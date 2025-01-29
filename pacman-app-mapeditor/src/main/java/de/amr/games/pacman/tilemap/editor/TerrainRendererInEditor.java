@@ -66,7 +66,9 @@ public class TerrainRendererInEditor extends TerrainRenderer {
             obstacles.forEach(obstacle -> {
                 for (int i = 0; i < obstacle.numSegments(); ++i) {
                     ObstacleSegment segment = obstacle.segment(i);
-                    Vector2i start = segment.startPoint(), end = segment.endPoint(), middle = start.midpoint(end);
+                    Vector2f start = segment.startPoint().toVector2f();
+                    Vector2f end = segment.endPoint().toVector2f();
+                    Vector2f  middle = start.midpoint(end);
                     g.setFont(SEGMENT_NUMBER_FONT);
                     g.setFill(SEGMENT_NUMBER_FILL_COLOR);
                     g.setStroke(SEGMENT_NUMBER_STROKE_COLOR);

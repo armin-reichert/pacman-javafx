@@ -1,5 +1,6 @@
 package experiments;
 
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
@@ -183,7 +184,7 @@ public class ExperimentsApp extends Application {
     }
 
     private void addVerticalWall(ObstacleSegment segment, Vector2i startPoint, Vector2i endPoint) {
-        Vector2i middlePoint = startPoint.midpoint(endPoint);
+        Vector2f middlePoint = startPoint.midpoint(endPoint);
         Box wall = new Box();
         wall.setMaterial(WALL_MATERIAL);
         wall.setTranslateX(middlePoint.x());
@@ -195,7 +196,7 @@ public class ExperimentsApp extends Application {
     }
 
     private void addHorizontalWall(ObstacleSegment segment, Vector2i startPoint, Vector2i endPoint) {
-        Vector2i middlePoint = startPoint.midpoint(endPoint);
+        Vector2f middlePoint = startPoint.midpoint(endPoint);
         Box wall = new Box();
         wall.setMaterial(WALL_MATERIAL);
         wall.setTranslateX(middlePoint.x());

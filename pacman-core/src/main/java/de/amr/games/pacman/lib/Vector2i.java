@@ -57,7 +57,7 @@ public record Vector2i(int x, int y) {
         return new Vector2i(x - dx, y - dy);
     }
 
-    public Vector2i midpoint(Vector2i v) { return new Vector2i((x + v.x) / 2, (y + v.y) / 2); }
+    public Vector2f midpoint(Vector2i v) { return this.plus(v).scaled(0.5f); }
 
     public double euclideanDist(Vector2i v) {
         return Math.hypot(x - v.x, y - v.y);

@@ -32,11 +32,12 @@ public class WorldRenderer3D {
 
     private static final int CYLINDER_DIVISIONS = 24;
 
-    public final static byte TAG_WALL_BASE      = 0x01;
-    public final static byte TAG_WALL_TOP       = 0x02;
-    public final static byte TAG_OUTER_WALL     = 0x04;
-    public final static byte TAG_CORNER         = 0x08;
-    public final static byte TAG_INNER_OBSTACLE = 0x10;
+    // Tags
+    public static final byte TAG_WALL_BASE      = 0x01;
+    public static final byte TAG_WALL_TOP       = 0x02;
+    public static final byte TAG_OUTER_WALL     = 0x04;
+    public static final byte TAG_CORNER         = 0x08;
+    public static final byte TAG_INNER_OBSTACLE = 0x10;
 
     public static void addTags(Node node, byte... tags) {
         if (node.getUserData() == null) {
@@ -99,6 +100,19 @@ public class WorldRenderer3D {
         this.oShapeFilled = value;
     }
 
+    public Node createWallBetweenTiles(Vector2i t1, Vector2i t2) {
+        Vector2i center = t1.plus(t2).scaled(HTS).plus(HTS, HTS);
+        if (t1.y() == t2.y()) { // horizontal wall
+            int length = TS * Math.abs((t2.x() - t1.x()));
+            return createWallCenteredAt(center.toVector2f(), length + wallThickness, wallThickness);
+        }
+        else if (t1.x() == t2.x()) { // vertical wall
+            int length = TS * Math.abs((t2.y() - t1.y()));
+            return createWallCenteredAt(center.toVector2f(), wallThickness, length);
+        }
+        throw new IllegalArgumentException("Cannot build wall between tiles %s and %s".formatted(t1, t2));
+    }
+
     public Node createWallCenteredAt(Vector2f center, double sizeX, double sizeY) {
         var base = new Box(sizeX, sizeY, wallBaseHeightPy.get());
         base.depthProperty().bind(wallBaseHeightPy);
@@ -116,24 +130,6 @@ public class WorldRenderer3D {
         wall.setTranslateY(center.y());
         wall.setMouseTransparent(true);
         return wall;
-    }
-
-    public Node createWallBetweenTiles(Vector2i beginTile, Vector2i endTile) {
-        if (beginTile.y() == endTile.y()) { // horizontal wall
-            Vector2i left  = beginTile.x() < endTile.x() ? beginTile : endTile;
-            Vector2i right = beginTile.x() < endTile.x() ? endTile : beginTile;
-            Vector2i center = left.plus(right).scaled(HTS).plus(HTS, HTS);
-            int length = TS * (right.x() - left.x());
-            return createWallCenteredAt(center.toVector2f(), length + wallThickness, wallThickness);
-        }
-        else if (beginTile.x() == endTile.x()) { // vertical wall
-            Vector2i top    = beginTile.y() < endTile.y() ? beginTile : endTile;
-            Vector2i bottom = beginTile.y() < endTile.y() ? endTile : beginTile;
-            Vector2i center = top.plus(bottom).scaled(HTS).plus(HTS, HTS);
-            int length = TS * (bottom.y() - top.y());
-            return createWallCenteredAt(center.toVector2f(), wallThickness, length);
-        }
-        throw new IllegalArgumentException("Cannot build wall between tiles %s and %s".formatted(beginTile, endTile));
     }
 
     public Node createCircularWall(Vector2i center, double radius) {
@@ -185,8 +181,8 @@ public class WorldRenderer3D {
         }
     }
 
-    private void addWallAtCenter(Group parent, Vector2i center, double sizeX, double sizeY) {
-        parent.getChildren().add(createWallCenteredAt(center.toVector2f(), sizeX, sizeY));
+    private void addWallAtCenter(Group parent, Vector2f center, double sizeX, double sizeY) {
+        parent.getChildren().add(createWallCenteredAt(center, sizeX, sizeY));
     }
 
     /**
@@ -244,10 +240,10 @@ public class WorldRenderer3D {
             double length = segment.vector().length();
             Vector2i q = p.plus(segment.vector());
             if (segment.isVerticalLine()) {
-                Node wall = createWallCenteredAt(p.midpoint(q).toVector2f(), wallThickness, length);
+                Node wall = createWallCenteredAt(p.midpoint(q), wallThickness, length);
                 g.getChildren().add(wall);
             } else if (segment.isHorizontalLine()) {
-                Node wall = createWallCenteredAt(p.midpoint(q).toVector2f(), length + wallThickness, wallThickness);
+                Node wall = createWallCenteredAt(p.midpoint(q), length + wallThickness, wallThickness);
                 g.getChildren().add(wall);
             } else if (segment.isNWCorner()) {
                 if (segment.ccw()) {
@@ -279,8 +275,8 @@ public class WorldRenderer3D {
     }
 
     private void addGenericShapeCorner(Group parent, Vector2i corner, Vector2i horEndPoint, Vector2i vertEndPoint) {
-        Node hWall = createWallCenteredAt(corner.midpoint(horEndPoint).toVector2f(), corner.manhattanDist(horEndPoint), wallThickness);
-        Node vWall = createWallCenteredAt(corner.midpoint(vertEndPoint).toVector2f(), wallThickness, corner.manhattanDist(vertEndPoint));
+        Node hWall = createWallCenteredAt(corner.midpoint(horEndPoint), corner.manhattanDist(horEndPoint), wallThickness);
+        Node vWall = createWallCenteredAt(corner.midpoint(vertEndPoint), wallThickness, corner.manhattanDist(vertEndPoint));
         Node cWall = createCompositeCornerWall(corner, 0.5 * wallThickness);
         parent.getChildren().addAll(hWall, vWall, cWall);
     }
