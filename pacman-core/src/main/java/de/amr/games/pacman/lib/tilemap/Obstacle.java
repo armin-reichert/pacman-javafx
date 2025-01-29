@@ -129,20 +129,21 @@ public class Obstacle {
     }
 
     public Vector2i[] cornerCenters() {
-        Set<Vector2i> centers = new LinkedHashSet<>();
+        var centers = new LinkedHashSet<Vector2i>();
         for (var segment : segments) {
+            boolean up = segment.vector().y() < 0, down = segment.vector().y() > 0;
             switch (segment.encoding()) {
-                case TileEncoding.CORNER_NW -> {
-                    if (segment.vector().y() > 0) centers.add(segment.startPoint().plus(0, HTS));
+                case TileEncoding.CORNER_NW, TileEncoding.DCORNER_NW -> {
+                    if (down) centers.add(segment.startPoint().plus(0, HTS));
                 }
-                case TileEncoding.CORNER_SW -> {
-                    if (segment.vector().y() > 0) centers.add(segment.startPoint().plus(HTS, 0));
+                case TileEncoding.CORNER_SW, TileEncoding.DCORNER_SW -> {
+                    if (down) centers.add(segment.startPoint().plus(HTS, 0));
                 }
-                case TileEncoding.CORNER_SE -> {
-                    if (segment.vector().y() < 0) centers.add(segment.startPoint().plus(0, -HTS));
+                case TileEncoding.CORNER_SE, TileEncoding.DCORNER_SE -> {
+                    if (up) centers.add(segment.startPoint().plus(0, -HTS));
                 }
-                case TileEncoding.CORNER_NE -> {
-                    if (segment.vector().y() < 0) centers.add(segment.startPoint().plus(-HTS, 0));
+                case TileEncoding.CORNER_NE, TileEncoding.DCORNER_NE -> {
+                    if (up) centers.add(segment.startPoint().plus(-HTS, 0));
                 }
             }
         }

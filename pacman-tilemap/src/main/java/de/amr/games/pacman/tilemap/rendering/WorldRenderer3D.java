@@ -182,7 +182,7 @@ public class WorldRenderer3D {
             addTags(og, TAG_INNER_OBSTACLE);
             parent.getChildren().add(og);
             //TODO provide more general solution for polygons with holes
-            if ("dcgbfceb".equals(encoding) && !oShapeFilled) {
+            if ("dcgbfceb".equals(encoding) && !oShapeFilled) { // O-shape with hole
                 Vector2i[] cornerCenters = obstacle.cornerCenters();
                 addTowers(og, cornerCenters);
                 addWallBetween(og, cornerCenters[0], cornerCenters[1], TS);
