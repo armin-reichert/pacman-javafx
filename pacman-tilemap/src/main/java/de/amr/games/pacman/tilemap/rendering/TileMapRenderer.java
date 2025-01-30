@@ -5,12 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tilemap.rendering;
 
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.Obstacle;
-import de.amr.games.pacman.lib.tilemap.TileMap;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-
-import java.util.List;
 
 public interface TileMapRenderer {
     void setScaling(double scaling);

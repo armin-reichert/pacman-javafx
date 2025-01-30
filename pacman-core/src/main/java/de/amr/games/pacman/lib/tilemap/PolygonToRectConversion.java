@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.vec_2i;
 import static java.lang.Math.signum;
 import static java.util.Comparator.comparingDouble;

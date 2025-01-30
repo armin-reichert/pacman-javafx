@@ -11,16 +11,10 @@ import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
-import javafx.scene.paint.PhongMaterial;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.stream.Stream;
 
 import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_DEBUG_INFO_VISIBLE;
 import static de.amr.games.pacman.ui2d.lib.Ufx.toggle;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_ENABLED;
-import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_FLOOR_COLOR;
 
 /**
  * User interface for all Pac-Man game variants with a 3D play scene. All others scenes are in 2D.
