@@ -82,7 +82,7 @@ public class TerrainRendererInEditor extends TerrainRenderer {
             double r = 1;
             obstacles.stream().filter(Obstacle::isClosed).filter(not(Obstacle::hasDoubleWalls)).forEach(obstacle -> {
                 Vector2i prev = null;
-                List<RectArea> rectangles = PolygonToRectConversion.convert(obstacle);
+                List<RectArea> rectangles = obstacle.innerAreaRectangles().toList();
                 for (int i = 0; i < rectangles.size(); ++i) {
                     RectArea rect = rectangles.get(i);
                     g.setFill(RANDOM_COLORS[i]);

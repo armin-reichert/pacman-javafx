@@ -4,12 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.tilemap.rendering;
 
-import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
-import de.amr.games.pacman.lib.tilemap.PolygonToRectConversion;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
@@ -157,9 +155,8 @@ public class WorldRenderer3D {
 
     private void render_ClosedSingleWallObstacle(Group g, Obstacle obstacle) {
         addTowers(g, obstacle.cornerCenters());
-        for (RectArea rect : PolygonToRectConversion.convert(obstacle)) {
-            g.getChildren().add(createWallCenteredAt(rect.center(), rect.width(), rect.height()));
-        }
+        obstacle.innerAreaRectangles()
+            .forEach(r -> g.getChildren().add( createWallCenteredAt(r.center(), r.width(), r.height()) ));
     }
 
     private void addTowers(Group g, Vector2i... centers) {

@@ -4,10 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib.tilemap;
 
+import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2i;
+import org.tinylog.Logger;
 
 import java.util.*;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 
@@ -20,16 +23,30 @@ public class Obstacle {
     private Vector2i endPoint;
     private final List<ObstacleSegment> segments = new ArrayList<>();
     private final boolean doubleWalls;
+    private final List<RectArea> innerAreaRectangles;
 
     public Obstacle(Vector2i startPoint, boolean doubleWalls) {
         this.startPoint = this.endPoint = Objects.requireNonNull(startPoint);
         this.doubleWalls = doubleWalls;
+        innerAreaRectangles = new ArrayList<>();
     }
 
     public void addSegment(Vector2i vector, boolean ccw, byte content) {
         ObstacleSegment segment = new ObstacleSegment(endPoint, vector, ccw, content);
         segments.add(segment);
         endPoint = segment.endPoint();
+        if (isClosed()) {
+            innerAreaRectangles.clear();
+            try {
+                innerAreaRectangles.addAll(PolygonToRectConversion.convert(this));
+            } catch (Exception x) {
+                Logger.warn("Inner area rectangle covering could not be computed yet");
+            }
+        }
+    }
+
+    public Stream<RectArea> innerAreaRectangles() {
+        return innerAreaRectangles.stream();
     }
 
     public Vector2i[] points() {
@@ -48,6 +65,7 @@ public class Obstacle {
             ", start=" + startPoint +
             ", end=" + endPoint +
             ", doubleWalls=" + doubleWalls +
+            ", rectangles=" + innerAreaRectangles +
             ", segment count=" + segments.size() +
             ", segments=" + segments +
             '}';

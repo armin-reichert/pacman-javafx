@@ -117,8 +117,6 @@ public class ObstacleBuilder {
         if (obstacle.isClosed()) {
             Logger.debug("Closed obstacle, top-left tile={}, map ID={}:", cornerNW, terrain.hashCode());
             Logger.debug(obstacle);
-        } else {
-            Logger.error("Could not build closed obstacle, top-left tile={}, map ID={}", cornerNW, terrain.hashCode());
         }
         return obstacle;
     }
@@ -161,7 +159,7 @@ public class ObstacleBuilder {
     }
 
     private void errorAtCurrentTile(List<Vector2i> tilesWithErrors) {
-        Logger.error("Did not expect content {} at tile {}", terrain.get(cursor.currentTile), cursor.currentTile);
+        Logger.debug("Did not expect content {} at tile {}", terrain.get(cursor.currentTile), cursor.currentTile);
         tilesWithErrors.add(cursor.currentTile);
     }
 

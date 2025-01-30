@@ -6,6 +6,7 @@ package de.amr.games.pacman.lib.tilemap;
 
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2i;
+import org.tinylog.Logger;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public interface PolygonToRectConversion {
             if (points.contains(p_km)) points.remove(p_km); else points.add(p_km);
             if (points.contains(p_lm)) points.remove(p_lm); else points.add(p_lm);
         }
+        Logger.debug("Inner obstacle area rectangles computed");
         return rectangles;
     }
 
