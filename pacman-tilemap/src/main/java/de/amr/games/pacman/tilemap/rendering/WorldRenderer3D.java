@@ -123,48 +123,6 @@ public class WorldRenderer3D {
         throw new IllegalArgumentException("Cannot build wall between tiles %s and %s".formatted(t1, t2));
     }
 
-    public Node createWallCenteredAt(Vector2f center, double sizeX, double sizeY) {
-        var base = new Box(sizeX, sizeY, wallBaseHeightPy.get());
-        base.depthProperty().bind(wallBaseHeightPy);
-        base.setMaterial(wallBaseMaterial);
-        base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5));
-        addTags(base, TAG_WALL_BASE);
-
-        var top = new Box(sizeX, sizeY, wallTopHeight);
-        top.setMaterial(wallTopMaterial);
-        top.translateZProperty().bind(wallBaseHeightPy.add(0.5 * wallTopHeight).multiply(-1));
-        addTags(top, TAG_WALL_TOP);
-
-        Group wall = new Group(base, top);
-        wall.setTranslateX(center.x());
-        wall.setTranslateY(center.y());
-        wall.setMouseTransparent(true);
-        return wall;
-    }
-
-    public Node createCircularWall(Vector2i center, double radius) {
-        Cylinder base = new Cylinder(radius, wallBaseHeightPy.get(), CYLINDER_DIVISIONS);
-        base.setMaterial(cornerBaseMaterial);
-        base.setRotationAxis(Rotate.X_AXIS);
-        base.setRotate(90);
-        base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5));
-        base.heightProperty().bind(wallBaseHeightPy);
-        addTags(base, TAG_WALL_BASE, TAG_CORNER);
-
-        Cylinder top = new Cylinder(radius, wallTopHeight, CYLINDER_DIVISIONS);
-        top.setMaterial(cornerTopMaterial);
-        top.setRotationAxis(Rotate.X_AXIS);
-        top.setRotate(90);
-        top.translateZProperty().bind(wallBaseHeightPy.add(0.5 * wallTopHeight).multiply(-1));
-        addTags(top, TAG_WALL_TOP, TAG_CORNER);
-
-        Group wall = new Group(base, top);
-        wall.setTranslateX(center.x());
-        wall.setTranslateY(center.y());
-        wall.setMouseTransparent(true);
-        return wall;
-    }
-
     /**
      * Creates a 3D representation for the given obstacle.
      * <p>
@@ -222,40 +180,42 @@ public class WorldRenderer3D {
                 addWallBetween(g, start, end, wallThickness);
             } else if (segment.isNWCorner()) {
                 if (counterClockwise) {
-                    addCornerWalls(g, start.plus(-r, 0), start, end);
+                    addCornerShape(g, start.plus(-r, 0), start, end);
                 } else {
-                    addCornerWalls(g, start.plus(0, -r), end, start);
+                    addCornerShape(g, start.plus(0, -r), end, start);
                 }
             } else if (segment.isSWCorner()) {
                 if (counterClockwise) {
-                    addCornerWalls(g, start.plus(0, r), end, start);
+                    addCornerShape(g, start.plus(0, r), end, start);
                 } else {
-                    addCornerWalls(g, start.plus(-r, 0), start, end);
+                    addCornerShape(g, start.plus(-r, 0), start, end);
                 }
             } else if (segment.isSECorner()) {
                 if (counterClockwise) {
-                    addCornerWalls(g, start.plus(r, 0), start, end);
+                    addCornerShape(g, start.plus(r, 0), start, end);
                 } else {
-                    addCornerWalls(g, start.plus(0, r), end, start);
+                    addCornerShape(g, start.plus(0, r), end, start);
                 }
             } else if (segment.isNECorner()) {
                 if (counterClockwise) {
-                    addCornerWalls(g, start.plus(0, -r), end, start);
+                    addCornerShape(g, start.plus(0, -r), end, start);
                 } else {
-                    addCornerWalls(g, start.plus(r, 0), start, end);
+                    addCornerShape(g, start.plus(r, 0), start, end);
                 }
             }
         }
     }
 
-    private void addCornerWalls(Group g, Vector2i corner, Vector2i horEndPoint, Vector2i vertEndPoint) {
-        Node hWall = createWallCenteredAt(corner.midpoint(horEndPoint), corner.manhattanDist(horEndPoint), wallThickness);
-        Node vWall = createWallCenteredAt(corner.midpoint(vertEndPoint), wallThickness, corner.manhattanDist(vertEndPoint));
-        Node cWall = createCompositeCornerWall(corner, 0.5 * wallThickness);
+    private void addCornerShape(Group g, Vector2i cornerCenter, Vector2i horEndPoint, Vector2i vertEndPoint) {
+        Node hWall = createWallCenteredAt(cornerCenter.midpoint(horEndPoint), cornerCenter.manhattanDist(horEndPoint), wallThickness);
+        Node vWall = createWallCenteredAt(cornerCenter.midpoint(vertEndPoint), wallThickness, cornerCenter.manhattanDist(vertEndPoint));
+        Group cWall = createCircularWall(cornerCenter, 0.5 * wallThickness);
+        addTags(cWall.getChildren().getFirst(), TAG_CORNER);
+        addTags(cWall.getChildren().getLast(), TAG_CORNER);
         g.getChildren().addAll(hWall, vWall, cWall);
     }
 
-    private Group createCompositeCornerWall(Vector2i center, double radius) {
+    public Group createCircularWall(Vector2i center, double radius) {
         Cylinder base = new Cylinder(radius, wallBaseHeightPy.get(), CYLINDER_DIVISIONS);
         base.setMaterial(cornerBaseMaterial);
         base.heightProperty().bind(wallBaseHeightPy);
@@ -267,7 +227,29 @@ public class WorldRenderer3D {
         top.setMaterial(cornerTopMaterial);
         top.setRotationAxis(Rotate.X_AXIS);
         top.setRotate(90);
-        top.translateZProperty().bind(wallBaseHeightPy.add(0.5* wallTopHeight).multiply(-1));
+        top.translateZProperty().bind(wallBaseHeightPy.add(0.5 * wallTopHeight).multiply(-1));
+
+        addTags(base, TAG_WALL_BASE);
+        addTags(top, TAG_WALL_TOP);
+
+        Group wall = new Group(base, top);
+        wall.setTranslateX(center.x());
+        wall.setTranslateY(center.y());
+        wall.setMouseTransparent(true);
+        return wall;
+    }
+
+    public Node createWallCenteredAt(Vector2f center, double sizeX, double sizeY) {
+        var base = new Box(sizeX, sizeY, wallBaseHeightPy.get());
+        base.depthProperty().bind(wallBaseHeightPy);
+        base.setMaterial(wallBaseMaterial);
+        base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5));
+        addTags(base, TAG_WALL_BASE);
+
+        var top = new Box(sizeX, sizeY, wallTopHeight);
+        top.setMaterial(wallTopMaterial);
+        top.translateZProperty().bind(wallBaseHeightPy.add(0.5 * wallTopHeight).multiply(-1));
+        addTags(top, TAG_WALL_TOP);
 
         Group wall = new Group(base, top);
         wall.setTranslateX(center.x());
