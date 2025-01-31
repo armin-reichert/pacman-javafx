@@ -108,10 +108,9 @@ public enum GameActions2D implements GameAction {
 
         @Override
         public boolean isEnabled(GameContext context) {
-            if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                return context.level().number < 32; //TODO reconsider
-            }
-            return context.game().isPlaying() && context.gameState() == GameState.HUNTING;
+            return context.game().isPlaying()
+                && context.gameState() == GameState.HUNTING
+                && context.level().number < context.game().lastLevelNumber();
         }
     },
 

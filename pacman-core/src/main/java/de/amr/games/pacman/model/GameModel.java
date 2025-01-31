@@ -86,6 +86,7 @@ public abstract class GameModel {
     protected abstract void        onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
     protected abstract void        onGhostReleased(Ghost ghost);
 
+    public int lastLevelNumber() { return Integer.MAX_VALUE; }
     public Optional<GameLevel> level() {
         return Optional.ofNullable(level);
     }

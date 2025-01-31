@@ -214,6 +214,11 @@ public class MsPacManGameTengen extends GameModel {
         return difficulty;
     }
 
+    @Override
+    public int lastLevelNumber() {
+        return MAX_LEVEL_NUMBER;
+    }
+
     public void setStartLevelNumber(int number) {
         if (number < MIN_LEVEL_NUMBER || number > MAX_LEVEL_NUMBER) {
             throw GameException.illegalLevelNumber(number);
