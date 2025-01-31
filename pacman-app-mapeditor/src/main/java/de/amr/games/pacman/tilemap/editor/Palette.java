@@ -99,6 +99,10 @@ public class Palette {
         return selectedCol;
     }
 
+    public int selectedIndex() {
+        return selectedRow * numRows + selectedCol;
+    }
+
     public Tool selectedTool() {
         return selectedTool;
     }
@@ -109,6 +113,10 @@ public class Palette {
             selectedRow = index / numCols;
             selectedCol = index % numCols;
         }
+    }
+
+    public int numTools() {
+        return tools.size();
     }
 
     private Tool getToolOrNull(int index) {

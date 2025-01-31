@@ -60,7 +60,7 @@ import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.*;
  */
 public class TileMapEditor {
 
-    public static final short RENDERING_FPS = 5;
+    public static final short RENDERING_FPS = 15;
     public static final short TOOL_SIZE = 32;
     public static final short MIN_GRID_SIZE = 8;
     public static final short MAX_GRID_SIZE = 64;
@@ -1171,13 +1171,24 @@ public class TileMapEditor {
         }
         else if (event.isControlDown()) {
             if (editMode() == EditMode.EDIT) {
-                editUsingKeyboard(event);
+                editUsingKeyboard();
             }
         }
     }
 
     private void onEditCanvasKeyPressed(KeyEvent event) {
-        navigateEditCanvas(event);
+        switch (event.getCode()) {
+            case LEFT, RIGHT, UP, DOWN -> navigateEditCanvas(event);
+            case SPACE -> {
+                if (event.isControlDown()) {
+                    selectNextPaletteEntry();
+                    event.consume();
+                } else {
+                    editUsingKeyboard();
+                }
+            }
+            default -> {}
+        }
     }
 
     private void onKeyTyped(KeyEvent event) {
@@ -1304,7 +1315,7 @@ public class TileMapEditor {
         }
     }
 
-    private void editUsingKeyboard(KeyEvent e) {
+    private void editUsingKeyboard() {
         if (selectedPaletteID() == PALETTE_ID_FOOD) {
             Vector2i tile = focussedTilePy.get();
             if (canEditFoodAtTile(tile)) {
@@ -1332,6 +1343,15 @@ public class TileMapEditor {
                 focussedTilePy.set(nextTile);
             }
         }
+    }
+
+    private void selectNextPaletteEntry() {
+        Palette palette = selectedPalette();
+        int next = palette.selectedIndex() + 1;
+        if (next == palette.numTools()) {
+            next = 0;
+        }
+        palette.selectTool(next);
     }
 
     private boolean canEnterTile(Vector2i tile) {
