@@ -1154,22 +1154,6 @@ public class TileMapEditor {
         }
     }
 
-    private void identifyObstacleAtTile(Vector2i tile) {
-        Obstacle obstacleAtTile = worldMap().obstacles().stream()
-            .filter(obstacle -> Globals.tileAt(obstacle.startPoint().minus(HTS, 0).toVector2f()).equals(tile))
-            .findFirst().orElse(null);
-        if (obstacleAtTile != null) {
-            String encoding = obstacleAtTile.encoding();
-            Clipboard clipboard = Clipboard.getSystemClipboard();
-            ClipboardContent content = new ClipboardContent();
-            content.putString(encoding);
-            clipboard.setContent(content);
-            showMessage("Obstacle identified (copied to clipboard)", 5, MessageType.INFO);
-        } else {
-            showMessage("", 1, MessageType.INFO);
-        }
-    }
-
     private void onKeyPressed(KeyEvent event) {
         if (event.isAltDown()) {
             if (event.getCode() == KeyCode.LEFT) {
@@ -1193,20 +1177,7 @@ public class TileMapEditor {
     }
 
     private void onEditCanvasKeyPressed(KeyEvent event) {
-        Direction cursor = switch (event.getCode()) {
-            case LEFT -> Direction.LEFT;
-            case RIGHT -> Direction.RIGHT;
-            case UP -> Direction.UP;
-            case DOWN -> Direction.DOWN;
-            default -> null;
-        };
-        if (cursor != null && focussedTilePy.get() != null) {
-            WorldMap worldMap = worldMapPy.get();
-            Vector2i newTile = focussedTilePy.get().plus(cursor.vector());
-            if (!worldMap.terrain().outOfBounds(newTile)) {
-                focussedTilePy.set(newTile);
-            }
-        }
+        navigateEditCanvas(event);
     }
 
     private void onKeyTyped(KeyEvent event) {
@@ -1342,6 +1313,31 @@ public class TileMapEditor {
         }
     }
 
+    private void navigateEditCanvas(KeyEvent event) {
+        Direction dir = switch (event.getCode()) {
+            case LEFT -> Direction.LEFT;
+            case RIGHT -> Direction.RIGHT;
+            case UP -> Direction.UP;
+            case DOWN -> Direction.DOWN;
+            default -> null;
+        };
+        Vector2i currentTile = focussedTilePy.get();
+        if (dir == null || currentTile == null) {
+            return;
+        }
+        Vector2i nextTile = currentTile.plus(dir.vector());
+        if (canEnterTile(nextTile)) {
+            WorldMap worldMap = worldMapPy.get();
+            if (!worldMap.terrain().outOfBounds(nextTile)) {
+                focussedTilePy.set(nextTile);
+            }
+        }
+    }
+
+    private boolean canEnterTile(Vector2i tile) {
+        return true;
+    }
+
     private boolean canEditFoodAtTile(Vector2i tile) {
         byte content = worldMap().terrain().get(tile);
         return content == TileEncoding.EMPTY
@@ -1349,6 +1345,22 @@ public class TileMapEditor {
             || content == TileEncoding.ONE_WAY_UP
             || content == TileEncoding.ONE_WAY_LEFT
             || content == TileEncoding.ONE_WAY_RIGHT;
+    }
+
+    private void identifyObstacleAtTile(Vector2i tile) {
+        Obstacle obstacleAtTile = worldMap().obstacles().stream()
+            .filter(obstacle -> Globals.tileAt(obstacle.startPoint().minus(HTS, 0).toVector2f()).equals(tile))
+            .findFirst().orElse(null);
+        if (obstacleAtTile != null) {
+            String encoding = obstacleAtTile.encoding();
+            Clipboard clipboard = Clipboard.getSystemClipboard();
+            ClipboardContent content = new ClipboardContent();
+            content.putString(encoding);
+            clipboard.setContent(content);
+            showMessage("Obstacle identified (copied to clipboard)", 5, MessageType.INFO);
+        } else {
+            showMessage("", 1, MessageType.INFO);
+        }
     }
 
     private void addBorder(TileMap terrain, int emptyRowsTop, int emptyRowsBottom) {
