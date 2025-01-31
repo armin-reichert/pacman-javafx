@@ -108,7 +108,7 @@ public class WorldRenderer3D {
         }
     }
 
-    public Node createWallBetweenTiles(Vector2i t1, Vector2i t2) {
+    public Group createWallBetweenTiles(Vector2i t1, Vector2i t2) {
         Vector2i center = t1.plus(t2).scaled(HTS).plus(HTS, HTS);
         if (t1.y() == t2.y()) { // horizontal wall
             int length = TS * Math.abs((t2.x() - t1.x()));
@@ -236,7 +236,7 @@ public class WorldRenderer3D {
         return wall;
     }
 
-    public Node createWallCenteredAt(Vector2f center, double sizeX, double sizeY) {
+    public Group createWallCenteredAt(Vector2f center, double sizeX, double sizeY) {
         var base = new Box(sizeX, sizeY, wallBaseHeightPy.get());
         base.depthProperty().bind(wallBaseHeightPy);
         base.setMaterial(wallBaseMaterial);
