@@ -137,7 +137,7 @@ public class TileMapEditor {
         protected void invalidated() {
             switch (get()) {
                 case INSPECT -> onEnterInspectMode();
-                case DRAW -> onEnterEditMode();
+                case EDIT -> onEnterEditMode();
                 case ERASE -> onEnterEraseMode();
             }
         }
@@ -514,7 +514,7 @@ public class TileMapEditor {
         editModeIndicator.textProperty().bind(Bindings.createStringBinding(
             () -> switch (modePy.get()) {
                     case INSPECT -> "INSPECT";
-                    case DRAW -> symmetricEditModePy.get() ?  "SYMMETRIC" : "NORMAL";
+                    case EDIT -> symmetricEditModePy.get() ?  "SYMMETRIC" : "NORMAL";
                     case ERASE -> "ERASE";
             },
             modePy, symmetricEditModePy
@@ -972,7 +972,7 @@ public class TileMapEditor {
         }
 
         // Vertical separator to indicate symmetric edit mode
-        if (isEditMode(EditMode.DRAW) && symmetricEditModePy.get()) {
+        if (isEditMode(EditMode.EDIT) && symmetricEditModePy.get()) {
             g.save();
             g.setStroke(Color.YELLOW);
             g.setLineWidth(0.75);
@@ -1087,7 +1087,7 @@ public class TileMapEditor {
             editCanvas.requestFocus();
             contextMenu.hide();
             if (event.getClickCount() == 2 && isEditMode(EditMode.INSPECT)) {
-                setEditMode(EditMode.DRAW);
+                setEditMode(EditMode.EDIT);
             }
         }
     }
@@ -1123,7 +1123,7 @@ public class TileMapEditor {
         WorldMap worldMap = worldMapPy.get();
         focussedTilePy.set(tile);
         switch (editMode()) {
-            case EditMode.DRAW -> {
+            case EditMode.EDIT -> {
                 if (event.isShiftDown()) {
                     switch (selectedPaletteID()) {
                         case TileMapEditor.PALETTE_ID_TERRAIN -> {
@@ -1185,6 +1185,11 @@ public class TileMapEditor {
                     () -> showMessage("Next map file not available", 1, MessageType.ERROR));
             }
         }
+        else if (event.isControlDown()) {
+            if (editMode() == EditMode.EDIT) {
+                editUsingKeyboard(event);
+            }
+        }
     }
 
     private void onEditCanvasKeyPressed(KeyEvent event) {
@@ -1210,11 +1215,11 @@ public class TileMapEditor {
         switch (ch) {
             case "i" -> setEditMode(EditMode.INSPECT);
             case "n" -> {
-                setEditMode(EditMode.DRAW);
+                setEditMode(EditMode.EDIT);
                 symmetricEditModePy.set(false);
             }
             case "s" -> {
-                setEditMode(EditMode.DRAW);
+                setEditMode(EditMode.EDIT);
                 symmetricEditModePy.set(true);
             }
             case "w" -> mazePreview3D.wireframeProperty().set(!mazePreview3D.wireframeProperty().get());
@@ -1299,8 +1304,8 @@ public class TileMapEditor {
         return new Vector2i(fullTiles(mouseX), fullTiles(mouseY));
     }
 
-    private void editMapTileAtMousePosition(TileMap tileMap, Vector2i tile, boolean erase) {
-        if (erase) { // Control-Click clears tile content
+    private void editMapTile(TileMap tileMap, Vector2i tile, boolean erase) {
+        if (erase) {
             eraseTileValue(tileMap, tile);
         } else if (selectedPalette().isToolSelected()) {
             selectedPalette().selectedTool().apply(tileMap, tile);
@@ -1315,7 +1320,7 @@ public class TileMapEditor {
         }
         boolean erase = event.isControlDown();
         switch (selectedPaletteID()) {
-            case TileMapEditor.PALETTE_ID_TERRAIN -> editMapTileAtMousePosition(worldMap().terrain(), tile, erase);
+            case TileMapEditor.PALETTE_ID_TERRAIN -> editMapTile(worldMap().terrain(), tile, erase);
             case TileMapEditor.PALETTE_ID_ACTORS -> {
                 if (selectedPalette().isToolSelected()) {
                     selectedPalette().selectedTool().apply(worldMap().terrain(), tile);
@@ -1323,9 +1328,27 @@ public class TileMapEditor {
                     terrainPropertiesEditor().updatePropertyEditorValues();
                 }
             }
-            case TileMapEditor.PALETTE_ID_FOOD -> editMapTileAtMousePosition(worldMap().food(), tile, erase);
+            case TileMapEditor.PALETTE_ID_FOOD -> editMapTile(worldMap().food(), tile, erase);
             default -> Logger.error("Unknown palette selection");
         }
+    }
+
+    private void editUsingKeyboard(KeyEvent e) {
+        if (selectedPaletteID() == PALETTE_ID_FOOD) {
+            Vector2i tile = focussedTilePy.get();
+            if (canEditFoodAtTile(tile)) {
+                editMapTile(worldMap().food(), tile, false);
+            }
+        }
+    }
+
+    private boolean canEditFoodAtTile(Vector2i tile) {
+        byte content = worldMap().terrain().get(tile);
+        return content == TileEncoding.EMPTY
+            || content == TileEncoding.ONE_WAY_DOWN
+            || content == TileEncoding.ONE_WAY_UP
+            || content == TileEncoding.ONE_WAY_LEFT
+            || content == TileEncoding.ONE_WAY_RIGHT;
     }
 
     private void addBorder(TileMap terrain, int emptyRowsTop, int emptyRowsBottom) {
