@@ -1335,6 +1335,14 @@ public class TileMapEditor {
     }
 
     private boolean canEnterTile(Vector2i tile) {
+        if (editMode() == EditMode.EDIT && selectedPaletteID() == PALETTE_ID_FOOD) {
+            byte content = worldMap().terrain().get(tile);
+            return content == TileEncoding.EMPTY
+                    || content == TileEncoding.ONE_WAY_DOWN
+                    || content == TileEncoding.ONE_WAY_UP
+                    || content == TileEncoding.ONE_WAY_LEFT
+                    || content == TileEncoding.ONE_WAY_RIGHT;
+        }
         return true;
     }
 
