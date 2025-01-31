@@ -203,7 +203,10 @@ public class TileMapEditor {
         lastUsedDir = workDir;
         titlePy.bind(createTitleBinding());
 
-        obstacleEditor = new ObstacleEditor((tile, value) -> setTileValue(worldMap().terrain(), tile, value));
+        obstacleEditor = new ObstacleEditor((tile, value) -> {
+            setTileValue(worldMap().terrain(), tile, value);
+            setTileValue(worldMap().food(), tile, TileEncoding.EMPTY);
+        });
         obstacleEditor.worldMapPy.bind(worldMapPy);
 
         setWorldMap(new WorldMap(36, 28));
