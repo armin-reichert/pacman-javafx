@@ -1158,24 +1158,19 @@ public class TileMapEditor {
     }
 
     private void onKeyPressed(KeyEvent event) {
-        if (event.isAltDown()) {
-            if (event.getCode() == KeyCode.LEFT) {
-                event.consume();
-                prevMapFileInDirectory().ifPresentOrElse(
-                    file -> showMessage("Map loaded: %s".formatted(file.getName()), 3, MessageType.INFO),
-                    () -> showMessage("Previous map file not available", 1, MessageType.ERROR));
-            } else if (event.getCode() == KeyCode.RIGHT) {
-                event.consume();
-                Optional<File> nextFile = nextMapFileInDirectory();
-                nextFile.ifPresentOrElse(
-                    file -> showMessage("Map loaded: %s".formatted(file.getName()), 3, MessageType.INFO),
-                    () -> showMessage("Next map file not available", 1, MessageType.ERROR));
-            }
+        if (event.isAltDown() && event.getCode() == KeyCode.LEFT) {
+            event.consume();
+            prevMapFileInDirectory().ifPresentOrElse(
+                file -> showMessage("Map loaded: %s".formatted(file.getName()), 3, MessageType.INFO),
+                () -> showMessage("Previous map file not available", 1, MessageType.ERROR));
+        } else if (event.isAltDown() && event.getCode() == KeyCode.RIGHT) {
+            event.consume();
+            nextMapFileInDirectory().ifPresentOrElse(
+                file -> showMessage("Map loaded: %s".formatted(file.getName()), 3, MessageType.INFO),
+                () -> showMessage("Next map file not available", 1, MessageType.ERROR));
         }
-        else if (event.isControlDown()) {
-            if (editMode() == EditMode.EDIT) {
-                editUsingKeyboard();
-            }
+        else if (event.isControlDown() && isEditMode(EditMode.EDIT)) {
+            editFoodAtCurrentTile();
         }
     }
 
@@ -1187,7 +1182,7 @@ public class TileMapEditor {
                     selectNextPaletteEntry();
                     event.consume();
                 } else {
-                    editUsingKeyboard();
+                    editFoodAtCurrentTile();
                 }
             }
             default -> {}
@@ -1318,7 +1313,7 @@ public class TileMapEditor {
         }
     }
 
-    private void editUsingKeyboard() {
+    private void editFoodAtCurrentTile() {
         if (selectedPaletteID() == PALETTE_ID_FOOD) {
             Vector2i tile = focussedTilePy.get();
             if (canEditFoodAtTile(tile)) {
@@ -1340,7 +1335,7 @@ public class TileMapEditor {
             return;
         }
         Vector2i nextTile = currentTile.plus(dir.vector());
-        if (canEnterTile(nextTile)) {
+        if (canEnterTileWithCursor(nextTile)) {
             WorldMap worldMap = worldMapPy.get();
             if (!worldMap.terrain().outOfBounds(nextTile)) {
                 focussedTilePy.set(nextTile);
@@ -1357,14 +1352,9 @@ public class TileMapEditor {
         palette.selectTool(next);
     }
 
-    private boolean canEnterTile(Vector2i tile) {
-        if (editMode() == EditMode.EDIT && selectedPaletteID() == PALETTE_ID_FOOD) {
-            byte content = worldMap().terrain().get(tile);
-            return content == TileEncoding.EMPTY
-                    || content == TileEncoding.ONE_WAY_DOWN
-                    || content == TileEncoding.ONE_WAY_UP
-                    || content == TileEncoding.ONE_WAY_LEFT
-                    || content == TileEncoding.ONE_WAY_RIGHT;
+    private boolean canEnterTileWithCursor(Vector2i tile) {
+        if (isEditMode(EditMode.EDIT) && selectedPaletteID() == PALETTE_ID_FOOD) {
+            return canEditFoodAtTile(tile);
         }
         return true;
     }
