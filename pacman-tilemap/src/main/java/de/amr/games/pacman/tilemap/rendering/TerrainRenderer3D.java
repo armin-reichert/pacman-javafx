@@ -153,7 +153,7 @@ public class TerrainRenderer3D {
 
     private void render_ClosedSingleWallObstacle(Group g, Obstacle obstacle) {
         addTowers(g, obstacle.cornerCenters());
-        obstacle.innerAreaRectangles()
+        obstacle.rectPartition()
             .forEach(r -> g.getChildren().add( createWallCenteredAt(r.center(), r.width(), r.height()) ));
     }
 

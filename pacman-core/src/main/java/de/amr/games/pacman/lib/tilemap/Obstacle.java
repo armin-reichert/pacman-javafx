@@ -25,12 +25,12 @@ public class Obstacle {
     private Vector2i endPoint;
     private final List<ObstacleSegment> segments = new ArrayList<>();
     private final boolean doubleWalls;
-    private final List<RectArea> innerPolygonRectangles;
+    private final List<RectArea> rectPartition;
 
     public Obstacle(Vector2i startPoint, boolean doubleWalls) {
         this.startPoint = this.endPoint = Objects.requireNonNull(startPoint);
         this.doubleWalls = doubleWalls;
-        innerPolygonRectangles = new ArrayList<>();
+        rectPartition = new ArrayList<>();
     }
 
     public void addSegment(Vector2i vector, boolean ccw, byte content) {
@@ -38,18 +38,18 @@ public class Obstacle {
         segments.add(segment);
         endPoint = segment.endPoint();
         if (isClosed()) {
-            innerPolygonRectangles.clear();
+            rectPartition.clear();
             try {
                 Collection<Vector2i> innerPolygon = computeInnerPolygonPoints();
-                innerPolygonRectangles.addAll(GourleyGreenPolygonToRect.convertPolygonToRectangles(innerPolygon));
+                rectPartition.addAll(GourleyGreenPolygonToRect.convertPolygonToRectangles(innerPolygon));
             } catch (Exception x) {
                 Logger.warn("Inner area rectangle covering could not be computed yet");
             }
         }
     }
 
-    public Stream<RectArea> innerAreaRectangles() {
-        return innerPolygonRectangles.stream();
+    public Stream<RectArea> rectPartition() {
+        return rectPartition.stream();
     }
 
     public Vector2i[] points() {
@@ -68,7 +68,7 @@ public class Obstacle {
             ", start=" + startPoint +
             ", end=" + endPoint +
             ", doubleWalls=" + doubleWalls +
-            ", rectangles=" + innerPolygonRectangles +
+            ", rectangles=" + rectPartition +
             ", segment count=" + segments.size() +
             ", segments=" + segments +
             '}';
@@ -258,8 +258,8 @@ public class Obstacle {
     // experimental
 
     public void checkParent(Obstacle other) {
-        for (RectArea parentRect : other.innerPolygonRectangles) {
-            for (RectArea childRect : innerPolygonRectangles) {
+        for (RectArea parentRect : other.rectPartition) {
+            for (RectArea childRect : rectPartition) {
                 if (parentRect.contains(childRect)) {
                     parent = other;
                     Logger.info("Obstacle {} at {} is contained in obstacle {} at {}",
