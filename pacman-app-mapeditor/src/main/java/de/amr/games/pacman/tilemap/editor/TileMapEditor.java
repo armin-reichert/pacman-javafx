@@ -1384,19 +1384,23 @@ public class TileMapEditor {
         }
     }
 
-    private void addBorder(TileMap terrain, int emptyRowsTop, int emptyRowsBottom) {
-        for (int row = emptyRowsTop; row < terrain.numRows() - emptyRowsBottom; ++row) {
+    private void addBorder(TileMap terrain, int firstRow, int emptyRowsBottom) {
+        int lastRow = terrain.numRows() - 1 - emptyRowsBottom, lastCol = terrain.numCols() - 1;
+
+        terrain.set(firstRow, 0, TileEncoding.DCORNER_NW);
+        terrain.set(firstRow, lastCol, TileEncoding.DCORNER_NE);
+        terrain.set(lastRow, 0, TileEncoding.DCORNER_SW);
+        terrain.set(lastRow, lastCol, TileEncoding.DCORNER_SE);
+
+        for (int row = firstRow + 1; row < lastRow; ++row) {
             terrain.set(row, 0, TileEncoding.DWALL_V);
-            terrain.set(row, terrain.numCols() - 1, TileEncoding.DWALL_V);
+            terrain.set(row, lastCol, TileEncoding.DWALL_V);
         }
-        for (int col = 1; col < terrain.numCols() - 1; ++col) {
-            terrain.set(emptyRowsTop, col, TileEncoding.DWALL_H);
-            terrain.set(terrain.numRows() - 1 - emptyRowsBottom, col, TileEncoding.DWALL_H);
+
+        for (int col = 1; col < lastCol; ++col) {
+            terrain.set(firstRow, col, TileEncoding.DWALL_H);
+            terrain.set(lastRow, col, TileEncoding.DWALL_H);
         }
-        terrain.set(emptyRowsTop, 0, TileEncoding.DCORNER_NW);
-        terrain.set(emptyRowsTop, terrain.numCols() - 1, TileEncoding.DCORNER_NE);
-        terrain.set(terrain.numRows() - 1 - emptyRowsBottom, 0, TileEncoding.DCORNER_SW);
-        terrain.set(terrain.numRows() - 1 - emptyRowsBottom, terrain.numCols() - 1, TileEncoding.DCORNER_SE);
 
         markTileMapEdited(terrain);
     }
