@@ -9,15 +9,14 @@ import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
 import de.amr.games.pacman.lib.tilemap.TileEncoding;
 import de.amr.games.pacman.lib.tilemap.TileMap;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import java.util.List;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.*;
 
 /**
  * Vector renderer for terrain tile maps.
@@ -28,22 +27,22 @@ public class TerrainRenderer implements TileMapRenderer {
 
     public static final ColorScheme DEFAULT_COLOR_SCHEME = new ColorScheme(Color.BLACK, Color.RED,  Color.GOLD, Color.PINK);
 
-    public final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
+    public final FloatProperty scalingPy = new SimpleFloatProperty(this, "scaling", 1.0f);
 
     protected double doubleStrokeOuterWidth;
     protected double doubleStrokeInnerWidth;
     protected double singleStrokeWidth;
-
-    protected ColorScheme colors = DEFAULT_COLOR_SCHEME;
+    protected ColorScheme colors;
 
     public TerrainRenderer() {
         doubleStrokeOuterWidth = 4;
         doubleStrokeInnerWidth = 2;
         singleStrokeWidth = 1;
+        colors = DEFAULT_COLOR_SCHEME;
     }
 
     public void setColors(ColorScheme colors) {
-        this.colors = colors;
+        this.colors = assertNotNull(colors);
     }
 
     @Override
@@ -55,16 +54,16 @@ public class TerrainRenderer implements TileMapRenderer {
         return scalingPy.get();
     }
 
-    public void setDoubleStrokeInnerWidth(double doubleStrokeInnerWidth) {
-        this.doubleStrokeInnerWidth = doubleStrokeInnerWidth;
+    public void setDoubleStrokeInnerWidth(double width) {
+        doubleStrokeInnerWidth = width;
     }
 
-    public void setDoubleStrokeOuterWidth(double doubleStrokeOuterWidth) {
-        this.doubleStrokeOuterWidth = doubleStrokeOuterWidth;
+    public void setDoubleStrokeOuterWidth(double width) {
+        doubleStrokeOuterWidth = width;
     }
 
-    public void setSingleStrokeWidth(double singleStrokeWidth) {
-        this.singleStrokeWidth = singleStrokeWidth;
+    public void setSingleStrokeWidth(double width) {
+        singleStrokeWidth = width;
     }
 
     public void drawTerrain(GraphicsContext g, TileMap terrainMap, List<Obstacle> obstacles) {
