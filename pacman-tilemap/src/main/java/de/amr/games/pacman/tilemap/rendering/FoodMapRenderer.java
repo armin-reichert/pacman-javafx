@@ -21,12 +21,14 @@ import static de.amr.games.pacman.lib.Globals.TS;
 public class FoodMapRenderer implements TileMapRenderer {
 
     static final double PELLET_SIZE = 2;
+    static final double ENERGIZER_SIZE = 8;
 
     public FloatProperty scalingPy = new SimpleFloatProperty(this, "scaling", 1f);
 
     private Color pelletColor = Color.PINK;
     private Color energizerColor = Color.YELLOW;
 
+    @Override
     public void setScaling(double scaling) {
         scalingPy.set((float) scaling);
     }
@@ -43,11 +45,11 @@ public class FoodMapRenderer implements TileMapRenderer {
         this.pelletColor = pelletColor;
     }
 
-
-    public void drawFood(GraphicsContext g, TileMap map) {
-        map.tiles().forEach(tile -> drawTile(g, tile, map.get(tile)));
+    public void drawFood(GraphicsContext g, TileMap foodMap) {
+        foodMap.tiles().forEach(tile -> drawTile(g, tile, foodMap.get(tile)));
     }
 
+    @Override
     public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
         switch (content) {
             case TileEncoding.PELLET -> drawPellet(g, tile);
@@ -66,16 +68,15 @@ public class FoodMapRenderer implements TileMapRenderer {
     }
 
     public void drawEnergizer(GraphicsContext g, Vector2i tile) {
-        double size = TS;
-        double offset = 0.5 * (HTS);
+        double offset = 0.5 * HTS;
         double x = tile.x() * TS, y = tile.y() * TS;
         g.save();
         g.scale(scaling(), scaling());
         g.setFill(energizerColor);
-        // draw pixelized "circle"
-        g.fillRect(x + offset, y, HTS, size);
-        g.fillRect(x, y + offset, size, HTS);
-        g.fillRect(x + 1, y + 1, size - 2, size - 2);
+        // draw pixelated "circle"
+        g.fillRect(x + offset, y, HTS, ENERGIZER_SIZE);
+        g.fillRect(x, y + offset, ENERGIZER_SIZE, HTS);
+        g.fillRect(x + 1, y + 1, ENERGIZER_SIZE - 2, ENERGIZER_SIZE - 2);
         g.restore();
     }
 }
