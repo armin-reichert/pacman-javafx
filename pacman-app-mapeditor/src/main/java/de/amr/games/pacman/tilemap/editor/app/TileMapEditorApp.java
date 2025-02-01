@@ -46,19 +46,21 @@ public class TileMapEditorApp extends Application  {
     @Override
     public void start(Stage stage) {
         editor = new TileMapEditor();
-        editor.init(new File(System.getProperty("user.home")));
         try {
             stage.setMinWidth(900);
             stage.setMinHeight(600);
-            doStart(stage);
+            editor.createUI(stage);
+            createUI(stage);
+            editor.init(new File(System.getProperty("user.home")));
+            editor.loadMap(mapPacManGame);
+            editor.start();
+            stage.show();
         } catch (Exception x) {
             x.printStackTrace(System.err);
         }
     }
 
-    private void doStart(Stage stage) {
-        editor.createUI(stage);
-
+    private void createUI(Stage stage) {
         var layout = new BorderPane();
         layout.setCenter(editor.getContentPane());
         layout.setTop(editor.getMenuBar());
@@ -69,9 +71,9 @@ public class TileMapEditorApp extends Application  {
 
         double height = Math.max(0.8 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
         double width = 1.25 * height;
+
         var scene = new Scene(layout, width, height);
         scene.setFill(Color.BLACK);
-        stage.setScene(scene);
 
         editor.addLoadMapMenuItem("Pac-Man", mapPacManGame);
         editor.getLoadMapMenu().getItems().add(new SeparatorMenuItem());
@@ -79,15 +81,12 @@ public class TileMapEditorApp extends Application  {
         editor.getLoadMapMenu().getItems().add(new SeparatorMenuItem());
         rangeClosed(1, 8).forEach(num -> editor.addLoadMapMenuItem("Pac-Man XXL " + num, mapsPacManXXLGame.get(num - 1)));
 
-        stage.titleProperty().bind(editor.titleProperty());
+        stage.setScene(scene);
         stage.setOnCloseRequest(e -> editor.showSaveConfirmationDialog(editor::showSaveDialog, () -> {
             editor.stop();
             stage.close();
         }));
-        stage.show();
-
-        editor.loadMap(mapPacManGame);
-        editor.start();
+        stage.titleProperty().bind(editor.titleProperty());
     }
 
     private void loadSampleMaps() throws IOException {

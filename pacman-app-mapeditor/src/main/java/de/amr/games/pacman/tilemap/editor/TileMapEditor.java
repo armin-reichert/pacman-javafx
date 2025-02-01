@@ -87,7 +87,7 @@ public class TileMapEditor {
 
     private final ObjectProperty<File> currentFilePy = new SimpleObjectProperty<>();
 
-    private final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>() {
+    private final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>(new WorldMap(28, 36)) {
         @Override
         protected void invalidated() {
             WorldMap worldMap = get();
@@ -130,7 +130,7 @@ public class TileMapEditor {
 
     private final ObjectProperty<Vector2i> focussedTilePy = new SimpleObjectProperty<>();
 
-    private final ObjectProperty<EditMode> modePy = new SimpleObjectProperty<>() {
+    private final ObjectProperty<EditMode> modePy = new SimpleObjectProperty<>(EditMode.INSPECT) {
         @Override
         protected void invalidated() {
             switch (get()) {
@@ -152,10 +152,6 @@ public class TileMapEditor {
     private boolean terrainDataUpToDate;
     private boolean dragging = false;
     private final List<Vector2i> tilesWithErrors = new ArrayList<>();
-
-    private final ObstacleEditor obstacleEditor;
-
-    // Widgets
 
     private final BorderPane contentPane = new BorderPane();
     private Stage stage;
@@ -188,23 +184,72 @@ public class TileMapEditor {
     private final Palette[] palettes = new Palette[3];
     private PropertyEditorPane terrainMapPropertiesEditor;
     private PropertyEditorPane foodMapPropertiesEditor;
+    private ObstacleEditor obstacleEditor;
 
     private TerrainRendererInEditor editorTerrainRenderer;
     private TerrainRenderer         previewTerrainRenderer;
     private FoodMapRenderer         foodMapRenderer;
 
-    public TileMapEditor() {
+    public void createUI(Stage stage) {
+        this.stage = assertNotNull(stage);
+
+        // renderers must be created before palettes!
+        createRenderers();
+
+        createFileChooser();
+        createMenuBarAndMenus();
+        createEditCanvas();
+        createPreviewCanvas();
+        createPreview3D();
+        createMapSourceView();
+        createPalettes();
+        createPropertyEditors();
+        createTabPaneWithPreviews();
+        createFocussedTileIndicator();
+        createEditModeIndicator();
+        createMessageDisplay();
+        createZoomSlider();
+        createStatusLine();
+
+        arrangeMainLayout();
+        initActiveRendering();
+
+        contentPane.setOnKeyTyped(this::onKeyTyped);
+        contentPane.setOnKeyPressed(this::onKeyPressed);
+
         obstacleEditor = new ObstacleEditor((tile, value) -> {
             setTileValue(worldMap().terrain(), tile, value);
             setTileValue(worldMap().food(), tile, TileEncoding.EMPTY);
         });
         obstacleEditor.worldMapPy.bind(worldMapPy);
+
         titlePy.bind(createTitleBinding());
     }
 
     public void init(File workDir) {
         lastUsedDir = workDir;
         setWorldMap(new WorldMap(36, 28));
+        setEditMode(EditMode.INSPECT);
+    }
+
+    public void start() {
+        stage.titleProperty().bind(titlePy);
+        setPropertyEditorsVisible(propertyEditorsVisiblePy.get());
+        spEditCanvas.heightProperty().addListener((py,ov,nv) -> {
+            if (ov.doubleValue() == 0) { // initial resize
+                Logger.info("Canvas scrollpane height {0.00}", spEditCanvas.getHeight());
+                double gridSize = spEditCanvas.getHeight() / worldMap().terrain().numRows();
+                gridSize = (int) Math.max(gridSize, MIN_GRID_SIZE);
+                Logger.info("Grid size {0.00}", gridSize);
+                gridSizePy.set((int) gridSize);
+            }
+        });
+        showEditHelpText();
+        clock.play();
+    }
+
+    public void stop() {
+        clock.stop();
         setEditMode(EditMode.INSPECT);
     }
 
@@ -241,52 +286,25 @@ public class TileMapEditor {
         showMessage(tt("edit_help"), 30, MessageType.INFO);
     }
 
-    public void onEnterInspectMode() {
-        if (editCanvas != null) {
-            editCanvas.setCursor(Cursor.HAND); // TODO use other cursor
-            obstacleEditor.setEnabled(false);
-            clearMessage();
-            showEditHelpText();
-        }
-    }
-
-    public void onEnterEditMode() {
-        if (editCanvas != null) {
-            editCanvas.setCursor(Cursor.DEFAULT);
-            obstacleEditor.setEnabled(true);
-            clearMessage();
-            showEditHelpText();
-        }
-    }
-
-    public void onEnterEraseMode() {
-        if (editCanvas != null) {
-            editCanvas.setCursor(RUBBER_CURSOR);
-            obstacleEditor.setEnabled(false);
-            clearMessage();
-            showEditHelpText();
-        }
-    }
-
-    public void start() {
-        stage.titleProperty().bind(titlePy);
-        setPropertyEditorsVisible(propertyEditorsVisiblePy.get());
-        spEditCanvas.heightProperty().addListener((py,ov,nv) -> {
-            if (ov.doubleValue() == 0) { // initial resize
-                Logger.info("Canvas scrollpane height {0.00}", spEditCanvas.getHeight());
-                double gridSize = spEditCanvas.getHeight() / worldMap().terrain().numRows();
-                gridSize = (int) Math.max(gridSize, MIN_GRID_SIZE);
-                Logger.info("Grid size {0.00}", gridSize);
-                gridSizePy.set((int) gridSize);
-            }
-        });
+    private void onEnterInspectMode() {
+        editCanvas.setCursor(Cursor.HAND); // TODO use other cursor
+        obstacleEditor.setEnabled(false);
+        clearMessage();
         showEditHelpText();
-        clock.play();
     }
 
-    public void stop() {
-        clock.stop();
-        setEditMode(EditMode.INSPECT);
+    private void onEnterEditMode() {
+        editCanvas.setCursor(Cursor.DEFAULT);
+        obstacleEditor.setEnabled(true);
+        clearMessage();
+        showEditHelpText();
+    }
+
+    private void onEnterEraseMode() {
+        editCanvas.setCursor(RUBBER_CURSOR);
+        obstacleEditor.setEnabled(false);
+        clearMessage();
+        showEditHelpText();
     }
 
     public WorldMap worldMap() {
@@ -295,34 +313,6 @@ public class TileMapEditor {
 
     public void setWorldMap(WorldMap worldMap) {
         worldMapPy.set(assertNotNull(worldMap));
-    }
-
-    public void createUI(Stage stage) {
-        this.stage = assertNotNull(stage);
-
-        // must be created before palettes!
-        createRenderers();
-
-        createFileChooser();
-        createMenuBarAndMenus();
-        createEditCanvas();
-        createPreviewCanvas();
-        createPreview3D();
-        createMapSourceView();
-        createPalettes();
-        createPropertyEditors();
-        createTabPaneWithPreviews();
-        createFocussedTileIndicator();
-        createEditModeIndicator();
-        createMessageDisplay();
-        createZoomSlider();
-        createStatusLine();
-
-        arrangeMainLayout();
-        initActiveRendering();
-
-        contentPane.setOnKeyTyped(this::onKeyTyped);
-        contentPane.setOnKeyPressed(this::onKeyPressed);
     }
 
     private void createRenderers() {
