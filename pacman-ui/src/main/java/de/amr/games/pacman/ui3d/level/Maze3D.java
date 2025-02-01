@@ -88,10 +88,11 @@ public class Maze3D extends Group {
         cornerTopMaterial.setDiffuseColor(wallTopColor);
         cornerTopMaterial.specularColorProperty().bind(cornerTopMaterial.diffuseColorProperty().map(Color::brighter));
 
+        PhongMaterial innerObstacleMaterial = coloredMaterial(Color.BLACK);
+
         TerrainRenderer3D r3D = configuration3D.createTerrainRenderer3D();
         r3D.setWallBaseHeightProperty(obstacleBaseHeightPy);
         r3D.setWallTopHeight(OBSTACLE_TOP_HEIGHT);
-        r3D.setWallBaseMaterial(wallBaseMaterial);
         r3D.setWallTopMaterial(wallTopMaterial);
         r3D.setCornerBaseMaterial(cornerBaseMaterial);
         r3D.setCornerTopMaterial(wallTopMaterial); // for now such that power animation also affects corner top
@@ -112,7 +113,15 @@ public class Maze3D extends Group {
         for (Obstacle obstacle : world.map().obstacles()) {
             if (!world.isPartOfHouse(tileAt(obstacle.startPoint().toVector2f()))) {
                 r3D.setWallThickness(obstacle.hasDoubleWalls() ? BORDER_WALL_THICKNESS : OBSTACLE_THICKNESS);
-                r3D.renderObstacle3D(this, obstacle);
+                if (!obstacle.hasDoubleWalls() && obstacle.getParent() != null) {
+                //    r3D.setWallBaseMaterial(innerObstacleMaterial);
+                //    r3D.setWallTopMaterial(innerObstacleMaterial);
+                //    r3D.renderObstacle3D(this, obstacle);
+                } else {
+                    r3D.setWallBaseMaterial(wallBaseMaterial);
+                    r3D.setWallTopMaterial(wallTopMaterial);
+                    r3D.renderObstacle3D(this, obstacle);
+                }
             }
         }
 
