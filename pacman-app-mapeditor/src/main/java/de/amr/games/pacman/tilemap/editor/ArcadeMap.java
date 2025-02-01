@@ -17,10 +17,10 @@ public class ArcadeMap {
     public static final RectArea ORANGE_GHOST_SPRITE = new RectArea(521, 113, 14, 14);
     public static final RectArea BONUS_SPRITE        = new RectArea(505,  49, 14, 14);
 
-    public static final String COLOR_FOOD = "rgb(255,255,255)";
-    public static final String COLOR_WALL_STROKE = "rgb(33,33,255)";
-    public static final String COLOR_WALL_FILL = "rgb(0,0,0)";
-    public static final String COLOR_DOOR = "rgb(255,183, 255)";
+    public static final String MS_PACMAN_COLOR_FOOD = "#dedeff";
+    public static final String MS_PACMAN_COLOR_WALL_STROKE = "#ff0000";
+    public static final String MS_PACMAN_COLOR_WALL_FILL = "#ffb7ae";
+    public static final String MS_PACMAN_COLOR_DOOR = "#fcb5ff";
     public static final Vector2i TILE_HOUSE = new Vector2i(10, 15);
     public static final Vector2i TILE_RED_GHOST = TILE_HOUSE.plus(3, -1);
     public static final Vector2i TILE_CYAN_GHOST = TILE_HOUSE.plus(1, 2);

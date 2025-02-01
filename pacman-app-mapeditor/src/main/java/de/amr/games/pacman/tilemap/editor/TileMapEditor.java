@@ -317,7 +317,7 @@ public class TileMapEditor {
 
     private void createRenderers() {
         TerrainRenderer.ColorScheme colors = new TerrainRenderer.ColorScheme(
-            Color.BLACK, parseColor(COLOR_WALL_FILL), parseColor(COLOR_WALL_STROKE), parseColor(COLOR_DOOR));
+            Color.BLACK, parseColor(MS_PACMAN_COLOR_WALL_FILL), parseColor(MS_PACMAN_COLOR_WALL_STROKE), parseColor(MS_PACMAN_COLOR_DOOR));
 
         editorTerrainRenderer = new TerrainRendererInEditor();
         editorTerrainRenderer.setColors(colors);
@@ -326,8 +326,8 @@ public class TileMapEditor {
         previewTerrainRenderer.setColors(colors);
 
         foodMapRenderer = new FoodMapRenderer();
-        foodMapRenderer.setPelletColor(parseColor(COLOR_FOOD));
-        foodMapRenderer.setEnergizerColor(parseColor(COLOR_FOOD));
+        foodMapRenderer.setPelletColor(parseColor(MS_PACMAN_COLOR_FOOD));
+        foodMapRenderer.setEnergizerColor(parseColor(MS_PACMAN_COLOR_FOOD));
     }
 
     private void createFileChooser() {
@@ -590,9 +590,9 @@ public class TileMapEditor {
             TileMap terrainMap = worldMap().terrain();
             TerrainRenderer.ColorScheme colors = new TerrainRenderer.ColorScheme(
                 CANVAS_BACKGROUND,
-                getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, parseColor(COLOR_WALL_FILL)),
-                getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_STROKE, parseColor(COLOR_WALL_STROKE)),
-                getColorFromMap(terrainMap, PROPERTY_COLOR_DOOR, parseColor(COLOR_DOOR))
+                getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL)),
+                getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE)),
+                getColorFromMap(terrainMap, PROPERTY_COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR))
             );
             try {
                 drawSelectedPalette(colors);
@@ -975,7 +975,7 @@ public class TileMapEditor {
 
         // Food
         if (foodVisiblePy.get()) {
-            Color foodColor = getColorFromMap(food, PROPERTY_COLOR_FOOD, parseColor(COLOR_FOOD));
+            Color foodColor = getColorFromMap(food, PROPERTY_COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
             foodMapRenderer.setScaling(gridSize() / 8.0);
             foodMapRenderer.setEnergizerColor(foodColor);
             foodMapRenderer.setPelletColor(foodColor);
@@ -1019,7 +1019,7 @@ public class TileMapEditor {
         }
         if (foodVisiblePy.get()) {
             foodMapRenderer.setScaling(gridSize() / 8.0);
-            Color foodColor = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, parseColor(COLOR_FOOD));
+            Color foodColor = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
             foodMapRenderer.setEnergizerColor(foodColor);
             foodMapRenderer.setPelletColor(foodColor);
             foodMapRenderer.drawFood(g, worldMap().food());
@@ -1454,9 +1454,9 @@ public class TileMapEditor {
         addHouse(terrain, houseOrigin);
         worldMap.updateObstacleList();
 
-        terrain.setProperty(PROPERTY_COLOR_WALL_STROKE, COLOR_WALL_STROKE);
-        terrain.setProperty(PROPERTY_COLOR_WALL_FILL, COLOR_WALL_FILL);
-        terrain.setProperty(PROPERTY_COLOR_DOOR, COLOR_DOOR);
+        terrain.setProperty(PROPERTY_COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE);
+        terrain.setProperty(PROPERTY_COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL);
+        terrain.setProperty(PROPERTY_COLOR_DOOR, MS_PACMAN_COLOR_DOOR);
 
         terrain.setProperty(PROPERTY_POS_PAC, formatTile(houseOrigin.plus(3, 11)));
         terrain.setProperty(PROPERTY_POS_BONUS, formatTile(houseOrigin.plus(3, 5)));
@@ -1466,7 +1466,7 @@ public class TileMapEditor {
         terrain.setProperty(PROPERTY_POS_SCATTER_CYAN_GHOST, formatTile(vec_2i(tilesX - 1, tilesY - 2)));
         terrain.setProperty(PROPERTY_POS_SCATTER_ORANGE_GHOST, formatTile(vec_2i(0, tilesY - 2)));
 
-        worldMap.food().setProperty(PROPERTY_COLOR_FOOD, COLOR_FOOD);
+        worldMap.food().setProperty(PROPERTY_COLOR_FOOD, MS_PACMAN_COLOR_FOOD);
 
         Logger.info("Map created. rows={}, cols={}", tilesY, tilesX);
         return worldMap;

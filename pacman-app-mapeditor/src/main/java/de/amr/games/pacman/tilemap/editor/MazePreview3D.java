@@ -90,9 +90,9 @@ public class MazePreview3D {
         double worldWidth = terrain.numCols() * TS;
         double worldHeight = terrain.numRows() * TS;
 
-        Color wallBaseColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_STROKE, parseColor(COLOR_WALL_STROKE));
-        Color wallTopColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_FILL, parseColor(COLOR_WALL_FILL));
-        Color doorColor = getColorFromMap(terrain, PROPERTY_COLOR_DOOR, parseColor(COLOR_DOOR));
+        Color wallBaseColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE));
+        Color wallTopColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL));
+        Color doorColor = getColorFromMap(terrain, PROPERTY_COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR));
 
         mazeGroup.getChildren().clear();
 
@@ -135,7 +135,7 @@ public class MazePreview3D {
 
     public void updateFood(WorldMap worldMap) {
         TileMap food = worldMap.food();
-        Color foodColor = getColorFromMap(food, PROPERTY_COLOR_FOOD, parseColor(COLOR_FOOD));
+        Color foodColor = getColorFromMap(food, PROPERTY_COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
         var foodMaterial = coloredMaterial(foodColor);
         foodGroup.getChildren().clear();
         food.tiles().filter(tile -> hasFoodAt(food, tile)).forEach(tile -> {
