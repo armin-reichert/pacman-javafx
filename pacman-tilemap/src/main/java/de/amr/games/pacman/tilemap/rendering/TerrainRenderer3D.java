@@ -22,11 +22,9 @@ import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 
 /**
- * A 3D printer for creating all artifacts in a 3D world.
- *
- * @author Armin Reichert
+ * Renders 3D terrain.
  */
-public class WorldRenderer3D {
+public class TerrainRenderer3D {
 
     private static final int CYLINDER_DIVISIONS = 24;
 

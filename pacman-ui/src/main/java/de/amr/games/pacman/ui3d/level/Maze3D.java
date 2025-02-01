@@ -8,7 +8,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.tilemap.rendering.WorldRenderer3D;
+import de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D;
 import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
 import de.amr.games.pacman.ui2d.lib.Ufx;
 import de.amr.games.pacman.ui3d.animation.MaterialColorAnimation;
@@ -38,8 +38,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.tilemap.rendering.WorldRenderer3D.TAG_WALL_BASE;
-import static de.amr.games.pacman.tilemap.rendering.WorldRenderer3D.isTagged;
+import static de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D.TAG_WALL_BASE;
+import static de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D.isTagged;
 import static de.amr.games.pacman.ui2d.lib.Ufx.*;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.*;
 
@@ -88,7 +88,7 @@ public class Maze3D extends Group {
         cornerTopMaterial.setDiffuseColor(wallTopColor);
         cornerTopMaterial.specularColorProperty().bind(cornerTopMaterial.diffuseColorProperty().map(Color::brighter));
 
-        WorldRenderer3D r3D = configuration3D.createWorldRenderer();
+        TerrainRenderer3D r3D = configuration3D.createTerrainRenderer3D();
         r3D.setWallBaseHeightProperty(obstacleBaseHeightPy);
         r3D.setWallTopHeight(OBSTACLE_TOP_HEIGHT);
         r3D.setWallBaseMaterial(wallBaseMaterial);
@@ -130,7 +130,7 @@ public class Maze3D extends Group {
         obstacleGroups = lookupAll("*").stream()
                 .filter(Group.class::isInstance)
                 .map(Group.class::cast)
-                .filter(group -> isTagged(group, WorldRenderer3D.TAG_INNER_OBSTACLE))
+                .filter(group -> isTagged(group, TerrainRenderer3D.TAG_INNER_OBSTACLE))
                 .collect(Collectors.toSet());
 
         PY_3D_WALL_HEIGHT.addListener((py, ov, nv) -> obstacleBaseHeightPy.set(nv.doubleValue()));
@@ -140,7 +140,7 @@ public class Maze3D extends Group {
     private Door3D addGhostHouse(
         Group parent,
         GameWorld world,
-        WorldRenderer3D r3D,
+        TerrainRenderer3D r3D,
         Color houseBaseColor, Color houseTopColor, Color doorsColor, float wallOpacity,
         DoubleProperty wallBaseHeightPy, float wallTopHeight, float wallThickness,
         BooleanProperty houseLightOnPy)

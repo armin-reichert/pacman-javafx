@@ -9,7 +9,7 @@ import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.TileEncoding;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.tilemap.rendering.WorldRenderer3D;
+import de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -50,7 +50,7 @@ public class MazePreview3D {
     private final Group mazeGroup = new Group();
     private final Group foodGroup = new Group();
 
-    private final WorldRenderer3D r3D;
+    private final TerrainRenderer3D r3D;
     private final PerspectiveCamera camera;
 
     private final DoubleProperty wallBaseHeightPy = new SimpleDoubleProperty(3.5);
@@ -64,7 +64,7 @@ public class MazePreview3D {
     }
 
     public MazePreview3D(double width, double height) {
-        r3D = new WorldRenderer3D();
+        r3D = new TerrainRenderer3D();
         root.getChildren().addAll(mazeGroup, foodGroup);
 
         AmbientLight ambientLight = new AmbientLight(Color.WHITE);

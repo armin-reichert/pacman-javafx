@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.ms_pacman;
 
-import de.amr.games.pacman.tilemap.rendering.WorldRenderer3D;
+import de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.scene.GameScene;
@@ -33,8 +33,8 @@ public class ArcadeMsPacMan_GameConfig3D extends ArcadeMsPacMan_GameConfig imple
     }
 
     @Override
-    public WorldRenderer3D createWorldRenderer() {
-        return new WorldRenderer3D();
+    public TerrainRenderer3D createTerrainRenderer3D() {
+        return new TerrainRenderer3D();
     }
 
     @Override
