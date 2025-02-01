@@ -16,6 +16,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -40,11 +41,12 @@ public class TileMapEditorApp extends Application  {
     @Override
     public void init() throws Exception {
         loadSampleMaps();
-        editor = new TileMapEditor();
     }
 
     @Override
     public void start(Stage stage) {
+        editor = new TileMapEditor();
+        editor.init(new File(System.getProperty("user.home")));
         try {
             stage.setMinWidth(900);
             stage.setMinHeight(600);

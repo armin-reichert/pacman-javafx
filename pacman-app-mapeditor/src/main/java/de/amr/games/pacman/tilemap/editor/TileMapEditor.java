@@ -194,19 +194,16 @@ public class TileMapEditor {
     private FoodMapRenderer         foodMapRenderer;
 
     public TileMapEditor() {
-        this(new File(System.getProperty("user.home")));
-    }
-
-    public TileMapEditor(File workDir) {
-        lastUsedDir = workDir;
-        titlePy.bind(createTitleBinding());
-
         obstacleEditor = new ObstacleEditor((tile, value) -> {
             setTileValue(worldMap().terrain(), tile, value);
             setTileValue(worldMap().food(), tile, TileEncoding.EMPTY);
         });
         obstacleEditor.worldMapPy.bind(worldMapPy);
+        titlePy.bind(createTitleBinding());
+    }
 
+    public void init(File workDir) {
+        lastUsedDir = workDir;
         setWorldMap(new WorldMap(36, 28));
         setEditMode(EditMode.INSPECT);
     }
