@@ -25,12 +25,12 @@ public class Obstacle {
     private Vector2i endPoint;
     private final List<ObstacleSegment> segments = new ArrayList<>();
     private final boolean doubleWalls;
-    private final List<RectArea> innerAreaRectangles;
+    private final List<RectArea> innerPolygonRectangles;
 
     public Obstacle(Vector2i startPoint, boolean doubleWalls) {
         this.startPoint = this.endPoint = Objects.requireNonNull(startPoint);
         this.doubleWalls = doubleWalls;
-        innerAreaRectangles = new ArrayList<>();
+        innerPolygonRectangles = new ArrayList<>();
     }
 
     public void addSegment(Vector2i vector, boolean ccw, byte content) {
@@ -38,9 +38,10 @@ public class Obstacle {
         segments.add(segment);
         endPoint = segment.endPoint();
         if (isClosed()) {
-            innerAreaRectangles.clear();
+            innerPolygonRectangles.clear();
             try {
-                innerAreaRectangles.addAll(PolygonToRectConversion.convert(this));
+                Collection<Vector2i> innerPolygon = computeInnerPolygonPoints();
+                innerPolygonRectangles.addAll(GourleyGreenPolygonToRect.convertPolygonToRectangles(innerPolygon));
             } catch (Exception x) {
                 Logger.warn("Inner area rectangle covering could not be computed yet");
             }
@@ -48,7 +49,7 @@ public class Obstacle {
     }
 
     public Stream<RectArea> innerAreaRectangles() {
-        return innerAreaRectangles.stream();
+        return innerPolygonRectangles.stream();
     }
 
     public Vector2i[] points() {
@@ -67,7 +68,7 @@ public class Obstacle {
             ", start=" + startPoint +
             ", end=" + endPoint +
             ", doubleWalls=" + doubleWalls +
-            ", rectangles=" + innerAreaRectangles +
+            ", rectangles=" + innerPolygonRectangles +
             ", segment count=" + segments.size() +
             ", segments=" + segments +
             '}';
