@@ -13,6 +13,8 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
+import static de.amr.games.pacman.lib.Globals.vec_2i;
+import static java.lang.Math.signum;
 
 /**
  * Open or closed polygon. Corners are represented by two diagonal vectors.
@@ -167,5 +169,88 @@ public class Obstacle {
             }
         }
         return centers.toArray(Vector2i[]::new);
+    }
+
+    public Collection<Vector2i> computeInnerPolygonPoints() {
+        Vector2i start = startPoint();
+        List<Vector2i> edges1 = replaceDiagonalCornerEdges();
+        List<Vector2i> edges2 = removeInversePairs(edges1);
+        // Handle degenerate case
+        if (edges2.size() > 2) {
+            if (edges2.getLast().equals(edges2.getFirst().inverse())) {
+                edges2.removeLast();
+                edges2.removeLast();
+                start = start.plus(edges2.removeFirst());
+                start = start.plus(edges2.removeFirst());
+            }
+        }
+        List<Vector2i> edges3 = combineEdgesWithSameDirection(edges2);
+        return makeOpenPolygonPoints(start, edges3);
+    }
+
+    private List<Vector2i> replaceDiagonalCornerEdges() {
+        var edges = new ArrayList<Vector2i>();
+        for (ObstacleSegment segment : segments) {
+            Vector2i v = segment.vector();
+            if (v.x() != 0 && v.y() != 0) { // diagonal
+                Vector2i e = segment.isNWCorner() || segment.isSECorner() ? vec_2i(0, v.y()) : vec_2i(v.x(), 0);
+                edges.add(e);
+                edges.add(v.minus(e));
+            } else {
+                edges.add(v);
+            }
+        }
+        return edges;
+    }
+
+    private List<Vector2i> removeInversePairs(List<Vector2i> polygonEdges) {
+        var stack = new ArrayDeque<Vector2i>();
+        for (Vector2i edge : polygonEdges) {
+            if (stack.isEmpty()) {
+                stack.push(edge);
+            } else {
+                if (stack.peek().equals(edge.inverse())) {
+                    stack.pop();
+                } else {
+                    stack.push(edge);
+                }
+            }
+        }
+        return new ArrayList<>(stack.reversed()); // stack.reversed() returns immutable list
+    }
+
+    private List<Vector2i> combineEdgesWithSameDirection(List<Vector2i> polygonEdges) {
+        var edges = new ArrayList<Vector2i>();
+        if (polygonEdges.isEmpty()) {
+            return edges;
+        }
+        edges.add(polygonEdges.getFirst());
+        for (int i = 1; i < polygonEdges.size(); ++i) {
+            Vector2i edge = polygonEdges.get(i);
+            Vector2i last = edges.getLast();
+            if (sameDirection(edge, last)) {
+                edges.removeLast();
+                edges.add(last.plus(edge));
+            } else {
+                edges.add(edge);
+            }
+        }
+        return edges;
+    }
+
+    private List<Vector2i> makeOpenPolygonPoints(Vector2i startPoint, List<Vector2i> polygonEdges) {
+        var points = new ArrayList<Vector2i>();
+        points.add(startPoint);
+        for (Vector2i edge : polygonEdges) {
+            points.add(points.getLast().plus(edge));
+        }
+        if (points.getFirst().equals(points.getLast())) {
+            points.removeLast();
+        }
+        return points;
+    }
+
+    private boolean sameDirection(Vector2i v, Vector2i w) {
+        return signum(v.x()) == signum(w.x()) && signum(v.y()) == signum(w.y());
     }
 }

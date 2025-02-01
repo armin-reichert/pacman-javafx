@@ -8,7 +8,10 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.*;
+import de.amr.games.pacman.lib.tilemap.Obstacle;
+import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
+import de.amr.games.pacman.lib.tilemap.TileEncoding;
+import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -97,7 +100,7 @@ public class TerrainRendererInEditor extends TerrainRenderer {
                 g.setFill(Color.RED);
                 g.setStroke(Color.grayRgb(150));
                 g.setLineWidth(0.5);
-                for (Vector2i p : PolygonToRectConversion.computeInnerPolygonPoints(obstacle)) {
+                for (Vector2i p : obstacle.computeInnerPolygonPoints()) {
                     g.fillOval(p.x() - r, p.y() - r, 2*r, 2*r);
                     if (prev != null) {
                         g.strokeLine(prev.x(), prev.y(), p.x(), p.y());
