@@ -75,8 +75,6 @@ public class TileMapEditor {
         return MessageFormat.format(TEXT_BUNDLE.getString(key), args);
     }
 
-    public static final String EDIT_HELP = "(I)=Inspect  (N)=Normal  (S)=Symmetric  (X)=Erase ->Shift+Move";
-
     public static final Node NO_GRAPHIC = null;
 
     public static final Color CANVAS_BACKGROUND = Color.BLACK;
@@ -242,12 +240,16 @@ public class TileMapEditor {
         messageCloseTime = Instant.now().plus(java.time.Duration.ofSeconds(seconds));
     }
 
+    private void showEditHelpText() {
+        showMessage(tt("edit_help"), 30, MessageType.INFO);
+    }
+
     public void onEnterInspectMode() {
         if (editCanvas != null) {
             editCanvas.setCursor(Cursor.HAND); // TODO use other cursor
             obstacleEditor.setEnabled(false);
             clearMessage();
-            showMessage(EDIT_HELP, 30, MessageType.INFO);
+            showEditHelpText();
         }
     }
 
@@ -256,7 +258,7 @@ public class TileMapEditor {
             editCanvas.setCursor(Cursor.DEFAULT);
             obstacleEditor.setEnabled(true);
             clearMessage();
-            showMessage(EDIT_HELP, 30, MessageType.INFO);
+            showEditHelpText();
         }
     }
 
@@ -265,7 +267,7 @@ public class TileMapEditor {
             editCanvas.setCursor(RUBBER_CURSOR);
             obstacleEditor.setEnabled(false);
             clearMessage();
-            showMessage(EDIT_HELP, 30, MessageType.INFO);
+            showEditHelpText();
         }
     }
 
@@ -281,7 +283,7 @@ public class TileMapEditor {
                 gridSizePy.set((int) gridSize);
             }
         });
-        showMessage(EDIT_HELP, 30, MessageType.INFO);
+        showEditHelpText();
         clock.play();
     }
 
@@ -1148,8 +1150,8 @@ public class TileMapEditor {
             case EditMode.ERASE -> {
                 if (event.isShiftDown()) {
                     switch (selectedPaletteID()) {
-                        case TileMapEditor.PALETTE_ID_TERRAIN -> eraseTileValue(worldMap.terrain(), tile);
-                        case TileMapEditor.PALETTE_ID_FOOD -> eraseTileValue(worldMap.food(), tile);
+                        case TileMapEditor.PALETTE_ID_TERRAIN -> clearTileValue(worldMap.terrain(), tile);
+                        case TileMapEditor.PALETTE_ID_FOOD -> clearTileValue(worldMap.food(), tile);
                     }
                 }
             }
@@ -1286,7 +1288,7 @@ public class TileMapEditor {
 
     private void editMapTile(TileMap tileMap, Vector2i tile, boolean erase) {
         if (erase) {
-            eraseTileValue(tileMap, tile);
+            clearTileValue(tileMap, tile);
         } else if (selectedPalette().isToolSelected()) {
             selectedPalette().selectedTool().apply(tileMap, tile);
         }
@@ -1437,8 +1439,7 @@ public class TileMapEditor {
     }
 
     /**
-     * This method should be used whenever a tile value is set! It takes editor enabled state and symmetric editing mode
-     * into account.
+     * This method should be used whenever a tile value has to be set.
      */
     void setTileValue(TileMap tileMap, Vector2i tile, byte value) {
         assertNotNull(tileMap);
@@ -1450,7 +1451,8 @@ public class TileMapEditor {
         markTileMapEdited(tileMap);
     }
 
-    private void eraseTileValue(TileMap tileMap, Vector2i tile) {
+    // ignores symmetric edit mode!
+    private void clearTileValue(TileMap tileMap, Vector2i tile) {
         tileMap.set(tile, TileEncoding.EMPTY);
         markTileMapEdited(tileMap);
     }
