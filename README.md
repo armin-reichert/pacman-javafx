@@ -160,4 +160,4 @@ There are some new videos about the different game variants available on [YouTub
 
 ### Tile map editor
 
-![Map Editor](doc/map-editor.png)
+![Map Editor](doc/mapeditor-3d-preview.png)
