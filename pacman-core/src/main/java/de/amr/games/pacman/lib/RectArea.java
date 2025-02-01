@@ -30,5 +30,9 @@ public record RectArea(short x, short y, short width, short height) {
         return this.x <= x && x < this.x + width &&  this.y <= y && y < this.y + height;
     }
 
+    public boolean contains(RectArea other) {
+        return contains(other.x(), other.y()) && contains(other.x() + other.width(), other.y() + other.height());
+    }
+
     public Vector2f center() { return vec_2f(x + width * 0.5f, y + height * 0.5f); }
 }

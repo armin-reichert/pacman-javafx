@@ -254,4 +254,28 @@ public class Obstacle {
     private boolean sameDirection(Vector2i v, Vector2i w) {
         return signum(v.x()) == signum(w.x()) && signum(v.y()) == signum(w.y());
     }
+
+    // experimental
+
+    public void checkParent(Obstacle other) {
+        for (RectArea parentRect : other.innerPolygonRectangles) {
+            for (RectArea childRect : innerPolygonRectangles) {
+                if (parentRect.contains(childRect)) {
+                    parent = other;
+                    Logger.info("Obstacle {} at {} is contained in obstacle {} at {}",
+                            encoding(), startPoint, other.encoding(), other.startPoint);
+                }
+            }
+        }
+    }
+
+    public boolean isContainedIn(Obstacle other) {
+        return other == parent;
+    }
+
+    private Obstacle parent;
+
+    public Obstacle getParent() {
+        return parent;
+    }
 }

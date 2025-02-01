@@ -71,17 +71,18 @@ public class TerrainRenderer implements TileMapRenderer {
         g.scale(scaling(), scaling());
         for (Obstacle obstacle : obstacles) {
             if (obstacle.hasDoubleWalls()) {
-                drawObstacle(g, obstacle, doubleStrokeOuterWidth, false, colors.wallStrokeColor());
-                drawObstacle(g, obstacle, doubleStrokeInnerWidth, false, colors.wallFillColor());
+                drawObstacle(g, obstacle, doubleStrokeOuterWidth, false, colors.wallFillColor(), colors.wallStrokeColor());
+                drawObstacle(g, obstacle, doubleStrokeInnerWidth, false, colors.wallFillColor(), colors.wallFillColor());
             } else {
-                drawObstacle(g, obstacle, singleStrokeWidth, true, colors.wallStrokeColor());
+                boolean hasParent = obstacle.getParent() != null;
+                drawObstacle(g, obstacle, singleStrokeWidth, true, hasParent ? colors.backgroundColor : colors.wallFillColor(), colors.wallStrokeColor());
             }
         }
         terrainMap.tiles(TileEncoding.DOOR).forEach(door -> drawDoor(g, door, terrainMap.get(door.y(), door.x() - 1) != TileEncoding.DOOR));
         g.restore();
     }
 
-    private void drawObstacle(GraphicsContext g, Obstacle obstacle, double lineWidth, boolean fill, Color strokeColor) {
+    private void drawObstacle(GraphicsContext g, Obstacle obstacle, double lineWidth, boolean fill, Color fillColor, Color strokeColor) {
         int r = HTS;
         Vector2i p = obstacle.startPoint();
         g.beginPath();
@@ -126,7 +127,7 @@ public class TerrainRenderer implements TileMapRenderer {
         if (obstacle.isClosed()) {
             g.closePath();
             if (fill) {
-                g.setFill(colors.wallFillColor());
+                g.setFill(fillColor);
                 g.fill();
             }
         }

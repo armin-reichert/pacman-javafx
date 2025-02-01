@@ -114,6 +114,16 @@ public class WorldMap {
     public List<Vector2i> updateObstacleList() {
         List<Vector2i> tilesWithErrors = new ArrayList<>();
         obstacles = ObstacleBuilder.buildObstacles(terrain, tilesWithErrors);
+        //TODO experimental
+        for (Obstacle o1 : obstacles) {
+            if (o1.hasDoubleWalls())
+                continue;
+            for (Obstacle o2 : obstacles) {
+                if (o1 != o2) {
+                    o2.checkParent(o1);
+                }
+            }
+        }
         return tilesWithErrors;
     }
 
