@@ -85,17 +85,18 @@ public class ObstacleBuilder {
         // Note: order of detection matters! Otherwise, when searching for closed
         // obstacles first, each failed attempt must set its visited tile set to unvisited!
         terrain.tiles()
+            .filter(not(this::isExplored))
             .filter(tile -> tile.x() == 0 || tile.x() == terrain.numCols() - 1)
             .map(borderTile -> buildOpenObstacle(borderTile, borderTile.x() == 0, tilesWithErrors))
             .filter(Objects::nonNull)
             .forEach(obstacles::add);
 
         terrain.tiles()
+            .filter(not(this::isExplored))
             .filter(tile ->
                 terrain.get(tile) == TileEncoding.CORNER_NW ||
                 terrain.get(tile) == TileEncoding.DCORNER_NW ||
                 terrain.get(tile) == TileEncoding.DCORNER_ANGULAR_NW) // house top-left corner
-            .filter(not(this::isExplored))
             .map(cornerNW -> buildClosedObstacle(cornerNW, tilesWithErrors))
             .forEach(obstacles::add);
 
