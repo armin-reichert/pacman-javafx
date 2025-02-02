@@ -93,12 +93,9 @@ public class TerrainRendererInEditor extends TerrainRenderer {
                     RectArea rect = rectangles.get(i);
                     g.setFill(RANDOM_COLORS[i]);
                     g.fillRect(rect.x(), rect.y(), rect.width(), rect.height());
-                    g.setFill(Color.WHITE);
-                    g.setFont(Font.font("Sans", FontWeight.BOLD, 3.5));
-                    g.fillText("R" + i, rect.x() + rect.width() * 0.5 - 2, rect.y() + rect.height() * 0.5 + 1);
                 }
-                g.setFill(Color.RED);
-                g.setStroke(Color.grayRgb(150));
+                g.setFill(Color.grayRgb(200));
+                g.setStroke(Color.grayRgb(200));
                 g.setLineWidth(0.5);
                 for (Vector2i p : obstacle.computeInnerPolygonPoints()) {
                     g.fillOval(p.x() - r, p.y() - r, 2*r, 2*r);
@@ -106,6 +103,12 @@ public class TerrainRendererInEditor extends TerrainRenderer {
                         g.strokeLine(prev.x(), prev.y(), p.x(), p.y());
                     }
                     prev = p;
+                }
+                for (int i = 0; i < rectangles.size(); ++i) {
+                    RectArea rect = rectangles.get(i);
+                    g.setFill(Color.WHITE);
+                    g.setFont(Font.font("Sans", FontWeight.BOLD, 3.5));
+                    g.fillText("R" + i, rect.x() + rect.width() * 0.5 - 3, rect.y() + rect.height() * 0.5 + 1);
                 }
             });
         }
