@@ -398,7 +398,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         level3D.stopAnimations();
         // delay state exit for 3 seconds
         context.gameState().timer().restartSeconds(3);
-        if (Globals.randomInt(0, 100) < 25) {
+        if (!context.game().isDemoLevel() && Globals.randomInt(0, 100) < 25) {
             context.showFlashMessageSec(3, context.locGameOverMessage());
         }
         context.sound().stopAll();
