@@ -17,7 +17,7 @@ import java.util.Random;
 public class MazeMapGenerator {
 
     private static final byte FREE = TileEncoding.EMPTY;
-    private static final byte BLOCKED = TileEncoding.WALL;
+    private static final byte BLOCKED = TileEncoding.WALL_H;
 
     private static final int EMPTY_ROWS_ABOVE = 3, EMPTY_ROWS_BELOW = 2;
 

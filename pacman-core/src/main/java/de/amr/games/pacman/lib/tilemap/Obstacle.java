@@ -9,7 +9,6 @@ import de.amr.games.pacman.lib.Vector2i;
 import org.tinylog.Logger;
 
 import java.util.*;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
@@ -34,6 +33,9 @@ public class Obstacle {
     }
 
     public void addSegment(Vector2i vector, boolean ccw, byte content) {
+        if (!isAllowedContent(content)) {
+            throw new IllegalArgumentException("Illegal content " + content);
+        }
         ObstacleSegment segment = new ObstacleSegment(endPoint, vector, ccw, content);
         segments.add(segment);
         endPoint = segment.endPoint();
@@ -46,6 +48,13 @@ public class Obstacle {
                 Logger.warn("Inner area rectangle covering could not be computed yet");
             }
         }
+    }
+
+    private boolean isAllowedContent(byte value) {
+        if (value == TileEncoding.DOOR) {
+            return true; //TODO
+        }
+        return doubleWalls == TileEncoding.isDoubleWall(value);
     }
 
     public Stream<RectArea> rectPartition() {
@@ -112,29 +121,6 @@ public class Obstacle {
         return segments.get(i);
     }
 
-    public IntStream uTurnSegmentIndices() {
-        return IntStream.range(0, segments.size()).filter(this::hasUTurnAt);
-    }
-
-    private boolean hasUTurnAt(int i) {
-        ObstacleSegment segment = segments.get(i);
-        ObstacleSegment nextSegment = i < segments.size() - 1 ? segments.get(i + 1) : segments.getFirst();
-        return isUTurn(segment, nextSegment);
-    }
-
-    /** Tells if two corner segments in counter-clockwise order form a U-turn */
-    private boolean isUTurn(ObstacleSegment s1, ObstacleSegment s2) {
-        if (s1.isRoundedNECorner() && s2.isRoundedNWCorner()) return true;
-        if (s1.isRoundedNWCorner() && s2.isRoundedSWCorner()) return true;
-        if (s1.isRoundedSWCorner() && s2.isRoundedSECorner()) return true;
-        if (s1.isRoundedSECorner() && s2.isRoundedNECorner()) return true;
-        if (s1.isAngularNECorner() && s2.isAngularNWCorner()) return true;
-        if (s1.isAngularNWCorner() && s2.isAngularSWCorner()) return true;
-        if (s1.isAngularSWCorner() && s2.isAngularSECorner()) return true;
-        if (s1.isAngularSECorner() && s2.isAngularNECorner()) return true;
-        return false;
-    }
-
     public Vector2i cornerCenter(int segmentIndex) {
         ObstacleSegment corner = segment(segmentIndex);
         return switch (corner.encoding()) {
@@ -144,10 +130,6 @@ public class Obstacle {
             case TileEncoding.CORNER_NE -> point(segmentIndex).plus(-HTS, 0);
             default -> throw new IllegalStateException("No corner tile at index " + segmentIndex);
         };
-    }
-
-    public Vector2i[] cornerCentersAtSegments(int... segmentIndices) {
-        return Arrays.stream(segmentIndices).mapToObj(this::cornerCenter).toArray(Vector2i[]::new);
     }
 
     public Vector2i[] cornerCenters() {

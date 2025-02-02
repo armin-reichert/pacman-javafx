@@ -31,7 +31,7 @@ public interface TileEncoding {
     byte DCORNER_SW = 13;
 
     byte DOOR       = 14;
-    byte WALL       = 15;
+//    byte WALL       = 15;
 
     byte DCORNER_ANGULAR_NW = 16;
     byte DCORNER_ANGULAR_NE = 17;

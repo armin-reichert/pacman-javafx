@@ -145,7 +145,6 @@ public class TerrainRendererInEditor extends TerrainRenderer {
 
     private void drawTileUnscaled(GraphicsContext g, Vector2i tile, byte content) {
         switch (content) {
-            case TileEncoding.WALL -> drawWall(g, tile);
             case TileEncoding.WALL_H -> drawWallH(g, tile);
             case TileEncoding.WALL_V -> drawWallV(g, tile);
             case TileEncoding.DWALL_H -> drawDWallH(g, tile);
@@ -232,12 +231,6 @@ public class TerrainRendererInEditor extends TerrainRenderer {
     private void drawTunnel(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * TS, y = tile.y() * TS;
         g.setFill(Color.GRAY);
-        g.fillRect(x, y, TS, TS);
-    }
-
-    private void drawWall(GraphicsContext g, Vector2i tile) {
-        double x = tile.x() * TS, y = tile.y() * TS;
-        g.setFill(colors.wallFillColor());
         g.fillRect(x, y, TS, TS);
     }
 
