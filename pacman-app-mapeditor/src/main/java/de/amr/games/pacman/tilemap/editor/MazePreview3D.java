@@ -63,7 +63,7 @@ public class MazePreview3D {
         return camera;
     }
 
-    public MazePreview3D(double width, double height) {
+    public MazePreview3D() {
         r3D = new TerrainRenderer3D();
         root.getChildren().addAll(mazeGroup, foodGroup);
 
@@ -74,9 +74,6 @@ public class MazePreview3D {
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
         camera.setFieldOfView(40); // default: 30
-
-        widthPy.set(width);
-        heightPy.set(height);
     }
 
     public DoubleProperty widthProperty() { return widthPy; }
