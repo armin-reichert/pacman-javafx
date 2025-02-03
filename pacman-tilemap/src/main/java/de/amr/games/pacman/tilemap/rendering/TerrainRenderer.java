@@ -23,16 +23,14 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class TerrainRenderer implements TileMapRenderer {
 
-    public record ColorScheme(Color backgroundColor, Color wallFillColor, Color wallStrokeColor, Color doorColor) {}
-
-    public static final ColorScheme DEFAULT_COLOR_SCHEME = new ColorScheme(Color.BLACK, Color.RED,  Color.GOLD, Color.PINK);
+    public static final TerrainColorScheme DEFAULT_COLOR_SCHEME = new TerrainColorScheme(Color.BLACK, Color.RED,  Color.GOLD, Color.PINK);
 
     public final FloatProperty scalingPy = new SimpleFloatProperty(this, "scaling", 1.0f);
 
     protected double doubleStrokeOuterWidth;
     protected double doubleStrokeInnerWidth;
     protected double singleStrokeWidth;
-    protected ColorScheme colors;
+    protected TerrainColorScheme colors;
 
     public TerrainRenderer() {
         doubleStrokeOuterWidth = 4;
@@ -41,7 +39,7 @@ public class TerrainRenderer implements TileMapRenderer {
         colors = DEFAULT_COLOR_SCHEME;
     }
 
-    public void setColors(ColorScheme colors) {
+    public void setColors(TerrainColorScheme colors) {
         this.colors = assertNotNull(colors);
     }
 
@@ -75,7 +73,7 @@ public class TerrainRenderer implements TileMapRenderer {
                 drawObstacle(g, obstacle, doubleStrokeInnerWidth, false, colors.wallFillColor(), colors.wallFillColor());
             } else {
                 boolean hasParent = obstacle.getParent() != null;
-                drawObstacle(g, obstacle, singleStrokeWidth, true, hasParent ? colors.backgroundColor : colors.wallFillColor(), colors.wallStrokeColor());
+                drawObstacle(g, obstacle, singleStrokeWidth, true, hasParent ? colors.backgroundColor() : colors.wallFillColor(), colors.wallStrokeColor());
             }
         }
         terrainMap.tiles(TileEncoding.DOOR).forEach(door -> drawDoor(g, door, terrainMap.get(door.y(), door.x() - 1) != TileEncoding.DOOR));

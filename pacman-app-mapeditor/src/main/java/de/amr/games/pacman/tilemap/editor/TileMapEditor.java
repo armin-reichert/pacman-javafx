@@ -13,6 +13,7 @@ import de.amr.games.pacman.lib.tilemap.TileEncoding;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.tilemap.rendering.FoodMapRenderer;
+import de.amr.games.pacman.tilemap.rendering.TerrainColorScheme;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
@@ -322,7 +323,7 @@ public class TileMapEditor {
     }
 
     private void createRenderers() {
-        TerrainRenderer.ColorScheme colors = new TerrainRenderer.ColorScheme(
+        TerrainColorScheme colors = new TerrainColorScheme(
             Color.BLACK, parseColor(MS_PACMAN_COLOR_WALL_FILL), parseColor(MS_PACMAN_COLOR_WALL_STROKE), parseColor(MS_PACMAN_COLOR_DOOR));
 
         editorTerrainRenderer = new TerrainRendererInEditor();
@@ -592,7 +593,7 @@ public class TileMapEditor {
         clock = new Timeline(RENDERING_FPS, new KeyFrame(Duration.millis(frameDuration), e -> {
             updateMessageAnimation();
             TileMap terrainMap = worldMap().terrain();
-            TerrainRenderer.ColorScheme colors = new TerrainRenderer.ColorScheme(
+            TerrainColorScheme colors = new TerrainColorScheme(
                 CANVAS_BACKGROUND,
                 getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL)),
                 getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE)),
@@ -923,7 +924,7 @@ public class TileMapEditor {
         g.fillText(text, x, y);
     }
 
-    private void drawEditCanvas(TerrainRenderer.ColorScheme colors) {
+    private void drawEditCanvas(TerrainColorScheme colors) {
         final WorldMap map = worldMap();
         final TileMap terrain = map.terrain(), food = map.food();
 
@@ -1009,7 +1010,7 @@ public class TileMapEditor {
         drawSprite(g, PROPERTY_POS_BONUS, BONUS_SPRITE, TILE_BONUS);
     }
 
-    private void drawPreviewCanvas(TerrainRenderer.ColorScheme colors) {
+    private void drawPreviewCanvas(TerrainColorScheme colors) {
         GraphicsContext g = previewCanvas.getGraphicsContext2D();
         g.setImageSmoothing(false);
         g.setFill(colors.backgroundColor());
@@ -1044,7 +1045,7 @@ public class TileMapEditor {
         g.drawImage(SPRITE_SHEET, sprite.x(), sprite.y(), sprite.width(), sprite.height(), x - ox, y - oy, w, h);
     }
 
-    private void drawSelectedPalette(TerrainRenderer.ColorScheme colors) {
+    private void drawSelectedPalette(TerrainColorScheme colors) {
         Palette selectedPalette = palettes[selectedPaletteID()];
         if (selectedPaletteID() == PALETTE_ID_TERRAIN) {
             double scaling = editorTerrainRenderer.scaling();

@@ -10,6 +10,7 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.tilemap.rendering.FoodMapRenderer;
+import de.amr.games.pacman.tilemap.rendering.TerrainColorScheme;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer;
 import de.amr.games.pacman.ui2d.GameRenderer;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
@@ -46,8 +47,8 @@ public class PacManGameXXLRenderer implements GameRenderer {
     private boolean mazeHighlighted;
     private boolean blinkingOn;
     private Color bgColor;
-    private TerrainRenderer.ColorScheme blinkingOnColors;
-    private TerrainRenderer.ColorScheme blinkingOffColors;
+    private TerrainColorScheme blinkingOnColors;
+    private TerrainColorScheme blinkingOffColors;
 
     public PacManGameXXLRenderer(AssetStorage assets, PacManGameSpriteSheet spriteSheet, Canvas canvas) {
         this.assets = assertNotNull(assets);
@@ -97,8 +98,8 @@ public class PacManGameXXLRenderer implements GameRenderer {
     @Override
     public void setBackgroundColor(Color color) {
         bgColor = assertNotNull(color);
-        blinkingOnColors = new TerrainRenderer.ColorScheme(bgColor, Color.BLACK, Color.WHITE, Color.BLACK);
-        blinkingOffColors = new TerrainRenderer.ColorScheme(bgColor, Color.WHITE, Color.BLACK, Color.BLACK);
+        blinkingOnColors = new TerrainColorScheme(bgColor, Color.BLACK, Color.WHITE, Color.BLACK);
+        blinkingOffColors = new TerrainColorScheme(bgColor, Color.WHITE, Color.BLACK, Color.BLACK);
     }
 
     @Override
@@ -119,7 +120,7 @@ public class PacManGameXXLRenderer implements GameRenderer {
         else {
             WorldMap worldMap = world.map();
             Map<String, String> colorMap = worldMap.getConfigValue("colorMap");
-            TerrainRenderer.ColorScheme colors = new TerrainRenderer.ColorScheme(
+            TerrainColorScheme colors = new TerrainColorScheme(
                 bgColor,
                 Color.web(colorMap.get("fill")),
                 Color.web(colorMap.get("stroke")),
