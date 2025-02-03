@@ -395,6 +395,10 @@ public class TileMapEditor {
                 initMazePreview3DPerspective();
             }
         });
+
+        previewScene.setOnScroll(e -> {
+            mazePreview3D.root().setTranslateY(mazePreview3D.root().getTranslateY() + e.getDeltaY() * 0.25);
+        });
     }
 
     private void initMazePreview3DPerspective() {
