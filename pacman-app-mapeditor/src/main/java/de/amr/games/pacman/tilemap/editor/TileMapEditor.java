@@ -408,9 +408,10 @@ public class TileMapEditor {
         camera.setRotationAxis(Rotate.X_AXIS);
         camera.setRotate(60);
         camera.setTranslateX(mapWidth * 0.5);
-        camera.setTranslateY(mapWidth * 1.5);
+        camera.setTranslateY(mapHeight);
         camera.setTranslateZ(-mapWidth * 0.5);
         mazePreview3D.root().setRotate(0);
+        mazePreview3D.root().setTranslateY(-0.5*mapHeight);
     }
 
     private void createMapSourceView() {
