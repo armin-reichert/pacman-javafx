@@ -113,12 +113,12 @@ public class PacManGameXXLRenderer implements GameRenderer {
 
     @Override
     public void drawWorld(GameWorld world, double x, double y) {
+        WorldMap worldMap = world.map();
         if (mazeHighlighted) {
             terrainRenderer.setColors(blinkingOn ? blinkingOnColors : blinkingOffColors);
-            terrainRenderer.drawTerrain(ctx(), world.map().terrain(), world.map().obstacles());
+            terrainRenderer.drawTerrain(ctx(), worldMap.terrain(), worldMap.obstacles());
         }
         else {
-            WorldMap worldMap = world.map();
             Map<String, String> colorMap = worldMap.getConfigValue("colorMap");
             TerrainColorScheme colors = new TerrainColorScheme(
                 bgColor,
@@ -127,11 +127,11 @@ public class PacManGameXXLRenderer implements GameRenderer {
                 Color.web(colorMap.get("door"))
             );
             terrainRenderer.setColors(colors);
-            terrainRenderer.drawTerrain(ctx(), world.map().terrain(), world.map().obstacles());
+            terrainRenderer.drawTerrain(ctx(), worldMap.terrain(), worldMap.obstacles());
 
             foodRenderer.setPelletColor(Color.web(colorMap.get("pellet")));
             foodRenderer.setEnergizerColor(Color.web(colorMap.get("pellet")));
-            world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))
+            worldMap.food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))
                 .forEach(tile -> foodRenderer.drawPellet(ctx(), tile));
             if (blinkingOn) {
                 world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx(), tile));
