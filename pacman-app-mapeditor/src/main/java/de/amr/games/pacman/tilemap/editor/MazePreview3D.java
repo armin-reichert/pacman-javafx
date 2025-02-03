@@ -127,7 +127,7 @@ public class MazePreview3D {
                 .forEach(shape3D -> shape3D.drawModeProperty()
                         .bind(wireframePy.map(wireframe -> wireframe ? DrawMode.LINE : DrawMode.FILL)));
 
-        Logger.info("Maze 3D recreated");
+        Logger.debug("Maze 3D recreated");
     }
 
     public void updateFood(WorldMap worldMap) {

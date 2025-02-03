@@ -169,7 +169,10 @@ public class TileMapEditor {
     private FileChooser fileChooser;
     private TabPane tabPaneWithPalettes;
     private HBox statusLine;
-
+    private TabPane tabPanePreviews;
+    private Tab tabPreview2D;
+    private Tab tabPreview3D;
+    private Tab tabSourceView;
     private MazePreview3D mazePreview3D;
     private SubScene previewScene;
 
@@ -372,6 +375,7 @@ public class TileMapEditor {
 
     private void createPreview3D() {
         mazePreview3D = new MazePreview3D();
+
         previewScene = new SubScene(new Group(mazePreview3D.root()), 500, 500, true, SceneAntialiasing.BALANCED);
         previewScene.setCamera(mazePreview3D.camera());
         previewScene.setFill(Color.CORNFLOWERBLUE);
@@ -400,8 +404,8 @@ public class TileMapEditor {
         camera.setRotationAxis(Rotate.X_AXIS);
         camera.setRotate(60);
         camera.setTranslateX(mapWidth * 0.5);
-        camera.setTranslateY(mapHeight * 1.5);
-        camera.setTranslateZ(-140);
+        camera.setTranslateY(mapWidth * 1.5);
+        camera.setTranslateZ(-mapWidth * 0.5);
         mazePreview3D.root().setRotate(0);
     }
 
@@ -419,11 +423,11 @@ public class TileMapEditor {
     }
 
     private void createTabPaneWithPreviews() {
-        var tabPreview2D = new Tab(tt("preview2D"), spPreviewCanvas);
-        var tabPreview3D = new Tab(tt("preview3D"), previewScene);
-        var tabSourceView = new Tab(tt("source"), spSourceView);
+        tabPreview2D = new Tab(tt("preview2D"), spPreviewCanvas);
+        tabPreview3D = new Tab(tt("preview3D"), previewScene);
+        tabSourceView = new Tab(tt("source"), spSourceView);
 
-        TabPane tabPanePreviews = new TabPane(tabPreview2D, tabPreview3D, tabSourceView);
+        tabPanePreviews = new TabPane(tabPreview2D, tabPreview3D, tabSourceView);
         tabPanePreviews.setSide(Side.BOTTOM);
         tabPanePreviews.getTabs().forEach(tab -> tab.setClosable(false));
         tabPanePreviews.getSelectionModel().select(0);
@@ -1142,19 +1146,51 @@ public class TileMapEditor {
     }
 
     private void onKeyPressed(KeyEvent event) {
-        if (event.isAltDown() && event.getCode() == KeyCode.LEFT) {
+        boolean alt = event.isAltDown();
+        boolean control = event.isControlDown();
+        if (alt && event.getCode() == KeyCode.LEFT) {
             event.consume();
             prevMapFileInDirectory().ifPresentOrElse(
                 file -> showMessage("Map loaded: %s".formatted(file.getName()), 3, MessageType.INFO),
                 () -> showMessage("Previous map file not available", 1, MessageType.ERROR));
-        } else if (event.isAltDown() && event.getCode() == KeyCode.RIGHT) {
+        } else if (alt && event.getCode() == KeyCode.RIGHT) {
             event.consume();
             nextMapFileInDirectory().ifPresentOrElse(
                 file -> showMessage("Map loaded: %s".formatted(file.getName()), 3, MessageType.INFO),
                 () -> showMessage("Next map file not available", 1, MessageType.ERROR));
         }
-        else if (event.isControlDown() && isEditMode(EditMode.EDIT)) {
+        else if (control && isEditMode(EditMode.EDIT)) {
             editFoodAtCurrentTile();
+        }
+        else if (control && event.getCode() == KeyCode.UP) {
+            if (tabPanePreviews.getSelectionModel().getSelectedItem() == tabPreview3D) {
+                mazePreview3D.root().setTranslateY(mazePreview3D.root().getTranslateY() - 10);
+            }
+        }
+        else if (control && event.getCode() == KeyCode.DOWN) {
+            if (tabPanePreviews.getSelectionModel().getSelectedItem() == tabPreview3D) {
+                mazePreview3D.root().setTranslateY(mazePreview3D.root().getTranslateY() + 10);
+            }
+        }
+        else if (control && event.getCode() == KeyCode.LEFT) {
+            if (tabPanePreviews.getSelectionModel().getSelectedItem() == tabPreview3D) {
+                mazePreview3D.root().setRotate(mazePreview3D.root().getRotate() + 5);
+            }
+        }
+        else if (control && event.getCode() == KeyCode.RIGHT) {
+            if (tabPanePreviews.getSelectionModel().getSelectedItem() == tabPreview3D) {
+                mazePreview3D.root().setRotate(mazePreview3D.root().getRotate() - 5);
+            }
+        }
+        else if (event.getCode() == KeyCode.PLUS) {
+            if (gridSize() < TileMapEditor.MAX_GRID_SIZE) {
+                gridSizePy.set(gridSize() + 1);
+            }
+        }
+        else if (event.getCode() == KeyCode.MINUS) {
+            if (gridSize() > TileMapEditor.MIN_GRID_SIZE) {
+                gridSizePy.set(gridSize() - 1);
+            }
         }
     }
 
@@ -1188,16 +1224,6 @@ public class TileMapEditor {
             }
             case "w" -> mazePreview3D.wireframeProperty().set(!mazePreview3D.wireframeProperty().get());
             case "x" -> setEditMode(EditMode.ERASE);
-            case "+" -> {
-                if (gridSize() < TileMapEditor.MAX_GRID_SIZE) {
-                    gridSizePy.set(gridSize() + 1);
-                }
-            }
-            case "-" -> {
-                if (gridSize() > TileMapEditor.MIN_GRID_SIZE) {
-                    gridSizePy.set(gridSize() - 1);
-                }
-            }
         }
     }
 

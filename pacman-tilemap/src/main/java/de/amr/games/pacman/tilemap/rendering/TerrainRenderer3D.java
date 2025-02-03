@@ -130,7 +130,7 @@ public class TerrainRenderer3D {
      */
     public void renderObstacle3D(Group parent, Obstacle obstacle) {
         String encoding = obstacle.encoding();
-        Logger.info("Render 3D obstacle with encoding '{}'", encoding);
+        Logger.debug("Render 3D obstacle with encoding '{}'", encoding);
         if (obstacle.isClosed() && !obstacle.hasDoubleWalls()) {
             Group og = new Group();
             addTags(og, TAG_INNER_OBSTACLE);
