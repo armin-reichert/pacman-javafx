@@ -1230,7 +1230,6 @@ public class TileMapEditor {
         else if (control && key == KeyCode.SPACE) {
             selectNextPaletteEntry();
         }
-        e.consume();
     }
 
     private void onKeyTyped(KeyEvent e) {
