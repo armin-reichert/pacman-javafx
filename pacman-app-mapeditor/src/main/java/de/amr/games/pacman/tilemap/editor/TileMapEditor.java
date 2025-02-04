@@ -1110,7 +1110,6 @@ public class TileMapEditor {
 
     private void onEditCanvasMouseMoved(MouseEvent e) {
         Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
-        WorldMap worldMap = worldMapPy.get();
         focussedTilePy.set(tile);
         switch (editMode()) {
             case EditMode.EDIT -> {
@@ -1118,15 +1117,15 @@ public class TileMapEditor {
                     switch (selectedPaletteID()) {
                         case TileMapEditor.PALETTE_ID_TERRAIN -> {
                             if (selectedPalette().isToolSelected()) {
-                                selectedPalette().selectedTool().apply(worldMap.terrain(), focussedTile());
+                                selectedPalette().selectedTool().apply(worldMap().terrain(), focussedTile());
                             }
-                            markTileMapEdited(worldMap.terrain());
+                            markTileMapEdited(worldMap().terrain());
                         }
                         case TileMapEditor.PALETTE_ID_FOOD -> {
                             if (selectedPalette().isToolSelected()) {
-                                selectedPalette().selectedTool().apply(worldMap.food(), focussedTile());
+                                selectedPalette().selectedTool().apply(worldMap().food(), focussedTile());
                             }
-                            markTileMapEdited(worldMap.food());
+                            markTileMapEdited(worldMap().food());
                         }
                         default -> {}
                     }
@@ -1135,8 +1134,8 @@ public class TileMapEditor {
             case EditMode.ERASE -> {
                 if (e.isShiftDown()) {
                     switch (selectedPaletteID()) {
-                        case TileMapEditor.PALETTE_ID_TERRAIN -> clearTileValue(worldMap.terrain(), tile);
-                        case TileMapEditor.PALETTE_ID_FOOD -> clearTileValue(worldMap.food(), tile);
+                        case TileMapEditor.PALETTE_ID_TERRAIN -> clearTileValue(worldMap().terrain(), tile);
+                        case TileMapEditor.PALETTE_ID_FOOD -> clearTileValue(worldMap().food(), tile);
                     }
                 }
             }
