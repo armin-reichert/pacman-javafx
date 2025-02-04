@@ -144,6 +144,61 @@ public class TileMapEditor {
 
     private final BooleanProperty symmetricEditModePy = new SimpleBooleanProperty(true);
 
+    // Accessor methods
+
+    public WorldMap worldMap() {
+        return worldMapPy.get();
+    }
+
+    public void setWorldMap(WorldMap worldMap) {
+        worldMapPy.set(assertNotNull(worldMap));
+    }
+
+    public boolean isSymmetricEditMode() { return symmetricEditModePy.get(); }
+
+    public StringProperty titleProperty() { return titlePy; }
+
+    public Vector2i focussedTile() { return focussedTilePy.get(); }
+
+    public byte selectedPaletteID() {
+        return (Byte) tabPaneWithPalettes.getSelectionModel().getSelectedItem().getUserData();
+    }
+
+    public Palette selectedPalette() {
+        return palettes[selectedPaletteID()];
+    }
+
+    public PropertyEditorPane terrainPropertiesEditor() {
+        return terrainMapPropertiesEditor;
+    }
+
+    public PropertyEditorPane foodPropertiesEditor() {
+        return foodMapPropertiesEditor;
+    }
+
+    public Pane getContentPane() {
+        return contentPane;
+    }
+
+    public MenuBar getMenuBar() {
+        return menuBar;
+    }
+
+    public Menu getFileMenu() {
+        return menuFile;
+    }
+
+    public Menu getLoadMapMenu() {
+        return menuLoadMap;
+    }
+
+    /**
+     * @return pixels used by one tile at current window zoom
+     */
+    private int gridSize() {
+        return gridSizePy.get();
+    }
+
     // Attributes
 
     private File lastUsedDir;
@@ -222,9 +277,6 @@ public class TileMapEditor {
         arrangeMainLayout();
         initActiveRendering();
 
-        contentPane.setOnKeyTyped(this::onKeyTyped);
-        contentPane.setOnKeyPressed(this::onKeyPressed);
-
         obstacleEditor = new ObstacleEditor((tile, value) -> {
             setTileValue(worldMap().terrain(), tile, value);
             setTileValue(worldMap().food(), tile, TileEncoding.EMPTY);
@@ -232,6 +284,37 @@ public class TileMapEditor {
         obstacleEditor.worldMapPy.bind(worldMapPy);
 
         titlePy.bind(createTitleBinding());
+
+        installInputHandlers();
+    }
+
+    private void installInputHandlers() {
+        contentPane.setOnKeyTyped(this::onKeyTyped);
+        contentPane.setOnKeyPressed(this::onKeyPressed);
+
+        editCanvas.setOnContextMenuRequested(this::onEditCanvasContextMenuRequested);
+        editCanvas.setOnMouseClicked(this::onEditCanvasMouseClicked);
+        editCanvas.setOnMouseDragged(this::onEditCanvasMouseDragged);
+        editCanvas.setOnMouseMoved(this::onEditCanvasMouseMoved);
+        editCanvas.setOnMouseReleased(this::onEditCanvasMouseReleased);
+        editCanvas.setOnKeyPressed(this::onEditCanvasKeyPressed);
+
+        previewScene.setOnMousePressed(e -> {
+            anchorX = e.getSceneX();
+            anchorY = e.getSceneY();
+            anchorAngle = mazePreview3D.root().getRotate();
+        });
+        previewScene.setOnMouseDragged(e -> {
+            mazePreview3D.root().setRotate(anchorAngle + anchorX - e.getSceneX());
+        });
+        previewScene.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                initMazePreview3DPerspective();
+            }
+        });
+        previewScene.setOnScroll(e -> {
+            mazePreview3D.root().setTranslateY(mazePreview3D.root().getTranslateY() + e.getDeltaY() * 0.25);
+        });
     }
 
     public void init(File workDir) {
@@ -259,24 +342,6 @@ public class TileMapEditor {
     public void stop() {
         clock.stop();
         setEditMode(EditMode.INSPECT);
-    }
-
-    public StringProperty titleProperty() { return titlePy; }
-
-    public byte selectedPaletteID() {
-        return (Byte) tabPaneWithPalettes.getSelectionModel().getSelectedItem().getUserData();
-    }
-
-    public Palette selectedPalette() {
-        return palettes[selectedPaletteID()];
-    }
-
-    public PropertyEditorPane terrainPropertiesEditor() {
-        return terrainMapPropertiesEditor;
-    }
-
-    public PropertyEditorPane foodPropertiesEditor() {
-        return foodMapPropertiesEditor;
     }
 
     public void showMessage(String message, long seconds, MessageType type) {
@@ -315,14 +380,6 @@ public class TileMapEditor {
         showEditHelpText();
     }
 
-    public WorldMap worldMap() {
-        return worldMapPy.get();
-    }
-
-    public void setWorldMap(WorldMap worldMap) {
-        worldMapPy.set(assertNotNull(worldMap));
-    }
-
     private void createRenderers() {
         TerrainColorScheme colors = new TerrainColorScheme(
             Color.BLACK, parseColor(MS_PACMAN_COLOR_WALL_FILL), parseColor(MS_PACMAN_COLOR_WALL_STROKE), parseColor(MS_PACMAN_COLOR_DOOR));
@@ -354,13 +411,6 @@ public class TileMapEditor {
         editCanvas.widthProperty().bind(Bindings.createDoubleBinding(
             () -> (double) worldMap().terrain().numCols() * gridSize(), worldMapPy, gridSizePy));
 
-        editCanvas.setOnContextMenuRequested(this::onEditCanvasContextMenuRequested);
-        editCanvas.setOnMouseClicked(this::onEditCanvasMouseClicked);
-        editCanvas.setOnMouseDragged(this::onEditCanvasMouseDragged);
-        editCanvas.setOnMouseMoved(this::onEditCanvasMouseMoved);
-        editCanvas.setOnMouseReleased(this::onEditCanvasMouseReleased);
-        editCanvas.setOnKeyPressed(this::onEditCanvasKeyPressed);
-
         spEditCanvas = new ScrollPane(editCanvas);
         spEditCanvas.setFitToHeight(true);
     }
@@ -381,26 +431,6 @@ public class TileMapEditor {
         previewScene = new SubScene(new Group(mazePreview3D.root()), 500, 500, true, SceneAntialiasing.BALANCED);
         previewScene.setCamera(mazePreview3D.camera());
         previewScene.setFill(Color.CORNFLOWERBLUE);
-
-        previewScene.setOnMousePressed(e -> {
-            anchorX = e.getSceneX();
-            anchorY = e.getSceneY();
-            anchorAngle = mazePreview3D.root().getRotate();
-        });
-
-        previewScene.setOnMouseDragged(e -> {
-            mazePreview3D.root().setRotate(anchorAngle + anchorX - e.getSceneX());
-        });
-
-        previewScene.setOnMouseClicked(e -> {
-            if (e.getClickCount() == 2) {
-                initMazePreview3DPerspective();
-            }
-        });
-
-        previewScene.setOnScroll(e -> {
-            mazePreview3D.root().setTranslateY(mazePreview3D.root().getTranslateY() + e.getDeltaY() * 0.25);
-        });
     }
 
     private void initMazePreview3DPerspective() {
@@ -512,7 +542,7 @@ public class TileMapEditor {
         editModeIndicator.textProperty().bind(Bindings.createStringBinding(
             () -> switch (modePy.get()) {
                     case INSPECT -> "INSPECT";
-                    case EDIT -> symmetricEditModePy.get() ?  "SYMMETRIC" : "NORMAL";
+                    case EDIT -> isSymmetricEditMode() ?  "SYMMETRIC" : "NORMAL";
                     case ERASE -> "ERASE";
             },
             modePy, symmetricEditModePy
@@ -851,29 +881,6 @@ public class TileMapEditor {
         }
     }
 
-    public Pane getContentPane() {
-        return contentPane;
-    }
-
-    public MenuBar getMenuBar() {
-        return menuBar;
-    }
-
-    public Menu getFileMenu() {
-        return menuFile;
-    }
-
-    public Menu getLoadMapMenu() {
-        return menuLoadMap;
-    }
-
-    /**
-     * @return pixels used by one tile at current window zoom
-     */
-    private int gridSize() {
-        return gridSizePy.get();
-    }
-
     private void updateSourceView() {
         if (sourceView == null) {
             Logger.warn("Cannot update source view as it doesn't exist yet");
@@ -963,14 +970,14 @@ public class TileMapEditor {
             g.setFont(Font.font("sans", gs - 2));
             g.setFill(Color.grayRgb(200, 0.8));
             g.fillText("?", tile.x() * gs + 0.25 * gs, tile.y() * gs + 0.8 * gs);
-            if (symmetricEditModePy.get()) {
+            if (isSymmetricEditMode()) {
                 int x = terrain.numCols() - tile.x() - 1;
                 g.fillText("?", x * gs + 0.25 * gs, tile.y() * gs + 0.8 * gs);
             }
         }
 
         // Vertical separator to indicate symmetric edit mode
-        if (isEditMode(EditMode.EDIT) && symmetricEditModePy.get()) {
+        if (isEditMode(EditMode.EDIT) && isSymmetricEditMode()) {
             g.save();
             g.setStroke(Color.YELLOW);
             g.setLineWidth(0.75);
@@ -994,11 +1001,10 @@ public class TileMapEditor {
             drawEditingHint(g);
         }
 
-        Vector2i focussedTile = focussedTilePy.get();
-        if (focussedTile != null) {
+        if (focussedTile() != null) {
             g.setStroke(Color.YELLOW);
             g.setLineWidth(1);
-            g.strokeRect(focussedTile.x() * gs, focussedTile.y() * gs, gs, gs);
+            g.strokeRect(focussedTile().x() * gs, focussedTile().y() * gs, gs, gs);
         }
     }
 
@@ -1126,13 +1132,13 @@ public class TileMapEditor {
                     switch (selectedPaletteID()) {
                         case TileMapEditor.PALETTE_ID_TERRAIN -> {
                             if (selectedPalette().isToolSelected()) {
-                                selectedPalette().selectedTool().apply(worldMap.terrain(), focussedTilePy.get());
+                                selectedPalette().selectedTool().apply(worldMap.terrain(), focussedTile());
                             }
                             markTileMapEdited(worldMap.terrain());
                         }
                         case TileMapEditor.PALETTE_ID_FOOD -> {
                             if (selectedPalette().isToolSelected()) {
-                                selectedPalette().selectedTool().apply(worldMap.food(), focussedTilePy.get());
+                                selectedPalette().selectedTool().apply(worldMap.food(), focussedTile());
                             }
                             markTileMapEdited(worldMap.food());
                         }
@@ -1202,32 +1208,32 @@ public class TileMapEditor {
         KeyCode code = e.getCode();
         boolean control = e.isControlDown();
         if (control && code == KeyCode.LEFT) {
-            navigateEditCanvas(Direction.LEFT, this::canEditFoodAtTile);
-            setFoodAtCurrentTile();
+            moveCursor(Direction.LEFT, this::canEditFoodAtTile);
+            setFoodAtFocussedTile();
         }
         else if (control && code == KeyCode.RIGHT) {
-            navigateEditCanvas(Direction.RIGHT, this::canEditFoodAtTile);
-            setFoodAtCurrentTile();
+            moveCursor(Direction.RIGHT, this::canEditFoodAtTile);
+            setFoodAtFocussedTile();
         }
         else if (control && code == KeyCode.UP) {
-            navigateEditCanvas(Direction.UP, this::canEditFoodAtTile);
-            setFoodAtCurrentTile();
+            moveCursor(Direction.UP, this::canEditFoodAtTile);
+            setFoodAtFocussedTile();
         }
         else if (control && code == KeyCode.DOWN) {
-            navigateEditCanvas(Direction.DOWN, this::canEditFoodAtTile);
-            setFoodAtCurrentTile();
+            moveCursor(Direction.DOWN, this::canEditFoodAtTile);
+            setFoodAtFocussedTile();
         }
         else if (code == KeyCode.LEFT) {
-            navigateEditCanvas(Direction.LEFT, tile -> true);
+            moveCursor(Direction.LEFT, tile -> true);
         }
         else if (code == KeyCode.RIGHT) {
-            navigateEditCanvas(Direction.RIGHT, tile -> true);
+            moveCursor(Direction.RIGHT, tile -> true);
         }
         else if (code == KeyCode.UP) {
-            navigateEditCanvas(Direction.UP, tile -> true);
+            moveCursor(Direction.UP, tile -> true);
         }
         else if (code == KeyCode.DOWN) {
-            navigateEditCanvas(Direction.DOWN, tile -> true);
+            moveCursor(Direction.DOWN, tile -> true);
         }
         else if (control && code == KeyCode.SPACE) {
             selectNextPaletteEntry();
@@ -1349,24 +1355,20 @@ public class TileMapEditor {
         }
     }
 
-    private void setFoodAtCurrentTile() {
+    private void setFoodAtFocussedTile() {
         if (editMode() == EditMode.EDIT && selectedPaletteID() == PALETTE_ID_FOOD) {
-            Vector2i tile = focussedTilePy.get();
-            if (canEditFoodAtTile(tile)) {
-                editMapTile(worldMap().food(), tile, false);
+            if (canEditFoodAtTile(focussedTile())) {
+                editMapTile(worldMap().food(), focussedTile(), false);
             }
         }
     }
 
-    private void navigateEditCanvas(Direction dir, Predicate<Vector2i> canEnterTile) {
-        Vector2i currentTile = focussedTilePy.get();
-        if (dir == null || currentTile == null) {
-            return;
-        }
-        Vector2i nextTile = currentTile.plus(dir.vector());
-        WorldMap worldMap = worldMapPy.get();
-        if (!worldMap.terrain().outOfBounds(nextTile) && canEnterTile.test(nextTile)) {
-            focussedTilePy.set(nextTile);
+    private void moveCursor(Direction dir, Predicate<Vector2i> canEnterTile) {
+        if (focussedTile() != null) {
+            Vector2i nextTile = focussedTile().plus(dir.vector());
+            if (!worldMap().terrain().outOfBounds(nextTile) && canEnterTile.test(nextTile)) {
+                focussedTilePy.set(nextTile);
+            }
         }
     }
 
@@ -1456,15 +1458,21 @@ public class TileMapEditor {
         markTileMapEdited(map);
     }
 
+    private Vector2i mirroredTile(TileMap tileMap, Vector2i tile) {
+        return new Vector2i(tileMap.numCols() - 1 - tile.x(), tile.y());
+    }
+
     /**
      * This method should be used whenever a tile value has to be set.
      */
-    void setTileValue(TileMap tileMap, Vector2i tile, byte value) {
+    public void setTileValue(TileMap tileMap, Vector2i tile, byte value) {
         assertNotNull(tileMap);
         assertNotNull(tile);
         tileMap.set(tile, value);
-        if (symmetricEditModePy.get()) {
-            tileMap.set(tile.y(), tileMap.numCols() - 1 - tile.x(), mirroredTileContent(tileMap.get(tile)));
+        if (isSymmetricEditMode()) {
+            Vector2i mirroredTile = mirroredTile(tileMap, tile);
+            byte mirroredContent = mirroredTileContent(tileMap.get(tile));
+            tileMap.set(mirroredTile.y(), mirroredTile.x(), mirroredContent);
         }
         markTileMapEdited(tileMap);
     }
@@ -1499,7 +1507,6 @@ public class TileMapEditor {
 
         worldMap.food().setProperty(PROPERTY_COLOR_FOOD, MS_PACMAN_COLOR_FOOD);
 
-        Logger.info("Map created. rows={}, cols={}", tilesY, tilesX);
         return worldMap;
     }
 }
