@@ -1205,15 +1205,19 @@ public class TileMapEditor {
 
         if (control && key == KeyCode.LEFT) {
             moveCursorAndSetFoodAtTile(Direction.LEFT);
+            e.consume();
         }
         else if (control && key == KeyCode.RIGHT) {
             moveCursorAndSetFoodAtTile(Direction.RIGHT);
+            e.consume();
         }
         else if (control && key == KeyCode.UP) {
             moveCursorAndSetFoodAtTile(Direction.UP);
+            e.consume();
         }
         else if (control && key == KeyCode.DOWN) {
             moveCursorAndSetFoodAtTile(Direction.DOWN);
+            e.consume();
         }
         else if (key == KeyCode.LEFT) {
             moveCursor(Direction.LEFT, tile -> true);
@@ -1395,10 +1399,10 @@ public class TileMapEditor {
         }
     }
 
-    private boolean moveCursor(Direction dir, Predicate<Vector2i> canEnterTile) {
+    private boolean moveCursor(Direction dir, Predicate<Vector2i> canMoveIntoTile) {
         if (focussedTile() != null) {
             Vector2i nextTile = focussedTile().plus(dir.vector());
-            if (!worldMap().terrain().outOfBounds(nextTile) && canEnterTile.test(nextTile)) {
+            if (!worldMap().terrain().outOfBounds(nextTile) && canMoveIntoTile.test(nextTile)) {
                 focussedTilePy.set(nextTile);
                 return true;
             }
@@ -1409,9 +1413,7 @@ public class TileMapEditor {
     private void selectNextPaletteEntry() {
         Palette palette = selectedPalette();
         int next = palette.selectedIndex() + 1;
-        if (next == palette.numTools()) {
-            next = 0;
-        }
+        if (next == palette.numTools()) { next = 0; }
         palette.selectTool(next);
     }
 
