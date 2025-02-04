@@ -84,6 +84,9 @@ public class TileMapEditor {
     public static final Font FONT_MESSAGE     = Font.font("Sans", FontWeight.NORMAL, 14);
     public static final Cursor RUBBER_CURSOR  = Cursor.cursor(urlString("graphics/radiergummi.jpg"));
 
+    public static final FileChooser.ExtensionFilter WORLD_MAP_FILES_FILTER = new FileChooser.ExtensionFilter("World Map Files", "*.world");
+    public static final FileChooser.ExtensionFilter ALL_FILES_FILTER = new FileChooser.ExtensionFilter("All Files", "*.*");
+
     // Properties
 
     private final ObjectProperty<File> currentFilePy = new SimpleObjectProperty<>();
@@ -131,7 +134,7 @@ public class TileMapEditor {
 
     private final ObjectProperty<Vector2i> focussedTilePy = new SimpleObjectProperty<>();
 
-    private final ObjectProperty<EditMode> modePy = new SimpleObjectProperty<>(EditMode.INSPECT) {
+    private final ObjectProperty<EditMode> editModePy = new SimpleObjectProperty<>(EditMode.INSPECT) {
         @Override
         protected void invalidated() {
             switch (get()) {
@@ -146,13 +149,9 @@ public class TileMapEditor {
 
     // Accessor methods
 
-    public WorldMap worldMap() {
-        return worldMapPy.get();
-    }
+    public WorldMap worldMap() { return worldMapPy.get(); }
 
-    public void setWorldMap(WorldMap worldMap) {
-        worldMapPy.set(assertNotNull(worldMap));
-    }
+    public void setWorldMap(WorldMap worldMap) { worldMapPy.set(assertNotNull(worldMap)); }
 
     public boolean isSymmetricEditMode() { return symmetricEditModePy.get(); }
 
@@ -214,14 +213,14 @@ public class TileMapEditor {
     private Pane propertyEditorsPane;
     private Canvas editCanvas;
     private ScrollPane spEditCanvas;
-    private ScrollPane spPreviewCanvas;
-    private Canvas previewCanvas;
+    private ScrollPane spPreview2D;
+    private Canvas preview2D;
     private Text sourceView;
     private ScrollPane spSourceView;
     private SplitPane splitPaneEditorAndPreviews;
     private Label messageLabel;
-    private Label focussedTileInfo;
-    private Label editModeIndicator;
+    private Label focussedTileStatusLabel;
+    private Label editModeStatusLabel;
     private HBox sliderZoomContainer;
     private FileChooser fileChooser;
     private TabPane tabPaneWithPalettes;
@@ -230,8 +229,8 @@ public class TileMapEditor {
     private Tab tabPreview2D;
     private Tab tabPreview3D;
     private Tab tabSourceView;
-    private MazePreview3D mazePreview3D;
-    private SubScene previewScene;
+    private MazePreview3D preview3D;
+    private SubScene previewScene3D;
 
     private final ContextMenu contextMenu = new ContextMenu();
     private MenuBar menuBar;
@@ -262,14 +261,14 @@ public class TileMapEditor {
         createFileChooser();
         createMenuBarAndMenus();
         createEditCanvas();
-        createPreviewCanvas();
+        createPreview2D();
         createPreview3D();
         createMapSourceView();
         createPalettes();
         createPropertyEditors();
         createTabPaneWithPreviews();
-        createFocussedTileIndicator();
-        createEditModeIndicator();
+        createFocussedTileStatusLabel();
+        createEditModeStatusLabel();
         createMessageDisplay();
         createZoomSlider();
         createStatusLine();
@@ -299,21 +298,21 @@ public class TileMapEditor {
         editCanvas.setOnMouseReleased(this::onEditCanvasMouseReleased);
         editCanvas.setOnKeyPressed(this::onEditCanvasKeyPressed);
 
-        previewScene.setOnMousePressed(e -> {
+        previewScene3D.setOnMousePressed(e -> {
             anchorX = e.getSceneX();
             anchorY = e.getSceneY();
-            anchorAngle = mazePreview3D.root().getRotate();
+            anchorAngle = preview3D.root().getRotate();
         });
-        previewScene.setOnMouseDragged(e -> {
-            mazePreview3D.root().setRotate(anchorAngle + anchorX - e.getSceneX());
+        previewScene3D.setOnMouseDragged(e -> {
+            preview3D.root().setRotate(anchorAngle + anchorX - e.getSceneX());
         });
-        previewScene.setOnMouseClicked(e -> {
+        previewScene3D.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
-                initMazePreview3DPerspective();
+                resetPreview3D();
             }
         });
-        previewScene.setOnScroll(e -> {
-            mazePreview3D.root().setTranslateY(mazePreview3D.root().getTranslateY() + e.getDeltaY() * 0.25);
+        previewScene3D.setOnScroll(e -> {
+            preview3D.root().setTranslateY(preview3D.root().getTranslateY() + e.getDeltaY() * 0.25);
         });
     }
 
@@ -397,10 +396,8 @@ public class TileMapEditor {
 
     private void createFileChooser() {
         fileChooser = new FileChooser();
-        var worldMapFilesFilter = new FileChooser.ExtensionFilter("World Map Files", "*.world");
-        var allFilesFilter = new FileChooser.ExtensionFilter("All Files", "*.*");
-        fileChooser.getExtensionFilters().addAll(worldMapFilesFilter, allFilesFilter);
-        fileChooser.setSelectedExtensionFilter(worldMapFilesFilter);
+        fileChooser.getExtensionFilters().addAll(WORLD_MAP_FILES_FILTER, ALL_FILES_FILTER);
+        fileChooser.setSelectedExtensionFilter(WORLD_MAP_FILES_FILTER);
         fileChooser.setInitialDirectory(lastUsedDir);
     }
 
@@ -415,35 +412,34 @@ public class TileMapEditor {
         spEditCanvas.setFitToHeight(true);
     }
 
-    private void createPreviewCanvas() {
-        previewCanvas = new Canvas();
-        spPreviewCanvas = new ScrollPane(previewCanvas);
-        spPreviewCanvas.setFitToHeight(true);
-        spPreviewCanvas.hvalueProperty().bindBidirectional(spEditCanvas.hvalueProperty());
-        spPreviewCanvas.vvalueProperty().bindBidirectional(spEditCanvas.vvalueProperty());
-        previewCanvas.widthProperty().bind(editCanvas.widthProperty());
-        previewCanvas.heightProperty().bind(editCanvas.heightProperty());
+    private void createPreview2D() {
+        preview2D = new Canvas();
+        preview2D.widthProperty().bind(editCanvas.widthProperty());
+        preview2D.heightProperty().bind(editCanvas.heightProperty());
+        spPreview2D = new ScrollPane(preview2D);
+        spPreview2D.setFitToHeight(true);
+        spPreview2D.hvalueProperty().bindBidirectional(spEditCanvas.hvalueProperty());
+        spPreview2D.vvalueProperty().bindBidirectional(spEditCanvas.vvalueProperty());
     }
 
     private void createPreview3D() {
-        mazePreview3D = new MazePreview3D();
-
-        previewScene = new SubScene(new Group(mazePreview3D.root()), 500, 500, true, SceneAntialiasing.BALANCED);
-        previewScene.setCamera(mazePreview3D.camera());
-        previewScene.setFill(Color.CORNFLOWERBLUE);
+        preview3D = new MazePreview3D();
+        previewScene3D = new SubScene(new Group(preview3D.root()), 500, 500, true, SceneAntialiasing.BALANCED);
+        previewScene3D.setCamera(preview3D.camera());
+        previewScene3D.setFill(Color.CORNFLOWERBLUE);
     }
 
-    private void initMazePreview3DPerspective() {
+    private void resetPreview3D() {
         double mapWidth = worldMap().terrain().numCols() * TS;
         double mapHeight = worldMap().terrain().numRows() * TS;
-        PerspectiveCamera camera = mazePreview3D.camera();
+        PerspectiveCamera camera = preview3D.camera();
         camera.setRotationAxis(Rotate.X_AXIS);
         camera.setRotate(60);
         camera.setTranslateX(mapWidth * 0.5);
         camera.setTranslateY(mapHeight);
         camera.setTranslateZ(-mapWidth * 0.5);
-        mazePreview3D.root().setRotate(0);
-        mazePreview3D.root().setTranslateY(-0.5*mapHeight);
+        preview3D.root().setRotate(0);
+        preview3D.root().setTranslateY(-0.5 * mapHeight);
     }
 
     private void createMapSourceView() {
@@ -460,8 +456,8 @@ public class TileMapEditor {
     }
 
     private void createTabPaneWithPreviews() {
-        tabPreview2D = new Tab(tt("preview2D"), spPreviewCanvas);
-        tabPreview3D = new Tab(tt("preview3D"), previewScene);
+        tabPreview2D = new Tab(tt("preview2D"), spPreview2D);
+        tabPreview3D = new Tab(tt("preview3D"), previewScene3D);
         tabSourceView = new Tab(tt("source"), spSourceView);
 
         tabPanePreviews = new TabPane(tabPreview2D, tabPreview3D, tabSourceView);
@@ -469,8 +465,8 @@ public class TileMapEditor {
         tabPanePreviews.getTabs().forEach(tab -> tab.setClosable(false));
         tabPanePreviews.getSelectionModel().select(0);
 
-        previewScene.widthProperty().bind(tabPanePreviews.widthProperty());
-        previewScene.heightProperty().bind(tabPanePreviews.heightProperty());
+        previewScene3D.widthProperty().bind(tabPanePreviews.widthProperty());
+        previewScene3D.heightProperty().bind(tabPanePreviews.heightProperty());
 
         splitPaneEditorAndPreviews = new SplitPane(spEditCanvas, tabPanePreviews);
         splitPaneEditorAndPreviews.setDividerPositions(0.5);
@@ -481,30 +477,30 @@ public class TileMapEditor {
         palettes[PALETTE_ID_TERRAIN] = createTerrainPalette(PALETTE_ID_TERRAIN, TOOL_SIZE, this, editorTerrainRenderer);
         palettes[PALETTE_ID_FOOD]    = createFoodPalette(PALETTE_ID_FOOD, TOOL_SIZE, this, foodMapRenderer);
 
-        var tab1 = new Tab(tt("terrain"), palettes[PALETTE_ID_TERRAIN].root());
-        tab1.setClosable(false);
-        tab1.setUserData(PALETTE_ID_TERRAIN);
+        var tabTerrain = new Tab(tt("terrain"), palettes[PALETTE_ID_TERRAIN].root());
+        tabTerrain.setClosable(false);
+        tabTerrain.setUserData(PALETTE_ID_TERRAIN);
 
-        var tab2 = new Tab(tt("actors"), palettes[PALETTE_ID_ACTORS].root());
-        tab2.setClosable(false);
-        tab2.setUserData(PALETTE_ID_ACTORS);
+        var tabActors = new Tab(tt("actors"), palettes[PALETTE_ID_ACTORS].root());
+        tabActors.setClosable(false);
+        tabActors.setUserData(PALETTE_ID_ACTORS);
 
-        var tab3 = new Tab(tt("pellets"), palettes[PALETTE_ID_FOOD].root());
-        tab3.setClosable(false);
-        tab3.setUserData(PALETTE_ID_FOOD);
+        var tabPellets = new Tab(tt("pellets"), palettes[PALETTE_ID_FOOD].root());
+        tabPellets.setClosable(false);
+        tabPellets.setUserData(PALETTE_ID_FOOD);
 
-        tabPaneWithPalettes = new TabPane(tab1, tab2, tab3);
+        tabPaneWithPalettes = new TabPane(tabTerrain, tabActors, tabPellets);
         tabPaneWithPalettes.setPadding(new Insets(5, 5, 5, 5));
         tabPaneWithPalettes.setMinHeight(75);
     }
 
     private void createPropertyEditors() {
         terrainMapPropertiesEditor = new PropertyEditorPane(this);
-        terrainMapPropertiesEditor.enabledPy.bind(modePy.map(mode -> mode != EditMode.INSPECT));
+        terrainMapPropertiesEditor.enabledPy.bind(editModePy.map(mode -> mode != EditMode.INSPECT));
         terrainMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
         foodMapPropertiesEditor = new PropertyEditorPane(this);
-        foodMapPropertiesEditor.enabledPy.bind(modePy.map(mode -> mode != EditMode.INSPECT));
+        foodMapPropertiesEditor.enabledPy.bind(editModePy.map(mode -> mode != EditMode.INSPECT));
         foodMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
         var terrainPropertiesPane = new TitledPane();
@@ -526,27 +522,27 @@ public class TileMapEditor {
         contentPane.setLeft(visible ? propertyEditorsPane : null);
     }
 
-    private void createFocussedTileIndicator() {
-        focussedTileInfo = new Label();
-        focussedTileInfo.setFont(FONT_STATUS_LINE);
-        focussedTileInfo.setMinWidth(70);
-        focussedTileInfo.setMaxWidth(70);
-        focussedTileInfo.textProperty().bind(focussedTilePy.map(
+    private void createFocussedTileStatusLabel() {
+        focussedTileStatusLabel = new Label();
+        focussedTileStatusLabel.setFont(FONT_STATUS_LINE);
+        focussedTileStatusLabel.setMinWidth(70);
+        focussedTileStatusLabel.setMaxWidth(70);
+        focussedTileStatusLabel.textProperty().bind(focussedTilePy.map(
             tile -> tile != null ? "(%2d,%2d)".formatted(tile.x(), tile.y()) : "n/a"));
     }
 
-    private void createEditModeIndicator() {
-        editModeIndicator = new Label();
-        editModeIndicator.setFont(FONT_STATUS_LINE);
-        editModeIndicator.setTextFill(Color.RED);
-        editModeIndicator.textProperty().bind(Bindings.createStringBinding(
-            () -> switch (modePy.get()) {
+    private void createEditModeStatusLabel() {
+        editModeStatusLabel = new Label();
+        editModeStatusLabel.setFont(FONT_STATUS_LINE);
+        editModeStatusLabel.setTextFill(Color.RED);
+        editModeStatusLabel.textProperty().bind(Bindings.createStringBinding(
+            () -> switch (editModePy.get()) {
                     case INSPECT -> "INSPECT";
                     case EDIT -> isSymmetricEditMode() ?  "SYMMETRIC" : "NORMAL";
                     case ERASE -> "ERASE";
             },
-            modePy, symmetricEditModePy
-    ));
+            editModePy, symmetricEditModePy
+        ));
     }
 
     private void createMessageDisplay() {
@@ -574,7 +570,7 @@ public class TileMapEditor {
         );
 
         var spacer = new Region();
-        statusLine = new HBox(mapSizeInfo, filler(10), focussedTileInfo, editModeIndicator, filler(20), messageLabel, spacer, sliderZoomContainer);
+        statusLine = new HBox(mapSizeInfo, filler(10), focussedTileStatusLabel, editModeStatusLabel, filler(20), messageLabel, spacer, sliderZoomContainer);
         statusLine.setPadding(new Insets(10, 10, 10, 10));
         HBox.setHgrow(spacer, Priority.ALWAYS);
     }
@@ -650,6 +646,7 @@ public class TileMapEditor {
     }
 
     private void createMenuBarAndMenus() {
+
         // File
         var miNew = new MenuItem(tt("menu.file.new"));
         miNew.setOnAction(e -> showNewMapDialog());
@@ -688,7 +685,7 @@ public class TileMapEditor {
             miClearTerrain,
             miClearFood);
 
-        menuEdit.disableProperty().bind(modePy.map(mode -> mode == EditMode.INSPECT));
+        menuEdit.disableProperty().bind(editModePy.map(mode -> mode == EditMode.INSPECT));
 
         // Maps
         menuLoadMap = new Menu(tt("menu.load_map"));
@@ -715,7 +712,6 @@ public class TileMapEditor {
         menuView = new Menu(tt("menu.view"), NO_GRAPHIC,
             miProperties, miTerrain, miSegmentNumbers, miObstacleInnerArea, miFood, miGrid);
 
-        // Menu Bar
         menuBar = new MenuBar(menuFile, menuEdit, menuLoadMap, menuView);
     }
 
@@ -796,19 +792,7 @@ public class TileMapEditor {
         return false;
     }
 
-    public Optional<File> nextMapFileInDirectory() {
-        Optional<File> file = selectMapFileInDirectory(true);
-        file.ifPresent(this::readMapFile);
-        return file;
-    }
-
-    public Optional<File> prevMapFileInDirectory() {
-        Optional<File> file = selectMapFileInDirectory(false);
-        file.ifPresent(this::readMapFile);
-        return file;
-    }
-
-    private Optional<File> selectMapFileInDirectory(boolean forward) {
+    private Optional<File> selectMapFileInDirectoryFollowing(boolean forward) {
         File currentFile = currentFilePy.get();
         if (currentFile == null) {
             return Optional.empty();
@@ -1018,10 +1002,10 @@ public class TileMapEditor {
     }
 
     private void drawPreviewCanvas(TerrainColorScheme colors) {
-        GraphicsContext g = previewCanvas.getGraphicsContext2D();
+        GraphicsContext g = preview2D.getGraphicsContext2D();
         g.setImageSmoothing(false);
         g.setFill(colors.backgroundColor());
-        g.fillRect(0, 0, previewCanvas.getWidth(), previewCanvas.getHeight());
+        g.fillRect(0, 0, preview2D.getWidth(), preview2D.getHeight());
         if (terrainVisiblePy.get()) {
             TileMap terrainMap = worldMap().terrain();
             ensureTerrainMapsPathsUpToDate();
@@ -1159,92 +1143,98 @@ public class TileMapEditor {
     }
 
     private void onKeyPressed(KeyEvent e) {
-        boolean alt = e.isAltDown();
-        boolean control = e.isControlDown();
-        if (alt && e.getCode() == KeyCode.LEFT) {
-            e.consume();
-            prevMapFileInDirectory().ifPresentOrElse(
-                file -> showMessage("Map loaded: %s".formatted(file.getName()), 3, MessageType.INFO),
-                () -> showMessage("Previous map file not available", 1, MessageType.ERROR));
-        } else if (alt && e.getCode() == KeyCode.RIGHT) {
-            e.consume();
-            nextMapFileInDirectory().ifPresentOrElse(
-                file -> showMessage("Map loaded: %s".formatted(file.getName()), 3, MessageType.INFO),
-                () -> showMessage("Next map file not available", 1, MessageType.ERROR));
+        KeyCode key = e.getCode();
+        boolean alt = e.isAltDown(), control = e.isControlDown();
+
+        if (alt && key == KeyCode.LEFT) {
+            selectMapFileInDirectoryFollowing(false).ifPresent(
+                file -> {
+                    if (readMapFile(file)) {
+                        showMessage("Map loaded: %s".formatted(file.getName()), 3, MessageType.INFO);
+                    } else {
+                        showMessage("Map file %s could not be loaded".formatted(file), 3, MessageType.ERROR);
+                    }
+                });
+        } else if (alt && key == KeyCode.RIGHT) {
+            selectMapFileInDirectoryFollowing(true).ifPresent(
+                file -> {
+                    if (readMapFile(file)) {
+                        showMessage("Map loaded: %s".formatted(file.getName()), 3, MessageType.INFO);
+                    } else {
+                        showMessage("Map file %s could not be loaded".formatted(file), 3, MessageType.ERROR);
+                    }
+                });
         }
-        else if (control && e.getCode() == KeyCode.UP) {
+        else if (control && key == KeyCode.UP) {
             if (tabPanePreviews.getSelectionModel().getSelectedItem() == tabPreview3D) {
-                mazePreview3D.root().setTranslateY(mazePreview3D.root().getTranslateY() + 10);
+                preview3D.root().setTranslateY(preview3D.root().getTranslateY() + 10);
             }
         }
-        else if (control && e.getCode() == KeyCode.DOWN) {
+        else if (control && key == KeyCode.DOWN) {
             if (tabPanePreviews.getSelectionModel().getSelectedItem() == tabPreview3D) {
-                mazePreview3D.root().setTranslateY(mazePreview3D.root().getTranslateY() - 10);
+                preview3D.root().setTranslateY(preview3D.root().getTranslateY() - 10);
             }
         }
-        else if (control && e.getCode() == KeyCode.LEFT) {
+        else if (control && key == KeyCode.LEFT) {
             if (tabPanePreviews.getSelectionModel().getSelectedItem() == tabPreview3D) {
-                mazePreview3D.root().setRotate(mazePreview3D.root().getRotate() - 5);
+                preview3D.root().setRotate(preview3D.root().getRotate() - 5);
             }
         }
-        else if (control && e.getCode() == KeyCode.RIGHT) {
+        else if (control && key == KeyCode.RIGHT) {
             if (tabPanePreviews.getSelectionModel().getSelectedItem() == tabPreview3D) {
-                mazePreview3D.root().setRotate(mazePreview3D.root().getRotate() + 5);
+                preview3D.root().setRotate(preview3D.root().getRotate() + 5);
             }
         }
-        else if (e.getCode() == KeyCode.PLUS) {
+        else if (key == KeyCode.PLUS) {
             if (gridSize() < TileMapEditor.MAX_GRID_SIZE) {
                 gridSizePy.set(gridSize() + 1);
             }
         }
-        else if (e.getCode() == KeyCode.MINUS) {
+        else if (key == KeyCode.MINUS) {
             if (gridSize() > TileMapEditor.MIN_GRID_SIZE) {
                 gridSizePy.set(gridSize() - 1);
             }
         }
+        e.consume();
     }
 
     private void onEditCanvasKeyPressed(KeyEvent e) {
-        KeyCode code = e.getCode();
+        KeyCode key = e.getCode();
         boolean control = e.isControlDown();
-        if (control && code == KeyCode.LEFT) {
-            moveCursor(Direction.LEFT, this::canEditFoodAtTile);
-            setFoodAtFocussedTile();
+
+        if (control && key == KeyCode.LEFT) {
+            moveCursorAndSetFoodAtTile(Direction.LEFT);
         }
-        else if (control && code == KeyCode.RIGHT) {
-            moveCursor(Direction.RIGHT, this::canEditFoodAtTile);
-            setFoodAtFocussedTile();
+        else if (control && key == KeyCode.RIGHT) {
+            moveCursorAndSetFoodAtTile(Direction.RIGHT);
         }
-        else if (control && code == KeyCode.UP) {
-            moveCursor(Direction.UP, this::canEditFoodAtTile);
-            setFoodAtFocussedTile();
+        else if (control && key == KeyCode.UP) {
+            moveCursorAndSetFoodAtTile(Direction.UP);
         }
-        else if (control && code == KeyCode.DOWN) {
-            moveCursor(Direction.DOWN, this::canEditFoodAtTile);
-            setFoodAtFocussedTile();
+        else if (control && key == KeyCode.DOWN) {
+            moveCursorAndSetFoodAtTile(Direction.DOWN);
         }
-        else if (code == KeyCode.LEFT) {
+        else if (key == KeyCode.LEFT) {
             moveCursor(Direction.LEFT, tile -> true);
         }
-        else if (code == KeyCode.RIGHT) {
+        else if (key == KeyCode.RIGHT) {
             moveCursor(Direction.RIGHT, tile -> true);
         }
-        else if (code == KeyCode.UP) {
+        else if (key == KeyCode.UP) {
             moveCursor(Direction.UP, tile -> true);
         }
-        else if (code == KeyCode.DOWN) {
+        else if (key == KeyCode.DOWN) {
             moveCursor(Direction.DOWN, tile -> true);
         }
-        else if (control && code == KeyCode.SPACE) {
+        else if (control && key == KeyCode.SPACE) {
             selectNextPaletteEntry();
         }
         e.consume();
     }
 
     private void onKeyTyped(KeyEvent e) {
-        Logger.debug("Typed {}", e);
-        String ch = e.getCharacter();
-        switch (ch) {
+        String key = e.getCharacter();
+        switch (key) {
             case "i" -> setEditMode(EditMode.INSPECT);
             case "n" -> {
                 setEditMode(EditMode.EDIT);
@@ -1254,7 +1244,7 @@ public class TileMapEditor {
                 setEditMode(EditMode.EDIT);
                 symmetricEditModePy.set(true);
             }
-            case "w" -> mazePreview3D.wireframeProperty().set(!mazePreview3D.wireframeProperty().get());
+            case "w" -> preview3D.wireframeProperty().set(!preview3D.wireframeProperty().get());
             case "x" -> setEditMode(EditMode.ERASE);
         }
     }
@@ -1275,12 +1265,12 @@ public class TileMapEditor {
         }
     }
 
-    public EditMode editMode() { return modePy.get(); }
+    public EditMode editMode() { return editModePy.get(); }
 
     public boolean isEditMode(EditMode mode) { return editMode() == mode; }
 
     public void setEditMode(EditMode mode) {
-        modePy.set(assertNotNull(mode));
+        editModePy.set(assertNotNull(mode));
     }
 
     /**
@@ -1299,10 +1289,10 @@ public class TileMapEditor {
         if (!terrainDataUpToDate) {
             tilesWithErrors.clear();
             tilesWithErrors.addAll(worldMap().updateObstacleList());
-            if (mazePreview3D != null) {
-                mazePreview3D.updateMaze(worldMap());
-                mazePreview3D.updateFood(worldMap());
-                initMazePreview3DPerspective();
+            if (preview3D != null) {
+                preview3D.updateMaze(worldMap());
+                preview3D.updateFood(worldMap());
+                resetPreview3D();
             }
             terrainDataUpToDate = true;
         }
@@ -1315,8 +1305,8 @@ public class TileMapEditor {
             if (editedMap == worldMap().terrain()) {
                 invalidateTerrainData();
             } else {
-                if (mazePreview3D != null) {
-                    mazePreview3D.updateFood(worldMap());
+                if (preview3D != null) {
+                    preview3D.updateFood(worldMap());
                 }
             }
         }
@@ -1355,6 +1345,12 @@ public class TileMapEditor {
         }
     }
 
+    private void moveCursorAndSetFoodAtTile(Direction dir) {
+        if (moveCursor(dir, this::canEditFoodAtTile)) {
+            setFoodAtFocussedTile();
+        }
+    }
+
     private void setFoodAtFocussedTile() {
         if (editMode() == EditMode.EDIT && selectedPaletteID() == PALETTE_ID_FOOD) {
             if (canEditFoodAtTile(focussedTile())) {
@@ -1363,13 +1359,15 @@ public class TileMapEditor {
         }
     }
 
-    private void moveCursor(Direction dir, Predicate<Vector2i> canEnterTile) {
+    private boolean moveCursor(Direction dir, Predicate<Vector2i> canEnterTile) {
         if (focussedTile() != null) {
             Vector2i nextTile = focussedTile().plus(dir.vector());
             if (!worldMap().terrain().outOfBounds(nextTile) && canEnterTile.test(nextTile)) {
                 focussedTilePy.set(nextTile);
+                return true;
             }
         }
+        return false;
     }
 
     private void selectNextPaletteEntry() {
