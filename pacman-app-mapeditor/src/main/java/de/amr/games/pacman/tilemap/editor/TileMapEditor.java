@@ -48,6 +48,7 @@ import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.time.Instant;
 import java.util.*;
+import java.util.function.Predicate;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
@@ -1078,50 +1079,50 @@ public class TileMapEditor {
 
     // Controller part
 
-    private void onEditCanvasMouseClicked(MouseEvent event) {
-        Logger.debug("Mouse clicked {}", event);
-        if (event.getButton() == MouseButton.PRIMARY) {
+    private void onEditCanvasMouseClicked(MouseEvent e) {
+        Logger.debug("Mouse clicked {}", e);
+        if (e.getButton() == MouseButton.PRIMARY) {
             editCanvas.requestFocus();
             contextMenu.hide();
-            if (event.getClickCount() == 2 && isEditMode(EditMode.INSPECT)) {
+            if (e.getClickCount() == 2 && isEditMode(EditMode.INSPECT)) {
                 setEditMode(EditMode.EDIT);
             }
         }
     }
 
-    private void onEditCanvasMouseDragged(MouseEvent event) {
-        Logger.debug("Mouse dragged {}", event);
+    private void onEditCanvasMouseDragged(MouseEvent e) {
+        Logger.debug("Mouse dragged {}", e);
         if (!dragging) {
-            Vector2i dragStartTile = tileAtMousePosition(event.getX(), event.getY());
+            Vector2i dragStartTile = tileAtMousePosition(e.getX(), e.getY());
             obstacleEditor.startEditing(dragStartTile);
             dragging = true;
             Logger.debug("Dragging started at tile {}", dragStartTile);
         } else {
-            obstacleEditor.continueEditing(tileAtMousePosition(event.getX(), event.getY()));
+            obstacleEditor.continueEditing(tileAtMousePosition(e.getX(), e.getY()));
         }
     }
 
-    private void onEditCanvasMouseReleased(MouseEvent event) {
-        if (event.getButton() == MouseButton.PRIMARY) {
-            Logger.debug("Mouse released: {}", event);
+    private void onEditCanvasMouseReleased(MouseEvent e) {
+        if (e.getButton() == MouseButton.PRIMARY) {
+            Logger.debug("Mouse released: {}", e);
             if (dragging) {
                 dragging = false;
-                Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
+                Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
                 Logger.debug("Dragging ends at tile {}", tile);
                 obstacleEditor.endEditing(tile);
             } else {
-                editAtMousePosition(event);
+                editAtMousePosition(e);
             }
         }
     }
 
-    private void onEditCanvasMouseMoved(MouseEvent event) {
-        Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
+    private void onEditCanvasMouseMoved(MouseEvent e) {
+        Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
         WorldMap worldMap = worldMapPy.get();
         focussedTilePy.set(tile);
         switch (editMode()) {
             case EditMode.EDIT -> {
-                if (event.isShiftDown()) {
+                if (e.isShiftDown()) {
                     switch (selectedPaletteID()) {
                         case TileMapEditor.PALETTE_ID_TERRAIN -> {
                             if (selectedPalette().isToolSelected()) {
@@ -1140,7 +1141,7 @@ public class TileMapEditor {
                 }
             }
             case EditMode.ERASE -> {
-                if (event.isShiftDown()) {
+                if (e.isShiftDown()) {
                     switch (selectedPaletteID()) {
                         case TileMapEditor.PALETTE_ID_TERRAIN -> clearTileValue(worldMap.terrain(), tile);
                         case TileMapEditor.PALETTE_ID_FOOD -> clearTileValue(worldMap.food(), tile);
@@ -1151,73 +1152,92 @@ public class TileMapEditor {
         }
     }
 
-    private void onKeyPressed(KeyEvent event) {
-        boolean alt = event.isAltDown();
-        boolean control = event.isControlDown();
-        if (alt && event.getCode() == KeyCode.LEFT) {
-            event.consume();
+    private void onKeyPressed(KeyEvent e) {
+        boolean alt = e.isAltDown();
+        boolean control = e.isControlDown();
+        if (alt && e.getCode() == KeyCode.LEFT) {
+            e.consume();
             prevMapFileInDirectory().ifPresentOrElse(
                 file -> showMessage("Map loaded: %s".formatted(file.getName()), 3, MessageType.INFO),
                 () -> showMessage("Previous map file not available", 1, MessageType.ERROR));
-        } else if (alt && event.getCode() == KeyCode.RIGHT) {
-            event.consume();
+        } else if (alt && e.getCode() == KeyCode.RIGHT) {
+            e.consume();
             nextMapFileInDirectory().ifPresentOrElse(
                 file -> showMessage("Map loaded: %s".formatted(file.getName()), 3, MessageType.INFO),
                 () -> showMessage("Next map file not available", 1, MessageType.ERROR));
         }
-        else if (control && isEditMode(EditMode.EDIT)) {
-            editFoodAtCurrentTile();
-        }
-        else if (control && event.getCode() == KeyCode.UP) {
-            if (tabPanePreviews.getSelectionModel().getSelectedItem() == tabPreview3D) {
-                mazePreview3D.root().setTranslateY(mazePreview3D.root().getTranslateY() - 10);
-            }
-        }
-        else if (control && event.getCode() == KeyCode.DOWN) {
+        else if (control && e.getCode() == KeyCode.UP) {
             if (tabPanePreviews.getSelectionModel().getSelectedItem() == tabPreview3D) {
                 mazePreview3D.root().setTranslateY(mazePreview3D.root().getTranslateY() + 10);
             }
         }
-        else if (control && event.getCode() == KeyCode.LEFT) {
+        else if (control && e.getCode() == KeyCode.DOWN) {
             if (tabPanePreviews.getSelectionModel().getSelectedItem() == tabPreview3D) {
-                mazePreview3D.root().setRotate(mazePreview3D.root().getRotate() + 5);
+                mazePreview3D.root().setTranslateY(mazePreview3D.root().getTranslateY() - 10);
             }
         }
-        else if (control && event.getCode() == KeyCode.RIGHT) {
+        else if (control && e.getCode() == KeyCode.LEFT) {
             if (tabPanePreviews.getSelectionModel().getSelectedItem() == tabPreview3D) {
                 mazePreview3D.root().setRotate(mazePreview3D.root().getRotate() - 5);
             }
         }
-        else if (event.getCode() == KeyCode.PLUS) {
+        else if (control && e.getCode() == KeyCode.RIGHT) {
+            if (tabPanePreviews.getSelectionModel().getSelectedItem() == tabPreview3D) {
+                mazePreview3D.root().setRotate(mazePreview3D.root().getRotate() + 5);
+            }
+        }
+        else if (e.getCode() == KeyCode.PLUS) {
             if (gridSize() < TileMapEditor.MAX_GRID_SIZE) {
                 gridSizePy.set(gridSize() + 1);
             }
         }
-        else if (event.getCode() == KeyCode.MINUS) {
+        else if (e.getCode() == KeyCode.MINUS) {
             if (gridSize() > TileMapEditor.MIN_GRID_SIZE) {
                 gridSizePy.set(gridSize() - 1);
             }
         }
     }
 
-    private void onEditCanvasKeyPressed(KeyEvent event) {
-        switch (event.getCode()) {
-            case LEFT, RIGHT, UP, DOWN -> navigateEditCanvas(event);
-            case SPACE -> {
-                if (event.isControlDown()) {
-                    selectNextPaletteEntry();
-                    event.consume();
-                } else {
-                    editFoodAtCurrentTile();
-                }
-            }
-            default -> {}
+    private void onEditCanvasKeyPressed(KeyEvent e) {
+        KeyCode code = e.getCode();
+        boolean control = e.isControlDown();
+        if (control && code == KeyCode.LEFT) {
+            navigateEditCanvas(Direction.LEFT, this::canEditFoodAtTile);
+            setFoodAtCurrentTile();
         }
+        else if (control && code == KeyCode.RIGHT) {
+            navigateEditCanvas(Direction.RIGHT, this::canEditFoodAtTile);
+            setFoodAtCurrentTile();
+        }
+        else if (control && code == KeyCode.UP) {
+            navigateEditCanvas(Direction.UP, this::canEditFoodAtTile);
+            setFoodAtCurrentTile();
+        }
+        else if (control && code == KeyCode.DOWN) {
+            navigateEditCanvas(Direction.DOWN, this::canEditFoodAtTile);
+            setFoodAtCurrentTile();
+        }
+        else if (code == KeyCode.LEFT) {
+            navigateEditCanvas(Direction.LEFT, tile -> true);
+        }
+        else if (code == KeyCode.RIGHT) {
+            navigateEditCanvas(Direction.RIGHT, tile -> true);
+        }
+        else if (code == KeyCode.UP) {
+            navigateEditCanvas(Direction.UP, tile -> true);
+        }
+        else if (code == KeyCode.DOWN) {
+            navigateEditCanvas(Direction.DOWN, tile -> true);
+        }
+        else if (control && code == KeyCode.SPACE) {
+            selectNextPaletteEntry();
+        }
+        e.consume();
     }
 
-    private void onKeyTyped(KeyEvent event) {
-        Logger.debug("Typed {}", event);
-        String ch = event.getCharacter();
+    private void onKeyTyped(KeyEvent e) {
+        Logger.debug("Typed {}", e);
+        String ch = e.getCharacter();
         switch (ch) {
             case "i" -> setEditMode(EditMode.INSPECT);
             case "n" -> {
@@ -1233,9 +1253,9 @@ public class TileMapEditor {
         }
     }
 
-    private void onEditCanvasContextMenuRequested(ContextMenuEvent event) {
+    private void onEditCanvasContextMenuRequested(ContextMenuEvent e) {
         if (!isEditMode(EditMode.INSPECT)) {
-            Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
+            Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
             WorldMap worldMap = worldMapPy.get();
 
             var miAddCircle2x2 = new MenuItem("2x2 Circle");
@@ -1245,7 +1265,7 @@ public class TileMapEditor {
             miAddHouse.setOnAction(actionEvent -> addHouse(worldMap.terrain(), tile));
 
             contextMenu.getItems().setAll(miAddCircle2x2, miAddHouse);
-            contextMenu.show(editCanvas, event.getScreenX(), event.getScreenY());
+            contextMenu.show(editCanvas, e.getScreenX(), e.getScreenY());
         }
     }
 
@@ -1329,8 +1349,8 @@ public class TileMapEditor {
         }
     }
 
-    private void editFoodAtCurrentTile() {
-        if (selectedPaletteID() == PALETTE_ID_FOOD) {
+    private void setFoodAtCurrentTile() {
+        if (editMode() == EditMode.EDIT && selectedPaletteID() == PALETTE_ID_FOOD) {
             Vector2i tile = focussedTilePy.get();
             if (canEditFoodAtTile(tile)) {
                 editMapTile(worldMap().food(), tile, false);
@@ -1338,24 +1358,15 @@ public class TileMapEditor {
         }
     }
 
-    private void navigateEditCanvas(KeyEvent event) {
-        Direction dir = switch (event.getCode()) {
-            case LEFT -> Direction.LEFT;
-            case RIGHT -> Direction.RIGHT;
-            case UP -> Direction.UP;
-            case DOWN -> Direction.DOWN;
-            default -> null;
-        };
+    private void navigateEditCanvas(Direction dir, Predicate<Vector2i> canEnterTile) {
         Vector2i currentTile = focussedTilePy.get();
         if (dir == null || currentTile == null) {
             return;
         }
         Vector2i nextTile = currentTile.plus(dir.vector());
-        if (canEnterTileWithCursor(nextTile)) {
-            WorldMap worldMap = worldMapPy.get();
-            if (!worldMap.terrain().outOfBounds(nextTile)) {
-                focussedTilePy.set(nextTile);
-            }
+        WorldMap worldMap = worldMapPy.get();
+        if (!worldMap.terrain().outOfBounds(nextTile) && canEnterTile.test(nextTile)) {
+            focussedTilePy.set(nextTile);
         }
     }
 
@@ -1366,13 +1377,6 @@ public class TileMapEditor {
             next = 0;
         }
         palette.selectTool(next);
-    }
-
-    private boolean canEnterTileWithCursor(Vector2i tile) {
-        if (isEditMode(EditMode.EDIT) && selectedPaletteID() == PALETTE_ID_FOOD) {
-            return canEditFoodAtTile(tile);
-        }
-        return true;
     }
 
     private boolean canEditFoodAtTile(Vector2i tile) {
