@@ -200,7 +200,7 @@ public class TileMapEditor {
 
     // Attributes
 
-    private File lastUsedDir;
+    private File currentWorkDirectory;
     private Instant messageCloseTime;
     private Timeline clock;
     private boolean unsavedChanges;
@@ -317,7 +317,7 @@ public class TileMapEditor {
     }
 
     public void init(File workDir) {
-        lastUsedDir = workDir;
+        currentWorkDirectory = workDir;
         setWorldMap(new WorldMap(36, 28));
         setEditMode(EditMode.INSPECT);
     }
@@ -398,7 +398,7 @@ public class TileMapEditor {
         fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(WORLD_MAP_FILES_FILTER, ALL_FILES_FILTER);
         fileChooser.setSelectedExtensionFilter(WORLD_MAP_FILES_FILTER);
-        fileChooser.setInitialDirectory(lastUsedDir);
+        fileChooser.setInitialDirectory(currentWorkDirectory);
     }
 
     private void createEditCanvas() {
@@ -772,7 +772,7 @@ public class TileMapEditor {
 
     private void openMapFileInteractively() {
         fileChooser.setTitle(tt("open_file"));
-        fileChooser.setInitialDirectory(lastUsedDir);
+        fileChooser.setInitialDirectory(currentWorkDirectory);
         File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
             readMapFile(file);
@@ -783,7 +783,7 @@ public class TileMapEditor {
         if (file.getName().endsWith(".world")) {
             try {
                 loadMap(new WorldMap(file));
-                lastUsedDir = file.getParentFile();
+                currentWorkDirectory = file.getParentFile();
                 currentFilePy.set(file);
                 Logger.info("Map read from file {}", file);
             } catch (IOException x) {
@@ -826,10 +826,10 @@ public class TileMapEditor {
 
     public void showSaveDialog() {
         fileChooser.setTitle(tt("save_file"));
-        fileChooser.setInitialDirectory(lastUsedDir);
+        fileChooser.setInitialDirectory(currentWorkDirectory);
         File file = fileChooser.showSaveDialog(stage);
         if (file != null) {
-            lastUsedDir = file.getParentFile();
+            currentWorkDirectory = file.getParentFile();
             if (file.getName().endsWith(".world")) {
                 worldMap().save(file);
                 unsavedChanges = false;
@@ -1096,12 +1096,9 @@ public class TileMapEditor {
 
     private void onEditCanvasMouseReleased(MouseEvent e) {
         if (e.getButton() == MouseButton.PRIMARY) {
-            Logger.debug("Mouse released: {}", e);
             if (dragging) {
                 dragging = false;
-                Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
-                Logger.debug("Dragging ends at tile {}", tile);
-                obstacleEditor.endEditing(tile);
+                obstacleEditor.endEditing(tileAtMousePosition(e.getX(), e.getY()));
             } else {
                 editAtMousePosition(e);
             }
@@ -1167,22 +1164,22 @@ public class TileMapEditor {
                 });
         }
         else if (control && key == KeyCode.UP) {
-            if (tabPanePreviews.getSelectionModel().getSelectedItem() == tabPreview3D) {
+            if (isPreview3DSelected()) {
                 preview3D.root().setTranslateY(preview3D.root().getTranslateY() + 10);
             }
         }
         else if (control && key == KeyCode.DOWN) {
-            if (tabPanePreviews.getSelectionModel().getSelectedItem() == tabPreview3D) {
+            if (isPreview3DSelected()) {
                 preview3D.root().setTranslateY(preview3D.root().getTranslateY() - 10);
             }
         }
         else if (control && key == KeyCode.LEFT) {
-            if (tabPanePreviews.getSelectionModel().getSelectedItem() == tabPreview3D) {
+            if (isPreview3DSelected()) {
                 preview3D.root().setRotate(preview3D.root().getRotate() - 5);
             }
         }
         else if (control && key == KeyCode.RIGHT) {
-            if (tabPanePreviews.getSelectionModel().getSelectedItem() == tabPreview3D) {
+            if (isPreview3DSelected()) {
                 preview3D.root().setRotate(preview3D.root().getRotate() + 5);
             }
         }
@@ -1196,6 +1193,10 @@ public class TileMapEditor {
                 gridSizePy.set(gridSize() - 1);
             }
         }
+    }
+
+    private boolean isPreview3DSelected() {
+        return tabPanePreviews.getSelectionModel().getSelectedItem() == tabPreview3D;
     }
 
     private void onEditCanvasKeyPressed(KeyEvent e) {
@@ -1355,14 +1356,6 @@ public class TileMapEditor {
         return new Vector2i(fullTiles(mouseX), fullTiles(mouseY));
     }
 
-    private void editMapTile(TileMap tileMap, Vector2i tile, boolean erase) {
-        if (erase) {
-            clearTileValue(tileMap, tile);
-        } else if (selectedPalette().isToolSelected()) {
-            selectedPalette().selectedTool().apply(tileMap, tile);
-        }
-    }
-
     private void editAtMousePosition(MouseEvent event) {
         Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
         if (isEditMode(EditMode.INSPECT)) {
@@ -1371,7 +1364,8 @@ public class TileMapEditor {
         }
         boolean erase = event.isControlDown();
         switch (selectedPaletteID()) {
-            case TileMapEditor.PALETTE_ID_TERRAIN -> editMapTile(worldMap().terrain(), tile, erase);
+            case TileMapEditor.PALETTE_ID_TERRAIN -> editAtTile(worldMap().terrain(), tile, erase);
+            case TileMapEditor.PALETTE_ID_FOOD -> editAtTile(worldMap().food(), tile, erase);
             case TileMapEditor.PALETTE_ID_ACTORS -> {
                 if (selectedPalette().isToolSelected()) {
                     selectedPalette().selectedTool().apply(worldMap().terrain(), tile);
@@ -1379,8 +1373,15 @@ public class TileMapEditor {
                     terrainPropertiesEditor().updatePropertyEditorValues();
                 }
             }
-            case TileMapEditor.PALETTE_ID_FOOD -> editMapTile(worldMap().food(), tile, erase);
-            default -> Logger.error("Unknown palette selection");
+            default -> Logger.error("Unknown palette ID " + selectedPaletteID());
+        }
+    }
+
+    private void editAtTile(TileMap tileMap, Vector2i tile, boolean erase) {
+        if (erase) {
+            clearTileValue(tileMap, tile);
+        } else if (selectedPalette().isToolSelected()) {
+            selectedPalette().selectedTool().apply(tileMap, tile);
         }
     }
 
@@ -1393,7 +1394,7 @@ public class TileMapEditor {
     private void setFoodAtFocussedTile() {
         if (editMode() == EditMode.EDIT && selectedPaletteID() == PALETTE_ID_FOOD) {
             if (canEditFoodAtTile(focussedTile())) {
-                editMapTile(worldMap().food(), focussedTile(), false);
+                editAtTile(worldMap().food(), focussedTile(), false);
             }
         }
     }
