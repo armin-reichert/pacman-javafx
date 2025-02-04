@@ -22,6 +22,7 @@ import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Side;
 import javafx.scene.*;
@@ -595,7 +596,9 @@ public class TileMapEditor {
                 if (worldMap() != null && worldMap().url() != null) {
                     return  "%s: [%s]".formatted( tt("map_editor"), worldMap().url() );
                 }
-                return "%s: [%s]".formatted( tt("map_editor"), tt("unsaved_map") );
+                return "%s: [%s %d: rows, %d cols]".formatted(
+                        tt("map_editor"), tt("unsaved_map"),
+                        worldMap().terrain().numRows(), worldMap().terrain().numCols() );
             }, currentFilePy, worldMapPy
         );
     }
@@ -1259,9 +1262,40 @@ public class TileMapEditor {
             var miAddHouse = new MenuItem(TileMapEditor.tt("menu.edit.add_house"));
             miAddHouse.setOnAction(actionEvent -> addHouse(worldMap.terrain(), tile));
 
-            contextMenu.getItems().setAll(miAddCircle2x2, miAddHouse);
+            var miAddEmptyRow = new MenuItem("Insert Row");
+            miAddEmptyRow.setOnAction(actionEvent -> {
+                int rowIndex = tileAtMousePosition(e.getX(), e.getY()).y();
+                addEmptyRow(rowIndex);
+            });
+            contextMenu.getItems().setAll(miAddEmptyRow, miAddCircle2x2, miAddHouse);
             contextMenu.show(editCanvas, e.getScreenX(), e.getScreenY());
         }
+    }
+
+    private void addEmptyRow(int rowIndex) {
+        WorldMap currentMap = worldMap();
+        WorldMap newMap = new WorldMap(currentMap.terrain().numRows() + 1, currentMap.terrain().numCols());
+        newMap.terrain().replaceProperties(currentMap.terrain().getProperties());
+        newMap.food().replaceProperties(currentMap.food().getProperties());
+        for (int row = 0; row < newMap.terrain().numRows(); ++row) {
+            for (int col = 0; col < newMap.terrain().numCols(); ++col) {
+                byte terrainValue = TileEncoding.EMPTY;
+                if (row < rowIndex) {
+                    terrainValue = currentMap.terrain().get(row, col);
+                } else if (row > rowIndex) {
+                    terrainValue = currentMap.terrain().get(row - 1, col);
+                }
+                newMap.terrain().set(row, col, terrainValue);
+                byte foodValue = TileEncoding.EMPTY;
+                if (row < rowIndex) {
+                    foodValue = currentMap.food().get(row, col);
+                } else if (row > rowIndex) {
+                    foodValue = currentMap.food().get(row - 1, col);
+                }
+                newMap.food().set(row, col, terrainValue);
+            }
+        }
+        setWorldMap(newMap);
     }
 
     public EditMode editMode() { return editModePy.get(); }

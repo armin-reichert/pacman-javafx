@@ -161,6 +161,15 @@ public class TileMap {
         return row < 0 || row >= numRows() || col < 0 || col >= numCols();
     }
 
+    public Map<String, Object> getProperties() {
+        return properties;
+    }
+
+    public void replaceProperties(Map<String, Object> properties) {
+        this.properties.clear();
+        this.properties.putAll(properties);
+    }
+
     public void setProperty(String name, Object value) {
         properties.put(name, value);
     }
