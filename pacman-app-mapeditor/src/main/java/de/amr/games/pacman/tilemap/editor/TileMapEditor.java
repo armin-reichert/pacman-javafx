@@ -1195,7 +1195,6 @@ public class TileMapEditor {
                 gridSizePy.set(gridSize() - 1);
             }
         }
-        e.consume();
     }
 
     private void onEditCanvasKeyPressed(KeyEvent e) {
