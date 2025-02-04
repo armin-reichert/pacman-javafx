@@ -22,7 +22,6 @@ import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
-import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Side;
 import javafx.scene.*;
@@ -1262,17 +1261,17 @@ public class TileMapEditor {
             var miAddHouse = new MenuItem(TileMapEditor.tt("menu.edit.add_house"));
             miAddHouse.setOnAction(actionEvent -> addHouse(worldMap.terrain(), tile));
 
-            var miAddEmptyRow = new MenuItem("Insert Row");
-            miAddEmptyRow.setOnAction(actionEvent -> {
+            var miInsertRow = new MenuItem("Insert Row");
+            miInsertRow.setOnAction(actionEvent -> {
                 int rowIndex = tileAtMousePosition(e.getX(), e.getY()).y();
-                addEmptyRow(rowIndex);
+                insertRow(rowIndex);
             });
-            contextMenu.getItems().setAll(miAddEmptyRow, miAddCircle2x2, miAddHouse);
+            contextMenu.getItems().setAll(miInsertRow, miAddCircle2x2, miAddHouse);
             contextMenu.show(editCanvas, e.getScreenX(), e.getScreenY());
         }
     }
 
-    private void addEmptyRow(int rowIndex) {
+    private void insertRow(int rowIndex) {
         WorldMap currentMap = worldMap();
         WorldMap newMap = new WorldMap(currentMap.terrain().numRows() + 1, currentMap.terrain().numCols());
         newMap.terrain().replaceProperties(currentMap.terrain().getProperties());
@@ -1284,6 +1283,11 @@ public class TileMapEditor {
                     terrainValue = currentMap.terrain().get(row, col);
                 } else if (row > rowIndex) {
                     terrainValue = currentMap.terrain().get(row - 1, col);
+                } else {
+                    if ((col == 0 || col == currentMap.terrain().numCols() - 1)
+                            && currentMap.terrain().get(row, col) == TileEncoding.DWALL_V) {
+                        terrainValue = TileEncoding.DWALL_V; // keep vertical border wall
+                    }
                 }
                 newMap.terrain().set(row, col, terrainValue);
                 byte foodValue = TileEncoding.EMPTY;
@@ -1292,7 +1296,7 @@ public class TileMapEditor {
                 } else if (row > rowIndex) {
                     foodValue = currentMap.food().get(row - 1, col);
                 }
-                newMap.food().set(row, col, terrainValue);
+                newMap.food().set(row, col, foodValue);
             }
         }
         setWorldMap(newMap);
