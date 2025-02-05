@@ -786,9 +786,11 @@ public class TileMapEditor {
                 currentWorkDirectory = file.getParentFile();
                 currentFilePy.set(file);
                 Logger.info("Map read from file {}", file);
+                return true;
             } catch (IOException x) {
                 Logger.error(x);
                 Logger.info("Map could not be read from file {}", file);
+                return false;
             }
         }
         return false;
@@ -1147,19 +1149,15 @@ public class TileMapEditor {
         if (alt && key == KeyCode.LEFT) {
             selectMapFileInDirectoryFollowing(false).ifPresent(
                 file -> {
-                    if (readMapFile(file)) {
-                        showMessage("Map loaded: %s".formatted(file.getName()), 3, MessageType.INFO);
-                    } else {
-                        showMessage("Map file %s could not be loaded".formatted(file), 3, MessageType.ERROR);
+                    if (!readMapFile(file)) {
+                        showMessage("Map file %s could not be loaded".formatted(file.getName()), 3, MessageType.ERROR);
                     }
                 });
         } else if (alt && key == KeyCode.RIGHT) {
             selectMapFileInDirectoryFollowing(true).ifPresent(
                 file -> {
-                    if (readMapFile(file)) {
-                        showMessage("Map loaded: %s".formatted(file.getName()), 3, MessageType.INFO);
-                    } else {
-                        showMessage("Map file %s could not be loaded".formatted(file), 3, MessageType.ERROR);
+                    if (!readMapFile(file)) {
+                        showMessage("Map file %s could not be loaded".formatted(file.getName()), 3, MessageType.ERROR);
                     }
                 });
         }
