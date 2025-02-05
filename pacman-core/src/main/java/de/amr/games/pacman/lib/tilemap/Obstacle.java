@@ -23,12 +23,10 @@ public class Obstacle {
     private final Vector2i startPoint;
     private Vector2i endPoint;
     private final List<ObstacleSegment> segments = new ArrayList<>();
-    private final boolean doubleWalls;
     private final List<RectArea> rectPartition;
 
-    public Obstacle(Vector2i startPoint, boolean doubleWalls) {
+    public Obstacle(Vector2i startPoint) {
         this.startPoint = this.endPoint = Objects.requireNonNull(startPoint);
-        this.doubleWalls = doubleWalls;
         rectPartition = new ArrayList<>();
     }
 
@@ -51,10 +49,14 @@ public class Obstacle {
     }
 
     private boolean isAllowedContent(byte value) {
+        if (segments.isEmpty()) {
+            return true; // TODO restrict to allowed start tile content
+        }
         if (value == TileEncoding.DOOR) {
             return true; //TODO
         }
-        return doubleWalls == TileEncoding.isDoubleWall(value);
+        boolean startsWithDoubleWall = TileEncoding.isDoubleWall(segments.getFirst().encoding());
+        return startsWithDoubleWall == TileEncoding.isDoubleWall(value);
     }
 
     public Stream<RectArea> rectPartition() {
@@ -76,7 +78,6 @@ public class Obstacle {
             "encoding=" + encoding() +
             ", start=" + startPoint +
             ", end=" + endPoint +
-            ", doubleWalls=" + doubleWalls +
             ", rectangles=" + rectPartition +
             ", segment count=" + segments.size() +
             ", segments=" + segments +
@@ -106,7 +107,7 @@ public class Obstacle {
     }
 
     public boolean hasDoubleWalls() {
-        return doubleWalls;
+        return !segments.isEmpty() && TileEncoding.isDoubleWall(segments.getFirst().encoding());
     }
 
     public List<ObstacleSegment> segments() {

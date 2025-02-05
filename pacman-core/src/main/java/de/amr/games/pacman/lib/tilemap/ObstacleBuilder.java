@@ -109,7 +109,7 @@ public class ObstacleBuilder {
     private Obstacle buildClosedObstacle(Vector2i cornerNW, List<Vector2i> tilesWithErrors) {
         Vector2i startPoint = cornerNW.scaled(TS).plus(TS, HTS);
         byte startTileContent = terrain.get(cornerNW);
-        Obstacle obstacle = new Obstacle(startPoint, isDoubleWall(startTileContent));
+        Obstacle obstacle = new Obstacle(startPoint);
         obstacle.addSegment(SEG_CORNER_NW_DOWN, true, startTileContent);
         cursor = new Cursor(cornerNW);
         cursor.move(DOWN);
@@ -125,7 +125,7 @@ public class ObstacleBuilder {
     private Obstacle buildOpenObstacle(Vector2i startTile, boolean startsAtLeftBorder, List<Vector2i> tilesWithErrors) {
         Vector2i startPoint = startTile.scaled(TS).plus(startsAtLeftBorder ? 0 : TS, HTS);
         byte startTileContent = terrain.get(startTile);
-        var obstacle = new Obstacle(startPoint, isDoubleWall(startTileContent));
+        var obstacle = new Obstacle(startPoint);
         cursor = new Cursor(startTile);
         if (startTileContent == TileEncoding.DWALL_H) {
             Direction startDir = startsAtLeftBorder ? RIGHT : LEFT;
@@ -286,7 +286,7 @@ public class ObstacleBuilder {
     private ArrayList<Obstacle> optimize(List<Obstacle> obstacles) {
         var optimizedObstacles = new ArrayList<Obstacle>();
         for (Obstacle obstacle : obstacles) {
-            Obstacle optimized = new Obstacle(obstacle.startPoint(), obstacle.hasDoubleWalls());
+            Obstacle optimized = new Obstacle(obstacle.startPoint());
             optimizedObstacles.add(optimized);
             boolean merging = false;
             Vector2i mergedVector = null;
