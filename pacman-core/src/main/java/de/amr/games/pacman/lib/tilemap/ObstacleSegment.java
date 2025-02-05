@@ -6,7 +6,14 @@ package de.amr.games.pacman.lib.tilemap;
 
 import de.amr.games.pacman.lib.Vector2i;
 
+import java.util.Objects;
+
 public record ObstacleSegment(Vector2i startPoint, Vector2i vector, boolean ccw, byte encoding) {
+
+    public ObstacleSegment {
+        Objects.requireNonNull(startPoint);
+        Objects.requireNonNull(vector);
+    }
 
     public Vector2i endPoint() {
         return startPoint.plus(vector);
