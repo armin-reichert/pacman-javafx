@@ -21,12 +21,11 @@ import static java.lang.Math.signum;
 public class Obstacle {
 
     private final Vector2i startPoint;
-    private Vector2i endPoint;
     private final List<ObstacleSegment> segments = new ArrayList<>();
     private final List<RectArea> rectPartition;
 
     public Obstacle(Vector2i startPoint) {
-        this.startPoint = this.endPoint = Objects.requireNonNull(startPoint);
+        this.startPoint = Objects.requireNonNull(startPoint);
         rectPartition = new ArrayList<>();
     }
 
@@ -34,9 +33,8 @@ public class Obstacle {
         if (!isAllowedContent(content)) {
             throw new IllegalArgumentException("Illegal content " + content);
         }
-        ObstacleSegment segment = new ObstacleSegment(endPoint, vector, ccw, content);
+        ObstacleSegment segment = new ObstacleSegment(endPoint(), vector, ccw, content);
         segments.add(segment);
-        endPoint = segment.endPoint();
         if (isClosed()) {
             rectPartition.clear();
             try {
@@ -77,7 +75,6 @@ public class Obstacle {
         return "Obstacle{" +
             "encoding=" + encoding() +
             ", start=" + startPoint +
-            ", end=" + endPoint +
             ", rectangles=" + rectPartition +
             ", segment count=" + segments.size() +
             ", segments=" + segments +
@@ -96,7 +93,11 @@ public class Obstacle {
 
     public Vector2i startPoint() { return startPoint; }
 
-    public Vector2i endPoint() { return endPoint; }
+    public Vector2i endPoint() {
+        return segments.isEmpty()
+            ? startPoint
+            : segments.getLast().startPoint().plus(segments.getLast().vector());
+    }
 
     public Vector2i point(int i) {
         return i < numSegments() ? segment(i).startPoint() : segment(i).endPoint();
