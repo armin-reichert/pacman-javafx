@@ -534,7 +534,7 @@ public class TileMapEditor {
     private void createEditModeStatusLabel() {
         editModeStatusLabel = new Label();
         editModeStatusLabel.setFont(FONT_STATUS_LINE);
-        editModeStatusLabel.setTextFill(Color.RED);
+        editModeStatusLabel.setTextFill(Color.LIGHTSEAGREEN);
         editModeStatusLabel.textProperty().bind(Bindings.createStringBinding(
             () -> switch (editModePy.get()) {
                     case INSPECT -> "INSPECT";
@@ -746,7 +746,13 @@ public class TileMapEditor {
         dialog.setContentText(tt("new_dialog.content_text"));
         dialog.showAndWait().ifPresent(text -> {
             Vector2i size = parseSize(text);
-            if (size != null) {
+            if (size == null) {
+                showMessage("Map size not recognized", 2, MessageType.ERROR);
+            }
+            else if (size.y() < 6) {
+                showMessage("Map must have at least 6 rows", 2, MessageType.ERROR);
+            }
+            else {
                 WorldMap map = createPreconfiguredMap(size.x(), size.y());
                 setWorldMap(map);
                 currentFilePy.set(null);
@@ -1265,42 +1271,11 @@ public class TileMapEditor {
             var miInsertRow = new MenuItem("Insert Row");
             miInsertRow.setOnAction(actionEvent -> {
                 int rowIndex = tileAtMousePosition(e.getX(), e.getY()).y();
-                insertRow(rowIndex);
+                setWorldMap(worldMap.insertRowBeforeIndex(rowIndex));
             });
             contextMenu.getItems().setAll(miInsertRow, miAddCircle2x2, miAddHouse);
             contextMenu.show(editCanvas, e.getScreenX(), e.getScreenY());
         }
-    }
-
-    private void insertRow(int rowIndex) {
-        WorldMap currentMap = worldMap();
-        WorldMap newMap = new WorldMap(currentMap.terrain().numRows() + 1, currentMap.terrain().numCols());
-        newMap.terrain().replaceProperties(currentMap.terrain().getProperties());
-        newMap.food().replaceProperties(currentMap.food().getProperties());
-        for (int row = 0; row < newMap.terrain().numRows(); ++row) {
-            for (int col = 0; col < newMap.terrain().numCols(); ++col) {
-                byte terrainValue = TileEncoding.EMPTY;
-                if (row < rowIndex) {
-                    terrainValue = currentMap.terrain().get(row, col);
-                } else if (row > rowIndex) {
-                    terrainValue = currentMap.terrain().get(row - 1, col);
-                } else {
-                    if ((col == 0 || col == currentMap.terrain().numCols() - 1)
-                            && currentMap.terrain().get(row, col) == TileEncoding.DWALL_V) {
-                        terrainValue = TileEncoding.DWALL_V; // keep vertical border wall
-                    }
-                }
-                newMap.terrain().set(row, col, terrainValue);
-                byte foodValue = TileEncoding.EMPTY;
-                if (row < rowIndex) {
-                    foodValue = currentMap.food().get(row, col);
-                } else if (row > rowIndex) {
-                    foodValue = currentMap.food().get(row - 1, col);
-                }
-                newMap.food().set(row, col, foodValue);
-            }
-        }
-        setWorldMap(newMap);
     }
 
     public EditMode editMode() { return editModePy.get(); }
@@ -1519,27 +1494,27 @@ public class TileMapEditor {
 
     private WorldMap createPreconfiguredMap(int tilesX, int tilesY) {
         var worldMap = new WorldMap(tilesY, tilesX);
+
         TileMap terrain = worldMap.terrain();
-
-        Vector2i houseOrigin = vec_2i(tilesX / 2 - 4, tilesY / 2 - 3);
-
         addBorder(terrain, 3, 2);
-        addHouse(terrain, houseOrigin);
-        worldMap.updateObstacleList();
 
         terrain.setProperty(PROPERTY_COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE);
         terrain.setProperty(PROPERTY_COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL);
         terrain.setProperty(PROPERTY_COLOR_DOOR, MS_PACMAN_COLOR_DOOR);
 
-        terrain.setProperty(PROPERTY_POS_PAC, formatTile(houseOrigin.plus(3, 11)));
-        terrain.setProperty(PROPERTY_POS_BONUS, formatTile(houseOrigin.plus(3, 5)));
-
-        terrain.setProperty(PROPERTY_POS_SCATTER_RED_GHOST, formatTile(vec_2i(tilesX - 3, 0)));
-        terrain.setProperty(PROPERTY_POS_SCATTER_PINK_GHOST, formatTile(vec_2i(3, 0)));
-        terrain.setProperty(PROPERTY_POS_SCATTER_CYAN_GHOST, formatTile(vec_2i(tilesX - 1, tilesY - 2)));
-        terrain.setProperty(PROPERTY_POS_SCATTER_ORANGE_GHOST, formatTile(vec_2i(0, tilesY - 2)));
-
         worldMap.food().setProperty(PROPERTY_COLOR_FOOD, MS_PACMAN_COLOR_FOOD);
+
+        if (terrain.numRows() >= 20) {
+            Vector2i houseOrigin = vec_2i(tilesX / 2 - 4, tilesY / 2 - 3);
+            addHouse(terrain, houseOrigin);
+            terrain.setProperty(PROPERTY_POS_PAC, formatTile(houseOrigin.plus(3, 11)));
+            terrain.setProperty(PROPERTY_POS_BONUS, formatTile(houseOrigin.plus(3, 5)));
+            terrain.setProperty(PROPERTY_POS_SCATTER_RED_GHOST, formatTile(vec_2i(tilesX - 3, 0)));
+            terrain.setProperty(PROPERTY_POS_SCATTER_PINK_GHOST, formatTile(vec_2i(3, 0)));
+            terrain.setProperty(PROPERTY_POS_SCATTER_CYAN_GHOST, formatTile(vec_2i(tilesX - 1, tilesY - 2)));
+            terrain.setProperty(PROPERTY_POS_SCATTER_ORANGE_GHOST, formatTile(vec_2i(0, tilesY - 2)));
+            worldMap.updateObstacleList();
+        }
 
         return worldMap;
     }

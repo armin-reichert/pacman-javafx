@@ -31,7 +31,6 @@ public class WorldMap {
     public static final String PROPERTY_POS_SCATTER_ORANGE_GHOST = "pos_scatter_ghost_4_orange";
     public static final String PROPERTY_POS_HOUSE_MIN_TILE       = "pos_house_min_tile";
 
-
     public static final String PROPERTY_COLOR_FOOD         = "color_food";
     public static final String PROPERTY_COLOR_WALL_STROKE  = "color_wall_stroke";
     public static final String PROPERTY_COLOR_WALL_FILL    = "color_wall_fill";
@@ -81,6 +80,39 @@ public class WorldMap {
         var r = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
         parse(r.lines());
         updateObstacleList();
+    }
+
+    public WorldMap insertRowBeforeIndex(int rowIndex) {
+        if (rowIndex < 0 || rowIndex > terrain.numRows()) {
+            throw new IllegalArgumentException("Illegal row index for inserting row: " + rowIndex);
+        }
+        WorldMap newMap = new WorldMap(terrain.numRows() + 1, terrain.numCols());
+        newMap.terrain.replaceProperties(terrain.getProperties());
+        newMap.food().replaceProperties(food().getProperties());
+        for (int row = 0; row < newMap.terrain.numRows(); ++row) {
+            for (int col = 0; col < newMap.terrain.numCols(); ++col) {
+                byte terrainValue = TileEncoding.EMPTY;
+                if (row < rowIndex) {
+                    terrainValue = terrain.get(row, col);
+                } else if (row > rowIndex) {
+                    terrainValue = terrain.get(row - 1, col);
+                } else {
+                    if ((col == 0 || col == terrain.numCols() - 1)
+                            && terrain.get(row, col) == TileEncoding.DWALL_V) {
+                        terrainValue = TileEncoding.DWALL_V; // keep vertical border wall
+                    }
+                }
+                newMap.terrain.set(row, col, terrainValue);
+                byte foodValue = TileEncoding.EMPTY;
+                if (row < rowIndex) {
+                    foodValue = food.get(row, col);
+                } else if (row > rowIndex) {
+                    foodValue = food.get(row - 1, col);
+                }
+                newMap.food.set(row, col, foodValue);
+            }
+        }
+        return newMap;
     }
 
     public String sourceCode() {
