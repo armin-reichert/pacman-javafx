@@ -1273,7 +1273,19 @@ public class TileMapEditor {
                 int rowIndex = tileAtMousePosition(e.getX(), e.getY()).y();
                 setWorldMap(worldMap.insertRowBeforeIndex(rowIndex));
             });
-            contextMenu.getItems().setAll(miInsertRow, miAddCircle2x2, miAddHouse);
+
+            var miDeleteRow = new MenuItem("Delete Row");
+            miDeleteRow.setOnAction(actionEvent -> {
+                int rowIndex = tileAtMousePosition(e.getX(), e.getY()).y();
+                setWorldMap(worldMap.deleteRowAtIndex(rowIndex));
+            });
+
+            contextMenu.getItems().setAll(
+                    miInsertRow,
+                    miDeleteRow,
+                    new SeparatorMenuItem(),
+                    miAddCircle2x2,
+                    miAddHouse);
             contextMenu.show(editCanvas, e.getScreenX(), e.getScreenY());
         }
     }

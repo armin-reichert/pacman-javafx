@@ -92,10 +92,13 @@ public class WorldMap {
         for (int row = 0; row < newMap.terrain.numRows(); ++row) {
             for (int col = 0; col < newMap.terrain.numCols(); ++col) {
                 byte terrainValue = TileEncoding.EMPTY;
+                byte foodValue = TileEncoding.EMPTY;
                 if (row < rowIndex) {
                     terrainValue = terrain.get(row, col);
+                    foodValue = food.get(row, col);
                 } else if (row > rowIndex) {
                     terrainValue = terrain.get(row - 1, col);
+                    foodValue = food.get(row - 1, col);
                 } else {
                     if ((col == 0 || col == terrain.numCols() - 1)
                             && terrain.get(row, col) == TileEncoding.DWALL_V) {
@@ -103,13 +106,31 @@ public class WorldMap {
                     }
                 }
                 newMap.terrain.set(row, col, terrainValue);
-                byte foodValue = TileEncoding.EMPTY;
-                if (row < rowIndex) {
-                    foodValue = food.get(row, col);
-                } else if (row > rowIndex) {
-                    foodValue = food.get(row - 1, col);
-                }
                 newMap.food.set(row, col, foodValue);
+            }
+        }
+        return newMap;
+    }
+
+    public WorldMap deleteRowAtIndex(int rowIndexToDelete) {
+        if (rowIndexToDelete < 0 || rowIndexToDelete > terrain.numRows() - 1) {
+            throw new IllegalArgumentException("Illegal row index for deleting row: " + rowIndexToDelete);
+        }
+        if (terrain.numRows() == 0) {
+            return this;
+        }
+        WorldMap newMap = new WorldMap(terrain.numRows() - 1, terrain.numCols());
+        newMap.terrain.replaceProperties(terrain.getProperties());
+        newMap.food.replaceProperties(food.getProperties());
+        for (int row = 0; row < newMap.terrain.numRows(); ++row) {
+            for (int col = 0; col < newMap.terrain.numCols(); ++col) {
+                if (row < rowIndexToDelete) {
+                    newMap.terrain.set(row, col, terrain.get(row, col));
+                    newMap.food.set(row, col, food.get(row, col));
+                } else {
+                    newMap.terrain.set(row, col, terrain.get(row + 1, col));
+                    newMap.food.set(row, col, food.get(row + 1, col));
+                }
             }
         }
         return newMap;
