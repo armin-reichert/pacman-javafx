@@ -11,9 +11,7 @@ import org.tinylog.Logger;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -47,7 +45,7 @@ public class WorldMap {
     }
 
     private TileMap terrain;
-    private List<Obstacle> obstacles = List.of();
+    private Set<Obstacle> obstacles = Collections.emptySet();
     private TileMap food;
     private final URL url;
 
@@ -59,7 +57,7 @@ public class WorldMap {
     public WorldMap(WorldMap other) {
         Globals.assertNotNull(other);
         terrain = new TileMap(other.terrain);
-        obstacles = new ArrayList<>(other.obstacles);
+        obstacles = new HashSet<>(other.obstacles);
         food = new TileMap(other.food);
         url = other.url;
     }
@@ -127,8 +125,8 @@ public class WorldMap {
         return tilesWithErrors;
     }
 
-    public List<Obstacle> obstacles() {
-        return Collections.unmodifiableList(obstacles);
+    public Set<Obstacle> obstacles() {
+        return Collections.unmodifiableSet(obstacles);
     }
 
     public boolean save(File file) {

@@ -21,6 +21,7 @@ import javafx.scene.text.FontWeight;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.TileMap.parseVector2i;
@@ -60,7 +61,7 @@ public class TerrainRendererInEditor extends TerrainRenderer {
     }
 
     @Override
-    public void drawTerrain(GraphicsContext g, TileMap terrainMap, List<Obstacle> obstacles) {
+    public void drawTerrain(GraphicsContext g, TileMap terrainMap, Set<Obstacle> obstacles) {
         g.save();
         g.scale(scaling(), scaling());
         terrainMap.tiles().forEach(tile -> drawTileUnscaled(g, tile, terrainMap.get(tile)));

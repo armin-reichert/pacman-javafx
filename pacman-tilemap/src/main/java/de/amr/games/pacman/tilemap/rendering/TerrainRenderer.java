@@ -14,7 +14,7 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import java.util.List;
+import java.util.Set;
 
 import static de.amr.games.pacman.lib.Globals.*;
 
@@ -64,7 +64,7 @@ public class TerrainRenderer implements TileMapRenderer {
         singleStrokeWidth = width;
     }
 
-    public void drawTerrain(GraphicsContext g, TileMap terrainMap, List<Obstacle> obstacles) {
+    public void drawTerrain(GraphicsContext g, TileMap terrainMap, Set<Obstacle> obstacles) {
         g.save();
         g.scale(scaling(), scaling());
         for (Obstacle obstacle : obstacles) {

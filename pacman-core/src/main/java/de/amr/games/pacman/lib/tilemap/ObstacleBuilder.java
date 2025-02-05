@@ -8,10 +8,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.*;
@@ -26,7 +23,7 @@ import static java.util.function.Predicate.not;
 public class ObstacleBuilder {
 
     // Public API
-    public static List<Obstacle> buildObstacles(TileMap terrain, List<Vector2i> tilesWithErrors) {
+    public static Set<Obstacle> buildObstacles(TileMap terrain, List<Vector2i> tilesWithErrors) {
         return new ObstacleBuilder(terrain).buildObstacles(tilesWithErrors);
     }
 
@@ -74,13 +71,13 @@ public class ObstacleBuilder {
         exploredTiles.set(terrain.index(tile));
     }
 
-    private List<Obstacle> buildObstacles(List<Vector2i> tilesWithErrors) {
+    private Set<Obstacle> buildObstacles(List<Vector2i> tilesWithErrors) {
         Logger.debug("Find obstacles in map ID={} size={}x{}", terrain.hashCode(), terrain.numRows(), terrain.numCols());
 
         tilesWithErrors.clear();
         exploredTiles.clear();
 
-        var obstacles = new ArrayList<Obstacle>();
+        Set<Obstacle> obstacles = new HashSet<>();
 
         // Note: order of detection matters! Otherwise, when searching for closed
         // obstacles first, each failed attempt must set its visited tile set to unvisited!
@@ -101,9 +98,8 @@ public class ObstacleBuilder {
             .forEach(obstacles::add);
 
         Logger.debug("Found {} obstacles", obstacles.size());
-        obstacles = optimize(obstacles);
-        Logger.debug("Optimized {} obstacles", obstacles.size());
-        return obstacles;
+
+        return optimize(obstacles);
     }
 
     private Obstacle buildClosedObstacle(Vector2i cornerNW, List<Vector2i> tilesWithErrors) {
@@ -129,7 +125,7 @@ public class ObstacleBuilder {
         cursor = new Cursor(startTile);
         if (startTileContent == TileEncoding.DWALL_H) {
             Direction startDir = startsAtLeftBorder ? RIGHT : LEFT;
-            obstacle.addSegment(arrow(startDir, TS), true, TileEncoding.DWALL_H);
+            obstacle.addSegment(scaledVector(startDir, TS), true, TileEncoding.DWALL_H);
             cursor.move(startDir);
         }
         else if (startsAtLeftBorder && startTileContent == TileEncoding.DCORNER_SE) {
@@ -186,10 +182,10 @@ public class ObstacleBuilder {
 
                 case TileEncoding.WALL_V, TileEncoding.DWALL_V -> {
                     if (cursor.points(DOWN)) {
-                        obstacle.addSegment(arrow(DOWN, TS), ccw, tileContent);
+                        obstacle.addSegment(scaledVector(DOWN, TS), ccw, tileContent);
                         cursor.move(DOWN);
                     } else if (cursor.points(UP)) {
-                        obstacle.addSegment(arrow(UP, TS), ccw, tileContent);
+                        obstacle.addSegment(scaledVector(UP, TS), ccw, tileContent);
                         cursor.move(UP);
                     } else {
                         errorAtCurrentTile(tilesWithErrors);
@@ -198,10 +194,10 @@ public class ObstacleBuilder {
 
                 case TileEncoding.WALL_H, TileEncoding.DWALL_H, TileEncoding.DOOR -> {
                     if (cursor.points(RIGHT)) {
-                        obstacle.addSegment(arrow(RIGHT, TS), ccw, tileContent);
+                        obstacle.addSegment(scaledVector(RIGHT, TS), ccw, tileContent);
                         cursor.move(RIGHT);
                     } else if (cursor.points(LEFT)) {
-                        obstacle.addSegment(arrow(LEFT, TS), ccw, tileContent);
+                        obstacle.addSegment(scaledVector(LEFT, TS), ccw, tileContent);
                         cursor.move(LEFT);
                     } else {
                         errorAtCurrentTile(tilesWithErrors);
@@ -279,12 +275,13 @@ public class ObstacleBuilder {
         }
     }
 
-    private Vector2i arrow(Direction dir, int length) {
+    private Vector2i scaledVector(Direction dir, int length) {
         return dir.vector().scaled(length);
     }
 
-    private ArrayList<Obstacle> optimize(List<Obstacle> obstacles) {
-        var optimizedObstacles = new ArrayList<Obstacle>();
+    //TODO simplify
+    private Set<Obstacle> optimize(Set<Obstacle> obstacles) {
+        var optimizedObstacles = new HashSet<Obstacle>();
         for (Obstacle obstacle : obstacles) {
             Obstacle optimized = new Obstacle(obstacle.startPoint());
             optimizedObstacles.add(optimized);
