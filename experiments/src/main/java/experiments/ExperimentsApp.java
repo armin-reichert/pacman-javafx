@@ -105,7 +105,7 @@ public class ExperimentsApp extends Application {
             content.getChildren().add(wallEast);
         }
 
-        obstacle = new Obstacle(new Vector2i(0, 15*TS), false);
+        obstacle = new Obstacle(new Vector2i(0, 15*TS));
         extendObstacle(-4, 4, true, TileEncoding.CORNER_NW);
         extendObstacle(0, 3*8, true, TileEncoding.WALL_V);
         extendObstacle(-4, 4, false, TileEncoding.CORNER_SE);
