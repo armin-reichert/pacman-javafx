@@ -28,6 +28,8 @@ import javafx.scene.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.image.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -41,10 +43,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.text.MessageFormat;
 import java.time.Instant;
 import java.util.*;
@@ -86,6 +85,7 @@ public class TileMapEditor {
     public static final Cursor RUBBER_CURSOR  = Cursor.cursor(urlString("graphics/radiergummi.jpg"));
 
     public static final FileChooser.ExtensionFilter WORLD_MAP_FILES_FILTER = new FileChooser.ExtensionFilter("World Map Files", "*.world");
+    public static final FileChooser.ExtensionFilter IMAGE_FILES_FILTER = new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg");
     public static final FileChooser.ExtensionFilter ALL_FILES_FILTER = new FileChooser.ExtensionFilter("All Files", "*.*");
 
     // Properties
@@ -252,6 +252,9 @@ public class TileMapEditor {
     // for rotating 3D preview
     private double anchorX, anchorY;
     private double anchorAngle;
+
+    // experimental
+    private Image templateImage;
 
     public void createUI(Stage stage) {
         this.stage = assertNotNull(stage);
@@ -643,16 +646,31 @@ public class TileMapEditor {
     private void createMenuBarAndMenus() {
 
         // File
-        var miNew = new MenuItem(tt("menu.file.new"));
-        miNew.setOnAction(e -> showNewMapDialog());
+        var miNewPreconfiguredMap = new MenuItem(tt("menu.file.new"));
+        miNewPreconfiguredMap.setOnAction(e -> showNewMapDialog(true));
 
-        var miOpen = new MenuItem(tt("menu.file.open"));
-        miOpen.setOnAction(e -> openMapFileInteractively());
+        var miNewBlankMap = new MenuItem("New Blank Map..."); // TODO localize
+        miNewBlankMap.setOnAction(e -> showNewMapDialog(false));
 
-        var miSaveAs = new MenuItem(tt("menu.file.save_as"));
-        miSaveAs.setOnAction(e -> showSaveDialog());
+        var miOpenMapFile = new MenuItem(tt("menu.file.open"));
+        miOpenMapFile.setOnAction(e -> openMapFileInteractively());
 
-        menuFile = new Menu(tt("menu.file"), NO_GRAPHIC, miNew, miOpen, miSaveAs);
+        var miSaveMapFileAs = new MenuItem(tt("menu.file.save_as"));
+        miSaveMapFileAs.setOnAction(e -> showSaveDialog());
+
+        var miOpenTemplateImage = new MenuItem("Open Template Image..."); //TODO localize
+        miOpenTemplateImage.setOnAction(e -> openTemplateImage());
+
+        var miCloseTemplateImage = new MenuItem("Close Template Image"); //TODO localize
+        miCloseTemplateImage.setOnAction(e -> closeTemplateImage());
+
+        menuFile = new Menu(tt("menu.file"), NO_GRAPHIC,
+                miNewPreconfiguredMap,
+                miNewBlankMap,
+                miOpenMapFile,
+                miSaveMapFileAs,
+                miOpenTemplateImage,
+                miCloseTemplateImage);
 
         // Edit
         var miSymmetricMode = new CheckMenuItem(tt("menu.edit.symmetric"));
@@ -732,21 +750,25 @@ public class TileMapEditor {
         }
     }
 
-    private void showNewMapDialog() {
+    private void showNewMapDialog(boolean preconfigured) {
         var dialog = new TextInputDialog("28x36");
         dialog.setTitle(tt("new_dialog.title"));
         dialog.setHeaderText(tt("new_dialog.header_text"));
         dialog.setContentText(tt("new_dialog.content_text"));
         dialog.showAndWait().ifPresent(text -> {
-            Vector2i size = parseSize(text);
-            if (size == null) {
+            Vector2i sizeInTiles = parseSize(text);
+            if (sizeInTiles == null) {
                 showMessage("Map size not recognized", 2, MessageType.ERROR);
             }
-            else if (size.y() < 6) {
+            else if (sizeInTiles.y() < 6) {
                 showMessage("Map must have at least 6 rows", 2, MessageType.ERROR);
             }
             else {
-                setPreconfiguredMap(size.x(), size.y());
+                if (preconfigured) {
+                    setPreconfiguredMap(sizeInTiles.x(), sizeInTiles.y());
+                } else {
+                    setBlankMap(sizeInTiles.x(), sizeInTiles.y());
+                }
                 currentFilePy.set(null);
             }
         });
@@ -922,6 +944,8 @@ public class TileMapEditor {
         final WorldMap map = worldMap();
         final TileMap terrain = map.terrain(), food = map.food();
 
+        double scaling = gridSize() / (double) TS;
+
         GraphicsContext g = editCanvas.getGraphicsContext2D();
         g.setImageSmoothing(false);
 
@@ -929,11 +953,18 @@ public class TileMapEditor {
         g.setFill(colors.backgroundColor());
         g.fillRect(0, 0, editCanvas.getWidth(), editCanvas.getHeight());
 
+        if (templateImage != null) {
+            int emptyRowsTop = 3, emptyRowsBottom = 2; // TODO
+            g.drawImage(templateImage,
+                    0, emptyRowsTop * scaling * TS,
+                    editCanvas.getWidth(), editCanvas.getHeight() - (emptyRowsTop + emptyRowsBottom) * scaling * TS);
+        }
+
         drawGrid(g);
 
         // Terrain
         if (terrainVisiblePy.get()) {
-            editorTerrainRenderer.setScaling(gridSize() / 8.0);
+            editorTerrainRenderer.setScaling(scaling);
             editorTerrainRenderer.setColors(colors);
             editorTerrainRenderer.setSegmentNumbersDisplayed(segmentNumbersDisplayedPy.get());
             editorTerrainRenderer.setObstacleInnerAreaDisplayed(obstacleInnerAreaDisplayedPy.get());
@@ -975,7 +1006,7 @@ public class TileMapEditor {
         // Food
         if (foodVisiblePy.get()) {
             Color foodColor = getColorFromMap(food, PROPERTY_COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
-            foodMapRenderer.setScaling(gridSize() / 8.0);
+            foodMapRenderer.setScaling(scaling);
             foodMapRenderer.setEnergizerColor(foodColor);
             foodMapRenderer.setPelletColor(foodColor);
             foodMapRenderer.drawFood(g, food);
@@ -995,12 +1026,12 @@ public class TileMapEditor {
     }
 
     private void drawActorSprites(GraphicsContext g) {
-        drawSprite(g, PROPERTY_POS_PAC, PAC_SPRITE, TILE_PAC);
-        drawSprite(g, PROPERTY_POS_RED_GHOST, RED_GHOST_SPRITE, TILE_RED_GHOST);
-        drawSprite(g, PROPERTY_POS_PINK_GHOST, PINK_GHOST_SPRITE, TILE_PINK_GHOST);
-        drawSprite(g, PROPERTY_POS_CYAN_GHOST, CYAN_GHOST_SPRITE, TILE_CYAN_GHOST);
-        drawSprite(g, PROPERTY_POS_ORANGE_GHOST, ORANGE_GHOST_SPRITE, TILE_ORANGE_GHOST);
-        drawSprite(g, PROPERTY_POS_BONUS, BONUS_SPRITE, TILE_BONUS);
+        drawSprite(g, PROPERTY_POS_PAC, PAC_SPRITE, null);
+        drawSprite(g, PROPERTY_POS_RED_GHOST, RED_GHOST_SPRITE, null);
+        drawSprite(g, PROPERTY_POS_PINK_GHOST, PINK_GHOST_SPRITE, null);
+        drawSprite(g, PROPERTY_POS_CYAN_GHOST, CYAN_GHOST_SPRITE, null);
+        drawSprite(g, PROPERTY_POS_ORANGE_GHOST, ORANGE_GHOST_SPRITE, null);
+        drawSprite(g, PROPERTY_POS_BONUS, BONUS_SPRITE, null);
     }
 
     private void drawPreviewCanvas(TerrainColorScheme colors) {
@@ -1447,6 +1478,16 @@ public class TileMapEditor {
         markAsEdited(tileMap);
     }
 
+    private void setBlankMap(int tilesX, int tilesY) {
+        var blankMap = new WorldMap(tilesY, tilesX);
+        TileMap terrain = blankMap.terrain();
+        terrain.setProperty(PROPERTY_COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE);
+        terrain.setProperty(PROPERTY_COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL);
+        terrain.setProperty(PROPERTY_COLOR_DOOR, MS_PACMAN_COLOR_DOOR);
+        blankMap.food().setProperty(PROPERTY_COLOR_FOOD, MS_PACMAN_COLOR_FOOD);
+        setWorldMap(blankMap);
+    }
+
     private void setPreconfiguredMap(int tilesX, int tilesY) {
         var preConfiguredMap = new WorldMap(tilesY, tilesX);
         TileMap terrain = preConfiguredMap.terrain();
@@ -1520,4 +1561,42 @@ public class TileMapEditor {
         markAsEdited(tileMap);
     }
 
+    // experimental
+
+    private void openTemplateImage() {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Open Template Maze Image"); // TODO localize
+        fc.setInitialDirectory(currentDirectory);
+        fc.getExtensionFilters().addAll(IMAGE_FILES_FILTER, ALL_FILES_FILTER);
+        fc.setSelectedExtensionFilter(IMAGE_FILES_FILTER);
+        File file = fc.showOpenDialog(stage);
+        if (file != null) {
+            try (FileInputStream in = new FileInputStream(file)) {
+                templateImage = new Image(in);
+                templateImage = toGreyscale(templateImage);
+            } catch (IOException x) {
+                Logger.error(x);
+            }
+        }
+    }
+
+    private void closeTemplateImage() {
+        templateImage = null;
+    }
+
+    private Image toGreyscale(Image source) {
+        int width = (int) source.getWidth(), height = (int) source.getHeight();
+        WritableImage target = new WritableImage(width, height);
+        PixelReader r = source.getPixelReader();
+        PixelWriter w = target.getPixelWriter();
+        for (int x = 0; x < width; ++x) {
+            for (int y = 0; y < height; ++y) {
+                Color color = r.getColor(x, y);
+                double g = 0.1 * (color.getRed() + color.getBlue() + color.getGreen());
+                Color gray = Color.color(g, g, g);
+                w.setColor(x, y, gray);
+            }
+        }
+        return target;
+    }
 }
