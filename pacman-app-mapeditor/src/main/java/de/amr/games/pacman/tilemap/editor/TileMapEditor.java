@@ -201,7 +201,7 @@ public class TileMapEditor {
 
     // Attributes
 
-    private File currentWorkDirectory;
+    private File currentDirectory;
     private Instant messageCloseTime;
     private Timeline clock;
     private boolean unsavedChanges;
@@ -257,7 +257,13 @@ public class TileMapEditor {
         this.stage = assertNotNull(stage);
 
         // renderers must be created before palettes!
-        createRenderers();
+        TerrainColorScheme colors = new TerrainColorScheme(
+            Color.BLACK,
+            parseColor(MS_PACMAN_COLOR_WALL_FILL),
+            parseColor(MS_PACMAN_COLOR_WALL_STROKE),
+            parseColor(MS_PACMAN_COLOR_DOOR)
+        );
+        createRenderers(colors, parseColor(MS_PACMAN_COLOR_FOOD));
 
         createFileChooser();
         createMenuBarAndMenus();
@@ -285,10 +291,7 @@ public class TileMapEditor {
 
         titlePy.bind(createTitleBinding());
 
-        installInputHandlers();
-    }
-
-    private void installInputHandlers() {
+        // Input handlers
         contentPane.setOnKeyTyped(this::onKeyTyped);
         contentPane.setOnKeyPressed(this::onKeyPressed);
 
@@ -299,26 +302,22 @@ public class TileMapEditor {
         editCanvas.setOnMouseReleased(this::onEditCanvasMouseReleased);
         editCanvas.setOnKeyPressed(this::onEditCanvasKeyPressed);
 
+        previewScene3D.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) resetPreview3D();
+        });
         previewScene3D.setOnMousePressed(e -> {
             anchorX = e.getSceneX();
             anchorY = e.getSceneY();
             anchorAngle = preview3D.root().getRotate();
         });
-        previewScene3D.setOnMouseDragged(e -> {
-            preview3D.root().setRotate(anchorAngle + anchorX - e.getSceneX());
-        });
-        previewScene3D.setOnMouseClicked(e -> {
-            if (e.getClickCount() == 2) {
-                resetPreview3D();
-            }
-        });
-        previewScene3D.setOnScroll(e -> {
-            preview3D.root().setTranslateY(preview3D.root().getTranslateY() + e.getDeltaY() * 0.25);
-        });
+        previewScene3D.setOnMouseDragged(e ->
+            preview3D.root().setRotate(anchorAngle + anchorX - e.getSceneX()));
+        previewScene3D.setOnScroll(e ->
+            preview3D.root().setTranslateY(preview3D.root().getTranslateY() + e.getDeltaY() * 0.25));
     }
 
     public void init(File workDir) {
-        currentWorkDirectory = workDir;
+        currentDirectory = workDir;
         setWorldMap(new WorldMap(36, 28));
         resetPreview3D();
         setEditMode(EditMode.INSPECT);
@@ -329,10 +328,7 @@ public class TileMapEditor {
         setPropertyEditorsVisible(propertyEditorsVisiblePy.get());
         spEditCanvas.heightProperty().addListener((py,ov,nv) -> {
             if (ov.doubleValue() == 0) { // initial resize
-                Logger.info("Canvas scrollpane height {0.00}", spEditCanvas.getHeight());
-                double gridSize = spEditCanvas.getHeight() / worldMap().terrain().numRows();
-                gridSize = (int) Math.max(gridSize, MIN_GRID_SIZE);
-                Logger.info("Grid size {0.00}", gridSize);
+                double gridSize = Math.max(spEditCanvas.getHeight() / worldMap().terrain().numRows(), MIN_GRID_SIZE);
                 gridSizePy.set((int) gridSize);
             }
         });
@@ -346,13 +342,13 @@ public class TileMapEditor {
     }
 
     public void showMessage(String message, long seconds, MessageType type) {
-        messageLabel.setText(message);
         Color color = switch (type) {
             case INFO -> Color.BLACK;
             case WARNING -> Color.GREEN;
             case ERROR -> Color.RED;
         };
         messageLabel.setTextFill(color);
+        messageLabel.setText(message);
         messageCloseTime = Instant.now().plus(java.time.Duration.ofSeconds(seconds));
     }
 
@@ -381,26 +377,21 @@ public class TileMapEditor {
         showEditHelpText();
     }
 
-    private void createRenderers() {
-        TerrainColorScheme colors = new TerrainColorScheme(
-            Color.BLACK, parseColor(MS_PACMAN_COLOR_WALL_FILL), parseColor(MS_PACMAN_COLOR_WALL_STROKE), parseColor(MS_PACMAN_COLOR_DOOR));
-
+    private void createRenderers(TerrainColorScheme colors, Color foodColor) {
         editorTerrainRenderer = new TerrainRendererInEditor();
         editorTerrainRenderer.setColors(colors);
-
         previewTerrainRenderer = new TerrainRenderer();
         previewTerrainRenderer.setColors(colors);
-
         foodMapRenderer = new FoodMapRenderer();
-        foodMapRenderer.setPelletColor(parseColor(MS_PACMAN_COLOR_FOOD));
-        foodMapRenderer.setEnergizerColor(parseColor(MS_PACMAN_COLOR_FOOD));
+        foodMapRenderer.setPelletColor(foodColor);
+        foodMapRenderer.setEnergizerColor(foodColor);
     }
 
     private void createFileChooser() {
         fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(WORLD_MAP_FILES_FILTER, ALL_FILES_FILTER);
         fileChooser.setSelectedExtensionFilter(WORLD_MAP_FILES_FILTER);
-        fileChooser.setInitialDirectory(currentWorkDirectory);
+        fileChooser.setInitialDirectory(currentDirectory);
     }
 
     private void createEditCanvas() {
@@ -779,7 +770,7 @@ public class TileMapEditor {
 
     private void openMapFileInteractively() {
         fileChooser.setTitle(tt("open_file"));
-        fileChooser.setInitialDirectory(currentWorkDirectory);
+        fileChooser.setInitialDirectory(currentDirectory);
         File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
             readMapFile(file);
@@ -790,7 +781,7 @@ public class TileMapEditor {
         if (file.getName().endsWith(".world")) {
             try {
                 loadMap(new WorldMap(file));
-                currentWorkDirectory = file.getParentFile();
+                currentDirectory = file.getParentFile();
                 currentFilePy.set(file);
                 Logger.info("Map read from file {}", file);
                 return true;
@@ -835,10 +826,10 @@ public class TileMapEditor {
 
     public void showSaveDialog() {
         fileChooser.setTitle(tt("save_file"));
-        fileChooser.setInitialDirectory(currentWorkDirectory);
+        fileChooser.setInitialDirectory(currentDirectory);
         File file = fileChooser.showSaveDialog(stage);
         if (file != null) {
-            currentWorkDirectory = file.getParentFile();
+            currentDirectory = file.getParentFile();
             if (file.getName().endsWith(".world")) {
                 worldMap().save(file);
                 unsavedChanges = false;
