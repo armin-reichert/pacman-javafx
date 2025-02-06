@@ -668,7 +668,7 @@ public class TileMapEditor {
         miSymmetricMode.selectedProperty().bindBidirectional(symmetricEditModePy);
 
         var miAddBorder = new MenuItem(tt("menu.edit.add_border"));
-        miAddBorder.setOnAction(e -> addBorder(worldMap().terrain(), 3, 2));
+        miAddBorder.setOnAction(e -> addBorderWall(worldMap().terrain(), 3, 2));
 
         var miClearTerrain = new MenuItem(tt("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(e -> {
@@ -755,8 +755,7 @@ public class TileMapEditor {
                 showMessage("Map must have at least 6 rows", 2, MessageType.ERROR);
             }
             else {
-                WorldMap map = createPreconfiguredMap(size.x(), size.y());
-                setWorldMap(map);
+                setPreconfiguredMap(size.x(), size.y());
                 currentFilePy.set(null);
             }
         });
@@ -1434,62 +1433,6 @@ public class TileMapEditor {
         }
     }
 
-    private void addBorder(TileMap terrain, int firstRow, int emptyRowsBottom) {
-        int lastRow = terrain.numRows() - 1 - emptyRowsBottom, lastCol = terrain.numCols() - 1;
-
-        terrain.set(firstRow, 0, TileEncoding.DCORNER_NW);
-        terrain.set(firstRow, lastCol, TileEncoding.DCORNER_NE);
-        terrain.set(lastRow, 0, TileEncoding.DCORNER_SW);
-        terrain.set(lastRow, lastCol, TileEncoding.DCORNER_SE);
-
-        for (int row = firstRow + 1; row < lastRow; ++row) {
-            terrain.set(row, 0, TileEncoding.DWALL_V);
-            terrain.set(row, lastCol, TileEncoding.DWALL_V);
-        }
-
-        for (int col = 1; col < lastCol; ++col) {
-            terrain.set(firstRow, col, TileEncoding.DWALL_H);
-            terrain.set(lastRow, col, TileEncoding.DWALL_H);
-        }
-
-        markAsEdited(terrain);
-    }
-
-    private void addHouse(TileMap terrain, Vector2i tile) {
-        addContentBlock(terrain, GHOST_HOUSE_SHAPE, tile);
-        terrain.setProperty(PROPERTY_POS_HOUSE_MIN_TILE, formatTile(tile));
-        terrain.setProperty(PROPERTY_POS_RED_GHOST, formatTile(tile.plus(3, -1)));
-        terrain.setProperty(PROPERTY_POS_CYAN_GHOST, formatTile(tile.plus(1, 2)));
-        terrain.setProperty(PROPERTY_POS_PINK_GHOST, formatTile(tile.plus(3, 2)));
-        terrain.setProperty(PROPERTY_POS_ORANGE_GHOST, formatTile(tile.plus(5, 2)));
-
-        terrainPropertiesEditor().rebuildPropertyEditors();
-    }
-
-    // does not add mirrored content!
-    private void addContentBlock(TileMap map, byte[][] block, Vector2i origin) {
-        int numRows = block.length, numCols = block[0].length;
-        for (int row = 0; row < numRows; ++row) {
-            for (int col = 0; col < numCols; ++col) {
-                map.set(origin.y() + row, origin.x() + col, block[row][col]);
-            }
-        }
-        markAsEdited(map);
-    }
-
-    private void addContentBlockMirrored(TileMap tileMap, byte[][] block, Vector2i origin) {
-        Vector2i mirroredOrigin = mirrored(tileMap, origin);
-        int numRows = block.length, numCols = block[0].length;
-        for (int row = 0; row < numRows; ++row) {
-            for (int col = 0; col < numCols; ++col) {
-                byte content = block[row][col];
-                // Note: content is added from right to left from mirrored origin!
-                tileMap.set(mirroredOrigin.y() + row, mirroredOrigin.x() - col, mirroredTileContent(content));
-            }
-        }
-        markAsEdited(tileMap);
-    }
-
     /**
      * This method should be used whenever a tile value has to be set.
      */
@@ -1514,10 +1457,13 @@ public class TileMapEditor {
         markAsEdited(tileMap);
     }
 
-    private WorldMap createPreconfiguredMap(int tilesX, int tilesY) {
-        var worldMap = new WorldMap(tilesY, tilesX);
-
-        TileMap terrain = worldMap.terrain();
+    private void setPreconfiguredMap(int tilesX, int tilesY) {
+        var preConfiguredMap = new WorldMap(tilesY, tilesX);
+        TileMap terrain = preConfiguredMap.terrain();
+        terrain.setProperty(PROPERTY_COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE);
+        terrain.setProperty(PROPERTY_COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL);
+        terrain.setProperty(PROPERTY_COLOR_DOOR, MS_PACMAN_COLOR_DOOR);
+        addBorderWall(terrain, 3, 2);
         if (terrain.numRows() >= 20) {
             Vector2i houseOrigin = vec_2i(tilesX / 2 - 4, tilesY / 2 - 3);
             addHouse(terrain, houseOrigin);
@@ -1528,14 +1474,60 @@ public class TileMapEditor {
             terrain.setProperty(PROPERTY_POS_SCATTER_CYAN_GHOST,   formatTile(vec_2i(tilesX - 1, tilesY - 2)));
             terrain.setProperty(PROPERTY_POS_SCATTER_ORANGE_GHOST, formatTile(vec_2i(0, tilesY - 2)));
         }
-        addBorder(terrain, 3, 2);
-        worldMap.updateObstacleList();
-
-        terrain.setProperty(PROPERTY_COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE);
-        terrain.setProperty(PROPERTY_COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL);
-        terrain.setProperty(PROPERTY_COLOR_DOOR, MS_PACMAN_COLOR_DOOR);
-        worldMap.food().setProperty(PROPERTY_COLOR_FOOD, MS_PACMAN_COLOR_FOOD);
-
-        return worldMap;
+        preConfiguredMap.updateObstacleList();
+        preConfiguredMap.food().setProperty(PROPERTY_COLOR_FOOD, MS_PACMAN_COLOR_FOOD);
+        setWorldMap(preConfiguredMap);
     }
+
+    private void addBorderWall(TileMap terrain, int firstRow, int emptyRowsBottom) {
+        int lastRow = terrain.numRows() - 1 - emptyRowsBottom, lastCol = terrain.numCols() - 1;
+        terrain.set(firstRow, 0, TileEncoding.DCORNER_NW);
+        terrain.set(firstRow, lastCol, TileEncoding.DCORNER_NE);
+        terrain.set(lastRow, 0, TileEncoding.DCORNER_SW);
+        terrain.set(lastRow, lastCol, TileEncoding.DCORNER_SE);
+        for (int row = firstRow + 1; row < lastRow; ++row) {
+            terrain.set(row, 0, TileEncoding.DWALL_V);
+            terrain.set(row, lastCol, TileEncoding.DWALL_V);
+        }
+        for (int col = 1; col < lastCol; ++col) {
+            terrain.set(firstRow, col, TileEncoding.DWALL_H);
+            terrain.set(lastRow, col, TileEncoding.DWALL_H);
+        }
+        markAsEdited(terrain);
+    }
+
+    private void addHouse(TileMap terrain, Vector2i origin) {
+        addContentBlock(terrain, GHOST_HOUSE_SHAPE, origin);
+        terrain.setProperty(PROPERTY_POS_HOUSE_MIN_TILE, formatTile(origin));
+        terrain.setProperty(PROPERTY_POS_RED_GHOST,      formatTile(origin.plus(3, -1)));
+        terrain.setProperty(PROPERTY_POS_CYAN_GHOST,     formatTile(origin.plus(1, 2)));
+        terrain.setProperty(PROPERTY_POS_PINK_GHOST,     formatTile(origin.plus(3, 2)));
+        terrain.setProperty(PROPERTY_POS_ORANGE_GHOST,   formatTile(origin.plus(5, 2)));
+        terrainPropertiesEditor().rebuildPropertyEditors();
+    }
+
+    // does not add mirrored content!
+    private void addContentBlock(TileMap tileMap, byte[][] block, Vector2i origin) {
+        int numRows = block.length, numCols = block[0].length;
+        for (int row = 0; row < numRows; ++row) {
+            for (int col = 0; col < numCols; ++col) {
+                tileMap.set(origin.y() + row, origin.x() + col, block[row][col]);
+            }
+        }
+        markAsEdited(tileMap);
+    }
+
+    private void addContentBlockMirrored(TileMap tileMap, byte[][] block, Vector2i origin) {
+        Vector2i mirroredOrigin = mirrored(tileMap, origin);
+        int numRows = block.length, numCols = block[0].length;
+        for (int row = 0; row < numRows; ++row) {
+            for (int col = 0; col < numCols; ++col) {
+                byte content = block[row][col];
+                // Note: content is added from right to left from mirrored origin!
+                tileMap.set(mirroredOrigin.y() + row, mirroredOrigin.x() - col, mirroredTileContent(content));
+            }
+        }
+        markAsEdited(tileMap);
+    }
+
 }
