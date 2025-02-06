@@ -61,7 +61,8 @@ import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.*;
  */
 public class TileMapEditor {
 
-    public static final short RENDERING_FPS = 15;
+    public static final short REFRESH_RATE = 10;
+
     public static final short TOOL_SIZE = 32;
     public static final short MIN_GRID_SIZE = 8;
     public static final short MAX_GRID_SIZE = 64;
@@ -618,8 +619,8 @@ public class TileMapEditor {
 
     // Active rendering (good idea?)
     private void initActiveRendering() {
-        double frameDuration = 1000.0 / RENDERING_FPS;
-        clock = new Timeline(RENDERING_FPS, new KeyFrame(Duration.millis(frameDuration), e -> {
+        double frameDuration = 1000.0 / REFRESH_RATE;
+        clock = new Timeline(REFRESH_RATE, new KeyFrame(Duration.millis(frameDuration), e -> {
             updateMessageAnimation();
             TileMap terrainMap = worldMap().terrain();
             TerrainColorScheme colors = new TerrainColorScheme(
