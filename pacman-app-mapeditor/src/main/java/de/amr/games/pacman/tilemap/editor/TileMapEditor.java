@@ -1019,7 +1019,7 @@ public class TileMapEditor {
         g.fillRect(0, 0, preview2D.getWidth(), preview2D.getHeight());
         if (terrainVisiblePy.get()) {
             TileMap terrainMap = worldMap().terrain();
-            ensureTerrainMapsPathsUpToDate();
+            ensureTerrainDataUpdated();
             previewTerrainRenderer.setScaling(gridSize() / 8.0);
             previewTerrainRenderer.setColors(colors);
             previewTerrainRenderer.drawTerrain(g, terrainMap, worldMap().obstacles());
@@ -1032,6 +1032,18 @@ public class TileMapEditor {
             foodMapRenderer.drawFood(g, worldMap().food());
         }
         drawActorSprites(g);
+    }
+
+    private void ensureTerrainDataUpdated() {
+        if (!terrainDataUpToDate) {
+            tilesWithErrors.clear();
+            tilesWithErrors.addAll(worldMap().updateObstacleList());
+            if (preview3D != null) {
+                preview3D.updateMaze(worldMap());
+                preview3D.updateFood(worldMap());
+            }
+            terrainDataUpToDate = true;
+        }
     }
 
     private void drawSprite(GraphicsContext g, String tilePropertyName, RectArea sprite, Vector2i defaultTile) {
@@ -1314,19 +1326,6 @@ public class TileMapEditor {
 
     private void invalidateTerrainData() {
         terrainDataUpToDate = false;
-    }
-
-    private void ensureTerrainMapsPathsUpToDate() {
-        if (!terrainDataUpToDate) {
-            tilesWithErrors.clear();
-            tilesWithErrors.addAll(worldMap().updateObstacleList());
-            if (preview3D != null) {
-                preview3D.updateMaze(worldMap());
-                preview3D.updateFood(worldMap());
-                //resetPreview3D();
-            }
-            terrainDataUpToDate = true;
-        }
     }
 
     void markAsEdited(TileMap editedMap) {
