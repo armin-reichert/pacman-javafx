@@ -320,6 +320,7 @@ public class TileMapEditor {
     public void init(File workDir) {
         currentWorkDirectory = workDir;
         setWorldMap(new WorldMap(36, 28));
+        resetPreview3D();
         setEditMode(EditMode.INSPECT);
     }
 
@@ -1323,7 +1324,7 @@ public class TileMapEditor {
             if (preview3D != null) {
                 preview3D.updateMaze(worldMap());
                 preview3D.updateFood(worldMap());
-                resetPreview3D();
+                //resetPreview3D();
             }
             terrainDataUpToDate = true;
         }
