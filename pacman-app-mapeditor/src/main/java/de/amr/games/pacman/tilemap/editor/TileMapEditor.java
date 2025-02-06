@@ -671,13 +671,13 @@ public class TileMapEditor {
         var miClearTerrain = new MenuItem(tt("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(e -> {
             worldMap().terrain().clear();
-            markTileMapEdited(worldMap().terrain());
+            markAsEdited(worldMap().terrain());
         });
 
         var miClearFood = new MenuItem(tt("menu.edit.clear_food"));
         miClearFood.setOnAction(e -> {
             worldMap().food().clear();
-            markTileMapEdited(worldMap().food());
+            markAsEdited(worldMap().food());
         });
 
         menuEdit = new Menu(tt("menu.edit"), NO_GRAPHIC,
@@ -1124,13 +1124,13 @@ public class TileMapEditor {
                             if (selectedPalette().isToolSelected()) {
                                 selectedPalette().selectedTool().apply(worldMap().terrain(), focussedTile());
                             }
-                            markTileMapEdited(worldMap().terrain());
+                            markAsEdited(worldMap().terrain());
                         }
                         case TileMapEditor.PALETTE_ID_FOOD -> {
                             if (selectedPalette().isToolSelected()) {
                                 selectedPalette().selectedTool().apply(worldMap().food(), focussedTile());
                             }
-                            markTileMapEdited(worldMap().food());
+                            markAsEdited(worldMap().food());
                         }
                         default -> {}
                     }
@@ -1263,7 +1263,12 @@ public class TileMapEditor {
             WorldMap worldMap = worldMapPy.get();
 
             var miAddCircle2x2 = new MenuItem("2x2 Circle");
-            miAddCircle2x2.setOnAction(actionEvent -> addShapeMirrored(worldMap.terrain(), CIRCLE_2x2, tile));
+            miAddCircle2x2.setOnAction(actionEvent -> {
+                addContentBlock(worldMap.terrain(), CIRCLE_2x2, tile);
+                if (isSymmetricEditMode()) {
+                    addContentBlockMirrored(worldMap.terrain(), CIRCLE_2x2, tile);
+                }
+            });
 
             var miAddHouse = new MenuItem(TileMapEditor.tt("menu.edit.add_house"));
             miAddHouse.setOnAction(actionEvent -> addHouse(worldMap.terrain(), tile));
@@ -1323,7 +1328,7 @@ public class TileMapEditor {
         }
     }
 
-    void markTileMapEdited(TileMap editedMap) {
+    void markAsEdited(TileMap editedMap) {
         unsavedChanges = true;
         if (worldMap() != null) {
             updateSourceView();
@@ -1354,7 +1359,7 @@ public class TileMapEditor {
             case TileMapEditor.PALETTE_ID_ACTORS -> {
                 if (selectedPalette().isToolSelected()) {
                     selectedPalette().selectedTool().apply(worldMap().terrain(), tile);
-                    markTileMapEdited(worldMap().terrain());
+                    markAsEdited(worldMap().terrain());
                     terrainPropertiesEditor().updatePropertyEditorValues();
                 }
             }
@@ -1445,11 +1450,11 @@ public class TileMapEditor {
             terrain.set(lastRow, col, TileEncoding.DWALL_H);
         }
 
-        markTileMapEdited(terrain);
+        markAsEdited(terrain);
     }
 
     private void addHouse(TileMap terrain, Vector2i tile) {
-        addShape(terrain, GHOST_HOUSE_SHAPE, tile);
+        addContentBlock(terrain, GHOST_HOUSE_SHAPE, tile);
         terrain.setProperty(PROPERTY_POS_HOUSE_MIN_TILE, formatTile(tile));
         terrain.setProperty(PROPERTY_POS_RED_GHOST, formatTile(tile.plus(3, -1)));
         terrain.setProperty(PROPERTY_POS_CYAN_GHOST, formatTile(tile.plus(1, 2)));
@@ -1459,28 +1464,28 @@ public class TileMapEditor {
         terrainPropertiesEditor().rebuildPropertyEditors();
     }
 
-    private void addShapeMirrored(TileMap map, byte[][] content, Vector2i originTile) {
-        int numRows = content.length, numCols = content[0].length;
+    // does not add mirrored content!
+    private void addContentBlock(TileMap map, byte[][] block, Vector2i origin) {
+        int numRows = block.length, numCols = block[0].length;
         for (int row = 0; row < numRows; ++row) {
             for (int col = 0; col < numCols; ++col) {
-                setTileValue(map, originTile.plus(col, row), content[row][col]);
+                map.set(origin.y() + row, origin.x() + col, block[row][col]);
             }
         }
-        markTileMapEdited(map);
+        markAsEdited(map);
     }
 
-    private void addShape(TileMap map, byte[][] content, Vector2i originTile) {
-        int numRows = content.length, numCols = content[0].length;
+    private void addContentBlockMirrored(TileMap tileMap, byte[][] block, Vector2i origin) {
+        Vector2i mirroredOrigin = mirrored(tileMap, origin);
+        int numRows = block.length, numCols = block[0].length;
         for (int row = 0; row < numRows; ++row) {
             for (int col = 0; col < numCols; ++col) {
-                map.set(originTile.plus(col, row), content[row][col]);
+                byte content = block[row][col];
+                // Note: content is added from right to left from mirrored origin!
+                tileMap.set(mirroredOrigin.y() + row, mirroredOrigin.x() - col, mirroredTileContent(content));
             }
         }
-        markTileMapEdited(map);
-    }
-
-    private Vector2i mirroredTile(TileMap tileMap, Vector2i tile) {
-        return new Vector2i(tileMap.numCols() - 1 - tile.x(), tile.y());
+        markAsEdited(tileMap);
     }
 
     /**
@@ -1491,17 +1496,20 @@ public class TileMapEditor {
         assertNotNull(tile);
         tileMap.set(tile, value);
         if (isSymmetricEditMode()) {
-            Vector2i mirroredTile = mirroredTile(tileMap, tile);
             byte mirroredContent = mirroredTileContent(tileMap.get(tile));
-            tileMap.set(mirroredTile.y(), mirroredTile.x(), mirroredContent);
+            tileMap.set(mirrored(tileMap, tile), mirroredContent);
         }
-        markTileMapEdited(tileMap);
+        markAsEdited(tileMap);
+    }
+
+    private Vector2i mirrored(TileMap tileMap, Vector2i tile) {
+        return vec_2i(tileMap.numCols() - 1 - tile.x(), tile.y());
     }
 
     // ignores symmetric edit mode!
     private void clearTileValue(TileMap tileMap, Vector2i tile) {
         tileMap.set(tile, TileEncoding.EMPTY);
-        markTileMapEdited(tileMap);
+        markAsEdited(tileMap);
     }
 
     private WorldMap createPreconfiguredMap(int tilesX, int tilesY) {
