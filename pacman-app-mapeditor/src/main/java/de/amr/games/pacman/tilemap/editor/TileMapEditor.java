@@ -406,6 +406,31 @@ public class TileMapEditor {
 
         spEditCanvas = new ScrollPane(editCanvas);
         spEditCanvas.setFitToHeight(true);
+
+        editCanvas.setOnDragOver(e -> {
+            if (e.getDragboard().hasFiles()) {
+                File file = e.getDragboard().getFiles().getFirst();
+                if (isSupportedImageFile(file)) {
+                    e.acceptTransferModes(TransferMode.COPY);
+                }
+                e.consume();
+            }
+        });
+        editCanvas.setOnDragDropped(e -> {
+            if (e.getDragboard().hasFiles()) {
+                List<File> files = e.getDragboard().getFiles();
+                File file = files.getFirst();
+                if (isSupportedImageFile(file)) {
+                    e.acceptTransferModes(TransferMode.COPY);
+                    try (FileInputStream in = new FileInputStream(file)) {
+                        templateImage = new Image(in);
+                        templateImage = toGreyscale(templateImage);
+                    } catch (IOException x) {
+                        Logger.error(x);
+                    }
+                }
+            }
+        });
     }
 
     private void createPreview2D() {
@@ -1568,6 +1593,10 @@ public class TileMapEditor {
     }
 
     // experimental
+
+    private boolean isSupportedImageFile(File file) {
+        return file.getName().endsWith(".png") || file.getName().endsWith(".jpg");
+    }
 
     private void openTemplateImage() {
         FileChooser fc = new FileChooser();
