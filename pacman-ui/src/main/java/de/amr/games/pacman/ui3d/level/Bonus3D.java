@@ -123,8 +123,7 @@ public class Bonus3D extends Box {
     }
 
     private void setTexture(Image texture) {
-        var material = new PhongMaterial(Color.GHOSTWHITE);
-        material.setDiffuseMap(texture);
-        setMaterial(material);
+        //TODO when using Color.TRANSPARENT, nothing is shown, why?
+        setMaterial(new PhongMaterial(Color.GHOSTWHITE, texture, null, null, null));
     }
 }
