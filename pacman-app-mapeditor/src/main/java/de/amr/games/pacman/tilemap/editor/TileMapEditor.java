@@ -1606,9 +1606,8 @@ public class TileMapEditor {
         fc.setSelectedExtensionFilter(IMAGE_FILES_FILTER);
         File file = fc.showOpenDialog(stage);
         if (file != null) {
-            try (FileInputStream in = new FileInputStream(file)) {
-                templateImage = new Image(in);
-                templateImage = toGreyscale(templateImage);
+            try (FileInputStream stream = new FileInputStream(file)) {
+                templateImage = toGreyscale(new Image(stream));
             } catch (IOException x) {
                 Logger.error(x);
             }
@@ -1627,9 +1626,8 @@ public class TileMapEditor {
         for (int x = 0; x < width; ++x) {
             for (int y = 0; y < height; ++y) {
                 Color color = r.getColor(x, y);
-                double g = 0.1 * (color.getRed() + color.getBlue() + color.getGreen());
-                Color gray = Color.color(g, g, g);
-                w.setColor(x, y, gray);
+                double g = (color.getRed() + color.getBlue() + color.getGreen()) / 3.0;
+                w.setColor(x, y, Color.gray(g));
             }
         }
         return target;
