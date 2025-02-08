@@ -248,14 +248,16 @@ public class TileMapEditor {
     private FileChooser fileChooser;
     private TabPane tabPaneWithPalettes;
     private HBox statusLine;
+    private TabPane tabPaneEditorViews;
+    private Tab tabEditCanvas;
+    private Tab tabTemplateImage;
+    private ImageView previewTemplateImage;
     private TabPane tabPanePreviews;
     private Tab tabPreview2D;
     private Tab tabPreview3D;
     private Tab tabSourceView;
-    private Tab tabTemplateImage;
     private MazePreview3D preview3D;
     private SubScene previewScene3D;
-    private ImageView previewTemplateImage;
 
     private final ContextMenu contextMenu = new ContextMenu();
     private MenuBar menuBar;
@@ -298,6 +300,7 @@ public class TileMapEditor {
         createMapSourceView();
         createPalettes();
         createPropertyEditors();
+        createTabPaneWithEditViews();
         createTabPaneWithPreviews();
         createFocussedTileStatusLabel();
         createEditModeStatusLabel();
@@ -564,21 +567,29 @@ public class TileMapEditor {
         spSourceView.setFitToHeight(true);
     }
 
+    private void createTabPaneWithEditViews() {
+        tabEditCanvas = new Tab("Editor", spEditCanvas); // TODO localize
+        tabTemplateImage = new Tab("Template Image", spTemplateImage); //TODO localize
+        tabPaneEditorViews = new TabPane(tabEditCanvas, tabTemplateImage);
+        tabPaneEditorViews.getTabs().forEach(tab -> tab.setClosable(false));
+        tabPaneEditorViews.setSide(Side.BOTTOM);
+        tabPaneEditorViews.getSelectionModel().select(tabEditCanvas);
+    }
+
     private void createTabPaneWithPreviews() {
         tabPreview2D = new Tab(tt("preview2D"), spPreview2D);
         tabPreview3D = new Tab(tt("preview3D"), previewScene3D);
         tabSourceView = new Tab(tt("source"), spSourceView);
-        tabTemplateImage = new Tab("Template Image", spTemplateImage); //TODO localize
 
-        tabPanePreviews = new TabPane(tabPreview2D, tabPreview3D, tabSourceView, tabTemplateImage);
+        tabPanePreviews = new TabPane(tabPreview2D, tabPreview3D, tabSourceView);
         tabPanePreviews.setSide(Side.BOTTOM);
         tabPanePreviews.getTabs().forEach(tab -> tab.setClosable(false));
-        tabPanePreviews.getSelectionModel().select(0);
+        tabPanePreviews.getSelectionModel().select(tabPreview2D);
 
         previewScene3D.widthProperty().bind(tabPanePreviews.widthProperty());
         previewScene3D.heightProperty().bind(tabPanePreviews.heightProperty());
 
-        splitPaneEditorAndPreviews = new SplitPane(spEditCanvas, tabPanePreviews);
+        splitPaneEditorAndPreviews = new SplitPane(tabPaneEditorViews, tabPanePreviews);
         splitPaneEditorAndPreviews.setDividerPositions(0.5);
     }
 
