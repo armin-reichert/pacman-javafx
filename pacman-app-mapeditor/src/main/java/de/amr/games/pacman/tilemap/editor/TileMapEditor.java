@@ -472,6 +472,7 @@ public class TileMapEditor {
                 worldMap().terrain().setProperty(PROPERTY_COLOR_WALL_FILL, formatColor(color));
                 //TODO find better solution
                 terrainPropertiesEditor().rebuildPropertyEditors();
+                preview3D.updateMaze(worldMap());
             });
             var miPickStrokeColor = new MenuItem("Set As Stroke Color");
             miPickStrokeColor.setOnAction(ae -> {
@@ -479,6 +480,7 @@ public class TileMapEditor {
                 worldMap().terrain().setProperty(PROPERTY_COLOR_WALL_STROKE, formatColor(color));
                 //TODO find better solution
                 terrainPropertiesEditor().rebuildPropertyEditors();
+                preview3D.updateMaze(worldMap());
             });
             var miPickDoorColor = new MenuItem("Set As Door Color");
             miPickDoorColor.setOnAction(ae -> {
@@ -486,6 +488,7 @@ public class TileMapEditor {
                 worldMap().terrain().setProperty(PROPERTY_COLOR_DOOR, formatColor(color));
                 //TODO find better solution
                 terrainPropertiesEditor().rebuildPropertyEditors();
+                preview3D.updateMaze(worldMap());
             });
             var miPickFoodColor = new MenuItem("Set As Food Color");
             miPickFoodColor.setOnAction(ae -> {
@@ -493,6 +496,7 @@ public class TileMapEditor {
                 worldMap().food().setProperty(PROPERTY_COLOR_FOOD, formatColor(color));
                 //TODO find better solution
                 foodPropertiesEditor().rebuildPropertyEditors();
+                preview3D.updateFood(worldMap());
             });
             menu.getItems().addAll(miPickFillColor, miPickStrokeColor, miPickDoorColor, miPickFoodColor);
             menu.show(templateImageView, e.getScreenX(), e.getScreenY());
