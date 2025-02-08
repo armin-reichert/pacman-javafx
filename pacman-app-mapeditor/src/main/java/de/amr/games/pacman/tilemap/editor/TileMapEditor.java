@@ -484,9 +484,58 @@ public class TileMapEditor {
                 return preview2D.heightProperty().get();
             }, preview2D.heightProperty(), templateImagePy));
 
+        previewTemplateImage.setOnContextMenuRequested(e -> {
+            Logger.info("Context menu request at x={} y={}", e.getX(), e.getY());
+            ContextMenu menu = new ContextMenu();
+            var miPickFillColor = new MenuItem("Set As Fill Color");
+            miPickFillColor.setOnAction(ae -> {
+                Color color = pickColor(previewTemplateImage, e.getX(), e.getY());
+                worldMap().terrain().setProperty(PROPERTY_COLOR_WALL_FILL, formatColor(color));
+                //TODO find better solution
+                terrainPropertiesEditor().rebuildPropertyEditors();
+            });
+            var miPickStrokeColor = new MenuItem("Set As Stroke Color");
+            miPickStrokeColor.setOnAction(ae -> {
+                Color color = pickColor(previewTemplateImage, e.getX(), e.getY());
+                worldMap().terrain().setProperty(PROPERTY_COLOR_WALL_STROKE, formatColor(color));
+                //TODO find better solution
+                terrainPropertiesEditor().rebuildPropertyEditors();
+            });
+            var miPickDoorColor = new MenuItem("Set As Door Color");
+            miPickDoorColor.setOnAction(ae -> {
+                Color color = pickColor(previewTemplateImage, e.getX(), e.getY());
+                worldMap().terrain().setProperty(PROPERTY_COLOR_DOOR, formatColor(color));
+                //TODO find better solution
+                terrainPropertiesEditor().rebuildPropertyEditors();
+            });
+            var miPickFoodColor = new MenuItem("Set As Food Color");
+            miPickFoodColor.setOnAction(ae -> {
+                Color color = pickColor(previewTemplateImage, e.getX(), e.getY());
+                worldMap().food().setProperty(PROPERTY_COLOR_FOOD, formatColor(color));
+                //TODO find better solution
+                foodPropertiesEditor().rebuildPropertyEditors();
+            });
+            menu.getItems().addAll(miPickFillColor, miPickStrokeColor, miPickDoorColor, miPickFoodColor);
+            menu.show(previewTemplateImage, e.getScreenX(), e.getScreenY());
+        });
+
+        previewTemplateImage.setOnMouseClicked(e -> {
+            double x = e.getX(), y = e.getY();
+            Color color = pickColor(previewTemplateImage, x, y);
+            Logger.info("At x={} y={} color={}", x, y, color);
+        });
+
         StackPane pane = new StackPane(previewTemplateImage);
         pane.setBackground(Background.fill(Color.BLACK));
+
         spTemplateImage = new ScrollPane(pane);
+    }
+
+    private Color pickColor(ImageView imageView, double x, double y) {
+        double pickX = (imageView.getImage().getWidth() / imageView.getBoundsInLocal().getWidth()) * x;
+        double pickY = (imageView.getImage().getHeight() / imageView.getBoundsInLocal().getHeight()) * y;
+        PixelReader pr = imageView.getImage().getPixelReader();
+        return pr.getColor((int) pickX, (int) pickY);
     }
 
     private void resetPreview3D() {

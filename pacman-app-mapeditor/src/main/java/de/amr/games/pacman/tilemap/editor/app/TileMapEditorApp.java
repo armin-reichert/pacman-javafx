@@ -52,7 +52,7 @@ public class TileMapEditorApp extends Application  {
             editor.createUI(stage);
             createUI(stage);
             editor.init(new File(System.getProperty("user.home")));
-            editor.loadMap(mapPacManGame);
+            //editor.loadMap(mapPacManGame);
             editor.start();
             stage.show();
         } catch (Exception x) {
