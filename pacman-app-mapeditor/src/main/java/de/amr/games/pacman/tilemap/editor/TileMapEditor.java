@@ -251,7 +251,7 @@ public class TileMapEditor {
     private TabPane tabPaneEditorViews;
     private Tab tabEditCanvas;
     private Tab tabTemplateImage;
-    private ImageView previewTemplateImage;
+    private ImageView templateImageView;
     private TabPane tabPanePreviews;
     private Tab tabPreview2D;
     private Tab tabPreview3D;
@@ -296,7 +296,7 @@ public class TileMapEditor {
         createEditCanvas();
         createPreview2D();
         createPreview3D();
-        createTemplateImagePreview();
+        createTemplateImageView();
         createMapSourceView();
         createPalettes();
         createPropertyEditors();
@@ -433,30 +433,6 @@ public class TileMapEditor {
 
         spEditCanvas = new ScrollPane(editCanvas);
         spEditCanvas.setFitToHeight(true);
-
-        editCanvas.setOnDragOver(e -> {
-            if (e.getDragboard().hasFiles()) {
-                File file = e.getDragboard().getFiles().getFirst();
-                if (isSupportedImageFile(file)) {
-                    e.acceptTransferModes(TransferMode.COPY);
-                }
-                e.consume();
-            }
-        });
-        editCanvas.setOnDragDropped(e -> {
-            if (e.getDragboard().hasFiles()) {
-                List<File> files = e.getDragboard().getFiles();
-                File file = files.getFirst();
-                if (isSupportedImageFile(file)) {
-                    e.acceptTransferModes(TransferMode.COPY);
-                    try (FileInputStream in = new FileInputStream(file)) {
-                        templateImagePy.set(new Image(in));
-                    } catch (IOException x) {
-                        Logger.error(x);
-                    }
-                }
-            }
-        });
     }
 
     private void createPreview2D() {
@@ -476,62 +452,86 @@ public class TileMapEditor {
         previewScene3D.setFill(Color.CORNFLOWERBLUE);
     }
 
-    private void createTemplateImagePreview() {
-        previewTemplateImage = new ImageView();
-        previewTemplateImage.setSmooth(false);
-        previewTemplateImage.setPreserveRatio(true);
-        previewTemplateImage.imageProperty().bind(templateImagePy);
-        previewTemplateImage.fitHeightProperty().bind(Bindings.createDoubleBinding(
+    private void createTemplateImageView() {
+        templateImageView = new ImageView();
+        templateImageView.setSmooth(false);
+        templateImageView.setPreserveRatio(true);
+        templateImageView.imageProperty().bind(templateImagePy);
+        templateImageView.fitHeightProperty().bind(Bindings.createDoubleBinding(
             () -> {
                 if (templateImagePy.get() == null) return 0.0;
                 return preview2D.heightProperty().get();
             }, preview2D.heightProperty(), templateImagePy));
 
-        previewTemplateImage.setOnContextMenuRequested(e -> {
+        templateImageView.setOnContextMenuRequested(e -> {
             Logger.info("Context menu request at x={} y={}", e.getX(), e.getY());
             ContextMenu menu = new ContextMenu();
             var miPickFillColor = new MenuItem("Set As Fill Color");
             miPickFillColor.setOnAction(ae -> {
-                Color color = pickColor(previewTemplateImage, e.getX(), e.getY());
+                Color color = pickColor(templateImageView, e.getX(), e.getY());
                 worldMap().terrain().setProperty(PROPERTY_COLOR_WALL_FILL, formatColor(color));
                 //TODO find better solution
                 terrainPropertiesEditor().rebuildPropertyEditors();
             });
             var miPickStrokeColor = new MenuItem("Set As Stroke Color");
             miPickStrokeColor.setOnAction(ae -> {
-                Color color = pickColor(previewTemplateImage, e.getX(), e.getY());
+                Color color = pickColor(templateImageView, e.getX(), e.getY());
                 worldMap().terrain().setProperty(PROPERTY_COLOR_WALL_STROKE, formatColor(color));
                 //TODO find better solution
                 terrainPropertiesEditor().rebuildPropertyEditors();
             });
             var miPickDoorColor = new MenuItem("Set As Door Color");
             miPickDoorColor.setOnAction(ae -> {
-                Color color = pickColor(previewTemplateImage, e.getX(), e.getY());
+                Color color = pickColor(templateImageView, e.getX(), e.getY());
                 worldMap().terrain().setProperty(PROPERTY_COLOR_DOOR, formatColor(color));
                 //TODO find better solution
                 terrainPropertiesEditor().rebuildPropertyEditors();
             });
             var miPickFoodColor = new MenuItem("Set As Food Color");
             miPickFoodColor.setOnAction(ae -> {
-                Color color = pickColor(previewTemplateImage, e.getX(), e.getY());
+                Color color = pickColor(templateImageView, e.getX(), e.getY());
                 worldMap().food().setProperty(PROPERTY_COLOR_FOOD, formatColor(color));
                 //TODO find better solution
                 foodPropertiesEditor().rebuildPropertyEditors();
             });
             menu.getItems().addAll(miPickFillColor, miPickStrokeColor, miPickDoorColor, miPickFoodColor);
-            menu.show(previewTemplateImage, e.getScreenX(), e.getScreenY());
+            menu.show(templateImageView, e.getScreenX(), e.getScreenY());
         });
 
-        previewTemplateImage.setOnMouseClicked(e -> {
+        templateImageView.setOnMouseClicked(e -> {
             double x = e.getX(), y = e.getY();
-            Color color = pickColor(previewTemplateImage, x, y);
+            Color color = pickColor(templateImageView, x, y);
             Logger.info("At x={} y={} color={}", x, y, color);
         });
 
-        StackPane pane = new StackPane(previewTemplateImage);
+        StackPane pane = new StackPane(templateImageView);
         pane.setBackground(Background.fill(Color.BLACK));
 
         spTemplateImage = new ScrollPane(pane);
+        spTemplateImage.setOnDragOver(e -> {
+            if (e.getDragboard().hasFiles()) {
+                File file = e.getDragboard().getFiles().getFirst();
+                if (isSupportedImageFile(file)) {
+                    e.acceptTransferModes(TransferMode.COPY);
+                }
+                e.consume();
+            }
+        });
+
+        spTemplateImage.setOnDragDropped(e -> {
+            if (e.getDragboard().hasFiles()) {
+                List<File> files = e.getDragboard().getFiles();
+                File file = files.getFirst();
+                if (isSupportedImageFile(file)) {
+                    e.acceptTransferModes(TransferMode.COPY);
+                    try (FileInputStream in = new FileInputStream(file)) {
+                        templateImagePy.set(new Image(in));
+                    } catch (IOException x) {
+                        Logger.error(x);
+                    }
+                }
+            }
+        });
     }
 
     private Color pickColor(ImageView imageView, double x, double y) {
