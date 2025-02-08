@@ -28,7 +28,6 @@ import javafx.scene.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
@@ -88,6 +87,24 @@ public class TileMapEditor {
     public static final FileChooser.ExtensionFilter IMAGE_FILES_FILTER = new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg");
     public static final FileChooser.ExtensionFilter ALL_FILES_FILTER = new FileChooser.ExtensionFilter("All Files", "*.*");
 
+    //TODO move into util class
+    private static Image imageToGreyscale(Image source) {
+        if (source == null) {
+            return null;
+        }
+        int width = (int) source.getWidth(), height = (int) source.getHeight();
+        WritableImage target = new WritableImage(width, height);
+        PixelReader r = source.getPixelReader();
+        PixelWriter w = target.getPixelWriter();
+        for (int x = 0; x < width; ++x) {
+            for (int y = 0; y < height; ++y) {
+                Color color = r.getColor(x, y);
+                double g = (color.getRed() + color.getBlue() + color.getGreen()) / 3.0;
+                w.setColor(x, y, Color.gray(g));
+            }
+        }
+        return target;
+    }
     // Properties
 
     private final ObjectProperty<File> currentFilePy = new SimpleObjectProperty<>();
@@ -147,6 +164,10 @@ public class TileMapEditor {
     };
 
     private final BooleanProperty symmetricEditModePy = new SimpleBooleanProperty(true);
+
+    private final ObjectProperty<Image> templateImagePy = new SimpleObjectProperty<>();
+
+    private final ObjectProperty<Image> templateImageGreyPy = new SimpleObjectProperty<>();
 
     // Accessor methods
 
@@ -218,6 +239,7 @@ public class TileMapEditor {
     private Canvas preview2D;
     private Text sourceView;
     private ScrollPane spSourceView;
+    private ScrollPane spTemplateImage;
     private SplitPane splitPaneEditorAndPreviews;
     private Label messageLabel;
     private Label focussedTileStatusLabel;
@@ -230,8 +252,10 @@ public class TileMapEditor {
     private Tab tabPreview2D;
     private Tab tabPreview3D;
     private Tab tabSourceView;
+    private Tab tabTemplateImage;
     private MazePreview3D preview3D;
     private SubScene previewScene3D;
+    private ImageView previewTemplateImage;
 
     private final ContextMenu contextMenu = new ContextMenu();
     private MenuBar menuBar;
@@ -253,9 +277,6 @@ public class TileMapEditor {
     private double anchorX, anchorY;
     private double anchorAngle;
 
-    // experimental
-    private Image templateImage;
-
     public void createUI(Stage stage) {
         this.stage = assertNotNull(stage);
 
@@ -273,6 +294,7 @@ public class TileMapEditor {
         createEditCanvas();
         createPreview2D();
         createPreview3D();
+        createTemplateImagePreview();
         createMapSourceView();
         createPalettes();
         createPropertyEditors();
@@ -293,6 +315,8 @@ public class TileMapEditor {
         obstacleEditor.worldMapPy.bind(worldMapPy);
 
         titlePy.bind(createTitleBinding());
+
+        templateImageGreyPy.bind(templateImagePy.map(TileMapEditor::imageToGreyscale));
 
         // Input handlers
         contentPane.setOnKeyTyped(this::onKeyTyped);
@@ -423,8 +447,7 @@ public class TileMapEditor {
                 if (isSupportedImageFile(file)) {
                     e.acceptTransferModes(TransferMode.COPY);
                     try (FileInputStream in = new FileInputStream(file)) {
-                        templateImage = new Image(in);
-                        templateImage = toGreyscale(templateImage);
+                        templateImagePy.set(new Image(in));
                     } catch (IOException x) {
                         Logger.error(x);
                     }
@@ -448,6 +471,22 @@ public class TileMapEditor {
         previewScene3D = new SubScene(new Group(preview3D.root()), 500, 500, true, SceneAntialiasing.BALANCED);
         previewScene3D.setCamera(preview3D.camera());
         previewScene3D.setFill(Color.CORNFLOWERBLUE);
+    }
+
+    private void createTemplateImagePreview() {
+        previewTemplateImage = new ImageView();
+        previewTemplateImage.setSmooth(false);
+        previewTemplateImage.setPreserveRatio(true);
+        previewTemplateImage.imageProperty().bind(templateImagePy);
+        previewTemplateImage.fitHeightProperty().bind(Bindings.createDoubleBinding(
+            () -> {
+                if (templateImagePy.get() == null) return 0.0;
+                return preview2D.heightProperty().get();
+            }, preview2D.heightProperty(), templateImagePy));
+
+        StackPane pane = new StackPane(previewTemplateImage);
+        pane.setBackground(Background.fill(Color.BLACK));
+        spTemplateImage = new ScrollPane(pane);
     }
 
     private void resetPreview3D() {
@@ -480,8 +519,9 @@ public class TileMapEditor {
         tabPreview2D = new Tab(tt("preview2D"), spPreview2D);
         tabPreview3D = new Tab(tt("preview3D"), previewScene3D);
         tabSourceView = new Tab(tt("source"), spSourceView);
+        tabTemplateImage = new Tab("Template Image", spTemplateImage); //TODO localize
 
-        tabPanePreviews = new TabPane(tabPreview2D, tabPreview3D, tabSourceView);
+        tabPanePreviews = new TabPane(tabPreview2D, tabPreview3D, tabSourceView, tabTemplateImage);
         tabPanePreviews.setSide(Side.BOTTOM);
         tabPanePreviews.getTabs().forEach(tab -> tab.setClosable(false));
         tabPanePreviews.getSelectionModel().select(0);
@@ -978,9 +1018,9 @@ public class TileMapEditor {
         g.setFill(colors.backgroundColor());
         g.fillRect(0, 0, editCanvas.getWidth(), editCanvas.getHeight());
 
-        if (templateImage != null) {
+        if (templateImageGreyPy.getName() != null) {
             int emptyRowsTop = 3, emptyRowsBottom = 2; // TODO
-            g.drawImage(templateImage,
+            g.drawImage(templateImageGreyPy.get(),
                     0, emptyRowsTop * scaling * TS,
                     editCanvas.getWidth(), editCanvas.getHeight() - (emptyRowsTop + emptyRowsBottom) * scaling * TS);
         }
@@ -1607,7 +1647,7 @@ public class TileMapEditor {
         File file = fc.showOpenDialog(stage);
         if (file != null) {
             try (FileInputStream stream = new FileInputStream(file)) {
-                templateImage = toGreyscale(new Image(stream));
+                templateImagePy.set(new Image(stream));
             } catch (IOException x) {
                 Logger.error(x);
             }
@@ -1615,21 +1655,7 @@ public class TileMapEditor {
     }
 
     private void closeTemplateImage() {
-        templateImage = null;
+        templateImagePy.set(null);
     }
 
-    private Image toGreyscale(Image source) {
-        int width = (int) source.getWidth(), height = (int) source.getHeight();
-        WritableImage target = new WritableImage(width, height);
-        PixelReader r = source.getPixelReader();
-        PixelWriter w = target.getPixelWriter();
-        for (int x = 0; x < width; ++x) {
-            for (int y = 0; y < height; ++y) {
-                Color color = r.getColor(x, y);
-                double g = (color.getRed() + color.getBlue() + color.getGreen()) / 3.0;
-                w.setColor(x, y, Color.gray(g));
-            }
-        }
-        return target;
-    }
 }
