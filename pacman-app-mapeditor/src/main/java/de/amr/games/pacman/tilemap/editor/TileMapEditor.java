@@ -28,7 +28,6 @@ import javafx.scene.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
@@ -478,15 +477,19 @@ public class TileMapEditor {
             colorPreview.setMinWidth(32);
             colorPreview.setMinHeight(16);
             colorPreview.setBackground(Background.fill(color));
+
             var colorValue = new Text(formatColorHex(color));
             colorValue.setFont(Font.font("Monospace", FontWeight.BOLD, 14.0));
             colorValue.setFill(Color.BLACK);
             colorValue.setDisable(true);
+
             var colorPreviewBox = new HBox(colorPreview, colorValue);
             colorPreviewBox.setSpacing(3);
-            var miColorPreview = new CustomMenuItem(colorPreviewBox);
 
-            var miPickFillColor = new MenuItem("Set As Fill Color");
+            var miColorPreview = new CustomMenuItem(colorPreviewBox);
+            //TODO how to let item appear unselectable?
+
+            var miPickFillColor = new MenuItem(tt("menu.pick_color.set_fill_color"));
             miPickFillColor.setOnAction(ae -> {
                 worldMap().terrain().setProperty(PROPERTY_COLOR_WALL_FILL, formatColor(color));
                 //TODO find better solution
@@ -494,7 +497,7 @@ public class TileMapEditor {
                 preview3D.updateMaze(worldMap());
             });
 
-            var miPickStrokeColor = new MenuItem("Set As Stroke Color");
+            var miPickStrokeColor = new MenuItem(tt("menu.pick_color.set_stroke_color"));
             miPickStrokeColor.setOnAction(ae -> {
                 worldMap().terrain().setProperty(PROPERTY_COLOR_WALL_STROKE, formatColor(color));
                 //TODO find better solution
@@ -502,7 +505,7 @@ public class TileMapEditor {
                 preview3D.updateMaze(worldMap());
             });
 
-            var miPickDoorColor = new MenuItem("Set As Door Color");
+            var miPickDoorColor = new MenuItem(tt("menu.pick_color.set_door_color"));
             miPickDoorColor.setOnAction(ae -> {
                 worldMap().terrain().setProperty(PROPERTY_COLOR_DOOR, formatColor(color));
                 //TODO find better solution
@@ -510,7 +513,7 @@ public class TileMapEditor {
                 preview3D.updateMaze(worldMap());
             });
 
-            var miPickFoodColor = new MenuItem("Set As Food Color");
+            var miPickFoodColor = new MenuItem(tt("menu.pick_color.set_food_color"));
             miPickFoodColor.setOnAction(ae -> {
                 worldMap().food().setProperty(PROPERTY_COLOR_FOOD, formatColor(color));
                 //TODO find better solution
