@@ -240,6 +240,7 @@ public class TileMapEditor {
     private Text sourceView;
     private ScrollPane spSourceView;
     private ScrollPane spTemplateImage;
+    private Pane dropTargetForTemplateImage;
     private SplitPane splitPaneEditorAndPreviews;
     private Label messageLabel;
     private Label focussedTileStatusLabel;
@@ -512,30 +513,6 @@ public class TileMapEditor {
         pane.setBackground(Background.fill(Color.BLACK));
 
         spTemplateImage = new ScrollPane(pane);
-        spTemplateImage.setOnDragOver(e -> {
-            if (e.getDragboard().hasFiles()) {
-                File file = e.getDragboard().getFiles().getFirst();
-                if (isSupportedImageFile(file)) {
-                    e.acceptTransferModes(TransferMode.COPY);
-                }
-                e.consume();
-            }
-        });
-
-        spTemplateImage.setOnDragDropped(e -> {
-            if (e.getDragboard().hasFiles()) {
-                List<File> files = e.getDragboard().getFiles();
-                File file = files.getFirst();
-                if (isSupportedImageFile(file)) {
-                    e.acceptTransferModes(TransferMode.COPY);
-                    try (FileInputStream in = new FileInputStream(file)) {
-                        templateImagePy.set(new Image(in));
-                    } catch (IOException x) {
-                        Logger.error(x);
-                    }
-                }
-            }
-        });
     }
 
     private Color pickColor(ImageView imageView, double x, double y) {
@@ -573,11 +550,53 @@ public class TileMapEditor {
 
     private void createTabPaneWithEditViews() {
         tabEditCanvas = new Tab("Editor", spEditCanvas); // TODO localize
-        tabTemplateImage = new Tab("Template Image", spTemplateImage); //TODO localize
+
+        var hint = new Label("Drop your maze image here!");  // TODO localize
+        hint.setFont(Font.font(16));
+
+        dropTargetForTemplateImage = new BorderPane(hint);
+        registerDragAndDropImageHandler(dropTargetForTemplateImage);
+
+        var stackPane = new StackPane(spTemplateImage, dropTargetForTemplateImage);
+        templateImagePy.addListener((py, ov, nv) -> {
+            stackPane.getChildren().remove(dropTargetForTemplateImage);
+            if (nv == null) {
+                stackPane.getChildren().add(dropTargetForTemplateImage);
+            }
+        });
+        tabTemplateImage = new Tab("Template Image", stackPane); //TODO localize
+
         tabPaneEditorViews = new TabPane(tabEditCanvas, tabTemplateImage);
         tabPaneEditorViews.getTabs().forEach(tab -> tab.setClosable(false));
         tabPaneEditorViews.setSide(Side.BOTTOM);
         tabPaneEditorViews.getSelectionModel().select(tabEditCanvas);
+    }
+
+    private void registerDragAndDropImageHandler(Node node) {
+        node.setOnDragOver(e -> {
+            if (e.getDragboard().hasFiles()) {
+                File file = e.getDragboard().getFiles().getFirst();
+                if (isSupportedImageFile(file)) {
+                    e.acceptTransferModes(TransferMode.COPY);
+                }
+            }
+            e.consume();
+        });
+
+        node.setOnDragDropped(e -> {
+            if (e.getDragboard().hasFiles()) {
+                File file = e.getDragboard().getFiles().getFirst();
+                if (isSupportedImageFile(file)) {
+                    e.acceptTransferModes(TransferMode.COPY);
+                    try (FileInputStream in = new FileInputStream(file)) {
+                        templateImagePy.set(new Image(in));
+                    } catch (IOException x) {
+                        Logger.error(x);
+                    }
+                }
+            }
+            e.consume();
+        });
     }
 
     private void createTabPaneWithPreviews() {
