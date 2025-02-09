@@ -490,51 +490,39 @@ public class TileMapEditor {
             //TODO how to let item appear unselectable?
 
             var miPickFillColor = new MenuItem(tt("menu.pick_color.set_fill_color"));
-            miPickFillColor.setOnAction(ae -> {
-                worldMap().terrain().setProperty(PROPERTY_COLOR_WALL_FILL, formatColor(color));
-                //TODO find better solution
-                terrainPropertiesEditor().rebuildPropertyEditors();
-                preview3D.updateMaze(worldMap());
-            });
+            miPickFillColor.setOnAction(ae -> setTerrainMapProperty(PROPERTY_COLOR_WALL_FILL, formatColor(color)));
 
             var miPickStrokeColor = new MenuItem(tt("menu.pick_color.set_stroke_color"));
-            miPickStrokeColor.setOnAction(ae -> {
-                worldMap().terrain().setProperty(PROPERTY_COLOR_WALL_STROKE, formatColor(color));
-                //TODO find better solution
-                terrainPropertiesEditor().rebuildPropertyEditors();
-                preview3D.updateMaze(worldMap());
-            });
+            miPickStrokeColor.setOnAction(ae -> setTerrainMapProperty(PROPERTY_COLOR_WALL_STROKE, formatColor(color)));
 
             var miPickDoorColor = new MenuItem(tt("menu.pick_color.set_door_color"));
-            miPickDoorColor.setOnAction(ae -> {
-                worldMap().terrain().setProperty(PROPERTY_COLOR_DOOR, formatColor(color));
-                //TODO find better solution
-                terrainPropertiesEditor().rebuildPropertyEditors();
-                preview3D.updateMaze(worldMap());
-            });
+            miPickDoorColor.setOnAction(ae -> setTerrainMapProperty(PROPERTY_COLOR_DOOR, formatColor(color)));
 
             var miPickFoodColor = new MenuItem(tt("menu.pick_color.set_food_color"));
-            miPickFoodColor.setOnAction(ae -> {
-                worldMap().food().setProperty(PROPERTY_COLOR_FOOD, formatColor(color));
-                //TODO find better solution
-                foodPropertiesEditor().rebuildPropertyEditors();
-                preview3D.updateFood(worldMap());
-            });
+            miPickFoodColor.setOnAction(ae -> setFoodMapProperty(PROPERTY_COLOR_FOOD, formatColor(color)));
 
             templateImageContextMenu.getItems().addAll(miColorPreview, miPickFillColor, miPickStrokeColor, miPickDoorColor, miPickFoodColor);
             templateImageContextMenu.show(templateImageView, e.getScreenX(), e.getScreenY());
-        });
-
-        templateImageView.setOnMouseClicked(e -> {
-            double x = e.getX(), y = e.getY();
-            Color color = pickColor(templateImageView, x, y);
-            Logger.info("At x={} y={} color={}", x, y, color);
         });
 
         StackPane pane = new StackPane(templateImageView);
         pane.setBackground(Background.fill(Color.BLACK));
 
         spTemplateImage = new ScrollPane(pane);
+    }
+
+    private void setTerrainMapProperty(String name, String value) {
+        worldMap().terrain().setProperty(name, value);
+        //TODO find better solution
+        terrainPropertiesEditor().rebuildPropertyEditors();
+        preview3D.updateMaze(worldMap());
+    }
+
+    private void setFoodMapProperty(String name, String value) {
+        worldMap().food().setProperty(name, value);
+        //TODO find better solution
+        foodPropertiesEditor().rebuildPropertyEditors();
+        preview3D.updateFood(worldMap());
     }
 
     private Color pickColor(ImageView imageView, double x, double y) {
@@ -1523,6 +1511,8 @@ public class TileMapEditor {
 
     void markAsEdited(TileMap editedMap) {
         unsavedChanges = true;
+
+        //TODO check this
         if (worldMap() != null) {
             updateSourceView();
             if (editedMap == worldMap().terrain()) {
