@@ -431,7 +431,7 @@ public class TileMapEditor {
             () -> (double) worldMap().terrain().numRows() * gridSize(), worldMapPy, gridSizePy));
         editCanvas.widthProperty().bind(Bindings.createDoubleBinding(
             () -> (double) worldMap().terrain().numCols() * gridSize(), worldMapPy, gridSizePy));
-
+        registerDragAndDropImageHandler(editCanvas);
         spEditCanvas = new ScrollPane(editCanvas);
         spEditCanvas.setFitToHeight(true);
     }
@@ -549,9 +549,9 @@ public class TileMapEditor {
     }
 
     private void createTabPaneWithEditViews() {
-        tabEditCanvas = new Tab("Editor", spEditCanvas); // TODO localize
+        tabEditCanvas = new Tab(tt("tab_editor"), spEditCanvas);
 
-        var hint = new Label("Drop your maze image here!");  // TODO localize
+        var hint = new Label(tt("image_drop_hint"));
         hint.setFont(Font.font(16));
 
         dropTargetForTemplateImage = new BorderPane(hint);
@@ -564,7 +564,7 @@ public class TileMapEditor {
                 stackPane.getChildren().add(dropTargetForTemplateImage);
             }
         });
-        tabTemplateImage = new Tab("Template Image", stackPane); //TODO localize
+        tabTemplateImage = new Tab(tt("tab_template_image"), stackPane);
 
         tabPaneEditorViews = new TabPane(tabEditCanvas, tabTemplateImage);
         tabPaneEditorViews.getTabs().forEach(tab -> tab.setClosable(false));
@@ -797,7 +797,7 @@ public class TileMapEditor {
         var miNewPreconfiguredMap = new MenuItem(tt("menu.file.new"));
         miNewPreconfiguredMap.setOnAction(e -> showNewMapDialog(true));
 
-        var miNewBlankMap = new MenuItem("New Blank Map..."); // TODO localize
+        var miNewBlankMap = new MenuItem(tt("menu.file.new_blank_map"));
         miNewBlankMap.setOnAction(e -> showNewMapDialog(false));
 
         var miOpenMapFile = new MenuItem(tt("menu.file.open"));
@@ -806,10 +806,10 @@ public class TileMapEditor {
         var miSaveMapFileAs = new MenuItem(tt("menu.file.save_as"));
         miSaveMapFileAs.setOnAction(e -> showSaveDialog());
 
-        var miOpenTemplateImage = new MenuItem("Open Template Image..."); //TODO localize
+        var miOpenTemplateImage = new MenuItem(tt("menu.file.open_template_image"));
         miOpenTemplateImage.setOnAction(e -> openTemplateImage());
 
-        var miCloseTemplateImage = new MenuItem("Close Template Image"); //TODO localize
+        var miCloseTemplateImage = new MenuItem(tt("menu.file.close_template_image"));
         miCloseTemplateImage.setOnAction(e -> closeTemplateImage());
 
         menuFile = new Menu(tt("menu.file"), NO_GRAPHIC,
@@ -867,7 +867,7 @@ public class TileMapEditor {
         var miSegmentNumbers = new CheckMenuItem(tt("menu.view.segment_numbers"));
         miSegmentNumbers.selectedProperty().bindBidirectional(segmentNumbersDisplayedPy);
 
-        var miObstacleInnerArea = new CheckMenuItem("Inner Obstacle Area"); //TODO localize
+        var miObstacleInnerArea = new CheckMenuItem(tt("inner_obstacle_area"));
         miObstacleInnerArea.selectedProperty().bindBidirectional(obstacleInnerAreaDisplayedPy);
 
         menuView = new Menu(tt("menu.view"), NO_GRAPHIC,

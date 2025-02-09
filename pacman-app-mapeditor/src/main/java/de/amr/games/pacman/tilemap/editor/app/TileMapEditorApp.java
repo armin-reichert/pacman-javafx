@@ -67,7 +67,7 @@ public class TileMapEditorApp extends Application  {
 
         var miQuit = new MenuItem(tt("quit"));
         miQuit.setOnAction(e -> editor.showSaveConfirmationDialog(editor::showSaveDialog, stage::close));
-        editor.getFileMenu().getItems().add(miQuit);
+        editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miQuit);
 
         double height = Math.max(0.8 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
         double width = 1.25 * height;
