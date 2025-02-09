@@ -1826,6 +1826,9 @@ public class TileMapEditor {
                     if (isPelletLike(pixels, foodColorPixel)) {
                         Logger.info("Detected pellet at tile {}", tile);
                         setTileValue(worldMap().food(), tile, TileEncoding.PELLET);
+                    } else if (isEnergizerLike(pixels, foodColorPixel)) {
+                        Logger.info("Detected energizer at tile {}", tile);
+                        setTileValue(worldMap().food(), tile, TileEncoding.ENERGIZER);
                     }
                 } catch (Exception e) {
                     Logger.error("getPixels() failed for tile {}", tile);
@@ -1840,6 +1843,14 @@ public class TileMapEditor {
             if (pixel == foodColorPixel) numFoodPixels++;
         }
         return numFoodPixels == 4;
+    }
+
+    private boolean isEnergizerLike(int[] pixels, int foodColorPixel) {
+        int numFoodPixels = 0;
+        for (int pixel : pixels) {
+            if (pixel == foodColorPixel) numFoodPixels++;
+        }
+        return numFoodPixels > 50;
     }
 
 }
