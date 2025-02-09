@@ -128,6 +128,8 @@ public class TileMapEditor {
 
     private final BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
 
+    private final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
+
     private final IntegerProperty gridSizePy = new SimpleIntegerProperty(16) {
         @Override
         protected void invalidated() {
@@ -147,8 +149,6 @@ public class TileMapEditor {
             setPropertyEditorsVisible(get());
         }
     };
-
-    private final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
 
     private final StringProperty titlePy = new SimpleStringProperty("Tile Map Editor");
 
@@ -322,7 +322,6 @@ public class TileMapEditor {
         obstacleEditor.worldMapPy.bind(worldMapPy);
 
         titlePy.bind(createTitleBinding());
-
         templateImageGreyPy.bind(templateImagePy.map(TileMapEditor::imageToGreyscale));
 
         // Input handlers
@@ -451,6 +450,8 @@ public class TileMapEditor {
 
     private void createPreview3D() {
         preview3D = new MazePreview3D();
+        preview3D.foodVisibleProperty().bind(foodVisiblePy);
+        preview3D.terrainVisibleProperty().bind(terrainVisiblePy);
         previewScene3D = new SubScene(new Group(preview3D.root()), 500, 500, true, SceneAntialiasing.BALANCED);
         previewScene3D.setCamera(preview3D.camera());
         previewScene3D.setFill(Color.CORNFLOWERBLUE);
@@ -1817,7 +1818,7 @@ public class TileMapEditor {
                     r.getPixels(col * TS, (row - 3) * TS, TS, TS, pixelFormat, pixels, 0, TS);
                     if (isPelletLike(pixels)) {
                         Logger.info("Detected pellet at tile {}", tile);
-                        worldMap().food().set(tile, TileEncoding.PELLET);
+                        setTileValue(worldMap().food(), tile, TileEncoding.PELLET);
                     }
                 } catch (Exception e) {
                     Logger.error("getPixels() failed for tile {}", tile);

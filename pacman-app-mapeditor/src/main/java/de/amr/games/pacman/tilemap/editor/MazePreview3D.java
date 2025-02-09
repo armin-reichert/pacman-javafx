@@ -45,6 +45,8 @@ public class MazePreview3D {
     private final DoubleProperty widthPy = new SimpleDoubleProperty(800);
     private final DoubleProperty heightPy = new SimpleDoubleProperty(400);
     private final BooleanProperty wireframePy = new SimpleBooleanProperty(false);
+    private final BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
+    private final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
 
     private final Group root = new Group();
     private final Group mazeGroup = new Group();
@@ -65,7 +67,10 @@ public class MazePreview3D {
 
     public MazePreview3D() {
         r3D = new TerrainRenderer3D();
+
         root.getChildren().addAll(mazeGroup, foodGroup);
+        foodGroup.visibleProperty().bind(foodVisiblePy);
+        mazeGroup.visibleProperty().bind(terrainVisiblePy);
 
         AmbientLight ambientLight = new AmbientLight(Color.WHITE);
         root.getChildren().add(ambientLight);
@@ -81,6 +86,10 @@ public class MazePreview3D {
     public DoubleProperty heightProperty() { return heightPy; }
 
     public BooleanProperty wireframeProperty() { return wireframePy; }
+
+    public BooleanProperty foodVisibleProperty() { return foodVisiblePy; }
+
+    public BooleanProperty terrainVisibleProperty() { return terrainVisiblePy; }
 
     public void updateMaze(WorldMap worldMap) {
         TileMap terrain = worldMap.terrain();
@@ -117,6 +126,7 @@ public class MazePreview3D {
             door.setTranslateX(tile.x() * TS + HTS);
             door.setTranslateY(tile.y() * TS + HTS);
             door.setTranslateZ(-door.getDepth() * 0.5);
+            door.visibleProperty().bind(terrainVisiblePy);
             mazeGroup.getChildren().add(door);
         });
 
