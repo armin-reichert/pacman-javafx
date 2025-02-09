@@ -817,6 +817,7 @@ public class TileMapEditor {
                 miNewBlankMap,
                 miOpenMapFile,
                 miSaveMapFileAs,
+                new SeparatorMenuItem(),
                 miOpenTemplateImage,
                 miCloseTemplateImage);
 
