@@ -1806,17 +1806,24 @@ public class TileMapEditor {
 
     private void detectPelletsInTemplateImage() {
         Image templateImage = templateImagePy.get();
-        PixelReader r = templateImage.getPixelReader();
+        PixelReader rdr = templateImage.getPixelReader();
         var pixelFormat = WritablePixelFormat.getIntArgbInstance() ;
         int numRows = worldMap().terrain().numRows(), numCols = worldMap().terrain().numCols();
         int[] pixels = new int[TS * TS];
+        Color foodColor = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, Color.WHITE);
+        //TODO is there predefined functionality for this?
+        int a = (int) (foodColor.getOpacity() * 255);
+        int r = (int) (foodColor.getRed() * 255);
+        int g = (int) (foodColor.getGreen() * 255);
+        int b = (int) (foodColor.getBlue() * 255);
+        int foodColorPixel = (a << 24) | (r << 16) | (g <<  8) | (b);
         // 3 empty rows on top, 2 on bottom
         for (int row = 3; row < numRows - 3; ++row) {
             for (int col = 0; col < numCols; ++col) {
                 Vector2i tile = vec_2i(col, row);
                 try {
-                    r.getPixels(col * TS, (row - 3) * TS, TS, TS, pixelFormat, pixels, 0, TS);
-                    if (isPelletLike(pixels)) {
+                    rdr.getPixels(col * TS, (row - 3) * TS, TS, TS, pixelFormat, pixels, 0, TS);
+                    if (isPelletLike(pixels, foodColorPixel)) {
                         Logger.info("Detected pellet at tile {}", tile);
                         setTileValue(worldMap().food(), tile, TileEncoding.PELLET);
                     }
@@ -1827,12 +1834,12 @@ public class TileMapEditor {
         }
     }
 
-    private boolean isPelletLike(int[] pixels) {
-        int nonZeroPixels = 0;
+    private boolean isPelletLike(int[] pixels, int foodColorPixel) {
+        int numFoodPixels = 0;
         for (int pixel : pixels) {
-            if (pixel != 0) nonZeroPixels++;
+            if (pixel == foodColorPixel) numFoodPixels++;
         }
-        return nonZeroPixels == 4;
+        return numFoodPixels == 4;
     }
 
 }
