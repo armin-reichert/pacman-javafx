@@ -43,6 +43,7 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.io.*;
+import java.nio.IntBuffer;
 import java.text.MessageFormat;
 import java.time.Instant;
 import java.util.*;
@@ -1459,9 +1460,9 @@ public class TileMapEditor {
         }
     }
 
-    private void onEditCanvasContextMenuRequested(ContextMenuEvent e) {
+    private void onEditCanvasContextMenuRequested(ContextMenuEvent menuEvent) {
         if (!isEditMode(EditMode.INSPECT)) {
-            Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
+            Vector2i tile = tileAtMousePosition(menuEvent.getX(), menuEvent.getY());
             WorldMap worldMap = worldMapPy.get();
 
             var miAddCircle2x2 = new MenuItem("2x2 Circle");
@@ -1477,13 +1478,13 @@ public class TileMapEditor {
 
             var miInsertRow = new MenuItem("Insert Row");
             miInsertRow.setOnAction(actionEvent -> {
-                int rowIndex = tileAtMousePosition(e.getX(), e.getY()).y();
+                int rowIndex = tileAtMousePosition(menuEvent.getX(), menuEvent.getY()).y();
                 setWorldMap(worldMap.insertRowBeforeIndex(rowIndex));
             });
 
             var miDeleteRow = new MenuItem("Delete Row");
             miDeleteRow.setOnAction(actionEvent -> {
-                int rowIndex = tileAtMousePosition(e.getX(), e.getY()).y();
+                int rowIndex = tileAtMousePosition(menuEvent.getX(), menuEvent.getY()).y();
                 setWorldMap(worldMap.deleteRowAtIndex(rowIndex));
             });
 
@@ -1494,6 +1495,10 @@ public class TileMapEditor {
                 }
             });
 
+            var miDetectPellets = new MenuItem("Detect pellets");
+            miDetectPellets.disableProperty().bind(templateImagePy.map(Objects::isNull));
+            miDetectPellets.setOnAction(ae -> detectPelletsInTemplateImage());
+
             contextMenu.getItems().setAll(
                     miInsertRow,
                     miDeleteRow,
@@ -1501,8 +1506,10 @@ public class TileMapEditor {
                     miAddCircle2x2,
                     miAddHouse,
                     new SeparatorMenuItem(),
+                    miDetectPellets,
                     miFloodWithPellets);
-            contextMenu.show(editCanvas, e.getScreenX(), e.getScreenY());
+
+            contextMenu.show(editCanvas, menuEvent.getScreenX(), menuEvent.getScreenY());
         }
     }
 
@@ -1794,6 +1801,37 @@ public class TileMapEditor {
                 }
             }
         }
+    }
+
+    private void detectPelletsInTemplateImage() {
+        Image templateImage = templateImagePy.get();
+        PixelReader r = templateImage.getPixelReader();
+        var pixelFormat = WritablePixelFormat.getIntArgbInstance() ;
+        int numRows = worldMap().terrain().numRows(), numCols = worldMap().terrain().numCols();
+        int[] pixels = new int[TS * TS];
+        // 3 empty rows on top, 2 on bottom
+        for (int row = 3; row < numRows - 3; ++row) {
+            for (int col = 0; col < numCols; ++col) {
+                Vector2i tile = vec_2i(col, row);
+                try {
+                    r.getPixels(col * TS, (row - 3) * TS, TS, TS, pixelFormat, pixels, 0, TS);
+                    if (isPelletLike(pixels)) {
+                        Logger.info("Detected pellet at tile {}", tile);
+                        worldMap().food().set(tile, TileEncoding.PELLET);
+                    }
+                } catch (Exception e) {
+                    Logger.error("getPixels() failed for tile {}", tile);
+                }
+            }
+        }
+    }
+
+    private boolean isPelletLike(int[] pixels) {
+        int nonZeroPixels = 0;
+        for (int pixel : pixels) {
+            if (pixel != 0) nonZeroPixels++;
+        }
+        return nonZeroPixels == 4;
     }
 
 }
