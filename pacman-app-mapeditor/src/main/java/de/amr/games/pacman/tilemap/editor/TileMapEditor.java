@@ -506,6 +506,13 @@ public class TileMapEditor {
             templateImageContextMenu.show(templateImageView, e.getScreenX(), e.getScreenY());
         });
 
+        templateImageView.setOnMouseClicked(e -> {
+            if (templateImageContextMenu != null) {
+                templateImageContextMenu.hide();
+                templateImageContextMenu = null;
+            }
+        });
+
         StackPane pane = new StackPane(templateImageView);
         pane.setBackground(Background.fill(Color.BLACK));
 
