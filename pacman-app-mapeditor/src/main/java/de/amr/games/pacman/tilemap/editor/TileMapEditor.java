@@ -1487,12 +1487,21 @@ public class TileMapEditor {
                 setWorldMap(worldMap.deleteRowAtIndex(rowIndex));
             });
 
+            var miFloodWithPellets = new MenuItem("Flood with pellets");
+            miFloodWithPellets.setOnAction(ae -> {
+                if (worldMap.terrain().get(tile) == TileEncoding.EMPTY && worldMap.food().get(tile) == TileEncoding.EMPTY) {
+                    floodWithPellets(tile);
+                }
+            });
+
             contextMenu.getItems().setAll(
                     miInsertRow,
                     miDeleteRow,
                     new SeparatorMenuItem(),
                     miAddCircle2x2,
-                    miAddHouse);
+                    miAddHouse,
+                    new SeparatorMenuItem(),
+                    miFloodWithPellets);
             contextMenu.show(editCanvas, e.getScreenX(), e.getScreenY());
         }
     }
@@ -1630,9 +1639,16 @@ public class TileMapEditor {
         assertNotNull(tileMap);
         assertNotNull(tile);
         tileMap.set(tile, value);
+        if (tileMap == worldMap().terrain()) {
+            worldMap().food().set(tile, TileEncoding.EMPTY);
+        }
         if (isSymmetricEditMode()) {
             byte mirroredContent = mirroredTileContent(tileMap.get(tile));
-            tileMap.set(mirrored(tileMap, tile), mirroredContent);
+            Vector2i mirrorTile = mirrored(tileMap, tile);
+            tileMap.set(mirrorTile, mirroredContent);
+            if (tileMap == worldMap().terrain()) {
+                worldMap().food().set(mirrorTile, TileEncoding.EMPTY);
+            }
         }
         markAsEdited(tileMap);
     }
@@ -1758,6 +1774,26 @@ public class TileMapEditor {
 
     private void closeTemplateImage() {
         templateImagePy.set(null);
+    }
+
+    private void floodWithPellets(Vector2i startTile) {
+        TileMap terrainMap = worldMap().terrain(), foodMap = worldMap().food();
+        var q = new ArrayDeque<Vector2i>();
+        q.push(startTile);
+        while (!q.isEmpty()) {
+            Vector2i tile = q.poll();
+            if (foodMap.get(tile) == TileEncoding.EMPTY) {
+                foodMap.set(tile, TileEncoding.PELLET);
+                for (Direction dir : Direction.values()) {
+                    Vector2i nb = tile.plus(dir.vector());
+                    if  (!terrainMap.outOfBounds(nb)
+                            && terrainMap.get(nb) == TileEncoding.EMPTY
+                            && foodMap.get(nb) == TileEncoding.EMPTY) {
+                        q.push(nb);
+                    }
+                }
+            }
+        }
     }
 
 }
