@@ -47,6 +47,7 @@ import java.text.MessageFormat;
 import java.time.Instant;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
@@ -1728,10 +1729,8 @@ public class TileMapEditor {
         markAsEdited(tileMap);
     }
 
-    // experimental
-
     private boolean isSupportedImageFile(File file) {
-        return file.getName().endsWith(".png") || file.getName().endsWith(".jpg");
+        return Stream.of(".bmp", ".gif", ".jpg", ".png").anyMatch(ext -> file.getName().toLowerCase().endsWith(ext));
     }
 
     private void openTemplateImage() {
