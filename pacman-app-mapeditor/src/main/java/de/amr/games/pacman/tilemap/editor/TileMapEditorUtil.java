@@ -67,6 +67,10 @@ public interface TileMapEditorUtil {
         return String.format("rgb(%d,%d,%d)", (int)(color.getRed()*255), (int)(color.getGreen()*255), (int)(color.getBlue()*255));
     }
 
+    static String formatColorHex(Color color) {
+        return String.format("#%02x%02x%02x", (int)(color.getRed()*255), (int)(color.getGreen()*255), (int)(color.getBlue()*255));
+    }
+
     static Color getColorFromMap(TileMap map, String key, Color defaultColor) {
         if (map.hasProperty(key)) {
             String colorSpec = map.getStringProperty(key);

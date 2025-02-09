@@ -28,6 +28,7 @@ import javafx.scene.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
@@ -253,6 +254,7 @@ public class TileMapEditor {
     private Tab tabEditCanvas;
     private Tab tabTemplateImage;
     private ImageView templateImageView;
+    private ContextMenu templateImageContextMenu;
     private TabPane tabPanePreviews;
     private Tab tabPreview2D;
     private Tab tabPreview3D;
@@ -465,42 +467,59 @@ public class TileMapEditor {
             }, preview2D.heightProperty(), templateImagePy));
 
         templateImageView.setOnContextMenuRequested(e -> {
-            Logger.info("Context menu request at x={} y={}", e.getX(), e.getY());
-            ContextMenu menu = new ContextMenu();
+            if (templateImageContextMenu != null) {
+                templateImageContextMenu.hide();
+            }
+            templateImageContextMenu = new ContextMenu();
+
+            Color color = pickColor(templateImageView, e.getX(), e.getY());
+
+            var colorPreview = new HBox();
+            colorPreview.setMinWidth(32);
+            colorPreview.setMinHeight(16);
+            colorPreview.setBackground(Background.fill(color));
+            var colorValue = new Text(formatColorHex(color));
+            colorValue.setFont(Font.font("Monospace", FontWeight.BOLD, 14.0));
+            colorValue.setFill(Color.BLACK);
+            colorValue.setDisable(true);
+            var colorPreviewBox = new HBox(colorPreview, colorValue);
+            colorPreviewBox.setSpacing(3);
+            var miColorPreview = new CustomMenuItem(colorPreviewBox);
+
             var miPickFillColor = new MenuItem("Set As Fill Color");
             miPickFillColor.setOnAction(ae -> {
-                Color color = pickColor(templateImageView, e.getX(), e.getY());
                 worldMap().terrain().setProperty(PROPERTY_COLOR_WALL_FILL, formatColor(color));
                 //TODO find better solution
                 terrainPropertiesEditor().rebuildPropertyEditors();
                 preview3D.updateMaze(worldMap());
             });
+
             var miPickStrokeColor = new MenuItem("Set As Stroke Color");
             miPickStrokeColor.setOnAction(ae -> {
-                Color color = pickColor(templateImageView, e.getX(), e.getY());
                 worldMap().terrain().setProperty(PROPERTY_COLOR_WALL_STROKE, formatColor(color));
                 //TODO find better solution
                 terrainPropertiesEditor().rebuildPropertyEditors();
                 preview3D.updateMaze(worldMap());
             });
+
             var miPickDoorColor = new MenuItem("Set As Door Color");
             miPickDoorColor.setOnAction(ae -> {
-                Color color = pickColor(templateImageView, e.getX(), e.getY());
                 worldMap().terrain().setProperty(PROPERTY_COLOR_DOOR, formatColor(color));
                 //TODO find better solution
                 terrainPropertiesEditor().rebuildPropertyEditors();
                 preview3D.updateMaze(worldMap());
             });
+
             var miPickFoodColor = new MenuItem("Set As Food Color");
             miPickFoodColor.setOnAction(ae -> {
-                Color color = pickColor(templateImageView, e.getX(), e.getY());
                 worldMap().food().setProperty(PROPERTY_COLOR_FOOD, formatColor(color));
                 //TODO find better solution
                 foodPropertiesEditor().rebuildPropertyEditors();
                 preview3D.updateFood(worldMap());
             });
-            menu.getItems().addAll(miPickFillColor, miPickStrokeColor, miPickDoorColor, miPickFoodColor);
-            menu.show(templateImageView, e.getScreenX(), e.getScreenY());
+
+            templateImageContextMenu.getItems().addAll(miColorPreview, miPickFillColor, miPickStrokeColor, miPickDoorColor, miPickFoodColor);
+            templateImageContextMenu.show(templateImageView, e.getScreenX(), e.getScreenY());
         });
 
         templateImageView.setOnMouseClicked(e -> {
