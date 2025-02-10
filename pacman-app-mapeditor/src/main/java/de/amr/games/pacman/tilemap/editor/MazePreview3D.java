@@ -192,15 +192,16 @@ public class MazePreview3D {
         pacmanShape3D.setTranslateZ(-0.5 * PAC_SIZE);
         mazeGroup.getChildren().add(pacmanShape3D);
 
-        addGhostShape(0, centerPos(terrain.getTileProperty(PROPERTY_POS_RED_GHOST, Vector2i.ZERO)));
-        addGhostShape(1, centerPos(terrain.getTileProperty(PROPERTY_POS_PINK_GHOST, Vector2i.ZERO)));
-        addGhostShape(2, centerPos(terrain.getTileProperty(PROPERTY_POS_CYAN_GHOST, Vector2i.ZERO)));
-        addGhostShape(3, centerPos(terrain.getTileProperty(PROPERTY_POS_ORANGE_GHOST, Vector2i.ZERO)));
+        addGhostShape(0, terrain, PROPERTY_POS_RED_GHOST);
+        addGhostShape(1, terrain, PROPERTY_POS_PINK_GHOST);
+        addGhostShape(2, terrain, PROPERTY_POS_CYAN_GHOST);
+        addGhostShape(3, terrain, PROPERTY_POS_ORANGE_GHOST);
 
         Logger.debug("Maze 3D recreated");
     }
 
-    private void addGhostShape(int i, Vector2f center) {
+    private void addGhostShape(int i, TileMap terrain, String propertyName) {
+        Vector2f center = centerPos(terrain.getTileProperty(propertyName, Vector2i.ZERO));
         ghostShapes[i].setTranslateX(center.x());
         ghostShapes[i].setTranslateY(center.y());
         ghostShapes[i].setTranslateZ(-0.5 * GHOST_SIZE);
