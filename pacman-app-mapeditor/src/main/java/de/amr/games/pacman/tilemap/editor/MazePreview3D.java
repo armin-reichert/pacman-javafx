@@ -31,7 +31,6 @@ import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
-import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
@@ -41,8 +40,7 @@ import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.parseColor;
 
 public class MazePreview3D {
 
-    private static final double PAC_SIZE = 12.0;
-    private static final double GHOST_SIZE = 12.0;
+    private static final double ACTOR_SIZE = 12.0;
 
     private static PhongMaterial coloredMaterial(Color color) {
         assertNotNull(color);
@@ -86,7 +84,7 @@ public class MazePreview3D {
 
         ResourceManager uiLibResources = () -> Ufx.class;
         Model3D pacmanModel3D = new Model3D(uiLibResources.url("model3D/pacman.obj"));
-        pacmanShape3D = PacModel3D.createPacShape(pacmanModel3D, PAC_SIZE, Color.YELLOW, Color.BLACK, Color.GRAY);
+        pacmanShape3D = PacModel3D.createPacShape(pacmanModel3D, ACTOR_SIZE, Color.YELLOW, Color.BLACK, Color.GRAY);
 
         Model3D ghostModel3D = new Model3D(uiLibResources.url("model3D/ghost.obj"));
         ghostShapes = new Node[4];
@@ -124,8 +122,8 @@ public class MazePreview3D {
         Group root = new Group(dressGroup, eyesGroup);
         root.getTransforms().add(new Rotate(270, Rotate.X_AXIS));
         root.getTransforms().add(new Rotate(rotate, Rotate.Y_AXIS));
-        Bounds bounds = root.getBoundsInLocal();
-        root.getTransforms().add(new Scale(GHOST_SIZE / bounds.getWidth(), GHOST_SIZE / bounds.getHeight(), GHOST_SIZE / bounds.getDepth()));
+        Bounds b = root.getBoundsInLocal();
+        root.getTransforms().add(new Scale(ACTOR_SIZE / b.getWidth(), ACTOR_SIZE / b.getHeight(), ACTOR_SIZE / b.getDepth()));
 
         return root;
     }
@@ -186,26 +184,19 @@ public class MazePreview3D {
                 .forEach(shape3D -> shape3D.drawModeProperty()
                         .bind(wireframePy.map(wireframe -> wireframe ? DrawMode.LINE : DrawMode.FILL)));
 
-        Vector2f pacCenter = centerPos(terrain.getTileProperty(PROPERTY_POS_PAC, Vector2i.ZERO));
-        pacmanShape3D.setTranslateX(pacCenter.x());
-        pacmanShape3D.setTranslateY(pacCenter.y());
-        pacmanShape3D.setTranslateZ(-0.5 * PAC_SIZE);
-        mazeGroup.getChildren().add(pacmanShape3D);
-
-        addGhostShape(0, terrain, PROPERTY_POS_RED_GHOST);
-        addGhostShape(1, terrain, PROPERTY_POS_PINK_GHOST);
-        addGhostShape(2, terrain, PROPERTY_POS_CYAN_GHOST);
-        addGhostShape(3, terrain, PROPERTY_POS_ORANGE_GHOST);
-
-        Logger.debug("Maze 3D recreated");
+        addActorShape(pacmanShape3D, terrain, PROPERTY_POS_PAC);
+        addActorShape(ghostShapes[0], terrain, PROPERTY_POS_RED_GHOST);
+        addActorShape(ghostShapes[1], terrain, PROPERTY_POS_PINK_GHOST);
+        addActorShape(ghostShapes[2], terrain, PROPERTY_POS_CYAN_GHOST);
+        addActorShape(ghostShapes[3], terrain, PROPERTY_POS_ORANGE_GHOST);
     }
 
-    private void addGhostShape(int i, TileMap terrain, String propertyName) {
+    private void addActorShape(Node actorShape, TileMap terrain, String propertyName) {
         Vector2f center = centerPos(terrain.getTileProperty(propertyName, Vector2i.ZERO));
-        ghostShapes[i].setTranslateX(center.x());
-        ghostShapes[i].setTranslateY(center.y());
-        ghostShapes[i].setTranslateZ(-0.5 * GHOST_SIZE);
-        mazeGroup.getChildren().add(ghostShapes[i]);
+        actorShape.setTranslateX(center.x());
+        actorShape.setTranslateY(center.y());
+        actorShape.setTranslateZ(-0.5 * ACTOR_SIZE);
+        mazeGroup.getChildren().add(actorShape);
     }
 
     private Vector2f centerPos(Vector2i actorTile) {
