@@ -759,7 +759,7 @@ public class TileMapEditor {
                 if (worldMap() != null && worldMap().url() != null) {
                     return  "%s: [%s]".formatted( tt("map_editor"), worldMap().url() );
                 }
-                return "%s: [%s %d: rows, %d cols]".formatted(
+                return "%s: [%s: %d rows %d cols]".formatted(
                         tt("map_editor"), tt("unsaved_map"),
                         worldMap().terrain().numRows(), worldMap().terrain().numCols() );
             }, currentFilePy, worldMapPy
