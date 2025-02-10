@@ -8,5 +8,5 @@ open module de.amr.games.pacman.uilib {
     requires de.amr.games.pacman;
 
     exports de.amr.games.pacman.uilib;
-
+    exports de.amr.games.pacman.uilib.objimport;
 }

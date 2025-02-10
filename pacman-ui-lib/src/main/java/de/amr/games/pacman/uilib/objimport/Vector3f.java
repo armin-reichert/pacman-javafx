@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui3d.objimport;
+package de.amr.games.pacman.uilib.objimport;
 
 /**
  * Immutable 3D vector with float precision. No full-fledged implementation, just the needed methods.
