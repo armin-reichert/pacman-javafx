@@ -1807,26 +1807,23 @@ public class TileMapEditor {
     private void detectPelletsInTemplateImage() {
         Image templateImage = templateImagePy.get();
         PixelReader rdr = templateImage.getPixelReader();
-        var pixelFormat = WritablePixelFormat.getIntArgbInstance() ;
-        int numRows = worldMap().terrain().numRows(), numCols = worldMap().terrain().numCols();
-        int[] pixels = new int[TS * TS];
+        Color[][] tileColors = new Color[TS][TS];
         Color foodColor = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, Color.WHITE);
-        //TODO is there predefined functionality for this?
-        int a = (int) (foodColor.getOpacity() * 255);
-        int r = (int) (foodColor.getRed() * 255);
-        int g = (int) (foodColor.getGreen() * 255);
-        int b = (int) (foodColor.getBlue() * 255);
-        int foodColorPixel = (a << 24) | (r << 16) | (g <<  8) | (b);
         // 3 empty rows on top, 2 on bottom
+        int numRows = worldMap().terrain().numRows(), numCols = worldMap().terrain().numCols();
         for (int row = 3; row < numRows - 3; ++row) {
             for (int col = 0; col < numCols; ++col) {
                 Vector2i tile = vec_2i(col, row);
                 try {
-                    rdr.getPixels(col * TS, (row - 3) * TS, TS, TS, pixelFormat, pixels, 0, TS);
-                    if (isPelletLike(pixels, foodColorPixel)) {
+                    for (int y = 0; y < TS; ++y) {
+                        for (int x = 0; x < TS; ++x) {
+                            tileColors[y][x] = rdr.getColor(col * TS + x, (row - 3) * TS + y);
+                        }
+                    }
+                    if (isPelletLike(tileColors, foodColor)) {
                         Logger.info("Detected pellet at tile {}", tile);
                         setTileValue(worldMap().food(), tile, TileEncoding.PELLET);
-                    } else if (isEnergizerLike(pixels, foodColorPixel)) {
+                    } else if (isEnergizerLike(tileColors, foodColor)) {
                         Logger.info("Detected energizer at tile {}", tile);
                         setTileValue(worldMap().food(), tile, TileEncoding.ENERGIZER);
                     }
@@ -1837,18 +1834,22 @@ public class TileMapEditor {
         }
     }
 
-    private boolean isPelletLike(int[] pixels, int foodColorPixel) {
+    private boolean isPelletLike(Color[][] tileColors, Color foodColor) {
         int numFoodPixels = 0;
-        for (int pixel : pixels) {
-            if (pixel == foodColorPixel) numFoodPixels++;
+        for (int y = 0; y < TS; ++y) {
+            for (int x = 0; x < TS; ++x) {
+                if (tileColors[y][x].equals(foodColor)) numFoodPixels++;
+            }
         }
         return numFoodPixels == 4;
     }
 
-    private boolean isEnergizerLike(int[] pixels, int foodColorPixel) {
+    private boolean isEnergizerLike(Color[][] tileColors, Color foodColor) {
         int numFoodPixels = 0;
-        for (int pixel : pixels) {
-            if (pixel == foodColorPixel) numFoodPixels++;
+        for (int y = 0; y < TS; ++y) {
+            for (int x = 0; x < TS; ++x) {
+                if (tileColors[y][x].equals(foodColor)) numFoodPixels++;
+            }
         }
         return numFoodPixels > 50;
     }
