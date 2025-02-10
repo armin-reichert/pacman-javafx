@@ -19,6 +19,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
@@ -26,10 +27,10 @@ import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
-import javafx.scene.shape.DrawMode;
-import javafx.scene.shape.Shape3D;
-import javafx.scene.shape.Sphere;
+import javafx.scene.shape.*;
+import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Scale;
+import javafx.scene.transform.Translate;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -40,7 +41,8 @@ import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.parseColor;
 
 public class MazePreview3D {
 
-    private static final double PAC_SIZE = 12;
+    private static final double PAC_SIZE = 12.0;
+    private static final double GHOST_SIZE = 12.0;
 
     private static PhongMaterial coloredMaterial(Color color) {
         assertNotNull(color);
@@ -64,7 +66,8 @@ public class MazePreview3D {
 
     private final DoubleProperty wallBaseHeightPy = new SimpleDoubleProperty(3.5);
 
-    private Node pacmanShape3D;
+    private final Node pacmanShape3D;
+    private final Node[] ghostShapes;
 
     public Node root() {
         return root;
@@ -85,6 +88,13 @@ public class MazePreview3D {
         Model3D pacmanModel3D = new Model3D(uiLibResources.url("model3D/pacman.obj"));
         pacmanShape3D = PacModel3D.createPacShape(pacmanModel3D, PAC_SIZE, Color.YELLOW, Color.BLACK, Color.GRAY);
 
+        Model3D ghostModel3D = new Model3D(uiLibResources.url("model3D/ghost.obj"));
+        ghostShapes = new Node[4];
+        ghostShapes[0] = createGhostShape3D(ghostModel3D, Color.RED, 0);
+        ghostShapes[1] = createGhostShape3D(ghostModel3D, Color.PINK, 270);
+        ghostShapes[2] = createGhostShape3D(ghostModel3D, Color.CYAN, 90);
+        ghostShapes[3] = createGhostShape3D(ghostModel3D, Color.ORANGE, 90);
+
         AmbientLight ambientLight = new AmbientLight(Color.WHITE);
         root.getChildren().add(ambientLight);
 
@@ -92,6 +102,32 @@ public class MazePreview3D {
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
         camera.setFieldOfView(40); // default: 30
+    }
+
+    private Node createGhostShape3D(Model3D model3D, Color dressColor, double rotate) {
+        MeshView dress = new MeshView(model3D.mesh("Sphere.004_Sphere.034_light_blue_ghost"));
+        dress.setMaterial(Ufx.coloredMaterial(dressColor));
+        Bounds dressBounds = dress.getBoundsInLocal();
+        var centeredOverOrigin = new Translate(-dressBounds.getCenterX(), -dressBounds.getCenterY(), -dressBounds.getCenterZ());
+        dress.getTransforms().add(centeredOverOrigin);
+
+        MeshView pupils = new MeshView(model3D.mesh("Sphere.010_Sphere.039_grey_wall"));
+        pupils.setMaterial(Ufx.coloredMaterial(Color.BLUE));
+
+        MeshView eyeballs = new MeshView(model3D.mesh("Sphere.009_Sphere.036_white"));
+        eyeballs.setMaterial(Ufx.coloredMaterial(Color.WHITE));
+        var eyesGroup = new Group(pupils, eyeballs);
+        eyesGroup.getTransforms().add(centeredOverOrigin);
+
+        var dressGroup = new Group(dress);
+
+        Group root = new Group(dressGroup, eyesGroup);
+        root.getTransforms().add(new Rotate(270, Rotate.X_AXIS));
+        root.getTransforms().add(new Rotate(rotate, Rotate.Y_AXIS));
+        Bounds bounds = root.getBoundsInLocal();
+        root.getTransforms().add(new Scale(GHOST_SIZE / bounds.getWidth(), GHOST_SIZE / bounds.getHeight(), GHOST_SIZE / bounds.getDepth()));
+
+        return root;
     }
 
     public DoubleProperty widthProperty() { return widthPy; }
@@ -150,14 +186,29 @@ public class MazePreview3D {
                 .forEach(shape3D -> shape3D.drawModeProperty()
                         .bind(wireframePy.map(wireframe -> wireframe ? DrawMode.LINE : DrawMode.FILL)));
 
-        Vector2i pacTile = terrain.getTileProperty(PROPERTY_POS_PAC, Vector2i.ZERO);
-        Vector2f center = pacTile.scaled(TS).toVector2f().plus(TS, HTS);
-        pacmanShape3D.setTranslateX(center.x());
-        pacmanShape3D.setTranslateY(center.y());
+        Vector2f pacCenter = centerPos(terrain.getTileProperty(PROPERTY_POS_PAC, Vector2i.ZERO));
+        pacmanShape3D.setTranslateX(pacCenter.x());
+        pacmanShape3D.setTranslateY(pacCenter.y());
         pacmanShape3D.setTranslateZ(-0.5 * PAC_SIZE);
         mazeGroup.getChildren().add(pacmanShape3D);
 
+        addGhostShape(0, centerPos(terrain.getTileProperty(PROPERTY_POS_RED_GHOST, Vector2i.ZERO)));
+        addGhostShape(1, centerPos(terrain.getTileProperty(PROPERTY_POS_PINK_GHOST, Vector2i.ZERO)));
+        addGhostShape(2, centerPos(terrain.getTileProperty(PROPERTY_POS_CYAN_GHOST, Vector2i.ZERO)));
+        addGhostShape(3, centerPos(terrain.getTileProperty(PROPERTY_POS_ORANGE_GHOST, Vector2i.ZERO)));
+
         Logger.debug("Maze 3D recreated");
+    }
+
+    private void addGhostShape(int i, Vector2f center) {
+        ghostShapes[i].setTranslateX(center.x());
+        ghostShapes[i].setTranslateY(center.y());
+        ghostShapes[i].setTranslateZ(-0.5 * GHOST_SIZE);
+        mazeGroup.getChildren().add(ghostShapes[i]);
+    }
+
+    private Vector2f centerPos(Vector2i actorTile) {
+        return actorTile.scaled(TS).toVector2f().plus(TS, HTS);
     }
 
     public void updateFood(WorldMap worldMap) {
