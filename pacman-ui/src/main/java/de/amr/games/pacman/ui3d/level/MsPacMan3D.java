@@ -10,7 +10,8 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.assets.GameSound;
-import de.amr.games.pacman.ui3d.model.Model3D;
+import de.amr.games.pacman.uilib.model.Model3D;
+import de.amr.games.pacman.uilib.model.PacModel3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -20,7 +21,7 @@ import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import static de.amr.games.pacman.ui3d.model.Model3D.meshViewById;
+import static de.amr.games.pacman.uilib.model.Model3D.meshViewById;
 import static de.amr.games.pacman.uilib.Ufx.now;
 import static de.amr.games.pacman.uilib.Ufx.pauseSec;
 

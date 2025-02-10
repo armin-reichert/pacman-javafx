@@ -26,6 +26,5 @@ open module de.amr.games.pacman.ui {
     exports de.amr.games.pacman.ui3d.animation;
     exports de.amr.games.pacman.ui3d.dashboard;
     exports de.amr.games.pacman.ui3d.level;
-    exports de.amr.games.pacman.ui3d.model;
     exports de.amr.games.pacman.ui3d.scene3d;
 }

@@ -8,7 +8,7 @@ import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.uilib.Picker;
 import de.amr.games.pacman.uilib.ResourceManager;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
-import de.amr.games.pacman.ui3d.model.Model3D;
+import de.amr.games.pacman.uilib.model.Model3D;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
 
