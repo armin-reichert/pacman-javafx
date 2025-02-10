@@ -43,7 +43,6 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.io.*;
-import java.nio.IntBuffer;
 import java.text.MessageFormat;
 import java.time.Instant;
 import java.util.*;
@@ -280,7 +279,7 @@ public class TileMapEditor {
     private FoodMapRenderer         foodMapRenderer;
 
     // for rotating 3D preview
-    private double anchorX, anchorY;
+    private double anchorX;
     private double anchorAngle;
 
     public void createUI(Stage stage) {
@@ -340,7 +339,6 @@ public class TileMapEditor {
         });
         previewScene3D.setOnMousePressed(e -> {
             anchorX = e.getSceneX();
-            anchorY = e.getSceneY();
             anchorAngle = preview3D.root().getRotate();
         });
         previewScene3D.setOnMouseDragged(e ->
@@ -1079,24 +1077,6 @@ public class TileMapEditor {
     // Drawing
     //
 
-    // TODO use own canvas or Text control
-    private void drawBlueScreen(Exception drawException) {
-        GraphicsContext g = editCanvas.getGraphicsContext2D();
-        g.setFill(Color.BLUE);
-        g.fillRect(0, 0, editCanvas.getWidth(), editCanvas.getHeight());
-        g.setStroke(Color.WHITE);
-        g.setFont(Font.font("Monospace", 12));
-        try {
-            Logger.error(drawException);
-            var trace = new StringWriter();
-            drawException.printStackTrace(new PrintWriter(trace));
-            g.strokeText(trace.toString(), 0, 20);
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-            Logger.error(e);
-        }
-    }
-
     private void drawEditingHint(GraphicsContext g) {
         double x = 16;
         double y = 24;
@@ -1195,12 +1175,12 @@ public class TileMapEditor {
     }
 
     private void drawActorSprites(GraphicsContext g) {
-        drawSprite(g, PROPERTY_POS_PAC, PAC_SPRITE, null);
-        drawSprite(g, PROPERTY_POS_RED_GHOST, RED_GHOST_SPRITE, null);
-        drawSprite(g, PROPERTY_POS_PINK_GHOST, PINK_GHOST_SPRITE, null);
-        drawSprite(g, PROPERTY_POS_CYAN_GHOST, CYAN_GHOST_SPRITE, null);
-        drawSprite(g, PROPERTY_POS_ORANGE_GHOST, ORANGE_GHOST_SPRITE, null);
-        drawSprite(g, PROPERTY_POS_BONUS, BONUS_SPRITE, null);
+        drawSprite(g, PROPERTY_POS_PAC, PAC_SPRITE);
+        drawSprite(g, PROPERTY_POS_RED_GHOST, RED_GHOST_SPRITE);
+        drawSprite(g, PROPERTY_POS_PINK_GHOST, PINK_GHOST_SPRITE);
+        drawSprite(g, PROPERTY_POS_CYAN_GHOST, CYAN_GHOST_SPRITE);
+        drawSprite(g, PROPERTY_POS_ORANGE_GHOST, ORANGE_GHOST_SPRITE);
+        drawSprite(g, PROPERTY_POS_BONUS, BONUS_SPRITE);
     }
 
     private void drawPreviewCanvas(TerrainColorScheme colors) {
@@ -1237,8 +1217,8 @@ public class TileMapEditor {
         }
     }
 
-    private void drawSprite(GraphicsContext g, String tilePropertyName, RectArea sprite, Vector2i defaultTile) {
-        Vector2i tile = worldMap().terrain().getTileProperty(tilePropertyName, defaultTile);
+    private void drawSprite(GraphicsContext g, String tilePropertyName, RectArea sprite) {
+        Vector2i tile = worldMap().terrain().getTileProperty(tilePropertyName, null);
         if (tile != null) {
             drawSprite(g, sprite, tile.x() * gridSize() + 0.5 * gridSize(), tile.y() * gridSize(), 1.75 * gridSize(), 1.75 * gridSize());
         }
@@ -1829,6 +1809,7 @@ public class TileMapEditor {
                     }
                 } catch (Exception e) {
                     Logger.error("getPixels() failed for tile {}", tile);
+                    Logger.error(e.getMessage());
                 }
             }
         }
