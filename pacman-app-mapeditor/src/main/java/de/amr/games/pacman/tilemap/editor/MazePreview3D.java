@@ -191,16 +191,13 @@ public class MazePreview3D {
         addActorShape(ghostShapes[3], terrain, PROPERTY_POS_ORANGE_GHOST);
     }
 
-    private void addActorShape(Node actorShape, TileMap terrain, String propertyName) {
-        Vector2f center = centerPos(terrain.getTileProperty(propertyName, Vector2i.ZERO));
+    private void addActorShape(Node actorShape, TileMap terrain, String actorTilePropertyName) {
+        Vector2i tile = terrain.getTileProperty(actorTilePropertyName, Vector2i.ZERO);
+        Vector2f center = tile.scaled(TS).toVector2f().plus(TS, HTS);
         actorShape.setTranslateX(center.x());
         actorShape.setTranslateY(center.y());
         actorShape.setTranslateZ(-0.5 * ACTOR_SIZE);
         mazeGroup.getChildren().add(actorShape);
-    }
-
-    private Vector2f centerPos(Vector2i actorTile) {
-        return actorTile.scaled(TS).toVector2f().plus(TS, HTS);
     }
 
     public void updateFood(WorldMap worldMap) {
