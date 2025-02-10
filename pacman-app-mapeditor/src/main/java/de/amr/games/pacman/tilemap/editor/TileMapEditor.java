@@ -418,6 +418,60 @@ public class TileMapEditor {
         spEditCanvas.setFitToHeight(true);
     }
 
+    private void onEditCanvasContextMenuRequested(ContextMenuEvent menuEvent) {
+        if (isEditMode(EditMode.INSPECT)) {
+            return;
+        }
+        Vector2i tile = tileAtMousePosition(menuEvent.getX(), menuEvent.getY());
+        WorldMap worldMap = worldMapPy.get();
+
+        var miAddCircle2x2 = new MenuItem("2x2 Circle");
+        miAddCircle2x2.setOnAction(actionEvent -> {
+            addContentBlock(worldMap.terrain(), CIRCLE_2x2, tile);
+            if (isSymmetricEditMode()) {
+                addContentBlockMirrored(worldMap.terrain(), CIRCLE_2x2, tile);
+            }
+        });
+
+        var miAddHouse = new MenuItem(TileMapEditor.tt("menu.edit.add_house"));
+        miAddHouse.setOnAction(actionEvent -> addHouse(worldMap.terrain(), tile));
+
+        var miInsertRow = new MenuItem("Insert Row"); //TODO localize
+        miInsertRow.setOnAction(actionEvent -> {
+            int rowIndex = tileAtMousePosition(menuEvent.getX(), menuEvent.getY()).y();
+            setWorldMap(worldMap.insertRowBeforeIndex(rowIndex));
+        });
+
+        var miDeleteRow = new MenuItem("Delete Row"); //TODO localize
+        miDeleteRow.setOnAction(actionEvent -> {
+            int rowIndex = tileAtMousePosition(menuEvent.getX(), menuEvent.getY()).y();
+            setWorldMap(worldMap.deleteRowAtIndex(rowIndex));
+        });
+
+        var miFloodWithPellets = new MenuItem("Flood with pellets"); //TODO localize
+        miFloodWithPellets.setOnAction(ae -> {
+            if (worldMap.terrain().get(tile) == TileEncoding.EMPTY && worldMap.food().get(tile) == TileEncoding.EMPTY) {
+                floodWithPellets(tile);
+            }
+        });
+
+        var miDetectPellets = new MenuItem("Detect pellets"); //TODO localize
+        miDetectPellets.disableProperty().bind(templateImagePy.map(Objects::isNull));
+        miDetectPellets.setOnAction(ae -> detectPelletsInTemplateImage());
+
+        contextMenu.getItems().setAll(
+            miInsertRow,
+            miDeleteRow,
+            new SeparatorMenuItem(),
+            miAddCircle2x2,
+            miAddHouse,
+            new SeparatorMenuItem(),
+            miDetectPellets,
+            miFloodWithPellets);
+
+        contextMenu.show(editCanvas, menuEvent.getScreenX(), menuEvent.getScreenY());
+    }
+
     private void createPreview2D() {
         preview2D = new Canvas();
         preview2D.widthProperty().bind(editCanvas.widthProperty());
@@ -514,10 +568,10 @@ public class TileMapEditor {
     }
 
     private Color pickColor(ImageView imageView, double x, double y) {
-        double pickX = (imageView.getImage().getWidth() / imageView.getBoundsInLocal().getWidth()) * x;
-        double pickY = (imageView.getImage().getHeight() / imageView.getBoundsInLocal().getHeight()) * y;
-        PixelReader pr = imageView.getImage().getPixelReader();
-        return pr.getColor((int) pickX, (int) pickY);
+        Image image = imageView.getImage();
+        double pickX = x * (image.getWidth() / imageView.getBoundsInLocal().getWidth());
+        double pickY = y * (image.getHeight() / imageView.getBoundsInLocal().getHeight());
+        return image.getPixelReader().getColor((int) pickX, (int) pickY);
     }
 
     private void createMapSourceView() {
@@ -825,12 +879,17 @@ public class TileMapEditor {
             markAsEdited(worldMap().food());
         });
 
+        var miDetectPellets = new MenuItem(tt("menu.edit.detect_pellets"));
+        miDetectPellets.disableProperty().bind(templateImagePy.map(Objects::isNull));
+        miDetectPellets.setOnAction(ae -> detectPelletsInTemplateImage());
+
         menuEdit = new Menu(tt("menu.edit"), NO_GRAPHIC,
             miSymmetricMode,
             new SeparatorMenuItem(),
             miAddBorder,
             miClearTerrain,
-            miClearFood);
+            miClearFood,
+            miDetectPellets);
 
         menuEdit.disableProperty().bind(editModePy.map(mode -> mode == EditMode.INSPECT));
 
@@ -1382,59 +1441,6 @@ public class TileMapEditor {
                 symmetricEditModePy.set(true);
             }
             case "x" -> setEditMode(EditMode.ERASE);
-        }
-    }
-
-    private void onEditCanvasContextMenuRequested(ContextMenuEvent menuEvent) {
-        if (!isEditMode(EditMode.INSPECT)) {
-            Vector2i tile = tileAtMousePosition(menuEvent.getX(), menuEvent.getY());
-            WorldMap worldMap = worldMapPy.get();
-
-            var miAddCircle2x2 = new MenuItem("2x2 Circle");
-            miAddCircle2x2.setOnAction(actionEvent -> {
-                addContentBlock(worldMap.terrain(), CIRCLE_2x2, tile);
-                if (isSymmetricEditMode()) {
-                    addContentBlockMirrored(worldMap.terrain(), CIRCLE_2x2, tile);
-                }
-            });
-
-            var miAddHouse = new MenuItem(TileMapEditor.tt("menu.edit.add_house"));
-            miAddHouse.setOnAction(actionEvent -> addHouse(worldMap.terrain(), tile));
-
-            var miInsertRow = new MenuItem("Insert Row");
-            miInsertRow.setOnAction(actionEvent -> {
-                int rowIndex = tileAtMousePosition(menuEvent.getX(), menuEvent.getY()).y();
-                setWorldMap(worldMap.insertRowBeforeIndex(rowIndex));
-            });
-
-            var miDeleteRow = new MenuItem("Delete Row");
-            miDeleteRow.setOnAction(actionEvent -> {
-                int rowIndex = tileAtMousePosition(menuEvent.getX(), menuEvent.getY()).y();
-                setWorldMap(worldMap.deleteRowAtIndex(rowIndex));
-            });
-
-            var miFloodWithPellets = new MenuItem("Flood with pellets");
-            miFloodWithPellets.setOnAction(ae -> {
-                if (worldMap.terrain().get(tile) == TileEncoding.EMPTY && worldMap.food().get(tile) == TileEncoding.EMPTY) {
-                    floodWithPellets(tile);
-                }
-            });
-
-            var miDetectPellets = new MenuItem("Detect pellets");
-            miDetectPellets.disableProperty().bind(templateImagePy.map(Objects::isNull));
-            miDetectPellets.setOnAction(ae -> detectPelletsInTemplateImage());
-
-            contextMenu.getItems().setAll(
-                    miInsertRow,
-                    miDeleteRow,
-                    new SeparatorMenuItem(),
-                    miAddCircle2x2,
-                    miAddHouse,
-                    new SeparatorMenuItem(),
-                    miDetectPellets,
-                    miFloodWithPellets);
-
-            contextMenu.show(editCanvas, menuEvent.getScreenX(), menuEvent.getScreenY());
         }
     }
 
