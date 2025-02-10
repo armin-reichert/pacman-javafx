@@ -15,10 +15,6 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.tilemap.rendering.FoodMapRenderer;
 import de.amr.games.pacman.tilemap.rendering.TerrainColorScheme;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer;
-import de.amr.games.pacman.uilib.ResourceManager;
-import de.amr.games.pacman.uilib.Ufx;
-import de.amr.games.pacman.uilib.model3D.Model3D;
-import de.amr.games.pacman.uilib.model3D.PacModel3D;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
@@ -29,7 +25,6 @@ import javafx.beans.property.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Side;
 import javafx.scene.Cursor;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -1753,39 +1748,28 @@ public class TileMapEditor {
                             tileColors[y][x] = rdr.getColor(col * TS + x, (row - 3) * TS + y);
                         }
                     }
-                    if (isPelletLike(tileColors, foodColor)) {
-                        Logger.info("Detected pellet at tile {}", tile);
-                        setTileValue(worldMap().food(), tile, TileEncoding.PELLET);
-                    } else if (isEnergizerLike(tileColors, foodColor)) {
-                        Logger.info("Detected energizer at tile {}", tile);
-                        setTileValue(worldMap().food(), tile, TileEncoding.ENERGIZER);
+                    byte value = classify(tileColors, foodColor);
+                    if (value != TileEncoding.EMPTY) {
+                        worldMap().food().set(tile, value);
                     }
                 } catch (Exception e) {
                     Logger.error("getPixels() failed for tile {}", tile);
-                    Logger.error(e.getMessage());
+                    Logger.error(e);
                 }
             }
         }
+        markAsEdited(worldMap().food());
     }
 
-    private boolean isPelletLike(Color[][] tileColors, Color foodColor) {
+    private byte classify(Color[][] tileColors, Color foodColor) {
         int numFoodPixels = 0;
         for (int y = 0; y < TS; ++y) {
             for (int x = 0; x < TS; ++x) {
                 if (tileColors[y][x].equals(foodColor)) numFoodPixels++;
             }
         }
-        return numFoodPixels == 4;
+        if (numFoodPixels == 4) return TileEncoding.PELLET;
+        if (numFoodPixels > 50) return TileEncoding.ENERGIZER;
+        return TileEncoding.EMPTY;
     }
-
-    private boolean isEnergizerLike(Color[][] tileColors, Color foodColor) {
-        int numFoodPixels = 0;
-        for (int y = 0; y < TS; ++y) {
-            for (int x = 0; x < TS; ++x) {
-                if (tileColors[y][x].equals(foodColor)) numFoodPixels++;
-            }
-        }
-        return numFoodPixels > 50;
-    }
-
 }
