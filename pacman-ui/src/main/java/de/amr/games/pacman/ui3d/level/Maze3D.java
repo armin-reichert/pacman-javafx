@@ -10,9 +10,9 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D;
 import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
-import de.amr.games.pacman.ui2d.lib.Ufx;
 import de.amr.games.pacman.ui3d.animation.MaterialColorAnimation;
 import de.amr.games.pacman.ui3d.scene3d.GameConfiguration3D;
+import de.amr.games.pacman.uilib.Ufx;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -40,8 +40,8 @@ import java.util.stream.Collectors;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D.TAG_WALL_BASE;
 import static de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D.isTagged;
-import static de.amr.games.pacman.ui2d.lib.Ufx.*;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.*;
+import static de.amr.games.pacman.uilib.Ufx.*;
 
 public class Maze3D extends Group {
 
@@ -57,7 +57,7 @@ public class Maze3D extends Group {
     private final PhongMaterial wallBaseMaterial;
 
     // experimental
-    private final PhongMaterial highlightMaterial = Ufx.coloredMaterial(Color.YELLOW);
+    private final PhongMaterial highlightMaterial = coloredMaterial(Color.YELLOW);
     private final Set<Group> obstacleGroups;
     private final MaterialColorAnimation materialColorAnimation;
 

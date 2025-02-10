@@ -46,9 +46,9 @@ import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GlobalProperties2d.*;
 import static de.amr.games.pacman.ui2d.action.GameActions2D.*;
 import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
-import static de.amr.games.pacman.ui2d.lib.Ufx.contextMenuTitleItem;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_AXES_VISIBLE;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_PERSPECTIVE;
+import static de.amr.games.pacman.uilib.Ufx.contextMenuTitleItem;
 
 /**
  * 3D play scene. Provides different camera perspectives that can be stepped

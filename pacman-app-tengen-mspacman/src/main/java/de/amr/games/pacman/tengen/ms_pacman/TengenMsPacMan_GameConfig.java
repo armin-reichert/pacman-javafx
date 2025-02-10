@@ -18,11 +18,11 @@ import de.amr.games.pacman.tengen.ms_pacman.scene.*;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.assets.ResourceManager;
 import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
 import de.amr.games.pacman.ui2d.scene.GameConfiguration;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
+import de.amr.games.pacman.uilib.ResourceManager;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 

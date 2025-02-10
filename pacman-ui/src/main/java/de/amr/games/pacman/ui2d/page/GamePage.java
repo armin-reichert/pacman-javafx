@@ -14,11 +14,11 @@ import de.amr.games.pacman.ui2d.GameRenderer;
 import de.amr.games.pacman.ui2d.action.GameAction;
 import de.amr.games.pacman.ui2d.action.GameActionProvider;
 import de.amr.games.pacman.ui2d.action.GameActions2D;
-import de.amr.games.pacman.ui2d.lib.Ufx;
 import de.amr.games.pacman.ui2d.scene.CameraControlledView;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.TooFancyGameCanvasContainer;
+import de.amr.games.pacman.uilib.Ufx;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
@@ -44,7 +44,7 @@ import java.util.Map;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GlobalProperties2d.*;
 import static de.amr.games.pacman.ui2d.input.Keyboard.*;
-import static de.amr.games.pacman.ui2d.lib.Ufx.*;
+import static de.amr.games.pacman.uilib.Ufx.*;
 
 /**
  * @author Armin Reichert

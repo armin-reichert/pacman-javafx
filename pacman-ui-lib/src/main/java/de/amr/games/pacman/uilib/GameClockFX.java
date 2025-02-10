@@ -2,9 +2,8 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui2d.lib;
+package de.amr.games.pacman.uilib;
 
-import de.amr.games.pacman.model.GameModel;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
@@ -23,7 +22,7 @@ import org.tinylog.Logger;
  */
 public class GameClockFX {
 
-    public final DoubleProperty targetFrameRatePy = new SimpleDoubleProperty(this, "targetFrameRate", GameModel.TICKS_PER_SECOND) {
+    public final DoubleProperty targetFrameRatePy = new SimpleDoubleProperty(this, "targetFrameRate", 60) {
         @Override
         protected void invalidated() {
             handleTargetFrameRateChanged();

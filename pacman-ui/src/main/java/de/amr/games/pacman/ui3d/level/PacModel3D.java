@@ -16,7 +16,8 @@ import javafx.scene.transform.Translate;
 
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.ui2d.lib.Ufx.coloredMaterial;
+import static de.amr.games.pacman.uilib.Ufx.coloredMaterial;
+
 
 /**
  * @author Armin Reichert

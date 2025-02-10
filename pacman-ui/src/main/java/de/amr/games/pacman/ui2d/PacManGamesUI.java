@@ -15,15 +15,11 @@ import de.amr.games.pacman.ui2d.action.GameActionProvider;
 import de.amr.games.pacman.ui2d.action.GameActions2D;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.assets.GameSound;
-import de.amr.games.pacman.ui2d.assets.ResourceManager;
+import de.amr.games.pacman.uilib.ResourceManager;
 import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui2d.input.Keyboard;
-import de.amr.games.pacman.ui2d.lib.FlashMessageView;
-import de.amr.games.pacman.ui2d.lib.GameClockFX;
-import de.amr.games.pacman.ui2d.lib.Picker;
-import de.amr.games.pacman.ui2d.lib.Ufx;
 import de.amr.games.pacman.ui2d.page.DashboardLayer;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.page.GamePage;
@@ -31,6 +27,10 @@ import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui2d.scene.GameConfiguration;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
+import de.amr.games.pacman.uilib.FlashMessageView;
+import de.amr.games.pacman.uilib.GameClockFX;
+import de.amr.games.pacman.uilib.Picker;
+import de.amr.games.pacman.uilib.Ufx;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -57,7 +57,7 @@ import java.util.ResourceBundle;
 import static de.amr.games.pacman.lib.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_CANVAS_BG_COLOR;
-import static de.amr.games.pacman.ui2d.lib.Ufx.createIcon;
+import static de.amr.games.pacman.uilib.Ufx.createIcon;
 
 /**
  * User interface for all Pac-Man game variants (2D only).

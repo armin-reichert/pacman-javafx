@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
-import static de.amr.games.pacman.ui2d.lib.Ufx.contextMenuTitleItem;
+import static de.amr.games.pacman.uilib.Ufx.contextMenuTitleItem;
 
 /**
  * @author Armin Reichert

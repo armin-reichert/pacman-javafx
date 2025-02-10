@@ -1,6 +1,5 @@
-package de.amr.games.pacman.ui2d.lib;
+package de.amr.games.pacman.uilib;
 
-import de.amr.games.pacman.ui2d.assets.ResourceManager;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -23,7 +22,7 @@ import javafx.scene.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.games.pacman.ui2d.lib.Ufx.coloredRoundedBackground;
+import static de.amr.games.pacman.uilib.Ufx.coloredRoundedBackground;
 
 public class Carousel extends StackPane {
 
@@ -88,9 +87,9 @@ public class Carousel extends StackPane {
     public Carousel() {
         ResourceManager rm = this::getClass;
 
-        Image arrowLeftImage = rm.loadImage("arrow-left.png");
-        Image arrowRightImage = rm.loadImage("arrow-right.png");
-        Font startButtonFont = rm.loadFont("emulogic.ttf", 30);
+        Image arrowLeftImage = rm.loadImage("graphics/arrow-left.png");
+        Image arrowRightImage = rm.loadImage("graphics/arrow-right.png");
+        Font startButtonFont = rm.loadFont("fonts/emulogic.ttf", 30);
 
         btnPrevSlide = createCarouselButton(arrowLeftImage);
         btnPrevSlide.setOnAction(e -> prevSlide());

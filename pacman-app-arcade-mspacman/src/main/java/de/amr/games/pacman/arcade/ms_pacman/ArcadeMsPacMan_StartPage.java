@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade.ms_pacman;
 
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.assets.ResourceManager;
-import de.amr.games.pacman.ui2d.lib.Flyer;
+import de.amr.games.pacman.uilib.Flyer;
+import de.amr.games.pacman.uilib.ResourceManager;
 
 public class ArcadeMsPacMan_StartPage {
 
