@@ -42,7 +42,9 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.time.Instant;
 import java.util.*;
@@ -106,6 +108,89 @@ public class TileMapEditor {
         }
         return target;
     }
+
+    private static class Preview3DSubScene extends SubScene {
+
+        private final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>();
+        private final BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
+        private final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
+        private final MazePreview3D preview3D;
+
+        // for rotating 3D preview
+        private double anchorX;
+        private double anchorAngle;
+
+        public Preview3DSubScene(double width, double height) {
+            super(new Group(), width, height, true, SceneAntialiasing.BALANCED);
+            preview3D = new MazePreview3D();
+            preview3D.foodVisibleProperty().bind(foodVisiblePy);
+            preview3D.terrainVisibleProperty().bind(terrainVisiblePy);
+
+            Group root = (Group) getRoot();
+            root.getChildren().add(preview3D.root());
+            setCamera(preview3D.camera());
+            setFill(Color.CORNFLOWERBLUE);
+
+            setOnMouseClicked(e -> {
+                requestFocus();
+                if (e.getClickCount() == 2) reset();
+            });
+            setOnMousePressed(e -> {
+                anchorX = e.getSceneX();
+                anchorAngle = preview3D.root().getRotate();
+            });
+            setOnMouseDragged(e -> preview3D.root().setRotate(anchorAngle + anchorX - e.getSceneX()));
+            setOnScroll(e -> preview3D.root().setTranslateY(preview3D.root().getTranslateY() + e.getDeltaY() * 0.25));
+            setOnKeyPressed(this::onKeyPressed);
+            setOnKeyTyped(this::onKeyTyped);
+        }
+
+        public void updateFood() {
+            preview3D.updateFood(worldMapPy.get());
+        }
+
+        public void updateTerrain() {
+            preview3D.updateMaze(worldMapPy.get());
+        }
+
+        public void reset() {
+            double mapWidth = worldMapPy.get().terrain().numCols() * TS;
+            double mapHeight = worldMapPy.get().terrain().numRows() * TS;
+            PerspectiveCamera camera = preview3D.camera();
+            camera.setRotationAxis(Rotate.X_AXIS);
+            camera.setRotate(60);
+            camera.setTranslateX(mapWidth * 0.5);
+            camera.setTranslateY(mapHeight);
+            camera.setTranslateZ(-mapWidth * 0.5);
+            preview3D.root().setRotate(0);
+            preview3D.root().setTranslateY(-0.5 * mapHeight);
+        }
+
+        private void onKeyPressed(KeyEvent e) {
+            boolean control = e.isControlDown();
+            KeyCode key = e.getCode();
+            if (control && key == KeyCode.UP) {
+                preview3D.root().setTranslateY(preview3D.root().getTranslateY() + 10);
+            }
+            else if (control && key == KeyCode.DOWN) {
+                preview3D.root().setTranslateY(preview3D.root().getTranslateY() - 10);
+            }
+            else if (control && key == KeyCode.LEFT) {
+                preview3D.root().setRotate(preview3D.root().getRotate() - 5);
+            }
+            else if (control && key == KeyCode.RIGHT) {
+                preview3D.root().setRotate(preview3D.root().getRotate() + 5);
+            }
+        }
+
+        private void onKeyTyped(KeyEvent e) {
+            String key = e.getCharacter();
+            if (key.equals("w")) {
+                preview3D.wireframeProperty().set(!preview3D.wireframeProperty().get());
+            }
+        }
+    }
+
     // Properties
 
     private final ObjectProperty<File> currentFilePy = new SimpleObjectProperty<>();
@@ -125,10 +210,6 @@ public class TileMapEditor {
         }
     };
 
-    private final BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
-
-    private final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
-
     private final IntegerProperty gridSizePy = new SimpleIntegerProperty(16) {
         @Override
         protected void invalidated() {
@@ -137,9 +218,9 @@ public class TileMapEditor {
     };
 
     private final BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
-
+    private final BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
+    private final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
     private final BooleanProperty segmentNumbersDisplayedPy = new SimpleBooleanProperty(false);
-
     private final BooleanProperty obstacleInnerAreaDisplayedPy = new SimpleBooleanProperty(false);
 
     private final BooleanProperty propertyEditorsVisiblePy = new SimpleBooleanProperty(false) {
@@ -259,8 +340,7 @@ public class TileMapEditor {
     private Tab tabPreview2D;
     private Tab tabPreview3D;
     private Tab tabSourceView;
-    private MazePreview3D preview3D;
-    private SubScene previewScene3D;
+    private Preview3DSubScene preview3DSubScene;
 
     private final ContextMenu contextMenu = new ContextMenu();
     private MenuBar menuBar;
@@ -277,10 +357,6 @@ public class TileMapEditor {
     private TerrainRendererInEditor editorTerrainRenderer;
     private TerrainRenderer         previewTerrainRenderer;
     private FoodMapRenderer         foodMapRenderer;
-
-    // for rotating 3D preview
-    private double anchorX;
-    private double anchorAngle;
 
     public void createUI(Stage stage) {
         this.stage = assertNotNull(stage);
@@ -333,24 +409,12 @@ public class TileMapEditor {
         editCanvas.setOnMouseMoved(this::onEditCanvasMouseMoved);
         editCanvas.setOnMouseReleased(this::onEditCanvasMouseReleased);
         editCanvas.setOnKeyPressed(this::onEditCanvasKeyPressed);
-
-        previewScene3D.setOnMouseClicked(e -> {
-            if (e.getClickCount() == 2) resetPreview3D();
-        });
-        previewScene3D.setOnMousePressed(e -> {
-            anchorX = e.getSceneX();
-            anchorAngle = preview3D.root().getRotate();
-        });
-        previewScene3D.setOnMouseDragged(e ->
-            preview3D.root().setRotate(anchorAngle + anchorX - e.getSceneX()));
-        previewScene3D.setOnScroll(e ->
-            preview3D.root().setTranslateY(preview3D.root().getTranslateY() + e.getDeltaY() * 0.25));
     }
 
     public void init(File workDir) {
         currentDirectory = workDir;
         setWorldMap(new WorldMap(36, 28));
-        resetPreview3D();
+        preview3DSubScene.reset();
         setEditMode(EditMode.INSPECT);
     }
 
@@ -447,12 +511,10 @@ public class TileMapEditor {
     }
 
     private void createPreview3D() {
-        preview3D = new MazePreview3D();
-        preview3D.foodVisibleProperty().bind(foodVisiblePy);
-        preview3D.terrainVisibleProperty().bind(terrainVisiblePy);
-        previewScene3D = new SubScene(new Group(preview3D.root()), 500, 500, true, SceneAntialiasing.BALANCED);
-        previewScene3D.setCamera(preview3D.camera());
-        previewScene3D.setFill(Color.CORNFLOWERBLUE);
+        preview3DSubScene = new Preview3DSubScene(500, 500);
+        preview3DSubScene.foodVisiblePy.bind(foodVisiblePy);
+        preview3DSubScene.terrainVisiblePy.bind(terrainVisiblePy);
+        preview3DSubScene.worldMapPy.bind(worldMapPy);
     }
 
     private void createTemplateImageView() {
@@ -523,14 +585,14 @@ public class TileMapEditor {
         worldMap().terrain().setProperty(name, value);
         //TODO find better solution
         terrainPropertiesEditor().rebuildPropertyEditors();
-        preview3D.updateMaze(worldMap());
+        preview3DSubScene.updateTerrain();
     }
 
     private void setFoodMapProperty(String name, String value) {
         worldMap().food().setProperty(name, value);
         //TODO find better solution
         foodPropertiesEditor().rebuildPropertyEditors();
-        preview3D.updateFood(worldMap());
+        preview3DSubScene.updateFood();
     }
 
     private Color pickColor(ImageView imageView, double x, double y) {
@@ -538,19 +600,6 @@ public class TileMapEditor {
         double pickY = (imageView.getImage().getHeight() / imageView.getBoundsInLocal().getHeight()) * y;
         PixelReader pr = imageView.getImage().getPixelReader();
         return pr.getColor((int) pickX, (int) pickY);
-    }
-
-    private void resetPreview3D() {
-        double mapWidth = worldMap().terrain().numCols() * TS;
-        double mapHeight = worldMap().terrain().numRows() * TS;
-        PerspectiveCamera camera = preview3D.camera();
-        camera.setRotationAxis(Rotate.X_AXIS);
-        camera.setRotate(60);
-        camera.setTranslateX(mapWidth * 0.5);
-        camera.setTranslateY(mapHeight);
-        camera.setTranslateZ(-mapWidth * 0.5);
-        preview3D.root().setRotate(0);
-        preview3D.root().setTranslateY(-0.5 * mapHeight);
     }
 
     private void createMapSourceView() {
@@ -619,7 +668,7 @@ public class TileMapEditor {
 
     private void createTabPaneWithPreviews() {
         tabPreview2D = new Tab(tt("preview2D"), spPreview2D);
-        tabPreview3D = new Tab(tt("preview3D"), previewScene3D);
+        tabPreview3D = new Tab(tt("preview3D"), preview3DSubScene);
         tabSourceView = new Tab(tt("source"), spSourceView);
 
         tabPanePreviews = new TabPane(tabPreview2D, tabPreview3D, tabSourceView);
@@ -627,8 +676,8 @@ public class TileMapEditor {
         tabPanePreviews.getTabs().forEach(tab -> tab.setClosable(false));
         tabPanePreviews.getSelectionModel().select(tabPreview2D);
 
-        previewScene3D.widthProperty().bind(tabPanePreviews.widthProperty());
-        previewScene3D.heightProperty().bind(tabPanePreviews.heightProperty());
+        preview3DSubScene.widthProperty().bind(tabPanePreviews.widthProperty());
+        preview3DSubScene.heightProperty().bind(tabPanePreviews.heightProperty());
 
         splitPaneEditorAndPreviews = new SplitPane(tabPaneEditorViews, tabPanePreviews);
         splitPaneEditorAndPreviews.setDividerPositions(0.5);
@@ -1209,10 +1258,8 @@ public class TileMapEditor {
         if (!terrainDataUpToDate) {
             tilesWithErrors.clear();
             tilesWithErrors.addAll(worldMap().updateObstacleList());
-            if (preview3D != null) {
-                preview3D.updateMaze(worldMap());
-                preview3D.updateFood(worldMap());
-            }
+            preview3DSubScene.updateTerrain();
+            preview3DSubScene.updateFood();
             terrainDataUpToDate = true;
         }
     }
@@ -1351,26 +1398,6 @@ public class TileMapEditor {
                     }
                 });
         }
-        else if (control && key == KeyCode.UP) {
-            if (isPreview3DSelected()) {
-                preview3D.root().setTranslateY(preview3D.root().getTranslateY() + 10);
-            }
-        }
-        else if (control && key == KeyCode.DOWN) {
-            if (isPreview3DSelected()) {
-                preview3D.root().setTranslateY(preview3D.root().getTranslateY() - 10);
-            }
-        }
-        else if (control && key == KeyCode.LEFT) {
-            if (isPreview3DSelected()) {
-                preview3D.root().setRotate(preview3D.root().getRotate() - 5);
-            }
-        }
-        else if (control && key == KeyCode.RIGHT) {
-            if (isPreview3DSelected()) {
-                preview3D.root().setRotate(preview3D.root().getRotate() + 5);
-            }
-        }
         else if (key == KeyCode.PLUS) {
             if (gridSize() < TileMapEditor.MAX_GRID_SIZE) {
                 gridSizePy.set(gridSize() + 1);
@@ -1436,7 +1463,6 @@ public class TileMapEditor {
                 setEditMode(EditMode.EDIT);
                 symmetricEditModePy.set(true);
             }
-            case "w" -> preview3D.wireframeProperty().set(!preview3D.wireframeProperty().get());
             case "x" -> setEditMode(EditMode.ERASE);
         }
     }
@@ -1523,9 +1549,7 @@ public class TileMapEditor {
             if (editedMap == worldMap().terrain()) {
                 invalidateTerrainData();
             } else {
-                if (preview3D != null) {
-                    preview3D.updateFood(worldMap());
-                }
+                preview3DSubScene.updateFood();
             }
         }
     }
