@@ -4,12 +4,17 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.tilemap.editor;
 
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.TileEncoding;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D;
+import de.amr.games.pacman.uilib.ResourceManager;
+import de.amr.games.pacman.uilib.Ufx;
+import de.amr.games.pacman.uilib.model3D.Model3D;
+import de.amr.games.pacman.uilib.model3D.PacModel3D;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -35,6 +40,8 @@ import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.parseColor;
 
 public class MazePreview3D {
 
+    private static final double PAC_SIZE = 12;
+
     private static PhongMaterial coloredMaterial(Color color) {
         assertNotNull(color);
         var material = new PhongMaterial(color);
@@ -57,6 +64,8 @@ public class MazePreview3D {
 
     private final DoubleProperty wallBaseHeightPy = new SimpleDoubleProperty(3.5);
 
+    private Node pacmanShape3D;
+
     public Node root() {
         return root;
     }
@@ -71,6 +80,10 @@ public class MazePreview3D {
         root.getChildren().addAll(mazeGroup, foodGroup);
         foodGroup.visibleProperty().bind(foodVisiblePy);
         mazeGroup.visibleProperty().bind(terrainVisiblePy);
+
+        ResourceManager uiLibResources = () -> Ufx.class;
+        Model3D pacmanModel3D = new Model3D(uiLibResources.url("model3D/pacman.obj"));
+        pacmanShape3D = PacModel3D.createPacShape(pacmanModel3D, PAC_SIZE, Color.YELLOW, Color.BLACK, Color.GRAY);
 
         AmbientLight ambientLight = new AmbientLight(Color.WHITE);
         root.getChildren().add(ambientLight);
@@ -136,6 +149,13 @@ public class MazePreview3D {
                 .map(Shape3D.class::cast)
                 .forEach(shape3D -> shape3D.drawModeProperty()
                         .bind(wireframePy.map(wireframe -> wireframe ? DrawMode.LINE : DrawMode.FILL)));
+
+        Vector2i pacTile = terrain.getTileProperty(PROPERTY_POS_PAC, Vector2i.ZERO);
+        Vector2f center = pacTile.scaled(TS).toVector2f().plus(TS, HTS);
+        pacmanShape3D.setTranslateX(center.x());
+        pacmanShape3D.setTranslateY(center.y());
+        pacmanShape3D.setTranslateZ(-0.5 * PAC_SIZE);
+        mazeGroup.getChildren().add(pacmanShape3D);
 
         Logger.debug("Maze 3D recreated");
     }

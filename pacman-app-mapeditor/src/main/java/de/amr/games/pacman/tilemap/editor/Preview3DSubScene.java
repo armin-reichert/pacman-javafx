@@ -5,14 +5,15 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tilemap.editor;
 
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.uilib.ResourceManager;
+import de.amr.games.pacman.uilib.Ufx;
+import de.amr.games.pacman.uilib.model3D.Model3D;
+import de.amr.games.pacman.uilib.model3D.PacModel3D;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.Group;
-import javafx.scene.PerspectiveCamera;
-import javafx.scene.SceneAntialiasing;
-import javafx.scene.SubScene;
+import javafx.scene.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
@@ -31,6 +32,7 @@ public class Preview3DSubScene extends SubScene {
     private double anchorX;
     private double anchorAngle;
 
+
     public Preview3DSubScene(double width, double height) {
         super(new Group(), width, height, true, SceneAntialiasing.BALANCED);
         preview3D = new MazePreview3D();
@@ -39,6 +41,7 @@ public class Preview3DSubScene extends SubScene {
 
         Group root = (Group) getRoot();
         root.getChildren().add(preview3D.root());
+
         setCamera(preview3D.camera());
         setFill(Color.CORNFLOWERBLUE);
 
