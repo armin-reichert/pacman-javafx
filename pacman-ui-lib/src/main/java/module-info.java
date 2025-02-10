@@ -9,5 +9,5 @@ open module de.amr.games.pacman.uilib {
 
     exports de.amr.games.pacman.uilib;
     exports de.amr.games.pacman.uilib.objimport;
-    exports de.amr.games.pacman.uilib.model;
+    exports de.amr.games.pacman.uilib.model3D;
 }

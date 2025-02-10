@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.uilib.model.Model3D;
+import de.amr.games.pacman.uilib.model3D.Model3D;
 import javafx.animation.Animation;
 import javafx.geometry.Point3D;
 import javafx.scene.shape.Shape3D;

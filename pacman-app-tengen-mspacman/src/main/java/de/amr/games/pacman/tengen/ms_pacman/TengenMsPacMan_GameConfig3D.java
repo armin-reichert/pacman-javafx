@@ -10,7 +10,7 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui3d.GlobalProperties3d;
-import de.amr.games.pacman.uilib.model.PacModel3D;
+import de.amr.games.pacman.uilib.model3D.PacModel3D;
 import de.amr.games.pacman.ui3d.scene3d.GameConfiguration3D;
 import javafx.scene.Group;
 import javafx.scene.Node;

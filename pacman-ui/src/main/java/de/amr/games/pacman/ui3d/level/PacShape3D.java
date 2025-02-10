@@ -10,9 +10,9 @@ import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.uilib.model.Model3D;
+import de.amr.games.pacman.uilib.model3D.Model3D;
 import de.amr.games.pacman.uilib.Ufx;
-import de.amr.games.pacman.uilib.model.PacModel3D;
+import de.amr.games.pacman.uilib.model3D.PacModel3D;
 import javafx.animation.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -28,7 +28,7 @@ import org.tinylog.Logger;
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui3d.GlobalProperties3d.PY_3D_PAC_LIGHT_ENABLED;
-import static de.amr.games.pacman.uilib.model.Model3D.meshViewById;
+import static de.amr.games.pacman.uilib.model3D.Model3D.meshViewById;
 
 /**
  * @author Armin Reichert

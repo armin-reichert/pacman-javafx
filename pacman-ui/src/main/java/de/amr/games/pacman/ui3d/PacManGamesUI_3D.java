@@ -8,7 +8,8 @@ import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.uilib.Picker;
 import de.amr.games.pacman.uilib.ResourceManager;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
-import de.amr.games.pacman.uilib.model.Model3D;
+import de.amr.games.pacman.uilib.Ufx;
+import de.amr.games.pacman.uilib.model3D.Model3D;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
 
@@ -30,13 +31,15 @@ public class PacManGamesUI_3D extends PacManGamesUI {
 
     public void loadAssets() {
         super.loadAssets();
+
         ResourceManager rm = this::getClass;
         assets.addBundle(rm.getModuleBundle("de.amr.games.pacman.ui3d.texts.messages"));
 
-        assets.store("model3D.pacman", new Model3D(rm.url("model3D/pacman.obj")));
-        assets.store("model3D.pellet", new Model3D(rm.url("model3D/fruit.obj")));
+        ResourceManager uiLibResources = () -> Ufx.class;
+        assets.store("model3D.pacman", new Model3D(uiLibResources.url("model3D/pacman.obj")));
+        assets.store("model3D.pellet", new Model3D(uiLibResources.url("model3D/fruit.obj")));
 
-        Model3D ghostModel3D = new Model3D(rm.url("model3D/ghost.obj"));
+        Model3D ghostModel3D = new Model3D(uiLibResources.url("model3D/ghost.obj"));
         assets.store("model3D.ghost",               ghostModel3D);
         assets.store("model3D.ghost.mesh.dress",    ghostModel3D.mesh("Sphere.004_Sphere.034_light_blue_ghost"));
         assets.store("model3D.ghost.mesh.pupils",   ghostModel3D.mesh("Sphere.010_Sphere.039_grey_wall"));

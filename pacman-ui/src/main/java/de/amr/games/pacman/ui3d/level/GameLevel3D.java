@@ -20,7 +20,7 @@ import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
 import de.amr.games.pacman.ui3d.animation.Squirting;
 import de.amr.games.pacman.ui3d.scene3d.GameConfiguration3D;
 import de.amr.games.pacman.uilib.Ufx;
-import de.amr.games.pacman.uilib.model.Model3D;
+import de.amr.games.pacman.uilib.model3D.Model3D;
 import javafx.animation.*;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;

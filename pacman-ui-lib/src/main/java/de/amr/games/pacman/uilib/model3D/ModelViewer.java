@@ -1,4 +1,4 @@
-package de.amr.games.pacman.uilib.model;
+package de.amr.games.pacman.uilib.model3D;
 
 import javafx.application.Application;
 import javafx.scene.*;
