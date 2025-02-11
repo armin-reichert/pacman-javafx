@@ -258,7 +258,7 @@ public class TileMapEditor {
     private Tab tabPreview2D;
     private Tab tabPreview3D;
     private Tab tabSourceView;
-    private Preview3DSubScene preview3DSubScene;
+    private MazePreview3D mazePreview3D;
 
     private final ContextMenu contextMenu = new ContextMenu();
     private MenuBar menuBar;
@@ -332,7 +332,7 @@ public class TileMapEditor {
     public void init(File workDir) {
         currentDirectory = workDir;
         setWorldMap(new WorldMap(36, 28));
-        preview3DSubScene.reset();
+        mazePreview3D.reset();
         setEditMode(EditMode.INSPECT);
     }
 
@@ -485,10 +485,10 @@ public class TileMapEditor {
     }
 
     private void createPreview3D() {
-        preview3DSubScene = new Preview3DSubScene(500, 500);
-        preview3DSubScene.foodVisibleProperty().bind(foodVisiblePy);
-        preview3DSubScene.terrainVisibleProperty().bind(terrainVisiblePy);
-        preview3DSubScene.worldMapProperty().bind(worldMapPy);
+        mazePreview3D = new MazePreview3D(500, 500);
+        mazePreview3D.foodVisibleProperty().bind(foodVisiblePy);
+        mazePreview3D.terrainVisibleProperty().bind(terrainVisiblePy);
+        mazePreview3D.worldMapProperty().bind(worldMapPy);
     }
 
     private void createTemplateImageView() {
@@ -559,14 +559,14 @@ public class TileMapEditor {
         worldMap().terrain().setProperty(name, value);
         //TODO find better solution
         terrainPropertiesEditor().rebuildPropertyEditors();
-        preview3DSubScene.updateTerrain();
+        mazePreview3D.updateTerrain();
     }
 
     private void setFoodMapProperty(String name, String value) {
         worldMap().food().setProperty(name, value);
         //TODO find better solution
         foodPropertiesEditor().rebuildPropertyEditors();
-        preview3DSubScene.updateFood();
+        mazePreview3D.updateFood();
     }
 
     private Color pickColor(ImageView imageView, double x, double y) {
@@ -642,7 +642,7 @@ public class TileMapEditor {
 
     private void createTabPaneWithPreviews() {
         tabPreview2D = new Tab(tt("preview2D"), spPreview2D);
-        tabPreview3D = new Tab(tt("preview3D"), preview3DSubScene);
+        tabPreview3D = new Tab(tt("preview3D"), mazePreview3D.getSubScene());
         tabSourceView = new Tab(tt("source"), spSourceView);
 
         tabPanePreviews = new TabPane(tabPreview2D, tabPreview3D, tabSourceView);
@@ -650,8 +650,8 @@ public class TileMapEditor {
         tabPanePreviews.getTabs().forEach(tab -> tab.setClosable(false));
         tabPanePreviews.getSelectionModel().select(tabPreview2D);
 
-        preview3DSubScene.widthProperty().bind(tabPanePreviews.widthProperty());
-        preview3DSubScene.heightProperty().bind(tabPanePreviews.heightProperty());
+        mazePreview3D.getSubScene().widthProperty().bind(tabPanePreviews.widthProperty());
+        mazePreview3D.getSubScene().heightProperty().bind(tabPanePreviews.heightProperty());
 
         splitPaneEditorAndPreviews = new SplitPane(tabPaneEditorViews, tabPanePreviews);
         splitPaneEditorAndPreviews.setDividerPositions(0.5);
@@ -1237,8 +1237,8 @@ public class TileMapEditor {
         if (!terrainDataUpToDate) {
             tilesWithErrors.clear();
             tilesWithErrors.addAll(worldMap().updateObstacleList());
-            preview3DSubScene.updateTerrain();
-            preview3DSubScene.updateFood();
+            mazePreview3D.updateTerrain();
+            mazePreview3D.updateFood();
             terrainDataUpToDate = true;
         }
     }
@@ -1475,7 +1475,7 @@ public class TileMapEditor {
             if (editedMap == worldMap().terrain()) {
                 invalidateTerrainData();
             } else {
-                preview3DSubScene.updateFood();
+                mazePreview3D.updateFood();
             }
         }
     }
