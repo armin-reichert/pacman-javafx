@@ -425,37 +425,39 @@ public class TileMapEditor {
         Vector2i tile = tileAtMousePosition(menuEvent.getX(), menuEvent.getY());
         WorldMap worldMap = worldMapPy.get();
 
-        var miAddCircle2x2 = new MenuItem("2x2 Circle");
+        var miAddCircle2x2 = new MenuItem(tt("menu.edit.add_circle"));
         miAddCircle2x2.setOnAction(actionEvent -> {
-            addContentBlock(worldMap.terrain(), CIRCLE_2x2, tile);
+            addTerrainContentBlock(worldMap(), CIRCLE_2x2, tile);
             if (isSymmetricEditMode()) {
-                addContentBlockMirrored(worldMap.terrain(), CIRCLE_2x2, tile);
+                addTerrainContentBlockMirrored(worldMap, CIRCLE_2x2, tile);
             }
+            markAsEdited(worldMap.terrain());
+            markAsEdited(worldMap.food());
         });
 
         var miAddHouse = new MenuItem(TileMapEditor.tt("menu.edit.add_house"));
-        miAddHouse.setOnAction(actionEvent -> addHouse(worldMap.terrain(), tile));
+        miAddHouse.setOnAction(actionEvent -> addHouse(worldMap, tile));
 
-        var miInsertRow = new MenuItem("Insert Row"); //TODO localize
+        var miInsertRow = new MenuItem(tt("menu.edit.insert_row"));
         miInsertRow.setOnAction(actionEvent -> {
             int rowIndex = tileAtMousePosition(menuEvent.getX(), menuEvent.getY()).y();
             setWorldMap(worldMap.insertRowBeforeIndex(rowIndex));
         });
 
-        var miDeleteRow = new MenuItem("Delete Row"); //TODO localize
+        var miDeleteRow = new MenuItem(tt("menu.edit.delete_row"));
         miDeleteRow.setOnAction(actionEvent -> {
             int rowIndex = tileAtMousePosition(menuEvent.getX(), menuEvent.getY()).y();
             setWorldMap(worldMap.deleteRowAtIndex(rowIndex));
         });
 
-        var miFloodWithPellets = new MenuItem("Flood with pellets"); //TODO localize
+        var miFloodWithPellets = new MenuItem(tt("menu.edit.flood_with_pellets"));
         miFloodWithPellets.setOnAction(ae -> {
             if (worldMap.terrain().get(tile) == TileEncoding.EMPTY && worldMap.food().get(tile) == TileEncoding.EMPTY) {
                 floodWithPellets(tile);
             }
         });
 
-        var miDetectPellets = new MenuItem("Detect pellets"); //TODO localize
+        var miDetectPellets = new MenuItem(tt("menu.edit.detect_pellets"));
         miDetectPellets.disableProperty().bind(templateImagePy.map(Objects::isNull));
         miDetectPellets.setOnAction(ae -> detectPelletsInTemplateImage());
 
@@ -1467,7 +1469,7 @@ public class TileMapEditor {
     void markAsEdited(TileMap editedMap) {
         unsavedChanges = true;
 
-        //TODO check this
+        //TODO check this and cleanup
         if (worldMap() != null) {
             updateSourceView();
             if (editedMap == worldMap().terrain()) {
@@ -1624,7 +1626,7 @@ public class TileMapEditor {
         addBorderWall(terrain, 3, 2);
         if (terrain.numRows() >= 20) {
             Vector2i houseOrigin = vec_2i(tilesX / 2 - 4, tilesY / 2 - 3);
-            addHouse(terrain, houseOrigin);
+            addHouse(preConfiguredMap, houseOrigin);
             terrain.setProperty(PROPERTY_POS_PAC,                  formatTile(houseOrigin.plus(3, 11)));
             terrain.setProperty(PROPERTY_POS_BONUS,                formatTile(houseOrigin.plus(3, 5)));
             terrain.setProperty(PROPERTY_POS_SCATTER_RED_GHOST,    formatTile(vec_2i(tilesX - 3, 0)));
@@ -1654,38 +1656,43 @@ public class TileMapEditor {
         markAsEdited(terrain);
     }
 
-    private void addHouse(TileMap terrain, Vector2i origin) {
-        addContentBlock(terrain, GHOST_HOUSE_SHAPE, origin);
+    private void addHouse(WorldMap worldMap, Vector2i origin) {
+        TileMap terrain = worldMap.terrain();
+        addTerrainContentBlock(worldMap, GHOST_HOUSE_SHAPE, origin);
         terrain.setProperty(PROPERTY_POS_HOUSE_MIN_TILE, formatTile(origin));
         terrain.setProperty(PROPERTY_POS_RED_GHOST,      formatTile(origin.plus(3, -1)));
         terrain.setProperty(PROPERTY_POS_CYAN_GHOST,     formatTile(origin.plus(1, 2)));
         terrain.setProperty(PROPERTY_POS_PINK_GHOST,     formatTile(origin.plus(3, 2)));
         terrain.setProperty(PROPERTY_POS_ORANGE_GHOST,   formatTile(origin.plus(5, 2)));
         terrainPropertiesEditor().rebuildPropertyEditors();
+        markAsEdited(worldMap.terrain());
+        markAsEdited(worldMap.food());
     }
 
-    // does not add mirrored content!
-    private void addContentBlock(TileMap tileMap, byte[][] block, Vector2i origin) {
+    // Does not add mirrored content, but deletes food at added block
+    private void addTerrainContentBlock(WorldMap worldMap, byte[][] block, Vector2i origin) {
         int numRows = block.length, numCols = block[0].length;
         for (int row = 0; row < numRows; ++row) {
             for (int col = 0; col < numCols; ++col) {
-                tileMap.set(origin.y() + row, origin.x() + col, block[row][col]);
+                int x = origin.x() + col, y = origin.y() + row;
+                worldMap.terrain().set(y, x, block[row][col]);
+                worldMap.food().set(y, x, TileEncoding.EMPTY);
             }
         }
-        markAsEdited(tileMap);
     }
 
-    private void addContentBlockMirrored(TileMap tileMap, byte[][] block, Vector2i origin) {
-        Vector2i mirroredOrigin = mirrored(tileMap, origin);
+    private void addTerrainContentBlockMirrored(WorldMap worldMap, byte[][] block, Vector2i origin) {
+        Vector2i mirroredOrigin = mirrored(worldMap.terrain(), origin);
         int numRows = block.length, numCols = block[0].length;
         for (int row = 0; row < numRows; ++row) {
             for (int col = 0; col < numCols; ++col) {
                 byte content = block[row][col];
                 // Note: content is added from right to left from mirrored origin!
-                tileMap.set(mirroredOrigin.y() + row, mirroredOrigin.x() - col, mirroredTileContent(content));
+                int x = mirroredOrigin.x() - col, y = mirroredOrigin.y() + row;
+                worldMap.terrain().set(y, x, mirroredTileContent(content));
+                worldMap.food().set(y, x, TileEncoding.EMPTY);
             }
         }
-        markAsEdited(tileMap);
     }
 
     private boolean isSupportedImageFile(File file) {
