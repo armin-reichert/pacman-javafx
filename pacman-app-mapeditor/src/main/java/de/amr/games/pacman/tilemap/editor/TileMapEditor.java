@@ -15,6 +15,7 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.tilemap.rendering.FoodMapRenderer;
 import de.amr.games.pacman.tilemap.rendering.TerrainColorScheme;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer;
+import de.amr.games.pacman.uilib.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
@@ -89,25 +90,6 @@ public class TileMapEditor {
     public static final FileChooser.ExtensionFilter WORLD_MAP_FILES_FILTER = new FileChooser.ExtensionFilter("World Map Files", "*.world");
     public static final FileChooser.ExtensionFilter IMAGE_FILES_FILTER = new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg");
     public static final FileChooser.ExtensionFilter ALL_FILES_FILTER = new FileChooser.ExtensionFilter("All Files", "*.*");
-
-    //TODO move into util class
-    private static Image imageToGreyscale(Image source) {
-        if (source == null) {
-            return null;
-        }
-        int width = (int) source.getWidth(), height = (int) source.getHeight();
-        WritableImage target = new WritableImage(width, height);
-        PixelReader r = source.getPixelReader();
-        PixelWriter w = target.getPixelWriter();
-        for (int x = 0; x < width; ++x) {
-            for (int y = 0; y < height; ++y) {
-                Color color = r.getColor(x, y);
-                double g = (color.getRed() + color.getBlue() + color.getGreen()) / 3.0;
-                w.setColor(x, y, Color.gray(g));
-            }
-        }
-        return target;
-    }
 
     // Properties
 
@@ -315,7 +297,7 @@ public class TileMapEditor {
         obstacleEditor.worldMapPy.bind(worldMapPy);
 
         titlePy.bind(createTitleBinding());
-        templateImageGreyPy.bind(templateImagePy.map(TileMapEditor::imageToGreyscale));
+        templateImageGreyPy.bind(templateImagePy.map(Ufx::imageToGreyscale));
 
         // Input handlers
         contentPane.setOnKeyTyped(this::onKeyTyped);

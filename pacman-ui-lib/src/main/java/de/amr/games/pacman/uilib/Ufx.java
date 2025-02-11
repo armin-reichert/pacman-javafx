@@ -214,6 +214,24 @@ public interface Ufx {
 
     record ColorChange(Color from, Color to) {}
 
+    static Image imageToGreyscale(Image source) {
+        if (source == null) {
+            return null;
+        }
+        int width = (int) source.getWidth(), height = (int) source.getHeight();
+        WritableImage target = new WritableImage(width, height);
+        PixelReader r = source.getPixelReader();
+        PixelWriter w = target.getPixelWriter();
+        for (int x = 0; x < width; ++x) {
+            for (int y = 0; y < height; ++y) {
+                Color color = r.getColor(x, y);
+                double g = (color.getRed() + color.getBlue() + color.getGreen()) / 3.0;
+                w.setColor(x, y, Color.gray(g));
+            }
+        }
+        return target;
+    }
+
     static Image exchangeColors(Map<String, ColorChange> changes, Image source) {
         WritableImage target = new WritableImage((int) source.getWidth(), (int) source.getHeight());
         PixelReader sourceReader = source.getPixelReader();
