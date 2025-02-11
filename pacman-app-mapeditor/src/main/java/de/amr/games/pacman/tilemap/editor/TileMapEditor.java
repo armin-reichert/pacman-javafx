@@ -1737,7 +1737,7 @@ public class TileMapEditor {
                             tileColors[y][x] = rdr.getColor(col * TS + x, (row - 3) * TS + y);
                         }
                     }
-                    byte value = classify(tileColors, foodColor);
+                    byte value = detectFoodTile(tileColors, foodColor);
                     if (value != TileEncoding.EMPTY) {
                         worldMap().food().set(tile, value);
                     }
@@ -1750,11 +1750,11 @@ public class TileMapEditor {
         markAsEdited(worldMap().food());
     }
 
-    private byte classify(Color[][] tileColors, Color foodColor) {
+    private byte detectFoodTile(Color[][] tileColors, Color foodColor) {
         int numFoodPixels = 0;
-        for (int y = 0; y < TS; ++y) {
-            for (int x = 0; x < TS; ++x) {
-                if (tileColors[y][x].equals(foodColor)) numFoodPixels++;
+        for (int row = 0; row < TS; ++row) {
+            for (int col = 0; col < TS; ++col) {
+                if (tileColors[row][col].equals(foodColor)) numFoodPixels++;
             }
         }
         if (numFoodPixels == 4) return TileEncoding.PELLET;
