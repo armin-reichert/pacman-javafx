@@ -32,7 +32,6 @@ public class Preview3DSubScene extends SubScene {
     private double anchorX;
     private double anchorAngle;
 
-
     public Preview3DSubScene(double width, double height) {
         super(new Group(), width, height, true, SceneAntialiasing.BALANCED);
         preview3D = new MazePreview3D();
@@ -92,9 +91,9 @@ public class Preview3DSubScene extends SubScene {
         } else if (control && key == KeyCode.DOWN) {
             preview3D.root().setTranslateY(preview3D.root().getTranslateY() - 10);
         } else if (control && key == KeyCode.LEFT) {
-            preview3D.root().setRotate(preview3D.root().getRotate() - 5);
+            preview3D.root().setRotate(preview3D.root().getRotate() - 2);
         } else if (control && key == KeyCode.RIGHT) {
-            preview3D.root().setRotate(preview3D.root().getRotate() + 5);
+            preview3D.root().setRotate(preview3D.root().getRotate() + 2);
         }
     }
 
