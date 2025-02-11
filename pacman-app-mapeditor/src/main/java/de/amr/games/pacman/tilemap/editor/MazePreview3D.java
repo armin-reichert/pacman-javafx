@@ -37,9 +37,7 @@ public class MazePreview3D {
         maze3D.foodVisibleProperty().bind(foodVisiblePy);
         maze3D.terrainVisibleProperty().bind(terrainVisiblePy);
 
-        var root = new Group(maze3D);
-
-        subScene = new SubScene(root, width, height, true, SceneAntialiasing.BALANCED);
+        subScene = new SubScene(maze3D, width, height, true, SceneAntialiasing.BALANCED);
         subScene.setCamera(maze3D.camera());
         subScene.setFill(Color.CORNFLOWERBLUE);
 
