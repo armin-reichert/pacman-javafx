@@ -208,6 +208,8 @@ public class TileMapEditor {
     private Instant messageCloseTime;
     private Timeline clock;
     private boolean unsavedChanges;
+    private boolean terrainChanged;
+    private boolean foodChanged;
     private boolean terrainDataUpToDate;
     private boolean dragging = false;
     private final List<Vector2i> tilesWithErrors = new ArrayList<>();
@@ -408,8 +410,8 @@ public class TileMapEditor {
             if (isSymmetricEditMode()) {
                 addTerrainContentBlockMirrored(worldMap, CIRCLE_2x2, tile);
             }
-            markAsEdited(worldMap.terrain());
-            markAsEdited(worldMap.food());
+            markTileMapEdited(worldMap.terrain());
+            markTileMapEdited(worldMap.food());
         });
 
         var miAddHouse = new MenuItem(TileMapEditor.tt("menu.edit.add_house"));
@@ -435,7 +437,8 @@ public class TileMapEditor {
         });
 
         var miDetectPellets = new MenuItem(tt("menu.edit.detect_pellets"));
-        miDetectPellets.disableProperty().bind(templateImagePy.map(Objects::isNull));
+        //miDetectPellets.disableProperty().bind(templateImagePy.map(Objects::isNull));
+        miDetectPellets.disableProperty().bind(Bindings.createBooleanBinding(() -> templateImagePy.get() == null, templateImagePy));
         miDetectPellets.setOnAction(ae -> detectPelletsInTemplateImage());
 
         contextMenu.getItems().setAll(
@@ -791,6 +794,7 @@ public class TileMapEditor {
     private void initActiveRendering() {
         double frameDuration = 1000.0 / REFRESH_RATE;
         clock = new Timeline(REFRESH_RATE, new KeyFrame(Duration.millis(frameDuration), e -> {
+            handleMapChanges();
             updateMessageAnimation();
             TileMap terrainMap = worldMap().terrain();
             TerrainColorScheme colors = new TerrainColorScheme(
@@ -858,17 +862,19 @@ public class TileMapEditor {
         var miClearTerrain = new MenuItem(tt("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(e -> {
             worldMap().terrain().clear();
-            markAsEdited(worldMap().terrain());
+            markTileMapEdited(worldMap().terrain());
         });
 
         var miClearFood = new MenuItem(tt("menu.edit.clear_food"));
         miClearFood.setOnAction(e -> {
             worldMap().food().clear();
-            markAsEdited(worldMap().food());
+            markTileMapEdited(worldMap().food());
         });
 
         var miDetectPellets = new MenuItem(tt("menu.edit.detect_pellets"));
-        miDetectPellets.disableProperty().bind(templateImagePy.map(Objects::isNull));
+        //TODO why doens't this work?
+//        miDetectPellets.disableProperty().bind(templateImagePy.map(Objects::isNull));
+        miDetectPellets.disableProperty().bind(Bindings.createBooleanBinding(() -> templateImagePy.get() == null,  templateImagePy));
         miDetectPellets.setOnAction(ae -> detectPelletsInTemplateImage());
 
         menuEdit = new Menu(tt("menu.edit"), NO_GRAPHIC,
@@ -1320,13 +1326,13 @@ public class TileMapEditor {
                             if (selectedPalette().isToolSelected()) {
                                 selectedPalette().selectedTool().apply(worldMap().terrain(), focussedTile());
                             }
-                            markAsEdited(worldMap().terrain());
+                            markTileMapEdited(worldMap().terrain());
                         }
                         case TileMapEditor.PALETTE_ID_FOOD -> {
                             if (selectedPalette().isToolSelected()) {
                                 selectedPalette().selectedTool().apply(worldMap().food(), focussedTile());
                             }
-                            markAsEdited(worldMap().food());
+                            markTileMapEdited(worldMap().food());
                         }
                         default -> {}
                     }
@@ -1452,17 +1458,22 @@ public class TileMapEditor {
         terrainDataUpToDate = false;
     }
 
-    void markAsEdited(TileMap editedMap) {
+    public void markTileMapEdited(TileMap tileMap) {
         unsavedChanges = true;
+        terrainChanged = tileMap == worldMap().terrain();
+        foodChanged = tileMap == worldMap().food();
+    }
 
-        //TODO check this and cleanup
-        if (worldMap() != null) {
+    private void handleMapChanges() {
+        if (terrainChanged) {
+            invalidateTerrainData();
+            mazePreview3D.updateTerrain();
+        }
+        if (foodChanged) {
+            mazePreview3D.updateFood();
+        }
+        if (foodChanged || terrainChanged) {
             updateSourceView();
-            if (editedMap == worldMap().terrain()) {
-                invalidateTerrainData();
-            } else {
-                mazePreview3D.updateFood();
-            }
         }
     }
 
@@ -1483,7 +1494,7 @@ public class TileMapEditor {
             case TileMapEditor.PALETTE_ID_ACTORS -> {
                 if (selectedPalette().isToolSelected()) {
                     selectedPalette().selectedTool().apply(worldMap().terrain(), tile);
-                    markAsEdited(worldMap().terrain());
+                    markTileMapEdited(worldMap().terrain());
                     terrainPropertiesEditor().updatePropertyEditorValues();
                 }
             }
@@ -1563,8 +1574,10 @@ public class TileMapEditor {
         assertNotNull(tileMap);
         assertNotNull(tile);
         tileMap.set(tile, value);
+        markTileMapEdited(worldMap().terrain());
         if (tileMap == worldMap().terrain()) {
             worldMap().food().set(tile, TileEncoding.EMPTY);
+            markTileMapEdited(worldMap().food());
         }
         if (isSymmetricEditMode()) {
             byte mirroredContent = mirroredTileContent(tileMap.get(tile));
@@ -1572,9 +1585,9 @@ public class TileMapEditor {
             tileMap.set(mirrorTile, mirroredContent);
             if (tileMap == worldMap().terrain()) {
                 worldMap().food().set(mirrorTile, TileEncoding.EMPTY);
+                markTileMapEdited(worldMap().food());
             }
         }
-        markAsEdited(tileMap);
     }
 
     private Vector2i mirrored(TileMap tileMap, Vector2i tile) {
@@ -1584,7 +1597,7 @@ public class TileMapEditor {
     // ignores symmetric edit mode!
     private void clearTileValue(TileMap tileMap, Vector2i tile) {
         tileMap.set(tile, TileEncoding.EMPTY);
-        markAsEdited(tileMap);
+        markTileMapEdited(tileMap);
     }
 
     private void setBlankMap(int tilesX, int tilesY) {
@@ -1639,7 +1652,7 @@ public class TileMapEditor {
             terrain.set(firstRow, col, TileEncoding.DWALL_H);
             terrain.set(lastRow, col, TileEncoding.DWALL_H);
         }
-        markAsEdited(terrain);
+        markTileMapEdited(terrain);
     }
 
     private void addHouse(WorldMap worldMap, Vector2i origin) {
@@ -1651,8 +1664,8 @@ public class TileMapEditor {
         terrain.setProperty(PROPERTY_POS_PINK_GHOST,     formatTile(origin.plus(3, 2)));
         terrain.setProperty(PROPERTY_POS_ORANGE_GHOST,   formatTile(origin.plus(5, 2)));
         terrainPropertiesEditor().rebuildPropertyEditors();
-        markAsEdited(worldMap.terrain());
-        markAsEdited(worldMap.food());
+        markTileMapEdited(worldMap.terrain());
+        markTileMapEdited(worldMap.food());
     }
 
     // Does not add mirrored content, but deletes food at added block
@@ -1727,6 +1740,9 @@ public class TileMapEditor {
 
     private void detectPelletsInTemplateImage() {
         Image templateImage = templateImagePy.get();
+        if (templateImage == null) {
+            return;
+        }
         PixelReader rdr = templateImage.getPixelReader();
         Color[][] tileColors = new Color[TS][TS];
         Color foodColor = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, Color.WHITE);
@@ -1745,13 +1761,15 @@ public class TileMapEditor {
                     if (value != TileEncoding.EMPTY) {
                         worldMap().food().set(tile, value);
                     }
+                } catch (IndexOutOfBoundsException e) {
+                    Logger.error("Could not get pixels for tile {}, maybe template image has been cropped incorrectly?", tile);
                 } catch (Exception e) {
-                    Logger.error("getPixels() failed for tile {}", tile);
+                    Logger.error("Could not get pixels for tile {}", tile);
                     Logger.error(e);
                 }
             }
         }
-        markAsEdited(worldMap().food());
+        markTileMapEdited(worldMap().food());
     }
 
     private byte detectFoodTile(Color[][] tileColors, Color foodColor) {
