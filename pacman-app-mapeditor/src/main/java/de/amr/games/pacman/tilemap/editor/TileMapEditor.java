@@ -278,6 +278,7 @@ public class TileMapEditor {
         createTemplateImageView();
         createMapSourceView();
         createPalettes();
+        createObstacleEditor();
         createPropertyEditors();
         createTabPaneWithEditViews();
         createTabPaneWithPreviews();
@@ -289,12 +290,6 @@ public class TileMapEditor {
 
         arrangeMainLayout();
         initActiveRendering();
-
-        obstacleEditor = new ObstacleEditor((tile, value) -> {
-            setTileValue(worldMap().terrain(), tile, value);
-            setTileValue(worldMap().food(), tile, TileEncoding.EMPTY);
-        });
-        obstacleEditor.worldMapPy.bind(worldMapPy);
 
         titlePy.bind(createTitleBinding());
         templateImageGreyPy.bind(templateImagePy.map(Ufx::imageToGreyscale));
@@ -659,6 +654,15 @@ public class TileMapEditor {
         tabPaneWithPalettes = new TabPane(tabTerrain, tabActors, tabPellets);
         tabPaneWithPalettes.setPadding(new Insets(5, 5, 5, 5));
         tabPaneWithPalettes.setMinHeight(75);
+    }
+
+    private void createObstacleEditor() {
+        obstacleEditor = new ObstacleEditor();
+        obstacleEditor.setEditCallback((tile, value) -> {
+            setTileValue(worldMap().terrain(), tile, value);
+            setTileValue(worldMap().food(), tile, TileEncoding.EMPTY);
+        });
+        obstacleEditor.worldMapPy.bind(worldMapPy);
     }
 
     private void createPropertyEditors() {

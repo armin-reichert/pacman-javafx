@@ -13,14 +13,13 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
 
-import java.util.Objects;
 import java.util.function.BiConsumer;
 
 public class ObstacleEditor {
 
     public final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>();
 
-    private final BiConsumer<Vector2i, Byte> editAction;
+    private BiConsumer<Vector2i, Byte> editCallback;
     private boolean enabled;
     private Vector2i anchor;
     private Vector2i frontier;
@@ -28,8 +27,8 @@ public class ObstacleEditor {
     private Vector2i maxTile; // bottom right corner
     private boolean join = true;
 
-    public ObstacleEditor(BiConsumer<Vector2i, Byte> editAction) {
-        this.editAction = Objects.requireNonNull(editAction);
+    public void setEditCallback(BiConsumer<Vector2i, Byte> callback) {
+        editCallback = callback;
     }
 
     public void setEnabled(boolean enabled) {
@@ -228,7 +227,9 @@ public class ObstacleEditor {
         for (int row = 0; row < numRows; ++row) {
             for (int col = 0; col < numCols; ++col) {
                 Vector2i tile = new Vector2i(minTile.x() + col, minTile.y() + row);
-                editAction.accept(tile, values[row][col]);
+                if (editCallback != null) {
+                    editCallback.accept(tile, values[row][col]);
+                }
             }
         }
     }
