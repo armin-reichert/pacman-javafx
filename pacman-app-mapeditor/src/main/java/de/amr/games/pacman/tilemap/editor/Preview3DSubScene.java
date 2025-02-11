@@ -39,7 +39,7 @@ public class Preview3DSubScene extends SubScene {
         preview3D.terrainVisibleProperty().bind(terrainVisiblePy);
 
         Group root = (Group) getRoot();
-        root.getChildren().add(preview3D.root());
+        root.getChildren().add(preview3D);
 
         setCamera(preview3D.camera());
         setFill(Color.CORNFLOWERBLUE);
@@ -50,10 +50,10 @@ public class Preview3DSubScene extends SubScene {
         });
         setOnMousePressed(e -> {
             anchorX = e.getSceneX();
-            anchorAngle = preview3D.root().getRotate();
+            anchorAngle = preview3D.getRotate();
         });
-        setOnMouseDragged(e -> preview3D.root().setRotate(anchorAngle + anchorX - e.getSceneX()));
-        setOnScroll(e -> preview3D.root().setTranslateY(preview3D.root().getTranslateY() + e.getDeltaY() * 0.25));
+        setOnMouseDragged(e -> preview3D.setRotate(anchorAngle + anchorX - e.getSceneX()));
+        setOnScroll(e -> preview3D.setTranslateY(preview3D.getTranslateY() + e.getDeltaY() * 0.25));
         setOnKeyPressed(this::onKeyPressed);
         setOnKeyTyped(this::onKeyTyped);
     }
@@ -79,21 +79,21 @@ public class Preview3DSubScene extends SubScene {
         camera.setTranslateX(mapWidth * 0.5);
         camera.setTranslateY(mapHeight);
         camera.setTranslateZ(-mapWidth * 0.5);
-        preview3D.root().setRotate(0);
-        preview3D.root().setTranslateY(-0.5 * mapHeight);
+        preview3D.setRotate(0);
+        preview3D.setTranslateY(-0.5 * mapHeight);
     }
 
     private void onKeyPressed(KeyEvent e) {
         boolean control = e.isControlDown();
         KeyCode key = e.getCode();
         if (control && key == KeyCode.UP) {
-            preview3D.root().setTranslateY(preview3D.root().getTranslateY() + 10);
+            preview3D.setTranslateY(preview3D.getTranslateY() + 10);
         } else if (control && key == KeyCode.DOWN) {
-            preview3D.root().setTranslateY(preview3D.root().getTranslateY() - 10);
+            preview3D.setTranslateY(preview3D.getTranslateY() - 10);
         } else if (control && key == KeyCode.LEFT) {
-            preview3D.root().setRotate(preview3D.root().getRotate() - 2);
+            preview3D.setRotate(preview3D.getRotate() - 2);
         } else if (control && key == KeyCode.RIGHT) {
-            preview3D.root().setRotate(preview3D.root().getRotate() + 2);
+            preview3D.setRotate(preview3D.getRotate() + 2);
         }
     }
 

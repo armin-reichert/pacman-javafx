@@ -38,7 +38,7 @@ import static de.amr.games.pacman.tilemap.editor.ArcadeMap.*;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.getColorFromMap;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.parseColor;
 
-public class MazePreview3D {
+public class MazePreview3D extends Group {
 
     private static final double ACTOR_SIZE = 12.0;
 
@@ -55,7 +55,6 @@ public class MazePreview3D {
     private final BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
     private final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
 
-    private final Group root = new Group();
     private final Group mazeGroup = new Group();
     private final Group foodGroup = new Group();
 
@@ -67,10 +66,6 @@ public class MazePreview3D {
     private final Node pacmanShape3D;
     private final Node[] ghostShapes;
 
-    public Node root() {
-        return root;
-    }
-
     public PerspectiveCamera camera() {
         return camera;
     }
@@ -78,7 +73,7 @@ public class MazePreview3D {
     public MazePreview3D() {
         r3D = new TerrainRenderer3D();
 
-        root.getChildren().addAll(mazeGroup, foodGroup);
+        getChildren().addAll(mazeGroup, foodGroup);
         foodGroup.visibleProperty().bind(foodVisiblePy);
         mazeGroup.visibleProperty().bind(terrainVisiblePy);
 
@@ -94,7 +89,7 @@ public class MazePreview3D {
         ghostShapes[3] = createGhostShape3D(ghostModel3D, Color.ORANGE, 90);
 
         AmbientLight ambientLight = new AmbientLight(Color.WHITE);
-        root.getChildren().add(ambientLight);
+        getChildren().add(ambientLight);
 
         camera = new PerspectiveCamera(true);
         camera.setNearClip(0.1);
