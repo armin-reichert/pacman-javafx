@@ -9,7 +9,10 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.*;
+import javafx.scene.Group;
+import javafx.scene.PerspectiveCamera;
+import javafx.scene.SceneAntialiasing;
+import javafx.scene.SubScene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
@@ -85,20 +88,20 @@ public class MazePreview3D {
         boolean control = e.isControlDown();
         KeyCode key = e.getCode();
         if (control && key == KeyCode.UP) {
-            maze3D.setTranslateY(maze3D.getTranslateY() + 10);
+            maze3D.moveTowardsUser(10);
         } else if (control && key == KeyCode.DOWN) {
-            maze3D.setTranslateY(maze3D.getTranslateY() - 10);
+            maze3D.moveTowardsUser(-10);
         } else if (control && key == KeyCode.LEFT) {
-            maze3D.setRotate(maze3D.getRotate() - 2);
+            maze3D.rotateBy(-2);
         } else if (control && key == KeyCode.RIGHT) {
-            maze3D.setRotate(maze3D.getRotate() + 2);
+            maze3D.rotateBy(2);
         }
     }
 
     private void onKeyTyped(KeyEvent e) {
         String key = e.getCharacter();
         if (key.equals("w")) {
-            maze3D.wireframeProperty().set(!maze3D.wireframeProperty().get());
+            maze3D.toggleWireframe();
         }
     }
 }

@@ -97,6 +97,19 @@ public class Maze3D extends Group {
         camera.setFieldOfView(40); // default: 30
     }
 
+    public void moveTowardsUser(double pixels) {
+        setTranslateY(getTranslateY() + pixels);
+    }
+
+    public void rotateBy(double angle) {
+        setRotationAxis(Rotate.Z_AXIS);
+        setRotate(getRotate() + angle);
+    }
+
+    public void toggleWireframe() {
+        wireframePy.set(!wireframePy.get());
+    }
+
     private Node createGhostShape3D(Model3D model3D, Color dressColor, double rotate) {
         MeshView dress = new MeshView(model3D.mesh("Sphere.004_Sphere.034_light_blue_ghost"));
         dress.setMaterial(Ufx.coloredMaterial(dressColor));
