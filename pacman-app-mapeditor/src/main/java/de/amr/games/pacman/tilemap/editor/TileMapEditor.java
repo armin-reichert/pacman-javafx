@@ -439,7 +439,7 @@ public class TileMapEditor {
         var miDetectPellets = new MenuItem(tt("menu.edit.detect_pellets"));
         //miDetectPellets.disableProperty().bind(templateImagePy.map(Objects::isNull));
         miDetectPellets.disableProperty().bind(Bindings.createBooleanBinding(() -> templateImagePy.get() == null, templateImagePy));
-        miDetectPellets.setOnAction(ae -> detectPelletsInTemplateImage());
+        miDetectPellets.setOnAction(ae -> detectTilesInTemplateImage());
 
         contextMenu.getItems().setAll(
             miInsertRow,
@@ -875,7 +875,7 @@ public class TileMapEditor {
         //TODO why doens't this work?
 //        miDetectPellets.disableProperty().bind(templateImagePy.map(Objects::isNull));
         miDetectPellets.disableProperty().bind(Bindings.createBooleanBinding(() -> templateImagePy.get() == null,  templateImagePy));
-        miDetectPellets.setOnAction(ae -> detectPelletsInTemplateImage());
+        miDetectPellets.setOnAction(ae -> detectTilesInTemplateImage());
 
         menuEdit = new Menu(tt("menu.edit"), NO_GRAPHIC,
             miSymmetricMode,
@@ -1742,14 +1742,13 @@ public class TileMapEditor {
         }
     }
 
-    private void detectPelletsInTemplateImage() {
+    private void detectTilesInTemplateImage() {
         Image templateImage = templateImagePy.get();
         if (templateImage == null) {
             return;
         }
         PixelReader rdr = templateImage.getPixelReader();
         Color[][] tileColors = new Color[TS][TS];
-        Color foodColor = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, Color.WHITE);
         // 3 empty rows on top, 2 on bottom
         int numRows = worldMap().terrain().numRows(), numCols = worldMap().terrain().numCols();
         for (int row = 3; row < numRows - 3; ++row) {
@@ -1761,10 +1760,16 @@ public class TileMapEditor {
                             tileColors[y][x] = rdr.getColor(col * TS + x, (row - 3) * TS + y);
                         }
                     }
-                    byte value = detectFoodTile(tileColors, foodColor);
-                    if (value != TileEncoding.EMPTY) {
-                        worldMap().food().set(tile, value);
+                    byte foodValue = identifyFoodTile(tile, tileColors);
+                    if (foodValue == TileEncoding.PELLET || foodValue == TileEncoding.ENERGIZER) {
+                        worldMap().food().set(tile, foodValue);
                     }
+                    /*
+                    else {
+                        byte terrainValue = identifyTerrainTile(tile, tileColors);
+                        worldMap().terrain().set(tile, terrainValue);
+                    }
+                     */
                 } catch (IndexOutOfBoundsException e) {
                     Logger.error("Could not get pixels for tile {}, maybe template image has been cropped incorrectly?", tile);
                 } catch (Exception e) {
@@ -1773,10 +1778,12 @@ public class TileMapEditor {
                 }
             }
         }
+        markTileMapEdited(worldMap().terrain());
         markTileMapEdited(worldMap().food());
     }
 
-    private byte detectFoodTile(Color[][] tileColors, Color foodColor) {
+    private byte identifyFoodTile(Vector2i tile, Color[][] tileColors) {
+        Color foodColor = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, Color.WHITE);
         int numFoodPixels = 0;
         for (int row = 0; row < TS; ++row) {
             for (int col = 0; col < TS; ++col) {
@@ -1786,5 +1793,103 @@ public class TileMapEditor {
         if (numFoodPixels == 4) return TileEncoding.PELLET;
         if (numFoodPixels > 50) return TileEncoding.ENERGIZER;
         return TileEncoding.EMPTY;
+    }
+
+    private byte identifyTerrainTile(Vector2i tile, Color[][] tileColors) {
+        Color fillColor = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_WALL_FILL, Color.WHITE);
+        Color strokeColor = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_WALL_STROKE, Color.WHITE);
+        Color doorColor = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_DOOR, Color.WHITE);
+
+        if (empty(tileColors)) {
+            return TileEncoding.EMPTY;
+        }
+        if (isNWCorner(tileColors)) {
+            return TileEncoding.CORNER_NW;
+        }
+        if (isSWCorner(tileColors)) {
+            return TileEncoding.CORNER_SW;
+        }
+        if (isNECorner(tileColors)) {
+            return TileEncoding.CORNER_NE;
+        }
+        if (isSECorner(tileColors)) {
+            return TileEncoding.CORNER_SE;
+        }
+        if (isHWall(tileColors)) {
+            return TileEncoding.WALL_H;
+        }
+        return TileEncoding.EMPTY;
+    }
+
+    private boolean empty(Color[][] tileColors) {
+        for (int row = 0; row < TS; ++row) {
+            for (int col = 0; col < TS; ++col) {
+                if (!tileColors[row][col].equals(Color.TRANSPARENT))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isHWall(Color[][] tileColors) {
+        boolean upperHalfEmpty = true;
+        for (int row = 0; row < HTS; ++row) {
+            for (int col = 0; col < TS; ++col) {
+                if (!tileColors[row][col].equals(Color.TRANSPARENT))
+                    upperHalfEmpty = false;
+            }
+        }
+        boolean lowerHalfEmpty = true;
+        for (int row = HTS; row < TS; ++row) {
+            for (int col = 0; col < TS; ++col) {
+                if (!tileColors[row][col].equals(Color.TRANSPARENT))
+                    lowerHalfEmpty = false;
+            }
+        }
+        return upperHalfEmpty || lowerHalfEmpty;
+    }
+
+    private boolean isNWCorner(Color[][] tileColors) {
+        for (int row = 0; row < TS; ++row) {
+            for (int col = 0; col < TS - row; ++col) {
+                if (!tileColors[row][col].equals(Color.TRANSPARENT)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean isSWCorner(Color[][] tileColors) {
+        for (int row = 0; row < TS; ++row) {
+            for (int col = 0; col <= row; ++col) {
+                if (!tileColors[row][col].equals(Color.TRANSPARENT)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean isNECorner(Color[][] tileColors) {
+        for (int row = 0; row < TS; ++row) {
+            for (int col = row; col < TS; ++col) {
+                if (!tileColors[row][col].equals(Color.TRANSPARENT)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean isSECorner(Color[][] tileColors) {
+        for (int row = 0; row < TS; ++row) {
+            for (int col = TS - row; col < TS; ++col) {
+                if (!tileColors[row][col].equals(Color.TRANSPARENT)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
