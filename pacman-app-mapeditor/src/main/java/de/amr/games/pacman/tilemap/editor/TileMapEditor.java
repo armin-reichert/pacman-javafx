@@ -1460,13 +1460,17 @@ public class TileMapEditor {
 
     public void markTileMapEdited(TileMap tileMap) {
         unsavedChanges = true;
-        terrainChanged = tileMap == worldMap().terrain();
-        foodChanged = tileMap == worldMap().food();
+        if (tileMap == worldMap().terrain()) {
+            terrainChanged = true;
+            invalidateTerrainData();
+        }
+        if (tileMap == worldMap().food()) {
+            foodChanged = true;
+        }
     }
 
     private void handleMapChanges() {
         if (terrainChanged) {
-            invalidateTerrainData();
             mazePreview3D.updateTerrain();
         }
         if (foodChanged) {
