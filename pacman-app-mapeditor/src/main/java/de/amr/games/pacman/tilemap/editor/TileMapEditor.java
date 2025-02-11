@@ -87,9 +87,9 @@ public class TileMapEditor {
     public static final Font FONT_MESSAGE     = Font.font("Sans", FontWeight.NORMAL, 14);
     public static final Cursor RUBBER_CURSOR  = Cursor.cursor(urlString("graphics/radiergummi.jpg"));
 
-    public static final FileChooser.ExtensionFilter WORLD_MAP_FILES_FILTER = new FileChooser.ExtensionFilter("World Map Files", "*.world");
-    public static final FileChooser.ExtensionFilter IMAGE_FILES_FILTER = new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg");
-    public static final FileChooser.ExtensionFilter ALL_FILES_FILTER = new FileChooser.ExtensionFilter("All Files", "*.*");
+    public static final FileChooser.ExtensionFilter FILTER_WORLD_MAP = new FileChooser.ExtensionFilter("World Map Files", "*.world");
+    public static final FileChooser.ExtensionFilter FILTER_IMAGE = new FileChooser.ExtensionFilter("Image Files", "*.bmp", "*.gif", "*.jpg", "*.png");
+    public static final FileChooser.ExtensionFilter FILTER_ALL = new FileChooser.ExtensionFilter("All Files", "*.*");
 
     // Properties
 
@@ -384,8 +384,8 @@ public class TileMapEditor {
 
     private void createFileChooser() {
         fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().addAll(WORLD_MAP_FILES_FILTER, ALL_FILES_FILTER);
-        fileChooser.setSelectedExtensionFilter(WORLD_MAP_FILES_FILTER);
+        fileChooser.getExtensionFilters().addAll(FILTER_WORLD_MAP, FILTER_ALL);
+        fileChooser.setSelectedExtensionFilter(FILTER_WORLD_MAP);
         fileChooser.setInitialDirectory(currentDirectory);
     }
 
@@ -1685,8 +1685,8 @@ public class TileMapEditor {
         FileChooser fc = new FileChooser();
         fc.setTitle("Open Template Maze Image"); // TODO localize
         fc.setInitialDirectory(currentDirectory);
-        fc.getExtensionFilters().addAll(IMAGE_FILES_FILTER, ALL_FILES_FILTER);
-        fc.setSelectedExtensionFilter(IMAGE_FILES_FILTER);
+        fc.getExtensionFilters().addAll(FILTER_IMAGE, FILTER_ALL);
+        fc.setSelectedExtensionFilter(FILTER_IMAGE);
         File file = fc.showOpenDialog(stage);
         if (file != null) {
             try (FileInputStream stream = new FileInputStream(file)) {
