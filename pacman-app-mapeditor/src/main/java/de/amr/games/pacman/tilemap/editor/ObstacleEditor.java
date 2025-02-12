@@ -6,7 +6,7 @@ package de.amr.games.pacman.tilemap.editor;
 
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.TileEncoding;
+import de.amr.games.pacman.lib.tilemap.TerrainTiles;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import javafx.beans.property.ObjectProperty;
@@ -114,36 +114,36 @@ public class ObstacleEditor {
         TileMap original = worldMapPy.get().terrain();
 
         joinedContent[0][0] = switch (original.get(minTile)) {
-            case TileEncoding.CORNER_NE -> TileEncoding.WALL_H;
-            case TileEncoding.CORNER_SW -> TileEncoding.WALL_V;
-            case TileEncoding.WALL_V    -> TileEncoding.CORNER_SW;
-            case TileEncoding.WALL_H    -> TileEncoding.CORNER_NE;
+            case TerrainTiles.CORNER_NE -> TerrainTiles.WALL_H;
+            case TerrainTiles.CORNER_SW -> TerrainTiles.WALL_V;
+            case TerrainTiles.WALL_V    -> TerrainTiles.CORNER_SW;
+            case TerrainTiles.WALL_H    -> TerrainTiles.CORNER_NE;
             default -> joinedContent[0][0];
         };
 
         Vector2i lowerLeftCorner = new Vector2i(minTile.x(), maxTile.y());
         joinedContent[numRows-1][0] = switch (original.get(lowerLeftCorner)) {
-            case TileEncoding.WALL_H    -> TileEncoding.CORNER_SE;
-            case TileEncoding.WALL_V    -> TileEncoding.CORNER_NW;
-            case TileEncoding.CORNER_SE -> TileEncoding.WALL_H;
-            case TileEncoding.CORNER_NW -> TileEncoding.WALL_V;
+            case TerrainTiles.WALL_H    -> TerrainTiles.CORNER_SE;
+            case TerrainTiles.WALL_V    -> TerrainTiles.CORNER_NW;
+            case TerrainTiles.CORNER_SE -> TerrainTiles.WALL_H;
+            case TerrainTiles.CORNER_NW -> TerrainTiles.WALL_V;
             default -> joinedContent[numRows-1][0];
         };
 
         Vector2i upperRightCorner = new Vector2i(maxTile.x(), minTile.y());
         joinedContent[0][numCols-1] = switch (original.get(upperRightCorner)) {
-            case TileEncoding.WALL_V    -> TileEncoding.CORNER_SE;
-            case TileEncoding.WALL_H    -> TileEncoding.CORNER_NW;
-            case TileEncoding.CORNER_SE -> TileEncoding.WALL_V;
-            case TileEncoding.CORNER_NW -> TileEncoding.WALL_H;
+            case TerrainTiles.WALL_V    -> TerrainTiles.CORNER_SE;
+            case TerrainTiles.WALL_H    -> TerrainTiles.CORNER_NW;
+            case TerrainTiles.CORNER_SE -> TerrainTiles.WALL_V;
+            case TerrainTiles.CORNER_NW -> TerrainTiles.WALL_H;
             default -> joinedContent[0][numCols-1];
         };
 
         joinedContent[numRows-1][numCols-1] = switch (original.get(maxTile)) {
-            case TileEncoding.WALL_V    -> TileEncoding.CORNER_NE;
-            case TileEncoding.WALL_H    -> TileEncoding.CORNER_SW;
-            case TileEncoding.CORNER_SW -> TileEncoding.WALL_H;
-            case TileEncoding.CORNER_NE -> TileEncoding.WALL_V;
+            case TerrainTiles.WALL_V    -> TerrainTiles.CORNER_NE;
+            case TerrainTiles.WALL_H    -> TerrainTiles.CORNER_SW;
+            case TerrainTiles.CORNER_SW -> TerrainTiles.WALL_H;
+            case TerrainTiles.CORNER_NE -> TerrainTiles.WALL_V;
             default -> joinedContent[numRows-1][numCols-1];
         };
 
@@ -151,8 +151,8 @@ public class ObstacleEditor {
         int leftBorder = minTile.x();
         for (int row = minTile.y(); row < maxTile.y(); ++row) {
             int x = 0, y = row - minTile.y();
-            if (editedContent[y][x] == TileEncoding.WALL_V && original.get(row, leftBorder) == TileEncoding.WALL_H) {
-                joinedContent[y][x] = Globals.isEven(crossings) ? TileEncoding.CORNER_SE : TileEncoding.CORNER_NE;
+            if (editedContent[y][x] == TerrainTiles.WALL_V && original.get(row, leftBorder) == TerrainTiles.WALL_H) {
+                joinedContent[y][x] = Globals.isEven(crossings) ? TerrainTiles.CORNER_SE : TerrainTiles.CORNER_NE;
                 ++crossings;
             }
         }
@@ -161,8 +161,8 @@ public class ObstacleEditor {
         int rightBorder = maxTile.x();
         for (int row = minTile.y(); row < maxTile.y(); ++row) {
             int x = rightBorder - minTile.x(), y = row - minTile.y();
-            if (editedContent[y][x] == TileEncoding.WALL_V && original.get(row, leftBorder) == TileEncoding.WALL_H) {
-                joinedContent[y][x] = Globals.isEven(crossings) ? TileEncoding.CORNER_SW : TileEncoding.CORNER_NW;
+            if (editedContent[y][x] == TerrainTiles.WALL_V && original.get(row, leftBorder) == TerrainTiles.WALL_H) {
+                joinedContent[y][x] = Globals.isEven(crossings) ? TerrainTiles.CORNER_SW : TerrainTiles.CORNER_NW;
                 ++crossings;
             }
         }
@@ -171,8 +171,8 @@ public class ObstacleEditor {
         int upperBorder = minTile.y(); // upper border
         for (int col = minTile.x(); col < maxTile.x(); ++col) {
             int x = col - minTile.x(), y = upperBorder - minTile.y();
-            if (editedContent[y][x] == TileEncoding.WALL_H && original.get(upperBorder, col) == TileEncoding.WALL_V) {
-                joinedContent[y][x] = Globals.isEven(crossings) ? TileEncoding.CORNER_SE : TileEncoding.CORNER_SW;
+            if (editedContent[y][x] == TerrainTiles.WALL_H && original.get(upperBorder, col) == TerrainTiles.WALL_V) {
+                joinedContent[y][x] = Globals.isEven(crossings) ? TerrainTiles.CORNER_SE : TerrainTiles.CORNER_SW;
                 ++crossings;
             }
         }
@@ -180,8 +180,8 @@ public class ObstacleEditor {
         int lowerBorder = maxTile.y(); // lower border
         for (int col = minTile.x(); col < maxTile.x(); ++col) {
             int x = col - minTile.x(), y = lowerBorder - minTile.y();
-            if (editedContent[y][x] == TileEncoding.WALL_H && original.get(lowerBorder, col) == TileEncoding.WALL_V) {
-                joinedContent[y][x] = Globals.isEven(crossings) ? TileEncoding.CORNER_NE : TileEncoding.CORNER_NW;
+            if (editedContent[y][x] == TerrainTiles.WALL_H && original.get(lowerBorder, col) == TerrainTiles.WALL_V) {
+                joinedContent[y][x] = Globals.isEven(crossings) ? TerrainTiles.CORNER_NE : TerrainTiles.CORNER_NW;
                 ++crossings;
             }
         }
@@ -201,19 +201,19 @@ public class ObstacleEditor {
         byte[][] area = new byte[numRows][numCols];
         for (int row = minTile.y(); row <= maxTile.y(); ++row) {
             for (int col = minTile.x(); col <= maxTile.x(); ++col) {
-                byte value = TileEncoding.EMPTY;
+                byte value = TerrainTiles.EMPTY;
                 if (row == minTile.y() && col == minTile.x()) {
-                    value = TileEncoding.CORNER_NW;
+                    value = TerrainTiles.CORNER_NW;
                 } else if (row == minTile.y() && col == maxTile.x()) {
-                    value = TileEncoding.CORNER_NE;
+                    value = TerrainTiles.CORNER_NE;
                 } else if (row == maxTile.y() && col == minTile.x()) {
-                    value = TileEncoding.CORNER_SW;
+                    value = TerrainTiles.CORNER_SW;
                 } else if (row == maxTile.y() && col == maxTile.x()) {
-                    value = TileEncoding.CORNER_SE;
+                    value = TerrainTiles.CORNER_SE;
                 } else if (row == minTile.y() || row == maxTile.y()) {
-                    value = TileEncoding.WALL_H;
+                    value = TerrainTiles.WALL_H;
                 } else if (col == minTile.x() || col == maxTile.x()) {
-                    value = TileEncoding.WALL_V;
+                    value = TerrainTiles.WALL_V;
                 }
                 area[row - minTile.y()][col - minTile.x()] = value;
             }

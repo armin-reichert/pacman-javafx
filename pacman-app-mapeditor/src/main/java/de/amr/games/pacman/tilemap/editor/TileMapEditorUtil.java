@@ -4,7 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.tilemap.editor;
 
-import de.amr.games.pacman.lib.tilemap.TileEncoding;
+import de.amr.games.pacman.lib.tilemap.FoodTiles;
+import de.amr.games.pacman.lib.tilemap.TerrainTiles;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.tilemap.rendering.TileMapRenderer;
 import javafx.scene.layout.HBox;
@@ -27,8 +28,8 @@ public interface TileMapEditorUtil {
     };
 
     byte[][] CIRCLE_2x2 = {
-        {TileEncoding.CORNER_NW, TileEncoding.CORNER_NE},
-        {TileEncoding.CORNER_SW, TileEncoding.CORNER_SE}
+        {TerrainTiles.CORNER_NW, TerrainTiles.CORNER_NE},
+        {TerrainTiles.CORNER_SW, TerrainTiles.CORNER_SE}
     };
 
     static String urlString(String resourcePath) {
@@ -38,18 +39,18 @@ public interface TileMapEditorUtil {
 
     static byte mirroredTileContent(byte content) {
         return switch (content) {
-            case TileEncoding.CORNER_NE -> TileEncoding.CORNER_NW;
-            case TileEncoding.CORNER_NW -> TileEncoding.CORNER_NE;
-            case TileEncoding.CORNER_SE -> TileEncoding.CORNER_SW;
-            case TileEncoding.CORNER_SW -> TileEncoding.CORNER_SE;
-            case TileEncoding.DCORNER_NE -> TileEncoding.DCORNER_NW;
-            case TileEncoding.DCORNER_NW -> TileEncoding.DCORNER_NE;
-            case TileEncoding.DCORNER_SE -> TileEncoding.DCORNER_SW;
-            case TileEncoding.DCORNER_SW -> TileEncoding.DCORNER_SE;
-            case TileEncoding.DCORNER_ANGULAR_NE -> TileEncoding.DCORNER_ANGULAR_NW;
-            case TileEncoding.DCORNER_ANGULAR_NW -> TileEncoding.DCORNER_ANGULAR_NE;
-            case TileEncoding.DCORNER_ANGULAR_SE -> TileEncoding.DCORNER_ANGULAR_SW;
-            case TileEncoding.DCORNER_ANGULAR_SW -> TileEncoding.DCORNER_ANGULAR_SE;
+            case TerrainTiles.CORNER_NE -> TerrainTiles.CORNER_NW;
+            case TerrainTiles.CORNER_NW -> TerrainTiles.CORNER_NE;
+            case TerrainTiles.CORNER_SE -> TerrainTiles.CORNER_SW;
+            case TerrainTiles.CORNER_SW -> TerrainTiles.CORNER_SE;
+            case TerrainTiles.DCORNER_NE -> TerrainTiles.DCORNER_NW;
+            case TerrainTiles.DCORNER_NW -> TerrainTiles.DCORNER_NE;
+            case TerrainTiles.DCORNER_SE -> TerrainTiles.DCORNER_SW;
+            case TerrainTiles.DCORNER_SW -> TerrainTiles.DCORNER_SE;
+            case TerrainTiles.DCORNER_ANGULAR_NE -> TerrainTiles.DCORNER_ANGULAR_NW;
+            case TerrainTiles.DCORNER_ANGULAR_NW -> TerrainTiles.DCORNER_ANGULAR_NE;
+            case TerrainTiles.DCORNER_ANGULAR_SE -> TerrainTiles.DCORNER_ANGULAR_SW;
+            case TerrainTiles.DCORNER_ANGULAR_SW -> TerrainTiles.DCORNER_ANGULAR_SE;
             default -> content;
         };
     }
@@ -93,29 +94,29 @@ public interface TileMapEditorUtil {
 
     static Palette createTerrainPalette(byte id, int toolSize, TileMapEditor editor, TileMapRenderer renderer) {
         var palette = new Palette(id, toolSize, 1, 23, renderer);
-        palette.addTileTool(editor, TileEncoding.EMPTY, "Empty Space");
-        palette.addTileTool(editor, TileEncoding.WALL_H, "Horiz. Wall");
-        palette.addTileTool(editor, TileEncoding.WALL_V, "Vert. Wall");
-        palette.addTileTool(editor, TileEncoding.DWALL_H, "Horiz. Double-Wall");
-        palette.addTileTool(editor, TileEncoding.DWALL_V, "Vert. Double-Wall");
-        palette.addTileTool(editor, TileEncoding.CORNER_NW, "NW Corner");
-        palette.addTileTool(editor, TileEncoding.CORNER_NE, "NE Corner");
-        palette.addTileTool(editor, TileEncoding.CORNER_SW, "SW Corner");
-        palette.addTileTool(editor, TileEncoding.CORNER_SE, "SE Corner");
-        palette.addTileTool(editor, TileEncoding.DCORNER_NW, "NW Corner");
-        palette.addTileTool(editor, TileEncoding.DCORNER_NE, "NE Corner");
-        palette.addTileTool(editor, TileEncoding.DCORNER_SW, "SW Corner");
-        palette.addTileTool(editor, TileEncoding.DCORNER_SE, "SE Corner");
-        palette.addTileTool(editor, TileEncoding.DCORNER_ANGULAR_NW, "NW Corner");
-        palette.addTileTool(editor, TileEncoding.DCORNER_ANGULAR_NE, "NE Corner");
-        palette.addTileTool(editor, TileEncoding.DCORNER_ANGULAR_SW, "SW Corner");
-        palette.addTileTool(editor, TileEncoding.DCORNER_ANGULAR_SE, "SE Corner");
-        palette.addTileTool(editor, TileEncoding.TUNNEL, "Tunnel");
-        palette.addTileTool(editor, TileEncoding.DOOR, "Door");
-        palette.addTileTool(editor, TileEncoding.ONE_WAY_UP, "One-Way Up");
-        palette.addTileTool(editor, TileEncoding.ONE_WAY_RIGHT, "One-Way Right");
-        palette.addTileTool(editor, TileEncoding.ONE_WAY_DOWN, "One-Way Down");
-        palette.addTileTool(editor, TileEncoding.ONE_WAY_LEFT, "One-Way Left");
+        palette.addTileTool(editor, TerrainTiles.EMPTY, "Empty Space");
+        palette.addTileTool(editor, TerrainTiles.WALL_H, "Horiz. Wall");
+        palette.addTileTool(editor, TerrainTiles.WALL_V, "Vert. Wall");
+        palette.addTileTool(editor, TerrainTiles.DWALL_H, "Horiz. Double-Wall");
+        palette.addTileTool(editor, TerrainTiles.DWALL_V, "Vert. Double-Wall");
+        palette.addTileTool(editor, TerrainTiles.CORNER_NW, "NW Corner");
+        palette.addTileTool(editor, TerrainTiles.CORNER_NE, "NE Corner");
+        palette.addTileTool(editor, TerrainTiles.CORNER_SW, "SW Corner");
+        palette.addTileTool(editor, TerrainTiles.CORNER_SE, "SE Corner");
+        palette.addTileTool(editor, TerrainTiles.DCORNER_NW, "NW Corner");
+        palette.addTileTool(editor, TerrainTiles.DCORNER_NE, "NE Corner");
+        palette.addTileTool(editor, TerrainTiles.DCORNER_SW, "SW Corner");
+        palette.addTileTool(editor, TerrainTiles.DCORNER_SE, "SE Corner");
+        palette.addTileTool(editor, TerrainTiles.DCORNER_ANGULAR_NW, "NW Corner");
+        palette.addTileTool(editor, TerrainTiles.DCORNER_ANGULAR_NE, "NE Corner");
+        palette.addTileTool(editor, TerrainTiles.DCORNER_ANGULAR_SW, "SW Corner");
+        palette.addTileTool(editor, TerrainTiles.DCORNER_ANGULAR_SE, "SE Corner");
+        palette.addTileTool(editor, TerrainTiles.TUNNEL, "Tunnel");
+        palette.addTileTool(editor, TerrainTiles.DOOR, "Door");
+        palette.addTileTool(editor, TerrainTiles.ONE_WAY_UP, "One-Way Up");
+        palette.addTileTool(editor, TerrainTiles.ONE_WAY_RIGHT, "One-Way Right");
+        palette.addTileTool(editor, TerrainTiles.ONE_WAY_DOWN, "One-Way Down");
+        palette.addTileTool(editor, TerrainTiles.ONE_WAY_LEFT, "One-Way Left");
 
         palette.selectTool(0); // "No Tile"
         return palette;
@@ -123,7 +124,7 @@ public interface TileMapEditorUtil {
 
     static Palette createActorPalette(byte id, int toolSize, TileMapEditor editor, TerrainRendererInEditor renderer) {
         var palette = new Palette(id, toolSize, 1, 10, renderer);
-        palette.addTileTool(editor, TileEncoding.EMPTY, "");
+        palette.addTileTool(editor, TerrainTiles.EMPTY, "");
         palette.addPropertyTool(PROPERTY_POS_PAC, "Pac-Man");
         palette.addPropertyTool(PROPERTY_POS_RED_GHOST, "Red Ghost");
         palette.addPropertyTool(PROPERTY_POS_PINK_GHOST, "Pink Ghost");
@@ -139,9 +140,9 @@ public interface TileMapEditorUtil {
 
     static Palette createFoodPalette(byte id, int toolSize, TileMapEditor editor, TileMapRenderer renderer) {
         var palette = new Palette(id, toolSize, 1, 3, renderer);
-        palette.addTileTool(editor, TileEncoding.EMPTY, "No Food");
-        palette.addTileTool(editor, TileEncoding.PELLET, "Pellet");
-        palette.addTileTool(editor, TileEncoding.ENERGIZER, "Energizer");
+        palette.addTileTool(editor, FoodTiles.EMPTY, "No Food");
+        palette.addTileTool(editor, FoodTiles.PELLET, "Pellet");
+        palette.addTileTool(editor, FoodTiles.ENERGIZER, "Energizer");
         palette.selectTool(0); // "No Food"
         return palette;
     }

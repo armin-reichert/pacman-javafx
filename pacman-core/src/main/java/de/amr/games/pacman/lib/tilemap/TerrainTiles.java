@@ -4,10 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib.tilemap;
 
-/**
- * @author Armin Reichert
- */
-public interface TileEncoding {
+public interface TerrainTiles {
 
     byte EMPTY = 0;
 
@@ -48,8 +45,4 @@ public interface TileEncoding {
     static boolean isDoubleWall(byte content) {
         return 8 <= content && content <= 13 || 16 <= content && content <= 19;
     }
-
-    // Food tiles
-    byte PELLET = 1;
-    byte ENERGIZER = 2;
 }

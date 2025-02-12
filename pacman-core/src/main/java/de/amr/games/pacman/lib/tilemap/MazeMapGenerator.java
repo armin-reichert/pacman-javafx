@@ -16,8 +16,8 @@ import java.util.Random;
 
 public class MazeMapGenerator {
 
-    private static final byte FREE = TileEncoding.EMPTY;
-    private static final byte BLOCKED = TileEncoding.WALL_H;
+    private static final byte FREE = TerrainTiles.EMPTY;
+    private static final byte BLOCKED = TerrainTiles.WALL_H;
 
     private static final int EMPTY_ROWS_ABOVE = 3, EMPTY_ROWS_BELOW = 2;
 
@@ -63,7 +63,7 @@ public class MazeMapGenerator {
         TileMap terrain = map.terrain();
         predecessor = null;
         current = startTile;
-        set(terrain, current, TileEncoding.CORNER_NW);
+        set(terrain, current, TerrainTiles.CORNER_NW);
         moveDir = Direction.RIGHT;
         move();
         while (inRange(current, terrain)) {
@@ -71,30 +71,30 @@ public class MazeMapGenerator {
             if (terrain.get(tileAtRightHand) == FREE) {
                 Vector2i tileAhead = current.plus(moveDir.vector());
                 if (terrain.get(tileAhead) == BLOCKED) {
-                    set(terrain, current, moveDir.isHorizontal() ? TileEncoding.WALL_H : TileEncoding.WALL_V);
+                    set(terrain, current, moveDir.isHorizontal() ? TerrainTiles.WALL_H : TerrainTiles.WALL_V);
                 } else {
                     byte corner = switch (moveDir) {
-                        case LEFT  -> TileEncoding.CORNER_NW;
-                        case RIGHT -> TileEncoding.CORNER_SE;
-                        case UP    -> TileEncoding.CORNER_NE;
-                        case DOWN  -> TileEncoding.CORNER_SW;
+                        case LEFT  -> TerrainTiles.CORNER_NW;
+                        case RIGHT -> TerrainTiles.CORNER_SE;
+                        case UP    -> TerrainTiles.CORNER_NE;
+                        case DOWN  -> TerrainTiles.CORNER_SW;
                     };
                     set(terrain, current, corner);
                     turnCounterclockwise();
                 }
             } else {
                 byte corner = switch (moveDir) {
-                    case RIGHT -> TileEncoding.CORNER_NE;
-                    case DOWN  -> TileEncoding.CORNER_SE;
-                    case LEFT  -> TileEncoding.CORNER_SW;
-                    case UP    -> TileEncoding.CORNER_NW;
+                    case RIGHT -> TerrainTiles.CORNER_NE;
+                    case DOWN  -> TerrainTiles.CORNER_SE;
+                    case LEFT  -> TerrainTiles.CORNER_SW;
+                    case UP    -> TerrainTiles.CORNER_NW;
                 };
                 set(terrain, current, corner);
                 turnClockwise();
             }
             move();
         }
-        set(terrain, predecessor, TileEncoding.WALL_V); //TODO correct?
+        set(terrain, predecessor, TerrainTiles.WALL_V); //TODO correct?
     }
 
     private void turnClockwise() {
@@ -110,8 +110,8 @@ public class MazeMapGenerator {
         TileMap foodMap = map.food();
         for (int row = EMPTY_ROWS_ABOVE; row < foodMap.numRows() - EMPTY_ROWS_BELOW; ++row) {
             for (int col = 0; col < foodMap.numCols(); ++col) {
-                if (terrainMap.get(row, col) == TileEncoding.EMPTY && new Random().nextInt(100) < 40) {
-                    foodMap.set(row, col, TileEncoding.PELLET);
+                if (terrainMap.get(row, col) == TerrainTiles.EMPTY && new Random().nextInt(100) < 40) {
+                    foodMap.set(row, col, FoodTiles.PELLET);
                 }
             }
         }

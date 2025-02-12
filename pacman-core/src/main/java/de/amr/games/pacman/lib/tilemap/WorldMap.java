@@ -91,8 +91,8 @@ public class WorldMap {
         newMap.food().replaceProperties(food().getProperties());
         for (int row = 0; row < newMap.terrain.numRows(); ++row) {
             for (int col = 0; col < newMap.terrain.numCols(); ++col) {
-                byte terrainValue = TileEncoding.EMPTY;
-                byte foodValue = TileEncoding.EMPTY;
+                byte terrainValue = TerrainTiles.EMPTY;
+                byte foodValue = FoodTiles.EMPTY;
                 if (row < rowIndex) {
                     terrainValue = terrain.get(row, col);
                     foodValue = food.get(row, col);
@@ -101,8 +101,8 @@ public class WorldMap {
                     foodValue = food.get(row - 1, col);
                 } else {
                     if ((col == 0 || col == terrain.numCols() - 1)
-                            && terrain.get(row, col) == TileEncoding.DWALL_V) {
-                        terrainValue = TileEncoding.DWALL_V; // keep vertical border wall
+                            && terrain.get(row, col) == TerrainTiles.DWALL_V) {
+                        terrainValue = TerrainTiles.DWALL_V; // keep vertical border wall
                     }
                 }
                 newMap.terrain.set(row, col, terrainValue);
@@ -158,8 +158,11 @@ public class WorldMap {
                 Logger.error("Line skipped: '{}'", line);
             }
         }
-        terrain = TileMap.parseTileMap(terrainSection, tv -> 0 <= tv && tv <= TileEncoding.LAST_TERRAIN_VALUE);
-        food = TileMap.parseTileMap(foodSection, tv -> 0 <= tv && tv <= TileEncoding.ENERGIZER);
+        terrain = TileMap.parseTileMap(terrainSection,
+            value -> 0 <= value && value <= TerrainTiles.LAST_TERRAIN_VALUE, TerrainTiles.EMPTY);
+
+        food = TileMap.parseTileMap(foodSection,
+            value -> 0 <= value && value <= FoodTiles.ENERGIZER, FoodTiles.EMPTY);
     }
 
     public List<Vector2i> updateObstacleList() {

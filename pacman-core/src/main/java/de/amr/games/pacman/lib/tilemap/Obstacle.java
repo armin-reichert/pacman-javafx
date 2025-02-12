@@ -51,11 +51,11 @@ public class Obstacle {
         if (segments.isEmpty()) {
             return true; // TODO restrict to allowed start tile content
         }
-        if (value == TileEncoding.DOOR) {
+        if (value == TerrainTiles.DOOR) {
             return true; //TODO
         }
-        boolean startsWithDoubleWall = TileEncoding.isDoubleWall(segments.getFirst().encoding());
-        return startsWithDoubleWall == TileEncoding.isDoubleWall(value);
+        boolean startsWithDoubleWall = TerrainTiles.isDoubleWall(segments.getFirst().encoding());
+        return startsWithDoubleWall == TerrainTiles.isDoubleWall(value);
     }
 
     public Stream<RectArea> innerAreaRectPartition() {
@@ -109,7 +109,7 @@ public class Obstacle {
     }
 
     public boolean hasDoubleWalls() {
-        return !segments.isEmpty() && TileEncoding.isDoubleWall(segments.getFirst().encoding());
+        return !segments.isEmpty() && TerrainTiles.isDoubleWall(segments.getFirst().encoding());
     }
 
     public List<ObstacleSegment> segments() {
@@ -127,10 +127,10 @@ public class Obstacle {
     public Vector2i cornerCenter(int segmentIndex) {
         ObstacleSegment corner = segment(segmentIndex);
         return switch (corner.encoding()) {
-            case TileEncoding.CORNER_NW -> point(segmentIndex).plus(0, HTS);
-            case TileEncoding.CORNER_SW -> point(segmentIndex).plus(HTS, 0);
-            case TileEncoding.CORNER_SE -> point(segmentIndex).plus(0, -HTS);
-            case TileEncoding.CORNER_NE -> point(segmentIndex).plus(-HTS, 0);
+            case TerrainTiles.CORNER_NW -> point(segmentIndex).plus(0, HTS);
+            case TerrainTiles.CORNER_SW -> point(segmentIndex).plus(HTS, 0);
+            case TerrainTiles.CORNER_SE -> point(segmentIndex).plus(0, -HTS);
+            case TerrainTiles.CORNER_NE -> point(segmentIndex).plus(-HTS, 0);
             default -> throw new IllegalStateException("No corner tile at index " + segmentIndex);
         };
     }
@@ -140,16 +140,16 @@ public class Obstacle {
         for (var segment : segments) {
             boolean up = segment.vector().y() < 0, down = segment.vector().y() > 0;
             switch (segment.encoding()) {
-                case TileEncoding.CORNER_NW, TileEncoding.DCORNER_NW -> {
+                case TerrainTiles.CORNER_NW, TerrainTiles.DCORNER_NW -> {
                     if (down) centers.add(segment.startPoint().plus(0, HTS));
                 }
-                case TileEncoding.CORNER_SW, TileEncoding.DCORNER_SW -> {
+                case TerrainTiles.CORNER_SW, TerrainTiles.DCORNER_SW -> {
                     if (down) centers.add(segment.startPoint().plus(HTS, 0));
                 }
-                case TileEncoding.CORNER_SE, TileEncoding.DCORNER_SE -> {
+                case TerrainTiles.CORNER_SE, TerrainTiles.DCORNER_SE -> {
                     if (up) centers.add(segment.startPoint().plus(0, -HTS));
                 }
-                case TileEncoding.CORNER_NE, TileEncoding.DCORNER_NE -> {
+                case TerrainTiles.CORNER_NE, TerrainTiles.DCORNER_NE -> {
                     if (up) centers.add(segment.startPoint().plus(-HTS, 0));
                 }
             }

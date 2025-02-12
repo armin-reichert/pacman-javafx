@@ -42,7 +42,7 @@ public class TileMap {
         return "(%d,%d)".formatted(tile.x(), tile.y());
     }
 
-    public static TileMap parseTileMap(List<String> lines, Predicate<Byte> valueAllowed) {
+    public static TileMap parseTileMap(List<String> lines, Predicate<Byte> valueAllowed, byte emptyValue) {
         // First pass: read property section and determine data section size
         int numDataRows = 0, numDataCols = -1;
         int dataSectionStartIndex = -1;
@@ -84,7 +84,7 @@ public class TileMap {
                     if (valueAllowed.test(value)) {
                         tileMap.data[row][col] = value;
                     } else {
-                        tileMap.data[row][col] = TileEncoding.EMPTY;
+                        tileMap.data[row][col] = emptyValue;
                         Logger.error("Invalid tile map value {} at row {}, col {}", value, row, col);
                     }
                 } catch (NumberFormatException x) {
@@ -270,12 +270,9 @@ public class TileMap {
         set(tile.y(), tile.x(), value);
     }
 
-    /**
-     * Sets all map data to {@link TileEncoding#EMPTY}
-     */
-    public void clear() {
+    public void clear(byte emptyValue) {
         for (byte[] row : data) {
-            Arrays.fill(row, TileEncoding.EMPTY);
+            Arrays.fill(row, emptyValue);
         }
     }
 

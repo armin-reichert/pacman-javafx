@@ -6,10 +6,7 @@ package de.amr.games.pacman.tilemap.editor;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.Obstacle;
-import de.amr.games.pacman.lib.tilemap.TileEncoding;
-import de.amr.games.pacman.lib.tilemap.TileMap;
-import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.lib.tilemap.*;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D;
 import de.amr.games.pacman.uilib.ResourceManager;
 import de.amr.games.pacman.uilib.Ufx;
@@ -175,7 +172,7 @@ public class Maze3D extends Group {
         }
 
         var doorMaterial = coloredMaterial(doorColor);
-        terrain.tiles().filter(tile -> terrain.get(tile) == TileEncoding.DOOR).forEach(tile -> {
+        terrain.tiles().filter(tile -> terrain.get(tile) == TerrainTiles.DOOR).forEach(tile -> {
             Box door = new Box(7, 2, wallBaseHeightPy.get());
             door.setMaterial(doorMaterial);
             door.setTranslateX(tile.x() * TS + HTS);
@@ -226,10 +223,10 @@ public class Maze3D extends Group {
     }
 
     private boolean hasFoodAt(TileMap food, Vector2i tile) {
-        return food.get(tile) != TileEncoding.EMPTY;
+        return food.get(tile) != FoodTiles.EMPTY;
     }
 
     private boolean hasEnergizerAt(TileMap food, Vector2i tile) {
-        return food.get(tile) == TileEncoding.ENERGIZER;
+        return food.get(tile) == FoodTiles.ENERGIZER;
     }
 }

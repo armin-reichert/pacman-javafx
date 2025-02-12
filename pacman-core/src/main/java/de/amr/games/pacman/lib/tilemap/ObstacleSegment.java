@@ -20,19 +20,19 @@ public record ObstacleSegment(Vector2i startPoint, Vector2i vector, boolean ccw,
     }
 
     public boolean isRoundedNWCorner() {
-        return encoding == TileEncoding.CORNER_NW || encoding == TileEncoding.DCORNER_NW;
+        return encoding == TerrainTiles.CORNER_NW || encoding == TerrainTiles.DCORNER_NW;
     }
 
     public boolean isRoundedSWCorner() {
-        return encoding == TileEncoding.CORNER_SW || encoding == TileEncoding.DCORNER_SW;
+        return encoding == TerrainTiles.CORNER_SW || encoding == TerrainTiles.DCORNER_SW;
     }
 
     public boolean isRoundedSECorner() {
-        return encoding == TileEncoding.CORNER_SE || encoding == TileEncoding.DCORNER_SE;
+        return encoding == TerrainTiles.CORNER_SE || encoding == TerrainTiles.DCORNER_SE;
     }
 
     public boolean isRoundedNECorner() {
-        return encoding == TileEncoding.CORNER_NE || encoding == TileEncoding.DCORNER_NE;
+        return encoding == TerrainTiles.CORNER_NE || encoding == TerrainTiles.DCORNER_NE;
     }
 
     public boolean isRoundedCorner() {
@@ -40,19 +40,19 @@ public record ObstacleSegment(Vector2i startPoint, Vector2i vector, boolean ccw,
     }
 
     public boolean isAngularNWCorner() {
-        return encoding == TileEncoding.DCORNER_ANGULAR_NW;
+        return encoding == TerrainTiles.DCORNER_ANGULAR_NW;
     }
 
     public boolean isAngularSWCorner() {
-        return encoding == TileEncoding.DCORNER_ANGULAR_SW;
+        return encoding == TerrainTiles.DCORNER_ANGULAR_SW;
     }
 
     public boolean isAngularSECorner() {
-        return encoding == TileEncoding.DCORNER_ANGULAR_SE;
+        return encoding == TerrainTiles.DCORNER_ANGULAR_SE;
     }
 
     public boolean isAngularNECorner() {
-        return encoding == TileEncoding.DCORNER_ANGULAR_NE;
+        return encoding == TerrainTiles.DCORNER_ANGULAR_NE;
     }
 
     public boolean isNWCorner() {
@@ -72,11 +72,11 @@ public record ObstacleSegment(Vector2i startPoint, Vector2i vector, boolean ccw,
     }
 
     public boolean isVerticalLine() {
-        return encoding == TileEncoding.WALL_V || encoding == TileEncoding.DWALL_V;
+        return encoding == TerrainTiles.WALL_V || encoding == TerrainTiles.DWALL_V;
     }
 
     public boolean isHorizontalLine() {
-        return encoding == TileEncoding.WALL_H || encoding == TileEncoding.DWALL_H;
+        return encoding == TerrainTiles.WALL_H || encoding == TerrainTiles.DWALL_H;
     }
 
     public boolean isStraightLine() {

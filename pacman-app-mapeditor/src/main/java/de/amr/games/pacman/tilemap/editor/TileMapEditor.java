@@ -8,10 +8,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.Obstacle;
-import de.amr.games.pacman.lib.tilemap.TileEncoding;
-import de.amr.games.pacman.lib.tilemap.TileMap;
-import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.lib.tilemap.*;
 import de.amr.games.pacman.tilemap.rendering.FoodMapRenderer;
 import de.amr.games.pacman.tilemap.rendering.TerrainColorScheme;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer;
@@ -30,7 +27,9 @@ import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.image.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelReader;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -434,7 +433,7 @@ public class TileMapEditor {
 
         var miFloodWithPellets = new MenuItem(tt("menu.edit.flood_with_pellets"));
         miFloodWithPellets.setOnAction(ae -> {
-            if (worldMap.terrain().get(tile) == TileEncoding.EMPTY && worldMap.food().get(tile) == TileEncoding.EMPTY) {
+            if (worldMap.terrain().get(tile) == TerrainTiles.EMPTY && worldMap.food().get(tile) == TerrainTiles.EMPTY) {
                 floodWithPellets(tile);
             }
         });
@@ -666,7 +665,7 @@ public class TileMapEditor {
         obstacleEditor = new ObstacleEditor();
         obstacleEditor.setEditCallback((tile, value) -> {
             setTileValue(worldMap().terrain(), tile, value);
-            setTileValue(worldMap().food(), tile, TileEncoding.EMPTY);
+            setTileValue(worldMap().food(), tile, FoodTiles.EMPTY);
         });
         obstacleEditor.worldMapPy.bind(worldMapPy);
     }
@@ -860,13 +859,13 @@ public class TileMapEditor {
 
         var miClearTerrain = new MenuItem(tt("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(e -> {
-            worldMap().terrain().clear();
+            worldMap().terrain().clear(TerrainTiles.EMPTY);
             markTileMapEdited(worldMap().terrain());
         });
 
         var miClearFood = new MenuItem(tt("menu.edit.clear_food"));
         miClearFood.setOnAction(e -> {
-            worldMap().food().clear();
+            worldMap().food().clear(FoodTiles.EMPTY);
             markTileMapEdited(worldMap().food());
         });
 
@@ -1340,8 +1339,8 @@ public class TileMapEditor {
             case EditMode.ERASE -> {
                 if (e.isShiftDown()) {
                     switch (selectedPaletteID()) {
-                        case TileMapEditor.PALETTE_ID_TERRAIN -> clearTileValue(worldMap().terrain(), tile);
-                        case TileMapEditor.PALETTE_ID_FOOD -> clearTileValue(worldMap().food(), tile);
+                        case TileMapEditor.PALETTE_ID_TERRAIN -> clearTerrainTileValue(tile);
+                        case TileMapEditor.PALETTE_ID_FOOD -> clearFoodTileValue(tile);
                     }
                 }
             }
@@ -1492,8 +1491,8 @@ public class TileMapEditor {
         }
         boolean erase = event.isControlDown();
         switch (selectedPaletteID()) {
-            case TileMapEditor.PALETTE_ID_TERRAIN -> editAtTile(worldMap().terrain(), tile, erase);
-            case TileMapEditor.PALETTE_ID_FOOD -> editAtTile(worldMap().food(), tile, erase);
+            case TileMapEditor.PALETTE_ID_TERRAIN -> editTerrainAtTile(tile, erase);
+            case TileMapEditor.PALETTE_ID_FOOD -> editFoodAtTile(tile, erase);
             case TileMapEditor.PALETTE_ID_ACTORS -> {
                 if (selectedPalette().isToolSelected()) {
                     selectedPalette().selectedTool().apply(worldMap().terrain(), tile);
@@ -1505,11 +1504,19 @@ public class TileMapEditor {
         }
     }
 
-    private void editAtTile(TileMap tileMap, Vector2i tile, boolean erase) {
+    private void editTerrainAtTile(Vector2i tile, boolean erase) {
         if (erase) {
-            clearTileValue(tileMap, tile);
+            clearTerrainTileValue(tile);
         } else if (selectedPalette().isToolSelected()) {
-            selectedPalette().selectedTool().apply(tileMap, tile);
+            selectedPalette().selectedTool().apply(worldMap().terrain(), tile);
+        }
+    }
+
+    private void editFoodAtTile(Vector2i tile, boolean erase) {
+        if (erase) {
+            clearFoodTileValue(tile);
+        } else if (selectedPalette().isToolSelected()) {
+            selectedPalette().selectedTool().apply(worldMap().food(), tile);
         }
     }
 
@@ -1522,7 +1529,7 @@ public class TileMapEditor {
     private void setFoodAtFocussedTile() {
         if (editMode() == EditMode.EDIT && selectedPaletteID() == PALETTE_ID_FOOD) {
             if (canEditFoodAtTile(focussedTile())) {
-                editAtTile(worldMap().food(), focussedTile(), false);
+                editFoodAtTile(focussedTile(), false);
             }
         }
     }
@@ -1547,11 +1554,11 @@ public class TileMapEditor {
 
     private boolean canEditFoodAtTile(Vector2i tile) {
         byte content = worldMap().terrain().get(tile);
-        return content == TileEncoding.EMPTY
-            || content == TileEncoding.ONE_WAY_DOWN
-            || content == TileEncoding.ONE_WAY_UP
-            || content == TileEncoding.ONE_WAY_LEFT
-            || content == TileEncoding.ONE_WAY_RIGHT;
+        return content == TerrainTiles.EMPTY
+            || content == TerrainTiles.ONE_WAY_DOWN
+            || content == TerrainTiles.ONE_WAY_UP
+            || content == TerrainTiles.ONE_WAY_LEFT
+            || content == TerrainTiles.ONE_WAY_RIGHT;
     }
 
     private void identifyObstacleAtTile(Vector2i tile) {
@@ -1579,7 +1586,7 @@ public class TileMapEditor {
         tileMap.set(tile, value);
         markTileMapEdited(worldMap().terrain());
         if (tileMap == worldMap().terrain()) {
-            worldMap().food().set(tile, TileEncoding.EMPTY);
+            worldMap().food().set(tile, FoodTiles.EMPTY);
             markTileMapEdited(worldMap().food());
         }
         if (isSymmetricEditMode()) {
@@ -1587,7 +1594,7 @@ public class TileMapEditor {
             Vector2i mirrorTile = mirrored(tileMap, tile);
             tileMap.set(mirrorTile, mirroredContent);
             if (tileMap == worldMap().terrain()) {
-                worldMap().food().set(mirrorTile, TileEncoding.EMPTY);
+                worldMap().food().set(mirrorTile, FoodTiles.EMPTY);
                 markTileMapEdited(worldMap().food());
             }
         }
@@ -1598,9 +1605,15 @@ public class TileMapEditor {
     }
 
     // ignores symmetric edit mode!
-    private void clearTileValue(TileMap tileMap, Vector2i tile) {
-        tileMap.set(tile, TileEncoding.EMPTY);
-        markTileMapEdited(tileMap);
+    private void clearTerrainTileValue(Vector2i tile) {
+        worldMap().terrain().set(tile, TerrainTiles.EMPTY);
+        markTileMapEdited(worldMap().terrain());
+    }
+
+    // ignores symmetric edit mode!
+    private void clearFoodTileValue(Vector2i tile) {
+        worldMap().food().set(tile, FoodTiles.EMPTY);
+        markTileMapEdited(worldMap().food());
     }
 
     private void setBlankMap(int tilesX, int tilesY) {
@@ -1643,17 +1656,17 @@ public class TileMapEditor {
 
     private void addBorderWall(TileMap terrain, int firstRow, int emptyRowsBottom) {
         int lastRow = terrain.numRows() - 1 - emptyRowsBottom, lastCol = terrain.numCols() - 1;
-        terrain.set(firstRow, 0, TileEncoding.DCORNER_NW);
-        terrain.set(firstRow, lastCol, TileEncoding.DCORNER_NE);
-        terrain.set(lastRow, 0, TileEncoding.DCORNER_SW);
-        terrain.set(lastRow, lastCol, TileEncoding.DCORNER_SE);
+        terrain.set(firstRow, 0, TerrainTiles.DCORNER_NW);
+        terrain.set(firstRow, lastCol, TerrainTiles.DCORNER_NE);
+        terrain.set(lastRow, 0, TerrainTiles.DCORNER_SW);
+        terrain.set(lastRow, lastCol, TerrainTiles.DCORNER_SE);
         for (int row = firstRow + 1; row < lastRow; ++row) {
-            terrain.set(row, 0, TileEncoding.DWALL_V);
-            terrain.set(row, lastCol, TileEncoding.DWALL_V);
+            terrain.set(row, 0, TerrainTiles.DWALL_V);
+            terrain.set(row, lastCol, TerrainTiles.DWALL_V);
         }
         for (int col = 1; col < lastCol; ++col) {
-            terrain.set(firstRow, col, TileEncoding.DWALL_H);
-            terrain.set(lastRow, col, TileEncoding.DWALL_H);
+            terrain.set(firstRow, col, TerrainTiles.DWALL_H);
+            terrain.set(lastRow, col, TerrainTiles.DWALL_H);
         }
         markTileMapEdited(terrain);
     }
@@ -1678,7 +1691,7 @@ public class TileMapEditor {
             for (int col = 0; col < numCols; ++col) {
                 int x = origin.x() + col, y = origin.y() + row;
                 worldMap.terrain().set(y, x, block[row][col]);
-                worldMap.food().set(y, x, TileEncoding.EMPTY);
+                worldMap.food().set(y, x, FoodTiles.EMPTY);
             }
         }
     }
@@ -1692,7 +1705,7 @@ public class TileMapEditor {
                 // Note: content is added from right to left from mirrored origin!
                 int x = mirroredOrigin.x() - col, y = mirroredOrigin.y() + row;
                 worldMap.terrain().set(y, x, mirroredTileContent(content));
-                worldMap.food().set(y, x, TileEncoding.EMPTY);
+                worldMap.food().set(y, x, FoodTiles.EMPTY);
             }
         }
     }
@@ -1727,13 +1740,13 @@ public class TileMapEditor {
         q.push(startTile);
         while (!q.isEmpty()) {
             Vector2i tile = q.poll();
-            if (foodMap.get(tile) == TileEncoding.EMPTY) {
-                foodMap.set(tile, TileEncoding.PELLET);
+            if (foodMap.get(tile) == FoodTiles.EMPTY) {
+                foodMap.set(tile, FoodTiles.PELLET);
                 for (Direction dir : Direction.values()) {
                     Vector2i nb = tile.plus(dir.vector());
                     if  (!terrainMap.outOfBounds(nb)
-                            && terrainMap.get(nb) == TileEncoding.EMPTY
-                            && foodMap.get(nb) == TileEncoding.EMPTY) {
+                            && terrainMap.get(nb) == TerrainTiles.EMPTY
+                            && foodMap.get(nb) == FoodTiles.EMPTY) {
                         q.push(nb);
                     }
                 }
@@ -1760,7 +1773,7 @@ public class TileMapEditor {
                         }
                     }
                     byte foodValue = identifyFoodTile(tile, tileColors);
-                    if (foodValue == TileEncoding.PELLET || foodValue == TileEncoding.ENERGIZER) {
+                    if (foodValue == FoodTiles.PELLET || foodValue == FoodTiles.ENERGIZER) {
                         worldMap().food().set(tile, foodValue);
                     }
                     /*
@@ -1789,9 +1802,9 @@ public class TileMapEditor {
                 if (tileColors[row][col].equals(foodColor)) numFoodPixels++;
             }
         }
-        if (numFoodPixels == 4) return TileEncoding.PELLET;
-        if (numFoodPixels > 50) return TileEncoding.ENERGIZER;
-        return TileEncoding.EMPTY;
+        if (numFoodPixels == 4) return FoodTiles.PELLET;
+        if (numFoodPixels > 50) return FoodTiles.ENERGIZER;
+        return FoodTiles.EMPTY;
     }
 
     private byte identifyTerrainTile(Vector2i tile, Color[][] tileColors) {
@@ -1800,24 +1813,24 @@ public class TileMapEditor {
         Color doorColor = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_DOOR, Color.WHITE);
 
         if (empty(tileColors)) {
-            return TileEncoding.EMPTY;
+            return TerrainTiles.EMPTY;
         }
         if (isNWCorner(tileColors)) {
-            return TileEncoding.CORNER_NW;
+            return TerrainTiles.CORNER_NW;
         }
         if (isSWCorner(tileColors)) {
-            return TileEncoding.CORNER_SW;
+            return TerrainTiles.CORNER_SW;
         }
         if (isNECorner(tileColors)) {
-            return TileEncoding.CORNER_NE;
+            return TerrainTiles.CORNER_NE;
         }
         if (isSECorner(tileColors)) {
-            return TileEncoding.CORNER_SE;
+            return TerrainTiles.CORNER_SE;
         }
         if (isHWall(tileColors)) {
-            return TileEncoding.WALL_H;
+            return TerrainTiles.WALL_H;
         }
-        return TileEncoding.EMPTY;
+        return TerrainTiles.EMPTY;
     }
 
     private boolean empty(Color[][] tileColors) {

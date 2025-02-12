@@ -7,6 +7,7 @@ package de.amr.games.pacman.model;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.FoodTiles;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import org.tinylog.Logger;
@@ -17,7 +18,7 @@ import java.util.BitSet;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.lib.tilemap.TileEncoding.*;
+import static de.amr.games.pacman.lib.tilemap.TerrainTiles.*;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.model.GameModel.*;
 
@@ -71,7 +72,7 @@ public class GameWorld {
         ghostPositions[CYAN_GHOST]   = posHalfTileRightOf(terrain.getTileProperty(PROPERTY_POS_CYAN_GHOST,   vec_2i(11,17)));
         ghostPositions[ORANGE_GHOST] = posHalfTileRightOf(terrain.getTileProperty(PROPERTY_POS_ORANGE_GHOST, vec_2i(15,17)));
 
-        energizerTiles = food.tiles(ENERGIZER).toArray(Vector2i[]::new);
+        energizerTiles = food.tiles(FoodTiles.ENERGIZER).toArray(Vector2i[]::new);
         eatenFood = new BitSet(food.numCols() * food.numRows());
         uneatenFoodCount = totalFoodCount = (int) food.tiles().filter(tile -> food.get(tile) != EMPTY).count();
     }
@@ -265,7 +266,7 @@ public class GameWorld {
     }
 
     public boolean isEnergizerPosition(Vector2i tile) {
-        return !isOutsideWorld(tile) && map.food().get(tile) == ENERGIZER;
+        return !isOutsideWorld(tile) && map.food().get(tile) == FoodTiles.ENERGIZER;
     }
 
     public boolean hasFoodAt(Vector2i tile) {

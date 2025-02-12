@@ -10,7 +10,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
-import de.amr.games.pacman.lib.tilemap.TileEncoding;
+import de.amr.games.pacman.lib.tilemap.TerrainTiles;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer;
 import javafx.scene.canvas.GraphicsContext;
@@ -149,20 +149,20 @@ public class TerrainRendererInEditor extends TerrainRenderer {
 
     private void drawTileUnscaled(GraphicsContext g, Vector2i tile, byte content) {
         switch (content) {
-            case TileEncoding.WALL_H -> drawWallH(g, tile);
-            case TileEncoding.WALL_V -> drawWallV(g, tile);
-            case TileEncoding.DWALL_H -> drawDWallH(g, tile);
-            case TileEncoding.DWALL_V -> drawDWallV(g, tile);
-            case TileEncoding.CORNER_NW, TileEncoding.CORNER_NE, TileEncoding.CORNER_SW, TileEncoding.CORNER_SE -> drawCorner(g, tile, content);
-            case TileEncoding.DCORNER_NW, TileEncoding.DCORNER_NE, TileEncoding.DCORNER_SW, TileEncoding.DCORNER_SE -> drawDCorner(g, tile, content);
-            case TileEncoding.DCORNER_ANGULAR_NW, TileEncoding.DCORNER_ANGULAR_NE, TileEncoding.DCORNER_ANGULAR_SW, TileEncoding.DCORNER_ANGULAR_SE
+            case TerrainTiles.WALL_H -> drawWallH(g, tile);
+            case TerrainTiles.WALL_V -> drawWallV(g, tile);
+            case TerrainTiles.DWALL_H -> drawDWallH(g, tile);
+            case TerrainTiles.DWALL_V -> drawDWallV(g, tile);
+            case TerrainTiles.CORNER_NW, TerrainTiles.CORNER_NE, TerrainTiles.CORNER_SW, TerrainTiles.CORNER_SE -> drawCorner(g, tile, content);
+            case TerrainTiles.DCORNER_NW, TerrainTiles.DCORNER_NE, TerrainTiles.DCORNER_SW, TerrainTiles.DCORNER_SE -> drawDCorner(g, tile, content);
+            case TerrainTiles.DCORNER_ANGULAR_NW, TerrainTiles.DCORNER_ANGULAR_NE, TerrainTiles.DCORNER_ANGULAR_SW, TerrainTiles.DCORNER_ANGULAR_SE
                     -> drawDCornerAngular(g, tile, content, xp, yp);
-            case TileEncoding.DOOR -> drawDoor(g, tile, colors.doorColor());
-            case TileEncoding.TUNNEL -> drawTunnel(g, tile);
-            case TileEncoding.ONE_WAY_UP    -> drawOneWaySign(g, tile, Direction.UP);
-            case TileEncoding.ONE_WAY_RIGHT -> drawOneWaySign(g, tile, Direction.RIGHT);
-            case TileEncoding.ONE_WAY_DOWN  -> drawOneWaySign(g, tile, Direction.DOWN);
-            case TileEncoding.ONE_WAY_LEFT  -> drawOneWaySign(g, tile, Direction.LEFT);
+            case TerrainTiles.DOOR -> drawDoor(g, tile, colors.doorColor());
+            case TerrainTiles.TUNNEL -> drawTunnel(g, tile);
+            case TerrainTiles.ONE_WAY_UP    -> drawOneWaySign(g, tile, Direction.UP);
+            case TerrainTiles.ONE_WAY_RIGHT -> drawOneWaySign(g, tile, Direction.RIGHT);
+            case TerrainTiles.ONE_WAY_DOWN  -> drawOneWaySign(g, tile, Direction.DOWN);
+            case TerrainTiles.ONE_WAY_LEFT  -> drawOneWaySign(g, tile, Direction.LEFT);
             default -> {}
         }
     }
@@ -271,10 +271,10 @@ public class TerrainRendererInEditor extends TerrainRenderer {
         g.setStroke(colors.wallStrokeColor());
         g.setLineWidth(1);
         switch (cornerType) {
-            case TileEncoding.CORNER_NW -> g.strokeArc(x + 4, y + 4, TS, TS, 90, 90,  ArcType.OPEN);
-            case TileEncoding.CORNER_NE -> g.strokeArc(x - 4, y + 4, TS, TS, 0, 90,   ArcType.OPEN);
-            case TileEncoding.CORNER_SE -> g.strokeArc(x - 4, y - 4, TS, TS, 270, 90, ArcType.OPEN);
-            case TileEncoding.CORNER_SW -> g.strokeArc(x + 4, y - 4, TS, TS, 180, 90, ArcType.OPEN);
+            case TerrainTiles.CORNER_NW -> g.strokeArc(x + 4, y + 4, TS, TS, 90, 90,  ArcType.OPEN);
+            case TerrainTiles.CORNER_NE -> g.strokeArc(x - 4, y + 4, TS, TS, 0, 90,   ArcType.OPEN);
+            case TerrainTiles.CORNER_SE -> g.strokeArc(x - 4, y - 4, TS, TS, 270, 90, ArcType.OPEN);
+            case TerrainTiles.CORNER_SW -> g.strokeArc(x + 4, y - 4, TS, TS, 180, 90, ArcType.OPEN);
             default -> {}
         }
     }
@@ -284,19 +284,19 @@ public class TerrainRendererInEditor extends TerrainRenderer {
         g.setStroke(colors.wallStrokeColor());
         g.setLineWidth(1);
         switch (cornerType) {
-            case TileEncoding.DCORNER_NW -> {
+            case TerrainTiles.DCORNER_NW -> {
                 g.strokeArc(x + 5, y + 5, 6, 6, 90, 90, ArcType.OPEN);
                 g.strokeArc(x + 3, y + 3, 10, 10, 90, 90, ArcType.OPEN);
             }
-            case TileEncoding.DCORNER_NE -> {
+            case TerrainTiles.DCORNER_NE -> {
                 g.strokeArc(x - 3, y + 5, 6, 6, 0, 90, ArcType.OPEN);
                 g.strokeArc(x - 5, y + 3, 10, 10, 0, 90, ArcType.OPEN);
             }
-            case TileEncoding.DCORNER_SE -> {
+            case TerrainTiles.DCORNER_SE -> {
                 g.strokeArc(x - 3, y - 3, 6, 6, 270, 90, ArcType.OPEN);
                 g.strokeArc(x - 5, y - 5, 10, 10, 270, 90, ArcType.OPEN);
             }
-            case TileEncoding.DCORNER_SW -> {
+            case TerrainTiles.DCORNER_SW -> {
                 g.strokeArc(x + 5, y - 3, 6, 6, 180, 90, ArcType.OPEN);
                 g.strokeArc(x + 3, y - 5, 10, 10, 180, 90, ArcType.OPEN);
             }
@@ -312,7 +312,7 @@ public class TerrainRendererInEditor extends TerrainRenderer {
         g.setStroke(colors.wallStrokeColor());
         g.setLineWidth(1);
         switch (cornerType) {
-            case TileEncoding.DCORNER_ANGULAR_NW -> {
+            case TerrainTiles.DCORNER_ANGULAR_NW -> {
                 xp[0]=xp[1]=cx-d; xp[2]=rightEdge;
                 yp[0]=bottomEdge; yp[1]=yp[2]=cy-d;
                 g.strokePolyline(xp,yp,xp.length);
@@ -321,7 +321,7 @@ public class TerrainRendererInEditor extends TerrainRenderer {
                 yp[0]=bottomEdge; yp[1]=yp[2]=cy+d;
                 g.strokePolyline(xp,yp,xp.length);
             }
-            case TileEncoding.DCORNER_ANGULAR_NE -> {
+            case TerrainTiles.DCORNER_ANGULAR_NE -> {
                 xp[0]=x; xp[1]=xp[2]=cx+d;
                 yp[0]=yp[1]=cy-d; yp[2]=bottomEdge;
                 g.strokePolyline(xp,yp,xp.length);
@@ -330,7 +330,7 @@ public class TerrainRendererInEditor extends TerrainRenderer {
                 yp[0]=yp[1]=cy+d; yp[2]=bottomEdge;
                 g.strokePolyline(xp,yp,xp.length);
             }
-            case TileEncoding.DCORNER_ANGULAR_SE -> {
+            case TerrainTiles.DCORNER_ANGULAR_SE -> {
                 xp[0]=x; xp[1]=xp[2]=cx-d;
                 yp[0]=yp[1]=cy-d; yp[2]=y;
                 g.strokePolyline(xp,yp,xp.length);
@@ -339,7 +339,7 @@ public class TerrainRendererInEditor extends TerrainRenderer {
                 yp[0]=yp[1]=cy+d; yp[2]=y;
                 g.strokePolyline(xp,yp,xp.length);
             }
-            case TileEncoding.DCORNER_ANGULAR_SW -> {
+            case TerrainTiles.DCORNER_ANGULAR_SW -> {
                 xp[0]=xp[1]=cx-d; xp[2]=rightEdge;
                 yp[0]=y; yp[1]=yp[2]=cy+d;
                 g.strokePolyline(xp,yp,xp.length);
