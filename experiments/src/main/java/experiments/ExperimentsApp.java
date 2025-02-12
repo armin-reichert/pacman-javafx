@@ -24,7 +24,7 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui2d.lib.Ufx.coloredMaterial;
+import static de.amr.games.pacman.uilib.Ufx.coloredMaterial;
 import static java.lang.Math.TAU;
 
 public class ExperimentsApp extends Application {
@@ -33,7 +33,7 @@ public class ExperimentsApp extends Application {
     private static final double WALL_HEIGHT = 10;
     private static final PhongMaterial WALL_MATERIAL = coloredMaterial(Color.BROWN);
 
-    private static final int SCENE_SIZE_X = 1200, SCENE_SIZE_Y = 800;
+    private static final int SCENE_SIZE_X = 800, SCENE_SIZE_Y = 600;
     private static final double MAZE_SIZE_X = 100 * 8, MAZE_SIZE_Y = 160 * 8, MAZE_SIZE_Z = 2 * 8;
 
     private final Group content = new Group();
