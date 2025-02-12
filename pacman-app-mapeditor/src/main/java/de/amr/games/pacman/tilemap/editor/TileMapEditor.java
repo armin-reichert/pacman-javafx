@@ -369,11 +369,11 @@ public class TileMapEditor {
         showEditHelpText();
     }
 
-    private void createRenderers(TerrainColorScheme colors, Color foodColor) {
+    private void createRenderers(TerrainColorScheme terrainColorScheme, Color foodColor) {
         editorTerrainRenderer = new TerrainRendererInEditor();
-        editorTerrainRenderer.setColors(colors);
+        editorTerrainRenderer.setColors(terrainColorScheme);
         previewTerrainRenderer = new TerrainRenderer();
-        previewTerrainRenderer.setColors(colors);
+        previewTerrainRenderer.setColors(terrainColorScheme);
         foodMapRenderer = new FoodMapRenderer();
         foodMapRenderer.setPelletColor(foodColor);
         foodMapRenderer.setEnergizerColor(foodColor);
@@ -400,6 +400,9 @@ public class TileMapEditor {
     private void onEditCanvasContextMenuRequested(ContextMenuEvent menuEvent) {
         if (isEditMode(EditMode.INSPECT)) {
             return;
+        }
+        if (menuEvent.isKeyboardTrigger()) {
+            return; // ignore keyboard-triggered event e.g. by pressing Shift+F10 in Windows
         }
         Vector2i tile = tileAtMousePosition(menuEvent.getX(), menuEvent.getY());
         WorldMap worldMap = worldMapPy.get();
@@ -869,7 +872,7 @@ public class TileMapEditor {
 
         var miDetectPellets = new MenuItem(tt("menu.edit.detect_pellets"));
         //TODO why doens't this work?
-//        miDetectPellets.disableProperty().bind(templateImagePy.map(Objects::isNull));
+        //miDetectPellets.disableProperty().bind(templateImagePy.map(image -> image == null));
         miDetectPellets.disableProperty().bind(Bindings.createBooleanBinding(() -> templateImagePy.get() == null,  templateImagePy));
         miDetectPellets.setOnAction(ae -> detectTilesInTemplateImage());
 
