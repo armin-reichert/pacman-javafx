@@ -8,10 +8,8 @@ import de.amr.games.pacman.lib.tilemap.FoodTiles;
 import de.amr.games.pacman.lib.tilemap.TerrainTiles;
 import javafx.scene.paint.Color;
 
-import java.util.Arrays;
 import java.util.stream.IntStream;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 
 public class TileMatcher {
@@ -82,35 +80,39 @@ public class TileMatcher {
 
     private IntStream all() { return IntStream.range(0, 64); }
 
-    private IntStream pixelsRightOfCol(int[] pixelsOfTile, int column) {
-        return all().filter(i -> i % TS > column).map(i -> pixelsOfTile[i]);
+    private IntStream pixelsRightOfCol(int[] pixels, int column) {
+        return all().filter(i -> i % TS > column).map(i -> pixels[i]);
     }
 
-    private IntStream pixelsLeftOfCol(int[] pixelsOfTile, int column) {
-        return all().filter(i -> i % TS < column).map(i -> pixelsOfTile[i]);
+    private IntStream pixelsLeftOfCol(int[] pixels, int column) {
+        return all().filter(i -> i % TS < column).map(i -> pixels[i]);
     }
 
-    private IntStream aboveRow(int row) {
-        return all().filter(i -> i < row * TS);
+    private IntStream pixelsAboveRow(int[] pixels, int row) {
+        return all().filter(i -> i < row * TS).map(i -> pixels[i]);
     }
 
-    private IntStream belowRow(int row) {
-        return all().filter(i -> i >= (row + 1) * TS);
+    private IntStream pixelsBelowRow(int[] pixels, int row) {
+        return all().filter(i -> i >= (row + 1) * TS).map(i -> pixels[i]);
     }
 
-    private IntStream pixelsAtColumn(int[] pixelsOfTile, int column) {
-        return all().filter(i -> i % TS == column).map(i -> pixelsOfTile[i]);
+    private IntStream pixelsAtRow(int[] pixels, int row) {
+        return all().filter(i -> i / TS == row).map(i -> pixels[i]);
     }
 
-    private boolean isEmptyTile(int[] pixelsOfTile) {
-        return IntStream.of(pixelsOfTile).allMatch(pixelScheme::isBackground);
+    private IntStream pixelsAtColumn(int[] pixels, int column) {
+        return all().filter(i -> i % TS == column).map(i -> pixels[i]);
     }
 
-    private boolean isHWall(int[] pixelsOfTile) {
-        return Arrays.stream(pixelsOfTile, 0, 32).allMatch(pixelScheme::isBackground) &&
-                Arrays.stream(pixelsOfTile, 32, 40).allMatch(pixelScheme::isStroke) ||
-                Arrays.stream(pixelsOfTile, 32, 64).allMatch(pixelScheme::isBackground) &&
-                Arrays.stream(pixelsOfTile, 24, 32).allMatch(pixelScheme::isStroke);
+    private boolean isEmptyTile(int[] pixels) {
+        return IntStream.of(pixels).allMatch(pixelScheme::isBackground);
+    }
+
+    private boolean isHWall(int[] pixels) {
+        return pixelsAboveRow(pixels, 4).allMatch(pixelScheme::isBackground) &&
+                pixelsAtRow(pixels, 4).allMatch(pixelScheme::isStroke) ||
+                pixelsBelowRow(pixels, 3).allMatch(pixelScheme::isBackground) &&
+                pixelsAtRow(pixels, 3).allMatch(pixelScheme::isStroke);
     }
 
     private boolean isVWall(int[] pixelsOfTile) {
