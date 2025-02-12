@@ -677,16 +677,12 @@ public class TileMapEditor {
         foodMapPropertiesEditor.enabledPy.bind(editModePy.map(mode -> mode != EditMode.INSPECT));
         foodMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
-        var terrainPropertiesPane = new TitledPane();
+        var terrainPropertiesPane = new TitledPane(tt("terrain"), terrainMapPropertiesEditor);
         terrainPropertiesPane.setMinWidth(300);
         terrainPropertiesPane.setExpanded(true);
-        terrainPropertiesPane.setText(tt("terrain"));
-        terrainPropertiesPane.setContent(terrainMapPropertiesEditor);
 
-        var foodPropertiesPane = new TitledPane();
+        var foodPropertiesPane = new TitledPane(tt("pellets"), foodMapPropertiesEditor);
         foodPropertiesPane.setExpanded(true);
-        foodPropertiesPane.setText(tt("pellets"));
-        foodPropertiesPane.setContent(foodMapPropertiesEditor);
 
         propertyEditorsPane = new VBox(terrainPropertiesPane, foodPropertiesPane);
         propertyEditorsPane.visibleProperty().bind(propertyEditorsVisiblePy);
