@@ -1783,8 +1783,8 @@ public class TileMapEditor {
                         worldMap().food().set(mapTile, foodValue);
                     }
                     else {
-                        //byte terrainValue = matcher.identifyTerrainTile(pixelsOfTile);
-                        //worldMap().terrain().set(mapTile, terrainValue);
+                        byte terrainValue = matcher.identifyTerrainTile(pixelsOfTile);
+                        worldMap().terrain().set(mapTile, terrainValue);
                     }
                 } catch (IndexOutOfBoundsException e) {
                     Logger.error("Could not get pixels for tile {}, maybe image has been cropped incorrectly?", mapTile);

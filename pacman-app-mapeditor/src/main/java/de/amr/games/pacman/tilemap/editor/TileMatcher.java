@@ -43,13 +43,13 @@ public class TileMatcher {
         this.pixelScheme = terrainColorScheme;
     }
 
-    public byte identifyFoodTile(int[] pixelsOfTile) {
+    public byte identifyFoodTile(int[] pixels) {
         int numFoodPixels = 0;
-        for (int px : pixelsOfTile) {
-            if (px == pixelScheme.foodColor) ++numFoodPixels;
+        for (int pixel : pixels) {
+            if (pixel == pixelScheme.foodColor) ++numFoodPixels;
         }
-        if (numFoodPixels == 4)  return FoodTiles.PELLET;
         if (numFoodPixels > 50) return FoodTiles.ENERGIZER;
+        if (pixels(pixels, 27, 28, 35, 36).allMatch(pixelScheme::isFood)) return FoodTiles.PELLET;
         return FoodTiles.EMPTY;
     }
 
@@ -104,15 +104,17 @@ public class TileMatcher {
         return all().filter(i -> i % TS == column).map(i -> pixels[i]);
     }
 
+    private IntStream pixels(int[] pixels, int... indices) {
+        return IntStream.of(indices).map(i -> pixels[i]);
+    }
+
     private boolean isEmptyTile(int[] pixels) {
         return IntStream.of(pixels).allMatch(pixelScheme::isBackground);
     }
 
     private boolean isHWall(int[] pixels) {
-        return pixelsAboveRow(pixels, 4).allMatch(pixelScheme::isBackground) &&
-                pixelsAtRow(pixels, 4).allMatch(pixelScheme::isStroke) ||
-                pixelsBelowRow(pixels, 3).allMatch(pixelScheme::isBackground) &&
-                pixelsAtRow(pixels, 3).allMatch(pixelScheme::isStroke);
+        return  pixelsAtRow(pixels, 3).allMatch(pixelScheme::isStroke) ||
+                pixelsAtRow(pixels, 4).allMatch(pixelScheme::isStroke);
     }
 
     private boolean isVWall(int[] pixelsOfTile) {
@@ -123,19 +125,23 @@ public class TileMatcher {
                 && pixelsRightOfCol(pixelsOfTile, 3).allMatch(pixelScheme::isBackground);
     }
 
-    private boolean isNWCorner(int[] pixelsOfTile) {
-        return false;
+    private boolean isNWCorner(int[] pixels) {
+        return pixels(pixels, 60, 52, 45, 38).allMatch(pixelScheme::isStroke)
+                || pixels(pixels, 51, 43, 36, 29).allMatch(pixelScheme::isStroke);
     }
 
-    private boolean isSWCorner(int[] pixelsOfTile) {
-        return false;
+    private boolean isSWCorner(int[] pixels) {
+        return pixels(pixels, 4, 12, 21, 30).allMatch(pixelScheme::isStroke)
+                || pixels(pixels, 11, 19, 28, 37).allMatch(pixelScheme::isStroke);
     }
 
-    private boolean isNECorner(int[] pixelsOfTile) {
-        return false;
+    private boolean isNECorner(int[] pixels) {
+        return pixels(pixels, 33, 42, 51, 59).allMatch(pixelScheme::isStroke)
+                || pixels(pixels, 26, 35, 44, 52).allMatch(pixelScheme::isStroke);
     }
 
-    private boolean isSECorner(int[] pixelsOfTile) {
-        return false;
+    private boolean isSECorner(int[] pixels) {
+        return pixels(pixels, 3, 11, 18, 25).allMatch(pixelScheme::isStroke)
+                || pixels(pixels, 34, 27, 20, 12).allMatch(pixelScheme::isStroke);
     }
 }
