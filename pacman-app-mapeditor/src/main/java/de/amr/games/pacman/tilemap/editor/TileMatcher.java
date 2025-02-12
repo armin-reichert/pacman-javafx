@@ -80,22 +80,6 @@ public class TileMatcher {
 
     private IntStream all() { return IntStream.range(0, 64); }
 
-    private IntStream pixelsRightOfCol(int[] pixels, int column) {
-        return all().filter(i -> i % TS > column).map(i -> pixels[i]);
-    }
-
-    private IntStream pixelsLeftOfCol(int[] pixels, int column) {
-        return all().filter(i -> i % TS < column).map(i -> pixels[i]);
-    }
-
-    private IntStream pixelsAboveRow(int[] pixels, int row) {
-        return all().filter(i -> i < row * TS).map(i -> pixels[i]);
-    }
-
-    private IntStream pixelsBelowRow(int[] pixels, int row) {
-        return all().filter(i -> i >= (row + 1) * TS).map(i -> pixels[i]);
-    }
-
     private IntStream pixelsAtRow(int[] pixels, int row) {
         return all().filter(i -> i / TS == row).map(i -> pixels[i]);
     }
@@ -118,11 +102,8 @@ public class TileMatcher {
     }
 
     private boolean isVWall(int[] pixelsOfTile) {
-        return pixelsLeftOfCol(pixelsOfTile, 4).allMatch(pixelScheme::isBackground)
-                && pixelsAtColumn(pixelsOfTile, 4).allMatch(pixelScheme::isStroke)
-                ||
-                pixelsAtColumn(pixelsOfTile, 3).allMatch(pixelScheme::isStroke)
-                && pixelsRightOfCol(pixelsOfTile, 3).allMatch(pixelScheme::isBackground);
+        return  pixelsAtColumn(pixelsOfTile, 3).allMatch(pixelScheme::isStroke) ||
+                pixelsAtColumn(pixelsOfTile, 4).allMatch(pixelScheme::isStroke);
     }
 
     private boolean isNWCorner(int[] pixels) {
