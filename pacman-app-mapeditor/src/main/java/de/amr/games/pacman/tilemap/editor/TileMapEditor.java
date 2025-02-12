@@ -1760,6 +1760,14 @@ public class TileMapEditor {
             return;
         }
         PixelReader rdr = templateImage.getPixelReader();
+        Color fillColor = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_WALL_FILL, Color.WHITE);
+        Color strokeColor = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_WALL_STROKE, Color.WHITE);
+        Color doorColor = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_DOOR, Color.WHITE);
+        Color foodColor = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, Color.WHITE);
+        TerrainColorScheme terrainColorScheme = new TerrainColorScheme(
+            Color.TRANSPARENT, fillColor, strokeColor, doorColor
+        );
+        TileMatcher matcher = new TileMatcher(terrainColorScheme, foodColor);
         Color[][] tileColors = new Color[TS][TS];
         // 3 empty rows on top, 2 on bottom
         int numRows = worldMap().terrain().numRows(), numCols = worldMap().terrain().numCols();
@@ -1772,16 +1780,14 @@ public class TileMapEditor {
                             tileColors[y][x] = rdr.getColor(col * TS + x, (row - 3) * TS + y);
                         }
                     }
-                    byte foodValue = identifyFoodTile(tile, tileColors);
+                    byte foodValue = matcher.identifyFoodTile(tile, tileColors);
                     if (foodValue == FoodTiles.PELLET || foodValue == FoodTiles.ENERGIZER) {
                         worldMap().food().set(tile, foodValue);
                     }
-                    /*
                     else {
-                        byte terrainValue = identifyTerrainTile(tile, tileColors);
-                        worldMap().terrain().set(tile, terrainValue);
+                        byte terrainValue = matcher.identifyTerrainTile(tile, tileColors);
+                        //worldMap().terrain().set(tile, terrainValue);
                     }
-                     */
                 } catch (IndexOutOfBoundsException e) {
                     Logger.error("Could not get pixels for tile {}, maybe template image has been cropped incorrectly?", tile);
                 } catch (Exception e) {
@@ -1794,114 +1800,4 @@ public class TileMapEditor {
         markTileMapEdited(worldMap().food());
     }
 
-    private byte identifyFoodTile(Vector2i tile, Color[][] tileColors) {
-        Color foodColor = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, Color.WHITE);
-        int numFoodPixels = 0;
-        for (int row = 0; row < TS; ++row) {
-            for (int col = 0; col < TS; ++col) {
-                if (tileColors[row][col].equals(foodColor)) numFoodPixels++;
-            }
-        }
-        if (numFoodPixels == 4) return FoodTiles.PELLET;
-        if (numFoodPixels > 50) return FoodTiles.ENERGIZER;
-        return FoodTiles.EMPTY;
-    }
-
-    private byte identifyTerrainTile(Vector2i tile, Color[][] tileColors) {
-        Color fillColor = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_WALL_FILL, Color.WHITE);
-        Color strokeColor = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_WALL_STROKE, Color.WHITE);
-        Color doorColor = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_DOOR, Color.WHITE);
-
-        if (empty(tileColors)) {
-            return TerrainTiles.EMPTY;
-        }
-        if (isNWCorner(tileColors)) {
-            return TerrainTiles.CORNER_NW;
-        }
-        if (isSWCorner(tileColors)) {
-            return TerrainTiles.CORNER_SW;
-        }
-        if (isNECorner(tileColors)) {
-            return TerrainTiles.CORNER_NE;
-        }
-        if (isSECorner(tileColors)) {
-            return TerrainTiles.CORNER_SE;
-        }
-        if (isHWall(tileColors)) {
-            return TerrainTiles.WALL_H;
-        }
-        return TerrainTiles.EMPTY;
-    }
-
-    private boolean empty(Color[][] tileColors) {
-        for (int row = 0; row < TS; ++row) {
-            for (int col = 0; col < TS; ++col) {
-                if (!tileColors[row][col].equals(Color.TRANSPARENT))
-                    return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean isHWall(Color[][] tileColors) {
-        boolean upperHalfEmpty = true;
-        for (int row = 0; row < HTS; ++row) {
-            for (int col = 0; col < TS; ++col) {
-                if (!tileColors[row][col].equals(Color.TRANSPARENT))
-                    upperHalfEmpty = false;
-            }
-        }
-        boolean lowerHalfEmpty = true;
-        for (int row = HTS; row < TS; ++row) {
-            for (int col = 0; col < TS; ++col) {
-                if (!tileColors[row][col].equals(Color.TRANSPARENT))
-                    lowerHalfEmpty = false;
-            }
-        }
-        return upperHalfEmpty || lowerHalfEmpty;
-    }
-
-    private boolean isNWCorner(Color[][] tileColors) {
-        for (int row = 0; row < TS; ++row) {
-            for (int col = 0; col < TS - row; ++col) {
-                if (!tileColors[row][col].equals(Color.TRANSPARENT)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    private boolean isSWCorner(Color[][] tileColors) {
-        for (int row = 0; row < TS; ++row) {
-            for (int col = 0; col <= row; ++col) {
-                if (!tileColors[row][col].equals(Color.TRANSPARENT)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    private boolean isNECorner(Color[][] tileColors) {
-        for (int row = 0; row < TS; ++row) {
-            for (int col = row; col < TS; ++col) {
-                if (!tileColors[row][col].equals(Color.TRANSPARENT)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    private boolean isSECorner(Color[][] tileColors) {
-        for (int row = 0; row < TS; ++row) {
-            for (int col = TS - row; col < TS; ++col) {
-                if (!tileColors[row][col].equals(Color.TRANSPARENT)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
 }
