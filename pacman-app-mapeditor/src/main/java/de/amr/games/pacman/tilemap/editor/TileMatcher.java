@@ -53,26 +53,37 @@ public class TileMatcher {
         return FoodTiles.EMPTY;
     }
 
-    public byte identifyTerrainTile(int[] pixelsOfTile) {
-        if (isEmptyTile(pixelsOfTile)) {
+    public byte identifyTerrainTile(int[] pixels) {
+        if (isEmptyTile(pixels)) {
             return TerrainTiles.EMPTY;
         }
-        if (isNWCorner(pixelsOfTile)) {
+        if (isNWCorner(pixels)) {
             return TerrainTiles.CORNER_NW;
         }
-        if (isSWCorner(pixelsOfTile)) {
+        if (isSWCorner(pixels)) {
             return TerrainTiles.CORNER_SW;
         }
-        if (isNECorner(pixelsOfTile)) {
+        if (isNECorner(pixels)) {
             return TerrainTiles.CORNER_NE;
         }
-        if (isSECorner(pixelsOfTile)) {
+        if (isSECorner(pixels)) {
             return TerrainTiles.CORNER_SE;
         }
-        if (isHWall(pixelsOfTile)) {
+
+/*
+        // check double before single wall
+        if (isDoubleHWall(pixels)) {
+            return TerrainTiles.DWALL_H;
+        }
+        if (isDoubleVWall(pixels)) {
+            return TerrainTiles.DWALL_V;
+        }
+*/
+
+        if (isHWall(pixels)) {
             return TerrainTiles.WALL_H;
         }
-        if (isVWall(pixelsOfTile)) {
+        if (isVWall(pixels)) {
             return TerrainTiles.WALL_V;
         }
         return TerrainTiles.EMPTY;
@@ -101,9 +112,23 @@ public class TileMatcher {
                 pixelsAtRow(pixels, 4).allMatch(pixelScheme::isStroke);
     }
 
-    private boolean isVWall(int[] pixelsOfTile) {
-        return  pixelsAtColumn(pixelsOfTile, 3).allMatch(pixelScheme::isStroke) ||
-                pixelsAtColumn(pixelsOfTile, 4).allMatch(pixelScheme::isStroke);
+    private boolean isDoubleHWall(int[] pixels) {
+        return  pixelsAtRow(pixels, 0).allMatch(pixelScheme::isStroke) &&
+                pixelsAtRow(pixels, 3).allMatch(pixelScheme::isStroke)
+                ||
+                pixelsAtRow(pixels, 4).allMatch(pixelScheme::isStroke) &&
+                pixelsAtRow(pixels, 7).allMatch(pixelScheme::isStroke);
+
+    }
+
+    private boolean isVWall(int[] pixels) {
+        return  pixelsAtColumn(pixels, 3).allMatch(pixelScheme::isStroke) ||
+                pixelsAtColumn(pixels, 4).allMatch(pixelScheme::isStroke);
+    }
+
+    private boolean isDoubleVWall(int[] pixels) {
+        return  pixelsAtColumn(pixels, 0).allMatch(pixelScheme::isStroke) &&
+                pixelsAtColumn(pixels, 3).allMatch(pixelScheme::isStroke);
     }
 
     private boolean isNWCorner(int[] pixels) {
