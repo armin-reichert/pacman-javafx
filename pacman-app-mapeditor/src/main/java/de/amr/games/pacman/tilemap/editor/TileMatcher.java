@@ -4,157 +4,110 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.tilemap.editor;
 
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.FoodTiles;
 import de.amr.games.pacman.lib.tilemap.TerrainTiles;
-import de.amr.games.pacman.tilemap.rendering.TerrainColorScheme;
 import javafx.scene.paint.Color;
+
+import java.util.Arrays;
+import java.util.stream.IntStream;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 
 public class TileMatcher {
 
-    private final TerrainColorScheme terrainColorScheme;
-    private final Color foodColor;
+    public record PixelScheme(int backgroundColor, int fillColor, int strokeColor, int doorColor, int foodColor) {
 
-    public TileMatcher(TerrainColorScheme terrainColorScheme, Color foodColor) {
-        this.terrainColorScheme = terrainColorScheme;
-        this.foodColor = foodColor;
+        public PixelScheme(Color backgroundColor, Color fillColor, Color strokeColor, Color doorColor, Color foodColor) {
+            this(toArgb(backgroundColor), toArgb(fillColor), toArgb(strokeColor), toArgb(doorColor), toArgb(foodColor));
+        }
+
+        public boolean isBackground(int pixel) { return pixel == backgroundColor; }
+        public boolean isStroke(int pixel) { return pixel == strokeColor; }
+        public boolean isFill(int pixel) { return pixel == fillColor; }
+        public boolean isDoor(int pixel) { return pixel == doorColor; }
+        public boolean isFood(int pixel) { return pixel == foodColor; }
     }
 
-    public byte identifyFoodTile(Vector2i tile, Color[][] tileColors) {
+    private static final int TRANSPARENT_PIXEL = 0;
+
+    private static int toArgb(Color color) {
+        int a = (int) (color.getOpacity() * 255);
+        int r = (int) (color.getRed() * 255);
+        int g = (int) (color.getGreen() * 255);
+        int b = (int) (color.getBlue() * 255);
+        return (a << 24) | (r << 16) | (g << 8) | b;
+    }
+
+    private final PixelScheme pixelScheme;
+
+    public TileMatcher(PixelScheme terrainColorScheme) {
+        this.pixelScheme = terrainColorScheme;
+    }
+
+    public byte identifyFoodTile(int[] pixelsOfTile) {
         int numFoodPixels = 0;
-        for (int row = 0; row < TS; ++row) {
-            for (int col = 0; col < TS; ++col) {
-                if (tileColors[row][col].equals(foodColor)) numFoodPixels++;
-            }
+        for (int px : pixelsOfTile) {
+            if (px == pixelScheme.foodColor) ++numFoodPixels;
         }
-        if (numFoodPixels == 4 &&
-                tileColors[3][3].equals(foodColor) &&
-                tileColors[3][4].equals(foodColor) &&
-                tileColors[4][3].equals(foodColor) &&
-                tileColors[4][4].equals(foodColor)) {
-            return FoodTiles.PELLET;
-        }
+        if (numFoodPixels == 4)  return FoodTiles.PELLET;
         if (numFoodPixels > 50) return FoodTiles.ENERGIZER;
         return FoodTiles.EMPTY;
     }
 
-
-    public byte identifyTerrainTile(Vector2i tile, Color[][] tileColors) {
-        if (empty(tileColors)) {
+    public byte identifyTerrainTile(int[] pixelsOfTile) {
+        if (isEmptyTile(pixelsOfTile)) {
             return TerrainTiles.EMPTY;
         }
-        if (isNWCorner(tileColors)) {
+        if (isNWCorner(pixelsOfTile)) {
             return TerrainTiles.CORNER_NW;
         }
-        if (isSWCorner(tileColors)) {
+        if (isSWCorner(pixelsOfTile)) {
             return TerrainTiles.CORNER_SW;
         }
-        if (isNECorner(tileColors)) {
+        if (isNECorner(pixelsOfTile)) {
             return TerrainTiles.CORNER_NE;
         }
-        if (isSECorner(tileColors)) {
+        if (isSECorner(pixelsOfTile)) {
             return TerrainTiles.CORNER_SE;
         }
-        if (isHWall(tileColors)) {
+        if (isHWall(pixelsOfTile)) {
             return TerrainTiles.WALL_H;
         }
-        if (isVWall(tileColors)) {
+        if (isVWall(pixelsOfTile)) {
             return TerrainTiles.WALL_V;
         }
         return TerrainTiles.EMPTY;
     }
 
-    private boolean empty(Color[][] tileColors) {
-        for (int row = 0; row < TS; ++row) {
-            for (int col = 0; col < TS; ++col) {
-                if (!tileColors[row][col].equals(Color.TRANSPARENT))
-                    return false;
-            }
-        }
-        return true;
+    private boolean isEmptyTile(int[] pixelsOfTile) {
+        return IntStream.of(pixelsOfTile).allMatch(pixelScheme::isBackground);
     }
 
-    private boolean isHWall(Color[][] tileColors) {
-        boolean upperHalfEmpty = true;
-        for (int row = 0; row < HTS; ++row) {
-            for (int col = 0; col < TS; ++col) {
-                if (!tileColors[row][col].equals(Color.TRANSPARENT))
-                    upperHalfEmpty = false;
-            }
-        }
-        boolean lowerHalfEmpty = true;
-        for (int row = HTS; row < TS; ++row) {
-            for (int col = 0; col < TS; ++col) {
-                if (!tileColors[row][col].equals(Color.TRANSPARENT))
-                    lowerHalfEmpty = false;
-            }
-        }
-        return upperHalfEmpty || lowerHalfEmpty;
+    private boolean isHWall(int[] pixelsOfTile) {
+        return Arrays.stream(pixelsOfTile, 0, 32).allMatch(pixelScheme::isBackground) &&
+                Arrays.stream(pixelsOfTile, 32, 40).allMatch(pixelScheme::isStroke) ||
+                Arrays.stream(pixelsOfTile, 32, 64).allMatch(pixelScheme::isBackground) &&
+                Arrays.stream(pixelsOfTile, 24, 32).allMatch(pixelScheme::isStroke);
     }
 
-    private boolean isVWall(Color[][] tileColors) {
-        boolean leftHalfEmpty = true;
-        for (int row = 0; row < TS; ++row) {
-            for (int col = 0; col < HTS; ++col) {
-                if (!tileColors[row][col].equals(Color.TRANSPARENT))
-                    leftHalfEmpty = false;
-            }
-        }
-        boolean rightHalfEmpty = true;
-        for (int row = 0; row < TS; ++row) {
-            for (int col = HTS + 1; col < TS; ++col) {
-                if (!tileColors[row][col].equals(Color.TRANSPARENT))
-                    rightHalfEmpty = false;
-            }
-        }
-        return leftHalfEmpty || rightHalfEmpty;
+    private boolean isVWall(int[] pixelsOfTile) {
+        return false;
     }
 
-    private boolean isNWCorner(Color[][] tileColors) {
-        for (int row = 0; row < TS; ++row) {
-            for (int col = 0; col < TS - row; ++col) {
-                if (!tileColors[row][col].equals(Color.TRANSPARENT)) {
-                    return false;
-                }
-            }
-        }
-        return true;
+    private boolean isNWCorner(int[] pixelsOfTile) {
+        return false;
     }
 
-    private boolean isSWCorner(Color[][] tileColors) {
-        for (int row = 0; row < TS; ++row) {
-            for (int col = 0; col <= row; ++col) {
-                if (!tileColors[row][col].equals(Color.TRANSPARENT)) {
-                    return false;
-                }
-            }
-        }
-        return true;
+    private boolean isSWCorner(int[] pixelsOfTile) {
+        return false;
     }
 
-    private boolean isNECorner(Color[][] tileColors) {
-        for (int row = 0; row < TS; ++row) {
-            for (int col = row; col < TS; ++col) {
-                if (!tileColors[row][col].equals(Color.TRANSPARENT)) {
-                    return false;
-                }
-            }
-        }
-        return true;
+    private boolean isNECorner(int[] pixelsOfTile) {
+        return false;
     }
 
-    private boolean isSECorner(Color[][] tileColors) {
-        for (int row = 0; row < TS; ++row) {
-            for (int col = TS - row; col < TS; ++col) {
-                if (!tileColors[row][col].equals(Color.TRANSPARENT)) {
-                    return false;
-                }
-            }
-        }
-        return true;
+    private boolean isSECorner(int[] pixelsOfTile) {
+        return false;
     }
-
 }

@@ -27,9 +27,7 @@ import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.PixelReader;
+import javafx.scene.image.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -45,6 +43,8 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.Buffer;
+import java.nio.IntBuffer;
 import java.text.MessageFormat;
 import java.time.Instant;
 import java.util.*;
@@ -1759,45 +1759,52 @@ public class TileMapEditor {
         if (templateImage == null) {
             return;
         }
-        PixelReader rdr = templateImage.getPixelReader();
-        Color fillColor = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_WALL_FILL, Color.WHITE);
+        Color fillColor   = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_WALL_FILL, Color.WHITE);
         Color strokeColor = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_WALL_STROKE, Color.WHITE);
-        Color doorColor = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_DOOR, Color.WHITE);
-        Color foodColor = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, Color.WHITE);
-        TerrainColorScheme terrainColorScheme = new TerrainColorScheme(
-            Color.TRANSPARENT, fillColor, strokeColor, doorColor
-        );
-        TileMatcher matcher = new TileMatcher(terrainColorScheme, foodColor);
-        Color[][] tileColors = new Color[TS][TS];
+        Color doorColor   = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_DOOR, Color.WHITE);
+        Color foodColor   = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, Color.WHITE);
+        TileMatcher.PixelScheme pixelScheme = new TileMatcher.PixelScheme(Color.TRANSPARENT, fillColor, strokeColor, doorColor, foodColor);
+        TileMatcher matcher = new TileMatcher(pixelScheme);
+
+        WritablePixelFormat<IntBuffer> pixelFormat = WritablePixelFormat.getIntArgbInstance();
+        PixelReader rdr = templateImage.getPixelReader();
+        int[] pixelsOfTile = new int[TS*TS]; // pixels row-wise
+
         // 3 empty rows on top, 2 on bottom
         int numRows = worldMap().terrain().numRows(), numCols = worldMap().terrain().numCols();
-        for (int row = 3; row < numRows - 3; ++row) {
+        for (int row = 0; row < numRows - 5; ++row) {
             for (int col = 0; col < numCols; ++col) {
-                Vector2i tile = vec_2i(col, row);
+                Vector2i mapTile = vec_2i(col, row + 3);
                 try {
-                    for (int y = 0; y < TS; ++y) {
-                        for (int x = 0; x < TS; ++x) {
-                            tileColors[y][x] = rdr.getColor(col * TS + x, (row - 3) * TS + y);
-                        }
-                    }
-                    byte foodValue = matcher.identifyFoodTile(tile, tileColors);
+                    // read pixel values for current tile
+                    rdr.getPixels(col * TS, row * TS, TS, TS, pixelFormat, pixelsOfTile, 0, TS);
+                    byte foodValue = matcher.identifyFoodTile(pixelsOfTile);
                     if (foodValue == FoodTiles.PELLET || foodValue == FoodTiles.ENERGIZER) {
-                        worldMap().food().set(tile, foodValue);
+                        worldMap().food().set(mapTile, foodValue);
                     }
                     else {
-                        byte terrainValue = matcher.identifyTerrainTile(tile, tileColors);
-                        //worldMap().terrain().set(tile, terrainValue);
+                        //byte terrainValue = matcher.identifyTerrainTile(pixelsOfTile);
+                        //worldMap().terrain().set(mapTile, terrainValue);
                     }
                 } catch (IndexOutOfBoundsException e) {
-                    Logger.error("Could not get pixels for tile {}, maybe template image has been cropped incorrectly?", tile);
+                    Logger.error("Could not get pixels for tile {}, maybe image has been cropped incorrectly?", mapTile);
                 } catch (Exception e) {
-                    Logger.error("Could not get pixels for tile {}", tile);
+                    Logger.error("Could not get pixels for tile {}", mapTile);
                     Logger.error(e);
                 }
             }
         }
         markTileMapEdited(worldMap().terrain());
         markTileMapEdited(worldMap().food());
+    }
+
+    private String toHex(int[] values) {
+        StringBuilder sb = new StringBuilder();
+        for (int value : values) {
+            String hex = String.format("%08x", value);
+            sb.append(hex);
+        }
+        return sb.toString();
     }
 
 }
