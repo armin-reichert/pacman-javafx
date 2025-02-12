@@ -80,6 +80,28 @@ public class TileMatcher {
         return TerrainTiles.EMPTY;
     }
 
+    private IntStream all() { return IntStream.range(0, 64); }
+
+    private IntStream pixelsRightOfCol(int[] pixelsOfTile, int column) {
+        return all().filter(i -> i % TS > column).map(i -> pixelsOfTile[i]);
+    }
+
+    private IntStream pixelsLeftOfCol(int[] pixelsOfTile, int column) {
+        return all().filter(i -> i % TS < column).map(i -> pixelsOfTile[i]);
+    }
+
+    private IntStream aboveRow(int row) {
+        return all().filter(i -> i < row * TS);
+    }
+
+    private IntStream belowRow(int row) {
+        return all().filter(i -> i >= (row + 1) * TS);
+    }
+
+    private IntStream pixelsAtColumn(int[] pixelsOfTile, int column) {
+        return all().filter(i -> i % TS == column).map(i -> pixelsOfTile[i]);
+    }
+
     private boolean isEmptyTile(int[] pixelsOfTile) {
         return IntStream.of(pixelsOfTile).allMatch(pixelScheme::isBackground);
     }
@@ -92,7 +114,11 @@ public class TileMatcher {
     }
 
     private boolean isVWall(int[] pixelsOfTile) {
-        return false;
+        return pixelsLeftOfCol(pixelsOfTile, 4).allMatch(pixelScheme::isBackground)
+                && pixelsAtColumn(pixelsOfTile, 4).allMatch(pixelScheme::isStroke)
+                ||
+                pixelsAtColumn(pixelsOfTile, 3).allMatch(pixelScheme::isStroke)
+                && pixelsRightOfCol(pixelsOfTile, 3).allMatch(pixelScheme::isBackground);
     }
 
     private boolean isNWCorner(int[] pixelsOfTile) {
