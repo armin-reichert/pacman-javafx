@@ -1783,8 +1783,8 @@ public class TileMapEditor {
                         worldMap().food().set(mapTile, foodValue);
                     }
                     else {
-                        byte terrainValue = matcher.identifyTerrainTile(pixelsOfTile);
-                        worldMap().terrain().set(mapTile, terrainValue);
+                        //byte terrainValue = matcher.identifyTerrainTile(pixelsOfTile);
+                        //worldMap().terrain().set(mapTile, terrainValue);
                     }
                 } catch (IndexOutOfBoundsException e) {
                     Logger.error("Could not get pixels for tile {}, maybe image has been cropped incorrectly?", mapTile);
@@ -1797,14 +1797,4 @@ public class TileMapEditor {
         markTileMapEdited(worldMap().terrain());
         markTileMapEdited(worldMap().food());
     }
-
-    private String toHex(int[] values) {
-        StringBuilder sb = new StringBuilder();
-        for (int value : values) {
-            String hex = String.format("%08x", value);
-            sb.append(hex);
-        }
-        return sb.toString();
-    }
-
 }

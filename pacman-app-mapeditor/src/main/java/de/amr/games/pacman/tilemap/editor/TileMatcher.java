@@ -52,44 +52,30 @@ public class TileMatcher {
     }
 
     public byte identifyTerrainTile(int[] pixels) {
-        if (isNWCorner(pixels)) {
-            return TerrainTiles.CORNER_NW;
-        }
-        if (isSWCorner(pixels)) {
-            return TerrainTiles.CORNER_SW;
-        }
-        if (isNECorner(pixels)) {
-            return TerrainTiles.CORNER_NE;
-        }
-        if (isSECorner(pixels)) {
-            return TerrainTiles.CORNER_SE;
-        }
-/*
         // check double before single wall
-        if (isDoubleHWall(pixels)) {
-            return TerrainTiles.DWALL_H;
-        }
-        if (isDoubleVWall(pixels)) {
-            return TerrainTiles.DWALL_V;
-        }
-*/
-        if (isHWall(pixels)) {
-            return TerrainTiles.WALL_H;
-        }
-        if (isVWall(pixels)) {
-            return TerrainTiles.WALL_V;
-        }
+        if (isDoubleHWall(pixels)) return TerrainTiles.DWALL_H;
+        if (isDoubleVWall(pixels)) return TerrainTiles.DWALL_V;
+        //if (isDoubleNWCorner(pixels)) return TerrainTiles.DCORNER_NW;
+        //if (isDoubleNECorner(pixels)) return TerrainTiles.DCORNER_NE;
+        //if (isDoubleSWCorner(pixels)) return TerrainTiles.DCORNER_SW;
+        //if (isDoubleSECorner(pixels)) return TerrainTiles.DCORNER_SE;
+        if (isHWall(pixels)) return TerrainTiles.WALL_H;
+        if (isVWall(pixels)) return TerrainTiles.WALL_V;
+        if (isNWCorner(pixels)) return TerrainTiles.CORNER_NW;
+        if (isSWCorner(pixels)) return TerrainTiles.CORNER_SW;
+        if (isNECorner(pixels)) return TerrainTiles.CORNER_NE;
+        if (isSECorner(pixels)) return TerrainTiles.CORNER_SE;
         return TerrainTiles.EMPTY;
     }
 
-    private IntStream all() { return IntStream.range(0, 64); }
+    private IntStream allIndices() { return IntStream.range(0, 64); }
 
     private IntStream row(int[] pixels, int rowIndex) {
-        return all().filter(i -> i / TS == rowIndex).map(i -> pixels[i]);
+        return allIndices().filter(i -> i / TS == rowIndex).map(i -> pixels[i]);
     }
 
     private IntStream col(int[] pixels, int columnIndex) {
-        return all().filter(i -> i % TS == columnIndex).map(i -> pixels[i]);
+        return allIndices().filter(i -> i % TS == columnIndex).map(i -> pixels[i]);
     }
 
     private IntStream set(int[] pixels, int... indices) {
@@ -111,22 +97,41 @@ public class TileMatcher {
     }
 
     private boolean isDoubleVWall(int[] pixels) {
-        return col(pixels, 0).allMatch(pixelScheme::isStroke) && col(pixels, 3).allMatch(pixelScheme::isStroke);
+        return
+            col(pixels, 0).allMatch(pixelScheme::isStroke) && col(pixels, 3).allMatch(pixelScheme::isStroke) ||
+            col(pixels, 4).allMatch(pixelScheme::isStroke) && col(pixels, 7).allMatch(pixelScheme::isStroke);
     }
 
     private boolean isNWCorner(int[] pixels) {
         return set(pixels, 60, 52, 45, 38).allMatch(pixelScheme::isStroke) || set(pixels, 51, 43, 36, 29).allMatch(pixelScheme::isStroke);
     }
 
+    private boolean isDoubleNWCorner(int[] pixels) {
+        return set(pixels, 10, 11, 17, 25, 36).allMatch(pixelScheme::isStroke);
+    }
+
     private boolean isSWCorner(int[] pixels) {
         return set(pixels, 4, 12, 21, 30).allMatch(pixelScheme::isStroke) || set(pixels, 11, 19, 28, 37).allMatch(pixelScheme::isStroke);
+    }
+
+    private boolean isDoubleSWCorner(int[] pixels) {
+        return set(pixels, 33, 41, 50, 51, 28).allMatch(pixelScheme::isStroke);
     }
 
     private boolean isNECorner(int[] pixels) {
         return set(pixels, 33, 42, 51, 59).allMatch(pixelScheme::isStroke) || set(pixels, 26, 35, 44, 52).allMatch(pixelScheme::isStroke);
     }
 
+    private boolean isDoubleNECorner(int[] pixels) {
+        return set(pixels, 12, 13, 22, 30, 35).allMatch(pixelScheme::isStroke) ||
+               set(pixels, 32, 33, 42, 51, 59).allMatch(pixelScheme::isStroke);
+    }
+
     private boolean isSECorner(int[] pixels) {
         return set(pixels, 3, 11, 18, 25).allMatch(pixelScheme::isStroke) || set(pixels, 34, 27, 20, 12).allMatch(pixelScheme::isStroke);
+    }
+
+    private boolean isDoubleSECorner(int[] pixels) {
+        return false;
     }
 }
