@@ -27,8 +27,6 @@ public class TileMatcher {
         public boolean isFood(int pixel) { return pixel == foodColor; }
     }
 
-    private static final int TRANSPARENT_PIXEL = 0;
-
     private static int toArgb(Color color) {
         int a = (int) (color.getOpacity() * 255);
         int r = (int) (color.getRed() * 255);
@@ -49,7 +47,7 @@ public class TileMatcher {
             if (pixel == pixelScheme.foodColor) ++numFoodPixels;
         }
         if (numFoodPixels > 50) return FoodTiles.ENERGIZER;
-        if (pixels(pixels, 27, 28, 35, 36).allMatch(pixelScheme::isFood)) return FoodTiles.PELLET;
+        if (set(pixels, 27, 28, 35, 36).allMatch(pixelScheme::isFood)) return FoodTiles.PELLET;
         return FoodTiles.EMPTY;
     }
 
@@ -86,63 +84,49 @@ public class TileMatcher {
 
     private IntStream all() { return IntStream.range(0, 64); }
 
-    private IntStream pixelsAtRow(int[] pixels, int row) {
-        return all().filter(i -> i / TS == row).map(i -> pixels[i]);
+    private IntStream row(int[] pixels, int rowIndex) {
+        return all().filter(i -> i / TS == rowIndex).map(i -> pixels[i]);
     }
 
-    private IntStream pixelsAtColumn(int[] pixels, int column) {
-        return all().filter(i -> i % TS == column).map(i -> pixels[i]);
+    private IntStream col(int[] pixels, int columnIndex) {
+        return all().filter(i -> i % TS == columnIndex).map(i -> pixels[i]);
     }
 
-    private IntStream pixels(int[] pixels, int... indices) {
+    private IntStream set(int[] pixels, int... indices) {
         return IntStream.of(indices).map(i -> pixels[i]);
     }
 
-    private boolean isEmptyTile(int[] pixels) {
-        return IntStream.of(pixels).allMatch(pixelScheme::isBackground);
-    }
-
     private boolean isHWall(int[] pixels) {
-        return  pixelsAtRow(pixels, 3).allMatch(pixelScheme::isStroke) ||
-                pixelsAtRow(pixels, 4).allMatch(pixelScheme::isStroke);
+        return row(pixels, 3).allMatch(pixelScheme::isStroke) || row(pixels, 4).allMatch(pixelScheme::isStroke);
     }
 
     private boolean isDoubleHWall(int[] pixels) {
-        return  pixelsAtRow(pixels, 0).allMatch(pixelScheme::isStroke) &&
-                pixelsAtRow(pixels, 3).allMatch(pixelScheme::isStroke)
-                ||
-                pixelsAtRow(pixels, 4).allMatch(pixelScheme::isStroke) &&
-                pixelsAtRow(pixels, 7).allMatch(pixelScheme::isStroke);
-
+        return
+            row(pixels, 0).allMatch(pixelScheme::isStroke) && row(pixels, 3).allMatch(pixelScheme::isStroke) ||
+            row(pixels, 4).allMatch(pixelScheme::isStroke) && row(pixels, 7).allMatch(pixelScheme::isStroke);
     }
 
     private boolean isVWall(int[] pixels) {
-        return  pixelsAtColumn(pixels, 3).allMatch(pixelScheme::isStroke) ||
-                pixelsAtColumn(pixels, 4).allMatch(pixelScheme::isStroke);
+        return col(pixels, 3).allMatch(pixelScheme::isStroke) || col(pixels, 4).allMatch(pixelScheme::isStroke);
     }
 
     private boolean isDoubleVWall(int[] pixels) {
-        return  pixelsAtColumn(pixels, 0).allMatch(pixelScheme::isStroke) &&
-                pixelsAtColumn(pixels, 3).allMatch(pixelScheme::isStroke);
+        return col(pixels, 0).allMatch(pixelScheme::isStroke) && col(pixels, 3).allMatch(pixelScheme::isStroke);
     }
 
     private boolean isNWCorner(int[] pixels) {
-        return pixels(pixels, 60, 52, 45, 38).allMatch(pixelScheme::isStroke)
-                || pixels(pixels, 51, 43, 36, 29).allMatch(pixelScheme::isStroke);
+        return set(pixels, 60, 52, 45, 38).allMatch(pixelScheme::isStroke) || set(pixels, 51, 43, 36, 29).allMatch(pixelScheme::isStroke);
     }
 
     private boolean isSWCorner(int[] pixels) {
-        return pixels(pixels, 4, 12, 21, 30).allMatch(pixelScheme::isStroke)
-                || pixels(pixels, 11, 19, 28, 37).allMatch(pixelScheme::isStroke);
+        return set(pixels, 4, 12, 21, 30).allMatch(pixelScheme::isStroke) || set(pixels, 11, 19, 28, 37).allMatch(pixelScheme::isStroke);
     }
 
     private boolean isNECorner(int[] pixels) {
-        return pixels(pixels, 33, 42, 51, 59).allMatch(pixelScheme::isStroke)
-                || pixels(pixels, 26, 35, 44, 52).allMatch(pixelScheme::isStroke);
+        return set(pixels, 33, 42, 51, 59).allMatch(pixelScheme::isStroke) || set(pixels, 26, 35, 44, 52).allMatch(pixelScheme::isStroke);
     }
 
     private boolean isSECorner(int[] pixels) {
-        return pixels(pixels, 3, 11, 18, 25).allMatch(pixelScheme::isStroke)
-                || pixels(pixels, 34, 27, 20, 12).allMatch(pixelScheme::isStroke);
+        return set(pixels, 3, 11, 18, 25).allMatch(pixelScheme::isStroke) || set(pixels, 34, 27, 20, 12).allMatch(pixelScheme::isStroke);
     }
 }
