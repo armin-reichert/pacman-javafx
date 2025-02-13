@@ -39,8 +39,8 @@ public class TileMatcher {
 
     private final PixelScheme pixelScheme;
 
-    public TileMatcher(PixelScheme terrainColorScheme) {
-        this.pixelScheme = terrainColorScheme;
+    public TileMatcher(PixelScheme pixelScheme) {
+        this.pixelScheme = pixelScheme;
     }
 
     public byte identifyFoodTile(int[] pixels) {
@@ -54,9 +54,6 @@ public class TileMatcher {
     }
 
     public byte identifyTerrainTile(int[] pixels) {
-        if (isEmptyTile(pixels)) {
-            return TerrainTiles.EMPTY;
-        }
         if (isNWCorner(pixels)) {
             return TerrainTiles.CORNER_NW;
         }
@@ -69,7 +66,6 @@ public class TileMatcher {
         if (isSECorner(pixels)) {
             return TerrainTiles.CORNER_SE;
         }
-
 /*
         // check double before single wall
         if (isDoubleHWall(pixels)) {
@@ -79,7 +75,6 @@ public class TileMatcher {
             return TerrainTiles.DWALL_V;
         }
 */
-
         if (isHWall(pixels)) {
             return TerrainTiles.WALL_H;
         }
