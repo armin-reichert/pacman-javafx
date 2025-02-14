@@ -21,7 +21,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -238,7 +237,7 @@ public class TileMapEditor {
     private TabPane tabPaneEditorViews;
     private Tab tabEditCanvas;
     private Tab tabTemplateImage;
-    private ImageView templateImageView;
+    private Canvas templateImageView;
     private ContextMenu templateImageContextMenu;
     private TabPane tabPanePreviews;
     private Tab tabPreview2D;
@@ -475,15 +474,20 @@ public class TileMapEditor {
     }
 
     private void createTemplateImageView() {
-        templateImageView = new ImageView();
-        templateImageView.setSmooth(false);
-        templateImageView.setPreserveRatio(true);
-        templateImageView.imageProperty().bind(templateImagePy);
-        templateImageView.fitHeightProperty().bind(Bindings.createDoubleBinding(
+        templateImageView = new Canvas();
+        templateImageView.widthProperty().bind(Bindings.createDoubleBinding(
             () -> {
-                if (templateImagePy.get() == null) return 0.0;
-                return preview2D.heightProperty().get();
-            }, preview2D.heightProperty(), templateImagePy));
+                Image templateImage = templateImagePy.get();
+                double scaling = gridSize() / (double)TS;
+                return templateImage != null ? templateImage.getWidth() * scaling : 0;
+            }, gridSizePy, templateImagePy));
+
+        templateImageView.heightProperty().bind(Bindings.createDoubleBinding(
+            () -> {
+                Image templateImage = templateImagePy.get();
+                double scaling = gridSize() / (double)TS;
+                return templateImage != null ? templateImage.getHeight() * scaling : 0;
+            }, gridSizePy, templateImagePy));
 
         templateImageView.setOnContextMenuRequested(e -> {
             if (templateImageContextMenu != null) {
@@ -552,8 +556,8 @@ public class TileMapEditor {
         mazePreview3D.updateFood();
     }
 
-    private Color pickColor(ImageView imageView, double x, double y) {
-        Image image = imageView.getImage();
+    private Color pickColor(Canvas imageView, double x, double y) {
+        Image image = templateImagePy.get();
         double pickX = x * (image.getWidth() / imageView.getBoundsInLocal().getWidth());
         double pickY = y * (image.getHeight() / imageView.getBoundsInLocal().getHeight());
         return image.getPixelReader().getColor((int) pickX, (int) pickY);
@@ -817,10 +821,19 @@ public class TileMapEditor {
             } catch (Exception x) {
                 Logger.error(x);
             }
-            try {
-                drawEditCanvas(colors);
-            } catch (Exception x) {
-                Logger.error(x);
+            if (tabEditCanvas.isSelected()) {
+                try {
+                    drawEditCanvas(colors);
+                } catch (Exception x) {
+                    Logger.error(x);
+                }
+            }
+            if (tabTemplateImage.isSelected()) {
+                try {
+                    drawTemplateImageView();
+                } catch (Exception x) {
+                    Logger.error(x);
+                }
             }
             try {
                 drawPreviewCanvas(colors);
@@ -1188,6 +1201,27 @@ public class TileMapEditor {
             g.setStroke(Color.YELLOW);
             g.setLineWidth(1);
             g.strokeRect(focussedTile().x() * gs, focussedTile().y() * gs, gs, gs);
+        }
+    }
+
+    private void drawTemplateImageView() {
+        GraphicsContext g = templateImageView.getGraphicsContext2D();
+        g.setFill(Color.BLACK);
+        g.fillRect(0, 0, templateImageView.getWidth(), templateImageView.getHeight());
+        Image image = templateImagePy.get();
+        if (image != null) {
+            double scaling = (double) gridSize() / TS;
+            double width = scaling * image.getWidth(), height = scaling * image.getHeight();
+            g.setImageSmoothing(false);
+            g.drawImage(image, 0, 0, width, height);
+            g.setStroke(Color.LIGHTGREEN);
+            g.setLineWidth(0.25);
+            for (int r = 1; r < height / TS; ++r) {
+                g.strokeLine(0, scaling * r * TS, width, scaling * r * TS);
+            }
+            for (int c = 1; c < width / TS; ++c) {
+                g.strokeLine(scaling * c * TS, 0, scaling * c * TS, height);
+            }
         }
     }
 
@@ -1782,8 +1816,8 @@ public class TileMapEditor {
                         worldMap().food().set(mapTile, foodValue);
                     }
                     else {
-                        //byte terrainValue = matcher.identifyTerrainTile(pixelsOfTile);
-                        //worldMap().terrain().set(mapTile, terrainValue);
+                        byte terrainValue = matcher.identifyTerrainTile(pixelsOfTile);
+                        worldMap().terrain().set(mapTile, terrainValue);
                     }
                 } catch (IndexOutOfBoundsException e) {
                     Logger.error("Could not get pixels for tile {}, maybe image has been cropped incorrectly?", mapTile);
