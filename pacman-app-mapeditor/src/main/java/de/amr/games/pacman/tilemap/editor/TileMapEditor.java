@@ -488,45 +488,7 @@ public class TileMapEditor {
                 return templateImage != null ? templateImage.getHeight() * scaling : 0;
             }, gridSizePy, templateImagePy));
 
-        templateImageView.setOnContextMenuRequested(e -> {
-            if (templateImageContextMenu != null) {
-                templateImageContextMenu.hide();
-            }
-            templateImageContextMenu = new ContextMenu();
-
-            Color color = pickColor(templateImageView, e.getX(), e.getY());
-
-            var colorPreview = new HBox();
-            colorPreview.setMinWidth(32);
-            colorPreview.setMinHeight(16);
-            colorPreview.setBackground(Background.fill(color));
-
-            var colorValue = new Text(formatColorHex(color));
-            colorValue.setFont(Font.font("Monospace", FontWeight.BOLD, 14.0));
-            colorValue.setFill(Color.BLACK);
-            colorValue.setDisable(true);
-
-            var colorPreviewBox = new HBox(colorPreview, colorValue);
-            colorPreviewBox.setSpacing(3);
-
-            var miColorPreview = new CustomMenuItem(colorPreviewBox);
-            //TODO how to let item appear unselectable?
-
-            var miPickFillColor = new MenuItem(tt("menu.pick_color.set_fill_color"));
-            miPickFillColor.setOnAction(ae -> setTerrainMapProperty(PROPERTY_COLOR_WALL_FILL, formatColor(color)));
-
-            var miPickStrokeColor = new MenuItem(tt("menu.pick_color.set_stroke_color"));
-            miPickStrokeColor.setOnAction(ae -> setTerrainMapProperty(PROPERTY_COLOR_WALL_STROKE, formatColor(color)));
-
-            var miPickDoorColor = new MenuItem(tt("menu.pick_color.set_door_color"));
-            miPickDoorColor.setOnAction(ae -> setTerrainMapProperty(PROPERTY_COLOR_DOOR, formatColor(color)));
-
-            var miPickFoodColor = new MenuItem(tt("menu.pick_color.set_food_color"));
-            miPickFoodColor.setOnAction(ae -> setFoodMapProperty(PROPERTY_COLOR_FOOD, formatColor(color)));
-
-            templateImageContextMenu.getItems().addAll(miColorPreview, miPickFillColor, miPickStrokeColor, miPickDoorColor, miPickFoodColor);
-            templateImageContextMenu.show(templateImageView, e.getScreenX(), e.getScreenY());
-        });
+        templateImageView.setOnContextMenuRequested(this::showTemplateImageContextMenu);
 
         templateImageView.setOnMouseClicked(e -> {
             if (templateImageContextMenu != null) {
@@ -541,11 +503,81 @@ public class TileMapEditor {
         spTemplateImage = new ScrollPane(pane);
     }
 
+    private void showTemplateImageContextMenu(ContextMenuEvent e) {
+        if (templateImageContextMenu != null) {
+            templateImageContextMenu.hide();
+        }
+        templateImageContextMenu = new ContextMenu();
+
+        Color colorAtMousePosition = pickColor(templateImageView, e.getX(), e.getY());
+        if (colorAtMousePosition.equals(Color.TRANSPARENT)) {
+            return;
+        }
+
+        var miColorPreview = createColorMenuItem(colorAtMousePosition, null);
+
+        Color fillColor = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_WALL_FILL, null);
+        var miPickFillColor = createColorMenuItem(fillColor, tt("menu.pick_color.set_fill_color"));
+        miPickFillColor.setOnAction(ae -> setTerrainMapProperty(PROPERTY_COLOR_WALL_FILL, formatColor(colorAtMousePosition)));
+
+        Color strokeColor =  getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_WALL_STROKE, null);
+        var miPickStrokeColor = createColorMenuItem(strokeColor, tt("menu.pick_color.set_stroke_color"));
+        miPickStrokeColor.setOnAction(ae -> setTerrainMapProperty(PROPERTY_COLOR_WALL_STROKE, formatColor(colorAtMousePosition)));
+
+        Color doorColor =  getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_DOOR, null);
+        var miPickDoorColor = createColorMenuItem(doorColor, tt("menu.pick_color.set_door_color"));
+        miPickDoorColor.setOnAction(ae -> setTerrainMapProperty(PROPERTY_COLOR_DOOR, formatColor(colorAtMousePosition)));
+
+        Color foodColor =  getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, null);
+        var miPickFoodColor = createColorMenuItem(foodColor, tt("menu.pick_color.set_food_color"));
+        miPickFoodColor.setOnAction(ae -> setFoodMapProperty(PROPERTY_COLOR_FOOD, formatColor(colorAtMousePosition)));
+
+        templateImageContextMenu.getItems().addAll(
+                miColorPreview,
+                new SeparatorMenuItem(),
+                miPickFillColor,
+                miPickStrokeColor,
+                miPickDoorColor,
+                miPickFoodColor
+        );
+        templateImageContextMenu.show(templateImageView, e.getScreenX(), e.getScreenY());
+    }
+
+    private CustomMenuItem createColorMenuItem(Color color, String itemText) {
+        var colorBox = new HBox();
+        colorBox.setMinWidth(32);
+        colorBox.setMinHeight(16);
+        if (color != null) {
+            colorBox.setBackground(Background.fill(color));
+            colorBox.setBorder(Border.stroke(Color.BLACK));
+            Text text = new Text(formatColorHex(color));
+            text.setFont(Font.font("Monospace", FontWeight.BOLD, 14.0));
+            text.setFill(Color.BLACK);
+            colorBox.getChildren().add(text);
+        } else {
+            colorBox.getChildren().add(new Text("Use as"));
+        }
+
+        var content = itemText != null ? new HBox(colorBox, new Text(itemText))  : new HBox(colorBox);
+        content.setSpacing(3);
+
+        return new CustomMenuItem(content);
+    }
+
     private void setTerrainMapProperty(String name, String value) {
         worldMap().terrain().setProperty(name, value);
         //TODO find better solution
         terrainPropertiesEditor().rebuildPropertyEditors();
         mazePreview3D.updateTerrain();
+        updateSourceView();
+    }
+
+    private void removeTerrainMapProperty(String name) {
+        worldMap().terrain().removeProperty(name);
+        //TODO find better solution
+        terrainPropertiesEditor().rebuildPropertyEditors();
+        mazePreview3D.updateTerrain();
+        updateSourceView();
     }
 
     private void setFoodMapProperty(String name, String value) {
@@ -553,6 +585,15 @@ public class TileMapEditor {
         //TODO find better solution
         foodPropertiesEditor().rebuildPropertyEditors();
         mazePreview3D.updateFood();
+        updateSourceView();
+    }
+
+    private void removeFoodMapProperty(String name) {
+        worldMap().food().removeProperty(name);
+        //TODO find better solution
+        terrainPropertiesEditor().rebuildPropertyEditors();
+        mazePreview3D.updateTerrain();
+        updateSourceView();
     }
 
     private Color pickColor(Canvas imageView, double x, double y) {
@@ -617,6 +658,10 @@ public class TileMapEditor {
                     e.acceptTransferModes(TransferMode.COPY);
                     try (FileInputStream in = new FileInputStream(file)) {
                         templateImagePy.set(new Image(in));
+                        removeTerrainMapProperty(PROPERTY_COLOR_WALL_FILL);
+                        removeTerrainMapProperty(PROPERTY_COLOR_WALL_STROKE);
+                        removeTerrainMapProperty(PROPERTY_COLOR_DOOR);
+                        removeFoodMapProperty(PROPERTY_COLOR_FOOD);
                         showMessage("Select colors for tile identification!", 3, MessageType.INFO);
                     } catch (IOException x) {
                         Logger.error(x);
