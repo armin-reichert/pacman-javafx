@@ -59,6 +59,11 @@ public class TileMatcher {
         //if (isDoubleNECorner(pixels)) return TerrainTiles.DCORNER_NE;
         //if (isDoubleSWCorner(pixels)) return TerrainTiles.DCORNER_SW;
         //if (isDoubleSECorner(pixels)) return TerrainTiles.DCORNER_SE;
+        if (isAngularDoubleNWCorner(pixels)) return TerrainTiles.DCORNER_ANGULAR_NW;
+        if (isAngularDoubleSWCorner(pixels)) return TerrainTiles.DCORNER_ANGULAR_SW;
+        if (isAngularDoubleSECorner(pixels)) return TerrainTiles.DCORNER_ANGULAR_SE;
+        if (isAngularDoubleNECorner(pixels)) return TerrainTiles.DCORNER_ANGULAR_NE;
+        if (isDoor(pixels)) return TerrainTiles.DOOR;
         if (isHWall(pixels)) return TerrainTiles.WALL_H;
         if (isVWall(pixels)) return TerrainTiles.WALL_V;
         if (isNWCorner(pixels)) return TerrainTiles.CORNER_NW;
@@ -80,6 +85,10 @@ public class TileMatcher {
 
     private IntStream set(int[] pixels, int... indices) {
         return IntStream.of(indices).map(i -> pixels[i]);
+    }
+
+    private boolean isDoor(int[] pixels) {
+        return row(pixels, 5).allMatch(pixelScheme::isDoor) && row(pixels, 6).allMatch(pixelScheme::isDoor);
     }
 
     private boolean isHWall(int[] pixels) {
@@ -110,12 +119,20 @@ public class TileMatcher {
         return set(pixels, 10, 11, 17, 25, 36).allMatch(pixelScheme::isStroke);
     }
 
+    private boolean isAngularDoubleNWCorner(int[] pixels) {
+        return set(pixels, 36, 44, 52, 60, 37, 38, 39, 63).allMatch(pixelScheme::isStroke);
+    }
+
     private boolean isSWCorner(int[] pixels) {
         return set(pixels, 4, 12, 21, 30).allMatch(pixelScheme::isStroke) || set(pixels, 11, 19, 28, 37).allMatch(pixelScheme::isStroke);
     }
 
     private boolean isDoubleSWCorner(int[] pixels) {
         return set(pixels, 33, 41, 50, 51, 28).allMatch(pixelScheme::isStroke);
+    }
+
+    private boolean isAngularDoubleSWCorner(int[] pixels) {
+        return set(pixels, 4, 12, 20, 28, 29, 30, 31, 7).allMatch(pixelScheme::isStroke);
     }
 
     private boolean isNECorner(int[] pixels) {
@@ -127,8 +144,16 @@ public class TileMatcher {
                set(pixels, 32, 33, 42, 51, 59).allMatch(pixelScheme::isStroke);
     }
 
+    private boolean isAngularDoubleNECorner(int[] pixels) {
+        return set(pixels, 32, 33, 34, 35, 43, 51, 59, 56).allMatch(pixelScheme::isStroke);
+    }
+
     private boolean isSECorner(int[] pixels) {
         return set(pixels, 3, 11, 18, 25).allMatch(pixelScheme::isStroke) || set(pixels, 34, 27, 20, 12).allMatch(pixelScheme::isStroke);
+    }
+
+    private boolean isAngularDoubleSECorner(int[] pixels) {
+        return set(pixels, 3, 11, 19, 27, 26, 25, 24, 0).allMatch(pixelScheme::isStroke);
     }
 
     private boolean isDoubleSECorner(int[] pixels) {
