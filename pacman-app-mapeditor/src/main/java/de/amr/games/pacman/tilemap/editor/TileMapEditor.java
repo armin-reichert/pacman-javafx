@@ -1912,6 +1912,7 @@ public class TileMapEditor {
         return Direction.stream()
                 .map(dir -> tile.plus(dir.vector()))
                 .filter(neighbor -> !tileMap.outOfBounds(neighbor))
+                .filter(neighbor -> tileMap.get(neighbor) != TerrainTiles.EMPTY)
                 .filter(neighbor -> !TerrainTiles.isDoubleWall(tileMap.get(neighbor)))
                 .collect(Collectors.toSet());
     }
