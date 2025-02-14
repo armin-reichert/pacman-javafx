@@ -110,6 +110,8 @@ public class TileMapEditor {
             }
             invalidateTerrainData();
             updateSourceView();
+            mazePreview3D.updateTerrain();
+            mazePreview3D.updateFood();
         }
     };
 
