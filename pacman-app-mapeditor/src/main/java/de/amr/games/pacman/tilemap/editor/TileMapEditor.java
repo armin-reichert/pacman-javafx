@@ -21,12 +21,14 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
@@ -84,9 +86,10 @@ public class TileMapEditor {
 
     public static final Color CANVAS_BACKGROUND = Color.BLACK;
 
-    public static final Font FONT_STATUS_LINE = Font.font("Sans", FontWeight.BOLD, 14);
-    public static final Font FONT_MESSAGE     = Font.font("Sans", FontWeight.NORMAL, 14);
-    public static final Cursor RUBBER_CURSOR  = Cursor.cursor(urlString("graphics/radiergummi.jpg"));
+    public static final Font FONT_STATUS_LINE_NORMAL = Font.font("Sans", FontWeight.NORMAL, 14);
+    public static final Font FONT_STATUS_LINE_BOLD   = Font.font("Sans", FontWeight.BOLD, 14);
+    public static final Font FONT_MESSAGE = Font.font("Sans", FontWeight.NORMAL, 14);
+    public static final Cursor RUBBER_CURSOR = Cursor.cursor(urlString("graphics/radiergummi.jpg"));
 
     public static final FileChooser.ExtensionFilter FILTER_WORLD_MAP = new FileChooser.ExtensionFilter("World Map Files", "*.world");
     public static final FileChooser.ExtensionFilter FILTER_IMAGE = new FileChooser.ExtensionFilter("Image Files", "*.bmp", "*.gif", "*.jpg", "*.png");
@@ -228,11 +231,9 @@ public class TileMapEditor {
     private Pane dropTargetForTemplateImage;
     private SplitPane splitPaneEditorAndPreviews;
     private Label messageLabel;
-    private Label focussedTileStatusLabel;
-    private Label editModeStatusLabel;
-    private HBox sliderZoomContainer;
     private FileChooser fileChooser;
     private TabPane tabPaneWithPalettes;
+    private Slider sliderZoom;
     private HBox statusLine;
     private TabPane tabPaneEditorViews;
     private Tab tabEditCanvas;
@@ -285,8 +286,6 @@ public class TileMapEditor {
         createPropertyEditors();
         createTabPaneWithEditViews();
         createTabPaneWithPreviews();
-        createFocussedTileStatusLabel();
-        createEditModeStatusLabel();
         createMessageDisplay();
         createZoomSlider();
         createStatusLine();
@@ -696,28 +695,6 @@ public class TileMapEditor {
         contentPane.setLeft(visible ? propertyEditorsPane : null);
     }
 
-    private void createFocussedTileStatusLabel() {
-        focussedTileStatusLabel = new Label();
-        focussedTileStatusLabel.setFont(FONT_STATUS_LINE);
-        focussedTileStatusLabel.setMinWidth(70);
-        focussedTileStatusLabel.setMaxWidth(70);
-        focussedTileStatusLabel.textProperty().bind(focussedTilePy.map(
-            tile -> tile != null ? "(%2d,%2d)".formatted(tile.x(), tile.y()) : "n/a"));
-    }
-
-    private void createEditModeStatusLabel() {
-        editModeStatusLabel = new Label();
-        editModeStatusLabel.setFont(FONT_STATUS_LINE);
-        editModeStatusLabel.setTextFill(Color.LIGHTSEAGREEN);
-        editModeStatusLabel.textProperty().bind(Bindings.createStringBinding(
-            () -> switch (editModePy.get()) {
-                case INSPECT -> tt("mode.inspect");
-                case EDIT    -> isSymmetricEditMode() ?  tt("mode.symmetric") : tt("mode.edit");
-                case ERASE   -> tt("mode.erase");
-            }, editModePy, symmetricEditModePy
-        ));
-    }
-
     private void createMessageDisplay() {
         messageLabel = new Label();
         messageLabel.setFont(FONT_MESSAGE);
@@ -725,27 +702,60 @@ public class TileMapEditor {
     }
 
     private void createZoomSlider() {
-        var sliderZoom = new Slider(MIN_GRID_SIZE, MAX_GRID_SIZE, 0.5 * (MIN_GRID_SIZE + MAX_GRID_SIZE));
+        sliderZoom = new Slider(MIN_GRID_SIZE, MAX_GRID_SIZE, 0.5 * (MIN_GRID_SIZE + MAX_GRID_SIZE));
         sliderZoom.valueProperty().bindBidirectional(gridSizePy);
         sliderZoom.setShowTickLabels(false);
         sliderZoom.setShowTickMarks(true);
-        sliderZoom.setPrefWidth(150);
-
-        sliderZoomContainer = new HBox(new Label("Zoom"), sliderZoom);
-        sliderZoomContainer.setSpacing(5);
+        sliderZoom.setPrefWidth(100);
     }
 
     private void createStatusLine() {
-        var mapSizeInfo = new Text();
-        mapSizeInfo.setFont(FONT_STATUS_LINE);
-        mapSizeInfo.textProperty().bind(worldMapPy.map(worldMap -> (worldMap != null)
-            ? "%2d cols %2d rows".formatted(worldMap.terrain().numCols(), worldMap.terrain().numRows()) : "")
+        var lblMapSize = new Label();
+        lblMapSize.setFont(FONT_STATUS_LINE_NORMAL);
+        lblMapSize.textProperty().bind(worldMapPy.map(worldMap -> (worldMap != null)
+            ? "Cols: %d Rows: %d".formatted(worldMap.terrain().numCols(), worldMap.terrain().numRows()) : "")
         );
 
-        var spacer = new Region();
-        statusLine = new HBox(mapSizeInfo, filler(10), focussedTileStatusLabel, editModeStatusLabel, filler(20), messageLabel, spacer, sliderZoomContainer);
+        var lblFocussedTile = new Label();
+        lblFocussedTile.setFont(FONT_STATUS_LINE_NORMAL);
+        lblFocussedTile.setMinWidth(70);
+        lblFocussedTile.setMaxWidth(70);
+        lblFocussedTile.textProperty().bind(focussedTilePy.map(
+            tile -> tile != null ? "(%2d,%2d)".formatted(tile.x(), tile.y()) : "n/a"));
+
+        var lblEditMode = new Label();
+        lblEditMode.setMinWidth(80);
+        lblEditMode.setFont(FONT_STATUS_LINE_BOLD);
+        lblEditMode.setTextFill(Color.FORESTGREEN);
+        lblEditMode.setEffect(new Glow());
+        lblEditMode.textProperty().bind(Bindings.createStringBinding(
+            () -> switch (editModePy.get()) {
+                case INSPECT -> tt("mode.inspect");
+                case EDIT    -> isSymmetricEditMode() ?  tt("mode.symmetric") : tt("mode.edit");
+                case ERASE   -> tt("mode.erase");
+            }, editModePy, symmetricEditModePy
+        ));
+
+
+        var lblSliderZoom = new Label("Zoom:"); //TODO localize
+        lblSliderZoom.setFont((FONT_STATUS_LINE_NORMAL));
+        lblSliderZoom.setLabelFor(sliderZoom);
+        lblSliderZoom.setPadding(new Insets(0, 10, 0, 0));
+
+        statusLine = new HBox(
+            lblMapSize,
+            filler(10),
+            lblFocussedTile,
+            spacer(),
+            messageLabel,
+            spacer(),
+            lblSliderZoom,
+            sliderZoom,
+            filler(30),
+            lblEditMode
+        );
+
         statusLine.setPadding(new Insets(10, 10, 10, 10));
-        HBox.setHgrow(spacer, Priority.ALWAYS);
     }
 
     private void arrangeMainLayout() {

@@ -8,7 +8,10 @@ import de.amr.games.pacman.lib.tilemap.FoodTiles;
 import de.amr.games.pacman.lib.tilemap.TerrainTiles;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.tilemap.rendering.TileMapRenderer;
+import javafx.scene.Node;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
@@ -85,11 +88,17 @@ public interface TileMapEditorUtil {
         return defaultColor;
     }
 
-    static HBox filler(int pixels) {
+    static Node filler(int pixels) {
         var filler = new HBox();
         filler.setMinWidth(pixels);
         filler.setMaxWidth(pixels);
         return filler;
+    }
+
+    static Node spacer() {
+        var spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        return spacer;
     }
 
     static Palette createTerrainPalette(byte id, int toolSize, TileMapEditor editor, TileMapRenderer renderer) {
