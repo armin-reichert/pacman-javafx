@@ -275,7 +275,6 @@ public class TileMapEditor {
         createRenderers(colors, parseColor(MS_PACMAN_COLOR_FOOD));
 
         createFileChooser();
-        createMenuBarAndMenus();
         createEditCanvas();
         createPreview2D();
         createPreview3D();
@@ -289,6 +288,7 @@ public class TileMapEditor {
         createMessageDisplay();
         createZoomSlider();
         createStatusLine();
+        createMenuBarAndMenus();
 
         arrangeMainLayout();
         initActiveRendering();
@@ -668,7 +668,7 @@ public class TileMapEditor {
             setTileValue(worldMap().terrain(), tile, value);
             setTileValue(worldMap().food(), tile, FoodTiles.EMPTY);
         });
-        obstacleEditor.worldMapPy.bind(worldMapPy);
+        obstacleEditor.worldMapProperty().bind(worldMapPy);
     }
 
     private void createPropertyEditors() {
@@ -865,6 +865,9 @@ public class TileMapEditor {
         var miSymmetricMode = new CheckMenuItem(tt("menu.edit.symmetric"));
         miSymmetricMode.selectedProperty().bindBidirectional(symmetricEditModePy);
 
+        var miObstaclesDoubleStroke = new CheckMenuItem("Double stroke obstacles"); //TODO localize
+        miObstaclesDoubleStroke.selectedProperty().bindBidirectional(obstacleEditor.doubleStrokeProperty());
+
         var miAddBorder = new MenuItem(tt("menu.edit.add_border"));
         miAddBorder.setOnAction(e -> addBorderWall(worldMap().terrain(), 3, 2));
 
@@ -881,13 +884,14 @@ public class TileMapEditor {
         });
 
         var miDetectPellets = new MenuItem(tt("menu.edit.detect_pellets"));
-        //TODO why doens't this work?
+        //TODO why doesn't this work?
         //miDetectPellets.disableProperty().bind(templateImagePy.map(image -> image == null));
         miDetectPellets.disableProperty().bind(Bindings.createBooleanBinding(() -> templateImagePy.get() == null,  templateImagePy));
         miDetectPellets.setOnAction(ae -> detectTilesInTemplateImage());
 
         menuEdit = new Menu(tt("menu.edit"), NO_GRAPHIC,
             miSymmetricMode,
+            miObstaclesDoubleStroke,
             new SeparatorMenuItem(),
             miAddBorder,
             miClearTerrain,
