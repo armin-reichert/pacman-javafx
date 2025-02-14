@@ -864,6 +864,7 @@ public class TileMapEditor {
                 getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE)),
                 getColorFromMap(terrainMap, PROPERTY_COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR))
             );
+            ensureTerrainDataUpdated();
             try {
                 drawSelectedPalette(colors);
             } catch (Exception x) {
@@ -1292,7 +1293,6 @@ public class TileMapEditor {
         g.setFill(colors.backgroundColor());
         g.fillRect(0, 0, canvasPreview2D.getWidth(), canvasPreview2D.getHeight());
         if (terrainVisiblePy.get()) {
-            ensureTerrainDataUpdated();
             preview2DTerrainRenderer.setScaling(gridSize() / 8.0);
             preview2DTerrainRenderer.setColors(colors);
             preview2DTerrainRenderer.drawTerrain(g, worldMap().terrain(), worldMap().obstacles());
