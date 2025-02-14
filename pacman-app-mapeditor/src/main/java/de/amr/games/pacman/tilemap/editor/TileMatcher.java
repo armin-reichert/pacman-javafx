@@ -42,13 +42,23 @@ public class TileMatcher {
     }
 
     public byte identifyFoodTile(int[] pixels) {
+        if (isEnergizer(pixels)) return FoodTiles.ENERGIZER;
+        if (isPellet(pixels)) return FoodTiles.PELLET;
+        return FoodTiles.EMPTY;
+    }
+
+    private boolean isEnergizer(int[] pixels) {
         int numFoodPixels = 0;
         for (int pixel : pixels) {
             if (pixel == pixelScheme.foodColor) ++numFoodPixels;
         }
-        if (numFoodPixels > 50) return FoodTiles.ENERGIZER;
-        if (set(pixels, 27, 28, 35, 36).allMatch(pixelScheme::isFood)) return FoodTiles.PELLET;
-        return FoodTiles.EMPTY;
+        return numFoodPixels > 50;
+    }
+
+    private boolean isPellet(int[] pixels) {
+        return set(pixels, 27, 28, 35, 36).allMatch(pixelScheme::isFood)
+                && row(pixels, 0).allMatch(pixelScheme::isBackground)
+                && row(pixels, 1).allMatch(pixelScheme::isBackground);
     }
 
     public byte identifyTerrainTile(int[] pixels) {

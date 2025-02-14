@@ -51,6 +51,7 @@ import java.text.MessageFormat;
 import java.time.Instant;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -1762,6 +1763,7 @@ public class TileMapEditor {
         terrain.setProperty(PROPERTY_POS_ORANGE_GHOST,   formatTile(origin.plus(5, 2)));
         terrainPropertiesEditor().rebuildPropertyEditors();
         markTileMapEdited(worldMap.terrain());
+        terrainChanged = true; //TODO check
         markTileMapEdited(worldMap.food());
     }
 
@@ -1858,7 +1860,6 @@ public class TileMapEditor {
             return;
         }
 
-
         TileMatcher.PixelScheme pixelScheme = new TileMatcher.PixelScheme(Color.TRANSPARENT, fillColor, strokeColor, doorColor, foodColor);
         TileMatcher matcher = new TileMatcher(pixelScheme);
 
@@ -1890,7 +1891,38 @@ public class TileMapEditor {
                 }
             }
         }
+        fixMixedWalls(worldMap().terrain());
         markTileMapEdited(worldMap().terrain());
         markTileMapEdited(worldMap().food());
+    }
+
+    private void fixMixedWalls(TileMap terrainMap) {
+        Set<Vector2i> doubleWallTiles = terrainMap.tiles()
+            .filter(tile -> TerrainTiles.isDoubleWall(terrainMap.get(tile)))
+            .collect(Collectors.toSet());
+        for (Vector2i tile : doubleWallTiles) {
+            Set<Vector2i> neighbors = singleWallNeighbors(terrainMap, tile);
+            for (Vector2i neighbor : neighbors) {
+                terrainMap.set(neighbor, toDoubleWall(terrainMap.get(neighbor)));
+            }
+        }
+    }
+
+    private Set<Vector2i> singleWallNeighbors(TileMap tileMap, Vector2i tile) {
+        return Direction.stream()
+                .map(dir -> tile.plus(dir.vector()))
+                .filter(neighbor -> !tileMap.outOfBounds(neighbor))
+                .filter(neighbor -> !TerrainTiles.isDoubleWall(tileMap.get(neighbor)))
+                .collect(Collectors.toSet());
+    }
+
+    private byte toDoubleWall(byte content) {
+        return switch (content) {
+            case TerrainTiles.CORNER_NW -> TerrainTiles.DCORNER_NW;
+            case TerrainTiles.CORNER_SW -> TerrainTiles.DCORNER_SW;
+            case TerrainTiles.CORNER_SE -> TerrainTiles.DCORNER_SE;
+            case TerrainTiles.CORNER_NE -> TerrainTiles.DCORNER_NE;
+            default -> content;
+        };
     }
 }
