@@ -112,7 +112,7 @@ public class TileMapEditor {
         }
     };
 
-    private final IntegerProperty gridSizePy = new SimpleIntegerProperty(16) {
+    private final IntegerProperty gridSizePy = new SimpleIntegerProperty(8) {
         @Override
         protected void invalidated() {
             invalidateTerrainData();
@@ -222,7 +222,7 @@ public class TileMapEditor {
     private Canvas editCanvas;
     private ScrollPane spEditCanvas;
     private ScrollPane spPreview2D;
-    private Canvas preview2D;
+    private Canvas canvasPreview2D;
     private Text sourceView;
     private ScrollPane spSourceView;
     private ScrollPane spTemplateImage;
@@ -257,8 +257,8 @@ public class TileMapEditor {
     private ObstacleEditor obstacleEditor;
 
     private TerrainRendererInEditor editorTerrainRenderer;
-    private TerrainRenderer         previewTerrainRenderer;
-    private FoodMapRenderer         foodMapRenderer;
+    private TerrainRenderer preview2DTerrainRenderer;
+    private FoodMapRenderer preview3DFoodRenderer;
 
     public void createUI(Stage stage) {
         this.stage = assertNotNull(stage);
@@ -370,11 +370,11 @@ public class TileMapEditor {
     private void createRenderers(TerrainColorScheme terrainColorScheme, Color foodColor) {
         editorTerrainRenderer = new TerrainRendererInEditor();
         editorTerrainRenderer.setColors(terrainColorScheme);
-        previewTerrainRenderer = new TerrainRenderer();
-        previewTerrainRenderer.setColors(terrainColorScheme);
-        foodMapRenderer = new FoodMapRenderer();
-        foodMapRenderer.setPelletColor(foodColor);
-        foodMapRenderer.setEnergizerColor(foodColor);
+        preview2DTerrainRenderer = new TerrainRenderer();
+        preview2DTerrainRenderer.setColors(terrainColorScheme);
+        preview3DFoodRenderer = new FoodMapRenderer();
+        preview3DFoodRenderer.setPelletColor(foodColor);
+        preview3DFoodRenderer.setEnergizerColor(foodColor);
     }
 
     private void createFileChooser() {
@@ -456,10 +456,10 @@ public class TileMapEditor {
     }
 
     private void createPreview2D() {
-        preview2D = new Canvas();
-        preview2D.widthProperty().bind(editCanvas.widthProperty());
-        preview2D.heightProperty().bind(editCanvas.heightProperty());
-        spPreview2D = new ScrollPane(preview2D);
+        canvasPreview2D = new Canvas();
+        canvasPreview2D.widthProperty().bind(editCanvas.widthProperty());
+        canvasPreview2D.heightProperty().bind(editCanvas.heightProperty());
+        spPreview2D = new ScrollPane(canvasPreview2D);
         spPreview2D.setFitToHeight(true);
         spPreview2D.hvalueProperty().bindBidirectional(spEditCanvas.hvalueProperty());
         spPreview2D.vvalueProperty().bindBidirectional(spEditCanvas.vvalueProperty());
@@ -617,6 +617,7 @@ public class TileMapEditor {
                     e.acceptTransferModes(TransferMode.COPY);
                     try (FileInputStream in = new FileInputStream(file)) {
                         templateImagePy.set(new Image(in));
+                        showMessage("Select colors for tile identification!", 3, MessageType.INFO);
                     } catch (IOException x) {
                         Logger.error(x);
                     }
@@ -646,7 +647,7 @@ public class TileMapEditor {
     private void createPalettes() {
         palettes[PALETTE_ID_ACTORS]  = createActorPalette(PALETTE_ID_ACTORS, TOOL_SIZE, this, editorTerrainRenderer);
         palettes[PALETTE_ID_TERRAIN] = createTerrainPalette(PALETTE_ID_TERRAIN, TOOL_SIZE, this, editorTerrainRenderer);
-        palettes[PALETTE_ID_FOOD]    = createFoodPalette(PALETTE_ID_FOOD, TOOL_SIZE, this, foodMapRenderer);
+        palettes[PALETTE_ID_FOOD]    = createFoodPalette(PALETTE_ID_FOOD, TOOL_SIZE, this, preview3DFoodRenderer);
 
         var tabTerrain = new Tab(tt("terrain"), palettes[PALETTE_ID_TERRAIN].root());
         tabTerrain.setClosable(false);
@@ -834,10 +835,12 @@ public class TileMapEditor {
                     Logger.error(x);
                 }
             }
-            try {
-                drawPreviewCanvas(colors);
-            } catch (Exception x) {
-                Logger.error(x);
+            if (tabPreview2D.isSelected()) {
+                try {
+                    drawPreview2D(colors);
+                } catch (Exception x) {
+                    Logger.error(x);
+                }
             }
         }));
         clock.setCycleCount(Animation.INDEFINITE);
@@ -1188,10 +1191,10 @@ public class TileMapEditor {
         // Food
         if (foodVisiblePy.get()) {
             Color foodColor = getColorFromMap(food, PROPERTY_COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
-            foodMapRenderer.setScaling(scaling);
-            foodMapRenderer.setEnergizerColor(foodColor);
-            foodMapRenderer.setPelletColor(foodColor);
-            foodMapRenderer.drawFood(g, food);
+            preview3DFoodRenderer.setScaling(scaling);
+            preview3DFoodRenderer.setEnergizerColor(foodColor);
+            preview3DFoodRenderer.setPelletColor(foodColor);
+            preview3DFoodRenderer.drawFood(g, food);
         }
 
         drawActorSprites(g);
@@ -1235,24 +1238,23 @@ public class TileMapEditor {
         drawSprite(g, PROPERTY_POS_BONUS, BONUS_SPRITE);
     }
 
-    private void drawPreviewCanvas(TerrainColorScheme colors) {
-        GraphicsContext g = preview2D.getGraphicsContext2D();
+    private void drawPreview2D(TerrainColorScheme colors) {
+        GraphicsContext g = canvasPreview2D.getGraphicsContext2D();
         g.setImageSmoothing(false);
         g.setFill(colors.backgroundColor());
-        g.fillRect(0, 0, preview2D.getWidth(), preview2D.getHeight());
+        g.fillRect(0, 0, canvasPreview2D.getWidth(), canvasPreview2D.getHeight());
         if (terrainVisiblePy.get()) {
-            TileMap terrainMap = worldMap().terrain();
             ensureTerrainDataUpdated();
-            previewTerrainRenderer.setScaling(gridSize() / 8.0);
-            previewTerrainRenderer.setColors(colors);
-            previewTerrainRenderer.drawTerrain(g, terrainMap, worldMap().obstacles());
+            preview2DTerrainRenderer.setScaling(gridSize() / 8.0);
+            preview2DTerrainRenderer.setColors(colors);
+            preview2DTerrainRenderer.drawTerrain(g, worldMap().terrain(), worldMap().obstacles());
         }
         if (foodVisiblePy.get()) {
-            foodMapRenderer.setScaling(gridSize() / 8.0);
             Color foodColor = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
-            foodMapRenderer.setEnergizerColor(foodColor);
-            foodMapRenderer.setPelletColor(foodColor);
-            foodMapRenderer.drawFood(g, worldMap().food());
+            preview3DFoodRenderer.setScaling(gridSize() / 8.0);
+            preview3DFoodRenderer.setEnergizerColor(foodColor);
+            preview3DFoodRenderer.setPelletColor(foodColor);
+            preview3DFoodRenderer.drawFood(g, worldMap().food());
         }
         drawActorSprites(g);
     }
