@@ -27,7 +27,10 @@ import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.image.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -43,7 +46,6 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.Buffer;
 import java.nio.IntBuffer;
 import java.text.MessageFormat;
 import java.time.Instant;
@@ -709,11 +711,10 @@ public class TileMapEditor {
         editModeStatusLabel.setTextFill(Color.LIGHTSEAGREEN);
         editModeStatusLabel.textProperty().bind(Bindings.createStringBinding(
             () -> switch (editModePy.get()) {
-                    case INSPECT -> "INSPECT";
-                    case EDIT -> isSymmetricEditMode() ?  "SYMMETRIC" : "NORMAL";
-                    case ERASE -> "ERASE";
-            },
-            editModePy, symmetricEditModePy
+                case INSPECT -> tt("mode.inspect");
+                case EDIT    -> isSymmetricEditMode() ?  tt("mode.symmetric") : tt("mode.edit");
+                case ERASE   -> tt("mode.erase");
+            }, editModePy, symmetricEditModePy
         ));
     }
 
@@ -1095,18 +1096,6 @@ public class TileMapEditor {
     // Drawing
     //
 
-    private void drawEditingHint(GraphicsContext g) {
-        double x = 16;
-        double y = 24;
-        String text = tt("click_to_start");
-        g.setFont(Font.font("Sans", FontWeight.BLACK, 18));
-        g.setStroke(Color.LIGHTGREEN);
-        g.setLineWidth(3);
-        g.strokeText(text, x, y);
-        g.setFill(Color.DARKGREEN);
-        g.fillText(text, x, y);
-    }
-
     private void drawEditCanvas(TerrainColorScheme colors) {
         final WorldMap map = worldMap();
         final TileMap terrain = map.terrain(), food = map.food();
@@ -1180,10 +1169,6 @@ public class TileMapEditor {
         }
 
         drawActorSprites(g);
-
-        if (isEditMode(EditMode.INSPECT)) {
-            drawEditingHint(g);
-        }
 
         if (focussedTile() != null) {
             g.setStroke(Color.YELLOW);
@@ -1424,7 +1409,7 @@ public class TileMapEditor {
         String key = e.getCharacter();
         switch (key) {
             case "i" -> setEditMode(EditMode.INSPECT);
-            case "n" -> {
+            case "e" -> {
                 setEditMode(EditMode.EDIT);
                 symmetricEditModePy.set(false);
             }
