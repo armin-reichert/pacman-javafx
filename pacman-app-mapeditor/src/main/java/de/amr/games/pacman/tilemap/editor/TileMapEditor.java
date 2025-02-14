@@ -29,7 +29,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.input.*;
@@ -69,7 +68,7 @@ public class TileMapEditor {
 
     public static final short TOOL_SIZE = 32;
     public static final short MIN_GRID_SIZE = 8;
-    public static final short MAX_GRID_SIZE = 64;
+    public static final short MAX_GRID_SIZE = 80;
 
     public static final byte PALETTE_ID_ACTORS  = 0;
     public static final byte PALETTE_ID_TERRAIN = 1;
@@ -438,10 +437,10 @@ public class TileMapEditor {
             }
         });
 
-        var miDetectPellets = new MenuItem(tt("menu.edit.detect_pellets"));
+        var miDetectPellets = new MenuItem(tt("menu.edit.identify_tiles"));
         //miDetectPellets.disableProperty().bind(templateImagePy.map(Objects::isNull));
         miDetectPellets.disableProperty().bind(Bindings.createBooleanBinding(() -> templateImagePy.get() == null, templateImagePy));
-        miDetectPellets.setOnAction(ae -> detectTilesInTemplateImage());
+        miDetectPellets.setOnAction(ae -> identifyTilesFromTemplateImage());
 
         contextMenu.getItems().setAll(
             miInsertRow,
@@ -896,11 +895,11 @@ public class TileMapEditor {
             markTileMapEdited(worldMap().food());
         });
 
-        var miDetectPellets = new MenuItem(tt("menu.edit.detect_pellets"));
+        var miDetectPellets = new MenuItem(tt("menu.edit.identify_tiles"));
         //TODO why doesn't this work?
         //miDetectPellets.disableProperty().bind(templateImagePy.map(image -> image == null));
         miDetectPellets.disableProperty().bind(Bindings.createBooleanBinding(() -> templateImagePy.get() == null,  templateImagePy));
-        miDetectPellets.setOnAction(ae -> detectTilesInTemplateImage());
+        miDetectPellets.setOnAction(ae -> identifyTilesFromTemplateImage());
 
         menuEdit = new Menu(tt("menu.edit"), NO_GRAPHIC,
             miSymmetricMode,
@@ -1214,13 +1213,15 @@ public class TileMapEditor {
             double width = scaling * image.getWidth(), height = scaling * image.getHeight();
             g.setImageSmoothing(false);
             g.drawImage(image, 0, 0, width, height);
-            g.setStroke(Color.LIGHTGREEN);
-            g.setLineWidth(0.25);
-            for (int r = 1; r < height / TS; ++r) {
-                g.strokeLine(0, scaling * r * TS, width, scaling * r * TS);
-            }
-            for (int c = 1; c < width / TS; ++c) {
-                g.strokeLine(scaling * c * TS, 0, scaling * c * TS, height);
+            if (gridVisiblePy.get()) {
+                g.setStroke(Color.GRAY);
+                g.setLineWidth(0.5);
+                for (int r = 1; r < height / TS; ++r) {
+                    g.strokeLine(0, scaling * r * TS, width, scaling * r * TS);
+                }
+                for (int c = 1; c < width / TS; ++c) {
+                    g.strokeLine(scaling * c * TS, 0, scaling * c * TS, height);
+                }
             }
         }
     }
@@ -1787,15 +1788,30 @@ public class TileMapEditor {
         }
     }
 
-    private void detectTilesInTemplateImage() {
+    private void identifyTilesFromTemplateImage() {
         Image templateImage = templateImagePy.get();
         if (templateImage == null) {
             return;
         }
-        Color fillColor   = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_WALL_FILL, Color.WHITE);
-        Color strokeColor = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_WALL_STROKE, Color.WHITE);
-        Color doorColor   = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_DOOR, Color.WHITE);
-        Color foodColor   = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, Color.WHITE);
+        Color fillColor   = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_WALL_FILL, null);
+        Color strokeColor = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_WALL_STROKE, null);
+        Color doorColor   = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_DOOR, Color.PINK);
+        Color foodColor   = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, null);
+
+        if (fillColor == null) {
+            showMessage("No fill color defined", 3, MessageType.ERROR);
+            return;
+        }
+        if (strokeColor == null) {
+            showMessage("No stroke color defined", 3, MessageType.ERROR);
+            return;
+        }
+        if (foodColor == null) {
+            showMessage("No food color defined", 3, MessageType.ERROR);
+            return;
+        }
+
+
         TileMatcher.PixelScheme pixelScheme = new TileMatcher.PixelScheme(Color.TRANSPARENT, fillColor, strokeColor, doorColor, foodColor);
         TileMatcher matcher = new TileMatcher(pixelScheme);
 
