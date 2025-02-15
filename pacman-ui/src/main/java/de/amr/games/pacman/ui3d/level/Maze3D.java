@@ -45,6 +45,8 @@ import static de.amr.games.pacman.uilib.Ufx.*;
 
 public class Maze3D extends Group {
 
+    private static final int EMPTY_ROWS_OVER_MAZE = 3;
+
     private static final String OSHAPES_FILLED_PROPERTY_NAME = "rendering_oshapes_filled";
 
     private final DoubleProperty obstacleBaseHeightPy = new SimpleDoubleProperty(OBSTACLE_BASE_HEIGHT);
@@ -141,7 +143,7 @@ public class Maze3D extends Group {
     private boolean isWorldBorder(WorldMap worldMap, Obstacle obstacle) {
         Vector2i start = obstacle.startPoint();
         if (obstacle.isClosed()) {
-            return start.x() == TS || start.y() == 3 * TS + HTS; //TODO assumes 3 empty rows before maze start row
+            return start.x() == TS || start.y() == EMPTY_ROWS_OVER_MAZE * TS + HTS;
         } else {
             return start.x() == 0 || start.x() == worldMap.terrain().numCols() * TS;
         }
