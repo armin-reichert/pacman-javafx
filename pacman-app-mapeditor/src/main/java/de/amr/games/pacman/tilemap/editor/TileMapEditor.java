@@ -21,6 +21,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -764,8 +765,9 @@ public class TileMapEditor {
             tile -> tile != null ? "(%2d,%2d)".formatted(tile.x(), tile.y()) : "n/a"));
 
         var lblEditMode = new Label();
+        lblEditMode.setAlignment(Pos.CENTER_RIGHT);
         lblEditMode.setMinWidth(80);
-        lblEditMode.setFont(FONT_STATUS_LINE_BOLD);
+        lblEditMode.setFont(Font.font("Sans", FontWeight.BOLD, 16));
         lblEditMode.setTextFill(Color.FORESTGREEN);
         lblEditMode.setEffect(new Glow());
         lblEditMode.textProperty().bind(Bindings.createStringBinding(
