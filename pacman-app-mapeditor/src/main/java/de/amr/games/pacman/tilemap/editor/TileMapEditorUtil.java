@@ -85,7 +85,7 @@ public interface TileMapEditorUtil {
     }
 
     static Palette createTerrainPalette(byte id, int toolSize, TileMapEditor editor, TileMapRenderer renderer) {
-        var palette = new Palette(id, toolSize, 1, 23, renderer);
+        var palette = new Palette(id, toolSize, 1, 13, renderer);
         palette.addTileTool(editor, TerrainTiles.EMPTY, "Empty Space");
         palette.addTileTool(editor, TerrainTiles.WALL_H, "Horiz. Wall");
         palette.addTileTool(editor, TerrainTiles.WALL_V, "Vert. Wall");
@@ -93,10 +93,6 @@ public interface TileMapEditorUtil {
         palette.addTileTool(editor, TerrainTiles.CORNER_NE, "NE Corner");
         palette.addTileTool(editor, TerrainTiles.CORNER_SW, "SW Corner");
         palette.addTileTool(editor, TerrainTiles.CORNER_SE, "SE Corner");
-        palette.addTileTool(editor, TerrainTiles.DCORNER_ANGULAR_NW, "NW Corner");
-        palette.addTileTool(editor, TerrainTiles.DCORNER_ANGULAR_NE, "NE Corner");
-        palette.addTileTool(editor, TerrainTiles.DCORNER_ANGULAR_SW, "SW Corner");
-        palette.addTileTool(editor, TerrainTiles.DCORNER_ANGULAR_SE, "SE Corner");
         palette.addTileTool(editor, TerrainTiles.TUNNEL, "Tunnel");
         palette.addTileTool(editor, TerrainTiles.DOOR, "Door");
         palette.addTileTool(editor, TerrainTiles.ONE_WAY_UP, "One-Way Up");
