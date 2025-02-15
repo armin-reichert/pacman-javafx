@@ -51,7 +51,6 @@ import java.text.MessageFormat;
 import java.time.Instant;
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -929,9 +928,6 @@ public class TileMapEditor {
         var miSymmetricMode = new CheckMenuItem(tt("menu.edit.symmetric"));
         miSymmetricMode.selectedProperty().bindBidirectional(symmetricEditModePy);
 
-        var miObstaclesDoubleStroke = new CheckMenuItem("Double stroke obstacles"); //TODO localize
-        miObstaclesDoubleStroke.selectedProperty().bindBidirectional(obstacleEditor.doubleStrokeProperty());
-
         var miAddBorder = new MenuItem(tt("menu.edit.add_border"));
         miAddBorder.setOnAction(e -> addBorderWall(worldMap().terrain(), 3, 2));
 
@@ -955,7 +951,6 @@ public class TileMapEditor {
 
         menuEdit = new Menu(tt("menu.edit"), NO_GRAPHIC,
             miSymmetricMode,
-            miObstaclesDoubleStroke,
             new SeparatorMenuItem(),
             miAddBorder,
             miClearTerrain,
@@ -1740,17 +1735,17 @@ public class TileMapEditor {
 
     private void addBorderWall(TileMap terrain, int firstRow, int emptyRowsBottom) {
         int lastRow = terrain.numRows() - 1 - emptyRowsBottom, lastCol = terrain.numCols() - 1;
-        terrain.set(firstRow, 0, TerrainTiles.DCORNER_NW);
-        terrain.set(firstRow, lastCol, TerrainTiles.DCORNER_NE);
-        terrain.set(lastRow, 0, TerrainTiles.DCORNER_SW);
-        terrain.set(lastRow, lastCol, TerrainTiles.DCORNER_SE);
+        terrain.set(firstRow, 0, TerrainTiles.CORNER_NW);
+        terrain.set(firstRow, lastCol, TerrainTiles.CORNER_NE);
+        terrain.set(lastRow, 0, TerrainTiles.CORNER_SW);
+        terrain.set(lastRow, lastCol, TerrainTiles.CORNER_SE);
         for (int row = firstRow + 1; row < lastRow; ++row) {
-            terrain.set(row, 0, TerrainTiles.DWALL_V);
-            terrain.set(row, lastCol, TerrainTiles.DWALL_V);
+            terrain.set(row, 0, TerrainTiles.WALL_V);
+            terrain.set(row, lastCol, TerrainTiles.WALL_V);
         }
         for (int col = 1; col < lastCol; ++col) {
-            terrain.set(firstRow, col, TerrainTiles.DWALL_H);
-            terrain.set(lastRow, col, TerrainTiles.DWALL_H);
+            terrain.set(firstRow, col, TerrainTiles.WALL_H);
+            terrain.set(lastRow, col, TerrainTiles.WALL_H);
         }
         markTileMapEdited(terrain);
     }
@@ -1893,39 +1888,7 @@ public class TileMapEditor {
                 }
             }
         }
-        fixMixedWalls(worldMap().terrain());
         markTileMapEdited(worldMap().terrain());
         markTileMapEdited(worldMap().food());
-    }
-
-    private void fixMixedWalls(TileMap terrainMap) {
-        Set<Vector2i> doubleWallTiles = terrainMap.tiles()
-            .filter(tile -> TerrainTiles.isDoubleWall(terrainMap.get(tile)))
-            .collect(Collectors.toSet());
-        for (Vector2i tile : doubleWallTiles) {
-            Set<Vector2i> neighbors = singleWallNeighbors(terrainMap, tile);
-            for (Vector2i neighbor : neighbors) {
-                terrainMap.set(neighbor, toDoubleWall(terrainMap.get(neighbor)));
-            }
-        }
-    }
-
-    private Set<Vector2i> singleWallNeighbors(TileMap tileMap, Vector2i tile) {
-        return Direction.stream()
-                .map(dir -> tile.plus(dir.vector()))
-                .filter(neighbor -> !tileMap.outOfBounds(neighbor))
-                .filter(neighbor -> tileMap.get(neighbor) != TerrainTiles.EMPTY)
-                .filter(neighbor -> !TerrainTiles.isDoubleWall(tileMap.get(neighbor)))
-                .collect(Collectors.toSet());
-    }
-
-    private byte toDoubleWall(byte content) {
-        return switch (content) {
-            case TerrainTiles.CORNER_NW -> TerrainTiles.DCORNER_NW;
-            case TerrainTiles.CORNER_SW -> TerrainTiles.DCORNER_SW;
-            case TerrainTiles.CORNER_SE -> TerrainTiles.DCORNER_SE;
-            case TerrainTiles.CORNER_NE -> TerrainTiles.DCORNER_NE;
-            default -> content;
-        };
     }
 }

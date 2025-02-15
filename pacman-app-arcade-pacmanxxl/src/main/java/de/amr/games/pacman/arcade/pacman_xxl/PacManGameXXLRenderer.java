@@ -6,6 +6,7 @@ package de.amr.games.pacman.arcade.pacman_xxl;
 
 import de.amr.games.pacman.arcade.pacman.PacManGameSpriteSheet;
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -128,7 +129,7 @@ public class PacManGameXXLRenderer implements GameRenderer {
             );
             terrainRenderer.setColors(colors);
             terrainRenderer.drawTerrain(ctx(), worldMap.terrain(), worldMap.obstacles());
-
+            terrainRenderer.drawHouse(ctx(), world.houseTopLeftTile(), world.houseSize());
             foodRenderer.setPelletColor(Color.web(colorMap.get("pellet")));
             foodRenderer.setEnergizerColor(Color.web(colorMap.get("pellet")));
             worldMap.food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))

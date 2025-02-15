@@ -151,10 +151,10 @@ public class TerrainRendererInEditor extends TerrainRenderer {
         switch (content) {
             case TerrainTiles.WALL_H -> drawWallH(g, tile);
             case TerrainTiles.WALL_V -> drawWallV(g, tile);
-            case TerrainTiles.DWALL_H -> drawDWallH(g, tile);
-            case TerrainTiles.DWALL_V -> drawDWallV(g, tile);
+            //case TerrainTiles.DWALL_H -> drawDWallH(g, tile);
+            //case TerrainTiles.DWALL_V -> drawDWallV(g, tile);
             case TerrainTiles.CORNER_NW, TerrainTiles.CORNER_NE, TerrainTiles.CORNER_SW, TerrainTiles.CORNER_SE -> drawCorner(g, tile, content);
-            case TerrainTiles.DCORNER_NW, TerrainTiles.DCORNER_NE, TerrainTiles.DCORNER_SW, TerrainTiles.DCORNER_SE -> drawDCorner(g, tile, content);
+            //case TerrainTiles.DCORNER_NW, TerrainTiles.DCORNER_NE, TerrainTiles.DCORNER_SW, TerrainTiles.DCORNER_SE -> drawDCorner(g, tile, content);
             case TerrainTiles.DCORNER_ANGULAR_NW, TerrainTiles.DCORNER_ANGULAR_NE, TerrainTiles.DCORNER_ANGULAR_SW, TerrainTiles.DCORNER_ANGULAR_SE
                     -> drawDCornerAngular(g, tile, content, xp, yp);
             case TerrainTiles.DOOR -> drawDoor(g, tile, colors.doorColor());
@@ -284,19 +284,19 @@ public class TerrainRendererInEditor extends TerrainRenderer {
         g.setStroke(colors.wallStrokeColor());
         g.setLineWidth(1);
         switch (cornerType) {
-            case TerrainTiles.DCORNER_NW -> {
+            case TerrainTiles.CORNER_NW -> {
                 g.strokeArc(x + 5, y + 5, 6, 6, 90, 90, ArcType.OPEN);
                 g.strokeArc(x + 3, y + 3, 10, 10, 90, 90, ArcType.OPEN);
             }
-            case TerrainTiles.DCORNER_NE -> {
+            case TerrainTiles.CORNER_NE -> {
                 g.strokeArc(x - 3, y + 5, 6, 6, 0, 90, ArcType.OPEN);
                 g.strokeArc(x - 5, y + 3, 10, 10, 0, 90, ArcType.OPEN);
             }
-            case TerrainTiles.DCORNER_SE -> {
+            case TerrainTiles.CORNER_SE -> {
                 g.strokeArc(x - 3, y - 3, 6, 6, 270, 90, ArcType.OPEN);
                 g.strokeArc(x - 5, y - 5, 10, 10, 270, 90, ArcType.OPEN);
             }
-            case TerrainTiles.DCORNER_SW -> {
+            case TerrainTiles.CORNER_SW -> {
                 g.strokeArc(x + 5, y - 3, 6, 6, 180, 90, ArcType.OPEN);
                 g.strokeArc(x + 3, y - 5, 10, 10, 180, 90, ArcType.OPEN);
             }

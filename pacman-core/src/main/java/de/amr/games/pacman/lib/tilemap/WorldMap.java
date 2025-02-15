@@ -101,8 +101,8 @@ public class WorldMap {
                     foodValue = food.get(row - 1, col);
                 } else {
                     if ((col == 0 || col == terrain.numCols() - 1)
-                            && terrain.get(row, col) == TerrainTiles.DWALL_V) {
-                        terrainValue = TerrainTiles.DWALL_V; // keep vertical border wall
+                            && terrain.get(row, col) == TerrainTiles.WALL_V) {
+                        terrainValue = TerrainTiles.WALL_V; // keep vertical border wall
                     }
                 }
                 newMap.terrain.set(row, col, terrainValue);
@@ -163,6 +163,22 @@ public class WorldMap {
 
         food = TileMap.parseTileMap(foodSection,
             value -> 0 <= value && value <= FoodTiles.ENERGIZER, FoodTiles.EMPTY);
+
+
+        // Replace obsolete terrain tile values
+        terrain.tiles().forEach(tile -> {
+            byte content = terrain.get(tile);
+            byte newContent = switch (content) {
+                case TerrainTiles.OBSOLETE_DWALL_H -> TerrainTiles.WALL_H;
+                case TerrainTiles.OBSOLETE_DWALL_V -> TerrainTiles.WALL_V;
+                case TerrainTiles.OBSOLETE_DCORNER_NW -> TerrainTiles.CORNER_NW;
+                case TerrainTiles.OBSOLETE_DCORNER_SW -> TerrainTiles.CORNER_SW;
+                case TerrainTiles.OBSOLETE_DCORNER_SE -> TerrainTiles.CORNER_SE;
+                case TerrainTiles.OBSOLETE_DCORNER_NE -> TerrainTiles.CORNER_NE;
+                default -> content;
+            };
+            terrain.set(tile, newContent);
+        });
     }
 
     public List<Vector2i> updateObstacleList() {

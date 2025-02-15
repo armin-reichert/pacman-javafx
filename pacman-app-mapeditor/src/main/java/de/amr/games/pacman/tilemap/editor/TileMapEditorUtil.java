@@ -46,10 +46,6 @@ public interface TileMapEditorUtil {
             case TerrainTiles.CORNER_NW -> TerrainTiles.CORNER_NE;
             case TerrainTiles.CORNER_SE -> TerrainTiles.CORNER_SW;
             case TerrainTiles.CORNER_SW -> TerrainTiles.CORNER_SE;
-            case TerrainTiles.DCORNER_NE -> TerrainTiles.DCORNER_NW;
-            case TerrainTiles.DCORNER_NW -> TerrainTiles.DCORNER_NE;
-            case TerrainTiles.DCORNER_SE -> TerrainTiles.DCORNER_SW;
-            case TerrainTiles.DCORNER_SW -> TerrainTiles.DCORNER_SE;
             case TerrainTiles.DCORNER_ANGULAR_NE -> TerrainTiles.DCORNER_ANGULAR_NW;
             case TerrainTiles.DCORNER_ANGULAR_NW -> TerrainTiles.DCORNER_ANGULAR_NE;
             case TerrainTiles.DCORNER_ANGULAR_SE -> TerrainTiles.DCORNER_ANGULAR_SW;
@@ -106,16 +102,10 @@ public interface TileMapEditorUtil {
         palette.addTileTool(editor, TerrainTiles.EMPTY, "Empty Space");
         palette.addTileTool(editor, TerrainTiles.WALL_H, "Horiz. Wall");
         palette.addTileTool(editor, TerrainTiles.WALL_V, "Vert. Wall");
-        palette.addTileTool(editor, TerrainTiles.DWALL_H, "Horiz. Double-Wall");
-        palette.addTileTool(editor, TerrainTiles.DWALL_V, "Vert. Double-Wall");
         palette.addTileTool(editor, TerrainTiles.CORNER_NW, "NW Corner");
         palette.addTileTool(editor, TerrainTiles.CORNER_NE, "NE Corner");
         palette.addTileTool(editor, TerrainTiles.CORNER_SW, "SW Corner");
         palette.addTileTool(editor, TerrainTiles.CORNER_SE, "SE Corner");
-        palette.addTileTool(editor, TerrainTiles.DCORNER_NW, "NW Corner");
-        palette.addTileTool(editor, TerrainTiles.DCORNER_NE, "NE Corner");
-        palette.addTileTool(editor, TerrainTiles.DCORNER_SW, "SW Corner");
-        palette.addTileTool(editor, TerrainTiles.DCORNER_SE, "SE Corner");
         palette.addTileTool(editor, TerrainTiles.DCORNER_ANGULAR_NW, "NW Corner");
         palette.addTileTool(editor, TerrainTiles.DCORNER_ANGULAR_NE, "NE Corner");
         palette.addTileTool(editor, TerrainTiles.DCORNER_ANGULAR_SW, "SW Corner");

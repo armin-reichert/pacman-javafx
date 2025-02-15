@@ -92,7 +92,6 @@ public class ObstacleBuilder {
             .filter(not(this::isExplored))
             .filter(tile ->
                 terrain.get(tile) == TerrainTiles.CORNER_NW ||
-                terrain.get(tile) == TerrainTiles.DCORNER_NW ||
                 terrain.get(tile) == TerrainTiles.DCORNER_ANGULAR_NW) // house top-left corner
             .map(cornerNW -> buildClosedObstacle(cornerNW, tilesWithErrors))
             .forEach(obstacles::add);
@@ -123,25 +122,25 @@ public class ObstacleBuilder {
         byte startTileContent = terrain.get(startTile);
         var obstacle = new Obstacle(startPoint);
         cursor = new Cursor(startTile);
-        if (startTileContent == TerrainTiles.DWALL_H) {
+        if (startTileContent == TerrainTiles.WALL_H) {
             Direction startDir = startsAtLeftBorder ? RIGHT : LEFT;
-            obstacle.addSegment(scaledVector(startDir, TS), true, TerrainTiles.DWALL_H);
+            obstacle.addSegment(scaledVector(startDir, TS), true, TerrainTiles.WALL_H);
             cursor.move(startDir);
         }
-        else if (startsAtLeftBorder && startTileContent == TerrainTiles.DCORNER_SE) {
-            obstacle.addSegment(SEG_CORNER_SE_UP, true, TerrainTiles.DCORNER_SE);
+        else if (startsAtLeftBorder && startTileContent == TerrainTiles.CORNER_SE) {
+            obstacle.addSegment(SEG_CORNER_SE_UP, true, TerrainTiles.CORNER_SE);
             cursor.move(UP);
         }
-        else if (startsAtLeftBorder && startTileContent == TerrainTiles.DCORNER_NE) {
-            obstacle.addSegment(SEG_CORNER_NE_DOWN, false, TerrainTiles.DCORNER_NE);
+        else if (startsAtLeftBorder && startTileContent == TerrainTiles.CORNER_NE) {
+            obstacle.addSegment(SEG_CORNER_NE_DOWN, false, TerrainTiles.CORNER_NE);
             cursor.move(DOWN);
         }
-        else if (!startsAtLeftBorder && startTileContent == TerrainTiles.DCORNER_SW) {
-            obstacle.addSegment(SEG_CORNER_SW_UP, false, TerrainTiles.DCORNER_SW);
+        else if (!startsAtLeftBorder && startTileContent == TerrainTiles.CORNER_SW) {
+            obstacle.addSegment(SEG_CORNER_SW_UP, false, TerrainTiles.CORNER_SW);
             cursor.move(UP);
         }
-        else if (!startsAtLeftBorder && startTileContent == TerrainTiles.DCORNER_NW) {
-            obstacle.addSegment(SEG_CORNER_NW_DOWN, true, TerrainTiles.DCORNER_NW);
+        else if (!startsAtLeftBorder && startTileContent == TerrainTiles.CORNER_NW) {
+            obstacle.addSegment(SEG_CORNER_NW_DOWN, true, TerrainTiles.CORNER_NW);
             cursor.move(DOWN);
         }
         else {
@@ -180,7 +179,7 @@ public class ObstacleBuilder {
 
             switch (tileContent) {
 
-                case TerrainTiles.WALL_V, TerrainTiles.DWALL_V -> {
+                case TerrainTiles.WALL_V -> {
                     if (cursor.points(DOWN)) {
                         obstacle.addSegment(scaledVector(DOWN, TS), ccw, tileContent);
                         cursor.move(DOWN);
@@ -192,7 +191,7 @@ public class ObstacleBuilder {
                     }
                 }
 
-                case TerrainTiles.WALL_H, TerrainTiles.DWALL_H, TerrainTiles.DOOR -> {
+                case TerrainTiles.WALL_H, TerrainTiles.DOOR -> {
                     if (cursor.points(RIGHT)) {
                         obstacle.addSegment(scaledVector(RIGHT, TS), ccw, tileContent);
                         cursor.move(RIGHT);
@@ -204,7 +203,7 @@ public class ObstacleBuilder {
                     }
                 }
 
-                case TerrainTiles.CORNER_SW, TerrainTiles.DCORNER_SW, TerrainTiles.DCORNER_ANGULAR_SW -> {
+                case TerrainTiles.CORNER_SW, TerrainTiles.DCORNER_ANGULAR_SW -> {
                     if (cursor.points(DOWN)) {
                         ccw = true;
                         obstacle.addSegment(SEG_CORNER_SW_DOWN, ccw, tileContent);
@@ -218,7 +217,7 @@ public class ObstacleBuilder {
                     }
                 }
 
-                case TerrainTiles.CORNER_SE, TerrainTiles.DCORNER_SE, TerrainTiles.DCORNER_ANGULAR_SE -> {
+                case TerrainTiles.CORNER_SE, TerrainTiles.DCORNER_ANGULAR_SE -> {
                     if (cursor.points(DOWN)) {
                         ccw = false;
                         obstacle.addSegment(SEG_CORNER_SE_DOWN, ccw, tileContent);
@@ -234,7 +233,7 @@ public class ObstacleBuilder {
                     }
                 }
 
-                case TerrainTiles.CORNER_NE, TerrainTiles.DCORNER_NE, TerrainTiles.DCORNER_ANGULAR_NE -> {
+                case TerrainTiles.CORNER_NE, TerrainTiles.DCORNER_ANGULAR_NE -> {
                     if (cursor.points(UP)) {
                         ccw = true;
                         obstacle.addSegment(SEG_CORNER_NE_UP, ccw, tileContent);
@@ -250,7 +249,7 @@ public class ObstacleBuilder {
                     }
                 }
 
-                case TerrainTiles.CORNER_NW, TerrainTiles.DCORNER_NW, TerrainTiles.DCORNER_ANGULAR_NW -> {
+                case TerrainTiles.CORNER_NW, TerrainTiles.DCORNER_ANGULAR_NW -> {
                     if (cursor.points(UP)) {
                         ccw = false;
                         obstacle.addSegment(SEG_CORNER_NW_UP, ccw, tileContent);

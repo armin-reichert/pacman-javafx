@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.tilemap.rendering;
 
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
@@ -68,16 +69,24 @@ public class TerrainRenderer implements TileMapRenderer {
         g.save();
         g.scale(scaling(), scaling());
         for (Obstacle obstacle : obstacles) {
-            if (obstacle.hasDoubleWalls()) {
+            if (startsAtBorder(obstacle, terrainMap)) {
                 drawObstacle(g, obstacle, doubleStrokeOuterWidth, false, colors.wallFillColor(), colors.wallStrokeColor());
                 drawObstacle(g, obstacle, doubleStrokeInnerWidth, false, colors.wallFillColor(), colors.wallFillColor());
-            } else {
-                boolean hasParent = obstacle.getParent() != null;
-                drawObstacle(g, obstacle, singleStrokeWidth, true, hasParent ? colors.backgroundColor() : colors.wallFillColor(), colors.wallStrokeColor());
             }
         }
-        terrainMap.tiles(TerrainTiles.DOOR).forEach(door -> drawDoor(g, door, terrainMap.get(door.y(), door.x() - 1) != TerrainTiles.DOOR));
+        for (Obstacle obstacle : obstacles) {
+            if (!startsAtBorder(obstacle, terrainMap)) {
+                //boolean hasParent = obstacle.getParent() != null;
+                drawObstacle(g, obstacle, singleStrokeWidth, true, colors.wallFillColor(), colors.wallStrokeColor());
+            }
+        }
         g.restore();
+    }
+
+    private boolean startsAtBorder(Obstacle obstacle, TileMap terrainMap) {
+        Vector2i start = obstacle.startPoint();
+        return start.x() <= TS || start.x() >= (terrainMap.numCols() - 1) * TS
+            || start.y() <= 4*TS || start.y() >= (terrainMap.numRows() - 1) * TS;
     }
 
     private void drawObstacle(GraphicsContext g, Obstacle obstacle, double lineWidth, boolean fill, Color fillColor, Color strokeColor) {
@@ -139,17 +148,42 @@ public class TerrainRenderer implements TileMapRenderer {
         // this renderer doesn't draw tiles individually but draws complete paths
     }
 
+    public void drawHouse(GraphicsContext g, Vector2i origin, Vector2i size) {
+        g.save();
+        g.scale(scaling(), scaling());
+        drawHouseWalls(g, origin, size, colors.wallStrokeColor(), doubleStrokeOuterWidth);
+        drawHouseWalls(g, origin, size, colors.wallFillColor(), doubleStrokeInnerWidth);
+        drawDoors(g, origin.plus((size.x() / 2 - 1), 0));
+        g.restore();
+    }
+
+    private void drawHouseWalls(GraphicsContext g, Vector2i origin, Vector2i size, Color color, double lineWidth) {
+        Vector2i p = origin.scaled(TS).plus(HTS, HTS);
+        double w = (size.x() - 1) * TS, h = (size.y() - 1) * TS - HTS;
+        g.save();
+        g.beginPath();
+        g.moveTo(p.x(), p.y());
+        g.lineTo(p.x(), p.y() + h);
+        g.lineTo(p.x() + w, p.y() + h);
+        g.lineTo(p.x() + w, p.y());
+        g.lineTo(p.x() + w - 2 * TS, p.y());
+        g.moveTo(p.x(), p.y());
+        g.lineTo(p.x() + 2 * TS, p.y());
+        g.setLineWidth(lineWidth);
+        g.setStroke(color);
+        g.stroke();
+        g.restore();
+    }
+
     // assume we always have a pair of horizontally neighbored doors
-    private void drawDoor(GraphicsContext g, Vector2i tile, boolean leftDoor) {
+    private void drawDoors(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * TS, y = tile.y() * TS + 3;
-        if (leftDoor) {
-            g.setFill(colors.backgroundColor());
-            g.fillRect(x, y - 1, 2 * TS, 4);
-            g.setFill(colors.doorColor());
-            g.fillRect(x, y, 2 * TS, 2);
-            g.setFill(colors.wallStrokeColor());
-            g.fillRect(x - 1, y - 1, 1, 3);
-            g.fillRect(x + 2 * TS, y - 1, 1, 3);
-        }
+        g.setFill(colors.backgroundColor());
+        g.fillRect(x, y - 1, 2 * TS, 4);
+        g.setFill(colors.doorColor());
+        g.fillRect(x-2, y, 2 * TS + 4, 2);
+        //g.setFill(colors.wallStrokeColor());
+        //g.fillRect(x - 1, y - 1, 1, 3);
+        //g.fillRect(x + 2 * TS, y - 1, 1, 3);
     }
 }

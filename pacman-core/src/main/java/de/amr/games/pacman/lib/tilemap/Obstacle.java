@@ -140,16 +140,16 @@ public class Obstacle {
         for (var segment : segments) {
             boolean up = segment.vector().y() < 0, down = segment.vector().y() > 0;
             switch (segment.encoding()) {
-                case TerrainTiles.CORNER_NW, TerrainTiles.DCORNER_NW -> {
+                case TerrainTiles.CORNER_NW -> {
                     if (down) centers.add(segment.startPoint().plus(0, HTS));
                 }
-                case TerrainTiles.CORNER_SW, TerrainTiles.DCORNER_SW -> {
+                case TerrainTiles.CORNER_SW -> {
                     if (down) centers.add(segment.startPoint().plus(HTS, 0));
                 }
-                case TerrainTiles.CORNER_SE, TerrainTiles.DCORNER_SE -> {
+                case TerrainTiles.CORNER_SE -> {
                     if (up) centers.add(segment.startPoint().plus(0, -HTS));
                 }
-                case TerrainTiles.CORNER_NE, TerrainTiles.DCORNER_NE -> {
+                case TerrainTiles.CORNER_NE -> {
                     if (up) centers.add(segment.startPoint().plus(-HTS, 0));
                 }
             }

@@ -20,19 +20,19 @@ public record ObstacleSegment(Vector2i startPoint, Vector2i vector, boolean ccw,
     }
 
     public boolean isRoundedNWCorner() {
-        return encoding == TerrainTiles.CORNER_NW || encoding == TerrainTiles.DCORNER_NW;
+        return encoding == TerrainTiles.CORNER_NW;
     }
 
     public boolean isRoundedSWCorner() {
-        return encoding == TerrainTiles.CORNER_SW || encoding == TerrainTiles.DCORNER_SW;
+        return encoding == TerrainTiles.CORNER_SW;
     }
 
     public boolean isRoundedSECorner() {
-        return encoding == TerrainTiles.CORNER_SE || encoding == TerrainTiles.DCORNER_SE;
+        return encoding == TerrainTiles.CORNER_SE;
     }
 
     public boolean isRoundedNECorner() {
-        return encoding == TerrainTiles.CORNER_NE || encoding == TerrainTiles.DCORNER_NE;
+        return encoding == TerrainTiles.CORNER_NE;
     }
 
     public boolean isRoundedCorner() {
@@ -71,13 +71,9 @@ public record ObstacleSegment(Vector2i startPoint, Vector2i vector, boolean ccw,
         return isRoundedNECorner() || isAngularNECorner();
     }
 
-    public boolean isVerticalLine() {
-        return encoding == TerrainTiles.WALL_V || encoding == TerrainTiles.DWALL_V;
-    }
+    public boolean isVerticalLine() { return encoding == TerrainTiles.WALL_V; }
 
-    public boolean isHorizontalLine() {
-        return encoding == TerrainTiles.WALL_H || encoding == TerrainTiles.DWALL_H;
-    }
+    public boolean isHorizontalLine() { return encoding == TerrainTiles.WALL_H; }
 
     public boolean isStraightLine() {
         return isVerticalLine() || isHorizontalLine();

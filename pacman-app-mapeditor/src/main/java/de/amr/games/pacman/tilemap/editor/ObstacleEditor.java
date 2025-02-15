@@ -9,9 +9,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TerrainTiles;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
 
@@ -20,7 +18,6 @@ import java.util.function.BiConsumer;
 public class ObstacleEditor {
 
     private final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>();
-    private final BooleanProperty doubleStrokePy = new SimpleBooleanProperty(false);
 
     private BiConsumer<Vector2i, Byte> editCallback;
     private boolean enabled;
@@ -31,8 +28,6 @@ public class ObstacleEditor {
     private boolean join = true;
 
     public ObjectProperty<WorldMap> worldMapProperty() { return worldMapPy; }
-
-    public BooleanProperty doubleStrokeProperty() { return doubleStrokePy; }
 
     public void setEditCallback(BiConsumer<Vector2i, Byte> callback) {
         editCallback = callback;
@@ -125,12 +120,6 @@ public class ObstacleEditor {
             case TerrainTiles.CORNER_SW -> TerrainTiles.WALL_V;
             case TerrainTiles.WALL_V    -> TerrainTiles.CORNER_SW;
             case TerrainTiles.WALL_H    -> TerrainTiles.CORNER_NE;
-
-            case TerrainTiles.DCORNER_NE -> TerrainTiles.DWALL_H;
-            case TerrainTiles.DCORNER_SW -> TerrainTiles.DWALL_V;
-            case TerrainTiles.DWALL_V    -> TerrainTiles.DCORNER_SW;
-            case TerrainTiles.DWALL_H    -> TerrainTiles.DCORNER_NE;
-
             default -> joinedContent[0][0];
         };
 
@@ -140,12 +129,6 @@ public class ObstacleEditor {
             case TerrainTiles.WALL_V    -> TerrainTiles.CORNER_NW;
             case TerrainTiles.CORNER_SE -> TerrainTiles.WALL_H;
             case TerrainTiles.CORNER_NW -> TerrainTiles.WALL_V;
-
-            case TerrainTiles.DWALL_H    -> TerrainTiles.DCORNER_SE;
-            case TerrainTiles.DWALL_V    -> TerrainTiles.DCORNER_NW;
-            case TerrainTiles.DCORNER_SE -> TerrainTiles.DWALL_H;
-            case TerrainTiles.DCORNER_NW -> TerrainTiles.DWALL_V;
-
             default -> joinedContent[numRows-1][0];
         };
 
@@ -155,12 +138,6 @@ public class ObstacleEditor {
             case TerrainTiles.WALL_H    -> TerrainTiles.CORNER_NW;
             case TerrainTiles.CORNER_SE -> TerrainTiles.WALL_V;
             case TerrainTiles.CORNER_NW -> TerrainTiles.WALL_H;
-
-            case TerrainTiles.DWALL_V    -> TerrainTiles.DCORNER_SE;
-            case TerrainTiles.DWALL_H    -> TerrainTiles.DCORNER_NW;
-            case TerrainTiles.DCORNER_SE -> TerrainTiles.DWALL_V;
-            case TerrainTiles.DCORNER_NW -> TerrainTiles.DWALL_H;
-
             default -> joinedContent[0][numCols-1];
         };
 
@@ -169,12 +146,6 @@ public class ObstacleEditor {
             case TerrainTiles.WALL_H    -> TerrainTiles.CORNER_SW;
             case TerrainTiles.CORNER_SW -> TerrainTiles.WALL_H;
             case TerrainTiles.CORNER_NE -> TerrainTiles.WALL_V;
-
-            case TerrainTiles.DWALL_V    -> TerrainTiles.DCORNER_NE;
-            case TerrainTiles.DWALL_H    -> TerrainTiles.DCORNER_SW;
-            case TerrainTiles.DCORNER_SW -> TerrainTiles.DWALL_H;
-            case TerrainTiles.DCORNER_NE -> TerrainTiles.DWALL_V;
-
             default -> joinedContent[numRows-1][numCols-1];
         };
 
@@ -182,15 +153,8 @@ public class ObstacleEditor {
         int leftBorder = minTile.x();
         for (int row = minTile.y(); row < maxTile.y(); ++row) {
             int x = 0, y = row - minTile.y();
-            if (doubleStrokePy.get()) {
-                if (editedContent[y][x] == TerrainTiles.DWALL_V && original.get(row, leftBorder) == TerrainTiles.DWALL_H) {
-                    joinedContent[y][x] = Globals.isEven(crossings) ? TerrainTiles.DCORNER_SE : TerrainTiles.DCORNER_NE;
-                }
-            }
-            else {
-                if (editedContent[y][x] == TerrainTiles.WALL_V && original.get(row, leftBorder) == TerrainTiles.WALL_H) {
-                    joinedContent[y][x] = Globals.isEven(crossings) ? TerrainTiles.CORNER_SE : TerrainTiles.CORNER_NE;
-                }
+            if (editedContent[y][x] == TerrainTiles.WALL_V && original.get(row, leftBorder) == TerrainTiles.WALL_H) {
+                joinedContent[y][x] = Globals.isEven(crossings) ? TerrainTiles.CORNER_SE : TerrainTiles.CORNER_NE;
             }
             ++crossings;
         }
@@ -199,15 +163,8 @@ public class ObstacleEditor {
         int rightBorder = maxTile.x();
         for (int row = minTile.y(); row < maxTile.y(); ++row) {
             int x = rightBorder - minTile.x(), y = row - minTile.y();
-            if (doubleStrokePy.get()) {
-                if (editedContent[y][x] == TerrainTiles.DWALL_V && original.get(row, leftBorder) == TerrainTiles.DWALL_H) {
-                    joinedContent[y][x] = Globals.isEven(crossings) ? TerrainTiles.DCORNER_SW : TerrainTiles.DCORNER_NW;
-                }
-            }
-            else {
-                if (editedContent[y][x] == TerrainTiles.WALL_V && original.get(row, leftBorder) == TerrainTiles.WALL_H) {
-                    joinedContent[y][x] = Globals.isEven(crossings) ? TerrainTiles.CORNER_SW : TerrainTiles.CORNER_NW;
-                }
+            if (editedContent[y][x] == TerrainTiles.WALL_V && original.get(row, leftBorder) == TerrainTiles.WALL_H) {
+                joinedContent[y][x] = Globals.isEven(crossings) ? TerrainTiles.CORNER_SW : TerrainTiles.CORNER_NW;
             }
             ++crossings;
         }
@@ -216,15 +173,8 @@ public class ObstacleEditor {
         int upperBorder = minTile.y(); // upper border
         for (int col = minTile.x(); col < maxTile.x(); ++col) {
             int x = col - minTile.x(), y = upperBorder - minTile.y();
-            if (doubleStrokePy.get()) {
-                if (editedContent[y][x] == TerrainTiles.DWALL_H && original.get(upperBorder, col) == TerrainTiles.DWALL_V) {
-                    joinedContent[y][x] = Globals.isEven(crossings) ? TerrainTiles.DCORNER_SE : TerrainTiles.DCORNER_SW;
-                }
-            }
-            else {
-                if (editedContent[y][x] == TerrainTiles.WALL_H && original.get(upperBorder, col) == TerrainTiles.WALL_V) {
-                    joinedContent[y][x] = Globals.isEven(crossings) ? TerrainTiles.CORNER_SE : TerrainTiles.CORNER_SW;
-                }
+            if (editedContent[y][x] == TerrainTiles.WALL_H && original.get(upperBorder, col) == TerrainTiles.WALL_V) {
+                joinedContent[y][x] = Globals.isEven(crossings) ? TerrainTiles.CORNER_SE : TerrainTiles.CORNER_SW;
             }
             ++crossings;
         }
@@ -233,15 +183,8 @@ public class ObstacleEditor {
         int lowerBorder = maxTile.y(); // lower border
         for (int col = minTile.x(); col < maxTile.x(); ++col) {
             int x = col - minTile.x(), y = lowerBorder - minTile.y();
-            if (doubleStrokePy.get()) {
-                if (editedContent[y][x] == TerrainTiles.DWALL_H && original.get(lowerBorder, col) == TerrainTiles.DWALL_V) {
-                    joinedContent[y][x] = Globals.isEven(crossings) ? TerrainTiles.DCORNER_NE : TerrainTiles.DCORNER_NW;
-                }
-            }
-            else {
-                if (editedContent[y][x] == TerrainTiles.WALL_H && original.get(lowerBorder, col) == TerrainTiles.WALL_V) {
-                    joinedContent[y][x] = Globals.isEven(crossings) ? TerrainTiles.CORNER_NE : TerrainTiles.CORNER_NW;
-                }
+            if (editedContent[y][x] == TerrainTiles.WALL_H && original.get(lowerBorder, col) == TerrainTiles.WALL_V) {
+                joinedContent[y][x] = Globals.isEven(crossings) ? TerrainTiles.CORNER_NE : TerrainTiles.CORNER_NW;
             }
             ++crossings;
         }
@@ -259,22 +202,21 @@ public class ObstacleEditor {
             return null;
         }
         byte[][] area = new byte[numRows][numCols];
-        boolean doubleStroke = doubleStrokePy.get();
         for (int row = minTile.y(); row <= maxTile.y(); ++row) {
             for (int col = minTile.x(); col <= maxTile.x(); ++col) {
                 byte value = TerrainTiles.EMPTY;
                 if (row == minTile.y() && col == minTile.x()) {
-                    value = doubleStroke ? TerrainTiles.DCORNER_NW : TerrainTiles.CORNER_NW;
+                    value = TerrainTiles.CORNER_NW;
                 } else if (row == minTile.y() && col == maxTile.x()) {
-                    value = doubleStroke ? TerrainTiles.DCORNER_NE : TerrainTiles.CORNER_NE;
+                    value = TerrainTiles.CORNER_NE;
                 } else if (row == maxTile.y() && col == minTile.x()) {
-                    value = doubleStroke ? TerrainTiles.DCORNER_SW : TerrainTiles.CORNER_SW;
+                    value = TerrainTiles.CORNER_SW;
                 } else if (row == maxTile.y() && col == maxTile.x()) {
-                    value = doubleStroke ? TerrainTiles.DCORNER_SE : TerrainTiles.CORNER_SE;
+                    value = TerrainTiles.CORNER_SE;
                 } else if (row == minTile.y() || row == maxTile.y()) {
-                    value = doubleStroke ?  TerrainTiles.DWALL_H : TerrainTiles.WALL_H;
+                    value = TerrainTiles.WALL_H;
                 } else if (col == minTile.x() || col == maxTile.x()) {
-                    value = doubleStroke ? TerrainTiles.DWALL_V : TerrainTiles.WALL_V;
+                    value = TerrainTiles.WALL_V;
                 }
                 area[row - minTile.y()][col - minTile.x()] = value;
             }
