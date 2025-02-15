@@ -14,6 +14,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.lib.Globals.HTS;
+import static de.amr.games.pacman.lib.Globals.TS;
+
 /**
  * @author Armin Reichert
  */
@@ -185,6 +188,19 @@ public class WorldMap {
     public List<Vector2i> updateObstacleList() {
         List<Vector2i> tilesWithErrors = new ArrayList<>();
         obstacles = ObstacleBuilder.buildObstacles(terrain, tilesWithErrors);
+        // remove house obstacle
+        Vector2i houseMinTile = terrain.getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
+        if (houseMinTile == null) {
+            Logger.info("Could not remove house placeholder-obstacle from world map, no min tile property exists");
+        } else {
+            Vector2i houseStartPoint = houseMinTile.scaled(TS).plus(TS, HTS);
+            obstacles.stream()
+                    .filter(obstacle -> obstacle.startPoint().equals(houseStartPoint))
+                    .findFirst().ifPresent(houseObstacle -> {
+                        Logger.info("Removing house placeholder-obstacle starting at tile {}, point {}", houseMinTile, houseStartPoint);
+                        obstacles.remove(houseObstacle);
+                    });
+        }
         return tilesWithErrors;
     }
 
