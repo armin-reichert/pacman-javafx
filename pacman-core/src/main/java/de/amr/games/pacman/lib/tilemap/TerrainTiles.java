@@ -41,8 +41,4 @@ public interface TerrainTiles {
     byte ONE_WAY_LEFT  = 23;
 
     byte LAST_TERRAIN_VALUE = 23; // Adapt when adding new tiles!
-
-    static boolean isDoubleWall(byte content) {
-        return 8 <= content && content <= 13 || 16 <= content && content <= 19;
-    }
 }

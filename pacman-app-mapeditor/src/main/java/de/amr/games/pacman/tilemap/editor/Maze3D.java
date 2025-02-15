@@ -167,8 +167,9 @@ public class Maze3D extends Group {
         r3D.setCornerBaseMaterial(coloredMaterial(wallBaseColor));
         r3D.setCornerTopMaterial(coloredMaterial(wallTopColor));
 
+        boolean worldBorder = false; // TODO
         for (Obstacle obstacle : worldMap.obstacles()) {
-            r3D.renderObstacle3D(mazeGroup, obstacle);
+            r3D.renderObstacle3D(mazeGroup, obstacle, worldBorder);
         }
 
         var doorMaterial = coloredMaterial(doorColor);

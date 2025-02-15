@@ -12,7 +12,6 @@ import java.util.*;
 
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.lib.tilemap.TerrainTiles.isDoubleWall;
 import static java.util.function.Predicate.not;
 
 /**
@@ -168,17 +167,7 @@ public class ObstacleBuilder {
             }
             setExplored(cursor.currentTile);
             byte tileContent = terrain.get(cursor.currentTile);
-
-            boolean doubleWall = isDoubleWall(tileContent);
-            // check if obstacle tiles have same wall strength, ignore doors
-            if (tileContent != TerrainTiles.DOOR &&
-                (obstacle.hasDoubleWalls() && !doubleWall || !obstacle.hasDoubleWalls() && doubleWall)) {
-                errorAtCurrentTile(tilesWithErrors);
-                break;
-            }
-
             switch (tileContent) {
-
                 case TerrainTiles.WALL_V -> {
                     if (cursor.points(DOWN)) {
                         obstacle.addSegment(scaledVector(DOWN, TS), ccw, tileContent);

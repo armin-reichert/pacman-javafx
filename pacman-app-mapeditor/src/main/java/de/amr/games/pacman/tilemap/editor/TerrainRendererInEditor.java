@@ -87,7 +87,7 @@ public class TerrainRendererInEditor extends TerrainRenderer {
         }
         if (obstacleInnerAreaDisplayed) {
             double r = 1;
-            obstacles.stream().filter(Obstacle::isClosed).filter(not(Obstacle::hasDoubleWalls)).forEach(obstacle -> {
+            obstacles.stream().filter(Obstacle::isClosed).forEach(obstacle -> {
                 Vector2i prev = null;
                 List<RectArea> rectangles = obstacle.innerAreaRectPartition().toList();
                 for (int i = 0; i < rectangles.size(); ++i) {

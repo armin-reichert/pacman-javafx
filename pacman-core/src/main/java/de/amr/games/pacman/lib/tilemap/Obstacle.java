@@ -31,9 +31,6 @@ public class Obstacle {
 
     public void addSegment(Vector2i vector, boolean counterClockwise, byte content) {
         Objects.requireNonNull(vector);
-        if (!isAllowedContent(content)) {
-            throw new IllegalArgumentException("Illegal content for new segment: " + content);
-        }
         segments.add(new ObstacleSegment(endPoint(), vector, counterClockwise, content));
         if (isClosed()) {
             innerAreaRectPartition.clear();
@@ -45,17 +42,6 @@ public class Obstacle {
                 Logger.error(x);
             }
         }
-    }
-
-    private boolean isAllowedContent(byte value) {
-        if (segments.isEmpty()) {
-            return true; // TODO restrict to allowed start tile content
-        }
-        if (value == TerrainTiles.DOOR) {
-            return true; //TODO
-        }
-        boolean startsWithDoubleWall = TerrainTiles.isDoubleWall(segments.getFirst().encoding());
-        return startsWithDoubleWall == TerrainTiles.isDoubleWall(value);
     }
 
     public Stream<RectArea> innerAreaRectPartition() {
@@ -106,10 +92,6 @@ public class Obstacle {
 
     public boolean isClosed() {
         return startPoint().equals(endPoint());
-    }
-
-    public boolean hasDoubleWalls() {
-        return !segments.isEmpty() && TerrainTiles.isDoubleWall(segments.getFirst().encoding());
     }
 
     public List<ObstacleSegment> segments() {

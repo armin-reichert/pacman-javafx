@@ -128,10 +128,10 @@ public class TerrainRenderer3D {
      * @param parent the group into which the 3D shapes are added
      * @param obstacle an obstacle
      */
-    public void renderObstacle3D(Group parent, Obstacle obstacle) {
+    public void renderObstacle3D(Group parent, Obstacle obstacle, boolean worldBorder) {
         String encoding = obstacle.encoding();
         Logger.debug("Render 3D obstacle with encoding '{}'", encoding);
-        if (obstacle.isClosed() && !obstacle.hasDoubleWalls()) {
+        if (obstacle.isClosed() && !worldBorder) {
             Group og = new Group();
             addTags(og, TAG_INNER_OBSTACLE);
             parent.getChildren().add(og);
@@ -147,7 +147,7 @@ public class TerrainRenderer3D {
                 render_ClosedSingleWallObstacle(parent, obstacle);
             }
         } else {
-            render_DoubleStrokeObstacle(parent, obstacle);
+            render_UnfilledObstacle(parent, obstacle);
         }
     }
 
@@ -163,10 +163,7 @@ public class TerrainRenderer3D {
         }
     }
 
-    /**
-     * Renders maze outer double-walls and double-wall-obstacles inside the maze.
-     */
-    private void render_DoubleStrokeObstacle(Group g, Obstacle obstacle){
+    private void render_UnfilledObstacle(Group g, Obstacle obstacle){
         int r = HTS;
         for (ObstacleSegment segment : obstacle.segments()) {
             boolean counterClockwise = segment.ccw();

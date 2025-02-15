@@ -6,13 +6,13 @@ package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D;
 import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
 import de.amr.games.pacman.ui3d.animation.MaterialColorAnimation;
 import de.amr.games.pacman.ui3d.scene3d.GameConfiguration3D;
-import de.amr.games.pacman.uilib.Ufx;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -88,8 +88,6 @@ public class Maze3D extends Group {
         cornerTopMaterial.setDiffuseColor(wallTopColor);
         cornerTopMaterial.specularColorProperty().bind(cornerTopMaterial.diffuseColorProperty().map(Color::brighter));
 
-        PhongMaterial innerObstacleMaterial = coloredMaterial(Color.BLACK);
-
         TerrainRenderer3D r3D = configuration3D.createTerrainRenderer3D();
         r3D.setWallBaseHeightProperty(obstacleBaseHeightPy);
         r3D.setWallTopHeight(OBSTACLE_TOP_HEIGHT);
@@ -112,16 +110,10 @@ public class Maze3D extends Group {
 
         for (Obstacle obstacle : world.map().obstacles()) {
             if (!world.isPartOfHouse(tileAt(obstacle.startPoint().toVector2f()))) {
-                r3D.setWallThickness(obstacle.hasDoubleWalls() ? BORDER_WALL_THICKNESS : OBSTACLE_THICKNESS);
-                if (!obstacle.hasDoubleWalls() && obstacle.getParent() != null) {
-                //    r3D.setWallBaseMaterial(innerObstacleMaterial);
-                //    r3D.setWallTopMaterial(innerObstacleMaterial);
-                //    r3D.renderObstacle3D(this, obstacle);
-                } else {
-                    r3D.setWallBaseMaterial(wallBaseMaterial);
-                    r3D.setWallTopMaterial(wallTopMaterial);
-                    r3D.renderObstacle3D(this, obstacle);
-                }
+                r3D.setWallThickness(OBSTACLE_THICKNESS);
+                r3D.setWallBaseMaterial(wallBaseMaterial);
+                r3D.setWallTopMaterial(wallTopMaterial);
+                r3D.renderObstacle3D(this, obstacle, isWorldBorder(world.map(), obstacle));
             }
         }
 
@@ -144,6 +136,15 @@ public class Maze3D extends Group {
 
         PY_3D_WALL_HEIGHT.addListener((py, ov, nv) -> obstacleBaseHeightPy.set(nv.doubleValue()));
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
+    }
+
+    private boolean isWorldBorder(WorldMap worldMap, Obstacle obstacle) {
+        Vector2i start = obstacle.startPoint();
+        if (obstacle.isClosed()) {
+            return start.x() == TS || start.y() == 3 * TS + HTS; //TODO assumes 3 empty rows before maze start row
+        } else {
+            return start.x() == 0 || start.x() == worldMap.terrain().numCols() * TS;
+        }
     }
 
     private Door3D addGhostHouse(
