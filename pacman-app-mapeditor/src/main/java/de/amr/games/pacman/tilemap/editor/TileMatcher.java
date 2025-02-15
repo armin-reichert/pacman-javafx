@@ -63,8 +63,8 @@ public class TileMatcher {
 
     public byte identifyTerrainTile(int[] pixels) {
         // check double before single wall
-        if (isDoubleHWall(pixels)) return TerrainTiles.DWALL_H;
-        if (isDoubleVWall(pixels)) return TerrainTiles.DWALL_V;
+        //if (isDoubleHWall(pixels)) return TerrainTiles.DWALL_H;
+        //if (isDoubleVWall(pixels)) return TerrainTiles.DWALL_V;
         //if (isDoubleNWCorner(pixels)) return TerrainTiles.DCORNER_NW;
         //if (isDoubleNECorner(pixels)) return TerrainTiles.DCORNER_NE;
         //if (isDoubleSWCorner(pixels)) return TerrainTiles.DCORNER_SW;
