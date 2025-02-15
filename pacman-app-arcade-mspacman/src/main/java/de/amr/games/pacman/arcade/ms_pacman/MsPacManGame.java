@@ -128,8 +128,6 @@ public class MsPacManGame extends GameModel {
     private static final int[] HUNTING_TICKS_LEVEL_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, -1};
     private static final int[] HUNTING_TICKS_LEVEL_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
 
-    private static final byte HOUSE_X = 10, HOUSE_Y = 15;
-
     // To assure that the demo level runs at least 20 seconds:
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
@@ -230,7 +228,7 @@ public class MsPacManGame extends GameModel {
 
     private void createWorldAndPopulation(WorldMap worldMap) {
         GameWorld world = new GameWorld(worldMap);
-        world.createArcadeHouse(HOUSE_X, HOUSE_Y);
+        world.createArcadeHouse(10, 15, 17, 19);
 
         var pac = new Pac();
         pac.setName("Ms. Pac-Man");

@@ -79,8 +79,13 @@ public class PacManGameXXL extends PacManGame implements CustomMapsHandler {
             Logger.warn("No house min tile found in map!");
             worldMap.terrain().setProperty(WorldMap.PROPERTY_POS_HOUSE_MIN_TILE, TileMap.formatTile(vec_2i(10, 15)));
         }
-        Vector2i topLeftTile = worldMap.terrain().getTileProperty(WorldMap.PROPERTY_POS_HOUSE_MIN_TILE, null);
-        level.world().createArcadeHouse(topLeftTile.x(), topLeftTile.y());
+        if (!worldMap.terrain().hasProperty(WorldMap.PROPERTY_POS_HOUSE_MAX_TILE)) {
+            Logger.warn("No house max tile found in map!");
+            worldMap.terrain().setProperty(WorldMap.PROPERTY_POS_HOUSE_MAX_TILE, TileMap.formatTile(vec_2i(17, 19)));
+        }
+        Vector2i minTile = worldMap.terrain().getTileProperty(WorldMap.PROPERTY_POS_HOUSE_MIN_TILE, null);
+        Vector2i maxTile = worldMap.terrain().getTileProperty(WorldMap.PROPERTY_POS_HOUSE_MAX_TILE, null);
+        level.world().createArcadeHouse(minTile.x(), minTile.y(), maxTile.x(), maxTile.y());
     }
 
     @Override

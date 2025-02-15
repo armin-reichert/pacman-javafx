@@ -403,7 +403,7 @@ public class MsPacManGameTengen extends GameModel {
 
     private void createWorldAndPopulation(WorldMap worldMap) {
         GameWorld world = new GameWorld(worldMap);
-        world.createArcadeHouse(10, 15);
+        world.createArcadeHouse(10, 15, 17, 19);
 
         var pac = new Pac();
         pac.setName("Ms. Pac-Man");

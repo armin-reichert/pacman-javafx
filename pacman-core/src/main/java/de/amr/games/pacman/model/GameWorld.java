@@ -151,14 +151,16 @@ public class GameWorld {
     // House
 
     /**
-     * @param topLeftX tile-x of top left corner
-     * @param topLeftY tile-y of top left corner
+     * @param minX tile-x of top left corner
+     * @param minY tile-y of top left corner
+     * @param maxX tile-x of bottom right corner
+     * @param maxY tile-y of bottom right corner
      */
-    public void createArcadeHouse(int topLeftX, int topLeftY) {
-        houseTopLeftTile = vec_2i(topLeftX, topLeftY);
-        houseSize = vec_2i(8, 5);
-        leftDoorTile = vec_2i(topLeftX + 3, topLeftY);
-        rightDoorTile = vec_2i(topLeftX + 4, topLeftY);
+    public void createArcadeHouse(int minX, int minY, int maxX, int maxY) {
+        houseTopLeftTile = vec_2i(minX, minY);
+        houseSize = vec_2i(maxX - minX + 1, maxY - minY + 1);
+        leftDoorTile = vec_2i(minX + 3, minY);
+        rightDoorTile = vec_2i(minX + 4, minY);
         setGhostDirection(RED_GHOST, Direction.LEFT);
         setGhostDirection(PINK_GHOST, Direction.DOWN);
         setGhostDirection(CYAN_GHOST, Direction.UP);

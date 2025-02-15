@@ -30,6 +30,7 @@ public class WorldMap {
     public static final String PROPERTY_POS_SCATTER_CYAN_GHOST   = "pos_scatter_ghost_3_cyan";
     public static final String PROPERTY_POS_SCATTER_ORANGE_GHOST = "pos_scatter_ghost_4_orange";
     public static final String PROPERTY_POS_HOUSE_MIN_TILE       = "pos_house_min_tile";
+    public static final String PROPERTY_POS_HOUSE_MAX_TILE       = "pos_house_max_tile";
 
     public static final String PROPERTY_COLOR_FOOD         = "color_food";
     public static final String PROPERTY_COLOR_WALL_STROKE  = "color_wall_stroke";

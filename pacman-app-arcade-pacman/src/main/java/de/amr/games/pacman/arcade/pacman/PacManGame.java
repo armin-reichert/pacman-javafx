@@ -87,9 +87,6 @@ public class PacManGame extends GameModel {
         };
     }
 
-    // Ghost house tile position in all Arcade mazes
-    private static final byte HOUSE_X = 10, HOUSE_Y = 15;
-
     protected static final NavPoint[] PACMAN_DEMO_LEVEL_ROUTE = {
         np(12, 26), np(9, 26), np(12, 32), np(15, 32), np(24, 29), np(21, 23),
         np(18, 23), np(18, 20), np(18, 17), np(15, 14), np(12, 14), np(9, 17),
@@ -228,7 +225,7 @@ public class PacManGame extends GameModel {
 
     protected void populateLevel(WorldMap worldMap) {
         GameWorld world = new GameWorld(worldMap);
-        world.createArcadeHouse(HOUSE_X, HOUSE_Y);
+        world.createArcadeHouse(10, 15, 17, 19);
 
         var pac = new Pac();
         pac.setName("Pac-Man");
