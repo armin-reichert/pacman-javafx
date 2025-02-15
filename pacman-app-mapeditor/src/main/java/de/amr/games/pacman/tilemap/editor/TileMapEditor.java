@@ -407,18 +407,8 @@ public class TileMapEditor {
         Vector2i tile = tileAtMousePosition(menuEvent.getX(), menuEvent.getY());
         WorldMap worldMap = worldMapPy.get();
 
-        var miAddCircle2x2 = new MenuItem(tt("menu.edit.add_circle"));
-        miAddCircle2x2.setOnAction(actionEvent -> {
-            addTerrainContentBlock(worldMap(), CIRCLE_2x2, tile);
-            if (isSymmetricEditMode()) {
-                addTerrainContentBlockMirrored(worldMap, CIRCLE_2x2, tile);
-            }
-            markTileMapEdited(worldMap.terrain());
-            markTileMapEdited(worldMap.food());
-        });
-
-        var miAddHouse = new MenuItem(TileMapEditor.tt("menu.edit.add_house"));
-        miAddHouse.setOnAction(actionEvent -> addHouse(worldMap, tile));
+        var miPlaceHouse = new MenuItem(TileMapEditor.tt("menu.edit.place_house"));
+        miPlaceHouse.setOnAction(actionEvent -> placeHouse(worldMap, tile));
 
         var miInsertRow = new MenuItem(tt("menu.edit.insert_row"));
         miInsertRow.setOnAction(actionEvent -> {
@@ -448,8 +438,7 @@ public class TileMapEditor {
             miInsertRow,
             miDeleteRow,
             new SeparatorMenuItem(),
-            miAddCircle2x2,
-            miAddHouse,
+            miPlaceHouse,
             new SeparatorMenuItem(),
             miDetectPellets,
             miFloodWithPellets);
@@ -1291,6 +1280,11 @@ public class TileMapEditor {
             preview2DTerrainRenderer.setScaling(gridSize() / 8.0);
             preview2DTerrainRenderer.setColors(colors);
             preview2DTerrainRenderer.drawTerrain(g, worldMap().terrain(), worldMap().obstacles());
+            Vector2i houseMinTile = worldMap().terrain().getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
+            Vector2i houseMaxTile = worldMap().terrain().getTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
+            if (houseMinTile != null && houseMaxTile != null) {
+                preview2DTerrainRenderer.drawHouse(g, houseMinTile, houseMaxTile.minus(houseMinTile).plus(1, 1));
+            }
         }
         if (foodVisiblePy.get()) {
             Color foodColor = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
@@ -1720,7 +1714,7 @@ public class TileMapEditor {
         addBorderWall(terrain, 3, 2);
         if (terrain.numRows() >= 20) {
             Vector2i houseOrigin = vec_2i(tilesX / 2 - 4, tilesY / 2 - 3);
-            addHouse(preConfiguredMap, houseOrigin);
+            placeHouse(preConfiguredMap, houseOrigin);
             terrain.setProperty(PROPERTY_POS_PAC,                  formatTile(houseOrigin.plus(3, 11)));
             terrain.setProperty(PROPERTY_POS_BONUS,                formatTile(houseOrigin.plus(3, 5)));
             terrain.setProperty(PROPERTY_POS_SCATTER_RED_GHOST,    formatTile(vec_2i(tilesX - 3, 0)));
@@ -1750,14 +1744,21 @@ public class TileMapEditor {
         markTileMapEdited(terrain);
     }
 
-    private void addHouse(WorldMap worldMap, Vector2i origin) {
+    private void placeHouse(WorldMap worldMap, Vector2i origin) {
         TileMap terrain = worldMap.terrain();
-        addTerrainContentBlock(worldMap, GHOST_HOUSE_SHAPE, origin);
         terrain.setProperty(PROPERTY_POS_HOUSE_MIN_TILE, formatTile(origin));
+        terrain.setProperty(PROPERTY_POS_HOUSE_MAX_TILE, formatTile(origin.plus(7, 4)));
         terrain.setProperty(PROPERTY_POS_RED_GHOST,      formatTile(origin.plus(3, -1)));
         terrain.setProperty(PROPERTY_POS_CYAN_GHOST,     formatTile(origin.plus(1, 2)));
         terrain.setProperty(PROPERTY_POS_PINK_GHOST,     formatTile(origin.plus(3, 2)));
         terrain.setProperty(PROPERTY_POS_ORANGE_GHOST,   formatTile(origin.plus(5, 2)));
+        Vector2i houseMinTile = terrain.getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
+        Vector2i houseMaxTile = terrain.getTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
+        for (int row = houseMinTile.y(); row <= houseMaxTile.y(); ++row) {
+            for (int col = houseMinTile.x(); col <= houseMaxTile.x(); ++col) {
+                terrain.set(row, col, TerrainTiles.EMPTY);
+            }
+        }
         terrainPropertiesEditor().rebuildPropertyEditors();
         markTileMapEdited(worldMap.terrain());
         terrainChanged = true; //TODO check

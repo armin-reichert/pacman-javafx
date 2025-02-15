@@ -37,6 +37,8 @@ import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.parseColor;
 
 public class Maze3D extends Group {
 
+    private static final int EMPTY_ROWS_OVER_MAZE = 3;
+
     private static final double ACTOR_SIZE = 12.0;
 
     private static PhongMaterial coloredMaterial(Color color) {
@@ -167,9 +169,8 @@ public class Maze3D extends Group {
         r3D.setCornerBaseMaterial(coloredMaterial(wallBaseColor));
         r3D.setCornerTopMaterial(coloredMaterial(wallTopColor));
 
-        boolean worldBorder = false; // TODO
         for (Obstacle obstacle : worldMap.obstacles()) {
-            r3D.renderObstacle3D(mazeGroup, obstacle, worldBorder);
+            r3D.renderObstacle3D(mazeGroup, obstacle, isWorldBorder(worldMap, obstacle));
         }
 
         var doorMaterial = coloredMaterial(doorColor);
@@ -195,6 +196,15 @@ public class Maze3D extends Group {
         addActorShape(ghostShapes[1], terrain, PROPERTY_POS_PINK_GHOST);
         addActorShape(ghostShapes[2], terrain, PROPERTY_POS_CYAN_GHOST);
         addActorShape(ghostShapes[3], terrain, PROPERTY_POS_ORANGE_GHOST);
+    }
+
+    private boolean isWorldBorder(WorldMap worldMap, Obstacle obstacle) {
+        Vector2i start = obstacle.startPoint();
+        if (obstacle.isClosed()) {
+            return start.x() == TS || start.y() == EMPTY_ROWS_OVER_MAZE * TS + HTS;
+        } else {
+            return start.x() == 0 || start.x() == worldMap.terrain().numCols() * TS;
+        }
     }
 
     private void addActorShape(Node actorShape, TileMap terrain, String actorTilePropertyName) {

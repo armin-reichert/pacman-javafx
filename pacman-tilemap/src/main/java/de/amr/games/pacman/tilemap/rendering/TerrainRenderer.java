@@ -159,7 +159,7 @@ public class TerrainRenderer implements TileMapRenderer {
 
     private void drawHouseWalls(GraphicsContext g, Vector2i origin, Vector2i size, Color color, double lineWidth) {
         Vector2i p = origin.scaled(TS).plus(HTS, HTS);
-        double w = (size.x() - 1) * TS, h = (size.y() - 1) * TS - HTS;
+        double w = (size.x() - 1) * TS, h = (size.y() - 1) * TS - 2;
         g.save();
         g.beginPath();
         g.moveTo(p.x(), p.y());

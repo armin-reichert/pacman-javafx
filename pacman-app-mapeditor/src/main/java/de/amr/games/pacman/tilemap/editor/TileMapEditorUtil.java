@@ -22,19 +22,6 @@ import static java.util.Objects.requireNonNull;
 
 public interface TileMapEditorUtil {
 
-    byte[][] GHOST_HOUSE_SHAPE = {
-        {16, 8, 8, 14, 14, 8, 8, 17},
-        {9, 0, 0, 0, 0, 0, 0, 9},
-        {9, 0, 0, 0, 0, 0, 0, 9},
-        {9, 0, 0, 0, 0, 0, 0, 9},
-        {19, 8, 8, 8, 8, 8, 8, 18}
-    };
-
-    byte[][] CIRCLE_2x2 = {
-        {TerrainTiles.CORNER_NW, TerrainTiles.CORNER_NE},
-        {TerrainTiles.CORNER_SW, TerrainTiles.CORNER_SE}
-    };
-
     static String urlString(String resourcePath) {
         URL url = requireNonNull(TileMapEditorUtil.class.getResource(resourcePath));
         return url.toExternalForm();

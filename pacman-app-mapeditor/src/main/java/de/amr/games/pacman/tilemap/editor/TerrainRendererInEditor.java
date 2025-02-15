@@ -114,6 +114,11 @@ public class TerrainRendererInEditor extends TerrainRenderer {
             });
         }
         g.restore();
+        Vector2i houseMinTile = terrainMap.getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
+        Vector2i houseMaxTile = terrainMap.getTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
+        if (houseMinTile != null && houseMaxTile != null) {
+            drawHouse(g, houseMinTile, houseMaxTile.minus(houseMinTile).plus(1, 1));
+        }
     }
 
     @Override
