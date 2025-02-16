@@ -9,9 +9,6 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.io.IOException;
 
-import static de.amr.games.pacman.lib.tilemap.WorldMap.PROPERTY_POS_HOUSE_MAX_TILE;
-import static de.amr.games.pacman.lib.tilemap.WorldMap.PROPERTY_POS_HOUSE_MIN_TILE;
-
 public class UpdateMapFiles {
 
     public static void main(String[] args) {

@@ -6,7 +6,10 @@ package de.amr.games.pacman.tilemap.editor;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.*;
+import de.amr.games.pacman.lib.tilemap.FoodTiles;
+import de.amr.games.pacman.lib.tilemap.Obstacle;
+import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D;
 import de.amr.games.pacman.uilib.ResourceManager;
 import de.amr.games.pacman.uilib.Ufx;
@@ -36,7 +39,6 @@ import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.tilemap.editor.ArcadeMap.*;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.getColorFromMap;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.parseColor;
-import static de.amr.games.pacman.uilib.Ufx.coloredMaterial;
 import static de.amr.games.pacman.uilib.Ufx.opaqueColor;
 
 public class Maze3D extends Group {

@@ -21,9 +21,9 @@ import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import static de.amr.games.pacman.uilib.model3D.Model3D.meshViewById;
 import static de.amr.games.pacman.uilib.Ufx.now;
 import static de.amr.games.pacman.uilib.Ufx.pauseSec;
+import static de.amr.games.pacman.uilib.model3D.Model3D.meshViewById;
 
 /**
  * @author Armin Reichert

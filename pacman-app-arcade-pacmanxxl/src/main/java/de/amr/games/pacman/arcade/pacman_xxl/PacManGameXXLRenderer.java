@@ -6,7 +6,6 @@ package de.amr.games.pacman.arcade.pacman_xxl;
 
 import de.amr.games.pacman.arcade.pacman.PacManGameSpriteSheet;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;

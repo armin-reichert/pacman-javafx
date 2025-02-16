@@ -4,11 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.tilemap.rendering;
 
-import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
-import de.amr.games.pacman.lib.tilemap.TerrainTiles;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;

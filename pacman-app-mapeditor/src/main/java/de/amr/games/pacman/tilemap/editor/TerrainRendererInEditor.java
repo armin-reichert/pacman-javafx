@@ -26,7 +26,6 @@ import java.util.Set;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.TileMap.parseVector2i;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
-import static java.util.function.Predicate.not;
 
 /**
  * @author Armin Reichert
