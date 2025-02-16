@@ -156,10 +156,7 @@ public class TerrainRendererInEditor extends TerrainRenderer {
         switch (content) {
             case TerrainTiles.WALL_H -> drawWallH(g, tile);
             case TerrainTiles.WALL_V -> drawWallV(g, tile);
-            //case TerrainTiles.DWALL_H -> drawDWallH(g, tile);
-            //case TerrainTiles.DWALL_V -> drawDWallV(g, tile);
             case TerrainTiles.CORNER_NW, TerrainTiles.CORNER_NE, TerrainTiles.CORNER_SW, TerrainTiles.CORNER_SE -> drawCorner(g, tile, content);
-            //case TerrainTiles.DCORNER_NW, TerrainTiles.DCORNER_NE, TerrainTiles.DCORNER_SW, TerrainTiles.DCORNER_SE -> drawDCorner(g, tile, content);
             case TerrainTiles.DCORNER_ANGULAR_NW, TerrainTiles.DCORNER_ANGULAR_NE, TerrainTiles.DCORNER_ANGULAR_SW, TerrainTiles.DCORNER_ANGULAR_SE
                     -> drawDCornerAngular(g, tile, content, xp, yp);
             case TerrainTiles.DOOR -> drawDoor(g, tile, colors.doorColor());

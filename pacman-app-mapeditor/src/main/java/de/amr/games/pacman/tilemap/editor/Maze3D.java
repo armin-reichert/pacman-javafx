@@ -34,6 +34,8 @@ import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.tilemap.editor.ArcadeMap.*;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.getColorFromMap;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.parseColor;
+import static de.amr.games.pacman.uilib.Ufx.coloredMaterial;
+import static de.amr.games.pacman.uilib.Ufx.opaqueColor;
 
 public class Maze3D extends Group {
 
@@ -61,6 +63,7 @@ public class Maze3D extends Group {
     private final PerspectiveCamera camera;
 
     private final DoubleProperty wallBaseHeightPy = new SimpleDoubleProperty(3.5);
+    private final DoubleProperty houseBaseHeightPy = new SimpleDoubleProperty(12);
 
     private final Node pacmanShape3D;
     private final Node[] ghostShapes;
@@ -150,10 +153,6 @@ public class Maze3D extends Group {
         double worldWidth = terrain.numCols() * TS;
         double worldHeight = terrain.numRows() * TS;
 
-        Color wallBaseColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE));
-        Color wallTopColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL));
-        Color doorColor = getColorFromMap(terrain, PROPERTY_COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR));
-
         mazeGroup.getChildren().clear();
 
         // Floor left-upper corner at origin
@@ -163,6 +162,8 @@ public class Maze3D extends Group {
         floor.setMaterial(coloredMaterial(Color.BLACK));
         mazeGroup.getChildren().add(floor);
 
+        Color wallBaseColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE));
+        Color wallTopColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL));
         r3D.setWallBaseHeightProperty(wallBaseHeightPy);
         r3D.setWallBaseMaterial(coloredMaterial(wallBaseColor));
         r3D.setWallTopMaterial(coloredMaterial(wallTopColor));
@@ -173,16 +174,7 @@ public class Maze3D extends Group {
             r3D.renderObstacle3D(mazeGroup, obstacle, isWorldBorder(worldMap, obstacle));
         }
 
-        var doorMaterial = coloredMaterial(doorColor);
-        terrain.tiles().filter(tile -> terrain.get(tile) == TerrainTiles.DOOR).forEach(tile -> {
-            Box door = new Box(7, 2, wallBaseHeightPy.get());
-            door.setMaterial(doorMaterial);
-            door.setTranslateX(tile.x() * TS + HTS);
-            door.setTranslateY(tile.y() * TS + HTS);
-            door.setTranslateZ(-door.getDepth() * 0.5);
-            door.visibleProperty().bind(terrainVisiblePy);
-            mazeGroup.getChildren().add(door);
-        });
+        addHouse(worldMap, wallBaseColor, wallTopColor);
 
         // exclude normal pellets from wireframe display
         mazeGroup.lookupAll("*").stream()
@@ -196,6 +188,44 @@ public class Maze3D extends Group {
         addActorShape(ghostShapes[1], terrain, PROPERTY_POS_PINK_GHOST);
         addActorShape(ghostShapes[2], terrain, PROPERTY_POS_CYAN_GHOST);
         addActorShape(ghostShapes[3], terrain, PROPERTY_POS_ORANGE_GHOST);
+    }
+
+    private void addHouse(WorldMap worldMap, Color wallBaseColor, Color wallTopColor) {
+        TileMap terrain = worldMap.terrain();
+
+        Vector2i houseMinTile = terrain.getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
+        Vector2i houseMaxTile = terrain.getTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
+        if (houseMinTile == null || houseMaxTile == null) {
+            return;
+        }
+        Vector2i houseRightUpper = vec_2i(houseMaxTile.x(), houseMinTile.y());
+        Vector2i houseLeftLower = vec_2i(houseMinTile.x(), houseMaxTile.y());
+
+        r3D.setWallBaseHeightProperty(houseBaseHeightPy);
+        r3D.setWallTopHeight(0.2f);
+        r3D.setWallThickness(2);
+        r3D.setWallBaseMaterial(coloredMaterial(opaqueColor(wallBaseColor, 0.4)));
+        r3D.setWallTopMaterial(coloredMaterial(wallTopColor));
+
+        mazeGroup.getChildren().addAll(
+            r3D.createWallBetweenTiles(houseMinTile, houseMinTile.plus(2, 0)),
+            r3D.createWallBetweenTiles(houseRightUpper.minus(2, 0), houseRightUpper),
+            r3D.createWallBetweenTiles(houseMinTile, houseLeftLower),
+            r3D.createWallBetweenTiles(houseLeftLower, houseMaxTile),
+            r3D.createWallBetweenTiles(houseMaxTile, houseRightUpper)
+        );
+
+        Color doorColor = getColorFromMap(terrain, PROPERTY_COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR));
+        var doorMaterial = coloredMaterial(doorColor);
+
+        terrain.tiles().filter(tile -> terrain.get(tile) == TerrainTiles.DOOR).forEach(tile -> {
+            Box door = new Box(TS + HTS, 2, houseBaseHeightPy.get());
+            door.setMaterial(doorMaterial);
+            door.setTranslateX(tile.x() * TS + HTS);
+            door.setTranslateY(tile.y() * TS + HTS);
+            door.setTranslateZ(-door.getDepth() * 0.5);
+            mazeGroup.getChildren().add(door);
+        });
     }
 
     private boolean isWorldBorder(WorldMap worldMap, Obstacle obstacle) {
