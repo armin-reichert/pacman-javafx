@@ -76,19 +76,21 @@ public class TileMapEditor {
     public static final byte PALETTE_ID_FOOD    = 2;
 
     public static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle(TileMapEditor.class.getPackageName() + ".texts");
-
     public static String tt(String key, Object... args) {
         return MessageFormat.format(TEXT_BUNDLE.getString(key), args);
     }
 
+    public static final Font FONT_CONTEXT_MENU_COLOR_TEXT = Font.font("Monospace", FontWeight.BOLD, 14);
+    public static final Font FONT_DROP_HINT               = Font.font("Sans", FontWeight.BOLD, 16);
+    public static final Font FONT_MESSAGE                 = Font.font("Sans", FontWeight.NORMAL, 14);
+    public static final Font FONT_SOURCE_VIEW             = Font.font("Monospace", FontWeight.NORMAL, 14);
+    public static final Font FONT_STATUS_LINE_EDIT_MODE   = Font.font("Sans", FontWeight.BOLD, 16);
+    public static final Font FONT_STATUS_LINE_NORMAL      = Font.font("Sans", FontWeight.NORMAL, 14);
+
+    public static final Color COLOR_CANVAS_BACKGROUND = Color.BLACK;
+    public static final Cursor CURSOR_RUBBER = Cursor.cursor(urlString("graphics/radiergummi.jpg"));
+
     public static final Node NO_GRAPHIC = null;
-
-    public static final Color CANVAS_BACKGROUND = Color.BLACK;
-
-    public static final Font FONT_STATUS_LINE_NORMAL = Font.font("Sans", FontWeight.NORMAL, 14);
-    public static final Font FONT_STATUS_LINE_BOLD   = Font.font("Sans", FontWeight.BOLD, 14);
-    public static final Font FONT_MESSAGE = Font.font("Sans", FontWeight.NORMAL, 14);
-    public static final Cursor RUBBER_CURSOR = Cursor.cursor(urlString("graphics/radiergummi.jpg"));
 
     public static final FileChooser.ExtensionFilter FILTER_WORLD_MAP = new FileChooser.ExtensionFilter("World Map Files", "*.world");
     public static final FileChooser.ExtensionFilter FILTER_IMAGE = new FileChooser.ExtensionFilter("Image Files", "*.bmp", "*.gif", "*.jpg", "*.png");
@@ -368,7 +370,7 @@ public class TileMapEditor {
     }
 
     private void onEnterEraseMode() {
-        editCanvas.setCursor(RUBBER_CURSOR);
+        editCanvas.setCursor(CURSOR_RUBBER);
         obstacleEditor.setEnabled(false);
         clearMessage();
         showEditHelpText();
@@ -547,7 +549,7 @@ public class TileMapEditor {
             colorBox.setBackground(Background.fill(color));
             colorBox.setBorder(Border.stroke(Color.BLACK));
             Text text = new Text(formatColorHex(color));
-            text.setFont(Font.font("Monospace", FontWeight.BOLD, 14.0));
+            text.setFont(FONT_CONTEXT_MENU_COLOR_TEXT);
             text.setFill(Color.BLACK);
             colorBox.getChildren().add(text);
         } else {
@@ -603,7 +605,7 @@ public class TileMapEditor {
         sourceView = new Text();
         sourceView.setSmooth(true);
         sourceView.setFontSmoothingType(FontSmoothingType.LCD);
-        sourceView.setFont(Font.font("Monospace", 14));
+        sourceView.setFont(FONT_SOURCE_VIEW);
 
         var vbox = new VBox(sourceView);
         vbox.setPadding(new Insets(10, 20, 10, 20));
@@ -616,7 +618,7 @@ public class TileMapEditor {
         tabEditCanvas = new Tab(tt("tab_editor"), spEditCanvas);
 
         var hint = new Label(tt("image_drop_hint"));
-        hint.setFont(Font.font(16));
+        hint.setFont(FONT_DROP_HINT);
 
         dropTargetForTemplateImage = new BorderPane(hint);
         registerDragAndDropImageHandler(dropTargetForTemplateImage);
@@ -782,7 +784,7 @@ public class TileMapEditor {
         var lblEditMode = new Label();
         lblEditMode.setAlignment(Pos.CENTER_RIGHT);
         lblEditMode.setMinWidth(80);
-        lblEditMode.setFont(Font.font("Sans", FontWeight.BOLD, 16));
+        lblEditMode.setFont(FONT_STATUS_LINE_EDIT_MODE);
         lblEditMode.setTextFill(Color.FORESTGREEN);
         lblEditMode.setEffect(new Glow());
         lblEditMode.textProperty().bind(Bindings.createStringBinding(
@@ -864,7 +866,7 @@ public class TileMapEditor {
             updateMessageAnimation();
             TileMap terrainMap = worldMap().terrain();
             TerrainColorScheme colors = new TerrainColorScheme(
-                CANVAS_BACKGROUND,
+                    COLOR_CANVAS_BACKGROUND,
                 getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL)),
                 getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE)),
                 getColorFromMap(terrainMap, PROPERTY_COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR))
