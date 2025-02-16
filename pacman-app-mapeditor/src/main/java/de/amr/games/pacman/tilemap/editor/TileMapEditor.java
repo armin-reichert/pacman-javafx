@@ -1891,6 +1891,17 @@ public class TileMapEditor {
                 }
             }
         }
+        // Find house: require at least min and max tile have been detected
+        Vector2i houseMinTile = worldMap().terrain().tiles()
+            .filter(tile -> worldMap().terrain().get(tile) == TerrainTiles.DCORNER_ANGULAR_NW)
+            .findFirst().orElse(null);
+        Vector2i houseMaxTile = worldMap().terrain().tiles()
+            .filter(tile -> worldMap().terrain().get(tile) == TerrainTiles.DCORNER_ANGULAR_SE)
+            .findFirst().orElse(null);
+        if (houseMinTile != null && houseMaxTile != null) {
+            placeHouse(worldMap(), houseMinTile);
+        }
+
         markTileMapEdited(worldMap().terrain());
         markTileMapEdited(worldMap().food());
     }
