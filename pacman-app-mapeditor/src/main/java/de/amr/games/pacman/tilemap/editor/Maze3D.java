@@ -29,6 +29,8 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 
+import java.util.stream.Stream;
+
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.tilemap.editor.ArcadeMap.*;
@@ -217,12 +219,11 @@ public class Maze3D extends Group {
 
         Color doorColor = getColorFromMap(terrain, PROPERTY_COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR));
         var doorMaterial = coloredMaterial(doorColor);
-
-        terrain.tiles().filter(tile -> terrain.get(tile) == TerrainTiles.DOOR).forEach(tile -> {
-            Box door = new Box(TS + HTS, 2, houseBaseHeightPy.get());
+        Stream.of(houseMinTile.plus(3.0f, 0), houseMinTile.plus(4.0f, 0)).forEach(doorTile -> {
+            Box door = new Box(TS+HTS, 2, houseBaseHeightPy.get());
             door.setMaterial(doorMaterial);
-            door.setTranslateX(tile.x() * TS + HTS);
-            door.setTranslateY(tile.y() * TS + HTS);
+            door.setTranslateX(doorTile.x() * TS + HTS);
+            door.setTranslateY(doorTile.y() * TS + HTS);
             door.setTranslateZ(-door.getDepth() * 0.5);
             mazeGroup.getChildren().add(door);
         });

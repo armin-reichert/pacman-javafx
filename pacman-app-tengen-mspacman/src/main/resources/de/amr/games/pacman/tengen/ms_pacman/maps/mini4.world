@@ -1,5 +1,5 @@
 !terrain
-color_door=rgb(255,183, 255)
+color_door=rgb(181,49,33)
 color_wall_fill=rgb(189,189,0)
 color_wall_stroke=rgb(181,49,33)
 pos_bonus=(13,20)
