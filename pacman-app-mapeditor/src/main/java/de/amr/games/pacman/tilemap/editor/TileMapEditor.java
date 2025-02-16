@@ -108,6 +108,10 @@ public class TileMapEditor {
             if (terrainPropertiesEditor() != null) {
                 terrainPropertiesEditor().setTileMap(worldMap.terrain());
             }
+            templateImagePy.set(null);
+            if (tabTemplateImage.isSelected()) {
+                tabPaneEditorViews.getSelectionModel().select(tabEditCanvas);
+            }
             invalidateTerrainData();
             updateSourceView();
             mazePreview3D.updateTerrain();
@@ -642,26 +646,37 @@ public class TileMapEditor {
             }
             e.consume();
         });
+        node.setOnDragDropped(this::onMazeImageFileDropped);
+    }
 
-        node.setOnDragDropped(e -> {
-            if (e.getDragboard().hasFiles()) {
-                File file = e.getDragboard().getFiles().getFirst();
-                if (isSupportedImageFile(file)) {
-                    e.acceptTransferModes(TransferMode.COPY);
-                    try (FileInputStream in = new FileInputStream(file)) {
-                        templateImagePy.set(new Image(in));
-                        removeTerrainMapProperty(PROPERTY_COLOR_WALL_FILL);
-                        removeTerrainMapProperty(PROPERTY_COLOR_WALL_STROKE);
-                        removeTerrainMapProperty(PROPERTY_COLOR_DOOR);
-                        removeFoodMapProperty(PROPERTY_COLOR_FOOD);
-                        showMessage("Select colors for tile identification!", 3, MessageType.INFO);
-                    } catch (IOException x) {
-                        Logger.error(x);
+    private void onMazeImageFileDropped(DragEvent e) {
+        if (e.getDragboard().hasFiles()) {
+            File file = e.getDragboard().getFiles().getFirst();
+            if (isSupportedImageFile(file)) {
+                e.acceptTransferModes(TransferMode.COPY);
+                try (FileInputStream in = new FileInputStream(file)) {
+                    Image image = new Image(in);
+                    if (image.getHeight() % TS != 0 || image.getWidth() % TS != 0) {
+                        showMessage("Image size seems dubious", 3, MessageType.WARNING);
+                        return;
                     }
+                    // 3 empty rows above maze, 2 empty rows below
+                    int tilesY = 5 + (int) (image.getHeight() / TS), tilesX = (int) (image.getWidth() / TS);
+                    setBlankMap(tilesX, tilesY);
+                    templateImagePy.set(image);
+                    removeTerrainMapProperty(PROPERTY_COLOR_WALL_FILL);
+                    removeTerrainMapProperty(PROPERTY_COLOR_WALL_STROKE);
+                    removeTerrainMapProperty(PROPERTY_COLOR_DOOR);
+                    removeFoodMapProperty(PROPERTY_COLOR_FOOD);
+                    showMessage("Select colors for tile identification!", 10, MessageType.INFO);
+                    tabPaneEditorViews.getSelectionModel().select(tabTemplateImage);
+                } catch (IOException x) {
+                    showMessage("Error dropping file " + file, 3, MessageType.ERROR);
+                    Logger.error(x);
                 }
             }
-            e.consume();
-        });
+        }
+        e.consume();
     }
 
     private void createTabPaneWithPreviews() {
