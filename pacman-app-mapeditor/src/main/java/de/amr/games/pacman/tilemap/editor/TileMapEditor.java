@@ -99,6 +99,59 @@ public class TileMapEditor {
     public static final FileChooser.ExtensionFilter FILTER_IMAGE = new FileChooser.ExtensionFilter("Image Files", "*.bmp", "*.gif", "*.jpg", "*.png");
     public static final FileChooser.ExtensionFilter FILTER_ALL = new FileChooser.ExtensionFilter("All Files", "*.*");
 
+    // Change management
+
+    public class ChangeManager {
+        private boolean unsavedChanges;
+        private boolean terrainChangesPending;
+        private boolean foodChangesPending;
+        private boolean terrainDataUpToDate;
+
+        public void setUnsavedChanges() { unsavedChanges = true; }
+        public void clearUnsavedChanges() { unsavedChanges = false; }
+        public boolean hasUnsavedChanges() { return unsavedChanges; }
+
+        public void markChanged() {
+            markTerrainChanged();
+            markFoodChanged();
+            setUnsavedChanges();
+        }
+
+        public void markTerrainChanged() {
+            unsavedChanges = true;
+            terrainChangesPending = true;
+            terrainDataUpToDate = false;
+        }
+
+        public void markFoodChanged() {
+            foodChangesPending = true;
+        }
+
+        private void processChanges() {
+            if (!terrainDataUpToDate) {
+                tilesWithErrors.clear();
+                tilesWithErrors.addAll(worldMap().updateObstacleList());
+                terrainDataUpToDate = true;
+            }
+            if (terrainChangesPending) {
+                terrainPropertiesEditor().rebuildPropertyEditors();
+                mazePreview3D.updateTerrain();
+                updateSourceView();
+                terrainChangesPending = false;
+                Logger.info("Terrain updated");
+            }
+            if (foodChangesPending) {
+                foodPropertiesEditor().rebuildPropertyEditors();
+                mazePreview3D.updateFood();
+                updateSourceView();
+                foodChangesPending = false;
+                Logger.info("Food updated");
+            }
+        }
+    }
+
+    private final ChangeManager changeManager = new ChangeManager();
+
     // Properties
 
     private final ObjectProperty<File> currentFilePy = new SimpleObjectProperty<>();
@@ -117,19 +170,13 @@ public class TileMapEditor {
             if (tabTemplateImage.isSelected()) {
                 tabPaneEditorViews.getSelectionModel().select(tabEditCanvas);
             }
-            invalidateTerrainData();
-            updateSourceView();
-            mazePreview3D.updateTerrain();
-            mazePreview3D.updateFood();
+            changeManager.markFoodChanged();
+            changeManager.markTerrainChanged();
+            changeManager.setUnsavedChanges();
         }
     };
 
-    private final IntegerProperty gridSizePy = new SimpleIntegerProperty(8) {
-        @Override
-        protected void invalidated() {
-            invalidateTerrainData();
-        }
-    };
+    private final IntegerProperty gridSizePy = new SimpleIntegerProperty(8);
 
     private final BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
     private final BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
@@ -160,6 +207,9 @@ public class TileMapEditor {
     private final ObjectProperty<Image> templateImageGreyPy = new SimpleObjectProperty<>();
 
     // Accessor methods
+
+
+    public ChangeManager getChangeManager() { return changeManager;}
 
     public ObjectProperty<WorldMap> worldMapProperty() { return worldMapPy; }
 
@@ -234,10 +284,6 @@ public class TileMapEditor {
     private File currentDirectory;
     private Instant messageCloseTime;
     private Timeline clock;
-    private boolean unsavedChanges;
-    private boolean terrainChanged;
-    private boolean foodChanged;
-    private boolean terrainDataUpToDate;
     private final List<Vector2i> tilesWithErrors = new ArrayList<>();
 
     private final BorderPane contentPane = new BorderPane();
@@ -410,34 +456,22 @@ public class TileMapEditor {
 
     public void setTerrainMapProperty(String name, String value) {
         worldMap().terrain().setProperty(name, value);
-        //TODO find better solution
-        terrainPropertiesEditor().rebuildPropertyEditors();
-        mazePreview3D.updateTerrain();
-        updateSourceView();
+        changeManager.markTerrainChanged();
     }
 
     private void removeTerrainMapProperty(String name) {
         worldMap().terrain().removeProperty(name);
-        //TODO find better solution
-        terrainPropertiesEditor().rebuildPropertyEditors();
-        mazePreview3D.updateTerrain();
-        updateSourceView();
+        changeManager.markTerrainChanged();
     }
 
     public void setFoodMapProperty(String name, String value) {
         worldMap().food().setProperty(name, value);
-        //TODO find better solution
-        foodPropertiesEditor().rebuildPropertyEditors();
-        mazePreview3D.updateFood();
-        updateSourceView();
+        changeManager.markFoodChanged();
     }
 
     private void removeFoodMapProperty(String name) {
         worldMap().food().removeProperty(name);
-        //TODO find better solution
-        terrainPropertiesEditor().rebuildPropertyEditors();
-        mazePreview3D.updateTerrain();
-        updateSourceView();
+        changeManager.markFoodChanged();
     }
 
     private void createMapSourceView() {
@@ -692,8 +726,11 @@ public class TileMapEditor {
     private void initActiveRendering() {
         double frameDuration = 1000.0 / REFRESH_RATE;
         clock = new Timeline(REFRESH_RATE, new KeyFrame(Duration.millis(frameDuration), e -> {
-            handleMapChanges();
+
+            changeManager.processChanges();
+
             updateMessageAnimation();
+
             TileMap terrainMap = worldMap().terrain();
             TerrainColorScheme colors = new TerrainColorScheme(
                     COLOR_CANVAS_BACKGROUND,
@@ -701,7 +738,6 @@ public class TileMapEditor {
                 getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE)),
                 getColorFromMap(terrainMap, PROPERTY_COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR))
             );
-            ensureTerrainDataUpdated();
             try {
                 drawSelectedPalette(colors);
             } catch (Exception x) {
@@ -772,13 +808,13 @@ public class TileMapEditor {
         var miClearTerrain = new MenuItem(tt("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(e -> {
             worldMap().terrain().clear(TerrainTiles.EMPTY);
-            markTileMapEdited(worldMap().terrain());
+            changeManager.markTerrainChanged();
         });
 
         var miClearFood = new MenuItem(tt("menu.edit.clear_food"));
         miClearFood.setOnAction(e -> {
             worldMap().food().clear(FoodTiles.EMPTY);
-            markTileMapEdited(worldMap().food());
+            changeManager.markFoodChanged();
         });
 
         var miDetectPellets = new MenuItem(tt("menu.edit.identify_tiles"));
@@ -836,7 +872,7 @@ public class TileMapEditor {
 
     public void loadMap(WorldMap worldMap) {
         assertNotNull(worldMap);
-        if (unsavedChanges) {
+        if (changeManager.hasUnsavedChanges()) {
             showSaveConfirmationDialog(this::showSaveDialog, () -> {
                 setWorldMap(new WorldMap(worldMap));
                 currentFilePy.set(null);
@@ -951,7 +987,7 @@ public class TileMapEditor {
             currentDirectory = file.getParentFile();
             if (file.getName().endsWith(".world")) {
                 worldMap().save(file);
-                unsavedChanges = false;
+                changeManager.clearUnsavedChanges();
                 readMapFile(file);
             } else {
                 Logger.error("No .world file selected");
@@ -961,7 +997,7 @@ public class TileMapEditor {
     }
 
     public void showSaveConfirmationDialog(Runnable saveAction, Runnable noSaveAction) {
-        if (unsavedChanges) {
+        if (changeManager.hasUnsavedChanges()) {
             var confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
             confirmationDialog.setTitle(tt("save_dialog.title"));
             confirmationDialog.setHeaderText(tt("save_dialog.header_text"));
@@ -975,9 +1011,9 @@ public class TileMapEditor {
                     saveAction.run();
                 } else if (choice == choiceNoSave) {
                     noSaveAction.run();
-                    unsavedChanges = false;
+                    changeManager.clearUnsavedChanges();
                 } else if (choice == choiceCancel) {
-                    confirmationDialog.close();
+                    confirmationDialog.close(); // TODO check this
                 }
             });
         } else {
@@ -1040,16 +1076,6 @@ public class TileMapEditor {
             foodRenderer.drawFood(g, worldMap().food());
         }
         editCanvas.drawActorSprites(g);
-    }
-
-    private void ensureTerrainDataUpdated() {
-        if (!terrainDataUpToDate) {
-            tilesWithErrors.clear();
-            tilesWithErrors.addAll(worldMap().updateObstacleList());
-            mazePreview3D.updateTerrain();
-            mazePreview3D.updateFood();
-            terrainDataUpToDate = true;
-        }
     }
 
     private void drawSelectedPalette(TerrainColorScheme colors) {
@@ -1124,33 +1150,6 @@ public class TileMapEditor {
         editModePy.set(assertNotNull(mode));
     }
 
-    private void invalidateTerrainData() {
-        terrainDataUpToDate = false;
-    }
-
-    public void markTileMapEdited(TileMap tileMap) {
-        unsavedChanges = true;
-        if (tileMap == worldMap().terrain()) {
-            terrainChanged = true;
-            invalidateTerrainData();
-        }
-        if (tileMap == worldMap().food()) {
-            foodChanged = true;
-        }
-    }
-
-    private void handleMapChanges() {
-        if (terrainChanged) {
-            mazePreview3D.updateTerrain();
-        }
-        if (foodChanged) {
-            mazePreview3D.updateFood();
-        }
-        if (foodChanged || terrainChanged) {
-            updateSourceView();
-        }
-    }
-
     void editAtMousePosition(MouseEvent event) {
         Vector2i tile = tileAtMousePosition(event.getX(), event.getY(), gridSize());
         if (isEditMode(EditMode.INSPECT)) {
@@ -1164,8 +1163,8 @@ public class TileMapEditor {
             case TileMapEditor.PALETTE_ID_ACTORS -> {
                 if (selectedPalette().isToolSelected()) {
                     selectedPalette().selectedTool().apply(worldMap().terrain(), tile);
-                    markTileMapEdited(worldMap().terrain());
-                    terrainPropertiesEditor().updatePropertyEditorValues();
+                    changeManager.markTerrainChanged();
+                    terrainPropertiesEditor().updatePropertyEditorValues(); //TODO check
                 }
             }
             default -> Logger.error("Unknown palette ID " + selectedPaletteID());
@@ -1241,18 +1240,23 @@ public class TileMapEditor {
         assertNotNull(tileMap);
         assertNotNull(tile);
         tileMap.set(tile, value);
-        markTileMapEdited(worldMap().terrain());
         if (tileMap == worldMap().terrain()) {
+            changeManager.markTerrainChanged();
             worldMap().food().set(tile, FoodTiles.EMPTY);
-            markTileMapEdited(worldMap().food());
+            changeManager.markFoodChanged();
+        } else {
+            changeManager.markFoodChanged();
         }
         if (isSymmetricEditMode()) {
             byte mirroredContent = mirroredTileContent(tileMap.get(tile));
             Vector2i mirrorTile = mirrored(tileMap, tile);
             tileMap.set(mirrorTile, mirroredContent);
             if (tileMap == worldMap().terrain()) {
+                changeManager.markTerrainChanged();
                 worldMap().food().set(mirrorTile, FoodTiles.EMPTY);
-                markTileMapEdited(worldMap().food());
+                changeManager.markFoodChanged();
+            } else {
+                changeManager.markFoodChanged();
             }
         }
     }
@@ -1264,13 +1268,13 @@ public class TileMapEditor {
     // ignores symmetric edit mode!
     public void clearTerrainTileValue(Vector2i tile) {
         worldMap().terrain().set(tile, TerrainTiles.EMPTY);
-        markTileMapEdited(worldMap().terrain());
+        changeManager.markTerrainChanged();
     }
 
     // ignores symmetric edit mode!
     public void clearFoodTileValue(Vector2i tile) {
         worldMap().food().set(tile, FoodTiles.EMPTY);
-        markTileMapEdited(worldMap().food());
+        changeManager.markFoodChanged();
     }
 
     private void setBlankMap(int tilesX, int tilesY) {
@@ -1325,7 +1329,7 @@ public class TileMapEditor {
             terrain.set(emptyRowsBeforeMaze, col, TerrainTiles.WALL_H);
             terrain.set(lastRow, col, TerrainTiles.WALL_H);
         }
-        markTileMapEdited(terrain);
+        changeManager.markTerrainChanged();
     }
 
     public void placeHouse(WorldMap worldMap, Vector2i origin) {
@@ -1343,10 +1347,7 @@ public class TileMapEditor {
                 terrain.set(row, col, TerrainTiles.EMPTY);
             }
         }
-        terrainPropertiesEditor().rebuildPropertyEditors();
-        markTileMapEdited(worldMap.terrain());
-        terrainChanged = true; //TODO check
-        markTileMapEdited(worldMap.food());
+        changeManager.markChanged();
     }
 
     private void openTemplateImage() {
@@ -1454,7 +1455,6 @@ public class TileMapEditor {
             placeHouse(worldMap(), houseMinTile);
         }
 
-        markTileMapEdited(worldMap().terrain());
-        markTileMapEdited(worldMap().food());
+        changeManager.markChanged();
     }
 }
