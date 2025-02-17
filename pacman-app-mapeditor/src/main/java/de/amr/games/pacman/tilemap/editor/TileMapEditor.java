@@ -142,11 +142,7 @@ public class TileMapEditor {
     private final ObjectProperty<EditMode> editModePy = new SimpleObjectProperty<>(EditMode.INSPECT) {
         @Override
         protected void invalidated() {
-            switch (get()) {
-                case INSPECT -> onEnterInspectMode();
-                case EDIT -> onEnterEditMode();
-                case ERASE -> onEnterEraseMode();
-            }
+            onEditModeChanged(get());
         }
     };
 
@@ -356,24 +352,6 @@ public class TileMapEditor {
 
     private void showEditHelpText() {
         showMessage(tt("edit_help"), 30, MessageType.INFO);
-    }
-
-    private void onEnterInspectMode() {
-        clearMessage();
-        showEditHelpText();
-        editCanvas.enterInspectMode();
-    }
-
-    private void onEnterEditMode() {
-        clearMessage();
-        showEditHelpText();
-        editCanvas.enterEditMode();
-    }
-
-    private void onEnterEraseMode() {
-        clearMessage();
-        showEditHelpText();
-        editCanvas.enterEraseMode();
     }
 
     private void createRenderers(TerrainColorScheme colors, Color foodColor) {
@@ -1108,6 +1086,16 @@ public class TileMapEditor {
             sourceView.setText(sb.toString());
         } catch (Exception x) {
             Logger.error(x);
+        }
+    }
+
+    private void onEditModeChanged(EditMode editMode) {
+        clearMessage();
+        showEditHelpText();
+        switch (editMode) {
+            case INSPECT -> editCanvas.enterInspectMode();
+            case EDIT    -> editCanvas.enterEditMode();
+            case ERASE   -> editCanvas.enterEraseMode();
         }
     }
 
