@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.FoodTiles;
+import de.amr.games.pacman.lib.tilemap.TerrainTiles;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import org.tinylog.Logger;
@@ -165,6 +166,22 @@ public class GameWorld {
         setGhostDirection(PINK_GHOST, Direction.DOWN);
         setGhostDirection(CYAN_GHOST, Direction.UP);
         setGhostDirection(ORANGE_GHOST, Direction.UP);
+
+        // Create an obstacle for the house!
+        //TODO change attributes to min_tile and max_tiles
+        for (int y = minY; y <= maxY; ++y) {
+            for (int x = minX; x <= maxX; ++x) {
+                byte value = EMPTY;
+                if (x == minX && y == minY) value = CORNER_NW;
+                else if (x == minX && y == maxY) value = CORNER_NE;
+                else if (x == maxX && y == minY) value = CORNER_SW;
+                else if (x == maxX && y == maxY) value = CORNER_SE;
+                else if (y == minY && (x == minX + 3 || x == minX + 4)) value = DOOR;
+                else if (x == minX || x == maxX) value = WALL_V;
+                else if (y == minY || y == maxY) value = WALL_H;
+                map.terrain().set(vec_2i(x, y), value);
+            }
+        }
     }
 
     public Vector2i houseTopLeftTile() {
