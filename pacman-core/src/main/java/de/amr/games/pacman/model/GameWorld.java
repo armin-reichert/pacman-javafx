@@ -172,9 +172,9 @@ public class GameWorld {
         for (int y = minY; y <= maxY; ++y) {
             for (int x = minX; x <= maxX; ++x) {
                 byte value = EMPTY;
-                if (x == minX && y == minY) value = CORNER_NW;
-                else if (x == minX && y == maxY) value = CORNER_NE;
-                else if (x == maxX && y == minY) value = CORNER_SW;
+                if      (x == minX && y == minY) value = CORNER_NW;
+                else if (x == minX && y == maxY) value = CORNER_SW;
+                else if (x == maxX && y == minY) value = CORNER_NE;
                 else if (x == maxX && y == maxY) value = CORNER_SE;
                 else if (y == minY && (x == minX + 3 || x == minX + 4)) value = DOOR;
                 else if (x == minX || x == maxX) value = WALL_V;
