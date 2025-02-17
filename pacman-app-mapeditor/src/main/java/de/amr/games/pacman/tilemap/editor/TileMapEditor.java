@@ -1424,10 +1424,10 @@ public class TileMapEditor {
         PixelReader rdr = templateImage.getPixelReader();
         int[] pixelsOfTile = new int[TS*TS]; // pixels row-wise
 
-        // 3 empty rows on top, 2 on bottom
-        int numRows = terrain.numRows(), numCols = terrain.numCols();
-        for (int row = 0; row < numRows - 5; ++row) {
-            for (int col = 0; col < numCols; ++col) {
+        int numMazeRows = terrain.numRows() - (EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE);
+        int numMazeCols = terrain.numCols();
+        for (int row = 0; row < numMazeRows; ++row) {
+            for (int col = 0; col < numMazeCols; ++col) {
                 Vector2i mapTile = vec_2i(col, row + 3);
                 try {
                     // read pixel values for current tile
