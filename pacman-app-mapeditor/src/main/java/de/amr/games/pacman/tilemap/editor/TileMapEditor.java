@@ -253,8 +253,7 @@ public class TileMapEditor {
     private TabPane tabPaneEditorViews;
     private Tab tabEditCanvas;
     private Tab tabTemplateImage;
-    private Canvas templateImageView;
-    private ContextMenu templateImageContextMenu;
+    private TemplateImageCanvas templateImageCanvas;
     private TabPane tabPanePreviews;
     private Tab tabPreview2D;
     private Tab tabPreview3D;
@@ -288,7 +287,7 @@ public class TileMapEditor {
         createRenderers(colors, parseColor(MS_PACMAN_COLOR_FOOD));
 
         createFileChooser();
-        createEditCanvas(colors);
+        createEditCanvas();
         createPreview2D();
         createPreview3D();
         createTemplateImageView();
@@ -371,7 +370,7 @@ public class TileMapEditor {
         fileChooser.setInitialDirectory(currentDirectory);
     }
 
-    private void createEditCanvas(TerrainColorScheme colors) {
+    private void createEditCanvas() {
         editCanvas = new EditCanvas(this);
         registerDragAndDropImageHandler(editCanvas);
         spEditCanvas = new ScrollPane(editCanvas);
@@ -396,98 +395,13 @@ public class TileMapEditor {
     }
 
     private void createTemplateImageView() {
-        templateImageView = new Canvas();
-        templateImageView.widthProperty().bind(Bindings.createDoubleBinding(
-            () -> {
-                Image templateImage = templateImagePy.get();
-                double scaling = gridSize() / (double)TS;
-                return templateImage != null ? templateImage.getWidth() * scaling : 0;
-            }, gridSizePy, templateImagePy));
-
-        templateImageView.heightProperty().bind(Bindings.createDoubleBinding(
-            () -> {
-                Image templateImage = templateImagePy.get();
-                double scaling = gridSize() / (double)TS;
-                return templateImage != null ? templateImage.getHeight() * scaling : 0;
-            }, gridSizePy, templateImagePy));
-
-        templateImageView.setOnContextMenuRequested(this::showTemplateImageContextMenu);
-
-        templateImageView.setOnMouseClicked(e -> {
-            if (templateImageContextMenu != null) {
-                templateImageContextMenu.hide();
-                templateImageContextMenu = null;
-            }
-        });
-
-        StackPane pane = new StackPane(templateImageView);
+        templateImageCanvas = new TemplateImageCanvas(this);
+        StackPane pane = new StackPane(templateImageCanvas);
         pane.setBackground(Background.fill(Color.BLACK));
-
         spTemplateImage = new ScrollPane(pane);
     }
 
-    private void showTemplateImageContextMenu(ContextMenuEvent e) {
-        if (templateImageContextMenu != null) {
-            templateImageContextMenu.hide();
-        }
-        templateImageContextMenu = new ContextMenu();
-
-        Color colorAtMousePosition = pickColor(templateImageView, e.getX(), e.getY());
-        if (colorAtMousePosition.equals(Color.TRANSPARENT)) {
-            return;
-        }
-
-        var miColorPreview = createColorMenuItem(colorAtMousePosition, null);
-
-        Color fillColor = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_WALL_FILL, null);
-        var miPickFillColor = createColorMenuItem(fillColor, tt("menu.pick_color.set_fill_color"));
-        miPickFillColor.setOnAction(ae -> setTerrainMapProperty(PROPERTY_COLOR_WALL_FILL, formatColor(colorAtMousePosition)));
-
-        Color strokeColor =  getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_WALL_STROKE, null);
-        var miPickStrokeColor = createColorMenuItem(strokeColor, tt("menu.pick_color.set_stroke_color"));
-        miPickStrokeColor.setOnAction(ae -> setTerrainMapProperty(PROPERTY_COLOR_WALL_STROKE, formatColor(colorAtMousePosition)));
-
-        Color doorColor =  getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_DOOR, null);
-        var miPickDoorColor = createColorMenuItem(doorColor, tt("menu.pick_color.set_door_color"));
-        miPickDoorColor.setOnAction(ae -> setTerrainMapProperty(PROPERTY_COLOR_DOOR, formatColor(colorAtMousePosition)));
-
-        Color foodColor =  getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, null);
-        var miPickFoodColor = createColorMenuItem(foodColor, tt("menu.pick_color.set_food_color"));
-        miPickFoodColor.setOnAction(ae -> setFoodMapProperty(PROPERTY_COLOR_FOOD, formatColor(colorAtMousePosition)));
-
-        templateImageContextMenu.getItems().addAll(
-                miColorPreview,
-                new SeparatorMenuItem(),
-                miPickFillColor,
-                miPickStrokeColor,
-                miPickDoorColor,
-                miPickFoodColor
-        );
-        templateImageContextMenu.show(templateImageView, e.getScreenX(), e.getScreenY());
-    }
-
-    private CustomMenuItem createColorMenuItem(Color color, String itemText) {
-        var colorBox = new HBox();
-        colorBox.setMinWidth(32);
-        colorBox.setMinHeight(16);
-        if (color != null) {
-            colorBox.setBackground(Background.fill(color));
-            colorBox.setBorder(Border.stroke(Color.BLACK));
-            Text text = new Text(formatColorHex(color));
-            text.setFont(FONT_CONTEXT_MENU_COLOR_TEXT);
-            text.setFill(Color.BLACK);
-            colorBox.getChildren().add(text);
-        } else {
-            colorBox.getChildren().add(new Text("Use as"));
-        }
-
-        var content = itemText != null ? new HBox(colorBox, new Text(itemText))  : new HBox(colorBox);
-        content.setSpacing(3);
-
-        return new CustomMenuItem(content);
-    }
-
-    private void setTerrainMapProperty(String name, String value) {
+    public void setTerrainMapProperty(String name, String value) {
         worldMap().terrain().setProperty(name, value);
         //TODO find better solution
         terrainPropertiesEditor().rebuildPropertyEditors();
@@ -503,7 +417,7 @@ public class TileMapEditor {
         updateSourceView();
     }
 
-    private void setFoodMapProperty(String name, String value) {
+    public void setFoodMapProperty(String name, String value) {
         worldMap().food().setProperty(name, value);
         //TODO find better solution
         foodPropertiesEditor().rebuildPropertyEditors();
@@ -517,13 +431,6 @@ public class TileMapEditor {
         terrainPropertiesEditor().rebuildPropertyEditors();
         mazePreview3D.updateTerrain();
         updateSourceView();
-    }
-
-    private Color pickColor(Canvas imageView, double x, double y) {
-        Image image = templateImagePy.get();
-        double pickX = x * (image.getWidth() / imageView.getBoundsInLocal().getWidth());
-        double pickY = y * (image.getHeight() / imageView.getBoundsInLocal().getHeight());
-        return image.getPixelReader().getColor((int) pickX, (int) pickY);
     }
 
     private void createMapSourceView() {
@@ -802,7 +709,7 @@ public class TileMapEditor {
             }
             if (tabTemplateImage.isSelected()) {
                 try {
-                    drawTemplateImageView();
+                    templateImageCanvas.draw();
                 } catch (Exception x) {
                     Logger.error(x);
                 }
@@ -1103,29 +1010,6 @@ public class TileMapEditor {
     // Drawing
     //
 
-    private void drawTemplateImageView() {
-        GraphicsContext g = templateImageView.getGraphicsContext2D();
-        g.setFill(Color.BLACK);
-        g.fillRect(0, 0, templateImageView.getWidth(), templateImageView.getHeight());
-        Image image = templateImagePy.get();
-        if (image != null) {
-            double scaling = (double) gridSize() / TS;
-            double width = scaling * image.getWidth(), height = scaling * image.getHeight();
-            g.setImageSmoothing(false);
-            g.drawImage(image, 0, 0, width, height);
-            if (gridVisiblePy.get()) {
-                g.setStroke(Color.GRAY);
-                g.setLineWidth(0.5);
-                for (int r = 1; r < height / TS; ++r) {
-                    g.strokeLine(0, scaling * r * TS, width, scaling * r * TS);
-                }
-                for (int c = 1; c < width / TS; ++c) {
-                    g.strokeLine(scaling * c * TS, 0, scaling * c * TS, height);
-                }
-            }
-        }
-    }
-
     private void drawPreview2D(TerrainColorScheme colors) {
         GraphicsContext g = canvasPreview2D.getGraphicsContext2D();
         g.setImageSmoothing(false);
@@ -1180,7 +1064,7 @@ public class TileMapEditor {
 
     private void onKeyPressed(KeyEvent e) {
         KeyCode key = e.getCode();
-        boolean alt = e.isAltDown(), control = e.isControlDown();
+        boolean alt = e.isAltDown();
 
         if (alt && key == KeyCode.LEFT) {
             selectMapFileInDirectoryFollowing(false).ifPresent(

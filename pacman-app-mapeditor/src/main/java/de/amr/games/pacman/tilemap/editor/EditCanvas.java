@@ -23,6 +23,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.image.Image;
 import javafx.scene.input.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -42,9 +43,10 @@ public class EditCanvas extends Canvas {
 
     private final TileMapEditor editor;
 
-    private final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>();
-    private final IntegerProperty gridSizePy = new SimpleIntegerProperty(8);
     private final ObjectProperty<Vector2i> focussedTilePy = new SimpleObjectProperty<>();
+    private final IntegerProperty gridSizePy = new SimpleIntegerProperty(8);
+    private final ObjectProperty<Image> templateImageGreyPy = new SimpleObjectProperty<>();
+    private final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>();
 
     private final ObstacleEditor obstacleEditor;
     private final ContextMenu contextMenu = new ContextMenu();
@@ -63,6 +65,7 @@ public class EditCanvas extends Canvas {
 
         gridSizePy.bind(editor.gridSizeProperty());
         worldMapPy.bind(editor.worldMapProperty());
+        templateImageGreyPy.bind(editor.templateImageGreyProperty());
 
         heightProperty().bind(Bindings.createDoubleBinding(
             () -> (double) worldMap().terrain().numRows() * gridSize(),
@@ -127,9 +130,9 @@ public class EditCanvas extends Canvas {
         g.setFill(colors.backgroundColor());
         g.fillRect(0, 0, getWidth(), getHeight());
 
-        if (editor.templateImageGreyProperty().get() != null) {
+        if (templateImageGreyPy.get() != null) {
             int emptyRowsTop = 3, emptyRowsBottom = 2; // TODO
-            g.drawImage(editor.templateImageGreyProperty().get(),
+            g.drawImage(templateImageGreyPy.get(),
                 0, emptyRowsTop * scaling * TS,
                 getWidth(), getHeight() - (emptyRowsTop + emptyRowsBottom) * scaling * TS);
         }
