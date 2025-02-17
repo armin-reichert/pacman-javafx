@@ -1333,14 +1333,25 @@ public class TileMapEditor {
 
     public void placeHouse(WorldMap worldMap, Vector2i origin) {
         TileMap terrain = worldMap.terrain(), food = worldMap.food();
+        // clear tiles where house was located (runtime creates walls and corners and doors!)
+        Vector2i houseMinTile = terrain.getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
+        Vector2i houseMaxTile = terrain.getTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
+        if (houseMinTile != null && houseMaxTile != null) {
+            for (int row = houseMinTile.y(); row <= houseMaxTile.y(); ++row) {
+                for (int col = houseMinTile.x(); col <= houseMaxTile.x(); ++col) {
+                    terrain.set(row, col, TerrainTiles.EMPTY);
+                    food.set(row, col, FoodTiles.EMPTY);
+                }
+            }
+        }
         terrain.setProperty(PROPERTY_POS_HOUSE_MIN_TILE, formatTile(origin));
         terrain.setProperty(PROPERTY_POS_HOUSE_MAX_TILE, formatTile(origin.plus(7, 4)));
         terrain.setProperty(PROPERTY_POS_RED_GHOST,      formatTile(origin.plus(3, -1)));
         terrain.setProperty(PROPERTY_POS_CYAN_GHOST,     formatTile(origin.plus(1, 2)));
         terrain.setProperty(PROPERTY_POS_PINK_GHOST,     formatTile(origin.plus(3, 2)));
         terrain.setProperty(PROPERTY_POS_ORANGE_GHOST,   formatTile(origin.plus(5, 2)));
-        Vector2i houseMinTile = terrain.getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
-        Vector2i houseMaxTile = terrain.getTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
+        houseMinTile = terrain.getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
+        houseMaxTile = terrain.getTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
         for (int row = houseMinTile.y(); row <= houseMaxTile.y(); ++row) {
             for (int col = houseMinTile.x(); col <= houseMaxTile.x(); ++col) {
                 terrain.set(row, col, TerrainTiles.EMPTY);
