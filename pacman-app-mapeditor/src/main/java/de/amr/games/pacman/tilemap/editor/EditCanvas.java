@@ -339,20 +339,12 @@ public class EditCanvas extends Canvas {
             }
         });
 
-        var miDetectPellets = new MenuItem(tt("menu.edit.identify_tiles"));
-        miDetectPellets.disableProperty().bind(
-            Bindings.createBooleanBinding(
-                () -> editor.templateImageProperty().get() == null,
-                editor.templateImageProperty()));
-        miDetectPellets.setOnAction(ae -> editor.identifyTilesFromTemplateImage());
-
         contextMenu.getItems().setAll(
             miInsertRow,
             miDeleteRow,
             new SeparatorMenuItem(),
             miPlaceHouse,
             new SeparatorMenuItem(),
-            miDetectPellets,
             miFloodWithPellets);
 
         contextMenu.show(this, menuEvent.getScreenX(), menuEvent.getScreenY());

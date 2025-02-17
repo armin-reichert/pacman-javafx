@@ -1390,7 +1390,7 @@ public class TileMapEditor {
         }
     }
 
-    public void identifyTilesFromTemplateImage() {
+    private void identifyTilesFromTemplateImage() {
         Image templateImage = templateImagePy.get();
         if (templateImage == null) {
             return;
