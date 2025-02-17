@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.tilemap.FoodTiles;
 import de.amr.games.pacman.lib.tilemap.TerrainTiles;
 import javafx.scene.paint.Color;
 
+import java.util.Arrays;
 import java.util.stream.IntStream;
 
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -20,123 +21,113 @@ public class TileMatcher {
             this(toArgb(backgroundColor), toArgb(fillColor), toArgb(strokeColor), toArgb(doorColor), toArgb(foodColor));
         }
 
-        public boolean isBackground(int pixel) { return pixel == backgroundColor; }
-        public boolean isStroke(int pixel) { return pixel == strokeColor; }
-        public boolean isFill(int pixel) { return pixel == fillColor; }
-        public boolean isDoor(int pixel) { return pixel == doorColor; }
-        public boolean isFood(int pixel) { return pixel == foodColor; }
-    }
+        public boolean isBackgroundPixel(int pixel) { return pixel == backgroundColor; }
+        public boolean isStrokePixel(int pixel) { return pixel == strokeColor; }
+        public boolean isFillPixel(int pixel) { return pixel == fillColor; }
+        public boolean isDoorPixel(int pixel) { return pixel == doorColor; }
+        public boolean isFoodPixel(int pixel) { return pixel == foodColor; }
 
-    private static int toArgb(Color color) {
-        int a = (int) (color.getOpacity() * 255);
-        int r = (int) (color.getRed() * 255);
-        int g = (int) (color.getGreen() * 255);
-        int b = (int) (color.getBlue() * 255);
-        return (a << 24) | (r << 16) | (g << 8) | b;
+        private static int toArgb(Color color) {
+            int a = (int) (color.getOpacity() * 255);
+            int r = (int) (color.getRed() * 255);
+            int g = (int) (color.getGreen() * 255);
+            int b = (int) (color.getBlue() * 255);
+            return (a << 24) | (r << 16) | (g << 8) | b;
+        }
     }
 
     private final PixelScheme pixelScheme;
 
-    public TileMatcher(PixelScheme pixelScheme) {
-        this.pixelScheme = pixelScheme;
+    public TileMatcher(Color backgroundColor, Color fillColor, Color strokeColor, Color doorColor, Color foodColor) {
+        pixelScheme = new PixelScheme(backgroundColor, fillColor, strokeColor, doorColor, foodColor);
     }
 
-    public byte identifyFoodTile(int[] pixels) {
-        if (isEnergizer(pixels)) return FoodTiles.ENERGIZER;
-        if (isPellet(pixels)) return FoodTiles.PELLET;
+    public byte identifyFoodTile(int[] tilePixels) {
+        if (isEnergizer(tilePixels)) return FoodTiles.ENERGIZER;
+        if (isPellet(tilePixels)) return FoodTiles.PELLET;
         return FoodTiles.EMPTY;
     }
 
-    private boolean isEnergizer(int[] pixels) {
-        int numFoodPixels = 0;
-        for (int pixel : pixels) {
-            if (pixel == pixelScheme.foodColor) ++numFoodPixels;
-        }
-        return numFoodPixels > 50;
+    private boolean isEnergizer(int[] tilePixels) {
+        return Arrays.stream(tilePixels).filter(pixelScheme::isFoodPixel).count() > 50;
     }
 
-    private boolean isPellet(int[] pixels) {
-        return set(pixels, 27, 28, 35, 36).allMatch(pixelScheme::isFood)
-                && row(pixels, 0).allMatch(pixelScheme::isBackground)
-                && row(pixels, 1).allMatch(pixelScheme::isBackground);
+    private boolean isPellet(int[] tilePixels) {
+        return subset(tilePixels, 27, 28, 35, 36).allMatch(pixelScheme::isFoodPixel)
+                && row(tilePixels, 0).allMatch(pixelScheme::isBackgroundPixel)
+                && row(tilePixels, 1).allMatch(pixelScheme::isBackgroundPixel);
     }
 
-    public byte identifyTerrainTile(int[] pixels) {
-        if (isAngularDoubleNWCorner(pixels)) return TerrainTiles.DCORNER_ANGULAR_NW;
-        if (isAngularDoubleSWCorner(pixels)) return TerrainTiles.DCORNER_ANGULAR_SW;
-        if (isAngularDoubleSECorner(pixels)) return TerrainTiles.DCORNER_ANGULAR_SE;
-        if (isAngularDoubleNECorner(pixels)) return TerrainTiles.DCORNER_ANGULAR_NE;
-        if (isDoor(pixels)) return TerrainTiles.DOOR;
-        if (isHWall(pixels)) return TerrainTiles.WALL_H;
-        if (isVWall(pixels)) return TerrainTiles.WALL_V;
-        if (isNWCorner(pixels)) return TerrainTiles.CORNER_NW;
-        if (isSWCorner(pixels)) return TerrainTiles.CORNER_SW;
-        if (isNECorner(pixels)) return TerrainTiles.CORNER_NE;
-        if (isSECorner(pixels)) return TerrainTiles.CORNER_SE;
+    public byte identifyTerrainTile(int[] tilePixels) {
+        if (matchesAngularDoubleNWCorner(tilePixels)) return TerrainTiles.DCORNER_ANGULAR_NW;
+        if (matchesAngularDoubleSWCorner(tilePixels)) return TerrainTiles.DCORNER_ANGULAR_SW;
+        if (matchesAngularDoubleSECorner(tilePixels)) return TerrainTiles.DCORNER_ANGULAR_SE;
+        if (matchesAngularDoubleNECorner(tilePixels)) return TerrainTiles.DCORNER_ANGULAR_NE;
+        if (matchesDoor(tilePixels)) return TerrainTiles.DOOR;
+        if (matchesHWall(tilePixels)) return TerrainTiles.WALL_H;
+        if (matchesVWall(tilePixels)) return TerrainTiles.WALL_V;
+        if (matchesNWCorner(tilePixels)) return TerrainTiles.CORNER_NW;
+        if (matchesSWCorner(tilePixels)) return TerrainTiles.CORNER_SW;
+        if (matchesNECorner(tilePixels)) return TerrainTiles.CORNER_NE;
+        if (matchesSECorner(tilePixels)) return TerrainTiles.CORNER_SE;
         return TerrainTiles.EMPTY;
     }
 
     private IntStream allIndices() { return IntStream.range(0, 64); }
 
-    private IntStream row(int[] pixels, int rowIndex) {
-        return allIndices().filter(i -> i / TS == rowIndex).map(i -> pixels[i]);
+    private IntStream row(int[] tilePixels, int rowIndex) {
+        return allIndices().filter(i -> i / TS == rowIndex).map(i -> tilePixels[i]);
     }
 
-    private IntStream col(int[] pixels, int columnIndex) {
-        return allIndices().filter(i -> i % TS == columnIndex).map(i -> pixels[i]);
+    private IntStream col(int[] tilePixels, int columnIndex) {
+        return allIndices().filter(i -> i % TS == columnIndex).map(i -> tilePixels[i]);
     }
 
-    private IntStream set(int[] pixels, int... indices) {
-        return IntStream.of(indices).map(i -> pixels[i]);
+    private IntStream subset(int[] tilePixels, int... indices) {
+        return IntStream.of(indices).map(i -> tilePixels[i]);
     }
 
-    private boolean isDoor(int[] pixels) {
-        return row(pixels, 5).allMatch(pixelScheme::isDoor) && row(pixels, 6).allMatch(pixelScheme::isDoor);
+    private boolean matchesDoor(int[] tilePixels) {
+        return row(tilePixels, 5).allMatch(pixelScheme::isDoorPixel) && row(tilePixels, 6).allMatch(pixelScheme::isDoorPixel);
     }
 
-    private boolean isHWall(int[] pixels) {
-        return row(pixels, 3).allMatch(pixelScheme::isStroke) || row(pixels, 4).allMatch(pixelScheme::isStroke);
+    private boolean matchesHWall(int[] tilePixels) {
+        return row(tilePixels, 3).allMatch(pixelScheme::isStrokePixel) || row(tilePixels, 4).allMatch(pixelScheme::isStrokePixel);
     }
 
-    private boolean isDoubleHWall(int[] pixels) {
-        return
-            row(pixels, 0).allMatch(pixelScheme::isStroke) && row(pixels, 3).allMatch(pixelScheme::isStroke) ||
-            row(pixels, 4).allMatch(pixelScheme::isStroke) && row(pixels, 7).allMatch(pixelScheme::isStroke);
+    private boolean matchesVWall(int[] tilePixels) {
+        return col(tilePixels, 3).allMatch(pixelScheme::isStrokePixel) || col(tilePixels, 4).allMatch(pixelScheme::isStrokePixel);
     }
 
-    private boolean isVWall(int[] pixels) {
-        return col(pixels, 3).allMatch(pixelScheme::isStroke) || col(pixels, 4).allMatch(pixelScheme::isStroke);
+    private boolean matchesNWCorner(int[] tilePixels) {
+        return subset(tilePixels, 60, 52, 45, 38).allMatch(pixelScheme::isStrokePixel) || subset(tilePixels, 51, 43, 36, 29).allMatch(pixelScheme::isStrokePixel);
     }
 
-    private boolean isNWCorner(int[] pixels) {
-        return set(pixels, 60, 52, 45, 38).allMatch(pixelScheme::isStroke) || set(pixels, 51, 43, 36, 29).allMatch(pixelScheme::isStroke);
+    private boolean matchesAngularDoubleNWCorner(int[] tilePixels) {
+        return subset(tilePixels, 36, 44, 52, 60, 37, 38, 39, 63).allMatch(pixelScheme::isStrokePixel);
     }
 
-    private boolean isAngularDoubleNWCorner(int[] pixels) {
-        return set(pixels, 36, 44, 52, 60, 37, 38, 39, 63).allMatch(pixelScheme::isStroke);
+    private boolean matchesSWCorner(int[] tilePixels) {
+        return subset(tilePixels, 4, 12, 21, 30).allMatch(pixelScheme::isStrokePixel) || subset(tilePixels, 11, 19, 28, 37).allMatch(pixelScheme::isStrokePixel);
     }
 
-    private boolean isSWCorner(int[] pixels) {
-        return set(pixels, 4, 12, 21, 30).allMatch(pixelScheme::isStroke) || set(pixels, 11, 19, 28, 37).allMatch(pixelScheme::isStroke);
+    private boolean matchesAngularDoubleSWCorner(int[] tilePixels) {
+        return subset(tilePixels, 4, 12, 20, 28, 29, 30, 31, 7).allMatch(pixelScheme::isStrokePixel);
     }
 
-    private boolean isAngularDoubleSWCorner(int[] pixels) {
-        return set(pixels, 4, 12, 20, 28, 29, 30, 31, 7).allMatch(pixelScheme::isStroke);
+    private boolean matchesNECorner(int[] tilePixels) {
+        return subset(tilePixels, 33, 42, 51, 59).allMatch(pixelScheme::isStrokePixel) || subset(tilePixels, 26, 35, 44, 52).allMatch(pixelScheme::isStrokePixel);
     }
 
-    private boolean isNECorner(int[] pixels) {
-        return set(pixels, 33, 42, 51, 59).allMatch(pixelScheme::isStroke) || set(pixels, 26, 35, 44, 52).allMatch(pixelScheme::isStroke);
+    private boolean matchesAngularDoubleNECorner(int[] tilePixels) {
+        return subset(tilePixels, 32, 33, 34, 35, 43, 51, 59, 56).allMatch(pixelScheme::isStrokePixel);
     }
 
-    private boolean isAngularDoubleNECorner(int[] pixels) {
-        return set(pixels, 32, 33, 34, 35, 43, 51, 59, 56).allMatch(pixelScheme::isStroke);
+    private boolean matchesSECorner(int[] tilePixels) {
+        return subset(tilePixels, 3, 11, 18, 25).allMatch(pixelScheme::isStrokePixel) || subset(tilePixels, 34, 27, 20, 12).allMatch(pixelScheme::isStrokePixel);
     }
 
-    private boolean isSECorner(int[] pixels) {
-        return set(pixels, 3, 11, 18, 25).allMatch(pixelScheme::isStroke) || set(pixels, 34, 27, 20, 12).allMatch(pixelScheme::isStroke);
-    }
-
-    private boolean isAngularDoubleSECorner(int[] pixels) {
-        return set(pixels, 3, 11, 19, 27, 26, 25, 24, 0).allMatch(pixelScheme::isStroke);
+    private boolean matchesAngularDoubleSECorner(int[] tilePixels) {
+        return subset(tilePixels, 3, 11, 19, 27, 26, 25, 24, 0).allMatch(pixelScheme::isStrokePixel);
     }
 }

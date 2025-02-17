@@ -818,10 +818,9 @@ public class TileMapEditor {
         });
 
         var miDetectPellets = new MenuItem(tt("menu.edit.identify_tiles"));
-        //TODO why doesn't this work?
-        //miDetectPellets.disableProperty().bind(templateImagePy.map(image -> image == null));
-        miDetectPellets.disableProperty().bind(Bindings.createBooleanBinding(() -> templateImagePy.get() == null,  templateImagePy));
-        miDetectPellets.setOnAction(ae -> identifyTilesFromTemplateImage());
+        miDetectPellets.disableProperty().bind(
+                Bindings.createBooleanBinding(() -> templateImagePy.get() == null, templateImagePy));
+        miDetectPellets.setOnAction(ae -> populateMapFromTemplateImage());
 
         menuEdit = new Menu(tt("menu.edit"), NO_GRAPHIC,
             miSymmetricMode,
@@ -1390,38 +1389,43 @@ public class TileMapEditor {
         }
     }
 
-    private void identifyTilesFromTemplateImage() {
+    private void populateMapFromTemplateImage() {
         Image templateImage = templateImagePy.get();
         if (templateImage == null) {
             return;
         }
-        Color fillColor   = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_WALL_FILL, null);
-        Color strokeColor = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_WALL_STROKE, null);
-        Color doorColor   = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_DOOR, Color.PINK);
-        Color foodColor   = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, null);
 
+        TileMap terrain = worldMap().terrain(), food = worldMap().food();
+
+        Color fillColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_FILL, null);
         if (fillColor == null) {
             showMessage("No fill color defined", 3, MessageType.ERROR);
             return;
         }
+        Color strokeColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_STROKE, null);
         if (strokeColor == null) {
             showMessage("No stroke color defined", 3, MessageType.ERROR);
             return;
         }
+        Color doorColor = getColorFromMap(terrain, PROPERTY_COLOR_DOOR, Color.PINK);
+        if (doorColor == null) {
+            showMessage("No door color defined", 3, MessageType.ERROR);
+            return;
+        }
+        Color foodColor = getColorFromMap(food, PROPERTY_COLOR_FOOD, null);
         if (foodColor == null) {
             showMessage("No food color defined", 3, MessageType.ERROR);
             return;
         }
 
-        TileMatcher.PixelScheme pixelScheme = new TileMatcher.PixelScheme(Color.TRANSPARENT, fillColor, strokeColor, doorColor, foodColor);
-        TileMatcher matcher = new TileMatcher(pixelScheme);
+        TileMatcher matcher = new TileMatcher(Color.TRANSPARENT, fillColor, strokeColor, doorColor, foodColor);
 
         WritablePixelFormat<IntBuffer> pixelFormat = WritablePixelFormat.getIntArgbInstance();
         PixelReader rdr = templateImage.getPixelReader();
         int[] pixelsOfTile = new int[TS*TS]; // pixels row-wise
 
         // 3 empty rows on top, 2 on bottom
-        int numRows = worldMap().terrain().numRows(), numCols = worldMap().terrain().numCols();
+        int numRows = terrain.numRows(), numCols = terrain.numCols();
         for (int row = 0; row < numRows - 5; ++row) {
             for (int col = 0; col < numCols; ++col) {
                 Vector2i mapTile = vec_2i(col, row + 3);
@@ -1430,11 +1434,11 @@ public class TileMapEditor {
                     rdr.getPixels(col * TS, row * TS, TS, TS, pixelFormat, pixelsOfTile, 0, TS);
                     byte foodValue = matcher.identifyFoodTile(pixelsOfTile);
                     if (foodValue == FoodTiles.PELLET || foodValue == FoodTiles.ENERGIZER) {
-                        worldMap().food().set(mapTile, foodValue);
+                        food.set(mapTile, foodValue);
                     }
                     else {
                         byte terrainValue = matcher.identifyTerrainTile(pixelsOfTile);
-                        worldMap().terrain().set(mapTile, terrainValue);
+                        terrain.set(mapTile, terrainValue);
                     }
                 } catch (IndexOutOfBoundsException e) {
                     Logger.error("Could not get pixels for tile {}, maybe image has been cropped incorrectly?", mapTile);
@@ -1445,11 +1449,11 @@ public class TileMapEditor {
             }
         }
         // Find house: require at least min and max tile have been detected
-        Vector2i houseMinTile = worldMap().terrain().tiles()
-            .filter(tile -> worldMap().terrain().get(tile) == TerrainTiles.DCORNER_ANGULAR_NW)
+        Vector2i houseMinTile = terrain.tiles()
+            .filter(tile -> terrain.get(tile) == TerrainTiles.DCORNER_ANGULAR_NW)
             .findFirst().orElse(null);
-        Vector2i houseMaxTile = worldMap().terrain().tiles()
-            .filter(tile -> worldMap().terrain().get(tile) == TerrainTiles.DCORNER_ANGULAR_SE)
+        Vector2i houseMaxTile = terrain.tiles()
+            .filter(tile -> terrain.get(tile) == TerrainTiles.DCORNER_ANGULAR_SE)
             .findFirst().orElse(null);
         if (houseMinTile != null && houseMaxTile != null) {
             placeHouse(worldMap(), houseMinTile);
