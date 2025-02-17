@@ -333,11 +333,7 @@ public class EditCanvas extends Canvas {
         });
 
         var miFloodWithPellets = new MenuItem(tt("menu.edit.flood_with_pellets"));
-        miFloodWithPellets.setOnAction(ae -> {
-            if (worldMap().terrain().get(tile) == TerrainTiles.EMPTY && worldMap().food().get(tile) == TerrainTiles.EMPTY) {
-                editor.floodWithPellets(tile);
-            }
-        });
+        miFloodWithPellets.setOnAction(ae -> editor.floodWithPellets(tile));
 
         contextMenu.getItems().setAll(
             miInsertRow,

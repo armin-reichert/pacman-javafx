@@ -1332,7 +1332,7 @@ public class TileMapEditor {
     }
 
     public void placeHouse(WorldMap worldMap, Vector2i origin) {
-        TileMap terrain = worldMap.terrain();
+        TileMap terrain = worldMap.terrain(), food = worldMap.food();
         terrain.setProperty(PROPERTY_POS_HOUSE_MIN_TILE, formatTile(origin));
         terrain.setProperty(PROPERTY_POS_HOUSE_MAX_TILE, formatTile(origin.plus(7, 4)));
         terrain.setProperty(PROPERTY_POS_RED_GHOST,      formatTile(origin.plus(3, -1)));
@@ -1344,6 +1344,7 @@ public class TileMapEditor {
         for (int row = houseMinTile.y(); row <= houseMaxTile.y(); ++row) {
             for (int col = houseMinTile.x(); col <= houseMaxTile.x(); ++col) {
                 terrain.set(row, col, TerrainTiles.EMPTY);
+                food.set(row, col, FoodTiles.EMPTY);
             }
         }
         changeManager.markChanged();
@@ -1370,23 +1371,39 @@ public class TileMapEditor {
     }
 
     public void floodWithPellets(Vector2i startTile) {
+        if (isPartOfHouse(startTile)) {
+            return;
+        }
         TileMap terrainMap = worldMap().terrain(), foodMap = worldMap().food();
         var q = new ArrayDeque<Vector2i>();
+        Set<Vector2i> visited = new HashSet<>();
         q.push(startTile);
+        visited.add(startTile);
         while (!q.isEmpty()) {
-            Vector2i tile = q.poll();
-            if (foodMap.get(tile) == FoodTiles.EMPTY) {
-                foodMap.set(tile, FoodTiles.PELLET);
-                for (Direction dir : Direction.values()) {
-                    Vector2i nb = tile.plus(dir.vector());
-                    if  (!terrainMap.outOfBounds(nb)
-                            && terrainMap.get(nb) == TerrainTiles.EMPTY
-                            && foodMap.get(nb) == FoodTiles.EMPTY) {
-                        q.push(nb);
-                    }
+            Vector2i current = q.poll();
+            foodMap.set(current, FoodTiles.PELLET);
+            for (Direction dir : Direction.values()) {
+                Vector2i neighborTile = current.plus(dir.vector());
+                if  (!visited.contains(neighborTile)
+                    && !terrainMap.outOfBounds(neighborTile) && !isPartOfHouse(neighborTile)
+                    && terrainMap.get(neighborTile) == TerrainTiles.EMPTY) {
+                    q.push(neighborTile);
+                    visited.add(neighborTile);
                 }
             }
         }
+        changeManager.markFoodChanged();
+    }
+
+    private boolean isPartOfHouse(Vector2i tile) {
+        TileMap terrain = worldMap().terrain();
+        Vector2i houseMinTile = terrain.getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
+        Vector2i houseMaxTile = terrain.getTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
+        if (houseMinTile != null && houseMaxTile != null) {
+            return houseMinTile.x() <= tile.x() && tile.x() <= houseMaxTile.x()
+                    && houseMinTile.y() <= tile.y() && tile.y() <= houseMaxTile.y();
+        }
+        return false;
     }
 
     private void populateMapFromTemplateImage() {
