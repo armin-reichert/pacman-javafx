@@ -42,7 +42,7 @@ public class TileMatcher {
         pixelScheme = new PixelScheme(backgroundColor, fillColor, strokeColor, doorColor, foodColor);
     }
 
-    public byte identifyFoodTile(int[] tilePixels) {
+    public byte matchFoodTile(int[] tilePixels) {
         if (isEnergizer(tilePixels)) return FoodTiles.ENERGIZER;
         if (isPellet(tilePixels)) return FoodTiles.PELLET;
         return FoodTiles.EMPTY;
@@ -58,7 +58,7 @@ public class TileMatcher {
                 && row(tilePixels, 1).allMatch(pixelScheme::isBackgroundPixel);
     }
 
-    public byte identifyTerrainTile(int[] tilePixels) {
+    public byte matchTerrainTile(int[] tilePixels) {
         if (matchesAngularDoubleNWCorner(tilePixels)) return TerrainTiles.DCORNER_ANGULAR_NW;
         if (matchesAngularDoubleSWCorner(tilePixels)) return TerrainTiles.DCORNER_ANGULAR_SW;
         if (matchesAngularDoubleSECorner(tilePixels)) return TerrainTiles.DCORNER_ANGULAR_SE;

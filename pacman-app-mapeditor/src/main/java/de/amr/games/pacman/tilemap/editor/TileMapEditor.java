@@ -1422,40 +1422,46 @@ public class TileMapEditor {
 
         WritablePixelFormat<IntBuffer> pixelFormat = WritablePixelFormat.getIntArgbInstance();
         PixelReader rdr = templateImage.getPixelReader();
-        int[] pixelsOfTile = new int[TS*TS]; // pixels row-wise
+        if (rdr == null) {
+            showMessage("Could not get pixel reader for this image", 5, MessageType.ERROR);
+            return;
+        }
 
         int numMazeRows = terrain.numRows() - (EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE);
         int numMazeCols = terrain.numCols();
         for (int row = 0; row < numMazeRows; ++row) {
             for (int col = 0; col < numMazeCols; ++col) {
-                Vector2i mapTile = vec_2i(col, row + 3);
+                Vector2i worldMapTile = vec_2i(col, row + EMPTY_ROWS_BEFORE_MAZE);
                 try {
-                    // read pixel values for current tile
+                    int[] pixelsOfTile = new int[TS*TS]; // pixels row-wise
                     rdr.getPixels(col * TS, row * TS, TS, TS, pixelFormat, pixelsOfTile, 0, TS);
-                    byte foodValue = matcher.identifyFoodTile(pixelsOfTile);
+                    byte foodValue = matcher.matchFoodTile(pixelsOfTile);
                     if (foodValue == FoodTiles.PELLET || foodValue == FoodTiles.ENERGIZER) {
-                        food.set(mapTile, foodValue);
-                    }
-                    else {
-                        byte terrainValue = matcher.identifyTerrainTile(pixelsOfTile);
-                        terrain.set(mapTile, terrainValue);
+                        food.set(worldMapTile, foodValue);
+                    } else {
+                        byte terrainValue = matcher.matchTerrainTile(pixelsOfTile);
+                        terrain.set(worldMapTile, terrainValue);
                     }
                 } catch (IndexOutOfBoundsException e) {
-                    Logger.error("Could not get pixels for tile {}, maybe image has been cropped incorrectly?", mapTile);
+                    Logger.error("Could not get pixels for tile {}, maybe image has been cropped incorrectly?", worldMapTile);
                 } catch (Exception e) {
-                    Logger.error("Could not get pixels for tile {}", mapTile);
+                    Logger.error("Could not get pixels for tile {}", worldMapTile);
                     Logger.error(e);
                 }
             }
         }
-        // Find house: require at least min and max tile have been detected
+
+        // Find house: requires that at least min and max tiles have been detected
         Vector2i houseMinTile = terrain.tiles()
             .filter(tile -> terrain.get(tile) == TerrainTiles.DCORNER_ANGULAR_NW)
             .findFirst().orElse(null);
+
         Vector2i houseMaxTile = terrain.tiles()
             .filter(tile -> terrain.get(tile) == TerrainTiles.DCORNER_ANGULAR_SE)
             .findFirst().orElse(null);
-        if (houseMinTile != null && houseMaxTile != null) {
+
+        if (houseMinTile != null && houseMaxTile != null
+                && houseMinTile.x() < houseMaxTile.x() && houseMinTile.y() < houseMaxTile.y()) {
             placeHouse(worldMap(), houseMinTile);
         }
 
