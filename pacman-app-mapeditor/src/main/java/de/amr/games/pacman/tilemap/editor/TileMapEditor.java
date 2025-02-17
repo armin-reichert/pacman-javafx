@@ -6,7 +6,6 @@ package de.amr.games.pacman.tilemap.editor;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Globals;
-import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.*;
 import de.amr.games.pacman.tilemap.rendering.FoodMapRenderer;
@@ -23,7 +22,6 @@ import javafx.beans.property.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -51,7 +49,6 @@ import java.nio.IntBuffer;
 import java.text.MessageFormat;
 import java.time.Instant;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -88,7 +85,6 @@ public class TileMapEditor {
     public static final Font FONT_STATUS_LINE_NORMAL      = Font.font("Sans", FontWeight.NORMAL, 14);
 
     public static final Color COLOR_CANVAS_BACKGROUND = Color.BLACK;
-    public static final Cursor CURSOR_RUBBER = Cursor.cursor(urlString("graphics/radiergummi.jpg"));
 
     public static final Node NO_GRAPHIC = null;
 
@@ -143,8 +139,6 @@ public class TileMapEditor {
 
     private final StringProperty titlePy = new SimpleStringProperty("Tile Map Editor");
 
-    private final ObjectProperty<Vector2i> focussedTilePy = new SimpleObjectProperty<>();
-
     private final ObjectProperty<EditMode> editModePy = new SimpleObjectProperty<>(EditMode.INSPECT) {
         @Override
         protected void invalidated() {
@@ -164,15 +158,37 @@ public class TileMapEditor {
 
     // Accessor methods
 
+    public ObjectProperty<WorldMap> worldMapProperty() { return worldMapPy; }
+
     public WorldMap worldMap() { return worldMapPy.get(); }
 
     public void setWorldMap(WorldMap worldMap) { worldMapPy.set(assertNotNull(worldMap)); }
 
+    public IntegerProperty gridSizeProperty() { return gridSizePy; }
+
+    public int gridSize() { return gridSizePy.get(); }
+
+    public BooleanProperty gridVisibleProperty() { return gridVisiblePy; }
+
+    public BooleanProperty terrainVisibleProperty() { return terrainVisiblePy; }
+
+    public BooleanProperty foodVisibleProperty() { return foodVisiblePy; }
+
+    public BooleanProperty segmentNumbersDisplayedProperty() { return segmentNumbersDisplayedPy; }
+
+    public BooleanProperty obstacleInnerAreaDisplayedProperty() { return obstacleInnerAreaDisplayedPy; }
+
     public boolean isSymmetricEditMode() { return symmetricEditModePy.get(); }
+
+    public TerrainRendererInEditor terrainRendererInEditor() { return terrainRendererInEditor; }
+
+    public FoodMapRenderer foodRenderer() { return foodRenderer; }
 
     public StringProperty titleProperty() { return titlePy; }
 
-    public Vector2i focussedTile() { return focussedTilePy.get(); }
+    public ObjectProperty<Image> templateImageProperty() { return templateImagePy; }
+
+    public ObjectProperty<Image> templateImageGreyProperty() { return templateImageGreyPy; }
 
     public byte selectedPaletteID() {
         return (Byte) tabPaneWithPalettes.getSelectionModel().getSelectedItem().getUserData();
@@ -206,11 +222,8 @@ public class TileMapEditor {
         return menuLoadMap;
     }
 
-    /**
-     * @return pixels used by one tile at current window zoom
-     */
-    private int gridSize() {
-        return gridSizePy.get();
+    public List<Vector2i> tilesWithErrors() {
+        return tilesWithErrors;
     }
 
     // Attributes
@@ -222,13 +235,12 @@ public class TileMapEditor {
     private boolean terrainChanged;
     private boolean foodChanged;
     private boolean terrainDataUpToDate;
-    private boolean dragging = false;
     private final List<Vector2i> tilesWithErrors = new ArrayList<>();
 
     private final BorderPane contentPane = new BorderPane();
     private Stage stage;
     private Pane propertyEditorsPane;
-    private Canvas editCanvas;
+    private EditCanvas editCanvas;
     private ScrollPane spEditCanvas;
     private ScrollPane spPreview2D;
     private Canvas canvasPreview2D;
@@ -253,7 +265,6 @@ public class TileMapEditor {
     private Tab tabSourceView;
     private MazePreview3D mazePreview3D;
 
-    private final ContextMenu contextMenu = new ContextMenu();
     private MenuBar menuBar;
     private Menu menuFile;
     private Menu menuEdit;
@@ -263,11 +274,10 @@ public class TileMapEditor {
     private final Palette[] palettes = new Palette[3];
     private PropertyEditorPane terrainMapPropertiesEditor;
     private PropertyEditorPane foodMapPropertiesEditor;
-    private ObstacleEditor obstacleEditor;
 
-    private TerrainRendererInEditor editorTerrainRenderer;
-    private TerrainRenderer preview2DTerrainRenderer;
-    private FoodMapRenderer preview3DFoodRenderer;
+    private TerrainRendererInEditor terrainRendererInEditor;
+    private TerrainRenderer terrainRendererInPreview;
+    private FoodMapRenderer foodRenderer;
 
     public void createUI(Stage stage) {
         this.stage = assertNotNull(stage);
@@ -282,13 +292,12 @@ public class TileMapEditor {
         createRenderers(colors, parseColor(MS_PACMAN_COLOR_FOOD));
 
         createFileChooser();
-        createEditCanvas();
+        createEditCanvas(colors);
         createPreview2D();
         createPreview3D();
         createTemplateImageView();
         createMapSourceView();
         createPalettes();
-        createObstacleEditor();
         createPropertyEditors();
         createTabPaneWithEditViews();
         createTabPaneWithPreviews();
@@ -307,12 +316,6 @@ public class TileMapEditor {
         contentPane.setOnKeyTyped(this::onKeyTyped);
         contentPane.setOnKeyPressed(this::onKeyPressed);
 
-        editCanvas.setOnContextMenuRequested(this::onEditCanvasContextMenuRequested);
-        editCanvas.setOnMouseClicked(this::onEditCanvasMouseClicked);
-        editCanvas.setOnMouseDragged(this::onEditCanvasMouseDragged);
-        editCanvas.setOnMouseMoved(this::onEditCanvasMouseMoved);
-        editCanvas.setOnMouseReleased(this::onEditCanvasMouseReleased);
-        editCanvas.setOnKeyPressed(this::onEditCanvasKeyPressed);
     }
 
     public void init(File workDir) {
@@ -356,34 +359,31 @@ public class TileMapEditor {
     }
 
     private void onEnterInspectMode() {
-        editCanvas.setCursor(Cursor.HAND); // TODO use other cursor
-        obstacleEditor.setEnabled(false);
         clearMessage();
         showEditHelpText();
+        editCanvas.enterInspectMode();
     }
 
     private void onEnterEditMode() {
-        editCanvas.setCursor(Cursor.DEFAULT);
-        obstacleEditor.setEnabled(true);
         clearMessage();
         showEditHelpText();
+        editCanvas.enterEditMode();
     }
 
     private void onEnterEraseMode() {
-        editCanvas.setCursor(CURSOR_RUBBER);
-        obstacleEditor.setEnabled(false);
         clearMessage();
         showEditHelpText();
+        editCanvas.enterEraseMode();
     }
 
-    private void createRenderers(TerrainColorScheme terrainColorScheme, Color foodColor) {
-        editorTerrainRenderer = new TerrainRendererInEditor();
-        editorTerrainRenderer.setColors(terrainColorScheme);
-        preview2DTerrainRenderer = new TerrainRenderer();
-        preview2DTerrainRenderer.setColors(terrainColorScheme);
-        preview3DFoodRenderer = new FoodMapRenderer();
-        preview3DFoodRenderer.setPelletColor(foodColor);
-        preview3DFoodRenderer.setEnergizerColor(foodColor);
+    private void createRenderers(TerrainColorScheme colors, Color foodColor) {
+        terrainRendererInEditor = new TerrainRendererInEditor();
+        terrainRendererInEditor.setColors(colors);
+        terrainRendererInPreview = new TerrainRenderer();
+        terrainRendererInPreview.setColors(colors);
+        foodRenderer = new FoodMapRenderer();
+        foodRenderer.setPelletColor(foodColor);
+        foodRenderer.setEnergizerColor(foodColor);
     }
 
     private void createFileChooser() {
@@ -393,64 +393,11 @@ public class TileMapEditor {
         fileChooser.setInitialDirectory(currentDirectory);
     }
 
-    private void createEditCanvas() {
-        editCanvas = new Canvas();
-        editCanvas.heightProperty().bind(Bindings.createDoubleBinding(
-            () -> (double) worldMap().terrain().numRows() * gridSize(), worldMapPy, gridSizePy));
-        editCanvas.widthProperty().bind(Bindings.createDoubleBinding(
-            () -> (double) worldMap().terrain().numCols() * gridSize(), worldMapPy, gridSizePy));
+    private void createEditCanvas(TerrainColorScheme colors) {
+        editCanvas = new EditCanvas(this);
         registerDragAndDropImageHandler(editCanvas);
         spEditCanvas = new ScrollPane(editCanvas);
         spEditCanvas.setFitToHeight(true);
-    }
-
-    private void onEditCanvasContextMenuRequested(ContextMenuEvent menuEvent) {
-        if (isEditMode(EditMode.INSPECT)) {
-            return;
-        }
-        if (menuEvent.isKeyboardTrigger()) {
-            return; // ignore keyboard-triggered event e.g. by pressing Shift+F10 in Windows
-        }
-        Vector2i tile = tileAtMousePosition(menuEvent.getX(), menuEvent.getY());
-        WorldMap worldMap = worldMapPy.get();
-
-        var miPlaceHouse = new MenuItem(TileMapEditor.tt("menu.edit.place_house"));
-        miPlaceHouse.setOnAction(actionEvent -> placeHouse(worldMap, tile));
-
-        var miInsertRow = new MenuItem(tt("menu.edit.insert_row"));
-        miInsertRow.setOnAction(actionEvent -> {
-            int rowIndex = tileAtMousePosition(menuEvent.getX(), menuEvent.getY()).y();
-            setWorldMap(worldMap.insertRowBeforeIndex(rowIndex));
-        });
-
-        var miDeleteRow = new MenuItem(tt("menu.edit.delete_row"));
-        miDeleteRow.setOnAction(actionEvent -> {
-            int rowIndex = tileAtMousePosition(menuEvent.getX(), menuEvent.getY()).y();
-            setWorldMap(worldMap.deleteRowAtIndex(rowIndex));
-        });
-
-        var miFloodWithPellets = new MenuItem(tt("menu.edit.flood_with_pellets"));
-        miFloodWithPellets.setOnAction(ae -> {
-            if (worldMap.terrain().get(tile) == TerrainTiles.EMPTY && worldMap.food().get(tile) == TerrainTiles.EMPTY) {
-                floodWithPellets(tile);
-            }
-        });
-
-        var miDetectPellets = new MenuItem(tt("menu.edit.identify_tiles"));
-        //miDetectPellets.disableProperty().bind(templateImagePy.map(Objects::isNull));
-        miDetectPellets.disableProperty().bind(Bindings.createBooleanBinding(() -> templateImagePy.get() == null, templateImagePy));
-        miDetectPellets.setOnAction(ae -> identifyTilesFromTemplateImage());
-
-        contextMenu.getItems().setAll(
-            miInsertRow,
-            miDeleteRow,
-            new SeparatorMenuItem(),
-            miPlaceHouse,
-            new SeparatorMenuItem(),
-            miDetectPellets,
-            miFloodWithPellets);
-
-        contextMenu.show(editCanvas, menuEvent.getScreenX(), menuEvent.getScreenY());
     }
 
     private void createPreview2D() {
@@ -699,9 +646,9 @@ public class TileMapEditor {
     }
 
     private void createPalettes() {
-        palettes[PALETTE_ID_ACTORS]  = createActorPalette(PALETTE_ID_ACTORS, TOOL_SIZE, this, editorTerrainRenderer);
-        palettes[PALETTE_ID_TERRAIN] = createTerrainPalette(PALETTE_ID_TERRAIN, TOOL_SIZE, this, editorTerrainRenderer);
-        palettes[PALETTE_ID_FOOD]    = createFoodPalette(PALETTE_ID_FOOD, TOOL_SIZE, this, preview3DFoodRenderer);
+        palettes[PALETTE_ID_ACTORS]  = createActorPalette(PALETTE_ID_ACTORS, TOOL_SIZE, this, terrainRendererInEditor);
+        palettes[PALETTE_ID_TERRAIN] = createTerrainPalette(PALETTE_ID_TERRAIN, TOOL_SIZE, this, terrainRendererInEditor);
+        palettes[PALETTE_ID_FOOD]    = createFoodPalette(PALETTE_ID_FOOD, TOOL_SIZE, this, foodRenderer);
 
         var tabTerrain = new Tab(tt("terrain"), palettes[PALETTE_ID_TERRAIN].root());
         tabTerrain.setClosable(false);
@@ -718,15 +665,6 @@ public class TileMapEditor {
         tabPaneWithPalettes = new TabPane(tabTerrain, tabActors, tabPellets);
         tabPaneWithPalettes.setPadding(new Insets(5, 5, 5, 5));
         tabPaneWithPalettes.setMinHeight(75);
-    }
-
-    private void createObstacleEditor() {
-        obstacleEditor = new ObstacleEditor();
-        obstacleEditor.setEditCallback((tile, value) -> {
-            setTileValue(worldMap().terrain(), tile, value);
-            setTileValue(worldMap().food(), tile, FoodTiles.EMPTY);
-        });
-        obstacleEditor.worldMapProperty().bind(worldMapPy);
     }
 
     private void createPropertyEditors() {
@@ -778,7 +716,7 @@ public class TileMapEditor {
         lblFocussedTile.setFont(FONT_STATUS_LINE_NORMAL);
         lblFocussedTile.setMinWidth(70);
         lblFocussedTile.setMaxWidth(70);
-        lblFocussedTile.textProperty().bind(focussedTilePy.map(
+        lblFocussedTile.textProperty().bind(editCanvas.focussedTileProperty().map(
             tile -> tile != null ? "(%2d,%2d)".formatted(tile.x(), tile.y()) : "n/a"));
 
         var lblEditMode = new Label();
@@ -879,7 +817,7 @@ public class TileMapEditor {
             }
             if (tabEditCanvas.isSelected()) {
                 try {
-                    drawEditCanvas(colors);
+                    editCanvas.draw(colors);
                 } catch (Exception x) {
                     Logger.error(x);
                 }
@@ -1177,87 +1115,6 @@ public class TileMapEditor {
     // Drawing
     //
 
-    private void drawEditCanvas(TerrainColorScheme colors) {
-        final WorldMap map = worldMap();
-        final TileMap terrain = map.terrain(), food = map.food();
-
-        double scaling = gridSize() / (double) TS;
-
-        GraphicsContext g = editCanvas.getGraphicsContext2D();
-        g.setImageSmoothing(false);
-
-        // Background
-        g.setFill(colors.backgroundColor());
-        g.fillRect(0, 0, editCanvas.getWidth(), editCanvas.getHeight());
-
-        if (templateImageGreyPy.getName() != null) {
-            int emptyRowsTop = 3, emptyRowsBottom = 2; // TODO
-            g.drawImage(templateImageGreyPy.get(),
-                    0, emptyRowsTop * scaling * TS,
-                    editCanvas.getWidth(), editCanvas.getHeight() - (emptyRowsTop + emptyRowsBottom) * scaling * TS);
-        }
-
-        drawGrid(g);
-
-        // Terrain
-        if (terrainVisiblePy.get()) {
-            editorTerrainRenderer.setScaling(scaling);
-            editorTerrainRenderer.setColors(colors);
-            editorTerrainRenderer.setSegmentNumbersDisplayed(segmentNumbersDisplayedPy.get());
-            editorTerrainRenderer.setObstacleInnerAreaDisplayed(obstacleInnerAreaDisplayedPy.get());
-            editorTerrainRenderer.drawTerrain(g, terrain, map.obstacles());
-
-            byte[][] editedObstacleContent = obstacleEditor.editedContent();
-            if (editedObstacleContent != null) {
-                for (int row = 0; row < editedObstacleContent.length; ++row) {
-                    for (int col = 0; col < editedObstacleContent[0].length; ++col) {
-                        Vector2i tile = obstacleEditor.minTile().plus(col, row);
-                        editorTerrainRenderer.drawTile(g, tile, editedObstacleContent[row][col]);
-                    }
-                }
-            }
-        }
-
-        // Tiles that seem to be wrong
-        double gs = gridSize();
-        for (Vector2i tile : tilesWithErrors) {
-            g.setFont(Font.font("sans", gs - 2));
-            g.setFill(Color.grayRgb(200, 0.8));
-            g.fillText("?", tile.x() * gs + 0.25 * gs, tile.y() * gs + 0.8 * gs);
-            if (isSymmetricEditMode()) {
-                int x = terrain.numCols() - tile.x() - 1;
-                g.fillText("?", x * gs + 0.25 * gs, tile.y() * gs + 0.8 * gs);
-            }
-        }
-
-        // Vertical separator to indicate symmetric edit mode
-        if (isEditMode(EditMode.EDIT) && isSymmetricEditMode()) {
-            g.save();
-            g.setStroke(Color.YELLOW);
-            g.setLineWidth(0.75);
-            g.setLineDashes(5, 5);
-            g.strokeLine(editCanvas.getWidth() / 2, 0, editCanvas.getWidth() / 2, editCanvas.getHeight());
-            g.restore();
-        }
-
-        // Food
-        if (foodVisiblePy.get()) {
-            Color foodColor = getColorFromMap(food, PROPERTY_COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
-            preview3DFoodRenderer.setScaling(scaling);
-            preview3DFoodRenderer.setEnergizerColor(foodColor);
-            preview3DFoodRenderer.setPelletColor(foodColor);
-            preview3DFoodRenderer.drawFood(g, food);
-        }
-
-        drawActorSprites(g);
-
-        if (focussedTile() != null) {
-            g.setStroke(Color.YELLOW);
-            g.setLineWidth(1);
-            g.strokeRect(focussedTile().x() * gs, focussedTile().y() * gs, gs, gs);
-        }
-    }
-
     private void drawTemplateImageView() {
         GraphicsContext g = templateImageView.getGraphicsContext2D();
         g.setFill(Color.BLACK);
@@ -1281,38 +1138,29 @@ public class TileMapEditor {
         }
     }
 
-    private void drawActorSprites(GraphicsContext g) {
-        drawSprite(g, PROPERTY_POS_PAC, PAC_SPRITE);
-        drawSprite(g, PROPERTY_POS_RED_GHOST, RED_GHOST_SPRITE);
-        drawSprite(g, PROPERTY_POS_PINK_GHOST, PINK_GHOST_SPRITE);
-        drawSprite(g, PROPERTY_POS_CYAN_GHOST, CYAN_GHOST_SPRITE);
-        drawSprite(g, PROPERTY_POS_ORANGE_GHOST, ORANGE_GHOST_SPRITE);
-        drawSprite(g, PROPERTY_POS_BONUS, BONUS_SPRITE);
-    }
-
     private void drawPreview2D(TerrainColorScheme colors) {
         GraphicsContext g = canvasPreview2D.getGraphicsContext2D();
         g.setImageSmoothing(false);
         g.setFill(colors.backgroundColor());
         g.fillRect(0, 0, canvasPreview2D.getWidth(), canvasPreview2D.getHeight());
         if (terrainVisiblePy.get()) {
-            preview2DTerrainRenderer.setScaling(gridSize() / 8.0);
-            preview2DTerrainRenderer.setColors(colors);
-            preview2DTerrainRenderer.drawTerrain(g, worldMap().terrain(), worldMap().obstacles());
+            terrainRendererInPreview.setScaling(gridSize() / 8.0);
+            terrainRendererInPreview.setColors(colors);
+            terrainRendererInPreview.drawTerrain(g, worldMap().terrain(), worldMap().obstacles());
             Vector2i houseMinTile = worldMap().terrain().getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
             Vector2i houseMaxTile = worldMap().terrain().getTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
             if (houseMinTile != null && houseMaxTile != null) {
-                preview2DTerrainRenderer.drawHouse(g, houseMinTile, houseMaxTile.minus(houseMinTile).plus(1, 1));
+                terrainRendererInPreview.drawHouse(g, houseMinTile, houseMaxTile.minus(houseMinTile).plus(1, 1));
             }
         }
         if (foodVisiblePy.get()) {
             Color foodColor = getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
-            preview3DFoodRenderer.setScaling(gridSize() / 8.0);
-            preview3DFoodRenderer.setEnergizerColor(foodColor);
-            preview3DFoodRenderer.setPelletColor(foodColor);
-            preview3DFoodRenderer.drawFood(g, worldMap().food());
+            foodRenderer.setScaling(gridSize() / 8.0);
+            foodRenderer.setEnergizerColor(foodColor);
+            foodRenderer.setPelletColor(foodColor);
+            foodRenderer.drawFood(g, worldMap().food());
         }
-        drawActorSprites(g);
+        editCanvas.drawActorSprites(g);
     }
 
     private void ensureTerrainDataUpdated() {
@@ -1325,44 +1173,15 @@ public class TileMapEditor {
         }
     }
 
-    private void drawSprite(GraphicsContext g, String tilePropertyName, RectArea sprite) {
-        Vector2i tile = worldMap().terrain().getTileProperty(tilePropertyName, null);
-        if (tile != null) {
-            drawSprite(g, sprite, tile.x() * gridSize() + 0.5 * gridSize(), tile.y() * gridSize(), 1.75 * gridSize(), 1.75 * gridSize());
-        }
-    }
-
-    private void drawSprite(GraphicsContext g, RectArea sprite, double x, double y, double w, double h) {
-        double ox = 0.5 * (w - gridSize());
-        double oy = 0.5 * (h - gridSize());
-        g.drawImage(SPRITE_SHEET, sprite.x(), sprite.y(), sprite.width(), sprite.height(), x - ox, y - oy, w, h);
-    }
-
     private void drawSelectedPalette(TerrainColorScheme colors) {
         Palette selectedPalette = palettes[selectedPaletteID()];
         if (selectedPaletteID() == PALETTE_ID_TERRAIN) {
-            double scaling = editorTerrainRenderer.scaling();
-            editorTerrainRenderer.setScaling((double) TOOL_SIZE / 8);
-            editorTerrainRenderer.setColors(colors);
-            editorTerrainRenderer.setScaling(scaling);
+            double scaling = terrainRendererInEditor.scaling();
+            terrainRendererInEditor.setScaling((double) TOOL_SIZE / 8);
+            terrainRendererInEditor.setColors(colors);
+            terrainRendererInEditor.setScaling(scaling);
         }
         selectedPalette.draw();
-    }
-
-    private void drawGrid(GraphicsContext g) {
-        if (gridVisiblePy.get()) {
-            g.save();
-            g.setStroke(Color.LIGHTGRAY);
-            g.setLineWidth(0.25);
-            double gridSize = gridSize();
-            for (int row = 1; row < worldMap().terrain().numRows(); ++row) {
-                g.strokeLine(0, row * gridSize, editCanvas.getWidth(), row * gridSize);
-            }
-            for (int col = 1; col < worldMap().terrain().numCols(); ++col) {
-                g.strokeLine(col * gridSize, 0, col * gridSize, editCanvas.getHeight());
-            }
-            g.restore();
-        }
     }
 
     void clearMessage() {
@@ -1370,75 +1189,6 @@ public class TileMapEditor {
     }
 
     // Controller part
-
-    private void onEditCanvasMouseClicked(MouseEvent e) {
-        Logger.debug("Mouse clicked {}", e);
-        if (e.getButton() == MouseButton.PRIMARY) {
-            editCanvas.requestFocus();
-            contextMenu.hide();
-            if (e.getClickCount() == 2 && isEditMode(EditMode.INSPECT)) {
-                setEditMode(EditMode.EDIT);
-            }
-        }
-    }
-
-    private void onEditCanvasMouseDragged(MouseEvent e) {
-        Logger.debug("Mouse dragged {}", e);
-        if (!dragging) {
-            Vector2i dragStartTile = tileAtMousePosition(e.getX(), e.getY());
-            obstacleEditor.startEditing(dragStartTile);
-            dragging = true;
-            Logger.debug("Dragging started at tile {}", dragStartTile);
-        } else {
-            obstacleEditor.continueEditing(tileAtMousePosition(e.getX(), e.getY()));
-        }
-    }
-
-    private void onEditCanvasMouseReleased(MouseEvent e) {
-        if (e.getButton() == MouseButton.PRIMARY) {
-            if (dragging) {
-                dragging = false;
-                obstacleEditor.endEditing(tileAtMousePosition(e.getX(), e.getY()));
-            } else {
-                editAtMousePosition(e);
-            }
-        }
-    }
-
-    private void onEditCanvasMouseMoved(MouseEvent e) {
-        Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
-        focussedTilePy.set(tile);
-        switch (editMode()) {
-            case EditMode.EDIT -> {
-                if (e.isShiftDown()) {
-                    switch (selectedPaletteID()) {
-                        case TileMapEditor.PALETTE_ID_TERRAIN -> {
-                            if (selectedPalette().isToolSelected()) {
-                                selectedPalette().selectedTool().apply(worldMap().terrain(), focussedTile());
-                            }
-                            markTileMapEdited(worldMap().terrain());
-                        }
-                        case TileMapEditor.PALETTE_ID_FOOD -> {
-                            if (selectedPalette().isToolSelected()) {
-                                selectedPalette().selectedTool().apply(worldMap().food(), focussedTile());
-                            }
-                            markTileMapEdited(worldMap().food());
-                        }
-                        default -> {}
-                    }
-                }
-            }
-            case EditMode.ERASE -> {
-                if (e.isShiftDown()) {
-                    switch (selectedPaletteID()) {
-                        case TileMapEditor.PALETTE_ID_TERRAIN -> clearTerrainTileValue(tile);
-                        case TileMapEditor.PALETTE_ID_FOOD -> clearFoodTileValue(tile);
-                    }
-                }
-            }
-            case EditMode.INSPECT -> {}
-        }
-    }
 
     private void onKeyPressed(KeyEvent e) {
         KeyCode key = e.getCode();
@@ -1475,43 +1225,6 @@ public class TileMapEditor {
         return tabPanePreviews.getSelectionModel().getSelectedItem() == tabPreview3D;
     }
 
-    private void onEditCanvasKeyPressed(KeyEvent e) {
-        KeyCode key = e.getCode();
-        boolean control = e.isControlDown();
-
-        if (control && key == KeyCode.LEFT) {
-            moveCursorAndSetFoodAtTile(Direction.LEFT);
-            e.consume();
-        }
-        else if (control && key == KeyCode.RIGHT) {
-            moveCursorAndSetFoodAtTile(Direction.RIGHT);
-            e.consume();
-        }
-        else if (control && key == KeyCode.UP) {
-            moveCursorAndSetFoodAtTile(Direction.UP);
-            e.consume();
-        }
-        else if (control && key == KeyCode.DOWN) {
-            moveCursorAndSetFoodAtTile(Direction.DOWN);
-            e.consume();
-        }
-        else if (key == KeyCode.LEFT) {
-            moveCursor(Direction.LEFT, tile -> true);
-        }
-        else if (key == KeyCode.RIGHT) {
-            moveCursor(Direction.RIGHT, tile -> true);
-        }
-        else if (key == KeyCode.UP) {
-            moveCursor(Direction.UP, tile -> true);
-        }
-        else if (key == KeyCode.DOWN) {
-            moveCursor(Direction.DOWN, tile -> true);
-        }
-        else if (control && key == KeyCode.SPACE) {
-            selectNextPaletteEntry();
-        }
-    }
-
     private void onKeyTyped(KeyEvent e) {
         String key = e.getCharacter();
         switch (key) {
@@ -1534,14 +1247,6 @@ public class TileMapEditor {
 
     public void setEditMode(EditMode mode) {
         editModePy.set(assertNotNull(mode));
-    }
-
-    /**
-     * @param pixels number of pixels
-     * @return number of full tiles spanned by pixels
-     */
-    private int fullTiles(double pixels) {
-        return (int) (pixels / gridSize());
     }
 
     private void invalidateTerrainData() {
@@ -1571,12 +1276,8 @@ public class TileMapEditor {
         }
     }
 
-    private Vector2i tileAtMousePosition(double mouseX, double mouseY) {
-        return new Vector2i(fullTiles(mouseX), fullTiles(mouseY));
-    }
-
-    private void editAtMousePosition(MouseEvent event) {
-        Vector2i tile = tileAtMousePosition(event.getX(), event.getY());
+    void editAtMousePosition(MouseEvent event) {
+        Vector2i tile = tileAtMousePosition(event.getX(), event.getY(), gridSize());
         if (isEditMode(EditMode.INSPECT)) {
             identifyObstacleAtTile(tile);
             return;
@@ -1612,32 +1313,21 @@ public class TileMapEditor {
         }
     }
 
-    private void moveCursorAndSetFoodAtTile(Direction dir) {
-        if (moveCursor(dir, this::canEditFoodAtTile)) {
+    public void moveCursorAndSetFoodAtTile(Direction dir) {
+        if (editCanvas.moveCursor(dir, this::canEditFoodAtTile)) {
             setFoodAtFocussedTile();
         }
     }
 
     private void setFoodAtFocussedTile() {
         if (editMode() == EditMode.EDIT && selectedPaletteID() == PALETTE_ID_FOOD) {
-            if (canEditFoodAtTile(focussedTile())) {
-                editFoodAtTile(focussedTile(), false);
+            if (canEditFoodAtTile(editCanvas.focussedTile())) {
+                editFoodAtTile(editCanvas.focussedTile(), false);
             }
         }
     }
 
-    private boolean moveCursor(Direction dir, Predicate<Vector2i> canMoveIntoTile) {
-        if (focussedTile() != null) {
-            Vector2i nextTile = focussedTile().plus(dir.vector());
-            if (!worldMap().terrain().outOfBounds(nextTile) && canMoveIntoTile.test(nextTile)) {
-                focussedTilePy.set(nextTile);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void selectNextPaletteEntry() {
+    public void selectNextPaletteEntry() {
         Palette palette = selectedPalette();
         int next = palette.selectedIndex() + 1;
         if (next == palette.numTools()) { next = 0; }
@@ -1697,13 +1387,13 @@ public class TileMapEditor {
     }
 
     // ignores symmetric edit mode!
-    private void clearTerrainTileValue(Vector2i tile) {
+    public void clearTerrainTileValue(Vector2i tile) {
         worldMap().terrain().set(tile, TerrainTiles.EMPTY);
         markTileMapEdited(worldMap().terrain());
     }
 
     // ignores symmetric edit mode!
-    private void clearFoodTileValue(Vector2i tile) {
+    public void clearFoodTileValue(Vector2i tile) {
         worldMap().food().set(tile, FoodTiles.EMPTY);
         markTileMapEdited(worldMap().food());
     }
@@ -1763,7 +1453,7 @@ public class TileMapEditor {
         markTileMapEdited(terrain);
     }
 
-    private void placeHouse(WorldMap worldMap, Vector2i origin) {
+    public void placeHouse(WorldMap worldMap, Vector2i origin) {
         TileMap terrain = worldMap.terrain();
         terrain.setProperty(PROPERTY_POS_HOUSE_MIN_TILE, formatTile(origin));
         terrain.setProperty(PROPERTY_POS_HOUSE_MAX_TILE, formatTile(origin.plus(7, 4)));
@@ -1834,7 +1524,7 @@ public class TileMapEditor {
         templateImagePy.set(null);
     }
 
-    private void floodWithPellets(Vector2i startTile) {
+    public void floodWithPellets(Vector2i startTile) {
         TileMap terrainMap = worldMap().terrain(), foodMap = worldMap().food();
         var q = new ArrayDeque<Vector2i>();
         q.push(startTile);
@@ -1854,7 +1544,7 @@ public class TileMapEditor {
         }
     }
 
-    private void identifyTilesFromTemplateImage() {
+    public void identifyTilesFromTemplateImage() {
         Image templateImage = templateImagePy.get();
         if (templateImage == null) {
             return;

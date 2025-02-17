@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.tilemap.editor;
 
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.FoodTiles;
 import de.amr.games.pacman.lib.tilemap.TerrainTiles;
 import de.amr.games.pacman.lib.tilemap.TileMap;
@@ -127,5 +128,17 @@ public interface TileMapEditorUtil {
         palette.addTileTool(editor, FoodTiles.ENERGIZER, "Energizer");
         palette.selectTool(0); // "No Food"
         return palette;
+    }
+
+    /**
+     * @param pixels number of pixels
+     * @return number of full tiles spanned by pixels
+     */
+    static int fullTiles(double pixels, double gridSize) {
+        return (int) (pixels / gridSize);
+    }
+
+    static Vector2i tileAtMousePosition(double mouseX, double mouseY, double gridSize) {
+        return new Vector2i(fullTiles(mouseX, gridSize), fullTiles(mouseY, gridSize));
     }
 }
