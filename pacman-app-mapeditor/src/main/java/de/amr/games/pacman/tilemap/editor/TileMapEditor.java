@@ -68,6 +68,9 @@ public class TileMapEditor {
     public static final short MIN_GRID_SIZE = 8;
     public static final short MAX_GRID_SIZE = 80;
 
+    public static final int EMPTY_ROWS_BEFORE_MAZE = 3;
+    public static final int EMPTY_ROWS_BELOW_MAZE = 2;
+
     public static final byte PALETTE_ID_ACTORS  = 0;
     public static final byte PALETTE_ID_TERRAIN = 1;
     public static final byte PALETTE_ID_FOOD    = 2;
@@ -75,6 +78,10 @@ public class TileMapEditor {
     public static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle(TileMapEditor.class.getPackageName() + ".texts");
     public static String tt(String key, Object... args) {
         return MessageFormat.format(TEXT_BUNDLE.getString(key), args);
+    }
+
+    private static boolean isSupportedImageFile(File file) {
+        return Stream.of(".bmp", ".gif", ".jpg", ".png").anyMatch(ext -> file.getName().toLowerCase().endsWith(ext));
     }
 
     public static final Font FONT_CONTEXT_MENU_COLOR_TEXT = Font.font("Monospace", FontWeight.BOLD, 14);
@@ -760,7 +767,7 @@ public class TileMapEditor {
         miSymmetricMode.selectedProperty().bindBidirectional(symmetricEditModePy);
 
         var miAddBorder = new MenuItem(tt("menu.edit.add_border"));
-        miAddBorder.setOnAction(e -> addBorderWall(worldMap().terrain(), 3, 2));
+        miAddBorder.setOnAction(e -> addBorderWall(worldMap().terrain(), EMPTY_ROWS_BEFORE_MAZE, EMPTY_ROWS_BELOW_MAZE));
 
         var miClearTerrain = new MenuItem(tt("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(e -> {
@@ -1093,10 +1100,6 @@ public class TileMapEditor {
         }
     }
 
-    private boolean isPreview3DSelected() {
-        return tabPanePreviews.getSelectionModel().getSelectedItem() == tabPreview3D;
-    }
-
     private void onKeyTyped(KeyEvent e) {
         String key = e.getCharacter();
         switch (key) {
@@ -1308,18 +1311,18 @@ public class TileMapEditor {
         setWorldMap(preConfiguredMap);
     }
 
-    private void addBorderWall(TileMap terrain, int firstRow, int emptyRowsBottom) {
-        int lastRow = terrain.numRows() - 1 - emptyRowsBottom, lastCol = terrain.numCols() - 1;
-        terrain.set(firstRow, 0, TerrainTiles.CORNER_NW);
-        terrain.set(firstRow, lastCol, TerrainTiles.CORNER_NE);
+    private void addBorderWall(TileMap terrain, int emptyRowsBeforeMaze, int emptyRowsAfterMaze) {
+        int lastRow = terrain.numRows() - 1 - emptyRowsAfterMaze, lastCol = terrain.numCols() - 1;
+        terrain.set(emptyRowsBeforeMaze, 0, TerrainTiles.CORNER_NW);
+        terrain.set(emptyRowsBeforeMaze, lastCol, TerrainTiles.CORNER_NE);
         terrain.set(lastRow, 0, TerrainTiles.CORNER_SW);
         terrain.set(lastRow, lastCol, TerrainTiles.CORNER_SE);
-        for (int row = firstRow + 1; row < lastRow; ++row) {
+        for (int row = emptyRowsBeforeMaze + 1; row < lastRow; ++row) {
             terrain.set(row, 0, TerrainTiles.WALL_V);
             terrain.set(row, lastCol, TerrainTiles.WALL_V);
         }
         for (int col = 1; col < lastCol; ++col) {
-            terrain.set(firstRow, col, TerrainTiles.WALL_H);
+            terrain.set(emptyRowsBeforeMaze, col, TerrainTiles.WALL_H);
             terrain.set(lastRow, col, TerrainTiles.WALL_H);
         }
         markTileMapEdited(terrain);
@@ -1344,36 +1347,6 @@ public class TileMapEditor {
         markTileMapEdited(worldMap.terrain());
         terrainChanged = true; //TODO check
         markTileMapEdited(worldMap.food());
-    }
-
-    // Does not add mirrored content, but deletes food at added block
-    private void addTerrainContentBlock(WorldMap worldMap, byte[][] block, Vector2i origin) {
-        int numRows = block.length, numCols = block[0].length;
-        for (int row = 0; row < numRows; ++row) {
-            for (int col = 0; col < numCols; ++col) {
-                int x = origin.x() + col, y = origin.y() + row;
-                worldMap.terrain().set(y, x, block[row][col]);
-                worldMap.food().set(y, x, FoodTiles.EMPTY);
-            }
-        }
-    }
-
-    private void addTerrainContentBlockMirrored(WorldMap worldMap, byte[][] block, Vector2i origin) {
-        Vector2i mirroredOrigin = mirrored(worldMap.terrain(), origin);
-        int numRows = block.length, numCols = block[0].length;
-        for (int row = 0; row < numRows; ++row) {
-            for (int col = 0; col < numCols; ++col) {
-                byte content = block[row][col];
-                // Note: content is added from right to left from mirrored origin!
-                int x = mirroredOrigin.x() - col, y = mirroredOrigin.y() + row;
-                worldMap.terrain().set(y, x, mirroredTileContent(content));
-                worldMap.food().set(y, x, FoodTiles.EMPTY);
-            }
-        }
-    }
-
-    private boolean isSupportedImageFile(File file) {
-        return Stream.of(".bmp", ".gif", ".jpg", ".png").anyMatch(ext -> file.getName().toLowerCase().endsWith(ext));
     }
 
     private void openTemplateImage() {
