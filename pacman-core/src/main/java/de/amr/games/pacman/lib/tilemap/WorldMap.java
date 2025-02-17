@@ -47,10 +47,10 @@ public class WorldMap {
         return "_config." + key;
     }
 
-    private TileMap terrain;
-    private Set<Obstacle> obstacles = Collections.emptySet();
-    private TileMap food;
     private final URL url;
+    private TileMap terrain;
+    private TileMap food;
+    private Set<Obstacle> obstacles = Collections.emptySet();
 
     /**
      * Creates a world map consisting of copies of the other map's layers.
@@ -84,6 +84,19 @@ public class WorldMap {
         var r = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
         parse(r.lines());
         updateObstacleList();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        s.append("WorldMap{");
+        if (terrain != null) {
+            s.append("numRows=").append(terrain.numRows());
+            s.append(", numCols=").append(terrain.numCols());
+        }
+        s.append(", url=").append(url);
+        s.append("}");
+        return s.toString();
     }
 
     public WorldMap insertRowBeforeIndex(int rowIndex) {
@@ -197,10 +210,11 @@ public class WorldMap {
             obstacles.stream()
                     .filter(obstacle -> obstacle.startPoint().equals(houseStartPoint))
                     .findFirst().ifPresent(houseObstacle -> {
-                        Logger.info("Removing house placeholder-obstacle starting at tile {}, point {}", houseMinTile, houseStartPoint);
+                        Logger.debug("Removing house placeholder-obstacle starting at tile {}, point {}", houseMinTile, houseStartPoint);
                         obstacles.remove(houseObstacle);
                     });
         }
+        Logger.info("Obstacle list updated for {}", this);
         return tilesWithErrors;
     }
 
