@@ -13,7 +13,9 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.tilemap.rendering.TerrainColorScheme;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
@@ -40,6 +42,8 @@ public class EditCanvas extends Canvas {
 
     private final TileMapEditor editor;
 
+    private final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>();
+    private final IntegerProperty gridSizePy = new SimpleIntegerProperty(8);
     private final ObjectProperty<Vector2i> focussedTilePy = new SimpleObjectProperty<>();
 
     private final ObstacleEditor obstacleEditor;
@@ -55,7 +59,18 @@ public class EditCanvas extends Canvas {
             editor.setTileValue(editor.worldMap().terrain(), tile, value);
             editor.setTileValue(editor.worldMap().food(), tile, FoodTiles.EMPTY);
         });
-        obstacleEditor.worldMapProperty().bind(editor.worldMapProperty());
+        obstacleEditor.worldMapProperty().bind(worldMapPy);
+
+        gridSizePy.bind(editor.gridSizeProperty());
+        worldMapPy.bind(editor.worldMapProperty());
+
+        heightProperty().bind(Bindings.createDoubleBinding(
+            () -> (double) worldMap().terrain().numRows() * gridSize(),
+            worldMapPy, gridSizePy));
+
+        widthProperty().bind(Bindings.createDoubleBinding(
+            () -> (double) worldMap().terrain().numCols() * gridSize(),
+            worldMapPy, gridSizePy));
 
         setOnContextMenuRequested(this::onContextMenuRequested);
         setOnMouseClicked(this::onMouseClicked);
@@ -64,14 +79,11 @@ public class EditCanvas extends Canvas {
         setOnMouseReleased(this::onMouseReleased);
         setOnKeyPressed(this::onKeyPressed);
 
-        heightProperty().bind(Bindings.createDoubleBinding(
-            () -> (double) editor.worldMap().terrain().numRows() * editor.gridSize(),
-            editor.worldMapProperty(), editor.gridSizeProperty()));
-
-        widthProperty().bind(Bindings.createDoubleBinding(
-            () -> (double) editor.worldMap().terrain().numCols() * editor.gridSize(),
-            editor.worldMapProperty(), editor.gridSizeProperty()));
     }
+
+    private int gridSize() { return gridSizePy.get(); }
+
+    private WorldMap worldMap() { return worldMapPy.get(); }
 
     public ObjectProperty<Vector2i> focussedTileProperty() { return focussedTilePy; }
 
@@ -80,7 +92,7 @@ public class EditCanvas extends Canvas {
     public boolean moveCursor(Direction dir, Predicate<Vector2i> canMoveIntoTile) {
         if (focussedTile() != null) {
             Vector2i nextTile = focussedTile().plus(dir.vector());
-            if (!editor.worldMap().terrain().outOfBounds(nextTile) && canMoveIntoTile.test(nextTile)) {
+            if (!worldMap().terrain().outOfBounds(nextTile) && canMoveIntoTile.test(nextTile)) {
                 focussedTilePy.set(nextTile);
                 return true;
             }
@@ -106,9 +118,8 @@ public class EditCanvas extends Canvas {
     public void draw(TerrainColorScheme colors) {
         GraphicsContext g = getGraphicsContext2D();
 
-        final WorldMap map = editor.worldMap();
-        final TileMap terrain = map.terrain(), food = map.food();
-        double scaling = editor.gridSize() / (double) TS;
+        final TileMap terrain = worldMap().terrain(), food = worldMap().food();
+        double scaling = gridSize() / (double) TS;
 
         g.setImageSmoothing(false);
 
@@ -133,7 +144,7 @@ public class EditCanvas extends Canvas {
             editor.terrainRendererInEditor().setColors(colors);
             editor.terrainRendererInEditor().setSegmentNumbersDisplayed(editor.segmentNumbersDisplayedProperty().get());
             editor.terrainRendererInEditor().setObstacleInnerAreaDisplayed(editor.obstacleInnerAreaDisplayedProperty().get());
-            editor.terrainRendererInEditor().drawTerrain(g, terrain, map.obstacles());
+            editor.terrainRendererInEditor().drawTerrain(g, terrain, worldMap().obstacles());
 
             byte[][] editedObstacleContent = obstacleEditor.editedContent();
             if (editedObstacleContent != null) {
@@ -147,14 +158,13 @@ public class EditCanvas extends Canvas {
         }
 
         // Tiles that seem to be wrong
-        double gs = editor.gridSize();
         for (Vector2i tile : editor.tilesWithErrors()) {
-            g.setFont(Font.font("sans", gs - 2));
+            g.setFont(Font.font("sans", gridSize() - 2));
             g.setFill(Color.grayRgb(200, 0.8));
-            g.fillText("?", tile.x() * gs + 0.25 * gs, tile.y() * gs + 0.8 * gs);
+            g.fillText("?", tile.x() * gridSize() + 0.25 * gridSize(), tile.y() * gridSize() + 0.8 * gridSize());
             if (editor.isSymmetricEditMode()) {
                 int x = terrain.numCols() - tile.x() - 1;
-                g.fillText("?", x * gs + 0.25 * gs, tile.y() * gs + 0.8 * gs);
+                g.fillText("?", x * gridSize() + 0.25 * gridSize(), tile.y() * gridSize() + 0.8 * gridSize());
             }
         }
 
@@ -182,20 +192,19 @@ public class EditCanvas extends Canvas {
         if (focussedTile() != null) {
             g.setStroke(Color.YELLOW);
             g.setLineWidth(1);
-            g.strokeRect(focussedTile().x() * gs, focussedTile().y() * gs, gs, gs);
+            g.strokeRect(focussedTile().x() * gridSize(), focussedTile().y() * gridSize(), gridSize(), gridSize());
         }
     }
 
     private void drawGrid(GraphicsContext g) {
-        double gridSize = editor.gridSize();
         g.save();
         g.setStroke(Color.LIGHTGRAY);
         g.setLineWidth(0.25);
-        for (int row = 1; row < editor.worldMap().terrain().numRows(); ++row) {
-            g.strokeLine(0, row * gridSize, getWidth(), row * gridSize);
+        for (int row = 1; row < worldMap().terrain().numRows(); ++row) {
+            g.strokeLine(0, row * gridSize(), getWidth(), row * gridSize());
         }
-        for (int col = 1; col < editor.worldMap().terrain().numCols(); ++col) {
-            g.strokeLine(col * gridSize, 0, col * gridSize, getHeight());
+        for (int col = 1; col < worldMap().terrain().numCols(); ++col) {
+            g.strokeLine(col * gridSize(), 0, col * gridSize(), getHeight());
         }
         g.restore();
     }
@@ -211,19 +220,17 @@ public class EditCanvas extends Canvas {
     }
 
     private void drawSprite(GraphicsContext g, String tilePropertyName, RectArea sprite) {
-        double gridSize = editor.gridSize();
-        Vector2i tile = editor.worldMap().terrain().getTileProperty(tilePropertyName, null);
+        Vector2i tile = worldMap().terrain().getTileProperty(tilePropertyName, null);
         if (tile != null) {
             drawSprite(g, sprite,
-                tile.x() * gridSize + 0.5 * gridSize,
-                tile.y() * gridSize, 1.75 * gridSize, 1.75 * gridSize);
+                tile.x() * gridSize() + 0.5 * gridSize(),
+                tile.y() * gridSize(), 1.75 * gridSize(), 1.75 * gridSize());
         }
     }
 
     private void drawSprite(GraphicsContext g, RectArea sprite, double x, double y, double w, double h) {
-        double gridSize = editor.gridSize();
-        double ox = 0.5 * (w - gridSize);
-        double oy = 0.5 * (h - gridSize);
+        double ox = 0.5 * (w - gridSize());
+        double oy = 0.5 * (h - gridSize());
         g.drawImage(SPRITE_SHEET, sprite.x(), sprite.y(), sprite.width(), sprite.height(), x - ox, y - oy, w, h);
     }
 
@@ -240,23 +247,21 @@ public class EditCanvas extends Canvas {
 
     private void onMouseDragged(MouseEvent e) {
         Logger.debug("Mouse dragged {}", e);
-        double gridSize = editor.gridSize();
         if (!dragging) {
-            Vector2i dragStartTile = tileAtMousePosition(e.getX(), e.getY(), gridSize);
+            Vector2i dragStartTile = tileAtMousePosition(e.getX(), e.getY(), gridSize());
             obstacleEditor.startEditing(dragStartTile);
             dragging = true;
             Logger.debug("Dragging started at tile {}", dragStartTile);
         } else {
-            obstacleEditor.continueEditing(tileAtMousePosition(e.getX(), e.getY(), gridSize));
+            obstacleEditor.continueEditing(tileAtMousePosition(e.getX(), e.getY(), gridSize()));
         }
     }
 
     private void onMouseReleased(MouseEvent e) {
-        double gridSize = editor.gridSize();
         if (e.getButton() == MouseButton.PRIMARY) {
             if (dragging) {
                 dragging = false;
-                obstacleEditor.endEditing(tileAtMousePosition(e.getX(), e.getY(), gridSize));
+                obstacleEditor.endEditing(tileAtMousePosition(e.getX(), e.getY(), gridSize()));
             } else {
                 editor.editAtMousePosition(e);
             }
@@ -264,8 +269,7 @@ public class EditCanvas extends Canvas {
     }
 
     private void onMouseMoved(MouseEvent e) {
-        double gridSize = editor.gridSize();
-        Vector2i tile = tileAtMousePosition(e.getX(), e.getY(), gridSize);
+        Vector2i tile = tileAtMousePosition(e.getX(), e.getY(), gridSize());
         focussedTilePy.set(tile);
         switch (editor.editMode()) {
             case EditMode.EDIT -> {
@@ -273,15 +277,15 @@ public class EditCanvas extends Canvas {
                     switch (editor.selectedPaletteID()) {
                         case TileMapEditor.PALETTE_ID_TERRAIN -> {
                             if (editor.selectedPalette().isToolSelected()) {
-                                editor.selectedPalette().selectedTool().apply(editor.worldMap().terrain(), focussedTile());
+                                editor.selectedPalette().selectedTool().apply(worldMap().terrain(), focussedTile());
                             }
-                            editor.markTileMapEdited(editor.worldMap().terrain());
+                            editor.markTileMapEdited(worldMap().terrain());
                         }
                         case TileMapEditor.PALETTE_ID_FOOD -> {
                             if (editor.selectedPalette().isToolSelected()) {
-                                editor.selectedPalette().selectedTool().apply(editor.worldMap().food(), focussedTile());
+                                editor.selectedPalette().selectedTool().apply(worldMap().food(), focussedTile());
                             }
-                            editor.markTileMapEdited(editor.worldMap().food());
+                            editor.markTileMapEdited(worldMap().food());
                         }
                         default -> {}
                     }
@@ -308,27 +312,26 @@ public class EditCanvas extends Canvas {
             return; // ignore keyboard-triggered event e.g. by pressing Shift+F10 in Windows
         }
 
-        Vector2i tile = tileAtMousePosition(menuEvent.getX(), menuEvent.getY(), editor.gridSize());
-        WorldMap worldMap = editor.worldMap();
+        Vector2i tile = tileAtMousePosition(menuEvent.getX(), menuEvent.getY(), gridSize());
 
         var miPlaceHouse = new MenuItem(tt("menu.edit.place_house"));
-        miPlaceHouse.setOnAction(actionEvent -> editor.placeHouse(worldMap, tile));
+        miPlaceHouse.setOnAction(actionEvent -> editor.placeHouse(worldMap(), tile));
 
         var miInsertRow = new MenuItem(tt("menu.edit.insert_row"));
         miInsertRow.setOnAction(actionEvent -> {
-            int rowIndex = tileAtMousePosition(menuEvent.getX(), menuEvent.getY(), editor.gridSize()).y();
-            editor.setWorldMap(worldMap.insertRowBeforeIndex(rowIndex));
+            int rowIndex = tileAtMousePosition(menuEvent.getX(), menuEvent.getY(), gridSize()).y();
+            editor.setWorldMap(worldMap().insertRowBeforeIndex(rowIndex));
         });
 
         var miDeleteRow = new MenuItem(tt("menu.edit.delete_row"));
         miDeleteRow.setOnAction(actionEvent -> {
-            int rowIndex = tileAtMousePosition(menuEvent.getX(), menuEvent.getY(), editor.gridSize()).y();
-            editor.setWorldMap(worldMap.deleteRowAtIndex(rowIndex));
+            int rowIndex = tileAtMousePosition(menuEvent.getX(), menuEvent.getY(), gridSize()).y();
+            editor.setWorldMap(worldMap().deleteRowAtIndex(rowIndex));
         });
 
         var miFloodWithPellets = new MenuItem(tt("menu.edit.flood_with_pellets"));
         miFloodWithPellets.setOnAction(ae -> {
-            if (worldMap.terrain().get(tile) == TerrainTiles.EMPTY && worldMap.food().get(tile) == TerrainTiles.EMPTY) {
+            if (worldMap().terrain().get(tile) == TerrainTiles.EMPTY && worldMap().food().get(tile) == TerrainTiles.EMPTY) {
                 editor.floodWithPellets(tile);
             }
         });
