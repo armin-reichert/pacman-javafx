@@ -82,6 +82,10 @@ public class TileMapEditor {
         return Stream.of(".bmp", ".gif", ".jpg", ".png").anyMatch(ext -> file.getName().toLowerCase().endsWith(ext));
     }
 
+    private static boolean isWorldMapFile(File file) {
+        return file.getName().toLowerCase().endsWith(".world");
+    }
+
     public static final Font FONT_CONTEXT_MENU_COLOR_TEXT = Font.font("Monospace", FontWeight.BOLD, 14);
     public static final Font FONT_DROP_HINT               = Font.font("Sans", FontWeight.BOLD, 16);
     public static final Font FONT_MESSAGE                 = Font.font("Sans", FontWeight.BOLD, 14);
@@ -514,16 +518,16 @@ public class TileMapEditor {
         node.setOnDragOver(e -> {
             if (e.getDragboard().hasFiles()) {
                 File file = e.getDragboard().getFiles().getFirst();
-                if (isSupportedImageFile(file)) {
+                if (isSupportedImageFile(file) || isWorldMapFile(file)) {
                     e.acceptTransferModes(TransferMode.COPY);
                 }
             }
             e.consume();
         });
-        node.setOnDragDropped(this::onMazeImageFileDropped);
+        node.setOnDragDropped(this::onFileDroppedOnEditCanvas);
     }
 
-    private void onMazeImageFileDropped(DragEvent e) {
+    private void onFileDroppedOnEditCanvas(DragEvent e) {
         if (e.getDragboard().hasFiles()) {
             File file = e.getDragboard().getFiles().getFirst();
             if (isSupportedImageFile(file)) {
@@ -534,7 +538,15 @@ public class TileMapEditor {
                     showMessage("Select colors for tile identification!", 10, MessageType.INFO);
                     tabPaneEditorViews.getSelectionModel().select(tabTemplateImage);
                 } catch (IOException x) {
-                    showMessage("Error dropping file " + file, 3, MessageType.ERROR);
+                    showMessage("Could not open image file " + file, 3, MessageType.ERROR);
+                    Logger.error(x);
+                }
+            } else if (isWorldMapFile(file)) {
+                try {
+                    WorldMap worldMap = new WorldMap(file);
+                    setWorldMap(worldMap);
+                } catch (IOException x) {
+                    showMessage("Could not open world map file " + file, 3, MessageType.ERROR);
                     Logger.error(x);
                 }
             }
