@@ -123,12 +123,14 @@ public class PropertyEditorPane extends BorderPane {
             editor.showMessage("Property %s renamed to %s".formatted(propertyName, editedName), 2, MessageType.INFO);
             propertyName = editedName;
             rebuildPropertyEditors(); // sort order might have changed
-            editor.getChangeManager().markChanged();
+            editor.getChangeManager().setWorldMapChanged();
+            editor.getChangeManager().setEdited(true);
         }
 
         void storePropertyValue() {
             tileMap().setProperty(propertyName, formattedPropertyValue());
-            editor.getChangeManager().markChanged();
+            editor.getChangeManager().setWorldMapChanged();
+            editor.getChangeManager().setEdited(true);
         }
 
         abstract String formattedPropertyValue();
@@ -327,8 +329,8 @@ public class PropertyEditorPane extends BorderPane {
 
     void deleteProperty(String propertyName) {
         tileMap().removeProperty(propertyName);
-        editor.getChangeManager().markChanged();
-        rebuildPropertyEditors(); //TODO check
+        editor.getChangeManager().setWorldMapChanged();
+        editor.getChangeManager().setEdited(true);
         editor.showMessage("Property %s deleted".formatted(propertyName), 3, MessageType.INFO);
         Logger.debug("Property {} deleted", propertyName);
     }

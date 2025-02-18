@@ -243,7 +243,7 @@ public class EditCanvas extends Canvas {
             requestFocus();
             contextMenu.hide();
             if (e.getClickCount() == 2 && editor.isEditMode(EditMode.INSPECT)) {
-                editor.setEditMode(EditMode.EDIT);
+                editor.showEditHelpText();
             }
         }
     }
@@ -265,6 +265,8 @@ public class EditCanvas extends Canvas {
             if (dragging) {
                 dragging = false;
                 obstacleEditor.endEditing(tileAtMousePosition(e.getX(), e.getY(), gridSize()));
+                editor.getChangeManager().setTerrainMapChanged();
+                editor.getChangeManager().setEdited(true);
             } else {
                 editor.editAtMousePosition(e);
             }
@@ -282,13 +284,15 @@ public class EditCanvas extends Canvas {
                             if (editor.selectedPalette().isToolSelected()) {
                                 editor.selectedPalette().selectedTool().apply(worldMap().terrain(), focussedTile());
                             }
-                            editor.getChangeManager().markTerrainChanged();
+                            editor.getChangeManager().setEdited(true);
+                            editor.getChangeManager().setWorldMapChanged(); // can delete food!
                         }
                         case TileMapEditor.PALETTE_ID_FOOD -> {
                             if (editor.selectedPalette().isToolSelected()) {
                                 editor.selectedPalette().selectedTool().apply(worldMap().food(), focussedTile());
                             }
-                            editor.getChangeManager().markFoodChanged();
+                            editor.getChangeManager().setEdited(true);
+                            editor.getChangeManager().setFoodMapChanged();
                         }
                         default -> {}
                     }

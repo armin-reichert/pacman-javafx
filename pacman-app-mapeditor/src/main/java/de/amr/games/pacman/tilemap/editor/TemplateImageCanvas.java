@@ -91,19 +91,19 @@ public class TemplateImageCanvas extends Canvas {
 
         Color fillColor = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_WALL_FILL, null);
         var miPickFillColor = createColorMenuItem(fillColor, tt("menu.pick_color.set_fill_color"));
-        miPickFillColor.setOnAction(ae -> editor.setTerrainMapProperty(PROPERTY_COLOR_WALL_FILL, formatColor(colorAtMousePosition)));
+        miPickFillColor.setOnAction(ae -> editor.setTerrainMapPropertyValue(PROPERTY_COLOR_WALL_FILL, formatColor(colorAtMousePosition)));
 
         Color strokeColor =  getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_WALL_STROKE, null);
         var miPickStrokeColor = createColorMenuItem(strokeColor, tt("menu.pick_color.set_stroke_color"));
-        miPickStrokeColor.setOnAction(ae -> editor.setTerrainMapProperty(PROPERTY_COLOR_WALL_STROKE, formatColor(colorAtMousePosition)));
+        miPickStrokeColor.setOnAction(ae -> editor.setTerrainMapPropertyValue(PROPERTY_COLOR_WALL_STROKE, formatColor(colorAtMousePosition)));
 
         Color doorColor =  getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_DOOR, null);
         var miPickDoorColor = createColorMenuItem(doorColor, tt("menu.pick_color.set_door_color"));
-        miPickDoorColor.setOnAction(ae -> editor.setTerrainMapProperty(PROPERTY_COLOR_DOOR, formatColor(colorAtMousePosition)));
+        miPickDoorColor.setOnAction(ae -> editor.setTerrainMapPropertyValue(PROPERTY_COLOR_DOOR, formatColor(colorAtMousePosition)));
 
         Color foodColor =  getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, null);
         var miPickFoodColor = createColorMenuItem(foodColor, tt("menu.pick_color.set_food_color"));
-        miPickFoodColor.setOnAction(ae -> editor.setFoodMapProperty(PROPERTY_COLOR_FOOD, formatColor(colorAtMousePosition)));
+        miPickFoodColor.setOnAction(ae -> editor.setFoodMapPropertyValue(PROPERTY_COLOR_FOOD, formatColor(colorAtMousePosition)));
 
         colorSelectionContextMenu.getItems().addAll(
             miColorPreview,
