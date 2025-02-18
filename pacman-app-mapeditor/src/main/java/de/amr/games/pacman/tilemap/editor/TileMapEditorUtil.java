@@ -28,7 +28,7 @@ public interface TileMapEditorUtil {
         return url.toExternalForm();
     }
 
-    static byte mirroredTileContent(byte content) {
+    static byte mirroredTileValue(byte content) {
         return switch (content) {
             case TerrainTiles.CORNER_NE -> TerrainTiles.CORNER_NW;
             case TerrainTiles.CORNER_NW -> TerrainTiles.CORNER_NE;

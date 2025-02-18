@@ -1238,29 +1238,30 @@ public class TileMapEditor {
     public void setTileValue(TileMap tileMap, Vector2i tile, byte value) {
         assertNotNull(tileMap);
         assertNotNull(tile);
+        boolean editingTerrain = tileMap == worldMap().terrain();
         tileMap.set(tile, value);
-        if (tileMap == worldMap().terrain()) {
+        if (editingTerrain) {
             changeManager.markTerrainChanged();
-            worldMap().food().set(tile, FoodTiles.EMPTY);
+            if (value != TerrainTiles.EMPTY) {
+                worldMap().food().set(tile, FoodTiles.EMPTY);
+            }
             changeManager.markFoodChanged();
         } else {
             changeManager.markFoodChanged();
         }
         if (isSymmetricEditMode()) {
-            byte mirroredContent = mirroredTileContent(tileMap.get(tile));
-            Vector2i mirrorTile = mirrored(tileMap, tile);
-            tileMap.set(mirrorTile, mirroredContent);
-            if (tileMap == worldMap().terrain()) {
-                changeManager.markTerrainChanged();
-                worldMap().food().set(mirrorTile, FoodTiles.EMPTY);
-                changeManager.markFoodChanged();
-            } else {
-                changeManager.markFoodChanged();
+            Vector2i symmetricTile = vSymmetricTile(tileMap, tile);
+            byte mirroredValue = mirroredTileValue(value);
+            tileMap.set(symmetricTile, mirroredValue);
+            if (editingTerrain) {
+                if (mirroredValue != TerrainTiles.EMPTY) {
+                    worldMap().food().set(symmetricTile, FoodTiles.EMPTY);
+                }
             }
         }
     }
 
-    private Vector2i mirrored(TileMap tileMap, Vector2i tile) {
+    private Vector2i vSymmetricTile(TileMap tileMap, Vector2i tile) {
         return vec_2i(tileMap.numCols() - 1 - tile.x(), tile.y());
     }
 
