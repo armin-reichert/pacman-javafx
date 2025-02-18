@@ -81,7 +81,7 @@ public class TerrainRenderer implements TileMapRenderer {
         g.restore();
     }
 
-    private boolean startsAtBorder(Obstacle obstacle, TileMap terrainMap) {
+    protected boolean startsAtBorder(Obstacle obstacle, TileMap terrainMap) {
         Vector2i start = obstacle.startPoint();
         return start.x() <= TS || start.x() >= (terrainMap.numCols() - 1) * TS
             || start.y() <= 4*TS || start.y() >= (terrainMap.numRows() - 1) * TS;

@@ -69,7 +69,7 @@ public class TerrainRendererInEditor extends TerrainRenderer {
         specialTile(terrainMap, PROPERTY_POS_SCATTER_CYAN_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.CYAN));
         specialTile(terrainMap, PROPERTY_POS_SCATTER_ORANGE_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.ORANGE));
         if (segmentNumbersDisplayed) {
-            obstacles.forEach(obstacle -> {
+            obstacles.stream().filter(obstacle -> !startsAtBorder(obstacle, terrainMap)).forEach(obstacle -> {
                 for (int i = 0; i < obstacle.numSegments(); ++i) {
                     ObstacleSegment segment = obstacle.segment(i);
                     Vector2f start = segment.startPoint().toVector2f();
@@ -86,7 +86,9 @@ public class TerrainRendererInEditor extends TerrainRenderer {
         }
         if (obstacleInnerAreaDisplayed) {
             double r = 1;
-            obstacles.stream().filter(Obstacle::isClosed).forEach(obstacle -> {
+            obstacles.stream()
+                    .filter(Obstacle::isClosed)
+                    .filter(obstacle -> !startsAtBorder(obstacle, terrainMap)).forEach(obstacle -> {
                 Vector2i prev = null;
                 List<RectArea> rectangles = obstacle.innerAreaRectPartition().toList();
                 for (int i = 0; i < rectangles.size(); ++i) {
