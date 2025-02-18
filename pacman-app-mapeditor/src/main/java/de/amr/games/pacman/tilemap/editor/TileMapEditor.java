@@ -421,9 +421,9 @@ public class TileMapEditor {
 
     private void createEditCanvas() {
         editCanvas = new EditCanvas(this);
-        registerDragAndDropImageHandler(editCanvas);
         spEditCanvas = new ScrollPane(editCanvas);
         spEditCanvas.setFitToHeight(true);
+        registerDragAndDropImageHandler(spEditCanvas);
     }
 
     private void createPreview2D() {
