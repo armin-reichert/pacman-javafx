@@ -887,10 +887,6 @@ public class TileMapEditor {
     }
 
     private void showNewMapDialog(boolean preconfigured) {
-        if (changeManager.isEdited()) {
-            showSaveDialog();
-            return;
-        }
         var dialog = new TextInputDialog("28x36");
         dialog.setTitle(tt("new_dialog.title"));
         dialog.setHeaderText(tt("new_dialog.header_text"));
