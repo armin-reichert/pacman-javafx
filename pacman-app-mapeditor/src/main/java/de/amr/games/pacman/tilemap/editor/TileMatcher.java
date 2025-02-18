@@ -63,6 +63,7 @@ public class TileMatcher {
         if (matchesAngularDoubleSWCorner(tilePixels)) return TerrainTiles.DCORNER_ANGULAR_SW;
         if (matchesAngularDoubleSECorner(tilePixels)) return TerrainTiles.DCORNER_ANGULAR_SE;
         if (matchesAngularDoubleNECorner(tilePixels)) return TerrainTiles.DCORNER_ANGULAR_NE;
+        //TODO: what if door and fill color are equal?
         if (matchesDoor(tilePixels)) return TerrainTiles.DOOR;
         if (matchesHWall(tilePixels)) return TerrainTiles.WALL_H;
         if (matchesVWall(tilePixels)) return TerrainTiles.WALL_V;
@@ -88,7 +89,7 @@ public class TileMatcher {
     }
 
     private boolean matchesDoor(int[] tilePixels) {
-        return row(tilePixels, 5).allMatch(pixelScheme::isDoorPixel) && row(tilePixels, 6).allMatch(pixelScheme::isDoorPixel);
+        return row(tilePixels, 3).allMatch(pixelScheme::isDoorPixel) && row(tilePixels, 4).allMatch(pixelScheme::isDoorPixel);
     }
 
     private boolean matchesHWall(int[] tilePixels) {
