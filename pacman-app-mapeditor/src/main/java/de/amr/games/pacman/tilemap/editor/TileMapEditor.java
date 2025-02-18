@@ -45,6 +45,7 @@ import java.io.IOException;
 import java.nio.IntBuffer;
 import java.text.MessageFormat;
 import java.time.Instant;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -1467,13 +1468,14 @@ public class TileMapEditor {
         }
 
         TileMatcher matcher = new TileMatcher(Color.TRANSPARENT, fillColor, strokeColor, doorColor, foodColor);
-
         WritablePixelFormat<IntBuffer> pixelFormat = WritablePixelFormat.getIntArgbInstance();
         PixelReader rdr = templateImage.getPixelReader();
         if (rdr == null) {
             showMessage("Could not get pixel reader for this image", 5, MessageType.ERROR);
             return;
         }
+
+        LocalTime startTime = LocalTime.now();
 
         int numMazeRows = terrain.numRows() - (EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE);
         int numMazeCols = terrain.numCols();
@@ -1512,6 +1514,9 @@ public class TileMapEditor {
                 && houseMinTile.x() < houseMaxTile.x() && houseMinTile.y() < houseMaxTile.y()) {
             placeHouse(worldMap(), houseMinTile);
         }
+
+        java.time.Duration duration = java.time.Duration.between(startTime, LocalTime.now());
+        showMessage("Map creation took %d milliseconds".formatted(duration.toMillis()), 5, MessageType.INFO);
 
         changeManager.setWorldMapChanged();
         changeManager.setEdited(true);
