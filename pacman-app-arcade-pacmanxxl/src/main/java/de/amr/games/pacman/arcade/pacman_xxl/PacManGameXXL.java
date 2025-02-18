@@ -11,6 +11,9 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.CustomMapSelectionMode;
 import de.amr.games.pacman.model.CustomMapsHandler;
+import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.actors.StaticBonus;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
@@ -22,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
@@ -74,7 +78,9 @@ public class PacManGameXXL extends PacManGame implements CustomMapsHandler {
 
     @Override
     protected void populateLevel(WorldMap worldMap) {
-        super.populateLevel(worldMap);
+        GameWorld world = new GameWorld(worldMap);
+
+        // House can be at non-default position!
         if (!worldMap.terrain().hasProperty(WorldMap.PROPERTY_POS_HOUSE_MIN_TILE)) {
             Logger.warn("No house min tile found in map!");
             worldMap.terrain().setProperty(WorldMap.PROPERTY_POS_HOUSE_MIN_TILE, TileMap.formatTile(vec_2i(10, 15)));
@@ -85,7 +91,26 @@ public class PacManGameXXL extends PacManGame implements CustomMapsHandler {
         }
         Vector2i minTile = worldMap.terrain().getTileProperty(WorldMap.PROPERTY_POS_HOUSE_MIN_TILE, null);
         Vector2i maxTile = worldMap.terrain().getTileProperty(WorldMap.PROPERTY_POS_HOUSE_MAX_TILE, null);
-        level.world().createArcadeHouse(minTile.x(), minTile.y(), maxTile.x(), maxTile.y());
+        world.createArcadeHouse(minTile.x(), minTile.y(), maxTile.x(), maxTile.y());
+
+        var pac = new Pac();
+        pac.setName("Pac-Man");
+        pac.setWorld(world);
+        pac.reset();
+
+        var ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.clyde() };
+        Stream.of(ghosts).forEach(ghost -> {
+            ghost.setWorld(world);
+            ghost.setRevivalPosition(world.ghostPosition(ghost.id()));
+            ghost.reset();
+        });
+        ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST)); // middle house position
+
+        level.setWorld(world);
+        level.setPac(pac);
+        level.setGhosts(ghosts);
+        level.setBonusSymbol(0, computeBonusSymbol());
+        level.setBonusSymbol(1, computeBonusSymbol());
     }
 
     @Override
