@@ -33,10 +33,7 @@ import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontSmoothingType;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
+import javafx.scene.text.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -86,9 +83,9 @@ public class TileMapEditor {
 
     public static final Font FONT_CONTEXT_MENU_COLOR_TEXT = Font.font("Monospace", FontWeight.BOLD, 14);
     public static final Font FONT_DROP_HINT               = Font.font("Sans", FontWeight.BOLD, 16);
-    public static final Font FONT_MESSAGE                 = Font.font("Sans", FontWeight.NORMAL, 14);
+    public static final Font FONT_MESSAGE                 = Font.font("Sans", FontWeight.BOLD, 14);
     public static final Font FONT_SOURCE_VIEW             = Font.font("Monospace", FontWeight.NORMAL, 14);
-    public static final Font FONT_STATUS_LINE_EDIT_MODE   = Font.font("Sans", FontWeight.BOLD, 16);
+    public static final Font FONT_STATUS_LINE_EDIT_MODE   = Font.font("Sans", FontWeight.BOLD, 14);
     public static final Font FONT_STATUS_LINE_NORMAL      = Font.font("Sans", FontWeight.NORMAL, 14);
 
     public static final Color COLOR_CANVAS_BACKGROUND = Color.BLACK;
@@ -300,6 +297,7 @@ public class TileMapEditor {
     private TabPane tabPaneWithPalettes;
     private Slider sliderZoom;
     private HBox statusLine;
+    private Label lblEditMode = new Label();
     private TabPane tabPaneEditorViews;
     private Tab tabEditCanvas;
     private Tab tabTemplateImage;
@@ -648,11 +646,10 @@ public class TileMapEditor {
         lblFocussedTile.textProperty().bind(editCanvas.focussedTileProperty().map(
             tile -> tile != null ? "(%2d,%2d)".formatted(tile.x(), tile.y()) : "n/a"));
 
-        var lblEditMode = new Label();
-        lblEditMode.setAlignment(Pos.CENTER_RIGHT);
-        lblEditMode.setMinWidth(80);
+        lblEditMode.setAlignment(Pos.BASELINE_RIGHT);
+        lblEditMode.setTextAlignment(TextAlignment.RIGHT);
+        lblEditMode.setMinWidth(100);
         lblEditMode.setFont(FONT_STATUS_LINE_EDIT_MODE);
-        lblEditMode.setTextFill(Color.FORESTGREEN);
         lblEditMode.setEffect(new Glow());
         lblEditMode.textProperty().bind(Bindings.createStringBinding(
             () -> switch (editModePy.get()) {
@@ -661,12 +658,13 @@ public class TileMapEditor {
                 case ERASE   -> tt("mode.erase");
             }, editModePy, symmetricEditModePy
         ));
-
-
-        var lblSliderZoom = new Label("Zoom:"); //TODO localize
-        lblSliderZoom.setFont((FONT_STATUS_LINE_NORMAL));
-        lblSliderZoom.setLabelFor(sliderZoom);
-        lblSliderZoom.setPadding(new Insets(0, 10, 0, 0));
+        lblEditMode.textFillProperty().bind(Bindings.createObjectBinding(
+            () -> switch (editModePy.get()) {
+                case INSPECT -> Color.GRAY;
+                case EDIT    -> Color.FORESTGREEN;
+                case ERASE   -> Color.RED;
+            }, editModePy
+        ));
 
         statusLine = new HBox(
             lblMapSize,
@@ -675,13 +673,13 @@ public class TileMapEditor {
             spacer(),
             messageLabel,
             spacer(),
-            lblSliderZoom,
+            filler(10),
             sliderZoom,
-            filler(30),
+            filler(10),
             lblEditMode
         );
 
-        statusLine.setPadding(new Insets(10, 10, 10, 10));
+        statusLine.setPadding(new Insets(6, 2, 2, 2));
     }
 
     private void arrangeMainLayout() {

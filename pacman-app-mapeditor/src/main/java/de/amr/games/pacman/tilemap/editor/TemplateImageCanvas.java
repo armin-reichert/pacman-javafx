@@ -128,7 +128,7 @@ public class TemplateImageCanvas extends Canvas {
             text.setFill(Color.BLACK);
             colorBox.getChildren().add(text);
         } else {
-            colorBox.getChildren().add(new Text("Use as"));
+            colorBox.getChildren().add(new Text(tt("use_color_as")));
         }
 
         var content = itemText != null ? new HBox(colorBox, new Text(itemText))  : new HBox(colorBox);
