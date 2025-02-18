@@ -532,18 +532,7 @@ public class TileMapEditor {
                 e.acceptTransferModes(TransferMode.COPY);
                 try (FileInputStream in = new FileInputStream(file)) {
                     Image image = new Image(in);
-                    if (image.getHeight() % TS != 0 || image.getWidth() % TS != 0) {
-                        showMessage("Image size seems dubious", 3, MessageType.WARNING);
-                        return;
-                    }
-                    // 3 empty rows above maze, 2 empty rows below
-                    int tilesY = 5 + (int) (image.getHeight() / TS), tilesX = (int) (image.getWidth() / TS);
-                    setBlankMap(tilesX, tilesY);
-                    templateImagePy.set(image);
-                    removeTerrainMapProperty(PROPERTY_COLOR_WALL_FILL);
-                    removeTerrainMapProperty(PROPERTY_COLOR_WALL_STROKE);
-                    removeTerrainMapProperty(PROPERTY_COLOR_DOOR);
-                    removeFoodMapProperty(PROPERTY_COLOR_FOOD);
+                    createWorldMapFromTemplateImage(image);
                     showMessage("Select colors for tile identification!", 10, MessageType.INFO);
                     tabPaneEditorViews.getSelectionModel().select(tabTemplateImage);
                 } catch (IOException x) {
@@ -553,6 +542,21 @@ public class TileMapEditor {
             }
         }
         e.consume();
+    }
+
+    private void createWorldMapFromTemplateImage(Image image) {
+        if (image.getHeight() % TS != 0 || image.getWidth() % TS != 0) {
+            showMessage("Image size seems dubious", 3, MessageType.WARNING);
+            return;
+        }
+        // 3 empty rows above maze, 2 empty rows below
+        int tilesY = 5 + (int) (image.getHeight() / TS), tilesX = (int) (image.getWidth() / TS);
+        setBlankMap(tilesX, tilesY);
+        templateImagePy.set(image);
+        removeTerrainMapProperty(PROPERTY_COLOR_WALL_FILL);
+        removeTerrainMapProperty(PROPERTY_COLOR_WALL_STROKE);
+        removeTerrainMapProperty(PROPERTY_COLOR_DOOR);
+        removeFoodMapProperty(PROPERTY_COLOR_FOOD);
     }
 
     private void createTabPaneWithPreviews() {
@@ -1389,7 +1393,8 @@ public class TileMapEditor {
         File file = fc.showOpenDialog(stage);
         if (file != null) {
             try (FileInputStream stream = new FileInputStream(file)) {
-                templateImagePy.set(new Image(stream));
+                Image image = new Image(stream);
+                createWorldMapFromTemplateImage(image);
             } catch (IOException x) {
                 Logger.error(x);
             }
