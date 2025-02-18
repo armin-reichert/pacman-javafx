@@ -161,11 +161,7 @@ public class TileMapEditor {
     private final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>(new WorldMap(28, 36)) {
         @Override
         protected void invalidated() {
-            //TODO check this
             templateImagePy.set(null);
-            if (tabTemplateImage.isSelected()) {
-                tabPaneEditorViews.getSelectionModel().select(tabEditCanvas);
-            }
             changeManager.setWorldMapChanged();
         }
     };
@@ -491,8 +487,9 @@ public class TileMapEditor {
     private void createTabPaneWithEditViews() {
         tabEditCanvas = new Tab(tt("tab_editor"), spEditCanvas);
 
-        var hint = new Label(tt("image_drop_hint"));
+        var hint = new Button(tt("image_drop_hint"));
         hint.setFont(FONT_DROP_HINT);
+        hint.setOnAction(ae -> openTemplateImage());
 
         dropTargetForTemplateImage = new BorderPane(hint);
         registerDragAndDropImageHandler(dropTargetForTemplateImage);
@@ -1386,7 +1383,7 @@ public class TileMapEditor {
 
     private void openTemplateImage() {
         FileChooser fc = new FileChooser();
-        fc.setTitle("Open Template Maze Image"); // TODO localize
+        fc.setTitle(tt("open_template_image")); // TODO localize
         fc.setInitialDirectory(currentDirectory);
         fc.getExtensionFilters().addAll(FILTER_IMAGE, FILTER_ALL);
         fc.setSelectedExtensionFilter(FILTER_IMAGE);
@@ -1395,7 +1392,9 @@ public class TileMapEditor {
             try (FileInputStream stream = new FileInputStream(file)) {
                 Image image = new Image(stream);
                 createWorldMapFromTemplateImage(image);
-            } catch (IOException x) {
+                showMessage("Select map colors from template!", 20, MessageType.INFO);
+            } catch (Exception x) {
+                showMessage("Could not open template image", 3, MessageType.ERROR);
                 Logger.error(x);
             }
         }
