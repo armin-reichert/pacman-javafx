@@ -86,7 +86,7 @@ public class TileMapEditor {
         return file.getName().toLowerCase().endsWith(".world");
     }
 
-    public static final Font FONT_CONTEXT_MENU_COLOR_TEXT = Font.font("Monospace", FontWeight.BOLD, 14);
+    public static final Font FONT_CONTEXT_MENU_COLOR_TEXT = Font.font("Monospace", FontWeight.BOLD, 16);
     public static final Font FONT_DROP_HINT               = Font.font("Sans", FontWeight.BOLD, 16);
     public static final Font FONT_MESSAGE                 = Font.font("Sans", FontWeight.BOLD, 14);
     public static final Font FONT_SOURCE_VIEW             = Font.font("Monospace", FontWeight.NORMAL, 14);
@@ -442,8 +442,8 @@ public class TileMapEditor {
 
     private void createTemplateImageCanvas() {
         templateImageCanvas = new TemplateImageCanvas(this);
-        StackPane pane = new StackPane(templateImageCanvas);
-        pane.setBackground(Background.fill(Color.BLACK));
+        Pane pane = new Pane(templateImageCanvas, templateImageCanvas.getColorIndicator());
+        pane.setBackground(Background.fill(Color.TRANSPARENT));
         spTemplateImage = new ScrollPane(pane);
     }
 
