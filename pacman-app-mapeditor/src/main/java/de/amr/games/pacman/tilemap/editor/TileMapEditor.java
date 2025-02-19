@@ -637,10 +637,10 @@ public class TileMapEditor {
 
     private void createZoomSlider() {
         sliderZoom = new Slider(MIN_GRID_SIZE, MAX_GRID_SIZE, 0.5 * (MIN_GRID_SIZE + MAX_GRID_SIZE));
-        sliderZoom.valueProperty().bindBidirectional(gridSizePy);
         sliderZoom.setShowTickLabels(false);
         sliderZoom.setShowTickMarks(true);
         sliderZoom.setPrefWidth(100);
+        Bindings.bindBidirectional(sliderZoom.valueProperty(), gridSizePy);
     }
 
     private void createStatusLine() {
