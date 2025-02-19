@@ -27,7 +27,7 @@ public class TileMap {
 
     private static final String MARKER_DATA_SECTION_START = "!data";
     private static final Pattern TILE_PATTERN = Pattern.compile("\\((\\d+),(\\d+)\\)");
-    private static final String TILE_FORMAT = "(%d,%d))";
+    private static final String TILE_FORMAT = "(%d,%d)";
 
     public static Vector2i parseTile(String text) {
         assertNotNull(text);
