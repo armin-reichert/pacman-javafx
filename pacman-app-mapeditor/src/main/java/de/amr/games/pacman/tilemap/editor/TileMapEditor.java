@@ -60,7 +60,7 @@ import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.*;
  */
 public class TileMapEditor {
 
-    public static final short REFRESH_RATE = 10;
+    public static final short REFRESH_RATE = 20;
 
     public static final short TOOL_SIZE = 32;
     public static final short MIN_GRID_SIZE = 8;
