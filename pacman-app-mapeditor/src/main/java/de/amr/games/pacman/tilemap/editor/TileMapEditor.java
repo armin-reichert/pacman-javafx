@@ -814,11 +814,9 @@ public class TileMapEditor {
                 miCloseTemplateImage);
 
         // Edit
-        var miSymmetricMode = new CheckMenuItem(tt("menu.edit.symmetric"));
-        miSymmetricMode.selectedProperty().bindBidirectional(symmetricEditModePy);
-
         var miAddBorder = new MenuItem(tt("menu.edit.add_border"));
         miAddBorder.setOnAction(e -> addBorderWall(worldMap().terrain()));
+        miAddBorder.disableProperty().bind(editModePy.map(mode -> mode == EditMode.INSPECT));
 
         var miClearTerrain = new MenuItem(tt("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(e -> {
@@ -826,6 +824,7 @@ public class TileMapEditor {
             changeManager.setTerrainMapChanged();
             changeManager.setEdited(true);
         });
+        miClearTerrain.disableProperty().bind(editModePy.map(mode -> mode == EditMode.INSPECT));
 
         var miClearFood = new MenuItem(tt("menu.edit.clear_food"));
         miClearFood.setOnAction(e -> {
@@ -833,21 +832,18 @@ public class TileMapEditor {
             changeManager.setFoodMapChanged();
             changeManager.setEdited(true);
         });
+        miClearFood.disableProperty().bind(editModePy.map(mode -> mode == EditMode.INSPECT));
 
-        var miDetectPellets = new MenuItem(tt("menu.edit.identify_tiles"));
-        miDetectPellets.disableProperty().bind(
-                Bindings.createBooleanBinding(() -> templateImagePy.get() == null, templateImagePy));
-        miDetectPellets.setOnAction(ae -> populateMapFromTemplateImage());
+        var miIdentifyTiles = new MenuItem(tt("menu.edit.identify_tiles"));
+        miIdentifyTiles.disableProperty().bind(Bindings.createBooleanBinding(
+            () -> editMode() == EditMode.INSPECT || templateImagePy.get() == null, editModePy, templateImagePy));
+        miIdentifyTiles.setOnAction(e -> populateMapFromTemplateImage());
 
         menuEdit = new Menu(tt("menu.edit"), NO_GRAPHIC,
-            miSymmetricMode,
-            new SeparatorMenuItem(),
             miAddBorder,
             miClearTerrain,
             miClearFood,
-            miDetectPellets);
-
-        menuEdit.disableProperty().bind(editModePy.map(mode -> mode == EditMode.INSPECT));
+            miIdentifyTiles);
 
         // Maps
         menuLoadMap = new Menu(tt("menu.load_map"));
