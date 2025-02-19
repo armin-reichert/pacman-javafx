@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
-import static de.amr.games.pacman.lib.tilemap.TileMap.parseVector2i;
+import static de.amr.games.pacman.lib.tilemap.TileMap.parseTile;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.formatColor;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.parseColor;
 import static java.util.Objects.requireNonNull;
@@ -208,7 +208,7 @@ public class PropertyEditorPane extends BorderPane {
 
         TilePropertyEditor(String propertyName, String propertyValue) {
             super(propertyName);
-            Vector2i tile = parseVector2i(propertyValue);
+            Vector2i tile = parseTile(propertyValue);
 
             spinnerX = new Spinner<>(0, tileMap().numCols() - 1, 0);
             spinnerX.setMaxWidth(60);
@@ -233,7 +233,7 @@ public class PropertyEditorPane extends BorderPane {
         @Override
         protected void updateEditorFromProperty() {
             String propertyValue = tileMap().getStringProperty(propertyName);
-            Vector2i tile = parseVector2i(propertyValue);
+            Vector2i tile = parseTile(propertyValue);
             if (tile != null) {
                 spinnerX.getValueFactory().setValue(tile.x());
                 spinnerY.getValueFactory().setValue(tile.y());

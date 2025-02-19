@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.lib.tilemap.TileMap.parseVector2i;
+import static de.amr.games.pacman.lib.tilemap.TileMap.parseTile;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 
 /**
@@ -147,7 +147,7 @@ public class TerrainRendererInEditor extends TerrainRenderer {
 
     private Optional<Vector2i> specialTile(TileMap terrainMap, String propertyName) {
         if (terrainMap.hasProperty(propertyName)) {
-            Vector2i tile = parseVector2i(terrainMap.getStringProperty(propertyName));
+            Vector2i tile = parseTile(terrainMap.getStringProperty(propertyName));
             return Optional.ofNullable(tile);
         }
         return Optional.empty();

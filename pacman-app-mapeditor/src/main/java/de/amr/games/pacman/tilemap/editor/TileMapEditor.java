@@ -822,14 +822,14 @@ public class TileMapEditor {
 
         var miClearTerrain = new MenuItem(tt("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(e -> {
-            worldMap().terrain().clear(TerrainTiles.EMPTY);
+            worldMap().terrain().fill(TerrainTiles.EMPTY);
             changeManager.setTerrainMapChanged();
             changeManager.setEdited(true);
         });
 
         var miClearFood = new MenuItem(tt("menu.edit.clear_food"));
         miClearFood.setOnAction(e -> {
-            worldMap().food().clear(FoodTiles.EMPTY);
+            worldMap().food().fill(FoodTiles.EMPTY);
             changeManager.setFoodMapChanged();
             changeManager.setEdited(true);
         });

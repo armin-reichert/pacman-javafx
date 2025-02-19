@@ -20,26 +20,24 @@ import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.lib.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.Globals.vec_2i;
 
-/**
- * @author Armin Reichert
- */
 public class TileMap {
 
-    public static final String DATA_SECTION_START = "!data";
+    private static final String MARKER_DATA_SECTION_START = "!data";
+    private static final Pattern TILE_PATTERN = Pattern.compile("\\((\\d+),(\\d+)\\)");
+    private static final String TILE_FORMAT = "(%d,%d))";
 
-    public static Vector2i parseVector2i(String text) {
-        Pattern pattern = Pattern.compile("\\((\\d+),(\\d+)\\)");
-        Matcher m = pattern.matcher(text);
-        if (m.matches()) {
-            return new Vector2i(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)));
-        }
-        return null;
+    public static Vector2i parseTile(String text) {
+        assertNotNull(text);
+        Matcher m = TILE_PATTERN.matcher(text);
+        return m.matches() ? new Vector2i(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2))) : null;
     }
 
     public static String formatTile(Vector2i tile) {
-        return "(%d,%d)".formatted(tile.x(), tile.y());
+        assertNotNull(tile);
+        return TILE_FORMAT.formatted(tile.x(), tile.y());
     }
 
     public static TileMap parseTileMap(List<String> lines, Predicate<Byte> valueAllowed, byte emptyValue) {
@@ -49,7 +47,7 @@ public class TileMap {
         StringBuilder propertySection = new StringBuilder();
         for (int lineIndex = 0; lineIndex < lines.size(); ++lineIndex) {
             String line = lines.get(lineIndex);
-            if (DATA_SECTION_START.equals(line)) {
+            if (MARKER_DATA_SECTION_START.equals(line)) {
                 dataSectionStartIndex = lineIndex + 1;
             }
             else if (dataSectionStartIndex == -1) {
@@ -82,9 +80,9 @@ public class TileMap {
                 try {
                     byte value = Byte.decode(entry);
                     if (valueAllowed.test(value)) {
-                        tileMap.data[row][col] = value;
+                        tileMap.matrix[row][col] = value;
                     } else {
-                        tileMap.data[row][col] = emptyValue;
+                        tileMap.matrix[row][col] = emptyValue;
                         Logger.error("Invalid tile map value {} at row {}, col {}", value, row, col);
                     }
                 } catch (NumberFormatException x) {
@@ -96,22 +94,22 @@ public class TileMap {
     }
 
     private final Map<String, Object> properties = new HashMap<>();
-    private final byte[][] data;
+    private final byte[][] matrix;
 
     public TileMap(int numRows, int numCols) {
-        data = new byte[numRows][numCols];
+        matrix = new byte[numRows][numCols];
     }
 
-    private TileMap(byte[][] data) {
-        this.data = data;
+    private TileMap(byte[][] matrix) {
+        this.matrix = matrix;
     }
 
     public TileMap(TileMap other) {
         int numRows = other.numRows(), numCols = other.numCols();
         properties.putAll(other.properties);
-        data = new byte[numRows][];
+        matrix = new byte[numRows][];
         for (int row = 0; row < numRows; ++row) {
-            data[row] = Arrays.copyOf(other.data[row], numCols);
+            matrix[row] = Arrays.copyOf(other.matrix[row], numCols);
         }
     }
 
@@ -146,11 +144,11 @@ public class TileMap {
     }
 
     public int numCols() {
-        return data[0].length;
+        return matrix[0].length;
     }
 
     public int numRows() {
-        return data.length;
+        return matrix.length;
     }
 
     public boolean outOfBounds(Vector2i tile) {
@@ -200,7 +198,7 @@ public class TileMap {
 
     public Vector2i getTileProperty(String name, Vector2i defaultTile) {
         if (hasProperty(name)) {
-            Vector2i tile = parseVector2i(getStringProperty(name));
+            Vector2i tile = parseTile(getStringProperty(name));
             return tile != null ? tile : defaultTile;
         }
         return defaultTile;
@@ -221,7 +219,7 @@ public class TileMap {
     }
 
     public byte[][] getData() {
-        return data;
+        return matrix;
     }
 
     /**
@@ -234,7 +232,7 @@ public class TileMap {
         if (outOfBounds(row, col)) {
             throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
         }
-        return data[row][col];
+        return matrix[row][col];
     }
 
     /**
@@ -257,7 +255,7 @@ public class TileMap {
         if (outOfBounds(row, col)) {
             throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
         }
-        data[row][col] = value;
+        matrix[row][col] = value;
     }
 
     /**
@@ -270,19 +268,19 @@ public class TileMap {
         set(tile.y(), tile.x(), value);
     }
 
-    public void clear(byte emptyValue) {
-        for (byte[] row : data) {
-            Arrays.fill(row, emptyValue);
+    public void fill(byte fillValue) {
+        for (byte[] row : matrix) {
+            Arrays.fill(row, fillValue);
         }
     }
 
     public void print(Writer w) {
         var pw = new PrintWriter(w);
         stringPropertyNames().map(name -> name + "=" + getStringProperty(name)).forEach(pw::println);
-        pw.println(DATA_SECTION_START);
+        pw.println(MARKER_DATA_SECTION_START);
         for (int row = 0; row < numRows(); ++row) {
             for (int col = 0; col < numCols(); ++col) {
-                byte value = data[row][col];
+                byte value = matrix[row][col];
                 pw.printf("#%02X", value);
                 if (col < numCols() - 1) {
                     pw.print(",");
