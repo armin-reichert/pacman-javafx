@@ -135,20 +135,18 @@ public class TileMapEditor {
                 obstaclesUpToDate = true;
             }
             if (terrainMapChanged) {
-                if (terrainPropertiesEditor() != null) {
-                    terrainPropertiesEditor().setTileMap(worldMap().terrain());
+                if (terrainMapPropertiesEditor != null) {
+                    terrainMapPropertiesEditor.setTileMap(worldMap().terrain());
                 }
-                terrainPropertiesEditor().rebuildPropertyEditors();
                 mazePreview3D.updateTerrain();
                 updateSourceView();
                 terrainMapChanged = false;
                 Logger.info("Terrain updated");
             }
             if (foodMapChanged) {
-                if (foodPropertiesEditor() != null) {
-                    foodPropertiesEditor().setTileMap(worldMap().food());
+                if (foodMapPropertiesEditor != null) {
+                    foodMapPropertiesEditor.setTileMap(worldMap().food());
                 }
-                foodPropertiesEditor().rebuildPropertyEditors();
                 mazePreview3D.updateFood();
                 updateSourceView();
                 foodMapChanged = false;
@@ -202,7 +200,6 @@ public class TileMapEditor {
     private final ObjectProperty<Image> templateImageGreyPy = new SimpleObjectProperty<>();
 
     // Accessor methods
-
 
     public ChangeManager getChangeManager() { return changeManager;}
 
@@ -896,6 +893,9 @@ public class TileMapEditor {
     }
 
     private void showNewMapDialog(boolean preconfigured) {
+        if (changeManager.isEdited()) {
+            showSaveConfirmationDialog(this::showSaveDialog, () -> Logger.info("Map saving declined"));
+        }
         var dialog = new TextInputDialog("28x36");
         dialog.setTitle(tt("new_dialog.title"));
         dialog.setHeaderText(tt("new_dialog.header_text"));
@@ -937,14 +937,17 @@ public class TileMapEditor {
 
     private void openMapFileInteractively() {
         if (changeManager.isEdited()) {
-            showSaveDialog();
-            return;
+            showSaveConfirmationDialog(this::showSaveDialog, () -> {
+                changeManager.setEdited(false);
+            });
         }
-        fileChooser.setTitle(tt("open_file"));
-        fileChooser.setInitialDirectory(currentDirectory);
-        File file = fileChooser.showOpenDialog(stage);
-        if (file != null) {
-            readMapFile(file);
+        else {
+            fileChooser.setTitle(tt("open_file"));
+            fileChooser.setInitialDirectory(currentDirectory);
+            File file = fileChooser.showOpenDialog(stage);
+            if (file != null) {
+                readMapFile(file);
+            }
         }
     }
 
@@ -1355,31 +1358,36 @@ public class TileMapEditor {
         changeManager.setEdited(true);
     }
 
-    public void placeHouse(WorldMap worldMap, Vector2i origin) {
-        TileMap terrain = worldMap.terrain(), food = worldMap.food();
-        // clear tiles where house was located (runtime creates walls and corners and doors!)
-        Vector2i houseMinTile = terrain.getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
-        Vector2i houseMaxTile = terrain.getTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
-        if (houseMinTile != null && houseMaxTile != null) {
-            for (int row = houseMinTile.y(); row <= houseMaxTile.y(); ++row) {
-                for (int col = houseMinTile.x(); col <= houseMaxTile.x(); ++col) {
-                    terrain.set(row, col, TerrainTiles.EMPTY);
-                    food.set(row, col, FoodTiles.EMPTY);
-                }
-            }
+    public void placeHouse(WorldMap worldMap, Vector2i houseMinTile) {
+        Vector2i houseMaxTile = houseMinTile.plus(7, 4);
+        TileMap terrain = worldMap.terrain();
+
+        Vector2i oldHouseMinTile = terrain.getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
+        Vector2i oldHouseMaxTile = terrain.getTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
+        terrain.setProperty(PROPERTY_POS_HOUSE_MIN_TILE, formatTile(houseMinTile));
+        terrain.setProperty(PROPERTY_POS_HOUSE_MAX_TILE, formatTile(houseMaxTile));
+
+        // clear tiles where house walls/doors were located (created at runtime!)
+        if (oldHouseMinTile != null && oldHouseMaxTile != null) {
+            clearRect(worldMap, oldHouseMinTile, oldHouseMaxTile);
         }
-        terrain.setProperty(PROPERTY_POS_HOUSE_MIN_TILE, formatTile(origin));
-        terrain.setProperty(PROPERTY_POS_HOUSE_MAX_TILE, formatTile(origin.plus(7, 4)));
-        terrain.setProperty(PROPERTY_POS_RED_GHOST,      formatTile(origin.plus(3, -1)));
-        terrain.setProperty(PROPERTY_POS_CYAN_GHOST,     formatTile(origin.plus(1, 2)));
-        terrain.setProperty(PROPERTY_POS_PINK_GHOST,     formatTile(origin.plus(3, 2)));
-        terrain.setProperty(PROPERTY_POS_ORANGE_GHOST,   formatTile(origin.plus(5, 2)));
-        houseMinTile = terrain.getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
-        houseMaxTile = terrain.getTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
-        for (int row = houseMinTile.y(); row <= houseMaxTile.y(); ++row) {
-            for (int col = houseMinTile.x(); col <= houseMaxTile.x(); ++col) {
-                terrain.set(row, col, TerrainTiles.EMPTY);
-                food.set(row, col, FoodTiles.EMPTY);
+        // clear new house area
+        clearRect(worldMap, houseMinTile, houseMaxTile);
+
+        terrain.setProperty(PROPERTY_POS_RED_GHOST,      formatTile(houseMinTile.plus(3, -1)));
+        terrain.setProperty(PROPERTY_POS_CYAN_GHOST,     formatTile(houseMinTile.plus(1, 2)));
+        terrain.setProperty(PROPERTY_POS_PINK_GHOST,     formatTile(houseMinTile.plus(3, 2)));
+        terrain.setProperty(PROPERTY_POS_ORANGE_GHOST,   formatTile(houseMinTile.plus(5, 2)));
+
+        changeManager.setWorldMapChanged();
+        changeManager.setEdited(true);
+    }
+
+    private void clearRect(WorldMap worldMap, Vector2i minTile, Vector2i maxTile) {
+        for (int row = minTile.y(); row <= maxTile.y(); ++row) {
+            for (int col = minTile.x(); col <= maxTile.x(); ++col) {
+                worldMap.terrain().set(row, col, TerrainTiles.EMPTY);
+                worldMap.food().set(row, col, FoodTiles.EMPTY);
             }
         }
         changeManager.setWorldMapChanged();

@@ -69,6 +69,7 @@ public class PropertyEditorPane extends BorderPane {
 
     public void setTileMap(TileMap tileMap) {
         tileMapPy.set(requireNonNull(tileMap));
+        rebuildPropertyEditors();
     }
 
     public TileMap tileMap() {
@@ -325,6 +326,8 @@ public class PropertyEditorPane extends BorderPane {
             grid.add(btnDelete, 2, row);
             ++row;
         }
+
+        updatePropertyEditorValues();
     }
 
     void deleteProperty(String propertyName) {
