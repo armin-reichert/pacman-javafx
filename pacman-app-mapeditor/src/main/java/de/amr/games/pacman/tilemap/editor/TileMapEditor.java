@@ -818,7 +818,7 @@ public class TileMapEditor {
         miSymmetricMode.selectedProperty().bindBidirectional(symmetricEditModePy);
 
         var miAddBorder = new MenuItem(tt("menu.edit.add_border"));
-        miAddBorder.setOnAction(e -> addBorderWall(worldMap().terrain(), EMPTY_ROWS_BEFORE_MAZE, EMPTY_ROWS_BELOW_MAZE));
+        miAddBorder.setOnAction(e -> addBorderWall(worldMap().terrain()));
 
         var miClearTerrain = new MenuItem(tt("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(e -> {
@@ -1320,15 +1320,15 @@ public class TileMapEditor {
     }
 
     private void setPreconfiguredMap(int tilesX, int tilesY) {
-        var preConfiguredMap = new WorldMap(tilesY, tilesX);
-        TileMap terrain = preConfiguredMap.terrain();
+        var worldMap = new WorldMap(tilesY, tilesX);
+        TileMap terrain = worldMap.terrain();
         terrain.setProperty(PROPERTY_COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE);
         terrain.setProperty(PROPERTY_COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL);
         terrain.setProperty(PROPERTY_COLOR_DOOR, MS_PACMAN_COLOR_DOOR);
-        addBorderWall(terrain, 3, 2);
+        addBorderWall(terrain);
         if (terrain.numRows() >= 20) {
             Vector2i houseOrigin = vec_2i(tilesX / 2 - 4, tilesY / 2 - 3);
-            placeHouse(preConfiguredMap, houseOrigin);
+            placeHouse(worldMap, houseOrigin);
             terrain.setProperty(PROPERTY_POS_PAC,                  formatTile(houseOrigin.plus(3, 11)));
             terrain.setProperty(PROPERTY_POS_BONUS,                formatTile(houseOrigin.plus(3, 5)));
             terrain.setProperty(PROPERTY_POS_SCATTER_RED_GHOST,    formatTile(vec_2i(tilesX - 3, 0)));
@@ -1336,23 +1336,23 @@ public class TileMapEditor {
             terrain.setProperty(PROPERTY_POS_SCATTER_CYAN_GHOST,   formatTile(vec_2i(tilesX - 1, tilesY - 2)));
             terrain.setProperty(PROPERTY_POS_SCATTER_ORANGE_GHOST, formatTile(vec_2i(0, tilesY - 2)));
         }
-        preConfiguredMap.updateObstacleList();
-        preConfiguredMap.food().setProperty(PROPERTY_COLOR_FOOD, MS_PACMAN_COLOR_FOOD);
-        setWorldMap(preConfiguredMap);
+        worldMap.updateObstacleList();
+        worldMap.food().setProperty(PROPERTY_COLOR_FOOD, MS_PACMAN_COLOR_FOOD);
+        setWorldMap(worldMap);
     }
 
-    private void addBorderWall(TileMap terrain, int emptyRowsBeforeMaze, int emptyRowsAfterMaze) {
-        int lastRow = terrain.numRows() - 1 - emptyRowsAfterMaze, lastCol = terrain.numCols() - 1;
-        terrain.set(emptyRowsBeforeMaze, 0, TerrainTiles.CORNER_NW);
-        terrain.set(emptyRowsBeforeMaze, lastCol, TerrainTiles.CORNER_NE);
+    private void addBorderWall(TileMap terrain) {
+        int lastRow = terrain.numRows() - 1 - EMPTY_ROWS_BELOW_MAZE, lastCol = terrain.numCols() - 1;
+        terrain.set(EMPTY_ROWS_BEFORE_MAZE, 0, TerrainTiles.CORNER_NW);
+        terrain.set(EMPTY_ROWS_BEFORE_MAZE, lastCol, TerrainTiles.CORNER_NE);
         terrain.set(lastRow, 0, TerrainTiles.CORNER_SW);
         terrain.set(lastRow, lastCol, TerrainTiles.CORNER_SE);
-        for (int row = emptyRowsBeforeMaze + 1; row < lastRow; ++row) {
+        for (int row = EMPTY_ROWS_BEFORE_MAZE + 1; row < lastRow; ++row) {
             terrain.set(row, 0, TerrainTiles.WALL_V);
             terrain.set(row, lastCol, TerrainTiles.WALL_V);
         }
         for (int col = 1; col < lastCol; ++col) {
-            terrain.set(emptyRowsBeforeMaze, col, TerrainTiles.WALL_H);
+            terrain.set(EMPTY_ROWS_BEFORE_MAZE, col, TerrainTiles.WALL_H);
             terrain.set(lastRow, col, TerrainTiles.WALL_H);
         }
         changeManager.setWorldMapChanged();
