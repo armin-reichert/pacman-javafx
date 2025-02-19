@@ -90,7 +90,7 @@ public class TileMapEditor {
     public static final Font FONT_DROP_HINT               = Font.font("Sans", FontWeight.BOLD, 16);
     public static final Font FONT_MESSAGE                 = Font.font("Sans", FontWeight.BOLD, 14);
     public static final Font FONT_SOURCE_VIEW             = Font.font("Monospace", FontWeight.NORMAL, 14);
-    public static final Font FONT_STATUS_LINE_EDIT_MODE   = Font.font("Sans", FontWeight.BOLD, 14);
+    public static final Font FONT_STATUS_LINE_EDIT_MODE   = Font.font("Sans", FontWeight.BOLD, 18);
     public static final Font FONT_STATUS_LINE_NORMAL      = Font.font("Sans", FontWeight.NORMAL, 14);
 
     public static final Color COLOR_CANVAS_BACKGROUND = Color.BLACK;
@@ -639,8 +639,12 @@ public class TileMapEditor {
         sliderZoom = new Slider(MIN_GRID_SIZE, MAX_GRID_SIZE, 0.5 * (MIN_GRID_SIZE + MAX_GRID_SIZE));
         sliderZoom.setShowTickLabels(false);
         sliderZoom.setShowTickMarks(true);
-        sliderZoom.setPrefWidth(100);
+        sliderZoom.setPrefWidth(120);
         Bindings.bindBidirectional(sliderZoom.valueProperty(), gridSizePy);
+        Tooltip tt = new Tooltip();
+        tt.setFont(Font.font(14));
+        tt.textProperty().bind(gridSizePy.map("Grid Size: %s"::formatted));
+        sliderZoom.setTooltip(tt);
     }
 
     private void createStatusLine() {
@@ -658,10 +662,9 @@ public class TileMapEditor {
             tile -> tile != null ? "(%2d,%2d)".formatted(tile.x(), tile.y()) : "n/a"));
 
         lblEditMode.setAlignment(Pos.BASELINE_RIGHT);
-        lblEditMode.setTextAlignment(TextAlignment.RIGHT);
         lblEditMode.setMinWidth(100);
         lblEditMode.setFont(FONT_STATUS_LINE_EDIT_MODE);
-        lblEditMode.setEffect(new Glow());
+        lblEditMode.setEffect(new Glow(0.2));
         lblEditMode.textProperty().bind(Bindings.createStringBinding(
             () -> switch (editModePy.get()) {
                 case INSPECT -> tt("mode.inspect");
