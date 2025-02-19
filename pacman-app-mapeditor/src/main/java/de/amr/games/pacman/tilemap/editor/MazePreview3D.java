@@ -78,20 +78,30 @@ public class MazePreview3D {
         camera.setTranslateY(mapHeight);
         camera.setTranslateZ(-mapWidth * 0.5);
         maze3D.setRotate(0);
+        maze3D.setTranslateX(0);
         maze3D.setTranslateY(-0.5 * mapHeight);
     }
 
     private void onKeyPressed(KeyEvent e) {
-        boolean control = e.isControlDown();
+        boolean control = e.isControlDown(), shift = e.isShiftDown();
         KeyCode key = e.getCode();
-        if (control && key == KeyCode.UP) {
-            maze3D.moveTowardsUser(10);
-        } else if (control && key == KeyCode.DOWN) {
-            maze3D.moveTowardsUser(-10);
-        } else if (control && key == KeyCode.LEFT) {
+        if (control && !shift && key == KeyCode.LEFT) {
             maze3D.rotateBy(-2);
-        } else if (control && key == KeyCode.RIGHT) {
+        }
+        else if (control && !shift && key == KeyCode.RIGHT) {
             maze3D.rotateBy(2);
+        }
+        else if (control && shift && key == KeyCode.UP) {
+            maze3D.moveTowardsUser(10);
+        }
+        else if (control && shift && key == KeyCode.DOWN) {
+            maze3D.moveTowardsUser(-10);
+        }
+        else  if (control && shift && key == KeyCode.LEFT) {
+            maze3D.moveRight(10);
+        }
+        else if (control && shift && key == KeyCode.RIGHT) {
+            maze3D.moveLeft(10);
         }
     }
 

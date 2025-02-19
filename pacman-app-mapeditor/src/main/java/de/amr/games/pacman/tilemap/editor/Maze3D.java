@@ -107,6 +107,14 @@ public class Maze3D extends Group {
         setTranslateY(getTranslateY() + pixels);
     }
 
+    public void moveLeft(double pixels) {
+        setTranslateX(getTranslateX() - pixels);
+    }
+
+    public void moveRight(double pixels) {
+        setTranslateX(getTranslateX() + pixels);
+    }
+
     public void rotateBy(double angle) {
         setRotationAxis(Rotate.Z_AXIS);
         setRotate(getRotate() + angle);
