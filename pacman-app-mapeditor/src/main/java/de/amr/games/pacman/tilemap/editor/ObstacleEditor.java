@@ -14,25 +14,28 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
 import org.tinylog.Logger;
 
-import java.util.function.BiConsumer;
-
 public class ObstacleEditor {
 
     private final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>();
 
-    private BiConsumer<Vector2i, Byte> editCallback;
     private boolean enabled;
     private Vector2i anchor;
     private Vector2i frontier;
     private Vector2i minTile; // top left corner
     private Vector2i maxTile; // bottom right corner
-    private boolean join = true;
+    private boolean join;
+
+    public ObstacleEditor() {}
+
+    public void setValue(Vector2i tile, byte value) {
+        Logger.info("Tile {} git value {}", tile, value);
+    }
+
+    public void setJoin(boolean join) {
+        this.join = join;
+    }
 
     public ObjectProperty<WorldMap> worldMapProperty() { return worldMapPy; }
-
-    public void setEditCallback(BiConsumer<Vector2i, Byte> callback) {
-        editCallback = callback;
-    }
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
@@ -89,7 +92,7 @@ public class ObstacleEditor {
     }
 
     public void endEditing() {
-        if (enabled && editCallback != null) {
+        if (enabled) {
             commit();
         }
     }
@@ -116,7 +119,7 @@ public class ObstacleEditor {
             for (int row = 0; row < numRows; ++row) {
                 for (int col = 0; col < numCols; ++col) {
                     var tile = new Vector2i(minTile.x() + col, minTile.y() + row);
-                    editCallback.accept(tile, content[row][col]);
+                    setValue(tile, content[row][col]);
                 }
             }
         }

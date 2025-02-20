@@ -56,11 +56,14 @@ public class EditCanvas extends Canvas {
     public EditCanvas(TileMapEditor editor) {
         this.editor = editor;
 
-        obstacleEditor = new ObstacleEditor();
-        obstacleEditor.setEditCallback((tile, value) -> {
-            editor.setTileValue(editor.worldMap().terrain(), tile, value);
-            editor.setTileValue(editor.worldMap().food(), tile, FoodTiles.EMPTY);
-        });
+        obstacleEditor = new ObstacleEditor() {
+            @Override
+            public void setValue(Vector2i tile, byte value) {
+                editor.setTileValue(editor.worldMap().terrain(), tile, value);
+                editor.setTileValue(editor.worldMap().food(), tile, FoodTiles.EMPTY);
+            }
+        };
+        obstacleEditor.setJoin(true);
         obstacleEditor.worldMapProperty().bind(worldMapPy);
 
         gridSizePy.bind(editor.gridSizeProperty());
