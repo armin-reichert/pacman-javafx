@@ -141,6 +141,15 @@ public class EditCanvas extends Canvas {
             drawGrid(g);
         }
 
+        // Indicate outer areas where obstacles are treated as outer walls
+        g.save();
+        g.setStroke(Color.grayRgb(200, 0.75));
+        g.setLineWidth(0.75);
+        g.setLineDashes(5, 5);
+        g.strokeLine(0, EMPTY_ROWS_BEFORE_MAZE * scaling * TS, getWidth(), EMPTY_ROWS_BEFORE_MAZE * scaling * TS);
+        g.strokeLine(0, getHeight() - EMPTY_ROWS_BELOW_MAZE * scaling * TS, getWidth(), getHeight() - EMPTY_ROWS_BELOW_MAZE * scaling * TS);
+        g.restore();
+
         // Terrain
         if (editor.terrainVisibleProperty().get()) {
             editor.terrainRendererInEditor().setScaling(scaling);
