@@ -77,7 +77,12 @@ public class TileMapEditor {
 
     public static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle(TileMapEditor.class.getPackageName() + ".texts");
     public static String tt(String key, Object... args) {
-        return MessageFormat.format(TEXT_BUNDLE.getString(key), args);
+        try {
+            return MessageFormat.format(TEXT_BUNDLE.getString(key), args);
+        } catch (MissingResourceException x) {
+            Logger.error("No resource with key {} found in {}", key, TEXT_BUNDLE);
+            return "[%s]".formatted(key);
+        }
     }
 
     private static boolean isSupportedImageFile(File file) {
@@ -816,6 +821,10 @@ public class TileMapEditor {
         miAddBorder.setOnAction(e -> addBorderWall(worldMap().terrain()));
         miAddBorder.disableProperty().bind(editModePy.map(mode -> mode == EditMode.INSPECT));
 
+        var miAddHouse = new MenuItem(tt("menu.edit.add_house"));
+        miAddHouse.setOnAction(e -> addHouse());
+        miAddHouse.disableProperty().bind(editModePy.map(mode -> mode == EditMode.INSPECT));
+
         var miClearTerrain = new MenuItem(tt("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(e -> {
             worldMap().terrain().fill(TerrainTiles.EMPTY);
@@ -839,6 +848,7 @@ public class TileMapEditor {
 
         menuEdit = new Menu(tt("menu.edit"), NO_GRAPHIC,
             miAddBorder,
+            miAddHouse,
             miClearTerrain,
             miClearFood,
             miIdentifyTiles);
@@ -1316,10 +1326,10 @@ public class TileMapEditor {
         terrain.setProperty(PROPERTY_COLOR_DOOR, MS_PACMAN_COLOR_DOOR);
         addBorderWall(terrain);
         if (terrain.numRows() >= 20) {
-            Vector2i houseOrigin = vec_2i(tilesX / 2 - 4, tilesY / 2 - 3);
-            placeHouse(worldMap, houseOrigin);
-            terrain.setProperty(PROPERTY_POS_PAC,                  formatTile(houseOrigin.plus(3, 11)));
-            terrain.setProperty(PROPERTY_POS_BONUS,                formatTile(houseOrigin.plus(3, 5)));
+            Vector2i houseMinTile = vec_2i(tilesX / 2 - 4, tilesY / 2 - 3);
+            placeHouse(worldMap, houseMinTile);
+            terrain.setProperty(PROPERTY_POS_PAC,                  formatTile(houseMinTile.plus(3, 11)));
+            terrain.setProperty(PROPERTY_POS_BONUS,                formatTile(houseMinTile.plus(3, 5)));
             terrain.setProperty(PROPERTY_POS_SCATTER_RED_GHOST,    formatTile(vec_2i(tilesX - 3, 0)));
             terrain.setProperty(PROPERTY_POS_SCATTER_PINK_GHOST,   formatTile(vec_2i(2, 0)));
             terrain.setProperty(PROPERTY_POS_SCATTER_CYAN_GHOST,   formatTile(vec_2i(tilesX - 1, tilesY - 2)));
@@ -1346,6 +1356,11 @@ public class TileMapEditor {
         }
         changeManager.setWorldMapChanged();
         changeManager.setEdited(true);
+    }
+
+    private void addHouse() {
+        int numRows = worldMap().terrain().numRows(), numCols = worldMap().terrain().numCols();
+        placeHouse(worldMap(), vec_2i(numCols / 2 - 4, numRows / 2 - 3));
     }
 
     public void placeHouse(WorldMap worldMap, Vector2i houseMinTile) {

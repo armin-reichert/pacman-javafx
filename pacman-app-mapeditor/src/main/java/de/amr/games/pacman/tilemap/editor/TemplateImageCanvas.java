@@ -135,9 +135,6 @@ public class TemplateImageCanvas extends Canvas {
         colorSelectionContextMenu = new ContextMenu();
 
         Color colorAtMousePosition = pickColor(e.getX(), e.getY());
-        if (colorAtMousePosition.equals(Color.TRANSPARENT)) {
-            return;
-        }
 
         var miColorPreview = createColorMenuItem(colorAtMousePosition, null);
 
