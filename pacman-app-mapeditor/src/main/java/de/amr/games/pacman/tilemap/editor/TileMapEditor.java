@@ -233,8 +233,6 @@ public class TileMapEditor {
 
     public ObjectProperty<Image> templateImageProperty() { return templateImagePy; }
 
-    public ObjectProperty<Image> templateImageGreyProperty() { return templateImageGreyPy; }
-
     public byte selectedPaletteID() {
         return (Byte) tabPaneWithPalettes.getSelectionModel().getSelectedItem().getUserData();
     }
@@ -351,7 +349,6 @@ public class TileMapEditor {
         initActiveRendering();
 
         titlePy.bind(createTitleBinding());
-        templateImageGreyPy.bind(templateImagePy.map(Ufx::imageToGreyscale));
 
         // Input handlers
         contentPane.setOnKeyTyped(this::onKeyTyped);

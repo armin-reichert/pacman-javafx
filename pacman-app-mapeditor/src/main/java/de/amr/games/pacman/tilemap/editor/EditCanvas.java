@@ -11,6 +11,7 @@ import de.amr.games.pacman.lib.tilemap.FoodTiles;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.tilemap.rendering.TerrainColorScheme;
+import de.amr.games.pacman.uilib.Ufx;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -64,7 +65,7 @@ public class EditCanvas extends Canvas {
 
         gridSizePy.bind(editor.gridSizeProperty());
         worldMapPy.bind(editor.worldMapProperty());
-        templateImageGreyPy.bind(editor.templateImageGreyProperty());
+        templateImageGreyPy.bind(editor.templateImageProperty().map(Ufx::imageToGreyscale));
 
         heightProperty().bind(Bindings.createDoubleBinding(
             () -> (double) worldMap().terrain().numRows() * gridSize(),
