@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.net.URL;
+import java.util.Locale;
 
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static java.util.Objects.requireNonNull;
@@ -51,8 +52,9 @@ public interface TileMapEditorUtil {
         }
     }
 
+    // Note: String.format is locale-dependent! This may produce illegal color format if locale is not ENGLISH!
     static String formatColor(Color color) {
-        return String.format("rgba(%d,%d,%d,%.2f)",
+        return String.format(Locale.ENGLISH, "rgba(%d,%d,%d,%.2f)",
                 (int) (color.getRed()   * 255),
                 (int) (color.getGreen() * 255),
                 (int) (color.getBlue()  * 255),

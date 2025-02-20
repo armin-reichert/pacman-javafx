@@ -132,6 +132,10 @@ public class TemplateImageCanvas extends Canvas {
         if (colorSelectionContextMenu != null) {
             colorSelectionContextMenu.hide();
         }
+        if (editor.isEditMode(EditMode.INSPECT)) {
+            return;
+        }
+
         colorSelectionContextMenu = new ContextMenu();
 
         final Color pickColor = pickColor(e.getX(), e.getY());
