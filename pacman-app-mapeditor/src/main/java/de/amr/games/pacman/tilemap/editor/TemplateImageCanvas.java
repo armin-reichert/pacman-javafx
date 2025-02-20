@@ -181,7 +181,12 @@ public class TemplateImageCanvas extends Canvas {
         colorBox.setMinHeight(30);
         colorBox.setMaxHeight(30);
         colorBox.setBorder(Border.stroke(Color.BLACK));
-        colorBox.setBackground(Background.fill(color));
+        colorBox.setBackground(Background.fill(color)); // color == null -> uses TRANSPARENT!
+        if (color == null) {
+            var undefinedHint = new Text("???");
+            undefinedHint.setFont(Font.font("Sans", FontWeight.BOLD, 14));
+            colorBox.getChildren().add(undefinedHint);
+        }
 
         Text colorText = new Text();
         colorText.setText(itemText);
