@@ -34,7 +34,7 @@ import java.util.function.Predicate;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.tilemap.editor.ArcadeMap.*;
-import static de.amr.games.pacman.tilemap.editor.TileMapEditor.tt;
+import static de.amr.games.pacman.tilemap.editor.TileMapEditor.*;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.*;
 
 public class EditCanvas extends Canvas {
@@ -120,21 +120,18 @@ public class EditCanvas extends Canvas {
 
     public void draw(TerrainColorScheme colors) {
         GraphicsContext g = getGraphicsContext2D();
-
-        final TileMap terrain = worldMap().terrain(), food = worldMap().food();
-        double scaling = gridSize() / (double) TS;
-
         g.setImageSmoothing(false);
 
-        // Background
+        TileMap terrain = worldMap().terrain(), food = worldMap().food();
+        double scaling = gridSize() / (double) TS;
+
         g.setFill(colors.backgroundColor());
         g.fillRect(0, 0, getWidth(), getHeight());
 
         if (templateImageGreyPy.get() != null) {
-            int emptyRowsTop = 3, emptyRowsBottom = 2; // TODO
             g.drawImage(templateImageGreyPy.get(),
-                0, emptyRowsTop * scaling * TS,
-                getWidth(), getHeight() - (emptyRowsTop + emptyRowsBottom) * scaling * TS);
+                0, EMPTY_ROWS_BEFORE_MAZE * scaling * TS,
+                getWidth(), getHeight() - (EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE) * scaling * TS);
         }
 
         if (editor.gridVisibleProperty().get()) {
@@ -148,16 +145,7 @@ public class EditCanvas extends Canvas {
             editor.terrainRendererInEditor().setSegmentNumbersDisplayed(editor.segmentNumbersDisplayedProperty().get());
             editor.terrainRendererInEditor().setObstacleInnerAreaDisplayed(editor.obstacleInnerAreaDisplayedProperty().get());
             editor.terrainRendererInEditor().drawTerrain(g, terrain, worldMap().obstacles());
-
-            byte[][] editedObstacleContent = obstacleEditor.editedContent();
-            if (editedObstacleContent != null) {
-                for (int row = 0; row < editedObstacleContent.length; ++row) {
-                    for (int col = 0; col < editedObstacleContent[0].length; ++col) {
-                        Vector2i tile = obstacleEditor.minTile().plus(col, row);
-                        editor.terrainRendererInEditor().drawTile(g, tile, editedObstacleContent[row][col]);
-                    }
-                }
-            }
+            obstacleEditor.draw(g, editor.terrainRendererInEditor());
         }
 
         // Tiles that seem to be wrong

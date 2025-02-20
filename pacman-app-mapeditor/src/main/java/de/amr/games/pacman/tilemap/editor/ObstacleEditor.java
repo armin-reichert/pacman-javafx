@@ -11,6 +11,7 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.canvas.GraphicsContext;
 import org.tinylog.Logger;
 
 import java.util.function.BiConsumer;
@@ -93,6 +94,18 @@ public class ObstacleEditor {
         }
         Logger.debug("End inserting obstacle at tile {}", tile);
         commit();
+    }
+
+    public void draw(GraphicsContext g, TerrainRendererInEditor renderer) {
+        byte[][] content = editedContent();
+        if (content != null) {
+            for (int row = 0; row < content.length; ++row) {
+                for (int col = 0; col < content[0].length; ++col) {
+                    Vector2i tile = minTile.plus(col, row);
+                    renderer.drawTile(g, tile, content[row][col]);
+                }
+            }
+        }
     }
 
     private void commit() {
