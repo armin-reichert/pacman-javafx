@@ -134,25 +134,27 @@ public class TemplateImageCanvas extends Canvas {
         }
         colorSelectionContextMenu = new ContextMenu();
 
-        Color colorAtMousePosition = pickColor(e.getX(), e.getY());
+        final Color pickColor = pickColor(e.getX(), e.getY());
+        final Color colorToSelect = pickColor.equals(Color.TRANSPARENT) ? Color.BLACK : pickColor;
 
-        var miColorPreview = createColorMenuItem(colorAtMousePosition, null);
+        var miColorPreview = createColorMenuItem(colorToSelect,
+                pickColor.equals(Color.TRANSPARENT) ? "TRANSPARENT -> BLACK" : formatColorHex(colorToSelect));
 
         Color fillColor = getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_WALL_FILL, null);
         var miPickFillColor = createColorMenuItem(fillColor, tt("menu.pick_color.set_fill_color"));
-        miPickFillColor.setOnAction(ae -> editor.setTerrainMapPropertyValue(PROPERTY_COLOR_WALL_FILL, formatColor(colorAtMousePosition)));
+        miPickFillColor.setOnAction(ae -> editor.setTerrainMapPropertyValue(PROPERTY_COLOR_WALL_FILL, formatColor(colorToSelect)));
 
         Color strokeColor =  getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_WALL_STROKE, null);
         var miPickStrokeColor = createColorMenuItem(strokeColor, tt("menu.pick_color.set_stroke_color"));
-        miPickStrokeColor.setOnAction(ae -> editor.setTerrainMapPropertyValue(PROPERTY_COLOR_WALL_STROKE, formatColor(colorAtMousePosition)));
+        miPickStrokeColor.setOnAction(ae -> editor.setTerrainMapPropertyValue(PROPERTY_COLOR_WALL_STROKE, formatColor(colorToSelect)));
 
         Color doorColor =  getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_DOOR, null);
         var miPickDoorColor = createColorMenuItem(doorColor, tt("menu.pick_color.set_door_color"));
-        miPickDoorColor.setOnAction(ae -> editor.setTerrainMapPropertyValue(PROPERTY_COLOR_DOOR, formatColor(colorAtMousePosition)));
+        miPickDoorColor.setOnAction(ae -> editor.setTerrainMapPropertyValue(PROPERTY_COLOR_DOOR, formatColor(colorToSelect)));
 
         Color foodColor =  getColorFromMap(worldMap().food(), PROPERTY_COLOR_FOOD, null);
         var miPickFoodColor = createColorMenuItem(foodColor, tt("menu.pick_color.set_food_color"));
-        miPickFoodColor.setOnAction(ae -> editor.setFoodMapPropertyValue(PROPERTY_COLOR_FOOD, formatColor(colorAtMousePosition)));
+        miPickFoodColor.setOnAction(ae -> editor.setFoodMapPropertyValue(PROPERTY_COLOR_FOOD, formatColor(colorToSelect)));
 
         colorSelectionContextMenu.getItems().addAll(
             miColorPreview,
@@ -166,22 +168,27 @@ public class TemplateImageCanvas extends Canvas {
     }
 
     private CustomMenuItem createColorMenuItem(Color color, String itemText) {
-        var colorBox = new HBox();
-        colorBox.setMinWidth(32);
-        colorBox.setMinHeight(16);
-        if (color != null) {
-            colorBox.setBackground(Background.fill(color));
-            colorBox.setBorder(Border.stroke(Color.BLACK));
-            Text text = new Text(formatColorHex(color));
-            text.setFont(TileMapEditor.FONT_CONTEXT_MENU_COLOR_TEXT);
-            text.setFill(Color.BLACK);
-            colorBox.getChildren().add(text);
-        } else {
-            colorBox.getChildren().add(new Text(tt("use_color_as")));
-        }
+        HBox content = new HBox();
+        content.setMinWidth(120);
+        content.setMinHeight(30);
+        content.setSpacing(10);
+        content.setPadding(new Insets(3));
+        content.setBackground(Background.fill(Color.TRANSPARENT));
 
-        var content = itemText != null ? new HBox(colorBox, new Text(itemText))  : new HBox(colorBox);
-        content.setSpacing(3);
+        VBox colorBox = new VBox();
+        colorBox.setMinWidth(30);
+        colorBox.setMaxWidth(30);
+        colorBox.setMinHeight(30);
+        colorBox.setMaxHeight(30);
+        colorBox.setBorder(Border.stroke(Color.BLACK));
+        colorBox.setBackground(Background.fill(color));
+
+        Text colorText = new Text();
+        colorText.setText(itemText);
+        colorText.setFont(Font.font("Sans", FontWeight.BOLD, 16));
+        colorText.setFill(Color.BLACK);
+
+        content.getChildren().addAll(colorBox, colorText);
 
         return new CustomMenuItem(content);
     }
