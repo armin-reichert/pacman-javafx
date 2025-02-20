@@ -881,42 +881,35 @@ public class TileMapEditor {
     }
 
     public void loadMap(WorldMap worldMap) {
-        assertNotNull(worldMap);
-        if (changeManager.isEdited()) {
-            showSaveConfirmationDialog(this::showSaveDialog, () -> {
-                setWorldMap(new WorldMap(worldMap));
-                currentFilePy.set(null);
-            });
-        } else {
+        executeWithCheckForUnsavedChanges(() -> {
             setWorldMap(new WorldMap(worldMap));
             currentFilePy.set(null);
-        }
+        });
     }
 
     private void showNewMapDialog(boolean preconfigured) {
-        if (changeManager.isEdited()) {
-            showSaveConfirmationDialog(this::showSaveDialog, () -> Logger.info("Map saving declined"));
-        }
-        var dialog = new TextInputDialog("28x36");
-        dialog.setTitle(tt("new_dialog.title"));
-        dialog.setHeaderText(tt("new_dialog.header_text"));
-        dialog.setContentText(tt("new_dialog.content_text"));
-        dialog.showAndWait().ifPresent(text -> {
-            Vector2i sizeInTiles = parseSize(text);
-            if (sizeInTiles == null) {
-                showMessage("Map size not recognized", 2, MessageType.ERROR);
-            }
-            else if (sizeInTiles.y() < 6) {
-                showMessage("Map must have at least 6 rows", 2, MessageType.ERROR);
-            }
-            else {
-                if (preconfigured) {
-                    setPreconfiguredMap(sizeInTiles.x(), sizeInTiles.y());
-                } else {
-                    setBlankMap(sizeInTiles.x(), sizeInTiles.y());
+        executeWithCheckForUnsavedChanges(() -> {
+            var dialog = new TextInputDialog("28x36");
+            dialog.setTitle(tt("new_dialog.title"));
+            dialog.setHeaderText(tt("new_dialog.header_text"));
+            dialog.setContentText(tt("new_dialog.content_text"));
+            dialog.showAndWait().ifPresent(text -> {
+                Vector2i sizeInTiles = parseSize(text);
+                if (sizeInTiles == null) {
+                    showMessage("Map size not recognized", 2, MessageType.ERROR);
                 }
-                currentFilePy.set(null);
-            }
+                else if (sizeInTiles.y() < 6) {
+                    showMessage("Map must have at least 6 rows", 2, MessageType.ERROR);
+                }
+                else {
+                    if (preconfigured) {
+                        setPreconfiguredMap(sizeInTiles.x(), sizeInTiles.y());
+                    } else {
+                        setBlankMap(sizeInTiles.x(), sizeInTiles.y());
+                    }
+                    currentFilePy.set(null);
+                }
+            });
         });
     }
 
@@ -937,19 +930,15 @@ public class TileMapEditor {
     }
 
     private void openMapFileInteractively() {
-        if (changeManager.isEdited()) {
-            showSaveConfirmationDialog(this::showSaveDialog, () -> {
-                changeManager.setEdited(false);
-            });
-        }
-        else {
+        executeWithCheckForUnsavedChanges(() -> {
             fileChooser.setTitle(tt("open_file"));
             fileChooser.setInitialDirectory(currentDirectory);
             File file = fileChooser.showOpenDialog(stage);
             if (file != null) {
                 readMapFile(file);
             }
-        }
+            changeManager.setEdited(false);
+        });
     }
 
     private boolean readMapFile(File file) {
@@ -1016,30 +1005,30 @@ public class TileMapEditor {
         }
     }
 
-    public void showSaveConfirmationDialog(Runnable saveAction, Runnable noSaveAction) {
-        if (changeManager.isEdited()) {
-            var confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
-            confirmationDialog.setTitle(tt("save_dialog.title"));
-            confirmationDialog.setHeaderText(tt("save_dialog.header_text"));
-            confirmationDialog.setContentText(tt("save_dialog.content_text"));
-            var choiceSave   = new ButtonType(tt("save_changes"));
-            var choiceNoSave = new ButtonType(tt("no_save_changes"));
-            var choiceCancel = new ButtonType(tt("cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
-            confirmationDialog.getButtonTypes().setAll(choiceSave, choiceNoSave, choiceCancel);
-            confirmationDialog.showAndWait().ifPresent(choice -> {
-                if (choice == choiceSave) {
-                    saveAction.run();
-                } else if (choice == choiceNoSave) {
-                    noSaveAction.run();
-                    changeManager.setEdited(false);
-                } else if (choice == choiceCancel) {
-                    confirmationDialog.close(); // TODO check this
-                }
-            });
-        } else {
-            stop();
-            noSaveAction.run();
+    public void executeWithCheckForUnsavedChanges(Runnable action) {
+        if (!changeManager.isEdited()) {
+            action.run();
+            return;
         }
+        var confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationDialog.setTitle(tt("save_dialog.title"));
+        confirmationDialog.setHeaderText(tt("save_dialog.header_text"));
+        confirmationDialog.setContentText(tt("save_dialog.content_text"));
+        var choiceSave   = new ButtonType(tt("save_changes"));
+        var choiceNoSave = new ButtonType(tt("no_save_changes"));
+        var choiceCancel = new ButtonType(tt("cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
+        confirmationDialog.getButtonTypes().setAll(choiceSave, choiceNoSave, choiceCancel);
+        confirmationDialog.showAndWait().ifPresent(choice -> {
+            if (choice == choiceSave) {
+                showSaveDialog();
+                action.run();
+            } else if (choice == choiceNoSave) {
+                changeManager.setEdited(false);
+                action.run();
+            } else if (choice == choiceCancel) {
+                confirmationDialog.close();
+            }
+        });
     }
 
     private void updateSourceView() {

@@ -317,7 +317,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         if (editorPage == null && game() instanceof CustomMapsHandler customMapsHandler) {
             editorPage = new EditorPage(stage, this, customMapsHandler.customMapDir());
             editorPage.setCloseAction(editor -> {
-                editor.showSaveConfirmationDialog(editor::showSaveDialog, this::bindStageTitle);
+                editor.executeWithCheckForUnsavedChanges(this::bindStageTitle);
                 editor.stop();
                 clock.setTargetFrameRate(GameModel.TICKS_PER_SECOND);
                 gameController().restart(GameState.BOOT);

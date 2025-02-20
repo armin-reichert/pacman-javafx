@@ -66,7 +66,7 @@ public class TileMapEditorApp extends Application  {
         layout.setTop(editor.getMenuBar());
 
         var miQuit = new MenuItem(tt("quit"));
-        miQuit.setOnAction(e -> editor.showSaveConfirmationDialog(editor::showSaveDialog, stage::close));
+        miQuit.setOnAction(e -> editor.executeWithCheckForUnsavedChanges(stage::close));
         editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miQuit);
 
         double height = Math.max(0.8 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
@@ -82,7 +82,7 @@ public class TileMapEditorApp extends Application  {
         rangeClosed(1, 8).forEach(num -> editor.addLoadMapMenuItem("Pac-Man XXL " + num, mapsPacManXXLGame.get(num - 1)));
 
         stage.setScene(scene);
-        stage.setOnCloseRequest(e -> editor.showSaveConfirmationDialog(editor::showSaveDialog, () -> {
+        stage.setOnCloseRequest(e -> editor.executeWithCheckForUnsavedChanges(() -> {
             editor.stop();
             stage.close();
         }));
