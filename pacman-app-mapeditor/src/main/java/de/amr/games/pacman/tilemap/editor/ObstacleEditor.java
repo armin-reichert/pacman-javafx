@@ -88,12 +88,10 @@ public class ObstacleEditor {
         Logger.debug("Min tile {} max tile {}", minTile, maxTile);
     }
 
-    public void endEditing(Vector2i tile) {
-        if (!enabled) {
-            return;
+    public void endEditing() {
+        if (enabled && editCallback != null) {
+            commit();
         }
-        Logger.debug("End inserting obstacle at tile {}", tile);
-        commit();
     }
 
     public void draw(GraphicsContext g, TerrainRendererInEditor renderer) {
@@ -109,12 +107,18 @@ public class ObstacleEditor {
     }
 
     private void commit() {
-        byte[][] editedContent = editedContent();
-        if (editedContent != null) {
+        byte[][] content = editedContent();
+        if (content != null) {
             if (join) {
-                editedContent = joinedContent(editedContent, editedContent.length, editedContent[0].length);
+                content = joinedContent(content, content.length, content[0].length);
             }
-            copy(editedContent);
+            int numRows = content.length, numCols = content[0].length;
+            for (int row = 0; row < numRows; ++row) {
+                for (int col = 0; col < numCols; ++col) {
+                    var tile = new Vector2i(minTile.x() + col, minTile.y() + row);
+                    editCallback.accept(tile, content[row][col]);
+                }
+            }
         }
         anchor = frontier = minTile = maxTile = null;
     }
@@ -205,7 +209,7 @@ public class ObstacleEditor {
         return joinedContent;
     }
 
-    public byte[][] editedContent() {
+    private byte[][] editedContent() {
         if (minTile == null || maxTile == null) {
             return null;
         }
@@ -214,7 +218,7 @@ public class ObstacleEditor {
         if (numRows <= 1 || numCols <= 1) {
             return null;
         }
-        byte[][] area = new byte[numRows][numCols];
+        byte[][] content = new byte[numRows][numCols];
         for (int row = minTile.y(); row <= maxTile.y(); ++row) {
             for (int col = minTile.x(); col <= maxTile.x(); ++col) {
                 byte value = TerrainTiles.EMPTY;
@@ -231,22 +235,9 @@ public class ObstacleEditor {
                 } else if (col == minTile.x() || col == maxTile.x()) {
                     value = TerrainTiles.WALL_V;
                 }
-                area[row - minTile.y()][col - minTile.x()] = value;
+                content[row - minTile.y()][col - minTile.x()] = value;
             }
         }
-        return area;
-    }
-
-    private void copy(byte[][] values) {
-        int numRows = values.length;
-        int numCols = values[0].length;
-        for (int row = 0; row < numRows; ++row) {
-            for (int col = 0; col < numCols; ++col) {
-                Vector2i tile = new Vector2i(minTile.x() + col, minTile.y() + row);
-                if (editCallback != null) {
-                    editCallback.accept(tile, values[row][col]);
-                }
-            }
-        }
+        return content;
     }
 }

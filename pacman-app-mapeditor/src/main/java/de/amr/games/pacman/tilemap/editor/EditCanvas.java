@@ -252,7 +252,7 @@ public class EditCanvas extends Canvas {
         if (e.getButton() == MouseButton.PRIMARY) {
             if (dragging) {
                 dragging = false;
-                obstacleEditor.endEditing(tileAtMousePosition(e.getX(), e.getY(), gridSize()));
+                obstacleEditor.endEditing();
                 editor.getChangeManager().setTerrainMapChanged();
                 editor.getChangeManager().setEdited(true);
             } else {
@@ -265,7 +265,7 @@ public class EditCanvas extends Canvas {
         Vector2i tile = tileAtMousePosition(e.getX(), e.getY(), gridSize());
         focussedTilePy.set(tile);
         switch (editor.editMode()) {
-            case EditMode.EDIT -> {
+            case EDIT -> {
                 if (e.isShiftDown()) {
                     switch (editor.selectedPaletteID()) {
                         case TileMapEditor.PALETTE_ID_TERRAIN -> {
@@ -286,7 +286,7 @@ public class EditCanvas extends Canvas {
                     }
                 }
             }
-            case EditMode.ERASE -> {
+            case ERASE -> {
                 if (e.isShiftDown()) {
                     switch (editor.selectedPaletteID()) {
                         case TileMapEditor.PALETTE_ID_TERRAIN -> editor.clearTerrainTileValue(tile);
@@ -294,7 +294,7 @@ public class EditCanvas extends Canvas {
                     }
                 }
             }
-            case EditMode.INSPECT -> {}
+            case INSPECT -> {}
         }
     }
 
