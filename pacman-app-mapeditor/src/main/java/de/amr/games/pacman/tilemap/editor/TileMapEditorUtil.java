@@ -52,7 +52,11 @@ public interface TileMapEditorUtil {
     }
 
     static String formatColor(Color color) {
-        return String.format("rgb(%d,%d,%d)", (int)(color.getRed()*255), (int)(color.getGreen()*255), (int)(color.getBlue()*255));
+        return String.format("rgba(%d,%d,%d,%.2f)",
+                (int) (color.getRed()   * 255),
+                (int) (color.getGreen() * 255),
+                (int) (color.getBlue()  * 255),
+                color.getOpacity());
     }
 
     static String formatColorHex(Color color) {
