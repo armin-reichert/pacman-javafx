@@ -159,6 +159,54 @@ public class TileMapEditor {
 
     private final ChangeManager changeManager = new ChangeManager();
 
+    // Attributes
+
+    private File currentDirectory;
+    private Instant messageCloseTime;
+    private Timeline clock;
+    private final List<Vector2i> tilesWithErrors = new ArrayList<>();
+
+    private final BorderPane contentPane = new BorderPane();
+    private Stage stage;
+    private Pane propertyEditorsPane;
+    private EditCanvas editCanvas;
+    private ScrollPane spEditCanvas;
+    private ScrollPane spPreview2D;
+    private Canvas canvasPreview2D;
+    private Text sourceView;
+    private ScrollPane spSourceView;
+    private ScrollPane spTemplateImage;
+    private Pane dropTargetForTemplateImage;
+    private SplitPane splitPaneEditorAndPreviews;
+    private Label messageLabel;
+    private FileChooser fileChooser;
+    private TabPane tabPaneWithPalettes;
+    private Slider sliderZoom;
+    private HBox statusLine;
+    private TabPane tabPaneEditorViews;
+    private Tab tabEditCanvas;
+    private Tab tabTemplateImage;
+    private TemplateImageCanvas templateImageCanvas;
+    private TabPane tabPanePreviews;
+    private Tab tabPreview2D;
+    private Tab tabPreview3D;
+    private Tab tabSourceView;
+    private MazePreview3D mazePreview3D;
+
+    private MenuBar menuBar;
+    private Menu menuFile;
+    private Menu menuEdit;
+    private Menu menuLoadMap;
+    private Menu menuView;
+
+    private final Palette[] palettes = new Palette[3];
+    private PropertyEditorPane terrainMapPropertiesEditor;
+    private PropertyEditorPane foodMapPropertiesEditor;
+
+    private TerrainRendererInEditor terrainRendererInEditor;
+    private TerrainRenderer terrainRendererInPreview;
+    private FoodMapRenderer foodRenderer;
+
     // Properties
 
     private final ObjectProperty<File> currentFilePy = new SimpleObjectProperty<>();
@@ -270,55 +318,6 @@ public class TileMapEditor {
     public List<Vector2i> tilesWithErrors() {
         return tilesWithErrors;
     }
-
-    // Attributes
-
-    private File currentDirectory;
-    private Instant messageCloseTime;
-    private Timeline clock;
-    private final List<Vector2i> tilesWithErrors = new ArrayList<>();
-
-    private final BorderPane contentPane = new BorderPane();
-    private Stage stage;
-    private Pane propertyEditorsPane;
-    private EditCanvas editCanvas;
-    private ScrollPane spEditCanvas;
-    private ScrollPane spPreview2D;
-    private Canvas canvasPreview2D;
-    private Text sourceView;
-    private ScrollPane spSourceView;
-    private ScrollPane spTemplateImage;
-    private Pane dropTargetForTemplateImage;
-    private SplitPane splitPaneEditorAndPreviews;
-    private Label messageLabel;
-    private FileChooser fileChooser;
-    private TabPane tabPaneWithPalettes;
-    private Slider sliderZoom;
-    private HBox statusLine;
-    private Label lblEditMode = new Label();
-    private TabPane tabPaneEditorViews;
-    private Tab tabEditCanvas;
-    private Tab tabTemplateImage;
-    private TemplateImageCanvas templateImageCanvas;
-    private TabPane tabPanePreviews;
-    private Tab tabPreview2D;
-    private Tab tabPreview3D;
-    private Tab tabSourceView;
-    private MazePreview3D mazePreview3D;
-
-    private MenuBar menuBar;
-    private Menu menuFile;
-    private Menu menuEdit;
-    private Menu menuLoadMap;
-    private Menu menuView;
-
-    private final Palette[] palettes = new Palette[3];
-    private PropertyEditorPane terrainMapPropertiesEditor;
-    private PropertyEditorPane foodMapPropertiesEditor;
-
-    private TerrainRendererInEditor terrainRendererInEditor;
-    private TerrainRenderer terrainRendererInPreview;
-    private FoodMapRenderer foodRenderer;
 
     public void createUI(Stage stage) {
         this.stage = assertNotNull(stage);
@@ -660,6 +659,7 @@ public class TileMapEditor {
         lblFocussedTile.textProperty().bind(editCanvas.focussedTileProperty().map(
             tile -> tile != null ? "(%2d,%2d)".formatted(tile.x(), tile.y()) : "n/a"));
 
+        var lblEditMode = new Label();
         lblEditMode.setAlignment(Pos.BASELINE_RIGHT);
         lblEditMode.setMinWidth(100);
         lblEditMode.setFont(FONT_STATUS_LINE_EDIT_MODE);
