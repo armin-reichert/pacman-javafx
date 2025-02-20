@@ -14,6 +14,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
 import org.tinylog.Logger;
 
+import static de.amr.games.pacman.lib.Globals.assertNotNull;
+
 public class ObstacleEditor {
 
     private final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>();
@@ -41,30 +43,18 @@ public class ObstacleEditor {
         this.enabled = enabled;
     }
 
-    public Vector2i minTile() {
-        return minTile;
-    }
-
-    public Vector2i maxTile() {
-        return maxTile;
-    }
-
     public void startEditing(Vector2i tile) {
-        if (!enabled) {
-            return;
+        assertNotNull(tile);
+        if (enabled) {
+            minTile = maxTile = anchor = frontier = tile;
         }
-        Logger.debug("Start inserting obstacle at tile {}", tile);
-        minTile = maxTile = anchor = frontier = tile;
     }
 
     public void continueEditing(Vector2i tile) {
-        if (!enabled) {
+        assertNotNull(tile);
+        if (!enabled || tile.equals(frontier)) {
             return;
         }
-        if (tile.equals(frontier)) {
-            return;
-        }
-        Logger.debug("Continue inserting obstacle at tile {}", tile);
         frontier = tile;
         int dx = frontier.x() - anchor.x(), dy = frontier.y() - anchor.y();
         if (dx >= 0) {
@@ -88,7 +78,6 @@ public class ObstacleEditor {
                 maxTile = anchor;
             }
         }
-        Logger.debug("Min tile {} max tile {}", minTile, maxTile);
     }
 
     public void endEditing() {
@@ -112,10 +101,10 @@ public class ObstacleEditor {
     private void commit() {
         byte[][] content = editedContent();
         if (content != null) {
-            if (join) {
-                content = joinedContent(content, content.length, content[0].length);
-            }
             int numRows = content.length, numCols = content[0].length;
+            if (join) {
+                content = joinedContent(content, numRows, numCols);
+            }
             for (int row = 0; row < numRows; ++row) {
                 for (int col = 0; col < numCols; ++col) {
                     var tile = new Vector2i(minTile.x() + col, minTile.y() + row);
@@ -224,23 +213,31 @@ public class ObstacleEditor {
         byte[][] content = new byte[numRows][numCols];
         for (int row = minTile.y(); row <= maxTile.y(); ++row) {
             for (int col = minTile.x(); col <= maxTile.x(); ++col) {
-                byte value = TerrainTiles.EMPTY;
-                if (row == minTile.y() && col == minTile.x()) {
-                    value = TerrainTiles.CORNER_NW;
-                } else if (row == minTile.y() && col == maxTile.x()) {
-                    value = TerrainTiles.CORNER_NE;
-                } else if (row == maxTile.y() && col == minTile.x()) {
-                    value = TerrainTiles.CORNER_SW;
-                } else if (row == maxTile.y() && col == maxTile.x()) {
-                    value = TerrainTiles.CORNER_SE;
-                } else if (row == minTile.y() || row == maxTile.y()) {
-                    value = TerrainTiles.WALL_H;
-                } else if (col == minTile.x() || col == maxTile.x()) {
-                    value = TerrainTiles.WALL_V;
-                }
-                content[row - minTile.y()][col - minTile.x()] = value;
+                content[row - minTile.y()][col - minTile.x()] = computeTileValue(row, col);
             }
         }
         return content;
+    }
+
+    private byte computeTileValue(int row, int col) {
+        if (row == minTile.y() && col == minTile.x()) {
+            return TerrainTiles.CORNER_NW;
+        }
+        if (row == minTile.y() && col == maxTile.x()) {
+            return TerrainTiles.CORNER_NE;
+        }
+        if (row == maxTile.y() && col == minTile.x()) {
+            return TerrainTiles.CORNER_SW;
+        }
+        if (row == maxTile.y() && col == maxTile.x()) {
+            return TerrainTiles.CORNER_SE;
+        }
+        if (row == minTile.y() || row == maxTile.y()) {
+            return TerrainTiles.WALL_H;
+        }
+        if (col == minTile.x() || col == maxTile.x()) {
+            return TerrainTiles.WALL_V;
+        }
+        return TerrainTiles.EMPTY;
     }
 }
