@@ -193,7 +193,7 @@ public class TileMapEditor {
         }
     };
 
-    private final BooleanProperty symmetricEditModePy = new SimpleBooleanProperty(true);
+    private final BooleanProperty symmetricEditPy = new SimpleBooleanProperty(true);
 
     private final ObjectProperty<Image> templateImagePy = new SimpleObjectProperty<>();
 
@@ -223,7 +223,7 @@ public class TileMapEditor {
 
     public BooleanProperty obstacleInnerAreaDisplayedProperty() { return obstacleInnerAreaDisplayedPy; }
 
-    public boolean isSymmetricEditMode() { return symmetricEditModePy.get(); }
+    public boolean isSymmetricEdit() { return symmetricEditPy.get(); }
 
     public TerrainRendererInEditor terrainRendererInEditor() { return terrainRendererInEditor; }
 
@@ -668,17 +668,16 @@ public class TileMapEditor {
         lblEditMode.textProperty().bind(Bindings.createStringBinding(
             () -> switch (editModePy.get()) {
                 case INSPECT -> tt("mode.inspect");
-                case EDIT    -> isSymmetricEditMode() ?  tt("mode.symmetric") : tt("mode.edit");
+                case EDIT    -> isSymmetricEdit() ?  tt("mode.symmetric") : tt("mode.edit");
                 case ERASE   -> tt("mode.erase");
-            }, editModePy, symmetricEditModePy
+            }, editModePy, symmetricEditPy
         ));
-        lblEditMode.textFillProperty().bind(Bindings.createObjectBinding(
-            () -> switch (editModePy.get()) {
-                case INSPECT -> Color.GRAY;
-                case EDIT    -> Color.FORESTGREEN;
-                case ERASE   -> Color.RED;
-            }, editModePy
-        ));
+        lblEditMode.textFillProperty().bind(
+            editModePy.map(mode -> switch (mode) {
+            case INSPECT -> Color.GRAY;
+            case EDIT    -> Color.FORESTGREEN;
+            case ERASE   -> Color.RED;
+        }));
 
         statusLine = new HBox(
             lblMapSize,
@@ -1154,11 +1153,11 @@ public class TileMapEditor {
             case "i" -> setEditMode(EditMode.INSPECT);
             case "e" -> {
                 setEditMode(EditMode.EDIT);
-                symmetricEditModePy.set(false);
+                symmetricEditPy.set(false);
             }
             case "s" -> {
                 setEditMode(EditMode.EDIT);
-                symmetricEditModePy.set(true);
+                symmetricEditPy.set(true);
             }
             case "x" -> setEditMode(EditMode.ERASE);
         }
@@ -1275,7 +1274,7 @@ public class TileMapEditor {
         } else {
             changeManager.setFoodMapChanged();
         }
-        if (isSymmetricEditMode()) {
+        if (isSymmetricEdit()) {
             Vector2i symmetricTile = vSymmetricTile(tileMap, tile);
             byte mirroredValue = mirroredTileValue(value);
             tileMap.set(symmetricTile, mirroredValue);

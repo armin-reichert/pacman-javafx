@@ -164,14 +164,14 @@ public class EditCanvas extends Canvas {
             g.setFont(Font.font("sans", gridSize() - 2));
             g.setFill(Color.grayRgb(200, 0.8));
             g.fillText("?", tile.x() * gridSize() + 0.25 * gridSize(), tile.y() * gridSize() + 0.8 * gridSize());
-            if (editor.isSymmetricEditMode()) {
+            if (editor.isSymmetricEdit()) {
                 int x = terrain.numCols() - tile.x() - 1;
                 g.fillText("?", x * gridSize() + 0.25 * gridSize(), tile.y() * gridSize() + 0.8 * gridSize());
             }
         }
 
         // Vertical separator to indicate symmetric edit mode
-        if (editor.isEditMode(EditMode.EDIT) && editor.isSymmetricEditMode()) {
+        if (editor.isEditMode(EditMode.EDIT) && editor.isSymmetricEdit()) {
             g.save();
             g.setStroke(Color.YELLOW);
             g.setLineWidth(0.75);
