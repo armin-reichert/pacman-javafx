@@ -22,69 +22,17 @@ import static de.amr.games.pacman.lib.Globals.vec_2i;
 
 public class TileMap {
 
-    private static final String MARKER_DATA_SECTION_START = "!data";
+    static final String MARKER_DATA_SECTION_START = "!data";
 
-    public static TileMap parseTileMap(List<String> lines, Predicate<Byte> valueAllowed, byte emptyValue) {
-        // First pass: read property section and determine data section size
-        int numDataRows = 0, numDataCols = -1;
-        int dataSectionStartIndex = -1;
-        StringBuilder propertySection = new StringBuilder();
-        for (int lineIndex = 0; lineIndex < lines.size(); ++lineIndex) {
-            String line = lines.get(lineIndex);
-            if (MARKER_DATA_SECTION_START.equals(line)) {
-                dataSectionStartIndex = lineIndex + 1;
-            }
-            else if (dataSectionStartIndex == -1) {
-                propertySection.append(line).append("\n");
-            } else {
-                numDataRows++;
-                String[] columns = line.split(",");
-                if (numDataCols == -1) {
-                    numDataCols = columns.length;
-                } else if (columns.length != numDataCols) {
-                    Logger.error("Inconsistent tile map data: {} columns in line {}, expected {}",
-                        columns.length, lineIndex, numDataCols);
-                }
-            }
-        }
-        if (numDataRows == 0) {
-            Logger.error("Inconsistent tile map data: No data");
-        }
 
-        // Second pass: read data and build new tile map
-        var tileMap = new TileMap(new byte[numDataRows][numDataCols]);
-        tileMap.parseProperties(propertySection.toString());
-
-        for (int lineIndex = dataSectionStartIndex; lineIndex < lines.size(); ++lineIndex) {
-            String line = lines.get(lineIndex);
-            int row = lineIndex -dataSectionStartIndex;
-            String[] columns = line.split(",");
-            for (int col = 0; col < columns.length; ++col) {
-                String entry = columns[col].trim();
-                try {
-                    byte value = Byte.decode(entry);
-                    if (valueAllowed.test(value)) {
-                        tileMap.matrix[row][col] = value;
-                    } else {
-                        tileMap.matrix[row][col] = emptyValue;
-                        Logger.error("Invalid tile map value {} at row {}, col {}", value, row, col);
-                    }
-                } catch (NumberFormatException x) {
-                    Logger.error("Invalid tile map entry {} at row {}, col {}", entry, row, col);
-                }
-            }
-        }
-        return tileMap;
-    }
-
-    private final Map<String, Object> properties = new HashMap<>();
-    private final byte[][] matrix;
+    final Map<String, Object> properties = new HashMap<>();
+    final byte[][] matrix;
 
     public TileMap(int numRows, int numCols) {
         matrix = new byte[numRows][numCols];
     }
 
-    private TileMap(byte[][] matrix) {
+    TileMap(byte[][] matrix) {
         this.matrix = matrix;
     }
 
@@ -178,20 +126,6 @@ public class TileMap {
 
     public Stream<String> stringPropertyNames() {
         return properties.keySet().stream().filter(name -> properties.get(name) instanceof String).sorted();
-    }
-
-    private void parseProperties(String text) {
-        String[] lines = text.split("\n");
-        for (String line : lines) {
-            if (line.startsWith("#")) continue;
-            String[] sides = line.split("=");
-            if (sides.length != 2) {
-                Logger.error("Invalid line inside property section: {}", line);
-            } else {
-                String lhs = sides[0].trim(), rhs = sides[1].trim();
-                properties.put(lhs, rhs);
-            }
-        }
     }
 
     public byte[][] getData() {

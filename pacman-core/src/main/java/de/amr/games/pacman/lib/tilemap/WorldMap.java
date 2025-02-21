@@ -12,12 +12,14 @@ import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.Globals.assertNotNull;
+import static de.amr.games.pacman.lib.tilemap.TileMap.MARKER_DATA_SECTION_START;
 
 /**
  * @author Armin Reichert
@@ -200,10 +202,10 @@ public class WorldMap {
                 Logger.error("Line skipped: '{}'", line);
             }
         }
-        terrain = TileMap.parseTileMap(terrainSection,
+        terrain = parseTileMap(terrainSection,
             value -> 0 <= value && value <= TerrainTiles.LAST_TERRAIN_VALUE, TerrainTiles.EMPTY);
 
-        food = TileMap.parseTileMap(foodSection,
+        food = parseTileMap(foodSection,
             value -> 0 <= value && value <= FoodTiles.ENERGIZER, FoodTiles.EMPTY);
 
 
@@ -221,6 +223,75 @@ public class WorldMap {
             };
             terrain.set(tile, newContent);
         });
+    }
+
+    private TileMap parseTileMap(List<String> lines, Predicate<Byte> valueAllowed, byte emptyValue) {
+        // First pass: read property section and determine data section size
+        int numDataRows = 0, numDataCols = -1;
+        int dataSectionStartIndex = -1;
+        StringBuilder propertySection = new StringBuilder();
+        for (int lineIndex = 0; lineIndex < lines.size(); ++lineIndex) {
+            String line = lines.get(lineIndex);
+            if (MARKER_DATA_SECTION_START.equals(line)) {
+                dataSectionStartIndex = lineIndex + 1;
+            }
+            else if (dataSectionStartIndex == -1) {
+                propertySection.append(line).append("\n");
+            } else {
+                numDataRows++;
+                String[] columns = line.split(",");
+                if (numDataCols == -1) {
+                    numDataCols = columns.length;
+                } else if (columns.length != numDataCols) {
+                    Logger.error("Inconsistent tile map data: {} columns in line {}, expected {}",
+                            columns.length, lineIndex, numDataCols);
+                }
+            }
+        }
+        if (numDataRows == 0) {
+            Logger.error("Inconsistent tile map data: No data");
+        }
+
+        // Second pass: read data and build new tile map
+        var tileMap = new TileMap(new byte[numDataRows][numDataCols]);
+        tileMap.properties.putAll(parseProperties(propertySection.toString()));
+
+        for (int lineIndex = dataSectionStartIndex; lineIndex < lines.size(); ++lineIndex) {
+            String line = lines.get(lineIndex);
+            int row = lineIndex -dataSectionStartIndex;
+            String[] columns = line.split(",");
+            for (int col = 0; col < columns.length; ++col) {
+                String entry = columns[col].trim();
+                try {
+                    byte value = Byte.decode(entry);
+                    if (valueAllowed.test(value)) {
+                        tileMap.matrix[row][col] = value;
+                    } else {
+                        tileMap.matrix[row][col] = emptyValue;
+                        Logger.error("Invalid tile map value {} at row {}, col {}", value, row, col);
+                    }
+                } catch (NumberFormatException x) {
+                    Logger.error("Invalid tile map entry {} at row {}, col {}", entry, row, col);
+                }
+            }
+        }
+        return tileMap;
+    }
+
+    private Map<String, Object> parseProperties(String text) {
+        var properties = new HashMap<String, Object>();
+        String[] lines = text.split("\n");
+        for (String line : lines) {
+            if (line.startsWith("#")) continue;
+            String[] sides = line.split("=");
+            if (sides.length != 2) {
+                Logger.error("Invalid line inside property section: {}", line);
+            } else {
+                String lhs = sides[0].trim(), rhs = sides[1].trim();
+                properties.put(lhs, rhs);
+            }
+        }
+        return properties;
     }
 
     public List<Vector2i> updateObstacleList() {
