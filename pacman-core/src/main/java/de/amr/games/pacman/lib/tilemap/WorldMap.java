@@ -18,7 +18,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.lib.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.tilemap.TileMap.MARKER_DATA_SECTION_START;
 
 /**
@@ -181,7 +180,29 @@ public class WorldMap {
     }
 
     public String sourceCode() {
-        return TERRAIN_SECTION_START + "\n" + terrain.sourceCode() + FOOD_SECTION_START + "\n" + food.sourceCode();
+        var sw = new StringWriter();
+        sw.append(TERRAIN_SECTION_START).append("\n");
+        print(terrain, sw);
+        sw.append(FOOD_SECTION_START).append("\n");
+        print(food, sw);
+        return sw.toString();
+    }
+
+    public void print(TileMap tileMap, Writer w) {
+        var pw = new PrintWriter(w);
+        tileMap.stringPropertyNames().map(name -> name + "=" + tileMap.getStringProperty(name)).forEach(pw::println);
+        pw.println(MARKER_DATA_SECTION_START);
+        for (int row = 0; row < tileMap.numRows(); ++row) {
+            for (int col = 0; col < tileMap.numCols(); ++col) {
+                byte value = tileMap.matrix[row][col];
+                pw.printf("#%02X", value);
+                if (col < tileMap.numCols() - 1) {
+                    pw.print(",");
+                }
+            }
+            pw.println();
+        }
+        pw.flush();
     }
 
     private void parse(Stream<String> lines) {
@@ -321,9 +342,9 @@ public class WorldMap {
     public boolean save(File file) {
         try (PrintWriter w = new PrintWriter(file, StandardCharsets.UTF_8)) {
             w.println(TERRAIN_SECTION_START);
-            terrain.print(w);
+            print(terrain, w);
             w.println(FOOD_SECTION_START);
-            food.print(w);
+            print(food, w);
             return true;
         } catch (IOException x) {
             Logger.error(x);

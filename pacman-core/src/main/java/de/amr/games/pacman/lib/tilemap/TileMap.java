@@ -5,19 +5,13 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.lib.tilemap;
 
 import de.amr.games.pacman.lib.Vector2i;
-import org.tinylog.Logger;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.*;
-import java.util.function.Predicate;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.Globals.vec_2i;
 
 public class TileMap {
@@ -184,26 +178,4 @@ public class TileMap {
         }
     }
 
-    public void print(Writer w) {
-        var pw = new PrintWriter(w);
-        stringPropertyNames().map(name -> name + "=" + getStringProperty(name)).forEach(pw::println);
-        pw.println(MARKER_DATA_SECTION_START);
-        for (int row = 0; row < numRows(); ++row) {
-            for (int col = 0; col < numCols(); ++col) {
-                byte value = matrix[row][col];
-                pw.printf("#%02X", value);
-                if (col < numCols() - 1) {
-                    pw.print(",");
-                }
-            }
-            pw.println();
-        }
-        pw.flush();
-    }
-
-    public String sourceCode() {
-        var sw = new StringWriter();
-        print(sw);
-        return sw.toString();
-    }
 }
