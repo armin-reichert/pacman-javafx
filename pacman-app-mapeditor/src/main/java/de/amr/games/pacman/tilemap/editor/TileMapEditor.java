@@ -469,6 +469,10 @@ public class TileMapEditor {
         messageCloseTime = Instant.now().plus(java.time.Duration.ofSeconds(seconds));
     }
 
+    private void clearMessage() {
+        showMessage("", 0, MessageType.INFO);
+    }
+
     public void showEditHelpText() {
         showMessage(tt("edit_help"), 30, MessageType.INFO);
     }
@@ -1150,10 +1154,6 @@ public class TileMapEditor {
             terrainRendererInEditor.setScaling(scaling);
         }
         selectedPalette.draw();
-    }
-
-    void clearMessage() {
-        showMessage("", 0, MessageType.INFO);
     }
 
     // Controller part
