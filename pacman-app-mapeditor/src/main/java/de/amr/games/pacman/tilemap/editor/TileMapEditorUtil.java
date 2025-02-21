@@ -7,7 +7,6 @@ package de.amr.games.pacman.tilemap.editor;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.FoodTiles;
 import de.amr.games.pacman.lib.tilemap.TerrainTiles;
-import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.tilemap.rendering.TileMapRenderer;
 import javafx.scene.Node;

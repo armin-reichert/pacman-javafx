@@ -6,7 +6,6 @@ package de.amr.games.pacman.tilemap.rendering;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.FoodTiles;
-import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
