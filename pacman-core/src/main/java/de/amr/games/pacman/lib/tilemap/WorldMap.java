@@ -369,11 +369,11 @@ public class WorldMap {
     }
 
     public boolean save(File file) {
-        try (PrintWriter w = new PrintWriter(file, StandardCharsets.UTF_8)) {
-            w.println(MARKER_START_TERRAIN_LAYER);
-            print(terrainLayer, w);
-            w.println(MARKER_START_FOOD_LAYER);
-            print(foodLayer, w);
+        try (PrintWriter pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
+            pw.println(MARKER_START_TERRAIN_LAYER);
+            print(terrainLayer, pw);
+            pw.println(MARKER_START_FOOD_LAYER);
+            print(foodLayer, pw);
             return true;
         } catch (IOException x) {
             Logger.error(x);
