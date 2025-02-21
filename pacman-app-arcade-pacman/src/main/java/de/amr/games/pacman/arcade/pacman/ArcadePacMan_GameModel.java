@@ -261,8 +261,8 @@ public class ArcadePacMan_GameModel extends GameModel {
         populateLevel(theWorldMap);
         level.pac().setAutopilot(autopilot);
         setCruiseElroy(0);
-        List<Vector2i> oneWayDownTiles = theWorldMap.terrain().tiles()
-            .filter(tile -> theWorldMap.terrain().get(tile) == TerrainTiles.ONE_WAY_DOWN).toList();
+        List<Vector2i> oneWayDownTiles = theWorldMap.tiles()
+            .filter(tile -> theWorldMap.get(WorldMap.LayerID.TERRAIN, tile) == TerrainTiles.ONE_WAY_DOWN).toList();
         level.ghosts().forEach(ghost -> {
             ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
             ghost.setSpecialTerrainTiles(oneWayDownTiles);

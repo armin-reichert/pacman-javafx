@@ -22,8 +22,8 @@ import static java.util.function.Predicate.not;
 public class ObstacleBuilder {
 
     // Public API
-    public static Set<Obstacle> buildObstacles(TileMap terrain, List<Vector2i> tilesWithErrors) {
-        return new ObstacleBuilder(terrain).buildObstacles(tilesWithErrors);
+    public static Set<Obstacle> buildObstacles(WorldMap worldMap, List<Vector2i> tilesWithErrors) {
+        return new ObstacleBuilder(worldMap).buildObstacles(tilesWithErrors);
     }
 
     static class Cursor {
@@ -54,24 +54,24 @@ public class ObstacleBuilder {
     private static final Vector2i SEG_CORNER_NE_UP   = vec_2i(-HTS, -HTS);
     private static final Vector2i SEG_CORNER_NE_DOWN = SEG_CORNER_NE_UP.inverse();
 
-    private final TileMap terrain;
+    private final WorldMap worldMap;
     private final BitSet exploredTiles = new BitSet();
     private Cursor cursor;
 
-    private ObstacleBuilder(TileMap terrain) {
-        this.terrain = terrain;
+    private ObstacleBuilder(WorldMap worldMap) {
+        this.worldMap = worldMap;
     }
 
     private boolean isExplored(Vector2i tile) {
-        return exploredTiles.get(terrain.index(tile));
+        return exploredTiles.get(worldMap.index(tile));
     }
 
     private void setExplored(Vector2i tile) {
-        exploredTiles.set(terrain.index(tile));
+        exploredTiles.set(worldMap.index(tile));
     }
 
     private Set<Obstacle> buildObstacles(List<Vector2i> tilesWithErrors) {
-        Logger.debug("Find obstacles in map ID={} size={}x{}", terrain.hashCode(), terrain.numRows(), terrain.numCols());
+        Logger.debug("Find obstacles in map ID={} size={}x{}", worldMap.hashCode(), worldMap.numRows(), worldMap.numCols());
 
         tilesWithErrors.clear();
         exploredTiles.clear();
@@ -80,18 +80,18 @@ public class ObstacleBuilder {
 
         // Note: order of detection matters! Otherwise, when searching for closed
         // obstacles first, each failed attempt must set its visited tile set to unvisited!
-        terrain.tiles()
+        worldMap.tiles()
             .filter(not(this::isExplored))
-            .filter(tile -> tile.x() == 0 || tile.x() == terrain.numCols() - 1)
+            .filter(tile -> tile.x() == 0 || tile.x() == worldMap.numCols() - 1)
             .map(borderTile -> buildOpenObstacle(borderTile, borderTile.x() == 0, tilesWithErrors))
             .filter(Objects::nonNull)
             .forEach(obstacles::add);
 
-        terrain.tiles()
+        worldMap.tiles()
             .filter(not(this::isExplored))
             .filter(tile ->
-                terrain.get(tile) == TerrainTiles.CORNER_NW ||
-                terrain.get(tile) == TerrainTiles.DCORNER_ANGULAR_NW) // house top-left corner
+                    worldMap.get(WorldMap.LayerID.TERRAIN, tile) == TerrainTiles.CORNER_NW ||
+                    worldMap.get(WorldMap.LayerID.TERRAIN, tile) == TerrainTiles.DCORNER_ANGULAR_NW) // house top-left corner
             .map(cornerNW -> buildClosedObstacle(cornerNW, tilesWithErrors))
             .forEach(obstacles::add);
 
@@ -102,7 +102,7 @@ public class ObstacleBuilder {
 
     private Obstacle buildClosedObstacle(Vector2i cornerNW, List<Vector2i> tilesWithErrors) {
         Vector2i startPoint = cornerNW.scaled(TS).plus(TS, HTS);
-        byte startTileContent = terrain.get(cornerNW);
+        byte startTileContent = worldMap.get(WorldMap.LayerID.TERRAIN, cornerNW);
         Obstacle obstacle = new Obstacle(startPoint);
         obstacle.addSegment(SEG_CORNER_NW_DOWN, true, startTileContent);
         cursor = new Cursor(cornerNW);
@@ -110,7 +110,7 @@ public class ObstacleBuilder {
         setExplored(cornerNW);
         buildRestOfObstacle(obstacle, cornerNW, true, tilesWithErrors);
         if (obstacle.isClosed()) {
-            Logger.debug("Closed obstacle, top-left tile={}, map ID={}:", cornerNW, terrain.hashCode());
+            Logger.debug("Closed obstacle, top-left tile={}, map ID={}:", cornerNW, worldMap.hashCode());
             Logger.debug(obstacle);
         }
         return obstacle;
@@ -118,7 +118,7 @@ public class ObstacleBuilder {
 
     private Obstacle buildOpenObstacle(Vector2i startTile, boolean startsAtLeftBorder, List<Vector2i> tilesWithErrors) {
         Vector2i startPoint = startTile.scaled(TS).plus(startsAtLeftBorder ? 0 : TS, HTS);
-        byte startTileContent = terrain.get(startTile);
+        byte startTileContent = worldMap.get(WorldMap.LayerID.TERRAIN, startTile);
         var obstacle = new Obstacle(startPoint);
         cursor = new Cursor(startTile);
         if (startTileContent == TerrainTiles.WALL_H) {
@@ -148,13 +148,14 @@ public class ObstacleBuilder {
         setExplored(startTile);
         buildRestOfObstacle(obstacle, startTile, obstacle.segment(0).ccw(), tilesWithErrors);
         Logger.debug("Open obstacle, start tile={}, segment count={}, map ID={}:",
-            startTile, obstacle.segments().size(), terrain.hashCode());
+            startTile, obstacle.segments().size(), worldMap.hashCode());
         Logger.debug(obstacle);
         return obstacle;
     }
 
     private void errorAtCurrentTile(List<Vector2i> tilesWithErrors) {
-        Logger.debug("Did not expect content {} at tile {}", terrain.get(cursor.currentTile), cursor.currentTile);
+        Logger.debug("Did not expect content {} at tile {}",
+                worldMap.get(WorldMap.LayerID.TERRAIN, cursor.currentTile), cursor.currentTile);
         tilesWithErrors.add(cursor.currentTile);
     }
 
@@ -166,7 +167,7 @@ public class ObstacleBuilder {
                 break;
             }
             setExplored(cursor.currentTile);
-            byte tileContent = terrain.get(cursor.currentTile);
+            byte tileContent = worldMap.get(WorldMap.LayerID.TERRAIN, cursor.currentTile);
             switch (tileContent) {
                 case TerrainTiles.WALL_V -> {
                     if (cursor.points(DOWN)) {
@@ -257,7 +258,7 @@ public class ObstacleBuilder {
                 default -> errorAtCurrentTile(tilesWithErrors);
             }
 
-            if (cursor.currentTile.equals(startTile) || terrain.outOfBounds(cursor.currentTile)) {
+            if (cursor.currentTile.equals(startTile) || worldMap.outOfBounds(cursor.currentTile)) {
                 break;
             }
         }

@@ -7,7 +7,6 @@ package de.amr.games.pacman.tilemap.editor;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TerrainTiles;
-import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -122,9 +121,9 @@ public class ObstacleEditor {
         }
         int crossings;
 
-        TileMap original = worldMapPy.get().terrain();
+        WorldMap worldMap = worldMapPy.get();
 
-        joinedContent[0][0] = switch (original.get(minTile)) {
+        joinedContent[0][0] = switch (worldMap.get(WorldMap.LayerID.TERRAIN, minTile)) {
             case TerrainTiles.CORNER_NE -> TerrainTiles.WALL_H;
             case TerrainTiles.CORNER_SW -> TerrainTiles.WALL_V;
             case TerrainTiles.WALL_V    -> TerrainTiles.CORNER_SW;
@@ -133,7 +132,7 @@ public class ObstacleEditor {
         };
 
         Vector2i lowerLeftCorner = new Vector2i(minTile.x(), maxTile.y());
-        joinedContent[numRows-1][0] = switch (original.get(lowerLeftCorner)) {
+        joinedContent[numRows-1][0] = switch (worldMap.get(WorldMap.LayerID.TERRAIN, lowerLeftCorner)) {
             case TerrainTiles.WALL_H    -> TerrainTiles.CORNER_SE;
             case TerrainTiles.WALL_V    -> TerrainTiles.CORNER_NW;
             case TerrainTiles.CORNER_SE -> TerrainTiles.WALL_H;
@@ -142,7 +141,7 @@ public class ObstacleEditor {
         };
 
         Vector2i upperRightCorner = new Vector2i(maxTile.x(), minTile.y());
-        joinedContent[0][numCols-1] = switch (original.get(upperRightCorner)) {
+        joinedContent[0][numCols-1] = switch (worldMap.get(WorldMap.LayerID.TERRAIN, upperRightCorner)) {
             case TerrainTiles.WALL_V    -> TerrainTiles.CORNER_SE;
             case TerrainTiles.WALL_H    -> TerrainTiles.CORNER_NW;
             case TerrainTiles.CORNER_SE -> TerrainTiles.WALL_V;
@@ -150,7 +149,7 @@ public class ObstacleEditor {
             default -> joinedContent[0][numCols-1];
         };
 
-        joinedContent[numRows-1][numCols-1] = switch (original.get(maxTile)) {
+        joinedContent[numRows-1][numCols-1] = switch (worldMap.get(WorldMap.LayerID.TERRAIN, maxTile)) {
             case TerrainTiles.WALL_V    -> TerrainTiles.CORNER_NE;
             case TerrainTiles.WALL_H    -> TerrainTiles.CORNER_SW;
             case TerrainTiles.CORNER_SW -> TerrainTiles.WALL_H;
@@ -162,7 +161,8 @@ public class ObstacleEditor {
         int leftBorder = minTile.x();
         for (int row = minTile.y(); row < maxTile.y(); ++row) {
             int x = 0, y = row - minTile.y();
-            if (editedContent[y][x] == TerrainTiles.WALL_V && original.get(row, leftBorder) == TerrainTiles.WALL_H) {
+            if (editedContent[y][x] == TerrainTiles.WALL_V
+                    && worldMap.get(WorldMap.LayerID.TERRAIN, row, leftBorder) == TerrainTiles.WALL_H) {
                 joinedContent[y][x] = Globals.isEven(crossings) ? TerrainTiles.CORNER_SE : TerrainTiles.CORNER_NE;
             }
             ++crossings;
@@ -172,7 +172,8 @@ public class ObstacleEditor {
         int rightBorder = maxTile.x();
         for (int row = minTile.y(); row < maxTile.y(); ++row) {
             int x = rightBorder - minTile.x(), y = row - minTile.y();
-            if (editedContent[y][x] == TerrainTiles.WALL_V && original.get(row, leftBorder) == TerrainTiles.WALL_H) {
+            if (editedContent[y][x] == TerrainTiles.WALL_V
+                    && worldMap.get(WorldMap.LayerID.TERRAIN, row, leftBorder) == TerrainTiles.WALL_H) {
                 joinedContent[y][x] = Globals.isEven(crossings) ? TerrainTiles.CORNER_SW : TerrainTiles.CORNER_NW;
             }
             ++crossings;
@@ -182,7 +183,8 @@ public class ObstacleEditor {
         int upperBorder = minTile.y(); // upper border
         for (int col = minTile.x(); col < maxTile.x(); ++col) {
             int x = col - minTile.x(), y = upperBorder - minTile.y();
-            if (editedContent[y][x] == TerrainTiles.WALL_H && original.get(upperBorder, col) == TerrainTiles.WALL_V) {
+            if (editedContent[y][x] == TerrainTiles.WALL_H
+                    && worldMap.get(WorldMap.LayerID.TERRAIN, upperBorder, col) == TerrainTiles.WALL_V) {
                 joinedContent[y][x] = Globals.isEven(crossings) ? TerrainTiles.CORNER_SE : TerrainTiles.CORNER_SW;
             }
             ++crossings;
@@ -192,7 +194,8 @@ public class ObstacleEditor {
         int lowerBorder = maxTile.y(); // lower border
         for (int col = minTile.x(); col < maxTile.x(); ++col) {
             int x = col - minTile.x(), y = lowerBorder - minTile.y();
-            if (editedContent[y][x] == TerrainTiles.WALL_H && original.get(lowerBorder, col) == TerrainTiles.WALL_V) {
+            if (editedContent[y][x] == TerrainTiles.WALL_H
+                    && worldMap.get(WorldMap.LayerID.TERRAIN, lowerBorder, col) == TerrainTiles.WALL_V) {
                 joinedContent[y][x] = Globals.isEven(crossings) ? TerrainTiles.CORNER_NE : TerrainTiles.CORNER_NW;
             }
             ++crossings;

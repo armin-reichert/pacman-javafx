@@ -7,12 +7,11 @@ package de.amr.games.pacman.tengen.ms_pacman.scene;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.nes.NES_JoypadButton;
-import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.ScoreManager;
-import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions;
+import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
 import de.amr.games.pacman.ui2d.action.GameActions2D;
 import de.amr.games.pacman.ui3d.GameActions3D;
@@ -43,8 +42,8 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     }
 
     private void addGameOptionsArea(TengenMsPacMan_GameModel game) {
-        TileMap terrain = context.level().world().map().terrain();
-        int unscaledWidth = terrain.numCols() * TS;
+        WorldMap worldMap = context.level().world().map();
+        int unscaledWidth = worldMap.numCols() * TS;
         int unscaledHeight = 2*TS;
 
         float scale = 5; // for better quality
@@ -61,7 +60,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         ImageView optionsArea = new ImageView(canvas.snapshot(null, null));
         optionsArea.setFitWidth(unscaledWidth);
         optionsArea.setFitHeight(unscaledHeight);
-        optionsArea.setTranslateY((terrain.numRows() - 2) * TS);
+        optionsArea.setTranslateY((worldMap.numRows() - 2) * TS);
         optionsArea.setTranslateZ(-level3D.floorThickness());
 
         level3D.getChildren().add(optionsArea);

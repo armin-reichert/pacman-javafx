@@ -8,7 +8,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.FoodTiles;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
-import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D;
 import de.amr.games.pacman.uilib.ResourceManager;
@@ -161,9 +160,8 @@ public class Maze3D extends Group {
     public BooleanProperty terrainVisibleProperty() { return terrainVisiblePy; }
 
     public void updateMaze(WorldMap worldMap) {
-        TileMap terrain = worldMap.terrain();
-        double worldWidth = terrain.numCols() * TS;
-        double worldHeight = terrain.numRows() * TS;
+        double worldWidth = worldMap.numCols() * TS;
+        double worldHeight = worldMap.numRows() * TS;
 
         mazeGroup.getChildren().clear();
 
@@ -174,8 +172,10 @@ public class Maze3D extends Group {
         floor.setMaterial(coloredMaterial(Color.BLACK));
         mazeGroup.getChildren().add(floor);
 
-        Color wallBaseColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE));
-        Color wallTopColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL));
+        Color wallBaseColor = getColorFromMap(worldMap, LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE,
+                parseColor(MS_PACMAN_COLOR_WALL_STROKE));
+        Color wallTopColor = getColorFromMap(worldMap, LayerID.TERRAIN, PROPERTY_COLOR_WALL_FILL,
+                parseColor(MS_PACMAN_COLOR_WALL_FILL));
         r3D.setWallBaseHeightProperty(wallBaseHeightPy);
         r3D.setWallBaseMaterial(coloredMaterial(wallBaseColor));
         r3D.setWallTopMaterial(coloredMaterial(wallTopColor));
@@ -203,8 +203,6 @@ public class Maze3D extends Group {
     }
 
     private void addHouse(WorldMap worldMap, Color wallBaseColor, Color wallTopColor) {
-        TileMap terrain = worldMap.terrain();
-
         Vector2i houseMinTile = worldMap.getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
         Vector2i houseMaxTile = worldMap.getTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
         if (houseMinTile == null || houseMaxTile == null) {
@@ -227,7 +225,7 @@ public class Maze3D extends Group {
             r3D.createWallBetweenTiles(houseMaxTile, houseRightUpper)
         );
 
-        Color doorColor = getColorFromMap(terrain, PROPERTY_COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR));
+        Color doorColor = getColorFromMap(worldMap, LayerID.TERRAIN, PROPERTY_COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR));
         var doorMaterial = coloredMaterial(doorColor);
         Stream.of(houseMinTile.plus(3.0f, 0), houseMinTile.plus(4.0f, 0)).forEach(doorTile -> {
             Box door = new Box(TS+HTS, 2, houseBaseHeightPy.get());
@@ -244,7 +242,7 @@ public class Maze3D extends Group {
         if (obstacle.isClosed()) {
             return start.x() == TS || start.y() == EMPTY_ROWS_OVER_MAZE * TS + HTS;
         } else {
-            return start.x() == 0 || start.x() == worldMap.terrain().numCols() * TS;
+            return start.x() == 0 || start.x() == worldMap.numCols() * TS;
         }
     }
 
@@ -258,13 +256,12 @@ public class Maze3D extends Group {
     }
 
     public void updateFood(WorldMap worldMap) {
-        TileMap food = worldMap.food();
-        Color foodColor = getColorFromMap(food, PROPERTY_COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
+        Color foodColor = getColorFromMap(worldMap, LayerID.FOOD, PROPERTY_COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
         var foodMaterial = coloredMaterial(foodColor);
         foodGroup.getChildren().clear();
-        food.tiles().filter(tile -> hasFoodAt(food, tile)).forEach(tile -> {
+        worldMap.tiles().filter(tile -> hasFoodAt(worldMap, tile)).forEach(tile -> {
             Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -4);
-            boolean energizer = hasEnergizerAt(food, tile);
+            boolean energizer = hasEnergizerAt(worldMap, tile);
             var pellet = new Sphere(energizer ? 4 : 1, 32);
             pellet.setMaterial(foodMaterial);
             pellet.setTranslateX(position.getX());
@@ -274,11 +271,11 @@ public class Maze3D extends Group {
         });
     }
 
-    private boolean hasFoodAt(TileMap food, Vector2i tile) {
-        return food.get(tile) != FoodTiles.EMPTY;
+    private boolean hasFoodAt(WorldMap worldMap, Vector2i tile) {
+        return worldMap.get(LayerID.FOOD, tile) != FoodTiles.EMPTY;
     }
 
-    private boolean hasEnergizerAt(TileMap food, Vector2i tile) {
-        return food.get(tile) == FoodTiles.ENERGIZER;
+    private boolean hasEnergizerAt(WorldMap worldMap, Vector2i tile) {
+        return worldMap.get(LayerID.FOOD, tile) == FoodTiles.ENERGIZER;
     }
 }

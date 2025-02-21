@@ -272,7 +272,7 @@ public abstract class GameModel {
         level.pac().freeze();
         level.bonus().ifPresent(Bonus::setInactive);
         // when cheating, there might still be food
-        level.world().map().food().tiles()
+        level.world().map().tiles()
             .filter(level.world()::hasFoodAt)
             .forEach(level.world()::registerFoodEatenAt);
         huntingControl.stop();

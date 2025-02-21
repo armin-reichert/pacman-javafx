@@ -131,7 +131,7 @@ public class ArcadePacManXXL_GameRenderer implements GameRenderer {
             terrainRenderer.drawHouse(ctx(), world.houseTopLeftTile(), world.houseSize());
             foodRenderer.setPelletColor(Color.web(colorMap.get("pellet")));
             foodRenderer.setEnergizerColor(Color.web(colorMap.get("pellet")));
-            worldMap.food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))
+            worldMap.tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))
                 .forEach(tile -> foodRenderer.drawPellet(ctx(), tile));
             if (blinkingOn) {
                 world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx(), tile));

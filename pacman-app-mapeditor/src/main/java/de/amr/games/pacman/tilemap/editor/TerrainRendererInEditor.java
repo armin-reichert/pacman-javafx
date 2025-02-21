@@ -8,7 +8,10 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.*;
+import de.amr.games.pacman.lib.tilemap.Obstacle;
+import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
+import de.amr.games.pacman.lib.tilemap.TerrainTiles;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -57,16 +60,15 @@ public class TerrainRendererInEditor extends TerrainRenderer {
 
     @Override
     public void drawTerrain(GraphicsContext g, WorldMap worldMap, Set<Obstacle> obstacles) {
-        TileMap terrain = worldMap.terrain();
         g.save();
         g.scale(scaling(), scaling());
-        terrain.tiles().forEach(tile -> drawTileUnscaled(g, tile, terrain.get(tile)));
-        specialTile(terrain, PROPERTY_POS_SCATTER_RED_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.RED));
-        specialTile(terrain, PROPERTY_POS_SCATTER_PINK_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.PINK));
-        specialTile(terrain, PROPERTY_POS_SCATTER_CYAN_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.CYAN));
-        specialTile(terrain, PROPERTY_POS_SCATTER_ORANGE_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.ORANGE));
+        worldMap.tiles().forEach(tile -> drawTileUnscaled(g, tile, worldMap.get(LayerID.TERRAIN, tile)));
+        specialTile(worldMap, PROPERTY_POS_SCATTER_RED_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.RED));
+        specialTile(worldMap, PROPERTY_POS_SCATTER_PINK_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.PINK));
+        specialTile(worldMap, PROPERTY_POS_SCATTER_CYAN_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.CYAN));
+        specialTile(worldMap, PROPERTY_POS_SCATTER_ORANGE_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.ORANGE));
         if (segmentNumbersDisplayed) {
-            obstacles.stream().filter(obstacle -> !startsAtBorder(obstacle, terrain)).forEach(obstacle -> {
+            obstacles.stream().filter(obstacle -> !startsAtBorder(obstacle, worldMap)).forEach(obstacle -> {
                 for (int i = 0; i < obstacle.numSegments(); ++i) {
                     ObstacleSegment segment = obstacle.segment(i);
                     Vector2f start = segment.startPoint().toVector2f();
@@ -85,7 +87,7 @@ public class TerrainRendererInEditor extends TerrainRenderer {
             double r = 1;
             obstacles.stream()
                     .filter(Obstacle::isClosed)
-                    .filter(obstacle -> !startsAtBorder(obstacle, terrain)).forEach(obstacle -> {
+                    .filter(obstacle -> !startsAtBorder(obstacle, worldMap)).forEach(obstacle -> {
                 Vector2i prev = null;
                 List<RectArea> rectangles = obstacle.innerAreaRectPartition().toList();
                 for (int i = 0; i < rectangles.size(); ++i) {
@@ -142,9 +144,9 @@ public class TerrainRendererInEditor extends TerrainRenderer {
         }
     }
 
-    private Optional<Vector2i> specialTile(TileMap terrainMap, String propertyName) {
-        if (terrainMap.hasProperty(propertyName)) {
-            return parseTile(terrainMap.getStringProperty(propertyName));
+    private Optional<Vector2i> specialTile(WorldMap worldMap, String propertyName) {
+        if (worldMap.hasProperty(LayerID.TERRAIN, propertyName)) {
+            return parseTile(worldMap.getStringProperty(LayerID.TERRAIN, propertyName));
         }
         return Optional.empty();
     }

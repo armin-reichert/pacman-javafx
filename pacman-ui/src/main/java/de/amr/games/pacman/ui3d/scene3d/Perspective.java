@@ -90,8 +90,8 @@ public interface Perspective {
         @Override
         public void update(SubScene scene, GameWorld world, Actor2D spottedActor) {
             PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
-            int sizeX = world.map().terrain().numCols() * TS;
-            int sizeY = world.map().terrain().numRows() * TS;
+            int sizeX = world.map().numCols() * TS;
+            int sizeY = world.map().numRows() * TS;
             camera.setTranslateX(sizeX * 0.5);
             camera.setTranslateY(sizeY * 1.5);
             camera.setTranslateZ(-100);
@@ -121,7 +121,7 @@ public interface Perspective {
             PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
             double speedX = 0.03;
             double speedY = 0.06;
-            double worldWidth = world.map().terrain().numCols() * TS;
+            double worldWidth = world.map().numCols() * TS;
             double targetX = clamp(spottedActor.posX(), 80, worldWidth - 80);
             double targetY = spottedActor.posY() + 150;
             camera.setTranslateX(lerp(camera.getTranslateX(), targetX, speedX));
@@ -151,7 +151,7 @@ public interface Perspective {
             PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
             double speedX = 0.04;
             double speedY = 0.04;
-            double worldWidth = world.map().terrain().numCols() * TS;
+            double worldWidth = world.map().numCols() * TS;
             double targetX = clamp(spottedActor.posX(), 40, worldWidth - 40);
             double targetY = spottedActor.position().y() + 100;
             camera.setTranslateX(lerp(camera.getTranslateX(), targetX, speedX));

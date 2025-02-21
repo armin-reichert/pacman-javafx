@@ -9,7 +9,6 @@ import de.amr.games.pacman.controller.HuntingTimer;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.*;
@@ -503,8 +502,8 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         Vector2i entryTile, exitTile;
         boolean crossMazeLeftToRight;
 
-        TileMap terrainMap = level.world().map().terrain();
-        if (terrainMap.hasProperty("pos_bonus")) {
+        WorldMap worldMap = level.world().map();
+        if (worldMap.hasProperty(WorldMap.LayerID.TERRAIN, "pos_bonus")) {
             // use entry tile stored in terrain map
             entryTile = level.world().map().getTileProperty("pos_bonus", null);
             if (entryTile.x() == 0) {

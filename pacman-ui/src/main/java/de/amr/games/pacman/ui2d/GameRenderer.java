@@ -77,7 +77,7 @@ public interface GameRenderer {
      *                 Message text is centered horizontally to the x-coordinate
      *                 and text baseline is y-coordinate of given position
      */
-    public void setMessagePosition(Vector2f position);
+    void setMessagePosition(Vector2f position);
 
     /**
      * @return Unscaled position where message (READY etc.) is displayed.
@@ -218,7 +218,7 @@ public interface GameRenderer {
      * Assumes to be called in scaled graphics context!
      */
     default void overPaintEatenPellets(GameWorld world) {
-        world.map().food().tiles()
+        world.map().tiles()
             .filter(not(world::isEnergizerPosition))
             .filter(world::hasEatenFoodAt).forEach(tile -> overPaint(tile, 4));
     }

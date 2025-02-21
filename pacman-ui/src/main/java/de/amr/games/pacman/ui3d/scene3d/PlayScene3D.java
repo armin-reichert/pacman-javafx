@@ -11,7 +11,7 @@ import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.arcade.Arcade;
-import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -353,7 +353,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         context.sound().stopAll();
         // if cheat has been used to complete level, food might still exist, so eat it:
         GameWorld world = context.level().world();
-        world.map().food().tiles().filter(world::hasFoodAt).forEach(world::registerFoodEatenAt);
+        world.map().tiles().filter(world::hasFoodAt).forEach(world::registerFoodEatenAt);
         level3D.pellets3D().forEach(Pellet3D::onEaten);
         level3D.energizers3D().forEach(Energizer3D::onEaten);
         level3D.maze3D().door3D().setVisible(false);
@@ -498,9 +498,9 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     }
 
     private void showLevelTestMessage(String message) {
-        TileMap terrainMap = context.level().world().map().terrain();
-        double x = terrainMap.numCols() * HTS;
-        double y = (terrainMap.numRows() - 2) * TS;
+        WorldMap worldMap = context.level().world().map();
+        double x = worldMap.numCols() * HTS;
+        double y = (worldMap.numRows() - 2) * TS;
         level3D.showAnimatedMessage(message, 5, x, y);
     }
 

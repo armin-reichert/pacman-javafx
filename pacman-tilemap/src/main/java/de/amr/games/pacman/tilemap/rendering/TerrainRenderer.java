@@ -7,7 +7,6 @@ package de.amr.games.pacman.tilemap.rendering;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
-import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
@@ -68,13 +67,13 @@ public class TerrainRenderer implements TileMapRenderer {
         g.save();
         g.scale(scaling(), scaling());
         for (Obstacle obstacle : obstacles) {
-            if (startsAtBorder(obstacle, worldMap.terrain())) {
+            if (startsAtBorder(obstacle, worldMap)) {
                 drawObstacle(g, obstacle, doubleStrokeOuterWidth, false, colors.wallFillColor(), colors.wallStrokeColor());
                 drawObstacle(g, obstacle, doubleStrokeInnerWidth, false, colors.wallFillColor(), colors.wallFillColor());
             }
         }
         for (Obstacle obstacle : obstacles) {
-            if (!startsAtBorder(obstacle, worldMap.terrain())) {
+            if (!startsAtBorder(obstacle, worldMap)) {
                 //boolean hasParent = obstacle.getParent() != null;
                 drawObstacle(g, obstacle, singleStrokeWidth, true, colors.wallFillColor(), colors.wallStrokeColor());
             }
@@ -82,10 +81,10 @@ public class TerrainRenderer implements TileMapRenderer {
         g.restore();
     }
 
-    protected boolean startsAtBorder(Obstacle obstacle, TileMap terrainMap) {
+    protected boolean startsAtBorder(Obstacle obstacle, WorldMap worldMap) {
         Vector2i start = obstacle.startPoint();
-        return start.x() <= TS || start.x() >= (terrainMap.numCols() - 1) * TS
-            || start.y() <= 4*TS || start.y() >= (terrainMap.numRows() - 1) * TS;
+        return start.x() <= TS || start.x() >= (worldMap.numCols() - 1) * TS
+            || start.y() <= 4*TS || start.y() >= (worldMap.numRows() - 1) * TS;
     }
 
     private void drawObstacle(GraphicsContext g, Obstacle obstacle, double lineWidth, boolean fill, Color fillColor, Color strokeColor) {

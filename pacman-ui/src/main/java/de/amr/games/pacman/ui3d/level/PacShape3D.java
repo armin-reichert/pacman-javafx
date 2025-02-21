@@ -117,9 +117,8 @@ public class PacShape3D extends Group {
     }
 
     public void updateVisibility(Pac pac, GameWorld world) {
-        WorldMap map = world.map();
-        boolean outsideWorld = getTranslateX() < HTS
-            || getTranslateX() > TS * map.terrain().numCols() - HTS;
+        WorldMap worldMap = world.map();
+        boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * worldMap.numCols() - HTS;
         setVisible(pac.isVisible() && !outsideWorld);
     }
 

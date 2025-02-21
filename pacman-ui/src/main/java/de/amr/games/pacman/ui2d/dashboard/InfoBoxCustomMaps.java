@@ -73,8 +73,8 @@ public class InfoBoxCustomMaps extends InfoBox {
         if (context.game() instanceof CustomMapsHandler customMapsHandler) {
             ObservableList<MapInfo> items = FXCollections.observableArrayList();
             for (File file : customMapsHandler.customMapsByFile().keySet().stream().sorted().toList()) {
-                WorldMap map = customMapsHandler.customMapsByFile().get(file);
-                items.add(new MapInfo(file.getName(), map.terrain().numRows(), map.terrain().numCols()));
+                WorldMap worldMap = customMapsHandler.customMapsByFile().get(file);
+                items.add(new MapInfo(file.getName(), worldMap.numRows(), worldMap.numCols()));
             }
             mapTable.setItems(items);
         }

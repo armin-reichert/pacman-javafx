@@ -101,8 +101,8 @@ public class Maze3D extends Group {
         obstacleBaseHeightPy.set(PY_3D_WALL_HEIGHT.get());
 
         //TODO just a temporary solution until I find something better
-        if (world.map().terrain().hasProperty(OSHAPES_FILLED_PROPERTY_NAME)) {
-            Object value = world.map().terrain().getProperty(OSHAPES_FILLED_PROPERTY_NAME);
+        if (world.map().hasProperty(WorldMap.LayerID.TERRAIN, OSHAPES_FILLED_PROPERTY_NAME)) {
+            Object value = world.map().getProperty(WorldMap.LayerID.TERRAIN, OSHAPES_FILLED_PROPERTY_NAME);
             try {
                 r3D.setOShapeFilled(Boolean.parseBoolean(String.valueOf(value)));
             } catch (Exception x) {
@@ -145,7 +145,7 @@ public class Maze3D extends Group {
         if (obstacle.isClosed()) {
             return start.x() == TS || start.y() == EMPTY_ROWS_OVER_MAZE * TS + HTS;
         } else {
-            return start.x() == 0 || start.x() == worldMap.terrain().numCols() * TS;
+            return start.x() == 0 || start.x() == worldMap.numCols() * TS;
         }
     }
 

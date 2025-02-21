@@ -59,8 +59,8 @@ public class EditCanvas extends Canvas {
         obstacleEditor = new ObstacleEditor() {
             @Override
             public void setValue(Vector2i tile, byte value) {
-                editor.setTileValue(editor.worldMap().terrain(), tile, value);
-                editor.setTileValue(editor.worldMap().food(), tile, FoodTiles.EMPTY);
+                editor.setTileValue(editor.worldMap(), LayerID.TERRAIN, tile, value);
+                editor.setTileValue(editor.worldMap(), LayerID.FOOD, tile, FoodTiles.EMPTY);
             }
         };
         obstacleEditor.setJoin(true);
@@ -71,11 +71,11 @@ public class EditCanvas extends Canvas {
         templateImageGreyPy.bind(editor.templateImageProperty().map(Ufx::imageToGreyscale));
 
         heightProperty().bind(Bindings.createDoubleBinding(
-            () -> (double) worldMap().terrain().numRows() * gridSize(),
+            () -> (double) worldMap().numRows() * gridSize(),
             worldMapPy, gridSizePy));
 
         widthProperty().bind(Bindings.createDoubleBinding(
-            () -> (double) worldMap().terrain().numCols() * gridSize(),
+            () -> (double) worldMap().numCols() * gridSize(),
             worldMapPy, gridSizePy));
 
         setOnContextMenuRequested(this::onContextMenuRequested);
@@ -98,7 +98,7 @@ public class EditCanvas extends Canvas {
     public boolean moveCursor(Direction dir, Predicate<Vector2i> canMoveIntoTile) {
         if (focussedTile() != null) {
             Vector2i nextTile = focussedTile().plus(dir.vector());
-            if (!worldMap().terrain().outOfBounds(nextTile) && canMoveIntoTile.test(nextTile)) {
+            if (!worldMap().outOfBounds(nextTile) && canMoveIntoTile.test(nextTile)) {
                 focussedTilePy.set(nextTile);
                 return true;
             }
@@ -125,7 +125,6 @@ public class EditCanvas extends Canvas {
         GraphicsContext g = getGraphicsContext2D();
         g.setImageSmoothing(false);
 
-        TileMap terrain = worldMap().terrain(), food = worldMap().food();
         double scaling = gridSize() / (double) TS;
 
         g.setFill(colors.backgroundColor());
@@ -166,7 +165,7 @@ public class EditCanvas extends Canvas {
             g.setFill(Color.grayRgb(200, 0.8));
             g.fillText("?", tile.x() * gridSize() + 0.25 * gridSize(), tile.y() * gridSize() + 0.8 * gridSize());
             if (editor.isSymmetricEdit()) {
-                int x = terrain.numCols() - tile.x() - 1;
+                int x = worldMap().numCols() - tile.x() - 1;
                 g.fillText("?", x * gridSize() + 0.25 * gridSize(), tile.y() * gridSize() + 0.8 * gridSize());
             }
         }
@@ -183,11 +182,11 @@ public class EditCanvas extends Canvas {
 
         // Food
         if (editor.foodVisibleProperty().get()) {
-            Color foodColor = getColorFromMap(food, PROPERTY_COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
+            Color foodColor = getColorFromMap(worldMap(), LayerID.FOOD, PROPERTY_COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
             editor.foodRenderer().setScaling(scaling);
             editor.foodRenderer().setEnergizerColor(foodColor);
             editor.foodRenderer().setPelletColor(foodColor);
-            editor.foodRenderer().drawFood(g, food);
+            editor.foodRenderer().drawFood(g, worldMap());
         }
 
         drawActorSprites(g);
@@ -203,10 +202,10 @@ public class EditCanvas extends Canvas {
         g.save();
         g.setStroke(Color.LIGHTGRAY);
         g.setLineWidth(0.25);
-        for (int row = 1; row < worldMap().terrain().numRows(); ++row) {
+        for (int row = 1; row < worldMap().numRows(); ++row) {
             g.strokeLine(0, row * gridSize(), getWidth(), row * gridSize());
         }
-        for (int col = 1; col < worldMap().terrain().numCols(); ++col) {
+        for (int col = 1; col < worldMap().numCols(); ++col) {
             g.strokeLine(col * gridSize(), 0, col * gridSize(), getHeight());
         }
         g.restore();
@@ -282,14 +281,14 @@ public class EditCanvas extends Canvas {
                     switch (editor.selectedPaletteID()) {
                         case TileMapEditor.PALETTE_ID_TERRAIN -> {
                             if (editor.selectedPalette().isToolSelected()) {
-                                editor.selectedPalette().selectedTool().apply(worldMap().terrain(), focussedTile());
+                                editor.selectedPalette().selectedTool().apply(worldMap(), LayerID.TERRAIN, focussedTile());
                             }
                             editor.getChangeManager().setEdited(true);
                             editor.getChangeManager().setWorldMapChanged(); // can delete food!
                         }
                         case TileMapEditor.PALETTE_ID_FOOD -> {
                             if (editor.selectedPalette().isToolSelected()) {
-                                editor.selectedPalette().selectedTool().apply(worldMap().food(), focussedTile());
+                                editor.selectedPalette().selectedTool().apply(worldMap(), LayerID.FOOD, focussedTile());
                             }
                             editor.getChangeManager().setEdited(true);
                             editor.getChangeManager().setFoodMapChanged();

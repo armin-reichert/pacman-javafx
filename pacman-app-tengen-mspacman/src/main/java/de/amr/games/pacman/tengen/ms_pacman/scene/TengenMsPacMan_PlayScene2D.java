@@ -191,7 +191,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     }
 
     private void updateCameraPosition(double scaling) {
-        int worldTilesY = context.game().level().map(level -> level.world().map().terrain().numRows()).orElse(NES_TILES.y());
+        int worldTilesY = context.game().level().map(level -> level.world().map().numRows()).orElse(NES_TILES.y());
         double dy = scaling * (worldTilesY - 43) * HTS;
         fixedCamera.setTranslateY(dy);
     }
@@ -235,7 +235,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 if (context.gameState() == GameState.HUNTING) {
                     movingCamera.focusPlayer(true);
                 }
-                movingCamera.setVerticalRangeTiles(level.world().map().terrain().numRows());
+                movingCamera.setVerticalRangeTiles(level.world().map().numRows());
                 movingCamera.update(level.pac());
             }
         });

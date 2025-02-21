@@ -69,8 +69,8 @@ public class MazePreview3D {
     }
 
     public void reset() {
-        double mapWidth = worldMapPy.get().terrain().numCols() * TS;
-        double mapHeight = worldMapPy.get().terrain().numRows() * TS;
+        double mapWidth = worldMapPy.get().numCols() * TS;
+        double mapHeight = worldMapPy.get().numRows() * TS;
         PerspectiveCamera camera = maze3D.camera();
         camera.setRotationAxis(Rotate.X_AXIS);
         camera.setRotate(60);

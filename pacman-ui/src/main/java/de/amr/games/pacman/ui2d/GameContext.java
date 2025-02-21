@@ -8,7 +8,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -93,8 +93,8 @@ public interface GameContext {
     default void showFlashMessage(String message, Object... args) { showFlashMessageSec(1, message, args); }
     default Vector2i worldSizeInTilesOrElse(Vector2i defaultSize) {
         if (game().level().isEmpty() || game().level().get().world() == null) { return defaultSize; }
-        TileMap terrain = game().level().get().world().map().terrain();
-        return new Vector2i(terrain.numCols(), terrain.numRows());
+        WorldMap worldMap = game().level().get().world().map();
+        return new Vector2i(worldMap.numCols(), worldMap.numRows());
     }
 
     // Actions

@@ -96,7 +96,7 @@ public class GameLevel3D extends Group {
         livesCounter3D = createLivesCounter3D(game.canStartNewGame());
         livesCounter3D.livesCountPy.bind(livesCountPy);
 
-        floor3D = createFloor(context.assets(), world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
+        floor3D = createFloor(context.assets(), world.map().numCols() * TS, world.map().numRows() * TS);
         WorldMapColoring coloring = context.gameConfiguration().worldMapColoring(world.map());
         maze3D = new Maze3D((GameConfiguration3D) context.gameConfiguration(), world, coloring);
         addFood3D(world, context.assets().get("model3D.pellet"), coloredMaterial(coloring.pellet()));
@@ -184,7 +184,7 @@ public class GameLevel3D extends Group {
 
     public void addLevelCounter() {
         // Place level counter at top right maze corner
-        double x = context.level().world().map().terrain().numCols() * TS - 2 * TS;
+        double x = context.level().world().map().numCols() * TS - 2 * TS;
         double y = 2 * TS;
         Node levelCounter3D = createLevelCounter3D(
             context.gameConfiguration().spriteSheet(),
@@ -237,7 +237,7 @@ public class GameLevel3D extends Group {
     }
 
     private void addFood3D(GameWorld world, Model3D pelletModel3D, Material foodMaterial) {
-        world.map().food().tiles().filter(world::hasFoodAt).forEach(tile -> {
+        world.map().tiles().filter(world::hasFoodAt).forEach(tile -> {
             Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
             if (world.isEnergizerPosition(tile)) {
                 var energizer3D = new Energizer3D(ENERGIZER_RADIUS);

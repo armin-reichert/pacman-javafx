@@ -7,6 +7,7 @@ package de.amr.games.pacman.tilemap.rendering;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.FoodTiles;
 import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.GraphicsContext;
@@ -45,8 +46,8 @@ public class FoodMapRenderer implements TileMapRenderer {
         this.pelletColor = pelletColor;
     }
 
-    public void drawFood(GraphicsContext g, TileMap foodMap) {
-        foodMap.tiles().forEach(tile -> drawTile(g, tile, foodMap.get(tile)));
+    public void drawFood(GraphicsContext g, WorldMap worldMap) {
+        worldMap.tiles().forEach(tile -> drawTile(g, tile, worldMap.get(WorldMap.LayerID.FOOD, tile)));
     }
 
     @Override

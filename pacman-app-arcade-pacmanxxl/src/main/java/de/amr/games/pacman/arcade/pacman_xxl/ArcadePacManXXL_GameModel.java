@@ -80,16 +80,16 @@ public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel implements
         GameWorld world = new GameWorld(worldMap);
 
         // House can be at non-default position!
-        if (!worldMap.terrain().hasProperty(WorldMap.PROPERTY_POS_HOUSE_MIN_TILE)) {
+        if (!worldMap.hasProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MIN_TILE)) {
             Logger.warn("No house min tile found in map!");
-            worldMap.terrain().setProperty(WorldMap.PROPERTY_POS_HOUSE_MIN_TILE, formatTile(vec_2i(10, 15)));
+            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MIN_TILE, formatTile(vec_2i(10, 15)));
         }
-        if (!worldMap.terrain().hasProperty(WorldMap.PROPERTY_POS_HOUSE_MAX_TILE)) {
+        if (!worldMap.hasProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MAX_TILE)) {
             Logger.warn("No house max tile found in map!");
-            worldMap.terrain().setProperty(WorldMap.PROPERTY_POS_HOUSE_MAX_TILE, formatTile(vec_2i(17, 19)));
+            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MAX_TILE, formatTile(vec_2i(17, 19)));
         }
-        Vector2i minTile = worldMap.getTileProperty(WorldMap.PROPERTY_POS_HOUSE_MIN_TILE, null);
-        Vector2i maxTile = worldMap.getTileProperty(WorldMap.PROPERTY_POS_HOUSE_MAX_TILE, null);
+        Vector2i minTile = worldMap.getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
+        Vector2i maxTile = worldMap.getTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
         world.createArcadeHouse(minTile.x(), minTile.y(), maxTile.x(), maxTile.y());
 
         var pac = new Pac();
@@ -158,10 +158,10 @@ public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel implements
             colorMap = COLOR_MAPS.get(randomInt(0, COLOR_MAPS.size()));
         } else {
             colorMap = Map.of(
-            "fill",   worldMap.terrain().getStringPropertyOrDefault(PROPERTY_COLOR_WALL_FILL, "000000"),
-            "stroke", worldMap.terrain().getStringPropertyOrDefault(PROPERTY_COLOR_WALL_STROKE, "0000ff"),
-            "door",   worldMap.terrain().getStringPropertyOrDefault(PROPERTY_COLOR_DOOR, "00ffff"),
-            "pellet", worldMap.food().getStringPropertyOrDefault(PROPERTY_COLOR_FOOD, "ffffff")
+                "fill",   worldMap.getStringPropertyOrElse(LayerID.TERRAIN, PROPERTY_COLOR_WALL_FILL, "000000"),
+                "stroke", worldMap.getStringPropertyOrElse(LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE, "0000ff"),
+                "door",   worldMap.getStringPropertyOrElse(LayerID.TERRAIN, PROPERTY_COLOR_DOOR, "00ffff"),
+                "pellet", worldMap.getStringPropertyOrElse(LayerID.FOOD, PROPERTY_COLOR_FOOD, "ffffff")
             );
         }
         worldMap.setConfigValue("colorMap", colorMap);
@@ -175,8 +175,8 @@ public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel implements
         StaticBonus staticBonus = new StaticBonus(symbol, ArcadePacMan_GameModel.BONUS_VALUE_FACTORS[symbol] * 100);
         level.setBonus(staticBonus);
         // in a non-Arcade style custom map, the bonus position must be taken from the terrain map
-        if (level.world().map().terrain().hasProperty(WorldMap.PROPERTY_POS_BONUS)) {
-            Vector2i bonusTile = level.world().map().getTileProperty(WorldMap.PROPERTY_POS_BONUS, new Vector2i(13, 20));
+        if (level.world().map().hasProperty(LayerID.TERRAIN, PROPERTY_POS_BONUS)) {
+            Vector2i bonusTile = level.world().map().getTileProperty(PROPERTY_POS_BONUS, new Vector2i(13, 20));
             staticBonus.actor().setPosition(halfTileRightOf(bonusTile));
         } else {
             staticBonus.actor().setPosition(ArcadePacMan_GameModel.BONUS_POS);

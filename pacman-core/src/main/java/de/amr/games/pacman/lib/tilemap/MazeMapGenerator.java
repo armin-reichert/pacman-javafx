@@ -28,26 +28,26 @@ public class MazeMapGenerator {
 
         // create map from maze (3 times larger!)
         var map = new WorldMap(3 * numRows + EMPTY_ROWS_ABOVE + EMPTY_ROWS_BELOW, 3 * numCols);
-        var terrain = map.terrain();
         for (int v = 0; v < graph.numVertices(); ++v) {
             // center of 3x3 "macro" cell
             int row = 3 * graph.row(v) + 1 + EMPTY_ROWS_ABOVE, col = 3 * graph.col(v) + 1;
             if (row < 3 || row > 3 * numRows + EMPTY_ROWS_BELOW) {
                 continue;
             }
-            set(terrain, row - 1, col - 1, BLOCKED);
-            set(terrain, row - 1, col, graph.connected(v, Dir.N) ? FREE : BLOCKED);
-            set(terrain, row - 1, col + 1, BLOCKED);
-            set(terrain, row, col - 1, graph.connected(v, Dir.W) ? FREE : BLOCKED);
-            set(terrain, row, col, FREE);
-            set(terrain, row, col + 1, graph.connected(v, Dir.E) ? FREE : BLOCKED);
-            set(terrain, row + 1, col - 1, BLOCKED);
-            set(terrain, row + 1, col, graph.connected(v, Dir.S) ? FREE : BLOCKED);
-            set(terrain, row + 1, col + 1, BLOCKED);
+            set(map, WorldMap.LayerID.TERRAIN, row - 1, col - 1, BLOCKED);
+            set(map, WorldMap.LayerID.TERRAIN, row - 1, col, graph.connected(v, Dir.N) ? FREE : BLOCKED);
+            set(map, WorldMap.LayerID.TERRAIN, row - 1, col + 1, BLOCKED);
+            set(map, WorldMap.LayerID.TERRAIN, row, col - 1, graph.connected(v, Dir.W) ? FREE : BLOCKED);
+            set(map, WorldMap.LayerID.TERRAIN, row, col, FREE);
+            set(map, WorldMap.LayerID.TERRAIN, row, col + 1, graph.connected(v, Dir.E) ? FREE : BLOCKED);
+            set(map, WorldMap.LayerID.TERRAIN, row + 1, col - 1, BLOCKED);
+            set(map, WorldMap.LayerID.TERRAIN, row + 1, col, graph.connected(v, Dir.S) ? FREE : BLOCKED);
+            set(map, WorldMap.LayerID.TERRAIN, row + 1, col + 1, BLOCKED);
         }
         computeWallContour(map, new Vector2i(0, EMPTY_ROWS_ABOVE));
         addFood(map);
-        terrain.setProperty("color_wall_fill", "#993300");
+        //TODO set color
+        //terrain.setProperty("color_wall_fill", "#993300");
         return map;
     }
 
@@ -55,23 +55,23 @@ public class MazeMapGenerator {
     private Vector2i predecessor;
     private Direction moveDir;
 
-    private boolean inRange(Vector2i tile, TileMap map) {
+    private boolean inRange(Vector2i tile, WorldMap map) {
         return 0 <= tile.x() && tile.x() < map.numCols() && 0 <= tile.y() && tile.y() <= map.numRows();
     }
 
     private void computeWallContour(WorldMap map, Vector2i startTile) {
-        TileMap terrain = map.terrain();
         predecessor = null;
         current = startTile;
-        set(terrain, current, TerrainTiles.CORNER_NW);
+        set(map, WorldMap.LayerID.TERRAIN, current, TerrainTiles.CORNER_NW);
         moveDir = Direction.RIGHT;
         move();
-        while (inRange(current, terrain)) {
+        while (inRange(current, map)) {
             Vector2i tileAtRightHand = current.plus(moveDir.nextClockwise().vector());
-            if (terrain.get(tileAtRightHand) == FREE) {
+            if (map.get(WorldMap.LayerID.TERRAIN, tileAtRightHand) == FREE) {
                 Vector2i tileAhead = current.plus(moveDir.vector());
-                if (terrain.get(tileAhead) == BLOCKED) {
-                    set(terrain, current, moveDir.isHorizontal() ? TerrainTiles.WALL_H : TerrainTiles.WALL_V);
+                if (map.get(WorldMap.LayerID.TERRAIN, tileAhead) == BLOCKED) {
+                    set(map, WorldMap.LayerID.TERRAIN, current,
+                            moveDir.isHorizontal() ? TerrainTiles.WALL_H : TerrainTiles.WALL_V);
                 } else {
                     byte corner = switch (moveDir) {
                         case LEFT  -> TerrainTiles.CORNER_NW;
@@ -79,7 +79,7 @@ public class MazeMapGenerator {
                         case UP    -> TerrainTiles.CORNER_NE;
                         case DOWN  -> TerrainTiles.CORNER_SW;
                     };
-                    set(terrain, current, corner);
+                    set(map, WorldMap.LayerID.TERRAIN, current, corner);
                     turnCounterclockwise();
                 }
             } else {
@@ -89,12 +89,12 @@ public class MazeMapGenerator {
                     case LEFT  -> TerrainTiles.CORNER_SW;
                     case UP    -> TerrainTiles.CORNER_NW;
                 };
-                set(terrain, current, corner);
+                set(map, WorldMap.LayerID.TERRAIN, current, corner);
                 turnClockwise();
             }
             move();
         }
-        set(terrain, predecessor, TerrainTiles.WALL_V); //TODO correct?
+        set(map, WorldMap.LayerID.TERRAIN, predecessor, TerrainTiles.WALL_V); //TODO correct?
     }
 
     private void turnClockwise() {
@@ -106,12 +106,11 @@ public class MazeMapGenerator {
     }
 
     private void addFood(WorldMap map) {
-        TileMap terrainMap = map.terrain();
-        TileMap foodMap = map.food();
-        for (int row = EMPTY_ROWS_ABOVE; row < foodMap.numRows() - EMPTY_ROWS_BELOW; ++row) {
-            for (int col = 0; col < foodMap.numCols(); ++col) {
-                if (terrainMap.get(row, col) == TerrainTiles.EMPTY && new Random().nextInt(100) < 40) {
-                    foodMap.set(row, col, FoodTiles.PELLET);
+        for (int row = EMPTY_ROWS_ABOVE; row < map.numRows() - EMPTY_ROWS_BELOW; ++row) {
+            for (int col = 0; col < map.numCols(); ++col) {
+                if (map.get(WorldMap.LayerID.TERRAIN, row, col) == TerrainTiles.EMPTY
+                        && new Random().nextInt(100) < 40) {
+                    map.set(WorldMap.LayerID.FOOD, row, col, FoodTiles.PELLET);
                 }
             }
         }
@@ -122,18 +121,18 @@ public class MazeMapGenerator {
         current = current.plus(moveDir.vector());
     }
 
-    private void set(TileMap map, Vector2i tile, byte value) {
-        set(map, tile.y(), tile.x(), value);
+    private void set(WorldMap map, WorldMap.LayerID layerID, Vector2i tile, byte value) {
+        set(map, layerID, tile.y(), tile.x(), value);
     }
 
-    private void set(TileMap map, int row, int col, byte value) {
+    private void set(WorldMap map, WorldMap.LayerID layerID, int row, int col, byte value) {
         if (row < 0 || row >= map.numRows()) {
             return;
         }
         if (col < 0 || col >= map.numCols()) {
             return;
         }
-        map.set(row, col, value);
+        map.set(layerID, row, col, value);
         Logger.debug("x={} y={}: {} move {}", col, row, value, moveDir);
     }
 

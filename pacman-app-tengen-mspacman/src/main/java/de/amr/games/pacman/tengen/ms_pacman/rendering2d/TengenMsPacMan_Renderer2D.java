@@ -203,13 +203,11 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx.setImageSmoothing(false);
 
         TengenMsPacMan_GameModel game = context.game();
-        GameLevel level = context.level();
         MapCategory mapCategory = game.mapCategory();
         int mapNumber = world.map().getConfigValue("mapNumber");
-        String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
 
         if (areGameOptionsChanged(game)) {
-            drawGameOptionsInfoCenteredAt(world.map().terrain().numCols() * HTS, tiles2Px(2) + HTS, game);
+            drawGameOptionsInfoCenteredAt(world.map().numCols() * HTS, tiles2Px(2) + HTS, game);
         }
 
         if (coloredMapSet == null) {
@@ -245,7 +243,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx.setImageSmoothing(false);
         TengenMsPacMan_GameModel game = context.game();
         if (areGameOptionsChanged(game)) {
-            drawGameOptionsInfoCenteredAt(world.map().terrain().numCols() * HTS, tiles2Px(2) + HTS, game);
+            drawGameOptionsInfoCenteredAt(world.map().numCols() * HTS, tiles2Px(2) + HTS, game);
         }
         ColoredMapImage maze = coloredMapSet.flashingMazes().get(flashingIndex);
         RectArea area = maze.area();
@@ -264,7 +262,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     private void drawPellets(GameWorld world, Color pelletColor) {
-        world.map().food().tiles()
+        world.map().tiles()
             .filter(world::isFoodPosition)
             .filter(not(world::isEnergizerPosition))
             .forEach(tile -> {
@@ -281,13 +279,13 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     private void drawEnergizers(GameWorld world, Color pelletColor) {
         double size = TS;
         double offset = 0.5 * (HTS);
-        world.map().food().tiles().filter(world::isEnergizerPosition).forEach(energizerTile -> {
+        world.map().tiles().filter(world::isEnergizerPosition).forEach(energizerTile -> {
             double x = energizerTile.x() * TS, y = energizerTile.y() * TS;
             ctx.setFill(CANVAS_BACKGROUND_COLOR);
             ctx.fillRect(x-1, y-1, TS + 2, TS + 2); // avoid blitzer
             if (!world.hasEatenFoodAt(energizerTile) && blinking) {
                 ctx.setFill(pelletColor);
-                // draw pixelized "circle"
+                // draw pixelated "circle"
                 ctx.fillRect(x + offset, y, HTS, size);
                 ctx.fillRect(x, y + offset, size, HTS);
                 ctx.fillRect(x + 1, y + 1, size - 2, size - 2);

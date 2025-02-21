@@ -15,14 +15,19 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.tilemap.WorldMap.LayerID.FOOD;
+import static de.amr.games.pacman.lib.tilemap.WorldMap.LayerID.TERRAIN;
 
 /**
  * @author Armin Reichert
  */
 public class WorldMap {
+
+    public enum LayerID { TERRAIN, FOOD }
 
     private static final String MARKER_DATA_SECTION_START = "!data";
     private static final Pattern TILE_PATTERN = Pattern.compile("\\((\\d+),(\\d+)\\)");
@@ -74,8 +79,13 @@ public class WorldMap {
     }
 
     private final URL url;
-    private TileMap terrain;
-    private TileMap food;
+    private int numRows;
+    private int numCols;
+
+    // layers
+    private TileMap terrainLayer;
+    private TileMap foodLayer;
+
     private Set<Obstacle> obstacles = Collections.emptySet();
 
     /**
@@ -85,18 +95,22 @@ public class WorldMap {
      */
     public WorldMap(WorldMap other) {
         Globals.assertNotNull(other);
-        terrain = new TileMap(other.terrain);
+        numRows = other.numRows;
+        numCols = other.numCols;
+        terrainLayer = new TileMap(other.terrainLayer);
         obstacles = new HashSet<>(other.obstacles);
-        food = new TileMap(other.food);
+        foodLayer = new TileMap(other.foodLayer);
         url = other.url;
     }
 
     // Used by map editor
     public WorldMap(int numRows, int numCols) {
-        terrain = new TileMap();
-        terrain.matrix = new byte[numRows][numCols];
-        food = new TileMap();
-        food.matrix = new byte[numRows][numCols];
+        this.numRows = numRows;
+        this.numCols = numCols;
+        terrainLayer = new TileMap();
+        terrainLayer.matrix = new byte[numRows][numCols];
+        foodLayer = new TileMap();
+        foodLayer.matrix = new byte[numRows][numCols];
         url = null;
     }
 
@@ -114,13 +128,20 @@ public class WorldMap {
         updateObstacleList();
     }
 
+    private TileMap layer(LayerID id) {
+        return switch (id) {
+            case TERRAIN -> terrainLayer;
+            case FOOD -> foodLayer;
+        };
+    }
+
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
         s.append("WorldMap{");
-        if (terrain != null) {
-            s.append("numRows=").append(terrain.numRows());
-            s.append(", numCols=").append(terrain.numCols());
+        if (terrainLayer != null) {
+            s.append("numRows=").append(numRows);
+            s.append(", numCols=").append(numCols);
         }
         s.append(", url=").append(url);
         s.append("}");
@@ -128,53 +149,53 @@ public class WorldMap {
     }
 
     public WorldMap insertRowBeforeIndex(int rowIndex) {
-        if (rowIndex < 0 || rowIndex > terrain.numRows()) {
+        if (rowIndex < 0 || rowIndex > numRows) {
             throw new IllegalArgumentException("Illegal row index for inserting row: " + rowIndex);
         }
-        WorldMap newMap = new WorldMap(terrain.numRows() + 1, terrain.numCols());
-        newMap.terrain.replaceProperties(terrain.getProperties());
-        newMap.food().replaceProperties(food().getProperties());
-        for (int row = 0; row < newMap.terrain.numRows(); ++row) {
-            for (int col = 0; col < newMap.terrain.numCols(); ++col) {
+        WorldMap newMap = new WorldMap(numRows + 1, numCols);
+        newMap.terrainLayer.replaceProperties(terrainLayer.getProperties());
+        newMap.foodLayer.replaceProperties(foodLayer.getProperties());
+        for (int row = 0; row < newMap.numRows; ++row) {
+            for (int col = 0; col < newMap.numCols; ++col) {
                 byte terrainValue = TerrainTiles.EMPTY;
                 byte foodValue = FoodTiles.EMPTY;
                 if (row < rowIndex) {
-                    terrainValue = terrain.get(row, col);
-                    foodValue = food.get(row, col);
+                    terrainValue = get(TERRAIN, row, col);
+                    foodValue = get(FOOD, row, col);
                 } else if (row > rowIndex) {
-                    terrainValue = terrain.get(row - 1, col);
-                    foodValue = food.get(row - 1, col);
+                    terrainValue = get(TERRAIN, row - 1, col);
+                    foodValue = get(FOOD, row - 1, col);
                 } else {
-                    if ((col == 0 || col == terrain.numCols() - 1)
-                            && terrain.get(row, col) == TerrainTiles.WALL_V) {
+                    if ((col == 0 || col == numCols - 1)
+                            && get(TERRAIN, row, col) == TerrainTiles.WALL_V) {
                         terrainValue = TerrainTiles.WALL_V; // keep vertical border wall
                     }
                 }
-                newMap.terrain.set(row, col, terrainValue);
-                newMap.food.set(row, col, foodValue);
+                newMap.set(TERRAIN, row, col, terrainValue);
+                newMap.set(FOOD, row, col, foodValue);
             }
         }
         return newMap;
     }
 
     public WorldMap deleteRowAtIndex(int rowIndexToDelete) {
-        if (rowIndexToDelete < 0 || rowIndexToDelete > terrain.numRows() - 1) {
+        if (rowIndexToDelete < 0 || rowIndexToDelete > numRows - 1) {
             throw new IllegalArgumentException("Illegal row index for deleting row: " + rowIndexToDelete);
         }
-        if (terrain.numRows() == 0) {
+        if (numRows == 0) {
             return this;
         }
-        WorldMap newMap = new WorldMap(terrain.numRows() - 1, terrain.numCols());
-        newMap.terrain.replaceProperties(terrain.getProperties());
-        newMap.food.replaceProperties(food.getProperties());
-        for (int row = 0; row < newMap.terrain.numRows(); ++row) {
-            for (int col = 0; col < newMap.terrain.numCols(); ++col) {
+        WorldMap newMap = new WorldMap(numRows - 1, numCols);
+        newMap.terrainLayer.replaceProperties(terrainLayer.getProperties());
+        newMap.foodLayer.replaceProperties(foodLayer.getProperties());
+        for (int row = 0; row < newMap.numRows; ++row) {
+            for (int col = 0; col < newMap.numCols; ++col) {
                 if (row < rowIndexToDelete) {
-                    newMap.terrain.set(row, col, terrain.get(row, col));
-                    newMap.food.set(row, col, food.get(row, col));
+                    newMap.set(TERRAIN, row, col, get(TERRAIN, row, col));
+                    newMap.set(FOOD, row, col, get(FOOD, row, col));
                 } else {
-                    newMap.terrain.set(row, col, terrain.get(row + 1, col));
-                    newMap.food.set(row, col, food.get(row + 1, col));
+                    newMap.set(TERRAIN, row, col, get(TERRAIN, row + 1, col));
+                    newMap.set(FOOD, row, col, get(FOOD, row + 1, col));
                 }
             }
         }
@@ -184,9 +205,9 @@ public class WorldMap {
     public String sourceCode() {
         var sw = new StringWriter();
         sw.append(TERRAIN_SECTION_START).append("\n");
-        print(terrain, sw);
+        print(terrainLayer, sw);
         sw.append(FOOD_SECTION_START).append("\n");
-        print(food, sw);
+        print(foodLayer, sw);
         return sw.toString();
     }
 
@@ -194,11 +215,11 @@ public class WorldMap {
         var pw = new PrintWriter(w);
         tileMap.stringPropertyNames().map(name -> name + "=" + tileMap.getStringProperty(name)).forEach(pw::println);
         pw.println(MARKER_DATA_SECTION_START);
-        for (int row = 0; row < tileMap.numRows(); ++row) {
-            for (int col = 0; col < tileMap.numCols(); ++col) {
+        for (int row = 0; row < numRows; ++row) {
+            for (int col = 0; col < numCols; ++col) {
                 byte value = tileMap.matrix[row][col];
                 pw.printf("#%02X", value);
-                if (col < tileMap.numCols() - 1) {
+                if (col < numCols - 1) {
                     pw.print(",");
                 }
             }
@@ -225,16 +246,18 @@ public class WorldMap {
                 Logger.error("Line skipped: '{}'", line);
             }
         }
-        terrain = parseTileMap(terrainSection,
+        terrainLayer = parseTileMap(terrainSection,
             value -> 0 <= value && value <= TerrainTiles.LAST_TERRAIN_VALUE, TerrainTiles.EMPTY);
 
-        food = parseTileMap(foodSection,
+        foodLayer = parseTileMap(foodSection,
             value -> 0 <= value && value <= FoodTiles.ENERGIZER, FoodTiles.EMPTY);
 
+        numRows = terrainLayer.matrix.length;
+        numCols = terrainLayer.matrix[0].length;
 
         // Replace obsolete terrain tile values
-        terrain.tiles().forEach(tile -> {
-            byte content = terrain.get(tile);
+        tiles().forEach(tile -> {
+            byte content = get(TERRAIN, tile);
             byte newContent = switch (content) {
                 case TerrainTiles.OBSOLETE_DWALL_H -> TerrainTiles.WALL_H;
                 case TerrainTiles.OBSOLETE_DWALL_V -> TerrainTiles.WALL_V;
@@ -244,7 +267,7 @@ public class WorldMap {
                 case TerrainTiles.OBSOLETE_DCORNER_NE -> TerrainTiles.CORNER_NE;
                 default -> content;
             };
-            terrain.set(tile, newContent);
+            set(TERRAIN, tile, newContent);
         });
     }
 
@@ -320,7 +343,7 @@ public class WorldMap {
 
     public List<Vector2i> updateObstacleList() {
         List<Vector2i> tilesWithErrors = new ArrayList<>();
-        obstacles = ObstacleBuilder.buildObstacles(terrain, tilesWithErrors);
+        obstacles = ObstacleBuilder.buildObstacles(this, tilesWithErrors);
         // remove house obstacle
         Vector2i houseMinTile = getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
         if (houseMinTile == null) {
@@ -345,9 +368,9 @@ public class WorldMap {
     public boolean save(File file) {
         try (PrintWriter w = new PrintWriter(file, StandardCharsets.UTF_8)) {
             w.println(TERRAIN_SECTION_START);
-            print(terrain, w);
+            print(terrainLayer, w);
             w.println(FOOD_SECTION_START);
-            print(food, w);
+            print(foodLayer, w);
             return true;
         } catch (IOException x) {
             Logger.error(x);
@@ -355,38 +378,161 @@ public class WorldMap {
         }
     }
 
+    public int numCols() {
+        return numCols;
+    }
+
+    public int numRows() {
+        return numRows;
+    }
+
+    /**
+     * @param tile tile inside map bounds
+     * @return index in row-by-row order
+     */
+    public int index(Vector2i tile) {
+        return numCols * tile.y() + tile.x();
+    }
+
+    /**
+     * @return stream of all tiles of this map (row-by-row)
+     */
+    public Stream<Vector2i> tiles() {
+        return IntStream.range(0, numCols * numRows).mapToObj(this::tile);
+    }
+
+    /**
+     * @param index tile index in order top-to-bottom, left-to-right
+     * @return tile with given index
+     */
+    public Vector2i tile(int index) {
+        return vec_2i(index % numCols, index / numCols);
+    }
+
+    /**
+     * @return stream of all tiles of this map with given content (row-by-row)
+     */
+    public Stream<Vector2i> tiles(LayerID layerID, byte content) {
+        return tiles().filter(tile -> get(layerID, tile) == content);
+    }
+
+    public boolean outOfBounds(Vector2i tile) {
+        return outOfBounds(tile.y(), tile.x());
+    }
+
+    public boolean outOfBounds(int row, int col) {
+        return row < 0 || row >= numRows || col < 0 || col >= numCols;
+    }
+
     public URL url() {
         return url;
     }
 
-    public TileMap terrain() {
-        return terrain;
-    }
-
-    public TileMap food() {
-        return food;
-    }
-
     // store non-string configuration data used by UI in own "namespace"
     public void setConfigValue(String key, Object value) {
-        terrain.setProperty(toConfigNamespace(key), value);
+        terrainLayer.setProperty(toConfigNamespace(key), value);
     }
 
     @SuppressWarnings("unchecked")
     public <T> T getConfigValue(String key) {
-        return (T) terrain.getProperty(toConfigNamespace(key));
+        return (T) terrainLayer.getProperty(toConfigNamespace(key));
     }
 
     public boolean hasConfigValue(String key) {
-        return terrain.hasProperty(toConfigNamespace(key));
+        return terrainLayer.hasProperty(toConfigNamespace(key));
+    }
+
+    public Stream<String> stringPropertyNames(LayerID layerID) {
+        Map<String, Object> properties = layer(layerID).properties;
+        return properties.keySet().stream().filter(name -> properties.get(name) instanceof String).sorted();
+    }
+
+    public boolean hasProperty(LayerID layerID, String propertyName) {
+        return layer(layerID).hasProperty(propertyName);
+    }
+
+    public Object getProperty(LayerID layerID, String name) {
+        return layer(layerID).properties.get(name);
+    }
+
+    public void setProperty(LayerID layerID, String name, Object value) {
+        layer(layerID).properties.put(name, value);
+    }
+
+    public String getStringProperty(LayerID layerID, String propertyName) {
+        return String.valueOf(layer(layerID).properties.get(propertyName));
+    }
+
+    public String getStringPropertyOrElse(LayerID layerID, String name, String defaultValue) {
+        return String.valueOf(layer(layerID).properties.getOrDefault(name, defaultValue));
     }
 
     public Vector2i getTileProperty(String name, Vector2i defaultTile) {
-        if (terrain.hasProperty(name)) {
-            return parseTile(terrain.getStringProperty(name)).orElse(defaultTile);
+        if (terrainLayer.hasProperty(name)) {
+            return parseTile(terrainLayer.getStringProperty(name)).orElse(defaultTile);
         }
         return defaultTile;
     }
 
+    public void removeProperty(LayerID layerID, String name) {
+        layer(layerID).properties.remove(name);
+    }
 
+    /**
+     * @param layerID Layer ID
+     * @param row row inside map bounds
+     * @param col column inside map bounds
+     * @return map data at position
+     * @throws IllegalArgumentException if tile outside map bounds
+     */
+    public byte get(LayerID layerID, int row, int col) {
+        if (outOfBounds(row, col)) {
+            throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
+        }
+        return layer(layerID).matrix[row][col];
+    }
+
+    /**
+     * @param layerID Layer ID
+     * @param tile tile inside map bounds
+     * @return map data at tile position
+     * @throws IllegalArgumentException if tile outside map bounds
+     */
+    public byte get(LayerID layerID, Vector2i tile) {
+        return get(layerID, tile.y(), tile.x());
+    }
+
+    /**
+     * Sets map layer data at position inside map bounds.
+     *
+     * @param layerID Layer ID
+     * @param row row inside map bounds
+     * @param col column inside map bounds
+     * @param value map value
+     * @throws IllegalArgumentException if tile outside map bounds
+     */
+    public void set(LayerID layerID, int row, int col, byte value) {
+        if (outOfBounds(row, col)) {
+            throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
+        }
+        layer(layerID).matrix[row][col] = value;
+    }
+
+    /**
+     * Sets map data at position inside map bounds
+     *
+     * @param layerID Layer ID
+     * @param tile tile inside map bounds
+     * @param value map value
+     * @throws IllegalArgumentException if tile outside map bounds
+     */
+    public void set(LayerID layerID, Vector2i tile, byte value) {
+        set(layerID, tile.y(), tile.x(), value);
+    }
+
+    public void fill(LayerID layerID, byte fillValue) {
+        for (byte[] row : layer(layerID).matrix) {
+            Arrays.fill(row, fillValue);
+        }
+    }
 }
