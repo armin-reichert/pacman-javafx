@@ -34,15 +34,15 @@ public class MazeMapGenerator {
             if (row < 3 || row > 3 * numRows + EMPTY_ROWS_BELOW) {
                 continue;
             }
-            set(map, WorldMap.LayerID.TERRAIN, row - 1, col - 1, BLOCKED);
-            set(map, WorldMap.LayerID.TERRAIN, row - 1, col, graph.connected(v, Dir.N) ? FREE : BLOCKED);
-            set(map, WorldMap.LayerID.TERRAIN, row - 1, col + 1, BLOCKED);
-            set(map, WorldMap.LayerID.TERRAIN, row, col - 1, graph.connected(v, Dir.W) ? FREE : BLOCKED);
-            set(map, WorldMap.LayerID.TERRAIN, row, col, FREE);
-            set(map, WorldMap.LayerID.TERRAIN, row, col + 1, graph.connected(v, Dir.E) ? FREE : BLOCKED);
-            set(map, WorldMap.LayerID.TERRAIN, row + 1, col - 1, BLOCKED);
-            set(map, WorldMap.LayerID.TERRAIN, row + 1, col, graph.connected(v, Dir.S) ? FREE : BLOCKED);
-            set(map, WorldMap.LayerID.TERRAIN, row + 1, col + 1, BLOCKED);
+            set(map, LayerID.TERRAIN, row - 1, col - 1, BLOCKED);
+            set(map, LayerID.TERRAIN, row - 1, col, graph.connected(v, Dir.N) ? FREE : BLOCKED);
+            set(map, LayerID.TERRAIN, row - 1, col + 1, BLOCKED);
+            set(map, LayerID.TERRAIN, row, col - 1, graph.connected(v, Dir.W) ? FREE : BLOCKED);
+            set(map, LayerID.TERRAIN, row, col, FREE);
+            set(map, LayerID.TERRAIN, row, col + 1, graph.connected(v, Dir.E) ? FREE : BLOCKED);
+            set(map, LayerID.TERRAIN, row + 1, col - 1, BLOCKED);
+            set(map, LayerID.TERRAIN, row + 1, col, graph.connected(v, Dir.S) ? FREE : BLOCKED);
+            set(map, LayerID.TERRAIN, row + 1, col + 1, BLOCKED);
         }
         computeWallContour(map, new Vector2i(0, EMPTY_ROWS_ABOVE));
         addFood(map);
@@ -62,15 +62,15 @@ public class MazeMapGenerator {
     private void computeWallContour(WorldMap map, Vector2i startTile) {
         predecessor = null;
         current = startTile;
-        set(map, WorldMap.LayerID.TERRAIN, current, TerrainTiles.CORNER_NW);
+        set(map, LayerID.TERRAIN, current, TerrainTiles.CORNER_NW);
         moveDir = Direction.RIGHT;
         move();
         while (inRange(current, map)) {
             Vector2i tileAtRightHand = current.plus(moveDir.nextClockwise().vector());
-            if (map.get(WorldMap.LayerID.TERRAIN, tileAtRightHand) == FREE) {
+            if (map.get(LayerID.TERRAIN, tileAtRightHand) == FREE) {
                 Vector2i tileAhead = current.plus(moveDir.vector());
-                if (map.get(WorldMap.LayerID.TERRAIN, tileAhead) == BLOCKED) {
-                    set(map, WorldMap.LayerID.TERRAIN, current,
+                if (map.get(LayerID.TERRAIN, tileAhead) == BLOCKED) {
+                    set(map, LayerID.TERRAIN, current,
                             moveDir.isHorizontal() ? TerrainTiles.WALL_H : TerrainTiles.WALL_V);
                 } else {
                     byte corner = switch (moveDir) {
@@ -79,7 +79,7 @@ public class MazeMapGenerator {
                         case UP    -> TerrainTiles.CORNER_NE;
                         case DOWN  -> TerrainTiles.CORNER_SW;
                     };
-                    set(map, WorldMap.LayerID.TERRAIN, current, corner);
+                    set(map, LayerID.TERRAIN, current, corner);
                     turnCounterclockwise();
                 }
             } else {
@@ -89,12 +89,12 @@ public class MazeMapGenerator {
                     case LEFT  -> TerrainTiles.CORNER_SW;
                     case UP    -> TerrainTiles.CORNER_NW;
                 };
-                set(map, WorldMap.LayerID.TERRAIN, current, corner);
+                set(map, LayerID.TERRAIN, current, corner);
                 turnClockwise();
             }
             move();
         }
-        set(map, WorldMap.LayerID.TERRAIN, predecessor, TerrainTiles.WALL_V); //TODO correct?
+        set(map, LayerID.TERRAIN, predecessor, TerrainTiles.WALL_V); //TODO correct?
     }
 
     private void turnClockwise() {
@@ -108,9 +108,9 @@ public class MazeMapGenerator {
     private void addFood(WorldMap map) {
         for (int row = EMPTY_ROWS_ABOVE; row < map.numRows() - EMPTY_ROWS_BELOW; ++row) {
             for (int col = 0; col < map.numCols(); ++col) {
-                if (map.get(WorldMap.LayerID.TERRAIN, row, col) == TerrainTiles.EMPTY
+                if (map.get(LayerID.TERRAIN, row, col) == TerrainTiles.EMPTY
                         && new Random().nextInt(100) < 40) {
-                    map.set(WorldMap.LayerID.FOOD, row, col, FoodTiles.PELLET);
+                    map.set(LayerID.FOOD, row, col, FoodTiles.PELLET);
                 }
             }
         }
@@ -121,11 +121,11 @@ public class MazeMapGenerator {
         current = current.plus(moveDir.vector());
     }
 
-    private void set(WorldMap map, WorldMap.LayerID layerID, Vector2i tile, byte value) {
+    private void set(WorldMap map, LayerID layerID, Vector2i tile, byte value) {
         set(map, layerID, tile.y(), tile.x(), value);
     }
 
-    private void set(WorldMap map, WorldMap.LayerID layerID, int row, int col, byte value) {
+    private void set(WorldMap map, LayerID layerID, int row, int col, byte value) {
         if (row < 0 || row >= map.numRows()) {
             return;
         }

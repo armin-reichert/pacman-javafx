@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tilemap.editor;
 
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.tilemap.rendering.TileMapRenderer;
 import javafx.scene.canvas.GraphicsContext;
@@ -39,7 +40,7 @@ public class TileValueEditorTool implements Tool {
     }
 
     @Override
-    public void apply(WorldMap worldMap, WorldMap.LayerID layerID, Vector2i tile) {
+    public void apply(WorldMap worldMap, LayerID layerID, Vector2i tile) {
         editor.setTileValue(worldMap, layerID, tile, value);
     }
 

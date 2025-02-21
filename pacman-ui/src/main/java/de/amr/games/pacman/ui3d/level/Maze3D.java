@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
@@ -101,8 +102,8 @@ public class Maze3D extends Group {
         obstacleBaseHeightPy.set(PY_3D_WALL_HEIGHT.get());
 
         //TODO just a temporary solution until I find something better
-        if (world.map().hasProperty(WorldMap.LayerID.TERRAIN, OSHAPES_FILLED_PROPERTY_NAME)) {
-            Object value = world.map().getProperty(WorldMap.LayerID.TERRAIN, OSHAPES_FILLED_PROPERTY_NAME);
+        if (world.map().hasProperty(LayerID.TERRAIN, OSHAPES_FILLED_PROPERTY_NAME)) {
+            Object value = world.map().getProperty(LayerID.TERRAIN, OSHAPES_FILLED_PROPERTY_NAME);
             try {
                 r3D.setOShapeFilled(Boolean.parseBoolean(String.valueOf(value)));
             } catch (Exception x) {

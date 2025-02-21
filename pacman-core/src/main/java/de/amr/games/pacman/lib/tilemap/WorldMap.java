@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib.tilemap;
 
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import org.tinylog.Logger;
 
@@ -19,23 +18,21 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.lib.tilemap.WorldMap.LayerID.FOOD;
-import static de.amr.games.pacman.lib.tilemap.WorldMap.LayerID.TERRAIN;
+import static de.amr.games.pacman.lib.tilemap.LayerID.FOOD;
+import static de.amr.games.pacman.lib.tilemap.LayerID.TERRAIN;
 
 /**
  * @author Armin Reichert
  */
 public class WorldMap {
 
-    public enum LayerID { TERRAIN, FOOD }
-
-    public static class LayerData {
+    public static class Layer {
         Map<String, Object> properties = new HashMap<>();
         byte[][] values;
 
-        public LayerData() {}
+        public Layer() {}
 
-        public LayerData(LayerData other) {
+        public Layer(Layer other) {
             int numRows = other.values.length, numCols = other.values[0].length;
             properties.putAll(other.properties);
             values = new byte[numRows][];
@@ -102,41 +99,32 @@ public class WorldMap {
     private final URL url;
     private int numRows;
     private int numCols;
-
-    // layers
-    private LayerData terrainLayer;
-    private LayerData foodLayer;
-
+    private Layer terrainLayer;
+    private Layer foodLayer;
     private Set<Obstacle> obstacles = Collections.emptySet();
 
-    /**
-     * Creates a world map consisting of copies of the other map's layers.
-     *
-     * @param other other map
-     */
     public WorldMap(WorldMap other) {
-        Globals.assertNotNull(other);
+        assertNotNull(other);
         numRows = other.numRows;
         numCols = other.numCols;
-        terrainLayer = new LayerData(other.terrainLayer);
-        obstacles = new HashSet<>(other.obstacles);
-        foodLayer = new LayerData(other.foodLayer);
         url = other.url;
+        terrainLayer = new Layer(other.terrainLayer);
+        foodLayer = new Layer(other.foodLayer);
+        obstacles = new HashSet<>(other.obstacles);
     }
 
-    // Used by map editor
     public WorldMap(int numRows, int numCols) {
         this.numRows = numRows;
         this.numCols = numCols;
-        terrainLayer = new LayerData();
-        terrainLayer.values = new byte[numRows][numCols];
-        foodLayer = new LayerData();
-        foodLayer.values = new byte[numRows][numCols];
         url = null;
+        terrainLayer = new Layer();
+        terrainLayer.values = new byte[numRows][numCols];
+        foodLayer = new Layer();
+        foodLayer.values = new byte[numRows][numCols];
     }
 
     public WorldMap(URL url) throws IOException {
-        this.url = Globals.assertNotNull(url);
+        this.url = assertNotNull(url);
         var r = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
         parse(r.lines());
         updateObstacleList();
@@ -147,13 +135,6 @@ public class WorldMap {
         var r = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
         parse(r.lines());
         updateObstacleList();
-    }
-
-    private LayerData layer(LayerID id) {
-        return switch (id) {
-            case TERRAIN -> terrainLayer;
-            case FOOD -> foodLayer;
-        };
     }
 
     @Override
@@ -230,7 +211,7 @@ public class WorldMap {
         return newMap;
     }
 
-    private void print(LayerData layer, PrintWriter pw) {
+    private void print(Layer layer, PrintWriter pw) {
         layer.properties.keySet().stream()
                 .filter(name -> layer.properties.get(name) instanceof String)
                 .sorted()
@@ -293,7 +274,7 @@ public class WorldMap {
         });
     }
 
-    private LayerData parseTileMap(List<String> lines, Predicate<Byte> valueAllowed, byte emptyValue) {
+    private Layer parseTileMap(List<String> lines, Predicate<Byte> valueAllowed, byte emptyValue) {
         // First pass: read property section and determine data section size
         int numDataRows = 0, numDataCols = -1;
         int dataSectionStartIndex = -1;
@@ -321,7 +302,7 @@ public class WorldMap {
         }
 
         // Second pass: read data and build new tile map
-        var tileMap = new LayerData();
+        var tileMap = new Layer();
         tileMap.values = new byte[numDataRows][numDataCols];
         tileMap.properties.putAll(parseProperties(propertySection.toString()));
 
@@ -400,12 +381,24 @@ public class WorldMap {
         }
     }
 
+    private Layer layer(LayerID id) {
+        return switch (id) {
+            case TERRAIN -> terrainLayer;
+            case FOOD -> foodLayer;
+        };
+    }
+
+
     public int numCols() {
         return numCols;
     }
 
     public int numRows() {
         return numRows;
+    }
+
+    public URL url() {
+        return url;
     }
 
     /**
@@ -432,9 +425,11 @@ public class WorldMap {
     }
 
     /**
+     * @param layerID the layer ID
+     * @param content value to search for
      * @return stream of all tiles of this map with given content (row-by-row)
      */
-    public Stream<Vector2i> tiles(LayerID layerID, byte content) {
+    public Stream<Vector2i> tilesContaining(LayerID layerID, byte content) {
         return tiles().filter(tile -> get(layerID, tile) == content);
     }
 
@@ -444,10 +439,6 @@ public class WorldMap {
 
     public boolean outOfBounds(int row, int col) {
         return row < 0 || row >= numRows || col < 0 || col >= numCols;
-    }
-
-    public URL url() {
-        return url;
     }
 
     // store non-string configuration data used by UI in own "namespace"
@@ -508,6 +499,7 @@ public class WorldMap {
      * @throws IllegalArgumentException if tile outside map bounds
      */
     public byte get(LayerID layerID, int row, int col) {
+        assertNotNull(layerID);
         if (outOfBounds(row, col)) {
             throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
         }
@@ -534,6 +526,7 @@ public class WorldMap {
      * @throws IllegalArgumentException if tile outside map bounds
      */
     public void set(LayerID layerID, int row, int col, byte value) {
+        assertNotNull(layerID);
         if (outOfBounds(row, col)) {
             throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
         }
@@ -553,6 +546,7 @@ public class WorldMap {
     }
 
     public void fill(LayerID layerID, byte fillValue) {
+        assertNotNull(layerID);
         for (byte[] row : layer(layerID).values) {
             Arrays.fill(row, fillValue);
         }

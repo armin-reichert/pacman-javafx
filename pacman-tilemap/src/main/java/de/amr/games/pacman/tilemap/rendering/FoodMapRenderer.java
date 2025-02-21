@@ -6,6 +6,7 @@ package de.amr.games.pacman.tilemap.rendering;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.FoodTiles;
+import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
@@ -46,7 +47,7 @@ public class FoodMapRenderer implements TileMapRenderer {
     }
 
     public void drawFood(GraphicsContext g, WorldMap worldMap) {
-        worldMap.tiles().forEach(tile -> drawTile(g, tile, worldMap.get(WorldMap.LayerID.FOOD, tile)));
+        worldMap.tiles().forEach(tile -> drawTile(g, tile, worldMap.get(LayerID.FOOD, tile)));
     }
 
     @Override

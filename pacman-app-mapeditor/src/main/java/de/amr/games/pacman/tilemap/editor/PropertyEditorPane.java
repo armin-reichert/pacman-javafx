@@ -6,6 +6,7 @@ package de.amr.games.pacman.tilemap.editor;
 
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -67,9 +68,9 @@ public class PropertyEditorPane extends BorderPane {
         }
     };
 
-    private WorldMap.LayerID layerID = WorldMap.LayerID.TERRAIN; // TODO check
+    private LayerID layerID = LayerID.TERRAIN; // TODO check
 
-    public void setTileMap(WorldMap worldMap, WorldMap.LayerID layerID) {
+    public void setTileMap(WorldMap worldMap, LayerID layerID) {
         worldMapPy.set(requireNonNull(worldMap));
         this.layerID = layerID;
         rebuildPropertyEditors();

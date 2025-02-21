@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.FoodTiles;
+import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import org.tinylog.Logger;
 
@@ -69,7 +70,7 @@ public class GameWorld {
         ghostPositions[CYAN_GHOST]   = posHalfTileRightOf(worldMap.getTileProperty(PROPERTY_POS_CYAN_GHOST,   vec_2i(11,17)));
         ghostPositions[ORANGE_GHOST] = posHalfTileRightOf(worldMap.getTileProperty(PROPERTY_POS_ORANGE_GHOST, vec_2i(15,17)));
 
-        energizerTiles = worldMap.tiles(LayerID.FOOD, FoodTiles.ENERGIZER).toArray(Vector2i[]::new);
+        energizerTiles = worldMap.tilesContaining(LayerID.FOOD, FoodTiles.ENERGIZER).toArray(Vector2i[]::new);
         eatenFood = new BitSet(worldMap.numCols() * worldMap.numRows());
         uneatenFoodCount = totalFoodCount
                 = (int) worldMap.tiles().filter(tile -> worldMap.get(LayerID.FOOD, tile) != FoodTiles.EMPTY).count();

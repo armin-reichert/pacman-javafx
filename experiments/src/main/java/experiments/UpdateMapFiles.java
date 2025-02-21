@@ -1,6 +1,7 @@
 package experiments;
 
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.TerrainTiles;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import org.tinylog.Logger;
@@ -38,7 +39,7 @@ public class UpdateMapFiles {
 
     private static void updateMapData(WorldMap map) {
         map.tiles().forEach(tile -> {
-            byte content = map.get(WorldMap.LayerID.TERRAIN, tile);
+            byte content = map.get(LayerID.TERRAIN, tile);
             byte newContent = switch (content) {
                 case TerrainTiles.OBSOLETE_DWALL_H -> TerrainTiles.WALL_H;
                 case TerrainTiles.OBSOLETE_DWALL_V -> TerrainTiles.WALL_V;
@@ -48,19 +49,19 @@ public class UpdateMapFiles {
                 case TerrainTiles.OBSOLETE_DCORNER_NE -> TerrainTiles.CORNER_NE;
                 default -> content;
             };
-            map.set(WorldMap.LayerID.TERRAIN, tile, newContent);
+            map.set(LayerID.TERRAIN, tile, newContent);
         });
         Vector2i houseMinTile = map.getTileProperty("pos_house_min_tile", new Vector2i(10, 15));
         Vector2i houseMaxTile = houseMinTile.plus(7, 4);
-        map.setProperty(WorldMap.LayerID.TERRAIN, WorldMap.PROPERTY_POS_HOUSE_MIN_TILE, WorldMap.formatTile(houseMinTile));
-        map.setProperty(WorldMap.LayerID.TERRAIN, WorldMap.PROPERTY_POS_HOUSE_MAX_TILE, WorldMap.formatTile(houseMaxTile));
+        map.setProperty(LayerID.TERRAIN, WorldMap.PROPERTY_POS_HOUSE_MIN_TILE, WorldMap.formatTile(houseMinTile));
+        map.setProperty(LayerID.TERRAIN, WorldMap.PROPERTY_POS_HOUSE_MAX_TILE, WorldMap.formatTile(houseMaxTile));
         for (int row = houseMinTile.y(); row <= houseMaxTile.y(); ++row) {
             for (int col = houseMinTile.x(); col <= houseMaxTile.x(); ++col) {
-                switch (map.get(WorldMap.LayerID.TERRAIN, row, col)) {
-                    case TerrainTiles.DCORNER_ANGULAR_NW -> map.set(WorldMap.LayerID.TERRAIN, row, col, TerrainTiles.CORNER_NW);
-                    case TerrainTiles.DCORNER_ANGULAR_SW -> map.set(WorldMap.LayerID.TERRAIN, row, col, TerrainTiles.CORNER_SW);
-                    case TerrainTiles.DCORNER_ANGULAR_SE -> map.set(WorldMap.LayerID.TERRAIN, row, col, TerrainTiles.CORNER_SE);
-                    case TerrainTiles.DCORNER_ANGULAR_NE -> map.set(WorldMap.LayerID.TERRAIN, row, col, TerrainTiles.CORNER_NE);
+                switch (map.get(LayerID.TERRAIN, row, col)) {
+                    case TerrainTiles.DCORNER_ANGULAR_NW -> map.set(LayerID.TERRAIN, row, col, TerrainTiles.CORNER_NW);
+                    case TerrainTiles.DCORNER_ANGULAR_SW -> map.set(LayerID.TERRAIN, row, col, TerrainTiles.CORNER_SW);
+                    case TerrainTiles.DCORNER_ANGULAR_SE -> map.set(LayerID.TERRAIN, row, col, TerrainTiles.CORNER_SE);
+                    case TerrainTiles.DCORNER_ANGULAR_NE -> map.set(LayerID.TERRAIN, row, col, TerrainTiles.CORNER_NE);
                 }
             }
         }

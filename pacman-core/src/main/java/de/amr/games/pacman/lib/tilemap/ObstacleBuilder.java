@@ -90,8 +90,8 @@ public class ObstacleBuilder {
         worldMap.tiles()
             .filter(not(this::isExplored))
             .filter(tile ->
-                    worldMap.get(WorldMap.LayerID.TERRAIN, tile) == TerrainTiles.CORNER_NW ||
-                    worldMap.get(WorldMap.LayerID.TERRAIN, tile) == TerrainTiles.DCORNER_ANGULAR_NW) // house top-left corner
+                    worldMap.get(LayerID.TERRAIN, tile) == TerrainTiles.CORNER_NW ||
+                    worldMap.get(LayerID.TERRAIN, tile) == TerrainTiles.DCORNER_ANGULAR_NW) // house top-left corner
             .map(cornerNW -> buildClosedObstacle(cornerNW, tilesWithErrors))
             .forEach(obstacles::add);
 
@@ -102,7 +102,7 @@ public class ObstacleBuilder {
 
     private Obstacle buildClosedObstacle(Vector2i cornerNW, List<Vector2i> tilesWithErrors) {
         Vector2i startPoint = cornerNW.scaled(TS).plus(TS, HTS);
-        byte startTileContent = worldMap.get(WorldMap.LayerID.TERRAIN, cornerNW);
+        byte startTileContent = worldMap.get(LayerID.TERRAIN, cornerNW);
         Obstacle obstacle = new Obstacle(startPoint);
         obstacle.addSegment(SEG_CORNER_NW_DOWN, true, startTileContent);
         cursor = new Cursor(cornerNW);
@@ -118,7 +118,7 @@ public class ObstacleBuilder {
 
     private Obstacle buildOpenObstacle(Vector2i startTile, boolean startsAtLeftBorder, List<Vector2i> tilesWithErrors) {
         Vector2i startPoint = startTile.scaled(TS).plus(startsAtLeftBorder ? 0 : TS, HTS);
-        byte startTileContent = worldMap.get(WorldMap.LayerID.TERRAIN, startTile);
+        byte startTileContent = worldMap.get(LayerID.TERRAIN, startTile);
         var obstacle = new Obstacle(startPoint);
         cursor = new Cursor(startTile);
         if (startTileContent == TerrainTiles.WALL_H) {
@@ -155,7 +155,7 @@ public class ObstacleBuilder {
 
     private void errorAtCurrentTile(List<Vector2i> tilesWithErrors) {
         Logger.debug("Did not expect content {} at tile {}",
-                worldMap.get(WorldMap.LayerID.TERRAIN, cursor.currentTile), cursor.currentTile);
+                worldMap.get(LayerID.TERRAIN, cursor.currentTile), cursor.currentTile);
         tilesWithErrors.add(cursor.currentTile);
     }
 
@@ -167,7 +167,7 @@ public class ObstacleBuilder {
                 break;
             }
             setExplored(cursor.currentTile);
-            byte tileContent = worldMap.get(WorldMap.LayerID.TERRAIN, cursor.currentTile);
+            byte tileContent = worldMap.get(LayerID.TERRAIN, cursor.currentTile);
             switch (tileContent) {
                 case TerrainTiles.WALL_V -> {
                     if (cursor.points(DOWN)) {

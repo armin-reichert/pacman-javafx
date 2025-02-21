@@ -8,8 +8,8 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.TerrainTiles;
-import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import org.tinylog.Logger;
@@ -181,7 +181,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
         if (state == HUNTING_PAC) {
             var currentTile = tile();
             if (specialTerrainTiles.contains(tile)
-                    && world.map().get(WorldMap.LayerID.TERRAIN, tile) == TerrainTiles.ONE_WAY_DOWN
+                    && world.map().get(LayerID.TERRAIN, tile) == TerrainTiles.ONE_WAY_DOWN
                     && currentTile.equals(tile.plus(DOWN.vector()))) {
                 Logger.debug("Hunting {} cannot move up to special tile {}", name, tile);
                 return false;

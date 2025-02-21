@@ -7,6 +7,7 @@ package de.amr.games.pacman.arcade.pacman_xxl;
 import de.amr.games.pacman.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.CustomMapSelectionMode;
 import de.amr.games.pacman.model.CustomMapsHandler;
