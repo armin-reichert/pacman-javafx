@@ -23,28 +23,6 @@ import static de.amr.games.pacman.lib.Globals.vec_2i;
 public class TileMap {
 
     private static final String MARKER_DATA_SECTION_START = "!data";
-    private static final Pattern TILE_PATTERN = Pattern.compile("\\((\\d+),(\\d+)\\)");
-    private static final String TILE_FORMAT = "(%d,%d)";
-
-    public static Optional<Vector2i> parseTile(String text) {
-        assertNotNull(text);
-        Matcher m = TILE_PATTERN.matcher(text);
-        if (!m.matches()) {
-            return Optional.empty();
-        }
-        try {
-            int x = Integer.parseInt(m.group(1));
-            int y = Integer.parseInt(m.group(2));
-            return Optional.of(new Vector2i(x, y));
-        } catch (NumberFormatException x) {
-            return Optional.empty();
-        }
-    }
-
-    public static String formatTile(Vector2i tile) {
-        assertNotNull(tile);
-        return TILE_FORMAT.formatted(tile.x(), tile.y());
-    }
 
     public static TileMap parseTileMap(List<String> lines, Predicate<Byte> valueAllowed, byte emptyValue) {
         // First pass: read property section and determine data section size
@@ -200,13 +178,6 @@ public class TileMap {
 
     public Stream<String> stringPropertyNames() {
         return properties.keySet().stream().filter(name -> properties.get(name) instanceof String).sorted();
-    }
-
-    public Vector2i getTileProperty(String name, Vector2i defaultTile) {
-        if (hasProperty(name)) {
-            return parseTile(getStringProperty(name)).orElse(defaultTile);
-        }
-        return defaultTile;
     }
 
     private void parseProperties(String text) {

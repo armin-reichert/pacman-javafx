@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
-import static de.amr.games.pacman.lib.tilemap.TileMap.parseTile;
+import static de.amr.games.pacman.lib.tilemap.WorldMap.formatTile;
+import static de.amr.games.pacman.lib.tilemap.WorldMap.parseTile;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.formatColor;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.parseColor;
 import static java.util.Objects.requireNonNull;

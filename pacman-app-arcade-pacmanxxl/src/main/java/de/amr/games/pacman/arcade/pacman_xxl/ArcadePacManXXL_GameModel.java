@@ -7,7 +7,6 @@ package de.amr.games.pacman.arcade.pacman_xxl;
 import de.amr.games.pacman.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.CustomMapSelectionMode;
 import de.amr.games.pacman.model.CustomMapsHandler;
@@ -83,14 +82,14 @@ public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel implements
         // House can be at non-default position!
         if (!worldMap.terrain().hasProperty(WorldMap.PROPERTY_POS_HOUSE_MIN_TILE)) {
             Logger.warn("No house min tile found in map!");
-            worldMap.terrain().setProperty(WorldMap.PROPERTY_POS_HOUSE_MIN_TILE, TileMap.formatTile(vec_2i(10, 15)));
+            worldMap.terrain().setProperty(WorldMap.PROPERTY_POS_HOUSE_MIN_TILE, formatTile(vec_2i(10, 15)));
         }
         if (!worldMap.terrain().hasProperty(WorldMap.PROPERTY_POS_HOUSE_MAX_TILE)) {
             Logger.warn("No house max tile found in map!");
-            worldMap.terrain().setProperty(WorldMap.PROPERTY_POS_HOUSE_MAX_TILE, TileMap.formatTile(vec_2i(17, 19)));
+            worldMap.terrain().setProperty(WorldMap.PROPERTY_POS_HOUSE_MAX_TILE, formatTile(vec_2i(17, 19)));
         }
-        Vector2i minTile = worldMap.terrain().getTileProperty(WorldMap.PROPERTY_POS_HOUSE_MIN_TILE, null);
-        Vector2i maxTile = worldMap.terrain().getTileProperty(WorldMap.PROPERTY_POS_HOUSE_MAX_TILE, null);
+        Vector2i minTile = worldMap.getTileProperty(WorldMap.PROPERTY_POS_HOUSE_MIN_TILE, null);
+        Vector2i maxTile = worldMap.getTileProperty(WorldMap.PROPERTY_POS_HOUSE_MAX_TILE, null);
         world.createArcadeHouse(minTile.x(), minTile.y(), maxTile.x(), maxTile.y());
 
         var pac = new Pac();
@@ -177,7 +176,7 @@ public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel implements
         level.setBonus(staticBonus);
         // in a non-Arcade style custom map, the bonus position must be taken from the terrain map
         if (level.world().map().terrain().hasProperty(WorldMap.PROPERTY_POS_BONUS)) {
-            Vector2i bonusTile = level.world().map().terrain().getTileProperty(WorldMap.PROPERTY_POS_BONUS, new Vector2i(13, 20));
+            Vector2i bonusTile = level.world().map().getTileProperty(WorldMap.PROPERTY_POS_BONUS, new Vector2i(13, 20));
             staticBonus.actor().setPosition(halfTileRightOf(bonusTile));
         } else {
             staticBonus.actor().setPosition(ArcadePacMan_GameModel.BONUS_POS);

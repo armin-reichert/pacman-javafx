@@ -8,7 +8,6 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.FoodTiles;
-import de.amr.games.pacman.lib.tilemap.TerrainTiles;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import org.tinylog.Logger;
@@ -34,7 +33,7 @@ public class GameWorld {
             || content == DCORNER_ANGULAR_NE || content == DCORNER_ANGULAR_NW || content == DCORNER_ANGULAR_SE || content == DCORNER_ANGULAR_SW;
     }
 
-    private final WorldMap map;
+    private final WorldMap worldMap;
     private final Vector2f pacPosition;
     private final Vector2f[] ghostPositions = new Vector2f[4];
     private final Direction[] ghostDirections = new Direction[4];
@@ -51,9 +50,9 @@ public class GameWorld {
     private final int totalFoodCount;
     private int uneatenFoodCount;
 
-    public GameWorld(WorldMap map) {
-        this.map = assertNotNull(map);
-        TileMap terrain = map.terrain(), food = map.food();
+    public GameWorld(WorldMap worldMap) {
+        this.worldMap = assertNotNull(worldMap);
+        TileMap terrain = worldMap.terrain(), food = worldMap.food();
 
         var portalList = new ArrayList<Portal>();
         int firstColumn = 0, lastColumn = terrain.numCols() - 1;
@@ -65,11 +64,11 @@ public class GameWorld {
         }
         portals = portalList.toArray(new Portal[0]);
 
-        pacPosition                  = posHalfTileRightOf(terrain.getTileProperty(PROPERTY_POS_PAC,          vec_2i(13,26)));
-        ghostPositions[RED_GHOST]    = posHalfTileRightOf(terrain.getTileProperty(PROPERTY_POS_RED_GHOST,    vec_2i(13,14)));
-        ghostPositions[PINK_GHOST]   = posHalfTileRightOf(terrain.getTileProperty(PROPERTY_POS_PINK_GHOST,   vec_2i(13,17)));
-        ghostPositions[CYAN_GHOST]   = posHalfTileRightOf(terrain.getTileProperty(PROPERTY_POS_CYAN_GHOST,   vec_2i(11,17)));
-        ghostPositions[ORANGE_GHOST] = posHalfTileRightOf(terrain.getTileProperty(PROPERTY_POS_ORANGE_GHOST, vec_2i(15,17)));
+        pacPosition                  = posHalfTileRightOf(worldMap.getTileProperty(PROPERTY_POS_PAC,          vec_2i(13,26)));
+        ghostPositions[RED_GHOST]    = posHalfTileRightOf(worldMap.getTileProperty(PROPERTY_POS_RED_GHOST,    vec_2i(13,14)));
+        ghostPositions[PINK_GHOST]   = posHalfTileRightOf(worldMap.getTileProperty(PROPERTY_POS_PINK_GHOST,   vec_2i(13,17)));
+        ghostPositions[CYAN_GHOST]   = posHalfTileRightOf(worldMap.getTileProperty(PROPERTY_POS_CYAN_GHOST,   vec_2i(11,17)));
+        ghostPositions[ORANGE_GHOST] = posHalfTileRightOf(worldMap.getTileProperty(PROPERTY_POS_ORANGE_GHOST, vec_2i(15,17)));
 
         energizerTiles = food.tiles(FoodTiles.ENERGIZER).toArray(Vector2i[]::new);
         eatenFood = new BitSet(food.numCols() * food.numRows());
@@ -86,24 +85,24 @@ public class GameWorld {
 
     public Vector2i ghostScatterTile(byte ghostID) {
         assertLegalGhostID(ghostID);
-        TileMap terrain = map.terrain();
+        TileMap terrain = worldMap.terrain();
         int numRows = terrain.numRows(), numCols = terrain.numCols();
         return switch (ghostID) {
-            case RED_GHOST    -> terrain.getTileProperty(PROPERTY_POS_SCATTER_RED_GHOST, vec_2i(0, numCols - 3));
-            case PINK_GHOST   -> terrain.getTileProperty(PROPERTY_POS_SCATTER_PINK_GHOST, vec_2i(0, 3));
-            case CYAN_GHOST   -> terrain.getTileProperty(PROPERTY_POS_SCATTER_CYAN_GHOST, vec_2i(numRows - 1, numCols - 1));
-            case ORANGE_GHOST -> terrain.getTileProperty(PROPERTY_POS_SCATTER_ORANGE_GHOST, vec_2i(numRows - 1, 0));
+            case RED_GHOST    -> worldMap.getTileProperty(PROPERTY_POS_SCATTER_RED_GHOST, vec_2i(0, numCols - 3));
+            case PINK_GHOST   -> worldMap.getTileProperty(PROPERTY_POS_SCATTER_PINK_GHOST, vec_2i(0, 3));
+            case CYAN_GHOST   -> worldMap.getTileProperty(PROPERTY_POS_SCATTER_CYAN_GHOST, vec_2i(numRows - 1, numCols - 1));
+            case ORANGE_GHOST -> worldMap.getTileProperty(PROPERTY_POS_SCATTER_ORANGE_GHOST, vec_2i(numRows - 1, 0));
             default -> throw new IllegalArgumentException("Illegal ghost ID: " + ghostID);
         };
     }
 
     public WorldMap map() {
-        return map;
+        return worldMap;
     }
 
     public boolean isOutsideWorld(Vector2i tile) {
         assertTileNotNull(tile);
-        return map.terrain().outOfBounds(tile.y(), tile.x());
+        return worldMap.terrain().outOfBounds(tile.y(), tile.x());
     }
 
     public boolean isInsideWorld(Vector2i tile) {
@@ -111,7 +110,7 @@ public class GameWorld {
     }
 
     public boolean containsPoint(double x, double y) {
-        return 0 <= x && x <= map.terrain().numCols() * TS && 0 <= y && y <= map.terrain().numRows() * TS;
+        return 0 <= x && x <= worldMap.terrain().numCols() * TS && 0 <= y && y <= worldMap.terrain().numRows() * TS;
     }
 
     public Stream<Vector2i> energizerTiles() {
@@ -133,11 +132,11 @@ public class GameWorld {
     }
 
     public boolean isBlockedTile(Vector2i tile) {
-        return !isOutsideWorld(tile) && isInaccessible(map.terrain().get(tile));
+        return !isOutsideWorld(tile) && isInaccessible(worldMap.terrain().get(tile));
     }
 
     public boolean isTunnel(Vector2i tile) {
-        return !isOutsideWorld(tile) && map.terrain().get(tile) == TUNNEL;
+        return !isOutsideWorld(tile) && worldMap.terrain().get(tile) == TUNNEL;
     }
 
     public boolean isIntersection(Vector2i tile) {
@@ -179,7 +178,7 @@ public class GameWorld {
                 else if (y == minY && (x == minX + 3 || x == minX + 4)) value = DOOR;
                 else if (x == minX || x == maxX) value = WALL_V;
                 else if (y == minY || y == maxY) value = WALL_H;
-                map.terrain().set(vec_2i(x, y), value);
+                worldMap.terrain().set(vec_2i(x, y), value);
             }
         }
     }
@@ -271,7 +270,7 @@ public class GameWorld {
 
     public void registerFoodEatenAt(Vector2i tile) {
         if (hasFoodAt(tile)) {
-            eatenFood.set(map.food().index(tile));
+            eatenFood.set(worldMap.food().index(tile));
             --uneatenFoodCount;
         } else {
             Logger.warn("Attempt to eat foot at tile {} that has none", tile);
@@ -279,11 +278,11 @@ public class GameWorld {
     }
 
     public boolean isFoodPosition(Vector2i tile) {
-        return !isOutsideWorld(tile) && map.food().get(tile) != EMPTY;
+        return !isOutsideWorld(tile) && worldMap.food().get(tile) != EMPTY;
     }
 
     public boolean isEnergizerPosition(Vector2i tile) {
-        return !isOutsideWorld(tile) && map.food().get(tile) == FoodTiles.ENERGIZER;
+        return !isOutsideWorld(tile) && worldMap.food().get(tile) == FoodTiles.ENERGIZER;
     }
 
     public boolean hasFoodAt(Vector2i tile) {
@@ -291,6 +290,6 @@ public class GameWorld {
     }
 
     public boolean hasEatenFoodAt(Vector2i tile) {
-        return !isOutsideWorld(tile) && eatenFood.get(map.food().index(tile));
+        return !isOutsideWorld(tile) && eatenFood.get(worldMap.food().index(tile));
     }
 }

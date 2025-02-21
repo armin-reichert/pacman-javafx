@@ -337,8 +337,8 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx.setFill(CANVAS_BACKGROUND_COLOR);
         ctx.fillRect(topLeftPosition.x(), topLeftPosition.y(), size.x(), size.y());
 
-        overPaint(world.map().terrain().getTileProperty("pos_pac", vec_2i(14, 26)));
-        overPaint(world.map().terrain().getTileProperty("pos_ghost_1_red", vec_2i(13, 14)));
+        overPaint(world.map().getTileProperty("pos_pac", vec_2i(14, 26)));
+        overPaint(world.map().getTileProperty("pos_ghost_1_red", vec_2i(13, 14)));
     }
 
     private void overPaint(Vector2i tile) {

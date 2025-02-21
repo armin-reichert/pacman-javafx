@@ -195,18 +195,18 @@ public class Maze3D extends Group {
                 .forEach(shape3D -> shape3D.drawModeProperty()
                         .bind(wireframePy.map(wireframe -> wireframe ? DrawMode.LINE : DrawMode.FILL)));
 
-        addActorShape(pacmanShape3D, terrain, PROPERTY_POS_PAC);
-        addActorShape(ghostShapes[0], terrain, PROPERTY_POS_RED_GHOST);
-        addActorShape(ghostShapes[1], terrain, PROPERTY_POS_PINK_GHOST);
-        addActorShape(ghostShapes[2], terrain, PROPERTY_POS_CYAN_GHOST);
-        addActorShape(ghostShapes[3], terrain, PROPERTY_POS_ORANGE_GHOST);
+        addActorShape(pacmanShape3D, worldMap, PROPERTY_POS_PAC);
+        addActorShape(ghostShapes[0], worldMap, PROPERTY_POS_RED_GHOST);
+        addActorShape(ghostShapes[1], worldMap, PROPERTY_POS_PINK_GHOST);
+        addActorShape(ghostShapes[2], worldMap, PROPERTY_POS_CYAN_GHOST);
+        addActorShape(ghostShapes[3], worldMap, PROPERTY_POS_ORANGE_GHOST);
     }
 
     private void addHouse(WorldMap worldMap, Color wallBaseColor, Color wallTopColor) {
         TileMap terrain = worldMap.terrain();
 
-        Vector2i houseMinTile = terrain.getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
-        Vector2i houseMaxTile = terrain.getTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
+        Vector2i houseMinTile = worldMap.getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
+        Vector2i houseMaxTile = worldMap.getTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
         if (houseMinTile == null || houseMaxTile == null) {
             return;
         }
@@ -248,8 +248,8 @@ public class Maze3D extends Group {
         }
     }
 
-    private void addActorShape(Node actorShape, TileMap terrain, String actorTilePropertyName) {
-        Vector2i tile = terrain.getTileProperty(actorTilePropertyName, Vector2i.ZERO);
+    private void addActorShape(Node actorShape, WorldMap worldMap, String actorTilePropertyName) {
+        Vector2i tile = worldMap.getTileProperty(actorTilePropertyName, Vector2i.ZERO);
         Vector2f center = tile.scaled(TS).toVector2f().plus(TS, HTS);
         actorShape.setTranslateX(center.x());
         actorShape.setTranslateY(center.y());

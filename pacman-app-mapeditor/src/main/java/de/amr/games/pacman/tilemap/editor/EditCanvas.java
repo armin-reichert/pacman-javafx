@@ -156,7 +156,7 @@ public class EditCanvas extends Canvas {
             editor.terrainRendererInEditor().setColors(colors);
             editor.terrainRendererInEditor().setSegmentNumbersDisplayed(editor.segmentNumbersDisplayedProperty().get());
             editor.terrainRendererInEditor().setObstacleInnerAreaDisplayed(editor.obstacleInnerAreaDisplayedProperty().get());
-            editor.terrainRendererInEditor().drawTerrain(g, terrain, worldMap().obstacles());
+            editor.terrainRendererInEditor().drawTerrain(g, worldMap(), worldMap().obstacles());
             obstacleEditor.draw(g, editor.terrainRendererInEditor());
         }
 
@@ -223,7 +223,7 @@ public class EditCanvas extends Canvas {
     }
 
     private void drawSprite(GraphicsContext g, String tilePropertyName, RectArea sprite) {
-        Vector2i tile = worldMap().terrain().getTileProperty(tilePropertyName, null);
+        Vector2i tile = worldMap().getTileProperty(tilePropertyName, null);
         if (tile != null) {
             drawSprite(g, sprite,
                 tile.x() * gridSize() + 0.5 * gridSize(),

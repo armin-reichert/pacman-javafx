@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
 import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.GraphicsContext;
@@ -63,17 +64,17 @@ public class TerrainRenderer implements TileMapRenderer {
         singleStrokeWidth = width;
     }
 
-    public void drawTerrain(GraphicsContext g, TileMap terrainMap, Set<Obstacle> obstacles) {
+    public void drawTerrain(GraphicsContext g, WorldMap worldMap, Set<Obstacle> obstacles) {
         g.save();
         g.scale(scaling(), scaling());
         for (Obstacle obstacle : obstacles) {
-            if (startsAtBorder(obstacle, terrainMap)) {
+            if (startsAtBorder(obstacle, worldMap.terrain())) {
                 drawObstacle(g, obstacle, doubleStrokeOuterWidth, false, colors.wallFillColor(), colors.wallStrokeColor());
                 drawObstacle(g, obstacle, doubleStrokeInnerWidth, false, colors.wallFillColor(), colors.wallFillColor());
             }
         }
         for (Obstacle obstacle : obstacles) {
-            if (!startsAtBorder(obstacle, terrainMap)) {
+            if (!startsAtBorder(obstacle, worldMap.terrain())) {
                 //boolean hasParent = obstacle.getParent() != null;
                 drawObstacle(g, obstacle, singleStrokeWidth, true, colors.wallFillColor(), colors.wallStrokeColor());
             }

@@ -506,7 +506,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         TileMap terrainMap = level.world().map().terrain();
         if (terrainMap.hasProperty("pos_bonus")) {
             // use entry tile stored in terrain map
-            entryTile = terrainMap.getTileProperty("pos_bonus", null);
+            entryTile = level.world().map().getTileProperty("pos_bonus", null);
             if (entryTile.x() == 0) {
                 // start tile is at left maze border
                 exitTile = portals.get(RND.nextInt(portals.size())).rightTunnelEnd().plus(1, 0);

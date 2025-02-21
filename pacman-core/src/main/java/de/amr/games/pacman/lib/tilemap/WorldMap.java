@@ -12,15 +12,20 @@ import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.Globals.assertNotNull;
 
 /**
  * @author Armin Reichert
  */
 public class WorldMap {
+
+    private static final Pattern TILE_PATTERN = Pattern.compile("\\((\\d+),(\\d+)\\)");
+    private static final String TILE_FORMAT = "(%d,%d)";
 
     public static final String PROPERTY_POS_BONUS                = "pos_bonus";
     public static final String PROPERTY_POS_PAC                  = "pos_pac";
@@ -45,6 +50,26 @@ public class WorldMap {
 
     private static String toConfigNamespace(String key) {
         return "_config." + key;
+    }
+
+    public static Optional<Vector2i> parseTile(String text) {
+        assertNotNull(text);
+        Matcher m = TILE_PATTERN.matcher(text);
+        if (!m.matches()) {
+            return Optional.empty();
+        }
+        try {
+            int x = Integer.parseInt(m.group(1));
+            int y = Integer.parseInt(m.group(2));
+            return Optional.of(new Vector2i(x, y));
+        } catch (NumberFormatException x) {
+            return Optional.empty();
+        }
+    }
+
+    public static String formatTile(Vector2i tile) {
+        assertNotNull(tile);
+        return TILE_FORMAT.formatted(tile.x(), tile.y());
     }
 
     private final URL url;
@@ -202,7 +227,7 @@ public class WorldMap {
         List<Vector2i> tilesWithErrors = new ArrayList<>();
         obstacles = ObstacleBuilder.buildObstacles(terrain, tilesWithErrors);
         // remove house obstacle
-        Vector2i houseMinTile = terrain.getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
+        Vector2i houseMinTile = getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
         if (houseMinTile == null) {
             Logger.info("Could not remove house placeholder-obstacle from world map, no min tile property exists");
         } else {
@@ -260,4 +285,13 @@ public class WorldMap {
     public boolean hasConfigValue(String key) {
         return terrain.hasProperty(toConfigNamespace(key));
     }
+
+    public Vector2i getTileProperty(String name, Vector2i defaultTile) {
+        if (terrain.hasProperty(name)) {
+            return parseTile(terrain.getStringProperty(name)).orElse(defaultTile);
+        }
+        return defaultTile;
+    }
+
+
 }

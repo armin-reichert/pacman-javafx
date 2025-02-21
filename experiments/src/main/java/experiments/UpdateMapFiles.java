@@ -52,10 +52,10 @@ public class UpdateMapFiles {
             };
             terrain.set(tile, newContent);
         });
-        Vector2i houseMinTile = terrain.getTileProperty("pos_house_min_tile", new Vector2i(10, 15));
+        Vector2i houseMinTile = map.getTileProperty("pos_house_min_tile", new Vector2i(10, 15));
         Vector2i houseMaxTile = houseMinTile.plus(7, 4);
-        terrain.setProperty(WorldMap.PROPERTY_POS_HOUSE_MIN_TILE, TileMap.formatTile(houseMinTile));
-        terrain.setProperty(WorldMap.PROPERTY_POS_HOUSE_MAX_TILE, TileMap.formatTile(houseMaxTile));
+        terrain.setProperty(WorldMap.PROPERTY_POS_HOUSE_MIN_TILE, WorldMap.formatTile(houseMinTile));
+        terrain.setProperty(WorldMap.PROPERTY_POS_HOUSE_MAX_TILE, WorldMap.formatTile(houseMaxTile));
         for (int row = houseMinTile.y(); row <= houseMaxTile.y(); ++row) {
             for (int col = houseMinTile.x(); col <= houseMaxTile.x(); ++col) {
                 switch (terrain.get(row, col)) {

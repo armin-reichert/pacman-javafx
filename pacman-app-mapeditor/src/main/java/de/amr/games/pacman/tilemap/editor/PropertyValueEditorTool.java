@@ -6,6 +6,7 @@ package de.amr.games.pacman.tilemap.editor;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.tilemap.rendering.TileMapRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -40,7 +41,7 @@ public class PropertyValueEditorTool implements Tool {
 
     @Override
     public void apply(TileMap tileMap, Vector2i tile) {
-        tileMap.setProperty(propertyName, TileMap.formatTile(tile));
+        tileMap.setProperty(propertyName, WorldMap.formatTile(tile));
     }
 
     @Override

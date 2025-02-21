@@ -116,7 +116,7 @@ public class ArcadePacManXXL_GameRenderer implements GameRenderer {
         WorldMap worldMap = world.map();
         if (mazeHighlighted) {
             terrainRenderer.setColors(blinkingOn ? blinkingOnColors : blinkingOffColors);
-            terrainRenderer.drawTerrain(ctx(), worldMap.terrain(), worldMap.obstacles());
+            terrainRenderer.drawTerrain(ctx(), worldMap, worldMap.obstacles());
         }
         else {
             Map<String, String> colorMap = worldMap.getConfigValue("colorMap");
@@ -127,7 +127,7 @@ public class ArcadePacManXXL_GameRenderer implements GameRenderer {
                 Color.web(colorMap.get("door"))
             );
             terrainRenderer.setColors(colors);
-            terrainRenderer.drawTerrain(ctx(), worldMap.terrain(), worldMap.obstacles());
+            terrainRenderer.drawTerrain(ctx(), worldMap, worldMap.obstacles());
             terrainRenderer.drawHouse(ctx(), world.houseTopLeftTile(), world.houseSize());
             foodRenderer.setPelletColor(Color.web(colorMap.get("pellet")));
             foodRenderer.setEnergizerColor(Color.web(colorMap.get("pellet")));
