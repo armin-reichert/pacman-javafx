@@ -545,7 +545,7 @@ public class WorldMap {
         set(layerID, tile.y(), tile.x(), value);
     }
 
-    public void fill(LayerID layerID, byte fillValue) {
+    public void setAll(LayerID layerID, byte fillValue) {
         assertNotNull(layerID);
         for (byte[] row : layer(layerID).values) {
             Arrays.fill(row, fillValue);
