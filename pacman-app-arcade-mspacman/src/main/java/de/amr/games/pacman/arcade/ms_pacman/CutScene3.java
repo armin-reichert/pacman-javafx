@@ -57,7 +57,7 @@ public class CutScene3 extends GameScene2D {
         bag = new Actor2D();
 
         music = context.sound().makeSound("intermission.3", 1.0, false);
-        var spriteSheet = (MsPacManGameSpriteSheet) context.gameConfiguration().spriteSheet();
+        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) context.gameConfiguration().spriteSheet();
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
         pacMan.setAnimations(new PacAnimations(spriteSheet));
 
@@ -87,12 +87,12 @@ public class CutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        MsPacManGameRenderer r = (MsPacManGameRenderer) gr;
+        ArcadeMsPacMan_GameRenderer r = (ArcadeMsPacMan_GameRenderer) gr;
         r.drawClapperBoard(clapAnimation, tiles2Px(3), tiles2Px(10));
         r.drawAnimatedActor(msPacMan);
         r.drawAnimatedActor(pacMan);
         r.drawActorSprite(stork, storkAnimation.currentSprite());
-        r.drawActorSprite(bag, bagOpen ? MsPacManGameSpriteSheet.JUNIOR_PAC_SPRITE : MsPacManGameSpriteSheet.BLUE_BAG_SPRITE);
+        r.drawActorSprite(bag, bagOpen ? ArcadeMsPacMan_SpriteSheet.JUNIOR_PAC_SPRITE : ArcadeMsPacMan_SpriteSheet.BLUE_BAG_SPRITE);
         r.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
     }
 

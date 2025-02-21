@@ -14,7 +14,7 @@ import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengen;
+import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_GhostAnimations;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_PacAnimations;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
@@ -311,7 +311,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 }
                 if (timer.atSecond(7)) {
                     // start demo level or show options
-                    MsPacManGameTengen game = intro.context.game();
+                    TengenMsPacMan_GameModel game = intro.context.game();
                     if (game.hasDefaultOptionValues()) {
                         game.setCanStartNewGame(false); // TODO check this
                         intro.context.gameController().restart(GameState.STARTING_GAME);

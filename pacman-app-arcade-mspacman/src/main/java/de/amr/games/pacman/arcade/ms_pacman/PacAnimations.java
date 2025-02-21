@@ -22,7 +22,7 @@ import static de.amr.games.pacman.lib.Globals.assertNotNull;
  */
 public class PacAnimations extends SpriteAnimationSet {
 
-    public PacAnimations(MsPacManGameSpriteSheet spriteSheet) {
+    public PacAnimations(ArcadeMsPacMan_SpriteSheet spriteSheet) {
         assertNotNull(spriteSheet);
 
         var munching = SpriteAnimation
@@ -59,7 +59,7 @@ public class PacAnimations extends SpriteAnimationSet {
                 return spriteSheet.pacMunchingSprites(msPacMan.moveDir());
             }
             if (isCurrentAnimationID(ActorAnimations.ANIM_MR_PACMAN_MUNCHING)) {
-                return ((MsPacManGameSpriteSheet) spriteSheet).mrPacManMunchingSprites(msPacMan.moveDir());
+                return ((ArcadeMsPacMan_SpriteSheet) spriteSheet).mrPacManMunchingSprites(msPacMan.moveDir());
             }
         }
         return super.selectedSprites(spriteSheet, actor);

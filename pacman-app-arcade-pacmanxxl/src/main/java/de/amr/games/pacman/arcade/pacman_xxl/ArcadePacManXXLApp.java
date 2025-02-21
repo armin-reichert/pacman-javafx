@@ -28,7 +28,7 @@ public class ArcadePacManXXLApp extends Application {
             if (userDir.mkdir()) {
                 Logger.info("User dir '{}' created", userDir);
             }
-            GameController.it().addGameImplementation(GameVariant.PACMAN_XXL, new PacManGameXXL(userDir));
+            GameController.it().addGameImplementation(GameVariant.PACMAN_XXL, new ArcadePacManGameModelXXL(userDir));
             GameController.it().selectGame(GameVariant.PACMAN_XXL);
         } catch (Exception x) {
             x.printStackTrace(System.err);

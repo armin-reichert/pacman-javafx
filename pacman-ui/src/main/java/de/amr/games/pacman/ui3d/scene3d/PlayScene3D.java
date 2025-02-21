@@ -344,7 +344,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         RectArea[] numberSprites = spriteSheet.ghostNumberSprites();
         context.game().eventLog().killedGhosts.forEach(ghost -> {
             int victimIndex = context.level().victims().indexOf(ghost);
-            var numberImage = spriteSheet.subImage(numberSprites[victimIndex]);
+            var numberImage = spriteSheet.crop(numberSprites[victimIndex]);
             level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
         });
     }

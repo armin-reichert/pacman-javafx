@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public class GhostAnimations extends SpriteAnimationSet {
 
-    public GhostAnimations(PacManGameSpriteSheet spriteSheet, byte ghostID) {
+    public GhostAnimations(ArcadePacMan_SpriteSheet spriteSheet, byte ghostID) {
 
         var normal = SpriteAnimation
             .spriteSheet(spriteSheet)

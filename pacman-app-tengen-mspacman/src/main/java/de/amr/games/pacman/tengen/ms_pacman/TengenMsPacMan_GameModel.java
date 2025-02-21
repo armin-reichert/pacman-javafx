@@ -35,7 +35,7 @@ import static de.amr.games.pacman.tengen.ms_pacman.SpeedConfiguration.*;
  *
  * @author Armin Reichert
  */
-public class MsPacManGameTengen extends GameModel {
+public class TengenMsPacMan_GameModel extends GameModel {
 
     public static final byte MIN_LEVEL_NUMBER = 1;
     public static final byte MAX_LEVEL_NUMBER = 32;
@@ -129,7 +129,7 @@ public class MsPacManGameTengen extends GameModel {
         }
     }
 
-    public MsPacManGameTengen(File userDir) {
+    public TengenMsPacMan_GameModel(File userDir) {
         scoreManager.setHighScoreFile(new File(userDir, HIGH_SCORE_FILENAME));
         huntingControl = new MsPacManGameTengenHuntingControl();
         mapManager = new MapManager(MAPS_ROOT);

@@ -5,7 +5,7 @@ package de.amr.games.pacman.tengen.ms_pacman.rendering2d;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
-import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengen;
+import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.assets.SpriteAnimation;
 import javafx.scene.image.Image;
@@ -254,9 +254,9 @@ public class TengenMsPacMan_SpriteSheet implements GameSpriteSheet {
     public RectArea bonusValueSprite(byte symbol) {
         // 0=100,1=200,2=500,3=700,4=1000,5=2000,6=3000,7=4000,8=5000,9=6000,10=7000,11=8000,12=9000, 13=10_000
         int index = switch (symbol) {
-            case MsPacManGameTengen.BONUS_BANANA -> 8; // 5000!
-            case MsPacManGameTengen.BONUS_MILK -> 6; // 3000!
-            case MsPacManGameTengen.BONUS_ICE_CREAM -> 7; // 4000!
+            case TengenMsPacMan_GameModel.BONUS_BANANA -> 8; // 5000!
+            case TengenMsPacMan_GameModel.BONUS_MILK -> 6; // 3000!
+            case TengenMsPacMan_GameModel.BONUS_ICE_CREAM -> 7; // 4000!
             default -> symbol;
         };
         return BONUS_VALUE_SPRITES[index];

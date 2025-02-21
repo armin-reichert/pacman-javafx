@@ -50,7 +50,7 @@ public class CutScene2 extends GameScene2D {
 
         music = context.sound().makeSound("intermission.2", 1, false);
 
-        var spriteSheet = (MsPacManGameSpriteSheet) context.gameConfiguration().spriteSheet();
+        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) context.gameConfiguration().spriteSheet();
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
         pacMan.setAnimations(new PacAnimations(spriteSheet));
 
@@ -77,7 +77,7 @@ public class CutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        MsPacManGameRenderer r = (MsPacManGameRenderer) gr;
+        ArcadeMsPacMan_GameRenderer r = (ArcadeMsPacMan_GameRenderer) gr;
         r.drawClapperBoard(clapAnimation, tiles2Px(3), tiles2Px(10));
         r.drawAnimatedActor(msPacMan);
         r.drawAnimatedActor(pacMan);

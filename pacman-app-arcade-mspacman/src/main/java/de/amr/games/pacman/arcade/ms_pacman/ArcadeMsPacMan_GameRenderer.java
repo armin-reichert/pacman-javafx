@@ -27,7 +27,7 @@ import static de.amr.games.pacman.lib.RectArea.rect;
 /**
  * @author Armin Reichert
  */
-public class MsPacManGameRenderer implements GameRenderer {
+public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
 
     private static final RectArea[] FULL_MAP_SPRITES = {
         rect(0,     0, 224, 248),
@@ -59,7 +59,7 @@ public class MsPacManGameRenderer implements GameRenderer {
     private static final Vector2f MESSAGE_POSITION = new Vector2f(14 * TS, 21 * TS);
 
     private final AssetStorage assets;
-    private final MsPacManGameSpriteSheet spriteSheet;
+    private final ArcadeMsPacMan_SpriteSheet spriteSheet;
     private final Canvas canvas;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final Image flashingMazesImage;
@@ -70,7 +70,7 @@ public class MsPacManGameRenderer implements GameRenderer {
     private boolean blinking;
     private Color bgColor = Color.BLACK;
 
-    public MsPacManGameRenderer(AssetStorage assets, MsPacManGameSpriteSheet spriteSheet, Canvas canvas) {
+    public ArcadeMsPacMan_GameRenderer(AssetStorage assets, ArcadeMsPacMan_SpriteSheet spriteSheet, Canvas canvas) {
         this.assets = assertNotNull(assets);
         this.spriteSheet = assertNotNull(spriteSheet);
         this.canvas = assertNotNull(canvas);
@@ -83,7 +83,7 @@ public class MsPacManGameRenderer implements GameRenderer {
     }
 
     @Override
-    public MsPacManGameSpriteSheet spriteSheet() {
+    public ArcadeMsPacMan_SpriteSheet spriteSheet() {
         return spriteSheet;
     }
 

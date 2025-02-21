@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman_xxl;
 
-import de.amr.games.pacman.arcade.pacman.PacManGame;
+import de.amr.games.pacman.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
@@ -34,7 +34,7 @@ import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
  * Extension of Arcade Pac-Man with 8 additional mazes (thanks to the one and only
  * <a href="https://github.com/masonicGIT/pacman">Shaun Williams</a>).
  */
-public class PacManGameXXL extends PacManGame implements CustomMapsHandler {
+public class ArcadePacManGameModelXXL extends ArcadePacMan_GameModel implements CustomMapsHandler {
 
     private static final int MAP_COUNT = 8;
     private static final String MAP_PATTERN = "maps/masonic_%d.world";
@@ -55,7 +55,7 @@ public class PacManGameXXL extends PacManGame implements CustomMapsHandler {
     private final Map<File, WorldMap> customMapsByFile = new HashMap<>();
     private CustomMapSelectionMode mapSelectionMode;
 
-    public PacManGameXXL(File userDir) {
+    public ArcadePacManGameModelXXL(File userDir) {
         super(userDir);
         customMapDir = new File(userDir, "maps");
         if (customMapDir.mkdir()) {
@@ -118,7 +118,7 @@ public class PacManGameXXL extends PacManGame implements CustomMapsHandler {
         levelCounterEnabled = true;
         WorldMap worldMap = createMapConfig(level.number);
         level.setNumFlashes(levelData(level.number).numFlashes());
-        level.setIntermissionNumber(PacManGame.intermissionNumberAfterLevel(level.number));
+        level.setIntermissionNumber(ArcadePacMan_GameModel.intermissionNumberAfterLevel(level.number));
         populateLevel(worldMap);
         level.pac().setAutopilot(autopilot);
         setCruiseElroy(0);
@@ -173,14 +173,14 @@ public class PacManGameXXL extends PacManGame implements CustomMapsHandler {
     public void activateNextBonus() {
         level.advanceNextBonus();
         byte symbol = level.bonusSymbol(level.nextBonusIndex());
-        StaticBonus staticBonus = new StaticBonus(symbol, PacManGame.BONUS_VALUE_FACTORS[symbol] * 100);
+        StaticBonus staticBonus = new StaticBonus(symbol, ArcadePacMan_GameModel.BONUS_VALUE_FACTORS[symbol] * 100);
         level.setBonus(staticBonus);
         // in a non-Arcade style custom map, the bonus position must be taken from the terrain map
         if (level.world().map().terrain().hasProperty(WorldMap.PROPERTY_POS_BONUS)) {
             Vector2i bonusTile = level.world().map().terrain().getTileProperty(WorldMap.PROPERTY_POS_BONUS, new Vector2i(13, 20));
             staticBonus.actor().setPosition(halfTileRightOf(bonusTile));
         } else {
-            staticBonus.actor().setPosition(PacManGame.BONUS_POS);
+            staticBonus.actor().setPosition(ArcadePacMan_GameModel.BONUS_POS);
         }
         staticBonus.setEdible(bonusEdibleTicks());
         publishGameEvent(GameEventType.BONUS_ACTIVATED, staticBonus.actor().tile());

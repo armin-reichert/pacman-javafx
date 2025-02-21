@@ -71,7 +71,7 @@ public enum TengenMsPacMan_GameActions implements GameAction {
     TOGGLE_PAC_BOOSTER {
         @Override
         public void execute(GameContext context) {
-            MsPacManGameTengen game = context.game();
+            TengenMsPacMan_GameModel game = context.game();
             if (game.pacBooster() == PacBooster.USE_A_OR_B) {
                 game.activatePacBooster(!game.isBoosterActive());
             }

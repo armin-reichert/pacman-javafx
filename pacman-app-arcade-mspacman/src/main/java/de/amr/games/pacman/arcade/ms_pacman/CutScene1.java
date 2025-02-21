@@ -13,7 +13,7 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 
-import static de.amr.games.pacman.arcade.ms_pacman.MsPacManGameSpriteSheet.HEART_SPRITE;
+import static de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.HEART_SPRITE;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.tiles2Px;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
@@ -63,7 +63,7 @@ public class CutScene1 extends GameScene2D {
 
         music = context.sound().makeSound("intermission.1", 1.0, false);
 
-        var spriteSheet = (MsPacManGameSpriteSheet) context.gameConfiguration().spriteSheet();
+        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) context.gameConfiguration().spriteSheet();
         msPac.setAnimations(new PacAnimations(spriteSheet));
         pacMan.setAnimations(new PacAnimations(spriteSheet));
         inky.setAnimations(new GhostAnimations(spriteSheet, inky.id()));
@@ -92,7 +92,7 @@ public class CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        MsPacManGameRenderer r = (MsPacManGameRenderer) gr;
+        ArcadeMsPacMan_GameRenderer r = (ArcadeMsPacMan_GameRenderer) gr;
         r.drawClapperBoard(clapAnimation, tiles2Px(3), tiles2Px(10));
         r.drawAnimatedActor(msPac);
         r.drawAnimatedActor(pacMan);

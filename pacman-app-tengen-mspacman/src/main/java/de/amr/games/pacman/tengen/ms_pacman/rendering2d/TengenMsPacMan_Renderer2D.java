@@ -15,7 +15,7 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.tengen.ms_pacman.Difficulty;
-import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengen;
+import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.PacBooster;
 import de.amr.games.pacman.tengen.ms_pacman.maps.ColoredMapImage;
 import de.amr.games.pacman.tengen.ms_pacman.maps.ColoredMapSet;
@@ -202,7 +202,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     public void drawWorld(GameContext context, GameWorld world, double mapX, double mapY) {
         ctx.setImageSmoothing(false);
 
-        MsPacManGameTengen game = context.game();
+        TengenMsPacMan_GameModel game = context.game();
         GameLevel level = context.level();
         MapCategory mapCategory = game.mapCategory();
         int mapNumber = world.map().getConfigValue("mapNumber");
@@ -243,7 +243,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     public void drawWorldHighlighted(GameContext context, GameWorld world, double mapX, double mapY, int flashingIndex) {
         ctx.setImageSmoothing(false);
-        MsPacManGameTengen game = context.game();
+        TengenMsPacMan_GameModel game = context.game();
         if (areGameOptionsChanged(game)) {
             drawGameOptionsInfoCenteredAt(world.map().terrain().numCols() * HTS, tiles2Px(2) + HTS, game);
         }
@@ -327,7 +327,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         }
     }
 
-    private boolean areGameOptionsChanged(MsPacManGameTengen game) {
+    private boolean areGameOptionsChanged(TengenMsPacMan_GameModel game) {
         return game.pacBooster() != PacBooster.OFF || game.difficulty() != Difficulty.NORMAL || game.mapCategory() != MapCategory.ARCADE;
     }
 
@@ -349,7 +349,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx.fillRect(scaled(cx), scaled(cy), scaled(16), scaled(16));
     }
 
-    public void drawGameOptionsInfoCenteredAt(double centerX, double y, MsPacManGameTengen game) {
+    public void drawGameOptionsInfoCenteredAt(double centerX, double y, TengenMsPacMan_GameModel game) {
         RectArea categorySprite = switch (game.mapCategory()) {
             case BIG     -> BIG_SPRITE;
             case MINI    -> MINI_SPRITE;
@@ -383,7 +383,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     @Override
     public void drawLevelCounter(GameContext context, double x, double y) {
         ctx.setImageSmoothing(false);
-        MsPacManGameTengen game = context.game();
+        TengenMsPacMan_GameModel game = context.game();
         int levelNumber = context.level().number;
         if (levelNumberBoxesVisible) {
             drawLevelNumberBox(levelNumber, 0, y); // left box

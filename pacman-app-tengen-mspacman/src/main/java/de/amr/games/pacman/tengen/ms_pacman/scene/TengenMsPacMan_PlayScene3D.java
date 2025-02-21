@@ -11,7 +11,7 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.ScoreManager;
-import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengen;
+import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
 import de.amr.games.pacman.ui2d.action.GameActions2D;
@@ -36,13 +36,13 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     protected void replaceGameLevel3D() {
         super.replaceGameLevel3D();
-        MsPacManGameTengen game = context.game();
+        TengenMsPacMan_GameModel game = context.game();
         if (!game.hasDefaultOptionValues()) {
             addGameOptionsArea(game);
         }
     }
 
-    private void addGameOptionsArea(MsPacManGameTengen game) {
+    private void addGameOptionsArea(TengenMsPacMan_GameModel game) {
         TileMap terrain = context.level().world().map().terrain();
         int unscaledWidth = terrain.numCols() * TS;
         int unscaledHeight = 2*TS;

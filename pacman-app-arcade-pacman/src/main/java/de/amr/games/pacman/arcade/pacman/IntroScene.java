@@ -83,7 +83,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        PacManGameSpriteSheet spriteSheet = (PacManGameSpriteSheet) context.gameConfiguration().spriteSheet();
+        ArcadePacMan_SpriteSheet spriteSheet = (ArcadePacMan_SpriteSheet) context.gameConfiguration().spriteSheet();
         blinking = new Pulse(10, true);
         pacMan = new Pac();
         pacMan.setAnimations(new PacAnimations(spriteSheet));
@@ -135,14 +135,14 @@ public class IntroScene extends GameScene2D {
                 }
                 drawGuys(flutter(timer.tickCount()));
                 if (context.gameVariant() == GameVariant.PACMAN) {
-                    gr.drawText(PacManGameSpriteSheet.MIDWAY_COPYRIGHT, Color.valueOf(Arcade.Palette.PINK), gr.scaledArcadeFont(TS),  tiles2Px(4), tiles2Px(32));
+                    gr.drawText(ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT, Color.valueOf(Arcade.Palette.PINK), gr.scaledArcadeFont(TS),  tiles2Px(4), tiles2Px(32));
                 }
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints();
                 drawGuys(0);
                 if (context.gameVariant() == GameVariant.PACMAN) {
-                    gr.drawText(PacManGameSpriteSheet.MIDWAY_COPYRIGHT, Color.valueOf(Arcade.Palette.PINK), gr.scaledArcadeFont(TS),  tiles2Px(4), tiles2Px(32));
+                    gr.drawText(ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT, Color.valueOf(Arcade.Palette.PINK), gr.scaledArcadeFont(TS),  tiles2Px(4), tiles2Px(32));
                 }
             }
             default -> {}
@@ -157,7 +157,7 @@ public class IntroScene extends GameScene2D {
     }
 
     private void drawGallery() {
-        var spriteSheet = (PacManGameSpriteSheet) context.gameConfiguration().spriteSheet();
+        var spriteSheet = (ArcadePacMan_SpriteSheet) context.gameConfiguration().spriteSheet();
         Font font = gr.scaledArcadeFont(TS);
         if (titleVisible) {
             gr.drawText("CHARACTER / NICKNAME", Color.valueOf(Arcade.Palette.WHITE), font, tiles2Px(LEFT_TILE_X + 3), tiles2Px(6));

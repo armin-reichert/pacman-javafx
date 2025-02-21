@@ -207,7 +207,7 @@ public class GameLevel3D extends Group {
             levelCounter3D.getChildren().add(cube);
 
             var material = new PhongMaterial(Color.WHITE);
-            Image texture = spriteSheet.subImage(spriteSheet.bonusSymbolSprite(symbol));
+            Image texture = spriteSheet.crop(spriteSheet.bonusSymbolSprite(symbol));
             material.setDiffuseMap(texture);
             cube.setMaterial(material);
 
@@ -297,8 +297,8 @@ public class GameLevel3D extends Group {
             worldGroup.getChildren().remove(bonus3D);
         }
         bonus3D = new Bonus3D(bonus,
-            spriteSheet.subImage(spriteSheet.bonusSymbolSprite(bonus.symbol())),
-            spriteSheet.subImage(spriteSheet.bonusValueSprite(bonus.symbol())));
+            spriteSheet.crop(spriteSheet.bonusSymbolSprite(bonus.symbol())),
+            spriteSheet.crop(spriteSheet.bonusValueSprite(bonus.symbol())));
         bonus3D.showEdible();
         worldGroup.getChildren().add(bonus3D);
     }

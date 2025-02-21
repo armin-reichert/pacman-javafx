@@ -44,7 +44,7 @@ public class StartScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        MsPacManGameRenderer r = (MsPacManGameRenderer) gr;
+        ArcadeMsPacMan_GameRenderer r = (ArcadeMsPacMan_GameRenderer) gr;
         GameSpriteSheet spriteSheet = r.spriteSheet();
         Color orange = Color.valueOf(Arcade.Palette.ORANGE), red = Color.valueOf(Arcade.Palette.RED), white = Color.valueOf(Arcade.Palette.WHITE);
         Font font8 = r.scaledArcadeFont(8), font6 = r.scaledArcadeFont(6);

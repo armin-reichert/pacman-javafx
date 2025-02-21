@@ -62,7 +62,7 @@ public interface SpeedConfiguration {
      * (I should note it's in subunits. it if was times 2, that would've been crazy)
      * </p>
      */
-    static float ghostSpeedIncreaseByFoodRemaining(MsPacManGameTengen game) {
+    static float ghostSpeedIncreaseByFoodRemaining(TengenMsPacMan_GameModel game) {
         GameLevel level = game.level().orElseThrow();
         byte units = 0;
         if (game.difficulty() == Difficulty.NORMAL && level.number >= 5) {

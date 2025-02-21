@@ -6,16 +6,16 @@ package de.amr.games.pacman.ui3d.appsuite;
 
 import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GameConfig3D;
 import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
-import de.amr.games.pacman.arcade.ms_pacman.MsPacManGame;
+import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
 import de.amr.games.pacman.arcade.pacman.ArcadePacMan_GameConfig3D;
 import de.amr.games.pacman.arcade.pacman.ArcadePacMan_StartPage;
-import de.amr.games.pacman.arcade.pacman.PacManGame;
+import de.amr.games.pacman.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.games.pacman.arcade.pacman_xxl.ArcadePacManXXLGameConfig3D;
 import de.amr.games.pacman.arcade.pacman_xxl.ArcadePacManXXL_StartPage;
-import de.amr.games.pacman.arcade.pacman_xxl.PacManGameXXL;
+import de.amr.games.pacman.arcade.pacman_xxl.ArcadePacManGameModelXXL;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengen;
+import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfig3D;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.games.pacman.ui2d.DashboardItemID;
@@ -61,10 +61,10 @@ public class PacManGames3dApp extends Application {
         if (userDir.mkdir()) {
             Logger.info("User dir '{}' created", userDir);
         }
-        GameController.it().addGameImplementation(GameVariant.MS_PACMAN, new MsPacManGame(userDir));
-        GameController.it().addGameImplementation(GameVariant.MS_PACMAN_TENGEN, new MsPacManGameTengen(userDir));
-        GameController.it().addGameImplementation(GameVariant.PACMAN, new PacManGame(userDir));
-        GameController.it().addGameImplementation(GameVariant.PACMAN_XXL, new PacManGameXXL(userDir));
+        GameController.it().addGameImplementation(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameModel(userDir));
+        GameController.it().addGameImplementation(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel(userDir));
+        GameController.it().addGameImplementation(GameVariant.PACMAN, new ArcadePacMan_GameModel(userDir));
+        GameController.it().addGameImplementation(GameVariant.PACMAN_XXL, new ArcadePacManGameModelXXL(userDir));
         GameController.it().selectGame(GameVariant.PACMAN);
         GlobalProperties3d.PY_3D_ENABLED.set(false);
     }

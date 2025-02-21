@@ -45,7 +45,7 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  *
  * @author Armin Reichert
  */
-public class MsPacManGame extends GameModel {
+public class ArcadeMsPacMan_GameModel extends GameModel {
 
     private static final String MAP_PATTERN = "maps/mspacman_%d.world";
 
@@ -141,7 +141,7 @@ public class MsPacManGame extends GameModel {
 
     private byte cruiseElroy; //TODO is this existing in Ms. Pac-Man at all?
 
-    public MsPacManGame(File userDir) {
+    public ArcadeMsPacMan_GameModel(File userDir) {
         for (int num = 1; num <= 4; ++num) {
             URL url = getClass().getResource(MAP_PATTERN.formatted(num));
             if (url != null) {

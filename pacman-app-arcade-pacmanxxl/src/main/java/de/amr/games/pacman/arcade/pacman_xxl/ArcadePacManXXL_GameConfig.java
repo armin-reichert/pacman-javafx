@@ -24,12 +24,12 @@ import java.util.stream.Stream;
 
 public class ArcadePacManXXL_GameConfig implements GameConfiguration {
 
-    private final PacManGameSpriteSheet spriteSheet;
+    private final ArcadePacMan_SpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
     public ArcadePacManXXL_GameConfig(AssetStorage assets) {
         loadAssets(() -> ResourceRoot.class, assets);
-        spriteSheet = new PacManGameSpriteSheet(assets.get(assetKeyPrefix() + ".spritesheet"));
+        spriteSheet = new ArcadePacMan_SpriteSheet(assets.get(assetKeyPrefix() + ".spritesheet"));
 
         setGameScene("BootScene",   new ArcadeBootScene());
         setGameScene("IntroScene",  new IntroScene());

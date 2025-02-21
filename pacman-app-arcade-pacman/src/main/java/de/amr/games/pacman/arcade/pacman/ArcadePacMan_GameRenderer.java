@@ -16,26 +16,26 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
-import static de.amr.games.pacman.arcade.pacman.PacManGameSpriteSheet.EMPTY_MAZE_SPRITE;
-import static de.amr.games.pacman.arcade.pacman.PacManGameSpriteSheet.FULL_MAZE_SPRITE;
+import static de.amr.games.pacman.arcade.pacman.ArcadePacMan_SpriteSheet.EMPTY_MAZE_SPRITE;
+import static de.amr.games.pacman.arcade.pacman.ArcadePacMan_SpriteSheet.FULL_MAZE_SPRITE;
 import static de.amr.games.pacman.lib.Globals.TS;
 
 /**
  * @author Armin Reichert
  */
-public class PacManGameRenderer implements GameRenderer {
+public class ArcadePacMan_GameRenderer implements GameRenderer {
 
     private static final Vector2f MESSAGE_POSITION = new Vector2f(14 * TS, 21 * TS);
 
     private final AssetStorage assets;
-    private final PacManGameSpriteSheet spriteSheet;
+    private final ArcadePacMan_SpriteSheet spriteSheet;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final Canvas canvas;
     private boolean mazeHighlighted;
     private boolean blinkingOn;
     private Color bgColor = Color.BLACK;
 
-    public PacManGameRenderer(AssetStorage assets, PacManGameSpriteSheet spriteSheet, Canvas canvas) {
+    public ArcadePacMan_GameRenderer(AssetStorage assets, ArcadePacMan_SpriteSheet spriteSheet, Canvas canvas) {
         this.assets = Globals.assertNotNull(assets);
         this.spriteSheet = Globals.assertNotNull(spriteSheet);
         this.canvas = Globals.assertNotNull(canvas);

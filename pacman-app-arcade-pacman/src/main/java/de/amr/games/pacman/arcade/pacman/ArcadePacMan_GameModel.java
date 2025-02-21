@@ -51,7 +51,7 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  *
  * @see <a href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</a>
  */
-public class PacManGame extends GameModel {
+public class ArcadePacMan_GameModel extends GameModel {
 
     // Level settings as specified in the dossier
     private static final byte[][] LEVEL_DATA = {
@@ -118,7 +118,7 @@ public class PacManGame extends GameModel {
     protected Steering demoLevelSteering;
     protected byte cruiseElroy;
 
-    public PacManGame(File userDir) {
+    public ArcadePacMan_GameModel(File userDir) {
         initialLives = 3;
         simulateOverflowBug = true;
         scoreManager.setHighScoreFile(new File(userDir, "highscore-pacman.xml"));

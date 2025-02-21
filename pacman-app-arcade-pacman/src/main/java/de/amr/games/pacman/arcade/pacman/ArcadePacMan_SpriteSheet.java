@@ -18,7 +18,7 @@ import static de.amr.games.pacman.ui2d.assets.GameSpriteSheet.rectAreas;
 /**
  * @author Armin Reichert
  */
-public class PacManGameSpriteSheet implements GameSpriteSheet {
+public class ArcadePacMan_SpriteSheet implements GameSpriteSheet {
 
     public static final String MIDWAY_COPYRIGHT = "© 1980 MIDWAY MFG.CO.";
 
@@ -151,7 +151,7 @@ public class PacManGameSpriteSheet implements GameSpriteSheet {
 
     private final Image source;
 
-    public PacManGameSpriteSheet(Image source) {
+    public ArcadePacMan_SpriteSheet(Image source) {
         this.source = source;
     }
 

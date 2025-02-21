@@ -33,11 +33,11 @@ public interface GameSpriteSheet {
     Image sourceImage();
 
     /**
-     * @param area rectangular region
+     * @param r rectangular region
      * @return image copy of region
      */
-    default Image subImage(RectArea area) {
-        return subImage(area.x(), area.y(), area.width(), area.height());
+    default Image crop(RectArea r) {
+        return crop(r.x(), r.y(), r.width(), r.height());
     }
 
     /**
@@ -47,10 +47,10 @@ public interface GameSpriteSheet {
      * @param height region height
      * @return image copy of region
      */
-    default Image subImage(int x, int y, int width, int height) {
-        var subImage = new WritableImage(width, height);
-        subImage.getPixelWriter().setPixels(0, 0, width, height, sourceImage().getPixelReader(), x, y);
-        return subImage;
+    default Image crop(int x, int y, int width, int height) {
+        var section = new WritableImage(width, height);
+        section.getPixelWriter().setPixels(0, 0, width, height, sourceImage().getPixelReader(), x, y);
+        return section;
     }
 
     // Game-related stuff

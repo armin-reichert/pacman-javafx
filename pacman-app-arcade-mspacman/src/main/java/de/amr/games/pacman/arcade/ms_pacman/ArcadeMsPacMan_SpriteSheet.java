@@ -19,7 +19,7 @@ import static de.amr.games.pacman.ui2d.assets.GameSpriteSheet.rectAreas;
 /**
  * @author Armin Reichert
  */
-public class MsPacManGameSpriteSheet implements GameSpriteSheet {
+public class ArcadeMsPacMan_SpriteSheet implements GameSpriteSheet {
 
     private static final byte RASTER_SIZE = 16;
     private static final List<Direction> ORDER = List.of(Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
@@ -96,7 +96,7 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
 
     private final Image source;
 
-    public MsPacManGameSpriteSheet(Image source) {
+    public ArcadeMsPacMan_SpriteSheet(Image source) {
         this.source = source;
     }
 

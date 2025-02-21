@@ -15,7 +15,7 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengen;
+import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions;
 import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.MessageMovement;
@@ -336,7 +336,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 levelCompleteAnimation.start();
             }
             case GAME_OVER -> {
-                MsPacManGameTengen game = context.game();
+                TengenMsPacMan_GameModel game = context.game();
                 if (game.mapCategory() != MapCategory.ARCADE) {
                     float belowHouse = centerPosBelowHouse(context.level().world()).x();
                     messageMovement.start(MOVING_MESSAGE_DELAY, belowHouse, size().x());
@@ -442,7 +442,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     protected void drawSceneContent() {
         var r = (TengenMsPacMan_Renderer2D) gr;
 
-        MsPacManGameTengen game = context.game();
+        TengenMsPacMan_GameModel game = context.game();
         GameLevel level = context.level();
         GameWorld world = level.world();
         Pac msPacMan = level.pac();

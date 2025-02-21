@@ -31,12 +31,12 @@ public class ArcadeMsPacMan_GameConfig implements GameConfiguration {
         new WorldMapColoring("FFB7AE", "FF0000", "FCB5FF", "DEDEFF")
     );
 
-    private final MsPacManGameSpriteSheet spriteSheet;
+    private final ArcadeMsPacMan_SpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
     public ArcadeMsPacMan_GameConfig(AssetStorage assets) {
         loadAssets(() -> ArcadeMsPacMan_GameConfig.class, assets);
-        spriteSheet = new MsPacManGameSpriteSheet(assets.get("ms_pacman.spritesheet"));
+        spriteSheet = new ArcadeMsPacMan_SpriteSheet(assets.get("ms_pacman.spritesheet"));
 
         setGameScene("BootScene",   new ArcadeBootScene());
         setGameScene("IntroScene",  new IntroScene());
@@ -81,12 +81,12 @@ public class ArcadeMsPacMan_GameConfig implements GameConfiguration {
     }
 
     @Override
-    public MsPacManGameRenderer createRenderer(AssetStorage assets, Canvas canvas) {
-        return new MsPacManGameRenderer(assets, spriteSheet, canvas);
+    public ArcadeMsPacMan_GameRenderer createRenderer(AssetStorage assets, Canvas canvas) {
+        return new ArcadeMsPacMan_GameRenderer(assets, spriteSheet, canvas);
     }
 
     @Override
-    public MsPacManGameSpriteSheet spriteSheet() {
+    public ArcadeMsPacMan_SpriteSheet spriteSheet() {
         return spriteSheet;
     }
 

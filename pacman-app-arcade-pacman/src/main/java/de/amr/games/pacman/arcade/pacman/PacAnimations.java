@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class PacAnimations extends SpriteAnimationSet {
 
-    public PacAnimations(PacManGameSpriteSheet spriteSheet) {
+    public PacAnimations(ArcadePacMan_SpriteSheet spriteSheet) {
         Globals.assertNotNull(spriteSheet);
         add(Map.of(
             ActorAnimations.ANIM_PAC_MUNCHING,

@@ -81,7 +81,7 @@ public class IntroScene extends GameScene2D {
         ghostIndex = 0;
         waitBeforeRising = 0;
 
-        MsPacManGameSpriteSheet spriteSheet = (MsPacManGameSpriteSheet) context.gameConfiguration().spriteSheet();
+        ArcadeMsPacMan_SpriteSheet spriteSheet = (ArcadeMsPacMan_SpriteSheet) context.gameConfiguration().spriteSheet();
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
         msPacMan.selectAnimation(ActorAnimations.ANIM_PAC_MUNCHING);
         for (Ghost ghost : ghosts) {
@@ -113,7 +113,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        MsPacManGameRenderer r = (MsPacManGameRenderer) gr;
+        ArcadeMsPacMan_GameRenderer r = (ArcadeMsPacMan_GameRenderer) gr;
         Font font = r.scaledArcadeFont(TS);
         BitSet marqueeState = computeMarqueeState(marqueeTimer.tickCount());
         drawMarquee(r.ctx(), marqueeState);

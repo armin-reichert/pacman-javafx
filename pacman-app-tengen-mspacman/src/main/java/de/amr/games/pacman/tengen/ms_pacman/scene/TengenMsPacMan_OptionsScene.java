@@ -8,7 +8,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.nes.NES_JoypadButton;
 import de.amr.games.pacman.tengen.ms_pacman.Difficulty;
-import de.amr.games.pacman.tengen.ms_pacman.MsPacManGameTengen;
+import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.PacBooster;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions;
 import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
@@ -60,7 +60,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     static final int INITIAL_DELAY = 20; //TODO verify
     static final int IDLE_TIMEOUT = 22 * 60; // TODO verify
 
-    private MsPacManGameTengen game;
+    private TengenMsPacMan_GameModel game;
     private int selectedOption;
     private long idleTicks;
     private int initialDelay;

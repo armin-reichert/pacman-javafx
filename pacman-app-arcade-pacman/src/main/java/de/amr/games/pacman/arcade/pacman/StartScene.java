@@ -12,7 +12,7 @@ import de.amr.games.pacman.ui2d.action.GameActions2D;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import javafx.scene.paint.Color;
 
-import static de.amr.games.pacman.arcade.pacman.PacManGameSpriteSheet.MIDWAY_COPYRIGHT;
+import static de.amr.games.pacman.arcade.pacman.ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.tiles2Px;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;

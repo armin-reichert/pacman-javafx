@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman_xxl;
 
-import de.amr.games.pacman.arcade.pacman.PacManGameSpriteSheet;
+import de.amr.games.pacman.arcade.pacman.ArcadePacMan_SpriteSheet;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
@@ -50,7 +50,7 @@ public class PacManGameXXLRenderer implements GameRenderer {
     private TerrainColorScheme blinkingOnColors;
     private TerrainColorScheme blinkingOffColors;
 
-    public PacManGameXXLRenderer(AssetStorage assets, PacManGameSpriteSheet spriteSheet, Canvas canvas) {
+    public PacManGameXXLRenderer(AssetStorage assets, ArcadePacMan_SpriteSheet spriteSheet, Canvas canvas) {
         this.assets = assertNotNull(assets);
         this.canvas = assertNotNull(canvas);
         this.spriteSheet = assertNotNull(spriteSheet);
