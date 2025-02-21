@@ -27,7 +27,7 @@ public class ArcadePacManApp extends Application {
             if (userDir.mkdir()) {
                 Logger.info("User dir '{}' created", userDir);
             }
-            GameController.it().addGameImplementation(GameVariant.PACMAN, new ArcadePacMan_GameModel(userDir));
+            GameController.it().addGame(GameVariant.PACMAN, new ArcadePacMan_GameModel(userDir));
             GameController.it().selectGame(GameVariant.PACMAN);
         } catch (Exception x) {
             x.printStackTrace(System.err);

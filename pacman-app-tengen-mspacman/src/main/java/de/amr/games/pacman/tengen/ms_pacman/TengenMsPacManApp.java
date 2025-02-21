@@ -29,7 +29,7 @@ public class TengenMsPacManApp extends Application {
             if (userDir.mkdir()) {
                 Logger.info("User dir '{}' created", userDir);
             }
-            GameController.it().addGameImplementation(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel(userDir));
+            GameController.it().addGame(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel(userDir));
             GameController.it().selectGame(GameVariant.MS_PACMAN_TENGEN);
         } catch (Exception x) {
             x.printStackTrace(System.err);
