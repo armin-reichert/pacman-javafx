@@ -18,13 +18,13 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.lib.tilemap.TileMap.MARKER_DATA_SECTION_START;
 
 /**
  * @author Armin Reichert
  */
 public class WorldMap {
 
+    private static final String MARKER_DATA_SECTION_START = "!data";
     private static final Pattern TILE_PATTERN = Pattern.compile("\\((\\d+),(\\d+)\\)");
     private static final String TILE_FORMAT = "(%d,%d)";
 

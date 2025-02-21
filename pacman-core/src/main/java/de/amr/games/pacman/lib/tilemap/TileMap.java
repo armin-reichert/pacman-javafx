@@ -16,9 +16,6 @@ import static de.amr.games.pacman.lib.Globals.vec_2i;
 
 public class TileMap {
 
-    static final String MARKER_DATA_SECTION_START = "!data";
-
-
     final Map<String, Object> properties = new HashMap<>();
     final byte[][] matrix;
 
@@ -177,5 +174,4 @@ public class TileMap {
             Arrays.fill(row, fillValue);
         }
     }
-
 }
