@@ -45,7 +45,6 @@ public class WorldMap {
         }
     }
 
-    private static final String MARKER_DATA_SECTION_START = "!data";
     private static final Pattern TILE_PATTERN = Pattern.compile("\\((\\d+),(\\d+)\\)");
     private static final String TILE_FORMAT = "(%d,%d)";
 
@@ -67,8 +66,9 @@ public class WorldMap {
     public static final String PROPERTY_COLOR_WALL_FILL    = "color_wall_fill";
     public static final String PROPERTY_COLOR_DOOR         = "color_door";
 
-    public static final String TERRAIN_SECTION_START = "!terrain";
-    public static final String FOOD_SECTION_START    = "!food";
+    private static final String MARKER_START_TERRAIN_LAYER = "!terrain";
+    private static final String MARKER_START_FOOD_LAYER = "!food";
+    private static final String MARKER_DATA_SECTION_START = "!data";
 
     private static String toConfigNamespace(String key) {
         return "_config." + key;
@@ -169,6 +169,16 @@ public class WorldMap {
         return s.toString();
     }
 
+    public String sourceText() {
+        var stringWriter = new StringWriter();
+        var pw = new PrintWriter(stringWriter);
+        pw.append(MARKER_START_TERRAIN_LAYER).append("\n");
+        print(terrainLayer, pw);
+        pw.append(MARKER_START_FOOD_LAYER).append("\n");
+        print(foodLayer, pw);
+        return stringWriter.toString();
+    }
+
     public WorldMap insertRowBeforeIndex(int rowIndex) {
         if (rowIndex < 0 || rowIndex > numRows) {
             throw new IllegalArgumentException("Illegal row index for inserting row: " + rowIndex);
@@ -220,17 +230,7 @@ public class WorldMap {
         return newMap;
     }
 
-    public String sourceCode() {
-        var sw = new StringWriter();
-        sw.append(TERRAIN_SECTION_START).append("\n");
-        print(terrainLayer, sw);
-        sw.append(FOOD_SECTION_START).append("\n");
-        print(foodLayer, sw);
-        return sw.toString();
-    }
-
-    public void print(LayerData layer, Writer w) {
-        var pw = new PrintWriter(w);
+    private void print(LayerData layer, PrintWriter pw) {
         layer.properties.keySet().stream()
                 .filter(name -> layer.properties.get(name) instanceof String)
                 .sorted()
@@ -255,9 +255,9 @@ public class WorldMap {
         var foodSection = new ArrayList<String>();
         boolean inTerrainSection = false, inFoodSection = false;
         for (var line : lines.toList()) {
-            if (TERRAIN_SECTION_START.equals(line)) {
+            if (MARKER_START_TERRAIN_LAYER.equals(line)) {
                 inTerrainSection = true;
-            } else if (FOOD_SECTION_START.equals(line)) {
+            } else if (MARKER_START_FOOD_LAYER.equals(line)) {
                 inTerrainSection = false;
                 inFoodSection = true;
             } else if (inTerrainSection) {
@@ -389,9 +389,9 @@ public class WorldMap {
 
     public boolean save(File file) {
         try (PrintWriter w = new PrintWriter(file, StandardCharsets.UTF_8)) {
-            w.println(TERRAIN_SECTION_START);
+            w.println(MARKER_START_TERRAIN_LAYER);
             print(terrainLayer, w);
-            w.println(FOOD_SECTION_START);
+            w.println(MARKER_START_FOOD_LAYER);
             print(foodLayer, w);
             return true;
         } catch (IOException x) {

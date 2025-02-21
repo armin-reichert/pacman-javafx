@@ -1065,7 +1065,7 @@ public class TileMapEditor {
         }
         try {
             StringBuilder sb = new StringBuilder();
-            String[] lines = worldMap().sourceCode().split("\n");
+            String[] lines = worldMap().sourceText().split("\n");
             for (int i = 0; i < lines.length; ++i) {
                 sb.append("%5d: ".formatted(i + 1)).append(lines[i]).append("\n");
             }
