@@ -29,7 +29,7 @@ public class WorldMap {
 
     public enum LayerID { TERRAIN, FOOD }
 
-    private static class LayerData {
+    public static class LayerData {
         Map<String, Object> properties = new HashMap<>();
         byte[][] values;
 
