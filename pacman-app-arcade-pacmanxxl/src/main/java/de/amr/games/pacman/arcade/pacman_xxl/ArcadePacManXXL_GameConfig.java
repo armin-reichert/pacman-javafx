@@ -69,8 +69,8 @@ public class ArcadePacManXXL_GameConfig implements GameConfiguration {
     }
 
     @Override
-    public PacManGameXXLRenderer createRenderer(AssetStorage assets, Canvas canvas) {
-        return new PacManGameXXLRenderer(assets, spriteSheet, canvas);
+    public ArcadePacManXXL_GameRenderer createRenderer(AssetStorage assets, Canvas canvas) {
+        return new ArcadePacManXXL_GameRenderer(assets, spriteSheet, canvas);
     }
 
     @Override

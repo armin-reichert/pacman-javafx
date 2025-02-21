@@ -34,7 +34,7 @@ import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
  * Extension of Arcade Pac-Man with 8 additional mazes (thanks to the one and only
  * <a href="https://github.com/masonicGIT/pacman">Shaun Williams</a>).
  */
-public class ArcadePacManGameModelXXL extends ArcadePacMan_GameModel implements CustomMapsHandler {
+public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel implements CustomMapsHandler {
 
     private static final int MAP_COUNT = 8;
     private static final String MAP_PATTERN = "maps/masonic_%d.world";
@@ -55,7 +55,7 @@ public class ArcadePacManGameModelXXL extends ArcadePacMan_GameModel implements 
     private final Map<File, WorldMap> customMapsByFile = new HashMap<>();
     private CustomMapSelectionMode mapSelectionMode;
 
-    public ArcadePacManGameModelXXL(File userDir) {
+    public ArcadePacManXXL_GameModel(File userDir) {
         super(userDir);
         customMapDir = new File(userDir, "maps");
         if (customMapDir.mkdir()) {

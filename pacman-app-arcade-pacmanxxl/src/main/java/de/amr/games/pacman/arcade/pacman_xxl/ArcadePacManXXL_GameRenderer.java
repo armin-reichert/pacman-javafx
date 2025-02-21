@@ -33,7 +33,7 @@ import static java.util.function.Predicate.not;
  *
  * @author Armin Reichert
  */
-public class PacManGameXXLRenderer implements GameRenderer {
+public class ArcadePacManXXL_GameRenderer implements GameRenderer {
 
     static final Vector2f DEFAULT_MESSAGE_ANCHOR_POSITION = new Vector2f(14f * TS, 21 * TS);
 
@@ -50,7 +50,7 @@ public class PacManGameXXLRenderer implements GameRenderer {
     private TerrainColorScheme blinkingOnColors;
     private TerrainColorScheme blinkingOffColors;
 
-    public PacManGameXXLRenderer(AssetStorage assets, ArcadePacMan_SpriteSheet spriteSheet, Canvas canvas) {
+    public ArcadePacManXXL_GameRenderer(AssetStorage assets, ArcadePacMan_SpriteSheet spriteSheet, Canvas canvas) {
         this.assets = assertNotNull(assets);
         this.canvas = assertNotNull(canvas);
         this.spriteSheet = assertNotNull(spriteSheet);

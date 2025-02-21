@@ -19,7 +19,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 
-public class ArcadePacManXXLApp extends Application {
+public class ArcadePacManXXL_App extends Application {
 
     @Override
     public void init() {
@@ -28,7 +28,7 @@ public class ArcadePacManXXLApp extends Application {
             if (userDir.mkdir()) {
                 Logger.info("User dir '{}' created", userDir);
             }
-            GameController.it().addGameImplementation(GameVariant.PACMAN_XXL, new ArcadePacManGameModelXXL(userDir));
+            GameController.it().addGameImplementation(GameVariant.PACMAN_XXL, new ArcadePacManXXL_GameModel(userDir));
             GameController.it().selectGame(GameVariant.PACMAN_XXL);
         } catch (Exception x) {
             x.printStackTrace(System.err);
@@ -39,7 +39,7 @@ public class ArcadePacManXXLApp extends Application {
     public void start(Stage stage) {
         PacManGamesUI_3D ui = new PacManGamesUI_3D();
         ui.loadAssets();
-        ui.configureGameVariant(GameVariant.PACMAN_XXL, new ArcadePacManXXLGameConfig3D(ui.assets()));
+        ui.configureGameVariant(GameVariant.PACMAN_XXL, new ArcadePacManXXL_GameConfig3D(ui.assets()));
         ui.create(stage, initialSize());
         ui.startPage().addSlide(new ArcadePacManXXL_StartPage().root());
 
