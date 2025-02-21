@@ -797,39 +797,6 @@ public class TileMapEditor {
         );
     }
 
-    private void draw(TerrainColorScheme colors) {
-        try {
-            Logger.trace("Draw palette");
-            drawSelectedPalette(colors);
-        } catch (Exception x) {
-            Logger.error(x);
-        }
-        if (tabEditCanvas.isSelected()) {
-            try {
-                Logger.trace("Draw edit canvas");
-                editCanvas.draw(colors);
-            } catch (Exception x) {
-                Logger.error(x);
-            }
-        }
-        if (templateImagePy.get() != null && tabTemplateImage.isSelected()) {
-            try {
-                Logger.trace("Draw template image");
-                templateImageCanvas.draw();
-            } catch (Exception x) {
-                Logger.error(x);
-            }
-        }
-        if (tabPreview2D.isSelected()) {
-            try {
-                Logger.trace("Draw preview 2D");
-                drawPreview2D(colors);
-            } catch (Exception x) {
-                Logger.error(x);
-            }
-        }
-    }
-
     private void createMenuBarAndMenus() {
 
         // File
@@ -1115,6 +1082,39 @@ public class TileMapEditor {
     //
     // Drawing
     //
+
+    private void draw(TerrainColorScheme colors) {
+        try {
+            Logger.trace("Draw palette");
+            drawSelectedPalette(colors);
+        } catch (Exception x) {
+            Logger.error(x);
+        }
+        if (tabEditCanvas.isSelected()) {
+            try {
+                Logger.trace("Draw edit canvas");
+                editCanvas.draw(colors);
+            } catch (Exception x) {
+                Logger.error(x);
+            }
+        }
+        if (templateImagePy.get() != null && tabTemplateImage.isSelected()) {
+            try {
+                Logger.trace("Draw template image");
+                templateImageCanvas.draw();
+            } catch (Exception x) {
+                Logger.error(x);
+            }
+        }
+        if (tabPreview2D.isSelected()) {
+            try {
+                Logger.trace("Draw preview 2D");
+                drawPreview2D(colors);
+            } catch (Exception x) {
+                Logger.error(x);
+            }
+        }
+    }
 
     private void drawPreview2D(TerrainColorScheme colors) {
         GraphicsContext g = canvasPreview2D.getGraphicsContext2D();
