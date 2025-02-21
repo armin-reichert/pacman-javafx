@@ -12,6 +12,7 @@ import de.amr.games.pacman.ui2d.action.GameActionProvider;
 import de.amr.games.pacman.uilib.ResourceManager;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
@@ -63,7 +64,7 @@ public class EditorPage extends BorderPane implements GameActionProvider {
 
         var miQuitEditor = new MenuItem(context.locText("back_to_game"));
         miQuitEditor.setOnAction(e -> closeAction.accept(editor));
-        editor.getFileMenu().getItems().add(miQuitEditor);
+        editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);
 
         for (int mapNumber = 1; mapNumber <= 8; ++mapNumber) {
             WorldMap map = loadMap(() -> context.game().getClass(), "maps/masonic_%d.world".formatted(mapNumber));

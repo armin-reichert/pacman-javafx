@@ -209,21 +209,19 @@ public class PropertyEditorPane extends BorderPane {
 
         TilePropertyEditor(String propertyName, String propertyValue) {
             super(propertyName);
-            Vector2i tile = parseTile(propertyValue);
 
             spinnerX = new Spinner<>(0, tileMap().numCols() - 1, 0);
             spinnerX.setMaxWidth(60);
             spinnerX.disableProperty().bind(enabledPy.not());
-            if (tile != null) {
-                spinnerX.getValueFactory().setValue(tile.x());
-            }
 
             spinnerY = new Spinner<>(0, tileMap().numRows() - 1, 0);
             spinnerY.setMaxWidth(60);
             spinnerY.disableProperty().bind(enabledPy.not());
-            if (tile != null) {
+
+            parseTile(propertyValue).ifPresent(tile -> {
+                spinnerX.getValueFactory().setValue(tile.x());
                 spinnerY.getValueFactory().setValue(tile.y());
-            }
+            });
 
             spinnerX.valueProperty().addListener((py,ov,nv) -> storePropertyValue());
             spinnerY.valueProperty().addListener((py,ov,nv) -> storePropertyValue());
@@ -234,11 +232,10 @@ public class PropertyEditorPane extends BorderPane {
         @Override
         protected void updateEditorFromProperty() {
             String propertyValue = tileMap().getStringProperty(propertyName);
-            Vector2i tile = parseTile(propertyValue);
-            if (tile != null) {
+            parseTile(propertyValue).ifPresent(tile -> {
                 spinnerX.getValueFactory().setValue(tile.x());
                 spinnerY.getValueFactory().setValue(tile.y());
-            }
+            });
         }
 
         @Override

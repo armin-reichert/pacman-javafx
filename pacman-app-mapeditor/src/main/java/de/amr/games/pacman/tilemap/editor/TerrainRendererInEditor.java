@@ -147,8 +147,7 @@ public class TerrainRendererInEditor extends TerrainRenderer {
 
     private Optional<Vector2i> specialTile(TileMap terrainMap, String propertyName) {
         if (terrainMap.hasProperty(propertyName)) {
-            Vector2i tile = parseTile(terrainMap.getStringProperty(propertyName));
-            return Optional.ofNullable(tile);
+            return parseTile(terrainMap.getStringProperty(propertyName));
         }
         return Optional.empty();
     }
@@ -247,26 +246,11 @@ public class TerrainRendererInEditor extends TerrainRenderer {
         g.fillRect(x, y + 3.5f, TS, 1);
     }
 
-    private void drawDWallH(GraphicsContext g, Vector2i tile) {
-        double x = tile.x() * TS, y = tile.y() * TS;
-        g.setFill(colors.wallStrokeColor());
-        // add 1 pixel to avoid gaps
-        g.fillRect(x, y + 2.5f, TS, 1);
-        g.fillRect(x, y + 4.5f, TS, 1);
-    }
-
     private void drawWallV(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * TS, y = tile.y() * TS;
         g.setFill(colors.wallStrokeColor());
         // add 1 pixel to avoid gaps
         g.fillRect(x + 3.5f, y, 1, TS);
-    }
-
-    private void drawDWallV(GraphicsContext g, Vector2i tile) {
-        double x = tile.x() * TS, y = tile.y() * TS;
-        g.setFill(colors.wallStrokeColor());
-        g.fillRect(x + 2.5f, y, 1, TS);
-        g.fillRect(x + 4.5f, y, 1, TS);
     }
 
     private void drawCorner(GraphicsContext g, Vector2i tile, byte cornerType) {
@@ -278,31 +262,6 @@ public class TerrainRendererInEditor extends TerrainRenderer {
             case TerrainTiles.CORNER_NE -> g.strokeArc(x - 4, y + 4, TS, TS, 0, 90,   ArcType.OPEN);
             case TerrainTiles.CORNER_SE -> g.strokeArc(x - 4, y - 4, TS, TS, 270, 90, ArcType.OPEN);
             case TerrainTiles.CORNER_SW -> g.strokeArc(x + 4, y - 4, TS, TS, 180, 90, ArcType.OPEN);
-            default -> {}
-        }
-    }
-
-    private void drawDCorner(GraphicsContext g, Vector2i tile, byte cornerType) {
-        double x = tile.x() * TS, y = tile.y() * TS;
-        g.setStroke(colors.wallStrokeColor());
-        g.setLineWidth(1);
-        switch (cornerType) {
-            case TerrainTiles.CORNER_NW -> {
-                g.strokeArc(x + 5, y + 5, 6, 6, 90, 90, ArcType.OPEN);
-                g.strokeArc(x + 3, y + 3, 10, 10, 90, 90, ArcType.OPEN);
-            }
-            case TerrainTiles.CORNER_NE -> {
-                g.strokeArc(x - 3, y + 5, 6, 6, 0, 90, ArcType.OPEN);
-                g.strokeArc(x - 5, y + 3, 10, 10, 0, 90, ArcType.OPEN);
-            }
-            case TerrainTiles.CORNER_SE -> {
-                g.strokeArc(x - 3, y - 3, 6, 6, 270, 90, ArcType.OPEN);
-                g.strokeArc(x - 5, y - 5, 10, 10, 270, 90, ArcType.OPEN);
-            }
-            case TerrainTiles.CORNER_SW -> {
-                g.strokeArc(x + 5, y - 3, 6, 6, 180, 90, ArcType.OPEN);
-                g.strokeArc(x + 3, y - 5, 10, 10, 180, 90, ArcType.OPEN);
-            }
             default -> {}
         }
     }

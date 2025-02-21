@@ -10,10 +10,7 @@ import org.tinylog.Logger;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,10 +26,19 @@ public class TileMap {
     private static final Pattern TILE_PATTERN = Pattern.compile("\\((\\d+),(\\d+)\\)");
     private static final String TILE_FORMAT = "(%d,%d)";
 
-    public static Vector2i parseTile(String text) {
+    public static Optional<Vector2i> parseTile(String text) {
         assertNotNull(text);
         Matcher m = TILE_PATTERN.matcher(text);
-        return m.matches() ? new Vector2i(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2))) : null;
+        if (!m.matches()) {
+            return Optional.empty();
+        }
+        try {
+            int x = Integer.parseInt(m.group(1));
+            int y = Integer.parseInt(m.group(2));
+            return Optional.of(new Vector2i(x, y));
+        } catch (NumberFormatException x) {
+            return Optional.empty();
+        }
     }
 
     public static String formatTile(Vector2i tile) {
@@ -198,8 +204,7 @@ public class TileMap {
 
     public Vector2i getTileProperty(String name, Vector2i defaultTile) {
         if (hasProperty(name)) {
-            Vector2i tile = parseTile(getStringProperty(name));
-            return tile != null ? tile : defaultTile;
+            return parseTile(getStringProperty(name)).orElse(defaultTile);
         }
         return defaultTile;
     }
