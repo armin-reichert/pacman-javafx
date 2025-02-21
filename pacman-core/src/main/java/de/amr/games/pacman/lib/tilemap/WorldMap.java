@@ -93,8 +93,10 @@ public class WorldMap {
 
     // Used by map editor
     public WorldMap(int numRows, int numCols) {
-        terrain = new TileMap(numRows, numCols);
-        food = new TileMap(numRows, numCols);
+        terrain = new TileMap();
+        terrain.matrix = new byte[numRows][numCols];
+        food = new TileMap();
+        food.matrix = new byte[numRows][numCols];
         url = null;
     }
 
@@ -274,7 +276,8 @@ public class WorldMap {
         }
 
         // Second pass: read data and build new tile map
-        var tileMap = new TileMap(new byte[numDataRows][numDataCols]);
+        var tileMap = new TileMap();
+        tileMap.matrix = new byte[numDataRows][numDataCols];
         tileMap.properties.putAll(parseProperties(propertySection.toString()));
 
         for (int lineIndex = dataSectionStartIndex; lineIndex < lines.size(); ++lineIndex) {

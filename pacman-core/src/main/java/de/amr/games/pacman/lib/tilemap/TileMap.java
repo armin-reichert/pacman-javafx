@@ -16,16 +16,10 @@ import static de.amr.games.pacman.lib.Globals.vec_2i;
 
 public class TileMap {
 
-    final Map<String, Object> properties = new HashMap<>();
-    final byte[][] matrix;
+    Map<String, Object> properties = new HashMap<>();
+    byte[][] matrix;
 
-    public TileMap(int numRows, int numCols) {
-        matrix = new byte[numRows][numCols];
-    }
-
-    TileMap(byte[][] matrix) {
-        this.matrix = matrix;
-    }
+    public TileMap() {}
 
     public TileMap(TileMap other) {
         int numRows = other.numRows(), numCols = other.numCols();
