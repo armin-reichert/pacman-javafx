@@ -62,7 +62,7 @@ import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.*;
  */
 public class TileMapEditor {
 
-    public static final short REFRESH_RATE = 20;
+    public static final short REFRESH_RATE = 5;
 
     public static final short TOOL_SIZE = 32;
     public static final short MIN_GRID_SIZE = 8;
@@ -93,7 +93,6 @@ public class TileMapEditor {
         return file.getName().toLowerCase().endsWith(".world");
     }
 
-    public static final Font FONT_CONTEXT_MENU_COLOR_TEXT = Font.font("Monospace", FontWeight.BOLD, 16);
     public static final Font FONT_DROP_HINT               = Font.font("Sans", FontWeight.BOLD, 16);
     public static final Font FONT_MESSAGE                 = Font.font("Sans", FontWeight.BOLD, 14);
     public static final Font FONT_SOURCE_VIEW             = Font.font("Monospace", FontWeight.NORMAL, 14);
@@ -116,6 +115,7 @@ public class TileMapEditor {
         private boolean terrainMapChanged;
         private boolean foodMapChanged;
         private boolean obstaclesUpToDate;
+        private boolean redrawRequested;
 
         public void setEdited(boolean edited) { this.edited = edited; }
 
@@ -135,11 +135,20 @@ public class TileMapEditor {
             foodMapChanged = true;
         }
 
+        public void requestRedraw() {
+            redrawRequested = true;
+        }
+
+        public boolean isRedrawRequested() {
+            return redrawRequested;
+        }
+
         private void processChanges() {
             if (!obstaclesUpToDate) {
                 tilesWithErrors.clear();
                 tilesWithErrors.addAll(worldMap().updateObstacleList());
                 obstaclesUpToDate = true;
+                requestRedraw();
             }
             if (terrainMapChanged) {
                 if (terrainMapPropertiesEditor != null) {
@@ -148,7 +157,8 @@ public class TileMapEditor {
                 mazePreview3D.updateTerrain();
                 updateSourceView();
                 terrainMapChanged = false;
-                Logger.info("Terrain updated");
+                Logger.trace("Terrain map updated");
+                requestRedraw();
             }
             if (foodMapChanged) {
                 if (foodMapPropertiesEditor != null) {
@@ -157,18 +167,18 @@ public class TileMapEditor {
                 mazePreview3D.updateFood();
                 updateSourceView();
                 foodMapChanged = false;
-                Logger.info("Food updated");
+                Logger.trace("Food map updated");
+                requestRedraw();
             }
         }
     }
 
-    private final ChangeManager changeManager = new ChangeManager();
-
     // Attributes
 
+    private final ChangeManager changeManager = new ChangeManager();
     private File currentDirectory;
     private Instant messageCloseTime;
-    private Timeline clock;
+    private Timeline updateLoop;
     private final List<Vector2i> tilesWithErrors = new ArrayList<>();
 
     private final BorderPane contentPane = new BorderPane();
@@ -214,6 +224,13 @@ public class TileMapEditor {
 
     // Properties
 
+    private final ObjectProperty<EditMode> editModePy = new SimpleObjectProperty<>(EditMode.INSPECT) {
+        @Override
+        protected void invalidated() {
+            onEditModeChanged(get());
+        }
+    };
+
     private final ObjectProperty<File> currentFilePy = new SimpleObjectProperty<>();
 
     private final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>(new WorldMap(28, 36)) {
@@ -224,13 +241,47 @@ public class TileMapEditor {
         }
     };
 
-    private final IntegerProperty gridSizePy = new SimpleIntegerProperty(8);
+    private final IntegerProperty gridSizePy = new SimpleIntegerProperty(8) {
+        @Override
+        protected void invalidated() {
+            changeManager.requestRedraw();
+        }
+    };
 
-    private final BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
-    private final BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
-    private final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
-    private final BooleanProperty segmentNumbersDisplayedPy = new SimpleBooleanProperty(false);
-    private final BooleanProperty obstacleInnerAreaDisplayedPy = new SimpleBooleanProperty(false);
+    private final BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true) {
+        @Override
+        protected void invalidated() {
+            changeManager.requestRedraw();
+        }
+    };
+
+    private final BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true) {
+        @Override
+        protected void invalidated() {
+            changeManager.requestRedraw();
+        }
+    };
+
+    private final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true) {
+        @Override
+        protected void invalidated() {
+            changeManager.requestRedraw();
+        }
+    };
+
+    private final BooleanProperty segmentNumbersDisplayedPy = new SimpleBooleanProperty(false) {
+        @Override
+        protected void invalidated() {
+            changeManager.requestRedraw();
+        }
+    };
+
+    private final BooleanProperty obstacleInnerAreaDisplayedPy = new SimpleBooleanProperty(false) {
+        @Override
+        protected void invalidated() {
+            changeManager.requestRedraw();
+        }
+    };
 
     private final BooleanProperty propertyEditorsVisiblePy = new SimpleBooleanProperty(false) {
         @Override
@@ -240,13 +291,6 @@ public class TileMapEditor {
     };
 
     private final StringProperty titlePy = new SimpleStringProperty("Tile Map Editor");
-
-    private final ObjectProperty<EditMode> editModePy = new SimpleObjectProperty<>(EditMode.INSPECT) {
-        @Override
-        protected void invalidated() {
-            onEditModeChanged(get());
-        }
-    };
 
     private final BooleanProperty symmetricEditPy = new SimpleBooleanProperty(true);
 
@@ -327,14 +371,14 @@ public class TileMapEditor {
     public void createUI(Stage stage) {
         this.stage = assertNotNull(stage);
 
-        // renderers must be created before palettes!
-        TerrainColorScheme colors = new TerrainColorScheme(
+        TerrainColorScheme initialColors = new TerrainColorScheme(
             Color.BLACK,
             parseColor(MS_PACMAN_COLOR_WALL_FILL),
             parseColor(MS_PACMAN_COLOR_WALL_STROKE),
             parseColor(MS_PACMAN_COLOR_DOOR)
         );
-        createRenderers(colors, parseColor(MS_PACMAN_COLOR_FOOD));
+        // renderers must be created before palettes!
+        createRenderers(initialColors, parseColor(MS_PACMAN_COLOR_FOOD));
 
         createFileChooser();
         createEditCanvas();
@@ -352,14 +396,13 @@ public class TileMapEditor {
         createMenuBarAndMenus();
 
         arrangeMainLayout();
-        initActiveRendering();
-
         titlePy.bind(createTitleBinding());
-
-        // Input handlers
         contentPane.setOnKeyTyped(this::onKeyTyped);
         contentPane.setOnKeyPressed(this::onKeyPressed);
 
+        Duration period = Duration.millis(1000.0 / REFRESH_RATE);
+        updateLoop = new Timeline(REFRESH_RATE, new KeyFrame(period, e -> update()));
+        updateLoop.setCycleCount(Animation.INDEFINITE);
     }
 
     public void init(File workDir) {
@@ -379,12 +422,40 @@ public class TileMapEditor {
             }
         });
         showEditHelpText();
-        clock.play();
+        updateLoop.play();
     }
 
     public void stop() {
-        clock.stop();
+        updateLoop.stop();
         setEditMode(EditMode.INSPECT);
+    }
+
+    private void update() {
+        updateMessage();
+        changeManager.processChanges();
+        if (changeManager.isRedrawRequested()) {
+            var colors = new TerrainColorScheme(
+                COLOR_CANVAS_BACKGROUND,
+                getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL)),
+                getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE)),
+                getColorFromMap(worldMap().terrain(), PROPERTY_COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR))
+            );
+            draw(colors);
+        }
+    }
+
+    private void updateMessage() {
+        if (messageCloseTime != null && Instant.now().isAfter(messageCloseTime)) {
+            messageCloseTime = null;
+            FadeTransition fadeOut = new FadeTransition(Duration.seconds(2), messageLabel);
+            fadeOut.setFromValue(1.0);
+            fadeOut.setToValue(0.0);
+            fadeOut.setOnFinished(event -> {
+                messageLabel.setText("");
+                messageLabel.setOpacity(1.0);
+            });
+            fadeOut.play();
+        }
     }
 
     public void showMessage(String message, long seconds, MessageType type) {
@@ -726,64 +797,37 @@ public class TileMapEditor {
         );
     }
 
-    private void updateMessageAnimation() {
-        if (messageCloseTime != null && Instant.now().isAfter(messageCloseTime)) {
-            messageCloseTime = null;
-            FadeTransition fadeOut = new FadeTransition(Duration.seconds(2), messageLabel);
-            fadeOut.setFromValue(1.0);
-            fadeOut.setToValue(0.0);
-            fadeOut.setOnFinished(event -> {
-                messageLabel.setText("");
-                messageLabel.setOpacity(1.0);
-            });
-            fadeOut.play();
+    private void draw(TerrainColorScheme colors) {
+        try {
+            Logger.trace("Draw palette");
+            drawSelectedPalette(colors);
+        } catch (Exception x) {
+            Logger.error(x);
         }
-    }
-
-    // Active rendering (good idea?)
-    private void initActiveRendering() {
-        double frameDuration = 1000.0 / REFRESH_RATE;
-        clock = new Timeline(REFRESH_RATE, new KeyFrame(Duration.millis(frameDuration), e -> {
-
-            changeManager.processChanges();
-
-            updateMessageAnimation();
-
-            TileMap terrainMap = worldMap().terrain();
-            TerrainColorScheme colors = new TerrainColorScheme(
-                    COLOR_CANVAS_BACKGROUND,
-                getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL)),
-                getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE)),
-                getColorFromMap(terrainMap, PROPERTY_COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR))
-            );
+        if (tabEditCanvas.isSelected()) {
             try {
-                drawSelectedPalette(colors);
+                Logger.trace("Draw edit canvas");
+                editCanvas.draw(colors);
             } catch (Exception x) {
                 Logger.error(x);
             }
-            if (tabEditCanvas.isSelected()) {
-                try {
-                    editCanvas.draw(colors);
-                } catch (Exception x) {
-                    Logger.error(x);
-                }
+        }
+        if (templateImagePy.get() != null && tabTemplateImage.isSelected()) {
+            try {
+                Logger.trace("Draw template image");
+                templateImageCanvas.draw();
+            } catch (Exception x) {
+                Logger.error(x);
             }
-            if (tabTemplateImage.isSelected()) {
-                try {
-                    templateImageCanvas.draw();
-                } catch (Exception x) {
-                    Logger.error(x);
-                }
+        }
+        if (tabPreview2D.isSelected()) {
+            try {
+                Logger.trace("Draw preview 2D");
+                drawPreview2D(colors);
+            } catch (Exception x) {
+                Logger.error(x);
             }
-            if (tabPreview2D.isSelected()) {
-                try {
-                    drawPreview2D(colors);
-                } catch (Exception x) {
-                    Logger.error(x);
-                }
-            }
-        }));
-        clock.setCycleCount(Animation.INDEFINITE);
+        }
     }
 
     private void createMenuBarAndMenus() {

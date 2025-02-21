@@ -84,6 +84,7 @@ public class ObstacleEditor {
         if (enabled) {
             commit();
         }
+        anchor = frontier = minTile = maxTile = null;
     }
 
     public void draw(GraphicsContext g, TerrainRendererInEditor renderer) {
@@ -112,7 +113,6 @@ public class ObstacleEditor {
                 }
             }
         }
-        anchor = frontier = minTile = maxTile = null;
     }
 
     private byte[][] joinedContent(byte[][] editedContent, int numRows, int numCols) {
