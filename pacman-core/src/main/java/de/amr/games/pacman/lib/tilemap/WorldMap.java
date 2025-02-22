@@ -63,9 +63,9 @@ public class WorldMap {
     public static final String PROPERTY_COLOR_WALL_FILL    = "color_wall_fill";
     public static final String PROPERTY_COLOR_DOOR         = "color_door";
 
-    private static final String MARKER_START_TERRAIN_LAYER = "!terrain";
-    private static final String MARKER_START_FOOD_LAYER = "!food";
-    private static final String MARKER_DATA_SECTION_START = "!data";
+    private static final String BEGIN_TERRAIN_LAYER = "!terrain";
+    private static final String BEGIN_FOOD_LAYER    = "!food";
+    private static final String BEGIN_DATA_SECTION  = "!data";
 
     private static String toConfigNamespace(String key) {
         return "_config." + key;
@@ -153,9 +153,9 @@ public class WorldMap {
     public String sourceText() {
         var stringWriter = new StringWriter();
         var pw = new PrintWriter(stringWriter);
-        pw.append(MARKER_START_TERRAIN_LAYER).append("\n");
+        pw.append(BEGIN_TERRAIN_LAYER).append("\n");
         print(terrainLayer, pw);
-        pw.append(MARKER_START_FOOD_LAYER).append("\n");
+        pw.append(BEGIN_FOOD_LAYER).append("\n");
         print(foodLayer, pw);
         return stringWriter.toString();
     }
@@ -217,7 +217,7 @@ public class WorldMap {
                 .sorted()
                 .map(name -> name + "=" + layer.properties.get(name))
                 .forEach(pw::println);
-        pw.println(MARKER_DATA_SECTION_START);
+        pw.println(BEGIN_DATA_SECTION);
         for (int row = 0; row < numRows; ++row) {
             for (int col = 0; col < numCols; ++col) {
                 byte value = layer.values[row][col];
@@ -236,9 +236,9 @@ public class WorldMap {
         var foodSection = new ArrayList<String>();
         boolean inTerrainSection = false, inFoodSection = false;
         for (var line : lines.toList()) {
-            if (MARKER_START_TERRAIN_LAYER.equals(line)) {
+            if (BEGIN_TERRAIN_LAYER.equals(line)) {
                 inTerrainSection = true;
-            } else if (MARKER_START_FOOD_LAYER.equals(line)) {
+            } else if (BEGIN_FOOD_LAYER.equals(line)) {
                 inTerrainSection = false;
                 inFoodSection = true;
             } else if (inTerrainSection) {
@@ -281,7 +281,7 @@ public class WorldMap {
         StringBuilder propertySection = new StringBuilder();
         for (int lineIndex = 0; lineIndex < lines.size(); ++lineIndex) {
             String line = lines.get(lineIndex);
-            if (MARKER_DATA_SECTION_START.equals(line)) {
+            if (BEGIN_DATA_SECTION.equals(line)) {
                 dataSectionStartIndex = lineIndex + 1;
             }
             else if (dataSectionStartIndex == -1) {
@@ -370,9 +370,9 @@ public class WorldMap {
 
     public boolean save(File file) {
         try (PrintWriter pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
-            pw.println(MARKER_START_TERRAIN_LAYER);
+            pw.println(BEGIN_TERRAIN_LAYER);
             print(terrainLayer, pw);
-            pw.println(MARKER_START_FOOD_LAYER);
+            pw.println(BEGIN_FOOD_LAYER);
             print(foodLayer, pw);
             return true;
         } catch (IOException x) {
