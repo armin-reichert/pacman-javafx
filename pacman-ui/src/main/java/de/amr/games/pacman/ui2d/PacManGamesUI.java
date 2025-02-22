@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui2d;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
+import de.amr.games.pacman.model.CustomMapSelectionMode;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.action.GameAction;
@@ -368,7 +369,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         // TODO: Not sure if this belongs here
         // We cannot use data binding to the game model classes because the game models are in project
         // "pacman-core" which has no dependency to JavaFX data binding.
-        if (game.isCustomMapsEnabled()) {
+        if (game.mapSelectionMode() != CustomMapSelectionMode.NO_CUSTOM_MAPS) {
             gamePage.setActionOpenEditor(actionOpenEditor);
             game.setMapSelectionMode(GlobalProperties2d.PY_MAP_SELECTION_MODE.get());
             GlobalProperties2d.PY_MAP_SELECTION_MODE.addListener((py, ov, selectionMode) -> game.setMapSelectionMode(selectionMode));

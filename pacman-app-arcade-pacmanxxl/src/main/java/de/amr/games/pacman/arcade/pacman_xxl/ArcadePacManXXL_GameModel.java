@@ -9,7 +9,6 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.CustomMapSelectionMode;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
@@ -21,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -35,9 +33,6 @@ import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
  */
 public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel {
 
-    private static final int MAP_COUNT = 8;
-    private static final String MAP_PATTERN = "maps/masonic_%d.world";
-
     static final List<Map<String, String>> COLOR_MAPS = List.of(
         Map.of("fill", "#359c9c", "stroke", "#85e2ff", "door", "#fcb5ff", "pellet", "#feb8ae"),
         Map.of("fill", "#c2b853", "stroke", "#ffeace", "door", "#fcb5ff", "pellet", "#feb8ae"),
@@ -49,22 +44,12 @@ public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel {
         Map.of("fill", "#5036d9", "stroke", "#5f8bcf", "door", "#fcb5ff", "pellet", "#feb8ae")
     );
 
-    private final List<WorldMap> standardMaps = new ArrayList<>();
-
     public ArcadePacManXXL_GameModel(File userDir) {
         super(userDir);
         scoreManager.setHighScoreFile(new File(userDir, "highscore-pacman_xxl.xml"));
-        for (int num = 1; num <= MAP_COUNT; ++num) {
-            URL url = getClass().getResource(MAP_PATTERN.formatted(num));
-            try {
-                WorldMap worldMap = new WorldMap(url);
-                standardMaps.add(worldMap);
-            } catch (IOException x) {
-                Logger.error("Could not create world map, url={}", url);
-                throw new RuntimeException(x);
-            }
-        }
-        customMapsEnabled = true;
+        //TODO ugly:
+        builtinMaps.clear();
+        loadBuiltinMaps("maps/masonic_%d.world", 8);
         updateCustomMaps();
     }
 
@@ -108,7 +93,7 @@ public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel {
     @Override
     public void configureNormalLevel() {
         levelCounterEnabled = true;
-        WorldMap worldMap = createMapConfig(level.number);
+        WorldMap worldMap = selectWorldMap(level.number);
         level.setNumFlashes(levelData(level.number).numFlashes());
         level.setIntermissionNumber(ArcadePacMan_GameModel.intermissionNumberAfterLevel(level.number));
         populateLevel(worldMap);
@@ -125,29 +110,29 @@ public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel {
         setDemoLevelBehavior();
     }
 
-    private WorldMap createMapConfig(int levelNumber) {
+    private WorldMap selectWorldMap(int levelNumber) {
         WorldMap worldMap = null;
         Map<String, String> colorMap;
         switch (mapSelectionMode) {
             case NO_CUSTOM_MAPS -> {
-                worldMap = levelNumber <= standardMaps.size()
-                    ? new WorldMap(standardMaps.get(levelNumber - 1))
-                    : new WorldMap(standardMaps.get(randomInt(0, standardMaps.size())));
+                worldMap = levelNumber <= builtinMaps.size()
+                    ? new WorldMap(builtinMaps.get(levelNumber - 1))
+                    : new WorldMap(builtinMaps.get(randomInt(0, builtinMaps.size())));
             }
             case CUSTOM_MAPS_FIRST -> {
                 List<WorldMap> maps = new ArrayList<>(customMapsSortedByFile());
-                maps.addAll(standardMaps);
+                maps.addAll(builtinMaps);
                 worldMap = levelNumber <= maps.size()
                     ? new WorldMap(maps.get(levelNumber - 1))
                     : new WorldMap(maps.get(randomInt(0, maps.size())));
             }
             case ALL_RANDOM -> {
                 List<WorldMap> maps = new ArrayList<>(customMapsSortedByFile());
-                maps.addAll(standardMaps);
+                maps.addAll(builtinMaps);
                 worldMap = new WorldMap(maps.get(randomInt(0, maps.size())));
             }
         }
-        if (standardMaps.contains(worldMap)) {
+        if (builtinMaps.contains(worldMap)) {
             colorMap = COLOR_MAPS.get(randomInt(0, COLOR_MAPS.size()));
         } else {
             colorMap = Map.of(

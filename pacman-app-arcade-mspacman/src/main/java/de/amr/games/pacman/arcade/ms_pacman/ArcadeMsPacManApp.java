@@ -27,7 +27,10 @@ public class ArcadeMsPacManApp extends Application {
             if (userDir.mkdir()) {
                 Logger.info("User dir '{}' created", userDir);
             }
-            GameController.it().addGame(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameModel(userDir));
+            ArcadeMsPacMan_GameModel game = new ArcadeMsPacMan_GameModel(userDir);
+            //game.setCustomMapsEnabled(true);
+            //game.updateCustomMaps();
+            GameController.it().addGame(GameVariant.MS_PACMAN, game);
             GameController.it().selectGame(GameVariant.MS_PACMAN);
         } catch (Exception x) {
             x.printStackTrace(System.err);

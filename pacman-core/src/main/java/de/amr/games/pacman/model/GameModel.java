@@ -17,6 +17,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.*;
 
 import static de.amr.games.pacman.lib.Globals.assertNotNull;
@@ -51,8 +52,10 @@ public abstract class GameModel {
     protected int                  lives;
     protected SimulationStepLog    eventLog;
     protected boolean              demoLevel;
-
     protected GameLevel            level;
+
+    protected File userDir;
+    protected final List<WorldMap> builtinMaps = new ArrayList<>();
 
     public abstract void           resetEverything();
     public abstract void           resetForStartingNewGame();
@@ -87,17 +90,10 @@ public abstract class GameModel {
     protected abstract void        onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
     protected abstract void        onGhostReleased(Ghost ghost);
 
-    protected File userDir;
-
     // Custom map handling
     protected File customMapDir;
     protected final Map<File, WorldMap> customMapsByFile = new HashMap<>();
     protected CustomMapSelectionMode mapSelectionMode;
-    protected boolean customMapsEnabled;
-
-    public boolean isCustomMapsEnabled() {
-        return customMapsEnabled;
-    }
 
     public void setMapSelectionMode(CustomMapSelectionMode mapSelectionMode) {
         this.mapSelectionMode = assertNotNull(mapSelectionMode);
@@ -155,6 +151,24 @@ public abstract class GameModel {
         publishGameEvent(GameEventType.CUSTOM_MAPS_CHANGED);
     }
 
+    protected void loadBuiltinMaps(String mapPattern, int count) {
+        for (int num = 1; num <= count; ++num) {
+            URL url = getClass().getResource(mapPattern.formatted(num));
+            if (url != null) {
+                try {
+                    WorldMap worldMap = new WorldMap(url);
+                    builtinMaps.add(worldMap);
+                } catch (IOException x) {
+                    Logger.error(x);
+                    Logger.error("Could not create world map, url={}", url);
+                }
+            } else {
+                Logger.error("Could not load world map, pattern={}, number={}", mapPattern, num);
+            }
+        }
+        Logger.info("{} maps loaded ({})", builtinMaps.size(), GameVariant.MS_PACMAN);
+    }
+
     public int lastLevelNumber() { return Integer.MAX_VALUE; }
     public Optional<GameLevel> level() {
         return Optional.ofNullable(level);
@@ -174,11 +188,11 @@ public abstract class GameModel {
 
     protected GameModel(File userDir) {
         this.userDir = assertNotNull(userDir);
+        mapSelectionMode = CustomMapSelectionMode.NO_CUSTOM_MAPS;
         customMapDir = new File(userDir, "maps");
         if (customMapDir.mkdir()) {
             Logger.info("Created custom map directory {}", customMapDir);
         }
-        mapSelectionMode = CustomMapSelectionMode.NO_CUSTOM_MAPS;
     }
 
     public void startNewGame() {

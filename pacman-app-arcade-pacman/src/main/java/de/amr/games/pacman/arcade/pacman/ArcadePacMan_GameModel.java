@@ -114,7 +114,6 @@ public class ArcadePacMan_GameModel extends GameModel {
     protected static final int[] HUNTING_TICKS_LEVEL_2_3_4 = {420, 1200, 420, 1200, 300, 61980,   1, -1};
     protected static final int[] HUNTING_TICKS_LEVEL_5_PLUS = {300, 1200, 300, 1200, 300, 62262,   1, -1};
 
-    protected WorldMap theWorldMap;
     protected final Steering autopilot = new RuleBasedPacSteering(this);
     protected Steering demoLevelSteering;
     protected byte cruiseElroy;
@@ -125,20 +124,16 @@ public class ArcadePacMan_GameModel extends GameModel {
         simulateOverflowBug = true;
         scoreManager.setHighScoreFile(new File(userDir, "highscore-pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
-        loadWorldMap(ResourceRoot.class.getResource("maps/pacman.world"));
-        createHuntingControl();
-    }
-
-    private void loadWorldMap(URL url) {
+        URL url = ResourceRoot.class.getResource("maps/pacman.world");
         try {
-            theWorldMap = new WorldMap(url);
-            theWorldMap.setConfigValue("mapNumber", 1);
-            theWorldMap.setConfigValue("colorMapIndex", 0);
+            var map = new WorldMap(url);
+            map.setConfigValue("mapNumber", 1);
+            map.setConfigValue("colorMapIndex", 0);
+            builtinMaps.add(map);
         } catch (Exception x) {
-            String message = "Could not create world map, url=%s".formatted(url);
-            Logger.error(message);
-            throw new RuntimeException(message, x);
+            throw new IllegalStateException(x);
         }
+        createHuntingControl();
     }
 
     private void createHuntingControl() {
@@ -260,11 +255,11 @@ public class ArcadePacMan_GameModel extends GameModel {
         levelCounterEnabled = true;
         level.setNumFlashes(levelData(level.number).numFlashes());
         level.setIntermissionNumber(intermissionNumberAfterLevel(level.number));
-        populateLevel(theWorldMap);
+        populateLevel(builtinMaps.getFirst());
         level.pac().setAutopilot(autopilot);
         setCruiseElroy(0);
-        List<Vector2i> oneWayDownTiles = theWorldMap.tiles()
-            .filter(tile -> theWorldMap.get(LayerID.TERRAIN, tile) == TerrainTiles.ONE_WAY_DOWN).toList();
+        List<Vector2i> oneWayDownTiles = builtinMaps.getFirst().tiles()
+            .filter(tile -> builtinMaps.getFirst().get(LayerID.TERRAIN, tile) == TerrainTiles.ONE_WAY_DOWN).toList();
         level.ghosts().forEach(ghost -> {
             ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
             ghost.setSpecialTerrainTiles(oneWayDownTiles);

@@ -14,6 +14,8 @@ import de.amr.games.pacman.arcade.pacman_xxl.ArcadePacManXXL_GameConfig3D;
 import de.amr.games.pacman.arcade.pacman_xxl.ArcadePacManXXL_GameModel;
 import de.amr.games.pacman.arcade.pacman_xxl.ArcadePacManXXL_StartPage;
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.model.CustomMapSelectionMode;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfig3D;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
@@ -61,10 +63,13 @@ public class PacManGames3dApp extends Application {
         if (userDir.mkdir()) {
             Logger.info("User dir '{}' created", userDir);
         }
+        GameModel gameXXL = new ArcadePacManXXL_GameModel(userDir);
+        gameXXL.setMapSelectionMode(CustomMapSelectionMode.CUSTOM_MAPS_FIRST);
+
         GameController.it().addGame(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameModel(userDir));
         GameController.it().addGame(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel(userDir));
         GameController.it().addGame(GameVariant.PACMAN, new ArcadePacMan_GameModel(userDir));
-        GameController.it().addGame(GameVariant.PACMAN_XXL, new ArcadePacManXXL_GameModel(userDir));
+        GameController.it().addGame(GameVariant.PACMAN_XXL, gameXXL);
         GameController.it().selectGame(GameVariant.PACMAN);
         GlobalProperties3d.PY_3D_ENABLED.set(false);
     }

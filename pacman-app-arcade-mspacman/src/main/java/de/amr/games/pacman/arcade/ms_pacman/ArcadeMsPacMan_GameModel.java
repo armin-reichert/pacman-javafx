@@ -24,7 +24,6 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -46,10 +45,6 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  * @author Armin Reichert
  */
 public class ArcadeMsPacMan_GameModel extends GameModel {
-
-    private static final String MAP_PATTERN = "maps/mspacman_%d.world";
-
-    private final List<WorldMap> maps = new ArrayList<>();
 
     // These are the Pac-Man level data as given in the Pac-Man dossier.
     // I have no information that Ms. Pac-Man uses different data.
@@ -77,46 +72,6 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         /*21*/ { 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
     };
 
-    /**
-     * <p>In Ms. Pac-Man, there are 4 maps and 6 color schemes.
-     * </p>
-     * <ul>
-     * <li>Levels 1-2: (1, 1): pink wall fill, white dots
-     * <li>Levels 3-5: (2, 2)): light blue wall fill, yellow dots
-     * <li>Levels 6-9: (3, 3): orange wall fill, red dots
-     * <li>Levels 10-13: (4, 4): blue wall fill, white dots
-     * </ul>
-     * For level 14 and later, (map, color_scheme) alternates every 4th level between (3, 5) and (4, 6):
-     * <ul>
-     * <li>(3, 5): pink wall fill, cyan dots
-     * <li>(4, 6): orange wall fill, white dots
-     * </ul>
-     * <p>
-     */
-    private static WorldMap configureWorldMap(List<WorldMap> maps, int levelNumber) {
-        final int mapNumber = switch (levelNumber) {
-            case 1, 2 -> 1;
-            case 3, 4, 5 -> 2;
-            case 6, 7, 8, 9 -> 3;
-            case 10, 11, 12, 13 -> 4;
-            default -> (levelNumber - 14) % 8 < 4 ? 3 : 4;
-        };
-        int colorMapIndex = levelNumber < 14 ? mapNumber - 1 : mapNumber + 2 - 1;
-        WorldMap worldMap = new WorldMap(maps.get(mapNumber - 1));
-        worldMap.setConfigValue("mapNumber", mapNumber);
-        worldMap.setConfigValue("colorMapIndex", colorMapIndex);
-        return worldMap;
-    }
-
-    private static int intermissionNumberAfterLevel(int number) {
-        return switch (number) {
-            case 2 -> 1;
-            case 5 -> 2;
-            case 9, 13, 17 -> 3;
-            default -> 0;
-        };
-    }
-
     /*
      * These numbers are from a conversation with @damselindis on Reddit.
      *
@@ -143,21 +98,6 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     public ArcadeMsPacMan_GameModel(File userDir) {
         super(userDir);
-        for (int num = 1; num <= 4; ++num) {
-            URL url = getClass().getResource(MAP_PATTERN.formatted(num));
-            if (url != null) {
-                try {
-                    WorldMap worldMap = new WorldMap(url);
-                    maps.add(worldMap);
-                } catch (IOException x) {
-                    Logger.error(x);
-                    Logger.error("Could not create world map, url={}", url);
-                }
-            } else {
-                Logger.error("Could not load world map, pattern={}, number={}", MAP_PATTERN, num);
-            }
-        }
-        Logger.info("{} maps loaded ({})", maps.size(), GameVariant.MS_PACMAN);
 
         initialLives = 3;
         simulateOverflowBug = true;
@@ -173,6 +113,8 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
             }
         };
         huntingControl.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
+
+        loadBuiltinMaps("maps/mspacman_%d.world", 4);
     }
 
     @Override
@@ -264,7 +206,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         levelCounterEnabled = level.number < 8;
         level.setIntermissionNumber(intermissionNumberAfterLevel(level.number));
         level.setNumFlashes(levelData(level.number).numFlashes());
-        WorldMap worldMap = configureWorldMap(maps, level.number);
+        WorldMap worldMap = selectWorldMap(builtinMaps, level.number);
         createWorldAndPopulation(worldMap);
         level.pac().setAutopilot(autopilot);
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
@@ -276,6 +218,46 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         levelCounterEnabled = false;
         setDemoLevelBehavior();
         demoLevelSteering.init();
+    }
+
+    /**
+     * <p>In Ms. Pac-Man, there are 4 maps and 6 color schemes.
+     * </p>
+     * <ul>
+     * <li>Levels 1-2: (1, 1): pink wall fill, white dots
+     * <li>Levels 3-5: (2, 2)): light blue wall fill, yellow dots
+     * <li>Levels 6-9: (3, 3): orange wall fill, red dots
+     * <li>Levels 10-13: (4, 4): blue wall fill, white dots
+     * </ul>
+     * For level 14 and later, (map, color_scheme) alternates every 4th level between (3, 5) and (4, 6):
+     * <ul>
+     * <li>(3, 5): pink wall fill, cyan dots
+     * <li>(4, 6): orange wall fill, white dots
+     * </ul>
+     * <p>
+     */
+    private WorldMap selectWorldMap(List<WorldMap> maps, int levelNumber) {
+        final int mapNumber = switch (levelNumber) {
+            case 1, 2 -> 1;
+            case 3, 4, 5 -> 2;
+            case 6, 7, 8, 9 -> 3;
+            case 10, 11, 12, 13 -> 4;
+            default -> (levelNumber - 14) % 8 < 4 ? 3 : 4;
+        };
+        int colorMapIndex = levelNumber < 14 ? mapNumber - 1 : mapNumber + 2 - 1;
+        WorldMap worldMap = new WorldMap(maps.get(mapNumber - 1));
+        worldMap.setConfigValue("mapNumber", mapNumber);
+        worldMap.setConfigValue("colorMapIndex", colorMapIndex);
+        return worldMap;
+    }
+
+    private int intermissionNumberAfterLevel(int number) {
+        return switch (number) {
+            case 2 -> 1;
+            case 5 -> 2;
+            case 9, 13, 17 -> 3;
+            default -> 0;
+        };
     }
 
     @Override
