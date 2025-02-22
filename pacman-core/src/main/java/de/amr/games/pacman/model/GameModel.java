@@ -9,16 +9,17 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.model.actors.*;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
+import static de.amr.games.pacman.lib.Globals.assertNotNull;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
 /**
@@ -86,6 +87,74 @@ public abstract class GameModel {
     protected abstract void        onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
     protected abstract void        onGhostReleased(Ghost ghost);
 
+    protected File userDir;
+
+    // Custom map handling
+    protected File customMapDir;
+    protected final Map<File, WorldMap> customMapsByFile = new HashMap<>();
+    protected CustomMapSelectionMode mapSelectionMode;
+    protected boolean customMapsEnabled;
+
+    public boolean isCustomMapsEnabled() {
+        return customMapsEnabled;
+    }
+
+    public void setMapSelectionMode(CustomMapSelectionMode mapSelectionMode) {
+        this.mapSelectionMode = assertNotNull(mapSelectionMode);
+        Logger.info("Map selection mode is now {}", mapSelectionMode);
+    }
+
+    public CustomMapSelectionMode mapSelectionMode() {
+        return mapSelectionMode;
+    }
+
+    public File customMapDir() {
+        return customMapDir;
+    }
+
+    public Map<File, WorldMap> customMapsByFile() {
+        return customMapsByFile;
+    }
+
+    public List<WorldMap> customMapsSortedByFile() {
+        return customMapsByFile.keySet().stream().sorted().map(customMapsByFile::get).toList();
+    }
+
+    public void updateCustomMaps() {
+        if (customMapDir.exists() && customMapDir.isDirectory()) {
+            Logger.info("Custom map directory found: '{}'", customMapDir);
+        } else {
+            if (customMapDir.mkdirs()) {
+                Logger.info("Custom map directory created: '{}'", customMapDir);
+            } else {
+                Logger.error("Custom map directory could not be created: '{}'", customMapDir);
+                return;
+            }
+        }
+        File[] mapFiles = customMapDir.listFiles((dir, name) -> name.endsWith(".world"));
+        if (mapFiles == null) {
+            Logger.error("An error occurred accessing custom map directory {}", customMapDir);
+            return;
+        }
+        if (mapFiles.length == 0) {
+            Logger.info("No custom maps found");
+        } else {
+            Logger.info("{} custom map(s) found", mapFiles.length);
+        }
+        customMapsByFile.clear();
+        for (File mapFile : mapFiles) {
+            try {
+                WorldMap worldMap = new WorldMap(mapFile);
+                customMapsByFile.put(mapFile, worldMap);
+                Logger.info("Custom map loaded from file {}", mapFile);
+            } catch (IOException x) {
+                Logger.error(x);
+                Logger.error("Could not read custom map from file {}", mapFile);
+            }
+        }
+        publishGameEvent(GameEventType.CUSTOM_MAPS_CHANGED);
+    }
+
     public int lastLevelNumber() { return Integer.MAX_VALUE; }
     public Optional<GameLevel> level() {
         return Optional.ofNullable(level);
@@ -101,6 +170,15 @@ public abstract class GameModel {
 
     public HuntingTimer huntingControl() {
         return huntingControl;
+    }
+
+    protected GameModel(File userDir) {
+        this.userDir = assertNotNull(userDir);
+        customMapDir = new File(userDir, "maps");
+        if (customMapDir.mkdir()) {
+            Logger.info("Created custom map directory {}", customMapDir);
+        }
+        mapSelectionMode = CustomMapSelectionMode.NO_CUSTOM_MAPS;
     }
 
     public void startNewGame() {
@@ -417,7 +495,7 @@ public abstract class GameModel {
     private final List<GameEventListener> gameEventListeners = new ArrayList<>();
 
     public void addGameEventListener(GameEventListener listener) {
-        Globals.assertNotNull(listener);
+        assertNotNull(listener);
         if (!gameEventListeners.contains(listener)) {
             gameEventListeners.add(listener);
         } else {
@@ -426,18 +504,18 @@ public abstract class GameModel {
     }
 
     public void publishGameEvent(GameEvent event) {
-        Globals.assertNotNull(event);
+        assertNotNull(event);
         gameEventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
         Logger.trace("Published game event: {}", event);
     }
 
     public void publishGameEvent(GameEventType type) {
-        Globals.assertNotNull(type);
+        assertNotNull(type);
         publishGameEvent(new GameEvent(type, this));
     }
 
     public void publishGameEvent(GameEventType type, Vector2i tile) {
-        Globals.assertNotNull(type);
+        assertNotNull(type);
         publishGameEvent(new GameEvent(type, this, tile));
     }
 }

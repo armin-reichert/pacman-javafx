@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.CustomMapSelectionMode;
-import de.amr.games.pacman.model.CustomMapsHandler;
 import de.amr.games.pacman.ui2d.GameContext;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -18,6 +17,7 @@ import javafx.scene.control.TableView;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.util.Map;
 
 import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_MAP_SELECTION_MODE;
 
@@ -70,13 +70,12 @@ public class InfoBoxCustomMaps extends InfoBox {
     }
 
     public void updateTableView() {
-        if (context.game() instanceof CustomMapsHandler customMapsHandler) {
-            ObservableList<MapInfo> items = FXCollections.observableArrayList();
-            for (File file : customMapsHandler.customMapsByFile().keySet().stream().sorted().toList()) {
-                WorldMap worldMap = customMapsHandler.customMapsByFile().get(file);
-                items.add(new MapInfo(file.getName(), worldMap.numRows(), worldMap.numCols()));
-            }
-            mapTable.setItems(items);
+        ObservableList<MapInfo> items = FXCollections.observableArrayList();
+        Map<File, WorldMap> customMaps = context.game().customMapsByFile();
+        for (File file : customMaps.keySet().stream().sorted().toList()) {
+            WorldMap worldMap = customMaps.get(file);
+            items.add(new MapInfo(file.getName(), worldMap.numRows(), worldMap.numCols()));
         }
+        mapTable.setItems(items);
     }
 }

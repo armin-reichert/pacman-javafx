@@ -10,7 +10,6 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.CustomMapSelectionMode;
-import de.amr.games.pacman.model.CustomMapsHandler;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
@@ -34,7 +33,7 @@ import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
  * Extension of Arcade Pac-Man with 8 additional mazes (thanks to the one and only
  * <a href="https://github.com/masonicGIT/pacman">Shaun Williams</a>).
  */
-public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel implements CustomMapsHandler {
+public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel {
 
     private static final int MAP_COUNT = 8;
     private static final String MAP_PATTERN = "maps/masonic_%d.world";
@@ -50,19 +49,11 @@ public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel implements
         Map.of("fill", "#5036d9", "stroke", "#5f8bcf", "door", "#fcb5ff", "pellet", "#feb8ae")
     );
 
-    private final File customMapDir;
     private final List<WorldMap> standardMaps = new ArrayList<>();
-    private final Map<File, WorldMap> customMapsByFile = new HashMap<>();
-    private CustomMapSelectionMode mapSelectionMode;
 
     public ArcadePacManXXL_GameModel(File userDir) {
         super(userDir);
-        customMapDir = new File(userDir, "maps");
-        if (customMapDir.mkdir()) {
-            Logger.info("Created custom map directory {}", customMapDir);
-        }
         scoreManager.setHighScoreFile(new File(userDir, "highscore-pacman_xxl.xml"));
-        mapSelectionMode = CustomMapSelectionMode.NO_CUSTOM_MAPS;
         for (int num = 1; num <= MAP_COUNT; ++num) {
             URL url = getClass().getResource(MAP_PATTERN.formatted(num));
             try {
@@ -73,6 +64,7 @@ public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel implements
                 throw new RuntimeException(x);
             }
         }
+        customMapsEnabled = true;
         updateCustomMaps();
     }
 
@@ -186,68 +178,4 @@ public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel implements
         publishGameEvent(GameEventType.BONUS_ACTIVATED, staticBonus.actor().tile());
     }
 
-    // Custom map handling
-
-    @Override
-    public void setMapSelectionMode(CustomMapSelectionMode mapSelectionMode) {
-        this.mapSelectionMode = assertNotNull(mapSelectionMode);
-        Logger.info("Map selection mode is now {}", mapSelectionMode);
-    }
-
-    @Override
-    public CustomMapSelectionMode mapSelectionMode() {
-        return mapSelectionMode;
-    }
-
-
-    @Override
-    public File customMapDir() {
-        return customMapDir;
-    }
-
-    @Override
-    public Map<File, WorldMap> customMapsByFile() {
-        return customMapsByFile;
-    }
-
-    @Override
-    public List<WorldMap> customMapsSortedByFile() {
-        return customMapsByFile.keySet().stream().sorted().map(customMapsByFile::get).toList();
-    }
-
-    @Override
-    public void updateCustomMaps() {
-        if (customMapDir.exists() && customMapDir.isDirectory()) {
-            Logger.info("Custom map directory found: '{}'", customMapDir);
-        } else {
-            if (customMapDir.mkdirs()) {
-                Logger.info("Custom map directory created: '{}'", customMapDir);
-            } else {
-                Logger.error("Custom map directory could not be created: '{}'", customMapDir);
-                return;
-            }
-        }
-        File[] mapFiles = customMapDir.listFiles((dir, name) -> name.endsWith(".world"));
-        if (mapFiles == null) {
-            Logger.error("An error occurred accessing custom map directory {}", customMapDir);
-            return;
-        }
-        if (mapFiles.length == 0) {
-            Logger.info("No custom maps found");
-        } else {
-            Logger.info("{} custom map(s) found", mapFiles.length);
-        }
-        customMapsByFile.clear();
-        for (File mapFile : mapFiles) {
-            try {
-                WorldMap worldMap = new WorldMap(mapFile);
-                customMapsByFile.put(mapFile, worldMap);
-                Logger.info("Custom map loaded from file {}", mapFile);
-            } catch (IOException x) {
-                Logger.error(x);
-                Logger.error("Could not read custom map from file {}", mapFile);
-            }
-        }
-        publishGameEvent(GameEventType.CUSTOM_MAPS_CHANGED);
-    }
 }

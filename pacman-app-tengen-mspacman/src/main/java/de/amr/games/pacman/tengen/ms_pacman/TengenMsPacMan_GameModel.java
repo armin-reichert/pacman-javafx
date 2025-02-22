@@ -130,6 +130,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     public TengenMsPacMan_GameModel(File userDir) {
+        super(userDir);
         scoreManager.setHighScoreFile(new File(userDir, HIGH_SCORE_FILENAME));
         huntingControl = new MsPacManGameTengenHuntingControl();
         mapManager = new MapManager(MAPS_ROOT);

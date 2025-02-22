@@ -120,6 +120,7 @@ public class ArcadePacMan_GameModel extends GameModel {
     protected byte cruiseElroy;
 
     public ArcadePacMan_GameModel(File userDir) {
+        super(userDir);
         initialLives = 3;
         simulateOverflowBug = true;
         scoreManager.setHighScoreFile(new File(userDir, "highscore-pacman.xml"));
