@@ -153,10 +153,10 @@ public class WorldMap {
     public String sourceText() {
         var stringWriter = new StringWriter();
         var pw = new PrintWriter(stringWriter);
-        pw.append(BEGIN_TERRAIN_LAYER).append("\n");
-        print(terrainLayer, pw);
-        pw.append(BEGIN_FOOD_LAYER).append("\n");
-        print(foodLayer, pw);
+        pw.println(BEGIN_TERRAIN_LAYER);
+        print(pw, terrainLayer);
+        pw.println(BEGIN_FOOD_LAYER);
+        print(pw, foodLayer);
         return stringWriter.toString();
     }
 
@@ -211,7 +211,7 @@ public class WorldMap {
         return newMap;
     }
 
-    private void print(Layer layer, PrintWriter pw) {
+    private void print(PrintWriter pw, Layer layer) {
         layer.properties.keySet().stream()
                 .filter(name -> layer.properties.get(name) instanceof String)
                 .sorted()
@@ -371,9 +371,9 @@ public class WorldMap {
     public boolean save(File file) {
         try (PrintWriter pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
             pw.println(BEGIN_TERRAIN_LAYER);
-            print(terrainLayer, pw);
+            print(pw, terrainLayer);
             pw.println(BEGIN_FOOD_LAYER);
-            print(foodLayer, pw);
+            print(pw, foodLayer);
             return true;
         } catch (IOException x) {
             Logger.error(x);
