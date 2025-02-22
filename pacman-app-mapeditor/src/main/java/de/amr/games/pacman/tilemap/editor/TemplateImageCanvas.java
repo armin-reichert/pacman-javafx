@@ -24,6 +24,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
@@ -31,6 +32,8 @@ import static de.amr.games.pacman.tilemap.editor.TileMapEditor.tt;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.*;
 
 public class TemplateImageCanvas extends Canvas {
+
+    private static final int COLOR_INDICATOR_WIDTH = 170;
 
     private final IntegerProperty gridSizePy = new SimpleIntegerProperty();
     private final BooleanProperty gridVisiblePy = new SimpleBooleanProperty();
@@ -42,14 +45,15 @@ public class TemplateImageCanvas extends Canvas {
 
     public static class ColorIndicator extends HBox {
         private final VBox colorBox = new VBox();
-        private final Text colorText = new Text("Color picked here");
+        private final Text colorText = new Text("#RGB");
 
         public ColorIndicator() {
-            setMinWidth(120);
+            setMinWidth(COLOR_INDICATOR_WIDTH);
+            setMaxWidth(COLOR_INDICATOR_WIDTH);
             setMinHeight(30);
             setSpacing(10);
             setPadding(new Insets(3));
-            setBackground(Background.fill(Color.BLACK));
+            setBackground(Background.fill(Color.gray(0.4)));
 
             colorBox.setMinWidth(30);
             colorBox.setMaxWidth(30);
@@ -70,7 +74,6 @@ public class TemplateImageCanvas extends Canvas {
     }
 
     public TemplateImageCanvas(TileMapEditor editor) {
-
         gridSizePy.bind(editor.gridSizeProperty());
         gridVisiblePy.bind(editor.gridVisibleProperty());
         templateImagePy.bind(editor.templateImageProperty());
@@ -102,8 +105,9 @@ public class TemplateImageCanvas extends Canvas {
 
         setOnMouseMoved(e -> {
             colorIndicator.setColor(pickColor(e.getX(), e.getY()));
-            colorIndicator.setLayoutX(e.getX() + 20);
-            colorIndicator.setLayoutY(e.getY() + 40);
+            double correction = 1.5 * (e.getX() - getWidth() * 0.5) / getWidth();
+            colorIndicator.setLayoutX(e.getX() - COLOR_INDICATOR_WIDTH * 0.5 - correction * COLOR_INDICATOR_WIDTH);
+            colorIndicator.setLayoutY(e.getY() + 20);
             colorIndicator.setVisible(e.getX() < getWidth() && e.getY() < getHeight());
         });
 

@@ -1093,7 +1093,7 @@ public class TileMapEditor {
                 Logger.error(x);
             }
         }
-        if (templateImagePy.get() != null && tabTemplateImage.isSelected()) {
+        if (tabTemplateImage.isSelected()) {
             try {
                 Logger.trace("Draw template image");
                 templateImageCanvas.draw();
