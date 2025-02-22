@@ -1056,20 +1056,12 @@ public class TileMapEditor {
     }
 
     private void updateSourceView() {
-        if (sourceView == null) {
-            Logger.warn("Cannot update source view as it doesn't exist yet");
-            return;
+        StringBuilder sb = new StringBuilder();
+        String[] lines = worldMap().sourceText().split("\n");
+        for (int i = 0; i < lines.length; ++i) {
+            sb.append("%5d: ".formatted(i + 1)).append(lines[i]).append("\n");
         }
-        try {
-            StringBuilder sb = new StringBuilder();
-            String[] lines = worldMap().sourceText().split("\n");
-            for (int i = 0; i < lines.length; ++i) {
-                sb.append("%5d: ".formatted(i + 1)).append(lines[i]).append("\n");
-            }
-            sourceView.setText(sb.toString());
-        } catch (Exception x) {
-            Logger.error(x);
-        }
+        sourceView.setText(sb.toString());
     }
 
     private void onEditModeChanged(EditMode editMode) {
