@@ -231,32 +231,32 @@ public class WorldMap {
         pw.flush();
     }
 
-    private void parse(Stream<String> lines) {
-        var terrainSection = new ArrayList<String>();
-        var foodSection = new ArrayList<String>();
-        boolean inTerrainSection = false, inFoodSection = false;
-        for (var line : lines.toList()) {
-            if (BEGIN_TERRAIN_LAYER.equals(line)) {
-                inTerrainSection = true;
-            } else if (BEGIN_FOOD_LAYER.equals(line)) {
-                inTerrainSection = false;
-                inFoodSection = true;
-            } else if (inTerrainSection) {
-                terrainSection.add(line);
-            } else if (inFoodSection) {
-                foodSection.add(line);
+    private void parse(Stream<String> rows) {
+        var terrainLayerRows = new ArrayList<String>();
+        var foodLayerRows = new ArrayList<String>();
+        boolean insideTerrainLayer = false, insideFoodLayer = false;
+        for (var row : rows.toList()) {
+            if (BEGIN_TERRAIN_LAYER.equals(row)) {
+                insideTerrainLayer = true;
+            } else if (BEGIN_FOOD_LAYER.equals(row)) {
+                insideTerrainLayer = false;
+                insideFoodLayer = true;
+            } else if (insideTerrainLayer) {
+                terrainLayerRows.add(row);
+            } else if (insideFoodLayer) {
+                foodLayerRows.add(row);
             } else {
-                Logger.error("Line skipped: '{}'", line);
+                Logger.error("Line skipped: '{}'", row);
             }
         }
-        terrainLayer = parseTileMap(terrainSection,
+        this.terrainLayer = parseTileMap(terrainLayerRows,
             value -> 0 <= value && value <= TerrainTiles.LAST_TERRAIN_VALUE, TerrainTiles.EMPTY);
 
-        foodLayer = parseTileMap(foodSection,
+        this.foodLayer = parseTileMap(foodLayerRows,
             value -> 0 <= value && value <= FoodTiles.ENERGIZER, FoodTiles.EMPTY);
 
-        numRows = terrainLayer.values.length;
-        numCols = terrainLayer.values[0].length;
+        numRows = this.terrainLayer.values.length;
+        numCols = this.terrainLayer.values[0].length;
 
         // Replace obsolete terrain tile values
         tiles().forEach(tile -> {
@@ -277,14 +277,14 @@ public class WorldMap {
     private Layer parseTileMap(List<String> lines, Predicate<Byte> valueAllowed, byte emptyValue) {
         // First pass: read property section and determine data section size
         int numDataRows = 0, numDataCols = -1;
-        int dataSectionStartIndex = -1;
+        int dataStartIndex = -1;
         StringBuilder propertySection = new StringBuilder();
         for (int lineIndex = 0; lineIndex < lines.size(); ++lineIndex) {
             String line = lines.get(lineIndex);
             if (BEGIN_DATA_SECTION.equals(line)) {
-                dataSectionStartIndex = lineIndex + 1;
+                dataStartIndex = lineIndex + 1;
             }
-            else if (dataSectionStartIndex == -1) {
+            else if (dataStartIndex == -1) {
                 propertySection.append(line).append("\n");
             } else {
                 numDataRows++;
@@ -306,9 +306,9 @@ public class WorldMap {
         tileMap.values = new byte[numDataRows][numDataCols];
         tileMap.properties.putAll(parseProperties(propertySection.toString()));
 
-        for (int lineIndex = dataSectionStartIndex; lineIndex < lines.size(); ++lineIndex) {
+        for (int lineIndex = dataStartIndex; lineIndex < lines.size(); ++lineIndex) {
             String line = lines.get(lineIndex);
-            int row = lineIndex -dataSectionStartIndex;
+            int row = lineIndex -dataStartIndex;
             String[] columns = line.split(",");
             for (int col = 0; col < columns.length; ++col) {
                 String entry = columns[col].trim();
