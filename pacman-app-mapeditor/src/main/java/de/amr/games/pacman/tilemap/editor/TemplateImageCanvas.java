@@ -24,7 +24,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
@@ -203,7 +202,6 @@ public class TemplateImageCanvas extends Canvas {
         colorText.setFill(Color.BLACK);
 
         content.getChildren().addAll(colorBox, colorText);
-
         return new CustomMenuItem(content);
     }
 
@@ -218,13 +216,15 @@ public class TemplateImageCanvas extends Canvas {
             g.setImageSmoothing(false);
             g.drawImage(image, 0, 0, width, height);
             if (gridVisiblePy.get()) {
-                g.setStroke(Color.GRAY);
+                g.setStroke(Color.grayRgb(180));
                 g.setLineWidth(0.5);
-                for (int r = 1; r < height / TS; ++r) {
-                    g.strokeLine(0, scaling * r * TS, width, scaling * r * TS);
+                for (int row = 1; row < height / TS; ++row) {
+                    double y = scaling * row * TS;
+                    g.strokeLine(0, y, width, y);
                 }
-                for (int c = 1; c < width / TS; ++c) {
-                    g.strokeLine(scaling * c * TS, 0, scaling * c * TS, height);
+                for (int col = 1; col < width / TS; ++col) {
+                    double x = scaling * col * TS;
+                    g.strokeLine(x, 0, x, height);
                 }
             }
         }

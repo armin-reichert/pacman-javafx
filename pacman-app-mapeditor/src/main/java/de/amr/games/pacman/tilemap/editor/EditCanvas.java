@@ -199,16 +199,14 @@ public class EditCanvas extends Canvas {
     }
 
     private void drawGrid(GraphicsContext g) {
-        g.save();
-        g.setStroke(Color.LIGHTGRAY);
-        g.setLineWidth(0.25);
+        g.setStroke(Color.grayRgb(180));
+        g.setLineWidth(0.5);
         for (int row = 1; row < worldMap().numRows(); ++row) {
             g.strokeLine(0, row * gridSize(), getWidth(), row * gridSize());
         }
         for (int col = 1; col < worldMap().numCols(); ++col) {
             g.strokeLine(col * gridSize(), 0, col * gridSize(), getHeight());
         }
-        g.restore();
     }
 
     //TODO move into renderer class
