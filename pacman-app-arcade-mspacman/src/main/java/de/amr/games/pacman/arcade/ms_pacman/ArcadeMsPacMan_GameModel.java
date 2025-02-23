@@ -25,6 +25,7 @@ import de.amr.games.pacman.steering.Steering;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -221,6 +222,25 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         demoLevelSteering.init();
     }
 
+    @Override
+    protected WorldMap selectWorldMap(int levelNumber) {
+        return switch (mapSelectionMode) {
+            case NO_CUSTOM_MAPS -> selectWorldMapAsInOriginalGame(levelNumber);
+            case CUSTOM_MAPS_FIRST -> {
+                List<WorldMap> maps = new ArrayList<>(customMapsSortedByFile());
+                maps.addAll(builtinMaps);
+                yield levelNumber <= maps.size()
+                        ? new WorldMap(maps.get(levelNumber - 1))
+                        : new WorldMap(maps.get(randomInt(0, maps.size())));
+            }
+            case ALL_RANDOM -> {
+                List<WorldMap> maps = new ArrayList<>(customMapsSortedByFile());
+                maps.addAll(builtinMaps);
+                yield new WorldMap(maps.get(randomInt(0, maps.size())));
+            }
+        };
+    }
+
     /**
      * <p>In Ms. Pac-Man, there are 4 maps and 6 color schemes.
      * </p>
@@ -237,8 +257,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
      * </ul>
      * <p>
      */
-    @Override
-    protected WorldMap selectWorldMap(int levelNumber) {
+    private WorldMap selectWorldMapAsInOriginalGame(int levelNumber) {
         final int mapNumber = switch (levelNumber) {
             case 1, 2 -> 1;
             case 3, 4, 5 -> 2;
@@ -251,6 +270,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         worldMap.setConfigValue("mapNumber", mapNumber);
         worldMap.setConfigValue("colorMapIndex", colorMapIndex);
         return worldMap;
+
     }
 
     private int intermissionNumberAfterLevel(int number) {

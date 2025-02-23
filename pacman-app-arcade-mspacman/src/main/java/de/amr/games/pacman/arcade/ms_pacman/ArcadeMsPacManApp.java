@@ -29,8 +29,8 @@ public class ArcadeMsPacManApp extends Application {
                 Logger.info("User dir '{}' created", userDir);
             }
             ArcadeMsPacMan_GameModel game = new ArcadeMsPacMan_GameModel(userDir);
-            game.setMapSelectionMode(CustomMapSelectionMode.CUSTOM_MAPS_FIRST);
-            game.updateCustomMaps();
+            //game.setMapSelectionMode(CustomMapSelectionMode.CUSTOM_MAPS_FIRST);
+            //game.updateCustomMaps();
             GameController.it().addGame(GameVariant.MS_PACMAN, game);
             GameController.it().selectGame(GameVariant.MS_PACMAN);
         } catch (Exception x) {
