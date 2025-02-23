@@ -22,6 +22,7 @@ import java.util.Set;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
+import static de.amr.games.pacman.tilemap.editor.ArcadeMap.*;
 
 /**
  * @author Armin Reichert
@@ -126,21 +127,6 @@ public class TerrainRendererInEditor extends TerrainRenderer {
         g.restore();
     }
 
-    public void drawActorRelatedTile(GraphicsContext g, String propertyName, Vector2i tile) {
-        switch (propertyName) {
-            case PROPERTY_POS_PAC -> drawPacHome(g, tile);
-            case PROPERTY_POS_RED_GHOST -> drawGhostHome(g, tile, Color.RED);
-            case PROPERTY_POS_PINK_GHOST -> drawGhostHome(g, tile, Color.PINK);
-            case PROPERTY_POS_CYAN_GHOST -> drawGhostHome(g, tile, Color.CYAN);
-            case PROPERTY_POS_ORANGE_GHOST -> drawGhostHome(g, tile, Color.ORANGE);
-            case PROPERTY_POS_SCATTER_RED_GHOST -> drawScatterTarget(g, tile, Color.RED);
-            case PROPERTY_POS_SCATTER_PINK_GHOST -> drawScatterTarget(g, tile, Color.PINK);
-            case PROPERTY_POS_SCATTER_CYAN_GHOST -> drawScatterTarget(g, tile, Color.CYAN);
-            case PROPERTY_POS_SCATTER_ORANGE_GHOST -> drawScatterTarget(g, tile, Color.ORANGE);
-            default -> {}
-        }
-    }
-
     private Optional<Vector2i> specialTile(WorldMap worldMap, String propertyName) {
         if (worldMap.hasProperty(LayerID.TERRAIN, propertyName)) {
             return parseTile(worldMap.getStringProperty(LayerID.TERRAIN, propertyName));
@@ -172,7 +158,7 @@ public class TerrainRendererInEditor extends TerrainRenderer {
         g.fillRect(x, y + 0.5 * (TS - height), TS, height);
     }
 
-    private void drawScatterTarget(GraphicsContext g, Vector2i tile, Color color) {
+    public void drawScatterTarget(GraphicsContext g, Vector2i tile, Color color) {
         double x = tile.x() * TS, y = tile.y() * TS;
         g.setFill(color);
         g.fillRect(x, y, TS, TS);
@@ -216,18 +202,6 @@ public class TerrainRendererInEditor extends TerrainRenderer {
         g.setLineDashes(0.5, 1);
         g.stroke();
         g.restore();
-    }
-
-    private void drawPacHome(GraphicsContext g, Vector2i tile) {
-        double x = tile.x() * TS, y = tile.y() * TS;
-        g.setFill(Color.YELLOW);
-        g.fillOval(x, y, TS, TS);
-    }
-
-    private void drawGhostHome(GraphicsContext g, Vector2i tile, Color color) {
-        double x = tile.x() * TS, y = tile.y() * TS;
-        g.setFill(color);
-        g.fillOval(x, y, TS, TS);
     }
 
     private void drawTunnel(GraphicsContext g, Vector2i tile) {
@@ -309,4 +283,31 @@ public class TerrainRendererInEditor extends TerrainRenderer {
             default -> {}
         }
     }
+
+    //TODO move into renderer class
+    public void drawActorSprites(GraphicsContext g, WorldMap worldMap, double gridSize) {
+        drawSprite(g, worldMap.getTileProperty(PROPERTY_POS_PAC, null), PAC_SPRITE, gridSize);
+        drawSprite(g, worldMap.getTileProperty(PROPERTY_POS_RED_GHOST, null), RED_GHOST_SPRITE, gridSize);
+        drawSprite(g, worldMap.getTileProperty(PROPERTY_POS_PINK_GHOST, null), PINK_GHOST_SPRITE, gridSize);
+        drawSprite(g, worldMap.getTileProperty(PROPERTY_POS_CYAN_GHOST, null), CYAN_GHOST_SPRITE, gridSize);
+        drawSprite(g, worldMap.getTileProperty(PROPERTY_POS_ORANGE_GHOST, null), ORANGE_GHOST_SPRITE, gridSize);
+        drawSprite(g, worldMap.getTileProperty(PROPERTY_POS_BONUS, null), BONUS_SPRITE, gridSize);
+    }
+
+    public void drawSprite(GraphicsContext g, Vector2i tile, RectArea sprite, double gridSize) {
+        if (tile != null) {
+            drawSprite(g, sprite, gridSize,
+                tile.x() * gridSize + 0.5 * gridSize,
+                tile.y() * gridSize,
+                1.75 * gridSize,
+                1.75 * gridSize);
+        }
+    }
+
+    private void drawSprite(GraphicsContext g, RectArea sprite, double gridSize, double x, double y, double w, double h) {
+        double ox = 0.5 * (w - gridSize);
+        double oy = 0.5 * (h - gridSize);
+        g.drawImage(SPRITE_SHEET, sprite.x(), sprite.y(), sprite.width(), sprite.height(), x - ox, y - oy, w, h);
+    }
+
 }

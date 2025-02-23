@@ -113,13 +113,14 @@ public interface TileMapEditorUtil {
     }
 
     static Palette createActorPalette(byte id, int toolSize, TileMapEditor editor, TerrainRendererInEditor renderer) {
-        var palette = new Palette(id, toolSize, 1, 10, renderer);
-        palette.addTileTool(editor, TerrainTiles.EMPTY, "");
+        var palette = new Palette(id, toolSize, 1, 11, renderer);
+        palette.addTileTool(editor, TerrainTiles.EMPTY, "Nope");
         palette.addPropertyTool(PROPERTY_POS_PAC, "Pac-Man");
         palette.addPropertyTool(PROPERTY_POS_RED_GHOST, "Red Ghost");
         palette.addPropertyTool(PROPERTY_POS_PINK_GHOST, "Pink Ghost");
         palette.addPropertyTool(PROPERTY_POS_CYAN_GHOST, "Cyan Ghost");
         palette.addPropertyTool(PROPERTY_POS_ORANGE_GHOST, "Orange Ghost");
+        palette.addPropertyTool(PROPERTY_POS_BONUS, "Bonus");
         palette.addPropertyTool(PROPERTY_POS_SCATTER_RED_GHOST, "Red Ghost Scatter");
         palette.addPropertyTool(PROPERTY_POS_SCATTER_PINK_GHOST, "Pink Ghost Scatter");
         palette.addPropertyTool(PROPERTY_POS_SCATTER_CYAN_GHOST, "Cyan Ghost Scatter");

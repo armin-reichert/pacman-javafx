@@ -189,7 +189,7 @@ public class EditCanvas extends Canvas {
             editor.foodRenderer().drawFood(g, worldMap());
         }
 
-        drawActorSprites(g);
+        editor.terrainRendererInEditor().drawActorSprites(g, worldMap(), gridSize());
 
         if (focussedTile() != null) {
             g.setStroke(Color.YELLOW);
@@ -207,31 +207,6 @@ public class EditCanvas extends Canvas {
         for (int col = 1; col < worldMap().numCols(); ++col) {
             g.strokeLine(col * gridSize(), 0, col * gridSize(), getHeight());
         }
-    }
-
-    //TODO move into renderer class
-    public void drawActorSprites(GraphicsContext g) {
-        drawSprite(g, PROPERTY_POS_PAC, PAC_SPRITE);
-        drawSprite(g, PROPERTY_POS_RED_GHOST, RED_GHOST_SPRITE);
-        drawSprite(g, PROPERTY_POS_PINK_GHOST, PINK_GHOST_SPRITE);
-        drawSprite(g, PROPERTY_POS_CYAN_GHOST, CYAN_GHOST_SPRITE);
-        drawSprite(g, PROPERTY_POS_ORANGE_GHOST, ORANGE_GHOST_SPRITE);
-        drawSprite(g, PROPERTY_POS_BONUS, BONUS_SPRITE);
-    }
-
-    private void drawSprite(GraphicsContext g, String tilePropertyName, RectArea sprite) {
-        Vector2i tile = worldMap().getTileProperty(tilePropertyName, null);
-        if (tile != null) {
-            drawSprite(g, sprite,
-                tile.x() * gridSize() + 0.5 * gridSize(),
-                tile.y() * gridSize(), 1.75 * gridSize(), 1.75 * gridSize());
-        }
-    }
-
-    private void drawSprite(GraphicsContext g, RectArea sprite, double x, double y, double w, double h) {
-        double ox = 0.5 * (w - gridSize());
-        double oy = 0.5 * (h - gridSize());
-        g.drawImage(SPRITE_SHEET, sprite.x(), sprite.y(), sprite.width(), sprite.height(), x - ox, y - oy, w, h);
     }
 
     private void onMouseClicked(MouseEvent e) {

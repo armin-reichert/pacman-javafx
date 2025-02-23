@@ -1135,7 +1135,7 @@ public class TileMapEditor {
             foodRenderer.setPelletColor(foodColor);
             foodRenderer.drawFood(g, worldMap());
         }
-        editCanvas.drawActorSprites(g);
+        terrainRendererInEditor.drawActorSprites(g, worldMap(), gridSize());
     }
 
     private void drawSelectedPalette(TerrainColorScheme colors) {
