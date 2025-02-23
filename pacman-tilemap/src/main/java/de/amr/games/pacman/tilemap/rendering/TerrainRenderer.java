@@ -24,7 +24,7 @@ public class TerrainRenderer implements TileRenderer {
 
     public static final TerrainColorScheme DEFAULT_COLOR_SCHEME = new TerrainColorScheme(Color.BLACK, Color.RED,  Color.GOLD, Color.PINK);
 
-    public final FloatProperty scalingPy = new SimpleFloatProperty(this, "scaling", 1.0f);
+    private final FloatProperty scalingPy = new SimpleFloatProperty(this, "scaling", 1.0f);
 
     protected double doubleStrokeOuterWidth;
     protected double doubleStrokeInnerWidth;
@@ -41,6 +41,8 @@ public class TerrainRenderer implements TileRenderer {
     public void setColors(TerrainColorScheme colors) {
         this.colors = assertNotNull(colors);
     }
+
+    public FloatProperty scalingProperty() { return scalingPy; }
 
     @Override
     public void setScaling(double scaling) {

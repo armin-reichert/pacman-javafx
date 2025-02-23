@@ -6,28 +6,30 @@ package de.amr.games.pacman.tilemap.rendering;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.FoodTiles;
-import de.amr.games.pacman.lib.tilemap.LayerID;
-import de.amr.games.pacman.lib.tilemap.WorldMap;
 import javafx.beans.property.FloatProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.*;
 
 /**
  * @author Armin Reichert
  */
 public class FoodTileRenderer implements TileRenderer {
 
-    static final double PELLET_SIZE = 2;
-    static final double ENERGIZER_SIZE = 8;
+    private static final double PELLET_SIZE = 2;
+    private static final double ENERGIZER_SIZE = 8;
 
-    public FloatProperty scalingPy = new SimpleFloatProperty(this, "scaling", 1f);
+    private final FloatProperty scalingPy = new SimpleFloatProperty(this, "scaling", 1f);
+    private final ObjectProperty<Color> pelletColorPy = new SimpleObjectProperty<>(Color.PINK);
+    private final ObjectProperty<Color> energizerColorPy = new SimpleObjectProperty<>(Color.YELLOW);
 
-    private Color pelletColor = Color.PINK;
-    private Color energizerColor = Color.YELLOW;
+    public FloatProperty scalingProperty() { return scalingPy;}
+    public ObjectProperty<Color> pelletColorProperty() { return pelletColorPy; }
+    public ObjectProperty<Color> energizerColorProperty() { return energizerColorPy; }
 
     @Override
     public void setScaling(double scaling) {
@@ -38,12 +40,12 @@ public class FoodTileRenderer implements TileRenderer {
         return scalingPy.get();
     }
 
-    public void setEnergizerColor(Color energizerColor) {
-        this.energizerColor = energizerColor;
+    public void setEnergizerColor(Color color) {
+        energizerColorPy.set(assertNotNull(color));
     }
 
-    public void setPelletColor(Color pelletColor) {
-        this.pelletColor = pelletColor;
+    public void setPelletColor(Color color) {
+        pelletColorPy.set(assertNotNull(color));
     }
 
     @Override
@@ -59,7 +61,7 @@ public class FoodTileRenderer implements TileRenderer {
         double offset = 0.5 * (TS - PELLET_SIZE);
         g.save();
         g.scale(scaling(), scaling());
-        g.setFill(pelletColor);
+        g.setFill(pelletColorPy.get());
         g.fillRect(tile.x() * TS + offset, tile.y() * TS + offset, PELLET_SIZE, PELLET_SIZE);
         g.restore();
     }
@@ -69,7 +71,7 @@ public class FoodTileRenderer implements TileRenderer {
         double x = tile.x() * TS, y = tile.y() * TS;
         g.save();
         g.scale(scaling(), scaling());
-        g.setFill(energizerColor);
+        g.setFill(energizerColorPy.get());
         // draw pixelated "circle"
         g.fillRect(x + offset, y, HTS, ENERGIZER_SIZE);
         g.fillRect(x, y + offset, ENERGIZER_SIZE, HTS);

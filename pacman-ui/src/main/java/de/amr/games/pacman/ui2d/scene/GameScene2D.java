@@ -23,7 +23,7 @@ import java.util.Map;
  */
 public abstract class GameScene2D implements GameScene {
 
-    protected final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
+    protected final FloatProperty scalingPy = new SimpleFloatProperty(this, "scaling", 1.0f);
     protected final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(this, "backgroundColor", Color.BLACK);
     protected final BooleanProperty debugInfoVisiblePy = new SimpleBooleanProperty(this, "debugInfoVisible", false);
     protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
@@ -59,11 +59,11 @@ public abstract class GameScene2D implements GameScene {
         return actionBindings;
     }
 
-    public DoubleProperty scalingProperty() { return scalingPy; }
-    public void setScaling(double scaling) { scalingPy.set(scaling); }
-    public double scaling() { return scalingPy.get(); }
-    public double scaled(double value) {
-        return value * scaling();
+    public FloatProperty scalingProperty() { return scalingPy; }
+    public void setScaling(double scaling) { scalingPy.set((float) scaling); }
+    public float scaling() { return scalingPy.get(); }
+    public float scaled(double value) {
+        return (float) value * scaling();
     }
 
     public ObjectProperty<Color> backgroundColorProperty() { return backgroundColorPy; }

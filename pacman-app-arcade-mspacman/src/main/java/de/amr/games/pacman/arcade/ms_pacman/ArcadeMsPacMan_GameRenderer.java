@@ -14,8 +14,8 @@ import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui2d.GameRenderer;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.assets.ImageArea;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -61,7 +61,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     private final AssetStorage assets;
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;
     private final Canvas canvas;
-    private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
+    private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
     private final Image flashingMazesImage;
     private RectArea fullMapSprite;
     private RectArea emptyMapSprite;
@@ -103,7 +103,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     }
 
     @Override
-    public DoubleProperty scalingProperty() {
+    public FloatProperty scalingProperty() {
         return scalingPy;
     }
 

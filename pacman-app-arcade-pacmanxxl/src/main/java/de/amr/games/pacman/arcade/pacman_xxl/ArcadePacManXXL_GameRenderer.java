@@ -16,7 +16,9 @@ import de.amr.games.pacman.ui2d.GameRenderer;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -40,7 +42,7 @@ public class ArcadePacManXXL_GameRenderer implements GameRenderer {
     private final AssetStorage assets;
     private final GameSpriteSheet spriteSheet;
     private final Canvas canvas;
-    private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
+    private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
     private final TerrainRenderer terrainRenderer = new TerrainRenderer();
     private final FoodTileRenderer foodRenderer = new FoodTileRenderer();
     private Vector2f messageAnchorPosition;
@@ -54,8 +56,8 @@ public class ArcadePacManXXL_GameRenderer implements GameRenderer {
         this.assets = assertNotNull(assets);
         this.canvas = assertNotNull(canvas);
         this.spriteSheet = assertNotNull(spriteSheet);
-        terrainRenderer.scalingPy.bind(scalingPy);
-        foodRenderer.scalingPy.bind(scalingPy);
+        terrainRenderer.scalingProperty().bind(scalingPy);
+        foodRenderer.scalingProperty().bind(scalingPy);
         messageAnchorPosition = DEFAULT_MESSAGE_ANCHOR_POSITION;
         setBackgroundColor(Color.BLACK);
     }
@@ -86,7 +88,7 @@ public class ArcadePacManXXL_GameRenderer implements GameRenderer {
     }
 
     @Override
-    public DoubleProperty scalingProperty() {
+    public FloatProperty scalingProperty() {
         return scalingPy;
     }
 

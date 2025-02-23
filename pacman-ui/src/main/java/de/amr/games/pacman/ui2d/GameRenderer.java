@@ -19,7 +19,7 @@ import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.assets.SpriteAnimation;
 import de.amr.games.pacman.ui2d.assets.SpriteAnimationSet;
-import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.FloatProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -60,15 +60,15 @@ public interface GameRenderer {
 
     default void clearCanvas() { fillCanvas(backgroundColor()); }
 
-    DoubleProperty scalingProperty();
+    FloatProperty scalingProperty();
 
-    default void setScaling(double value) { scalingProperty().set(value); }
+    default void setScaling(float value) { scalingProperty().set(value); }
 
-    default double scaling() { return scalingProperty().get(); }
+    default float scaling() { return scalingProperty().get(); }
 
-    default double scaled(double value) { return scaling() * value; }
+    default float scaled(double value) { return scaling() * (float) value; }
 
-    default Font scaledArcadeFont(double size) {
+    default Font scaledArcadeFont(float size) {
         return assets().font("font.arcade", scaled(size));
     }
 
@@ -255,7 +255,7 @@ public interface GameRenderer {
                 ctx().fillText(text, scaled(guy.posX() - 4), scaled(guy.posY() - 4));
             }
             if (guy.wishDir() != null) {
-                float scaling = (float) scaling();
+                float scaling = scaling();
                 Vector2f center = guy.position().plus(HTS, HTS);
                 Vector2f arrowHead = center.plus(guy.wishDir().vector().scaled(12f)).scaled(scaling);
                 Vector2f guyCenter = center.scaled(scaling);

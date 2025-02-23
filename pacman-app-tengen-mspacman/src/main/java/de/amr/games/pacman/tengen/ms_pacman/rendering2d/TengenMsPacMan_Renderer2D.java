@@ -27,8 +27,8 @@ import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.assets.SpriteAnimation;
 import de.amr.games.pacman.ui2d.assets.SpriteAnimationSet;
 import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -56,7 +56,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     private final AssetStorage assets;
     private final TengenMsPacMan_SpriteSheet spriteSheet;
     private final MapRepository mapRepository;
-    private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
+    private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
     private final GraphicsContext ctx;
 
     private ColoredMapSet coloredMapSet;
@@ -108,7 +108,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     @Override
-    public DoubleProperty scalingProperty() {
+    public FloatProperty scalingProperty() {
         return scalingPy;
     }
 
