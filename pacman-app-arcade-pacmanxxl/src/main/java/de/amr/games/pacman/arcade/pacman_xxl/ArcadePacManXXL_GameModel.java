@@ -65,10 +65,14 @@ public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel {
         };
 
         WorldMap worldMap = new WorldMap(template);
-        Map<String, String> mapColoring = builtinMaps.contains(template)
-            ? MAP_COLORINGS.get(randomInt(0, MAP_COLORINGS.size())) : coloringFromMap(template);
+        Map<String, String> mapColoring = builtinMaps.contains(template) ? randomMapColoring() : coloringFromMap(template);
         worldMap.setConfigValue("colorMap", mapColoring);
+
         return worldMap;
+    }
+
+    private Map<String, String> randomMapColoring() {
+        return MAP_COLORINGS.get(randomInt(0, MAP_COLORINGS.size()));
     }
 
     private Map<String, String> coloringFromMap(WorldMap template) {
