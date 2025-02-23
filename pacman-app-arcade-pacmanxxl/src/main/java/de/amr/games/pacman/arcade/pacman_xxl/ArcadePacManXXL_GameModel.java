@@ -5,11 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade.pacman_xxl;
 
 import de.amr.games.pacman.arcade.pacman.ArcadePacMan_GameModel;
-import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.actors.StaticBonus;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 
 import java.io.File;
@@ -17,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static de.amr.games.pacman.lib.Globals.halfTileRightOf;
 import static de.amr.games.pacman.lib.Globals.randomInt;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 
@@ -91,22 +87,4 @@ public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel {
         demoLevelSteering = new RuleBasedPacSteering(this);
         setDemoLevelBehavior();
     }
-
-    @Override
-    public void activateNextBonus() {
-        level.advanceNextBonus();
-        byte symbol = level.bonusSymbol(level.nextBonusIndex());
-        StaticBonus staticBonus = new StaticBonus(symbol, ArcadePacMan_GameModel.BONUS_VALUE_FACTORS[symbol] * 100);
-        level.setBonus(staticBonus);
-        // in a non-Arcade style custom map, the bonus position must be taken from the terrain map
-        if (level.world().map().hasProperty(LayerID.TERRAIN, PROPERTY_POS_BONUS)) {
-            Vector2i bonusTile = level.world().map().getTileProperty(PROPERTY_POS_BONUS, new Vector2i(13, 20));
-            staticBonus.actor().setPosition(halfTileRightOf(bonusTile));
-        } else {
-            staticBonus.actor().setPosition(ArcadePacMan_GameModel.BONUS_POS);
-        }
-        staticBonus.setEdible(bonusEdibleTicks());
-        publishGameEvent(GameEventType.BONUS_ACTIVATED, staticBonus.actor().tile());
-    }
-
 }

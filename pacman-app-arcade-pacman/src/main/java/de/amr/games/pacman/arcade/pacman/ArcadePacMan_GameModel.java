@@ -99,7 +99,6 @@ public class ArcadePacMan_GameModel extends GameModel {
     protected static final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {42, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
     // Bonus value = factor * 100
     protected static final byte[] BONUS_VALUE_FACTORS = {1, 3, 5, 7, 10, 20, 30, 50};
-    protected static final Vector2f BONUS_POS = halfTileRightOf(13, 20);
 
     // Ticks of scatter and chasing phases, -1=INDEFINITE
     protected static final int[] HUNTING_TICKS_LEVEL_1 = {420, 1200, 420, 1200, 300,  1200, 300, -1};
@@ -449,10 +448,16 @@ public class ArcadePacMan_GameModel extends GameModel {
     public void activateNextBonus() {
         level.advanceNextBonus();
         byte symbol = level.bonusSymbol(level.nextBonusIndex());
-        StaticBonus staticBonus = new StaticBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
-        staticBonus.setEdible(bonusEdibleTicks());
-        staticBonus.actor().setPosition(BONUS_POS);
+        StaticBonus staticBonus = new StaticBonus(symbol, ArcadePacMan_GameModel.BONUS_VALUE_FACTORS[symbol] * 100);
         level.setBonus(staticBonus);
+        if (level.world().map().hasProperty(LayerID.TERRAIN, PROPERTY_POS_BONUS)) {
+            Vector2i bonusTile = level.world().map().getTileProperty(PROPERTY_POS_BONUS, new Vector2i(13, 20));
+            staticBonus.actor().setPosition(halfTileRightOf(bonusTile));
+        } else {
+            Logger.error("No bonus position found in map");
+            staticBonus.actor().setPosition(halfTileRightOf(13, 20));
+        }
+        staticBonus.setEdible(bonusEdibleTicks());
         publishGameEvent(GameEventType.BONUS_ACTIVATED, staticBonus.actor().tile());
     }
 
