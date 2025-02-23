@@ -19,7 +19,7 @@ import de.amr.games.pacman.model.actors.GhostState;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.games.pacman.model.GameModel.TICKS_PER_SECOND;
+import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 
 /**
  * Game states of the Pac-Man game variants.

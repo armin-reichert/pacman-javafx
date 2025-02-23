@@ -33,9 +33,6 @@ public abstract class GameModel {
     // Ghost IDs
     public static final byte RED_GHOST = 0, PINK_GHOST = 1, CYAN_GHOST = 2, ORANGE_GHOST = 3;
 
-    /** Game loop frequency, ticks per second. */
-    public static final byte TICKS_PER_SECOND = 60;
-
     public static final short    POINTS_ALL_GHOSTS_IN_LEVEL = 12_000;
     public static final byte     LEVEL_COUNTER_MAX_SIZE = 7;
     public static final byte     BONUS_POINTS_SHOWN_TICKS = 120; //TODO unsure

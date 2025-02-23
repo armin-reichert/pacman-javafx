@@ -18,6 +18,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 import static de.amr.games.pacman.lib.Globals.tileAt;
 
 /**
@@ -130,7 +131,7 @@ public class RuleBasedPacSteering implements Steering {
         if (pac.moveInfo().moved && !level.world().isIntersection(pac.tile()))
             return;
 
-        if (!data.frightenedGhosts.isEmpty() && level.powerTimer().remainingTicks() >= GameModel.TICKS_PER_SECOND) {
+        if (!data.frightenedGhosts.isEmpty() && level.powerTimer().remainingTicks() >= TICKS_PER_SECOND) {
             Ghost prey = data.frightenedGhosts.getFirst();
             Logger.trace("Detected frightened ghost {} {} tiles away", prey.name(),
                 prey.tile().manhattanDist(pac.tile()));

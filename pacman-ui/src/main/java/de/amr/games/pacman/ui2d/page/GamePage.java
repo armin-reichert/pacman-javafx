@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GlobalProperties2d.*;
 import static de.amr.games.pacman.ui2d.input.Keyboard.*;
@@ -74,7 +75,7 @@ public class GamePage extends StackPane implements GameActionProvider {
     };
 
     private final GameAction actionSimulationNormalSpeed = context -> {
-        context.gameClock().setTargetFrameRate(GameModel.TICKS_PER_SECOND);
+        context.gameClock().setTargetFrameRate(TICKS_PER_SECOND);
         context.showFlashMessageSec(0.75, context.gameClock().getTargetFrameRate() + "Hz");
     };
 

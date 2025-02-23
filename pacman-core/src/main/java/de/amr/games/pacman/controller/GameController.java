@@ -37,6 +37,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     public static GameController it() { return THE_ONE; }
 
+    public static final byte TICKS_PER_SECOND = 60;
     public static final int MAX_COINS = 99;
 
     private static final GameController THE_ONE = new GameController();

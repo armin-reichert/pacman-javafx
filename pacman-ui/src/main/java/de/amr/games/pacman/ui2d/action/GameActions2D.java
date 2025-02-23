@@ -19,6 +19,7 @@ import de.amr.games.pacman.ui2d.scene.GameScene;
 import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
 
+import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
@@ -61,7 +62,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             context.sound().stopAll();
-            context.gameClock().setTargetFrameRate(GameModel.TICKS_PER_SECOND);
+            context.gameClock().setTargetFrameRate(TICKS_PER_SECOND);
             context.gameController().restart(GameState.BOOT);
         }
     },
@@ -172,7 +173,7 @@ public enum GameActions2D implements GameAction {
             if (context.gameState() == GameState.TESTING_LEVELS) {
                 context.gameState().onExit(context.game()); //TODO exit other states too?
             }
-            context.gameClock().setTargetFrameRate(GameModel.TICKS_PER_SECOND);
+            context.gameClock().setTargetFrameRate(TICKS_PER_SECOND);
             context.gameController().restart(INTRO);
         }
     },

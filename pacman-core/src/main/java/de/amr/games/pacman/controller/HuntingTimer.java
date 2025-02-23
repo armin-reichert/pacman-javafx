@@ -10,6 +10,8 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
+import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
+
 /**
  * Hunting happens in a sequence of scatter and chasing phases.
  */
@@ -69,7 +71,7 @@ public abstract class HuntingTimer extends TickTimer {
         start();
         Logger.info("Hunting phase {} ({}, {} ticks / {} seconds) started. {}",
             this.phaseIndex, phaseType,
-            durationTicks(), (float) durationTicks() / GameModel.TICKS_PER_SECOND, this);
+            durationTicks(), (float) durationTicks() / TICKS_PER_SECOND, this);
     }
 
     public int phaseIndex() {

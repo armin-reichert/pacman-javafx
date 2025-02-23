@@ -50,6 +50,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 import static de.amr.games.pacman.lib.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_CANVAS_BG_COLOR;
@@ -319,7 +320,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             editorPage.setCloseAction(editor -> {
                 editor.executeWithCheckForUnsavedChanges(this::bindStageTitle);
                 editor.stop();
-                clock.setTargetFrameRate(GameModel.TICKS_PER_SECOND);
+                clock.setTargetFrameRate(TICKS_PER_SECOND);
                 gameController().restart(GameState.BOOT);
                 selectStartPage();
             });
