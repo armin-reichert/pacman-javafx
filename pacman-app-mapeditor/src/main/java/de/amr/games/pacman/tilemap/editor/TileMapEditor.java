@@ -590,9 +590,11 @@ public class TileMapEditor {
 
     private void registerDragAndDropImageHandler(Node node) {
         node.setOnDragOver(e -> {
-            if (editMode() != EditMode.INSPECT && e.getDragboard().hasFiles()) {
+            if (e.getDragboard().hasFiles()) {
                 File file = e.getDragboard().getFiles().getFirst();
-                if (isSupportedImageFile(file) || isWorldMapFile(file)) {
+                if (isSupportedImageFile(file)  & !isEditMode(EditMode.INSPECT)
+                    || isWorldMapFile(file))
+                {
                     e.acceptTransferModes(TransferMode.COPY);
                 }
             }
@@ -602,9 +604,9 @@ public class TileMapEditor {
     }
 
     private void onFileDroppedOnEditCanvas(DragEvent e) {
-        if (editMode() != EditMode.INSPECT && e.getDragboard().hasFiles()) {
+        if (e.getDragboard().hasFiles()) {
             File file = e.getDragboard().getFiles().getFirst();
-            if (isSupportedImageFile(file)) {
+            if (isSupportedImageFile(file) && !isEditMode(EditMode.INSPECT)) {
                 e.acceptTransferModes(TransferMode.COPY);
                 try (FileInputStream in = new FileInputStream(file)) {
                     Image image = new Image(in);
