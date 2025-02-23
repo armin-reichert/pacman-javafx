@@ -20,7 +20,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 /**
  * Vector renderer for terrain tile maps.
  */
-public class TerrainRenderer implements TileMapRenderer {
+public class TerrainRenderer implements TileRenderer {
 
     public static final TerrainColorScheme DEFAULT_COLOR_SCHEME = new TerrainColorScheme(Color.BLACK, Color.RED,  Color.GOLD, Color.PINK);
 

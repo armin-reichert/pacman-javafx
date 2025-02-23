@@ -19,7 +19,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
 /**
  * @author Armin Reichert
  */
-public class FoodMapRenderer implements TileMapRenderer {
+public class FoodTileRenderer implements TileRenderer {
 
     static final double PELLET_SIZE = 2;
     static final double ENERGIZER_SIZE = 8;
@@ -44,10 +44,6 @@ public class FoodMapRenderer implements TileMapRenderer {
 
     public void setPelletColor(Color pelletColor) {
         this.pelletColor = pelletColor;
-    }
-
-    public void drawFood(GraphicsContext g, WorldMap worldMap) {
-        worldMap.tiles().forEach(tile -> drawTile(g, tile, worldMap.get(LayerID.FOOD, tile)));
     }
 
     @Override

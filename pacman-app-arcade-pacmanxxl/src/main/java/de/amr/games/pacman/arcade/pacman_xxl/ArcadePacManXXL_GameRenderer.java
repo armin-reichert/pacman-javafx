@@ -9,7 +9,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
-import de.amr.games.pacman.tilemap.rendering.FoodMapRenderer;
+import de.amr.games.pacman.tilemap.rendering.FoodTileRenderer;
 import de.amr.games.pacman.tilemap.rendering.TerrainColorScheme;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer;
 import de.amr.games.pacman.ui2d.GameRenderer;
@@ -42,7 +42,7 @@ public class ArcadePacManXXL_GameRenderer implements GameRenderer {
     private final Canvas canvas;
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
     private final TerrainRenderer terrainRenderer = new TerrainRenderer();
-    private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
+    private final FoodTileRenderer foodRenderer = new FoodTileRenderer();
     private Vector2f messageAnchorPosition;
     private boolean mazeHighlighted;
     private boolean blinkingOn;

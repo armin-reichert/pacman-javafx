@@ -8,7 +8,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.*;
-import de.amr.games.pacman.tilemap.rendering.FoodMapRenderer;
+import de.amr.games.pacman.tilemap.rendering.FoodTileRenderer;
 import de.amr.games.pacman.tilemap.rendering.TerrainColorScheme;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer;
 import javafx.animation.Animation;
@@ -219,7 +219,7 @@ public class TileMapEditor {
 
     private TerrainRendererInEditor terrainRendererInEditor;
     private TerrainRenderer terrainRendererInPreview;
-    private FoodMapRenderer foodRenderer;
+    private FoodTileRenderer foodRenderer;
 
     // Properties
 
@@ -325,7 +325,7 @@ public class TileMapEditor {
 
     public TerrainRendererInEditor terrainRendererInEditor() { return terrainRendererInEditor; }
 
-    public FoodMapRenderer foodRenderer() { return foodRenderer; }
+    public FoodTileRenderer foodRenderer() { return foodRenderer; }
 
     public StringProperty titleProperty() { return titlePy; }
 
@@ -481,7 +481,7 @@ public class TileMapEditor {
         terrainRendererInEditor.setColors(colors);
         terrainRendererInPreview = new TerrainRenderer();
         terrainRendererInPreview.setColors(colors);
-        foodRenderer = new FoodMapRenderer();
+        foodRenderer = new FoodTileRenderer();
         foodRenderer.setPelletColor(foodColor);
         foodRenderer.setEnergizerColor(foodColor);
     }
@@ -1133,10 +1133,11 @@ public class TileMapEditor {
             foodRenderer.setScaling(gridSize() / 8.0);
             foodRenderer.setEnergizerColor(foodColor);
             foodRenderer.setPelletColor(foodColor);
-            foodRenderer.drawFood(g, worldMap());
+            worldMap().tiles().forEach(tile -> foodRenderer.drawTile(g, tile, worldMap().get(LayerID.FOOD, tile)));
         }
         terrainRendererInEditor.drawActorSprites(g, worldMap(), gridSize());
     }
+
 
     private void drawSelectedPalette(TerrainColorScheme colors) {
         Palette selectedPalette = palettes[selectedPaletteID()];

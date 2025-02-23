@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.tilemap.editor;
 
-import de.amr.games.pacman.tilemap.rendering.TileMapRenderer;
+import de.amr.games.pacman.tilemap.rendering.TileRenderer;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -30,14 +30,14 @@ public class Palette {
     private final int toolSize;
     private final int numRows;
     private final int numCols;
-    private final TileMapRenderer renderer;
+    private final TileRenderer renderer;
     private List<Tool> tools;
     private Tool selectedTool;
     private int selectedRow;
     private int selectedCol;
     private final Tooltip tooltip;
 
-    public Palette(byte id, int toolSize, int numRows, int numCols, TileMapRenderer renderer) {
+    public Palette(byte id, int toolSize, int numRows, int numCols, TileRenderer renderer) {
         this.id = id;
         this.toolSize = toolSize;
         this.numRows = numRows;

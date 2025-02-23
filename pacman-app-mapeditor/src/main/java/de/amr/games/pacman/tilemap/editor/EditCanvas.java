@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tilemap.editor;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.FoodTiles;
 import de.amr.games.pacman.lib.tilemap.LayerID;
@@ -32,8 +31,8 @@ import org.tinylog.Logger;
 import java.util.function.Predicate;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
-import static de.amr.games.pacman.tilemap.editor.ArcadeMap.*;
+import static de.amr.games.pacman.lib.tilemap.WorldMap.PROPERTY_COLOR_FOOD;
+import static de.amr.games.pacman.tilemap.editor.ArcadeMap.MS_PACMAN_COLOR_FOOD;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditor.*;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.*;
 
@@ -186,7 +185,7 @@ public class EditCanvas extends Canvas {
             editor.foodRenderer().setScaling(scaling);
             editor.foodRenderer().setEnergizerColor(foodColor);
             editor.foodRenderer().setPelletColor(foodColor);
-            editor.foodRenderer().drawFood(g, worldMap());
+            worldMap().tiles().forEach(tile -> editor.foodRenderer().drawTile(g, tile, worldMap().get(LayerID.FOOD, tile)));
         }
 
         editor.terrainRendererInEditor().drawActorSprites(g, worldMap(), gridSize());
