@@ -104,7 +104,7 @@ public interface GameContext {
             .ifPresent(action -> action.execute(this));
     }
 
-    default void ifGameActionTriggeredRunItElse(GameActionProvider actionProvider, Runnable defaultAction) {
+    default void runTriggeredActionOrElse(GameActionProvider actionProvider, Runnable defaultAction) {
         actionProvider.firstMatchedAction(keyboard())
             .filter(gameAction -> gameAction.isEnabled(this))
             .ifPresentOrElse(action -> action.execute(this), defaultAction);

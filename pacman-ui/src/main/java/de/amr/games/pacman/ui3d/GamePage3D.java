@@ -46,11 +46,11 @@ public class GamePage3D extends GamePage {
         }
         List<MenuItem> gameSceneMenuItems = gameScenePy.get().supplyContextMenuItems(event);
         menuItems.addAll(gameSceneMenuItems);
-        if (actionOpenEditor != null) {
+        if (actionToOpenEditor != null) {
             menuItems.add(new SeparatorMenuItem());
             var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
-            miOpenMapEditor.setOnAction(ae -> actionOpenEditor.execute(context));
-            miOpenMapEditor.setDisable(!actionOpenEditor.isEnabled(context));
+            miOpenMapEditor.setOnAction(ae -> actionToOpenEditor.execute(context));
+            miOpenMapEditor.setDisable(!actionToOpenEditor.isEnabled(context));
             menuItems.add(miOpenMapEditor);
         }
         contextMenu = new ContextMenu(menuItems.toArray(MenuItem[]::new));

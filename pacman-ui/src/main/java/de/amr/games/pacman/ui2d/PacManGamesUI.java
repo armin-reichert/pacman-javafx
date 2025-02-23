@@ -308,8 +308,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             }
         });
 
-        mainScene.widthProperty().addListener((py,ov,nv) -> adaptGamePageSizeToMainScene(mainScene));
-        mainScene.heightProperty().addListener((py,ov,nv) -> adaptGamePageSizeToMainScene(mainScene));
+        mainScene.widthProperty() .addListener((py,ov,nv) -> gamePage.setSize(mainScene.getWidth(), mainScene.getHeight()));
+        mainScene.heightProperty().addListener((py,ov,nv) -> gamePage.setSize(mainScene.getWidth(), mainScene.getHeight()));
 
         return mainScene;
     }
@@ -326,10 +326,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             });
         }
         return editorPage;
-    }
-
-    private void adaptGamePageSizeToMainScene(Scene mainScene) {
-        gamePage.setSize(mainScene.getWidth(), mainScene.getHeight());
     }
 
     protected void createGamePage(Scene parentScene) {
@@ -371,11 +367,11 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         // We cannot use data binding to the game model classes because the game models are in project
         // "pacman-core" which has no dependency to JavaFX data binding.
         if (game.mapSelectionMode() != CustomMapSelectionMode.NO_CUSTOM_MAPS) {
-            gamePage.setActionOpenEditor(actionOpenEditor);
+            gamePage.setActionToOpenEditor(actionOpenEditor);
             game.setMapSelectionMode(GlobalProperties2d.PY_MAP_SELECTION_MODE.get());
             GlobalProperties2d.PY_MAP_SELECTION_MODE.addListener((py, ov, selectionMode) -> game.setMapSelectionMode(selectionMode));
         } else {
-            gamePage.setActionOpenEditor(null);
+            gamePage.setActionToOpenEditor(null);
         }
 
         String assetKeyPrefix = gameConfiguration().assetKeyPrefix();

@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui2d.page;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameRenderer;
@@ -52,42 +51,55 @@ import static de.amr.games.pacman.uilib.Ufx.*;
  */
 public class GamePage extends StackPane implements GameActionProvider {
 
-    static final double MAX_SCENE_SCALING = 5;
+    private static final double MAX_SCENE_SCALING = 5;
+    private static final int SIMULATION_SPEED_DELTA = 5;
 
     private final GameAction actionToggleDebugInfo = context -> toggle(PY_DEBUG_INFO_VISIBLE);
 
     private final GameAction actionShowHelp = context -> showHelp();
 
-    private final GameAction actionSimulationSlower = context -> {
-        double newRate = context.gameClock().getTargetFrameRate() - 5;
+    private final GameAction actionSimulationSpeedSlower = context -> {
+        double newRate = context.gameClock().getTargetFrameRate() - SIMULATION_SPEED_DELTA;
         if (newRate > 0) {
             context.gameClock().setTargetFrameRate(newRate);
             context.showFlashMessageSec(0.75, newRate + "Hz");
         }
     };
 
-    private final GameAction actionSimulationFaster = context -> {
-        double newRate = context.gameClock().getTargetFrameRate() + 5;
+    private final GameAction actionSimulationSpeedFaster = context -> {
+        double newRate = context.gameClock().getTargetFrameRate() + SIMULATION_SPEED_DELTA;
         if (newRate > 0) {
             context.gameClock().setTargetFrameRate(newRate);
             context.showFlashMessageSec(0.75, newRate + "Hz");
         }
     };
 
-    private final GameAction actionSimulationNormalSpeed = context -> {
+    private final GameAction actionSimulationSpeedReset = context -> {
         context.gameClock().setTargetFrameRate(TICKS_PER_SECOND);
         context.showFlashMessageSec(0.75, context.gameClock().getTargetFrameRate() + "Hz");
     };
 
-    private final GameAction actionSimulationOneStep = context -> {
-        if (context.gameClock().isPaused()) {
+    private final GameAction actionSimulationOneStep = new GameAction() {
+        @Override
+        public void execute(GameContext context) {
             context.gameClock().makeStep(true);
+        }
+
+        @Override
+        public boolean isEnabled(GameContext context) {
+            return context.gameClock().isPaused();
         }
     };
 
-    private final GameAction actionSimulationTenSteps = context -> {
-        if (context.gameClock().isPaused()) {
+    private final GameAction actionSimulationTenSteps = new GameAction() {
+        @Override
+        public void execute(GameContext context) {
             context.gameClock().makeSteps(10, true);
+        }
+
+        @Override
+        public boolean isEnabled(GameContext context) {
+            return context.gameClock().isPaused();
         }
     };
 
@@ -106,7 +118,7 @@ public class GamePage extends StackPane implements GameActionProvider {
         context.sound().playVoice(PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
     };
 
-    protected GameAction actionOpenEditor;
+    protected GameAction actionToOpenEditor;
 
     protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
 
@@ -184,9 +196,9 @@ public class GamePage extends StackPane implements GameActionProvider {
         bind(GameActions2D.TOGGLE_PAUSED,   KeyCode.P);
         bind(actionToggleDebugInfo,         alt(KeyCode.D));
         bind(actionShowHelp,                KeyCode.H);
-        bind(actionSimulationSlower,        alt(KeyCode.MINUS));
-        bind(actionSimulationFaster,        alt(KeyCode.PLUS));
-        bind(actionSimulationNormalSpeed,   alt(KeyCode.DIGIT0));
+        bind(actionSimulationSpeedSlower,        alt(KeyCode.MINUS));
+        bind(actionSimulationSpeedFaster,        alt(KeyCode.PLUS));
+        bind(actionSimulationSpeedReset,   alt(KeyCode.DIGIT0));
         bind(actionSimulationOneStep,       shift(KeyCode.P));
         bind(actionSimulationTenSteps,      shift(KeyCode.SPACE));
         bind(actionToggleAutopilot,         alt(KeyCode.A));
@@ -205,26 +217,28 @@ public class GamePage extends StackPane implements GameActionProvider {
 
     public void setSize(double width, double height) {
         canvasContainer.resizeTo(width, height);
+        Logger.debug("Game page size set to w={} h={}", canvasContainer.getWidth(), canvasContainer.getHeight());
     }
 
     @Override
     public void handleInput(GameContext context) {
-        context.ifGameActionTriggeredRunItElse(this,
+        context.runTriggeredActionOrElse(this,
             () -> context.currentGameScene().ifPresent(gameScene -> gameScene.handleInput(context)));
     }
 
-    public void setActionOpenEditor(GameAction actionOpenEditor) {
-        this.actionOpenEditor = actionOpenEditor;
-        bind(actionOpenEditor, shift_alt(KeyCode.E));
+    public void setActionToOpenEditor(GameAction action) {
+        this.actionToOpenEditor = action;
+        bind(action, shift_alt(KeyCode.E));
     }
 
     private void handleContextMenuRequest(ContextMenuEvent event) {
-        List<MenuItem> menuItems = new ArrayList<>(gameScenePy.get().supplyContextMenuItems(event));
-        if (actionOpenEditor != null) {
+        List<MenuItem> gameSceneItems = gameScenePy.get().supplyContextMenuItems(event);
+        var menuItems = new ArrayList<>(gameSceneItems);
+        if (actionToOpenEditor != null) {
             menuItems.add(new SeparatorMenuItem());
             var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
-            miOpenMapEditor.setOnAction(ae -> actionOpenEditor.execute(context));
-            miOpenMapEditor.setDisable(!actionOpenEditor.isEnabled(context));
+            miOpenMapEditor.setOnAction(ae -> actionToOpenEditor.execute(context));
+            miOpenMapEditor.setDisable(!actionToOpenEditor.isEnabled(context));
             menuItems.add(miOpenMapEditor);
         }
         contextMenu = new ContextMenu(menuItems.toArray(MenuItem[]::new));
@@ -234,14 +248,12 @@ public class GamePage extends StackPane implements GameActionProvider {
     }
 
     protected void handleGameSceneChange(GameScene gameScene) {
-        if (gameScene != null) {
-            embedGameScene(gameScene);
-        }
+        if (gameScene != null) embedGameScene(gameScene);
         if (contextMenu != null) contextMenu.hide();
     }
 
     public void embedGameScene(GameScene gameScene) {
-        // new switch feature
+        // new switch!
         switch (gameScene) {
             case null -> Logger.error("No game scene to embed");
             case CameraControlledView cameraControlledView -> {
@@ -275,14 +287,6 @@ public class GamePage extends StackPane implements GameActionProvider {
 
     protected boolean isCurrentGameScene2D() {
         return context.currentGameScene().map(GameScene2D.class::isInstance).orElse(false);
-    }
-
-    public void showSignature() {
-        popupLayer.showSignature(1, 2, 1);
-    }
-
-    public void hideSignature() {
-        popupLayer.hideSignature();
     }
 
     public void toggleDashboard() {
