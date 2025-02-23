@@ -9,22 +9,16 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.actors.StaticBonus;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
-import org.tinylog.Logger;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.Globals.halfTileRightOf;
+import static de.amr.games.pacman.lib.Globals.randomInt;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 
 /**
@@ -54,34 +48,8 @@ public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel {
     }
 
     @Override
-    public void configureNormalLevel() {
-        levelCounterEnabled = true;
-
-        WorldMap worldMap = selectWorldMap(level.number);
-        Map<String, String> colorMap;
-        if (builtinMaps.contains(worldMap)) {
-            colorMap = COLOR_MAPS.get(randomInt(0, COLOR_MAPS.size()));
-        } else {
-            colorMap = Map.of(
-                    "fill",   worldMap.getStringPropertyOrElse(LayerID.TERRAIN, PROPERTY_COLOR_WALL_FILL, "000000"),
-                    "stroke", worldMap.getStringPropertyOrElse(LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE, "0000ff"),
-                    "door",   worldMap.getStringPropertyOrElse(LayerID.TERRAIN, PROPERTY_COLOR_DOOR, "00ffff"),
-                    "pellet", worldMap.getStringPropertyOrElse(LayerID.FOOD, PROPERTY_COLOR_FOOD, "ffffff")
-            );
-        }
-        worldMap.setConfigValue("colorMap", colorMap);
-
-        level.setNumFlashes(levelData(level.number).numFlashes());
-        level.setIntermissionNumber(ArcadePacMan_GameModel.intermissionNumberAfterLevel(level.number));
-        populateLevel(worldMap);
-        level.pac().setAutopilot(autopilot);
-        setCruiseElroy(0);
-        level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
-    }
-
-    @Override
     protected WorldMap selectWorldMap(int levelNumber) {
-        return switch (mapSelectionMode) {
+        WorldMap worldMap = switch (mapSelectionMode) {
             case NO_CUSTOM_MAPS ->
                     levelNumber <= builtinMaps.size()
                             ? new WorldMap(builtinMaps.get(levelNumber - 1))
@@ -99,6 +67,21 @@ public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel {
                 yield new WorldMap(maps.get(randomInt(0, maps.size())));
             }
         };
+
+        Map<String, String> colorMap;
+        if (builtinMaps.contains(worldMap)) {
+            colorMap = COLOR_MAPS.get(randomInt(0, COLOR_MAPS.size()));
+        } else {
+            colorMap = Map.of(
+                    "fill",   worldMap.getStringPropertyOrElse(LayerID.TERRAIN, PROPERTY_COLOR_WALL_FILL, "000000"),
+                    "stroke", worldMap.getStringPropertyOrElse(LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE, "0000ff"),
+                    "door",   worldMap.getStringPropertyOrElse(LayerID.TERRAIN, PROPERTY_COLOR_DOOR, "00ffff"),
+                    "pellet", worldMap.getStringPropertyOrElse(LayerID.FOOD, PROPERTY_COLOR_FOOD, "ffffff")
+            );
+        }
+        worldMap.setConfigValue("colorMap", colorMap);
+
+        return worldMap;
     }
 
     @Override

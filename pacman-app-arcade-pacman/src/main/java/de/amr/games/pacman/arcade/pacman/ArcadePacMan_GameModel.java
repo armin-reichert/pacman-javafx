@@ -80,15 +80,6 @@ public class ArcadePacMan_GameModel extends GameModel {
         /*21*/ { 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
     };
 
-    protected static int intermissionNumberAfterLevel(int number) {
-        return switch (number) {
-            case 2 -> 1;
-            case 5 -> 2;
-            case 9, 13, 17 -> 3;
-            default -> 0;
-        };
-    }
-
     protected static final NavPoint[] PACMAN_DEMO_LEVEL_ROUTE = {
         np(12, 26), np(9, 26), np(12, 32), np(15, 32), np(24, 29), np(21, 23),
         np(18, 23), np(18, 20), np(18, 17), np(15, 14), np(12, 14), np(9, 17),
@@ -269,18 +260,30 @@ public class ArcadePacMan_GameModel extends GameModel {
     @Override
     public void configureNormalLevel() {
         levelCounterEnabled = true;
+
         level.setNumFlashes(levelData(level.number).numFlashes());
         level.setIntermissionNumber(intermissionNumberAfterLevel(level.number));
+
         WorldMap worldMap = selectWorldMap(level.number);
+
         populateLevel(worldMap);
         level.pac().setAutopilot(autopilot);
         setCruiseElroy(0);
+
+        level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
+
         List<Vector2i> oneWayDownTiles = worldMap.tiles()
-            .filter(tile -> worldMap.get(LayerID.TERRAIN, tile) == TerrainTiles.ONE_WAY_DOWN).toList();
-        level.ghosts().forEach(ghost -> {
-            ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
-            ghost.setSpecialTerrainTiles(oneWayDownTiles);
-        });
+                .filter(tile -> worldMap.get(LayerID.TERRAIN, tile) == TerrainTiles.ONE_WAY_DOWN).toList();
+        level.ghosts().forEach(ghost -> ghost.setSpecialTerrainTiles(oneWayDownTiles));
+    }
+
+    protected int intermissionNumberAfterLevel(int number) {
+        return switch (number) {
+            case 2 -> 1;
+            case 5 -> 2;
+            case 9, 13, 17 -> 3;
+            default -> 0;
+        };
     }
 
     @Override
