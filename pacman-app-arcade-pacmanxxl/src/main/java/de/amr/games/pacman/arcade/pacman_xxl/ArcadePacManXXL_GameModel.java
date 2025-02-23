@@ -18,12 +18,13 @@ import static de.amr.games.pacman.lib.Globals.randomInt;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 
 /**
- * Extension of Arcade Pac-Man with 8 additional mazes (thanks to the one and only
- * <a href="https://github.com/masonicGIT/pacman">Shaun Williams</a>).
+ * Extension of Arcade Pac-Man with 8 new builtin mazes (thanks to the one and only
+ * <a href="https://github.com/masonicGIT/pacman">Shaun Williams</a>) and the possibility to
+ * play custom maps.
  */
 public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel {
 
-    static final List<Map<String, String>> COLOR_MAPS = List.of(
+    static final List<Map<String, String>> MAP_COLORINGS = List.of(
         Map.of("fill", "#359c9c", "stroke", "#85e2ff", "door", "#fcb5ff", "pellet", "#feb8ae"),
         Map.of("fill", "#c2b853", "stroke", "#ffeace", "door", "#fcb5ff", "pellet", "#feb8ae"),
         Map.of("fill", "#86669c", "stroke", "#f6c4e0", "door", "#fcb5ff", "pellet", "#feb8ae"),
@@ -37,8 +38,7 @@ public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel {
     public ArcadePacManXXL_GameModel(File userDir) {
         super(userDir);
         scoreManager.setHighScoreFile(new File(userDir, "highscore-pacman_xxl.xml"));
-        //TODO ugly:
-        builtinMaps.clear();
+        builtinMaps.clear(); // super class constructor adds Pac-Man Aracde map
         loadBuiltinMaps("maps/masonic_%d.world", 8);
         updateCustomMaps();
     }
@@ -64,18 +64,18 @@ public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel {
             }
         };
 
-        Map<String, String> colorMap;
+        Map<String, String> mapColoring;
         if (builtinMaps.contains(worldMap)) {
-            colorMap = COLOR_MAPS.get(randomInt(0, COLOR_MAPS.size()));
+            mapColoring = MAP_COLORINGS.get(randomInt(0, MAP_COLORINGS.size()));
         } else {
-            colorMap = Map.of(
-                    "fill",   worldMap.getStringPropertyOrElse(LayerID.TERRAIN, PROPERTY_COLOR_WALL_FILL, "000000"),
-                    "stroke", worldMap.getStringPropertyOrElse(LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE, "0000ff"),
-                    "door",   worldMap.getStringPropertyOrElse(LayerID.TERRAIN, PROPERTY_COLOR_DOOR, "00ffff"),
-                    "pellet", worldMap.getStringPropertyOrElse(LayerID.FOOD, PROPERTY_COLOR_FOOD, "ffffff")
+            mapColoring = Map.of(
+                "fill",   worldMap.getStringPropertyOrElse(LayerID.TERRAIN, PROPERTY_COLOR_WALL_FILL, "000000"),
+                "stroke", worldMap.getStringPropertyOrElse(LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE, "0000ff"),
+                "door",   worldMap.getStringPropertyOrElse(LayerID.TERRAIN, PROPERTY_COLOR_DOOR, "00ffff"),
+                "pellet", worldMap.getStringPropertyOrElse(LayerID.FOOD, PROPERTY_COLOR_FOOD, "ffffff")
             );
         }
-        worldMap.setConfigValue("colorMap", colorMap);
+        worldMap.setConfigValue("colorMap", mapColoring);
 
         return worldMap;
     }
@@ -84,7 +84,7 @@ public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel {
     public void configureDemoLevel() {
         configureNormalLevel();
         levelCounterEnabled = false;
-        demoLevelSteering = new RuleBasedPacSteering(this);
+        demoLevelSteering = new RuleBasedPacSteering(this); // super class uses predefined steering
         setDemoLevelBehavior();
     }
 }
