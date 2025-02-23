@@ -10,6 +10,7 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.model.actors.*;
@@ -21,6 +22,9 @@ import java.net.URL;
 import java.util.*;
 
 import static de.amr.games.pacman.lib.Globals.assertNotNull;
+import static de.amr.games.pacman.lib.Globals.randomInt;
+import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
+import static de.amr.games.pacman.lib.tilemap.WorldMap.PROPERTY_COLOR_FOOD;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
 /**
@@ -77,6 +81,7 @@ public abstract class GameModel {
     public abstract long           gameOverStateTicks();
     public abstract void           setDemoLevelBehavior();
 
+    protected abstract WorldMap    selectWorldMap(int levelNumber);
     protected abstract void        configureNormalLevel();
     protected abstract void        configureDemoLevel();
     protected abstract boolean     isPacManKillingIgnored();

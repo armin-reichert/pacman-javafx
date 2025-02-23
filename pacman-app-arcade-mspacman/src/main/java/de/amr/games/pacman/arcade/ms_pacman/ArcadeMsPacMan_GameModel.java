@@ -207,7 +207,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         levelCounterEnabled = level.number < 8;
         level.setIntermissionNumber(intermissionNumberAfterLevel(level.number));
         level.setNumFlashes(levelData(level.number).numFlashes());
-        WorldMap worldMap = selectWorldMap(builtinMaps, level.number);
+        WorldMap worldMap = selectWorldMap(level.number);
         createWorldAndPopulation(worldMap);
         level.pac().setAutopilot(autopilot);
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
@@ -237,7 +237,8 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
      * </ul>
      * <p>
      */
-    private WorldMap selectWorldMap(List<WorldMap> maps, int levelNumber) {
+    @Override
+    protected WorldMap selectWorldMap(int levelNumber) {
         final int mapNumber = switch (levelNumber) {
             case 1, 2 -> 1;
             case 3, 4, 5 -> 2;
@@ -246,7 +247,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
             default -> (levelNumber - 14) % 8 < 4 ? 3 : 4;
         };
         int colorMapIndex = levelNumber < 14 ? mapNumber - 1 : mapNumber + 2 - 1;
-        WorldMap worldMap = new WorldMap(maps.get(mapNumber - 1));
+        WorldMap worldMap = new WorldMap(builtinMaps.get(mapNumber - 1));
         worldMap.setConfigValue("mapNumber", mapNumber);
         worldMap.setConfigValue("colorMapIndex", colorMapIndex);
         return worldMap;

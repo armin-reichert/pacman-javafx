@@ -93,7 +93,21 @@ public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel {
     @Override
     public void configureNormalLevel() {
         levelCounterEnabled = true;
+
         WorldMap worldMap = selectWorldMap(level.number);
+        Map<String, String> colorMap;
+        if (builtinMaps.contains(worldMap)) {
+            colorMap = COLOR_MAPS.get(randomInt(0, COLOR_MAPS.size()));
+        } else {
+            colorMap = Map.of(
+                    "fill",   worldMap.getStringPropertyOrElse(LayerID.TERRAIN, PROPERTY_COLOR_WALL_FILL, "000000"),
+                    "stroke", worldMap.getStringPropertyOrElse(LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE, "0000ff"),
+                    "door",   worldMap.getStringPropertyOrElse(LayerID.TERRAIN, PROPERTY_COLOR_DOOR, "00ffff"),
+                    "pellet", worldMap.getStringPropertyOrElse(LayerID.FOOD, PROPERTY_COLOR_FOOD, "ffffff")
+            );
+        }
+        worldMap.setConfigValue("colorMap", colorMap);
+
         level.setNumFlashes(levelData(level.number).numFlashes());
         level.setIntermissionNumber(ArcadePacMan_GameModel.intermissionNumberAfterLevel(level.number));
         populateLevel(worldMap);
@@ -103,47 +117,33 @@ public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel {
     }
 
     @Override
+    protected WorldMap selectWorldMap(int levelNumber) {
+        return switch (mapSelectionMode) {
+            case NO_CUSTOM_MAPS ->
+                    levelNumber <= builtinMaps.size()
+                            ? new WorldMap(builtinMaps.get(levelNumber - 1))
+                            : new WorldMap(builtinMaps.get(randomInt(0, builtinMaps.size())));
+            case CUSTOM_MAPS_FIRST -> {
+                List<WorldMap> maps = new ArrayList<>(customMapsSortedByFile());
+                maps.addAll(builtinMaps);
+                yield levelNumber <= maps.size()
+                        ? new WorldMap(maps.get(levelNumber - 1))
+                        : new WorldMap(maps.get(randomInt(0, maps.size())));
+            }
+            case ALL_RANDOM -> {
+                List<WorldMap> maps = new ArrayList<>(customMapsSortedByFile());
+                maps.addAll(builtinMaps);
+                yield new WorldMap(maps.get(randomInt(0, maps.size())));
+            }
+        };
+    }
+
+    @Override
     public void configureDemoLevel() {
         configureNormalLevel();
         levelCounterEnabled = false;
         demoLevelSteering = new RuleBasedPacSteering(this);
         setDemoLevelBehavior();
-    }
-
-    private WorldMap selectWorldMap(int levelNumber) {
-        WorldMap worldMap = null;
-        Map<String, String> colorMap;
-        switch (mapSelectionMode) {
-            case NO_CUSTOM_MAPS -> {
-                worldMap = levelNumber <= builtinMaps.size()
-                    ? new WorldMap(builtinMaps.get(levelNumber - 1))
-                    : new WorldMap(builtinMaps.get(randomInt(0, builtinMaps.size())));
-            }
-            case CUSTOM_MAPS_FIRST -> {
-                List<WorldMap> maps = new ArrayList<>(customMapsSortedByFile());
-                maps.addAll(builtinMaps);
-                worldMap = levelNumber <= maps.size()
-                    ? new WorldMap(maps.get(levelNumber - 1))
-                    : new WorldMap(maps.get(randomInt(0, maps.size())));
-            }
-            case ALL_RANDOM -> {
-                List<WorldMap> maps = new ArrayList<>(customMapsSortedByFile());
-                maps.addAll(builtinMaps);
-                worldMap = new WorldMap(maps.get(randomInt(0, maps.size())));
-            }
-        }
-        if (builtinMaps.contains(worldMap)) {
-            colorMap = COLOR_MAPS.get(randomInt(0, COLOR_MAPS.size()));
-        } else {
-            colorMap = Map.of(
-                "fill",   worldMap.getStringPropertyOrElse(LayerID.TERRAIN, PROPERTY_COLOR_WALL_FILL, "000000"),
-                "stroke", worldMap.getStringPropertyOrElse(LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE, "0000ff"),
-                "door",   worldMap.getStringPropertyOrElse(LayerID.TERRAIN, PROPERTY_COLOR_DOOR, "00ffff"),
-                "pellet", worldMap.getStringPropertyOrElse(LayerID.FOOD, PROPERTY_COLOR_FOOD, "ffffff")
-            );
-        }
-        worldMap.setConfigValue("colorMap", colorMap);
-        return worldMap;
     }
 
     @Override

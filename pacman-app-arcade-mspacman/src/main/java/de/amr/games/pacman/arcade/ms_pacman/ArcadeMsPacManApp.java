@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade.ms_pacman;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.model.CustomMapSelectionMode;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.DashboardItemID;
 import de.amr.games.pacman.ui3d.PacManGamesUI_3D;
@@ -28,8 +29,8 @@ public class ArcadeMsPacManApp extends Application {
                 Logger.info("User dir '{}' created", userDir);
             }
             ArcadeMsPacMan_GameModel game = new ArcadeMsPacMan_GameModel(userDir);
-            //game.setCustomMapsEnabled(true);
-            //game.updateCustomMaps();
+            game.setMapSelectionMode(CustomMapSelectionMode.CUSTOM_MAPS_FIRST);
+            game.updateCustomMaps();
             GameController.it().addGame(GameVariant.MS_PACMAN, game);
             GameController.it().selectGame(GameVariant.MS_PACMAN);
         } catch (Exception x) {

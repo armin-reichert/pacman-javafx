@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade.pacman;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.DashboardItemID;
 import de.amr.games.pacman.ui3d.PacManGamesUI_3D;
@@ -27,7 +28,8 @@ public class ArcadePacManApp extends Application {
             if (userDir.mkdir()) {
                 Logger.info("User dir '{}' created", userDir);
             }
-            GameController.it().addGame(GameVariant.PACMAN, new ArcadePacMan_GameModel(userDir));
+            GameModel game = new ArcadePacMan_GameModel(userDir);
+            GameController.it().addGame(GameVariant.PACMAN, game);
             GameController.it().selectGame(GameVariant.PACMAN);
         } catch (Exception x) {
             x.printStackTrace(System.err);

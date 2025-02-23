@@ -251,15 +251,21 @@ public class ArcadePacMan_GameModel extends GameModel {
     }
 
     @Override
+    protected WorldMap selectWorldMap(int levelNumber) {
+        return builtinMaps.getFirst();
+    }
+
+    @Override
     public void configureNormalLevel() {
         levelCounterEnabled = true;
         level.setNumFlashes(levelData(level.number).numFlashes());
         level.setIntermissionNumber(intermissionNumberAfterLevel(level.number));
-        populateLevel(builtinMaps.getFirst());
+        WorldMap worldMap = selectWorldMap(level.number);
+        populateLevel(worldMap);
         level.pac().setAutopilot(autopilot);
         setCruiseElroy(0);
-        List<Vector2i> oneWayDownTiles = builtinMaps.getFirst().tiles()
-            .filter(tile -> builtinMaps.getFirst().get(LayerID.TERRAIN, tile) == TerrainTiles.ONE_WAY_DOWN).toList();
+        List<Vector2i> oneWayDownTiles = worldMap.tiles()
+            .filter(tile -> worldMap.get(LayerID.TERRAIN, tile) == TerrainTiles.ONE_WAY_DOWN).toList();
         level.ghosts().forEach(ghost -> {
             ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
             ghost.setSpecialTerrainTiles(oneWayDownTiles);

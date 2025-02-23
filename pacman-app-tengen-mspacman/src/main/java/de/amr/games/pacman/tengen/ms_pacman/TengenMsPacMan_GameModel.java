@@ -428,8 +428,13 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
+    protected WorldMap selectWorldMap(int levelNumber) {
+        return mapManager.coloredWorldMap(mapCategory, level.number);
+    }
+
+    @Override
     public void configureNormalLevel() {
-        WorldMap worldMap = mapManager.coloredWorldMap(mapCategory, level.number);
+        WorldMap worldMap = selectWorldMap(level.number);
         createWorldAndPopulation(worldMap);
         level.setNumFlashes(5); // TODO check this
         level.setIntermissionNumber(intermissionNumberAfterLevel(level.number));
