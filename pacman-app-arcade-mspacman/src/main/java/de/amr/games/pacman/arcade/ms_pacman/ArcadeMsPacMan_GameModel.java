@@ -270,7 +270,6 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         worldMap.setConfigValue("mapNumber", mapNumber);
         worldMap.setConfigValue("colorMapIndex", colorMapIndex);
         return worldMap;
-
     }
 
     private int intermissionNumberAfterLevel(int number) {

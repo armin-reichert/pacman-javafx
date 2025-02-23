@@ -33,6 +33,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.NavPoint.np;
+import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
 /**
@@ -222,7 +223,17 @@ public class ArcadePacMan_GameModel extends GameModel {
 
     protected void populateLevel(WorldMap worldMap) {
         GameWorld world = new GameWorld(worldMap);
-        world.createArcadeHouse(10, 15, 17, 19);
+        if (!worldMap.hasProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MIN_TILE)) {
+            Logger.warn("No house min tile found in map!");
+            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MIN_TILE, formatTile(vec_2i(10, 15)));
+        }
+        if (!worldMap.hasProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MAX_TILE)) {
+            Logger.warn("No house max tile found in map!");
+            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MAX_TILE, formatTile(vec_2i(17, 19)));
+        }
+        Vector2i minTile = worldMap.getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
+        Vector2i maxTile = worldMap.getTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
+        world.createArcadeHouse(minTile.x(), minTile.y(), maxTile.x(), maxTile.y());
 
         var pac = new Pac();
         pac.setName("Pac-Man");

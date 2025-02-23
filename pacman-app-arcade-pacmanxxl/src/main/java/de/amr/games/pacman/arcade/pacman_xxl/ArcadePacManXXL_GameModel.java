@@ -54,43 +54,6 @@ public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel {
     }
 
     @Override
-    protected void populateLevel(WorldMap worldMap) {
-        GameWorld world = new GameWorld(worldMap);
-
-        // House can be at non-default position!
-        if (!worldMap.hasProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MIN_TILE)) {
-            Logger.warn("No house min tile found in map!");
-            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MIN_TILE, formatTile(vec_2i(10, 15)));
-        }
-        if (!worldMap.hasProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MAX_TILE)) {
-            Logger.warn("No house max tile found in map!");
-            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MAX_TILE, formatTile(vec_2i(17, 19)));
-        }
-        Vector2i minTile = worldMap.getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
-        Vector2i maxTile = worldMap.getTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
-        world.createArcadeHouse(minTile.x(), minTile.y(), maxTile.x(), maxTile.y());
-
-        var pac = new Pac();
-        pac.setName("Pac-Man");
-        pac.setWorld(world);
-        pac.reset();
-
-        var ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.clyde() };
-        Stream.of(ghosts).forEach(ghost -> {
-            ghost.setWorld(world);
-            ghost.setRevivalPosition(world.ghostPosition(ghost.id()));
-            ghost.reset();
-        });
-        ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST)); // middle house position
-
-        level.setWorld(world);
-        level.setPac(pac);
-        level.setGhosts(ghosts);
-        level.setBonusSymbol(0, computeBonusSymbol());
-        level.setBonusSymbol(1, computeBonusSymbol());
-    }
-
-    @Override
     public void configureNormalLevel() {
         levelCounterEnabled = true;
 
