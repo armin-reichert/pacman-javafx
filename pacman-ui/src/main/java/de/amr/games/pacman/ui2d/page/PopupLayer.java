@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui2d.page;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.scene.TooFancyGameCanvasContainer;
+import de.amr.games.pacman.ui2d.scene.TooFancyCanvasContainer;
 import de.amr.games.pacman.uilib.FadingPane;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
@@ -33,7 +33,7 @@ public class PopupLayer extends Pane {
     private final TextFlow signature = new TextFlow();
     private Animation signatureAnimation;
 
-    public PopupLayer(GameContext context, TooFancyGameCanvasContainer canvas) {
+    public PopupLayer(GameContext context, TooFancyCanvasContainer canvas) {
         this.context = context;
 
         getChildren().addAll(helpPopUp, signature);
@@ -46,7 +46,7 @@ public class PopupLayer extends Pane {
         prefWidthProperty().bind(canvas.prefWidthProperty());
     }
 
-    public void sign(TooFancyGameCanvasContainer gameCanvasContainer, Font font, Color color, String... words) {
+    public void sign(TooFancyCanvasContainer gameCanvasContainer, Font font, Color color, String... words) {
         signature.setOpacity(0); // invisible initially
         signature.getChildren().clear(); // just in case
         for (String word : words) {

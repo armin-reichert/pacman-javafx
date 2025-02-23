@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameVariant;
@@ -16,7 +15,7 @@ import de.amr.games.pacman.ui2d.action.GameActions2D;
 import de.amr.games.pacman.ui2d.scene.CameraControlledView;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.TooFancyGameCanvasContainer;
+import de.amr.games.pacman.ui2d.scene.TooFancyCanvasContainer;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -41,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
+import static de.amr.games.pacman.lib.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui2d.GlobalProperties2d.*;
 import static de.amr.games.pacman.ui2d.input.Keyboard.*;
@@ -132,17 +132,17 @@ public class GamePage extends StackPane implements GameActionProvider {
     protected final GameContext context;
     protected final Scene parentScene;
     protected final Canvas canvas = new Canvas();
-    protected final TooFancyGameCanvasContainer canvasContainer;
 
-    protected final BorderPane canvasLayer = new BorderPane();
-    protected final DashboardLayer dashboardLayer; // dashboard, picture-in-picture view
-    protected final PopupLayer popupLayer; // help, signature
+    protected BorderPane canvasLayer;
+    protected DashboardLayer dashboardLayer; // dashboard, picture-in-picture view
+    protected PopupLayer popupLayer; // help, signature
 
+    protected TooFancyCanvasContainer canvasContainer;
     protected ContextMenu contextMenu;
 
     public GamePage(GameContext context, Scene parentScene) {
-        this.context = Globals.assertNotNull(context);
-        this.parentScene = Globals.assertNotNull(parentScene);
+        this.context = assertNotNull(context);
+        this.parentScene = assertNotNull(parentScene);
 
         bindGameActions();
 
@@ -152,32 +152,32 @@ public class GamePage extends StackPane implements GameActionProvider {
             if (contextMenu != null) contextMenu.hide();
         });
 
+        createCanvasLayer();
+        createDashboardLayer();
+        createPopupLayer();
+        getChildren().addAll(canvasLayer, dashboardLayer, popupLayer);
+
         GraphicsContext g = canvas.getGraphicsContext2D();
         g.setFontSmoothingType(FontSmoothingType.GRAY);
         g.setImageSmoothing(false);
+        PY_CANVAS_FONT_SMOOTHING.addListener(
+            (py, ov, smooth) -> g.setFontSmoothingType(smooth ? FontSmoothingType.LCD : FontSmoothingType.GRAY
+        ));
+        PY_CANVAS_IMAGE_SMOOTHING.addListener(
+            (py, ov, smooth) -> g.setImageSmoothing(smooth)
+        );
+    }
 
-        canvasContainer = new TooFancyGameCanvasContainer(canvas);
+    private void createCanvasLayer() {
+        canvasContainer = new TooFancyCanvasContainer(canvas);
         canvasContainer.setMinScaling(0.5);
-        // default: Arcade games aspect ratio
         canvasContainer.setUnscaledCanvasWidth(ARCADE_MAP_SIZE_IN_PIXELS.x());
         canvasContainer.setUnscaledCanvasHeight(ARCADE_MAP_SIZE_IN_PIXELS.y());
         canvasContainer.setBorderColor(Color.valueOf(Arcade.Palette.WHITE));
         canvasContainer.decorationEnabledPy.addListener((py, ov, nv) -> embedGameScene(gameScenePy.get()));
 
-        canvasLayer.setCenter(canvasContainer);
+        canvasLayer = new BorderPane(canvasContainer);
 
-        dashboardLayer = new DashboardLayer(context);
-
-        popupLayer = new PopupLayer(context, canvasContainer);
-        popupLayer.setMouseTransparent(true);
-        popupLayer.sign(canvasContainer,
-            context.assets().font("font.monospaced", 8), Color.LIGHTGRAY,
-            context.locText("app.signature"));
-
-        getChildren().addAll(canvasLayer, dashboardLayer, popupLayer);
-
-        PY_CANVAS_FONT_SMOOTHING.addListener((py, ov, nv) -> g.setFontSmoothingType(nv ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
-        PY_CANVAS_IMAGE_SMOOTHING.addListener((py, ov, nv) -> g.setImageSmoothing(nv));
         PY_DEBUG_INFO_VISIBLE.addListener((py, ov, debug) -> {
             if (debug) {
                 canvasLayer.setBackground(coloredBackground(Color.DARKGREEN));
@@ -189,6 +189,18 @@ public class GamePage extends StackPane implements GameActionProvider {
         });
     }
 
+    private void createDashboardLayer() {
+        dashboardLayer = new DashboardLayer(context);
+    }
+
+    private void createPopupLayer() {
+        popupLayer = new PopupLayer(context, canvasContainer);
+        popupLayer.setMouseTransparent(true);
+        popupLayer.sign(canvasContainer,
+            context.assets().font("font.monospaced", 8), Color.LIGHTGRAY,
+            context.locText("app.signature"));
+    }
+
     @Override
     public void bindGameActions() {
         bind(GameActions2D.BOOT,            KeyCode.F3);
@@ -196,9 +208,9 @@ public class GamePage extends StackPane implements GameActionProvider {
         bind(GameActions2D.TOGGLE_PAUSED,   KeyCode.P);
         bind(actionToggleDebugInfo,         alt(KeyCode.D));
         bind(actionShowHelp,                KeyCode.H);
-        bind(actionSimulationSpeedSlower,        alt(KeyCode.MINUS));
-        bind(actionSimulationSpeedFaster,        alt(KeyCode.PLUS));
-        bind(actionSimulationSpeedReset,   alt(KeyCode.DIGIT0));
+        bind(actionSimulationSpeedSlower,   alt(KeyCode.MINUS));
+        bind(actionSimulationSpeedFaster,   alt(KeyCode.PLUS));
+        bind(actionSimulationSpeedReset,    alt(KeyCode.DIGIT0));
         bind(actionSimulationOneStep,       shift(KeyCode.P));
         bind(actionSimulationTenSteps,      shift(KeyCode.SPACE));
         bind(actionToggleAutopilot,         alt(KeyCode.A));
@@ -211,7 +223,7 @@ public class GamePage extends StackPane implements GameActionProvider {
         return actionBindings;
     }
 
-    public TooFancyGameCanvasContainer gameCanvasContainer() {
+    public TooFancyCanvasContainer canvasContainer() {
         return canvasContainer;
     }
 
@@ -228,7 +240,10 @@ public class GamePage extends StackPane implements GameActionProvider {
 
     public void setActionToOpenEditor(GameAction action) {
         this.actionToOpenEditor = action;
-        bind(action, shift_alt(KeyCode.E));
+        if (action != null) {
+            bind(action, shift_alt(KeyCode.E));
+        }
+        //TODO unbind else?
     }
 
     private void handleContextMenuRequest(ContextMenuEvent event) {

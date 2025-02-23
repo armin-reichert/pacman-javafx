@@ -385,7 +385,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         } catch (Exception x) {
             Logger.error(x);
         }
-        gamePage.gameCanvasContainer().decorationEnabledPy.set(gameConfiguration().isGameCanvasDecorated());
+        gamePage.canvasContainer().decorationEnabledPy.set(gameConfiguration().isGameCanvasDecorated());
     }
 
     protected void bindStageTitle() {
@@ -661,7 +661,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         // size of game scene might have changed, so re-embed
         currentGameScene().ifPresent(gamePage::embedGameScene);
 
-        GameScene2D pipScene = gameConfiguration().createPiPScene(this, gamePage.gameCanvasContainer().canvas());
+        GameScene2D pipScene = gameConfiguration().createPiPScene(this, gamePage.canvasContainer().canvas());
         gamePage.dashboardLayer().pipView().setScene2D(pipScene);
 
         Logger.info("Game level {} ({}) created", level().number, gameVariant());

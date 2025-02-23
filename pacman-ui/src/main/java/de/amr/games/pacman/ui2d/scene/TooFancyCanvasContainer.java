@@ -18,7 +18,7 @@ import org.tinylog.Logger;
 /**
  * @author Armin Reichert
  */
-public class TooFancyGameCanvasContainer extends BorderPane {
+public class TooFancyCanvasContainer extends BorderPane {
 
     static final Vector2f DOWNSCALING_IF_BORDER = new Vector2f(0.85f, 0.93f);
 
@@ -68,7 +68,7 @@ public class TooFancyGameCanvasContainer extends BorderPane {
     private final Canvas canvas;
     private double minScaling = 1.0;
 
-    public TooFancyGameCanvasContainer(Canvas canvas) {
+    public TooFancyCanvasContainer(Canvas canvas) {
         this.canvas = Globals.assertNotNull(canvas);
         setCenter(canvas);
         canvas.widthProperty().bind(unscaledCanvasWidthPy.multiply(scalingPy));
