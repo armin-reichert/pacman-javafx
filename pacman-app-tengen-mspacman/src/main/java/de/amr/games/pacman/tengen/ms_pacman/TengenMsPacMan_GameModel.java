@@ -563,7 +563,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public void killGhost(Ghost ghost) {
         eventLog.killedGhosts.add(ghost);
         int killedSoFar = level.victims().size();
-        int points = KILLED_GHOST_VALUES[killedSoFar];
+        int points = 100 * KILLED_GHOST_VALUE_MULTIPLIER[killedSoFar];
         level.addKilledGhost(ghost);
         ghost.eaten(killedSoFar);
         scoreManager.scorePoints(this, points);

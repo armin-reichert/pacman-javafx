@@ -34,25 +34,25 @@ public abstract class GameModel {
     public static final byte RED_GHOST = 0, PINK_GHOST = 1, CYAN_GHOST = 2, ORANGE_GHOST = 3;
 
     /** Game loop frequency, ticks per second. */
-    public static final byte       TICKS_PER_SECOND = 60;
+    public static final byte TICKS_PER_SECOND = 60;
 
-    public static final short      POINTS_ALL_GHOSTS_IN_LEVEL = 12_000;
-    public static final byte       LEVEL_COUNTER_MAX_SIZE = 7;
-    public static final byte       BONUS_POINTS_SHOWN_TICKS = 120; // unsure
-    public static final short[]    KILLED_GHOST_VALUES = { 200, 400, 800, 1600 };
+    public static final short    POINTS_ALL_GHOSTS_IN_LEVEL = 12_000;
+    public static final byte     LEVEL_COUNTER_MAX_SIZE = 7;
+    public static final byte     BONUS_POINTS_SHOWN_TICKS = 120; //TODO unsure
+    public static final byte[]   KILLED_GHOST_VALUE_MULTIPLIER = { 2, 4, 8, 16 }; // factor * 100 = value
 
-    protected final List<Byte>     levelCounter = new ArrayList<>();
-    protected final GateKeeper     gateKeeper = new GateKeeper();
-    protected final ScoreManager   scoreManager = new ScoreManager();
-    protected HuntingTimer         huntingControl;
-    protected boolean              levelCounterEnabled;
-    protected boolean              playing;
-    protected boolean              simulateOverflowBug;
-    protected int                  initialLives;
-    protected int                  lives;
-    protected SimulationStepLog    eventLog;
-    protected boolean              demoLevel;
-    protected GameLevel            level;
+    protected final List<Byte>   levelCounter = new ArrayList<>();
+    protected final GateKeeper   gateKeeper = new GateKeeper();
+    protected final ScoreManager scoreManager = new ScoreManager();
+    protected HuntingTimer       huntingControl;
+    protected boolean            levelCounterEnabled;
+    protected boolean            playing;
+    protected boolean            simulateOverflowBug;
+    protected int                initialLives;
+    protected int                lives;
+    protected SimulationStepLog  eventLog;
+    protected boolean            demoLevel;
+    protected GameLevel          level;
 
     protected File userDir;
     protected final List<WorldMap> builtinMaps = new ArrayList<>();
@@ -170,6 +170,7 @@ public abstract class GameModel {
     }
 
     public int lastLevelNumber() { return Integer.MAX_VALUE; }
+
     public Optional<GameLevel> level() {
         return Optional.ofNullable(level);
     }
