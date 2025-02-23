@@ -20,7 +20,7 @@ import java.io.File;
 
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfig.NES_SIZE;
 
-public class TengenMsPacManApp extends Application {
+public class TengenMsPacMan_App extends Application {
 
     @Override
     public void init() {
