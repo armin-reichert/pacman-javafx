@@ -399,6 +399,7 @@ public enum GameState implements FsmState<GameModel> {
                 level.blinking().restart();
             }
             else if (timer().atSecond(2.5)) {
+                level.clearMessage();
                 game.activateNextBonus();
             }
             else if (timer().atSecond(4.5)) {
@@ -420,12 +421,12 @@ public enum GameState implements FsmState<GameModel> {
                 level.blinking().reset();
             }
             else if (timer().atSecond(9.5)) {
-                setProperty("mazeFlashing", true);
+                setProperty("mazeFlashing", true); //TODO fix
                 level.blinking().setStartPhase(Pulse.OFF);
                 level.blinking().restart(2 * level.numFlashes());
             }
             else if (timer().atSecond(12.0)) {
-                setProperty("mazeFlashing", false);
+                setProperty("mazeFlashing", false); //TODO fix
                 level.blinking().reset();
                 level.pac().freeze();
                 level.bonus().ifPresent(Bonus::setInactive);
