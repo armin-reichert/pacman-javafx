@@ -275,7 +275,8 @@ public class Ghost extends Creature implements AnimatedActor2D {
     private void updateStateLocked(GameModel game) {
         GameLevel level = game.level().orElseThrow();
         if (insideHouse()) {
-            float minY = world.houseCeilingY() + HTS, maxY = world().houseFloorY() - HTS;
+            float minY = (world.houseMinTile().y() + 1) * TS + HTS;
+            float maxY = (world.houseMaxTile().y() - 1) * TS - HTS;
             setSpeed(game.ghostSpeedInsideHouse(this));
             move();
             if (posY <= minY) {

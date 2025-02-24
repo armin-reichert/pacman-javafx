@@ -210,14 +210,6 @@ public class GameWorld {
         return houseMinTile().toVector2f().scaled(TS).plus(houseSizeInTiles().toVector2f().scaled(HTS));
     }
 
-    public float houseCeilingY() {
-        return (houseMinTile().y() + 1 ) * TS;
-    }
-
-    public float houseFloorY() {
-        return (houseMinTile().y() + houseSizeInTiles().y() - 2) * TS;
-    }
-
     /**
      * @param tile some tile
      * @return tells if the given tile is part of the ghost house
