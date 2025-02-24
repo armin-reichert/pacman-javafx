@@ -224,9 +224,8 @@ public class GameWorld {
      */
     public boolean isPartOfHouse(Vector2i tile) {
         assertTileNotNull(tile);
-        Vector2i max = houseMinTile().plus(houseSizeInTiles().minus(1, 1));
-        return tile.x() >= houseMinTile().x() && tile.x() <= max.x() //
-            && tile.y() >= houseMinTile().y() && tile.y() <= max.y();
+        return tile.x() >= houseMinTile().x() && tile.x() <= houseMaxTile().x()
+            && tile.y() >= houseMinTile().y() && tile.y() <= houseMaxTile().y();
     }
 
     public Vector2f pacPosition() {
