@@ -61,7 +61,6 @@ public enum GameActions2D implements GameAction {
     BOOT {
         @Override
         public void execute(GameContext context) {
-            context.sound().stopAll();
             context.gameClock().setTargetFrameRate(TICKS_PER_SECOND);
             context.gameController().restart(GameState.BOOT);
         }

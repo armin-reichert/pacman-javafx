@@ -92,6 +92,26 @@ public class GameSound {
         logPlayerStatus();
     }
 
+    public void playVoice(String voiceClipID, double delaySeconds) {
+        if (voice != null) {
+            Logger.info("Cannot play voice {}, another voice is already playing", voiceClipID);
+            return;
+        }
+        URL url = assets.get(voiceClipID);
+        voice = new MediaPlayer(new Media(url.toExternalForm()));
+        // media player stays in state PLAYING, so we remove the reference when it reaches the end
+        voice.setOnEndOfMedia(() -> voice = null);
+        voice.muteProperty().bind(mutedPy);
+        voice.setStartTime(Duration.seconds(delaySeconds));
+        voice.play(); // play also if enabledPy is set to false
+    }
+
+    public void stopVoice() {
+        if (voice != null) {
+            voice.stop();
+        }
+    }
+
     private Map<String, MediaPlayer> players(GameVariant gameVariant) {
         return soundsByGameVariant.get(gameVariant);
     }
@@ -295,25 +315,5 @@ public class GameSound {
 
     public void stopPacPowerSound() {
         stop("pacman_power");
-    }
-
-    public void playVoice(String voiceClipID, double delaySeconds) {
-        if (voice != null) {
-            Logger.info("Cannot play voice {}, another voice is already playing", voiceClipID);
-            return;
-        }
-        URL url = assets.get(voiceClipID);
-        voice = new MediaPlayer(new Media(url.toExternalForm()));
-        // media player stays in state PLAYING, so we remove the reference when it reaches the end
-        voice.setOnEndOfMedia(() -> voice = null);
-        voice.muteProperty().bind(mutedPy);
-        voice.setStartTime(Duration.seconds(delaySeconds));
-        voice.play(); // play also if enabledPy is set to false
-    }
-
-    public void stopVoice() {
-        if (voice != null) {
-            voice.stop();
-        }
     }
 }
