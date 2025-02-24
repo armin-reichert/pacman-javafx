@@ -293,9 +293,9 @@ public class TileMapEditor {
 
     private final BooleanProperty symmetricEditPy = new SimpleBooleanProperty(true);
 
-    private final ObjectProperty<Image> templateImagePy = new SimpleObjectProperty<>();
+    private final BooleanProperty obstaclesJoiningPy = new SimpleBooleanProperty(true);
 
-    private final ObjectProperty<Image> templateImageGreyPy = new SimpleObjectProperty<>();
+    private final ObjectProperty<Image> templateImagePy = new SimpleObjectProperty<>();
 
     // Accessor methods
 
@@ -320,6 +320,8 @@ public class TileMapEditor {
     public BooleanProperty segmentNumbersDisplayedProperty() { return segmentNumbersDisplayedPy; }
 
     public BooleanProperty obstacleInnerAreaDisplayedProperty() { return obstacleInnerAreaDisplayedPy; }
+
+    public BooleanProperty obstaclesJoiningProperty() { return obstaclesJoiningPy; }
 
     public boolean isSymmetricEdit() { return symmetricEditPy.get(); }
 
@@ -833,6 +835,9 @@ public class TileMapEditor {
                 miCloseTemplateImage);
 
         // Edit
+        var miObstacleJoining = new CheckMenuItem(tt("menu.edit.obstacles_joining"));
+        miObstacleJoining.selectedProperty().bindBidirectional(obstaclesJoiningPy);
+
         var miAddBorder = new MenuItem(tt("menu.edit.add_border"));
         miAddBorder.setOnAction(e -> addBorderWall(worldMap()));
         miAddBorder.disableProperty().bind(editModePy.map(mode -> mode == EditMode.INSPECT));
@@ -863,6 +868,8 @@ public class TileMapEditor {
         miIdentifyTiles.setOnAction(e -> populateMapFromTemplateImage());
 
         menuEdit = new Menu(tt("menu.edit"), NO_GRAPHIC,
+            miObstacleJoining,
+            new SeparatorMenuItem(),
             miAddBorder,
             miAddHouse,
             miClearTerrain,

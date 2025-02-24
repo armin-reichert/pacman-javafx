@@ -62,7 +62,7 @@ public class EditCanvas extends Canvas {
                 editor.setTileValue(editor.worldMap(), LayerID.FOOD, tile, FoodTiles.EMPTY);
             }
         };
-        obstacleEditor.setJoin(true);
+        obstacleEditor.joiningProperty().bind(editor.obstaclesJoiningProperty());
         obstacleEditor.worldMapProperty().bind(worldMapPy);
 
         gridSizePy.bind(editor.gridSizeProperty());
