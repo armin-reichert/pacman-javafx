@@ -323,6 +323,8 @@ public class TileMapEditor {
 
     public BooleanProperty obstaclesJoiningProperty() { return obstaclesJoiningPy; }
 
+    public BooleanProperty symmetricEditProperty() { return symmetricEditPy; }
+
     public boolean isSymmetricEdit() { return symmetricEditPy.get(); }
 
     public TerrainRendererInEditor terrainRendererInEditor() { return terrainRendererInEditor; }
@@ -1317,7 +1319,7 @@ public class TileMapEditor {
             changeManager.setFoodMapChanged();
         }
         if (isSymmetricEdit()) {
-            Vector2i symmetricTile = vSymmetricTile(worldMap, tile);
+            Vector2i symmetricTile = worldMap.vSymmetricTile(tile);
             byte mirroredValue = mirroredTileValue(value);
             worldMap.set(layerID, symmetricTile, mirroredValue);
             if (layerID == LayerID.TERRAIN) {
@@ -1326,10 +1328,6 @@ public class TileMapEditor {
                 }
             }
         }
-    }
-
-    private Vector2i vSymmetricTile(WorldMap worldMap, Vector2i tile) {
-        return vec_2i(worldMap.numCols() - 1 - tile.x(), tile.y());
     }
 
     // ignores symmetric edit mode!

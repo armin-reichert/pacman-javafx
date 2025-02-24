@@ -64,6 +64,7 @@ public class EditCanvas extends Canvas {
         };
         obstacleEditor.joiningProperty().bind(editor.obstaclesJoiningProperty());
         obstacleEditor.worldMapProperty().bind(worldMapPy);
+        obstacleEditor.symmetricEditProperty().bind(editor.symmetricEditProperty());
 
         gridSizePy.bind(editor.gridSizeProperty());
         worldMapPy.bind(editor.worldMapProperty());

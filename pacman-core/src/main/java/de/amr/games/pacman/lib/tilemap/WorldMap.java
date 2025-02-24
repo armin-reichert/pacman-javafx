@@ -437,6 +437,10 @@ public class WorldMap {
         return tiles().filter(tile -> get(layerID, tile) == content);
     }
 
+    public Vector2i vSymmetricTile(Vector2i tile) {
+        return vec_2i(numCols - 1 - tile.x(), tile.y());
+    }
+
     public boolean outOfBounds(Vector2i tile) {
         return outOfBounds(tile.y(), tile.x());
     }

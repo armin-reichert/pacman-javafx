@@ -17,11 +17,14 @@ import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.Globals.isEven;
+import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.mirroredTileValue;
 
 public class ObstacleEditor {
 
     private final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>();
     private final BooleanProperty joiningPy = new SimpleBooleanProperty();
+    private final BooleanProperty symmetricEditPy = new SimpleBooleanProperty();
+
     private boolean enabled;
     private Vector2i anchor;
     private Vector2i frontier;
@@ -39,6 +42,8 @@ public class ObstacleEditor {
     public void setJoining(boolean join) {
         joiningPy.set(join);
     }
+
+    public BooleanProperty symmetricEditProperty() { return symmetricEditPy; }
 
     public ObjectProperty<WorldMap> worldMapProperty() { return worldMapPy; }
 
@@ -97,6 +102,10 @@ public class ObstacleEditor {
                 for (int col = 0; col < content[0].length; ++col) {
                     Vector2i tile = minTile.plus(col, row);
                     renderer.drawTile(g, tile, content[row][col]);
+                    if (symmetricEditProperty().get()) {
+                        Vector2i symmetricTile = worldMapPy.get().vSymmetricTile(tile);
+                        renderer.drawTile(g, symmetricTile, mirroredTileValue(content[row][col]));
+                    }
                 }
             }
         }
@@ -110,7 +119,7 @@ public class ObstacleEditor {
                 content = joinedContent(content, numRows, numCols);
             }
             for (int row = 0; row < numRows; ++row) {
-                for (int col = 0; col < numCols; ++col) {
+               for (int col = 0; col < numCols; ++col) {
                     var tile = new Vector2i(minTile.x() + col, minTile.y() + row);
                     setValue(tile, content[row][col]);
                 }
