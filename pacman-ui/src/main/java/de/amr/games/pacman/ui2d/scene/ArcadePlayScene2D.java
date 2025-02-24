@@ -200,7 +200,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     }
 
     private Vector2f centerPositionBelowHouse(GameWorld world) {
-        Vector2i houseTopLeft = world.houseTopLeftTile(), houseSize = world.houseSize();
+        Vector2i houseTopLeft = world.houseMinTile(), houseSize = world.houseSizeInTiles();
         float x = TS * (houseTopLeft.x() + houseSize.x() * 0.5f);
         float y = TS * (houseTopLeft.y() + houseSize.y() + 1);
         return new Vector2f(x, y);

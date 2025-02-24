@@ -15,9 +15,7 @@ import de.amr.games.pacman.tilemap.rendering.TerrainRenderer;
 import de.amr.games.pacman.ui2d.GameRenderer;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.FloatProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -130,7 +128,7 @@ public class ArcadePacManXXL_GameRenderer implements GameRenderer {
             );
             terrainRenderer.setColors(colors);
             terrainRenderer.drawTerrain(ctx(), worldMap, worldMap.obstacles());
-            terrainRenderer.drawHouse(ctx(), world.houseTopLeftTile(), world.houseSize());
+            terrainRenderer.drawHouse(ctx(), world.houseMinTile(), world.houseSizeInTiles());
             foodRenderer.setPelletColor(Color.web(colorMap.get("pellet")));
             foodRenderer.setEnergizerColor(Color.web(colorMap.get("pellet")));
             worldMap.tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))

@@ -158,7 +158,7 @@ public class Maze3D extends Group {
         DoubleProperty wallBaseHeightPy, float wallTopHeight, float wallThickness,
         BooleanProperty houseLightOnPy)
     {
-        Vector2i houseSize = world.houseSize();
+        Vector2i houseSize = world.houseSizeInTiles();
         r3D.setWallBaseHeightProperty(wallBaseHeightPy);
         r3D.setWallTopHeight(wallTopHeight);
         r3D.setWallThickness(wallThickness);
@@ -166,8 +166,8 @@ public class Maze3D extends Group {
         r3D.setWallTopMaterial(coloredMaterial(houseTopColor));
 
         int tilesX = houseSize.x(), tilesY = houseSize.y();
-        int xMin = world.houseTopLeftTile().x(), xMax = xMin + tilesX - 1;
-        int yMin = world.houseTopLeftTile().y(), yMax = yMin + tilesY - 1;
+        int xMin = world.houseMinTile().x(), xMax = xMin + tilesX - 1;
+        int yMin = world.houseMinTile().y(), yMax = yMin + tilesY - 1;
         Vector2i leftDoorTile = world.houseLeftDoorTile(), rightDoorTile = world.houseRightDoorTile();
 
         var door3D = new Door3D(leftDoorTile, rightDoorTile, doorsColor, wallBaseHeightPy.get());

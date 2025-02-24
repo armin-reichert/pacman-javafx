@@ -502,7 +502,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     }
 
     private Vector2f centerPosBelowHouse(GameWorld world) {
-        return world.houseTopLeftTile().plus(0.5f * world.houseSize().x(), world.houseSize().y() + 1).scaled(TS);
+        return world.houseMinTile().plus(0.5f * world.houseSizeInTiles().x(), world.houseSizeInTiles().y() + 1).scaled(TS);
     }
 
     private Stream<Ghost> ghostsInZOrder(GameLevel level) {

@@ -40,8 +40,6 @@ public class GameWorld {
     private final Vector2i[] energizerTiles;
     private final Portal[] portals;
 
-    private Vector2i houseTopLeftTile;
-    private Vector2i houseSize;
     private Vector2i leftDoorTile;
     private Vector2i rightDoorTile;
 
@@ -157,8 +155,6 @@ public class GameWorld {
      * @param maxY tile-y of bottom right corner
      */
     public void createArcadeHouse(int minX, int minY, int maxX, int maxY) {
-        houseTopLeftTile = vec_2i(minX, minY);
-        houseSize = vec_2i(maxX - minX + 1, maxY - minY + 1);
         leftDoorTile = vec_2i(minX + 3, minY);
         rightDoorTile = vec_2i(minX + 4, minY);
         setGhostDirection(RED_GHOST, Direction.LEFT);
@@ -183,12 +179,16 @@ public class GameWorld {
         }
     }
 
-    public Vector2i houseTopLeftTile() {
-        return houseTopLeftTile;
+    public Vector2i houseMinTile() {
+        return worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
     }
 
-    public Vector2i houseSize() {
-        return houseSize;
+    public Vector2i houseMaxTile() {
+        return worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
+    }
+
+    public Vector2i houseSizeInTiles() {
+        return houseMaxTile().minus(houseMinTile()).plus(1, 1);
     }
 
     public Vector2i houseLeftDoorTile() {
@@ -207,15 +207,15 @@ public class GameWorld {
     }
 
     public Vector2f houseCenter() {
-        return houseTopLeftTile.toVector2f().scaled(TS).plus(houseSize.toVector2f().scaled(HTS));
+        return houseMinTile().toVector2f().scaled(TS).plus(houseSizeInTiles().toVector2f().scaled(HTS));
     }
 
     public float houseCeilingY() {
-        return (houseTopLeftTile.y() + 1 ) * TS;
+        return (houseMinTile().y() + 1 ) * TS;
     }
 
     public float houseFloorY() {
-        return (houseTopLeftTile.y() + houseSize().y() - 2) * TS;
+        return (houseMinTile().y() + houseSizeInTiles().y() - 2) * TS;
     }
 
     /**
@@ -224,9 +224,9 @@ public class GameWorld {
      */
     public boolean isPartOfHouse(Vector2i tile) {
         assertTileNotNull(tile);
-        Vector2i max = houseTopLeftTile.plus(houseSize().minus(1, 1));
-        return tile.x() >= houseTopLeftTile.x() && tile.x() <= max.x() //
-            && tile.y() >= houseTopLeftTile.y() && tile.y() <= max.y();
+        Vector2i max = houseMinTile().plus(houseSizeInTiles().minus(1, 1));
+        return tile.x() >= houseMinTile().x() && tile.x() <= max.x() //
+            && tile.y() >= houseMinTile().y() && tile.y() <= max.y();
     }
 
     public Vector2f pacPosition() {

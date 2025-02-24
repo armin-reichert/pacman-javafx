@@ -330,8 +330,8 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     private void overPaintActors(GameWorld world) {
-        Vector2f topLeftPosition = world.houseTopLeftTile().plus(1, 2).scaled(TS * scaling());
-        Vector2f size = new Vector2i(world.houseSize().x() - 2, 2).scaled(TS * scaling());
+        Vector2f topLeftPosition = world.houseMinTile().plus(1, 2).scaled(TS * scaling());
+        Vector2f size = new Vector2i(world.houseSizeInTiles().x() - 2, 2).scaled(TS * scaling());
         ctx.setFill(CANVAS_BACKGROUND_COLOR);
         ctx.fillRect(topLeftPosition.x(), topLeftPosition.y(), size.x(), size.y());
 

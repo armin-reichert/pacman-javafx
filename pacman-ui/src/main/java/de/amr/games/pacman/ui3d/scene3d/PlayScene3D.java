@@ -506,8 +506,8 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
     private void showReadyMessage() {
         GameWorld world = context.level().world();
-        Vector2i houseTopLeft = world.houseTopLeftTile();
-        Vector2i houseSize = world.houseSize();
+        Vector2i houseTopLeft = world.houseMinTile();
+        Vector2i houseSize = world.houseSizeInTiles();
         double x = TS * (houseTopLeft.x() + 0.5 * houseSize.x());
         double y = TS * (houseTopLeft.y() +       houseSize.y());
         double seconds = context.game().isPlaying() ? 0.5 : 2.5;

@@ -510,7 +510,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
         boolean leftToRight = RND.nextBoolean();
         Vector2i houseEntry = tileAt(level.world().houseEntryPosition());
-        Vector2i houseEntryOpposite = houseEntry.plus(0, level.world().houseSize().y() + 1);
+        Vector2i houseEntryOpposite = houseEntry.plus(0, level.world().houseSizeInTiles().y() + 1);
         List<Portal> portals = level.world().portals().toList();
         if (portals.isEmpty()) {
             return; // there should be no mazes without portal but who knows?

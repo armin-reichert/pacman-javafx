@@ -533,7 +533,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         }
 
         Vector2i houseEntry = tileAt(level.world().houseEntryPosition());
-        Vector2i behindHouse = houseEntry.plus(0, level.world().houseSize().y() + 1);
+        Vector2i behindHouse = houseEntry.plus(0, level.world().houseSizeInTiles().y() + 1);
         List<NavPoint> route = Stream.of(entryTile, houseEntry, behindHouse, houseEntry, exitTile).map(NavPoint::np).toList();
 
         byte symbol = level.bonusSymbol(level.nextBonusIndex());
