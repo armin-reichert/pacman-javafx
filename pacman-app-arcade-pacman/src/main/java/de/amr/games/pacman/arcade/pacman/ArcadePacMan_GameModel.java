@@ -221,8 +221,8 @@ public class ArcadePacMan_GameModel extends GameModel {
             Logger.warn("No house max tile found in map!");
             worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MAX_TILE, formatTile(vec_2i(17, 19)));
         }
-        Vector2i minTile = worldMap.getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
-        Vector2i maxTile = worldMap.getTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
+        Vector2i minTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
+        Vector2i maxTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
         world.createArcadeHouse(minTile.x(), minTile.y(), maxTile.x(), maxTile.y());
 
         var pac = new Pac();
@@ -451,7 +451,7 @@ public class ArcadePacMan_GameModel extends GameModel {
         StaticBonus staticBonus = new StaticBonus(symbol, ArcadePacMan_GameModel.BONUS_VALUE_FACTORS[symbol] * 100);
         level.setBonus(staticBonus);
         if (level.world().map().hasProperty(LayerID.TERRAIN, PROPERTY_POS_BONUS)) {
-            Vector2i bonusTile = level.world().map().getTileProperty(PROPERTY_POS_BONUS, new Vector2i(13, 20));
+            Vector2i bonusTile = level.world().map().getTerrainTileProperty(PROPERTY_POS_BONUS, new Vector2i(13, 20));
             staticBonus.actor().setPosition(halfTileRightOf(bonusTile));
         } else {
             Logger.error("No bonus position found in map");

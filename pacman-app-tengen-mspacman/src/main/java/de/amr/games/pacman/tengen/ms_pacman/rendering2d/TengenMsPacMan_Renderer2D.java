@@ -175,7 +175,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     private void drawGuy(Creature guy, Direction dir, RectArea spriteLookingLeft) {
-        Vector2f center = guy.position().plus(HTS, HTS).scaled((float) scaling());
+        Vector2f center = guy.position().plus(HTS, HTS).scaled(scaling());
         ctx.save();
         ctx.translate(center.x(), center.y());
         switch (dir) {
@@ -335,8 +335,8 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx.setFill(CANVAS_BACKGROUND_COLOR);
         ctx.fillRect(topLeftPosition.x(), topLeftPosition.y(), size.x(), size.y());
 
-        overPaint(world.map().getTileProperty("pos_pac", vec_2i(14, 26)));
-        overPaint(world.map().getTileProperty("pos_ghost_1_red", vec_2i(13, 14)));
+        overPaint(world.map().getTerrainTileProperty("pos_pac", vec_2i(14, 26)));
+        overPaint(world.map().getTerrainTileProperty("pos_ghost_1_red", vec_2i(13, 14)));
     }
 
     private void overPaint(Vector2i tile) {

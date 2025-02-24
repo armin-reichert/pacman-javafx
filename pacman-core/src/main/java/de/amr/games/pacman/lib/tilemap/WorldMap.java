@@ -347,10 +347,11 @@ public class WorldMap {
     public List<Vector2i> updateObstacleList() {
         List<Vector2i> tilesWithErrors = new ArrayList<>();
         obstacles = ObstacleBuilder.buildObstacles(this, tilesWithErrors);
+
         // remove house obstacle
-        Vector2i houseMinTile = getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
+        Vector2i houseMinTile = getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
         if (houseMinTile == null) {
-            Logger.info("Could not remove house placeholder-obstacle from world map, no min tile property exists");
+            Logger.info("Could not remove house placeholder from obstacle list, house min tile not set");
         } else {
             Vector2i houseStartPoint = houseMinTile.scaled(TS).plus(TS, HTS);
             obstacles.stream()
@@ -360,7 +361,7 @@ public class WorldMap {
                         obstacles.remove(houseObstacle);
                     });
         }
-        Logger.info("Obstacle list updated for {}", this);
+        Logger.debug("Obstacle list updated for {}", this);
         return tilesWithErrors;
     }
 
@@ -464,27 +465,32 @@ public class WorldMap {
         return layer(layerID).properties.containsKey(propertyName);
     }
 
-    public Object getProperty(LayerID layerID, String name) {
-        return layer(layerID).properties.get(name);
+    public Object getProperty(LayerID layerID, String propertyName) {
+        return layer(layerID).properties.get(propertyName);
     }
 
-    public void setProperty(LayerID layerID, String name, Object value) {
-        layer(layerID).properties.put(name, value);
+    public void setProperty(LayerID layerID, String propertyName, Object value) {
+        layer(layerID).properties.put(propertyName, value);
     }
 
     public String getStringProperty(LayerID layerID, String propertyName) {
-        return String.valueOf(layer(layerID).properties.get(propertyName));
+        return String.valueOf(getProperty(layerID, propertyName));
     }
 
-    public String getStringPropertyOrElse(LayerID layerID, String name, String defaultValue) {
-        return String.valueOf(layer(layerID).properties.getOrDefault(name, defaultValue));
+    public String getStringPropertyOrElse(LayerID layerID, String propertyName, String defaultValue) {
+        return String.valueOf(layer(layerID).properties.getOrDefault(propertyName, defaultValue));
     }
 
-    public Vector2i getTileProperty(String name, Vector2i defaultTile) {
-        if (terrainLayer.properties.containsKey(name)) {
-            return parseTile(String.valueOf(terrainLayer.properties.get(name))).orElse(defaultTile);
+    public Vector2i getTileProperty(LayerID layerID, String propertyName, Vector2i defaultTile) {
+        if (hasProperty(layerID, propertyName)) {
+            String propertyValue = getStringProperty(layerID, propertyName);
+            return parseTile(propertyValue).orElse(defaultTile);
         }
         return defaultTile;
+    }
+
+    public Vector2i getTerrainTileProperty(String propertyName, Vector2i defaultTile) {
+        return getTileProperty(TERRAIN, propertyName, defaultTile);
     }
 
     public void removeProperty(LayerID layerID, String name) {

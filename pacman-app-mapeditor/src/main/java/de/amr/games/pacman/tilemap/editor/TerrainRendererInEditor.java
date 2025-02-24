@@ -112,8 +112,8 @@ public class TerrainRendererInEditor extends TerrainRenderer {
             });
         }
         g.restore();
-        Vector2i houseMinTile = worldMap.getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
-        Vector2i houseMaxTile = worldMap.getTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
+        Vector2i houseMinTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
+        Vector2i houseMaxTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
         if (houseMinTile != null && houseMaxTile != null) {
             drawHouse(g, houseMinTile, houseMaxTile.minus(houseMinTile).plus(1, 1));
         }
@@ -286,12 +286,12 @@ public class TerrainRendererInEditor extends TerrainRenderer {
 
     //TODO move into renderer class
     public void drawActorSprites(GraphicsContext g, WorldMap worldMap, double gridSize) {
-        drawSprite(g, worldMap.getTileProperty(PROPERTY_POS_PAC, null), PAC_SPRITE, gridSize);
-        drawSprite(g, worldMap.getTileProperty(PROPERTY_POS_RED_GHOST, null), RED_GHOST_SPRITE, gridSize);
-        drawSprite(g, worldMap.getTileProperty(PROPERTY_POS_PINK_GHOST, null), PINK_GHOST_SPRITE, gridSize);
-        drawSprite(g, worldMap.getTileProperty(PROPERTY_POS_CYAN_GHOST, null), CYAN_GHOST_SPRITE, gridSize);
-        drawSprite(g, worldMap.getTileProperty(PROPERTY_POS_ORANGE_GHOST, null), ORANGE_GHOST_SPRITE, gridSize);
-        drawSprite(g, worldMap.getTileProperty(PROPERTY_POS_BONUS, null), BONUS_SPRITE, gridSize);
+        drawSprite(g, worldMap.getTerrainTileProperty(PROPERTY_POS_PAC, null), PAC_SPRITE, gridSize);
+        drawSprite(g, worldMap.getTerrainTileProperty(PROPERTY_POS_RED_GHOST, null), RED_GHOST_SPRITE, gridSize);
+        drawSprite(g, worldMap.getTerrainTileProperty(PROPERTY_POS_PINK_GHOST, null), PINK_GHOST_SPRITE, gridSize);
+        drawSprite(g, worldMap.getTerrainTileProperty(PROPERTY_POS_CYAN_GHOST, null), CYAN_GHOST_SPRITE, gridSize);
+        drawSprite(g, worldMap.getTerrainTileProperty(PROPERTY_POS_ORANGE_GHOST, null), ORANGE_GHOST_SPRITE, gridSize);
+        drawSprite(g, worldMap.getTerrainTileProperty(PROPERTY_POS_BONUS, null), BONUS_SPRITE, gridSize);
     }
 
     public void drawSprite(GraphicsContext g, Vector2i tile, RectArea sprite, double gridSize) {

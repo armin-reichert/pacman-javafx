@@ -1129,8 +1129,8 @@ public class TileMapEditor {
             terrainRendererInPreview.setScaling(gridSize() / 8.0);
             terrainRendererInPreview.setColors(colors);
             terrainRendererInPreview.drawTerrain(g, worldMap(), worldMap().obstacles());
-            Vector2i houseMinTile = worldMap().getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
-            Vector2i houseMaxTile = worldMap().getTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
+            Vector2i houseMinTile = worldMap().getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
+            Vector2i houseMaxTile = worldMap().getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
             if (houseMinTile != null && houseMaxTile != null) {
                 terrainRendererInPreview.drawHouse(g, houseMinTile, houseMaxTile.minus(houseMinTile).plus(1, 1));
             }
@@ -1408,8 +1408,8 @@ public class TileMapEditor {
     public void placeHouse(WorldMap worldMap, Vector2i houseMinTile) {
         Vector2i houseMaxTile = houseMinTile.plus(7, 4);
 
-        Vector2i oldHouseMinTile = worldMap.getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
-        Vector2i oldHouseMaxTile = worldMap.getTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
+        Vector2i oldHouseMinTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
+        Vector2i oldHouseMaxTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
         worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MIN_TILE, formatTile(houseMinTile));
         worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MAX_TILE, formatTile(houseMaxTile));
 
@@ -1489,8 +1489,8 @@ public class TileMapEditor {
     }
 
     private boolean isPartOfHouse(Vector2i tile) {
-        Vector2i houseMinTile = worldMap().getTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
-        Vector2i houseMaxTile = worldMap().getTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
+        Vector2i houseMinTile = worldMap().getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
+        Vector2i houseMaxTile = worldMap().getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
         if (houseMinTile != null && houseMaxTile != null) {
             return houseMinTile.x() <= tile.x() && tile.x() <= houseMaxTile.x()
                     && houseMinTile.y() <= tile.y() && tile.y() <= houseMaxTile.y();

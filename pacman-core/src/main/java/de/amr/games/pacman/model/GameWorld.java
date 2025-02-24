@@ -64,11 +64,11 @@ public class GameWorld {
         }
         portals = portalList.toArray(new Portal[0]);
 
-        pacPosition                  = posHalfTileRightOf(worldMap.getTileProperty(PROPERTY_POS_PAC,          vec_2i(13,26)));
-        ghostPositions[RED_GHOST]    = posHalfTileRightOf(worldMap.getTileProperty(PROPERTY_POS_RED_GHOST,    vec_2i(13,14)));
-        ghostPositions[PINK_GHOST]   = posHalfTileRightOf(worldMap.getTileProperty(PROPERTY_POS_PINK_GHOST,   vec_2i(13,17)));
-        ghostPositions[CYAN_GHOST]   = posHalfTileRightOf(worldMap.getTileProperty(PROPERTY_POS_CYAN_GHOST,   vec_2i(11,17)));
-        ghostPositions[ORANGE_GHOST] = posHalfTileRightOf(worldMap.getTileProperty(PROPERTY_POS_ORANGE_GHOST, vec_2i(15,17)));
+        pacPosition                  = posHalfTileRightOf(worldMap.getTerrainTileProperty(PROPERTY_POS_PAC,          vec_2i(13,26)));
+        ghostPositions[RED_GHOST]    = posHalfTileRightOf(worldMap.getTerrainTileProperty(PROPERTY_POS_RED_GHOST,    vec_2i(13,14)));
+        ghostPositions[PINK_GHOST]   = posHalfTileRightOf(worldMap.getTerrainTileProperty(PROPERTY_POS_PINK_GHOST,   vec_2i(13,17)));
+        ghostPositions[CYAN_GHOST]   = posHalfTileRightOf(worldMap.getTerrainTileProperty(PROPERTY_POS_CYAN_GHOST,   vec_2i(11,17)));
+        ghostPositions[ORANGE_GHOST] = posHalfTileRightOf(worldMap.getTerrainTileProperty(PROPERTY_POS_ORANGE_GHOST, vec_2i(15,17)));
 
         energizerTiles = worldMap.tilesContaining(LayerID.FOOD, FoodTiles.ENERGIZER).toArray(Vector2i[]::new);
         eatenFood = new BitSet(worldMap.numCols() * worldMap.numRows());
@@ -88,10 +88,10 @@ public class GameWorld {
         assertLegalGhostID(ghostID);
         int numRows = worldMap.numRows(), numCols = worldMap.numCols();
         return switch (ghostID) {
-            case RED_GHOST    -> worldMap.getTileProperty(PROPERTY_POS_SCATTER_RED_GHOST, vec_2i(0, numCols - 3));
-            case PINK_GHOST   -> worldMap.getTileProperty(PROPERTY_POS_SCATTER_PINK_GHOST, vec_2i(0, 3));
-            case CYAN_GHOST   -> worldMap.getTileProperty(PROPERTY_POS_SCATTER_CYAN_GHOST, vec_2i(numRows - 1, numCols - 1));
-            case ORANGE_GHOST -> worldMap.getTileProperty(PROPERTY_POS_SCATTER_ORANGE_GHOST, vec_2i(numRows - 1, 0));
+            case RED_GHOST    -> worldMap.getTerrainTileProperty(PROPERTY_POS_SCATTER_RED_GHOST, vec_2i(0, numCols - 3));
+            case PINK_GHOST   -> worldMap.getTerrainTileProperty(PROPERTY_POS_SCATTER_PINK_GHOST, vec_2i(0, 3));
+            case CYAN_GHOST   -> worldMap.getTerrainTileProperty(PROPERTY_POS_SCATTER_CYAN_GHOST, vec_2i(numRows - 1, numCols - 1));
+            case ORANGE_GHOST -> worldMap.getTerrainTileProperty(PROPERTY_POS_SCATTER_ORANGE_GHOST, vec_2i(numRows - 1, 0));
             default -> throw new IllegalArgumentException("Illegal ghost ID: " + ghostID);
         };
     }
