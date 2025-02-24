@@ -51,7 +51,7 @@ public class UpdateMapFiles {
             };
             map.set(LayerID.TERRAIN, tile, newContent);
         });
-        Vector2i houseMinTile = map.getTileProperty("pos_house_min_tile", new Vector2i(10, 15));
+        Vector2i houseMinTile = map.getTerrainTileProperty("pos_house_min_tile", new Vector2i(10, 15));
         Vector2i houseMaxTile = houseMinTile.plus(7, 4);
         map.setProperty(LayerID.TERRAIN, WorldMap.PROPERTY_POS_HOUSE_MIN_TILE, WorldMap.formatTile(houseMinTile));
         map.setProperty(LayerID.TERRAIN, WorldMap.PROPERTY_POS_HOUSE_MAX_TILE, WorldMap.formatTile(houseMaxTile));

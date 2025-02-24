@@ -27,8 +27,8 @@ import static de.amr.games.pacman.lib.tilemap.LayerID.TERRAIN;
 public class WorldMap {
 
     public static class Layer {
-        Map<String, Object> properties = new HashMap<>();
-        byte[][] values;
+        private final Map<String, Object> properties = new HashMap<>();
+        private byte[][] values;
 
         public Layer() {}
 
@@ -39,6 +39,11 @@ public class WorldMap {
             for (int row = 0; row < numRows; ++row) {
                 values[row] = Arrays.copyOf(other.values[row], numCols);
             }
+        }
+
+        public void replaceProperties(Map<String, Object> otherProperties) {
+            properties.clear();
+            properties.putAll(otherProperties);
         }
     }
 
@@ -58,10 +63,10 @@ public class WorldMap {
     public static final String PROPERTY_POS_HOUSE_MIN_TILE       = "pos_house_min";
     public static final String PROPERTY_POS_HOUSE_MAX_TILE       = "pos_house_max";
 
-    public static final String PROPERTY_COLOR_FOOD         = "color_food";
-    public static final String PROPERTY_COLOR_WALL_STROKE  = "color_wall_stroke";
-    public static final String PROPERTY_COLOR_WALL_FILL    = "color_wall_fill";
-    public static final String PROPERTY_COLOR_DOOR         = "color_door";
+    public static final String PROPERTY_COLOR_FOOD               = "color_food";
+    public static final String PROPERTY_COLOR_WALL_STROKE        = "color_wall_stroke";
+    public static final String PROPERTY_COLOR_WALL_FILL          = "color_wall_fill";
+    public static final String PROPERTY_COLOR_DOOR               = "color_door";
 
     private static final String BEGIN_TERRAIN_LAYER = "!terrain";
     private static final String BEGIN_FOOD_LAYER    = "!food";
@@ -69,11 +74,6 @@ public class WorldMap {
 
     private static String toConfigNamespace(String key) {
         return "_config." + key;
-    }
-
-    private static void replaceProperties(Map<String, Object> properties, Map<String, Object> otherProperties) {
-        properties.clear();
-        properties.putAll(otherProperties);
     }
 
     public static Optional<Vector2i> parseTile(String text) {
@@ -165,8 +165,8 @@ public class WorldMap {
             throw new IllegalArgumentException("Illegal row index for inserting row: " + rowIndex);
         }
         WorldMap newMap = new WorldMap(numRows + 1, numCols);
-        replaceProperties(newMap.terrainLayer.properties, terrainLayer.properties);
-        replaceProperties(newMap.foodLayer.properties, foodLayer.properties);
+        newMap.terrainLayer.replaceProperties(terrainLayer.properties);
+        newMap.foodLayer.replaceProperties(foodLayer.properties);
         for (int row = 0; row < newMap.numRows; ++row) {
             for (int col = 0; col < newMap.numCols; ++col) {
                 byte terrainValue = TerrainTiles.EMPTY;
@@ -195,8 +195,8 @@ public class WorldMap {
             throw new IllegalArgumentException("Illegal row index for deleting row: " + rowIndexToDelete);
         }
         WorldMap newMap = new WorldMap(numRows - 1, numCols);
-        replaceProperties(newMap.terrainLayer.properties, terrainLayer.properties);
-        replaceProperties(newMap.foodLayer.properties, foodLayer.properties);
+        newMap.terrainLayer.replaceProperties(terrainLayer.properties);
+        newMap.foodLayer.replaceProperties(foodLayer.properties);
         for (int row = 0; row < newMap.numRows; ++row) {
             for (int col = 0; col < newMap.numCols; ++col) {
                 if (row < rowIndexToDelete) {
@@ -389,6 +389,9 @@ public class WorldMap {
         };
     }
 
+    private Map<String, Object> properties(LayerID layerID) {
+        return layer(layerID).properties;
+    }
 
     public int numCols() {
         return numCols;
@@ -457,20 +460,19 @@ public class WorldMap {
     }
 
     public Stream<String> stringPropertyNames(LayerID layerID) {
-        Map<String, Object> properties = layer(layerID).properties;
-        return properties.keySet().stream().filter(name -> properties.get(name) instanceof String).sorted();
+        return properties(layerID).keySet().stream().filter(name -> properties(layerID).get(name) instanceof String).sorted();
     }
 
     public boolean hasProperty(LayerID layerID, String propertyName) {
-        return layer(layerID).properties.containsKey(propertyName);
+        return properties(layerID).containsKey(propertyName);
     }
 
     public Object getProperty(LayerID layerID, String propertyName) {
-        return layer(layerID).properties.get(propertyName);
+        return properties(layerID).get(propertyName);
     }
 
     public void setProperty(LayerID layerID, String propertyName, Object value) {
-        layer(layerID).properties.put(propertyName, value);
+        properties(layerID).put(propertyName, value);
     }
 
     public String getStringProperty(LayerID layerID, String propertyName) {
@@ -478,7 +480,7 @@ public class WorldMap {
     }
 
     public String getStringPropertyOrElse(LayerID layerID, String propertyName, String defaultValue) {
-        return String.valueOf(layer(layerID).properties.getOrDefault(propertyName, defaultValue));
+        return String.valueOf(properties(layerID).getOrDefault(propertyName, defaultValue));
     }
 
     public Vector2i getTileProperty(LayerID layerID, String propertyName, Vector2i defaultTile) {
@@ -494,7 +496,7 @@ public class WorldMap {
     }
 
     public void removeProperty(LayerID layerID, String name) {
-        layer(layerID).properties.remove(name);
+        properties(layerID).remove(name);
     }
 
     /**
