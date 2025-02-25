@@ -470,12 +470,12 @@ public class WorldMap {
         return properties(layerID).get(propertyName);
     }
 
-    public void setProperty(LayerID layerID, String propertyName, String value) {
-        properties(layerID).put(propertyName, value);
+    public String getPropertyOrDefault(LayerID layerID, String propertyName, String defaultValue) {
+        return properties(layerID).getOrDefault(propertyName, defaultValue);
     }
 
-    public String getStringPropertyOrElse(LayerID layerID, String propertyName, String defaultValue) {
-        return String.valueOf(properties(layerID).getOrDefault(propertyName, defaultValue));
+    public void setProperty(LayerID layerID, String propertyName, String value) {
+        properties(layerID).put(propertyName, value);
     }
 
     public Vector2i getTileProperty(LayerID layerID, String propertyName, Vector2i defaultTile) {
@@ -490,8 +490,8 @@ public class WorldMap {
         return getTileProperty(TERRAIN, propertyName, defaultTile);
     }
 
-    public void removeProperty(LayerID layerID, String name) {
-        properties(layerID).remove(name);
+    public void removeProperty(LayerID layerID, String propertyName) {
+        properties(layerID).remove(propertyName);
     }
 
     /**

@@ -528,9 +528,12 @@ public class TileMapEditor {
         spTemplateImage = new ScrollPane(pane);
     }
 
-    public void setTerrainMapPropertyValue(String name, String value) {
-        if (worldMap().getProperty(LayerID.TERRAIN, name).equals(value)) return;
-        worldMap().setProperty(LayerID.TERRAIN, name, value);
+    public void setTerrainMapPropertyValue(String propertyName, String value) {
+        assertNotNull(value);
+        if (worldMap().hasProperty(LayerID.TERRAIN, propertyName)
+            && worldMap().getProperty(LayerID.TERRAIN, propertyName).equals(value))
+            return;
+        worldMap().setProperty(LayerID.TERRAIN, propertyName, value);
         changeManager.setTerrainMapChanged();
         changeManager.setEdited(true);
     }
@@ -541,9 +544,12 @@ public class TileMapEditor {
         changeManager.setEdited(true);
     }
 
-    public void setFoodMapPropertyValue(String name, String value) {
-        if (worldMap().getProperty(LayerID.FOOD, name).equals(value)) return;
-        worldMap().setProperty(LayerID.FOOD, name, value);
+    public void setFoodMapPropertyValue(String propertyName, String value) {
+        assertNotNull(value);
+        if (worldMap().hasProperty(LayerID.FOOD, propertyName)
+            && worldMap().getProperty(LayerID.FOOD, propertyName).equals(value))
+            return;
+        worldMap().setProperty(LayerID.FOOD, propertyName, value);
         changeManager.setFoodMapChanged();
         changeManager.setEdited(true);
     }

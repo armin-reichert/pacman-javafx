@@ -77,10 +77,10 @@ public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel {
 
     private Map<String, String> coloringFromMap(WorldMap template) {
         return Map.of(
-            "fill",   template.getStringPropertyOrElse(LayerID.TERRAIN, PROPERTY_COLOR_WALL_FILL, "000000"),
-            "stroke", template.getStringPropertyOrElse(LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE, "0000ff"),
-            "door",   template.getStringPropertyOrElse(LayerID.TERRAIN, PROPERTY_COLOR_DOOR, "00ffff"),
-            "pellet", template.getStringPropertyOrElse(LayerID.FOOD, PROPERTY_COLOR_FOOD, "ffffff"));
+            "fill",   template.getPropertyOrDefault(LayerID.TERRAIN, PROPERTY_COLOR_WALL_FILL,   "000000"),
+            "stroke", template.getPropertyOrDefault(LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE, "0000ff"),
+            "door",   template.getPropertyOrDefault(LayerID.TERRAIN, PROPERTY_COLOR_DOOR,        "00ffff"),
+            "pellet", template.getPropertyOrDefault(LayerID.FOOD, PROPERTY_COLOR_FOOD,           "ffffff"));
     }
 
     @Override
