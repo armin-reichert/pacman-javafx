@@ -72,10 +72,6 @@ public class WorldMap {
     private static final String BEGIN_FOOD_LAYER    = "!food";
     private static final String BEGIN_DATA_SECTION  = "!data";
 
-    private static String toConfigNamespace(String key) {
-        return "_config." + key;
-    }
-
     public static Optional<Vector2i> parseTile(String text) {
         assertNotNull(text);
         Matcher m = TILE_PATTERN.matcher(text);
@@ -102,6 +98,7 @@ public class WorldMap {
     private Layer terrainLayer;
     private Layer foodLayer;
     private Set<Obstacle> obstacles = Collections.emptySet();
+    private Map<String, Object> config = new HashMap<>();
 
     public WorldMap(WorldMap other) {
         assertNotNull(other);
@@ -449,18 +446,17 @@ public class WorldMap {
         return row < 0 || row >= numRows || col < 0 || col >= numCols;
     }
 
-    // store non-string configuration data used by UI in own "namespace"
     public void setConfigValue(String key, Object value) {
-        terrainLayer.properties.put(toConfigNamespace(key), value);
+        config.put(key, value);
     }
 
     @SuppressWarnings("unchecked")
     public <T> T getConfigValue(String key) {
-        return (T) terrainLayer.properties.get(toConfigNamespace(key));
+        return (T) config.get(key);
     }
 
     public boolean hasConfigValue(String key) {
-        return terrainLayer.properties.containsKey(toConfigNamespace(key));
+        return config.containsKey(key);
     }
 
     public Stream<String> stringPropertyNames(LayerID layerID) {
