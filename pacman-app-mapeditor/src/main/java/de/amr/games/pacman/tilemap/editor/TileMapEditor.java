@@ -608,29 +608,31 @@ public class TileMapEditor {
     }
 
     private void onFileDroppedOnEditCanvas(DragEvent e) {
-        if (e.getDragboard().hasFiles()) {
-            File file = e.getDragboard().getFiles().getFirst();
-            if (isSupportedImageFile(file) && !isEditMode(EditMode.INSPECT)) {
-                e.acceptTransferModes(TransferMode.COPY);
-                try (FileInputStream in = new FileInputStream(file)) {
-                    Image image = new Image(in);
-                    createWorldMapFromTemplateImage(image);
-                    showMessage("Select colors for tile identification!", 10, MessageType.INFO);
-                    tabPaneEditorViews.getSelectionModel().select(tabTemplateImage);
-                } catch (IOException x) {
-                    showMessage("Could not open image file " + file, 3, MessageType.ERROR);
-                    Logger.error(x);
-                }
-            } else if (isWorldMapFile(file)) {
-                try {
-                    WorldMap worldMap = new WorldMap(file);
-                    setWorldMap(worldMap);
-                } catch (IOException x) {
-                    showMessage("Could not open world map file " + file, 3, MessageType.ERROR);
-                    Logger.error(x);
+        executeWithCheckForUnsavedChanges(() -> {
+            if (e.getDragboard().hasFiles()) {
+                File file = e.getDragboard().getFiles().getFirst();
+                if (isSupportedImageFile(file) && !isEditMode(EditMode.INSPECT)) {
+                    e.acceptTransferModes(TransferMode.COPY);
+                    try (FileInputStream in = new FileInputStream(file)) {
+                        Image image = new Image(in);
+                        createWorldMapFromTemplateImage(image);
+                        showMessage("Select colors for tile identification!", 10, MessageType.INFO);
+                        tabPaneEditorViews.getSelectionModel().select(tabTemplateImage);
+                    } catch (IOException x) {
+                        showMessage("Could not open image file " + file, 3, MessageType.ERROR);
+                        Logger.error(x);
+                    }
+                } else if (isWorldMapFile(file)) {
+                    try {
+                        WorldMap worldMap = new WorldMap(file);
+                        setWorldMap(worldMap);
+                    } catch (IOException x) {
+                        showMessage("Could not open world map file " + file, 3, MessageType.ERROR);
+                        Logger.error(x);
+                    }
                 }
             }
-        }
+        });
         e.consume();
     }
 
