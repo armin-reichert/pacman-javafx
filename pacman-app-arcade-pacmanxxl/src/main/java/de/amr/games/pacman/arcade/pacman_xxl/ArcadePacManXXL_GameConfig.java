@@ -31,6 +31,7 @@ public class ArcadePacManXXL_GameConfig implements GameConfiguration {
         loadAssets(() -> ResourceRoot.class, assets);
         spriteSheet = new ArcadePacMan_SpriteSheet(assets.get(assetKeyPrefix() + ".spritesheet"));
 
+        setGameScene("BootMenu",    new BootMenu());
         setGameScene("BootScene",   new ArcadeBootScene());
         setGameScene("IntroScene",  new IntroScene());
         setGameScene("StartScene",  new StartScene());
@@ -87,7 +88,7 @@ public class ArcadePacManXXL_GameConfig implements GameConfiguration {
     @Override
     public GameScene selectGameScene(GameContext context) {
         String sceneID = switch (context.gameState()) {
-            case BOOT -> "BootScene";
+            case BOOT -> "BootScene"; //  "BootMenu";
             case SETTING_OPTIONS -> "StartScene";
             case INTRO -> "IntroScene";
             case INTERMISSION -> "CutScene" + context.level().intermissionNumber();
