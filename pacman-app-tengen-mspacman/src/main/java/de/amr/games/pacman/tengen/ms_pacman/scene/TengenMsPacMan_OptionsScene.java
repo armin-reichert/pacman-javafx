@@ -251,64 +251,53 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         r.setScaling(scaling());
         Font scaledFont = r.scaledArcadeFont(TS);
 
-        double y = 20;
-        r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), size().x(), y);
+        r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), size().x(), 20);
 
-        y += 28;
-        r.drawText("MS PAC-MAN OPTIONS", LABEL_COLOR, scaledFont, COL_LABEL + 3 * TS, y);
+        r.drawText("MS PAC-MAN OPTIONS", LABEL_COLOR, scaledFont, COL_LABEL + 3 * TS, 48);
 
         // Players (not implemented)
-        y += 3 * TS;
-        drawArrowIfSelected(OPTION_PLAYERS, y, scaledFont);
-        r.drawText("TYPE", LABEL_COLOR, scaledFont, COL_LABEL, y);
-        r.drawText(":", LABEL_COLOR, scaledFont, COL_LABEL + 4 * TS + 4, y);
-        r.drawText("1 PLAYER", VALUE_COLOR, scaledFont, COL_LABEL + 6 * TS  , y);
+        drawArrowIfSelected(OPTION_PLAYERS, 72, scaledFont);
+        r.drawText("TYPE", LABEL_COLOR, scaledFont, COL_LABEL, 72);
+        r.drawText(":", LABEL_COLOR, scaledFont, COL_LABEL + 4 * TS + 4, 72);
+        r.drawText("1 PLAYER", VALUE_COLOR, scaledFont, COL_LABEL + 6 * TS  , 72);
 
         // Pac-Booster
-        y += 3 * TS;
-        drawArrowIfSelected(OPTION_PAC_BOOSTER, y, scaledFont);
-        r.drawText("PAC BOOSTER", LABEL_COLOR, scaledFont, COL_LABEL, y);
-        r.drawText(":", LABEL_COLOR, scaledFont, COL_COLON, y);
+        drawArrowIfSelected(OPTION_PAC_BOOSTER, 96, scaledFont);
+        r.drawText("PAC BOOSTER", LABEL_COLOR, scaledFont, COL_LABEL, 96);
+        r.drawText(":", LABEL_COLOR, scaledFont, COL_COLON, 96);
         String pacBoosterText = switch (game.pacBooster()) {
             case OFF -> "OFF";
             case ALWAYS_ON -> "ALWAYS ON";
             case USE_A_OR_B -> "USE A OR B";
         };
-        r.drawText(pacBoosterText, VALUE_COLOR, scaledFont, COL_VALUE, y);
+        r.drawText(pacBoosterText, VALUE_COLOR, scaledFont, COL_VALUE, 96);
 
         // Game difficulty
-        y += 3 * TS;
-        drawArrowIfSelected(OPTION_DIFFICULTY, y, scaledFont);
-        r.drawText("GAME DIFFICULTY", LABEL_COLOR, scaledFont, COL_LABEL, y);
-        r.drawText(":", LABEL_COLOR, scaledFont, COL_COLON, y);
-        r.drawText(game.difficulty().name(), VALUE_COLOR, scaledFont, COL_VALUE, y);
+        drawArrowIfSelected(OPTION_DIFFICULTY, 120, scaledFont);
+        r.drawText("GAME DIFFICULTY", LABEL_COLOR, scaledFont, COL_LABEL, 120);
+        r.drawText(":", LABEL_COLOR, scaledFont, COL_COLON, 120);
+        r.drawText(game.difficulty().name(), VALUE_COLOR, scaledFont, COL_VALUE, 120);
 
         // Maze (type) selection
-        y += 3 * TS;
-        drawArrowIfSelected(OPTION_MAZE_SELECTION, y, scaledFont);
-        r.drawText("MAZE SELECTION", LABEL_COLOR, scaledFont, COL_LABEL, y);
-        r.drawText(":", LABEL_COLOR, scaledFont, COL_COLON, y);
-        r.drawText(game.mapCategory().name(), VALUE_COLOR, scaledFont, COL_VALUE, y);
+        drawArrowIfSelected(OPTION_MAZE_SELECTION, 144, scaledFont);
+        r.drawText("MAZE SELECTION", LABEL_COLOR, scaledFont, COL_LABEL, 144);
+        r.drawText(":", LABEL_COLOR, scaledFont, COL_COLON, 144);
+        r.drawText(game.mapCategory().name(), VALUE_COLOR, scaledFont, COL_VALUE, 144);
 
         // Starting level number
-        y += 3 * TS;
-        drawArrowIfSelected(OPTION_STARTING_LEVEL, y, scaledFont);
-        r.drawText("STARTING LEVEL", LABEL_COLOR, scaledFont, COL_LABEL, y);
-        r.drawText(":", LABEL_COLOR, scaledFont, COL_COLON, y);
-        r.drawText(String.valueOf(game.startLevelNumber()), VALUE_COLOR, scaledFont, COL_VALUE, y);
+        drawArrowIfSelected(OPTION_STARTING_LEVEL, 168, scaledFont);
+        r.drawText("STARTING LEVEL", LABEL_COLOR, scaledFont, COL_LABEL, 168);
+        r.drawText(":", LABEL_COLOR, scaledFont, COL_COLON, 168);
+        r.drawText(String.valueOf(game.startLevelNumber()), VALUE_COLOR, scaledFont, COL_VALUE, 168);
         if (game.numContinues() < 4) {
-            r.drawSpriteScaled(CONTINUES_SPRITES[game.numContinues()], COL_VALUE + 3 * TS, y - TS);
+            r.drawSpriteScaled(CONTINUES_SPRITES[game.numContinues()], COL_VALUE + 3 * TS, 160);
         }
 
-        y += 3 * TS;
-        r.drawText("MOVE ARROW WITH JOYPAD", LABEL_COLOR, scaledFont, 4 * TS,  y);
-        y += TS;
-        r.drawText("CHOOSE OPTIONS WITH A AND B", LABEL_COLOR, scaledFont, 2 * TS,  y);
-        y += TS;
-        r.drawText("PRESS START TO START GAME", LABEL_COLOR, scaledFont, 3 * TS,  y);
+        r.drawText("MOVE ARROW WITH JOYPAD", LABEL_COLOR, scaledFont, 4 * TS,  192);
+        r.drawText("CHOOSE OPTIONS WITH A AND B", LABEL_COLOR, scaledFont, 2 * TS,  200);
+        r.drawText("PRESS START TO START GAME", LABEL_COLOR, scaledFont, 3 * TS,  208);
 
-        y += 4;
-        r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), size().x(), y);
+        r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), size().x(), 212);
 
         if (PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED.get()) {
             r.drawJoypadBindings(context.currentJoypadKeyBinding());
