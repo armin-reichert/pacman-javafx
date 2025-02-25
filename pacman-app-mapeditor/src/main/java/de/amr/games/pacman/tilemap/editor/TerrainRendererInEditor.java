@@ -129,7 +129,7 @@ public class TerrainRendererInEditor extends TerrainRenderer {
 
     private Optional<Vector2i> specialTile(WorldMap worldMap, String propertyName) {
         if (worldMap.hasProperty(LayerID.TERRAIN, propertyName)) {
-            return parseTile(worldMap.getStringProperty(LayerID.TERRAIN, propertyName));
+            return parseTile(worldMap.getProperty(LayerID.TERRAIN, propertyName));
         }
         return Optional.empty();
     }

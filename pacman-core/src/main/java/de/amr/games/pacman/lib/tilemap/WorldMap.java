@@ -466,16 +466,12 @@ public class WorldMap {
         return properties(layerID).containsKey(propertyName);
     }
 
-    public Object getProperty(LayerID layerID, String propertyName) {
+    public String getProperty(LayerID layerID, String propertyName) {
         return properties(layerID).get(propertyName);
     }
 
     public void setProperty(LayerID layerID, String propertyName, String value) {
         properties(layerID).put(propertyName, value);
-    }
-
-    public String getStringProperty(LayerID layerID, String propertyName) {
-        return String.valueOf(getProperty(layerID, propertyName));
     }
 
     public String getStringPropertyOrElse(LayerID layerID, String propertyName, String defaultValue) {
@@ -484,7 +480,7 @@ public class WorldMap {
 
     public Vector2i getTileProperty(LayerID layerID, String propertyName, Vector2i defaultTile) {
         if (hasProperty(layerID, propertyName)) {
-            String propertyValue = getStringProperty(layerID, propertyName);
+            String propertyValue = getProperty(layerID, propertyName);
             return parseTile(propertyValue).orElse(defaultTile);
         }
         return defaultTile;
@@ -552,10 +548,10 @@ public class WorldMap {
         set(layerID, tile.y(), tile.x(), value);
     }
 
-    public void setAll(LayerID layerID, byte fillValue) {
+    public void setAll(LayerID layerID, byte value) {
         assertNotNull(layerID);
         for (byte[] row : layer(layerID).values) {
-            Arrays.fill(row, fillValue);
+            Arrays.fill(row, value);
         }
     }
 }

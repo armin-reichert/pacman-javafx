@@ -529,7 +529,7 @@ public class TileMapEditor {
     }
 
     public void setTerrainMapPropertyValue(String name, String value) {
-        if (worldMap().getStringProperty(LayerID.TERRAIN, name).equals(value)) return;
+        if (worldMap().getProperty(LayerID.TERRAIN, name).equals(value)) return;
         worldMap().setProperty(LayerID.TERRAIN, name, value);
         changeManager.setTerrainMapChanged();
         changeManager.setEdited(true);
@@ -542,7 +542,7 @@ public class TileMapEditor {
     }
 
     public void setFoodMapPropertyValue(String name, String value) {
-        if (worldMap().getStringProperty(LayerID.FOOD, name).equals(value)) return;
+        if (worldMap().getProperty(LayerID.FOOD, name).equals(value)) return;
         worldMap().setProperty(LayerID.FOOD, name, value);
         changeManager.setFoodMapChanged();
         changeManager.setEdited(true);

@@ -162,7 +162,7 @@ public class PropertyEditorPane extends BorderPane {
 
         @Override
         void updateEditorFromProperty() {
-            textEditor.setText(worldMapPy.get().getStringProperty(layerID, propertyName));
+            textEditor.setText(worldMapPy.get().getProperty(layerID, propertyName));
         }
 
         @Override
@@ -190,7 +190,7 @@ public class PropertyEditorPane extends BorderPane {
 
         @Override
         void updateEditorFromProperty() {
-            String propertyValue = worldMapPy.get().getStringProperty(layerID, propertyName);
+            String propertyValue = worldMapPy.get().getProperty(layerID, propertyName);
             colorPicker.setValue(parseColor(propertyValue));
         }
 
@@ -234,7 +234,7 @@ public class PropertyEditorPane extends BorderPane {
 
         @Override
         protected void updateEditorFromProperty() {
-            String propertyValue = worldMapPy.get().getStringProperty(layerID, propertyName);
+            String propertyValue = worldMapPy.get().getProperty(layerID, propertyName);
             parseTile(propertyValue).ifPresent(tile -> {
                 spinnerX.getValueFactory().setValue(tile.x());
                 spinnerY.getValueFactory().setValue(tile.y());
@@ -304,7 +304,7 @@ public class PropertyEditorPane extends BorderPane {
         Logger.debug("Rebuild editors");
         propertyEditors.clear();
         worldMapPy.get().propertyNames(layerID).forEach(propertyName -> {
-            String propertyValue = worldMapPy.get().getStringProperty(layerID, propertyName);
+            String propertyValue = worldMapPy.get().getProperty(layerID, propertyName);
             // primitive way of discriminating but fulfills its purpose
             if (propertyName.startsWith("color_")) {
                 propertyEditors.add(new ColorPropertyEditor(propertyName, propertyValue));
