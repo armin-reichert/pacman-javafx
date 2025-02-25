@@ -27,7 +27,7 @@ import static de.amr.games.pacman.lib.tilemap.LayerID.TERRAIN;
 public class WorldMap {
 
     public static class Layer {
-        private final Map<String, Object> properties = new HashMap<>();
+        private final Map<String, String> properties = new HashMap<>();
         private byte[][] values;
 
         public Layer() {}
@@ -41,7 +41,7 @@ public class WorldMap {
             }
         }
 
-        public void replaceProperties(Map<String, Object> otherProperties) {
+        public void replaceProperties(Map<String, String> otherProperties) {
             properties.clear();
             properties.putAll(otherProperties);
         }
@@ -98,7 +98,7 @@ public class WorldMap {
     private Layer terrainLayer;
     private Layer foodLayer;
     private Set<Obstacle> obstacles = Collections.emptySet();
-    private Map<String, Object> config = new HashMap<>();
+    private final Map<String, Object> config = new HashMap<>();
 
     public WorldMap(WorldMap other) {
         assertNotNull(other);
@@ -210,7 +210,6 @@ public class WorldMap {
 
     private void print(PrintWriter pw, Layer layer) {
         layer.properties.keySet().stream()
-                .filter(name -> layer.properties.get(name) instanceof String)
                 .sorted()
                 .map(name -> name + "=" + layer.properties.get(name))
                 .forEach(pw::println);
@@ -325,8 +324,8 @@ public class WorldMap {
         return tileMap;
     }
 
-    private Map<String, Object> parseProperties(String text) {
-        var properties = new HashMap<String, Object>();
+    private Map<String, String> parseProperties(String text) {
+        var properties = new HashMap<String, String>();
         String[] lines = text.split("\n");
         for (String line : lines) {
             if (line.startsWith("#")) continue;
@@ -386,7 +385,7 @@ public class WorldMap {
         };
     }
 
-    private Map<String, Object> properties(LayerID layerID) {
+    private Map<String, String> properties(LayerID layerID) {
         return layer(layerID).properties;
     }
 
@@ -459,8 +458,8 @@ public class WorldMap {
         return config.containsKey(key);
     }
 
-    public Stream<String> stringPropertyNames(LayerID layerID) {
-        return properties(layerID).keySet().stream().filter(name -> properties(layerID).get(name) instanceof String).sorted();
+    public Stream<String> propertyNames(LayerID layerID) {
+        return layer(layerID).properties.keySet().stream().sorted();
     }
 
     public boolean hasProperty(LayerID layerID, String propertyName) {
@@ -471,7 +470,7 @@ public class WorldMap {
         return properties(layerID).get(propertyName);
     }
 
-    public void setProperty(LayerID layerID, String propertyName, Object value) {
+    public void setProperty(LayerID layerID, String propertyName, String value) {
         properties(layerID).put(propertyName, value);
     }
 

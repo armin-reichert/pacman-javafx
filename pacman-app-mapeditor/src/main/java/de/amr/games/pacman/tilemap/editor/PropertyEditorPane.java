@@ -303,7 +303,7 @@ public class PropertyEditorPane extends BorderPane {
     public void rebuildPropertyEditors() {
         Logger.debug("Rebuild editors");
         propertyEditors.clear();
-        worldMapPy.get().stringPropertyNames(layerID).forEach(propertyName -> {
+        worldMapPy.get().propertyNames(layerID).forEach(propertyName -> {
             String propertyValue = worldMapPy.get().getStringProperty(layerID, propertyName);
             // primitive way of discriminating but fulfills its purpose
             if (propertyName.startsWith("color_")) {
