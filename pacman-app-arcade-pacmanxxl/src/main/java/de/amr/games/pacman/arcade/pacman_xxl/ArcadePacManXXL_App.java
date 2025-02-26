@@ -4,9 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman_xxl;
 
+import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GameConfig3D;
+import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
+import de.amr.games.pacman.arcade.pacman.ArcadePacMan_GameConfig3D;
+import de.amr.games.pacman.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.model.CustomMapSelectionMode;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.DashboardItemID;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
@@ -30,9 +32,10 @@ public class ArcadePacManXXL_App extends Application {
             if (userDir.mkdir()) {
                 Logger.info("User dir '{}' created", userDir);
             }
-            GameModel game = new ArcadePacManXXL_GameModel(userDir);
-            game.setMapSelectionMode(CustomMapSelectionMode.CUSTOM_MAPS_FIRST);
-            GameController.it().addGame(GameVariant.PACMAN_XXL, game);
+            GameController.it().addGame(GameVariant.PACMAN_XXL, new ArcadePacManXXL_GameModel(userDir));
+            GameController.it().addGame(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameModel(userDir));
+            GameController.it().addGame(GameVariant.PACMAN, new ArcadePacMan_GameModel(userDir));
+
             GameController.it().selectGame(GameVariant.PACMAN_XXL);
         } catch (Exception x) {
             x.printStackTrace(System.err);
@@ -43,9 +46,15 @@ public class ArcadePacManXXL_App extends Application {
     public void start(Stage stage) {
         PacManGamesUI_3D ui = new PacManGamesUI_3D();
         ui.loadAssets();
+
+        ui.configureGameVariant(GameVariant.PACMAN, new ArcadePacMan_GameConfig3D(ui.assets()));
+        ui.configureGameVariant(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameConfig3D(ui.assets()));
         ui.configureGameVariant(GameVariant.PACMAN_XXL, new ArcadePacManXXL_GameConfig3D(ui.assets()));
+
         ui.create(stage, initialSize());
-        ui.startPage().addSlide(new ArcadePacManXXL_StartPage().root());
+
+        BootMenu bootMenu = new BootMenu(ui);
+        ui.startPage().addSlide(bootMenu);
 
         ui.addDashboardItem(DashboardItemID.README);
         ui.addDashboardItem(DashboardItemID.GENERAL);

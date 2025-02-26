@@ -135,6 +135,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected final StackPane sceneRoot = new StackPane();
 
     protected Stage stage;
+    protected Scene mainScene;
     protected StartPage startPage;
     protected GamePage gamePage;
     protected EditorPage editorPage;
@@ -204,7 +205,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         this.stage = assertNotNull(stage);
         assertNotNull(initialSize);
 
-        Scene mainScene = createMainScene(initialSize);
+        mainScene = createMainScene(initialSize);
         stage.setScene(mainScene);
 
         createStartPage();
@@ -235,6 +236,10 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     public StartPage startPage() {
         return startPage;
+    }
+
+    public Scene getMainScene() {
+        return mainScene;
     }
 
     /**

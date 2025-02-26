@@ -87,25 +87,26 @@ public class StartPage extends StackPane implements GameActionProvider {
         return carousel;
     }
 
-    private Flyer currentFlyer() {
-        return (Flyer) carousel.currentSlide();
+    private Node currentFlyer() {
+        return carousel.currentSlide();
     }
 
     @Override
     public void bindGameActions() {
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
             JoypadKeyBinding joypadKeys = context.currentJoypadKeyBinding();
-            bind(context -> currentFlyer().prevFlyerPage(),  joypadKeys.key(NES_JoypadButton.BTN_UP));
-            bind(context -> currentFlyer().nextFlyerPage(),  joypadKeys.key(NES_JoypadButton.BTN_DOWN));
+            //TODO assumption that current carousel item is always a flyer does not hold anymore
+//            bind(context -> currentFlyer().prevFlyerPage(),  joypadKeys.key(NES_JoypadButton.BTN_UP));
+//            bind(context -> currentFlyer().nextFlyerPage(),  joypadKeys.key(NES_JoypadButton.BTN_DOWN));
             bind(context -> carousel.prevSlide(),            joypadKeys.key(NES_JoypadButton.BTN_LEFT));
             bind(context -> carousel.nextSlide(),            joypadKeys.key(NES_JoypadButton.BTN_RIGHT));
             bind(actionSelectGamePage,                       joypadKeys.key(NES_JoypadButton.BTN_START));
         } else {
             ArcadeKeyBinding arcadeKeys = context.arcadeKeys();
-            bind(context -> currentFlyer().prevFlyerPage(),  arcadeKeys.key(Arcade.Button.UP));
-            bind(context -> currentFlyer().nextFlyerPage(),  arcadeKeys.key(Arcade.Button.DOWN));
-            bind(context -> carousel.prevSlide(),            arcadeKeys.key(Arcade.Button.LEFT));
-            bind(context -> carousel.nextSlide(),            arcadeKeys.key(Arcade.Button.RIGHT));
+//            bind(context -> currentFlyer().prevFlyerPage(),  arcadeKeys.key(Arcade.Button.UP));
+//            bind(context -> currentFlyer().nextFlyerPage(),  arcadeKeys.key(Arcade.Button.DOWN));
+//            bind(context -> carousel.prevSlide(),            arcadeKeys.key(Arcade.Button.LEFT));
+//            bind(context -> carousel.nextSlide(),            arcadeKeys.key(Arcade.Button.RIGHT));
             // START key is "1" which might be unclear on start page, so add ENTER
             bind(actionSelectGamePage,                       context.arcadeKeys().key(Arcade.Button.START), naked(KeyCode.ENTER));
         }

@@ -8,6 +8,7 @@ dependencies {
     implementation project(":pacman-ui-lib")
     implementation project(":pacman-tilemap")
     implementation project(":pacman-ui")
+    implementation project(":pacman-app-arcade-mspacman")
     implementation project(":pacman-app-arcade-pacman")
     implementation libs.bundles.tinylog
 }
