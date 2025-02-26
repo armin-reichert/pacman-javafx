@@ -49,7 +49,7 @@ public class ArcadePacManXXL_App extends Application {
         ui.create(stage, initialSize());
 
         PacManXXLOptionsMenu optionsMenu = new PacManXXLOptionsMenu(ui);
-        ui.addStartPage(GameVariant.PACMAN_XXL, optionsMenu);
+        ui.setStartPage(GameVariant.PACMAN_XXL, optionsMenu);
 
         ui.addDashboardItem(DashboardItemID.README);
         ui.addDashboardItem(DashboardItemID.GENERAL);

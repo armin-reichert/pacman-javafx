@@ -36,16 +36,16 @@ public class Carousel extends StackPane {
         }
     };
 
-    private final StringProperty selectButtonTextPy = new SimpleStringProperty("SELECT");
+    protected final StringProperty selectButtonTextPy = new SimpleStringProperty("SELECT");
 
-    private final StackPane buttonsLayer = new StackPane();
-    private final List<Node> slides = new ArrayList<>();
-    private final Node btnSelect;
-    private final Button btnPrevSlide;
-    private final Button btnNextSlide;
+    protected final StackPane buttonsLayer = new StackPane();
+    protected final List<Node> slides = new ArrayList<>();
+    protected final Node btnSelect;
+    protected final Button btnPrevSlide;
+    protected final Button btnNextSlide;
 
-    private Runnable onPrevSlide;
-    private Runnable onNextSlide;
+    protected Runnable onPrevSlide;
+    protected Runnable onNextSlide;
 
     public Carousel() {
         ResourceManager rm = () -> Carousel.class;
@@ -109,6 +109,10 @@ public class Carousel extends StackPane {
     public void setNavigationVisible(boolean visible) {
         btnPrevSlide.setVisible(visible);
         btnNextSlide.setVisible(visible);
+    }
+
+    public Node getBtnSelect() {
+        return btnSelect;
     }
 
     public IntegerProperty selectedIndexProperty() {

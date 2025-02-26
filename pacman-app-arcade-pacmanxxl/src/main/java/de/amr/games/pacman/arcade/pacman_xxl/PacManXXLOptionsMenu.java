@@ -60,7 +60,7 @@ public class PacManXXLOptionsMenu extends BorderPane {
             var entry = new MenuEntry() {
                 {
                     label = "GAME VARIANT";
-                    options = List.of("PAC-MAN", "MS. PAC-MAN");
+                    options = List.of("PAC-MAN", "MS.PAC-MAN (TODO)");
                     selectedOptionIndex = 0;
                 }
                 @Override
@@ -124,11 +124,6 @@ public class PacManXXLOptionsMenu extends BorderPane {
                 }
             }
         });
-
-        // initialize
-        for (MenuEntry entry : entries) {
-            entry.onOptionSelected();
-        }
 
         Timeline loop = new Timeline(new KeyFrame(Duration.millis(1000.0/ 60), e -> draw()));
         loop.setCycleCount(Animation.INDEFINITE);

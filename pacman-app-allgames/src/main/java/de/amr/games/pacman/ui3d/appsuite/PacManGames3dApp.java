@@ -13,6 +13,7 @@ import de.amr.games.pacman.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.games.pacman.arcade.pacman_xxl.ArcadePacManXXL_GameConfig3D;
 import de.amr.games.pacman.arcade.pacman_xxl.ArcadePacManXXL_GameModel;
 import de.amr.games.pacman.arcade.pacman_xxl.ArcadePacManXXL_StartPage;
+import de.amr.games.pacman.arcade.pacman_xxl.PacManXXLOptionsMenu;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.CustomMapSelectionMode;
 import de.amr.games.pacman.model.GameModel;
@@ -86,10 +87,12 @@ public class PacManGames3dApp extends Application {
         ui.configureGameVariant(GameVariant.PACMAN_XXL, new ArcadePacManXXL_GameConfig3D(ui.assets()));
 
         ui.create(stage, initialSize());
-        ui.addStartPage(GameVariant.PACMAN, new ArcadePacMan_StartPage(ui));
-        ui.addStartPage(GameVariant.MS_PACMAN, new ArcadeMsPacMan_StartPage(ui));
-        ui.addStartPage(GameVariant.PACMAN_XXL, new ArcadePacManXXL_StartPage().root());
-        ui.addStartPage(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_StartPage(ui));
+        ui.setStartPage(GameVariant.PACMAN, new ArcadePacMan_StartPage(ui));
+        ui.setStartPage(GameVariant.MS_PACMAN, new ArcadeMsPacMan_StartPage(ui));
+        ui.setStartPage(GameVariant.PACMAN_XXL, new ArcadePacManXXL_StartPage(ui));
+        //PacManXXLOptionsMenu optionsMenu = new PacManXXLOptionsMenu(ui);
+        //ui.setStartPage(GameVariant.PACMAN_XXL, optionsMenu);
+        ui.setStartPage(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_StartPage(ui));
 
         ui.addDashboardItem(DashboardItemID.README);
         ui.addDashboardItem(DashboardItemID.GENERAL);

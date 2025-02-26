@@ -217,20 +217,17 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         clock.setPauseableCallback(this::runIfNotPausedOnEveryTick);
         clock.setPermanentCallback(this::runOnEveryTick);
 
-        // init game variant property
-        gameVariantPy.set(gameController().currentGameVariant());
-
-        selectStartPage();
+        selectGameVariant(gameController().currentGameVariant());
 
         //TODO This doesn't fit for NES aspect ratio
         stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
         stage.setMinHeight(ARCADE_MAP_SIZE_IN_PIXELS.y() * 1.25);
         bindStageTitle();
         stage.centerOnScreen();
-        stage.setOnShowing(e-> selectStartPage());
+        stage.setOnShowing(e -> selectStartPage());
     }
 
-    public void addStartPage(GameVariant variant, Node page) {
+    public void setStartPage(GameVariant variant, Node page) {
         startPagesCarousel.addStartPage(variant, page);
     }
 
@@ -241,6 +238,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     public Scene getMainScene() {
         return mainScene;
     }
+
+    public ObjectProperty<GameVariant> gameVariantProperty() { return gameVariantPy; }
 
     /**
      * Executed on clock tick if game is not paused.

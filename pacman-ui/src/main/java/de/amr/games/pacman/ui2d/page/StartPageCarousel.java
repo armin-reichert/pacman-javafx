@@ -8,12 +8,16 @@ import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.nes.NES_JoypadButton;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.action.GameAction;
 import de.amr.games.pacman.ui2d.action.GameActionProvider;
 import de.amr.games.pacman.ui2d.action.GameActions2D;
 import de.amr.games.pacman.ui2d.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import de.amr.games.pacman.uilib.Carousel;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -44,8 +48,8 @@ public class StartPageCarousel extends Carousel implements GameActionProvider {
     private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
     private final GameContext context;
 
-    public StartPageCarousel(GameContext context) {
-        this.context = assertNotNull(context);
+    public StartPageCarousel(PacManGamesUI ui) {
+        this.context = assertNotNull(ui);
 
         selectButtonTextProperty().set(context.locText("play_button"));
         setOnPrevSlideSelected(() -> {
@@ -59,7 +63,6 @@ public class StartPageCarousel extends Carousel implements GameActionProvider {
             currentSlide().requestFocus();
         });
         setOnSelect(context::selectGamePage);
-
         bindGameActions();
     }
 
