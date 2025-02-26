@@ -27,25 +27,25 @@ import static de.amr.games.pacman.lib.Globals.TS;
 public class PacManXXLOptionsMenu extends BorderPane {
 
     private static abstract class MenuEntry {
-        String label;
+        final String label;
         List<String> options;
         int selectedOptionIndex;
         void onSelected() {}
         abstract void onOptionSelected();
+        MenuEntry(String label) {
+            this.label = label;
+        }
     }
 
-    private final PacManGamesUI ui;
     private final Canvas canvas = new Canvas();
-    private FloatProperty scalingPy = new SimpleFloatProperty(2);
-    private Font arcadeFont8;
-    private Font arcadeFont12;
+    private final FloatProperty scalingPy = new SimpleFloatProperty(2);
+    private final Font arcadeFont8;
+    private final Font arcadeFont12;
 
     private final List<MenuEntry> entries = new ArrayList<>();
     private int selectedEntryIndex = 0;
 
     public PacManXXLOptionsMenu(PacManGamesUI ui) {
-        this.ui = ui;
-
         ResourceManager rm = () -> GameRenderer.class;
         arcadeFont8 = rm.loadFont("fonts/emulogic.ttf", 8);
         arcadeFont12 = rm.loadFont("fonts/emulogic.ttf", 12);
@@ -56,53 +56,40 @@ public class PacManXXLOptionsMenu extends BorderPane {
         canvas.heightProperty().bind(scalingPy.multiply(unscaledHeight));
         setCenter(canvas);
 
-        {
-            var entry = new MenuEntry() {
-                {
-                    label = "GAME VARIANT";
-                    options = List.of("PAC-MAN", "MS.PAC-MAN (TODO)");
-                    selectedOptionIndex = 0;
+        entries.add(new MenuEntry("GAME VARIANT") {
+            {
+                options = List.of("PAC-MAN", "MS.PAC-MAN (TODO)");
+                selectedOptionIndex = 0;
+            }
+            @Override
+            void onOptionSelected() {
+                switch (selectedOptionIndex) {
+                    case 0 -> ui.selectGameVariant(GameVariant.PACMAN_XXL);
+                    case 1 -> ui.selectGameVariant(GameVariant.MS_PACMAN);
                 }
-                @Override
-                void onOptionSelected() {
-                    switch (selectedOptionIndex) {
-                        case 0 -> ui.selectGameVariant(GameVariant.PACMAN_XXL);
-                        case 1 -> ui.selectGameVariant(GameVariant.MS_PACMAN);
-                    }
+            }
+        });
+        entries.add(new MenuEntry("CUT SCENES") {
+            {
+                options = List.of("ENABLED", "DISABLED");
+                selectedOptionIndex = 1;
+            }
+            @Override
+            void onOptionSelected() {}
+        });
+        entries.add(new MenuEntry("CUSTOM MAPS") {
+            {
+                options = List.of("CUSTOM-MAPS FIRST", "ALL MAPS RANDOMLY");
+                selectedOptionIndex = 1;
+            }
+            @Override
+            void onOptionSelected() {
+                switch (selectedOptionIndex) {
+                    case 0 -> ui.game().setMapSelectionMode(CustomMapSelectionMode.CUSTOM_MAPS_FIRST);
+                    case 1 -> ui.game().setMapSelectionMode(CustomMapSelectionMode.ALL_RANDOM);
                 }
-            };
-            entries.add(entry);
-        }
-        {
-            var entry = new MenuEntry() {
-                {
-                    label = "CUT SCENES";
-                    options = List.of("ENABLED", "DISABLED");
-                    selectedOptionIndex = 1;
-                }
-                @Override
-                void onOptionSelected() {
-                }
-            };
-            entries.add(entry);
-        }
-        {
-            var entry = new MenuEntry() {
-                {
-                    label = "CUSTOM MAPS";
-                    options = List.of("CUSTOM-MAPS FIRST", "ALL MAPS RANDOMLY");
-                    selectedOptionIndex = 1;
-                }
-                @Override
-                void onOptionSelected() {
-                    switch (selectedOptionIndex) {
-                        case 0 -> ui.game().setMapSelectionMode(CustomMapSelectionMode.CUSTOM_MAPS_FIRST);
-                        case 1 -> ui.game().setMapSelectionMode(CustomMapSelectionMode.ALL_RANDOM);
-                    }
-                }
-            };
-            entries.add(entry);
-        }
+            }
+        });
 
         ui.getMainScene().addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
@@ -152,7 +139,6 @@ public class PacManXXLOptionsMenu extends BorderPane {
         g.setFont(arcadeFont12);
         g.setFill(Color.grayRgb(200));
         g.fillText("PAC-MAN XXL OPTIONS", 4 * TS, 8 * TS);
-
         g.setFont(arcadeFont8);
         for (int i = 0; i < entries.size(); ++i) {
             int y = (12 + 3 * i) * TS;

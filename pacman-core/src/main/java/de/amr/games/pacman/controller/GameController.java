@@ -60,7 +60,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         return currentGame;
     }
 
-    public void addGame(GameVariant variant, GameModel gameModel) {
+    public void setGameModel(GameVariant variant, GameModel gameModel) {
         modelsByVariant.put(variant, gameModel);
     }
 

@@ -29,7 +29,7 @@ public class ArcadePacMan_App extends Application {
                 Logger.info("User dir '{}' created", userDir);
             }
             GameModel game = new ArcadePacMan_GameModel(userDir);
-            GameController.it().addGame(GameVariant.PACMAN, game);
+            GameController.it().setGameModel(GameVariant.PACMAN, game);
             GameController.it().selectGame(GameVariant.PACMAN);
         } catch (Exception x) {
             x.printStackTrace(System.err);
