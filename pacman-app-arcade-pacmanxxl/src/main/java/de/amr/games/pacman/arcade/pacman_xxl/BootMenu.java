@@ -21,6 +21,7 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 
 public class BootMenu extends BorderPane {
@@ -36,7 +37,8 @@ public class BootMenu extends BorderPane {
     private final PacManGamesUI ui;
     private final Canvas canvas = new Canvas();
     private FloatProperty scalingPy = new SimpleFloatProperty(2);
-    private Font arcadeFont;
+    private Font arcadeFont8;
+    private Font arcadeFont12;
 
     private final List<MenuEntry> entries = new ArrayList<>();
     private int selectedEntryIndex = 0;
@@ -45,7 +47,8 @@ public class BootMenu extends BorderPane {
         this.ui = ui;
 
         ResourceManager rm = () -> GameRenderer.class;
-        arcadeFont = rm.loadFont("fonts/emulogic.ttf", 8);
+        arcadeFont8 = rm.loadFont("fonts/emulogic.ttf", 8);
+        arcadeFont12 = rm.loadFont("fonts/emulogic.ttf", 12);
 
         double unscaledHeight = 36 * TS;
         scalingPy.bind(ui.getMainScene().heightProperty().divide(unscaledHeight));
@@ -151,19 +154,27 @@ public class BootMenu extends BorderPane {
     }
 
     private void drawContent(GraphicsContext g) {
-        g.setFont(arcadeFont);
+        g.setFont(arcadeFont12);
+        g.setFill(Color.grayRgb(200));
+        g.fillText("PAC-MAN XXL OPTIONS", 4 * TS, 8 * TS);
 
+        g.setFont(arcadeFont8);
         for (int i = 0; i < entries.size(); ++i) {
-            int y = (7 + 5 * i) * TS;
+            int y = (12 + 3 * i) * TS;
             MenuEntry entry = entries.get(i);
             if (i == selectedEntryIndex) {
                 g.setFill(Color.YELLOW);
-                g.fillText("->", TS, y);
+                g.fillText("-", TS, y);
+                g.fillText(">", TS+HTS, y);
             }
             g.setFill(Color.YELLOW);
             g.fillText(entry.label, 3 * TS, y);
             g.setFill(Color.WHITE);
-            g.fillText(entry.options.get(entry.selectedOptionIndex), 16 * TS, y);
+            g.fillText(entry.options.get(entry.selectedOptionIndex), 17 * TS, y);
         }
+        g.setFill(Color.YELLOW);
+        g.fillText("   PRESS SPACE TO CHANGE OPTIONS    ", 0, 23 * TS);
+        g.fillText("  CHOOSE OPTIONS WITH UP AND DOWN   ", 0, 25 * TS);
+        g.fillText("     PRESS ENTER TO START GAME      ", 0, 27 * TS);
     }
 }
