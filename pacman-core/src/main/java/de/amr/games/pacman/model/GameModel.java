@@ -119,6 +119,9 @@ public abstract class GameModel {
     }
 
     public void updateCustomMaps() {
+        if (mapSelectionMode == CustomMapSelectionMode.NO_CUSTOM_MAPS) {
+            return;
+        }
         if (customMapDir.exists() && customMapDir.isDirectory()) {
             Logger.info("Custom map directory found: '{}'", customMapDir);
         } else {
