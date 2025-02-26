@@ -28,8 +28,6 @@ public class ArcadeMsPacMan_App extends Application {
                 Logger.info("User dir '{}' created", userDir);
             }
             ArcadeMsPacMan_GameModel game = new ArcadeMsPacMan_GameModel(userDir);
-            //game.setMapSelectionMode(CustomMapSelectionMode.CUSTOM_MAPS_FIRST);
-            //game.updateCustomMaps();
             GameController.it().addGame(GameVariant.MS_PACMAN, game);
             GameController.it().selectGame(GameVariant.MS_PACMAN);
         } catch (Exception x) {
@@ -43,7 +41,7 @@ public class ArcadeMsPacMan_App extends Application {
         ui.loadAssets();
         ui.configureGameVariant(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameConfig3D(ui.assets()));
         ui.create(stage, initialSize());
-        ui.startPage().addSlide(new ArcadeMsPacMan_StartPage().root());
+        ui.addStartPage(GameVariant.MS_PACMAN, new ArcadeMsPacMan_StartPage(ui));
 
         ui.addDashboardItem(DashboardItemID.README);
         ui.addDashboardItem(DashboardItemID.GENERAL);

@@ -85,7 +85,7 @@ public class Carousel extends StackPane {
     private Runnable onNextSlide;
 
     public Carousel() {
-        ResourceManager rm = this::getClass;
+        ResourceManager rm = () -> Carousel.class;
 
         Image arrowLeftImage = rm.loadImage("graphics/arrow-left.png");
         Image arrowRightImage = rm.loadImage("graphics/arrow-right.png");
@@ -105,6 +105,8 @@ public class Carousel extends StackPane {
 
         buttonsLayer.getChildren().setAll(btnPrevSlide, btnNextSlide, btnStart);
         getChildren().add(buttonsLayer);
+
+
     }
 
     public void setNavigationVisible(boolean visible) {
@@ -157,7 +159,6 @@ public class Carousel extends StackPane {
         if (onNextSlide != null) {
             onNextSlide.run();
         }
-
     }
 
     public int numSlides() {

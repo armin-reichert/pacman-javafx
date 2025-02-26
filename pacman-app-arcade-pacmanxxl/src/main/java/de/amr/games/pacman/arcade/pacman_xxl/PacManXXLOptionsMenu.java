@@ -24,7 +24,7 @@ import java.util.List;
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 
-public class BootMenu extends BorderPane {
+public class PacManXXLOptionsMenu extends BorderPane {
 
     private static abstract class MenuEntry {
         String label;
@@ -43,7 +43,7 @@ public class BootMenu extends BorderPane {
     private final List<MenuEntry> entries = new ArrayList<>();
     private int selectedEntryIndex = 0;
 
-    public BootMenu(PacManGamesUI ui) {
+    public PacManXXLOptionsMenu(PacManGamesUI ui) {
         this.ui = ui;
 
         ResourceManager rm = () -> GameRenderer.class;

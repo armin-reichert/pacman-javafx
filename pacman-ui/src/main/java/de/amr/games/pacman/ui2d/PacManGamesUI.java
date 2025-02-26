@@ -22,7 +22,7 @@ import de.amr.games.pacman.ui2d.input.Keyboard;
 import de.amr.games.pacman.ui2d.page.DashboardLayer;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.page.GamePage;
-import de.amr.games.pacman.ui2d.page.StartPage;
+import de.amr.games.pacman.ui2d.page.StartPageSelector;
 import de.amr.games.pacman.ui2d.scene.GameConfiguration;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -136,9 +136,12 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     protected Stage stage;
     protected Scene mainScene;
-    protected StartPage startPage;
+
+    protected final Map<GameVariant, Node> startPages = new EnumMap<>(GameVariant.class);
+    protected StartPageSelector startPagesCarousel;
     protected GamePage gamePage;
     protected EditorPage editorPage;
+
     protected boolean scoreVisible;
     protected Picker<String> textPickerGameOverTexts;
     protected Picker<String> textPickerLevelCompleteTexts;
@@ -208,7 +211,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         mainScene = createMainScene(initialSize);
         stage.setScene(mainScene);
 
-        createStartPage();
+        startPagesCarousel = new StartPageSelector(this);
+
         createGamePage(mainScene);
 
         clock.setPauseableCallback(this::runIfNotPausedOnEveryTick);
@@ -216,6 +220,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
         // init game variant property
         gameVariantPy.set(gameController().currentGameVariant());
+
+        selectStartPage();
 
         //TODO This doesn't fit for NES aspect ratio
         stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
@@ -225,17 +231,13 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         stage.setOnShowing(e-> selectStartPage());
     }
 
+    public void addStartPage(GameVariant variant, Node page) {
+        startPages.put(variant, page);
+        startPagesCarousel.addStartPage(variant, page);
+    }
+
     public void show() {
         stage.show();
-    }
-
-    private void createStartPage() {
-        startPage = new StartPage(this);
-        startPage.gameVariantPy.bind(gameVariantPy);
-    }
-
-    public StartPage startPage() {
-        return startPage;
     }
 
     public Scene getMainScene() {
@@ -608,7 +610,10 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         //TODO check this
         gamePage.dashboardLayer().hideDashboard();
         sceneRoot.setBackground(assets.get("scene_background"));
-        selectPage(startPage);
+        if (startPagesCarousel.currentSlide() != null) {
+            startPagesCarousel.currentSlide().requestFocus();
+        }
+        selectPage(startPagesCarousel);
     }
 
     @Override

@@ -6,8 +6,6 @@ package de.amr.games.pacman.arcade.pacman_xxl;
 
 import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GameConfig3D;
 import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
-import de.amr.games.pacman.arcade.pacman.ArcadePacMan_GameConfig3D;
-import de.amr.games.pacman.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.DashboardItemID;
@@ -50,8 +48,8 @@ public class ArcadePacManXXL_App extends Application {
 
         ui.create(stage, initialSize());
 
-        BootMenu bootMenu = new BootMenu(ui);
-        ui.startPage().addSlide(bootMenu);
+        PacManXXLOptionsMenu optionsMenu = new PacManXXLOptionsMenu(ui);
+        ui.addStartPage(GameVariant.PACMAN_XXL, optionsMenu);
 
         ui.addDashboardItem(DashboardItemID.README);
         ui.addDashboardItem(DashboardItemID.GENERAL);

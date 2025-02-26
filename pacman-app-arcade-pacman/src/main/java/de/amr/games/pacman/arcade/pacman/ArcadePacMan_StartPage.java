@@ -6,14 +6,17 @@ package de.amr.games.pacman.arcade.pacman;
 
 import de.amr.games.pacman.arcade.ResourceRoot;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.uilib.Flyer;
 import de.amr.games.pacman.uilib.ResourceManager;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.StackPane;
 
-public class ArcadePacMan_StartPage {
+public class ArcadePacMan_StartPage extends StackPane {
 
     private final Flyer flyer;
 
-    public ArcadePacMan_StartPage() {
+    public ArcadePacMan_StartPage(PacManGamesUI ui) {
         ResourceManager rm = () -> ResourceRoot.class;
         flyer = new Flyer(
             rm.loadImage("graphics/f1.jpg"),
@@ -22,10 +25,14 @@ public class ArcadePacMan_StartPage {
         );
         flyer.setUserData(GameVariant.PACMAN);
         flyer.selectFlyerPage(0);
-    }
 
-    public Flyer root() {
-        return flyer;
+        getChildren().add(flyer);
+        addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+            switch (e.getCode()) {
+                case ENTER -> ui.selectGamePage();
+                case DOWN -> flyer.nextFlyerPage();
+                case UP -> flyer.prevFlyerPage();
+            }
+        });
     }
-
 }
