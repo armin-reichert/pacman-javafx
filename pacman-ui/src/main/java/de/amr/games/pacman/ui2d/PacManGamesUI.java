@@ -22,7 +22,7 @@ import de.amr.games.pacman.ui2d.input.Keyboard;
 import de.amr.games.pacman.ui2d.page.DashboardLayer;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.page.GamePage;
-import de.amr.games.pacman.ui2d.page.StartPageSelector;
+import de.amr.games.pacman.ui2d.page.StartPageCarousel;
 import de.amr.games.pacman.ui2d.scene.GameConfiguration;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -138,7 +138,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected Scene mainScene;
 
     protected final Map<GameVariant, Node> startPages = new EnumMap<>(GameVariant.class);
-    protected StartPageSelector startPagesCarousel;
+    protected StartPageCarousel startPagesCarousel;
     protected GamePage gamePage;
     protected EditorPage editorPage;
 
@@ -211,7 +211,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         mainScene = createMainScene(initialSize);
         stage.setScene(mainScene);
 
-        startPagesCarousel = new StartPageSelector(this);
+        startPagesCarousel = new StartPageCarousel(this);
 
         createGamePage(mainScene);
 

@@ -26,12 +26,7 @@ import java.util.Map;
 
 import static de.amr.games.pacman.ui2d.input.Keyboard.naked;
 
-/**
- * Got the flyer images from <a href="https://flyers.arcade-museum.com/">The Arcade Flyer Archive</a>.
- *
- * @author Armin Reichert
- */
-public class StartPageSelector extends Carousel implements GameActionProvider {
+public class StartPageCarousel extends Carousel implements GameActionProvider {
 
     public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
         @Override
@@ -55,7 +50,7 @@ public class StartPageSelector extends Carousel implements GameActionProvider {
     private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
     private final GameContext context;
 
-    public StartPageSelector(GameContext context) {
+    public StartPageCarousel(GameContext context) {
         this.context = Globals.assertNotNull(context);
 
         selectButtonTextProperty().set(context.locText("play_button"));
@@ -74,9 +69,9 @@ public class StartPageSelector extends Carousel implements GameActionProvider {
         bindGameActions();
     }
 
-    public void addStartPage(GameVariant variant, Node page) {
-        addSlide(page);
-        page.setUserData(variant);
+    public void addStartPage(GameVariant variant, Node startPage) {
+        startPage.setUserData(variant);
+        addSlide(startPage);
         setNavigationVisible(numSlides() >= 2);
         selectedIndexProperty().set(0);
     }
@@ -84,10 +79,10 @@ public class StartPageSelector extends Carousel implements GameActionProvider {
     @Override
     public void bindGameActions() {
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-            JoypadKeyBinding joypadKeys = context.currentJoypadKeyBinding();
-            bind(context -> prevSlide(), joypadKeys.key(NES_JoypadButton.BTN_LEFT));
-            bind(context -> nextSlide(), joypadKeys.key(NES_JoypadButton.BTN_RIGHT));
-            bind(actionSelectGamePage, joypadKeys.key(NES_JoypadButton.BTN_START));
+            JoypadKeyBinding joypad = context.currentJoypadKeyBinding();
+            bind(context -> prevSlide(), joypad.key(NES_JoypadButton.BTN_LEFT));
+            bind(context -> nextSlide(), joypad.key(NES_JoypadButton.BTN_RIGHT));
+            bind(actionSelectGamePage, joypad.key(NES_JoypadButton.BTN_START));
         } else {
             ArcadeKeyBinding arcadeKeys = context.arcadeKeys();
             bind(context -> prevSlide(), arcadeKeys.keyLeft());
@@ -95,6 +90,7 @@ public class StartPageSelector extends Carousel implements GameActionProvider {
             // START key is "1" which might be unclear on start page, so add ENTER
             bind(actionSelectGamePage, context.arcadeKeys().key(Arcade.Button.START), naked(KeyCode.ENTER));
         }
+        // in case clock has been paused and start page selector got called, allow unpause
         bind(GameActions2D.TOGGLE_PAUSED, KeyCode.P);
     }
 

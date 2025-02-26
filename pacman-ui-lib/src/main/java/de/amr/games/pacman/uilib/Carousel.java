@@ -40,7 +40,7 @@ public class Carousel extends StackPane {
         return button;
     }
 
-    private Node createSelectButton(Font font) {
+    private Node createFancyButton(Font font) {
         Color bgColor = Color.rgb(0, 155, 252, 0.7);
         Color fillColor = Color.WHITE;
 
@@ -99,14 +99,12 @@ public class Carousel extends StackPane {
         btnNextSlide.setOnAction(e -> nextSlide());
         StackPane.setAlignment(btnNextSlide, Pos.CENTER_RIGHT);
 
-        btnStart = createSelectButton(startButtonFont);
+        btnStart = createFancyButton(startButtonFont);
         btnStart.setTranslateY(-50);
         StackPane.setAlignment(btnStart, Pos.BOTTOM_CENTER);
 
         buttonsLayer.getChildren().setAll(btnPrevSlide, btnNextSlide, btnStart);
         getChildren().add(buttonsLayer);
-
-
     }
 
     public void setNavigationVisible(boolean visible) {
