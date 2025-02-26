@@ -26,6 +26,49 @@ import static de.amr.games.pacman.uilib.Ufx.coloredRoundedBackground;
 
 public class Carousel extends StackPane {
 
+    private final IntegerProperty selectedIndexPy = new SimpleIntegerProperty(-1) {
+        @Override
+        protected void invalidated() {
+            int index = get();
+            if (index >= 0 && index < slides.size()) {
+                getChildren().setAll(slides.get(index), buttonsLayer);
+            }
+        }
+    };
+
+    private final StringProperty selectButtonTextPy = new SimpleStringProperty("SELECT");
+
+    private final StackPane buttonsLayer = new StackPane();
+    private final List<Node> slides = new ArrayList<>();
+    private final Node btnSelect;
+    private final Button btnPrevSlide;
+    private final Button btnNextSlide;
+
+    private Runnable onPrevSlide;
+    private Runnable onNextSlide;
+
+    public Carousel() {
+        ResourceManager rm = () -> Carousel.class;
+
+        Image arrowLeftImage = rm.loadImage("graphics/arrow-left.png");
+        btnPrevSlide = createCarouselButton(arrowLeftImage);
+        btnPrevSlide.setOnAction(e -> showPreviousSlide());
+        StackPane.setAlignment(btnPrevSlide, Pos.CENTER_LEFT);
+
+        Image arrowRightImage = rm.loadImage("graphics/arrow-right.png");
+        btnNextSlide = createCarouselButton(arrowRightImage);
+        btnNextSlide.setOnAction(e -> showNextSlide());
+        StackPane.setAlignment(btnNextSlide, Pos.CENTER_RIGHT);
+
+        Font startButtonFont = rm.loadFont("fonts/emulogic.ttf", 30);
+        btnSelect = createFancyButton(startButtonFont);
+        btnSelect.setTranslateY(-50);
+        StackPane.setAlignment(btnSelect, Pos.BOTTOM_CENTER);
+
+        buttonsLayer.getChildren().setAll(btnPrevSlide, btnNextSlide, btnSelect);
+        getChildren().add(buttonsLayer);
+    }
+
     private Button createCarouselButton(Image image) {
         ImageView icon = new ImageView(image);
         icon.setFitHeight(32);
@@ -63,57 +106,9 @@ public class Carousel extends StackPane {
         return pane;
     }
 
-    private final IntegerProperty selectedIndexPy = new SimpleIntegerProperty(-1) {
-        @Override
-        protected void invalidated() {
-            int index = get();
-            if (index >= 0 && index < slides.size()) {
-                getChildren().setAll(slides.get(index), buttonsLayer);
-            }
-        }
-    };
-
-    private final StringProperty selectButtonTextPy = new SimpleStringProperty("SELECT");
-
-    private final StackPane buttonsLayer = new StackPane();
-    private final List<Node> slides = new ArrayList<>();
-    private final Node btnStart;
-    private final Button btnPrevSlide;
-    private final Button btnNextSlide;
-
-    private Runnable onPrevSlide;
-    private Runnable onNextSlide;
-
-    public Carousel() {
-        ResourceManager rm = () -> Carousel.class;
-
-        Image arrowLeftImage = rm.loadImage("graphics/arrow-left.png");
-        Image arrowRightImage = rm.loadImage("graphics/arrow-right.png");
-        Font startButtonFont = rm.loadFont("fonts/emulogic.ttf", 30);
-
-        btnPrevSlide = createCarouselButton(arrowLeftImage);
-        btnPrevSlide.setOnAction(e -> prevSlide());
-        StackPane.setAlignment(btnPrevSlide, Pos.CENTER_LEFT);
-
-        btnNextSlide = createCarouselButton(arrowRightImage);
-        btnNextSlide.setOnAction(e -> nextSlide());
-        StackPane.setAlignment(btnNextSlide, Pos.CENTER_RIGHT);
-
-        btnStart = createFancyButton(startButtonFont);
-        btnStart.setTranslateY(-50);
-        StackPane.setAlignment(btnStart, Pos.BOTTOM_CENTER);
-
-        buttonsLayer.getChildren().setAll(btnPrevSlide, btnNextSlide, btnStart);
-        getChildren().add(buttonsLayer);
-    }
-
     public void setNavigationVisible(boolean visible) {
         btnPrevSlide.setVisible(visible);
         btnNextSlide.setVisible(visible);
-    }
-
-    public Node getBtnStart() {
-        return btnStart;
     }
 
     public IntegerProperty selectedIndexProperty() {
@@ -133,7 +128,7 @@ public class Carousel extends StackPane {
     }
 
     public void setOnSelect(Runnable action) {
-        btnStart.setOnMouseClicked(e -> {
+        btnSelect.setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY)) {
                 action.run();
             }
@@ -141,7 +136,7 @@ public class Carousel extends StackPane {
         });
     }
 
-    public void prevSlide() {
+    public void showPreviousSlide() {
         int prevIndex = selectedIndexPy.get() > 0 ? selectedIndexPy.get() - 1: slides.size() - 1;
         selectedIndexPy.set(prevIndex);
         updateUI();
@@ -150,7 +145,7 @@ public class Carousel extends StackPane {
         }
     }
 
-    public void nextSlide() {
+    public void showNextSlide() {
         int newIndex = selectedIndexPy.get() < slides.size() - 1 ? selectedIndexPy.get() + 1 : 0;
         selectedIndexPy.set(newIndex);
         updateUI();

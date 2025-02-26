@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.nes.NES_JoypadButton;
 import de.amr.games.pacman.model.GameVariant;
@@ -15,8 +14,6 @@ import de.amr.games.pacman.ui2d.action.GameActions2D;
 import de.amr.games.pacman.ui2d.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import de.amr.games.pacman.uilib.Carousel;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -24,16 +21,13 @@ import javafx.scene.input.KeyCodeCombination;
 import java.util.HashMap;
 import java.util.Map;
 
+import static de.amr.games.pacman.lib.Globals.assertNotNull;
 import static de.amr.games.pacman.ui2d.input.Keyboard.naked;
 
+/**
+ * Carousel used to select the start page for each game variant.
+ */
 public class StartPageCarousel extends Carousel implements GameActionProvider {
-
-    public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
-        @Override
-        protected void invalidated() {
-            bindGameActions();
-        }
-    };
 
     private final GameAction actionSelectGamePage = new GameAction() {
         @Override
@@ -51,7 +45,7 @@ public class StartPageCarousel extends Carousel implements GameActionProvider {
     private final GameContext context;
 
     public StartPageCarousel(GameContext context) {
-        this.context = Globals.assertNotNull(context);
+        this.context = assertNotNull(context);
 
         selectButtonTextProperty().set(context.locText("play_button"));
         setOnPrevSlideSelected(() -> {
@@ -80,13 +74,13 @@ public class StartPageCarousel extends Carousel implements GameActionProvider {
     public void bindGameActions() {
         if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
             JoypadKeyBinding joypad = context.currentJoypadKeyBinding();
-            bind(context -> prevSlide(), joypad.key(NES_JoypadButton.BTN_LEFT));
-            bind(context -> nextSlide(), joypad.key(NES_JoypadButton.BTN_RIGHT));
+            bind(context -> showPreviousSlide(), joypad.key(NES_JoypadButton.BTN_LEFT));
+            bind(context -> showNextSlide(), joypad.key(NES_JoypadButton.BTN_RIGHT));
             bind(actionSelectGamePage, joypad.key(NES_JoypadButton.BTN_START));
         } else {
             ArcadeKeyBinding arcadeKeys = context.arcadeKeys();
-            bind(context -> prevSlide(), arcadeKeys.keyLeft());
-            bind(context -> nextSlide(), arcadeKeys.keyRight());
+            bind(context -> showPreviousSlide(), arcadeKeys.keyLeft());
+            bind(context -> showNextSlide(), arcadeKeys.keyRight());
             // START key is "1" which might be unclear on start page, so add ENTER
             bind(actionSelectGamePage, context.arcadeKeys().key(Arcade.Button.START), naked(KeyCode.ENTER));
         }

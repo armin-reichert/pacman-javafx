@@ -137,7 +137,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected Stage stage;
     protected Scene mainScene;
 
-    protected final Map<GameVariant, Node> startPages = new EnumMap<>(GameVariant.class);
     protected StartPageCarousel startPagesCarousel;
     protected GamePage gamePage;
     protected EditorPage editorPage;
@@ -232,7 +231,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     public void addStartPage(GameVariant variant, Node page) {
-        startPages.put(variant, page);
         startPagesCarousel.addStartPage(variant, page);
     }
 
