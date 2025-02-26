@@ -34,8 +34,6 @@ public class ArcadePacManXXL_App extends Application {
             }
             GameController.it().addGame(GameVariant.PACMAN_XXL, new ArcadePacManXXL_GameModel(userDir));
             GameController.it().addGame(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameModel(userDir));
-            GameController.it().addGame(GameVariant.PACMAN, new ArcadePacMan_GameModel(userDir));
-
             GameController.it().selectGame(GameVariant.PACMAN_XXL);
         } catch (Exception x) {
             x.printStackTrace(System.err);
@@ -47,7 +45,6 @@ public class ArcadePacManXXL_App extends Application {
         PacManGamesUI_3D ui = new PacManGamesUI_3D();
         ui.loadAssets();
 
-        ui.configureGameVariant(GameVariant.PACMAN, new ArcadePacMan_GameConfig3D(ui.assets()));
         ui.configureGameVariant(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameConfig3D(ui.assets()));
         ui.configureGameVariant(GameVariant.PACMAN_XXL, new ArcadePacManXXL_GameConfig3D(ui.assets()));
 

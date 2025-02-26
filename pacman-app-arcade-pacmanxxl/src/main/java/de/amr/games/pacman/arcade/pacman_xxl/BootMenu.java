@@ -8,6 +8,8 @@ import de.amr.games.pacman.uilib.ResourceManager;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
@@ -33,7 +35,7 @@ public class BootMenu extends BorderPane {
 
     private final PacManGamesUI ui;
     private final Canvas canvas = new Canvas();
-    private float scaling = 2;
+    private FloatProperty scalingPy = new SimpleFloatProperty(2);
     private Font arcadeFont;
 
     private final List<MenuEntry> entries = new ArrayList<>();
@@ -45,8 +47,10 @@ public class BootMenu extends BorderPane {
         ResourceManager rm = () -> GameRenderer.class;
         arcadeFont = rm.loadFont("fonts/emulogic.ttf", 8);
 
-        canvas.setWidth(scaling * 36 * TS);
-        canvas.setHeight(scaling * 36 * TS);
+        double unscaledHeight = 36 * TS;
+        scalingPy.bind(ui.getMainScene().heightProperty().divide(unscaledHeight));
+        canvas.widthProperty().bind(scalingPy.multiply(unscaledHeight));
+        canvas.heightProperty().bind(scalingPy.multiply(unscaledHeight));
         setCenter(canvas);
 
         {
@@ -59,7 +63,7 @@ public class BootMenu extends BorderPane {
                 @Override
                 void onOptionSelected() {
                     switch (selectedOptionIndex) {
-                        case 0 -> ui.selectGameVariant(GameVariant.PACMAN);
+                        case 0 -> ui.selectGameVariant(GameVariant.PACMAN_XXL);
                         case 1 -> ui.selectGameVariant(GameVariant.MS_PACMAN);
                     }
                 }
@@ -123,24 +127,34 @@ public class BootMenu extends BorderPane {
             entry.onOptionSelected();
         }
 
-        Timeline loop = new Timeline(new KeyFrame(Duration.millis(16), e -> {
-            drawContent();
-        }));
+        Timeline loop = new Timeline(new KeyFrame(Duration.millis(1000.0/ 60), e -> draw()));
         loop.setCycleCount(Animation.INDEFINITE);
         loop.play();
     }
 
-    private void drawContent() {
+    private void draw() {
         GraphicsContext g = canvas.getGraphicsContext2D();
         g.save();
-        g.scale(scaling, scaling);
-        g.setFont(arcadeFont);
-
+        g.scale(scalingPy.doubleValue(), scalingPy.doubleValue());
         g.setFill(Color.BLACK);
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        g.setFill(Color.WHITE);
+        g.fillRect(0, 2*TS, getWidth(), TS);
+        g.setFill(Color.CORNFLOWERBLUE);
+        g.fillRect(0, 2*TS+1, getWidth(), TS-2);
+        drawContent(g);
+        g.setFill(Color.WHITE);
+        g.fillRect(0, 34*TS, getWidth(), TS);
+        g.setFill(Color.CORNFLOWERBLUE);
+        g.fillRect(0, 34*TS+1, getWidth(), TS-2);
+        g.restore();
+    }
+
+    private void drawContent(GraphicsContext g) {
+        g.setFont(arcadeFont);
 
         for (int i = 0; i < entries.size(); ++i) {
-            int y =  (4 + 3*i) * TS;
+            int y = (7 + 5 * i) * TS;
             MenuEntry entry = entries.get(i);
             if (i == selectedEntryIndex) {
                 g.setFill(Color.YELLOW);
@@ -151,6 +165,5 @@ public class BootMenu extends BorderPane {
             g.setFill(Color.WHITE);
             g.fillText(entry.options.get(entry.selectedOptionIndex), 16 * TS, y);
         }
-        g.restore();
     }
 }

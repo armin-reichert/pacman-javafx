@@ -100,7 +100,7 @@ public abstract class GameModel {
     public void setMapSelectionMode(CustomMapSelectionMode mapSelectionMode) {
         this.mapSelectionMode = assertNotNull(mapSelectionMode);
         updateCustomMaps();
-        Logger.info("Map selection mode is now {}", mapSelectionMode);
+        Logger.info("{}: Map selection mode is now {}", getClass().getSimpleName(), mapSelectionMode);
     }
 
     public CustomMapSelectionMode mapSelectionMode() {

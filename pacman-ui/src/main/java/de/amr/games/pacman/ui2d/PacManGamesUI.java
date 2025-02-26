@@ -359,16 +359,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         gamePage.dashboardLayer().addDashboardItem(title, infoBox);
     }
 
-    protected void handleGameVariantChange(GameVariant variant) {
-        gameController().selectGame(variant);
-        gameController().restart(GameState.BOOT);
-        Logger.info("Selected game variant: {}", variant);
-
-        GameModel game = gameController().gameModel(variant);
-        game.addGameEventListener(this);
-        game.addGameEventListener(gamePage.dashboardLayer().pipView());
-
-        // TODO: Not sure if this belongs here
+    private void onCustomMapSelectionModeChange(GameModel game) {
         // We cannot use data binding to the game model classes because the game models are in project
         // "pacman-core" which has no dependency to JavaFX data binding.
         if (game.mapSelectionMode() != CustomMapSelectionMode.NO_CUSTOM_MAPS) {
@@ -378,6 +369,19 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         } else {
             gamePage.setActionToOpenEditor(null);
         }
+    }
+
+    protected void handleGameVariantChange(GameVariant variant) {
+        gameController().selectGame(variant);
+        gameController().restart(GameState.BOOT);
+        Logger.info("Selected game variant: {}", variant);
+
+        GameModel game = gameController().gameModel(variant);
+        game.addGameEventListener(this);
+        game.addGameEventListener(gamePage.dashboardLayer().pipView());
+
+        // TODO: this does not belongs here
+        onCustomMapSelectionModeChange(game);
 
         String assetKeyPrefix = gameConfiguration().assetKeyPrefix();
         sceneRoot.setBackground(assets.get("scene_background"));
