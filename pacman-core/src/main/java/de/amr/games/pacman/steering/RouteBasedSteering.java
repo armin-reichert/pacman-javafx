@@ -12,6 +12,8 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
+import static de.amr.games.pacman.lib.Globals.assertNotNull;
+
 /**
  * Steers a creature to follow a given route.
  *
@@ -24,12 +26,7 @@ public class RouteBasedSteering implements Steering {
     private boolean complete;
 
     public RouteBasedSteering(List<NavPoint> route) {
-        Globals.assertNotNull(route);
-        setRoute(route);
-    }
-
-    public void setRoute(List<NavPoint> route) {
-        this.route = route;
+        this.route = assertNotNull(route);
         init();
     }
 
