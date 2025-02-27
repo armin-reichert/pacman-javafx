@@ -1305,9 +1305,14 @@ public class TileMapEditor {
             ClipboardContent content = new ClipboardContent();
             content.putString(encoding);
             clipboard.setContent(content);
-            showMessage("Obstacle identified (copied to clipboard)", 5, MessageType.INFO);
+            showMessage("Obstacle (copied to clipboard)", 5, MessageType.INFO);
         } else {
-            showMessage("", 1, MessageType.INFO);
+            byte terrainValue = worldMap().get(LayerID.TERRAIN, tile);
+            byte foodValue = worldMap().get(LayerID.FOOD, tile);
+            String info = "";
+            if (terrainValue != TerrainTiles.EMPTY) info = "Terrain #%02X".formatted(terrainValue);
+            if (foodValue != TerrainTiles.EMPTY) info = "Food #%02X".formatted(foodValue);
+            showMessage(info, 4, MessageType.INFO);
         }
     }
 
