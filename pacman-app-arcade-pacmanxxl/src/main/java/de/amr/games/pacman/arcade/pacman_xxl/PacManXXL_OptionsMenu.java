@@ -31,7 +31,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
 
 public class PacManXXL_OptionsMenu extends BorderPane {
 
-    private static final double HEIGHT_FRACTION = 0.75;
+    private static final double HEIGHT_FRACTION = 0.85;
     private static final double UNSCALED_HEIGHT = 36 * TS;
 
     private static abstract class MenuEntry {
