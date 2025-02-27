@@ -89,7 +89,10 @@ public class TileMatcher {
     }
 
     private boolean matchesDoor(int[] tilePixels) {
-        return row(tilePixels, 3).allMatch(pixelScheme::isDoorPixel) && row(tilePixels, 4).allMatch(pixelScheme::isDoorPixel);
+        return row(tilePixels, 3).allMatch(pixelScheme::isDoorPixel)
+            && row(tilePixels, 4).allMatch(pixelScheme::isDoorPixel)
+            && row(tilePixels, 2).allMatch(pixelScheme::isBackgroundPixel)
+            && row(tilePixels, 5).allMatch(pixelScheme::isBackgroundPixel);
     }
 
     private boolean matchesHWall(int[] tilePixels) {
