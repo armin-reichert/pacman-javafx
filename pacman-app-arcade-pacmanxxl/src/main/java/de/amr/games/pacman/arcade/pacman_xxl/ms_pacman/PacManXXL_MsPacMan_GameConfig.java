@@ -9,6 +9,7 @@ import de.amr.games.pacman.arcade.pacman_xxl.PacManXXL_GameRenderer;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameRenderer;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
@@ -38,6 +39,11 @@ public class PacManXXL_MsPacMan_GameConfig implements GameConfiguration {
         setGameScene("CutScene1",   new CutScene1());
         setGameScene("CutScene2",   new CutScene2());
         setGameScene("CutScene3",   new CutScene3());
+    }
+
+    @Override
+    public GameVariant gameVariant() {
+        return GameVariant.MS_PACMAN;
     }
 
     @Override

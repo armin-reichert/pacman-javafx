@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.nes.NES_Palette;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.maps.MapRepository;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_GhostAnimations;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_PacAnimations;
@@ -66,6 +67,11 @@ public class TengenMsPacMan_GameConfig implements GameConfiguration {
         //TODO where is the best place to do that?
         TengenMsPacMan_PlayScene2D playScene2D = (TengenMsPacMan_PlayScene2D) getGameScene("PlayScene2D");
         playScene2D.displayModeProperty().bind(PY_TENGEN_PLAY_SCENE_DISPLAY_MODE);
+    }
+
+    @Override
+    public GameVariant gameVariant() {
+        return GameVariant.MS_PACMAN_TENGEN;
     }
 
     @Override

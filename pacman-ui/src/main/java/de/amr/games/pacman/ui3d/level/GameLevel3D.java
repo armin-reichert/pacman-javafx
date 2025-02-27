@@ -8,6 +8,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -150,9 +151,10 @@ public class GameLevel3D extends Group {
 
     private Pac3D createPac3D(Pac pac) {
         String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
-        Pac3D pac3D = switch (context.gameVariant()) {
+        Pac3D pac3D = switch (context.gameConfiguration().gameVariant()) {
             case MS_PACMAN, MS_PACMAN_TENGEN -> new MsPacMan3D(context.gameVariant(), pac, PAC_SIZE, context.assets(), assetKeyPrefix);
-            case PACMAN, PACMAN_XXL          -> new PacMan3D(context.gameVariant(), pac, PAC_SIZE, context.assets(), assetKeyPrefix);
+            case PACMAN -> new PacMan3D(context.gameVariant(), pac, PAC_SIZE, context.assets(), assetKeyPrefix);
+            case PACMAN_XXL -> throw new IllegalArgumentException();
         };
         pac3D.shape3D().light().setColor(context.assets().color(assetKeyPrefix + ".pac.color.head").desaturate());
         pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);

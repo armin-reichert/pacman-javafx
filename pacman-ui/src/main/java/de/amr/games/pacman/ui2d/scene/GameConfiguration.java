@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameRenderer;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
@@ -16,6 +17,7 @@ import javafx.scene.canvas.Canvas;
 import java.util.stream.Stream;
 
 public interface GameConfiguration {
+    GameVariant gameVariant();
     void setGameScene(String id, GameScene gameScene);
     GameScene getGameScene(String id);
     default void initGameScenes(GameContext context) {
