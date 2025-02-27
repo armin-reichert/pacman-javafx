@@ -1310,10 +1310,39 @@ public class TileMapEditor {
             byte terrainValue = worldMap().get(LayerID.TERRAIN, tile);
             byte foodValue = worldMap().get(LayerID.FOOD, tile);
             String info = "";
-            if (terrainValue != TerrainTiles.EMPTY) info = "Terrain #%02X".formatted(terrainValue);
-            if (foodValue != TerrainTiles.EMPTY) info = "Food #%02X".formatted(foodValue);
+            if (terrainValue != TerrainTiles.EMPTY)
+                info = "Terrain #%02X (%s)".formatted(terrainValue, terrainTileValueName(terrainValue));
+            if (foodValue != TerrainTiles.EMPTY)
+                info = "Food #%02X (%s)".formatted(foodValue, foodTileValueName(foodValue));
             showMessage(info, 4, MessageType.INFO);
         }
+    }
+
+    private String terrainTileValueName(byte value) {
+        return switch (value) {
+            case TerrainTiles.EMPTY -> "EMPTY";
+            case TerrainTiles.CORNER_NW -> "CORNER_NW";
+            case TerrainTiles.CORNER_SW -> "CORNER_SW";
+            case TerrainTiles.CORNER_SE -> "CORNER_SE";
+            case TerrainTiles.CORNER_NE -> "CORNER_NE";
+            case TerrainTiles.DOOR -> "DOOR";
+            case TerrainTiles.WALL_H -> "WALL_H";
+            case TerrainTiles.WALL_V -> "WALL_V";
+            case TerrainTiles.DCORNER_ANGULAR_NW -> "DCORNER_ANGULAR_NW";
+            case TerrainTiles.DCORNER_ANGULAR_SW -> "DCORNER_ANGULAR_SW";
+            case TerrainTiles.DCORNER_ANGULAR_SE -> "DCORNER_ANGULAR_SE";
+            case TerrainTiles.DCORNER_ANGULAR_NE -> "DCORNER_ANGULAR_NE";
+            default -> "?";
+        };
+    }
+
+    private String foodTileValueName(byte value) {
+        return switch (value) {
+            case FoodTiles.EMPTY -> "EMPTY";
+            case FoodTiles.PELLET -> "PELLET";
+            case FoodTiles.ENERGIZER -> "ENERGIZER";
+            default -> "?";
+        };
     }
 
     /**
