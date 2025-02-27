@@ -97,13 +97,14 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     private byte cruiseElroy; //TODO is this existing in Ms. Pac-Man at all?
 
-    public ArcadeMsPacMan_GameModel(File userDir) {
-        super(userDir);
+    @Override
+    public void init(File homeDir) {
+        super.init(homeDir);
 
         initialLives = 3;
         simulateOverflowBug = true;
 
-        scoreManager.setHighScoreFile(new File(userDir, "highscore-ms_pacman.xml"));
+        scoreManager.setHighScoreFile(new File(homeDir, "highscore-ms_pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
 
         huntingControl = new HuntingTimer() {

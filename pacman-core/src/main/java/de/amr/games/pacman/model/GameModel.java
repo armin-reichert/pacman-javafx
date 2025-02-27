@@ -51,8 +51,11 @@ public abstract class GameModel {
     protected boolean            demoLevel;
     protected GameLevel          level;
 
-    protected File userDir;
+    protected File homeDir;
+    protected File customMapDir;
     protected final List<WorldMap> builtinMaps = new ArrayList<>();
+    protected final Map<File, WorldMap> customMapsByFile = new HashMap<>();
+    protected CustomMapSelectionMode mapSelectionMode;
 
     public abstract void           resetEverything();
     public abstract void           resetForStartingNewGame();
@@ -88,10 +91,17 @@ public abstract class GameModel {
     protected abstract void        onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
     protected abstract void        onGhostReleased(Ghost ghost);
 
-    // Custom map handling
-    protected File customMapDir;
-    protected final Map<File, WorldMap> customMapsByFile = new HashMap<>();
-    protected CustomMapSelectionMode mapSelectionMode;
+    public void init(File homeDir) {
+        this.homeDir = assertNotNull(homeDir);
+        if (!homeDir.isDirectory()) {
+            throw new IllegalArgumentException("Home directory is invalid");
+        }
+        customMapDir = new File(homeDir, "maps");
+        if (customMapDir.mkdir()) {
+            Logger.info("Created custom map directory {}", customMapDir);
+        }
+        mapSelectionMode = CustomMapSelectionMode.NO_CUSTOM_MAPS;
+    }
 
     public void setMapSelectionMode(CustomMapSelectionMode mapSelectionMode) {
         this.mapSelectionMode = assertNotNull(mapSelectionMode);
@@ -173,7 +183,7 @@ public abstract class GameModel {
                 Logger.error("Could not load world map, pattern={}, number={}", mapPattern, mapNumber);
             }
         }
-        Logger.info("{} maps loaded ({})", builtinMaps.size(), GameVariant.MS_PACMAN);
+        Logger.info("{} maps loaded ({})", builtinMaps.size(), getClass().getSimpleName());
     }
 
     public int lastLevelNumber() { return Integer.MAX_VALUE; }
@@ -192,15 +202,6 @@ public abstract class GameModel {
 
     public HuntingTimer huntingControl() {
         return huntingControl;
-    }
-
-    protected GameModel(File userDir) {
-        this.userDir = assertNotNull(userDir);
-        mapSelectionMode = CustomMapSelectionMode.NO_CUSTOM_MAPS;
-        customMapDir = new File(userDir, "maps");
-        if (customMapDir.mkdir()) {
-            Logger.info("Created custom map directory {}", customMapDir);
-        }
     }
 
     public void startNewGame() {

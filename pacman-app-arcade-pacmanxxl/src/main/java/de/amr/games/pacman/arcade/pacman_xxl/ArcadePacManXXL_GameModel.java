@@ -7,6 +7,7 @@ package de.amr.games.pacman.arcade.pacman_xxl;
 import de.amr.games.pacman.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.model.CustomMapSelectionMode;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 
 import java.io.File;
@@ -35,13 +36,14 @@ public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel {
         Map.of("fill", "#5036d9", "stroke", "#5f8bcf", "door", "#fcb5ff", "pellet", "#feb8ae")
     );
 
-    public ArcadePacManXXL_GameModel(File userDir) {
-        super(userDir);
-        scoreManager.setHighScoreFile(new File(userDir, "highscore-pacman_xxl.xml"));
+    public void init(File homeDir) {
+        super.init(homeDir);
+        mapSelectionMode = CustomMapSelectionMode.CUSTOM_MAPS_FIRST;
+        demoLevelSteering = new RuleBasedPacSteering(this); // super class uses predefined steering
+        scoreManager.setHighScoreFile(new File(homeDir, "highscore-pacman_xxl.xml"));
         builtinMaps.clear(); // super class constructor adds Pac-Man Aracde map
         loadMapsFromModule("maps/masonic_%d.world", 8);
         updateCustomMaps();
-        demoLevelSteering = new RuleBasedPacSteering(this); // super class uses predefined steering
     }
 
     @Override

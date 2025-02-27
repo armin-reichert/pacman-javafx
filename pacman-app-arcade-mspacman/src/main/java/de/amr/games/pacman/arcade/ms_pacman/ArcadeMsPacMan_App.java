@@ -23,12 +23,12 @@ public class ArcadeMsPacMan_App extends Application {
     @Override
     public void init() {
         try {
-            File userDir = new File(System.getProperty("user.home"), ".pacmanfx");
-            if (userDir.mkdir()) {
-                Logger.info("User dir '{}' created", userDir);
+            File homeDir = new File(System.getProperty("user.home"), ".pacmanfx");
+            if (homeDir.mkdir()) {
+                Logger.info("Home directory '{}' created", homeDir);
             }
-            ArcadeMsPacMan_GameModel game = new ArcadeMsPacMan_GameModel(userDir);
-            GameController.it().setGameModel(GameVariant.MS_PACMAN, game);
+            GameController.it().setGameModel(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameModel());
+            GameController.it().gameModels().forEach(gameModel -> gameModel.init(homeDir));
             GameController.it().selectGame(GameVariant.MS_PACMAN);
         } catch (Exception x) {
             x.printStackTrace(System.err);

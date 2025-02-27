@@ -14,6 +14,7 @@ import org.tinylog.Logger;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * Controller (in the sense of MVC) for all game variants.
@@ -42,7 +43,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     private static final GameController THE_ONE = new GameController();
 
-    private final Map<GameVariant, GameModel> modelsByVariant = new EnumMap<>(GameVariant.class);
+    private final Map<GameVariant, GameModel> gameModelsByVariant = new EnumMap<>(GameVariant.class);
     private GameModel currentGame;
     public int credit;
 
@@ -61,13 +62,13 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     }
 
     public void setGameModel(GameVariant variant, GameModel gameModel) {
-        modelsByVariant.put(variant, gameModel);
+        gameModelsByVariant.put(variant, gameModel);
     }
 
     @SuppressWarnings("unchecked")
     public <T extends GameModel> T gameModel(GameVariant variant) {
         Globals.assertNotNull(variant);
-        return (T) modelsByVariant.get(variant);
+        return (T) gameModelsByVariant.get(variant);
     }
 
     public void selectGame(GameVariant variant) {
@@ -79,8 +80,10 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         }
     }
 
+    public Stream<GameModel> gameModels() { return gameModelsByVariant.values().stream(); }
+
     public GameVariant currentGameVariant() {
-        return modelsByVariant.entrySet().stream()
+        return gameModelsByVariant.entrySet().stream()
             .filter(entry -> entry.getValue() == currentGame)
             .findFirst()
             .map(Map.Entry::getKey)

@@ -59,18 +59,20 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void init() {
-        File userDir = new File(System.getProperty("user.home"), ".pacmanfx");
-        if (userDir.mkdir()) {
-            Logger.info("User dir '{}' created", userDir);
+        GameController gameController = GameController.it();
+        File homeDir = new File(System.getProperty("user.home"), ".pacmanfx");
+        if (homeDir.mkdir()) {
+            Logger.info("Home directory '{}' created", homeDir);
         }
-        GameModel gameXXL = new ArcadePacManXXL_GameModel(userDir);
-        gameXXL.setMapSelectionMode(CustomMapSelectionMode.CUSTOM_MAPS_FIRST);
+        gameController.setGameModel(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_GameModel());
+        gameController.setGameModel(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
+        gameController.setGameModel(GameVariant.PACMAN,           new ArcadePacMan_GameModel());
+        gameController.setGameModel(GameVariant.PACMAN_XXL,       new ArcadePacManXXL_GameModel());
 
-        GameController.it().setGameModel(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameModel(userDir));
-        GameController.it().setGameModel(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel(userDir));
-        GameController.it().setGameModel(GameVariant.PACMAN, new ArcadePacMan_GameModel(userDir));
-        GameController.it().setGameModel(GameVariant.PACMAN_XXL, gameXXL);
-        GameController.it().selectGame(GameVariant.PACMAN);
+        gameController.gameModels().forEach(gameModel -> gameModel.init(homeDir));
+
+        gameController.selectGame(GameVariant.PACMAN);
+
         GlobalProperties3d.PY_3D_ENABLED.set(false);
     }
 

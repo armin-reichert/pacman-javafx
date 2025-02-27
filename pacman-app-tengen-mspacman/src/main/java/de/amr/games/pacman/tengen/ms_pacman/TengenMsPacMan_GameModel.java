@@ -102,7 +102,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         };
     }
 
-    private final MapManager mapManager;
+    private MapManager mapManager;
     private MapCategory mapCategory;
     private Difficulty difficulty;
     private PacBooster pacBooster;
@@ -129,9 +129,9 @@ public class TengenMsPacMan_GameModel extends GameModel {
         }
     }
 
-    public TengenMsPacMan_GameModel(File userDir) {
-        super(userDir);
-        scoreManager.setHighScoreFile(new File(userDir, HIGH_SCORE_FILENAME));
+    public void init(File homeDir) {
+        super.init(homeDir);
+        scoreManager.setHighScoreFile(new File(homeDir, HIGH_SCORE_FILENAME));
         huntingControl = new MsPacManGameTengenHuntingControl();
         mapManager = new MapManager(MAPS_ROOT);
         setInitialLives(3);
