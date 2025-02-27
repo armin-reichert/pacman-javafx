@@ -19,10 +19,7 @@ import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui2d.input.Keyboard;
-import de.amr.games.pacman.ui2d.page.DashboardLayer;
-import de.amr.games.pacman.ui2d.page.EditorPage;
-import de.amr.games.pacman.ui2d.page.GamePage;
-import de.amr.games.pacman.ui2d.page.StartPageCarousel;
+import de.amr.games.pacman.ui2d.page.*;
 import de.amr.games.pacman.ui2d.scene.GameConfiguration;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -227,7 +224,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         stage.setOnShowing(e -> selectStartPage());
     }
 
-    public void setStartPage(GameVariant variant, Node page) {
+    public void setStartPage(GameVariant variant, StartPage page) {
         startPagesCarousel.addStartPage(variant, page);
     }
 

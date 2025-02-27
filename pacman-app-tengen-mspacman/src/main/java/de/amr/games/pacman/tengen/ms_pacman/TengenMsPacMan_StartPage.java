@@ -6,16 +6,26 @@ package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
+import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.uilib.Flyer;
 import de.amr.games.pacman.uilib.ResourceManager;
+import de.amr.games.pacman.uilib.Ufx;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
 
-public class TengenMsPacMan_StartPage extends StackPane {
+import java.util.Optional;
 
+public class TengenMsPacMan_StartPage extends StackPane implements StartPage {
+
+    private final PacManGamesUI ui;
     private final Flyer flyer;
 
     public TengenMsPacMan_StartPage(PacManGamesUI ui) {
+        this.ui = ui;
+
         ResourceManager rm = this::getClass;
         flyer = new Flyer(
             rm.loadImage("graphics/f1.png"),
@@ -32,5 +42,25 @@ public class TengenMsPacMan_StartPage extends StackPane {
                 case UP -> flyer.prevFlyerPage();
             }
         });
+    }
+
+    @Override
+    public Optional<Node> startButton() {
+        ResourceManager rm = () -> PacManGamesUI.class;
+        Font startButtonFont = rm.loadFont("fonts/emulogic.ttf", 30);
+        Node btnStart = Ufx.createFancyButton(startButtonFont, ui.locText("play_button"), ui::selectGamePage);
+        btnStart.setTranslateY(-50);
+        StackPane.setAlignment(btnStart, Pos.BOTTOM_CENTER);
+        return Optional.of(btnStart);
+    }
+
+    @Override
+    public void start() {
+        ui.selectGamePage();
+    }
+
+    @Override
+    public Node root() {
+        return this;
     }
 }

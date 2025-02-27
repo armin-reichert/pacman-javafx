@@ -2,27 +2,15 @@ package de.amr.games.pacman.uilib;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static de.amr.games.pacman.uilib.Ufx.coloredRoundedBackground;
 
 public class Carousel extends StackPane {
 
@@ -36,11 +24,8 @@ public class Carousel extends StackPane {
         }
     };
 
-    protected final StringProperty selectButtonTextPy = new SimpleStringProperty("SELECT");
-
     protected final StackPane buttonsLayer = new StackPane();
     protected final List<Node> slides = new ArrayList<>();
-    protected final Node btnSelect;
     protected final Button btnPrevSlide;
     protected final Button btnNextSlide;
 
@@ -60,12 +45,7 @@ public class Carousel extends StackPane {
         btnNextSlide.setOnAction(e -> showNextSlide());
         StackPane.setAlignment(btnNextSlide, Pos.CENTER_RIGHT);
 
-        Font startButtonFont = rm.loadFont("fonts/emulogic.ttf", 30);
-        btnSelect = createFancyButton(startButtonFont);
-        btnSelect.setTranslateY(-50);
-        StackPane.setAlignment(btnSelect, Pos.BOTTOM_CENTER);
-
-        buttonsLayer.getChildren().setAll(btnPrevSlide, btnNextSlide, btnSelect);
+        buttonsLayer.getChildren().setAll(btnPrevSlide, btnNextSlide);
         getChildren().add(buttonsLayer);
     }
 
@@ -83,44 +63,13 @@ public class Carousel extends StackPane {
         return button;
     }
 
-    private Node createFancyButton(Font font) {
-        Color bgColor = Color.rgb(0, 155, 252, 0.7);
-        Color fillColor = Color.WHITE;
-
-        var buttonText = new Text();
-        buttonText.setFill(fillColor);
-        buttonText.setFont(font);
-        buttonText.textProperty().bind(selectButtonTextPy);
-
-        var shadow = new DropShadow();
-        shadow.setOffsetY(3.0f);
-        shadow.setColor(Color.color(0.2f, 0.2f, 0.2f));
-        buttonText.setEffect(shadow);
-
-        var pane = new BorderPane(buttonText);
-        pane.setMaxSize(200, 60);
-        pane.setPadding(new Insets(5, 5, 5, 5));
-        pane.setCursor(Cursor.HAND);
-        pane.setBackground(coloredRoundedBackground(bgColor, 20));
-
-        return pane;
-    }
-
     public void setNavigationVisible(boolean visible) {
         btnPrevSlide.setVisible(visible);
         btnNextSlide.setVisible(visible);
     }
 
-    public Node getBtnSelect() {
-        return btnSelect;
-    }
-
     public IntegerProperty selectedIndexProperty() {
         return selectedIndexPy;
-    }
-
-    public StringProperty selectButtonTextProperty() {
-        return selectButtonTextPy;
     }
 
     public void setOnPrevSlideSelected(Runnable action) {
@@ -129,15 +78,6 @@ public class Carousel extends StackPane {
 
     public void setOnNextSlideSelected(Runnable action) {
         onNextSlide = action;
-    }
-
-    public void setOnSelect(Runnable action) {
-        btnSelect.setOnMouseClicked(e -> {
-            if (e.getButton().equals(MouseButton.PRIMARY)) {
-                action.run();
-            }
-            e.consume();
-        });
     }
 
     public void showPreviousSlide() {

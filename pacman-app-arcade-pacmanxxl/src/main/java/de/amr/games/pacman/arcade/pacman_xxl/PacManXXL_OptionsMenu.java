@@ -17,6 +17,7 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -29,6 +30,9 @@ import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 
 public class PacManXXL_OptionsMenu extends BorderPane {
+
+    private static final double HEIGHT_FRACTION = 0.75;
+    private static final double UNSCALED_HEIGHT = 36 * TS;
 
     private static abstract class MenuEntry {
         final String label;
@@ -43,21 +47,24 @@ public class PacManXXL_OptionsMenu extends BorderPane {
 
     private final Canvas canvas = new Canvas();
     private final FloatProperty scalingPy = new SimpleFloatProperty(2);
-    private final Font arcadeFont8;
-    private final Font arcadeFont12;
+    private final Font arcadeFontNormal;
+    private final Font arcadeFontBig;
 
     private final List<MenuEntry> entries = new ArrayList<>();
     private int selectedEntryIndex = 0;
 
     public PacManXXL_OptionsMenu(PacManGamesUI ui) {
-        ResourceManager rm = () -> GameRenderer.class;
-        arcadeFont8 = rm.loadFont("fonts/emulogic.ttf", 8);
-        arcadeFont12 = rm.loadFont("fonts/emulogic.ttf", 12);
+        setBackground(Background.EMPTY);
 
-        double unscaledHeight = 36 * TS;
-        scalingPy.bind(ui.getMainScene().heightProperty().divide(unscaledHeight));
-        canvas.widthProperty().bind(scalingPy.multiply(unscaledHeight));
-        canvas.heightProperty().bind(scalingPy.multiply(unscaledHeight));
+        ResourceManager rm = () -> GameRenderer.class;
+        arcadeFontNormal = rm.loadFont("fonts/emulogic.ttf", 8);
+        arcadeFontBig = rm.loadFont("fonts/emulogic.ttf", 20);
+
+        scalingPy.bind(ui.getMainScene().heightProperty().multiply(HEIGHT_FRACTION).divide(UNSCALED_HEIGHT));
+
+        canvas.widthProperty().bind(scalingPy.multiply(UNSCALED_HEIGHT));
+        canvas.heightProperty().bind(scalingPy.multiply(UNSCALED_HEIGHT));
+
         setCenter(canvas);
 
         entries.add(new MenuEntry("GAME VARIANT") {
@@ -120,6 +127,9 @@ public class PacManXXL_OptionsMenu extends BorderPane {
                     if (entry.selectedOptionIndex == entry.options.size()) entry.selectedOptionIndex = 0;
                     entry.onOptionSelected();
                 }
+                case ENTER -> {
+                    ui.selectGamePage();
+                }
             }
         });
 
@@ -131,26 +141,38 @@ public class PacManXXL_OptionsMenu extends BorderPane {
     private void draw() {
         GraphicsContext g = canvas.getGraphicsContext2D();
         g.save();
-        g.scale(scalingPy.doubleValue(), scalingPy.doubleValue());
-        g.setFill(Color.BLACK);
+
+        g.setFill(Color.grayRgb(200));
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+        int d = 3;
+        g.setFill(Color.rgb(30, 30, 200));
+        g.fillRect(d, d, canvas.getWidth() - 2*d, canvas.getHeight() - 2*d);
+
+        g.scale(scalingPy.doubleValue(), scalingPy.doubleValue());
+        drawContent(g);
+
+        /*
         g.setFill(Color.WHITE);
         g.fillRect(0, 2*TS, getWidth(), TS);
         g.setFill(Color.CORNFLOWERBLUE);
         g.fillRect(0, 2*TS+1, getWidth(), TS-2);
-        drawContent(g);
+
+
         g.setFill(Color.WHITE);
         g.fillRect(0, 34*TS, getWidth(), TS);
         g.setFill(Color.CORNFLOWERBLUE);
         g.fillRect(0, 34*TS+1, getWidth(), TS-2);
+         */
+
         g.restore();
     }
 
     private void drawContent(GraphicsContext g) {
-        g.setFont(arcadeFont12);
-        g.setFill(Color.grayRgb(200));
-        g.fillText("PAC-MAN XXL OPTIONS", 4 * TS, 8 * TS);
-        g.setFont(arcadeFont8);
+        g.setFont(arcadeFontBig);
+        g.setFill(Color.RED);
+        g.fillText("PAC-MAN XXL", 4 * TS, 6 * TS);
+        g.setFont(arcadeFontNormal);
         for (int i = 0; i < entries.size(); ++i) {
             int y = (12 + 3 * i) * TS;
             MenuEntry entry = entries.get(i);
@@ -165,8 +187,8 @@ public class PacManXXL_OptionsMenu extends BorderPane {
             g.fillText(entry.options.get(entry.selectedOptionIndex), 17 * TS, y);
         }
         g.setFill(Color.YELLOW);
-        g.fillText("   PRESS SPACE TO CHANGE OPTIONS    ", 0, 23 * TS);
-        g.fillText("  CHOOSE OPTIONS WITH UP AND DOWN   ", 0, 25 * TS);
-        g.fillText("     PRESS ENTER TO START GAME      ", 0, 27 * TS);
+        g.fillText("   PRESS SPACE TO CHANGE OPTIONS    ", 0, 29 * TS);
+        g.fillText("  CHOOSE OPTIONS WITH UP AND DOWN   ", 0, 31 * TS);
+        g.fillText("     PRESS ENTER TO START GAME      ", 0, 33 * TS);
     }
 }

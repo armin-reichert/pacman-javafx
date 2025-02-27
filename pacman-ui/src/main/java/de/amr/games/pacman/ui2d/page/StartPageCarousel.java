@@ -15,10 +15,6 @@ import de.amr.games.pacman.ui2d.action.GameActions2D;
 import de.amr.games.pacman.ui2d.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import de.amr.games.pacman.uilib.Carousel;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 
@@ -50,8 +46,6 @@ public class StartPageCarousel extends Carousel implements GameActionProvider {
 
     public StartPageCarousel(PacManGamesUI ui) {
         this.context = assertNotNull(ui);
-
-        selectButtonTextProperty().set(context.locText("play_button"));
         setOnPrevSlideSelected(() -> {
             var variant = (GameVariant) currentSlide().getUserData();
             context.selectGameVariant(variant);
@@ -62,13 +56,29 @@ public class StartPageCarousel extends Carousel implements GameActionProvider {
             context.selectGameVariant(variant);
             currentSlide().requestFocus();
         });
-        setOnSelect(context::selectGamePage);
         bindGameActions();
+
+        //TODO this crap is used because carousel has a button layer and buttons added to the slide layer are
+        // not sensitive to mouse clicks!
+        selectedIndexProperty().addListener((py, ov, selection) -> {
+            var buttons = buttonsLayer.getChildren();
+            var buttonsToRemove = buttons.stream()
+                .filter(node -> "start_button".equals(node.getUserData())).toList();
+            buttonsToRemove.forEach(buttons::remove);
+            startPage(selection.intValue()).startButton().ifPresent(newStartButton -> {
+                newStartButton.setUserData("start_button");
+                buttons.add(newStartButton);
+            });
+        });
     }
 
-    public void addStartPage(GameVariant variant, Node startPage) {
-        startPage.setUserData(variant);
-        addSlide(startPage);
+    private StartPage startPage(int index) {
+        return (StartPage) slide(index);
+    }
+
+    public void addStartPage(GameVariant variant, StartPage startPage) {
+        startPage.root().setUserData(variant);
+        addSlide(startPage.root());
         setNavigationVisible(numSlides() >= 2);
         selectedIndexProperty().set(0);
     }
@@ -87,7 +97,7 @@ public class StartPageCarousel extends Carousel implements GameActionProvider {
             // START key is "1" which might be unclear on start page, so add ENTER
             bind(actionSelectGamePage, context.arcadeKeys().key(Arcade.Button.START), naked(KeyCode.ENTER));
         }
-        // in case clock has been paused and start page selector got called, allow unpause
+        // in case clock has been paused and start page selector got called, allow pause toggle
         bind(GameActions2D.TOGGLE_PAUSED, KeyCode.P);
     }
 

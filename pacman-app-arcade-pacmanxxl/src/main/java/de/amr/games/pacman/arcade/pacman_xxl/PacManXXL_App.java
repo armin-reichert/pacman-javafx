@@ -57,7 +57,7 @@ public class PacManXXL_App extends Application {
         ui.addDashboardItem(DashboardItemID.KEYBOARD);
         ui.addDashboardItem(DashboardItemID.ABOUT);
 
-        ui.setStartPage(GameVariant.PACMAN_XXL, new PacManXXL_OptionsMenu(ui));
+        ui.setStartPage(GameVariant.PACMAN_XXL, new PacManXXL_StartPage(ui));
         ui.show();
     }
 
