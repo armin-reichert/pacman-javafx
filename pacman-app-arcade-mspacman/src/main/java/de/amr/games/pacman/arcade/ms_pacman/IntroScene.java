@@ -113,14 +113,13 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        ArcadeMsPacMan_GameRenderer r = (ArcadeMsPacMan_GameRenderer) gr;
-        Font font = r.scaledArcadeFont(TS);
+        Font font = gr.scaledArcadeFont(TS);
         BitSet marqueeState = computeMarqueeState(marqueeTimer.tickCount());
-        drawMarquee(r.ctx(), marqueeState);
-        r.drawText("\"MS PAC-MAN\"", Color.valueOf(Arcade.Palette.ORANGE), font, TITLE_POSITION.x(), TITLE_POSITION.y());
+        drawMarquee(gr.ctx(), marqueeState);
+        gr.drawText("\"MS PAC-MAN\"", Color.valueOf(Arcade.Palette.ORANGE), font, TITLE_POSITION.x(), TITLE_POSITION.y());
         if (sceneController.state() == SceneState.GHOSTS_MARCHING_IN) {
             if (ghostIndex == GameModel.RED_GHOST) {
-                r.drawText("WITH", Color.valueOf(Arcade.Palette.WHITE), font, TITLE_POSITION.x(), TOP_Y + tiles2Px(3));
+                gr.drawText("WITH", Color.valueOf(Arcade.Palette.WHITE), font, TITLE_POSITION.x(), TOP_Y + tiles2Px(3));
             }
             String ghostName = ghosts[ghostIndex].name().toUpperCase();
             Color color = switch (ghostIndex) {
@@ -131,18 +130,21 @@ public class IntroScene extends GameScene2D {
                 default -> throw new IllegalStateException("Illegal ghost index: " + ghostIndex);
             };
             double dx = ghostName.length() < 4 ? tiles2Px(1) : 0;
-            r.drawText(ghostName, color, font, TITLE_POSITION.x() + tiles2Px(3) + dx, TOP_Y + tiles2Px(6));
+            gr.drawText(ghostName, color, font, TITLE_POSITION.x() + tiles2Px(3) + dx, TOP_Y + tiles2Px(6));
         } else if (sceneController.state() == SceneState.MS_PACMAN_MARCHING_IN || sceneController.state() == SceneState.READY_TO_PLAY) {
-            r.drawText("STARRING", Color.valueOf(Arcade.Palette.WHITE), font, TITLE_POSITION.x(), TOP_Y + tiles2Px(3));
-            r.drawText("MS PAC-MAN", Color.valueOf(Arcade.Palette.YELLOW), font, TITLE_POSITION.x(), TOP_Y + tiles2Px(6));
+            gr.drawText("STARRING", Color.valueOf(Arcade.Palette.WHITE), font, TITLE_POSITION.x(), TOP_Y + tiles2Px(3));
+            gr.drawText("MS PAC-MAN", Color.valueOf(Arcade.Palette.YELLOW), font, TITLE_POSITION.x(), TOP_Y + tiles2Px(6));
         }
         for (Ghost ghost : ghosts) {
-            r.drawAnimatedActor(ghost);
+            gr.drawAnimatedActor(ghost);
         }
-        r.drawAnimatedActor(msPacMan);
-        r.drawMsPacManMidwayCopyright(tiles2Px(6), tiles2Px(28), Color.valueOf(Arcade.Palette.RED), font);
-        r.drawText("CREDIT %2d".formatted(context.gameController().credit), Color.valueOf(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS), 2 * TS, size().y() - 2);
-        r.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
+        gr.drawAnimatedActor(msPacMan);
+        // might be PacManXXL renderer
+        if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
+            r.drawMsPacManMidwayCopyright(tiles2Px(6), tiles2Px(28), Color.valueOf(Arcade.Palette.RED), font);
+        }
+        gr.drawText("CREDIT %2d".formatted(context.gameController().credit), Color.valueOf(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS), 2 * TS, size().y() - 2);
+        gr.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
     }
 
     /**

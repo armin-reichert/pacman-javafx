@@ -44,19 +44,20 @@ public class StartScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        ArcadeMsPacMan_GameRenderer r = (ArcadeMsPacMan_GameRenderer) gr;
-        GameSpriteSheet spriteSheet = r.spriteSheet();
+        GameSpriteSheet spriteSheet = gr.spriteSheet();
         Color orange = Color.valueOf(Arcade.Palette.ORANGE), red = Color.valueOf(Arcade.Palette.RED), white = Color.valueOf(Arcade.Palette.WHITE);
-        Font font8 = r.scaledArcadeFont(8), font6 = r.scaledArcadeFont(6);
-        r.drawText("PUSH START BUTTON", orange, font8, tiles2Px(6), tiles2Px(16));
-        r.drawText("1 PLAYER ONLY", orange, font8, tiles2Px(8), tiles2Px(18));
-        r.drawText("ADDITIONAL    AT 10000", orange, font8, tiles2Px(2), tiles2Px(25));
-        r.drawSpriteScaled(spriteSheet.livesCounterSprite(), tiles2Px(13), tiles2Px(23) + 1);
-        r.drawText("PTS", orange, font6, tiles2Px(25), tiles2Px(25));
-        r.drawMsPacManMidwayCopyright(tiles2Px(6), tiles2Px(28), red, r.scaledArcadeFont(TS));
-        r.drawText("CREDIT %2d".formatted(context.gameController().credit), white, r.scaledArcadeFont(TS),
+        Font font8 = gr.scaledArcadeFont(8), font6 = gr.scaledArcadeFont(6);
+        gr.drawText("PUSH START BUTTON", orange, font8, tiles2Px(6), tiles2Px(16));
+        gr.drawText("1 PLAYER ONLY", orange, font8, tiles2Px(8), tiles2Px(18));
+        gr.drawText("ADDITIONAL    AT 10000", orange, font8, tiles2Px(2), tiles2Px(25));
+        gr.drawSpriteScaled(spriteSheet.livesCounterSprite(), tiles2Px(13), tiles2Px(23) + 1);
+        gr.drawText("PTS", orange, font6, tiles2Px(25), tiles2Px(25));
+        if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
+            r.drawMsPacManMidwayCopyright(tiles2Px(6), tiles2Px(28), red, gr.scaledArcadeFont(TS));
+        }
+        gr.drawText("CREDIT %2d".formatted(context.gameController().credit), white, gr.scaledArcadeFont(TS),
             tiles2Px(2), size().y() - 2);
-        r.drawLevelCounter(context, size().x() - tiles2Px(4), size().y() - tiles2Px(2));
+        gr.drawLevelCounter(context, size().x() - tiles2Px(4), size().y() - tiles2Px(2));
     }
 
     @Override

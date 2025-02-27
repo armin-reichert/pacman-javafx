@@ -93,7 +93,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     private static final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
 
     private final Steering autopilot = new RuleBasedPacSteering(this);
-    private final Steering demoLevelSteering = new RuleBasedPacSteering(this);
+    protected Steering demoLevelSteering = new RuleBasedPacSteering(this);
 
     private byte cruiseElroy; //TODO is this existing in Ms. Pac-Man at all?
 

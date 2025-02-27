@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.arcade.pacman_xxl;
+package de.amr.games.pacman.arcade.pacman_xxl.pacman;
 
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -14,9 +14,10 @@ import de.amr.games.pacman.ui3d.scene3d.PlayScene3D;
 import de.amr.games.pacman.uilib.model3D.PacModel3D;
 import javafx.scene.Node;
 
-public class ArcadePacManXXL_GameConfig3D extends ArcadePacManXXL_GameConfig implements GameConfiguration3D {
+public class ArcadePacManXXL_PacMan_GameConfig3D extends ArcadePacManXXL_PacMan_GameConfig
+        implements GameConfiguration3D {
 
-    public ArcadePacManXXL_GameConfig3D(AssetStorage assets) {
+    public ArcadePacManXXL_PacMan_GameConfig3D(AssetStorage assets) {
         super(assets);
         setGameScene("PlayScene3D", new PlayScene3D());
     }

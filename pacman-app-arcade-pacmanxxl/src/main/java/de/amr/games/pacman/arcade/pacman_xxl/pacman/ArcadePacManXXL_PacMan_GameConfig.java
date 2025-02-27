@@ -2,10 +2,11 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.arcade.pacman_xxl;
+package de.amr.games.pacman.arcade.pacman_xxl.pacman;
 
 import de.amr.games.pacman.arcade.ResourceRoot;
 import de.amr.games.pacman.arcade.pacman.*;
+import de.amr.games.pacman.arcade.pacman_xxl.ArcadePacManXXL_GameRenderer;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
@@ -22,14 +23,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class ArcadePacManXXL_GameConfig implements GameConfiguration {
+public class ArcadePacManXXL_PacMan_GameConfig implements GameConfiguration {
 
     private final ArcadePacMan_SpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public ArcadePacManXXL_GameConfig(AssetStorage assets) {
+    public ArcadePacManXXL_PacMan_GameConfig(AssetStorage assets) {
         loadAssets(() -> ResourceRoot.class, assets);
-        spriteSheet = new ArcadePacMan_SpriteSheet(assets.get(assetKeyPrefix() + ".spritesheet"));
+        spriteSheet = new ArcadePacMan_SpriteSheet(assets.get("pacman_xxl.spritesheet"));
 
         setGameScene("BootScene",   new ArcadeBootScene());
         setGameScene("IntroScene",  new IntroScene());

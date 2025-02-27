@@ -13,4 +13,6 @@ open module de.amr.games.pacman.arcade.pacman_xxl {
     requires de.amr.games.pacman.uilib;
 
     exports de.amr.games.pacman.arcade.pacman_xxl;
+    exports de.amr.games.pacman.arcade.pacman_xxl.ms_pacman;
+    exports de.amr.games.pacman.arcade.pacman_xxl.pacman;
 }

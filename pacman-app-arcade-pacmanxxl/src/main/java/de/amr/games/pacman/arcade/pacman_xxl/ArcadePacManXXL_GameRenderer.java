@@ -50,7 +50,7 @@ public class ArcadePacManXXL_GameRenderer implements GameRenderer {
     private TerrainColorScheme blinkingOnColors;
     private TerrainColorScheme blinkingOffColors;
 
-    public ArcadePacManXXL_GameRenderer(AssetStorage assets, ArcadePacMan_SpriteSheet spriteSheet, Canvas canvas) {
+    public ArcadePacManXXL_GameRenderer(AssetStorage assets, GameSpriteSheet spriteSheet, Canvas canvas) {
         this.assets = assertNotNull(assets);
         this.canvas = assertNotNull(canvas);
         this.spriteSheet = assertNotNull(spriteSheet);

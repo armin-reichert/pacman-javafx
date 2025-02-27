@@ -186,7 +186,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
      * @param variant a game variant
      * @param gameConfiguration the configuration for this variant
      */
-    public void configureGameVariant(GameVariant variant, GameConfiguration gameConfiguration) {
+    public void setGameConfiguration(GameVariant variant, GameConfiguration gameConfiguration) {
         assertNotNull(variant);
         assertNotNull(gameConfiguration);
         gameConfigByVariant.put(variant, gameConfiguration);

@@ -1,5 +1,9 @@
 package de.amr.games.pacman.arcade.pacman_xxl;
 
+import de.amr.games.pacman.arcade.pacman_xxl.ms_pacman.ArcadePacManXXL_MsPacMan_GameConfig3D;
+import de.amr.games.pacman.arcade.pacman_xxl.ms_pacman.ArcadePacManXXL_MsPacMan_GameModel;
+import de.amr.games.pacman.arcade.pacman_xxl.pacman.ArcadePacManXXL_PacMan_GameConfig3D;
+import de.amr.games.pacman.arcade.pacman_xxl.pacman.ArcadePacManXXL_PacMan_GameModel;
 import de.amr.games.pacman.model.CustomMapSelectionMode;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameRenderer;
@@ -58,14 +62,21 @@ public class PacManXXLOptionsMenu extends BorderPane {
 
         entries.add(new MenuEntry("GAME VARIANT") {
             {
-                options = List.of("PAC-MAN", "MS.PAC-MAN (TODO)");
+                options = List.of("PAC-MAN", "MS.PAC-MAN");
                 selectedOptionIndex = 0;
             }
             @Override
             void onOptionSelected() {
                 switch (selectedOptionIndex) {
-                    case 0 -> ui.selectGameVariant(GameVariant.PACMAN_XXL);
-                    case 1 -> ui.selectGameVariant(GameVariant.MS_PACMAN);
+                    case 0 -> {
+                        ui.gameController().setGameModel(GameVariant.PACMAN_XXL, new ArcadePacManXXL_PacMan_GameModel());
+                        ui.setGameConfiguration(GameVariant.PACMAN_XXL, new ArcadePacManXXL_PacMan_GameConfig3D(ui.assets()));
+                    }
+                    case 1 -> {
+                        ui.gameController().setGameModel(GameVariant.PACMAN_XXL, new ArcadePacManXXL_MsPacMan_GameModel());
+                        //TODO create configuration for Ms Pac-Man XXL
+                        ui.setGameConfiguration(GameVariant.PACMAN_XXL, new ArcadePacManXXL_MsPacMan_GameConfig3D(ui.assets()));
+                    }
                 }
             }
         });

@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.arcade.pacman_xxl;
+package de.amr.games.pacman.arcade.pacman_xxl.pacman;
 
 import de.amr.games.pacman.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.games.pacman.lib.tilemap.LayerID;
@@ -23,7 +23,7 @@ import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
  * <a href="https://github.com/masonicGIT/pacman">Shaun Williams</a>) and the possibility to
  * play custom maps.
  */
-public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel {
+public class ArcadePacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
 
     static final List<Map<String, String>> MAP_COLORINGS = List.of(
         Map.of("fill", "#359c9c", "stroke", "#85e2ff", "door", "#fcb5ff", "pellet", "#feb8ae"),
