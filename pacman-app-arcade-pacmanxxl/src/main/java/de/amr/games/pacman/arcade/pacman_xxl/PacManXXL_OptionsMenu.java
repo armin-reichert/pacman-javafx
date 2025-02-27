@@ -77,15 +77,19 @@ public class PacManXXL_OptionsMenu extends BorderPane {
                 switch (selectedOptionIndex) {
                     case 0 -> {
                         ui.gameController().setGameModel(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_GameModel());
-                        var gameConfig = new PacManXXL_PacMan_GameConfig3D(ui.assets());
-                        ui.setGameConfiguration(GameVariant.PACMAN_XXL, gameConfig);
-                        ui.sound().setGameVariant(GameVariant.PACMAN_XXL, gameConfig.assetKeyPrefix());
+                        var pacManGameConfig = new PacManXXL_PacMan_GameConfig3D(ui.assets());
+                        ui.setGameConfiguration(GameVariant.PACMAN_XXL, pacManGameConfig);
+                        // clear sounds for XXL game variant first such that they are reloaded with Pac-Man sounds
+                        ui.sound().clearSounds(GameVariant.PACMAN_XXL);
+                        ui.sound().setGameVariant(GameVariant.PACMAN_XXL, pacManGameConfig.assetKeyPrefix());
                     }
                     case 1 -> {
                         ui.gameController().setGameModel(GameVariant.PACMAN_XXL, new PacManXXL_MsPacMan_GameModel());
-                        var gameConfig = new PacManXXL_MsPacMan_GameConfig3D(ui.assets());
-                        ui.setGameConfiguration(GameVariant.PACMAN_XXL, gameConfig);
-                        ui.sound().setGameVariant(GameVariant.PACMAN_XXL, gameConfig.assetKeyPrefix());
+                        var msPacManGameConfig = new PacManXXL_MsPacMan_GameConfig3D(ui.assets());
+                        ui.setGameConfiguration(GameVariant.PACMAN_XXL, msPacManGameConfig);
+                        // clear sounds for XXL game variant first such that they are reloaded with Ms. Pac-Man sounds
+                        ui.sound().clearSounds(GameVariant.PACMAN_XXL);
+                        ui.sound().setGameVariant(GameVariant.PACMAN_XXL, msPacManGameConfig.assetKeyPrefix());
                     }
                 }
             }

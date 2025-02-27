@@ -67,6 +67,10 @@ public class GameSound {
         return player;
     }
 
+    public void clearSounds(GameVariant gameVariant) {
+        soundsByGameVariant.get(gameVariant).clear();
+    }
+
     //TODO check volume settings
     public void setGameVariant(GameVariant gameVariant, String assetKeyPrefix) {
         this.gameVariant = Globals.assertNotNull(gameVariant);
