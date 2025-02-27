@@ -125,6 +125,7 @@ public class ArcadePacMan_GameModel extends GameModel {
             throw new IllegalStateException(x);
         }
         createHuntingControl();
+        demoLevelSteering = new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE));
     }
 
     private void createHuntingControl() {
@@ -289,7 +290,7 @@ public class ArcadePacMan_GameModel extends GameModel {
     public void configureDemoLevel() {
         configureNormalLevel();
         levelCounterEnabled = false;
-        demoLevelSteering = new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE));
+        demoLevelSteering.init();
         setDemoLevelBehavior();
     }
 

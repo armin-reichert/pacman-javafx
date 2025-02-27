@@ -41,6 +41,7 @@ public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel {
         builtinMaps.clear(); // super class constructor adds Pac-Man Aracde map
         loadBuiltinMaps("maps/masonic_%d.world", 8);
         updateCustomMaps();
+        demoLevelSteering = new RuleBasedPacSteering(this); // super class uses predefined steering
     }
 
     @Override
@@ -81,13 +82,5 @@ public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel {
             "stroke", template.getPropertyOrDefault(LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE, "0000ff"),
             "door",   template.getPropertyOrDefault(LayerID.TERRAIN, PROPERTY_COLOR_DOOR,        "00ffff"),
             "pellet", template.getPropertyOrDefault(LayerID.FOOD, PROPERTY_COLOR_FOOD,           "ffffff"));
-    }
-
-    @Override
-    public void configureDemoLevel() {
-        configureNormalLevel();
-        levelCounterEnabled = false;
-        demoLevelSteering = new RuleBasedPacSteering(this); // super class uses predefined steering
-        setDemoLevelBehavior();
     }
 }
