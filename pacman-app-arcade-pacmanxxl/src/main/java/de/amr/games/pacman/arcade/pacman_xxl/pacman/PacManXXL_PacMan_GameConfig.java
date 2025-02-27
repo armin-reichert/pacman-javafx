@@ -30,8 +30,6 @@ public class PacManXXL_PacMan_GameConfig implements GameConfiguration {
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
     public PacManXXL_PacMan_GameConfig(AssetStorage assets) {
-        ResourceManager rm = () -> ResourceRoot.class;
-
         setGameScene("BootScene",   new ArcadeBootScene());
         setGameScene("IntroScene",  new IntroScene());
         setGameScene("StartScene",  new StartScene());
@@ -39,6 +37,8 @@ public class PacManXXL_PacMan_GameConfig implements GameConfiguration {
         setGameScene("CutScene1",   new CutScene1());
         setGameScene("CutScene2",   new CutScene2());
         setGameScene("CutScene3",   new CutScene3());
+
+        ResourceManager rm = () -> ResourceRoot.class;
 
         spriteSheet = new ArcadePacMan_SpriteSheet(rm.loadImage("graphics/pacman_spritesheet.png"));
 

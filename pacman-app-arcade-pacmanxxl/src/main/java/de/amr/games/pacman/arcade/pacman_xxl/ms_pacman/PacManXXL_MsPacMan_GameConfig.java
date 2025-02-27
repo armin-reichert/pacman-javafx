@@ -29,6 +29,14 @@ public class PacManXXL_MsPacMan_GameConfig implements GameConfiguration {
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
     public PacManXXL_MsPacMan_GameConfig(AssetStorage assets) {
+        setGameScene("BootScene",   new ArcadeBootScene());
+        setGameScene("IntroScene",  new IntroScene());
+        setGameScene("StartScene",  new StartScene());
+        setGameScene("PlayScene2D", new ArcadePlayScene2D());
+        setGameScene("CutScene1",   new CutScene1());
+        setGameScene("CutScene2",   new CutScene2());
+        setGameScene("CutScene3",   new CutScene3());
+
         ResourceManager rm = () -> ArcadeMsPacMan_GameConfig.class;
 
         spriteSheet = new ArcadeMsPacMan_SpriteSheet(rm.loadImage("graphics/mspacman_spritesheet.png"));
@@ -92,13 +100,6 @@ public class PacManXXL_MsPacMan_GameConfig implements GameConfiguration {
         assets.store("pacman_xxl.audio.siren.3",                 rm.url("sound/GhostNoise1.wav"));// TODO
         assets.store("pacman_xxl.audio.siren.4",                 rm.url("sound/GhostNoise1.wav"));// TODO
         assets.store("pacman_xxl.audio.ghost_returns",           rm.url("sound/GhostEyes.mp3"));
-        setGameScene("BootScene",   new ArcadeBootScene());
-        setGameScene("IntroScene",  new IntroScene());
-        setGameScene("StartScene",  new StartScene());
-        setGameScene("PlayScene2D", new ArcadePlayScene2D());
-        setGameScene("CutScene1",   new CutScene1());
-        setGameScene("CutScene2",   new CutScene2());
-        setGameScene("CutScene3",   new CutScene3());
     }
 
     @Override
