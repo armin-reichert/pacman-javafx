@@ -34,7 +34,7 @@ public class TengenMsPacMan_App extends Application {
             gameController.gameModels().forEach(gameModel -> gameModel.init(homeDir));
             gameController.selectGame(GameVariant.MS_PACMAN_TENGEN);
         } catch (Exception x) {
-            x.printStackTrace(System.err);
+            Logger.error(x);
         }
     }
 

@@ -36,7 +36,7 @@ public class ArcadePacManXXL_App extends Application {
             gameController.gameModels().forEach(gameModel -> gameModel.init(homeDir));
             gameController.selectGame(GameVariant.PACMAN_XXL);
         } catch (Exception x) {
-            x.printStackTrace(System.err);
+            Logger.error(x);
         }
     }
 
