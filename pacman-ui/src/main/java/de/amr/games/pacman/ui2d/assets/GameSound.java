@@ -39,7 +39,7 @@ public class GameSound {
     private final Map<GameVariant, Map<String, MediaPlayer>> soundsByGameVariant = new HashMap<>();
     {
         for (GameVariant variant : GameVariant.values()) {
-            soundsByGameVariant.put(variant, Map.of());
+            soundsByGameVariant.put(variant, new HashMap<>());
         }
     }
 
