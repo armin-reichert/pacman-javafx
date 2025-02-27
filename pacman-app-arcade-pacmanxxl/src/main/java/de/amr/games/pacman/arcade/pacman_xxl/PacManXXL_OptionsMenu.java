@@ -159,16 +159,12 @@ public class PacManXXL_OptionsMenu extends BorderPane {
         g.fillRect(d, d, canvas.getWidth() - 2*d, canvas.getHeight() - 2*d);
 
         g.scale(scalingPy.doubleValue(), scalingPy.doubleValue());
-        drawContent(g);
 
-        g.restore();
-    }
-
-    private void drawContent(GraphicsContext g) {
         g.setFont(arcadeFontBig);
         g.setFill(Color.RED);
         g.fillText("PAC-MAN XXL", 4 * TS, 6 * TS);
         g.setFont(arcadeFontNormal);
+
         for (int i = 0; i < entries.size(); ++i) {
             int y = (12 + 3 * i) * TS;
             MenuEntry entry = entries.get(i);
@@ -182,9 +178,12 @@ public class PacManXXL_OptionsMenu extends BorderPane {
             g.setFill(Color.WHITE);
             g.fillText(entry.options.get(entry.selectedOptionIndex), 17 * TS, y);
         }
+
         g.setFill(Color.YELLOW);
         g.fillText("   PRESS SPACE TO CHANGE OPTIONS    ", 0, 29 * TS);
         g.fillText("  CHOOSE OPTIONS WITH UP AND DOWN   ", 0, 31 * TS);
         g.fillText("     PRESS ENTER TO START GAME      ", 0, 33 * TS);
+
+        g.restore();
     }
 }
