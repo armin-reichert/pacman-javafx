@@ -10,9 +10,9 @@ import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.games.pacman.arcade.pacman.ArcadePacMan_GameConfig3D;
 import de.amr.games.pacman.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.games.pacman.arcade.pacman.ArcadePacMan_StartPage;
-import de.amr.games.pacman.arcade.pacman_xxl.pacman.ArcadePacManXXL_PacMan_GameConfig3D;
-import de.amr.games.pacman.arcade.pacman_xxl.pacman.ArcadePacManXXL_PacMan_GameModel;
-import de.amr.games.pacman.arcade.pacman_xxl.ArcadePacManXXL_StartPage;
+import de.amr.games.pacman.arcade.pacman_xxl.pacman.PacManXXL_PacMan_GameConfig3D;
+import de.amr.games.pacman.arcade.pacman_xxl.pacman.PacManXXL_PacMan_GameModel;
+import de.amr.games.pacman.arcade.pacman_xxl.PacManXXL_StartPage;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfig3D;
@@ -65,7 +65,7 @@ public class PacManGames3dApp extends Application {
         gameController.setGameModel(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_GameModel());
         gameController.setGameModel(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
         gameController.setGameModel(GameVariant.PACMAN,           new ArcadePacMan_GameModel());
-        gameController.setGameModel(GameVariant.PACMAN_XXL,       new ArcadePacManXXL_PacMan_GameModel());
+        gameController.setGameModel(GameVariant.PACMAN_XXL,       new PacManXXL_PacMan_GameModel());
 
         gameController.gameModels().forEach(gameModel -> gameModel.init(homeDir));
 
@@ -83,12 +83,12 @@ public class PacManGames3dApp extends Application {
         ui.setGameConfiguration(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameConfig3D(ui.assets()));
         ui.setGameConfiguration(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameConfig3D(ui.assets()));
         ui.setGameConfiguration(GameVariant.PACMAN, new ArcadePacMan_GameConfig3D(ui.assets()));
-        ui.setGameConfiguration(GameVariant.PACMAN_XXL, new ArcadePacManXXL_PacMan_GameConfig3D(ui.assets()));
+        ui.setGameConfiguration(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_GameConfig3D(ui.assets()));
 
         ui.create(stage, initialSize());
         ui.setStartPage(GameVariant.PACMAN, new ArcadePacMan_StartPage(ui));
         ui.setStartPage(GameVariant.MS_PACMAN, new ArcadeMsPacMan_StartPage(ui));
-        ui.setStartPage(GameVariant.PACMAN_XXL, new ArcadePacManXXL_StartPage(ui));
+        ui.setStartPage(GameVariant.PACMAN_XXL, new PacManXXL_StartPage(ui));
         //PacManXXLOptionsMenu optionsMenu = new PacManXXLOptionsMenu(ui);
         //ui.setStartPage(GameVariant.PACMAN_XXL, optionsMenu);
         ui.setStartPage(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_StartPage(ui));

@@ -11,7 +11,7 @@ import de.amr.games.pacman.steering.RuleBasedPacSteering;
 
 import java.io.File;
 
-public class ArcadePacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
+public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
 
     @Override
     public void init(File homeDir) {

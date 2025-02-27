@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman_xxl;
 
-import de.amr.games.pacman.arcade.pacman.ArcadePacMan_SpriteSheet;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
@@ -33,7 +32,7 @@ import static java.util.function.Predicate.not;
  *
  * @author Armin Reichert
  */
-public class ArcadePacManXXL_GameRenderer implements GameRenderer {
+public class PacManXXL_GameRenderer implements GameRenderer {
 
     static final Vector2f DEFAULT_MESSAGE_ANCHOR_POSITION = new Vector2f(14f * TS, 21 * TS);
 
@@ -50,7 +49,7 @@ public class ArcadePacManXXL_GameRenderer implements GameRenderer {
     private TerrainColorScheme blinkingOnColors;
     private TerrainColorScheme blinkingOffColors;
 
-    public ArcadePacManXXL_GameRenderer(AssetStorage assets, GameSpriteSheet spriteSheet, Canvas canvas) {
+    public PacManXXL_GameRenderer(AssetStorage assets, GameSpriteSheet spriteSheet, Canvas canvas) {
         this.assets = assertNotNull(assets);
         this.canvas = assertNotNull(canvas);
         this.spriteSheet = assertNotNull(spriteSheet);

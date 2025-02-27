@@ -11,9 +11,9 @@ import de.amr.games.pacman.uilib.ResourceManager;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 
-public class ArcadePacManXXL_StartPage extends StackPane {
+public class PacManXXL_StartPage extends StackPane {
 
-    public ArcadePacManXXL_StartPage(PacManGamesUI ui) {
+    public PacManXXL_StartPage(PacManGamesUI ui) {
         ResourceManager rm = this::getClass;
         Flyer flyer = new Flyer(rm.loadImage("graphics/pacman_xxl_startpage.jpg"));
         flyer.setUserData(GameVariant.PACMAN_XXL);

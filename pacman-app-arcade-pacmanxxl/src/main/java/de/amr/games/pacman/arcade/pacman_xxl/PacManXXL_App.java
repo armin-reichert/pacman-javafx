@@ -4,10 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman_xxl;
 
-import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GameConfig3D;
-import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
-import de.amr.games.pacman.arcade.pacman_xxl.pacman.ArcadePacManXXL_PacMan_GameConfig3D;
-import de.amr.games.pacman.arcade.pacman_xxl.pacman.ArcadePacManXXL_PacMan_GameModel;
+import de.amr.games.pacman.arcade.pacman_xxl.pacman.PacManXXL_PacMan_GameConfig3D;
+import de.amr.games.pacman.arcade.pacman_xxl.pacman.PacManXXL_PacMan_GameModel;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.DashboardItemID;
@@ -23,7 +21,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 
-public class ArcadePacManXXL_App extends Application {
+public class PacManXXL_App extends Application {
 
     @Override
     public void init() {
@@ -33,7 +31,7 @@ public class ArcadePacManXXL_App extends Application {
             if (homeDir.mkdir()) {
                 Logger.info("Home directory '{}' created", homeDir);
             }
-            gameController.setGameModel(GameVariant.PACMAN_XXL, new ArcadePacManXXL_PacMan_GameModel());
+            gameController.setGameModel(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_GameModel());
             gameController.gameModels().forEach(gameModel -> gameModel.init(homeDir));
             gameController.selectGame(GameVariant.PACMAN_XXL);
         } catch (Exception x) {
@@ -46,7 +44,7 @@ public class ArcadePacManXXL_App extends Application {
         PacManGamesUI_3D ui = new PacManGamesUI_3D();
         ui.loadAssets();
 
-        ui.setGameConfiguration(GameVariant.PACMAN_XXL, new ArcadePacManXXL_PacMan_GameConfig3D(ui.assets()));
+        ui.setGameConfiguration(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_GameConfig3D(ui.assets()));
 
         ui.create(stage, initialSize());
         ui.addDashboardItem(DashboardItemID.README);

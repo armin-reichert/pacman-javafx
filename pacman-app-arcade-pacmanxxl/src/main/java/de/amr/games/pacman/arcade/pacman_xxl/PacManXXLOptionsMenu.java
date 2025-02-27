@@ -1,9 +1,9 @@
 package de.amr.games.pacman.arcade.pacman_xxl;
 
-import de.amr.games.pacman.arcade.pacman_xxl.ms_pacman.ArcadePacManXXL_MsPacMan_GameConfig3D;
-import de.amr.games.pacman.arcade.pacman_xxl.ms_pacman.ArcadePacManXXL_MsPacMan_GameModel;
-import de.amr.games.pacman.arcade.pacman_xxl.pacman.ArcadePacManXXL_PacMan_GameConfig3D;
-import de.amr.games.pacman.arcade.pacman_xxl.pacman.ArcadePacManXXL_PacMan_GameModel;
+import de.amr.games.pacman.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_GameConfig3D;
+import de.amr.games.pacman.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_GameModel;
+import de.amr.games.pacman.arcade.pacman_xxl.pacman.PacManXXL_PacMan_GameConfig3D;
+import de.amr.games.pacman.arcade.pacman_xxl.pacman.PacManXXL_PacMan_GameModel;
 import de.amr.games.pacman.model.CustomMapSelectionMode;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameRenderer;
@@ -69,13 +69,13 @@ public class PacManXXLOptionsMenu extends BorderPane {
             void onOptionSelected() {
                 switch (selectedOptionIndex) {
                     case 0 -> {
-                        ui.gameController().setGameModel(GameVariant.PACMAN_XXL, new ArcadePacManXXL_PacMan_GameModel());
-                        ui.setGameConfiguration(GameVariant.PACMAN_XXL, new ArcadePacManXXL_PacMan_GameConfig3D(ui.assets()));
+                        ui.gameController().setGameModel(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_GameModel());
+                        ui.setGameConfiguration(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_GameConfig3D(ui.assets()));
                     }
                     case 1 -> {
-                        ui.gameController().setGameModel(GameVariant.PACMAN_XXL, new ArcadePacManXXL_MsPacMan_GameModel());
+                        ui.gameController().setGameModel(GameVariant.PACMAN_XXL, new PacManXXL_MsPacMan_GameModel());
                         //TODO create configuration for Ms Pac-Man XXL
-                        ui.setGameConfiguration(GameVariant.PACMAN_XXL, new ArcadePacManXXL_MsPacMan_GameConfig3D(ui.assets()));
+                        ui.setGameConfiguration(GameVariant.PACMAN_XXL, new PacManXXL_MsPacMan_GameConfig3D(ui.assets()));
                     }
                 }
             }
