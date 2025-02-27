@@ -629,13 +629,7 @@ public class TileMapEditor {
                         Logger.error(x);
                     }
                 } else if (isWorldMapFile(file)) {
-                    try {
-                        WorldMap worldMap = new WorldMap(file);
-                        setWorldMap(worldMap);
-                    } catch (IOException x) {
-                        showMessage("Could not open world map file " + file, 3, MessageType.ERROR);
-                        Logger.error(x);
-                    }
+                    readMapFile(file);
                 }
             }
         });
