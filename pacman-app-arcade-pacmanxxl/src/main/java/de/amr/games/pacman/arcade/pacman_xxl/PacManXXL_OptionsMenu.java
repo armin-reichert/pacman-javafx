@@ -28,7 +28,7 @@ import java.util.List;
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 
-public class PacManXXLOptionsMenu extends BorderPane {
+public class PacManXXL_OptionsMenu extends BorderPane {
 
     private static abstract class MenuEntry {
         final String label;
@@ -49,7 +49,7 @@ public class PacManXXLOptionsMenu extends BorderPane {
     private final List<MenuEntry> entries = new ArrayList<>();
     private int selectedEntryIndex = 0;
 
-    public PacManXXLOptionsMenu(PacManGamesUI ui) {
+    public PacManXXL_OptionsMenu(PacManGamesUI ui) {
         ResourceManager rm = () -> GameRenderer.class;
         arcadeFont8 = rm.loadFont("fonts/emulogic.ttf", 8);
         arcadeFont12 = rm.loadFont("fonts/emulogic.ttf", 12);
