@@ -138,9 +138,7 @@ public class PacManXXL_OptionsMenu extends BorderPane {
                     if (entry.selectedOptionIndex == entry.options.size()) entry.selectedOptionIndex = 0;
                     entry.onOptionSelected();
                 }
-                case ENTER -> {
-                    ui.selectGamePage();
-                }
+                case ENTER -> ui.selectGamePage();
             }
         });
 
@@ -162,19 +160,6 @@ public class PacManXXL_OptionsMenu extends BorderPane {
 
         g.scale(scalingPy.doubleValue(), scalingPy.doubleValue());
         drawContent(g);
-
-        /*
-        g.setFill(Color.WHITE);
-        g.fillRect(0, 2*TS, getWidth(), TS);
-        g.setFill(Color.CORNFLOWERBLUE);
-        g.fillRect(0, 2*TS+1, getWidth(), TS-2);
-
-
-        g.setFill(Color.WHITE);
-        g.fillRect(0, 34*TS, getWidth(), TS);
-        g.setFill(Color.CORNFLOWERBLUE);
-        g.fillRect(0, 34*TS+1, getWidth(), TS-2);
-         */
 
         g.restore();
     }
