@@ -77,12 +77,15 @@ public class PacManXXL_OptionsMenu extends BorderPane {
                 switch (selectedOptionIndex) {
                     case 0 -> {
                         ui.gameController().setGameModel(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_GameModel());
-                        ui.setGameConfiguration(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_GameConfig3D(ui.assets()));
+                        var gameConfig = new PacManXXL_PacMan_GameConfig3D(ui.assets());
+                        ui.setGameConfiguration(GameVariant.PACMAN_XXL, gameConfig);
+                        ui.sound().setGameVariant(GameVariant.PACMAN_XXL, gameConfig.assetKeyPrefix());
                     }
                     case 1 -> {
                         ui.gameController().setGameModel(GameVariant.PACMAN_XXL, new PacManXXL_MsPacMan_GameModel());
-                        //TODO create configuration for Ms Pac-Man XXL
-                        ui.setGameConfiguration(GameVariant.PACMAN_XXL, new PacManXXL_MsPacMan_GameConfig3D(ui.assets()));
+                        var gameConfig = new PacManXXL_MsPacMan_GameConfig3D(ui.assets());
+                        ui.setGameConfiguration(GameVariant.PACMAN_XXL, gameConfig);
+                        ui.sound().setGameVariant(GameVariant.PACMAN_XXL, gameConfig.assetKeyPrefix());
                     }
                 }
             }
