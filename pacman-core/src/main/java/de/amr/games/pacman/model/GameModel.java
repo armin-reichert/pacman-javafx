@@ -10,7 +10,6 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.model.actors.*;
@@ -22,9 +21,6 @@ import java.net.URL;
 import java.util.*;
 
 import static de.amr.games.pacman.lib.Globals.assertNotNull;
-import static de.amr.games.pacman.lib.Globals.randomInt;
-import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
-import static de.amr.games.pacman.lib.tilemap.WorldMap.PROPERTY_COLOR_FOOD;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
 /**
@@ -157,9 +153,14 @@ public abstract class GameModel {
         publishGameEvent(GameEventType.CUSTOM_MAPS_CHANGED);
     }
 
-    protected void loadBuiltinMaps(String mapPattern, int count) {
-        for (int num = 1; num <= count; ++num) {
-            URL url = getClass().getResource(mapPattern.formatted(num));
+    /**
+     * @param mapPattern path (pattern) to access the map files inside resources folder,
+     *                   counting from 1, e.g. <code>"maps/masonic_%d.world"</code>
+     * @param mapCount number of maps to be loaded
+     */
+    protected void loadMapsFromModule(String mapPattern, int mapCount) {
+        for (int mapNumber = 1; mapNumber <= mapCount; ++mapNumber) {
+            URL url = getClass().getResource(mapPattern.formatted(mapNumber));
             if (url != null) {
                 try {
                     WorldMap worldMap = new WorldMap(url);
@@ -169,7 +170,7 @@ public abstract class GameModel {
                     Logger.error("Could not create world map, url={}", url);
                 }
             } else {
-                Logger.error("Could not load world map, pattern={}, number={}", mapPattern, num);
+                Logger.error("Could not load world map, pattern={}, number={}", mapPattern, mapNumber);
             }
         }
         Logger.info("{} maps loaded ({})", builtinMaps.size(), GameVariant.MS_PACMAN);

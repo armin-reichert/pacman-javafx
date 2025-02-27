@@ -115,7 +115,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         };
         huntingControl.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
 
-        loadBuiltinMaps("maps/mspacman_%d.world", 4);
+        loadMapsFromModule("maps/mspacman_%d.world", 4);
     }
 
     @Override

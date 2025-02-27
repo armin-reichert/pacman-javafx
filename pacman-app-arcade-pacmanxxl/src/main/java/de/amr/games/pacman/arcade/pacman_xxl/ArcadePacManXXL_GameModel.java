@@ -39,7 +39,7 @@ public class ArcadePacManXXL_GameModel extends ArcadePacMan_GameModel {
         super(userDir);
         scoreManager.setHighScoreFile(new File(userDir, "highscore-pacman_xxl.xml"));
         builtinMaps.clear(); // super class constructor adds Pac-Man Aracde map
-        loadBuiltinMaps("maps/masonic_%d.world", 8);
+        loadMapsFromModule("maps/masonic_%d.world", 8);
         updateCustomMaps();
         demoLevelSteering = new RuleBasedPacSteering(this); // super class uses predefined steering
     }
