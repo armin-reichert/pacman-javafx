@@ -11,6 +11,7 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameRenderer;
+import de.amr.games.pacman.ui2d.VectorGraphicsGameRenderer;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
 import de.amr.games.pacman.ui2d.scene.*;
@@ -142,7 +143,7 @@ public class PacManXXL_MsPacMan_GameConfig implements GameConfiguration {
 
     @Override
     public GameRenderer createRenderer(AssetStorage assets, Canvas canvas) {
-        return new PacManXXL_GameRenderer(assets, spriteSheet, canvas);
+        return new VectorGraphicsGameRenderer(assets, spriteSheet, canvas);
     }
 
     @Override

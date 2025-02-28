@@ -11,6 +11,7 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.VectorGraphicsGameRenderer;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.assets.WorldMapColoring;
@@ -128,8 +129,8 @@ public class PacManXXL_PacMan_GameConfig implements GameConfiguration {
     }
 
     @Override
-    public PacManXXL_GameRenderer createRenderer(AssetStorage assets, Canvas canvas) {
-        return new PacManXXL_GameRenderer(assets, spriteSheet, canvas);
+    public VectorGraphicsGameRenderer createRenderer(AssetStorage assets, Canvas canvas) {
+        return new VectorGraphicsGameRenderer(assets, spriteSheet, canvas);
     }
 
     @Override

@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.arcade.pacman_xxl;
+package de.amr.games.pacman.ui2d;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
@@ -11,7 +11,6 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.tilemap.rendering.FoodTileRenderer;
 import de.amr.games.pacman.tilemap.rendering.TerrainColorScheme;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer;
-import de.amr.games.pacman.ui2d.GameRenderer;
 import de.amr.games.pacman.ui2d.assets.AssetStorage;
 import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
 import javafx.beans.property.FloatProperty;
@@ -32,7 +31,7 @@ import static java.util.function.Predicate.not;
  *
  * @author Armin Reichert
  */
-public class PacManXXL_GameRenderer implements GameRenderer {
+public class VectorGraphicsGameRenderer implements GameRenderer {
 
     static final Vector2f DEFAULT_MESSAGE_ANCHOR_POSITION = new Vector2f(14f * TS, 21 * TS);
 
@@ -49,7 +48,7 @@ public class PacManXXL_GameRenderer implements GameRenderer {
     private TerrainColorScheme blinkingOnColors;
     private TerrainColorScheme blinkingOffColors;
 
-    public PacManXXL_GameRenderer(AssetStorage assets, GameSpriteSheet spriteSheet, Canvas canvas) {
+    public VectorGraphicsGameRenderer(AssetStorage assets, GameSpriteSheet spriteSheet, Canvas canvas) {
         this.assets = assertNotNull(assets);
         this.canvas = assertNotNull(canvas);
         this.spriteSheet = assertNotNull(spriteSheet);
