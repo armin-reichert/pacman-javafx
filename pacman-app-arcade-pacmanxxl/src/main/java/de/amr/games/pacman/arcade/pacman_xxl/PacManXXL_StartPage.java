@@ -35,6 +35,11 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
     }
 
     @Override
+    public void requestFocus() {
+        menu.requestFocus();
+    }
+
+    @Override
     public void start() {
     }
 

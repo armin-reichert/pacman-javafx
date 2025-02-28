@@ -56,6 +56,7 @@ public class StartPageCarousel extends Carousel implements GameActionProvider {
             context.selectGameVariant(variant);
             currentSlide().requestFocus();
         });
+
         bindGameActions();
     }
 
@@ -76,7 +77,7 @@ public class StartPageCarousel extends Carousel implements GameActionProvider {
             JoypadKeyBinding joypad = context.currentJoypadKeyBinding();
             bind(context -> showPreviousSlide(), joypad.key(NES_JoypadButton.BTN_LEFT));
             bind(context -> showNextSlide(), joypad.key(NES_JoypadButton.BTN_RIGHT));
-            bind(actionSelectGamePage, joypad.key(NES_JoypadButton.BTN_START));
+            //bind(actionSelectGamePage, joypad.key(NES_JoypadButton.BTN_START));
         } else {
             ArcadeKeyBinding arcadeKeys = context.arcadeKeys();
             bind(context -> showPreviousSlide(), arcadeKeys.keyLeft());

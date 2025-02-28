@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade.pacman_xxl;
 
 import de.amr.games.pacman.model.CustomMapSelectionMode;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameRenderer;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
@@ -76,7 +77,8 @@ public class PacManXXL_OptionsMenu extends BorderPane {
             void onOptionSelected() {
                 switch (selectedOptionIndex) {
                     case 0 -> {
-                        ui.gameController().setGameModel(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_GameModel());
+                        GameModel pacManGame = ui.gameController().gameModel(GameVariant.PACMAN);
+                        ui.gameController().setGameModel(GameVariant.PACMAN_XXL, pacManGame);
                         var pacManGameConfig = new PacManXXL_PacMan_GameConfig3D(ui.assets());
                         ui.setGameConfiguration(GameVariant.PACMAN_XXL, pacManGameConfig);
                         // clear sounds for XXL game variant first such that they are reloaded with Pac-Man sounds
@@ -84,7 +86,8 @@ public class PacManXXL_OptionsMenu extends BorderPane {
                         ui.sound().setGameVariant(GameVariant.PACMAN_XXL, pacManGameConfig.assetKeyPrefix());
                     }
                     case 1 -> {
-                        ui.gameController().setGameModel(GameVariant.PACMAN_XXL, new PacManXXL_MsPacMan_GameModel());
+                        GameModel msPacManGame = ui.gameController().gameModel(GameVariant.MS_PACMAN);
+                        ui.gameController().setGameModel(GameVariant.PACMAN_XXL, msPacManGame);
                         var msPacManGameConfig = new PacManXXL_MsPacMan_GameConfig3D(ui.assets());
                         ui.setGameConfiguration(GameVariant.PACMAN_XXL, msPacManGameConfig);
                         // clear sounds for XXL game variant first such that they are reloaded with Ms. Pac-Man sounds
@@ -116,7 +119,7 @@ public class PacManXXL_OptionsMenu extends BorderPane {
             }
         });
 
-        ui.getMainScene().addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+        addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
                 case DOWN -> {
                     selectedEntryIndex++;

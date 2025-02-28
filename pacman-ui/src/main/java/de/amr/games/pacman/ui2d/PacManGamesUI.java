@@ -369,7 +369,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     protected void handleGameVariantChange(GameVariant variant) {
         gameController().selectGame(variant);
-        gameController().restart(GameState.BOOT);
+        //gameController().restart(GameState.BOOT);
         Logger.info("Selected game variant: {}", variant);
 
         GameModel game = gameController().gameModel(variant);

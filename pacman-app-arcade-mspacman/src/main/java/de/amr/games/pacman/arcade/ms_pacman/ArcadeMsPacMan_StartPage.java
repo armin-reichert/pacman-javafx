@@ -39,7 +39,6 @@ public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage {
 
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
-                case ENTER -> ui.selectGamePage();
                 case DOWN -> flyer.nextFlyerPage();
                 case UP -> flyer.prevFlyerPage();
             }
