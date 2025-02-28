@@ -45,6 +45,7 @@ public abstract class GameModel {
     protected boolean            levelCounterEnabled;
     protected boolean            playing;
     protected boolean            simulateOverflowBug;
+    protected boolean            cutScenesEnabled;
     protected int                initialLives;
     protected int                lives;
     protected SimulationStepLog  eventLog;
@@ -198,6 +199,14 @@ public abstract class GameModel {
 
     public boolean isDemoLevel() {
         return demoLevel;
+    }
+
+    public void setCutScenesEnabled(boolean cutScenesEnabled) {
+        this.cutScenesEnabled = cutScenesEnabled;
+    }
+
+    public boolean isCutScenesEnabled() {
+        return cutScenesEnabled;
     }
 
     public HuntingTimer huntingControl() {

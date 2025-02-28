@@ -80,7 +80,7 @@ public class GameLevel {
         return numFlashes;
     }
 
-    public void setIntermissionNumber(int number) {
+    public void setCutSceneNumber(int number) {
         this.intermissionNumber = number;
     }
 

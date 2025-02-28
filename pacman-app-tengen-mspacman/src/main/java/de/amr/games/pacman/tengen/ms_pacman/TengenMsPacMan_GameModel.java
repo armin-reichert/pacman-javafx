@@ -437,7 +437,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         WorldMap worldMap = selectWorldMap(level.number);
         createWorldAndPopulation(worldMap);
         level.setNumFlashes(5); // TODO check this
-        level.setIntermissionNumber(intermissionNumberAfterLevel(level.number));
+        level.setCutSceneNumber(intermissionNumberAfterLevel(level.number));
         level.pac().setAutopilot(autopilot);
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         // Ghosts inside house start at bottom of house instead at middle
@@ -453,7 +453,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         WorldMap worldMap = mapManager.coloredWorldMap(mapCategory, level.number);
         createWorldAndPopulation(worldMap);
         level.setNumFlashes(5); // TODO check this
-        level.setIntermissionNumber(0);
+        level.setCutSceneNumber(0);
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         // ghosts inside house start at floor of house
         level.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST).forEach(ghost ->

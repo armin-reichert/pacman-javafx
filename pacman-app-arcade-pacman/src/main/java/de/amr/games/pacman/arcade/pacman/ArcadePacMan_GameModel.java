@@ -9,7 +9,6 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.HuntingTimer;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.NavPoint;
-import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.TerrainTiles;
@@ -114,6 +113,7 @@ public class ArcadePacMan_GameModel extends GameModel {
 
         initialLives = 3;
         simulateOverflowBug = true;
+        cutScenesEnabled = true;
         scoreManager.setHighScoreFile(new File(homeDir, "highscore-pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
         URL url = ResourceRoot.class.getResource("maps/pacman.world");
@@ -263,7 +263,7 @@ public class ArcadePacMan_GameModel extends GameModel {
         levelCounterEnabled = true;
 
         level.setNumFlashes(levelData(level.number).numFlashes());
-        level.setIntermissionNumber(intermissionNumberAfterLevel(level.number));
+        level.setCutSceneNumber(cutScenesEnabled ? cutSceneNumberAfterLevel(level.number) : 0);
 
         WorldMap worldMap = selectWorldMap(level.number);
 
@@ -278,7 +278,7 @@ public class ArcadePacMan_GameModel extends GameModel {
         level.ghosts().forEach(ghost -> ghost.setSpecialTerrainTiles(oneWayDownTiles));
     }
 
-    protected int intermissionNumberAfterLevel(int number) {
+    protected int cutSceneNumberAfterLevel(int number) {
         return switch (number) {
             case 2 -> 1;
             case 5 -> 2;
