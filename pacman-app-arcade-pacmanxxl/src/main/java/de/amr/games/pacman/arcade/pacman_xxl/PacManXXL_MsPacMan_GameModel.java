@@ -16,7 +16,6 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
     @Override
     public void init() {
         super.init();
-        mapSelectionMode = CustomMapSelectionMode.CUSTOM_MAPS_FIRST;
         demoLevelSteering = new RuleBasedPacSteering(this); // super class uses predefined steering
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-mspacman_xxl.xml"));
         builtinMaps.clear(); // super class constructor adds Aracde maps

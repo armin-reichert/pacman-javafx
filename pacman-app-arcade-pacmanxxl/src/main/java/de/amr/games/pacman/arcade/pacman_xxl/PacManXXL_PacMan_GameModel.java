@@ -38,7 +38,6 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
 
     public void init() {
         super.init();
-        mapSelectionMode = CustomMapSelectionMode.CUSTOM_MAPS_FIRST;
         demoLevelSteering = new RuleBasedPacSteering(this); // super class uses predefined steering
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-pacman_xxl.xml"));
         builtinMaps.clear(); // super class constructor adds Pac-Man Aracde map

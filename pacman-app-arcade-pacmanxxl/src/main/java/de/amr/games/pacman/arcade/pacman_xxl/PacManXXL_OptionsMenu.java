@@ -25,7 +25,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
@@ -39,9 +39,9 @@ public class PacManXXL_OptionsMenu extends BorderPane {
     private static abstract class MenuEntry {
         final String label;
         List<String> options;
-        int selectedOptionIndex;
-        void onSelected() {}
-        abstract void onOptionSelected();
+        int valueIndex;
+        void onSelect() {}
+        abstract void onValueChange();
         MenuEntry(String label) {
             this.label = label;
         }
@@ -52,99 +52,151 @@ public class PacManXXL_OptionsMenu extends BorderPane {
     private final Font arcadeFontNormal;
     private final Font arcadeFontBig;
 
-    private final List<MenuEntry> entries = new ArrayList<>();
+    private final MenuEntry entryGameVariant;
+    private final MenuEntry entryCutScenesEnabled;
+    private final MenuEntry entryCustomMapSelectionMode;
+    private final List<MenuEntry> entries;
     private int selectedEntryIndex = 0;
+
+    // state
+    private GameVariant stateGameVariant;
+    private boolean stateCutScenesEnabled;
+    private CustomMapSelectionMode stateCustomMapSelectionMode;
 
     public PacManXXL_OptionsMenu(PacManGamesUI ui) {
         setBackground(Background.EMPTY);
+        setCenter(canvas);
 
         ResourceManager rm = () -> GameRenderer.class;
         arcadeFontNormal = rm.loadFont("fonts/emulogic.ttf", 8);
         arcadeFontBig = rm.loadFont("fonts/emulogic.ttf", 20);
 
         scalingPy.bind(ui.getMainScene().heightProperty().multiply(HEIGHT_FRACTION).divide(UNSCALED_HEIGHT));
-
         canvas.widthProperty().bind(scalingPy.multiply(UNSCALED_HEIGHT));
         canvas.heightProperty().bind(scalingPy.multiply(UNSCALED_HEIGHT));
 
-        setCenter(canvas);
-
-        entries.add(new MenuEntry("GAME VARIANT") {
+        entryGameVariant = new MenuEntry("GAME VARIANT") {
             {
                 options = List.of("PAC-MAN", "MS.PAC-MAN");
-                selectedOptionIndex = 0;
             }
             @Override
-            void onOptionSelected() {
-                switch (selectedOptionIndex) {
-                    case 0 -> { // Pac-Man
-                        GameModel pacManGame = ui.gameController().gameModel(GameVariant.PACMAN);
-                        GameConfiguration pacManGameConfig = new PacManXXL_PacMan_GameConfig3D(ui.assets());
-                        ui.gameController().setGameModel(GameVariant.PACMAN_XXL, pacManGame);
-                        ui.setGameConfiguration(GameVariant.PACMAN_XXL, pacManGameConfig);
-                        // clear sounds first such that they are replaced with Pac-Man sounds
-                        ui.sound().clearSounds(GameVariant.PACMAN_XXL);
-                        ui.sound().useSoundsForGameVariant(GameVariant.PACMAN_XXL, pacManGameConfig.assetKeyPrefix());
-                    }
-                    case 1 -> { // Ms. Pac-Man
-                        GameModel msPacManGame = ui.gameController().gameModel(GameVariant.MS_PACMAN);
-                        GameConfiguration msPacManGameConfig = new PacManXXL_MsPacMan_GameConfig3D(ui.assets());
-                        ui.gameController().setGameModel(GameVariant.PACMAN_XXL, msPacManGame);
-                        ui.setGameConfiguration(GameVariant.PACMAN_XXL, msPacManGameConfig);
-                        // clear sounds first such that they are replaced with Ms. Pac-Man sounds
-                        ui.sound().clearSounds(GameVariant.PACMAN_XXL);
-                        ui.sound().useSoundsForGameVariant(GameVariant.PACMAN_XXL, msPacManGameConfig.assetKeyPrefix());
-                    }
+            void onValueChange() {
+                switch (valueIndex) {
+                    case 0 -> stateGameVariant = GameVariant.PACMAN;
+                    case 1 -> stateGameVariant = GameVariant.MS_PACMAN;
+                    default -> menuSelectionFailed();
                 }
             }
-        });
-        entries.add(new MenuEntry("CUT SCENES") {
+        };
+
+        entryCutScenesEnabled = new MenuEntry("CUT SCENES") {
             {
                 options = List.of("ENABLED", "DISABLED");
-                selectedOptionIndex = 1;
             }
             @Override
-            void onOptionSelected() {}
-        });
-        entries.add(new MenuEntry("CUSTOM MAPS") {
+            void onValueChange() {
+                stateCutScenesEnabled = valueIndex == 0;
+            }
+        };
+
+        entryCustomMapSelectionMode = new MenuEntry("CUSTOM MAPS") {
             {
                 options = List.of("CUSTOM-MAPS FIRST", "ALL MAPS RANDOMLY");
-                selectedOptionIndex = 1;
             }
             @Override
-            void onOptionSelected() {
-                switch (selectedOptionIndex) {
-                    case 0 -> ui.game().setMapSelectionMode(CustomMapSelectionMode.CUSTOM_MAPS_FIRST);
-                    case 1 -> ui.game().setMapSelectionMode(CustomMapSelectionMode.ALL_RANDOM);
+            void onValueChange() {
+                switch (valueIndex) {
+                    case 0 -> stateCustomMapSelectionMode = CustomMapSelectionMode.CUSTOM_MAPS_FIRST;
+                    case 1 -> stateCustomMapSelectionMode = CustomMapSelectionMode.ALL_RANDOM;
+                    default -> menuSelectionFailed();
                 }
             }
-        });
+        };
+
+        entries = Arrays.asList(entryGameVariant, entryCutScenesEnabled, entryCustomMapSelectionMode);
 
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
                 case DOWN -> {
                     selectedEntryIndex++;
                     if (selectedEntryIndex == entries.size()) selectedEntryIndex = 0;
-                    entries.get(selectedEntryIndex).onSelected();
+                    entries.get(selectedEntryIndex).onSelect();
                 }
                 case UP -> {
                     selectedEntryIndex--;
                     if (selectedEntryIndex == -1) selectedEntryIndex = entries.size() - 1;
-                    entries.get(selectedEntryIndex).onSelected();
+                    entries.get(selectedEntryIndex).onSelect();
                 }
                 case SPACE -> {
                     MenuEntry entry = entries.get(selectedEntryIndex);
-                    entry.selectedOptionIndex++;
-                    if (entry.selectedOptionIndex == entry.options.size()) entry.selectedOptionIndex = 0;
-                    entry.onOptionSelected();
+                    entry.valueIndex++;
+                    if (entry.valueIndex == entry.options.size()) entry.valueIndex = 0;
+                    entry.onValueChange();
                 }
-                case ENTER -> ui.selectGamePage();
+                case ENTER -> startConfiguredGame(ui);
             }
         });
 
         Timeline loop = new Timeline(new KeyFrame(Duration.millis(1000.0/ 60), e -> draw()));
         loop.setCycleCount(Animation.INDEFINITE);
         loop.play();
+    }
+
+    private void menuSelectionFailed() {
+        throw new IllegalArgumentException("Menu Selection failed");
+    }
+
+    public void initState(GameVariant gameVariant, boolean cutScenesEnabled, CustomMapSelectionMode customMapSelectionMode) {
+        stateGameVariant = gameVariant;
+        stateCutScenesEnabled = cutScenesEnabled;
+        stateCustomMapSelectionMode = customMapSelectionMode;
+
+        entryGameVariant.valueIndex = switch (gameVariant) {
+            case PACMAN -> 0;
+            case MS_PACMAN -> 1;
+            default -> throw new IllegalArgumentException();
+        };
+
+        entryCutScenesEnabled.valueIndex = cutScenesEnabled ? 0 : 1;
+
+        entryCustomMapSelectionMode.valueIndex = switch (customMapSelectionMode) {
+            case CUSTOM_MAPS_FIRST -> 0;
+            case ALL_RANDOM -> 1;
+            default -> throw new IllegalArgumentException();
+        };
+    }
+
+    private void startConfiguredGame(PacManGamesUI ui) {
+        switch (stateGameVariant) {
+            case PACMAN -> { // Pac-Man
+                GameModel pacManGame = new PacManXXL_PacMan_GameModel();
+                pacManGame.init();
+                pacManGame.setCutScenesEnabled(stateCutScenesEnabled);
+                pacManGame.setMapSelectionMode(stateCustomMapSelectionMode);
+                ui.gameController().setGameModel(GameVariant.PACMAN_XXL, pacManGame);
+
+                GameConfiguration pacManGameConfig = new PacManXXL_PacMan_GameConfig3D(ui.assets());
+                ui.setGameConfiguration(GameVariant.PACMAN_XXL, pacManGameConfig);
+                // clear sounds first such that they are replaced with Pac-Man sounds
+                ui.sound().clearSounds(GameVariant.PACMAN_XXL);
+                ui.sound().useSoundsForGameVariant(GameVariant.PACMAN_XXL, pacManGameConfig.assetKeyPrefix());
+                ui.selectGamePage();
+            }
+            case MS_PACMAN -> { // Ms. Pac-Man
+                GameModel msPacManGame = new PacManXXL_MsPacMan_GameModel();
+                msPacManGame.init();
+                msPacManGame.setCutScenesEnabled(stateCutScenesEnabled);
+                msPacManGame.setMapSelectionMode(stateCustomMapSelectionMode);
+                ui.gameController().setGameModel(GameVariant.PACMAN_XXL, msPacManGame);
+
+                GameConfiguration msPacManGameConfig = new PacManXXL_MsPacMan_GameConfig3D(ui.assets());
+                ui.setGameConfiguration(GameVariant.PACMAN_XXL, msPacManGameConfig);
+                // clear sounds first such that they are replaced with Ms. Pac-Man sounds
+                ui.sound().clearSounds(GameVariant.PACMAN_XXL);
+                ui.sound().useSoundsForGameVariant(GameVariant.PACMAN_XXL, msPacManGameConfig.assetKeyPrefix());
+                ui.selectGamePage();
+            }
+        }
     }
 
     private void draw() {
@@ -176,7 +228,7 @@ public class PacManXXL_OptionsMenu extends BorderPane {
             g.setFill(Color.YELLOW);
             g.fillText(entry.label, 3 * TS, y);
             g.setFill(Color.WHITE);
-            g.fillText(entry.options.get(entry.selectedOptionIndex), 17 * TS, y);
+            g.fillText(entry.options.get(entry.valueIndex), 17 * TS, y);
         }
 
         g.setFill(Color.YELLOW);

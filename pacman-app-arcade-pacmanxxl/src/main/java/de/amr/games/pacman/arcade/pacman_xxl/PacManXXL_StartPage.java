@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman_xxl;
 
+import de.amr.games.pacman.model.CustomMapSelectionMode;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.page.StartPage;
@@ -30,6 +31,8 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
         flyer.setLayoutMode(0, Flyer.LayoutMode.FILL);
 
         menu = new PacManXXL_OptionsMenu(ui);
+        //TODO when to init menu state?
+        menu.initState(GameVariant.MS_PACMAN, true, CustomMapSelectionMode.ALL_RANDOM);
 
         getChildren().addAll(flyer, menu);
     }

@@ -87,13 +87,14 @@ public class CutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        ArcadeMsPacMan_GameRenderer r = (ArcadeMsPacMan_GameRenderer) gr;
-        r.drawClapperBoard(clapAnimation, tiles2Px(3), tiles2Px(10));
-        r.drawAnimatedActor(msPacMan);
-        r.drawAnimatedActor(pacMan);
-        r.drawActorSprite(stork, storkAnimation.currentSprite());
-        r.drawActorSprite(bag, bagOpen ? ArcadeMsPacMan_SpriteSheet.JUNIOR_PAC_SPRITE : ArcadeMsPacMan_SpriteSheet.BLUE_BAG_SPRITE);
-        r.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
+        if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
+            r.drawClapperBoard(clapAnimation, tiles2Px(3), tiles2Px(10));
+        }
+        gr.drawAnimatedActor(msPacMan);
+        gr.drawAnimatedActor(pacMan);
+        gr.drawActorSprite(stork, storkAnimation.currentSprite());
+        gr.drawActorSprite(bag, bagOpen ? ArcadeMsPacMan_SpriteSheet.JUNIOR_PAC_SPRITE : ArcadeMsPacMan_SpriteSheet.BLUE_BAG_SPRITE);
+        gr.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
     }
 
     // scene controller state machine

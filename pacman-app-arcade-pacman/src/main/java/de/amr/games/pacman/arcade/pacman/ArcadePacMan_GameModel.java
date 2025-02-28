@@ -128,21 +128,6 @@ public class ArcadePacMan_GameModel extends GameModel {
         demoLevelSteering = new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE));
     }
 
-    private void createHuntingControl() {
-        huntingControl = new HuntingTimer() {
-            @Override
-            public long huntingTicks(int levelNumber, int phaseIndex) {
-                long ticks = switch (levelNumber) {
-                    case 1 -> HUNTING_TICKS_LEVEL_1[phaseIndex];
-                    case 2, 3, 4 -> HUNTING_TICKS_LEVEL_2_3_4[phaseIndex];
-                    default -> HUNTING_TICKS_LEVEL_5_PLUS[phaseIndex];
-                };
-                return ticks != -1 ? ticks : TickTimer.INDEFINITE;
-            }
-        };
-        huntingControl.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
-    }
-
     @Override
     public void resetEverything() {
         resetForStartingNewGame();
@@ -160,6 +145,21 @@ public class ArcadePacMan_GameModel extends GameModel {
         scoreManager.resetScore();
         gateKeeper.reset();
         huntingControl.reset();
+    }
+
+    private void createHuntingControl() {
+        huntingControl = new HuntingTimer() {
+            @Override
+            public long huntingTicks(int levelNumber, int phaseIndex) {
+                long ticks = switch (levelNumber) {
+                    case 1 -> HUNTING_TICKS_LEVEL_1[phaseIndex];
+                    case 2, 3, 4 -> HUNTING_TICKS_LEVEL_2_3_4[phaseIndex];
+                    default -> HUNTING_TICKS_LEVEL_5_PLUS[phaseIndex];
+                };
+                return ticks != -1 ? ticks : TickTimer.INDEFINITE;
+            }
+        };
+        huntingControl.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
     }
 
     protected LevelData levelData(int levelNumber) {
