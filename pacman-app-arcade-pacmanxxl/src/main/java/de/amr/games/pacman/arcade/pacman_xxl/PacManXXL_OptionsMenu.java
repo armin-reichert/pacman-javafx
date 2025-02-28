@@ -4,10 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman_xxl;
 
-import de.amr.games.pacman.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_GameConfig3D;
-import de.amr.games.pacman.arcade.pacman_xxl.ms_pacman.PacManXXL_MsPacMan_GameModel;
-import de.amr.games.pacman.arcade.pacman_xxl.pacman.PacManXXL_PacMan_GameConfig3D;
-import de.amr.games.pacman.arcade.pacman_xxl.pacman.PacManXXL_PacMan_GameModel;
 import de.amr.games.pacman.model.CustomMapSelectionMode;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameRenderer;
