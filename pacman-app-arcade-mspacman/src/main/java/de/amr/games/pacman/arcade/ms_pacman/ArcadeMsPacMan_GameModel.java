@@ -97,7 +97,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     private byte cruiseElroy; //TODO is this existing in Ms. Pac-Man at all?
 
-    protected ArcadeMsPacMan_MapSelector mapSelector;
+    protected ArcadeMsPacMan_MapSelector mapSelector = new ArcadeMsPacMan_MapSelector();
 
     @Override
     public void init() {
@@ -108,7 +108,6 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
 
-        mapSelector = new ArcadeMsPacMan_MapSelector();
         mapSelector.loadAllMaps(this);
 
         huntingControl = new HuntingTimer() {

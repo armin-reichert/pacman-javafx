@@ -30,7 +30,7 @@ import java.util.List;
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 
-public class PacManXXL_OptionsMenu extends BorderPane {
+public class PacManXXL_OptionsMenu {
 
     private static final double HEIGHT_FRACTION = 0.85;
     private static final double UNSCALED_HEIGHT = 36 * TS;
@@ -46,6 +46,7 @@ public class PacManXXL_OptionsMenu extends BorderPane {
         }
     }
 
+    private final BorderPane root = new BorderPane();
     private final Canvas canvas = new Canvas();
     private final FloatProperty scalingPy = new SimpleFloatProperty(2);
     private final Font arcadeFontNormal;
@@ -63,8 +64,8 @@ public class PacManXXL_OptionsMenu extends BorderPane {
     private CustomMapSelectionMode stateCustomMapSelectionMode;
 
     public PacManXXL_OptionsMenu(PacManGamesUI ui) {
-        setBackground(Background.EMPTY);
-        setCenter(canvas);
+        root.setBackground(Background.EMPTY);
+        root.setCenter(canvas);
 
         ResourceManager rm = () -> GameRenderer.class;
         arcadeFontNormal = rm.loadFont("fonts/emulogic.ttf", 8);
@@ -114,7 +115,7 @@ public class PacManXXL_OptionsMenu extends BorderPane {
 
         entries = Arrays.asList(entryGameVariant, entryCutScenesEnabled, entryCustomMapSelectionMode);
 
-        addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+        root.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
                 case DOWN -> {
                     selectedEntryIndex++;
@@ -139,6 +140,10 @@ public class PacManXXL_OptionsMenu extends BorderPane {
         Timeline loop = new Timeline(new KeyFrame(Duration.millis(1000.0/ 60), e -> draw()));
         loop.setCycleCount(Animation.INDEFINITE);
         loop.play();
+    }
+
+    public BorderPane root() {
+        return root;
     }
 
     private void menuSelectionFailed() {
@@ -168,11 +173,12 @@ public class PacManXXL_OptionsMenu extends BorderPane {
     private void startConfiguredGame(PacManGamesUI ui) {
         switch (stateGameVariant) {
             case PACMAN -> { // Pac-Man
-                PacManXXL_PacMan_GameModel pacManGame = new PacManXXL_PacMan_GameModel();
+                PacManXXL_PacMan_GameModel pacManGame = ui.gameController().gameModel(GameVariant.PACMAN_XXL);
                 pacManGame.init();
                 pacManGame.setCutScenesEnabled(stateCutScenesEnabled);
                 pacManGame.mapSelector().setMapSelectionMode(stateCustomMapSelectionMode);
-                ui.gameController().setGameModel(GameVariant.PACMAN_XXL, pacManGame);
+                pacManGame.mapSelector().updateCustomMaps(pacManGame);
+                ui.gameController().selectGame(GameVariant.PACMAN_XXL);
 
                 GameConfiguration pacManGameConfig = new PacManXXL_PacMan_GameConfig3D(ui.assets());
                 ui.setGameConfiguration(GameVariant.PACMAN_XXL, pacManGameConfig);
@@ -182,14 +188,15 @@ public class PacManXXL_OptionsMenu extends BorderPane {
                 ui.selectGamePage();
             }
             case MS_PACMAN -> { // Ms. Pac-Man
-                PacManXXL_MsPacMan_GameModel msPacManGame = new PacManXXL_MsPacMan_GameModel();
+                PacManXXL_MsPacMan_GameModel msPacManGame = ui.gameController().gameModel(GameVariant.MS_PACMAN_XXL);
                 msPacManGame.init();
                 msPacManGame.setCutScenesEnabled(stateCutScenesEnabled);
                 msPacManGame.mapSelector().setMapSelectionMode(stateCustomMapSelectionMode);
-                ui.gameController().setGameModel(GameVariant.PACMAN_XXL, msPacManGame);
+                msPacManGame.mapSelector().updateCustomMaps(msPacManGame);
+                ui.gameController().selectGame(GameVariant.MS_PACMAN_XXL);
 
                 GameConfiguration msPacManGameConfig = new PacManXXL_MsPacMan_GameConfig3D(ui.assets());
-                ui.setGameConfiguration(GameVariant.PACMAN_XXL, msPacManGameConfig);
+                ui.setGameConfiguration(GameVariant.MS_PACMAN_XXL, msPacManGameConfig);
                 // clear sounds first such that they are replaced with Ms. Pac-Man sounds
                 ui.sound().clearSounds(GameVariant.PACMAN_XXL);
                 ui.sound().useSoundsForGameVariant(GameVariant.PACMAN_XXL, msPacManGameConfig.assetKeyPrefix());

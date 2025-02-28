@@ -152,9 +152,8 @@ public class GameLevel3D extends Group {
     private Pac3D createPac3D(Pac pac) {
         String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
         Pac3D pac3D = switch (context.gameConfiguration().gameVariant()) {
-            case MS_PACMAN, MS_PACMAN_TENGEN -> new MsPacMan3D(context.gameVariant(), pac, PAC_SIZE, context.assets(), assetKeyPrefix);
-            case PACMAN -> new PacMan3D(context.gameVariant(), pac, PAC_SIZE, context.assets(), assetKeyPrefix);
-            case PACMAN_XXL -> throw new IllegalArgumentException();
+            case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL -> new MsPacMan3D(context.gameVariant(), pac, PAC_SIZE, context.assets(), assetKeyPrefix);
+            case PACMAN, PACMAN_XXL -> new PacMan3D(context.gameVariant(), pac, PAC_SIZE, context.assets(), assetKeyPrefix);
         };
         pac3D.shape3D().light().setColor(context.assets().color(assetKeyPrefix + ".pac.color.head").desaturate());
         pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);

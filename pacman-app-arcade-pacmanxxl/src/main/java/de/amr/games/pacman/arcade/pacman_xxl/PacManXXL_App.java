@@ -25,6 +25,7 @@ public class PacManXXL_App extends Application {
         GameController gameController = GameController.it();
         try {
             gameController.setGameModel(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_GameModel());
+            gameController.setGameModel(GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_GameModel());
             gameController.gameModels().forEach(GameModel::init);
             gameController.selectGame(GameVariant.PACMAN_XXL);
         } catch (Exception x) {
@@ -38,8 +39,10 @@ public class PacManXXL_App extends Application {
         ui.loadAssets();
 
         ui.setGameConfiguration(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_GameConfig3D(ui.assets()));
+        ui.setGameConfiguration(GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_GameConfig3D(ui.assets()));
 
         ui.create(stage, initialSize());
+
         ui.addDashboardItem(DashboardItemID.README);
         ui.addDashboardItem(DashboardItemID.GENERAL);
         ui.addDashboardItem(DashboardItemID.GAME_CONTROL);

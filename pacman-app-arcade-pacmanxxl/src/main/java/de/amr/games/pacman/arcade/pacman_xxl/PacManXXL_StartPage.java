@@ -4,13 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman_xxl;
 
-import de.amr.games.pacman.model.CustomMapSelectionMode;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.uilib.Flyer;
 import de.amr.games.pacman.uilib.ResourceManager;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
@@ -18,10 +16,13 @@ import javafx.scene.paint.Color;
 
 public class PacManXXL_StartPage extends StackPane implements StartPage {
 
+    private final PacManGamesUI ui;
     private final Flyer flyer;
     private final PacManXXL_OptionsMenu menu;
 
     public PacManXXL_StartPage(PacManGamesUI ui) {
+        this.ui = ui;
+
         setBackground(Background.fill(Color.BLACK));
 
         ResourceManager rm = this::getClass;
@@ -31,19 +32,36 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
         flyer.setLayoutMode(0, Flyer.LayoutMode.FILL);
 
         menu = new PacManXXL_OptionsMenu(ui);
-        //TODO when to init menu state?
-        menu.initState(GameVariant.MS_PACMAN, true, CustomMapSelectionMode.ALL_RANDOM);
-
-        getChildren().addAll(flyer, menu);
+        getChildren().addAll(flyer, menu.root());
     }
 
     @Override
     public void requestFocus() {
-        menu.requestFocus();
+        menu.root().requestFocus();
+        initMenu();
     }
 
     @Override
-    public void start() {
+    public void start() {}
+
+    private void initMenu() {
+        switch (ui.gameController().currentGameVariant()) {
+            case MS_PACMAN_XXL -> {
+                PacManXXL_MsPacMan_GameModel game = ui.game();
+                menu.initState(
+                        ui.gameController().currentGameVariant(),
+                        game.isCutScenesEnabled(),
+                        game.mapSelector().mapSelectionMode());
+            }
+            case PACMAN_XXL -> {
+                PacManXXL_PacMan_GameModel game = ui.game();
+                menu.initState(
+                        ui.gameController().currentGameVariant(),
+                        game.isCutScenesEnabled(),
+                        game.mapSelector().mapSelectionMode());
+            }
+            default -> throw new IllegalStateException();
+        }
     }
 
     @Override

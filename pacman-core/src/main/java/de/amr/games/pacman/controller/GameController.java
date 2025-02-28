@@ -6,7 +6,6 @@ package de.amr.games.pacman.controller;
 
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.event.GameStateChangeEvent;
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -66,13 +65,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     public void setGameModel(GameVariant variant, GameModel gameModel) {
         assertNotNull(variant);
         assertNotNull(gameModel);
-        GameModel oldValue = gameModelsByVariant.put(variant, gameModel);
-        if (oldValue == currentGame) {
-            //TODO this does not work yet
-            Logger.warn("Current game model is getting replaced");
-//            currentGame = gameModel;
-//            currentGame.publishGameEvent(GameEventType.GAME_VARIANT_CHANGED);
-        }
+        gameModelsByVariant.put(variant, gameModel);
     }
 
     @SuppressWarnings("unchecked")

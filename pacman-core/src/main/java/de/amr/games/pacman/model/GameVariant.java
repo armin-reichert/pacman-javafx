@@ -10,5 +10,5 @@ package de.amr.games.pacman.model;
  * @author Armin Reichert
  */
 public enum GameVariant {
-    MS_PACMAN, PACMAN, PACMAN_XXL, MS_PACMAN_TENGEN;
+    PACMAN, MS_PACMAN, MS_PACMAN_TENGEN, PACMAN_XXL, MS_PACMAN_XXL;
 }

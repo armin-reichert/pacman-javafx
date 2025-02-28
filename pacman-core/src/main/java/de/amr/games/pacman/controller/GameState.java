@@ -372,7 +372,7 @@ public enum GameState implements FsmState<GameModel> {
                 case MS_PACMAN -> 25;
                 case MS_PACMAN_TENGEN -> 32;
                 case PACMAN -> 21;
-                case PACMAN_XXL -> 16;
+                case PACMAN_XXL, MS_PACMAN_XXL -> 16;
             };
             timer.restartIndefinitely();
             game.resetForStartingNewGame();
@@ -460,7 +460,7 @@ public enum GameState implements FsmState<GameModel> {
                 case MS_PACMAN -> 17;
                 case MS_PACMAN_TENGEN -> 32;
                 case PACMAN -> 21;
-                case PACMAN_XXL -> 16;
+                case PACMAN_XXL, MS_PACMAN_XXL -> 16;
             };
             timer.restartSeconds(TEASER_TIME_SECONDS);
             game.resetForStartingNewGame();

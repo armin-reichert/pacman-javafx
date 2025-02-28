@@ -10,6 +10,7 @@ import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.games.pacman.arcade.pacman.ArcadePacMan_GameConfig3D;
 import de.amr.games.pacman.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.games.pacman.arcade.pacman.ArcadePacMan_StartPage;
+import de.amr.games.pacman.arcade.pacman_xxl.PacManXXL_MsPacMan_GameModel;
 import de.amr.games.pacman.arcade.pacman_xxl.PacManXXL_PacMan_GameConfig3D;
 import de.amr.games.pacman.arcade.pacman_xxl.PacManXXL_PacMan_GameModel;
 import de.amr.games.pacman.arcade.pacman_xxl.PacManXXL_StartPage;
@@ -62,6 +63,7 @@ public class PacManGames3dApp extends Application {
         gameController.setGameModel(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
         gameController.setGameModel(GameVariant.PACMAN,           new ArcadePacMan_GameModel());
         gameController.setGameModel(GameVariant.PACMAN_XXL,       new PacManXXL_PacMan_GameModel());
+        gameController.setGameModel(GameVariant.MS_PACMAN_XXL,    new PacManXXL_MsPacMan_GameModel());
 
         gameController.gameModels().forEach(GameModel::init);
         gameController.selectGame(GameVariant.PACMAN);

@@ -107,7 +107,7 @@ public class ArcadePacMan_GameModel extends GameModel {
     protected Steering demoLevelSteering;
     protected byte cruiseElroy;
 
-    protected MapSelector mapSelector;
+    protected MapSelector mapSelector = new ArcadePacMan_MapSelector();;
 
     @Override
     public void init() {
@@ -117,7 +117,6 @@ public class ArcadePacMan_GameModel extends GameModel {
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
 
-        mapSelector = new ArcadePacMan_MapSelector();
         mapSelector.loadAllMaps(this);
 
         createHuntingControl();
