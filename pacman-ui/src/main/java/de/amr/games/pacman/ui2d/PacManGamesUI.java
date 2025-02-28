@@ -386,7 +386,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             stage.getIcons().setAll(icon);
         }
         try {
-            sound().setGameVariant(variant, gameConfiguration().assetKeyPrefix());
+            sound().useSoundsForGameVariant(variant, gameConfiguration().assetKeyPrefix());
         } catch (Exception x) {
             Logger.error(x);
         }

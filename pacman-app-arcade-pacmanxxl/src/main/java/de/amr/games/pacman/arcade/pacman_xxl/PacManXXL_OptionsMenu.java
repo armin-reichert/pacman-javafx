@@ -9,6 +9,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameRenderer;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
+import de.amr.games.pacman.ui2d.scene.GameConfiguration;
 import de.amr.games.pacman.uilib.ResourceManager;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -76,23 +77,23 @@ public class PacManXXL_OptionsMenu extends BorderPane {
             @Override
             void onOptionSelected() {
                 switch (selectedOptionIndex) {
-                    case 0 -> {
+                    case 0 -> { // Pac-Man
                         GameModel pacManGame = ui.gameController().gameModel(GameVariant.PACMAN);
+                        GameConfiguration pacManGameConfig = new PacManXXL_PacMan_GameConfig3D(ui.assets());
                         ui.gameController().setGameModel(GameVariant.PACMAN_XXL, pacManGame);
-                        var pacManGameConfig = new PacManXXL_PacMan_GameConfig3D(ui.assets());
                         ui.setGameConfiguration(GameVariant.PACMAN_XXL, pacManGameConfig);
-                        // clear sounds for XXL game variant first such that they are reloaded with Pac-Man sounds
+                        // clear sounds first such that they are replaced with Pac-Man sounds
                         ui.sound().clearSounds(GameVariant.PACMAN_XXL);
-                        ui.sound().setGameVariant(GameVariant.PACMAN_XXL, pacManGameConfig.assetKeyPrefix());
+                        ui.sound().useSoundsForGameVariant(GameVariant.PACMAN_XXL, pacManGameConfig.assetKeyPrefix());
                     }
-                    case 1 -> {
+                    case 1 -> { // Ms. Pac-Man
                         GameModel msPacManGame = ui.gameController().gameModel(GameVariant.MS_PACMAN);
+                        GameConfiguration msPacManGameConfig = new PacManXXL_MsPacMan_GameConfig3D(ui.assets());
                         ui.gameController().setGameModel(GameVariant.PACMAN_XXL, msPacManGame);
-                        var msPacManGameConfig = new PacManXXL_MsPacMan_GameConfig3D(ui.assets());
                         ui.setGameConfiguration(GameVariant.PACMAN_XXL, msPacManGameConfig);
-                        // clear sounds for XXL game variant first such that they are reloaded with Ms. Pac-Man sounds
+                        // clear sounds first such that they are replaced with Ms. Pac-Man sounds
                         ui.sound().clearSounds(GameVariant.PACMAN_XXL);
-                        ui.sound().setGameVariant(GameVariant.PACMAN_XXL, msPacManGameConfig.assetKeyPrefix());
+                        ui.sound().useSoundsForGameVariant(GameVariant.PACMAN_XXL, msPacManGameConfig.assetKeyPrefix());
                     }
                 }
             }

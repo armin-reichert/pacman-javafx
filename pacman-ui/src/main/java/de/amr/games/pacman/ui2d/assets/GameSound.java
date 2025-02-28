@@ -18,6 +18,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import static de.amr.games.pacman.lib.Globals.assertNotNull;
+
 /**
  * @author Armin Reichert
  */
@@ -71,26 +73,28 @@ public class GameSound {
         soundsByGameVariant.get(gameVariant).clear();
     }
 
-    //TODO check volume settings
-    public void setGameVariant(GameVariant gameVariant, String assetKeyPrefix) {
-        this.gameVariant = Globals.assertNotNull(gameVariant);
-        this.assetKeyPrefix = Globals.assertNotNull(assetKeyPrefix);
+    public void useSoundsForGameVariant(GameVariant gameVariant, String assetKeyPrefix) {
+        this.gameVariant = assertNotNull(gameVariant);
+        this.assetKeyPrefix = assertNotNull(assetKeyPrefix);
         if (soundsByGameVariant.get(gameVariant).isEmpty()) {
-            Map<String, MediaPlayer> sounds = new HashMap<>();
-            soundsByGameVariant.put(gameVariant, sounds);
-            sounds.put("game_over",      makeSound("game_over", 1, false));
-            sounds.put("game_ready",     makeSound("game_ready", 1, false));
-            sounds.put("ghost_returns",  makeSound("ghost_returns", 1, true));
-            sounds.put("level_complete", makeSound("level_complete", 1, false));
-            sounds.put("pacman_munch",   makeSound("pacman_munch", 1, true));
-            sounds.put("pacman_death",   makeSound("pacman_death", 1, false));
-            sounds.put("pacman_power",   makeSound("pacman_power", 1, true));
-            MediaPlayer bouncePlayer =   makeSound("bonus_bouncing", 1, true);
-            if (gameVariant == GameVariant.MS_PACMAN_TENGEN && bouncePlayer != null) {
-                bouncePlayer.setRate(0.25); //TODO why is this needed?
+            var soundMap = new HashMap<String, MediaPlayer>();
+            soundMap.put("game_over",      makeSound("game_over", 1, false));
+            soundMap.put("game_ready",     makeSound("game_ready", 1, false));
+            soundMap.put("ghost_returns",  makeSound("ghost_returns", 1, true));
+            soundMap.put("level_complete", makeSound("level_complete", 1, false));
+            soundMap.put("pacman_munch",   makeSound("pacman_munch", 1, true));
+            soundMap.put("pacman_death",   makeSound("pacman_death", 1, false));
+            soundMap.put("pacman_power",   makeSound("pacman_power", 1, true));
+            soundMap.put("bonus_bouncing", makeSound("bonus_bouncing", 1, true));
+
+            //TODO check this
+            MediaPlayer bounceSound = soundMap.get("bonus_bouncing");
+            if (bounceSound != null && gameVariant == GameVariant.MS_PACMAN_TENGEN) {
+                bounceSound.setRate(0.25);
             }
-            sounds.put("bonus_bouncing", bouncePlayer);
-            Logger.info("Created sounds for game variant {}", gameVariant);
+
+            soundsByGameVariant.put(gameVariant, soundMap);
+            Logger.info("Created sound map for game variant {}", gameVariant);
         }
         siren = null;
         logPlayerStatus();
@@ -169,7 +173,7 @@ public class GameSound {
     }
 
     public void playClipIfEnabled(String keySuffix, double volume) {
-        Globals.assertNotNull(keySuffix);
+        assertNotNull(keySuffix);
         String assetKey = assetKeyPrefix + ".audio." + keySuffix;
         AudioClip clip = assets.get(assetKey);
         if (clip == null) {
@@ -185,7 +189,7 @@ public class GameSound {
     // Public API
 
     public void setAssets(AssetStorage assets) {
-        this.assets = Globals.assertNotNull(assets);
+        this.assets = assertNotNull(assets);
     }
 
     public BooleanProperty enabledProperty() {
