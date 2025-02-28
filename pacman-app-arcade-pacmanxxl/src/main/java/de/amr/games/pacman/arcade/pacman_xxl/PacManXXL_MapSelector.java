@@ -36,7 +36,7 @@ public class PacManXXL_MapSelector implements MapSelector {
 
     private List<WorldMap> builtinMaps;
     private final Map<File, WorldMap> customMapsByFile = new HashMap<>();
-    private CustomMapSelectionMode mapSelectionMode = CustomMapSelectionMode.NO_CUSTOM_MAPS;
+    private CustomMapSelectionMode mapSelectionMode = CustomMapSelectionMode.CUSTOM_MAPS_FIRST;
 
     @Override
     public void loadAllMaps(GameModel game) {

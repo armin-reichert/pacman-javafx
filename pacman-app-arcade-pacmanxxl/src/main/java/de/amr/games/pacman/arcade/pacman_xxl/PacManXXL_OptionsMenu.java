@@ -156,8 +156,8 @@ public class PacManXXL_OptionsMenu {
         stateCustomMapSelectionMode = customMapSelectionMode;
 
         entryGameVariant.valueIndex = switch (gameVariant) {
-            case PACMAN -> 0;
-            case MS_PACMAN -> 1;
+            case PACMAN_XXL -> 0;
+            case MS_PACMAN_XXL -> 1;
             default -> throw new IllegalArgumentException();
         };
 
@@ -166,7 +166,7 @@ public class PacManXXL_OptionsMenu {
         entryCustomMapSelectionMode.valueIndex = switch (customMapSelectionMode) {
             case CUSTOM_MAPS_FIRST -> 0;
             case ALL_RANDOM -> 1;
-            default -> throw new IllegalArgumentException();
+            case NO_CUSTOM_MAPS -> 1; // TODO
         };
     }
 

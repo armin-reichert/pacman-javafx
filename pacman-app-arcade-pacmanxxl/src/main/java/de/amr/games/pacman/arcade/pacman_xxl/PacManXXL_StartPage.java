@@ -13,6 +13,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import org.tinylog.Logger;
 
 public class PacManXXL_StartPage extends StackPane implements StartPage {
 
@@ -62,6 +63,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
             }
             default -> throw new IllegalStateException();
         }
+        Logger.info("Menu initialized");
     }
 
     @Override
