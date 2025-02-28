@@ -34,7 +34,9 @@ public class TengenMsPacMan_StartPage extends StackPane implements StartPage {
         flyer.setUserData(GameVariant.MS_PACMAN_TENGEN);
         flyer.selectFlyerPage(0);
 
-        getChildren().add(flyer);
+        Node startButton = startButton();
+        getChildren().addAll(flyer, startButton);
+
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
                 case ENTER -> ui.selectGamePage();
@@ -44,14 +46,13 @@ public class TengenMsPacMan_StartPage extends StackPane implements StartPage {
         });
     }
 
-    @Override
-    public Optional<Node> startButton() {
+    private Node startButton() {
         ResourceManager rm = () -> PacManGamesUI.class;
         Font startButtonFont = rm.loadFont("fonts/emulogic.ttf", 30);
         Node btnStart = Ufx.createFancyButton(startButtonFont, ui.locText("play_button"), ui::selectGamePage);
         btnStart.setTranslateY(-50);
         StackPane.setAlignment(btnStart, Pos.BOTTOM_CENTER);
-        return Optional.of(btnStart);
+        return btnStart;
     }
 
     @Override

@@ -19,12 +19,11 @@ public class Carousel extends StackPane {
         protected void invalidated() {
             int index = get();
             if (index >= 0 && index < slides.size()) {
-                getChildren().setAll(slides.get(index), buttonsLayer);
+                getChildren().setAll(slides.get(index), btnPrevSlide, btnNextSlide);
             }
         }
     };
 
-    protected final StackPane buttonsLayer = new StackPane();
     protected final List<Node> slides = new ArrayList<>();
     protected final Button btnPrevSlide;
     protected final Button btnNextSlide;
@@ -44,9 +43,6 @@ public class Carousel extends StackPane {
         btnNextSlide = createCarouselButton(arrowRightImage);
         btnNextSlide.setOnAction(e -> showNextSlide());
         StackPane.setAlignment(btnNextSlide, Pos.CENTER_RIGHT);
-
-        buttonsLayer.getChildren().setAll(btnPrevSlide, btnNextSlide);
-        getChildren().add(buttonsLayer);
     }
 
     private Button createCarouselButton(Image image) {
@@ -117,9 +113,9 @@ public class Carousel extends StackPane {
     private void updateUI() {
         Node currentSlide = currentSlide();
         if (currentSlide != null) {
-            getChildren().setAll(currentSlide(), buttonsLayer);
+            getChildren().setAll(currentSlide(), btnPrevSlide, btnNextSlide);
         } else {
-            getChildren().setAll(buttonsLayer);
+            getChildren().setAll(btnPrevSlide, btnNextSlide);
         }
     }
 }

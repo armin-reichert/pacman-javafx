@@ -36,7 +36,8 @@ public class ArcadePacMan_StartPage extends StackPane implements StartPage {
         flyer.setUserData(GameVariant.PACMAN);
         flyer.selectFlyerPage(0);
 
-        getChildren().setAll(flyer);
+        Node startButton = startButton();
+        getChildren().addAll(flyer, startButton);
 
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
@@ -47,14 +48,13 @@ public class ArcadePacMan_StartPage extends StackPane implements StartPage {
         });
     }
 
-    @Override
-    public Optional<Node> startButton() {
+    private Node startButton() {
         ResourceManager rm = () -> PacManGamesUI.class;
         Font startButtonFont = rm.loadFont("fonts/emulogic.ttf", 30);
         Node btnStart = Ufx.createFancyButton(startButtonFont, ui.locText("play_button"), ui::selectGamePage);
         btnStart.setTranslateY(-50);
         StackPane.setAlignment(btnStart, Pos.BOTTOM_CENTER);
-        return Optional.of(btnStart);
+        return btnStart;
     }
 
     @Override

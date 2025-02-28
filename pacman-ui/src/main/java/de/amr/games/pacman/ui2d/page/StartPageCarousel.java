@@ -57,19 +57,6 @@ public class StartPageCarousel extends Carousel implements GameActionProvider {
             currentSlide().requestFocus();
         });
         bindGameActions();
-
-        //TODO this crap is used because carousel has a button layer and buttons added to the slide layer are
-        // not sensitive to mouse clicks!
-        selectedIndexProperty().addListener((py, ov, selection) -> {
-            var buttons = buttonsLayer.getChildren();
-            var buttonsToRemove = buttons.stream()
-                .filter(node -> "start_button".equals(node.getUserData())).toList();
-            buttonsToRemove.forEach(buttons::remove);
-            startPage(selection.intValue()).startButton().ifPresent(newStartButton -> {
-                newStartButton.setUserData("start_button");
-                buttons.add(newStartButton);
-            });
-        });
     }
 
     private StartPage startPage(int index) {
