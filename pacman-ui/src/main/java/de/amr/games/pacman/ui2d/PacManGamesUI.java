@@ -604,10 +604,10 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         //TODO check this
         gamePage.dashboardLayer().hideDashboard();
         sceneRoot.setBackground(assets.get("scene_background"));
+        selectPage(startPagesCarousel);
         if (startPagesCarousel.currentSlide() != null) {
             startPagesCarousel.currentSlide().requestFocus();
         }
-        selectPage(startPagesCarousel);
     }
 
     @Override
