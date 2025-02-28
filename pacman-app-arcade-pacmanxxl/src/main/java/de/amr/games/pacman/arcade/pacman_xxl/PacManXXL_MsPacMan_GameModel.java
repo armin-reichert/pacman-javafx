@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade.pacman_xxl;
 
 import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
-import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.CustomMapSelectionMode;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 
@@ -13,18 +12,18 @@ import java.io.File;
 
 public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
 
+    private PacManXXL_MapSelector mapSelector;
+
     @Override
     public void init() {
         super.init();
         demoLevelSteering = new RuleBasedPacSteering(this); // super class uses predefined steering
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-mspacman_xxl.xml"));
-        builtinMaps.clear(); // super class constructor adds Aracde maps
-        loadMapsFromModule("maps/masonic_%d.world", 8);
-        updateCustomMaps();
+        mapSelector = new PacManXXL_MapSelector();
+        mapSelector.loadAllMaps(this);
     }
 
-    @Override
-    protected WorldMap selectWorldMap(int levelNumber) {
-        return super.selectWorldMap(levelNumber);
+    public PacManXXL_MapSelector mapSelector() {
+        return mapSelector;
     }
 }

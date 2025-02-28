@@ -36,7 +36,6 @@ public enum GameState implements FsmState<GameModel> {
         public void onEnter(GameModel game) {
             timer.restartIndefinitely();
             game.resetEverything();
-            game.updateCustomMaps();
         }
 
         @Override

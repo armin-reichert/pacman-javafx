@@ -2,10 +2,13 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.tengen.ms_pacman.maps;
+package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.MapSelector;
+import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
 import org.tinylog.Logger;
 
 import java.io.IOException;
@@ -18,15 +21,30 @@ import java.util.Map;
 import static de.amr.games.pacman.lib.nes.NES_ColorScheme.*;
 import static de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory.*;
 
-public class MapManager {
+public class TengenMsPacMan_MapSelector implements MapSelector {
+
+    private static final String MAPS_ROOT = "/de/amr/games/pacman/tengen/ms_pacman/maps/";
 
     private final Map<MapCategory, List<WorldMap>> mapRepository = new EnumMap<>(MapCategory.class);
 
-    public MapManager(String mapsRoot) {
-        mapRepository.put(MapCategory.ARCADE,  createMaps(mapsRoot + "arcade%d.world", 4));
-        mapRepository.put(MapCategory.MINI,    createMaps(mapsRoot + "mini%d.world", 6));
-        mapRepository.put(MapCategory.BIG,     createMaps(mapsRoot + "big%02d.world", 11));
-        mapRepository.put(MapCategory.STRANGE, createMaps(mapsRoot + "strange%02d.world", 15));
+    public TengenMsPacMan_MapSelector() {}
+
+    @Override
+    public void loadAllMaps(GameModel game) {
+        mapRepository.put(MapCategory.ARCADE,  createMaps(MAPS_ROOT + "arcade%d.world", 4));
+        mapRepository.put(MapCategory.MINI,    createMaps(MAPS_ROOT + "mini%d.world", 6));
+        mapRepository.put(MapCategory.BIG,     createMaps(MAPS_ROOT + "big%02d.world", 11));
+        mapRepository.put(MapCategory.STRANGE, createMaps(MAPS_ROOT + "strange%02d.world", 15));
+    }
+
+    @Override
+    public WorldMap selectWorldMap(int levelNumber) {
+        //TODO what?
+        return coloredWorldMap(ARCADE, levelNumber);
+    }
+
+    public WorldMap selectWorldMap(MapCategory mapCategory, int levelNumber) {
+        return coloredWorldMap(mapCategory, levelNumber);
     }
 
     public WorldMap coloredWorldMap(MapCategory mapCategory, int levelNumber) {

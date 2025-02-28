@@ -10,15 +10,14 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.model.actors.*;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.assertNotNull;
 import static de.amr.games.pacman.model.actors.GhostState.*;
@@ -66,10 +65,6 @@ public abstract class GameModel {
     protected boolean            demoLevel;
     protected GameLevel          level;
 
-    protected final List<WorldMap> builtinMaps = new ArrayList<>();
-    protected final Map<File, WorldMap> customMapsByFile = new HashMap<>();
-    private CustomMapSelectionMode mapSelectionMode = CustomMapSelectionMode.NO_CUSTOM_MAPS;
-
     public abstract void           init();
     public abstract void           resetEverything();
     public abstract void           resetForStartingNewGame();
@@ -94,7 +89,6 @@ public abstract class GameModel {
     public abstract long           gameOverStateTicks();
     public abstract void           setDemoLevelBehavior();
 
-    protected abstract WorldMap    selectWorldMap(int levelNumber);
     protected abstract void        configureNormalLevel();
     protected abstract void        configureDemoLevel();
     protected abstract boolean     isPacManKillingIgnored();
@@ -104,75 +98,6 @@ public abstract class GameModel {
 
     protected abstract void        onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
     protected abstract void        onGhostReleased(Ghost ghost);
-
-    public void setMapSelectionMode(CustomMapSelectionMode mapSelectionMode) {
-        this.mapSelectionMode = assertNotNull(mapSelectionMode);
-        updateCustomMaps();
-        Logger.info("{}: Map selection mode is now {}", getClass().getSimpleName(), mapSelectionMode);
-    }
-
-    public CustomMapSelectionMode mapSelectionMode() {
-        return mapSelectionMode;
-    }
-
-    public Map<File, WorldMap> customMapsByFile() {
-        return customMapsByFile;
-    }
-
-    public List<WorldMap> customMapsSortedByFile() {
-        return customMapsByFile.keySet().stream().sorted().map(customMapsByFile::get).toList();
-    }
-
-    public void updateCustomMaps() {
-        if (mapSelectionMode == CustomMapSelectionMode.NO_CUSTOM_MAPS) {
-            return;
-        }
-        File[] mapFiles = CUSTOM_MAP_DIR.listFiles((dir, name) -> name.endsWith(".world"));
-        if (mapFiles == null) {
-            Logger.error("An error occurred accessing custom map directory {}", CUSTOM_MAP_DIR);
-            return;
-        }
-        if (mapFiles.length == 0) {
-            Logger.info("No custom maps found");
-        } else {
-            Logger.info("{} custom map(s) found", mapFiles.length);
-        }
-        customMapsByFile.clear();
-        for (File mapFile : mapFiles) {
-            try {
-                WorldMap worldMap = new WorldMap(mapFile);
-                customMapsByFile.put(mapFile, worldMap);
-                Logger.info("Custom map loaded from file {}", mapFile);
-            } catch (IOException x) {
-                Logger.error(x);
-                Logger.error("Could not read custom map from file {}", mapFile);
-            }
-        }
-        publishGameEvent(GameEventType.CUSTOM_MAPS_CHANGED);
-    }
-
-    /**
-     * @param mapPattern path (pattern) to access the map files inside resources folder,
-     *                   counting from 1, e.g. <code>"maps/masonic_%d.world"</code>
-     * @param mapCount number of maps to be loaded
-     */
-    protected void loadMapsFromModule(String mapPattern, int mapCount) {
-        for (int mapNumber = 1; mapNumber <= mapCount; ++mapNumber) {
-            URL url = getClass().getResource(mapPattern.formatted(mapNumber));
-            if (url != null) {
-                try {
-                    WorldMap worldMap = new WorldMap(url);
-                    builtinMaps.add(worldMap);
-                } catch (IOException x) {
-                    Logger.error(x);
-                    Logger.error("Could not create world map, url={}", url);
-                }
-            } else {
-                Logger.error("Could not load world map, pattern={}, number={}", mapPattern, mapNumber);
-            }
-        }
-        Logger.info("{} maps loaded ({})", builtinMaps.size(), getClass().getSimpleName());
-    }
 
     public int lastLevelNumber() { return Integer.MAX_VALUE; }
 

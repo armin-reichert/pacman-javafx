@@ -18,7 +18,6 @@ import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import de.amr.games.pacman.steering.Steering;
 import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
-import de.amr.games.pacman.tengen.ms_pacman.maps.MapManager;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -91,7 +90,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
     private static final String HIGH_SCORE_FILENAME = "highscore-ms_pacman_tengen.xml";
-    private static final String MAPS_ROOT = "/de/amr/games/pacman/tengen/ms_pacman/maps/";
 
     private static int intermissionNumberAfterLevel(int number) {
         return switch (number) {
@@ -102,7 +100,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         };
     }
 
-    private MapManager mapManager;
+    private TengenMsPacMan_MapSelector mapManager;
     private MapCategory mapCategory;
     private Difficulty difficulty;
     private PacBooster pacBooster;
@@ -131,8 +129,9 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     public void init() {
         scoreManager.setHighScoreFile(new File(HOME_DIR, HIGH_SCORE_FILENAME));
+        mapManager = new TengenMsPacMan_MapSelector();
+        mapManager.loadAllMaps(this);
         huntingControl = new MsPacManGameTengenHuntingControl();
-        mapManager = new MapManager(MAPS_ROOT);
         setInitialLives(3);
         simulateOverflowBug = false; //TODO check this
         resetForStartingNewGame();
@@ -427,13 +426,8 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    protected WorldMap selectWorldMap(int levelNumber) {
-        return mapManager.coloredWorldMap(mapCategory, level.number);
-    }
-
-    @Override
     public void configureNormalLevel() {
-        WorldMap worldMap = selectWorldMap(level.number);
+        WorldMap worldMap = mapManager.selectWorldMap(mapCategory, level.number);
         createWorldAndPopulation(worldMap);
         level.setNumFlashes(5); // TODO check this
         level.setCutSceneNumber(intermissionNumberAfterLevel(level.number));

@@ -97,6 +97,8 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     private byte cruiseElroy; //TODO is this existing in Ms. Pac-Man at all?
 
+    protected ArcadeMsPacMan_MapSelector mapSelector;
+
     @Override
     public void init() {
         initialLives = 3;
@@ -106,6 +108,9 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
 
+        mapSelector = new ArcadeMsPacMan_MapSelector();
+        mapSelector.loadAllMaps(this);
+
         huntingControl = new HuntingTimer() {
             @Override
             public long huntingTicks(int levelNumber, int phaseIndex) {
@@ -114,8 +119,6 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
             }
         };
         huntingControl.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
-
-        loadMapsFromModule("maps/mspacman_%d.world", 4);
     }
 
     @Override
@@ -207,7 +210,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         levelCounterEnabled = level.number < 8;
         level.setCutSceneNumber(cutScenesEnabled ? cutSceneNumberAfterLevel(level.number) : 0);
         level.setNumFlashes(levelData(level.number).numFlashes());
-        WorldMap worldMap = selectWorldMap(level.number);
+        WorldMap worldMap = mapSelector.selectWorldMap(level.number);
         createWorldAndPopulation(worldMap);
         level.pac().setAutopilot(autopilot);
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
@@ -219,38 +222,6 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         levelCounterEnabled = false;
         setDemoLevelBehavior();
         demoLevelSteering.init();
-    }
-
-    /**
-     * <p>In Ms. Pac-Man, there are 4 maps and 6 color schemes.
-     * </p>
-     * <ul>
-     * <li>Levels 1-2: (1, 1): pink wall fill, white dots
-     * <li>Levels 3-5: (2, 2)): light blue wall fill, yellow dots
-     * <li>Levels 6-9: (3, 3): orange wall fill, red dots
-     * <li>Levels 10-13: (4, 4): blue wall fill, white dots
-     * </ul>
-     * For level 14 and later, (map, color_scheme) alternates every 4th level between (3, 5) and (4, 6):
-     * <ul>
-     * <li>(3, 5): pink wall fill, cyan dots
-     * <li>(4, 6): orange wall fill, white dots
-     * </ul>
-     * <p>
-     */
-    @Override
-    protected WorldMap selectWorldMap(int levelNumber) {
-        final int mapNumber = switch (levelNumber) {
-            case 1, 2 -> 1;
-            case 3, 4, 5 -> 2;
-            case 6, 7, 8, 9 -> 3;
-            case 10, 11, 12, 13 -> 4;
-            default -> (levelNumber - 14) % 8 < 4 ? 3 : 4;
-        };
-        int colorMapIndex = levelNumber < 14 ? mapNumber - 1 : mapNumber + 2 - 1;
-        WorldMap worldMap = new WorldMap(builtinMaps.get(mapNumber - 1));
-        worldMap.setConfigValue("mapNumber", mapNumber);
-        worldMap.setConfigValue("colorMapIndex", colorMapIndex);
-        return worldMap;
     }
 
     private int cutSceneNumberAfterLevel(int number) {

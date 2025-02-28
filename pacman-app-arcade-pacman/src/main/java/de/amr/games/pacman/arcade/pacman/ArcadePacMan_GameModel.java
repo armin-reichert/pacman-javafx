@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman;
 
-import de.amr.games.pacman.arcade.ResourceRoot;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.HuntingTimer;
 import de.amr.games.pacman.event.GameEventType;
@@ -17,6 +16,7 @@ import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.LevelData;
+import de.amr.games.pacman.model.MapSelector;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.actors.StaticBonus;
@@ -26,7 +26,6 @@ import de.amr.games.pacman.steering.Steering;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.net.URL;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -108,6 +107,8 @@ public class ArcadePacMan_GameModel extends GameModel {
     protected Steering demoLevelSteering;
     protected byte cruiseElroy;
 
+    protected MapSelector mapSelector;
+
     @Override
     public void init() {
         initialLives = 3;
@@ -115,15 +116,10 @@ public class ArcadePacMan_GameModel extends GameModel {
         cutScenesEnabled = true;
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
-        URL url = ResourceRoot.class.getResource("maps/pacman.world");
-        try {
-            var map = new WorldMap(url);
-            map.setConfigValue("mapNumber", 1);
-            map.setConfigValue("colorMapIndex", 0);
-            builtinMaps.add(map);
-        } catch (Exception x) {
-            throw new IllegalStateException(x);
-        }
+
+        mapSelector = new ArcadePacMan_MapSelector();
+        mapSelector.loadAllMaps(this);
+
         createHuntingControl();
         demoLevelSteering = new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE));
     }
@@ -253,18 +249,13 @@ public class ArcadePacMan_GameModel extends GameModel {
     }
 
     @Override
-    protected WorldMap selectWorldMap(int levelNumber) {
-        return builtinMaps.getFirst();
-    }
-
-    @Override
     public void configureNormalLevel() {
         levelCounterEnabled = true;
 
         level.setNumFlashes(levelData(level.number).numFlashes());
         level.setCutSceneNumber(cutScenesEnabled ? cutSceneNumberAfterLevel(level.number) : 0);
 
-        WorldMap worldMap = selectWorldMap(level.number);
+        WorldMap worldMap = mapSelector.selectWorldMap(level.number);
 
         populateLevel(worldMap);
         level.pac().setAutopilot(autopilot);

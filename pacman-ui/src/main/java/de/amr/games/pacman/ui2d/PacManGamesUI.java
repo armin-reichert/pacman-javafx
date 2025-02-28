@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui2d;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
-import de.amr.games.pacman.model.CustomMapSelectionMode;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.action.GameAction;
@@ -355,6 +354,9 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         gamePage.dashboardLayer().addDashboardItem(title, infoBox);
     }
 
+    //TODO reimplement
+
+    /*
     private void onCustomMapSelectionModeChange(GameModel game) {
         // We cannot use data binding to the game model classes because the game models are in project
         // "pacman-core" which has no dependency to JavaFX data binding.
@@ -366,6 +368,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             gamePage.setActionToOpenEditor(null);
         }
     }
+     */
 
     protected void handleGameVariantChange(GameVariant variant) {
         gameController().selectGame(variant);
@@ -375,9 +378,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         GameModel game = gameController().gameModel(variant);
         game.addGameEventListener(this);
         game.addGameEventListener(gamePage.dashboardLayer().pipView());
-
-        // TODO: this does not belongs here
-        onCustomMapSelectionModeChange(game);
 
         String assetKeyPrefix = gameConfiguration().assetKeyPrefix();
         sceneRoot.setBackground(assets.get("scene_background"));
@@ -641,9 +641,10 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         }
     }
 
+    //TODO reimplement
+    /*
     @Override
     public void onCustomMapsChanged(GameEvent e) {
-        //TODO find a cleaner solution
         gamePage.dashboardLayer().dashboardEntries().stream()
             .map(DashboardLayer.DashboardEntry::infoBox)
             .filter(infoBox -> infoBox instanceof InfoBoxCustomMaps)
@@ -651,6 +652,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             .ifPresent(infoBox -> ((InfoBoxCustomMaps)infoBox).updateTableView());
         Logger.info("Custom maps table updated");
     }
+     */
 
     @Override
     public void onGameVariantChanged(GameEvent event) {

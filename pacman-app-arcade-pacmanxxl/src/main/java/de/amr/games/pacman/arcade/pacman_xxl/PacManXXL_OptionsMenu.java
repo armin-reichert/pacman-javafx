@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade.pacman_xxl;
 
 import de.amr.games.pacman.model.CustomMapSelectionMode;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameRenderer;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
@@ -169,10 +168,10 @@ public class PacManXXL_OptionsMenu extends BorderPane {
     private void startConfiguredGame(PacManGamesUI ui) {
         switch (stateGameVariant) {
             case PACMAN -> { // Pac-Man
-                GameModel pacManGame = new PacManXXL_PacMan_GameModel();
+                PacManXXL_PacMan_GameModel pacManGame = new PacManXXL_PacMan_GameModel();
                 pacManGame.init();
                 pacManGame.setCutScenesEnabled(stateCutScenesEnabled);
-                pacManGame.setMapSelectionMode(stateCustomMapSelectionMode);
+                pacManGame.mapSelector().setMapSelectionMode(stateCustomMapSelectionMode);
                 ui.gameController().setGameModel(GameVariant.PACMAN_XXL, pacManGame);
 
                 GameConfiguration pacManGameConfig = new PacManXXL_PacMan_GameConfig3D(ui.assets());
@@ -183,10 +182,10 @@ public class PacManXXL_OptionsMenu extends BorderPane {
                 ui.selectGamePage();
             }
             case MS_PACMAN -> { // Ms. Pac-Man
-                GameModel msPacManGame = new PacManXXL_MsPacMan_GameModel();
+                PacManXXL_MsPacMan_GameModel msPacManGame = new PacManXXL_MsPacMan_GameModel();
                 msPacManGame.init();
                 msPacManGame.setCutScenesEnabled(stateCutScenesEnabled);
-                msPacManGame.setMapSelectionMode(stateCustomMapSelectionMode);
+                msPacManGame.mapSelector().setMapSelectionMode(stateCustomMapSelectionMode);
                 ui.gameController().setGameModel(GameVariant.PACMAN_XXL, msPacManGame);
 
                 GameConfiguration msPacManGameConfig = new PacManXXL_MsPacMan_GameConfig3D(ui.assets());

@@ -4,20 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.dashboard;
 
-import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.CustomMapSelectionMode;
 import de.amr.games.pacman.ui2d.GameContext;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import org.tinylog.Logger;
-
-import java.io.File;
-import java.util.Map;
 
 import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_MAP_SELECTION_MODE;
 
@@ -60,15 +53,10 @@ public class InfoBoxCustomMaps extends InfoBox {
             column.setSortable(false);
             column.setReorderable(false);
         });
-
-        expandedProperty().addListener((py,ov,nv) -> {
-            if (nv) {
-                updateTableView();
-                Logger.info("Custom map table updated");
-            }
-        });
     }
 
+    //TODO reimplement and this time right
+    /*
     public void updateTableView() {
         ObservableList<MapInfo> items = FXCollections.observableArrayList();
         Map<File, WorldMap> customMaps = context.game().customMapsByFile();
@@ -78,4 +66,5 @@ public class InfoBoxCustomMaps extends InfoBox {
         }
         mapTable.setItems(items);
     }
+     */
 }
