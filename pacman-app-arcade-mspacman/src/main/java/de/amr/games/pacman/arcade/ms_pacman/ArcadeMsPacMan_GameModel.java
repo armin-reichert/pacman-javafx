@@ -99,8 +99,6 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     @Override
     public void init() {
-        super.init();
-
         initialLives = 3;
         simulateOverflowBug = true;
         cutScenesEnabled = true;

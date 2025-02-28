@@ -68,8 +68,9 @@ public abstract class GameModel {
 
     protected final List<WorldMap> builtinMaps = new ArrayList<>();
     protected final Map<File, WorldMap> customMapsByFile = new HashMap<>();
-    protected CustomMapSelectionMode mapSelectionMode;
+    protected CustomMapSelectionMode mapSelectionMode = CustomMapSelectionMode.NO_CUSTOM_MAPS;
 
+    public abstract void           init();
     public abstract void           resetEverything();
     public abstract void           resetForStartingNewGame();
     public abstract boolean        canStartNewGame();
@@ -103,10 +104,6 @@ public abstract class GameModel {
 
     protected abstract void        onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
     protected abstract void        onGhostReleased(Ghost ghost);
-
-    public void init() {
-        mapSelectionMode = CustomMapSelectionMode.NO_CUSTOM_MAPS;
-    }
 
     public void setMapSelectionMode(CustomMapSelectionMode mapSelectionMode) {
         this.mapSelectionMode = assertNotNull(mapSelectionMode);
