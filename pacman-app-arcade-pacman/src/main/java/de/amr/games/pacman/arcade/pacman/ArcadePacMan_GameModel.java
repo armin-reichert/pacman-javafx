@@ -108,13 +108,14 @@ public class ArcadePacMan_GameModel extends GameModel {
     protected Steering demoLevelSteering;
     protected byte cruiseElroy;
 
-    public void init(File homeDir) {
-        super.init(homeDir);
+    @Override
+    public void init() {
+        super.init();
 
         initialLives = 3;
         simulateOverflowBug = true;
         cutScenesEnabled = true;
-        scoreManager.setHighScoreFile(new File(homeDir, "highscore-pacman.xml"));
+        scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
         URL url = ResourceRoot.class.getResource("maps/pacman.world");
         try {

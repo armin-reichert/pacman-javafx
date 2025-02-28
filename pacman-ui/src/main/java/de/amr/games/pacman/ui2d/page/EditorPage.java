@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.tilemap.editor.TileMapEditor;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.action.GameAction;
@@ -19,7 +20,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -51,10 +51,9 @@ public class EditorPage extends BorderPane implements GameActionProvider {
     private final TileMapEditor editor;
     private Consumer<TileMapEditor> closeAction = editor -> {};
 
-    public EditorPage(Stage stage, GameContext context, File customMapDir) {
+    public EditorPage(Stage stage, GameContext context) {
         assertNotNull(stage);
         assertNotNull(context);
-        assertNotNull(customMapDir);
 
         // without this, Pac-Man wallpaper shines through
         setBackground(Ufx.coloredBackground(Color.web("#dddddd"))); // JavaFX default grey
@@ -76,7 +75,7 @@ public class EditorPage extends BorderPane implements GameActionProvider {
         setCenter(editor.getContentPane());
         setTop(editor.getMenuBar());
 
-        editor.init(customMapDir);
+        editor.init(GameModel.CUSTOM_MAP_DIR);
     }
 
     @Override

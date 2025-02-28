@@ -30,6 +30,20 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  */
 public abstract class GameModel {
 
+    public static final File HOME_DIR;
+    public static final File CUSTOM_MAP_DIR;
+
+    static {
+        HOME_DIR = new File(System.getProperty("user.home"), ".pacmanfx");
+        if (HOME_DIR.mkdir()) {
+            Logger.info("Home directory '{}' created", HOME_DIR);
+        }
+        CUSTOM_MAP_DIR = new File(HOME_DIR, "maps");
+        if (CUSTOM_MAP_DIR.mkdir()) {
+            Logger.info("Created custom map directory {}", CUSTOM_MAP_DIR);
+        }
+    }
+
     // Ghost IDs
     public static final byte RED_GHOST = 0, PINK_GHOST = 1, CYAN_GHOST = 2, ORANGE_GHOST = 3;
 
@@ -52,8 +66,6 @@ public abstract class GameModel {
     protected boolean            demoLevel;
     protected GameLevel          level;
 
-    protected File homeDir;
-    protected File customMapDir;
     protected final List<WorldMap> builtinMaps = new ArrayList<>();
     protected final Map<File, WorldMap> customMapsByFile = new HashMap<>();
     protected CustomMapSelectionMode mapSelectionMode;
@@ -92,15 +104,7 @@ public abstract class GameModel {
     protected abstract void        onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
     protected abstract void        onGhostReleased(Ghost ghost);
 
-    public void init(File homeDir) {
-        this.homeDir = assertNotNull(homeDir);
-        if (!homeDir.isDirectory()) {
-            throw new IllegalArgumentException("Home directory is invalid");
-        }
-        customMapDir = new File(homeDir, "maps");
-        if (customMapDir.mkdir()) {
-            Logger.info("Created custom map directory {}", customMapDir);
-        }
+    public void init() {
         mapSelectionMode = CustomMapSelectionMode.NO_CUSTOM_MAPS;
     }
 
@@ -112,10 +116,6 @@ public abstract class GameModel {
 
     public CustomMapSelectionMode mapSelectionMode() {
         return mapSelectionMode;
-    }
-
-    public File customMapDir() {
-        return customMapDir;
     }
 
     public Map<File, WorldMap> customMapsByFile() {
@@ -130,19 +130,9 @@ public abstract class GameModel {
         if (mapSelectionMode == CustomMapSelectionMode.NO_CUSTOM_MAPS) {
             return;
         }
-        if (customMapDir.exists() && customMapDir.isDirectory()) {
-            Logger.info("Custom map directory found: '{}'", customMapDir);
-        } else {
-            if (customMapDir.mkdirs()) {
-                Logger.info("Custom map directory created: '{}'", customMapDir);
-            } else {
-                Logger.error("Custom map directory could not be created: '{}'", customMapDir);
-                return;
-            }
-        }
-        File[] mapFiles = customMapDir.listFiles((dir, name) -> name.endsWith(".world"));
+        File[] mapFiles = CUSTOM_MAP_DIR.listFiles((dir, name) -> name.endsWith(".world"));
         if (mapFiles == null) {
-            Logger.error("An error occurred accessing custom map directory {}", customMapDir);
+            Logger.error("An error occurred accessing custom map directory {}", CUSTOM_MAP_DIR);
             return;
         }
         if (mapFiles.length == 0) {

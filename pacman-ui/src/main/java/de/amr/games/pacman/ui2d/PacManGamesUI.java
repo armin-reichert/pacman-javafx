@@ -317,7 +317,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     private EditorPage getOrCreateEditorPage() {
         if (editorPage == null) {
-            editorPage = new EditorPage(stage, this, game().customMapDir());
+            editorPage = new EditorPage(stage, this);
             editorPage.setCloseAction(editor -> {
                 editor.executeWithCheckForUnsavedChanges(this::bindStageTitle);
                 editor.stop();

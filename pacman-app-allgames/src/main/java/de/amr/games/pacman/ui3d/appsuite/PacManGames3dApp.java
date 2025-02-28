@@ -14,6 +14,7 @@ import de.amr.games.pacman.arcade.pacman_xxl.PacManXXL_PacMan_GameConfig3D;
 import de.amr.games.pacman.arcade.pacman_xxl.PacManXXL_PacMan_GameModel;
 import de.amr.games.pacman.arcade.pacman_xxl.PacManXXL_StartPage;
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfig3D;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
@@ -35,7 +36,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.io.File;
 import java.util.Map;
 
 /**
@@ -58,17 +58,12 @@ public class PacManGames3dApp extends Application {
     @Override
     public void init() {
         GameController gameController = GameController.it();
-        File homeDir = new File(System.getProperty("user.home"), ".pacmanfx");
-        if (homeDir.mkdir()) {
-            Logger.info("Home directory '{}' created", homeDir);
-        }
         gameController.setGameModel(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_GameModel());
         gameController.setGameModel(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
         gameController.setGameModel(GameVariant.PACMAN,           new ArcadePacMan_GameModel());
         gameController.setGameModel(GameVariant.PACMAN_XXL,       new PacManXXL_PacMan_GameModel());
 
-        gameController.gameModels().forEach(gameModel -> gameModel.init(homeDir));
-
+        gameController.gameModels().forEach(GameModel::init);
         gameController.selectGame(GameVariant.PACMAN);
 
         GlobalProperties3d.PY_3D_ENABLED.set(false);

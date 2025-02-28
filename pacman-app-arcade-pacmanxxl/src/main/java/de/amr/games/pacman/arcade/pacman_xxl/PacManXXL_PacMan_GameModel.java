@@ -36,11 +36,11 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         Map.of("fill", "#5036d9", "stroke", "#5f8bcf", "door", "#fcb5ff", "pellet", "#feb8ae")
     );
 
-    public void init(File homeDir) {
-        super.init(homeDir);
+    public void init() {
+        super.init();
         mapSelectionMode = CustomMapSelectionMode.CUSTOM_MAPS_FIRST;
         demoLevelSteering = new RuleBasedPacSteering(this); // super class uses predefined steering
-        scoreManager.setHighScoreFile(new File(homeDir, "highscore-pacman_xxl.xml"));
+        scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-pacman_xxl.xml"));
         builtinMaps.clear(); // super class constructor adds Pac-Man Aracde map
         loadMapsFromModule("maps/masonic_%d.world", 8);
         updateCustomMaps();

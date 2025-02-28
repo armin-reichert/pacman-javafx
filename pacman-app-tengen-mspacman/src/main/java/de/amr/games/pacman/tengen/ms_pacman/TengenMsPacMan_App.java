@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.DashboardItemID;
 import de.amr.games.pacman.ui3d.PacManGamesUI_3D;
@@ -16,8 +17,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.io.File;
-
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfig.NES_SIZE;
 
 public class TengenMsPacMan_App extends Application {
@@ -26,12 +25,8 @@ public class TengenMsPacMan_App extends Application {
     public void init() {
         GameController gameController = GameController.it();
         try {
-            File homeDir = new File(System.getProperty("user.home"), ".pacmanfx");
-            if (homeDir.mkdir()) {
-                Logger.info("Home directory '{}' created", homeDir);
-            }
             gameController.setGameModel(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
-            gameController.gameModels().forEach(gameModel -> gameModel.init(homeDir));
+            gameController.gameModels().forEach(GameModel::init);
             gameController.selectGame(GameVariant.MS_PACMAN_TENGEN);
         } catch (Exception x) {
             Logger.error(x);
