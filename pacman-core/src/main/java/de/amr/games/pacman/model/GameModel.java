@@ -68,7 +68,7 @@ public abstract class GameModel {
 
     protected final List<WorldMap> builtinMaps = new ArrayList<>();
     protected final Map<File, WorldMap> customMapsByFile = new HashMap<>();
-    protected CustomMapSelectionMode mapSelectionMode = CustomMapSelectionMode.NO_CUSTOM_MAPS;
+    private CustomMapSelectionMode mapSelectionMode = CustomMapSelectionMode.NO_CUSTOM_MAPS;
 
     public abstract void           init();
     public abstract void           resetEverything();

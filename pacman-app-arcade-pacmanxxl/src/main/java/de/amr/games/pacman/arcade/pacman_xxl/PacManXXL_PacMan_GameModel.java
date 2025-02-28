@@ -47,7 +47,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
 
     @Override
     protected WorldMap selectWorldMap(int levelNumber) {
-        WorldMap template = switch (mapSelectionMode) {
+        WorldMap template = switch (mapSelectionMode()) {
             case NO_CUSTOM_MAPS ->
                     levelNumber <= builtinMaps.size()
                             ? builtinMaps.get(levelNumber - 1)

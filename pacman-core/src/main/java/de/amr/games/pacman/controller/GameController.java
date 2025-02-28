@@ -16,6 +16,8 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.lib.Globals.assertNotNull;
+
 /**
  * Controller (in the sense of MVC) for all game variants.
  * <p>
@@ -62,17 +64,25 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     }
 
     public void setGameModel(GameVariant variant, GameModel gameModel) {
-        gameModelsByVariant.put(variant, gameModel);
+        assertNotNull(variant);
+        assertNotNull(gameModel);
+        GameModel oldValue = gameModelsByVariant.put(variant, gameModel);
+        if (oldValue == currentGame) {
+            //TODO this does not work yet
+            Logger.warn("Current game model is getting replaced");
+//            currentGame = gameModel;
+//            currentGame.publishGameEvent(GameEventType.GAME_VARIANT_CHANGED);
+        }
     }
 
     @SuppressWarnings("unchecked")
     public <T extends GameModel> T gameModel(GameVariant variant) {
-        Globals.assertNotNull(variant);
+        assertNotNull(variant);
         return (T) gameModelsByVariant.get(variant);
     }
 
     public void selectGame(GameVariant variant) {
-        Globals.assertNotNull(variant);
+        assertNotNull(variant);
         GameVariant oldVariant = currentGame != null ? currentGameVariant() : null;
         currentGame = gameModel(variant);
         if (oldVariant != variant) {
