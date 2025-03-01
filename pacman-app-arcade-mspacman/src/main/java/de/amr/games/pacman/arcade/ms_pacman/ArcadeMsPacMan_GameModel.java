@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
 /**
@@ -169,9 +170,19 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         return new LevelData(LEVEL_DATA[Math.min(levelNumber - 1, LEVEL_DATA.length - 1)]);
     }
 
-    private void createWorldAndPopulation(WorldMap worldMap) {
+    protected void populateLevel(WorldMap worldMap) {
         GameWorld world = new GameWorld(worldMap);
-        world.createArcadeHouse(10, 15, 17, 19);
+        if (!worldMap.hasProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MIN_TILE)) {
+            Logger.warn("No house min tile found in map!");
+            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MIN_TILE, formatTile(vec_2i(10, 15)));
+        }
+        if (!worldMap.hasProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MAX_TILE)) {
+            Logger.warn("No house max tile found in map!");
+            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MAX_TILE, formatTile(vec_2i(17, 19)));
+        }
+        Vector2i minTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
+        Vector2i maxTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
+        world.createArcadeHouse(minTile.x(), minTile.y(), maxTile.x(), maxTile.y());
 
         var pac = new Pac();
         pac.setName("Ms. Pac-Man");
@@ -207,7 +218,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         level.setCutSceneNumber(cutScenesEnabled ? cutSceneNumberAfterLevel(level.number) : 0);
         level.setNumFlashes(levelData(level.number).numFlashes());
         WorldMap worldMap = mapSelector.selectWorldMap(level.number);
-        createWorldAndPopulation(worldMap);
+        populateLevel(worldMap);
         level.pac().setAutopilot(autopilot);
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
