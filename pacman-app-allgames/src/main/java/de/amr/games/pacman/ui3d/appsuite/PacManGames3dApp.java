@@ -56,17 +56,15 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void init() {
+        Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
         GameController gameController = GameController.it();
         gameController.setGameModel(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_GameModel());
         gameController.setGameModel(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
         gameController.setGameModel(GameVariant.PACMAN,           new ArcadePacMan_GameModel());
         gameController.setGameModel(GameVariant.PACMAN_XXL,       new PacManXXL_PacMan_GameModel());
         gameController.setGameModel(GameVariant.MS_PACMAN_XXL,    new PacManXXL_MsPacMan_GameModel());
-
         gameController.gameModels().forEach(GameModel::init);
         gameController.selectGame(GameVariant.PACMAN);
-
-        GlobalProperties3d.PY_3D_ENABLED.set(false);
     }
 
     @Override
@@ -82,12 +80,6 @@ public class PacManGames3dApp extends Application {
         ui.setGameConfiguration(GameVariant.MS_PACMAN_XXL,    new PacManXXL_MsPacMan_GameConfig3D(ui.assets()));
 
         ui.create(stage, initialSize());
-        ui.setStartPage(GameVariant.PACMAN,           new ArcadePacMan_StartPage(ui));
-        ui.setStartPage(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_StartPage(ui));
-        ui.setStartPage(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_StartPage(ui));
-        StartPage xxlStartPage = new PacManXXL_StartPage(ui);
-        ui.setStartPage(GameVariant.PACMAN_XXL,    xxlStartPage);
-        ui.setStartPage(GameVariant.MS_PACMAN_XXL, xxlStartPage);
 
         ui.addDashboardItem(DashboardItemID.README);
         ui.addDashboardItem(DashboardItemID.GENERAL);
@@ -100,15 +92,22 @@ public class PacManGames3dApp extends Application {
         ui.addDashboardItem(DashboardItemID.KEYBOARD);
         ui.addDashboardItem(DashboardItemID.ABOUT);
 
-        Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
-        Logger.info("Assets: {}", ui.assets().summary(Map.of(
-            Model3D.class,"3D models",
-            Image.class, "images",
-            Font.class, "fonts",
-            Color.class, "colors",
-            AudioClip.class, "audio clips")));
+        ui.setStartPage(GameVariant.PACMAN,           new ArcadePacMan_StartPage(ui));
+        ui.setStartPage(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_StartPage(ui));
+        ui.setStartPage(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_StartPage(ui));
+
+        StartPage xxlStartPage = new PacManXXL_StartPage(ui);
+        ui.setStartPage(GameVariant.PACMAN_XXL,    xxlStartPage);
+        ui.setStartPage(GameVariant.MS_PACMAN_XXL, xxlStartPage);
 
         ui.show();
+
+        Logger.info("Assets: {}", ui.assets().summary(Map.of(
+                Model3D.class,"3D models",
+                Image.class, "images",
+                Font.class, "fonts",
+                Color.class, "colors",
+                AudioClip.class, "audio clips")));
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
     }
 

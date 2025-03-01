@@ -9,6 +9,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.DashboardItemID;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
+import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui3d.PacManGamesUI_3D;
 import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
 import javafx.application.Application;
@@ -23,14 +24,10 @@ public class PacManXXL_App extends Application {
     @Override
     public void init() {
         GameController gameController = GameController.it();
-        try {
-            gameController.setGameModel(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_GameModel());
-            gameController.setGameModel(GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_GameModel());
-            gameController.gameModels().forEach(GameModel::init);
-            gameController.selectGame(GameVariant.PACMAN_XXL);
-        } catch (Exception x) {
-            Logger.error(x);
-        }
+        gameController.setGameModel(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_GameModel());
+        gameController.setGameModel(GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_GameModel());
+        gameController.gameModels().forEach(GameModel::init);
+        gameController.selectGame(GameVariant.PACMAN_XXL);
     }
 
     @Override
@@ -38,7 +35,7 @@ public class PacManXXL_App extends Application {
         PacManGamesUI_3D ui = new PacManGamesUI_3D();
         ui.loadAssets();
 
-        ui.setGameConfiguration(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_GameConfig3D(ui.assets()));
+        ui.setGameConfiguration(GameVariant.PACMAN_XXL,    new PacManXXL_PacMan_GameConfig3D(ui.assets()));
         ui.setGameConfiguration(GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_GameConfig3D(ui.assets()));
 
         ui.create(stage, initialSize());
@@ -53,7 +50,10 @@ public class PacManXXL_App extends Application {
         ui.addDashboardItem(DashboardItemID.KEYBOARD);
         ui.addDashboardItem(DashboardItemID.ABOUT);
 
-        ui.setStartPage(GameVariant.PACMAN_XXL, new PacManXXL_StartPage(ui));
+        StartPage xxlStartPage = new PacManXXL_StartPage(ui);
+        ui.setStartPage(GameVariant.PACMAN_XXL,    xxlStartPage);
+        ui.setStartPage(GameVariant.MS_PACMAN_XXL, xxlStartPage);
+
         ui.show();
     }
 
