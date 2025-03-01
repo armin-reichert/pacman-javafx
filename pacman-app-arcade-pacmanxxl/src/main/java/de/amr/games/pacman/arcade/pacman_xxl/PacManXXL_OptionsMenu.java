@@ -184,11 +184,11 @@ public class PacManXXL_OptionsMenu {
     private void startConfiguredGame(PacManGamesUI ui) {
         logMenuState();
         if (menuState.gameVariant == GameVariant.PACMAN_XXL || menuState.gameVariant == GameVariant.MS_PACMAN_XXL) {
-            GameModel game = ui.gameController().gameModel(GameVariant.PACMAN_XXL);
+            GameModel game = ui.gameController().gameModel(menuState.gameVariant);
             game.setCutScenesEnabled(menuState.cutScenesEnabled);
             game.mapSelector().loadAllMaps(game);
             game.mapSelector().setMapSelectionMode(menuState.mapSelectionMode);
-            ui.selectGameVariant(GameVariant.PACMAN_XXL);
+            ui.selectGameVariant(menuState.gameVariant);
         } else {
             Logger.error("Game variant {} is not allowed for XXL game", menuState.gameVariant);
         }
