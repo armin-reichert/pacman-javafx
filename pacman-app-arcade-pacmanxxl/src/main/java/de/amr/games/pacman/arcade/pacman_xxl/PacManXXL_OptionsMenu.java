@@ -154,7 +154,7 @@ public class PacManXXL_OptionsMenu {
         throw new IllegalArgumentException("Menu Selection failed");
     }
 
-    public void initState(GameVariant gameVariant, boolean cutScenesEnabled, MapSelectionMode mapSelectionMode) {
+    public void setMenuState(GameVariant gameVariant, boolean cutScenesEnabled, MapSelectionMode mapSelectionMode) {
         menuState.gameVariant = gameVariant;
         menuState.cutScenesEnabled = cutScenesEnabled;
         menuState.mapSelectionMode = mapSelectionMode;
@@ -177,22 +177,20 @@ public class PacManXXL_OptionsMenu {
     private void startConfiguredGame(PacManGamesUI ui) {
         switch (menuState.gameVariant) {
             case PACMAN_XXL -> { // Pac-Man
-                GameConfiguration pacManGameConfig = new PacManXXL_PacMan_GameConfig3D(ui.assets());
-                //ui.setGameConfiguration(GameVariant.PACMAN_XXL, pacManGameConfig);
+                GameConfiguration pacManGameConfig = ui.gameConfiguration(GameVariant.PACMAN_XXL);
                 // clear sounds first such that they are replaced with Pac-Man sounds
                 ui.sound().clearSounds(GameVariant.PACMAN_XXL);
                 ui.sound().useSoundsForGameVariant(GameVariant.PACMAN_XXL, pacManGameConfig.assetKeyPrefix());
 
-                //ui.selectGamePage();
                 PacManXXL_PacMan_GameModel pacManGame = ui.gameController().gameModel(GameVariant.PACMAN_XXL);
                 pacManGame.setCutScenesEnabled(menuState.cutScenesEnabled);
                 pacManGame.mapSelector().setMapSelectionMode(menuState.mapSelectionMode);
                 pacManGame.mapSelector().updateCustomMaps(pacManGame);
+
                 ui.gameController().selectGame(GameVariant.PACMAN_XXL);
             }
             case MS_PACMAN_XXL -> { // Ms. Pac-Man
-                GameConfiguration msPacManGameConfig = new PacManXXL_MsPacMan_GameConfig3D(ui.assets());
-                //ui.setGameConfiguration(GameVariant.MS_PACMAN_XXL, msPacManGameConfig);
+                GameConfiguration msPacManGameConfig = ui.gameConfiguration(GameVariant.MS_PACMAN_XXL);
                 // clear sounds first such that they are replaced with Ms. Pac-Man sounds
                 ui.sound().clearSounds(GameVariant.MS_PACMAN_XXL);
                 ui.sound().useSoundsForGameVariant(GameVariant.MS_PACMAN_XXL, msPacManGameConfig.assetKeyPrefix());
@@ -201,8 +199,8 @@ public class PacManXXL_OptionsMenu {
                 msPacManGame.setCutScenesEnabled(menuState.cutScenesEnabled);
                 msPacManGame.mapSelector().setMapSelectionMode(menuState.mapSelectionMode);
                 msPacManGame.mapSelector().updateCustomMaps(msPacManGame);
+
                 ui.gameController().selectGame(GameVariant.MS_PACMAN_XXL);
-                //ui.selectGamePage();
             }
         }
     }

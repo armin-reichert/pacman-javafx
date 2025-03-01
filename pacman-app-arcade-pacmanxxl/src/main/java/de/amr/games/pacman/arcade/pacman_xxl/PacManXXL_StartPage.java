@@ -49,14 +49,14 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
         switch (ui.gameController().currentGameVariant()) {
             case MS_PACMAN_XXL -> {
                 PacManXXL_MsPacMan_GameModel game = ui.game();
-                menu.initState(
+                menu.setMenuState(
                         ui.gameController().currentGameVariant(),
                         game.isCutScenesEnabled(),
                         game.mapSelector().mapSelectionMode());
             }
             case PACMAN_XXL -> {
                 PacManXXL_PacMan_GameModel game = ui.game();
-                menu.initState(
+                menu.setMenuState(
                         ui.gameController().currentGameVariant(),
                         game.isCutScenesEnabled(),
                         game.mapSelector().mapSelectionMode());
