@@ -23,7 +23,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,11 +41,12 @@ public class PacManXXL_OptionsMenu {
         final String label;
         List<String> options;
         int valueIndex;
+        MenuEntry(String label, List<String> options) {
+            this.label = label;
+            this.options = new ArrayList<>(options);
+        }
         void onSelect() {}
         abstract void onValueChange();
-        MenuEntry(String label) {
-            this.label = label;
-        }
     }
 
     private final BorderPane root = new BorderPane();
@@ -54,7 +57,7 @@ public class PacManXXL_OptionsMenu {
 
     private final MenuEntry entryGameVariant;
     private final MenuEntry entryCutScenesEnabled;
-    private final MenuEntry entryCustomMapSelectionMode;
+    private final MenuEntry entryMapSelectionMode;
     private final List<MenuEntry> entries;
     private int selectedEntryIndex = 0;
 
@@ -79,10 +82,7 @@ public class PacManXXL_OptionsMenu {
         canvas.widthProperty().bind(scalingPy.multiply(UNSCALED_HEIGHT));
         canvas.heightProperty().bind(scalingPy.multiply(UNSCALED_HEIGHT));
 
-        entryGameVariant = new MenuEntry("GAME VARIANT") {
-            {
-                options = List.of("PAC-MAN", "MS.PAC-MAN");
-            }
+        entryGameVariant = new MenuEntry("GAME VARIANT", List.of("PAC-MAN", "MS.PAC-MAN")) {
             @Override
             void onValueChange() {
                 switch (valueIndex) {
@@ -90,23 +90,19 @@ public class PacManXXL_OptionsMenu {
                     case 1 -> menuState.gameVariant = GameVariant.MS_PACMAN_XXL;
                     default -> menuSelectionFailed();
                 }
+                Logger.info("menuState.gameVariant={}", menuState.gameVariant);
             }
         };
 
-        entryCutScenesEnabled = new MenuEntry("CUT SCENES") {
-            {
-                options = List.of("ENABLED", "DISABLED");
-            }
+        entryCutScenesEnabled = new MenuEntry("CUT SCENES", List.of("ENABLED", "DISABLED")) {
             @Override
             void onValueChange() {
-                menuState.cutScenesEnabled = valueIndex == 0;
+                menuState.cutScenesEnabled = (valueIndex == 0);
+                Logger.info("menuState.cutScenesEnabled={}", menuState.cutScenesEnabled);
             }
         };
 
-        entryCustomMapSelectionMode = new MenuEntry("CUSTOM MAPS") {
-            {
-                options = List.of("CUSTOM-MAPS FIRST", "ALL MAPS RANDOMLY");
-            }
+        entryMapSelectionMode = new MenuEntry("CUSTOM MAPS", List.of("CUSTOM-MAPS FIRST", "ALL MAPS RANDOMLY")) {
             @Override
             void onValueChange() {
                 switch (valueIndex) {
@@ -114,10 +110,11 @@ public class PacManXXL_OptionsMenu {
                     case 1 -> menuState.mapSelectionMode = MapSelectionMode.ALL_RANDOM;
                     default -> menuSelectionFailed();
                 }
+                Logger.info("menuState.mapSelectionMode={}", menuState.mapSelectionMode);
             }
         };
 
-        entries = Arrays.asList(entryGameVariant, entryCutScenesEnabled, entryCustomMapSelectionMode);
+        entries = Arrays.asList(entryGameVariant, entryCutScenesEnabled, entryMapSelectionMode);
 
         root.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
@@ -167,38 +164,46 @@ public class PacManXXL_OptionsMenu {
 
         entryCutScenesEnabled.valueIndex = cutScenesEnabled ? 0 : 1;
 
-        entryCustomMapSelectionMode.valueIndex = switch (mapSelectionMode) {
+        entryMapSelectionMode.valueIndex = switch (mapSelectionMode) {
             case CUSTOM_MAPS_FIRST -> 0;
             case ALL_RANDOM -> 1;
             case NO_CUSTOM_MAPS -> 1; // TODO
         };
+        logMenuState();
+    }
+
+    private void logMenuState() {
+        Logger.info("Menu state: gameVariant={}, cutScenesEnabled={}, mapSelectionMode={}",
+                menuState.gameVariant, menuState.cutScenesEnabled, menuState.mapSelectionMode);
     }
 
     private void startConfiguredGame(PacManGamesUI ui) {
+        Logger.info("Start game");
+        logMenuState();
         switch (menuState.gameVariant) {
             case PACMAN_XXL -> { // Pac-Man
                 GameConfiguration pacManGameConfig = ui.gameConfiguration(GameVariant.PACMAN_XXL);
                 // clear sounds first such that they are replaced with Pac-Man sounds
-                ui.sound().clearSounds(GameVariant.PACMAN_XXL);
-                ui.sound().useSoundsForGameVariant(GameVariant.PACMAN_XXL, pacManGameConfig.assetKeyPrefix());
+                //ui.sound().clearSounds(GameVariant.PACMAN_XXL);
+                //ui.sound().useSoundsForGameVariant(GameVariant.PACMAN_XXL, pacManGameConfig.assetKeyPrefix());
 
-                PacManXXL_PacMan_GameModel pacManGame = ui.gameController().gameModel(GameVariant.PACMAN_XXL);
-                pacManGame.setCutScenesEnabled(menuState.cutScenesEnabled);
-                pacManGame.mapSelector().setMapSelectionMode(menuState.mapSelectionMode);
-                pacManGame.mapSelector().updateCustomMaps(pacManGame);
+                PacManXXL_PacMan_GameModel game = ui.gameController().gameModel(GameVariant.PACMAN_XXL);
+                game.setCutScenesEnabled(menuState.cutScenesEnabled);
+                game.mapSelector().setMapSelectionMode(menuState.mapSelectionMode);
+                game.mapSelector().updateCustomMaps(game);
 
                 ui.gameController().selectGame(GameVariant.PACMAN_XXL);
             }
             case MS_PACMAN_XXL -> { // Ms. Pac-Man
                 GameConfiguration msPacManGameConfig = ui.gameConfiguration(GameVariant.MS_PACMAN_XXL);
                 // clear sounds first such that they are replaced with Ms. Pac-Man sounds
-                ui.sound().clearSounds(GameVariant.MS_PACMAN_XXL);
-                ui.sound().useSoundsForGameVariant(GameVariant.MS_PACMAN_XXL, msPacManGameConfig.assetKeyPrefix());
+                //ui.sound().clearSounds(GameVariant.MS_PACMAN_XXL);
+                //ui.sound().useSoundsForGameVariant(GameVariant.MS_PACMAN_XXL, msPacManGameConfig.assetKeyPrefix());
 
-                PacManXXL_MsPacMan_GameModel msPacManGame = ui.gameController().gameModel(GameVariant.MS_PACMAN_XXL);
-                msPacManGame.setCutScenesEnabled(menuState.cutScenesEnabled);
-                msPacManGame.mapSelector().setMapSelectionMode(menuState.mapSelectionMode);
-                msPacManGame.mapSelector().updateCustomMaps(msPacManGame);
+                PacManXXL_MsPacMan_GameModel game = ui.gameController().gameModel(GameVariant.MS_PACMAN_XXL);
+                game.setCutScenesEnabled(menuState.cutScenesEnabled);
+                game.mapSelector().setMapSelectionMode(menuState.mapSelectionMode);
+                game.mapSelector().updateCustomMaps(game);
 
                 ui.gameController().selectGame(GameVariant.MS_PACMAN_XXL);
             }

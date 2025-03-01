@@ -21,13 +21,13 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         demoLevelSteering = new RuleBasedPacSteering(this); // super class uses predefined steering
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-pacman_xxl.xml"));
         mapSelector = new PacManXXL_MapSelector();
-        mapSelector.loadAllMaps(this);
+        //mapSelector.loadAllMaps(this);
     }
 
     @Override
     public void resetEverything() {
         super.resetEverything();
-        mapSelector.loadAllMaps(this);
+        //mapSelector.loadAllMaps(this);
     }
 
     public PacManXXL_MapSelector mapSelector() {

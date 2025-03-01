@@ -34,7 +34,7 @@ public class PacManXXL_MapSelector implements MapSelector {
             Map.of("fill", "#5036d9", "stroke", "#5f8bcf", "door", "#fcb5ff", "pellet", "#feb8ae")
     );
 
-    private List<WorldMap> builtinMaps;
+    private List<WorldMap> builtinMaps = new ArrayList<>();
     private final Map<File, WorldMap> customMapsByFile = new HashMap<>();
     private MapSelectionMode mapSelectionMode = MapSelectionMode.CUSTOM_MAPS_FIRST;
 

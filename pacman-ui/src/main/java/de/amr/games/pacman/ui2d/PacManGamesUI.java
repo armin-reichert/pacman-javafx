@@ -105,9 +105,9 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
         @Override
         public boolean isEnabled(GameContext context) {
-            return context.gameVariant() == GameVariant.PACMAN_XXL &&
-                context.game().level().isPresent() &&
-                context.level().world() != null;
+            return (context.gameVariant() == GameVariant.PACMAN_XXL || context.gameVariant() == GameVariant.MS_PACMAN_XXL)
+                    && context.game().level().isPresent()
+                    && context.level().world() != null;
         }
     };
 
