@@ -82,8 +82,8 @@ public class PacManXXL_OptionsMenu {
             @Override
             void onValueChange() {
                 switch (valueIndex) {
-                    case 0 -> stateGameVariant = GameVariant.PACMAN;
-                    case 1 -> stateGameVariant = GameVariant.MS_PACMAN;
+                    case 0 -> stateGameVariant = GameVariant.PACMAN_XXL;
+                    case 1 -> stateGameVariant = GameVariant.MS_PACMAN_XXL;
                     default -> menuSelectionFailed();
                 }
             }
@@ -172,35 +172,33 @@ public class PacManXXL_OptionsMenu {
 
     private void startConfiguredGame(PacManGamesUI ui) {
         switch (stateGameVariant) {
-            case PACMAN -> { // Pac-Man
+            case PACMAN_XXL -> { // Pac-Man
+                GameConfiguration pacManGameConfig = new PacManXXL_PacMan_GameConfig3D(ui.assets());
+                //ui.setGameConfiguration(GameVariant.PACMAN_XXL, pacManGameConfig);
+                // clear sounds first such that they are replaced with Pac-Man sounds
+                ui.sound().clearSounds(GameVariant.PACMAN_XXL);
+                ui.sound().useSoundsForGameVariant(GameVariant.PACMAN_XXL, pacManGameConfig.assetKeyPrefix());
+
+                //ui.selectGamePage();
                 PacManXXL_PacMan_GameModel pacManGame = ui.gameController().gameModel(GameVariant.PACMAN_XXL);
-                pacManGame.init();
                 pacManGame.setCutScenesEnabled(stateCutScenesEnabled);
                 pacManGame.mapSelector().setMapSelectionMode(stateCustomMapSelectionMode);
                 pacManGame.mapSelector().updateCustomMaps(pacManGame);
                 ui.gameController().selectGame(GameVariant.PACMAN_XXL);
-
-                GameConfiguration pacManGameConfig = new PacManXXL_PacMan_GameConfig3D(ui.assets());
-                ui.setGameConfiguration(GameVariant.PACMAN_XXL, pacManGameConfig);
-                // clear sounds first such that they are replaced with Pac-Man sounds
-                ui.sound().clearSounds(GameVariant.PACMAN_XXL);
-                ui.sound().useSoundsForGameVariant(GameVariant.PACMAN_XXL, pacManGameConfig.assetKeyPrefix());
-                ui.selectGamePage();
             }
-            case MS_PACMAN -> { // Ms. Pac-Man
+            case MS_PACMAN_XXL -> { // Ms. Pac-Man
+                GameConfiguration msPacManGameConfig = new PacManXXL_MsPacMan_GameConfig3D(ui.assets());
+                //ui.setGameConfiguration(GameVariant.MS_PACMAN_XXL, msPacManGameConfig);
+                // clear sounds first such that they are replaced with Ms. Pac-Man sounds
+                ui.sound().clearSounds(GameVariant.PACMAN_XXL);
+                ui.sound().useSoundsForGameVariant(GameVariant.PACMAN_XXL, msPacManGameConfig.assetKeyPrefix());
+
                 PacManXXL_MsPacMan_GameModel msPacManGame = ui.gameController().gameModel(GameVariant.MS_PACMAN_XXL);
-                msPacManGame.init();
                 msPacManGame.setCutScenesEnabled(stateCutScenesEnabled);
                 msPacManGame.mapSelector().setMapSelectionMode(stateCustomMapSelectionMode);
                 msPacManGame.mapSelector().updateCustomMaps(msPacManGame);
                 ui.gameController().selectGame(GameVariant.MS_PACMAN_XXL);
-
-                GameConfiguration msPacManGameConfig = new PacManXXL_MsPacMan_GameConfig3D(ui.assets());
-                ui.setGameConfiguration(GameVariant.MS_PACMAN_XXL, msPacManGameConfig);
-                // clear sounds first such that they are replaced with Ms. Pac-Man sounds
-                ui.sound().clearSounds(GameVariant.PACMAN_XXL);
-                ui.sound().useSoundsForGameVariant(GameVariant.PACMAN_XXL, msPacManGameConfig.assetKeyPrefix());
-                ui.selectGamePage();
+                //ui.selectGamePage();
             }
         }
     }
