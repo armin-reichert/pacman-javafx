@@ -78,11 +78,11 @@ public class PacManXXL_MsPacMan_GameConfig implements GameConfiguration {
         assets.store("ms_pacman_xxl.ghost.color.flashing.pupils",     Color.valueOf(Arcade.Palette.RED));
 
         // Clips
-        assets.store("ms_pacman_xxl.audio.bonus_eaten",             rm.loadAudioClip("sound/Fruit.mp3"));
-        assets.store("ms_pacman_xxl.audio.credit",                  rm.loadAudioClip("sound/credit.wav"));
-        assets.store("ms_pacman_xxl.audio.extra_life",              rm.loadAudioClip("sound/ExtraLife.mp3"));
-        assets.store("ms_pacman_xxl.audio.ghost_eaten",             rm.loadAudioClip("sound/Ghost.mp3"));
-        assets.store("ms_pacman_xxl.audio.sweep",                   rm.loadAudioClip("sound/sweep.mp3"));
+        assets.store("ms_pacman_xxl.audio.bonus_eaten",               rm.loadAudioClip("sound/Fruit.mp3"));
+        assets.store("ms_pacman_xxl.audio.credit",                    rm.loadAudioClip("sound/credit.wav"));
+        assets.store("ms_pacman_xxl.audio.extra_life",                rm.loadAudioClip("sound/ExtraLife.mp3"));
+        assets.store("ms_pacman_xxl.audio.ghost_eaten",               rm.loadAudioClip("sound/Ghost.mp3"));
+        assets.store("ms_pacman_xxl.audio.sweep",                     rm.loadAudioClip("sound/sweep.mp3"));
 
         // Audio played by MediaPlayer
         assets.store("ms_pacman_xxl.audio.bonus_bouncing",          rm.url("sound/Fruit Bounce.mp3"));
@@ -100,6 +100,11 @@ public class PacManXXL_MsPacMan_GameConfig implements GameConfiguration {
         assets.store("ms_pacman_xxl.audio.siren.3",                 rm.url("sound/GhostNoise1.wav"));// TODO
         assets.store("ms_pacman_xxl.audio.siren.4",                 rm.url("sound/GhostNoise1.wav"));// TODO
         assets.store("ms_pacman_xxl.audio.ghost_returns",           rm.url("sound/GhostEyes.mp3"));
+
+        rm = this::getClass;
+        assets.store("ms_pacman_xxl.audio.option.selection_changed",  rm.loadAudioClip("sound/ms-select1.wav"));
+        assets.store("ms_pacman_xxl.audio.option.value_changed",      rm.loadAudioClip("sound/ms-select2.wav"));
+
     }
 
     @Override

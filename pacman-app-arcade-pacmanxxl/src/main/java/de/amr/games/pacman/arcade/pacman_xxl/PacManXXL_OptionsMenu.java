@@ -122,17 +122,20 @@ public class PacManXXL_OptionsMenu {
                     selectedEntryIndex++;
                     if (selectedEntryIndex == entries.size()) selectedEntryIndex = 0;
                     entries.get(selectedEntryIndex).onSelect();
+                    ui.sound().playClipIfEnabled("option.selection_changed", 1);
                 }
                 case UP -> {
                     selectedEntryIndex--;
                     if (selectedEntryIndex == -1) selectedEntryIndex = entries.size() - 1;
                     entries.get(selectedEntryIndex).onSelect();
+                    ui.sound().playClipIfEnabled("option.selection_changed", 1);
                 }
                 case SPACE -> {
                     MenuEntry entry = entries.get(selectedEntryIndex);
                     entry.valueIndex++;
                     if (entry.valueIndex == entry.options.size()) entry.valueIndex = 0;
                     entry.onValueChange();
+                    ui.sound().playClipIfEnabled("option.value_changed", 1);
                 }
                 case ENTER -> startConfiguredGame(ui);
             }

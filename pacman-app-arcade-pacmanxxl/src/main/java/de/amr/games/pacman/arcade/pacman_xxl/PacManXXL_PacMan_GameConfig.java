@@ -93,6 +93,11 @@ public class PacManXXL_PacMan_GameConfig implements GameConfiguration {
         assets.store("pacman_xxl.audio.siren.3",        rm.url("sound/siren_3.mp3"));
         assets.store("pacman_xxl.audio.siren.4",        rm.url("sound/siren_4.mp3"));
         assets.store("pacman_xxl.audio.ghost_returns",  rm.url("sound/retreating.mp3"));
+
+        rm = this::getClass;
+        assets.store("pacman_xxl.audio.option.selection_changed",  rm.loadAudioClip("sound/ms-select1.wav"));
+        assets.store("pacman_xxl.audio.option.value_changed",      rm.loadAudioClip("sound/ms-select2.wav"));
+
     }
 
     @Override
