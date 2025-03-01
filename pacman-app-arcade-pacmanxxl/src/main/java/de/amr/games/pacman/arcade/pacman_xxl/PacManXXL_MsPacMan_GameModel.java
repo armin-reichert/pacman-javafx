@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade.pacman_xxl;
 
 import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
-import de.amr.games.pacman.model.CustomMapSelectionMode;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 
 import java.io.File;

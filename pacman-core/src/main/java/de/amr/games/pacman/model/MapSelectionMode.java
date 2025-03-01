@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
-public enum CustomMapSelectionMode {
+public enum MapSelectionMode {
     /**
      * Standard maps 1-8 in order, then randomly.
      */

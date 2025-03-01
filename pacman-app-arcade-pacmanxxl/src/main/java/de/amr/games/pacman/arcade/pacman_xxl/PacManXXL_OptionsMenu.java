@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman_xxl;
 
-import de.amr.games.pacman.model.CustomMapSelectionMode;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.MapSelectionMode;
 import de.amr.games.pacman.ui2d.GameRenderer;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.scene.GameConfiguration;
@@ -59,9 +59,13 @@ public class PacManXXL_OptionsMenu {
     private int selectedEntryIndex = 0;
 
     // state
-    private GameVariant stateGameVariant;
-    private boolean stateCutScenesEnabled;
-    private CustomMapSelectionMode stateCustomMapSelectionMode;
+    private static class MenuState {
+        private GameVariant gameVariant;
+        private boolean cutScenesEnabled;
+        private MapSelectionMode mapSelectionMode;
+    }
+
+    private final MenuState menuState = new MenuState();
 
     public PacManXXL_OptionsMenu(PacManGamesUI ui) {
         root.setBackground(Background.EMPTY);
@@ -82,8 +86,8 @@ public class PacManXXL_OptionsMenu {
             @Override
             void onValueChange() {
                 switch (valueIndex) {
-                    case 0 -> stateGameVariant = GameVariant.PACMAN_XXL;
-                    case 1 -> stateGameVariant = GameVariant.MS_PACMAN_XXL;
+                    case 0 -> menuState.gameVariant = GameVariant.PACMAN_XXL;
+                    case 1 -> menuState.gameVariant = GameVariant.MS_PACMAN_XXL;
                     default -> menuSelectionFailed();
                 }
             }
@@ -95,7 +99,7 @@ public class PacManXXL_OptionsMenu {
             }
             @Override
             void onValueChange() {
-                stateCutScenesEnabled = valueIndex == 0;
+                menuState.cutScenesEnabled = valueIndex == 0;
             }
         };
 
@@ -106,8 +110,8 @@ public class PacManXXL_OptionsMenu {
             @Override
             void onValueChange() {
                 switch (valueIndex) {
-                    case 0 -> stateCustomMapSelectionMode = CustomMapSelectionMode.CUSTOM_MAPS_FIRST;
-                    case 1 -> stateCustomMapSelectionMode = CustomMapSelectionMode.ALL_RANDOM;
+                    case 0 -> menuState.mapSelectionMode = MapSelectionMode.CUSTOM_MAPS_FIRST;
+                    case 1 -> menuState.mapSelectionMode = MapSelectionMode.ALL_RANDOM;
                     default -> menuSelectionFailed();
                 }
             }
@@ -150,10 +154,10 @@ public class PacManXXL_OptionsMenu {
         throw new IllegalArgumentException("Menu Selection failed");
     }
 
-    public void initState(GameVariant gameVariant, boolean cutScenesEnabled, CustomMapSelectionMode customMapSelectionMode) {
-        stateGameVariant = gameVariant;
-        stateCutScenesEnabled = cutScenesEnabled;
-        stateCustomMapSelectionMode = customMapSelectionMode;
+    public void initState(GameVariant gameVariant, boolean cutScenesEnabled, MapSelectionMode mapSelectionMode) {
+        menuState.gameVariant = gameVariant;
+        menuState.cutScenesEnabled = cutScenesEnabled;
+        menuState.mapSelectionMode = mapSelectionMode;
 
         entryGameVariant.valueIndex = switch (gameVariant) {
             case PACMAN_XXL -> 0;
@@ -163,7 +167,7 @@ public class PacManXXL_OptionsMenu {
 
         entryCutScenesEnabled.valueIndex = cutScenesEnabled ? 0 : 1;
 
-        entryCustomMapSelectionMode.valueIndex = switch (customMapSelectionMode) {
+        entryCustomMapSelectionMode.valueIndex = switch (mapSelectionMode) {
             case CUSTOM_MAPS_FIRST -> 0;
             case ALL_RANDOM -> 1;
             case NO_CUSTOM_MAPS -> 1; // TODO
@@ -171,7 +175,7 @@ public class PacManXXL_OptionsMenu {
     }
 
     private void startConfiguredGame(PacManGamesUI ui) {
-        switch (stateGameVariant) {
+        switch (menuState.gameVariant) {
             case PACMAN_XXL -> { // Pac-Man
                 GameConfiguration pacManGameConfig = new PacManXXL_PacMan_GameConfig3D(ui.assets());
                 //ui.setGameConfiguration(GameVariant.PACMAN_XXL, pacManGameConfig);
@@ -181,8 +185,8 @@ public class PacManXXL_OptionsMenu {
 
                 //ui.selectGamePage();
                 PacManXXL_PacMan_GameModel pacManGame = ui.gameController().gameModel(GameVariant.PACMAN_XXL);
-                pacManGame.setCutScenesEnabled(stateCutScenesEnabled);
-                pacManGame.mapSelector().setMapSelectionMode(stateCustomMapSelectionMode);
+                pacManGame.setCutScenesEnabled(menuState.cutScenesEnabled);
+                pacManGame.mapSelector().setMapSelectionMode(menuState.mapSelectionMode);
                 pacManGame.mapSelector().updateCustomMaps(pacManGame);
                 ui.gameController().selectGame(GameVariant.PACMAN_XXL);
             }
@@ -190,12 +194,12 @@ public class PacManXXL_OptionsMenu {
                 GameConfiguration msPacManGameConfig = new PacManXXL_MsPacMan_GameConfig3D(ui.assets());
                 //ui.setGameConfiguration(GameVariant.MS_PACMAN_XXL, msPacManGameConfig);
                 // clear sounds first such that they are replaced with Ms. Pac-Man sounds
-                ui.sound().clearSounds(GameVariant.PACMAN_XXL);
-                ui.sound().useSoundsForGameVariant(GameVariant.PACMAN_XXL, msPacManGameConfig.assetKeyPrefix());
+                ui.sound().clearSounds(GameVariant.MS_PACMAN_XXL);
+                ui.sound().useSoundsForGameVariant(GameVariant.MS_PACMAN_XXL, msPacManGameConfig.assetKeyPrefix());
 
                 PacManXXL_MsPacMan_GameModel msPacManGame = ui.gameController().gameModel(GameVariant.MS_PACMAN_XXL);
-                msPacManGame.setCutScenesEnabled(stateCutScenesEnabled);
-                msPacManGame.mapSelector().setMapSelectionMode(stateCustomMapSelectionMode);
+                msPacManGame.setCutScenesEnabled(menuState.cutScenesEnabled);
+                msPacManGame.mapSelector().setMapSelectionMode(menuState.mapSelectionMode);
                 msPacManGame.mapSelector().updateCustomMaps(msPacManGame);
                 ui.gameController().selectGame(GameVariant.MS_PACMAN_XXL);
                 //ui.selectGamePage();

@@ -3,7 +3,7 @@ package de.amr.games.pacman.arcade.pacman_xxl;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.CustomMapSelectionMode;
+import de.amr.games.pacman.model.MapSelectionMode;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.MapSelector;
 import org.tinylog.Logger;
@@ -36,7 +36,7 @@ public class PacManXXL_MapSelector implements MapSelector {
 
     private List<WorldMap> builtinMaps;
     private final Map<File, WorldMap> customMapsByFile = new HashMap<>();
-    private CustomMapSelectionMode mapSelectionMode = CustomMapSelectionMode.CUSTOM_MAPS_FIRST;
+    private MapSelectionMode mapSelectionMode = MapSelectionMode.CUSTOM_MAPS_FIRST;
 
     @Override
     public void loadAllMaps(GameModel game) {
@@ -72,11 +72,11 @@ public class PacManXXL_MapSelector implements MapSelector {
         return worldMap;
     }
 
-    public void setMapSelectionMode(CustomMapSelectionMode mapSelectionMode) {
+    public void setMapSelectionMode(MapSelectionMode mapSelectionMode) {
         this.mapSelectionMode = assertNotNull(mapSelectionMode);
     }
 
-    public CustomMapSelectionMode mapSelectionMode() {
+    public MapSelectionMode mapSelectionMode() {
         return mapSelectionMode;
     }
 
@@ -89,7 +89,7 @@ public class PacManXXL_MapSelector implements MapSelector {
     }
 
     public void updateCustomMaps(GameModel game) {
-        if (mapSelectionMode == CustomMapSelectionMode.NO_CUSTOM_MAPS) {
+        if (mapSelectionMode == MapSelectionMode.NO_CUSTOM_MAPS) {
             return;
         }
         File[] mapFiles = CUSTOM_MAP_DIR.listFiles((dir, name) -> name.endsWith(".world"));
