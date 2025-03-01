@@ -69,6 +69,7 @@ public class PacManXXL_MapSelector implements MapSelector {
         Map<String, String> mapColoring = builtinMaps.contains(template) ? randomMapColoring() : coloringFromMap(template);
         worldMap.setConfigValue("colorMap", mapColoring);
 
+        Logger.info("Map selected (Mode {}): {}", mapSelectionMode, worldMap.url());
         return worldMap;
     }
 

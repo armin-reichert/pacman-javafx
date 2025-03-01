@@ -189,8 +189,8 @@ public class PacManXXL_OptionsMenu {
 
                 PacManXXL_PacMan_GameModel game = ui.gameController().gameModel(GameVariant.PACMAN_XXL);
                 game.setCutScenesEnabled(menuState.cutScenesEnabled);
+                game.mapSelector().loadAllMaps(game);
                 game.mapSelector().setMapSelectionMode(menuState.mapSelectionMode);
-                game.mapSelector().updateCustomMaps(game);
 
                 ui.gameController().selectGame(GameVariant.PACMAN_XXL);
             }
@@ -202,8 +202,8 @@ public class PacManXXL_OptionsMenu {
 
                 PacManXXL_MsPacMan_GameModel game = ui.gameController().gameModel(GameVariant.MS_PACMAN_XXL);
                 game.setCutScenesEnabled(menuState.cutScenesEnabled);
+                game.mapSelector().loadAllMaps(game);
                 game.mapSelector().setMapSelectionMode(menuState.mapSelectionMode);
-                game.mapSelector().updateCustomMaps(game);
 
                 ui.gameController().selectGame(GameVariant.MS_PACMAN_XXL);
             }
