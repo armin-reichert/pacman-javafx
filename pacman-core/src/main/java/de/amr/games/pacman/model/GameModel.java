@@ -65,6 +65,7 @@ public abstract class GameModel {
     protected boolean            demoLevel;
     protected GameLevel          level;
 
+    public abstract MapSelector    mapSelector();
     public abstract void           init();
     public abstract void           resetEverything();
     public abstract void           resetForStartingNewGame();

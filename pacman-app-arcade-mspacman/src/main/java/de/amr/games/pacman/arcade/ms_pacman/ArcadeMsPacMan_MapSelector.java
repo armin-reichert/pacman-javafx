@@ -6,6 +6,7 @@ package de.amr.games.pacman.arcade.ms_pacman;
 
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.MapSelectionMode;
 import de.amr.games.pacman.model.MapSelector;
 
 import java.util.List;

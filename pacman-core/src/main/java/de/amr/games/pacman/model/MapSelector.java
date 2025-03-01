@@ -39,6 +39,8 @@ public interface MapSelector {
         return maps;
     }
 
+    default void setMapSelectionMode(MapSelectionMode mode) {}
+
     void loadAllMaps(GameModel game);
 
     WorldMap selectWorldMap(int levelNumber);

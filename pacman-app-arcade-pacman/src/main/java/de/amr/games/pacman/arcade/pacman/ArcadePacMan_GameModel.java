@@ -110,6 +110,11 @@ public class ArcadePacMan_GameModel extends GameModel {
     protected MapSelector mapSelector = new ArcadePacMan_MapSelector();;
 
     @Override
+    public MapSelector mapSelector() {
+        return mapSelector;
+    }
+
+    @Override
     public void init() {
         initialLives = 3;
         simulateOverflowBug = true;

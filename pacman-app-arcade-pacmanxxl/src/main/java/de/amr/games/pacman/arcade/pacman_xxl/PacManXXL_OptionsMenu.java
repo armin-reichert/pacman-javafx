@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman_xxl;
 
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.MapSelectionMode;
 import de.amr.games.pacman.ui2d.GameRenderer;
@@ -181,35 +182,15 @@ public class PacManXXL_OptionsMenu {
     }
 
     private void startConfiguredGame(PacManGamesUI ui) {
-        Logger.info("Start game");
         logMenuState();
-        switch (menuState.gameVariant) {
-            case PACMAN_XXL -> { // Pac-Man
-                GameConfiguration pacManGameConfig = ui.gameConfiguration(GameVariant.PACMAN_XXL);
-                // clear sounds first such that they are replaced with Pac-Man sounds
-                //ui.sound().clearSounds(GameVariant.PACMAN_XXL);
-                //ui.sound().useSoundsForGameVariant(GameVariant.PACMAN_XXL, pacManGameConfig.assetKeyPrefix());
-
-                PacManXXL_PacMan_GameModel game = ui.gameController().gameModel(GameVariant.PACMAN_XXL);
-                game.setCutScenesEnabled(menuState.cutScenesEnabled);
-                game.mapSelector().loadAllMaps(game);
-                game.mapSelector().setMapSelectionMode(menuState.mapSelectionMode);
-
-                ui.selectGameVariant(GameVariant.PACMAN_XXL);
-            }
-            case MS_PACMAN_XXL -> { // Ms. Pac-Man
-                GameConfiguration msPacManGameConfig = ui.gameConfiguration(GameVariant.MS_PACMAN_XXL);
-                // clear sounds first such that they are replaced with Ms. Pac-Man sounds
-                //ui.sound().clearSounds(GameVariant.MS_PACMAN_XXL);
-                //ui.sound().useSoundsForGameVariant(GameVariant.MS_PACMAN_XXL, msPacManGameConfig.assetKeyPrefix());
-
-                PacManXXL_MsPacMan_GameModel game = ui.gameController().gameModel(GameVariant.MS_PACMAN_XXL);
-                game.setCutScenesEnabled(menuState.cutScenesEnabled);
-                game.mapSelector().loadAllMaps(game);
-                game.mapSelector().setMapSelectionMode(menuState.mapSelectionMode);
-
-                ui.selectGameVariant(GameVariant.MS_PACMAN_XXL);
-            }
+        if (menuState.gameVariant == GameVariant.PACMAN_XXL || menuState.gameVariant == GameVariant.MS_PACMAN_XXL) {
+            GameModel game = ui.gameController().gameModel(GameVariant.PACMAN_XXL);
+            game.setCutScenesEnabled(menuState.cutScenesEnabled);
+            game.mapSelector().loadAllMaps(game);
+            game.mapSelector().setMapSelectionMode(menuState.mapSelectionMode);
+            ui.selectGameVariant(GameVariant.PACMAN_XXL);
+        } else {
+            Logger.error("Game variant {} is not allowed for XXL game", menuState.gameVariant);
         }
     }
 

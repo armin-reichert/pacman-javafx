@@ -10,10 +10,7 @@ import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.GameException;
-import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.Portal;
+import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import de.amr.games.pacman.steering.Steering;
@@ -100,7 +97,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         };
     }
 
-    private TengenMsPacMan_MapSelector mapManager;
+    private TengenMsPacMan_MapSelector mapSelector;
     private MapCategory mapCategory;
     private Difficulty difficulty;
     private PacBooster pacBooster;
@@ -127,10 +124,15 @@ public class TengenMsPacMan_GameModel extends GameModel {
         }
     }
 
+    @Override
+    public MapSelector mapSelector() {
+        return mapSelector;
+    }
+
     public void init() {
         scoreManager.setHighScoreFile(new File(HOME_DIR, HIGH_SCORE_FILENAME));
-        mapManager = new TengenMsPacMan_MapSelector();
-        mapManager.loadAllMaps(this);
+        mapSelector = new TengenMsPacMan_MapSelector();
+        mapSelector.loadAllMaps(this);
         huntingControl = new MsPacManGameTengenHuntingControl();
         setInitialLives(3);
         simulateOverflowBug = false; //TODO check this
@@ -427,7 +429,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public void configureNormalLevel() {
-        WorldMap worldMap = mapManager.selectWorldMap(mapCategory, level.number);
+        WorldMap worldMap = mapSelector.selectWorldMap(mapCategory, level.number);
         createWorldAndPopulation(worldMap);
         level.setNumFlashes(5); // TODO check this
         level.setCutSceneNumber(intermissionNumberAfterLevel(level.number));
@@ -443,7 +445,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public void configureDemoLevel() {
-        WorldMap worldMap = mapManager.coloredWorldMap(mapCategory, level.number);
+        WorldMap worldMap = mapSelector.coloredWorldMap(mapCategory, level.number);
         createWorldAndPopulation(worldMap);
         level.setNumFlashes(5); // TODO check this
         level.setCutSceneNumber(0);
