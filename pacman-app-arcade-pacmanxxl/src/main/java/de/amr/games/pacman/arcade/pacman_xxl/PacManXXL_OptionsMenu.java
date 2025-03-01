@@ -192,7 +192,7 @@ public class PacManXXL_OptionsMenu {
                 game.mapSelector().loadAllMaps(game);
                 game.mapSelector().setMapSelectionMode(menuState.mapSelectionMode);
 
-                ui.gameController().selectGame(GameVariant.PACMAN_XXL);
+                ui.selectGameVariant(GameVariant.PACMAN_XXL);
             }
             case MS_PACMAN_XXL -> { // Ms. Pac-Man
                 GameConfiguration msPacManGameConfig = ui.gameConfiguration(GameVariant.MS_PACMAN_XXL);
@@ -205,7 +205,7 @@ public class PacManXXL_OptionsMenu {
                 game.mapSelector().loadAllMaps(game);
                 game.mapSelector().setMapSelectionMode(menuState.mapSelectionMode);
 
-                ui.gameController().selectGame(GameVariant.MS_PACMAN_XXL);
+                ui.selectGameVariant(GameVariant.MS_PACMAN_XXL);
             }
         }
     }

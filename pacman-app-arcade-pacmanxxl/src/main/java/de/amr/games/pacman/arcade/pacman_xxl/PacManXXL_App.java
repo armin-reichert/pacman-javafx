@@ -27,7 +27,7 @@ public class PacManXXL_App extends Application {
         gameController.setGameModel(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_GameModel());
         gameController.setGameModel(GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_GameModel());
         gameController.gameModels().forEach(GameModel::init);
-        gameController.selectGame(GameVariant.PACMAN_XXL);
+        gameController.selectGame(GameVariant.MS_PACMAN_XXL);
     }
 
     @Override
