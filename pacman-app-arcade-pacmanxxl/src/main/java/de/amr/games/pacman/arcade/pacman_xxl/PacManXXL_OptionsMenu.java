@@ -202,7 +202,7 @@ public class PacManXXL_OptionsMenu {
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
         int d = 3;
-        g.setFill(Color.rgb(30, 30, 200));
+        g.setFill(Color.valueOf("#172E73"));
         g.fillRect(d, d, canvas.getWidth() - 2*d, canvas.getHeight() - 2*d);
 
         g.scale(scalingPy.doubleValue(), scalingPy.doubleValue());
