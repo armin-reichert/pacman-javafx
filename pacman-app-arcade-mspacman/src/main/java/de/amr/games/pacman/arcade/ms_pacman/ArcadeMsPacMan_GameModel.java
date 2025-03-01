@@ -12,10 +12,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.LevelData;
-import de.amr.games.pacman.model.Portal;
+import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
@@ -97,7 +94,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     private byte cruiseElroy; //TODO is this existing in Ms. Pac-Man at all?
 
-    protected ArcadeMsPacMan_MapSelector mapSelector = new ArcadeMsPacMan_MapSelector();
+    protected MapSelector mapSelector = new ArcadeMsPacMan_MapSelector();
 
     @Override
     public void init() {

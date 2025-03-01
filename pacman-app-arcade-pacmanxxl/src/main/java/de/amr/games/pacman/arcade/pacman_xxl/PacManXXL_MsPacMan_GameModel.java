@@ -12,8 +12,6 @@ import java.io.File;
 
 public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
 
-    private PacManXXL_MapSelector mapSelector;
-
     @Override
     public void init() {
         super.init();
@@ -24,6 +22,6 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
     }
 
     public PacManXXL_MapSelector mapSelector() {
-        return mapSelector;
+        return (PacManXXL_MapSelector) mapSelector;
     }
 }

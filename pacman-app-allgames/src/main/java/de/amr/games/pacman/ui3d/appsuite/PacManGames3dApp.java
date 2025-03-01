@@ -10,10 +10,7 @@ import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.games.pacman.arcade.pacman.ArcadePacMan_GameConfig3D;
 import de.amr.games.pacman.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.games.pacman.arcade.pacman.ArcadePacMan_StartPage;
-import de.amr.games.pacman.arcade.pacman_xxl.PacManXXL_MsPacMan_GameModel;
-import de.amr.games.pacman.arcade.pacman_xxl.PacManXXL_PacMan_GameConfig3D;
-import de.amr.games.pacman.arcade.pacman_xxl.PacManXXL_PacMan_GameModel;
-import de.amr.games.pacman.arcade.pacman_xxl.PacManXXL_StartPage;
+import de.amr.games.pacman.arcade.pacman_xxl.*;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -22,6 +19,7 @@ import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.games.pacman.ui2d.DashboardItemID;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
+import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui3d.GlobalProperties3d;
 import de.amr.games.pacman.ui3d.PacManGamesUI_3D;
 import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
@@ -77,16 +75,19 @@ public class PacManGames3dApp extends Application {
         ui.loadAssets();
 
         // UI asset storage exists now, add game variants including their own assets
-        ui.setGameConfiguration(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameConfig3D(ui.assets()));
+        ui.setGameConfiguration(GameVariant.PACMAN,           new ArcadePacMan_GameConfig3D(ui.assets()));
+        ui.setGameConfiguration(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_GameConfig3D(ui.assets()));
         ui.setGameConfiguration(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameConfig3D(ui.assets()));
-        ui.setGameConfiguration(GameVariant.PACMAN, new ArcadePacMan_GameConfig3D(ui.assets()));
-        ui.setGameConfiguration(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_GameConfig3D(ui.assets()));
+        ui.setGameConfiguration(GameVariant.PACMAN_XXL,       new PacManXXL_PacMan_GameConfig3D(ui.assets()));
+        ui.setGameConfiguration(GameVariant.MS_PACMAN_XXL,    new PacManXXL_MsPacMan_GameConfig3D(ui.assets()));
 
         ui.create(stage, initialSize());
-        ui.setStartPage(GameVariant.PACMAN, new ArcadePacMan_StartPage(ui));
-        ui.setStartPage(GameVariant.MS_PACMAN, new ArcadeMsPacMan_StartPage(ui));
-        ui.setStartPage(GameVariant.PACMAN_XXL, new PacManXXL_StartPage(ui));
+        ui.setStartPage(GameVariant.PACMAN,           new ArcadePacMan_StartPage(ui));
+        ui.setStartPage(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_StartPage(ui));
         ui.setStartPage(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_StartPage(ui));
+        StartPage xxlStartPage = new PacManXXL_StartPage(ui);
+        ui.setStartPage(GameVariant.PACMAN_XXL,    xxlStartPage);
+        ui.setStartPage(GameVariant.MS_PACMAN_XXL, xxlStartPage);
 
         ui.addDashboardItem(DashboardItemID.README);
         ui.addDashboardItem(DashboardItemID.GENERAL);
