@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman_xxl;
 
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.uilib.Flyer;
@@ -18,22 +17,17 @@ import org.tinylog.Logger;
 public class PacManXXL_StartPage extends StackPane implements StartPage {
 
     private final PacManGamesUI ui;
-    private final Flyer flyer;
     private final PacManXXL_OptionsMenu menu;
 
     public PacManXXL_StartPage(PacManGamesUI ui) {
         this.ui = ui;
-
-        setBackground(Background.fill(Color.BLACK));
-
         ResourceManager rm = this::getClass;
-        flyer = new Flyer(rm.loadImage("graphics/pacman_xxl_startpage.jpg"));
-        flyer.setUserData(GameVariant.PACMAN_XXL);
+        Flyer flyer = new Flyer(rm.loadImage("graphics/pacman_xxl_startpage.jpg"));
         flyer.selectFlyerPage(0);
         flyer.setLayoutMode(0, Flyer.LayoutMode.FILL);
-
         menu = new PacManXXL_OptionsMenu(ui);
         getChildren().addAll(flyer, menu.root());
+        setBackground(Background.fill(Color.BLACK));
     }
 
     @Override

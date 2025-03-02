@@ -61,16 +61,18 @@ public class StartPageCarousel extends Carousel implements GameActionProvider {
         bindGameActions();
     }
 
-    public void addStartPage(GameVariant variant, StartPage startPage) {
-        if (slides.contains(startPage.root())) {
+    public void addStartPage(GameVariant gameVariant, StartPage startPage) {
+        if (slides().contains(startPage.root())) {
             Logger.warn("Start page {} already in carousel", startPage);
             return;
         }
         addSlide(startPage.root());
-        startPage.root().setUserData(variant);
+        startPage.root().setUserData(gameVariant);
         setNavigationVisible(numSlides() >= 2);
+        //TODO check this
         selectedIndexProperty().set(0);
-        Logger.info("Start page {} added for game variant {}", startPage, variant);
+
+        Logger.info("Start page {} added for game variant {}", startPage, gameVariant);
     }
 
     @Override

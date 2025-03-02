@@ -10,41 +10,62 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
 public class Carousel extends StackPane {
 
+    private static final ResourceManager RESOURCE_MANAGER = () -> Carousel.class;
+    private static final Image ARROW_LEFT_IMAGE = RESOURCE_MANAGER.loadImage("graphics/arrow-left.png");
+    private static final Image ARROW_RIGHT_IMAGE = RESOURCE_MANAGER.loadImage("graphics/arrow-right.png");
+
+    private static Button createCarouselButton(Image image) {
+        ImageView icon = new ImageView(image);
+        icon.setFitHeight(32);
+        icon.setFitWidth(32);
+        var button = new Button();
+        // Without this, button gets input focus after being clicked with the mouse and the LEFT, RIGHT keys stop working!
+        button.setFocusTraversable(false);
+        button.setGraphic(icon);
+        button.setOpacity(0.1);
+        button.setOnMouseEntered(e -> button.setOpacity(0.4));
+        button.setOnMouseExited(e -> button.setOpacity(0.1));
+        return button;
+    }
+
     private final IntegerProperty selectedIndexPy = new SimpleIntegerProperty(-1) {
         @Override
         protected void invalidated() {
-            updateUI();
+            getChildren().clear();
+            currentSlide().ifPresent(slide -> getChildren().add(slide));
+            // Buttons must be added last!
+            getChildren().addAll(btnPrevSlideSelector, btnNextSlideSelector);
         }
     };
 
-    protected final List<Node> slides = new ArrayList<>();
-    protected final Button btnPrevSlideArrow;
-    protected final Button btnNextSlideArrow;
-
-    protected Consumer<Node> actionPrevSlideSelected;
-    protected Consumer<Node> actionNextSlideSelected;
+    private final List<Node> slides = new ArrayList<>();
+    private final Button btnPrevSlideSelector;
+    private final Button btnNextSlideSelector;
+    private Consumer<Node> actionPrevSlideSelected;
+    private Consumer<Node> actionNextSlideSelected;
 
     public Carousel() {
-        ResourceManager rm = () -> Carousel.class;
-        Image arrowLeftImage = rm.loadImage("graphics/arrow-left.png");
-        Image arrowRightImage = rm.loadImage("graphics/arrow-right.png");
+        btnPrevSlideSelector = createCarouselButton(ARROW_LEFT_IMAGE);
+        btnPrevSlideSelector.setOnAction(e -> showPreviousSlide());
+        StackPane.setAlignment(btnPrevSlideSelector, Pos.CENTER_LEFT);
 
-        btnPrevSlideArrow = createCarouselButton(arrowLeftImage);
-        btnPrevSlideArrow.setOnAction(e -> showPreviousSlide());
-        StackPane.setAlignment(btnPrevSlideArrow, Pos.CENTER_LEFT);
-
-        btnNextSlideArrow = createCarouselButton(arrowRightImage);
-        btnNextSlideArrow.setOnAction(e -> showNextSlide());
-        StackPane.setAlignment(btnNextSlideArrow, Pos.CENTER_RIGHT);
+        btnNextSlideSelector = createCarouselButton(ARROW_RIGHT_IMAGE);
+        btnNextSlideSelector.setOnAction(e -> showNextSlide());
+        StackPane.setAlignment(btnNextSlideSelector, Pos.CENTER_RIGHT);
     }
 
     public int selectedIndex() { return selectedIndexPy.get(); }
+
+    public List<Node> slides() {
+        return Collections.unmodifiableList(slides);
+    }
 
     public int numSlides() {
         return slides.size();
@@ -64,28 +85,9 @@ public class Carousel extends StackPane {
             : Optional.empty();
     }
 
-    private void updateUI() {
-        getChildren().setAll(btnPrevSlideArrow, btnNextSlideArrow);
-        currentSlide().ifPresent(slide -> getChildren().add(slide));
-    }
-
-    private Button createCarouselButton(Image image) {
-        ImageView icon = new ImageView(image);
-        icon.setFitHeight(32);
-        icon.setFitWidth(32);
-        var button = new Button();
-        // Without this, button gets input focus after being clicked with the mouse and the LEFT, RIGHT keys stop working!
-        button.setFocusTraversable(false);
-        button.setGraphic(icon);
-        button.setOpacity(0.1);
-        button.setOnMouseEntered(e -> button.setOpacity(0.4));
-        button.setOnMouseExited(e -> button.setOpacity(0.1));
-        return button;
-    }
-
     public void setNavigationVisible(boolean visible) {
-        btnPrevSlideArrow.setVisible(visible);
-        btnNextSlideArrow.setVisible(visible);
+        btnPrevSlideSelector.setVisible(visible);
+        btnNextSlideSelector.setVisible(visible);
     }
 
     public IntegerProperty selectedIndexProperty() {
