@@ -16,7 +16,10 @@ import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui2d.input.Keyboard;
-import de.amr.games.pacman.ui2d.page.*;
+import de.amr.games.pacman.ui2d.page.EditorPage;
+import de.amr.games.pacman.ui2d.page.GamePage;
+import de.amr.games.pacman.ui2d.page.StartPage;
+import de.amr.games.pacman.ui2d.page.StartPageCarousel;
 import de.amr.games.pacman.ui2d.scene.GameConfiguration;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -604,9 +607,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         gamePage.dashboardLayer().hideDashboard();
         sceneRoot.setBackground(assets.get("scene_background"));
         selectPage(startPagesCarousel);
-        if (startPagesCarousel.currentSlide() != null) {
-            startPagesCarousel.currentSlide().requestFocus();
-        }
+        startPagesCarousel.currentSlide().ifPresent(Node::requestFocus);
     }
 
     @Override

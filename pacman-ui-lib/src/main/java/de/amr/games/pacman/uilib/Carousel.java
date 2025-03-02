@@ -11,6 +11,7 @@ import javafx.scene.layout.StackPane;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class Carousel extends StackPane {
@@ -18,10 +19,7 @@ public class Carousel extends StackPane {
     private final IntegerProperty selectedIndexPy = new SimpleIntegerProperty(-1) {
         @Override
         protected void invalidated() {
-            int index = get();
-            if (index >= 0 && index < slides.size()) {
-                getChildren().setAll(slides.get(index), btnPrevSlideArrow, btnNextSlideArrow);
-            }
+            updateUI();
         }
     };
 
@@ -44,6 +42,31 @@ public class Carousel extends StackPane {
         btnNextSlideArrow = createCarouselButton(arrowRightImage);
         btnNextSlideArrow.setOnAction(e -> showNextSlide());
         StackPane.setAlignment(btnNextSlideArrow, Pos.CENTER_RIGHT);
+    }
+
+    public int selectedIndex() { return selectedIndexPy.get(); }
+
+    public int numSlides() {
+        return slides.size();
+    }
+
+    public void addSlide(Node slide) {
+        slides.add(slide);
+    }
+
+    public Node slide(int index) {
+        return slides.get(index);
+    }
+
+    public Optional<Node> currentSlide() {
+        return selectedIndex() != -1
+            ? Optional.of(slides.get(selectedIndex()))
+            : Optional.empty();
+    }
+
+    private void updateUI() {
+        getChildren().setAll(btnPrevSlideArrow, btnNextSlideArrow);
+        currentSlide().ifPresent(slide -> getChildren().add(slide));
     }
 
     private Button createCarouselButton(Image image) {
@@ -78,9 +101,9 @@ public class Carousel extends StackPane {
     }
 
     public void showPreviousSlide() {
-        int newIndex = selectedIndexPy.get() > 0 ? selectedIndexPy.get() - 1: slides.size() - 1;
+        if (slides.isEmpty()) return;
+        int newIndex = selectedIndex() > 0 ? selectedIndex() - 1: slides.size() - 1;
         selectedIndexPy.set(newIndex);
-        updateUI();
         if (actionPrevSlideSelected != null) {
             actionPrevSlideSelected.accept(slides.get(newIndex));
         }
@@ -89,34 +112,8 @@ public class Carousel extends StackPane {
     public void showNextSlide() {
         int newIndex = selectedIndexPy.get() < slides.size() - 1 ? selectedIndexPy.get() + 1 : 0;
         selectedIndexPy.set(newIndex);
-        updateUI();
         if (actionNextSlideSelected != null) {
             actionNextSlideSelected.accept(slides.get(newIndex));
-        }
-    }
-
-    public int numSlides() {
-        return slides.size();
-    }
-
-    public void addSlide(Node slide) {
-        slides.add(slide);
-    }
-
-    public Node slide(int index) {
-        return slides.get(index);
-    }
-
-    public Node currentSlide() {
-        return selectedIndexPy.get() != -1 ? slides.get(selectedIndexPy.get()) : null;
-    }
-
-    private void updateUI() {
-        Node currentSlide = currentSlide();
-        if (currentSlide != null) {
-            getChildren().setAll(currentSlide(), btnPrevSlideArrow, btnNextSlideArrow);
-        } else {
-            getChildren().setAll(btnPrevSlideArrow, btnNextSlideArrow);
         }
     }
 }
