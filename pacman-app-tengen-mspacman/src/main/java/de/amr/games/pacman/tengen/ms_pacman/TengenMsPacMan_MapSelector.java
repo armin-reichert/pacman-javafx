@@ -30,6 +30,20 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
     public TengenMsPacMan_MapSelector() {}
 
     @Override
+    public List<WorldMap> builtinMaps() {
+        List<WorldMap> all = new ArrayList<>();
+        for (MapCategory category : MapCategory.values()) {
+            all.addAll(mapRepository.get(category));
+        }
+        return all;
+    }
+
+    @Override
+    public List<WorldMap> customMaps() {
+        return List.of();
+    }
+
+    @Override
     public void loadAllMaps(GameModel game) {
         mapRepository.put(MapCategory.ARCADE,  createMaps(MAPS_ROOT + "arcade%d.world", 4));
         mapRepository.put(MapCategory.MINI,    createMaps(MAPS_ROOT + "mini%d.world", 6));

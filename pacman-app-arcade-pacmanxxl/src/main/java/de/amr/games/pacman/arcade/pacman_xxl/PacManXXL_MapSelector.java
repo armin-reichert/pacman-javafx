@@ -3,8 +3,8 @@ package de.amr.games.pacman.arcade.pacman_xxl;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.MapSelectionMode;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.MapSelectionMode;
 import de.amr.games.pacman.model.MapSelector;
 import org.tinylog.Logger;
 
@@ -18,7 +18,6 @@ import java.util.Map;
 import static de.amr.games.pacman.lib.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.Globals.randomInt;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
-import static de.amr.games.pacman.lib.tilemap.WorldMap.PROPERTY_COLOR_FOOD;
 import static de.amr.games.pacman.model.GameModel.CUSTOM_MAP_DIR;
 
 public class PacManXXL_MapSelector implements MapSelector {
@@ -39,6 +38,16 @@ public class PacManXXL_MapSelector implements MapSelector {
     private MapSelectionMode mapSelectionMode = MapSelectionMode.CUSTOM_MAPS_FIRST;
 
     @Override
+    public List<WorldMap> builtinMaps() {
+        return builtinMaps;
+    }
+
+    @Override
+    public List<WorldMap> customMaps() {
+        return customMapsByFile.keySet().stream().sorted().map(customMapsByFile::get).toList();
+    }
+
+    @Override
     public void loadAllMaps(GameModel game) {
         builtinMaps = loadMapsFromModule("maps/masonic_%d.world", 8);
         updateCustomMaps(game);
@@ -52,14 +61,14 @@ public class PacManXXL_MapSelector implements MapSelector {
                             ? builtinMaps.get(levelNumber - 1)
                             : builtinMaps.get(randomInt(0, builtinMaps.size()));
             case CUSTOM_MAPS_FIRST -> {
-                List<WorldMap> maps = new ArrayList<>(customMapsSortedByFile());
+                List<WorldMap> maps = new ArrayList<>(customMaps());
                 maps.addAll(builtinMaps);
                 yield levelNumber <= maps.size()
                         ? maps.get(levelNumber - 1)
                         : maps.get(randomInt(0, maps.size()));
             }
             case ALL_RANDOM -> {
-                List<WorldMap> maps = new ArrayList<>(customMapsSortedByFile());
+                List<WorldMap> maps = new ArrayList<>(customMaps());
                 maps.addAll(builtinMaps);
                 yield maps.get(randomInt(0, maps.size()));
             }
@@ -79,14 +88,6 @@ public class PacManXXL_MapSelector implements MapSelector {
 
     public MapSelectionMode mapSelectionMode() {
         return mapSelectionMode;
-    }
-
-    public Map<File, WorldMap> customMapsByFile() {
-        return customMapsByFile;
-    }
-
-    public List<WorldMap> customMapsSortedByFile() {
-        return customMapsByFile.keySet().stream().sorted().map(customMapsByFile::get).toList();
     }
 
     public void updateCustomMaps(GameModel game) {

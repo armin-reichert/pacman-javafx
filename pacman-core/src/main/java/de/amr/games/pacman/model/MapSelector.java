@@ -44,4 +44,8 @@ public interface MapSelector {
     void loadAllMaps(GameModel game);
 
     WorldMap selectWorldMap(int levelNumber);
+
+    List<WorldMap> builtinMaps();
+
+    List<WorldMap> customMaps();
 }

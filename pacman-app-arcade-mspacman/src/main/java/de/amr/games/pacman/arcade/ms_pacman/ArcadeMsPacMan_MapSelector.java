@@ -6,18 +6,29 @@ package de.amr.games.pacman.arcade.ms_pacman;
 
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.MapSelectionMode;
 import de.amr.games.pacman.model.MapSelector;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.util.List;
 
 public class ArcadeMsPacMan_MapSelector implements MapSelector {
 
-    private List<WorldMap> maps;
+    private ObservableList<WorldMap> maps;
+
+    @Override
+    public List<WorldMap> builtinMaps() {
+        return maps;
+    }
+
+    @Override
+    public List<WorldMap> customMaps() {
+        return List.of();
+    }
 
     @Override
     public void loadAllMaps(GameModel game) {
-        maps = loadMapsFromModule("maps/mspacman_%d.world", 4);
+        maps = FXCollections.observableList(loadMapsFromModule("maps/mspacman_%d.world", 4));
     }
 
     /**

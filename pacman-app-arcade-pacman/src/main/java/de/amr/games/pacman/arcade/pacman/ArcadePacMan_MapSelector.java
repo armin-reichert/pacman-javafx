@@ -11,10 +11,21 @@ import de.amr.games.pacman.model.MapSelector;
 import org.tinylog.Logger;
 
 import java.net.URL;
+import java.util.List;
 
 public class ArcadePacMan_MapSelector implements MapSelector {
 
     private WorldMap map;
+
+    @Override
+    public List<WorldMap> builtinMaps() {
+        return List.of(map);
+    }
+
+    @Override
+    public List<WorldMap> customMaps() {
+        return List.of();
+    }
 
     @Override
     public void loadAllMaps(GameModel game) {
