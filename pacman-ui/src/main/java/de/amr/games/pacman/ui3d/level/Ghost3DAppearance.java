@@ -9,7 +9,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.assets.AssetStorage;
+import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.ui3d.GlobalProperties3d;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.animation.Interpolator;

@@ -7,9 +7,7 @@ package de.amr.games.pacman.arcade.pacman_xxl;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.MapSelectionMode;
-import de.amr.games.pacman.ui2d.GameRenderer;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
-import de.amr.games.pacman.ui2d.scene.GameConfiguration;
 import de.amr.games.pacman.uilib.ResourceManager;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -19,7 +17,6 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
@@ -78,7 +75,7 @@ public class PacManXXL_OptionsMenu {
         root.setCenter(canvas);
         root.setBorder(Border.stroke(BORDER_COLOR));
 
-        ResourceManager rm = () -> GameRenderer.class;
+        ResourceManager rm = () -> PacManGamesUI.class;
         arcadeFontNormal = rm.loadFont("fonts/emulogic.ttf", 8);
         arcadeFontBig = rm.loadFont("fonts/emulogic.ttf", 20);
 

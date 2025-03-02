@@ -6,14 +6,14 @@ package de.amr.games.pacman.arcade.pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
-import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import javafx.scene.image.Image;
 
 import java.util.List;
 import java.util.stream.IntStream;
 
 import static de.amr.games.pacman.lib.RectArea.rect;
-import static de.amr.games.pacman.ui2d.assets.GameSpriteSheet.rectAreas;
+import static de.amr.games.pacman.ui2d.rendering.GameSpriteSheet.rectAreas;
 
 /**
  * @author Armin Reichert

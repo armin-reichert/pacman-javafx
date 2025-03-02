@@ -21,7 +21,7 @@ import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.MessageMovement;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
 import de.amr.games.pacman.ui2d.action.GameActions2D;
-import de.amr.games.pacman.ui2d.assets.GameSound;
+import de.amr.games.pacman.ui2d.sound.GameSound;
 import de.amr.games.pacman.ui2d.input.Keyboard;
 import de.amr.games.pacman.ui2d.scene.CameraControlledView;
 import de.amr.games.pacman.ui2d.scene.GameScene;

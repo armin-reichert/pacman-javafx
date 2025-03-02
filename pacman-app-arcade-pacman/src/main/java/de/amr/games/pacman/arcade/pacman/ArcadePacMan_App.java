@@ -7,7 +7,7 @@ package de.amr.games.pacman.arcade.pacman;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.DashboardItemID;
+import de.amr.games.pacman.ui2d.dashboard.DashboardItemID;
 import de.amr.games.pacman.ui3d.PacManGamesUI_3D;
 import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
 import javafx.application.Application;

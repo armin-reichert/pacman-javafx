@@ -2,10 +2,10 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui2d.assets;
+package de.amr.games.pacman.ui2d.sound;
 
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.uilib.AssetStorage;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.media.AudioClip;

@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.assets.GameSound;
+import de.amr.games.pacman.ui2d.sound.GameSound;
 import javafx.animation.Animation;
 
 /**

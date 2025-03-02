@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui2d;
+package de.amr.games.pacman.ui2d.rendering;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
@@ -11,8 +11,7 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.tilemap.rendering.FoodTileRenderer;
 import de.amr.games.pacman.tilemap.rendering.TerrainColorScheme;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer;
-import de.amr.games.pacman.ui2d.assets.AssetStorage;
-import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
+import de.amr.games.pacman.uilib.AssetStorage;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;

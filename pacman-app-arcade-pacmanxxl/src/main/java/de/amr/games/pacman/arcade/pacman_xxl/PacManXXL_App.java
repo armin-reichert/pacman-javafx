@@ -7,7 +7,7 @@ package de.amr.games.pacman.arcade.pacman_xxl;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.DashboardItemID;
+import de.amr.games.pacman.ui2d.dashboard.DashboardItemID;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
 import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui3d.PacManGamesUI_3D;
@@ -17,7 +17,6 @@ import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.tinylog.Logger;
 
 public class PacManXXL_App extends Application {
 

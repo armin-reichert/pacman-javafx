@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.level;
 
-import de.amr.games.pacman.ui2d.assets.AssetStorage;
+import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.animation.*;
 import javafx.animation.Animation.Status;

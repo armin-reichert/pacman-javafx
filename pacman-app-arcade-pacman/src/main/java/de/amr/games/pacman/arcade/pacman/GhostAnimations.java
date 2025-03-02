@@ -9,9 +9,9 @@ import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.ActorAnimations;
 import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.assets.SpriteAnimation;
-import de.amr.games.pacman.ui2d.assets.SpriteAnimationSet;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.SpriteAnimation;
+import de.amr.games.pacman.ui2d.rendering.SpriteAnimationSet;
 
 import java.util.Map;
 

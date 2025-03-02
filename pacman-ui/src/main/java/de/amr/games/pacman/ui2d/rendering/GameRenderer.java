@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui2d;
+package de.amr.games.pacman.ui2d.rendering;
 
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
@@ -15,10 +15,8 @@ import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.AnimatedActor2D;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Creature;
-import de.amr.games.pacman.ui2d.assets.AssetStorage;
-import de.amr.games.pacman.ui2d.assets.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.assets.SpriteAnimation;
-import de.amr.games.pacman.ui2d.assets.SpriteAnimationSet;
+import de.amr.games.pacman.ui2d.*;
+import de.amr.games.pacman.uilib.AssetStorage;
 import javafx.beans.property.FloatProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;

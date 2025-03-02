@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui2d.assets;
+package de.amr.games.pacman.ui2d.rendering;
 
 import de.amr.games.pacman.lib.RectArea;
 import javafx.animation.Animation;
@@ -88,7 +88,7 @@ public class SpriteAnimation {
         this.spriteSheet = spriteSheet;
     }
 
-    public GameSpriteSheet spriteSheet() {
+    public de.amr.games.pacman.ui2d.rendering.GameSpriteSheet spriteSheet() {
         return spriteSheet;
     }
 

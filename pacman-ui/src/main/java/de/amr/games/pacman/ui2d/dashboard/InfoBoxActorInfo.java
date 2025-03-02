@@ -13,7 +13,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.assets.SpriteAnimationSet;
+import de.amr.games.pacman.ui2d.rendering.SpriteAnimationSet;
 
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
