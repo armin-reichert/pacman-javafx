@@ -20,6 +20,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -37,6 +38,8 @@ public class PacManXXL_OptionsMenu {
 
     private static final double HEIGHT_FRACTION = 0.85;
     private static final double UNSCALED_HEIGHT = 36 * TS;
+    private static final Color BACKGROUND_COLOR = Color.valueOf("#172E73");
+    private static final Color BORDER_COLOR = Color.grayRgb(200);
 
     private static abstract class MenuEntry {
         final String label;
@@ -72,14 +75,18 @@ public class PacManXXL_OptionsMenu {
     private final MenuState menuState = new MenuState();
 
     public PacManXXL_OptionsMenu(PacManGamesUI ui) {
-        root.setBackground(Background.EMPTY);
         root.setCenter(canvas);
+        root.setBorder(Border.stroke(BORDER_COLOR));
 
         ResourceManager rm = () -> GameRenderer.class;
         arcadeFontNormal = rm.loadFont("fonts/emulogic.ttf", 8);
         arcadeFontBig = rm.loadFont("fonts/emulogic.ttf", 20);
 
         scalingPy.bind(ui.getMainScene().heightProperty().multiply(HEIGHT_FRACTION).divide(UNSCALED_HEIGHT));
+
+        root.maxWidthProperty().bind(scalingPy.multiply(UNSCALED_HEIGHT));
+        root.maxHeightProperty().bind(scalingPy.multiply(UNSCALED_HEIGHT));
+
         canvas.widthProperty().bind(scalingPy.multiply(UNSCALED_HEIGHT));
         canvas.heightProperty().bind(scalingPy.multiply(UNSCALED_HEIGHT));
 
@@ -196,15 +203,10 @@ public class PacManXXL_OptionsMenu {
 
     private void draw() {
         GraphicsContext g = canvas.getGraphicsContext2D();
-        g.save();
-
-        g.setFill(Color.grayRgb(200));
+        g.setFill(BACKGROUND_COLOR);
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        int d = 3;
-        g.setFill(Color.valueOf("#172E73"));
-        g.fillRect(d, d, canvas.getWidth() - 2*d, canvas.getHeight() - 2*d);
-
+        g.save();
         g.scale(scalingPy.doubleValue(), scalingPy.doubleValue());
 
         g.setFont(arcadeFontBig);
