@@ -17,6 +17,7 @@ import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import de.amr.games.pacman.uilib.Carousel;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
+import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -65,10 +66,15 @@ public class StartPageCarousel extends Carousel implements GameActionProvider {
     }
 
     public void addStartPage(GameVariant variant, StartPage startPage) {
-        startPage.root().setUserData(variant);
+        if (slides.contains(startPage.root())) {
+            Logger.warn("Start page {} already in carousel", startPage);
+            return;
+        }
         addSlide(startPage.root());
+        startPage.root().setUserData(variant);
         setNavigationVisible(numSlides() >= 2);
         selectedIndexProperty().set(0);
+        Logger.info("Start page {} added for game variant {}", startPage, variant);
     }
 
     @Override
