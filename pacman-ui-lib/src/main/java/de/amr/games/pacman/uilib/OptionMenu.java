@@ -25,6 +25,8 @@ import static de.amr.games.pacman.lib.Globals.TS;
 
 public class OptionMenu {
 
+    private static final int WIDTH_IN_TILES = 36; // TODO
+    private static final float UNSCALED_HEIGHT = 36 * TS;
 
     public static abstract class MenuEntry {
         protected final String label;
@@ -51,7 +53,9 @@ public class OptionMenu {
     private final List<OptionMenu.MenuEntry> entries = new ArrayList<>();
 
     private int selectedEntryIndex = 0;
-    private Runnable actionOnEnter;
+    private Runnable actionOnStart;
+
+    private String title = "<Add title>";
 
     private final BorderPane root = new BorderPane();
     private final Canvas canvas = new Canvas();
@@ -106,8 +110,8 @@ public class OptionMenu {
                     selectValueSound.play();
                 }
                 case ENTER -> {
-                    if (actionOnEnter != null) {
-                        actionOnEnter.run();
+                    if (actionOnStart != null) {
+                        actionOnStart.run();
                     }
                 }
             }
@@ -119,6 +123,10 @@ public class OptionMenu {
     public FloatProperty scalingProperty() { return scalingPy; }
     public void addEntry(MenuEntry entry) {
         entries.add(entry);
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public void setBackgroundFill(Paint backgroundFill) {
@@ -145,8 +153,8 @@ public class OptionMenu {
         this.titleTextFill = titleTextFill;
     }
 
-    public void setOnEnter(Runnable action) {
-        this.actionOnEnter = action;
+    public void setOnStart(Runnable action) {
+        this.actionOnStart = action;
     }
 
     public void draw() {
@@ -157,9 +165,10 @@ public class OptionMenu {
         g.save();
         g.scale(scalingPy.doubleValue(), scalingPy.doubleValue());
 
+        int titleX = (WIDTH_IN_TILES - title.length()) / 2;
         g.setFont(arcadeFontBig);
         g.setFill(titleTextFill);
-        g.fillText("PAC-MAN XXL", 4 * TS, 6 * TS);
+        g.fillText(title, 4 * TS, 6 * TS);
         g.setFont(arcadeFontNormal);
 
         for (int i = 0; i < entries.size(); ++i) {
@@ -179,7 +188,7 @@ public class OptionMenu {
         g.setFill(hintTextFill);
         g.fillText("   PRESS SPACE TO CHANGE OPTIONS    ", 0, 29 * TS);
         g.fillText("  CHOOSE OPTIONS WITH UP AND DOWN   ", 0, 31 * TS);
-        g.fillText("     PRESS ENTER TO START GAME      ", 0, 33 * TS);
+        g.fillText("          PRESS ENTER TO START      ", 0, 33 * TS);
 
         g.restore();
     }
