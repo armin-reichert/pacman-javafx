@@ -68,7 +68,7 @@ public class OptionMenu {
         root.setCenter(canvas);
         root.setBorder(Border.stroke(borderStroke));
 
-        ResourceManager rm = () -> ResourceManager.class;
+        ResourceManager rm = () -> OptionMenu.class;
         arcadeFont8 = rm.loadFont("fonts/emulogic.ttf", 8);
         arcadeFont20 = rm.loadFont("fonts/emulogic.ttf", 20);
 
@@ -178,9 +178,9 @@ public class OptionMenu {
         }
 
         g.setFill(hintTextFill);
-        g.fillText("   PRESS SPACE TO CHANGE OPTIONS    ", 0, 29 * TS);
-        g.fillText("  CHOOSE OPTIONS WITH UP AND DOWN   ", 0, 31 * TS);
-        g.fillText("          PRESS ENTER TO START      ", 0, 33 * TS);
+        g.fillText("  SELECT OPTIONS WITH UP AND DOWN   ", 0, 29 * TS);
+        g.fillText("   PRESS SPACE TO CHANGE OPTIONS    ", 0, 31 * TS);
+        g.fillText("        PRESS ENTER TO START        ", 0, 33 * TS);
 
         g.restore();
     }
