@@ -25,8 +25,6 @@ import static de.amr.games.pacman.lib.Globals.TS;
 
 public class OptionMenu {
 
-    private static final int WIDTH_IN_TILES = 36; // TODO
-
     public static abstract class MenuEntry {
         protected final String label;
         protected List<String> options;
@@ -35,10 +33,6 @@ public class OptionMenu {
         public MenuEntry(String label, List<String> options) {
             this.label = label;
             this.options = new ArrayList<>(options);
-        }
-
-        public int getValueIndex() {
-            return valueIndex;
         }
 
         public void setValueIndex(int valueIndex) {
@@ -60,8 +54,8 @@ public class OptionMenu {
     private final Canvas canvas = new Canvas();
     private final FloatProperty scalingPy = new SimpleFloatProperty(2);
 
-    private final Font arcadeFontNormal;
-    private final Font arcadeFontBig;
+    private final Font arcadeFont8;
+    private final Font arcadeFont20;
 
     private Paint backgroundFill = Color.BLACK;
     private Paint borderStroke = Color.LIGHTGRAY;
@@ -75,8 +69,8 @@ public class OptionMenu {
         root.setBorder(Border.stroke(borderStroke));
 
         ResourceManager rm = () -> ResourceManager.class;
-        arcadeFontNormal = rm.loadFont("fonts/emulogic.ttf", 8);
-        arcadeFontBig = rm.loadFont("fonts/emulogic.ttf", 20);
+        arcadeFont8 = rm.loadFont("fonts/emulogic.ttf", 8);
+        arcadeFont20 = rm.loadFont("fonts/emulogic.ttf", 20);
 
         AudioClip selectEntrySound = rm.loadAudioClip("sounds/menu-select1.wav");
         AudioClip selectValueSound = rm.loadAudioClip("sounds/menu-select2.wav");
@@ -156,7 +150,7 @@ public class OptionMenu {
         this.actionOnStart = action;
     }
 
-    public void draw() {
+    public void draw(double titleX) {
         GraphicsContext g = canvas.getGraphicsContext2D();
         g.setFill(backgroundFill);
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -164,11 +158,10 @@ public class OptionMenu {
         g.save();
         g.scale(scalingPy.doubleValue(), scalingPy.doubleValue());
 
-        int titleX = (WIDTH_IN_TILES - title.length()) / 2;
-        g.setFont(arcadeFontBig);
+        g.setFont(arcadeFont20);
         g.setFill(titleTextFill);
-        g.fillText(title, 4 * TS, 6 * TS);
-        g.setFont(arcadeFontNormal);
+        g.fillText(title, titleX, 6 * TS);
+        g.setFont(arcadeFont8);
 
         for (int i = 0; i < entries.size(); ++i) {
             int y = (12 + 3 * i) * TS;

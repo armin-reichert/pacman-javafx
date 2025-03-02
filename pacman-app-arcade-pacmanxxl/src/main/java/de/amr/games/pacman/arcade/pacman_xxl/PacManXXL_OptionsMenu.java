@@ -109,7 +109,8 @@ public class PacManXXL_OptionsMenu {
         menu.addEntry(entryCutScenesEnabled);
         menu.addEntry(entryMapSelectionMode);
 
-        Timeline loop = new Timeline(new KeyFrame(Duration.millis(1000.0/ 60), e -> menu.draw()));
+        //TODO compute titleX
+        Timeline loop = new Timeline(new KeyFrame(Duration.millis(1000.0/ 60), e -> menu.draw(4*TS)));
         loop.setCycleCount(Animation.INDEFINITE);
         loop.play();
     }
