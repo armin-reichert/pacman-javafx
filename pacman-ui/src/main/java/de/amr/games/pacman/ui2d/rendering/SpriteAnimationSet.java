@@ -9,6 +9,8 @@ import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.ActorAnimations;
 import de.amr.games.pacman.model.actors.AnimatedActor2D;
+import de.amr.games.pacman.uilib.SpriteAnimation;
+import de.amr.games.pacman.uilib.SpriteSheet;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -47,8 +49,7 @@ public class SpriteAnimationSet implements ActorAnimations {
         return currentAnimation.currentSprite();
     }
 
-    //TODO passing spritesheet is not necessary
-    protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Actor2D actor) {
+    protected RectArea[] selectedSprites(SpriteSheet spriteSheet, Actor2D actor) {
         return null;
     }
 

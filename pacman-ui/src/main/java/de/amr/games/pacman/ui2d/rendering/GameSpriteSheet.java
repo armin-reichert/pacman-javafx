@@ -6,56 +6,9 @@ package de.amr.games.pacman.ui2d.rendering;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
-import de.amr.games.pacman.uilib.ImageArea;
-import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
+import de.amr.games.pacman.uilib.SpriteSheet;
 
-/**
- * Sprite sheet interface for all game variants.
- *
- * @author Armin Reichert
- */
-public interface GameSpriteSheet {
-
-    static RectArea[] rectAreas(RectArea... areas) {
-        return areas;
-    }
-
-    static ImageArea imageArea(Image sourceImage, int x, int y, int width, int height) {
-        return new ImageArea(sourceImage, new RectArea(x, y, width, height));
-    }
-
-    default ImageArea imageArea(int x, int y, int width, int height) {
-        return imageArea(sourceImage(), x, y, width, height);
-    }
-
-    RectArea NO_SPRITE  = RectArea.PIXEL;
-
-    Image sourceImage();
-
-    /**
-     * @param r rectangular region
-     * @return image copy of region
-     */
-    default Image crop(RectArea r) {
-        return crop(r.x(), r.y(), r.width(), r.height());
-    }
-
-    /**
-     * @param x      region x-coordinate
-     * @param y      region y-coordinate
-     * @param width  region width
-     * @param height region height
-     * @return image copy of region
-     */
-    default Image crop(int x, int y, int width, int height) {
-        var section = new WritableImage(width, height);
-        section.getPixelWriter().setPixels(0, 0, width, height, sourceImage().getPixelReader(), x, y);
-        return section;
-    }
-
-    // Game-related stuff
-
+public interface GameSpriteSheet extends SpriteSheet {
     RectArea[] pacMunchingSprites(Direction dir);
     RectArea[] pacDyingSprites();
 

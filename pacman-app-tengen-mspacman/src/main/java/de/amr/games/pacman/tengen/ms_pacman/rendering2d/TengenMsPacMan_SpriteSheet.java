@@ -7,7 +7,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.SpriteAnimation;
+import de.amr.games.pacman.uilib.SpriteAnimation;
 import javafx.scene.image.Image;
 
 import java.util.Arrays;

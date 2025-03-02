@@ -11,8 +11,9 @@ import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.ActorAnimations;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.SpriteAnimation;
 import de.amr.games.pacman.ui2d.rendering.SpriteAnimationSet;
+import de.amr.games.pacman.uilib.SpriteAnimation;
+import de.amr.games.pacman.uilib.SpriteSheet;
 
 import java.util.Map;
 
@@ -39,10 +40,11 @@ public class PacAnimations extends SpriteAnimationSet {
     }
 
     @Override
-    protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Actor2D actor) {
+    protected RectArea[] selectedSprites(SpriteSheet spriteSheet, Actor2D actor) {
+        GameSpriteSheet gss = (GameSpriteSheet) spriteSheet;
         if (actor instanceof Pac pac) {
             if (isCurrentAnimationID(ActorAnimations.ANIM_PAC_MUNCHING)) {
-                return spriteSheet.pacMunchingSprites(pac.moveDir());
+                return gss.pacMunchingSprites(pac.moveDir());
             }
         }
         return super.selectedSprites(spriteSheet, actor);

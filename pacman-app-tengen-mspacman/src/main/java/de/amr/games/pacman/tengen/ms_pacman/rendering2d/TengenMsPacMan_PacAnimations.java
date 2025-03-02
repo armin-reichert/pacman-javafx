@@ -8,9 +8,9 @@ import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.SpriteAnimation;
 import de.amr.games.pacman.ui2d.rendering.SpriteAnimationSet;
+import de.amr.games.pacman.uilib.SpriteAnimation;
+import de.amr.games.pacman.uilib.SpriteSheet;
 
 import java.util.Map;
 
@@ -105,7 +105,8 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet {
     }
 
     @Override
-    protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Actor2D actor) {
+    protected RectArea[] selectedSprites(SpriteSheet spriteSheet, Actor2D actor) {
+        TengenMsPacMan_SpriteSheet gss = (TengenMsPacMan_SpriteSheet) spriteSheet;
         if (actor instanceof Pac msPacMan) {
             if (isCurrentAnimationID(ANIM_PAC_MUNCHING)) {
                 return TengenMsPacMan_SpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT;
@@ -114,7 +115,7 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet {
                 return TengenMsPacMan_SpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER;
             }
             if (isCurrentAnimationID(ANIM_MR_PACMAN_MUNCHING)) {
-                return ((TengenMsPacMan_SpriteSheet)spriteSheet).pacManMunchingSprites(msPacMan.moveDir());
+                return gss.pacManMunchingSprites(msPacMan.moveDir());
             }
         }
         return super.selectedSprites(spriteSheet, actor);

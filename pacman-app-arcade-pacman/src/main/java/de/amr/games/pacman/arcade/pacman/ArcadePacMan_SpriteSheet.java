@@ -7,13 +7,13 @@ package de.amr.games.pacman.arcade.pacman;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
+import de.amr.games.pacman.uilib.SpriteSheet;
 import javafx.scene.image.Image;
 
 import java.util.List;
 import java.util.stream.IntStream;
 
 import static de.amr.games.pacman.lib.RectArea.rect;
-import static de.amr.games.pacman.ui2d.rendering.GameSpriteSheet.rectAreas;
 
 /**
  * @author Armin Reichert
@@ -44,7 +44,7 @@ public class ArcadePacMan_SpriteSheet implements GameSpriteSheet {
         return tiles;
     }
 
-    private static final RectArea[] GHOST_NUMBER_SPRITES = rectAreas(
+    private static final RectArea[] GHOST_NUMBER_SPRITES = SpriteSheet.rectAreaArray(
         rect(456, 133, 15, 7),  // 200
         rect(472, 133, 15, 7),  // 400
         rect(488, 133, 15, 7),  // 800
@@ -84,7 +84,7 @@ public class ArcadePacMan_SpriteSheet implements GameSpriteSheet {
             RectArea wide   = rect(OFF_X      + margin, dir * 16 + margin, size, size);
             RectArea middle = rect(OFF_X + 16 + margin, dir * 16 + margin, size, size);
             RectArea closed = rect(OFF_X + 32 + margin,          margin, size, size);
-            PAC_MUNCHING_SPRITES[dir] = rectAreas(closed, closed, middle, middle, wide, wide, middle, middle);
+            PAC_MUNCHING_SPRITES[dir] = SpriteSheet.rectAreaArray(closed, closed, middle, middle, wide, wide, middle, middle);
         }
     }
 
@@ -105,7 +105,7 @@ public class ArcadePacMan_SpriteSheet implements GameSpriteSheet {
         }
     }
 
-    private static final RectArea[] GHOST_FRIGHTENED_SPRITES = rectAreas(
+    private static final RectArea[] GHOST_FRIGHTENED_SPRITES = SpriteSheet.rectAreaArray(
         rect(OFF_X + RASTER_SIZE * (8), RASTER_SIZE * (4), RASTER_SIZE, RASTER_SIZE),
         rect(OFF_X + RASTER_SIZE * (9), RASTER_SIZE * (4), RASTER_SIZE, RASTER_SIZE));
 
@@ -114,12 +114,12 @@ public class ArcadePacMan_SpriteSheet implements GameSpriteSheet {
     private static final RectArea[][] GHOST_EYES_SPRITES = new RectArea[4][];
     static {
         for (byte dir = 0; dir < 4; ++dir) {
-            GHOST_EYES_SPRITES[dir] = rectAreas(
+            GHOST_EYES_SPRITES[dir] = SpriteSheet.rectAreaArray(
                 rect(OFF_X + RASTER_SIZE * (8 + dir), RASTER_SIZE * (5), RASTER_SIZE, RASTER_SIZE));
         }
     }
 
-    private static final RectArea[] BIG_PAC_MAN_SPRITES = rectAreas(
+    private static final RectArea[] BIG_PAC_MAN_SPRITES = SpriteSheet.rectAreaArray(
         rect(OFF_X + 32, 16, 32, 32), rect(OFF_X + 64, 16, 32, 32), rect(OFF_X + 96, 16, 32, 32));
 
     private static final RectArea[] BLINKY_STRETCHED_SPRITES = new RectArea[5];

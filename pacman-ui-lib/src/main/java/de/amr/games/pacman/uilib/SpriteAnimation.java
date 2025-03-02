@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui2d.rendering;
+package de.amr.games.pacman.uilib;
 
 import de.amr.games.pacman.lib.RectArea;
 import javafx.animation.Animation;
@@ -23,7 +23,7 @@ public class SpriteAnimation {
 
         private final SpriteAnimation workPiece;
 
-        private Builder(GameSpriteSheet spriteSheet) {
+        private Builder(SpriteSheet spriteSheet) {
             workPiece = new SpriteAnimation(spriteSheet);
         }
 
@@ -56,7 +56,7 @@ public class SpriteAnimation {
         }
     }
 
-    public static Builder spriteSheet(GameSpriteSheet spriteSheet) {
+    public static Builder spriteSheet(SpriteSheet spriteSheet) {
         return new Builder(spriteSheet);
     }
 
@@ -76,7 +76,7 @@ public class SpriteAnimation {
         }
     }
 
-    private final GameSpriteSheet spriteSheet;
+    private final SpriteSheet spriteSheet;
     private Animator animator;
     private String info;
     private RectArea[] sprites;
@@ -84,11 +84,11 @@ public class SpriteAnimation {
     private int frameTicks = 1;
     private int frameIndex;
 
-    private SpriteAnimation(GameSpriteSheet spriteSheet) {
+    private SpriteAnimation(SpriteSheet spriteSheet) {
         this.spriteSheet = spriteSheet;
     }
 
-    public de.amr.games.pacman.ui2d.rendering.GameSpriteSheet spriteSheet() {
+    public SpriteSheet spriteSheet() {
         return spriteSheet;
     }
 

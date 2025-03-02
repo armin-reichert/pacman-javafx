@@ -10,8 +10,9 @@ import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.ActorAnimations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.SpriteAnimation;
 import de.amr.games.pacman.ui2d.rendering.SpriteAnimationSet;
+import de.amr.games.pacman.uilib.SpriteAnimation;
+import de.amr.games.pacman.uilib.SpriteSheet;
 
 import java.util.Map;
 
@@ -106,13 +107,14 @@ public class GhostAnimations extends SpriteAnimationSet {
     }
 
     @Override
-    protected RectArea[] selectedSprites(GameSpriteSheet spriteSheet, Actor2D actor) {
+    protected RectArea[] selectedSprites(SpriteSheet spriteSheet, Actor2D actor) {
+        GameSpriteSheet gss = (GameSpriteSheet) spriteSheet;
         if (actor instanceof Ghost ghost) {
             if (isCurrentAnimationID(ActorAnimations.ANIM_GHOST_NORMAL)) {
-                return spriteSheet.ghostNormalSprites(ghost.id(), ghost.wishDir());
+                return gss.ghostNormalSprites(ghost.id(), ghost.wishDir());
             }
             if (isCurrentAnimationID(ActorAnimations.ANIM_GHOST_EYES)) {
-                return spriteSheet.ghostEyesSprites(ghost.wishDir());
+                return gss.ghostEyesSprites(ghost.wishDir());
             }
         }
         return super.selectedSprites(spriteSheet, actor);

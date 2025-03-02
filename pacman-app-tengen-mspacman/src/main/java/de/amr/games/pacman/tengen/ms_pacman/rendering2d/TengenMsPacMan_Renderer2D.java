@@ -24,7 +24,7 @@ import de.amr.games.pacman.tengen.ms_pacman.maps.MapRepository;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.uilib.AssetStorage;
-import de.amr.games.pacman.ui2d.rendering.SpriteAnimation;
+import de.amr.games.pacman.uilib.SpriteAnimation;
 import de.amr.games.pacman.ui2d.rendering.SpriteAnimationSet;
 import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import javafx.beans.property.FloatProperty;

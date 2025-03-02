@@ -13,7 +13,7 @@ import de.amr.games.pacman.tengen.ms_pacman.rendering2d.ClapperboardAnimation;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_PacAnimations;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.SpriteAnimation;
+import de.amr.games.pacman.uilib.SpriteAnimation;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;

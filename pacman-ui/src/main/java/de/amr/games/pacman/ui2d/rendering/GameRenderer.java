@@ -17,6 +17,7 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Creature;
 import de.amr.games.pacman.ui2d.*;
 import de.amr.games.pacman.uilib.AssetStorage;
+import de.amr.games.pacman.uilib.SpriteAnimation;
 import javafx.beans.property.FloatProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
