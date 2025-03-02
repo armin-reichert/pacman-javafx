@@ -10,7 +10,7 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.uilib.AssetStorage;
-import de.amr.games.pacman.ui2d.rendering.WorldMapColoring;
+import de.amr.games.pacman.uilib.WorldMapColoring;
 import de.amr.games.pacman.ui2d.scene.*;
 import de.amr.games.pacman.uilib.ResourceManager;
 import javafx.scene.canvas.Canvas;

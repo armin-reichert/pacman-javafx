@@ -16,7 +16,7 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.WorldMapColoring;
+import de.amr.games.pacman.uilib.WorldMapColoring;
 import de.amr.games.pacman.ui3d.animation.Squirting;
 import de.amr.games.pacman.ui3d.scene3d.GameConfiguration3D;
 import de.amr.games.pacman.uilib.Ufx;

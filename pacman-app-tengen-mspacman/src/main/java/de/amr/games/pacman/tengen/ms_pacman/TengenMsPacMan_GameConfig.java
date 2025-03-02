@@ -19,7 +19,7 @@ import de.amr.games.pacman.tengen.ms_pacman.scene.*;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.WorldMapColoring;
+import de.amr.games.pacman.uilib.WorldMapColoring;
 import de.amr.games.pacman.ui2d.scene.GameConfiguration;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
