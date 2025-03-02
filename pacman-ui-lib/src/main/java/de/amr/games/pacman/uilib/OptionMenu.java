@@ -48,7 +48,7 @@ public class OptionMenu {
     private int selectedEntryIndex = 0;
     private Runnable actionOnStart;
 
-    private String title = "<Add title>";
+    private String title = "123456789012345";
 
     private final BorderPane root = new BorderPane();
     private final Canvas canvas = new Canvas();
@@ -150,7 +150,7 @@ public class OptionMenu {
         this.actionOnStart = action;
     }
 
-    public void draw(double titleX) {
+    public void draw() {
         GraphicsContext g = canvas.getGraphicsContext2D();
         g.setFill(backgroundFill);
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -160,7 +160,7 @@ public class OptionMenu {
 
         g.setFont(arcadeFont20);
         g.setFill(titleTextFill);
-        g.fillText(title, titleX, 6 * TS);
+        g.fillText(title, 0, 6 * TS);
         g.setFont(arcadeFont8);
 
         for (int i = 0; i < entries.size(); ++i) {

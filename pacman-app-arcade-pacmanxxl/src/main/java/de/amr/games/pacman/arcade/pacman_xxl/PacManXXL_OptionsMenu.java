@@ -41,7 +41,7 @@ public class PacManXXL_OptionsMenu {
 
     public PacManXXL_OptionsMenu(PacManGamesUI ui) {
 
-        menu.setTitle("Pac-Man XXL");
+        menu.setTitle("  Pac-Man XXL");
         menu.setBackgroundFill(Color.valueOf("#172E73"));
         menu.setBorderStroke(Color.WHITESMOKE);
         menu.setEntryTextFill(Color.YELLOW);
@@ -110,7 +110,7 @@ public class PacManXXL_OptionsMenu {
         menu.addEntry(entryMapSelectionMode);
 
         //TODO compute titleX
-        Timeline loop = new Timeline(new KeyFrame(Duration.millis(1000.0/ 60), e -> menu.draw(4*TS)));
+        Timeline loop = new Timeline(new KeyFrame(Duration.millis(1000.0/ 60), e -> menu.draw()));
         loop.setCycleCount(Animation.INDEFINITE);
         loop.play();
     }
