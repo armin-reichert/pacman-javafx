@@ -8,13 +8,13 @@ import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.nes.NES_JoypadButton;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.action.GameAction;
 import de.amr.games.pacman.ui2d.action.GameActionProvider;
 import de.amr.games.pacman.ui2d.action.GameActions2D;
 import de.amr.games.pacman.ui2d.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui2d.input.JoypadKeyBinding;
 import de.amr.games.pacman.uilib.Carousel;
+import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import org.tinylog.Logger;
@@ -26,7 +26,7 @@ import static de.amr.games.pacman.lib.Globals.assertNotNull;
 import static de.amr.games.pacman.ui2d.input.Keyboard.naked;
 
 /**
- * Carousel used to select the start page for each game variant.
+ * Carousel containing the start pages for the different game variants (XXL game variants share common start page).
  */
 public class StartPageCarousel extends Carousel implements GameActionProvider {
 
@@ -45,29 +45,30 @@ public class StartPageCarousel extends Carousel implements GameActionProvider {
     private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
     private final GameContext context;
 
-    public StartPageCarousel(PacManGamesUI ui) {
-        this.context = assertNotNull(ui);
-        setOnPrevSlideSelected(slide -> {
-            var variant = (GameVariant) slide.getUserData();
+    public StartPageCarousel(GameContext context) {
+        this.context = assertNotNull(context);
+        setOnPrevSlideSelected(startPage -> {
+            var variant = (GameVariant) startPage.getUserData();
             context.selectGameVariant(variant);
-            slide.requestFocus();
+            startPage.requestFocus();
         });
-        setOnNextSlideSelected(slide -> {
-            var variant = (GameVariant) slide.getUserData();
+        setOnNextSlideSelected(startPage -> {
+            var variant = (GameVariant) startPage.getUserData();
             context.selectGameVariant(variant);
-            slide.requestFocus();
+            startPage.requestFocus();
         });
-
         bindGameActions();
     }
 
     public void addStartPage(GameVariant gameVariant, StartPage startPage) {
-        if (slides().contains(startPage.root())) {
-            Logger.warn("Start page {} already in carousel", startPage);
+        Node slide = startPage.root();
+        if (slides().contains(slide)) {
+            Logger.warn("Start page {} is already in carousel", startPage);
             return;
         }
-        addSlide(startPage.root());
-        startPage.root().setUserData(gameVariant);
+        slide.setUserData(gameVariant);
+        addSlide(slide);
+
         setNavigationVisible(numSlides() >= 2);
         //TODO check this
         selectedIndexProperty().set(0);
