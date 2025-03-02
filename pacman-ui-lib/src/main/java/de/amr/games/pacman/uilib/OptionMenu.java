@@ -26,7 +26,6 @@ import static de.amr.games.pacman.lib.Globals.TS;
 public class OptionMenu {
 
     private static final int WIDTH_IN_TILES = 36; // TODO
-    private static final float UNSCALED_HEIGHT = 36 * TS;
 
     public static abstract class MenuEntry {
         protected final String label;
