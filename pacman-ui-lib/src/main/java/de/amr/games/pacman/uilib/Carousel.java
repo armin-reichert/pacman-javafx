@@ -11,6 +11,7 @@ import javafx.scene.layout.StackPane;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class Carousel extends StackPane {
 
@@ -19,30 +20,30 @@ public class Carousel extends StackPane {
         protected void invalidated() {
             int index = get();
             if (index >= 0 && index < slides.size()) {
-                getChildren().setAll(slides.get(index), btnPrevSlide, btnNextSlide);
+                getChildren().setAll(slides.get(index), btnPrevSlideArrow, btnNextSlideArrow);
             }
         }
     };
 
     protected final List<Node> slides = new ArrayList<>();
-    protected final Button btnPrevSlide;
-    protected final Button btnNextSlide;
+    protected final Button btnPrevSlideArrow;
+    protected final Button btnNextSlideArrow;
 
-    protected Runnable onPrevSlide;
-    protected Runnable onNextSlide;
+    protected Consumer<Node> actionPrevSlideSelected;
+    protected Consumer<Node> actionNextSlideSelected;
 
     public Carousel() {
         ResourceManager rm = () -> Carousel.class;
-
         Image arrowLeftImage = rm.loadImage("graphics/arrow-left.png");
-        btnPrevSlide = createCarouselButton(arrowLeftImage);
-        btnPrevSlide.setOnAction(e -> showPreviousSlide());
-        StackPane.setAlignment(btnPrevSlide, Pos.CENTER_LEFT);
-
         Image arrowRightImage = rm.loadImage("graphics/arrow-right.png");
-        btnNextSlide = createCarouselButton(arrowRightImage);
-        btnNextSlide.setOnAction(e -> showNextSlide());
-        StackPane.setAlignment(btnNextSlide, Pos.CENTER_RIGHT);
+
+        btnPrevSlideArrow = createCarouselButton(arrowLeftImage);
+        btnPrevSlideArrow.setOnAction(e -> showPreviousSlide());
+        StackPane.setAlignment(btnPrevSlideArrow, Pos.CENTER_LEFT);
+
+        btnNextSlideArrow = createCarouselButton(arrowRightImage);
+        btnNextSlideArrow.setOnAction(e -> showNextSlide());
+        StackPane.setAlignment(btnNextSlideArrow, Pos.CENTER_RIGHT);
     }
 
     private Button createCarouselButton(Image image) {
@@ -60,28 +61,28 @@ public class Carousel extends StackPane {
     }
 
     public void setNavigationVisible(boolean visible) {
-        btnPrevSlide.setVisible(visible);
-        btnNextSlide.setVisible(visible);
+        btnPrevSlideArrow.setVisible(visible);
+        btnNextSlideArrow.setVisible(visible);
     }
 
     public IntegerProperty selectedIndexProperty() {
         return selectedIndexPy;
     }
 
-    public void setOnPrevSlideSelected(Runnable action) {
-        onPrevSlide = action;
+    public void setOnPrevSlideSelected(Consumer<Node> action) {
+        actionPrevSlideSelected = action;
     }
 
-    public void setOnNextSlideSelected(Runnable action) {
-        onNextSlide = action;
+    public void setOnNextSlideSelected(Consumer<Node> action) {
+        actionNextSlideSelected = action;
     }
 
     public void showPreviousSlide() {
-        int prevIndex = selectedIndexPy.get() > 0 ? selectedIndexPy.get() - 1: slides.size() - 1;
-        selectedIndexPy.set(prevIndex);
+        int newIndex = selectedIndexPy.get() > 0 ? selectedIndexPy.get() - 1: slides.size() - 1;
+        selectedIndexPy.set(newIndex);
         updateUI();
-        if (onPrevSlide != null) {
-            onPrevSlide.run();
+        if (actionPrevSlideSelected != null) {
+            actionPrevSlideSelected.accept(slides.get(newIndex));
         }
     }
 
@@ -89,8 +90,8 @@ public class Carousel extends StackPane {
         int newIndex = selectedIndexPy.get() < slides.size() - 1 ? selectedIndexPy.get() + 1 : 0;
         selectedIndexPy.set(newIndex);
         updateUI();
-        if (onNextSlide != null) {
-            onNextSlide.run();
+        if (actionNextSlideSelected != null) {
+            actionNextSlideSelected.accept(slides.get(newIndex));
         }
     }
 
@@ -113,9 +114,9 @@ public class Carousel extends StackPane {
     private void updateUI() {
         Node currentSlide = currentSlide();
         if (currentSlide != null) {
-            getChildren().setAll(currentSlide(), btnPrevSlide, btnNextSlide);
+            getChildren().setAll(currentSlide(), btnPrevSlideArrow, btnNextSlideArrow);
         } else {
-            getChildren().setAll(btnPrevSlide, btnNextSlide);
+            getChildren().setAll(btnPrevSlideArrow, btnNextSlideArrow);
         }
     }
 }

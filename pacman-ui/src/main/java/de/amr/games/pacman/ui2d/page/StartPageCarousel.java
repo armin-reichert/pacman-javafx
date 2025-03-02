@@ -47,22 +47,18 @@ public class StartPageCarousel extends Carousel implements GameActionProvider {
 
     public StartPageCarousel(PacManGamesUI ui) {
         this.context = assertNotNull(ui);
-        setOnPrevSlideSelected(() -> {
-            var variant = (GameVariant) currentSlide().getUserData();
+        setOnPrevSlideSelected(slide -> {
+            var variant = (GameVariant) slide.getUserData();
             context.selectGameVariant(variant);
-            currentSlide().requestFocus();
+            slide.requestFocus();
         });
-        setOnNextSlideSelected(() -> {
-            var variant = (GameVariant) currentSlide().getUserData();
+        setOnNextSlideSelected(slide -> {
+            var variant = (GameVariant) slide.getUserData();
             context.selectGameVariant(variant);
-            currentSlide().requestFocus();
+            slide.requestFocus();
         });
 
         bindGameActions();
-    }
-
-    private StartPage startPage(int index) {
-        return (StartPage) slide(index);
     }
 
     public void addStartPage(GameVariant variant, StartPage startPage) {
