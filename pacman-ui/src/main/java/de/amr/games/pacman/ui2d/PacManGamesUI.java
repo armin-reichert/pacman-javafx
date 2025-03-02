@@ -19,7 +19,7 @@ import de.amr.games.pacman.ui2d.input.Keyboard;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.StartPage;
-import de.amr.games.pacman.ui2d.page.StartPageCarousel;
+import de.amr.games.pacman.ui2d.page.StartPagesCarousel;
 import de.amr.games.pacman.ui2d.scene.GameConfiguration;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -135,7 +135,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected Stage stage;
     protected Scene mainScene;
 
-    protected StartPageCarousel startPagesCarousel;
+    protected StartPagesCarousel startPagesCarousel;
     protected GamePage gamePage;
     protected EditorPage editorPage;
 
@@ -208,7 +208,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         mainScene = createMainScene(initialSize);
         stage.setScene(mainScene);
 
-        startPagesCarousel = new StartPageCarousel(this);
+        startPagesCarousel = new StartPagesCarousel(this);
 
         createGamePage(mainScene);
 
@@ -237,7 +237,11 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         return mainScene;
     }
 
+    public ObjectProperty<Node> pageProperty() { return pagePy; }
+
     public ObjectProperty<GameVariant> gameVariantProperty() { return gameVariantPy; }
+
+    public StartPagesCarousel startPagesCarousel() { return startPagesCarousel; }
 
     /**
      * Executed on clock tick if game is not paused.

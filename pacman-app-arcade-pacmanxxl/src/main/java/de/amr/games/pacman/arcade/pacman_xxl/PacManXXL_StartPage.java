@@ -28,6 +28,26 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
         menu = new PacManXXL_OptionsMenu(ui);
         getChildren().addAll(flyer, menu.root());
         setBackground(Background.fill(Color.BLACK));
+
+        //TODO find a more elegant way to start/stop the animation loop of the menu
+        ui.startPagesCarousel().selectedIndexProperty().addListener((py, ov, nv) -> {
+            ui.startPagesCarousel().currentSlide().ifPresent(startPage -> {
+                if (startPage == this) {
+                    menu.getAnimationTimer().start();
+                } else {
+                    menu.getAnimationTimer().stop();
+                }
+            });
+        });
+        ui.pageProperty().addListener((py,ov,page) -> {
+            if (page == ui.startPagesCarousel()
+                    && ui.startPagesCarousel().currentSlide().isPresent()
+                    && ui.startPagesCarousel().currentSlide().get() == this) {
+                menu.getAnimationTimer().start();
+            } else {
+                menu.getAnimationTimer().stop();
+            }
+        });
     }
 
     @Override
@@ -37,7 +57,8 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
     }
 
     @Override
-    public void start() {}
+    public void start() {
+    }
 
     private void initMenu() {
         switch (ui.gameController().currentGameVariant()) {

@@ -9,12 +9,9 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.MapSelectionMode;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.uilib.OptionMenu;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import javafx.animation.AnimationTimer;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
-import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -36,10 +33,19 @@ public class PacManXXL_OptionsMenu {
         private MapSelectionMode mapSelectionMode;
     }
 
+    private final AnimationTimer animationTimer;
     private final MenuState menuState = new MenuState();
     private final OptionMenu menu = new OptionMenu(UNSCALED_HEIGHT);
 
     public PacManXXL_OptionsMenu(PacManGamesUI ui) {
+
+        animationTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                menu.draw();
+                Logger.info("Draw");
+            }
+        };
 
         menu.setTitle("  Pac-Man XXL");
         menu.setBackgroundFill(Color.valueOf("#172E73"));
@@ -108,11 +114,10 @@ public class PacManXXL_OptionsMenu {
         menu.addEntry(entryGameVariant);
         menu.addEntry(entryCutScenesEnabled);
         menu.addEntry(entryMapSelectionMode);
+    }
 
-        //TODO compute titleX
-        Timeline loop = new Timeline(new KeyFrame(Duration.millis(1000.0/ 60), e -> menu.draw()));
-        loop.setCycleCount(Animation.INDEFINITE);
-        loop.play();
+    public AnimationTimer getAnimationTimer() {
+        return animationTimer;
     }
 
     public Node root() {

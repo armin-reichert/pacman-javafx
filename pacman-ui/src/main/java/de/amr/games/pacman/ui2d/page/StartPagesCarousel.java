@@ -28,7 +28,7 @@ import static de.amr.games.pacman.ui2d.input.Keyboard.naked;
 /**
  * Carousel containing the start pages for the different game variants (XXL game variants share common start page).
  */
-public class StartPageCarousel extends Carousel implements GameActionProvider {
+public class StartPagesCarousel extends Carousel implements GameActionProvider {
 
     private final GameAction actionSelectGamePage = new GameAction() {
         @Override
@@ -45,7 +45,7 @@ public class StartPageCarousel extends Carousel implements GameActionProvider {
     private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
     private final GameContext context;
 
-    public StartPageCarousel(GameContext context) {
+    public StartPagesCarousel(GameContext context) {
         this.context = assertNotNull(context);
         setOnPrevSlideSelected(startPage -> {
             var variant = (GameVariant) startPage.getUserData();
