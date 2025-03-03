@@ -52,6 +52,7 @@ public class PacManGames3dApp extends Application {
     }
 
     private PacManGamesUI_3D ui;
+    private final PacManXXL_MapSelector xxlMapSelector = new PacManXXL_MapSelector();
 
     @Override
     public void init() {
@@ -60,8 +61,8 @@ public class PacManGames3dApp extends Application {
         gameController.setGameModel(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_GameModel());
         gameController.setGameModel(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
         gameController.setGameModel(GameVariant.PACMAN,           new ArcadePacMan_GameModel());
-        gameController.setGameModel(GameVariant.PACMAN_XXL,       new PacManXXL_PacMan_GameModel());
-        gameController.setGameModel(GameVariant.MS_PACMAN_XXL,    new PacManXXL_MsPacMan_GameModel());
+        gameController.setGameModel(GameVariant.PACMAN_XXL,       new PacManXXL_PacMan_GameModel(xxlMapSelector));
+        gameController.setGameModel(GameVariant.MS_PACMAN_XXL,    new PacManXXL_MsPacMan_GameModel(xxlMapSelector));
         gameController.gameModels().forEach(GameModel::init);
         gameController.selectGame(GameVariant.PACMAN);
     }
@@ -86,7 +87,9 @@ public class PacManGames3dApp extends Application {
         ui.addDashboardItem(ui.locText("infobox.3D_settings.title"), new InfoBox3D());
         ui.addDashboardItem(DashboardItemID.GAME_INFO);
         ui.addDashboardItem(DashboardItemID.ACTOR_INFO);
-        ui.addDashboardItem(ui.locText("infobox.custom_maps.title"), new InfoBoxCustomMaps());
+        InfoBoxCustomMaps infoBoxCustomMaps = new InfoBoxCustomMaps();
+        infoBoxCustomMaps.getMapsTableView().setItems(xxlMapSelector.customMaps());
+        ui.addDashboardItem(ui.locText("infobox.custom_maps.title"), infoBoxCustomMaps);
         ui.addDashboardItem(DashboardItemID.JOYPAD);
         ui.addDashboardItem(DashboardItemID.KEYBOARD);
         ui.addDashboardItem(DashboardItemID.ABOUT);

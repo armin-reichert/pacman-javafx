@@ -24,15 +24,14 @@ import java.util.List;
 
 public class PacManXXL_App extends Application {
 
-    private PacManXXL_PacMan_GameModel pacManGameModel;
-    private PacManXXL_MsPacMan_GameModel msPacManGameModel;
+    private final PacManXXL_MapSelector xxlMapSelector = new PacManXXL_MapSelector();
 
     @Override
     public void init() {
+        var pacManGameModel = new PacManXXL_PacMan_GameModel(xxlMapSelector);
+        var msPacManGameModel = new PacManXXL_MsPacMan_GameModel(xxlMapSelector);
         GameController gameController = GameController.it();
-        pacManGameModel = new PacManXXL_PacMan_GameModel();
         gameController.setGameModel(GameVariant.PACMAN_XXL, pacManGameModel);
-        msPacManGameModel = new PacManXXL_MsPacMan_GameModel();
         gameController.setGameModel(GameVariant.MS_PACMAN_XXL, msPacManGameModel);
         gameController.gameModels().forEach(GameModel::init);
         gameController.selectGame(GameVariant.MS_PACMAN_XXL);
@@ -56,7 +55,7 @@ public class PacManXXL_App extends Application {
         ui.addDashboardItem(DashboardItemID.ACTOR_INFO);
 
         InfoBoxCustomMaps infoBoxCustomMaps = new InfoBoxCustomMaps();
-        infoBoxCustomMaps.getMapsTableView().setItems(pacManGameModel.mapSelector().customMaps());
+        infoBoxCustomMaps.getMapsTableView().setItems(xxlMapSelector.customMaps());
         ui.addDashboardItem(ui.locText("infobox.custom_maps.title"), infoBoxCustomMaps);
 
         ui.addDashboardItem(DashboardItemID.KEYBOARD);

@@ -11,16 +11,21 @@ import java.io.File;
 
 public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
 
+    private final PacManXXL_MapSelector xxlMapSelector;
+
+    public PacManXXL_MsPacMan_GameModel(PacManXXL_MapSelector mapSelector) {
+        xxlMapSelector = mapSelector;
+    }
+
     @Override
     public void init() {
         super.init();
         demoLevelSteering = new RuleBasedPacSteering(this); // super class uses predefined steering
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-mspacman_xxl.xml"));
-        mapSelector = new PacManXXL_MapSelector();
-        //mapSelector.loadAllMaps(this);
+        mapSelector = xxlMapSelector;
     }
 
     public PacManXXL_MapSelector mapSelector() {
-        return (PacManXXL_MapSelector) mapSelector;
+        return xxlMapSelector;
     }
 }

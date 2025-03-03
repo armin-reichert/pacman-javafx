@@ -15,6 +15,9 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.uilib.WorldMapColoring;
 import javafx.scene.paint.Color;
 
+import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.timer.TickTimer.ticksToString;
@@ -33,8 +36,12 @@ public class InfoBoxGameInfo extends InfoBox {
         addLabeledValue("Level Number", ifLevelPresent(level -> "%d".formatted(level.number)));
         addLabeledValue("Demo Level", ifLevelPresent(gameScene -> context.game().isDemoLevel() ? "Yes" : "No"));
         addLabeledValue("World Map", ifLevelPresent(level -> {
-            String url = level.world().map().url().toString();
-            return url.substring(url.lastIndexOf("/") + 1);
+            URL url = level.world().map().url();
+            if (url == null) {
+                return InfoText.NO_INFO;
+            }
+            String urlString = URLDecoder.decode(url.toExternalForm(), StandardCharsets.UTF_8);
+            return urlString.substring(urlString.lastIndexOf("/") + 1);
         }));
         addLabeledValue("Fill/Stroke/Pellet", ifLevelPresent(level -> {
             WorldMap worldMap = level.world().map();

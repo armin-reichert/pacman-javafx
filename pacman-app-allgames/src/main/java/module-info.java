@@ -1,5 +1,6 @@
 module de.amr.games.pacman.ui3d.appsuite {
     requires org.tinylog.api;
+    requires javafx.controls;
     requires javafx.graphics;
     requires javafx.media;
 
