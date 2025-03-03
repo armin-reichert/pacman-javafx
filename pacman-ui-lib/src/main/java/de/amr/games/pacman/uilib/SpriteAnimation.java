@@ -68,7 +68,7 @@ public class SpriteAnimation extends Transition {
 
     @Override
     protected void interpolate(double t) {
-        if (t >= 1) {
+        if (t == 1) {
             nextFrame();
         }
     }
