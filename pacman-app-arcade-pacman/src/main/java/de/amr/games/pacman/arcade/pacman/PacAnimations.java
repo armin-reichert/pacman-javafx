@@ -26,15 +26,15 @@ public class PacAnimations extends SpriteAnimationSet {
         Globals.assertNotNull(spriteSheet);
         add(Map.of(
             ActorAnimations.ANIM_PAC_MUNCHING,
-            SpriteAnimation.spriteSheet(spriteSheet).info("Pac-Man munching")
+            SpriteAnimation.spriteSheet(spriteSheet)
                 .sprites(spriteSheet.pacMunchingSprites(Direction.LEFT)).endLoop(),
 
             ActorAnimations.ANIM_PAC_DYING,
-            SpriteAnimation.spriteSheet(spriteSheet).info("Pac-Man dying")
+            SpriteAnimation.spriteSheet(spriteSheet)
                 .sprites(spriteSheet.pacDyingSprites()).frameTicks(8).end(),
 
             ActorAnimations.ANIM_PAC_BIG,
-            SpriteAnimation.spriteSheet(spriteSheet).info("BIG Pac-Man munching")
+            SpriteAnimation.spriteSheet(spriteSheet)
                 .sprites(spriteSheet.bigPacManSprites()).frameTicks(3).endLoop()
         ));
     }

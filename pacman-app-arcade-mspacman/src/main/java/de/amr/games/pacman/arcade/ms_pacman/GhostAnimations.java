@@ -30,34 +30,29 @@ public class GhostAnimations extends SpriteAnimationSet {
 
         var normal = SpriteAnimation
             .spriteSheet(spriteSheet)
-            .info("Normal ghost")
             .sprites(spriteSheet.ghostNormalSprites(ghostID, Direction.LEFT))
             .frameTicks(8)
             .endLoop();
 
         var frightened = SpriteAnimation
             .spriteSheet(spriteSheet)
-            .info("Frightened ghost")
             .sprites(spriteSheet.ghostFrightenedSprites())
             .frameTicks(8)
             .endLoop();
 
         var flashing = SpriteAnimation
             .spriteSheet(spriteSheet)
-            .info("Flashing ghost")
             .sprites(spriteSheet.ghostFlashingSprites())
             .frameTicks(7)
             .endLoop();
 
         var eyes = SpriteAnimation
             .spriteSheet(spriteSheet)
-            .info("Eyes-only ghost")
             .sprites(spriteSheet.ghostEyesSprites(Direction.LEFT))
             .end();
 
         var number = SpriteAnimation
             .spriteSheet(spriteSheet)
-            .info("Number for dead ghost")
             .sprites(spriteSheet.ghostNumberSprites())
             .end();
 

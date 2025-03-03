@@ -26,11 +26,6 @@ public class SpriteAnimation extends Transition {
             workPiece = new SpriteAnimation(spriteSheet);
         }
 
-        public Builder info(String info) {
-            workPiece.info = info;
-            return this;
-        }
-
         public Builder frameTicks(int ticks) {
             workPiece.frameTicks = ticks;
             return this;
@@ -53,7 +48,7 @@ public class SpriteAnimation extends Transition {
             workPiece.setCycleDuration(Duration.seconds(1.0 / FPS * workPiece.frameTicks));
             workPiece.setCycleCount(cycleCount);
             workPiece.setInterpolator(Interpolator.LINEAR);
-            Logger.debug("New sprite animation '{}'", workPiece.info);
+            Logger.debug("New sprite animation '{}'", workPiece);
             return workPiece;
         }
     }
@@ -63,7 +58,6 @@ public class SpriteAnimation extends Transition {
     }
 
     private final SpriteSheet spriteSheet;
-    private String info;
     private RectArea[] sprites = new RectArea[0];
     private int frameTicks = 1;
     private int frameIndex;

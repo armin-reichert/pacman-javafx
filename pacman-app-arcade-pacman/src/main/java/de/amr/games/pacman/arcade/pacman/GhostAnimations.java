@@ -25,59 +25,50 @@ public class GhostAnimations extends SpriteAnimationSet {
 
         var normal = SpriteAnimation
             .spriteSheet(spriteSheet)
-            .info("Normal ghost")
             .sprites(spriteSheet.ghostNormalSprites(ghostID, Direction.LEFT))
             .frameTicks(8)
             .endLoop();
 
         var frightened = SpriteAnimation
             .spriteSheet(spriteSheet)
-            .info("Frightened ghost")
             .sprites(spriteSheet.ghostFrightenedSprites())
             .frameTicks(8)
             .endLoop();
 
         var flashing = SpriteAnimation
             .spriteSheet(spriteSheet)
-            .info("Flashing ghost")
             .sprites(spriteSheet.ghostFlashingSprites())
             .frameTicks(7)
             .endLoop();
 
         var eyes = SpriteAnimation
             .spriteSheet(spriteSheet)
-            .info("Eyes-only ghost")
             .sprites(spriteSheet.ghostEyesSprites(Direction.LEFT))
             .end();
 
         var number = SpriteAnimation
             .spriteSheet(spriteSheet)
-            .info("Number for dead ghost")
             .sprites(spriteSheet.ghostNumberSprites())
             .end();
 
         var damaged = SpriteAnimation
             .spriteSheet(spriteSheet)
-            .info("Damaged dress ghost")
             .sprites(spriteSheet.blinkyDamagedSprites())
             .end();
 
         var stretching = SpriteAnimation
             .spriteSheet(spriteSheet)
-            .info("Stretching dress ghost")
             .sprites(spriteSheet.blinkyStretchedSprites())
             .end();
 
         var patched = SpriteAnimation
             .spriteSheet(spriteSheet)
-            .info("Patched dress ghost")
             .sprites(spriteSheet.blinkyPatchedSprites())
             .frameTicks(4)
             .endLoop();
 
         var naked = SpriteAnimation
             .spriteSheet(spriteSheet)
-            .info("Naked ghost")
             .sprites(spriteSheet.blinkyNakedSprites())
             .frameTicks(4)
             .endLoop();

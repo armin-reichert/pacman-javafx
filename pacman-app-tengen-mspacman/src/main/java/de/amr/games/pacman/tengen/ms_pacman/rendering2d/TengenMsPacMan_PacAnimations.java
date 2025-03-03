@@ -24,68 +24,58 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet {
 
         var msPacManMunching = SpriteAnimation
             .spriteSheet(spriteSheet)
-            .info("Ms. Pac-Man munching")
             .sprites(TengenMsPacMan_SpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT)
             .endLoop();
 
         var msPacManMunchingBooster = SpriteAnimation
             .spriteSheet(spriteSheet)
-            .info("Ms. Pac-Man munching booster mode")
             .sprites(TengenMsPacMan_SpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER)
             .endLoop();
 
         var msPacManWavingHand = SpriteAnimation
             .spriteSheet(spriteSheet)
-            .info("Ms. Pac-Man waving hand")
             .sprites(TengenMsPacMan_SpriteSheet.MS_PAC_WAVING_HAND)
             .frameTicks(8)
             .endLoop();
 
         var msPacManTurningAway = SpriteAnimation
             .spriteSheet(spriteSheet)
-            .info("Ms. Pac-Man turning away")
             .sprites(TengenMsPacMan_SpriteSheet.MS_PAC_TURNING_AWAY)
             .frameTicks(15)
             .end();
 
         var msPacmanDying = SpriteAnimation
             .spriteSheet(spriteSheet)
-            .info("Ms. Pac-Man dying")
             .sprites(spriteSheet.pacDyingSprites())
             .frameTicks(8)
             .end();
 
         var mrPacManMunching = SpriteAnimation
             .spriteSheet(spriteSheet)
-            .info("Ms. Pac-Man's husband munching")
             .sprites(TengenMsPacMan_SpriteSheet.MR_PAC_MUNCHING_SPRITES_LEFT)
             .frameTicks(2)
             .endLoop();
 
         var mrPacManMunchingBooster = SpriteAnimation
             .spriteSheet(spriteSheet)
-            .info("Ms. Pac-Man's husband munching booster mode")
             .sprites(TengenMsPacMan_SpriteSheet.MR_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER)
             .frameTicks(2)
             .endLoop();
 
         var mrPacManWavingHand = SpriteAnimation
             .spriteSheet(spriteSheet)
-            .info("Pac-Man waving hand")
             .sprites(TengenMsPacMan_SpriteSheet.MR_PAC_WAVING_HAND)
             .frameTicks(8)
             .endLoop();
 
         var mrPacManTurningAway = SpriteAnimation
-                .spriteSheet(spriteSheet)
-                .info("Mr. Pac-Man turning away")
-                .sprites(TengenMsPacMan_SpriteSheet.MR_PAC_TURNING_AWAY)
-                .frameTicks(15)
-                .end();
+            .spriteSheet(spriteSheet)
+            .sprites(TengenMsPacMan_SpriteSheet.MR_PAC_TURNING_AWAY)
+            .frameTicks(15)
+            .end();
 
         var junior = SpriteAnimation
             .spriteSheet(spriteSheet)
-            .info("Junior Pac-Man")
             .sprites(TengenMsPacMan_SpriteSheet.JUNIOR_PAC_SPRITE)
             .end();
 
