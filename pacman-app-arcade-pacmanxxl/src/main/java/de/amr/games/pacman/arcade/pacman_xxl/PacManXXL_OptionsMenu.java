@@ -34,7 +34,7 @@ public class PacManXXL_OptionsMenu {
     }
 
     private final AnimationTimer animationTimer;
-    private final MenuState menuState = new MenuState();
+    private final MenuState state = new MenuState();
     private final OptionMenu menu = new OptionMenu(UNSCALED_HEIGHT);
 
     public PacManXXL_OptionsMenu(PacManGamesUI ui) {
@@ -58,55 +58,52 @@ public class PacManXXL_OptionsMenu {
 
         menu.setOnStart(() -> {
             logMenuState();
-            if (menuState.gameVariant == GameVariant.PACMAN_XXL || menuState.gameVariant == GameVariant.MS_PACMAN_XXL) {
-                GameModel game = ui.gameController().gameModel(menuState.gameVariant);
-                game.setCutScenesEnabled(menuState.cutScenesEnabled);
+            if (state.gameVariant == GameVariant.PACMAN_XXL || state.gameVariant == GameVariant.MS_PACMAN_XXL) {
+                GameModel game = ui.gameController().gameModel(state.gameVariant);
+                game.setCutScenesEnabled(state.cutScenesEnabled);
                 game.mapSelector().loadAllMaps(game);
-                game.mapSelector().setMapSelectionMode(menuState.mapSelectionMode);
-                ui.selectGameVariant(menuState.gameVariant);
+                game.mapSelector().setMapSelectionMode(state.mapSelectionMode);
+                ui.selectGameVariant(state.gameVariant);
             } else {
-                Logger.error("Game variant {} is not allowed for XXL game", menuState.gameVariant);
+                Logger.error("Game variant {} is not allowed for XXL game", state.gameVariant);
             }
         });
 
         entryGameVariant = new OptionMenu.MenuEntry(
-                "GAME VARIANT",
-                List.of("PAC-MAN", "MS.PAC-MAN")) {
-
+            "GAME VARIANT", List.of("PAC-MAN", "MS.PAC-MAN"))
+        {
             @Override
             protected void onValueChange() {
                 switch (valueIndex) {
-                    case 0 -> menuState.gameVariant = GameVariant.PACMAN_XXL;
-                    case 1 -> menuState.gameVariant = GameVariant.MS_PACMAN_XXL;
+                    case 0 -> state.gameVariant = GameVariant.PACMAN_XXL;
+                    case 1 -> state.gameVariant = GameVariant.MS_PACMAN_XXL;
                     default -> throw new IllegalArgumentException("Menu Selection failed");
                 }
-                Logger.info("menuState.gameVariant={}", menuState.gameVariant);
+                Logger.info("menuState.gameVariant={}", state.gameVariant);
             }
         };
 
         entryCutScenesEnabled = new OptionMenu.MenuEntry(
-                "CUT SCENES",
-                List.of("ENABLED", "DISABLED")) {
-
+            "CUT SCENES", List.of("ENABLED", "DISABLED"))
+        {
             @Override
             protected void onValueChange() {
-                menuState.cutScenesEnabled = (valueIndex == 0);
-                Logger.info("menuState.cutScenesEnabled={}", menuState.cutScenesEnabled);
+                state.cutScenesEnabled = (valueIndex == 0);
+                Logger.info("menuState.cutScenesEnabled={}", state.cutScenesEnabled);
             }
         };
 
         entryMapSelectionMode = new OptionMenu.MenuEntry(
-                "CUSTOM MAPS",
-                List.of("CUSTOM-MAPS FIRST", "ALL MAPS RANDOMLY")) {
-
+            "CUSTOM MAPS", List.of("CUSTOM-MAPS FIRST", "ALL MAPS RANDOMLY"))
+        {
             @Override
             protected void onValueChange() {
                 switch (valueIndex) {
-                    case 0 -> menuState.mapSelectionMode = MapSelectionMode.CUSTOM_MAPS_FIRST;
-                    case 1 -> menuState.mapSelectionMode = MapSelectionMode.ALL_RANDOM;
+                    case 0 -> state.mapSelectionMode = MapSelectionMode.CUSTOM_MAPS_FIRST;
+                    case 1 -> state.mapSelectionMode = MapSelectionMode.ALL_RANDOM;
                     default -> throw new IllegalArgumentException("Menu Selection failed");
                 }
-                Logger.info("menuState.mapSelectionMode={}", menuState.mapSelectionMode);
+                Logger.info("menuState.mapSelectionMode={}", state.mapSelectionMode);
             }
         };
 
@@ -123,10 +120,10 @@ public class PacManXXL_OptionsMenu {
         return menu.root();
     }
 
-    public void setMenuState(GameVariant gameVariant, boolean cutScenesEnabled, MapSelectionMode mapSelectionMode) {
-        menuState.gameVariant = gameVariant;
-        menuState.cutScenesEnabled = cutScenesEnabled;
-        menuState.mapSelectionMode = mapSelectionMode;
+    public void setState(GameVariant gameVariant, boolean cutScenesEnabled, MapSelectionMode mapSelectionMode) {
+        state.gameVariant = gameVariant;
+        state.cutScenesEnabled = cutScenesEnabled;
+        state.mapSelectionMode = mapSelectionMode;
 
         entryGameVariant.setValueIndex(switch (gameVariant) {
             case PACMAN_XXL -> 0;
@@ -146,6 +143,6 @@ public class PacManXXL_OptionsMenu {
 
     private void logMenuState() {
         Logger.info("Menu state: gameVariant={}, cutScenesEnabled={}, mapSelectionMode={}",
-                menuState.gameVariant, menuState.cutScenesEnabled, menuState.mapSelectionMode);
+                state.gameVariant, state.cutScenesEnabled, state.mapSelectionMode);
     }
 }
