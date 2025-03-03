@@ -6,13 +6,13 @@ package de.amr.games.pacman.arcade.pacman_xxl;
 
 import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.page.StartPage;
+import de.amr.games.pacman.ui2d.page.StartPagesCarousel;
 import de.amr.games.pacman.uilib.Flyer;
 import de.amr.games.pacman.uilib.ResourceManager;
 import javafx.scene.Node;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import org.tinylog.Logger;
 
 public class PacManXXL_StartPage extends StackPane implements StartPage {
 
@@ -21,17 +21,21 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
 
     public PacManXXL_StartPage(PacManGamesUI ui) {
         this.ui = ui;
+
         ResourceManager rm = this::getClass;
         Flyer flyer = new Flyer(rm.loadImage("graphics/pacman_xxl_startpage.jpg"));
         flyer.selectFlyerPage(0);
         flyer.setLayoutMode(0, Flyer.LayoutMode.FILL);
+
         menu = new PacManXXL_OptionsMenu(ui);
         getChildren().addAll(flyer, menu.root());
+
         setBackground(Background.fill(Color.BLACK));
 
         //TODO find a more elegant way to start/stop the animation loop of the menu
-        ui.startPagesCarousel().selectedIndexProperty().addListener((py, ov, nv) -> {
-            ui.startPagesCarousel().currentSlide().ifPresent(startPage -> {
+        final StartPagesCarousel carousel = ui.startPagesCarousel();
+        carousel.selectedIndexProperty().addListener((py, ov, nv) -> {
+            carousel.currentSlide().ifPresent(startPage -> {
                 if (startPage == this) {
                     menu.getAnimationTimer().start();
                 } else {
@@ -40,9 +44,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
             });
         });
         ui.pageProperty().addListener((py,ov,page) -> {
-            if (page == ui.startPagesCarousel()
-                    && ui.startPagesCarousel().currentSlide().isPresent()
-                    && ui.startPagesCarousel().currentSlide().get() == this) {
+            if (page == carousel && carousel.currentSlide().isPresent() && carousel.currentSlide().get() == this) {
                 menu.getAnimationTimer().start();
             } else {
                 menu.getAnimationTimer().stop();
@@ -50,36 +52,23 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
         });
     }
 
+    private void initMenuState() {
+        switch (ui.gameVariant()) {
+            case MS_PACMAN_XXL, PACMAN_XXL ->
+                    menu.setMenuState(
+                            ui.gameVariant(), ui.game().isCutScenesEnabled(), ui.game().mapSelector().mapSelectionMode());
+            default -> throw new IllegalStateException();
+        }
+    }
+
     @Override
     public void requestFocus() {
         menu.root().requestFocus();
-        initMenu();
+        initMenuState();
     }
 
     @Override
-    public void start() {
-    }
-
-    private void initMenu() {
-        switch (ui.gameController().currentGameVariant()) {
-            case MS_PACMAN_XXL -> {
-                PacManXXL_MsPacMan_GameModel game = ui.game();
-                menu.setMenuState(
-                        ui.gameController().currentGameVariant(),
-                        game.isCutScenesEnabled(),
-                        game.mapSelector().mapSelectionMode());
-            }
-            case PACMAN_XXL -> {
-                PacManXXL_PacMan_GameModel game = ui.game();
-                menu.setMenuState(
-                        ui.gameController().currentGameVariant(),
-                        game.isCutScenesEnabled(),
-                        game.mapSelector().mapSelectionMode());
-            }
-            default -> throw new IllegalStateException();
-        }
-        Logger.info("Menu initialized");
-    }
+    public void start() {}
 
     @Override
     public Node root() {

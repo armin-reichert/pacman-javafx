@@ -39,6 +39,8 @@ public interface MapSelector {
         return maps;
     }
 
+    default MapSelectionMode mapSelectionMode() { return MapSelectionMode.NO_CUSTOM_MAPS; }
+
     default void setMapSelectionMode(MapSelectionMode mode) {}
 
     void loadAllMaps(GameModel game);
