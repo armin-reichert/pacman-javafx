@@ -77,21 +77,21 @@ public class SpriteAnimationSet implements ActorAnimations {
     @Override
     public void start() {
         if (currentAnimation() != null) {
-            currentAnimation().startAnimation();
+            currentAnimation().play();
         }
     }
 
     @Override
     public void stop() {
         if (currentAnimation() != null) {
-            currentAnimation().stopAnimation();
+            currentAnimation().stop();
         }
     }
 
     @Override
     public void reset() {
         if (currentAnimation() != null) {
-            currentAnimation().resetAnimation();
+            currentAnimation().reset();
         }
     }
 }

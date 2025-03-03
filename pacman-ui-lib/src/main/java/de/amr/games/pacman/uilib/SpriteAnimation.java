@@ -42,7 +42,6 @@ public class SpriteAnimation extends Transition {
         }
 
         public SpriteAnimation endLoop() {
-            workPiece.loop = true;
             return build(Animation.INDEFINITE);
         }
 
@@ -66,7 +65,6 @@ public class SpriteAnimation extends Transition {
     private final SpriteSheet spriteSheet;
     private String info;
     private RectArea[] sprites = new RectArea[0];
-    private boolean loop;
     private int frameTicks = 1;
     private int frameIndex;
 
@@ -79,6 +77,12 @@ public class SpriteAnimation extends Transition {
         if (t >= 1) {
             nextFrame();
         }
+    }
+
+    public void reset() {
+        stop();
+        jumpTo(Duration.ZERO);
+        frameIndex = 0;
     }
 
     public SpriteSheet spriteSheet() {
@@ -95,23 +99,9 @@ public class SpriteAnimation extends Transition {
             stop();
             frameTicks = ticks;
             if (doRestart) {
-                startAnimation();
+                play();
             }
         }
-    }
-
-    public void startAnimation() {
-        play();
-    }
-
-    public void stopAnimation() {
-        stop();
-    }
-
-    public void resetAnimation() {
-        stop();
-        jumpTo(Duration.ZERO);
-        frameIndex = 0;
     }
 
     public void setFrameIndex(int index) {

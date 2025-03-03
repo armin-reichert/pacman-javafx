@@ -68,9 +68,9 @@ public class GhostAnimations extends SpriteAnimationSet {
             ActorAnimations.ANIM_GHOST_EYES, eyes,
             ActorAnimations.ANIM_GHOST_NUMBER, number));
 
-        eyes.startAnimation();
-        frightened.startAnimation();
-        flashing.startAnimation();
+        eyes.play();
+        frightened.play();
+        flashing.play();
     }
 
     @Override

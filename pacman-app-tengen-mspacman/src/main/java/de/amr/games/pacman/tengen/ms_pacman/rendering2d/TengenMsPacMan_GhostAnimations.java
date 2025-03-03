@@ -70,9 +70,9 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationSet {
             ActorAnimations.ANIM_GHOST_NUMBER, number));
 
         // TODO check this
-        eyes.startAnimation();
-        frightened.startAnimation();
-        flashing.startAnimation();
+        eyes.play();
+        frightened.play();
+        flashing.play();
     }
 
     @Override

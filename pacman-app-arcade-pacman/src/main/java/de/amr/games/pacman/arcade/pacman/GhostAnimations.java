@@ -93,9 +93,9 @@ public class GhostAnimations extends SpriteAnimationSet {
             ActorAnimations.ANIM_BLINKY_PATCHED, patched,
             ActorAnimations.ANIM_BLINKY_NAKED, naked));
 
-        eyes.startAnimation();
-        frightened.startAnimation();
-        flashing.startAnimation();
+        eyes.play();
+        frightened.play();
+        flashing.play();
     }
 
     @Override

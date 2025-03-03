@@ -114,7 +114,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
             stork.setVelocity(-0.8f, 0);
             stork.show();
             storkAnimation = spriteSheet.createStorkFlyingAnimation();
-            storkAnimation.startAnimation();
+            storkAnimation.play();
             bagReleased = false;
         }
         else if (t == 270) {
