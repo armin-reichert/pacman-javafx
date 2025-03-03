@@ -8,6 +8,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.MapSelectionMode;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
+import de.amr.games.pacman.ui3d.GlobalProperties3d;
 import de.amr.games.pacman.uilib.OptionMenu;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Node;
@@ -23,11 +24,13 @@ public class PacManXXL_OptionsMenu {
     private static final float UNSCALED_HEIGHT = 36 * TS;
     private static final float RELATIVE_HEIGHT = 0.9f;
 
+    private final OptionMenu.MenuEntry entryPlay3D;
     private final OptionMenu.MenuEntry entryGameVariant;
     private final OptionMenu.MenuEntry entryCutScenesEnabled;
     private final OptionMenu.MenuEntry entryMapSelectionMode;
 
     private static class MenuState {
+        private boolean play3D;
         private GameVariant gameVariant;
         private boolean cutScenesEnabled;
         private MapSelectionMode mapSelectionMode;
@@ -59,6 +62,7 @@ public class PacManXXL_OptionsMenu {
         menu.setOnStart(() -> {
             logMenuState();
             if (state.gameVariant == GameVariant.PACMAN_XXL || state.gameVariant == GameVariant.MS_PACMAN_XXL) {
+                GlobalProperties3d.PY_3D_ENABLED.set(state.play3D);
                 GameModel game = ui.gameController().gameModel(state.gameVariant);
                 game.setCutScenesEnabled(state.cutScenesEnabled);
                 game.mapSelector().loadAllMaps(game);
@@ -68,6 +72,20 @@ public class PacManXXL_OptionsMenu {
                 Logger.error("Game variant {} is not allowed for XXL game", state.gameVariant);
             }
         });
+
+        entryPlay3D = new OptionMenu.MenuEntry(
+                "USE 3D VIEW",
+                List.of("NO", "YES"))
+        {
+            @Override
+            protected void onValueChange() {
+                switch (valueIndex) {
+                    case 0 -> state.play3D = false;
+                    case 1 -> state.play3D = true;
+                    default -> throw new IllegalArgumentException("Menu Selection failed");
+                }
+            }
+        };
 
         entryGameVariant = new OptionMenu.MenuEntry(
             "GAME VARIANT", List.of("PAC-MAN", "MS.PAC-MAN"))
@@ -107,6 +125,7 @@ public class PacManXXL_OptionsMenu {
             }
         };
 
+        menu.addEntry(entryPlay3D);
         menu.addEntry(entryGameVariant);
         menu.addEntry(entryCutScenesEnabled);
         menu.addEntry(entryMapSelectionMode);
@@ -120,10 +139,13 @@ public class PacManXXL_OptionsMenu {
         return menu.root();
     }
 
-    public void setState(GameVariant gameVariant, boolean cutScenesEnabled, MapSelectionMode mapSelectionMode) {
+    public void setState(boolean play3D, GameVariant gameVariant, boolean cutScenesEnabled, MapSelectionMode mapSelectionMode) {
+        state.play3D = play3D;
         state.gameVariant = gameVariant;
         state.cutScenesEnabled = cutScenesEnabled;
         state.mapSelectionMode = mapSelectionMode;
+
+        entryPlay3D.setValueIndex(play3D ? 1 : 0);
 
         entryGameVariant.setValueIndex(switch (gameVariant) {
             case PACMAN_XXL -> 0;
@@ -142,7 +164,7 @@ public class PacManXXL_OptionsMenu {
     }
 
     private void logMenuState() {
-        Logger.info("Menu state: gameVariant={}, cutScenesEnabled={}, mapSelectionMode={}",
-                state.gameVariant, state.cutScenesEnabled, state.mapSelectionMode);
+        Logger.info("Menu state: play3D={}, gameVariant={}, cutScenesEnabled={}, mapSelectionMode={}",
+                state.play3D, state.gameVariant, state.cutScenesEnabled, state.mapSelectionMode);
     }
 }

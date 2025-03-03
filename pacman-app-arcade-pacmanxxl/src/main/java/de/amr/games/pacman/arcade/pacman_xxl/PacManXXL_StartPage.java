@@ -7,6 +7,7 @@ package de.amr.games.pacman.arcade.pacman_xxl;
 import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui2d.page.StartPagesCarousel;
+import de.amr.games.pacman.ui3d.GlobalProperties3d;
 import de.amr.games.pacman.uilib.Flyer;
 import de.amr.games.pacman.uilib.ResourceManager;
 import javafx.scene.Node;
@@ -55,7 +56,10 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
     private void initMenuState() {
         switch (ui.gameVariant()) {
             case MS_PACMAN_XXL, PACMAN_XXL -> menu.setState(
-                ui.gameVariant(), ui.game().isCutScenesEnabled(), ui.game().mapSelector().mapSelectionMode()
+                GlobalProperties3d.PY_3D_ENABLED.get(),
+                ui.gameVariant(),
+                ui.game().isCutScenesEnabled(),
+                ui.game().mapSelector().mapSelectionMode()
             );
             default -> throw new IllegalStateException();
         }
