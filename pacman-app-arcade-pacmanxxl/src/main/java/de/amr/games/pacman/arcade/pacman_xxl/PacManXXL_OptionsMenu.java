@@ -43,7 +43,6 @@ public class PacManXXL_OptionsMenu {
             @Override
             public void handle(long now) {
                 menu.draw();
-                Logger.info("Draw");
             }
         };
 
