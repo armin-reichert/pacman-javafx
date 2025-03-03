@@ -62,7 +62,7 @@ public class CutScene3 extends GameScene2D {
         pacMan.setAnimations(new PacAnimations(spriteSheet));
 
         storkAnimation = spriteSheet.createStorkFlyingAnimation();
-        storkAnimation.start();
+        storkAnimation.startAnimation();
 
         clapAnimation = new ClapperboardAnimation("3", "JUNIOR");
         clapAnimation.start();

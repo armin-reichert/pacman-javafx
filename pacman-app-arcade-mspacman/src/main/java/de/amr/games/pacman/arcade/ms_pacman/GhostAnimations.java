@@ -33,21 +33,21 @@ public class GhostAnimations extends SpriteAnimationSet {
             .info("Normal ghost")
             .sprites(spriteSheet.ghostNormalSprites(ghostID, Direction.LEFT))
             .frameTicks(8)
-            .loop();
+            .endLoop();
 
         var frightened = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Frightened ghost")
             .sprites(spriteSheet.ghostFrightenedSprites())
             .frameTicks(8)
-            .loop();
+            .endLoop();
 
         var flashing = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Flashing ghost")
             .sprites(spriteSheet.ghostFlashingSprites())
             .frameTicks(7)
-            .loop();
+            .endLoop();
 
         var eyes = SpriteAnimation
             .spriteSheet(spriteSheet)
@@ -68,9 +68,9 @@ public class GhostAnimations extends SpriteAnimationSet {
             ActorAnimations.ANIM_GHOST_EYES, eyes,
             ActorAnimations.ANIM_GHOST_NUMBER, number));
 
-        eyes.start();
-        frightened.start();
-        flashing.start();
+        eyes.startAnimation();
+        frightened.startAnimation();
+        flashing.startAnimation();
     }
 
     @Override

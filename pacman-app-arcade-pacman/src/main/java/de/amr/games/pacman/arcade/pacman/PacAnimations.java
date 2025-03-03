@@ -27,7 +27,7 @@ public class PacAnimations extends SpriteAnimationSet {
         add(Map.of(
             ActorAnimations.ANIM_PAC_MUNCHING,
             SpriteAnimation.spriteSheet(spriteSheet).info("Pac-Man munching")
-                .sprites(spriteSheet.pacMunchingSprites(Direction.LEFT)).loop(),
+                .sprites(spriteSheet.pacMunchingSprites(Direction.LEFT)).endLoop(),
 
             ActorAnimations.ANIM_PAC_DYING,
             SpriteAnimation.spriteSheet(spriteSheet).info("Pac-Man dying")
@@ -35,7 +35,7 @@ public class PacAnimations extends SpriteAnimationSet {
 
             ActorAnimations.ANIM_PAC_BIG,
             SpriteAnimation.spriteSheet(spriteSheet).info("BIG Pac-Man munching")
-                .sprites(spriteSheet.bigPacManSprites()).frameTicks(3).loop()
+                .sprites(spriteSheet.bigPacManSprites()).frameTicks(3).endLoop()
         ));
     }
 

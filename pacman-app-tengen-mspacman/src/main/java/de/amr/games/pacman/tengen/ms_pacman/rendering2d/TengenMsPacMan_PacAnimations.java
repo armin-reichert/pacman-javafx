@@ -26,20 +26,20 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet {
             .spriteSheet(spriteSheet)
             .info("Ms. Pac-Man munching")
             .sprites(TengenMsPacMan_SpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT)
-            .loop();
+            .endLoop();
 
         var msPacManMunchingBooster = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Ms. Pac-Man munching booster mode")
             .sprites(TengenMsPacMan_SpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER)
-            .loop();
+            .endLoop();
 
         var msPacManWavingHand = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Ms. Pac-Man waving hand")
             .sprites(TengenMsPacMan_SpriteSheet.MS_PAC_WAVING_HAND)
             .frameTicks(8)
-            .loop();
+            .endLoop();
 
         var msPacManTurningAway = SpriteAnimation
             .spriteSheet(spriteSheet)
@@ -60,21 +60,21 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet {
             .info("Ms. Pac-Man's husband munching")
             .sprites(TengenMsPacMan_SpriteSheet.MR_PAC_MUNCHING_SPRITES_LEFT)
             .frameTicks(2)
-            .loop();
+            .endLoop();
 
         var mrPacManMunchingBooster = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Ms. Pac-Man's husband munching booster mode")
             .sprites(TengenMsPacMan_SpriteSheet.MR_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER)
             .frameTicks(2)
-            .loop();
+            .endLoop();
 
         var mrPacManWavingHand = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Pac-Man waving hand")
             .sprites(TengenMsPacMan_SpriteSheet.MR_PAC_WAVING_HAND)
             .frameTicks(8)
-            .loop();
+            .endLoop();
 
         var mrPacManTurningAway = SpriteAnimation
                 .spriteSheet(spriteSheet)

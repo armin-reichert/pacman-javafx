@@ -28,21 +28,21 @@ public class GhostAnimations extends SpriteAnimationSet {
             .info("Normal ghost")
             .sprites(spriteSheet.ghostNormalSprites(ghostID, Direction.LEFT))
             .frameTicks(8)
-            .loop();
+            .endLoop();
 
         var frightened = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Frightened ghost")
             .sprites(spriteSheet.ghostFrightenedSprites())
             .frameTicks(8)
-            .loop();
+            .endLoop();
 
         var flashing = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Flashing ghost")
             .sprites(spriteSheet.ghostFlashingSprites())
             .frameTicks(7)
-            .loop();
+            .endLoop();
 
         var eyes = SpriteAnimation
             .spriteSheet(spriteSheet)
@@ -73,14 +73,14 @@ public class GhostAnimations extends SpriteAnimationSet {
             .info("Patched dress ghost")
             .sprites(spriteSheet.blinkyPatchedSprites())
             .frameTicks(4)
-            .loop();
+            .endLoop();
 
         var naked = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Naked ghost")
             .sprites(spriteSheet.blinkyNakedSprites())
             .frameTicks(4)
-            .loop();
+            .endLoop();
 
         add(Map.of(
             ActorAnimations.ANIM_GHOST_NORMAL, normal,
@@ -93,9 +93,9 @@ public class GhostAnimations extends SpriteAnimationSet {
             ActorAnimations.ANIM_BLINKY_PATCHED, patched,
             ActorAnimations.ANIM_BLINKY_NAKED, naked));
 
-        eyes.start();
-        frightened.start();
-        flashing.start();
+        eyes.startAnimation();
+        frightened.startAnimation();
+        flashing.startAnimation();
     }
 
     @Override

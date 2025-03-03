@@ -29,7 +29,7 @@ public class PacAnimations extends SpriteAnimationSet {
             .spriteSheet(spriteSheet)
             .info("Ms. Pac-Man munching")
             .sprites(spriteSheet.pacMunchingSprites(Direction.LEFT))
-            .loop();
+            .endLoop();
 
         var dying = SpriteAnimation
             .spriteSheet(spriteSheet)
@@ -43,7 +43,7 @@ public class PacAnimations extends SpriteAnimationSet {
             .info("Ms. Pac-Man's husband munching")
             .sprites(spriteSheet.mrPacManMunchingSprites(Direction.LEFT))
             .frameTicks(2)
-            .loop();
+            .endLoop();
 
         add(Map.of(
             ActorAnimations.ANIM_PAC_MUNCHING, munching,

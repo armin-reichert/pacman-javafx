@@ -271,7 +271,7 @@ public class TengenMsPacMan_SpriteSheet implements GameSpriteSheet {
             .sprites(
                 rect(157, 355, 33, 16),
                 rect(198, 355, 33, 16)
-            ).frameTicks(8).loop();
+            ).frameTicks(8).endLoop();
     }
 
     // Tengen-specific

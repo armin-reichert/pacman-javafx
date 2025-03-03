@@ -6,7 +6,6 @@ package de.amr.games.pacman.uilib;
 
 import de.amr.games.pacman.lib.RectArea;
 import javafx.animation.Animation;
-import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.util.Duration;
@@ -15,7 +14,7 @@ import org.tinylog.Logger;
 /**
  * @author Armin Reichert
  */
-public class SpriteAnimation {
+public class SpriteAnimation extends Transition {
 
     private static final int FPS = 60;
 
@@ -42,16 +41,20 @@ public class SpriteAnimation {
             return this;
         }
 
-        public SpriteAnimation loop() {
+        public SpriteAnimation endLoop() {
             workPiece.loop = true;
-            workPiece.animator = workPiece.new Animator();
-            Logger.debug("New sprite animation '{}'", workPiece.info);
-            return workPiece;
+            return build(Animation.INDEFINITE);
         }
 
         public SpriteAnimation end() {
+            return build(workPiece.sprites.length);
+        }
+
+        private SpriteAnimation build(int cycleCount) {
+            workPiece.setCycleDuration(Duration.seconds(1.0 / FPS * workPiece.frameTicks));
+            workPiece.setCycleCount(cycleCount);
+            workPiece.setInterpolator(Interpolator.LINEAR);
             Logger.debug("New sprite animation '{}'", workPiece.info);
-            workPiece.animator = workPiece.new Animator();
             return workPiece;
         }
     }
@@ -60,32 +63,22 @@ public class SpriteAnimation {
         return new Builder(spriteSheet);
     }
 
-    private class Animator extends Transition {
-
-        private Animator() {
-            setCycleDuration(Duration.seconds(1.0 / FPS * frameTicks));
-            setCycleCount(loop ? Animation.INDEFINITE : sprites.length);
-            setInterpolator(Interpolator.LINEAR);
-        }
-
-        @Override
-        protected void interpolate(double frac) {
-            if (frac >= 1) {
-                nextFrame();
-            }
-        }
-    }
-
     private final SpriteSheet spriteSheet;
-    private Animator animator;
     private String info;
-    private RectArea[] sprites;
+    private RectArea[] sprites = new RectArea[0];
     private boolean loop;
     private int frameTicks = 1;
     private int frameIndex;
 
     private SpriteAnimation(SpriteSheet spriteSheet) {
         this.spriteSheet = spriteSheet;
+    }
+
+    @Override
+    protected void interpolate(double t) {
+        if (t >= 1) {
+            nextFrame();
+        }
     }
 
     public SpriteSheet spriteSheet() {
@@ -96,29 +89,29 @@ public class SpriteAnimation {
         this.sprites = sprites;
     }
 
-    public void reset() {
-        animator.stop();
-        animator.jumpTo(Duration.ZERO);
-        frameIndex = 0;
-    }
-
     public void setFrameTicks(int ticks) {
         if (ticks != frameTicks) {
-            boolean doRestart = animator.getStatus() == Status.RUNNING;
-            animator.stop();
+            boolean doRestart = getStatus() == Status.RUNNING;
+            stop();
             frameTicks = ticks;
             if (doRestart) {
-                start();
+                startAnimation();
             }
         }
     }
 
-    public void start() {
-        animator.play();
+    public void startAnimation() {
+        play();
     }
 
-    public void stop() {
-        animator.stop();
+    public void stopAnimation() {
+        stop();
+    }
+
+    public void resetAnimation() {
+        stop();
+        jumpTo(Duration.ZERO);
+        frameIndex = 0;
     }
 
     public void setFrameIndex(int index) {
@@ -144,7 +137,7 @@ public class SpriteAnimation {
     public void nextFrame() {
         frameIndex++;
         if (frameIndex == sprites.length) {
-            frameIndex = animator.getCycleCount() == Animation.INDEFINITE ? 0 : sprites.length - 1;
+            frameIndex = getCycleCount() == Animation.INDEFINITE ? 0 : sprites.length - 1;
         }
     }
 }

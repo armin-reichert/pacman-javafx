@@ -34,21 +34,21 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationSet {
             .info("Normal ghost")
             .sprites(spriteSheet.ghostNormalSprites(ghostID, Direction.LEFT))
             .frameTicks(NORMAL_FRAME_TICKS)
-            .loop();
+            .endLoop();
 
         var frightened = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Frightened ghost")
             .sprites(spriteSheet.ghostFrightenedSprites())
             .frameTicks(FRIGHTENED_FRAME_TICKS)
-            .loop();
+            .endLoop();
 
         var flashing = SpriteAnimation
             .spriteSheet(spriteSheet)
             .info("Flashing ghost")
             .sprites(spriteSheet.ghostFlashingSprites())
             .frameTicks(FLASH_FRAME_TICKS)
-            .loop();
+            .endLoop();
 
         var eyes = SpriteAnimation
             .spriteSheet(spriteSheet)
@@ -70,9 +70,9 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationSet {
             ActorAnimations.ANIM_GHOST_NUMBER, number));
 
         // TODO check this
-        eyes.start();
-        frightened.start();
-        flashing.start();
+        eyes.startAnimation();
+        frightened.startAnimation();
+        flashing.startAnimation();
     }
 
     @Override
