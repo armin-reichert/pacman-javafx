@@ -21,7 +21,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
 public class PacManXXL_OptionsMenu {
 
     private static final float UNSCALED_HEIGHT = 36 * TS;
-    private static final float RELATIVE_HEIGHT = 0.85f;
+    private static final float RELATIVE_HEIGHT = 0.9f;
 
     private final OptionMenu.MenuEntry entryGameVariant;
     private final OptionMenu.MenuEntry entryCutScenesEnabled;
