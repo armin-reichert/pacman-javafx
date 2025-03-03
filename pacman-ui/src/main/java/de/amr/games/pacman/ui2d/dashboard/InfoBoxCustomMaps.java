@@ -5,52 +5,57 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.MapSelectionMode;
-import de.amr.games.pacman.ui2d.GameContext;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
-import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_MAP_SELECTION_MODE;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
-/**
- * @author Armin Reichert
- */
 public class InfoBoxCustomMaps extends InfoBox {
 
-    private TableView<WorldMap> mapsTableView;
-    private ComboBox<MapSelectionMode> comboMapSelectionMode;
+    private final TableView<WorldMap> mapsTableView = new TableView<>();
 
-    @Override
-    public void init(GameContext context) {
-        super.init(context);
-
-        comboMapSelectionMode = addComboBox("Map Selection", MapSelectionMode.values());
-        comboMapSelectionMode.setOnAction(e -> PY_MAP_SELECTION_MODE.set(comboMapSelectionMode.getValue()));
-        comboMapSelectionMode.getSelectionModel().select(PY_MAP_SELECTION_MODE.get());
-
-        mapsTableView = new TableView<>();
+    public InfoBoxCustomMaps() {
+        mapsTableView.setPrefWidth(300);
         mapsTableView.setPrefHeight(200);
-        addRow(mapsTableView);
 
-        var tcMapFile = new TableColumn<WorldMap, String>("Map File");
-        tcMapFile.setCellValueFactory(p -> new SimpleStringProperty(p.getValue().url().toString()));
+        var tcMapURL = new TableColumn<WorldMap, String>("URL");
+        tcMapURL.setCellValueFactory(data -> {
+            String shortURL = "";
+            URL url = data.getValue().url();
+            if (url == null) {
+                shortURL = InfoText.NO_INFO;
+            } else {
+                String urlString = URLDecoder.decode(url.toString(), StandardCharsets.UTF_8);
+                int lastSlash = urlString.lastIndexOf('/');
+                if (lastSlash != -1) {
+                    shortURL = urlString.substring(lastSlash + 1);
+                } else {
+                    shortURL = urlString.substring(0, 10); //TODO
+                }
+            }
+            return new SimpleStringProperty(shortURL);
+        });
 
         var tcMapRowCount = new TableColumn<WorldMap, Integer>("Rows");
-        tcMapRowCount.setCellValueFactory(p -> new SimpleIntegerProperty(p.getValue().numRows()).asObject());
+        tcMapRowCount.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().numRows()).asObject());
 
         var tcMapColCount = new TableColumn<WorldMap, Integer>("Cols");
-        tcMapColCount.setCellValueFactory(p -> new SimpleIntegerProperty(p.getValue().numCols()).asObject());
+        tcMapColCount.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().numCols()).asObject());
 
-        mapsTableView.getColumns().add(tcMapFile);
+        mapsTableView.getColumns().add(tcMapURL);
         mapsTableView.getColumns().add(tcMapRowCount);
         mapsTableView.getColumns().add(tcMapColCount);
         mapsTableView.getColumns().forEach(column -> {
             column.setSortable(false);
             column.setReorderable(false);
         });
+
+        addRow(mapsTableView);
+
     }
 
     public TableView<WorldMap> getMapsTableView() {

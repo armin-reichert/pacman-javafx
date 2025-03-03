@@ -360,22 +360,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         gamePage.dashboardLayer().addDashboardItem(title, infoBox);
     }
 
-    //TODO reimplement
-
-    /*
-    private void onCustomMapSelectionModeChange(GameModel game) {
-        // We cannot use data binding to the game model classes because the game models are in project
-        // "pacman-core" which has no dependency to JavaFX data binding.
-        if (game.mapSelectionMode() != CustomMapSelectionMode.NO_CUSTOM_MAPS) {
-            gamePage.setActionToOpenEditor(actionOpenEditor);
-            game.setMapSelectionMode(GlobalProperties2d.PY_MAP_SELECTION_MODE.get());
-            GlobalProperties2d.PY_MAP_SELECTION_MODE.addListener((py, ov, selectionMode) -> game.setMapSelectionMode(selectionMode));
-        } else {
-            gamePage.setActionToOpenEditor(null);
-        }
-    }
-     */
-
     protected void handleGameVariantChange(GameVariant variant) {
         gameController().selectGame(variant);
         //gameController().restart(GameState.BOOT);

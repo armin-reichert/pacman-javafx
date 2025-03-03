@@ -50,7 +50,7 @@ public abstract class InfoBox extends TitledPane {
 
     public InfoBox() {
         setExpanded(false);
-        setOpacity(0.7);
+        setOpacity(0.8);
         setFocusTraversable(false);
         setContent(grid);
         grid.setVgap(2);

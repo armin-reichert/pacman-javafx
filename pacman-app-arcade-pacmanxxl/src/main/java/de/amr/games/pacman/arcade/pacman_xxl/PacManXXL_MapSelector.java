@@ -6,12 +6,13 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.MapSelectionMode;
 import de.amr.games.pacman.model.MapSelector;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +35,7 @@ public class PacManXXL_MapSelector implements MapSelector {
     );
 
     private List<WorldMap> builtinMaps = new ArrayList<>();
-    private final Map<File, WorldMap> customMapsByFile = new HashMap<>();
+    private final List<WorldMap> customMapsByFile = FXCollections.observableList(new ArrayList<>());
     private MapSelectionMode mapSelectionMode = MapSelectionMode.CUSTOM_MAPS_FIRST;
 
     @Override
@@ -43,8 +44,8 @@ public class PacManXXL_MapSelector implements MapSelector {
     }
 
     @Override
-    public List<WorldMap> customMaps() {
-        return customMapsByFile.keySet().stream().sorted().map(customMapsByFile::get).toList();
+    public ObservableList<WorldMap> customMaps() {
+        return (ObservableList<WorldMap>) customMapsByFile;
     }
 
     @Override
@@ -108,7 +109,7 @@ public class PacManXXL_MapSelector implements MapSelector {
         for (File mapFile : mapFiles) {
             try {
                 WorldMap worldMap = new WorldMap(mapFile);
-                customMapsByFile.put(mapFile, worldMap);
+                customMapsByFile.add(worldMap);
                 Logger.info("Custom map loaded from file {}", mapFile);
             } catch (IOException x) {
                 Logger.error(x);
