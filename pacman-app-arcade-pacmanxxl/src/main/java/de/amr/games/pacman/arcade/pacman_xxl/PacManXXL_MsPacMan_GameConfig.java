@@ -37,7 +37,7 @@ public class PacManXXL_MsPacMan_GameConfig implements GameConfiguration {
         setGameScene("CutScene2",   new CutScene2());
         setGameScene("CutScene3",   new CutScene3());
 
-        ResourceManager rm = () -> ArcadeMsPacMan_GameConfig.class;
+        ResourceManager rm = () -> ArcadeMsPacMan_GameConfig3D.class;
 
         spriteSheet = new ArcadeMsPacMan_SpriteSheet(rm.loadImage("graphics/mspacman_spritesheet.png"));
 
