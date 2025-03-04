@@ -24,24 +24,23 @@ public class PacManXXL_OptionsMenu {
     private static final float UNSCALED_HEIGHT = 36 * TS;
     private static final float RELATIVE_HEIGHT = 0.9f;
 
+    private static class MenuState {
+        GameVariant gameVariant;
+        boolean play3D;
+        boolean cutScenesEnabled;
+        MapSelectionMode mapSelectionMode;
+    }
+
+    private final OptionMenu menu = new OptionMenu(UNSCALED_HEIGHT);
     private final OptionMenu.MenuEntry<Boolean> entryPlay3D;
     private final OptionMenu.MenuEntry<GameVariant> entryGameVariant;
     private final OptionMenu.MenuEntry<Boolean> entryCutScenesEnabled;
     private final OptionMenu.MenuEntry<MapSelectionMode> entryMapSelectionMode;
 
-    private static class MenuState {
-        private boolean play3D;
-        private GameVariant gameVariant;
-        private boolean cutScenesEnabled;
-        private MapSelectionMode mapSelectionMode;
-    }
-
     private final AnimationTimer animationTimer;
     private final MenuState state = new MenuState();
-    private final OptionMenu menu = new OptionMenu(UNSCALED_HEIGHT);
 
     public PacManXXL_OptionsMenu(PacManGamesUI ui) {
-
         animationTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -77,7 +76,10 @@ public class PacManXXL_OptionsMenu {
             "GAME VARIANT", List.of(GameVariant.PACMAN_XXL, GameVariant.MS_PACMAN_XXL))
         {
             @Override
-            protected void onValueChange(int index) { state.gameVariant = selectedValue(); }
+            protected void onValueChange(int index) {
+                state.gameVariant = selectedValue();
+                logMenuState();
+            }
 
             @Override
             public String selectedValueText() {
@@ -94,7 +96,10 @@ public class PacManXXL_OptionsMenu {
             List.of(true, false))
         {
             @Override
-            protected void onValueChange(int index) { state.play3D = selectedValue(); }
+            protected void onValueChange(int index) {
+                state.play3D = selectedValue();
+                logMenuState();
+            }
 
             @Override
             public String selectedValueText() {
@@ -106,7 +111,10 @@ public class PacManXXL_OptionsMenu {
             "CUTSCENES", List.of(true, false))
         {
             @Override
-            protected void onValueChange(int index) { state.cutScenesEnabled = selectedValue(); }
+            protected void onValueChange(int index) {
+                state.cutScenesEnabled = selectedValue();
+                logMenuState();
+            }
 
             @Override
             public String selectedValueText() {
@@ -118,7 +126,10 @@ public class PacManXXL_OptionsMenu {
             "MAP ORDER", List.of(MapSelectionMode.CUSTOM_MAPS_FIRST, MapSelectionMode.ALL_RANDOM))
         {
             @Override
-            protected void onValueChange(int index) { state.mapSelectionMode = selectedValue(); }
+            protected void onValueChange(int index) {
+                state.mapSelectionMode = selectedValue();
+                logMenuState();
+            }
 
             @Override
             public String selectedValueText() {
@@ -159,7 +170,7 @@ public class PacManXXL_OptionsMenu {
     }
 
     private void logMenuState() {
-        Logger.info("Menu state: play3D={}, gameVariant={}, cutScenesEnabled={}, mapSelectionMode={}",
-                state.play3D, state.gameVariant, state.cutScenesEnabled, state.mapSelectionMode);
+        Logger.info("Menu state: gameVariant={}, play3D={}, cutScenesEnabled={}, mapSelectionMode={}",
+            state.gameVariant, state.play3D, state.cutScenesEnabled, state.mapSelectionMode);
     }
 }

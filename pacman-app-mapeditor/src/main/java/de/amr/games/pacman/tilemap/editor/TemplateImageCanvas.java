@@ -16,10 +16,7 @@ import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -32,8 +29,6 @@ import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.*;
 
 public class TemplateImageCanvas extends Canvas {
 
-    private static final int COLOR_INDICATOR_WIDTH = 170;
-
     private final IntegerProperty gridSizePy = new SimpleIntegerProperty();
     private final BooleanProperty gridVisiblePy = new SimpleBooleanProperty();
     private final ObjectProperty<Image> templateImagePy = new SimpleObjectProperty<>();
@@ -41,36 +36,6 @@ public class TemplateImageCanvas extends Canvas {
 
     private ContextMenu colorSelectionContextMenu;
     private ColorIndicator colorIndicator;
-
-    public static class ColorIndicator extends HBox {
-        private final VBox colorBox = new VBox();
-        private final Text colorText = new Text("#RGB");
-
-        public ColorIndicator() {
-            setMinWidth(COLOR_INDICATOR_WIDTH);
-            setMaxWidth(COLOR_INDICATOR_WIDTH);
-            setMinHeight(30);
-            setSpacing(10);
-            setPadding(new Insets(3));
-            setBackground(Background.fill(Color.gray(0.4)));
-
-            colorBox.setMinWidth(30);
-            colorBox.setMaxWidth(30);
-            colorBox.setMinHeight(30);
-            colorBox.setMaxHeight(30);
-            colorBox.setBorder(Border.stroke(Color.WHITE));
-
-            colorText.setFont(Font.font("Sans", FontWeight.BOLD, 20));
-            colorText.setFill(Color.WHITE);
-
-            getChildren().addAll(colorBox, colorText);
-        }
-
-        public void setColor(Color color) {
-            colorBox.setBackground(Background.fill(color));
-            colorText.setText(color.equals(Color.TRANSPARENT) ? "Transparent" : formatColorHex(color));
-        }
-    }
 
     public TemplateImageCanvas(TileMapEditor editor) {
         gridSizePy.bind(editor.gridSizeProperty());
@@ -105,14 +70,14 @@ public class TemplateImageCanvas extends Canvas {
         setOnMouseMoved(e -> {
             colorIndicator.setColor(pickColor(e.getX(), e.getY()));
             double correction = 1.5 * (e.getX() - getWidth() * 0.5) / getWidth();
-            colorIndicator.setLayoutX(e.getX() - COLOR_INDICATOR_WIDTH * 0.5 - correction * COLOR_INDICATOR_WIDTH);
+            colorIndicator.setLayoutX(e.getX() - colorIndicator.getWidth() * 0.5 - correction * colorIndicator.getWidth());
             colorIndicator.setLayoutY(e.getY() + 20);
             colorIndicator.setVisible(e.getX() < getWidth() && e.getY() < getHeight());
         });
 
         setOnMouseExited(e -> colorIndicator.setVisible(false));
 
-        colorIndicator = new ColorIndicator();
+        colorIndicator = new ColorIndicator(170);
         colorIndicator.setVisible(false);
         templateImagePy.addListener((py, ov, nv) -> colorIndicator.setVisible(nv != null));
     }
@@ -183,7 +148,7 @@ public class TemplateImageCanvas extends Canvas {
         content.setPadding(new Insets(3));
         content.setBackground(Background.fill(Color.TRANSPARENT));
 
-        VBox colorBox = new VBox();
+        BorderPane colorBox = new BorderPane();
         colorBox.setMinWidth(30);
         colorBox.setMaxWidth(30);
         colorBox.setMinHeight(30);
@@ -193,7 +158,7 @@ public class TemplateImageCanvas extends Canvas {
         if (color == null) {
             var undefinedHint = new Text("???");
             undefinedHint.setFont(Font.font("Sans", FontWeight.BOLD, 14));
-            colorBox.getChildren().add(undefinedHint);
+            colorBox.setCenter(undefinedHint);
         }
 
         Text colorText = new Text();
