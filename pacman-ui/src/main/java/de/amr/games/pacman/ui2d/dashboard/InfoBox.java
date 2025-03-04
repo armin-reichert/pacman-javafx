@@ -49,21 +49,21 @@ public abstract class InfoBox extends TitledPane {
     protected int rowIndex;
 
     public InfoBox() {
-        setExpanded(false);
-        setOpacity(0.8);
-        setFocusTraversable(false);
-        setContent(grid);
+        grid.setBackground(Ufx.coloredBackground(DashboardAssets.IT.color("infobox.background_color")));
         grid.setVgap(2);
         grid.setHgap(3);
+        setContent(grid);
+
+        setExpanded(false);
+        setFocusTraversable(false);
+        setOpacity(0.9);
     }
 
     public void init(GameContext context) {
         this.context = context;
-        grid.setBackground(Ufx.coloredBackground(DashboardAssets.IT.color("infobox.background_color")));
     }
 
     public void update() {
-        // auto update all info texts inside this box
         infoTexts.forEach(InfoText::update);
     }
 

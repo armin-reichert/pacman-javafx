@@ -18,27 +18,23 @@ public class InfoBoxCustomMaps extends InfoBox {
 
     private final TableView<WorldMap> mapsTableView = new TableView<>();
 
+    private static String urlToText(URL url) {
+        if (url == null) return InfoText.NO_INFO;
+        String text = URLDecoder.decode(url.toString(), StandardCharsets.UTF_8);
+        int lastSlash = text.lastIndexOf('/');
+        if (lastSlash != -1) {
+            return text.substring(lastSlash + 1);
+        } else {
+            return text.substring(0, 10); //TODO
+        }
+    }
+
     public InfoBoxCustomMaps() {
         mapsTableView.setPrefWidth(300);
         mapsTableView.setPrefHeight(200);
 
         var tcMapURL = new TableColumn<WorldMap, String>("Map");
-        tcMapURL.setCellValueFactory(data -> {
-            String shortURL = "";
-            URL url = data.getValue().url();
-            if (url == null) {
-                shortURL = InfoText.NO_INFO;
-            } else {
-                String urlString = URLDecoder.decode(url.toString(), StandardCharsets.UTF_8);
-                int lastSlash = urlString.lastIndexOf('/');
-                if (lastSlash != -1) {
-                    shortURL = urlString.substring(lastSlash + 1);
-                } else {
-                    shortURL = urlString.substring(0, 10); //TODO
-                }
-            }
-            return new SimpleStringProperty(shortURL);
-        });
+        tcMapURL.setCellValueFactory(data -> new SimpleStringProperty(urlToText(data.getValue().url())));
 
         var tcMapRowCount = new TableColumn<WorldMap, Integer>("Rows");
         tcMapRowCount.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().numRows()).asObject());
@@ -49,13 +45,13 @@ public class InfoBoxCustomMaps extends InfoBox {
         mapsTableView.getColumns().add(tcMapURL);
         mapsTableView.getColumns().add(tcMapRowCount);
         mapsTableView.getColumns().add(tcMapColCount);
+
         mapsTableView.getColumns().forEach(column -> {
             column.setSortable(false);
             column.setReorderable(false);
         });
 
         addRow(mapsTableView);
-
     }
 
     public TableView<WorldMap> getMapsTableView() {

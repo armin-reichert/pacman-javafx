@@ -98,6 +98,10 @@ public interface Ufx {
         booleanProperty.set(!booleanProperty.get());
     }
 
+    static String formatColorHex(Color color) {
+        return String.format("#%02x%02x%02x", (int)(color.getRed()*255), (int)(color.getGreen()*255), (int)(color.getBlue()*255));
+    }
+
     static  Color opaqueColor(Color color, double opacity) {
         Globals.assertNotNull(color);
         return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
