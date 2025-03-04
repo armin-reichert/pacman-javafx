@@ -24,10 +24,10 @@ public class PacManXXL_OptionsMenu {
     private static final float UNSCALED_HEIGHT = 36 * TS;
     private static final float RELATIVE_HEIGHT = 0.9f;
 
-    private final OptionMenu.MenuEntry entryPlay3D;
-    private final OptionMenu.MenuEntry entryGameVariant;
-    private final OptionMenu.MenuEntry entryCutScenesEnabled;
-    private final OptionMenu.MenuEntry entryMapSelectionMode;
+    private final OptionMenu.MenuEntry<Boolean> entryPlay3D;
+    private final OptionMenu.MenuEntry<GameVariant> entryGameVariant;
+    private final OptionMenu.MenuEntry<Boolean> entryCutScenesEnabled;
+    private final OptionMenu.MenuEntry<MapSelectionMode> entryMapSelectionMode;
 
     private static class MenuState {
         private boolean play3D;
@@ -73,55 +73,60 @@ public class PacManXXL_OptionsMenu {
             }
         });
 
-        entryGameVariant = new OptionMenu.MenuEntry(
-            "GAME VARIANT", List.of("PAC-MAN", "MS.PAC-MAN"))
+        entryGameVariant = new OptionMenu.MenuEntry<>(
+            "GAME VARIANT", List.of(GameVariant.PACMAN_XXL, GameVariant.MS_PACMAN_XXL))
         {
             @Override
-            protected void onValueChange() {
-                switch (valueIndex) {
-                    case 0 -> state.gameVariant = GameVariant.PACMAN_XXL;
-                    case 1 -> state.gameVariant = GameVariant.MS_PACMAN_XXL;
-                    default -> throw new IllegalArgumentException("Menu Selection failed");
-                }
-                Logger.info("menuState.gameVariant={}", state.gameVariant);
+            protected void onValueChange(int index) { state.gameVariant = selectedValue(); }
+
+            @Override
+            public String selectedValueText() {
+                return switch (selectedValue()) {
+                    case PACMAN_XXL -> "PAC-MAN";
+                    case MS_PACMAN_XXL -> "MS.PAC-MAN";
+                    default -> "";
+                };
             }
         };
 
-        entryPlay3D = new OptionMenu.MenuEntry(
-            "PLAY SCENE",
-            List.of("2D", "3D"))
+        entryPlay3D = new OptionMenu.MenuEntry<>(
+            "SCENE DISPLAY",
+            List.of(true, false))
         {
             @Override
-            protected void onValueChange() {
-                switch (valueIndex) {
-                    case 0 -> state.play3D = false;
-                    case 1 -> state.play3D = true;
-                    default -> throw new IllegalArgumentException("Menu Selection failed");
-                }
+            protected void onValueChange(int index) { state.play3D = selectedValue(); }
+
+            @Override
+            public String selectedValueText() {
+                return selectedValue() ? "3D" : "2D";
             }
         };
 
-        entryCutScenesEnabled = new OptionMenu.MenuEntry(
-            "CUT SCENES", List.of("ENABLED", "DISABLED"))
+        entryCutScenesEnabled = new OptionMenu.MenuEntry<>(
+            "CUTSCENES", List.of(true, false))
         {
             @Override
-            protected void onValueChange() {
-                state.cutScenesEnabled = (valueIndex == 0);
-                Logger.info("menuState.cutScenesEnabled={}", state.cutScenesEnabled);
+            protected void onValueChange(int index) { state.cutScenesEnabled = selectedValue(); }
+
+            @Override
+            public String selectedValueText() {
+                return selectedValue() ? "ON" : "OFF";
             }
         };
 
-        entryMapSelectionMode = new OptionMenu.MenuEntry(
-            "CUSTOM MAPS", List.of("CUSTOM-MAPS FIRST", "ALL MAPS RANDOMLY"))
+        entryMapSelectionMode = new OptionMenu.MenuEntry<>(
+            "MAP ORDER", List.of(MapSelectionMode.CUSTOM_MAPS_FIRST, MapSelectionMode.ALL_RANDOM))
         {
             @Override
-            protected void onValueChange() {
-                switch (valueIndex) {
-                    case 0 -> state.mapSelectionMode = MapSelectionMode.CUSTOM_MAPS_FIRST;
-                    case 1 -> state.mapSelectionMode = MapSelectionMode.ALL_RANDOM;
-                    default -> throw new IllegalArgumentException("Menu Selection failed");
-                }
-                Logger.info("menuState.mapSelectionMode={}", state.mapSelectionMode);
+            protected void onValueChange(int index) { state.mapSelectionMode = selectedValue(); }
+
+            @Override
+            public String selectedValueText() {
+                return switch (selectedValue()) {
+                    case CUSTOM_MAPS_FIRST -> "CUSTOM MAPS FIRST";
+                    case ALL_RANDOM -> "RANDOM ORDER";
+                    default -> "";
+                };
             }
         };
 
@@ -145,17 +150,17 @@ public class PacManXXL_OptionsMenu {
         state.cutScenesEnabled = cutScenesEnabled;
         state.mapSelectionMode = mapSelectionMode;
 
-        entryPlay3D.setValueIndex(play3D ? 1 : 0);
+        entryPlay3D.setSelectedIndex(play3D ? 1 : 0);
 
-        entryGameVariant.setValueIndex(switch (gameVariant) {
+        entryGameVariant.setSelectedIndex(switch (gameVariant) {
             case PACMAN_XXL -> 0;
             case MS_PACMAN_XXL -> 1;
             default -> throw new IllegalArgumentException();
         });
 
-        entryCutScenesEnabled.setValueIndex(cutScenesEnabled ? 0 : 1);
+        entryCutScenesEnabled.setSelectedIndex(cutScenesEnabled ? 0 : 1);
 
-        entryMapSelectionMode.setValueIndex(switch (mapSelectionMode) {
+        entryMapSelectionMode.setSelectedIndex(switch (mapSelectionMode) {
             case CUSTOM_MAPS_FIRST -> 0;
             case ALL_RANDOM -> 1;
             case NO_CUSTOM_MAPS -> 1; // TODO

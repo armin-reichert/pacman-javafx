@@ -20,30 +20,41 @@ import javafx.scene.text.Font;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.*;
 
 public class OptionMenu {
 
-    public static abstract class MenuEntry {
-        protected final String label;
-        protected List<String> options;
-        protected int valueIndex;
+    public static abstract class MenuEntry<T> {
+        protected final String text;
+        protected List<T> values;
+        protected int selectedIndex;
 
-        public MenuEntry(String label, List<String> options) {
-            this.label = label;
-            this.options = new ArrayList<>(options);
+        public MenuEntry(String text, List<T> values) {
+            this.text = assertNotNull(text);
+            assertNotNull(values);
+            if (values.isEmpty()) {
+                throw new IllegalArgumentException("Menu entry must provide at least one value");
+            }
+            this.values = new ArrayList<>(values);
+            this.selectedIndex = 0;
         }
 
-        public void setValueIndex(int valueIndex) {
-            this.valueIndex = valueIndex;
+        public int selectedIndex() { return selectedIndex; }
+
+        public void setSelectedIndex(int index) {
+            this.selectedIndex = index;
         }
+
+        public T selectedValue() { return values.get(selectedIndex); }
+
+        public String selectedValueText() { return String.valueOf(selectedValue()); }
 
         protected void onSelect() {}
-        protected abstract void onValueChange();
+
+        protected abstract void onValueChange(int index);
     }
 
-    private final List<OptionMenu.MenuEntry> entries = new ArrayList<>();
+    private final List<OptionMenu.MenuEntry<?>> entries = new ArrayList<>();
 
     private int selectedEntryIndex = 0;
     private Runnable actionOnStart;
@@ -96,10 +107,10 @@ public class OptionMenu {
                     selectEntrySound.play();
                 }
                 case SPACE -> {
-                    MenuEntry entry = entries.get(selectedEntryIndex);
-                    entry.valueIndex++;
-                    if (entry.valueIndex == entry.options.size()) entry.valueIndex = 0;
-                    entry.onValueChange();
+                    MenuEntry<?> entry = entries.get(selectedEntryIndex);
+                    entry.selectedIndex++;
+                    if (entry.selectedIndex == entry.values.size()) entry.selectedIndex = 0;
+                    entry.onValueChange(entry.selectedIndex);
                     selectValueSound.play();
                 }
                 case ENTER -> {
@@ -114,7 +125,8 @@ public class OptionMenu {
     public Node root() { return root; }
 
     public FloatProperty scalingProperty() { return scalingPy; }
-    public void addEntry(MenuEntry entry) {
+
+    public void addEntry(MenuEntry<?> entry) {
         entries.add(entry);
     }
 
@@ -165,16 +177,16 @@ public class OptionMenu {
 
         for (int i = 0; i < entries.size(); ++i) {
             int y = (12 + 3 * i) * TS;
-            MenuEntry entry = entries.get(i);
+            MenuEntry<?> entry = entries.get(i);
             if (i == selectedEntryIndex) {
                 g.setFill(entryTextFill);
                 g.fillText("-", TS, y);
                 g.fillText(">", TS+HTS, y);
             }
             g.setFill(entryTextFill);
-            g.fillText(entry.label, 3 * TS, y);
+            g.fillText(entry.text, 3 * TS, y);
             g.setFill(entryValueFill);
-            g.fillText(entry.options.get(entry.valueIndex), 17 * TS, y);
+            g.fillText(entry.selectedValueText(), 17 * TS, y);
         }
 
         g.setFill(hintTextFill);
@@ -184,7 +196,4 @@ public class OptionMenu {
 
         g.restore();
     }
-
-
-
 }
