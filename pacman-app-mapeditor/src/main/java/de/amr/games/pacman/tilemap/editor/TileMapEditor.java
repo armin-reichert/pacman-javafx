@@ -579,6 +579,7 @@ public class TileMapEditor {
         var hint = new Button(tt("image_drop_hint"));
         hint.setFont(FONT_DROP_HINT);
         hint.setOnAction(ae -> openTemplateImage());
+        hint.disableProperty().bind(editModePy.map(mode -> mode == EditMode.INSPECT));
 
         dropTargetForTemplateImage = new BorderPane(hint);
         registerDragAndDropImageHandler(dropTargetForTemplateImage);
