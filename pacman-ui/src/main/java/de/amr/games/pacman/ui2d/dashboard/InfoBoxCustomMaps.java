@@ -22,7 +22,7 @@ public class InfoBoxCustomMaps extends InfoBox {
         mapsTableView.setPrefWidth(300);
         mapsTableView.setPrefHeight(200);
 
-        var tcMapURL = new TableColumn<WorldMap, String>("URL");
+        var tcMapURL = new TableColumn<WorldMap, String>("Map");
         tcMapURL.setCellValueFactory(data -> {
             String shortURL = "";
             URL url = data.getValue().url();
