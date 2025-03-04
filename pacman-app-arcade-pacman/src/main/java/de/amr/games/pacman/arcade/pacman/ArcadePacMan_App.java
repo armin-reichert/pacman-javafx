@@ -15,20 +15,15 @@ import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.tinylog.Logger;
 
 public class ArcadePacMan_App extends Application {
 
     @Override
     public void init() {
         GameController gameController = GameController.it();
-        try {
-            gameController.setGameModel(GameVariant.PACMAN, new ArcadePacMan_GameModel());
-            gameController.gameModels().forEach(GameModel::init);
-            gameController.selectGame(GameVariant.PACMAN);
-        } catch (Exception x) {
-            Logger.error(x);
-        }
+        gameController.setGameModel(GameVariant.PACMAN, new ArcadePacMan_GameModel());
+        gameController.gameModels().forEach(GameModel::init);
+        gameController.selectGame(GameVariant.PACMAN);
     }
 
     @Override
@@ -47,6 +42,7 @@ public class ArcadePacMan_App extends Application {
         ui.addDashboardItem(DashboardItemID.ACTOR_INFO);
         ui.addDashboardItem(DashboardItemID.KEYBOARD);
         ui.addDashboardItem(DashboardItemID.ABOUT);
+
         ui.show();
     }
 
