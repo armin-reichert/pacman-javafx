@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade.pacman_xxl;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.dashboard.DashboardItemID;
@@ -14,13 +13,10 @@ import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui3d.PacManGamesUI_3D;
 import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-
-import java.util.List;
 
 public class PacManXXL_App extends Application {
 
