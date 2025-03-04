@@ -45,6 +45,16 @@ public class OptionMenu {
             this.selectedIndex = index;
         }
 
+        public void selectValue(T value) {
+            for (int i = 0; i < values.size(); ++i) {
+                if (values.get(i).equals(value)) {
+                    selectedIndex = i;
+                    return;
+                }
+            }
+            throw new IllegalArgumentException("Cannot select value " + value);
+        }
+
         public T selectedValue() { return values.get(selectedIndex); }
 
         public String selectedValueText() { return String.valueOf(selectedValue()); }

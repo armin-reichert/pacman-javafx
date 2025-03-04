@@ -150,21 +150,11 @@ public class PacManXXL_OptionsMenu {
         state.cutScenesEnabled = cutScenesEnabled;
         state.mapSelectionMode = mapSelectionMode;
 
-        entryPlay3D.setSelectedIndex(play3D ? 1 : 0);
+        entryPlay3D.selectValue(play3D);
+        entryGameVariant.selectValue(gameVariant);
+        entryCutScenesEnabled.selectValue(cutScenesEnabled);
+        entryMapSelectionMode.selectValue(mapSelectionMode);
 
-        entryGameVariant.setSelectedIndex(switch (gameVariant) {
-            case PACMAN_XXL -> 0;
-            case MS_PACMAN_XXL -> 1;
-            default -> throw new IllegalArgumentException();
-        });
-
-        entryCutScenesEnabled.setSelectedIndex(cutScenesEnabled ? 0 : 1);
-
-        entryMapSelectionMode.setSelectedIndex(switch (mapSelectionMode) {
-            case CUSTOM_MAPS_FIRST -> 0;
-            case ALL_RANDOM -> 1;
-            case NO_CUSTOM_MAPS -> 1; // TODO
-        });
         logMenuState();
     }
 
