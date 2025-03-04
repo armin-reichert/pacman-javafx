@@ -73,20 +73,6 @@ public class PacManXXL_OptionsMenu {
             }
         });
 
-        entryPlay3D = new OptionMenu.MenuEntry(
-                "USE 3D VIEW",
-                List.of("NO", "YES"))
-        {
-            @Override
-            protected void onValueChange() {
-                switch (valueIndex) {
-                    case 0 -> state.play3D = false;
-                    case 1 -> state.play3D = true;
-                    default -> throw new IllegalArgumentException("Menu Selection failed");
-                }
-            }
-        };
-
         entryGameVariant = new OptionMenu.MenuEntry(
             "GAME VARIANT", List.of("PAC-MAN", "MS.PAC-MAN"))
         {
@@ -98,6 +84,20 @@ public class PacManXXL_OptionsMenu {
                     default -> throw new IllegalArgumentException("Menu Selection failed");
                 }
                 Logger.info("menuState.gameVariant={}", state.gameVariant);
+            }
+        };
+
+        entryPlay3D = new OptionMenu.MenuEntry(
+            "PLAY SCENE",
+            List.of("2D", "3D"))
+        {
+            @Override
+            protected void onValueChange() {
+                switch (valueIndex) {
+                    case 0 -> state.play3D = false;
+                    case 1 -> state.play3D = true;
+                    default -> throw new IllegalArgumentException("Menu Selection failed");
+                }
             }
         };
 
@@ -125,8 +125,8 @@ public class PacManXXL_OptionsMenu {
             }
         };
 
-        menu.addEntry(entryPlay3D);
         menu.addEntry(entryGameVariant);
+        menu.addEntry(entryPlay3D);
         menu.addEntry(entryCutScenesEnabled);
         menu.addEntry(entryMapSelectionMode);
     }
