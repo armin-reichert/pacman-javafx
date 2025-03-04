@@ -10,10 +10,11 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.MapSelector;
 import org.tinylog.Logger;
 
-import java.net.URL;
 import java.util.List;
 
 public class ArcadePacMan_MapSelector implements MapSelector {
+
+    private static final String MAP_PATH = "/de/amr/games/pacman/arcade/maps/pacman.world";
 
     private WorldMap map;
 
@@ -29,16 +30,15 @@ public class ArcadePacMan_MapSelector implements MapSelector {
 
     @Override
     public void loadAllMaps(GameModel game) {
-        String path = "/de/amr/games/pacman/arcade/maps/pacman.world";
-        URL url = ResourceRoot.class.getResource(path);
-        if (url == null) {
-            Logger.error("Could not load map from path {}", path);
+        if (map != null) {
+            return; // avoid loading map again
         }
         try {
-            map = new WorldMap(url);
+            map = new WorldMap(ResourceRoot.class.getResource(MAP_PATH));
             map.setConfigValue("mapNumber", 1);
             map.setConfigValue("colorMapIndex", 0);
         } catch (Exception x) {
+            Logger.error("Could not load map from path {}", MAP_PATH);
             throw new IllegalStateException(x);
         }
     }
