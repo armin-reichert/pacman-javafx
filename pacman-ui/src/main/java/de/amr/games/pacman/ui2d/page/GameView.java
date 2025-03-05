@@ -10,10 +10,10 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.action.GameAction;
 import de.amr.games.pacman.ui2d.action.GameActionProvider;
 import de.amr.games.pacman.ui2d.action.GameActions2D;
+import de.amr.games.pacman.ui2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui2d.scene.CameraControlledView;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -124,7 +124,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
 
     protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
 
-    public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene") {
+    protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene") {
         @Override
         protected void invalidated() {
             handleGameSceneChange(get());
@@ -169,6 +169,8 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
             (py, ov, smooth) -> g.setImageSmoothing(smooth)
         );
     }
+
+    public ObjectProperty<GameScene> gameSceneProperty() { return gameScenePy; }
 
     private void createCanvasLayer() {
         canvasContainer = new TooFancyCanvasContainer(canvas);
