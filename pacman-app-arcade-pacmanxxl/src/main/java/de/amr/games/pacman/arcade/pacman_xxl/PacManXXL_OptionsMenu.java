@@ -32,8 +32,8 @@ public class PacManXXL_OptionsMenu {
     }
 
     private final OptionMenu menu = new OptionMenu(UNSCALED_HEIGHT);
-    private final OptionMenu.MenuEntry<Boolean> entryPlay3D;
     private final OptionMenu.MenuEntry<GameVariant> entryGameVariant;
+    private final OptionMenu.MenuEntry<Boolean> entryPlay3D;
     private final OptionMenu.MenuEntry<Boolean> entryCutScenesEnabled;
     private final OptionMenu.MenuEntry<MapSelectionMode> entryMapSelectionMode;
 
