@@ -178,7 +178,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
         startPagesCarousel = new StartPagesCarousel(this);
 
-        createGamePage(mainScene);
+        createGameView(mainScene);
 
         clock.setPauseableCallback(this::runIfNotPausedOnEveryTick);
         clock.setPermanentCallback(this::runOnEveryTick);
@@ -307,7 +307,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         return editorView;
     }
 
-    protected void createGamePage(Scene parentScene) {
+    protected void createGameView(Scene parentScene) {
         gameView = new GameView(this, parentScene);
         gameView.gameScenePy.bind(gameScenePy);
     }
@@ -487,7 +487,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public GameView gamePage() {
+    public GameView gameView() {
         return gameView;
     }
 

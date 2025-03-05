@@ -88,7 +88,7 @@ public interface GameContext {
     void showView(Node page);
     void showStartView();
     void showGameView();
-    Pane gamePage();
+    Pane gameView();
     void showFlashMessageSec(double seconds, String message, Object... args);
     default void showFlashMessage(String message, Object... args) { showFlashMessageSec(1, message, args); }
     default Vector2i worldSizeInTilesOrElse(Vector2i defaultSize) {
