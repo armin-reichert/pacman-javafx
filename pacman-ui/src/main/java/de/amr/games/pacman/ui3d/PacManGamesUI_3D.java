@@ -54,7 +54,7 @@ public class PacManGamesUI_3D extends PacManGamesUI {
     protected void createGameView(Scene parentScene) {
         gameView = new GameView3D(this, parentScene);
         gameView.setActionToOpenEditor(actionOpenEditorView);
-        gameView.gameScenePy.bind(gameScenePy);
+        gameView.gameSceneProperty().bind(gameScenePy);
     }
 
     @Override

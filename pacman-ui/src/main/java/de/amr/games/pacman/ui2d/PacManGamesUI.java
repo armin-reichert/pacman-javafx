@@ -314,7 +314,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     protected void createGameView(Scene parentScene) {
         gameView = new GameView(this, parentScene);
-        gameView.gameScenePy.bind(gameScenePy);
+        gameView.gameSceneProperty().bind(gameScenePy);
     }
 
     public void addDashboardItem(DashboardItemID id) {
