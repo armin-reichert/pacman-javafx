@@ -295,13 +295,6 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
         }
     }
 
-    public void draw() {
-        context.currentGameScene()
-            .filter(GameScene2D.class::isInstance)
-            .map(GameScene2D.class::cast)
-            .ifPresent(GameScene2D::draw);
-    }
-
     protected boolean isCurrentGameScene2D() {
         return context.currentGameScene().map(GameScene2D.class::isInstance).orElse(false);
     }

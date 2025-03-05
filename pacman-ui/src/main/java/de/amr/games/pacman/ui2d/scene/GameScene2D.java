@@ -12,6 +12,7 @@ import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.paint.Color;
+import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
