@@ -30,23 +30,6 @@ import static de.amr.games.pacman.lib.Globals.assertNotNull;
 
 public class EditorPage extends BorderPane implements GameActionProvider {
 
-    private static WorldMap loadMap(ResourceManager rm, String relativeMapPath) {
-        URL url = rm.url(relativeMapPath);
-        if (url != null) {
-            try {
-                WorldMap map = new WorldMap(url);
-                Logger.info("Map loaded from URL {}", url);
-                return map;
-            } catch (IOException x) {
-                Logger.error(x);
-                Logger.error("Could not load map at path {}", relativeMapPath);
-                return null;
-            }
-        }
-        Logger.error("Could not find map at path {}", relativeMapPath);
-        return null;
-    }
-
     private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
     private final TileMapEditor editor;
     private Consumer<TileMapEditor> closeAction = editor -> {};
@@ -65,10 +48,19 @@ public class EditorPage extends BorderPane implements GameActionProvider {
         miQuitEditor.setOnAction(e -> closeAction.accept(editor));
         editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);
 
+        ResourceManager rm = () -> context.game().getClass();
         for (int mapNumber = 1; mapNumber <= 8; ++mapNumber) {
-            WorldMap map = loadMap(() -> context.game().getClass(), "maps/masonic_%d.world".formatted(mapNumber));
-            if (map != null) {
-                editor.addLoadMapMenuItem("Pac-Man XXL " + mapNumber, map);
+            String path = "maps/masonic_%d.world".formatted(mapNumber);
+            URL url = rm.url(path);
+            if (url != null) {
+                try {
+                    WorldMap map = new WorldMap(url);
+                    editor.addLoadMapMenuItem("Pac-Man XXL " + mapNumber, map);
+                } catch (IOException x) {
+                    Logger.info("Map could not be loaded from path {}", path);
+                }
+            } else {
+                Logger.info("Map could not be found at path {}", path);
             }
         }
 
