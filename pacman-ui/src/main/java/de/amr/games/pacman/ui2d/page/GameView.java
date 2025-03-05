@@ -242,6 +242,14 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
             () -> context.currentGameScene().ifPresent(gameScene -> gameScene.handleInput(context)));
     }
 
+    public void onTick() {
+        dashboardLayer.update();
+        context.currentGameScene()
+                .filter(GameScene2D.class::isInstance)
+                .map(GameScene2D.class::cast)
+                .ifPresent(GameScene2D::draw);
+    }
+
     public void setActionToOpenEditor(GameAction action) {
         this.actionToOpenEditor = action;
         if (action != null) {
@@ -303,10 +311,6 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
 
     public void toggleDashboard() {
         dashboardLayer.toggleDashboardVisibility();
-    }
-
-    public void updateDashboard() {
-        dashboardLayer.update();
     }
 
     public DashboardLayer dashboardLayer() {

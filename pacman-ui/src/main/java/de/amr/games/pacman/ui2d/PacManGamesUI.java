@@ -19,7 +19,7 @@ import de.amr.games.pacman.ui2d.input.Keyboard;
 import de.amr.games.pacman.ui2d.page.EditorView;
 import de.amr.games.pacman.ui2d.page.GameView;
 import de.amr.games.pacman.ui2d.page.StartPage;
-import de.amr.games.pacman.ui2d.page.StartPagesCarousel;
+import de.amr.games.pacman.ui2d.page.StartPageSelectionView;
 import de.amr.games.pacman.ui2d.scene.GameConfiguration;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -110,7 +110,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected Scene mainScene;
     protected final StackPane sceneRoot = new StackPane();
 
-    protected StartPagesCarousel startPagesCarousel;
+    protected StartPageSelectionView startPageSelectionView;
     protected GameView gameView;
     protected EditorView editorView;
     protected final FlashMessageView flashMessageOverlay = new FlashMessageView();
@@ -184,7 +184,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
         mainScene = createMainScene(initialSize);
 
-        startPagesCarousel = new StartPagesCarousel(this);
+        startPageSelectionView = new StartPageSelectionView(this);
 
         createGameView(mainScene);
 
@@ -210,14 +210,14 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         return mainScene;
     }
 
-    public StartPagesCarousel startPagesCarousel() { return startPagesCarousel; }
+    public StartPageSelectionView startPagesCarousel() { return startPageSelectionView; }
 
     public ObjectProperty<Node> viewProperty() { return viewPy; }
 
     public ObjectProperty<GameVariant> gameVariantProperty() { return gameVariantPy; }
 
     public void addStartPage(GameVariant variant, StartPage page) {
-        startPagesCarousel.addStartPage(variant, page);
+        startPageSelectionView.addStartPage(variant, page);
     }
 
     protected void runIfNotPausedOnEveryTick() {
@@ -234,12 +234,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     protected void runOnEveryTick() {
         try {
-            currentGameScene()
-                    .filter(GameScene2D.class::isInstance)
-                    .map(GameScene2D.class::cast)
-                    .ifPresent(GameScene2D::draw);
             if (viewPy.get() == gameView) {
-                gameView.updateDashboard();
+                gameView.onTick();
                 flashMessageOverlay.update();
             } else {
                 Logger.warn("Should not happen: tick received when not on game view");
@@ -578,8 +574,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         gameScenePy.set(null);
         gameView.dashboardLayer().hideDashboard(); // TODO binding?
         sceneRoot.setBackground(assets.get("scene_background"));
-        startPagesCarousel.currentSlide().ifPresent(Node::requestFocus);
-        showView(startPagesCarousel);
+        startPageSelectionView.currentSlide().ifPresent(Node::requestFocus);
+        showView(startPageSelectionView);
     }
 
     @Override

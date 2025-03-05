@@ -6,7 +6,7 @@ package de.amr.games.pacman.arcade.pacman_xxl;
 
 import de.amr.games.pacman.ui2d.PacManGamesUI;
 import de.amr.games.pacman.ui2d.page.StartPage;
-import de.amr.games.pacman.ui2d.page.StartPagesCarousel;
+import de.amr.games.pacman.ui2d.page.StartPageSelectionView;
 import de.amr.games.pacman.ui3d.GlobalProperties3d;
 import de.amr.games.pacman.uilib.Flyer;
 import de.amr.games.pacman.uilib.ResourceManager;
@@ -34,7 +34,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
         setBackground(Background.fill(Color.BLACK));
 
         //TODO find a more elegant way to start/stop the animation loop of the menu
-        final StartPagesCarousel carousel = ui.startPagesCarousel();
+        final StartPageSelectionView carousel = ui.startPagesCarousel();
         carousel.selectedIndexProperty().addListener((py, ov, nv) -> {
             carousel.currentSlide().ifPresent(startPage -> {
                 if (startPage == this) {
