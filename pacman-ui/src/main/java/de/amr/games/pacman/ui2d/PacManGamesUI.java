@@ -91,7 +91,13 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         }
     };
 
-    protected final ObjectProperty<Node> viewPy = new SimpleObjectProperty<>();
+    protected final ObjectProperty<Node> viewPy = new SimpleObjectProperty<>() {
+        @Override
+        protected void invalidated() {
+            Node view = get();
+            view.requestFocus();
+        }
+    };
     protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
 
     protected final Map<GameVariant, GameConfiguration> gameConfigByVariant = new EnumMap<>(GameVariant.class);
@@ -562,7 +568,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             }
             gameView.setSize(mainScene.getWidth(), mainScene.getHeight());
             sceneRoot.getChildren().set(0, view);
-            view.requestFocus();
             viewPy.set(view);
         }
     }
