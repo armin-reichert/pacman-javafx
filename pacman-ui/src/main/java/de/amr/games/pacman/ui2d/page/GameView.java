@@ -149,10 +149,9 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
         bindGameActions();
 
         setOnContextMenuRequested(this::handleContextMenuRequest);
+
         //TODO is this the recommended way to close an open context-menu?
-        setOnMouseClicked(e -> {
-            if (contextMenu != null) contextMenu.hide();
-        });
+        setOnMouseClicked(e -> { if (contextMenu != null) contextMenu.hide(); });
 
         createCanvasLayer();
         createDashboardLayer();
@@ -258,9 +257,15 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
         //TODO unbind else?
     }
 
-    private void handleContextMenuRequest(ContextMenuEvent event) {
-        List<MenuItem> gameSceneItems = gameScenePy.get().supplyContextMenuItems(event);
-        var menuItems = new ArrayList<>(gameSceneItems);
+    protected void handleContextMenuRequest(ContextMenuEvent event) {
+        contextMenu = new ContextMenu(createContextMenuItems(event).toArray(MenuItem[]::new));
+        contextMenu.show(this, event.getScreenX(), event.getScreenY());
+        contextMenu.requestFocus();
+        event.consume();
+    }
+
+    protected List<MenuItem> createContextMenuItems(ContextMenuEvent event) {
+        var menuItems = new ArrayList<>(gameScenePy.get().supplyContextMenuItems(event));
         if (actionToOpenEditor != null) {
             menuItems.add(new SeparatorMenuItem());
             var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
@@ -268,10 +273,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
             miOpenMapEditor.setDisable(!actionToOpenEditor.isEnabled(context));
             menuItems.add(miOpenMapEditor);
         }
-        contextMenu = new ContextMenu(menuItems.toArray(MenuItem[]::new));
-        contextMenu.show(this, event.getScreenX(), event.getScreenY());
-        contextMenu.requestFocus();
-        event.consume();
+        return menuItems;
     }
 
     protected void handleGameSceneChange(GameScene gameScene) {
