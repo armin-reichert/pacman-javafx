@@ -324,6 +324,8 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
         Logger.trace("{} received game event {}", getClass().getSimpleName(), event);
         // dispatch event to overridden methods:
         GameEventListener.super.onGameEvent(event);
+        // dispatch event to current game scene if any
+        context.currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(event));
     }
 
     @Override

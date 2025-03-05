@@ -604,8 +604,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         GameEventListener.super.onGameEvent(event);
         if (viewPy.get() == gameView) {
             updateGameScene(false);
-            // dispatch event to current game scene if any
-            currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(event));
         }
     }
 
