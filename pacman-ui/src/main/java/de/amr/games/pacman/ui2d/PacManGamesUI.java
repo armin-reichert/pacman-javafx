@@ -340,7 +340,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
         GameModel game = gameController().gameModel(variant);
         game.addGameEventListener(this);
-        game.addGameEventListener(gameView.dashboardLayer().pipView());
 
         String assetKeyPrefix = gameConfiguration().assetKeyPrefix();
         sceneRoot.setBackground(assets.get("scene_background"));
@@ -550,8 +549,14 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             if (currentView instanceof GameActionProvider actionProvider) {
                 actionProvider.unregisterGameActionKeyBindings(keyboard);
             }
+            if (currentView instanceof GameEventListener gameEventListener) {
+                game().removeGameEventListener(gameEventListener);
+            }
             if (view instanceof GameActionProvider actionProvider) {
                 actionProvider.registerGameActionKeyBindings(keyboard);
+            }
+            if (view instanceof GameEventListener gameEventListener) {
+                game().addGameEventListener(gameEventListener);
             }
             gameView.setSize(mainScene.getWidth(), mainScene.getHeight());
             sceneRoot.getChildren().set(0, view);
@@ -609,21 +614,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     @Override
     public void onUnspecifiedChange(GameEvent event) {
         updateGameScene(true);
-    }
-
-    @Override
-    public void onLevelCreated(GameEvent event) {
-        gameConfiguration().createActorAnimations(level());
-        sound().setEnabled(!game().isDemoLevel());
-        // size of game scene might have changed, so re-embed
-        currentGameScene().ifPresent(gameView::embedGameScene);
-
-        GameScene2D pipScene = gameConfiguration().createPiPScene(this, gameView.canvasContainer().canvas());
-        gameView.dashboardLayer().pipView().setScene2D(pipScene);
-
-        Logger.info("Game level {} ({}) created", level().number, gameVariant());
-        Logger.info("Actor animations created");
-        Logger.info("Sounds {}", sound().isEnabled() ? "enabled" : "disabled");
     }
 
     @Override

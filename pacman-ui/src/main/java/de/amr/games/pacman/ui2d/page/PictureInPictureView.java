@@ -4,8 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
-import de.amr.games.pacman.event.GameEvent;
-import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
@@ -27,10 +25,10 @@ import static de.amr.games.pacman.ui2d.GlobalProperties2d.*;
  * TODO: For large maps we need a camera inside this view or something alike
  * </p>
  */
-public class PictureInPictureView extends VBox implements GameEventListener {
+public class PictureInPictureView extends VBox {
 
-    private final Canvas canvas = new Canvas();
     private final GameContext context;
+    private final Canvas canvas = new Canvas();
     private GameScene2D scene2D;
 
     public PictureInPictureView(GameContext context) {
@@ -50,10 +48,6 @@ public class PictureInPictureView extends VBox implements GameEventListener {
 
     public void setScene2D(GameScene2D scene2D) {
         this.scene2D = Globals.assertNotNull(scene2D);
-    }
-
-    @Override
-    public void onLevelCreated(GameEvent e) {
         scene2D.setGameContext(context);
         scene2D.setGameRenderer(context.gameConfiguration().createRenderer(context.assets(), canvas));
         scene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);

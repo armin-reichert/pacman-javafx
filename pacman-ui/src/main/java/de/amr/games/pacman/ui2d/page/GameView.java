@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
+import de.amr.games.pacman.event.GameEvent;
+import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameVariant;
@@ -49,7 +51,7 @@ import static de.amr.games.pacman.uilib.Ufx.*;
 /**
  * @author Armin Reichert
  */
-public class GameView extends StackPane implements GameActionProvider {
+public class GameView extends StackPane implements GameActionProvider, GameEventListener {
 
     private static final double MAX_SCENE_SCALING = 5;
     private static final int SIMULATION_SPEED_DELTA = 5;
@@ -322,5 +324,27 @@ public class GameView extends StackPane implements GameActionProvider {
                 popupLayer.showHelp(canvasContainer.scaling());
             }
         }
+    }
+
+    @Override
+    public void onGameEvent(GameEvent event) {
+        Logger.trace("{} received game event {}", getClass().getSimpleName(), event);
+        // dispatch event to overridden methods:
+        GameEventListener.super.onGameEvent(event);
+    }
+
+    @Override
+    public void onLevelCreated(GameEvent event) {
+        context.gameConfiguration().createActorAnimations(context.level());
+        context.sound().setEnabled(!context.game().isDemoLevel());
+        // size of game scene might have changed, so re-embed
+        context.currentGameScene().ifPresent(this::embedGameScene);
+
+        GameScene2D pipGameScene = context.gameConfiguration().createPiPScene(context, canvasContainer().canvas());
+        dashboardLayer().pipView().setScene2D(pipGameScene);
+
+        Logger.info("Game level {} ({}) created", context.level().number, context.gameVariant());
+        Logger.info("Actor animations created");
+        Logger.info("Sounds {}", context.sound().isEnabled() ? "enabled" : "disabled");
     }
 }

@@ -443,8 +443,19 @@ public abstract class GameModel {
         assertNotNull(listener);
         if (!gameEventListeners.contains(listener)) {
             gameEventListeners.add(listener);
+            Logger.info("Game event listener registered: {}", listener);
         } else {
             Logger.warn("Game event listener already registered: {}", listener);
+        }
+    }
+
+    public void removeGameEventListener(GameEventListener listener) {
+        assertNotNull(listener);
+        boolean removed = gameEventListeners.remove(listener);
+        if (removed) {
+            Logger.info("Game event listener registered: {}", listener);
+        } else {
+            Logger.warn("Game event listener not removed, as not registered: {}", listener);
         }
     }
 
