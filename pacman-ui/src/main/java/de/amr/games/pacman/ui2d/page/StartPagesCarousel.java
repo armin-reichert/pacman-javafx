@@ -33,7 +33,7 @@ public class StartPagesCarousel extends Carousel implements GameActionProvider {
     private final GameAction actionSelectGamePage = new GameAction() {
         @Override
         public void execute(GameContext context) {
-            context.selectGamePage();
+            context.showGameView();
         }
 
         @Override

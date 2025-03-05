@@ -58,8 +58,8 @@ public class PacManXXL_App extends Application {
         ui.addDashboardItem(DashboardItemID.ABOUT);
 
         StartPage xxlStartPage = new PacManXXL_StartPage(ui);
-        ui.setStartPage(GameVariant.PACMAN_XXL,    xxlStartPage);
-        ui.setStartPage(GameVariant.MS_PACMAN_XXL, xxlStartPage);
+        ui.addStartPage(GameVariant.PACMAN_XXL,    xxlStartPage);
+        ui.addStartPage(GameVariant.MS_PACMAN_XXL, xxlStartPage);
 
         ui.show();
     }

@@ -85,9 +85,9 @@ public interface GameContext {
     default GameConfiguration gameConfiguration() { return gameConfiguration(gameVariant()); }
     void setScoreVisible(boolean visible);
     boolean isScoreVisible();
-    void selectView(Node page);
-    void selectStartPage();
-    void selectGamePage();
+    void showView(Node page);
+    void showStartView();
+    void showGameView();
     Pane gamePage();
     void showFlashMessageSec(double seconds, String message, Object... args);
     default void showFlashMessage(String message, Object... args) { showFlashMessageSec(1, message, args); }

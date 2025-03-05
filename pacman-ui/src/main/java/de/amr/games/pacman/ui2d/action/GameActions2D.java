@@ -9,7 +9,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.arcade.Arcade;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -160,7 +159,7 @@ public enum GameActions2D implements GameAction {
             context.sound().stopAll();
             context.currentGameScene().ifPresent(GameScene::end);
             context.game().endGame();
-            context.selectStartPage();
+            context.showStartView();
         }
     },
 

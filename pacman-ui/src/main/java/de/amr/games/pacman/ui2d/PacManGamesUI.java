@@ -78,7 +78,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             context.gameClock().stop();
             EditorView editorView = getOrCreateEditorView();
             editorView.startEditor(context.level().world().map());
-            context.selectView(editorView);
+            context.showView(editorView);
         }
 
         @Override
@@ -191,30 +191,27 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
         stage.setMinHeight(ARCADE_MAP_SIZE_IN_PIXELS.y() * 1.25);
         stage.centerOnScreen();
-        stage.setOnShowing(e -> selectStartPage());
-    }
-
-    public void setStartPage(GameVariant variant, StartPage page) {
-        startPagesCarousel.addStartPage(variant, page);
+        stage.setOnShowing(e -> showStartView());
     }
 
     public void show() {
         stage.show();
     }
 
-    public Scene getMainScene() {
+    public Scene mainScene() {
         return mainScene;
     }
 
-    public ObjectProperty<Node> pageProperty() { return viewPy; }
+    public StartPagesCarousel startPagesCarousel() { return startPagesCarousel; }
+
+    public ObjectProperty<Node> viewProperty() { return viewPy; }
 
     public ObjectProperty<GameVariant> gameVariantProperty() { return gameVariantPy; }
 
-    public StartPagesCarousel startPagesCarousel() { return startPagesCarousel; }
+    public void addStartPage(GameVariant variant, StartPage page) {
+        startPagesCarousel.addStartPage(variant, page);
+    }
 
-    /**
-     * Executed on clock tick if game is not paused.
-     */
     protected void runIfNotPausedOnEveryTick() {
         try {
             gameController().update();
@@ -227,9 +224,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         }
     }
 
-    /**
-     * Executed on clock tick even if game is paused.
-     */
     protected void runOnEveryTick() {
         try {
             if (viewPy.get() == gameView) {
@@ -237,7 +231,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
                 gameView.updateDashboard();
                 flashMessageOverlay.update();
             } else {
-                Logger.warn("Should not happen: Cannot handle tick when not on game page");
+                Logger.warn("Should not happen: tick received when not on game view");
             }
         } catch (Exception x) {
             clock.stop();
@@ -250,33 +244,43 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         clock.stop();
     }
 
-    protected Scene createMainScene(Dimension2D size) {
-        Scene mainScene = new Scene(sceneRoot, size.getWidth(), size.getHeight());
-
+    private Pane createIconPane() {
         ImageView mutedIcon = createIcon(assets.get("icon.mute"), 48, sound().mutedProperty());
-        ImageView autoIcon = createIcon(assets.get("icon.auto"), 48, GlobalProperties2d.PY_AUTOPILOT);
-        var bottomRightIcons = new HBox(autoIcon, mutedIcon);
-        bottomRightIcons.setMaxWidth(128);
-        bottomRightIcons.setMaxHeight(64);
-        bottomRightIcons.visibleProperty().bind(Bindings.createBooleanBinding(() -> viewPy.get() != editorView, viewPy));
-        StackPane.setAlignment(bottomRightIcons, Pos.BOTTOM_RIGHT);
+        ImageView autoIcon  = createIcon(assets.get("icon.auto"), 48, GlobalProperties2d.PY_AUTOPILOT);
+
+        var pane = new HBox(autoIcon, mutedIcon);
+        pane.setMaxWidth(128);
+        pane.setMaxHeight(64);
+        pane.visibleProperty().bind(Bindings.createBooleanBinding(() -> viewPy.get() != editorView, viewPy));
+        return pane;
+    }
+
+    protected Scene createMainScene(Dimension2D size) {
+        Pane iconPane = createIconPane();
 
         ImageView pauseIcon = createIcon(assets.get("icon.pause"), 64, clock.pausedPy);
-        StackPane.setAlignment(pauseIcon, Pos.CENTER);
-        pauseIcon.visibleProperty().bind(
-                Bindings.createBooleanBinding(() -> viewPy.get() != editorView && clock.isPaused(), viewPy, clock.pausedPy));
+        pauseIcon.visibleProperty().bind(Bindings.createBooleanBinding(
+            () -> viewPy.get() != editorView && clock.isPaused(), viewPy, clock.pausedPy));
 
-        sceneRoot.getChildren().addAll(new Pane(), flashMessageOverlay, pauseIcon, bottomRightIcons);
+        StackPane.setAlignment(iconPane, Pos.BOTTOM_RIGHT);
+        StackPane.setAlignment(pauseIcon, Pos.CENTER);
+
+        sceneRoot.getChildren().addAll(new Pane(), flashMessageOverlay, pauseIcon, iconPane);
+
+        Scene mainScene = new Scene(sceneRoot, size.getWidth(), size.getHeight());
 
         mainScene.addEventFilter(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
         mainScene.addEventFilter(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
+
         // Global keyboard shortcuts
         mainScene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.F11) {
                 stage.setFullScreen(true);
-            } else if (e.getCode() == KeyCode.M && e.isAltDown()) {
+            }
+            else if (e.isAltDown() && e.getCode() == KeyCode.M) {
                 sound().toggleMuted();
-            } else {
+            }
+            else {
                 if (viewPy.get() instanceof GameActionProvider actionProvider) {
                     actionProvider.handleInput(this);
                 }
@@ -297,7 +301,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
                 editor.stop();
                 clock.setTargetFrameRate(TICKS_PER_SECOND);
                 gameController().restart(GameState.BOOT);
-                selectStartPage();
+                showStartView();
             });
         }
         return editorView;
@@ -540,36 +544,35 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public void selectView(Node page) {
-        Node selectedPage = viewPy.get();
-        if (page != selectedPage) {
-            if (selectedPage instanceof GameActionProvider actionProvider) {
-                actionProvider.unregisterGameActionKeyBindings(keyboard());
+    public void showView(Node view) {
+        Node currentView = viewPy.get();
+        if (view != currentView) {
+            if (currentView instanceof GameActionProvider actionProvider) {
+                actionProvider.unregisterGameActionKeyBindings(keyboard);
             }
-            if (page instanceof GameActionProvider actionProvider) {
-                actionProvider.registerGameActionKeyBindings(keyboard());
+            if (view instanceof GameActionProvider actionProvider) {
+                actionProvider.registerGameActionKeyBindings(keyboard);
             }
-            viewPy.set(page);
-            gameView.setSize(stage.getScene().getWidth(), stage.getScene().getHeight());
-            sceneRoot.getChildren().set(0, page);
-            page.requestFocus();
+            gameView.setSize(mainScene.getWidth(), mainScene.getHeight());
+            sceneRoot.getChildren().set(0, view);
+            view.requestFocus();
+            viewPy.set(view);
         }
     }
 
     @Override
-    public void selectStartPage() {
+    public void showStartView() {
         clock.stop();
         gameScenePy.set(null);
-        //TODO check this
-        gameView.dashboardLayer().hideDashboard();
+        gameView.dashboardLayer().hideDashboard(); // TODO binding?
         sceneRoot.setBackground(assets.get("scene_background"));
-        selectView(startPagesCarousel);
         startPagesCarousel.currentSlide().ifPresent(Node::requestFocus);
+        showView(startPagesCarousel);
     }
 
     @Override
-    public void selectGamePage() {
-        selectView(gameView);
+    public void showGameView() {
+        showView(gameView);
         clock.start();
         if (gameVariant() != GameVariant.MS_PACMAN_TENGEN) {
             sound().playVoice("voice.explain", 0);
@@ -597,19 +600,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(event));
         }
     }
-
-    //TODO reimplement
-    /*
-    @Override
-    public void onCustomMapsChanged(GameEvent e) {
-        gamePage.dashboardLayer().dashboardEntries().stream()
-            .map(DashboardLayer.DashboardEntry::infoBox)
-            .filter(infoBox -> infoBox instanceof InfoBoxCustomMaps)
-            .findFirst()
-            .ifPresent(infoBox -> ((InfoBoxCustomMaps)infoBox).updateTableView());
-        Logger.info("Custom maps table updated");
-    }
-     */
 
     @Override
     public void onGameVariantChanged(GameEvent event) {

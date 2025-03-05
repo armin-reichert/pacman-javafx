@@ -44,7 +44,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
                 }
             });
         });
-        ui.pageProperty().addListener((py,ov,page) -> {
+        ui.viewProperty().addListener((py, ov, page) -> {
             if (page == carousel && carousel.currentSlide().isPresent() && carousel.currentSlide().get() == this) {
                 menu.getAnimationTimer().start();
             } else {

@@ -56,7 +56,7 @@ public class PacManXXL_OptionsMenu {
         menu.setTitleTextFill(Color.RED);
         menu.setHintTextFill(Color.YELLOW);
 
-        menu.scalingProperty().bind(ui.getMainScene().heightProperty().multiply(RELATIVE_HEIGHT).divide(UNSCALED_HEIGHT));
+        menu.scalingProperty().bind(ui.mainScene().heightProperty().multiply(RELATIVE_HEIGHT).divide(UNSCALED_HEIGHT));
 
         menu.setOnStart(() -> {
             logMenuState();
