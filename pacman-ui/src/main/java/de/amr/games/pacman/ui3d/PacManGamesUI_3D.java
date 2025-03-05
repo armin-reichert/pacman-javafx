@@ -52,9 +52,9 @@ public class PacManGamesUI_3D extends PacManGamesUI {
 
     @Override
     protected void createGamePage(Scene parentScene) {
-        gamePage = new GamePage3D(this, parentScene);
-        gamePage.setActionToOpenEditor(actionOpenEditor);
-        gamePage.gameScenePy.bind(gameScenePy);
+        gameView = new GameView3D(this, parentScene);
+        gameView.setActionToOpenEditor(actionOpenEditorView);
+        gameView.gameScenePy.bind(gameScenePy);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class PacManGamesUI_3D extends PacManGamesUI {
                 }
                 return locText(key, modeKey) + sceneNameText;
             },
-            clock.pausedPy, gameVariantPy, gameScenePy, gamePage.heightProperty(), PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE)
+            clock.pausedPy, gameVariantPy, gameScenePy, gameView.heightProperty(), PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE)
         );
     }
 

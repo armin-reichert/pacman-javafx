@@ -28,13 +28,13 @@ import java.util.function.Consumer;
 
 import static de.amr.games.pacman.lib.Globals.assertNotNull;
 
-public class EditorPage extends BorderPane implements GameActionProvider {
+public class EditorView extends BorderPane implements GameActionProvider {
 
     private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
     private final TileMapEditor editor;
     private Consumer<TileMapEditor> closeAction = editor -> {};
 
-    public EditorPage(Stage stage, GameContext context) {
+    public EditorView(Stage stage, GameContext context) {
         assertNotNull(stage);
         assertNotNull(context);
 

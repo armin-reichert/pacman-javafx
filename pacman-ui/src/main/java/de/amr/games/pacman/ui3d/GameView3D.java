@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.page.GamePage;
+import de.amr.games.pacman.ui2d.page.GameView;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -22,9 +22,9 @@ import static de.amr.games.pacman.uilib.Ufx.contextMenuTitleItem;
 /**
  * @author Armin Reichert
  */
-public class GamePage3D extends GamePage {
+public class GameView3D extends GameView {
 
-    public GamePage3D(GameContext context, Scene parentScene) {
+    public GameView3D(GameContext context, Scene parentScene) {
         super(context, parentScene);
         setOnContextMenuRequested(this::handleContextMenuRequest);
     }

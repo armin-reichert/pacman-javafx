@@ -49,7 +49,7 @@ import static de.amr.games.pacman.uilib.Ufx.*;
 /**
  * @author Armin Reichert
  */
-public class GamePage extends StackPane implements GameActionProvider {
+public class GameView extends StackPane implements GameActionProvider {
 
     private static final double MAX_SCENE_SCALING = 5;
     private static final int SIMULATION_SPEED_DELTA = 5;
@@ -140,7 +140,7 @@ public class GamePage extends StackPane implements GameActionProvider {
     protected TooFancyCanvasContainer canvasContainer;
     protected ContextMenu contextMenu;
 
-    public GamePage(GameContext context, Scene parentScene) {
+    public GameView(GameContext context, Scene parentScene) {
         this.context = assertNotNull(context);
         this.parentScene = assertNotNull(parentScene);
 
