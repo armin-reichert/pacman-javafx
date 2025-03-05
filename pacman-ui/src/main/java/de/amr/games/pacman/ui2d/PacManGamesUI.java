@@ -385,14 +385,11 @@ public class PacManGamesUI implements GameEventListener, GameContext {
                 Logger.info("Game scene ended: {}", prevGameScene.displayName());
             }
             if (nextGameScene != null) {
-                if (nextGameScene instanceof GameScene2D gameScene2D) {
-                    gameScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR); //TODO do this elsewhere?
-                    gameView.embedGameScene(nextGameScene);
-                }
                 nextGameScene.init();
                 if (is2D3DSwitch(prevGameScene, nextGameScene)) {
                     nextGameScene.onSceneVariantSwitch(prevGameScene);
                 }
+                gameView.embedGameScene(nextGameScene);
             } else {
                 Logger.error("Could not determine next game scene");
                 return;

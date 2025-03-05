@@ -289,15 +289,16 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
                 cameraControlledView.viewPortHeightProperty().bind(parentScene.heightProperty());
             }
             case GameScene2D gameScene2D -> {
+                GameRenderer renderer = context.gameConfiguration().createRenderer(context.assets(), canvas);
                 Vector2f sceneSize = gameScene2D.size();
-                canvasContainer.backgroundProperty().bind(gameScene2D.backgroundColorProperty().map(Ufx::coloredBackground));
                 canvasContainer.setUnscaledCanvasWidth(sceneSize.x());
                 canvasContainer.setUnscaledCanvasHeight(sceneSize.y());
                 canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
+                canvasContainer.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
                 gameScene2D.scalingProperty().bind(
                     canvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_SCALING)));
-                GameRenderer renderer = context.gameConfiguration().createRenderer(context.assets(), canvas);
                 gameScene2D.setCanvas(canvas);
+                gameScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
                 gameScene2D.setGameRenderer(renderer);
                 getChildren().set(0, canvasLayer);
             }
