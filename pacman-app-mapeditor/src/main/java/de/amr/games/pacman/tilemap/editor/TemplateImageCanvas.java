@@ -82,9 +82,7 @@ public class TemplateImageCanvas extends Canvas {
         templateImagePy.addListener((py, ov, nv) -> colorIndicator.setVisible(nv != null));
     }
 
-    public ColorIndicator getColorIndicator() {
-        return colorIndicator;
-    }
+    public ColorIndicator getColorIndicator() { return colorIndicator; }
 
     private int gridSize() { return gridSizePy.get(); }
 
@@ -141,20 +139,13 @@ public class TemplateImageCanvas extends Canvas {
     }
 
     private CustomMenuItem createColorMenuItem(Color color, String itemText) {
-        HBox content = new HBox();
-        content.setMinWidth(120);
-        content.setMinHeight(30);
-        content.setSpacing(10);
-        content.setPadding(new Insets(3));
-        content.setBackground(Background.fill(Color.TRANSPARENT));
-
         BorderPane colorBox = new BorderPane();
         colorBox.setMinWidth(30);
         colorBox.setMaxWidth(30);
         colorBox.setMinHeight(30);
         colorBox.setMaxHeight(30);
         colorBox.setBorder(Border.stroke(Color.BLACK));
-        colorBox.setBackground(Background.fill(color)); // color == null -> uses TRANSPARENT!
+        colorBox.setBackground(Background.fill(color)); // color == null -> TRANSPARENT!
         if (color == null) {
             var undefinedHint = new Text("???");
             undefinedHint.setFont(Font.font("Sans", FontWeight.BOLD, 14));
@@ -166,7 +157,14 @@ public class TemplateImageCanvas extends Canvas {
         colorText.setFont(Font.font("Sans", FontWeight.BOLD, 16));
         colorText.setFill(Color.BLACK);
 
+        HBox content = new HBox();
+        content.setMinWidth(120);
+        content.setMinHeight(30);
+        content.setSpacing(10);
+        content.setPadding(new Insets(3));
+        content.setBackground(Background.fill(Color.TRANSPARENT));
         content.getChildren().addAll(colorBox, colorText);
+
         return new CustomMenuItem(content);
     }
 
