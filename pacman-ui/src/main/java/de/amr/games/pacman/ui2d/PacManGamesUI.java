@@ -375,10 +375,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         );
     }
 
-    private void configureGameScene2D(GameScene2D gameScene2D) {
-        gameScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
-    }
-
     protected void updateGameScene(boolean reloadCurrent) {
         GameScene prevGameScene = gameScenePy.get();
         GameScene nextGameScene = gameConfiguration().selectGameScene(this);
@@ -390,7 +386,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             }
             if (nextGameScene != null) {
                 if (nextGameScene instanceof GameScene2D gameScene2D) {
-                    configureGameScene2D(gameScene2D);
+                    gameScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR); //TODO do this elsewhere?
                     gameView.embedGameScene(nextGameScene);
                 }
                 nextGameScene.init();
