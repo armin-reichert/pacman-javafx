@@ -453,7 +453,7 @@ public abstract class GameModel {
         assertNotNull(listener);
         boolean removed = gameEventListeners.remove(listener);
         if (removed) {
-            Logger.info("Game event listener registered: {}", listener);
+            Logger.info("Game event listener removed: {}", listener);
         } else {
             Logger.warn("Game event listener not removed, as not registered: {}", listener);
         }

@@ -66,7 +66,9 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
-            handleGameVariantChange(get());
+        GameVariant gameVariant = get();
+        Logger.info("Game variant changed to {}", gameVariant);
+        handleGameVariantChange(gameVariant);
         }
     };
 
@@ -338,8 +340,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     protected void handleGameVariantChange(GameVariant variant) {
         gameController().selectGame(variant);
-        //gameController().restart(GameState.BOOT);
-        Logger.info("Selected game variant: {}", variant);
 
         GameModel game = gameController().gameModel(variant);
         game.addGameEventListener(this);
