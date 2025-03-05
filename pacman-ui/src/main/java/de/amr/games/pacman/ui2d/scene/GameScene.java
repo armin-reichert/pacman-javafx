@@ -62,4 +62,8 @@ public interface GameScene extends GameEventListener, GameActionProvider {
     default void onSceneVariantSwitch(GameScene oldScene) {}
 
     default List<MenuItem> supplyContextMenuItems(ContextMenuEvent e) { return List.of(); }
+
+    default String displayName() {
+        return "%s (%s)".formatted(getClass().getSimpleName(), context().gameVariant());
+    }
 }

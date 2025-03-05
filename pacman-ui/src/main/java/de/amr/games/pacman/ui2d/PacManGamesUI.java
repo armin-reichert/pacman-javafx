@@ -384,7 +384,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         if (reloadCurrent || sceneChanging) {
             if (prevGameScene != null) {
                 prevGameScene.end();
-                Logger.info("Game scene ended: {}", sceneDisplayName(prevGameScene));
+                Logger.info("Game scene ended: {}", prevGameScene.displayName());
             }
             if (nextGameScene != null) {
                 if (nextGameScene instanceof GameScene2D gameScene2D) {
@@ -395,20 +395,19 @@ public class PacManGamesUI implements GameEventListener, GameContext {
                 if (is2D3DSwitch(prevGameScene, nextGameScene)) {
                     nextGameScene.onSceneVariantSwitch(prevGameScene);
                 }
+            } else {
+                Logger.error("Could not determine next game scene");
+                return;
             }
             if (sceneChanging) {
                 gameScenePy.set(nextGameScene);
+                Logger.info("Game scene is now: {}", nextGameScene.displayName());
             }
+
             sceneRoot.setBackground(currentGameSceneHasID("PlayScene3D")
                 ? assets.get("play_scene3d_background")
                 : assets.get("scene_background"));
-            Logger.info("Game scene is now: {}", sceneDisplayName(nextGameScene));
         }
-    }
-
-    private String sceneDisplayName(GameScene gameScene) {
-        String text = gameScene != null ? gameScene.getClass().getSimpleName() : "NO GAME SCENE";
-        return text + " (%s)".formatted(gameVariant());
     }
 
     private boolean is2D3DSwitch(GameScene oldGameScene, GameScene newGameScene) {
