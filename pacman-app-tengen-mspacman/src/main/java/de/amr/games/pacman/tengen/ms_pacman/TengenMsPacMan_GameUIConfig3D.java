@@ -22,7 +22,7 @@ import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._3d.GlobalProperties3d;
-import de.amr.games.pacman.ui._3d.scene3d.GameConfiguration3D;
+import de.amr.games.pacman.ui._3d.scene3d.GameUIConfiguration3D;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.ResourceManager;
 import de.amr.games.pacman.uilib.WorldMapColoring;
@@ -42,7 +42,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 
-public class TengenMsPacMan_GameConfig3D implements GameConfiguration3D {
+public class TengenMsPacMan_GameUIConfig3D implements GameUIConfiguration3D {
 
     public static final BooleanProperty PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED = new SimpleBooleanProperty(false);
     public static final ObjectProperty<SceneDisplayMode> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
@@ -58,8 +58,8 @@ public class TengenMsPacMan_GameConfig3D implements GameConfiguration3D {
     private final MapRepository mapRepository;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public TengenMsPacMan_GameConfig3D(AssetStorage assets) {
-        loadAssets(() -> TengenMsPacMan_GameConfig3D.class, assets);
+    public TengenMsPacMan_GameUIConfig3D(AssetStorage assets) {
+        loadAssets(() -> TengenMsPacMan_GameUIConfig3D.class, assets);
         spriteSheet = new TengenMsPacMan_SpriteSheet(assets.image(assetKeyPrefix() + ".spritesheet"));
         mapRepository = new MapRepository(
             assets.image(assetKeyPrefix() + ".mazes.arcade"),

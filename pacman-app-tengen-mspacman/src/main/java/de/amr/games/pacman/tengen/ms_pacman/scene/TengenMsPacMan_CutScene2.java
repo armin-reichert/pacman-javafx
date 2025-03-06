@@ -19,8 +19,8 @@ import javafx.scene.paint.Color;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_MR_PACMAN_MUNCHING;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
-import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfig3D.NES_SIZE;
-import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfig3D.NES_TILES;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameUIConfig3D.NES_SIZE;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameUIConfig3D.NES_TILES;
 
 /**
  * Intermission scene 2: "The chase".

@@ -37,8 +37,8 @@ public class PacManXXL_App extends Application {
         PacManGamesUI_3D ui = new PacManGamesUI_3D();
         ui.loadAssets();
 
-        ui.setGameConfiguration(GameVariant.PACMAN_XXL,    new PacManXXL_PacMan_GameConfig3D(ui.assets()));
-        ui.setGameConfiguration(GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_GameConfig3D(ui.assets()));
+        ui.setGameConfiguration(GameVariant.PACMAN_XXL,    new PacManXXL_PacMan_GameUIConfig3D(ui.assets()));
+        ui.setGameConfiguration(GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_GameUIConfig3D(ui.assets()));
 
         ui.create(stage, initialSize());
 

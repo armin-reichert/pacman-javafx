@@ -9,20 +9,17 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._2d.GameRenderer;
 import de.amr.games.pacman.ui._2d.GameScene2D;
-import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
+import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.WorldMapColoring;
 import javafx.scene.canvas.Canvas;
 
 import java.util.stream.Stream;
 
-public interface GameConfiguration {
+public interface GameUIConfiguration {
     GameVariant gameVariant();
     void setGameScene(String id, GameScene gameScene);
     GameScene getGameScene(String id);
-    default void initGameScenes(GameContext context) {
-        gameScenes().forEach(gameScene -> gameScene.setGameContext(context));
-    }
     Stream<GameScene> gameScenes();
     default boolean gameSceneHasID(GameScene gameScene, String sceneID) {
         return getGameScene(sceneID) == gameScene;

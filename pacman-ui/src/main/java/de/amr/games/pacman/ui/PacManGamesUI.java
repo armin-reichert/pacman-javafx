@@ -10,7 +10,7 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._2d.*;
-import de.amr.games.pacman.ui.dashboard.*;
+import de.amr.games.pacman.ui.dashboard.InfoBox;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui.input.Keyboard;
@@ -41,6 +41,7 @@ import java.util.ResourceBundle;
 import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 import static de.amr.games.pacman.lib.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_DEBUG_INFO_VISIBLE;
 import static de.amr.games.pacman.ui.input.ArcadeKeyBinding.DEFAULT_ARCADE_KEY_BINDING;
 import static de.amr.games.pacman.ui.input.JoypadKeyBinding.JOYPAD_CURSOR_KEYS;
 import static de.amr.games.pacman.ui.input.JoypadKeyBinding.JOYPAD_WASD;
@@ -90,7 +91,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     };
     protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
 
-    protected final Map<GameVariant, GameConfiguration> gameConfigByVariant = new EnumMap<>(GameVariant.class);
+    protected final Map<GameVariant, GameUIConfiguration> gameConfigByVariant = new EnumMap<>(GameVariant.class);
     protected final Keyboard keyboard = new Keyboard();
     protected final GameClockFX clock = new GameClockFX();
     protected final AssetStorage assets = new AssetStorage();
@@ -146,20 +147,21 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     /**
-     * Stores the configuration for a game variant and initializes the game scenes (assigns the game context).
+     * Stores the UI configuration for a game variant and initializes the game scenes (assigns the game context).
      *
      * @param variant a game variant
-     * @param gameConfiguration the configuration for this variant
+     * @param uiConfiguration the UI configuration for this variant
      */
-    public void setGameConfiguration(GameVariant variant, GameConfiguration gameConfiguration) {
+    public void setGameConfiguration(GameVariant variant, GameUIConfiguration uiConfiguration) {
         assertNotNull(variant);
-        assertNotNull(gameConfiguration);
-        gameConfigByVariant.put(variant, gameConfiguration);
-        gameConfiguration.initGameScenes(this);
-        gameConfiguration.gameScenes()
-            .filter(GameScene2D.class::isInstance)
-            .map(GameScene2D.class::cast)
-            .forEach(gameScene2D -> gameScene2D.debugInfoVisibleProperty().bind(GlobalProperties2d.PY_DEBUG_INFO_VISIBLE));
+        assertNotNull(uiConfiguration);
+        uiConfiguration.gameScenes().forEach(scene -> {
+            scene.setGameContext(this);
+            if (scene instanceof GameScene2D gameScene2D) {
+                gameScene2D.debugInfoVisibleProperty().bind(PY_DEBUG_INFO_VISIBLE);
+            }
+        });
+        gameConfigByVariant.put(variant, uiConfiguration);
     }
 
     /**
@@ -472,7 +474,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public GameConfiguration gameConfiguration(GameVariant variant) {
+    public GameUIConfiguration gameConfiguration(GameVariant variant) {
         return gameConfigByVariant.get(variant);
     }
 

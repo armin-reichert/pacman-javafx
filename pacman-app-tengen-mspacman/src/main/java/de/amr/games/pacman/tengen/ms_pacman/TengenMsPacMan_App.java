@@ -16,7 +16,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfig3D.NES_SIZE;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameUIConfig3D.NES_SIZE;
 
 public class TengenMsPacMan_App extends Application {
 
@@ -36,7 +36,7 @@ public class TengenMsPacMan_App extends Application {
     public void start(Stage stage) {
         PacManGamesUI_3D ui = new PacManGamesUI_3D();
         ui.loadAssets();
-        ui.setGameConfiguration(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameConfig3D(ui.assets()));
+        ui.setGameConfiguration(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameUIConfig3D(ui.assets()));
         ui.create(stage, initialSize());
         ui.addStartPage(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_StartPage(ui));
 

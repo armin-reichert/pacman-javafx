@@ -18,7 +18,7 @@ import de.amr.games.pacman.ui._2d.ArcadePlayScene2D;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._3d.GlobalProperties3d;
-import de.amr.games.pacman.ui._3d.scene3d.GameConfiguration3D;
+import de.amr.games.pacman.ui._3d.scene3d.GameUIConfiguration3D;
 import de.amr.games.pacman.ui._3d.scene3d.PlayScene3D;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.ResourceManager;
@@ -32,14 +32,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class ArcadePacMan_GameConfig3D implements GameConfiguration3D {
+public class ArcadePacMan_GameUIConfig3D implements GameUIConfiguration3D {
 
     private static final WorldMapColoring MAP_COLORING = new WorldMapColoring("#000000", "#2121ff", "#fcb5ff", "#febdb4");
 
     private final ArcadePacMan_SpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public ArcadePacMan_GameConfig3D(AssetStorage assets) {
+    public ArcadePacMan_GameUIConfig3D(AssetStorage assets) {
         loadAssets(() -> ResourceRoot.class, assets);
         spriteSheet = new ArcadePacMan_SpriteSheet(assets.get("pacman.spritesheet"));
 

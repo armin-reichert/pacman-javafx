@@ -10,7 +10,7 @@ import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.GameConfiguration;
+import de.amr.games.pacman.ui.GameUIConfiguration;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui._2d.*;
@@ -24,12 +24,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class PacManXXL_PacMan_GameConfig implements GameConfiguration {
+public class PacManXXL_PacMan_GameUIConfig implements GameUIConfiguration {
 
     private final ArcadePacMan_SpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public PacManXXL_PacMan_GameConfig(AssetStorage assets) {
+    public PacManXXL_PacMan_GameUIConfig(AssetStorage assets) {
         setGameScene("BootScene",   new ArcadeBootScene());
         setGameScene("IntroScene",  new IntroScene());
         setGameScene("StartScene",  new StartScene());

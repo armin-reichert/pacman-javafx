@@ -15,7 +15,7 @@ import de.amr.games.pacman.ui._2d.ArcadeBootScene;
 import de.amr.games.pacman.ui._2d.ArcadePlayScene2D;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._3d.GlobalProperties3d;
-import de.amr.games.pacman.ui._3d.scene3d.GameConfiguration3D;
+import de.amr.games.pacman.ui._3d.scene3d.GameUIConfiguration3D;
 import de.amr.games.pacman.ui._3d.scene3d.PlayScene3D;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.WorldMapColoring;
@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class ArcadeMsPacMan_GameConfig3D implements GameConfiguration3D {
+public class ArcadeMsPacMan_GameUIConfig3D implements GameUIConfiguration3D {
 
     private static final List<WorldMapColoring> WORLD_MAP_COLORINGS = List.of(
         new WorldMapColoring("FFB7AE", "FF0000", "FCB5FF", "DEDEFF"),
@@ -45,8 +45,8 @@ public class ArcadeMsPacMan_GameConfig3D implements GameConfiguration3D {
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public ArcadeMsPacMan_GameConfig3D(AssetStorage assets) {
-        loadAssets(() -> ArcadeMsPacMan_GameConfig3D.class, assets);
+    public ArcadeMsPacMan_GameUIConfig3D(AssetStorage assets) {
+        loadAssets(() -> ArcadeMsPacMan_GameUIConfig3D.class, assets);
         spriteSheet = new ArcadeMsPacMan_SpriteSheet(assets.get("ms_pacman.spritesheet"));
 
         setGameScene("BootScene",   new ArcadeBootScene());

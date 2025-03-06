@@ -29,7 +29,7 @@ public class ArcadePacMan_App extends Application {
     public void start(Stage stage) {
         PacManGamesUI_3D ui = new PacManGamesUI_3D();
         ui.loadAssets();
-        ui.setGameConfiguration(GameVariant.PACMAN, new ArcadePacMan_GameConfig3D(ui.assets()));
+        ui.setGameConfiguration(GameVariant.PACMAN, new ArcadePacMan_GameUIConfig3D(ui.assets()));
         ui.create(stage, initialSize());
         ui.addStartPage(GameVariant.PACMAN, new ArcadePacMan_StartPage(ui));
 

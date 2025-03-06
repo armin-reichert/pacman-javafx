@@ -9,15 +9,15 @@ import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui._3d.GlobalProperties3d;
-import de.amr.games.pacman.ui._3d.scene3d.GameConfiguration3D;
+import de.amr.games.pacman.ui._3d.scene3d.GameUIConfiguration3D;
 import de.amr.games.pacman.ui._3d.scene3d.PlayScene3D;
 import de.amr.games.pacman.uilib.model3D.PacModel3D;
 import javafx.scene.Node;
 
-public class PacManXXL_PacMan_GameConfig3D extends PacManXXL_PacMan_GameConfig
-        implements GameConfiguration3D {
+public class PacManXXL_PacMan_GameUIConfig3D extends PacManXXL_PacMan_GameUIConfig
+        implements GameUIConfiguration3D {
 
-    public PacManXXL_PacMan_GameConfig3D(AssetStorage assets) {
+    public PacManXXL_PacMan_GameUIConfig3D(AssetStorage assets) {
         super(assets);
         setGameScene("PlayScene3D", new PlayScene3D());
     }

@@ -78,8 +78,8 @@ public interface GameContext {
     void selectNextJoypadKeyBinding();
 
     // GUI
-    GameConfiguration gameConfiguration(GameVariant variant);
-    default GameConfiguration gameConfiguration() { return gameConfiguration(gameVariant()); }
+    GameUIConfiguration gameConfiguration(GameVariant variant);
+    default GameUIConfiguration gameConfiguration() { return gameConfiguration(gameVariant()); }
     void setScoreVisible(boolean visible);
     boolean isScoreVisible();
     void showView(Node page);
