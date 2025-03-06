@@ -35,7 +35,6 @@ public class TengenMsPacMan_App extends Application {
     @Override
     public void start(Stage stage) {
         PacManGamesUI_3D ui = new PacManGamesUI_3D();
-        ui.loadAssets();
         ui.setGameConfiguration(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameUIConfig3D(ui.assets()));
         ui.create(stage, initialSize());
         ui.addStartPage(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_StartPage(ui));

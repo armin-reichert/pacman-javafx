@@ -115,9 +115,35 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected int selectedJoypadIndex;
     protected ArcadeKeyBinding arcadeKeyBinding = DEFAULT_ARCADE_KEY_BINDING;
 
-    public PacManGamesUI() {}
+    public PacManGamesUI() {
+        clock.setPauseableCallback(this::runIfNotPausedOnEveryTick);
+        clock.setPermanentCallback(this::runOnEveryTick);
+        loadAssets2D();
+    }
 
-    public void loadAssets() {
+    /**
+     * Called from application start method (on JavaFX application thread).
+     *
+     * @param stage primary stage (window)
+     * @param initialSize initial UI size
+     */
+    public void create(Stage stage, Dimension2D initialSize) {
+        this.stage = assertNotNull(stage);
+        mainScene = createMainScene(assertNotNull(initialSize));
+        startPageSelectionView = new StartPageSelectionView(this);
+        startPagesCarousel().setBackground(assets.background("background.scene"));
+        createGameView(mainScene);
+        selectGameVariant(gameController().currentGameVariant());
+        bindStageTitle();
+        stage.setScene(mainScene);
+        //TODO This doesn't fit for NES aspect ratio
+        stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
+        stage.setMinHeight(ARCADE_MAP_SIZE_IN_PIXELS.y() * 1.25);
+        stage.centerOnScreen();
+        stage.setOnShowing(e -> showStartView());
+    }
+
+    private void loadAssets2D() {
         ResourceManager rm = () -> PacManGamesUI.class;
 
         ResourceBundle textResources = rm.getModuleBundle("de.amr.games.pacman.ui.texts.messages2d");
@@ -162,30 +188,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             }
         });
         uiConfigByVariant.put(variant, uiConfiguration);
-    }
-
-    /**
-     * Called from application start method (on JavaFX application thread).
-     *
-     * @param stage primary stage (window)
-     * @param initialSize initial UI size
-     */
-    public void create(Stage stage, Dimension2D initialSize) {
-        this.stage = assertNotNull(stage);
-        mainScene = createMainScene(assertNotNull(initialSize));
-        startPageSelectionView = new StartPageSelectionView(this);
-        startPagesCarousel().setBackground(assets.background("background.scene"));
-        createGameView(mainScene);
-        clock.setPauseableCallback(this::runIfNotPausedOnEveryTick);
-        clock.setPermanentCallback(this::runOnEveryTick);
-        selectGameVariant(gameController().currentGameVariant());
-        bindStageTitle();
-        stage.setScene(mainScene);
-        //TODO This doesn't fit for NES aspect ratio
-        stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
-        stage.setMinHeight(ARCADE_MAP_SIZE_IN_PIXELS.y() * 1.25);
-        stage.centerOnScreen();
-        stage.setOnShowing(e -> showStartView());
     }
 
     public void show() {

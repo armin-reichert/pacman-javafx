@@ -4,10 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._3d;
 
-import de.amr.games.pacman.ui.DashboardItemID;
 import de.amr.games.pacman.ui.PacManGamesUI;
 import de.amr.games.pacman.ui._2d.GameScene2D;
-import de.amr.games.pacman.ui._3d.dashboard.InfoBox3D;
 import de.amr.games.pacman.uilib.Picker;
 import de.amr.games.pacman.uilib.ResourceManager;
 import de.amr.games.pacman.uilib.Ufx;
@@ -31,9 +29,12 @@ import static de.amr.games.pacman.uilib.Ufx.toggle;
  */
 public class PacManGamesUI_3D extends PacManGamesUI {
 
-    public void loadAssets() {
-        super.loadAssets();
+    public PacManGamesUI_3D() {
+        super(); // loads 2D assets!
+        loadAssets3D();
+    }
 
+    private void loadAssets3D() {
         ResourceManager rm = this::getClass;
         assets.addBundle(rm.getModuleBundle("de.amr.games.pacman.ui.texts.messages3d"));
 
