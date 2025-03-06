@@ -536,8 +536,9 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         clock.stop();
         gameScenePy.set(null);
         gameView.hideDashboard(); // TODO use binding?
-        startPageSelectionView.currentSlide().ifPresent(Node::requestFocus);
         showView(startPageSelectionView);
+        // Note: this must be called last such that option menu gets focus!
+        startPageSelectionView.currentSlide().ifPresent(Node::requestFocus);
     }
 
     @Override
