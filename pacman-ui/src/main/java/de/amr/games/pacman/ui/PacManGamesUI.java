@@ -91,7 +91,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     };
     protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
 
-    protected final Map<GameVariant, GameUIConfiguration> gameConfigByVariant = new EnumMap<>(GameVariant.class);
+    protected final Map<GameVariant, GameUIConfiguration> uiConfigByVariant = new EnumMap<>(GameVariant.class);
     protected final Keyboard keyboard = new Keyboard();
     protected final GameClockFX clock = new GameClockFX();
     protected final AssetStorage assets = new AssetStorage();
@@ -161,7 +161,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
                 gameScene2D.debugInfoVisibleProperty().bind(PY_DEBUG_INFO_VISIBLE);
             }
         });
-        gameConfigByVariant.put(variant, uiConfiguration);
+        uiConfigByVariant.put(variant, uiConfiguration);
     }
 
     /**
@@ -475,7 +475,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     @Override
     public GameUIConfiguration gameConfiguration(GameVariant variant) {
-        return gameConfigByVariant.get(variant);
+        return uiConfigByVariant.get(variant);
     }
 
     @Override
