@@ -6,8 +6,8 @@ package de.amr.games.pacman.arcade.pacman;
 
 import de.amr.games.pacman.arcade.ResourceRoot;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.PacManGamesUI;
-import de.amr.games.pacman.ui2d.page.StartPage;
+import de.amr.games.pacman.ui.PacManGamesUI;
+import de.amr.games.pacman.ui._2d.StartPage;
 import de.amr.games.pacman.uilib.Flyer;
 import de.amr.games.pacman.uilib.ResourceManager;
 import de.amr.games.pacman.uilib.Ufx;

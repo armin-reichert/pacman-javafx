@@ -14,18 +14,16 @@ open module de.amr.games.pacman.ui {
     requires de.amr.games.pacman.tilemap.editor.app;
     requires de.amr.games.pacman.uilib;
 
-    exports de.amr.games.pacman.ui2d;
-    exports de.amr.games.pacman.ui2d.action;
-    exports de.amr.games.pacman.ui2d.dashboard;
-    exports de.amr.games.pacman.ui2d.input;
-    exports de.amr.games.pacman.ui2d.page;
-    exports de.amr.games.pacman.ui2d.rendering;
-    exports de.amr.games.pacman.ui2d.scene;
-    exports de.amr.games.pacman.ui2d.sound;
+    exports de.amr.games.pacman.ui.dashboard;
+    exports de.amr.games.pacman.ui.input;
+    exports de.amr.games.pacman.ui.sound;
 
-    exports de.amr.games.pacman.ui3d;
-    exports de.amr.games.pacman.ui3d.animation;
-    exports de.amr.games.pacman.ui3d.dashboard;
-    exports de.amr.games.pacman.ui3d.level;
-    exports de.amr.games.pacman.ui3d.scene3d;
+    exports de.amr.games.pacman.ui._2d;
+
+    exports de.amr.games.pacman.ui._3d;
+    exports de.amr.games.pacman.ui._3d.animation;
+    exports de.amr.games.pacman.ui._3d.dashboard;
+    exports de.amr.games.pacman.ui._3d.level;
+    exports de.amr.games.pacman.ui._3d.scene3d;
+    exports de.amr.games.pacman.ui;
 }

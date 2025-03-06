@@ -11,7 +11,7 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
-import de.amr.games.pacman.ui2d.rendering.GameRenderer;
+import de.amr.games.pacman.ui._2d.GameRenderer;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.ImageArea;
 import javafx.beans.property.FloatProperty;

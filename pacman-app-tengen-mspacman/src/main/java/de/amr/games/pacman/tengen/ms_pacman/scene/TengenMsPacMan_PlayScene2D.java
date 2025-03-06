@@ -20,13 +20,13 @@ import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.MessageMovement;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
-import de.amr.games.pacman.ui2d.action.GameActions2D;
-import de.amr.games.pacman.ui2d.sound.GameSound;
-import de.amr.games.pacman.ui2d.input.Keyboard;
-import de.amr.games.pacman.ui2d.scene.CameraControlledView;
-import de.amr.games.pacman.ui2d.scene.GameScene;
-import de.amr.games.pacman.ui2d.scene.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.LevelCompleteAnimation;
+import de.amr.games.pacman.ui._2d.GameActions2D;
+import de.amr.games.pacman.ui.sound.GameSound;
+import de.amr.games.pacman.ui.input.Keyboard;
+import de.amr.games.pacman.ui.CameraControlledView;
+import de.amr.games.pacman.ui.GameScene;
+import de.amr.games.pacman.ui._2d.GameScene2D;
+import de.amr.games.pacman.ui._2d.LevelCompleteAnimation;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -55,10 +55,10 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions.QUIT_DEMO_LEVEL;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfig3D.*;
-import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_AUTOPILOT;
-import static de.amr.games.pacman.ui2d.GlobalProperties2d.PY_IMMUNITY;
-import static de.amr.games.pacman.ui2d.action.GameActions2D.bindCheatActions;
-import static de.amr.games.pacman.ui2d.action.GameActions2D.bindFallbackPlayerControlActions;
+import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_AUTOPILOT;
+import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_IMMUNITY;
+import static de.amr.games.pacman.ui._2d.GameActions2D.bindCheatActions;
+import static de.amr.games.pacman.ui._2d.GameActions2D.bindFallbackPlayerControlActions;
 
 /**
  * Tengen play scene, uses vertical scrolling.

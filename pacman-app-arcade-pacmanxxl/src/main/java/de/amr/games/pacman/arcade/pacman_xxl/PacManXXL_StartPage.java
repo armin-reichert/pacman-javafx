@@ -4,10 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman_xxl;
 
-import de.amr.games.pacman.ui2d.PacManGamesUI;
-import de.amr.games.pacman.ui2d.page.StartPage;
-import de.amr.games.pacman.ui2d.page.StartPageSelectionView;
-import de.amr.games.pacman.ui3d.GlobalProperties3d;
+import de.amr.games.pacman.ui.PacManGamesUI;
+import de.amr.games.pacman.ui._2d.StartPage;
+import de.amr.games.pacman.ui._2d.StartPageSelectionView;
+import de.amr.games.pacman.ui._3d.GlobalProperties3d;
 import de.amr.games.pacman.uilib.Flyer;
 import de.amr.games.pacman.uilib.ResourceManager;
 import javafx.scene.Node;

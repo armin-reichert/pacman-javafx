@@ -6,7 +6,7 @@ package de.amr.games.pacman.arcade.pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
-import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
+import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.uilib.SpriteSheet;
 import javafx.scene.image.Image;
 

@@ -13,9 +13,9 @@ import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
-import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.action.GameActions2D;
-import de.amr.games.pacman.ui2d.scene.GameScene2D;
+import de.amr.games.pacman.ui.GameContext;
+import de.amr.games.pacman.ui._2d.GameActions2D;
+import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -24,7 +24,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfig3D.*;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.CONTINUES_SPRITES;
-import static de.amr.games.pacman.ui2d.input.Keyboard.alt;
+import static de.amr.games.pacman.ui.input.Keyboard.alt;
 
 /**
  * Options scene for Ms. Pac-Man Tengen.

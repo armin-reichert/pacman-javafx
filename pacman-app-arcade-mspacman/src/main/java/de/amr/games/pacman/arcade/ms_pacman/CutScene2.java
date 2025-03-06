@@ -9,7 +9,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.ActorAnimations;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.scene.GameScene2D;
+import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 
 import static de.amr.games.pacman.lib.Globals.TS;
