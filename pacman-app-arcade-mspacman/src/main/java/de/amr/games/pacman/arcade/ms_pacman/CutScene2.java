@@ -48,7 +48,7 @@ public class CutScene2 extends GameScene2D {
         pacMan = new Pac();
         msPacMan = new Pac();
 
-        music = context.sound().makeSound("intermission.2", 1, false);
+        music = context.sound().makeSound("intermission.2");
 
         var spriteSheet = (ArcadeMsPacMan_SpriteSheet) context.gameConfiguration().spriteSheet();
         msPacMan.setAnimations(new PacAnimations(spriteSheet));

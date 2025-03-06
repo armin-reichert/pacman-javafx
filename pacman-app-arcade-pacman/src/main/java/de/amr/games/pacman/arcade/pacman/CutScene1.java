@@ -39,7 +39,7 @@ public class CutScene1 extends GameScene2D {
         pac = new Pac();
         blinky = Ghost.blinky();
 
-        music = context.sound().makeSound("intermission", 1.0, true);
+        music = context.sound().makeSoundLoop("intermission");
         music.setCycleCount(2);
 
         var spriteSheet = (ArcadePacMan_SpriteSheet) context.gameConfiguration().spriteSheet();
