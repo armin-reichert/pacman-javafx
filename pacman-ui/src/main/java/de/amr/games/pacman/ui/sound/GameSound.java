@@ -15,6 +15,7 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.net.URL;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,7 +39,7 @@ public class GameSound {
     private String assetNamespace;
     private AssetStorage assets;
 
-    private final Map<GameVariant, Map<String, MediaPlayer>> soundsByGameVariant = new HashMap<>();
+    private final Map<GameVariant, Map<String, MediaPlayer>> soundsByGameVariant = new EnumMap<>(GameVariant.class);
     {
         for (GameVariant variant : GameVariant.values()) {
             soundsByGameVariant.put(variant, new HashMap<>());
