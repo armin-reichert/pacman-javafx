@@ -33,7 +33,7 @@ public class ArcadePacMan_App extends Application {
         ui.create(stage, initialSize());
         ui.addStartPage(GameVariant.PACMAN, new ArcadePacMan_StartPage(ui));
 
-        ui.addDashboardItems(
+        ui.gameView().addDashboardItems(
             DashboardItemID.README,
             DashboardItemID.GENERAL,
             DashboardItemID.GAME_CONTROL,

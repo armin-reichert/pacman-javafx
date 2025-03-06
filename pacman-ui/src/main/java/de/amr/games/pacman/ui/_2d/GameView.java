@@ -9,12 +9,8 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.ui.GameAction;
-import de.amr.games.pacman.ui.GameActionProvider;
-import de.amr.games.pacman.ui.CameraControlledView;
-import de.amr.games.pacman.ui.GameScene;
-import de.amr.games.pacman.ui.dashboard.InfoBox;
+import de.amr.games.pacman.ui.*;
+import de.amr.games.pacman.ui.dashboard.*;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -44,8 +40,7 @@ import java.util.Map;
 import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 import static de.amr.games.pacman.lib.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_DEBUG_INFO_VISIBLE;
-import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_PIP_ON;
+import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
 import static de.amr.games.pacman.ui.input.Keyboard.*;
 import static de.amr.games.pacman.uilib.Ufx.*;
 
@@ -107,8 +102,8 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
     };
 
     private final GameAction actionToggleAutopilot = context -> {
-        toggle(GlobalProperties2d.PY_AUTOPILOT);
-        boolean auto = GlobalProperties2d.PY_AUTOPILOT.get();
+        toggle(PY_AUTOPILOT);
+        boolean auto = PY_AUTOPILOT.get();
         context.showFlashMessage(context.locText(auto ? "autopilot_on" : "autopilot_off"));
         context.sound().playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
     };
@@ -165,12 +160,38 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
         GraphicsContext g = canvas.getGraphicsContext2D();
         g.setFontSmoothingType(FontSmoothingType.GRAY);
         g.setImageSmoothing(false);
-        GlobalProperties2d.PY_CANVAS_FONT_SMOOTHING.addListener(
+        PY_CANVAS_FONT_SMOOTHING.addListener(
             (py, ov, smooth) -> g.setFontSmoothingType(smooth ? FontSmoothingType.LCD : FontSmoothingType.GRAY
         ));
-        GlobalProperties2d.PY_CANVAS_IMAGE_SMOOTHING.addListener(
+        PY_CANVAS_IMAGE_SMOOTHING.addListener(
             (py, ov, smooth) -> g.setImageSmoothing(smooth)
         );
+    }
+
+    public void addDashboardItems(DashboardItemID... ids) {
+        for (var id : ids) addDashboardItem(id);
+    }
+
+    public void addDashboardItem(DashboardItemID id) {
+        switch (id) {
+            case ABOUT        -> addDashboardItem(id, context.locText("infobox.about.title"),              new InfoBoxAbout());
+            case ACTOR_INFO   -> addDashboardItem(id, context.locText("infobox.actor_info.title"),         new InfoBoxActorInfo());
+            case CUSTOM_MAPS  -> addDashboardItem(id, context.locText("infobox.custom_maps.title"),        new InfoBoxCustomMaps());
+            case GENERAL      -> addDashboardItem(id, context.locText("infobox.general.title"),            new InfoBoxGeneral());
+            case GAME_CONTROL -> addDashboardItem(id, context.locText("infobox.game_control.title"),       new InfoBoxGameControl());
+            case GAME_INFO    -> addDashboardItem(id, context.locText("infobox.game_info.title"),          new InfoBoxGameInfo());
+            case JOYPAD       -> addDashboardItem(id, context.locText("infobox.joypad.title"),             new InfoBoxJoypad());
+            case KEYBOARD     -> addDashboardItem(id, context.locText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
+            case README -> {
+                InfoBox readMeBox = new InfoBoxReadmeFirst();
+                readMeBox.setExpanded(true);
+                addDashboardItem(id, context.locText("infobox.readme.title"), readMeBox);
+            }
+        }
+    }
+
+    public void addDashboardItem(DashboardItemID id, String title, InfoBox infoBox) {
+        dashboard.addDashboardItem(id, title, infoBox);
     }
 
     public ObjectProperty<GameScene> gameSceneProperty() { return gameScenePy; }

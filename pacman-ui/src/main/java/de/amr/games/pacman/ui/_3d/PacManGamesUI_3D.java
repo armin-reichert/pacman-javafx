@@ -81,15 +81,6 @@ public class PacManGamesUI_3D extends PacManGamesUI {
     }
 
     @Override
-    public void addDashboardItem(DashboardItemID id) {
-        if (DashboardItemID.SETTINGS_3D == id) {
-            addDashboardItem(DashboardItemID.SETTINGS_3D, locText("infobox.3D_settings.title"), new InfoBox3D());
-        } else {
-            super.addDashboardItem(id);
-        }
-    }
-
-    @Override
     public void togglePlayScene2D3D() {
         currentGameScene().ifPresent(gameScene -> {
             toggle(PY_3D_ENABLED);
