@@ -27,11 +27,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
@@ -128,8 +126,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         textPickerGameOverTexts      = Picker.fromBundle(textResources, "game.over");
         textPickerLevelCompleteTexts = Picker.fromBundle(textResources, "level.complete");
 
-        assets.store("scene_background",        Ufx.imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
-        assets.store("play_scene3d_background", Ufx.imageBackground(rm.loadImage("graphics/blue_sky.jpg")));
+        assets.store("background.scene",  Ufx.imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
+        assets.store("background.play_scene3d", Ufx.imageBackground(rm.loadImage("graphics/blue_sky.jpg")));
 
         assets.store("font.arcade",             rm.loadFont("fonts/emulogic.ttf", 8));
         assets.store("font.handwriting",        rm.loadFont("fonts/Molle-Italic.ttf", 9));
@@ -176,7 +174,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         this.stage = assertNotNull(stage);
         mainScene = createMainScene(assertNotNull(initialSize));
         startPageSelectionView = new StartPageSelectionView(this);
-        startPagesCarousel().setBackground(assets.background("scene_background"));
+        startPagesCarousel().setBackground(assets.background("background.scene"));
         createGameView(mainScene);
         clock.setPauseableCallback(this::runIfNotPausedOnEveryTick);
         clock.setPermanentCallback(this::runOnEveryTick);
@@ -261,11 +259,11 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         StackPane.setAlignment(pauseIcon, Pos.CENTER);
 
         sceneRoot.getChildren().addAll(new Pane(), flashMessageOverlay, pauseIcon, iconPane);
-        sceneRoot.setBackground(assets.get("scene_background"));
+        sceneRoot.setBackground(assets.get("background.scene"));
         sceneRoot.backgroundProperty().bind(gameScenePy.map(
             gameScene -> currentGameSceneHasID("PlayScene3D")
-                ? assets.get("play_scene3d_background")
-                : assets.get("scene_background"))
+                ? assets.get("background.play_scene3d")
+                : assets.get("background.scene"))
         );
 
         Scene mainScene = new Scene(sceneRoot, size.getWidth(), size.getHeight());
