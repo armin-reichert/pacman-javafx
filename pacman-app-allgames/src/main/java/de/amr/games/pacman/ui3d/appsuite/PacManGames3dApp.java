@@ -70,11 +70,11 @@ public class PacManGames3dApp extends Application {
     public void start(Stage stage) {
         ui = new PacManGamesUI_3D();
         // UI asset storage exists now, add game variants including their own assets
-        ui.setGameConfiguration(GameVariant.PACMAN,           new ArcadePacMan_GameUIConfig3D(ui.assets()));
-        ui.setGameConfiguration(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_GameUIConfig3D(ui.assets()));
-        ui.setGameConfiguration(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameUIConfig3D(ui.assets()));
-        ui.setGameConfiguration(GameVariant.PACMAN_XXL,       new PacManXXL_PacMan_GameUIConfig3D(ui.assets()));
-        ui.setGameConfiguration(GameVariant.MS_PACMAN_XXL,    new PacManXXL_MsPacMan_GameUIConfig3D(ui.assets()));
+        ui.setConfiguration(GameVariant.PACMAN,           new ArcadePacMan_GameUIConfig3D(ui.assets()));
+        ui.setConfiguration(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_GameUIConfig3D(ui.assets()));
+        ui.setConfiguration(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameUIConfig3D(ui.assets()));
+        ui.setConfiguration(GameVariant.PACMAN_XXL,       new PacManXXL_PacMan_GameUIConfig3D(ui.assets()));
+        ui.setConfiguration(GameVariant.MS_PACMAN_XXL,    new PacManXXL_MsPacMan_GameUIConfig3D(ui.assets()));
 
         ui.create(stage, initialSize());
 
