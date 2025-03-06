@@ -82,7 +82,6 @@ public interface GameContext {
     default GameUIConfiguration gameConfiguration() { return gameConfiguration(gameVariant()); }
     void setScoreVisible(boolean visible);
     boolean isScoreVisible();
-    void showView(Node page);
     void showStartView();
     void showGameView();
     Pane gameView();

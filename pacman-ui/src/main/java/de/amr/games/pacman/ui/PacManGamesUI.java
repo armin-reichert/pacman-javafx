@@ -71,7 +71,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             context.gameClock().stop();
             EditorView editorView = getOrCreateEditorView();
             editorView.startEditor(context.level().world().map());
-            context.showView(editorView);
+            showView(editorView);
         }
 
         @Override
@@ -510,7 +510,25 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public void showView(Node view) {
+    public void showStartView() {
+        clock.stop();
+        gameScenePy.set(null);
+        gameView.hideDashboard(); // TODO use binding?
+        showView(startPageSelectionView);
+        // Note: this must be called last such that option menu gets focus!
+        startPageSelectionView.currentSlide().ifPresent(Node::requestFocus);
+    }
+
+    @Override
+    public void showGameView() {
+        showView(gameView);
+        if (gameVariant() != GameVariant.MS_PACMAN_TENGEN) {
+            sound().playVoice("voice.explain", 0);
+        }
+        GameActions2D.BOOT.execute(this);
+    }
+
+    private void showView(Node view) {
         Node currentView = viewPy.get();
         if (view != currentView) {
             if (currentView instanceof GameActionProvider actionProvider) {
@@ -529,26 +547,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             sceneRoot.getChildren().set(0, view);
             viewPy.set(view);
         }
-    }
-
-    @Override
-    public void showStartView() {
-        clock.stop();
-        gameScenePy.set(null);
-        gameView.hideDashboard(); // TODO use binding?
-        showView(startPageSelectionView);
-        // Note: this must be called last such that option menu gets focus!
-        startPageSelectionView.currentSlide().ifPresent(Node::requestFocus);
-    }
-
-    @Override
-    public void showGameView() {
-        showView(gameView);
-        clock.start();
-        if (gameVariant() != GameVariant.MS_PACMAN_TENGEN) {
-            sound().playVoice("voice.explain", 0);
-        }
-        GameActions2D.BOOT.execute(this);
     }
 
     @Override
