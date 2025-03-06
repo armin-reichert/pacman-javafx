@@ -306,13 +306,13 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx.restore();
     }
 
-    public void drawLevelMessage(String assetKeyPrefix, GameLevel level, boolean demoLevel) {
+    public void drawLevelMessage(String assetNamespace, GameLevel level, boolean demoLevel) {
         if (level.message() != null) {
             float x = getMessagePosition().x(), y = getMessagePosition().y();
             switch (level.message().type()) {
-                case READY -> drawTextCenteredOver("READY!", x, y, assets.color(assetKeyPrefix + ".color.ready_message"));
+                case READY -> drawTextCenteredOver("READY!", x, y, assets.color(assetNamespace + ".color.ready_message"));
                 case GAME_OVER -> {
-                    Color color = assets.color(assetKeyPrefix + ".color.game_over_message");
+                    Color color = assets.color(assetNamespace + ".color.game_over_message");
                     if (demoLevel) {
                         WorldMap worldMap = level.world().map();
                         NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");

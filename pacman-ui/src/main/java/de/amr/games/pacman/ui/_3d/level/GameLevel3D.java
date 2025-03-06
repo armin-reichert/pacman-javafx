@@ -149,22 +149,22 @@ public class GameLevel3D extends Group {
     }
 
     private Pac3D createPac3D(Pac pac) {
-        String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
+        String assetNamespace = context.gameConfiguration().assetNamespace();
         Pac3D pac3D = switch (context.gameConfiguration().gameVariant()) {
-            case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL -> new MsPacMan3D(context.gameVariant(), pac, PAC_SIZE, context.assets(), assetKeyPrefix);
-            case PACMAN, PACMAN_XXL -> new PacMan3D(context.gameVariant(), pac, PAC_SIZE, context.assets(), assetKeyPrefix);
+            case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL -> new MsPacMan3D(context.gameVariant(), pac, PAC_SIZE, context.assets(), assetNamespace);
+            case PACMAN, PACMAN_XXL -> new PacMan3D(context.gameVariant(), pac, PAC_SIZE, context.assets(), assetNamespace);
         };
-        pac3D.shape3D().light().setColor(context.assets().color(assetKeyPrefix + ".pac.color.head").desaturate());
+        pac3D.shape3D().light().setColor(context.assets().color(assetNamespace + ".pac.color.head").desaturate());
         pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
         return pac3D;
     }
 
     private Ghost3DAppearance createGhost3D(Ghost ghost, int numFlashes) {
-        String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
+        String assetNamespace = context.gameConfiguration().assetNamespace();
         Shape3D dressShape    = new MeshView(context.assets().get("model3D.ghost.mesh.dress"));
         Shape3D pupilsShape   = new MeshView(context.assets().get("model3D.ghost.mesh.pupils"));
         Shape3D eyeballsShape = new MeshView(context.assets().get("model3D.ghost.mesh.eyeballs"));
-        return new Ghost3DAppearance(dressShape, pupilsShape, eyeballsShape, context.assets(), assetKeyPrefix,
+        return new Ghost3DAppearance(dressShape, pupilsShape, eyeballsShape, context.assets(), assetNamespace,
             ghost, GHOST_SIZE, numFlashes);
     }
 

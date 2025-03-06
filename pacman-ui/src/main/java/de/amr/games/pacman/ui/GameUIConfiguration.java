@@ -30,6 +30,6 @@ public interface GameUIConfiguration {
     WorldMapColoring worldMapColoring(WorldMap worldMap);
     void createActorAnimations(GameLevel level);
     GameScene selectGameScene(GameContext context);
-    String assetKeyPrefix();
+    String assetNamespace();
     default boolean isGameCanvasDecorated() { return true; }
 }

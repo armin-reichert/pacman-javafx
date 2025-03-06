@@ -467,7 +467,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             //TODO in the original game, the message is draw under the maze image but over the pellets!
             r.drawWorld(context, world, 0,  3 * TS);
             r.drawFood(world);
-            r.drawLevelMessage(context.gameConfiguration().assetKeyPrefix(), level, game.isDemoLevel());
+            r.drawLevelMessage(context.gameConfiguration().assetNamespace(), level, game.isDemoLevel());
         }
 
         context.level().bonus().ifPresent(r::drawBonus);

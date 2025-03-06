@@ -59,7 +59,7 @@ public class ArcadePacMan_GameUIConfig3D implements GameUIConfiguration3D {
     }
 
     @Override
-    public String assetKeyPrefix() {
+    public String assetNamespace() {
         return "pacman";
     }
 
@@ -127,7 +127,7 @@ public class ArcadePacMan_GameUIConfig3D implements GameUIConfiguration3D {
 
     @Override
     public Node createLivesCounterShape(AssetStorage assets) {
-        String akp = assetKeyPrefix();
+        String akp = assetNamespace();
         return PacModel3D.createPacShape(
                 assets.get("model3D.pacman"), 10,
                 assets.color(akp + ".pac.color.head"),

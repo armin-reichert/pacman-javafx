@@ -39,7 +39,7 @@ public class PacManXXL_PacMan_GameUIConfig3D extends PacManXXL_PacMan_GameUIConf
 
     @Override
     public Node createLivesCounterShape(AssetStorage assets) {
-        String akp = assetKeyPrefix();
+        String akp = assetNamespace();
         return PacModel3D.createPacShape(
             assets.get("model3D.pacman"), 10,
             assets.color(akp + ".pac.color.head"),

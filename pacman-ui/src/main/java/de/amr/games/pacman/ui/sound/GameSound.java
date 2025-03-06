@@ -35,7 +35,7 @@ public class GameSound {
     private final BooleanProperty mutedPy = new SimpleBooleanProperty(false);
 
     private GameVariant gameVariant;
-    private String assetKeyPrefix;
+    private String assetNamespace;
     private AssetStorage assets;
 
     private final Map<GameVariant, Map<String, MediaPlayer>> soundsByGameVariant = new HashMap<>();
@@ -49,7 +49,7 @@ public class GameSound {
     private MediaPlayer voice;
 
     private String soundURL(String keySuffix) {
-        String assetKey = assetKeyPrefix + ".audio." + keySuffix;
+        String assetKey = assetNamespace + ".audio." + keySuffix;
         URL url = assets.get(assetKey);
         return url != null ? url.toExternalForm() : null;
     }
@@ -81,9 +81,9 @@ public class GameSound {
         soundsByGameVariant.get(gameVariant).clear();
     }
 
-    public void useSoundsForGameVariant(GameVariant gameVariant, String assetKeyPrefix) {
+    public void useSoundsForGameVariant(GameVariant gameVariant, String assetNamespace) {
         this.gameVariant = assertNotNull(gameVariant);
-        this.assetKeyPrefix = assertNotNull(assetKeyPrefix);
+        this.assetNamespace = assertNotNull(assetNamespace);
         if (soundsByGameVariant.get(gameVariant).isEmpty()) {
             var soundMap = new HashMap<String, MediaPlayer>();
             soundMap.put("game_over",      makeSound("game_over"));
@@ -182,10 +182,10 @@ public class GameSound {
 
     public void playClipIfEnabled(String keySuffix, double volume) {
         assertNotNull(keySuffix);
-        String assetKey = assetKeyPrefix + ".audio." + keySuffix;
-        AudioClip clip = assets.get(assetKey);
+        String key = assetNamespace + ".audio." + keySuffix;
+        AudioClip clip = assets.get(key);
         if (clip == null) {
-            Logger.error("No audio clip with key {}", assetKey);
+            Logger.error("No audio clip with key {}", key);
             return;
         }
         if (isUnMuted() && isEnabled()) {

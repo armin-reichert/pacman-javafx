@@ -41,34 +41,34 @@ public class MsPacMan3D implements Pac3D {
      * @param msPacMan Ms. Pac-Man instance
      * @param size diameter of Pac-Man
      * @param assets asset storage
-     * @param assetKeyPrefix prefix of asse keys (depends on current game variant)
+     * @param assetNamespace prefix of asset keys (depends on current game variant)
      */
-    public MsPacMan3D(GameVariant variant, Pac msPacMan, double size, AssetStorage assets, String assetKeyPrefix) {
+    public MsPacMan3D(GameVariant variant, Pac msPacMan, double size, AssetStorage assets, String assetNamespace) {
         Globals.assertNotNull(variant);
         this.msPacMan = Globals.assertNotNull(msPacMan);
         Globals.assertNotNull(assets);
-        Globals.assertNotNull(assetKeyPrefix);
+        Globals.assertNotNull(assetNamespace);
 
         Model3D model3D = assets.get("model3D.pacman");
 
         shape3D = new PacShape3D(model3D, size,
-            assets.color(assetKeyPrefix + ".pac.color.head"),
-            assets.color(assetKeyPrefix + ".pac.color.palate"));
+            assets.color(assetNamespace + ".pac.color.head"),
+            assets.color(assetNamespace + ".pac.color.palate"));
 
         Group body = PacModel3D.createPacShape(
             model3D, size,
-            assets.color(assetKeyPrefix + ".pac.color.head"),
-            assets.color(assetKeyPrefix + ".pac.color.eyes"),
-            assets.color(assetKeyPrefix + ".pac.color.palate"));
+            assets.color(assetNamespace + ".pac.color.head"),
+            assets.color(assetNamespace + ".pac.color.eyes"),
+            assets.color(assetNamespace + ".pac.color.palate"));
 
         meshViewById(body, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(shape3D.drawModeProperty());
         meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(shape3D.drawModeProperty());
         meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(shape3D.drawModeProperty());
 
         Group femaleParts = PacModel3D.createFemaleParts(size,
-            assets.color(assetKeyPrefix + ".pac.color.hairbow"),
-            assets.color(assetKeyPrefix + ".pac.color.hairbow.pearls"),
-            assets.color(assetKeyPrefix + ".pac.color.boobs"));
+            assets.color(assetNamespace + ".pac.color.hairbow"),
+            assets.color(assetNamespace + ".pac.color.hairbow.pearls"),
+            assets.color(assetNamespace + ".pac.color.boobs"));
 
         shape3D.getChildren().addAll(body, femaleParts);
         createHipSwayingAnimation(shape3D);

@@ -66,8 +66,8 @@ public class PacManGamesUI_3D extends PacManGamesUI {
             () -> {
                 String sceneName = currentGameScene().map(gameScene -> gameScene.getClass().getSimpleName()).orElse(null);
                 String sceneNameText = sceneName != null && PY_DEBUG_INFO_VISIBLE.get() ? " [%s]".formatted(sceneName) : "";
-                String assetKeyPrefix = gameConfiguration().assetKeyPrefix();
-                String key = "app.title." + assetKeyPrefix;
+                String assetNamespace = gameConfiguration().assetNamespace();
+                String key = "app.title." + assetNamespace;
                 if (clock.isPaused()) {
                     key += ".paused";
                 }

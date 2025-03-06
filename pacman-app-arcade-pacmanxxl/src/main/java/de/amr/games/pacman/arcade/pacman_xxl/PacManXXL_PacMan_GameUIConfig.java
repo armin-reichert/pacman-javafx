@@ -106,7 +106,7 @@ public class PacManXXL_PacMan_GameUIConfig implements GameUIConfiguration {
     }
 
     @Override
-    public String assetKeyPrefix() {
+    public String assetNamespace() {
         return "pacman_xxl";
     }
 

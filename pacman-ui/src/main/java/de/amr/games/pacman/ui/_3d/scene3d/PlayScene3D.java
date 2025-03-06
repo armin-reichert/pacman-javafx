@@ -234,8 +234,8 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             scores3D.showScore(score.points(), score.levelNumber());
         }
         else { // when score is disabled, show text "game over"
-            String assetKeyPrefix = context.gameConfiguration().assetKeyPrefix();
-            Color color = context.assets().color(assetKeyPrefix + ".color.game_over_message");
+            String assetNamespace = context.gameConfiguration().assetNamespace();
+            Color color = context.assets().color(assetNamespace + ".color.game_over_message");
             scores3D.showTextAsScore(TEXT_GAME_OVER, color);
         }
     }

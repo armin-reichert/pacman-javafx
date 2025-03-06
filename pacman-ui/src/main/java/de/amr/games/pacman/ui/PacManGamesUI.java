@@ -321,13 +321,13 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         GameModel game = gameController().gameModel(variant);
         game.addGameEventListener(this);
 
-        String assetKeyPrefix = gameConfiguration().assetKeyPrefix();
-        Image icon = assets.image(assetKeyPrefix + ".icon");
+        String assetNamespace = gameConfiguration().assetNamespace();
+        Image icon = assets.image(assetNamespace + ".icon");
         if (icon != null) {
             stage.getIcons().setAll(icon);
         }
         try {
-            sound().useSoundsForGameVariant(variant, gameConfiguration().assetKeyPrefix());
+            sound().useSoundsForGameVariant(variant, gameConfiguration().assetNamespace());
         } catch (Exception x) {
             Logger.error(x);
         }
@@ -338,7 +338,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         stage.titleProperty().bind(Bindings.createStringBinding(
             () -> {
                 // "app.title.pacman" vs. "app.title.pacman.paused"
-                String key = "app.title." + gameConfiguration().assetKeyPrefix();
+                String key = "app.title." + gameConfiguration().assetNamespace();
                 if (clock.isPaused()) { key += ".paused"; }
                 if (currentGameScene().isPresent() && currentGameScene().get() instanceof GameScene2D gameScene2D) {
                     return locText(key, "2D") + " (%.2fx)".formatted(gameScene2D.scaling());
