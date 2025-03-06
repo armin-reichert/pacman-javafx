@@ -19,7 +19,6 @@ import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.GameClockFX;
 import javafx.beans.property.ObjectProperty;
-import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import org.tinylog.Logger;
 
@@ -94,13 +93,13 @@ public interface GameContext {
     }
 
     // Actions
-    default void ifGameActionTriggeredRunIt(GameActionProvider actionProvider) {
+    default void ifTriggeredRunAction(GameActionProvider actionProvider) {
         actionProvider.firstMatchedAction(keyboard())
             .filter(gameAction -> gameAction.isEnabled(this))
             .ifPresent(action -> action.execute(this));
     }
 
-    default void runTriggeredActionOrElse(GameActionProvider actionProvider, Runnable defaultAction) {
+    default void ifTriggeredRunActionElse(GameActionProvider actionProvider, Runnable defaultAction) {
         actionProvider.firstMatchedAction(keyboard())
             .filter(gameAction -> gameAction.isEnabled(this))
             .ifPresentOrElse(action -> action.execute(this), defaultAction);

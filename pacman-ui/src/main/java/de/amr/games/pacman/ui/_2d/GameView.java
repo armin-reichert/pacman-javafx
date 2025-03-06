@@ -302,7 +302,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
 
     @Override
     public void handleInput(GameContext context) {
-        context.runTriggeredActionOrElse(this,
+        context.ifTriggeredRunActionElse(this,
             () -> context.currentGameScene().ifPresent(gameScene -> gameScene.handleInput(context)));
     }
 
