@@ -4,8 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._3d;
 
+import de.amr.games.pacman.ui.DashboardItemID;
 import de.amr.games.pacman.ui.PacManGamesUI;
 import de.amr.games.pacman.ui._2d.GameScene2D;
+import de.amr.games.pacman.ui._3d.dashboard.InfoBox3D;
 import de.amr.games.pacman.uilib.Picker;
 import de.amr.games.pacman.uilib.ResourceManager;
 import de.amr.games.pacman.uilib.Ufx;
@@ -76,6 +78,15 @@ public class PacManGamesUI_3D extends PacManGamesUI {
             },
             clock.pausedPy, gameVariantPy, gameScenePy, gameView.heightProperty(), PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE)
         );
+    }
+
+    @Override
+    public void addDashboardItem(DashboardItemID id) {
+        if (DashboardItemID.SETTINGS_3D == id) {
+            addDashboardItem(DashboardItemID.SETTINGS_3D, locText("infobox.3D_settings.title"), new InfoBox3D());
+        } else {
+            super.addDashboardItem(id);
+        }
     }
 
     @Override

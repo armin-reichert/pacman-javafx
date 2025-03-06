@@ -14,7 +14,9 @@ import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameActionProvider;
 import de.amr.games.pacman.ui.CameraControlledView;
 import de.amr.games.pacman.ui.GameScene;
+import de.amr.games.pacman.ui.dashboard.InfoBox;
 import de.amr.games.pacman.uilib.Ufx;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
@@ -27,7 +29,9 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontSmoothingType;
 import org.tinylog.Logger;
@@ -40,6 +44,8 @@ import java.util.Map;
 import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 import static de.amr.games.pacman.lib.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_DEBUG_INFO_VISIBLE;
+import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_PIP_ON;
 import static de.amr.games.pacman.ui.input.Keyboard.*;
 import static de.amr.games.pacman.uilib.Ufx.*;
 
@@ -51,7 +57,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
     private static final double MAX_SCENE_SCALING = 5;
     private static final int SIMULATION_SPEED_DELTA = 5;
 
-    private final GameAction actionToggleDebugInfo = context -> toggle(GlobalProperties2d.PY_DEBUG_INFO_VISIBLE);
+    private final GameAction actionToggleDebugInfo = context -> toggle(PY_DEBUG_INFO_VISIBLE);
 
     private final GameAction actionShowHelp = context -> showHelp();
 
@@ -107,7 +113,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
         context.sound().playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
     };
 
-    private final GameAction actionToggleDashboard = context -> toggleDashboard();
+    private final GameAction actionToggleDashboard = context -> toggleDashboardVisibility();
 
     private final GameAction actionToggleImmunity = context -> {
         toggle(GlobalProperties2d.PY_IMMUNITY);
@@ -131,27 +137,30 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
     protected final Canvas canvas = new Canvas();
 
     protected BorderPane canvasLayer;
-    protected DashboardLayer dashboardLayer; // dashboard, picture-in-picture view
     protected PopupLayer popupLayer; // help, signature
+    private final BorderPane dashboardLayer = new BorderPane();
 
     protected TooFancyCanvasContainer canvasContainer;
     protected ContextMenu contextMenu;
+
+    private VBox dashboardContainer;
+    private Dashboard dashboard;
+    private final VBox pipContainer = new VBox();
+    private PictureInPictureView pipView;
 
     public GameView(GameContext context, Scene parentScene) {
         this.context = assertNotNull(context);
         this.parentScene = assertNotNull(parentScene);
 
-        bindGameActions();
-
-        setOnContextMenuRequested(this::handleContextMenuRequest);
-
-        //TODO is this the recommended way to close an open context-menu?
-        setOnMouseClicked(e -> { if (contextMenu != null) contextMenu.hide(); });
-
         createCanvasLayer();
         createDashboardLayer();
         createPopupLayer();
         getChildren().addAll(canvasLayer, dashboardLayer, popupLayer);
+
+        bindGameActions();
+        setOnContextMenuRequested(this::handleContextMenuRequest);
+        //TODO is this the recommended way to close an open context-menu?
+        setOnMouseClicked(e -> { if (contextMenu != null) contextMenu.hide(); });
 
         GraphicsContext g = canvas.getGraphicsContext2D();
         g.setFontSmoothingType(FontSmoothingType.GRAY);
@@ -176,7 +185,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
 
         canvasLayer = new BorderPane(canvasContainer);
 
-        GlobalProperties2d.PY_DEBUG_INFO_VISIBLE.addListener((py, ov, debug) -> {
+        PY_DEBUG_INFO_VISIBLE.addListener((py, ov, debug) -> {
             if (debug) {
                 canvasLayer.setBackground(coloredBackground(Color.DARKGREEN));
                 canvasLayer.setBorder(border(Color.LIGHTGREEN, 2));
@@ -187,8 +196,48 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
         });
     }
 
+    //
+    // Dashboard
+    //
+
     private void createDashboardLayer() {
-        dashboardLayer = new DashboardLayer(context);
+        dashboard = new Dashboard(context);
+        dashboardContainer = new VBox();
+
+        pipView = new PictureInPictureView(context);
+        pipContainer.getChildren().setAll(pipView, new HBox());
+
+        dashboardLayer.setLeft(dashboardContainer);
+        dashboardLayer.setRight(pipContainer);
+
+        dashboardLayer.visibleProperty().bind(Bindings.createObjectBinding(
+            () -> dashboardContainer.isVisible() || PY_PIP_ON.get(),
+            dashboardContainer.visibleProperty(), PY_PIP_ON
+        ));
+    }
+
+    public Dashboard dashboard() {
+        return dashboard;
+    }
+
+    public boolean isDashboardOpen() { return dashboardContainer.isVisible(); }
+
+    public void hideDashboard() {
+        dashboardContainer.setVisible(false);
+    }
+
+    public void showDashboard() {
+        dashboardContainer.getChildren().setAll(dashboard.entries()
+            .map(Dashboard.DashboardEntry::infoBox).toArray(InfoBox[]::new));
+        dashboardContainer.setVisible(true);
+    }
+
+    public void toggleDashboardVisibility() {
+        if (dashboardContainer.isVisible()) {
+            hideDashboard();
+        } else {
+            showDashboard();
+        }
     }
 
     private void createPopupLayer() {
@@ -237,7 +286,12 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
     }
 
     public void onTick() {
-        dashboardLayer.update();
+        if (dashboardLayer.isVisible()) {
+            dashboard.entries().map(Dashboard.DashboardEntry::infoBox).filter(InfoBox::isExpanded).forEach(InfoBox::update);
+        }
+        if (pipView.isVisible()) {
+            pipView.draw();
+        }
         context.currentGameScene()
                 .filter(GameScene2D.class::isInstance)
                 .map(GameScene2D.class::cast)
@@ -307,14 +361,6 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
         return context.currentGameScene().map(GameScene2D.class::isInstance).orElse(false);
     }
 
-    public void toggleDashboard() {
-        dashboardLayer.toggleDashboardVisibility();
-    }
-
-    public DashboardLayer dashboardLayer() {
-        return dashboardLayer;
-    }
-
     public void showHelp() {
         if (context.gameVariant() != GameVariant.MS_PACMAN_TENGEN) {
             if (isCurrentGameScene2D()) {
@@ -340,7 +386,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
         context.currentGameScene().ifPresent(this::embedGameScene);
 
         GameScene2D pipGameScene = context.gameConfiguration().createPiPScene(context, canvasContainer().canvas());
-        dashboardLayer().pipView().setScene2D(pipGameScene);
+        pipView.setScene2D(pipGameScene);
 
         Logger.info("Game level {} ({}) created", context.level().number, context.gameVariant());
         Logger.info("Actor animations created");

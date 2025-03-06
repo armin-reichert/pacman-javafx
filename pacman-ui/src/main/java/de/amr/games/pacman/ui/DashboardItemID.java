@@ -5,5 +5,14 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui;
 
 public enum DashboardItemID {
-    README, GENERAL, GAME_CONTROL, GAME_INFO, ACTOR_INFO, KEYBOARD, JOYPAD, ABOUT
+    ABOUT,
+    ACTOR_INFO,
+    CUSTOM_MAPS,
+    GAME_CONTROL,
+    GAME_INFO,
+    GENERAL,
+    JOYPAD,
+    KEYBOARD,
+    README,
+    SETTINGS_3D
 }

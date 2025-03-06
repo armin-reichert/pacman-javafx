@@ -18,10 +18,9 @@ import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameConfig3D;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.games.pacman.ui.DashboardItemID;
-import de.amr.games.pacman.ui.dashboard.InfoBoxCustomMaps;
 import de.amr.games.pacman.ui._2d.StartPage;
 import de.amr.games.pacman.ui._3d.PacManGamesUI_3D;
-import de.amr.games.pacman.ui._3d.dashboard.InfoBox3D;
+import de.amr.games.pacman.ui.dashboard.InfoBoxCustomMaps;
 import de.amr.games.pacman.uilib.model3D.Model3D;
 import javafx.application.Application;
 import javafx.geometry.Dimension2D;
@@ -81,18 +80,21 @@ public class PacManGames3dApp extends Application {
 
         ui.create(stage, initialSize());
 
-        ui.addDashboardItem(DashboardItemID.README);
-        ui.addDashboardItem(DashboardItemID.GENERAL);
-        ui.addDashboardItem(DashboardItemID.GAME_CONTROL);
-        ui.addDashboardItem(ui.locText("infobox.3D_settings.title"), new InfoBox3D());
-        ui.addDashboardItem(DashboardItemID.GAME_INFO);
-        ui.addDashboardItem(DashboardItemID.ACTOR_INFO);
-        InfoBoxCustomMaps infoBoxCustomMaps = new InfoBoxCustomMaps();
+        ui.addDashboardItems(
+            DashboardItemID.README,
+            DashboardItemID.GENERAL,
+            DashboardItemID.GAME_CONTROL,
+            DashboardItemID.SETTINGS_3D,
+            DashboardItemID.GAME_INFO,
+            DashboardItemID.ACTOR_INFO,
+            DashboardItemID.CUSTOM_MAPS,
+            DashboardItemID.JOYPAD,
+            DashboardItemID.KEYBOARD,
+            DashboardItemID.ABOUT
+        );
+
+        InfoBoxCustomMaps infoBoxCustomMaps = ui.getDashboardItem(DashboardItemID.CUSTOM_MAPS);
         infoBoxCustomMaps.getMapsTableView().setItems(xxlMapSelector.customMaps());
-        ui.addDashboardItem(ui.locText("infobox.custom_maps.title"), infoBoxCustomMaps);
-        ui.addDashboardItem(DashboardItemID.JOYPAD);
-        ui.addDashboardItem(DashboardItemID.KEYBOARD);
-        ui.addDashboardItem(DashboardItemID.ABOUT);
 
         ui.addStartPage(GameVariant.PACMAN,           new ArcadePacMan_StartPage(ui));
         ui.addStartPage(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_StartPage(ui));
@@ -110,6 +112,7 @@ public class PacManGames3dApp extends Application {
                 Font.class, "fonts",
                 Color.class, "colors",
                 AudioClip.class, "audio clips")));
+
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
     }
 

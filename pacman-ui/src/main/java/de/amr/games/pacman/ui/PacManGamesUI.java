@@ -315,23 +315,28 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     public void addDashboardItem(DashboardItemID id) {
         switch (id) {
+            case ABOUT        -> addDashboardItem(id, locText("infobox.about.title"),              new InfoBoxAbout());
+            case ACTOR_INFO   -> addDashboardItem(id, locText("infobox.actor_info.title"),         new InfoBoxActorInfo());
+            case CUSTOM_MAPS  -> addDashboardItem(id, locText("infobox.custom_maps.title"),        new InfoBoxCustomMaps());
+            case GENERAL      -> addDashboardItem(id, locText("infobox.general.title"),            new InfoBoxGeneral());
+            case GAME_CONTROL -> addDashboardItem(id, locText("infobox.game_control.title"),       new InfoBoxGameControl());
+            case GAME_INFO    -> addDashboardItem(id, locText("infobox.game_info.title"),          new InfoBoxGameInfo());
+            case JOYPAD       -> addDashboardItem(id, locText("infobox.joypad.title"),             new InfoBoxJoypad());
+            case KEYBOARD     -> addDashboardItem(id, locText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
             case README -> {
                 InfoBox readMeBox = new InfoBoxReadmeFirst();
                 readMeBox.setExpanded(true);
-                addDashboardItem(locText("infobox.readme.title"), readMeBox);
+                addDashboardItem(id, locText("infobox.readme.title"), readMeBox);
             }
-            case GENERAL -> addDashboardItem(locText("infobox.general.title"), new InfoBoxGeneral());
-            case GAME_CONTROL -> addDashboardItem(locText("infobox.game_control.title"), new InfoBoxGameControl());
-            case GAME_INFO -> addDashboardItem(locText("infobox.game_info.title"), new InfoBoxGameInfo());
-            case ACTOR_INFO -> addDashboardItem(locText("infobox.actor_info.title"), new InfoBoxActorInfo());
-            case KEYBOARD -> addDashboardItem(locText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
-            case JOYPAD -> addDashboardItem(locText("infobox.joypad.title"), new InfoBoxJoypad());
-            case ABOUT -> addDashboardItem(locText("infobox.about.title"), new InfoBoxAbout());
         }
     }
 
-    public void addDashboardItem(String title, InfoBox infoBox) {
-        gameView.dashboardLayer().addDashboardItem(title, infoBox);
+    public void addDashboardItem(DashboardItemID id, String title, InfoBox infoBox) {
+        gameView.dashboard().addDashboardItem(id, title, infoBox);
+    }
+
+    public <I extends InfoBox> I getDashboardItem(DashboardItemID id) {
+        return gameView.dashboard().getItem(id);
     }
 
     protected void handleGameVariantChange(GameVariant variant) {
@@ -559,7 +564,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     public void showStartView() {
         clock.stop();
         gameScenePy.set(null);
-        gameView.dashboardLayer().hideDashboard(); // TODO binding?
+        gameView.hideDashboard(); // TODO binding?
         sceneRoot.setBackground(assets.get("scene_background"));
         startPageSelectionView.currentSlide().ifPresent(Node::requestFocus);
         showView(startPageSelectionView);

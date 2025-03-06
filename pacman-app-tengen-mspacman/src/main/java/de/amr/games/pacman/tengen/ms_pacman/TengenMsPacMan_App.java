@@ -9,7 +9,6 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.DashboardItemID;
 import de.amr.games.pacman.ui._3d.PacManGamesUI_3D;
-import de.amr.games.pacman.ui._3d.dashboard.InfoBox3D;
 import javafx.application.Application;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
@@ -41,15 +40,18 @@ public class TengenMsPacMan_App extends Application {
         ui.create(stage, initialSize());
         ui.addStartPage(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_StartPage(ui));
 
-        ui.addDashboardItem(DashboardItemID.README);
-        ui.addDashboardItem(DashboardItemID.GENERAL);
-        ui.addDashboardItem(DashboardItemID.GAME_CONTROL);
-        ui.addDashboardItem(ui.locText("infobox.3D_settings.title"), new InfoBox3D());
-        ui.addDashboardItem(DashboardItemID.GAME_INFO);
-        ui.addDashboardItem(DashboardItemID.ACTOR_INFO);
-        ui.addDashboardItem(DashboardItemID.JOYPAD);
-        ui.addDashboardItem(DashboardItemID.KEYBOARD);
-        ui.addDashboardItem(DashboardItemID.ABOUT);
+        ui.addDashboardItems(
+            DashboardItemID.README,
+            DashboardItemID.GENERAL,
+            DashboardItemID.GAME_CONTROL,
+            DashboardItemID.SETTINGS_3D,
+            DashboardItemID.GAME_INFO,
+            DashboardItemID.ACTOR_INFO,
+            DashboardItemID.JOYPAD,
+            DashboardItemID.KEYBOARD,
+            DashboardItemID.ABOUT
+        );
+
         ui.show();
     }
 
