@@ -16,6 +16,8 @@ import de.amr.games.pacman.uilib.Carousel;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.layout.Background;
+import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.HashMap;

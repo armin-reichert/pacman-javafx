@@ -27,9 +27,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
@@ -172,19 +174,13 @@ public class PacManGamesUI implements GameEventListener, GameContext {
      */
     public void create(Stage stage, Dimension2D initialSize) {
         this.stage = assertNotNull(stage);
-        assertNotNull(initialSize);
-
-        mainScene = createMainScene(initialSize);
-
+        mainScene = createMainScene(assertNotNull(initialSize));
         startPageSelectionView = new StartPageSelectionView(this);
-
+        startPagesCarousel().setBackground(assets.background("scene_background"));
         createGameView(mainScene);
-
         clock.setPauseableCallback(this::runIfNotPausedOnEveryTick);
         clock.setPermanentCallback(this::runOnEveryTick);
-
         selectGameVariant(gameController().currentGameVariant());
-
         bindStageTitle();
         stage.setScene(mainScene);
         //TODO This doesn't fit for NES aspect ratio
@@ -265,12 +261,16 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         StackPane.setAlignment(pauseIcon, Pos.CENTER);
 
         sceneRoot.getChildren().addAll(new Pane(), flashMessageOverlay, pauseIcon, iconPane);
+        sceneRoot.setBackground(assets.get("scene_background"));
+        sceneRoot.backgroundProperty().bind(gameScenePy.map(
+            gameScene -> currentGameSceneHasID("PlayScene3D")
+                ? assets.get("play_scene3d_background")
+                : assets.get("scene_background"))
+        );
 
         Scene mainScene = new Scene(sceneRoot, size.getWidth(), size.getHeight());
-
         mainScene.addEventFilter(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
         mainScene.addEventFilter(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
-
         // Global keyboard shortcuts
         mainScene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.F11) {
@@ -322,7 +322,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         game.addGameEventListener(this);
 
         String assetKeyPrefix = gameConfiguration().assetKeyPrefix();
-        sceneRoot.setBackground(assets.get("scene_background"));
         Image icon = assets.image(assetKeyPrefix + ".icon");
         if (icon != null) {
             stage.getIcons().setAll(icon);
@@ -373,10 +372,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
                 gameScenePy.set(nextGameScene);
                 Logger.info("Game scene is now: {}", nextGameScene.displayName());
             }
-
-            sceneRoot.setBackground(currentGameSceneHasID("PlayScene3D")
-                ? assets.get("play_scene3d_background")
-                : assets.get("scene_background"));
         }
     }
 
@@ -540,8 +535,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     public void showStartView() {
         clock.stop();
         gameScenePy.set(null);
-        gameView.hideDashboard(); // TODO binding?
-        sceneRoot.setBackground(assets.get("scene_background"));
+        gameView.hideDashboard(); // TODO use binding?
         startPageSelectionView.currentSlide().ifPresent(Node::requestFocus);
         showView(startPageSelectionView);
     }
@@ -570,6 +564,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         Logger.trace("Received: {}", event);
         // call event specific hook method:
         GameEventListener.super.onGameEvent(event);
+        //TODO this looks like crap
         if (viewPy.get() == gameView) {
             updateGameScene(false);
         }
