@@ -153,7 +153,9 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
 
         createCanvasLayer();
         createDashboardLayer();
-        createPopupLayer();
+
+        popupLayer = new PopupLayer(context, canvasContainer);
+        popupLayer.setMouseTransparent(true);
 
         getChildren().addAll(canvasLayer, dashboardLayer, popupLayer);
 
@@ -196,11 +198,6 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
         PY_CANVAS_FONT_SMOOTHING.addListener((py, ov, smooth) -> g.setFontSmoothingType(
                 smooth ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
         PY_CANVAS_IMAGE_SMOOTHING.addListener((py, ov, smooth) -> g.setImageSmoothing(smooth));
-    }
-
-    private void createPopupLayer() {
-        popupLayer = new PopupLayer(context, canvasContainer);
-        popupLayer.setMouseTransparent(true);
     }
 
     //
