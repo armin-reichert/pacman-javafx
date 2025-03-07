@@ -49,9 +49,35 @@ public class PacManXXL_MapSelector implements MapSelector {
     }
 
     @Override
+    public void loadCustomMaps(GameModel game) {
+        File[] mapFiles = CUSTOM_MAP_DIR.listFiles((dir, name) -> name.endsWith(".world"));
+        if (mapFiles == null) {
+            Logger.error("An error occurred accessing custom map directory {}", CUSTOM_MAP_DIR);
+            return;
+        }
+        if (mapFiles.length == 0) {
+            Logger.info("No custom maps found");
+        } else {
+            Logger.info("{} custom map(s) found", mapFiles.length);
+        }
+        customMapsByFile.clear();
+        for (File mapFile : mapFiles) {
+            try {
+                WorldMap worldMap = new WorldMap(mapFile);
+                customMapsByFile.add(worldMap);
+                Logger.info("Custom map loaded from file {}", mapFile);
+            } catch (IOException x) {
+                Logger.error(x);
+                Logger.error("Could not read custom map from file {}", mapFile);
+            }
+        }
+        game.publishGameEvent(GameEventType.CUSTOM_MAPS_CHANGED);
+    }
+
+    @Override
     public void loadAllMaps(GameModel game) {
         builtinMaps = loadMapsFromModule("maps/masonic_%d.world", 8);
-        updateCustomMaps(game);
+        loadCustomMaps(game);
     }
 
     @Override
@@ -89,34 +115,6 @@ public class PacManXXL_MapSelector implements MapSelector {
 
     public MapSelectionMode mapSelectionMode() {
         return mapSelectionMode;
-    }
-
-    public void updateCustomMaps(GameModel game) {
-        if (mapSelectionMode == MapSelectionMode.NO_CUSTOM_MAPS) {
-            return;
-        }
-        File[] mapFiles = CUSTOM_MAP_DIR.listFiles((dir, name) -> name.endsWith(".world"));
-        if (mapFiles == null) {
-            Logger.error("An error occurred accessing custom map directory {}", CUSTOM_MAP_DIR);
-            return;
-        }
-        if (mapFiles.length == 0) {
-            Logger.info("No custom maps found");
-        } else {
-            Logger.info("{} custom map(s) found", mapFiles.length);
-        }
-        customMapsByFile.clear();
-        for (File mapFile : mapFiles) {
-            try {
-                WorldMap worldMap = new WorldMap(mapFile);
-                customMapsByFile.add(worldMap);
-                Logger.info("Custom map loaded from file {}", mapFile);
-            } catch (IOException x) {
-                Logger.error(x);
-                Logger.error("Could not read custom map from file {}", mapFile);
-            }
-        }
-        game.publishGameEvent(GameEventType.CUSTOM_MAPS_CHANGED);
     }
 
     private Map<String, String> randomMapColoring() {

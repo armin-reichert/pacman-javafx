@@ -29,6 +29,9 @@ public class ArcadePacMan_MapSelector implements MapSelector {
     }
 
     @Override
+    public void loadCustomMaps(GameModel game) {}
+
+    @Override
     public void loadAllMaps(GameModel game) {
         if (map != null) {
             return; // avoid loading map again

@@ -55,13 +55,16 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
 
     private void initMenuState() {
         switch (ui.gameVariant()) {
-            case MS_PACMAN_XXL, PACMAN_XXL -> menu.setState(
-                GlobalProperties3d.PY_3D_ENABLED.get(),
-                ui.gameVariant(),
-                ui.game().isCutScenesEnabled(),
-                ui.game().mapSelector().mapSelectionMode(),
-                !ui.game().mapSelector().customMaps().isEmpty()
-            );
+            case MS_PACMAN_XXL, PACMAN_XXL -> {
+                ui.game().mapSelector().loadAllMaps(ui.game());
+                menu.setState(
+                    GlobalProperties3d.PY_3D_ENABLED.get(),
+                    ui.gameVariant(),
+                    ui.game().isCutScenesEnabled(),
+                    ui.game().mapSelector().mapSelectionMode(),
+                    !ui.game().mapSelector().customMaps().isEmpty()
+                );
+            }
             default -> throw new IllegalStateException();
         }
     }
@@ -69,8 +72,6 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
     @Override
     public void requestFocus() {
         menu.root().requestFocus();
-        //TODO check this:
-        ui.game().mapSelector().loadAllMaps(ui.game());
         initMenuState();
     }
 

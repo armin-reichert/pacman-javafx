@@ -43,11 +43,14 @@ public interface MapSelector {
 
     default void setMapSelectionMode(MapSelectionMode mode) {}
 
-    void loadAllMaps(GameModel game);
-
     WorldMap selectWorldMap(int levelNumber);
+
 
     List<WorldMap> builtinMaps();
 
     List<WorldMap> customMaps();
+
+    void loadCustomMaps(GameModel game);
+
+    void loadAllMaps(GameModel game);
 }

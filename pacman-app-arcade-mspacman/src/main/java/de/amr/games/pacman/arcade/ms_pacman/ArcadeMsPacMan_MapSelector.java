@@ -27,6 +27,9 @@ public class ArcadeMsPacMan_MapSelector implements MapSelector {
     }
 
     @Override
+    public void loadCustomMaps(GameModel game) {}
+
+    @Override
     public void loadAllMaps(GameModel game) {
         maps = FXCollections.observableList(loadMapsFromModule("maps/mspacman_%d.world", 4));
     }

@@ -44,6 +44,9 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
     }
 
     @Override
+    public void loadCustomMaps(GameModel game) {}
+
+    @Override
     public void loadAllMaps(GameModel game) {
         mapRepository.put(MapCategory.ARCADE,  createMaps(MAPS_ROOT + "arcade%d.world", 4));
         mapRepository.put(MapCategory.MINI,    createMaps(MAPS_ROOT + "mini%d.world", 6));
