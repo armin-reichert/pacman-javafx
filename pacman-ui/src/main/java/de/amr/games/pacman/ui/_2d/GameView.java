@@ -202,7 +202,12 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
         canvasContainer.setUnscaledCanvasWidth(ARCADE_MAP_SIZE_IN_PIXELS.x());
         canvasContainer.setUnscaledCanvasHeight(ARCADE_MAP_SIZE_IN_PIXELS.y());
         canvasContainer.setBorderColor(Color.valueOf(Arcade.Palette.WHITE));
-        canvasContainer.decorationEnabledPy.addListener((py, ov, nv) -> embedGameScene(gameScenePy.get()));
+        canvasContainer.decorationEnabledPy.addListener((py, ov, nv) -> {
+            GameScene gameScene = gameScenePy.get();
+            if (gameScene != null) {
+                embedGameScene(gameScene); //TODO check this
+            }
+        });
 
         canvasLayer = new BorderPane(canvasContainer);
 
@@ -352,9 +357,8 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
     }
 
     public void embedGameScene(GameScene gameScene) {
-        // new switch!
+        assertNotNull(gameScene);
         switch (gameScene) {
-            case null -> Logger.error("No game scene to embed");
             case CameraControlledView cameraControlledView -> {
                 getChildren().set(0, cameraControlledView.viewPort());
                 cameraControlledView.viewPortWidthProperty().bind(parentScene.widthProperty());

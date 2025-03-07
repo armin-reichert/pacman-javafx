@@ -54,15 +54,6 @@ import static de.amr.games.pacman.uilib.Ufx.createIcon;
  */
 public class PacManGamesUI implements GameEventListener, GameContext {
 
-    protected final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>() {
-        @Override
-        protected void invalidated() {
-            GameVariant gameVariant = get();
-            Logger.info("Game variant changed to {}", gameVariant);
-            handleGameVariantChange(gameVariant);
-        }
-    };
-
     protected final GameAction actionOpenEditorView = new GameAction() {
         @Override
         public void execute(GameContext context) {
@@ -82,14 +73,25 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         }
     };
 
+    protected final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>() {
+        @Override
+        protected void invalidated() {
+            GameVariant gameVariant = get();
+            Logger.info("Game variant changed to {}", gameVariant);
+            handleGameVariantChange(gameVariant);
+        }
+    };
+
+    protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
+
     protected final ObjectProperty<Node> viewPy = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
             Node view = get();
             view.requestFocus();
+            Logger.info("Request focus for view {}", view);
         }
     };
-    protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
 
     protected final Map<GameVariant, GameUIConfiguration> uiConfigByVariant = new EnumMap<>(GameVariant.class);
     protected final Keyboard keyboard = new Keyboard();
