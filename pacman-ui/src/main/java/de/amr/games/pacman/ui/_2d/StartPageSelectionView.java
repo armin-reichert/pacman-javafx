@@ -59,10 +59,10 @@ public class StartPageSelectionView extends Carousel implements GameActionProvid
 
     @Override
     public void bindGameActions() {
-        bind(context -> showPreviousSlide(), naked(KeyCode.LEFT));
-        bind(context -> showNextSlide(), naked(KeyCode.RIGHT));
-        bind(actionSelectGamePage, naked(KeyCode.ENTER));
-        bind(GameActions2D.TOGGLE_PAUSED, KeyCode.P);
+        bind(context -> showPreviousSlide(), KeyCode.LEFT);
+        bind(context -> showNextSlide(),     KeyCode.RIGHT);
+        bind(actionSelectGamePage,           KeyCode.ENTER);
+        bind(GameActions2D.TOGGLE_PAUSED,    KeyCode.P);
     }
 
     public void addStartPage(GameVariant gameVariant, StartPage startPage) {
