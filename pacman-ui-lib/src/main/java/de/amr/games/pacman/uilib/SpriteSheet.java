@@ -19,14 +19,6 @@ public interface SpriteSheet {
         return areas;
     }
 
-    static ImageArea imageArea(Image sourceImage, int x, int y, int width, int height) {
-        return new ImageArea(sourceImage, new RectArea(x, y, width, height));
-    }
-
-    default ImageArea imageArea(int x, int y, int width, int height) {
-        return imageArea(sourceImage(), x, y, width, height);
-    }
-
     RectArea NO_SPRITE  = RectArea.PIXEL;
 
     Image sourceImage();
