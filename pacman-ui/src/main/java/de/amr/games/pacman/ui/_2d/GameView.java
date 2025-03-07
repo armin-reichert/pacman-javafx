@@ -345,8 +345,11 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
     }
 
     protected List<MenuItem> createContextMenuItems(ContextMenuEvent event) {
-        var menuItems = new ArrayList<>(gameScenePy.get().supplyContextMenuItems(event));
-        if (actionToOpenEditor != null) {
+        GameScene gameScene = gameScenePy.get();
+        var menuItems = new ArrayList<>(gameScene.supplyContextMenuItems(event));
+        if (actionToOpenEditor != null
+                && (context.currentGameSceneHasID("PlayScene2D") || context.currentGameSceneHasID("PlayScene3D"))
+                && (context.gameVariant() == GameVariant.MS_PACMAN_XXL || context.gameVariant() == GameVariant.PACMAN_XXL)) {
             menuItems.add(new SeparatorMenuItem());
             var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
             miOpenMapEditor.setOnAction(ae -> actionToOpenEditor.execute(context));
