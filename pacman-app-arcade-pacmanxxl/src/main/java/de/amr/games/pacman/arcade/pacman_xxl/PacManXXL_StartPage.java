@@ -69,6 +69,8 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
     @Override
     public void requestFocus() {
         menu.root().requestFocus();
+        //TODO check this:
+        ui.game().mapSelector().loadAllMaps(ui.game());
         initMenuState();
     }
 
