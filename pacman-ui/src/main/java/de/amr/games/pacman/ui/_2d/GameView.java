@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameVariant;
@@ -39,37 +40,39 @@ import java.util.Map;
 
 import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 import static de.amr.games.pacman.lib.Globals.assertNotNull;
+import static de.amr.games.pacman.lib.Globals.clamp;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
 import static de.amr.games.pacman.ui.input.Keyboard.*;
 import static de.amr.games.pacman.uilib.Ufx.*;
 
 /**
- * @author Armin Reichert
+ * This view shows the game play and the overlays like dashboard and picture-in-picture view of the running play scene.
  */
 public class GameView extends StackPane implements GameActionProvider, GameEventListener {
 
     private static final double MAX_SCENE_SCALING = 5;
-    private static final int SIMULATION_SPEED_DELTA = 5;
 
-    private final GameAction actionToggleDebugInfo = context -> toggle(PY_DEBUG_INFO_VISIBLE);
+    private static final int SIMULATION_SPEED_DELTA = 2;
+    private static final int SIMULATION_SPEED_MIN   = 10;
+    private static final int SIMULATION_SPEED_MAX   = 240;
 
     private final GameAction actionShowHelp = context -> showHelp();
 
     private final GameAction actionSimulationSpeedSlower = context -> {
         double newRate = context.gameClock().getTargetFrameRate() - SIMULATION_SPEED_DELTA;
-        if (newRate > 0) {
-            context.gameClock().setTargetFrameRate(newRate);
-            context.showFlashMessageSec(0.75, newRate + "Hz");
-        }
+        newRate = clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
+        context.gameClock().setTargetFrameRate(newRate);
+        String prefix = newRate == SIMULATION_SPEED_MIN ? "At minimum speed: " : "";
+        context.showFlashMessageSec(0.75, prefix + newRate + "Hz");
     };
 
     private final GameAction actionSimulationSpeedFaster = context -> {
         double newRate = context.gameClock().getTargetFrameRate() + SIMULATION_SPEED_DELTA;
-        if (newRate > 0) {
-            context.gameClock().setTargetFrameRate(newRate);
-            context.showFlashMessageSec(0.75, newRate + "Hz");
-        }
+        newRate = clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
+        context.gameClock().setTargetFrameRate(newRate);
+        String prefix = newRate == SIMULATION_SPEED_MAX ? "At maximum speed: " : "";
+        context.showFlashMessageSec(0.75, prefix + newRate + "Hz");
     };
 
     private final GameAction actionSimulationSpeedReset = context -> {
@@ -109,6 +112,8 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
     };
 
     private final GameAction actionToggleDashboard = context -> toggleDashboardVisibility();
+
+    private final GameAction actionToggleDebugInfo = context -> toggle(PY_DEBUG_INFO_VISIBLE);
 
     private final GameAction actionToggleImmunity = context -> {
         toggle(GlobalProperties2d.PY_IMMUNITY);
