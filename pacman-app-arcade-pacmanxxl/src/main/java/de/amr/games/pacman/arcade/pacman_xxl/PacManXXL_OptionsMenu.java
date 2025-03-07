@@ -127,12 +127,17 @@ public class PacManXXL_OptionsMenu {
         {
             @Override
             protected void onValueChange(int index) {
-                state.mapSelectionMode = selectedValue();
+                if (enabled) {
+                    state.mapSelectionMode = selectedValue();
+                }
                 logMenuState();
             }
 
             @Override
             public String selectedValueText() {
+                if (!enabled) {
+                    return "NO CUSTOM MAPS!";
+                }
                 return switch (selectedValue()) {
                     case CUSTOM_MAPS_FIRST -> "CUSTOM MAPS FIRST";
                     case ALL_RANDOM -> "RANDOM ORDER";
@@ -155,7 +160,8 @@ public class PacManXXL_OptionsMenu {
         return menu.root();
     }
 
-    public void setState(boolean play3D, GameVariant gameVariant, boolean cutScenesEnabled, MapSelectionMode mapSelectionMode) {
+    public void setState(boolean play3D, GameVariant gameVariant, boolean cutScenesEnabled,
+                         MapSelectionMode mapSelectionMode, boolean customMapsExist) {
         state.play3D = play3D;
         state.gameVariant = gameVariant;
         state.cutScenesEnabled = cutScenesEnabled;
@@ -165,6 +171,7 @@ public class PacManXXL_OptionsMenu {
         entryGameVariant.selectValue(gameVariant);
         entryCutScenesEnabled.selectValue(cutScenesEnabled);
         entryMapSelectionMode.selectValue(mapSelectionMode);
+        entryMapSelectionMode.setEnabled(customMapsExist);
 
         logMenuState();
     }

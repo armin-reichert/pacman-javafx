@@ -25,11 +25,13 @@ import static de.amr.games.pacman.lib.Globals.*;
 public class OptionMenu {
 
     public static abstract class MenuEntry<T> {
+        protected boolean enabled;
         protected final String text;
         protected List<T> values;
         protected int selectedIndex;
 
         public MenuEntry(String text, List<T> values) {
+            enabled = true;
             this.text = assertNotNull(text);
             assertNotNull(values);
             if (values.isEmpty()) {
@@ -37,6 +39,10 @@ public class OptionMenu {
             }
             this.values = new ArrayList<>(values);
             this.selectedIndex = 0;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
         }
 
         public int selectedIndex() { return selectedIndex; }
@@ -83,6 +89,7 @@ public class OptionMenu {
     private Paint titleTextFill = Color.GREEN;
     private Paint entryTextFill = Color.YELLOW;
     private Paint entryValueFill = Color.WHITESMOKE;
+    private Paint entryValueDisabledFill = Color.GRAY;
     private Paint hintTextFill = Color.YELLOW;
 
     public OptionMenu(float height) {
@@ -160,6 +167,10 @@ public class OptionMenu {
         this.entryValueFill = entryValueFill;
     }
 
+    public void setEntryValueDisabledFill(Paint entryValueDisabledFill) {
+        this.entryValueDisabledFill = entryValueDisabledFill;
+    }
+
     public void setHintTextFill(Paint hintTextFill) {
         this.hintTextFill = hintTextFill;
     }
@@ -195,7 +206,7 @@ public class OptionMenu {
             }
             g.setFill(entryTextFill);
             g.fillText(entry.text, 3 * TS, y);
-            g.setFill(entryValueFill);
+            g.setFill(entry.enabled ? entryValueFill : entryValueDisabledFill);
             g.fillText(entry.selectedValueText(), 17 * TS, y);
         }
 

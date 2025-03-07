@@ -59,7 +59,8 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
                 GlobalProperties3d.PY_3D_ENABLED.get(),
                 ui.gameVariant(),
                 ui.game().isCutScenesEnabled(),
-                ui.game().mapSelector().mapSelectionMode()
+                ui.game().mapSelector().mapSelectionMode(),
+                !ui.game().mapSelector().customMaps().isEmpty()
             );
             default -> throw new IllegalStateException();
         }
