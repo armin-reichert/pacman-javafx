@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameVariant;
@@ -138,7 +137,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
 
     protected BorderPane canvasLayer;
     protected PopupLayer popupLayer; // help, signature
-    private final BorderPane dashboardLayer = new BorderPane();
+    protected final BorderPane dashboardLayer = new BorderPane();
 
     protected TooFancyCanvasContainer canvasContainer;
     protected ContextMenu contextMenu;
@@ -155,48 +154,13 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
         createCanvasLayer();
         createDashboardLayer();
         createPopupLayer();
+
         getChildren().addAll(canvasLayer, dashboardLayer, popupLayer);
 
-        bindGameActions();
         setOnContextMenuRequested(this::handleContextMenuRequest);
         //TODO is this the recommended way to close an open context-menu?
         setOnMouseClicked(e -> { if (contextMenu != null) contextMenu.hide(); });
-
-        GraphicsContext g = canvas.getGraphicsContext2D();
-        g.setFontSmoothingType(FontSmoothingType.GRAY);
-        g.setImageSmoothing(false);
-        PY_CANVAS_FONT_SMOOTHING.addListener(
-            (py, ov, smooth) -> g.setFontSmoothingType(smooth ? FontSmoothingType.LCD : FontSmoothingType.GRAY
-        ));
-        PY_CANVAS_IMAGE_SMOOTHING.addListener(
-            (py, ov, smooth) -> g.setImageSmoothing(smooth)
-        );
-    }
-
-    public void addDashboardItems(DashboardItemID... ids) {
-        for (var id : ids) addDashboardItem(id);
-    }
-
-    public void addDashboardItem(DashboardItemID id) {
-        switch (id) {
-            case ABOUT        -> addDashboardItem(id, context.locText("infobox.about.title"),              new InfoBoxAbout());
-            case ACTOR_INFO   -> addDashboardItem(id, context.locText("infobox.actor_info.title"),         new InfoBoxActorInfo());
-            case CUSTOM_MAPS  -> addDashboardItem(id, context.locText("infobox.custom_maps.title"),        new InfoBoxCustomMaps());
-            case GENERAL      -> addDashboardItem(id, context.locText("infobox.general.title"),            new InfoBoxGeneral());
-            case GAME_CONTROL -> addDashboardItem(id, context.locText("infobox.game_control.title"),       new InfoBoxGameControl());
-            case GAME_INFO    -> addDashboardItem(id, context.locText("infobox.game_info.title"),          new InfoBoxGameInfo());
-            case JOYPAD       -> addDashboardItem(id, context.locText("infobox.joypad.title"),             new InfoBoxJoypad());
-            case KEYBOARD     -> addDashboardItem(id, context.locText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
-            case README -> {
-                InfoBox readMeBox = new InfoBoxReadmeFirst();
-                readMeBox.setExpanded(true);
-                addDashboardItem(id, context.locText("infobox.readme.title"), readMeBox);
-            }
-        }
-    }
-
-    public void addDashboardItem(DashboardItemID id, String title, InfoBox infoBox) {
-        dashboard.addDashboardItem(id, title, infoBox);
+        bindGameActions();
     }
 
     public ObjectProperty<GameScene> gameSceneProperty() { return gameScenePy; }
@@ -225,11 +189,49 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
                 canvasLayer.setBorder(null);
             }
         });
+
+        GraphicsContext g = canvas.getGraphicsContext2D();
+        g.setFontSmoothingType(FontSmoothingType.GRAY);
+        g.setImageSmoothing(false);
+        PY_CANVAS_FONT_SMOOTHING.addListener((py, ov, smooth) -> g.setFontSmoothingType(
+                smooth ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
+        PY_CANVAS_IMAGE_SMOOTHING.addListener((py, ov, smooth) -> g.setImageSmoothing(smooth));
+    }
+
+    private void createPopupLayer() {
+        popupLayer = new PopupLayer(context, canvasContainer);
+        popupLayer.setMouseTransparent(true);
     }
 
     //
     // Dashboard
     //
+
+    public void addDashboardItems(DashboardItemID... ids) {
+        for (var id : ids) addDashboardItem(id);
+    }
+
+    public void addDashboardItem(DashboardItemID id) {
+        switch (id) {
+            case ABOUT        -> addDashboardItem(id, context.locText("infobox.about.title"),              new InfoBoxAbout());
+            case ACTOR_INFO   -> addDashboardItem(id, context.locText("infobox.actor_info.title"),         new InfoBoxActorInfo());
+            case CUSTOM_MAPS  -> addDashboardItem(id, context.locText("infobox.custom_maps.title"),        new InfoBoxCustomMaps());
+            case GENERAL      -> addDashboardItem(id, context.locText("infobox.general.title"),            new InfoBoxGeneral());
+            case GAME_CONTROL -> addDashboardItem(id, context.locText("infobox.game_control.title"),       new InfoBoxGameControl());
+            case GAME_INFO    -> addDashboardItem(id, context.locText("infobox.game_info.title"),          new InfoBoxGameInfo());
+            case JOYPAD       -> addDashboardItem(id, context.locText("infobox.joypad.title"),             new InfoBoxJoypad());
+            case KEYBOARD     -> addDashboardItem(id, context.locText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
+            case README -> {
+                InfoBox readMeBox = new InfoBoxReadmeFirst();
+                readMeBox.setExpanded(true);
+                addDashboardItem(id, context.locText("infobox.readme.title"), readMeBox);
+            }
+        }
+    }
+
+    public void addDashboardItem(DashboardItemID id, String title, InfoBox infoBox) {
+        dashboard.addDashboardItem(id, title, infoBox);
+    }
 
     private void createDashboardLayer() {
         dashboard = new Dashboard(context);
@@ -269,14 +271,6 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
         } else {
             showDashboard();
         }
-    }
-
-    private void createPopupLayer() {
-        popupLayer = new PopupLayer(context, canvasContainer);
-        popupLayer.setMouseTransparent(true);
-        popupLayer.sign(canvasContainer,
-            context.assets().font("font.monospaced", 8), Color.LIGHTGRAY,
-            context.locText("app.signature"));
     }
 
     @Override
