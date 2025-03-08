@@ -76,7 +76,9 @@ public class PacManXXL_MapSelector implements MapSelector {
 
     @Override
     public void loadAllMaps(GameModel game) {
-        builtinMaps = loadMapsFromModule("maps/masonic_%d.world", 8);
+        if (builtinMaps.isEmpty()) {
+            builtinMaps = loadMapsFromModule("maps/masonic_%d.world", 8);
+        }
         loadCustomMaps(game);
     }
 

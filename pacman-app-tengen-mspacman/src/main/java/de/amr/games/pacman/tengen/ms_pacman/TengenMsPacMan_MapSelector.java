@@ -48,16 +48,17 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
 
     @Override
     public void loadAllMaps(GameModel game) {
-        mapRepository.put(MapCategory.ARCADE,  createMaps(MAPS_ROOT + "arcade%d.world", 4));
-        mapRepository.put(MapCategory.MINI,    createMaps(MAPS_ROOT + "mini%d.world", 6));
-        mapRepository.put(MapCategory.BIG,     createMaps(MAPS_ROOT + "big%02d.world", 11));
-        mapRepository.put(MapCategory.STRANGE, createMaps(MAPS_ROOT + "strange%02d.world", 15));
+        if (mapRepository.isEmpty()) {
+            mapRepository.put(MapCategory.ARCADE, createMaps(MAPS_ROOT + "arcade%d.world", 4));
+            mapRepository.put(MapCategory.MINI, createMaps(MAPS_ROOT + "mini%d.world", 6));
+            mapRepository.put(MapCategory.BIG, createMaps(MAPS_ROOT + "big%02d.world", 11));
+            mapRepository.put(MapCategory.STRANGE, createMaps(MAPS_ROOT + "strange%02d.world", 15));
+        }
     }
 
     @Override
     public WorldMap selectWorldMap(int levelNumber) {
-        //TODO what?
-        return coloredWorldMap(ARCADE, levelNumber);
+        throw new UnsupportedOperationException(); //TODO ugly
     }
 
     public WorldMap selectWorldMap(MapCategory mapCategory, int levelNumber) {
@@ -66,10 +67,10 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
 
     public WorldMap coloredWorldMap(MapCategory mapCategory, int levelNumber) {
         return switch (mapCategory) {
-            case ARCADE  -> arcadeWorldMap(levelNumber);
-            case STRANGE -> strangeWorldMap(levelNumber);
-            case MINI    -> miniWorldMap(levelNumber);
-            case BIG     -> bigWorldMap(levelNumber);
+            case ARCADE  -> coloredArcadeMap(levelNumber);
+            case STRANGE -> coloredStrangeMap(levelNumber);
+            case MINI    -> coloredMiniMap(levelNumber);
+            case BIG     -> coloredBigMap(levelNumber);
         };
     }
 
@@ -95,7 +96,7 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
         return maps;
     }
 
-    private WorldMap arcadeWorldMap(int levelNumber) {
+    private WorldMap coloredArcadeMap(int levelNumber) {
         return switch (levelNumber) {
             case 1,2         -> coloredMap(ARCADE, 1, _36_15_20_PINK_RED_WHITE);
             case 3,4,5       -> coloredMap(ARCADE, 2, _21_20_28_BLUE_WHITE_YELLOW);
@@ -110,7 +111,7 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
         };
     }
 
-    private WorldMap miniWorldMap(int levelNumber) {
+    private WorldMap coloredMiniMap(int levelNumber) {
         return switch (levelNumber) {
             case 1  -> coloredMap(MINI, 1, _36_15_20_PINK_RED_WHITE);
             case 2  -> coloredMap(MINI, 2, _21_20_28_BLUE_WHITE_YELLOW);
@@ -148,7 +149,7 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
         };
     }
 
-    private WorldMap bigWorldMap(int levelNumber) {
+    private WorldMap coloredBigMap(int levelNumber) {
         return switch (levelNumber) {
             case 1  -> coloredMap(BIG,  1, _36_15_20_PINK_RED_WHITE);
             case 2  -> coloredMap(BIG,  2, _21_20_28_BLUE_WHITE_YELLOW);
@@ -186,7 +187,7 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
         };
     }
 
-    private WorldMap strangeWorldMap(int levelNumber) {
+    private WorldMap coloredStrangeMap(int levelNumber) {
         WorldMap worldMap = switch (levelNumber) {
             case  1 -> coloredMap(STRANGE,  1, _36_15_20_PINK_RED_WHITE);
             case  2 -> coloredMap(STRANGE,  2, _21_20_28_BLUE_WHITE_YELLOW);
