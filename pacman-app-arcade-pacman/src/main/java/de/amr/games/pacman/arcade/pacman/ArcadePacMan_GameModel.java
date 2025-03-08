@@ -106,11 +106,12 @@ public class ArcadePacMan_GameModel extends GameModel {
     protected Steering demoLevelSteering;
     protected byte cruiseElroy;
 
-    protected MapSelector mapSelector = new ArcadePacMan_MapSelector();;
+    public ArcadePacMan_GameModel() {
+        super(new ArcadePacMan_MapSelector());
+    }
 
-    @Override
-    public MapSelector mapSelector() {
-        return mapSelector;
+    protected ArcadePacMan_GameModel(MapSelector mapSelector) {
+        super(mapSelector);
     }
 
     @Override

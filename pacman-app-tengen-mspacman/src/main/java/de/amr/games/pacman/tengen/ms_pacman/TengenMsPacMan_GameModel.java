@@ -6,11 +6,14 @@ package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.controller.HuntingTimer;
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.Waypoint;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.Waypoint;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.*;
+import de.amr.games.pacman.model.GameException;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.Portal;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import de.amr.games.pacman.steering.Steering;
@@ -97,7 +100,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
         };
     }
 
-    private TengenMsPacMan_MapSelector mapSelector;
     private MapCategory mapCategory;
     private Difficulty difficulty;
     private PacBooster pacBooster;
@@ -124,14 +126,12 @@ public class TengenMsPacMan_GameModel extends GameModel {
         }
     }
 
-    @Override
-    public MapSelector mapSelector() {
-        return mapSelector;
+    public TengenMsPacMan_GameModel() {
+        super(new TengenMsPacMan_MapSelector());
     }
 
     public void init() {
         scoreManager.setHighScoreFile(new File(HOME_DIR, HIGH_SCORE_FILENAME));
-        mapSelector = new TengenMsPacMan_MapSelector();
         mapSelector.loadAllMaps(this);
         huntingControl = new MsPacManGameTengenHuntingControl();
         setInitialLives(3);
@@ -429,7 +429,8 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public void configureNormalLevel() {
-        WorldMap worldMap = mapSelector.selectWorldMap(mapCategory, level.number);
+        TengenMsPacMan_MapSelector tengenMsPacManMapSelector = (TengenMsPacMan_MapSelector) mapSelector;
+        WorldMap worldMap = tengenMsPacManMapSelector.selectWorldMap(mapCategory, level.number);
         createWorldAndPopulation(worldMap);
         level.setNumFlashes(5); // TODO check this
         level.setCutSceneNumber(intermissionNumberAfterLevel(level.number));
@@ -445,7 +446,8 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public void configureDemoLevel() {
-        WorldMap worldMap = mapSelector.coloredWorldMap(mapCategory, level.number);
+        TengenMsPacMan_MapSelector tengenMsPacManMapSelector = (TengenMsPacMan_MapSelector) mapSelector;
+        WorldMap worldMap = tengenMsPacManMapSelector.coloredWorldMap(mapCategory, level.number);
         createWorldAndPopulation(worldMap);
         level.setNumFlashes(5); // TODO check this
         level.setCutSceneNumber(0);

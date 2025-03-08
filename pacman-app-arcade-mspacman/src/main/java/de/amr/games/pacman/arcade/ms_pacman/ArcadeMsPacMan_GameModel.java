@@ -7,8 +7,8 @@ package de.amr.games.pacman.arcade.ms_pacman;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.HuntingTimer;
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.Waypoint;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.Waypoint;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
@@ -95,11 +95,12 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     private byte cruiseElroy; //TODO is this existing in Ms. Pac-Man at all?
 
-    protected MapSelector mapSelector = new ArcadeMsPacMan_MapSelector();
+    public ArcadeMsPacMan_GameModel() {
+        super(new ArcadeMsPacMan_MapSelector());
+    }
 
-    @Override
-    public MapSelector mapSelector() {
-        return mapSelector;
+    protected ArcadeMsPacMan_GameModel(MapSelector mapSelector) {
+        super(mapSelector);
     }
 
     @Override

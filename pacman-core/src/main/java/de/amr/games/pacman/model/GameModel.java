@@ -51,6 +51,7 @@ public abstract class GameModel {
     public static final byte     BONUS_POINTS_SHOWN_TICKS = 120; //TODO unsure
     public static final byte[]   KILLED_GHOST_VALUE_MULTIPLIER = { 2, 4, 8, 16 }; // factor * 100 = value
 
+    protected final MapSelector  mapSelector;
     protected final List<Byte>   levelCounter = new ArrayList<>();
     protected final GateKeeper   gateKeeper = new GateKeeper();
     protected final ScoreManager scoreManager = new ScoreManager();
@@ -65,45 +66,90 @@ public abstract class GameModel {
     protected boolean            demoLevel;
     protected GameLevel          level;
 
-    public abstract MapSelector    mapSelector();
-    public abstract void           init();
-    public abstract void           resetEverything();
-    public abstract void           resetForStartingNewGame();
-    public abstract boolean        canStartNewGame();
-    public abstract boolean        continueOnGameOver();
-    public abstract boolean        isOver();
-    public abstract void           endGame();
-    public abstract void           onPacKilled();
-    public abstract void           killGhost(Ghost ghost);
-    public abstract void           activateNextBonus();
+    protected GameModel(MapSelector mapSelector) {
+        this.mapSelector = assertNotNull(mapSelector);
+    }
 
-    public abstract float          ghostAttackSpeed(Ghost ghost);
-    public abstract float          ghostFrightenedSpeed(Ghost ghost);
-    public abstract float          ghostSpeedInsideHouse(Ghost ghost);
-    public abstract float          ghostSpeedReturningToHouse(Ghost ghost);
-    public abstract float          ghostTunnelSpeed(Ghost ghost);
+    public abstract void         init();
+    public abstract void         resetEverything();
+    public abstract void         resetForStartingNewGame();
+    public abstract boolean      canStartNewGame();
+    public abstract boolean      continueOnGameOver();
+    public abstract boolean      isOver();
+    public abstract void         endGame();
+    public abstract void         onPacKilled();
+    public abstract void         killGhost(Ghost ghost);
+    public abstract void         activateNextBonus();
 
-    public abstract float          pacNormalSpeed();
-    public abstract long           pacPowerTicks();
-    public abstract long           pacPowerFadingTicks();
-    public abstract float          pacPowerSpeed();
-    public abstract long           gameOverStateTicks();
-    public abstract void           setDemoLevelBehavior();
+    public abstract float        ghostAttackSpeed(Ghost ghost);
+    public abstract float        ghostFrightenedSpeed(Ghost ghost);
+    public abstract float        ghostSpeedInsideHouse(Ghost ghost);
+    public abstract float        ghostSpeedReturningToHouse(Ghost ghost);
+    public abstract float        ghostTunnelSpeed(Ghost ghost);
 
-    protected abstract void        configureNormalLevel();
-    protected abstract void        configureDemoLevel();
-    protected abstract boolean     isPacManKillingIgnored();
-    protected abstract void        setActorBaseSpeed(int levelNumber);
-    protected abstract boolean     isBonusReached();
-    protected abstract byte        computeBonusSymbol();
+    public abstract float        pacNormalSpeed();
+    public abstract long         pacPowerTicks();
+    public abstract long         pacPowerFadingTicks();
+    public abstract float        pacPowerSpeed();
+    public abstract long         gameOverStateTicks();
+    public abstract void         setDemoLevelBehavior();
 
-    protected abstract void        onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
-    protected abstract void        onGhostReleased(Ghost ghost);
+    protected abstract void      configureNormalLevel();
+    protected abstract void      configureDemoLevel();
+    protected abstract boolean   isPacManKillingIgnored();
+    protected abstract void      setActorBaseSpeed(int levelNumber);
+    protected abstract boolean   isBonusReached();
+    protected abstract byte      computeBonusSymbol();
+
+    protected abstract void      onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
+    protected abstract void      onGhostReleased(Ghost ghost);
+
+    public final MapSelector mapSelector() { return mapSelector; }
 
     public int lastLevelNumber() { return Integer.MAX_VALUE; }
 
     public Optional<GameLevel> level() {
         return Optional.ofNullable(level);
+    }
+
+    public int initialLives() {
+        return initialLives;
+    }
+
+    public void setInitialLives(int lives) {
+        initialLives = lives;
+    }
+
+    public int lives() {
+        return lives;
+    }
+
+    public void addLives(int deltaLives) {
+        lives += deltaLives;
+    }
+
+    public void loseLife() {
+        if (lives == 0) {
+            Logger.error("No life left to lose :-(");
+            return;
+        }
+        --lives;
+    }
+
+    public List<Byte> levelCounter() {
+        return levelCounter;
+    }
+
+    public ScoreManager scoreManager() {
+        return scoreManager;
+    }
+
+    public void setPlaying(boolean playing) {
+        this.playing = playing;
+    }
+
+    public boolean isPlaying() {
+        return playing;
     }
 
     public void setDemoLevel(boolean demoLevel) {
@@ -247,46 +293,6 @@ public abstract class GameModel {
             case ORANGE_GHOST -> ghost.tile().euclideanDist(level.pac().tile()) < 8 ? scatterTarget(ghost) : level.pac().tile();
             default -> throw GameException.illegalGhostID(ghost.id());
         };
-    }
-
-    public int initialLives() {
-        return initialLives;
-    }
-
-    public void setInitialLives(int lives) {
-        initialLives = lives;
-    }
-
-    public int lives() {
-        return lives;
-    }
-
-    public void addLives(int deltaLives) {
-        lives += deltaLives;
-    }
-
-    public void loseLife() {
-        if (lives == 0) {
-            Logger.error("No life left to lose :-(");
-            return;
-        }
-        --lives;
-    }
-
-    public List<Byte> levelCounter() {
-        return levelCounter;
-    }
-
-    public ScoreManager scoreManager() {
-        return scoreManager;
-    }
-
-    public void setPlaying(boolean playing) {
-        this.playing = playing;
-    }
-
-    public boolean isPlaying() {
-        return playing;
     }
 
     public void onLevelCompleted() {
