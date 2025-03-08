@@ -8,7 +8,6 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.*;
 import org.tinylog.Logger;
 
@@ -75,7 +74,7 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     @Override
-    public void steer(Creature creature, GameWorld world) {
+    public void steer(Creature creature, GameLevel level) {
         if (creature.moveInfo().moved && !creature.isNewTileEntered()) {
             return;
         }
@@ -128,7 +127,7 @@ public class RuleBasedPacSteering implements Steering {
         }
 
         // when not escaping ghost, keep move direction at least until next intersection
-        if (pac.moveInfo().moved && !level.world().isIntersection(pac.tile()))
+        if (pac.moveInfo().moved && !level.isIntersection(pac.tile()))
             return;
 
         if (!data.frightenedGhosts.isEmpty() && level.powerTimer().remainingTicks() >= TICKS_PER_SECOND) {
@@ -168,7 +167,7 @@ public class RuleBasedPacSteering implements Steering {
             if (!pac.canAccessTile(ahead)) {
                 break;
             }
-            if (level.world().isEnergizerPosition(ahead) && !level.world().hasEatenFoodAt(ahead)) {
+            if (level.isEnergizerPosition(ahead) && !level.hasEatenFoodAt(ahead)) {
                 energizerFound = true;
             }
             var aheadLeft = ahead.plus(pac.moveDir().nextCounterClockwise().vector());
@@ -220,7 +219,7 @@ public class RuleBasedPacSteering implements Steering {
         }
         for (Direction escape : escapes) {
             Vector2i escapeTile = pacManTile.plus(escape.vector());
-            if (level.world().isTunnel(escapeTile)) {
+            if (level.isTunnel(escapeTile)) {
                 return escape;
             }
         }
@@ -233,14 +232,14 @@ public class RuleBasedPacSteering implements Steering {
         List<Vector2i> foodTiles = new ArrayList<>();
         Vector2i pacManTile = pac.tile();
         float minDist = Float.MAX_VALUE;
-        for (int x = 0; x < level.world().map().numCols(); ++x) {
-            for (int y = 0; y < level.world().map().numRows(); ++y) {
+        for (int x = 0; x < level.map().numCols(); ++x) {
+            for (int y = 0; y < level.map().numRows(); ++y) {
                 Vector2i tile = new Vector2i(x, y);
-                if (!level.world().isFoodPosition(tile) || level.world().hasEatenFoodAt(tile)) {
+                if (!level.isFoodPosition(tile) || level.hasEatenFoodAt(tile)) {
                     continue;
                 }
-                if (level.world().isEnergizerPosition(tile) && level.powerTimer().remainingTicks() > 2 * 60
-                    && level.world().uneatenFoodCount() > 1) {
+                if (level.isEnergizerPosition(tile) && level.powerTimer().remainingTicks() > 2 * 60
+                    && level.uneatenFoodCount() > 1) {
                     continue;
                 }
                 float dist = pacManTile.manhattanDist(tile);

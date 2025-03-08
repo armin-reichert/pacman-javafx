@@ -9,7 +9,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.uilib.Ufx;
 import de.amr.games.pacman.uilib.model3D.Model3D;
@@ -116,8 +115,8 @@ public class PacShape3D extends Group {
         }
     }
 
-    public void updateVisibility(Pac pac, GameWorld world) {
-        WorldMap worldMap = world.map();
+    public void updateVisibility(Pac pac, GameLevel level) {
+        WorldMap worldMap = level.map();
         boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * worldMap.numCols() - HTS;
         setVisible(pac.isVisible() && !outsideWorld);
     }

@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.tilemap.rendering.FoodTileRenderer;
 import de.amr.games.pacman.tilemap.rendering.TerrainColorScheme;
@@ -109,8 +109,8 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void drawWorld(GameWorld world, double x, double y) {
-        WorldMap worldMap = world.map();
+    public void drawWorld(GameLevel level, double x, double y) {
+        WorldMap worldMap = level.map();
         if (mazeHighlighted) {
             terrainRenderer.setColors(blinkingOn ? blinkingOnColors : blinkingOffColors);
             terrainRenderer.drawTerrain(ctx(), worldMap, worldMap.obstacles());
@@ -125,13 +125,13 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
             );
             terrainRenderer.setColors(colors);
             terrainRenderer.drawTerrain(ctx(), worldMap, worldMap.obstacles());
-            terrainRenderer.drawHouse(ctx(), world.houseMinTile(), world.houseSizeInTiles());
+            terrainRenderer.drawHouse(ctx(), level.houseMinTile(), level.houseSizeInTiles());
             foodRenderer.setPelletColor(Color.web(colorMap.get("pellet")));
             foodRenderer.setEnergizerColor(Color.web(colorMap.get("pellet")));
-            worldMap.tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition))
+            worldMap.tiles().filter(level::hasFoodAt).filter(not(level::isEnergizerPosition))
                 .forEach(tile -> foodRenderer.drawPellet(ctx(), tile));
             if (blinkingOn) {
-                world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx(), tile));
+                level.energizerTiles().filter(level::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx(), tile));
             }
         }
     }

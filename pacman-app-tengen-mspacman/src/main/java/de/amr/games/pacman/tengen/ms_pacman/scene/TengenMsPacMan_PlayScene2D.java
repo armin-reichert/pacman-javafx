@@ -11,7 +11,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.nes.NES_JoypadButton;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
@@ -20,13 +19,13 @@ import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.MessageMovement;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
-import de.amr.games.pacman.ui._2d.GameActions2D;
-import de.amr.games.pacman.ui.sound.GameSound;
-import de.amr.games.pacman.ui.input.Keyboard;
 import de.amr.games.pacman.ui.CameraControlledView;
 import de.amr.games.pacman.ui.GameScene;
+import de.amr.games.pacman.ui._2d.GameActions2D;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._2d.LevelCompleteAnimation;
+import de.amr.games.pacman.ui.input.Keyboard;
+import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -55,10 +54,10 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions.QUIT_DEMO_LEVEL;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameUIConfig3D.*;
-import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_AUTOPILOT;
-import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_IMMUNITY;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindCheatActions;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindFallbackPlayerControlActions;
+import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_AUTOPILOT;
+import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_IMMUNITY;
 
 /**
  * Tengen play scene, uses vertical scrolling.
@@ -190,7 +189,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     }
 
     private void updateCameraPosition(double scaling) {
-        int worldTilesY = context.game().level().map(level -> level.world().map().numRows()).orElse(NES_TILES.y());
+        int worldTilesY = context.game().level().map(level -> level.map().numRows()).orElse(NES_TILES.y());
         double dy = scaling * (worldTilesY - 43) * HTS;
         fixedCamera.setTranslateY(dy);
     }
@@ -234,7 +233,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 if (context.gameState() == GameState.HUNTING) {
                     movingCamera.focusPlayer(true);
                 }
-                movingCamera.setVerticalRangeTiles(level.world().map().numRows());
+                movingCamera.setVerticalRangeTiles(level.map().numRows());
                 movingCamera.update(level.pac());
             }
         });
@@ -288,7 +287,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             level.pac().setImmune(PY_IMMUNITY.get());
         }
         createLevelCompleteAnimation(level);
-        gr.setWorldMap(level.world().map());
+        gr.setWorldMap(level.map());
     }
 
     @Override
@@ -303,7 +302,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         Logger.info("{} entered from {}", this, oldScene);
         context.registerJoypadKeyBinding();
         setKeyBindings();
-        gr.setWorldMap(context.level().world().map());
+        gr.setWorldMap(context.level().map());
     }
 
     private void setKeyBindings() {
@@ -337,7 +336,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             case GAME_OVER -> {
                 TengenMsPacMan_GameModel game = context.game();
                 if (game.mapCategory() != MapCategory.ARCADE) {
-                    float belowHouse = centerPosBelowHouse(context.level().world()).x();
+                    float belowHouse = centerPosBelowHouse(context.level()).x();
                     messageMovement.start(MOVING_MESSAGE_DELAY, belowHouse, size().x());
                 }
                 movingCamera.focusTopOfScene();
@@ -443,13 +442,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
         TengenMsPacMan_GameModel game = context.game();
         GameLevel level = context.level();
-        GameWorld world = level.world();
         Pac msPacMan = level.pac();
 
         if (context.isScoreVisible()) {
             r.drawScores(context);
         }
-        Vector2f messageCenterPosition = centerPosBelowHouse(world);
+        Vector2f messageCenterPosition = centerPosBelowHouse(level);
         if (messageMovement != null) {
             r.setMessagePosition(messageMovement.isRunning()
                     ? new Vector2f(messageMovement.currentX(), messageCenterPosition.y())
@@ -462,11 +460,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         r.setBlinking(level.blinking().isOn());
         boolean flashing = levelCompleteAnimation != null && levelCompleteAnimation.isFlashing();
         if (flashing && levelCompleteAnimation.isInHighlightPhase()) {
-            r.drawWorldHighlighted(context, world, 0, 3 * TS, levelCompleteAnimation.flashingIndex());
+            r.drawWorldHighlighted(context, level, 0, 3 * TS, levelCompleteAnimation.flashingIndex());
         } else {
             //TODO in the original game, the message is draw under the maze image but over the pellets!
-            r.drawWorld(context, world, 0,  3 * TS);
-            r.drawFood(world);
+            r.drawWorld(context, level, 0,  3 * TS);
+            r.drawFood(level);
             r.drawLevelMessage(context.gameConfiguration().assetNamespace(), level, game.isDemoLevel());
         }
 
@@ -500,8 +498,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         gr.ctx().fillText("%s %d".formatted(state, state.timer().tickCount()), 0, scaled(3 * TS));
     }
 
-    private Vector2f centerPosBelowHouse(GameWorld world) {
-        return world.houseMinTile().plus(0.5f * world.houseSizeInTiles().x(), world.houseSizeInTiles().y() + 1).scaled(TS);
+    private Vector2f centerPosBelowHouse(GameLevel level) {
+        return level.houseMinTile().plus(0.5f * level.houseSizeInTiles().x(), level.houseSizeInTiles().y() + 1).scaled(TS);
     }
 
     private Stream<Ghost> ghostsInZOrder(GameLevel level) {

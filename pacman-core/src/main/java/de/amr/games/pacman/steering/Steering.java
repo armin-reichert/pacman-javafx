@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.steering;
 
-import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Creature;
 
 /**
@@ -14,5 +14,5 @@ public interface Steering {
 
     default void init() {}
 
-    void steer(Creature creature, GameWorld world);
+    void steer(Creature creature, GameLevel level);
 }

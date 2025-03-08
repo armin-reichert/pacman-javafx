@@ -75,13 +75,13 @@ public class Pac extends Creature implements AnimatedActor2D {
 
     @Override
     public boolean canAccessTile(Vector2i tile) {
-        if (world.isPartOfHouse(tile)) {
+        if (level.isPartOfHouse(tile)) {
             return false;
         }
-        if (world.isInsideWorld(tile)) {
-            return !world.isBlockedTile(tile);
+        if (level.isInsideWorld(tile)) {
+            return !level.isBlockedTile(tile);
         }
-        return world.isPortalAt(tile);
+        return level.isPortalAt(tile);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class Pac extends Creature implements AnimatedActor2D {
         }
         if (restingTicks == 0) {
             if (usingAutopilot) {
-                autopilot.steer(this, level.world());
+                autopilot.steer(this, level);
             }
             setSpeed(level.powerTimer().isRunning() ? game.pacPowerSpeed() : game.pacNormalSpeed());
             tryMoving();

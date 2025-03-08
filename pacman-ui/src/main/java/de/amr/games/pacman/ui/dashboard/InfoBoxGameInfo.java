@@ -37,7 +37,7 @@ public class InfoBoxGameInfo extends InfoBox {
         addLabeledValue("Level Number", ifLevelPresent(level -> "%d".formatted(level.number)));
         addLabeledValue("Demo Level", ifLevelPresent(gameScene -> context.game().isDemoLevel() ? "Yes" : "No"));
         addLabeledValue("World Map", ifLevelPresent(level -> {
-            URL url = level.world().map().url();
+            URL url = level.map().url();
             if (url == null) {
                 return InfoText.NO_INFO;
             }
@@ -45,7 +45,7 @@ public class InfoBoxGameInfo extends InfoBox {
             return urlString.substring(urlString.lastIndexOf("/") + 1);
         }));
         addLabeledValue("Fill/Stroke/Pellet", ifLevelPresent(level -> {
-            WorldMap worldMap = level.world().map();
+            WorldMap worldMap = level.map();
             if (worldMap.hasConfigValue("nesColorScheme")) {
                 // Tengen Ms. Pac-Man
                 var nesColors = (NES_ColorScheme) worldMap.getConfigValue("nesColorScheme");
@@ -118,9 +118,9 @@ public class InfoBoxGameInfo extends InfoBox {
 
     private String fmtPelletCount(GameLevel level) {
         return "%d of %d (%d energizers)".formatted(
-                level.world().uneatenFoodCount(),
-                level.world().totalFoodCount(),
-                level.world().energizerTiles().count()
+                level.uneatenFoodCount(),
+                level.totalFoodCount(),
+                level.energizerTiles().count()
         );
     }
 

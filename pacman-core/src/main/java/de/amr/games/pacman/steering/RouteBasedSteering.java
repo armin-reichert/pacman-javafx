@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.steering;
 
 import de.amr.games.pacman.lib.Waypoint;
-import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Creature;
 import org.tinylog.Logger;
 
@@ -40,7 +40,7 @@ public class RouteBasedSteering implements Steering {
     }
 
     @Override
-    public void steer(Creature creature, GameWorld world) {
+    public void steer(Creature creature, GameLevel level) {
         creature.navigateTowardsTarget();
         if (targetIndex == route.size()) {
             complete = true;

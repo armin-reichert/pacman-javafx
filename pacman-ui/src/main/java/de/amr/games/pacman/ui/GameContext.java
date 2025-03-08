@@ -87,8 +87,8 @@ public interface GameContext {
     void showFlashMessageSec(double seconds, String message, Object... args);
     default void showFlashMessage(String message, Object... args) { showFlashMessageSec(1, message, args); }
     default Vector2i worldSizeInTilesOrElse(Vector2i defaultSize) {
-        if (game().level().isEmpty() || game().level().get().world() == null) { return defaultSize; }
-        WorldMap worldMap = game().level().get().world().map();
+        if (game().level().isEmpty()) { return defaultSize; }
+        WorldMap worldMap = game().level().get().map();
         return new Vector2i(worldMap.numCols(), worldMap.numRows());
     }
 

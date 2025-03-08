@@ -9,7 +9,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.AnimatedActor2D;
@@ -206,7 +206,7 @@ public interface GameRenderer {
 
     void drawBonus(Bonus bonus);
 
-    void drawWorld(GameWorld world, double x, double y);
+    void drawWorld(GameLevel level, double x, double y);
 
     void setMazeHighlighted(boolean on);
 
@@ -216,18 +216,18 @@ public interface GameRenderer {
      * Over-paints all eaten pellet tiles.
      * Assumes to be called in scaled graphics context!
      */
-    default void overPaintEatenPellets(GameWorld world) {
-        world.map().tiles()
-            .filter(not(world::isEnergizerPosition))
-            .filter(world::hasEatenFoodAt).forEach(tile -> overPaint(tile, 4));
+    default void overPaintEatenPellets(GameLevel level) {
+        level.map().tiles()
+            .filter(not(level::isEnergizerPosition))
+            .filter(level::hasEatenFoodAt).forEach(tile -> overPaint(tile, 4));
     }
 
     /**
      * Over-pains all eaten energizer tiles.
      * Assumes to be called in scaled graphics context!
      */
-    default void overPaintEnergizers(GameWorld world, Predicate<Vector2i> condition) {
-        world.energizerTiles().filter(condition).forEach(tile -> overPaint(tile, 10));
+    default void overPaintEnergizers(GameLevel level, Predicate<Vector2i> condition) {
+        level.energizerTiles().filter(condition).forEach(tile -> overPaint(tile, 10));
     }
 
     /**

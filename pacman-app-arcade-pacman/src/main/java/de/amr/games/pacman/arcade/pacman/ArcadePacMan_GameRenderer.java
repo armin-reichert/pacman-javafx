@@ -6,11 +6,11 @@ package de.amr.games.pacman.arcade.pacman;
 
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.ui._2d.GameRenderer;
-import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
+import de.amr.games.pacman.uilib.AssetStorage;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
@@ -90,19 +90,19 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
     public void setMessagePosition(Vector2f position) {}
 
     @Override
-    public void drawWorld(GameWorld world, double x, double y) {
+    public void drawWorld(GameLevel level, double x, double y) {
         double scaling = scaling();
         ctx().save();
         ctx().scale(scaling, scaling);
         if (mazeHighlighted) {
             ctx().drawImage(assets.image("pacman.flashing_maze"), x, y);
         } else {
-            if (world.uneatenFoodCount() == 0) {
+            if (level.uneatenFoodCount() == 0) {
                 drawSpriteUnscaled(EMPTY_MAZE_SPRITE, x, y);
             } else {
                 drawSpriteUnscaled(FULL_MAZE_SPRITE, x, y);
-                overPaintEatenPellets(world);
-                overPaintEnergizers(world, tile -> !blinkingOn || world.hasEatenFoodAt(tile));
+                overPaintEatenPellets(level);
+                overPaintEnergizers(level, tile -> !blinkingOn || level.hasEatenFoodAt(tile));
             }
         }
         ctx().restore();

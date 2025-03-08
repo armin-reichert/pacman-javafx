@@ -12,7 +12,6 @@ import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.nes.NES_JoypadButton;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.tengen.ms_pacman.Difficulty;
 import de.amr.games.pacman.tengen.ms_pacman.PacBooster;
@@ -23,10 +22,10 @@ import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
 import de.amr.games.pacman.tengen.ms_pacman.maps.MapRepository;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui._2d.GameRenderer;
-import de.amr.games.pacman.uilib.AssetStorage;
-import de.amr.games.pacman.uilib.SpriteAnimation;
 import de.amr.games.pacman.ui._2d.SpriteAnimationSet;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
+import de.amr.games.pacman.uilib.AssetStorage;
+import de.amr.games.pacman.uilib.SpriteAnimation;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
@@ -196,18 +195,17 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     @Override
-    public void drawWorld(GameWorld world, double x, double y) {
-    }
+    public void drawWorld(GameLevel level, double x, double y) {}
 
-    public void drawWorld(GameContext context, GameWorld world, double mapX, double mapY) {
+    public void drawWorld(GameContext context, GameLevel level, double mapX, double mapY) {
         ctx.setImageSmoothing(false);
 
         TengenMsPacMan_GameModel game = context.game();
         MapCategory mapCategory = game.mapCategory();
-        int mapNumber = world.map().getConfigValue("mapNumber");
+        int mapNumber = level.map().getConfigValue("mapNumber");
 
         if (areGameOptionsChanged(game)) {
-            drawGameOptionsInfoCenteredAt(world.map().numCols() * HTS, tiles2Px(2) + HTS, game);
+            drawGameOptionsInfoCenteredAt(level.map().numCols() * HTS, tiles2Px(2) + HTS, game);
         }
 
         if (coloredMapSet == null) {
@@ -223,10 +221,10 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             area.x(), area.y(), area.width(), area.height(),
             scaled(mapX), scaled(mapY), scaled(area.width()), scaled(area.height())
         );
-        overPaintActors(world);
+        overPaintActors(level);
     }
 
-    public void drawFood(GameWorld world) {
+    public void drawFood(GameLevel level) {
         if (coloredMapSet == null) {
             Logger.error("Cannot draw food: no map set available");
             return; //TODO check why this happens
@@ -234,16 +232,16 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx.save();
         ctx.scale(scaling(), scaling());
         Color pelletColor = Color.valueOf(coloredMapSet.normalMaze().colorScheme().pelletColor());
-        drawPellets(world, pelletColor);
-        drawEnergizers(world, pelletColor);
+        drawPellets(level, pelletColor);
+        drawEnergizers(level, pelletColor);
         ctx.restore();
     }
 
-    public void drawWorldHighlighted(GameContext context, GameWorld world, double mapX, double mapY, int flashingIndex) {
+    public void drawWorldHighlighted(GameContext context, GameLevel level, double mapX, double mapY, int flashingIndex) {
         ctx.setImageSmoothing(false);
         TengenMsPacMan_GameModel game = context.game();
         if (areGameOptionsChanged(game)) {
-            drawGameOptionsInfoCenteredAt(world.map().numCols() * HTS, tiles2Px(2) + HTS, game);
+            drawGameOptionsInfoCenteredAt(level.map().numCols() * HTS, tiles2Px(2) + HTS, game);
         }
         ColoredMapImage maze = coloredMapSet.flashingMazes().get(flashingIndex);
         RectArea area = maze.area();
@@ -251,39 +249,39 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             area.x(), area.y(), area.width(), area.height(),
             scaled(mapX), scaled(mapY), scaled(area.width()), scaled(area.height())
         );
-        overPaintActors(world);
+        overPaintActors(level);
         // draw food to erase eaten food!
         ctx.save();
         ctx.scale(scaling(), scaling());
         Color pelletColor = Color.valueOf(coloredMapSet.normalMaze().colorScheme().pelletColor());
-        drawPellets(world, pelletColor);
-        drawEnergizers(world, pelletColor);
+        drawPellets(level, pelletColor);
+        drawEnergizers(level, pelletColor);
         ctx.restore();
     }
 
-    private void drawPellets(GameWorld world, Color pelletColor) {
-        world.map().tiles()
-            .filter(world::isFoodPosition)
-            .filter(not(world::isEnergizerPosition))
+    private void drawPellets(GameLevel level, Color pelletColor) {
+        level.map().tiles()
+            .filter(level::isFoodPosition)
+            .filter(not(level::isEnergizerPosition))
             .forEach(tile -> {
                 double centerX = tile.x() * TS + HTS, centerY = tile.y() * TS + HTS;
                 ctx.setFill(CANVAS_BACKGROUND_COLOR);
                 ctx.fillRect(centerX - 2, centerY - 2, 4, 4);
-                if (!world.hasEatenFoodAt(tile)) {
+                if (!level.hasEatenFoodAt(tile)) {
                     ctx.setFill(pelletColor);
                     ctx.fillRect(centerX - 1, centerY - 1, 2, 2);
                 }
             });
     }
 
-    private void drawEnergizers(GameWorld world, Color pelletColor) {
+    private void drawEnergizers(GameLevel level, Color pelletColor) {
         double size = TS;
         double offset = 0.5 * (HTS);
-        world.map().tiles().filter(world::isEnergizerPosition).forEach(energizerTile -> {
+        level.map().tiles().filter(level::isEnergizerPosition).forEach(energizerTile -> {
             double x = energizerTile.x() * TS, y = energizerTile.y() * TS;
             ctx.setFill(CANVAS_BACKGROUND_COLOR);
             ctx.fillRect(x-1, y-1, TS + 2, TS + 2); // avoid blitzer
-            if (!world.hasEatenFoodAt(energizerTile) && blinking) {
+            if (!level.hasEatenFoodAt(energizerTile) && blinking) {
                 ctx.setFill(pelletColor);
                 // draw pixelated "circle"
                 ctx.fillRect(x + offset, y, HTS, size);
@@ -314,7 +312,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
                 case GAME_OVER -> {
                     Color color = assets.color(assetNamespace + ".color.game_over_message");
                     if (demoLevel) {
-                        WorldMap worldMap = level.world().map();
+                        WorldMap worldMap = level.map();
                         NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
                         color = Color.valueOf(nesColorScheme.strokeColor());
                     }
@@ -329,7 +327,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         return game.pacBooster() != PacBooster.OFF || game.difficulty() != Difficulty.NORMAL || game.mapCategory() != MapCategory.ARCADE;
     }
 
-    private void overPaintActors(GameWorld world) {
+    private void overPaintActors(GameLevel world) {
         Vector2f topLeftPosition = world.houseMinTile().plus(1, 2).scaled(TS * scaling());
         Vector2f size = new Vector2i(world.houseSizeInTiles().x() - 2, 2).scaled(TS * scaling());
         ctx.setFill(CANVAS_BACKGROUND_COLOR);

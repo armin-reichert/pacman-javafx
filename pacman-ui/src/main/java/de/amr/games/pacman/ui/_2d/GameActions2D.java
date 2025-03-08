@@ -9,14 +9,14 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.arcade.Arcade;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameActionProvider;
 import de.amr.games.pacman.ui.GameContext;
+import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui.input.Keyboard;
-import de.amr.games.pacman.ui.GameScene;
 import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
 
@@ -81,11 +81,11 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             if (context.game().isPlaying() && context.gameState() == GameState.HUNTING) {
-                GameWorld world = context.level().world();
-                world.map().tiles()
-                    .filter(not(world::isEnergizerPosition))
-                    .filter(world::hasFoodAt)
-                    .forEach(world::registerFoodEatenAt);
+                GameLevel level = context.level();
+                level.map().tiles()
+                    .filter(not(level::isEnergizerPosition))
+                    .filter(level::hasFoodAt)
+                    .forEach(level::registerFoodEatenAt);
                 context.game().publishGameEvent(GameEventType.PAC_FOUND_FOOD);
                 context.sound().stopMunchingSound();
             }

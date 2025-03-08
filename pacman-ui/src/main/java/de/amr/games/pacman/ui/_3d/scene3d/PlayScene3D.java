@@ -12,7 +12,10 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.*;
+import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.Score;
+import de.amr.games.pacman.model.ScoreManager;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.CameraControlledView;
@@ -64,7 +67,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     protected final ObjectProperty<Perspective.Name> perspectiveNamePy = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
-            context.game().level().ifPresent(level -> perspective().init(fxSubScene, level.world()));
+            context.game().level().ifPresent(level -> perspective().init(fxSubScene, level));
         }
     };
 
@@ -156,7 +159,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             }
         }
         updateScores();
-        perspective().init(fxSubScene, level.world());
+        perspective().init(fxSubScene, level);
     }
 
     @Override
@@ -169,8 +172,8 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         }
 
         GameLevel level = context.level();
-        level3D.pellets3D().forEach(pellet -> pellet.shape3D().setVisible(!level.world().hasEatenFoodAt(pellet.tile())));
-        level3D.energizers3D().forEach(energizer -> energizer.shape3D().setVisible(!level.world().hasEatenFoodAt(energizer.tile())));
+        level3D.pellets3D().forEach(pellet -> pellet.shape3D().setVisible(!level.hasEatenFoodAt(pellet.tile())));
+        level3D.energizers3D().forEach(energizer -> energizer.shape3D().setVisible(!level.hasEatenFoodAt(energizer.tile())));
         if (oneOf(context.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
             level3D.energizers3D().filter(energizer -> energizer.shape3D().isVisible()).forEach(Energizer3D::startPumping);
         }
@@ -218,7 +221,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             updateScores();
             updateSound(context.sound());
         }
-        perspective().update(fxSubScene, level.world(), level.pac());
+        perspective().update(fxSubScene, level, level.pac());
     }
 
     protected Perspective perspective() {
@@ -351,8 +354,8 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     private void onEnterStateLevelComplete() {
         context.sound().stopAll();
         // if cheat has been used to complete level, food might still exist, so eat it:
-        GameWorld world = context.level().world();
-        world.map().tiles().filter(world::hasFoodAt).forEach(world::registerFoodEatenAt);
+        GameLevel level = context.level();
+        level.map().tiles().filter(level::hasFoodAt).forEach(level::registerFoodEatenAt);
         level3D.pellets3D().forEach(Pellet3D::onEaten);
         level3D.energizers3D().forEach(Energizer3D::onEaten);
         level3D.maze3D().door3D().setVisible(false);
@@ -372,7 +375,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         replaceGameLevel3D();
         level3D.addLevelCounter();
         level3D.pac3D().init();
-        perspective().init(fxSubScene, context.level().world());
+        perspective().init(fxSubScene, context.level());
     }
 
     private void onEnterStateTestingLevels() {
@@ -497,16 +500,16 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     }
 
     private void showLevelTestMessage(String message) {
-        WorldMap worldMap = context.level().world().map();
+        WorldMap worldMap = context.level().map();
         double x = worldMap.numCols() * HTS;
         double y = (worldMap.numRows() - 2) * TS;
         level3D.showAnimatedMessage(message, 5, x, y);
     }
 
     private void showReadyMessage() {
-        GameWorld world = context.level().world();
-        Vector2i houseTopLeft = world.houseMinTile();
-        Vector2i houseSize = world.houseSizeInTiles();
+        GameLevel level = context.level();
+        Vector2i houseTopLeft = level.houseMinTile();
+        Vector2i houseSize = level.houseSizeInTiles();
         double x = TS * (houseTopLeft.x() + 0.5 * houseSize.x());
         double y = TS * (houseTopLeft.y() +       houseSize.y());
         double seconds = context.game().isPlaying() ? 0.5 : 2.5;

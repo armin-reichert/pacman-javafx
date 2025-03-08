@@ -12,7 +12,6 @@ import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.GameScene;
@@ -68,8 +67,8 @@ public class ArcadePlayScene2D extends GameScene2D {
             GameActions2D.bindFallbackPlayerControlActions(this);
         }
         registerGameActionKeyBindings(context.keyboard());
-        gr.setWorldMap(context.level().world().map());
-        gr.setMessagePosition(centerPositionBelowHouse(context.level().world()));
+        gr.setWorldMap(context.level().map());
+        gr.setMessagePosition(centerPositionBelowHouse(context.level()));
     }
 
     @Override
@@ -157,7 +156,7 @@ public class ArcadePlayScene2D extends GameScene2D {
                     text = "TEST    L%03d".formatted(context.level().number);
                 }
             }
-            gr.setMessagePosition(centerPositionBelowHouse(context.level().world()));
+            gr.setMessagePosition(centerPositionBelowHouse(context.level()));
             // this assumes fixed width font of one tile size:
             double x = gr.getMessagePosition().x() - (text.length() * HTS);
             gr.drawText(text, color, gr.scaledArcadeFont(TS), x, gr.getMessagePosition().y());
@@ -167,8 +166,8 @@ public class ArcadePlayScene2D extends GameScene2D {
         boolean highlighted = levelCompleteAnimation != null && levelCompleteAnimation.isInHighlightPhase();
         gr.setMazeHighlighted(highlighted);
         gr.setBlinking(level.blinking().isOn());
-        gr.setWorldMap(level.world().map()); //TODO fixme: avoid calling this in every frame
-        gr.drawWorld(level.world(), 0, 3 * TS);
+        gr.setWorldMap(level.map()); //TODO fixme: avoid calling this in every frame
+        gr.drawWorld(level, 0, 3 * TS);
 
         // Draw bonus
         level.bonus().ifPresent(gr::drawBonus);
@@ -199,8 +198,8 @@ public class ArcadePlayScene2D extends GameScene2D {
         gr.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
     }
 
-    private Vector2f centerPositionBelowHouse(GameWorld world) {
-        Vector2i houseTopLeft = world.houseMinTile(), houseSize = world.houseSizeInTiles();
+    private Vector2f centerPositionBelowHouse(GameLevel level) {
+        Vector2i houseTopLeft = level.houseMinTile(), houseSize = level.houseSizeInTiles();
         float x = TS * (houseTopLeft.x() + houseSize.x() * 0.5f);
         float y = TS * (houseTopLeft.y() + houseSize.y() + 1);
         return new Vector2f(x, y);
@@ -237,7 +236,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         if (gr == null) {
             setGameRenderer(context.gameConfiguration().createRenderer(context.assets(), canvas));
         }
-        gr.setWorldMap(context.level().world().map());
+        gr.setWorldMap(context.level().map());
     }
 
     @Override

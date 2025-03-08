@@ -7,13 +7,12 @@ package de.amr.games.pacman.model.actors;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Globals;
-import de.amr.games.pacman.lib.Waypoint;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.Waypoint;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.steering.RouteBasedSteering;
 import org.tinylog.Logger;
 
@@ -38,8 +37,8 @@ public class MovingBonus extends Creature implements Bonus {
     private long countdown;
     private RouteBasedSteering steering;
 
-    public MovingBonus(GameWorld world, byte symbol, int points) {
-        this.world = Globals.assertNotNull(world);
+    public MovingBonus(GameLevel level, byte symbol, int points) {
+        super.level = Globals.assertNotNull(level);
         this.symbol = symbol;
         this.points = points;
         reset();
@@ -60,13 +59,13 @@ public class MovingBonus extends Creature implements Bonus {
 
     @Override
     public boolean canAccessTile(Vector2i tile) {
-        if (world.isPartOfHouse(tile)) {
+        if (level.isPartOfHouse(tile)) {
             return false;
         }
-        if (world.isInsideWorld(tile)) {
-            return !world.isBlockedTile(tile);
+        if (level.isInsideWorld(tile)) {
+            return !level.isBlockedTile(tile);
         }
-        return world.isPortalAt(tile);
+        return level.isPortalAt(tile);
     }
 
     @Override
@@ -121,7 +120,7 @@ public class MovingBonus extends Creature implements Bonus {
 
     private void updateStateEdible(GameModel game) {
         GameLevel level = game.level().orElseThrow();
-        steering.steer(this, level.world());
+        steering.steer(this, level);
         if (steering.isComplete()) {
             Logger.trace("Moving bonus reached target: {}", this);
             setInactive();
@@ -164,9 +163,9 @@ public class MovingBonus extends Creature implements Bonus {
     public void setRoute(List<Waypoint> route, boolean leftToRight) {
         Globals.assertNotNull(route);
         var routeCopy = new ArrayList<>(route);
-        centerOverTile(routeCopy.get(0).tile());
+        centerOverTile(routeCopy.getFirst().tile());
         setMoveAndWishDir(leftToRight ? Direction.RIGHT : Direction.LEFT);
-        routeCopy.remove(0);
+        routeCopy.removeFirst();
         steering = new RouteBasedSteering(routeCopy);
     }
 

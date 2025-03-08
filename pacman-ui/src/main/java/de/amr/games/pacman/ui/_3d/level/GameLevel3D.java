@@ -8,18 +8,17 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
-import de.amr.games.pacman.uilib.WorldMapColoring;
 import de.amr.games.pacman.ui._3d.animation.Squirting;
 import de.amr.games.pacman.ui._3d.scene3d.GameUIConfiguration3D;
+import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.Ufx;
+import de.amr.games.pacman.uilib.WorldMapColoring;
 import de.amr.games.pacman.uilib.model3D.Model3D;
 import javafx.animation.*;
 import javafx.beans.property.BooleanProperty;
@@ -88,7 +87,6 @@ public class GameLevel3D extends Group {
 
         final GameModel game = context.game();
         final GameLevel level = context.level();
-        final GameWorld world = level.world();
 
         pac3D = createPac3D(level.pac());
         ghost3DAppearances = level.ghosts().map(ghost -> createGhost3D(ghost, level.numFlashes())).toList();
@@ -96,10 +94,10 @@ public class GameLevel3D extends Group {
         livesCounter3D = createLivesCounter3D(game.canStartNewGame());
         livesCounter3D.livesCountPy.bind(livesCountPy);
 
-        floor3D = createFloor(context.assets(), world.map().numCols() * TS, world.map().numRows() * TS);
-        WorldMapColoring coloring = context.gameConfiguration().worldMapColoring(world.map());
-        maze3D = new Maze3D((GameUIConfiguration3D) context.gameConfiguration(), world, coloring);
-        addFood3D(world, context.assets().get("model3D.pellet"), coloredMaterial(coloring.pellet()));
+        floor3D = createFloor(context.assets(), level.map().numCols() * TS, level.map().numRows() * TS);
+        WorldMapColoring coloring = context.gameConfiguration().worldMapColoring(level.map());
+        maze3D = new Maze3D((GameUIConfiguration3D) context.gameConfiguration(), level, coloring);
+        addFood3D(level, context.assets().get("model3D.pellet"), coloredMaterial(coloring.pellet()));
 
         worldGroup.getChildren().addAll(floor3D, maze3D);
 
@@ -133,7 +131,7 @@ public class GameLevel3D extends Group {
 
         boolean ghostNearHouseEntry = context.level()
             .ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-            .filter(ghost -> ghost.position().euclideanDist(context.level().world().houseEntryPosition()) <= HOUSE_SENSITIVITY)
+            .filter(ghost -> ghost.position().euclideanDist(context.level().houseEntryPosition()) <= HOUSE_SENSITIVITY)
             .anyMatch(Ghost::isVisible);
         houseOpenPy.set(ghostNearHouseEntry);
 
@@ -184,7 +182,7 @@ public class GameLevel3D extends Group {
 
     public void addLevelCounter() {
         // Place level counter at top right maze corner
-        double x = context.level().world().map().numCols() * TS - 2 * TS;
+        double x = context.level().map().numCols() * TS - 2 * TS;
         double y = 2 * TS;
         Node levelCounter3D = createLevelCounter3D(
             context.gameConfiguration().spriteSheet(),
@@ -236,17 +234,17 @@ public class GameLevel3D extends Group {
         return floor3D;
     }
 
-    private void addFood3D(GameWorld world, Model3D pelletModel3D, Material foodMaterial) {
-        world.map().tiles().filter(world::hasFoodAt).forEach(tile -> {
+    private void addFood3D(GameLevel level, Model3D pelletModel3D, Material foodMaterial) {
+        level.map().tiles().filter(level::hasFoodAt).forEach(tile -> {
             Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
-            if (world.isEnergizerPosition(tile)) {
+            if (level.isEnergizerPosition(tile)) {
                 var energizer3D = new Energizer3D(ENERGIZER_RADIUS);
                 energizer3D.shape3D().setMaterial(foodMaterial);
                 energizer3D.setTile(tile);
                 energizer3D.setPosition(position);
                 var squirting = new Squirting(this, Duration.seconds(2));
                 squirting.setDropReachesFinalPosition(drop ->
-                    drop.getTranslateZ() >= -1 && world.containsPoint(drop.getTranslateX(), drop.getTranslateY()));
+                    drop.getTranslateZ() >= -1 && level.containsPoint(drop.getTranslateX(), drop.getTranslateY()));
                 squirting.createDrops(15, 46, foodMaterial, position);
                 energizer3D.setEatenAnimation(squirting);
                 getChildren().add(energizer3D.shape3D());

@@ -181,8 +181,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     }
 
     protected void populateLevel(GameLevel level) {
-        final GameWorld world = level.world();
-        final WorldMap worldMap = world.map();
+        final WorldMap worldMap = level.map();
 
         if (!worldMap.hasProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MIN_TILE)) {
             Logger.warn("No house min tile found in map!");
@@ -194,20 +193,20 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         }
         Vector2i minTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
         Vector2i maxTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
-        world.createArcadeHouse(minTile.x(), minTile.y(), maxTile.x(), maxTile.y());
+        level.createArcadeHouse(minTile.x(), minTile.y(), maxTile.x(), maxTile.y());
 
         var pac = new Pac();
         pac.setName("Ms. Pac-Man");
-        pac.setWorld(world);
+        pac.setGameLevel(level);
         pac.reset();
 
         var ghosts = new Ghost[] { blinky(), pinky(), inky(), sue() };
         Stream.of(ghosts).forEach(ghost -> {
-            ghost.setWorld(world);
-            ghost.setRevivalPosition(world.ghostPosition(ghost.id()));
+            ghost.setGameLevel(level);
+            ghost.setRevivalPosition(level.ghostPosition(ghost.id()));
             ghost.reset();
         });
-        ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST)); // middle house position
+        ghosts[RED_GHOST].setRevivalPosition(level.ghostPosition(PINK_GHOST)); // middle house position
 
         level.setPac(pac);
         level.setGhosts(ghosts);
@@ -225,7 +224,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     public GameLevel makeNormalLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
 
-        GameLevel newLevel = new GameLevel(levelNumber, new GameWorld(worldMap));
+        GameLevel newLevel = new GameLevel(levelNumber, worldMap);
         newLevel.setCutSceneNumber(cutScenesEnabled ? cutSceneNumberAfterLevel(newLevel.number) : 0);
         newLevel.setNumFlashes(levelData(newLevel.number).numFlashes());
 
@@ -303,7 +302,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     @Override
     public float ghostAttackSpeed(Ghost ghost) {
-        if (level.world().isTunnel(ghost.tile()) && level.number <= 3) {
+        if (level.isTunnel(ghost.tile()) && level.number <= 3) {
             return ghostTunnelSpeed(ghost);
         }
         if (ghost.id() == RED_GHOST && cruiseElroy == 1) {
@@ -415,7 +414,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     @Override
     public boolean isBonusReached() {
-        return level.world().eatenFoodCount() == 64 || level.world().eatenFoodCount() == 176;
+        return level.eatenFoodCount() == 64 || level.eatenFoodCount() == 176;
     }
 
     /**
@@ -476,7 +475,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         }
         level.advanceNextBonus();
 
-        List<Portal> portals = level.world().portals().toList();
+        List<Portal> portals = level.portals().toList();
         if (portals.isEmpty()) {
             return; // should not happen
         }
@@ -484,10 +483,10 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         Vector2i entryTile, exitTile;
         boolean crossMazeLeftToRight;
 
-        WorldMap worldMap = level.world().map();
+        WorldMap worldMap = level.map();
         if (worldMap.hasProperty(LayerID.TERRAIN, "pos_bonus")) {
             // use entry tile stored in terrain map
-            entryTile = level.world().map().getTerrainTileProperty("pos_bonus", null);
+            entryTile = level.map().getTerrainTileProperty("pos_bonus", null);
             if (entryTile.x() == 0) {
                 // start tile is at left maze border
                 exitTile = portals.get(RND.nextInt(portals.size())).rightTunnelEnd().plus(1, 0);
@@ -509,12 +508,12 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
             }
         }
 
-        Vector2i houseEntry = tileAt(level.world().houseEntryPosition());
-        Vector2i behindHouse = houseEntry.plus(0, level.world().houseSizeInTiles().y() + 1);
+        Vector2i houseEntry = tileAt(level.houseEntryPosition());
+        Vector2i behindHouse = houseEntry.plus(0, level.houseSizeInTiles().y() + 1);
         List<Waypoint> route = Stream.of(entryTile, houseEntry, behindHouse, houseEntry, exitTile).map(Waypoint::new).toList();
 
         byte symbol = level.bonusSymbol(level.nextBonusIndex());
-        var movingBonus = new MovingBonus(level.world(), symbol, BONUS_VALUE_FACTORS[symbol] * 100);
+        var movingBonus = new MovingBonus(level, symbol, BONUS_VALUE_FACTORS[symbol] * 100);
         movingBonus.setEdible(TickTimer.INDEFINITE);
         movingBonus.setRoute(route, crossMazeLeftToRight);
         movingBonus.setBaseSpeed(1.25f);

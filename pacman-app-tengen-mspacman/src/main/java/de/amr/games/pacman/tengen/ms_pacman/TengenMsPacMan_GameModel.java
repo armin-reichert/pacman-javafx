@@ -10,7 +10,10 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.Waypoint;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.*;
+import de.amr.games.pacman.model.GameException;
+import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.Portal;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import de.amr.games.pacman.steering.Steering;
@@ -297,7 +300,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         if (level == null) {
             return 0;
         }
-        if (level.world().isTunnel(ghost.tile())) {
+        if (level.isTunnel(ghost.tile())) {
             return ghostTunnelSpeed(ghost);
         }
         float speed = ghost.baseSpeed();
@@ -395,22 +398,20 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     private void populateLevel(GameLevel level) {
-        GameWorld world = level.world();
-
-        world.createArcadeHouse(10, 15, 17, 19);
+        level.createArcadeHouse(10, 15, 17, 19);
 
         var pac = new Pac();
         pac.setName("Ms. Pac-Man");
-        pac.setWorld(world);
+        pac.setGameLevel(level);
         pac.reset();
 
         var ghosts = new Ghost[] { blinky(), pinky(), inky(), sue() };
         Stream.of(ghosts).forEach(ghost -> {
-            ghost.setWorld(world);
-            ghost.setRevivalPosition(world.ghostPosition(ghost.id()));
+            ghost.setGameLevel(level);
+            ghost.setRevivalPosition(level.ghostPosition(ghost.id()));
             ghost.reset();
         });
-        ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST)); // middle house position
+        ghosts[RED_GHOST].setRevivalPosition(level.ghostPosition(PINK_GHOST)); // middle house position
 
         level.setPac(pac);
         level.setGhosts(ghosts);
@@ -425,7 +426,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         TengenMsPacMan_MapSelector tengenMsPacManMapSelector = (TengenMsPacMan_MapSelector) mapSelector;
         WorldMap worldMap = tengenMsPacManMapSelector.selectWorldMap(mapCategory, levelNumber);
 
-        GameLevel newLevel = new GameLevel(levelNumber, new GameWorld(worldMap));
+        GameLevel newLevel = new GameLevel(levelNumber, worldMap);
         newLevel.setNumFlashes(5); // TODO check this
         newLevel.setCutSceneNumber(cutSceneNumberAfterLevel(newLevel.number));
 
@@ -434,7 +435,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         newLevel.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         // Ghosts inside house start at bottom of house instead at middle
         newLevel.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST).forEach(ghost ->
-            newLevel.world().setGhostPosition(ghost.id(), newLevel.world().ghostPosition(ghost.id()).plus(0, HTS))
+            newLevel.setGhostPosition(ghost.id(), newLevel.ghostPosition(ghost.id()).plus(0, HTS))
         );
 
         levelCounterEnabled = newLevel.number < 8;
@@ -458,7 +459,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         TengenMsPacMan_MapSelector tengenMsPacManMapSelector = (TengenMsPacMan_MapSelector) mapSelector;
         WorldMap worldMap = tengenMsPacManMapSelector.coloredWorldMap(mapCategory, 1);
 
-        GameLevel newLevel = new GameLevel(1, new GameWorld(worldMap));
+        GameLevel newLevel = new GameLevel(1, worldMap);
         newLevel.setNumFlashes(5); // TODO check this
         newLevel.setCutSceneNumber(0);
 
@@ -467,7 +468,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         newLevel.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         // ghosts inside house start at floor of house
         newLevel.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST).forEach(ghost ->
-            newLevel.world().setGhostPosition(ghost.id(), newLevel.world().ghostPosition(ghost.id()).plus(0, HTS))
+            newLevel.setGhostPosition(ghost.id(), newLevel.ghostPosition(ghost.id()).plus(0, HTS))
         );
 
         levelCounterEnabled = true;
@@ -501,7 +502,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public boolean isBonusReached() {
-        return level.world().eatenFoodCount() == 64 || level.world().eatenFoodCount() == 176;
+        return level.eatenFoodCount() == 64 || level.eatenFoodCount() == 176;
     }
 
     @Override
@@ -524,9 +525,9 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.advanceNextBonus();
 
         boolean leftToRight = RND.nextBoolean();
-        Vector2i houseEntry = tileAt(level.world().houseEntryPosition());
-        Vector2i houseEntryOpposite = houseEntry.plus(0, level.world().houseSizeInTiles().y() + 1);
-        List<Portal> portals = level.world().portals().toList();
+        Vector2i houseEntry = tileAt(level.houseEntryPosition());
+        Vector2i houseEntryOpposite = houseEntry.plus(0, level.houseSizeInTiles().y() + 1);
+        List<Portal> portals = level.portals().toList();
         if (portals.isEmpty()) {
             return; // there should be no mazes without portal but who knows?
         }
@@ -541,7 +542,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         ).map(Waypoint::new).toList();
 
         byte symbol = level.bonusSymbol(level.nextBonusIndex());
-        var movingBonus = new MovingBonus(level.world(), symbol, BONUS_VALUE_FACTORS[symbol] * 100);
+        var movingBonus = new MovingBonus(level, symbol, BONUS_VALUE_FACTORS[symbol] * 100);
         movingBonus.setRoute(route, leftToRight);
         movingBonus.setBaseSpeed(1f); // TODO how fast is the bonus really moving?
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");

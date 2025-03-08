@@ -8,12 +8,12 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D;
-import de.amr.games.pacman.uilib.WorldMapColoring;
 import de.amr.games.pacman.ui._3d.animation.MaterialColorAnimation;
 import de.amr.games.pacman.ui._3d.scene3d.GameUIConfiguration3D;
+import de.amr.games.pacman.uilib.WorldMapColoring;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -64,8 +64,8 @@ public class Maze3D extends Group {
     private final Set<Group> obstacleGroups;
     private final MaterialColorAnimation materialColorAnimation;
 
-    public Maze3D(GameUIConfiguration3D configuration3D, GameWorld world, WorldMapColoring coloring) {
-        Logger.info("Build world 3D. Map URL='{}'", URLDecoder.decode(world.map().url().toExternalForm(), StandardCharsets.UTF_8));
+    public Maze3D(GameUIConfiguration3D configuration3D, GameLevel level, WorldMapColoring coloring) {
+        Logger.info("Build world 3D. Map URL='{}'", URLDecoder.decode(level.map().url().toExternalForm(), StandardCharsets.UTF_8));
 
         Color wallBaseColor = coloring.stroke();
         // need some contrast with floor if fill color is black
@@ -102,8 +102,8 @@ public class Maze3D extends Group {
         obstacleBaseHeightPy.set(PY_3D_WALL_HEIGHT.get());
 
         //TODO just a temporary solution until I find something better
-        if (world.map().hasProperty(LayerID.TERRAIN, OSHAPES_FILLED_PROPERTY_NAME)) {
-            Object value = world.map().getProperty(LayerID.TERRAIN, OSHAPES_FILLED_PROPERTY_NAME);
+        if (level.map().hasProperty(LayerID.TERRAIN, OSHAPES_FILLED_PROPERTY_NAME)) {
+            Object value = level.map().getProperty(LayerID.TERRAIN, OSHAPES_FILLED_PROPERTY_NAME);
             try {
                 r3D.setOShapeFilled(Boolean.parseBoolean(String.valueOf(value)));
             } catch (Exception x) {
@@ -111,19 +111,19 @@ public class Maze3D extends Group {
             }
         }
 
-        for (Obstacle obstacle : world.map().obstacles()) {
-            if (!world.isPartOfHouse(tileAt(obstacle.startPoint().toVector2f()))) {
+        for (Obstacle obstacle : level.map().obstacles()) {
+            if (!level.isPartOfHouse(tileAt(obstacle.startPoint().toVector2f()))) {
                 r3D.setWallThickness(OBSTACLE_THICKNESS);
                 r3D.setWallBaseMaterial(wallBaseMaterial);
                 r3D.setWallTopMaterial(wallTopMaterial);
-                r3D.renderObstacle3D(this, obstacle, isWorldBorder(world.map(), obstacle));
+                r3D.renderObstacle3D(this, obstacle, isWorldBorder(level.map(), obstacle));
             }
         }
 
         // House
         houseBaseHeightPy.set(HOUSE_BASE_HEIGHT);
         door3D = addGhostHouse(
-                this, world, r3D,
+                this, level, r3D,
                 coloring.fill(), coloring.stroke(), coloring.door(),
                 HOUSE_OPACITY,
                 houseBaseHeightPy, HOUSE_WALL_TOP_HEIGHT, HOUSE_WALL_THICKNESS,
@@ -152,13 +152,13 @@ public class Maze3D extends Group {
 
     private Door3D addGhostHouse(
         Group parent,
-        GameWorld world,
+        GameLevel level,
         TerrainRenderer3D r3D,
         Color houseBaseColor, Color houseTopColor, Color doorsColor, float wallOpacity,
         DoubleProperty wallBaseHeightPy, float wallTopHeight, float wallThickness,
         BooleanProperty houseLightOnPy)
     {
-        Vector2i houseSize = world.houseSizeInTiles();
+        Vector2i houseSize = level.houseSizeInTiles();
         r3D.setWallBaseHeightProperty(wallBaseHeightPy);
         r3D.setWallTopHeight(wallTopHeight);
         r3D.setWallThickness(wallThickness);
@@ -166,9 +166,9 @@ public class Maze3D extends Group {
         r3D.setWallTopMaterial(coloredMaterial(houseTopColor));
 
         int tilesX = houseSize.x(), tilesY = houseSize.y();
-        int xMin = world.houseMinTile().x(), xMax = xMin + tilesX - 1;
-        int yMin = world.houseMinTile().y(), yMax = yMin + tilesY - 1;
-        Vector2i leftDoorTile = world.houseLeftDoorTile(), rightDoorTile = world.houseRightDoorTile();
+        int xMin = level.houseMinTile().x(), xMax = xMin + tilesX - 1;
+        int yMin = level.houseMinTile().y(), yMax = yMin + tilesY - 1;
+        Vector2i leftDoorTile = level.houseLeftDoorTile(), rightDoorTile = level.houseRightDoorTile();
 
         var door3D = new Door3D(leftDoorTile, rightDoorTile, doorsColor, wallBaseHeightPy.get());
 

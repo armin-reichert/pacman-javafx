@@ -91,7 +91,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
     }
 
     public boolean insideHouse() {
-        return world.isPartOfHouse(tile());
+        return level.isPartOfHouse(tile());
     }
 
     public void setRevivalPosition(Vector2f position) {
@@ -114,7 +114,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
      */
     public void roam(float speed) {
         Vector2i currentTile = tile();
-        if (!world.isPortalAt(currentTile) && (isNewTileEntered() || !moveInfo.moved)) {
+        if (!level.isPortalAt(currentTile) && (isNewTileEntered() || !moveInfo.moved)) {
             setWishDir(determineNextDirection(currentTile));
         }
         setSpeed(speed);
@@ -145,25 +145,24 @@ public class Ghost extends Creature implements AnimatedActor2D {
     @Override
     public boolean canAccessTile(Vector2i tile) {
         assertTileNotNull(tile);
-        assertNotNull(world);
 
         // hunting ghosts cannot move up at certain tiles in Pac-Man game
         if (state == HUNTING_PAC) {
             var currentTile = tile();
             if (specialTerrainTiles.contains(tile)
-                    && world.map().get(LayerID.TERRAIN, tile) == TerrainTiles.ONE_WAY_DOWN
+                    && level.map().get(LayerID.TERRAIN, tile) == TerrainTiles.ONE_WAY_DOWN
                     && currentTile.equals(tile.plus(DOWN.vector()))) {
                 Logger.debug("Hunting {} cannot move up to special tile {}", name, tile);
                 return false;
             }
         }
-        if (world.isDoorAt(tile)) {
+        if (level.isDoorAt(tile)) {
             return inState(ENTERING_HOUSE, LEAVING_HOUSE);
         }
-        if (world.isInsideWorld(tile)) {
-            return !world.isBlockedTile(tile);
+        if (level.isInsideWorld(tile)) {
+            return !level.isBlockedTile(tile);
         }
-        return world.isPortalAt(tile);
+        return level.isPortalAt(tile);
     }
 
     @Override
@@ -245,8 +244,8 @@ public class Ghost extends Creature implements AnimatedActor2D {
     private void updateStateLocked(GameModel game) {
         GameLevel level = game.level().orElseThrow();
         if (insideHouse()) {
-            float minY = (world.houseMinTile().y() + 1) * TS + HTS;
-            float maxY = (world.houseMaxTile().y() - 1) * TS - HTS;
+            float minY = (level.houseMinTile().y() + 1) * TS + HTS;
+            float maxY = (level.houseMaxTile().y() - 1) * TS - HTS;
             setSpeed(game.ghostSpeedInsideHouse(this));
             move();
             if (posY <= minY) {
@@ -277,7 +276,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
     private void updateStateLeavingHouse(GameModel game) {
         GameLevel level = game.level().orElseThrow();
         float speedInsideHouse = game.ghostSpeedInsideHouse(this);
-        Vector2f houseEntryPosition = world.houseEntryPosition();
+        Vector2f houseEntryPosition = level.houseEntryPosition();
         if (posY() <= houseEntryPosition.y()) {
             // has raised and is outside house
             setPosition(houseEntryPosition);
@@ -292,7 +291,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
         }
         // move inside house
         float centerX = posX + HTS;
-        float houseCenterX = world.houseCenter().x();
+        float houseCenterX = level.houseCenter().x();
         if (differsAtMost(0.5f * speedInsideHouse, centerX, houseCenterX)) {
             // align horizontally and raise
             setPosX(houseCenterX - HTS);
@@ -340,7 +339,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
      * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
      */
     private void updateStateFrightened(GameModel game) {
-        float speed = world.isTunnel(tile()) ? game.ghostTunnelSpeed(this) : game.ghostFrightenedSpeed(this);
+        float speed = level.isTunnel(tile()) ? game.ghostTunnelSpeed(this) : game.ghostFrightenedSpeed(this);
         roam(speed);
         updateFrightenedAnimation(game);
     }
@@ -370,14 +369,14 @@ public class Ghost extends Creature implements AnimatedActor2D {
      */
     private void updateStateReturningToHouse(GameModel game) {
         float speedReturningToHouse = game.ghostSpeedReturningToHouse(this);
-        Vector2f houseEntry = world.houseEntryPosition();
+        Vector2f houseEntry = level.houseEntryPosition();
         if (position().roughlyEquals(houseEntry, 0.5f * speedReturningToHouse, 0)) {
             setPosition(houseEntry);
             setMoveAndWishDir(DOWN);
             setState(ENTERING_HOUSE);
         } else {
             setSpeed(speedReturningToHouse);
-            setTargetTile(world.houseLeftDoorTile());
+            setTargetTile(level.houseLeftDoorTile());
             navigateTowardsTarget();
             tryMoving();
         }

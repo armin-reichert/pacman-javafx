@@ -7,12 +7,15 @@ package de.amr.games.pacman.arcade.pacman;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.HuntingTimer;
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.Waypoint;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.Waypoint;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.TerrainTiles;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.*;
+import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.LevelData;
+import de.amr.games.pacman.model.MapSelector;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.actors.StaticBonus;
@@ -213,8 +216,7 @@ public class ArcadePacMan_GameModel extends GameModel {
     }
 
     protected void populateLevel(GameLevel level) {
-        WorldMap worldMap = level.world().map();
-        GameWorld world = level.world(); //TODO merge with level class
+        WorldMap worldMap = level.map();
 
         if (!worldMap.hasProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MIN_TILE)) {
             Logger.warn("No house min tile found in map!");
@@ -226,20 +228,20 @@ public class ArcadePacMan_GameModel extends GameModel {
         }
         Vector2i minTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
         Vector2i maxTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
-        world.createArcadeHouse(minTile.x(), minTile.y(), maxTile.x(), maxTile.y());
+        level.createArcadeHouse(minTile.x(), minTile.y(), maxTile.x(), maxTile.y());
 
         var pac = new Pac();
         pac.setName("Pac-Man");
-        pac.setWorld(world);
+        pac.setGameLevel(level);
         pac.reset();
 
         var ghosts = new Ghost[] { blinky(), pinky(), inky(), clyde() };
         Stream.of(ghosts).forEach(ghost -> {
-            ghost.setWorld(world);
-            ghost.setRevivalPosition(world.ghostPosition(ghost.id()));
+            ghost.setGameLevel(level);
+            ghost.setRevivalPosition(level.ghostPosition(ghost.id()));
             ghost.reset();
         });
-        ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST)); // middle house position
+        ghosts[RED_GHOST].setRevivalPosition(level.ghostPosition(PINK_GHOST)); // middle house position
 
         level.setPac(pac);
         level.setGhosts(ghosts);
@@ -257,7 +259,7 @@ public class ArcadePacMan_GameModel extends GameModel {
     public GameLevel makeNormalLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
 
-        GameLevel newLevel = new GameLevel(levelNumber, new GameWorld(worldMap));
+        GameLevel newLevel = new GameLevel(levelNumber, worldMap);
         newLevel.setNumFlashes(levelData(newLevel.number).numFlashes());
         newLevel.setCutSceneNumber(cutScenesEnabled ? cutSceneNumberAfterLevel(newLevel.number) : 0);
 
@@ -321,7 +323,7 @@ public class ArcadePacMan_GameModel extends GameModel {
     @Override
     public float ghostAttackSpeed(Ghost ghost) {
         LevelData levelData = levelData(level.number);
-        if (level.world().isTunnel(ghost.tile())) {
+        if (level.isTunnel(ghost.tile())) {
             return levelData.ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed();
         }
         if (ghost.id() == RED_GHOST && cruiseElroy == 1) {
@@ -435,7 +437,7 @@ public class ArcadePacMan_GameModel extends GameModel {
 
     @Override
     public boolean isBonusReached() {
-        return level.world().eatenFoodCount() == 70 || level.world().eatenFoodCount() == 170;
+        return level.eatenFoodCount() == 70 || level.eatenFoodCount() == 170;
     }
 
     // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level
@@ -450,8 +452,8 @@ public class ArcadePacMan_GameModel extends GameModel {
         byte symbol = level.bonusSymbol(level.nextBonusIndex());
         StaticBonus staticBonus = new StaticBonus(symbol, ArcadePacMan_GameModel.BONUS_VALUE_FACTORS[symbol] * 100);
         level.setBonus(staticBonus);
-        if (level.world().map().hasProperty(LayerID.TERRAIN, PROPERTY_POS_BONUS)) {
-            Vector2i bonusTile = level.world().map().getTerrainTileProperty(PROPERTY_POS_BONUS, new Vector2i(13, 20));
+        if (level.map().hasProperty(LayerID.TERRAIN, PROPERTY_POS_BONUS)) {
+            Vector2i bonusTile = level.map().getTerrainTileProperty(PROPERTY_POS_BONUS, new Vector2i(13, 20));
             staticBonus.actor().setPosition(halfTileRightOf(bonusTile));
         } else {
             Logger.error("No bonus position found in map");

@@ -48,7 +48,7 @@ public class PictureInPictureView extends VBox {
         scene2D.setGameContext(context);
         scene2D.setGameRenderer(context.gameConfiguration().createRenderer(context.assets(), canvas));
         scene2D.backgroundColorProperty().bind(GlobalProperties2d.PY_CANVAS_BG_COLOR);
-        scene2D.renderer().setWorldMap(context.level().world().map());
+        scene2D.renderer().setWorldMap(context.level().map());
         recomputeLayout();
     }
 

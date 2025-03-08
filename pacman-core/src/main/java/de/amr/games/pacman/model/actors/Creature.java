@@ -7,7 +7,7 @@ package de.amr.games.pacman.model.actors;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.Portal;
 import org.tinylog.Logger;
 
@@ -28,7 +28,7 @@ public abstract class Creature extends Actor2D {
 
     protected final MoveResult moveInfo = new MoveResult();
 
-    protected GameWorld world;
+    protected GameLevel level;
 
     protected Direction moveDir;
     protected Direction wishDir;
@@ -109,12 +109,12 @@ public abstract class Creature extends Actor2D {
         return Optional.ofNullable(targetTile);
     }
 
-    public void setWorld(GameWorld world) {
-        this.world = assertNotNull(world);
+    public void setGameLevel(GameLevel level) {
+        this.level = assertNotNull(level);
     }
 
-    public GameWorld world() {
-        return world;
+    public GameLevel level() {
+        return level;
     }
 
     /**
@@ -264,7 +264,7 @@ public abstract class Creature extends Actor2D {
             return; // we don't need no navigation, dim dit didit didit...
         }
         Vector2i currentTile = tile();
-        if (!world.isPortalAt(currentTile)) {
+        if (!level.isPortalAt(currentTile)) {
             computeTargetDirection(currentTile, targetTile).ifPresent(this::setWishDir);
         }
     }
@@ -314,7 +314,7 @@ public abstract class Creature extends Actor2D {
             return;
         }
         Vector2i currentTile = tile();
-        for (Portal portal : world.portals().toList()) {
+        for (Portal portal : level.portals().toList()) {
             tryTeleport(currentTile, portal);
             if (moveInfo.teleported) {
                 return;
@@ -384,12 +384,12 @@ public abstract class Creature extends Actor2D {
 
         newTileEntered = !tileBeforeMove.equals(currentTile);
         moveInfo.moved = true;
-        moveInfo.tunnelEntered = world.isTunnel(currentTile)
-            && !world.isTunnel(tileBeforeMove)
-            && !world.isPortalAt(tileBeforeMove);
-        moveInfo.tunnelLeft = !world.isTunnel(currentTile)
-            && world.isTunnel(tileBeforeMove)
-            && !world.isPortalAt(currentTile);
+        moveInfo.tunnelEntered = level.isTunnel(currentTile)
+            && !level.isTunnel(tileBeforeMove)
+            && !level.isPortalAt(tileBeforeMove);
+        moveInfo.tunnelLeft = !level.isTunnel(currentTile)
+            && level.isTunnel(tileBeforeMove)
+            && !level.isPortalAt(currentTile);
 
         moveInfo.log(String.format("%5s (%.2f pixels)", dir, newVelocity.length()));
 
