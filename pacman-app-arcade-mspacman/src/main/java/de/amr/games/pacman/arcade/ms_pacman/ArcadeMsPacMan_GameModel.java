@@ -91,6 +91,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     protected ArcadeMsPacMan_GameModel(MapSelector mapSelector) {
         super(mapSelector, new ArcadeMsPacMan_HuntingTimer());
         huntingTimer.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
+        lastLevelNumber = Integer.MAX_VALUE;
     }
 
     @Override
@@ -360,7 +361,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         scoreManager.scorePoints(this, points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
         if (level.killedGhostCount() == 16) {
-            int extraPoints = POINTS_ALL_GHOSTS_IN_LEVEL;
+            int extraPoints = POINTS_ALL_GHOSTS_EATEN_IN_LEVEL;
             scoreManager.scorePoints(this, extraPoints);
             Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, level.number);
         }

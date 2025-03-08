@@ -12,7 +12,6 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.TerrainTiles;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.LevelData;
@@ -108,6 +107,7 @@ public class ArcadePacMan_GameModel extends GameModel {
     protected ArcadePacMan_GameModel(MapSelector mapSelector) {
         super(mapSelector, new ArcadePacMan_HuntingTimer());
         huntingTimer.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
+        lastLevelNumber = Integer.MAX_VALUE;
     }
 
     @Override
@@ -390,7 +390,7 @@ public class ArcadePacMan_GameModel extends GameModel {
         scoreManager.scorePoints(this, points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
         if (level.killedGhostCount() == 16) {
-            int extraPoints = POINTS_ALL_GHOSTS_IN_LEVEL;
+            int extraPoints = POINTS_ALL_GHOSTS_EATEN_IN_LEVEL;
             scoreManager.scorePoints(this, extraPoints);
             Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, level.number);
         }

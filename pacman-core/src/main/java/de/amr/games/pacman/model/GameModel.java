@@ -23,13 +23,20 @@ import static de.amr.games.pacman.lib.Globals.assertNotNull;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
 /**
- * Common base class of all game models.
+ * Common base class of all Pac-Man game models.
  *
  * @author Armin Reichert
  */
 public abstract class GameModel {
 
+    /**
+     * Directory where application stores high scores and other stuff (user home directory).
+     */
     public static final File HOME_DIR;
+
+    /**
+     * Directory where custom maps are looked for (<code>user_home_directory/maps</code>).
+     */
     public static final File CUSTOM_MAP_DIR;
 
     static {
@@ -46,10 +53,9 @@ public abstract class GameModel {
     // Ghost IDs
     public static final byte RED_GHOST = 0, PINK_GHOST = 1, CYAN_GHOST = 2, ORANGE_GHOST = 3;
 
-    public static final short    POINTS_ALL_GHOSTS_IN_LEVEL = 12_000;
-    public static final byte     LEVEL_COUNTER_MAX_SIZE = 7;
-    public static final byte     BONUS_POINTS_SHOWN_TICKS = 120; //TODO unsure
-    public static final byte[]   KILLED_GHOST_VALUE_MULTIPLIER = { 2, 4, 8, 16 }; // factor * 100 = value
+    public static final byte LEVEL_COUNTER_MAX_SIZE = 7;
+    public static final short POINTS_ALL_GHOSTS_EATEN_IN_LEVEL = 12_000;
+    public static final byte[] KILLED_GHOST_VALUE_MULTIPLIER = { 2, 4, 8, 16 }; // factor * 100 = value
 
     protected final MapSelector  mapSelector;
     protected final List<Byte>   levelCounter = new ArrayList<>();
@@ -58,6 +64,7 @@ public abstract class GameModel {
     protected final HuntingTimer huntingTimer;
 
     protected GameLevel          level;
+    protected int                lastLevelNumber;
     protected boolean            levelCounterEnabled;
     protected boolean            playing;
     protected boolean            simulateOverflowBug;
@@ -84,6 +91,8 @@ public abstract class GameModel {
     public abstract void         killGhost(Ghost ghost);
     public abstract void         activateNextBonus();
 
+    protected abstract void      setActorBaseSpeed(int levelNumber);
+
     public abstract float        ghostAttackSpeed(Ghost ghost);
     public abstract float        ghostFrightenedSpeed(Ghost ghost);
     public abstract float        ghostSpeedInsideHouse(Ghost ghost);
@@ -94,13 +103,13 @@ public abstract class GameModel {
     public abstract long         pacPowerTicks();
     public abstract long         pacPowerFadingTicks();
     public abstract float        pacPowerSpeed();
+
     public abstract long         gameOverStateTicks();
-    public abstract void         setDemoLevelBehavior();
 
     protected abstract void      configureNormalLevel();
     protected abstract void      configureDemoLevel();
+    public abstract void         setDemoLevelBehavior();
     protected abstract boolean   isPacManKillingIgnored();
-    protected abstract void      setActorBaseSpeed(int levelNumber);
     protected abstract boolean   isBonusReached();
     protected abstract byte      computeBonusSymbol();
 
@@ -111,11 +120,11 @@ public abstract class GameModel {
 
     public final HuntingTimer huntingTimer() { return huntingTimer; }
 
-    public int lastLevelNumber() { return Integer.MAX_VALUE; }
-
     public Optional<GameLevel> level() {
         return Optional.ofNullable(level);
     }
+
+    public final int lastLevelNumber() { return lastLevelNumber; }
 
     public int initialLives() {
         return initialLives;
@@ -190,9 +199,14 @@ public abstract class GameModel {
     }
 
     public void startNextLevel() {
-        createNormalLevel(level.number + 1);
-        startLevel();
-        showGuys();
+        int nextLevelNumber = level.number + 1;
+        if (nextLevelNumber <= lastLevelNumber) {
+            createNormalLevel(nextLevelNumber);
+            startLevel();
+            showGuys();
+        } else {
+            Logger.warn("Last level ({}) reached, cannot start next level", lastLevelNumber);
+        }
     }
 
     public void createDemoLevel() {
@@ -432,7 +446,7 @@ public abstract class GameModel {
 
     private void updateBonus(Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE && level.pac().sameTile(bonus.actor())) {
-            bonus.setEaten(BONUS_POINTS_SHOWN_TICKS);
+            bonus.setEaten(120); //TODO is 2 seconds correct?
             scoreManager.scorePoints(this, bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
             eventLog.bonusEaten = true;

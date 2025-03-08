@@ -91,15 +91,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     private static final String HIGH_SCORE_FILENAME = "highscore-ms_pacman_tengen.xml";
 
-    private static int intermissionNumberAfterLevel(int number) {
-        return switch (number) {
-            case 2 -> 1;
-            case 5 -> 2;
-            case 9, 13, 17 -> 3;
-            default -> 0;
-        };
-    }
-
     private MapCategory mapCategory;
     private Difficulty difficulty;
     private PacBooster pacBooster;
@@ -113,6 +104,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public TengenMsPacMan_GameModel() {
         super(new TengenMsPacMan_MapSelector(), new TengenMsPacMan_HuntingTimer());
         huntingTimer.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
+        lastLevelNumber = MAX_LEVEL_NUMBER;
     }
 
     public void init() {
@@ -197,11 +189,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     public Difficulty difficulty() {
         return difficulty;
-    }
-
-    @Override
-    public int lastLevelNumber() {
-        return MAX_LEVEL_NUMBER;
     }
 
     public void setStartLevelNumber(int number) {
@@ -417,7 +404,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         WorldMap worldMap = tengenMsPacManMapSelector.selectWorldMap(mapCategory, level.number);
         createWorldAndPopulation(worldMap);
         level.setNumFlashes(5); // TODO check this
-        level.setCutSceneNumber(intermissionNumberAfterLevel(level.number));
+        level.setCutSceneNumber(cutSceneNumberAfterLevel(level.number));
         level.pac().setAutopilot(autopilot);
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         // Ghosts inside house start at bottom of house instead at middle
@@ -426,6 +413,16 @@ public class TengenMsPacMan_GameModel extends GameModel {
         );
         levelCounterEnabled = level.number < 8;
         activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON
+    }
+
+    private int cutSceneNumberAfterLevel(int levelNumber) {
+        return switch (levelNumber) {
+            case 2 -> 1;
+            case 5 -> 2;
+            case 9, 13, 17 -> 3;
+            case MAX_LEVEL_NUMBER -> 4;
+            default -> 0;
+        };
     }
 
     @Override
