@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ArcadeMsPacMan_MapSelector implements MapSelector {
 
-    private ObservableList<WorldMap> maps;
+    private ObservableList<WorldMap> maps = FXCollections.emptyObservableList();
 
     @Override
     public List<WorldMap> builtinMaps() {
@@ -31,7 +31,9 @@ public class ArcadeMsPacMan_MapSelector implements MapSelector {
 
     @Override
     public void loadAllMaps(GameModel game) {
-        maps = FXCollections.observableList(loadMapsFromModule("maps/mspacman_%d.world", 4));
+        if (maps.isEmpty()) {
+            maps = FXCollections.observableList(loadMapsFromModule("maps/mspacman_%d.world", 4));
+        }
     }
 
     /**
