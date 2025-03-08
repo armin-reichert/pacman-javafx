@@ -210,7 +210,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
         //TODO check if this has to de done on every tick
         if (context.game().isDemoLevel()) {
-            context.game().setDemoLevelBehavior();
+            context.game().assignDemoLevelBehavior(level);
         }
         else {
             level.pac().setUsingAutopilot(PY_AUTOPILOT.get());

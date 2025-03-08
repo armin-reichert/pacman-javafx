@@ -180,8 +180,10 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         return new LevelData(LEVEL_DATA[Math.min(levelNumber - 1, LEVEL_DATA.length - 1)]);
     }
 
-    protected void populateLevel(WorldMap worldMap) {
-        GameWorld world = new GameWorld(worldMap);
+    protected void populateLevel(GameLevel level) {
+        final GameWorld world = level.world();
+        final WorldMap worldMap = world.map();
+
         if (!worldMap.hasProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MIN_TILE)) {
             Logger.warn("No house min tile found in map!");
             worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MIN_TILE, formatTile(vec_2i(10, 15)));
@@ -207,11 +209,10 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         });
         ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST)); // middle house position
 
-        level.setWorld(world);
         level.setPac(pac);
         level.setGhosts(ghosts);
-        level.setBonusSymbol(0, computeBonusSymbol());
-        level.setBonusSymbol(1, computeBonusSymbol());
+        level.setBonusSymbol(0, computeBonusSymbol(level.number));
+        level.setBonusSymbol(1, computeBonusSymbol(level.number));
     }
 
     @Override
@@ -221,24 +222,31 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public void configureNormalLevel() {
+    public GameLevel makeNormalLevel(int levelNumber) {
+        WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
+
+        GameLevel newLevel = new GameLevel(levelNumber, new GameWorld(worldMap));
+        newLevel.setCutSceneNumber(cutScenesEnabled ? cutSceneNumberAfterLevel(newLevel.number) : 0);
+        newLevel.setNumFlashes(levelData(newLevel.number).numFlashes());
+
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
-        levelCounterEnabled = level.number < 8;
-        level.setCutSceneNumber(cutScenesEnabled ? cutSceneNumberAfterLevel(level.number) : 0);
-        level.setNumFlashes(levelData(level.number).numFlashes());
-        WorldMap worldMap = mapSelector.selectWorldMap(level.number);
-        populateLevel(worldMap);
-        level.pac().setAutopilot(autopilot);
-        level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
+        levelCounterEnabled = newLevel.number < 8;
+
+        populateLevel(newLevel);
+        newLevel.pac().setAutopilot(autopilot);
+        newLevel.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
+
+        return newLevel;
     }
 
     @Override
-    public void configureDemoLevel() {
-        configureNormalLevel();
+    public GameLevel makeDemoLevel() {
+        GameLevel newLevel = makeNormalLevel(1);
         levelCounterEnabled = false;
-        setDemoLevelBehavior();
+        assignDemoLevelBehavior(newLevel);
         demoLevelSteering.init();
+        return newLevel;
     }
 
     private int cutSceneNumberAfterLevel(int number) {
@@ -251,10 +259,10 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public void setDemoLevelBehavior() {
-        level.pac().setAutopilot(demoLevelSteering);
-        level.pac().setUsingAutopilot(true);
-        level.pac().setImmune(false);
+    public void assignDemoLevelBehavior(GameLevel demoLevel) {
+        demoLevel.pac().setAutopilot(demoLevelSteering);
+        demoLevel.pac().setUsingAutopilot(true);
+        demoLevel.pac().setImmune(false);
     }
 
     @Override
@@ -435,9 +443,9 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
      * </p>
      */
     @Override
-    public byte computeBonusSymbol() {
-        if (level.number <= 7) {
-            return (byte) (level.number - 1);
+    public byte computeBonusSymbol(int levelNumber) {
+        if (levelNumber <= 7) {
+            return (byte) (levelNumber - 1);
         }
         int choice = randomInt(0, 320);
         if (choice <  50) return 0; // 5/32 probability

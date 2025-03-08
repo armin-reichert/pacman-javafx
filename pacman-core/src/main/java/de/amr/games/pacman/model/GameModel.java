@@ -106,12 +106,14 @@ public abstract class GameModel {
 
     public abstract long         gameOverStateTicks();
 
-    protected abstract void      configureNormalLevel();
-    protected abstract void      configureDemoLevel();
-    public abstract void         setDemoLevelBehavior();
+    protected abstract GameLevel makeNormalLevel(int levelNumber);
+    protected abstract GameLevel makeDemoLevel();
+
+    public abstract void assignDemoLevelBehavior(GameLevel demoLevel);
+
     protected abstract boolean   isPacManKillingIgnored();
     protected abstract boolean   isBonusReached();
-    protected abstract byte      computeBonusSymbol();
+    protected abstract byte      computeBonusSymbol(int levelNumber);
 
     protected abstract void      onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
     protected abstract void      onGhostReleased(Ghost ghost);
@@ -190,8 +192,7 @@ public abstract class GameModel {
 
     public void createNormalLevel(int levelNumber) {
         setDemoLevel(false);
-        level = new GameLevel(levelNumber);
-        configureNormalLevel();
+        level = makeNormalLevel(levelNumber);
         scoreManager.setLevelNumber(levelNumber);
         huntingTimer.reset();
         updateLevelCounter();
@@ -211,8 +212,7 @@ public abstract class GameModel {
 
     public void createDemoLevel() {
         setDemoLevel(true);
-        level = new GameLevel(1);
-        configureDemoLevel();
+        level = makeDemoLevel();
         publishGameEvent(GameEventType.LEVEL_CREATED);
     }
 

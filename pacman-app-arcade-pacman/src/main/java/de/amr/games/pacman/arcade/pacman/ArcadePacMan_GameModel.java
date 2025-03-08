@@ -12,10 +12,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.TerrainTiles;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.LevelData;
-import de.amr.games.pacman.model.MapSelector;
+import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.actors.StaticBonus;
@@ -215,8 +212,10 @@ public class ArcadePacMan_GameModel extends GameModel {
         publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
     }
 
-    protected void populateLevel(WorldMap worldMap) {
-        GameWorld world = new GameWorld(worldMap);
+    protected void populateLevel(GameLevel level) {
+        WorldMap worldMap = level.world().map();
+        GameWorld world = level.world(); //TODO merge with level class
+
         if (!worldMap.hasProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MIN_TILE)) {
             Logger.warn("No house min tile found in map!");
             worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MIN_TILE, formatTile(vec_2i(10, 15)));
@@ -242,11 +241,10 @@ public class ArcadePacMan_GameModel extends GameModel {
         });
         ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST)); // middle house position
 
-        level.setWorld(world);
         level.setPac(pac);
         level.setGhosts(ghosts);
-        level.setBonusSymbol(0, computeBonusSymbol());
-        level.setBonusSymbol(1, computeBonusSymbol());
+        level.setBonusSymbol(0, computeBonusSymbol(level.number));
+        level.setBonusSymbol(1, computeBonusSymbol(level.number));
     }
 
     @Override
@@ -256,23 +254,34 @@ public class ArcadePacMan_GameModel extends GameModel {
     }
 
     @Override
-    public void configureNormalLevel() {
+    public GameLevel makeNormalLevel(int levelNumber) {
+        WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
+
+        GameLevel newLevel = new GameLevel(levelNumber, new GameWorld(worldMap));
+        newLevel.setNumFlashes(levelData(newLevel.number).numFlashes());
+        newLevel.setCutSceneNumber(cutScenesEnabled ? cutSceneNumberAfterLevel(newLevel.number) : 0);
+
         levelCounterEnabled = true;
 
-        level.setNumFlashes(levelData(level.number).numFlashes());
-        level.setCutSceneNumber(cutScenesEnabled ? cutSceneNumberAfterLevel(level.number) : 0);
-
-        WorldMap worldMap = mapSelector.selectWorldMap(level.number);
-
-        populateLevel(worldMap);
-        level.pac().setAutopilot(autopilot);
+        populateLevel(newLevel);
+        newLevel.pac().setAutopilot(autopilot);
         setCruiseElroy(0);
-
-        level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
+        newLevel.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
 
         List<Vector2i> oneWayDownTiles = worldMap.tiles()
                 .filter(tile -> worldMap.get(LayerID.TERRAIN, tile) == TerrainTiles.ONE_WAY_DOWN).toList();
-        level.ghosts().forEach(ghost -> ghost.setSpecialTerrainTiles(oneWayDownTiles));
+        newLevel.ghosts().forEach(ghost -> ghost.setSpecialTerrainTiles(oneWayDownTiles));
+
+        return newLevel;
+    }
+
+    @Override
+    public GameLevel makeDemoLevel() {
+        GameLevel newLevel = makeNormalLevel(1);
+        levelCounterEnabled = false;
+        demoLevelSteering.init();
+        assignDemoLevelBehavior(newLevel);
+        return newLevel;
     }
 
     protected int cutSceneNumberAfterLevel(int number) {
@@ -285,18 +294,10 @@ public class ArcadePacMan_GameModel extends GameModel {
     }
 
     @Override
-    public void configureDemoLevel() {
-        configureNormalLevel();
-        levelCounterEnabled = false;
-        demoLevelSteering.init();
-        setDemoLevelBehavior();
-    }
-
-    @Override
-    public void setDemoLevelBehavior() {
-        level.pac().setAutopilot(demoLevelSteering);
-        level.pac().setUsingAutopilot(true);
-        level.pac().setImmune(false);
+    public void assignDemoLevelBehavior(GameLevel demoLevel) {
+        demoLevel.pac().setAutopilot(demoLevelSteering);
+        demoLevel.pac().setUsingAutopilot(true);
+        demoLevel.pac().setImmune(false);
     }
 
     @Override
@@ -439,8 +440,8 @@ public class ArcadePacMan_GameModel extends GameModel {
 
     // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level
     @Override
-    public byte computeBonusSymbol() {
-        return level.number > 12 ? 7 : BONUS_SYMBOLS_BY_LEVEL_NUMBER[level.number];
+    public byte computeBonusSymbol(int levelNumber) {
+        return levelNumber > 12 ? 7 : BONUS_SYMBOLS_BY_LEVEL_NUMBER[levelNumber];
     }
 
     @Override

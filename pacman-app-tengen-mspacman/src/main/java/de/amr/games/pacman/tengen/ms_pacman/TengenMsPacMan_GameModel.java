@@ -10,10 +10,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.Waypoint;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.GameException;
-import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.Portal;
+import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import de.amr.games.pacman.steering.Steering;
@@ -397,8 +394,9 @@ public class TengenMsPacMan_GameModel extends GameModel {
         }
     }
 
-    private void createWorldAndPopulation(WorldMap worldMap) {
-        GameWorld world = new GameWorld(worldMap);
+    private void populateLevel(GameLevel level) {
+        GameWorld world = level.world();
+
         world.createArcadeHouse(10, 15, 17, 19);
 
         var pac = new Pac();
@@ -414,29 +412,35 @@ public class TengenMsPacMan_GameModel extends GameModel {
         });
         ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST)); // middle house position
 
-        level.setWorld(world);
         level.setPac(pac);
         level.setGhosts(ghosts);
+
         //TODO this might not be appropriate for Tengen Ms. Pac-Man
-        level.setBonusSymbol(0, computeBonusSymbol());
-        level.setBonusSymbol(1, computeBonusSymbol());
+        level.setBonusSymbol(0, computeBonusSymbol(level.number));
+        level.setBonusSymbol(1, computeBonusSymbol(level.number));
     }
 
     @Override
-    public void configureNormalLevel() {
+    public GameLevel makeNormalLevel(int levelNumber) {
         TengenMsPacMan_MapSelector tengenMsPacManMapSelector = (TengenMsPacMan_MapSelector) mapSelector;
-        WorldMap worldMap = tengenMsPacManMapSelector.selectWorldMap(mapCategory, level.number);
-        createWorldAndPopulation(worldMap);
-        level.setNumFlashes(5); // TODO check this
-        level.setCutSceneNumber(cutSceneNumberAfterLevel(level.number));
-        level.pac().setAutopilot(autopilot);
-        level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
+        WorldMap worldMap = tengenMsPacManMapSelector.selectWorldMap(mapCategory, levelNumber);
+
+        GameLevel newLevel = new GameLevel(levelNumber, new GameWorld(worldMap));
+        newLevel.setNumFlashes(5); // TODO check this
+        newLevel.setCutSceneNumber(cutSceneNumberAfterLevel(newLevel.number));
+
+        populateLevel(newLevel);
+        newLevel.pac().setAutopilot(autopilot);
+        newLevel.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         // Ghosts inside house start at bottom of house instead at middle
-        level.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST).forEach(ghost ->
-            level.world().setGhostPosition(ghost.id(), level.world().ghostPosition(ghost.id()).plus(0, HTS))
+        newLevel.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST).forEach(ghost ->
+            newLevel.world().setGhostPosition(ghost.id(), newLevel.world().ghostPosition(ghost.id()).plus(0, HTS))
         );
-        levelCounterEnabled = level.number < 8;
+
+        levelCounterEnabled = newLevel.number < 8;
         activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON
+
+        return newLevel;
     }
 
     private int cutSceneNumberAfterLevel(int levelNumber) {
@@ -450,30 +454,39 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public void configureDemoLevel() {
+    public GameLevel makeDemoLevel() {
         TengenMsPacMan_MapSelector tengenMsPacManMapSelector = (TengenMsPacMan_MapSelector) mapSelector;
-        WorldMap worldMap = tengenMsPacManMapSelector.coloredWorldMap(mapCategory, level.number);
-        createWorldAndPopulation(worldMap);
-        level.setNumFlashes(5); // TODO check this
-        level.setCutSceneNumber(0);
-        level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
+        WorldMap worldMap = tengenMsPacManMapSelector.coloredWorldMap(mapCategory, 1);
+
+        GameLevel newLevel = new GameLevel(1, new GameWorld(worldMap));
+        newLevel.setNumFlashes(5); // TODO check this
+        newLevel.setCutSceneNumber(0);
+
+        populateLevel(newLevel);
+
+        newLevel.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         // ghosts inside house start at floor of house
-        level.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST).forEach(ghost ->
-            level.world().setGhostPosition(ghost.id(), level.world().ghostPosition(ghost.id()).plus(0, HTS))
+        newLevel.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST).forEach(ghost ->
+            newLevel.world().setGhostPosition(ghost.id(), newLevel.world().ghostPosition(ghost.id()).plus(0, HTS))
         );
+
         levelCounterEnabled = true;
         levelCounter.clear();
         levelCounter.add((byte)0);
+
         activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON
-        setDemoLevelBehavior();
+
+        assignDemoLevelBehavior(newLevel);
         demoLevelSteering.init();
+
+        return newLevel;
     }
 
     @Override
-    public void setDemoLevelBehavior() {
-        level.pac().setAutopilot(demoLevelSteering);
-        level.pac().setUsingAutopilot(true);
-        level.pac().setImmune(false);
+    public void assignDemoLevelBehavior(GameLevel demoLevel) {
+        demoLevel.pac().setAutopilot(demoLevelSteering);
+        demoLevel.pac().setUsingAutopilot(true);
+        demoLevel.pac().setImmune(false);
     }
 
     @Override
@@ -492,11 +505,11 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public byte computeBonusSymbol() {
+    public byte computeBonusSymbol(int levelNumber) {
         //TODO: I have no idea yet how Tengen does this
         byte maxBonus = mapCategory == MapCategory.STRANGE ? BONUS_FLOWER : BONUS_BANANA;
-        if (level.number - 1 <= maxBonus) {
-            return (byte) (level.number - 1);
+        if (levelNumber - 1 <= maxBonus) {
+            return (byte) (levelNumber - 1);
         }
         return (byte) randomInt(0, maxBonus);
     }

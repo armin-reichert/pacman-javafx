@@ -18,11 +18,14 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.assertLegalGhostID;
+import static de.amr.games.pacman.lib.Globals.assertNotNull;
 
 public class GameLevel {
 
     public enum MessageType { READY, GAME_OVER, TEST_LEVEL }
     public record Message(MessageType type) {}
+
+    private final GameWorld world;
 
     public final int number; // 1=first level
     private long startTime;
@@ -30,7 +33,6 @@ public class GameLevel {
     private int numFlashes;
     private int intermissionNumber;
 
-    private GameWorld world;
     private Pac pac;
     private Ghost[] ghosts;
     private final List<Ghost> victims = new ArrayList<>();
@@ -42,8 +44,9 @@ public class GameLevel {
     private final Pulse blinking = new Pulse(10, Pulse.OFF);
     private final TickTimer powerTimer = new TickTimer("PacPowerTimer");
 
-    public GameLevel(int number) {
+    public GameLevel(int number, GameWorld world) {
         this.number = number;
+        this.world = assertNotNull(world);
         nextBonusIndex = -1;
     }
 
@@ -62,10 +65,6 @@ public class GameLevel {
 
     public long startTime() {
         return startTime;
-    }
-
-    public void setWorld(GameWorld world) {
-        this.world = world;
     }
 
     public GameWorld world() {
