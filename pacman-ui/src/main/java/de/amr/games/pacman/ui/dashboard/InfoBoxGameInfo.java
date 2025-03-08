@@ -99,21 +99,21 @@ public class InfoBoxGameInfo extends InfoBox {
 
     private String fmtHuntingPhase(GameLevel level) {
         var game = context.game();
-        HuntingTimer huntingControl = game.huntingControl();
+        HuntingTimer huntingTimer = game.huntingTimer();
         return "%s #%d%s".formatted(
-            huntingControl.phaseType().name(),
-            huntingControl.phaseType() == HuntingTimer.PhaseType.CHASING
-                ? huntingControl.currentChasingPhaseIndex().orElse(42)
-                : huntingControl.currentScatterPhaseIndex().orElse(42),
-            huntingControl.isStopped() ? " STOPPED" : "");
+            huntingTimer.phaseType().name(),
+            huntingTimer.phaseType() == HuntingTimer.PhaseType.CHASING
+                ? huntingTimer.currentChasingPhaseIndex().orElse(42)
+                : huntingTimer.currentScatterPhaseIndex().orElse(42),
+            huntingTimer.isStopped() ? " STOPPED" : "");
     }
 
     private String fmtHuntingTicksRunning(GameLevel level) {
-        return "Running:   %d".formatted(context.game().huntingControl().tickCount());
+        return "Running:   %d".formatted(context.game().huntingTimer().tickCount());
     }
 
     private String fmtHuntingTicksRemaining(GameLevel level) {
-        return "Remaining: %s".formatted(ticksToString(context.game().huntingControl().remainingTicks()));
+        return "Remaining: %s".formatted(ticksToString(context.game().huntingTimer().remainingTicks()));
     }
 
     private String fmtPelletCount(GameLevel level) {

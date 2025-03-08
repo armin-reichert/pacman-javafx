@@ -71,17 +71,6 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         /*21*/ { 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
     };
 
-    /*
-     * These numbers are from a conversation with @damselindis on Reddit.
-     *
-     * I am not sure if they are correct.
-     *
-     * @see <a href="https://www.reddit.com/r/Pacman/comments/12q4ny3/is_anyone_able_to_explain_the_ai_behind_the/">Reddit</a>
-     * @see <a href="https://github.com/armin-reichert/pacman-basic/blob/main/doc/mspacman-details-reddit-user-damselindis.md">GitHub</a>
-     */
-    private static final int[] HUNTING_TICKS_LEVEL_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, -1};
-    private static final int[] HUNTING_TICKS_LEVEL_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
-
     // To assure that the demo level runs at least 20 seconds:
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
@@ -96,11 +85,12 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     private byte cruiseElroy; //TODO is this existing in Ms. Pac-Man at all?
 
     public ArcadeMsPacMan_GameModel() {
-        super(new ArcadeMsPacMan_MapSelector());
+        this(new ArcadeMsPacMan_MapSelector());
     }
 
     protected ArcadeMsPacMan_GameModel(MapSelector mapSelector) {
-        super(mapSelector);
+        super(mapSelector, new ArcadeMsPacMan_HuntingTimer());
+        huntingTimer.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
     }
 
     @Override
@@ -108,20 +98,9 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         initialLives = 3;
         simulateOverflowBug = true;
         cutScenesEnabled = true;
-
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
-
         mapSelector.loadAllMaps(this);
-
-        huntingControl = new HuntingTimer() {
-            @Override
-            public long huntingTicks(int levelNumber, int phaseIndex) {
-                long ticks = levelNumber < 5 ? HUNTING_TICKS_LEVEL_1_TO_4[phaseIndex] : HUNTING_TICKS_LEVEL_5_PLUS[phaseIndex];
-                return ticks != -1 ? ticks : TickTimer.INDEFINITE;
-            }
-        };
-        huntingControl.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
     }
 
     @Override
@@ -140,7 +119,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         scoreManager().loadHighScore();
         scoreManager.resetScore();
         gateKeeper.reset();
-        huntingControl.reset();
+        huntingTimer.reset();
     }
 
     @Override
@@ -361,7 +340,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     @Override
     public void onPacKilled() {
-        huntingControl.stop();
+        huntingTimer.stop();
         Logger.info("Hunting timer stopped");
         level.powerTimer().stop();
         level.powerTimer().reset(0);
@@ -518,10 +497,10 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
      * only the scatter target of Blinky and Pinky would have been affected. Who knows?
      */
     private void ghostHuntingBehaviour(Ghost ghost) {
-        if (huntingControl.phaseIndex() == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
+        if (huntingTimer.phaseIndex() == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
             ghost.roam(ghostAttackSpeed(ghost));
         } else {
-            boolean chasing = huntingControl.phaseType() == HuntingTimer.PhaseType.CHASING
+            boolean chasing = huntingTimer.phaseType() == HuntingTimer.PhaseType.CHASING
                 || ghost.id() == RED_GHOST && cruiseElroy > 0;
             Vector2i targetTile = chasing ? chasingTarget(ghost) : scatterTarget(ghost);
             ghost.followTarget(targetTile, ghostAttackSpeed(ghost));

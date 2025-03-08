@@ -110,30 +110,14 @@ public class TengenMsPacMan_GameModel extends GameModel {
     private final Steering autopilot = new RuleBasedPacSteering(this);
     private final Steering demoLevelSteering = new RuleBasedPacSteering(this);
 
-    //TODO: I have no info about the exact timing so far, so I use these (inofficial) Arcade game values for now
-    private class MsPacManGameTengenHuntingControl extends HuntingTimer
-    {
-        static final long[] TICKS_LEVEL_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, TickTimer.INDEFINITE };
-        static final long[] TICKS_LEVEL_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, TickTimer.INDEFINITE };
-
-        public MsPacManGameTengenHuntingControl() {
-            setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
-        }
-
-        @Override
-        public long huntingTicks(int levelNumber, int phaseIndex) {
-            return levelNumber <= 4 ? TICKS_LEVEL_1_TO_4[phaseIndex] : TICKS_LEVEL_5_PLUS[phaseIndex];
-        }
-    }
-
     public TengenMsPacMan_GameModel() {
-        super(new TengenMsPacMan_MapSelector());
+        super(new TengenMsPacMan_MapSelector(), new TengenMsPacMan_HuntingTimer());
+        huntingTimer.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
     }
 
     public void init() {
         scoreManager.setHighScoreFile(new File(HOME_DIR, HIGH_SCORE_FILENAME));
         mapSelector.loadAllMaps(this);
-        huntingControl = new MsPacManGameTengenHuntingControl();
         setInitialLives(3);
         simulateOverflowBug = false; //TODO check this
         resetForStartingNewGame();
@@ -552,7 +536,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public void onPacKilled() {
-        huntingControl.stop();
+        huntingTimer.stop();
         Logger.info("Hunting timer stopped");
         level.powerTimer().stop();
         level.powerTimer().reset(0);
@@ -580,10 +564,10 @@ public class TengenMsPacMan_GameModel extends GameModel {
     // TODO clarify what exactly Tengen Ms. Pac-Man does
     private void ghostHuntingBehaviour(Ghost ghost) {
         float speed = ghostAttackSpeed(ghost);
-        if (huntingControl.phaseIndex() == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
+        if (huntingTimer.phaseIndex() == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
             ghost.roam(speed);
         } else {
-            boolean chasing = huntingControl.phaseType() == HuntingTimer.PhaseType.CHASING;
+            boolean chasing = huntingTimer.phaseType() == HuntingTimer.PhaseType.CHASING;
             Vector2i targetTile = chasing ? chasingTarget(ghost) : scatterTarget(ghost);
             ghost.followTarget(targetTile, speed);
         }

@@ -97,21 +97,17 @@ public class ArcadePacMan_GameModel extends GameModel {
     // Bonus value = factor * 100
     protected static final byte[] BONUS_VALUE_FACTORS = {1, 3, 5, 7, 10, 20, 30, 50};
 
-    // Ticks of scatter and chasing phases, -1=INDEFINITE
-    protected static final int[] HUNTING_TICKS_LEVEL_1 = {420, 1200, 420, 1200, 300,  1200, 300, -1};
-    protected static final int[] HUNTING_TICKS_LEVEL_2_3_4 = {420, 1200, 420, 1200, 300, 61980,   1, -1};
-    protected static final int[] HUNTING_TICKS_LEVEL_5_PLUS = {300, 1200, 300, 1200, 300, 62262,   1, -1};
-
     protected final Steering autopilot = new RuleBasedPacSteering(this);
     protected Steering demoLevelSteering;
     protected byte cruiseElroy;
 
     public ArcadePacMan_GameModel() {
-        super(new ArcadePacMan_MapSelector());
+        this(new ArcadePacMan_MapSelector());
     }
 
     protected ArcadePacMan_GameModel(MapSelector mapSelector) {
-        super(mapSelector);
+        super(mapSelector, new ArcadePacMan_HuntingTimer());
+        huntingTimer.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
     }
 
     @Override
@@ -121,10 +117,7 @@ public class ArcadePacMan_GameModel extends GameModel {
         cutScenesEnabled = true;
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
-
         mapSelector.loadAllMaps(this);
-
-        createHuntingControl();
         demoLevelSteering = new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE));
     }
 
@@ -144,22 +137,7 @@ public class ArcadePacMan_GameModel extends GameModel {
         scoreManager().loadHighScore();
         scoreManager.resetScore();
         gateKeeper.reset();
-        huntingControl.reset();
-    }
-
-    private void createHuntingControl() {
-        huntingControl = new HuntingTimer() {
-            @Override
-            public long huntingTicks(int levelNumber, int phaseIndex) {
-                long ticks = switch (levelNumber) {
-                    case 1 -> HUNTING_TICKS_LEVEL_1[phaseIndex];
-                    case 2, 3, 4 -> HUNTING_TICKS_LEVEL_2_3_4[phaseIndex];
-                    default -> HUNTING_TICKS_LEVEL_5_PLUS[phaseIndex];
-                };
-                return ticks != -1 ? ticks : TickTimer.INDEFINITE;
-            }
-        };
-        huntingControl.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
+        huntingTimer.reset();
     }
 
     protected LevelData levelData(int levelNumber) {
@@ -392,7 +370,7 @@ public class ArcadePacMan_GameModel extends GameModel {
 
     @Override
     public void onPacKilled() {
-        huntingControl.stop();
+        huntingTimer.stop();
         Logger.info("Hunting timer stopped");
         level.powerTimer().stop();
         level.powerTimer().reset(0);
@@ -462,7 +440,7 @@ public class ArcadePacMan_GameModel extends GameModel {
     }
 
     protected void ghostHuntingBehaviour(Ghost ghost) {
-        boolean chasing = huntingControl.phaseType() == HuntingTimer.PhaseType.CHASING
+        boolean chasing = huntingTimer.phaseType() == HuntingTimer.PhaseType.CHASING
             || ghost.id() == RED_GHOST && cruiseElroy > 0;
         Vector2i targetTile = chasing ? chasingTarget(ghost) : scatterTarget(ghost);
         ghost.followTarget(targetTile, ghostAttackSpeed(ghost));

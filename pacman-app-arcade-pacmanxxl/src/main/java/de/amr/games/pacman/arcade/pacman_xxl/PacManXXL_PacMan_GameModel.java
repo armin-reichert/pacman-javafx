@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade.pacman_xxl;
 
 import de.amr.games.pacman.arcade.pacman.ArcadePacMan_GameModel;
+import de.amr.games.pacman.model.MapSelector;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 
 import java.io.File;
@@ -16,7 +17,7 @@ import java.io.File;
  */
 public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
 
-    public PacManXXL_PacMan_GameModel(PacManXXL_MapSelector mapSelector) {
+    public PacManXXL_PacMan_GameModel(MapSelector mapSelector) {
         super(mapSelector);
     }
 

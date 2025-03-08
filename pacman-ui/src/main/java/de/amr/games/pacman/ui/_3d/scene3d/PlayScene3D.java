@@ -242,7 +242,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
     private void updateSound(GameSound sound) {
         if (context.gameState() == GameState.HUNTING && !context.level().powerTimer().isRunning()) {
-            int sirenNumber = 1 + context.game().huntingControl().phaseIndex() / 2;
+            int sirenNumber = 1 + context.game().huntingTimer().phaseIndex() / 2;
             sound.selectSiren(sirenNumber);
             sound.playSiren();
         }
