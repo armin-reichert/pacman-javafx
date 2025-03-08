@@ -12,14 +12,20 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface MapSelector {
+public abstract class MapSelector {
+
+    private MapSelectionMode mapSelectionMode;
+
+    public MapSelector() {
+        this.mapSelectionMode = MapSelectionMode.NO_CUSTOM_MAPS;
+    }
 
     /**
      * @param mapPattern path (pattern) to access the map files inside resources folder,
      *                   counting from 1, e.g. <code>"maps/masonic_%d.world"</code>
      * @param mapCount number of maps to be loaded
      */
-    default List<WorldMap> loadMapsFromModule(String mapPattern, int mapCount) {
+    public List<WorldMap> loadMapsFromModule(String mapPattern, int mapCount) {
         var maps = new ArrayList<WorldMap>();
         for (int mapNumber = 1; mapNumber <= mapCount; ++mapNumber) {
             URL url = getClass().getResource(mapPattern.formatted(mapNumber));
@@ -39,18 +45,17 @@ public interface MapSelector {
         return maps;
     }
 
-    default MapSelectionMode mapSelectionMode() { return MapSelectionMode.NO_CUSTOM_MAPS; }
+    public final MapSelectionMode mapSelectionMode() { return mapSelectionMode; }
 
-    default void setMapSelectionMode(MapSelectionMode mode) {}
+    public void setMapSelectionMode(MapSelectionMode mode) { mapSelectionMode = mode; }
 
-    WorldMap selectWorldMap(int levelNumber);
+    public abstract WorldMap selectWorldMap(int levelNumber);
 
+    public abstract List<WorldMap> builtinMaps();
 
-    List<WorldMap> builtinMaps();
+    public abstract List<WorldMap> customMaps();
 
-    List<WorldMap> customMaps();
+    public abstract void loadCustomMaps(GameModel game);
 
-    void loadCustomMaps(GameModel game);
-
-    void loadAllMaps(GameModel game);
+    public abstract void loadAllMaps(GameModel game);
 }

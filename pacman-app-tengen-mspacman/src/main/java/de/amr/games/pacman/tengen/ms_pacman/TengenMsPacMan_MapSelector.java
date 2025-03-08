@@ -21,7 +21,7 @@ import java.util.Map;
 import static de.amr.games.pacman.lib.nes.NES_ColorScheme.*;
 import static de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory.*;
 
-public class TengenMsPacMan_MapSelector implements MapSelector {
+public class TengenMsPacMan_MapSelector extends MapSelector {
 
     private static final String MAPS_ROOT = "/de/amr/games/pacman/tengen/ms_pacman/maps/";
 

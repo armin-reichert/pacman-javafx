@@ -12,7 +12,7 @@ import javafx.collections.ObservableList;
 
 import java.util.List;
 
-public class ArcadeMsPacMan_MapSelector implements MapSelector {
+public class ArcadeMsPacMan_MapSelector extends MapSelector {
 
     private ObservableList<WorldMap> maps = FXCollections.emptyObservableList();
 

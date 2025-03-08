@@ -16,12 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static de.amr.games.pacman.lib.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.Globals.randomInt;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.model.GameModel.CUSTOM_MAP_DIR;
 
-public class PacManXXL_MapSelector implements MapSelector {
+public class PacManXXL_MapSelector extends MapSelector {
 
     private static final List<Map<String, String>> MAP_COLORINGS = List.of(
             Map.of("fill", "#359c9c", "stroke", "#85e2ff", "door", "#fcb5ff", "pellet", "#feb8ae"),
@@ -36,7 +35,10 @@ public class PacManXXL_MapSelector implements MapSelector {
 
     private List<WorldMap> builtinMaps = new ArrayList<>();
     private final List<WorldMap> customMapsByFile = FXCollections.observableList(new ArrayList<>());
-    private MapSelectionMode mapSelectionMode = MapSelectionMode.CUSTOM_MAPS_FIRST;
+
+    public PacManXXL_MapSelector() {
+        setMapSelectionMode(MapSelectionMode.CUSTOM_MAPS_FIRST);
+    }
 
     @Override
     public List<WorldMap> builtinMaps() {
@@ -107,16 +109,8 @@ public class PacManXXL_MapSelector implements MapSelector {
         Map<String, String> mapColoring = builtinMaps.contains(template) ? randomMapColoring() : coloringFromMap(template);
         worldMap.setConfigValue("colorMap", mapColoring);
 
-        Logger.info("Map selected (Mode {}): {}", mapSelectionMode, worldMap.url());
+        Logger.info("Map selected (Mode {}): {}", mapSelectionMode(), worldMap.url());
         return worldMap;
-    }
-
-    public void setMapSelectionMode(MapSelectionMode mapSelectionMode) {
-        this.mapSelectionMode = assertNotNull(mapSelectionMode);
-    }
-
-    public MapSelectionMode mapSelectionMode() {
-        return mapSelectionMode;
     }
 
     private Map<String, String> randomMapColoring() {
@@ -130,5 +124,4 @@ public class PacManXXL_MapSelector implements MapSelector {
                 "door",   template.getPropertyOrDefault(LayerID.TERRAIN, PROPERTY_COLOR_DOOR,        "00ffff"),
                 "pellet", template.getPropertyOrDefault(LayerID.FOOD, PROPERTY_COLOR_FOOD,           "ffffff"));
     }
-
 }

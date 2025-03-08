@@ -12,7 +12,7 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
-public class ArcadePacMan_MapSelector implements MapSelector {
+public class ArcadePacMan_MapSelector extends MapSelector {
 
     private static final String MAP_PATH = "/de/amr/games/pacman/arcade/maps/pacman.world";
 
