@@ -7,7 +7,7 @@ package de.amr.games.pacman.arcade.ms_pacman;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.HuntingTimer;
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.NavPoint;
+import de.amr.games.pacman.lib.Waypoint;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
@@ -498,7 +498,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
         Vector2i houseEntry = tileAt(level.world().houseEntryPosition());
         Vector2i behindHouse = houseEntry.plus(0, level.world().houseSizeInTiles().y() + 1);
-        List<NavPoint> route = Stream.of(entryTile, houseEntry, behindHouse, houseEntry, exitTile).map(NavPoint::np).toList();
+        List<Waypoint> route = Stream.of(entryTile, houseEntry, behindHouse, houseEntry, exitTile).map(Waypoint::new).toList();
 
         byte symbol = level.bonusSymbol(level.nextBonusIndex());
         var movingBonus = new MovingBonus(level.world(), symbol, BONUS_VALUE_FACTORS[symbol] * 100);

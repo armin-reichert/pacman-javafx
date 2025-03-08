@@ -7,7 +7,7 @@ package de.amr.games.pacman.model.actors;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Globals;
-import de.amr.games.pacman.lib.NavPoint;
+import de.amr.games.pacman.lib.Waypoint;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
@@ -161,7 +161,7 @@ public class MovingBonus extends Creature implements Bonus {
         }
     }
 
-    public void setRoute(List<NavPoint> route, boolean leftToRight) {
+    public void setRoute(List<Waypoint> route, boolean leftToRight) {
         Globals.assertNotNull(route);
         var routeCopy = new ArrayList<>(route);
         centerOverTile(routeCopy.get(0).tile());

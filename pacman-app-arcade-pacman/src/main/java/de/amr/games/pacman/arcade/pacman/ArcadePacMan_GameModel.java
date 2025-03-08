@@ -7,7 +7,7 @@ package de.amr.games.pacman.arcade.pacman;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.HuntingTimer;
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.NavPoint;
+import de.amr.games.pacman.lib.Waypoint;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.TerrainTiles;
@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.lib.NavPoint.np;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
@@ -78,16 +77,16 @@ public class ArcadePacMan_GameModel extends GameModel {
         /*21*/ { 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
     };
 
-    protected static final NavPoint[] PACMAN_DEMO_LEVEL_ROUTE = {
-        np(12, 26), np(9, 26), np(12, 32), np(15, 32), np(24, 29), np(21, 23),
-        np(18, 23), np(18, 20), np(18, 17), np(15, 14), np(12, 14), np(9, 17),
-        np(6, 17), np(6, 11), np(6, 8), np(6, 4), np(1, 8), np(6, 8),
-        np(9, 8), np(12, 8), np(6, 4), np(6, 8), np(6, 11), np(1, 8),
-        np(6, 8), np(9, 8), np(12, 14), np(9, 17), np(6, 17), np(0, 17),
-        np(21, 17), np(21, 23), np(21, 26), np(24, 29), /* avoid moving up: */ np(26, 29),
-        np(15, 32), np(12, 32), np(3, 29), np(6, 23), np(9, 23), np(12, 26),
-        np(15, 26), np(18, 23), np(21, 23), np(24, 29), /* avoid moving up: */ np(26, 29),
-        np(15, 32), np(12, 32), np(3, 29), np(6, 23)
+    protected static final Waypoint[] PACMAN_DEMO_LEVEL_ROUTE = {
+        new Waypoint(12, 26), new Waypoint(9, 26), new Waypoint(12, 32), new Waypoint(15, 32), new Waypoint(24, 29), new Waypoint(21, 23),
+        new Waypoint(18, 23), new Waypoint(18, 20), new Waypoint(18, 17), new Waypoint(15, 14), new Waypoint(12, 14), new Waypoint(9, 17),
+        new Waypoint(6, 17), new Waypoint(6, 11), new Waypoint(6, 8), new Waypoint(6, 4), new Waypoint(1, 8), new Waypoint(6, 8),
+        new Waypoint(9, 8), new Waypoint(12, 8), new Waypoint(6, 4), new Waypoint(6, 8), new Waypoint(6, 11), new Waypoint(1, 8),
+        new Waypoint(6, 8), new Waypoint(9, 8), new Waypoint(12, 14), new Waypoint(9, 17), new Waypoint(6, 17), new Waypoint(0, 17),
+        new Waypoint(21, 17), new Waypoint(21, 23), new Waypoint(21, 26), new Waypoint(24, 29), /* avoid moving up: */ new Waypoint(26, 29),
+        new Waypoint(15, 32), new Waypoint(12, 32), new Waypoint(3, 29), new Waypoint(6, 23), new Waypoint(9, 23), new Waypoint(12, 26),
+        new Waypoint(15, 26), new Waypoint(18, 23), new Waypoint(21, 23), new Waypoint(24, 29), /* avoid moving up: */ new Waypoint(26, 29),
+        new Waypoint(15, 32), new Waypoint(12, 32), new Waypoint(3, 29), new Waypoint(6, 23)
     };
 
     private static final byte PELLET_VALUE = 10;

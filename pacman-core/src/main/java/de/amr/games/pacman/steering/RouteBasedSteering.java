@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.steering;
 
-import de.amr.games.pacman.lib.NavPoint;
+import de.amr.games.pacman.lib.Waypoint;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Creature;
 import org.tinylog.Logger;
@@ -20,11 +20,11 @@ import static de.amr.games.pacman.lib.Globals.assertNotNull;
  */
 public class RouteBasedSteering implements Steering {
 
-    private final List<NavPoint> route;
+    private final List<Waypoint> route;
     private int targetIndex;
     private boolean complete;
 
-    public RouteBasedSteering(List<NavPoint> route) {
+    public RouteBasedSteering(List<Waypoint> route) {
         this.route = assertNotNull(route);
         init();
     }
@@ -62,7 +62,7 @@ public class RouteBasedSteering implements Steering {
         }
     }
 
-    private NavPoint currentTarget() {
+    private Waypoint currentTarget() {
         return route.get(targetIndex);
     }
 }

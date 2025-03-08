@@ -6,7 +6,7 @@ package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.controller.HuntingTimer;
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.NavPoint;
+import de.amr.games.pacman.lib.Waypoint;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
@@ -512,13 +512,13 @@ public class TengenMsPacMan_GameModel extends GameModel {
         }
         Portal entryPortal = portals.get(RND.nextInt(portals.size()));
         Portal exitPortal  = portals.get(RND.nextInt(portals.size()));
-        List<NavPoint> route = Stream.of(
+        List<Waypoint> route = Stream.of(
             leftToRight ? entryPortal.leftTunnelEnd() : entryPortal.rightTunnelEnd(),
             houseEntry,
             houseEntryOpposite,
             houseEntry,
             leftToRight ? exitPortal.rightTunnelEnd().plus(1, 0) : exitPortal.leftTunnelEnd().minus(1, 0)
-        ).map(NavPoint::np).toList();
+        ).map(Waypoint::new).toList();
 
         byte symbol = level.bonusSymbol(level.nextBonusIndex());
         var movingBonus = new MovingBonus(level.world(), symbol, BONUS_VALUE_FACTORS[symbol] * 100);
