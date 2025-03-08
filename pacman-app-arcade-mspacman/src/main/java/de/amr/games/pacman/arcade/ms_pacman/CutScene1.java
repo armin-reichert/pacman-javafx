@@ -57,8 +57,8 @@ public class CutScene1 extends GameScene2D {
 
         pacMan = new Pac();
         msPac = new Pac();
-        inky = Ghost.inky();
-        pinky = Ghost.pinky();
+        inky = ArcadeMsPacMan_GameModel.inky();
+        pinky = ArcadeMsPacMan_GameModel.pinky();
         heart = new Actor2D();
 
         music = context.sound().makeSound("intermission.1");

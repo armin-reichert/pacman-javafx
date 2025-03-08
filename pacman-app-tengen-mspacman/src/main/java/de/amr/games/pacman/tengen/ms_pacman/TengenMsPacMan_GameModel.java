@@ -36,6 +36,30 @@ import static de.amr.games.pacman.tengen.ms_pacman.SpeedConfiguration.*;
  */
 public class TengenMsPacMan_GameModel extends GameModel {
 
+    public static Ghost blinky() {
+        var ghost = new Ghost(GameModel.RED_GHOST);
+        ghost.setName("Blinky");
+        return ghost;
+    }
+
+    public static Ghost pinky() {
+        var ghost = new Ghost(GameModel.PINK_GHOST);
+        ghost.setName("Pinky");
+        return ghost;
+    }
+
+    public static Ghost inky() {
+        var ghost = new Ghost(GameModel.CYAN_GHOST);
+        ghost.setName("Inky");
+        return ghost;
+    }
+
+    public static Ghost sue() {
+        var ghost = new Ghost(GameModel.ORANGE_GHOST);
+        ghost.setName("Sue");
+        return ghost;
+    }
+
     public static final byte MIN_LEVEL_NUMBER = 1;
     public static final byte MAX_LEVEL_NUMBER = 32;
 
@@ -382,7 +406,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         pac.setWorld(world);
         pac.reset();
 
-        var ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.sue() };
+        var ghosts = new Ghost[] { blinky(), pinky(), inky(), sue() };
         Stream.of(ghosts).forEach(ghost -> {
             ghost.setWorld(world);
             ghost.setRevivalPosition(world.ghostPosition(ghost.id()));

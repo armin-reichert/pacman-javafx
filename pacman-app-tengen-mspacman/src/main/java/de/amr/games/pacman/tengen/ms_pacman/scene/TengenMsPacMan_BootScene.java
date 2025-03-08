@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.ActorAnimations;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_GhostAnimations;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
@@ -53,7 +54,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             grayScreen = false;
             tengenPresentsY = size().y() + TS;  // just out of visible area
             tengenPresentsSpeed = 0;
-            ghost = Ghost.blinky();
+            ghost = TengenMsPacMan_GameModel.blinky();
             ghost.setSpeed(0);
             ghost.hide();
             GameSpriteSheet spriteSheet = context.gameConfiguration().spriteSheet();

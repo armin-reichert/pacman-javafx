@@ -76,7 +76,12 @@ public class IntroScene extends GameScene2D {
         context.setScoreVisible(true);
 
         msPacMan = new Pac();
-        ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.sue() };
+        ghosts = new Ghost[] {
+            ArcadeMsPacMan_GameModel.blinky(),
+            ArcadeMsPacMan_GameModel.pinky(),
+            ArcadeMsPacMan_GameModel.inky(),
+            ArcadeMsPacMan_GameModel.sue()
+        };
         marqueeTimer = new TickTimer("marquee-timer");
         ghostIndex = 0;
         waitBeforeRising = 0;

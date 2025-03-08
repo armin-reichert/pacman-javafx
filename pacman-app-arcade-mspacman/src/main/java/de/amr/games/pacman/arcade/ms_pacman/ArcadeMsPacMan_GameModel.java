@@ -45,6 +45,30 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  */
 public class ArcadeMsPacMan_GameModel extends GameModel {
 
+    public static Ghost blinky() {
+        var ghost = new Ghost(GameModel.RED_GHOST);
+        ghost.setName("Blinky");
+        return ghost;
+    }
+
+    public static Ghost pinky() {
+        var ghost = new Ghost(GameModel.PINK_GHOST);
+        ghost.setName("Pinky");
+        return ghost;
+    }
+
+    public static Ghost inky() {
+        var ghost = new Ghost(GameModel.CYAN_GHOST);
+        ghost.setName("Inky");
+        return ghost;
+    }
+
+    public static Ghost sue() {
+        var ghost = new Ghost(GameModel.ORANGE_GHOST);
+        ghost.setName("Sue");
+        return ghost;
+    }
+
     // These are the Pac-Man level data as given in the Pac-Man dossier.
     // I have no information that Ms. Pac-Man uses different data.
     private static final byte[][] LEVEL_DATA = {
@@ -175,7 +199,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         pac.setWorld(world);
         pac.reset();
 
-        var ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.sue() };
+        var ghosts = new Ghost[] { blinky(), pinky(), inky(), sue() };
         Stream.of(ghosts).forEach(ghost -> {
             ghost.setWorld(world);
             ghost.setRevivalPosition(world.ghostPosition(ghost.id()));

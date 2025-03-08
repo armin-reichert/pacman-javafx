@@ -87,7 +87,12 @@ public class IntroScene extends GameScene2D {
         blinking = new Pulse(10, true);
         pacMan = new Pac();
         pacMan.setAnimations(new PacAnimations(spriteSheet));
-        ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.clyde() };
+        ghosts = new Ghost[] {
+            ArcadePacMan_GameModel.blinky(),
+            ArcadePacMan_GameModel.pinky(),
+            ArcadePacMan_GameModel.inky(),
+            ArcadePacMan_GameModel.clyde()
+        };
         for (Ghost ghost : ghosts) {
             ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id()));
         }

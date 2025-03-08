@@ -30,36 +30,6 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  */
 public class Ghost extends Creature implements AnimatedActor2D {
 
-    public static Ghost blinky() {
-        var ghost = new Ghost(GameModel.RED_GHOST);
-        ghost.setName("Blinky");
-        return ghost;
-    }
-
-    public static Ghost pinky() {
-        var ghost = new Ghost(GameModel.PINK_GHOST);
-        ghost.setName("Pinky");
-        return ghost;
-    }
-
-    public static Ghost inky() {
-        var ghost = new Ghost(GameModel.CYAN_GHOST);
-        ghost.setName("Inky");
-        return ghost;
-    }
-
-    public static Ghost clyde() {
-        var ghost = new Ghost(GameModel.ORANGE_GHOST);
-        ghost.setName("Clyde");
-        return ghost;
-    }
-
-    public static Ghost sue() {
-        var ghost = new Ghost(GameModel.ORANGE_GHOST);
-        ghost.setName("Sue");
-        return ghost;
-    }
-
     private final byte id;
     private String name;
     private GhostState state;
@@ -72,7 +42,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
      * Constructs a ghost without associated world like the ones in the cut scenes.
      * @param id ghost ID
      */
-    private Ghost(byte id) {
+    public Ghost(byte id) {
         this.id = assertLegalGhostID(id);
         corneringSpeedUp = -1.25f;
     }
@@ -98,7 +68,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
         return id;
     }
 
-    private void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 

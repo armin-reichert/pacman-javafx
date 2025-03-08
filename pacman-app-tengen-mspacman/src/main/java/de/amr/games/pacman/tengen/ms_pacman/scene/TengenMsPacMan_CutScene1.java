@@ -10,6 +10,7 @@ import de.amr.games.pacman.lib.nes.NES_JoypadButton;
 import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.*;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
@@ -70,8 +71,8 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
         mrPacMan = new Pac();
         msPacMan = new Pac();
-        inky = Ghost.inky();
-        pinky = Ghost.pinky();
+        inky = TengenMsPacMan_GameModel.inky();
+        pinky = TengenMsPacMan_GameModel.pinky();
         heart = new Actor2D();
 
         var spriteSheet = (TengenMsPacMan_SpriteSheet) context.gameConfiguration().spriteSheet();

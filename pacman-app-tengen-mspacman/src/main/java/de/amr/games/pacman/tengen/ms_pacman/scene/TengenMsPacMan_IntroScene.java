@@ -209,7 +209,12 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 intro.msPacMan.setSpeed(SPEED);
                 intro.msPacMan.setVisible(true);
 
-                intro.ghosts = new Ghost[] { Ghost.blinky(), Ghost.inky(), Ghost.pinky(), Ghost.sue() };
+                intro.ghosts = new Ghost[] {
+                    TengenMsPacMan_GameModel.blinky(),
+                    TengenMsPacMan_GameModel.inky(),
+                    TengenMsPacMan_GameModel.pinky(),
+                    TengenMsPacMan_GameModel.sue()
+                };
                 for (Ghost ghost : intro.ghosts) {
                     ghost.setPosition(TS * 33, ACTOR_Y);
                     ghost.setMoveAndWishDir(Direction.LEFT);

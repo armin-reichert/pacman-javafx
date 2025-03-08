@@ -51,6 +51,31 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  */
 public class ArcadePacMan_GameModel extends GameModel {
 
+    public static Ghost blinky() {
+        var ghost = new Ghost(GameModel.RED_GHOST);
+        ghost.setName("Blinky");
+        return ghost;
+    }
+
+    public static Ghost pinky() {
+        var ghost = new Ghost(GameModel.PINK_GHOST);
+        ghost.setName("Pinky");
+        return ghost;
+    }
+
+    public static Ghost inky() {
+        var ghost = new Ghost(GameModel.CYAN_GHOST);
+        ghost.setName("Inky");
+        return ghost;
+    }
+
+    public static Ghost clyde() {
+        var ghost = new Ghost(GameModel.ORANGE_GHOST);
+        ghost.setName("Clyde");
+        return ghost;
+    }
+
+
     // Level settings as specified in the dossier
     private static final byte[][] LEVEL_DATA = {
         /* 1*/ { 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5},
@@ -209,7 +234,7 @@ public class ArcadePacMan_GameModel extends GameModel {
         pac.setWorld(world);
         pac.reset();
 
-        var ghosts = new Ghost[] { Ghost.blinky(), Ghost.pinky(), Ghost.inky(), Ghost.clyde() };
+        var ghosts = new Ghost[] { blinky(), pinky(), inky(), clyde() };
         Stream.of(ghosts).forEach(ghost -> {
             ghost.setWorld(world);
             ghost.setRevivalPosition(world.ghostPosition(ghost.id()));
