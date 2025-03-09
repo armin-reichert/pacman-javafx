@@ -40,6 +40,8 @@ public class GameLevel {
                 || content == DCORNER_ANGULAR_NE || content == DCORNER_ANGULAR_NW || content == DCORNER_ANGULAR_SE || content == DCORNER_ANGULAR_SW;
     }
 
+    public final int number; // 1=first level
+
     private final WorldMap worldMap;
     private final Vector2f pacPosition;
     private final Vector2f[] ghostPositions = new Vector2f[4];
@@ -55,9 +57,6 @@ public class GameLevel {
     private final int totalFoodCount;
     private int uneatenFoodCount;
 
-
-    public final int number; // 1=first level
-    private long startTime;
     private int killedGhostCount;
     private int numFlashes;
     private int intermissionNumber;
@@ -108,14 +107,6 @@ public class GameLevel {
 
     public int killedGhostCount() {
         return killedGhostCount;
-    }
-
-    public void setStartTime(long startTime) {
-        this.startTime = startTime;
-    }
-
-    public long startTime() {
-        return startTime;
     }
 
     public void setNumFlashes(int numFlashes) {

@@ -64,6 +64,7 @@ public abstract class GameModel {
     protected final HuntingTimer huntingTimer;
 
     protected GameLevel          level;
+    protected long               levelStartTime;
     protected int                lastLevelNumber;
     protected boolean            levelCounterEnabled;
     protected boolean            playing;
@@ -237,7 +238,7 @@ public abstract class GameModel {
         setActorBaseSpeed(level.number);
         level.showReadyMessage();
         Logger.info("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
-        level.setStartTime(System.currentTimeMillis());
+        levelStartTime = System.currentTimeMillis();
         Logger.info("{} started", isDemoLevel() ? "Demo Level" : "Level " + level.number);
         level.ghosts().forEach(ghost -> Logger.info("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
         publishGameEvent(GameEventType.LEVEL_STARTED);
