@@ -35,9 +35,19 @@ public class PacManXXL_MapSelector extends MapSelector {
 
     private List<WorldMap> builtinMaps = new ArrayList<>();
     private final List<WorldMap> customMapsByFile = FXCollections.observableList(new ArrayList<>());
+    private boolean customMapsUpToDate;
 
     public PacManXXL_MapSelector() {
         setMapSelectionMode(MapSelectionMode.CUSTOM_MAPS_FIRST);
+        customMapsUpToDate = false;
+    }
+
+    public void setCustomMapsUpToDate(boolean customMapsUpToDate) {
+        this.customMapsUpToDate = customMapsUpToDate;
+    }
+
+    public boolean isCustomMapsUpToDate() {
+        return customMapsUpToDate;
     }
 
     @Override
@@ -52,6 +62,10 @@ public class PacManXXL_MapSelector extends MapSelector {
 
     @Override
     public void loadCustomMaps(GameModel game) {
+        if (customMapsUpToDate) {
+            Logger.info("Custom maps not loaded as they are up-to-date");
+            return;
+        }
         File[] mapFiles = CUSTOM_MAP_DIR.listFiles((dir, name) -> name.endsWith(".world"));
         if (mapFiles == null) {
             Logger.error("An error occurred accessing custom map directory {}", CUSTOM_MAP_DIR);
@@ -73,6 +87,7 @@ public class PacManXXL_MapSelector extends MapSelector {
                 Logger.error("Could not read custom map from file {}", mapFile);
             }
         }
+        customMapsUpToDate = true;
         game.publishGameEvent(GameEventType.CUSTOM_MAPS_CHANGED);
     }
 

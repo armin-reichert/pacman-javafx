@@ -106,7 +106,8 @@ public class PacManGames3dApp extends Application {
 
         DirectoryWatchdog goodBoy = new DirectoryWatchdog(GameModel.CUSTOM_MAP_DIR);
         goodBoy.setEventConsumer(eventList -> {
-            ui.showFlashMessageSec(2, "Custom map change detected");
+            xxlMapSelector.setCustomMapsUpToDate(false);
+            Logger.info("Custom map change detected");
         });
         goodBoy.startWatching();
 
