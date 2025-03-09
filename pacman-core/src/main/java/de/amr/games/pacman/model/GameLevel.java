@@ -29,6 +29,8 @@ import static de.amr.games.pacman.model.GameModel.*;
 
 public class GameLevel {
 
+    public static final int EMPTY_ROWS_OVER_MAZE = 3;
+
     public enum MessageType { READY, GAME_OVER, TEST_LEVEL }
     public record Message(MessageType type) {}
 

@@ -5,11 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._3d.level;
 
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D;
 import de.amr.games.pacman.ui._3d.animation.MaterialColorAnimation;
 import de.amr.games.pacman.ui._3d.scene3d.GameUIConfiguration3D;
@@ -20,35 +18,21 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.geometry.BoundingBox;
-import javafx.geometry.Bounds;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
-import javafx.scene.shape.Cylinder;
-import javafx.scene.shape.Shape3D;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D.TAG_WALL_BASE;
-import static de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D.isTagged;
 import static de.amr.games.pacman.ui._3d.GlobalProperties3d.*;
 import static de.amr.games.pacman.uilib.Ufx.*;
 
 public class Maze3D extends Group {
-
-    private static final int EMPTY_ROWS_OVER_MAZE = 3;
-
-    private static final String OSHAPES_FILLED_PROPERTY_NAME = "rendering_oshapes_filled";
 
     private final DoubleProperty obstacleBaseHeightPy = new SimpleDoubleProperty(OBSTACLE_BASE_HEIGHT);
     private final DoubleProperty wallOpacityPy = new SimpleDoubleProperty(1);
@@ -56,12 +40,6 @@ public class Maze3D extends Group {
     private final BooleanProperty houseLightOnPy = new SimpleBooleanProperty(false);
 
     private final Door3D door3D;
-
-    private final PhongMaterial wallBaseMaterial;
-
-    // experimental
-    private final PhongMaterial highlightMaterial = coloredMaterial(Color.YELLOW);
-    private final Set<Group> obstacleGroups;
     private final MaterialColorAnimation materialColorAnimation;
 
     public Maze3D(GameUIConfiguration3D configuration3D, GameLevel level, WorldMapColoring coloring) {
@@ -71,7 +49,7 @@ public class Maze3D extends Group {
         // need some contrast with floor if fill color is black
         Color wallTopColor = coloring.fill().equals(Color.BLACK) ? Color.grayRgb(42) : coloring.fill();
 
-        wallBaseMaterial = new PhongMaterial();
+        PhongMaterial wallBaseMaterial = new PhongMaterial();
         wallBaseMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
                 () -> opaqueColor(wallBaseColor, wallOpacityPy.get()), wallOpacityPy
         ));
@@ -101,16 +79,6 @@ public class Maze3D extends Group {
         //TODO check this:
         obstacleBaseHeightPy.set(PY_3D_WALL_HEIGHT.get());
 
-        //TODO just a temporary solution until I find something better
-        if (level.map().hasProperty(LayerID.TERRAIN, OSHAPES_FILLED_PROPERTY_NAME)) {
-            Object value = level.map().getProperty(LayerID.TERRAIN, OSHAPES_FILLED_PROPERTY_NAME);
-            try {
-                r3D.setOShapeFilled(Boolean.parseBoolean(String.valueOf(value)));
-            } catch (Exception x) {
-                Logger.error("Map property '{}}' is not a valid boolean value: {}", OSHAPES_FILLED_PROPERTY_NAME, value);
-            }
-        }
-
         for (Obstacle obstacle : level.map().obstacles()) {
             if (!level.isPartOfHouse(tileAt(obstacle.startPoint().toVector2f()))) {
                 r3D.setWallThickness(OBSTACLE_THICKNESS);
@@ -130,13 +98,6 @@ public class Maze3D extends Group {
                 houseLightOnPy);
         getChildren().add(door3D); //TODO check this
 
-        // experimental
-        obstacleGroups = lookupAll("*").stream()
-                .filter(Group.class::isInstance)
-                .map(Group.class::cast)
-                .filter(group -> isTagged(group, TerrainRenderer3D.TAG_INNER_OBSTACLE))
-                .collect(Collectors.toSet());
-
         PY_3D_WALL_HEIGHT.addListener((py, ov, nv) -> obstacleBaseHeightPy.set(nv.doubleValue()));
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
     }
@@ -144,7 +105,7 @@ public class Maze3D extends Group {
     private boolean isWorldBorder(WorldMap worldMap, Obstacle obstacle) {
         Vector2i start = obstacle.startPoint();
         if (obstacle.isClosed()) {
-            return start.x() == TS || start.y() == EMPTY_ROWS_OVER_MAZE * TS + HTS;
+            return start.x() == TS || start.y() == GameLevel.EMPTY_ROWS_OVER_MAZE * TS + HTS;
         } else {
             return start.x() == 0 || start.x() == worldMap.numCols() * TS;
         }
@@ -234,29 +195,5 @@ public class Maze3D extends Group {
         animation.setAutoReverse(true);
         animation.setCycleCount(2 * numFlashes);
         return animation;
-    }
-
-    public void highlightObstacleNearPac(Pac3D pac3D, Pac pac) {
-        Bounds pacSensitiveArea = new BoundingBox(pac.posX(), pac.posY(), 0, 3*TS, 3*TS, TS);
-        for (Group obstacleGroup : obstacleGroups) {
-            Bounds bounds = obstacleGroup.getBoundsInLocal();
-            if (bounds.intersects(pacSensitiveArea)) {
-                Logger.info("Pac near obstacle {}", obstacleGroup);
-                Timeline timeline = new Timeline();
-                Set<Node> obstacleParts = obstacleGroup.lookupAll("*").stream()
-                        .filter(node -> node instanceof Box || node instanceof Cylinder)
-                        .collect(Collectors.toSet());
-                for (Node node : obstacleParts) {
-                    if (isTagged(node, TAG_WALL_BASE) && node instanceof Shape3D shape3D) {
-                        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0.1),
-                                e -> shape3D.setMaterial(highlightMaterial)));
-                        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1.5),
-                                e -> shape3D.setMaterial(wallBaseMaterial)));
-                    }
-                }
-                timeline.play();
-                break;
-            }
-        }
     }
 }
