@@ -46,7 +46,7 @@ public class PacManXXL_MapSelector extends MapSelector {
         this.customMapsUpToDate = customMapsUpToDate;
     }
 
-    public boolean isCustomMapsUpToDate() {
+    public boolean areCustomMapsUpToDate() {
         return customMapsUpToDate;
     }
 
