@@ -53,7 +53,7 @@ public class GameLevel {
     private Vector2i rightDoorTile;
 
     // instead of Set<Vector2i> we use a bitset indexed by top-down-left-to-right tile index
-    private final BitSet eatenFood;
+    private final BitSet eatenFoodBits;
     private final int totalFoodCount;
     private int uneatenFoodCount;
 
@@ -76,17 +76,7 @@ public class GameLevel {
         this.number = number;
         nextBonusIndex = -1;
         this.worldMap = assertNotNull(worldMap);
-
-        var portalList = new ArrayList<Portal>();
-        int firstColumn = 0, lastColumn = worldMap.numCols() - 1;
-        for (int row = 0; row < worldMap.numRows(); ++row) {
-            Vector2i leftBorderTile = vec_2i(firstColumn, row), rightBorderTile = vec_2i(lastColumn, row);
-            if (worldMap.get(LayerID.TERRAIN, row, firstColumn) == TUNNEL
-                    && worldMap.get(LayerID.TERRAIN, row, lastColumn) == TUNNEL) {
-                portalList.add(new Portal(leftBorderTile, rightBorderTile, 2));
-            }
-        }
-        portals = portalList.toArray(new Portal[0]);
+        portals = findPortals(worldMap);
 
         pacPosition                  = posHalfTileRightOf(worldMap.getTerrainTileProperty(PROPERTY_POS_PAC,          vec_2i(13,26)));
         ghostPositions[RED_GHOST]    = posHalfTileRightOf(worldMap.getTerrainTileProperty(PROPERTY_POS_RED_GHOST,    vec_2i(13,14)));
@@ -95,9 +85,22 @@ public class GameLevel {
         ghostPositions[ORANGE_GHOST] = posHalfTileRightOf(worldMap.getTerrainTileProperty(PROPERTY_POS_ORANGE_GHOST, vec_2i(15,17)));
 
         energizerTiles = worldMap.tilesContaining(LayerID.FOOD, FoodTiles.ENERGIZER).toArray(Vector2i[]::new);
-        eatenFood = new BitSet(worldMap.numCols() * worldMap.numRows());
-        uneatenFoodCount = totalFoodCount
-                = (int) worldMap.tiles().filter(tile -> worldMap.get(LayerID.FOOD, tile) != FoodTiles.EMPTY).count();
+        eatenFoodBits = new BitSet(worldMap.numCols() * worldMap.numRows());
+        totalFoodCount = (int) worldMap.tiles().filter(tile -> worldMap.get(LayerID.FOOD, tile) != FoodTiles.EMPTY).count();
+        uneatenFoodCount = totalFoodCount;
+    }
+
+    private Portal[] findPortals(WorldMap worldMap) {
+        var portals = new ArrayList<Portal>();
+        int firstColumn = 0, lastColumn = worldMap.numCols() - 1;
+        for (int row = 0; row < worldMap.numRows(); ++row) {
+            Vector2i leftBorderTile = vec_2i(firstColumn, row), rightBorderTile = vec_2i(lastColumn, row);
+            if (worldMap.get(LayerID.TERRAIN, row, firstColumn) == TUNNEL
+                && worldMap.get(LayerID.TERRAIN, row, lastColumn) == TUNNEL) {
+                portals.add(new Portal(leftBorderTile, rightBorderTile, 2));
+            }
+        }
+        return portals.toArray(new Portal[0]);
     }
 
     public void addKilledGhost(Ghost victim) {
@@ -387,7 +390,7 @@ public class GameLevel {
 
     public void registerFoodEatenAt(Vector2i tile) {
         if (hasFoodAt(tile)) {
-            eatenFood.set(worldMap.index(tile));
+            eatenFoodBits.set(worldMap.index(tile));
             --uneatenFoodCount;
         } else {
             Logger.warn("Attempt to eat foot at tile {} that has none", tile);
@@ -407,7 +410,7 @@ public class GameLevel {
     }
 
     public boolean hasEatenFoodAt(Vector2i tile) {
-        return !isOutsideWorld(tile) && eatenFood.get(worldMap.index(tile));
+        return !isOutsideWorld(tile) && eatenFoodBits.get(worldMap.index(tile));
     }
 
 }
