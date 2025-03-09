@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,15 +21,29 @@ import static java.nio.file.StandardWatchEventKinds.*;
 
 public class WatchCustomMapsApp extends Application {
 
+    private final File watchedDirectory = GameModel.CUSTOM_MAP_DIR;
     private WatchKey customMapDirWatcher;
-
     private final ObservableList<String> eventsDescriptions = FXCollections.observableList(new ArrayList<>());
 
     @Override
-    public void init() throws Exception {
-        Logger.info("Watching {}", GameModel.CUSTOM_MAP_DIR);
+    public void start(Stage stage) throws IOException {
+        BorderPane root = new BorderPane();
+        var eventListView = new ListView<String>();
+        eventListView.setItems(eventsDescriptions);
+        root.setCenter(eventListView);
+
+        Scene scene = new Scene(root, 400, 600);
+        stage.setScene(scene);
+        stage.setTitle("Watch " + watchedDirectory);
+        stage.show();
+
+        Logger.info("Watching {}", watchedDirectory);
         WatchService watchService = FileSystems.getDefault().newWatchService();
-        customMapDirWatcher = GameModel.CUSTOM_MAP_DIR.toPath().register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+        customMapDirWatcher = watchedDirectory.toPath().register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+
+        Thread pollingThread = new Thread(this::pollingLoop);
+        pollingThread.setDaemon(true);
+        pollingThread.start();
     }
 
     private void pollingLoop() {
@@ -39,7 +54,7 @@ public class WatchCustomMapsApp extends Application {
                 for (WatchEvent<?> we : result) {
                     @SuppressWarnings("unchecked") WatchEvent<Path> event = (WatchEvent<Path>) we;
                     Path relativePath = event.context();
-                    File file = new File(GameModel.CUSTOM_MAP_DIR, relativePath.toString());
+                    File file = new File(watchedDirectory, relativePath.toString());
                     String fileType = file.isDirectory() ? "Directory" : "File";
                     if (event.kind().equals(ENTRY_CREATE)) {
                         descriptions.add("%s %s created".formatted(fileType, file));
@@ -52,27 +67,10 @@ public class WatchCustomMapsApp extends Application {
                 Platform.runLater(() -> eventsDescriptions.addAll(descriptions));
             }
             try {
-                Thread.sleep(100);
+                Thread.sleep(10);
             } catch (InterruptedException e) {
                 Logger.error("Interrupted");
             }
         }
-    }
-
-    @Override
-    public void start(Stage stage) {
-        BorderPane root = new BorderPane();
-        var eventListView = new ListView<String>();
-        eventListView.setItems(eventsDescriptions);
-        root.setCenter(eventListView);
-
-        Scene scene = new Scene(root, 400, 600);
-        stage.setScene(scene);
-        stage.setTitle("Watch " + GameModel.CUSTOM_MAP_DIR);
-        stage.show();
-
-        Thread pollingThread = new Thread(this::pollingLoop);
-        pollingThread.setDaemon(true);
-        pollingThread.start();
     }
 }
