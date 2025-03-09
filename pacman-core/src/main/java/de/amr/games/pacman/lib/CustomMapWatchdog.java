@@ -1,4 +1,4 @@
-package experiments;
+package de.amr.games.pacman.lib;
 
 import org.tinylog.Logger;
 

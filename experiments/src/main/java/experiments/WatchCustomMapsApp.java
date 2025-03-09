@@ -1,5 +1,6 @@
 package experiments;
 
+import de.amr.games.pacman.lib.CustomMapWatchdog;
 import de.amr.games.pacman.model.GameModel;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -14,6 +15,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +34,7 @@ public class WatchCustomMapsApp extends Application {
         eventListView.setItems(eventsDescriptions);
         root.setCenter(eventListView);
 
-        Scene scene = new Scene(root, 400, 600);
+        Scene scene = new Scene(root, 600, 400);
         stage.setScene(scene);
         stage.setTitle("Watch " + watchedDirectory);
         stage.show();
@@ -42,20 +45,21 @@ public class WatchCustomMapsApp extends Application {
     }
 
     private void showEventsInList(List<WatchEvent<?>> polledEvents) {
-        List<String> descriptions = new ArrayList<>();
-        for (WatchEvent<?> we : polledEvents) {
-            @SuppressWarnings("unchecked") WatchEvent<Path> event = (WatchEvent<Path>) we;
-            Path relativePath = event.context();
-            File file = new File(watchedDirectory, relativePath.toString());
-            String fileType = file.isDirectory() ? "Directory" : "File";
-            if (event.kind().equals(ENTRY_CREATE)) {
-                descriptions.add("%s %s created".formatted(fileType, file));
-            } else if (event.kind().equals(ENTRY_MODIFY)) {
-                descriptions.add("%s %s modified".formatted(fileType, file));
-            } else if (event.kind().equals(ENTRY_DELETE)) {
-                descriptions.add("%s %s deleted".formatted(fileType, file));
+        Platform.runLater(() -> {
+            var now = LocalTime.now().format(DateTimeFormatter.ISO_LOCAL_TIME);
+            for (WatchEvent<?> we : polledEvents) {
+                @SuppressWarnings("unchecked") WatchEvent<Path> event = (WatchEvent<Path>) we;
+                Path relativePath = event.context();
+                File file = new File(watchedDirectory, relativePath.toString());
+                String fileType = file.isDirectory() ? "Directory" : "File";
+                if (event.kind().equals(ENTRY_CREATE)) {
+                    eventsDescriptions.add("%s: %s %s created".formatted(now, fileType, file));
+                } else if (event.kind().equals(ENTRY_MODIFY)) {
+                    eventsDescriptions.add("%s: %s %s modified".formatted(now, fileType, file));
+                } else if (event.kind().equals(ENTRY_DELETE)) {
+                    eventsDescriptions.add("%s: %s %s deleted".formatted(now, fileType, file));
+                }
             }
-        }
-        Platform.runLater(() -> eventsDescriptions.addAll(descriptions));
+        });
     }
 }
