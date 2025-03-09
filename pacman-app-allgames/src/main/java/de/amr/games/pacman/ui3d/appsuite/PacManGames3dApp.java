@@ -4,18 +4,19 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.appsuite;
 
-import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GameUIConfig3D;
 import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
+import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GameUIConfig3D;
 import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
-import de.amr.games.pacman.arcade.pacman.ArcadePacMan_GameUIConfig3D;
 import de.amr.games.pacman.arcade.pacman.ArcadePacMan_GameModel;
+import de.amr.games.pacman.arcade.pacman.ArcadePacMan_GameUIConfig3D;
 import de.amr.games.pacman.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.games.pacman.arcade.pacman_xxl.*;
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.lib.DirectoryWatchdog;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameUIConfig3D;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
+import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameUIConfig3D;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.games.pacman.ui.DashboardItemID;
 import de.amr.games.pacman.ui._2d.StartPage;
@@ -33,6 +34,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -67,7 +69,7 @@ public class PacManGames3dApp extends Application {
     }
 
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws IOException {
         ui = new PacManGamesUI_3D();
         // UI asset storage exists now, add game variants including their own assets
         ui.setConfiguration(GameVariant.PACMAN,           new ArcadePacMan_GameUIConfig3D(ui.assets()));
@@ -101,6 +103,12 @@ public class PacManGames3dApp extends Application {
         StartPage xxlStartPage = new PacManXXL_StartPage(ui);
         ui.addStartPage(GameVariant.PACMAN_XXL,    xxlStartPage);
         ui.addStartPage(GameVariant.MS_PACMAN_XXL, xxlStartPage);
+
+        DirectoryWatchdog goodBoy = new DirectoryWatchdog(GameModel.CUSTOM_MAP_DIR);
+        goodBoy.setEventConsumer(eventList -> {
+            ui.showFlashMessageSec(2, "Custom map change detected");
+        });
+        goodBoy.startWatching();
 
         ui.show();
 

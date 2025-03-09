@@ -1,6 +1,6 @@
 package experiments;
 
-import de.amr.games.pacman.lib.CustomMapWatchdog;
+import de.amr.games.pacman.lib.DirectoryWatchdog;
 import de.amr.games.pacman.model.GameModel;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -39,7 +39,7 @@ public class WatchCustomMapsApp extends Application {
         stage.setTitle("Watch " + watchedDirectory);
         stage.show();
 
-        CustomMapWatchdog dog = new CustomMapWatchdog(GameModel.CUSTOM_MAP_DIR);
+        DirectoryWatchdog dog = new DirectoryWatchdog(GameModel.CUSTOM_MAP_DIR);
         dog.setEventConsumer(this::showEventsInList);
         dog.startWatching();
     }

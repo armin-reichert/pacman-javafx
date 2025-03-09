@@ -13,13 +13,13 @@ import java.util.function.Consumer;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 
-public class CustomMapWatchdog {
+public class DirectoryWatchdog {
 
     private final File watchedDirectory;
-    private final WatchKey customMapDirWatcher;
+    private final WatchKey watchKey;
     private Consumer<List<WatchEvent<?>>> eventConsumer;
 
-    public CustomMapWatchdog(File watchedDirectory) throws IOException {
+    public DirectoryWatchdog(File watchedDirectory) throws IOException {
         if (watchedDirectory == null) {
             throw new IllegalArgumentException();
         }
@@ -28,7 +28,7 @@ public class CustomMapWatchdog {
         }
         this.watchedDirectory = watchedDirectory;
         WatchService watchService = FileSystems.getDefault().newWatchService();
-        customMapDirWatcher = watchedDirectory.toPath().register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+        watchKey = watchedDirectory.toPath().register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
 
         setEventConsumer(eventList -> {
             for (var event : eventList) {
@@ -50,7 +50,7 @@ public class CustomMapWatchdog {
 
     private void pollingLoop() {
         for (;;) {
-            var polledEvents = customMapDirWatcher.pollEvents();
+            var polledEvents = watchKey.pollEvents();
             if (!polledEvents.isEmpty()) {
                 eventConsumer.accept(polledEvents);
             }
