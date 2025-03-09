@@ -16,11 +16,11 @@ This is an implementation of the classic Arcade games Pac-Man and Ms. Pac-Man an
 
 The user interface can be switched between 2D and 3D, even during the gameplay (key combination <kbd>Alt+3</kbd>). The game implementation tries to mimic the original Arcade version as good as possible, however there are some differences, e.g. in the "attract mode" behaviour, or the bonus behaviour in the Ms. Pac-Man game.
 
-The game also contains a 3rd game variant (working title "Pac-Man XXL") with 8 maps (shamelessly stolen from the one and only Shaun Williams 👏, https://github.com/masonicGIT/pacman). To integrate these maps, I implemented a map editor that can either be used as a standalone application or called from within the XXL version of the game). The nice thing is that all these maps and all your custom maps are playable in 2D and in 3D! You can also create maps of different size than the original Pac-Man maps, however this is still work in progress. Also the game can hang if the maps have dead-ends. So you have to be aware of that. The map editor has been used to create all the 8 new maps and you don't have to specify any graphics assets when adding a new map. Colors can be specified using map properties inside the editor.
+The game also contains a game variant (working title "Pac-Man XXL") with 8 others Arcade-like maps (shamelessly stolen from the one and only Shaun Williams 👏, https://github.com/masonicGIT/pacman). To integrate these maps, I implemented a map editor that can either be used as a standalone application or called from within the XXL version of the game). All these maps and all your custom maps are playable in 2D and in 3D! 
 
 ### How to use custom maps in PacMan XXL
 
-Use the map editor to create your custom map and store the `.world` file inside folder `$user_home/.pacmanfx/maps`. Select the "Pac-Man XXL" game variant, start it and open the dashboard (<key>F1</key> or <key>Alt+B</key>). In the "Custom Maps" info box, select "CUSTOM_MAPS_FIRST". This will select all your custom maps (in alphabetic order) first, then the standard maps and after the last standard map, select any maps randomly.
+When using the map editor to create your own maps, you don't have to specify any graphics assets!. Colors, tunnel and actor positions can be specified using map properties inside the editor. Store the `.world` file inside folder `$user_home/.pacmanfx/maps`. In the option menu of the Pac-Man XXL variant, you can select if your custom maps are selected first or randomly shuffled with the 8 builtin maps.
 
 ## How to run
 
