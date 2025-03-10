@@ -59,9 +59,7 @@ public class IntroScene extends GameScene2D {
     static final Color COLOR_BULB_ON  = COLOR_WHITE;
     static final Color COLOR_BULB_OFF = COLOR_RED;
 
-    static final Color[] COLOR_GHOST = {
-        COLOR_RED, COLOR_PINK, COLOR_CYAN, COLOR_ORANGE
-    };
+    static final Color[] COLOR_GHOST = { COLOR_RED, COLOR_PINK, COLOR_CYAN, COLOR_ORANGE };
 
     private final FiniteStateMachine<SceneState, IntroScene> sceneController;
 
