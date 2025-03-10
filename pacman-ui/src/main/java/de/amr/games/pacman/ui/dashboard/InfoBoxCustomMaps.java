@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui.dashboard;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
@@ -54,7 +55,7 @@ public class InfoBoxCustomMaps extends InfoBox {
         addRow(mapsTableView);
     }
 
-    public TableView<WorldMap> getMapsTableView() {
-        return mapsTableView;
+    public void setTableItems(ObservableList<WorldMap> items) {
+        mapsTableView.setItems(items);
     }
 }
