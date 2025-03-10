@@ -8,7 +8,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.lib.fsm.FsmState;
@@ -25,7 +24,8 @@ import javafx.scene.text.Font;
 
 import java.util.BitSet;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.tiles2Px;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindTestActions;
 
@@ -39,10 +39,13 @@ import static de.amr.games.pacman.ui._2d.GameActions2D.bindTestActions;
 public class IntroScene extends GameScene2D {
 
     static final float SPEED = 1.1f;
-    static final int TOP_Y = TS * 11 + 1;
+
+    static final int TOP_Y        = TS * 11 + 1;
+    static final int TITLE_X      = TS * 10;
+    static final int TITLE_Y      = TS * 8;
     static final int STOP_X_GHOST = TS * 6 - 4;
-    static final int STOP_X_MS_PAC_MAN = TS * 15 + 2;
-    static final Vector2i TITLE_POSITION = vec_2i(TS * 10, TS * 8);
+    static final int STOP_X_MSPAC = TS * 15 + 2;
+
     static final int NUM_BULBS = 96;
     static final int DISTANCE_BETWEEN_ACTIVE_BULBS = 16;
 
@@ -133,18 +136,18 @@ public class IntroScene extends GameScene2D {
     public void drawSceneContent() {
         final Font font = gr.scaledArcadeFont(TS);
         drawMarquee();
-        gr.drawText("\"MS PAC-MAN\"", COLOR_ORANGE, font, TITLE_POSITION.x(), TITLE_POSITION.y());
+        gr.drawText("\"MS PAC-MAN\"", COLOR_ORANGE, font, TITLE_X, TITLE_Y);
         if (sceneController.state() == SceneState.GHOSTS_MARCHING_IN) {
             String ghostName = ghosts[ghostID].name().toUpperCase();
             double dx = ghostName.length() < 4 ? tiles2Px(1) : 0;
             if (ghostID == GameModel.RED_GHOST) {
-                gr.drawText("WITH", COLOR_WHITE, font, TITLE_POSITION.x(), TOP_Y + tiles2Px(3));
+                gr.drawText("WITH", COLOR_WHITE, font, TITLE_X, TOP_Y + tiles2Px(3));
             }
-            gr.drawText(ghostName, COLOR_GHOST[ghostID], font, TITLE_POSITION.x() + tiles2Px(3) + dx, TOP_Y + tiles2Px(6));
+            gr.drawText(ghostName, COLOR_GHOST[ghostID], font, TITLE_X + tiles2Px(3) + dx, TOP_Y + tiles2Px(6));
         }
         else if (sceneController.state() == SceneState.MS_PACMAN_MARCHING_IN || sceneController.state() == SceneState.READY_TO_PLAY) {
-            gr.drawText("STARRING", COLOR_WHITE, font, TITLE_POSITION.x(), TOP_Y + tiles2Px(3));
-            gr.drawText("MS PAC-MAN", COLOR_YELLOW, font, TITLE_POSITION.x(), TOP_Y + tiles2Px(6));
+            gr.drawText("STARRING", COLOR_WHITE, font, TITLE_X, TOP_Y + tiles2Px(3));
+            gr.drawText("MS PAC-MAN", COLOR_YELLOW, font, TITLE_X, TOP_Y + tiles2Px(6));
         }
         for (Ghost ghost : ghosts) {
             gr.drawAnimatedActor(ghost);
@@ -284,7 +287,7 @@ public class IntroScene extends GameScene2D {
             public void onUpdate(IntroScene intro) {
                 intro.marqueeTimer.doTick();
                 intro.msPacMan.move();
-                if (intro.msPacMan.posX() <= STOP_X_MS_PAC_MAN) {
+                if (intro.msPacMan.posX() <= STOP_X_MSPAC) {
                     intro.msPacMan.setSpeed(0);
                     intro.msPacMan.resetAnimation();
                     intro.sceneController.changeState(READY_TO_PLAY);
