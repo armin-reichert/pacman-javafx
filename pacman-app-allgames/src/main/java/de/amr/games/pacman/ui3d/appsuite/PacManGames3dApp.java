@@ -71,7 +71,6 @@ public class PacManGames3dApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         ui = new PacManGamesUI_3D();
-        // UI asset storage exists now, add game variants including their own assets
         ui.setConfiguration(GameVariant.PACMAN,           new ArcadePacMan_GameUIConfig3D(ui.assets()));
         ui.setConfiguration(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_GameUIConfig3D(ui.assets()));
         ui.setConfiguration(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameUIConfig3D(ui.assets()));

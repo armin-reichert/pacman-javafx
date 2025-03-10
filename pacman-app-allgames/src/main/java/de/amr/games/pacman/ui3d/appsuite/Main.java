@@ -4,11 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.appsuite;
 
-
 import de.amr.games.pacman.uilib.Ufx;
 
 /**
- * @author Armin Reichert
+ * Wraps application start, if an exception occurs, the stacktrace will be stored in file <code>oh_shit.txt</code>.
  */
 public class Main {
     public static void main(String[] args) {
