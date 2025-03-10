@@ -24,7 +24,6 @@ public interface GameEventListener {
             case BONUS_EATEN -> onBonusEaten(event);
             case BONUS_EXPIRED -> onBonusExpired(event);
             case CREDIT_ADDED -> onCreditAdded(event);
-            case CUSTOM_MAPS_CHANGED -> onCustomMapsChanged(event);
             case EXTRA_LIFE_WON -> onExtraLifeWon(event);
             case GAME_STARTED -> onGameStarted(event);
             case GAME_STATE_CHANGED -> {
@@ -53,7 +52,6 @@ public interface GameEventListener {
     }
 
     default void onCreditAdded(GameEvent e) {}
-    default void onCustomMapsChanged(GameEvent e) {}
     default void onExtraLifeWon(GameEvent e) {}
     default void onBonusActivated(GameEvent e) {}
     default void onBonusEaten(GameEvent e) {}

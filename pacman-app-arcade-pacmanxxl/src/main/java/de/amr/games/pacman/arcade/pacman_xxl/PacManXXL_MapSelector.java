@@ -1,6 +1,5 @@
 package de.amr.games.pacman.arcade.pacman_xxl;
 
-import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameModel;
@@ -34,7 +33,7 @@ public class PacManXXL_MapSelector extends MapSelector {
     );
 
     private List<WorldMap> builtinMaps = new ArrayList<>();
-    private final List<WorldMap> customMapsByFile = FXCollections.observableList(new ArrayList<>());
+    private final ObservableList<WorldMap> customMapsByFile = FXCollections.observableList(new ArrayList<>());
     private boolean customMapsUpToDate;
 
     public PacManXXL_MapSelector() {
@@ -57,11 +56,11 @@ public class PacManXXL_MapSelector extends MapSelector {
 
     @Override
     public ObservableList<WorldMap> customMaps() {
-        return (ObservableList<WorldMap>) customMapsByFile;
+        return customMapsByFile;
     }
 
     @Override
-    public void loadCustomMaps(GameModel game) {
+    public void loadCustomMaps() {
         if (customMapsUpToDate) {
             Logger.info("Custom maps not loaded as they are up-to-date");
             return;
@@ -88,7 +87,6 @@ public class PacManXXL_MapSelector extends MapSelector {
             }
         }
         customMapsUpToDate = true;
-        game.publishGameEvent(GameEventType.CUSTOM_MAPS_CHANGED);
     }
 
     @Override
@@ -96,7 +94,7 @@ public class PacManXXL_MapSelector extends MapSelector {
         if (builtinMaps.isEmpty()) {
             builtinMaps = loadMapsFromModule("maps/masonic_%d.world", 8);
         }
-        loadCustomMaps(game);
+        loadCustomMaps();
     }
 
     @Override

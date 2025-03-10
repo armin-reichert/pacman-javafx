@@ -55,7 +55,7 @@ public abstract class MapSelector {
 
     public abstract List<WorldMap> customMaps();
 
-    public abstract void loadCustomMaps(GameModel game);
+    public abstract void loadCustomMaps();
 
     public abstract void loadAllMaps(GameModel game);
 }

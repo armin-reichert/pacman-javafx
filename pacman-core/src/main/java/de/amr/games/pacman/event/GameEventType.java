@@ -8,7 +8,6 @@ public enum GameEventType {
     BONUS_EATEN,
     BONUS_EXPIRED,
     CREDIT_ADDED,
-    CUSTOM_MAPS_CHANGED,
     EXTRA_LIFE_WON,
     GAME_STARTED,
     GAME_STATE_CHANGED,

@@ -44,7 +44,7 @@ public class TengenMsPacMan_MapSelector extends MapSelector {
     }
 
     @Override
-    public void loadCustomMaps(GameModel game) {}
+    public void loadCustomMaps() {}
 
     @Override
     public void loadAllMaps(GameModel game) {
