@@ -48,6 +48,16 @@ public class IntroScene extends GameScene2D {
     static final int DISTANCE_BETWEEN_ACTIVE_BULBS = 16;
     static final Color COLOR_BULB_ON = Color.valueOf(Arcade.Palette.WHITE);
     static final Color COLOR_BULB_OFF = Color.valueOf(Arcade.Palette.RED);
+    static final Color[] COLOR_GHOST = {
+        Color.valueOf(Arcade.Palette.RED),
+        Color.valueOf(Arcade.Palette.PINK),
+        Color.valueOf(Arcade.Palette.CYAN),
+        Color.valueOf(Arcade.Palette.ORANGE),
+    };
+    static final Color COLOR_RED = Color.valueOf(Arcade.Palette.RED);
+    static final Color COLOR_WHITE = Color.valueOf(Arcade.Palette.WHITE);
+    static final Color COLOR_ORANGE = Color.valueOf(Arcade.Palette.ORANGE);
+    static final Color COLOR_YELLOW = Color.valueOf(Arcade.Palette.YELLOW);
 
     private final FiniteStateMachine<SceneState, IntroScene> sceneController;
 
@@ -120,36 +130,30 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        Font font = gr.scaledArcadeFont(TS);
+        final Font font = gr.scaledArcadeFont(TS);
         drawMarquee();
-        gr.drawText("\"MS PAC-MAN\"", Color.valueOf(Arcade.Palette.ORANGE), font, TITLE_POSITION.x(), TITLE_POSITION.y());
+        gr.drawText("\"MS PAC-MAN\"", COLOR_ORANGE, font, TITLE_POSITION.x(), TITLE_POSITION.y());
         if (sceneController.state() == SceneState.GHOSTS_MARCHING_IN) {
             if (ghostIndex == GameModel.RED_GHOST) {
-                gr.drawText("WITH", Color.valueOf(Arcade.Palette.WHITE), font, TITLE_POSITION.x(), TOP_Y + tiles2Px(3));
+                gr.drawText("WITH", COLOR_WHITE, font, TITLE_POSITION.x(), TOP_Y + tiles2Px(3));
             }
             String ghostName = ghosts[ghostIndex].name().toUpperCase();
-            Color color = switch (ghostIndex) {
-                case GameModel.RED_GHOST -> Color.valueOf(Arcade.Palette.RED);
-                case GameModel.PINK_GHOST -> Color.valueOf(Arcade.Palette.PINK);
-                case GameModel.CYAN_GHOST -> Color.valueOf(Arcade.Palette.CYAN);
-                case GameModel.ORANGE_GHOST -> Color.valueOf(Arcade.Palette.ORANGE);
-                default -> throw new IllegalStateException("Illegal ghost index: " + ghostIndex);
-            };
             double dx = ghostName.length() < 4 ? tiles2Px(1) : 0;
-            gr.drawText(ghostName, color, font, TITLE_POSITION.x() + tiles2Px(3) + dx, TOP_Y + tiles2Px(6));
-        } else if (sceneController.state() == SceneState.MS_PACMAN_MARCHING_IN || sceneController.state() == SceneState.READY_TO_PLAY) {
-            gr.drawText("STARRING", Color.valueOf(Arcade.Palette.WHITE), font, TITLE_POSITION.x(), TOP_Y + tiles2Px(3));
-            gr.drawText("MS PAC-MAN", Color.valueOf(Arcade.Palette.YELLOW), font, TITLE_POSITION.x(), TOP_Y + tiles2Px(6));
+            gr.drawText(ghostName, COLOR_GHOST[ghostIndex], font, TITLE_POSITION.x() + tiles2Px(3) + dx, TOP_Y + tiles2Px(6));
+        }
+        else if (sceneController.state() == SceneState.MS_PACMAN_MARCHING_IN || sceneController.state() == SceneState.READY_TO_PLAY) {
+            gr.drawText("STARRING", COLOR_WHITE, font, TITLE_POSITION.x(), TOP_Y + tiles2Px(3));
+            gr.drawText("MS PAC-MAN", COLOR_YELLOW, font, TITLE_POSITION.x(), TOP_Y + tiles2Px(6));
         }
         for (Ghost ghost : ghosts) {
             gr.drawAnimatedActor(ghost);
         }
         gr.drawAnimatedActor(msPacMan);
-        // might be PacManXXL renderer
+        // might be PacManXXL renderer!
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
-            r.drawMsPacManMidwayCopyright(tiles2Px(6), tiles2Px(28), Color.valueOf(Arcade.Palette.RED), font);
+            r.drawMsPacManMidwayCopyright(tiles2Px(6), tiles2Px(28), COLOR_RED, font);
         }
-        gr.drawText("CREDIT %2d".formatted(context.gameController().credit), Color.valueOf(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS), 2 * TS, size().y() - 2);
+        gr.drawText("CREDIT %2d".formatted(context.gameController().credit), COLOR_WHITE, font, 2 * TS, size().y() - 2);
         gr.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
     }
 
