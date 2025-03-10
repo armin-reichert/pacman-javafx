@@ -46,6 +46,8 @@ public class IntroScene extends GameScene2D {
     static final Vector2i TITLE_POSITION = vec_2i(TS * 10, TS * 8);
     static final int NUM_BULBS = 96;
     static final int DISTANCE_BETWEEN_ACTIVE_BULBS = 16;
+    static final Color COLOR_BULB_ON = Color.valueOf(Arcade.Palette.WHITE);
+    static final Color COLOR_BULB_OFF = Color.valueOf(Arcade.Palette.RED);
 
     private final FiniteStateMachine<SceneState, IntroScene> sceneController;
 
@@ -119,8 +121,7 @@ public class IntroScene extends GameScene2D {
     @Override
     public void drawSceneContent() {
         Font font = gr.scaledArcadeFont(TS);
-        BitSet marqueeState = computeMarqueeState(marqueeTimer.tickCount());
-        drawMarquee(gr.ctx(), marqueeState);
+        drawMarquee();
         gr.drawText("\"MS PAC-MAN\"", Color.valueOf(Arcade.Palette.ORANGE), font, TITLE_POSITION.x(), TITLE_POSITION.y());
         if (sceneController.state() == SceneState.GHOSTS_MARCHING_IN) {
             if (ghostIndex == GameModel.RED_GHOST) {
@@ -153,42 +154,44 @@ public class IntroScene extends GameScene2D {
     }
 
     /**
-     * 6 of the 96 bulbs are switched on per frame, shifting counter-clockwise every tick.
-     * The bulbs on the left border however are switched off every second frame. Bug in original game?
-     *
-     * @return bit set indicating which bulbs are switched on
+     * 6 of the 96 light bulbs are lightning each frame, shifting counter-clockwise every tick.
+     * <p>
+     * The bulbs on the left border however are switched off every second frame. This is
+     * probably a bug in the original Arcade game.
+     * </p>
      */
-    private BitSet computeMarqueeState(long tick) {
-        var state = new BitSet(NUM_BULBS);
+    private void drawMarquee() {
+        long tick = marqueeTimer.tickCount();
+        var marqueeState = new BitSet(NUM_BULBS);
         for (int b = 0; b < 6; ++b) {
-            state.set((b * DISTANCE_BETWEEN_ACTIVE_BULBS + (int) tick) % NUM_BULBS);
+            marqueeState.set((b * DISTANCE_BETWEEN_ACTIVE_BULBS + (int) tick) % NUM_BULBS);
         }
         // Simulate bug on left border
         for (int i = 81; i < NUM_BULBS; i += 2) {
-            state.clear(i);
+            marqueeState.clear(i);
         }
-        return state;
-    }
-
-    private void drawMarquee(GraphicsContext g, BitSet marqueeState) {
-        double xMin = 60, xMax = 192, yMin = 88, yMax = 148;
+        final double xMin = 60, xMax = 192, yMin = 88, yMax = 148;
+        final double size = scaled(2);
         for (int i = 0; i < NUM_BULBS; ++i) {
             boolean on = marqueeState.get(i);
-            if (i <= 33) { // lower edge left-to-right
-                drawBulb(g, xMin + 4 * i, yMax, on);
-            } else if (i <= 48) { // right edge bottom-to-top
-                drawBulb(g, xMax, 4 * (70 - i), on);
-            } else if (i <= 81) { // upper edge right-to-left
-                drawBulb(g, 4 * (96 - i), yMin, on);
-            } else { // left edge top-to-bottom
-                drawBulb(g, xMin, 4 * (i - 59), on);
+            gr.ctx().setFill(on ? COLOR_BULB_ON : COLOR_BULB_OFF);
+            if (i <= 33) {
+                // lower edge left-to-right
+                gr.ctx().fillRect(scaled(xMin + 4 * i), scaled(yMax), size, size);
+            }
+            else if (i <= 48) {
+                // right edge bottom-to-top
+                gr.ctx().fillRect(scaled(xMax), scaled(4 * (70 - i)), size, size);
+            }
+            else if (i <= 81) {
+                // upper edge right-to-left
+                gr.ctx().fillRect(scaled(4 * (96 - i)), scaled(yMin), size, size);
+            }
+            else {
+                // left edge top-to-bottom
+                gr.ctx().fillRect(scaled(xMin), scaled(4 * (i - 59)), size, size);
             }
         }
-    }
-
-    private void drawBulb(GraphicsContext g, double x, double y, boolean on) {
-        g.setFill(on ? Color.valueOf(Arcade.Palette.WHITE) : Color.valueOf(Arcade.Palette.RED));
-        g.fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 
     // Scene controller FSM states
