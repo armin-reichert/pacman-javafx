@@ -20,7 +20,6 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui._2d.GameActions2D;
 import de.amr.games.pacman.ui._2d.GameScene2D;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -46,25 +45,27 @@ public class IntroScene extends GameScene2D {
     static final Vector2i TITLE_POSITION = vec_2i(TS * 10, TS * 8);
     static final int NUM_BULBS = 96;
     static final int DISTANCE_BETWEEN_ACTIVE_BULBS = 16;
-    static final Color COLOR_BULB_ON = Color.valueOf(Arcade.Palette.WHITE);
-    static final Color COLOR_BULB_OFF = Color.valueOf(Arcade.Palette.RED);
-    static final Color[] COLOR_GHOST = {
-        Color.valueOf(Arcade.Palette.RED),
-        Color.valueOf(Arcade.Palette.PINK),
-        Color.valueOf(Arcade.Palette.CYAN),
-        Color.valueOf(Arcade.Palette.ORANGE),
-    };
-    static final Color COLOR_RED = Color.valueOf(Arcade.Palette.RED);
-    static final Color COLOR_WHITE = Color.valueOf(Arcade.Palette.WHITE);
+
+    static final Color COLOR_CYAN   = Color.valueOf(Arcade.Palette.CYAN);
     static final Color COLOR_ORANGE = Color.valueOf(Arcade.Palette.ORANGE);
+    static final Color COLOR_PINK   = Color.valueOf(Arcade.Palette.PINK);
+    static final Color COLOR_RED    = Color.valueOf(Arcade.Palette.RED);
+    static final Color COLOR_WHITE  = Color.valueOf(Arcade.Palette.WHITE);
     static final Color COLOR_YELLOW = Color.valueOf(Arcade.Palette.YELLOW);
+
+    static final Color COLOR_BULB_ON  = COLOR_WHITE;
+    static final Color COLOR_BULB_OFF = COLOR_RED;
+
+    static final Color[] COLOR_GHOST = {
+        COLOR_RED, COLOR_PINK, COLOR_CYAN, COLOR_ORANGE
+    };
 
     private final FiniteStateMachine<SceneState, IntroScene> sceneController;
 
     private Pac msPacMan;
     private Ghost[] ghosts;
     private TickTimer marqueeTimer;
-    private int ghostIndex;
+    private int ghostID;
     private int waitBeforeRising;
 
     public IntroScene() {
@@ -95,7 +96,7 @@ public class IntroScene extends GameScene2D {
             ArcadeMsPacMan_GameModel.sue()
         };
         marqueeTimer = new TickTimer("marquee-timer");
-        ghostIndex = 0;
+        ghostID = 0;
         waitBeforeRising = 0;
 
         ArcadeMsPacMan_SpriteSheet spriteSheet = (ArcadeMsPacMan_SpriteSheet) context.gameConfiguration().spriteSheet();
@@ -134,12 +135,12 @@ public class IntroScene extends GameScene2D {
         drawMarquee();
         gr.drawText("\"MS PAC-MAN\"", COLOR_ORANGE, font, TITLE_POSITION.x(), TITLE_POSITION.y());
         if (sceneController.state() == SceneState.GHOSTS_MARCHING_IN) {
-            if (ghostIndex == GameModel.RED_GHOST) {
+            String ghostName = ghosts[ghostID].name().toUpperCase();
+            double dx = ghostName.length() < 4 ? tiles2Px(1) : 0;
+            if (ghostID == GameModel.RED_GHOST) {
                 gr.drawText("WITH", COLOR_WHITE, font, TITLE_POSITION.x(), TOP_Y + tiles2Px(3));
             }
-            String ghostName = ghosts[ghostIndex].name().toUpperCase();
-            double dx = ghostName.length() < 4 ? tiles2Px(1) : 0;
-            gr.drawText(ghostName, COLOR_GHOST[ghostIndex], font, TITLE_POSITION.x() + tiles2Px(3) + dx, TOP_Y + tiles2Px(6));
+            gr.drawText(ghostName, COLOR_GHOST[ghostID], font, TITLE_POSITION.x() + tiles2Px(3) + dx, TOP_Y + tiles2Px(6));
         }
         else if (sceneController.state() == SceneState.MS_PACMAN_MARCHING_IN || sceneController.state() == SceneState.READY_TO_PLAY) {
             gr.drawText("STARRING", COLOR_WHITE, font, TITLE_POSITION.x(), TOP_Y + tiles2Px(3));
@@ -220,7 +221,7 @@ public class IntroScene extends GameScene2D {
                     ghost.setVisible(true);
                     ghost.startAnimation();
                 }
-                intro.ghostIndex = 0;
+                intro.ghostID = 0;
             }
 
             @Override
@@ -239,16 +240,16 @@ public class IntroScene extends GameScene2D {
                 intro.marqueeTimer.doTick();
                 boolean reachedEndPosition = letGhostMarchIn(intro);
                 if (reachedEndPosition) {
-                    if (intro.ghostIndex == 3) {
+                    if (intro.ghostID == 3) {
                         intro.sceneController.changeState(MS_PACMAN_MARCHING_IN);
                     } else {
-                        ++intro.ghostIndex;
+                        ++intro.ghostID;
                     }
                 }
             }
 
             boolean letGhostMarchIn(IntroScene intro) {
-                Ghost ghost = intro.ghosts[intro.ghostIndex];
+                Ghost ghost = intro.ghosts[intro.ghostID];
                 if (ghost.moveDir() == Direction.LEFT) {
                     if (ghost.posX() <= STOP_X_GHOST) {
                         ghost.setPosX(STOP_X_GHOST);
@@ -259,7 +260,7 @@ public class IntroScene extends GameScene2D {
                     }
                 }
                 else if (ghost.moveDir() == Direction.UP) {
-                    int endPositionY = TOP_Y + intro.ghostIndex * 16;
+                    int endPositionY = TOP_Y + intro.ghostID * 16;
                     if (intro.waitBeforeRising > 0) {
                         intro.waitBeforeRising--;
                     }
