@@ -169,7 +169,7 @@ public class IntroScene extends GameScene2D {
         int t = (int) (marqueeTimer.tickCount() % BULB_COUNT);
         for (int i = 0; i < BULB_COUNT; ++i) { drawBulb(i, false); }
         for (int b = 0; b < 6; ++b) { drawBulb((t + b * ACTIVE_BULBS_DIST) % BULB_COUNT, true); }
-        for (int i = 81; i < BULB_COUNT; i += 2) { drawBulb(i, false); }
+        for (int i = 81; i < BULB_COUNT; i += 2) { drawBulb(i, false); } // simulates bug
     }
 
     private void drawBulb(int i, boolean on) {
