@@ -46,7 +46,7 @@ public class IntroScene extends GameScene2D {
 
     static final int BULB_COUNT = 96;
     static final int ACTIVE_BULBS_DIST = 16;
-    static final double MARQUEE_XMIN = 60, MARQUEE_XMAX = 192, MARQUEE_YMIN = 88, MARQUEE_YMAX = 148;
+    static final int MARQUEE_XMIN = 60, MARQUEE_XMAX = 192, MARQUEE_YMIN = 88, MARQUEE_YMAX = 148;
 
     static final Color COLOR_CYAN   = Color.valueOf(Arcade.Palette.CYAN);
     static final Color COLOR_ORANGE = Color.valueOf(Arcade.Palette.ORANGE);
@@ -173,21 +173,13 @@ public class IntroScene extends GameScene2D {
     }
 
     private void drawBulb(int i, boolean on) {
-        double x, y;
-        if (i <= 33) { // lower edge left-to-right
-            x = scaled(MARQUEE_XMIN + 4 * i); y = scaled(MARQUEE_YMAX);
-        }
-        else if (i <= 48) { // right edge bottom-to-top
-            x = scaled(MARQUEE_XMAX); y = scaled(4 * (70 - i));
-        }
-        else if (i <= 81) { // upper edge right-to-left
-            x = scaled(4 * (96 - i)); y = scaled(MARQUEE_YMIN);
-        }
-        else { // left edge top-to-bottom
-            x = scaled(MARQUEE_XMIN); y = scaled(4 * (i - 59));
-        }
+        int x, y;
+        if (i <= 33)      { x = MARQUEE_XMIN + 4 * i; y = MARQUEE_YMAX; } // lower edge left-to-right
+        else if (i <= 48) { x = MARQUEE_XMAX;         y = 4 * (70 - i); } // right edge bottom-to-top
+        else if (i <= 81) { x = 4 * (96 - i);         y = MARQUEE_YMIN; } // upper edge right-to-left
+        else              { x = MARQUEE_XMIN;         y = 4 * (i - 59); } // left edge top-to-bottom
         gr.ctx().setFill(on ? COLOR_BULB_ON : COLOR_BULB_OFF);
-        gr.ctx().fillRect(x, y, scaled(2), scaled(2));
+        gr.ctx().fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 
     // Scene controller FSM states
