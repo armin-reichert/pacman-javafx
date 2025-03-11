@@ -73,10 +73,14 @@ public class GameLevel {
     private final TickTimer powerTimer = new TickTimer("PacPowerTimer");
 
     public GameLevel(int number, WorldMap worldMap) {
+        if (number < 1) {
+            throw new IllegalArgumentException("Illegal level number: " + number);
+        }
         this.number = number;
-        nextBonusIndex = -1;
         this.worldMap = assertNotNull(worldMap);
-        portals = findPortals(worldMap);
+        this.portals = findPortals(worldMap);
+
+        nextBonusIndex = -1;
 
         pacPosition                  = posHalfTileRightOf(worldMap.getTerrainTileProperty(PROPERTY_POS_PAC,          vec_2i(13,26)));
         ghostPositions[RED_GHOST]    = posHalfTileRightOf(worldMap.getTerrainTileProperty(PROPERTY_POS_RED_GHOST,    vec_2i(13,14)));

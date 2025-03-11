@@ -45,9 +45,6 @@ public class MazeMapGenerator {
             set(map, LayerID.TERRAIN, row + 1, col + 1, BLOCKED);
         }
         computeWallContour(map, new Vector2i(0, EMPTY_ROWS_ABOVE));
-        addFood(map);
-        //TODO set color
-        //terrain.setProperty("color_wall_fill", "#993300");
         return map;
     }
 
@@ -136,11 +133,19 @@ public class MazeMapGenerator {
         Logger.debug("x={} y={}: {} move {}", col, row, value, moveDir);
     }
 
+    private void setColors(WorldMap map) {
+        map.setProperty(LayerID.TERRAIN, WorldMap.PROPERTY_COLOR_DOOR, "#fcb5ff");
+        map.setProperty(LayerID.TERRAIN, WorldMap.PROPERTY_COLOR_WALL_FILL, "#47b7ff");
+        map.setProperty(LayerID.TERRAIN, WorldMap.PROPERTY_COLOR_WALL_STROKE, "#dedeff");
+        map.setProperty(LayerID.FOOD,    WorldMap.PROPERTY_COLOR_FOOD, "#ffff00");
+    }
+
     public static void main(String[] args)  {
         MazeMapGenerator mg = new MazeMapGenerator();
         //WorldMap mazeMap = new WorldMap(new File("maze.world"));
         for (int i = 0; i < 5; ++i) {
             WorldMap mazeMap = mg.createMazeMap(10, 10);
+            mg.setColors(mazeMap);
             File file = new File("maze_%d.world".formatted(i));
             boolean saved = mazeMap.save(file);
             if (!saved) {
