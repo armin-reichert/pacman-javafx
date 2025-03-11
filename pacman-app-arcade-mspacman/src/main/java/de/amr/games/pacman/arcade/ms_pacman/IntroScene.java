@@ -22,8 +22,6 @@ import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import java.util.BitSet;
-
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.tiles2Px;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
@@ -46,8 +44,9 @@ public class IntroScene extends GameScene2D {
     static final int STOP_X_GHOST = TS * 6 - 4;
     static final int STOP_X_MSPAC = TS * 15 + 2;
 
-    static final int NUM_BULBS = 96;
-    static final int DISTANCE_BETWEEN_ACTIVE_BULBS = 16;
+    static final int BULB_COUNT = 96;
+    static final int ACTIVE_BULBS_DIST = 16;
+    static final double MARQUEE_XMIN = 60, MARQUEE_XMAX = 192, MARQUEE_YMIN = 88, MARQUEE_YMAX = 148;
 
     static final Color COLOR_CYAN   = Color.valueOf(Arcade.Palette.CYAN);
     static final Color COLOR_ORANGE = Color.valueOf(Arcade.Palette.ORANGE);
@@ -167,36 +166,26 @@ public class IntroScene extends GameScene2D {
      * </p>
      */
     private void drawMarquee() {
-        long tick = marqueeTimer.tickCount();
-        var marqueeState = new BitSet(NUM_BULBS);
-        for (int b = 0; b < 6; ++b) {
-            marqueeState.set((b * DISTANCE_BETWEEN_ACTIVE_BULBS + (int) tick) % NUM_BULBS);
-        }
-        // Simulate bug on left border
-        for (int i = 81; i < NUM_BULBS; i += 2) {
-            marqueeState.clear(i);
-        }
-        final double xMin = 60, xMax = 192, yMin = 88, yMax = 148;
+        int t = (int) (marqueeTimer.tickCount() % BULB_COUNT);
+        for (int i = 0; i < BULB_COUNT; ++i) { drawBulb(i, false); }
+        for (int b = 0; b < 6; ++b) { drawBulb((t + b * ACTIVE_BULBS_DIST) % BULB_COUNT, true); }
+        for (int i = 81; i < BULB_COUNT; i += 2) { drawBulb(i, false); }
+    }
+
+    private void drawBulb(int i, boolean on) {
         final double size = scaled(2);
-        for (int i = 0; i < NUM_BULBS; ++i) {
-            boolean on = marqueeState.get(i);
-            gr.ctx().setFill(on ? COLOR_BULB_ON : COLOR_BULB_OFF);
-            if (i <= 33) {
-                // lower edge left-to-right
-                gr.ctx().fillRect(scaled(xMin + 4 * i), scaled(yMax), size, size);
-            }
-            else if (i <= 48) {
-                // right edge bottom-to-top
-                gr.ctx().fillRect(scaled(xMax), scaled(4 * (70 - i)), size, size);
-            }
-            else if (i <= 81) {
-                // upper edge right-to-left
-                gr.ctx().fillRect(scaled(4 * (96 - i)), scaled(yMin), size, size);
-            }
-            else {
-                // left edge top-to-bottom
-                gr.ctx().fillRect(scaled(xMin), scaled(4 * (i - 59)), size, size);
-            }
+        gr.ctx().setFill(on ? COLOR_BULB_ON : COLOR_BULB_OFF);
+        if (i <= 33) { // lower edge left-to-right
+            gr.ctx().fillRect(scaled(MARQUEE_XMIN + 4 * i), scaled(MARQUEE_YMAX), size, size);
+        }
+        else if (i <= 48) { // right edge bottom-to-top
+            gr.ctx().fillRect(scaled(MARQUEE_XMAX), scaled(4 * (70 - i)), size, size);
+        }
+        else if (i <= 81) { // upper edge right-to-left
+            gr.ctx().fillRect(scaled(4 * (96 - i)), scaled(MARQUEE_YMIN), size, size);
+        }
+        else { // left edge top-to-bottom
+            gr.ctx().fillRect(scaled(MARQUEE_XMIN), scaled(4 * (i - 59)), size, size);
         }
     }
 
