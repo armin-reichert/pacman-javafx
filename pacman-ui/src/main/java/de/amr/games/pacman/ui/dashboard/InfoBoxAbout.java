@@ -5,7 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.dashboard;
 
 import de.amr.games.pacman.ui.GameContext;
+import de.amr.games.pacman.ui.PacManGamesUI;
+import de.amr.games.pacman.uilib.ResourceManager;
 import javafx.geometry.Insets;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -20,22 +23,26 @@ public class InfoBoxAbout extends InfoBox {
     public void init(GameContext context) {
         super.init(context);
 
-        var theAuthor = new ImageView(DashboardAssets.IT.image("photo.armin1970"));
-        theAuthor.setFitWidth(250);
-        theAuthor.setPreserveRatio(true);
+        ResourceManager rm = () -> PacManGamesUI.class;
+        Image armin1970 = rm.loadImage("graphics/armin1970.jpg");
+        Font handwriting = rm.loadFont("fonts/Molle-Italic.ttf", 20);
 
-        var madeBy = new Text("Made by     ");
+
+        var myImage = new ImageView(armin1970);
+        myImage.setFitWidth(250);
+        myImage.setPreserveRatio(true);
+
+        var madeBy = new Text("Made by    ");
         madeBy.setFont(Font.font("Helvetica", 16));
         madeBy.setFill(Color.grayRgb(150));
 
         var signature = new Text("Armin Reichert");
-        var font = DashboardAssets.IT.font("font.handwriting", 18);
-        signature.setFont(font);
+        signature.setFont(handwriting);
         signature.setFill(Color.grayRgb(225));
 
         var tf = new TextFlow(madeBy, signature);
         tf.setPadding(new Insets(5, 5, 5, 5));
-        grid.add(theAuthor, 0, 0);
+        grid.add(myImage, 0, 0);
         grid.add(tf, 0, 1);
     }
 }

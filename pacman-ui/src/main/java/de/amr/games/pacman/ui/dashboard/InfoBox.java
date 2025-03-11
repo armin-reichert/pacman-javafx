@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui.dashboard;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GameScene;
-import de.amr.games.pacman.uilib.Ufx;
+import de.amr.games.pacman.ui._2d.Dashboard;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.WritableObjectValue;
@@ -15,6 +15,7 @@ import javafx.collections.FXCollections;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -49,7 +50,6 @@ public abstract class InfoBox extends TitledPane {
     protected int rowIndex;
 
     public InfoBox() {
-        grid.setBackground(Ufx.coloredBackground(DashboardAssets.IT.color("infobox.background_color")));
         grid.setVgap(2);
         grid.setHgap(3);
         setContent(grid);
@@ -65,6 +65,10 @@ public abstract class InfoBox extends TitledPane {
 
     public void update() {
         infoTexts.forEach(InfoText::update);
+    }
+
+    public void setContentBackground(Background background) {
+        grid.setBackground(background);
     }
 
     public void setLabelFont(Font labelFont) {
@@ -201,11 +205,11 @@ public abstract class InfoBox extends TitledPane {
         slider.valueProperty().bindBidirectional(property);
     }
 
-    protected Slider adddSlider(String labelText, int min, int max, double initialValue, boolean tickMarks, boolean tickLabels) {
+    protected Slider addSlider(String labelText, int min, int max, double initialValue, boolean tickMarks, boolean tickLabels) {
         var slider = new Slider(min, max, initialValue);
         slider.setShowTickMarks(tickMarks);
         slider.setShowTickLabels(tickLabels);
-        slider.setMinWidth(DashboardAssets.IT.<Integer>get("infobox.min_col_width"));
+        slider.setMinWidth(Dashboard.INFOBOX_MIN_WIDTH);
         slider.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             if (e.getClickCount() == 2) {
                 slider.setValue(initialValue);

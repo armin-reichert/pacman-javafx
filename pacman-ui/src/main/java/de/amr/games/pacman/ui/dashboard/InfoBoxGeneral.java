@@ -5,8 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.dashboard;
 
 import de.amr.games.pacman.ui.GameContext;
+import de.amr.games.pacman.ui.PacManGamesUI;
 import de.amr.games.pacman.ui._2d.GameActions2D;
 import de.amr.games.pacman.uilib.GameClockFX;
+import de.amr.games.pacman.uilib.ResourceManager;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
@@ -36,15 +38,16 @@ public class InfoBoxGeneral extends InfoBox {
 
         GameClockFX clock = context.gameClock();
 
-        iconPlay = new ImageView(DashboardAssets.IT.image("icon.play"));
-        iconStop = new ImageView(DashboardAssets.IT.image("icon.stop"));
-        iconStep = new ImageView(DashboardAssets.IT.image("icon.step"));
+        ResourceManager rm = () -> PacManGamesUI.class;
+        iconPlay = new ImageView(rm.loadImage("graphics/icons/play.png"));
+        iconStop = new ImageView(rm.loadImage("graphics/icons/stop.png"));
+        iconStep = new ImageView(rm.loadImage("graphics/icons/step.png"));
 
         addLabeledValue("Java Version",   Runtime.version().toString());
         addLabeledValue("JavaFX Version", System.getProperty("javafx.runtime.version"));
         bgSimulation = addButtonList("Simulation", "Pause", "Step(s)");
         addIntSpinner("Num Steps", 1, 50, PY_SIMULATION_STEPS);
-        var sliderTargetFPS = adddSlider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
+        var sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
         addLabeledValue("", () -> "FPS: %.1f (Tgt: %.1f)".formatted(clock.getActualFrameRate(), clock.getTargetFrameRate()));
         addLabeledValue("Total Updates",  clock::getUpdateCount);
         var pickerCanvasColor = addColorPicker("Canvas Color", PY_CANVAS_BG_COLOR.get());

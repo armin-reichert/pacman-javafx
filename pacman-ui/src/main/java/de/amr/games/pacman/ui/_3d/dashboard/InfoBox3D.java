@@ -57,10 +57,10 @@ public class InfoBox3D extends InfoBox {
         addLabeledValue("Viewport Size", this::sceneViewportSizeInfo);
         addLabeledValue("Scene Size",    this::sceneSizeInfo);
         cbPiPOn              = addCheckBox("Picture-In-Picture");
-        sliderPiPSceneHeight = adddSlider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get(), false, false);
-        sliderPiPOpacity     = adddSlider("- Opacity", 0, 100, PY_PIP_OPACITY_PERCENT.get(), false, false);
-        sliderWallHeight     = adddSlider("Obstacle Height", 0, 16, GlobalProperties3d.PY_3D_WALL_HEIGHT.get(), false, false);
-        sliderWallOpacity    = adddSlider("Wall Opacity", 0, 1, GlobalProperties3d.PY_3D_WALL_OPACITY.get(), false, false);
+        sliderPiPSceneHeight = addSlider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get(), false, false);
+        sliderPiPOpacity     = addSlider("- Opacity", 0, 100, PY_PIP_OPACITY_PERCENT.get(), false, false);
+        sliderWallHeight     = addSlider("Obstacle Height", 0, 16, GlobalProperties3d.PY_3D_WALL_HEIGHT.get(), false, false);
+        sliderWallOpacity    = addSlider("Wall Opacity", 0, 1, GlobalProperties3d.PY_3D_WALL_OPACITY.get(), false, false);
         cbEnergizerExplodes  = addCheckBox("Energizer Explosion");
         cbPacLighted         = addCheckBox("Pac-Man Lighted");
         cbAxesVisible        = addCheckBox("Show Axes");
