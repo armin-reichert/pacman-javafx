@@ -173,20 +173,21 @@ public class IntroScene extends GameScene2D {
     }
 
     private void drawBulb(int i, boolean on) {
-        final double size = scaled(2);
-        gr.ctx().setFill(on ? COLOR_BULB_ON : COLOR_BULB_OFF);
+        double x, y;
         if (i <= 33) { // lower edge left-to-right
-            gr.ctx().fillRect(scaled(MARQUEE_XMIN + 4 * i), scaled(MARQUEE_YMAX), size, size);
+            x = scaled(MARQUEE_XMIN + 4 * i); y = scaled(MARQUEE_YMAX);
         }
         else if (i <= 48) { // right edge bottom-to-top
-            gr.ctx().fillRect(scaled(MARQUEE_XMAX), scaled(4 * (70 - i)), size, size);
+            x = scaled(MARQUEE_XMAX); y = scaled(4 * (70 - i));
         }
         else if (i <= 81) { // upper edge right-to-left
-            gr.ctx().fillRect(scaled(4 * (96 - i)), scaled(MARQUEE_YMIN), size, size);
+            x = scaled(4 * (96 - i)); y = scaled(MARQUEE_YMIN);
         }
         else { // left edge top-to-bottom
-            gr.ctx().fillRect(scaled(MARQUEE_XMIN), scaled(4 * (i - 59)), size, size);
+            x = scaled(MARQUEE_XMIN); y = scaled(4 * (i - 59));
         }
+        gr.ctx().setFill(on ? COLOR_BULB_ON : COLOR_BULB_OFF);
+        gr.ctx().fillRect(x, y, scaled(2), scaled(2));
     }
 
     // Scene controller FSM states
