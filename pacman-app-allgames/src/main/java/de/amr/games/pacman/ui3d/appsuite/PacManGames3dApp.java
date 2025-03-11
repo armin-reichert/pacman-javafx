@@ -78,7 +78,7 @@ public class PacManGames3dApp extends Application {
 
         ui.create(stage, initialSize());
 
-        ui.gameView().addDashboardItems(
+        ui.gameView().addDefaultDashboardItems(
             "README",
             "GENERAL",
             "GAME_CONTROL",

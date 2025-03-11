@@ -35,11 +35,11 @@ public class GameView3D extends GameView {
     }
 
     @Override
-    public void addDashboardItem(String id) {
+    public void addDefaultDashboardItem(String id) {
         if ("SETTINGS_3D".equals(id)) {
             addDashboardItem("SETTINGS_3D", context.locText("infobox.3D_settings.title"), new InfoBox3D());
         } else {
-            super.addDashboardItem(id);
+            super.addDefaultDashboardItem(id);
         }
     }
 

@@ -39,7 +39,7 @@ public class PacManXXL_App extends Application {
 
         ui.create(stage, initialSize());
 
-        ui.gameView().addDashboardItems(
+        ui.gameView().addDefaultDashboardItems(
             "README",
             "GENERAL",
             "GAME_CONTROL",

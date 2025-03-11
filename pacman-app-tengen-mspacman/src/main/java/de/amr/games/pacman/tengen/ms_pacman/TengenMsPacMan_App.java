@@ -38,7 +38,7 @@ public class TengenMsPacMan_App extends Application {
         ui.create(stage, initialSize());
         ui.addStartPage(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_StartPage(ui));
 
-        ui.gameView().addDashboardItems(
+        ui.gameView().addDefaultDashboardItems(
             "README",
             "GENERAL",
             "GAME_CONTROL",

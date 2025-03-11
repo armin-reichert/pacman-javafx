@@ -204,11 +204,11 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
     // Dashboard
     //
 
-    public void addDashboardItems(String... ids) {
-        for (var id : ids) addDashboardItem(id);
+    public void addDefaultDashboardItems(String... ids) {
+        for (var id : ids) addDefaultDashboardItem(id);
     }
 
-    public void addDashboardItem(String id) {
+    public void addDefaultDashboardItem(String id) {
         switch (id) {
             case "ABOUT"        -> addDashboardItem(id, context.locText("infobox.about.title"),              new InfoBoxAbout());
             case "ACTOR_INFO"   -> addDashboardItem(id, context.locText("infobox.actor_info.title"),         new InfoBoxActorInfo());
