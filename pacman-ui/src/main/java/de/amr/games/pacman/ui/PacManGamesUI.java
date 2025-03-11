@@ -312,7 +312,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         gameView.gameSceneProperty().bind(gameScenePy);
     }
 
-    public <I extends InfoBox> I getDashboardItem(DashboardItemID id) {
+    public <I extends InfoBox> I getDashboardItem(String id) {
         return gameView.dashboard().getItem(id);
     }
 

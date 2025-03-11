@@ -18,7 +18,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameUIConfig3D;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_StartPage;
-import de.amr.games.pacman.ui.DashboardItemID;
 import de.amr.games.pacman.ui._2d.StartPage;
 import de.amr.games.pacman.ui._3d.PacManGamesUI_3D;
 import de.amr.games.pacman.ui.dashboard.InfoBoxCustomMaps;
@@ -80,19 +79,19 @@ public class PacManGames3dApp extends Application {
         ui.create(stage, initialSize());
 
         ui.gameView().addDashboardItems(
-            DashboardItemID.README,
-            DashboardItemID.GENERAL,
-            DashboardItemID.GAME_CONTROL,
-            DashboardItemID.SETTINGS_3D,
-            DashboardItemID.GAME_INFO,
-            DashboardItemID.ACTOR_INFO,
-            DashboardItemID.CUSTOM_MAPS,
-            DashboardItemID.JOYPAD,
-            DashboardItemID.KEYBOARD,
-            DashboardItemID.ABOUT
+            "README",
+            "GENERAL",
+            "GAME_CONTROL",
+            "SETTINGS_3D",
+            "GAME_INFO",
+            "ACTOR_INFO",
+            "CUSTOM_MAPS",
+            "JOYPAD",
+            "KEYBOARD",
+            "ABOUT"
         );
 
-        InfoBoxCustomMaps infoBoxCustomMaps = ui.getDashboardItem(DashboardItemID.CUSTOM_MAPS);
+        InfoBoxCustomMaps infoBoxCustomMaps = ui.getDashboardItem("CUSTOM_MAPS");
         infoBoxCustomMaps.setTableItems(xxlMapSelector.customMaps());
 
         ui.addStartPage(GameVariant.PACMAN,           new ArcadePacMan_StartPage(ui));

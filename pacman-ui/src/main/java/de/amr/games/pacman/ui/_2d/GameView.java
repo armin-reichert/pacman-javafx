@@ -204,21 +204,21 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
     // Dashboard
     //
 
-    public void addDashboardItems(DashboardItemID... ids) {
+    public void addDashboardItems(String... ids) {
         for (var id : ids) addDashboardItem(id);
     }
 
-    public void addDashboardItem(DashboardItemID id) {
+    public void addDashboardItem(String id) {
         switch (id) {
-            case ABOUT        -> addDashboardItem(id, context.locText("infobox.about.title"),              new InfoBoxAbout());
-            case ACTOR_INFO   -> addDashboardItem(id, context.locText("infobox.actor_info.title"),         new InfoBoxActorInfo());
-            case CUSTOM_MAPS  -> addDashboardItem(id, context.locText("infobox.custom_maps.title"),        new InfoBoxCustomMaps());
-            case GENERAL      -> addDashboardItem(id, context.locText("infobox.general.title"),            new InfoBoxGeneral());
-            case GAME_CONTROL -> addDashboardItem(id, context.locText("infobox.game_control.title"),       new InfoBoxGameControl());
-            case GAME_INFO    -> addDashboardItem(id, context.locText("infobox.game_info.title"),          new InfoBoxGameInfo());
-            case JOYPAD       -> addDashboardItem(id, context.locText("infobox.joypad.title"),             new InfoBoxJoypad());
-            case KEYBOARD     -> addDashboardItem(id, context.locText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
-            case README -> {
+            case "ABOUT"        -> addDashboardItem(id, context.locText("infobox.about.title"),              new InfoBoxAbout());
+            case "ACTOR_INFO"   -> addDashboardItem(id, context.locText("infobox.actor_info.title"),         new InfoBoxActorInfo());
+            case "CUSTOM_MAPS"  -> addDashboardItem(id, context.locText("infobox.custom_maps.title"),        new InfoBoxCustomMaps());
+            case "GENERAL"      -> addDashboardItem(id, context.locText("infobox.general.title"),            new InfoBoxGeneral());
+            case "GAME_CONTROL" -> addDashboardItem(id, context.locText("infobox.game_control.title"),       new InfoBoxGameControl());
+            case "GAME_INFO"    -> addDashboardItem(id, context.locText("infobox.game_info.title"),          new InfoBoxGameInfo());
+            case "JOYPAD"       -> addDashboardItem(id, context.locText("infobox.joypad.title"),             new InfoBoxJoypad());
+            case "KEYBOARD"     -> addDashboardItem(id, context.locText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
+            case "README" -> {
                 InfoBox readMeBox = new InfoBoxReadmeFirst();
                 readMeBox.setExpanded(true);
                 addDashboardItem(id, context.locText("infobox.readme.title"), readMeBox);
@@ -226,7 +226,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
         }
     }
 
-    public void addDashboardItem(DashboardItemID id, String title, InfoBox infoBox) {
+    public void addDashboardItem(String id, String title, InfoBox infoBox) {
         dashboard.addDashboardItem(id, title, infoBox);
     }
 

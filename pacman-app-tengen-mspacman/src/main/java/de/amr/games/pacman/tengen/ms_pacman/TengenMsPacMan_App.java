@@ -7,7 +7,6 @@ package de.amr.games.pacman.tengen.ms_pacman;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.DashboardItemID;
 import de.amr.games.pacman.ui._3d.PacManGamesUI_3D;
 import javafx.application.Application;
 import javafx.geometry.Dimension2D;
@@ -40,15 +39,15 @@ public class TengenMsPacMan_App extends Application {
         ui.addStartPage(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_StartPage(ui));
 
         ui.gameView().addDashboardItems(
-            DashboardItemID.README,
-            DashboardItemID.GENERAL,
-            DashboardItemID.GAME_CONTROL,
-            DashboardItemID.SETTINGS_3D,
-            DashboardItemID.GAME_INFO,
-            DashboardItemID.ACTOR_INFO,
-            DashboardItemID.JOYPAD,
-            DashboardItemID.KEYBOARD,
-            DashboardItemID.ABOUT
+            "README",
+            "GENERAL",
+            "GAME_CONTROL",
+            "SETTINGS_3D",
+            "GAME_INFO",
+            "ACTOR_INFO",
+            "JOYPAD",
+            "KEYBOARD",
+            "ABOUT"
         );
 
         ui.show();

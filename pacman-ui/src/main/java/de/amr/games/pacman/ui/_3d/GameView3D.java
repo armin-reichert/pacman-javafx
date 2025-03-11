@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._3d;
 
-import de.amr.games.pacman.ui.DashboardItemID;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui._2d.GameView;
 import de.amr.games.pacman.ui._3d.dashboard.InfoBox3D;
@@ -36,9 +35,9 @@ public class GameView3D extends GameView {
     }
 
     @Override
-    public void addDashboardItem(DashboardItemID id) {
-        if (DashboardItemID.SETTINGS_3D == id) {
-            addDashboardItem(DashboardItemID.SETTINGS_3D, context.locText("infobox.3D_settings.title"), new InfoBox3D());
+    public void addDashboardItem(String id) {
+        if ("SETTINGS_3D".equals(id)) {
+            addDashboardItem("SETTINGS_3D", context.locText("infobox.3D_settings.title"), new InfoBox3D());
         } else {
             super.addDashboardItem(id);
         }
