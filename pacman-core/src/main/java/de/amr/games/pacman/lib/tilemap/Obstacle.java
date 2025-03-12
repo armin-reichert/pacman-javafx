@@ -22,30 +22,34 @@ public class Obstacle {
 
     private final Vector2i startPoint;
     private final List<ObstacleSegment> segments = new ArrayList<>();
-    private final List<RectArea> innerAreaRectPartition;
+    private final List<RectArea> innerRectPartition;
 
     public Obstacle(Vector2i startPoint) {
         this.startPoint = Objects.requireNonNull(startPoint);
-        innerAreaRectPartition = new ArrayList<>();
+        innerRectPartition = new ArrayList<>();
     }
 
     public void addSegment(Vector2i vector, boolean counterClockwise, byte content) {
         Objects.requireNonNull(vector);
         segments.add(new ObstacleSegment(endPoint(), vector, counterClockwise, content));
         if (isClosed()) {
-            innerAreaRectPartition.clear();
-            try {
-                Collection<Vector2i> innerPolygon = computeInnerPolygonPoints();
-                innerAreaRectPartition.addAll(GourleyGreenPolygonToRect.convertPolygonToRectangles(innerPolygon));
-            } catch (Exception x) {
-                Logger.warn("Inner area rectangle partition could not be computed");
-                Logger.error(x);
-            }
+            computeInnerRectPartition();
+        }
+    }
+
+    private void computeInnerRectPartition() {
+        innerRectPartition.clear();
+        try {
+            Collection<Vector2i> innerPolygon = computeInnerPolygonPoints();
+            innerRectPartition.addAll(GourleyGreenPolygonToRect.convertPolygonToRectangles(innerPolygon));
+        } catch (Exception x) {
+            Logger.warn("Inner area rectangle partition could not be computed");
+            Logger.error(x);
         }
     }
 
     public Stream<RectArea> innerAreaRectPartition() {
-        return innerAreaRectPartition.stream();
+        return innerRectPartition.stream();
     }
 
     public Vector2i[] points() {
@@ -62,7 +66,7 @@ public class Obstacle {
         return "Obstacle{" +
             "encoding=" + encoding() +
             ", start=" + startPoint +
-            ", rectangles=" + innerAreaRectPartition +
+            ", rectangles=" + innerRectPartition +
             ", segment count=" + segments.size() +
             ", segments=" + segments +
             '}';
@@ -225,8 +229,8 @@ public class Obstacle {
     // experimental
 
     public void checkParent(Obstacle other) {
-        for (RectArea parentRect : other.innerAreaRectPartition) {
-            for (RectArea childRect : innerAreaRectPartition) {
+        for (RectArea parentRect : other.innerRectPartition) {
+            for (RectArea childRect : innerRectPartition) {
                 if (parentRect.contains(childRect)) {
                     parent = other;
                     Logger.info("Obstacle {} at {} is contained in obstacle {} at {}",
