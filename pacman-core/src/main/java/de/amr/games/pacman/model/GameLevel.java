@@ -56,9 +56,9 @@ public class GameLevel {
     private final int totalFoodCount;
     private int uneatenFoodCount;
 
-    private int killedGhostCount;
+    private int victimsCount;
     private int numFlashes;
-    private int intermissionNumber;
+    private int cutSceneNumber;
 
     private Pac pac;
     private Ghost[] ghosts;
@@ -131,13 +131,13 @@ public class GameLevel {
         return portals.toArray(new Portal[0]);
     }
 
-    public void addKilledGhost(Ghost victim) {
-        killedGhostCount += 1;
-        victims.add(victim);
+    public void addVictim(Ghost ghost) {
+        victimsCount += 1;
+        victims.add(ghost);
     }
 
-    public int killedGhostCount() {
-        return killedGhostCount;
+    public int victimsCount() {
+        return victimsCount;
     }
 
     public void setNumFlashes(int numFlashes) {
@@ -149,19 +149,15 @@ public class GameLevel {
     }
 
     public void setCutSceneNumber(int number) {
-        this.intermissionNumber = number;
+        this.cutSceneNumber = number;
     }
 
-    public int intermissionNumber() {
-        return intermissionNumber;
+    public int cutSceneNumber() {
+        return cutSceneNumber;
     }
 
-    public void showReadyMessage() {
-        message = Message.READY;
-    }
-
-    public void showGameOverMessage() {
-        message = Message.GAME_OVER;
+    public void showMessage(Message message) {
+        this.message = assertNotNull(message);
     }
 
     public void clearMessage() {
@@ -178,13 +174,13 @@ public class GameLevel {
 
     public Pac pac() { return pac; }
 
+    public void setGhosts(Ghost[] ghosts) {
+        this.ghosts = assertNotNull(ghosts);
+    }
+
     public Ghost ghost(byte id) {
         assertLegalGhostID(id);
         return ghosts != null ? ghosts[id] : null;
-    }
-
-    public void setGhosts(Ghost[] ghosts) {
-        this.ghosts = ghosts;
     }
 
     public Stream<Ghost> ghosts(GhostState... states) {

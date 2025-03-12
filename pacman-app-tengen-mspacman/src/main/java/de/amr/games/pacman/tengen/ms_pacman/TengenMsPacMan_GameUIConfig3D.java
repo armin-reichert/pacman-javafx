@@ -98,7 +98,7 @@ public class TengenMsPacMan_GameUIConfig3D implements GameUIConfiguration3D {
             case SETTING_OPTIONS    -> "StartScene";
             case SHOWING_CREDITS    -> "ShowingCredits";
             case INTRO              -> "IntroScene";
-            case INTERMISSION       -> "CutScene" + context.level().intermissionNumber();
+            case INTERMISSION       -> "CutScene" + context.level().cutSceneNumber();
             case TESTING_CUT_SCENES -> "CutScene" + context.gameState().<Integer>getProperty("intermissionTestNumber");
             default                 -> GlobalProperties3d.PY_3D_ENABLED.get() ? "PlayScene3D" : "PlayScene2D";
         };

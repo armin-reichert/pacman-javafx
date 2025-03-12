@@ -324,7 +324,7 @@ public class GameLevel3D extends Group {
                 context.gameState().timer().resetIndefiniteTime();
                 onStart.run();
             }),
-            context.level().intermissionNumber() != 0
+            context.level().cutSceneNumber() != 0
                 ? levelTransformationBeforeIntermission(context.level().numFlashes())
                 : levelTransformation(context.level().numFlashes())
         );

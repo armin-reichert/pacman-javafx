@@ -155,7 +155,7 @@ public class PacManXXL_PacMan_GameUIConfig implements GameUIConfiguration {
             case BOOT -> "BootScene";
             case SETTING_OPTIONS -> "StartScene";
             case INTRO -> "IntroScene";
-            case INTERMISSION -> "CutScene" + context.level().intermissionNumber();
+            case INTERMISSION -> "CutScene" + context.level().cutSceneNumber();
             case TESTING_CUT_SCENES -> "CutScene" + context.gameState().<Integer>getProperty("intermissionTestNumber");
             default -> "PlayScene2D";
         };

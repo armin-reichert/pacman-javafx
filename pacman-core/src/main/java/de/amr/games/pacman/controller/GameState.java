@@ -101,7 +101,7 @@ public enum GameState implements FsmState<GameModel> {
             if (game.isPlaying()) {
                 // resume running game
                 if (timer.tickCount() == 1) {
-                    game.level().ifPresent(GameLevel::showReadyMessage);
+                    game.level().ifPresent(gameLevel -> gameLevel.showMessage(GameLevel.Message.READY));
                     game.letsGetReadyToRumble();
                     game.showGuys();
                 } else if (timer.tickCount() == TICK_RESUME_GAME) {
@@ -129,7 +129,7 @@ public enum GameState implements FsmState<GameModel> {
                     game.createDemoLevel();
                     game.startLevel();
                     game.showGuys();
-                    game.level().ifPresent(GameLevel::showGameOverMessage);
+                    game.level().ifPresent(gameLevel -> gameLevel.showMessage(GameLevel.Message.GAME_OVER));
                 }
                 else if (timer.tickCount() == TICK_DEMO_LEVEL_START_PLAYING) {
                     gameController().changeState(GameState.HUNTING);
@@ -197,7 +197,7 @@ public enum GameState implements FsmState<GameModel> {
             if (timer.hasExpired()) {
                 if (game.isDemoLevel()) { // just in case: if demo level is completed, go back to intro scene
                     gameController().changeState(INTRO);
-                } else if (level.intermissionNumber() != 0) {
+                } else if (level.cutSceneNumber() != 0) {
                     gameController().changeState(INTERMISSION);
                 } else {
                     gameController().changeState(LEVEL_TRANSITION);
@@ -312,7 +312,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onEnter(GameModel game) {
             timer.restartTicks(game.gameOverStateTicks());
             game.endGame();
-            game.level().ifPresent(GameLevel::showGameOverMessage);
+            game.level().ifPresent(gameLevel -> gameLevel.showMessage(GameLevel.Message.GAME_OVER));
         }
 
         @Override

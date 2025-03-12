@@ -413,11 +413,11 @@ public class ArcadePacMan_GameModel extends GameModel {
         eventLog.killedGhosts.add(ghost);
         int killedSoFar = level.victims().size();
         int points = 100 * KILLED_GHOST_VALUE_MULTIPLIER[killedSoFar];
-        level.addKilledGhost(ghost);
+        level.addVictim(ghost);
         ghost.eaten(killedSoFar);
         scoreManager.scorePoints(this, points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
-        if (level.killedGhostCount() == 16) {
+        if (level.victimsCount() == 16) {
             int extraPoints = POINTS_ALL_GHOSTS_EATEN_IN_LEVEL;
             scoreManager.scorePoints(this, extraPoints);
             Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, level.number);
