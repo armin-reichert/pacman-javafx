@@ -35,8 +35,8 @@ public class GameLevel {
 
     private static boolean isInaccessible(byte content) {
         return content == WALL_H  || content == WALL_V
-                || content == CORNER_NE  || content == CORNER_NW  || content == CORNER_SE  || content == CORNER_SW
-                || content == DCORNER_ANGULAR_NE || content == DCORNER_ANGULAR_NW || content == DCORNER_ANGULAR_SE || content == DCORNER_ANGULAR_SW;
+            || content == CORNER_NE  || content == CORNER_NW  || content == CORNER_SE  || content == CORNER_SW
+            || content == DCORNER_ANGULAR_NE || content == DCORNER_ANGULAR_NW || content == DCORNER_ANGULAR_SE || content == DCORNER_ANGULAR_SW;
     }
 
     public final int number; // 1=first level
@@ -71,22 +71,22 @@ public class GameLevel {
     private final Pulse blinking = new Pulse(10, Pulse.OFF);
     private final TickTimer powerTimer = new TickTimer("PacPowerTimer");
 
-    public GameLevel(int number, WorldMap worldMap) {
-        if (number < 1) {
-            throw new IllegalArgumentException("Illegal level number: " + number);
+    public GameLevel(int levelNumber, WorldMap worldMap) {
+        if (levelNumber < 1) {
+            throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         }
-        this.number = number;
+        number = levelNumber;
         this.worldMap = assertNotNull(worldMap);
-        this.portals = findPortals(worldMap);
-        this.nextBonusIndex = -1;
-        readActorPositionsFromMap();
+        portals = findPortals(worldMap);
+        nextBonusIndex = -1;
         energizerTiles = worldMap.tilesContaining(LayerID.FOOD, FoodTiles.ENERGIZER).toArray(Vector2i[]::new);
-        eatenFoodBits = new BitSet(worldMap.numCols() * worldMap.numRows());
-        totalFoodCount = (int) worldMap.tiles().filter(tile -> worldMap.get(LayerID.FOOD, tile) != FoodTiles.EMPTY).count();
+        totalFoodCount = (int) worldMap.tilesContaining(LayerID.FOOD, FoodTiles.PELLET).count() + energizerTiles.length;
         uneatenFoodCount = totalFoodCount;
+        eatenFoodBits = new BitSet(worldMap.numCols() * worldMap.numRows());
+        readActorPositionsFromMap(worldMap);
     }
 
-    private void readActorPositionsFromMap() {
+    private void readActorPositionsFromMap(WorldMap worldMap) {
         Vector2i pacTile = worldMap.getTerrainTileProperty(PROPERTY_POS_PAC, null);
         if (pacTile == null) {
             throw new IllegalArgumentException("No Pac position stored in map");
