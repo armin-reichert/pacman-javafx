@@ -410,7 +410,7 @@ public class TileMapEditor {
 
     public void init(File workDir) {
         currentDirectory = workDir;
-        setWorldMap(new WorldMap(36, 28));
+        setBlankMap(28, 36);
         mazePreview3D.reset();
         setEditMode(EditMode.INSPECT);
     }
@@ -872,6 +872,10 @@ public class TileMapEditor {
             () -> editMode() == EditMode.INSPECT || templateImagePy.get() == null, editModePy, templateImagePy));
         miIdentifyTiles.setOnAction(e -> populateMapFromTemplateImage());
 
+        var miAssignDefaultColors = new MenuItem("Assign default colors"); //TODO localize
+        miAssignDefaultColors.setOnAction(e -> assignDefaultColors(worldMap()));
+        miAssignDefaultColors.disableProperty().bind(editModePy.map(mode -> mode == EditMode.INSPECT));
+
         menuEdit = new Menu(tt("menu.edit"), NO_GRAPHIC,
             miObstacleJoining,
             new SeparatorMenuItem(),
@@ -879,7 +883,8 @@ public class TileMapEditor {
             miAddHouse,
             miClearTerrain,
             miClearFood,
-            miIdentifyTiles);
+            miIdentifyTiles,
+            miAssignDefaultColors);
 
         // Maps
         menuLoadMap = new Menu(tt("menu.load_map"));
@@ -1383,24 +1388,19 @@ public class TileMapEditor {
 
     private void setBlankMap(int tilesX, int tilesY) {
         var blankMap = new WorldMap(tilesY, tilesX);
-        blankMap.setProperty(LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE);
-        blankMap.setProperty(LayerID.TERRAIN, PROPERTY_COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL);
-        blankMap.setProperty(LayerID.TERRAIN, PROPERTY_COLOR_DOOR, MS_PACMAN_COLOR_DOOR);
+        assignDefaultColors(blankMap);
         if (tilesX >= 3 && tilesY >= 2) {
             blankMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_RED_GHOST, formatTile(vec_2i(tilesX - 3, 0)));
             blankMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_PINK_GHOST, formatTile(vec_2i(2, 0)));
             blankMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_CYAN_GHOST, formatTile(vec_2i(tilesX - 1, tilesY - 2)));
             blankMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_ORANGE_GHOST, formatTile(vec_2i(0, tilesY - 2)));
         }
-        blankMap.setProperty(LayerID.FOOD, PROPERTY_COLOR_FOOD, MS_PACMAN_COLOR_FOOD);
         setWorldMap(blankMap);
     }
 
     private void setPreconfiguredMap(int tilesX, int tilesY) {
         var worldMap = new WorldMap(tilesY, tilesX);
-        worldMap.setProperty(LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE);
-        worldMap.setProperty(LayerID.TERRAIN, PROPERTY_COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL);
-        worldMap.setProperty(LayerID.TERRAIN, PROPERTY_COLOR_DOOR, MS_PACMAN_COLOR_DOOR);
+        assignDefaultColors(worldMap);
         addBorderWall(worldMap);
         if (worldMap.numRows() >= 20) {
             Vector2i houseMinTile = vec_2i(tilesX / 2 - 4, tilesY / 2 - 3);
@@ -1413,8 +1413,16 @@ public class TileMapEditor {
             worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_ORANGE_GHOST, formatTile(vec_2i(0, tilesY - 2)));
         }
         worldMap.updateObstacleList();
-        worldMap.setProperty(LayerID.FOOD, PROPERTY_COLOR_FOOD, MS_PACMAN_COLOR_FOOD);
         setWorldMap(worldMap);
+    }
+
+    private void assignDefaultColors(WorldMap worldMap) {
+        worldMap.setProperty(LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE);
+        worldMap.setProperty(LayerID.TERRAIN, PROPERTY_COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL);
+        worldMap.setProperty(LayerID.TERRAIN, PROPERTY_COLOR_DOOR, MS_PACMAN_COLOR_DOOR);
+        worldMap.setProperty(LayerID.FOOD, PROPERTY_COLOR_FOOD, MS_PACMAN_COLOR_FOOD);
+        changeManager.setTerrainMapChanged();
+        changeManager.setFoodMapChanged();
     }
 
     private void addBorderWall(WorldMap worldMap) {
