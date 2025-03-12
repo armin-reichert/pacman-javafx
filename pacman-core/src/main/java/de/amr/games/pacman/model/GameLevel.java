@@ -43,7 +43,7 @@ public class GameLevel {
     public final int number; // 1=first level
 
     private final WorldMap worldMap;
-    private final Vector2f pacPosition;
+    private Vector2f pacPosition;
     private final Vector2f[] ghostPositions = new Vector2f[4];
     private final Direction[] ghostDirections = new Direction[4];
     private final Vector2i[] energizerTiles;
@@ -79,19 +79,44 @@ public class GameLevel {
         this.number = number;
         this.worldMap = assertNotNull(worldMap);
         this.portals = findPortals(worldMap);
-
-        nextBonusIndex = -1;
-
-        pacPosition                  = posHalfTileRightOf(worldMap.getTerrainTileProperty(PROPERTY_POS_PAC,          vec_2i(13,26)));
-        ghostPositions[RED_GHOST]    = posHalfTileRightOf(worldMap.getTerrainTileProperty(PROPERTY_POS_RED_GHOST,    vec_2i(13,14)));
-        ghostPositions[PINK_GHOST]   = posHalfTileRightOf(worldMap.getTerrainTileProperty(PROPERTY_POS_PINK_GHOST,   vec_2i(13,17)));
-        ghostPositions[CYAN_GHOST]   = posHalfTileRightOf(worldMap.getTerrainTileProperty(PROPERTY_POS_CYAN_GHOST,   vec_2i(11,17)));
-        ghostPositions[ORANGE_GHOST] = posHalfTileRightOf(worldMap.getTerrainTileProperty(PROPERTY_POS_ORANGE_GHOST, vec_2i(15,17)));
-
+        this.nextBonusIndex = -1;
+        readActorPositionsFromMap();
         energizerTiles = worldMap.tilesContaining(LayerID.FOOD, FoodTiles.ENERGIZER).toArray(Vector2i[]::new);
         eatenFoodBits = new BitSet(worldMap.numCols() * worldMap.numRows());
         totalFoodCount = (int) worldMap.tiles().filter(tile -> worldMap.get(LayerID.FOOD, tile) != FoodTiles.EMPTY).count();
         uneatenFoodCount = totalFoodCount;
+    }
+
+    private void readActorPositionsFromMap() {
+        Vector2i pacTile = worldMap.getTerrainTileProperty(PROPERTY_POS_PAC, null);
+        if (pacTile == null) {
+            throw new IllegalArgumentException("No Pac position stored in map");
+        }
+        pacPosition = posHalfTileRightOf(pacTile);
+
+        Vector2i redGhostTile = worldMap.getTerrainTileProperty(PROPERTY_POS_RED_GHOST, null);
+        if (redGhostTile == null) {
+            throw new IllegalArgumentException("No red ghost position stored in map");
+        }
+        ghostPositions[RED_GHOST] = posHalfTileRightOf(redGhostTile);
+
+        Vector2i pinkGhostTile = worldMap.getTerrainTileProperty(PROPERTY_POS_PINK_GHOST, null);
+        if (pinkGhostTile == null) {
+            throw new IllegalArgumentException("No pink ghost position stored in map");
+        }
+        ghostPositions[PINK_GHOST] = posHalfTileRightOf(pinkGhostTile);
+
+        Vector2i cyanGhostTile = worldMap.getTerrainTileProperty(PROPERTY_POS_CYAN_GHOST, null);
+        if (cyanGhostTile == null) {
+            throw new IllegalArgumentException("No cyan ghost position stored in map");
+        }
+        ghostPositions[CYAN_GHOST] = posHalfTileRightOf(cyanGhostTile);
+
+        Vector2i orangeGhostTile = worldMap.getTerrainTileProperty(PROPERTY_POS_ORANGE_GHOST, null);
+        if (orangeGhostTile == null) {
+            throw new IllegalArgumentException("No orange ghost position stored in map");
+        }
+        ghostPositions[ORANGE_GHOST] = posHalfTileRightOf(orangeGhostTile);
     }
 
     private Portal[] findPortals(WorldMap worldMap) {
