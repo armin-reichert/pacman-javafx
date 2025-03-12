@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.FoodTiles;
@@ -29,7 +28,8 @@ import static de.amr.games.pacman.model.GameModel.*;
 
 public class GameLevel {
 
-    public static final int EMPTY_ROWS_OVER_MAZE = 3;
+    public static final int EMPTY_ROWS_OVER_MAZE  = 3;
+    public static final int EMPTY_ROWS_BELOW_MAZE = 2;
 
     public enum Message { READY, GAME_OVER, TEST_LEVEL }
 
@@ -39,11 +39,20 @@ public class GameLevel {
             || content == DCORNER_ANGULAR_NE || content == DCORNER_ANGULAR_NW || content == DCORNER_ANGULAR_SE || content == DCORNER_ANGULAR_SW;
     }
 
+    /**
+     * @param tile a tile coordinate
+     * @return position in world (scaled by tile size) between given tile and right neighbor tile
+     */
+    private static Vector2f posHalfTileRightOf(Vector2i tile) {
+        return tile.scaled(TS).plus(HTS, 0).toVector2f();
+    }
+
     public final int number; // 1=first level
 
     private final WorldMap worldMap;
     private Vector2f pacPosition;
     private final Vector2f[] ghostPositions = new Vector2f[4];
+    private final Vector2i[] ghostScatterTiles = new Vector2i[4];
     private final Direction[] ghostDirections = new Direction[4];
     private final Vector2i[] energizerTiles;
     private final Portal[] portals;
@@ -116,6 +125,18 @@ public class GameLevel {
             throw new IllegalArgumentException("No orange ghost position stored in map");
         }
         ghostPositions[ORANGE_GHOST] = posHalfTileRightOf(orangeGhostTile);
+
+        ghostScatterTiles[RED_GHOST] = worldMap.getTerrainTileProperty(PROPERTY_POS_SCATTER_RED_GHOST,
+            vec_2i(0, worldMap.numCols() - 3));
+
+        ghostScatterTiles[PINK_GHOST] = worldMap.getTerrainTileProperty(PROPERTY_POS_SCATTER_PINK_GHOST,
+            vec_2i(0, 3));
+
+        ghostScatterTiles[CYAN_GHOST] = worldMap.getTerrainTileProperty(PROPERTY_POS_SCATTER_CYAN_GHOST,
+            vec_2i(worldMap.numRows() - EMPTY_ROWS_BELOW_MAZE, worldMap.numCols() - 1));
+
+        ghostScatterTiles[ORANGE_GHOST] = worldMap.getTerrainTileProperty(PROPERTY_POS_SCATTER_ORANGE_GHOST,
+            vec_2i(worldMap.numRows() - EMPTY_ROWS_BELOW_MAZE, 0));
     }
 
     private Portal[] findPortals(WorldMap worldMap) {
@@ -184,7 +205,7 @@ public class GameLevel {
     }
 
     public Stream<Ghost> ghosts(GhostState... states) {
-        Globals.assertNotNull(states);
+        assertNotNull(states);
         if (ghosts == null) {
             return Stream.empty();
         }
@@ -227,24 +248,8 @@ public class GameLevel {
         return powerTimer;
     }
 
-    /**
-     * @param tile a tile coordinate
-     * @return position in world (scaled by tile size) between given tile and right neighbor tile
-     */
-    private static Vector2f posHalfTileRightOf(Vector2i tile) {
-        return tile.scaled(TS).plus(HTS, 0).toVector2f();
-    }
-
     public Vector2i ghostScatterTile(byte ghostID) {
-        assertLegalGhostID(ghostID);
-        int numRows = worldMap.numRows(), numCols = worldMap.numCols();
-        return switch (ghostID) {
-            case RED_GHOST    -> worldMap.getTerrainTileProperty(PROPERTY_POS_SCATTER_RED_GHOST, vec_2i(0, numCols - 3));
-            case PINK_GHOST   -> worldMap.getTerrainTileProperty(PROPERTY_POS_SCATTER_PINK_GHOST, vec_2i(0, 3));
-            case CYAN_GHOST   -> worldMap.getTerrainTileProperty(PROPERTY_POS_SCATTER_CYAN_GHOST, vec_2i(numRows - 1, numCols - 1));
-            case ORANGE_GHOST -> worldMap.getTerrainTileProperty(PROPERTY_POS_SCATTER_ORANGE_GHOST, vec_2i(numRows - 1, 0));
-            default -> throw new IllegalArgumentException("Illegal ghost ID: " + ghostID);
-        };
+        return ghostScatterTiles[assertLegalGhostID(ghostID)];
     }
 
     public WorldMap map() {
@@ -373,6 +378,8 @@ public class GameLevel {
                 && tile.y() >= houseMinTile().y() && tile.y() <= houseMaxTile().y();
     }
 
+    // Actor positions
+
     public Vector2f pacPosition() {
         return pacPosition;
     }
@@ -436,5 +443,4 @@ public class GameLevel {
     public boolean hasEatenFoodAt(Vector2i tile) {
         return !isOutsideWorld(tile) && eatenFoodBits.get(worldMap.index(tile));
     }
-
 }
