@@ -142,7 +142,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         if (level.message() != null) {
             Color color = null;
             String text = null;
-            switch (level.message().type()) {
+            switch (level.message()) {
                 case GAME_OVER -> {
                     color = Color.valueOf(Arcade.Palette.RED);
                     text = "GAME  OVER";

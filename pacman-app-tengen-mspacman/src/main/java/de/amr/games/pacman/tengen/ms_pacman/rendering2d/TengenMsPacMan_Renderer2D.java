@@ -307,7 +307,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     public void drawLevelMessage(String assetNamespace, GameLevel level, boolean demoLevel) {
         if (level.message() != null) {
             float x = getMessagePosition().x(), y = getMessagePosition().y();
-            switch (level.message().type()) {
+            switch (level.message()) {
                 case READY -> drawTextCenteredOver("READY!", x, y, assets.color(assetNamespace + ".color.ready_message"));
                 case GAME_OVER -> {
                     Color color = assets.color(assetNamespace + ".color.game_over_message");

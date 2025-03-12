@@ -31,8 +31,7 @@ public class GameLevel {
 
     public static final int EMPTY_ROWS_OVER_MAZE = 3;
 
-    public enum MessageType { READY, GAME_OVER, TEST_LEVEL }
-    public record Message(MessageType type) {}
+    public enum Message { READY, GAME_OVER, TEST_LEVEL }
 
     private static boolean isInaccessible(byte content) {
         return content == WALL_H  || content == WALL_V
@@ -158,11 +157,11 @@ public class GameLevel {
     }
 
     public void showReadyMessage() {
-        message = new Message(MessageType.READY);
+        message = Message.READY;
     }
 
     public void showGameOverMessage() {
-        message = new Message(MessageType.GAME_OVER);
+        message = Message.GAME_OVER;
     }
 
     public void clearMessage() {
