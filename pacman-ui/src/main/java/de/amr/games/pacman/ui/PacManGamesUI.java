@@ -92,7 +92,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         }
     };
 
-    protected final Map<GameVariant, GameUIConfiguration> uiConfigByVariant = new EnumMap<>(GameVariant.class);
+    protected final Map<GameVariant, GameUIConfiguration> uiConfigsByVariant = new EnumMap<>(GameVariant.class);
     protected final Keyboard keyboard = new Keyboard();
     protected final GameClockFX clock = new GameClockFX();
     protected final AssetStorage assets = new AssetStorage();
@@ -177,18 +177,18 @@ public class PacManGamesUI implements GameEventListener, GameContext {
      * Stores the UI configuration for a game variant and initializes the game scenes (assigns the game context).
      *
      * @param variant a game variant
-     * @param uiConfiguration the UI configuration for this variant
+     * @param uiConfig the UI configuration for this variant
      */
-    public void setConfiguration(GameVariant variant, GameUIConfiguration uiConfiguration) {
+    public void setConfiguration(GameVariant variant, GameUIConfiguration uiConfig) {
         assertNotNull(variant);
-        assertNotNull(uiConfiguration);
-        uiConfiguration.gameScenes().forEach(scene -> {
+        assertNotNull(uiConfig);
+        uiConfig.gameScenes().forEach(scene -> {
             scene.setGameContext(this);
             if (scene instanceof GameScene2D gameScene2D) {
                 gameScene2D.debugInfoVisibleProperty().bind(PY_DEBUG_INFO_VISIBLE);
             }
         });
-        uiConfigByVariant.put(variant, uiConfiguration);
+        uiConfigsByVariant.put(variant, uiConfig);
     }
 
     public Stage stage() { return stage; }
@@ -450,7 +450,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     @Override
     public GameUIConfiguration gameConfiguration(GameVariant variant) {
-        return uiConfigByVariant.get(variant);
+        return uiConfigsByVariant.get(variant);
     }
 
     @Override
