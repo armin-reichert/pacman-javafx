@@ -480,14 +480,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public boolean currentGameSceneHasID(String sceneID) {
-        if (currentGameScene().isEmpty()) {
-            return false;
-        }
-        return gameConfiguration().gameSceneHasID(currentGameScene().get(), sceneID);
-    }
-
-    @Override
     public void togglePlayScene2D3D() {}
 
     @Override

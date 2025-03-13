@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
@@ -25,6 +24,8 @@ import org.tinylog.Logger;
 import java.text.MessageFormat;
 import java.util.Optional;
 
+import static de.amr.games.pacman.lib.Globals.assertNotNull;
+
 /**
  * @author Armin Reichert
  */
@@ -35,7 +36,7 @@ public interface GameContext {
     GameSound sound();
 
     default String locText(String keyOrPattern, Object... args) {
-        Globals.assertNotNull(keyOrPattern);
+        assertNotNull(keyOrPattern);
         for (var bundle : assets().bundles()) {
             if (bundle.containsKey(keyOrPattern)) {
                 return MessageFormat.format(bundle.getString(keyOrPattern), args);
@@ -106,8 +107,16 @@ public interface GameContext {
     }
 
     // Game scenes
-    boolean currentGameSceneHasID(String gameSceneID);
+
+    default boolean currentGameSceneHasID(String gameSceneID) {
+        assertNotNull(gameSceneID);
+        return currentGameScene().isPresent()
+            && gameConfiguration().gameSceneHasID(currentGameScene().get(), gameSceneID);
+    }
+
     ObjectProperty<GameScene> gameSceneProperty();
+
     Optional<GameScene> currentGameScene();
+
     void togglePlayScene2D3D();
 }
