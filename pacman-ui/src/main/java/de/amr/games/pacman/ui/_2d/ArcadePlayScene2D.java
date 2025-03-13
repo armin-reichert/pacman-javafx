@@ -90,7 +90,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     public void update() {
         if (context.game().level().isEmpty()) {
             // Scene is already visible for 2 ticks before game level has been created
-            Logger.warn("Tick {}: Cannot update PlayScene2D: game level not yet available", context.tick());
+            Logger.warn("Tick {}: Cannot update PlayScene2D: game level not yet available", context.gameClock().tickCount());
             return;
         }
         /* TODO: I would like to do this only on level start but when scene view is switched
@@ -133,7 +133,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     @Override
     protected void drawSceneContent() {
         if (context.game().level().isEmpty()) { // This happens on level start
-            Logger.warn("Tick {}: Cannot draw scene content: game world not yet available!", context.tick());
+            Logger.warn("Tick {}: Cannot draw scene content: game world not yet available!", context.gameClock().tickCount());
             return;
         }
         GameLevel level = context.level();

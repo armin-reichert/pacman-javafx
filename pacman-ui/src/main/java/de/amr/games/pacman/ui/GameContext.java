@@ -67,8 +67,6 @@ public interface GameContext {
 
     void selectGameVariant(GameVariant variant);
 
-    default long tick() { return gameClock().getTickCount(); }
-
     // Input
     Keyboard keyboard();
     ArcadeKeyBinding arcadeKeys();

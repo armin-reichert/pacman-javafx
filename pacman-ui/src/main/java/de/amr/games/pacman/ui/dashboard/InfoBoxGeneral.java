@@ -49,7 +49,7 @@ public class InfoBoxGeneral extends InfoBox {
         addIntSpinner("Num Steps", 1, 50, PY_SIMULATION_STEPS);
         var sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
         addLabeledValue("", () -> "FPS: %.1f (Tgt: %.1f)".formatted(clock.getActualFrameRate(), clock.getTargetFrameRate()));
-        addLabeledValue("Total Updates",  clock::getUpdateCount);
+        addLabeledValue("Total Updates",  clock::updateCount);
         var pickerCanvasColor = addColorPicker("Canvas Color", PY_CANVAS_BG_COLOR.get());
         var cbCanvasImageSmoothing = addCheckBox("Image Smoothing");
         var cbCanvasFontSmoothing = addCheckBox("Font Smoothing");

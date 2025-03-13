@@ -210,12 +210,12 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
         if (coloredMapSet == null) {
             // setWorldMap() not yet called?
-            Logger.warn("Tick {}: No maze available", context.tick());
+            Logger.warn("Tick {}: No maze available", context.gameClock().tickCount());
             return;
         }
 
         RectArea area = mapCategory == MapCategory.STRANGE && mapNumber == 15
-            ? strangeMap15Sprite(context.tick()) // Strange map #15: psychedelic animation
+            ? strangeMap15Sprite(context.gameClock().tickCount()) // Strange map #15: psychedelic animation
             : coloredMapSet.normalMaze().area();
         ctx.drawImage(coloredMapSet.normalMaze().source(),
             area.x(), area.y(), area.width(), area.height(),
@@ -370,7 +370,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     public void drawScores(GameContext context) {
         Color color = nesPaletteColor(0x20);
         Font font = scaledArcadeFont(TS);
-        if (context.gameClock().getTickCount() % 60 < 30) { drawText("1UP", color, font, tiles2Px(2), tiles2Px(1)); }
+        if (context.gameClock().tickCount() % 60 < 30) { drawText("1UP", color, font, tiles2Px(2), tiles2Px(1)); }
         drawText("HIGH SCORE", color, font, tiles2Px(9), tiles2Px(1));
         drawText("%6d".formatted(context.game().scoreManager().score().points()), color, font, 0, tiles2Px(2));
         drawText("%6d".formatted(context.game().scoreManager().highScore().points()), color, font, tiles2Px(11), tiles2Px(2));

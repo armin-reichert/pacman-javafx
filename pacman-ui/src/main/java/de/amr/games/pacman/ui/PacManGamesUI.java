@@ -388,7 +388,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     private void logUpdateResult() {
         var messageList = game().eventLog().createMessageList();
         if (!messageList.isEmpty()) {
-            Logger.info("Simulation step #{}:", clock.getUpdateCount());
+            Logger.info("Simulation step #{}:", clock.updateCount());
             for (var msg : messageList) {
                 Logger.info("- " + msg);
             }

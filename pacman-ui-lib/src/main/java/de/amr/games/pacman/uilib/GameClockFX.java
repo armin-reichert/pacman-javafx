@@ -107,11 +107,9 @@ public class GameClockFX {
     /**
      * @return total number of ticks this clock has made.
      */
-    public long getTickCount() {
-        return tickCount;
-    }
+    public long tickCount() { return tickCount; }
 
-    public long getUpdateCount() {
+    public long updateCount() {
         return updateCount;
     }
 

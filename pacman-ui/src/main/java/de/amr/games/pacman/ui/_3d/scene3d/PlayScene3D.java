@@ -199,12 +199,12 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     public void update() {
         if (context.game().level().isEmpty()) {
             // Scene is visible for 1 (2?) ticks before game level has been created
-            Logger.warn("Tick #{}: Cannot update PlayScene3D: game level not yet available", context.tick());
+            Logger.warn("Tick #{}: Cannot update PlayScene3D: game level not yet available", context.gameClock().tickCount());
             return;
         }
         // TODO: check this
         if (!hasLevel3D()) {
-            Logger.warn("Tick #{}: Cannot update 3D play scene, 3D game level not yet created?", context.tick());
+            Logger.warn("Tick #{}: Cannot update 3D play scene, 3D game level not yet created?", context.gameClock().tickCount());
             return;
         }
 

@@ -267,7 +267,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
             boolean letGhostMarchIn(TengenMsPacMan_IntroScene intro) {
                 Ghost ghost = intro.ghosts[intro.ghostIndex];
-                Logger.debug("Tick {}: {} marching in", intro.context.tick(), ghost.name());
+                Logger.debug("Tick {}: {} marching in", intro.context.gameClock().tickCount(), ghost.name());
                 if (ghost.moveDir() == Direction.LEFT) {
                     if (ghost.posX() <= GHOST_STOP_X) {
                         ghost.setPosX(GHOST_STOP_X);
@@ -306,7 +306,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene intro) {
                 intro.updateMarqueeState();
-                Logger.debug("Tick {}: {} marching in", intro.context.tick(), intro.msPacMan.name());
+                Logger.debug("Tick {}: {} marching in", intro.context.gameClock().tickCount(), intro.msPacMan.name());
                 intro.msPacMan.move();
                 if (intro.msPacMan.posX() <= MS_PAC_MAN_STOP_X) {
                     intro.msPacMan.setSpeed(0);
