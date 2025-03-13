@@ -12,6 +12,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.*;
+import de.amr.games.pacman.ui._2d.GameRenderer;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -232,7 +233,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     protected void drawDebugInfo() {
         gr.drawTileGrid(size().x(), size().y());
         gr.ctx().setFill(Color.WHITE);
-        gr.ctx().setFont(DEBUG_FONT);
+        gr.ctx().setFont(GameRenderer.DEBUG_FONT);
         gr.ctx().fillText("Tick " + t, 20, 20);
     }
 }

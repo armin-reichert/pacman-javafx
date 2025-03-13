@@ -20,8 +20,6 @@ import java.util.List;
  */
 public interface GameScene extends GameEventListener, GameActionProvider {
 
-    Font DEBUG_FONT = Font.font("Sans", FontWeight.BOLD, 20);
-
     /**
      * @return the game scene context
      */

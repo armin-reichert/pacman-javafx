@@ -8,7 +8,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui.GameScene;
+import de.amr.games.pacman.ui._2d.GameRenderer;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -104,6 +104,6 @@ public class CutScene3 extends GameScene2D {
     protected void drawDebugInfo() {
         gr.drawTileGrid(size().x(), size().y());
         String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-        gr.drawText(text, Color.YELLOW, GameScene.DEBUG_FONT, tiles2Px(1), tiles2Px(5));
+        gr.drawText(text, Color.YELLOW, GameRenderer.DEBUG_FONT, tiles2Px(1), tiles2Px(5));
     }
 }

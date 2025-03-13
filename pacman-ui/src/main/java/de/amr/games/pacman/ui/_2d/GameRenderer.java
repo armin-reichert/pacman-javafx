@@ -38,6 +38,8 @@ import static java.util.function.Predicate.not;
  */
 public interface GameRenderer {
 
+    Font DEBUG_FONT = Font.font("Sans", FontWeight.BOLD, 20);
+
     default void setWorldMap(WorldMap worldMap) {}
 
     AssetStorage assets();

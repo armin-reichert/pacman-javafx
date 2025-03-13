@@ -224,7 +224,7 @@ public class ArcadePlayScene2D extends GameScene2D {
             });
         }
         g.setFill(Color.YELLOW);
-        g.setFont(DEBUG_FONT);
+        g.setFont(GameRenderer.DEBUG_FONT);
         g.fillText(String.format("%s %d", context.gameState(), context.gameState().timer().tickCount()), 0, 64);
     }
 
