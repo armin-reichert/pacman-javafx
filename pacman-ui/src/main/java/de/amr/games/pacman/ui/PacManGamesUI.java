@@ -320,11 +320,9 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         if (icon != null) {
             stage.getIcons().setAll(icon);
         }
-        try {
-            sound().useSoundsForGameVariant(variant, gameConfiguration().assetNamespace());
-        } catch (Exception x) {
-            Logger.error(x);
-        }
+        sound().useSoundsForGameVariant(variant, assetNamespace);
+
+        //TODO check this
         gameView.canvasContainer().decorationEnabledPy.set(gameConfiguration().isGameCanvasDecorated());
     }
 
