@@ -189,7 +189,9 @@ public class EditCanvas extends Canvas {
             worldMap().tiles().forEach(tile -> editor.foodRenderer().drawTile(g, tile, worldMap().get(LayerID.FOOD, tile)));
         }
 
-        editor.terrainRendererInEditor().drawActorSprites(g, worldMap(), gridSize());
+        if (editor.actorsVisibleProperty().get()) {
+            editor.terrainRendererInEditor().drawActorSprites(g, worldMap(), gridSize());
+        }
 
         if (focussedTile() != null) {
             g.setStroke(Color.YELLOW);

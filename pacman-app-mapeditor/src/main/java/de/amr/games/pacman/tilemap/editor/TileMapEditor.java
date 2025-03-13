@@ -247,6 +247,13 @@ public class TileMapEditor {
         }
     };
 
+    private final BooleanProperty actorsVisiblePy = new SimpleBooleanProperty(true) {
+        @Override
+        protected void invalidated() {
+            changeManager.requestRedraw();
+        }
+    };
+
     private final BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true) {
         @Override
         protected void invalidated() {
@@ -310,6 +317,8 @@ public class TileMapEditor {
     public IntegerProperty gridSizeProperty() { return gridSizePy; }
 
     public int gridSize() { return gridSizePy.get(); }
+
+    public BooleanProperty actorsVisibleProperty() { return actorsVisiblePy; }
 
     public BooleanProperty gridVisibleProperty() { return gridVisiblePy; }
 
@@ -890,26 +899,30 @@ public class TileMapEditor {
         menuLoadMap = new Menu(tt("menu.load_map"));
 
         // View
-        var miProperties = new CheckMenuItem(tt("menu.view.properties"));
-        miProperties.selectedProperty().bindBidirectional(propertyEditorsVisiblePy);
+        var miPropertiesVisible = new CheckMenuItem(tt("menu.view.properties"));
+        miPropertiesVisible.selectedProperty().bindBidirectional(propertyEditorsVisiblePy);
 
-        var miTerrain = new CheckMenuItem(tt("menu.view.terrain"));
-        miTerrain.selectedProperty().bindBidirectional(terrainVisiblePy);
+        var miTerrainVisible = new CheckMenuItem(tt("menu.view.terrain"));
+        miTerrainVisible.selectedProperty().bindBidirectional(terrainVisiblePy);
 
-        var miFood = new CheckMenuItem(tt("menu.view.food"));
-        miFood.selectedProperty().bindBidirectional(foodVisiblePy);
+        var miFoodVisible = new CheckMenuItem(tt("menu.view.food"));
+        miFoodVisible.selectedProperty().bindBidirectional(foodVisiblePy);
 
-        var miGrid = new CheckMenuItem(tt("menu.view.grid"));
-        miGrid.selectedProperty().bindBidirectional(gridVisiblePy);
+        var miActorsVisible = new CheckMenuItem("Actors"); //TODO localize
+        miActorsVisible.selectedProperty().bindBidirectional(actorsVisiblePy);
 
-        var miSegmentNumbers = new CheckMenuItem(tt("menu.view.segment_numbers"));
-        miSegmentNumbers.selectedProperty().bindBidirectional(segmentNumbersDisplayedPy);
+        var miGridVisible = new CheckMenuItem(tt("menu.view.grid"));
+        miGridVisible.selectedProperty().bindBidirectional(gridVisiblePy);
 
-        var miObstacleInnerArea = new CheckMenuItem(tt("inner_obstacle_area"));
-        miObstacleInnerArea.selectedProperty().bindBidirectional(obstacleInnerAreaDisplayedPy);
+        var miSegmentNumbersVisible = new CheckMenuItem(tt("menu.view.segment_numbers"));
+        miSegmentNumbersVisible.selectedProperty().bindBidirectional(segmentNumbersDisplayedPy);
+
+        var miObstacleInnerAreaVisible = new CheckMenuItem(tt("inner_obstacle_area"));
+        miObstacleInnerAreaVisible.selectedProperty().bindBidirectional(obstacleInnerAreaDisplayedPy);
 
         menuView = new Menu(tt("menu.view"), NO_GRAPHIC,
-            miProperties, miTerrain, miSegmentNumbers, miObstacleInnerArea, miFood, miGrid);
+            miPropertiesVisible, miTerrainVisible, miSegmentNumbersVisible, miObstacleInnerAreaVisible,
+            miFoodVisible, miActorsVisible, miGridVisible);
 
         menuBar = new MenuBar(menuFile, menuEdit, menuLoadMap, menuView);
     }
@@ -1152,7 +1165,9 @@ public class TileMapEditor {
             foodRenderer.setPelletColor(foodColor);
             worldMap().tiles().forEach(tile -> foodRenderer.drawTile(g, tile, worldMap().get(LayerID.FOOD, tile)));
         }
-        terrainRendererInEditor.drawActorSprites(g, worldMap(), gridSize());
+        if (actorsVisiblePy.get()) {
+            terrainRendererInEditor.drawActorSprites(g, worldMap(), gridSize());
+        }
     }
 
 
