@@ -195,7 +195,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     @Override
-    public void drawWorld(GameLevel level, double x, double y) {}
+    public void drawGameLevel(GameLevel level, double x, double y) {}
 
     public void drawWorld(GameContext context, GameLevel level, double mapX, double mapY) {
         ctx.setImageSmoothing(false);

@@ -134,7 +134,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     }
 
     @Override
-    public void drawWorld(GameLevel level, double x, double y) {
+    public void drawGameLevel(GameLevel level, double x, double y) {
         if (mazeHighlighted) {
             drawSubImageScaled(flashingMapSprite.source(), flashingMapSprite.area(), x, y);
         } else if (level.uneatenFoodCount() == 0) {

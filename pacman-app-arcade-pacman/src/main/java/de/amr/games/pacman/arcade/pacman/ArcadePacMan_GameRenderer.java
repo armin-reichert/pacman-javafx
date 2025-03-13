@@ -90,7 +90,7 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
     public void setMessagePosition(Vector2f position) {}
 
     @Override
-    public void drawWorld(GameLevel level, double x, double y) {
+    public void drawGameLevel(GameLevel level, double x, double y) {
         double scaling = scaling();
         ctx().save();
         ctx().scale(scaling, scaling);

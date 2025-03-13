@@ -208,7 +208,7 @@ public interface GameRenderer {
 
     void drawBonus(Bonus bonus);
 
-    void drawWorld(GameLevel level, double x, double y);
+    void drawGameLevel(GameLevel level, double x, double y);
 
     void setMazeHighlighted(boolean on);
 
