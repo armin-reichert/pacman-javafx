@@ -311,8 +311,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     protected void handleGameVariantChange(GameVariant variant) {
+        game().removeGameEventListener(this);
         gameController().selectGame(variant);
-
         GameModel game = gameController().gameModel(variant);
         game.addGameEventListener(this);
 
