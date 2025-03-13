@@ -124,6 +124,6 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void stop() {
-        ui.stop();
+        ui.gameClock().stop();
     }
 }

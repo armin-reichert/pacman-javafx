@@ -210,8 +210,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             logUpdateResult();
         } catch (Exception x) {
             clock.stop();
-            Logger.error("Something very bad happened, game clock stopped!");
             Logger.error(x);
+            Logger.error("Something very bad happened, game clock has been stopped!");
         }
     }
 
@@ -225,13 +225,9 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             }
         } catch (Exception x) {
             clock.stop();
-            Logger.error("Something very bad happened, game clock stopped!");
             Logger.error(x);
+            Logger.error("Something very bad happened, game clock has been stopped!");
         }
-    }
-
-    public void stop() {
-        clock.stop();
     }
 
     private Pane createIconPane() {
