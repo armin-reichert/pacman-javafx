@@ -42,7 +42,7 @@ public class ArcadeMsPacMan_App extends Application {
             "ABOUT"
         );
 
-        ui.show();
+        ui.stage().show();
     }
 
     private static Dimension2D initialSize() {

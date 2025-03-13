@@ -191,9 +191,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         uiConfigByVariant.put(variant, uiConfiguration);
     }
 
-    public void show() {
-        stage.show();
-    }
+    public Stage stage() { return stage; }
 
     public Scene mainScene() {
         return mainScene;

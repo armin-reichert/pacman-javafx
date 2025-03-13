@@ -110,7 +110,7 @@ public class PacManGames3dApp extends Application {
         });
         goodBoy.startWatching();
 
-        ui.show();
+        stage.show();
 
         Logger.info("Assets: {}", ui.assets().summary(Map.of(
                 Model3D.class,"3D models",
