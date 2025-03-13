@@ -108,12 +108,12 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected final FlashMessageView flashMessageOverlay = new FlashMessageView();
 
     protected boolean scoreVisible;
-    protected Picker<String> textPickerGameOverTexts;
-    protected Picker<String> textPickerLevelCompleteTexts;
+    protected Picker<String> pickerForGameOverTexts;
+    protected Picker<String> pickerForLevelCompleteTexts;
 
     //TODO maybe this is overdesign
     protected final JoypadKeyBinding[] joypadKeyBindings = new JoypadKeyBinding[] { JOYPAD_CURSOR_KEYS, JOYPAD_WASD };
-    protected int selectedJoypadIndex;
+    protected int joypadIndex;
     protected ArcadeKeyBinding arcadeKeyBinding = DEFAULT_ARCADE_KEY_BINDING;
 
     public PacManGamesUI() {
@@ -150,8 +150,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         ResourceBundle textResources = rm.getModuleBundle("de.amr.games.pacman.ui.texts.messages2d");
         assets.addBundle(textResources);
 
-        textPickerGameOverTexts      = Picker.fromBundle(textResources, "game.over");
-        textPickerLevelCompleteTexts = Picker.fromBundle(textResources, "level.complete");
+        pickerForGameOverTexts = Picker.fromBundle(textResources, "game.over");
+        pickerForLevelCompleteTexts = Picker.fromBundle(textResources, "level.complete");
 
         assets.store("background.scene",  Ufx.imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
         assets.store("background.play_scene3d", Ufx.imageBackground(rm.loadImage("graphics/blue_sky.jpg")));
@@ -411,25 +411,22 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     @Override
     public JoypadKeyBinding joypadKeyBinding() {
-        return joypadKeyBindings[selectedJoypadIndex];
+        return joypadKeyBindings[joypadIndex];
     }
 
     @Override
     public void selectNextJoypadKeyBinding() {
-        selectedJoypadIndex = selectedJoypadIndex + 1;
-        if (selectedJoypadIndex == joypadKeyBindings.length) {
-            selectedJoypadIndex = 0;
-        }
+        joypadIndex = (joypadIndex + 1) % joypadKeyBindings.length;
     }
 
     @Override
     public String locGameOverMessage() {
-        return textPickerGameOverTexts.next();
+        return pickerForGameOverTexts.next();
     }
 
     @Override
     public String locLevelCompleteMessage(int levelNumber) {
-        return textPickerLevelCompleteTexts.next() + "\n\n" + locText("level_complete", levelNumber);
+        return pickerForLevelCompleteTexts.next() + "\n\n" + locText("level_complete", levelNumber);
     }
 
     @Override

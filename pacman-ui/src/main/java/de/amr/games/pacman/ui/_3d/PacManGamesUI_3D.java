@@ -48,8 +48,8 @@ public class PacManGamesUI_3D extends PacManGamesUI {
         assets.store("model3D.ghost.mesh.pupils",   ghostModel3D.mesh("Sphere.010_Sphere.039_grey_wall"));
         assets.store("model3D.ghost.mesh.eyeballs", ghostModel3D.mesh("Sphere.009_Sphere.036_white"));
 
-        textPickerGameOverTexts = Picker.fromBundle(assets.bundles().getLast(), "game.over");
-        textPickerLevelCompleteTexts = Picker.fromBundle(assets.bundles().getLast(), "level.complete");
+        pickerForGameOverTexts = Picker.fromBundle(assets.bundles().getLast(), "game.over");
+        pickerForLevelCompleteTexts = Picker.fromBundle(assets.bundles().getLast(), "level.complete");
         sound().setAssets(assets);
     }
 
