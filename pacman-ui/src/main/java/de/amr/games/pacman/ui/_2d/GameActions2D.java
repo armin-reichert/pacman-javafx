@@ -9,7 +9,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.arcade.Arcade;
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameActionProvider;
@@ -81,13 +80,14 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             if (context.game().isPlaying() && context.gameState() == GameState.HUNTING) {
-                GameLevel level = context.level();
-                level.map().tiles()
-                    .filter(not(level::isEnergizerPosition))
-                    .filter(level::hasFoodAt)
-                    .forEach(level::registerFoodEatenAt);
-                context.game().publishGameEvent(GameEventType.PAC_FOUND_FOOD);
-                context.sound().stopMunchingSound();
+                context.game().level().ifPresent(level -> {
+                    level.map().tiles()
+                        .filter(not(level::isEnergizerPosition))
+                        .filter(level::hasFoodAt)
+                        .forEach(level::registerFoodEatenAt);
+                    context.game().publishGameEvent(GameEventType.PAC_FOUND_FOOD);
+                    context.sound().stopMunchingSound();
+                });
             }
         }
     },
@@ -96,9 +96,11 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             if (context.game().isPlaying() && context.gameState() == GameState.HUNTING) {
-                context.level().victims().clear();
-                context.level().ghosts(FRIGHTENED, HUNTING_PAC).forEach(context.game()::killGhost);
-                context.gameController().changeState(GameState.GHOST_DYING);
+                context.game().level().ifPresent(level -> {
+                    level.victims().clear();
+                    level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(context.game()::killGhost);
+                    context.gameController().changeState(GameState.GHOST_DYING);
+                });
             }
         }
     },
@@ -112,48 +114,53 @@ public enum GameActions2D implements GameAction {
         @Override
         public boolean isEnabled(GameContext context) {
             return context.game().isPlaying()
-                && context.gameState() == GameState.HUNTING
-                && context.level().number < context.game().lastLevelNumber();
+                    && context.gameState() == GameState.HUNTING
+                    && context.game().level().isPresent()
+                    && context.game().level().get().number < context.game().lastLevelNumber();
         }
     },
 
     PLAYER_UP {
         @Override
         public void execute(GameContext context) {
-            if (!context.level().pac().isUsingAutopilot()) {
-                Logger.debug("Player UP");
-                context.level().pac().setWishDir(Direction.UP);
-            }
+            context.game().level().ifPresent(level -> {
+                if (!level.pac().isUsingAutopilot()) {
+                    level.pac().setWishDir(Direction.UP);
+                }
+            });
         }
     },
 
     PLAYER_DOWN {
         @Override
         public void execute(GameContext context) {
-            if (!context.level().pac().isUsingAutopilot()) {
-                Logger.debug("Player DOWN");
-                context.level().pac().setWishDir(Direction.DOWN);
-            }
+            context.game().level().ifPresent(level -> {
+                if (!level.pac().isUsingAutopilot()) {
+                    level.pac().setWishDir(Direction.DOWN);
+                }
+            });
         }
     },
 
     PLAYER_LEFT {
         @Override
         public void execute(GameContext context) {
-            if (!context.level().pac().isUsingAutopilot()) {
-                Logger.debug("Player LEFT");
-                context.level().pac().setWishDir(Direction.LEFT);
-            }
+            context.game().level().ifPresent(level -> {
+                if (!level.pac().isUsingAutopilot()) {
+                    level.pac().setWishDir(Direction.LEFT);
+                }
+            });
         }
     },
 
     PLAYER_RIGHT {
         @Override
         public void execute(GameContext context) {
-            if (!context.level().pac().isUsingAutopilot()) {
-                Logger.debug("Player RIGHT");
-                context.level().pac().setWishDir(Direction.RIGHT);
-            }
+            context.game().level().ifPresent(level -> {
+                if (!level.pac().isUsingAutopilot()) {
+                    level.pac().setWishDir(Direction.RIGHT);
+                }
+            });
         }
     },
 

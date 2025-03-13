@@ -78,11 +78,8 @@ public class EditorView extends BorderPane implements GameActionProvider {
         return actionBindings;
     }
 
-    public void startEditor(WorldMap map) {
-        if (map != null) {
-            editor.setWorldMap(map);
-        }
-        editor.start();
+    public TileMapEditor editor() {
+        return editor;
     }
 
     public void setCloseAction(Consumer<TileMapEditor> closeAction) {

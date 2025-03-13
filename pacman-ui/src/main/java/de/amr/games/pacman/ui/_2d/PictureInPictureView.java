@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.ui.GameContext;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
@@ -50,7 +51,7 @@ public class PictureInPictureView extends VBox {
         scene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
         scene2D.setGameContext(context);
         GameRenderer renderer = context.gameConfiguration().createRenderer(context.assets(), canvas);
-        renderer.setWorldMap(context.level().map());
+        context.game().level().map(GameLevel::map).ifPresent(renderer::setWorldMap);
         scene2D.setGameRenderer(renderer);
         recomputeLayout();
     }

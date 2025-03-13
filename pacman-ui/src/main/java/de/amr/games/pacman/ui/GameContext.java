@@ -8,7 +8,6 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
@@ -59,9 +58,6 @@ public interface GameContext {
 
     @SuppressWarnings("unchecked")
     default <GAME extends GameModel> GAME game() { return (GAME) gameController().currentGame(); }
-
-    /** @return the current game level, throw exception if level does not exist */
-    default GameLevel level() { return game().level().orElseThrow(); }
 
     GameVariant gameVariant();
 

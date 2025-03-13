@@ -67,14 +67,14 @@ public class GameLevel3D extends Group {
 
     private final GameContext context;
     private final Group worldGroup = new Group();
-    private final AmbientLight ambientLight;
-    private final Pac3D pac3D;
-    private final List<Ghost3DAppearance> ghost3DAppearances;
+    private AmbientLight ambientLight;
+    private Pac3D pac3D;
+    private List<Ghost3DAppearance> ghost3DAppearances;
     private final List<Pellet3D> pellets3D = new ArrayList<>();
     private final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
-    private final LivesCounter3D livesCounter3D;
-    private final Box floor3D;
-    private final Maze3D maze3D;
+    private LivesCounter3D livesCounter3D;
+    private Box floor3D;
+    private Maze3D maze3D;
 
     private Message3D message3D;
     private Bonus3D bonus3D;
@@ -84,66 +84,58 @@ public class GameLevel3D extends Group {
 
     public GameLevel3D(GameContext context) {
         this.context = assertNotNull(context);
-
         final GameModel game = context.game();
-        final GameLevel level = context.level();
+        game.level().ifPresent(level -> {
+            pac3D = createPac3D(level.pac());
+            ghost3DAppearances = level.ghosts().map(ghost -> createGhost3D(ghost, level.numFlashes())).toList();
 
-        pac3D = createPac3D(level.pac());
-        ghost3DAppearances = level.ghosts().map(ghost -> createGhost3D(ghost, level.numFlashes())).toList();
+            livesCounter3D = createLivesCounter3D(game.canStartNewGame());
+            livesCounter3D.livesCountPy.bind(livesCountPy);
 
-        livesCounter3D = createLivesCounter3D(game.canStartNewGame());
-        livesCounter3D.livesCountPy.bind(livesCountPy);
+            floor3D = createFloor(context.assets(), level.map().numCols() * TS, level.map().numRows() * TS);
+            WorldMapColoring coloring = context.gameConfiguration().worldMapColoring(level.map());
+            maze3D = new Maze3D((GameUIConfiguration3D) context.gameConfiguration(), level, coloring);
+            addFood3D(level, context.assets().get("model3D.pellet"), coloredMaterial(coloring.pellet()));
 
-        floor3D = createFloor(context.assets(), level.map().numCols() * TS, level.map().numRows() * TS);
-        WorldMapColoring coloring = context.gameConfiguration().worldMapColoring(level.map());
-        maze3D = new Maze3D((GameUIConfiguration3D) context.gameConfiguration(), level, coloring);
-        addFood3D(level, context.assets().get("model3D.pellet"), coloredMaterial(coloring.pellet()));
+            worldGroup.getChildren().addAll(floor3D, maze3D);
 
-        worldGroup.getChildren().addAll(floor3D, maze3D);
+            // for wireframe mode view
+            worldGroup.lookupAll("*").stream().filter(Shape3D.class::isInstance)
+                    .forEach(shape3D -> ((Shape3D) shape3D).drawModeProperty().bind(PY_3D_DRAW_MODE));
 
-        // for wireframe mode view
-        worldGroup.lookupAll("*").stream().filter(Shape3D.class::isInstance)
-            .forEach(shape3D -> ((Shape3D) shape3D).drawModeProperty().bind(PY_3D_DRAW_MODE));
+            // Walls and house must be added after the guys! Otherwise, transparency is not working correctly.
+            getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
+            getChildren().addAll(ghost3DAppearances);
+            getChildren().addAll(livesCounter3D, worldGroup);
 
-
-        // Walls and house must be added after the guys! Otherwise, transparency is not working correctly.
-        getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
-        getChildren().addAll(ghost3DAppearances);
-        getChildren().addAll(livesCounter3D, worldGroup);
-
-        ambientLight = new AmbientLight();
-        ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
-        getChildren().add(ambientLight);
-
-        setMouseTransparent(true); //TODO does this increase performance?
-
+            ambientLight = new AmbientLight();
+            ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
+            getChildren().add(ambientLight);
+        });
+        setMouseTransparent(true); //TODO does this really increase performance?
     }
 
     public void update(GameContext context) {
         pac3D.update(context);
         ghosts3D().forEach(ghost3D -> ghost3D.update(context));
         bonus3D().ifPresent(bonus -> bonus.update(context));
+        context.game().level().ifPresent(level -> {
+            boolean houseAccessRequired = level.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+                    .anyMatch(Ghost::isVisible);
+            maze3D().setHouseLightOn(houseAccessRequired);
 
-        boolean houseAccessRequired = context.level()
-            .ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-            .anyMatch(Ghost::isVisible);
-        maze3D().setHouseLightOn(houseAccessRequired);
+            boolean ghostNearHouseEntry = level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+                    .filter(ghost -> ghost.position().euclideanDist(level.houseEntryPosition()) <= HOUSE_SENSITIVITY)
+                    .anyMatch(Ghost::isVisible);
+            houseOpenPy.set(ghostNearHouseEntry);
 
-        boolean ghostNearHouseEntry = context.level()
-            .ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-            .filter(ghost -> ghost.position().euclideanDist(context.level().houseEntryPosition()) <= HOUSE_SENSITIVITY)
-            .anyMatch(Ghost::isVisible);
-        houseOpenPy.set(ghostNearHouseEntry);
-
-        int symbolsDisplayed = Math.max(0, context.game().lives() - 1);
-        if (!context.level().pac().isVisible() && context.gameState() == GameState.STARTING_GAME) {
-            livesCountPy.set(symbolsDisplayed + 1);
-        } else {
-            livesCountPy.set(symbolsDisplayed);
-        }
-
-        // experimental
-        //maze3D.highlightObstacleNearPac(pac3D, context.level().pac());
+            int symbolsDisplayed = Math.max(0, context.game().lives() - 1);
+            if (!level.pac().isVisible() && context.gameState() == GameState.STARTING_GAME) {
+                livesCountPy.set(symbolsDisplayed + 1);
+            } else {
+                livesCountPy.set(symbolsDisplayed);
+            }
+        });
     }
 
     private Pac3D createPac3D(Pac pac) {
@@ -181,13 +173,15 @@ public class GameLevel3D extends Group {
     }
 
     public void addLevelCounter() {
-        // Place level counter at top right maze corner
-        double x = context.level().map().numCols() * TS - 2 * TS;
-        double y = 2 * TS;
-        Node levelCounter3D = createLevelCounter3D(
-            context.gameConfiguration().spriteSheet(),
-            context.game().levelCounter(), x, y);
-        getChildren().add(levelCounter3D);
+        context.game().level().map(GameLevel::map).ifPresent(worldMap -> {
+            // Place level counter at top right maze corner
+            double x = worldMap.numCols() * TS - 2 * TS;
+            double y = 2 * TS;
+            Node levelCounter3D = createLevelCounter3D(
+                    context.gameConfiguration().spriteSheet(),
+                    context.game().levelCounter(), x, y);
+            getChildren().add(levelCounter3D);
+        });
     }
 
     private Node createLevelCounter3D(GameSpriteSheet spriteSheet, List<Byte> symbols, double x, double y) {
@@ -317,16 +311,16 @@ public class GameLevel3D extends Group {
         return rotation;
     }
 
-    public void playLevelCompleteAnimation(double delaySeconds, Runnable onStart, Runnable onFinished) {
+    public void playLevelCompleteAnimation(GameLevel level, double delaySeconds, Runnable onStart, Runnable onFinished) {
         levelCompleteAnimation = new SequentialTransition(
             now(() -> {
                 // keep game state until animation has finished
                 context.gameState().timer().resetIndefiniteTime();
                 onStart.run();
             }),
-            context.level().cutSceneNumber() != 0
-                ? levelTransformationBeforeIntermission(context.level().numFlashes())
-                : levelTransformation(context.level().numFlashes())
+            level.cutSceneNumber() != 0
+                ? levelTransformationBeforeIntermission(level, level.numFlashes())
+                : levelTransformation(level, level.numFlashes())
         );
         levelCompleteAnimation.setOnFinished(e -> {
             onFinished.run();
@@ -336,25 +330,25 @@ public class GameLevel3D extends Group {
         levelCompleteAnimation.play();
     }
 
-    private Animation levelTransformationBeforeIntermission(int numFlashes) {
+    private Animation levelTransformationBeforeIntermission(GameLevel level, int numFlashes) {
         return new SequentialTransition(
-            doAfterSec(1.0, () -> context.level().ghosts().forEach(Ghost::hide))
+            doAfterSec(1.0, () -> level.ghosts().forEach(Ghost::hide))
             , maze3D.mazeFlashAnimation(numFlashes)
-            , doAfterSec(2.5, () -> context.level().pac().hide())
+            , doAfterSec(2.5, () -> level.pac().hide())
         );
     }
 
-    private Animation levelTransformation(int numFlashes) {
+    private Animation levelTransformation(GameLevel level, int numFlashes) {
         return new Timeline(
             new KeyFrame(Duration.ZERO, e -> {
                 livesCounter3D().light().setLightOn(false);
                 if (Globals.randomInt(1, 100) < 25) {
-                    context.showFlashMessageSec(3, context.locLevelCompleteMessage(context.level().number));
+                    context.showFlashMessageSec(3, context.locLevelCompleteMessage(level.number));
                 }
             }),
-            new KeyFrame(Duration.seconds(1.0), e -> context.level().ghosts().forEach(Ghost::hide)),
+            new KeyFrame(Duration.seconds(1.0), e -> level.ghosts().forEach(Ghost::hide)),
             new KeyFrame(Duration.seconds(1.5), e -> maze3D.mazeFlashAnimation(numFlashes).play()),
-            new KeyFrame(Duration.seconds(4.5), e -> context.level().pac().hide()),
+            new KeyFrame(Duration.seconds(4.5), e -> level.pac().hide()),
             new KeyFrame(Duration.seconds(5.0), e -> levelRotateAnimation(1.5).play()),
             new KeyFrame(Duration.seconds(7.0), e -> {
                 maze3D.wallsDisappearAnimation(2.0).play();

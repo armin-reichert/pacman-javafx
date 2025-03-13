@@ -8,6 +8,7 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.nes.NES_JoypadButton;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.ScoreManager;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions;
@@ -42,28 +43,30 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     }
 
     private void addGameOptionsArea(TengenMsPacMan_GameModel game) {
-        WorldMap worldMap = context.level().map();
-        int unscaledWidth = worldMap.numCols() * TS;
-        int unscaledHeight = 2*TS;
+        context.game().level().ifPresent(level -> {
+            WorldMap worldMap = level.map();
+            int unscaledWidth = worldMap.numCols() * TS;
+            int unscaledHeight = 2*TS;
 
-        float scale = 5; // for better quality
-        var canvas = new Canvas(scale * unscaledWidth, scale * unscaledHeight);
-        canvas.getGraphicsContext2D().setImageSmoothing(false); // important!
+            float scale = 5; // for better quality
+            var canvas = new Canvas(scale * unscaledWidth, scale * unscaledHeight);
+            canvas.getGraphicsContext2D().setImageSmoothing(false); // important!
 
-        var renderer = (TengenMsPacMan_Renderer2D) context.gameConfiguration().createRenderer(context.assets(), canvas);
-        renderer.setScaling(scale);
-        renderer.fillCanvas(level3D.floorColor());
-        renderer.drawGameOptionsInfoCenteredAt(0.5 * unscaledWidth, TS+HTS, game);
-        renderer.drawLevelNumberBox(context.level().number, 0, 0);
-        renderer.drawLevelNumberBox(context.level().number, unscaledWidth - 2*TS, 0);
+            var renderer = (TengenMsPacMan_Renderer2D) context.gameConfiguration().createRenderer(context.assets(), canvas);
+            renderer.setScaling(scale);
+            renderer.fillCanvas(level3D.floorColor());
+            renderer.drawGameOptionsInfoCenteredAt(0.5 * unscaledWidth, TS+HTS, game);
+            renderer.drawLevelNumberBox(level.number, 0, 0);
+            renderer.drawLevelNumberBox(level.number, unscaledWidth - 2*TS, 0);
 
-        ImageView optionsArea = new ImageView(canvas.snapshot(null, null));
-        optionsArea.setFitWidth(unscaledWidth);
-        optionsArea.setFitHeight(unscaledHeight);
-        optionsArea.setTranslateY((worldMap.numRows() - 2) * TS);
-        optionsArea.setTranslateZ(-level3D.floorThickness());
+            ImageView optionsArea = new ImageView(canvas.snapshot(null, null));
+            optionsArea.setFitWidth(unscaledWidth);
+            optionsArea.setFitHeight(unscaledHeight);
+            optionsArea.setTranslateY((worldMap.numRows() - 2) * TS);
+            optionsArea.setTranslateZ(-level3D.floorThickness());
 
-        level3D.getChildren().add(optionsArea);
+            level3D.getChildren().add(optionsArea);
+        });
     }
 
     @Override
@@ -100,16 +103,17 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             scores3D.showScore(score.points(), score.levelNumber());
         }
         else { // when score is disabled, show text "game over"
-            WorldMap worldMap = context.level().map();
-            NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
-            Color color = Color.valueOf(nesColorScheme.strokeColor());
-            scores3D.showTextAsScore(TEXT_GAME_OVER, color);
+            context.game().level().ifPresent(level -> {
+                NES_ColorScheme nesColorScheme = level.map().getConfigValue("nesColorScheme");
+                Color color = Color.valueOf(nesColorScheme.strokeColor());
+                scores3D.showTextAsScore(TEXT_GAME_OVER, color);
+            });
         }
     }
 
     @Override
     public void onBonusActivated(GameEvent event) {
-        context.level().bonus().ifPresent(bonus -> level3D.replaceBonus3D(bonus, context.gameConfiguration().spriteSheet()));
+        context.game().level().flatMap(GameLevel::bonus).ifPresent(bonus -> level3D.replaceBonus3D(bonus, context.gameConfiguration().spriteSheet()));
         context.sound().playBonusBouncingSound();
     }
 

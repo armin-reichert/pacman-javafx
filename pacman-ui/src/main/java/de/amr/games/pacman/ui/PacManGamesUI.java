@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._2d.*;
@@ -65,7 +66,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             context.sound().stopAll();
             context.gameClock().stop();
             EditorView editorView = getOrCreateEditorView();
-            editorView.startEditor(context.level().map());
+            context.game().level().ifPresent(level -> editorView.editor().setWorldMap(level.map()));
+            editorView.editor().start();
             showView(editorView);
         }
 

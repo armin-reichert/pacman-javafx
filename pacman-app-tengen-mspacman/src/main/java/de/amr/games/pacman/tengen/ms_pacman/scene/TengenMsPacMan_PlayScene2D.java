@@ -225,7 +225,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
                 level.pac().setImmune(PY_IMMUNITY.get());
                 messageMovement.update();
-                updateSound();
+                updateSound(level);
             }
             if (context.gameState() == GameState.LEVEL_COMPLETE) {
                 levelCompleteAnimation.update();
@@ -277,18 +277,18 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        context.joypadKeyBinding().register(context.keyboard());
-        setKeyBindings();
-
-        GameLevel level = context.level();
-        if (context.game().isDemoLevel()) {
-            level.pac().setImmune(false);
-        } else {
-            level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
-            level.pac().setImmune(PY_IMMUNITY.get());
-        }
-        createLevelCompleteAnimation(level);
-        gr.setWorldMap(level.map());
+        context.game().level().ifPresent(level -> {
+            context.joypadKeyBinding().register(context.keyboard());
+            setKeyBindings();
+            if (context.game().isDemoLevel()) {
+                level.pac().setImmune(false);
+            } else {
+                level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
+                level.pac().setImmune(PY_IMMUNITY.get());
+            }
+            createLevelCompleteAnimation(level);
+            gr.setWorldMap(level.map());
+        });
     }
 
     @Override
@@ -303,7 +303,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         Logger.info("{} entered from {}", this, oldScene);
         context.joypadKeyBinding().register(context.keyboard());
         setKeyBindings();
-        gr.setWorldMap(context.level().map());
+        context.game().level().map(GameLevel::map).ifPresent(worldMap -> gr.setWorldMap(worldMap));
     }
 
     private void setKeyBindings() {
@@ -328,19 +328,23 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         switch (state) {
             case HUNTING -> movingCamera.focusPlayer(true);
             case LEVEL_COMPLETE -> {
-                if (levelCompleteAnimation == null) {
-                    // if 3D scene was active when level has been created, the animation has not been created!
-                    createLevelCompleteAnimation(context.level());
-                }
-                levelCompleteAnimation.start();
+                context.game().level().ifPresent(level -> {
+                    if (levelCompleteAnimation == null) {
+                        // if 3D scene was active when level has been created, the animation has not been created!
+                        createLevelCompleteAnimation(level);
+                    }
+                    levelCompleteAnimation.start();
+                });
             }
             case GAME_OVER -> {
                 TengenMsPacMan_GameModel game = context.game();
-                if (game.mapCategory() != MapCategory.ARCADE) {
-                    float belowHouse = centerPosBelowHouse(context.level()).x();
-                    messageMovement.start(MOVING_MESSAGE_DELAY, belowHouse, sizeInPx().x());
-                }
-                movingCamera.focusTopOfScene();
+                game.level().ifPresent(level -> {
+                    if (game.mapCategory() != MapCategory.ARCADE) {
+                        float belowHouse = centerPosBelowHouse(level).x();
+                        messageMovement.start(MOVING_MESSAGE_DELAY, belowHouse, sizeInPx().x());
+                    }
+                    movingCamera.focusTopOfScene();
+                });
             }
             default -> {}
         }
@@ -398,8 +402,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         context.sound().stopPacPowerSound();
     }
 
-    private void updateSound() {
-        GameLevel level = context.level();
+    private void updateSound(GameLevel level) {
         GameSound sound = context.sound();
         if (context.gameState() == GameState.HUNTING && !level.powerTimer().isRunning()) {
             HuntingTimer huntingControl = context.game().huntingTimer();
@@ -440,11 +443,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     protected void drawSceneContent() {
         var r = (TengenMsPacMan_Renderer2D) gr;
-
         TengenMsPacMan_GameModel game = context.game();
-        GameLevel level = context.level();
-        Pac msPacMan = level.pac();
-
+        GameLevel level = game.level().orElse(null);
+        if (level == null) {
+            Logger.warn("Cannot draw scene content, no game level exists");
+            return;
+        }
         if (context.isScoreVisible()) {
             r.drawScores(context);
         }
@@ -469,13 +473,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             r.drawLevelMessage(context.gameConfiguration().assetNamespace(), level, game.isDemoLevel());
         }
 
-        context.level().bonus().ifPresent(r::drawBonus);
+        level.bonus().ifPresent(r::drawBonus);
 
-        r.drawAnimatedActor(msPacMan);
+        r.drawAnimatedActor(level.pac());
         ghostsInZOrder(level).forEach(r::drawAnimatedActor);
 
         int livesCounterEntries = game.lives() - 1;
-        if (context.gameState() == GameState.STARTING_GAME && !msPacMan.isVisible()) {
+        if (context.gameState() == GameState.STARTING_GAME && !level.pac().isVisible()) {
             // as long as Pac-Man is invisible when the game is started, one entry more appears in the lives counter
             livesCounterEntries += 1;
         }
@@ -484,7 +488,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         r.drawLevelCounter(context, sizeInPx().x() - 2 * TS, sizeInPx().y() - TS);
 
         if (debugInfoVisiblePy.get()) {
-            r.drawAnimatedCreatureInfo(msPacMan);
+            r.drawAnimatedCreatureInfo(level.pac());
             ghostsInZOrder(level).forEach(r::drawAnimatedCreatureInfo);
             drawDebugInfo();
         }

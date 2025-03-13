@@ -49,8 +49,8 @@ public class InfoBoxActorInfo extends InfoBox {
     }
 
     private Supplier<String> pacInfo(BiFunction<GameModel, Pac, String> fnPacInfo) {
-        return ifLevelPresent(level -> context.level().pac() != null
-            ? fnPacInfo.apply(context.game(), context.level().pac())
+        return ifLevelPresent(level -> level.pac() != null
+            ? fnPacInfo.apply(context.game(), level.pac())
             : NO_INFO);
     }
 

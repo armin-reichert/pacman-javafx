@@ -8,8 +8,8 @@ import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.ui.sound.GameSound;
+import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.model3D.Model3D;
 import de.amr.games.pacman.uilib.model3D.PacModel3D;
 import javafx.animation.Animation;
@@ -88,18 +88,20 @@ public class MsPacMan3D implements Pac3D {
 
     @Override
     public void update(GameContext context) {
-        if (msPacMan.isAlive()) {
-            shape3D.updatePosition(msPacMan);
-            shape3D.updateLight(msPacMan, context.level());
-            shape3D.updateVisibility(msPacMan, context.level());
-        }
-        if (msPacMan.isAlive() && !msPacMan.isStandingStill()) {
-            swayHips();
-            shape3D.chew();
-        } else {
-            stopSwayingHips();
-            shape3D.stopChewingAndOpenMouth();
-        }
+        context.game().level().ifPresent(level -> {
+            if (msPacMan.isAlive()) {
+                shape3D.updatePosition(msPacMan);
+                shape3D.updateLight(msPacMan, level);
+                shape3D.updateVisibility(msPacMan, level);
+            }
+            if (msPacMan.isAlive() && !msPacMan.isStandingStill()) {
+                swayHips();
+                shape3D.chew();
+            } else {
+                stopSwayingHips();
+                shape3D.stopChewingAndOpenMouth();
+            }
+        });
     }
 
     @Override

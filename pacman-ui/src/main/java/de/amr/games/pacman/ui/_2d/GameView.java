@@ -250,8 +250,6 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
         return dashboard;
     }
 
-    public boolean isDashboardOpen() { return dashboardContainer.isVisible(); }
-
     public void hideDashboard() {
         dashboardContainer.setVisible(false);
     }
@@ -404,16 +402,16 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
 
     @Override
     public void onLevelCreated(GameEvent event) {
-        context.gameConfiguration().createActorAnimations(context.level());
-        context.sound().setEnabled(!context.game().isDemoLevel());
-        // size of game scene might have changed, so re-embed
-        context.currentGameScene().ifPresent(this::embedGameScene);
-
-        GameScene2D pipGameScene = context.gameConfiguration().createPiPScene(context, canvasContainer().canvas());
-        pipView.setScene2D(pipGameScene);
-
-        Logger.info("Game level {} ({}) created", context.level().number, context.gameVariant());
-        Logger.info("Actor animations created");
-        Logger.info("Sounds {}", context.sound().isEnabled() ? "enabled" : "disabled");
+        context.game().level().ifPresent(level -> {
+            Logger.info("Game level {} ({}) created", level.number, context.gameVariant());
+            context.gameConfiguration().createActorAnimations(level);
+            Logger.info("Actor animations ({}) created", context.gameVariant());
+            context.sound().setEnabled(!context.game().isDemoLevel());
+            Logger.info("Sounds ({}) {}", context.gameVariant(), context.sound().isEnabled() ? "enabled" : "disabled");
+            // size of game scene might have changed, so re-embed
+            context.currentGameScene().ifPresent(this::embedGameScene);
+            GameScene2D pipGameScene = context.gameConfiguration().createPiPScene(context, canvasContainer().canvas());
+            pipView.setScene2D(pipGameScene);
+        });
     }
 }

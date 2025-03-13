@@ -139,56 +139,56 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
     @Override
     public void onLevelStarted(GameEvent event) {
-        bindGameActions(); //TODO check this
-        GameLevel level = context.level();
-        if (!hasLevel3D()) {
-            replaceGameLevel3D();
-            level3D.addLevelCounter();
-        }
-        switch (context.gameState()) {
-            case TESTING_LEVELS, TESTING_LEVEL_TEASERS -> {
+        context.game().level().ifPresent(level -> {
+            bindGameActions(); //TODO check this
+            if (!hasLevel3D()) {
                 replaceGameLevel3D();
-                level3D.playLivesCounterAnimation();
-                level3D.energizers3D().forEach(Energizer3D::startPumping);
-                showLevelTestMessage("TEST LEVEL " + level.number);
+                level3D.addLevelCounter();
             }
-            default -> {
-                if (!context.game().isDemoLevel()){
-                    showReadyMessage();
+            switch (context.gameState()) {
+                case TESTING_LEVELS, TESTING_LEVEL_TEASERS -> {
+                    replaceGameLevel3D();
+                    level3D.playLivesCounterAnimation();
+                    level3D.energizers3D().forEach(Energizer3D::startPumping);
+                    showLevelTestMessage(level, "TEST LEVEL " + level.number);
+                }
+                default -> {
+                    if (!context.game().isDemoLevel()) {
+                        showReadyMessage(level);
+                    }
                 }
             }
-        }
-        updateScores();
-        perspective().init(fxSubScene, level);
+            updateScores();
+            perspective().init(fxSubScene, level);
+        });
     }
 
     @Override
     public void onSceneVariantSwitch(GameScene fromScene) {
-        bindGameActions();
-        registerGameActionKeyBindings(context.keyboard());
-        if (!hasLevel3D()) {
-            replaceGameLevel3D();
-            level3D.addLevelCounter();
-        }
-
-        GameLevel level = context.level();
-        level3D.pellets3D().forEach(pellet -> pellet.shape3D().setVisible(!level.hasEatenFoodAt(pellet.tile())));
-        level3D.energizers3D().forEach(energizer -> energizer.shape3D().setVisible(!level.hasEatenFoodAt(energizer.tile())));
-        if (oneOf(context.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
-            level3D.energizers3D().filter(energizer -> energizer.shape3D().isVisible()).forEach(Energizer3D::startPumping);
-        }
-        level.pac().show();
-        level3D.pac3D().init();
-        level.ghosts().forEach(Ghost::show);
-        level3D.pac3D().update(context);
-
-        if (context.gameState() == GameState.HUNTING) {
-            if (level.powerTimer().isRunning()) {
-                context.sound().playPacPowerSound();
+        context.game().level().ifPresent(level -> {
+            bindGameActions();
+            registerGameActionKeyBindings(context.keyboard());
+            if (!hasLevel3D()) {
+                replaceGameLevel3D();
+                level3D.addLevelCounter();
             }
-            level3D.playLivesCounterAnimation();
-        }
-        updateScores();
+            level3D.pellets3D().forEach(pellet -> pellet.shape3D().setVisible(!level.hasEatenFoodAt(pellet.tile())));
+            level3D.energizers3D().forEach(energizer -> energizer.shape3D().setVisible(!level.hasEatenFoodAt(energizer.tile())));
+            if (oneOf(context.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
+                level3D.energizers3D().filter(energizer -> energizer.shape3D().isVisible()).forEach(Energizer3D::startPumping);
+            }
+            level.pac().show();
+            level.ghosts().forEach(Ghost::show);
+            level3D.pac3D().init();
+            level3D.pac3D().update(context);
+            if (context.gameState() == GameState.HUNTING) {
+                if (level.powerTimer().isRunning()) {
+                    context.sound().playPacPowerSound();
+                }
+                level3D.playLivesCounterAnimation();
+            }
+            updateScores();
+        });
     }
 
     public boolean hasLevel3D() {
@@ -197,7 +197,8 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
     @Override
     public void update() {
-        if (context.game().level().isEmpty()) {
+        GameLevel level = context.game().level().orElse(null);
+        if (level == null) {
             // Scene is visible for 1 (2?) ticks before game level has been created
             Logger.warn("Tick #{}: Cannot update PlayScene3D: game level not yet available", context.gameClock().tickCount());
             return;
@@ -208,7 +209,6 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             return;
         }
 
-        GameLevel level = context.level();
         level3D.update(context);
 
         //TODO check if this has to de done on every tick
@@ -219,7 +219,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
             level.pac().setImmune(PY_IMMUNITY.get());
             updateScores();
-            updateSound(context.sound());
+            updateSound(level, context.sound());
         }
         perspective().update(fxSubScene, level, level.pac());
     }
@@ -243,17 +243,17 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         }
     }
 
-    private void updateSound(GameSound sound) {
-        if (context.gameState() == GameState.HUNTING && !context.level().powerTimer().isRunning()) {
+    private void updateSound(GameLevel level, GameSound sound) {
+        if (context.gameState() == GameState.HUNTING && !level.powerTimer().isRunning()) {
             int sirenNumber = 1 + context.game().huntingTimer().phaseIndex() / 2;
             sound.selectSiren(sirenNumber);
             sound.playSiren();
         }
-        if (context.level().pac().starvingTicks() > 8) { // TODO not sure how to do this right
+        if (level.pac().starvingTicks() > 8) { // TODO not sure how to do this right
             sound.stopMunchingSound();
         }
-        boolean ghostsReturning = context.level().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
-        if (context.level().pac().isAlive() && ghostsReturning) {
+        boolean ghostsReturning = level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
+        if (level.pac().isAlive() && ghostsReturning) {
             sound.playGhostReturningHomeSound();
         } else {
             sound.stopGhostReturningHomeSound();
@@ -322,7 +322,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             level3D.stopAnimations();
             level3D.pac3D().init();
             level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
-            showReadyMessage();
+            context.game().level().ifPresent(this::showReadyMessage);
         }
     }
 
@@ -342,32 +342,33 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     }
 
     private void onEnterStateGhostDying() {
-        GameSpriteSheet spriteSheet = context.gameConfiguration().spriteSheet();
-        RectArea[] numberSprites = spriteSheet.ghostNumberSprites();
-        context.game().eventLog().killedGhosts.forEach(ghost -> {
-            int victimIndex = context.level().victims().indexOf(ghost);
-            var numberImage = spriteSheet.crop(numberSprites[victimIndex]);
-            level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
+        context.game().level().ifPresent(level -> {
+            GameSpriteSheet spriteSheet = context.gameConfiguration().spriteSheet();
+            RectArea[] numberSprites = spriteSheet.ghostNumberSprites();
+            context.game().eventLog().killedGhosts.forEach(ghost -> {
+                int victimIndex = level.victims().indexOf(ghost);
+                var numberImage = spriteSheet.crop(numberSprites[victimIndex]);
+                level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
+            });
         });
     }
 
     private void onEnterStateLevelComplete() {
-        context.sound().stopAll();
-        // if cheat has been used to complete level, food might still exist, so eat it:
-        GameLevel level = context.level();
-        level.map().tiles().filter(level::hasFoodAt).forEach(level::registerFoodEatenAt);
-        level3D.pellets3D().forEach(Pellet3D::onEaten);
-        level3D.energizers3D().forEach(Energizer3D::onEaten);
-        level3D.maze3D().door3D().setVisible(false);
-
-        level3D.stopAnimations();
-
-        level3D.playLevelCompleteAnimation(2.0,
-            () -> {
-                perspectiveNamePy.unbind();
-                perspectiveNamePy.set(Perspective.Name.TOTAL);
-            },
-            () -> perspectiveNamePy.bind(GlobalProperties3d.PY_3D_PERSPECTIVE));
+        context.game().level().ifPresent(level -> {
+            context.sound().stopAll();
+            // if cheat has been used to complete level, food might still exist, so eat it:
+            level.map().tiles().filter(level::hasFoodAt).forEach(level::registerFoodEatenAt);
+            level3D.pellets3D().forEach(Pellet3D::onEaten);
+            level3D.energizers3D().forEach(Energizer3D::onEaten);
+            level3D.maze3D().door3D().setVisible(false);
+            level3D.stopAnimations();
+            level3D.playLevelCompleteAnimation(level, 2.0,
+                () -> {
+                    perspectiveNamePy.unbind();
+                    perspectiveNamePy.set(Perspective.Name.TOTAL);
+                },
+                () -> perspectiveNamePy.bind(GlobalProperties3d.PY_3D_PERSPECTIVE));
+        });
     }
 
     private void onEnterStateLevelTransition() {
@@ -375,7 +376,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         replaceGameLevel3D();
         level3D.addLevelCounter();
         level3D.pac3D().init();
-        perspective().init(fxSubScene, context.level());
+        context.game().level().ifPresent(level -> perspective().init(fxSubScene, level));
     }
 
     private void onEnterStateTestingLevels() {
@@ -383,7 +384,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         level3D.addLevelCounter();
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
-        showLevelTestMessage("TEST LEVEL" + context.level().number);
+        context.game().level().ifPresent(level -> showLevelTestMessage(level, "TEST LEVEL" + level.number));
         GlobalProperties3d.PY_3D_PERSPECTIVE.set(Perspective.Name.TOTAL);
     }
 
@@ -392,7 +393,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         level3D.addLevelCounter();
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
-        showLevelTestMessage("PREVIEW LEVEL " + context.level().number);
+        context.game().level().ifPresent(level -> showLevelTestMessage(level, "PREVIEW LEVEL " + level.number));
         GlobalProperties3d.PY_3D_PERSPECTIVE.set(Perspective.Name.TOTAL);
     }
 
@@ -409,7 +410,8 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
     @Override
     public void onBonusActivated(GameEvent event) {
-        context.level().bonus().ifPresent(bonus -> level3D.replaceBonus3D(bonus, context.gameConfiguration().spriteSheet()));
+        context.game().level().flatMap(GameLevel::bonus).ifPresent(
+                bonus -> level3D.replaceBonus3D(bonus, context.gameConfiguration().spriteSheet()));
         if (context.gameVariant() == GameVariant.MS_PACMAN) {
             context.sound().playBonusBouncingSound();
         }
@@ -496,18 +498,16 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         scores3D.translateXProperty().bind(level3D.translateXProperty().add(TS));
         scores3D.translateYProperty().bind(level3D.translateYProperty().subtract(3.5 * TS));
         scores3D.translateZProperty().bind(level3D.translateZProperty().subtract(3.5 * TS));
-        Logger.info("3D game level {} created.", context.level().number);
     }
 
-    private void showLevelTestMessage(String message) {
-        WorldMap worldMap = context.level().map();
+    private void showLevelTestMessage(GameLevel level, String message) {
+        WorldMap worldMap = level.map();
         double x = worldMap.numCols() * HTS;
         double y = (worldMap.numRows() - 2) * TS;
         level3D.showAnimatedMessage(message, 5, x, y);
     }
 
-    private void showReadyMessage() {
-        GameLevel level = context.level();
+    private void showReadyMessage(GameLevel level) {
         Vector2i houseTopLeft = level.houseMinTile();
         Vector2i houseSize = level.houseSizeInTiles();
         double x = TS * (houseTopLeft.x() + 0.5 * houseSize.x());

@@ -379,17 +379,18 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     @Override
     public void drawLevelCounter(GameContext context, double x, double y) {
         ctx.setImageSmoothing(false);
-        TengenMsPacMan_GameModel game = context.game();
-        int levelNumber = context.level().number;
-        if (levelNumberBoxesVisible) {
-            drawLevelNumberBox(levelNumber, 0, y); // left box
-            drawLevelNumberBox(levelNumber, x, y); // right box
-        }
-        double symbolX = x - 2 * TS;
-        for (byte symbol : game.levelCounter()) {
-            drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), symbolX, y);
-            symbolX -= TS * 2;
-        }
+        context.game().level().ifPresent(level -> {
+            TengenMsPacMan_GameModel game = context.game();
+            if (levelNumberBoxesVisible) {
+                drawLevelNumberBox(level.number, 0, y); // left box
+                drawLevelNumberBox(level.number, x, y); // right box
+            }
+            double symbolX = x - 2 * TS;
+            for (byte symbol : game.levelCounter()) {
+                drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), symbolX, y);
+                symbolX -= TS * 2;
+            }
+        });
     }
 
     public void drawLevelNumberBox(int levelNumber, double x, double y) {

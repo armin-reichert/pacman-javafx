@@ -79,18 +79,20 @@ public class PacMan3D implements Pac3D {
 
     @Override
     public void update(GameContext context) {
-        if (pacMan.isAlive()) {
-            shape3D.updatePosition(pacMan);
-            shape3D.updateLight(pacMan, context.level());
-            shape3D.updateVisibility(pacMan, context.level());
-        }
-        if (pacMan.isAlive() && !pacMan.isStandingStill()) {
-            updateHeadBanging(pacMan);
-            shape3D.chew();
-        } else {
-            stopHeadBanging();
-            shape3D.stopChewingAndOpenMouth();
-        }
+        context.game().level().ifPresent(level -> {
+            if (pacMan.isAlive()) {
+                shape3D.updatePosition(pacMan);
+                shape3D.updateLight(pacMan, level);
+                shape3D.updateVisibility(pacMan, level);
+            }
+            if (pacMan.isAlive() && !pacMan.isStandingStill()) {
+                updateHeadBanging(pacMan);
+                shape3D.chew();
+            } else {
+                stopHeadBanging();
+                shape3D.stopChewingAndOpenMouth();
+            }
+        });
     }
 
     @Override

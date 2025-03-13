@@ -6,11 +6,10 @@ package de.amr.games.pacman.ui._3d.level;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.ui._3d.GlobalProperties3d;
+import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -171,24 +170,24 @@ public class Ghost3DAppearance extends Group {
     }
 
     private void updateAppearance(GameContext context) {
-        GameLevel level = context.level(); // assert not null
-        if (ghost.state() == null) {
-            // can this happen?
+        if (ghost.state() == null) { // TODO: can this happen?
             appearancePy.set(Appearance.COLORED_GHOST);
             return;
         }
-        Appearance nextAppearance = switch (ghost.state()) {
-            case LEAVING_HOUSE, LOCKED ->
-                // ghost that have been killed by current energizer will not look frightened
-                level.powerTimer().isRunning() && !level.victims().contains(ghost)
-                    ? frightenedOrFlashing(context.game().isPowerFading())
-                        : Appearance.COLORED_GHOST;
-            case FRIGHTENED -> frightenedOrFlashing(context.game().isPowerFading());
-            case ENTERING_HOUSE, RETURNING_HOME -> Appearance.GHOST_EYES;
-            case EATEN -> Appearance.NUMBER;
-            default -> Appearance.COLORED_GHOST;
-        };
-        appearancePy.set(nextAppearance);
+        context.game().level().ifPresent(level -> {
+            Appearance nextAppearance = switch (ghost.state()) {
+                case LEAVING_HOUSE, LOCKED ->
+                    // ghost that have been killed by current energizer will not look frightened
+                        level.powerTimer().isRunning() && !level.victims().contains(ghost)
+                                ? frightenedOrFlashing(context.game().isPowerFading())
+                                : Appearance.COLORED_GHOST;
+                case FRIGHTENED -> frightenedOrFlashing(context.game().isPowerFading());
+                case ENTERING_HOUSE, RETURNING_HOME -> Appearance.GHOST_EYES;
+                case EATEN -> Appearance.NUMBER;
+                default -> Appearance.COLORED_GHOST;
+            };
+            appearancePy.set(nextAppearance);
+        });
     }
 
     private Appearance frightenedOrFlashing(boolean powerFading) {

@@ -191,7 +191,7 @@ public class PacManXXL_MsPacMan_GameUIConfig3D implements GameUIConfiguration3D 
             case BOOT               -> "BootScene";
             case SETTING_OPTIONS    -> "StartScene";
             case INTRO              -> "IntroScene";
-            case INTERMISSION       -> "CutScene" + context.level().cutSceneNumber();
+            case INTERMISSION       -> "CutScene" + context.game().level().map(GameLevel::cutSceneNumber).orElseThrow();
             case TESTING_CUT_SCENES -> "CutScene" + context.gameState().<Integer>getProperty("intermissionTestNumber");
             default                 -> GlobalProperties3d.PY_3D_ENABLED.get() ? "PlayScene3D" : "PlayScene2D";
         };

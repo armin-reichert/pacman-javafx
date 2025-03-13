@@ -67,8 +67,10 @@ public class ArcadePlayScene2D extends GameScene2D {
             GameActions2D.bindFallbackPlayerControlActions(this);
         }
         registerGameActionKeyBindings(context.keyboard());
-        gr.setWorldMap(context.level().map());
-        gr.setMessagePosition(centerPositionBelowHouse(context.level()));
+        context.game().level().ifPresent(level -> {
+            gr.setWorldMap(level.map());
+            gr.setMessagePosition(centerPositionBelowHouse(level));
+        });
     }
 
     @Override
@@ -88,37 +90,36 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     @Override
     public void update() {
-        if (context.game().level().isEmpty()) {
-            // Scene is already visible for 2 ticks before game level has been created
-            Logger.warn("Tick {}: Cannot update PlayScene2D: game level not yet available", context.gameClock().tickCount());
-            return;
-        }
-        /* TODO: I would like to do this only on level start but when scene view is switched
-                 between 2D and 3D, the other scene has to be updated accordingly. */
-        if (context.game().isDemoLevel()) {
-            context.game().assignDemoLevelBehavior(context.level());
-        }
-        else {
-            context.level().pac().setUsingAutopilot(PY_AUTOPILOT.get());
-            context.level().pac().setImmune(PY_IMMUNITY.get());
-            updateSound(context.sound());
-        }
-        if (context.gameState() == GameState.LEVEL_COMPLETE) {
-            levelCompleteAnimation.update();
-        }
+        context.game().level().ifPresentOrElse(level -> {
+            /* TODO: I would like to do this only on level start but when scene view is switched
+                between 2D and 3D, the other scene has to be updated accordingly. */
+            if (context.game().isDemoLevel()) {
+                context.game().assignDemoLevelBehavior(level);
+            }
+            else {
+                level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
+                level.pac().setImmune(PY_IMMUNITY.get());
+                updateSound(level, context.sound());
+            }
+            if (context.gameState() == GameState.LEVEL_COMPLETE) {
+                levelCompleteAnimation.update();
+            }
+        }, () -> { // Scene is already visible 2 ticks before game level is created!
+            Logger.warn("Tick {}: Game level not yet available", context.gameClock().tickCount());
+        });
     }
 
-    private void updateSound(GameSound sound) {
-        if (context.gameState() == GameState.HUNTING && !context.level().powerTimer().isRunning()) {
+    private void updateSound(GameLevel level, GameSound sound) {
+        if (context.gameState() == GameState.HUNTING && !level.powerTimer().isRunning()) {
             int sirenNumber = 1 + context.game().huntingTimer().phaseIndex() / 2;
             sound.selectSiren(sirenNumber);
             sound.playSiren();
         }
-        if (context.level().pac().starvingTicks() > 8) { // TODO not sure how to do this right
+        if (level.pac().starvingTicks() > 8) { // TODO not sure how to do this right
             sound.stopMunchingSound();
         }
-        boolean ghostsReturning = context.level().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
-        if (context.level().pac().isAlive() && ghostsReturning) {
+        boolean ghostsReturning = level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
+        if (level.pac().isAlive() && ghostsReturning) {
             sound.playGhostReturningHomeSound();
         } else {
             sound.stopGhostReturningHomeSound();
@@ -132,11 +133,11 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        if (context.game().level().isEmpty()) { // This happens on level start
-            Logger.warn("Tick {}: Cannot draw scene content: game world not yet available!", context.gameClock().tickCount());
+        GameLevel level = context.game().level().orElse(null);
+        if (level == null) { // This happens on level start
+            Logger.warn("Tick {}: Cannot draw scene content: Game level not yet available!", context.gameClock().tickCount());
             return;
         }
-        GameLevel level = context.level();
 
         // Draw message
         if (level.message() != null) {
@@ -153,10 +154,10 @@ public class ArcadePlayScene2D extends GameScene2D {
                 }
                 case TEST_LEVEL -> {
                     color = Color.valueOf(Arcade.Palette.WHITE);
-                    text = "TEST    L%03d".formatted(context.level().number);
+                    text = "TEST    L%03d".formatted(level.number);
                 }
             }
-            gr.setMessagePosition(centerPositionBelowHouse(context.level()));
+            gr.setMessagePosition(centerPositionBelowHouse(level));
             // this assumes fixed width font of one tile size:
             double x = gr.getMessagePosition().x() - (text.length() * HTS);
             gr.drawText(text, color, gr.scaledArcadeFont(TS), x, gr.getMessagePosition().y());
@@ -213,13 +214,16 @@ public class ArcadePlayScene2D extends GameScene2D {
     protected void drawDebugInfo() {
         GraphicsContext g = gr.ctx();
         gr.drawTileGrid(sizeInPx().x(), sizeInPx().y());
-        if (context.gameVariant() == GameVariant.PACMAN && context.game().level().isPresent()) {
-            context.level().ghosts().forEach(ghost -> {
-                // Are currently the same for each ghost, but who knows what comes...
-                ghost.specialTerrainTiles().forEach(tile -> {
-                    g.setFill(Color.RED);
-                    double x = scaled(tile.x() * TS), y = scaled(tile.y() * TS + HTS), size = scaled(TS);
-                    g.fillRect(x, y, size, 2);
+
+        if (context.gameVariant() == GameVariant.PACMAN) {
+            context.game().level().ifPresent(level -> {
+                level.ghosts().forEach(ghost -> {
+                    // Are currently the same for each ghost, but who knows what comes...
+                    ghost.specialTerrainTiles().forEach(tile -> {
+                        g.setFill(Color.RED);
+                        double x = scaled(tile.x() * TS), y = scaled(tile.y() * TS + HTS), size = scaled(TS);
+                        g.fillRect(x, y, size, 2);
+                    });
                 });
             });
         }
@@ -236,7 +240,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         if (gr == null) {
             setGameRenderer(context.gameConfiguration().createRenderer(context.assets(), canvas));
         }
-        gr.setWorldMap(context.level().map());
+        context.game().level().map(GameLevel::map).ifPresent(gr::setWorldMap);
     }
 
     @Override
@@ -245,10 +249,12 @@ public class ArcadePlayScene2D extends GameScene2D {
             context.sound().playGameOverSound();
         }
         else if (state == GameState.LEVEL_COMPLETE) {
-            levelCompleteAnimation = new LevelCompleteAnimation(context.level().numFlashes(), 10);
-            levelCompleteAnimation.setOnHideGhosts(() -> context.level().ghosts().forEach(Ghost::hide));
-            levelCompleteAnimation.setOnFinished(() -> state.timer().expire());
-            levelCompleteAnimation.start();
+            context.game().level().ifPresent(level -> {
+                levelCompleteAnimation = new LevelCompleteAnimation(level.numFlashes(), 10);
+                levelCompleteAnimation.setOnHideGhosts(() -> level.ghosts().forEach(Ghost::hide));
+                levelCompleteAnimation.setOnFinished(() -> state.timer().expire());
+                levelCompleteAnimation.start();
+            });
         }
     }
 
