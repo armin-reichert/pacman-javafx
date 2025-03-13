@@ -132,7 +132,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         this.stage = assertNotNull(stage);
         mainScene = createMainScene(assertNotNull(initialSize));
         startPageSelectionView = new StartPageSelectionView(this);
-        startPagesCarousel().setBackground(assets.background("background.scene"));
+        startPageSelectionView().setBackground(assets.background("background.scene"));
         createGameView(mainScene);
         selectGameVariant(gameController().currentGameVariant());
         bindStageTitle();
@@ -199,15 +199,11 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         return mainScene;
     }
 
-    public StartPageSelectionView startPagesCarousel() { return startPageSelectionView; }
+    public StartPageSelectionView startPageSelectionView() { return startPageSelectionView; }
 
     public ObjectProperty<Node> viewProperty() { return viewPy; }
 
     public ObjectProperty<GameVariant> gameVariantProperty() { return gameVariantPy; }
-
-    public void addStartPage(GameVariant variant, StartPage page) {
-        startPageSelectionView.addStartPage(variant, page);
-    }
 
     protected void runIfNotPausedOnEveryTick() {
         try {

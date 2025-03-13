@@ -34,7 +34,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
         setBackground(Background.fill(Color.BLACK));
 
         //TODO find a more elegant way to start/stop the animation loop of the menu
-        final StartPageSelectionView carousel = ui.startPagesCarousel();
+        final StartPageSelectionView carousel = ui.startPageSelectionView();
         carousel.selectedIndexProperty().addListener((py, ov, nv) -> {
             carousel.currentSlide().ifPresent(startPage -> {
                 if (startPage == this) {
