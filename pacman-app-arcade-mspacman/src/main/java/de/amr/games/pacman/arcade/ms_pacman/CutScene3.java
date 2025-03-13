@@ -81,7 +81,7 @@ public class CutScene3 extends GameScene2D {
     }
 
     @Override
-    public Vector2f size() {
+    public Vector2f sizeInPx() {
         return ARCADE_MAP_SIZE_IN_PIXELS;
     }
 
@@ -94,7 +94,7 @@ public class CutScene3 extends GameScene2D {
         gr.drawAnimatedActor(pacMan);
         gr.drawActorSprite(stork, storkAnimation.currentSprite());
         gr.drawActorSprite(bag, bagOpen ? ArcadeMsPacMan_SpriteSheet.JUNIOR_PAC_SPRITE : ArcadeMsPacMan_SpriteSheet.BLUE_BAG_SPRITE);
-        gr.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
+        gr.drawLevelCounter(context, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 
     // scene controller state machine

@@ -101,7 +101,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     @Override
-    public Vector2f size() {
+    public Vector2f sizeInPx() {
         return NES_SIZE.toVector2f();
     }
 
@@ -249,7 +249,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         r.setScaling(scaling());
         Font scaledFont = r.scaledArcadeFont(TS);
 
-        r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), size().x(), 20);
+        r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), sizeInPx().x(), 20);
 
         r.drawText("MS PAC-MAN OPTIONS", NES_YELLOW, scaledFont, COL_LABEL + 3 * TS, 48);
 
@@ -295,7 +295,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         r.drawText("CHOOSE OPTIONS WITH A AND B", NES_YELLOW, scaledFont, 2 * TS,  200);
         r.drawText("PRESS START TO START GAME", NES_YELLOW, scaledFont, 3 * TS,  208);
 
-        r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), size().x(), 212);
+        r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), sizeInPx().x(), 212);
 
         if (PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED.get()) {
             r.drawJoypadBindings(context.currentJoypadKeyBinding());

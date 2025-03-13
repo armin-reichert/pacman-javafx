@@ -38,7 +38,7 @@ public class StartScene extends GameScene2D {
     }
 
     @Override
-    public Vector2f size() {
+    public Vector2f sizeInPx() {
         return ARCADE_MAP_SIZE_IN_PIXELS;
     }
 
@@ -58,8 +58,8 @@ public class StartScene extends GameScene2D {
         if (context.gameVariant() == GameVariant.PACMAN) {
             gr.drawText(MIDWAY_COPYRIGHT, pink, font8, tiles2Px(4), tiles2Px(29));
         }
-        gr.drawText("CREDIT %2d".formatted(context.gameController().credit), white, font8, 2 * TS, size().y() - 2);
-        gr.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
+        gr.drawText("CREDIT %2d".formatted(context.gameController().credit), white, font8, 2 * TS, sizeInPx().y() - 2);
+        gr.drawLevelCounter(context, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 
     @Override

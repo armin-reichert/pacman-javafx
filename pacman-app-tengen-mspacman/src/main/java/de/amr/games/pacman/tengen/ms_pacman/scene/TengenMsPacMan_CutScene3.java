@@ -158,7 +158,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     }
 
     @Override
-    public Vector2f size() {
+    public Vector2f sizeInPx() {
         return NES_SIZE.toVector2f();
     }
 
@@ -182,13 +182,13 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         }
         if (context.game().level().isPresent()) { // avoid exception in cut scene test mode
             r.setLevelNumberBoxesVisible(false);
-            r.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 3 * TS);
+            r.drawLevelCounter(context, sizeInPx().x() - 4 * TS, sizeInPx().y() - 3 * TS);
         }
     }
 
     @Override
     protected void drawDebugInfo() {
-        gr.drawTileGrid(size().x(), size().y());
+        gr.drawTileGrid(sizeInPx().x(), sizeInPx().y());
         gr.ctx().setFill(Color.WHITE);
         gr.ctx().setFont(GameRenderer.DEBUG_FONT);
         gr.ctx().fillText("Tick " + t, 20, 20);

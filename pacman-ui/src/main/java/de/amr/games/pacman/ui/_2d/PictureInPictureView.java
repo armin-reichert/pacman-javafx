@@ -4,11 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._2d;
 
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.uilib.Ufx;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
@@ -66,7 +63,7 @@ public class PictureInPictureView extends VBox {
 
     private void recomputeLayout() {
         if (scene2D != null) {
-            Vector2f size = scene2D.size();
+            Vector2f size = scene2D.sizeInPx();
             double aspectRatio = size.x() / size.y();
             canvas.setWidth(aspectRatio * canvas.getHeight());
             scene2D.setScaling(canvas.getHeight() / size.y());

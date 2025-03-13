@@ -34,13 +34,13 @@ public class ArcadeBootScene extends GameScene2D {
     }
 
     @Override
-    public Vector2f size() {
+    public Vector2f sizeInPx() {
         return ARCADE_MAP_SIZE_IN_PIXELS;
     }
 
     @Override
     public void draw() {
-        Vector2f sceneSize = size();
+        Vector2f sceneSize = sizeInPx();
         gr.setScaling(scaling());
         gr.setBackgroundColor(backgroundColor());
         var timer = context.gameState().timer();

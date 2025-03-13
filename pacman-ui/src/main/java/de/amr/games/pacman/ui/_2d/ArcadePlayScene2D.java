@@ -126,7 +126,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     }
 
     @Override
-    public Vector2f size() {
+    public Vector2f sizeInPx() {
         return context.worldSizeInTilesOrElse(ARCADE_MAP_SIZE_IN_TILES).scaled(TS).toVector2f();
     }
 
@@ -187,15 +187,15 @@ public class ArcadePlayScene2D extends GameScene2D {
             if (context.gameState() == GameState.STARTING_GAME && !level.pac().isVisible()) {
                 numLivesShown += 1;
             }
-            gr.drawLivesCounter(numLivesShown, 5, 2 * TS, size().y() - 2 * TS);
+            gr.drawLivesCounter(numLivesShown, 5, 2 * TS, sizeInPx().y() - 2 * TS);
         } else {
             int credit = context.gameController().credit;
             gr.drawText("CREDIT %2d".formatted(credit), Color.valueOf(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS),
-                    2 * TS, size().y() - 2);
+                    2 * TS, sizeInPx().y() - 2);
         }
 
         // Draw level counter
-        gr.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
+        gr.drawLevelCounter(context, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 
     private Vector2f centerPositionBelowHouse(GameLevel level) {
@@ -212,7 +212,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     @Override
     protected void drawDebugInfo() {
         GraphicsContext g = gr.ctx();
-        gr.drawTileGrid(size().x(), size().y());
+        gr.drawTileGrid(sizeInPx().x(), sizeInPx().y());
         if (context.gameVariant() == GameVariant.PACMAN && context.game().level().isPresent()) {
             context.level().ghosts().forEach(ghost -> {
                 // Are currently the same for each ghost, but who knows what comes...

@@ -93,7 +93,7 @@ public abstract class GameScene2D implements GameScene {
     protected abstract void drawSceneContent();
 
     protected void drawDebugInfo() {
-        gr.drawTileGrid(size().x(), size().y());
+        gr.drawTileGrid(sizeInPx().x(), sizeInPx().y());
     }
 
     public void draw() {

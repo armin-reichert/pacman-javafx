@@ -123,7 +123,7 @@ public class InfoBox3D extends InfoBox {
     private String sceneSizeInfo() {
         if (context.currentGameScene().isPresent()) {
             GameScene gameScene = context.currentGameScene().get();
-            Vector2f size = gameScene.size();
+            Vector2f size = gameScene.sizeInPx();
             if (gameScene instanceof GameScene2D gameScene2D) {
                 double scaling = gameScene2D.scaling();
                 return "%.0fx%.0f (scaled: %.0fx%.0f)".formatted(

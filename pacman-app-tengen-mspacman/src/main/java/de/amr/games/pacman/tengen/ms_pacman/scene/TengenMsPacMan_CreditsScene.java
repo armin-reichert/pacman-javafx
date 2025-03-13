@@ -34,7 +34,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     }
 
     @Override
-    public Vector2f size() {
+    public Vector2f sizeInPx() {
         return NES_SIZE.toVector2f();
     }
 
@@ -42,7 +42,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     protected void drawSceneContent() {
         var r = (TengenMsPacMan_Renderer2D) gr;
         Font scaledFont = r.scaledArcadeFont(TS);
-        double width = size().x();
+        double width = sizeInPx().x();
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), width, 20);
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), width, 212);
         if (context.gameState().timer().betweenSeconds(0.5*DISPLAY_SECONDS, DISPLAY_SECONDS)) {

@@ -114,7 +114,7 @@ public class CutScene2 extends GameScene2D {
     }
 
     @Override
-    public Vector2f size() {
+    public Vector2f sizeInPx() {
         return ARCADE_MAP_SIZE_IN_PIXELS;
     }
 
@@ -123,12 +123,12 @@ public class CutScene2 extends GameScene2D {
         gr.drawSpriteScaled(blinkyStretching.currentSprite(), tiles2Px(14), tiles2Px(19) + 3);
         gr.drawAnimatedActor(blinky);
         gr.drawAnimatedActor(pac);
-        gr.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
+        gr.drawLevelCounter(context, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 
     @Override
     protected void drawDebugInfo() {
-        gr.drawTileGrid(size().x(), size().y());
+        gr.drawTileGrid(sizeInPx().x(), sizeInPx().y());
         String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
         gr.drawText(text, Color.YELLOW, GameRenderer.DEBUG_FONT, tiles2Px(1), tiles2Px(5));
     }

@@ -296,7 +296,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     }
 
     @Override
-    public Vector2f size() {
+    public Vector2f sizeInPx() {
         return ARCADE_MAP_SIZE_IN_PIXELS; // irrelevant
     }
 

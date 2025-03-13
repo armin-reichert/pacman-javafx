@@ -52,7 +52,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         t += 1;
         if (t == 0) {
             grayScreen = false;
-            tengenPresentsY = size().y() + TS;  // just out of visible area
+            tengenPresentsY = sizeInPx().y() + TS;  // just out of visible area
             tengenPresentsSpeed = 0;
             ghost = TengenMsPacMan_GameModel.blinky();
             ghost.setSpeed(0);
@@ -68,7 +68,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             grayScreen = false;
         }
         else if (t == 21) {
-            tengenPresentsY = size().y();
+            tengenPresentsY = sizeInPx().y();
             tengenPresentsSpeed = -HTS;
         }
         else if (t == 55) {
@@ -79,7 +79,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             tengenPresentsY = TENGEN_PRESENTS_FINAL_Y;
         }
         else if (t == 113) {
-            ghost.setPosition(size().x() - TS, GHOST_Y);
+            ghost.setPosition(sizeInPx().x() - TS, GHOST_Y);
             ghost.setMoveAndWishDir(Direction.LEFT);
             ghost.setSpeed(TS);
             ghost.setVisible(true);
@@ -101,7 +101,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     }
 
     @Override
-    public Vector2f size() {
+    public Vector2f sizeInPx() {
         return NES_SIZE.toVector2f();
     }
 
@@ -120,7 +120,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
 
     @Override
     protected void drawDebugInfo() {
-        gr.drawTileGrid(size().x(), size().y());
+        gr.drawTileGrid(sizeInPx().x(), sizeInPx().y());
         gr.ctx().setFill(Color.WHITE);
         gr.ctx().setFont(Font.font(20));
         gr.ctx().fillText("Tick " + t, 20, 20);

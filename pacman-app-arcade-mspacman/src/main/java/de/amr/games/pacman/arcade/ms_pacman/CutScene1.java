@@ -86,7 +86,7 @@ public class CutScene1 extends GameScene2D {
     }
 
     @Override
-    public Vector2f size() {
+    public Vector2f sizeInPx() {
         return ARCADE_MAP_SIZE_IN_PIXELS;
     }
 
@@ -100,7 +100,7 @@ public class CutScene1 extends GameScene2D {
         gr.drawAnimatedActor(inky);
         gr.drawAnimatedActor(pinky);
         gr.drawActorSprite(heart, HEART_SPRITE);
-        gr.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
+        gr.drawLevelCounter(context, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 
     // Scene controller state machine

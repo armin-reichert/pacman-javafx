@@ -157,7 +157,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         double randomX = 8 * TS + (8 * TS) * Math.random();
         int rnd = Globals.randomInt(1, 3);
         AudioClip clip = context.assets().get(assetNamespace + ".audio.intermission.4.junior." + rnd);
-        junior.setPosition((float) randomX, size().y() - 4 * TS);
+        junior.setPosition((float) randomX, sizeInPx().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
         junior.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
@@ -177,11 +177,11 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             computeNewMoveDir(junior);
         }
         junior.move();
-        if (junior.posX() > size().x()) {
+        if (junior.posX() > sizeInPx().x()) {
             junior.setPosX(0);
         }
         if (junior.posX() < 0) {
-            junior.setPosX(size().x());
+            junior.setPosX(sizeInPx().x());
         }
     }
 
@@ -199,13 +199,13 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     private int bySmallestDistanceToToCenter(Pac junior, Direction dir1, Direction dir2) {
         Vector2f pos1 = junior.tile().plus(dir1.vector()).scaled(TS).toVector2f();
         Vector2f pos2 = junior.tile().plus(dir2.vector()).scaled(TS).toVector2f();
-        Vector2f center = size().scaled(0.5);
+        Vector2f center = sizeInPx().scaled(0.5);
         double dist1 = pos1.euclideanDist(center), dist2 = pos2.euclideanDist(center);
         return Double.compare(dist1, dist2);
     }
 
     @Override
-    public Vector2f size() {
+    public Vector2f sizeInPx() {
         return NES_SIZE.toVector2f();
     }
 
@@ -223,13 +223,13 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
         if (context.game().level().isPresent()) { // avoid exception in cut scene test mode
             r.setLevelNumberBoxesVisible(false);
-            r.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 3 * TS);
+            r.drawLevelCounter(context, sizeInPx().x() - 4 * TS, sizeInPx().y() - 3 * TS);
         }
     }
 
     @Override
     protected void drawDebugInfo() {
-        gr.drawTileGrid(size().x(), size().y());
+        gr.drawTileGrid(sizeInPx().x(), sizeInPx().y());
         gr.ctx().setFill(Color.WHITE);
         gr.ctx().setFont(GameRenderer.DEBUG_FONT);
         gr.ctx().fillText("Tick " + t, 20, 20);

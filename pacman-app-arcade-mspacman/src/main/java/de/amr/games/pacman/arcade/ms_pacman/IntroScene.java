@@ -120,7 +120,7 @@ public class IntroScene extends GameScene2D {
     }
 
     @Override
-    public Vector2f size() {
+    public Vector2f sizeInPx() {
         return ARCADE_MAP_SIZE_IN_PIXELS;
     }
 
@@ -154,8 +154,8 @@ public class IntroScene extends GameScene2D {
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
             r.drawMsPacManMidwayCopyright(tiles2Px(6), tiles2Px(28), COLOR_RED, font);
         }
-        gr.drawText("CREDIT %2d".formatted(context.gameController().credit), COLOR_WHITE, font, 2 * TS, size().y() - 2);
-        gr.drawLevelCounter(context, size().x() - 4 * TS, size().y() - 2 * TS);
+        gr.drawText("CREDIT %2d".formatted(context.gameController().credit), COLOR_WHITE, font, 2 * TS, sizeInPx().y() - 2);
+        gr.drawLevelCounter(context, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 
     /**

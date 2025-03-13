@@ -365,7 +365,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
             }
             case GameScene2D gameScene2D -> {
                 GameRenderer renderer = context.gameConfiguration().createRenderer(context.assets(), canvas);
-                Vector2f sceneSize = gameScene2D.size();
+                Vector2f sceneSize = gameScene2D.sizeInPx();
                 canvasContainer.setUnscaledCanvasWidth(sceneSize.x());
                 canvasContainer.setUnscaledCanvasHeight(sceneSize.y());
                 canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());

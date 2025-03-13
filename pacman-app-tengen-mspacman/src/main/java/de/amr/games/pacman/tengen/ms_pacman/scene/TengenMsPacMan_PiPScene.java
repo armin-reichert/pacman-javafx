@@ -26,10 +26,10 @@ public class TengenMsPacMan_PiPScene extends TengenMsPacMan_PlayScene2D {
 
     @Override
     public void draw() {
-        double aspect = size().x() / size().y();
+        double aspect = sizeInPx().x() / sizeInPx().y();
         canvas.setWidth(GlobalProperties2d.PY_PIP_HEIGHT.doubleValue() * aspect);
         canvas.setHeight(GlobalProperties2d.PY_PIP_HEIGHT.doubleValue());
-        setScaling(canvas.getHeight() / (size().y() + 3 * TS));
+        setScaling(canvas.getHeight() / (sizeInPx().y() + 3 * TS));
         gr.setScaling(scaling());
         gr.clearCanvas();
         context.game().level().ifPresent(level -> {

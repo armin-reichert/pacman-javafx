@@ -185,7 +185,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     protected void updateScaling() {
         SceneDisplayMode displayMode = displayModePy.get();
-        double unscaledHeight = displayMode == SceneDisplayMode.SCROLLING ? NES_SIZE.y() : size().y() + 3*TS;
+        double unscaledHeight = displayMode == SceneDisplayMode.SCROLLING ? NES_SIZE.y() : sizeInPx().y() + 3*TS;
         setScaling(viewPortHeightProperty().get() / unscaledHeight);
     }
 
@@ -261,7 +261,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     }
 
     @Override
-    public Vector2f size() {
+    public Vector2f sizeInPx() {
         return context.worldSizeInTilesOrElse(NES_TILES).toVector2f().scaled(TS);
     }
 
@@ -338,7 +338,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 TengenMsPacMan_GameModel game = context.game();
                 if (game.mapCategory() != MapCategory.ARCADE) {
                     float belowHouse = centerPosBelowHouse(context.level()).x();
-                    messageMovement.start(MOVING_MESSAGE_DELAY, belowHouse, size().x());
+                    messageMovement.start(MOVING_MESSAGE_DELAY, belowHouse, sizeInPx().x());
                 }
                 movingCamera.focusTopOfScene();
             }
@@ -479,9 +479,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             // as long as Pac-Man is invisible when the game is started, one entry more appears in the lives counter
             livesCounterEntries += 1;
         }
-        r.drawLivesCounter(livesCounterEntries, 5, 2 * TS, size().y() - TS);
+        r.drawLivesCounter(livesCounterEntries, 5, 2 * TS, sizeInPx().y() - TS);
         r.setLevelNumberBoxesVisible(!game.isDemoLevel() && game.mapCategory() != MapCategory.ARCADE);
-        r.drawLevelCounter(context, size().x() - 2 * TS, size().y() - TS);
+        r.drawLevelCounter(context, sizeInPx().x() - 2 * TS, sizeInPx().y() - TS);
 
         if (debugInfoVisiblePy.get()) {
             r.drawAnimatedCreatureInfo(msPacMan);
