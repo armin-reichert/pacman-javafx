@@ -70,7 +70,7 @@ public interface GameContext {
     // Input
     Keyboard keyboard();
     ArcadeKeyBinding arcadeKeys();
-    JoypadKeyBinding currentJoypadKeyBinding();
+    JoypadKeyBinding joypadKeyBinding();
     void selectNextJoypadKeyBinding();
 
     // GUI

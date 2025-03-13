@@ -410,7 +410,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public JoypadKeyBinding currentJoypadKeyBinding() {
+    public JoypadKeyBinding joypadKeyBinding() {
         return joypadKeyBindings[selectedJoypadIndex];
     }
 

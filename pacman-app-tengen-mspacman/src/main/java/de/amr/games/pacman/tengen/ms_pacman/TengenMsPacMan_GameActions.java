@@ -19,10 +19,10 @@ public enum TengenMsPacMan_GameActions implements GameAction {
     SELECT_NEXT_JOYPAD_KEY_BINDING {
         @Override
         public void execute(GameContext context) {
-            context.currentJoypadKeyBinding().unregister(context.keyboard());
+            context.joypadKeyBinding().unregister(context.keyboard());
             context.selectNextJoypadKeyBinding();
-            context.currentJoypadKeyBinding().register(context.keyboard());
-            Logger.info("Selected joypad: {} ", context.currentJoypadKeyBinding());
+            context.joypadKeyBinding().register(context.keyboard());
+            Logger.info("Selected joypad: {} ", context.joypadKeyBinding());
         }
     },
 
