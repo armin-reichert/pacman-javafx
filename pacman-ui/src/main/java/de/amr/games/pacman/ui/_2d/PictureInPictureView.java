@@ -12,8 +12,12 @@ import de.amr.games.pacman.uilib.Ufx;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 import org.tinylog.Logger;
+
+import static de.amr.games.pacman.lib.Globals.assertNotNull;
+import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
 
 /**
  * Picture-in-Picture view. Adapts its aspect ratio to the current game world. Height can be changed via dashboard.
@@ -25,30 +29,32 @@ import org.tinylog.Logger;
 public class PictureInPictureView extends VBox {
 
     private final GameContext context;
-    private final Canvas canvas = new Canvas();
+    private final Canvas canvas;
     private GameScene2D scene2D;
 
     public PictureInPictureView(GameContext context) {
-        this.context = Globals.assertNotNull(context);
-        canvas.heightProperty().bind(GlobalProperties2d.PY_PIP_HEIGHT);
+        this.context = assertNotNull(context);
+        canvas = new Canvas();
+        canvas.heightProperty().bind(PY_PIP_HEIGHT);
         canvas.heightProperty().addListener((py,ov,nv) -> recomputeLayout());
         getChildren().add(canvas);
         setPadding(new Insets(5, 15, 5, 15));
-        backgroundProperty().bind(GlobalProperties2d.PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
-        opacityProperty().bind(GlobalProperties2d.PY_PIP_OPACITY_PERCENT.divide(100.0));
+        backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Background::fill));
+        opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
         visibleProperty().bind(Bindings.createObjectBinding(
-            () -> GlobalProperties2d.PY_PIP_ON.get() && context.currentGameSceneHasID("PlayScene3D"),
-            GlobalProperties2d.PY_PIP_ON, context.gameSceneProperty()
+            () -> PY_PIP_ON.get() && context.currentGameSceneHasID("PlayScene3D"),
+            PY_PIP_ON, context.gameSceneProperty()
         ));
-        visibleProperty().addListener((py,ov,visible) -> recomputeLayout());
+        visibleProperty().addListener((py,ov,nv) -> recomputeLayout());
     }
 
     public void setScene2D(GameScene2D scene2D) {
-        this.scene2D = Globals.assertNotNull(scene2D);
+        this.scene2D = assertNotNull(scene2D);
+        scene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
         scene2D.setGameContext(context);
-        scene2D.setGameRenderer(context.gameConfiguration().createRenderer(context.assets(), canvas));
-        scene2D.backgroundColorProperty().bind(GlobalProperties2d.PY_CANVAS_BG_COLOR);
-        scene2D.renderer().setWorldMap(context.level().map());
+        GameRenderer renderer = context.gameConfiguration().createRenderer(context.assets(), canvas);
+        renderer.setWorldMap(context.level().map());
+        scene2D.setGameRenderer(renderer);
         recomputeLayout();
     }
 
@@ -59,15 +65,13 @@ public class PictureInPictureView extends VBox {
     }
 
     private void recomputeLayout() {
-        Vector2f size = scene2D != null ? scene2D.size() : Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-        double canvasHeight = canvas.getHeight();
-        double aspectRatio = size.x() / size.y();
-        canvas.setWidth(aspectRatio * canvasHeight);
         if (scene2D != null) {
-            scene2D.setScaling(canvasHeight / size.y());
+            Vector2f size = scene2D.size();
+            double aspectRatio = size.x() / size.y();
+            canvas.setWidth(aspectRatio * canvas.getHeight());
+            scene2D.setScaling(canvas.getHeight() / size.y());
+            Logger.debug("Layout recomputed, w={0.00} h={0.00} aspect={0.00}, scene size (px)={}",
+                getWidth(), getHeight(), aspectRatio, size);
         }
-        layout();
-        Logger.debug("Layout recomputed, w={0.00} h={0.00} aspect={0.00}, scene size (px)={}",
-            getWidth(), getHeight(), aspectRatio, size);
     }
 }
