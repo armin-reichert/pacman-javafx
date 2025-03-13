@@ -26,6 +26,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -53,6 +54,9 @@ import static de.amr.games.pacman.uilib.Ufx.createIcon;
  * @author Armin Reichert
  */
 public class PacManGamesUI implements GameEventListener, GameContext {
+
+    public static final KeyCodeCombination KEY_FULLSCREEN = Keyboard.naked(KeyCode.F11);
+    public static final KeyCodeCombination KEY_MUTE = Keyboard.alt(KeyCode.M);
 
     protected final GameAction actionOpenEditorView = new GameAction() {
         @Override
@@ -230,6 +234,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         }
     }
 
+    //TODO use nice font icons instead
     private Pane createIconPane() {
         ImageView mutedIcon = createIcon(assets.get("icon.mute"), 48, sound().mutedProperty());
         ImageView autoIcon  = createIcon(assets.get("icon.auto"), 48, GlobalProperties2d.PY_AUTOPILOT);
@@ -262,18 +267,17 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         Scene mainScene = new Scene(sceneRoot, size.getWidth(), size.getHeight());
         mainScene.addEventFilter(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
         mainScene.addEventFilter(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
+
         // Global keyboard shortcuts
-        mainScene.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.F11) {
+        mainScene.setOnKeyPressed(keyPress -> {
+            if (KEY_FULLSCREEN.match(keyPress)) {
                 stage.setFullScreen(true);
             }
-            else if (e.isAltDown() && e.getCode() == KeyCode.M) {
+            else if (KEY_MUTE.match(keyPress)) {
                 sound().toggleMuted();
             }
-            else {
-                if (viewPy.get() instanceof GameActionProvider actionProvider) {
-                    actionProvider.handleInput(this);
-                }
+            else if (viewPy.get() instanceof GameActionProvider actionProvider) {
+                actionProvider.handleInput(this);
             }
         });
 
