@@ -71,8 +71,6 @@ public interface GameContext {
     Keyboard keyboard();
     ArcadeKeyBinding arcadeKeys();
     JoypadKeyBinding currentJoypadKeyBinding();
-    void registerJoypadKeyBinding();
-    void unregisterJoypadKeyBinding();
     void selectNextJoypadKeyBinding();
 
     // GUI

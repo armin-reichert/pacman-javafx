@@ -203,7 +203,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void doInit() {
         messageMovement = new MessageMovement();
-        context.registerJoypadKeyBinding();
+        context.currentJoypadKeyBinding().register(context.keyboard());
         context.setScoreVisible(true);
         setGameRenderer(context.gameConfiguration().createRenderer(context.assets(), canvas));
         movingCamera.focusTopOfScene();
@@ -212,7 +212,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     protected void doEnd() {
         context.sound().stopAll();
-        context.unregisterJoypadKeyBinding();
+        context.currentJoypadKeyBinding().unregister(context.keyboard());
     }
 
     @Override
@@ -277,7 +277,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        context.registerJoypadKeyBinding();
+        context.currentJoypadKeyBinding().register(context.keyboard());
         setKeyBindings();
 
         GameLevel level = context.level();
@@ -301,7 +301,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
         Logger.info("{} entered from {}", this, oldScene);
-        context.registerJoypadKeyBinding();
+        context.currentJoypadKeyBinding().register(context.keyboard());
         setKeyBindings();
         gr.setWorldMap(context.level().map());
     }

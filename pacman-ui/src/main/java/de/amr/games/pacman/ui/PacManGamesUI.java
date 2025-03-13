@@ -423,18 +423,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public void registerJoypadKeyBinding() {
-        Logger.info("Enable joypad key binding {}", currentJoypadKeyBinding());
-        currentJoypadKeyBinding().register(keyboard);
-    }
-
-    @Override
-    public void unregisterJoypadKeyBinding() {
-        Logger.info("Disable joypad key binding {}", currentJoypadKeyBinding());
-        currentJoypadKeyBinding().unregister(keyboard);
-    }
-
-    @Override
     public String locGameOverMessage() {
         return textPickerGameOverTexts.next();
     }
