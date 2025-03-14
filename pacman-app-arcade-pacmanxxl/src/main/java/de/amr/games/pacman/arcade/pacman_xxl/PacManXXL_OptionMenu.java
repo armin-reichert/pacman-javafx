@@ -21,6 +21,7 @@ import org.tinylog.Logger;
 import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_ENABLED;
 
 public class PacManXXL_OptionMenu extends OptionMenu {
 
@@ -44,39 +45,32 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
     public PacManXXL_OptionMenu(PacManGamesUI ui) {
         super(UNSCALED_HEIGHT);
-
         this.ui = ui;
-        scalingProperty().bind(ui.mainScene().heightProperty().multiply(RELATIVE_HEIGHT).divide(UNSCALED_HEIGHT));
+
+        setBackgroundFill(Color.valueOf("#0C1568"));
         setTitle("  Pac-Man XXL");
-        setBackgroundFill(Color.valueOf("#172E73"));
-        setBorderStroke(Color.WHITESMOKE);
-        setEntryTextFill(Color.YELLOW);
-        setEntryValueFill(Color.WHITESMOKE);
-        setTitleTextFill(Color.RED);
-        setHintTextFill(Color.YELLOW);
         setOnStart(() -> {
             logMenuState();
             if (state.gameVariant == GameVariant.PACMAN_XXL || state.gameVariant == GameVariant.MS_PACMAN_XXL) {
-                GlobalProperties3d.PY_3D_ENABLED.set(state.play3D);
+                ui.setGameVariant(state.gameVariant);
+                PY_3D_ENABLED.set(state.play3D);
                 GameModel game = ui.gameController().game(state.gameVariant);
                 game.setCutScenesEnabled(state.cutScenesEnabled);
-                game.mapSelector().loadAllMaps(game);
                 game.mapSelector().setMapSelectionMode(state.mapSelectionMode);
-                ui.setGameVariant(state.gameVariant);
+                game.mapSelector().loadAllMaps(game);
             } else {
                 Logger.error("Game variant {} is not allowed for XXL game", state.gameVariant);
             }
         });
+        scalingProperty().bind(ui.mainScene().heightProperty().multiply(RELATIVE_HEIGHT).divide(UNSCALED_HEIGHT));
 
         drawingLoop = new AnimationTimer() {
             @Override
-            public void handle(long now) {
-                draw();
-            }
+            public void handle(long now) { draw(); }
         };
 
-        entryGameVariant = new OptionMenu.MenuEntry<>(
-            "GAME VARIANT", List.of(GameVariant.PACMAN_XXL, GameVariant.MS_PACMAN_XXL))
+        entryGameVariant = new OptionMenu.MenuEntry<>("GAME VARIANT",
+                List.of(GameVariant.PACMAN_XXL, GameVariant.MS_PACMAN_XXL))
         {
             @Override
             protected void onValueChange(int index) {
@@ -94,8 +88,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             }
         };
 
-        entryPlay3D = new OptionMenu.MenuEntry<>(
-            "SCENE DISPLAY",
+        entryPlay3D = new OptionMenu.MenuEntry<>("SCENE DISPLAY",
             List.of(true, false))
         {
             @Override
@@ -110,8 +103,8 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             }
         };
 
-        entryCutScenesEnabled = new OptionMenu.MenuEntry<>(
-            "CUTSCENES", List.of(true, false))
+        entryCutScenesEnabled = new OptionMenu.MenuEntry<>("CUTSCENES",
+                List.of(true, false))
         {
             @Override
             protected void onValueChange(int index) {
@@ -125,8 +118,8 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             }
         };
 
-        entryMapSelectionMode = new OptionMenu.MenuEntry<>(
-            "MAP ORDER", List.of(MapSelectionMode.CUSTOM_MAPS_FIRST, MapSelectionMode.ALL_RANDOM))
+        entryMapSelectionMode = new OptionMenu.MenuEntry<>("MAP ORDER",
+                List.of(MapSelectionMode.CUSTOM_MAPS_FIRST, MapSelectionMode.ALL_RANDOM))
         {
             @Override
             protected void onValueChange(int index) {

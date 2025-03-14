@@ -88,8 +88,8 @@ public class OptionMenu {
     protected final Font arcadeFont20;
 
     protected Paint backgroundFill = Color.BLACK;
-    protected Paint borderStroke = Color.LIGHTGRAY;
-    protected Paint titleTextFill = Color.GREEN;
+    protected Paint borderStroke = Color.WHITESMOKE;
+    protected Paint titleTextFill = Color.RED;
     protected Paint entryTextFill = Color.YELLOW;
     protected Paint entryValueFill = Color.WHITESMOKE;
     protected Paint entryValueDisabledFill = Color.GRAY;
