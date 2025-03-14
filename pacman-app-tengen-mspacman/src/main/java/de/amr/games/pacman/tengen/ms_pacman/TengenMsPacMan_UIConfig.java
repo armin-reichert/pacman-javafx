@@ -232,19 +232,19 @@ public class TengenMsPacMan_UIConfig implements GameUIConfiguration {
 
     @Override
     public Node createLivesCounterShape(AssetStorage assets) {
-        String akp = assetNamespace();
+        String namespace = assetNamespace();
         return new Group(
-                PacModel3D.createPacShape(
-                        assets.get("model3D.pacman"), 10,
-                        assets.color(akp + ".pac.color.head"),
-                        assets.color(akp + ".pac.color.eyes"),
-                        assets.color(akp + ".pac.color.palate")
-                ),
-                PacModel3D.createFemaleParts(10,
-                        assets.color(akp + ".pac.color.hairbow"),
-                        assets.color(akp + ".pac.color.hairbow.pearls"),
-                        assets.color(akp + ".pac.color.boobs")
-                )
+            PacModel3D.createPacShape(
+                assets.get("model3D.pacman"), 10,
+                assets.color(namespace + ".pac.color.head"),
+                assets.color(namespace + ".pac.color.eyes"),
+                assets.color(namespace + ".pac.color.palate")
+            ),
+            PacModel3D.createFemaleParts(10,
+                assets.color(namespace + ".pac.color.hairbow"),
+                assets.color(namespace + ".pac.color.hairbow.pearls"),
+                assets.color(namespace + ".pac.color.boobs")
+            )
         );
     }
 }

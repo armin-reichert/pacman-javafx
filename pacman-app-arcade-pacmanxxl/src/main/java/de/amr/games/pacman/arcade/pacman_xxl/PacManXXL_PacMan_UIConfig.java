@@ -184,12 +184,12 @@ public class PacManXXL_PacMan_UIConfig implements GameUIConfiguration {
 
     @Override
     public Node createLivesCounterShape(AssetStorage assets) {
-        String akp = assetNamespace();
+        String namespace = assetNamespace();
         return PacModel3D.createPacShape(
             assets.get("model3D.pacman"), 10,
-            assets.color(akp + ".pac.color.head"),
-            assets.color(akp + ".pac.color.eyes"),
-            assets.color(akp + ".pac.color.palate")
+            assets.color(namespace + ".pac.color.head"),
+            assets.color(namespace + ".pac.color.eyes"),
+            assets.color(namespace + ".pac.color.palate")
         );
     }
 }
