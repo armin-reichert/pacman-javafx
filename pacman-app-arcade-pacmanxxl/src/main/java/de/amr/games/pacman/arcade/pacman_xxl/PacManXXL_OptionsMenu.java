@@ -9,9 +9,13 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.MapSelectionMode;
 import de.amr.games.pacman.ui.PacManGamesUI;
 import de.amr.games.pacman.ui._3d.GlobalProperties3d;
+import de.amr.games.pacman.ui.input.Keyboard;
 import de.amr.games.pacman.uilib.OptionMenu;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Node;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
@@ -31,46 +35,68 @@ public class PacManXXL_OptionsMenu {
         MapSelectionMode mapSelectionMode;
     }
 
-    private final OptionMenu menu = new OptionMenu(UNSCALED_HEIGHT);
     private final OptionMenu.MenuEntry<GameVariant> entryGameVariant;
     private final OptionMenu.MenuEntry<Boolean> entryPlay3D;
     private final OptionMenu.MenuEntry<Boolean> entryCutScenesEnabled;
     private final OptionMenu.MenuEntry<MapSelectionMode> entryMapSelectionMode;
 
+    private final OptionMenu menu;
     private final AnimationTimer animationTimer;
     private final MenuState state = new MenuState();
 
     public PacManXXL_OptionsMenu(PacManGamesUI ui) {
+        menu = new OptionMenu(UNSCALED_HEIGHT) {
+            {
+                scalingProperty().bind(ui.mainScene().heightProperty().multiply(RELATIVE_HEIGHT).divide(UNSCALED_HEIGHT));
+                setTitle("  Pac-Man XXL");
+                setBackgroundFill(Color.valueOf("#172E73"));
+                setBorderStroke(Color.WHITESMOKE);
+                setEntryTextFill(Color.YELLOW);
+                setEntryValueFill(Color.WHITESMOKE);
+                setTitleTextFill(Color.RED);
+                setHintTextFill(Color.YELLOW);
+                setOnStart(() -> {
+                    logMenuState();
+                    if (state.gameVariant == GameVariant.PACMAN_XXL || state.gameVariant == GameVariant.MS_PACMAN_XXL) {
+                        GlobalProperties3d.PY_3D_ENABLED.set(state.play3D);
+                        GameModel game = ui.gameController().game(state.gameVariant);
+                        game.setCutScenesEnabled(state.cutScenesEnabled);
+                        game.mapSelector().loadAllMaps(game);
+                        game.mapSelector().setMapSelectionMode(state.mapSelectionMode);
+                        ui.setGameVariant(state.gameVariant);
+                    } else {
+                        Logger.error("Game variant {} is not allowed for XXL game", state.gameVariant);
+                    }
+                });
+            }
+
+            @Override
+            protected void handleKeyPress(KeyEvent e) {
+                super.handleKeyPress(e);
+                if (Keyboard.naked(KeyCode.E).match(e)) {
+                    ui.openEditor();
+                }
+            }
+
+            @Override
+            public void draw() {
+                super.draw();
+                GraphicsContext g = canvas.getGraphicsContext2D();
+                g.save();
+                g.scale(scalingPy.doubleValue(), scalingPy.doubleValue());
+                g.setFont(arcadeFont8);
+                g.setFill(hintTextFill);
+                g.fillText("      PRESS E TO OPEN EDITOR ", 0, 27 * TS);
+                g.restore();
+            }
+        };
+
         animationTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 menu.draw();
             }
         };
-
-        menu.setTitle("  Pac-Man XXL");
-        menu.setBackgroundFill(Color.valueOf("#172E73"));
-        menu.setBorderStroke(Color.WHITESMOKE);
-        menu.setEntryTextFill(Color.YELLOW);
-        menu.setEntryValueFill(Color.WHITESMOKE);
-        menu.setTitleTextFill(Color.RED);
-        menu.setHintTextFill(Color.YELLOW);
-
-        menu.scalingProperty().bind(ui.mainScene().heightProperty().multiply(RELATIVE_HEIGHT).divide(UNSCALED_HEIGHT));
-
-        menu.setOnStart(() -> {
-            logMenuState();
-            if (state.gameVariant == GameVariant.PACMAN_XXL || state.gameVariant == GameVariant.MS_PACMAN_XXL) {
-                GlobalProperties3d.PY_3D_ENABLED.set(state.play3D);
-                GameModel game = ui.gameController().game(state.gameVariant);
-                game.setCutScenesEnabled(state.cutScenesEnabled);
-                game.mapSelector().loadAllMaps(game);
-                game.mapSelector().setMapSelectionMode(state.mapSelectionMode);
-                ui.setGameVariant(state.gameVariant);
-            } else {
-                Logger.error("Game variant {} is not allowed for XXL game", state.gameVariant);
-            }
-        });
 
         entryGameVariant = new OptionMenu.MenuEntry<>(
             "GAME VARIANT", List.of(GameVariant.PACMAN_XXL, GameVariant.MS_PACMAN_XXL))

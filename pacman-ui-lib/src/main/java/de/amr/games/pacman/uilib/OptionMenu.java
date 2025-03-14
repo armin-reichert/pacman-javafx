@@ -73,24 +73,27 @@ public class OptionMenu {
     private final List<OptionMenu.MenuEntry<?>> entries = new ArrayList<>();
 
     private int selectedEntryIndex = 0;
+    private final AudioClip selectEntrySound;
+    private final AudioClip selectValueSound;
+
     private Runnable actionOnStart;
 
     private String title = "123456789012345";
 
     private final BorderPane root = new BorderPane();
-    private final Canvas canvas = new Canvas();
-    private final FloatProperty scalingPy = new SimpleFloatProperty(2);
+    protected final Canvas canvas = new Canvas();
+    protected final FloatProperty scalingPy = new SimpleFloatProperty(2);
 
-    private final Font arcadeFont8;
-    private final Font arcadeFont20;
+    protected final Font arcadeFont8;
+    protected final Font arcadeFont20;
 
-    private Paint backgroundFill = Color.BLACK;
-    private Paint borderStroke = Color.LIGHTGRAY;
-    private Paint titleTextFill = Color.GREEN;
-    private Paint entryTextFill = Color.YELLOW;
-    private Paint entryValueFill = Color.WHITESMOKE;
-    private Paint entryValueDisabledFill = Color.GRAY;
-    private Paint hintTextFill = Color.YELLOW;
+    protected Paint backgroundFill = Color.BLACK;
+    protected Paint borderStroke = Color.LIGHTGRAY;
+    protected Paint titleTextFill = Color.GREEN;
+    protected Paint entryTextFill = Color.YELLOW;
+    protected Paint entryValueFill = Color.WHITESMOKE;
+    protected Paint entryValueDisabledFill = Color.GRAY;
+    protected Paint hintTextFill = Color.YELLOW;
 
     public OptionMenu(float height) {
         root.setCenter(canvas);
@@ -100,8 +103,8 @@ public class OptionMenu {
         arcadeFont8 = rm.loadFont("fonts/emulogic.ttf", 8);
         arcadeFont20 = rm.loadFont("fonts/emulogic.ttf", 20);
 
-        AudioClip selectEntrySound = rm.loadAudioClip("sounds/menu-select1.wav");
-        AudioClip selectValueSound = rm.loadAudioClip("sounds/menu-select2.wav");
+        selectEntrySound = rm.loadAudioClip("sounds/menu-select1.wav");
+        selectValueSound = rm.loadAudioClip("sounds/menu-select2.wav");
 
         root.maxWidthProperty().bind(scalingPy.multiply(height));
         root.maxHeightProperty().bind(scalingPy.multiply(height));
@@ -109,34 +112,36 @@ public class OptionMenu {
         canvas.widthProperty().bind(scalingPy.multiply(height));
         canvas.heightProperty().bind(scalingPy.multiply(height));
 
-        root.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-            switch (e.getCode()) {
-                case DOWN -> {
-                    selectedEntryIndex++;
-                    if (selectedEntryIndex == entries.size()) selectedEntryIndex = 0;
-                    entries.get(selectedEntryIndex).onSelect();
-                    selectEntrySound.play();
-                }
-                case UP -> {
-                    selectedEntryIndex--;
-                    if (selectedEntryIndex == -1) selectedEntryIndex = entries.size() - 1;
-                    entries.get(selectedEntryIndex).onSelect();
-                    selectEntrySound.play();
-                }
-                case SPACE -> {
-                    MenuEntry<?> entry = entries.get(selectedEntryIndex);
-                    entry.selectedIndex++;
-                    if (entry.selectedIndex == entry.values.size()) entry.selectedIndex = 0;
-                    entry.onValueChange(entry.selectedIndex);
-                    selectValueSound.play();
-                }
-                case ENTER -> {
-                    if (actionOnStart != null) {
-                        actionOnStart.run();
-                    }
+        root.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPress);
+    }
+
+    protected void handleKeyPress(KeyEvent e) {
+        switch (e.getCode()) {
+            case DOWN -> {
+                selectedEntryIndex++;
+                if (selectedEntryIndex == entries.size()) selectedEntryIndex = 0;
+                entries.get(selectedEntryIndex).onSelect();
+                selectEntrySound.play();
+            }
+            case UP -> {
+                selectedEntryIndex--;
+                if (selectedEntryIndex == -1) selectedEntryIndex = entries.size() - 1;
+                entries.get(selectedEntryIndex).onSelect();
+                selectEntrySound.play();
+            }
+            case SPACE -> {
+                MenuEntry<?> entry = entries.get(selectedEntryIndex);
+                entry.selectedIndex++;
+                if (entry.selectedIndex == entry.values.size()) entry.selectedIndex = 0;
+                entry.onValueChange(entry.selectedIndex);
+                selectValueSound.play();
+            }
+            case ENTER -> {
+                if (actionOnStart != null) {
+                    actionOnStart.run();
                 }
             }
-        });
+        }
     }
 
     public Node root() { return root; }

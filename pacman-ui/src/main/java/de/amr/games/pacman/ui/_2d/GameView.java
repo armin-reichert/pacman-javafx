@@ -120,8 +120,6 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
         context.sound().playVoice(GlobalProperties2d.PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
     };
 
-    protected GameAction actionToOpenEditor;
-
     protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
 
     protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene") {
@@ -318,14 +316,6 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
                 .ifPresent(GameScene2D::draw);
     }
 
-    public void setActionToOpenEditor(GameAction action) {
-        this.actionToOpenEditor = action;
-        if (action != null) {
-            bind(action, shift_alt(KeyCode.E));
-        }
-        //TODO unbind else?
-    }
-
     protected void handleContextMenuRequest(ContextMenuEvent event) {
         contextMenu = new ContextMenu(createContextMenuItems(event).toArray(MenuItem[]::new));
         contextMenu.show(this, event.getScreenX(), event.getScreenY());
@@ -335,17 +325,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
 
     protected List<MenuItem> createContextMenuItems(ContextMenuEvent event) {
         GameScene gameScene = gameScenePy.get();
-        var menuItems = new ArrayList<>(gameScene.supplyContextMenuItems(event));
-        if (actionToOpenEditor != null
-                && (context.currentGameSceneHasID("PlayScene2D") || context.currentGameSceneHasID("PlayScene3D"))
-                && (context.gameVariant() == GameVariant.MS_PACMAN_XXL || context.gameVariant() == GameVariant.PACMAN_XXL)) {
-            menuItems.add(new SeparatorMenuItem());
-            var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
-            miOpenMapEditor.setOnAction(ae -> actionToOpenEditor.execute(context));
-            miOpenMapEditor.setDisable(!actionToOpenEditor.isEnabled(context));
-            menuItems.add(miOpenMapEditor);
-        }
-        return menuItems;
+        return new ArrayList<>(gameScene.supplyContextMenuItems(event));
     }
 
     protected void handleGameSceneChange(GameScene gameScene) {

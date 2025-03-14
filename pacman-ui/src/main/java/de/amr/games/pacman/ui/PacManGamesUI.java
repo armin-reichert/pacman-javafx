@@ -274,9 +274,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
                 sound().toggleMuted();
             }
             else if (KEY_OPEN_EDITOR.match(keyPress)) {
-                if (actionOpenEditorView.isEnabled(this)) {
-                    actionOpenEditorView.execute(this);
-                }
+                openEditor();
             }
             else if (viewPy.get() instanceof GameActionProvider actionProvider) {
                 actionProvider.handleInput(this);
@@ -301,6 +299,12 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             });
         }
         return editorView;
+    }
+
+    public void openEditor() {
+        if (actionOpenEditorView.isEnabled(this)) {
+            actionOpenEditorView.execute(this);
+        }
     }
 
     protected void createGameView(Scene parentScene) {
