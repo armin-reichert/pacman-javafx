@@ -19,11 +19,8 @@ import javafx.scene.image.Image;
 import java.util.stream.Stream;
 
 public interface GameUIConfiguration {
-    GameScene getGameScene(String id);
     Stream<GameScene> gameScenes();
-    default boolean gameSceneHasID(GameScene gameScene, String sceneID) {
-        return getGameScene(sceneID) == gameScene;
-    }
+    boolean gameSceneHasID(GameScene gameScene, String sceneID);
     GameScene2D createPiPScene(GameContext context, Canvas canvas);
     GameSpriteSheet spriteSheet();
     GameRenderer createRenderer(AssetStorage assets, Canvas canvas);

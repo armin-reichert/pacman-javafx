@@ -361,12 +361,16 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     private boolean is2D3DSwitch(GameScene oldGameScene, GameScene newGameScene) {
+        if (oldGameScene == null) {
+            if (newGameScene == null) {
+                Logger.error("WTF is going on here, old and new game scenes are NULL!");
+                return false;
+            }
+            return false;
+        }
         var cfg = gameConfiguration();
-        return
-            cfg.gameSceneHasID(oldGameScene, "PlayScene2D") &&
-            cfg.gameSceneHasID(newGameScene, "PlayScene3D") ||
-            cfg.gameSceneHasID(oldGameScene, "PlayScene3D") &&
-            cfg.gameSceneHasID(newGameScene, "PlayScene2D");
+        return cfg.gameSceneHasID(oldGameScene, "PlayScene2D") && cfg.gameSceneHasID(newGameScene, "PlayScene3D")
+            || cfg.gameSceneHasID(oldGameScene, "PlayScene3D") && cfg.gameSceneHasID(newGameScene, "PlayScene2D");
     }
 
     private void logUpdateResult() {

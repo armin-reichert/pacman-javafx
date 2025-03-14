@@ -41,6 +41,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.assertNotNull;
 
 public class TengenMsPacMan_UIConfig implements GameUIConfiguration {
 
@@ -72,7 +73,7 @@ public class TengenMsPacMan_UIConfig implements GameUIConfiguration {
         scenesByID.put("CutScene4",      new TengenMsPacMan_CutScene4());
 
         //TODO where is the best place to do that?
-        var playScene2D = (TengenMsPacMan_PlayScene2D) getGameScene("PlayScene2D");
+        var playScene2D = (TengenMsPacMan_PlayScene2D) scenesByID.get("PlayScene2D");
         playScene2D.displayModeProperty().bind(PY_TENGEN_PLAY_SCENE_DISPLAY_MODE);
 
         ResourceManager rm = () -> TengenMsPacMan_UIConfig.class;
@@ -174,12 +175,14 @@ public class TengenMsPacMan_UIConfig implements GameUIConfiguration {
             case TESTING_CUT_SCENES -> "CutScene" + context.gameState().<Integer>getProperty("intermissionTestNumber");
             default                 -> GlobalProperties3d.PY_3D_ENABLED.get() ? "PlayScene3D" : "PlayScene2D";
         };
-        return getGameScene(sceneID);
+        return scenesByID.get(sceneID);
     }
 
     @Override
-    public GameScene getGameScene(String id) {
-        return scenesByID.get(id);
+    public boolean gameSceneHasID(GameScene gameScene, String sceneID) {
+        assertNotNull(gameScene);
+        assertNotNull(sceneID);
+        return scenesByID.get(sceneID) == gameScene;
     }
 
     @Override

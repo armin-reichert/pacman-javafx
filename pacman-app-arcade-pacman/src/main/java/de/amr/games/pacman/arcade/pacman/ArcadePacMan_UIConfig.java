@@ -32,6 +32,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.lib.Globals.assertNotNull;
+
 public class ArcadePacMan_UIConfig implements GameUIConfiguration {
 
     private static final WorldMapColoring MAP_COLORING = new WorldMapColoring("#000000", "#2121ff", "#fcb5ff", "#febdb4");
@@ -118,8 +120,10 @@ public class ArcadePacMan_UIConfig implements GameUIConfiguration {
     }
 
     @Override
-    public GameScene getGameScene(String id) {
-        return scenesByID.get(id);
+    public boolean gameSceneHasID(GameScene gameScene, String sceneID) {
+        assertNotNull(gameScene);
+        assertNotNull(sceneID);
+        return scenesByID.get(sceneID) == gameScene;
     }
 
     @Override
@@ -160,7 +164,7 @@ public class ArcadePacMan_UIConfig implements GameUIConfiguration {
             case GameState.TESTING_CUT_SCENES -> "CutScene" + context.gameState().<Integer>getProperty("intermissionTestNumber");
             default -> GlobalProperties3d.PY_3D_ENABLED.get() ?  "PlayScene3D" : "PlayScene2D";
         };
-        return getGameScene(sceneID);
+        return scenesByID.get(sceneID);
     }
 
     @Override
