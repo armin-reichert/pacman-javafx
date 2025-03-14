@@ -44,6 +44,7 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.IntBuffer;
 import java.text.MessageFormat;
 import java.time.Instant;
@@ -55,6 +56,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.tilemap.editor.ArcadeMap.*;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.*;
+import static java.util.stream.IntStream.rangeClosed;
 
 /**
  * @author Armin Reichert
@@ -406,6 +408,7 @@ public class TileMapEditor {
         createZoomSlider();
         createStatusLine();
         createMenuBarAndMenus();
+        loadSampleMapsAndAddMenuEntries();
 
         arrangeMainLayout();
         titlePy.bind(createTitleBinding());
@@ -1651,5 +1654,48 @@ public class TileMapEditor {
 
         changeManager.setWorldMapChanged();
         changeManager.setEdited(true);
+    }
+
+
+    // Sample maps loading
+
+    static final String SAMPLE_MAPS_PATH = "/de/amr/games/pacman/tilemap/editor/maps/";
+
+    private WorldMap mapPacManGame;
+    private List<WorldMap> mapsMsPacManGame;
+    private List<WorldMap> mapsPacManXXLGame;
+
+    private void loadSampleMapsAndAddMenuEntries() {
+        try {
+            loadSampleMaps();
+            addLoadMapMenuItem("Pac-Man", mapPacManGame);
+            getLoadMapMenu().getItems().add(new SeparatorMenuItem());
+            rangeClosed(1, 6).forEach(num -> addLoadMapMenuItem("Ms. Pac-Man " + num, mapsMsPacManGame.get(num - 1)));
+            getLoadMapMenu().getItems().add(new SeparatorMenuItem());
+            rangeClosed(1, 8).forEach(num -> addLoadMapMenuItem("Pac-Man XXL " + num, mapsPacManXXLGame.get(num - 1)));
+        } catch (IOException x) {
+            Logger.error("Could not load sample maps");
+            Logger.error(x);
+        }
+    }
+
+    private void loadSampleMaps() throws IOException {
+        mapPacManGame = loadSampleMap("pacman/pacman.world", 1);
+
+        mapsMsPacManGame = new ArrayList<>(6);
+        for (int num = 1; num <= 6; ++num) {
+            WorldMap worldMap = loadSampleMap("mspacman/mspacman_%d.world", num);
+            mapsMsPacManGame.add(worldMap);
+        }
+        mapsPacManXXLGame = new ArrayList<>(8);
+        for (int num = 1; num <= 8; ++num) {
+            WorldMap worldMap = loadSampleMap("pacman_xxl/masonic_%d.world", num);
+            mapsPacManXXLGame.add(worldMap);
+        }
+    }
+
+    private WorldMap loadSampleMap(String pattern, int number) throws IOException {
+        URL url = getClass().getResource(SAMPLE_MAPS_PATH + pattern.formatted(number));
+        return new WorldMap(url);
     }
 }

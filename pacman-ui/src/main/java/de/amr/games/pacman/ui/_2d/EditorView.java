@@ -48,22 +48,6 @@ public class EditorView extends BorderPane implements GameActionProvider {
         miQuitEditor.setOnAction(e -> closeAction.accept(editor));
         editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);
 
-        ResourceManager rm = () -> context.game().getClass();
-        for (int mapNumber = 1; mapNumber <= 8; ++mapNumber) {
-            String path = "maps/masonic_%d.world".formatted(mapNumber);
-            URL url = rm.url(path);
-            if (url != null) {
-                try {
-                    WorldMap map = new WorldMap(url);
-                    editor.addLoadMapMenuItem("Pac-Man XXL " + mapNumber, map);
-                } catch (IOException x) {
-                    Logger.info("Map could not be loaded from path {}", path);
-                }
-            } else {
-                Logger.info("Map could not be found at path {}", path);
-            }
-        }
-
         setCenter(editor.getContentPane());
         setTop(editor.getMenuBar());
 

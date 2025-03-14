@@ -55,6 +55,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     public static final KeyCodeCombination KEY_FULLSCREEN = Keyboard.naked(KeyCode.F11);
     public static final KeyCodeCombination KEY_MUTE = Keyboard.alt(KeyCode.M);
+    public static final KeyCodeCombination KEY_OPEN_EDITOR = Keyboard.shift_alt(KeyCode.E);
 
     protected final GameAction actionOpenEditorView = new GameAction() {
         @Override
@@ -70,8 +71,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
         @Override
         public boolean isEnabled(GameContext context) {
-            return (context.gameVariant() == GameVariant.PACMAN_XXL || context.gameVariant() == GameVariant.MS_PACMAN_XXL)
-                && context.game().level().isPresent();
+            return !context.game().isPlaying();
         }
     };
 
@@ -272,6 +272,11 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             }
             else if (KEY_MUTE.match(keyPress)) {
                 sound().toggleMuted();
+            }
+            else if (KEY_OPEN_EDITOR.match(keyPress)) {
+                if (actionOpenEditorView.isEnabled(this)) {
+                    actionOpenEditorView.execute(this);
+                }
             }
             else if (viewPy.get() instanceof GameActionProvider actionProvider) {
                 actionProvider.handleInput(this);

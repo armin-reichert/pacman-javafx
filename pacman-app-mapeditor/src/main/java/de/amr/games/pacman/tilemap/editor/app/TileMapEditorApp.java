@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.tilemap.editor.app;
 
-import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.tilemap.editor.TileMapEditor;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -14,34 +13,17 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.tinylog.Logger;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import static de.amr.games.pacman.tilemap.editor.TileMapEditor.tt;
-import static java.util.stream.IntStream.rangeClosed;
 
 /**
  * @author Armin Reichert
  */
 public class TileMapEditorApp extends Application  {
 
-    static final String SAMPLE_MAPS_PATH = "/de/amr/games/pacman/tilemap/editor/maps/";
-
-    private WorldMap mapPacManGame;
-    private List<WorldMap> mapsMsPacManGame;
-    private List<WorldMap> mapsPacManXXLGame;
-
     private TileMapEditor editor;
-
-    @Override
-    public void init() throws Exception {
-        loadSampleMaps();
-    }
 
     @Override
     public void start(Stage stage) {
@@ -75,50 +57,11 @@ public class TileMapEditorApp extends Application  {
         var scene = new Scene(layout, width, height);
         scene.setFill(Color.BLACK);
 
-        editor.addLoadMapMenuItem("Pac-Man", mapPacManGame);
-        editor.getLoadMapMenu().getItems().add(new SeparatorMenuItem());
-        rangeClosed(1, 6).forEach(num -> editor.addLoadMapMenuItem("Ms. Pac-Man " + num, mapsMsPacManGame.get(num - 1)));
-        editor.getLoadMapMenu().getItems().add(new SeparatorMenuItem());
-        rangeClosed(1, 8).forEach(num -> editor.addLoadMapMenuItem("Pac-Man XXL " + num, mapsPacManXXLGame.get(num - 1)));
-
         stage.setScene(scene);
         stage.setOnCloseRequest(e -> editor.executeWithCheckForUnsavedChanges(() -> {
             editor.stop();
             stage.close();
         }));
         stage.titleProperty().bind(editor.titleProperty());
-    }
-
-    private void loadSampleMaps() throws IOException {
-        mapPacManGame = loadSampleMap("pacman/pacman.world", 1);
-
-        mapsMsPacManGame = new ArrayList<>(6);
-        for (int num = 1; num <= 6; ++num) {
-            WorldMap worldMap = loadSampleMap("mspacman/mspacman_%d.world", num);
-            if (worldMap != null) {
-                mapsMsPacManGame.add(worldMap);
-            }
-        }
-        mapsPacManXXLGame = new ArrayList<>(8);
-        for (int num = 1; num <= 8; ++num) {
-            WorldMap worldMap = loadSampleMap("pacman_xxl/masonic_%d.world", num);
-            if (worldMap != null) {
-                mapsPacManXXLGame.add(worldMap);
-            }
-        }
-    }
-
-    private WorldMap loadSampleMap(String pattern, int number) {
-        URL url = getClass().getResource(SAMPLE_MAPS_PATH + pattern.formatted(number));
-        if (url != null) {
-            try {
-                return new WorldMap(url);
-            } catch (IOException x) {
-                Logger.error(x);
-                return null;
-            }
-        }
-        Logger.error("Could not load world map, pattern={}, number={}", pattern, number);
-        return null;
     }
 }
