@@ -13,6 +13,7 @@ import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.WorldMapColoring;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
 
 import java.util.stream.Stream;
 
@@ -32,4 +33,5 @@ public interface GameUIConfiguration {
     GameScene selectGameScene(GameContext context);
     String assetNamespace();
     default boolean isGameCanvasDecorated() { return true; }
+    Image appIcon();
 }

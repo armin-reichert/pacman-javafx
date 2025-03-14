@@ -23,6 +23,7 @@ import de.amr.games.pacman.uilib.model3D.PacModel3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 import java.util.HashMap;
@@ -31,6 +32,7 @@ import java.util.stream.Stream;
 
 public class PacManXXL_MsPacMan_GameUIConfig3D implements GameUIConfiguration3D {
 
+    private final Image appIcon;
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
@@ -46,6 +48,7 @@ public class PacManXXL_MsPacMan_GameUIConfig3D implements GameUIConfiguration3D 
 
         ResourceManager rm = () -> ArcadeMsPacMan_GameUIConfig3D.class;
 
+        appIcon = rm.loadImage("graphics/icons/mspacman.png");
         spriteSheet = new ArcadeMsPacMan_SpriteSheet(rm.loadImage("graphics/mspacman_spritesheet.png"));
 
         assets.store("ms_pacman_xxl.flashing_mazes",                rm.loadImage("graphics/mazes_flashing.png"));
@@ -53,7 +56,6 @@ public class PacManXXL_MsPacMan_GameUIConfig3D implements GameUIConfiguration3D 
         assets.store("ms_pacman_xxl.startpage.image1",              rm.loadImage("graphics/f1.jpg"));
         assets.store("ms_pacman_xxl.startpage.image2",              rm.loadImage("graphics/f2.jpg"));
 
-        assets.store("ms_pacman_xxl.icon",                          rm.loadImage("graphics/icons/mspacman.png"));
         assets.store("ms_pacman_xxl.logo.midway",                   rm.loadImage("graphics/midway_logo.png"));
 
         assets.store("ms_pacman_xxl.color.game_over_message",         Color.valueOf(Arcade.Palette.RED));
@@ -111,7 +113,11 @@ public class PacManXXL_MsPacMan_GameUIConfig3D implements GameUIConfiguration3D 
         rm = this::getClass;
         assets.store("ms_pacman_xxl.audio.option.selection_changed",  rm.loadAudioClip("sound/ms-select1.wav"));
         assets.store("ms_pacman_xxl.audio.option.value_changed",      rm.loadAudioClip("sound/ms-select2.wav"));
+    }
 
+    @Override
+    public Image appIcon() {
+        return appIcon;
     }
 
     @Override

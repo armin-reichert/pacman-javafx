@@ -10,14 +10,15 @@ import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.GameUIConfiguration;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GameScene;
+import de.amr.games.pacman.ui.GameUIConfiguration;
 import de.amr.games.pacman.ui._2d.*;
 import de.amr.games.pacman.uilib.AssetStorage;
-import de.amr.games.pacman.uilib.WorldMapColoring;
 import de.amr.games.pacman.uilib.ResourceManager;
+import de.amr.games.pacman.uilib.WorldMapColoring;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 import java.util.HashMap;
@@ -26,6 +27,7 @@ import java.util.stream.Stream;
 
 public class PacManXXL_PacMan_GameUIConfig implements GameUIConfiguration {
 
+    private final Image appIcon;
     private final ArcadePacMan_SpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
@@ -40,9 +42,9 @@ public class PacManXXL_PacMan_GameUIConfig implements GameUIConfiguration {
 
         ResourceManager rm = () -> ResourceRoot.class;
 
+        appIcon = rm.loadImage("graphics/icons/pacman.png");
         spriteSheet = new ArcadePacMan_SpriteSheet(rm.loadImage("graphics/pacman_spritesheet.png"));
 
-        assets.store("pacman_xxl.icon",                            rm.loadImage("graphics/icons/pacman.png"));
         assets.store("pacman_xxl.color.game_over_message",         Color.valueOf(Arcade.Palette.RED));
 
         assets.store("pacman_xxl.pac.color.head",                  Color.valueOf(Arcade.Palette.YELLOW));
@@ -98,6 +100,11 @@ public class PacManXXL_PacMan_GameUIConfig implements GameUIConfiguration {
         assets.store("pacman_xxl.audio.option.selection_changed",  rm.loadAudioClip("sound/ms-select1.wav"));
         assets.store("pacman_xxl.audio.option.value_changed",      rm.loadAudioClip("sound/ms-select2.wav"));
 
+    }
+
+    @Override
+    public Image appIcon() {
+        return appIcon;
     }
 
     @Override

@@ -7,8 +7,6 @@ package de.amr.games.pacman.ui;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
-import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._2d.*;
 import de.amr.games.pacman.ui.dashboard.InfoBox;
@@ -24,7 +22,6 @@ import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -314,14 +311,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         game().removeGameEventListener(this);
         gameController().selectGame(gameVariant);
         game().addGameEventListener(this);
-
-        String assetNamespace = gameConfiguration().assetNamespace();
-        Image icon = assets.image(assetNamespace + ".icon");
-        if (icon != null) {
-            stage.getIcons().setAll(icon);
-        }
-        sound().useSoundsForGameVariant(gameVariant, assetNamespace);
-
+        stage.getIcons().setAll(gameConfiguration().appIcon());
+        sound().selectGameVariant(gameVariant, gameConfiguration().assetNamespace());
         //TODO check this
         gameView.canvasContainer().decorationEnabledPy.set(gameConfiguration().isGameCanvasDecorated());
 

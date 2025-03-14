@@ -82,7 +82,7 @@ public class GameSound {
         soundsByGameVariant.get(gameVariant).clear();
     }
 
-    public void useSoundsForGameVariant(GameVariant gameVariant, String assetNamespace) {
+    public void selectGameVariant(GameVariant gameVariant, String assetNamespace) {
         this.gameVariant = assertNotNull(gameVariant);
         this.assetNamespace = assertNotNull(assetNamespace);
         if (soundsByGameVariant.get(gameVariant).isEmpty()) {
