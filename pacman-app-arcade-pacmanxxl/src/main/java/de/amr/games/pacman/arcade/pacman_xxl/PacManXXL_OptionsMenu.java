@@ -62,7 +62,7 @@ public class PacManXXL_OptionsMenu {
             logMenuState();
             if (state.gameVariant == GameVariant.PACMAN_XXL || state.gameVariant == GameVariant.MS_PACMAN_XXL) {
                 GlobalProperties3d.PY_3D_ENABLED.set(state.play3D);
-                GameModel game = ui.gameController().gameModel(state.gameVariant);
+                GameModel game = ui.gameController().game(state.gameVariant);
                 game.setCutScenesEnabled(state.cutScenesEnabled);
                 game.mapSelector().loadAllMaps(game);
                 game.mapSelector().setMapSelectionMode(state.mapSelectionMode);

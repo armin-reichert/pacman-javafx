@@ -144,7 +144,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onEnter(GameModel game) {
-            delay = gameController().currentGameVariant() == GameVariant.MS_PACMAN_TENGEN ? 60 : 0;
+            delay = gameController().selectedGameVariant() == GameVariant.MS_PACMAN_TENGEN ? 60 : 0;
         }
 
         @Override
@@ -190,7 +190,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             GameLevel level = game.level().orElseThrow();
-            if (gameController().currentGameVariant() == GameVariant.MS_PACMAN_TENGEN && game.isDemoLevel()) {
+            if (gameController().selectedGameVariant() == GameVariant.MS_PACMAN_TENGEN && game.isDemoLevel()) {
                 gameController().changeState(SHOWING_CREDITS);
                 return;
             }
@@ -237,7 +237,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onUpdate(GameModel game) {
             GameLevel level = game.level().orElseThrow();
             if (timer.hasExpired()) {
-                GameController.it().resumePreviousState();
+                GameController.THE_ONE.resumePreviousState();
             } else {
                 level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).forEach(ghost -> ghost.update(game));
                 level.blinking().tick();
@@ -262,7 +262,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             //TODO find a better solution
-            timer.reset(gameController().currentGameVariant() == GameVariant.MS_PACMAN_TENGEN ? 300 : 240);
+            timer.reset(gameController().selectedGameVariant() == GameVariant.MS_PACMAN_TENGEN ? 300 : 240);
             timer.start();
             game.onPacKilled();
             game.publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
@@ -319,7 +319,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 //TODO find unified solution
-                if (gameController().currentGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+                if (gameController().selectedGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                     if (game.isDemoLevel()) {
                         gameController().changeState(SHOWING_CREDITS);
                     } else {
@@ -367,7 +367,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onEnter(GameModel game) {
-            GameVariant gameVariant = GameController.it().currentGameVariant();
+            GameVariant gameVariant = GameController.THE_ONE.selectedGameVariant();
             lastLevelNumber = switch (gameVariant) {
                 case MS_PACMAN -> 25;
                 case MS_PACMAN_TENGEN -> 32;
@@ -430,7 +430,7 @@ public enum GameState implements FsmState<GameModel> {
                 level.pac().freeze();
                 level.bonus().ifPresent(Bonus::setInactive);
                 if (level.number == lastLevelNumber) {
-                    GameController.it().restart(GameState.BOOT);
+                    GameController.THE_ONE.restart(GameState.BOOT);
                 } else {
                     timer().restartIndefinitely();
                     game.startNextLevel();
@@ -455,7 +455,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onEnter(GameModel game) {
-            GameVariant gameVariant = GameController.it().currentGameVariant();
+            GameVariant gameVariant = GameController.THE_ONE.selectedGameVariant();
             lastLevelNumber = switch (gameVariant) {
                 case MS_PACMAN -> 17;
                 case MS_PACMAN_TENGEN -> 32;
@@ -513,7 +513,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            GameVariant gameVariant = GameController.it().currentGameVariant();
+            GameVariant gameVariant = GameController.THE_ONE.selectedGameVariant();
             if (timer.hasExpired()) {
                 int number = this.<Integer>getProperty("intermissionTestNumber");
                 int last = gameVariant == GameVariant.MS_PACMAN_TENGEN ? 4 : 3;
@@ -536,7 +536,7 @@ public enum GameState implements FsmState<GameModel> {
         return timer;
     }
 
-    GameController gameController() { return GameController.it(); }
+    GameController gameController() { return GameController.THE_ONE; }
 
     @SuppressWarnings("unchecked")
     public <T> T getProperty(String key) {

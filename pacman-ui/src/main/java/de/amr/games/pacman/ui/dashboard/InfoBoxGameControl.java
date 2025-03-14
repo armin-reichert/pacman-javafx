@@ -56,7 +56,7 @@ public class InfoBoxGameControl extends InfoBox {
 
         comboGameVariant.setOnAction(e -> {
             if (comboGameVariant.getValue() != context.gameVariant()) {
-                context.gameController().selectGame(comboGameVariant.getValue());
+                context.gameController().selectGameVariant(comboGameVariant.getValue());
                 context.gameController().restart(GameState.BOOT);
             }
         });

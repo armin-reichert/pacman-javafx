@@ -135,7 +135,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         startPageSelectionView = new StartPageSelectionView(this);
         startPageSelectionView().setBackground(assets.background("background.scene"));
         createGameView(mainScene);
-        selectGameVariant(gameController().currentGameVariant());
+        selectGameVariant(gameController().selectedGameVariant());
         bindStageTitle();
         stage.setScene(mainScene);
         //TODO This doesn't fit for NES aspect ratio
@@ -309,7 +309,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     protected void handleGameVariantChange(GameVariant gameVariant) {
         game().removeGameEventListener(this);
-        gameController().selectGame(gameVariant);
+        gameController().selectGameVariant(gameVariant);
         game().addGameEventListener(this);
         stage.getIcons().setAll(gameConfiguration().appIcon());
         sound().selectGameVariant(gameVariant, gameConfiguration().assetNamespace());

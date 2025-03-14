@@ -149,8 +149,8 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     @Override
     public void endGame() {
-        if (GameController.it().credit > 0) {
-            GameController.it().credit -= 1;
+        if (GameController.THE_ONE.credit > 0) {
+            GameController.THE_ONE.credit -= 1;
         }
         scoreManager().updateHighScore();
         publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
@@ -158,7 +158,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     @Override
     public boolean canStartNewGame() {
-        return GameController.it().credit > 0;
+        return GameController.THE_ONE.credit > 0;
     }
 
     @Override

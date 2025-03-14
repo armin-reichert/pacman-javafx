@@ -18,10 +18,10 @@ public class ArcadeMsPacMan_App extends Application {
 
     @Override
     public void init() {
-        GameController gameController = GameController.it();
-        gameController.setGameModel(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameModel());
-        gameController.gameModels().forEach(GameModel::init);
-        gameController.selectGame(GameVariant.MS_PACMAN);
+        GameController gameController = GameController.THE_ONE;
+        gameController.setGame(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameModel());
+        gameController.games().forEach(GameModel::init);
+        gameController.selectGameVariant(GameVariant.MS_PACMAN);
     }
 
     @Override

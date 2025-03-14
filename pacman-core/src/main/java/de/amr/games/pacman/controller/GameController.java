@@ -37,57 +37,55 @@ import static de.amr.games.pacman.lib.Globals.assertNotNull;
  */
 public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
-    public static GameController it() { return THE_ONE; }
+    public static final GameController THE_ONE = new GameController();
 
     public static final byte TICKS_PER_SECOND = 60;
     public static final int MAX_COINS = 99;
 
-    private static final GameController THE_ONE = new GameController();
-
     private final Map<GameVariant, GameModel> gameModelsByVariant = new EnumMap<>(GameVariant.class);
-    private GameModel currentGame;
+    private GameModel currentGameModel;
     public int credit;
 
     private GameController() {
         super(GameState.values());
         // map state change events to game events
-        addStateChangeListener((oldState, newState) -> currentGame.publishGameEvent(new GameStateChangeEvent(currentGame, oldState, newState)));
+        addStateChangeListener((oldState, newState) -> currentGameModel.publishGameEvent(new GameStateChangeEvent(currentGameModel, oldState, newState)));
         Logger.info("Game controller created");
     }
 
     /**
      * @return The currently selected game (model).
      */
-    public GameModel currentGame() {
-        return currentGame;
+    public GameModel game() {
+        return currentGameModel;
     }
 
-    public void setGameModel(GameVariant variant, GameModel gameModel) {
+    public void setGame(GameVariant variant, GameModel gameModel) {
         assertNotNull(variant);
         assertNotNull(gameModel);
         gameModelsByVariant.put(variant, gameModel);
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends GameModel> T gameModel(GameVariant variant) {
+    public <T extends GameModel> T game(GameVariant variant) {
         assertNotNull(variant);
         return (T) gameModelsByVariant.get(variant);
     }
 
-    public void selectGame(GameVariant variant) {
+    public Stream<GameModel> games() { return gameModelsByVariant.values().stream(); }
+
+    public void selectGameVariant(GameVariant variant) {
         assertNotNull(variant);
-        GameVariant oldVariant = currentGame != null ? currentGameVariant() : null;
-        currentGame = gameModel(variant);
+        GameVariant oldVariant = currentGameModel != null ? selectedGameVariant() : null;
+        currentGameModel = game(variant);
         if (oldVariant != variant) {
-            currentGame.publishGameEvent(GameEventType.GAME_VARIANT_CHANGED);
+            currentGameModel.publishGameEvent(GameEventType.GAME_VARIANT_CHANGED);
         }
     }
 
-    public Stream<GameModel> gameModels() { return gameModelsByVariant.values().stream(); }
-
-    public GameVariant currentGameVariant() {
+    public GameVariant selectedGameVariant() {
         return gameModelsByVariant.entrySet().stream()
-            .filter(entry -> entry.getValue() == currentGame)
+            .filter(entry -> entry.getValue() == currentGameModel)
             .findFirst()
             .map(Map.Entry::getKey)
             .orElse(null);
@@ -95,12 +93,12 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     @Override
     public GameModel context() {
-        return currentGame;
+        return currentGameModel;
     }
 
     @Override
     public void update() {
-        currentGame.clearEventLog();
+        currentGameModel.clearEventLog();
         super.update();
     }
 }

@@ -21,11 +21,11 @@ public class TengenMsPacMan_App extends Application {
 
     @Override
     public void init() {
-        GameController gameController = GameController.it();
+        GameController gameController = GameController.THE_ONE;
         try {
-            gameController.setGameModel(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
-            gameController.gameModels().forEach(GameModel::init);
-            gameController.selectGame(GameVariant.MS_PACMAN_TENGEN);
+            gameController.setGame(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
+            gameController.games().forEach(GameModel::init);
+            gameController.selectGameVariant(GameVariant.MS_PACMAN_TENGEN);
         } catch (Exception x) {
             Logger.error(x);
         }

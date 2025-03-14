@@ -24,11 +24,11 @@ public class PacManXXL_App extends Application {
     public void init() {
         var pacManGameModel = new PacManXXL_PacMan_GameModel(xxlMapSelector);
         var msPacManGameModel = new PacManXXL_MsPacMan_GameModel(xxlMapSelector);
-        GameController gameController = GameController.it();
-        gameController.setGameModel(GameVariant.PACMAN_XXL, pacManGameModel);
-        gameController.setGameModel(GameVariant.MS_PACMAN_XXL, msPacManGameModel);
-        gameController.gameModels().forEach(GameModel::init);
-        gameController.selectGame(GameVariant.MS_PACMAN_XXL);
+        GameController gameController = GameController.THE_ONE;
+        gameController.setGame(GameVariant.PACMAN_XXL, pacManGameModel);
+        gameController.setGame(GameVariant.MS_PACMAN_XXL, msPacManGameModel);
+        gameController.games().forEach(GameModel::init);
+        gameController.selectGameVariant(GameVariant.MS_PACMAN_XXL);
     }
 
     @Override

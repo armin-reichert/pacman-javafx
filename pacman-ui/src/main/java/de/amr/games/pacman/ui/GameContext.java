@@ -52,12 +52,12 @@ public interface GameContext {
 
     GameClockFX gameClock();
 
-    default GameController gameController() { return GameController.it(); }
+    default GameController gameController() { return GameController.THE_ONE; }
 
     default GameState gameState() { return gameController().state(); }
 
     @SuppressWarnings("unchecked")
-    default <GAME extends GameModel> GAME game() { return (GAME) gameController().currentGame(); }
+    default <GAME extends GameModel> GAME game() { return (GAME) gameController().game(); }
 
     GameVariant gameVariant();
 
