@@ -18,7 +18,7 @@ import javafx.scene.paint.Color;
 public class PacManXXL_StartPage extends StackPane implements StartPage {
 
     private final PacManGamesUI ui;
-    private final PacManXXL_OptionsMenu menu;
+    private final PacManXXL_OptionMenu menu;
 
     public PacManXXL_StartPage(PacManGamesUI ui) {
         this.ui = ui;
@@ -28,7 +28,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
         flyer.selectFlyerPage(0);
         flyer.setLayoutMode(0, Flyer.LayoutMode.FILL);
 
-        menu = new PacManXXL_OptionsMenu(ui);
+        menu = new PacManXXL_OptionMenu(ui);
         getChildren().addAll(flyer, menu.root());
 
         setBackground(Background.fill(Color.BLACK));
@@ -38,17 +38,17 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
         carousel.selectedIndexProperty().addListener((py, ov, nv) -> {
             carousel.currentSlide().ifPresent(startPage -> {
                 if (startPage == this) {
-                    menu.getAnimationTimer().start();
+                    menu.startDrawingLoop();
                 } else {
-                    menu.getAnimationTimer().stop();
+                    menu.stopDrawingLoop();
                 }
             });
         });
         ui.viewProperty().addListener((py, ov, page) -> {
             if (page == carousel && carousel.currentSlide().isPresent() && carousel.currentSlide().get() == this) {
-                menu.getAnimationTimer().start();
+                menu.startDrawingLoop();
             } else {
-                menu.getAnimationTimer().stop();
+                menu.stopDrawingLoop();
             }
         });
     }
