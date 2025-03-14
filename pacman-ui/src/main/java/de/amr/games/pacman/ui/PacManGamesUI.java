@@ -180,7 +180,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
      * @param variant a game variant
      * @param uiConfig the UI configuration for this variant
      */
-    public void setConfiguration(GameVariant variant, GameUIConfiguration uiConfig) {
+    public void configure(GameVariant variant, GameUIConfiguration uiConfig) {
         assertNotNull(variant);
         assertNotNull(uiConfig);
         uiConfig.gameScenes().forEach(scene -> {

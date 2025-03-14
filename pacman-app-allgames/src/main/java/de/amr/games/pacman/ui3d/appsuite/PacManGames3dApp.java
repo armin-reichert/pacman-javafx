@@ -70,11 +70,11 @@ public class PacManGames3dApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         ui = new PacManGamesUI_3D();
-        ui.setConfiguration(GameVariant.PACMAN,           new ArcadePacMan_UIConfig(ui.assets()));
-        ui.setConfiguration(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_UIConfig(ui.assets()));
-        ui.setConfiguration(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_UIConfig(ui.assets()));
-        ui.setConfiguration(GameVariant.PACMAN_XXL,       new PacManXXL_PacMan_UIConfig(ui.assets()));
-        ui.setConfiguration(GameVariant.MS_PACMAN_XXL,    new PacManXXL_MsPacMan_UIConfig(ui.assets()));
+        ui.configure(GameVariant.PACMAN,           new ArcadePacMan_UIConfig(ui.assets()));
+        ui.configure(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_UIConfig(ui.assets()));
+        ui.configure(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_UIConfig(ui.assets()));
+        ui.configure(GameVariant.PACMAN_XXL,       new PacManXXL_PacMan_UIConfig(ui.assets()));
+        ui.configure(GameVariant.MS_PACMAN_XXL,    new PacManXXL_MsPacMan_UIConfig(ui.assets()));
 
         ui.create(stage, initialSize());
 

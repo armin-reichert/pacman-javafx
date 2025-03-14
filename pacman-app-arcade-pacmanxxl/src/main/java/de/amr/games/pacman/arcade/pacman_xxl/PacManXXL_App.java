@@ -34,8 +34,8 @@ public class PacManXXL_App extends Application {
     @Override
     public void start(Stage stage) {
         PacManGamesUI_3D ui = new PacManGamesUI_3D();
-        ui.setConfiguration(GameVariant.PACMAN_XXL,    new PacManXXL_PacMan_UIConfig(ui.assets()));
-        ui.setConfiguration(GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_UIConfig(ui.assets()));
+        ui.configure(GameVariant.PACMAN_XXL,    new PacManXXL_PacMan_UIConfig(ui.assets()));
+        ui.configure(GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_UIConfig(ui.assets()));
 
         ui.create(stage, initialSize());
 

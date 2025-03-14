@@ -27,7 +27,7 @@ public class ArcadePacMan_App extends Application {
     @Override
     public void start(Stage stage) {
         PacManGamesUI_3D ui = new PacManGamesUI_3D();
-        ui.setConfiguration(GameVariant.PACMAN, new ArcadePacMan_UIConfig(ui.assets()));
+        ui.configure(GameVariant.PACMAN, new ArcadePacMan_UIConfig(ui.assets()));
         ui.create(stage, initialSize());
         ui.startPageSelectionView().addStartPage(GameVariant.PACMAN, new ArcadePacMan_StartPage(ui));
 
