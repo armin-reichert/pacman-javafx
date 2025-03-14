@@ -170,14 +170,17 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
     public void startDrawingLoop() {
         drawingLoop.start();
+        Logger.trace("Menu drawing started");
     }
 
     public void stopDrawingLoop() {
         drawingLoop.stop();
+        Logger.trace("Menu drawing stopped");
     }
 
     public void setState(boolean play3D, GameVariant gameVariant, boolean cutScenesEnabled,
-                         MapSelectionMode mapSelectionMode, boolean customMapsExist) {
+                         MapSelectionMode mapSelectionMode, boolean customMapsExist)
+    {
         state.play3D = play3D;
         state.gameVariant = gameVariant;
         state.cutScenesEnabled = cutScenesEnabled;
