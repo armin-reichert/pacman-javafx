@@ -21,7 +21,6 @@ import java.util.stream.Stream;
 
 public interface GameUIConfiguration {
     GameVariant gameVariant();
-    void setGameScene(String id, GameScene gameScene);
     GameScene getGameScene(String id);
     Stream<GameScene> gameScenes();
     default boolean gameSceneHasID(GameScene gameScene, String sceneID) {

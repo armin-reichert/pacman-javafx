@@ -61,16 +61,16 @@ public class TengenMsPacMan_GameUIConfig implements GameUIConfiguration {
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
     public TengenMsPacMan_GameUIConfig(AssetStorage assets) {
-        setGameScene("BootScene",      new TengenMsPacMan_BootScene());
-        setGameScene("IntroScene",     new TengenMsPacMan_IntroScene());
-        setGameScene("StartScene",     new TengenMsPacMan_OptionsScene());
-        setGameScene("ShowingCredits", new TengenMsPacMan_CreditsScene());
-        setGameScene("PlayScene2D",    new TengenMsPacMan_PlayScene2D());
-        setGameScene("PlayScene3D",    new TengenMsPacMan_PlayScene3D());
-        setGameScene("CutScene1",      new TengenMsPacMan_CutScene1());
-        setGameScene("CutScene2",      new TengenMsPacMan_CutScene2());
-        setGameScene("CutScene3",      new TengenMsPacMan_CutScene3());
-        setGameScene("CutScene4",      new TengenMsPacMan_CutScene4());
+        scenesByID.put("BootScene",      new TengenMsPacMan_BootScene());
+        scenesByID.put("IntroScene",     new TengenMsPacMan_IntroScene());
+        scenesByID.put("StartScene",     new TengenMsPacMan_OptionsScene());
+        scenesByID.put("ShowingCredits", new TengenMsPacMan_CreditsScene());
+        scenesByID.put("PlayScene2D",    new TengenMsPacMan_PlayScene2D());
+        scenesByID.put("PlayScene3D",    new TengenMsPacMan_PlayScene3D());
+        scenesByID.put("CutScene1",      new TengenMsPacMan_CutScene1());
+        scenesByID.put("CutScene2",      new TengenMsPacMan_CutScene2());
+        scenesByID.put("CutScene3",      new TengenMsPacMan_CutScene3());
+        scenesByID.put("CutScene4",      new TengenMsPacMan_CutScene4());
 
         //TODO where is the best place to do that?
         var playScene2D = (TengenMsPacMan_PlayScene2D) getGameScene("PlayScene2D");
@@ -181,11 +181,6 @@ public class TengenMsPacMan_GameUIConfig implements GameUIConfiguration {
             default                 -> GlobalProperties3d.PY_3D_ENABLED.get() ? "PlayScene3D" : "PlayScene2D";
         };
         return getGameScene(sceneID);
-    }
-
-    @Override
-    public void setGameScene(String id, GameScene gameScene) {
-        scenesByID.put(id, gameScene);
     }
 
     @Override

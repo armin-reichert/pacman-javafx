@@ -42,14 +42,14 @@ public class ArcadePacMan_GameUIConfig implements GameUIConfiguration {
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
     public ArcadePacMan_GameUIConfig(AssetStorage assets) {
-        setGameScene("BootScene",   new ArcadeBootScene());
-        setGameScene("IntroScene",  new IntroScene());
-        setGameScene("StartScene",  new StartScene());
-        setGameScene("PlayScene2D", new ArcadePlayScene2D());
-        setGameScene("PlayScene3D", new PlayScene3D());
-        setGameScene("CutScene1",   new CutScene1());
-        setGameScene("CutScene2",   new CutScene2());
-        setGameScene("CutScene3",   new CutScene3());
+        scenesByID.put("BootScene",   new ArcadeBootScene());
+        scenesByID.put("IntroScene",  new IntroScene());
+        scenesByID.put("StartScene",  new StartScene());
+        scenesByID.put("PlayScene2D", new ArcadePlayScene2D());
+        scenesByID.put("PlayScene3D", new PlayScene3D());
+        scenesByID.put("CutScene1",   new CutScene1());
+        scenesByID.put("CutScene2",   new CutScene2());
+        scenesByID.put("CutScene3",   new CutScene3());
 
         ResourceManager rm = () -> ResourceRoot.class;
         appIcon = rm.loadImage("graphics/icons/pacman.png");
@@ -121,11 +121,6 @@ public class ArcadePacMan_GameUIConfig implements GameUIConfiguration {
     @Override
     public String assetNamespace() {
         return "pacman";
-    }
-
-    @Override
-    public void setGameScene(String id, GameScene gameScene) {
-        scenesByID.put(id, gameScene);
     }
 
     @Override
