@@ -122,8 +122,8 @@ public class TerrainRenderer3D {
     /**
      * Creates a 3D representation for the given obstacle.
      * <p>
-     * For each closed, single-wall obstacles, a group of Cylinder and Box primitives is created. For all other obstacles,
-     * a sequence of walls and cylinders as corners is created.
+     * For each closed obstacle, a group of Cylinder and Box primitives is created. For all other obstacles,
+     * a sequence of walls with cylinders as corners is created.
      *
      * @param parent the group into which the 3D shapes are added
      * @param obstacle an obstacle

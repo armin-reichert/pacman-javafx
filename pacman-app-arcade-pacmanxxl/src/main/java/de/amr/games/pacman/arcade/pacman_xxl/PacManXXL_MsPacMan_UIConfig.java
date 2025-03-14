@@ -8,7 +8,6 @@ import de.amr.games.pacman.arcade.ms_pacman.*;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GameScene;
@@ -17,8 +16,8 @@ import de.amr.games.pacman.ui._2d.*;
 import de.amr.games.pacman.ui._3d.GlobalProperties3d;
 import de.amr.games.pacman.ui._3d.scene3d.PlayScene3D;
 import de.amr.games.pacman.uilib.AssetStorage;
-import de.amr.games.pacman.uilib.WorldMapColoring;
 import de.amr.games.pacman.uilib.ResourceManager;
+import de.amr.games.pacman.uilib.WorldMapColoring;
 import de.amr.games.pacman.uilib.model3D.PacModel3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -118,11 +117,6 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUIConfiguration {
     @Override
     public Image appIcon() {
         return appIcon;
-    }
-
-    @Override
-    public GameVariant gameVariant() {
-        return GameVariant.MS_PACMAN;
     }
 
     @Override

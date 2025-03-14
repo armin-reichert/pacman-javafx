@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui;
 
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D;
 import de.amr.games.pacman.ui._2d.GameRenderer;
 import de.amr.games.pacman.ui._2d.GameScene2D;
@@ -20,7 +19,6 @@ import javafx.scene.image.Image;
 import java.util.stream.Stream;
 
 public interface GameUIConfiguration {
-    GameVariant gameVariant();
     GameScene getGameScene(String id);
     Stream<GameScene> gameScenes();
     default boolean gameSceneHasID(GameScene gameScene, String sceneID) {

@@ -9,7 +9,6 @@ import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.nes.NES_Palette;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.maps.MapRepository;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_GhostAnimations;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_PacAnimations;
@@ -18,10 +17,10 @@ import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteShe
 import de.amr.games.pacman.tengen.ms_pacman.scene.*;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D;
 import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.ui.GameUIConfiguration;
-import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.ui.GameScene;
+import de.amr.games.pacman.ui.GameUIConfiguration;
 import de.amr.games.pacman.ui._2d.GameScene2D;
+import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.ui._3d.GlobalProperties3d;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.ResourceManager;
@@ -157,11 +156,6 @@ public class TengenMsPacMan_UIConfig implements GameUIConfiguration {
     @Override
     public Image appIcon() {
         return appIcon;
-    }
-
-    @Override
-    public GameVariant gameVariant() {
-        return GameVariant.MS_PACMAN_TENGEN;
     }
 
     @Override

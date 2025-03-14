@@ -7,7 +7,6 @@ package de.amr.games.pacman.arcade.ms_pacman;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GameScene;
@@ -125,11 +124,6 @@ public class ArcadeMsPacMan_UIConfig implements GameUIConfiguration {
     @Override
     public Image appIcon() {
         return appIcon;
-    }
-
-    @Override
-    public GameVariant gameVariant() {
-        return GameVariant.MS_PACMAN;
     }
 
     @Override

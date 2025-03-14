@@ -16,7 +16,6 @@ import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GameUIConfiguration;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.ui._3d.animation.Squirting;
-import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.Ufx;
 import de.amr.games.pacman.uilib.WorldMapColoring;
 import de.amr.games.pacman.uilib.model3D.Model3D;
@@ -92,7 +91,7 @@ public class GameLevel3D extends Group {
             livesCounter3D = createLivesCounter3D(game.canStartNewGame());
             livesCounter3D.livesCountPy.bind(livesCountPy);
 
-            floor3D = createFloor(context.assets(), level.map().numCols() * TS, level.map().numRows() * TS);
+            floor3D = createFloor(level.map().numCols() * TS, level.map().numRows() * TS);
             WorldMapColoring coloring = context.gameConfiguration().worldMapColoring(level.map());
             maze3D = new Maze3D(context.gameConfiguration(), level, coloring);
             addFood3D(level, context.assets().get("model3D.pellet"), coloredMaterial(coloring.pellet()));
@@ -140,7 +139,7 @@ public class GameLevel3D extends Group {
 
     private Pac3D createPac3D(Pac pac) {
         String assetNamespace = context.gameConfiguration().assetNamespace();
-        Pac3D pac3D = switch (context.gameConfiguration().gameVariant()) {
+        Pac3D pac3D = switch (context.gameVariant()) {
             case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL -> new MsPacMan3D(context.gameVariant(), pac, PAC_SIZE, context.assets(), assetNamespace);
             case PACMAN, PACMAN_XXL -> new PacMan3D(context.gameVariant(), pac, PAC_SIZE, context.assets(), assetNamespace);
         };
@@ -216,7 +215,7 @@ public class GameLevel3D extends Group {
         return levelCounter3D;
     }
 
-    private Box createFloor(AssetStorage assets, double sizeX, double sizeY) {
+    private Box createFloor(double sizeX, double sizeY) {
         // add some extra space
         double extraSpace = 10;
         var floor3D = new Box(sizeX + extraSpace, sizeY, FLOOR_THICKNESS);
