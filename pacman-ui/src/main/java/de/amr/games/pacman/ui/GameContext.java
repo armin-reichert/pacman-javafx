@@ -61,7 +61,7 @@ public interface GameContext {
 
     GameVariant gameVariant();
 
-    void selectGameVariant(GameVariant variant);
+    void setGameVariant(GameVariant variant);
 
     // Input
     Keyboard keyboard();

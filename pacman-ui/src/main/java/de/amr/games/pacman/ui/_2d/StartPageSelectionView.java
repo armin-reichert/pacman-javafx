@@ -17,8 +17,6 @@ import org.tinylog.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.games.pacman.ui.input.Keyboard.naked;
-
 /**
  * Carousel containing the start pages for the different game variants (XXL game variants share common start page).
  */
@@ -41,12 +39,12 @@ public class StartPageSelectionView extends Carousel implements GameActionProvid
     public StartPageSelectionView(GameContext context) {
         setOnPrevSlideSelected(startPage -> {
             var variant = (GameVariant) startPage.getUserData();
-            context.selectGameVariant(variant);
+            context.setGameVariant(variant);
             startPage.requestFocus();
         });
         setOnNextSlideSelected(startPage -> {
             var variant = (GameVariant) startPage.getUserData();
-            context.selectGameVariant(variant);
+            context.setGameVariant(variant);
             startPage.requestFocus();
         });
         bindGameActions();

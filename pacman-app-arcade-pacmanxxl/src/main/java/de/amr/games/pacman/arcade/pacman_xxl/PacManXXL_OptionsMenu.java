@@ -66,7 +66,7 @@ public class PacManXXL_OptionsMenu {
                 game.setCutScenesEnabled(state.cutScenesEnabled);
                 game.mapSelector().loadAllMaps(game);
                 game.mapSelector().setMapSelectionMode(state.mapSelectionMode);
-                ui.selectGameVariant(state.gameVariant);
+                ui.setGameVariant(state.gameVariant);
             } else {
                 Logger.error("Game variant {} is not allowed for XXL game", state.gameVariant);
             }

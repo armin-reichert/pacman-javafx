@@ -135,7 +135,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         startPageSelectionView = new StartPageSelectionView(this);
         startPageSelectionView().setBackground(assets.background("background.scene"));
         createGameView(mainScene);
-        selectGameVariant(gameController().selectedGameVariant());
+        setGameVariant(gameController().selectedGameVariant());
         bindStageTitle();
         stage.setScene(mainScene);
         //TODO This doesn't fit for NES aspect ratio
@@ -471,7 +471,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public void selectGameVariant(GameVariant variant) {
+    public void setGameVariant(GameVariant variant) {
         gameVariantPy.set(variant);
     }
 
