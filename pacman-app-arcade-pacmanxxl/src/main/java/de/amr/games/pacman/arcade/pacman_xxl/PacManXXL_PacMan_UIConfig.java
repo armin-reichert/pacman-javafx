@@ -31,13 +31,13 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_ENABLED;
 
-public class PacManXXL_PacMan_GameUIConfig implements GameUIConfiguration {
+public class PacManXXL_PacMan_UIConfig implements GameUIConfiguration {
 
     private final Image appIcon;
     private final ArcadePacMan_SpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public PacManXXL_PacMan_GameUIConfig(AssetStorage assets) {
+    public PacManXXL_PacMan_UIConfig(AssetStorage assets) {
         scenesByID.put("BootScene",   new ArcadeBootScene());
         scenesByID.put("IntroScene",  new IntroScene());
         scenesByID.put("StartScene",  new StartScene());

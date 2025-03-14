@@ -43,7 +43,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 
-public class TengenMsPacMan_GameUIConfig implements GameUIConfiguration {
+public class TengenMsPacMan_UIConfig implements GameUIConfiguration {
 
     public static final BooleanProperty PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED = new SimpleBooleanProperty(false);
     public static final ObjectProperty<SceneDisplayMode> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
@@ -60,7 +60,7 @@ public class TengenMsPacMan_GameUIConfig implements GameUIConfiguration {
     private final MapRepository mapRepository;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public TengenMsPacMan_GameUIConfig(AssetStorage assets) {
+    public TengenMsPacMan_UIConfig(AssetStorage assets) {
         scenesByID.put("BootScene",      new TengenMsPacMan_BootScene());
         scenesByID.put("IntroScene",     new TengenMsPacMan_IntroScene());
         scenesByID.put("StartScene",     new TengenMsPacMan_OptionsScene());
@@ -76,7 +76,7 @@ public class TengenMsPacMan_GameUIConfig implements GameUIConfiguration {
         var playScene2D = (TengenMsPacMan_PlayScene2D) getGameScene("PlayScene2D");
         playScene2D.displayModeProperty().bind(PY_TENGEN_PLAY_SCENE_DISPLAY_MODE);
 
-        ResourceManager rm = () -> TengenMsPacMan_GameUIConfig.class;
+        ResourceManager rm = () -> TengenMsPacMan_UIConfig.class;
 
         appIcon = rm.loadImage("graphics/icons/mspacman.png");
         spriteSheet = new TengenMsPacMan_SpriteSheet(rm.loadImage("graphics/spritesheet.png"));

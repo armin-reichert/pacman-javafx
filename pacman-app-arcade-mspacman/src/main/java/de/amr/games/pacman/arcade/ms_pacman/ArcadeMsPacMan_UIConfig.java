@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class ArcadeMsPacMan_GameUIConfig implements GameUIConfiguration {
+public class ArcadeMsPacMan_UIConfig implements GameUIConfiguration {
 
     private static final List<WorldMapColoring> WORLD_MAP_COLORINGS = List.of(
         new WorldMapColoring("FFB7AE", "FF0000", "FCB5FF", "DEDEFF"),
@@ -47,7 +47,7 @@ public class ArcadeMsPacMan_GameUIConfig implements GameUIConfiguration {
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public ArcadeMsPacMan_GameUIConfig(AssetStorage assets) {
+    public ArcadeMsPacMan_UIConfig(AssetStorage assets) {
         scenesByID.put("BootScene",   new ArcadeBootScene());
         scenesByID.put("IntroScene",  new IntroScene());
         scenesByID.put("StartScene",  new StartScene());
@@ -57,7 +57,7 @@ public class ArcadeMsPacMan_GameUIConfig implements GameUIConfiguration {
         scenesByID.put("CutScene2",   new CutScene2());
         scenesByID.put("CutScene3",   new CutScene3());
 
-        ResourceManager rm = () -> ArcadeMsPacMan_GameUIConfig.class;
+        ResourceManager rm = () -> ArcadeMsPacMan_UIConfig.class;
         appIcon = rm.loadImage("graphics/icons/mspacman.png");
         spriteSheet = new ArcadeMsPacMan_SpriteSheet(rm.loadImage("graphics/mspacman_spritesheet.png"));
 

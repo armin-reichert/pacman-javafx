@@ -31,7 +31,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_GHOST_NORMAL;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
-import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameUIConfig.*;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.MS_PAC_MAN_TITLE_SPRITE;
 
 /**

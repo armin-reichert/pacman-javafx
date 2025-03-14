@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class ArcadePacMan_GameUIConfig implements GameUIConfiguration {
+public class ArcadePacMan_UIConfig implements GameUIConfiguration {
 
     private static final WorldMapColoring MAP_COLORING = new WorldMapColoring("#000000", "#2121ff", "#fcb5ff", "#febdb4");
 
@@ -41,7 +41,7 @@ public class ArcadePacMan_GameUIConfig implements GameUIConfiguration {
     private final ArcadePacMan_SpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public ArcadePacMan_GameUIConfig(AssetStorage assets) {
+    public ArcadePacMan_UIConfig(AssetStorage assets) {
         scenesByID.put("BootScene",   new ArcadeBootScene());
         scenesByID.put("IntroScene",  new IntroScene());
         scenesByID.put("StartScene",  new StartScene());
