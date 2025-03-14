@@ -20,8 +20,8 @@ import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameUIConfig3D.NES_SIZE;
-import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameUIConfig3D.nesPaletteColor;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameUIConfig.NES_SIZE;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameUIConfig.nesPaletteColor;
 
 /**
  * Animated "TENGEN PRESENTS" text and ghost running through scene.

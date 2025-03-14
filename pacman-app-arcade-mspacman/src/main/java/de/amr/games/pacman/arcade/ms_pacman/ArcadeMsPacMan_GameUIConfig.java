@@ -11,11 +11,11 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GameScene;
+import de.amr.games.pacman.ui.GameUIConfiguration;
 import de.amr.games.pacman.ui._2d.ArcadeBootScene;
 import de.amr.games.pacman.ui._2d.ArcadePlayScene2D;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._3d.GlobalProperties3d;
-import de.amr.games.pacman.ui._3d.scene3d.GameUIConfiguration3D;
 import de.amr.games.pacman.ui._3d.scene3d.PlayScene3D;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.ResourceManager;
@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class ArcadeMsPacMan_GameUIConfig3D implements GameUIConfiguration3D {
+public class ArcadeMsPacMan_GameUIConfig implements GameUIConfiguration {
 
     private static final List<WorldMapColoring> WORLD_MAP_COLORINGS = List.of(
         new WorldMapColoring("FFB7AE", "FF0000", "FCB5FF", "DEDEFF"),
@@ -47,7 +47,7 @@ public class ArcadeMsPacMan_GameUIConfig3D implements GameUIConfiguration3D {
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public ArcadeMsPacMan_GameUIConfig3D(AssetStorage assets) {
+    public ArcadeMsPacMan_GameUIConfig(AssetStorage assets) {
         setGameScene("BootScene",   new ArcadeBootScene());
         setGameScene("IntroScene",  new IntroScene());
         setGameScene("StartScene",  new StartScene());
@@ -57,7 +57,7 @@ public class ArcadeMsPacMan_GameUIConfig3D implements GameUIConfiguration3D {
         setGameScene("CutScene2",   new CutScene2());
         setGameScene("CutScene3",   new CutScene3());
 
-        ResourceManager rm = () -> ArcadeMsPacMan_GameUIConfig3D.class;
+        ResourceManager rm = () -> ArcadeMsPacMan_GameUIConfig.class;
         appIcon = rm.loadImage("graphics/icons/mspacman.png");
         spriteSheet = new ArcadeMsPacMan_SpriteSheet(rm.loadImage("graphics/mspacman_spritesheet.png"));
 

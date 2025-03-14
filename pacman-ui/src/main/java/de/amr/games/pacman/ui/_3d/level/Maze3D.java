@@ -9,8 +9,8 @@ import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D;
+import de.amr.games.pacman.ui.GameUIConfiguration;
 import de.amr.games.pacman.ui._3d.animation.MaterialColorAnimation;
-import de.amr.games.pacman.ui._3d.scene3d.GameUIConfiguration3D;
 import de.amr.games.pacman.uilib.WorldMapColoring;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
@@ -42,7 +42,7 @@ public class Maze3D extends Group {
     private final Door3D door3D;
     private final MaterialColorAnimation materialColorAnimation;
 
-    public Maze3D(GameUIConfiguration3D configuration3D, GameLevel level, WorldMapColoring coloring) {
+    public Maze3D(GameUIConfiguration configuration3D, GameLevel level, WorldMapColoring coloring) {
         Logger.info("Build world 3D. Map URL='{}'", URLDecoder.decode(level.map().url().toExternalForm(), StandardCharsets.UTF_8));
 
         Color wallBaseColor = coloring.stroke();

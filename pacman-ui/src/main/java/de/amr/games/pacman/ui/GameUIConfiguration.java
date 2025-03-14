@@ -7,11 +7,13 @@ package de.amr.games.pacman.ui;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D;
 import de.amr.games.pacman.ui._2d.GameRenderer;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.WorldMapColoring;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
@@ -34,4 +36,8 @@ public interface GameUIConfiguration {
     String assetNamespace();
     default boolean isGameCanvasDecorated() { return true; }
     Image appIcon();
+
+    // 3D-only
+    TerrainRenderer3D createTerrainRenderer3D();
+    Node createLivesCounterShape(AssetStorage assets);
 }

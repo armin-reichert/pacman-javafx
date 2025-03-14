@@ -13,9 +13,9 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.GameContext;
+import de.amr.games.pacman.ui.GameUIConfiguration;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.ui._3d.animation.Squirting;
-import de.amr.games.pacman.ui._3d.scene3d.GameUIConfiguration3D;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.Ufx;
 import de.amr.games.pacman.uilib.WorldMapColoring;
@@ -94,7 +94,7 @@ public class GameLevel3D extends Group {
 
             floor3D = createFloor(context.assets(), level.map().numCols() * TS, level.map().numRows() * TS);
             WorldMapColoring coloring = context.gameConfiguration().worldMapColoring(level.map());
-            maze3D = new Maze3D((GameUIConfiguration3D) context.gameConfiguration(), level, coloring);
+            maze3D = new Maze3D(context.gameConfiguration(), level, coloring);
             addFood3D(level, context.assets().get("model3D.pellet"), coloredMaterial(coloring.pellet()));
 
             worldGroup.getChildren().addAll(floor3D, maze3D);
@@ -159,7 +159,7 @@ public class GameLevel3D extends Group {
     }
 
     private LivesCounter3D createLivesCounter3D(boolean canStartNewGame) {
-        GameUIConfiguration3D config3D = (GameUIConfiguration3D) context.gameConfiguration();
+        GameUIConfiguration config3D = context.gameConfiguration();
         Node[] shapes = IntStream.range(0, LIVES_COUNTER_MAX)
             .mapToObj(i -> config3D.createLivesCounterShape(context.assets())).toArray(Node[]::new);
         var counter3D = new LivesCounter3D(shapes, 10);

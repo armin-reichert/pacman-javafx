@@ -10,13 +10,17 @@ import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui.GameUIConfiguration;
 import de.amr.games.pacman.ui._2d.*;
+import de.amr.games.pacman.ui._3d.scene3d.PlayScene3D;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.ResourceManager;
 import de.amr.games.pacman.uilib.WorldMapColoring;
+import de.amr.games.pacman.uilib.model3D.PacModel3D;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -24,6 +28,8 @@ import javafx.scene.paint.Color;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
+
+import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_ENABLED;
 
 public class PacManXXL_PacMan_GameUIConfig implements GameUIConfiguration {
 
@@ -36,6 +42,7 @@ public class PacManXXL_PacMan_GameUIConfig implements GameUIConfiguration {
         setGameScene("IntroScene",  new IntroScene());
         setGameScene("StartScene",  new StartScene());
         setGameScene("PlayScene2D", new ArcadePlayScene2D());
+        setGameScene("PlayScene3D", new PlayScene3D());
         setGameScene("CutScene1",   new CutScene1());
         setGameScene("CutScene2",   new CutScene2());
         setGameScene("CutScene3",   new CutScene3());
@@ -164,7 +171,7 @@ public class PacManXXL_PacMan_GameUIConfig implements GameUIConfiguration {
             case INTRO -> "IntroScene";
             case INTERMISSION -> "CutScene" + context.game().level().map(GameLevel::cutSceneNumber).orElseThrow();
             case TESTING_CUT_SCENES -> "CutScene" + context.gameState().<Integer>getProperty("intermissionTestNumber");
-            default -> "PlayScene2D";
+            default -> PY_3D_ENABLED.get() ? "PlayScene3D" : "PlayScene2D";
         };
         return getGameScene(sceneID);
     }
@@ -173,5 +180,21 @@ public class PacManXXL_PacMan_GameUIConfig implements GameUIConfiguration {
     public void createActorAnimations(GameLevel level) {
         level.pac().setAnimations(new PacAnimations(spriteSheet));
         level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id())));
+    }
+
+    @Override
+    public TerrainRenderer3D createTerrainRenderer3D() {
+        return new TerrainRenderer3D();
+    }
+
+    @Override
+    public Node createLivesCounterShape(AssetStorage assets) {
+        String akp = assetNamespace();
+        return PacModel3D.createPacShape(
+            assets.get("model3D.pacman"), 10,
+            assets.color(akp + ".pac.color.head"),
+            assets.color(akp + ".pac.color.eyes"),
+            assets.color(akp + ".pac.color.palate")
+        );
     }
 }

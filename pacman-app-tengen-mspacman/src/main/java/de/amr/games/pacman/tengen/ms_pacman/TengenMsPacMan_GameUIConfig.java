@@ -18,11 +18,11 @@ import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteShe
 import de.amr.games.pacman.tengen.ms_pacman.scene.*;
 import de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D;
 import de.amr.games.pacman.ui.GameContext;
+import de.amr.games.pacman.ui.GameUIConfiguration;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._3d.GlobalProperties3d;
-import de.amr.games.pacman.ui._3d.scene3d.GameUIConfiguration3D;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.ResourceManager;
 import de.amr.games.pacman.uilib.WorldMapColoring;
@@ -43,7 +43,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 
-public class TengenMsPacMan_GameUIConfig3D implements GameUIConfiguration3D {
+public class TengenMsPacMan_GameUIConfig implements GameUIConfiguration {
 
     public static final BooleanProperty PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED = new SimpleBooleanProperty(false);
     public static final ObjectProperty<SceneDisplayMode> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
@@ -60,7 +60,7 @@ public class TengenMsPacMan_GameUIConfig3D implements GameUIConfiguration3D {
     private final MapRepository mapRepository;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public TengenMsPacMan_GameUIConfig3D(AssetStorage assets) {
+    public TengenMsPacMan_GameUIConfig(AssetStorage assets) {
         setGameScene("BootScene",      new TengenMsPacMan_BootScene());
         setGameScene("IntroScene",     new TengenMsPacMan_IntroScene());
         setGameScene("StartScene",     new TengenMsPacMan_OptionsScene());
@@ -76,7 +76,7 @@ public class TengenMsPacMan_GameUIConfig3D implements GameUIConfiguration3D {
         var playScene2D = (TengenMsPacMan_PlayScene2D) getGameScene("PlayScene2D");
         playScene2D.displayModeProperty().bind(PY_TENGEN_PLAY_SCENE_DISPLAY_MODE);
 
-        ResourceManager rm = () -> TengenMsPacMan_GameUIConfig3D.class;
+        ResourceManager rm = () -> TengenMsPacMan_GameUIConfig.class;
 
         appIcon = rm.loadImage("graphics/icons/mspacman.png");
         spriteSheet = new TengenMsPacMan_SpriteSheet(rm.loadImage("graphics/spritesheet.png"));
