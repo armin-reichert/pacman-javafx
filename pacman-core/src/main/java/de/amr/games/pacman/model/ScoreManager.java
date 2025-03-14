@@ -9,6 +9,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Set;
 
@@ -50,7 +51,7 @@ public class ScoreManager {
     }
 
     public void resetHighScore() {
-        new Score().save(highScoreFile, "High Score, reset at %s".formatted(LocalTime.now()));
+        new Score().save(highScoreFile, "High Score, %s".formatted(LocalDateTime.now()));
     }
 
     public void setLevelNumber(int levelNumber) {

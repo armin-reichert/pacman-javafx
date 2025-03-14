@@ -81,9 +81,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
-            GameVariant gameVariant = get();
-            Logger.info("Game variant changed to {}", gameVariant);
-            handleGameVariantChange(gameVariant);
+        handleGameVariantChange(get());
         }
     };
 
@@ -312,9 +310,9 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         return gameView.dashboard().getItem(id);
     }
 
-    protected void handleGameVariantChange(GameVariant variant) {
+    protected void handleGameVariantChange(GameVariant gameVariant) {
         game().removeGameEventListener(this);
-        gameController().selectGame(variant);
+        gameController().selectGame(gameVariant);
         game().addGameEventListener(this);
 
         String assetNamespace = gameConfiguration().assetNamespace();
@@ -322,10 +320,12 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         if (icon != null) {
             stage.getIcons().setAll(icon);
         }
-        sound().useSoundsForGameVariant(variant, assetNamespace);
+        sound().useSoundsForGameVariant(gameVariant, assetNamespace);
 
         //TODO check this
         gameView.canvasContainer().decorationEnabledPy.set(gameConfiguration().isGameCanvasDecorated());
+
+        Logger.info("Game variant changed to {}", gameVariant);
     }
 
     protected void bindStageTitle() {
