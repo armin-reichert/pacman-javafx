@@ -31,7 +31,7 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
 public class Ghost extends Creature implements AnimatedActor2D {
 
     private final byte id;
-    private String name;
+    private final String name;
     private GhostState state;
     private Vector2f revivalPosition;
     private ActorAnimations animations;
@@ -41,9 +41,11 @@ public class Ghost extends Creature implements AnimatedActor2D {
     /**
      * Constructs a ghost without associated world like the ones in the cut scenes.
      * @param id ghost ID
+     * @param name readable name, used for logging or debug display
      */
-    public Ghost(byte id) {
+    public Ghost(byte id, String name) {
         this.id = assertLegalGhostID(id);
+        this.name = assertNotNull(name);
         corneringSpeedUp = -1.25f;
     }
 
@@ -66,10 +68,6 @@ public class Ghost extends Creature implements AnimatedActor2D {
 
     public byte id() {
         return id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String name() {

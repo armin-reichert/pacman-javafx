@@ -37,27 +37,19 @@ import static de.amr.games.pacman.tengen.ms_pacman.SpeedConfiguration.*;
 public class TengenMsPacMan_GameModel extends GameModel {
 
     public static Ghost blinky() {
-        var ghost = new Ghost(GameModel.RED_GHOST);
-        ghost.setName("Blinky");
-        return ghost;
+        return new Ghost(GameModel.RED_GHOST, "Blinky");
     }
 
     public static Ghost pinky() {
-        var ghost = new Ghost(GameModel.PINK_GHOST);
-        ghost.setName("Pinky");
-        return ghost;
+        return new Ghost(GameModel.PINK_GHOST, "Pinky");
     }
 
     public static Ghost inky() {
-        var ghost = new Ghost(GameModel.CYAN_GHOST);
-        ghost.setName("Inky");
-        return ghost;
+        return new Ghost(GameModel.CYAN_GHOST, "Inky");
     }
 
     public static Ghost sue() {
-        var ghost = new Ghost(GameModel.ORANGE_GHOST);
-        ghost.setName("Sue");
-        return ghost;
+        return new Ghost(GameModel.ORANGE_GHOST, "Sue");
     }
 
     public static final byte MIN_LEVEL_NUMBER = 1;
