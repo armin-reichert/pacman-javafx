@@ -42,12 +42,12 @@ public class IntroScene extends GameScene2D {
 
     static final String[] GHOST_CHARACTERS = { "SHADOW", "SPEEDY", "BASHFUL", "POKEY" };
     static final Color[] GHOST_COLORS = {
-        Color.valueOf(Arcade.Palette.RED),
-        Color.valueOf(Arcade.Palette.PINK),
-        Color.valueOf(Arcade.Palette.CYAN),
-        Color.valueOf(Arcade.Palette.ORANGE)
+        Color.web(Arcade.Palette.RED),
+        Color.web(Arcade.Palette.PINK),
+        Color.web(Arcade.Palette.CYAN),
+        Color.web(Arcade.Palette.ORANGE)
     };
-    static final Color PELLET_COLOR = Color.valueOf(Arcade.Palette.ROSE);
+    static final Color PELLET_COLOR = Color.web(Arcade.Palette.ROSE);
     static final float CHASE_SPEED = 1.1f;
     static final float GHOST_FRIGHTENED_SPEED = 0.6f;
     static final int LEFT_TILE_X = 4;
@@ -140,19 +140,19 @@ public class IntroScene extends GameScene2D {
                 }
                 drawGuys(flutter(timer.tickCount()));
                 if (context.gameVariant() == GameVariant.PACMAN) {
-                    gr.drawText(ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT, Color.valueOf(Arcade.Palette.PINK), gr.scaledArcadeFont(TS),  tiles2Px(4), tiles2Px(32));
+                    gr.drawText(ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT, Color.web(Arcade.Palette.PINK), gr.scaledArcadeFont(TS),  tiles2Px(4), tiles2Px(32));
                 }
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints();
                 drawGuys(0);
                 if (context.gameVariant() == GameVariant.PACMAN) {
-                    gr.drawText(ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT, Color.valueOf(Arcade.Palette.PINK), gr.scaledArcadeFont(TS),  tiles2Px(4), tiles2Px(32));
+                    gr.drawText(ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT, Color.web(Arcade.Palette.PINK), gr.scaledArcadeFont(TS),  tiles2Px(4), tiles2Px(32));
                 }
             }
             default -> {}
         }
-        gr.drawText("CREDIT %2d".formatted(context.gameController().credit), Color.valueOf(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS), 2 * TS, sizeInPx().y() - 2);
+        gr.drawText("CREDIT %2d".formatted(context.gameController().credit), Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS), 2 * TS, sizeInPx().y() - 2);
         gr.drawLevelCounter(context, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 
@@ -165,7 +165,7 @@ public class IntroScene extends GameScene2D {
         var spriteSheet = (ArcadePacMan_SpriteSheet) context.gameConfiguration().spriteSheet();
         Font font = gr.scaledArcadeFont(TS);
         if (titleVisible) {
-            gr.drawText("CHARACTER / NICKNAME", Color.valueOf(Arcade.Palette.WHITE), font, tiles2Px(LEFT_TILE_X + 3), tiles2Px(6));
+            gr.drawText("CHARACTER / NICKNAME", Color.web(Arcade.Palette.WHITE), font, tiles2Px(LEFT_TILE_X + 3), tiles2Px(6));
         }
         for (byte id = 0; id < 4; ++id) {
             int tileY = 7 + 3 * id;
@@ -200,7 +200,7 @@ public class IntroScene extends GameScene2D {
     }
 
     private void drawPoints() {
-        var color = Color.valueOf(Arcade.Palette.WHITE);
+        var color = Color.web(Arcade.Palette.WHITE);
         var font8 = gr.scaledArcadeFont(8);
         var font6 = gr.scaledArcadeFont(6);
         int tileX = LEFT_TILE_X + 6;

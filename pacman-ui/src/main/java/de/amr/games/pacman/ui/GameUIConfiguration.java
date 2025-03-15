@@ -11,7 +11,7 @@ import de.amr.games.pacman.ui._2d.GameRenderer;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.uilib.AssetStorage;
-import de.amr.games.pacman.uilib.WorldMapColoring;
+import de.amr.games.pacman.uilib.WorldMapColorScheme;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -24,7 +24,7 @@ public interface GameUIConfiguration {
     GameScene2D createPiPScene(GameContext context, Canvas canvas);
     GameSpriteSheet spriteSheet();
     GameRenderer createRenderer(AssetStorage assets, Canvas canvas);
-    WorldMapColoring worldMapColoring(WorldMap worldMap);
+    WorldMapColorScheme worldMapColoring(WorldMap worldMap);
     void createActorAnimations(GameLevel level);
     GameScene selectGameScene(GameContext context);
     String assetNamespace();

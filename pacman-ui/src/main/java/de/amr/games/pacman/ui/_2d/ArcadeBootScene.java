@@ -60,7 +60,7 @@ public class ArcadeBootScene extends GameScene2D {
 
     private void paintRandomHexCodes(Vector2f sceneSize) {
         gr.clearCanvas();
-        gr.ctx().setFill(Color.valueOf(Arcade.Palette.WHITE));
+        gr.ctx().setFill(Color.web(Arcade.Palette.WHITE));
         gr.ctx().setFont(gr.scaledArcadeFont(TS));
         int numRows = (int) (sceneSize.y() / TS), numCols = (int) (sceneSize.x() / TS);
         for (int row = 0; row < numRows; ++row) {
@@ -99,7 +99,7 @@ public class ArcadeBootScene extends GameScene2D {
         gr.clearCanvas();
         Vector2i sizeInTiles = context.worldSizeInTilesOrElse(ARCADE_MAP_SIZE_IN_TILES);
         int numRows = sizeInTiles.y() / 2, numCols = sizeInTiles.y() / 2;
-        g.setStroke(Color.valueOf(Arcade.Palette.WHITE));
+        g.setStroke(Color.web(Arcade.Palette.WHITE));
         g.setLineWidth(scaled(2.0));
         for (int row = 0; row <= numRows; ++row) {
             g.setLineWidth(row == 0 || row == numRows ? scaled(4.0) : scaled(2.0));

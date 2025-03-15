@@ -346,9 +346,9 @@ public interface Ufx {
 
     static Image exchange_NESColorScheme(Image source, NES_ColorScheme from, NES_ColorScheme to) {
         Map<String, ColorChange> changes = Map.of(
-            "fill", new ColorChange(Color.valueOf(from.fillColor()), Color.valueOf(to.fillColor())),
-            "stroke", new ColorChange(Color.valueOf(from.strokeColor()), Color.valueOf(to.strokeColor())),
-            "pellet", new ColorChange(Color.valueOf(from.pelletColor()), Color.valueOf(to.pelletColor()))
+            "fill", new ColorChange(Color.web(from.fillColor()), Color.web(to.fillColor())),
+            "stroke", new ColorChange(Color.web(from.strokeColor()), Color.web(to.strokeColor())),
+            "pellet", new ColorChange(Color.web(from.pelletColor()), Color.web(to.pelletColor()))
         );
         return exchangeColors(changes, source);
     }

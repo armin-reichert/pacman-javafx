@@ -21,7 +21,7 @@ import de.amr.games.pacman.ui._3d.GlobalProperties3d;
 import de.amr.games.pacman.ui._3d.scene3d.PlayScene3D;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.ResourceManager;
-import de.amr.games.pacman.uilib.WorldMapColoring;
+import de.amr.games.pacman.uilib.WorldMapColorScheme;
 import de.amr.games.pacman.uilib.model3D.PacModel3D;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -36,7 +36,7 @@ import static de.amr.games.pacman.lib.Globals.assertNotNull;
 
 public class ArcadePacMan_UIConfig implements GameUIConfiguration {
 
-    private static final WorldMapColoring MAP_COLORING = new WorldMapColoring("#000000", "#2121ff", "#fcb5ff", "#febdb4");
+    private static final WorldMapColorScheme MAP_COLORING = new WorldMapColorScheme("#000000", "#2121ff", "#fcb5ff", "#febdb4");
 
     private final Image appIcon;
     private final ArcadePacMan_SpriteSheet spriteSheet;
@@ -62,30 +62,30 @@ public class ArcadePacMan_UIConfig implements GameUIConfiguration {
         assets.store("pacman.startpage.image2",                rm.loadImage("graphics/f2.jpg"));
         assets.store("pacman.startpage.image3",                rm.loadImage("graphics/f3.jpg"));
 
-        assets.store("pacman.color.game_over_message",         Color.valueOf(Arcade.Palette.RED));
+        assets.store("pacman.color.game_over_message",         Color.web(Arcade.Palette.RED));
 
-        assets.store("pacman.pac.color.head",                  Color.valueOf(Arcade.Palette.YELLOW));
+        assets.store("pacman.pac.color.head",                  Color.web(Arcade.Palette.YELLOW));
         assets.store("pacman.pac.color.eyes",                  Color.grayRgb(33));
         assets.store("pacman.pac.color.palate",                Color.rgb(240, 180, 160));
 
-        assets.store("pacman.ghost.0.color.normal.dress",      Color.valueOf(Arcade.Palette.RED));
-        assets.store("pacman.ghost.0.color.normal.eyeballs",   Color.valueOf(Arcade.Palette.WHITE));
-        assets.store("pacman.ghost.0.color.normal.pupils",     Color.valueOf(Arcade.Palette.BLUE));
-        assets.store("pacman.ghost.1.color.normal.dress",      Color.valueOf(Arcade.Palette.PINK));
-        assets.store("pacman.ghost.1.color.normal.eyeballs",   Color.valueOf(Arcade.Palette.WHITE));
-        assets.store("pacman.ghost.1.color.normal.pupils",     Color.valueOf(Arcade.Palette.BLUE));
-        assets.store("pacman.ghost.2.color.normal.dress",      Color.valueOf(Arcade.Palette.CYAN));
-        assets.store("pacman.ghost.2.color.normal.eyeballs",   Color.valueOf(Arcade.Palette.WHITE));
-        assets.store("pacman.ghost.2.color.normal.pupils",     Color.valueOf(Arcade.Palette.BLUE));
-        assets.store("pacman.ghost.3.color.normal.dress",      Color.valueOf(Arcade.Palette.ORANGE));
-        assets.store("pacman.ghost.3.color.normal.eyeballs",   Color.valueOf(Arcade.Palette.WHITE));
-        assets.store("pacman.ghost.3.color.normal.pupils",     Color.valueOf(Arcade.Palette.BLUE));
-        assets.store("pacman.ghost.color.frightened.dress",    Color.valueOf(Arcade.Palette.BLUE));
-        assets.store("pacman.ghost.color.frightened.eyeballs", Color.valueOf(Arcade.Palette.ROSE));
-        assets.store("pacman.ghost.color.frightened.pupils",   Color.valueOf(Arcade.Palette.ROSE));
-        assets.store("pacman.ghost.color.flashing.dress",      Color.valueOf(Arcade.Palette.WHITE));
-        assets.store("pacman.ghost.color.flashing.eyeballs",   Color.valueOf(Arcade.Palette.ROSE));
-        assets.store("pacman.ghost.color.flashing.pupils",     Color.valueOf(Arcade.Palette.RED));
+        assets.store("pacman.ghost.0.color.normal.dress",      Color.web(Arcade.Palette.RED));
+        assets.store("pacman.ghost.0.color.normal.eyeballs",   Color.web(Arcade.Palette.WHITE));
+        assets.store("pacman.ghost.0.color.normal.pupils",     Color.web(Arcade.Palette.BLUE));
+        assets.store("pacman.ghost.1.color.normal.dress",      Color.web(Arcade.Palette.PINK));
+        assets.store("pacman.ghost.1.color.normal.eyeballs",   Color.web(Arcade.Palette.WHITE));
+        assets.store("pacman.ghost.1.color.normal.pupils",     Color.web(Arcade.Palette.BLUE));
+        assets.store("pacman.ghost.2.color.normal.dress",      Color.web(Arcade.Palette.CYAN));
+        assets.store("pacman.ghost.2.color.normal.eyeballs",   Color.web(Arcade.Palette.WHITE));
+        assets.store("pacman.ghost.2.color.normal.pupils",     Color.web(Arcade.Palette.BLUE));
+        assets.store("pacman.ghost.3.color.normal.dress",      Color.web(Arcade.Palette.ORANGE));
+        assets.store("pacman.ghost.3.color.normal.eyeballs",   Color.web(Arcade.Palette.WHITE));
+        assets.store("pacman.ghost.3.color.normal.pupils",     Color.web(Arcade.Palette.BLUE));
+        assets.store("pacman.ghost.color.frightened.dress",    Color.web(Arcade.Palette.BLUE));
+        assets.store("pacman.ghost.color.frightened.eyeballs", Color.web(Arcade.Palette.ROSE));
+        assets.store("pacman.ghost.color.frightened.pupils",   Color.web(Arcade.Palette.ROSE));
+        assets.store("pacman.ghost.color.flashing.dress",      Color.web(Arcade.Palette.WHITE));
+        assets.store("pacman.ghost.color.flashing.eyeballs",   Color.web(Arcade.Palette.ROSE));
+        assets.store("pacman.ghost.color.flashing.pupils",     Color.web(Arcade.Palette.RED));
 
         // Clips
         assets.store("pacman.audio.bonus_eaten",               rm.loadAudioClip("sound/eat_fruit.mp3"));
@@ -145,7 +145,7 @@ public class ArcadePacMan_UIConfig implements GameUIConfiguration {
     }
 
     @Override
-    public WorldMapColoring worldMapColoring(WorldMap worldMap) {
+    public WorldMapColorScheme worldMapColoring(WorldMap worldMap) {
         return MAP_COLORING;
     }
 

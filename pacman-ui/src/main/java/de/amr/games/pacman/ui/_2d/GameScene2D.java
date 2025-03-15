@@ -5,9 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.lib.Globals;
+import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GameScene;
-import de.amr.games.pacman.ui.GameAction;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCodeCombination;

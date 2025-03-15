@@ -6,8 +6,8 @@ package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.tengen.ms_pacman.scene.SceneDisplayMode;
-import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GameAction;
+import de.amr.games.pacman.ui.GameContext;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED;

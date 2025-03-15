@@ -14,7 +14,6 @@ import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
-import static de.amr.games.pacman.lib.tilemap.WorldMap.PROPERTY_POS_SCATTER_ORANGE_GHOST;
 import static de.amr.games.pacman.tilemap.editor.ArcadeMap.PAC_SPRITE;
 import static de.amr.games.pacman.tilemap.editor.ArcadeMap.SPRITE_SHEET;
 

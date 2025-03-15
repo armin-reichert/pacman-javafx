@@ -24,7 +24,7 @@ import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.ui._3d.GlobalProperties3d;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.ResourceManager;
-import de.amr.games.pacman.uilib.WorldMapColoring;
+import de.amr.games.pacman.uilib.WorldMapColorScheme;
 import de.amr.games.pacman.uilib.model3D.PacModel3D;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -212,8 +212,10 @@ public class TengenMsPacMan_UIConfig implements GameUIConfiguration {
     }
 
     @Override
-    public WorldMapColoring worldMapColoring(WorldMap worldMap) {
-        return new WorldMapColoring((NES_ColorScheme) worldMap.getConfigValue("nesColorScheme"));
+    public WorldMapColorScheme worldMapColoring(WorldMap worldMap) {
+        NES_ColorScheme colorScheme = worldMap.getConfigValue("nesColorScheme");
+        return new WorldMapColorScheme(
+            colorScheme.fillColor(), colorScheme.strokeColor(), colorScheme.strokeColor(), colorScheme.pelletColor());
     }
 
     @Override

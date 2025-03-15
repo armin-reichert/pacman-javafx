@@ -145,15 +145,15 @@ public class ArcadePlayScene2D extends GameScene2D {
             String text = null;
             switch (level.message()) {
                 case GAME_OVER -> {
-                    color = Color.valueOf(Arcade.Palette.RED);
+                    color = Color.web(Arcade.Palette.RED);
                     text = "GAME  OVER";
                 }
                 case READY -> {
-                    color = Color.valueOf(Arcade.Palette.YELLOW);
+                    color = Color.web(Arcade.Palette.YELLOW);
                     text = "READY!";
                 }
                 case TEST_LEVEL -> {
-                    color = Color.valueOf(Arcade.Palette.WHITE);
+                    color = Color.web(Arcade.Palette.WHITE);
                     text = "TEST    L%03d".formatted(level.number);
                 }
             }
@@ -191,7 +191,7 @@ public class ArcadePlayScene2D extends GameScene2D {
             gr.drawLivesCounter(numLivesShown, 5, 2 * TS, sizeInPx().y() - 2 * TS);
         } else {
             int credit = context.gameController().credit;
-            gr.drawText("CREDIT %2d".formatted(credit), Color.valueOf(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS),
+            gr.drawText("CREDIT %2d".formatted(credit), Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS),
                     2 * TS, sizeInPx().y() - 2);
         }
 

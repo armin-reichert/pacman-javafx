@@ -48,12 +48,12 @@ public class IntroScene extends GameScene2D {
     static final int ACTIVE_BULBS_DIST = 16;
     static final int MARQUEE_XMIN = 60, MARQUEE_XMAX = 192, MARQUEE_YMIN = 88, MARQUEE_YMAX = 148;
 
-    static final Color COLOR_CYAN   = Color.valueOf(Arcade.Palette.CYAN);
-    static final Color COLOR_ORANGE = Color.valueOf(Arcade.Palette.ORANGE);
-    static final Color COLOR_PINK   = Color.valueOf(Arcade.Palette.PINK);
-    static final Color COLOR_RED    = Color.valueOf(Arcade.Palette.RED);
-    static final Color COLOR_WHITE  = Color.valueOf(Arcade.Palette.WHITE);
-    static final Color COLOR_YELLOW = Color.valueOf(Arcade.Palette.YELLOW);
+    static final Color COLOR_CYAN   = Color.web(Arcade.Palette.CYAN);
+    static final Color COLOR_ORANGE = Color.web(Arcade.Palette.ORANGE);
+    static final Color COLOR_PINK   = Color.web(Arcade.Palette.PINK);
+    static final Color COLOR_RED    = Color.web(Arcade.Palette.RED);
+    static final Color COLOR_WHITE  = Color.web(Arcade.Palette.WHITE);
+    static final Color COLOR_YELLOW = Color.web(Arcade.Palette.YELLOW);
 
     static final Color COLOR_BULB_ON  = COLOR_WHITE;
     static final Color COLOR_BULB_OFF = COLOR_RED;
