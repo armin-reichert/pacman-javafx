@@ -147,9 +147,10 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUIConfiguration {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public WorldMapColoring worldMapColoring(WorldMap worldMap) {
-        return new WorldMapColoring((Map<String, String>) worldMap.getConfigValue("colorMap"));
+        Map<String, String> colorMap = worldMap.getConfigValue("colorMap");
+        return new WorldMapColoring(
+            colorMap.get("fill"), colorMap.get("stroke"), colorMap.get("door"), colorMap.get("pellet"));
     }
 
     @Override

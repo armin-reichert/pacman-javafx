@@ -15,10 +15,6 @@ public record WorldMapColoring(Color fill, Color stroke, Color door, Color pelle
         this(Color.valueOf(fillValue), Color.valueOf(strokeValue), Color.valueOf(doorValue), Color.valueOf(pelletValue));
     }
 
-    public WorldMapColoring(Map<String, String> sourceMap) {
-        this(sourceMap.get("fill"), sourceMap.get("stroke"), sourceMap.get("door"), sourceMap.get("pellet"));
-    }
-
     public WorldMapColoring(NES_ColorScheme ncs) {
         this(ncs.fillColor(), ncs.strokeColor(), ncs.strokeColor(), ncs.pelletColor());
     }
