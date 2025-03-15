@@ -38,7 +38,7 @@ public class Keyboard {
         return new KeyCodeCombination(code, KeyCombination.CONTROL_DOWN);
     }
 
-    public String format(KeyCodeCombination... combinations) {
+    public static String format(KeyCodeCombination... combinations) {
         return Arrays.stream(combinations)
             .map(KeyCodeCombination::toString)
             .map(s -> "[" + s + "]")
@@ -46,39 +46,37 @@ public class Keyboard {
     }
 
     private final Set<KeyCode> pressedKeys = new HashSet<>();
-    private final Map<KeyCodeCombination, Object> registeredCombinations = new HashMap<>();
+    private final Map<KeyCodeCombination, Object> knownCombinations = new HashMap<>();
     private final List<KeyCodeCombination> matches = new ArrayList<>(3);
 
-    public void register(KeyCodeCombination kcc, Object owner) {
-        if (registeredCombinations.get(kcc) == owner) {
-            Logger.debug("Key code combination '{}' already registered: {}", kcc, owner);
+    public void register(KeyCodeCombination combination, Object client) {
+        if (knownCombinations.get(combination) == client) {
+            Logger.debug("Key code combination '{}' already registered by {}", combination, client);
         } else {
-            registeredCombinations.put(kcc, owner);
-            Logger.debug("Key code combination '{}' registered: {}", kcc, owner);
+            knownCombinations.put(combination, client);
+            Logger.debug("Key code combination '{}' registered by {}", combination, client);
         }
     }
 
-    public void unregister(KeyCodeCombination kcc, Object owner) {
-        boolean removed = registeredCombinations.remove(kcc, owner);
+    public void unregister(KeyCodeCombination combination, Object client) {
+        boolean removed = knownCombinations.remove(combination, client);
         if (removed) {
-            Logger.debug("Key code combination '{}' removed: {}", kcc, owner);
+            Logger.debug("Key code combination '{}' removed by {}", combination, client);
         }
     }
 
-    public void onKeyPressed(KeyEvent keyEvent) {
-        Logger.debug("Key pressed: {}", keyEvent.getCode());
-        pressedKeys.add(keyEvent.getCode());
-        registeredCombinations.keySet().stream().filter(kcc -> kcc.match(keyEvent)).forEach(matches::add);
+    public void onKeyPressed(KeyEvent keyPress) {
+        pressedKeys.add(keyPress.getCode());
+        knownCombinations.keySet().stream().filter(kcc -> kcc.match(keyPress)).forEach(matches::add);
     }
 
-    public void onKeyReleased(KeyEvent keyEvent) {
-        Logger.debug("Key released: {}", keyEvent.getCode());
-        pressedKeys.remove(keyEvent.getCode());
+    public void onKeyReleased(KeyEvent keyRelease) {
+        pressedKeys.remove(keyRelease.getCode());
         matches.clear();
     }
 
-    public boolean isMatching(KeyCodeCombination kcc) {
-        return matches.contains(kcc);
+    public boolean isMatching(KeyCodeCombination combination) {
+        return matches.contains(combination);
     }
 
     public boolean pressed(KeyCode keyCode) {

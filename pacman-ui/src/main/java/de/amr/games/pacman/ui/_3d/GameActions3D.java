@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._3d;
 
-import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GameAction;
+import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui._3d.scene3d.Perspective;
 import javafx.scene.shape.DrawMode;
 

@@ -5,19 +5,19 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.appsuite;
 
 import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
-import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
+import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.games.pacman.arcade.pacman.ArcadePacMan_GameModel;
-import de.amr.games.pacman.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.games.pacman.arcade.pacman.ArcadePacMan_StartPage;
+import de.amr.games.pacman.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.games.pacman.arcade.pacman_xxl.*;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.DirectoryWatchdog;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
-import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_StartPage;
+import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.games.pacman.ui._2d.StartPage;
 import de.amr.games.pacman.ui._3d.PacManGamesUI_3D;
 import de.amr.games.pacman.ui.dashboard.InfoBoxCustomMaps;

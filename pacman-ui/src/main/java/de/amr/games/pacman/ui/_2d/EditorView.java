@@ -4,13 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._2d;
 
-import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.tilemap.editor.TileMapEditor;
-import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameActionProvider;
-import de.amr.games.pacman.uilib.ResourceManager;
+import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -18,10 +16,7 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import org.tinylog.Logger;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;

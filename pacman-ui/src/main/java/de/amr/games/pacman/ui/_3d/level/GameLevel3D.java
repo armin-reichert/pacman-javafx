@@ -17,7 +17,7 @@ import de.amr.games.pacman.ui.GameUIConfiguration;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.ui._3d.animation.Squirting;
 import de.amr.games.pacman.uilib.Ufx;
-import de.amr.games.pacman.uilib.WorldMapColoring;
+import de.amr.games.pacman.uilib.WorldMapColorScheme;
 import de.amr.games.pacman.uilib.model3D.Model3D;
 import javafx.animation.*;
 import javafx.beans.property.BooleanProperty;
@@ -92,7 +92,7 @@ public class GameLevel3D extends Group {
             livesCounter3D.livesCountPy.bind(livesCountPy);
 
             floor3D = createFloor(level.map().numCols() * TS, level.map().numRows() * TS);
-            WorldMapColoring coloring = context.gameConfiguration().worldMapColoring(level.map());
+            WorldMapColorScheme coloring = context.gameConfiguration().worldMapColoring(level.map());
             maze3D = new Maze3D(context.gameConfiguration(), level, coloring);
             addFood3D(level, context.assets().get("model3D.pellet"), coloredMaterial(coloring.pellet()));
 

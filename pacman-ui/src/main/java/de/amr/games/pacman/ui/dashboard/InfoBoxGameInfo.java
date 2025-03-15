@@ -12,7 +12,7 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui.GameContext;
-import de.amr.games.pacman.uilib.WorldMapColoring;
+import de.amr.games.pacman.uilib.WorldMapColorScheme;
 import javafx.scene.paint.Color;
 
 import java.net.URL;
@@ -49,20 +49,20 @@ public class InfoBoxGameInfo extends InfoBox {
             if (worldMap.hasConfigValue("nesColorScheme")) {
                 // Tengen Ms. Pac-Man
                 var nesColors = (NES_ColorScheme) worldMap.getConfigValue("nesColorScheme");
-                Color fillColor = Color.valueOf(nesColors.fillColor());
-                Color strokeColor = Color.valueOf(nesColors.strokeColor());
-                Color pelletColor = Color.valueOf(nesColors.pelletColor());
+                Color fillColor = Color.web(nesColors.fillColor());
+                Color strokeColor = Color.web(nesColors.strokeColor());
+                Color pelletColor = Color.web(nesColors.pelletColor());
                 return "%s / %s / %s".formatted(formatColorHex(fillColor), formatColorHex(strokeColor), formatColorHex(pelletColor));
             } else if (worldMap.hasConfigValue("colorMap")) {
                 // Pac-Man XXL game
                 Map<String, String> colorMap = worldMap.getConfigValue("colorMap");
-                Color fillColor = Color.valueOf(colorMap.get("fill"));
-                Color strokeColor = Color.valueOf(colorMap.get("stroke"));
-                Color pelletColor = Color.valueOf(colorMap.get("pellet"));
+                Color fillColor = Color.web(colorMap.get("fill"));
+                Color strokeColor = Color.web(colorMap.get("stroke"));
+                Color pelletColor = Color.web(colorMap.get("pellet"));
                 return "%s / %s / %s".formatted(formatColorHex(fillColor), formatColorHex(strokeColor), formatColorHex(pelletColor));
             } else if (worldMap.hasConfigValue("colorMapIndex")) {
                 // Arcade games
-                WorldMapColoring coloring = context.gameConfiguration().worldMapColoring(worldMap);
+                WorldMapColorScheme coloring = context.gameConfiguration().worldMapColoring(worldMap);
                 return "%s / %s / %s".formatted(formatColorHex(coloring.fill()), formatColorHex(coloring.stroke()), formatColorHex(coloring.pellet()));
             } else {
                 return InfoText.NO_INFO;

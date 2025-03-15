@@ -77,9 +77,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     protected final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>() {
         @Override
-        protected void invalidated() {
-        handleGameVariantChange(get());
-        }
+        protected void invalidated() { handleGameVariantChange(get()); }
     };
 
     protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
@@ -118,7 +116,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected ArcadeKeyBinding arcadeKeyBinding = DEFAULT_ARCADE_KEY_BINDING;
 
     public PacManGamesUI() {
-        clock.setPauseableCallback(this::runIfNotPausedOnEveryTick);
+        clock.setPauseableCallback(this::runOnEveryTickExceptWhenPaused);
         clock.setPermanentCallback(this::runOnEveryTick);
         loadAssets2D();
     }
@@ -194,9 +192,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     public Stage stage() { return stage; }
 
-    public Scene mainScene() {
-        return mainScene;
-    }
+    public Scene mainScene() { return mainScene; }
 
     public StartPageSelectionView startPageSelectionView() { return startPageSelectionView; }
 
@@ -204,7 +200,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     public ObjectProperty<GameVariant> gameVariantProperty() { return gameVariantPy; }
 
-    protected void runIfNotPausedOnEveryTick() {
+    protected void runOnEveryTickExceptWhenPaused() {
         try {
             gameController().update();
             currentGameScene().ifPresent(GameScene::update);
@@ -262,6 +258,9 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         );
 
         Scene mainScene = new Scene(sceneRoot, size.getWidth(), size.getHeight());
+        mainScene.widthProperty() .addListener((py,ov,nv) -> gameView.setSize(mainScene.getWidth(), mainScene.getHeight()));
+        mainScene.heightProperty().addListener((py,ov,nv) -> gameView.setSize(mainScene.getWidth(), mainScene.getHeight()));
+
         mainScene.addEventFilter(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
         mainScene.addEventFilter(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
 
@@ -280,9 +279,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
                 actionProvider.handleInput(this);
             }
         });
-
-        mainScene.widthProperty() .addListener((py,ov,nv) -> gameView.setSize(mainScene.getWidth(), mainScene.getHeight()));
-        mainScene.heightProperty().addListener((py,ov,nv) -> gameView.setSize(mainScene.getWidth(), mainScene.getHeight()));
 
         return mainScene;
     }

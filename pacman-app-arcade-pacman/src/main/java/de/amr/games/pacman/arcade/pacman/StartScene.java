@@ -46,11 +46,11 @@ public class StartScene extends GameScene2D {
     public void drawSceneContent() {
         var font8 = gr.scaledArcadeFont(8);
         var font6 = gr.scaledArcadeFont(6);
-        Color cyan = Color.valueOf(Arcade.Palette.CYAN);
-        Color orange = Color.valueOf(Arcade.Palette.ORANGE);
-        Color pink = Color.valueOf(Arcade.Palette.PINK);
-        Color rose = Color.valueOf(Arcade.Palette.ROSE);
-        Color white = Color.valueOf(Arcade.Palette.WHITE);
+        Color cyan = Color.web(Arcade.Palette.CYAN);
+        Color orange = Color.web(Arcade.Palette.ORANGE);
+        Color pink = Color.web(Arcade.Palette.PINK);
+        Color rose = Color.web(Arcade.Palette.ROSE);
+        Color white = Color.web(Arcade.Palette.WHITE);
         gr.drawText("PUSH START BUTTON", orange, font8, tiles2Px(6), tiles2Px(17));
         gr.drawText("1 PLAYER ONLY", cyan, font8, tiles2Px(8), tiles2Px(21));
         gr.drawText("BONUS PAC-MAN FOR 10000", rose, font8, tiles2Px(1), tiles2Px(25));

@@ -17,7 +17,7 @@ import de.amr.games.pacman.ui._2d.*;
 import de.amr.games.pacman.ui._3d.scene3d.PlayScene3D;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.ResourceManager;
-import de.amr.games.pacman.uilib.WorldMapColoring;
+import de.amr.games.pacman.uilib.WorldMapColorScheme;
 import de.amr.games.pacman.uilib.model3D.PacModel3D;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -52,35 +52,35 @@ public class PacManXXL_PacMan_UIConfig implements GameUIConfiguration {
         appIcon = rm.loadImage("graphics/icons/pacman.png");
         spriteSheet = new ArcadePacMan_SpriteSheet(rm.loadImage("graphics/pacman_spritesheet.png"));
 
-        assets.store("pacman_xxl.color.game_over_message",         Color.valueOf(Arcade.Palette.RED));
+        assets.store("pacman_xxl.color.game_over_message",         Color.web(Arcade.Palette.RED));
 
-        assets.store("pacman_xxl.pac.color.head",                  Color.valueOf(Arcade.Palette.YELLOW));
+        assets.store("pacman_xxl.pac.color.head",                  Color.web(Arcade.Palette.YELLOW));
         assets.store("pacman_xxl.pac.color.eyes",                  Color.grayRgb(33));
         assets.store("pacman_xxl.pac.color.palate",                Color.rgb(240, 180, 160));
 
-        assets.store("pacman_xxl.ghost.0.color.normal.dress",      Color.valueOf(Arcade.Palette.RED));
-        assets.store("pacman_xxl.ghost.0.color.normal.eyeballs",   Color.valueOf(Arcade.Palette.WHITE));
-        assets.store("pacman_xxl.ghost.0.color.normal.pupils",     Color.valueOf(Arcade.Palette.BLUE));
+        assets.store("pacman_xxl.ghost.0.color.normal.dress",      Color.web(Arcade.Palette.RED));
+        assets.store("pacman_xxl.ghost.0.color.normal.eyeballs",   Color.web(Arcade.Palette.WHITE));
+        assets.store("pacman_xxl.ghost.0.color.normal.pupils",     Color.web(Arcade.Palette.BLUE));
 
-        assets.store("pacman_xxl.ghost.1.color.normal.dress",      Color.valueOf(Arcade.Palette.PINK));
-        assets.store("pacman_xxl.ghost.1.color.normal.eyeballs",   Color.valueOf(Arcade.Palette.WHITE));
-        assets.store("pacman_xxl.ghost.1.color.normal.pupils",     Color.valueOf(Arcade.Palette.BLUE));
+        assets.store("pacman_xxl.ghost.1.color.normal.dress",      Color.web(Arcade.Palette.PINK));
+        assets.store("pacman_xxl.ghost.1.color.normal.eyeballs",   Color.web(Arcade.Palette.WHITE));
+        assets.store("pacman_xxl.ghost.1.color.normal.pupils",     Color.web(Arcade.Palette.BLUE));
 
-        assets.store("pacman_xxl.ghost.2.color.normal.dress",      Color.valueOf(Arcade.Palette.CYAN));
-        assets.store("pacman_xxl.ghost.2.color.normal.eyeballs",   Color.valueOf(Arcade.Palette.WHITE));
-        assets.store("pacman_xxl.ghost.2.color.normal.pupils",     Color.valueOf(Arcade.Palette.BLUE));
+        assets.store("pacman_xxl.ghost.2.color.normal.dress",      Color.web(Arcade.Palette.CYAN));
+        assets.store("pacman_xxl.ghost.2.color.normal.eyeballs",   Color.web(Arcade.Palette.WHITE));
+        assets.store("pacman_xxl.ghost.2.color.normal.pupils",     Color.web(Arcade.Palette.BLUE));
 
-        assets.store("pacman_xxl.ghost.3.color.normal.dress",      Color.valueOf(Arcade.Palette.ORANGE));
-        assets.store("pacman_xxl.ghost.3.color.normal.eyeballs",   Color.valueOf(Arcade.Palette.WHITE));
-        assets.store("pacman_xxl.ghost.3.color.normal.pupils",     Color.valueOf(Arcade.Palette.BLUE));
+        assets.store("pacman_xxl.ghost.3.color.normal.dress",      Color.web(Arcade.Palette.ORANGE));
+        assets.store("pacman_xxl.ghost.3.color.normal.eyeballs",   Color.web(Arcade.Palette.WHITE));
+        assets.store("pacman_xxl.ghost.3.color.normal.pupils",     Color.web(Arcade.Palette.BLUE));
 
-        assets.store("pacman_xxl.ghost.color.frightened.dress",    Color.valueOf(Arcade.Palette.BLUE));
-        assets.store("pacman_xxl.ghost.color.frightened.eyeballs", Color.valueOf(Arcade.Palette.ROSE));
-        assets.store("pacman_xxl.ghost.color.frightened.pupils",   Color.valueOf(Arcade.Palette.ROSE));
+        assets.store("pacman_xxl.ghost.color.frightened.dress",    Color.web(Arcade.Palette.BLUE));
+        assets.store("pacman_xxl.ghost.color.frightened.eyeballs", Color.web(Arcade.Palette.ROSE));
+        assets.store("pacman_xxl.ghost.color.frightened.pupils",   Color.web(Arcade.Palette.ROSE));
 
-        assets.store("pacman_xxl.ghost.color.flashing.dress",      Color.valueOf(Arcade.Palette.WHITE));
-        assets.store("pacman_xxl.ghost.color.flashing.eyeballs",   Color.valueOf(Arcade.Palette.ROSE));
-        assets.store("pacman_xxl.ghost.color.flashing.pupils",     Color.valueOf(Arcade.Palette.RED));
+        assets.store("pacman_xxl.ghost.color.flashing.dress",      Color.web(Arcade.Palette.WHITE));
+        assets.store("pacman_xxl.ghost.color.flashing.eyeballs",   Color.web(Arcade.Palette.ROSE));
+        assets.store("pacman_xxl.ghost.color.flashing.pupils",     Color.web(Arcade.Palette.RED));
 
         // Clips
         assets.store("pacman_xxl.audio.bonus_eaten",    rm.loadAudioClip("sound/eat_fruit.mp3"));
@@ -145,9 +145,10 @@ public class PacManXXL_PacMan_UIConfig implements GameUIConfiguration {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public WorldMapColoring worldMapColoring(WorldMap worldMap) {
-        return new WorldMapColoring((Map<String, String>) worldMap.getConfigValue("colorMap"));
+    public WorldMapColorScheme worldMapColoring(WorldMap worldMap) {
+        Map<String, String> colorMap = worldMap.getConfigValue("colorMap");
+        return new WorldMapColorScheme(
+            colorMap.get("fill"), colorMap.get("stroke"), colorMap.get("door"), colorMap.get("pellet"));
     }
 
     @Override

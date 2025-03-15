@@ -309,7 +309,7 @@ public interface GameRenderer {
     }
 
     default void drawScores(GameContext context) {
-        Color color = Color.valueOf(Arcade.Palette.WHITE);
+        Color color = Color.web(Arcade.Palette.WHITE);
         Font font = scaledArcadeFont(TS);
         drawScore(context.game().scoreManager().score(),     "SCORE",      tiles2Px(1),  tiles2Px(1), font, color);
         drawScore(context.game().scoreManager().highScore(), "HIGH SCORE", tiles2Px(14), tiles2Px(1), font, color);

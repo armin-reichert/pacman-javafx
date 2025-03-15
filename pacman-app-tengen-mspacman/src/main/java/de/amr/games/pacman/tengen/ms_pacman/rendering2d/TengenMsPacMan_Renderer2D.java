@@ -231,7 +231,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         }
         ctx.save();
         ctx.scale(scaling(), scaling());
-        Color pelletColor = Color.valueOf(coloredMapSet.normalMaze().colorScheme().pelletColor());
+        Color pelletColor = Color.web(coloredMapSet.normalMaze().colorScheme().pelletColor());
         drawPellets(level, pelletColor);
         drawEnergizers(level, pelletColor);
         ctx.restore();
@@ -253,7 +253,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         // draw food to erase eaten food!
         ctx.save();
         ctx.scale(scaling(), scaling());
-        Color pelletColor = Color.valueOf(coloredMapSet.normalMaze().colorScheme().pelletColor());
+        Color pelletColor = Color.web(coloredMapSet.normalMaze().colorScheme().pelletColor());
         drawPellets(level, pelletColor);
         drawEnergizers(level, pelletColor);
         ctx.restore();
@@ -314,7 +314,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
                     if (demoLevel) {
                         WorldMap worldMap = level.map();
                         NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
-                        color = Color.valueOf(nesColorScheme.strokeColor());
+                        color = Color.web(nesColorScheme.strokeColor());
                     }
                     drawTextCenteredOver("GAME OVER", x, y, color);
                 }

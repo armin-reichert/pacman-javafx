@@ -8,8 +8,8 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.ui._2d.GameActions2D;
-import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.ui._2d.GameScene2D;
+import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -45,7 +45,7 @@ public class StartScene extends GameScene2D {
     @Override
     public void drawSceneContent() {
         GameSpriteSheet spriteSheet = gr.spriteSheet();
-        Color orange = Color.valueOf(Arcade.Palette.ORANGE), red = Color.valueOf(Arcade.Palette.RED), white = Color.valueOf(Arcade.Palette.WHITE);
+        Color orange = Color.web(Arcade.Palette.ORANGE), red = Color.web(Arcade.Palette.RED), white = Color.web(Arcade.Palette.WHITE);
         Font font8 = gr.scaledArcadeFont(8), font6 = gr.scaledArcadeFont(6);
         gr.drawText("PUSH START BUTTON", orange, font8, tiles2Px(6), tiles2Px(16));
         gr.drawText("1 PLAYER ONLY", orange, font8, tiles2Px(8), tiles2Px(18));

@@ -8,7 +8,6 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.MapSelectionMode;
 import de.amr.games.pacman.ui.PacManGamesUI;
-import de.amr.games.pacman.ui._3d.GlobalProperties3d;
 import de.amr.games.pacman.ui.input.Keyboard;
 import de.amr.games.pacman.uilib.OptionMenu;
 import javafx.animation.AnimationTimer;
@@ -47,7 +46,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         super(UNSCALED_HEIGHT);
         this.ui = ui;
 
-        setBackgroundFill(Color.valueOf("#0C1568"));
+        setBackgroundFill(Color.web("#0C1568"));
         setTitle("  Pac-Man XXL");
         setOnStart(() -> {
             logMenuState();

@@ -6,39 +6,21 @@ package de.amr.games.pacman.ui.dashboard;
 
 import javafx.scene.text.Text;
 
-import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
-/**
- * Text field whose text is conditionally computed.
- *
- * @author Armin Reichert
- */
+import static de.amr.games.pacman.lib.Globals.assertNotNull;
+
 public class InfoText extends Text {
 
     public static final String NO_INFO = "n/a";
 
-    private BooleanSupplier fnAvailable = () -> true;
-    private Supplier<?> fnText = () -> "Value";
+    private final Supplier<?> fnSupplyText;
 
-    public InfoText(String text) {
-        this(() -> text);
-    }
-
-    public InfoText(Supplier<?> fnText) {
-        this.fnText = fnText;
-    }
-
-    public InfoText available(BooleanSupplier fnEvaluate) {
-        this.fnAvailable = fnEvaluate;
-        return this;
+    public InfoText(Supplier<?> fnSupplyText) {
+        this.fnSupplyText = assertNotNull(fnSupplyText);
     }
 
     public void update() {
-        if (fnAvailable.getAsBoolean()) {
-            setText(String.valueOf(fnText.get()));
-        } else {
-            setText(InfoText.NO_INFO);
-        }
+        setText(String.valueOf(fnSupplyText.get()));
     }
 }

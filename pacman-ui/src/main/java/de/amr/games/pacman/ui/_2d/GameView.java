@@ -20,7 +20,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -170,7 +169,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
         canvasContainer.setMinScaling(0.5);
         canvasContainer.setUnscaledCanvasWidth(ARCADE_MAP_SIZE_IN_PIXELS.x());
         canvasContainer.setUnscaledCanvasHeight(ARCADE_MAP_SIZE_IN_PIXELS.y());
-        canvasContainer.setBorderColor(Color.valueOf(Arcade.Palette.WHITE));
+        canvasContainer.setBorderColor(Color.web(Arcade.Palette.WHITE));
         canvasContainer.decorationEnabledPy.addListener((py, ov, nv) -> {
             GameScene gameScene = gameScenePy.get();
             if (gameScene != null) {

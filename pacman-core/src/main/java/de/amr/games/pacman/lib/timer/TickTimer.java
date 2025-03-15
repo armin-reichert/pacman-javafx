@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib.timer;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.timer.TickTimerEvent.Type;
 import org.tinylog.Logger;
 
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import static de.amr.games.pacman.lib.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.timer.TickTimer.State.*;
 
 /**
@@ -26,10 +28,6 @@ public class TickTimer {
 
     public static final long INDEFINITE = Long.MAX_VALUE; // TODO use -1?
 
-    private static boolean isValidTickNumber(long ticks) {
-        return ticks >= 0 || ticks == INDEFINITE;
-    }
-
     /**
      * @param seconds seconds
      * @return number of ticks corresponding to given seconds at 60Hz
@@ -44,6 +42,12 @@ public class TickTimer {
      */
     public static String ticksToString(long ticks) {
         return ticks == INDEFINITE ? "indefinite" : "" + ticks;
+    }
+
+    private static void assertValidTickNumber(long ticks) {
+        if (ticks < 0) {
+            throw new IllegalArgumentException("Invalid tick number: " + ticks);
+        }
     }
 
     private final String name;
@@ -73,9 +77,7 @@ public class TickTimer {
      * @param ticks timer duration in ticks
      */
     public void reset(long ticks) {
-        if (!isValidTickNumber(ticks)) {
-            throw new IllegalArgumentException("Invalid tick number: " + ticks);
-        }
+        assertValidTickNumber(ticks);
         duration = ticks;
         tickCount = 0;
         state = READY;
@@ -174,9 +176,7 @@ public class TickTimer {
      * @param ticks number of ticks
      */
     public void restartTicks(long ticks) {
-        if (!isValidTickNumber(ticks)) {
-            throw new IllegalArgumentException("Invalid tick number: " + ticks);
-        }
+        assertValidTickNumber(ticks);
         reset(ticks);
         start();
     }
@@ -244,6 +244,7 @@ public class TickTimer {
     }
 
     public void addListener(Consumer<TickTimerEvent> subscriber) {
+        assertNotNull(subscriber);
         if (listeners == null) {
             listeners = new ArrayList<>(3);
         }
@@ -251,12 +252,14 @@ public class TickTimer {
     }
 
     public void removeListener(Consumer<TickTimerEvent> subscriber) {
+        assertNotNull(subscriber);
         if (listeners != null) {
             listeners.remove(subscriber);
         }
     }
 
     private void publishEvent(TickTimerEvent event) {
+        assertNotNull(event);
         if (listeners != null) {
             listeners.forEach(subscriber -> subscriber.accept(event));
         }
