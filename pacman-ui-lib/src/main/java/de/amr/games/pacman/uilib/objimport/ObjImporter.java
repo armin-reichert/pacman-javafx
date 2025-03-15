@@ -331,6 +331,7 @@ public class ObjImporter {
                  */
                 else if (line.isEmpty() || line.startsWith("#")) {
                     // comments and empty lines are ignored
+                    Logger.trace("Empty or comment line, ignored");
                 }
 
                 /*
