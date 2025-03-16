@@ -15,7 +15,6 @@ import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_PacAnimat
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet;
 import de.amr.games.pacman.tengen.ms_pacman.scene.*;
-import de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui.GameUIConfiguration;
@@ -222,11 +221,6 @@ public class TengenMsPacMan_UIConfig implements GameUIConfiguration {
     public void createActorAnimations(GameLevel level) {
         level.pac().setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         level.ghosts().forEach(ghost -> ghost.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, ghost.id())));
-    }
-
-    @Override
-    public TerrainRenderer3D createTerrainRenderer3D() {
-        return new TerrainRenderer3D();
     }
 
     @Override

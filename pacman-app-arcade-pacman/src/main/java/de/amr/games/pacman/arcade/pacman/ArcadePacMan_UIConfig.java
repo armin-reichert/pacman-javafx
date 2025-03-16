@@ -9,7 +9,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui.GameUIConfiguration;
@@ -171,11 +170,6 @@ public class ArcadePacMan_UIConfig implements GameUIConfiguration {
     public void createActorAnimations(GameLevel level) {
         level.pac().setAnimations(new PacAnimations(spriteSheet));
         level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id())));
-    }
-
-    @Override
-    public TerrainRenderer3D createTerrainRenderer3D() {
-        return new TerrainRenderer3D();
     }
 
     @Override

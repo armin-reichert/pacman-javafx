@@ -8,7 +8,6 @@ import de.amr.games.pacman.arcade.ms_pacman.*;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui.GameUIConfiguration;
@@ -156,10 +155,6 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUIConfiguration {
     @Override
     public GameRenderer createRenderer(AssetStorage assets, Canvas canvas) {
         return new VectorGraphicsGameRenderer(assets, spriteSheet, canvas);
-    }
-    @Override
-    public TerrainRenderer3D createTerrainRenderer3D() {
-        return new TerrainRenderer3D();
     }
 
     @Override

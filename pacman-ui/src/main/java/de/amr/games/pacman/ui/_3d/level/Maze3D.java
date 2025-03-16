@@ -69,7 +69,7 @@ public class Maze3D extends Group {
         cornerTopMaterial.setDiffuseColor(wallTopColor);
         cornerTopMaterial.specularColorProperty().bind(cornerTopMaterial.diffuseColorProperty().map(Color::brighter));
 
-        TerrainRenderer3D r3D = configuration3D.createTerrainRenderer3D();
+        TerrainRenderer3D r3D = new TerrainRenderer3D();
         r3D.setWallBaseHeightProperty(obstacleBaseHeightPy);
         r3D.setWallTopHeight(OBSTACLE_TOP_HEIGHT);
         r3D.setWallTopMaterial(wallTopMaterial);

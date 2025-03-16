@@ -32,6 +32,5 @@ public interface GameUIConfiguration {
     Image appIcon();
 
     // 3D-only
-    TerrainRenderer3D createTerrainRenderer3D();
     Node createLivesCounterShape(AssetStorage assets);
 }
