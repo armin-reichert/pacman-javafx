@@ -92,16 +92,22 @@ public class ArcadePacMan_GameModel extends GameModel {
         /*21*/ { 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
     };
 
+    private static Waypoint wp(int x, int y) { return new Waypoint(x, y); }
+
     protected static final Waypoint[] PACMAN_DEMO_LEVEL_ROUTE = {
-        new Waypoint(12, 26), new Waypoint(9, 26), new Waypoint(12, 32), new Waypoint(15, 32), new Waypoint(24, 29), new Waypoint(21, 23),
-        new Waypoint(18, 23), new Waypoint(18, 20), new Waypoint(18, 17), new Waypoint(15, 14), new Waypoint(12, 14), new Waypoint(9, 17),
-        new Waypoint(6, 17), new Waypoint(6, 11), new Waypoint(6, 8), new Waypoint(6, 4), new Waypoint(1, 8), new Waypoint(6, 8),
-        new Waypoint(9, 8), new Waypoint(12, 8), new Waypoint(6, 4), new Waypoint(6, 8), new Waypoint(6, 11), new Waypoint(1, 8),
-        new Waypoint(6, 8), new Waypoint(9, 8), new Waypoint(12, 14), new Waypoint(9, 17), new Waypoint(6, 17), new Waypoint(0, 17),
-        new Waypoint(21, 17), new Waypoint(21, 23), new Waypoint(21, 26), new Waypoint(24, 29), /* avoid moving up: */ new Waypoint(26, 29),
-        new Waypoint(15, 32), new Waypoint(12, 32), new Waypoint(3, 29), new Waypoint(6, 23), new Waypoint(9, 23), new Waypoint(12, 26),
-        new Waypoint(15, 26), new Waypoint(18, 23), new Waypoint(21, 23), new Waypoint(24, 29), /* avoid moving up: */ new Waypoint(26, 29),
-        new Waypoint(15, 32), new Waypoint(12, 32), new Waypoint(3, 29), new Waypoint(6, 23)
+            wp(9, 26), wp(9, 29), wp(12,29), wp(12, 32), wp(26,32),
+            wp(26,29), wp(24,29), wp(24,26), wp(26,26), wp(26,23),
+            wp(21,23), wp(18,23), wp(18,14), wp(9,14), wp(9,17),
+            wp(6,17), wp(6,4), wp(1,4), wp(1,8), wp(12,8),
+            wp(12,4), wp(6,4), wp(6,11), wp(1,11), wp(1,8),
+            wp(9,8), wp(9,11), wp(12,11), wp(12,14), wp(9,14),
+            wp(9,17), wp(0,17), /*warp tunnel*/ wp(21,17), wp(21,29),
+            wp(26,29), wp(26,32), wp(1,32), wp(1,29), wp(3,29),
+            wp(3,26), wp(1,26), wp(1,23), wp(12,23), wp(12,26),
+            wp(15,26), wp(15,23), wp(26,23), wp(26,26), wp(24,26),
+            wp(24,29), wp(26,29), wp(26,32), wp(1,32),
+            wp(1,29), wp(3,29), wp(3,26), wp(1,26), wp(1,23),
+            wp(6,23) /* eaten at 3,23 in original game */
     };
 
     private static final byte PELLET_VALUE = 10;
