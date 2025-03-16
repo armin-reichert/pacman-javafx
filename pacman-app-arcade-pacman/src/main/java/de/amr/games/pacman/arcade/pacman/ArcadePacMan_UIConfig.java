@@ -173,10 +173,10 @@ public class ArcadePacMan_UIConfig implements GameUIConfiguration {
     }
 
     @Override
-    public Node createLivesCounterShape(AssetStorage assets) {
+    public Node createLivesCounterShape(AssetStorage assets, double size) {
         String namespace = assetNamespace();
         return PacModel3D.createPacShape(
-                assets.get("model3D.pacman"), 10,
+                assets.get("model3D.pacman"), size,
                 assets.color(namespace + ".pac.color.head"),
                 assets.color(namespace + ".pac.color.eyes"),
                 assets.color(namespace + ".pac.color.palate")

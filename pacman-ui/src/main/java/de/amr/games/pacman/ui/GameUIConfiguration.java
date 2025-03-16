@@ -32,5 +32,5 @@ public interface GameUIConfiguration {
     Image appIcon();
 
     // 3D-only
-    Node createLivesCounterShape(AssetStorage assets);
+    Node createLivesCounterShape(AssetStorage assets, double size);
 }

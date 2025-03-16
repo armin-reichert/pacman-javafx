@@ -158,16 +158,16 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUIConfiguration {
     }
 
     @Override
-    public Node createLivesCounterShape(AssetStorage assets) {
+    public Node createLivesCounterShape(AssetStorage assets, double size) {
         String namespace = assetNamespace();
         return new Group(
             PacModel3D.createPacShape(
-                assets.get("model3D.pacman"), 10,
+                assets.get("model3D.pacman"), size,
                 assets.color(namespace + ".pac.color.head"),
                 assets.color(namespace + ".pac.color.eyes"),
                 assets.color(namespace + ".pac.color.palate")
             ),
-            PacModel3D.createFemaleParts(10,
+            PacModel3D.createFemaleParts(size,
                 assets.color(namespace + ".pac.color.hairbow"),
                 assets.color(namespace + ".pac.color.hairbow.pearls"),
                 assets.color(namespace + ".pac.color.boobs")

@@ -50,6 +50,7 @@ public interface PacModel3D {
         root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
         root.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
         root.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
+
         var rootBounds = root.getBoundsInLocal();
         root.getTransforms().add(new Scale(size / rootBounds.getWidth(), size / rootBounds.getHeight(), size / rootBounds.getDepth()));
 

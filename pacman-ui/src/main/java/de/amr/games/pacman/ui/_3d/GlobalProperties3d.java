@@ -10,18 +10,18 @@ import static de.amr.games.pacman.lib.Globals.TS;
 public interface GlobalProperties3d {
 
     int   LIVES_COUNTER_MAX     = 5;
+    float LIVES_COUNTER_SIZE    = 12f;
     float FLOOR_THICKNESS       = 0.5f;
     float OBSTACLE_BASE_HEIGHT  = 7.0f;
     float OBSTACLE_TOP_HEIGHT   = 0.1f;
     float OBSTACLE_THICKNESS    = 1.25f;
-    float BORDER_WALL_THICKNESS = 1.5f;
     float HOUSE_BASE_HEIGHT     = 12.0f;
     float HOUSE_WALL_TOP_HEIGHT = 0.1f;
     float HOUSE_WALL_THICKNESS  = 1.5f;
     float HOUSE_OPACITY         = 0.4f;
     float HOUSE_SENSITIVITY     = 1.5f * TS;
-    float PAC_SIZE              = 14.0f;
-    float GHOST_SIZE            = 13.5f;
+    float PAC_SIZE              = 15.0f;
+    float GHOST_SIZE            = 13.0f;
     float ENERGIZER_RADIUS      = 3.5f;
     float PELLET_RADIUS         = 1.0f;
 

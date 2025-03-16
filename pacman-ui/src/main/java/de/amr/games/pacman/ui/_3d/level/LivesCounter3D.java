@@ -43,7 +43,7 @@ public class LivesCounter3D extends Group {
     private final Node[] pacShapes;
     private final PointLight light = new PointLight();
 
-    public LivesCounter3D(Node[] pacShapes, int shapeHeight) {
+    public LivesCounter3D(Node[] pacShapes) {
         this.pacShapes = pacShapes;
 
         pillarMaterialPy.bind(pillarColorPy.map(Ufx::coloredMaterial));
@@ -56,15 +56,19 @@ public class LivesCounter3D extends Group {
 
         var standsGroup = new Group();
         for (int i = 0; i < pacShapes.length; ++i) {
-            int x = i * 2 * TS;
+            final Node pacShape = pacShapes[i];
+            final int x = i * 2 * TS;
+            final double shapeRadius = 0.5 * pacShape.getBoundsInParent().getHeight(); // take scale transform into account!
+
+            pacShape.setUserData(i);
+            pacShape.setTranslateX(x);
+            pacShape.setTranslateY(0);
+            // let Pac shape sit on top of plate
+            pacShape.translateZProperty().bind(pillarHeightPy.add(plateThicknessPy).add(shapeRadius).negate());
+            pacShape.visibleProperty().bind(livesCountPy.map(count -> count.intValue() > (int) pacShape.getUserData()));
+
             standsGroup.getChildren().add(createStand(x));
-            Node shape = pacShapes[i];
-            shape.setUserData(i);
-            shape.setTranslateX(x);
-            shape.setTranslateY(0);
-            shape.translateZProperty().bind(pillarHeightPy.add(plateThicknessPy).add(0.5 * shapeHeight).negate());
-            shape.visibleProperty().bind(livesCountPy.map(count -> count.intValue() > (int) shape.getUserData()));
-            getChildren().add(shape);
+            getChildren().add(pacShape);
         }
         resetShapes();
         getChildren().addAll(standsGroup, light);

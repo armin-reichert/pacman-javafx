@@ -15,6 +15,7 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GameUIConfiguration;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
+import de.amr.games.pacman.ui._3d.GlobalProperties3d;
 import de.amr.games.pacman.ui._3d.animation.Squirting;
 import de.amr.games.pacman.uilib.Ufx;
 import de.amr.games.pacman.uilib.WorldMapColorScheme;
@@ -24,6 +25,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
@@ -36,6 +38,7 @@ import javafx.scene.shape.Box;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -159,9 +162,11 @@ public class GameLevel3D extends Group {
 
     private LivesCounter3D createLivesCounter3D(boolean canStartNewGame) {
         GameUIConfiguration config3D = context.gameConfiguration();
-        Node[] shapes = IntStream.range(0, LIVES_COUNTER_MAX)
-            .mapToObj(i -> config3D.createLivesCounterShape(context.assets())).toArray(Node[]::new);
-        var counter3D = new LivesCounter3D(shapes, 10);
+        Node[] counterShapes = new Node[LIVES_COUNTER_MAX];
+        for (int i = 0; i < counterShapes.length; ++i) {
+            counterShapes[i] = config3D.createLivesCounterShape(context.assets(), LIVES_COUNTER_SIZE);
+        }
+        var counter3D = new LivesCounter3D(counterShapes);
         counter3D.setTranslateX(2 * TS);
         counter3D.setTranslateY(2 * TS);
         counter3D.setVisible(canStartNewGame);
