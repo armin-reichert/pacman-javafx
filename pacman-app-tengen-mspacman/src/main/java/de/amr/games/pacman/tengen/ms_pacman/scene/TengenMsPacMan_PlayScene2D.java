@@ -190,7 +190,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     }
 
     private void updateCameraPosition(double scaling) {
-        int worldTilesY = context.game().level().map(level -> level.map().numRows()).orElse(NES_TILES.y());
+        int worldTilesY = context.game().level().map(level -> level.worldMap().numRows()).orElse(NES_TILES.y());
         double dy = scaling * (worldTilesY - 43) * HTS;
         fixedCamera.setTranslateY(dy);
     }
@@ -234,7 +234,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 if (context.gameState() == GameState.HUNTING) {
                     movingCamera.focusPlayer(true);
                 }
-                movingCamera.setVerticalRangeTiles(level.map().numRows());
+                movingCamera.setVerticalRangeTiles(level.worldMap().numRows());
                 movingCamera.update(level.pac());
             }
         });
@@ -287,7 +287,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 level.pac().setImmune(PY_IMMUNITY.get());
             }
             createLevelCompleteAnimation(level);
-            gr.setWorldMap(level.map());
+            gr.setWorldMap(level.worldMap());
         });
     }
 
@@ -303,7 +303,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         Logger.info("{} entered from {}", this, oldScene);
         context.joypadKeyBinding().register(context.keyboard());
         setKeyBindings();
-        context.game().level().map(GameLevel::map).ifPresent(worldMap -> gr.setWorldMap(worldMap));
+        context.game().level().map(GameLevel::worldMap).ifPresent(worldMap -> gr.setWorldMap(worldMap));
     }
 
     private void setKeyBindings() {

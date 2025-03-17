@@ -148,7 +148,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
         if (state == HUNTING_PAC) {
             var currentTile = tile();
             if (specialTerrainTiles.contains(tile)
-                    && level.map().get(LayerID.TERRAIN, tile) == TerrainTiles.ONE_WAY_DOWN
+                    && level.worldMap().get(LayerID.TERRAIN, tile) == TerrainTiles.ONE_WAY_DOWN
                     && currentTile.equals(tile.plus(DOWN.vector()))) {
                 Logger.debug("Hunting {} cannot move up to special tile {}", name, tile);
                 return false;

@@ -81,7 +81,7 @@ public enum GameActions2D implements GameAction {
         public void execute(GameContext context) {
             if (context.game().isPlaying() && context.gameState() == GameState.HUNTING) {
                 context.game().level().ifPresent(level -> {
-                    level.map().tiles()
+                    level.worldMap().tiles()
                         .filter(not(level::isEnergizerPosition))
                         .filter(level::hasFoodAt)
                         .forEach(level::registerFoodEatenAt);

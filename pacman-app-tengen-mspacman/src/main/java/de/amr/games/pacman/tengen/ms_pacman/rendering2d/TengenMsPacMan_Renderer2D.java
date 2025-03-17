@@ -202,10 +202,10 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
         TengenMsPacMan_GameModel game = context.game();
         MapCategory mapCategory = game.mapCategory();
-        int mapNumber = level.map().getConfigValue("mapNumber");
+        int mapNumber = level.worldMap().getConfigValue("mapNumber");
 
         if (areGameOptionsChanged(game)) {
-            drawGameOptionsInfoCenteredAt(level.map().numCols() * HTS, tiles2Px(2) + HTS, game);
+            drawGameOptionsInfoCenteredAt(level.worldMap().numCols() * HTS, tiles2Px(2) + HTS, game);
         }
 
         if (coloredMapSet == null) {
@@ -241,7 +241,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx.setImageSmoothing(false);
         TengenMsPacMan_GameModel game = context.game();
         if (areGameOptionsChanged(game)) {
-            drawGameOptionsInfoCenteredAt(level.map().numCols() * HTS, tiles2Px(2) + HTS, game);
+            drawGameOptionsInfoCenteredAt(level.worldMap().numCols() * HTS, tiles2Px(2) + HTS, game);
         }
         ColoredMapImage maze = coloredMapSet.flashingMazes().get(flashingIndex);
         RectArea area = maze.area();
@@ -260,7 +260,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     private void drawPellets(GameLevel level, Color pelletColor) {
-        level.map().tiles()
+        level.worldMap().tiles()
             .filter(level::isFoodPosition)
             .filter(not(level::isEnergizerPosition))
             .forEach(tile -> {
@@ -277,7 +277,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     private void drawEnergizers(GameLevel level, Color pelletColor) {
         double size = TS;
         double offset = 0.5 * (HTS);
-        level.map().tiles().filter(level::isEnergizerPosition).forEach(energizerTile -> {
+        level.worldMap().tiles().filter(level::isEnergizerPosition).forEach(energizerTile -> {
             double x = energizerTile.x() * TS, y = energizerTile.y() * TS;
             ctx.setFill(CANVAS_BACKGROUND_COLOR);
             ctx.fillRect(x-1, y-1, TS + 2, TS + 2); // avoid blitzer
@@ -312,7 +312,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
                 case GAME_OVER -> {
                     Color color = assets.color(assetNamespace + ".color.game_over_message");
                     if (demoLevel) {
-                        WorldMap worldMap = level.map();
+                        WorldMap worldMap = level.worldMap();
                         NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
                         color = Color.web(nesColorScheme.strokeColor());
                     }
@@ -333,8 +333,8 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx.setFill(CANVAS_BACKGROUND_COLOR);
         ctx.fillRect(topLeftPosition.x(), topLeftPosition.y(), size.x(), size.y());
 
-        overPaint(world.map().getTerrainTileProperty("pos_pac", vec_2i(14, 26)));
-        overPaint(world.map().getTerrainTileProperty("pos_ghost_1_red", vec_2i(13, 14)));
+        overPaint(world.worldMap().getTerrainTileProperty("pos_pac", vec_2i(14, 26)));
+        overPaint(world.worldMap().getTerrainTileProperty("pos_ghost_1_red", vec_2i(13, 14)));
     }
 
     private void overPaint(Vector2i tile) {

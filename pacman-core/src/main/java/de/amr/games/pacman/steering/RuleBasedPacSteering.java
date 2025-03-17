@@ -232,8 +232,8 @@ public class RuleBasedPacSteering implements Steering {
         List<Vector2i> foodTiles = new ArrayList<>();
         Vector2i pacManTile = pac.tile();
         float minDist = Float.MAX_VALUE;
-        for (int x = 0; x < level.map().numCols(); ++x) {
-            for (int y = 0; y < level.map().numRows(); ++y) {
+        for (int x = 0; x < level.worldMap().numCols(); ++x) {
+            for (int y = 0; y < level.worldMap().numRows(); ++y) {
                 Vector2i tile = new Vector2i(x, y);
                 if (!level.isFoodPosition(tile) || level.hasEatenFoodAt(tile)) {
                     continue;

@@ -43,7 +43,7 @@ public class Maze3D extends Group {
     private final MaterialColorAnimation materialColorAnimation;
 
     public Maze3D(GameUIConfiguration configuration3D, GameLevel level, WorldMapColorScheme coloring) {
-        Logger.info("Build world 3D. Map URL='{}'", URLDecoder.decode(level.map().url().toExternalForm(), StandardCharsets.UTF_8));
+        Logger.info("Build world 3D. Map URL='{}'", URLDecoder.decode(level.worldMap().url().toExternalForm(), StandardCharsets.UTF_8));
 
         Color wallBaseColor = coloring.stroke();
         // need some contrast with floor if fill color is black
@@ -79,12 +79,12 @@ public class Maze3D extends Group {
         //TODO check this:
         obstacleBaseHeightPy.set(PY_3D_WALL_HEIGHT.get());
 
-        for (Obstacle obstacle : level.map().obstacles()) {
+        for (Obstacle obstacle : level.worldMap().obstacles()) {
             if (!level.isPartOfHouse(tileAt(obstacle.startPoint().toVector2f()))) {
                 r3D.setWallThickness(OBSTACLE_THICKNESS);
                 r3D.setWallBaseMaterial(wallBaseMaterial);
                 r3D.setWallTopMaterial(wallTopMaterial);
-                r3D.renderObstacle3D(this, obstacle, isWorldBorder(level.map(), obstacle));
+                r3D.renderObstacle3D(this, obstacle, isWorldBorder(level.worldMap(), obstacle));
             }
         }
 

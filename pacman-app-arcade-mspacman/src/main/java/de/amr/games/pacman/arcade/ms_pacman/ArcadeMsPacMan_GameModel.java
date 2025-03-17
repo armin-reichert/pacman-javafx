@@ -173,7 +173,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     }
 
     protected void populateLevel(GameLevel level) {
-        final WorldMap worldMap = level.map();
+        final WorldMap worldMap = level.worldMap();
 
         if (!worldMap.hasProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MIN_TILE)) {
             Logger.warn("No house min tile found in map!");
@@ -475,10 +475,10 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         Vector2i entryTile, exitTile;
         boolean crossMazeLeftToRight;
 
-        WorldMap worldMap = level.map();
+        WorldMap worldMap = level.worldMap();
         if (worldMap.hasProperty(LayerID.TERRAIN, "pos_bonus")) {
             // use entry tile stored in terrain map
-            entryTile = level.map().getTerrainTileProperty("pos_bonus", null);
+            entryTile = level.worldMap().getTerrainTileProperty("pos_bonus", null);
             if (entryTile.x() == 0) {
                 // start tile is at left maze border
                 exitTile = portals.get(RND.nextInt(portals.size())).rightTunnelEnd().plus(1, 0);

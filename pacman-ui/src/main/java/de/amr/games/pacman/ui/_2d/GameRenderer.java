@@ -219,7 +219,7 @@ public interface GameRenderer {
      * Assumes to be called in scaled graphics context!
      */
     default void overPaintEatenPellets(GameLevel level) {
-        level.map().tiles()
+        level.worldMap().tiles()
             .filter(not(level::isEnergizerPosition))
             .filter(level::hasEatenFoodAt).forEach(tile -> overPaint(tile, 4));
     }

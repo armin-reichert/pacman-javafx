@@ -213,7 +213,7 @@ public class ArcadePacMan_GameModel extends GameModel {
     }
 
     protected void populateLevel(GameLevel level) {
-        WorldMap worldMap = level.map();
+        WorldMap worldMap = level.worldMap();
 
         if (!worldMap.hasProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MIN_TILE)) {
             Logger.warn("No house min tile found in map!");
@@ -449,8 +449,8 @@ public class ArcadePacMan_GameModel extends GameModel {
         byte symbol = level.bonusSymbol(level.nextBonusIndex());
         StaticBonus staticBonus = new StaticBonus(symbol, ArcadePacMan_GameModel.BONUS_VALUE_FACTORS[symbol] * 100);
         level.setBonus(staticBonus);
-        if (level.map().hasProperty(LayerID.TERRAIN, PROPERTY_POS_BONUS)) {
-            Vector2i bonusTile = level.map().getTerrainTileProperty(PROPERTY_POS_BONUS, new Vector2i(13, 20));
+        if (level.worldMap().hasProperty(LayerID.TERRAIN, PROPERTY_POS_BONUS)) {
+            Vector2i bonusTile = level.worldMap().getTerrainTileProperty(PROPERTY_POS_BONUS, new Vector2i(13, 20));
             staticBonus.actor().setPosition(halfTileRightOf(bonusTile));
         } else {
             Logger.error("No bonus position found in map");

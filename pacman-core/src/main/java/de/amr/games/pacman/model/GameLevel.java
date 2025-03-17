@@ -252,7 +252,7 @@ public class GameLevel {
         return ghostScatterTiles[assertLegalGhostID(ghostID)];
     }
 
-    public WorldMap map() {
+    public WorldMap worldMap() {
         return worldMap;
     }
 

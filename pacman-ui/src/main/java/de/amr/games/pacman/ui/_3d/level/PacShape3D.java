@@ -116,7 +116,7 @@ public class PacShape3D extends Group {
     }
 
     public void updateVisibility(Pac pac, GameLevel level) {
-        WorldMap worldMap = level.map();
+        WorldMap worldMap = level.worldMap();
         boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * worldMap.numCols() - HTS;
         setVisible(pac.isVisible() && !outsideWorld);
     }

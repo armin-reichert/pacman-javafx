@@ -357,7 +357,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         context.game().level().ifPresent(level -> {
             context.sound().stopAll();
             // if cheat has been used to complete level, food might still exist, so eat it:
-            level.map().tiles().filter(level::hasFoodAt).forEach(level::registerFoodEatenAt);
+            level.worldMap().tiles().filter(level::hasFoodAt).forEach(level::registerFoodEatenAt);
             level3D.pellets3D().forEach(Pellet3D::onEaten);
             level3D.energizers3D().forEach(Energizer3D::onEaten);
             level3D.maze3D().door3D().setVisible(false);
@@ -501,7 +501,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     }
 
     private void showLevelTestMessage(GameLevel level, String message) {
-        WorldMap worldMap = level.map();
+        WorldMap worldMap = level.worldMap();
         double x = worldMap.numCols() * HTS;
         double y = (worldMap.numRows() - 2) * TS;
         level3D.showAnimatedMessage(message, 5, x, y);

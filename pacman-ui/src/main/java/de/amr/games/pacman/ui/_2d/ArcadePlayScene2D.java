@@ -68,7 +68,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         }
         registerGameActionKeyBindings(context.keyboard());
         context.game().level().ifPresent(level -> {
-            gr.setWorldMap(level.map());
+            gr.setWorldMap(level.worldMap());
             gr.setMessagePosition(centerPositionBelowHouse(level));
         });
     }
@@ -167,7 +167,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         boolean highlighted = levelCompleteAnimation != null && levelCompleteAnimation.isInHighlightPhase();
         gr.setMazeHighlighted(highlighted);
         gr.setBlinking(level.blinking().isOn());
-        gr.setWorldMap(level.map()); //TODO fixme: avoid calling this in every frame
+        gr.setWorldMap(level.worldMap()); //TODO fixme: avoid calling this in every frame
         gr.drawGameLevel(level, 0, 3 * TS);
 
         // Draw bonus
@@ -240,7 +240,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         if (gr == null) {
             setGameRenderer(context.gameConfiguration().createRenderer(context.assets(), canvas));
         }
-        context.game().level().map(GameLevel::map).ifPresent(gr::setWorldMap);
+        context.game().level().map(GameLevel::worldMap).ifPresent(gr::setWorldMap);
     }
 
     @Override

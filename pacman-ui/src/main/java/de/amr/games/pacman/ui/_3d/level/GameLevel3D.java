@@ -15,7 +15,6 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GameUIConfiguration;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
-import de.amr.games.pacman.ui._3d.GlobalProperties3d;
 import de.amr.games.pacman.ui._3d.animation.Squirting;
 import de.amr.games.pacman.uilib.Ufx;
 import de.amr.games.pacman.uilib.WorldMapColorScheme;
@@ -25,7 +24,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
@@ -38,13 +36,11 @@ import javafx.scene.shape.Box;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -94,8 +90,8 @@ public class GameLevel3D extends Group {
             livesCounter3D = createLivesCounter3D(game.canStartNewGame());
             livesCounter3D.livesCountPy.bind(livesCountPy);
 
-            floor3D = createFloor(level.map().numCols() * TS, level.map().numRows() * TS);
-            WorldMapColorScheme coloring = context.gameConfiguration().worldMapColoring(level.map());
+            floor3D = createFloor(level.worldMap().numCols() * TS, level.worldMap().numRows() * TS);
+            WorldMapColorScheme coloring = context.gameConfiguration().worldMapColoring(level.worldMap());
             maze3D = new Maze3D(context.gameConfiguration(), level, coloring);
             addFood3D(level, context.assets().get("model3D.pellet"), coloredMaterial(coloring.pellet()));
 
@@ -177,7 +173,7 @@ public class GameLevel3D extends Group {
     }
 
     public void addLevelCounter() {
-        context.game().level().map(GameLevel::map).ifPresent(worldMap -> {
+        context.game().level().map(GameLevel::worldMap).ifPresent(worldMap -> {
             // Place level counter at top right maze corner
             double x = worldMap.numCols() * TS - 2 * TS;
             double y = 2 * TS;
@@ -233,7 +229,7 @@ public class GameLevel3D extends Group {
     }
 
     private void addFood3D(GameLevel level, Model3D pelletModel3D, Material foodMaterial) {
-        level.map().tiles().filter(level::hasFoodAt).forEach(tile -> {
+        level.worldMap().tiles().filter(level::hasFoodAt).forEach(tile -> {
             Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
             if (level.isEnergizerPosition(tile)) {
                 var energizer3D = new Energizer3D(ENERGIZER_RADIUS);

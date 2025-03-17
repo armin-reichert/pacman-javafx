@@ -44,7 +44,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     private void addGameOptionsArea(TengenMsPacMan_GameModel game) {
         context.game().level().ifPresent(level -> {
-            WorldMap worldMap = level.map();
+            WorldMap worldMap = level.worldMap();
             int unscaledWidth = worldMap.numCols() * TS;
             int unscaledHeight = 2*TS;
 
@@ -104,7 +104,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         }
         else { // when score is disabled, show text "game over"
             context.game().level().ifPresent(level -> {
-                NES_ColorScheme nesColorScheme = level.map().getConfigValue("nesColorScheme");
+                NES_ColorScheme nesColorScheme = level.worldMap().getConfigValue("nesColorScheme");
                 Color color = Color.web(nesColorScheme.strokeColor());
                 scores3D.showTextAsScore(TEXT_GAME_OVER, color);
             });

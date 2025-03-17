@@ -64,7 +64,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             context.sound().stopAll();
             context.gameClock().stop();
             EditorView editorView = getOrCreateEditorView();
-            context.game().level().ifPresent(level -> editorView.editor().setWorldMap(level.map()));
+            context.game().level().ifPresent(level -> editorView.editor().setWorldMap(level.worldMap()));
             editorView.editor().start();
             showView(editorView);
         }
