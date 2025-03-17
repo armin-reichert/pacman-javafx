@@ -372,7 +372,7 @@ public class ArcadePacMan_GameModel extends GameModel {
             setCruiseElroy(2);
         }
         if (energizer) {
-            processEatenEnergizer();
+            onEnergizerEaten();
             scoreManager.scorePoints(this, ENERGIZER_VALUE);
             Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
         } else {

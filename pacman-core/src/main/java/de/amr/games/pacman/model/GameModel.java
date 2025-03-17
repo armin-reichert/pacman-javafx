@@ -432,7 +432,7 @@ public abstract class GameModel {
         }
     }
 
-    protected void processEatenEnergizer() {
+    protected void onEnergizerEaten() {
         level.victims().clear(); // ghosts eaten using this energizer
         long powerTicks = pacPowerTicks();
         if (powerTicks > 0) {

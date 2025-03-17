@@ -548,7 +548,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         //TODO does Ms. Pac-Man slow down after eating here too?
         //pac.setRestingTicks(energizer ? 3 : 1);
         if (energizer) {
-            processEatenEnergizer();
+            onEnergizerEaten();
             scoreManager.scorePoints(this, ENERGIZER_VALUE);
             Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
         } else {
