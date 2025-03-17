@@ -116,7 +116,7 @@ public enum GameActions2D implements GameAction {
             return context.game().isPlaying()
                     && context.gameState() == GameState.HUNTING
                     && context.game().level().isPresent()
-                    && context.game().level().get().number < context.game().lastLevelNumber();
+                    && context.game().level().get().number() < context.game().lastLevelNumber();
         }
     },
 

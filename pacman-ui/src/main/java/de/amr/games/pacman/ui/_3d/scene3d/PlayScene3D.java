@@ -150,7 +150,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
                     replaceGameLevel3D();
                     level3D.playLivesCounterAnimation();
                     level3D.energizers3D().forEach(Energizer3D::startPumping);
-                    showLevelTestMessage(level, "TEST LEVEL " + level.number);
+                    showLevelTestMessage(level, "TEST LEVEL " + level.number());
                 }
                 default -> {
                     if (!context.game().isDemoLevel()) {
@@ -384,7 +384,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         level3D.addLevelCounter();
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
-        context.game().level().ifPresent(level -> showLevelTestMessage(level, "TEST LEVEL" + level.number));
+        context.game().level().ifPresent(level -> showLevelTestMessage(level, "TEST LEVEL" + level.number()));
         GlobalProperties3d.PY_3D_PERSPECTIVE.set(Perspective.Name.TOTAL);
     }
 
@@ -393,7 +393,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         level3D.addLevelCounter();
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
-        context.game().level().ifPresent(level -> showLevelTestMessage(level, "PREVIEW LEVEL " + level.number));
+        context.game().level().ifPresent(level -> showLevelTestMessage(level, "PREVIEW LEVEL " + level.number()));
         GlobalProperties3d.PY_3D_PERSPECTIVE.set(Perspective.Name.TOTAL);
     }
 

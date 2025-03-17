@@ -318,7 +318,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
                     }
                     drawTextCenteredOver("GAME OVER", x, y, color);
                 }
-                case TEST_LEVEL -> drawTextCenteredOver("TEST L%02d".formatted(level.number), x, y, nesPaletteColor(0x28));
+                case TEST_LEVEL -> drawTextCenteredOver("TEST L%02d".formatted(level.number()), x, y, nesPaletteColor(0x28));
             }
         }
     }
@@ -382,8 +382,8 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         context.game().level().ifPresent(level -> {
             TengenMsPacMan_GameModel game = context.game();
             if (levelNumberBoxesVisible) {
-                drawLevelNumberBox(level.number, 0, y); // left box
-                drawLevelNumberBox(level.number, x, y); // right box
+                drawLevelNumberBox(level.number(), 0, y); // left box
+                drawLevelNumberBox(level.number(), x, y); // right box
             }
             double symbolX = x - 2 * TS;
             for (byte symbol : game.levelCounter()) {

@@ -263,7 +263,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         if (level == null) {
             return 0;
         }
-        int index = level.number <= 19 ? level.number - 1 : 18;
+        int index = level.number() <= 19 ? level.number() - 1 : 18;
         double seconds = POWER_PELLET_TIMES[index] / 16.0;
         return (long) (seconds * 60); // 60 ticks/sec
     }
@@ -379,7 +379,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public void activatePacBooster(boolean active) {
         if (boosterActive != active) {
             boosterActive = active;
-            float speed = pacBaseSpeedInLevel(level.number) + pacDifficultySpeedDelta(difficulty);
+            float speed = pacBaseSpeedInLevel(level.number()) + pacDifficultySpeedDelta(difficulty);
             if (boosterActive) {
                 speed += pacBoosterSpeedDelta();
             }
@@ -409,8 +409,8 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.setGhosts(ghosts);
 
         //TODO this might not be appropriate for Tengen Ms. Pac-Man
-        level.setBonusSymbol(0, computeBonusSymbol(level.number));
-        level.setBonusSymbol(1, computeBonusSymbol(level.number));
+        level.setBonusSymbol(0, computeBonusSymbol(level.number()));
+        level.setBonusSymbol(1, computeBonusSymbol(level.number()));
     }
 
     @Override
@@ -420,7 +420,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
         GameLevel newLevel = new GameLevel(levelNumber, worldMap);
         newLevel.setNumFlashes(5); // TODO check this
-        newLevel.setCutSceneNumber(cutSceneNumberAfterLevel(newLevel.number));
+        newLevel.setCutSceneNumber(cutSceneNumberAfterLevel(newLevel.number()));
 
         populateLevel(newLevel);
         newLevel.pac().setAutopilot(autopilot);
@@ -430,7 +430,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             newLevel.setGhostPosition(ghost.id(), newLevel.ghostPosition(ghost.id()).plus(0, HTS))
         );
 
-        levelCounterEnabled = newLevel.number < 8;
+        levelCounterEnabled = newLevel.number() < 8;
         activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON
 
         return newLevel;

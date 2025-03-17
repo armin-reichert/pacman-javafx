@@ -201,7 +201,7 @@ public abstract class GameModel {
     }
 
     public void startNextLevel() {
-        int nextLevelNumber = level.number + 1;
+        int nextLevelNumber = level.number() + 1;
         if (nextLevelNumber <= lastLevelNumber) {
             createNormalLevel(nextLevelNumber);
             startLevel();
@@ -218,7 +218,7 @@ public abstract class GameModel {
     }
 
     protected void updateLevelCounter() {
-        if (level.number == 1) {
+        if (level.number() == 1) {
             levelCounter.clear();
         }
         if (levelCounterEnabled) {
@@ -230,16 +230,16 @@ public abstract class GameModel {
     }
 
     public void startLevel() {
-        gateKeeper.setLevelNumber(level.number);
-        scoreManager.setLevelNumber(level.number);
+        gateKeeper.setLevelNumber(level.number());
+        scoreManager.setLevelNumber(level.number());
         scoreManager.setScoreEnabled(!isDemoLevel());
         scoreManager.setHighScoreEnabled(!isDemoLevel());
         letsGetReadyToRumble();
-        setActorBaseSpeed(level.number);
+        setActorBaseSpeed(level.number());
         level.showMessage(GameLevel.Message.READY);
         Logger.info("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
         levelStartTime = System.currentTimeMillis();
-        Logger.info("{} started", isDemoLevel() ? "Demo Level" : "Level " + level.number);
+        Logger.info("{} started", isDemoLevel() ? "Demo Level" : "Level " + level.number());
         level.ghosts().forEach(ghost -> Logger.info("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
         publishGameEvent(GameEventType.LEVEL_STARTED);
     }
@@ -325,7 +325,7 @@ public abstract class GameModel {
         level.powerTimer().stop();
         level.powerTimer().reset(0);
         Logger.info("Power timer stopped and reset to zero");
-        Logger.trace("Game level {} completed.", level.number);
+        Logger.trace("Game level {} completed.", level.number());
     }
 
     public boolean isLevelComplete() {
@@ -345,7 +345,7 @@ public abstract class GameModel {
         level.ghosts().forEach(Ghost::startAnimation);
         level.blinking().setStartPhase(Pulse.ON);
         level.blinking().restart(Integer.MAX_VALUE);
-        huntingTimer.startHunting(level.number);
+        huntingTimer.startHunting(level.number());
         publishGameEvent(GameEventType.HUNTING_PHASE_STARTED);
     }
 
@@ -371,7 +371,7 @@ public abstract class GameModel {
         if (huntingTimer.hasExpired()) {
             Logger.info("Hunting phase {} ({}) ends, tick={}",
                 huntingTimer.phaseIndex(), huntingTimer.phaseType(), huntingTimer.tickCount());
-            huntingTimer.startNextPhase(level.number);
+            huntingTimer.startNextPhase(level.number());
         } else {
             huntingTimer.doTick();
         }

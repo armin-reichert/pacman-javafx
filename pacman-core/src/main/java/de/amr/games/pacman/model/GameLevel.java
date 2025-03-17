@@ -47,10 +47,9 @@ public class GameLevel {
         return tile.scaled(TS).plus(HTS, 0).toVector2f();
     }
 
-    public final int number; // 1=first level
-
+    private final int number; // 1=first level
     private final WorldMap worldMap;
-    private Vector2f pacPosition;
+    private final Vector2f pacPosition;
     private final Vector2f[] ghostPositions = new Vector2f[4];
     private final Vector2i[] ghostScatterTiles = new Vector2i[4];
     private final Direction[] ghostDirections = new Direction[4];
@@ -92,10 +91,7 @@ public class GameLevel {
         totalFoodCount = (int) worldMap.tilesContaining(LayerID.FOOD, FoodTiles.PELLET).count() + energizerTiles.length;
         uneatenFoodCount = totalFoodCount;
         eatenFoodBits = new BitSet(worldMap.numCols() * worldMap.numRows());
-        readActorPositionsFromMap(worldMap);
-    }
 
-    private void readActorPositionsFromMap(WorldMap worldMap) {
         Vector2i pacTile = worldMap.getTerrainTileProperty(PROPERTY_POS_PAC, null);
         if (pacTile == null) {
             throw new IllegalArgumentException("No Pac position stored in map");
@@ -250,6 +246,10 @@ public class GameLevel {
 
     public Vector2i ghostScatterTile(byte ghostID) {
         return ghostScatterTiles[assertLegalGhostID(ghostID)];
+    }
+
+    public int number() {
+        return number;
     }
 
     public WorldMap worldMap() {

@@ -154,7 +154,7 @@ public class ArcadePlayScene2D extends GameScene2D {
                 }
                 case TEST_LEVEL -> {
                     color = Color.web(Arcade.Palette.WHITE);
-                    text = "TEST    L%03d".formatted(level.number);
+                    text = "TEST    L%03d".formatted(level.number());
                 }
             }
             gr.setMessagePosition(centerPositionBelowHouse(level));

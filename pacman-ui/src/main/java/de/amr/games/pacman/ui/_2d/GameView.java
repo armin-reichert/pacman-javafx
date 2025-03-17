@@ -382,7 +382,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
     @Override
     public void onLevelCreated(GameEvent event) {
         context.game().level().ifPresent(level -> {
-            Logger.info("Game level {} ({}) created", level.number, context.gameVariant());
+            Logger.info("Game level {} ({}) created", level.number(), context.gameVariant());
             context.gameConfiguration().createActorAnimations(level);
             Logger.info("Actor animations ({}) created", context.gameVariant());
             context.sound().setEnabled(!context.game().isDemoLevel());

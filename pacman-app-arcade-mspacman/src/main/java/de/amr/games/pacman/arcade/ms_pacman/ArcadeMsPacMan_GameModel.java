@@ -202,8 +202,8 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
         level.setPac(pac);
         level.setGhosts(ghosts);
-        level.setBonusSymbol(0, computeBonusSymbol(level.number));
-        level.setBonusSymbol(1, computeBonusSymbol(level.number));
+        level.setBonusSymbol(0, computeBonusSymbol(level.number()));
+        level.setBonusSymbol(1, computeBonusSymbol(level.number()));
     }
 
     @Override
@@ -217,12 +217,12 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
 
         GameLevel newLevel = new GameLevel(levelNumber, worldMap);
-        newLevel.setCutSceneNumber(cutScenesEnabled ? cutSceneNumberAfterLevel(newLevel.number) : 0);
-        newLevel.setNumFlashes(levelData(newLevel.number).numFlashes());
+        newLevel.setCutSceneNumber(cutScenesEnabled ? cutSceneNumberAfterLevel(newLevel.number()) : 0);
+        newLevel.setNumFlashes(levelData(newLevel.number()).numFlashes());
 
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
-        levelCounterEnabled = newLevel.number < 8;
+        levelCounterEnabled = newLevel.number() < 8;
 
         populateLevel(newLevel);
         newLevel.pac().setAutopilot(autopilot);
@@ -261,7 +261,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         if (level == null) {
             return 0;
         }
-        byte percentage = levelData(level.number).pacSpeedPercentage();
+        byte percentage = levelData(level.number()).pacSpeedPercentage();
         if (percentage == 0) {
             percentage = 100;
         }
@@ -273,7 +273,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         if (level == null) {
             return 0;
         }
-        byte percentage = levelData(level.number).pacSpeedPoweredPercentage();
+        byte percentage = levelData(level.number()).pacSpeedPoweredPercentage();
         if (percentage == 0) {
             percentage = 100;
         }
@@ -282,7 +282,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     @Override
     public long pacPowerTicks() {
-        return level != null ? 60 * levelData(level.number).pacPowerSeconds() : 0;
+        return level != null ? 60 * levelData(level.number()).pacPowerSeconds() : 0;
     }
 
     @Override
@@ -294,16 +294,16 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     @Override
     public float ghostAttackSpeed(Ghost ghost) {
-        if (level.isTunnel(ghost.tile()) && level.number <= 3) {
+        if (level.isTunnel(ghost.tile()) && level.number() <= 3) {
             return ghostTunnelSpeed(ghost);
         }
         if (ghost.id() == RED_GHOST && cruiseElroy == 1) {
-            return levelData(level.number).elroy1SpeedPercentage() * 0.01f * ghost.baseSpeed();
+            return levelData(level.number()).elroy1SpeedPercentage() * 0.01f * ghost.baseSpeed();
         }
         if (ghost.id() == RED_GHOST && cruiseElroy == 2) {
-            return levelData(level.number).elroy2SpeedPercentage() * 0.01f * ghost.baseSpeed();
+            return levelData(level.number()).elroy2SpeedPercentage() * 0.01f * ghost.baseSpeed();
         }
-        return levelData(level.number).ghostSpeedPercentage() * 0.01f * ghost.baseSpeed();
+        return levelData(level.number()).ghostSpeedPercentage() * 0.01f * ghost.baseSpeed();
     }
 
     @Override
@@ -319,14 +319,14 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     @Override
     public float ghostFrightenedSpeed(Ghost ghost) {
         return level !=null
-            ? levelData(level.number).ghostSpeedFrightenedPercentage() * 0.01f * ghost.baseSpeed()
+            ? levelData(level.number()).ghostSpeedFrightenedPercentage() * 0.01f * ghost.baseSpeed()
             : 0;
     }
 
     @Override
     public float ghostTunnelSpeed(Ghost ghost) {
         return level !=null
-            ? levelData(level.number).ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed()
+            ? levelData(level.number()).ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed()
             : 0;
     }
 
@@ -343,9 +343,9 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     @Override
     protected void onPelletOrEnergizerEaten(Vector2i tile, int uneatenFoodCount, boolean energizer) {
         level.pac().setRestingTicks(energizer ? 3 : 1);
-        if (uneatenFoodCount == levelData(level.number).elroy1DotsLeft()) {
+        if (uneatenFoodCount == levelData(level.number()).elroy1DotsLeft()) {
             cruiseElroy = 1;
-        } else if (uneatenFoodCount == levelData(level.number).elroy2DotsLeft()) {
+        } else if (uneatenFoodCount == levelData(level.number()).elroy2DotsLeft()) {
             cruiseElroy = 2;
         }
         if (energizer) {
@@ -386,7 +386,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         if (level.victimsCount() == 16) {
             int extraPoints = POINTS_ALL_GHOSTS_EATEN_IN_LEVEL;
             scoreManager.scorePoints(this, extraPoints);
-            Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, level.number);
+            Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, level.number());
         }
     }
 

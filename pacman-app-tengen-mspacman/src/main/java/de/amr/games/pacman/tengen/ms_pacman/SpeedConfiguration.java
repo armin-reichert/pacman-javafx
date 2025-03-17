@@ -65,7 +65,7 @@ public interface SpeedConfiguration {
     static float ghostSpeedIncreaseByFoodRemaining(TengenMsPacMan_GameModel game) {
         GameLevel level = game.level().orElseThrow();
         byte units = 0;
-        if (game.difficulty() == Difficulty.NORMAL && level.number >= 5) {
+        if (game.difficulty() == Difficulty.NORMAL && level.number() >= 5) {
             int dotsLeft = level.uneatenFoodCount();
             if (dotsLeft <= 7) {
                 units = 5;

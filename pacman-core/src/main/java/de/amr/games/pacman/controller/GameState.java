@@ -429,7 +429,7 @@ public enum GameState implements FsmState<GameModel> {
                 level.blinking().reset();
                 level.pac().freeze();
                 level.bonus().ifPresent(Bonus::setInactive);
-                if (level.number == lastLevelNumber) {
+                if (level.number() == lastLevelNumber) {
                     GameController.THE_ONE.restart(GameState.BOOT);
                 } else {
                     timer().restartIndefinitely();
@@ -477,7 +477,7 @@ public enum GameState implements FsmState<GameModel> {
             game.doHuntingStep();
             GameLevel level = game.level().orElseThrow();
             if (timer().hasExpired()) {
-                if (level.number == lastLevelNumber) {
+                if (level.number() == lastLevelNumber) {
                     game.publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
                     gameController().changeState(INTRO);
                 } else {

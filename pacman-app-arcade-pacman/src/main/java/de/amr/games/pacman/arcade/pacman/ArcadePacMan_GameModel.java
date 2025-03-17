@@ -242,8 +242,8 @@ public class ArcadePacMan_GameModel extends GameModel {
 
         level.setPac(pac);
         level.setGhosts(ghosts);
-        level.setBonusSymbol(0, computeBonusSymbol(level.number));
-        level.setBonusSymbol(1, computeBonusSymbol(level.number));
+        level.setBonusSymbol(0, computeBonusSymbol(level.number()));
+        level.setBonusSymbol(1, computeBonusSymbol(level.number()));
     }
 
     @Override
@@ -257,8 +257,8 @@ public class ArcadePacMan_GameModel extends GameModel {
         WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
 
         GameLevel newLevel = new GameLevel(levelNumber, worldMap);
-        newLevel.setNumFlashes(levelData(newLevel.number).numFlashes());
-        newLevel.setCutSceneNumber(cutScenesEnabled ? cutSceneNumberAfterLevel(newLevel.number) : 0);
+        newLevel.setNumFlashes(levelData(newLevel.number()).numFlashes());
+        newLevel.setCutSceneNumber(cutScenesEnabled ? cutSceneNumberAfterLevel(newLevel.number()) : 0);
 
         levelCounterEnabled = true;
 
@@ -304,7 +304,7 @@ public class ArcadePacMan_GameModel extends GameModel {
         if (level == null) {
             return 0;
         }
-        byte percentage = levelData(level.number).pacSpeedPercentage();
+        byte percentage = levelData(level.number()).pacSpeedPercentage();
         return percentage > 0 ? percentage * 0.01f * level.pac().baseSpeed() : level.pac().baseSpeed();
     }
 
@@ -313,13 +313,13 @@ public class ArcadePacMan_GameModel extends GameModel {
         if (level == null) {
             return 0;
         }
-        byte percentage = levelData(level.number).pacSpeedPoweredPercentage();
+        byte percentage = levelData(level.number()).pacSpeedPoweredPercentage();
         return percentage > 0 ? percentage * 0.01f * level.pac().baseSpeed() : pacNormalSpeed();
     }
 
     @Override
     public float ghostAttackSpeed(Ghost ghost) {
-        LevelData levelData = levelData(level.number);
+        LevelData levelData = levelData(level.number());
         if (level.isTunnel(ghost.tile())) {
             return levelData.ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed();
         }
@@ -347,14 +347,14 @@ public class ArcadePacMan_GameModel extends GameModel {
         if (level == null) {
             return 0;
         }
-        float percentage = levelData(level.number).ghostSpeedFrightenedPercentage();
+        float percentage = levelData(level.number()).ghostSpeedFrightenedPercentage();
         return percentage > 0 ? percentage * 0.01f * ghost.baseSpeed() : ghost.baseSpeed();
     }
 
     @Override
     public float ghostTunnelSpeed(Ghost ghost) {
         return level != null
-            ? levelData(level.number).ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed()
+            ? levelData(level.number()).ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed()
             : 0;
     }
 
@@ -366,9 +366,9 @@ public class ArcadePacMan_GameModel extends GameModel {
     @Override
     protected void onPelletOrEnergizerEaten(Vector2i tile, int uneatenFoodCount, boolean energizer) {
         level.pac().setRestingTicks(energizer ? 3 : 1);
-        if (uneatenFoodCount == levelData(level.number).elroy1DotsLeft()) {
+        if (uneatenFoodCount == levelData(level.number()).elroy1DotsLeft()) {
             setCruiseElroy(1);
-        } else if (uneatenFoodCount == levelData(level.number).elroy2DotsLeft()) {
+        } else if (uneatenFoodCount == levelData(level.number()).elroy2DotsLeft()) {
             setCruiseElroy(2);
         }
         if (energizer) {
@@ -417,13 +417,13 @@ public class ArcadePacMan_GameModel extends GameModel {
         if (level.victimsCount() == 16) {
             int extraPoints = POINTS_ALL_GHOSTS_EATEN_IN_LEVEL;
             scoreManager.scorePoints(this, extraPoints);
-            Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, level.number);
+            Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, level.number());
         }
     }
 
     @Override
     public long pacPowerTicks() {
-        return level != null ? 60 * levelData(level.number).pacPowerSeconds() : 0;
+        return level != null ? 60 * levelData(level.number()).pacPowerSeconds() : 0;
     }
 
     @Override
