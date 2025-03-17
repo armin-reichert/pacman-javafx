@@ -33,9 +33,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -189,8 +187,7 @@ public class TileMapEditor {
     private ScrollPane spEditCanvas;
     private ScrollPane spPreview2D;
     private Canvas canvasPreview2D;
-    private Text sourceView;
-    private ScrollPane spSourceView;
+    private TextArea sourceView;
     private ScrollPane spTemplateImage;
     private Pane dropTargetForTemplateImage;
     private SplitPane splitPaneEditorAndPreviews;
@@ -573,16 +570,12 @@ public class TileMapEditor {
     }
 
     private void createMapSourceView() {
-        sourceView = new Text();
-        sourceView.setSmooth(true);
-        sourceView.setFontSmoothingType(FontSmoothingType.LCD);
+        sourceView = new TextArea();
+        sourceView.setEditable(false);
+        sourceView.setWrapText(false);
+        sourceView.setPrefWidth(600);
+        sourceView.setPrefHeight(800);
         sourceView.setFont(FONT_SOURCE_VIEW);
-
-        var vbox = new VBox(sourceView);
-        vbox.setPadding(new Insets(10, 20, 10, 20));
-
-        spSourceView = new ScrollPane(vbox);
-        spSourceView.setFitToHeight(true);
     }
 
     private void createTabPaneWithEditViews() {
@@ -634,9 +627,11 @@ public class TileMapEditor {
                     e.acceptTransferModes(TransferMode.COPY);
                     try (FileInputStream in = new FileInputStream(file)) {
                         Image image = new Image(in);
-                        createWorldMapFromTemplateImage(image);
-                        showMessage("Select colors for tile identification!", 10, MessageType.INFO);
-                        tabPaneEditorViews.getSelectionModel().select(tabTemplateImage);
+                        boolean accepted = createWorldMapFromTemplateImage(image);
+                        if (accepted) {
+                            showMessage("Select colors for tile identification!", 10, MessageType.INFO);
+                            tabPaneEditorViews.getSelectionModel().select(tabTemplateImage);
+                        }
                     } catch (IOException x) {
                         showMessage("Could not open image file " + file, 3, MessageType.ERROR);
                         Logger.error(x);
@@ -649,10 +644,10 @@ public class TileMapEditor {
         e.consume();
     }
 
-    private void createWorldMapFromTemplateImage(Image image) {
+    private boolean createWorldMapFromTemplateImage(Image image) {
         if (image.getHeight() % TS != 0 || image.getWidth() % TS != 0) {
             showMessage("Image size seems dubious", 3, MessageType.WARNING);
-            return;
+            return false;
         }
         // 3 empty rows above maze, 2 empty rows below
         int tilesY = 5 + (int) (image.getHeight() / TS), tilesX = (int) (image.getWidth() / TS);
@@ -662,12 +657,13 @@ public class TileMapEditor {
         removeTerrainMapProperty(PROPERTY_COLOR_WALL_STROKE);
         removeTerrainMapProperty(PROPERTY_COLOR_DOOR);
         removeFoodMapProperty(PROPERTY_COLOR_FOOD);
+        return true;
     }
 
     private void createTabPaneWithPreviews() {
         tabPreview2D = new Tab(tt("preview2D"), spPreview2D);
         tabPreview3D = new Tab(tt("preview3D"), mazePreview3D.getSubScene());
-        tabSourceView = new Tab(tt("source"), spSourceView);
+        tabSourceView = new Tab(tt("source"), sourceView);
 
         tabPanePreviews = new TabPane(tabPreview2D, tabPreview3D, tabSourceView);
         tabPanePreviews.setSide(Side.BOTTOM);
@@ -1526,8 +1522,10 @@ public class TileMapEditor {
         if (file != null) {
             try (FileInputStream stream = new FileInputStream(file)) {
                 Image image = new Image(stream);
-                createWorldMapFromTemplateImage(image);
-                showMessage("Select map colors from template!", 20, MessageType.INFO);
+                boolean accepted = createWorldMapFromTemplateImage(image);
+                if (accepted) {
+                    showMessage("Select map colors from template!", 20, MessageType.INFO);
+                }
             } catch (Exception x) {
                 showMessage("Could not open template image", 3, MessageType.ERROR);
                 Logger.error(x);
