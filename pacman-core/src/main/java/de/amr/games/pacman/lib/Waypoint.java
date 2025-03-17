@@ -4,14 +4,14 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib;
 
-public record Waypoint(short x, short y, Direction dir) {
-
-    public Waypoint(Vector2i tile) {
-        this((short) tile.x(), (short) tile.y(), null);
-    }
+public record Waypoint(short x, short y) {
 
     public Waypoint(int x, int y) {
-        this((short) x, (short) y, null);
+        this((short) x, (short) y);
+    }
+
+    public Waypoint(Vector2i tile) {
+        this((short) tile.x(), (short) tile.y());
     }
 
     public Vector2i tile() {
