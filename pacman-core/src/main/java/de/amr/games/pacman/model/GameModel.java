@@ -139,7 +139,7 @@ public abstract class GameModel {
 
     protected abstract byte computeBonusSymbol(int levelNumber);
 
-    protected abstract void onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
+    protected abstract void onFoodEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
 
     protected abstract void onGhostReleased(Ghost ghost);
 
@@ -424,7 +424,7 @@ public abstract class GameModel {
             eventLog.foodFoundTile = tile;
             eventLog.energizerFound = level.isEnergizerPosition(tile);
             level.registerFoodEatenAt(tile);
-            onPelletOrEnergizerEaten(tile, level.uneatenFoodCount(), eventLog.energizerFound);
+            onFoodEaten(tile, level.uneatenFoodCount(), eventLog.energizerFound);
             level.pac().endStarving();
             publishGameEvent(GameEventType.PAC_FOUND_FOOD, tile);
         } else {

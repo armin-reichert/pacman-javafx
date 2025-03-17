@@ -544,7 +544,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    protected void onPelletOrEnergizerEaten(Vector2i tile, int uneatenFoodCount, boolean energizer) {
+    protected void onFoodEaten(Vector2i tile, int uneatenFoodCount, boolean energizer) {
         //TODO does Ms. Pac-Man slow down after eating here too?
         //pac.setRestingTicks(energizer ? 3 : 1);
         if (energizer) {

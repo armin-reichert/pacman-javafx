@@ -364,7 +364,7 @@ public class ArcadePacMan_GameModel extends GameModel {
     }
 
     @Override
-    protected void onPelletOrEnergizerEaten(Vector2i tile, int uneatenFoodCount, boolean energizer) {
+    protected void onFoodEaten(Vector2i tile, int uneatenFoodCount, boolean energizer) {
         level.pac().setRestingTicks(energizer ? 3 : 1);
         if (uneatenFoodCount == levelData(level.number()).elroy1DotsLeft()) {
             setCruiseElroy(1);
