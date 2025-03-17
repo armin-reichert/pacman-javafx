@@ -40,13 +40,17 @@ public abstract class GameModel {
     public static final File CUSTOM_MAP_DIR;
 
     static {
-        HOME_DIR = new File(System.getProperty("user.home"), ".pacmanfx");
-        if (HOME_DIR.mkdir()) {
-            Logger.info("Home directory '{}' created", HOME_DIR);
-        }
+        String userHomePath = System.getProperty("user.home");
+        Logger.info("User home path is {}", userHomePath);
+        HOME_DIR = new File(userHomePath, ".pacmanfx");
         CUSTOM_MAP_DIR = new File(HOME_DIR, "maps");
-        if (CUSTOM_MAP_DIR.mkdir()) {
+        if (CUSTOM_MAP_DIR.mkdirs()) {
             Logger.info("Created custom map directory {}", CUSTOM_MAP_DIR);
+        } else if (CUSTOM_MAP_DIR.isDirectory()) {
+            Logger.info("Custom map directory exists: {}", CUSTOM_MAP_DIR);
+            if (!CUSTOM_MAP_DIR.canWrite()) {
+                Logger.error("Custom map directory is not writable: {}", CUSTOM_MAP_DIR);
+            }
         }
     }
 
