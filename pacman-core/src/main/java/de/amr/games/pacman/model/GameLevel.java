@@ -59,7 +59,7 @@ public class GameLevel {
     private Vector2i leftDoorTile;
     private Vector2i rightDoorTile;
 
-    // instead of Set<Vector2i> we use a bitset indexed by top-down-left-to-right tile index
+    // instead of Set<Vector2i> we use a bit-set indexed by top-down-left-to-right tile index
     private final BitSet eatenFoodBits;
     private final int totalFoodCount;
     private int uneatenFoodCount;
@@ -79,12 +79,13 @@ public class GameLevel {
     private final Pulse blinking = new Pulse(10, Pulse.OFF);
     private final TickTimer powerTimer = new TickTimer("PacPowerTimer");
 
-    public GameLevel(int levelNumber, WorldMap worldMap) {
-        if (levelNumber < 1) {
-            throw new IllegalArgumentException("Illegal level number: " + levelNumber);
+    public GameLevel(int number, WorldMap worldMap) {
+        if (number < 1) {
+            throw new IllegalArgumentException("Illegal level number: " + number);
         }
-        number = levelNumber;
+        this.number = number;
         this.worldMap = assertNotNull(worldMap);
+
         portals = findPortals(worldMap);
         nextBonusIndex = -1;
         energizerTiles = worldMap.tilesContaining(LayerID.FOOD, FoodTiles.ENERGIZER).toArray(Vector2i[]::new);

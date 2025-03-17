@@ -55,79 +55,105 @@ public abstract class GameModel {
 
     public static final byte LEVEL_COUNTER_MAX_SIZE = 7;
     public static final short POINTS_ALL_GHOSTS_EATEN_IN_LEVEL = 12_000;
-    public static final byte[] KILLED_GHOST_VALUE_MULTIPLIER = { 2, 4, 8, 16 }; // factor * 100 = value
+    public static final byte[] KILLED_GHOST_VALUE_MULTIPLIER = {2, 4, 8, 16}; // factor * 100 = value
 
-    protected final MapSelector  mapSelector;
-    protected final List<Byte>   levelCounter = new ArrayList<>();
-    protected final GateKeeper   gateKeeper = new GateKeeper();
+    protected final MapSelector mapSelector;
+    protected final List<Byte> levelCounter = new ArrayList<>();
+    protected final GateKeeper gateKeeper = new GateKeeper();
     protected final ScoreManager scoreManager = new ScoreManager();
     protected final HuntingTimer huntingTimer;
 
-    protected GameLevel          level;
-    protected long               levelStartTime;
-    protected int                lastLevelNumber;
-    protected boolean            levelCounterEnabled;
-    protected boolean            playing;
-    protected boolean            simulateOverflowBug;
-    protected boolean            cutScenesEnabled;
-    protected int                initialLives;
-    protected int                lives;
-    protected boolean            demoLevel;
+    protected GameLevel level;
+    protected long levelStartTime;
+    protected int lastLevelNumber;
+    protected boolean levelCounterEnabled;
+    protected boolean playing;
+    protected boolean simulateOverflowBug;
+    protected boolean cutScenesEnabled;
+    protected int initialLives;
+    protected int lives;
+    protected boolean demoLevel;
 
-    protected SimulationStepLog  eventLog;
+    protected SimulationStepLog eventLog;
 
     protected GameModel(MapSelector mapSelector, HuntingTimer huntingTimer) {
         this.mapSelector = assertNotNull(mapSelector);
         this.huntingTimer = assertNotNull(huntingTimer);
     }
 
-    public abstract void         init();
-    public abstract void         resetEverything();
-    public abstract void         resetForStartingNewGame();
-    public abstract boolean      canStartNewGame();
-    public abstract boolean      continueOnGameOver();
-    public abstract boolean      isOver();
-    public abstract void         endGame();
-    public abstract void         onPacKilled();
-    public abstract void         killGhost(Ghost ghost);
-    public abstract void         activateNextBonus();
+    public abstract void init();
 
-    protected abstract void      setActorBaseSpeed(int levelNumber);
+    public abstract void resetEverything();
 
-    public abstract float        ghostAttackSpeed(Ghost ghost);
-    public abstract float        ghostFrightenedSpeed(Ghost ghost);
-    public abstract float        ghostSpeedInsideHouse(Ghost ghost);
-    public abstract float        ghostSpeedReturningToHouse(Ghost ghost);
-    public abstract float        ghostTunnelSpeed(Ghost ghost);
+    public abstract void resetForStartingNewGame();
 
-    public abstract float        pacNormalSpeed();
-    public abstract long         pacPowerTicks();
-    public abstract long         pacPowerFadingTicks();
-    public abstract float        pacPowerSpeed();
+    public abstract boolean canStartNewGame();
 
-    public abstract long         gameOverStateTicks();
+    public abstract boolean continueOnGameOver();
+
+    public abstract boolean isOver();
+
+    public abstract void endGame();
+
+    public abstract void onPacKilled();
+
+    public abstract void killGhost(Ghost ghost);
+
+    public abstract void activateNextBonus();
+
+    protected abstract void setActorBaseSpeed(int levelNumber);
+
+    public abstract float ghostAttackSpeed(Ghost ghost);
+
+    public abstract float ghostFrightenedSpeed(Ghost ghost);
+
+    public abstract float ghostSpeedInsideHouse(Ghost ghost);
+
+    public abstract float ghostSpeedReturningToHouse(Ghost ghost);
+
+    public abstract float ghostTunnelSpeed(Ghost ghost);
+
+    public abstract float pacNormalSpeed();
+
+    public abstract long pacPowerTicks();
+
+    public abstract long pacPowerFadingTicks();
+
+    public abstract float pacPowerSpeed();
+
+    public abstract long gameOverStateTicks();
 
     protected abstract GameLevel makeNormalLevel(int levelNumber);
+
     protected abstract GameLevel makeDemoLevel();
 
     public abstract void assignDemoLevelBehavior(GameLevel demoLevel);
 
-    protected abstract boolean   isPacManKillingIgnored();
-    protected abstract boolean   isBonusReached();
-    protected abstract byte      computeBonusSymbol(int levelNumber);
+    protected abstract boolean isPacManKillingIgnored();
 
-    protected abstract void      onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
-    protected abstract void      onGhostReleased(Ghost ghost);
+    protected abstract boolean isBonusReached();
 
-    public final MapSelector mapSelector() { return mapSelector; }
+    protected abstract byte computeBonusSymbol(int levelNumber);
 
-    public final HuntingTimer huntingTimer() { return huntingTimer; }
+    protected abstract void onPelletOrEnergizerEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
+
+    protected abstract void onGhostReleased(Ghost ghost);
+
+    public final MapSelector mapSelector() {
+        return mapSelector;
+    }
+
+    public final HuntingTimer huntingTimer() {
+        return huntingTimer;
+    }
 
     public Optional<GameLevel> level() {
         return Optional.ofNullable(level);
     }
 
-    public final int lastLevelNumber() { return lastLevelNumber; }
+    public final int lastLevelNumber() {
+        return lastLevelNumber;
+    }
 
     public int initialLives() {
         return initialLives;
@@ -148,9 +174,9 @@ public abstract class GameModel {
     public void loseLife() {
         if (lives == 0) {
             Logger.error("No life left to lose :-(");
-            return;
+        } else {
+            --lives;
         }
-        --lives;
     }
 
     public List<Byte> levelCounter() {
@@ -304,9 +330,11 @@ public abstract class GameModel {
             // Pinky: ambushes Pac-Man
             case PINK_GHOST -> level.pac().tilesAhead(4, simulateOverflowBug);
             // Inky: attacks from opposite side as Blinky
-            case CYAN_GHOST -> level.pac().tilesAhead(2, simulateOverflowBug).scaled(2).minus(level.ghost(RED_GHOST).tile());
+            case CYAN_GHOST ->
+                level.pac().tilesAhead(2, simulateOverflowBug).scaled(2).minus(level.ghost(RED_GHOST).tile());
             // Clyde/Sue: attacks directly but retreats if Pac is near
-            case ORANGE_GHOST -> ghost.tile().euclideanDist(level.pac().tile()) < 8 ? scatterTarget(ghost) : level.pac().tile();
+            case ORANGE_GHOST ->
+                ghost.tile().euclideanDist(level.pac().tile()) < 8 ? scatterTarget(ghost) : level.pac().tile();
             default -> throw GameException.illegalGhostID(ghost.id());
         };
     }
