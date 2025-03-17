@@ -386,7 +386,7 @@ public abstract class GameModel {
         updateHuntingTimer();
         level.blinking().tick();
         gateKeeper.unlockGhosts(level, this::onGhostReleased, eventLog);
-        checkForFood(level, pac);
+        checkForFood();
         pac.update(this);
         updatePacPower();
         checkPacKilled();
@@ -418,17 +418,17 @@ public abstract class GameModel {
         }
     }
 
-    private void checkForFood(GameLevel level, Pac pac) {
-        Vector2i tile = pac.tile();
+    private void checkForFood() {
+        Vector2i tile = level.pac().tile();
         if (level.hasFoodAt(tile)) {
             eventLog.foodFoundTile = tile;
             eventLog.energizerFound = level.isEnergizerPosition(tile);
             level.registerFoodEatenAt(tile);
             onPelletOrEnergizerEaten(tile, level.uneatenFoodCount(), eventLog.energizerFound);
-            pac.endStarving();
+            level.pac().endStarving();
             publishGameEvent(GameEventType.PAC_FOUND_FOOD, tile);
         } else {
-            pac.starve();
+            level.pac().starve();
         }
     }
 
