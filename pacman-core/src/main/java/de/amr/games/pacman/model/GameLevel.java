@@ -257,13 +257,13 @@ public class GameLevel {
         return worldMap;
     }
 
-    public boolean isOutsideWorld(Vector2i tile) {
+    public boolean outOfWorld(Vector2i tile) {
         assertTileNotNull(tile);
         return worldMap.outOfBounds(tile.y(), tile.x());
     }
 
     public boolean isInsideWorld(Vector2i tile) {
-        return !isOutsideWorld(tile);
+        return !outOfWorld(tile);
     }
 
     public boolean containsPoint(double x, double y) {
@@ -289,15 +289,15 @@ public class GameLevel {
     }
 
     public boolean isBlockedTile(Vector2i tile) {
-        return !isOutsideWorld(tile) && isInaccessible(worldMap.get(LayerID.TERRAIN, tile));
+        return !outOfWorld(tile) && isInaccessible(worldMap.get(LayerID.TERRAIN, tile));
     }
 
     public boolean isTunnel(Vector2i tile) {
-        return !isOutsideWorld(tile) && worldMap.get(LayerID.TERRAIN, tile) == TUNNEL;
+        return !outOfWorld(tile) && worldMap.get(LayerID.TERRAIN, tile) == TUNNEL;
     }
 
     public boolean isIntersection(Vector2i tile) {
-        if (isOutsideWorld(tile) || isPartOfHouse(tile)) {
+        if (outOfWorld(tile) || isPartOfHouse(tile)) {
             return false;
         }
         long numBlockedNeighbors = tile.neighbors().filter(this::isInsideWorld).filter(this::isBlockedTile).count();
@@ -430,11 +430,11 @@ public class GameLevel {
     }
 
     public boolean isFoodPosition(Vector2i tile) {
-        return !isOutsideWorld(tile) && worldMap.get(LayerID.FOOD, tile) != FoodTiles.EMPTY;
+        return !outOfWorld(tile) && worldMap.get(LayerID.FOOD, tile) != FoodTiles.EMPTY;
     }
 
     public boolean isEnergizerPosition(Vector2i tile) {
-        return !isOutsideWorld(tile) && worldMap.get(LayerID.FOOD, tile) == FoodTiles.ENERGIZER;
+        return !outOfWorld(tile) && worldMap.get(LayerID.FOOD, tile) == FoodTiles.ENERGIZER;
     }
 
     public boolean hasFoodAt(Vector2i tile) {
@@ -442,6 +442,6 @@ public class GameLevel {
     }
 
     public boolean hasEatenFoodAt(Vector2i tile) {
-        return !isOutsideWorld(tile) && eatenFoodBits.get(worldMap.index(tile));
+        return !outOfWorld(tile) && eatenFoodBits.get(worldMap.index(tile));
     }
 }
