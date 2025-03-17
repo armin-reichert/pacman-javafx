@@ -5,10 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.lib.tilemap;
 
 public interface TerrainTiles {
-
     byte EMPTY               = 0x00;
     byte WALL_H              = 0x01;
-    byte WALL_V              = 0x2;
+    byte WALL_V              = 0x02;
     byte CORNER_NW           = 0x03;
     byte CORNER_NE           = 0x04;
     byte CORNER_SE           = 0x05;
@@ -31,5 +30,5 @@ public interface TerrainTiles {
     byte ONE_WAY_DOWN        = 0x16;
     byte ONE_WAY_LEFT        = 0x17;
 
-    byte LAST_TERRAIN_VALUE = 0x17; // Adapt when adding new tiles!
+    byte MAX_VALUE = 0x17;
 }

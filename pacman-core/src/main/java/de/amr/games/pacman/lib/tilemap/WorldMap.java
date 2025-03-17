@@ -246,7 +246,7 @@ public class WorldMap {
             }
         }
         this.terrainLayer = parseTileMap(terrainLayerRows,
-            value -> 0 <= value && value <= TerrainTiles.LAST_TERRAIN_VALUE, TerrainTiles.EMPTY);
+            value -> 0 <= value && value <= TerrainTiles.MAX_VALUE, TerrainTiles.EMPTY);
 
         this.foodLayer = parseTileMap(foodLayerRows,
             value -> 0 <= value && value <= FoodTiles.ENERGIZER, FoodTiles.EMPTY);
