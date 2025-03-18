@@ -22,7 +22,7 @@ import java.util.Set;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
-import static de.amr.games.pacman.tilemap.editor.ArcadeMap.*;
+import static de.amr.games.pacman.tilemap.editor.ArcadeMap.SPRITE_SHEET;
 
 /**
  * @author Armin Reichert
@@ -289,29 +289,18 @@ public class TerrainRendererInEditor extends TerrainRenderer {
         }
     }
 
-    //TODO move into renderer class
-    public void drawActorSprites(GraphicsContext g, WorldMap worldMap, double gridSize) {
-        drawSprite(g, worldMap.getTerrainTileProperty(PROPERTY_POS_PAC, null), PAC_SPRITE, gridSize);
-        drawSprite(g, worldMap.getTerrainTileProperty(PROPERTY_POS_RED_GHOST, null), RED_GHOST_SPRITE, gridSize);
-        drawSprite(g, worldMap.getTerrainTileProperty(PROPERTY_POS_PINK_GHOST, null), PINK_GHOST_SPRITE, gridSize);
-        drawSprite(g, worldMap.getTerrainTileProperty(PROPERTY_POS_CYAN_GHOST, null), CYAN_GHOST_SPRITE, gridSize);
-        drawSprite(g, worldMap.getTerrainTileProperty(PROPERTY_POS_ORANGE_GHOST, null), ORANGE_GHOST_SPRITE, gridSize);
-        drawSprite(g, worldMap.getTerrainTileProperty(PROPERTY_POS_BONUS, null), BONUS_SPRITE, gridSize);
-    }
-
-    public void drawSprite(GraphicsContext g, Vector2i tile, RectArea sprite, double gridSize) {
-        if (tile != null) {
-            drawSprite(g, sprite, gridSize,
-                tile.x() * gridSize + 0.5 * gridSize,
-                tile.y() * gridSize,
-                1.75 * gridSize,
-                1.75 * gridSize);
+    public void drawSpriteBetweenTiles(GraphicsContext g, Vector2i leftTile, RectArea sprite, double gridSize) {
+        if (leftTile != null) {
+            double spriteSize = 1.75 * gridSize;
+            drawSpriteImage(g, sprite, gridSize,
+                (leftTile.x() + 0.5) * gridSize, // sprite image is draw between left tile and right neighbor tile!
+                leftTile.y() * gridSize,
+                spriteSize, spriteSize);
         }
     }
 
-    private void drawSprite(GraphicsContext g, RectArea sprite, double gridSize, double x, double y, double w, double h) {
-        double ox = 0.5 * (w - gridSize);
-        double oy = 0.5 * (h - gridSize);
+    private void drawSpriteImage(GraphicsContext g, RectArea sprite, double gridSize, double x, double y, double w, double h) {
+        double ox = 0.5 * (w - gridSize), oy = 0.5 * (h - gridSize);
         g.drawImage(SPRITE_SHEET, sprite.x(), sprite.y(), sprite.width(), sprite.height(), x - ox, y - oy, w, h);
     }
 }

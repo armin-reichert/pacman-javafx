@@ -151,12 +151,12 @@ public class EditCanvas extends Canvas {
 
         // Terrain
         if (editor.terrainVisibleProperty().get()) {
-            editor.terrainRendererInEditor().setScaling(scaling);
-            editor.terrainRendererInEditor().setColors(colors);
-            editor.terrainRendererInEditor().setSegmentNumbersDisplayed(editor.segmentNumbersDisplayedProperty().get());
-            editor.terrainRendererInEditor().setObstacleInnerAreaDisplayed(editor.obstacleInnerAreaDisplayedProperty().get());
-            editor.terrainRendererInEditor().drawTerrain(g, worldMap(), worldMap().obstacles());
-            obstacleEditor.draw(g, editor.terrainRendererInEditor());
+            editor.terrainTileRenderer().setScaling(scaling);
+            editor.terrainTileRenderer().setColors(colors);
+            editor.terrainTileRenderer().setSegmentNumbersDisplayed(editor.segmentNumbersDisplayedProperty().get());
+            editor.terrainTileRenderer().setObstacleInnerAreaDisplayed(editor.obstacleInnerAreaDisplayedProperty().get());
+            editor.terrainTileRenderer().drawTerrain(g, worldMap(), worldMap().obstacles());
+            obstacleEditor.draw(g, editor.terrainTileRenderer());
         }
 
         // Tiles that seem to be wrong
@@ -190,7 +190,7 @@ public class EditCanvas extends Canvas {
         }
 
         if (editor.actorsVisibleProperty().get()) {
-            editor.terrainRendererInEditor().drawActorSprites(g, worldMap(), gridSize());
+            editor.drawActorSprites(g, worldMap(), gridSize());
         }
 
         if (focussedTile() != null) {

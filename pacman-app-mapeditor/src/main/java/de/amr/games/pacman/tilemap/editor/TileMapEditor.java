@@ -216,8 +216,8 @@ public class TileMapEditor {
     private PropertyEditorPane terrainMapPropertiesEditor;
     private PropertyEditorPane foodMapPropertiesEditor;
 
-    private TerrainRendererInEditor terrainRendererInEditor;
-    private TerrainRenderer terrainRendererInPreview;
+    private TerrainRendererInEditor terrainTileRenderer;
+    private TerrainRenderer terrainPathRenderer;
     private FoodTileRenderer foodRenderer;
 
     // Properties
@@ -335,7 +335,7 @@ public class TileMapEditor {
 
     public boolean isSymmetricEdit() { return symmetricEditPy.get(); }
 
-    public TerrainRendererInEditor terrainRendererInEditor() { return terrainRendererInEditor; }
+    public TerrainRendererInEditor terrainTileRenderer() { return terrainTileRenderer; }
 
     public FoodTileRenderer foodRenderer() { return foodRenderer; }
 
@@ -490,10 +490,10 @@ public class TileMapEditor {
     }
 
     private void createRenderers(TerrainColorScheme colors, Color foodColor) {
-        terrainRendererInEditor = new TerrainRendererInEditor();
-        terrainRendererInEditor.setColors(colors);
-        terrainRendererInPreview = new TerrainRenderer();
-        terrainRendererInPreview.setColors(colors);
+        terrainTileRenderer = new TerrainRendererInEditor();
+        terrainTileRenderer.setColors(colors);
+        terrainPathRenderer = new TerrainRenderer();
+        terrainPathRenderer.setColors(colors);
         foodRenderer = new FoodTileRenderer();
         foodRenderer.setPelletColor(foodColor);
         foodRenderer.setEnergizerColor(foodColor);
@@ -678,8 +678,8 @@ public class TileMapEditor {
     }
 
     private void createPalettes() {
-        palettes[PALETTE_ID_ACTORS]  = createActorPalette(PALETTE_ID_ACTORS, TOOL_SIZE, this, terrainRendererInEditor);
-        palettes[PALETTE_ID_TERRAIN] = createTerrainPalette(PALETTE_ID_TERRAIN, TOOL_SIZE, this, terrainRendererInEditor);
+        palettes[PALETTE_ID_ACTORS]  = createActorPalette(PALETTE_ID_ACTORS, TOOL_SIZE, this, terrainTileRenderer);
+        palettes[PALETTE_ID_TERRAIN] = createTerrainPalette(PALETTE_ID_TERRAIN, TOOL_SIZE, this, terrainTileRenderer);
         palettes[PALETTE_ID_FOOD]    = createFoodPalette(PALETTE_ID_FOOD, TOOL_SIZE, this, foodRenderer);
 
         var tabTerrain = new Tab(tt("terrain"), palettes[PALETTE_ID_TERRAIN].root());
@@ -1109,6 +1109,15 @@ public class TileMapEditor {
     // Drawing
     //
 
+    public void drawActorSprites(GraphicsContext g, WorldMap worldMap, double gridSize) {
+        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(PROPERTY_POS_PAC, null), PAC_SPRITE, gridSize);
+        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(PROPERTY_POS_RED_GHOST, null), RED_GHOST_SPRITE, gridSize);
+        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(PROPERTY_POS_PINK_GHOST, null), PINK_GHOST_SPRITE, gridSize);
+        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(PROPERTY_POS_CYAN_GHOST, null), CYAN_GHOST_SPRITE, gridSize);
+        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(PROPERTY_POS_ORANGE_GHOST, null), ORANGE_GHOST_SPRITE, gridSize);
+        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(PROPERTY_POS_BONUS, null), BONUS_SPRITE, gridSize);
+    }
+
     private void draw(TerrainColorScheme colors) {
         try {
             Logger.trace("Draw palette");
@@ -1148,13 +1157,13 @@ public class TileMapEditor {
         g.setFill(colors.backgroundColor());
         g.fillRect(0, 0, canvasPreview2D.getWidth(), canvasPreview2D.getHeight());
         if (terrainVisiblePy.get()) {
-            terrainRendererInPreview.setScaling(gridSize() / 8.0);
-            terrainRendererInPreview.setColors(colors);
-            terrainRendererInPreview.drawTerrain(g, worldMap(), worldMap().obstacles());
+            terrainPathRenderer.setScaling(gridSize() / 8.0);
+            terrainPathRenderer.setColors(colors);
+            terrainPathRenderer.drawTerrain(g, worldMap(), worldMap().obstacles());
             Vector2i houseMinTile = worldMap().getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
             Vector2i houseMaxTile = worldMap().getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
             if (houseMinTile != null && houseMaxTile != null) {
-                terrainRendererInPreview.drawHouse(g, houseMinTile, houseMaxTile.minus(houseMinTile).plus(1, 1));
+                terrainPathRenderer.drawHouse(g, houseMinTile, houseMaxTile.minus(houseMinTile).plus(1, 1));
             }
         }
         if (foodVisiblePy.get()) {
@@ -1165,18 +1174,17 @@ public class TileMapEditor {
             worldMap().tiles().forEach(tile -> foodRenderer.drawTile(g, tile, worldMap().get(LayerID.FOOD, tile)));
         }
         if (actorsVisiblePy.get()) {
-            terrainRendererInEditor.drawActorSprites(g, worldMap(), gridSize());
+            drawActorSprites(g, worldMap(), gridSize());
         }
     }
-
 
     private void drawSelectedPalette(TerrainColorScheme colors) {
         Palette selectedPalette = palettes[selectedPaletteID()];
         if (selectedPaletteID() == PALETTE_ID_TERRAIN) {
-            double scaling = terrainRendererInEditor.scaling();
-            terrainRendererInEditor.setScaling((double) TOOL_SIZE / 8);
-            terrainRendererInEditor.setColors(colors);
-            terrainRendererInEditor.setScaling(scaling);
+            double scaling = terrainTileRenderer.scaling();
+            terrainTileRenderer.setScaling((double) TOOL_SIZE / 8);
+            terrainTileRenderer.setColors(colors);
+            terrainTileRenderer.setScaling(scaling);
         }
         selectedPalette.draw();
     }
