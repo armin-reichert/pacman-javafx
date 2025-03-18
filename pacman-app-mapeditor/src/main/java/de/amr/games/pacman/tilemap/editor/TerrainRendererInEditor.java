@@ -90,7 +90,7 @@ public class TerrainRendererInEditor extends TerrainRenderer {
                 List<RectArea> rectangles = obstacle.innerAreaRectPartition().toList();
                 for (int i = 0; i < rectangles.size(); ++i) {
                     RectArea rect = rectangles.get(i);
-                    g.setFill(RANDOM_COLORS[i]);
+                    g.setFill(RANDOM_COLORS[i % RANDOM_COLORS.length]);
                     g.fillRect(rect.x(), rect.y(), rect.width(), rect.height());
                 }
                 g.setFill(Color.grayRgb(200));
