@@ -59,18 +59,18 @@ public class TileMatcher {
     }
 
     public byte matchTerrainTile(int[] tilePixels) {
-        if (matchesAngularDoubleNWCorner(tilePixels)) return TerrainTiles.DCORNER_ANGULAR_NW;
-        if (matchesAngularDoubleSWCorner(tilePixels)) return TerrainTiles.DCORNER_ANGULAR_SW;
-        if (matchesAngularDoubleSECorner(tilePixels)) return TerrainTiles.DCORNER_ANGULAR_SE;
-        if (matchesAngularDoubleNECorner(tilePixels)) return TerrainTiles.DCORNER_ANGULAR_NE;
+        if (matchesAngularDoubleNWCorner(tilePixels)) return TerrainTiles.DCORNER_NW;
+        if (matchesAngularDoubleSWCorner(tilePixels)) return TerrainTiles.DCORNER_SW;
+        if (matchesAngularDoubleSECorner(tilePixels)) return TerrainTiles.DCORNER_SE;
+        if (matchesAngularDoubleNECorner(tilePixels)) return TerrainTiles.DCORNER_NE;
         //TODO: what if door and fill color are equal?
         if (matchesDoor(tilePixels)) return TerrainTiles.DOOR;
         if (matchesHWall(tilePixels)) return TerrainTiles.WALL_H;
         if (matchesVWall(tilePixels)) return TerrainTiles.WALL_V;
-        if (matchesNWCorner(tilePixels)) return TerrainTiles.CORNER_NW;
-        if (matchesSWCorner(tilePixels)) return TerrainTiles.CORNER_SW;
-        if (matchesNECorner(tilePixels)) return TerrainTiles.CORNER_NE;
-        if (matchesSECorner(tilePixels)) return TerrainTiles.CORNER_SE;
+        if (matchesNWCorner(tilePixels)) return TerrainTiles.ARC_NW;
+        if (matchesSWCorner(tilePixels)) return TerrainTiles.ARC_SW;
+        if (matchesNECorner(tilePixels)) return TerrainTiles.ARC_NE;
+        if (matchesSECorner(tilePixels)) return TerrainTiles.ARC_SE;
         return TerrainTiles.EMPTY;
     }
 

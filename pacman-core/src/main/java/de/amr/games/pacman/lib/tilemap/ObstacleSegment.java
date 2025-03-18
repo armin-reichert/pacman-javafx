@@ -20,19 +20,19 @@ public record ObstacleSegment(Vector2i startPoint, Vector2i vector, boolean ccw,
     }
 
     public boolean isRoundedNWCorner() {
-        return encoding == TerrainTiles.CORNER_NW;
+        return encoding == TerrainTiles.ARC_NW;
     }
 
     public boolean isRoundedSWCorner() {
-        return encoding == TerrainTiles.CORNER_SW;
+        return encoding == TerrainTiles.ARC_SW;
     }
 
     public boolean isRoundedSECorner() {
-        return encoding == TerrainTiles.CORNER_SE;
+        return encoding == TerrainTiles.ARC_SE;
     }
 
     public boolean isRoundedNECorner() {
-        return encoding == TerrainTiles.CORNER_NE;
+        return encoding == TerrainTiles.ARC_NE;
     }
 
     public boolean isRoundedCorner() {
@@ -40,19 +40,19 @@ public record ObstacleSegment(Vector2i startPoint, Vector2i vector, boolean ccw,
     }
 
     public boolean isAngularNWCorner() {
-        return encoding == TerrainTiles.DCORNER_ANGULAR_NW;
+        return encoding == TerrainTiles.DCORNER_NW;
     }
 
     public boolean isAngularSWCorner() {
-        return encoding == TerrainTiles.DCORNER_ANGULAR_SW;
+        return encoding == TerrainTiles.DCORNER_SW;
     }
 
     public boolean isAngularSECorner() {
-        return encoding == TerrainTiles.DCORNER_ANGULAR_SE;
+        return encoding == TerrainTiles.DCORNER_SE;
     }
 
     public boolean isAngularNECorner() {
-        return encoding == TerrainTiles.DCORNER_ANGULAR_NE;
+        return encoding == TerrainTiles.DCORNER_NE;
     }
 
     public boolean isNWCorner() {

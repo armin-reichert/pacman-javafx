@@ -43,10 +43,10 @@ public class UpdateMapFiles {
             byte newContent = switch (content) {
                 case TerrainTiles.OBSOLETE_DWALL_H -> TerrainTiles.WALL_H;
                 case TerrainTiles.OBSOLETE_DWALL_V -> TerrainTiles.WALL_V;
-                case TerrainTiles.OBSOLETE_DCORNER_NW -> TerrainTiles.CORNER_NW;
-                case TerrainTiles.OBSOLETE_DCORNER_SW -> TerrainTiles.CORNER_SW;
-                case TerrainTiles.OBSOLETE_DCORNER_SE -> TerrainTiles.CORNER_SE;
-                case TerrainTiles.OBSOLETE_DCORNER_NE -> TerrainTiles.CORNER_NE;
+                case TerrainTiles.OBSOLETE_DCORNER_NW -> TerrainTiles.ARC_NW;
+                case TerrainTiles.OBSOLETE_DCORNER_SW -> TerrainTiles.ARC_SW;
+                case TerrainTiles.OBSOLETE_DCORNER_SE -> TerrainTiles.ARC_SE;
+                case TerrainTiles.OBSOLETE_DCORNER_NE -> TerrainTiles.ARC_NE;
                 default -> content;
             };
             map.set(LayerID.TERRAIN, tile, newContent);
@@ -58,10 +58,10 @@ public class UpdateMapFiles {
         for (int row = houseMinTile.y(); row <= houseMaxTile.y(); ++row) {
             for (int col = houseMinTile.x(); col <= houseMaxTile.x(); ++col) {
                 switch (map.get(LayerID.TERRAIN, row, col)) {
-                    case TerrainTiles.DCORNER_ANGULAR_NW -> map.set(LayerID.TERRAIN, row, col, TerrainTiles.CORNER_NW);
-                    case TerrainTiles.DCORNER_ANGULAR_SW -> map.set(LayerID.TERRAIN, row, col, TerrainTiles.CORNER_SW);
-                    case TerrainTiles.DCORNER_ANGULAR_SE -> map.set(LayerID.TERRAIN, row, col, TerrainTiles.CORNER_SE);
-                    case TerrainTiles.DCORNER_ANGULAR_NE -> map.set(LayerID.TERRAIN, row, col, TerrainTiles.CORNER_NE);
+                    case TerrainTiles.DCORNER_NW -> map.set(LayerID.TERRAIN, row, col, TerrainTiles.ARC_NW);
+                    case TerrainTiles.DCORNER_SW -> map.set(LayerID.TERRAIN, row, col, TerrainTiles.ARC_SW);
+                    case TerrainTiles.DCORNER_SE -> map.set(LayerID.TERRAIN, row, col, TerrainTiles.ARC_SE);
+                    case TerrainTiles.DCORNER_NE -> map.set(LayerID.TERRAIN, row, col, TerrainTiles.ARC_NE);
                 }
             }
         }

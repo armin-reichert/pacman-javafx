@@ -106,19 +106,19 @@ public class ExperimentsApp extends Application {
         }
 
         obstacle = new Obstacle(new Vector2i(0, 15*TS));
-        extendObstacle(-4, 4, true, TerrainTiles.CORNER_NW);
+        extendObstacle(-4, 4, true, TerrainTiles.ARC_NW);
         extendObstacle(0, 3*8, true, TerrainTiles.WALL_V);
-        extendObstacle(-4, 4, false, TerrainTiles.CORNER_SE);
+        extendObstacle(-4, 4, false, TerrainTiles.ARC_SE);
         extendObstacle(-8, 0, false, TerrainTiles.WALL_H);
-        extendObstacle(-4, 4, true, TerrainTiles.CORNER_NW);
-        extendObstacle(4, 4, true, TerrainTiles.CORNER_SW);
+        extendObstacle(-4, 4, true, TerrainTiles.ARC_NW);
+        extendObstacle(4, 4, true, TerrainTiles.ARC_SW);
         extendObstacle(4*8, 0, true, TerrainTiles.WALL_H);
-        extendObstacle(4, -4, true, TerrainTiles.CORNER_SE);
-        extendObstacle(-4, -4, true, TerrainTiles.CORNER_NE);
+        extendObstacle(4, -4, true, TerrainTiles.ARC_SE);
+        extendObstacle(-4, -4, true, TerrainTiles.ARC_NE);
         extendObstacle(-8, 0, true, TerrainTiles.WALL_H);
-        extendObstacle(-4, -4, false, TerrainTiles.CORNER_SW);
+        extendObstacle(-4, -4, false, TerrainTiles.ARC_SW);
         extendObstacle(0, -3*8, false, TerrainTiles.WALL_V);
-        extendObstacle(-4, -4, true, TerrainTiles.CORNER_NE);
+        extendObstacle(-4, -4, true, TerrainTiles.ARC_NE);
 
         Vector2i currentPoint = obstacle.startPoint();
         Vector2i endPoint = null;

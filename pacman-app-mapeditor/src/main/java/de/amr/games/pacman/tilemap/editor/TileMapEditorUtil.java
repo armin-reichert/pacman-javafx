@@ -32,14 +32,14 @@ public interface TileMapEditorUtil {
 
     static byte mirroredTileValue(byte content) {
         return switch (content) {
-            case TerrainTiles.CORNER_NE -> TerrainTiles.CORNER_NW;
-            case TerrainTiles.CORNER_NW -> TerrainTiles.CORNER_NE;
-            case TerrainTiles.CORNER_SE -> TerrainTiles.CORNER_SW;
-            case TerrainTiles.CORNER_SW -> TerrainTiles.CORNER_SE;
-            case TerrainTiles.DCORNER_ANGULAR_NE -> TerrainTiles.DCORNER_ANGULAR_NW;
-            case TerrainTiles.DCORNER_ANGULAR_NW -> TerrainTiles.DCORNER_ANGULAR_NE;
-            case TerrainTiles.DCORNER_ANGULAR_SE -> TerrainTiles.DCORNER_ANGULAR_SW;
-            case TerrainTiles.DCORNER_ANGULAR_SW -> TerrainTiles.DCORNER_ANGULAR_SE;
+            case TerrainTiles.ARC_NE -> TerrainTiles.ARC_NW;
+            case TerrainTiles.ARC_NW -> TerrainTiles.ARC_NE;
+            case TerrainTiles.ARC_SE -> TerrainTiles.ARC_SW;
+            case TerrainTiles.ARC_SW -> TerrainTiles.ARC_SE;
+            case TerrainTiles.DCORNER_NE -> TerrainTiles.DCORNER_NW;
+            case TerrainTiles.DCORNER_NW -> TerrainTiles.DCORNER_NE;
+            case TerrainTiles.DCORNER_SE -> TerrainTiles.DCORNER_SW;
+            case TerrainTiles.DCORNER_SW -> TerrainTiles.DCORNER_SE;
             default -> content;
         };
     }
@@ -97,10 +97,10 @@ public interface TileMapEditorUtil {
         palette.addTileTool(editor, TerrainTiles.EMPTY, "Empty Space");
         palette.addTileTool(editor, TerrainTiles.WALL_H, "Horiz. Wall");
         palette.addTileTool(editor, TerrainTiles.WALL_V, "Vert. Wall");
-        palette.addTileTool(editor, TerrainTiles.CORNER_NW, "NW Corner");
-        palette.addTileTool(editor, TerrainTiles.CORNER_NE, "NE Corner");
-        palette.addTileTool(editor, TerrainTiles.CORNER_SW, "SW Corner");
-        palette.addTileTool(editor, TerrainTiles.CORNER_SE, "SE Corner");
+        palette.addTileTool(editor, TerrainTiles.ARC_NW, "NW Corner");
+        palette.addTileTool(editor, TerrainTiles.ARC_NE, "NE Corner");
+        palette.addTileTool(editor, TerrainTiles.ARC_SW, "SW Corner");
+        palette.addTileTool(editor, TerrainTiles.ARC_SE, "SE Corner");
         palette.addTileTool(editor, TerrainTiles.TUNNEL, "Tunnel");
         palette.addTileTool(editor, TerrainTiles.DOOR, "Door");
         palette.addTileTool(editor, TerrainTiles.ONE_WAY_UP, "One-Way Up");

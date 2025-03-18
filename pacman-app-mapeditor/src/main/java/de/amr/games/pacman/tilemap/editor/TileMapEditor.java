@@ -1325,38 +1325,11 @@ public class TileMapEditor {
             byte foodValue = worldMap().get(LayerID.FOOD, tile);
             String info = "";
             if (terrainValue != TerrainTiles.EMPTY)
-                info = "Terrain #%02X (%s)".formatted(terrainValue, terrainTileValueName(terrainValue));
+                info = "Terrain #%02X (%s)".formatted(terrainValue, TerrainTiles.name(terrainValue));
             if (foodValue != TerrainTiles.EMPTY)
-                info = "Food #%02X (%s)".formatted(foodValue, foodTileValueName(foodValue));
+                info = "Food #%02X (%s)".formatted(foodValue, FoodTiles.name(foodValue));
             showMessage(info, 4, MessageType.INFO);
         }
-    }
-
-    private String terrainTileValueName(byte value) {
-        return switch (value) {
-            case TerrainTiles.EMPTY -> "EMPTY";
-            case TerrainTiles.CORNER_NW -> "CORNER_NW";
-            case TerrainTiles.CORNER_SW -> "CORNER_SW";
-            case TerrainTiles.CORNER_SE -> "CORNER_SE";
-            case TerrainTiles.CORNER_NE -> "CORNER_NE";
-            case TerrainTiles.DOOR -> "DOOR";
-            case TerrainTiles.WALL_H -> "WALL_H";
-            case TerrainTiles.WALL_V -> "WALL_V";
-            case TerrainTiles.DCORNER_ANGULAR_NW -> "DCORNER_ANGULAR_NW";
-            case TerrainTiles.DCORNER_ANGULAR_SW -> "DCORNER_ANGULAR_SW";
-            case TerrainTiles.DCORNER_ANGULAR_SE -> "DCORNER_ANGULAR_SE";
-            case TerrainTiles.DCORNER_ANGULAR_NE -> "DCORNER_ANGULAR_NE";
-            default -> "?";
-        };
-    }
-
-    private String foodTileValueName(byte value) {
-        return switch (value) {
-            case FoodTiles.EMPTY -> "EMPTY";
-            case FoodTiles.PELLET -> "PELLET";
-            case FoodTiles.ENERGIZER -> "ENERGIZER";
-            default -> "?";
-        };
     }
 
     /**
@@ -1441,10 +1414,10 @@ public class TileMapEditor {
 
     private void addBorderWall(WorldMap worldMap) {
         int lastRow = worldMap.numRows() - 1 - EMPTY_ROWS_BELOW_MAZE, lastCol = worldMap.numCols() - 1;
-        worldMap.set(LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, 0, TerrainTiles.CORNER_NW);
-        worldMap.set(LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, lastCol, TerrainTiles.CORNER_NE);
-        worldMap.set(LayerID.TERRAIN, lastRow, 0, TerrainTiles.CORNER_SW);
-        worldMap.set(LayerID.TERRAIN, lastRow, lastCol, TerrainTiles.CORNER_SE);
+        worldMap.set(LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, 0, TerrainTiles.ARC_NW);
+        worldMap.set(LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, lastCol, TerrainTiles.ARC_NE);
+        worldMap.set(LayerID.TERRAIN, lastRow, 0, TerrainTiles.ARC_SW);
+        worldMap.set(LayerID.TERRAIN, lastRow, lastCol, TerrainTiles.ARC_SE);
         for (int row = EMPTY_ROWS_BEFORE_MAZE + 1; row < lastRow; ++row) {
             worldMap.set(LayerID.TERRAIN, row, 0, TerrainTiles.WALL_V);
             worldMap.set(LayerID.TERRAIN, row, lastCol, TerrainTiles.WALL_V);
@@ -1635,11 +1608,11 @@ public class TileMapEditor {
 
         // Find house: requires that at least min and max tiles have been detected
         Vector2i houseMinTile = worldMap().tiles()
-            .filter(tile -> worldMap().get(LayerID.TERRAIN, tile) == TerrainTiles.DCORNER_ANGULAR_NW)
+            .filter(tile -> worldMap().get(LayerID.TERRAIN, tile) == TerrainTiles.DCORNER_NW)
             .findFirst().orElse(null);
 
         Vector2i houseMaxTile = worldMap().tiles()
-            .filter(tile -> worldMap().get(LayerID.TERRAIN, tile) == TerrainTiles.DCORNER_ANGULAR_SE)
+            .filter(tile -> worldMap().get(LayerID.TERRAIN, tile) == TerrainTiles.DCORNER_SE)
             .findFirst().orElse(null);
 
         if (houseMinTile != null && houseMaxTile != null

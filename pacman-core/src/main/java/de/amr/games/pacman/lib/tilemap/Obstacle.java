@@ -113,10 +113,10 @@ public class Obstacle {
     public Vector2i cornerCenter(int segmentIndex) {
         ObstacleSegment corner = segment(segmentIndex);
         return switch (corner.encoding()) {
-            case TerrainTiles.CORNER_NW -> point(segmentIndex).plus(0, HTS);
-            case TerrainTiles.CORNER_SW -> point(segmentIndex).plus(HTS, 0);
-            case TerrainTiles.CORNER_SE -> point(segmentIndex).plus(0, -HTS);
-            case TerrainTiles.CORNER_NE -> point(segmentIndex).plus(-HTS, 0);
+            case TerrainTiles.ARC_NW -> point(segmentIndex).plus(0, HTS);
+            case TerrainTiles.ARC_SW -> point(segmentIndex).plus(HTS, 0);
+            case TerrainTiles.ARC_SE -> point(segmentIndex).plus(0, -HTS);
+            case TerrainTiles.ARC_NE -> point(segmentIndex).plus(-HTS, 0);
             default -> throw new IllegalStateException("No corner tile at index " + segmentIndex);
         };
     }
@@ -126,16 +126,16 @@ public class Obstacle {
         for (var segment : segments) {
             boolean up = segment.vector().y() < 0, down = segment.vector().y() > 0;
             switch (segment.encoding()) {
-                case TerrainTiles.CORNER_NW -> {
+                case TerrainTiles.ARC_NW -> {
                     if (down) centers.add(segment.startPoint().plus(0, HTS));
                 }
-                case TerrainTiles.CORNER_SW -> {
+                case TerrainTiles.ARC_SW -> {
                     if (down) centers.add(segment.startPoint().plus(HTS, 0));
                 }
-                case TerrainTiles.CORNER_SE -> {
+                case TerrainTiles.ARC_SE -> {
                     if (up) centers.add(segment.startPoint().plus(0, -HTS));
                 }
-                case TerrainTiles.CORNER_NE -> {
+                case TerrainTiles.ARC_NE -> {
                     if (up) centers.add(segment.startPoint().plus(-HTS, 0));
                 }
             }

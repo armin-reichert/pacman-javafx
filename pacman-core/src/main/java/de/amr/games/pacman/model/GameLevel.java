@@ -35,8 +35,8 @@ public class GameLevel {
 
     private static boolean isInaccessible(byte content) {
         return content == WALL_H  || content == WALL_V
-            || content == CORNER_NE  || content == CORNER_NW  || content == CORNER_SE  || content == CORNER_SW
-            || content == DCORNER_ANGULAR_NE || content == DCORNER_ANGULAR_NW || content == DCORNER_ANGULAR_SE || content == DCORNER_ANGULAR_SW;
+            || content == ARC_NE || content == ARC_NW || content == ARC_SE || content == ARC_SW
+            || content == DCORNER_NE || content == DCORNER_NW || content == DCORNER_SE || content == DCORNER_SW;
     }
 
     /**
@@ -326,10 +326,10 @@ public class GameLevel {
         for (int y = minY; y <= maxY; ++y) {
             for (int x = minX; x <= maxX; ++x) {
                 byte value = EMPTY;
-                if      (x == minX && y == minY) value = CORNER_NW;
-                else if (x == minX && y == maxY) value = CORNER_SW;
-                else if (x == maxX && y == minY) value = CORNER_NE;
-                else if (x == maxX && y == maxY) value = CORNER_SE;
+                if      (x == minX && y == minY) value = ARC_NW;
+                else if (x == minX && y == maxY) value = ARC_SW;
+                else if (x == maxX && y == minY) value = ARC_NE;
+                else if (x == maxX && y == maxY) value = ARC_SE;
                 else if (y == minY && (x == minX + 3 || x == minX + 4)) value = DOOR;
                 else if (x == minX || x == maxX) value = WALL_V;
                 else if (y == minY || y == maxY) value = WALL_H;

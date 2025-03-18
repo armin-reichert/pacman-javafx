@@ -59,7 +59,7 @@ public class MazeMapGenerator {
     private void computeWallContour(WorldMap map, Vector2i startTile) {
         predecessor = null;
         current = startTile;
-        set(map, LayerID.TERRAIN, current, TerrainTiles.CORNER_NW);
+        set(map, LayerID.TERRAIN, current, TerrainTiles.ARC_NW);
         moveDir = Direction.RIGHT;
         move();
         while (inRange(current, map)) {
@@ -71,20 +71,20 @@ public class MazeMapGenerator {
                             moveDir.isHorizontal() ? TerrainTiles.WALL_H : TerrainTiles.WALL_V);
                 } else {
                     byte corner = switch (moveDir) {
-                        case LEFT  -> TerrainTiles.CORNER_NW;
-                        case RIGHT -> TerrainTiles.CORNER_SE;
-                        case UP    -> TerrainTiles.CORNER_NE;
-                        case DOWN  -> TerrainTiles.CORNER_SW;
+                        case LEFT  -> TerrainTiles.ARC_NW;
+                        case RIGHT -> TerrainTiles.ARC_SE;
+                        case UP    -> TerrainTiles.ARC_NE;
+                        case DOWN  -> TerrainTiles.ARC_SW;
                     };
                     set(map, LayerID.TERRAIN, current, corner);
                     turnCounterclockwise();
                 }
             } else {
                 byte corner = switch (moveDir) {
-                    case RIGHT -> TerrainTiles.CORNER_NE;
-                    case DOWN  -> TerrainTiles.CORNER_SE;
-                    case LEFT  -> TerrainTiles.CORNER_SW;
-                    case UP    -> TerrainTiles.CORNER_NW;
+                    case RIGHT -> TerrainTiles.ARC_NE;
+                    case DOWN  -> TerrainTiles.ARC_SE;
+                    case LEFT  -> TerrainTiles.ARC_SW;
+                    case UP    -> TerrainTiles.ARC_NW;
                 };
                 set(map, LayerID.TERRAIN, current, corner);
                 turnClockwise();

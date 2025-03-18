@@ -260,10 +260,10 @@ public class WorldMap {
             byte newContent = switch (content) {
                 case TerrainTiles.OBSOLETE_DWALL_H -> TerrainTiles.WALL_H;
                 case TerrainTiles.OBSOLETE_DWALL_V -> TerrainTiles.WALL_V;
-                case TerrainTiles.OBSOLETE_DCORNER_NW -> TerrainTiles.CORNER_NW;
-                case TerrainTiles.OBSOLETE_DCORNER_SW -> TerrainTiles.CORNER_SW;
-                case TerrainTiles.OBSOLETE_DCORNER_SE -> TerrainTiles.CORNER_SE;
-                case TerrainTiles.OBSOLETE_DCORNER_NE -> TerrainTiles.CORNER_NE;
+                case TerrainTiles.OBSOLETE_DCORNER_NW -> TerrainTiles.ARC_NW;
+                case TerrainTiles.OBSOLETE_DCORNER_SW -> TerrainTiles.ARC_SW;
+                case TerrainTiles.OBSOLETE_DCORNER_SE -> TerrainTiles.ARC_SE;
+                case TerrainTiles.OBSOLETE_DCORNER_NE -> TerrainTiles.ARC_NE;
                 default -> content;
             };
             set(TERRAIN, tile, newContent);
