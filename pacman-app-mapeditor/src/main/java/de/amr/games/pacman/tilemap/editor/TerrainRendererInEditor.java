@@ -29,7 +29,7 @@ import static de.amr.games.pacman.tilemap.editor.ArcadeMap.*;
  */
 public class TerrainRendererInEditor extends TerrainRenderer {
 
-    private static final Color[] RANDOM_COLORS = new Color[50];
+    private static final Color[] RANDOM_COLORS = new Color[30];
     static {
         for (int i = 0; i < RANDOM_COLORS.length; ++i) {
             RANDOM_COLORS[i] = Color.rgb(randomInt(0, 256),randomInt(0, 256), randomInt(0, 256));
