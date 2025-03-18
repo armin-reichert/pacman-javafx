@@ -216,7 +216,7 @@ public class TileMapEditor {
     private PropertyEditorPane terrainMapPropertiesEditor;
     private PropertyEditorPane foodMapPropertiesEditor;
 
-    private TerrainRendererInEditor terrainTileRenderer;
+    private TerrainTileRenderer terrainTileRenderer;
     private TerrainRenderer terrainPathRenderer;
     private FoodTileRenderer foodRenderer;
 
@@ -335,7 +335,7 @@ public class TileMapEditor {
 
     public boolean isSymmetricEdit() { return symmetricEditPy.get(); }
 
-    public TerrainRendererInEditor terrainTileRenderer() { return terrainTileRenderer; }
+    public TerrainTileRenderer terrainTileRenderer() { return terrainTileRenderer; }
 
     public FoodTileRenderer foodRenderer() { return foodRenderer; }
 
@@ -490,7 +490,7 @@ public class TileMapEditor {
     }
 
     private void createRenderers(TerrainColorScheme colors, Color foodColor) {
-        terrainTileRenderer = new TerrainRendererInEditor();
+        terrainTileRenderer = new TerrainTileRenderer();
         terrainTileRenderer.setColors(colors);
         terrainPathRenderer = new TerrainRenderer();
         terrainPathRenderer.setColors(colors);

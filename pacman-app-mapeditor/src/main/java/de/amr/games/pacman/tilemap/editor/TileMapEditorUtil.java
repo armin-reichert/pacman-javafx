@@ -112,7 +112,7 @@ public interface TileMapEditorUtil {
         return palette;
     }
 
-    static Palette createActorPalette(byte id, int toolSize, TileMapEditor editor, TerrainRendererInEditor renderer) {
+    static Palette createActorPalette(byte id, int toolSize, TileMapEditor editor, TerrainTileRenderer renderer) {
         var palette = new Palette(id, toolSize, 1, 11, renderer);
         palette.addTileTool(editor, TerrainTiles.EMPTY, "Nope");
         palette.addPropertyTool(PROPERTY_POS_PAC, "Pac-Man");

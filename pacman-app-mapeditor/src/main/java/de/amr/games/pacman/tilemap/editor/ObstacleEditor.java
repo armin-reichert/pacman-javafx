@@ -95,7 +95,7 @@ public class ObstacleEditor {
         anchor = frontier = minTile = maxTile = null;
     }
 
-    public void draw(GraphicsContext g, TerrainRendererInEditor renderer) {
+    public void draw(GraphicsContext g, TerrainTileRenderer renderer) {
         byte[][] content = editedContent();
         if (content != null) {
             for (int row = 0; row < content.length; ++row) {

@@ -27,7 +27,7 @@ import static de.amr.games.pacman.tilemap.editor.ArcadeMap.SPRITE_SHEET;
 /**
  * @author Armin Reichert
  */
-public class TerrainRendererInEditor extends TerrainRenderer {
+public class TerrainTileRenderer extends TerrainRenderer {
 
     private static final Color[] RANDOM_COLORS = new Color[30];
     static {
@@ -46,7 +46,7 @@ public class TerrainRendererInEditor extends TerrainRenderer {
     private final double[] xp = new double[3];
     private final double[] yp = new double[3];
 
-    public TerrainRendererInEditor() {}
+    public TerrainTileRenderer() {}
 
     public void setSegmentNumbersDisplayed(boolean segmentNumbersDisplayed) {
         this.segmentNumbersDisplayed = segmentNumbersDisplayed;
