@@ -41,7 +41,13 @@ public class Obstacle {
         innerRectPartition.clear();
         try {
             Collection<Vector2i> innerPolygon = computeInnerPolygonPoints();
-            innerRectPartition.addAll(GourleyGreenPolygonToRect.convertPolygonToRectangles(innerPolygon));
+            var rectanglePartitioner = new GourleyGreenPolygonToRect<RectArea>() {
+                @Override
+                public RectArea makeRectangle(int x, int y, int width, int height) {
+                    return new RectArea(x, y, width, height);
+                }
+            };
+            innerRectPartition.addAll(rectanglePartitioner.convertPolygonToRectangles(innerPolygon));
         } catch (Exception x) {
             Logger.warn("Inner area rectangle partition could not be computed");
             Logger.error(x);

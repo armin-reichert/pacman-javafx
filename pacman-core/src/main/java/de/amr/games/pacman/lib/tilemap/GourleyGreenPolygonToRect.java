@@ -17,20 +17,32 @@ import static java.util.Comparator.comparingDouble;
 /**
  * Implements the Gourley/Green
  * <a href="https://github.com/armin-reichert/pacman-javafx/blob/main/doc/gourley1983.pdf">polygon-to-rectangle conversion algorithm</a>.
+ *
+ * @param <R> type of rectangles returned by the algorithm
  */
-public interface GourleyGreenPolygonToRect {
+public interface GourleyGreenPolygonToRect<R> {
+
+    /**
+     * @param x left-upper corner x
+     * @param y left-upper-corner y
+     * @param width width of rectangle
+     * @param height height of rectangle
+     * @return rectangle with given top-left position and size
+     */
+    R makeRectangle(int x, int y , int width, int height);
 
     // Note: In the original paper, the condition for p_m is p.x() < p_l.x() but that leads to incorrect results for some polygons!
     // After changing the condition to p.x() <= p_l.x(), the problem disappeared!
-    static List<RectArea> convertPolygonToRectangles(Collection<Vector2i> points) {
-        var rectangles = new ArrayList<RectArea>();
+    default List<R> convertPolygonToRectangles(Collection<Vector2i> points) {
+        var rectangles = new ArrayList<R>();
         while (!points.isEmpty()) {
             Vector2i p_k = minPoint(points.stream());
             Vector2i p_l = minPoint(points.stream().filter(p -> !p.equals(p_k)));
             Vector2i p_m = minPoint(points.stream().filter(p -> p_k.x() <= p.x() && p.x() <= p_l.x() && p.y() > p_k.y()));
             Vector2i p_km = new Vector2i(p_k.x(), p_m.y());
             Vector2i p_lm = new Vector2i(p_l.x(), p_m.y());
-            rectangles.add(new RectArea(p_k.x(), p_k.y(), p_l.x() - p_k.x(), p_m.y() - p_k.y()));
+            R rectangle = makeRectangle(p_k.x(), p_k.y(), p_l.x() - p_k.x(), p_m.y() - p_k.y());
+            rectangles.add(rectangle);
             points.remove(p_k);
             points.remove(p_l);
             if (points.contains(p_km)) points.remove(p_km); else points.add(p_km);
