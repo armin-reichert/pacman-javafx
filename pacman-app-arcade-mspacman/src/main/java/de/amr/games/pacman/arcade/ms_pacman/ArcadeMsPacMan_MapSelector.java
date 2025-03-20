@@ -12,6 +12,8 @@ import javafx.collections.ObservableList;
 
 import java.util.List;
 
+import static de.amr.games.pacman.lib.Globals.assertValidLevelNumber;
+
 public class ArcadeMsPacMan_MapSelector extends MapSelector {
 
     private ObservableList<WorldMap> maps = FXCollections.emptyObservableList();
@@ -54,6 +56,7 @@ public class ArcadeMsPacMan_MapSelector extends MapSelector {
      */
     @Override
     public WorldMap selectWorldMap(int levelNumber) {
+        assertValidLevelNumber(levelNumber);
         final int mapNumber = switch (levelNumber) {
             case 1, 2 -> 1;
             case 3, 4, 5 -> 2;
@@ -61,10 +64,10 @@ public class ArcadeMsPacMan_MapSelector extends MapSelector {
             case 10, 11, 12, 13 -> 4;
             default -> (levelNumber - 14) % 8 < 4 ? 3 : 4;
         };
-        int colorMapIndex = levelNumber < 14 ? mapNumber - 1 : mapNumber + 2 - 1;
         WorldMap worldMap = new WorldMap(maps.get(mapNumber - 1));
         worldMap.setConfigValue("mapNumber", mapNumber);
-        worldMap.setConfigValue("colorMapIndex", colorMapIndex);
+        // 1->0, 2->1, 3->2, 4->3 if level <= 13; 3->4; 4->5 if level >= 14
+        worldMap.setConfigValue("colorMapIndex", levelNumber < 14 ? mapNumber - 1 : mapNumber + 1);
         return worldMap;
     }
 }

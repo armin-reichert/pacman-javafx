@@ -209,7 +209,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     public void setStartLevelNumber(int number) {
         if (number < MIN_LEVEL_NUMBER || number > MAX_LEVEL_NUMBER) {
-            throw GameException.illegalLevelNumber(number);
+            throw GameException.invalidLevelNumber(number);
         }
         startLevelNumber = number;
     }

@@ -339,7 +339,7 @@ public abstract class GameModel {
             // Clyde/Sue: attacks directly but retreats if Pac is near
             case ORANGE_GHOST ->
                 ghost.tile().euclideanDist(level.pac().tile()) < 8 ? scatterTarget(ghost) : level.pac().tile();
-            default -> throw GameException.illegalGhostID(ghost.id());
+            default -> throw GameException.invalidGhostID(ghost.id());
         };
     }
 

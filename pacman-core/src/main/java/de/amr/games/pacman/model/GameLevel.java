@@ -197,7 +197,7 @@ public class GameLevel {
     }
 
     public Ghost ghost(byte id) {
-        assertLegalGhostID(id);
+        assertValidGhostID(id);
         return ghosts != null ? ghosts[id] : null;
     }
 
@@ -246,7 +246,7 @@ public class GameLevel {
     }
 
     public Vector2i ghostScatterTile(byte ghostID) {
-        return ghostScatterTiles[assertLegalGhostID(ghostID)];
+        return ghostScatterTiles[assertValidGhostID(ghostID)];
     }
 
     public int number() {
@@ -386,23 +386,23 @@ public class GameLevel {
     }
 
     public void setGhostPosition(byte ghostID, Vector2f position) {
-        assertLegalGhostID(ghostID);
+        assertValidGhostID(ghostID);
         ghostPositions[ghostID] = position;
     }
 
     public Vector2f ghostPosition(byte ghostID) {
-        assertLegalGhostID(ghostID);
+        assertValidGhostID(ghostID);
         return ghostPositions[ghostID];
     }
 
     public void setGhostDirection(byte ghostID, Direction dir) {
-        assertLegalGhostID(ghostID);
+        assertValidGhostID(ghostID);
         assertNotNull(dir);
         ghostDirections[ghostID] = dir;
     }
 
     public Direction ghostDirection(byte ghostID) {
-        assertLegalGhostID(ghostID);
+        assertValidGhostID(ghostID);
         return ghostDirections[ghostID];
     }
 

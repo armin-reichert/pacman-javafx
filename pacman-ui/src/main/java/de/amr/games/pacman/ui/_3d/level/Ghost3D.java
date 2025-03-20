@@ -60,7 +60,7 @@ public class Ghost3D {
         Shape3D dressShape, Shape3D pupilsShape, Shape3D eyeballsShape,
         AssetStorage assets, String assetPrefix, double size) {
 
-        assertLegalGhostID(id);
+        assertValidGhostID(id);
         assertNotNull(dressShape);
         assertNotNull(pupilsShape);
         assertNotNull(eyeballsShape);

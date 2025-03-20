@@ -49,7 +49,7 @@ public interface SpeedConfiguration {
             case ORANGE_GHOST -> 2;
             case CYAN_GHOST -> 1;
             case PINK_GHOST -> 0;
-            default -> throw GameException.illegalGhostID(ghostID);
+            default -> throw GameException.invalidGhostID(ghostID);
         });
     }
 

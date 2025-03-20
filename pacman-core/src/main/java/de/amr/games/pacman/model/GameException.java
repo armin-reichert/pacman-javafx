@@ -9,11 +9,11 @@ package de.amr.games.pacman.model;
  */
 public class GameException extends RuntimeException {
 
-    public static GameException illegalGhostID(byte id) {
+    public static GameException invalidGhostID(byte id) {
         return new GameException(String.format("Illegal ghost ID value '%d' (Allowed values: 0-3)", id));
     }
 
-    public static GameException illegalLevelNumber(int number) {
+    public static GameException invalidLevelNumber(int number) {
         return new GameException(String.format("Illegal level number '%d' (Allowed values: 1-)", number));
     }
 

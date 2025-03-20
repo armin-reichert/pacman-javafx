@@ -85,11 +85,17 @@ public class Globals {
         return assertNotNull(tile, MSG_TILE_NULL);
     }
 
-    public static byte assertLegalGhostID(byte id) {
+    public static byte assertValidGhostID(byte id) {
         if (id < 0 || id > 3) {
-            throw GameException.illegalGhostID(id);
+            throw GameException.invalidGhostID(id);
         }
         return id;
+    }
+
+    public static int assertValidLevelNumber(int number) {
+        if (number < 1)
+            throw GameException.invalidLevelNumber(number);
+        return number;
     }
 
     public static Direction assertDirectionNotNull(Direction dir) {
