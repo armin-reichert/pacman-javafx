@@ -8,9 +8,9 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.*;
-import de.amr.games.pacman.tilemap.rendering.FoodTileRenderer;
-import de.amr.games.pacman.tilemap.rendering.TerrainColorScheme;
-import de.amr.games.pacman.tilemap.rendering.TerrainRenderer;
+import de.amr.games.pacman.tilemap.rendering.FoodMapRenderer;
+import de.amr.games.pacman.tilemap.rendering.TerrainMapColorScheme;
+import de.amr.games.pacman.tilemap.rendering.TerrainMapRenderer;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
@@ -216,9 +216,9 @@ public class TileMapEditor {
     private PropertyEditorPane terrainMapPropertiesEditor;
     private PropertyEditorPane foodMapPropertiesEditor;
 
-    private TerrainTileRenderer terrainTileRenderer;
-    private TerrainRenderer terrainPathRenderer;
-    private FoodTileRenderer foodRenderer;
+    private TerrainTileMapRenderer terrainTileRenderer;
+    private TerrainMapRenderer terrainPathRenderer;
+    private FoodMapRenderer foodRenderer;
 
     // Properties
 
@@ -335,9 +335,9 @@ public class TileMapEditor {
 
     public boolean isSymmetricEdit() { return symmetricEditPy.get(); }
 
-    public TerrainTileRenderer terrainTileRenderer() { return terrainTileRenderer; }
+    public TerrainTileMapRenderer terrainTileRenderer() { return terrainTileRenderer; }
 
-    public FoodTileRenderer foodRenderer() { return foodRenderer; }
+    public FoodMapRenderer foodRenderer() { return foodRenderer; }
 
     public StringProperty titleProperty() { return titlePy; }
 
@@ -382,7 +382,7 @@ public class TileMapEditor {
     public void createUI(Stage stage) {
         this.stage = assertNotNull(stage);
 
-        TerrainColorScheme initialColors = new TerrainColorScheme(
+        TerrainMapColorScheme initialColors = new TerrainMapColorScheme(
             Color.BLACK,
             parseColor(MS_PACMAN_COLOR_WALL_FILL),
             parseColor(MS_PACMAN_COLOR_WALL_STROKE),
@@ -446,7 +446,7 @@ public class TileMapEditor {
         updateMessage();
         changeManager.processChanges();
         if (changeManager.isRedrawRequested()) {
-            var colors = new TerrainColorScheme(
+            var colors = new TerrainMapColorScheme(
                 COLOR_CANVAS_BACKGROUND,
                 getColorFromMap(worldMap(), LayerID.TERRAIN, PROPERTY_COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL)),
                 getColorFromMap(worldMap(), LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE)),
@@ -489,12 +489,12 @@ public class TileMapEditor {
         showMessage(tt("edit_help"), 30, MessageType.INFO);
     }
 
-    private void createRenderers(TerrainColorScheme colors, Color foodColor) {
-        terrainTileRenderer = new TerrainTileRenderer();
+    private void createRenderers(TerrainMapColorScheme colors, Color foodColor) {
+        terrainTileRenderer = new TerrainTileMapRenderer();
         terrainTileRenderer.setColors(colors);
-        terrainPathRenderer = new TerrainRenderer();
+        terrainPathRenderer = new TerrainMapRenderer();
         terrainPathRenderer.setColors(colors);
-        foodRenderer = new FoodTileRenderer();
+        foodRenderer = new FoodMapRenderer();
         foodRenderer.setPelletColor(foodColor);
         foodRenderer.setEnergizerColor(foodColor);
     }
@@ -1118,7 +1118,7 @@ public class TileMapEditor {
         terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(PROPERTY_POS_BONUS, null), BONUS_SPRITE, gridSize);
     }
 
-    private void draw(TerrainColorScheme colors) {
+    private void draw(TerrainMapColorScheme colors) {
         try {
             Logger.trace("Draw palette");
             drawSelectedPalette(colors);
@@ -1151,7 +1151,7 @@ public class TileMapEditor {
         }
     }
 
-    private void drawPreview2D(TerrainColorScheme colors) {
+    private void drawPreview2D(TerrainMapColorScheme colors) {
         GraphicsContext g = canvasPreview2D.getGraphicsContext2D();
         g.setImageSmoothing(false);
         g.setFill(colors.backgroundColor());
@@ -1178,7 +1178,7 @@ public class TileMapEditor {
         }
     }
 
-    private void drawSelectedPalette(TerrainColorScheme colors) {
+    private void drawSelectedPalette(TerrainMapColorScheme colors) {
         Palette selectedPalette = palettes[selectedPaletteID()];
         if (selectedPaletteID() == PALETTE_ID_TERRAIN) {
             double scaling = terrainTileRenderer.scaling();

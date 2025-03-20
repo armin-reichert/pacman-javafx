@@ -8,9 +8,9 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Bonus;
-import de.amr.games.pacman.tilemap.rendering.FoodTileRenderer;
-import de.amr.games.pacman.tilemap.rendering.TerrainColorScheme;
-import de.amr.games.pacman.tilemap.rendering.TerrainRenderer;
+import de.amr.games.pacman.tilemap.rendering.FoodMapRenderer;
+import de.amr.games.pacman.tilemap.rendering.TerrainMapColorScheme;
+import de.amr.games.pacman.tilemap.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.uilib.AssetStorage;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
@@ -38,14 +38,14 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     private final GameSpriteSheet spriteSheet;
     private final Canvas canvas;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
-    private final TerrainRenderer terrainRenderer = new TerrainRenderer();
-    private final FoodTileRenderer foodRenderer = new FoodTileRenderer();
+    private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
+    private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
     private Vector2f messageAnchorPosition;
     private boolean mazeHighlighted;
     private boolean blinkingOn;
     private Color bgColor;
-    private TerrainColorScheme blinkingOnColors;
-    private TerrainColorScheme blinkingOffColors;
+    private TerrainMapColorScheme blinkingOnColors;
+    private TerrainMapColorScheme blinkingOffColors;
 
     public VectorGraphicsGameRenderer(AssetStorage assets, GameSpriteSheet spriteSheet, Canvas canvas) {
         this.assets = assertNotNull(assets);
@@ -95,8 +95,8 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     @Override
     public void setBackgroundColor(Color color) {
         bgColor = assertNotNull(color);
-        blinkingOnColors = new TerrainColorScheme(bgColor, Color.BLACK, Color.WHITE, Color.BLACK);
-        blinkingOffColors = new TerrainColorScheme(bgColor, Color.WHITE, Color.BLACK, Color.BLACK);
+        blinkingOnColors = new TerrainMapColorScheme(bgColor, Color.BLACK, Color.WHITE, Color.BLACK);
+        blinkingOffColors = new TerrainMapColorScheme(bgColor, Color.WHITE, Color.BLACK, Color.BLACK);
     }
 
     @Override
@@ -117,7 +117,7 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
         }
         else {
             Map<String, String> colorMap = worldMap.getConfigValue("colorMap");
-            TerrainColorScheme colors = new TerrainColorScheme(
+            TerrainMapColorScheme colors = new TerrainMapColorScheme(
                 bgColor,
                 Color.web(colorMap.get("fill")),
                 Color.web(colorMap.get("stroke")),

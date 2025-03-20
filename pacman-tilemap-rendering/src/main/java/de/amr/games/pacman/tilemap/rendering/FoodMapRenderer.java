@@ -18,7 +18,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 /**
  * @author Armin Reichert
  */
-public class FoodTileRenderer implements TileRenderer {
+public class FoodMapRenderer implements TileMapRenderer {
 
     private static final double PELLET_SIZE = 2;
     private static final double ENERGIZER_SIZE = 8;

@@ -6,5 +6,9 @@ package de.amr.games.pacman.tilemap.rendering;
 
 import javafx.scene.paint.Color;
 
-public record TerrainColorScheme(Color backgroundColor, Color wallFillColor, Color wallStrokeColor, Color doorColor) {
-}
+public record TerrainMapColorScheme(
+    Color backgroundColor,
+    Color wallFillColor,
+    Color wallStrokeColor,
+    Color doorColor
+) {}

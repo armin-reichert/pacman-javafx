@@ -9,7 +9,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.FoodTiles;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.tilemap.rendering.TerrainColorScheme;
+import de.amr.games.pacman.tilemap.rendering.TerrainMapColorScheme;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
@@ -121,7 +121,7 @@ public class EditCanvas extends Canvas {
         obstacleEditor.setEnabled(false);
     }
 
-    public void draw(TerrainColorScheme colors) {
+    public void draw(TerrainMapColorScheme colors) {
         GraphicsContext g = getGraphicsContext2D();
         g.setImageSmoothing(false);
 

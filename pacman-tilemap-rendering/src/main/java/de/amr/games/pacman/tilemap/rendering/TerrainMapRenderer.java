@@ -20,25 +20,25 @@ import static de.amr.games.pacman.lib.Globals.*;
 /**
  * Vector renderer for terrain tile maps.
  */
-public class TerrainRenderer implements TileRenderer {
+public class TerrainMapRenderer implements TileMapRenderer {
 
-    public static final TerrainColorScheme DEFAULT_COLOR_SCHEME = new TerrainColorScheme(Color.BLACK, Color.RED,  Color.GOLD, Color.PINK);
+    public static final TerrainMapColorScheme DEFAULT_COLOR_SCHEME = new TerrainMapColorScheme(Color.BLACK, Color.RED,  Color.GOLD, Color.PINK);
 
     private final FloatProperty scalingPy = new SimpleFloatProperty(this, "scaling", 1.0f);
 
     protected double doubleStrokeOuterWidth;
     protected double doubleStrokeInnerWidth;
     protected double singleStrokeWidth;
-    protected TerrainColorScheme colors;
+    protected TerrainMapColorScheme colors;
 
-    public TerrainRenderer() {
+    public TerrainMapRenderer() {
         doubleStrokeOuterWidth = 4;
         doubleStrokeInnerWidth = 2;
         singleStrokeWidth = 1;
         colors = DEFAULT_COLOR_SCHEME;
     }
 
-    public void setColors(TerrainColorScheme colors) {
+    public void setColors(TerrainMapColorScheme colors) {
         this.colors = assertNotNull(colors);
     }
 

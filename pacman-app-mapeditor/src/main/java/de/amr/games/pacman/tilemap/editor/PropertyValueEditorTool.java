@@ -8,7 +8,7 @@ import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.tilemap.rendering.TileRenderer;
+import de.amr.games.pacman.tilemap.rendering.TileMapRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -21,12 +21,12 @@ import static de.amr.games.pacman.tilemap.editor.ArcadeMap.SPRITE_SHEET;
  * @author Armin Reichert
  */
 public class PropertyValueEditorTool implements Tool {
-    private final TileRenderer renderer;
+    private final TileMapRenderer renderer;
     private final double size;
     private final String propertyName;
     private final String description;
 
-    public PropertyValueEditorTool(TileRenderer renderer, double size, String propertyName, String description) {
+    public PropertyValueEditorTool(TileMapRenderer renderer, double size, String propertyName, String description) {
         this.renderer = renderer;
         this.size = size;
         this.propertyName = propertyName;
@@ -34,7 +34,7 @@ public class PropertyValueEditorTool implements Tool {
     }
 
     @Override
-    public TileRenderer renderer() {
+    public TileMapRenderer renderer() {
         return renderer;
     }
 
@@ -52,7 +52,7 @@ public class PropertyValueEditorTool implements Tool {
     public void draw(GraphicsContext g, int row, int col) {
         g.setFill(Color.BLACK);
         g.fillRect(col * size, row * size, size, size);
-        if (renderer instanceof TerrainTileRenderer tr) {
+        if (renderer instanceof TerrainTileMapRenderer tr) {
             g.save();
             g.setImageSmoothing(true);
             g.scale(size / (double) TS, size / (double) TS);

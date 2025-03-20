@@ -7,7 +7,7 @@ package de.amr.games.pacman.tilemap.rendering;
 import de.amr.games.pacman.lib.Vector2i;
 import javafx.scene.canvas.GraphicsContext;
 
-public interface TileRenderer {
+public interface TileMapRenderer {
     void setScaling(double scaling);
     void drawTile(GraphicsContext g, Vector2i tile, byte content);
 }

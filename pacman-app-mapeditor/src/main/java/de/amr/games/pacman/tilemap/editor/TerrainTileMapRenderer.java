@@ -9,7 +9,7 @@ import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.*;
-import de.amr.games.pacman.tilemap.rendering.TerrainRenderer;
+import de.amr.games.pacman.tilemap.rendering.TerrainMapRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -27,7 +27,7 @@ import static de.amr.games.pacman.tilemap.editor.ArcadeMap.SPRITE_SHEET;
 /**
  * Tile-based renderer used in editor. At runtime and in the 2D editor preview, the path based renderer is used.
  */
-public class TerrainTileRenderer extends TerrainRenderer {
+public class TerrainTileMapRenderer extends TerrainMapRenderer {
 
     private static final Color[] RANDOM_COLORS = new Color[30];
     static {
@@ -46,7 +46,7 @@ public class TerrainTileRenderer extends TerrainRenderer {
     private final double[] xp = new double[3];
     private final double[] yp = new double[3];
 
-    public TerrainTileRenderer() {}
+    public TerrainTileMapRenderer() {}
 
     public void setSegmentNumbersDisplayed(boolean segmentNumbersDisplayed) {
         this.segmentNumbersDisplayed = segmentNumbersDisplayed;

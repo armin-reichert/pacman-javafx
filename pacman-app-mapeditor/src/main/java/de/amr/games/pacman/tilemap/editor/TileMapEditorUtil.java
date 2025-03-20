@@ -9,7 +9,7 @@ import de.amr.games.pacman.lib.tilemap.FoodTiles;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.TerrainTiles;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.tilemap.rendering.TileRenderer;
+import de.amr.games.pacman.tilemap.rendering.TileMapRenderer;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -92,7 +92,7 @@ public interface TileMapEditorUtil {
         return spacer;
     }
 
-    static Palette createTerrainPalette(byte id, int toolSize, TileMapEditor editor, TileRenderer renderer) {
+    static Palette createTerrainPalette(byte id, int toolSize, TileMapEditor editor, TileMapRenderer renderer) {
         var palette = new Palette(id, toolSize, 1, 13, renderer);
         palette.addTileTool(editor, TerrainTiles.EMPTY, "Empty Space");
         palette.addTileTool(editor, TerrainTiles.WALL_H, "Horiz. Wall");
@@ -112,7 +112,7 @@ public interface TileMapEditorUtil {
         return palette;
     }
 
-    static Palette createActorPalette(byte id, int toolSize, TileMapEditor editor, TerrainTileRenderer renderer) {
+    static Palette createActorPalette(byte id, int toolSize, TileMapEditor editor, TerrainTileMapRenderer renderer) {
         var palette = new Palette(id, toolSize, 1, 11, renderer);
         palette.addTileTool(editor, TerrainTiles.EMPTY, "Nope");
         palette.addPropertyTool(PROPERTY_POS_PAC, "Pac-Man");
@@ -129,7 +129,7 @@ public interface TileMapEditorUtil {
         return palette;
     }
 
-    static Palette createFoodPalette(byte id, int toolSize, TileMapEditor editor, TileRenderer renderer) {
+    static Palette createFoodPalette(byte id, int toolSize, TileMapEditor editor, TileMapRenderer renderer) {
         var palette = new Palette(id, toolSize, 1, 3, renderer);
         palette.addTileTool(editor, FoodTiles.EMPTY, "No Food");
         palette.addTileTool(editor, FoodTiles.PELLET, "Pellet");

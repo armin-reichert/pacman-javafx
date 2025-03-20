@@ -7,7 +7,7 @@ package de.amr.games.pacman.tilemap.editor;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.tilemap.rendering.TileRenderer;
+import de.amr.games.pacman.tilemap.rendering.TileMapRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -16,12 +16,12 @@ import javafx.scene.paint.Color;
  */
 public class TileValueEditorTool implements Tool {
     private final TileMapEditor editor;
-    private final TileRenderer renderer;
+    private final TileMapRenderer renderer;
     private final double size;
     private final byte value;
     private final String description;
 
-    public TileValueEditorTool(TileMapEditor editor, TileRenderer renderer, double size, byte value, String description) {
+    public TileValueEditorTool(TileMapEditor editor, TileMapRenderer renderer, double size, byte value, String description) {
         this.editor = editor;
         this.renderer = renderer;
         this.size = size;
@@ -30,7 +30,7 @@ public class TileValueEditorTool implements Tool {
     }
 
     @Override
-    public TileRenderer renderer() {
+    public TileMapRenderer renderer() {
         return renderer;
     }
 
