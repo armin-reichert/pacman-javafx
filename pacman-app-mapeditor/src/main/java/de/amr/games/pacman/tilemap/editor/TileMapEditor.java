@@ -1659,22 +1659,18 @@ public class TileMapEditor {
     }
 
     private void loadSampleMaps() throws IOException {
-        mapPacManGame = loadSampleMap("pacman/pacman.world", 1);
-
+        mapPacManGame = new WorldMap(sampleMap("pacman/pacman.world", 1));
         mapsMsPacManGame = new ArrayList<>(6);
-        for (int num = 1; num <= 6; ++num) {
-            WorldMap worldMap = loadSampleMap("mspacman/mspacman_%d.world", num);
-            mapsMsPacManGame.add(worldMap);
+        for (int n = 1; n <= 6; ++n) {
+            mapsMsPacManGame.add(new WorldMap(sampleMap("mspacman/mspacman_%d.world", n)));
         }
         mapsPacManXXLGame = new ArrayList<>(8);
-        for (int num = 1; num <= 8; ++num) {
-            WorldMap worldMap = loadSampleMap("pacman_xxl/masonic_%d.world", num);
-            mapsPacManXXLGame.add(worldMap);
+        for (int n = 1; n <= 8; ++n) {
+            mapsPacManXXLGame.add(new WorldMap(sampleMap("pacman_xxl/masonic_%d.world", n)));
         }
     }
 
-    private WorldMap loadSampleMap(String pattern, int number) throws IOException {
-        URL url = getClass().getResource(SAMPLE_MAPS_PATH + pattern.formatted(number));
-        return new WorldMap(url);
+    private URL sampleMap(String namePattern, int number) {
+        return getClass().getResource(SAMPLE_MAPS_PATH + namePattern.formatted(number));
     }
 }
