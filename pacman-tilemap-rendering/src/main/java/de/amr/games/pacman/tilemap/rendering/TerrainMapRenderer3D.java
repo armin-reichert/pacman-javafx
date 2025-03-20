@@ -24,7 +24,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
 /**
  * Renders 3D terrain.
  */
-public class TerrainRenderer3D {
+public class TerrainMapRenderer3D {
 
     private static final int CYLINDER_DIVISIONS = 24;
 

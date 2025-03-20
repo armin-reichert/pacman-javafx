@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui;
 
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D;
 import de.amr.games.pacman.ui._2d.GameRenderer;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;

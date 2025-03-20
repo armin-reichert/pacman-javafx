@@ -8,7 +8,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D;
+import de.amr.games.pacman.tilemap.rendering.TerrainMapRenderer3D;
 import de.amr.games.pacman.ui.GameUIConfiguration;
 import de.amr.games.pacman.ui._3d.animation.MaterialColorAnimation;
 import de.amr.games.pacman.uilib.WorldMapColorScheme;
@@ -69,7 +69,7 @@ public class Maze3D extends Group {
         cornerTopMaterial.setDiffuseColor(wallTopColor);
         cornerTopMaterial.specularColorProperty().bind(cornerTopMaterial.diffuseColorProperty().map(Color::brighter));
 
-        TerrainRenderer3D r3D = new TerrainRenderer3D();
+        TerrainMapRenderer3D r3D = new TerrainMapRenderer3D();
         r3D.setWallBaseHeightProperty(obstacleBaseHeightPy);
         r3D.setWallTopHeight(OBSTACLE_TOP_HEIGHT);
         r3D.setWallTopMaterial(wallTopMaterial);
@@ -114,7 +114,7 @@ public class Maze3D extends Group {
     private Door3D addGhostHouse(
         Group parent,
         GameLevel level,
-        TerrainRenderer3D r3D,
+        TerrainMapRenderer3D r3D,
         Color houseBaseColor, Color houseTopColor, Color doorsColor, float wallOpacity,
         DoubleProperty wallBaseHeightPy, float wallTopHeight, float wallThickness,
         BooleanProperty houseLightOnPy)

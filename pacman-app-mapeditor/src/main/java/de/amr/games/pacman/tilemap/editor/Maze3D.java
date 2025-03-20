@@ -10,7 +10,7 @@ import de.amr.games.pacman.lib.tilemap.FoodTiles;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.tilemap.rendering.TerrainRenderer3D;
+import de.amr.games.pacman.tilemap.rendering.TerrainMapRenderer3D;
 import de.amr.games.pacman.uilib.ResourceManager;
 import de.amr.games.pacman.uilib.Ufx;
 import de.amr.games.pacman.uilib.model3D.Model3D;
@@ -63,7 +63,7 @@ public class Maze3D extends Group {
     private final Group mazeGroup = new Group();
     private final Group foodGroup = new Group();
 
-    private final TerrainRenderer3D r3D;
+    private final TerrainMapRenderer3D r3D;
     private final PerspectiveCamera camera;
 
     private final DoubleProperty wallBaseHeightPy = new SimpleDoubleProperty(3.5);
@@ -77,7 +77,7 @@ public class Maze3D extends Group {
     }
 
     public Maze3D() {
-        r3D = new TerrainRenderer3D();
+        r3D = new TerrainMapRenderer3D();
 
         getChildren().addAll(mazeGroup, foodGroup);
         foodGroup.visibleProperty().bind(foodVisiblePy);
