@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman;
 
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -19,6 +18,7 @@ import javafx.scene.paint.Color;
 import static de.amr.games.pacman.arcade.pacman.ArcadePacMan_SpriteSheet.EMPTY_MAZE_SPRITE;
 import static de.amr.games.pacman.arcade.pacman.ArcadePacMan_SpriteSheet.FULL_MAZE_SPRITE;
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.assertNotNull;
 
 /**
  * @author Armin Reichert
@@ -36,9 +36,9 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
     private Color bgColor = Color.BLACK;
 
     public ArcadePacMan_GameRenderer(AssetStorage assets, ArcadePacMan_SpriteSheet spriteSheet, Canvas canvas) {
-        this.assets = Globals.assertNotNull(assets);
-        this.spriteSheet = Globals.assertNotNull(spriteSheet);
-        this.canvas = Globals.assertNotNull(canvas);
+        this.assets = assertNotNull(assets);
+        this.spriteSheet = assertNotNull(spriteSheet);
+        this.canvas = assertNotNull(canvas);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
 
     @Override
     public void setBackgroundColor(Color color) {
-        bgColor = Globals.assertNotNull(color);
+        bgColor = assertNotNull(color);
     }
 
     @Override

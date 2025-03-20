@@ -25,7 +25,7 @@ import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.tilemap.editor.ArcadeMap.SPRITE_SHEET;
 
 /**
- * @author Armin Reichert
+ * Tile-based renderer used in editor. At runtime and in the 2D editor preview, the path based renderer is used.
  */
 public class TerrainTileRenderer extends TerrainRenderer {
 
