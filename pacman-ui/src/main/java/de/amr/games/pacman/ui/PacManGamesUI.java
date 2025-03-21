@@ -242,9 +242,9 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected Scene createMainScene(Dimension2D size) {
         Pane iconPane = createIconPane();
 
-        ImageView pauseIcon = createIcon(assets.get("icon.pause"), 64, clock.pausedPy);
+        ImageView pauseIcon = createIcon(assets.get("icon.pause"), 64, clock.pausedProperty());
         pauseIcon.visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> viewPy.get() != editorView && clock.isPaused(), viewPy, clock.pausedPy));
+            () -> viewPy.get() != editorView && clock.isPaused(), viewPy, clock.pausedProperty()));
 
         StackPane.setAlignment(iconPane, Pos.BOTTOM_RIGHT);
         StackPane.setAlignment(pauseIcon, Pos.CENTER);
@@ -335,7 +335,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
                 }
                 return locText(key, "2D");
             },
-            clock.pausedPy, gameVariantPy, gameScenePy, gameView.heightProperty())
+            clock.pausedProperty(), gameVariantPy, gameScenePy, gameView.heightProperty())
         );
     }
 

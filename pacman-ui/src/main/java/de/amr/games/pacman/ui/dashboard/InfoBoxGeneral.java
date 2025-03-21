@@ -69,18 +69,18 @@ public class InfoBoxGeneral extends InfoBox {
 
         setAction(bgSimulation[0], () -> GameActions2D.TOGGLE_PAUSED.execute(context));
         setAction(bgSimulation[1], () -> clock.makeSteps(PY_SIMULATION_STEPS.get(), true));
-        setEditor(sliderTargetFPS, clock.targetFrameRatePy);
+        setEditor(sliderTargetFPS, clock.targetFrameRateProperty());
         setEditor(pickerCanvasColor, PY_CANVAS_BG_COLOR);
         setEditor(cbCanvasImageSmoothing, PY_CANVAS_IMAGE_SMOOTHING);
         setEditor(cbCanvasFontSmoothing, PY_CANVAS_FONT_SMOOTHING);
         setEditor(cbDebugUI, PY_DEBUG_INFO_VISIBLE);
-        setEditor(cbTimeMeasured, clock.timeMeasuredPy);
+        setEditor(cbTimeMeasured, clock.timeMeasuredProperty());
     }
 
     @Override
     public void update() {
         super.update();
-        boolean paused = context.gameClock().pausedPy.get();
+        boolean paused = context.gameClock().pausedProperty().get();
         bgSimulation[0].setGraphic(paused ? iconPlay : iconStop);
         bgSimulation[0].setTooltip(paused ? tooltipPlay : tooltipStop);
         bgSimulation[1].setDisable(!paused);

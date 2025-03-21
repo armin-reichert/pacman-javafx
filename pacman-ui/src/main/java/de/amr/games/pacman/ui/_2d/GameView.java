@@ -81,7 +81,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
     private final GameAction actionSimulationOneStep = new GameAction() {
         @Override
         public void execute(GameContext context) {
-            context.gameClock().makeStep(true);
+            context.gameClock().makeOneStep(true);
         }
 
         @Override

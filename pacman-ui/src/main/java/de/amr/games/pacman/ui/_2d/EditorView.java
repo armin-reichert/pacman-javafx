@@ -33,9 +33,6 @@ public class EditorView extends BorderPane implements GameActionProvider {
         assertNotNull(stage);
         assertNotNull(context);
 
-        // without this, Pac-Man wallpaper shines through
-        setBackground(Ufx.coloredBackground(Color.web("#dddddd"))); // JavaFX default grey
-
         editor = new TileMapEditor();
         editor.createUI(stage);
         editor.init(GameModel.CUSTOM_MAP_DIR);
@@ -44,6 +41,8 @@ public class EditorView extends BorderPane implements GameActionProvider {
         miQuitEditor.setOnAction(e -> closeAction.accept(editor));
         editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);
 
+        // without this, Pac-Man wallpaper shines through
+        setBackground(Ufx.coloredBackground(Color.web("#dddddd"))); // JavaFX default grey
         setCenter(editor.getContentPane());
         setTop(editor.getMenuBar());
     }

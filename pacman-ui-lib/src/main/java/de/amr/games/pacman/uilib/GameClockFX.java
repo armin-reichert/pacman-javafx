@@ -22,20 +22,20 @@ import org.tinylog.Logger;
  */
 public class GameClockFX {
 
-    public final DoubleProperty targetFrameRatePy = new SimpleDoubleProperty(this, "targetFrameRate", 60) {
+    private final DoubleProperty targetFrameRatePy = new SimpleDoubleProperty(this, "targetFrameRate", 60) {
         @Override
         protected void invalidated() {
             handleTargetFrameRateChanged();
         }
     };
 
-    public final BooleanProperty pausedPy = new SimpleBooleanProperty(this, "paused", false);
+    private final BooleanProperty pausedPy = new SimpleBooleanProperty(this, "paused", false);
 
-    public final BooleanProperty timeMeasuredPy = new SimpleBooleanProperty(this, "timeMeasured", false);
+    private final BooleanProperty timeMeasuredPy = new SimpleBooleanProperty(this, "timeMeasured", false);
 
     private Runnable pauseableCallback = () -> {};
     private Runnable permanentCallback = () -> {};
-    private Timeline timeLine;
+    private Timeline animation;
     private long updateCount;
     private long tickCount;
 
@@ -44,7 +44,7 @@ public class GameClockFX {
     private long ticksInFrame;
 
     public GameClockFX() {
-        createTimeline(targetFrameRatePy.get());
+        create(targetFrameRatePy.get());
     }
 
     public void setPauseableCallback(Runnable callback) {
@@ -55,26 +55,13 @@ public class GameClockFX {
         this.permanentCallback = callback;
     }
 
-    private void createTimeline(double targetFPS) {
-        var tickDuration = Duration.seconds(1.0 / targetFPS);
-        timeLine = new Timeline(targetFPS, new KeyFrame(tickDuration, e -> makeStep(!isPaused())));
-        timeLine.setCycleCount(Animation.INDEFINITE);
-        timeLine.statusProperty().addListener((py, ov, nv) -> {
-            Logger.info("Clock status: {} -> {}", ov, nv);
-            Logger.info("Clock target frequency: {} Hz", getTargetFrameRate());
-        });
+    public DoubleProperty targetFrameRateProperty() {
+        return targetFrameRatePy;
     }
 
-    private void handleTargetFrameRateChanged() {
-        boolean running = timeLine.getStatus() == Status.RUNNING;
-        if (running) {
-            timeLine.stop();
-        }
-        createTimeline(targetFrameRatePy.get());
-        if (running) {
-            start();
-        }
-    }
+    public BooleanProperty pausedProperty() { return pausedPy; }
+
+    public BooleanProperty timeMeasuredProperty() { return timeMeasuredPy; }
 
     public double getTargetFrameRate() {
         return targetFrameRatePy.get();
@@ -85,15 +72,15 @@ public class GameClockFX {
     }
 
     public void start() {
-        timeLine.play();
+        animation.play();
     }
 
     public void stop() {
-        timeLine.stop();
+        animation.stop();
     }
 
     public boolean isRunning() {
-        return timeLine.getStatus() == Status.RUNNING;
+        return animation.getStatus() == Status.RUNNING;
     }
 
     public boolean isPaused() {
@@ -104,9 +91,6 @@ public class GameClockFX {
         return ticksPerSec;
     }
 
-    /**
-     * @return total number of ticks this clock has made.
-     */
     public long tickCount() { return tickCount; }
 
     public long updateCount() {
@@ -115,11 +99,11 @@ public class GameClockFX {
 
     public void makeSteps(int n, boolean pauseableCallbackEnabled) {
         for (int i = 0; i < n; ++i) {
-            makeStep(pauseableCallbackEnabled);
+            makeOneStep(pauseableCallbackEnabled);
         }
     }
 
-    public void makeStep(boolean pauseableCallbackEnabled) {
+    public void makeOneStep(boolean pauseableCallbackEnabled) {
         long now = System.nanoTime();
         if (pauseableCallbackEnabled) {
             execute(pauseableCallback, "Pauseable phase: {} milliseconds");
@@ -129,6 +113,27 @@ public class GameClockFX {
         ++tickCount;
         ++ticksInFrame;
         computeFrameRate(now);
+    }
+
+    private void create(double targetFPS) {
+        var tickDuration = Duration.seconds(1.0 / targetFPS);
+        animation = new Timeline(targetFPS, new KeyFrame(tickDuration, e -> makeOneStep(!isPaused())));
+        animation.setCycleCount(Animation.INDEFINITE);
+        animation.statusProperty().addListener((py, ov, nv) -> {
+            Logger.info("Clock status: {} -> {}", ov, nv);
+            Logger.info("Clock target frequency: {} Hz", getTargetFrameRate());
+        });
+    }
+
+    private void handleTargetFrameRateChanged() {
+        boolean running = animation.getStatus() == Status.RUNNING;
+        if (running) {
+            animation.stop();
+        }
+        create(targetFrameRatePy.get());
+        if (running) {
+            start();
+        }
     }
 
     private void execute(Runnable callback, String logMessage) {

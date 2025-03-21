@@ -63,7 +63,7 @@ public enum GameActions2D implements GameAction {
         public void execute(GameContext context) {
             context.gameController().restart(GameState.BOOT);
             context.gameClock().setTargetFrameRate(TICKS_PER_SECOND);
-            context.gameClock().pausedPy.set(false);
+            context.gameClock().pausedProperty().set(false);
             context.gameClock().start();
         }
     },
@@ -230,7 +230,7 @@ public enum GameActions2D implements GameAction {
     TOGGLE_PAUSED {
         @Override
         public void execute(GameContext context) {
-            toggle(context.gameClock().pausedPy);
+            toggle(context.gameClock().pausedProperty());
             if (context.gameClock().isPaused()) {
                 context.sound().stopAll();
             }
