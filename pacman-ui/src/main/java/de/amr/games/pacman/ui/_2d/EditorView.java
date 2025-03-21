@@ -38,6 +38,7 @@ public class EditorView extends BorderPane implements GameActionProvider {
 
         editor = new TileMapEditor();
         editor.createUI(stage);
+        editor.init(GameModel.CUSTOM_MAP_DIR);
 
         var miQuitEditor = new MenuItem(context.locText("back_to_game"));
         miQuitEditor.setOnAction(e -> closeAction.accept(editor));
@@ -45,8 +46,6 @@ public class EditorView extends BorderPane implements GameActionProvider {
 
         setCenter(editor.getContentPane());
         setTop(editor.getMenuBar());
-
-        editor.init(GameModel.CUSTOM_MAP_DIR);
     }
 
     @Override

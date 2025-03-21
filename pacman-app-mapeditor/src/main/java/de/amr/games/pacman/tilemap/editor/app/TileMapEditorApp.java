@@ -28,18 +28,15 @@ public class TileMapEditorApp extends Application  {
     @Override
     public void start(Stage stage) {
         editor = new TileMapEditor();
-        try {
-            stage.setMinWidth(900);
-            stage.setMinHeight(600);
-            editor.createUI(stage);
-            createUI(stage);
-            editor.init(new File(System.getProperty("user.home")));
-            //editor.loadMap(mapPacManGame);
-            editor.start();
-            stage.show();
-        } catch (Exception x) {
-            x.printStackTrace(System.err);
-        }
+        editor.createUI(stage);
+        editor.init(new File(System.getProperty("user.home")));
+        editor.start();
+
+        createUI(stage);
+        stage.titleProperty().bind(editor.titleProperty());
+        stage.setMinWidth(900);
+        stage.setMinHeight(600);
+        stage.show();
     }
 
     private void createUI(Stage stage) {
