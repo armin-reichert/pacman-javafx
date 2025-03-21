@@ -1527,9 +1527,7 @@ public class TileMapEditor {
             editedWorldMap().set(LayerID.FOOD, current, FoodTiles.PELLET);
             for (Direction dir : Direction.values()) {
                 Vector2i neighborTile = current.plus(dir.vector());
-                if  (!visited.contains(neighborTile)
-                    && !editedWorldMap().outOfBounds(neighborTile) && !isPartOfHouse(neighborTile)
-                    && editedWorldMap().get(LayerID.TERRAIN, neighborTile) == TerrainTiles.EMPTY) {
+                if  (!visited.contains(neighborTile) && canPutPelletOnTile(neighborTile)) {
                     q.push(neighborTile);
                     visited.add(neighborTile);
                 }
@@ -1537,6 +1535,14 @@ public class TileMapEditor {
         }
         changeManager.setFoodMapChanged();
         changeManager.setEdited(true);
+    }
+
+    public boolean canPutPelletOnTile(Vector2i tile) {
+        return !editedWorldMap().outOfBounds(tile)
+                && tile.y() >= EMPTY_ROWS_BEFORE_MAZE
+                && tile.y() < editedWorldMap().numRows() - EMPTY_ROWS_BELOW_MAZE
+                && !isPartOfHouse(tile)
+                && editedWorldMap().get(LayerID.TERRAIN, tile) == TerrainTiles.EMPTY;
     }
 
     private boolean isPartOfHouse(Vector2i tile) {

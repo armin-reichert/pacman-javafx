@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.FoodTiles;
 import de.amr.games.pacman.lib.tilemap.LayerID;
+import de.amr.games.pacman.lib.tilemap.TerrainTiles;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.tilemap.rendering.TerrainMapColorScheme;
 import de.amr.games.pacman.uilib.Ufx;
@@ -312,6 +313,7 @@ public class EditCanvas extends Canvas {
 
         var miFloodWithPellets = new MenuItem(tt("menu.edit.flood_with_pellets"));
         miFloodWithPellets.setOnAction(ae -> editor.floodWithPellets(tile));
+        miFloodWithPellets.setDisable(!editor.canPutPelletOnTile(tile));
 
         contextMenu.getItems().setAll(
             miInsertRow,
