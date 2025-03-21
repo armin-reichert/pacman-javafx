@@ -44,7 +44,7 @@ public class TemplateImageCanvas extends Canvas {
         gridSizePy.bind(editor.gridSizeProperty());
         gridVisiblePy.bind(editor.gridVisibleProperty());
         templateImagePy.bind(editor.templateImageProperty());
-        worldMapPy.bind(editor.worldMapProperty());
+        worldMapPy.bind(editor.editedWorldMapProperty());
 
         widthProperty().bind(Bindings.createDoubleBinding(
             () -> {

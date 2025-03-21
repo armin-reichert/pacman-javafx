@@ -145,13 +145,13 @@ public class TileMapEditor {
         private void processChanges() {
             if (!obstaclesUpToDate) {
                 tilesWithErrors.clear();
-                tilesWithErrors.addAll(worldMap().updateObstacleList());
+                tilesWithErrors.addAll(editedWorldMap().updateObstacleList());
                 obstaclesUpToDate = true;
                 requestRedraw();
             }
             if (terrainMapChanged) {
                 if (terrainMapPropertiesEditor != null) {
-                    terrainMapPropertiesEditor.setTileMap(worldMap(), LayerID.TERRAIN);
+                    terrainMapPropertiesEditor.setTileMap(editedWorldMap(), LayerID.TERRAIN);
                 }
                 mazePreview3D.updateTerrain();
                 updateSourceView();
@@ -161,7 +161,7 @@ public class TileMapEditor {
             }
             if (foodMapChanged) {
                 if (foodMapPropertiesEditor != null) {
-                    foodMapPropertiesEditor.setTileMap(worldMap(), LayerID.FOOD);
+                    foodMapPropertiesEditor.setTileMap(editedWorldMap(), LayerID.FOOD);
                 }
                 mazePreview3D.updateFood();
                 updateSourceView();
@@ -231,7 +231,7 @@ public class TileMapEditor {
 
     private final ObjectProperty<File> currentFilePy = new SimpleObjectProperty<>();
 
-    private final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>(new WorldMap(28, 36)) {
+    private final ObjectProperty<WorldMap> editedWorldMapPy = new SimpleObjectProperty<>(new WorldMap(28, 36)) {
         @Override
         protected void invalidated() {
             templateImagePy.set(null);
@@ -307,11 +307,11 @@ public class TileMapEditor {
 
     public ChangeManager getChangeManager() { return changeManager;}
 
-    public ObjectProperty<WorldMap> worldMapProperty() { return worldMapPy; }
+    public ObjectProperty<WorldMap> editedWorldMapProperty() { return editedWorldMapPy; }
 
-    public WorldMap worldMap() { return worldMapPy.get(); }
+    public WorldMap editedWorldMap() { return editedWorldMapPy.get(); }
 
-    public void setWorldMap(WorldMap worldMap) { worldMapPy.set(assertNotNull(worldMap)); }
+    public void setEditedWorldMap(WorldMap worldMap) { editedWorldMapPy.set(assertNotNull(worldMap)); }
 
     public IntegerProperty gridSizeProperty() { return gridSizePy; }
 
@@ -349,14 +349,6 @@ public class TileMapEditor {
 
     public Palette selectedPalette() {
         return palettes[selectedPaletteID()];
-    }
-
-    public PropertyEditorPane terrainPropertiesEditor() {
-        return terrainMapPropertiesEditor;
-    }
-
-    public PropertyEditorPane foodPropertiesEditor() {
-        return foodMapPropertiesEditor;
     }
 
     public Pane getContentPane() {
@@ -442,9 +434,9 @@ public class TileMapEditor {
         if (changeManager.isRedrawRequested()) {
             var colors = new TerrainMapColorScheme(
                 COLOR_CANVAS_BACKGROUND,
-                getColorFromMap(worldMap(), LayerID.TERRAIN, PROPERTY_COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL)),
-                getColorFromMap(worldMap(), LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE)),
-                getColorFromMap(worldMap(), LayerID.TERRAIN, PROPERTY_COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR))
+                getColorFromMap(editedWorldMap(), LayerID.TERRAIN, PROPERTY_COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL)),
+                getColorFromMap(editedWorldMap(), LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE)),
+                getColorFromMap(editedWorldMap(), LayerID.TERRAIN, PROPERTY_COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR))
             );
             draw(colors);
         }
@@ -508,7 +500,7 @@ public class TileMapEditor {
         //TODO is there a better way to get the initial resize time of the scroll pane?
         spEditCanvas.heightProperty().addListener((py,oldHeight,newHeight) -> {
             if (oldHeight.doubleValue() == 0) { // initial resize
-                int initialGridSize = (int) Math.max(newHeight.doubleValue() / worldMap().numRows(), MIN_GRID_SIZE);
+                int initialGridSize = (int) Math.max(newHeight.doubleValue() / editedWorldMap().numRows(), MIN_GRID_SIZE);
                 gridSizePy.set(initialGridSize);
             }
         });
@@ -528,7 +520,7 @@ public class TileMapEditor {
         mazePreview3D = new MazePreview3D(500, 500);
         mazePreview3D.foodVisibleProperty().bind(foodVisiblePy);
         mazePreview3D.terrainVisibleProperty().bind(terrainVisiblePy);
-        mazePreview3D.worldMapProperty().bind(worldMapPy);
+        mazePreview3D.worldMapProperty().bind(editedWorldMapPy);
     }
 
     private void createTemplateImageCanvas() {
@@ -540,32 +532,32 @@ public class TileMapEditor {
 
     public void setTerrainMapPropertyValue(String propertyName, String value) {
         assertNotNull(value);
-        if (worldMap().hasProperty(LayerID.TERRAIN, propertyName)
-            && worldMap().getProperty(LayerID.TERRAIN, propertyName).equals(value))
+        if (editedWorldMap().hasProperty(LayerID.TERRAIN, propertyName)
+            && editedWorldMap().getProperty(LayerID.TERRAIN, propertyName).equals(value))
             return;
-        worldMap().setProperty(LayerID.TERRAIN, propertyName, value);
+        editedWorldMap().setProperty(LayerID.TERRAIN, propertyName, value);
         changeManager.setTerrainMapChanged();
         changeManager.setEdited(true);
     }
 
     private void removeTerrainMapProperty(String name) {
-        worldMap().removeProperty(LayerID.TERRAIN, name);
+        editedWorldMap().removeProperty(LayerID.TERRAIN, name);
         changeManager.setTerrainMapChanged();
         changeManager.setEdited(true);
     }
 
     public void setFoodMapPropertyValue(String propertyName, String value) {
         assertNotNull(value);
-        if (worldMap().hasProperty(LayerID.FOOD, propertyName)
-            && worldMap().getProperty(LayerID.FOOD, propertyName).equals(value))
+        if (editedWorldMap().hasProperty(LayerID.FOOD, propertyName)
+            && editedWorldMap().getProperty(LayerID.FOOD, propertyName).equals(value))
             return;
-        worldMap().setProperty(LayerID.FOOD, propertyName, value);
+        editedWorldMap().setProperty(LayerID.FOOD, propertyName, value);
         changeManager.setFoodMapChanged();
         changeManager.setEdited(true);
     }
 
     private void removeFoodMapProperty(String name) {
-        worldMap().removeProperty(LayerID.FOOD, name);
+        editedWorldMap().removeProperty(LayerID.FOOD, name);
         changeManager.setFoodMapChanged();
         changeManager.setEdited(true);
     }
@@ -745,7 +737,7 @@ public class TileMapEditor {
     private void createStatusLine() {
         var lblMapSize = new Label();
         lblMapSize.setFont(FONT_STATUS_LINE_NORMAL);
-        lblMapSize.textProperty().bind(worldMapPy.map(worldMap -> (worldMap != null)
+        lblMapSize.textProperty().bind(editedWorldMapPy.map(worldMap -> (worldMap != null)
             ? "Cols: %d Rows: %d".formatted(worldMap.numCols(), worldMap.numRows()) : "")
         );
 
@@ -808,13 +800,13 @@ public class TileMapEditor {
                 if (mapFile != null) {
                     return "%s: [%s] - %s".formatted( tt("map_editor"), mapFile.getName(), mapFile.getPath() );
                 }
-                if (worldMap() != null && worldMap().url() != null) {
-                    return  "%s: [%s]".formatted( tt("map_editor"), worldMap().url() );
+                if (editedWorldMap() != null && editedWorldMap().url() != null) {
+                    return  "%s: [%s]".formatted( tt("map_editor"), editedWorldMap().url() );
                 }
                 return "%s: [%s: %d rows %d cols]".formatted(
                         tt("map_editor"), tt("unsaved_map"),
-                        worldMap().numRows(), worldMap().numCols() );
-            }, currentFilePy, worldMapPy
+                        editedWorldMap().numRows(), editedWorldMap().numCols() );
+            }, currentFilePy, editedWorldMapPy
         );
     }
 
@@ -853,16 +845,16 @@ public class TileMapEditor {
         miObstacleJoining.selectedProperty().bindBidirectional(obstaclesJoiningPy);
 
         var miAddBorder = new MenuItem(tt("menu.edit.add_border"));
-        miAddBorder.setOnAction(e -> addBorderWall(worldMap()));
+        miAddBorder.setOnAction(e -> addBorderWall(editedWorldMap()));
         miAddBorder.disableProperty().bind(editModePy.map(mode -> mode == EditMode.INSPECT));
 
         var miAddHouse = new MenuItem(tt("menu.edit.add_house"));
-        miAddHouse.setOnAction(e -> addHouse());
+        miAddHouse.setOnAction(e -> addHouse(editedWorldMap()));
         miAddHouse.disableProperty().bind(editModePy.map(mode -> mode == EditMode.INSPECT));
 
         var miClearTerrain = new MenuItem(tt("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(e -> {
-            worldMap().setAll(LayerID.TERRAIN, TerrainTiles.EMPTY);
+            editedWorldMap().setAll(LayerID.TERRAIN, TerrainTiles.EMPTY);
             changeManager.setTerrainMapChanged();
             changeManager.setEdited(true);
         });
@@ -870,7 +862,7 @@ public class TileMapEditor {
 
         var miClearFood = new MenuItem(tt("menu.edit.clear_food"));
         miClearFood.setOnAction(e -> {
-            worldMap().setAll(LayerID.FOOD, FoodTiles.EMPTY);
+            editedWorldMap().setAll(LayerID.FOOD, FoodTiles.EMPTY);
             changeManager.setFoodMapChanged();
             changeManager.setEdited(true);
         });
@@ -882,7 +874,7 @@ public class TileMapEditor {
         miIdentifyTiles.setOnAction(e -> populateMapFromTemplateImage());
 
         var miAssignDefaultColors = new MenuItem("Assign default colors"); //TODO localize
-        miAssignDefaultColors.setOnAction(e -> assignDefaultColors(worldMap()));
+        miAssignDefaultColors.setOnAction(e -> assignDefaultColors(editedWorldMap()));
         miAssignDefaultColors.disableProperty().bind(editModePy.map(mode -> mode == EditMode.INSPECT));
 
         menuEdit = new Menu(tt("menu.edit"), NO_GRAPHIC,
@@ -938,7 +930,7 @@ public class TileMapEditor {
 
     public void loadMap(WorldMap worldMap) {
         executeWithCheckForUnsavedChanges(() -> {
-            setWorldMap(new WorldMap(worldMap));
+            setEditedWorldMap(new WorldMap(worldMap));
             currentFilePy.set(null);
         });
     }
@@ -1051,7 +1043,7 @@ public class TileMapEditor {
         if (file != null) {
             currentDirectory = file.getParentFile();
             if (file.getName().endsWith(".world")) {
-                worldMap().save(file);
+                editedWorldMap().save(file);
                 changeManager.setEdited(false);
                 readMapFile(file);
             } else {
@@ -1089,7 +1081,7 @@ public class TileMapEditor {
 
     private void updateSourceView() {
         StringBuilder sb = new StringBuilder();
-        String[] lines = worldMap().sourceText().split("\n");
+        String[] lines = editedWorldMap().sourceText().split("\n");
         for (int i = 0; i < lines.length; ++i) {
             sb.append("%5d: ".formatted(i + 1)).append(lines[i]).append("\n");
         }
@@ -1172,22 +1164,22 @@ public class TileMapEditor {
         if (terrainVisiblePy.get()) {
             terrainPathRenderer.setScaling(gridSize() / 8.0);
             terrainPathRenderer.setColors(colors);
-            terrainPathRenderer.drawTerrain(g, worldMap(), worldMap().obstacles());
-            Vector2i houseMinTile = worldMap().getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
-            Vector2i houseMaxTile = worldMap().getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
+            terrainPathRenderer.drawTerrain(g, editedWorldMap(), editedWorldMap().obstacles());
+            Vector2i houseMinTile = editedWorldMap().getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
+            Vector2i houseMaxTile = editedWorldMap().getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
             if (houseMinTile != null && houseMaxTile != null) {
                 terrainPathRenderer.drawHouse(g, houseMinTile, houseMaxTile.minus(houseMinTile).plus(1, 1));
             }
         }
         if (foodVisiblePy.get()) {
-            Color foodColor = getColorFromMap(worldMap(), LayerID.FOOD, PROPERTY_COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
+            Color foodColor = getColorFromMap(editedWorldMap(), LayerID.FOOD, PROPERTY_COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
             foodRenderer.setScaling(gridSize() / 8.0);
             foodRenderer.setEnergizerColor(foodColor);
             foodRenderer.setPelletColor(foodColor);
-            worldMap().tiles().forEach(tile -> foodRenderer.drawTile(g, tile, worldMap().get(LayerID.FOOD, tile)));
+            editedWorldMap().tiles().forEach(tile -> foodRenderer.drawTile(g, tile, editedWorldMap().get(LayerID.FOOD, tile)));
         }
         if (actorsVisiblePy.get()) {
-            drawActorSprites(g, worldMap(), gridSize());
+            drawActorSprites(g, editedWorldMap(), gridSize());
         }
     }
 
@@ -1267,7 +1259,7 @@ public class TileMapEditor {
             case TileMapEditor.PALETTE_ID_FOOD -> editFoodAtTile(tile, erase);
             case TileMapEditor.PALETTE_ID_ACTORS -> {
                 if (selectedPalette().isToolSelected()) {
-                    selectedPalette().selectedTool().apply(worldMap(), LayerID.TERRAIN, tile);
+                    selectedPalette().selectedTool().apply(editedWorldMap(), LayerID.TERRAIN, tile);
                     changeManager.setTerrainMapChanged();
                     changeManager.setEdited(true);
                 }
@@ -1280,7 +1272,7 @@ public class TileMapEditor {
         if (erase) {
             clearTerrainTileValue(tile);
         } else if (selectedPalette().isToolSelected()) {
-            selectedPalette().selectedTool().apply(worldMap(), LayerID.TERRAIN, tile);
+            selectedPalette().selectedTool().apply(editedWorldMap(), LayerID.TERRAIN, tile);
         }
         changeManager.setTerrainMapChanged();
         changeManager.setEdited(true);
@@ -1290,7 +1282,7 @@ public class TileMapEditor {
         if (erase) {
             clearFoodTileValue(tile);
         } else if (selectedPalette().isToolSelected()) {
-            selectedPalette().selectedTool().apply(worldMap(), LayerID.FOOD, tile);
+            selectedPalette().selectedTool().apply(editedWorldMap(), LayerID.FOOD, tile);
         }
         changeManager.setFoodMapChanged();
         changeManager.setEdited(true);
@@ -1318,7 +1310,7 @@ public class TileMapEditor {
     }
 
     private boolean canEditFoodAtTile(Vector2i tile) {
-        byte terrain = worldMap().get(LayerID.TERRAIN, tile);
+        byte terrain = editedWorldMap().get(LayerID.TERRAIN, tile);
         return terrain == TerrainTiles.EMPTY
             || terrain == TerrainTiles.ONE_WAY_DOWN
             || terrain == TerrainTiles.ONE_WAY_UP
@@ -1327,7 +1319,7 @@ public class TileMapEditor {
     }
 
     private void identifyObstacleAtTile(Vector2i tile) {
-        Obstacle obstacleAtTile = worldMap().obstacles().stream()
+        Obstacle obstacleAtTile = editedWorldMap().obstacles().stream()
             .filter(obstacle -> Globals.tileAt(obstacle.startPoint().minus(HTS, 0).toVector2f()).equals(tile))
             .findFirst().orElse(null);
         if (obstacleAtTile != null) {
@@ -1338,8 +1330,8 @@ public class TileMapEditor {
             clipboard.setContent(content);
             showMessage("Obstacle (copied to clipboard)", 5, MessageType.INFO);
         } else {
-            byte terrainValue = worldMap().get(LayerID.TERRAIN, tile);
-            byte foodValue = worldMap().get(LayerID.FOOD, tile);
+            byte terrainValue = editedWorldMap().get(LayerID.TERRAIN, tile);
+            byte foodValue = editedWorldMap().get(LayerID.FOOD, tile);
             String info = "";
             if (terrainValue != TerrainTiles.EMPTY)
                 info = "Terrain #%02X (%s)".formatted(terrainValue, TerrainTiles.name(terrainValue));
@@ -1358,7 +1350,7 @@ public class TileMapEditor {
         worldMap.set(layerID, tile, value);
         if (layerID == LayerID.TERRAIN) {
             if (value != TerrainTiles.EMPTY) {
-                worldMap().set(LayerID.FOOD, tile, FoodTiles.EMPTY);
+                editedWorldMap().set(LayerID.FOOD, tile, FoodTiles.EMPTY);
             }
             changeManager.setWorldMapChanged();
         } else {
@@ -1370,7 +1362,7 @@ public class TileMapEditor {
             worldMap.set(layerID, symmetricTile, mirroredValue);
             if (layerID == LayerID.TERRAIN) {
                 if (mirroredValue != TerrainTiles.EMPTY) {
-                    worldMap().set(LayerID.FOOD, symmetricTile, FoodTiles.EMPTY);
+                    editedWorldMap().set(LayerID.FOOD, symmetricTile, FoodTiles.EMPTY);
                 }
             }
         }
@@ -1378,14 +1370,14 @@ public class TileMapEditor {
 
     // ignores symmetric edit mode!
     public void clearTerrainTileValue(Vector2i tile) {
-        worldMap().set(LayerID.TERRAIN, tile, TerrainTiles.EMPTY);
+        editedWorldMap().set(LayerID.TERRAIN, tile, TerrainTiles.EMPTY);
         changeManager.setTerrainMapChanged();
         changeManager.setEdited(true);
     }
 
     // ignores symmetric edit mode!
     public void clearFoodTileValue(Vector2i tile) {
-        worldMap().set(LayerID.FOOD, tile, FoodTiles.EMPTY);
+        editedWorldMap().set(LayerID.FOOD, tile, FoodTiles.EMPTY);
         changeManager.setFoodMapChanged();
         changeManager.setEdited(true);
     }
@@ -1399,25 +1391,25 @@ public class TileMapEditor {
             blankMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_CYAN_GHOST, formatTile(vec_2i(tilesX - 1, tilesY - 2)));
             blankMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_ORANGE_GHOST, formatTile(vec_2i(0, tilesY - 2)));
         }
-        setWorldMap(blankMap);
+        setEditedWorldMap(blankMap);
     }
 
     private void setPreconfiguredMap(int tilesX, int tilesY) {
-        var worldMap = new WorldMap(tilesY, tilesX);
-        assignDefaultColors(worldMap);
-        addBorderWall(worldMap);
-        if (worldMap.numRows() >= 20) {
+        var newWorldMap = new WorldMap(tilesY, tilesX);
+        assignDefaultColors(newWorldMap);
+        addBorderWall(newWorldMap);
+        if (newWorldMap.numRows() >= 20) {
             Vector2i houseMinTile = vec_2i(tilesX / 2 - 4, tilesY / 2 - 3);
-            placeHouse(worldMap, houseMinTile);
-            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_PAC,                  formatTile(houseMinTile.plus(3, 11)));
-            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_BONUS,                formatTile(houseMinTile.plus(3, 5)));
-            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_RED_GHOST,    formatTile(vec_2i(tilesX - 3, 0)));
-            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_PINK_GHOST,   formatTile(vec_2i(2, 0)));
-            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_CYAN_GHOST,   formatTile(vec_2i(tilesX - 1, tilesY - 2)));
-            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_ORANGE_GHOST, formatTile(vec_2i(0, tilesY - 2)));
+            placeHouse(newWorldMap, houseMinTile);
+            newWorldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_PAC,                  formatTile(houseMinTile.plus(3, 11)));
+            newWorldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_BONUS,                formatTile(houseMinTile.plus(3, 5)));
+            newWorldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_RED_GHOST,    formatTile(vec_2i(tilesX - 3, 0)));
+            newWorldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_PINK_GHOST,   formatTile(vec_2i(2, 0)));
+            newWorldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_CYAN_GHOST,   formatTile(vec_2i(tilesX - 1, tilesY - 2)));
+            newWorldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_ORANGE_GHOST, formatTile(vec_2i(0, tilesY - 2)));
         }
-        worldMap.updateObstacleList();
-        setWorldMap(worldMap);
+        newWorldMap.updateObstacleList();
+        setEditedWorldMap(newWorldMap);
     }
 
     private void assignDefaultColors(WorldMap worldMap) {
@@ -1447,10 +1439,10 @@ public class TileMapEditor {
         changeManager.setEdited(true);
     }
 
-    private void addHouse() {
-        int numRows = worldMap().numRows(), numCols = worldMap().numCols();
+    private void addHouse(WorldMap worldMap) {
+        int numRows = worldMap.numRows(), numCols = worldMap.numCols();
         int houseMinX = numCols / 2 - 4, houseMinY = numRows / 2 - 3;
-        placeHouse(worldMap(), vec_2i(houseMinX, houseMinY));
+        placeHouse(worldMap, vec_2i(houseMinX, houseMinY));
     }
 
     public void placeHouse(WorldMap worldMap, Vector2i houseMinTile) {
@@ -1537,12 +1529,12 @@ public class TileMapEditor {
         visited.add(startTile);
         while (!q.isEmpty()) {
             Vector2i current = q.poll();
-            worldMap().set(LayerID.FOOD, current, FoodTiles.PELLET);
+            editedWorldMap().set(LayerID.FOOD, current, FoodTiles.PELLET);
             for (Direction dir : Direction.values()) {
                 Vector2i neighborTile = current.plus(dir.vector());
                 if  (!visited.contains(neighborTile)
-                    && !worldMap().outOfBounds(neighborTile) && !isPartOfHouse(neighborTile)
-                    && worldMap().get(LayerID.TERRAIN, neighborTile) == TerrainTiles.EMPTY) {
+                    && !editedWorldMap().outOfBounds(neighborTile) && !isPartOfHouse(neighborTile)
+                    && editedWorldMap().get(LayerID.TERRAIN, neighborTile) == TerrainTiles.EMPTY) {
                     q.push(neighborTile);
                     visited.add(neighborTile);
                 }
@@ -1553,8 +1545,8 @@ public class TileMapEditor {
     }
 
     private boolean isPartOfHouse(Vector2i tile) {
-        Vector2i houseMinTile = worldMap().getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
-        Vector2i houseMaxTile = worldMap().getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
+        Vector2i houseMinTile = editedWorldMap().getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
+        Vector2i houseMaxTile = editedWorldMap().getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
         if (houseMinTile != null && houseMaxTile != null) {
             return houseMinTile.x() <= tile.x() && tile.x() <= houseMaxTile.x()
                     && houseMinTile.y() <= tile.y() && tile.y() <= houseMaxTile.y();
@@ -1568,22 +1560,22 @@ public class TileMapEditor {
             return;
         }
 
-        Color fillColor = getColorFromMap(worldMap(), LayerID.TERRAIN, PROPERTY_COLOR_WALL_FILL, null);
+        Color fillColor = getColorFromMap(editedWorldMap(), LayerID.TERRAIN, PROPERTY_COLOR_WALL_FILL, null);
         if (fillColor == null) {
             showMessage("No fill color defined", 3, MessageType.ERROR);
             return;
         }
-        Color strokeColor = getColorFromMap(worldMap(), LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE, null);
+        Color strokeColor = getColorFromMap(editedWorldMap(), LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE, null);
         if (strokeColor == null) {
             showMessage("No stroke color defined", 3, MessageType.ERROR);
             return;
         }
-        Color doorColor = getColorFromMap(worldMap(), LayerID.TERRAIN, PROPERTY_COLOR_DOOR, Color.PINK);
+        Color doorColor = getColorFromMap(editedWorldMap(), LayerID.TERRAIN, PROPERTY_COLOR_DOOR, Color.PINK);
         if (doorColor == null) {
             showMessage("No door color defined", 3, MessageType.ERROR);
             return;
         }
-        Color foodColor = getColorFromMap(worldMap(), LayerID.FOOD, PROPERTY_COLOR_FOOD, null);
+        Color foodColor = getColorFromMap(editedWorldMap(), LayerID.FOOD, PROPERTY_COLOR_FOOD, null);
         if (foodColor == null) {
             showMessage("No food color defined", 3, MessageType.ERROR);
             return;
@@ -1599,8 +1591,8 @@ public class TileMapEditor {
 
         LocalTime startTime = LocalTime.now();
 
-        int numMazeRows = worldMap().numRows() - (EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE);
-        int numMazeCols = worldMap().numCols();
+        int numMazeRows = editedWorldMap().numRows() - (EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE);
+        int numMazeCols = editedWorldMap().numCols();
         for (int row = 0; row < numMazeRows; ++row) {
             for (int col = 0; col < numMazeCols; ++col) {
                 Vector2i worldMapTile = vec_2i(col, row + EMPTY_ROWS_BEFORE_MAZE);
@@ -1609,10 +1601,10 @@ public class TileMapEditor {
                     rdr.getPixels(col * TS, row * TS, TS, TS, pixelFormat, pixelsOfTile, 0, TS);
                     byte foodValue = matcher.matchFoodTile(pixelsOfTile);
                     if (foodValue == FoodTiles.PELLET || foodValue == FoodTiles.ENERGIZER) {
-                        worldMap().set(LayerID.FOOD, worldMapTile, foodValue);
+                        editedWorldMap().set(LayerID.FOOD, worldMapTile, foodValue);
                     } else {
                         byte terrainValue = matcher.matchTerrainTile(pixelsOfTile);
-                        worldMap().set(LayerID.TERRAIN, worldMapTile, terrainValue);
+                        editedWorldMap().set(LayerID.TERRAIN, worldMapTile, terrainValue);
                     }
                 } catch (IndexOutOfBoundsException e) {
                     Logger.error("Could not get pixels for tile {}, maybe image has been cropped incorrectly?", worldMapTile);
@@ -1624,17 +1616,17 @@ public class TileMapEditor {
         }
 
         // Find house: requires that at least min and max tiles have been detected
-        Vector2i houseMinTile = worldMap().tiles()
-            .filter(tile -> worldMap().get(LayerID.TERRAIN, tile) == TerrainTiles.DCORNER_NW)
+        Vector2i houseMinTile = editedWorldMap().tiles()
+            .filter(tile -> editedWorldMap().get(LayerID.TERRAIN, tile) == TerrainTiles.DCORNER_NW)
             .findFirst().orElse(null);
 
-        Vector2i houseMaxTile = worldMap().tiles()
-            .filter(tile -> worldMap().get(LayerID.TERRAIN, tile) == TerrainTiles.DCORNER_SE)
+        Vector2i houseMaxTile = editedWorldMap().tiles()
+            .filter(tile -> editedWorldMap().get(LayerID.TERRAIN, tile) == TerrainTiles.DCORNER_SE)
             .findFirst().orElse(null);
 
         if (houseMinTile != null && houseMaxTile != null
                 && houseMinTile.x() < houseMaxTile.x() && houseMinTile.y() < houseMaxTile.y()) {
-            placeHouse(worldMap(), houseMinTile);
+            placeHouse(editedWorldMap(), houseMinTile);
         }
 
         java.time.Duration duration = java.time.Duration.between(startTime, LocalTime.now());

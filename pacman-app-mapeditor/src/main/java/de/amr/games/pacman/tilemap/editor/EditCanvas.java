@@ -58,8 +58,8 @@ public class EditCanvas extends Canvas {
         obstacleEditor = new ObstacleEditor() {
             @Override
             public void setValue(Vector2i tile, byte value) {
-                editor.setTileValue(editor.worldMap(), LayerID.TERRAIN, tile, value);
-                editor.setTileValue(editor.worldMap(), LayerID.FOOD, tile, FoodTiles.EMPTY);
+                editor.setTileValue(editor.editedWorldMap(), LayerID.TERRAIN, tile, value);
+                editor.setTileValue(editor.editedWorldMap(), LayerID.FOOD, tile, FoodTiles.EMPTY);
             }
         };
         obstacleEditor.joiningProperty().bind(editor.obstaclesJoiningProperty());
@@ -67,7 +67,7 @@ public class EditCanvas extends Canvas {
         obstacleEditor.symmetricEditProperty().bind(editor.symmetricEditProperty());
 
         gridSizePy.bind(editor.gridSizeProperty());
-        worldMapPy.bind(editor.worldMapProperty());
+        worldMapPy.bind(editor.editedWorldMapProperty());
         templateImageGreyPy.bind(editor.templateImageProperty().map(Ufx::imageToGreyscale));
 
         heightProperty().bind(Bindings.createDoubleBinding(
@@ -301,13 +301,13 @@ public class EditCanvas extends Canvas {
         var miInsertRow = new MenuItem(tt("menu.edit.insert_row"));
         miInsertRow.setOnAction(actionEvent -> {
             int rowIndex = tileAtMousePosition(menuEvent.getX(), menuEvent.getY(), gridSize()).y();
-            editor.setWorldMap(worldMap().insertRowBeforeIndex(rowIndex));
+            editor.setEditedWorldMap(worldMap().insertRowBeforeIndex(rowIndex));
         });
 
         var miDeleteRow = new MenuItem(tt("menu.edit.delete_row"));
         miDeleteRow.setOnAction(actionEvent -> {
             int rowIndex = tileAtMousePosition(menuEvent.getX(), menuEvent.getY(), gridSize()).y();
-            editor.setWorldMap(worldMap().deleteRowAtIndex(rowIndex));
+            editor.setEditedWorldMap(worldMap().deleteRowAtIndex(rowIndex));
         });
 
         var miFloodWithPellets = new MenuItem(tt("menu.edit.flood_with_pellets"));
