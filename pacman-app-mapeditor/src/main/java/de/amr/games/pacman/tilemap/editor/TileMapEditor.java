@@ -11,10 +11,8 @@ import de.amr.games.pacman.lib.tilemap.*;
 import de.amr.games.pacman.tilemap.rendering.FoodMapRenderer;
 import de.amr.games.pacman.tilemap.rendering.TerrainMapColorScheme;
 import de.amr.games.pacman.tilemap.rendering.TerrainMapRenderer;
-import javafx.animation.Animation;
+import javafx.animation.AnimationTimer;
 import javafx.animation.FadeTransition;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
@@ -60,8 +58,6 @@ import static java.util.stream.IntStream.rangeClosed;
  * @author Armin Reichert
  */
 public class TileMapEditor {
-
-    public static final short REFRESH_RATE = 5;
 
     public static final short TOOL_SIZE = 32;
     public static final short MIN_GRID_SIZE = 8;
@@ -177,7 +173,7 @@ public class TileMapEditor {
     private final ChangeManager changeManager = new ChangeManager();
     private File currentDirectory;
     private Instant messageCloseTime;
-    private Timeline updateLoop;
+    private AnimationTimer updateLoop;
     private final List<Vector2i> tilesWithErrors = new ArrayList<>();
 
     private final BorderPane contentPane = new BorderPane();
@@ -404,9 +400,22 @@ public class TileMapEditor {
         contentPane.setOnKeyTyped(this::onKeyTyped);
         contentPane.setOnKeyPressed(this::onKeyPressed);
 
-        Duration period = Duration.millis(1000.0 / REFRESH_RATE);
-        updateLoop = new Timeline(REFRESH_RATE, new KeyFrame(period, e -> update()));
-        updateLoop.setCycleCount(Animation.INDEFINITE);
+        updateLoop = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                updateAutoClosingMessage();
+                changeManager.processChanges();
+                if (changeManager.isRedrawRequested()) {
+                    var colors = new TerrainMapColorScheme(
+                            COLOR_CANVAS_BACKGROUND,
+                            getColorFromMap(editedWorldMap(), LayerID.TERRAIN, PROPERTY_COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL)),
+                            getColorFromMap(editedWorldMap(), LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE)),
+                            getColorFromMap(editedWorldMap(), LayerID.TERRAIN, PROPERTY_COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR))
+                    );
+                    draw(colors);
+                }
+            }
+        };
     }
 
     public void init(File workDir) {
@@ -420,7 +429,7 @@ public class TileMapEditor {
         titlePy.bind(createTitleBinding());
         setPropertyEditorsVisible(propertyEditorsVisiblePy.get());
         showEditHelpText();
-        updateLoop.play();
+        updateLoop.start();
     }
 
     public void stop() {
@@ -428,21 +437,7 @@ public class TileMapEditor {
         setEditMode(EditMode.INSPECT);
     }
 
-    private void update() {
-        updateMessage();
-        changeManager.processChanges();
-        if (changeManager.isRedrawRequested()) {
-            var colors = new TerrainMapColorScheme(
-                COLOR_CANVAS_BACKGROUND,
-                getColorFromMap(editedWorldMap(), LayerID.TERRAIN, PROPERTY_COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL)),
-                getColorFromMap(editedWorldMap(), LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE)),
-                getColorFromMap(editedWorldMap(), LayerID.TERRAIN, PROPERTY_COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR))
-            );
-            draw(colors);
-        }
-    }
-
-    private void updateMessage() {
+    private void updateAutoClosingMessage() {
         if (messageCloseTime != null && Instant.now().isAfter(messageCloseTime)) {
             messageCloseTime = null;
             FadeTransition fadeOut = new FadeTransition(Duration.seconds(2), messageLabel);
