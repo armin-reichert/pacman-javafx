@@ -10,7 +10,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -19,46 +18,39 @@ import java.io.File;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditor.tt;
 
 /**
- * @author Armin Reichert
+ * Standalone tile map editor application.
  */
 public class TileMapEditorApp extends Application  {
 
-    private TileMapEditor editor;
-
     @Override
     public void start(Stage stage) {
-        editor = new TileMapEditor();
+        var editor = new TileMapEditor();
         editor.createUI(stage);
-        editor.init(new File(System.getProperty("user.home")));
-        editor.start();
-
-        createUI(stage);
-        stage.titleProperty().bind(editor.titleProperty());
-        stage.setMinWidth(900);
-        stage.setMinHeight(600);
-        stage.show();
-    }
-
-    private void createUI(Stage stage) {
-        var layout = new BorderPane();
-        layout.setCenter(editor.getContentPane());
-        layout.setTop(editor.getMenuBar());
 
         var miQuit = new MenuItem(tt("quit"));
         miQuit.setOnAction(e -> editor.executeWithCheckForUnsavedChanges(stage::close));
         editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miQuit);
 
-        double height = Math.max(0.8 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
+        var layout = new BorderPane();
+        layout.setCenter(editor.getContentPane());
+        layout.setTop(editor.getMenuBar());
+
+        double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
+        double height = Math.max(0.8 * screenHeight, 600);
         double width = 1.25 * height;
 
         var scene = new Scene(layout, width, height);
-        scene.setFill(Color.BLACK);
-
         stage.setScene(scene);
+
+        stage.titleProperty().bind(editor.titleProperty());
         stage.setOnCloseRequest(e -> editor.executeWithCheckForUnsavedChanges(() -> {
             editor.stop();
             stage.close();
         }));
-        stage.titleProperty().bind(editor.titleProperty());
+
+        editor.init(new File(System.getProperty("user.home")));
+        editor.start();
+
+        stage.show();
     }
 }

@@ -1474,17 +1474,17 @@ public class TileMapEditor {
         worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_ORANGE_GHOST,   formatTile(houseMinTile.plus(5, 2)));
 
         // clear pellets around house
-        Vector2i min = worldMap().getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null).minus(1, 1);
-        Vector2i max = worldMap().getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null).plus(1, 1);
+        Vector2i min = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null).minus(1, 1);
+        Vector2i max = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null).plus(1, 1);
         for (int x = min.x(); x <= max.x(); ++x) {
             // Note: parameters are row and col (y and x)
-            worldMap().set(LayerID.FOOD, min.y(), x, FoodTiles.EMPTY);
-            worldMap().set(LayerID.FOOD, max.y(), x, FoodTiles.EMPTY);
+            worldMap.set(LayerID.FOOD, min.y(), x, FoodTiles.EMPTY);
+            worldMap.set(LayerID.FOOD, max.y(), x, FoodTiles.EMPTY);
         }
         for (int y = min.y(); y <= max.y(); ++y) {
             // Note: parameters are row and col (y and x)
-            worldMap().set(LayerID.FOOD, y, min.x(), FoodTiles.EMPTY);
-            worldMap().set(LayerID.FOOD, y, max.x(), FoodTiles.EMPTY);
+            worldMap.set(LayerID.FOOD, y, min.x(), FoodTiles.EMPTY);
+            worldMap.set(LayerID.FOOD, y, max.x(), FoodTiles.EMPTY);
         }
 
         changeManager.setWorldMapChanged();
