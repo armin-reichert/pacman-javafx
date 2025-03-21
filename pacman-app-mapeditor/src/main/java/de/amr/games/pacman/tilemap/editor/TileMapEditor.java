@@ -408,7 +408,7 @@ public class TileMapEditor {
         loadSampleMapsAndAddMenuEntries();
 
         arrangeMainLayout();
-        titlePy.bind(createTitleBinding());
+
         contentPane.setOnKeyTyped(this::onKeyTyped);
         contentPane.setOnKeyPressed(this::onKeyPressed);
 
@@ -425,14 +425,9 @@ public class TileMapEditor {
     }
 
     public void start() {
+        titlePy.bind(createTitleBinding());
         stage.titleProperty().bind(titlePy);
         setPropertyEditorsVisible(propertyEditorsVisiblePy.get());
-        spEditCanvas.heightProperty().addListener((py,ov,nv) -> {
-            if (ov.doubleValue() == 0) { // initial resize
-                double gridSize = Math.max(spEditCanvas.getHeight() / worldMap().numRows(), MIN_GRID_SIZE);
-                gridSizePy.set((int) gridSize);
-            }
-        });
         showEditHelpText();
         updateLoop.play();
     }
@@ -511,6 +506,13 @@ public class TileMapEditor {
         spEditCanvas = new ScrollPane(editCanvas);
         spEditCanvas.setFitToHeight(true);
         registerDragAndDropImageHandler(spEditCanvas);
+        //TODO is there a better way to get the initial resize time of the scroll pane?
+        spEditCanvas.heightProperty().addListener((py,oldHeight,newHeight) -> {
+            if (oldHeight.doubleValue() == 0) { // initial resize
+                int initialGridSize = (int) Math.max(newHeight.doubleValue() / worldMap().numRows(), MIN_GRID_SIZE);
+                gridSizePy.set(initialGridSize);
+            }
+        });
     }
 
     private void createPreview2D() {
@@ -1105,6 +1107,18 @@ public class TileMapEditor {
         }
     }
 
+    private void zoomIn() {
+        if (gridSize() < TileMapEditor.MAX_GRID_SIZE) {
+            gridSizePy.set(gridSize() + 1);
+        }
+    }
+
+    private void zoomOut() {
+        if (gridSize() > TileMapEditor.MIN_GRID_SIZE) {
+            gridSizePy.set(gridSize() - 1);
+        }
+    }
+
     //
     // Drawing
     //
@@ -1211,14 +1225,10 @@ public class TileMapEditor {
                 });
         }
         else if (key == KeyCode.PLUS) {
-            if (gridSize() < TileMapEditor.MAX_GRID_SIZE) {
-                gridSizePy.set(gridSize() + 1);
-            }
+            zoomIn();
         }
         else if (key == KeyCode.MINUS) {
-            if (gridSize() > TileMapEditor.MIN_GRID_SIZE) {
-                gridSizePy.set(gridSize() - 1);
-            }
+            zoomOut();
         }
     }
 
@@ -1246,7 +1256,7 @@ public class TileMapEditor {
         editModePy.set(assertNotNull(mode));
     }
 
-    void editAtMousePosition(MouseEvent event) {
+    public void editAtMousePosition(MouseEvent event) {
         Vector2i tile = tileAtMousePosition(event.getX(), event.getY(), gridSize());
         if (isEditMode(EditMode.INSPECT)) {
             identifyObstacleAtTile(tile);
