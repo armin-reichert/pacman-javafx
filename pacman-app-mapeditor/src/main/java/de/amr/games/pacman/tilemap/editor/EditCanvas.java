@@ -60,7 +60,7 @@ public class EditCanvas {
         obstacleEditor = new ObstacleEditor() {
             @Override
             public void setValue(Vector2i tile, byte value) {
-                editor.setTileValue(editor.editedWorldMap(), LayerID.TERRAIN, tile, value);
+                editor.setTileValueAndRespectSymmetricEditing(editor.editedWorldMap(), LayerID.TERRAIN, tile, value);
             }
         };
         obstacleEditor.joiningProperty().bind(editor.obstaclesJoiningProperty());

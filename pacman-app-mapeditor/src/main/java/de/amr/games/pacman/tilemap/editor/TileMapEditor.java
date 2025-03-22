@@ -1328,35 +1328,42 @@ public class TileMapEditor {
     }
 
     /**
-     * This method should be used whenever a tile value has to be set.
+     * This method should be used whenever a tile value has to be set and symmetric editing should be executed.
      */
-    public void setTileValue(WorldMap worldMap, LayerID layerID, Vector2i tile, byte value) {
+    public void setTileValueAndRespectSymmetricEditing(WorldMap worldMap, LayerID layerID, Vector2i tile, byte value) {
         assertNotNull(worldMap);
+        assertNotNull(layerID);
         assertNotNull(tile);
+
+        if (layerID == LayerID.FOOD && !canEditFoodAtTile(tile)) {
+            return;
+        }
+
         worldMap.set(layerID, tile, value);
         if (layerID == LayerID.TERRAIN) {
-            if (value != TerrainTiles.EMPTY) {
-                editedWorldMap().set(LayerID.FOOD, tile, FoodTiles.EMPTY);
-            }
-            changeManager.setWorldMapChanged();
-        } else {
-            changeManager.setFoodMapChanged();
+            worldMap.set(LayerID.FOOD, tile, FoodTiles.EMPTY);
         }
+
+        changeManager.setEdited(true);
+        changeManager.setWorldMapChanged();
+
         if (isSymmetricEdit()) {
-            Vector2i symmetricTile = worldMap.vSymmetricTile(tile);
-            byte mirroredValue = mirroredTileValue(value);
-            worldMap.set(layerID, symmetricTile, mirroredValue);
-            if (layerID == LayerID.TERRAIN) {
-                if (mirroredValue != TerrainTiles.EMPTY) {
-                    editedWorldMap().set(LayerID.FOOD, symmetricTile, FoodTiles.EMPTY);
+            Vector2i mirrorTile = worldMap.vSymmetricTile(tile);
+            if (layerID == LayerID.FOOD) {
+                if (canEditFoodAtTile(mirrorTile)) {
+                    worldMap.set(layerID, mirrorTile, value);
                 }
+            } else {
+                byte mirroredValue = mirroredTileValue(value);
+                worldMap.set(layerID, mirrorTile, mirroredValue);
+                worldMap.set(LayerID.FOOD, mirrorTile, FoodTiles.EMPTY);
             }
         }
     }
 
-    public void setTileValue(WorldMap worldMap, LayerID layerID, int row, int col, byte value) {
+    public void setTileValueAndRespectSymmetricEditing(WorldMap worldMap, LayerID layerID, int row, int col, byte value) {
         Vector2i tile = new Vector2i(col, row);
-        setTileValue(worldMap, LayerID.TERRAIN, tile, value);
+        setTileValueAndRespectSymmetricEditing(worldMap, layerID, tile, value);
     }
 
 
@@ -1415,17 +1422,17 @@ public class TileMapEditor {
 
     private void addBorderWall(WorldMap worldMap) {
         int lastRow = worldMap.numRows() - 1 - EMPTY_ROWS_BELOW_MAZE, lastCol = worldMap.numCols() - 1;
-        setTileValue(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, 0, TerrainTiles.ARC_NW);
-        setTileValue(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, lastCol, TerrainTiles.ARC_NE);
-        setTileValue(worldMap, LayerID.TERRAIN, lastRow, 0, TerrainTiles.ARC_SW);
-        setTileValue(worldMap, LayerID.TERRAIN, lastRow, lastCol, TerrainTiles.ARC_SE);
+        setTileValueAndRespectSymmetricEditing(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, 0, TerrainTiles.ARC_NW);
+        setTileValueAndRespectSymmetricEditing(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, lastCol, TerrainTiles.ARC_NE);
+        setTileValueAndRespectSymmetricEditing(worldMap, LayerID.TERRAIN, lastRow, 0, TerrainTiles.ARC_SW);
+        setTileValueAndRespectSymmetricEditing(worldMap, LayerID.TERRAIN, lastRow, lastCol, TerrainTiles.ARC_SE);
         for (int row = EMPTY_ROWS_BEFORE_MAZE + 1; row < lastRow; ++row) {
-            setTileValue(worldMap, LayerID.TERRAIN, row, 0, TerrainTiles.WALL_V);
-            setTileValue(worldMap, LayerID.TERRAIN, row, lastCol, TerrainTiles.WALL_V);
+            setTileValueAndRespectSymmetricEditing(worldMap, LayerID.TERRAIN, row, 0, TerrainTiles.WALL_V);
+            setTileValueAndRespectSymmetricEditing(worldMap, LayerID.TERRAIN, row, lastCol, TerrainTiles.WALL_V);
         }
         for (int col = 1; col < lastCol; ++col) {
-            setTileValue(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, col, TerrainTiles.WALL_H);
-            setTileValue(worldMap, LayerID.TERRAIN, lastRow, col, TerrainTiles.WALL_H);
+            setTileValueAndRespectSymmetricEditing(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, col, TerrainTiles.WALL_H);
+            setTileValueAndRespectSymmetricEditing(worldMap, LayerID.TERRAIN, lastRow, col, TerrainTiles.WALL_H);
         }
     }
 
@@ -1445,10 +1452,12 @@ public class TileMapEditor {
 
         // clear tiles where house walls/doors were located (created at runtime!)
         if (oldHouseMinTile != null && oldHouseMaxTile != null) {
-            clearRect(worldMap, oldHouseMinTile, oldHouseMaxTile);
+            clearTerrainAreaOneSided(worldMap, oldHouseMinTile, oldHouseMaxTile);
+            clearFoodAreaOneSided(worldMap, oldHouseMinTile, oldHouseMaxTile);
         }
         // clear new house area
-        clearRect(worldMap, houseMinTile, houseMaxTile);
+        clearTerrainAreaOneSided(worldMap, houseMinTile, houseMaxTile);
+        clearFoodAreaOneSided(worldMap, houseMinTile, houseMaxTile);
 
         worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_RED_GHOST,      formatTile(houseMinTile.plus(3, -1)));
         worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_CYAN_GHOST,     formatTile(houseMinTile.plus(1, 2)));
@@ -1473,13 +1482,25 @@ public class TileMapEditor {
         changeManager.setEdited(true);
     }
 
-    private void clearRect(WorldMap worldMap, Vector2i minTile, Vector2i maxTile) {
+    private void clearTerrainAreaOneSided(WorldMap worldMap, Vector2i minTile, Vector2i maxTile) {
         for (int row = minTile.y(); row <= maxTile.y(); ++row) {
             for (int col = minTile.x(); col <= maxTile.x(); ++col) {
-                setTileValue(worldMap, LayerID.TERRAIN, row, col, TerrainTiles.EMPTY);
+                // No symmetric editing!
+                worldMap.set(LayerID.TERRAIN, row, col, TerrainTiles.EMPTY);
             }
         }
-        changeManager.setWorldMapChanged();
+        changeManager.setTerrainMapChanged();
+        changeManager.setEdited(true);
+    }
+
+    private void clearFoodAreaOneSided(WorldMap worldMap, Vector2i minTile, Vector2i maxTile) {
+        for (int row = minTile.y(); row <= maxTile.y(); ++row) {
+            for (int col = minTile.x(); col <= maxTile.x(); ++col) {
+                // No symmetric editing!
+                worldMap.set(LayerID.FOOD, row, col, FoodTiles.EMPTY);
+            }
+        }
+        changeManager.setFoodMapChanged();
         changeManager.setEdited(true);
     }
 
@@ -1519,13 +1540,13 @@ public class TileMapEditor {
         while (!q.isEmpty()) {
             Vector2i current = q.poll();
             // use this method such that symmmetric editing etc. is taken into account:
-            setTileValue(editedWorldMap(), LayerID.FOOD, current, value);
+            setTileValueAndRespectSymmetricEditing(editedWorldMap(), LayerID.FOOD, current, value);
             for (Direction dir : Direction.values()) {
                 Vector2i neighborTile = current.plus(dir.vector());
                 if  (!visited.contains(neighborTile) && canEditFoodAtTile(neighborTile)) {
                     q.push(neighborTile);
-                    visited.add(neighborTile);
                 }
+                visited.add(neighborTile);
             }
         }
         changeManager.setFoodMapChanged();
