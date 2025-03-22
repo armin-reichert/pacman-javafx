@@ -87,15 +87,23 @@ public interface GameContext {
 
     // Actions
     default void ifTriggeredRunAction(GameActionProvider actionProvider) {
-        actionProvider.firstMatchedAction(keyboard())
-            .filter(gameAction -> gameAction.isEnabled(this))
-            .ifPresent(action -> action.execute(this));
+        actionProvider.firstMatchedAction(keyboard()).ifPresent(action -> {
+           if (action.isEnabled(this)) {
+               action.execute(this);
+           } else {
+               Logger.info("Action '{}' not executed, not enabled", action);
+           }
+        });
     }
 
     default void ifTriggeredRunActionElse(GameActionProvider actionProvider, Runnable defaultAction) {
-        actionProvider.firstMatchedAction(keyboard())
-            .filter(gameAction -> gameAction.isEnabled(this))
-            .ifPresentOrElse(action -> action.execute(this), defaultAction);
+        actionProvider.firstMatchedAction(keyboard()).ifPresentOrElse(action -> {
+            if (action.isEnabled(this)) {
+                action.execute(this);
+            } else {
+                Logger.info("Action '{}' not executed, not enabled", action);
+            }
+        }, defaultAction);
     }
 
     // Game scenes
