@@ -152,6 +152,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public void endGame() {
+        playing = false;
         scoreManager.updateHighScore();
         publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
     }

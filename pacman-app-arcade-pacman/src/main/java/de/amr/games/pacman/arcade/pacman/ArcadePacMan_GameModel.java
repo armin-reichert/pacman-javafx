@@ -205,6 +205,7 @@ public class ArcadePacMan_GameModel extends GameModel {
 
     @Override
     public void endGame() {
+        playing = false;
         if (GameController.THE_ONE.credit > 0) {
             GameController.THE_ONE.credit -= 1;
         }
