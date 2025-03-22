@@ -1363,6 +1363,12 @@ public class TileMapEditor {
         }
     }
 
+    public void setTileValue(WorldMap worldMap, LayerID layerID, int row, int col, byte value) {
+        Vector2i tile = new Vector2i(col, row);
+        setTileValue(worldMap, LayerID.TERRAIN, tile, value);
+    }
+
+
     // ignores symmetric edit mode!
     public void clearTerrainTileValue(Vector2i tile) {
         editedWorldMap().set(LayerID.TERRAIN, tile, TerrainTiles.EMPTY);
@@ -1418,25 +1424,18 @@ public class TileMapEditor {
 
     private void addBorderWall(WorldMap worldMap) {
         int lastRow = worldMap.numRows() - 1 - EMPTY_ROWS_BELOW_MAZE, lastCol = worldMap.numCols() - 1;
-        setTerrainAndClearFood(worldMap, EMPTY_ROWS_BEFORE_MAZE, 0, TerrainTiles.ARC_NW);
-        setTerrainAndClearFood(worldMap, EMPTY_ROWS_BEFORE_MAZE, lastCol, TerrainTiles.ARC_NE);
-        setTerrainAndClearFood(worldMap, lastRow, 0, TerrainTiles.ARC_SW);
-        setTerrainAndClearFood(worldMap, lastRow, lastCol, TerrainTiles.ARC_SE);
+        setTileValue(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, 0, TerrainTiles.ARC_NW);
+        setTileValue(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, lastCol, TerrainTiles.ARC_NE);
+        setTileValue(worldMap, LayerID.TERRAIN, lastRow, 0, TerrainTiles.ARC_SW);
+        setTileValue(worldMap, LayerID.TERRAIN, lastRow, lastCol, TerrainTiles.ARC_SE);
         for (int row = EMPTY_ROWS_BEFORE_MAZE + 1; row < lastRow; ++row) {
-            setTerrainAndClearFood(worldMap, row, 0, TerrainTiles.WALL_V);
-            setTerrainAndClearFood(worldMap, row, lastCol, TerrainTiles.WALL_V);
+            setTileValue(worldMap, LayerID.TERRAIN, row, 0, TerrainTiles.WALL_V);
+            setTileValue(worldMap, LayerID.TERRAIN, row, lastCol, TerrainTiles.WALL_V);
         }
         for (int col = 1; col < lastCol; ++col) {
-            setTerrainAndClearFood(worldMap, EMPTY_ROWS_BEFORE_MAZE, col, TerrainTiles.WALL_H);
-            setTerrainAndClearFood(worldMap, lastRow, col, TerrainTiles.WALL_H);
+            setTileValue(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, col, TerrainTiles.WALL_H);
+            setTileValue(worldMap, LayerID.TERRAIN, lastRow, col, TerrainTiles.WALL_H);
         }
-        changeManager.setWorldMapChanged();
-        changeManager.setEdited(true);
-    }
-
-    private void setTerrainAndClearFood(WorldMap worldMap, int row, int col, byte terrainValue) {
-        worldMap.set(LayerID.TERRAIN, row, col, terrainValue);
-        worldMap.set(LayerID.FOOD, row, col, FoodTiles.EMPTY);
     }
 
     private void addHouse(WorldMap worldMap) {
@@ -1486,7 +1485,7 @@ public class TileMapEditor {
     private void clearRect(WorldMap worldMap, Vector2i minTile, Vector2i maxTile) {
         for (int row = minTile.y(); row <= maxTile.y(); ++row) {
             for (int col = minTile.x(); col <= maxTile.x(); ++col) {
-                setTerrainAndClearFood(worldMap, row, col, TerrainTiles.EMPTY);
+                setTileValue(worldMap, LayerID.TERRAIN, row, col, TerrainTiles.EMPTY);
             }
         }
         changeManager.setWorldMapChanged();

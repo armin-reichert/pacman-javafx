@@ -6,7 +6,6 @@ package de.amr.games.pacman.tilemap.editor;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.FoodTiles;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.tilemap.rendering.TerrainMapColorScheme;
@@ -60,7 +59,6 @@ public class EditCanvas {
             @Override
             public void setValue(Vector2i tile, byte value) {
                 editor.setTileValue(editor.editedWorldMap(), LayerID.TERRAIN, tile, value);
-                editor.setTileValue(editor.editedWorldMap(), LayerID.FOOD, tile, FoodTiles.EMPTY);
             }
         };
         obstacleEditor.joiningProperty().bind(editor.obstaclesJoiningProperty());
