@@ -489,7 +489,7 @@ public class TileMapEditor {
 
     private void createEditCanvas() {
         editCanvas = new EditCanvas(this);
-        spEditCanvas = new ScrollPane(editCanvas);
+        spEditCanvas = new ScrollPane(editCanvas.canvas());
         spEditCanvas.setFitToHeight(true);
         registerDragAndDropImageHandler(spEditCanvas);
         //TODO is there a better way to get the initial resize time of the scroll pane?
@@ -503,8 +503,8 @@ public class TileMapEditor {
 
     private void createPreview2D() {
         canvasPreview2D = new Canvas();
-        canvasPreview2D.widthProperty().bind(editCanvas.widthProperty());
-        canvasPreview2D.heightProperty().bind(editCanvas.heightProperty());
+        canvasPreview2D.widthProperty().bind(editCanvas.canvas().widthProperty());
+        canvasPreview2D.heightProperty().bind(editCanvas.canvas().heightProperty());
         spPreview2D = new ScrollPane(canvasPreview2D);
         spPreview2D.setFitToHeight(true);
         spPreview2D.hvalueProperty().bindBidirectional(spEditCanvas.hvalueProperty());

@@ -8,7 +8,6 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.FoodTiles;
 import de.amr.games.pacman.lib.tilemap.LayerID;
-import de.amr.games.pacman.lib.tilemap.TerrainTiles;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.tilemap.rendering.TerrainMapColorScheme;
 import de.amr.games.pacman.uilib.Ufx;
@@ -32,29 +31,30 @@ import org.tinylog.Logger;
 import java.util.function.Predicate;
 
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.PROPERTY_COLOR_FOOD;
 import static de.amr.games.pacman.tilemap.editor.ArcadeMap.MS_PACMAN_COLOR_FOOD;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditor.*;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.*;
 
-public class EditCanvas extends Canvas {
+public class EditCanvas {
 
     public static final Cursor CURSOR_RUBBER = Cursor.cursor(urlString("graphics/radiergummi.jpg"));
-
-    private final TileMapEditor editor;
 
     private final ObjectProperty<Vector2i> focussedTilePy = new SimpleObjectProperty<>();
     private final IntegerProperty gridSizePy = new SimpleIntegerProperty(8);
     private final ObjectProperty<Image> templateImageGreyPy = new SimpleObjectProperty<>();
     private final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>();
 
+    private final Canvas canvas;
+    private final TileMapEditor editor;
     private final ObstacleEditor obstacleEditor;
     private final ContextMenu contextMenu = new ContextMenu();
 
     private boolean dragging = false;
 
     public EditCanvas(TileMapEditor editor) {
-        this.editor = editor;
+        this.editor = assertNotNull(editor);
 
         obstacleEditor = new ObstacleEditor() {
             @Override
@@ -71,22 +71,22 @@ public class EditCanvas extends Canvas {
         worldMapPy.bind(editor.editedWorldMapProperty());
         templateImageGreyPy.bind(editor.templateImageProperty().map(Ufx::imageToGreyscale));
 
-        heightProperty().bind(Bindings.createDoubleBinding(
-            () -> (double) worldMap().numRows() * gridSize(),
-            worldMapPy, gridSizePy));
+        canvas = new Canvas();
+        canvas.heightProperty().bind(Bindings.createDoubleBinding(
+            () -> (double) worldMap().numRows() * gridSize(), worldMapPy, gridSizePy));
 
-        widthProperty().bind(Bindings.createDoubleBinding(
-            () -> (double) worldMap().numCols() * gridSize(),
-            worldMapPy, gridSizePy));
+        canvas.widthProperty().bind(Bindings.createDoubleBinding(
+            () -> (double) worldMap().numCols() * gridSize(), worldMapPy, gridSizePy));
 
-        setOnContextMenuRequested(this::onContextMenuRequested);
-        setOnMouseClicked(this::onMouseClicked);
-        setOnMouseDragged(this::onMouseDragged);
-        setOnMouseMoved(this::onMouseMoved);
-        setOnMouseReleased(this::onMouseReleased);
-        setOnKeyPressed(this::onKeyPressed);
-
+        canvas.setOnContextMenuRequested(this::onContextMenuRequested);
+        canvas.setOnMouseClicked(this::onMouseClicked);
+        canvas.setOnMouseDragged(this::onMouseDragged);
+        canvas.setOnMouseMoved(this::onMouseMoved);
+        canvas.setOnMouseReleased(this::onMouseReleased);
+        canvas.setOnKeyPressed(this::onKeyPressed);
     }
+
+    public Canvas canvas() { return canvas; }
 
     private int gridSize() { return gridSizePy.get(); }
 
@@ -108,33 +108,33 @@ public class EditCanvas extends Canvas {
     }
 
     public void enterInspectMode() {
-        setCursor(Cursor.HAND); // TODO use other cursor
+        canvas.setCursor(Cursor.HAND); // TODO use other cursor
         obstacleEditor.setEnabled(false);
     }
 
     public void enterEditMode() {
-        setCursor(Cursor.DEFAULT);
+        canvas.setCursor(Cursor.DEFAULT);
         obstacleEditor.setEnabled(true);
     }
 
     public void enterEraseMode() {
-        setCursor(CURSOR_RUBBER);
+        canvas.setCursor(CURSOR_RUBBER);
         obstacleEditor.setEnabled(false);
     }
 
     public void draw(TerrainMapColorScheme colors) {
-        GraphicsContext g = getGraphicsContext2D();
+        GraphicsContext g = canvas.getGraphicsContext2D();
         g.setImageSmoothing(false);
 
         double scaling = gridSize() / (double) TS;
 
         g.setFill(colors.backgroundColor());
-        g.fillRect(0, 0, getWidth(), getHeight());
+        g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
         if (templateImageGreyPy.get() != null) {
             g.drawImage(templateImageGreyPy.get(),
                 0, EMPTY_ROWS_BEFORE_MAZE * scaling * TS,
-                getWidth(), getHeight() - (EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE) * scaling * TS);
+                canvas.getWidth(), canvas.getHeight() - (EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE) * scaling * TS);
         }
 
         if (editor.gridVisibleProperty().get()) {
@@ -146,8 +146,9 @@ public class EditCanvas extends Canvas {
         g.setStroke(Color.grayRgb(200, 0.75));
         g.setLineWidth(0.75);
         g.setLineDashes(5, 5);
-        g.strokeLine(0, EMPTY_ROWS_BEFORE_MAZE * scaling * TS, getWidth(), EMPTY_ROWS_BEFORE_MAZE * scaling * TS);
-        g.strokeLine(0, getHeight() - EMPTY_ROWS_BELOW_MAZE * scaling * TS, getWidth(), getHeight() - EMPTY_ROWS_BELOW_MAZE * scaling * TS);
+        g.strokeLine(0, EMPTY_ROWS_BEFORE_MAZE * scaling * TS, canvas.getWidth(), EMPTY_ROWS_BEFORE_MAZE * scaling * TS);
+        g.strokeLine(0, canvas.getHeight() - EMPTY_ROWS_BELOW_MAZE * scaling * TS,
+            canvas.getWidth(), canvas.getHeight() - EMPTY_ROWS_BELOW_MAZE * scaling * TS);
         g.restore();
 
         // Terrain
@@ -177,7 +178,7 @@ public class EditCanvas extends Canvas {
             g.setStroke(Color.YELLOW);
             g.setLineWidth(0.75);
             g.setLineDashes(5, 5);
-            g.strokeLine(getWidth() / 2, 0, getWidth() / 2, getHeight());
+            g.strokeLine(canvas.getWidth() / 2, 0, canvas.getWidth() / 2, canvas.getHeight());
             g.restore();
         }
 
@@ -205,17 +206,17 @@ public class EditCanvas extends Canvas {
         g.setStroke(Color.grayRgb(180));
         g.setLineWidth(0.5);
         for (int row = 1; row < worldMap().numRows(); ++row) {
-            g.strokeLine(0, row * gridSize(), getWidth(), row * gridSize());
+            g.strokeLine(0, row * gridSize(), canvas.getWidth(), row * gridSize());
         }
         for (int col = 1; col < worldMap().numCols(); ++col) {
-            g.strokeLine(col * gridSize(), 0, col * gridSize(), getHeight());
+            g.strokeLine(col * gridSize(), 0, col * gridSize(), canvas.getHeight());
         }
     }
 
     private void onMouseClicked(MouseEvent e) {
         Logger.debug("Mouse clicked {}", e);
         if (e.getButton() == MouseButton.PRIMARY) {
-            requestFocus();
+            canvas.requestFocus();
             contextMenu.hide();
             if (e.getClickCount() == 2 && editor.isEditMode(EditMode.INSPECT)) {
                 editor.showEditHelpText();
@@ -323,7 +324,7 @@ public class EditCanvas extends Canvas {
             new SeparatorMenuItem(),
             miFloodWithPellets);
 
-        contextMenu.show(this, menuEvent.getScreenX(), menuEvent.getScreenY());
+        contextMenu.show(canvas, menuEvent.getScreenX(), menuEvent.getScreenY());
     }
 
     private void onKeyPressed(KeyEvent e) {
