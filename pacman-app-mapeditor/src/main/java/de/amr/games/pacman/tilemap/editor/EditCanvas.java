@@ -6,8 +6,10 @@ package de.amr.games.pacman.tilemap.editor;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.FoodTiles;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.tilemap.rendering.FoodMapRenderer;
 import de.amr.games.pacman.tilemap.rendering.TerrainMapColorScheme;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.beans.binding.Bindings;
@@ -120,49 +122,50 @@ public class EditCanvas {
         obstacleEditor.setEnabled(false);
     }
 
-    public void draw(TerrainMapColorScheme colors) {
+    public void draw(TerrainMapColorScheme terrainMapColorScheme) {
+        double scaling = gridSize() / (double) TS;
+        double width = canvas.getWidth(), height = canvas.getHeight();
+
         GraphicsContext g = canvas.getGraphicsContext2D();
         g.setImageSmoothing(false);
 
-        double scaling = gridSize() / (double) TS;
-
-        g.setFill(colors.backgroundColor());
-        g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        g.setFill(terrainMapColorScheme.backgroundColor());
+        g.fillRect(0, 0, width, height);
 
         if (templateImageGreyPy.get() != null) {
             g.drawImage(templateImageGreyPy.get(),
                 0, EMPTY_ROWS_BEFORE_MAZE * scaling * TS,
-                canvas.getWidth(), canvas.getHeight() - (EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE) * scaling * TS);
+                width, height - (EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE) * scaling * TS);
         }
 
         if (editor.gridVisibleProperty().get()) {
             drawGrid(g);
         }
 
-        // Indicate outer areas where obstacles are treated as outer walls
+        // Indicate start and end of reserved areas at top and bottom
         g.save();
         g.setStroke(Color.grayRgb(200, 0.75));
         g.setLineWidth(0.75);
         g.setLineDashes(5, 5);
-        g.strokeLine(0, EMPTY_ROWS_BEFORE_MAZE * scaling * TS, canvas.getWidth(), EMPTY_ROWS_BEFORE_MAZE * scaling * TS);
-        g.strokeLine(0, canvas.getHeight() - EMPTY_ROWS_BELOW_MAZE * scaling * TS,
-            canvas.getWidth(), canvas.getHeight() - EMPTY_ROWS_BELOW_MAZE * scaling * TS);
+        g.strokeLine(0, EMPTY_ROWS_BEFORE_MAZE * scaling * TS, width, EMPTY_ROWS_BEFORE_MAZE * scaling * TS);
+        g.strokeLine(0, height - EMPTY_ROWS_BELOW_MAZE * scaling * TS, width, height - EMPTY_ROWS_BELOW_MAZE * scaling * TS);
         g.restore();
 
         // Terrain
         if (editor.terrainVisibleProperty().get()) {
-            editor.terrainTileRenderer().setScaling(scaling);
-            editor.terrainTileRenderer().setColors(colors);
-            editor.terrainTileRenderer().setSegmentNumbersDisplayed(editor.segmentNumbersDisplayedProperty().get());
-            editor.terrainTileRenderer().setObstacleInnerAreaDisplayed(editor.obstacleInnerAreaDisplayedProperty().get());
-            editor.terrainTileRenderer().drawTerrain(g, worldMap(), worldMap().obstacles());
-            obstacleEditor.draw(g, editor.terrainTileRenderer());
+            TerrainTileMapRenderer renderer = editor.terrainTileRenderer();
+            renderer.setScaling(scaling);
+            renderer.setColorScheme(terrainMapColorScheme);
+            renderer.setSegmentNumbersDisplayed(editor.segmentNumbersDisplayedProperty().get());
+            renderer.setObstacleInnerAreaDisplayed(editor.obstacleInnerAreaDisplayedProperty().get());
+            renderer.drawTerrain(g, worldMap(), worldMap().obstacles());
+            obstacleEditor.draw(g, renderer);
         }
 
         // Tiles that seem to be wrong
+        g.setFont(Font.font("sans", gridSize() - 2));
+        g.setFill(Color.grayRgb(200, 0.8));
         for (Vector2i tile : editor.tilesWithErrors()) {
-            g.setFont(Font.font("sans", gridSize() - 2));
-            g.setFill(Color.grayRgb(200, 0.8));
             g.fillText("?", tile.x() * gridSize() + 0.25 * gridSize(), tile.y() * gridSize() + 0.8 * gridSize());
             if (editor.isSymmetricEdit()) {
                 int x = worldMap().numCols() - tile.x() - 1;
@@ -176,17 +179,18 @@ public class EditCanvas {
             g.setStroke(Color.YELLOW);
             g.setLineWidth(0.75);
             g.setLineDashes(5, 5);
-            g.strokeLine(canvas.getWidth() / 2, 0, canvas.getWidth() / 2, canvas.getHeight());
+            g.strokeLine(width / 2.0, 0, width / 2.0, height);
             g.restore();
         }
 
         // Food
         if (editor.foodVisibleProperty().get()) {
+            FoodMapRenderer renderer = editor.foodRenderer();
             Color foodColor = getColorFromMap(worldMap(), LayerID.FOOD, PROPERTY_COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
-            editor.foodRenderer().setScaling(scaling);
-            editor.foodRenderer().setEnergizerColor(foodColor);
-            editor.foodRenderer().setPelletColor(foodColor);
-            worldMap().tiles().forEach(tile -> editor.foodRenderer().drawTile(g, tile, worldMap().get(LayerID.FOOD, tile)));
+            renderer.setScaling(scaling);
+            renderer.setEnergizerColor(foodColor);
+            renderer.setPelletColor(foodColor);
+            worldMap().tiles().forEach(tile -> renderer.drawTile(g, tile, worldMap().get(LayerID.FOOD, tile)));
         }
 
         if (editor.actorsVisibleProperty().get()) {
@@ -194,21 +198,25 @@ public class EditCanvas {
         }
 
         if (focussedTile() != null) {
-            g.setStroke(Color.YELLOW);
+            g.save();
             g.setLineWidth(1);
+            g.setStroke(Color.YELLOW);
             g.strokeRect(focussedTile().x() * gridSize(), focussedTile().y() * gridSize(), gridSize(), gridSize());
+            g.restore();
         }
     }
 
     private void drawGrid(GraphicsContext g) {
-        g.setStroke(Color.grayRgb(180));
+        g.save();
         g.setLineWidth(0.5);
+        g.setStroke(Color.grayRgb(180));
         for (int row = 1; row < worldMap().numRows(); ++row) {
             g.strokeLine(0, row * gridSize(), canvas.getWidth(), row * gridSize());
         }
         for (int col = 1; col < worldMap().numCols(); ++col) {
             g.strokeLine(col * gridSize(), 0, col * gridSize(), canvas.getHeight());
         }
+        g.restore();
     }
 
     private void onMouseClicked(MouseEvent e) {
@@ -259,7 +267,7 @@ public class EditCanvas {
                                 editor.selectedPalette().selectedTool().apply(worldMap(), LayerID.TERRAIN, focussedTile());
                             }
                             editor.getChangeManager().setEdited(true);
-                            editor.getChangeManager().setWorldMapChanged(); // can delete food!
+                            editor.getChangeManager().setWorldMapChanged();
                         }
                         case TileMapEditor.PALETTE_ID_FOOD -> {
                             if (editor.selectedPalette().isToolSelected()) {
@@ -311,8 +319,12 @@ public class EditCanvas {
         });
 
         var miFloodWithPellets = new MenuItem(tt("menu.edit.flood_with_pellets"));
-        miFloodWithPellets.setOnAction(ae -> editor.floodWithPellets(tile));
-        miFloodWithPellets.setDisable(!editor.canPutPelletOnTile(tile));
+        miFloodWithPellets.setOnAction(ae -> editor.floodWithFoodValue(tile, FoodTiles.PELLET));
+        miFloodWithPellets.setDisable(!editor.canEditFoodAtTile(tile));
+
+        var miClearPellets = new MenuItem(tt("menu.edit.clear_food"));
+        miClearPellets.setOnAction(ae -> editor.floodWithFoodValue(tile, FoodTiles.EMPTY));
+        miClearPellets.setDisable(!editor.canEditFoodAtTile(tile));
 
         contextMenu.getItems().setAll(
             miInsertRow,
@@ -320,7 +332,8 @@ public class EditCanvas {
             new SeparatorMenuItem(),
             miPlaceHouse,
             new SeparatorMenuItem(),
-            miFloodWithPellets);
+            miFloodWithPellets,
+            miClearPellets);
 
         contextMenu.show(canvas, menuEvent.getScreenX(), menuEvent.getScreenY());
     }

@@ -38,7 +38,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
         colors = DEFAULT_COLOR_SCHEME;
     }
 
-    public void setColors(TerrainMapColorScheme colors) {
+    public void setColorScheme(TerrainMapColorScheme colors) {
         this.colors = assertNotNull(colors);
     }
 

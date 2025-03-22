@@ -112,7 +112,7 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     public void drawGameLevel(GameLevel level, double x, double y) {
         WorldMap worldMap = level.worldMap();
         if (mazeHighlighted) {
-            terrainRenderer.setColors(blinkingOn ? blinkingOnColors : blinkingOffColors);
+            terrainRenderer.setColorScheme(blinkingOn ? blinkingOnColors : blinkingOffColors);
             terrainRenderer.drawTerrain(ctx(), worldMap, worldMap.obstacles());
         }
         else {
@@ -123,7 +123,7 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
                 Color.web(colorMap.get("stroke")),
                 Color.web(colorMap.get("door"))
             );
-            terrainRenderer.setColors(colors);
+            terrainRenderer.setColorScheme(colors);
             terrainRenderer.drawTerrain(ctx(), worldMap, worldMap.obstacles());
             terrainRenderer.drawHouse(ctx(), level.houseMinTile(), level.houseSizeInTiles());
             foodRenderer.setPelletColor(Color.web(colorMap.get("pellet")));

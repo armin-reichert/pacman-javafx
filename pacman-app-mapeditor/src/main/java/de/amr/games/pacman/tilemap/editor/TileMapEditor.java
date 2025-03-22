@@ -472,9 +472,9 @@ public class TileMapEditor {
 
     private void createRenderers(TerrainMapColorScheme colors, Color foodColor) {
         terrainTileRenderer = new TerrainTileMapRenderer();
-        terrainTileRenderer.setColors(colors);
+        terrainTileRenderer.setColorScheme(colors);
         terrainPathRenderer = new TerrainMapRenderer();
-        terrainPathRenderer.setColors(colors);
+        terrainPathRenderer.setColorScheme(colors);
         foodRenderer = new FoodMapRenderer();
         foodRenderer.setPelletColor(foodColor);
         foodRenderer.setEnergizerColor(foodColor);
@@ -1158,7 +1158,7 @@ public class TileMapEditor {
         g.fillRect(0, 0, canvasPreview2D.getWidth(), canvasPreview2D.getHeight());
         if (terrainVisiblePy.get()) {
             terrainPathRenderer.setScaling(gridSize() / 8.0);
-            terrainPathRenderer.setColors(colors);
+            terrainPathRenderer.setColorScheme(colors);
             terrainPathRenderer.drawTerrain(g, editedWorldMap(), editedWorldMap().obstacles());
             Vector2i houseMinTile = editedWorldMap().getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
             Vector2i houseMaxTile = editedWorldMap().getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
@@ -1183,7 +1183,7 @@ public class TileMapEditor {
         if (selectedPaletteID() == PALETTE_ID_TERRAIN) {
             double scaling = terrainTileRenderer.scaling();
             terrainTileRenderer.setScaling((double) TOOL_SIZE / 8);
-            terrainTileRenderer.setColors(colors);
+            terrainTileRenderer.setColorScheme(colors);
             terrainTileRenderer.setScaling(scaling);
         }
         selectedPalette.draw();
@@ -1284,14 +1284,14 @@ public class TileMapEditor {
     }
 
     public void moveCursorAndSetFoodAtTile(Direction dir) {
-        if (editCanvas.moveCursor(dir, this::canEditFoodAtTile)) {
+        if (editCanvas.moveCursor(dir, this::hasAccessibleTerrainAtTile)) {
             setFoodAtFocussedTile();
         }
     }
 
     private void setFoodAtFocussedTile() {
         if (editMode() == EditMode.EDIT && selectedPaletteID() == PALETTE_ID_FOOD) {
-            if (canEditFoodAtTile(editCanvas.focussedTile())) {
+            if (hasAccessibleTerrainAtTile(editCanvas.focussedTile())) {
                 editFoodAtTile(editCanvas.focussedTile(), false);
             }
         }
@@ -1302,15 +1302,6 @@ public class TileMapEditor {
         int next = palette.selectedIndex() + 1;
         if (next == palette.numTools()) { next = 0; }
         palette.selectTool(next);
-    }
-
-    private boolean canEditFoodAtTile(Vector2i tile) {
-        byte terrain = editedWorldMap().get(LayerID.TERRAIN, tile);
-        return terrain == TerrainTiles.EMPTY
-            || terrain == TerrainTiles.ONE_WAY_DOWN
-            || terrain == TerrainTiles.ONE_WAY_UP
-            || terrain == TerrainTiles.ONE_WAY_LEFT
-            || terrain == TerrainTiles.ONE_WAY_RIGHT;
     }
 
     private void identifyObstacleAtTile(Vector2i tile) {
@@ -1517,8 +1508,8 @@ public class TileMapEditor {
         templateImagePy.set(null);
     }
 
-    public void floodWithPellets(Vector2i startTile) {
-        if (isPartOfHouse(startTile)) {
+    public void floodWithFoodValue(Vector2i startTile, byte value) {
+        if (!canEditFoodAtTile(startTile)) {
             return;
         }
         var q = new ArrayDeque<Vector2i>();
@@ -1527,10 +1518,11 @@ public class TileMapEditor {
         visited.add(startTile);
         while (!q.isEmpty()) {
             Vector2i current = q.poll();
-            editedWorldMap().set(LayerID.FOOD, current, FoodTiles.PELLET);
+            // use this method such that symmmetric editing etc. is taken into account:
+            setTileValue(editedWorldMap(), LayerID.FOOD, current, value);
             for (Direction dir : Direction.values()) {
                 Vector2i neighborTile = current.plus(dir.vector());
-                if  (!visited.contains(neighborTile) && canPutPelletOnTile(neighborTile)) {
+                if  (!visited.contains(neighborTile) && canEditFoodAtTile(neighborTile)) {
                     q.push(neighborTile);
                     visited.add(neighborTile);
                 }
@@ -1540,12 +1532,21 @@ public class TileMapEditor {
         changeManager.setEdited(true);
     }
 
-    public boolean canPutPelletOnTile(Vector2i tile) {
+    private boolean hasAccessibleTerrainAtTile(Vector2i tile) {
+        byte value = editedWorldMap().get(LayerID.TERRAIN, tile);
+        return value == TerrainTiles.EMPTY
+            || value == TerrainTiles.ONE_WAY_DOWN
+            || value == TerrainTiles.ONE_WAY_UP
+            || value == TerrainTiles.ONE_WAY_LEFT
+            || value == TerrainTiles.ONE_WAY_RIGHT;
+    }
+
+    public boolean canEditFoodAtTile(Vector2i tile) {
         return !editedWorldMap().outOfBounds(tile)
                 && tile.y() >= EMPTY_ROWS_BEFORE_MAZE
                 && tile.y() < editedWorldMap().numRows() - EMPTY_ROWS_BELOW_MAZE
                 && !isPartOfHouse(tile)
-                && editedWorldMap().get(LayerID.TERRAIN, tile) == TerrainTiles.EMPTY;
+                && hasAccessibleTerrainAtTile(tile);
     }
 
     private boolean isPartOfHouse(Vector2i tile) {
