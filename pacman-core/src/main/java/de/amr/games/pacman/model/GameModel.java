@@ -353,7 +353,7 @@ public abstract class GameModel {
             // Blinky, the red ghost attacks Pac-Man directly
             case RED_GHOST_ID -> pac.tile();
 
-            // Pinky, the pink ghost  ambushes Pac-Man
+            // Pinky, the pink ghost ambushes Pac-Man
             case PINK_GHOST_ID -> pac.tilesAhead(4, overflowBug);
 
             // Inky, the cyan ghost attacks from opposite side as Blinky

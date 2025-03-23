@@ -41,9 +41,9 @@ public class Obstacle {
         innerRectPartition.clear();
         try {
             Collection<Vector2i> innerPolygon = computeInnerPolygonPoints();
-            var rectanglePartitioner = new GourleyGreenPolygonToRect<RectArea>() {
+            var rectanglePartitioner = new PolygonToRectangleConverter<RectArea>() {
                 @Override
-                public RectArea makeRectangle(int x, int y, int width, int height) {
+                public RectArea createRectangle(int x, int y, int width, int height) {
                     return new RectArea(x, y, width, height);
                 }
             };
