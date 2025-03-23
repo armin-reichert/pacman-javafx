@@ -248,17 +248,6 @@ public abstract class GameModel {
         publishGameEvent(GameEventType.LEVEL_CREATED);
     }
 
-    public void startNextLevel() {
-        int nextLevelNumber = level.number() + 1;
-        if (nextLevelNumber <= lastLevelNumber) {
-            createNormalLevel(nextLevelNumber);
-            startLevel();
-            showGuys();
-        } else {
-            Logger.warn("Last level ({}) reached, cannot start next level", lastLevelNumber);
-        }
-    }
-
     public void createDemoLevel() {
         setDemoLevel(true);
         level = makeDemoLevel();
@@ -284,12 +273,23 @@ public abstract class GameModel {
         scoreManager.setHighScoreEnabled(!isDemoLevel());
         letsGetReadyToRumble();
         setActorBaseSpeed(level.number());
+        Logger.debug("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
+        level.ghosts().forEach(ghost -> Logger.debug("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
         level.showMessage(GameLevel.Message.READY);
-        Logger.info("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
         levelStartTime = System.currentTimeMillis();
         Logger.info("{} started", isDemoLevel() ? "Demo Level" : "Level " + level.number());
-        level.ghosts().forEach(ghost -> Logger.info("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
         publishGameEvent(GameEventType.LEVEL_STARTED);
+    }
+
+    public void startNextLevel() {
+        int nextLevelNumber = level.number() + 1;
+        if (nextLevelNumber <= lastLevelNumber) {
+            createNormalLevel(nextLevelNumber);
+            startLevel();
+            showGuys();
+        } else {
+            Logger.warn("Last level ({}) reached, cannot start next level", lastLevelNumber);
+        }
     }
 
     /**
