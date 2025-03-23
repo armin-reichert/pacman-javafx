@@ -382,12 +382,11 @@ public abstract class GameModel {
     }
 
     public void doHuntingStep() {
-        Pac pac = level.pac();
-        updateHuntingTimer();
+        huntingTimer.update(level.number());
         level.blinking().tick();
         gateKeeper.unlockGhosts(level, this::onGhostReleased, eventLog);
         checkForFood();
-        pac.update(this);
+        level.pac().update(this);
         updatePacPower();
         checkPacKilled();
         if (!eventLog.pacKilled) {
@@ -396,16 +395,6 @@ public abstract class GameModel {
             if (eventLog.killedGhosts.isEmpty()) {
                 level.bonus().ifPresent(this::updateBonus);
             }
-        }
-    }
-
-    private void updateHuntingTimer() {
-        if (huntingTimer.hasExpired()) {
-            Logger.info("Hunting phase {} ({}) ends, tick={}",
-                huntingTimer.phaseIndex(), huntingTimer.phaseType(), huntingTimer.tickCount());
-            huntingTimer.startNextPhase(level.number());
-        } else {
-            huntingTimer.doTick();
         }
     }
 

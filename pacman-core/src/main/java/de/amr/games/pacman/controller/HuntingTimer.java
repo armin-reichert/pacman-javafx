@@ -52,6 +52,15 @@ public abstract class HuntingTimer extends TickTimer {
         startHuntingPhase(0, PhaseType.SCATTERING, huntingTicks(levelNumber, 0));
     }
 
+    public void update(int levelNumber) {
+        if (hasExpired()) {
+            Logger.info("Hunting phase {} ({}) ends, tick={}", phaseIndex, phaseType, tickCount());
+            startNextPhase(levelNumber);
+        } else {
+            doTick();
+        }
+    }
+
     public void startNextPhase(int levelNumber) {
         int nextPhaseIndex = phaseIndex + 1;
         // alternate between CHASING and SCATTERING
