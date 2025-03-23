@@ -55,7 +55,7 @@ public abstract class GameModel {
     }
 
     // Ghost IDs
-    public static final byte RED_GHOST = 0, PINK_GHOST = 1, CYAN_GHOST = 2, ORANGE_GHOST = 3;
+    public static final byte RED_GHOST_ID = 0, PINK_GHOST_ID = 1, CYAN_GHOST_ID = 2, ORANGE_GHOST_ID = 3;
 
     public static final byte LEVEL_COUNTER_MAX_SIZE = 7;
     public static final short POINTS_ALL_GHOSTS_EATEN_IN_LEVEL = 12_000;
@@ -330,14 +330,14 @@ public abstract class GameModel {
     protected Vector2i chasingTarget(Ghost ghost) {
         return switch (ghost.id()) {
             // Blinky: attacks Pac-Man directly
-            case RED_GHOST -> level.pac().tile();
+            case RED_GHOST_ID -> level.pac().tile();
             // Pinky: ambushes Pac-Man
-            case PINK_GHOST -> level.pac().tilesAhead(4, simulateOverflowBug);
+            case PINK_GHOST_ID -> level.pac().tilesAhead(4, simulateOverflowBug);
             // Inky: attacks from opposite side as Blinky
-            case CYAN_GHOST ->
-                level.pac().tilesAhead(2, simulateOverflowBug).scaled(2).minus(level.ghost(RED_GHOST).tile());
+            case CYAN_GHOST_ID ->
+                level.pac().tilesAhead(2, simulateOverflowBug).scaled(2).minus(level.ghost(RED_GHOST_ID).tile());
             // Clyde/Sue: attacks directly but retreats if Pac is near
-            case ORANGE_GHOST ->
+            case ORANGE_GHOST_ID ->
                 ghost.tile().euclideanDist(level.pac().tile()) < 8 ? scatterTarget(ghost) : level.pac().tile();
             default -> throw GameException.invalidGhostID(ghost.id());
         };

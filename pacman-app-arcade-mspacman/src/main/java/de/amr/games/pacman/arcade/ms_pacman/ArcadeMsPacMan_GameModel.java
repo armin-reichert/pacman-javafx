@@ -46,19 +46,19 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
 public class ArcadeMsPacMan_GameModel extends GameModel {
 
     public static Ghost blinky() {
-        return new Ghost(GameModel.RED_GHOST, "Blinky");
+        return new Ghost(GameModel.RED_GHOST_ID, "Blinky");
     }
 
     public static Ghost pinky() {
-        return new Ghost(GameModel.PINK_GHOST, "Pinky");
+        return new Ghost(GameModel.PINK_GHOST_ID, "Pinky");
     }
 
     public static Ghost inky() {
-        return new Ghost(GameModel.CYAN_GHOST, "Inky");
+        return new Ghost(GameModel.CYAN_GHOST_ID, "Inky");
     }
 
     public static Ghost sue() {
-        return new Ghost(GameModel.ORANGE_GHOST, "Sue");
+        return new Ghost(GameModel.ORANGE_GHOST_ID, "Sue");
     }
 
     // These are the Pac-Man level data as given in the Pac-Man dossier.
@@ -199,7 +199,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
             ghost.setRevivalPosition(level.ghostPosition(ghost.id()));
             ghost.reset();
         });
-        ghosts[RED_GHOST].setRevivalPosition(level.ghostPosition(PINK_GHOST)); // middle house position
+        ghosts[RED_GHOST_ID].setRevivalPosition(level.ghostPosition(PINK_GHOST_ID)); // middle house position
 
         level.setPac(pac);
         level.setGhosts(ghosts);
@@ -298,10 +298,10 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         if (level.isTunnel(ghost.tile()) && level.number() <= 3) {
             return ghostTunnelSpeed(ghost);
         }
-        if (ghost.id() == RED_GHOST && cruiseElroy == 1) {
+        if (ghost.id() == RED_GHOST_ID && cruiseElroy == 1) {
             return levelData(level.number()).elroy1SpeedPercentage() * 0.01f * ghost.baseSpeed();
         }
-        if (ghost.id() == RED_GHOST && cruiseElroy == 2) {
+        if (ghost.id() == RED_GHOST_ID && cruiseElroy == 2) {
             return levelData(level.number()).elroy2SpeedPercentage() * 0.01f * ghost.baseSpeed();
         }
         return levelData(level.number()).ghostSpeedPercentage() * 0.01f * ghost.baseSpeed();
@@ -399,7 +399,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     @Override
     protected void onGhostReleased(Ghost ghost) {
-        if (ghost.id() == ORANGE_GHOST && cruiseElroy < 0) {
+        if (ghost.id() == ORANGE_GHOST_ID && cruiseElroy < 0) {
             Logger.trace("Re-enable cruise elroy mode because {} exits house:", ghost.name());
             setCruiseElroyEnabled(true);
         }
@@ -522,11 +522,11 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
      * only the scatter target of Blinky and Pinky would have been affected. Who knows?
      */
     private void ghostHuntingBehaviour(Ghost ghost) {
-        if (huntingTimer.phaseIndex() == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
+        if (huntingTimer.phaseIndex() == 0 && (ghost.id() == RED_GHOST_ID || ghost.id() == PINK_GHOST_ID)) {
             ghost.roam(ghostAttackSpeed(ghost));
         } else {
             boolean chasing = huntingTimer.phaseType() == HuntingTimer.PhaseType.CHASING
-                || ghost.id() == RED_GHOST && cruiseElroy > 0;
+                || ghost.id() == RED_GHOST_ID && cruiseElroy > 0;
             Vector2i targetTile = chasing ? chasingTarget(ghost) : scatterTarget(ghost);
             ghost.followTarget(targetTile, ghostAttackSpeed(ghost));
         }

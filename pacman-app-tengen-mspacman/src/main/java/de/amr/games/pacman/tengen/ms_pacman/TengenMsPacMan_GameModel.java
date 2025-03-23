@@ -37,19 +37,19 @@ import static de.amr.games.pacman.tengen.ms_pacman.SpeedConfiguration.*;
 public class TengenMsPacMan_GameModel extends GameModel {
 
     public static Ghost blinky() {
-        return new Ghost(GameModel.RED_GHOST, "Blinky");
+        return new Ghost(GameModel.RED_GHOST_ID, "Blinky");
     }
 
     public static Ghost pinky() {
-        return new Ghost(GameModel.PINK_GHOST, "Pinky");
+        return new Ghost(GameModel.PINK_GHOST_ID, "Pinky");
     }
 
     public static Ghost inky() {
-        return new Ghost(GameModel.CYAN_GHOST, "Inky");
+        return new Ghost(GameModel.CYAN_GHOST_ID, "Inky");
     }
 
     public static Ghost sue() {
-        return new Ghost(GameModel.ORANGE_GHOST, "Sue");
+        return new Ghost(GameModel.ORANGE_GHOST_ID, "Sue");
     }
 
     public static final byte MIN_LEVEL_NUMBER = 1;
@@ -404,7 +404,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             ghost.setRevivalPosition(level.ghostPosition(ghost.id()));
             ghost.reset();
         });
-        ghosts[RED_GHOST].setRevivalPosition(level.ghostPosition(PINK_GHOST)); // middle house position
+        ghosts[RED_GHOST_ID].setRevivalPosition(level.ghostPosition(PINK_GHOST_ID)); // middle house position
 
         level.setPac(pac);
         level.setGhosts(ghosts);
@@ -427,7 +427,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         newLevel.pac().setAutopilot(autopilot);
         newLevel.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         // Ghosts inside house start at bottom of house instead at middle
-        newLevel.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST).forEach(ghost ->
+        newLevel.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST_ID).forEach(ghost ->
             newLevel.setGhostPosition(ghost.id(), newLevel.ghostPosition(ghost.id()).plus(0, HTS))
         );
 
@@ -460,7 +460,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
         newLevel.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         // ghosts inside house start at floor of house
-        newLevel.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST).forEach(ghost ->
+        newLevel.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST_ID).forEach(ghost ->
             newLevel.setGhostPosition(ghost.id(), newLevel.ghostPosition(ghost.id()).plus(0, HTS))
         );
 
@@ -592,7 +592,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     // TODO clarify what exactly Tengen Ms. Pac-Man does
     private void ghostHuntingBehaviour(Ghost ghost) {
         float speed = ghostAttackSpeed(ghost);
-        if (huntingTimer.phaseIndex() == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
+        if (huntingTimer.phaseIndex() == 0 && (ghost.id() == RED_GHOST_ID || ghost.id() == PINK_GHOST_ID)) {
             ghost.roam(speed);
         } else {
             boolean chasing = huntingTimer.phaseType() == HuntingTimer.PhaseType.CHASING;

@@ -208,7 +208,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     }
 
     private Stream<Ghost> ghostsInZOrder(GameLevel level) {
-        return Stream.of(GameModel.ORANGE_GHOST, GameModel.CYAN_GHOST, GameModel.PINK_GHOST, GameModel.RED_GHOST).map(level::ghost);
+        return Stream.of(GameModel.ORANGE_GHOST_ID, GameModel.CYAN_GHOST_ID, GameModel.PINK_GHOST_ID, GameModel.RED_GHOST_ID).map(level::ghost);
     }
 
     @Override

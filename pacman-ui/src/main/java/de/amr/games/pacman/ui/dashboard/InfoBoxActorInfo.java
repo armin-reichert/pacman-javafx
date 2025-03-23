@@ -39,13 +39,13 @@ public class InfoBoxActorInfo extends InfoBox {
                 : "No Power";
         }));
         addEmptyRow();
-        ghostInfo(GameModel.RED_GHOST);
+        ghostInfo(GameModel.RED_GHOST_ID);
         addEmptyRow();
-        ghostInfo(GameModel.PINK_GHOST);
+        ghostInfo(GameModel.PINK_GHOST_ID);
         addEmptyRow();
-        ghostInfo(GameModel.CYAN_GHOST);
+        ghostInfo(GameModel.CYAN_GHOST_ID);
         addEmptyRow();
-        ghostInfo(GameModel.ORANGE_GHOST);
+        ghostInfo(GameModel.ORANGE_GHOST_ID);
     }
 
     private Supplier<String> pacInfo(BiFunction<GameModel, Pac, String> fnPacInfo) {
@@ -91,10 +91,10 @@ public class InfoBoxActorInfo extends InfoBox {
 
     private String ghostColorName(byte ghostID) {
         return switch (ghostID) {
-            case GameModel.RED_GHOST -> "Red";
-            case GameModel.PINK_GHOST -> "Pink";
-            case GameModel.CYAN_GHOST -> "Cyan";
-            case GameModel.ORANGE_GHOST -> "Orange";
+            case GameModel.RED_GHOST_ID -> "Red";
+            case GameModel.PINK_GHOST_ID -> "Pink";
+            case GameModel.CYAN_GHOST_ID -> "Cyan";
+            case GameModel.ORANGE_GHOST_ID -> "Orange";
             default -> "";
         };
     }

@@ -126,17 +126,17 @@ public class InfoBoxGameInfo extends InfoBox {
 
     private String fmtGhostAttackSpeed(GameLevel level) {
         // use Pinky because Blinky could be in Elroy mode
-        Ghost pinky = level.ghost(GameModel.PINK_GHOST);
+        Ghost pinky = level.ghost(GameModel.PINK_GHOST_ID);
         return (pinky != null) ? "%.4f px/s".formatted(context.game().ghostAttackSpeed(pinky) * 60) : InfoText.NO_INFO;
     }
 
     private String fmtGhostSpeedFrightened(GameLevel level) {
-        Ghost blinky = level.ghost(GameModel.RED_GHOST);
+        Ghost blinky = level.ghost(GameModel.RED_GHOST_ID);
         return (blinky != null) ? "%.4f px/s".formatted(context.game().ghostFrightenedSpeed(blinky) * 60) : InfoText.NO_INFO;
     }
 
     private String fmtGhostSpeedTunnel(GameLevel level) {
-        Ghost blinky = level.ghost(GameModel.RED_GHOST);
+        Ghost blinky = level.ghost(GameModel.RED_GHOST_ID);
         return (blinky != null) ? "%.4f px/s".formatted(context.game().ghostTunnelSpeed(blinky) * 60) : InfoText.NO_INFO;
     }
 

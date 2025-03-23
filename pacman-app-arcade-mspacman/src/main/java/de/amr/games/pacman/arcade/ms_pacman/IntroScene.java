@@ -137,7 +137,7 @@ public class IntroScene extends GameScene2D {
         if (sceneController.state() == SceneState.GHOSTS_MARCHING_IN) {
             String ghostName = ghosts[ghostID].name().toUpperCase();
             double dx = ghostName.length() < 4 ? tiles2Px(1) : 0;
-            if (ghostID == GameModel.RED_GHOST) {
+            if (ghostID == GameModel.RED_GHOST_ID) {
                 gr.drawText("WITH", COLOR_WHITE, font, TITLE_X, TOP_Y + tiles2Px(3));
             }
             gr.drawText(ghostName, COLOR_GHOST[ghostID], font, TITLE_X + tiles2Px(3) + dx, TOP_Y + tiles2Px(6));

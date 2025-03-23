@@ -45,10 +45,10 @@ public interface SpeedConfiguration {
 
     static float ghostIDSpeedDelta(byte ghostID) {
         return speedUnitsToPixels(switch (ghostID) {
-            case RED_GHOST -> 3;
-            case ORANGE_GHOST -> 2;
-            case CYAN_GHOST -> 1;
-            case PINK_GHOST -> 0;
+            case RED_GHOST_ID -> 3;
+            case ORANGE_GHOST_ID -> 2;
+            case CYAN_GHOST_ID -> 1;
+            case PINK_GHOST_ID -> 0;
             default -> throw GameException.invalidGhostID(ghostID);
         });
     }

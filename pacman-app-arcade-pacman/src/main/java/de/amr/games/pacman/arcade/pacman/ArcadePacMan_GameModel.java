@@ -52,19 +52,19 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
 public class ArcadePacMan_GameModel extends GameModel {
 
     public static Ghost blinky() {
-        return new Ghost(GameModel.RED_GHOST, "Blinky");
+        return new Ghost(GameModel.RED_GHOST_ID, "Blinky");
     }
 
     public static Ghost pinky() {
-        return new Ghost(GameModel.PINK_GHOST, "Pinky");
+        return new Ghost(GameModel.PINK_GHOST_ID, "Pinky");
     }
 
     public static Ghost inky() {
-        return new Ghost(GameModel.CYAN_GHOST, "Inky");
+        return new Ghost(GameModel.CYAN_GHOST_ID, "Inky");
     }
 
     public static Ghost clyde() {
-        return new Ghost(GameModel.ORANGE_GHOST, "Clyde");
+        return new Ghost(GameModel.ORANGE_GHOST_ID, "Clyde");
     }
 
     // Level settings as specified in the dossier
@@ -239,7 +239,7 @@ public class ArcadePacMan_GameModel extends GameModel {
             ghost.setRevivalPosition(level.ghostPosition(ghost.id()));
             ghost.reset();
         });
-        ghosts[RED_GHOST].setRevivalPosition(level.ghostPosition(PINK_GHOST)); // middle house position
+        ghosts[RED_GHOST_ID].setRevivalPosition(level.ghostPosition(PINK_GHOST_ID)); // middle house position
 
         level.setPac(pac);
         level.setGhosts(ghosts);
@@ -324,10 +324,10 @@ public class ArcadePacMan_GameModel extends GameModel {
         if (level.isTunnel(ghost.tile())) {
             return levelData.ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed();
         }
-        if (ghost.id() == RED_GHOST && cruiseElroy == 1) {
+        if (ghost.id() == RED_GHOST_ID && cruiseElroy == 1) {
             return levelData.elroy1SpeedPercentage() * 0.01f * ghost.baseSpeed();
         }
-        if (ghost.id() == RED_GHOST && cruiseElroy == 2) {
+        if (ghost.id() == RED_GHOST_ID && cruiseElroy == 2) {
             return levelData.elroy2SpeedPercentage() * 0.01f * ghost.baseSpeed();
         }
         return levelData.ghostSpeedPercentage() * 0.01f * ghost.baseSpeed();
@@ -388,7 +388,7 @@ public class ArcadePacMan_GameModel extends GameModel {
 
     @Override
     protected void onGhostReleased(Ghost ghost) {
-        if (ghost.id() == ORANGE_GHOST && cruiseElroy < 0) {
+        if (ghost.id() == ORANGE_GHOST_ID && cruiseElroy < 0) {
             Logger.trace("Re-enable cruise elroy mode because {} exits house:", ghost.name());
             setCruiseElroyEnabled(true);
         }
@@ -467,7 +467,7 @@ public class ArcadePacMan_GameModel extends GameModel {
 
     protected void ghostHuntingBehaviour(Ghost ghost) {
         boolean chasing = huntingTimer.phaseType() == HuntingTimer.PhaseType.CHASING
-            || ghost.id() == RED_GHOST && cruiseElroy > 0;
+            || ghost.id() == RED_GHOST_ID && cruiseElroy > 0;
         Vector2i targetTile = chasing ? chasingTarget(ghost) : scatterTarget(ghost);
         ghost.followTarget(targetTile, ghostAttackSpeed(ghost));
     }

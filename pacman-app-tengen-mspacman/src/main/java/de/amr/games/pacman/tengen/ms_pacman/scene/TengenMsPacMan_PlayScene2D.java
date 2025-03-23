@@ -508,7 +508,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     }
 
     private Stream<Ghost> ghostsInZOrder(GameLevel level) {
-        return Stream.of(ORANGE_GHOST, CYAN_GHOST, PINK_GHOST, RED_GHOST).map(level::ghost);
+        return Stream.of(ORANGE_GHOST_ID, CYAN_GHOST_ID, PINK_GHOST_ID, RED_GHOST_ID).map(level::ghost);
     }
 
     private void createLevelCompleteAnimation(GameLevel level) {
