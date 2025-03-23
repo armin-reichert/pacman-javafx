@@ -11,7 +11,10 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.timer.Pulse;
-import de.amr.games.pacman.model.actors.*;
+import de.amr.games.pacman.model.actors.Actor2D;
+import de.amr.games.pacman.model.actors.ActorAnimations;
+import de.amr.games.pacman.model.actors.Bonus;
+import de.amr.games.pacman.model.actors.Ghost;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -30,28 +33,43 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
 public abstract class GameModel {
 
     /**
-     * Directory where application stores high scores and other stuff (user home directory).
+     * Directory under which application stores high scores, maps etc. (default: <code>&lt;user_home/.pacmanfx&gt;</code>).
      */
-    public static final File HOME_DIR;
+    public static final File HOME_DIR = new File(System.getProperty("user.home"), ".pacmanfx");
 
     /**
-     * Directory where custom maps are looked for (<code>user_home_directory/maps</code>).
+     * Directory where custom maps are stored (default: <code>&lt;home_directory&gt;/maps</code>).
      */
-    public static final File CUSTOM_MAP_DIR;
+    public static final File CUSTOM_MAP_DIR = new File(HOME_DIR, "maps");;
 
     static {
-        String userHomePath = System.getProperty("user.home");
-        Logger.info("User home path is {}", userHomePath);
-        HOME_DIR = new File(userHomePath, ".pacmanfx");
-        CUSTOM_MAP_DIR = new File(HOME_DIR, "maps");
-        if (CUSTOM_MAP_DIR.mkdirs()) {
-            Logger.info("Created custom map directory {}", CUSTOM_MAP_DIR);
-        } else if (CUSTOM_MAP_DIR.isDirectory()) {
-            Logger.info("Custom map directory exists: {}", CUSTOM_MAP_DIR);
-            if (!CUSTOM_MAP_DIR.canWrite()) {
-                Logger.error("Custom map directory is not writable: {}", CUSTOM_MAP_DIR);
+        String homeDirDesc = "Pac-Man FX home directory";
+        String customMapDirDesc = "Pac-Man FX custom map directory";
+        boolean success = ensureDirectoryExistsAndIsWritable(HOME_DIR, homeDirDesc);
+        if (success) {
+            Logger.info(homeDirDesc + " is " + HOME_DIR);
+            success = ensureDirectoryExistsAndIsWritable(CUSTOM_MAP_DIR, customMapDirDesc);
+            if (success) {
+                Logger.info(customMapDirDesc + " is " + CUSTOM_MAP_DIR);
             }
         }
+    }
+
+    private static boolean ensureDirectoryExistsAndIsWritable(File dir, String description) {
+        assertNotNull(dir);
+        if (!dir.exists()) {
+            Logger.info(description + " does not exist, create it...");
+            if (!dir.mkdirs()) {
+                Logger.error(description + " could not be created");
+                return false;
+            }
+            Logger.error(description + " has been created");
+            if (!dir.canWrite()) {
+                Logger.error(description + " is not writeable");
+                return false;
+            }
+        }
+        return true;
     }
 
     // Ghost IDs
