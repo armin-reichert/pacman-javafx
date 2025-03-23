@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.controller.HuntingTimer;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
@@ -229,7 +230,13 @@ public class ArcadePlayScene2D extends GameScene2D {
         }
         g.setFill(Color.YELLOW);
         g.setFont(GameRenderer.DEBUG_FONT);
-        g.fillText(String.format("%s %d", context.gameState(), context.gameState().timer().tickCount()), 0, 64);
+        String gameStateText = context.gameState().name() + " (Tick %d)".formatted(context.gameState().timer().tickCount());
+        String scatterChaseText = "";
+        if (context.gameState() == GameState.HUNTING) {
+            HuntingTimer huntingTimer = context.game().huntingTimer();
+            scatterChaseText = " %s (Tick %d)".formatted(huntingTimer.phaseType(), huntingTimer.tickCount());
+        }
+        g.fillText("%s%s".formatted(gameStateText, scatterChaseText), 0, 64);
     }
 
     @Override
