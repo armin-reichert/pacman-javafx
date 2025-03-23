@@ -828,7 +828,7 @@ public class TileMapEditor {
         miAddBorder.disableProperty().bind(editModePy.map(mode -> mode == EditMode.INSPECT));
 
         var miAddHouse = new MenuItem(tt("menu.edit.add_house"));
-        miAddHouse.setOnAction(e -> addHouse(editedWorldMap()));
+        miAddHouse.setOnAction(e -> addArcadeHouseAtMapCenter(editedWorldMap()));
         miAddHouse.disableProperty().bind(editModePy.map(mode -> mode == EditMode.INSPECT));
 
         var miClearTerrain = new MenuItem(tt("menu.edit.clear_terrain"));
@@ -850,7 +850,7 @@ public class TileMapEditor {
         var miIdentifyTiles = new MenuItem(tt("menu.edit.identify_tiles"));
         miIdentifyTiles.disableProperty().bind(Bindings.createBooleanBinding(
             () -> editMode() == EditMode.INSPECT || templateImagePy.get() == null, editModePy, templateImagePy));
-        miIdentifyTiles.setOnAction(e -> populateMapFromTemplateImage());
+        miIdentifyTiles.setOnAction(e -> populateMapFromTemplateImage(editedWorldMap()));
 
         var miAssignDefaultColors = new MenuItem("Assign default colors"); //TODO localize
         miAssignDefaultColors.setOnAction(e -> setDefaultColors(editedWorldMap()));
@@ -1378,7 +1378,7 @@ public class TileMapEditor {
         setDefaultScatterPositions(worldMap);
         if (worldMap.numRows() >= 20) {
             Vector2i houseMinTile = vec_2i(tilesX / 2 - 4, tilesY / 2 - 3);
-            placeHouse(worldMap, houseMinTile);
+            placeArcadeHouse(worldMap, houseMinTile);
             worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_PAC,   formatTile(houseMinTile.plus(3, 11)));
             worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_BONUS, formatTile(houseMinTile.plus(3, 5)));
         }
@@ -1424,13 +1424,13 @@ public class TileMapEditor {
         changeManager.setTerrainMapChanged();
     }
 
-    private void addHouse(WorldMap worldMap) {
+    private void addArcadeHouseAtMapCenter(WorldMap worldMap) {
         int numRows = worldMap.numRows(), numCols = worldMap.numCols();
         int houseMinX = numCols / 2 - 4, houseMinY = numRows / 2 - 3;
-        placeHouse(worldMap, vec_2i(houseMinX, houseMinY));
+        placeArcadeHouse(worldMap, vec_2i(houseMinX, houseMinY));
     }
 
-    public void placeHouse(WorldMap worldMap, Vector2i houseMinTile) {
+    public void placeArcadeHouse(WorldMap worldMap, Vector2i houseMinTile) {
         Vector2i houseMaxTile = houseMinTile.plus(7, 4);
 
         Vector2i oldHouseMinTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
@@ -1513,13 +1513,11 @@ public class TileMapEditor {
     }
 
     private void initWorldMapForTemplateImage() {
-        selectImageFile(tt("open_template_image")).ifPresent(file -> {
-            readImageFromFile(file).ifPresentOrElse(image -> {
-                if (setBlankMapForTemplateImage(image)) {
-                    showMessage("Select map colors from template!", 20, MessageType.INFO);
-                }
-            }, () -> showMessage("Could not open image file", 3, MessageType.ERROR));
-        });
+        selectImageFile(tt("open_template_image")).ifPresent(file -> readImageFromFile(file).ifPresentOrElse(image -> {
+            if (setBlankMapForTemplateImage(image)) {
+                showMessage("Select map colors from template!", 20, MessageType.INFO);
+            }
+        }, () -> showMessage("Could not open image file", 3, MessageType.ERROR)));
     }
 
     private Optional<File> selectImageFile(String title) {
@@ -1585,28 +1583,28 @@ public class TileMapEditor {
                 && hasAccessibleTerrainAtTile(tile);
     }
 
-    private void populateMapFromTemplateImage() {
+    private void populateMapFromTemplateImage(WorldMap worldMap) {
         Image templateImage = templateImagePy.get();
         if (templateImage == null) {
             return;
         }
 
-        Color fillColor = getColorFromMap(editedWorldMap(), LayerID.TERRAIN, PROPERTY_COLOR_WALL_FILL, null);
+        Color fillColor = getColorFromMap(worldMap, LayerID.TERRAIN, PROPERTY_COLOR_WALL_FILL, null);
         if (fillColor == null) {
             showMessage("No fill color defined", 3, MessageType.ERROR);
             return;
         }
-        Color strokeColor = getColorFromMap(editedWorldMap(), LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE, null);
+        Color strokeColor = getColorFromMap(worldMap, LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE, null);
         if (strokeColor == null) {
             showMessage("No stroke color defined", 3, MessageType.ERROR);
             return;
         }
-        Color doorColor = getColorFromMap(editedWorldMap(), LayerID.TERRAIN, PROPERTY_COLOR_DOOR, Color.PINK);
+        Color doorColor = getColorFromMap(worldMap, LayerID.TERRAIN, PROPERTY_COLOR_DOOR, Color.PINK);
         if (doorColor == null) {
             showMessage("No door color defined", 3, MessageType.ERROR);
             return;
         }
-        Color foodColor = getColorFromMap(editedWorldMap(), LayerID.FOOD, PROPERTY_COLOR_FOOD, null);
+        Color foodColor = getColorFromMap(worldMap, LayerID.FOOD, PROPERTY_COLOR_FOOD, null);
         if (foodColor == null) {
             showMessage("No food color defined", 3, MessageType.ERROR);
             return;
@@ -1622,8 +1620,8 @@ public class TileMapEditor {
 
         LocalTime startTime = LocalTime.now();
 
-        int numMazeRows = editedWorldMap().numRows() - (EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE);
-        int numMazeCols = editedWorldMap().numCols();
+        int numMazeRows = worldMap.numRows() - (EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE);
+        int numMazeCols = worldMap.numCols();
         for (int row = 0; row < numMazeRows; ++row) {
             for (int col = 0; col < numMazeCols; ++col) {
                 Vector2i worldMapTile = vec_2i(col, row + EMPTY_ROWS_BEFORE_MAZE);
@@ -1632,10 +1630,10 @@ public class TileMapEditor {
                     rdr.getPixels(col * TS, row * TS, TS, TS, pixelFormat, pixelsOfTile, 0, TS);
                     byte foodValue = matcher.matchFoodTile(pixelsOfTile);
                     if (foodValue == FoodTiles.PELLET || foodValue == FoodTiles.ENERGIZER) {
-                        editedWorldMap().set(LayerID.FOOD, worldMapTile, foodValue);
+                        worldMap.set(LayerID.FOOD, worldMapTile, foodValue);
                     } else {
                         byte terrainValue = matcher.matchTerrainTile(pixelsOfTile);
-                        editedWorldMap().set(LayerID.TERRAIN, worldMapTile, terrainValue);
+                        worldMap.set(LayerID.TERRAIN, worldMapTile, terrainValue);
                     }
                 } catch (IndexOutOfBoundsException e) {
                     Logger.error("Could not get pixels for tile {}, maybe image has been cropped incorrectly?", worldMapTile);
@@ -1647,17 +1645,17 @@ public class TileMapEditor {
         }
 
         // Find house: requires that at least min and max tiles have been detected
-        Vector2i houseMinTile = editedWorldMap().tiles()
-            .filter(tile -> editedWorldMap().get(LayerID.TERRAIN, tile) == TerrainTiles.DCORNER_NW)
+        Vector2i houseMinTile = worldMap.tiles()
+            .filter(tile -> worldMap.get(LayerID.TERRAIN, tile) == TerrainTiles.DCORNER_NW)
             .findFirst().orElse(null);
 
-        Vector2i houseMaxTile = editedWorldMap().tiles()
-            .filter(tile -> editedWorldMap().get(LayerID.TERRAIN, tile) == TerrainTiles.DCORNER_SE)
+        Vector2i houseMaxTile = worldMap.tiles()
+            .filter(tile -> worldMap.get(LayerID.TERRAIN, tile) == TerrainTiles.DCORNER_SE)
             .findFirst().orElse(null);
 
         if (houseMinTile != null && houseMaxTile != null
                 && houseMinTile.x() < houseMaxTile.x() && houseMinTile.y() < houseMaxTile.y()) {
-            placeHouse(editedWorldMap(), houseMinTile);
+            placeArcadeHouse(worldMap, houseMinTile);
         }
 
         java.time.Duration duration = java.time.Duration.between(startTime, LocalTime.now());
@@ -1691,18 +1689,18 @@ public class TileMapEditor {
     }
 
     private void loadSampleMaps() throws IOException {
-        mapPacManGame = new WorldMap(sampleMap("pacman/pacman.world", 1));
-        mapsMsPacManGame = new ArrayList<>(6);
+        mapPacManGame = new WorldMap(sampleMapURL("pacman/pacman.world", 1));
+        mapsMsPacManGame = new ArrayList<>();
         for (int n = 1; n <= 6; ++n) {
-            mapsMsPacManGame.add(new WorldMap(sampleMap("mspacman/mspacman_%d.world", n)));
+            mapsMsPacManGame.add(new WorldMap(sampleMapURL("mspacman/mspacman_%d.world", n)));
         }
-        mapsPacManXXLGame = new ArrayList<>(8);
+        mapsPacManXXLGame = new ArrayList<>();
         for (int n = 1; n <= 8; ++n) {
-            mapsPacManXXLGame.add(new WorldMap(sampleMap("pacman_xxl/masonic_%d.world", n)));
+            mapsPacManXXLGame.add(new WorldMap(sampleMapURL("pacman_xxl/masonic_%d.world", n)));
         }
     }
 
-    private URL sampleMap(String namePattern, int number) {
+    private URL sampleMapURL(String namePattern, int number) {
         return getClass().getResource(SAMPLE_MAPS_PATH + namePattern.formatted(number));
     }
 }

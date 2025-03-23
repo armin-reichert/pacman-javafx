@@ -304,7 +304,7 @@ public class EditCanvas {
         Vector2i tile = tileAtMousePosition(menuEvent.getX(), menuEvent.getY(), gridSize());
 
         var miPlaceHouse = new MenuItem(tt("menu.edit.place_house"));
-        miPlaceHouse.setOnAction(actionEvent -> editor.placeHouse(worldMap(), tile));
+        miPlaceHouse.setOnAction(actionEvent -> editor.placeArcadeHouse(worldMap(), tile));
 
         var miInsertRow = new MenuItem(tt("menu.edit.insert_row"));
         miInsertRow.setOnAction(actionEvent -> {
