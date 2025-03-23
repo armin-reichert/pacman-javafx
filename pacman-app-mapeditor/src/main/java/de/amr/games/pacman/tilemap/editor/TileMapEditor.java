@@ -99,8 +99,8 @@ public class TileMapEditor {
     public static final Node NO_GRAPHIC = null;
 
     public static final FileChooser.ExtensionFilter FILTER_WORLD_MAP = new FileChooser.ExtensionFilter("World Map Files", "*.world");
-    public static final FileChooser.ExtensionFilter FILTER_IMAGE = new FileChooser.ExtensionFilter("Image Files", "*.bmp", "*.gif", "*.jpg", "*.png");
-    public static final FileChooser.ExtensionFilter FILTER_ALL = new FileChooser.ExtensionFilter("All Files", "*.*");
+    public static final FileChooser.ExtensionFilter FILTER_IMAGE_FILES = new FileChooser.ExtensionFilter("Image Files", "*.bmp", "*.gif", "*.jpg", "*.png");
+    public static final FileChooser.ExtensionFilter FILTER_ALL_FILES = new FileChooser.ExtensionFilter("All Files", "*.*");
 
     // Change management
 
@@ -482,7 +482,7 @@ public class TileMapEditor {
 
     private void createFileChooser() {
         fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().addAll(FILTER_WORLD_MAP, FILTER_ALL);
+        fileChooser.getExtensionFilters().addAll(FILTER_WORLD_MAP, FILTER_ALL_FILES);
         fileChooser.setSelectedExtensionFilter(FILTER_WORLD_MAP);
         fileChooser.setInitialDirectory(currentDirectory);
     }
@@ -571,7 +571,7 @@ public class TileMapEditor {
 
         var hint = new Button(tt("image_drop_hint"));
         hint.setFont(FONT_DROP_HINT);
-        hint.setOnAction(ae -> openTemplateImage());
+        hint.setOnAction(ae -> initWorldMapForTemplateImage());
         hint.disableProperty().bind(editModePy.map(mode -> mode == EditMode.INSPECT));
 
         dropTargetForTemplateImage = new BorderPane(hint);
@@ -615,7 +615,7 @@ public class TileMapEditor {
                     e.acceptTransferModes(TransferMode.COPY);
                     try (FileInputStream in = new FileInputStream(file)) {
                         Image image = new Image(in);
-                        boolean accepted = createWorldMapFromTemplateImage(image);
+                        boolean accepted = setBlankMapForTemplateImage(image);
                         if (accepted) {
                             showMessage("Select colors for tile identification!", 10, MessageType.INFO);
                             tabPaneEditorViews.getSelectionModel().select(tabTemplateImage);
@@ -630,22 +630,6 @@ public class TileMapEditor {
             }
         });
         e.consume();
-    }
-
-    private boolean createWorldMapFromTemplateImage(Image image) {
-        if (image.getHeight() % TS != 0 || image.getWidth() % TS != 0) {
-            showMessage("Image size seems dubious", 3, MessageType.WARNING);
-            return false;
-        }
-        // 3 empty rows above maze, 2 empty rows below
-        int tilesY = 5 + (int) (image.getHeight() / TS), tilesX = (int) (image.getWidth() / TS);
-        setBlankMap(tilesX, tilesY);
-        templateImagePy.set(image);
-        removeTerrainMapProperty(PROPERTY_COLOR_WALL_FILL);
-        removeTerrainMapProperty(PROPERTY_COLOR_WALL_STROKE);
-        removeTerrainMapProperty(PROPERTY_COLOR_DOOR);
-        removeFoodMapProperty(PROPERTY_COLOR_FOOD);
-        return true;
     }
 
     private void createTabPaneWithPreviews() {
@@ -821,7 +805,7 @@ public class TileMapEditor {
         miSaveMapFileAs.setOnAction(e -> showSaveDialog());
 
         var miOpenTemplateImage = new MenuItem(tt("menu.file.open_template_image"));
-        miOpenTemplateImage.setOnAction(e -> openTemplateImage());
+        miOpenTemplateImage.setOnAction(e -> initWorldMapForTemplateImage());
 
         var miCloseTemplateImage = new MenuItem(tt("menu.file.close_template_image"));
         miCloseTemplateImage.setOnAction(e -> closeTemplateImage());
@@ -1504,24 +1488,51 @@ public class TileMapEditor {
         changeManager.setEdited(true);
     }
 
-    private void openTemplateImage() {
-        FileChooser fc = new FileChooser();
-        fc.setTitle(tt("open_template_image")); // TODO localize
-        fc.setInitialDirectory(currentDirectory);
-        fc.getExtensionFilters().addAll(FILTER_IMAGE, FILTER_ALL);
-        fc.setSelectedExtensionFilter(FILTER_IMAGE);
-        File file = fc.showOpenDialog(stage);
-        if (file != null) {
-            try (FileInputStream stream = new FileInputStream(file)) {
-                Image image = new Image(stream);
-                boolean accepted = createWorldMapFromTemplateImage(image);
-                if (accepted) {
+    private boolean hasTemplateImageSize(Image image) {
+        return image.getHeight() % TS == 0 && image.getWidth() % TS == 0;
+    }
+
+    private boolean setBlankMapForTemplateImage(Image templateImage) {
+        if (!hasTemplateImageSize(templateImage)) {
+            showMessage("Template image size seems dubious", 3, MessageType.WARNING);
+            return false;
+        }
+        int tilesX = (int) (templateImage.getWidth() / TS);
+        int tilesY = EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE + (int) (templateImage.getHeight() / TS);
+        setBlankMap(tilesX, tilesY);
+        removeTerrainMapProperty(PROPERTY_COLOR_WALL_FILL);
+        removeTerrainMapProperty(PROPERTY_COLOR_WALL_STROKE);
+        removeTerrainMapProperty(PROPERTY_COLOR_DOOR);
+        removeFoodMapProperty(PROPERTY_COLOR_FOOD);
+        templateImagePy.set(templateImage);
+        return true;
+    }
+
+    private void initWorldMapForTemplateImage() {
+        selectImageFile(tt("open_template_image")).ifPresent(file -> {
+            readImageFromFile(file).ifPresentOrElse(image -> {
+                if (setBlankMapForTemplateImage(image)) {
                     showMessage("Select map colors from template!", 20, MessageType.INFO);
                 }
-            } catch (Exception x) {
-                showMessage("Could not open template image", 3, MessageType.ERROR);
-                Logger.error(x);
-            }
+            }, () -> showMessage("Could not open image file", 3, MessageType.ERROR));
+        });
+    }
+
+    private Optional<File> selectImageFile(String title) {
+        FileChooser selector = new FileChooser();
+        selector.setTitle(title);
+        selector.setInitialDirectory(currentDirectory);
+        selector.getExtensionFilters().addAll(FILTER_IMAGE_FILES, FILTER_ALL_FILES);
+        selector.setSelectedExtensionFilter(FILTER_IMAGE_FILES);
+        return Optional.ofNullable(selector.showOpenDialog(stage));
+    }
+
+    private Optional<Image> readImageFromFile(File file) {
+        try (FileInputStream stream = new FileInputStream(file)) {
+            return Optional.of(new Image(stream));
+        } catch (IOException x) {
+            Logger.error(x);
+            return Optional.empty();
         }
     }
 
