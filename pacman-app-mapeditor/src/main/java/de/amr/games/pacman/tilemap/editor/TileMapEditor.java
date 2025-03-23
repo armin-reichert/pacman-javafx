@@ -1368,31 +1368,23 @@ public class TileMapEditor {
     private void setBlankMap(int tilesX, int tilesY) {
         var blankMap = new WorldMap(tilesY, tilesX);
         assignDefaultColors(blankMap);
-        if (tilesX >= 3 && tilesY >= 2) {
-            blankMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_RED_GHOST, formatTile(vec_2i(tilesX - 3, 0)));
-            blankMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_PINK_GHOST, formatTile(vec_2i(2, 0)));
-            blankMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_CYAN_GHOST, formatTile(vec_2i(tilesX - 1, tilesY - 2)));
-            blankMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_ORANGE_GHOST, formatTile(vec_2i(0, tilesY - 2)));
-        }
+        assignDefaultScatterPositions(blankMap);
         setEditedWorldMap(blankMap);
     }
 
     private void setPreconfiguredMap(int tilesX, int tilesY) {
-        var newWorldMap = new WorldMap(tilesY, tilesX);
-        assignDefaultColors(newWorldMap);
-        addBorderWall(newWorldMap);
-        if (newWorldMap.numRows() >= 20) {
+        var worldMap = new WorldMap(tilesY, tilesX);
+        addBorderWall(worldMap);
+        assignDefaultScatterPositions(worldMap);
+        if (worldMap.numRows() >= 20) {
             Vector2i houseMinTile = vec_2i(tilesX / 2 - 4, tilesY / 2 - 3);
-            placeHouse(newWorldMap, houseMinTile);
-            newWorldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_PAC,                  formatTile(houseMinTile.plus(3, 11)));
-            newWorldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_BONUS,                formatTile(houseMinTile.plus(3, 5)));
-            newWorldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_RED_GHOST,    formatTile(vec_2i(tilesX - 3, 0)));
-            newWorldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_PINK_GHOST,   formatTile(vec_2i(2, 0)));
-            newWorldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_CYAN_GHOST,   formatTile(vec_2i(tilesX - 1, tilesY - 2)));
-            newWorldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_ORANGE_GHOST, formatTile(vec_2i(0, tilesY - 2)));
+            placeHouse(worldMap, houseMinTile);
+            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_PAC,   formatTile(houseMinTile.plus(3, 11)));
+            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_BONUS, formatTile(houseMinTile.plus(3, 5)));
         }
-        newWorldMap.updateObstacleList();
-        setEditedWorldMap(newWorldMap);
+        worldMap.updateObstacleList();
+        assignDefaultColors(worldMap);
+        setEditedWorldMap(worldMap);
     }
 
     private void assignDefaultColors(WorldMap worldMap) {
@@ -1402,6 +1394,16 @@ public class TileMapEditor {
         worldMap.setProperty(LayerID.FOOD, PROPERTY_COLOR_FOOD, MS_PACMAN_COLOR_FOOD);
         changeManager.setTerrainMapChanged();
         changeManager.setFoodMapChanged();
+    }
+
+    private void assignDefaultScatterPositions(WorldMap worldMap) {
+        if (worldMap.numCols() >= 3 && worldMap.numRows() >= 2) {
+            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_RED_GHOST, formatTile(vec_2i(worldMap.numCols() - 3, 0)));
+            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_PINK_GHOST, formatTile(vec_2i(2, 0)));
+            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_CYAN_GHOST, formatTile(vec_2i(worldMap.numCols() - 1, worldMap.numRows() - 2)));
+            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_ORANGE_GHOST, formatTile(vec_2i(0, worldMap.numRows() - 2)));
+        }
+
     }
 
     private void addBorderWall(WorldMap worldMap) {
