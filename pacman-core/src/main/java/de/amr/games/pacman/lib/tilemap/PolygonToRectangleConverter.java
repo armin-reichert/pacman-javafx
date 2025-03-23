@@ -46,8 +46,7 @@ public interface PolygonToRectangleConverter<RECTANGLE_TYPE> {
             Vector2i pm = minPoint(points.stream().filter(p -> pk.x() <= p.x() && p.x() <= pl.x() && p.y() > pk.y()));
             Vector2i pkm = new Vector2i(pk.x(), pm.y());
             Vector2i plm = new Vector2i(pl.x(), pm.y());
-            RECTANGLE_TYPE rectangle = createRectangle(pk.x(), pk.y(), pl.x() - pk.x(), pm.y() - pk.y());
-            rectangles.add(rectangle);
+            rectangles.add(createRectangle(pk.x(), pk.y(), pl.x() - pk.x(), pm.y() - pk.y()));
             points.remove(pk);
             points.remove(pl);
             if (points.contains(pkm)) points.remove(pkm);
