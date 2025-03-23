@@ -554,4 +554,14 @@ public class WorldMap {
             Arrays.fill(row, value);
         }
     }
+
+    public boolean isPartOfHouse(Vector2i tile) {
+        Vector2i houseMinTile = getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
+        Vector2i houseMaxTile = getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
+        if (houseMinTile != null && houseMaxTile != null) {
+            return houseMinTile.x() <= tile.x() && tile.x() <= houseMaxTile.x()
+                && houseMinTile.y() <= tile.y() && tile.y() <= houseMaxTile.y();
+        }
+        return false;
+    }
 }
