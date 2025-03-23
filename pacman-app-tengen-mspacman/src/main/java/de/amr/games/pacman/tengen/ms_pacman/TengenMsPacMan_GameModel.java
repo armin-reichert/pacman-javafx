@@ -596,7 +596,9 @@ public class TengenMsPacMan_GameModel extends GameModel {
             ghost.roam(speed);
         } else {
             boolean chasing = huntingTimer.phaseType() == HuntingTimer.PhaseType.CHASING;
-            Vector2i targetTile = chasing ? chasingTarget(ghost) : scatterTarget(ghost);
+            Vector2i targetTile = chasing ?
+                    chasingTargetTile(ghost, level.pac(), level.ghostsArray(), simulateOverflowBug)
+                    : scatterTargetTile(ghost);
             ghost.followTarget(targetTile, speed);
         }
     }

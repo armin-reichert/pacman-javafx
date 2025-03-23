@@ -201,6 +201,10 @@ public class GameLevel {
         return ghosts != null ? ghosts[id] : null;
     }
 
+    public Ghost[] ghostsArray() {
+        return ghosts; // for access without having to create a copy
+    }
+
     public Stream<Ghost> ghosts(GhostState... states) {
         assertNotNull(states);
         if (ghosts == null) {
