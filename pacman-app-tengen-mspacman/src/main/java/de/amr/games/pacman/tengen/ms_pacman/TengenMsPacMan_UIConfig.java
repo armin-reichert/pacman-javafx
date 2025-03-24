@@ -59,7 +59,7 @@ public class TengenMsPacMan_UIConfig implements GameUIConfiguration {
     private final MapRepository mapRepository;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public TengenMsPacMan_UIConfig(AssetStorage assets) {
+    public TengenMsPacMan_UIConfig() {
         scenesByID.put("BootScene",      new TengenMsPacMan_BootScene());
         scenesByID.put("IntroScene",     new TengenMsPacMan_IntroScene());
         scenesByID.put("StartScene",     new TengenMsPacMan_OptionsScene());
@@ -83,6 +83,8 @@ public class TengenMsPacMan_UIConfig implements GameUIConfiguration {
             rm.loadImage("graphics/arcade_mazes.png"),
             rm.loadImage("graphics/non_arcade_mazes.png")
         );
+
+        AssetStorage assets = THE_GAME_CONTEXT.assets();
 
         assets.store("tengen.startpage.image1",                 rm.loadImage("graphics/f1.png"));
         assets.store("tengen.startpage.image2",                 rm.loadImage("graphics/f2.png"));
@@ -192,7 +194,7 @@ public class TengenMsPacMan_UIConfig implements GameUIConfiguration {
     @Override
     public GameScene2D createPiPScene(Canvas canvasNotUsed) {
         var gameScene = new TengenMsPacMan_PiPScene();
-        gameScene.setGameRenderer(createRenderer(THE_GAME_CONTEXT.assets(), gameScene.canvas()));
+        gameScene.setGameRenderer(createRenderer(gameScene.canvas()));
         return gameScene;
     }
 
@@ -205,8 +207,8 @@ public class TengenMsPacMan_UIConfig implements GameUIConfiguration {
     }
 
     @Override
-    public TengenMsPacMan_Renderer2D createRenderer(AssetStorage assets, Canvas canvas) {
-        return new TengenMsPacMan_Renderer2D(assets, spriteSheet, mapRepository, canvas);
+    public TengenMsPacMan_Renderer2D createRenderer(Canvas canvas) {
+        return new TengenMsPacMan_Renderer2D(THE_GAME_CONTEXT.assets(), spriteSheet, mapRepository, canvas);
     }
 
     @Override

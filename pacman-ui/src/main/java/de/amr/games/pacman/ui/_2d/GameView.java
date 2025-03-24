@@ -343,7 +343,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
                 cameraControlledView.viewPortHeightProperty().bind(parentScene.heightProperty());
             }
             case GameScene2D gameScene2D -> {
-                GameRenderer renderer = THE_GAME_CONTEXT.gameConfiguration().createRenderer(THE_GAME_CONTEXT.assets(), canvas);
+                GameRenderer renderer = THE_GAME_CONTEXT.gameConfiguration().createRenderer(canvas);
                 Vector2f sceneSize = gameScene2D.sizeInPx();
                 canvasContainer.setUnscaledCanvasWidth(sceneSize.x());
                 canvasContainer.setUnscaledCanvasHeight(sceneSize.y());

@@ -40,7 +40,7 @@ public class ArcadePacMan_UIConfig implements GameUIConfiguration {
     private final ArcadePacMan_SpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public ArcadePacMan_UIConfig(AssetStorage assets) {
+    public ArcadePacMan_UIConfig() {
         scenesByID.put("BootScene",   new ArcadeBootScene());
         scenesByID.put("IntroScene",  new IntroScene());
         scenesByID.put("StartScene",  new StartScene());
@@ -54,6 +54,7 @@ public class ArcadePacMan_UIConfig implements GameUIConfiguration {
         appIcon = rm.loadImage("graphics/icons/pacman.png");
         spriteSheet = new ArcadePacMan_SpriteSheet(rm.loadImage("graphics/pacman_spritesheet.png"));
 
+        AssetStorage assets = THE_GAME_CONTEXT.assets();
         assets.store("pacman.flashing_maze",                   rm.loadImage("graphics/maze_flashing.png"));
 
         assets.store("pacman.startpage.image1",                rm.loadImage("graphics/f1.jpg"));
@@ -132,13 +133,13 @@ public class ArcadePacMan_UIConfig implements GameUIConfiguration {
     @Override
     public GameScene2D createPiPScene(Canvas canvas) {
         var gameScene = new ArcadePlayScene2D();
-        gameScene.setGameRenderer(createRenderer(THE_GAME_CONTEXT.assets(), canvas));
+        gameScene.setGameRenderer(createRenderer(canvas));
         return gameScene;
     }
 
     @Override
-    public ArcadePacMan_GameRenderer createRenderer(AssetStorage assets, Canvas canvas) {
-        return new ArcadePacMan_GameRenderer(assets, spriteSheet, canvas);
+    public ArcadePacMan_GameRenderer createRenderer(Canvas canvas) {
+        return new ArcadePacMan_GameRenderer(THE_GAME_CONTEXT.assets(), spriteSheet, canvas);
     }
 
     @Override

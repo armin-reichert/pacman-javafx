@@ -22,7 +22,7 @@ public interface GameUIConfiguration {
     boolean gameSceneHasID(GameScene gameScene, String sceneID);
     GameScene2D createPiPScene(Canvas canvas);
     GameSpriteSheet spriteSheet();
-    GameRenderer createRenderer(AssetStorage assets, Canvas canvas);
+    GameRenderer createRenderer(Canvas canvas);
     WorldMapColorScheme worldMapColoring(WorldMap worldMap);
     void createActorAnimations(GameLevel level);
     GameScene selectGameScene();

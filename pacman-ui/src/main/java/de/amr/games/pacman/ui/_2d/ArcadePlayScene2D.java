@@ -245,7 +245,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         bindGameActions();
         registerGameActionKeyBindings(THE_GAME_CONTEXT.keyboard());
         if (gr == null) {
-            setGameRenderer(THE_GAME_CONTEXT.gameConfiguration().createRenderer(THE_GAME_CONTEXT.assets(), canvas));
+            setGameRenderer(THE_GAME_CONTEXT.gameConfiguration().createRenderer(canvas));
         }
         THE_GAME_CONTEXT.game().level().map(GameLevel::worldMap).ifPresent(gr::setWorldMap);
     }
