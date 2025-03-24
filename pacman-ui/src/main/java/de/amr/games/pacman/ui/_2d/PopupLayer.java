@@ -92,7 +92,7 @@ public class PopupLayer extends Pane {
         Color bgColor = Color.web(context.gameVariant() == GameVariant.MS_PACMAN
             ? Arcade.Palette.RED : Arcade.Palette.BLUE);
         var font = context.assets().font("font.monospaced", Math.max(6, 14 * scaling));
-        var helpPane = HelpInfo.build(context).createPane(opaqueColor(bgColor, 0.8), font);
+        var helpPane = HelpInfo.build().createPane(opaqueColor(bgColor, 0.8), font);
         helpPopUp.setTranslateX(10 * scaling);
         helpPopUp.setTranslateY(30 * scaling);
         helpPopUp.setContent(helpPane);

@@ -155,7 +155,7 @@ public class IntroScene extends GameScene2D {
             r.drawMsPacManMidwayCopyright(tiles2Px(6), tiles2Px(28), COLOR_RED, font);
         }
         gr.drawText("CREDIT %2d".formatted(THE_GAME_CONTROLLER.credit), COLOR_WHITE, font, 2 * TS, sizeInPx().y() - 2);
-        gr.drawLevelCounter(THE_GAME_CONTEXT, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
+        gr.drawLevelCounter(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 
     /**

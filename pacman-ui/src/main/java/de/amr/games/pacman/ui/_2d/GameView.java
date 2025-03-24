@@ -296,9 +296,9 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
     }
 
     @Override
-    public void handleInput(GameContext context) {
+    public void handleInput() {
         THE_GAME_CONTEXT.ifTriggeredRunActionElse(this,
-            () -> THE_GAME_CONTEXT.currentGameScene().ifPresent(gameScene -> gameScene.handleInput(context)));
+            () -> THE_GAME_CONTEXT.currentGameScene().ifPresent(GameActionProvider::handleInput));
     }
 
     public void onTick() {

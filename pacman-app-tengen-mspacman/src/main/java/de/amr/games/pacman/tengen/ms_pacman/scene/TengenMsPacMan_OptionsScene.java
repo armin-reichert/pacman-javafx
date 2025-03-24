@@ -126,7 +126,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     @Override
-    public void handleInput(GameContext context) {
+    public void handleInput() {
 
         if (isJoypadPressed(NES_JoypadButton.BTN_DOWN)) {
             selectNextOption();

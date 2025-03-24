@@ -451,7 +451,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             return;
         }
         if (THE_GAME_CONTEXT.isScoreVisible()) {
-            r.drawScores(THE_GAME_CONTEXT);
+            r.drawScores();
         }
         Vector2f messageCenterPosition = centerPosBelowHouse(level);
         if (messageMovement != null) {
@@ -466,10 +466,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         r.setBlinking(level.blinking().isOn());
         boolean flashing = levelCompleteAnimation != null && levelCompleteAnimation.isFlashing();
         if (flashing && levelCompleteAnimation.isInHighlightPhase()) {
-            r.drawWorldHighlighted(THE_GAME_CONTEXT, level, 0, 3 * TS, levelCompleteAnimation.flashingIndex());
+            r.drawWorldHighlighted(level, 0, 3 * TS, levelCompleteAnimation.flashingIndex());
         } else {
             //TODO in the original game, the message is draw under the maze image but over the pellets!
-            r.drawWorld(THE_GAME_CONTEXT, level, 0,  3 * TS);
+            r.drawWorld(level, 0,  3 * TS);
             r.drawFood(level);
             r.drawLevelMessage(THE_GAME_CONTEXT.gameConfiguration().assetNamespace(), level, game.isDemoLevel());
         }
@@ -486,7 +486,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         }
         r.drawLivesCounter(livesCounterEntries, 5, 2 * TS, sizeInPx().y() - TS);
         r.setLevelNumberBoxesVisible(!game.isDemoLevel() && game.mapCategory() != MapCategory.ARCADE);
-        r.drawLevelCounter(THE_GAME_CONTEXT, sizeInPx().x() - 2 * TS, sizeInPx().y() - TS);
+        r.drawLevelCounter(sizeInPx().x() - 2 * TS, sizeInPx().y() - TS);
 
         if (debugInfoVisiblePy.get()) {
             r.drawAnimatedCreatureInfo(level.pac());

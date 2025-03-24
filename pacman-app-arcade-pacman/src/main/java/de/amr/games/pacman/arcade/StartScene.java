@@ -59,7 +59,7 @@ public class StartScene extends GameScene2D {
             gr.drawText(MIDWAY_COPYRIGHT, pink, font8, tiles2Px(4), tiles2Px(29));
         }
         gr.drawText("CREDIT %2d".formatted(THE_GAME_CONTROLLER.credit), white, font8, 2 * TS, sizeInPx().y() - 2);
-        gr.drawLevelCounter(THE_GAME_CONTEXT, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
+        gr.drawLevelCounter(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 
     @Override

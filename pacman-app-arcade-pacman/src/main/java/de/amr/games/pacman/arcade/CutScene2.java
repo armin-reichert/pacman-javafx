@@ -124,7 +124,7 @@ public class CutScene2 extends GameScene2D {
         gr.drawSpriteScaled(blinkyStretching.currentSprite(), tiles2Px(14), tiles2Px(19) + 3);
         gr.drawAnimatedActor(blinky);
         gr.drawAnimatedActor(pac);
-        gr.drawLevelCounter(THE_GAME_CONTEXT, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
+        gr.drawLevelCounter(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 
     @Override

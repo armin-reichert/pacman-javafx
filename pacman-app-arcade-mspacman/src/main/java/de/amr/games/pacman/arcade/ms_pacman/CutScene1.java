@@ -100,7 +100,7 @@ public class CutScene1 extends GameScene2D {
         gr.drawAnimatedActor(inky);
         gr.drawAnimatedActor(pinky);
         gr.drawActorSprite(heart, HEART_SPRITE);
-        gr.drawLevelCounter(THE_GAME_CONTEXT, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
+        gr.drawLevelCounter(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 
     // Scene controller state machine

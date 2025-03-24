@@ -94,7 +94,7 @@ public class CutScene3 extends GameScene2D {
         gr.drawAnimatedActor(pacMan);
         gr.drawActorSprite(stork, storkAnimation.currentSprite());
         gr.drawActorSprite(bag, bagOpen ? ArcadeMsPacMan_SpriteSheet.JUNIOR_PAC_SPRITE : ArcadeMsPacMan_SpriteSheet.BLUE_BAG_SPRITE);
-        gr.drawLevelCounter(THE_GAME_CONTEXT, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
+        gr.drawLevelCounter(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 
     // scene controller state machine

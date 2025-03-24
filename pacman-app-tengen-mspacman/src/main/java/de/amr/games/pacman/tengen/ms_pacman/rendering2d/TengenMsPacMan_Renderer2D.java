@@ -41,6 +41,7 @@ import static de.amr.games.pacman.model.actors.Bonus.STATE_EDIBLE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.games.pacman.tengen.ms_pacman.maps.MapRepository.strangeMap15Sprite;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.*;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 import static de.amr.games.pacman.ui._2d.GameSpriteSheet.NO_SPRITE;
 import static java.util.function.Predicate.not;
 
@@ -197,10 +198,10 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     @Override
     public void drawGameLevel(GameLevel level, double x, double y) {}
 
-    public void drawWorld(GameContext context, GameLevel level, double mapX, double mapY) {
+    public void drawWorld(GameLevel level, double mapX, double mapY) {
         ctx.setImageSmoothing(false);
 
-        TengenMsPacMan_GameModel game = context.game();
+        TengenMsPacMan_GameModel game = THE_GAME_CONTEXT.game();
         MapCategory mapCategory = game.mapCategory();
         int mapNumber = level.worldMap().getConfigValue("mapNumber");
 
@@ -210,12 +211,12 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
         if (coloredMapSet == null) {
             // setWorldMap() not yet called?
-            Logger.warn("Tick {}: No maze available", context.gameClock().tickCount());
+            Logger.warn("Tick {}: No maze available", THE_GAME_CONTEXT.gameClock().tickCount());
             return;
         }
 
         RectArea area = mapCategory == MapCategory.STRANGE && mapNumber == 15
-            ? strangeMap15Sprite(context.gameClock().tickCount()) // Strange map #15: psychedelic animation
+            ? strangeMap15Sprite(THE_GAME_CONTEXT.gameClock().tickCount()) // Strange map #15: psychedelic animation
             : coloredMapSet.normalMaze().area();
         ctx.drawImage(coloredMapSet.normalMaze().source(),
             area.x(), area.y(), area.width(), area.height(),
@@ -237,9 +238,9 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx.restore();
     }
 
-    public void drawWorldHighlighted(GameContext context, GameLevel level, double mapX, double mapY, int flashingIndex) {
+    public void drawWorldHighlighted(GameLevel level, double mapX, double mapY, int flashingIndex) {
         ctx.setImageSmoothing(false);
-        TengenMsPacMan_GameModel game = context.game();
+        TengenMsPacMan_GameModel game = THE_GAME_CONTEXT.game();
         if (areGameOptionsChanged(game)) {
             drawGameOptionsInfoCenteredAt(level.worldMap().numCols() * HTS, tiles2Px(2) + HTS, game);
         }
@@ -367,20 +368,20 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     @Override
-    public void drawScores(GameContext context) {
+    public void drawScores() {
         Color color = nesPaletteColor(0x20);
         Font font = scaledArcadeFont(TS);
-        if (context.gameClock().tickCount() % 60 < 30) { drawText("1UP", color, font, tiles2Px(2), tiles2Px(1)); }
+        if (THE_GAME_CONTEXT.gameClock().tickCount() % 60 < 30) { drawText("1UP", color, font, tiles2Px(2), tiles2Px(1)); }
         drawText("HIGH SCORE", color, font, tiles2Px(9), tiles2Px(1));
-        drawText("%6d".formatted(context.game().scoreManager().score().points()), color, font, 0, tiles2Px(2));
-        drawText("%6d".formatted(context.game().scoreManager().highScore().points()), color, font, tiles2Px(11), tiles2Px(2));
+        drawText("%6d".formatted(THE_GAME_CONTEXT.game().scoreManager().score().points()), color, font, 0, tiles2Px(2));
+        drawText("%6d".formatted(THE_GAME_CONTEXT.game().scoreManager().highScore().points()), color, font, tiles2Px(11), tiles2Px(2));
     }
 
     @Override
-    public void drawLevelCounter(GameContext context, double x, double y) {
+    public void drawLevelCounter(double x, double y) {
         ctx.setImageSmoothing(false);
-        context.game().level().ifPresent(level -> {
-            TengenMsPacMan_GameModel game = context.game();
+        THE_GAME_CONTEXT.game().level().ifPresent(level -> {
+            TengenMsPacMan_GameModel game = THE_GAME_CONTEXT.game();
             if (levelNumberBoxesVisible) {
                 drawLevelNumberBox(level.number(), 0, y); // left box
                 drawLevelNumberBox(level.number(), x, y); // right box

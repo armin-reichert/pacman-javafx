@@ -82,7 +82,7 @@ public class CutScene2 extends GameScene2D {
         }
         gr.drawAnimatedActor(msPacMan);
         gr.drawAnimatedActor(pacMan);
-        gr.drawLevelCounter(THE_GAME_CONTEXT, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
+        gr.drawLevelCounter(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 
     // Scene controller state machine

@@ -15,7 +15,6 @@ import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.AnimatedActor2D;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Creature;
-import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.SpriteAnimation;
 import javafx.beans.property.FloatProperty;
@@ -31,6 +30,7 @@ import org.tinylog.Logger;
 import java.util.function.Predicate;
 
 import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 import static java.util.function.Predicate.not;
 
 /**
@@ -300,19 +300,19 @@ public interface GameRenderer {
         }
     }
 
-    default void drawLevelCounter(GameContext context, double x, double y) {
+    default void drawLevelCounter(double x, double y) {
 //        double x = sceneSize.x() - 4 * TS, y = sceneSize.y() - 2 * TS;
-        for (byte symbol : context.game().levelCounter()) {
+        for (byte symbol : THE_GAME_CONTEXT.game().levelCounter()) {
             drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), x, y);
             x -= TS * 2;
         }
     }
 
-    default void drawScores(GameContext context) {
+    default void drawScores() {
         Color color = Color.web(Arcade.Palette.WHITE);
         Font font = scaledArcadeFont(TS);
-        drawScore(context.game().scoreManager().score(),     "SCORE",      tiles2Px(1),  tiles2Px(1), font, color);
-        drawScore(context.game().scoreManager().highScore(), "HIGH SCORE", tiles2Px(14), tiles2Px(1), font, color);
+        drawScore(THE_GAME_CONTEXT.game().scoreManager().score(),     "SCORE",      tiles2Px(1),  tiles2Px(1), font, color);
+        drawScore(THE_GAME_CONTEXT.game().scoreManager().highScore(), "HIGH SCORE", tiles2Px(14), tiles2Px(1), font, color);
     }
 
     default void drawScore(Score score, String title, double x, double y, Font font, Color color) {

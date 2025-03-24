@@ -278,7 +278,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
                 openEditor();
             }
             else if (viewPy.get() instanceof GameActionProvider actionProvider) {
-                actionProvider.handleInput(this);
+                actionProvider.handleInput();
             }
         });
 
@@ -287,7 +287,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     private EditorView getOrCreateEditorView() {
         if (editorView == null) {
-            editorView = new EditorView(stage, this);
+            editorView = new EditorView(stage);
             editorView.setCloseAction(editor -> {
                 editor.executeWithCheckForUnsavedChanges(this::bindStageTitle);
                 editor.stop();

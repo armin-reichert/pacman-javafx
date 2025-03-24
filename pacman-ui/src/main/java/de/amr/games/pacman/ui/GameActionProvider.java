@@ -12,6 +12,8 @@ import org.tinylog.Logger;
 import java.util.Map;
 import java.util.Optional;
 
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
+
 public interface GameActionProvider {
 
     Map<KeyCodeCombination, GameAction> actionBindings();
@@ -54,7 +56,7 @@ public interface GameActionProvider {
             .findFirst();
     }
 
-    default void handleInput(GameContext context) {
-        context.ifTriggeredRunAction(this);
+    default void handleInput() {
+        THE_GAME_CONTEXT.ifTriggeredRunAction(this);
     }
 }

@@ -197,7 +197,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         }
 
         // Draw level counter
-        gr.drawLevelCounter(THE_GAME_CONTEXT, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
+        gr.drawLevelCounter(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 
     private Vector2f centerPositionBelowHouse(GameLevel level) {
