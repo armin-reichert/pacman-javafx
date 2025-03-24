@@ -49,16 +49,16 @@ public interface GameActionProvider {
         }
     }
 
-    default Optional<GameAction> firstMatchedAction(Keyboard keyboard) {
+    default Optional<GameAction> firstMatchedAction() {
         return actionBindings().entrySet().stream()
-            .filter(entry -> keyboard.isMatching(entry.getKey()))
+            .filter(entry -> THE_KEYBOARD.isMatching(entry.getKey()))
             .map(Map.Entry::getValue)
             .findFirst();
     }
 
     // Actions
-    default void ifTriggeredRunAction(Keyboard keyboard) {
-        firstMatchedAction(keyboard).ifPresent(action -> {
+    default void ifTriggeredRunAction() {
+        firstMatchedAction().ifPresent(action -> {
             if (action.isEnabled()) {
                 action.execute();
             } else {
@@ -67,8 +67,8 @@ public interface GameActionProvider {
         });
     }
 
-    default void ifTriggeredRunActionElse(Keyboard keyboard, Runnable defaultAction) {
-        firstMatchedAction(keyboard).ifPresentOrElse(action -> {
+    default void ifTriggeredRunActionElse(Runnable defaultAction) {
+        firstMatchedAction().ifPresentOrElse(action -> {
             if (action.isEnabled()) {
                 action.execute();
             } else {
@@ -78,6 +78,6 @@ public interface GameActionProvider {
     }
 
     default void handleInput() {
-        ifTriggeredRunAction(THE_KEYBOARD);
+        ifTriggeredRunAction();
     }
 }

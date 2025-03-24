@@ -43,7 +43,6 @@ import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
-import static de.amr.games.pacman.ui.UIGlobals.THE_KEYBOARD;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
 import static de.amr.games.pacman.ui.input.Keyboard.*;
 import static de.amr.games.pacman.uilib.Ufx.*;
@@ -300,8 +299,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
 
     @Override
     public void handleInput() {
-        ifTriggeredRunActionElse(THE_KEYBOARD,
-                () -> THE_GAME_CONTEXT.currentGameScene().ifPresent(GameActionProvider::handleInput));
+        ifTriggeredRunActionElse(() -> THE_GAME_CONTEXT.currentGameScene().ifPresent(GameActionProvider::handleInput));
     }
 
     public void onTick() {
