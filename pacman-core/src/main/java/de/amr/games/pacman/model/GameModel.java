@@ -400,7 +400,7 @@ public abstract class GameModel {
         level.ghosts().forEach(Ghost::startAnimation);
         level.blinking().setStartPhase(Pulse.ON);
         level.blinking().restart(Integer.MAX_VALUE);
-        huntingTimer.startHunting(level.number());
+        huntingTimer.startFirstHuntingPhase(level.number());
         publishGameEvent(GameEventType.HUNTING_PHASE_STARTED);
     }
 
@@ -467,7 +467,7 @@ public abstract class GameModel {
 
     private void updatePacPower() {
         level.powerTimer().doTick();
-        if (level.powerTimer().remainingTicks() == pacPowerFadingTicks()) {
+        if (isPowerFadingStarting(level.powerTimer())) {
             eventLog.pacStartsLosingPower = true;
             publishGameEvent(GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (level.powerTimer().hasExpired()) {
@@ -476,7 +476,7 @@ public abstract class GameModel {
             Logger.info("Power timer stopped and reset to zero");
             level.victims().clear();
             huntingTimer.start();
-            Logger.info("Hunting timer started");
+            Logger.info("Hunting timer restarted");
             level.ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
             eventLog.pacLostPower = true;
             publishGameEvent(GameEventType.PAC_LOST_POWER);

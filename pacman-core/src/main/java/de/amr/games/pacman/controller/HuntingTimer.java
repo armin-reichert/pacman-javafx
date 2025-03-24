@@ -48,7 +48,7 @@ public abstract class HuntingTimer extends TickTimer {
         this.phaseChangeAction = phaseChangeAction;
     }
 
-    public void startHunting(int levelNumber) {
+    public void startFirstHuntingPhase(int levelNumber) {
         startHuntingPhase(0, PhaseType.SCATTERING, huntingTicks(levelNumber, 0));
     }
 
