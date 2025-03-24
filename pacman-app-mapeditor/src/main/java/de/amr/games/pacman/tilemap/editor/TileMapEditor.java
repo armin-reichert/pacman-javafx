@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.tilemap.editor;
 
-import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.Globals;
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.*;
 import de.amr.games.pacman.tilemap.rendering.FoodMapRenderer;

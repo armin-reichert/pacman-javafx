@@ -35,7 +35,6 @@ import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions.TO
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.MS_PAC_MAN_TITLE_SPRITE;
 import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
-import static de.amr.games.pacman.ui.UIGlobals.THE_KEYBOARD;
 
 /**
  * @author Armin Reichert
@@ -78,14 +77,14 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     @Override
     public void doInit() {
         THE_GAME_CONTEXT.setScoreVisible(false);
-        THE_GAME_CONTEXT.joypadKeyBinding().register(THE_KEYBOARD);
+        THE_GAME_CONTEXT.joypadKeyBinding().register();
         sceneController.restart(SceneState.WAITING_FOR_START);
     }
 
     @Override
     protected void doEnd() {
         THE_GAME_CONTEXT.sound().stopVoice(); // TODO check if needed
-        THE_GAME_CONTEXT.joypadKeyBinding().unregister(THE_KEYBOARD);
+        THE_GAME_CONTEXT.joypadKeyBinding().unregister();
     }
 
     @Override

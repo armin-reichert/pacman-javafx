@@ -10,6 +10,8 @@ import javafx.scene.input.KeyCodeCombination;
 
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.ui.UIGlobals.THE_KEYBOARD;
+
 /**
  * @ see <a href="https://www.nesdev.org/wiki/Standard_controller">here</a>
  */
@@ -67,12 +69,12 @@ public interface JoypadKeyBinding {
 
     KeyCodeCombination key(NES_JoypadButton button);
 
-    default void register(Keyboard keyboard) {
-        keys().forEach(kcc -> keyboard.register(kcc, this));
+    default void register() {
+        keys().forEach(kcc -> THE_KEYBOARD.register(kcc, this));
     }
 
-    default void unregister(Keyboard keyboard) {
-        keys().forEach(kcc -> keyboard.unregister(kcc, this));
+    default void unregister() {
+        keys().forEach(combination -> THE_KEYBOARD.unregister(combination, this));
     }
 
     default Stream<KeyCodeCombination> keys() {

@@ -16,7 +16,6 @@ import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
-import static de.amr.games.pacman.ui.UIGlobals.THE_KEYBOARD;
 
 public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
@@ -25,7 +24,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     @Override
     public void bindGameActions() {
         THE_GAME_CONTEXT.setScoreVisible(false);
-        THE_GAME_CONTEXT.joypadKeyBinding().register(THE_KEYBOARD);
+        THE_GAME_CONTEXT.joypadKeyBinding().register();
         bind(GameActions2D.START_GAME, THE_GAME_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
     }
 

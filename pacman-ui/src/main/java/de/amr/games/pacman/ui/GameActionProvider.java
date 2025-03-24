@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui;
 
-import de.amr.games.pacman.ui.input.Keyboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import org.tinylog.Logger;
@@ -23,17 +22,17 @@ public interface GameActionProvider {
      */
     void bindGameActions();
 
-    default void registerGameActionKeyBindings(Keyboard keyboard) {
+    default void registerGameActionKeyBindings() {
         Logger.info("Register key bindings for {}", getClass().getSimpleName());
         for (KeyCodeCombination keyCodeCombination : actionBindings().keySet()) {
-            keyboard.register(keyCodeCombination, this);
+            THE_KEYBOARD.register(keyCodeCombination, this);
         }
     }
 
-    default void unregisterGameActionKeyBindings(Keyboard keyboard) {
+    default void unregisterGameActionKeyBindings() {
         Logger.info("Unregister key bindings for {}", getClass().getSimpleName());
         for (KeyCodeCombination keyCodeCombination : actionBindings().keySet()) {
-            keyboard.unregister(keyCodeCombination, this);
+            THE_KEYBOARD.unregister(keyCodeCombination, this);
         }
     }
 

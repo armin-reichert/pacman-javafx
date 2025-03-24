@@ -509,13 +509,13 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         Node currentView = viewPy.get();
         if (view != currentView) {
             if (currentView instanceof GameActionProvider actionProvider) {
-                actionProvider.unregisterGameActionKeyBindings(THE_KEYBOARD);
+                actionProvider.unregisterGameActionKeyBindings();
             }
             if (currentView instanceof GameEventListener gameEventListener) {
                 THE_GAME_CONTROLLER.game().removeGameEventListener(gameEventListener);
             }
             if (view instanceof GameActionProvider actionProvider) {
-                actionProvider.registerGameActionKeyBindings(THE_KEYBOARD);
+                actionProvider.registerGameActionKeyBindings();
             }
             if (view instanceof GameEventListener gameEventListener) {
                 THE_GAME_CONTROLLER.game().addGameEventListener(gameEventListener);

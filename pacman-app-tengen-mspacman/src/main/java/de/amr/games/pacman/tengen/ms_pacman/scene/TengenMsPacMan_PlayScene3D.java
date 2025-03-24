@@ -25,7 +25,6 @@ import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
-import static de.amr.games.pacman.ui.UIGlobals.THE_KEYBOARD;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindCheatActions;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindFallbackPlayerControlActions;
 import static de.amr.games.pacman.ui.input.Keyboard.alt;
@@ -91,7 +90,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             bindFallbackPlayerControlActions(this);
             bindCheatActions(this);
         }
-        registerGameActionKeyBindings(THE_KEYBOARD);
+        registerGameActionKeyBindings();
     }
 
     @Override

@@ -75,7 +75,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        THE_GAME_CONTEXT.joypadKeyBinding().register(THE_KEYBOARD);
+        THE_GAME_CONTEXT.joypadKeyBinding().register();
         THE_GAME_CONTEXT.setScoreVisible(false);
         selectedOption = OPTION_PAC_BOOSTER;
         tengenGame = THE_GAME_CONTROLLER.game();
@@ -86,7 +86,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        THE_GAME_CONTEXT.joypadKeyBinding().unregister(THE_KEYBOARD);
+        THE_GAME_CONTEXT.joypadKeyBinding().unregister();
     }
 
     @Override

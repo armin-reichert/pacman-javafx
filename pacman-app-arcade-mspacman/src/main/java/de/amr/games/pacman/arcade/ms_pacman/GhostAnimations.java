@@ -16,8 +16,8 @@ import de.amr.games.pacman.uilib.SpriteSheet;
 
 import java.util.Map;
 
-import static de.amr.games.pacman.Globals.assertValidGhostID;
 import static de.amr.games.pacman.Globals.assertNotNull;
+import static de.amr.games.pacman.Globals.assertValidGhostID;
 
 /**
  * @author Armin Reichert

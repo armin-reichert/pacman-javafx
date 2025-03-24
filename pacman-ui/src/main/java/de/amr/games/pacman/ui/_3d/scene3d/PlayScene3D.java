@@ -47,7 +47,6 @@ import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
-import static de.amr.games.pacman.ui.UIGlobals.THE_KEYBOARD;
 import static de.amr.games.pacman.ui._2d.GameActions2D.*;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
 import static de.amr.games.pacman.ui.input.Keyboard.alt;
@@ -108,7 +107,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     @Override
     public void init() {
         bindGameActions();
-        registerGameActionKeyBindings(THE_KEYBOARD);
+        registerGameActionKeyBindings();
         THE_GAME_CONTEXT.setScoreVisible(true);
         perspectiveNamePy.bind(GlobalProperties3d.PY_3D_PERSPECTIVE);
         scores3D.setFont(THE_GAME_CONTEXT.assets().font("font.arcade", 8));
@@ -116,7 +115,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
     @Override
     public final void end() {
-        unregisterGameActionKeyBindings(THE_KEYBOARD);
+        unregisterGameActionKeyBindings();
         perspectiveNamePy.unbind();
         level3D.stopAnimations();
         level3D = null;
@@ -134,7 +133,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             bindFallbackPlayerControlActions(this);
             bindCheatActions(this);
         }
-        registerGameActionKeyBindings(THE_KEYBOARD);
+        registerGameActionKeyBindings();
     }
 
     @Override
@@ -167,7 +166,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     public void onSceneVariantSwitch(GameScene fromScene) {
         THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
             bindGameActions();
-            registerGameActionKeyBindings(THE_KEYBOARD);
+            registerGameActionKeyBindings();
             if (!hasLevel3D()) {
                 replaceGameLevel3D();
                 level3D.addLevelCounter();

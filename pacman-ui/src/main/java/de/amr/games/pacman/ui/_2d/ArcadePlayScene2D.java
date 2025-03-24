@@ -35,7 +35,6 @@ import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
-import static de.amr.games.pacman.ui.UIGlobals.THE_KEYBOARD;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_IMMUNITY;
 
@@ -56,7 +55,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         THE_GAME_CONTEXT.setScoreVisible(true);
         GameActions2D.bindDefaultArcadeControllerActions(this, THE_GAME_CONTEXT.arcadeKeys());
         GameActions2D.bindFallbackPlayerControlActions(this);
-        registerGameActionKeyBindings(THE_KEYBOARD);
+        registerGameActionKeyBindings();
     }
 
     @Override
@@ -68,7 +67,7 @@ public class ArcadePlayScene2D extends GameScene2D {
             GameActions2D.bindDefaultArcadeControllerActions(this, THE_GAME_CONTEXT.arcadeKeys());
             GameActions2D.bindFallbackPlayerControlActions(this);
         }
-        registerGameActionKeyBindings(THE_KEYBOARD);
+        registerGameActionKeyBindings();
         THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
             gr.setWorldMap(level.worldMap());
             gr.setMessagePosition(centerPositionBelowHouse(level));
@@ -244,7 +243,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     public void onSceneVariantSwitch(GameScene oldScene) {
         Logger.info("{} entered from {}", this, oldScene);
         bindGameActions();
-        registerGameActionKeyBindings(THE_KEYBOARD);
+        registerGameActionKeyBindings();
         if (gr == null) {
             setGameRenderer(THE_GAME_CONTEXT.gameConfiguration().createRenderer(canvas));
         }
