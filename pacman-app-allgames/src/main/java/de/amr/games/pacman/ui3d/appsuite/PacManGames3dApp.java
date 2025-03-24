@@ -95,11 +95,11 @@ public class PacManGames3dApp extends Application {
         InfoBoxCustomMaps infoBoxCustomMaps = ui.getDashboardItem("CUSTOM_MAPS");
         infoBoxCustomMaps.setTableItems(xxlMapSelector.customMaps());
 
-        ui.startPageSelectionView().addStartPage(GameVariant.PACMAN,           new ArcadePacMan_StartPage(ui));
-        ui.startPageSelectionView().addStartPage(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_StartPage(ui));
-        ui.startPageSelectionView().addStartPage(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_StartPage(ui));
+        ui.startPageSelectionView().addStartPage(GameVariant.PACMAN,           new ArcadePacMan_StartPage());
+        ui.startPageSelectionView().addStartPage(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_StartPage());
+        ui.startPageSelectionView().addStartPage(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_StartPage());
 
-        StartPage xxlStartPage = new PacManXXL_StartPage(ui);
+        StartPage xxlStartPage = new PacManXXL_StartPage();
         ui.startPageSelectionView().addStartPage(GameVariant.PACMAN_XXL,    xxlStartPage);
         ui.startPageSelectionView().addStartPage(GameVariant.MS_PACMAN_XXL, xxlStartPage);
 

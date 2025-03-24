@@ -21,6 +21,7 @@ import java.util.List;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.TS;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_ENABLED;
 
 public class PacManXXL_OptionMenu extends OptionMenu {
@@ -35,7 +36,6 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         MapSelectionMode mapSelectionMode;
     }
 
-    private final PacManGamesUI ui;
     private final OptionMenu.MenuEntry<GameVariant> entryGameVariant;
     private final OptionMenu.MenuEntry<Boolean> entryPlay3D;
     private final OptionMenu.MenuEntry<Boolean> entryCutScenesEnabled;
@@ -43,16 +43,14 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     private final MenuState state = new MenuState();
     private final AnimationTimer drawingLoop;
 
-    public PacManXXL_OptionMenu(PacManGamesUI ui) {
+    public PacManXXL_OptionMenu() {
         super(UNSCALED_HEIGHT);
-        this.ui = ui;
-
         setBackgroundFill(Color.web("#0C1568"));
         setTitle("  Pac-Man XXL");
         setOnStart(() -> {
             logMenuState();
             if (state.gameVariant == GameVariant.PACMAN_XXL || state.gameVariant == GameVariant.MS_PACMAN_XXL) {
-                ui.setGameVariant(state.gameVariant);
+                THE_GAME_CONTEXT.setGameVariant(state.gameVariant);
                 PY_3D_ENABLED.set(state.play3D);
                 GameModel game = THE_GAME_CONTROLLER.game(state.gameVariant);
                 game.setCutScenesEnabled(state.cutScenesEnabled);
@@ -62,7 +60,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
                 Logger.error("Game variant {} is not allowed for XXL game", state.gameVariant);
             }
         });
-        scalingProperty().bind(ui.mainScene().heightProperty().multiply(RELATIVE_HEIGHT).divide(UNSCALED_HEIGHT));
+        scalingProperty().bind(THE_GAME_CONTEXT.heightProperty().multiply(RELATIVE_HEIGHT).divide(UNSCALED_HEIGHT));
 
         drawingLoop = new AnimationTimer() {
             @Override
@@ -152,7 +150,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     protected void handleKeyPress(KeyEvent e) {
         super.handleKeyPress(e);
         if (Keyboard.naked(KeyCode.E).match(e)) {
-            ui.openEditor();
+            THE_GAME_CONTEXT.openEditor();
         }
     }
 

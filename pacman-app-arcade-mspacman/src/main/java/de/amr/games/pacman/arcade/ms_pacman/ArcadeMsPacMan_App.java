@@ -29,7 +29,7 @@ public class ArcadeMsPacMan_App extends Application {
         PacManGamesUI_3D ui = new PacManGamesUI_3D();
         ui.configure(GameVariant.MS_PACMAN, new ArcadeMsPacMan_UIConfig());
         ui.create(stage, initialSize());
-        ui.startPageSelectionView().addStartPage(GameVariant.MS_PACMAN, new ArcadeMsPacMan_StartPage(ui));
+        ui.startPageSelectionView().addStartPage(GameVariant.MS_PACMAN, new ArcadeMsPacMan_StartPage());
 
         ui.gameView().addDefaultDashboardItems(
             "README",

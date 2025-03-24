@@ -17,6 +17,7 @@ import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
@@ -196,10 +197,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     public Scene mainScene() { return mainScene; }
 
-    public StartPageSelectionView startPageSelectionView() { return startPageSelectionView; }
-
-    public ObjectProperty<Node> viewProperty() { return viewPy; }
-
     public ObjectProperty<GameVariant> gameVariantProperty() { return gameVariantPy; }
 
     protected void runOnEveryTickExceptWhenPaused() {
@@ -299,12 +296,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         return editorView;
     }
 
-    public void openEditor() {
-        if (actionOpenEditorView.isEnabled()) {
-            actionOpenEditorView.execute();
-        }
-    }
-
     protected void createGameView(Scene parentScene) {
         gameView = new GameView(parentScene);
         gameView.gameSceneProperty().bind(gameScenePy);
@@ -395,6 +386,11 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
+    public ReadOnlyDoubleProperty heightProperty() {
+        return mainScene.heightProperty();
+    }
+
+    @Override
     public Keyboard keyboard() {
         return keyboard;
     }
@@ -435,8 +431,18 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     @Override
+    public ObjectProperty<Node> viewProperty() { return viewPy; }
+
+    @Override
     public GameView gameView() {
         return gameView;
+    }
+
+    @Override
+    public void openEditor() {
+        if (actionOpenEditorView.isEnabled()) {
+            actionOpenEditorView.execute();
+        }
     }
 
     @Override
@@ -491,6 +497,9 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         // Note: this must be called last such that option menu gets focus!
         startPageSelectionView.currentSlide().ifPresent(Node::requestFocus);
     }
+
+    @Override
+    public StartPageSelectionView startPageSelectionView() { return startPageSelectionView; }
 
     @Override
     public void showGameView() {

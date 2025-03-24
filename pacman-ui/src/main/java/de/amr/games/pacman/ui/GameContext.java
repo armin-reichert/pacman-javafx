@@ -9,13 +9,17 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui._2d.StartPageSelectionView;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui.input.Keyboard;
 import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.GameClockFX;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import org.tinylog.Logger;
 
@@ -62,13 +66,17 @@ public interface GameContext {
     void selectNextJoypadKeyBinding();
 
     // GUI
+    ReadOnlyDoubleProperty heightProperty();
     GameUIConfiguration gameConfiguration(GameVariant variant);
     default GameUIConfiguration gameConfiguration() { return gameConfiguration(gameVariant()); }
     void setScoreVisible(boolean visible);
     boolean isScoreVisible();
+    ObjectProperty<Node> viewProperty();
     void showStartView();
+    StartPageSelectionView startPageSelectionView();
     void showGameView();
     Pane gameView();
+    void openEditor();
     void showFlashMessageSec(double seconds, String message, Object... args);
     default void showFlashMessage(String message, Object... args) { showFlashMessageSec(1, message, args); }
     default Vector2i worldSizeInTilesOrElse(Vector2i defaultSize) {
