@@ -23,8 +23,7 @@ import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
-import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
-import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
+import static de.amr.games.pacman.ui.UIGlobals.*;
 import static de.amr.games.pacman.uilib.Ufx.toggle;
 import static java.util.function.Predicate.not;
 
@@ -64,9 +63,9 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute() {
             THE_GAME_CONTROLLER.restart(GameState.BOOT);
-            THE_GAME_CONTEXT.gameClock().setTargetFrameRate(TICKS_PER_SECOND);
-            THE_GAME_CONTEXT.gameClock().pausedProperty().set(false);
-            THE_GAME_CONTEXT.gameClock().start();
+            THE_CLOCK.setTargetFrameRate(TICKS_PER_SECOND);
+            THE_CLOCK.pausedProperty().set(false);
+            THE_CLOCK.start();
         }
     },
 
@@ -184,7 +183,7 @@ public enum GameActions2D implements GameAction {
             if (THE_GAME_CONTROLLER.state() == GameState.TESTING_LEVELS) {
                 THE_GAME_CONTROLLER.state().onExit(THE_GAME_CONTROLLER.game()); //TODO exit other states too?
             }
-            THE_GAME_CONTEXT.gameClock().setTargetFrameRate(TICKS_PER_SECOND);
+            THE_CLOCK.setTargetFrameRate(TICKS_PER_SECOND);
             THE_GAME_CONTROLLER.restart(INTRO);
         }
     },
@@ -232,11 +231,11 @@ public enum GameActions2D implements GameAction {
     TOGGLE_PAUSED {
         @Override
         public void execute() {
-            toggle(THE_GAME_CONTEXT.gameClock().pausedProperty());
-            if (THE_GAME_CONTEXT.gameClock().isPaused()) {
+            toggle(THE_CLOCK.pausedProperty());
+            if (THE_CLOCK.isPaused()) {
                 THE_SOUND.stopAll();
             }
-            Logger.info("Game ({}) {}", THE_GAME_CONTEXT.gameVariant(), THE_GAME_CONTEXT.gameClock().isPaused() ? "paused" : "resumed");
+            Logger.info("Game ({}) {}", THE_GAME_CONTEXT.gameVariant(), THE_CLOCK.isPaused() ? "paused" : "resumed");
         }
     };
 

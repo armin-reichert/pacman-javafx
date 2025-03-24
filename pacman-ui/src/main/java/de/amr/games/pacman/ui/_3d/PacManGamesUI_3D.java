@@ -15,8 +15,7 @@ import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
-import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
+import static de.amr.games.pacman.ui.UIGlobals.*;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_DEBUG_INFO_VISIBLE;
 import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_ENABLED;
 import static de.amr.games.pacman.uilib.Ufx.toggle;
@@ -72,7 +71,7 @@ public class PacManGamesUI_3D extends PacManGamesUI {
                 String sceneNameText = sceneName != null && PY_DEBUG_INFO_VISIBLE.get() ? " [%s]".formatted(sceneName) : "";
                 String assetNamespace = gameConfiguration().assetNamespace();
                 String key = "app.title." + assetNamespace;
-                if (clock.isPaused()) {
+                if (THE_CLOCK.isPaused()) {
                     key += ".paused";
                 }
                 String modeKey = locText(PY_3D_ENABLED.get() ? "threeD" : "twoD");
@@ -81,7 +80,7 @@ public class PacManGamesUI_3D extends PacManGamesUI {
                 }
                 return locText(key, modeKey) + sceneNameText;
             },
-            clock.pausedProperty(), gameVariantPy, gameScenePy, gameView.heightProperty(), PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE)
+            THE_CLOCK.pausedProperty(), gameVariantPy, gameScenePy, gameView.heightProperty(), PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE)
         );
     }
 

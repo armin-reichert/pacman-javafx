@@ -16,6 +16,7 @@ import org.tinylog.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
+import static de.amr.games.pacman.ui.UIGlobals.THE_CLOCK;
 import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 
 /**
@@ -31,7 +32,7 @@ public class StartPageSelectionView extends Carousel implements GameActionProvid
 
         @Override
         public boolean isEnabled() {
-            return !THE_GAME_CONTEXT.gameClock().isPaused();
+            return !THE_CLOCK.isPaused();
         }
     };
 

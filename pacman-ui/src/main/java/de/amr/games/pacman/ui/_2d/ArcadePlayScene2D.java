@@ -34,8 +34,7 @@ import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_TILES;
-import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
-import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
+import static de.amr.games.pacman.ui.UIGlobals.*;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_IMMUNITY;
 
@@ -107,7 +106,7 @@ public class ArcadePlayScene2D extends GameScene2D {
                 levelCompleteAnimation.update();
             }
         }, () -> { // Scene is already visible 2 ticks before game level is created!
-            Logger.warn("Tick {}: Game level not yet available", THE_GAME_CONTEXT.gameClock().tickCount());
+            Logger.warn("Tick {}: Game level not yet available", THE_CLOCK.tickCount());
         });
     }
 
@@ -137,7 +136,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     protected void drawSceneContent() {
         GameLevel level = THE_GAME_CONTROLLER.game().level().orElse(null);
         if (level == null) { // This happens on level start
-            Logger.warn("Tick {}: Cannot draw scene content: Game level not yet available!", THE_GAME_CONTEXT.gameClock().tickCount());
+            Logger.warn("Tick {}: Cannot draw scene content: Game level not yet available!", THE_CLOCK.tickCount());
             return;
         }
 

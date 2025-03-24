@@ -42,8 +42,7 @@ import java.util.Map;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
-import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
+import static de.amr.games.pacman.ui.UIGlobals.*;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
 import static de.amr.games.pacman.ui.input.Keyboard.*;
 import static de.amr.games.pacman.uilib.Ufx.*;
@@ -62,47 +61,47 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
     private final GameAction actionShowHelp = this::showHelp;
 
     private final GameAction actionSimulationSpeedSlower = () -> {
-        double newRate = THE_GAME_CONTEXT.gameClock().getTargetFrameRate() - SIMULATION_SPEED_DELTA;
+        double newRate = THE_CLOCK.getTargetFrameRate() - SIMULATION_SPEED_DELTA;
         newRate = clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
-        THE_GAME_CONTEXT.gameClock().setTargetFrameRate(newRate);
+        THE_CLOCK.setTargetFrameRate(newRate);
         String prefix = newRate == SIMULATION_SPEED_MIN ? "At minimum speed: " : "";
         THE_GAME_CONTEXT.showFlashMessageSec(0.75, prefix + newRate + "Hz");
     };
 
     private final GameAction actionSimulationSpeedFaster = () -> {
-        double newRate = THE_GAME_CONTEXT.gameClock().getTargetFrameRate() + SIMULATION_SPEED_DELTA;
+        double newRate = THE_CLOCK.getTargetFrameRate() + SIMULATION_SPEED_DELTA;
         newRate = clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
-        THE_GAME_CONTEXT.gameClock().setTargetFrameRate(newRate);
+        THE_CLOCK.setTargetFrameRate(newRate);
         String prefix = newRate == SIMULATION_SPEED_MAX ? "At maximum speed: " : "";
         THE_GAME_CONTEXT.showFlashMessageSec(0.75, prefix + newRate + "Hz");
     };
 
     private final GameAction actionSimulationSpeedReset = () -> {
-        THE_GAME_CONTEXT.gameClock().setTargetFrameRate(TICKS_PER_SECOND);
-        THE_GAME_CONTEXT.showFlashMessageSec(0.75, THE_GAME_CONTEXT.gameClock().getTargetFrameRate() + "Hz");
+        THE_CLOCK.setTargetFrameRate(TICKS_PER_SECOND);
+        THE_GAME_CONTEXT.showFlashMessageSec(0.75, THE_CLOCK.getTargetFrameRate() + "Hz");
     };
 
     private final GameAction actionSimulationOneStep = new GameAction() {
         @Override
         public void execute() {
-            THE_GAME_CONTEXT.gameClock().makeOneStep(true);
+            THE_CLOCK.makeOneStep(true);
         }
 
         @Override
         public boolean isEnabled() {
-            return THE_GAME_CONTEXT.gameClock().isPaused();
+            return THE_CLOCK.isPaused();
         }
     };
 
     private final GameAction actionSimulationTenSteps = new GameAction() {
         @Override
         public void execute() {
-            THE_GAME_CONTEXT.gameClock().makeSteps(10, true);
+            THE_CLOCK.makeSteps(10, true);
         }
 
         @Override
         public boolean isEnabled() {
-            return THE_GAME_CONTEXT.gameClock().isPaused();
+            return THE_CLOCK.isPaused();
         }
     };
 

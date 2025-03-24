@@ -13,7 +13,10 @@ import de.amr.games.pacman.ui.dashboard.InfoBox;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui.input.Keyboard;
-import de.amr.games.pacman.uilib.*;
+import de.amr.games.pacman.uilib.FlashMessageView;
+import de.amr.games.pacman.uilib.Picker;
+import de.amr.games.pacman.uilib.ResourceManager;
+import de.amr.games.pacman.uilib.Ufx;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
@@ -63,7 +66,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         @Override
         public void execute() {
             THE_GAME_CONTEXT.currentGameScene().ifPresent(GameScene::end);
-            THE_GAME_CONTEXT.gameClock().stop();
+            THE_CLOCK.stop();
             THE_SOUND.stopAll();
             EditorView editorView = getOrCreateEditorView();
             stage.titleProperty().bind(editorView.editor().titleProperty());
@@ -94,7 +97,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     };
 
     protected final Map<GameVariant, GameUIConfiguration> uiConfigsByVariant = new EnumMap<>(GameVariant.class);
-    protected final GameClockFX clock = new GameClockFX();
 
     protected Stage stage;
     protected Scene mainScene;
@@ -115,8 +117,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected ArcadeKeyBinding arcadeKeyBinding = DEFAULT_ARCADE_KEY_BINDING;
 
     public PacManGamesUI() {
-        clock.setPauseableCallback(this::runOnEveryTickExceptWhenPaused);
-        clock.setPermanentCallback(this::runOnEveryTick);
+        THE_CLOCK.setPauseableCallback(this::runOnEveryTickExceptWhenPaused);
+        THE_CLOCK.setPermanentCallback(this::runOnEveryTick);
         loadAssets2D();
         THE_GAME_CONTEXT = this;
     }
@@ -201,7 +203,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             currentGameScene().ifPresent(GameScene::update);
             logUpdateResult();
         } catch (Exception x) {
-            clock.stop();
+            THE_CLOCK.stop();
             Logger.error(x);
             Logger.error("Something very bad happened, game clock has been stopped!");
         }
@@ -216,7 +218,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
                 Logger.warn("Should not happen: tick received when not on game view");
             }
         } catch (Exception x) {
-            clock.stop();
+            THE_CLOCK.stop();
             Logger.error(x);
             Logger.error("Something very bad happened, game clock has been stopped!");
         }
@@ -237,9 +239,9 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected Scene createMainScene(Dimension2D size) {
         Pane iconPane = createIconPane();
 
-        ImageView pauseIcon = createIcon(THE_ASSETS.get("icon.pause"), 64, clock.pausedProperty());
+        ImageView pauseIcon = createIcon(THE_ASSETS.get("icon.pause"), 64, THE_CLOCK.pausedProperty());
         pauseIcon.visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> viewPy.get() != editorView && clock.isPaused(), viewPy, clock.pausedProperty()));
+            () -> viewPy.get() != editorView && THE_CLOCK.isPaused(), viewPy, THE_CLOCK.pausedProperty()));
 
         StackPane.setAlignment(iconPane, Pos.BOTTOM_RIGHT);
         StackPane.setAlignment(pauseIcon, Pos.CENTER);
@@ -284,7 +286,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             editorView.setCloseAction(editor -> {
                 editor.executeWithCheckForUnsavedChanges(this::bindStageTitle);
                 editor.stop();
-                clock.setTargetFrameRate(TICKS_PER_SECOND);
+                THE_CLOCK.setTargetFrameRate(TICKS_PER_SECOND);
                 THE_GAME_CONTROLLER.restart(GameState.BOOT);
                 showStartView();
             });
@@ -317,13 +319,13 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             () -> {
                 // "app.title.pacman" vs. "app.title.pacman.paused"
                 String key = "app.title." + gameConfiguration().assetNamespace();
-                if (clock.isPaused()) { key += ".paused"; }
+                if (THE_CLOCK.isPaused()) { key += ".paused"; }
                 if (currentGameScene().isPresent() && currentGameScene().get() instanceof GameScene2D gameScene2D) {
                     return locText(key, "2D") + " (%.2fx)".formatted(gameScene2D.scaling());
                 }
                 return locText(key, "2D");
             },
-            clock.pausedProperty(), gameVariantPy, gameScenePy, gameView.heightProperty())
+            THE_CLOCK.pausedProperty(), gameVariantPy, gameScenePy, gameView.heightProperty())
         );
     }
 
@@ -369,7 +371,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     private void logUpdateResult() {
         var messageList = THE_GAME_CONTROLLER.game().eventLog().createMessageList();
         if (!messageList.isEmpty()) {
-            Logger.info("Simulation step #{}:", clock.updateCount());
+            Logger.info("Simulation step #{}:", THE_CLOCK.updateCount());
             for (var msg : messageList) {
                 Logger.info("- " + msg);
             }
@@ -408,11 +410,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     @Override
     public String localizedLevelCompleteMessage(int levelNumber) {
         return pickerForLevelCompleteTexts.next() + "\n\n" + locText("level_complete", levelNumber);
-    }
-
-    @Override
-    public GameClockFX gameClock() {
-        return clock;
     }
 
     @Override
@@ -470,7 +467,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     @Override
     public void showStartView() {
-        clock.stop();
+        THE_CLOCK.stop();
         gameScenePy.set(null);
         gameView.hideDashboard(); // TODO use binding?
         showView(startPageSelectionView);

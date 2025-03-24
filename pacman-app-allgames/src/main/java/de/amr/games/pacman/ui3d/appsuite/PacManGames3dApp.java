@@ -37,6 +37,7 @@ import java.util.Map;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
+import static de.amr.games.pacman.ui.UIGlobals.THE_CLOCK;
 
 /**
  * Application containing all game variants and including 3D play scene.
@@ -126,6 +127,6 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void stop() {
-        ui.gameClock().stop();
+        THE_CLOCK.stop();
     }
 }

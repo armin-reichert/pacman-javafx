@@ -10,7 +10,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._2d.StartPageSelectionView;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
-import de.amr.games.pacman.uilib.GameClockFX;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.scene.Node;
@@ -44,7 +43,6 @@ public interface GameContext {
     String localizedLevelCompleteMessage(int levelNumber);
 
     // Game model and controller
-    GameClockFX gameClock();
     GameVariant gameVariant();
     void setGameVariant(GameVariant variant);
 

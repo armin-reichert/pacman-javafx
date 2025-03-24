@@ -6,13 +6,12 @@ package de.amr.games.pacman.ui.dashboard;
 
 import de.amr.games.pacman.ui.PacManGamesUI;
 import de.amr.games.pacman.ui._2d.GameActions2D;
-import de.amr.games.pacman.uilib.GameClockFX;
 import de.amr.games.pacman.uilib.ResourceManager;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 
-import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.UIGlobals.THE_CLOCK;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
 
 /**
@@ -34,8 +33,6 @@ public class InfoBoxGeneral extends InfoBox {
     private ImageView iconStep;
 
     public void init() {
-        GameClockFX clock = THE_GAME_CONTEXT.gameClock();
-
         ResourceManager rm = () -> PacManGamesUI.class;
         iconPlay = new ImageView(rm.loadImage("graphics/icons/play.png"));
         iconStop = new ImageView(rm.loadImage("graphics/icons/stop.png"));
@@ -46,8 +43,8 @@ public class InfoBoxGeneral extends InfoBox {
         bgSimulation = addButtonList("Simulation", "Pause", "Step(s)");
         addIntSpinner("Num Steps", 1, 50, PY_SIMULATION_STEPS);
         var sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
-        addLabeledValue("", () -> "FPS: %.1f (Tgt: %.1f)".formatted(clock.getActualFrameRate(), clock.getTargetFrameRate()));
-        addLabeledValue("Total Updates",  clock::updateCount);
+        addLabeledValue("", () -> "FPS: %.1f (Tgt: %.1f)".formatted(THE_CLOCK.getActualFrameRate(), THE_CLOCK.getTargetFrameRate()));
+        addLabeledValue("Total Updates",  THE_CLOCK::updateCount);
         var pickerCanvasColor = addColorPicker("Canvas Color", PY_CANVAS_BG_COLOR.get());
         var cbCanvasImageSmoothing = addCheckBox("Image Smoothing");
         var cbCanvasFontSmoothing = addCheckBox("Font Smoothing");
@@ -66,19 +63,19 @@ public class InfoBoxGeneral extends InfoBox {
         btnStep.setTooltip(new Tooltip("Single Step Mode"));
 
         setAction(bgSimulation[0], GameActions2D.TOGGLE_PAUSED::execute);
-        setAction(bgSimulation[1], () -> clock.makeSteps(PY_SIMULATION_STEPS.get(), true));
-        setEditor(sliderTargetFPS, clock.targetFrameRateProperty());
+        setAction(bgSimulation[1], () -> THE_CLOCK.makeSteps(PY_SIMULATION_STEPS.get(), true));
+        setEditor(sliderTargetFPS, THE_CLOCK.targetFrameRateProperty());
         setEditor(pickerCanvasColor, PY_CANVAS_BG_COLOR);
         setEditor(cbCanvasImageSmoothing, PY_CANVAS_IMAGE_SMOOTHING);
         setEditor(cbCanvasFontSmoothing, PY_CANVAS_FONT_SMOOTHING);
         setEditor(cbDebugUI, PY_DEBUG_INFO_VISIBLE);
-        setEditor(cbTimeMeasured, clock.timeMeasuredProperty());
+        setEditor(cbTimeMeasured, THE_CLOCK.timeMeasuredProperty());
     }
 
     @Override
     public void update() {
         super.update();
-        boolean paused = THE_GAME_CONTEXT.gameClock().pausedProperty().get();
+        boolean paused = THE_CLOCK.pausedProperty().get();
         bgSimulation[0].setGraphic(paused ? iconPlay : iconStop);
         bgSimulation[0].setTooltip(paused ? tooltipPlay : tooltipStop);
         bgSimulation[1].setDisable(!paused);
