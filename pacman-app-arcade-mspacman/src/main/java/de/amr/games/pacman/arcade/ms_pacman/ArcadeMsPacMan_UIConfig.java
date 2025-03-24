@@ -31,7 +31,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
-import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
 
 public class ArcadeMsPacMan_UIConfig implements GameUIConfiguration {
 
@@ -63,63 +63,62 @@ public class ArcadeMsPacMan_UIConfig implements GameUIConfiguration {
         appIcon = rm.loadImage("graphics/icons/mspacman.png");
         spriteSheet = new ArcadeMsPacMan_SpriteSheet(rm.loadImage("graphics/mspacman_spritesheet.png"));
 
-        AssetStorage assets = THE_GAME_CONTEXT.assets();
-        assets.store("ms_pacman.flashing_mazes",                  rm.loadImage("graphics/mazes_flashing.png"));
-        assets.store("ms_pacman.logo.midway",                     rm.loadImage("graphics/midway_logo.png"));
-        assets.store("ms_pacman.startpage.image1",                rm.loadImage("graphics/f1.jpg"));
-        assets.store("ms_pacman.startpage.image2",                rm.loadImage("graphics/f2.jpg"));
+        THE_ASSETS.store("ms_pacman.flashing_mazes",                  rm.loadImage("graphics/mazes_flashing.png"));
+        THE_ASSETS.store("ms_pacman.logo.midway",                     rm.loadImage("graphics/midway_logo.png"));
+        THE_ASSETS.store("ms_pacman.startpage.image1",                rm.loadImage("graphics/f1.jpg"));
+        THE_ASSETS.store("ms_pacman.startpage.image2",                rm.loadImage("graphics/f2.jpg"));
 
-        assets.store("ms_pacman.color.game_over_message",         Color.web(Arcade.Palette.RED));
+        THE_ASSETS.store("ms_pacman.color.game_over_message",         Color.web(Arcade.Palette.RED));
 
-        assets.store("ms_pacman.pac.color.head",                  Color.web(Arcade.Palette.YELLOW));
-        assets.store("ms_pacman.pac.color.eyes",                  Color.grayRgb(33));
-        assets.store("ms_pacman.pac.color.palate",                Color.rgb(240, 180, 160));
-        assets.store("ms_pacman.pac.color.boobs",                 Color.web(Arcade.Palette.YELLOW).deriveColor(0, 1.0, 0.96, 1.0));
-        assets.store("ms_pacman.pac.color.hairbow",               Color.web(Arcade.Palette.RED));
-        assets.store("ms_pacman.pac.color.hairbow.pearls",        Color.web(Arcade.Palette.BLUE));
+        THE_ASSETS.store("ms_pacman.pac.color.head",                  Color.web(Arcade.Palette.YELLOW));
+        THE_ASSETS.store("ms_pacman.pac.color.eyes",                  Color.grayRgb(33));
+        THE_ASSETS.store("ms_pacman.pac.color.palate",                Color.rgb(240, 180, 160));
+        THE_ASSETS.store("ms_pacman.pac.color.boobs",                 Color.web(Arcade.Palette.YELLOW).deriveColor(0, 1.0, 0.96, 1.0));
+        THE_ASSETS.store("ms_pacman.pac.color.hairbow",               Color.web(Arcade.Palette.RED));
+        THE_ASSETS.store("ms_pacman.pac.color.hairbow.pearls",        Color.web(Arcade.Palette.BLUE));
 
-        assets.store("ms_pacman.ghost.0.color.normal.dress",      Color.web(Arcade.Palette.RED));
-        assets.store("ms_pacman.ghost.0.color.normal.eyeballs",   Color.web(Arcade.Palette.WHITE));
-        assets.store("ms_pacman.ghost.0.color.normal.pupils",     Color.web(Arcade.Palette.BLUE));
-        assets.store("ms_pacman.ghost.1.color.normal.dress",      Color.web(Arcade.Palette.PINK));
-        assets.store("ms_pacman.ghost.1.color.normal.eyeballs",   Color.web(Arcade.Palette.WHITE));
-        assets.store("ms_pacman.ghost.1.color.normal.pupils",     Color.web(Arcade.Palette.BLUE));
-        assets.store("ms_pacman.ghost.2.color.normal.dress",      Color.web(Arcade.Palette.CYAN));
-        assets.store("ms_pacman.ghost.2.color.normal.eyeballs",   Color.web(Arcade.Palette.WHITE));
-        assets.store("ms_pacman.ghost.2.color.normal.pupils",     Color.web(Arcade.Palette.BLUE));
-        assets.store("ms_pacman.ghost.3.color.normal.dress",      Color.web(Arcade.Palette.ORANGE));
-        assets.store("ms_pacman.ghost.3.color.normal.eyeballs",   Color.web(Arcade.Palette.WHITE));
-        assets.store("ms_pacman.ghost.3.color.normal.pupils",     Color.web(Arcade.Palette.BLUE));
-        assets.store("ms_pacman.ghost.color.frightened.dress",    Color.web(Arcade.Palette.BLUE));
-        assets.store("ms_pacman.ghost.color.frightened.eyeballs", Color.web(Arcade.Palette.ROSE));
-        assets.store("ms_pacman.ghost.color.frightened.pupils",   Color.web(Arcade.Palette.ROSE));
-        assets.store("ms_pacman.ghost.color.flashing.dress",      Color.web(Arcade.Palette.WHITE));
-        assets.store("ms_pacman.ghost.color.flashing.eyeballs",   Color.web(Arcade.Palette.ROSE));
-        assets.store("ms_pacman.ghost.color.flashing.pupils",     Color.web(Arcade.Palette.RED));
+        THE_ASSETS.store("ms_pacman.ghost.0.color.normal.dress",      Color.web(Arcade.Palette.RED));
+        THE_ASSETS.store("ms_pacman.ghost.0.color.normal.eyeballs",   Color.web(Arcade.Palette.WHITE));
+        THE_ASSETS.store("ms_pacman.ghost.0.color.normal.pupils",     Color.web(Arcade.Palette.BLUE));
+        THE_ASSETS.store("ms_pacman.ghost.1.color.normal.dress",      Color.web(Arcade.Palette.PINK));
+        THE_ASSETS.store("ms_pacman.ghost.1.color.normal.eyeballs",   Color.web(Arcade.Palette.WHITE));
+        THE_ASSETS.store("ms_pacman.ghost.1.color.normal.pupils",     Color.web(Arcade.Palette.BLUE));
+        THE_ASSETS.store("ms_pacman.ghost.2.color.normal.dress",      Color.web(Arcade.Palette.CYAN));
+        THE_ASSETS.store("ms_pacman.ghost.2.color.normal.eyeballs",   Color.web(Arcade.Palette.WHITE));
+        THE_ASSETS.store("ms_pacman.ghost.2.color.normal.pupils",     Color.web(Arcade.Palette.BLUE));
+        THE_ASSETS.store("ms_pacman.ghost.3.color.normal.dress",      Color.web(Arcade.Palette.ORANGE));
+        THE_ASSETS.store("ms_pacman.ghost.3.color.normal.eyeballs",   Color.web(Arcade.Palette.WHITE));
+        THE_ASSETS.store("ms_pacman.ghost.3.color.normal.pupils",     Color.web(Arcade.Palette.BLUE));
+        THE_ASSETS.store("ms_pacman.ghost.color.frightened.dress",    Color.web(Arcade.Palette.BLUE));
+        THE_ASSETS.store("ms_pacman.ghost.color.frightened.eyeballs", Color.web(Arcade.Palette.ROSE));
+        THE_ASSETS.store("ms_pacman.ghost.color.frightened.pupils",   Color.web(Arcade.Palette.ROSE));
+        THE_ASSETS.store("ms_pacman.ghost.color.flashing.dress",      Color.web(Arcade.Palette.WHITE));
+        THE_ASSETS.store("ms_pacman.ghost.color.flashing.eyeballs",   Color.web(Arcade.Palette.ROSE));
+        THE_ASSETS.store("ms_pacman.ghost.color.flashing.pupils",     Color.web(Arcade.Palette.RED));
 
         // Clips
-        assets.store("ms_pacman.audio.bonus_eaten",             rm.loadAudioClip("sound/Fruit.mp3"));
-        assets.store("ms_pacman.audio.credit",                  rm.loadAudioClip("sound/credit.wav"));
-        assets.store("ms_pacman.audio.extra_life",              rm.loadAudioClip("sound/ExtraLife.mp3"));
-        assets.store("ms_pacman.audio.ghost_eaten",             rm.loadAudioClip("sound/Ghost.mp3"));
-        assets.store("ms_pacman.audio.sweep",                   rm.loadAudioClip("sound/sweep.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.bonus_eaten",             rm.loadAudioClip("sound/Fruit.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.credit",                  rm.loadAudioClip("sound/credit.wav"));
+        THE_ASSETS.store("ms_pacman.audio.extra_life",              rm.loadAudioClip("sound/ExtraLife.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.ghost_eaten",             rm.loadAudioClip("sound/Ghost.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.sweep",                   rm.loadAudioClip("sound/sweep.mp3"));
 
         // Audio played by MediaPlayer
-        assets.store("ms_pacman.audio.bonus_bouncing",          rm.url("sound/Fruit Bounce.mp3"));
-        assets.store("ms_pacman.audio.game_ready",              rm.url("sound/Start.mp3"));
-        assets.store("ms_pacman.audio.game_over",               rm.url("sound/game-over.mp3"));
-        assets.store("ms_pacman.audio.intermission.1",          rm.url("sound/Act_1_They_Meet.mp3"));
-        assets.store("ms_pacman.audio.intermission.2",          rm.url("sound/Act_2_The_Chase.mp3"));
-        assets.store("ms_pacman.audio.intermission.3",          rm.url("sound/Act_3_Junior.mp3"));
-        assets.store("ms_pacman.audio.level_complete",          rm.url("sound/level-complete.mp3"));
-        assets.store("ms_pacman.audio.pacman_death",            rm.url("sound/Died.mp3"));
-        assets.store("ms_pacman.audio.pacman_munch",            rm.url("sound/munch.wav"));
-        assets.store("ms_pacman.audio.pacman_power",            rm.url("sound/ScaredGhost.mp3"));
-        assets.store("ms_pacman.audio.siren.1",                 rm.url("sound/GhostNoise1.wav"));
-        assets.store("ms_pacman.audio.siren.2",                 rm.url("sound/GhostNoise1.wav"));// TODO
-        assets.store("ms_pacman.audio.siren.3",                 rm.url("sound/GhostNoise1.wav"));// TODO
-        assets.store("ms_pacman.audio.siren.4",                 rm.url("sound/GhostNoise1.wav"));// TODO
-        assets.store("ms_pacman.audio.ghost_returns",           rm.url("sound/GhostEyes.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.bonus_bouncing",          rm.url("sound/Fruit Bounce.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.game_ready",              rm.url("sound/Start.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.game_over",               rm.url("sound/game-over.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.intermission.1",          rm.url("sound/Act_1_They_Meet.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.intermission.2",          rm.url("sound/Act_2_The_Chase.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.intermission.3",          rm.url("sound/Act_3_Junior.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.level_complete",          rm.url("sound/level-complete.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.pacman_death",            rm.url("sound/Died.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.pacman_munch",            rm.url("sound/munch.wav"));
+        THE_ASSETS.store("ms_pacman.audio.pacman_power",            rm.url("sound/ScaredGhost.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.siren.1",                 rm.url("sound/GhostNoise1.wav"));
+        THE_ASSETS.store("ms_pacman.audio.siren.2",                 rm.url("sound/GhostNoise1.wav"));// TODO
+        THE_ASSETS.store("ms_pacman.audio.siren.3",                 rm.url("sound/GhostNoise1.wav"));// TODO
+        THE_ASSETS.store("ms_pacman.audio.siren.4",                 rm.url("sound/GhostNoise1.wav"));// TODO
+        THE_ASSETS.store("ms_pacman.audio.ghost_returns",           rm.url("sound/GhostEyes.mp3"));
 
     }
 
@@ -159,7 +158,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUIConfiguration {
 
     @Override
     public ArcadeMsPacMan_GameRenderer createRenderer(Canvas canvas) {
-        return new ArcadeMsPacMan_GameRenderer(THE_GAME_CONTEXT.assets(), spriteSheet, canvas);
+        return new ArcadeMsPacMan_GameRenderer(THE_ASSETS, spriteSheet, canvas);
     }
 
     @Override
@@ -167,15 +166,15 @@ public class ArcadeMsPacMan_UIConfig implements GameUIConfiguration {
         String namespace = assetNamespace();
         return new Group(
             PacModel3D.createPacShape(
-                assets.get("model3D.pacman"), size,
-                assets.color(namespace + ".pac.color.head"),
-                assets.color(namespace + ".pac.color.eyes"),
-                assets.color(namespace + ".pac.color.palate")
+                THE_ASSETS.get("model3D.pacman"), size,
+                THE_ASSETS.color(namespace + ".pac.color.head"),
+                THE_ASSETS.color(namespace + ".pac.color.eyes"),
+                THE_ASSETS.color(namespace + ".pac.color.palate")
             ),
             PacModel3D.createFemaleParts(size,
-                assets.color(namespace + ".pac.color.hairbow"),
-                assets.color(namespace + ".pac.color.hairbow.pearls"),
-                assets.color(namespace + ".pac.color.boobs")
+                THE_ASSETS.color(namespace + ".pac.color.hairbow"),
+                THE_ASSETS.color(namespace + ".pac.color.hairbow.pearls"),
+                THE_ASSETS.color(namespace + ".pac.color.boobs")
             )
         );
     }

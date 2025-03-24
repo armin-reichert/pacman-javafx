@@ -15,6 +15,7 @@ import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
+import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
 import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_DEBUG_INFO_VISIBLE;
 import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_ENABLED;
@@ -34,27 +35,27 @@ public class PacManGamesUI_3D extends PacManGamesUI {
 
     public PacManGamesUI_3D() {
         super(); // loads 2D assets!
-        loadAssets3D();
         UIGlobals.THE_GAME_CONTEXT = this;
+        loadAssets3D();
     }
 
     private void loadAssets3D() {
         ResourceManager rm = this::getClass;
-        assets.addBundle(rm.getModuleBundle("de.amr.games.pacman.ui.texts.messages3d"));
+        THE_ASSETS.addBundle(rm.getModuleBundle("de.amr.games.pacman.ui.texts.messages3d"));
 
         ResourceManager uiLibResources = () -> Ufx.class;
-        assets.store("model3D.pacman", new Model3D(uiLibResources.url("model3D/pacman.obj")));
-        assets.store("model3D.pellet", new Model3D(uiLibResources.url("model3D/fruit.obj")));
+        THE_ASSETS.store("model3D.pacman", new Model3D(uiLibResources.url("model3D/pacman.obj")));
+        THE_ASSETS.store("model3D.pellet", new Model3D(uiLibResources.url("model3D/fruit.obj")));
 
         Model3D ghostModel3D = new Model3D(uiLibResources.url("model3D/ghost.obj"));
-        assets.store("model3D.ghost",               ghostModel3D);
-        assets.store("model3D.ghost.mesh.dress",    ghostModel3D.mesh("Sphere.004_Sphere.034_light_blue_ghost"));
-        assets.store("model3D.ghost.mesh.pupils",   ghostModel3D.mesh("Sphere.010_Sphere.039_grey_wall"));
-        assets.store("model3D.ghost.mesh.eyeballs", ghostModel3D.mesh("Sphere.009_Sphere.036_white"));
+        THE_ASSETS.store("model3D.ghost",               ghostModel3D);
+        THE_ASSETS.store("model3D.ghost.mesh.dress",    ghostModel3D.mesh("Sphere.004_Sphere.034_light_blue_ghost"));
+        THE_ASSETS.store("model3D.ghost.mesh.pupils",   ghostModel3D.mesh("Sphere.010_Sphere.039_grey_wall"));
+        THE_ASSETS.store("model3D.ghost.mesh.eyeballs", ghostModel3D.mesh("Sphere.009_Sphere.036_white"));
 
-        pickerForGameOverTexts = Picker.fromBundle(assets.bundles().getLast(), "game.over");
-        pickerForLevelCompleteTexts = Picker.fromBundle(assets.bundles().getLast(), "level.complete");
-        THE_SOUND.setAssets(assets);
+        pickerForGameOverTexts = Picker.fromBundle(THE_ASSETS.bundles().getLast(), "game.over");
+        pickerForLevelCompleteTexts = Picker.fromBundle(THE_ASSETS.bundles().getLast(), "level.complete");
+        THE_SOUND.setAssets(THE_ASSETS);
     }
 
     @Override

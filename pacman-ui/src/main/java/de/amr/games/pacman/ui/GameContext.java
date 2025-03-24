@@ -10,8 +10,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._2d.StartPageSelectionView;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
-import de.amr.games.pacman.ui.sound.GameSound;
-import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.GameClockFX;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
@@ -24,18 +22,16 @@ import java.util.Optional;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
+import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
 
 /**
  * @author Armin Reichert
  */
 public interface GameContext {
 
-    // Assets
-    AssetStorage assets();
-
     default String locText(String keyOrPattern, Object... args) {
         assertNotNull(keyOrPattern);
-        for (var bundle : assets().bundles()) {
+        for (var bundle : THE_ASSETS.bundles()) {
             if (bundle.containsKey(keyOrPattern)) {
                 return MessageFormat.format(bundle.getString(keyOrPattern), args);
             }

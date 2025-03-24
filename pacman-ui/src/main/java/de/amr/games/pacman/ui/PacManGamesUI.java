@@ -95,7 +95,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     protected final Map<GameVariant, GameUIConfiguration> uiConfigsByVariant = new EnumMap<>(GameVariant.class);
     protected final GameClockFX clock = new GameClockFX();
-    protected final AssetStorage assets = new AssetStorage();
 
     protected Stage stage;
     protected Scene mainScene;
@@ -132,7 +131,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         this.stage = assertNotNull(stage);
         mainScene = createMainScene(assertNotNull(initialSize));
         startPageSelectionView = new StartPageSelectionView();
-        startPageSelectionView().setBackground(assets.background("background.scene"));
+        startPageSelectionView().setBackground(THE_ASSETS.background("background.scene"));
         createGameView(mainScene);
         setGameVariant(THE_GAME_CONTROLLER.selectedGameVariant());
         bindStageTitle();
@@ -148,29 +147,29 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         ResourceManager rm = () -> PacManGamesUI.class;
 
         ResourceBundle textResources = rm.getModuleBundle("de.amr.games.pacman.ui.texts.messages2d");
-        assets.addBundle(textResources);
+        THE_ASSETS.addBundle(textResources);
 
         pickerForGameOverTexts = Picker.fromBundle(textResources, "game.over");
         pickerForLevelCompleteTexts = Picker.fromBundle(textResources, "level.complete");
 
-        assets.store("background.scene",  Ufx.imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
-        assets.store("background.play_scene3d", Ufx.imageBackground(rm.loadImage("graphics/blue_sky.jpg")));
+        THE_ASSETS.store("background.scene",  Ufx.imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
+        THE_ASSETS.store("background.play_scene3d", Ufx.imageBackground(rm.loadImage("graphics/blue_sky.jpg")));
 
-        assets.store("font.arcade",             rm.loadFont("fonts/emulogic.ttf", 8));
-        assets.store("font.handwriting",        rm.loadFont("fonts/Molle-Italic.ttf", 9));
-        assets.store("font.monospaced",         rm.loadFont("fonts/Inconsolata_Condensed-Bold.ttf", 12));
+        THE_ASSETS.store("font.arcade",             rm.loadFont("fonts/emulogic.ttf", 8));
+        THE_ASSETS.store("font.handwriting",        rm.loadFont("fonts/Molle-Italic.ttf", 9));
+        THE_ASSETS.store("font.monospaced",         rm.loadFont("fonts/Inconsolata_Condensed-Bold.ttf", 12));
 
-        assets.store("icon.auto",               rm.loadImage("graphics/icons/auto.png"));
-        assets.store("icon.mute",               rm.loadImage("graphics/icons/mute.png"));
-        assets.store("icon.pause",              rm.loadImage("graphics/icons/pause.png"));
+        THE_ASSETS.store("icon.auto",               rm.loadImage("graphics/icons/auto.png"));
+        THE_ASSETS.store("icon.mute",               rm.loadImage("graphics/icons/mute.png"));
+        THE_ASSETS.store("icon.pause",              rm.loadImage("graphics/icons/pause.png"));
 
-        assets.store("voice.explain",           rm.url("sound/voice/press-key.mp3"));
-        assets.store("voice.autopilot.off",     rm.url("sound/voice/autopilot-off.mp3"));
-        assets.store("voice.autopilot.on",      rm.url("sound/voice/autopilot-on.mp3"));
-        assets.store("voice.immunity.off",      rm.url("sound/voice/immunity-off.mp3"));
-        assets.store("voice.immunity.on",       rm.url("sound/voice/immunity-on.mp3"));
+        THE_ASSETS.store("voice.explain",           rm.url("sound/voice/press-key.mp3"));
+        THE_ASSETS.store("voice.autopilot.off",     rm.url("sound/voice/autopilot-off.mp3"));
+        THE_ASSETS.store("voice.autopilot.on",      rm.url("sound/voice/autopilot-on.mp3"));
+        THE_ASSETS.store("voice.immunity.off",      rm.url("sound/voice/immunity-off.mp3"));
+        THE_ASSETS.store("voice.immunity.on",       rm.url("sound/voice/immunity-on.mp3"));
 
-        THE_SOUND.setAssets(assets);
+        THE_SOUND.setAssets(THE_ASSETS);
     }
 
     /**
@@ -225,8 +224,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     //TODO use nice font icons instead
     private Pane createIconPane() {
-        ImageView mutedIcon = createIcon(assets.get("icon.mute"), 48, THE_SOUND.mutedProperty());
-        ImageView autoIcon  = createIcon(assets.get("icon.auto"), 48, GlobalProperties2d.PY_AUTOPILOT);
+        ImageView mutedIcon = createIcon(THE_ASSETS.get("icon.mute"), 48, THE_SOUND.mutedProperty());
+        ImageView autoIcon  = createIcon(THE_ASSETS.get("icon.auto"), 48, GlobalProperties2d.PY_AUTOPILOT);
 
         var pane = new HBox(autoIcon, mutedIcon);
         pane.setMaxWidth(128);
@@ -238,7 +237,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected Scene createMainScene(Dimension2D size) {
         Pane iconPane = createIconPane();
 
-        ImageView pauseIcon = createIcon(assets.get("icon.pause"), 64, clock.pausedProperty());
+        ImageView pauseIcon = createIcon(THE_ASSETS.get("icon.pause"), 64, clock.pausedProperty());
         pauseIcon.visibleProperty().bind(Bindings.createBooleanBinding(
             () -> viewPy.get() != editorView && clock.isPaused(), viewPy, clock.pausedProperty()));
 
@@ -246,11 +245,11 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         StackPane.setAlignment(pauseIcon, Pos.CENTER);
 
         sceneRoot.getChildren().addAll(new Pane(), flashMessageOverlay, pauseIcon, iconPane);
-        sceneRoot.setBackground(assets.get("background.scene"));
+        sceneRoot.setBackground(THE_ASSETS.get("background.scene"));
         sceneRoot.backgroundProperty().bind(gameScenePy.map(
             gameScene -> currentGameSceneHasID("PlayScene3D")
-                ? assets.get("background.play_scene3d")
-                : assets.get("background.scene"))
+                ? THE_ASSETS.get("background.play_scene3d")
+                : THE_ASSETS.get("background.scene"))
         );
 
         Scene mainScene = new Scene(sceneRoot, size.getWidth(), size.getHeight());
@@ -453,11 +452,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     @Override
     public void togglePlayScene2D3D() {}
-
-    @Override
-    public AssetStorage assets() {
-        return assets;
-    }
 
     @Override
     public boolean isScoreVisible() {

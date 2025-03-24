@@ -46,8 +46,7 @@ import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
-import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
+import static de.amr.games.pacman.ui.UIGlobals.*;
 import static de.amr.games.pacman.ui._2d.GameActions2D.*;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
 import static de.amr.games.pacman.ui.input.Keyboard.alt;
@@ -111,7 +110,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         registerGameActionKeyBindings();
         THE_GAME_CONTEXT.setScoreVisible(true);
         perspectiveNamePy.bind(GlobalProperties3d.PY_3D_PERSPECTIVE);
-        scores3D.setFont(THE_GAME_CONTEXT.assets().font("font.arcade", 8));
+        scores3D.setFont(THE_ASSETS.font("font.arcade", 8));
     }
 
     @Override
@@ -238,7 +237,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         }
         else { // when score is disabled, show text "game over"
             String assetNamespace = THE_GAME_CONTEXT.gameConfiguration().assetNamespace();
-            Color color = THE_GAME_CONTEXT.assets().color(assetNamespace + ".color.game_over_message");
+            Color color = THE_ASSETS.color(assetNamespace + ".color.game_over_message");
             scores3D.showTextAsScore(TEXT_GAME_OVER, color);
         }
     }

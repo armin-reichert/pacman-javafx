@@ -43,8 +43,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
-import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
+import static de.amr.games.pacman.ui.UIGlobals.*;
 import static de.amr.games.pacman.ui._3d.GlobalProperties3d.*;
 import static de.amr.games.pacman.uilib.Ufx.*;
 
@@ -91,7 +90,7 @@ public class GameLevel3D extends Group {
             floor3D = createFloor(level.worldMap().numCols() * TS, level.worldMap().numRows() * TS);
             WorldMapColorScheme coloring = THE_GAME_CONTEXT.gameConfiguration().worldMapColoring(level.worldMap());
             maze3D = new Maze3D(THE_GAME_CONTEXT.gameConfiguration(), level, coloring);
-            addFood3D(level, THE_GAME_CONTEXT.assets().get("model3D.pellet"), coloredMaterial(coloring.pellet()));
+            addFood3D(level, THE_ASSETS.get("model3D.pellet"), coloredMaterial(coloring.pellet()));
 
             worldGroup.getChildren().addAll(floor3D, maze3D);
 
@@ -137,20 +136,20 @@ public class GameLevel3D extends Group {
     private Pac3D createPac3D(Pac pac) {
         String assetNamespace = THE_GAME_CONTEXT.gameConfiguration().assetNamespace();
         Pac3D pac3D = switch (THE_GAME_CONTEXT.gameVariant()) {
-            case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL -> new MsPacMan3D(THE_GAME_CONTEXT.gameVariant(), pac, PAC_SIZE, THE_GAME_CONTEXT.assets(), assetNamespace);
-            case PACMAN, PACMAN_XXL -> new PacMan3D(THE_GAME_CONTEXT.gameVariant(), pac, PAC_SIZE, THE_GAME_CONTEXT.assets(), assetNamespace);
+            case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL -> new MsPacMan3D(THE_GAME_CONTEXT.gameVariant(), pac, PAC_SIZE, THE_ASSETS, assetNamespace);
+            case PACMAN, PACMAN_XXL -> new PacMan3D(THE_GAME_CONTEXT.gameVariant(), pac, PAC_SIZE, THE_ASSETS, assetNamespace);
         };
-        pac3D.shape3D().light().setColor(THE_GAME_CONTEXT.assets().color(assetNamespace + ".pac.color.head").desaturate());
+        pac3D.shape3D().light().setColor(THE_ASSETS.color(assetNamespace + ".pac.color.head").desaturate());
         pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
         return pac3D;
     }
 
     private Ghost3DAppearance createGhost3D(Ghost ghost, int numFlashes) {
         String assetNamespace = THE_GAME_CONTEXT.gameConfiguration().assetNamespace();
-        Shape3D dressShape    = new MeshView(THE_GAME_CONTEXT.assets().get("model3D.ghost.mesh.dress"));
-        Shape3D pupilsShape   = new MeshView(THE_GAME_CONTEXT.assets().get("model3D.ghost.mesh.pupils"));
-        Shape3D eyeballsShape = new MeshView(THE_GAME_CONTEXT.assets().get("model3D.ghost.mesh.eyeballs"));
-        return new Ghost3DAppearance(dressShape, pupilsShape, eyeballsShape, THE_GAME_CONTEXT.assets(), assetNamespace,
+        Shape3D dressShape    = new MeshView(THE_ASSETS.get("model3D.ghost.mesh.dress"));
+        Shape3D pupilsShape   = new MeshView(THE_ASSETS.get("model3D.ghost.mesh.pupils"));
+        Shape3D eyeballsShape = new MeshView(THE_ASSETS.get("model3D.ghost.mesh.eyeballs"));
+        return new Ghost3DAppearance(dressShape, pupilsShape, eyeballsShape, THE_ASSETS, assetNamespace,
             ghost, GHOST_SIZE, numFlashes);
     }
 
@@ -158,7 +157,7 @@ public class GameLevel3D extends Group {
         GameUIConfiguration config3D = THE_GAME_CONTEXT.gameConfiguration();
         Node[] counterShapes = new Node[LIVES_COUNTER_MAX];
         for (int i = 0; i < counterShapes.length; ++i) {
-            counterShapes[i] = config3D.createLivesCounterShape(THE_GAME_CONTEXT.assets(), LIVES_COUNTER_SIZE);
+            counterShapes[i] = config3D.createLivesCounterShape(THE_ASSETS, LIVES_COUNTER_SIZE);
         }
         var counter3D = new LivesCounter3D(counterShapes);
         counter3D.setTranslateX(2 * TS);
@@ -259,7 +258,7 @@ public class GameLevel3D extends Group {
         }
         message3D = Message3D.builder()
             .text(text)
-            .font(THE_GAME_CONTEXT.assets().font("font.arcade", 6))
+            .font(THE_ASSETS.font("font.arcade", 6))
             .borderColor(Color.WHITE)
             .textColor(Color.YELLOW)
             .build();

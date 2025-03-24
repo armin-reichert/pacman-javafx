@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
+import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
 
 /**
  * Application containing all game variants and including 3D play scene.
@@ -113,7 +114,7 @@ public class PacManGames3dApp extends Application {
 
         stage.show();
 
-        Logger.info("Assets: {}", ui.assets().summary(Map.of(
+        Logger.info("Assets: {}", THE_ASSETS.summary(Map.of(
                 Model3D.class,"3D models",
                 Image.class, "images",
                 Font.class, "fonts",

@@ -24,8 +24,7 @@ import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
-import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
-import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
+import static de.amr.games.pacman.ui.UIGlobals.*;
 
 public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
@@ -159,7 +158,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         var junior = new Pac();
         double randomX = 8 * TS + (8 * TS) * Math.random();
         int rnd = Globals.randomInt(1, 3);
-        AudioClip clip = THE_GAME_CONTEXT.assets().get(assetNamespace + ".audio.intermission.4.junior." + rnd);
+        AudioClip clip = THE_ASSETS.get(assetNamespace + ".audio.intermission.4.junior." + rnd);
         junior.setPosition((float) randomX, sizeInPx().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);

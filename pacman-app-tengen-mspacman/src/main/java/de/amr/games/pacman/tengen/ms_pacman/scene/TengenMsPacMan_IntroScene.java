@@ -34,8 +34,7 @@ import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.MS_PAC_MAN_TITLE_SPRITE;
-import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
-import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
+import static de.amr.games.pacman.ui.UIGlobals.*;
 
 /**
  * @author Armin Reichert
@@ -129,7 +128,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                     r.drawText("WITH", nesPaletteColor(0x20), scaledFont, MARQUEE_X + 12, MARQUEE_Y + 23);
                 }
                 Ghost currentGhost = ghosts[ghostIndex];
-                Color ghostColor = THE_GAME_CONTEXT.assets().color("tengen.ghost.%d.color.normal.dress".formatted(currentGhost.id()));
+                Color ghostColor = THE_ASSETS.color("tengen.ghost.%d.color.normal.dress".formatted(currentGhost.id()));
                 r.drawText(currentGhost.name().toUpperCase(), ghostColor, scaledFont, MARQUEE_X + 44, MARQUEE_Y + 41);
                 for (Ghost ghost : ghosts) { r.drawAnimatedActor(ghost); }
             }
