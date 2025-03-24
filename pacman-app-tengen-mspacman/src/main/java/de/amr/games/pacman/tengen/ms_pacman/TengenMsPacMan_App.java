@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.tengen.ms_pacman;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._3d.PacManGamesUI_3D;
@@ -15,17 +14,17 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
+import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 
 public class TengenMsPacMan_App extends Application {
 
     @Override
     public void init() {
-        GameController gameController = GameController.THE_ONE;
         try {
-            gameController.setGame(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
-            gameController.games().forEach(GameModel::init);
-            gameController.selectGameVariant(GameVariant.MS_PACMAN_TENGEN);
+            THE_GAME_CONTROLLER.setGame(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
+            THE_GAME_CONTROLLER.games().forEach(GameModel::init);
+            THE_GAME_CONTROLLER.selectGameVariant(GameVariant.MS_PACMAN_TENGEN);
         } catch (Exception x) {
             Logger.error(x);
         }

@@ -23,6 +23,7 @@ import org.tinylog.Logger;
 import java.text.MessageFormat;
 import java.util.Optional;
 
+import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
 
 /**
@@ -52,7 +53,7 @@ public interface GameContext {
 
     GameClockFX gameClock();
 
-    default GameController gameController() { return GameController.THE_ONE; }
+    default GameController gameController() { return THE_GAME_CONTROLLER; }
 
     default GameState gameState() { return gameController().state(); }
 

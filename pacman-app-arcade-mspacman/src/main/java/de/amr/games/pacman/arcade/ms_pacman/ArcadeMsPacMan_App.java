@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.ms_pacman;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._3d.PacManGamesUI_3D;
@@ -14,14 +13,15 @@ import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
+
 public class ArcadeMsPacMan_App extends Application {
 
     @Override
     public void init() {
-        GameController gameController = GameController.THE_ONE;
-        gameController.setGame(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameModel());
-        gameController.games().forEach(GameModel::init);
-        gameController.selectGameVariant(GameVariant.MS_PACMAN);
+        THE_GAME_CONTROLLER.setGame(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameModel());
+        THE_GAME_CONTROLLER.games().forEach(GameModel::init);
+        THE_GAME_CONTROLLER.selectGameVariant(GameVariant.MS_PACMAN);
     }
 
     @Override

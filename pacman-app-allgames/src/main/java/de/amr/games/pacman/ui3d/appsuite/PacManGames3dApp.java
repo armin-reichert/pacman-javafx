@@ -4,14 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.appsuite;
 
-import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
-import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
-import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.games.pacman.arcade.ArcadePacMan_GameModel;
 import de.amr.games.pacman.arcade.ArcadePacMan_StartPage;
 import de.amr.games.pacman.arcade.ArcadePacMan_UIConfig;
+import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
+import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
+import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.games.pacman.arcade.pacman_xxl.*;
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.DirectoryWatchdog;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -36,6 +35,8 @@ import org.tinylog.Logger;
 import java.io.IOException;
 import java.util.Map;
 
+import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
+
 /**
  * Application containing all game variants and including 3D play scene.
  *
@@ -57,14 +58,13 @@ public class PacManGames3dApp extends Application {
     @Override
     public void init() {
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
-        GameController gameController = GameController.THE_ONE;
-        gameController.setGame(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_GameModel());
-        gameController.setGame(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
-        gameController.setGame(GameVariant.PACMAN,           new ArcadePacMan_GameModel());
-        gameController.setGame(GameVariant.PACMAN_XXL,       new PacManXXL_PacMan_GameModel(xxlMapSelector));
-        gameController.setGame(GameVariant.MS_PACMAN_XXL,    new PacManXXL_MsPacMan_GameModel(xxlMapSelector));
-        gameController.games().forEach(GameModel::init);
-        gameController.selectGameVariant(GameVariant.PACMAN);
+        THE_GAME_CONTROLLER.setGame(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_GameModel());
+        THE_GAME_CONTROLLER.setGame(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
+        THE_GAME_CONTROLLER.setGame(GameVariant.PACMAN,           new ArcadePacMan_GameModel());
+        THE_GAME_CONTROLLER.setGame(GameVariant.PACMAN_XXL,       new PacManXXL_PacMan_GameModel(xxlMapSelector));
+        THE_GAME_CONTROLLER.setGame(GameVariant.MS_PACMAN_XXL,    new PacManXXL_MsPacMan_GameModel(xxlMapSelector));
+        THE_GAME_CONTROLLER.games().forEach(GameModel::init);
+        THE_GAME_CONTROLLER.selectGameVariant(GameVariant.PACMAN);
     }
 
     @Override

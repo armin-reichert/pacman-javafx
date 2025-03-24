@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.ms_pacman;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.HuntingTimer;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
@@ -142,8 +141,8 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     @Override
     public void endGame() {
         playing = false;
-        if (GameController.THE_ONE.credit > 0) {
-            GameController.THE_ONE.credit -= 1;
+        if (THE_GAME_CONTROLLER.credit > 0) {
+            THE_GAME_CONTROLLER.credit -= 1;
         }
         scoreManager().updateHighScore();
         publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
@@ -151,7 +150,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     @Override
     public boolean canStartNewGame() {
-        return GameController.THE_ONE.credit > 0;
+        return THE_GAME_CONTROLLER.credit > 0;
     }
 
     @Override

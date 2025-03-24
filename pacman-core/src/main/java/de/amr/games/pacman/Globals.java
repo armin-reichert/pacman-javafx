@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
@@ -14,9 +15,13 @@ import java.util.Objects;
 import java.util.Random;
 
 /**
- * @author Armin Reichert
+ * Global is not evil.
+ *
+ * @see <a href="https://www.youtube.com/watch?v=ogHl_OwcZWE">this video</a>
  */
 public class Globals {
+
+    public static final GameController THE_GAME_CONTROLLER = new GameController();
 
     /** Tile size (8px). */
     public static final int TS = 8;

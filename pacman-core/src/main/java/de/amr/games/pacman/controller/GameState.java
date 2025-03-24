@@ -19,6 +19,7 @@ import de.amr.games.pacman.model.actors.GhostState;
 import java.util.HashMap;
 import java.util.Map;
 
+import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 
 /**
@@ -237,7 +238,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onUpdate(GameModel game) {
             GameLevel level = game.level().orElseThrow();
             if (timer.hasExpired()) {
-                GameController.THE_ONE.resumePreviousState();
+                THE_GAME_CONTROLLER.resumePreviousState();
             } else {
                 level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).forEach(ghost -> ghost.update(game));
                 level.blinking().tick();
@@ -367,7 +368,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onEnter(GameModel game) {
-            GameVariant gameVariant = GameController.THE_ONE.selectedGameVariant();
+            GameVariant gameVariant = THE_GAME_CONTROLLER.selectedGameVariant();
             lastLevelNumber = switch (gameVariant) {
                 case MS_PACMAN -> 25;
                 case MS_PACMAN_TENGEN -> 32;
@@ -430,7 +431,7 @@ public enum GameState implements FsmState<GameModel> {
                 level.pac().freeze();
                 level.bonus().ifPresent(Bonus::setInactive);
                 if (level.number() == lastLevelNumber) {
-                    GameController.THE_ONE.restart(GameState.BOOT);
+                    THE_GAME_CONTROLLER.restart(GameState.BOOT);
                 } else {
                     timer().restartIndefinitely();
                     game.startNextLevel();
@@ -455,7 +456,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onEnter(GameModel game) {
-            GameVariant gameVariant = GameController.THE_ONE.selectedGameVariant();
+            GameVariant gameVariant = THE_GAME_CONTROLLER.selectedGameVariant();
             lastLevelNumber = switch (gameVariant) {
                 case MS_PACMAN -> 17;
                 case MS_PACMAN_TENGEN -> 32;
@@ -513,7 +514,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            GameVariant gameVariant = GameController.THE_ONE.selectedGameVariant();
+            GameVariant gameVariant = THE_GAME_CONTROLLER.selectedGameVariant();
             if (timer.hasExpired()) {
                 int number = this.<Integer>getProperty("intermissionTestNumber");
                 int last = gameVariant == GameVariant.MS_PACMAN_TENGEN ? 4 : 3;
@@ -536,7 +537,7 @@ public enum GameState implements FsmState<GameModel> {
         return timer;
     }
 
-    GameController gameController() { return GameController.THE_ONE; }
+    GameController gameController() { return THE_GAME_CONTROLLER; }
 
     @SuppressWarnings("unchecked")
     public <T> T getProperty(String key) {

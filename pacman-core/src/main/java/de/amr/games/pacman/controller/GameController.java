@@ -37,8 +37,6 @@ import static de.amr.games.pacman.Globals.assertNotNull;
  */
 public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
-    public static final GameController THE_ONE = new GameController();
-
     public static final byte TICKS_PER_SECOND = 60;
     public static final int MAX_COINS = 99;
 
@@ -46,7 +44,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     private GameModel currentGameModel;
     public int credit;
 
-    private GameController() {
+    public GameController() {
         super(GameState.values());
         // map state change events to game events
         addStateChangeListener((oldState, newState) -> currentGameModel.publishGameEvent(new GameStateChangeEvent(currentGameModel, oldState, newState)));
