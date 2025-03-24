@@ -16,7 +16,6 @@ import de.amr.games.pacman.ui.input.Keyboard;
 import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.GameClockFX;
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.scene.Node;
@@ -49,8 +48,8 @@ public interface GameContext {
         return "[" + keyOrPattern + "]";
     }
 
-    String locGameOverMessage();
-    String locLevelCompleteMessage(int levelNumber);
+    String localizedGameOverMessage();
+    String localizedLevelCompleteMessage(int levelNumber);
 
     // Game model and controller
     GameClockFX gameClock();

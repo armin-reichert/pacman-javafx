@@ -411,12 +411,12 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public String locGameOverMessage() {
+    public String localizedGameOverMessage() {
         return pickerForGameOverTexts.next();
     }
 
     @Override
-    public String locLevelCompleteMessage(int levelNumber) {
+    public String localizedLevelCompleteMessage(int levelNumber) {
         return pickerForLevelCompleteTexts.next() + "\n\n" + locText("level_complete", levelNumber);
     }
 

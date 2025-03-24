@@ -391,7 +391,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         // delay state exit for 3 seconds
         THE_GAME_CONTEXT.gameState().timer().restartSeconds(3);
         if (!THE_GAME_CONTEXT.game().isDemoLevel() && Globals.randomInt(0, 100) < 25) {
-            THE_GAME_CONTEXT.showFlashMessageSec(3, THE_GAME_CONTEXT.locGameOverMessage());
+            THE_GAME_CONTEXT.showFlashMessageSec(3, THE_GAME_CONTEXT.localizedGameOverMessage());
         }
         THE_GAME_CONTEXT.sound().stopAll();
         THE_GAME_CONTEXT.sound().playGameOverSound();
