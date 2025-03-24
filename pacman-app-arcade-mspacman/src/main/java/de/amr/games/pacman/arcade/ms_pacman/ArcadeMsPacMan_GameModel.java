@@ -525,7 +525,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         if (huntingTimer.phaseIndex() == 0 && (ghost.id() == RED_GHOST_ID || ghost.id() == PINK_GHOST_ID)) {
             ghost.roam(ghostAttackSpeed(ghost));
         } else {
-            boolean chasing = huntingTimer.phaseType() == HuntingTimer.PhaseType.CHASING
+            boolean chasing = huntingTimer.huntingPhase() == HuntingTimer.HuntingPhase.CHASING
                 || ghost.id() == RED_GHOST_ID && cruiseElroy > 0;
             Vector2i targetTile = chasing
                     ? chasingTargetTile(ghost.id(), level, simulateOverflowBug)

@@ -12,34 +12,29 @@ import java.util.Optional;
 import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 
 /**
- * Hunting happens in a sequence of scatter and chasing phases.
+ * Hunting happens in a sequence of retreat (scatter) and attack (chasing) phases.
  */
 public abstract class HuntingTimer extends TickTimer {
 
-    public enum PhaseType { SCATTERING, CHASING }
+    public enum HuntingPhase {SCATTERING, CHASING}
 
-    private static byte checkHuntingPhaseIndex(int phaseIndex) {
-        if (phaseIndex < 0 || phaseIndex > 7) {
-            throw new IllegalArgumentException("Hunting phase index must be 0..7, but is " + phaseIndex);
-        }
-        return (byte) phaseIndex;
-    }
-
+    private final int numPhases;
     private int phaseIndex;
-    private PhaseType phaseType;
+    private HuntingPhase huntingPhase;
     private Runnable phaseChangeAction;
 
-    protected HuntingTimer() {
+    protected HuntingTimer(int numPhases) {
         super("HuntingTimer");
+        this.numPhases = numPhases;
         phaseIndex = 0;
-        phaseType = PhaseType.SCATTERING;
+        huntingPhase = HuntingPhase.SCATTERING;
     }
 
     public void reset() {
         stop();
         reset(TickTimer.INDEFINITE);
         phaseIndex = 0;
-        phaseType = PhaseType.SCATTERING;
+        huntingPhase = HuntingPhase.SCATTERING;
     }
 
     public abstract long huntingTicks(int levelNumber, int phaseIndex);
@@ -49,12 +44,12 @@ public abstract class HuntingTimer extends TickTimer {
     }
 
     public void startFirstHuntingPhase(int levelNumber) {
-        startHuntingPhase(0, PhaseType.SCATTERING, huntingTicks(levelNumber, 0));
+        startHuntingPhase(0, HuntingPhase.SCATTERING, huntingTicks(levelNumber, 0));
     }
 
     public void update(int levelNumber) {
         if (hasExpired()) {
-            Logger.info("Hunting phase {} ({}) ends, tick={}", phaseIndex, phaseType, tickCount());
+            Logger.info("Hunting phase {} ({}) ends, tick={}", phaseIndex, huntingPhase, tickCount());
             startNextPhase(levelNumber);
         } else {
             doTick();
@@ -64,40 +59,47 @@ public abstract class HuntingTimer extends TickTimer {
     public void startNextPhase(int levelNumber) {
         int nextPhaseIndex = phaseIndex + 1;
         // alternate between CHASING and SCATTERING
-        PhaseType nextPhaseType = phaseType == PhaseType.SCATTERING
-            ? PhaseType.CHASING : PhaseType.SCATTERING;
-        startHuntingPhase(nextPhaseIndex, nextPhaseType, huntingTicks(levelNumber, nextPhaseIndex));
+        HuntingPhase nextHuntingPhase = huntingPhase == HuntingPhase.SCATTERING
+            ? HuntingPhase.CHASING : HuntingPhase.SCATTERING;
+        startHuntingPhase(nextPhaseIndex, nextHuntingPhase, huntingTicks(levelNumber, nextPhaseIndex));
         if (phaseChangeAction != null) {
             phaseChangeAction.run();
         }
     }
 
-    private void startHuntingPhase(int phaseIndex, PhaseType type, long duration) {
+    private void startHuntingPhase(int phaseIndex, HuntingPhase type, long duration) {
         this.phaseIndex = checkHuntingPhaseIndex(phaseIndex);
-        phaseType = type;
+        huntingPhase = type;
         reset(duration);
         start();
         Logger.info("Hunting phase {} ({}, {} ticks / {} seconds) started. {}",
-            this.phaseIndex, phaseType,
+            this.phaseIndex, huntingPhase,
             durationTicks(), (float) durationTicks() / TICKS_PER_SECOND, this);
+    }
+
+    private byte checkHuntingPhaseIndex(int phaseIndex) {
+        if (phaseIndex < 0 || phaseIndex > numPhases - 1) {
+            throw new IllegalArgumentException("Hunting phase index must be 0..%d, but is %d".formatted(numPhases, phaseIndex));
+        }
+        return (byte) phaseIndex;
     }
 
     public int phaseIndex() {
         return phaseIndex;
     }
 
-    public PhaseType phaseType() {
-        return phaseType;
+    public HuntingPhase huntingPhase() {
+        return huntingPhase;
     }
 
     public Optional<Integer> currentScatterPhaseIndex() {
-        return phaseType == HuntingTimer.PhaseType.SCATTERING
+        return huntingPhase == HuntingPhase.SCATTERING
             ? Optional.of(phaseIndex / 2)
             : Optional.empty();
     }
 
     public Optional<Integer> currentChasingPhaseIndex() {
-        return phaseType == HuntingTimer.PhaseType.CHASING
+        return huntingPhase == HuntingPhase.CHASING
             ? Optional.of(phaseIndex / 2)
             : Optional.empty();
     }

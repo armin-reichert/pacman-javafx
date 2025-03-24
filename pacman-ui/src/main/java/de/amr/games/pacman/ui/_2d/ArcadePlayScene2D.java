@@ -234,7 +234,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         String scatterChaseText = "";
         if (context.gameState() == GameState.HUNTING) {
             HuntingTimer huntingTimer = context.game().huntingTimer();
-            scatterChaseText = " %s (Tick %d)".formatted(huntingTimer.phaseType(), huntingTimer.tickCount());
+            scatterChaseText = " %s (Tick %d)".formatted(huntingTimer.huntingPhase(), huntingTimer.tickCount());
         }
         g.fillText("%s%s".formatted(gameStateText, scatterChaseText), 0, 64);
     }

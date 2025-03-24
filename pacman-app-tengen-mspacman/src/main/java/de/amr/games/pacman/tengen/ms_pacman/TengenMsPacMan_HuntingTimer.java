@@ -12,8 +12,14 @@ import de.amr.games.pacman.lib.timer.TickTimer;
  */
 public class TengenMsPacMan_HuntingTimer extends HuntingTimer {
 
+    private static final int NUM_PHASES = 8;
+
     private static final long[] TICKS_LEVEL_1_TO_4 = { 420, 1200, 1, 62220, 1, 62220, 1, TickTimer.INDEFINITE };
     private static final long[] TICKS_LEVEL_5_PLUS = { 300, 1200, 1, 62220, 1, 62220, 1, TickTimer.INDEFINITE };
+
+    public TengenMsPacMan_HuntingTimer() {
+        super(NUM_PHASES);
+    }
 
     @Override
     public long huntingTicks(int levelNumber, int phaseIndex) {

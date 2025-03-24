@@ -466,7 +466,7 @@ public class ArcadePacMan_GameModel extends GameModel {
     }
 
     protected void ghostHuntingBehaviour(Ghost ghost) {
-        boolean chasing = huntingTimer.phaseType() == HuntingTimer.PhaseType.CHASING
+        boolean chasing = huntingTimer.huntingPhase() == HuntingTimer.HuntingPhase.CHASING
             || ghost.id() == RED_GHOST_ID && cruiseElroy > 0;
         Vector2i targetTile = chasing
                 ? chasingTargetTile(ghost.id(), level, simulateOverflowBug)
