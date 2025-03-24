@@ -54,7 +54,6 @@ public class PacManGamesUI_3D extends PacManGamesUI {
 
         pickerForGameOverTexts = Picker.fromBundle(THE_ASSETS.bundles().getLast(), "game.over");
         pickerForLevelCompleteTexts = Picker.fromBundle(THE_ASSETS.bundles().getLast(), "level.complete");
-        THE_SOUND.setAssets(THE_ASSETS);
     }
 
     @Override

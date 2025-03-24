@@ -170,8 +170,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         THE_ASSETS.store("voice.autopilot.on",      rm.url("sound/voice/autopilot-on.mp3"));
         THE_ASSETS.store("voice.immunity.off",      rm.url("sound/voice/immunity-off.mp3"));
         THE_ASSETS.store("voice.immunity.on",       rm.url("sound/voice/immunity-on.mp3"));
-
-        THE_SOUND.setAssets(THE_ASSETS);
     }
 
     /**

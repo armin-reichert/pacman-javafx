@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.sound;
 
+import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.uilib.AssetStorage;
 import javafx.beans.property.BooleanProperty;
@@ -37,7 +38,7 @@ public class GameSound {
 
     private GameVariant gameVariant;
     private String assetNamespace;
-    private AssetStorage assets;
+    private final AssetStorage assets;
 
     private final Map<GameVariant, Map<String, MediaPlayer>> soundsByGameVariant = new EnumMap<>(GameVariant.class);
     {
@@ -48,6 +49,10 @@ public class GameSound {
 
     private Siren siren;
     private MediaPlayer voice;
+
+    public GameSound(AssetStorage assets) {
+        this.assets = Globals.assertNotNull(assets);
+    }
 
     private String soundURL(String keySuffix) {
         String assetKey = assetNamespace + ".audio." + keySuffix;
@@ -196,10 +201,6 @@ public class GameSound {
     }
 
     // Public API
-
-    public void setAssets(AssetStorage assets) {
-        this.assets = assertNotNull(assets);
-    }
 
     public BooleanProperty enabledProperty() {
         return enabledPy;
