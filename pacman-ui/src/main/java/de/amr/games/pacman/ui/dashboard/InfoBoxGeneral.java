@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.dashboard;
 
-import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.PacManGamesUI;
 import de.amr.games.pacman.ui._2d.GameActions2D;
 import de.amr.games.pacman.uilib.GameClockFX;
@@ -13,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
 
 /**
@@ -33,10 +33,8 @@ public class InfoBoxGeneral extends InfoBox {
     private ImageView iconStop;
     private ImageView iconStep;
 
-    public void init(GameContext context) {
-        super.init(context);
-
-        GameClockFX clock = context.gameClock();
+    public void init() {
+        GameClockFX clock = THE_GAME_CONTEXT.gameClock();
 
         ResourceManager rm = () -> PacManGamesUI.class;
         iconPlay = new ImageView(rm.loadImage("graphics/icons/play.png"));
@@ -67,7 +65,7 @@ public class InfoBoxGeneral extends InfoBox {
         btnStep.setText(null);
         btnStep.setTooltip(new Tooltip("Single Step Mode"));
 
-        setAction(bgSimulation[0], () -> GameActions2D.TOGGLE_PAUSED.execute(context));
+        setAction(bgSimulation[0], GameActions2D.TOGGLE_PAUSED::execute);
         setAction(bgSimulation[1], () -> clock.makeSteps(PY_SIMULATION_STEPS.get(), true));
         setEditor(sliderTargetFPS, clock.targetFrameRateProperty());
         setEditor(pickerCanvasColor, PY_CANVAS_BG_COLOR);
@@ -80,7 +78,7 @@ public class InfoBoxGeneral extends InfoBox {
     @Override
     public void update() {
         super.update();
-        boolean paused = context.gameClock().pausedProperty().get();
+        boolean paused = THE_GAME_CONTEXT.gameClock().pausedProperty().get();
         bgSimulation[0].setGraphic(paused ? iconPlay : iconStop);
         bgSimulation[0].setTooltip(paused ? tooltipPlay : tooltipStop);
         bgSimulation[1].setDisable(!paused);

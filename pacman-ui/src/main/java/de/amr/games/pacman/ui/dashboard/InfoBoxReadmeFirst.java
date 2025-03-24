@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.dashboard;
 
-import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -12,14 +11,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 
 public class InfoBoxReadmeFirst extends InfoBox {
 
     @Override
-    public void init(GameContext context) {
-        super.init(context);
+    public void init() {
+        super.init();
         Text readmeText = new Text();
-        readmeText.setText(context.locText("infobox.readme.content"));
+        readmeText.setText(THE_GAME_CONTEXT.locText("infobox.readme.content"));
         readmeText.setFont(Font.font("Serif", 16));
         readmeText.setFill(Color.WHITE);
         Pane pane = new BorderPane(readmeText);

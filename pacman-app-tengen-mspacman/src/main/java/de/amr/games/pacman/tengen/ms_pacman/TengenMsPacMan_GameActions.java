@@ -7,30 +7,30 @@ package de.amr.games.pacman.tengen.ms_pacman;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.tengen.ms_pacman.scene.SceneDisplayMode;
 import de.amr.games.pacman.ui.GameAction;
-import de.amr.games.pacman.ui.GameContext;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 import static de.amr.games.pacman.uilib.Ufx.toggle;
 
 public enum TengenMsPacMan_GameActions implements GameAction {
 
     SELECT_NEXT_JOYPAD_KEY_BINDING {
         @Override
-        public void execute(GameContext context) {
-            context.joypadKeyBinding().unregister(context.keyboard());
-            context.selectNextJoypadKeyBinding();
-            context.joypadKeyBinding().register(context.keyboard());
-            Logger.info("Selected joypad: {} ", context.joypadKeyBinding());
+        public void execute() {
+            THE_GAME_CONTEXT.joypadKeyBinding().unregister(THE_GAME_CONTEXT.keyboard());
+            THE_GAME_CONTEXT.selectNextJoypadKeyBinding();
+            THE_GAME_CONTEXT.joypadKeyBinding().register(THE_GAME_CONTEXT.keyboard());
+            Logger.info("Selected joypad: {} ", THE_GAME_CONTEXT.joypadKeyBinding());
         }
     },
 
     QUIT_DEMO_LEVEL {
         @Override
-        public void execute(GameContext context) {
-            if (context.game().isDemoLevel()) {
+        public void execute() {
+            if (THE_GAME_CONTEXT.game().isDemoLevel()) {
                 THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
             }
         }
@@ -38,24 +38,24 @@ public enum TengenMsPacMan_GameActions implements GameAction {
 
     SHOW_OPTIONS {
         @Override
-        public void execute(GameContext context) {
-            context.game().setPlaying(false);
+        public void execute() {
+            THE_GAME_CONTEXT.game().setPlaying(false);
             THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
         }
     },
 
     START_PLAYING {
         @Override
-        public void execute(GameContext context) {
-            context.sound().stopAll();
-            context.game().setPlaying(false);
+        public void execute() {
+            THE_GAME_CONTEXT.sound().stopAll();
+            THE_GAME_CONTEXT.game().setPlaying(false);
             THE_GAME_CONTROLLER.changeState(GameState.STARTING_GAME);
         }
     },
 
     TOGGLE_DISPLAY_MODE {
         @Override
-        public void execute(GameContext context) {
+        public void execute() {
             SceneDisplayMode mode = PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.get();
             PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(mode == SceneDisplayMode.SCROLLING
                 ? SceneDisplayMode.SCALED_TO_FIT : SceneDisplayMode.SCROLLING);
@@ -64,15 +64,15 @@ public enum TengenMsPacMan_GameActions implements GameAction {
 
     TOGGLE_JOYPAD_BINDINGS_DISPLAYED {
         @Override
-        public void execute(GameContext context) {
+        public void execute() {
             toggle(PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED);
         }
     },
 
     TOGGLE_PAC_BOOSTER {
         @Override
-        public void execute(GameContext context) {
-            TengenMsPacMan_GameModel game = context.game();
+        public void execute() {
+            TengenMsPacMan_GameModel game = THE_GAME_CONTEXT.game();
             if (game.pacBooster() == PacBooster.USE_A_OR_B) {
                 game.activatePacBooster(!game.isBoosterActive());
             }

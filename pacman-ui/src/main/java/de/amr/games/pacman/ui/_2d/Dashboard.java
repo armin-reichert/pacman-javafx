@@ -26,11 +26,9 @@ public class Dashboard {
     public static final Color INFO_BOX_TEXT_COLOR = Color.WHITE;
     public static final Font INFO_BOX_FONT = Font.font("Sans", 12);
 
-    private final GameContext context;
     private final List<DashboardEntry> entries = new ArrayList<>();
 
-    public Dashboard(GameContext context) {
-        this.context = assertNotNull(context);
+    public Dashboard() {
     }
 
     private DashboardEntry createEntry(String id, String title, InfoBox infoBox) {
@@ -40,7 +38,7 @@ public class Dashboard {
         infoBox.setTextColor(INFO_BOX_TEXT_COLOR);
         infoBox.setContentTextFont(INFO_BOX_FONT);
         infoBox.setLabelFont(INFO_BOX_FONT);
-        infoBox.init(context);
+        infoBox.init();
 
         return new DashboardEntry(id, title, infoBox);
     }

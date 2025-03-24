@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui._2d;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameActionProvider;
-import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.uilib.Carousel;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
@@ -17,6 +16,8 @@ import org.tinylog.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
+
 /**
  * Carousel containing the start pages for the different game variants (XXL game variants share common start page).
  */
@@ -24,27 +25,27 @@ public class StartPageSelectionView extends Carousel implements GameActionProvid
 
     private final GameAction actionSelectGamePage = new GameAction() {
         @Override
-        public void execute(GameContext context) {
-            context.showGameView();
+        public void execute() {
+            THE_GAME_CONTEXT.showGameView();
         }
 
         @Override
-        public boolean isEnabled(GameContext context) {
-            return !context.gameClock().isPaused();
+        public boolean isEnabled() {
+            return !THE_GAME_CONTEXT.gameClock().isPaused();
         }
     };
 
     private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
 
-    public StartPageSelectionView(GameContext context) {
+    public StartPageSelectionView() {
         setOnPrevSlideSelected(startPage -> {
             var variant = (GameVariant) startPage.getUserData();
-            context.setGameVariant(variant);
+            THE_GAME_CONTEXT.setGameVariant(variant);
             startPage.requestFocus();
         });
         setOnNextSlideSelected(startPage -> {
             var variant = (GameVariant) startPage.getUserData();
-            context.setGameVariant(variant);
+            THE_GAME_CONTEXT.setGameVariant(variant);
             startPage.requestFocus();
         });
         bindGameActions();
@@ -57,10 +58,10 @@ public class StartPageSelectionView extends Carousel implements GameActionProvid
 
     @Override
     public void bindGameActions() {
-        bind(context -> showPreviousSlide(), KeyCode.LEFT);
-        bind(context -> showNextSlide(),     KeyCode.RIGHT);
-        bind(actionSelectGamePage,           KeyCode.ENTER);
-        bind(GameActions2D.TOGGLE_PAUSED,    KeyCode.P);
+        bind(this::showPreviousSlide,     KeyCode.LEFT);
+        bind(this::showNextSlide,         KeyCode.RIGHT);
+        bind(actionSelectGamePage,        KeyCode.ENTER);
+        bind(GameActions2D.TOGGLE_PAUSED, KeyCode.P);
     }
 
     public void addStartPage(GameVariant gameVariant, StartPage startPage) {

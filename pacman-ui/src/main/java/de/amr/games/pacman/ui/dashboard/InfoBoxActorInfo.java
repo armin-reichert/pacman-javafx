@@ -12,13 +12,13 @@ import de.amr.games.pacman.model.actors.Creature;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui._2d.SpriteAnimationSet;
 
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import static de.amr.games.pacman.lib.timer.TickTimer.ticksToString;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 import static de.amr.games.pacman.ui.dashboard.InfoText.NO_INFO;
 
 /**
@@ -26,9 +26,7 @@ import static de.amr.games.pacman.ui.dashboard.InfoText.NO_INFO;
  */
 public class InfoBoxActorInfo extends InfoBox {
 
-    public void init(GameContext context) {
-        super.init(context);
-
+    public void init() {
         addLabeledValue("Pac Name", pacInfo((game, pac) -> pac.name()));
         addLabeledValue("Movement", pacInfo(this::movementInfo));
         addLabeledValue("Tile",     pacInfo(this::locationInfo));
@@ -50,7 +48,7 @@ public class InfoBoxActorInfo extends InfoBox {
 
     private Supplier<String> pacInfo(BiFunction<GameModel, Pac, String> fnPacInfo) {
         return ifLevelPresent(level -> level.pac() != null
-            ? fnPacInfo.apply(context.game(), level.pac())
+            ? fnPacInfo.apply(THE_GAME_CONTEXT.game(), level.pac())
             : NO_INFO);
     }
 
@@ -83,7 +81,7 @@ public class InfoBoxActorInfo extends InfoBox {
         BiFunction<GameModel, Ghost, String> fnGhostInfo, byte ghostID) {
         return ifLevelPresent(level -> {
             if (level.ghosts().findAny().isPresent()) {
-                return fnGhostInfo.apply(context.game(), level.ghost(ghostID));
+                return fnGhostInfo.apply(THE_GAME_CONTEXT.game(), level.ghost(ghostID));
             }
             return NO_INFO;
         });

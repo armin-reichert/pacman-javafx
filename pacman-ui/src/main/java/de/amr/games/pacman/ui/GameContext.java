@@ -86,8 +86,8 @@ public interface GameContext {
     // Actions
     default void ifTriggeredRunAction(GameActionProvider actionProvider) {
         actionProvider.firstMatchedAction(keyboard()).ifPresent(action -> {
-           if (action.isEnabled(this)) {
-               action.execute(this);
+           if (action.isEnabled()) {
+               action.execute();
            } else {
                Logger.info("Action '{}' not executed, not enabled", action);
            }
@@ -96,8 +96,8 @@ public interface GameContext {
 
     default void ifTriggeredRunActionElse(GameActionProvider actionProvider, Runnable defaultAction) {
         actionProvider.firstMatchedAction(keyboard()).ifPresentOrElse(action -> {
-            if (action.isEnabled(this)) {
-                action.execute(this);
+            if (action.isEnabled()) {
+                action.execute();
             } else {
                 Logger.info("Action '{}' not executed, not enabled", action);
             }

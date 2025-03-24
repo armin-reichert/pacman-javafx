@@ -41,6 +41,7 @@ import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_DEBUG_INFO_VISIBLE;
 import static de.amr.games.pacman.ui.input.ArcadeKeyBinding.DEFAULT_ARCADE_KEY_BINDING;
 import static de.amr.games.pacman.ui.input.JoypadKeyBinding.JOYPAD_CURSOR_KEYS;
@@ -60,10 +61,10 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     protected final GameAction actionOpenEditorView = new GameAction() {
         @Override
-        public void execute(GameContext context) {
-            context.currentGameScene().ifPresent(GameScene::end);
-            context.sound().stopAll();
-            context.gameClock().stop();
+        public void execute() {
+            THE_GAME_CONTEXT.currentGameScene().ifPresent(GameScene::end);
+            THE_GAME_CONTEXT.sound().stopAll();
+            THE_GAME_CONTEXT.gameClock().stop();
             EditorView editorView = getOrCreateEditorView();
             stage.titleProperty().bind(editorView.editor().titleProperty());
             editorView.editor().start();
@@ -71,8 +72,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         }
 
         @Override
-        public boolean isEnabled(GameContext context) {
-            return !context.game().isPlaying();
+        public boolean isEnabled() {
+            return !THE_GAME_CONTEXT.game().isPlaying();
         }
     };
 
@@ -120,7 +121,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         clock.setPauseableCallback(this::runOnEveryTickExceptWhenPaused);
         clock.setPermanentCallback(this::runOnEveryTick);
         loadAssets2D();
-        UIGlobals.THE_GAME_CONTEXT = this;
+        THE_GAME_CONTEXT = this;
     }
 
     /**
@@ -132,7 +133,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     public void create(Stage stage, Dimension2D initialSize) {
         this.stage = assertNotNull(stage);
         mainScene = createMainScene(assertNotNull(initialSize));
-        startPageSelectionView = new StartPageSelectionView(this);
+        startPageSelectionView = new StartPageSelectionView();
         startPageSelectionView().setBackground(assets.background("background.scene"));
         createGameView(mainScene);
         setGameVariant(THE_GAME_CONTROLLER.selectedGameVariant());
@@ -299,13 +300,13 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     public void openEditor() {
-        if (actionOpenEditorView.isEnabled(this)) {
-            actionOpenEditorView.execute(this);
+        if (actionOpenEditorView.isEnabled()) {
+            actionOpenEditorView.execute();
         }
     }
 
     protected void createGameView(Scene parentScene) {
-        gameView = new GameView(this, parentScene);
+        gameView = new GameView(parentScene);
         gameView.gameSceneProperty().bind(gameScenePy);
     }
 
@@ -342,7 +343,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     protected void updateGameScene(boolean reloadCurrent) {
         GameScene prevGameScene = gameScenePy.get();
-        GameScene nextGameScene = gameConfiguration().selectGameScene(this);
+        GameScene nextGameScene = gameConfiguration().selectGameScene();
         boolean sceneChanging = nextGameScene != prevGameScene;
         if (reloadCurrent || sceneChanging) {
             if (prevGameScene != null) {
@@ -497,7 +498,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         if (gameVariant() != GameVariant.MS_PACMAN_TENGEN) {
             sound().playVoice("voice.explain", 0);
         }
-        GameActions2D.BOOT.execute(this);
+        GameActions2D.BOOT.execute();
     }
 
     private void showView(Node view) {

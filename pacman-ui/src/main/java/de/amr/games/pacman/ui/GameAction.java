@@ -10,7 +10,7 @@ package de.amr.games.pacman.ui;
  */
 public interface GameAction {
 
-    void execute(GameContext context);
+    void execute();
 
-    default boolean isEnabled(GameContext context) { return true; }
+    default boolean isEnabled() { return true; }
 }

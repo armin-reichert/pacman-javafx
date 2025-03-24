@@ -520,7 +520,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         items.add(contextMenuTitleItem(THE_GAME_CONTEXT.locText("scene_display")));
 
         var item = new MenuItem(THE_GAME_CONTEXT.locText("use_2D_scene"));
-        item.setOnAction(ae -> GameActions3D.TOGGLE_PLAY_SCENE_2D_3D.execute(THE_GAME_CONTEXT));
+        item.setOnAction(ae -> GameActions3D.TOGGLE_PLAY_SCENE_2D_3D.execute());
         items.add(item);
 
         // Toggle picture-in-picture display
@@ -573,7 +573,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         items.add(miMuted);
 
         var miQuit = new MenuItem(THE_GAME_CONTEXT.locText("quit"));
-        miQuit.setOnAction(ae -> GameActions2D.SHOW_START_PAGE.execute(THE_GAME_CONTEXT));
+        miQuit.setOnAction(ae -> GameActions2D.SHOW_START_PAGE.execute());
         items.add(miQuit);
 
         return items;

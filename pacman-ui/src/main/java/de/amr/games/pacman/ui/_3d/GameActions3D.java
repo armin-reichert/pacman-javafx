@@ -5,10 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._3d;
 
 import de.amr.games.pacman.ui.GameAction;
-import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui._3d.scene3d.Perspective;
 import javafx.scene.shape.DrawMode;
 
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_PIP_ON;
 import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_DRAW_MODE;
 import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_PERSPECTIVE;
@@ -21,42 +21,42 @@ public enum GameActions3D implements GameAction {
 
     NEXT_PERSPECTIVE {
         @Override
-        public void execute(GameContext context) {
+        public void execute() {
             Perspective.Name next = PY_3D_PERSPECTIVE.get().next();
             PY_3D_PERSPECTIVE.set(next);
-            context.showFlashMessage(context.locText("camera_perspective", context.locText(next.name())));
+            THE_GAME_CONTEXT.showFlashMessage(THE_GAME_CONTEXT.locText("camera_perspective", THE_GAME_CONTEXT.locText(next.name())));
         }
     },
 
     PREV_PERSPECTIVE {
         @Override
-        public void execute(GameContext context) {
+        public void execute() {
             Perspective.Name prev = PY_3D_PERSPECTIVE.get().prev();
             PY_3D_PERSPECTIVE.set(prev);
-            context.showFlashMessage(context.locText("camera_perspective", context.locText(prev.name())));
+            THE_GAME_CONTEXT.showFlashMessage(THE_GAME_CONTEXT.locText("camera_perspective", THE_GAME_CONTEXT.locText(prev.name())));
         }
     },
 
     TOGGLE_DRAW_MODE {
         @Override
-        public void execute(GameContext context) {
+        public void execute() {
             PY_3D_DRAW_MODE.set(PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
         }
     },
 
     TOGGLE_PLAY_SCENE_2D_3D {
         @Override
-        public void execute(GameContext context) {
-            context.togglePlayScene2D3D();
+        public void execute() {
+            THE_GAME_CONTEXT.togglePlayScene2D3D();
         }
     },
 
     TOGGLE_PIP_VISIBILITY {
         @Override
-        public void execute(GameContext context) {
+        public void execute() {
             toggle(PY_PIP_ON);
-            if (!context.currentGameSceneHasID("PlayScene3D")) {
-                context.showFlashMessage(context.locText(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
+            if (!THE_GAME_CONTEXT.currentGameSceneHasID("PlayScene3D")) {
+                THE_GAME_CONTEXT.showFlashMessage(THE_GAME_CONTEXT.locText(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
             }
         }
     }

@@ -7,7 +7,6 @@ package de.amr.games.pacman.arcade.ms_pacman;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui.GameUIConfiguration;
 import de.amr.games.pacman.ui._2d.ArcadeBootScene;
@@ -31,6 +30,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.assertNotNull;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 
 public class ArcadeMsPacMan_UIConfig implements GameUIConfiguration {
 
@@ -144,9 +144,9 @@ public class ArcadeMsPacMan_UIConfig implements GameUIConfiguration {
     }
 
     @Override
-    public GameScene2D createPiPScene(GameContext context, Canvas canvas) {
+    public GameScene2D createPiPScene(Canvas canvas) {
         var gameScene = new ArcadePlayScene2D();
-        gameScene.setGameRenderer(createRenderer(context.assets(), canvas));
+        gameScene.setGameRenderer(createRenderer(THE_GAME_CONTEXT.assets(), canvas));
         return gameScene;
     }
 
@@ -184,13 +184,13 @@ public class ArcadeMsPacMan_UIConfig implements GameUIConfiguration {
     }
 
     @Override
-    public GameScene selectGameScene(GameContext context) {
-        String sceneID = switch (context.gameState()) {
+    public GameScene selectGameScene() {
+        String sceneID = switch (THE_GAME_CONTEXT.gameState()) {
             case BOOT               -> "BootScene";
             case SETTING_OPTIONS    -> "StartScene";
             case INTRO              -> "IntroScene";
-            case INTERMISSION       -> "CutScene" + context.game().level().map(GameLevel::cutSceneNumber).orElseThrow();
-            case TESTING_CUT_SCENES -> "CutScene" + context.gameState().<Integer>getProperty("intermissionTestNumber");
+            case INTERMISSION       -> "CutScene" + THE_GAME_CONTEXT.game().level().map(GameLevel::cutSceneNumber).orElseThrow();
+            case TESTING_CUT_SCENES -> "CutScene" + THE_GAME_CONTEXT.gameState().<Integer>getProperty("intermissionTestNumber");
             default                 -> GlobalProperties3d.PY_3D_ENABLED.get() ? "PlayScene3D" : "PlayScene2D";
         };
         return scenesByID.get(sceneID);

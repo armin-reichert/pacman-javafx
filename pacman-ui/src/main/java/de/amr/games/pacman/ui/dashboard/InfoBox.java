@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 import static de.amr.games.pacman.ui.dashboard.InfoText.NO_INFO;
 
 /**
@@ -42,7 +43,6 @@ public abstract class InfoBox extends TitledPane {
 
     protected final List<InfoText> infoTexts = new ArrayList<>();
     protected final GridPane grid = new GridPane();
-    protected GameContext context;
     protected int minLabelWidth;
     protected Color textColor;
     protected Font textFont;
@@ -59,9 +59,7 @@ public abstract class InfoBox extends TitledPane {
         setOpacity(0.9);
     }
 
-    public void init(GameContext context) {
-        this.context = context;
-    }
+    public void init() {}
 
     public void update() {
         infoTexts.forEach(InfoText::update);
@@ -88,11 +86,11 @@ public abstract class InfoBox extends TitledPane {
     }
 
     protected Supplier<String> ifGameScenePresent(Function<GameScene, String> fnInfo) {
-        return () -> context.currentGameScene().map(fnInfo).orElse(NO_INFO);
+        return () -> THE_GAME_CONTEXT.currentGameScene().map(fnInfo).orElse(NO_INFO);
     }
 
     protected Supplier<String> ifLevelPresent(Function<GameLevel, String> fnInfo) {
-        return () -> context.game().level().map(fnInfo).orElse(NO_INFO);
+        return () -> THE_GAME_CONTEXT.game().level().map(fnInfo).orElse(NO_INFO);
     }
 
     protected void clearGrid() {

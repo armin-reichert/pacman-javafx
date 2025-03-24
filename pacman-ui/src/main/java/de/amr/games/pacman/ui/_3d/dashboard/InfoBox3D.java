@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui._3d.dashboard;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.ui.CameraControlledView;
-import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._3d.GameActions3D;
@@ -20,6 +19,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
 
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
 
 /**
@@ -46,8 +46,8 @@ public class InfoBox3D extends InfoBox {
     private CheckBox cbAxesVisible;
     private CheckBox cbWireframeMode;
 
-    public void init(GameContext context) {
-        super.init(context);
+    public void init() {
+        super.init();
 
         cbUsePlayScene3D     = addCheckBox("3D Play Scene");
         pickerLightColor     = addColorPicker("Light Color", GlobalProperties3d.PY_3D_LIGHT_COLOR.get());
@@ -83,8 +83,8 @@ public class InfoBox3D extends InfoBox {
         setEditor(cbAxesVisible, GlobalProperties3d.PY_3D_AXES_VISIBLE);
 
         //TODO check these
-        cbUsePlayScene3D.setOnAction(e -> GameActions3D.TOGGLE_PLAY_SCENE_2D_3D.execute(context));
-        cbWireframeMode.setOnAction(e -> GameActions3D.TOGGLE_DRAW_MODE.execute(context));
+        cbUsePlayScene3D.setOnAction(e -> GameActions3D.TOGGLE_PLAY_SCENE_2D_3D.execute());
+        cbWireframeMode.setOnAction(e -> GameActions3D.TOGGLE_DRAW_MODE.execute());
     }
 
     private void updateControlsFromProperties() {
@@ -110,8 +110,8 @@ public class InfoBox3D extends InfoBox {
     }
 
     private String sceneViewportSizeInfo() {
-        if (context.currentGameScene().isPresent()
-            && context.currentGameScene().get() instanceof CameraControlledView sgs) {
+        if (THE_GAME_CONTEXT.currentGameScene().isPresent()
+            && THE_GAME_CONTEXT.currentGameScene().get() instanceof CameraControlledView sgs) {
             return "%.0fx%.0f".formatted(
                 sgs.viewPortWidthProperty().get(),
                 sgs.viewPortHeightProperty().get()
@@ -121,8 +121,8 @@ public class InfoBox3D extends InfoBox {
     }
 
     private String sceneSizeInfo() {
-        if (context.currentGameScene().isPresent()) {
-            GameScene gameScene = context.currentGameScene().get();
+        if (THE_GAME_CONTEXT.currentGameScene().isPresent()) {
+            GameScene gameScene = THE_GAME_CONTEXT.currentGameScene().get();
             Vector2f size = gameScene.sizeInPx();
             if (gameScene instanceof GameScene2D gameScene2D) {
                 double scaling = gameScene2D.scaling();
@@ -136,8 +136,8 @@ public class InfoBox3D extends InfoBox {
     }
 
     private String sceneCameraInfo() {
-        if (context.currentGameScene().isPresent()
-            && context.currentGameScene().get() instanceof CameraControlledView scrollableGameScene) {
+        if (THE_GAME_CONTEXT.currentGameScene().isPresent()
+            && THE_GAME_CONTEXT.currentGameScene().get() instanceof CameraControlledView scrollableGameScene) {
             var cam = scrollableGameScene.camera();
             return String.format("rot=%.0f x=%.0f y=%.0f z=%.0f",
                 cam.getRotate(), cam.getTranslateX(), cam.getTranslateY(), cam.getTranslateZ());

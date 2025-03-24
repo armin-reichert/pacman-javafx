@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.ui.GameContext;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
@@ -15,6 +14,7 @@ import javafx.scene.layout.VBox;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.assertNotNull;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
 
 /**
@@ -26,12 +26,10 @@ import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
  */
 public class PictureInPictureView extends VBox {
 
-    private final GameContext context;
     private final Canvas canvas;
     private GameScene2D scene2D;
 
-    public PictureInPictureView(GameContext context) {
-        this.context = assertNotNull(context);
+    public PictureInPictureView() {
         canvas = new Canvas();
         canvas.heightProperty().bind(PY_PIP_HEIGHT);
         canvas.heightProperty().addListener((py,ov,nv) -> recomputeLayout());
@@ -40,8 +38,8 @@ public class PictureInPictureView extends VBox {
         backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Background::fill));
         opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
         visibleProperty().bind(Bindings.createObjectBinding(
-            () -> PY_PIP_ON.get() && context.currentGameSceneHasID("PlayScene3D"),
-            PY_PIP_ON, context.gameSceneProperty()
+            () -> PY_PIP_ON.get() && THE_GAME_CONTEXT.currentGameSceneHasID("PlayScene3D"),
+            PY_PIP_ON, THE_GAME_CONTEXT.gameSceneProperty()
         ));
         visibleProperty().addListener((py,ov,nv) -> recomputeLayout());
     }
@@ -49,8 +47,8 @@ public class PictureInPictureView extends VBox {
     public void setScene2D(GameScene2D scene2D) {
         this.scene2D = assertNotNull(scene2D);
         scene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
-        GameRenderer renderer = context.gameConfiguration().createRenderer(context.assets(), canvas);
-        context.game().level().map(GameLevel::worldMap).ifPresent(renderer::setWorldMap);
+        GameRenderer renderer = THE_GAME_CONTEXT.gameConfiguration().createRenderer(THE_GAME_CONTEXT.assets(), canvas);
+        THE_GAME_CONTEXT.game().level().map(GameLevel::worldMap).ifPresent(renderer::setWorldMap);
         scene2D.setGameRenderer(renderer);
         recomputeLayout();
     }

@@ -12,7 +12,6 @@ import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameActionProvider;
-import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui.input.Keyboard;
@@ -24,6 +23,7 @@ import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 import static de.amr.games.pacman.uilib.Ufx.toggle;
 import static java.util.function.Predicate.not;
 
@@ -36,58 +36,58 @@ public enum GameActions2D implements GameAction {
      */
     INSERT_COIN {
         @Override
-        public void execute(GameContext context) {
+        public void execute() {
             if (THE_GAME_CONTROLLER.credit < GameController.MAX_COINS) {
                 THE_GAME_CONTROLLER.credit += 1;
-                context.sound().enabledProperty().set(true);
-                context.game().publishGameEvent(GameEventType.CREDIT_ADDED);
+                THE_GAME_CONTEXT.sound().enabledProperty().set(true);
+                THE_GAME_CONTEXT.game().publishGameEvent(GameEventType.CREDIT_ADDED);
             }
-            if (context.gameState() != GameState.SETTING_OPTIONS) {
+            if (THE_GAME_CONTEXT.gameState() != GameState.SETTING_OPTIONS) {
                 THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
             }
         }
 
         @Override
-        public boolean isEnabled(GameContext context) {
-            if (context.game().isPlaying()) {
+        public boolean isEnabled() {
+            if (THE_GAME_CONTEXT.game().isPlaying()) {
                 return false;
             }
-            return context.gameState() == GameState.SETTING_OPTIONS ||
-                context.gameState() == INTRO ||
-                context.game().isDemoLevel() ||
+            return THE_GAME_CONTEXT.gameState() == GameState.SETTING_OPTIONS ||
+                THE_GAME_CONTEXT.gameState() == INTRO ||
+                THE_GAME_CONTEXT.game().isDemoLevel() ||
                 THE_GAME_CONTROLLER.credit == 0;
         }
     },
 
     BOOT {
         @Override
-        public void execute(GameContext context) {
+        public void execute() {
             THE_GAME_CONTROLLER.restart(GameState.BOOT);
-            context.gameClock().setTargetFrameRate(TICKS_PER_SECOND);
-            context.gameClock().pausedProperty().set(false);
-            context.gameClock().start();
+            THE_GAME_CONTEXT.gameClock().setTargetFrameRate(TICKS_PER_SECOND);
+            THE_GAME_CONTEXT.gameClock().pausedProperty().set(false);
+            THE_GAME_CONTEXT.gameClock().start();
         }
     },
 
     CHEAT_ADD_LIVES {
         @Override
-        public void execute(GameContext context) {
-            context.game().addLives(3);
-            context.showFlashMessage(context.locText("cheat_add_lives", context.game().lives()));
+        public void execute() {
+            THE_GAME_CONTEXT.game().addLives(3);
+            THE_GAME_CONTEXT.showFlashMessage(THE_GAME_CONTEXT.locText("cheat_add_lives", THE_GAME_CONTEXT.game().lives()));
         }
     },
 
     CHEAT_EAT_ALL {
         @Override
-        public void execute(GameContext context) {
-            if (context.game().isPlaying() && context.gameState() == GameState.HUNTING) {
-                context.game().level().ifPresent(level -> {
+        public void execute() {
+            if (THE_GAME_CONTEXT.game().isPlaying() && THE_GAME_CONTEXT.gameState() == GameState.HUNTING) {
+                THE_GAME_CONTEXT.game().level().ifPresent(level -> {
                     level.worldMap().tiles()
                         .filter(not(level::isEnergizerPosition))
                         .filter(level::hasFoodAt)
                         .forEach(level::registerFoodEatenAt);
-                    context.game().publishGameEvent(GameEventType.PAC_FOUND_FOOD);
-                    context.sound().stopMunchingSound();
+                    THE_GAME_CONTEXT.game().publishGameEvent(GameEventType.PAC_FOUND_FOOD);
+                    THE_GAME_CONTEXT.sound().stopMunchingSound();
                 });
             }
         }
@@ -95,11 +95,11 @@ public enum GameActions2D implements GameAction {
 
     CHEAT_KILL_GHOSTS {
         @Override
-        public void execute(GameContext context) {
-            if (context.game().isPlaying() && context.gameState() == GameState.HUNTING) {
-                context.game().level().ifPresent(level -> {
+        public void execute() {
+            if (THE_GAME_CONTEXT.game().isPlaying() && THE_GAME_CONTEXT.gameState() == GameState.HUNTING) {
+                THE_GAME_CONTEXT.game().level().ifPresent(level -> {
                     level.victims().clear();
-                    level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(context.game()::killGhost);
+                    level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(THE_GAME_CONTEXT.game()::killGhost);
                     THE_GAME_CONTROLLER.changeState(GameState.GHOST_DYING);
                 });
             }
@@ -108,23 +108,23 @@ public enum GameActions2D implements GameAction {
 
     CHEAT_NEXT_LEVEL {
         @Override
-        public void execute(GameContext context) {
+        public void execute() {
             THE_GAME_CONTROLLER.changeState(GameState.LEVEL_COMPLETE);
         }
 
         @Override
-        public boolean isEnabled(GameContext context) {
-            return context.game().isPlaying()
-                    && context.gameState() == GameState.HUNTING
-                    && context.game().level().isPresent()
-                    && context.game().level().get().number() < context.game().lastLevelNumber();
+        public boolean isEnabled() {
+            return THE_GAME_CONTEXT.game().isPlaying()
+                    && THE_GAME_CONTEXT.gameState() == GameState.HUNTING
+                    && THE_GAME_CONTEXT.game().level().isPresent()
+                    && THE_GAME_CONTEXT.game().level().get().number() < THE_GAME_CONTEXT.game().lastLevelNumber();
         }
     },
 
     PLAYER_UP {
         @Override
-        public void execute(GameContext context) {
-            context.game().level().ifPresent(level -> {
+        public void execute() {
+            THE_GAME_CONTEXT.game().level().ifPresent(level -> {
                 if (!level.pac().isUsingAutopilot()) {
                     level.pac().setWishDir(Direction.UP);
                 }
@@ -134,8 +134,8 @@ public enum GameActions2D implements GameAction {
 
     PLAYER_DOWN {
         @Override
-        public void execute(GameContext context) {
-            context.game().level().ifPresent(level -> {
+        public void execute() {
+            THE_GAME_CONTEXT.game().level().ifPresent(level -> {
                 if (!level.pac().isUsingAutopilot()) {
                     level.pac().setWishDir(Direction.DOWN);
                 }
@@ -145,8 +145,8 @@ public enum GameActions2D implements GameAction {
 
     PLAYER_LEFT {
         @Override
-        public void execute(GameContext context) {
-            context.game().level().ifPresent(level -> {
+        public void execute() {
+            THE_GAME_CONTEXT.game().level().ifPresent(level -> {
                 if (!level.pac().isUsingAutopilot()) {
                     level.pac().setWishDir(Direction.LEFT);
                 }
@@ -156,8 +156,8 @@ public enum GameActions2D implements GameAction {
 
     PLAYER_RIGHT {
         @Override
-        public void execute(GameContext context) {
-            context.game().level().ifPresent(level -> {
+        public void execute() {
+            THE_GAME_CONTEXT.game().level().ifPresent(level -> {
                 if (!level.pac().isUsingAutopilot()) {
                     level.pac().setWishDir(Direction.RIGHT);
                 }
@@ -167,38 +167,38 @@ public enum GameActions2D implements GameAction {
 
     SHOW_START_PAGE {
         @Override
-        public void execute(GameContext context) {
-            context.sound().stopAll();
-            context.currentGameScene().ifPresent(GameScene::end);
-            context.game().endGame();
-            context.showStartView();
+        public void execute() {
+            THE_GAME_CONTEXT.sound().stopAll();
+            THE_GAME_CONTEXT.currentGameScene().ifPresent(GameScene::end);
+            THE_GAME_CONTEXT.game().endGame();
+            THE_GAME_CONTEXT.showStartView();
         }
     },
 
     RESTART_INTRO {
         @Override
-        public void execute(GameContext context) {
-            context.sound().stopAll();
-            context.currentGameScene().ifPresent(GameScene::end);
-            if (context.gameState() == GameState.TESTING_LEVELS) {
-                context.gameState().onExit(context.game()); //TODO exit other states too?
+        public void execute() {
+            THE_GAME_CONTEXT.sound().stopAll();
+            THE_GAME_CONTEXT.currentGameScene().ifPresent(GameScene::end);
+            if (THE_GAME_CONTEXT.gameState() == GameState.TESTING_LEVELS) {
+                THE_GAME_CONTEXT.gameState().onExit(THE_GAME_CONTEXT.game()); //TODO exit other states too?
             }
-            context.gameClock().setTargetFrameRate(TICKS_PER_SECOND);
+            THE_GAME_CONTEXT.gameClock().setTargetFrameRate(TICKS_PER_SECOND);
             THE_GAME_CONTROLLER.restart(INTRO);
         }
     },
 
     START_GAME {
         @Override
-        public void execute(GameContext context) {
-            if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+        public void execute() {
+            if (THE_GAME_CONTEXT.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                 THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
-            } else if (context.game().canStartNewGame()) {
-                context.sound().stopVoice();
-                if (context.gameState() == GameState.INTRO || context.gameState() == GameState.SETTING_OPTIONS) {
+            } else if (THE_GAME_CONTEXT.game().canStartNewGame()) {
+                THE_GAME_CONTEXT.sound().stopVoice();
+                if (THE_GAME_CONTEXT.gameState() == GameState.INTRO || THE_GAME_CONTEXT.gameState() == GameState.SETTING_OPTIONS) {
                     THE_GAME_CONTROLLER.changeState(GameState.STARTING_GAME);
                 } else {
-                    Logger.error("Cannot start game play in game state {}", context.gameState());
+                    Logger.error("Cannot start game play in game state {}", THE_GAME_CONTEXT.gameState());
                 }
             }
         }
@@ -206,36 +206,36 @@ public enum GameActions2D implements GameAction {
 
     TEST_CUT_SCENES {
         @Override
-        public void execute(GameContext context) {
+        public void execute() {
             THE_GAME_CONTROLLER.changeState(GameState.TESTING_CUT_SCENES);
-            context.showFlashMessage("Cut scenes test"); //TODO localize
+            THE_GAME_CONTEXT.showFlashMessage("Cut scenes test"); //TODO localize
         }
     },
 
     TEST_LEVELS_BONI {
         @Override
-        public void execute(GameContext context) {
+        public void execute() {
             THE_GAME_CONTROLLER.restart(GameState.TESTING_LEVELS);
-            context.showFlashMessageSec(3, "Level TEST MODE");
+            THE_GAME_CONTEXT.showFlashMessageSec(3, "Level TEST MODE");
         }
     },
 
     TEST_LEVELS_TEASERS {
         @Override
-        public void execute(GameContext context) {
+        public void execute() {
             THE_GAME_CONTROLLER.restart(GameState.TESTING_LEVEL_TEASERS);
-            context.showFlashMessageSec(3, "Level TEST MODE");
+            THE_GAME_CONTEXT.showFlashMessageSec(3, "Level TEST MODE");
         }
     },
 
     TOGGLE_PAUSED {
         @Override
-        public void execute(GameContext context) {
-            toggle(context.gameClock().pausedProperty());
-            if (context.gameClock().isPaused()) {
-                context.sound().stopAll();
+        public void execute() {
+            toggle(THE_GAME_CONTEXT.gameClock().pausedProperty());
+            if (THE_GAME_CONTEXT.gameClock().isPaused()) {
+                THE_GAME_CONTEXT.sound().stopAll();
             }
-            Logger.info("Game ({}) {}", context.gameVariant(), context.gameClock().isPaused() ? "paused" : "resumed");
+            Logger.info("Game ({}) {}", THE_GAME_CONTEXT.gameVariant(), THE_GAME_CONTEXT.gameClock().isPaused() ? "paused" : "resumed");
         }
     };
 

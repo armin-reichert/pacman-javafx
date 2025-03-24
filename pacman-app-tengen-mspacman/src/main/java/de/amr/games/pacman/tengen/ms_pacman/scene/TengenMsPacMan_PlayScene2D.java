@@ -559,7 +559,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         items.add(miMuted);
 
         var miQuit = new MenuItem(THE_GAME_CONTEXT.locText("quit"));
-        miQuit.setOnAction(ae -> GameActions2D.SHOW_START_PAGE.execute(THE_GAME_CONTEXT));
+        miQuit.setOnAction(ae -> GameActions2D.SHOW_START_PAGE.execute());
         items.add(miQuit);
 
         return items;

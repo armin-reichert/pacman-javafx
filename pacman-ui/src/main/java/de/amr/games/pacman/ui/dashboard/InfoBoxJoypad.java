@@ -5,26 +5,27 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.dashboard;
 
 import de.amr.games.pacman.lib.nes.NES_JoypadButton;
-import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.PacManGamesUI;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
 import de.amr.games.pacman.uilib.ResourceManager;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
 
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
+
 public class InfoBoxJoypad extends InfoBox {
 
     private JoypadKeyBinding joypad;
 
-    public void init(GameContext context) {
-        super.init(context);
+    public void init() {
+        super.init();
 
         ResourceManager rm = () -> PacManGamesUI.class;
         var imageNesController = new ImageView(rm.loadImage("graphics/nes-controller.jpg"));
 
         setContentTextFont(Font.font("Monospace", 16));
 
-        joypad = context.joypadKeyBinding();
+        joypad = THE_GAME_CONTEXT.joypadKeyBinding();
         String indent = "  "; // Urgh
         addLabeledValue("[SELECT]   [START]", () -> "%s%s  %s".formatted(
             indent,
@@ -48,7 +49,7 @@ public class InfoBoxJoypad extends InfoBox {
 
     @Override
     public void update() {
-        joypad = context.joypadKeyBinding();
+        joypad = THE_GAME_CONTEXT.joypadKeyBinding();
         super.update();
     }
 }

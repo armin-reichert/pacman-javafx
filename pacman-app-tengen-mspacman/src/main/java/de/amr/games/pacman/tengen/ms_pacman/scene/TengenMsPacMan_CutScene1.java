@@ -64,7 +64,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(context -> THE_GAME_CONTROLLER.terminateCurrentState(), THE_GAME_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
+        bind(THE_GAME_CONTROLLER::terminateCurrentState, THE_GAME_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
     }
 
     @Override

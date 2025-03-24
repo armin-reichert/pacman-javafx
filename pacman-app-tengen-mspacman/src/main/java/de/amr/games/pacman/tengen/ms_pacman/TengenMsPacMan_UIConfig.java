@@ -15,7 +15,6 @@ import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_PacAnimat
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet;
 import de.amr.games.pacman.tengen.ms_pacman.scene.*;
-import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui.GameUIConfiguration;
 import de.amr.games.pacman.ui._2d.GameScene2D;
@@ -41,6 +40,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.Globals.assertNotNull;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 
 public class TengenMsPacMan_UIConfig implements GameUIConfiguration {
 
@@ -164,14 +164,14 @@ public class TengenMsPacMan_UIConfig implements GameUIConfiguration {
     }
 
     @Override
-    public GameScene selectGameScene(GameContext context) {
-        String sceneID = switch (context.gameState()) {
+    public GameScene selectGameScene() {
+        String sceneID = switch (THE_GAME_CONTEXT.gameState()) {
             case BOOT               -> "BootScene";
             case SETTING_OPTIONS    -> "StartScene";
             case SHOWING_CREDITS    -> "ShowingCredits";
             case INTRO              -> "IntroScene";
-            case INTERMISSION       -> "CutScene" + context.game().level().map(GameLevel::cutSceneNumber).orElseThrow();
-            case TESTING_CUT_SCENES -> "CutScene" + context.gameState().<Integer>getProperty("intermissionTestNumber");
+            case INTERMISSION       -> "CutScene" + THE_GAME_CONTEXT.game().level().map(GameLevel::cutSceneNumber).orElseThrow();
+            case TESTING_CUT_SCENES -> "CutScene" + THE_GAME_CONTEXT.gameState().<Integer>getProperty("intermissionTestNumber");
             default                 -> GlobalProperties3d.PY_3D_ENABLED.get() ? "PlayScene3D" : "PlayScene2D";
         };
         return scenesByID.get(sceneID);
@@ -190,9 +190,9 @@ public class TengenMsPacMan_UIConfig implements GameUIConfiguration {
     }
 
     @Override
-    public GameScene2D createPiPScene(GameContext context, Canvas canvasNotUsed) {
+    public GameScene2D createPiPScene(Canvas canvasNotUsed) {
         var gameScene = new TengenMsPacMan_PiPScene();
-        gameScene.setGameRenderer(createRenderer(context.assets(), gameScene.canvas()));
+        gameScene.setGameRenderer(createRenderer(THE_GAME_CONTEXT.assets(), gameScene.canvas()));
         return gameScene;
     }
 

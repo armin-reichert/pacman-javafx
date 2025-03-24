@@ -20,16 +20,15 @@ import java.util.stream.Stream;
 public interface GameUIConfiguration {
     Stream<GameScene> gameScenes();
     boolean gameSceneHasID(GameScene gameScene, String sceneID);
-    GameScene2D createPiPScene(GameContext context, Canvas canvas);
+    GameScene2D createPiPScene(Canvas canvas);
     GameSpriteSheet spriteSheet();
     GameRenderer createRenderer(AssetStorage assets, Canvas canvas);
     WorldMapColorScheme worldMapColoring(WorldMap worldMap);
     void createActorAnimations(GameLevel level);
-    GameScene selectGameScene(GameContext context);
+    GameScene selectGameScene();
     String assetNamespace();
     default boolean isGameCanvasDecorated() { return true; }
     Image appIcon();
-
     // 3D-only
     Node createLivesCounterShape(AssetStorage assets, double size);
 }

@@ -8,7 +8,6 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui._2d.GameActions2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -17,6 +16,7 @@ import javafx.scene.control.Spinner;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.oneOf;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_IMMUNITY;
 
@@ -42,9 +42,7 @@ public class InfoBoxGameControl extends InfoBox {
     private CheckBox cbAutopilot;
     private CheckBox cbImmunity;
 
-    public void init(GameContext context) {
-        super.init(context);
-
+    public void init() {
         spinnerCredit      = addIntSpinner("Credit", 0, GameController.MAX_COINS, 0);
         comboGameVariant   = addComboBox("Variant", GameVariant.values());
         comboInitialLives  = addComboBox("Initial Lives", new Integer[] {3, 5});
@@ -56,18 +54,18 @@ public class InfoBoxGameControl extends InfoBox {
         spinnerCredit.valueProperty().addListener((py, ov, number) -> THE_GAME_CONTROLLER.credit = number);
 
         comboGameVariant.setOnAction(e -> {
-            if (comboGameVariant.getValue() != context.gameVariant()) {
+            if (comboGameVariant.getValue() != THE_GAME_CONTEXT.gameVariant()) {
                 THE_GAME_CONTROLLER.selectGameVariant(comboGameVariant.getValue());
                 THE_GAME_CONTROLLER.restart(GameState.BOOT);
             }
         });
 
-        setAction(bgCutScenesTest[CUT_SCENES_TEST_START], () -> GameActions2D.TEST_CUT_SCENES.execute(context));
-        setAction(bgCutScenesTest[CUT_SCENES_TEST_QUIT],  () -> GameActions2D.RESTART_INTRO.execute(context));
-        setAction(bgLevelActions[GAME_LEVEL_START],       () -> GameActions2D.START_GAME.execute(context));
-        setAction(bgLevelActions[GAME_LEVEL_QUIT],        () -> GameActions2D.RESTART_INTRO.execute(context));
-        setAction(bgLevelActions[GAME_LEVEL_NEXT],        () -> GameActions2D.CHEAT_NEXT_LEVEL.execute(context));
-        setAction(comboInitialLives,                      () -> context.game().setInitialLives(comboInitialLives.getValue()));
+        setAction(bgCutScenesTest[CUT_SCENES_TEST_START], GameActions2D.TEST_CUT_SCENES::execute);
+        setAction(bgCutScenesTest[CUT_SCENES_TEST_QUIT], GameActions2D.RESTART_INTRO::execute);
+        setAction(bgLevelActions[GAME_LEVEL_START], GameActions2D.START_GAME::execute);
+        setAction(bgLevelActions[GAME_LEVEL_QUIT], GameActions2D.RESTART_INTRO::execute);
+        setAction(bgLevelActions[GAME_LEVEL_NEXT], GameActions2D.CHEAT_NEXT_LEVEL::execute);
+        setAction(comboInitialLives, () -> THE_GAME_CONTEXT.game().setInitialLives(comboInitialLives.getValue()));
 
         setEditor(cbAutopilot, PY_AUTOPILOT);
         setEditor(cbImmunity, PY_IMMUNITY);
@@ -77,11 +75,11 @@ public class InfoBoxGameControl extends InfoBox {
     public void update() {
         super.update();
 
-        GameModel game = context.game();
-        GameState state = context.gameState();
+        GameModel game = THE_GAME_CONTEXT.game();
+        GameState state = THE_GAME_CONTEXT.gameState();
 
         spinnerCredit.getValueFactory().setValue(THE_GAME_CONTROLLER.credit);
-        comboGameVariant.setValue(context.gameVariant());
+        comboGameVariant.setValue(THE_GAME_CONTEXT.gameVariant());
         comboInitialLives.setValue(game.initialLives());
 
         spinnerCredit.setDisable(!(oneOf(state, GameState.INTRO, GameState.SETTING_OPTIONS)));
@@ -89,7 +87,7 @@ public class InfoBoxGameControl extends InfoBox {
         comboInitialLives.setDisable(state != GameState.INTRO);
 
         bgLevelActions[GAME_LEVEL_START].setDisable(isBooting() || !canStartLevel());
-        bgLevelActions[GAME_LEVEL_QUIT].setDisable(isBooting() || context.game().level().isEmpty());
+        bgLevelActions[GAME_LEVEL_QUIT].setDisable(isBooting() || game.level().isEmpty());
         bgLevelActions[GAME_LEVEL_NEXT].setDisable(isBooting() || !canEnterNextLevel());
 
         bgCutScenesTest[CUT_SCENES_TEST_START].setDisable(isBooting() || state != GameState.INTRO);
@@ -100,14 +98,14 @@ public class InfoBoxGameControl extends InfoBox {
     }
 
     private boolean isBooting() {
-        return context.gameState() == GameState.BOOT;
+        return THE_GAME_CONTEXT.gameState() == GameState.BOOT;
     }
 
     private boolean canStartLevel() {
-        return context.game().canStartNewGame() && oneOf(context.gameState(), GameState.INTRO, GameState.SETTING_OPTIONS);
+        return THE_GAME_CONTEXT.game().canStartNewGame() && oneOf(THE_GAME_CONTEXT.gameState(), GameState.INTRO, GameState.SETTING_OPTIONS);
     }
 
     private boolean canEnterNextLevel() {
-        return context.game().isPlaying() && oneOf(context.gameState(), GameState.HUNTING);
+        return THE_GAME_CONTEXT.game().isPlaying() && oneOf(THE_GAME_CONTEXT.gameState(), GameState.HUNTING);
     }
 }

@@ -4,8 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.dashboard;
 
-import de.amr.games.pacman.ui.GameContext;
-
 /**
  * Keyboard shortcuts.
  *
@@ -13,8 +11,8 @@ import de.amr.games.pacman.ui.GameContext;
  */
 public class InfoBoxKeys extends InfoBox {
 
-    public void init(GameContext context) {
-        super.init(context);
+    public void init() {
+        super.init();
 
         addLabeledValue("F1, Alt+B", "Dashboard On/Off");
         addLabeledValue("F2", "Pic-in-Pic On/Off");
