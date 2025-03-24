@@ -451,13 +451,13 @@ public abstract class GameModel {
         level.victims().clear(); // ghosts eaten using this energizer
         long powerTicks = pacPowerTicks();
         if (powerTicks > 0) {
-            Logger.info("Power: {} ticks ({0.00} sec)", powerTicks, powerTicks / 60.0);
-            eventLog.pacGetsPower = true;
             huntingTimer.stop();
-            level.powerTimer().restartTicks(pacPowerTicks());
-            Logger.info("Hunting paused, power timer restarted, duration={} ticks", level.powerTimer().durationTicks());
+            Logger.info("Hunting stopped");
+            level.powerTimer().restartTicks(powerTicks);
+            Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerTicks / 60.0);
             level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             level.ghosts(FRIGHTENED).forEach(Ghost::reverseASAP);
+            eventLog.pacGetsPower = true;
             publishGameEvent(GameEventType.PAC_GETS_POWER);
         } else {
             level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseASAP);
