@@ -11,7 +11,10 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.timer.Pulse;
-import de.amr.games.pacman.model.actors.*;
+import de.amr.games.pacman.model.actors.Actor2D;
+import de.amr.games.pacman.model.actors.ActorAnimations;
+import de.amr.games.pacman.model.actors.Bonus;
+import de.amr.games.pacman.model.actors.Ghost;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -335,34 +338,30 @@ public abstract class GameModel {
         eventLog = new SimulationStepLog();
     }
 
-    protected Vector2i scatterTargetTile(Ghost ghost) {
-        return level.ghostScatterTile(ghost.id());
-    }
-
     /**
      * Returns the chasing target tile for the given chaser.
      *
-     * @param chaser the chasing ghost
-     * @param pac the Pac-Man
-     * @param ghosts all ghosts
-     * @param overflowBug if overflow bug from Arcade game is simulated
+     * @param ghostID the chasing ghost's ID
+     * @param level the game level
+     * @param buggy if overflow bug from Arcade game is simulated
      * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
      */
-    protected Vector2i chasingTargetTile(Ghost chaser, Pac pac, Ghost[] ghosts, boolean overflowBug) {
-        return switch (chaser.id()) {
-            // Blinky, the red ghost attacks Pac-Man directly
-            case RED_GHOST_ID -> pac.tile();
+    protected Vector2i chasingTargetTile(byte ghostID, GameLevel level, boolean buggy) {
+        return switch (ghostID) {
+            // Blinky (red ghost) attacks Pac-Man directly
+            case RED_GHOST_ID -> level.pac().tile();
 
-            // Pinky, the pink ghost ambushes Pac-Man
-            case PINK_GHOST_ID -> pac.tilesAhead(4, overflowBug);
+            // Pinky (pink ghost) ambushes Pac-Man
+            case PINK_GHOST_ID -> level.pac().tilesAhead(4, buggy);
 
-            // Inky, the cyan ghost attacks from opposite side as Blinky
-            case CYAN_GHOST_ID -> pac.tilesAhead(2, overflowBug).scaled(2).minus(ghosts[RED_GHOST_ID].tile());
+            // Inky (cyan ghost) attacks from opposite side as Blinky
+            case CYAN_GHOST_ID -> level.pac().tilesAhead(2, buggy).scaled(2).minus(level.ghost(RED_GHOST_ID).tile());
 
-            // Clyde/Sue, the orange ghost attacks directly or retreats towards scatter target if Pac is near
-            case ORANGE_GHOST_ID -> chaser.tile().euclideanDist(pac.tile()) < 8 ? scatterTargetTile(chaser) : pac.tile();
+            // Clyde/Sue (orange ghost) attacks directly or retreats towards scatter target if Pac is near
+            case ORANGE_GHOST_ID -> level.ghost(ORANGE_GHOST_ID).tile().euclideanDist(level.pac().tile()) < 8
+                ? level.ghostScatterTile(ORANGE_GHOST_ID) : level.pac().tile();
 
-            default -> throw GameException.invalidGhostID(chaser.id());
+            default -> throw GameException.invalidGhostID(ghostID);
         };
     }
 
