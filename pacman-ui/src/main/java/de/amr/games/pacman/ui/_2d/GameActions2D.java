@@ -19,6 +19,7 @@ import de.amr.games.pacman.ui.input.Keyboard;
 import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
 
+import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
@@ -36,13 +37,13 @@ public enum GameActions2D implements GameAction {
     INSERT_COIN {
         @Override
         public void execute(GameContext context) {
-            if (context.gameController().credit < GameController.MAX_COINS) {
-                context.gameController().credit += 1;
+            if (THE_GAME_CONTROLLER.credit < GameController.MAX_COINS) {
+                THE_GAME_CONTROLLER.credit += 1;
                 context.sound().enabledProperty().set(true);
                 context.game().publishGameEvent(GameEventType.CREDIT_ADDED);
             }
             if (context.gameState() != GameState.SETTING_OPTIONS) {
-                context.gameController().changeState(GameState.SETTING_OPTIONS);
+                THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
             }
         }
 
@@ -54,14 +55,14 @@ public enum GameActions2D implements GameAction {
             return context.gameState() == GameState.SETTING_OPTIONS ||
                 context.gameState() == INTRO ||
                 context.game().isDemoLevel() ||
-                context.gameController().credit == 0;
+                THE_GAME_CONTROLLER.credit == 0;
         }
     },
 
     BOOT {
         @Override
         public void execute(GameContext context) {
-            context.gameController().restart(GameState.BOOT);
+            THE_GAME_CONTROLLER.restart(GameState.BOOT);
             context.gameClock().setTargetFrameRate(TICKS_PER_SECOND);
             context.gameClock().pausedProperty().set(false);
             context.gameClock().start();
@@ -99,7 +100,7 @@ public enum GameActions2D implements GameAction {
                 context.game().level().ifPresent(level -> {
                     level.victims().clear();
                     level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(context.game()::killGhost);
-                    context.gameController().changeState(GameState.GHOST_DYING);
+                    THE_GAME_CONTROLLER.changeState(GameState.GHOST_DYING);
                 });
             }
         }
@@ -108,7 +109,7 @@ public enum GameActions2D implements GameAction {
     CHEAT_NEXT_LEVEL {
         @Override
         public void execute(GameContext context) {
-            context.gameController().changeState(GameState.LEVEL_COMPLETE);
+            THE_GAME_CONTROLLER.changeState(GameState.LEVEL_COMPLETE);
         }
 
         @Override
@@ -183,7 +184,7 @@ public enum GameActions2D implements GameAction {
                 context.gameState().onExit(context.game()); //TODO exit other states too?
             }
             context.gameClock().setTargetFrameRate(TICKS_PER_SECOND);
-            context.gameController().restart(INTRO);
+            THE_GAME_CONTROLLER.restart(INTRO);
         }
     },
 
@@ -191,11 +192,11 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute(GameContext context) {
             if (context.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
-                context.gameController().changeState(GameState.SETTING_OPTIONS);
+                THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
             } else if (context.game().canStartNewGame()) {
                 context.sound().stopVoice();
                 if (context.gameState() == GameState.INTRO || context.gameState() == GameState.SETTING_OPTIONS) {
-                    context.gameController().changeState(GameState.STARTING_GAME);
+                    THE_GAME_CONTROLLER.changeState(GameState.STARTING_GAME);
                 } else {
                     Logger.error("Cannot start game play in game state {}", context.gameState());
                 }
@@ -206,7 +207,7 @@ public enum GameActions2D implements GameAction {
     TEST_CUT_SCENES {
         @Override
         public void execute(GameContext context) {
-            context.gameController().changeState(GameState.TESTING_CUT_SCENES);
+            THE_GAME_CONTROLLER.changeState(GameState.TESTING_CUT_SCENES);
             context.showFlashMessage("Cut scenes test"); //TODO localize
         }
     },
@@ -214,7 +215,7 @@ public enum GameActions2D implements GameAction {
     TEST_LEVELS_BONI {
         @Override
         public void execute(GameContext context) {
-            context.gameController().restart(GameState.TESTING_LEVELS);
+            THE_GAME_CONTROLLER.restart(GameState.TESTING_LEVELS);
             context.showFlashMessageSec(3, "Level TEST MODE");
         }
     },
@@ -222,7 +223,7 @@ public enum GameActions2D implements GameAction {
     TEST_LEVELS_TEASERS {
         @Override
         public void execute(GameContext context) {
-            context.gameController().restart(GameState.TESTING_LEVEL_TEASERS);
+            THE_GAME_CONTROLLER.restart(GameState.TESTING_LEVEL_TEASERS);
             context.showFlashMessageSec(3, "Level TEST MODE");
         }
     },

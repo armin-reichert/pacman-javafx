@@ -31,6 +31,7 @@ import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.*;
 import static de.amr.games.pacman.model.actors.GhostState.EATEN;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 
 /**
  * <p>
@@ -76,14 +77,14 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(GameActions2D.INSERT_COIN, context.arcadeKeys().key(Arcade.Button.COIN));
-        bind(GameActions2D.START_GAME, context.arcadeKeys().key(Arcade.Button.START));
+        bind(GameActions2D.INSERT_COIN, THE_GAME_CONTEXT.arcadeKeys().key(Arcade.Button.COIN));
+        bind(GameActions2D.START_GAME, THE_GAME_CONTEXT.arcadeKeys().key(Arcade.Button.START));
         GameActions2D.bindTestActions(this);
     }
 
     @Override
     public void doInit() {
-        ArcadePacMan_SpriteSheet spriteSheet = (ArcadePacMan_SpriteSheet) context.gameConfiguration().spriteSheet();
+        ArcadePacMan_SpriteSheet spriteSheet = (ArcadePacMan_SpriteSheet) THE_GAME_CONTEXT.gameConfiguration().spriteSheet();
         blinking = new Pulse(10, true);
         pacMan = new Pac();
         pacMan.setAnimations(new PacAnimations(spriteSheet));
@@ -103,13 +104,13 @@ public class IntroScene extends GameScene2D {
         titleVisible = false;
         ghostIndex = 0;
         ghostKilledTime = 0;
-        context.setScoreVisible(true);
+        THE_GAME_CONTEXT.setScoreVisible(true);
         sceneController.restart(SceneState.STARTING);
     }
 
     @Override
     protected void doEnd() {
-        context.sound().stopVoice();
+        THE_GAME_CONTEXT.sound().stopVoice();
     }
 
     @Override
@@ -119,7 +120,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        context.sound().playInsertCoinSound();
+        THE_GAME_CONTEXT.sound().playInsertCoinSound();
     }
 
     @Override
@@ -139,21 +140,21 @@ public class IntroScene extends GameScene2D {
                     drawEnergizer(tiles2Px(LEFT_TILE_X), tiles2Px(20));
                 }
                 drawGuys(flutter(timer.tickCount()));
-                if (context.gameVariant() == GameVariant.PACMAN) {
+                if (THE_GAME_CONTEXT.gameVariant() == GameVariant.PACMAN) {
                     gr.drawText(ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT, Color.web(Arcade.Palette.PINK), gr.scaledArcadeFont(TS),  tiles2Px(4), tiles2Px(32));
                 }
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints();
                 drawGuys(0);
-                if (context.gameVariant() == GameVariant.PACMAN) {
+                if (THE_GAME_CONTEXT.gameVariant() == GameVariant.PACMAN) {
                     gr.drawText(ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT, Color.web(Arcade.Palette.PINK), gr.scaledArcadeFont(TS),  tiles2Px(4), tiles2Px(32));
                 }
             }
             default -> {}
         }
-        gr.drawText("CREDIT %2d".formatted(context.gameController().credit), Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS), 2 * TS, sizeInPx().y() - 2);
-        gr.drawLevelCounter(context, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
+        gr.drawText("CREDIT %2d".formatted(THE_GAME_CONTROLLER.credit), Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS), 2 * TS, sizeInPx().y() - 2);
+        gr.drawLevelCounter(THE_GAME_CONTEXT, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 
     // TODO inspect in MAME what's really going on here
@@ -162,7 +163,7 @@ public class IntroScene extends GameScene2D {
     }
 
     private void drawGallery() {
-        var spriteSheet = (ArcadePacMan_SpriteSheet) context.gameConfiguration().spriteSheet();
+        var spriteSheet = (ArcadePacMan_SpriteSheet) THE_GAME_CONTEXT.gameConfiguration().spriteSheet();
         Font font = gr.scaledArcadeFont(TS);
         if (titleVisible) {
             gr.drawText("CHARACTER / NICKNAME", Color.web(Arcade.Palette.WHITE), font, tiles2Px(LEFT_TILE_X + 3), tiles2Px(6));
@@ -382,11 +383,11 @@ public class IntroScene extends GameScene2D {
             public void onUpdate(IntroScene intro) {
                 if (timer.atSecond(0.75)) {
                     intro.ghosts[3].hide();
-                    if (!intro.context.game().canStartNewGame()) {
-                        intro.context.gameController().changeState(GameState.STARTING_GAME);
+                    if (!THE_GAME_CONTEXT.game().canStartNewGame()) {
+                        THE_GAME_CONTROLLER.changeState(GameState.STARTING_GAME);
                     }
                 } else if (timer.atSecond(5)) {
-                    intro.context.gameController().changeState(GameState.SETTING_OPTIONS);
+                    THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
                 }
             }
         };

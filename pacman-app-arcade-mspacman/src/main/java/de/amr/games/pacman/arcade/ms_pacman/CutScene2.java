@@ -12,10 +12,10 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 
-import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.Globals.tiles2Px;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_MR_PACMAN_MUNCHING;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 
 /**
  * Intermission scene 2: "The chase".
@@ -43,14 +43,14 @@ public class CutScene2 extends GameScene2D {
 
     @Override
     public void doInit() {
-        context.setScoreVisible(true);
+        THE_GAME_CONTEXT.setScoreVisible(true);
 
         pacMan = new Pac();
         msPacMan = new Pac();
 
-        music = context.sound().makeSound("intermission.2");
+        music = THE_GAME_CONTEXT.sound().makeSound("intermission.2");
 
-        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) context.gameConfiguration().spriteSheet();
+        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_GAME_CONTEXT.gameConfiguration().spriteSheet();
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
         pacMan.setAnimations(new PacAnimations(spriteSheet));
 
@@ -82,7 +82,7 @@ public class CutScene2 extends GameScene2D {
         }
         gr.drawAnimatedActor(msPacMan);
         gr.drawAnimatedActor(pacMan);
-        gr.drawLevelCounter(context, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
+        gr.drawLevelCounter(THE_GAME_CONTEXT, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 
     // Scene controller state machine
@@ -171,7 +171,7 @@ public class CutScene2 extends GameScene2D {
             msPacMan.setSpeed(4.0f);
         }
         else if (stateTimer.atSecond(23)) {
-            context.gameController().terminateCurrentState();
+            THE_GAME_CONTROLLER.terminateCurrentState();
         }
         else {
             pacMan.move();

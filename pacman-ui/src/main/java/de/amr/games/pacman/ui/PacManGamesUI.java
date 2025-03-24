@@ -37,8 +37,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
+import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
+import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_DEBUG_INFO_VISIBLE;
 import static de.amr.games.pacman.ui.input.ArcadeKeyBinding.DEFAULT_ARCADE_KEY_BINDING;
@@ -119,6 +120,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         clock.setPauseableCallback(this::runOnEveryTickExceptWhenPaused);
         clock.setPermanentCallback(this::runOnEveryTick);
         loadAssets2D();
+        UIGlobals.THE_GAME_CONTEXT = this;
     }
 
     /**
@@ -133,7 +135,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         startPageSelectionView = new StartPageSelectionView(this);
         startPageSelectionView().setBackground(assets.background("background.scene"));
         createGameView(mainScene);
-        setGameVariant(gameController().selectedGameVariant());
+        setGameVariant(THE_GAME_CONTROLLER.selectedGameVariant());
         bindStageTitle();
         stage.setScene(mainScene);
         //TODO This doesn't fit for NES aspect ratio
@@ -182,7 +184,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         assertNotNull(variant);
         assertNotNull(uiConfig);
         uiConfig.gameScenes().forEach(scene -> {
-            scene.setGameContext(this);
             if (scene instanceof GameScene2D gameScene2D) {
                 gameScene2D.debugInfoVisibleProperty().bind(PY_DEBUG_INFO_VISIBLE);
             }
@@ -202,7 +203,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     protected void runOnEveryTickExceptWhenPaused() {
         try {
-            gameController().update();
+            THE_GAME_CONTROLLER.update();
             currentGameScene().ifPresent(GameScene::update);
             logUpdateResult();
         } catch (Exception x) {
@@ -290,7 +291,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
                 editor.executeWithCheckForUnsavedChanges(this::bindStageTitle);
                 editor.stop();
                 clock.setTargetFrameRate(TICKS_PER_SECOND);
-                gameController().restart(GameState.BOOT);
+                THE_GAME_CONTROLLER.restart(GameState.BOOT);
                 showStartView();
             });
         }
@@ -314,7 +315,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     protected void handleGameVariantChange(GameVariant gameVariant) {
         game().removeGameEventListener(this);
-        gameController().selectGameVariant(gameVariant);
+        THE_GAME_CONTROLLER.selectGameVariant(gameVariant);
         game().addGameEventListener(this);
         stage.getIcons().setAll(gameConfiguration().appIcon());
         sound().selectGameVariant(gameVariant, gameConfiguration().assetNamespace());

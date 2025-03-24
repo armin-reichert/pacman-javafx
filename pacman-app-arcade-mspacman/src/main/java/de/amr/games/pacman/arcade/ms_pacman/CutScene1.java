@@ -13,11 +13,11 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.HEART_SPRITE;
-import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.Globals.tiles2Px;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.*;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 
 /**
  * Intermission scene 1: "They meet".
@@ -53,7 +53,7 @@ public class CutScene1 extends GameScene2D {
 
     @Override
     public void doInit() {
-        context.setScoreVisible(true);
+        THE_GAME_CONTEXT.setScoreVisible(true);
 
         pacMan = new Pac();
         msPac = new Pac();
@@ -61,9 +61,9 @@ public class CutScene1 extends GameScene2D {
         pinky = ArcadeMsPacMan_GameModel.pinky();
         heart = new Actor2D();
 
-        music = context.sound().makeSound("intermission.1");
+        music = THE_GAME_CONTEXT.sound().makeSound("intermission.1");
 
-        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) context.gameConfiguration().spriteSheet();
+        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_GAME_CONTEXT.gameConfiguration().spriteSheet();
         msPac.setAnimations(new PacAnimations(spriteSheet));
         pacMan.setAnimations(new PacAnimations(spriteSheet));
         inky.setAnimations(new GhostAnimations(spriteSheet, inky.id()));
@@ -100,7 +100,7 @@ public class CutScene1 extends GameScene2D {
         gr.drawAnimatedActor(inky);
         gr.drawAnimatedActor(pinky);
         gr.drawActorSprite(heart, HEART_SPRITE);
-        gr.drawLevelCounter(context, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
+        gr.drawLevelCounter(THE_GAME_CONTEXT, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 
     // Scene controller state machine
@@ -266,7 +266,7 @@ public class CutScene1 extends GameScene2D {
 
     private void updateStateInHeaven() {
         if (stateTimer.hasExpired()) {
-            context.gameController().terminateCurrentState();
+            THE_GAME_CONTROLLER.terminateCurrentState();
         }
     }
 }

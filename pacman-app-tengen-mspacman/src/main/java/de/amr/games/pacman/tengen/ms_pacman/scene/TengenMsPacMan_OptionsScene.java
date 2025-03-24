@@ -20,10 +20,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.CONTINUES_SPRITES;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 import static de.amr.games.pacman.ui.input.Keyboard.alt;
 
 /**
@@ -66,17 +68,17 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     @Override
     public void bindGameActions() {
         bind(TengenMsPacMan_GameActions.SELECT_NEXT_JOYPAD_KEY_BINDING, alt(KeyCode.J));
-        bind(TengenMsPacMan_GameActions.START_PLAYING, context.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
-        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, context.joypadKeyBinding().key(NES_JoypadButton.BTN_SELECT));
+        bind(TengenMsPacMan_GameActions.START_PLAYING, THE_GAME_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
+        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, THE_GAME_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_SELECT));
         GameActions2D.bindTestActions(this);
     }
 
     @Override
     public void doInit() {
-        context.joypadKeyBinding().register(context.keyboard());
-        context.setScoreVisible(false);
+        THE_GAME_CONTEXT.joypadKeyBinding().register(THE_GAME_CONTEXT.keyboard());
+        THE_GAME_CONTEXT.setScoreVisible(false);
         selectedOption = OPTION_PAC_BOOSTER;
-        tengenGame = context.game();
+        tengenGame = THE_GAME_CONTEXT.game();
         tengenGame.setCanStartNewGame(true);
         resetIdleTimer();
         initialDelay = INITIAL_DELAY;
@@ -84,7 +86,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        context.joypadKeyBinding().unregister(context.keyboard());
+        THE_GAME_CONTEXT.joypadKeyBinding().unregister(THE_GAME_CONTEXT.keyboard());
     }
 
     @Override
@@ -94,7 +96,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
             return;
         }
         if (idleTicks == IDLE_TIMEOUT) {
-            context.gameController().changeState(GameState.INTRO);
+            THE_GAME_CONTROLLER.changeState(GameState.INTRO);
             return;
         }
         idleTicks += 1;
@@ -110,17 +112,17 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     private void optionSelectionChanged() {
-        context.sound().playClipIfEnabled("option.selection_changed", 1);
+        THE_GAME_CONTEXT.sound().playClipIfEnabled("option.selection_changed", 1);
         resetIdleTimer();
     }
 
     private void optionValueChanged() {
-        context.sound().playClipIfEnabled("option.value_changed", 1);
+        THE_GAME_CONTEXT.sound().playClipIfEnabled("option.value_changed", 1);
         resetIdleTimer();
     }
 
     private boolean isJoypadPressed(NES_JoypadButton button) {
-        return context.keyboard().isMatching(context.joypadKeyBinding().key(button));
+        return THE_GAME_CONTEXT.keyboard().isMatching(THE_GAME_CONTEXT.joypadKeyBinding().key(button));
     }
 
     @Override
@@ -156,7 +158,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         }
 
         else {
-            context.ifTriggeredRunAction(this);
+            THE_GAME_CONTEXT.ifTriggeredRunAction(this);
         }
     }
 
@@ -298,7 +300,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), sizeInPx().x(), 212);
 
         if (PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED.get()) {
-            r.drawJoypadBindings(context.joypadKeyBinding());
+            r.drawJoypadBindings(THE_GAME_CONTEXT.joypadKeyBinding());
         }
     }
 

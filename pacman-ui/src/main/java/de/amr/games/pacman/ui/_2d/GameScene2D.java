@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.ui.GameAction;
-import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GameScene;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
@@ -15,6 +14,8 @@ import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 
 /**
  * Base class of all 2D scenes.
@@ -27,7 +28,6 @@ public abstract class GameScene2D implements GameScene {
     protected final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(this, "backgroundColor", Color.BLACK);
     protected final BooleanProperty debugInfoVisiblePy = new SimpleBooleanProperty(this, "debugInfoVisible", false);
     protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
-    protected GameContext context;
     protected GameRenderer gr;
     protected Canvas canvas;
 
@@ -35,23 +35,13 @@ public abstract class GameScene2D implements GameScene {
     public final void init() {
         doInit();
         bindGameActions();
-        registerGameActionKeyBindings(context().keyboard());
+        registerGameActionKeyBindings(THE_GAME_CONTEXT.keyboard());
     }
 
     @Override
     public final void end() {
         doEnd();
-        unregisterGameActionKeyBindings(context().keyboard());
-    }
-
-    @Override
-    public GameContext context() {
-        return context;
-    }
-
-    @Override
-    public void setGameContext(GameContext context) {
-        this.context = Globals.assertNotNull(context);
+        unregisterGameActionKeyBindings(THE_GAME_CONTEXT.keyboard());
     }
 
     @Override
@@ -100,8 +90,8 @@ public abstract class GameScene2D implements GameScene {
         gr.setScaling(scaling());
         gr.setBackgroundColor(backgroundColor());
         gr.clearCanvas();
-        if (context.isScoreVisible()) {
-            gr.drawScores(context);
+        if (THE_GAME_CONTEXT.isScoreVisible()) {
+            gr.drawScores(THE_GAME_CONTEXT);
         }
         drawSceneContent();
         if (debugInfoVisiblePy.get()) {

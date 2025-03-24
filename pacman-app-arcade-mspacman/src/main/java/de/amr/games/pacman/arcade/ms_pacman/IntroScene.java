@@ -22,9 +22,9 @@ import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.Globals.tiles2Px;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindTestActions;
 
 /**
@@ -79,14 +79,14 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(GameActions2D.INSERT_COIN, context.arcadeKeys().key(Arcade.Button.COIN));
-        bind(GameActions2D.START_GAME, context.arcadeKeys().key(Arcade.Button.START));
+        bind(GameActions2D.INSERT_COIN, THE_GAME_CONTEXT.arcadeKeys().key(Arcade.Button.COIN));
+        bind(GameActions2D.START_GAME, THE_GAME_CONTEXT.arcadeKeys().key(Arcade.Button.START));
         bindTestActions(this);
     }
 
     @Override
     public void doInit() {
-        context.setScoreVisible(true);
+        THE_GAME_CONTEXT.setScoreVisible(true);
 
         msPacMan = new Pac();
         ghosts = new Ghost[] {
@@ -99,7 +99,7 @@ public class IntroScene extends GameScene2D {
         ghostID = 0;
         waitBeforeRising = 0;
 
-        ArcadeMsPacMan_SpriteSheet spriteSheet = (ArcadeMsPacMan_SpriteSheet) context.gameConfiguration().spriteSheet();
+        ArcadeMsPacMan_SpriteSheet spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_GAME_CONTEXT.gameConfiguration().spriteSheet();
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
         msPacMan.selectAnimation(ActorAnimations.ANIM_PAC_MUNCHING);
         for (Ghost ghost : ghosts) {
@@ -111,7 +111,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        context.sound().stopVoice();
+        THE_GAME_CONTEXT.sound().stopVoice();
     }
 
     @Override
@@ -126,7 +126,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        context.sound().playInsertCoinSound();
+        THE_GAME_CONTEXT.sound().playInsertCoinSound();
     }
 
     @Override
@@ -154,8 +154,8 @@ public class IntroScene extends GameScene2D {
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
             r.drawMsPacManMidwayCopyright(tiles2Px(6), tiles2Px(28), COLOR_RED, font);
         }
-        gr.drawText("CREDIT %2d".formatted(context.gameController().credit), COLOR_WHITE, font, 2 * TS, sizeInPx().y() - 2);
-        gr.drawLevelCounter(context, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
+        gr.drawText("CREDIT %2d".formatted(THE_GAME_CONTROLLER.credit), COLOR_WHITE, font, 2 * TS, sizeInPx().y() - 2);
+        gr.drawLevelCounter(THE_GAME_CONTEXT, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 
     /**
@@ -280,10 +280,10 @@ public class IntroScene extends GameScene2D {
             @Override
             public void onUpdate(IntroScene intro) {
                 intro.marqueeTimer.doTick();
-                if (timer.atSecond(2.0) && !intro.context.game().canStartNewGame()) {
-                    intro.context.gameController().changeState(GameState.STARTING_GAME); // demo level
+                if (timer.atSecond(2.0) && !THE_GAME_CONTEXT.game().canStartNewGame()) {
+                    THE_GAME_CONTROLLER.changeState(GameState.STARTING_GAME); // demo level
                 } else if (timer.atSecond(5)) {
-                    intro.context.gameController().changeState(GameState.SETTING_OPTIONS);
+                    THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
                 }
             }
         };

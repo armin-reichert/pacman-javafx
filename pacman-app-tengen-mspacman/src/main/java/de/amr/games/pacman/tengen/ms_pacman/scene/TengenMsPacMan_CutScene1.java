@@ -17,12 +17,14 @@ import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
+import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_GHOST_NORMAL;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.HEART_SPRITE;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 
 /**
  * Intermission scene 1: "They meet".
@@ -62,13 +64,13 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(context -> context.gameController().terminateCurrentState(), context.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
+        bind(context -> THE_GAME_CONTROLLER.terminateCurrentState(), THE_GAME_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
     }
 
     @Override
     public void doInit() {
         t = -1;
-        context.setScoreVisible(false);
+        THE_GAME_CONTEXT.setScoreVisible(false);
 
         mrPacMan = new Pac();
         msPacMan = new Pac();
@@ -76,13 +78,13 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         pinky = TengenMsPacMan_GameModel.pinky();
         heart = new Actor2D();
 
-        var spriteSheet = (TengenMsPacMan_SpriteSheet) context.gameConfiguration().spriteSheet();
+        var spriteSheet = (TengenMsPacMan_SpriteSheet) THE_GAME_CONTEXT.gameConfiguration().spriteSheet();
         msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         mrPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         inky.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, inky.id()));
         pinky.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, pinky.id()));
 
-        music = context.sound().makeSound("intermission.1");
+        music = THE_GAME_CONTEXT.sound().makeSound("intermission.1");
     }
 
     @Override
@@ -186,7 +188,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             heart.hide();
         }
         else if (t == 775) {
-            context.gameController().terminateCurrentState();
+            THE_GAME_CONTROLLER.terminateCurrentState();
             return;
         }
 
@@ -223,9 +225,9 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         r.drawAnimatedActor(inky);
         r.drawAnimatedActor(pinky);
         r.drawActorSprite(heart, HEART_SPRITE);
-        if (context.game().level().isPresent()) {
+        if (THE_GAME_CONTEXT.game().level().isPresent()) {
             // avoid exception in cut scene test mode
-            r.drawLevelCounter(context, sizeInPx().x() - 4 * TS, sizeInPx().y() - 3 * TS);
+            r.drawLevelCounter(THE_GAME_CONTEXT, sizeInPx().x() - 4 * TS, sizeInPx().y() - 3 * TS);
         }
     }
 

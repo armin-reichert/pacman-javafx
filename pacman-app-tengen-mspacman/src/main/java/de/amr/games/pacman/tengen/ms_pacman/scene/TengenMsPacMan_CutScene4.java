@@ -1,8 +1,8 @@
 package de.amr.games.pacman.tengen.ms_pacman.scene;
 
+import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.ClapperboardAnimation;
@@ -19,10 +19,12 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 
 public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
@@ -49,18 +51,18 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     protected void doInit() {
         t = -1;
 
-        context.setScoreVisible(false);
+        THE_GAME_CONTEXT.setScoreVisible(false);
 
         mrPacMan = new Pac();
         msPacMan = new Pac();
         juniors = new ArrayList<>();
         juniorCreationTime = new ArrayList<>();
 
-        spriteSheet = (TengenMsPacMan_SpriteSheet) context.gameConfiguration().spriteSheet();
+        spriteSheet = (TengenMsPacMan_SpriteSheet) THE_GAME_CONTEXT.gameConfiguration().spriteSheet();
         mrPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
 
-        music = context.sound().makeSound("intermission.4");
+        music = THE_GAME_CONTEXT.sound().makeSound("intermission.4");
     }
 
     @Override
@@ -131,7 +133,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             spawnJunior();
         }
         else if (t == 1512) {
-            context.gameController().changeState(GameState.SETTING_OPTIONS);
+            THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
         }
 
         mrPacMan.move();
@@ -152,11 +154,11 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     }
 
     private void spawnJunior() {
-        String assetNamespace = context.gameConfiguration().assetNamespace();
+        String assetNamespace = THE_GAME_CONTEXT.gameConfiguration().assetNamespace();
         var junior = new Pac();
         double randomX = 8 * TS + (8 * TS) * Math.random();
         int rnd = Globals.randomInt(1, 3);
-        AudioClip clip = context.assets().get(assetNamespace + ".audio.intermission.4.junior." + rnd);
+        AudioClip clip = THE_GAME_CONTEXT.assets().get(assetNamespace + ".audio.intermission.4.junior." + rnd);
         junior.setPosition((float) randomX, sizeInPx().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
@@ -221,9 +223,9 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         r.drawAnimatedActor(mrPacMan);
         juniors.forEach(r::drawAnimatedActor);
 
-        if (context.game().level().isPresent()) { // avoid exception in cut scene test mode
+        if (THE_GAME_CONTEXT.game().level().isPresent()) { // avoid exception in cut scene test mode
             r.setLevelNumberBoxesVisible(false);
-            r.drawLevelCounter(context, sizeInPx().x() - 4 * TS, sizeInPx().y() - 3 * TS);
+            r.drawLevelCounter(THE_GAME_CONTEXT, sizeInPx().x() - 4 * TS, sizeInPx().y() - 3 * TS);
         }
     }
 

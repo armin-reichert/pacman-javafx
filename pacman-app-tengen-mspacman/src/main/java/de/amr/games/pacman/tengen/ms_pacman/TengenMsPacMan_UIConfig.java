@@ -192,7 +192,6 @@ public class TengenMsPacMan_UIConfig implements GameUIConfiguration {
     @Override
     public GameScene2D createPiPScene(GameContext context, Canvas canvasNotUsed) {
         var gameScene = new TengenMsPacMan_PiPScene();
-        gameScene.setGameContext(context);
         gameScene.setGameRenderer(createRenderer(context.assets(), gameScene.canvas()));
         return gameScene;
     }

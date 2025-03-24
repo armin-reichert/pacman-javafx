@@ -13,11 +13,11 @@ import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.uilib.SpriteAnimation;
 import javafx.scene.media.MediaPlayer;
 
-import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.Globals.tiles2Px;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_MR_PACMAN_MUNCHING;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 
 /**
  * Intermission scene 3: "Junior".
@@ -49,15 +49,15 @@ public class CutScene3 extends GameScene2D {
 
     @Override
     public void doInit() {
-        context.setScoreVisible(true);
+        THE_GAME_CONTEXT.setScoreVisible(true);
 
         pacMan = new Pac();
         msPacMan = new Pac();
         stork = new Actor2D();
         bag = new Actor2D();
 
-        music = context.sound().makeSound("intermission.3");
-        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) context.gameConfiguration().spriteSheet();
+        music = THE_GAME_CONTEXT.sound().makeSound("intermission.3");
+        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_GAME_CONTEXT.gameConfiguration().spriteSheet();
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
         pacMan.setAnimations(new PacAnimations(spriteSheet));
 
@@ -94,7 +94,7 @@ public class CutScene3 extends GameScene2D {
         gr.drawAnimatedActor(pacMan);
         gr.drawActorSprite(stork, storkAnimation.currentSprite());
         gr.drawActorSprite(bag, bagOpen ? ArcadeMsPacMan_SpriteSheet.JUNIOR_PAC_SPRITE : ArcadeMsPacMan_SpriteSheet.BLUE_BAG_SPRITE);
-        gr.drawLevelCounter(context, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
+        gr.drawLevelCounter(THE_GAME_CONTEXT, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 
     // scene controller state machine
@@ -183,7 +183,7 @@ public class CutScene3 extends GameScene2D {
     private void updateStateStorkLeavesScene() {
         stork.move();
         if (stateTimer.hasExpired()) {
-            context.gameController().terminateCurrentState();
+            THE_GAME_CONTROLLER.terminateCurrentState();
         }
     }
 }

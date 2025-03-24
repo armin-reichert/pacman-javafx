@@ -16,6 +16,7 @@ import javafx.scene.paint.Color;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 
 /**
  * @author Armin Reichert
@@ -34,15 +35,15 @@ public class CutScene3 extends GameScene2D {
 
     @Override
     public void doInit() {
-        context.setScoreVisible(true);
+        THE_GAME_CONTEXT.setScoreVisible(true);
 
         pac = new Pac();
         blinky = ArcadePacMan_GameModel.blinky();
 
-        music = context.sound().makeSoundLoop("intermission");
+        music = THE_GAME_CONTEXT.sound().makeSoundLoop("intermission");
         music.setCycleCount(2);
 
-        var spriteSheet = (ArcadePacMan_SpriteSheet) context.gameConfiguration().spriteSheet();
+        var spriteSheet = (ArcadePacMan_SpriteSheet) THE_GAME_CONTEXT.gameConfiguration().spriteSheet();
         pac.setAnimations(new PacAnimations(spriteSheet));
         blinky.setAnimations(new GhostAnimations(spriteSheet, blinky.id()));
 
@@ -83,7 +84,7 @@ public class CutScene3 extends GameScene2D {
                 blinky.selectAnimation(GhostAnimations.ANIM_BLINKY_NAKED);
                 blinky.startAnimation();
             }
-            case ANIMATION_START + 700 -> context.gameState().timer().expire();
+            case ANIMATION_START + 700 -> THE_GAME_CONTEXT.gameState().timer().expire();
             default -> {}
         }
     }
@@ -97,7 +98,7 @@ public class CutScene3 extends GameScene2D {
     public void drawSceneContent() {
         gr.drawAnimatedActor(pac);
         gr.drawAnimatedActor(blinky);
-        gr.drawLevelCounter(context, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
+        gr.drawLevelCounter(THE_GAME_CONTEXT, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 
     @Override

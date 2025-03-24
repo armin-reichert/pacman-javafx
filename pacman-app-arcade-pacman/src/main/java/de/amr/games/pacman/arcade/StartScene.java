@@ -12,10 +12,10 @@ import de.amr.games.pacman.ui._2d.GameActions2D;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
 
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.arcade.ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT;
-import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.Globals.tiles2Px;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 
 /**
  * @author Armin Reichert
@@ -24,13 +24,13 @@ public class StartScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(GameActions2D.INSERT_COIN, context.arcadeKeys().key(Arcade.Button.COIN));
-        bind(GameActions2D.START_GAME, context.arcadeKeys().key(Arcade.Button.START));
+        bind(GameActions2D.INSERT_COIN, THE_GAME_CONTEXT.arcadeKeys().key(Arcade.Button.COIN));
+        bind(GameActions2D.START_GAME, THE_GAME_CONTEXT.arcadeKeys().key(Arcade.Button.START));
     }
 
     @Override
     public void doInit() {
-        context.setScoreVisible(true);
+        THE_GAME_CONTEXT.setScoreVisible(true);
     }
 
     @Override
@@ -55,15 +55,15 @@ public class StartScene extends GameScene2D {
         gr.drawText("1 PLAYER ONLY", cyan, font8, tiles2Px(8), tiles2Px(21));
         gr.drawText("BONUS PAC-MAN FOR 10000", rose, font8, tiles2Px(1), tiles2Px(25));
         gr.drawText("PTS", rose, font6, tiles2Px(25), tiles2Px(25));
-        if (context.gameVariant() == GameVariant.PACMAN) {
+        if (THE_GAME_CONTEXT.gameVariant() == GameVariant.PACMAN) {
             gr.drawText(MIDWAY_COPYRIGHT, pink, font8, tiles2Px(4), tiles2Px(29));
         }
-        gr.drawText("CREDIT %2d".formatted(context.gameController().credit), white, font8, 2 * TS, sizeInPx().y() - 2);
-        gr.drawLevelCounter(context, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
+        gr.drawText("CREDIT %2d".formatted(THE_GAME_CONTROLLER.credit), white, font8, 2 * TS, sizeInPx().y() - 2);
+        gr.drawLevelCounter(THE_GAME_CONTEXT, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        context.sound().playInsertCoinSound();
+        THE_GAME_CONTEXT.sound().playInsertCoinSound();
     }
 }

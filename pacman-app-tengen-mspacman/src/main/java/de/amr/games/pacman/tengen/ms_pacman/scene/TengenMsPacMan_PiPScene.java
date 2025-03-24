@@ -4,6 +4,7 @@ import de.amr.games.pacman.ui._2d.GlobalProperties2d;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.games.pacman.Globals.TS;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 
 public class TengenMsPacMan_PiPScene extends TengenMsPacMan_PlayScene2D {
 
@@ -32,7 +33,7 @@ public class TengenMsPacMan_PiPScene extends TengenMsPacMan_PlayScene2D {
         setScaling(canvas.getHeight() / (sizeInPx().y() + 3 * TS));
         gr.setScaling(scaling());
         gr.clearCanvas();
-        context.game().level().ifPresent(level -> {
+        THE_GAME_CONTEXT.game().level().ifPresent(level -> {
             gr.ctx().save();
             gr.ctx().translate(scaled(TS), 0);
             drawSceneContent();

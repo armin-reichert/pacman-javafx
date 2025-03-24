@@ -15,6 +15,7 @@ import javafx.scene.paint.Color;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_TILES;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 
 public class ArcadeBootScene extends GameScene2D {
 
@@ -23,13 +24,13 @@ public class ArcadeBootScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        context.setScoreVisible(false);
+        THE_GAME_CONTEXT.setScoreVisible(false);
     }
 
     @Override
     public void update() {
-        if (context.gameState().timer().atSecond(4)) {
-            context.gameController().terminateCurrentState();
+        if (THE_GAME_CONTEXT.gameState().timer().atSecond(4)) {
+            THE_GAME_CONTROLLER.terminateCurrentState();
         }
     }
 
@@ -43,13 +44,13 @@ public class ArcadeBootScene extends GameScene2D {
         Vector2f sceneSize = sizeInPx();
         gr.setScaling(scaling());
         gr.setBackgroundColor(backgroundColor());
-        var timer = context.gameState().timer();
+        var timer = THE_GAME_CONTEXT.gameState().timer();
         if (timer.tickCount() == 1) {
             gr.clearCanvas();
         } else if (timer.betweenSeconds(1, 2) && timer.tickCount() % 8 == 0) {
             paintRandomHexCodes(sceneSize);
         } else if (timer.betweenSeconds(2, 3.5) && timer.tickCount() % 4 == 0) {
-            paintRandomSprites(context.gameConfiguration().spriteSheet().sourceImage(), sceneSize);
+            paintRandomSprites(THE_GAME_CONTEXT.gameConfiguration().spriteSheet().sourceImage(), sceneSize);
         } else if (timer.atSecond(3.5)) {
             paintScreenTestGrid(sceneSize);
         }
@@ -97,7 +98,7 @@ public class ArcadeBootScene extends GameScene2D {
     private void paintScreenTestGrid(Vector2f sceneSize) {
         GraphicsContext g = gr.ctx();
         gr.clearCanvas();
-        Vector2i sizeInTiles = context.worldSizeInTilesOrElse(ARCADE_MAP_SIZE_IN_TILES);
+        Vector2i sizeInTiles = THE_GAME_CONTEXT.worldSizeInTilesOrElse(ARCADE_MAP_SIZE_IN_TILES);
         int numRows = sizeInTiles.y() / 2, numCols = sizeInTiles.y() / 2;
         g.setStroke(Color.web(Arcade.Palette.WHITE));
         g.setLineWidth(scaled(2.0));

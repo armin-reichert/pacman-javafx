@@ -13,9 +13,9 @@ import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.Globals.tiles2Px;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 
 /**
  * @author Armin Reichert
@@ -24,13 +24,13 @@ public class StartScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(GameActions2D.INSERT_COIN, context.arcadeKeys().key(Arcade.Button.COIN));
-        bind(GameActions2D.START_GAME, context.arcadeKeys().key(Arcade.Button.START));
+        bind(GameActions2D.INSERT_COIN, THE_GAME_CONTEXT.arcadeKeys().key(Arcade.Button.COIN));
+        bind(GameActions2D.START_GAME, THE_GAME_CONTEXT.arcadeKeys().key(Arcade.Button.START));
     }
 
     @Override
     public void doInit() {
-        context.setScoreVisible(true);
+        THE_GAME_CONTEXT.setScoreVisible(true);
     }
 
     @Override
@@ -55,13 +55,13 @@ public class StartScene extends GameScene2D {
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
             r.drawMsPacManMidwayCopyright(tiles2Px(6), tiles2Px(28), red, gr.scaledArcadeFont(TS));
         }
-        gr.drawText("CREDIT %2d".formatted(context.gameController().credit), white, gr.scaledArcadeFont(TS),
+        gr.drawText("CREDIT %2d".formatted(THE_GAME_CONTROLLER.credit), white, gr.scaledArcadeFont(TS),
             tiles2Px(2), sizeInPx().y() - 2);
-        gr.drawLevelCounter(context, sizeInPx().x() - tiles2Px(4), sizeInPx().y() - tiles2Px(2));
+        gr.drawLevelCounter(THE_GAME_CONTEXT, sizeInPx().x() - tiles2Px(4), sizeInPx().y() - tiles2Px(2));
     }
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        context.sound().playInsertCoinSound();
+        THE_GAME_CONTEXT.sound().playInsertCoinSound();
     }
 }

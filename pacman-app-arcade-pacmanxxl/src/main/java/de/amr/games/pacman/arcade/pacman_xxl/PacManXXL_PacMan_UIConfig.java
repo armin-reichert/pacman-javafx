@@ -132,7 +132,6 @@ public class PacManXXL_PacMan_UIConfig implements GameUIConfiguration {
     @Override
     public GameScene2D createPiPScene(GameContext context, Canvas canvas) {
         var gameScene = new ArcadePlayScene2D();
-        gameScene.setGameContext(context);
         gameScene.setGameRenderer(createRenderer(context.assets(), canvas));
         return gameScene;
     }

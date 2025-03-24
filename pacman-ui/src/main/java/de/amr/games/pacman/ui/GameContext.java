@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
@@ -53,12 +52,10 @@ public interface GameContext {
 
     GameClockFX gameClock();
 
-    default GameController gameController() { return THE_GAME_CONTROLLER; }
-
-    default GameState gameState() { return gameController().state(); }
+    default GameState gameState() { return THE_GAME_CONTROLLER.state(); }
 
     @SuppressWarnings("unchecked")
-    default <GAME extends GameModel> GAME game() { return (GAME) gameController().game(); }
+    default <GAME extends GameModel> GAME game() { return (GAME) THE_GAME_CONTROLLER.game(); }
 
     GameVariant gameVariant();
 

@@ -15,6 +15,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
 
+import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.oneOf;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_IMMUNITY;
@@ -52,12 +53,12 @@ public class InfoBoxGameControl extends InfoBox {
         cbAutopilot        = addCheckBox("Autopilot");
         cbImmunity         = addCheckBox("Pac-Man Immune");
 
-        spinnerCredit.valueProperty().addListener((py, ov, number) -> context.gameController().credit = number);
+        spinnerCredit.valueProperty().addListener((py, ov, number) -> THE_GAME_CONTROLLER.credit = number);
 
         comboGameVariant.setOnAction(e -> {
             if (comboGameVariant.getValue() != context.gameVariant()) {
-                context.gameController().selectGameVariant(comboGameVariant.getValue());
-                context.gameController().restart(GameState.BOOT);
+                THE_GAME_CONTROLLER.selectGameVariant(comboGameVariant.getValue());
+                THE_GAME_CONTROLLER.restart(GameState.BOOT);
             }
         });
 
@@ -79,7 +80,7 @@ public class InfoBoxGameControl extends InfoBox {
         GameModel game = context.game();
         GameState state = context.gameState();
 
-        spinnerCredit.getValueFactory().setValue(context.gameController().credit);
+        spinnerCredit.getValueFactory().setValue(THE_GAME_CONTROLLER.credit);
         comboGameVariant.setValue(context.gameVariant());
         comboInitialLives.setValue(game.initialLives());
 

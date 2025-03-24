@@ -11,16 +11,14 @@ import javafx.scene.input.ContextMenuEvent;
 
 import java.util.List;
 
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
+
 /**
  * Common interface of all game scenes (2D and 3D).
  *
  * @author Armin Reichert
  */
 public interface GameScene extends GameEventListener, GameActionProvider {
-
-    GameContext context();
-
-    void setGameContext(GameContext context);
 
     /**
      * Called when the scene becomes the current one.
@@ -59,6 +57,6 @@ public interface GameScene extends GameEventListener, GameActionProvider {
      * @return scene name as used by logging output
      */
     default String displayName() {
-        return "%s (%s)".formatted(getClass().getSimpleName(), context().gameVariant());
+        return "%s (%s)".formatted(getClass().getSimpleName(), THE_GAME_CONTEXT.gameVariant());
     }
 }

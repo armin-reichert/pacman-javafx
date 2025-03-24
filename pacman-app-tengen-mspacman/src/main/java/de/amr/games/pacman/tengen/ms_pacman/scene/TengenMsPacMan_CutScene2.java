@@ -17,11 +17,13 @@ import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
+import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_MR_PACMAN_MUNCHING;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 
 /**
  * Intermission scene 2: "The chase".
@@ -51,19 +53,19 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(context -> context.gameController().terminateCurrentState(), context.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
+        bind(context -> THE_GAME_CONTROLLER.terminateCurrentState(), THE_GAME_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
     }
 
     @Override
     public void doInit() {
         t = -1;
-        context.setScoreVisible(false);
+        THE_GAME_CONTEXT.setScoreVisible(false);
         pacMan = new Pac();
         msPacMan = new Pac();
-        var spriteSheet = (TengenMsPacMan_SpriteSheet) context.gameConfiguration().spriteSheet();
+        var spriteSheet = (TengenMsPacMan_SpriteSheet) THE_GAME_CONTEXT.gameConfiguration().spriteSheet();
         msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         pacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
-        music = context.sound().makeSound("intermission.2");
+        music = THE_GAME_CONTEXT.sound().makeSound("intermission.2");
     }
 
     @Override
@@ -137,7 +139,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
             pacMan.setSpeed(4.0f);
         }
         else if (t == 1380) {
-            context.gameController().terminateCurrentState();
+            THE_GAME_CONTROLLER.terminateCurrentState();
             return;
         }
         pacMan.move();
@@ -158,8 +160,8 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         r.drawClapperBoard(clapAnimation, "THE CHASE", 2, CLAP_TILE_X, CLAP_TILE_Y);
         r.drawAnimatedActor(msPacMan);
         r.drawAnimatedActor(pacMan);
-        if (context.game().level().isPresent()) { // avoid exception in cut scene test mode
-            r.drawLevelCounter(context, sizeInPx().x() - 4 * TS, sizeInPx().y() - 3 * TS);
+        if (THE_GAME_CONTEXT.game().level().isPresent()) { // avoid exception in cut scene test mode
+            r.drawLevelCounter(THE_GAME_CONTEXT, sizeInPx().x() - 4 * TS, sizeInPx().y() - 3 * TS);
         }
     }
 

@@ -19,12 +19,14 @@ import de.amr.games.pacman.uilib.SpriteAnimation;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
+import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.BLUE_BAG_SPRITE;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.JUNIOR_PAC_SPRITE;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 
 /**
  * Intermission scene 3: "Junior".
@@ -63,13 +65,13 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(context -> context.gameController().terminateCurrentState(), context.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
+        bind(context -> THE_GAME_CONTROLLER.terminateCurrentState(), THE_GAME_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
     }
 
     @Override
     public void doInit() {
         t = -1;
-        context.setScoreVisible(false);
+        THE_GAME_CONTEXT.setScoreVisible(false);
 
         mrPacMan = new Pac();
         msPacMan = new Pac();
@@ -77,11 +79,11 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         bagWithJunior = new Actor2D();
         bagWithJunior.hide();
 
-        spriteSheet = (TengenMsPacMan_SpriteSheet) context.gameConfiguration().spriteSheet();
+        spriteSheet = (TengenMsPacMan_SpriteSheet) THE_GAME_CONTEXT.gameConfiguration().spriteSheet();
         mrPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
 
-        music = context.sound().makeSound("intermission.3");
+        music = THE_GAME_CONTEXT.sound().makeSound("intermission.3");
     }
 
     @Override
@@ -140,7 +142,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
             darkness = true;
         }
         else if (t == 660) {
-            context.gameController().terminateCurrentState();
+            THE_GAME_CONTROLLER.terminateCurrentState();
             return;
         }
 
@@ -180,9 +182,9 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
                 r.drawActorSprite(bagWithJunior, BLUE_BAG_SPRITE);
             }
         }
-        if (context.game().level().isPresent()) { // avoid exception in cut scene test mode
+        if (THE_GAME_CONTEXT.game().level().isPresent()) { // avoid exception in cut scene test mode
             r.setLevelNumberBoxesVisible(false);
-            r.drawLevelCounter(context, sizeInPx().x() - 4 * TS, sizeInPx().y() - 3 * TS);
+            r.drawLevelCounter(THE_GAME_CONTEXT, sizeInPx().x() - 4 * TS, sizeInPx().y() - 3 * TS);
         }
     }
 

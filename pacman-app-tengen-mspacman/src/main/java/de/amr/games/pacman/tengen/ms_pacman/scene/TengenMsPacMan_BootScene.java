@@ -18,10 +18,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.Globals.HTS;
-import static de.amr.games.pacman.Globals.TS;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 
 /**
  * Animated "TENGEN PRESENTS" text and ghost running through scene.
@@ -43,7 +43,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        context.setScoreVisible(false);
+        THE_GAME_CONTEXT.setScoreVisible(false);
         t = -1;
     }
 
@@ -57,7 +57,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             ghost = TengenMsPacMan_GameModel.blinky();
             ghost.setSpeed(0);
             ghost.hide();
-            GameSpriteSheet spriteSheet = context.gameConfiguration().spriteSheet();
+            GameSpriteSheet spriteSheet = THE_GAME_CONTEXT.gameConfiguration().spriteSheet();
             ghost.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, ghost.id()));
             ghost.selectAnimation(ActorAnimations.ANIM_GHOST_NORMAL);
         }
@@ -94,7 +94,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             grayScreen = false;
         }
         else if (t == 220) {
-            context.gameController().changeState(GameState.INTRO);
+            THE_GAME_CONTROLLER.changeState(GameState.INTRO);
         }
         ghost.move();
         tengenPresentsY += tengenPresentsSpeed;

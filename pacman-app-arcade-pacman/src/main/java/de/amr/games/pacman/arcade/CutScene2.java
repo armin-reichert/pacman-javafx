@@ -18,6 +18,7 @@ import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.Globals.tiles2Px;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.*;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 
 /**
  * @author Armin Reichert
@@ -39,17 +40,17 @@ public class CutScene2 extends GameScene2D {
 
     @Override
     public void doInit() {
-        context.setScoreVisible(true);
+        THE_GAME_CONTEXT.setScoreVisible(true);
 
         pac = new Pac();
         blinky = ArcadePacMan_GameModel.blinky();
         blinky.setSpeed(0);
         blinky.hide();
 
-        music = context.sound().makeSound("intermission");
+        music = THE_GAME_CONTEXT.sound().makeSound("intermission");
         music.setCycleCount(1);
 
-        var spriteSheet = (ArcadePacMan_SpriteSheet) context.gameConfiguration().spriteSheet();
+        var spriteSheet = (ArcadePacMan_SpriteSheet) THE_GAME_CONTEXT.gameConfiguration().spriteSheet();
         pac.setAnimations(new PacAnimations(spriteSheet));
 
         var blinkyAnimations = new GhostAnimations(spriteSheet, blinky.id());
@@ -107,7 +108,7 @@ public class CutScene2 extends GameScene2D {
             case ANIMATION_START + 389 -> blinkyDamaged.nextFrame(); // Eyes right-down
             case ANIMATION_START + 508 -> {
                 blinky.setVisible(false);
-                context.gameState().timer().expire();
+                THE_GAME_CONTEXT.gameState().timer().expire();
             }
             default -> {}
         }
@@ -123,7 +124,7 @@ public class CutScene2 extends GameScene2D {
         gr.drawSpriteScaled(blinkyStretching.currentSprite(), tiles2Px(14), tiles2Px(19) + 3);
         gr.drawAnimatedActor(blinky);
         gr.drawAnimatedActor(pac);
-        gr.drawLevelCounter(context, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
+        gr.drawLevelCounter(THE_GAME_CONTEXT, sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 
     @Override

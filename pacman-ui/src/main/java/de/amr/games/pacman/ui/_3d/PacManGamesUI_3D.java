@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._3d;
 
 import de.amr.games.pacman.ui.PacManGamesUI;
+import de.amr.games.pacman.ui.UIGlobals;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.uilib.Picker;
 import de.amr.games.pacman.uilib.ResourceManager;
@@ -13,6 +14,7 @@ import de.amr.games.pacman.uilib.model3D.Model3D;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
 
+import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_DEBUG_INFO_VISIBLE;
 import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_ENABLED;
 import static de.amr.games.pacman.uilib.Ufx.toggle;
@@ -32,6 +34,7 @@ public class PacManGamesUI_3D extends PacManGamesUI {
     public PacManGamesUI_3D() {
         super(); // loads 2D assets!
         loadAssets3D();
+        UIGlobals.THE_GAME_CONTEXT = this;
     }
 
     private void loadAssets3D() {
@@ -86,7 +89,7 @@ public class PacManGamesUI_3D extends PacManGamesUI {
             toggle(PY_3D_ENABLED);
             if (currentGameSceneHasID("PlayScene2D") || currentGameSceneHasID("PlayScene3D")) {
                 updateGameScene(true);
-                gameController().update(); //TODO needed?
+                THE_GAME_CONTROLLER.update(); //TODO needed?
             }
             if (!game().isPlaying()) {
                 showFlashMessage(locText(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));

@@ -14,6 +14,7 @@ import javafx.scene.text.Font;
 import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 
 public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
@@ -21,15 +22,15 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        context.setScoreVisible(false);
-        context.joypadKeyBinding().register(context.keyboard());
-        bind(GameActions2D.START_GAME, context.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
+        THE_GAME_CONTEXT.setScoreVisible(false);
+        THE_GAME_CONTEXT.joypadKeyBinding().register(THE_GAME_CONTEXT.keyboard());
+        bind(GameActions2D.START_GAME, THE_GAME_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
     }
 
     @Override
     public void update() {
-        if (context.gameState().timer().atSecond(DISPLAY_SECONDS)) {
-            context.gameState().timer().expire();
+        if (THE_GAME_CONTEXT.gameState().timer().atSecond(DISPLAY_SECONDS)) {
+            THE_GAME_CONTEXT.gameState().timer().expire();
         }
     }
 
@@ -45,7 +46,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
         double width = sizeInPx().x();
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), width, 20);
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), width, 212);
-        if (context.gameState().timer().betweenSeconds(0.5*DISPLAY_SECONDS, DISPLAY_SECONDS)) {
+        if (THE_GAME_CONTEXT.gameState().timer().betweenSeconds(0.5*DISPLAY_SECONDS, DISPLAY_SECONDS)) {
             drawJavaFXVersionAuthors(r, scaledFont);
         } else {
             drawOriginalGameAuthors(r, scaledFont);
