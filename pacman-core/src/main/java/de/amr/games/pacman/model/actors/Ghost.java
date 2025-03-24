@@ -10,6 +10,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.TerrainTiles;
+import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import org.tinylog.Logger;
@@ -343,9 +344,10 @@ public class Ghost extends Creature implements AnimatedActor2D {
     }
 
     private void updateFrightenedAnimation(GameModel game) {
-        if (game.isPowerFadingStarting()) {
+        TickTimer powerTimer = game.level().orElseThrow().powerTimer();
+        if (game.isPowerFadingStarting(powerTimer)) {
             selectAnimation(ActorAnimations.ANIM_GHOST_FLASHING);
-        } else if (!game.isPowerFading()) {
+        } else if (!game.isPowerFading(powerTimer)) {
             selectAnimation(ActorAnimations.ANIM_GHOST_FRIGHTENED);
         }
     }

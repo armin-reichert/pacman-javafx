@@ -179,9 +179,9 @@ public class Ghost3DAppearance extends Group {
                 case LEAVING_HOUSE, LOCKED ->
                     // ghost that have been killed by current energizer will not look frightened
                         level.powerTimer().isRunning() && !level.victims().contains(ghost)
-                                ? frightenedOrFlashing(context.game().isPowerFading())
+                                ? frightenedOrFlashing(context.game().isPowerFading(level.powerTimer()))
                                 : Appearance.COLORED_GHOST;
-                case FRIGHTENED -> frightenedOrFlashing(context.game().isPowerFading());
+                case FRIGHTENED -> frightenedOrFlashing(context.game().isPowerFading(level.powerTimer()));
                 case ENTERING_HOUSE, RETURNING_HOME -> Appearance.GHOST_EYES;
                 case EATEN -> Appearance.NUMBER;
                 default -> Appearance.COLORED_GHOST;

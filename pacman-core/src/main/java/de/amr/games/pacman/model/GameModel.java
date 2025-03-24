@@ -11,6 +11,7 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.timer.Pulse;
+import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.ActorAnimations;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -482,13 +483,13 @@ public abstract class GameModel {
         }
     }
 
-    public boolean isPowerFading() {
-        return level.powerTimer().isRunning() && level.powerTimer().remainingTicks() <= pacPowerFadingTicks();
+    public boolean isPowerFading(TickTimer powerTimer) {
+        return powerTimer.isRunning() && powerTimer.remainingTicks() <= pacPowerFadingTicks();
     }
 
-    public boolean isPowerFadingStarting() {
-        return level.powerTimer().isRunning() && level.powerTimer().remainingTicks() == pacPowerFadingTicks()
-            || level.powerTimer().durationTicks() < pacPowerFadingTicks() && level.powerTimer().tickCount() == 1;
+    public boolean isPowerFadingStarting(TickTimer powerTimer) {
+        return powerTimer.isRunning() && powerTimer.remainingTicks() == pacPowerFadingTicks()
+            || powerTimer.durationTicks() < pacPowerFadingTicks() && powerTimer.tickCount() == 1;
     }
 
     private void updateBonus(Bonus bonus) {
