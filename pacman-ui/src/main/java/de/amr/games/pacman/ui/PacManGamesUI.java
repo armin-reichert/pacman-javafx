@@ -13,7 +13,6 @@ import de.amr.games.pacman.ui.dashboard.InfoBox;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui.input.Keyboard;
-import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -42,8 +41,7 @@ import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
-import static de.amr.games.pacman.ui.UIGlobals.THE_KEYBOARD;
+import static de.amr.games.pacman.ui.UIGlobals.*;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_DEBUG_INFO_VISIBLE;
 import static de.amr.games.pacman.ui.input.ArcadeKeyBinding.DEFAULT_ARCADE_KEY_BINDING;
 import static de.amr.games.pacman.ui.input.JoypadKeyBinding.JOYPAD_CURSOR_KEYS;
@@ -65,8 +63,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         @Override
         public void execute() {
             THE_GAME_CONTEXT.currentGameScene().ifPresent(GameScene::end);
-            THE_GAME_CONTEXT.sound().stopAll();
             THE_GAME_CONTEXT.gameClock().stop();
+            THE_SOUND.stopAll();
             EditorView editorView = getOrCreateEditorView();
             stage.titleProperty().bind(editorView.editor().titleProperty());
             editorView.editor().start();
@@ -98,7 +96,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected final Map<GameVariant, GameUIConfiguration> uiConfigsByVariant = new EnumMap<>(GameVariant.class);
     protected final GameClockFX clock = new GameClockFX();
     protected final AssetStorage assets = new AssetStorage();
-    protected final GameSound gameSound = new GameSound();
 
     protected Stage stage;
     protected Scene mainScene;
@@ -173,7 +170,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         assets.store("voice.immunity.off",      rm.url("sound/voice/immunity-off.mp3"));
         assets.store("voice.immunity.on",       rm.url("sound/voice/immunity-on.mp3"));
 
-        gameSound.setAssets(assets);
+        THE_SOUND.setAssets(assets);
     }
 
     /**
@@ -228,7 +225,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     //TODO use nice font icons instead
     private Pane createIconPane() {
-        ImageView mutedIcon = createIcon(assets.get("icon.mute"), 48, sound().mutedProperty());
+        ImageView mutedIcon = createIcon(assets.get("icon.mute"), 48, THE_SOUND.mutedProperty());
         ImageView autoIcon  = createIcon(assets.get("icon.auto"), 48, GlobalProperties2d.PY_AUTOPILOT);
 
         var pane = new HBox(autoIcon, mutedIcon);
@@ -269,7 +266,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
                 stage.setFullScreen(true);
             }
             else if (KEY_MUTE.match(keyPress)) {
-                sound().toggleMuted();
+                THE_SOUND.toggleMuted();
             }
             else if (KEY_OPEN_EDITOR.match(keyPress)) {
                 openEditor();
@@ -309,11 +306,10 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         THE_GAME_CONTROLLER.game().removeGameEventListener(this);
         THE_GAME_CONTROLLER.selectGameVariant(gameVariant);
         THE_GAME_CONTROLLER.game().addGameEventListener(this);
+        THE_SOUND.selectGameVariant(gameVariant, gameConfiguration().assetNamespace());
         stage.getIcons().setAll(gameConfiguration().appIcon());
-        sound().selectGameVariant(gameVariant, gameConfiguration().assetNamespace());
         //TODO check this
         gameView.canvasContainer().decorationEnabledPy.set(gameConfiguration().isGameCanvasDecorated());
-
         Logger.info("Game variant changed to {}", gameVariant);
     }
 
@@ -416,11 +412,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public GameSound sound() {
-        return gameSound;
-    }
-
-    @Override
     public GameClockFX gameClock() {
         return clock;
     }
@@ -500,7 +491,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     public void showGameView() {
         showView(gameView);
         if (gameVariant() != GameVariant.MS_PACMAN_TENGEN) {
-            sound().playVoice("voice.explain", 0);
+            THE_SOUND.playVoice("voice.explain", 0);
         }
         GameActions2D.BOOT.execute();
     }
@@ -558,6 +549,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     @Override
     public void onStopAllSounds(GameEvent event) {
-        sound().stopAll();
+        THE_SOUND.stopAll();
     }
 }

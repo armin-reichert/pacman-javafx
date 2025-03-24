@@ -43,6 +43,7 @@ import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
 import static de.amr.games.pacman.ui.input.Keyboard.*;
 import static de.amr.games.pacman.uilib.Ufx.*;
@@ -109,7 +110,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
         toggle(PY_AUTOPILOT);
         boolean auto = PY_AUTOPILOT.get();
         THE_GAME_CONTEXT.showFlashMessage(THE_GAME_CONTEXT.locText(auto ? "autopilot_on" : "autopilot_off"));
-        THE_GAME_CONTEXT.sound().playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
+        THE_SOUND.playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
     };
 
     private final GameAction actionToggleDashboard = this::toggleDashboardVisibility;
@@ -119,7 +120,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
     private final GameAction actionToggleImmunity = () -> {
         toggle(GlobalProperties2d.PY_IMMUNITY);
         THE_GAME_CONTEXT.showFlashMessage(THE_GAME_CONTEXT.locText(GlobalProperties2d.PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
-        THE_GAME_CONTEXT.sound().playVoice(GlobalProperties2d.PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
+        THE_SOUND.playVoice(GlobalProperties2d.PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
     };
 
     protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
@@ -385,8 +386,8 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
             Logger.info("Game level {} ({}) created", level.number(), THE_GAME_CONTEXT.gameVariant());
             THE_GAME_CONTEXT.gameConfiguration().createActorAnimations(level);
             Logger.info("Actor animations ({}) created", THE_GAME_CONTEXT.gameVariant());
-            THE_GAME_CONTEXT.sound().setEnabled(!THE_GAME_CONTROLLER.game().isDemoLevel());
-            Logger.info("Sounds ({}) {}", THE_GAME_CONTEXT.gameVariant(), THE_GAME_CONTEXT.sound().isEnabled() ? "enabled" : "disabled");
+            THE_SOUND.setEnabled(!THE_GAME_CONTROLLER.game().isDemoLevel());
+            Logger.info("Sounds ({}) {}", THE_GAME_CONTEXT.gameVariant(), THE_SOUND.isEnabled() ? "enabled" : "disabled");
             // size of game scene might have changed, so re-embed
             THE_GAME_CONTEXT.currentGameScene().ifPresent(this::embedGameScene);
             GameScene2D pipGameScene = THE_GAME_CONTEXT.gameConfiguration().createPiPScene(canvasContainer().canvas());

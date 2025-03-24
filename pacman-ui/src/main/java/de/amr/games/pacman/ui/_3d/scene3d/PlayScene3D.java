@@ -47,6 +47,7 @@ import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
 import static de.amr.games.pacman.ui._2d.GameActions2D.*;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
 import static de.amr.games.pacman.ui.input.Keyboard.alt;
@@ -182,7 +183,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             level3D.pac3D().update();
             if (THE_GAME_CONTROLLER.state() == GameState.HUNTING) {
                 if (level.powerTimer().isRunning()) {
-                    THE_GAME_CONTEXT.sound().playPacPowerSound();
+                    THE_SOUND.playPacPowerSound();
                 }
                 level3D.playLivesCounterAnimation();
             }
@@ -218,7 +219,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
             level.pac().setImmune(PY_IMMUNITY.get());
             updateScores();
-            updateSound(level, THE_GAME_CONTEXT.sound());
+            updateSound(level, THE_SOUND);
         }
         perspective().update(fxSubScene, level, level.pac());
     }
@@ -324,7 +325,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
     private void onEnterStatePacManDying() {
         level3D.stopAnimations();
-        THE_GAME_CONTEXT.sound().stopAll();
+        THE_SOUND.stopAll();
         // last update before dying animation
         level3D.pac3D().update();
         playPacManDiesAnimation();
@@ -344,7 +345,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
     private void onEnterStateLevelComplete() {
         THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-            THE_GAME_CONTEXT.sound().stopAll();
+            THE_SOUND.stopAll();
             // if cheat has been used to complete level, food might still exist, so eat it:
             level.worldMap().tiles().filter(level::hasFoodAt).forEach(level::registerFoodEatenAt);
             level3D.pellets3D().forEach(Pellet3D::onEaten);
@@ -393,8 +394,8 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         if (!THE_GAME_CONTROLLER.game().isDemoLevel() && Globals.randomInt(0, 100) < 25) {
             THE_GAME_CONTEXT.showFlashMessageSec(3, THE_GAME_CONTEXT.localizedGameOverMessage());
         }
-        THE_GAME_CONTEXT.sound().stopAll();
-        THE_GAME_CONTEXT.sound().playGameOverSound();
+        THE_SOUND.stopAll();
+        THE_SOUND.playGameOverSound();
     }
 
     @Override
@@ -402,7 +403,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         THE_GAME_CONTROLLER.game().level().flatMap(GameLevel::bonus).ifPresent(
                 bonus -> level3D.replaceBonus3D(bonus, THE_GAME_CONTEXT.gameConfiguration().spriteSheet()));
         if (THE_GAME_CONTEXT.gameVariant() == GameVariant.MS_PACMAN) {
-            THE_GAME_CONTEXT.sound().playBonusBouncingSound();
+            THE_SOUND.playBonusBouncingSound();
         }
     }
 
@@ -410,27 +411,27 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     public void onBonusEaten(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::showEaten);
         if (THE_GAME_CONTEXT.gameVariant() == GameVariant.MS_PACMAN) {
-            THE_GAME_CONTEXT.sound().stopBonusBouncingSound();
+            THE_SOUND.stopBonusBouncingSound();
         }
-        THE_GAME_CONTEXT.sound().playBonusEatenSound();
+        THE_SOUND.playBonusEatenSound();
     }
 
     @Override
     public void onBonusExpired(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::onBonusExpired);
         if (THE_GAME_CONTEXT.gameVariant() == GameVariant.MS_PACMAN) {
-            THE_GAME_CONTEXT.sound().stopBonusBouncingSound();
+            THE_SOUND.stopBonusBouncingSound();
         }
     }
 
     @Override
     public void onExtraLifeWon(GameEvent e) {
-        THE_GAME_CONTEXT.sound().playExtraLifeSound();
+        THE_SOUND.playExtraLifeSound();
     }
 
     @Override
     public void onGhostEaten(GameEvent e) {
-        THE_GAME_CONTEXT.sound().playGhostEatenSound();
+        THE_SOUND.playGhostEatenSound();
     }
 
     @Override
@@ -439,7 +440,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
                 THE_GAME_CONTROLLER.state() == TESTING_LEVELS ||
                 THE_GAME_CONTROLLER.state() == TESTING_LEVEL_TEASERS;
         if (!silent) {
-            THE_GAME_CONTEXT.sound().playGameReadySound();
+            THE_SOUND.playGameReadySound();
         }
     }
 
@@ -461,7 +462,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
                     .findFirst()
                     .ifPresent(Pellet3D::onEaten);
             }
-            THE_GAME_CONTEXT.sound().playMunchingSound();
+            THE_SOUND.playMunchingSound();
         }
     }
 
@@ -469,15 +470,15 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     public void onPacGetsPower(GameEvent event) {
         level3D.pac3D().setPowerMode(true);
         level3D.maze3D().playMaterialAnimation();
-        THE_GAME_CONTEXT.sound().stopSiren();
-        THE_GAME_CONTEXT.sound().playPacPowerSound();
+        THE_SOUND.stopSiren();
+        THE_SOUND.playPacPowerSound();
     }
 
     @Override
     public void onPacLostPower(GameEvent event) {
         level3D.pac3D().setPowerMode(false);
         level3D.maze3D().stopMaterialAnimation();
-        THE_GAME_CONTEXT.sound().stopPacPowerSound();
+        THE_SOUND.stopPacPowerSound();
     }
 
     protected void replaceGameLevel3D() {
@@ -507,7 +508,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
     private void playPacManDiesAnimation() {
         THE_GAME_CONTROLLER.state().timer().resetIndefiniteTime();
-        Animation animation = level3D.pac3D().createDyingAnimation(THE_GAME_CONTEXT.sound());
+        Animation animation = level3D.pac3D().createDyingAnimation(THE_SOUND);
         animation.setDelay(Duration.seconds(1));
         animation.setOnFinished(e -> THE_GAME_CONTROLLER.state().timer().expire());
         animation.play();
@@ -569,7 +570,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         items.add(new SeparatorMenuItem());
 
         var miMuted = new CheckMenuItem(THE_GAME_CONTEXT.locText("muted"));
-        miMuted.selectedProperty().bindBidirectional(THE_GAME_CONTEXT.sound().mutedProperty());
+        miMuted.selectedProperty().bindBidirectional(THE_SOUND.mutedProperty());
         items.add(miMuted);
 
         var miQuit = new MenuItem(THE_GAME_CONTEXT.locText("quit"));

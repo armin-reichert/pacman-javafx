@@ -25,6 +25,7 @@ import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindCheatActions;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindFallbackPlayerControlActions;
 import static de.amr.games.pacman.ui.input.Keyboard.alt;
@@ -113,20 +114,21 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     public void onBonusActivated(GameEvent event) {
-        THE_GAME_CONTROLLER.game().level().flatMap(GameLevel::bonus).ifPresent(bonus -> level3D.replaceBonus3D(bonus, THE_GAME_CONTEXT.gameConfiguration().spriteSheet()));
-        THE_GAME_CONTEXT.sound().playBonusBouncingSound();
+        THE_GAME_CONTROLLER.game().level().flatMap(GameLevel::bonus)
+                .ifPresent(bonus -> level3D.replaceBonus3D(bonus, THE_GAME_CONTEXT.gameConfiguration().spriteSheet()));
+        THE_SOUND.playBonusBouncingSound();
     }
 
     @Override
     public void onBonusEaten(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::showEaten);
-        THE_GAME_CONTEXT.sound().stopBonusBouncingSound();
-        THE_GAME_CONTEXT.sound().playBonusEatenSound();
+        THE_SOUND.stopBonusBouncingSound();
+        THE_SOUND.playBonusEatenSound();
     }
 
     @Override
     public void onBonusExpired(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::onBonusExpired);
-        THE_GAME_CONTEXT.sound().stopBonusBouncingSound();
+        THE_SOUND.stopBonusBouncingSound();
     }
 }

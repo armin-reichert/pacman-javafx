@@ -25,6 +25,7 @@ import static de.amr.games.pacman.model.actors.ActorAnimations.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
 import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
 
 public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
@@ -62,7 +63,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         mrPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
 
-        music = THE_GAME_CONTEXT.sound().makeSound("intermission.4");
+        music = THE_SOUND.makeSound("intermission.4");
     }
 
     @Override

@@ -35,6 +35,7 @@ import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_IMMUNITY;
 
@@ -80,13 +81,13 @@ public class ArcadePlayScene2D extends GameScene2D {
                 THE_GAME_CONTROLLER.state() == TESTING_LEVELS ||
                 THE_GAME_CONTROLLER.state() == TESTING_LEVEL_TEASERS;
         if (!silent) {
-            THE_GAME_CONTEXT.sound().playGameReadySound();
+            THE_SOUND.playGameReadySound();
         }
     }
 
     @Override
     protected void doEnd() {
-        THE_GAME_CONTEXT.sound().stopAll();
+        THE_SOUND.stopAll();
     }
 
     @Override
@@ -100,7 +101,7 @@ public class ArcadePlayScene2D extends GameScene2D {
             else {
                 level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
                 level.pac().setImmune(PY_IMMUNITY.get());
-                updateSound(level, THE_GAME_CONTEXT.sound());
+                updateSound(level, THE_SOUND);
             }
             if (THE_GAME_CONTROLLER.state() == GameState.LEVEL_COMPLETE) {
                 levelCompleteAnimation.update();
@@ -253,7 +254,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     @Override
     public void onEnterGameState(GameState state) {
         if (state == GameState.GAME_OVER) {
-            THE_GAME_CONTEXT.sound().playGameOverSound();
+            THE_SOUND.playGameOverSound();
         }
         else if (state == GameState.LEVEL_COMPLETE) {
             THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
@@ -267,54 +268,54 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     @Override
     public void onBonusActivated(GameEvent e) {
-        THE_GAME_CONTEXT.sound().playBonusBouncingSound();
+        THE_SOUND.playBonusBouncingSound();
     }
 
     @Override
     public void onBonusEaten(GameEvent e) {
-        THE_GAME_CONTEXT.sound().stopBonusBouncingSound();
-        THE_GAME_CONTEXT.sound().playBonusEatenSound();
+        THE_SOUND.stopBonusBouncingSound();
+        THE_SOUND.playBonusEatenSound();
     }
 
     @Override
     public void onBonusExpired(GameEvent e) {
-        THE_GAME_CONTEXT.sound().stopBonusBouncingSound();
+        THE_SOUND.stopBonusBouncingSound();
     }
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        THE_GAME_CONTEXT.sound().playInsertCoinSound();
+        THE_SOUND.playInsertCoinSound();
     }
 
     @Override
     public void onExtraLifeWon(GameEvent e) {
-        THE_GAME_CONTEXT.sound().playExtraLifeSound();
+        THE_SOUND.playExtraLifeSound();
     }
 
     @Override
     public void onGhostEaten(GameEvent e) {
-        THE_GAME_CONTEXT.sound().playGhostEatenSound();
+        THE_SOUND.playGhostEatenSound();
     }
 
     @Override
     public void onPacDying(GameEvent e) {
-        THE_GAME_CONTEXT.sound().playPacDeathSound();
+        THE_SOUND.playPacDeathSound();
     }
 
     @Override
     public void onPacFoundFood(GameEvent e) {
-        THE_GAME_CONTEXT.sound().playMunchingSound();
+        THE_SOUND.playMunchingSound();
     }
 
     @Override
     public void onPacGetsPower(GameEvent e) {
-        THE_GAME_CONTEXT.sound().stopSiren();
-        THE_GAME_CONTEXT.sound().playPacPowerSound();
+        THE_SOUND.stopSiren();
+        THE_SOUND.playPacPowerSound();
     }
 
     @Override
     public void onPacLostPower(GameEvent e) {
-        THE_GAME_CONTEXT.sound().stopPacPowerSound();
+        THE_SOUND.stopPacPowerSound();
     }
 
     @Override
@@ -333,7 +334,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         items.add(new SeparatorMenuItem());
 
         var miMuted = new CheckMenuItem(THE_GAME_CONTEXT.locText("muted"));
-        miMuted.selectedProperty().bindBidirectional(THE_GAME_CONTEXT.sound().mutedProperty());
+        miMuted.selectedProperty().bindBidirectional(THE_SOUND.mutedProperty());
         items.add(miMuted);
 
         var miQuit = new MenuItem(THE_GAME_CONTEXT.locText("quit"));

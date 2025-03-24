@@ -24,6 +24,7 @@ import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
 import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
 import static de.amr.games.pacman.uilib.Ufx.toggle;
 import static java.util.function.Predicate.not;
 
@@ -39,7 +40,7 @@ public enum GameActions2D implements GameAction {
         public void execute() {
             if (THE_GAME_CONTROLLER.credit < GameController.MAX_COINS) {
                 THE_GAME_CONTROLLER.credit += 1;
-                THE_GAME_CONTEXT.sound().enabledProperty().set(true);
+                THE_SOUND.enabledProperty().set(true);
                 THE_GAME_CONTROLLER.game().publishGameEvent(GameEventType.CREDIT_ADDED);
             }
             if (THE_GAME_CONTROLLER.state() != GameState.SETTING_OPTIONS) {
@@ -87,7 +88,7 @@ public enum GameActions2D implements GameAction {
                         .filter(level::hasFoodAt)
                         .forEach(level::registerFoodEatenAt);
                     THE_GAME_CONTROLLER.game().publishGameEvent(GameEventType.PAC_FOUND_FOOD);
-                    THE_GAME_CONTEXT.sound().stopMunchingSound();
+                    THE_SOUND.stopMunchingSound();
                 });
             }
         }
@@ -168,7 +169,7 @@ public enum GameActions2D implements GameAction {
     SHOW_START_PAGE {
         @Override
         public void execute() {
-            THE_GAME_CONTEXT.sound().stopAll();
+            THE_SOUND.stopAll();
             THE_GAME_CONTEXT.currentGameScene().ifPresent(GameScene::end);
             THE_GAME_CONTROLLER.game().endGame();
             THE_GAME_CONTEXT.showStartView();
@@ -178,7 +179,7 @@ public enum GameActions2D implements GameAction {
     RESTART_INTRO {
         @Override
         public void execute() {
-            THE_GAME_CONTEXT.sound().stopAll();
+            THE_SOUND.stopAll();
             THE_GAME_CONTEXT.currentGameScene().ifPresent(GameScene::end);
             if (THE_GAME_CONTROLLER.state() == GameState.TESTING_LEVELS) {
                 THE_GAME_CONTROLLER.state().onExit(THE_GAME_CONTROLLER.game()); //TODO exit other states too?
@@ -194,7 +195,7 @@ public enum GameActions2D implements GameAction {
             if (THE_GAME_CONTEXT.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                 THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
             } else if (THE_GAME_CONTROLLER.game().canStartNewGame()) {
-                THE_GAME_CONTEXT.sound().stopVoice();
+                THE_SOUND.stopVoice();
                 if (THE_GAME_CONTROLLER.state() == GameState.INTRO || THE_GAME_CONTROLLER.state() == GameState.SETTING_OPTIONS) {
                     THE_GAME_CONTROLLER.changeState(GameState.STARTING_GAME);
                 } else {
@@ -233,7 +234,7 @@ public enum GameActions2D implements GameAction {
         public void execute() {
             toggle(THE_GAME_CONTEXT.gameClock().pausedProperty());
             if (THE_GAME_CONTEXT.gameClock().isPaused()) {
-                THE_GAME_CONTEXT.sound().stopAll();
+                THE_SOUND.stopAll();
             }
             Logger.info("Game ({}) {}", THE_GAME_CONTEXT.gameVariant(), THE_GAME_CONTEXT.gameClock().isPaused() ? "paused" : "resumed");
         }

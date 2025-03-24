@@ -32,7 +32,6 @@ public interface GameContext {
 
     // Assets
     AssetStorage assets();
-    GameSound sound();
 
     default String locText(String keyOrPattern, Object... args) {
         assertNotNull(keyOrPattern);

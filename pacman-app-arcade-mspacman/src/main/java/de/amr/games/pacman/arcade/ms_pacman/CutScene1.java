@@ -18,6 +18,7 @@ import static de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.HE
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.*;
 import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
 
 /**
  * Intermission scene 1: "They meet".
@@ -61,7 +62,7 @@ public class CutScene1 extends GameScene2D {
         pinky = ArcadeMsPacMan_GameModel.pinky();
         heart = new Actor2D();
 
-        music = THE_GAME_CONTEXT.sound().makeSound("intermission.1");
+        music = THE_SOUND.makeSound("intermission.1");
 
         var spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_GAME_CONTEXT.gameConfiguration().spriteSheet();
         msPac.setAnimations(new PacAnimations(spriteSheet));

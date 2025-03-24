@@ -56,6 +56,7 @@ import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions.QUIT_DEMO_LEVEL;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindCheatActions;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindFallbackPlayerControlActions;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_AUTOPILOT;
@@ -212,7 +213,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     protected void doEnd() {
-        THE_GAME_CONTEXT.sound().stopAll();
+        THE_SOUND.stopAll();
         THE_GAME_CONTEXT.joypadKeyBinding().unregister();
     }
 
@@ -272,7 +273,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             THE_GAME_CONTROLLER.state() == TESTING_LEVELS ||
             THE_GAME_CONTROLLER.state() == TESTING_LEVEL_TEASERS;
         if (!silent) {
-            THE_GAME_CONTEXT.sound().playGameReadySound();
+            THE_SOUND.playGameReadySound();
         }
     }
 
@@ -353,28 +354,28 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onBonusActivated(GameEvent e) {
-        THE_GAME_CONTEXT.sound().playBonusBouncingSound();
+        THE_SOUND.playBonusBouncingSound();
     }
 
     @Override
     public void onBonusEaten(GameEvent e) {
-        THE_GAME_CONTEXT.sound().stopBonusBouncingSound();
-        THE_GAME_CONTEXT.sound().playBonusEatenSound();
+        THE_SOUND.stopBonusBouncingSound();
+        THE_SOUND.playBonusEatenSound();
     }
 
     @Override
     public void onBonusExpired(GameEvent e) {
-        THE_GAME_CONTEXT.sound().stopBonusBouncingSound();
+        THE_SOUND.stopBonusBouncingSound();
     }
 
     @Override
     public void onExtraLifeWon(GameEvent e) {
-        THE_GAME_CONTEXT.sound().playExtraLifeSound();
+        THE_SOUND.playExtraLifeSound();
     }
 
     @Override
     public void onGhostEaten(GameEvent e) {
-        THE_GAME_CONTEXT.sound().playGhostEatenSound();
+        THE_SOUND.playGhostEatenSound();
     }
 
     @Override
@@ -384,27 +385,27 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onPacDying(GameEvent e) {
-        THE_GAME_CONTEXT.sound().playPacDeathSound();
+        THE_SOUND.playPacDeathSound();
     }
 
     @Override
     public void onPacFoundFood(GameEvent e) {
-        THE_GAME_CONTEXT.sound().playMunchingSound();
+        THE_SOUND.playMunchingSound();
     }
 
     @Override
     public void onPacGetsPower(GameEvent e) {
-        THE_GAME_CONTEXT.sound().stopSiren();
-        THE_GAME_CONTEXT.sound().playPacPowerSound();
+        THE_SOUND.stopSiren();
+        THE_SOUND.playPacPowerSound();
     }
 
     @Override
     public void onPacLostPower(GameEvent e) {
-        THE_GAME_CONTEXT.sound().stopPacPowerSound();
+        THE_SOUND.stopPacPowerSound();
     }
 
     private void updateSound(GameLevel level) {
-        GameSound sound = THE_GAME_CONTEXT.sound();
+        GameSound sound = THE_SOUND;
         if (THE_GAME_CONTROLLER.state() == GameState.HUNTING && !level.powerTimer().isRunning()) {
             HuntingTimer huntingControl = THE_GAME_CONTROLLER.game().huntingTimer();
             int sirenNumber = 1 + huntingControl.phaseIndex() / 2; // TODO check how this works in original game
@@ -555,7 +556,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         items.add(new SeparatorMenuItem());
 
         var miMuted = new CheckMenuItem(THE_GAME_CONTEXT.locText("muted"));
-        miMuted.selectedProperty().bindBidirectional(THE_GAME_CONTEXT.sound().mutedProperty());
+        miMuted.selectedProperty().bindBidirectional(THE_SOUND.mutedProperty());
         items.add(miMuted);
 
         var miQuit = new MenuItem(THE_GAME_CONTEXT.locText("quit"));

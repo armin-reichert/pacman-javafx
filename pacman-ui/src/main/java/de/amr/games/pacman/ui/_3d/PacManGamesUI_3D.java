@@ -15,6 +15,7 @@ import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
+import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_DEBUG_INFO_VISIBLE;
 import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_ENABLED;
 import static de.amr.games.pacman.uilib.Ufx.toggle;
@@ -53,7 +54,7 @@ public class PacManGamesUI_3D extends PacManGamesUI {
 
         pickerForGameOverTexts = Picker.fromBundle(assets.bundles().getLast(), "game.over");
         pickerForLevelCompleteTexts = Picker.fromBundle(assets.bundles().getLast(), "level.complete");
-        sound().setAssets(assets);
+        THE_SOUND.setAssets(assets);
     }
 
     @Override

@@ -24,8 +24,7 @@ import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.CONTINUES_SPRITES;
-import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
-import static de.amr.games.pacman.ui.UIGlobals.THE_KEYBOARD;
+import static de.amr.games.pacman.ui.UIGlobals.*;
 import static de.amr.games.pacman.ui.input.Keyboard.alt;
 
 /**
@@ -112,12 +111,12 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     private void optionSelectionChanged() {
-        THE_GAME_CONTEXT.sound().playClipIfEnabled("option.selection_changed", 1);
+        THE_SOUND.playClipIfEnabled("option.selection_changed", 1);
         resetIdleTimer();
     }
 
     private void optionValueChanged() {
-        THE_GAME_CONTEXT.sound().playClipIfEnabled("option.value_changed", 1);
+        THE_SOUND.playClipIfEnabled("option.value_changed", 1);
         resetIdleTimer();
     }
 

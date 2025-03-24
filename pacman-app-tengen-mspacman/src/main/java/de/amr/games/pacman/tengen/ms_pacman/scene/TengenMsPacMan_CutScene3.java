@@ -27,6 +27,7 @@ import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_T
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.BLUE_BAG_SPRITE;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.JUNIOR_PAC_SPRITE;
 import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
 
 /**
  * Intermission scene 3: "Junior".
@@ -83,7 +84,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         mrPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
 
-        music = THE_GAME_CONTEXT.sound().makeSound("intermission.3");
+        music = THE_SOUND.makeSound("intermission.3");
     }
 
     @Override
