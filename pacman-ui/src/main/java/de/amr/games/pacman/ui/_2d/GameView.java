@@ -108,7 +108,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
     private final GameAction actionToggleAutopilot = () -> {
         toggle(PY_AUTOPILOT);
         boolean auto = PY_AUTOPILOT.get();
-        THE_GAME_CONTEXT.showFlashMessage(THE_GAME_CONTEXT.locText(auto ? "autopilot_on" : "autopilot_off"));
+        THE_GAME_CONTEXT.showFlashMessage(THE_GAME_CONTEXT.localizedText(auto ? "autopilot_on" : "autopilot_off"));
         THE_SOUND.playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
     };
 
@@ -118,7 +118,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
 
     private final GameAction actionToggleImmunity = () -> {
         toggle(GlobalProperties2d.PY_IMMUNITY);
-        THE_GAME_CONTEXT.showFlashMessage(THE_GAME_CONTEXT.locText(GlobalProperties2d.PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
+        THE_GAME_CONTEXT.showFlashMessage(THE_GAME_CONTEXT.localizedText(GlobalProperties2d.PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
         THE_SOUND.playVoice(GlobalProperties2d.PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
     };
 
@@ -208,18 +208,18 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
 
     public void addDefaultDashboardItem(String id) {
         switch (id) {
-            case "ABOUT"        -> addDashboardItem(id, THE_GAME_CONTEXT.locText("infobox.about.title"),              new InfoBoxAbout());
-            case "ACTOR_INFO"   -> addDashboardItem(id, THE_GAME_CONTEXT.locText("infobox.actor_info.title"),         new InfoBoxActorInfo());
-            case "CUSTOM_MAPS"  -> addDashboardItem(id, THE_GAME_CONTEXT.locText("infobox.custom_maps.title"),        new InfoBoxCustomMaps());
-            case "GENERAL"      -> addDashboardItem(id, THE_GAME_CONTEXT.locText("infobox.general.title"),            new InfoBoxGeneral());
-            case "GAME_CONTROL" -> addDashboardItem(id, THE_GAME_CONTEXT.locText("infobox.game_control.title"),       new InfoBoxGameControl());
-            case "GAME_INFO"    -> addDashboardItem(id, THE_GAME_CONTEXT.locText("infobox.game_info.title"),          new InfoBoxGameInfo());
-            case "JOYPAD"       -> addDashboardItem(id, THE_GAME_CONTEXT.locText("infobox.joypad.title"),             new InfoBoxJoypad());
-            case "KEYBOARD"     -> addDashboardItem(id, THE_GAME_CONTEXT.locText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
+            case "ABOUT"        -> addDashboardItem(id, THE_GAME_CONTEXT.localizedText("infobox.about.title"),              new InfoBoxAbout());
+            case "ACTOR_INFO"   -> addDashboardItem(id, THE_GAME_CONTEXT.localizedText("infobox.actor_info.title"),         new InfoBoxActorInfo());
+            case "CUSTOM_MAPS"  -> addDashboardItem(id, THE_GAME_CONTEXT.localizedText("infobox.custom_maps.title"),        new InfoBoxCustomMaps());
+            case "GENERAL"      -> addDashboardItem(id, THE_GAME_CONTEXT.localizedText("infobox.general.title"),            new InfoBoxGeneral());
+            case "GAME_CONTROL" -> addDashboardItem(id, THE_GAME_CONTEXT.localizedText("infobox.game_control.title"),       new InfoBoxGameControl());
+            case "GAME_INFO"    -> addDashboardItem(id, THE_GAME_CONTEXT.localizedText("infobox.game_info.title"),          new InfoBoxGameInfo());
+            case "JOYPAD"       -> addDashboardItem(id, THE_GAME_CONTEXT.localizedText("infobox.joypad.title"),             new InfoBoxJoypad());
+            case "KEYBOARD"     -> addDashboardItem(id, THE_GAME_CONTEXT.localizedText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
             case "README" -> {
                 InfoBox readMeBox = new InfoBoxReadmeFirst();
                 readMeBox.setExpanded(true);
-                addDashboardItem(id, THE_GAME_CONTEXT.locText("infobox.readme.title"), readMeBox);
+                addDashboardItem(id, THE_GAME_CONTEXT.localizedText("infobox.readme.title"), readMeBox);
             }
         }
     }

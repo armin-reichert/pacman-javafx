@@ -523,13 +523,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e) {
         List<MenuItem> items = new ArrayList<>();
         // Switching scene display mode
-        var miScaledToFit = new RadioMenuItem(THE_GAME_CONTEXT.locText("scaled_to_fit"));
+        var miScaledToFit = new RadioMenuItem(THE_GAME_CONTEXT.localizedText("scaled_to_fit"));
         miScaledToFit.selectedProperty().addListener(
                 (py,ov,nv) -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(nv? SceneDisplayMode.SCALED_TO_FIT:SceneDisplayMode.SCROLLING));
         PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.addListener((py, ov, nv) -> miScaledToFit.setSelected(nv == SceneDisplayMode.SCALED_TO_FIT));
         items.add(miScaledToFit);
 
-        var miScrolling = new RadioMenuItem(THE_GAME_CONTEXT.locText("scrolling"));
+        var miScrolling = new RadioMenuItem(THE_GAME_CONTEXT.localizedText("scrolling"));
         miScrolling.selectedProperty().addListener(
                 (py,ov,nv) -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(nv? SceneDisplayMode.SCROLLING:SceneDisplayMode.SCALED_TO_FIT));
         PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.addListener((py, ov, nv) -> miScrolling.setSelected(nv == SceneDisplayMode.SCROLLING));
@@ -543,23 +543,23 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         } else {
             miScrolling.setSelected(true);
         }
-        items.add(Ufx.contextMenuTitleItem(THE_GAME_CONTEXT.locText("pacman")));
+        items.add(Ufx.contextMenuTitleItem(THE_GAME_CONTEXT.localizedText("pacman")));
 
-        var miAutopilot = new CheckMenuItem(THE_GAME_CONTEXT.locText("autopilot"));
+        var miAutopilot = new CheckMenuItem(THE_GAME_CONTEXT.localizedText("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
         items.add(miAutopilot);
 
-        var miImmunity = new CheckMenuItem(THE_GAME_CONTEXT.locText("immunity"));
+        var miImmunity = new CheckMenuItem(THE_GAME_CONTEXT.localizedText("immunity"));
         miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
         items.add(miImmunity);
 
         items.add(new SeparatorMenuItem());
 
-        var miMuted = new CheckMenuItem(THE_GAME_CONTEXT.locText("muted"));
+        var miMuted = new CheckMenuItem(THE_GAME_CONTEXT.localizedText("muted"));
         miMuted.selectedProperty().bindBidirectional(THE_SOUND.mutedProperty());
         items.add(miMuted);
 
-        var miQuit = new MenuItem(THE_GAME_CONTEXT.locText("quit"));
+        var miQuit = new MenuItem(THE_GAME_CONTEXT.localizedText("quit"));
         miQuit.setOnAction(ae -> GameActions2D.SHOW_START_PAGE.execute());
         items.add(miQuit);
 

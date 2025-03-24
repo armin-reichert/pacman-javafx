@@ -72,11 +72,11 @@ public class PacManGamesUI_3D extends PacManGamesUI {
                 if (THE_CLOCK.isPaused()) {
                     key += ".paused";
                 }
-                String modeKey = locText(PY_3D_ENABLED.get() ? "threeD" : "twoD");
+                String modeKey = localizedText(PY_3D_ENABLED.get() ? "threeD" : "twoD");
                 if (currentGameScene().isPresent() && currentGameScene().get() instanceof GameScene2D gameScene2D) {
-                    return locText(key, modeKey) + sceneNameText + " (%.2fx)".formatted(gameScene2D.scaling());
+                    return localizedText(key, modeKey) + sceneNameText + " (%.2fx)".formatted(gameScene2D.scaling());
                 }
-                return locText(key, modeKey) + sceneNameText;
+                return localizedText(key, modeKey) + sceneNameText;
             },
             THE_CLOCK.pausedProperty(), gameVariantPy, gameScenePy, gameView.heightProperty(), PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE)
         );
@@ -91,7 +91,7 @@ public class PacManGamesUI_3D extends PacManGamesUI {
                 THE_GAME_CONTROLLER.update(); //TODO needed?
             }
             if (!THE_GAME_CONTROLLER.game().isPlaying()) {
-                showFlashMessage(locText(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
+                showFlashMessage(localizedText(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
             }
         });
     }

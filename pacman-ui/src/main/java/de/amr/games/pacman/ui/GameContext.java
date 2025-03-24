@@ -28,7 +28,7 @@ import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
  */
 public interface GameContext {
 
-    default String locText(String keyOrPattern, Object... args) {
+    default String localizedText(String keyOrPattern, Object... args) {
         assertNotNull(keyOrPattern);
         for (var bundle : THE_ASSETS.bundles()) {
             if (bundle.containsKey(keyOrPattern)) {

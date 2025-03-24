@@ -36,7 +36,7 @@ public class EditorView extends BorderPane implements GameActionProvider {
         editor.createUI(stage);
         editor.init(GameModel.CUSTOM_MAP_DIR);
 
-        var miQuitEditor = new MenuItem(THE_GAME_CONTEXT.locText("back_to_game"));
+        var miQuitEditor = new MenuItem(THE_GAME_CONTEXT.localizedText("back_to_game"));
         miQuitEditor.setOnAction(e -> closeAction.accept(editor));
         editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);
 

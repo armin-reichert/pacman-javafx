@@ -46,7 +46,7 @@ public class ArcadePacMan_StartPage extends StackPane implements StartPage {
     private Node startButton() {
         ResourceManager rm = () -> PacManGamesUI.class;
         Font startButtonFont = rm.loadFont("fonts/emulogic.ttf", 30);
-        Node btnStart = Ufx.createFancyButton(startButtonFont, THE_GAME_CONTEXT.locText("play_button"), THE_GAME_CONTEXT::showGameView);
+        Node btnStart = Ufx.createFancyButton(startButtonFont, THE_GAME_CONTEXT.localizedText("play_button"), THE_GAME_CONTEXT::showGameView);
         btnStart.setTranslateY(-50);
         StackPane.setAlignment(btnStart, Pos.BOTTOM_CENTER);
         return btnStart;

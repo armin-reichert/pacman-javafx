@@ -19,7 +19,7 @@ public class InfoBoxReadmeFirst extends InfoBox {
     public void init() {
         super.init();
         Text readmeText = new Text();
-        readmeText.setText(THE_GAME_CONTEXT.locText("infobox.readme.content"));
+        readmeText.setText(THE_GAME_CONTEXT.localizedText("infobox.readme.content"));
         readmeText.setFont(Font.font("Serif", 16));
         readmeText.setFill(Color.WHITE);
         Pane pane = new BorderPane(readmeText);
