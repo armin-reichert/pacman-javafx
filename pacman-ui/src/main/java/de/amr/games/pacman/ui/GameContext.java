@@ -77,27 +77,6 @@ public interface GameContext {
         return new Vector2i(worldMap.numCols(), worldMap.numRows());
     }
 
-    // Actions
-    default void ifTriggeredRunAction(GameActionProvider actionProvider) {
-        actionProvider.firstMatchedAction(keyboard()).ifPresent(action -> {
-           if (action.isEnabled()) {
-               action.execute();
-           } else {
-               Logger.info("Action '{}' not executed, not enabled", action);
-           }
-        });
-    }
-
-    default void ifTriggeredRunActionElse(GameActionProvider actionProvider, Runnable defaultAction) {
-        actionProvider.firstMatchedAction(keyboard()).ifPresentOrElse(action -> {
-            if (action.isEnabled()) {
-                action.execute();
-            } else {
-                Logger.info("Action '{}' not executed, not enabled", action);
-            }
-        }, defaultAction);
-    }
-
     // Game scenes
 
     default boolean currentGameSceneHasID(String gameSceneID) {

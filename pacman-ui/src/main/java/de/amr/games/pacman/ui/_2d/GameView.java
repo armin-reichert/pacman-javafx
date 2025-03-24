@@ -9,7 +9,10 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.*;
+import de.amr.games.pacman.ui.CameraControlledView;
+import de.amr.games.pacman.ui.GameAction;
+import de.amr.games.pacman.ui.GameActionProvider;
+import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui.dashboard.*;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.beans.binding.Bindings;
@@ -297,8 +300,8 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
 
     @Override
     public void handleInput() {
-        THE_GAME_CONTEXT.ifTriggeredRunActionElse(this,
-            () -> THE_GAME_CONTEXT.currentGameScene().ifPresent(GameActionProvider::handleInput));
+        ifTriggeredRunActionElse(THE_GAME_CONTEXT.keyboard(),
+                () -> THE_GAME_CONTEXT.currentGameScene().ifPresent(GameActionProvider::handleInput));
     }
 
     public void onTick() {

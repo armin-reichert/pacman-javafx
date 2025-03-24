@@ -56,7 +56,28 @@ public interface GameActionProvider {
             .findFirst();
     }
 
+    // Actions
+    default void ifTriggeredRunAction(Keyboard keyboard) {
+        firstMatchedAction(keyboard).ifPresent(action -> {
+            if (action.isEnabled()) {
+                action.execute();
+            } else {
+                Logger.info("Action '{}' not executed, not enabled", action);
+            }
+        });
+    }
+
+    default void ifTriggeredRunActionElse(Keyboard keyboard, Runnable defaultAction) {
+        firstMatchedAction(keyboard).ifPresentOrElse(action -> {
+            if (action.isEnabled()) {
+                action.execute();
+            } else {
+                Logger.info("Action '{}' not executed, not enabled", action);
+            }
+        }, defaultAction);
+    }
+
     default void handleInput() {
-        THE_GAME_CONTEXT.ifTriggeredRunAction(this);
+        ifTriggeredRunAction(THE_GAME_CONTEXT.keyboard());
     }
 }
