@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib.tilemap;
 
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 
 import java.util.ArrayList;
@@ -38,7 +37,12 @@ public interface PolygonToRectangleConverter<RECTANGLE_TYPE> {
     // Note: In the original paper, the condition for p_m is p.x() < p_l.x() but that leads to incorrect results for some polygons!
     // After changing the condition to p.x() <= p_l.x(), the problem disappeared!
     default List<RECTANGLE_TYPE> convertPolygonToRectangles(Collection<Vector2i> points) {
-        Globals.assertNotNull(points);
+        if (points == null) {
+            throw new IllegalArgumentException("Points array must not be NULL");
+        }
+        if (points.isEmpty()) {
+            return List.of();
+        }
         var rectangles = new ArrayList<RECTANGLE_TYPE>();
         while (!points.isEmpty()) {
             Vector2i pk = minPoint(points.stream());
@@ -46,13 +50,17 @@ public interface PolygonToRectangleConverter<RECTANGLE_TYPE> {
             Vector2i pm = minPoint(points.stream().filter(p -> pk.x() <= p.x() && p.x() <= pl.x() && p.y() > pk.y()));
             Vector2i pkm = new Vector2i(pk.x(), pm.y());
             Vector2i plm = new Vector2i(pl.x(), pm.y());
-            rectangles.add(createRectangle(pk.x(), pk.y(), pl.x() - pk.x(), pm.y() - pk.y()));
+
+            var rectangle = createRectangle(pk.x(), pk.y(), pl.x() - pk.x(), pm.y() - pk.y());
+            if (rectangle == null) {
+                throw new IllegalArgumentException("createRectangle() method returned NULL");
+            }
+            rectangles.add(rectangle);
+
             points.remove(pk);
             points.remove(pl);
-            if (points.contains(pkm)) points.remove(pkm);
-            else points.add(pkm);
-            if (points.contains(plm)) points.remove(plm);
-            else points.add(plm);
+            if (points.contains(pkm)) points.remove(pkm); else points.add(pkm);
+            if (points.contains(plm)) points.remove(plm); else points.add(plm);
         }
         return rectangles;
     }

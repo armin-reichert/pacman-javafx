@@ -22,40 +22,29 @@ public class Obstacle {
 
     private final Vector2i startPoint;
     private final List<ObstacleSegment> segments = new ArrayList<>();
-    private final List<RectArea> innerRectPartition;
+    private final PolygonToRectangleConverter<RectArea> polyToRectConverter = RectArea::new;
+    private List<RectArea> innerRectanglePartition = List.of();
 
     public Obstacle(Vector2i startPoint) {
         this.startPoint = Objects.requireNonNull(startPoint);
-        innerRectPartition = new ArrayList<>();
     }
 
     public void addSegment(Vector2i vector, boolean counterClockwise, byte content) {
         Objects.requireNonNull(vector);
         segments.add(new ObstacleSegment(endPoint(), vector, counterClockwise, content));
         if (isClosed()) {
-            computeInnerRectPartition();
-        }
-    }
-
-    private void computeInnerRectPartition() {
-        innerRectPartition.clear();
-        try {
-            Collection<Vector2i> innerPolygon = computeInnerPolygonPoints();
-            var rectanglePartitioner = new PolygonToRectangleConverter<RectArea>() {
-                @Override
-                public RectArea createRectangle(int x, int y, int width, int height) {
-                    return new RectArea(x, y, width, height);
-                }
-            };
-            innerRectPartition.addAll(rectanglePartitioner.convertPolygonToRectangles(innerPolygon));
-        } catch (Exception x) {
-            Logger.warn("Inner area rectangle partition could not be computed");
-            Logger.error(x);
+            try {
+                Collection<Vector2i> innerPolygon = computeInnerPolygon();
+                innerRectanglePartition = polyToRectConverter.convertPolygonToRectangles(innerPolygon);
+            } catch (Exception x) {
+                Logger.warn("Inner area rectangle partition could not be computed");
+                Logger.error(x);
+            }
         }
     }
 
     public Stream<RectArea> innerAreaRectPartition() {
-        return innerRectPartition.stream();
+        return innerRectanglePartition.stream();
     }
 
     public Vector2i[] points() {
@@ -72,7 +61,7 @@ public class Obstacle {
         return "Obstacle{" +
             "encoding=" + encoding() +
             ", start=" + startPoint +
-            ", rectangles=" + innerRectPartition +
+            ", rectangles=" + innerRectanglePartition +
             ", segment count=" + segments.size() +
             ", segments=" + segments +
             '}';
@@ -149,7 +138,7 @@ public class Obstacle {
         return centers.toArray(Vector2i[]::new);
     }
 
-    public Collection<Vector2i> computeInnerPolygonPoints() {
+    public Collection<Vector2i> computeInnerPolygon() {
         Vector2i start = startPoint();
         List<Vector2i> edges1 = replaceDiagonalCornerEdges();
         List<Vector2i> edges2 = removeInversePairs(edges1);
@@ -235,8 +224,8 @@ public class Obstacle {
     // experimental
 
     public void checkParent(Obstacle other) {
-        for (RectArea parentRect : other.innerRectPartition) {
-            for (RectArea childRect : innerRectPartition) {
+        for (RectArea parentRect : other.innerRectanglePartition) {
+            for (RectArea childRect : innerRectanglePartition) {
                 if (parentRect.contains(childRect)) {
                     parent = other;
                     Logger.info("Obstacle {} at {} is contained in obstacle {} at {}",

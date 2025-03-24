@@ -96,7 +96,7 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
                 g.setFill(Color.grayRgb(200));
                 g.setStroke(Color.grayRgb(200));
                 g.setLineWidth(0.5);
-                for (Vector2i p : obstacle.computeInnerPolygonPoints()) {
+                for (Vector2i p : obstacle.computeInnerPolygon()) {
                     g.fillOval(p.x() - r, p.y() - r, 2*r, 2*r);
                     if (prev != null) {
                         g.strokeLine(prev.x(), prev.y(), p.x(), p.y());
