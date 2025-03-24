@@ -150,7 +150,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
         createCanvasLayer();
         createDashboardLayer();
 
-        popupLayer = new PopupLayer(THE_GAME_CONTEXT, canvasContainer);
+        popupLayer = new PopupLayer(canvasContainer);
         popupLayer.setMouseTransparent(true);
 
         getChildren().addAll(canvasLayer, dashboardLayer, popupLayer);

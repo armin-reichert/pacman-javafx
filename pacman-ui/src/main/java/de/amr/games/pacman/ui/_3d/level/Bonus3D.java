@@ -9,7 +9,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.actors.StaticBonus;
-import de.amr.games.pacman.ui.GameContext;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -23,6 +22,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 
 /**
  * 3D bonus symbol.
@@ -71,12 +71,12 @@ public class Bonus3D extends Box {
         eatenAnimation.setCycleCount(2);
     }
 
-    public void update(GameContext context) {
+    public void update() {
         Vector2f center = bonus.actor().position().plus(HTS, HTS);
         setTranslateX(center.x());
         setTranslateY(center.y());
         setTranslateZ(-HTS);
-        context.game().level().ifPresent(level -> {
+        THE_GAME_CONTEXT.game().level().ifPresent(level -> {
             boolean outsideWorld = center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
             boolean visible = !(bonus.state() == Bonus.STATE_INACTIVE || outsideWorld);
             setVisible(visible);

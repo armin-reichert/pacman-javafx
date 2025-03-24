@@ -4,15 +4,14 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._3d.level;
 
-import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.Globals;
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GameUIConfiguration;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.ui._3d.animation.Squirting;
@@ -44,6 +43,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 import static de.amr.games.pacman.ui._3d.GlobalProperties3d.*;
 import static de.amr.games.pacman.uilib.Ufx.*;
 
@@ -63,7 +63,6 @@ public class GameLevel3D extends Group {
 
     private final IntegerProperty livesCountPy = new SimpleIntegerProperty(0);
 
-    private final GameContext context;
     private final Group worldGroup = new Group();
     private AmbientLight ambientLight;
     private Pac3D pac3D;
@@ -80,9 +79,8 @@ public class GameLevel3D extends Group {
     private Animation levelCompleteAnimation;
     private Animation livesCounterAnimation;
 
-    public GameLevel3D(GameContext context) {
-        this.context = assertNotNull(context);
-        final GameModel game = context.game();
+    public GameLevel3D() {
+        final GameModel game = THE_GAME_CONTEXT.game();
         game.level().ifPresent(level -> {
             pac3D = createPac3D(level.pac());
             ghost3DAppearances = level.ghosts().map(ghost -> createGhost3D(ghost, level.numFlashes())).toList();
@@ -91,9 +89,9 @@ public class GameLevel3D extends Group {
             livesCounter3D.livesCountPy.bind(livesCountPy);
 
             floor3D = createFloor(level.worldMap().numCols() * TS, level.worldMap().numRows() * TS);
-            WorldMapColorScheme coloring = context.gameConfiguration().worldMapColoring(level.worldMap());
-            maze3D = new Maze3D(context.gameConfiguration(), level, coloring);
-            addFood3D(level, context.assets().get("model3D.pellet"), coloredMaterial(coloring.pellet()));
+            WorldMapColorScheme coloring = THE_GAME_CONTEXT.gameConfiguration().worldMapColoring(level.worldMap());
+            maze3D = new Maze3D(THE_GAME_CONTEXT.gameConfiguration(), level, coloring);
+            addFood3D(level, THE_GAME_CONTEXT.assets().get("model3D.pellet"), coloredMaterial(coloring.pellet()));
 
             worldGroup.getChildren().addAll(floor3D, maze3D);
 
@@ -113,11 +111,11 @@ public class GameLevel3D extends Group {
         setMouseTransparent(true); //TODO does this really increase performance?
     }
 
-    public void update(GameContext context) {
-        pac3D.update(context);
-        ghosts3D().forEach(ghost3D -> ghost3D.update(context));
-        bonus3D().ifPresent(bonus -> bonus.update(context));
-        context.game().level().ifPresent(level -> {
+    public void update() {
+        pac3D.update();
+        ghosts3D().forEach(ghost3D -> ghost3D.update());
+        bonus3D().ifPresent(bonus -> bonus.update());
+        THE_GAME_CONTEXT.game().level().ifPresent(level -> {
             boolean houseAccessRequired = level.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
                     .anyMatch(Ghost::isVisible);
             maze3D().setHouseLightOn(houseAccessRequired);
@@ -127,8 +125,8 @@ public class GameLevel3D extends Group {
                     .anyMatch(Ghost::isVisible);
             houseOpenPy.set(ghostNearHouseEntry);
 
-            int symbolsDisplayed = Math.max(0, context.game().lives() - 1);
-            if (!level.pac().isVisible() && context.gameState() == GameState.STARTING_GAME) {
+            int symbolsDisplayed = Math.max(0, THE_GAME_CONTEXT.game().lives() - 1);
+            if (!level.pac().isVisible() && THE_GAME_CONTEXT.gameState() == GameState.STARTING_GAME) {
                 livesCountPy.set(symbolsDisplayed + 1);
             } else {
                 livesCountPy.set(symbolsDisplayed);
@@ -137,30 +135,30 @@ public class GameLevel3D extends Group {
     }
 
     private Pac3D createPac3D(Pac pac) {
-        String assetNamespace = context.gameConfiguration().assetNamespace();
-        Pac3D pac3D = switch (context.gameVariant()) {
-            case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL -> new MsPacMan3D(context.gameVariant(), pac, PAC_SIZE, context.assets(), assetNamespace);
-            case PACMAN, PACMAN_XXL -> new PacMan3D(context.gameVariant(), pac, PAC_SIZE, context.assets(), assetNamespace);
+        String assetNamespace = THE_GAME_CONTEXT.gameConfiguration().assetNamespace();
+        Pac3D pac3D = switch (THE_GAME_CONTEXT.gameVariant()) {
+            case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL -> new MsPacMan3D(THE_GAME_CONTEXT.gameVariant(), pac, PAC_SIZE, THE_GAME_CONTEXT.assets(), assetNamespace);
+            case PACMAN, PACMAN_XXL -> new PacMan3D(THE_GAME_CONTEXT.gameVariant(), pac, PAC_SIZE, THE_GAME_CONTEXT.assets(), assetNamespace);
         };
-        pac3D.shape3D().light().setColor(context.assets().color(assetNamespace + ".pac.color.head").desaturate());
+        pac3D.shape3D().light().setColor(THE_GAME_CONTEXT.assets().color(assetNamespace + ".pac.color.head").desaturate());
         pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
         return pac3D;
     }
 
     private Ghost3DAppearance createGhost3D(Ghost ghost, int numFlashes) {
-        String assetNamespace = context.gameConfiguration().assetNamespace();
-        Shape3D dressShape    = new MeshView(context.assets().get("model3D.ghost.mesh.dress"));
-        Shape3D pupilsShape   = new MeshView(context.assets().get("model3D.ghost.mesh.pupils"));
-        Shape3D eyeballsShape = new MeshView(context.assets().get("model3D.ghost.mesh.eyeballs"));
-        return new Ghost3DAppearance(dressShape, pupilsShape, eyeballsShape, context.assets(), assetNamespace,
+        String assetNamespace = THE_GAME_CONTEXT.gameConfiguration().assetNamespace();
+        Shape3D dressShape    = new MeshView(THE_GAME_CONTEXT.assets().get("model3D.ghost.mesh.dress"));
+        Shape3D pupilsShape   = new MeshView(THE_GAME_CONTEXT.assets().get("model3D.ghost.mesh.pupils"));
+        Shape3D eyeballsShape = new MeshView(THE_GAME_CONTEXT.assets().get("model3D.ghost.mesh.eyeballs"));
+        return new Ghost3DAppearance(dressShape, pupilsShape, eyeballsShape, THE_GAME_CONTEXT.assets(), assetNamespace,
             ghost, GHOST_SIZE, numFlashes);
     }
 
     private LivesCounter3D createLivesCounter3D(boolean canStartNewGame) {
-        GameUIConfiguration config3D = context.gameConfiguration();
+        GameUIConfiguration config3D = THE_GAME_CONTEXT.gameConfiguration();
         Node[] counterShapes = new Node[LIVES_COUNTER_MAX];
         for (int i = 0; i < counterShapes.length; ++i) {
-            counterShapes[i] = config3D.createLivesCounterShape(context.assets(), LIVES_COUNTER_SIZE);
+            counterShapes[i] = config3D.createLivesCounterShape(THE_GAME_CONTEXT.assets(), LIVES_COUNTER_SIZE);
         }
         var counter3D = new LivesCounter3D(counterShapes);
         counter3D.setTranslateX(2 * TS);
@@ -173,13 +171,13 @@ public class GameLevel3D extends Group {
     }
 
     public void addLevelCounter() {
-        context.game().level().map(GameLevel::worldMap).ifPresent(worldMap -> {
+        THE_GAME_CONTEXT.game().level().map(GameLevel::worldMap).ifPresent(worldMap -> {
             // Place level counter at top right maze corner
             double x = worldMap.numCols() * TS - 2 * TS;
             double y = 2 * TS;
             Node levelCounter3D = createLevelCounter3D(
-                    context.gameConfiguration().spriteSheet(),
-                    context.game().levelCounter(), x, y);
+                    THE_GAME_CONTEXT.gameConfiguration().spriteSheet(),
+                    THE_GAME_CONTEXT.game().levelCounter(), x, y);
             getChildren().add(levelCounter3D);
         });
     }
@@ -261,7 +259,7 @@ public class GameLevel3D extends Group {
         }
         message3D = Message3D.builder()
             .text(text)
-            .font(context.assets().font("font.arcade", 6))
+            .font(THE_GAME_CONTEXT.assets().font("font.arcade", 6))
             .borderColor(Color.WHITE)
             .textColor(Color.YELLOW)
             .build();
@@ -315,7 +313,7 @@ public class GameLevel3D extends Group {
         levelCompleteAnimation = new SequentialTransition(
             now(() -> {
                 // keep game state until animation has finished
-                context.gameState().timer().resetIndefiniteTime();
+                THE_GAME_CONTEXT.gameState().timer().resetIndefiniteTime();
                 onStart.run();
             }),
             level.cutSceneNumber() != 0
@@ -324,7 +322,7 @@ public class GameLevel3D extends Group {
         );
         levelCompleteAnimation.setOnFinished(e -> {
             onFinished.run();
-            context.gameState().timer().expire();
+            THE_GAME_CONTEXT.gameState().timer().expire();
         });
         levelCompleteAnimation.setDelay(Duration.seconds(delaySeconds));
         levelCompleteAnimation.play();
@@ -343,7 +341,7 @@ public class GameLevel3D extends Group {
             new KeyFrame(Duration.ZERO, e -> {
                 livesCounter3D().light().setLightOn(false);
                 if (Globals.randomInt(1, 100) < 25) {
-                    context.showFlashMessageSec(3, context.locLevelCompleteMessage(level.number()));
+                    THE_GAME_CONTEXT.showFlashMessageSec(3, THE_GAME_CONTEXT.locLevelCompleteMessage(level.number()));
                 }
             }),
             new KeyFrame(Duration.seconds(1.0), e -> level.ghosts().forEach(Ghost::hide)),
@@ -352,9 +350,9 @@ public class GameLevel3D extends Group {
             new KeyFrame(Duration.seconds(5.0), e -> levelRotateAnimation(1.5).play()),
             new KeyFrame(Duration.seconds(7.0), e -> {
                 maze3D.wallsDisappearAnimation(2.0).play();
-                context.sound().playLevelCompleteSound();
+                THE_GAME_CONTEXT.sound().playLevelCompleteSound();
             }),
-            new KeyFrame(Duration.seconds(9.5), e -> context.sound().playLevelChangedSound())
+            new KeyFrame(Duration.seconds(9.5), e -> THE_GAME_CONTEXT.sound().playLevelChangedSound())
         );
     }
 

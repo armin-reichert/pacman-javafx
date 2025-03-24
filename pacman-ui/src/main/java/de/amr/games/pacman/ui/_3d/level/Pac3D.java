@@ -17,7 +17,7 @@ public interface Pac3D {
 
     void init();
 
-    void update(GameContext context);
+    void update();
 
     Animation createDyingAnimation(GameSound sounds);
 

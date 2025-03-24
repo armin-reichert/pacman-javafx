@@ -179,7 +179,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             level.pac().show();
             level.ghosts().forEach(Ghost::show);
             level3D.pac3D().init();
-            level3D.pac3D().update(THE_GAME_CONTEXT);
+            level3D.pac3D().update();
             if (THE_GAME_CONTEXT.gameState() == GameState.HUNTING) {
                 if (level.powerTimer().isRunning()) {
                     THE_GAME_CONTEXT.sound().playPacPowerSound();
@@ -208,7 +208,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             return;
         }
 
-        level3D.update(THE_GAME_CONTEXT);
+        level3D.update();
 
         //TODO check if this has to de done on every tick
         if (THE_GAME_CONTEXT.game().isDemoLevel()) {
@@ -310,14 +310,14 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         if (hasLevel3D()) {
             level3D.stopAnimations();
             level3D.pac3D().init();
-            level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(THE_GAME_CONTEXT));
+            level3D.ghosts3D().forEach(Ghost3DAppearance::init);
             THE_GAME_CONTEXT.game().level().ifPresent(this::showReadyMessage);
         }
     }
 
     private void onEnterStateHunting() {
         level3D.pac3D().init();
-        level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(THE_GAME_CONTEXT));
+        level3D.ghosts3D().forEach(Ghost3DAppearance::init);
         level3D.energizers3D().forEach(Energizer3D::startPumping);
         level3D.playLivesCounterAnimation();
     }
@@ -326,7 +326,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         level3D.stopAnimations();
         THE_GAME_CONTEXT.sound().stopAll();
         // last update before dying animation
-        level3D.pac3D().update(THE_GAME_CONTEXT);
+        level3D.pac3D().update();
         playPacManDiesAnimation();
     }
 
@@ -372,7 +372,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         replaceGameLevel3D();
         level3D.addLevelCounter();
         level3D.pac3D().init();
-        level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(THE_GAME_CONTEXT));
+        level3D.ghosts3D().forEach(Ghost3DAppearance::init);
         THE_GAME_CONTEXT.game().level().ifPresent(level -> showLevelTestMessage(level, "TEST LEVEL" + level.number()));
         GlobalProperties3d.PY_3D_PERSPECTIVE.set(Perspective.Name.TOTAL);
     }
@@ -381,7 +381,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         replaceGameLevel3D();
         level3D.addLevelCounter();
         level3D.pac3D().init();
-        level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(THE_GAME_CONTEXT));
+        level3D.ghosts3D().forEach(Ghost3DAppearance::init);
         THE_GAME_CONTEXT.game().level().ifPresent(level -> showLevelTestMessage(level, "PREVIEW LEVEL " + level.number()));
         GlobalProperties3d.PY_3D_PERSPECTIVE.set(Perspective.Name.TOTAL);
     }
@@ -481,7 +481,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     }
 
     protected void replaceGameLevel3D() {
-        level3D = new GameLevel3D(THE_GAME_CONTEXT);
+        level3D = new GameLevel3D();
         int lastIndex = getChildren().size() - 1;
         getChildren().set(lastIndex, level3D);
         scores3D.translateXProperty().bind(level3D.translateXProperty().add(TS));
