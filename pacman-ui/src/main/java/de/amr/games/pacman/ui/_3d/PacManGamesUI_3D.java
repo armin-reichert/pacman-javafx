@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._3d;
 
 import de.amr.games.pacman.ui.PacManGamesUI;
-import de.amr.games.pacman.ui.UIGlobals;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.uilib.Picker;
 import de.amr.games.pacman.uilib.ResourceManager;
@@ -34,7 +33,7 @@ public class PacManGamesUI_3D extends PacManGamesUI {
 
     public PacManGamesUI_3D() {
         super(); // loads 2D assets!
-        UIGlobals.THE_GAME_CONTEXT = this;
+        THE_GAME_CONTEXT = this;
         loadAssets3D();
     }
 
