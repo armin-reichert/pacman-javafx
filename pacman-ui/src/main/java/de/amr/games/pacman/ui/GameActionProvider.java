@@ -12,7 +12,7 @@ import org.tinylog.Logger;
 import java.util.Map;
 import java.util.Optional;
 
-import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.UIGlobals.THE_KEYBOARD;
 
 public interface GameActionProvider {
 
@@ -78,6 +78,6 @@ public interface GameActionProvider {
     }
 
     default void handleInput() {
-        ifTriggeredRunAction(THE_GAME_CONTEXT.keyboard());
+        ifTriggeredRunAction(THE_KEYBOARD);
     }
 }

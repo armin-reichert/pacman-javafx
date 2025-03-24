@@ -43,6 +43,7 @@ import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.UIGlobals.THE_KEYBOARD;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_DEBUG_INFO_VISIBLE;
 import static de.amr.games.pacman.ui.input.ArcadeKeyBinding.DEFAULT_ARCADE_KEY_BINDING;
 import static de.amr.games.pacman.ui.input.JoypadKeyBinding.JOYPAD_CURSOR_KEYS;
@@ -95,7 +96,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     };
 
     protected final Map<GameVariant, GameUIConfiguration> uiConfigsByVariant = new EnumMap<>(GameVariant.class);
-    protected final Keyboard keyboard = new Keyboard();
     protected final GameClockFX clock = new GameClockFX();
     protected final AssetStorage assets = new AssetStorage();
     protected final GameSound gameSound = new GameSound();
@@ -260,8 +260,8 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         mainScene.widthProperty() .addListener((py,ov,nv) -> gameView.setSize(mainScene.getWidth(), mainScene.getHeight()));
         mainScene.heightProperty().addListener((py,ov,nv) -> gameView.setSize(mainScene.getWidth(), mainScene.getHeight()));
 
-        mainScene.addEventFilter(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
-        mainScene.addEventFilter(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
+        mainScene.addEventFilter(KeyEvent.KEY_PRESSED, THE_KEYBOARD::onKeyPressed);
+        mainScene.addEventFilter(KeyEvent.KEY_RELEASED, THE_KEYBOARD::onKeyReleased);
 
         // Global keyboard shortcuts
         mainScene.setOnKeyPressed(keyPress -> {
@@ -391,11 +391,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public Keyboard keyboard() {
-        return keyboard;
-    }
-
-    @Override
     public ArcadeKeyBinding arcadeKeys() {
         return arcadeKeyBinding;
     }
@@ -514,13 +509,13 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         Node currentView = viewPy.get();
         if (view != currentView) {
             if (currentView instanceof GameActionProvider actionProvider) {
-                actionProvider.unregisterGameActionKeyBindings(keyboard);
+                actionProvider.unregisterGameActionKeyBindings(THE_KEYBOARD);
             }
             if (currentView instanceof GameEventListener gameEventListener) {
                 THE_GAME_CONTROLLER.game().removeGameEventListener(gameEventListener);
             }
             if (view instanceof GameActionProvider actionProvider) {
-                actionProvider.registerGameActionKeyBindings(keyboard);
+                actionProvider.registerGameActionKeyBindings(THE_KEYBOARD);
             }
             if (view instanceof GameEventListener gameEventListener) {
                 THE_GAME_CONTROLLER.game().addGameEventListener(gameEventListener);

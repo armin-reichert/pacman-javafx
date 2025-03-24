@@ -56,6 +56,7 @@ import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions.QUIT_DEMO_LEVEL;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.UIGlobals.THE_KEYBOARD;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindCheatActions;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindFallbackPlayerControlActions;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_AUTOPILOT;
@@ -204,7 +205,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void doInit() {
         messageMovement = new MessageMovement();
-        THE_GAME_CONTEXT.joypadKeyBinding().register(THE_GAME_CONTEXT.keyboard());
+        THE_GAME_CONTEXT.joypadKeyBinding().register(THE_KEYBOARD);
         THE_GAME_CONTEXT.setScoreVisible(true);
         setGameRenderer(THE_GAME_CONTEXT.gameConfiguration().createRenderer(canvas));
         movingCamera.focusTopOfScene();
@@ -213,7 +214,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     protected void doEnd() {
         THE_GAME_CONTEXT.sound().stopAll();
-        THE_GAME_CONTEXT.joypadKeyBinding().unregister(THE_GAME_CONTEXT.keyboard());
+        THE_GAME_CONTEXT.joypadKeyBinding().unregister(THE_KEYBOARD);
     }
 
     @Override
@@ -279,7 +280,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void onLevelCreated(GameEvent e) {
         THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-            THE_GAME_CONTEXT.joypadKeyBinding().register(THE_GAME_CONTEXT.keyboard());
+            THE_GAME_CONTEXT.joypadKeyBinding().register(THE_KEYBOARD);
             setKeyBindings();
             if (THE_GAME_CONTROLLER.game().isDemoLevel()) {
                 level.pac().setImmune(false);
@@ -302,7 +303,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
         Logger.info("{} entered from {}", this, oldScene);
-        THE_GAME_CONTEXT.joypadKeyBinding().register(THE_GAME_CONTEXT.keyboard());
+        THE_GAME_CONTEXT.joypadKeyBinding().register(THE_KEYBOARD);
         setKeyBindings();
         THE_GAME_CONTROLLER.game().level().map(GameLevel::worldMap).ifPresent(worldMap -> gr.setWorldMap(worldMap));
     }
@@ -321,7 +322,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             bindFallbackPlayerControlActions(this);
             bindCheatActions(this);
         }
-        registerGameActionKeyBindings(THE_GAME_CONTEXT.keyboard());
+        registerGameActionKeyBindings(THE_KEYBOARD);
     }
 
     @Override

@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.UIGlobals.THE_KEYBOARD;
 
 /**
  * Base class of all 2D scenes.
@@ -35,13 +36,13 @@ public abstract class GameScene2D implements GameScene {
     public final void init() {
         doInit();
         bindGameActions();
-        registerGameActionKeyBindings(THE_GAME_CONTEXT.keyboard());
+        registerGameActionKeyBindings(THE_KEYBOARD);
     }
 
     @Override
     public final void end() {
         doEnd();
-        unregisterGameActionKeyBindings(THE_GAME_CONTEXT.keyboard());
+        unregisterGameActionKeyBindings(THE_KEYBOARD);
     }
 
     @Override
