@@ -10,5 +10,5 @@ public class UIGlobals {
     public static final AssetStorage THE_ASSETS = new AssetStorage();
     public static final GameClockFX THE_CLOCK = new GameClockFX();
     public static final Keyboard THE_KEYBOARD = new Keyboard();
-    public static final GameSound THE_SOUND = new GameSound(THE_ASSETS);
+    public static final GameSound THE_SOUND = new GameSound();
 }
