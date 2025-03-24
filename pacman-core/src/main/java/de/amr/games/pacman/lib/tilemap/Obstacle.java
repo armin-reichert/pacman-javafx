@@ -11,8 +11,8 @@ import org.tinylog.Logger;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.vec_2i;
+import static de.amr.games.pacman.Globals.HTS;
+import static de.amr.games.pacman.Globals.vec_2i;
 import static java.lang.Math.signum;
 
 /**

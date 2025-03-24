@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.assertNotNull;
+import static de.amr.games.pacman.Globals.assertNotNull;
 
 public class ArcadeMsPacMan_UIConfig implements GameUIConfiguration {
 

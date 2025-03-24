@@ -17,7 +17,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 
-import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.Globals.TS;
 
 public class MazePreview3D {
 

@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.arcade.pacman;
+package de.amr.games.pacman.arcade;
 
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
@@ -12,9 +12,9 @@ import de.amr.games.pacman.ui._2d.GameActions2D;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
 
-import static de.amr.games.pacman.arcade.pacman.ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT;
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.tiles2Px;
+import static de.amr.games.pacman.arcade.ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT;
+import static de.amr.games.pacman.Globals.TS;
+import static de.amr.games.pacman.Globals.tiles2Px;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 
 /**

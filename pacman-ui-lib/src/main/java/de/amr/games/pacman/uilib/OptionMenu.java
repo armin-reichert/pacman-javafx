@@ -20,7 +20,7 @@ import javafx.scene.text.Font;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.Globals.*;
 
 public class OptionMenu {
 

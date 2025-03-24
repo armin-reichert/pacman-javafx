@@ -12,7 +12,7 @@ import javafx.collections.ObservableList;
 
 import java.util.List;
 
-import static de.amr.games.pacman.lib.Globals.assertValidLevelNumber;
+import static de.amr.games.pacman.Globals.assertValidLevelNumber;
 
 public class ArcadeMsPacMan_MapSelector extends MapSelector {
 

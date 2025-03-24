@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import static de.amr.games.pacman.lib.Globals.assertNotNull;
+import static de.amr.games.pacman.Globals.assertNotNull;
 
 public class EditorView extends BorderPane implements GameActionProvider {
 

@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.tilemap.editor.ArcadeMap.SPRITE_SHEET;
 

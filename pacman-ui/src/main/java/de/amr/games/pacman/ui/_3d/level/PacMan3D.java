@@ -18,7 +18,7 @@ import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import static de.amr.games.pacman.lib.Globals.assertNotNull;
+import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.uilib.Ufx.doAfterSec;
 import static de.amr.games.pacman.uilib.Ufx.now;
 import static de.amr.games.pacman.uilib.model3D.Model3D.meshViewById;

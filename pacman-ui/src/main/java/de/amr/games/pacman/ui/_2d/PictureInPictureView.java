@@ -14,7 +14,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.lib.Globals.assertNotNull;
+import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
 
 /**

@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 
 import java.util.Set;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.Globals.*;
 
 /**
  * Vector renderer for terrain tile maps.

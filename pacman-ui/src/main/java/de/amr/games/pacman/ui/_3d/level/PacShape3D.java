@@ -25,8 +25,8 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.Globals.HTS;
+import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.uilib.model3D.Model3D.meshViewById;
 
 /**

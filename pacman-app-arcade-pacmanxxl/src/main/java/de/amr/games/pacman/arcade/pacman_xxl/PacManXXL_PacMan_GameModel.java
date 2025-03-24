@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman_xxl;
 
-import de.amr.games.pacman.arcade.pacman.ArcadePacMan_GameModel;
+import de.amr.games.pacman.arcade.ArcadePacMan_GameModel;
 import de.amr.games.pacman.model.MapSelector;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 

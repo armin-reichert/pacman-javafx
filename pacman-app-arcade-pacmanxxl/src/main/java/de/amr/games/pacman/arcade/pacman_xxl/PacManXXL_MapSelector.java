@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static de.amr.games.pacman.lib.Globals.randomInt;
+import static de.amr.games.pacman.Globals.randomInt;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.model.GameModel.CUSTOM_MAP_DIR;
 

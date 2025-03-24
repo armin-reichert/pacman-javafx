@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
-import static de.amr.games.pacman.lib.Globals.tileAt;
+import static de.amr.games.pacman.Globals.tileAt;
 
 /**
  * Pac-Man steering based on a set of rules.

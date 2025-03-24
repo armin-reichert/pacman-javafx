@@ -7,7 +7,7 @@ package de.amr.games.pacman.model.actors;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.Globals.*;
 
 /**
  * Base class for all 2D game actors, e.g. creatures and bonus entities.

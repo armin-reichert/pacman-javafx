@@ -32,8 +32,8 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.Globals.HTS;
+import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_IMMUNITY;

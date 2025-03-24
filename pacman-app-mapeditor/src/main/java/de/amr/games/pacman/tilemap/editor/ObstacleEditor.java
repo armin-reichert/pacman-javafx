@@ -15,8 +15,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.lib.Globals.assertNotNull;
-import static de.amr.games.pacman.lib.Globals.isEven;
+import static de.amr.games.pacman.Globals.assertNotNull;
+import static de.amr.games.pacman.Globals.isEven;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.mirroredTileValue;
 
 public class ObstacleEditor {

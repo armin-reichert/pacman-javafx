@@ -2,7 +2,7 @@ package de.amr.games.pacman.tengen.ms_pacman.scene;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.Globals;
+import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.ClapperboardAnimation;
@@ -19,7 +19,7 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;

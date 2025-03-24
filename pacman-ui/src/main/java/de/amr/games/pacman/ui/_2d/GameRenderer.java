@@ -30,7 +30,7 @@ import org.tinylog.Logger;
 
 import java.util.function.Predicate;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.Globals.*;
 import static java.util.function.Predicate.not;
 
 /**

@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui._3d.scene3d;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
-import de.amr.games.pacman.lib.Globals;
+import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
@@ -45,7 +45,7 @@ import java.util.*;
 
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui._2d.GameActions2D.*;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;

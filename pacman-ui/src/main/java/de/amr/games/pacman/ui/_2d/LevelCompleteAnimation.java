@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui._2d;
 
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.lib.Globals.inClosedRange;
+import static de.amr.games.pacman.Globals.inClosedRange;
 
 public class LevelCompleteAnimation {
 

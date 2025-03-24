@@ -2,9 +2,8 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.arcade.pacman;
+package de.amr.games.pacman.arcade;
 
-import de.amr.games.pacman.arcade.ResourceRoot;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.MapSelector;
@@ -37,7 +36,7 @@ public class ArcadePacMan_MapSelector extends MapSelector {
             return; // avoid loading map again
         }
         try {
-            map = new WorldMap(ResourceRoot.class.getResource(MAP_PATH));
+            map = new WorldMap(getClass().getResource(MAP_PATH));
             map.setConfigValue("mapNumber", 1);
             map.setConfigValue("colorMapIndex", 0);
         } catch (Exception x) {

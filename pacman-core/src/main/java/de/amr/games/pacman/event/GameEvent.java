@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.event;
 
-import de.amr.games.pacman.lib.Globals;
+import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 

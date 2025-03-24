@@ -23,7 +23,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.uilib.Ufx.coloredMaterial;
 import static java.lang.Math.TAU;
 

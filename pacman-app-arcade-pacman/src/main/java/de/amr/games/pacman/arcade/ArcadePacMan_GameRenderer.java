@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.arcade.pacman;
+package de.amr.games.pacman.arcade;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameLevel;
@@ -15,10 +15,10 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
-import static de.amr.games.pacman.arcade.pacman.ArcadePacMan_SpriteSheet.EMPTY_MAZE_SPRITE;
-import static de.amr.games.pacman.arcade.pacman.ArcadePacMan_SpriteSheet.FULL_MAZE_SPRITE;
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.assertNotNull;
+import static de.amr.games.pacman.arcade.ArcadePacMan_SpriteSheet.EMPTY_MAZE_SPRITE;
+import static de.amr.games.pacman.arcade.ArcadePacMan_SpriteSheet.FULL_MAZE_SPRITE;
+import static de.amr.games.pacman.Globals.TS;
+import static de.amr.games.pacman.Globals.assertNotNull;
 
 /**
  * @author Armin Reichert

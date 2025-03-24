@@ -11,7 +11,7 @@ import org.tinylog.Logger;
 import java.util.*;
 
 import static de.amr.games.pacman.lib.Direction.*;
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.Globals.*;
 import static java.util.function.Predicate.not;
 
 /**

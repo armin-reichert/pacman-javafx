@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.uilib.model3D;
 
-import de.amr.games.pacman.lib.Globals;
+import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.uilib.objimport.ObjImporter;
 import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;

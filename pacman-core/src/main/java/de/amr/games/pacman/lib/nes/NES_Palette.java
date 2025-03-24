@@ -1,6 +1,6 @@
 package de.amr.games.pacman.lib.nes;
 
-import static de.amr.games.pacman.lib.Globals.inClosedRange;
+import static de.amr.games.pacman.Globals.inClosedRange;
 
 public interface NES_Palette {
 

@@ -12,7 +12,7 @@ import de.amr.games.pacman.tilemap.rendering.TileMapRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.tilemap.editor.ArcadeMap.PAC_SPRITE;
 import static de.amr.games.pacman.tilemap.editor.ArcadeMap.SPRITE_SHEET;

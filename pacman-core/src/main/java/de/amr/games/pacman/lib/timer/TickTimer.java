@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib.timer;
 
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.timer.TickTimerEvent.Type;
 import org.tinylog.Logger;
 
@@ -12,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static de.amr.games.pacman.lib.Globals.assertNotNull;
+import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.timer.TickTimer.State.*;
 
 /**

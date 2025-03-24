@@ -25,7 +25,7 @@ import java.io.File;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 

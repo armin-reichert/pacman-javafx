@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
-import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.Globals.TS;
 
 public class TileMatcher {
 

@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.LayerID.FOOD;
 import static de.amr.games.pacman.lib.tilemap.LayerID.TERRAIN;
 

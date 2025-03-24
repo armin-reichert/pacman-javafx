@@ -4,8 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman_xxl;
 
-import de.amr.games.pacman.arcade.ResourceRoot;
-import de.amr.games.pacman.arcade.pacman.*;
+import de.amr.games.pacman.arcade.*;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
@@ -27,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.assertNotNull;
+import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_ENABLED;
 
 public class PacManXXL_PacMan_UIConfig implements GameUIConfiguration {
@@ -46,7 +45,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUIConfiguration {
         scenesByID.put("CutScene2",   new CutScene2());
         scenesByID.put("CutScene3",   new CutScene3());
 
-        ResourceManager rm = () -> ResourceRoot.class;
+        ResourceManager rm = () -> ArcadePacMan_UIConfig.class;
 
         appIcon = rm.loadImage("graphics/icons/pacman.png");
         spriteSheet = new ArcadePacMan_SpriteSheet(rm.loadImage("graphics/pacman_spritesheet.png"));

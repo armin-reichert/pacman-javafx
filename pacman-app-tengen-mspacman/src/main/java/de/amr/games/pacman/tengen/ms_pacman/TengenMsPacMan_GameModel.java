@@ -24,7 +24,7 @@ import java.io.File;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_MS_PACMAN_BOOSTER;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 import static de.amr.games.pacman.tengen.ms_pacman.SpeedConfiguration.*;

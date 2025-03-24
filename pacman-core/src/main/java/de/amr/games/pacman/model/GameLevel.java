@@ -21,7 +21,7 @@ import org.tinylog.Logger;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.TerrainTiles.*;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.model.GameModel.*;

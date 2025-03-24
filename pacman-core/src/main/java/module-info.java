@@ -17,4 +17,5 @@ module de.amr.games.pacman {
     exports de.amr.games.pacman.lib.tilemap;
     exports de.amr.games.pacman.lib.timer;
     exports de.amr.games.pacman.steering;
+    exports de.amr.games.pacman;
 }

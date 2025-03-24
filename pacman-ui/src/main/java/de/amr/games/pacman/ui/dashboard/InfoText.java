@@ -8,7 +8,7 @@ import javafx.scene.text.Text;
 
 import java.util.function.Supplier;
 
-import static de.amr.games.pacman.lib.Globals.assertNotNull;
+import static de.amr.games.pacman.Globals.assertNotNull;
 
 public class InfoText extends Text {
 

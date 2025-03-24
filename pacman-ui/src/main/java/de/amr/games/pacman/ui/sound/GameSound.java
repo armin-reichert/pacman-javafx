@@ -19,7 +19,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.games.pacman.lib.Globals.assertNotNull;
+import static de.amr.games.pacman.Globals.assertNotNull;
 
 /**
  * @author Armin Reichert

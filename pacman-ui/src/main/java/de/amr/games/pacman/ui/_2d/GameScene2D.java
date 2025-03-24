@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._2d;
 
-import de.amr.games.pacman.lib.Globals;
+import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui.GameScene;

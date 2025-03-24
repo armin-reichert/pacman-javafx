@@ -28,7 +28,7 @@ import org.tinylog.Logger;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.ui._3d.GlobalProperties3d.*;
 import static de.amr.games.pacman.uilib.Ufx.*;
 

@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib.nes;
 
-import static de.amr.games.pacman.lib.Globals.randomInt;
+import static de.amr.games.pacman.Globals.randomInt;
 
 /**
  * The color schemes used in the Tengen Ms. Pac-Man maps.

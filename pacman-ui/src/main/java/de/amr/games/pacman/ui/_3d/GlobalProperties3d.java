@@ -5,7 +5,7 @@ import javafx.beans.property.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 
-import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.Globals.TS;
 
 public interface GlobalProperties3d {
 

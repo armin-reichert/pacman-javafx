@@ -22,7 +22,7 @@ import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.Globals.*;
 
 /**
  * @author Armin Reichert

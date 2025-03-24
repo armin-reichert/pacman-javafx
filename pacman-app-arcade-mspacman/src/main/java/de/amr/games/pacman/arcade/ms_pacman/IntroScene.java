@@ -22,8 +22,8 @@ import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.tiles2Px;
+import static de.amr.games.pacman.Globals.TS;
+import static de.amr.games.pacman.Globals.tiles2Px;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindTestActions;
 

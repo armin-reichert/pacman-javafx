@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._3d.level;
 
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.lib.Globals;
+import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.ui._3d.GlobalProperties3d.*;
 import static de.amr.games.pacman.uilib.Ufx.*;
 

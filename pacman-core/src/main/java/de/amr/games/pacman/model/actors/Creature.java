@@ -14,7 +14,7 @@ import org.tinylog.Logger;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Direction.*;
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.Globals.*;
 
 /**
  * Base class for all creatures which can move through a level's world.

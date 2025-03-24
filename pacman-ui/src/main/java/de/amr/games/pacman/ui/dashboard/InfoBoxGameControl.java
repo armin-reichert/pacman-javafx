@@ -15,7 +15,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
 
-import static de.amr.games.pacman.lib.Globals.oneOf;
+import static de.amr.games.pacman.Globals.oneOf;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_IMMUNITY;
 

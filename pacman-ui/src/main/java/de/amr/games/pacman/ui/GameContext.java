@@ -23,7 +23,7 @@ import org.tinylog.Logger;
 import java.text.MessageFormat;
 import java.util.Optional;
 
-import static de.amr.games.pacman.lib.Globals.assertNotNull;
+import static de.amr.games.pacman.Globals.assertNotNull;
 
 /**
  * @author Armin Reichert

@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib;
 
-import static de.amr.games.pacman.lib.Globals.vec_2f;
+import static de.amr.games.pacman.Globals.vec_2f;
 
 /**
  * A rectangular area with short precision to represent sprite sheet regions.

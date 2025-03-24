@@ -2,9 +2,8 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.arcade.pacman;
+package de.amr.games.pacman.arcade;
 
-import de.amr.games.pacman.arcade.ResourceRoot;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
@@ -31,7 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.assertNotNull;
+import static de.amr.games.pacman.Globals.assertNotNull;
 
 public class ArcadePacMan_UIConfig implements GameUIConfiguration {
 
@@ -51,7 +50,7 @@ public class ArcadePacMan_UIConfig implements GameUIConfiguration {
         scenesByID.put("CutScene2",   new CutScene2());
         scenesByID.put("CutScene3",   new CutScene3());
 
-        ResourceManager rm = () -> ResourceRoot.class;
+        ResourceManager rm = this::getClass;
         appIcon = rm.loadImage("graphics/icons/pacman.png");
         spriteSheet = new ArcadePacMan_SpriteSheet(rm.loadImage("graphics/pacman_spritesheet.png"));
 

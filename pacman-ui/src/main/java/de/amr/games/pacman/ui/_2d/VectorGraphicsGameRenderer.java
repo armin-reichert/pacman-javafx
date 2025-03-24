@@ -19,8 +19,8 @@ import javafx.scene.paint.Color;
 
 import java.util.Map;
 
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.assertNotNull;
+import static de.amr.games.pacman.Globals.TS;
+import static de.amr.games.pacman.Globals.assertNotNull;
 import static java.util.function.Predicate.not;
 
 /**

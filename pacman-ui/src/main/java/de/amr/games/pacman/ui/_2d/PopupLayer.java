@@ -19,7 +19,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 
-import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.uilib.Ufx.opaqueColor;
 
 /**

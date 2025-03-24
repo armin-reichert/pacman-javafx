@@ -2,9 +2,8 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.arcade.pacman;
+package de.amr.games.pacman.arcade;
 
-import de.amr.games.pacman.arcade.ResourceRoot;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.PacManGamesUI;
 import de.amr.games.pacman.ui._2d.StartPage;
@@ -25,7 +24,7 @@ public class ArcadePacMan_StartPage extends StackPane implements StartPage {
     public ArcadePacMan_StartPage(PacManGamesUI ui) {
         this.ui = ui;
 
-        ResourceManager rm = () -> ResourceRoot.class;
+        ResourceManager rm = this::getClass;
         flyer = new Flyer(
             rm.loadImage("graphics/f1.jpg"),
             rm.loadImage("graphics/f2.jpg"),

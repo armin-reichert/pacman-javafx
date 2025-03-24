@@ -31,8 +31,8 @@ import org.tinylog.Logger;
 
 import java.util.function.Predicate;
 
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.assertNotNull;
+import static de.amr.games.pacman.Globals.TS;
+import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.PROPERTY_COLOR_FOOD;
 import static de.amr.games.pacman.tilemap.editor.ArcadeMap.MS_PACMAN_COLOR_FOOD;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditor.*;

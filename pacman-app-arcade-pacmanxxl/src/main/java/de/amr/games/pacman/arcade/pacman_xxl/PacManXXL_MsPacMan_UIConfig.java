@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.assertNotNull;
+import static de.amr.games.pacman.Globals.assertNotNull;
 
 public class PacManXXL_MsPacMan_UIConfig implements GameUIConfiguration {
 

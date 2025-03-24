@@ -3,7 +3,7 @@
  */
 package de.amr.games.pacman.tengen.ms_pacman.maps;
 
-import de.amr.games.pacman.lib.Globals;
+import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
@@ -13,7 +13,7 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.lib.RectArea.rect;
 import static de.amr.games.pacman.lib.nes.NES_ColorScheme.*;
 import static de.amr.games.pacman.uilib.Ufx.*;

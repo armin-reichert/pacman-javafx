@@ -11,7 +11,7 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
-import static de.amr.games.pacman.lib.Globals.assertNotNull;
+import static de.amr.games.pacman.Globals.assertNotNull;
 
 /**
  * Steers a creature to follow a given route.
