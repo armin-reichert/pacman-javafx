@@ -79,8 +79,7 @@ public class GameLevel3D extends Group {
     private Animation levelCompleteAnimation;
     private Animation livesCounterAnimation;
 
-    public GameLevel3D() {
-        final GameModel game = THE_GAME_CONTEXT.game();
+    public GameLevel3D(GameModel game) {
         game.level().ifPresent(level -> {
             pac3D = createPac3D(level.pac());
             ghost3DAppearances = level.ghosts().map(ghost -> createGhost3D(ghost, level.numFlashes())).toList();
@@ -113,8 +112,8 @@ public class GameLevel3D extends Group {
 
     public void update() {
         pac3D.update();
-        ghosts3D().forEach(ghost3D -> ghost3D.update());
-        bonus3D().ifPresent(bonus -> bonus.update());
+        ghosts3D().forEach(Ghost3DAppearance::update);
+        bonus3D().ifPresent(Bonus3D::update);
         THE_GAME_CONTEXT.game().level().ifPresent(level -> {
             boolean houseAccessRequired = level.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
                     .anyMatch(Ghost::isVisible);

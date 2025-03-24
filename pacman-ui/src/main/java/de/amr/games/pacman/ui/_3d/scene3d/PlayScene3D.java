@@ -481,7 +481,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     }
 
     protected void replaceGameLevel3D() {
-        level3D = new GameLevel3D();
+        level3D = new GameLevel3D(THE_GAME_CONTEXT.game());
         int lastIndex = getChildren().size() - 1;
         getChildren().set(lastIndex, level3D);
         scores3D.translateXProperty().bind(level3D.translateXProperty().add(TS));

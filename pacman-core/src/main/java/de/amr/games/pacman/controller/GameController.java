@@ -54,8 +54,9 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     /**
      * @return The currently selected game (model).
      */
-    public GameModel game() {
-        return currentGameModel;
+    @SuppressWarnings("unchecked")
+    public <GAME extends GameModel> GAME game() {
+        return (GAME) currentGameModel;
     }
 
     public void setGame(GameVariant variant, GameModel gameModel) {

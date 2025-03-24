@@ -49,16 +49,10 @@ public interface GameContext {
     String locLevelCompleteMessage(int levelNumber);
 
     // Game model and controller
-
     GameClockFX gameClock();
-
     default GameState gameState() { return THE_GAME_CONTROLLER.state(); }
-
-    @SuppressWarnings("unchecked")
-    default <GAME extends GameModel> GAME game() { return (GAME) THE_GAME_CONTROLLER.game(); }
-
+    default <GAME extends GameModel> GAME game() { return THE_GAME_CONTROLLER.game(); }
     GameVariant gameVariant();
-
     void setGameVariant(GameVariant variant);
 
     // Input
