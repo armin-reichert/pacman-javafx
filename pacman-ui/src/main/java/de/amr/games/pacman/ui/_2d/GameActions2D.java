@@ -40,21 +40,21 @@ public enum GameActions2D implements GameAction {
             if (THE_GAME_CONTROLLER.credit < GameController.MAX_COINS) {
                 THE_GAME_CONTROLLER.credit += 1;
                 THE_GAME_CONTEXT.sound().enabledProperty().set(true);
-                THE_GAME_CONTEXT.game().publishGameEvent(GameEventType.CREDIT_ADDED);
+                THE_GAME_CONTROLLER.game().publishGameEvent(GameEventType.CREDIT_ADDED);
             }
-            if (THE_GAME_CONTEXT.gameState() != GameState.SETTING_OPTIONS) {
+            if (THE_GAME_CONTROLLER.state() != GameState.SETTING_OPTIONS) {
                 THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
             }
         }
 
         @Override
         public boolean isEnabled() {
-            if (THE_GAME_CONTEXT.game().isPlaying()) {
+            if (THE_GAME_CONTROLLER.game().isPlaying()) {
                 return false;
             }
-            return THE_GAME_CONTEXT.gameState() == GameState.SETTING_OPTIONS ||
-                THE_GAME_CONTEXT.gameState() == INTRO ||
-                THE_GAME_CONTEXT.game().isDemoLevel() ||
+            return THE_GAME_CONTROLLER.state() == GameState.SETTING_OPTIONS ||
+                THE_GAME_CONTROLLER.state() == INTRO ||
+                THE_GAME_CONTROLLER.game().isDemoLevel() ||
                 THE_GAME_CONTROLLER.credit == 0;
         }
     },
@@ -72,21 +72,21 @@ public enum GameActions2D implements GameAction {
     CHEAT_ADD_LIVES {
         @Override
         public void execute() {
-            THE_GAME_CONTEXT.game().addLives(3);
-            THE_GAME_CONTEXT.showFlashMessage(THE_GAME_CONTEXT.locText("cheat_add_lives", THE_GAME_CONTEXT.game().lives()));
+            THE_GAME_CONTROLLER.game().addLives(3);
+            THE_GAME_CONTEXT.showFlashMessage(THE_GAME_CONTEXT.locText("cheat_add_lives", THE_GAME_CONTROLLER.game().lives()));
         }
     },
 
     CHEAT_EAT_ALL {
         @Override
         public void execute() {
-            if (THE_GAME_CONTEXT.game().isPlaying() && THE_GAME_CONTEXT.gameState() == GameState.HUNTING) {
-                THE_GAME_CONTEXT.game().level().ifPresent(level -> {
+            if (THE_GAME_CONTROLLER.game().isPlaying() && THE_GAME_CONTROLLER.state() == GameState.HUNTING) {
+                THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
                     level.worldMap().tiles()
                         .filter(not(level::isEnergizerPosition))
                         .filter(level::hasFoodAt)
                         .forEach(level::registerFoodEatenAt);
-                    THE_GAME_CONTEXT.game().publishGameEvent(GameEventType.PAC_FOUND_FOOD);
+                    THE_GAME_CONTROLLER.game().publishGameEvent(GameEventType.PAC_FOUND_FOOD);
                     THE_GAME_CONTEXT.sound().stopMunchingSound();
                 });
             }
@@ -96,10 +96,10 @@ public enum GameActions2D implements GameAction {
     CHEAT_KILL_GHOSTS {
         @Override
         public void execute() {
-            if (THE_GAME_CONTEXT.game().isPlaying() && THE_GAME_CONTEXT.gameState() == GameState.HUNTING) {
-                THE_GAME_CONTEXT.game().level().ifPresent(level -> {
+            if (THE_GAME_CONTROLLER.game().isPlaying() && THE_GAME_CONTROLLER.state() == GameState.HUNTING) {
+                THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
                     level.victims().clear();
-                    level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(THE_GAME_CONTEXT.game()::killGhost);
+                    level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(THE_GAME_CONTROLLER.game()::killGhost);
                     THE_GAME_CONTROLLER.changeState(GameState.GHOST_DYING);
                 });
             }
@@ -114,17 +114,17 @@ public enum GameActions2D implements GameAction {
 
         @Override
         public boolean isEnabled() {
-            return THE_GAME_CONTEXT.game().isPlaying()
-                    && THE_GAME_CONTEXT.gameState() == GameState.HUNTING
-                    && THE_GAME_CONTEXT.game().level().isPresent()
-                    && THE_GAME_CONTEXT.game().level().get().number() < THE_GAME_CONTEXT.game().lastLevelNumber();
+            return THE_GAME_CONTROLLER.game().isPlaying()
+                    && THE_GAME_CONTROLLER.state() == GameState.HUNTING
+                    && THE_GAME_CONTROLLER.game().level().isPresent()
+                    && THE_GAME_CONTROLLER.game().level().get().number() < THE_GAME_CONTROLLER.game().lastLevelNumber();
         }
     },
 
     PLAYER_UP {
         @Override
         public void execute() {
-            THE_GAME_CONTEXT.game().level().ifPresent(level -> {
+            THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
                 if (!level.pac().isUsingAutopilot()) {
                     level.pac().setWishDir(Direction.UP);
                 }
@@ -135,7 +135,7 @@ public enum GameActions2D implements GameAction {
     PLAYER_DOWN {
         @Override
         public void execute() {
-            THE_GAME_CONTEXT.game().level().ifPresent(level -> {
+            THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
                 if (!level.pac().isUsingAutopilot()) {
                     level.pac().setWishDir(Direction.DOWN);
                 }
@@ -146,7 +146,7 @@ public enum GameActions2D implements GameAction {
     PLAYER_LEFT {
         @Override
         public void execute() {
-            THE_GAME_CONTEXT.game().level().ifPresent(level -> {
+            THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
                 if (!level.pac().isUsingAutopilot()) {
                     level.pac().setWishDir(Direction.LEFT);
                 }
@@ -157,7 +157,7 @@ public enum GameActions2D implements GameAction {
     PLAYER_RIGHT {
         @Override
         public void execute() {
-            THE_GAME_CONTEXT.game().level().ifPresent(level -> {
+            THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
                 if (!level.pac().isUsingAutopilot()) {
                     level.pac().setWishDir(Direction.RIGHT);
                 }
@@ -170,7 +170,7 @@ public enum GameActions2D implements GameAction {
         public void execute() {
             THE_GAME_CONTEXT.sound().stopAll();
             THE_GAME_CONTEXT.currentGameScene().ifPresent(GameScene::end);
-            THE_GAME_CONTEXT.game().endGame();
+            THE_GAME_CONTROLLER.game().endGame();
             THE_GAME_CONTEXT.showStartView();
         }
     },
@@ -180,8 +180,8 @@ public enum GameActions2D implements GameAction {
         public void execute() {
             THE_GAME_CONTEXT.sound().stopAll();
             THE_GAME_CONTEXT.currentGameScene().ifPresent(GameScene::end);
-            if (THE_GAME_CONTEXT.gameState() == GameState.TESTING_LEVELS) {
-                THE_GAME_CONTEXT.gameState().onExit(THE_GAME_CONTEXT.game()); //TODO exit other states too?
+            if (THE_GAME_CONTROLLER.state() == GameState.TESTING_LEVELS) {
+                THE_GAME_CONTROLLER.state().onExit(THE_GAME_CONTROLLER.game()); //TODO exit other states too?
             }
             THE_GAME_CONTEXT.gameClock().setTargetFrameRate(TICKS_PER_SECOND);
             THE_GAME_CONTROLLER.restart(INTRO);
@@ -193,12 +193,12 @@ public enum GameActions2D implements GameAction {
         public void execute() {
             if (THE_GAME_CONTEXT.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                 THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
-            } else if (THE_GAME_CONTEXT.game().canStartNewGame()) {
+            } else if (THE_GAME_CONTROLLER.game().canStartNewGame()) {
                 THE_GAME_CONTEXT.sound().stopVoice();
-                if (THE_GAME_CONTEXT.gameState() == GameState.INTRO || THE_GAME_CONTEXT.gameState() == GameState.SETTING_OPTIONS) {
+                if (THE_GAME_CONTROLLER.state() == GameState.INTRO || THE_GAME_CONTROLLER.state() == GameState.SETTING_OPTIONS) {
                     THE_GAME_CONTROLLER.changeState(GameState.STARTING_GAME);
                 } else {
-                    Logger.error("Cannot start game play in game state {}", THE_GAME_CONTEXT.gameState());
+                    Logger.error("Cannot start game play in game state {}", THE_GAME_CONTROLLER.state());
                 }
             }
         }

@@ -84,7 +84,7 @@ public class CutScene3 extends GameScene2D {
                 blinky.selectAnimation(GhostAnimations.ANIM_BLINKY_NAKED);
                 blinky.startAnimation();
             }
-            case ANIMATION_START + 700 -> THE_GAME_CONTEXT.gameState().timer().expire();
+            case ANIMATION_START + 700 -> THE_GAME_CONTROLLER.state().timer().expire();
             default -> {}
         }
     }

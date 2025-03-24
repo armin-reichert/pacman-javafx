@@ -29,7 +29,7 @@ public class ArcadeBootScene extends GameScene2D {
 
     @Override
     public void update() {
-        if (THE_GAME_CONTEXT.gameState().timer().atSecond(4)) {
+        if (THE_GAME_CONTROLLER.state().timer().atSecond(4)) {
             THE_GAME_CONTROLLER.terminateCurrentState();
         }
     }
@@ -44,7 +44,7 @@ public class ArcadeBootScene extends GameScene2D {
         Vector2f sceneSize = sizeInPx();
         gr.setScaling(scaling());
         gr.setBackgroundColor(backgroundColor());
-        var timer = THE_GAME_CONTEXT.gameState().timer();
+        var timer = THE_GAME_CONTROLLER.state().timer();
         if (timer.tickCount() == 1) {
             gr.clearCanvas();
         } else if (timer.betweenSeconds(1, 2) && timer.tickCount() % 8 == 0) {

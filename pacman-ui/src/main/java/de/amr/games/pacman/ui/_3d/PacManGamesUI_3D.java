@@ -91,7 +91,7 @@ public class PacManGamesUI_3D extends PacManGamesUI {
                 updateGameScene(true);
                 THE_GAME_CONTROLLER.update(); //TODO needed?
             }
-            if (!game().isPlaying()) {
+            if (!THE_GAME_CONTROLLER.game().isPlaying()) {
                 showFlashMessage(locText(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
             }
         });

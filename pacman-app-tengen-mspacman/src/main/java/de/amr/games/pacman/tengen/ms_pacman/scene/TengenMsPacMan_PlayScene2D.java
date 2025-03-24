@@ -191,7 +191,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     }
 
     private void updateCameraPosition(double scaling) {
-        int worldTilesY = THE_GAME_CONTEXT.game().level().map(level -> level.worldMap().numRows()).orElse(NES_TILES.y());
+        int worldTilesY = THE_GAME_CONTROLLER.game().level().map(level -> level.worldMap().numRows()).orElse(NES_TILES.y());
         double dy = scaling * (worldTilesY - 43) * HTS;
         fixedCamera.setTranslateY(dy);
     }
@@ -218,9 +218,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void update() {
-        THE_GAME_CONTEXT.game().level().ifPresent(level -> {
-            if (THE_GAME_CONTEXT.game().isDemoLevel()) {
-                THE_GAME_CONTEXT.game().assignDemoLevelBehavior(level);
+        THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
+            if (THE_GAME_CONTROLLER.game().isDemoLevel()) {
+                THE_GAME_CONTROLLER.game().assignDemoLevelBehavior(level);
             }
             else {
                 level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
@@ -228,11 +228,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 messageMovement.update();
                 updateSound(level);
             }
-            if (THE_GAME_CONTEXT.gameState() == GameState.LEVEL_COMPLETE) {
+            if (THE_GAME_CONTROLLER.state() == GameState.LEVEL_COMPLETE) {
                 levelCompleteAnimation.update();
             }
             if (fxSubScene.getCamera() == movingCamera) {
-                if (THE_GAME_CONTEXT.gameState() == GameState.HUNTING) {
+                if (THE_GAME_CONTROLLER.state() == GameState.HUNTING) {
                     movingCamera.focusPlayer(true);
                 }
                 movingCamera.setVerticalRangeTiles(level.worldMap().numRows());
@@ -268,9 +268,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onGameStarted(GameEvent e) {
-        boolean silent = THE_GAME_CONTEXT.game().isDemoLevel() ||
-            THE_GAME_CONTEXT.gameState() == TESTING_LEVELS ||
-            THE_GAME_CONTEXT.gameState() == TESTING_LEVEL_TEASERS;
+        boolean silent = THE_GAME_CONTROLLER.game().isDemoLevel() ||
+            THE_GAME_CONTROLLER.state() == TESTING_LEVELS ||
+            THE_GAME_CONTROLLER.state() == TESTING_LEVEL_TEASERS;
         if (!silent) {
             THE_GAME_CONTEXT.sound().playGameReadySound();
         }
@@ -278,10 +278,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        THE_GAME_CONTEXT.game().level().ifPresent(level -> {
+        THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
             THE_GAME_CONTEXT.joypadKeyBinding().register(THE_GAME_CONTEXT.keyboard());
             setKeyBindings();
-            if (THE_GAME_CONTEXT.game().isDemoLevel()) {
+            if (THE_GAME_CONTROLLER.game().isDemoLevel()) {
                 level.pac().setImmune(false);
             } else {
                 level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
@@ -304,11 +304,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         Logger.info("{} entered from {}", this, oldScene);
         THE_GAME_CONTEXT.joypadKeyBinding().register(THE_GAME_CONTEXT.keyboard());
         setKeyBindings();
-        THE_GAME_CONTEXT.game().level().map(GameLevel::worldMap).ifPresent(worldMap -> gr.setWorldMap(worldMap));
+        THE_GAME_CONTROLLER.game().level().map(GameLevel::worldMap).ifPresent(worldMap -> gr.setWorldMap(worldMap));
     }
 
     private void setKeyBindings() {
-        if (THE_GAME_CONTEXT.game().isDemoLevel()) {
+        if (THE_GAME_CONTROLLER.game().isDemoLevel()) {
             bind(QUIT_DEMO_LEVEL, THE_GAME_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
         } else {
             bind(GameActions2D.PLAYER_UP,    THE_GAME_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_UP));
@@ -329,7 +329,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         switch (state) {
             case HUNTING -> movingCamera.focusPlayer(true);
             case LEVEL_COMPLETE -> {
-                THE_GAME_CONTEXT.game().level().ifPresent(level -> {
+                THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
                     if (levelCompleteAnimation == null) {
                         // if 3D scene was active when level has been created, the animation has not been created!
                         createLevelCompleteAnimation(level);
@@ -338,7 +338,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 });
             }
             case GAME_OVER -> {
-                TengenMsPacMan_GameModel game = THE_GAME_CONTEXT.game();
+                TengenMsPacMan_GameModel game = THE_GAME_CONTROLLER.game();
                 game.level().ifPresent(level -> {
                     if (game.mapCategory() != MapCategory.ARCADE) {
                         float belowHouse = centerPosBelowHouse(level).x();
@@ -405,8 +405,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     private void updateSound(GameLevel level) {
         GameSound sound = THE_GAME_CONTEXT.sound();
-        if (THE_GAME_CONTEXT.gameState() == GameState.HUNTING && !level.powerTimer().isRunning()) {
-            HuntingTimer huntingControl = THE_GAME_CONTEXT.game().huntingTimer();
+        if (THE_GAME_CONTROLLER.state() == GameState.HUNTING && !level.powerTimer().isRunning()) {
+            HuntingTimer huntingControl = THE_GAME_CONTROLLER.game().huntingTimer();
             int sirenNumber = 1 + huntingControl.phaseIndex() / 2; // TODO check how this works in original game
             sound.selectSiren(sirenNumber);
             sound.playSiren();
@@ -433,7 +433,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         var r = (TengenMsPacMan_Renderer2D) gr;
         r.setScaling(scaling());
         r.clearCanvas();
-        THE_GAME_CONTEXT.game().level().ifPresent(level -> {
+        THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
             r.ctx().save();
             r.ctx().translate(scaled(2 * TS), 0);
             drawSceneContent();
@@ -444,7 +444,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     protected void drawSceneContent() {
         var r = (TengenMsPacMan_Renderer2D) gr;
-        TengenMsPacMan_GameModel game = THE_GAME_CONTEXT.game();
+        TengenMsPacMan_GameModel game = THE_GAME_CONTROLLER.game();
         GameLevel level = game.level().orElse(null);
         if (level == null) {
             Logger.warn("Cannot draw scene content, no game level exists");
@@ -480,7 +480,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         ghostsInZOrder(level).forEach(r::drawAnimatedActor);
 
         int livesCounterEntries = game.lives() - 1;
-        if (THE_GAME_CONTEXT.gameState() == GameState.STARTING_GAME && !level.pac().isVisible()) {
+        if (THE_GAME_CONTROLLER.state() == GameState.STARTING_GAME && !level.pac().isVisible()) {
             // as long as Pac-Man is invisible when the game is started, one entry more appears in the lives counter
             livesCounterEntries += 1;
         }
@@ -500,7 +500,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         gr.drawTileGrid(canvas.getWidth(), canvas.getHeight());
         gr.ctx().setFill(Color.WHITE);
         gr.ctx().setFont(GameRenderer.DEBUG_FONT);
-        GameState state = THE_GAME_CONTEXT.gameState();
+        GameState state = THE_GAME_CONTROLLER.state();
         gr.ctx().fillText("%s %d".formatted(state, state.timer().tickCount()), 0, scaled(3 * TS));
     }
 
@@ -515,7 +515,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     private void createLevelCompleteAnimation(GameLevel level) {
         levelCompleteAnimation = new LevelCompleteAnimation(level.numFlashes(), 10);
         levelCompleteAnimation.setOnHideGhosts(() -> level.ghosts().forEach(Ghost::hide));
-        levelCompleteAnimation.setOnFinished(() -> THE_GAME_CONTEXT.gameState().timer().expire());
+        levelCompleteAnimation.setOnFinished(() -> THE_GAME_CONTROLLER.state().timer().expire());
     }
 
     @Override

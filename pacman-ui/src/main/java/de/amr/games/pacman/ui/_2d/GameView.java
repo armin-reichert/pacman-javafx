@@ -39,8 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static de.amr.games.pacman.Globals.assertNotNull;
-import static de.amr.games.pacman.Globals.clamp;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
@@ -383,11 +382,11 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
 
     @Override
     public void onLevelCreated(GameEvent event) {
-        THE_GAME_CONTEXT.game().level().ifPresent(level -> {
+        THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
             Logger.info("Game level {} ({}) created", level.number(), THE_GAME_CONTEXT.gameVariant());
             THE_GAME_CONTEXT.gameConfiguration().createActorAnimations(level);
             Logger.info("Actor animations ({}) created", THE_GAME_CONTEXT.gameVariant());
-            THE_GAME_CONTEXT.sound().setEnabled(!THE_GAME_CONTEXT.game().isDemoLevel());
+            THE_GAME_CONTEXT.sound().setEnabled(!THE_GAME_CONTROLLER.game().isDemoLevel());
             Logger.info("Sounds ({}) {}", THE_GAME_CONTEXT.gameVariant(), THE_GAME_CONTEXT.sound().isEnabled() ? "enabled" : "disabled");
             // size of game scene might have changed, so re-embed
             THE_GAME_CONTEXT.currentGameScene().ifPresent(this::embedGameScene);

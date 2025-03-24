@@ -22,7 +22,6 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 
 /**
  * 3D bonus symbol.
@@ -76,7 +75,7 @@ public class Bonus3D extends Box {
         setTranslateX(center.x());
         setTranslateY(center.y());
         setTranslateZ(-HTS);
-        THE_GAME_CONTEXT.game().level().ifPresent(level -> {
+        THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
             boolean outsideWorld = center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
             boolean visible = !(bonus.state() == Bonus.STATE_INACTIVE || outsideWorld);
             setVisible(visible);

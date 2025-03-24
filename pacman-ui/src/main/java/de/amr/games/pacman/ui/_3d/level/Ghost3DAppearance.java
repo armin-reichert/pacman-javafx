@@ -25,7 +25,6 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -174,14 +173,14 @@ public class Ghost3DAppearance extends Group {
             appearancePy.set(Appearance.COLORED_GHOST);
             return;
         }
-        THE_GAME_CONTEXT.game().level().ifPresent(level -> {
+        THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
             Appearance nextAppearance = switch (ghost.state()) {
                 case LEAVING_HOUSE, LOCKED ->
                     // ghost that have been killed by current energizer will not look frightened
                         level.powerTimer().isRunning() && !level.victims().contains(ghost)
-                                ? frightenedOrFlashing(THE_GAME_CONTEXT.game().isPowerFading(level.powerTimer()))
+                                ? frightenedOrFlashing(THE_GAME_CONTROLLER.game().isPowerFading(level.powerTimer()))
                                 : Appearance.COLORED_GHOST;
-                case FRIGHTENED -> frightenedOrFlashing(THE_GAME_CONTEXT.game().isPowerFading(level.powerTimer()));
+                case FRIGHTENED -> frightenedOrFlashing(THE_GAME_CONTROLLER.game().isPowerFading(level.powerTimer()));
                 case ENTERING_HOUSE, RETURNING_HOME -> Appearance.GHOST_EYES;
                 case EATEN -> Appearance.NUMBER;
                 default -> Appearance.COLORED_GHOST;

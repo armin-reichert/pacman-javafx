@@ -4,10 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui;
 
-import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._2d.StartPageSelectionView;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
@@ -53,8 +51,6 @@ public interface GameContext {
 
     // Game model and controller
     GameClockFX gameClock();
-    default GameState gameState() { return THE_GAME_CONTROLLER.state(); }
-    default <GAME extends GameModel> GAME game() { return THE_GAME_CONTROLLER.game(); }
     GameVariant gameVariant();
     void setGameVariant(GameVariant variant);
 
@@ -78,9 +74,10 @@ public interface GameContext {
     void openEditor();
     void showFlashMessageSec(double seconds, String message, Object... args);
     default void showFlashMessage(String message, Object... args) { showFlashMessageSec(1, message, args); }
+
     default Vector2i worldSizeInTilesOrElse(Vector2i defaultSize) {
-        if (game().level().isEmpty()) { return defaultSize; }
-        WorldMap worldMap = game().level().get().worldMap();
+        if (THE_GAME_CONTROLLER.game().level().isEmpty()) { return defaultSize; }
+        WorldMap worldMap = THE_GAME_CONTROLLER.game().level().get().worldMap();
         return new Vector2i(worldMap.numCols(), worldMap.numRows());
     }
 

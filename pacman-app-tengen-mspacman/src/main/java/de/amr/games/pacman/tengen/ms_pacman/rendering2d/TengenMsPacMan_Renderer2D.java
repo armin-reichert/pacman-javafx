@@ -20,7 +20,6 @@ import de.amr.games.pacman.tengen.ms_pacman.maps.ColoredMapImage;
 import de.amr.games.pacman.tengen.ms_pacman.maps.ColoredMapSet;
 import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
 import de.amr.games.pacman.tengen.ms_pacman.maps.MapRepository;
-import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui._2d.GameRenderer;
 import de.amr.games.pacman.ui._2d.SpriteAnimationSet;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
@@ -201,7 +200,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     public void drawWorld(GameLevel level, double mapX, double mapY) {
         ctx.setImageSmoothing(false);
 
-        TengenMsPacMan_GameModel game = THE_GAME_CONTEXT.game();
+        TengenMsPacMan_GameModel game = THE_GAME_CONTROLLER.game();
         MapCategory mapCategory = game.mapCategory();
         int mapNumber = level.worldMap().getConfigValue("mapNumber");
 
@@ -240,7 +239,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     public void drawWorldHighlighted(GameLevel level, double mapX, double mapY, int flashingIndex) {
         ctx.setImageSmoothing(false);
-        TengenMsPacMan_GameModel game = THE_GAME_CONTEXT.game();
+        TengenMsPacMan_GameModel game = THE_GAME_CONTROLLER.game();
         if (areGameOptionsChanged(game)) {
             drawGameOptionsInfoCenteredAt(level.worldMap().numCols() * HTS, tiles2Px(2) + HTS, game);
         }
@@ -373,15 +372,15 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         Font font = scaledArcadeFont(TS);
         if (THE_GAME_CONTEXT.gameClock().tickCount() % 60 < 30) { drawText("1UP", color, font, tiles2Px(2), tiles2Px(1)); }
         drawText("HIGH SCORE", color, font, tiles2Px(9), tiles2Px(1));
-        drawText("%6d".formatted(THE_GAME_CONTEXT.game().scoreManager().score().points()), color, font, 0, tiles2Px(2));
-        drawText("%6d".formatted(THE_GAME_CONTEXT.game().scoreManager().highScore().points()), color, font, tiles2Px(11), tiles2Px(2));
+        drawText("%6d".formatted(THE_GAME_CONTROLLER.game().scoreManager().score().points()), color, font, 0, tiles2Px(2));
+        drawText("%6d".formatted(THE_GAME_CONTROLLER.game().scoreManager().highScore().points()), color, font, tiles2Px(11), tiles2Px(2));
     }
 
     @Override
     public void drawLevelCounter(double x, double y) {
         ctx.setImageSmoothing(false);
-        THE_GAME_CONTEXT.game().level().ifPresent(level -> {
-            TengenMsPacMan_GameModel game = THE_GAME_CONTEXT.game();
+        THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
+            TengenMsPacMan_GameModel game = THE_GAME_CONTROLLER.game();
             if (levelNumberBoxesVisible) {
                 drawLevelNumberBox(level.number(), 0, y); // left box
                 drawLevelNumberBox(level.number(), x, y); // right box

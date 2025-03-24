@@ -38,8 +38,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.Globals.assertNotNull;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 
 public class TengenMsPacMan_UIConfig implements GameUIConfiguration {
@@ -167,13 +166,13 @@ public class TengenMsPacMan_UIConfig implements GameUIConfiguration {
 
     @Override
     public GameScene selectGameScene() {
-        String sceneID = switch (THE_GAME_CONTEXT.gameState()) {
+        String sceneID = switch (THE_GAME_CONTROLLER.state()) {
             case BOOT               -> "BootScene";
             case SETTING_OPTIONS    -> "StartScene";
             case SHOWING_CREDITS    -> "ShowingCredits";
             case INTRO              -> "IntroScene";
-            case INTERMISSION       -> "CutScene" + THE_GAME_CONTEXT.game().level().map(GameLevel::cutSceneNumber).orElseThrow();
-            case TESTING_CUT_SCENES -> "CutScene" + THE_GAME_CONTEXT.gameState().<Integer>getProperty("intermissionTestNumber");
+            case INTERMISSION       -> "CutScene" + THE_GAME_CONTROLLER.game().level().map(GameLevel::cutSceneNumber).orElseThrow();
+            case TESTING_CUT_SCENES -> "CutScene" + THE_GAME_CONTROLLER.state().<Integer>getProperty("intermissionTestNumber");
             default                 -> GlobalProperties3d.PY_3D_ENABLED.get() ? "PlayScene3D" : "PlayScene2D";
         };
         return scenesByID.get(sceneID);

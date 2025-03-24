@@ -13,6 +13,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 import org.tinylog.Logger;
 
+import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
@@ -48,7 +49,7 @@ public class PictureInPictureView extends VBox {
         this.scene2D = assertNotNull(scene2D);
         scene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
         GameRenderer renderer = THE_GAME_CONTEXT.gameConfiguration().createRenderer(canvas);
-        THE_GAME_CONTEXT.game().level().map(GameLevel::worldMap).ifPresent(renderer::setWorldMap);
+        THE_GAME_CONTROLLER.game().level().map(GameLevel::worldMap).ifPresent(renderer::setWorldMap);
         scene2D.setGameRenderer(renderer);
         recomputeLayout();
     }

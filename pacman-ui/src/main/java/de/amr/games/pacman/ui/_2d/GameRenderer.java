@@ -30,7 +30,6 @@ import org.tinylog.Logger;
 import java.util.function.Predicate;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 import static java.util.function.Predicate.not;
 
 /**
@@ -302,7 +301,7 @@ public interface GameRenderer {
 
     default void drawLevelCounter(double x, double y) {
 //        double x = sceneSize.x() - 4 * TS, y = sceneSize.y() - 2 * TS;
-        for (byte symbol : THE_GAME_CONTEXT.game().levelCounter()) {
+        for (byte symbol : THE_GAME_CONTROLLER.game().levelCounter()) {
             drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), x, y);
             x -= TS * 2;
         }
@@ -311,8 +310,8 @@ public interface GameRenderer {
     default void drawScores() {
         Color color = Color.web(Arcade.Palette.WHITE);
         Font font = scaledArcadeFont(TS);
-        drawScore(THE_GAME_CONTEXT.game().scoreManager().score(),     "SCORE",      tiles2Px(1),  tiles2Px(1), font, color);
-        drawScore(THE_GAME_CONTEXT.game().scoreManager().highScore(), "HIGH SCORE", tiles2Px(14), tiles2Px(1), font, color);
+        drawScore(THE_GAME_CONTROLLER.game().scoreManager().score(),     "SCORE",      tiles2Px(1),  tiles2Px(1), font, color);
+        drawScore(THE_GAME_CONTROLLER.game().scoreManager().highScore(), "HIGH SCORE", tiles2Px(14), tiles2Px(1), font, color);
     }
 
     default void drawScore(Score score, String title, double x, double y, Font font, Color color) {

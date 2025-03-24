@@ -23,8 +23,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 
-import static de.amr.games.pacman.Globals.HTS;
-import static de.amr.games.pacman.Globals.TS;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindCheatActions;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindFallbackPlayerControlActions;
@@ -37,14 +36,14 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     protected void replaceGameLevel3D() {
         super.replaceGameLevel3D();
-        TengenMsPacMan_GameModel game = THE_GAME_CONTEXT.game();
+        TengenMsPacMan_GameModel game = THE_GAME_CONTROLLER.game();
         if (!game.hasDefaultOptionValues()) {
             addGameOptionsArea(game);
         }
     }
 
     private void addGameOptionsArea(TengenMsPacMan_GameModel game) {
-        THE_GAME_CONTEXT.game().level().ifPresent(level -> {
+        THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
             WorldMap worldMap = level.worldMap();
             int unscaledWidth = worldMap.numCols() * TS;
             int unscaledHeight = 2*TS;
@@ -75,7 +74,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         bind(GameActions3D.PREV_PERSPECTIVE, alt(KeyCode.LEFT));
         bind(GameActions3D.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
         bind(GameActions3D.TOGGLE_DRAW_MODE, alt(KeyCode.W));
-        if (THE_GAME_CONTEXT.game().isDemoLevel()) {
+        if (THE_GAME_CONTROLLER.game().isDemoLevel()) {
             bind(TengenMsPacMan_GameActions.QUIT_DEMO_LEVEL, THE_GAME_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
         }
         else {
@@ -96,7 +95,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void updateScores() {
-        ScoreManager manager = THE_GAME_CONTEXT.game().scoreManager();
+        ScoreManager manager = THE_GAME_CONTROLLER.game().scoreManager();
         Score score = manager.score(), highScore = manager.highScore();
 
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());
@@ -104,7 +103,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             scores3D.showScore(score.points(), score.levelNumber());
         }
         else { // when score is disabled, show text "game over"
-            THE_GAME_CONTEXT.game().level().ifPresent(level -> {
+            THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
                 NES_ColorScheme nesColorScheme = level.worldMap().getConfigValue("nesColorScheme");
                 Color color = Color.web(nesColorScheme.strokeColor());
                 scores3D.showTextAsScore(TEXT_GAME_OVER, color);
@@ -114,7 +113,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     public void onBonusActivated(GameEvent event) {
-        THE_GAME_CONTEXT.game().level().flatMap(GameLevel::bonus).ifPresent(bonus -> level3D.replaceBonus3D(bonus, THE_GAME_CONTEXT.gameConfiguration().spriteSheet()));
+        THE_GAME_CONTROLLER.game().level().flatMap(GameLevel::bonus).ifPresent(bonus -> level3D.replaceBonus3D(bonus, THE_GAME_CONTEXT.gameConfiguration().spriteSheet()));
         THE_GAME_CONTEXT.sound().playBonusBouncingSound();
     }
 

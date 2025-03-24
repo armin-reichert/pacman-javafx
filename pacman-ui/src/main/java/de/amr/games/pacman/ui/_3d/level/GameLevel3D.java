@@ -114,7 +114,7 @@ public class GameLevel3D extends Group {
         pac3D.update();
         ghosts3D().forEach(Ghost3DAppearance::update);
         bonus3D().ifPresent(Bonus3D::update);
-        THE_GAME_CONTEXT.game().level().ifPresent(level -> {
+        THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
             boolean houseAccessRequired = level.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
                     .anyMatch(Ghost::isVisible);
             maze3D().setHouseLightOn(houseAccessRequired);
@@ -124,8 +124,8 @@ public class GameLevel3D extends Group {
                     .anyMatch(Ghost::isVisible);
             houseOpenPy.set(ghostNearHouseEntry);
 
-            int symbolsDisplayed = Math.max(0, THE_GAME_CONTEXT.game().lives() - 1);
-            if (!level.pac().isVisible() && THE_GAME_CONTEXT.gameState() == GameState.STARTING_GAME) {
+            int symbolsDisplayed = Math.max(0, THE_GAME_CONTROLLER.game().lives() - 1);
+            if (!level.pac().isVisible() && THE_GAME_CONTROLLER.state() == GameState.STARTING_GAME) {
                 livesCountPy.set(symbolsDisplayed + 1);
             } else {
                 livesCountPy.set(symbolsDisplayed);
@@ -170,13 +170,13 @@ public class GameLevel3D extends Group {
     }
 
     public void addLevelCounter() {
-        THE_GAME_CONTEXT.game().level().map(GameLevel::worldMap).ifPresent(worldMap -> {
+        THE_GAME_CONTROLLER.game().level().map(GameLevel::worldMap).ifPresent(worldMap -> {
             // Place level counter at top right maze corner
             double x = worldMap.numCols() * TS - 2 * TS;
             double y = 2 * TS;
             Node levelCounter3D = createLevelCounter3D(
                     THE_GAME_CONTEXT.gameConfiguration().spriteSheet(),
-                    THE_GAME_CONTEXT.game().levelCounter(), x, y);
+                    THE_GAME_CONTROLLER.game().levelCounter(), x, y);
             getChildren().add(levelCounter3D);
         });
     }
@@ -312,7 +312,7 @@ public class GameLevel3D extends Group {
         levelCompleteAnimation = new SequentialTransition(
             now(() -> {
                 // keep game state until animation has finished
-                THE_GAME_CONTEXT.gameState().timer().resetIndefiniteTime();
+                THE_GAME_CONTROLLER.state().timer().resetIndefiniteTime();
                 onStart.run();
             }),
             level.cutSceneNumber() != 0
@@ -321,7 +321,7 @@ public class GameLevel3D extends Group {
         );
         levelCompleteAnimation.setOnFinished(e -> {
             onFinished.run();
-            THE_GAME_CONTEXT.gameState().timer().expire();
+            THE_GAME_CONTROLLER.state().timer().expire();
         });
         levelCompleteAnimation.setDelay(Duration.seconds(delaySeconds));
         levelCompleteAnimation.play();

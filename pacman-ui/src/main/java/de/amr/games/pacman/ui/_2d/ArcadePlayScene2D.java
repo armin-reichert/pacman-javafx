@@ -60,7 +60,7 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        if (THE_GAME_CONTEXT.game().isDemoLevel()) {
+        if (THE_GAME_CONTROLLER.game().isDemoLevel()) {
             bind(GameActions2D.INSERT_COIN, THE_GAME_CONTEXT.arcadeKeys().key(Arcade.Button.COIN));
         } else {
             GameActions2D.bindCheatActions(this);
@@ -68,7 +68,7 @@ public class ArcadePlayScene2D extends GameScene2D {
             GameActions2D.bindFallbackPlayerControlActions(this);
         }
         registerGameActionKeyBindings(THE_GAME_CONTEXT.keyboard());
-        THE_GAME_CONTEXT.game().level().ifPresent(level -> {
+        THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
             gr.setWorldMap(level.worldMap());
             gr.setMessagePosition(centerPositionBelowHouse(level));
         });
@@ -76,9 +76,9 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     @Override
     public void onGameStarted(GameEvent e) {
-        boolean silent = THE_GAME_CONTEXT.game().isDemoLevel() ||
-                THE_GAME_CONTEXT.gameState() == TESTING_LEVELS ||
-                THE_GAME_CONTEXT.gameState() == TESTING_LEVEL_TEASERS;
+        boolean silent = THE_GAME_CONTROLLER.game().isDemoLevel() ||
+                THE_GAME_CONTROLLER.state() == TESTING_LEVELS ||
+                THE_GAME_CONTROLLER.state() == TESTING_LEVEL_TEASERS;
         if (!silent) {
             THE_GAME_CONTEXT.sound().playGameReadySound();
         }
@@ -91,18 +91,18 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     @Override
     public void update() {
-        THE_GAME_CONTEXT.game().level().ifPresentOrElse(level -> {
+        THE_GAME_CONTROLLER.game().level().ifPresentOrElse(level -> {
             /* TODO: I would like to do this only on level start but when scene view is switched
                 between 2D and 3D, the other scene has to be updated accordingly. */
-            if (THE_GAME_CONTEXT.game().isDemoLevel()) {
-                THE_GAME_CONTEXT.game().assignDemoLevelBehavior(level);
+            if (THE_GAME_CONTROLLER.game().isDemoLevel()) {
+                THE_GAME_CONTROLLER.game().assignDemoLevelBehavior(level);
             }
             else {
                 level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
                 level.pac().setImmune(PY_IMMUNITY.get());
                 updateSound(level, THE_GAME_CONTEXT.sound());
             }
-            if (THE_GAME_CONTEXT.gameState() == GameState.LEVEL_COMPLETE) {
+            if (THE_GAME_CONTROLLER.state() == GameState.LEVEL_COMPLETE) {
                 levelCompleteAnimation.update();
             }
         }, () -> { // Scene is already visible 2 ticks before game level is created!
@@ -111,8 +111,8 @@ public class ArcadePlayScene2D extends GameScene2D {
     }
 
     private void updateSound(GameLevel level, GameSound sound) {
-        if (THE_GAME_CONTEXT.gameState() == GameState.HUNTING && !level.powerTimer().isRunning()) {
-            int sirenNumber = 1 + THE_GAME_CONTEXT.game().huntingTimer().phaseIndex() / 2;
+        if (THE_GAME_CONTROLLER.state() == GameState.HUNTING && !level.powerTimer().isRunning()) {
+            int sirenNumber = 1 + THE_GAME_CONTROLLER.game().huntingTimer().phaseIndex() / 2;
             sound.selectSiren(sirenNumber);
             sound.playSiren();
         }
@@ -134,7 +134,7 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        GameLevel level = THE_GAME_CONTEXT.game().level().orElse(null);
+        GameLevel level = THE_GAME_CONTROLLER.game().level().orElse(null);
         if (level == null) { // This happens on level start
             Logger.warn("Tick {}: Cannot draw scene content: Game level not yet available!", THE_GAME_CONTEXT.gameClock().tickCount());
             return;
@@ -183,10 +183,10 @@ public class ArcadePlayScene2D extends GameScene2D {
         }
 
         // Draw lives counter or remaining credit
-        if (THE_GAME_CONTEXT.game().canStartNewGame()) {
+        if (THE_GAME_CONTROLLER.game().canStartNewGame()) {
             //TODO: this code is ugly
-            int numLivesShown = THE_GAME_CONTEXT.game().lives() - 1;
-            if (THE_GAME_CONTEXT.gameState() == GameState.STARTING_GAME && !level.pac().isVisible()) {
+            int numLivesShown = THE_GAME_CONTROLLER.game().lives() - 1;
+            if (THE_GAME_CONTROLLER.state() == GameState.STARTING_GAME && !level.pac().isVisible()) {
                 numLivesShown += 1;
             }
             gr.drawLivesCounter(numLivesShown, 5, 2 * TS, sizeInPx().y() - 2 * TS);
@@ -217,7 +217,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         gr.drawTileGrid(sizeInPx().x(), sizeInPx().y());
 
         if (THE_GAME_CONTEXT.gameVariant() == GameVariant.PACMAN) {
-            THE_GAME_CONTEXT.game().level().ifPresent(level -> {
+            THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
                 level.ghosts().forEach(ghost -> {
                     // Are currently the same for each ghost, but who knows what comes...
                     ghost.specialTerrainTiles().forEach(tile -> {
@@ -230,10 +230,10 @@ public class ArcadePlayScene2D extends GameScene2D {
         }
         g.setFill(Color.YELLOW);
         g.setFont(GameRenderer.DEBUG_FONT);
-        String gameStateText = THE_GAME_CONTEXT.gameState().name() + " (Tick %d)".formatted(THE_GAME_CONTEXT.gameState().timer().tickCount());
+        String gameStateText = THE_GAME_CONTROLLER.state().name() + " (Tick %d)".formatted(THE_GAME_CONTROLLER.state().timer().tickCount());
         String scatterChaseText = "";
-        if (THE_GAME_CONTEXT.gameState() == GameState.HUNTING) {
-            HuntingTimer huntingTimer = THE_GAME_CONTEXT.game().huntingTimer();
+        if (THE_GAME_CONTROLLER.state() == GameState.HUNTING) {
+            HuntingTimer huntingTimer = THE_GAME_CONTROLLER.game().huntingTimer();
             scatterChaseText = " %s (Tick %d)".formatted(huntingTimer.huntingPhase(), huntingTimer.tickCount());
         }
         g.fillText("%s%s".formatted(gameStateText, scatterChaseText), 0, 64);
@@ -247,7 +247,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         if (gr == null) {
             setGameRenderer(THE_GAME_CONTEXT.gameConfiguration().createRenderer(canvas));
         }
-        THE_GAME_CONTEXT.game().level().map(GameLevel::worldMap).ifPresent(gr::setWorldMap);
+        THE_GAME_CONTROLLER.game().level().map(GameLevel::worldMap).ifPresent(gr::setWorldMap);
     }
 
     @Override
@@ -256,7 +256,7 @@ public class ArcadePlayScene2D extends GameScene2D {
             THE_GAME_CONTEXT.sound().playGameOverSound();
         }
         else if (state == GameState.LEVEL_COMPLETE) {
-            THE_GAME_CONTEXT.game().level().ifPresent(level -> {
+            THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
                 levelCompleteAnimation = new LevelCompleteAnimation(level.numFlashes(), 10);
                 levelCompleteAnimation.setOnHideGhosts(() -> level.ghosts().forEach(Ghost::hide));
                 levelCompleteAnimation.setOnFinished(() -> state.timer().expire());

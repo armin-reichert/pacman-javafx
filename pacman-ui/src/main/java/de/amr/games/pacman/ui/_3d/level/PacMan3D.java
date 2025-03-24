@@ -17,8 +17,8 @@ import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
+import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
-import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 import static de.amr.games.pacman.uilib.Ufx.doAfterSec;
 import static de.amr.games.pacman.uilib.Ufx.now;
 import static de.amr.games.pacman.uilib.model3D.Model3D.meshViewById;
@@ -79,7 +79,7 @@ public class PacMan3D implements Pac3D {
 
     @Override
     public void update() {
-        THE_GAME_CONTEXT.game().level().ifPresent(level -> {
+        THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
             if (pacMan.isAlive()) {
                 shape3D.updatePosition(pacMan);
                 shape3D.updateLight(pacMan, level);

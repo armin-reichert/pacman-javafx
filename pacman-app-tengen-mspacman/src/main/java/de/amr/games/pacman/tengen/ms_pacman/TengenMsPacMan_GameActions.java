@@ -30,7 +30,7 @@ public enum TengenMsPacMan_GameActions implements GameAction {
     QUIT_DEMO_LEVEL {
         @Override
         public void execute() {
-            if (THE_GAME_CONTEXT.game().isDemoLevel()) {
+            if (THE_GAME_CONTROLLER.game().isDemoLevel()) {
                 THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
             }
         }
@@ -39,7 +39,7 @@ public enum TengenMsPacMan_GameActions implements GameAction {
     SHOW_OPTIONS {
         @Override
         public void execute() {
-            THE_GAME_CONTEXT.game().setPlaying(false);
+            THE_GAME_CONTROLLER.game().setPlaying(false);
             THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
         }
     },
@@ -48,7 +48,7 @@ public enum TengenMsPacMan_GameActions implements GameAction {
         @Override
         public void execute() {
             THE_GAME_CONTEXT.sound().stopAll();
-            THE_GAME_CONTEXT.game().setPlaying(false);
+            THE_GAME_CONTROLLER.game().setPlaying(false);
             THE_GAME_CONTROLLER.changeState(GameState.STARTING_GAME);
         }
     },
@@ -72,7 +72,7 @@ public enum TengenMsPacMan_GameActions implements GameAction {
     TOGGLE_PAC_BOOSTER {
         @Override
         public void execute() {
-            TengenMsPacMan_GameModel game = THE_GAME_CONTEXT.game();
+            TengenMsPacMan_GameModel game = THE_GAME_CONTROLLER.game();
             if (game.pacBooster() == PacBooster.USE_A_OR_B) {
                 game.activatePacBooster(!game.isBoosterActive());
             }

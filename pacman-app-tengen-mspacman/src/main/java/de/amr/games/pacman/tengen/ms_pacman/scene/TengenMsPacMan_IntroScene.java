@@ -316,7 +316,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 }
                 if (timer.atSecond(7)) {
                     // start demo level or show options
-                    TengenMsPacMan_GameModel game = THE_GAME_CONTEXT.game();
+                    TengenMsPacMan_GameModel game = THE_GAME_CONTROLLER.game();
                     if (game.hasDefaultOptionValues()) {
                         game.setCanStartNewGame(false); // TODO check this
                         THE_GAME_CONTROLLER.restart(GameState.STARTING_GAME);

@@ -74,7 +74,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
         @Override
         public boolean isEnabled() {
-            return !THE_GAME_CONTEXT.game().isPlaying();
+            return !THE_GAME_CONTROLLER.game().isPlaying();
         }
     };
 
@@ -306,9 +306,9 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     protected void handleGameVariantChange(GameVariant gameVariant) {
-        game().removeGameEventListener(this);
+        THE_GAME_CONTROLLER.game().removeGameEventListener(this);
         THE_GAME_CONTROLLER.selectGameVariant(gameVariant);
-        game().addGameEventListener(this);
+        THE_GAME_CONTROLLER.game().addGameEventListener(this);
         stage.getIcons().setAll(gameConfiguration().appIcon());
         sound().selectGameVariant(gameVariant, gameConfiguration().assetNamespace());
         //TODO check this
@@ -372,7 +372,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     private void logUpdateResult() {
-        var messageList = game().eventLog().createMessageList();
+        var messageList = THE_GAME_CONTROLLER.game().eventLog().createMessageList();
         if (!messageList.isEmpty()) {
             Logger.info("Simulation step #{}:", clock.updateCount());
             for (var msg : messageList) {
@@ -517,13 +517,13 @@ public class PacManGamesUI implements GameEventListener, GameContext {
                 actionProvider.unregisterGameActionKeyBindings(keyboard);
             }
             if (currentView instanceof GameEventListener gameEventListener) {
-                game().removeGameEventListener(gameEventListener);
+                THE_GAME_CONTROLLER.game().removeGameEventListener(gameEventListener);
             }
             if (view instanceof GameActionProvider actionProvider) {
                 actionProvider.registerGameActionKeyBindings(keyboard);
             }
             if (view instanceof GameEventListener gameEventListener) {
-                game().addGameEventListener(gameEventListener);
+                THE_GAME_CONTROLLER.game().addGameEventListener(gameEventListener);
             }
             gameView.setSize(mainScene.getWidth(), mainScene.getHeight());
             sceneRoot.getChildren().set(0, view);

@@ -17,6 +17,7 @@ import javafx.scene.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 
 
@@ -27,11 +28,11 @@ public class HelpInfo {
 
     public static HelpInfo build() {
         HelpInfo help = new HelpInfo();
-        switch (THE_GAME_CONTEXT.gameState()) {
+        switch (THE_GAME_CONTROLLER.state()) {
             case INTRO -> help.addInfoForIntroScene();
             case SETTING_OPTIONS -> help.addInfoForCreditScene();
             case STARTING_GAME, HUNTING, PACMAN_DYING, GHOST_DYING -> {
-                if (THE_GAME_CONTEXT.game().isDemoLevel()) {
+                if (THE_GAME_CONTROLLER.game().isDemoLevel()) {
                     help.addInfoForDemoLevelPlayScene();
                 } else {
                     help.addInfoForPlayScene();
@@ -106,7 +107,7 @@ public class HelpInfo {
     }
 
     private void addInfoForIntroScene() {
-        if (THE_GAME_CONTEXT.game().canStartNewGame()) {
+        if (THE_GAME_CONTROLLER.game().canStartNewGame()) {
             addRow("help.start_game", "1");
         }
         addRow("help.add_credit", "5");
@@ -114,7 +115,7 @@ public class HelpInfo {
     }
 
     private void addInfoForCreditScene() {
-        if (THE_GAME_CONTEXT.game().canStartNewGame()) {
+        if (THE_GAME_CONTROLLER.game().canStartNewGame()) {
             addRow("help.start_game", "1");
         }
         addRow("help.add_credit", "5");

@@ -14,8 +14,7 @@ import de.amr.games.pacman.uilib.SpriteAnimation;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
-import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.Globals.tiles2Px;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.*;
 import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
@@ -108,7 +107,7 @@ public class CutScene2 extends GameScene2D {
             case ANIMATION_START + 389 -> blinkyDamaged.nextFrame(); // Eyes right-down
             case ANIMATION_START + 508 -> {
                 blinky.setVisible(false);
-                THE_GAME_CONTEXT.gameState().timer().expire();
+                THE_GAME_CONTROLLER.state().timer().expire();
             }
             default -> {}
         }

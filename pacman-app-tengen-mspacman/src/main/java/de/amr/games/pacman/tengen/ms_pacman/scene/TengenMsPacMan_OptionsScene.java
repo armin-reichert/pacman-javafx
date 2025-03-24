@@ -13,7 +13,6 @@ import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
-import de.amr.games.pacman.ui.GameContext;
 import de.amr.games.pacman.ui._2d.GameActions2D;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.input.KeyCode;
@@ -78,7 +77,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         THE_GAME_CONTEXT.joypadKeyBinding().register(THE_GAME_CONTEXT.keyboard());
         THE_GAME_CONTEXT.setScoreVisible(false);
         selectedOption = OPTION_PAC_BOOSTER;
-        tengenGame = THE_GAME_CONTEXT.game();
+        tengenGame = THE_GAME_CONTROLLER.game();
         tengenGame.setCanStartNewGame(true);
         resetIdleTimer();
         initialDelay = INITIAL_DELAY;
