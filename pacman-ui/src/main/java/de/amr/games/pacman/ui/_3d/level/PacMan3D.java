@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui._3d.level;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.model3D.Model3D;
 import de.amr.games.pacman.uilib.model3D.PacModel3D;
@@ -19,6 +18,7 @@ import javafx.util.Duration;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
+import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
 import static de.amr.games.pacman.uilib.Ufx.doAfterSec;
 import static de.amr.games.pacman.uilib.Ufx.now;
 import static de.amr.games.pacman.uilib.model3D.Model3D.meshViewById;
@@ -101,7 +101,7 @@ public class PacMan3D implements Pac3D {
     }
 
     @Override
-    public Animation createDyingAnimation(GameSound sounds) {
+    public Animation createDyingAnimation() {
         Duration duration = Duration.seconds(1.5);
         byte numSpins = 6;
 
@@ -125,7 +125,7 @@ public class PacMan3D implements Pac3D {
 
         return new SequentialTransition(
             now(this::init), // TODO check this
-            doAfterSec(0.5, sounds::playPacDeathSound),
+            doAfterSec(0.5, THE_SOUND::playPacDeathSound),
             new ParallelTransition(spins, new SequentialTransition(shrinks, expands), sinks),
             doAfterSec(1.0, () -> shape3D.setVisible(false))
         );

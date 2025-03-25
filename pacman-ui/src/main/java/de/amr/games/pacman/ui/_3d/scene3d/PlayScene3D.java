@@ -26,7 +26,6 @@ import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.ui._3d.GameActions3D;
 import de.amr.games.pacman.ui._3d.GlobalProperties3d;
 import de.amr.games.pacman.ui._3d.level.*;
-import de.amr.games.pacman.ui.sound.GameSound;
 import javafx.animation.Animation;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -218,7 +217,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
             level.pac().setImmune(PY_IMMUNITY.get());
             updateScores();
-            updateSound(level, THE_SOUND);
+            updateSound(level);
         }
         perspective().update(fxSubScene, level, level.pac());
     }
@@ -242,20 +241,20 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         }
     }
 
-    private void updateSound(GameLevel level, GameSound sound) {
+    private void updateSound(GameLevel level) {
         if (THE_GAME_CONTROLLER.state() == GameState.HUNTING && !level.powerTimer().isRunning()) {
             int sirenNumber = 1 + THE_GAME_CONTROLLER.game().huntingTimer().phaseIndex() / 2;
-            sound.selectSiren(sirenNumber);
-            sound.playSiren();
+            THE_SOUND.selectSiren(sirenNumber);
+            THE_SOUND.playSiren();
         }
         if (level.pac().starvingTicks() > 8) { // TODO not sure how to do this right
-            sound.stopMunchingSound();
+            THE_SOUND.stopMunchingSound();
         }
         boolean ghostsReturning = level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
         if (level.pac().isAlive() && ghostsReturning) {
-            sound.playGhostReturningHomeSound();
+            THE_SOUND.playGhostReturningHomeSound();
         } else {
-            sound.stopGhostReturningHomeSound();
+            THE_SOUND.stopGhostReturningHomeSound();
         }
     }
 
@@ -507,7 +506,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
     private void playPacManDiesAnimation() {
         THE_GAME_CONTROLLER.state().timer().resetIndefiniteTime();
-        Animation animation = level3D.pac3D().createDyingAnimation(THE_SOUND);
+        Animation animation = level3D.pac3D().createDyingAnimation();
         animation.setDelay(Duration.seconds(1));
         animation.setOnFinished(e -> THE_GAME_CONTROLLER.state().timer().expire());
         animation.play();

@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._3d.level;
 
-import de.amr.games.pacman.ui.sound.GameSound;
 import javafx.animation.Animation;
 
 /**
@@ -18,7 +17,7 @@ public interface Pac3D {
 
     void update();
 
-    Animation createDyingAnimation(GameSound sounds);
+    Animation createDyingAnimation();
 
     void setPowerMode(boolean power);
 }

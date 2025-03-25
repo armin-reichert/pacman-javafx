@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui._3d.level;
 import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.model3D.Model3D;
 import de.amr.games.pacman.uilib.model3D.PacModel3D;
@@ -21,6 +20,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
+import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
 import static de.amr.games.pacman.uilib.Ufx.now;
 import static de.amr.games.pacman.uilib.Ufx.pauseSec;
 import static de.amr.games.pacman.uilib.model3D.Model3D.meshViewById;
@@ -110,7 +110,7 @@ public class MsPacMan3D implements Pac3D {
     }
 
     @Override
-    public Animation createDyingAnimation(GameSound sounds) {
+    public Animation createDyingAnimation() {
         //TODO use Timeline?
         var spinning = new RotateTransition(Duration.seconds(0.25), shape3D);
         spinning.setAxis(Rotate.Z_AXIS);
@@ -118,7 +118,7 @@ public class MsPacMan3D implements Pac3D {
         spinning.setToAngle(360);
         spinning.setInterpolator(Interpolator.LINEAR);
         spinning.setCycleCount(4);
-        return new SequentialTransition(pauseSec(1), now(sounds::playPacDeathSound), spinning, pauseSec(1.5));
+        return new SequentialTransition(pauseSec(1), now(THE_SOUND::playPacDeathSound), spinning, pauseSec(1.5));
     }
 
     // Hip swaying animation
