@@ -55,8 +55,7 @@ import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions.QUIT_DEMO_LEVEL;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
-import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
-import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
+import static de.amr.games.pacman.ui.UIGlobals.*;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindCheatActions;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindFallbackPlayerControlActions;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_AUTOPILOT;
@@ -329,7 +328,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     public void onEnterGameState(GameState state) {
         switch (state) {
             case HUNTING -> movingCamera.focusPlayer(true);
-            case LEVEL_COMPLETE -> {
+            case LEVEL_COMPLETE ->
                 THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
                     if (levelCompleteAnimation == null) {
                         // if 3D scene was active when level has been created, the animation has not been created!
@@ -337,7 +336,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                     }
                     levelCompleteAnimation.start();
                 });
-            }
             case GAME_OVER -> {
                 TengenMsPacMan_GameModel game = THE_GAME_CONTROLLER.game();
                 game.level().ifPresent(level -> {
@@ -523,13 +521,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e) {
         List<MenuItem> items = new ArrayList<>();
         // Switching scene display mode
-        var miScaledToFit = new RadioMenuItem(THE_GAME_CONTEXT.localizedText("scaled_to_fit"));
+        var miScaledToFit = new RadioMenuItem(THE_ASSETS.localizedText("scaled_to_fit"));
         miScaledToFit.selectedProperty().addListener(
                 (py,ov,nv) -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(nv? SceneDisplayMode.SCALED_TO_FIT:SceneDisplayMode.SCROLLING));
         PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.addListener((py, ov, nv) -> miScaledToFit.setSelected(nv == SceneDisplayMode.SCALED_TO_FIT));
         items.add(miScaledToFit);
 
-        var miScrolling = new RadioMenuItem(THE_GAME_CONTEXT.localizedText("scrolling"));
+        var miScrolling = new RadioMenuItem(THE_ASSETS.localizedText("scrolling"));
         miScrolling.selectedProperty().addListener(
                 (py,ov,nv) -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(nv? SceneDisplayMode.SCROLLING:SceneDisplayMode.SCALED_TO_FIT));
         PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.addListener((py, ov, nv) -> miScrolling.setSelected(nv == SceneDisplayMode.SCROLLING));
@@ -543,23 +541,23 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         } else {
             miScrolling.setSelected(true);
         }
-        items.add(Ufx.contextMenuTitleItem(THE_GAME_CONTEXT.localizedText("pacman")));
+        items.add(Ufx.contextMenuTitleItem(THE_ASSETS.localizedText("pacman")));
 
-        var miAutopilot = new CheckMenuItem(THE_GAME_CONTEXT.localizedText("autopilot"));
+        var miAutopilot = new CheckMenuItem(THE_ASSETS.localizedText("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
         items.add(miAutopilot);
 
-        var miImmunity = new CheckMenuItem(THE_GAME_CONTEXT.localizedText("immunity"));
+        var miImmunity = new CheckMenuItem(THE_ASSETS.localizedText("immunity"));
         miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
         items.add(miImmunity);
 
         items.add(new SeparatorMenuItem());
 
-        var miMuted = new CheckMenuItem(THE_GAME_CONTEXT.localizedText("muted"));
+        var miMuted = new CheckMenuItem(THE_ASSETS.localizedText("muted"));
         miMuted.selectedProperty().bindBidirectional(THE_SOUND.mutedProperty());
         items.add(miMuted);
 
-        var miQuit = new MenuItem(THE_GAME_CONTEXT.localizedText("quit"));
+        var miQuit = new MenuItem(THE_ASSETS.localizedText("quit"));
         miQuit.setOnAction(ae -> GameActions2D.SHOW_START_PAGE.execute());
         items.add(miQuit);
 

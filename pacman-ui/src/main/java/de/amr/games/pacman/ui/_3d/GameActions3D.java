@@ -8,6 +8,7 @@ import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui._3d.scene3d.Perspective;
 import javafx.scene.shape.DrawMode;
 
+import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
 import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_PIP_ON;
 import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_DRAW_MODE;
@@ -24,7 +25,7 @@ public enum GameActions3D implements GameAction {
         public void execute() {
             Perspective.Name next = PY_3D_PERSPECTIVE.get().next();
             PY_3D_PERSPECTIVE.set(next);
-            THE_GAME_CONTEXT.showFlashMessage(THE_GAME_CONTEXT.localizedText("camera_perspective", THE_GAME_CONTEXT.localizedText(next.name())));
+            THE_GAME_CONTEXT.showFlashMessage(THE_ASSETS.localizedText("camera_perspective", THE_ASSETS.localizedText(next.name())));
         }
     },
 
@@ -33,7 +34,7 @@ public enum GameActions3D implements GameAction {
         public void execute() {
             Perspective.Name prev = PY_3D_PERSPECTIVE.get().prev();
             PY_3D_PERSPECTIVE.set(prev);
-            THE_GAME_CONTEXT.showFlashMessage(THE_GAME_CONTEXT.localizedText("camera_perspective", THE_GAME_CONTEXT.localizedText(prev.name())));
+            THE_GAME_CONTEXT.showFlashMessage(THE_ASSETS.localizedText("camera_perspective", THE_ASSETS.localizedText(prev.name())));
         }
     },
 
@@ -56,7 +57,7 @@ public enum GameActions3D implements GameAction {
         public void execute() {
             toggle(PY_PIP_ON);
             if (!THE_GAME_CONTEXT.currentGameSceneIsPlayScene3D()) {
-                THE_GAME_CONTEXT.showFlashMessage(THE_GAME_CONTEXT.localizedText(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
+                THE_GAME_CONTEXT.showFlashMessage(THE_ASSETS.localizedText(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
             }
         }
     }

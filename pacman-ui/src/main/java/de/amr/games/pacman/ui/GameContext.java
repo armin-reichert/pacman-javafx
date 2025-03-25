@@ -14,34 +14,15 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
-import org.tinylog.Logger;
 
-import java.text.MessageFormat;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.Globals.assertNotNull;
-import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
 
 /**
  * @author Armin Reichert
  */
 public interface GameContext {
-
-    default String localizedText(String keyOrPattern, Object... args) {
-        assertNotNull(keyOrPattern);
-        for (ResourceBundle bundle : THE_ASSETS.bundles()) {
-            if (bundle.containsKey(keyOrPattern)) {
-                return MessageFormat.format(bundle.getString(keyOrPattern), args);
-            }
-        }
-        Logger.error("Missing localized text for key {}", keyOrPattern);
-        return "[" + keyOrPattern + "]";
-    }
-
-    String localizedGameOverMessage();
-    String localizedLevelCompleteMessage(int levelNumber);
 
     // Game model and controller
     GameVariant gameVariant();
@@ -72,6 +53,9 @@ public interface GameContext {
         WorldMap worldMap = THE_GAME_CONTROLLER.game().level().get().worldMap();
         return new Vector2i(worldMap.numCols(), worldMap.numRows());
     }
+
+    String localizedGameOverMessage();
+    String localizedLevelCompleteMessage(int levelNumber);
 
     // Game scenes
     ObjectProperty<GameScene> gameSceneProperty();

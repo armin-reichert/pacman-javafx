@@ -320,23 +320,23 @@ public class ArcadePlayScene2D extends GameScene2D {
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e) {
         List<MenuItem> items = new ArrayList<>();
-        items.add(Ufx.contextMenuTitleItem(THE_GAME_CONTEXT.localizedText("pacman")));
+        items.add(Ufx.contextMenuTitleItem(THE_ASSETS.localizedText("pacman")));
 
-        var miAutopilot = new CheckMenuItem(THE_GAME_CONTEXT.localizedText("autopilot"));
+        var miAutopilot = new CheckMenuItem(THE_ASSETS.localizedText("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
         items.add(miAutopilot);
 
-        var miImmunity = new CheckMenuItem(THE_GAME_CONTEXT.localizedText("immunity"));
+        var miImmunity = new CheckMenuItem(THE_ASSETS.localizedText("immunity"));
         miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
         items.add(miImmunity);
 
         items.add(new SeparatorMenuItem());
 
-        var miMuted = new CheckMenuItem(THE_GAME_CONTEXT.localizedText("muted"));
+        var miMuted = new CheckMenuItem(THE_ASSETS.localizedText("muted"));
         miMuted.selectedProperty().bindBidirectional(THE_SOUND.mutedProperty());
         items.add(miMuted);
 
-        var miQuit = new MenuItem(THE_GAME_CONTEXT.localizedText("quit"));
+        var miQuit = new MenuItem(THE_ASSETS.localizedText("quit"));
         miQuit.setOnAction(ae -> GameActions2D.SHOW_START_PAGE.execute());
         items.add(miQuit);
 

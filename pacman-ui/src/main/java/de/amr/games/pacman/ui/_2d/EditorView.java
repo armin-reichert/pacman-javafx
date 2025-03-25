@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import static de.amr.games.pacman.Globals.assertNotNull;
-import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
 
 public class EditorView extends BorderPane implements GameActionProvider {
 
@@ -36,7 +36,7 @@ public class EditorView extends BorderPane implements GameActionProvider {
         editor.createUI(stage);
         editor.init(GameModel.CUSTOM_MAP_DIR);
 
-        var miQuitEditor = new MenuItem(THE_GAME_CONTEXT.localizedText("back_to_game"));
+        var miQuitEditor = new MenuItem(THE_ASSETS.localizedText("back_to_game"));
         miQuitEditor.setOnAction(e -> closeAction.accept(editor));
         editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);
 

@@ -325,9 +325,9 @@ public class PacManGamesUI implements GameEventListener, GameContext {
                 String key = "app.title." + gameConfiguration().assetNamespace();
                 if (THE_CLOCK.isPaused()) { key += ".paused"; }
                 if (currentGameScene().isPresent() && currentGameScene().get() instanceof GameScene2D gameScene2D) {
-                    return localizedText(key, "2D") + " (%.2fx)".formatted(gameScene2D.scaling());
+                    return THE_ASSETS.localizedText(key, "2D") + " (%.2fx)".formatted(gameScene2D.scaling());
                 }
-                return localizedText(key, "2D");
+                return THE_ASSETS.localizedText(key, "2D");
             },
             THE_CLOCK.pausedProperty(), gameVariantPy, gameScenePy, gameView.heightProperty())
         );
@@ -413,7 +413,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     @Override
     public String localizedLevelCompleteMessage(int levelNumber) {
-        return pickerForLevelCompleteTexts.next() + "\n\n" + localizedText("level_complete", levelNumber);
+        return pickerForLevelCompleteTexts.next() + "\n\n" + THE_ASSETS.localizedText("level_complete", levelNumber);
     }
 
     @Override

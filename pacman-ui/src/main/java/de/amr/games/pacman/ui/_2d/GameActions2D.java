@@ -73,7 +73,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute() {
             THE_GAME_CONTROLLER.game().addLives(3);
-            THE_GAME_CONTEXT.showFlashMessage(THE_GAME_CONTEXT.localizedText("cheat_add_lives", THE_GAME_CONTROLLER.game().lives()));
+            THE_GAME_CONTEXT.showFlashMessage(THE_ASSETS.localizedText("cheat_add_lives", THE_GAME_CONTROLLER.game().lives()));
         }
     },
 

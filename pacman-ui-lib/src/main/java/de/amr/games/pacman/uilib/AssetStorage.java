@@ -11,8 +11,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Stream;
+
+import static de.amr.games.pacman.Globals.assertNotNull;
 
 /**
  * @author Armin Reichert
@@ -37,6 +40,17 @@ public class AssetStorage {
     public void addAll(AssetStorage other) {
         map.putAll(other.map);
         bundles.addAll(other.bundles);
+    }
+
+    public String localizedText(String keyOrPattern, Object... args) {
+        assertNotNull(keyOrPattern);
+        for (ResourceBundle bundle : bundles) {
+            if (bundle.containsKey(keyOrPattern)) {
+                return MessageFormat.format(bundle.getString(keyOrPattern), args);
+            }
+        }
+        Logger.error("Missing localized text for key {}", keyOrPattern);
+        return "[" + keyOrPattern + "]";
     }
 
     /**
