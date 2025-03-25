@@ -14,6 +14,8 @@ import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.util.Map;
+
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 
 public class ArcadePacMan_App extends Application {
@@ -27,8 +29,9 @@ public class ArcadePacMan_App extends Application {
 
     @Override
     public void start(Stage stage) {
-        PacManGamesUI_3D ui = UIGlobals.createGameUI3D();
-        ui.configure(GameVariant.PACMAN, new ArcadePacMan_UIConfig());
+        PacManGamesUI_3D ui = UIGlobals.createGameUI_3D(Map.of(
+            GameVariant.PACMAN, new ArcadePacMan_UIConfig()
+        ));
         ui.create(stage, initialSize());
         ui.startPageSelectionView().addStartPage(GameVariant.PACMAN, new ArcadePacMan_StartPage());
 

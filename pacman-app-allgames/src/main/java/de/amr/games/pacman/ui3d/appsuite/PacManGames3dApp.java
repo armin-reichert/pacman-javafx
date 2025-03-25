@@ -55,7 +55,6 @@ public class PacManGames3dApp extends Application {
         return new Dimension2D(width, height);
     }
 
-    private PacManGamesUI_3D ui;
     private final PacManXXL_MapSelector xxlMapSelector = new PacManXXL_MapSelector();
 
     @Override
@@ -72,13 +71,13 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        ui = UIGlobals.createGameUI3D();
-        ui.configure(GameVariant.PACMAN,           new ArcadePacMan_UIConfig());
-        ui.configure(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_UIConfig());
-        ui.configure(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_UIConfig());
-        ui.configure(GameVariant.PACMAN_XXL,       new PacManXXL_PacMan_UIConfig());
-        ui.configure(GameVariant.MS_PACMAN_XXL,    new PacManXXL_MsPacMan_UIConfig());
-
+        PacManGamesUI_3D ui = UIGlobals.createGameUI_3D(Map.of(
+            GameVariant.PACMAN, new ArcadePacMan_UIConfig(),
+            GameVariant.MS_PACMAN, new ArcadeMsPacMan_UIConfig(),
+            GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_UIConfig(),
+            GameVariant.PACMAN_XXL, new PacManXXL_PacMan_UIConfig(),
+            GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_UIConfig()
+        ));
         ui.create(stage, initialSize());
 
         ui.gameView().addDefaultDashboardItems(
