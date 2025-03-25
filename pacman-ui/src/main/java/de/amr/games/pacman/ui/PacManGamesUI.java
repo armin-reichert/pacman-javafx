@@ -111,7 +111,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     public PacManGamesUI() {
         THE_CLOCK.setPauseableCallback(this::runOnEveryTickExceptWhenPaused);
         THE_CLOCK.setPermanentCallback(this::runOnEveryTick);
-        loadAssets2D();
         viewPy.addListener((py, oldView, newView) -> {
             if (oldView instanceof GameActionProvider oldActionProvider) {
                 oldActionProvider.unregisterGameActionKeyBindings();
@@ -152,7 +151,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         stage.setOnShowing(e -> showStartView());
     }
 
-    private void loadAssets2D() {
+    public void loadAssets2D() {
         ResourceManager rm = () -> PacManGamesUI.class;
 
         ResourceBundle textResources = rm.getModuleBundle("de.amr.games.pacman.ui.texts.messages2d");

@@ -31,11 +31,7 @@ import static de.amr.games.pacman.uilib.Ufx.toggle;
  */
 public class PacManGamesUI_3D extends PacManGamesUI {
 
-    public PacManGamesUI_3D() {
-        loadAssets3D();
-    }
-
-    private void loadAssets3D() {
+    public void loadAssets3D() {
         ResourceManager rm = this::getClass;
         THE_ASSETS.addBundle(rm.getModuleBundle("de.amr.games.pacman.ui.texts.messages3d"));
 

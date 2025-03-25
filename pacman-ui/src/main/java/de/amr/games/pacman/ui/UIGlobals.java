@@ -13,6 +13,7 @@ public class UIGlobals {
 
     public static PacManGamesUI createGameUI_2D(Map<GameVariant, GameUIConfiguration> configMap) {
         var ui = new PacManGamesUI();
+        ui.loadAssets2D();
         for (var entry : configMap.entrySet()) {
             ui.configure(entry.getKey(), entry.getValue());
         }
@@ -22,6 +23,8 @@ public class UIGlobals {
 
     public static PacManGamesUI_3D createGameUI_3D(Map<GameVariant, GameUIConfiguration> configMap) {
         var ui = new PacManGamesUI_3D();
+        ui.loadAssets2D();
+        ui.loadAssets3D();
         for (var entry : configMap.entrySet()) {
             ui.configure(entry.getKey(), entry.getValue());
         }
