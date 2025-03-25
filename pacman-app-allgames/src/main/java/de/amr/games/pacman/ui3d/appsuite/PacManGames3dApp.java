@@ -82,7 +82,7 @@ public class PacManGames3dApp extends Application {
         ui.gameView().addDefaultDashboardItems("README", "GENERAL", "GAME_CONTROL", "SETTINGS_3D", "GAME_INFO",
             "ACTOR_INFO", "CUSTOM_MAPS", "JOYPAD", "KEYBOARD", "ABOUT");
 
-        InfoBoxCustomMaps infoBoxCustomMaps = ui.getDashboardItem("CUSTOM_MAPS");
+        InfoBoxCustomMaps infoBoxCustomMaps = ui.gameView().dashboard().getItem("CUSTOM_MAPS");
         infoBoxCustomMaps.setTableItems(xxlMapSelector.customMaps());
 
         ui.startPageSelectionView().addStartPage(GameVariant.PACMAN,           new ArcadePacMan_StartPage());

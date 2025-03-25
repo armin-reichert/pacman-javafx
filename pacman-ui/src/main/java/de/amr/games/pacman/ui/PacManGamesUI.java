@@ -9,7 +9,6 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._2d.*;
-import de.amr.games.pacman.ui.dashboard.InfoBox;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui.input.Keyboard;
@@ -300,10 +299,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         gameView = new GameView(parentScene);
         gameView.gameSceneProperty().bind(gameScenePy);
         gameView.setSize(mainScene.getWidth(), mainScene.getHeight());
-    }
-
-    public <I extends InfoBox> I getDashboardItem(String id) {
-        return gameView.dashboard().getItem(id);
     }
 
     protected void handleGameVariantChange(GameVariant gameVariant) {
