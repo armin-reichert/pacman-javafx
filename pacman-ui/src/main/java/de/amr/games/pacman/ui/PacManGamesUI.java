@@ -266,7 +266,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected void setGlobalKeyboardShortcuts() {
         mainScene.setOnKeyPressed(keyPress -> {
             if (KEY_FULLSCREEN.match(keyPress)) {
-                stage.setFullScreen(true);
+                enterFullScreenMode();
             }
             else if (KEY_MUTE.match(keyPress)) {
                 THE_SOUND.toggleMuted();
@@ -380,11 +380,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public ReadOnlyDoubleProperty heightProperty() {
-        return mainScene.heightProperty();
-    }
-
-    @Override
     public ArcadeKeyBinding arcadeKeys() {
         return arcadeKeyBinding;
     }
@@ -410,18 +405,21 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     @Override
+    public void enterFullScreenMode() {
+        stage.setFullScreen(true);
+    }
+
+    @Override
+    public ReadOnlyDoubleProperty heightProperty() {
+        return mainScene.heightProperty();
+    }
+
+    @Override
     public ObjectProperty<Node> viewProperty() { return viewPy; }
 
     @Override
     public GameView gameView() {
         return gameView;
-    }
-
-    @Override
-    public void openEditor() {
-        if (actionOpenEditorView.isEnabled()) {
-            actionOpenEditorView.execute();
-        }
     }
 
     @Override
@@ -442,6 +440,13 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     @Override
     public Optional<GameScene> currentGameScene() {
         return Optional.ofNullable(gameScenePy.get());
+    }
+
+    @Override
+    public void openEditor() {
+        if (actionOpenEditorView.isEnabled()) {
+            actionOpenEditorView.execute();
+        }
     }
 
     @Override
