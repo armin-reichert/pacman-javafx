@@ -13,7 +13,6 @@ import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.tinylog.Logger;
 
 import java.util.Map;
 
@@ -24,13 +23,9 @@ public class TengenMsPacMan_App extends Application {
 
     @Override
     public void init() {
-        try {
-            THE_GAME_CONTROLLER.setGameModel(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
-            THE_GAME_CONTROLLER.games().forEach(GameModel::init);
-            THE_GAME_CONTROLLER.selectGameVariant(GameVariant.MS_PACMAN_TENGEN);
-        } catch (Exception x) {
-            Logger.error(x);
-        }
+        THE_GAME_CONTROLLER.setGameModel(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
+        THE_GAME_CONTROLLER.games().forEach(GameModel::init);
+        THE_GAME_CONTROLLER.selectGameVariant(GameVariant.MS_PACMAN_TENGEN);
     }
 
     @Override
