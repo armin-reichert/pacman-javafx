@@ -71,7 +71,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             EditorView editorView = getOrCreateEditorView();
             stage.titleProperty().bind(editorView.editor().titleProperty());
             editorView.editor().start();
-            showView(editorView);
+            viewPy.set(editorView);
         }
 
         @Override
@@ -87,14 +87,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
 
-    protected final ObjectProperty<Node> viewPy = new SimpleObjectProperty<>() {
-        @Override
-        protected void invalidated() {
-            Node view = get();
-            view.requestFocus();
-            Logger.info("Request focus for view {}", view);
-        }
-    };
+    protected final ObjectProperty<Node> viewPy = new SimpleObjectProperty<>();
 
     protected final Map<GameVariant, GameUIConfiguration> uiConfigMap = new EnumMap<>(GameVariant.class);
 
@@ -121,6 +114,22 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         THE_CLOCK.setPauseableCallback(this::runOnEveryTickExceptWhenPaused);
         THE_CLOCK.setPermanentCallback(this::runOnEveryTick);
         loadAssets2D();
+        viewPy.addListener((py, oldView, newView) -> {
+            if (oldView instanceof GameActionProvider oldActionProvider) {
+                oldActionProvider.unregisterGameActionKeyBindings();
+            }
+            if (newView instanceof GameActionProvider newActionProvider) {
+                newActionProvider.registerGameActionKeyBindings();
+            }
+            if (oldView instanceof GameEventListener oldGameEventListener) {
+                THE_GAME_CONTROLLER.game().removeGameEventListener(oldGameEventListener);
+            }
+            if (newView instanceof GameEventListener newGameEventListener) {
+                THE_GAME_CONTROLLER.game().addGameEventListener(newGameEventListener);
+            }
+            sceneRoot.getChildren().set(0, newView);
+            newView.requestFocus();
+        });
     }
 
     /**
@@ -291,6 +300,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected void createGameView(Scene parentScene) {
         gameView = new GameView(parentScene);
         gameView.gameSceneProperty().bind(gameScenePy);
+        gameView.setSize(mainScene.getWidth(), mainScene.getHeight());
     }
 
     public <I extends InfoBox> I getDashboardItem(String id) {
@@ -464,7 +474,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         THE_CLOCK.stop();
         gameScenePy.set(null);
         gameView.hideDashboard(); // TODO use binding?
-        showView(startPageSelectionView);
+        viewPy.set(startPageSelectionView);
         // Note: this must be called last such that option menu gets focus!
         startPageSelectionView.currentSlide().ifPresent(Node::requestFocus);
     }
@@ -474,32 +484,12 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     @Override
     public void showGameView() {
-        showView(gameView);
+        viewPy.set(gameView);
         if (gameVariant() != GameVariant.MS_PACMAN_TENGEN) {
             THE_SOUND.playVoice("voice.explain", 0);
         }
+        gameView.setSize(mainScene.getWidth(), mainScene.getHeight());
         GameActions2D.BOOT.execute();
-    }
-
-    private void showView(Node view) {
-        Node currentView = viewPy.get();
-        if (view != currentView) {
-            if (currentView instanceof GameActionProvider actionProvider) {
-                actionProvider.unregisterGameActionKeyBindings();
-            }
-            if (currentView instanceof GameEventListener gameEventListener) {
-                THE_GAME_CONTROLLER.game().removeGameEventListener(gameEventListener);
-            }
-            if (view instanceof GameActionProvider actionProvider) {
-                actionProvider.registerGameActionKeyBindings();
-            }
-            if (view instanceof GameEventListener gameEventListener) {
-                THE_GAME_CONTROLLER.game().addGameEventListener(gameEventListener);
-            }
-            gameView.setSize(mainScene.getWidth(), mainScene.getHeight());
-            sceneRoot.getChildren().set(0, view);
-            viewPy.set(view);
-        }
     }
 
     @Override
@@ -524,7 +514,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     @Override
     public void onGameVariantChanged(GameEvent event) {
-        gameVariantPy.set(gameVariant());
+        gameVariantPy.set(THE_GAME_CONTROLLER.selectedGameVariant());
     }
 
     @Override
