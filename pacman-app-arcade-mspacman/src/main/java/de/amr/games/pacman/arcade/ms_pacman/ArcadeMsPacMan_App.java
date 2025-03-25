@@ -6,6 +6,7 @@ package de.amr.games.pacman.arcade.ms_pacman;
 
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui.UIGlobals;
 import de.amr.games.pacman.ui._3d.PacManGamesUI_3D;
 import javafx.application.Application;
 import javafx.geometry.Dimension2D;
@@ -26,7 +27,7 @@ public class ArcadeMsPacMan_App extends Application {
 
     @Override
     public void start(Stage stage) {
-        PacManGamesUI_3D ui = new PacManGamesUI_3D();
+        PacManGamesUI_3D ui = UIGlobals.createGameUI3D();
         ui.configure(GameVariant.MS_PACMAN, new ArcadeMsPacMan_UIConfig());
         ui.create(stage, initialSize());
         ui.startPageSelectionView().addStartPage(GameVariant.MS_PACMAN, new ArcadeMsPacMan_StartPage());

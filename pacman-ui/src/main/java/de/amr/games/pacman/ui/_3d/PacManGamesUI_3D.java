@@ -32,8 +32,6 @@ import static de.amr.games.pacman.uilib.Ufx.toggle;
 public class PacManGamesUI_3D extends PacManGamesUI {
 
     public PacManGamesUI_3D() {
-        super(); // loads 2D assets!
-        THE_GAME_CONTEXT = this;
         loadAssets3D();
     }
 

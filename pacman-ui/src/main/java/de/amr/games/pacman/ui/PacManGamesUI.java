@@ -110,7 +110,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected ArcadeKeyBinding arcadeKeyBinding = DEFAULT_ARCADE_KEY_BINDING;
 
     public PacManGamesUI() {
-        THE_GAME_CONTEXT = this;
         THE_CLOCK.setPauseableCallback(this::runOnEveryTickExceptWhenPaused);
         THE_CLOCK.setPermanentCallback(this::runOnEveryTick);
         loadAssets2D();

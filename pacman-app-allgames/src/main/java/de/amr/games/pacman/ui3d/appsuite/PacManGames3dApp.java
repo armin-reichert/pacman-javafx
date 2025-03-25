@@ -17,6 +17,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig;
+import de.amr.games.pacman.ui.UIGlobals;
 import de.amr.games.pacman.ui._2d.StartPage;
 import de.amr.games.pacman.ui._3d.PacManGamesUI_3D;
 import de.amr.games.pacman.ui.dashboard.InfoBoxCustomMaps;
@@ -71,8 +72,7 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        ui = new PacManGamesUI_3D();
-
+        ui = UIGlobals.createGameUI3D();
         ui.configure(GameVariant.PACMAN,           new ArcadePacMan_UIConfig());
         ui.configure(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_UIConfig());
         ui.configure(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_UIConfig());
