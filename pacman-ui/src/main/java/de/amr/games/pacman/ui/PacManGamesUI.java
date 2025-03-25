@@ -339,7 +339,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
             if (nextGameScene != null) {
                 gameView.embedGameScene(nextGameScene);
                 nextGameScene.init();
-                if (is2D3DSwitch(prevGameScene, nextGameScene)) {
+                if (is2D3DPlaySceneSwitch(prevGameScene, nextGameScene)) {
                     nextGameScene.onSceneVariantSwitch(prevGameScene);
                 }
             } else {
@@ -353,13 +353,13 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         }
     }
 
-    private boolean is2D3DSwitch(GameScene oldGameScene, GameScene newGameScene) {
-        if (oldGameScene == null) {
-            if (newGameScene == null) {
-                Logger.error("WTF is going on here, old and new game scenes are NULL!");
-                return false;
-            }
+    private boolean is2D3DPlaySceneSwitch(GameScene oldGameScene, GameScene newGameScene) {
+        if (oldGameScene == null && newGameScene == null) {
+            Logger.error("WTF is going on here, old and new game scene are NULL!");
             return false;
+        }
+        if (oldGameScene == null) {
+            return false; // first scene
         }
         var cfg = gameConfiguration();
         return cfg.gameSceneHasID(oldGameScene, "PlayScene2D") && cfg.gameSceneHasID(newGameScene, "PlayScene3D")
