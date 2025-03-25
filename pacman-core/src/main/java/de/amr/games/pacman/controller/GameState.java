@@ -145,7 +145,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onEnter(GameModel game) {
-            delay = gameController().selectedGameVariant() == GameVariant.MS_PACMAN_TENGEN ? 60 : 0;
+            delay = gameController().isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN) ? 60 : 0;
         }
 
         @Override
@@ -191,7 +191,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             GameLevel level = game.level().orElseThrow();
-            if (gameController().selectedGameVariant() == GameVariant.MS_PACMAN_TENGEN && game.isDemoLevel()) {
+            if (gameController().isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN) && game.isDemoLevel()) {
                 gameController().changeState(SHOWING_CREDITS);
                 return;
             }
@@ -263,7 +263,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             //TODO find a better solution
-            timer.reset(gameController().selectedGameVariant() == GameVariant.MS_PACMAN_TENGEN ? 300 : 240);
+            timer.reset(gameController().isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN) ? 300 : 240);
             timer.start();
             game.onPacKilled();
             game.publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
@@ -320,7 +320,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 //TODO find unified solution
-                if (gameController().selectedGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+                if (gameController().isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN)) {
                     if (game.isDemoLevel()) {
                         gameController().changeState(SHOWING_CREDITS);
                     } else {
@@ -364,17 +364,14 @@ public enum GameState implements FsmState<GameModel> {
 
     TESTING_LEVELS {
 
-        private int lastLevelNumber;
+        private int lastTestedLevelNumber;
 
         @Override
         public void onEnter(GameModel game) {
-            GameVariant gameVariant = THE_GAME_CONTROLLER.selectedGameVariant();
-            lastLevelNumber = switch (gameVariant) {
-                case MS_PACMAN -> 25;
-                case MS_PACMAN_TENGEN -> 32;
-                case PACMAN -> 21;
-                case PACMAN_XXL, MS_PACMAN_XXL -> 16;
-            };
+            lastTestedLevelNumber = 25;
+            if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN)) {
+                lastTestedLevelNumber = 32;
+            }
             timer.restartIndefinitely();
             game.resetForStartingNewGame();
             game.createNormalLevel(1);
@@ -430,7 +427,7 @@ public enum GameState implements FsmState<GameModel> {
                 level.blinking().reset();
                 level.pac().freeze();
                 level.bonus().ifPresent(Bonus::setInactive);
-                if (level.number() == lastLevelNumber) {
+                if (level.number() == lastTestedLevelNumber) {
                     THE_GAME_CONTROLLER.restart(GameState.BOOT);
                 } else {
                     timer().restartIndefinitely();
@@ -452,17 +449,14 @@ public enum GameState implements FsmState<GameModel> {
 
         static final int TEASER_TIME_SECONDS = 10;
 
-        private int lastLevelNumber;
+        private int lastTestedLevelNumber;
 
         @Override
         public void onEnter(GameModel game) {
-            GameVariant gameVariant = THE_GAME_CONTROLLER.selectedGameVariant();
-            lastLevelNumber = switch (gameVariant) {
-                case MS_PACMAN -> 17;
-                case MS_PACMAN_TENGEN -> 32;
-                case PACMAN -> 21;
-                case PACMAN_XXL, MS_PACMAN_XXL -> 16;
-            };
+            lastTestedLevelNumber = 25;
+            if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN)) {
+                lastTestedLevelNumber = 32;
+            }
             timer.restartSeconds(TEASER_TIME_SECONDS);
             game.resetForStartingNewGame();
             game.createNormalLevel(1);
@@ -478,7 +472,7 @@ public enum GameState implements FsmState<GameModel> {
             game.doHuntingStep();
             GameLevel level = game.level().orElseThrow();
             if (timer().hasExpired()) {
-                if (level.number() == lastLevelNumber) {
+                if (level.number() == lastTestedLevelNumber) {
                     game.publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
                     gameController().changeState(INTRO);
                 } else {
@@ -514,11 +508,10 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            GameVariant gameVariant = THE_GAME_CONTROLLER.selectedGameVariant();
             if (timer.hasExpired()) {
                 int number = this.<Integer>getProperty("intermissionTestNumber");
-                int last = gameVariant == GameVariant.MS_PACMAN_TENGEN ? 4 : 3;
-                if (number < last) {
+                int lastCutSceneNumber = THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN) ? 4 : 3;
+                if (number < lastCutSceneNumber) {
                     setProperty("intermissionTestNumber", number + 1);
                     timer.restartIndefinitely();
                     game.publishGameEvent(GameEventType.UNSPECIFIED_CHANGE);

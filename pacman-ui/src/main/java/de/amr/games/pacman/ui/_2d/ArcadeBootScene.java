@@ -50,7 +50,7 @@ public class ArcadeBootScene extends GameScene2D {
         } else if (timer.betweenSeconds(1, 2) && timer.tickCount() % 8 == 0) {
             paintRandomHexCodes(sceneSize);
         } else if (timer.betweenSeconds(2, 3.5) && timer.tickCount() % 4 == 0) {
-            paintRandomSprites(THE_GAME_CONTEXT.gameConfiguration().spriteSheet().sourceImage(), sceneSize);
+            paintRandomSprites(THE_GAME_CONTEXT.currentUIConfig().spriteSheet().sourceImage(), sceneSize);
         } else if (timer.atSecond(3.5)) {
             paintScreenTestGrid(sceneSize);
         }

@@ -79,7 +79,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         pinky = TengenMsPacMan_GameModel.pinky();
         heart = new Actor2D();
 
-        var spriteSheet = (TengenMsPacMan_SpriteSheet) THE_GAME_CONTEXT.gameConfiguration().spriteSheet();
+        var spriteSheet = (TengenMsPacMan_SpriteSheet) THE_GAME_CONTEXT.currentUIConfig().spriteSheet();
         msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         mrPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         inky.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, inky.id()));

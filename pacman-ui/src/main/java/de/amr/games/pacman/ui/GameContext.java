@@ -36,28 +36,48 @@ public interface GameContext {
     void selectNextJoypadKeyBinding();
 
     // GUI
+    default GameUIConfiguration currentUIConfig() { return gameConfiguration(THE_GAME_CONTROLLER.selectedGameVariant()); }
+
     Optional<GameScene> currentGameScene();
+
     default boolean currentGameSceneIsPlayScene2D() {
-        return currentGameScene().isPresent() && gameConfiguration().gameSceneHasID(currentGameScene().get(), "PlayScene2D");
+        return currentGameScene().isPresent()
+                && currentUIConfig().gameSceneHasID(currentGameScene().get(), "PlayScene2D");
     }
+
     default boolean currentGameSceneIsPlayScene3D() {
-        return currentGameScene().isPresent() && gameConfiguration().gameSceneHasID(currentGameScene().get(), "PlayScene3D");
+        return currentGameScene().isPresent()
+                && currentUIConfig().gameSceneHasID(currentGameScene().get(), "PlayScene3D");
     }
+
     void enterFullScreenMode();
+
     ReadOnlyDoubleProperty heightProperty();
+
     GameUIConfiguration gameConfiguration(GameVariant variant);
-    default GameUIConfiguration gameConfiguration() { return gameConfiguration(THE_GAME_CONTROLLER.selectedGameVariant()); }
+
     Pane gameView();
+
     ObjectProperty<GameScene> gameSceneProperty();
+
     boolean isScoreVisible();
+
     void openEditor();
+
     ObjectProperty<Node> viewProperty();
+
     void setScoreVisible(boolean visible);
+
     void showStartView();
+
     StartPageSelectionView startPageSelectionView();
+
     void showGameView();
+
     void showFlashMessageSec(double seconds, String message, Object... args);
+
     default void showFlashMessage(String message, Object... args) { showFlashMessageSec(1, message, args); }
+
     void togglePlayScene2D3D();
 
     default Vector2i worldSizeInTilesOrElse(Vector2i defaultSize) {
@@ -65,6 +85,4 @@ public interface GameContext {
         WorldMap worldMap = THE_GAME_CONTROLLER.game().level().get().worldMap();
         return new Vector2i(worldMap.numCols(), worldMap.numRows());
     }
-
-
 }

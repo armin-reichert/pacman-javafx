@@ -85,7 +85,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        ArcadePacMan_SpriteSheet spriteSheet = (ArcadePacMan_SpriteSheet) THE_GAME_CONTEXT.gameConfiguration().spriteSheet();
+        ArcadePacMan_SpriteSheet spriteSheet = (ArcadePacMan_SpriteSheet) THE_GAME_CONTEXT.currentUIConfig().spriteSheet();
         blinking = new Pulse(10, true);
         pacMan = new Pac();
         pacMan.setAnimations(new PacAnimations(spriteSheet));
@@ -141,14 +141,14 @@ public class IntroScene extends GameScene2D {
                     drawEnergizer(tiles2Px(LEFT_TILE_X), tiles2Px(20));
                 }
                 drawGuys(flutter(timer.tickCount()));
-                if (THE_GAME_CONTROLLER.selectedGameVariant() == GameVariant.PACMAN) {
+                if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.PACMAN)) {
                     gr.drawText(ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT, Color.web(Arcade.Palette.PINK), gr.scaledArcadeFont(TS),  tiles2Px(4), tiles2Px(32));
                 }
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints();
                 drawGuys(0);
-                if (THE_GAME_CONTROLLER.selectedGameVariant() == GameVariant.PACMAN) {
+                if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.PACMAN)) {
                     gr.drawText(ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT, Color.web(Arcade.Palette.PINK), gr.scaledArcadeFont(TS),  tiles2Px(4), tiles2Px(32));
                 }
             }
@@ -164,7 +164,7 @@ public class IntroScene extends GameScene2D {
     }
 
     private void drawGallery() {
-        var spriteSheet = (ArcadePacMan_SpriteSheet) THE_GAME_CONTEXT.gameConfiguration().spriteSheet();
+        var spriteSheet = (ArcadePacMan_SpriteSheet) THE_GAME_CONTEXT.currentUIConfig().spriteSheet();
         Font font = gr.scaledArcadeFont(TS);
         if (titleVisible) {
             gr.drawText("CHARACTER / NICKNAME", Color.web(Arcade.Palette.WHITE), font, tiles2Px(LEFT_TILE_X + 3), tiles2Px(6));

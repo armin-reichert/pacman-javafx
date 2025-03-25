@@ -100,7 +100,7 @@ public class IntroScene extends GameScene2D {
         ghostID = 0;
         waitBeforeRising = 0;
 
-        ArcadeMsPacMan_SpriteSheet spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_GAME_CONTEXT.gameConfiguration().spriteSheet();
+        ArcadeMsPacMan_SpriteSheet spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_GAME_CONTEXT.currentUIConfig().spriteSheet();
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
         msPacMan.selectAnimation(ActorAnimations.ANIM_PAC_MUNCHING);
         for (Ghost ghost : ghosts) {

@@ -82,6 +82,10 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         }
     }
 
+    public boolean isGameVariantSelected(GameVariant gameVariant) {
+        return gameModelsByVariant.get(gameVariant) == currentGameModel;
+    }
+
     public GameVariant selectedGameVariant() {
         return gameModelsByVariant.entrySet().stream()
             .filter(entry -> entry.getValue() == currentGameModel)

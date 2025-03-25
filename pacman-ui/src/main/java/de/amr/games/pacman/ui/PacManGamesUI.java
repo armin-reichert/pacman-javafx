@@ -299,10 +299,10 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         THE_GAME_CONTROLLER.game().removeGameEventListener(this);
         THE_GAME_CONTROLLER.selectGameVariant(gameVariant);
         THE_GAME_CONTROLLER.game().addGameEventListener(this);
-        THE_SOUND.selectGameVariant(gameVariant, gameConfiguration().assetNamespace());
-        stage.getIcons().setAll(gameConfiguration().appIcon());
+        THE_SOUND.selectGameVariant(gameVariant, gameConfiguration(gameVariant).assetNamespace());
+        stage.getIcons().setAll(gameConfiguration(gameVariant).appIcon());
         //TODO check this
-        gameView.canvasContainer().decorationEnabledPy.set(gameConfiguration().isGameCanvasDecorated());
+        gameView.canvasContainer().decorationEnabledPy.set(gameConfiguration(gameVariant).isGameCanvasDecorated());
         Logger.info("Game variant changed to {}", gameVariant);
     }
 
@@ -310,7 +310,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         stage.titleProperty().bind(Bindings.createStringBinding(
             () -> {
                 // "app.title.pacman" vs. "app.title.pacman.paused"
-                String key = "app.title." + gameConfiguration().assetNamespace();
+                String key = "app.title." + currentUIConfig().assetNamespace();
                 if (THE_CLOCK.isPaused()) { key += ".paused"; }
                 if (currentGameScene().isPresent() && currentGameScene().get() instanceof GameScene2D gameScene2D) {
                     return THE_ASSETS.localizedText(key, "2D") + " (%.2fx)".formatted(gameScene2D.scaling());
@@ -323,7 +323,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     protected void updateGameScene(boolean reloadCurrent) {
         GameScene prevGameScene = gameScenePy.get();
-        GameScene nextGameScene = gameConfiguration().selectGameScene();
+        GameScene nextGameScene = currentUIConfig().selectGameScene();
         boolean sceneChanging = nextGameScene != prevGameScene;
         if (reloadCurrent || sceneChanging) {
             if (prevGameScene != null) {
@@ -355,7 +355,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         if (oldGameScene == null) {
             return false; // first scene
         }
-        var cfg = gameConfiguration();
+        var cfg = currentUIConfig();
         return cfg.gameSceneHasID(oldGameScene, "PlayScene2D") && cfg.gameSceneHasID(newGameScene, "PlayScene3D")
             || cfg.gameSceneHasID(oldGameScene, "PlayScene3D") && cfg.gameSceneHasID(newGameScene, "PlayScene2D");
     }
@@ -473,7 +473,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     @Override
     public void showGameView() {
         viewPy.set(gameView);
-        if (THE_GAME_CONTROLLER.selectedGameVariant() != GameVariant.MS_PACMAN_TENGEN) {
+        if (!THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN)) {
             THE_SOUND.playVoice("voice.explain", 0);
         }
         gameView.setSize(mainScene.getWidth(), mainScene.getHeight());

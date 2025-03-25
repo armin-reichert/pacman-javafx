@@ -235,7 +235,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             scores3D.showScore(score.points(), score.levelNumber());
         }
         else { // when score is disabled, show text "game over"
-            String assetNamespace = THE_GAME_CONTEXT.gameConfiguration().assetNamespace();
+            String assetNamespace = THE_GAME_CONTEXT.currentUIConfig().assetNamespace();
             Color color = THE_ASSETS.color(assetNamespace + ".color.game_over_message");
             scores3D.showTextAsScore(TEXT_GAME_OVER, color);
         }
@@ -331,7 +331,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
     private void onEnterStateGhostDying() {
         THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-            GameSpriteSheet spriteSheet = THE_GAME_CONTEXT.gameConfiguration().spriteSheet();
+            GameSpriteSheet spriteSheet = THE_GAME_CONTEXT.currentUIConfig().spriteSheet();
             RectArea[] numberSprites = spriteSheet.ghostNumberSprites();
             THE_GAME_CONTROLLER.game().eventLog().killedGhosts.forEach(ghost -> {
                 int victimIndex = level.victims().indexOf(ghost);
@@ -399,7 +399,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     @Override
     public void onBonusActivated(GameEvent event) {
         THE_GAME_CONTROLLER.game().level().flatMap(GameLevel::bonus).ifPresent(
-                bonus -> level3D.replaceBonus3D(bonus, THE_GAME_CONTEXT.gameConfiguration().spriteSheet()));
+                bonus -> level3D.replaceBonus3D(bonus, THE_GAME_CONTEXT.currentUIConfig().spriteSheet()));
         if (THE_GAME_CONTROLLER.selectedGameVariant() == GameVariant.MS_PACMAN) {
             THE_SOUND.playBonusBouncingSound();
         }
