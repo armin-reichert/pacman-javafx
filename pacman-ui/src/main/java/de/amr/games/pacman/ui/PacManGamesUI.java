@@ -58,14 +58,14 @@ import static de.amr.games.pacman.uilib.Ufx.createIcon;
  */
 public class PacManGamesUI implements GameEventListener, GameContext {
 
-    public static final KeyCodeCombination KEY_FULLSCREEN = Keyboard.naked(KeyCode.F11);
-    public static final KeyCodeCombination KEY_MUTE = Keyboard.alt(KeyCode.M);
-    public static final KeyCodeCombination KEY_OPEN_EDITOR = Keyboard.shift_alt(KeyCode.E);
+    private static final KeyCodeCombination KEY_FULLSCREEN = Keyboard.naked(KeyCode.F11);
+    private static final KeyCodeCombination KEY_MUTE = Keyboard.alt(KeyCode.M);
+    private static final KeyCodeCombination KEY_OPEN_EDITOR = Keyboard.shift_alt(KeyCode.E);
 
     protected final GameAction actionOpenEditorView = new GameAction() {
         @Override
         public void execute() {
-            THE_GAME_CONTEXT.currentGameScene().ifPresent(GameScene::end);
+            currentGameScene().ifPresent(GameScene::end);
             THE_CLOCK.stop();
             THE_SOUND.stopAll();
             EditorView editorView = getOrCreateEditorView();
@@ -96,7 +96,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         }
     };
 
-    protected final Map<GameVariant, GameUIConfiguration> uiConfigsByVariant = new EnumMap<>(GameVariant.class);
+    protected final Map<GameVariant, GameUIConfiguration> uiConfigMap = new EnumMap<>(GameVariant.class);
 
     protected Stage stage;
     protected Scene mainScene;
@@ -137,10 +137,10 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         createGameView(mainScene);
         setGameVariant(THE_GAME_CONTROLLER.selectedGameVariant());
         bindStageTitle();
-        stage.setScene(mainScene);
-        //TODO This doesn't fit for NES aspect ratio
+        setGlobalKeyboardShortcuts();
         stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
         stage.setMinHeight(ARCADE_MAP_SIZE_IN_PIXELS.y() * 1.25);
+        stage.setScene(mainScene);
         stage.centerOnScreen();
         stage.setOnShowing(e -> showStartView());
     }
@@ -186,14 +186,10 @@ public class PacManGamesUI implements GameEventListener, GameContext {
                 gameScene2D.debugInfoVisibleProperty().bind(PY_DEBUG_INFO_VISIBLE);
             }
         });
-        uiConfigsByVariant.put(variant, uiConfig);
+        uiConfigMap.put(variant, uiConfig);
     }
 
     public Stage stage() { return stage; }
-
-    public Scene mainScene() { return mainScene; }
-
-    public ObjectProperty<GameVariant> gameVariantProperty() { return gameVariantPy; }
 
     protected void runOnEveryTickExceptWhenPaused() {
         try {
@@ -258,8 +254,10 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
         mainScene.addEventFilter(KeyEvent.KEY_PRESSED, THE_KEYBOARD::onKeyPressed);
         mainScene.addEventFilter(KeyEvent.KEY_RELEASED, THE_KEYBOARD::onKeyReleased);
+        return mainScene;
+    }
 
-        // Global keyboard shortcuts
+    protected void setGlobalKeyboardShortcuts() {
         mainScene.setOnKeyPressed(keyPress -> {
             if (KEY_FULLSCREEN.match(keyPress)) {
                 stage.setFullScreen(true);
@@ -274,8 +272,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
                 actionProvider.handleInput();
             }
         });
-
-        return mainScene;
     }
 
     private EditorView getOrCreateEditorView() {
@@ -437,7 +433,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     @Override
     public GameUIConfiguration gameConfiguration(GameVariant variant) {
-        return uiConfigsByVariant.get(variant);
+        return uiConfigMap.get(variant);
     }
 
     @Override
