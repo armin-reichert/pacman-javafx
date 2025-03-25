@@ -79,19 +79,8 @@ public class PacManGames3dApp extends Application {
             GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_UIConfig()
         ));
         ui.create(stage, initialSize());
-
-        ui.gameView().addDefaultDashboardItems(
-            "README",
-            "GENERAL",
-            "GAME_CONTROL",
-            "SETTINGS_3D",
-            "GAME_INFO",
-            "ACTOR_INFO",
-            "CUSTOM_MAPS",
-            "JOYPAD",
-            "KEYBOARD",
-            "ABOUT"
-        );
+        ui.gameView().addDefaultDashboardItems("README", "GENERAL", "GAME_CONTROL", "SETTINGS_3D", "GAME_INFO",
+            "ACTOR_INFO", "CUSTOM_MAPS", "JOYPAD", "KEYBOARD", "ABOUT");
 
         InfoBoxCustomMaps infoBoxCustomMaps = ui.getDashboardItem("CUSTOM_MAPS");
         infoBoxCustomMaps.setTableItems(xxlMapSelector.customMaps());

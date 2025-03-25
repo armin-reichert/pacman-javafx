@@ -34,18 +34,8 @@ public class ArcadePacMan_App extends Application {
         ));
         ui.create(stage, initialSize());
         ui.startPageSelectionView().addStartPage(GameVariant.PACMAN, new ArcadePacMan_StartPage());
-
-        ui.gameView().addDefaultDashboardItems(
-            "README",
-            "GENERAL",
-            "GAME_CONTROL",
-            "SETTINGS_3D",
-            "GAME_INFO",
-            "ACTOR_INFO",
-            "KEYBOARD",
-            "ABOUT"
-        );
-
+        ui.gameView().addDefaultDashboardItems("README", "GENERAL", "GAME_CONTROL", "SETTINGS_3D", "GAME_INFO",
+            "ACTOR_INFO", "KEYBOARD", "ABOUT");
         stage.show();
     }
 
