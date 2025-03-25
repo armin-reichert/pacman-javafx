@@ -53,12 +53,12 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
     }
 
     private void initMenuState() {
-        switch (THE_GAME_CONTEXT.gameVariant()) {
+        switch (THE_GAME_CONTROLLER.selectedGameVariant()) {
             case MS_PACMAN_XXL, PACMAN_XXL -> {
                 THE_GAME_CONTROLLER.game().mapSelector().loadAllMaps(THE_GAME_CONTROLLER.game());
                 menu.setState(
                     GlobalProperties3d.PY_3D_ENABLED.get(),
-                        THE_GAME_CONTEXT.gameVariant(),
+                        THE_GAME_CONTROLLER.selectedGameVariant(),
                         THE_GAME_CONTROLLER.game().isCutScenesEnabled(),
                         THE_GAME_CONTROLLER.game().mapSelector().mapSelectionMode(),
                     !THE_GAME_CONTROLLER.game().mapSelector().customMaps().isEmpty()

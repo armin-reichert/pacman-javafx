@@ -141,14 +141,14 @@ public class IntroScene extends GameScene2D {
                     drawEnergizer(tiles2Px(LEFT_TILE_X), tiles2Px(20));
                 }
                 drawGuys(flutter(timer.tickCount()));
-                if (THE_GAME_CONTEXT.gameVariant() == GameVariant.PACMAN) {
+                if (THE_GAME_CONTROLLER.selectedGameVariant() == GameVariant.PACMAN) {
                     gr.drawText(ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT, Color.web(Arcade.Palette.PINK), gr.scaledArcadeFont(TS),  tiles2Px(4), tiles2Px(32));
                 }
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints();
                 drawGuys(0);
-                if (THE_GAME_CONTEXT.gameVariant() == GameVariant.PACMAN) {
+                if (THE_GAME_CONTROLLER.selectedGameVariant() == GameVariant.PACMAN) {
                     gr.drawText(ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT, Color.web(Arcade.Palette.PINK), gr.scaledArcadeFont(TS),  tiles2Px(4), tiles2Px(32));
                 }
             }

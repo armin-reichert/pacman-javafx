@@ -28,7 +28,6 @@ public interface GameContext {
     String localizedLevelCompleteMessage(int levelNumber);
 
     // Game model and controller
-    GameVariant gameVariant();
     void setGameVariant(GameVariant variant);
 
     // Input
@@ -47,7 +46,7 @@ public interface GameContext {
     void enterFullScreenMode();
     ReadOnlyDoubleProperty heightProperty();
     GameUIConfiguration gameConfiguration(GameVariant variant);
-    default GameUIConfiguration gameConfiguration() { return gameConfiguration(gameVariant()); }
+    default GameUIConfiguration gameConfiguration() { return gameConfiguration(THE_GAME_CONTROLLER.selectedGameVariant()); }
     Pane gameView();
     ObjectProperty<GameScene> gameSceneProperty();
     boolean isScoreVisible();

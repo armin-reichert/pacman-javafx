@@ -18,6 +18,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 
+import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
 import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
@@ -87,7 +88,7 @@ public class PopupLayer extends Pane {
     }
 
     public void showHelp(double scaling) {
-        Color bgColor = Color.web(THE_GAME_CONTEXT.gameVariant() == GameVariant.MS_PACMAN
+        Color bgColor = Color.web(THE_GAME_CONTROLLER.selectedGameVariant() == GameVariant.MS_PACMAN
             ? Arcade.Palette.RED : Arcade.Palette.BLUE);
         var font = THE_ASSETS.font("font.monospaced", Math.max(6, 14 * scaling));
         var helpPane = HelpInfo.build().createPane(opaqueColor(bgColor, 0.8), font);

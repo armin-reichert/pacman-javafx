@@ -54,7 +54,7 @@ public class InfoBoxGameControl extends InfoBox {
         spinnerCredit.valueProperty().addListener((py, ov, number) -> THE_GAME_CONTROLLER.credit = number);
 
         comboGameVariant.setOnAction(e -> {
-            if (comboGameVariant.getValue() != THE_GAME_CONTEXT.gameVariant()) {
+            if (comboGameVariant.getValue() != THE_GAME_CONTROLLER.selectedGameVariant()) {
                 THE_GAME_CONTROLLER.selectGameVariant(comboGameVariant.getValue());
                 THE_GAME_CONTROLLER.restart(GameState.BOOT);
             }
@@ -79,7 +79,7 @@ public class InfoBoxGameControl extends InfoBox {
         GameState state = THE_GAME_CONTROLLER.state();
 
         spinnerCredit.getValueFactory().setValue(THE_GAME_CONTROLLER.credit);
-        comboGameVariant.setValue(THE_GAME_CONTEXT.gameVariant());
+        comboGameVariant.setValue(THE_GAME_CONTROLLER.selectedGameVariant());
         comboInitialLives.setValue(game.initialLives());
 
         spinnerCredit.setDisable(!(oneOf(state, GameState.INTRO, GameState.SETTING_OPTIONS)));

@@ -363,7 +363,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
     }
 
     public void showHelp() {
-        if (THE_GAME_CONTEXT.gameVariant() != GameVariant.MS_PACMAN_TENGEN) {
+        if (THE_GAME_CONTROLLER.selectedGameVariant() != GameVariant.MS_PACMAN_TENGEN) {
             if (isCurrentGameScene2D()) {
                 popupLayer.showHelp(canvasContainer.scaling());
             }
@@ -382,11 +382,11 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
     @Override
     public void onLevelCreated(GameEvent event) {
         THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-            Logger.info("Game level {} ({}) created", level.number(), THE_GAME_CONTEXT.gameVariant());
+            Logger.info("Game level {} ({}) created", level.number(), THE_GAME_CONTROLLER.selectedGameVariant());
             THE_GAME_CONTEXT.gameConfiguration().createActorAnimations(level);
-            Logger.info("Actor animations ({}) created", THE_GAME_CONTEXT.gameVariant());
+            Logger.info("Actor animations ({}) created", THE_GAME_CONTROLLER.selectedGameVariant());
             THE_SOUND.setEnabled(!THE_GAME_CONTROLLER.game().isDemoLevel());
-            Logger.info("Sounds ({}) {}", THE_GAME_CONTEXT.gameVariant(), THE_SOUND.isEnabled() ? "enabled" : "disabled");
+            Logger.info("Sounds ({}) {}", THE_GAME_CONTROLLER.selectedGameVariant(), THE_SOUND.isEnabled() ? "enabled" : "disabled");
             // size of game scene might have changed, so re-embed
             THE_GAME_CONTEXT.currentGameScene().ifPresent(this::embedGameScene);
             GameScene2D pipGameScene = THE_GAME_CONTEXT.gameConfiguration().createPiPScene(canvasContainer().canvas());

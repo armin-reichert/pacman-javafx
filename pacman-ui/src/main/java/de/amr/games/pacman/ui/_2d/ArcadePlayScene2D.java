@@ -216,7 +216,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         GraphicsContext g = gr.ctx();
         gr.drawTileGrid(sizeInPx().x(), sizeInPx().y());
 
-        if (THE_GAME_CONTEXT.gameVariant() == GameVariant.PACMAN) {
+        if (THE_GAME_CONTROLLER.selectedGameVariant() == GameVariant.PACMAN) {
             THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
                 level.ghosts().forEach(ghost -> {
                     // Are currently the same for each ghost, but who knows what comes...

@@ -79,11 +79,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         }
     };
 
-    protected final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>() {
-        @Override
-        protected void invalidated() { handleGameVariantChange(get()); }
-    };
-
     protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
 
     protected final ObjectProperty<Node> viewPy = new SimpleObjectProperty<>();
@@ -322,7 +317,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
                 }
                 return THE_ASSETS.localizedText(key, "2D");
             },
-            THE_CLOCK.pausedProperty(), gameVariantPy, gameScenePy, gameView.heightProperty())
+            THE_CLOCK.pausedProperty(), gameScenePy, gameView.heightProperty())
         );
     }
 
@@ -428,11 +423,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public GameVariant gameVariant() {
-        return gameVariantPy.get();
-    }
-
-    @Override
     public GameUIConfiguration gameConfiguration(GameVariant variant) {
         return uiConfigMap.get(variant);
     }
@@ -464,7 +454,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     @Override
     public void setGameVariant(GameVariant variant) {
-        gameVariantPy.set(variant);
+        handleGameVariantChange(variant);
     }
 
     @Override
@@ -483,7 +473,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     @Override
     public void showGameView() {
         viewPy.set(gameView);
-        if (gameVariant() != GameVariant.MS_PACMAN_TENGEN) {
+        if (THE_GAME_CONTROLLER.selectedGameVariant() != GameVariant.MS_PACMAN_TENGEN) {
             THE_SOUND.playVoice("voice.explain", 0);
         }
         gameView.setSize(mainScene.getWidth(), mainScene.getHeight());
@@ -512,7 +502,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
 
     @Override
     public void onGameVariantChanged(GameEvent event) {
-        gameVariantPy.set(THE_GAME_CONTROLLER.selectedGameVariant());
+        handleGameVariantChange(THE_GAME_CONTROLLER.selectedGameVariant());
     }
 
     @Override

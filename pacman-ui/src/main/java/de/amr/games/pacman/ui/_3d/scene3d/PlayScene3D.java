@@ -400,7 +400,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     public void onBonusActivated(GameEvent event) {
         THE_GAME_CONTROLLER.game().level().flatMap(GameLevel::bonus).ifPresent(
                 bonus -> level3D.replaceBonus3D(bonus, THE_GAME_CONTEXT.gameConfiguration().spriteSheet()));
-        if (THE_GAME_CONTEXT.gameVariant() == GameVariant.MS_PACMAN) {
+        if (THE_GAME_CONTROLLER.selectedGameVariant() == GameVariant.MS_PACMAN) {
             THE_SOUND.playBonusBouncingSound();
         }
     }
@@ -408,7 +408,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     @Override
     public void onBonusEaten(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::showEaten);
-        if (THE_GAME_CONTEXT.gameVariant() == GameVariant.MS_PACMAN) {
+        if (THE_GAME_CONTROLLER.selectedGameVariant() == GameVariant.MS_PACMAN) {
             THE_SOUND.stopBonusBouncingSound();
         }
         THE_SOUND.playBonusEatenSound();
@@ -417,7 +417,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     @Override
     public void onBonusExpired(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::onBonusExpired);
-        if (THE_GAME_CONTEXT.gameVariant() == GameVariant.MS_PACMAN) {
+        if (THE_GAME_CONTROLLER.selectedGameVariant() == GameVariant.MS_PACMAN) {
             THE_SOUND.stopBonusBouncingSound();
         }
     }

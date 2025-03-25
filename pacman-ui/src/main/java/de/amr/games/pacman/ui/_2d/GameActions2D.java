@@ -191,7 +191,7 @@ public enum GameActions2D implements GameAction {
     START_GAME {
         @Override
         public void execute() {
-            if (THE_GAME_CONTEXT.gameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+            if (THE_GAME_CONTROLLER.selectedGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                 THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
             } else if (THE_GAME_CONTROLLER.game().canStartNewGame()) {
                 THE_SOUND.stopVoice();
@@ -235,7 +235,7 @@ public enum GameActions2D implements GameAction {
             if (THE_CLOCK.isPaused()) {
                 THE_SOUND.stopAll();
             }
-            Logger.info("Game ({}) {}", THE_GAME_CONTEXT.gameVariant(), THE_CLOCK.isPaused() ? "paused" : "resumed");
+            Logger.info("Game ({}) {}", THE_GAME_CONTROLLER.selectedGameVariant(), THE_CLOCK.isPaused() ? "paused" : "resumed");
         }
     };
 

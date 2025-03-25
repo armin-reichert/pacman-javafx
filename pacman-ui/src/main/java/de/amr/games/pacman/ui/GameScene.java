@@ -11,7 +11,7 @@ import javafx.scene.input.ContextMenuEvent;
 
 import java.util.List;
 
-import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 
 /**
  * Common interface of all game scenes (2D and 3D).
@@ -57,6 +57,6 @@ public interface GameScene extends GameEventListener, GameActionProvider {
      * @return scene name as used by logging output
      */
     default String displayName() {
-        return "%s (%s)".formatted(getClass().getSimpleName(), THE_GAME_CONTEXT.gameVariant());
+        return "%s (%s)".formatted(getClass().getSimpleName(), THE_GAME_CONTROLLER.selectedGameVariant());
     }
 }

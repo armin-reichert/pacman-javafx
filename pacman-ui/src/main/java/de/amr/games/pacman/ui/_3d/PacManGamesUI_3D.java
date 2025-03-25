@@ -72,7 +72,7 @@ public class PacManGamesUI_3D extends PacManGamesUI {
                 }
                 return THE_ASSETS.localizedText(key, modeKey) + sceneNameText;
             },
-            THE_CLOCK.pausedProperty(), gameVariantPy, gameScenePy, gameView.heightProperty(), PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE)
+            THE_CLOCK.pausedProperty(), gameScenePy, gameView.heightProperty(), PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE)
         );
     }
 
