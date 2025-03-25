@@ -15,7 +15,6 @@ import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.AnimatedActor2D;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Creature;
-import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.SpriteAnimation;
 import javafx.beans.property.FloatProperty;
 import javafx.scene.canvas.Canvas;
@@ -30,6 +29,7 @@ import org.tinylog.Logger;
 import java.util.function.Predicate;
 
 import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
 import static java.util.function.Predicate.not;
 
 /**
@@ -40,8 +40,6 @@ public interface GameRenderer {
     Font DEBUG_FONT = Font.font("Sans", FontWeight.BOLD, 20);
 
     default void setWorldMap(WorldMap worldMap) {}
-
-    AssetStorage assets();
 
     Color backgroundColor();
 
@@ -69,7 +67,7 @@ public interface GameRenderer {
     default float scaled(double value) { return scaling() * (float) value; }
 
     default Font scaledArcadeFont(float size) {
-        return assets().font("font.arcade", scaled(size));
+        return THE_ASSETS.font("font.arcade", scaled(size));
     }
 
     /**

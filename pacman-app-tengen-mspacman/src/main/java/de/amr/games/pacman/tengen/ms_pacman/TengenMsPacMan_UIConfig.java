@@ -205,7 +205,7 @@ public class TengenMsPacMan_UIConfig implements GameUIConfiguration {
 
     @Override
     public TengenMsPacMan_Renderer2D createRenderer(Canvas canvas) {
-        return new TengenMsPacMan_Renderer2D(THE_ASSETS, spriteSheet, mapRepository, canvas);
+        return new TengenMsPacMan_Renderer2D(spriteSheet, mapRepository, canvas);
     }
 
     @Override

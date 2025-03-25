@@ -9,7 +9,6 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.ui._2d.GameRenderer;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
-import de.amr.games.pacman.uilib.AssetStorage;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
@@ -19,6 +18,7 @@ import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.arcade.ArcadePacMan_SpriteSheet.EMPTY_MAZE_SPRITE;
 import static de.amr.games.pacman.arcade.ArcadePacMan_SpriteSheet.FULL_MAZE_SPRITE;
+import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
 
 /**
  * @author Armin Reichert
@@ -27,7 +27,6 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
 
     private static final Vector2f MESSAGE_POSITION = new Vector2f(14 * TS, 21 * TS);
 
-    private final AssetStorage assets;
     private final ArcadePacMan_SpriteSheet spriteSheet;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
     private final Canvas canvas;
@@ -35,15 +34,9 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
     private boolean blinkingOn;
     private Color bgColor = Color.BLACK;
 
-    public ArcadePacMan_GameRenderer(AssetStorage assets, ArcadePacMan_SpriteSheet spriteSheet, Canvas canvas) {
-        this.assets = assertNotNull(assets);
+    public ArcadePacMan_GameRenderer(ArcadePacMan_SpriteSheet spriteSheet, Canvas canvas) {
         this.spriteSheet = assertNotNull(spriteSheet);
         this.canvas = assertNotNull(canvas);
-    }
-
-    @Override
-    public AssetStorage assets() {
-        return assets;
     }
 
     @Override
@@ -95,7 +88,7 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
         ctx().save();
         ctx().scale(scaling, scaling);
         if (mazeHighlighted) {
-            ctx().drawImage(assets.image("pacman.flashing_maze"), x, y);
+            ctx().drawImage(THE_ASSETS.image("pacman.flashing_maze"), x, y);
         } else {
             if (level.uneatenFoodCount() == 0) {
                 drawSpriteUnscaled(EMPTY_MAZE_SPRITE, x, y);

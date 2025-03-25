@@ -23,7 +23,6 @@ import de.amr.games.pacman.tengen.ms_pacman.maps.MapRepository;
 import de.amr.games.pacman.ui._2d.GameRenderer;
 import de.amr.games.pacman.ui._2d.SpriteAnimationSet;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
-import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.SpriteAnimation;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
@@ -40,6 +39,7 @@ import static de.amr.games.pacman.model.actors.Bonus.STATE_EDIBLE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.games.pacman.tengen.ms_pacman.maps.MapRepository.strangeMap15Sprite;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.*;
+import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
 import static de.amr.games.pacman.ui.UIGlobals.THE_CLOCK;
 import static de.amr.games.pacman.ui._2d.GameSpriteSheet.NO_SPRITE;
 import static java.util.function.Predicate.not;
@@ -52,7 +52,6 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     private static final Color CANVAS_BACKGROUND_COLOR = Color.BLACK;
     private static final Vector2f DEFAULT_MESSAGE_ANCHOR_POS = new Vector2f(14f * TS, 21 * TS);
 
-    private final AssetStorage assets;
     private final TengenMsPacMan_SpriteSheet spriteSheet;
     private final MapRepository mapRepository;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
@@ -64,12 +63,10 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     private Vector2f messageAnchorPosition;
 
     public TengenMsPacMan_Renderer2D(
-        AssetStorage assets,
         TengenMsPacMan_SpriteSheet spriteSheet,
         MapRepository mapRepository,
         Canvas canvas)
     {
-        this.assets = assertNotNull(assets);
         this.spriteSheet = assertNotNull(spriteSheet);
         this.mapRepository = mapRepository;
         assertNotNull(canvas);
@@ -83,11 +80,6 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         Logger.info("Create maze set with {} flash colors", flashCount);
         coloredMapSet = mapRepository.createMazeSet(worldMap, flashCount);
         Logger.info("Maze set {}", coloredMapSet);
-    }
-
-    @Override
-    public AssetStorage assets() {
-        return assets;
     }
 
     @Override
@@ -308,9 +300,9 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         if (level.message() != null) {
             float x = getMessagePosition().x(), y = getMessagePosition().y();
             switch (level.message()) {
-                case READY -> drawTextCenteredOver("READY!", x, y, assets.color(assetNamespace + ".color.ready_message"));
+                case READY -> drawTextCenteredOver("READY!", x, y, THE_ASSETS.color(assetNamespace + ".color.ready_message"));
                 case GAME_OVER -> {
-                    Color color = assets.color(assetNamespace + ".color.game_over_message");
+                    Color color = THE_ASSETS.color(assetNamespace + ".color.game_over_message");
                     if (demoLevel) {
                         WorldMap worldMap = level.worldMap();
                         NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");

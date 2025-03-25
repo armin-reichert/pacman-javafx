@@ -139,7 +139,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUIConfiguration {
 
     @Override
     public VectorGraphicsGameRenderer createRenderer(Canvas canvas) {
-        return new VectorGraphicsGameRenderer(THE_ASSETS, spriteSheet, canvas);
+        return new VectorGraphicsGameRenderer(spriteSheet, canvas);
     }
 
     @Override

@@ -12,7 +12,6 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui._2d.GameRenderer;
-import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.ImageArea;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
@@ -23,6 +22,7 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.RectArea.rect;
+import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
 
 /**
  * @author Armin Reichert
@@ -58,7 +58,6 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
 
     private static final Vector2f MESSAGE_POSITION = new Vector2f(14 * TS, 21 * TS);
 
-    private final AssetStorage assets;
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;
     private final Canvas canvas;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
@@ -70,16 +69,10 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     private boolean blinking;
     private Color bgColor = Color.BLACK;
 
-    public ArcadeMsPacMan_GameRenderer(AssetStorage assets, ArcadeMsPacMan_SpriteSheet spriteSheet, Canvas canvas) {
-        this.assets = assertNotNull(assets);
+    public ArcadeMsPacMan_GameRenderer(ArcadeMsPacMan_SpriteSheet spriteSheet, Canvas canvas) {
         this.spriteSheet = assertNotNull(spriteSheet);
         this.canvas = assertNotNull(canvas);
-        flashingMazesImage = assets.get("ms_pacman.flashing_mazes");
-    }
-
-    @Override
-    public AssetStorage assets() {
-        return assets;
+        flashingMazesImage = THE_ASSETS.get("ms_pacman.flashing_mazes");
     }
 
     @Override
@@ -176,7 +169,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     }
 
     public void drawMsPacManMidwayCopyright(double x, double y, Color color, Font font) {
-        Image image = assets.get("ms_pacman.logo.midway");
+        Image image = THE_ASSETS.get("ms_pacman.logo.midway");
         drawImageScaled(image, x, y + 2, tiles2Px(4) - 2, tiles2Px(4));
         ctx().setFont(font);
         ctx().setFill(color);

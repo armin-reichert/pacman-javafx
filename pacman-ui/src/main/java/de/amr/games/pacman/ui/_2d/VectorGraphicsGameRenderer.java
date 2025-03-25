@@ -11,7 +11,6 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.tilemap.rendering.FoodMapRenderer;
 import de.amr.games.pacman.tilemap.rendering.TerrainMapColorScheme;
 import de.amr.games.pacman.tilemap.rendering.TerrainMapRenderer;
-import de.amr.games.pacman.uilib.AssetStorage;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
@@ -34,7 +33,6 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
 
     static final Vector2f DEFAULT_MESSAGE_ANCHOR_POSITION = new Vector2f(14f * TS, 21 * TS);
 
-    private final AssetStorage assets;
     private final GameSpriteSheet spriteSheet;
     private final Canvas canvas;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
@@ -47,19 +45,13 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     private TerrainMapColorScheme blinkingOnColors;
     private TerrainMapColorScheme blinkingOffColors;
 
-    public VectorGraphicsGameRenderer(AssetStorage assets, GameSpriteSheet spriteSheet, Canvas canvas) {
-        this.assets = assertNotNull(assets);
+    public VectorGraphicsGameRenderer(GameSpriteSheet spriteSheet, Canvas canvas) {
         this.canvas = assertNotNull(canvas);
         this.spriteSheet = assertNotNull(spriteSheet);
         terrainRenderer.scalingProperty().bind(scalingPy);
         foodRenderer.scalingProperty().bind(scalingPy);
         messageAnchorPosition = DEFAULT_MESSAGE_ANCHOR_POSITION;
         setBackgroundColor(Color.BLACK);
-    }
-
-    @Override
-    public AssetStorage assets() {
-        return assets;
     }
 
     @Override
