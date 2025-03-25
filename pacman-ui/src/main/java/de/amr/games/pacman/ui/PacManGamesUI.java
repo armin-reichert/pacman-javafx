@@ -243,7 +243,7 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         sceneRoot.getChildren().addAll(new Pane(), flashMessageOverlay, pauseIcon, iconPane);
         sceneRoot.setBackground(THE_ASSETS.get("background.scene"));
         sceneRoot.backgroundProperty().bind(gameScenePy.map(
-            gameScene -> currentGameSceneHasID("PlayScene3D")
+            gameScene -> currentGameSceneIsPlayScene3D()
                 ? THE_ASSETS.get("background.play_scene3d")
                 : THE_ASSETS.get("background.scene"))
         );

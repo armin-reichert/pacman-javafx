@@ -55,7 +55,7 @@ public enum GameActions3D implements GameAction {
         @Override
         public void execute() {
             toggle(PY_PIP_ON);
-            if (!THE_GAME_CONTEXT.currentGameSceneHasID("PlayScene3D")) {
+            if (!THE_GAME_CONTEXT.currentGameSceneIsPlayScene3D()) {
                 THE_GAME_CONTEXT.showFlashMessage(THE_GAME_CONTEXT.localizedText(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
             }
         }

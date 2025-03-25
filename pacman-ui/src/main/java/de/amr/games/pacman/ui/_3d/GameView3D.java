@@ -45,7 +45,7 @@ public class GameView3D extends GameView {
 
     protected List<MenuItem> createContextMenuItems(ContextMenuEvent event) {
         List<MenuItem> menuItems = new ArrayList<>();
-        if (THE_GAME_CONTEXT.currentGameSceneHasID("PlayScene2D")) {
+        if (THE_GAME_CONTEXT.currentGameSceneIsPlayScene2D()) {
             menuItems.add(contextMenuTitleItem(THE_GAME_CONTEXT.localizedText("scene_display")));
             var item = new MenuItem(THE_GAME_CONTEXT.localizedText("use_3D_scene"));
             item.setOnAction(ae -> GameActions3D.TOGGLE_PLAY_SCENE_2D_3D.execute());

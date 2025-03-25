@@ -18,6 +18,7 @@ import org.tinylog.Logger;
 
 import java.text.MessageFormat;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
@@ -30,7 +31,7 @@ public interface GameContext {
 
     default String localizedText(String keyOrPattern, Object... args) {
         assertNotNull(keyOrPattern);
-        for (var bundle : THE_ASSETS.bundles()) {
+        for (ResourceBundle bundle : THE_ASSETS.bundles()) {
             if (bundle.containsKey(keyOrPattern)) {
                 return MessageFormat.format(bundle.getString(keyOrPattern), args);
             }
@@ -73,16 +74,13 @@ public interface GameContext {
     }
 
     // Game scenes
-
-    default boolean currentGameSceneHasID(String gameSceneID) {
-        assertNotNull(gameSceneID);
-        return currentGameScene().isPresent()
-            && gameConfiguration().gameSceneHasID(currentGameScene().get(), gameSceneID);
-    }
-
     ObjectProperty<GameScene> gameSceneProperty();
-
     Optional<GameScene> currentGameScene();
-
+    default boolean currentGameSceneIsPlayScene2D() {
+        return currentGameScene().isPresent() && gameConfiguration().gameSceneHasID(currentGameScene().get(), "PlayScene2D");
+    }
+    default boolean currentGameSceneIsPlayScene3D() {
+        return currentGameScene().isPresent() && gameConfiguration().gameSceneHasID(currentGameScene().get(), "PlayScene3D");
+    }
     void togglePlayScene2D3D();
 }

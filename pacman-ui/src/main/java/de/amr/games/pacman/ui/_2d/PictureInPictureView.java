@@ -39,7 +39,7 @@ public class PictureInPictureView extends VBox {
         backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Background::fill));
         opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
         visibleProperty().bind(Bindings.createObjectBinding(
-            () -> PY_PIP_ON.get() && THE_GAME_CONTEXT.currentGameSceneHasID("PlayScene3D"),
+            () -> PY_PIP_ON.get() && THE_GAME_CONTEXT.currentGameSceneIsPlayScene3D(),
             PY_PIP_ON, THE_GAME_CONTEXT.gameSceneProperty()
         ));
         visibleProperty().addListener((py,ov,nv) -> recomputeLayout());
