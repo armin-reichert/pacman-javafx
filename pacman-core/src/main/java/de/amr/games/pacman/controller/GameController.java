@@ -59,7 +59,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         return (GAME) currentGameModel;
     }
 
-    public void setGame(GameVariant variant, GameModel gameModel) {
+    public void setGameModel(GameVariant variant, GameModel gameModel) {
         assertNotNull(variant);
         assertNotNull(gameModel);
         gameModelsByVariant.put(variant, gameModel);
