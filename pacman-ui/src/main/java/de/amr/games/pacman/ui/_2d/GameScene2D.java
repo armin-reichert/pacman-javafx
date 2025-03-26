@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.GameUI.THE_GAME_CONTEXT;
 
 /**
  * Base class of all 2D scenes.

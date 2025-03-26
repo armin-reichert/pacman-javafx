@@ -15,8 +15,8 @@ import javafx.scene.media.MediaPlayer;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_MR_PACMAN_MUNCHING;
-import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
-import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
+import static de.amr.games.pacman.ui.GameUI.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.GameUI.THE_SOUND;
 
 /**
  * Intermission scene 2: "The chase".

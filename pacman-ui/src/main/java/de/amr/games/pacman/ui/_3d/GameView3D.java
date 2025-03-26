@@ -14,8 +14,8 @@ import javafx.scene.input.KeyCode;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
-import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.GameUI.THE_ASSETS;
+import static de.amr.games.pacman.ui.GameUI.THE_GAME_CONTEXT;
 import static de.amr.games.pacman.ui.input.Keyboard.alt;
 import static de.amr.games.pacman.uilib.Ufx.contextMenuTitleItem;
 

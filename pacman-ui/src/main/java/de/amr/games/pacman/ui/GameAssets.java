@@ -12,7 +12,7 @@ import de.amr.games.pacman.uilib.model3D.Model3D;
 
 import java.util.ResourceBundle;
 
-import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
+import static de.amr.games.pacman.ui.GameUI.THE_ASSETS;
 
 public class GameAssets extends AssetStorage {
 

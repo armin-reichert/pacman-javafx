@@ -16,8 +16,8 @@ import org.tinylog.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.games.pacman.ui.UIGlobals.THE_CLOCK;
-import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.GameUI.THE_CLOCK;
+import static de.amr.games.pacman.ui.GameUI.THE_GAME_CONTEXT;
 
 /**
  * Carousel containing the start pages for the different game variants (XXL game variants share common start page).

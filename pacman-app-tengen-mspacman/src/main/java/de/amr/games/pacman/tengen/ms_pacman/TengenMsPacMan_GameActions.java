@@ -12,8 +12,8 @@ import org.tinylog.Logger;
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
-import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
-import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
+import static de.amr.games.pacman.ui.GameUI.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.GameUI.THE_SOUND;
 import static de.amr.games.pacman.uilib.Ufx.toggle;
 
 public enum TengenMsPacMan_GameActions implements GameAction {

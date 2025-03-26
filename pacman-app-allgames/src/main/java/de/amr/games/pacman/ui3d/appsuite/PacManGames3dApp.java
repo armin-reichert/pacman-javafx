@@ -17,7 +17,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig;
-import de.amr.games.pacman.ui.UIGlobals;
+import de.amr.games.pacman.ui.GameUI;
 import de.amr.games.pacman.ui._2d.StartPage;
 import de.amr.games.pacman.ui._3d.PacManGamesUI_3D;
 import de.amr.games.pacman.ui.dashboard.InfoBoxCustomMaps;
@@ -37,8 +37,8 @@ import java.io.IOException;
 import java.util.Map;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
-import static de.amr.games.pacman.ui.UIGlobals.THE_CLOCK;
+import static de.amr.games.pacman.ui.GameUI.THE_ASSETS;
+import static de.amr.games.pacman.ui.GameUI.THE_CLOCK;
 
 /**
  * Application containing all game variants and including 3D play scene.
@@ -71,7 +71,7 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        PacManGamesUI_3D ui = UIGlobals.createGameUI_3D(Map.of(
+        PacManGamesUI_3D ui = GameUI.createGameUI_3D(Map.of(
             GameVariant.PACMAN, new ArcadePacMan_UIConfig(),
             GameVariant.MS_PACMAN, new ArcadeMsPacMan_UIConfig(),
             GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_UIConfig(),

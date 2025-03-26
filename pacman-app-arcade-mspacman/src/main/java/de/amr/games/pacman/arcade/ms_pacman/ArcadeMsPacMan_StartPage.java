@@ -16,8 +16,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 
-import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
-import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.GameUI.THE_ASSETS;
+import static de.amr.games.pacman.ui.GameUI.THE_GAME_CONTEXT;
 
 public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage {
 

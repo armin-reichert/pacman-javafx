@@ -15,7 +15,7 @@ import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
-import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.GameUI.THE_GAME_CONTEXT;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
 
 /**

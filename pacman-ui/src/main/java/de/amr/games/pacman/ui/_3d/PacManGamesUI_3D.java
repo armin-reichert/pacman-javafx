@@ -6,15 +6,11 @@ package de.amr.games.pacman.ui._3d;
 
 import de.amr.games.pacman.ui.PacManGamesUI;
 import de.amr.games.pacman.ui._2d.GameScene2D;
-import de.amr.games.pacman.uilib.Picker;
-import de.amr.games.pacman.uilib.ResourceManager;
-import de.amr.games.pacman.uilib.Ufx;
-import de.amr.games.pacman.uilib.model3D.Model3D;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.ui.UIGlobals.*;
+import static de.amr.games.pacman.ui.GameUI.*;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_DEBUG_INFO_VISIBLE;
 import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_ENABLED;
 import static de.amr.games.pacman.uilib.Ufx.toggle;

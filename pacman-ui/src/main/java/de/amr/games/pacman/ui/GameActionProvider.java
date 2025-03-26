@@ -11,7 +11,7 @@ import org.tinylog.Logger;
 import java.util.Map;
 import java.util.Optional;
 
-import static de.amr.games.pacman.ui.UIGlobals.THE_KEYBOARD;
+import static de.amr.games.pacman.ui.GameUI.THE_KEYBOARD;
 
 public interface GameActionProvider {
 

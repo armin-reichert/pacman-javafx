@@ -24,7 +24,7 @@ import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.CONTINUES_SPRITES;
-import static de.amr.games.pacman.ui.UIGlobals.*;
+import static de.amr.games.pacman.ui.GameUI.*;
 import static de.amr.games.pacman.ui.input.Keyboard.alt;
 
 /**

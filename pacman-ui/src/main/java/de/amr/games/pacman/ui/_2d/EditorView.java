@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import static de.amr.games.pacman.Globals.assertNotNull;
-import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
+import static de.amr.games.pacman.ui.GameUI.THE_ASSETS;
 
 public class EditorView extends BorderPane implements GameActionProvider {
 

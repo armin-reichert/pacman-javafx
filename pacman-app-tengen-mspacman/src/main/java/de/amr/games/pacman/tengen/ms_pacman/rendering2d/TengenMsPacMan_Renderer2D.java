@@ -39,8 +39,8 @@ import static de.amr.games.pacman.model.actors.Bonus.STATE_EDIBLE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.games.pacman.tengen.ms_pacman.maps.MapRepository.strangeMap15Sprite;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.*;
-import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
-import static de.amr.games.pacman.ui.UIGlobals.THE_CLOCK;
+import static de.amr.games.pacman.ui.GameUI.THE_ASSETS;
+import static de.amr.games.pacman.ui.GameUI.THE_CLOCK;
 import static de.amr.games.pacman.ui._2d.GameSpriteSheet.NO_SPRITE;
 import static java.util.function.Predicate.not;
 

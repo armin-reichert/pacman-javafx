@@ -11,7 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 
-import static de.amr.games.pacman.ui.UIGlobals.THE_CLOCK;
+import static de.amr.games.pacman.ui.GameUI.THE_CLOCK;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
 
 /**

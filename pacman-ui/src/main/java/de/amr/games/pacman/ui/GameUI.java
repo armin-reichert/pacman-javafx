@@ -12,7 +12,7 @@ import de.amr.games.pacman.uilib.GameClockFX;
 
 import java.util.Map;
 
-public class UIGlobals {
+public class GameUI {
 
     public static PacManGamesUI createGameUI_2D(Map<GameVariant, GameUIConfiguration> configMap) {
         var ui = new PacManGamesUI();

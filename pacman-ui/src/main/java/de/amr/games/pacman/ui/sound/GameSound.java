@@ -4,9 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.sound;
 
-import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.uilib.AssetStorage;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.media.AudioClip;
@@ -21,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.Globals.assertNotNull;
-import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
+import static de.amr.games.pacman.ui.GameUI.THE_ASSETS;
 
 /**
  * @author Armin Reichert

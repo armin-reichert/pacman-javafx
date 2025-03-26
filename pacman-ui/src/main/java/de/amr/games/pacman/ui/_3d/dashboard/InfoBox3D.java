@@ -19,7 +19,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
 
-import static de.amr.games.pacman.ui.UIGlobals.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.GameUI.THE_GAME_CONTEXT;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
 
 /**
