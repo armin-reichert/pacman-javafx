@@ -67,15 +67,15 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     @Override
     public void bindGameActions() {
         bind(TengenMsPacMan_GameActions.SELECT_NEXT_JOYPAD_KEY_BINDING, alt(KeyCode.J));
-        bind(TengenMsPacMan_GameActions.START_PLAYING, THE_GAME_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
-        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, THE_GAME_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_SELECT));
+        bind(TengenMsPacMan_GameActions.START_PLAYING, THE_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
+        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, THE_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_SELECT));
         GameActions2D.bindTestActions(this);
     }
 
     @Override
     public void doInit() {
-        THE_GAME_CONTEXT.joypadKeyBinding().register();
-        THE_GAME_CONTEXT.setScoreVisible(false);
+        THE_CONTEXT.joypadKeyBinding().register();
+        THE_CONTEXT.setScoreVisible(false);
         selectedOption = OPTION_PAC_BOOSTER;
         tengenGame = THE_GAME_CONTROLLER.game();
         tengenGame.setCanStartNewGame(true);
@@ -85,7 +85,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        THE_GAME_CONTEXT.joypadKeyBinding().unregister();
+        THE_CONTEXT.joypadKeyBinding().unregister();
     }
 
     @Override
@@ -121,7 +121,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     private boolean isJoypadPressed(NES_JoypadButton button) {
-        return THE_KEYBOARD.isMatching(THE_GAME_CONTEXT.joypadKeyBinding().key(button));
+        return THE_KEYBOARD.isMatching(THE_CONTEXT.joypadKeyBinding().key(button));
     }
 
     @Override
@@ -299,7 +299,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), sizeInPx().x(), 212);
 
         if (PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED.get()) {
-            r.drawJoypadBindings(THE_GAME_CONTEXT.joypadKeyBinding());
+            r.drawJoypadBindings(THE_CONTEXT.joypadKeyBinding());
         }
     }
 

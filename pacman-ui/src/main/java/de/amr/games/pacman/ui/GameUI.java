@@ -19,7 +19,7 @@ public class GameUI {
         for (var entry : configMap.entrySet()) {
             ui.configure(entry.getKey(), entry.getValue());
         }
-        THE_GAME_CONTEXT = ui;
+        THE_CONTEXT = ui;
         return ui;
     }
 
@@ -29,11 +29,11 @@ public class GameUI {
         for (var entry : configMap.entrySet()) {
             ui.configure(entry.getKey(), entry.getValue());
         }
-        THE_GAME_CONTEXT = ui;
+        THE_CONTEXT = ui;
         return ui;
     }
 
-    public static GameContext THE_GAME_CONTEXT;
+    public static GameContext THE_CONTEXT;
     public static final GameAssets THE_ASSETS = new GameAssets();
     public static final GameClockFX THE_CLOCK = new GameClockFX();
     public static final Keyboard THE_KEYBOARD = new Keyboard();

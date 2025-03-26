@@ -31,7 +31,7 @@ import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.*;
 import static de.amr.games.pacman.model.actors.GhostState.EATEN;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
-import static de.amr.games.pacman.ui.GameUI.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.GameUI.THE_CONTEXT;
 import static de.amr.games.pacman.ui.GameUI.THE_SOUND;
 
 /**
@@ -78,14 +78,14 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(GameActions2D.INSERT_COIN, THE_GAME_CONTEXT.arcadeKeys().key(Arcade.Button.COIN));
-        bind(GameActions2D.START_GAME, THE_GAME_CONTEXT.arcadeKeys().key(Arcade.Button.START));
+        bind(GameActions2D.INSERT_COIN, THE_CONTEXT.arcadeKeys().key(Arcade.Button.COIN));
+        bind(GameActions2D.START_GAME, THE_CONTEXT.arcadeKeys().key(Arcade.Button.START));
         GameActions2D.bindTestActions(this);
     }
 
     @Override
     public void doInit() {
-        ArcadePacMan_SpriteSheet spriteSheet = (ArcadePacMan_SpriteSheet) THE_GAME_CONTEXT.currentUIConfig().spriteSheet();
+        ArcadePacMan_SpriteSheet spriteSheet = (ArcadePacMan_SpriteSheet) THE_CONTEXT.currentUIConfig().spriteSheet();
         blinking = new Pulse(10, true);
         pacMan = new Pac();
         pacMan.setAnimations(new PacAnimations(spriteSheet));
@@ -105,7 +105,7 @@ public class IntroScene extends GameScene2D {
         titleVisible = false;
         ghostIndex = 0;
         ghostKilledTime = 0;
-        THE_GAME_CONTEXT.setScoreVisible(true);
+        THE_CONTEXT.setScoreVisible(true);
         sceneController.restart(SceneState.STARTING);
     }
 
@@ -164,7 +164,7 @@ public class IntroScene extends GameScene2D {
     }
 
     private void drawGallery() {
-        var spriteSheet = (ArcadePacMan_SpriteSheet) THE_GAME_CONTEXT.currentUIConfig().spriteSheet();
+        var spriteSheet = (ArcadePacMan_SpriteSheet) THE_CONTEXT.currentUIConfig().spriteSheet();
         Font font = gr.scaledArcadeFont(TS);
         if (titleVisible) {
             gr.drawText("CHARACTER / NICKNAME", Color.web(Arcade.Palette.WHITE), font, tiles2Px(LEFT_TILE_X + 3), tiles2Px(6));

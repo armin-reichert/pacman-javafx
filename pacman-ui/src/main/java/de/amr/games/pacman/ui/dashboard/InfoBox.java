@@ -27,7 +27,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.ui.GameUI.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.GameUI.THE_CONTEXT;
 import static de.amr.games.pacman.ui.dashboard.InfoText.NO_INFO;
 
 /**
@@ -86,7 +86,7 @@ public abstract class InfoBox extends TitledPane {
     }
 
     protected Supplier<String> ifGameScenePresent(Function<GameScene, String> fnInfo) {
-        return () -> THE_GAME_CONTEXT.currentGameScene().map(fnInfo).orElse(NO_INFO);
+        return () -> THE_CONTEXT.currentGameScene().map(fnInfo).orElse(NO_INFO);
     }
 
     protected Supplier<String> ifLevelPresent(Function<GameLevel, String> fnInfo) {

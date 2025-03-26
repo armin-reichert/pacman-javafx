@@ -73,7 +73,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute() {
             THE_GAME_CONTROLLER.game().addLives(3);
-            THE_GAME_CONTEXT.showFlashMessage(THE_ASSETS.localizedText("cheat_add_lives", THE_GAME_CONTROLLER.game().lives()));
+            THE_CONTEXT.showFlashMessage(THE_ASSETS.localizedText("cheat_add_lives", THE_GAME_CONTROLLER.game().lives()));
         }
     },
 
@@ -169,9 +169,9 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute() {
             THE_SOUND.stopAll();
-            THE_GAME_CONTEXT.currentGameScene().ifPresent(GameScene::end);
+            THE_CONTEXT.currentGameScene().ifPresent(GameScene::end);
             THE_GAME_CONTROLLER.game().endGame();
-            THE_GAME_CONTEXT.showStartView();
+            THE_CONTEXT.showStartView();
         }
     },
 
@@ -179,7 +179,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute() {
             THE_SOUND.stopAll();
-            THE_GAME_CONTEXT.currentGameScene().ifPresent(GameScene::end);
+            THE_CONTEXT.currentGameScene().ifPresent(GameScene::end);
             if (THE_GAME_CONTROLLER.state() == GameState.TESTING_LEVELS) {
                 THE_GAME_CONTROLLER.state().onExit(THE_GAME_CONTROLLER.game()); //TODO exit other states too?
             }
@@ -208,7 +208,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute() {
             THE_GAME_CONTROLLER.changeState(GameState.TESTING_CUT_SCENES);
-            THE_GAME_CONTEXT.showFlashMessage("Cut scenes test"); //TODO localize
+            THE_CONTEXT.showFlashMessage("Cut scenes test"); //TODO localize
         }
     },
 
@@ -216,7 +216,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute() {
             THE_GAME_CONTROLLER.restart(GameState.TESTING_LEVELS);
-            THE_GAME_CONTEXT.showFlashMessageSec(3, "Level TEST MODE");
+            THE_CONTEXT.showFlashMessageSec(3, "Level TEST MODE");
         }
     },
 
@@ -224,7 +224,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute() {
             THE_GAME_CONTROLLER.restart(GameState.TESTING_LEVEL_TEASERS);
-            THE_GAME_CONTEXT.showFlashMessageSec(3, "Level TEST MODE");
+            THE_CONTEXT.showFlashMessageSec(3, "Level TEST MODE");
         }
     },
 

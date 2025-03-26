@@ -52,8 +52,8 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     @Override
     protected void doInit() {
-        THE_GAME_CONTEXT.setScoreVisible(true);
-        GameActions2D.bindDefaultArcadeControllerActions(this, THE_GAME_CONTEXT.arcadeKeys());
+        THE_CONTEXT.setScoreVisible(true);
+        GameActions2D.bindDefaultArcadeControllerActions(this, THE_CONTEXT.arcadeKeys());
         GameActions2D.bindFallbackPlayerControlActions(this);
         registerGameActionKeyBindings();
     }
@@ -61,10 +61,10 @@ public class ArcadePlayScene2D extends GameScene2D {
     @Override
     public void onLevelCreated(GameEvent e) {
         if (THE_GAME_CONTROLLER.game().isDemoLevel()) {
-            bind(GameActions2D.INSERT_COIN, THE_GAME_CONTEXT.arcadeKeys().key(Arcade.Button.COIN));
+            bind(GameActions2D.INSERT_COIN, THE_CONTEXT.arcadeKeys().key(Arcade.Button.COIN));
         } else {
             GameActions2D.bindCheatActions(this);
-            GameActions2D.bindDefaultArcadeControllerActions(this, THE_GAME_CONTEXT.arcadeKeys());
+            GameActions2D.bindDefaultArcadeControllerActions(this, THE_CONTEXT.arcadeKeys());
             GameActions2D.bindFallbackPlayerControlActions(this);
         }
         registerGameActionKeyBindings();
@@ -129,7 +129,7 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     @Override
     public Vector2f sizeInPx() {
-        return THE_GAME_CONTEXT.worldSizeInTilesOrElse(ARCADE_MAP_SIZE_IN_TILES).scaled(TS).toVector2f();
+        return THE_CONTEXT.worldSizeInTilesOrElse(ARCADE_MAP_SIZE_IN_TILES).scaled(TS).toVector2f();
     }
 
     @Override
@@ -245,7 +245,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         bindGameActions();
         registerGameActionKeyBindings();
         if (gr == null) {
-            setGameRenderer(THE_GAME_CONTEXT.currentUIConfig().createRenderer(canvas));
+            setGameRenderer(THE_CONTEXT.currentUIConfig().createRenderer(canvas));
         }
         THE_GAME_CONTROLLER.game().level().map(GameLevel::worldMap).ifPresent(gr::setWorldMap);
     }

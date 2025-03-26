@@ -26,7 +26,7 @@ import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_S
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.BLUE_BAG_SPRITE;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.JUNIOR_PAC_SPRITE;
-import static de.amr.games.pacman.ui.GameUI.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.GameUI.THE_CONTEXT;
 import static de.amr.games.pacman.ui.GameUI.THE_SOUND;
 
 /**
@@ -66,13 +66,13 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(THE_GAME_CONTROLLER::terminateCurrentState, THE_GAME_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
+        bind(THE_GAME_CONTROLLER::terminateCurrentState, THE_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
     }
 
     @Override
     public void doInit() {
         t = -1;
-        THE_GAME_CONTEXT.setScoreVisible(false);
+        THE_CONTEXT.setScoreVisible(false);
 
         mrPacMan = new Pac();
         msPacMan = new Pac();
@@ -80,7 +80,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         bagWithJunior = new Actor2D();
         bagWithJunior.hide();
 
-        spriteSheet = (TengenMsPacMan_SpriteSheet) THE_GAME_CONTEXT.currentUIConfig().spriteSheet();
+        spriteSheet = (TengenMsPacMan_SpriteSheet) THE_CONTEXT.currentUIConfig().spriteSheet();
         mrPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
 

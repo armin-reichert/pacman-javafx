@@ -17,7 +17,7 @@ import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_MR_PACMAN_MUNCHING;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
-import static de.amr.games.pacman.ui.GameUI.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.GameUI.THE_CONTEXT;
 import static de.amr.games.pacman.ui.GameUI.THE_SOUND;
 
 /**
@@ -50,7 +50,7 @@ public class CutScene3 extends GameScene2D {
 
     @Override
     public void doInit() {
-        THE_GAME_CONTEXT.setScoreVisible(true);
+        THE_CONTEXT.setScoreVisible(true);
 
         pacMan = new Pac();
         msPacMan = new Pac();
@@ -58,7 +58,7 @@ public class CutScene3 extends GameScene2D {
         bag = new Actor2D();
 
         music = THE_SOUND.makeSound("intermission.3");
-        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_GAME_CONTEXT.currentUIConfig().spriteSheet();
+        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_CONTEXT.currentUIConfig().spriteSheet();
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
         pacMan.setAnimations(new PacAnimations(spriteSheet));
 

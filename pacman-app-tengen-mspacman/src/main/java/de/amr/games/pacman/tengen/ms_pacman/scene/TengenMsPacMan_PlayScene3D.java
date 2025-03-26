@@ -24,7 +24,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.ui.GameUI.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.GameUI.THE_CONTEXT;
 import static de.amr.games.pacman.ui.GameUI.THE_SOUND;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindCheatActions;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindFallbackPlayerControlActions;
@@ -53,7 +53,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             var canvas = new Canvas(scale * unscaledWidth, scale * unscaledHeight);
             canvas.getGraphicsContext2D().setImageSmoothing(false); // important!
 
-            var renderer = (TengenMsPacMan_Renderer2D) THE_GAME_CONTEXT.currentUIConfig().createRenderer(canvas);
+            var renderer = (TengenMsPacMan_Renderer2D) THE_CONTEXT.currentUIConfig().createRenderer(canvas);
             renderer.setScaling(scale);
             renderer.fillCanvas(level3D.floorColor());
             renderer.drawGameOptionsInfoCenteredAt(0.5 * unscaledWidth, TS+HTS, game);
@@ -76,16 +76,16 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         bind(GameActions3D.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
         bind(GameActions3D.TOGGLE_DRAW_MODE, alt(KeyCode.W));
         if (THE_GAME_CONTROLLER.game().isDemoLevel()) {
-            bind(TengenMsPacMan_GameActions.QUIT_DEMO_LEVEL, THE_GAME_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
+            bind(TengenMsPacMan_GameActions.QUIT_DEMO_LEVEL, THE_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
         }
         else {
-            bind(GameActions2D.PLAYER_UP,    THE_GAME_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_UP));
-            bind(GameActions2D.PLAYER_DOWN,  THE_GAME_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_DOWN));
-            bind(GameActions2D.PLAYER_LEFT,  THE_GAME_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_LEFT));
-            bind(GameActions2D.PLAYER_RIGHT, THE_GAME_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_RIGHT));
+            bind(GameActions2D.PLAYER_UP,    THE_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_UP));
+            bind(GameActions2D.PLAYER_DOWN,  THE_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_DOWN));
+            bind(GameActions2D.PLAYER_LEFT,  THE_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_LEFT));
+            bind(GameActions2D.PLAYER_RIGHT, THE_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_RIGHT));
             bind(TengenMsPacMan_GameActions.TOGGLE_PAC_BOOSTER,
-                THE_GAME_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_A),
-                THE_GAME_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_B));
+                THE_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_A),
+                THE_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_B));
             bindFallbackPlayerControlActions(this);
             bindCheatActions(this);
             bindFallbackPlayerControlActions(this);
@@ -115,7 +115,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     public void onBonusActivated(GameEvent event) {
         THE_GAME_CONTROLLER.game().level().flatMap(GameLevel::bonus)
-                .ifPresent(bonus -> level3D.replaceBonus3D(bonus, THE_GAME_CONTEXT.currentUIConfig().spriteSheet()));
+                .ifPresent(bonus -> level3D.replaceBonus3D(bonus, THE_CONTEXT.currentUIConfig().spriteSheet()));
         THE_SOUND.playBonusBouncingSound();
     }
 

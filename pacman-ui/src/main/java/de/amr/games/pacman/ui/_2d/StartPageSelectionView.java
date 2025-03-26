@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.ui.GameUI.THE_CLOCK;
-import static de.amr.games.pacman.ui.GameUI.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.GameUI.THE_CONTEXT;
 
 /**
  * Carousel containing the start pages for the different game variants (XXL game variants share common start page).
@@ -27,7 +27,7 @@ public class StartPageSelectionView extends Carousel implements GameActionProvid
     private final GameAction actionSelectGamePage = new GameAction() {
         @Override
         public void execute() {
-            THE_GAME_CONTEXT.showGameView();
+            THE_CONTEXT.showGameView();
         }
 
         @Override
@@ -41,12 +41,12 @@ public class StartPageSelectionView extends Carousel implements GameActionProvid
     public StartPageSelectionView() {
         setOnPrevSlideSelected(startPage -> {
             var variant = (GameVariant) startPage.getUserData();
-            THE_GAME_CONTEXT.setGameVariant(variant);
+            THE_CONTEXT.setGameVariant(variant);
             startPage.requestFocus();
         });
         setOnNextSlideSelected(startPage -> {
             var variant = (GameVariant) startPage.getUserData();
-            THE_GAME_CONTEXT.setGameVariant(variant);
+            THE_CONTEXT.setGameVariant(variant);
             startPage.requestFocus();
         });
         bindGameActions();

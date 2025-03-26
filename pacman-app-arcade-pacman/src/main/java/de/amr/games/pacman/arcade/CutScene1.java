@@ -16,7 +16,7 @@ import javafx.scene.paint.Color;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.*;
-import static de.amr.games.pacman.ui.GameUI.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.GameUI.THE_CONTEXT;
 import static de.amr.games.pacman.ui.GameUI.THE_SOUND;
 
 /**
@@ -36,14 +36,14 @@ public class CutScene1 extends GameScene2D {
 
     @Override
     public void doInit() {
-        THE_GAME_CONTEXT.setScoreVisible(true);
+        THE_CONTEXT.setScoreVisible(true);
         pac = new Pac();
         blinky = ArcadePacMan_GameModel.blinky();
 
         music = THE_SOUND.makeSoundLoop("intermission");
         music.setCycleCount(2);
 
-        var spriteSheet = (ArcadePacMan_SpriteSheet) THE_GAME_CONTEXT.currentUIConfig().spriteSheet();
+        var spriteSheet = (ArcadePacMan_SpriteSheet) THE_CONTEXT.currentUIConfig().spriteSheet();
         pac.setAnimations(new PacAnimations(spriteSheet));
         blinky.setAnimations(new GhostAnimations(spriteSheet, blinky.id()));
 

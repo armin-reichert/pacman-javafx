@@ -17,7 +17,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.ui.GameUI.THE_ASSETS;
-import static de.amr.games.pacman.ui.GameUI.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.GameUI.THE_CONTEXT;
 
 public class TengenMsPacMan_StartPage extends StackPane implements StartPage {
 
@@ -46,7 +46,7 @@ public class TengenMsPacMan_StartPage extends StackPane implements StartPage {
     private Node startButton() {
         ResourceManager rm = () -> PacManGamesUI.class;
         Font startButtonFont = rm.loadFont("fonts/emulogic.ttf", 30);
-        Node btnStart = Ufx.createFancyButton(startButtonFont, THE_ASSETS.localizedText("play_button"), THE_GAME_CONTEXT::showGameView);
+        Node btnStart = Ufx.createFancyButton(startButtonFont, THE_ASSETS.localizedText("play_button"), THE_CONTEXT::showGameView);
         btnStart.setTranslateY(-50);
         StackPane.setAlignment(btnStart, Pos.BOTTOM_CENTER);
         return btnStart;
@@ -54,7 +54,7 @@ public class TengenMsPacMan_StartPage extends StackPane implements StartPage {
 
     @Override
     public void start() {
-        THE_GAME_CONTEXT.showGameView();
+        THE_CONTEXT.showGameView();
     }
 
     @Override

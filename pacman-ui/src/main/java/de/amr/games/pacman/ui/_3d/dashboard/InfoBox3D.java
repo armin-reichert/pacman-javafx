@@ -19,7 +19,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
 
-import static de.amr.games.pacman.ui.GameUI.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.GameUI.THE_CONTEXT;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
 
 /**
@@ -110,8 +110,8 @@ public class InfoBox3D extends InfoBox {
     }
 
     private String sceneViewportSizeInfo() {
-        if (THE_GAME_CONTEXT.currentGameScene().isPresent()
-            && THE_GAME_CONTEXT.currentGameScene().get() instanceof CameraControlledView sgs) {
+        if (THE_CONTEXT.currentGameScene().isPresent()
+            && THE_CONTEXT.currentGameScene().get() instanceof CameraControlledView sgs) {
             return "%.0fx%.0f".formatted(
                 sgs.viewPortWidthProperty().get(),
                 sgs.viewPortHeightProperty().get()
@@ -121,8 +121,8 @@ public class InfoBox3D extends InfoBox {
     }
 
     private String sceneSizeInfo() {
-        if (THE_GAME_CONTEXT.currentGameScene().isPresent()) {
-            GameScene gameScene = THE_GAME_CONTEXT.currentGameScene().get();
+        if (THE_CONTEXT.currentGameScene().isPresent()) {
+            GameScene gameScene = THE_CONTEXT.currentGameScene().get();
             Vector2f size = gameScene.sizeInPx();
             if (gameScene instanceof GameScene2D gameScene2D) {
                 double scaling = gameScene2D.scaling();
@@ -136,8 +136,8 @@ public class InfoBox3D extends InfoBox {
     }
 
     private String sceneCameraInfo() {
-        if (THE_GAME_CONTEXT.currentGameScene().isPresent()
-            && THE_GAME_CONTEXT.currentGameScene().get() instanceof CameraControlledView scrollableGameScene) {
+        if (THE_CONTEXT.currentGameScene().isPresent()
+            && THE_CONTEXT.currentGameScene().get() instanceof CameraControlledView scrollableGameScene) {
             var cam = scrollableGameScene.camera();
             return String.format("rot=%.0f x=%.0f y=%.0f z=%.0f",
                 cam.getRotate(), cam.getTranslateX(), cam.getTranslateY(), cam.getTranslateZ());

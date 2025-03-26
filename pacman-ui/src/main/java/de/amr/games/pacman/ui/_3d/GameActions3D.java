@@ -9,7 +9,7 @@ import de.amr.games.pacman.ui._3d.scene3d.Perspective;
 import javafx.scene.shape.DrawMode;
 
 import static de.amr.games.pacman.ui.GameUI.THE_ASSETS;
-import static de.amr.games.pacman.ui.GameUI.THE_GAME_CONTEXT;
+import static de.amr.games.pacman.ui.GameUI.THE_CONTEXT;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_PIP_ON;
 import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_DRAW_MODE;
 import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_PERSPECTIVE;
@@ -25,7 +25,7 @@ public enum GameActions3D implements GameAction {
         public void execute() {
             Perspective.Name next = PY_3D_PERSPECTIVE.get().next();
             PY_3D_PERSPECTIVE.set(next);
-            THE_GAME_CONTEXT.showFlashMessage(THE_ASSETS.localizedText("camera_perspective", THE_ASSETS.localizedText(next.name())));
+            THE_CONTEXT.showFlashMessage(THE_ASSETS.localizedText("camera_perspective", THE_ASSETS.localizedText(next.name())));
         }
     },
 
@@ -34,7 +34,7 @@ public enum GameActions3D implements GameAction {
         public void execute() {
             Perspective.Name prev = PY_3D_PERSPECTIVE.get().prev();
             PY_3D_PERSPECTIVE.set(prev);
-            THE_GAME_CONTEXT.showFlashMessage(THE_ASSETS.localizedText("camera_perspective", THE_ASSETS.localizedText(prev.name())));
+            THE_CONTEXT.showFlashMessage(THE_ASSETS.localizedText("camera_perspective", THE_ASSETS.localizedText(prev.name())));
         }
     },
 
@@ -48,7 +48,7 @@ public enum GameActions3D implements GameAction {
     TOGGLE_PLAY_SCENE_2D_3D {
         @Override
         public void execute() {
-            THE_GAME_CONTEXT.togglePlayScene2D3D();
+            THE_CONTEXT.togglePlayScene2D3D();
         }
     },
 
@@ -56,8 +56,8 @@ public enum GameActions3D implements GameAction {
         @Override
         public void execute() {
             toggle(PY_PIP_ON);
-            if (!THE_GAME_CONTEXT.currentGameSceneIsPlayScene3D()) {
-                THE_GAME_CONTEXT.showFlashMessage(THE_ASSETS.localizedText(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
+            if (!THE_CONTEXT.currentGameSceneIsPlayScene3D()) {
+                THE_CONTEXT.showFlashMessage(THE_ASSETS.localizedText(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
             }
         }
     }
