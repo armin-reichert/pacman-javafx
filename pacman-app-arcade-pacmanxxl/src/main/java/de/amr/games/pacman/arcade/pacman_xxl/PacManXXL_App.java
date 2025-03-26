@@ -51,7 +51,7 @@ public class PacManXXL_App extends Application {
         THE_UI.addStartPage(GameVariant.PACMAN_XXL,    xxlStartPage);
         THE_UI.addStartPage(GameVariant.MS_PACMAN_XXL, xxlStartPage);
 
-        stage.show();
+        THE_UI.show();
     }
 
     private static Dimension2D initialSize() {
