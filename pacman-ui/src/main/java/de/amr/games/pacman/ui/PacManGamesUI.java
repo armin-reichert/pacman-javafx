@@ -130,7 +130,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
         startPageSelectionView = new StartPageSelectionView();
         startPageSelectionView().setBackground(THE_ASSETS.background("background.scene"));
         createGameView(mainScene);
-        setGameVariant(THE_GAME_CONTROLLER.selectedGameVariant());
+        init(THE_GAME_CONTROLLER.selectedGameVariant());
         bindStageTitle();
         setGlobalKeyboardShortcuts();
         stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
@@ -410,7 +410,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
     }
 
     @Override
-    public void setGameVariant(GameVariant variant) {
+    public void init(GameVariant variant) {
         handleGameVariantChange(variant);
     }
 

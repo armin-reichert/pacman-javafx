@@ -22,7 +22,7 @@ import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 public interface GameUI {
 
     // Game model and controller
-    void setGameVariant(GameVariant variant);
+    void init(GameVariant variant);
 
     // Input
     ArcadeKeyBinding arcadeKeys();

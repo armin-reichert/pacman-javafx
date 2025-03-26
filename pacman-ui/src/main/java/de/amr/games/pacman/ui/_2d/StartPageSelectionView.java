@@ -41,12 +41,12 @@ public class StartPageSelectionView extends Carousel implements GameActionProvid
     public StartPageSelectionView() {
         setOnPrevSlideSelected(startPage -> {
             var variant = (GameVariant) startPage.getUserData();
-            THE_UI.setGameVariant(variant);
+            THE_UI.init(variant);
             startPage.requestFocus();
         });
         setOnNextSlideSelected(startPage -> {
             var variant = (GameVariant) startPage.getUserData();
-            THE_UI.setGameVariant(variant);
+            THE_UI.init(variant);
             startPage.requestFocus();
         });
         bindGameActions();

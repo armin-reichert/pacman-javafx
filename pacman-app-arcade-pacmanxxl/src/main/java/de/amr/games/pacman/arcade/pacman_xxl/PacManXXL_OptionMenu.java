@@ -49,12 +49,12 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         setOnStart(() -> {
             logMenuState();
             if (state.gameVariant == GameVariant.PACMAN_XXL || state.gameVariant == GameVariant.MS_PACMAN_XXL) {
-                THE_UI.setGameVariant(state.gameVariant);
                 PY_3D_ENABLED.set(state.play3D);
                 GameModel game = THE_GAME_CONTROLLER.game(state.gameVariant);
                 game.setCutScenesEnabled(state.cutScenesEnabled);
                 game.mapSelector().setMapSelectionMode(state.mapSelectionMode);
                 game.mapSelector().loadAllMaps(game);
+                THE_UI.init(state.gameVariant);
             } else {
                 Logger.error("Game variant {} is not allowed for XXL game", state.gameVariant);
             }
