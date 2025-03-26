@@ -6,6 +6,7 @@ package de.amr.games.pacman.arcade.pacman_xxl;
 
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.MapSelector;
 import de.amr.games.pacman.ui._2d.StartPage;
 import de.amr.games.pacman.ui._3d.GlobalProperties3d;
 import de.amr.games.pacman.uilib.Flyer;
@@ -17,13 +18,17 @@ import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 
-public class PacManXXL_StartPage extends StackPane implements StartPage {
+public class PacManXXL_StartPage extends StackPane implements StartPage, ResourceManager {
 
     private final PacManXXL_OptionMenu menu;
 
+    @Override
+    public Class<?> resourceRootClass() {
+        return PacManXXL_StartPage.class;
+    }
+
     public PacManXXL_StartPage() {
-        ResourceManager rm = this::getClass;
-        Flyer flyer = new Flyer(rm.loadImage("graphics/pacman_xxl_startpage.jpg"));
+        Flyer flyer = new Flyer(loadImage("graphics/pacman_xxl_startpage.jpg"));
         flyer.selectFlyerPage(0);
         flyer.setLayoutMode(0, Flyer.LayoutMode.FILL);
 
@@ -33,16 +38,17 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
     }
 
     private void initMenuState(GameVariant gameVariant) {
-        GameModel game = THE_GAME_CONTROLLER.game(gameVariant);
         switch (gameVariant) {
             case MS_PACMAN_XXL, PACMAN_XXL -> {
-                game.mapSelector().loadAllMaps(game);
+                GameModel game = THE_GAME_CONTROLLER.game(gameVariant);
+                MapSelector mapSelector = game.mapSelector();
+                mapSelector.loadAllMaps(game);
                 menu.setState(
                     GlobalProperties3d.PY_3D_ENABLED.get(),
                     gameVariant,
                     game.isCutScenesEnabled(),
-                    game.mapSelector().mapSelectionMode(),
-                    !game.mapSelector().customMaps().isEmpty()
+                    mapSelector.mapSelectionMode(),
+                    !mapSelector.customMaps().isEmpty()
                 );
             }
             default -> throw new IllegalStateException("Illegal game variant for this start page: %s".formatted(gameVariant));

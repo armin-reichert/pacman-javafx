@@ -18,7 +18,7 @@ public class GameAssets extends AssetStorage implements ResourceManager {
     protected Picker<String> pickerForLevelCompleteTexts;
 
     @Override
-    public Class<?> rootClass() {
+    public Class<?> resourceRootClass() {
         return GameAssets.class;
     }
 

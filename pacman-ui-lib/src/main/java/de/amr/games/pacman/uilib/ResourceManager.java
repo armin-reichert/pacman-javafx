@@ -39,7 +39,7 @@ public interface ResourceManager {
     /**
      * @return class relative to which resources are loaded if the path does not start with '/'
      */
-    Class<?> rootClass();
+    Class<?> resourceRootClass();
 
     /**
      * Creates a URL from a resource path.
@@ -49,17 +49,17 @@ public interface ResourceManager {
      */
     default URL url(String path) {
         Globals.assertNotNull(path);
-        URL url = rootClass().getResource(path);
+        URL url = resourceRootClass().getResource(path);
         if (url == null) {
             throw new MissingResourceException(
-                "Resource '%s' not found relative to class '%s'".formatted(path, rootClass().getName()),
-                rootClass().getName(), path);
+                "Resource '%s' not found relative to class '%s'".formatted(path, resourceRootClass().getName()),
+                resourceRootClass().getName(), path);
         }
         return url;
     }
 
     default ResourceBundle getModuleBundle(String baseName) {
-        return ResourceBundle.getBundle(baseName, rootClass().getModule());
+        return ResourceBundle.getBundle(baseName, resourceRootClass().getModule());
     }
 
     /**
