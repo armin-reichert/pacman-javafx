@@ -10,9 +10,12 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._2d.StartPageSelectionView;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
+import de.amr.games.pacman.ui.input.Keyboard;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.scene.Node;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.Pane;
 
 import java.util.Optional;
@@ -21,15 +24,14 @@ import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 
 public interface GameUI {
 
-    // Game model and controller
-    void init(GameVariant variant);
+    KeyCodeCombination KEY_FULLSCREEN = Keyboard.naked(KeyCode.F11);
+    KeyCodeCombination KEY_MUTE = Keyboard.alt(KeyCode.M);
+    KeyCodeCombination KEY_OPEN_EDITOR = Keyboard.shift_alt(KeyCode.E);
 
-    // Input
     ArcadeKeyBinding arcadeKeys();
     JoypadKeyBinding joypadKeyBinding();
     void selectNextJoypadKeyBinding();
 
-    // GUI
     default GameUIConfiguration currentUIConfig() { return gameConfiguration(THE_GAME_CONTROLLER.selectedGameVariant()); }
 
     Optional<GameScene> currentGameScene();
@@ -53,6 +55,8 @@ public interface GameUI {
     Pane gameView();
 
     ObjectProperty<GameScene> gameSceneProperty();
+
+    void init(GameVariant variant);
 
     boolean isScoreVisible();
 

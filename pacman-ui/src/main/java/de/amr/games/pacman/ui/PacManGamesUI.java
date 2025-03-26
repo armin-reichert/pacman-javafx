@@ -12,7 +12,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._2d.*;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
-import de.amr.games.pacman.ui.input.Keyboard;
 import de.amr.games.pacman.uilib.FlashMessageView;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -23,8 +22,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -52,10 +49,6 @@ import static de.amr.games.pacman.uilib.Ufx.createIcon;
  * @author Armin Reichert
  */
 public class PacManGamesUI implements GameEventListener, GameUI {
-
-    private static final KeyCodeCombination KEY_FULLSCREEN = Keyboard.naked(KeyCode.F11);
-    private static final KeyCodeCombination KEY_MUTE = Keyboard.alt(KeyCode.M);
-    private static final KeyCodeCombination KEY_OPEN_EDITOR = Keyboard.shift_alt(KeyCode.E);
 
     protected final GameAction actionOpenEditorView = new GameAction() {
         @Override
@@ -126,13 +119,12 @@ public class PacManGamesUI implements GameEventListener, GameUI {
      */
     public void create(Stage stage, Dimension2D initialSize) {
         this.stage = assertNotNull(stage);
-        mainScene = createMainScene(assertNotNull(initialSize));
+        createMainScene(assertNotNull(initialSize));
         startPageSelectionView = new StartPageSelectionView();
         startPageSelectionView().setBackground(THE_ASSETS.background("background.scene"));
         createGameView(mainScene);
         init(THE_GAME_CONTROLLER.selectedGameVariant());
         bindStageTitle();
-        setGlobalKeyboardShortcuts();
         stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
         stage.setMinHeight(ARCADE_MAP_SIZE_IN_PIXELS.y() * 1.25);
         stage.setScene(mainScene);
@@ -198,34 +190,34 @@ public class PacManGamesUI implements GameEventListener, GameUI {
         return pane;
     }
 
-    protected Scene createMainScene(Dimension2D size) {
+    // icons indicating autopilot, mute state
+    private void addIconPane() {
         Pane iconPane = createIconPane();
-
         ImageView pauseIcon = createIcon(THE_ASSETS.get("icon.pause"), 64, THE_CLOCK.pausedProperty());
         pauseIcon.visibleProperty().bind(Bindings.createBooleanBinding(
             () -> viewPy.get() != editorView && THE_CLOCK.isPaused(), viewPy, THE_CLOCK.pausedProperty()));
-
-        StackPane.setAlignment(iconPane, Pos.BOTTOM_RIGHT);
         StackPane.setAlignment(pauseIcon, Pos.CENTER);
+        StackPane.setAlignment(iconPane, Pos.BOTTOM_RIGHT);
+        sceneRoot.getChildren().addAll(pauseIcon, iconPane);
+    }
 
-        sceneRoot.getChildren().addAll(new Pane(), flashMessageOverlay, pauseIcon, iconPane);
+    protected void createMainScene(Dimension2D size) {
+        sceneRoot.getChildren().addAll(new Pane(), flashMessageOverlay);
         sceneRoot.setBackground(THE_ASSETS.get("background.scene"));
         sceneRoot.backgroundProperty().bind(gameScenePy.map(
             gameScene -> currentGameSceneIsPlayScene3D()
                 ? THE_ASSETS.get("background.play_scene3d")
                 : THE_ASSETS.get("background.scene"))
         );
+        addIconPane();
 
-        Scene mainScene = new Scene(sceneRoot, size.getWidth(), size.getHeight());
+        mainScene = new Scene(sceneRoot, size.getWidth(), size.getHeight());
         mainScene.widthProperty() .addListener((py,ov,nv) -> gameView.setSize(mainScene.getWidth(), mainScene.getHeight()));
         mainScene.heightProperty().addListener((py,ov,nv) -> gameView.setSize(mainScene.getWidth(), mainScene.getHeight()));
 
         mainScene.addEventFilter(KeyEvent.KEY_PRESSED, THE_KEYBOARD::onKeyPressed);
         mainScene.addEventFilter(KeyEvent.KEY_RELEASED, THE_KEYBOARD::onKeyReleased);
-        return mainScene;
-    }
 
-    protected void setGlobalKeyboardShortcuts() {
         mainScene.setOnKeyPressed(keyPress -> {
             if (KEY_FULLSCREEN.match(keyPress)) {
                 enterFullScreenMode();
