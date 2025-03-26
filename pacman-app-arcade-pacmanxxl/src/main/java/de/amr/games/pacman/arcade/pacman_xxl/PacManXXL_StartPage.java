@@ -20,7 +20,7 @@ import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 
 public class PacManXXL_StartPage extends StackPane implements StartPage, ResourceManager {
 
-    private final PacManXXL_OptionMenu menu;
+    private final PacManXXL_OptionMenu menu = new PacManXXL_OptionMenu();
 
     @Override
     public Class<?> resourceRootClass() {
@@ -28,16 +28,23 @@ public class PacManXXL_StartPage extends StackPane implements StartPage, Resourc
     }
 
     public PacManXXL_StartPage() {
+        setBackground(Background.fill(Color.BLACK));
         Flyer flyer = new Flyer(loadImage("graphics/pacman_xxl_startpage.jpg"));
         flyer.selectFlyerPage(0);
         flyer.setLayoutMode(0, Flyer.LayoutMode.FILL);
-
-        menu = new PacManXXL_OptionMenu();
         getChildren().addAll(flyer, menu.root());
-        setBackground(Background.fill(Color.BLACK));
     }
 
-    private void initMenuState(GameVariant gameVariant) {
+    @Override
+    public void start() {}
+
+    @Override
+    public Node root() {
+        return this;
+    }
+
+    @Override
+    public void onSelected(GameVariant gameVariant) {
         switch (gameVariant) {
             case MS_PACMAN_XXL, PACMAN_XXL -> {
                 GameModel game = THE_GAME_CONTROLLER.game(gameVariant);
@@ -53,21 +60,8 @@ public class PacManXXL_StartPage extends StackPane implements StartPage, Resourc
             }
             default -> throw new IllegalStateException("Illegal game variant for this start page: %s".formatted(gameVariant));
         }
-    }
-
-    @Override
-    public void start() {}
-
-    @Override
-    public Node root() {
-        return this;
-    }
-
-    @Override
-    public void onSelected(GameVariant gameVariant) {
-        initMenuState(gameVariant);
-        menu.startDrawingLoop();
         menu.root().requestFocus();
+        menu.startDrawingLoop();
     }
 
     @Override
