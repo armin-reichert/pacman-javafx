@@ -36,8 +36,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
-import static de.amr.games.pacman.ui.UIGlobals.THE_CLOCK;
+import static de.amr.games.pacman.ui.UIGlobals.*;
 
 /**
  * Application containing all game variants and including 3D play scene.
@@ -70,29 +69,29 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        GameUI ui = GameUI.create(Map.of(
+        GameUI.create(Map.of(
             GameVariant.PACMAN, new ArcadePacMan_UIConfig(),
             GameVariant.MS_PACMAN, new ArcadeMsPacMan_UIConfig(),
             GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_UIConfig(),
             GameVariant.PACMAN_XXL, new PacManXXL_PacMan_UIConfig(),
             GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_UIConfig()
         ), true);
-        ui.create(stage, initialSize());
-        ui.addDefaultDashboardItems("README", "GENERAL", "GAME_CONTROL", "SETTINGS_3D", "GAME_INFO",
+        THE_UI.create(stage, initialSize());
+        THE_UI.addDefaultDashboardItems("README", "GENERAL", "GAME_CONTROL", "SETTINGS_3D", "GAME_INFO",
             "ACTOR_INFO", "CUSTOM_MAPS", "JOYPAD", "KEYBOARD", "ABOUT");
 
-        InfoBoxCustomMaps infoBoxCustomMaps = ui.gameView().dashboard().getItem("CUSTOM_MAPS");
+        InfoBoxCustomMaps infoBoxCustomMaps = THE_UI.gameView().dashboard().getItem("CUSTOM_MAPS");
         infoBoxCustomMaps.setTableItems(xxlMapSelector.customMaps());
 
-        ui.addStartPage(GameVariant.PACMAN,           new ArcadePacMan_StartPage());
-        ui.addStartPage(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_StartPage());
-        ui.addStartPage(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_StartPage());
+        THE_UI.addStartPage(GameVariant.PACMAN,           new ArcadePacMan_StartPage());
+        THE_UI.addStartPage(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_StartPage());
+        THE_UI.addStartPage(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_StartPage());
 
         StartPage xxlStartPage = new PacManXXL_StartPage();
-        ui.addStartPage(GameVariant.PACMAN_XXL,    xxlStartPage);
-        ui.addStartPage(GameVariant.MS_PACMAN_XXL, xxlStartPage);
+        THE_UI.addStartPage(GameVariant.PACMAN_XXL,    xxlStartPage);
+        THE_UI.addStartPage(GameVariant.MS_PACMAN_XXL, xxlStartPage);
 
-        ui.show();
+        THE_UI.show();
 
         DirectoryWatchdog goodBoy = new DirectoryWatchdog(GameModel.CUSTOM_MAP_DIR);
         goodBoy.setEventConsumer(eventList -> {

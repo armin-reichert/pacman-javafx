@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import java.util.Map;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
+import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 
 public class PacManXXL_App extends Application {
 
@@ -35,20 +36,20 @@ public class PacManXXL_App extends Application {
 
     @Override
     public void start(Stage stage) {
-        GameUI ui = GameUI.create(Map.of(
+        GameUI.create(Map.of(
             GameVariant.PACMAN_XXL, new PacManXXL_PacMan_UIConfig(),
             GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_UIConfig()
         ), true);
-        ui.create(stage, initialSize());
-        ui.addDefaultDashboardItems("README", "GENERAL", "GAME_CONTROL", "SETTINGS_3D", "GAME_INFO",
+        THE_UI.create(stage, initialSize());
+        THE_UI.addDefaultDashboardItems("README", "GENERAL", "GAME_CONTROL", "SETTINGS_3D", "GAME_INFO",
             "ACTOR_INFO", "CUSTOM_MAPS", "KEYBOARD", "ABOUT");
 
-        InfoBoxCustomMaps infoBoxCustomMaps = ui.gameView().dashboard().getItem("CUSTOM_MAPS");
+        InfoBoxCustomMaps infoBoxCustomMaps = THE_UI.gameView().dashboard().getItem("CUSTOM_MAPS");
         infoBoxCustomMaps.setTableItems(xxlMapSelector.customMaps());
 
         StartPage xxlStartPage = new PacManXXL_StartPage();
-        ui.startPageSelectionView().addStartPage(GameVariant.PACMAN_XXL,    xxlStartPage);
-        ui.startPageSelectionView().addStartPage(GameVariant.MS_PACMAN_XXL, xxlStartPage);
+        THE_UI.addStartPage(GameVariant.PACMAN_XXL,    xxlStartPage);
+        THE_UI.addStartPage(GameVariant.MS_PACMAN_XXL, xxlStartPage);
 
         stage.show();
     }

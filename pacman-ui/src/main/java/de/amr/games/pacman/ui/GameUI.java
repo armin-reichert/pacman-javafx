@@ -28,16 +28,14 @@ import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 
 public interface GameUI {
 
-    static GameUI create(Map<GameVariant, GameUIConfiguration> configMap, boolean support3D) {
-        var ui = support3D ? new PacManGamesUI_3D() : new PacManGamesUI();
+    static void create(Map<GameVariant, GameUIConfiguration> configMap, boolean support3D) {
+        THE_UI = support3D ? new PacManGamesUI_3D() : new PacManGamesUI();
         if (support3D) {
             THE_ASSETS.addAssets3D();
         }
         for (var entry : configMap.entrySet()) {
-            ui.configure(entry.getKey(), entry.getValue());
+            THE_UI.configure(entry.getKey(), entry.getValue());
         }
-        THE_UI = ui;
-        return ui;
     }
 
 
@@ -52,6 +50,8 @@ public interface GameUI {
     void addStartPage(GameVariant gameVariant, StartPage startPage);
 
     void addDefaultDashboardItems(String... titles);
+
+    void configure(GameVariant gameVariant, GameUIConfiguration configuration);
 
     void create(Stage stage, Dimension2D size);
 
