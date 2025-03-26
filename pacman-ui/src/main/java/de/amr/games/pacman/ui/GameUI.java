@@ -28,7 +28,7 @@ import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 
 public interface GameUI {
 
-    static PacManGamesUI create(Map<GameVariant, GameUIConfiguration> configMap, boolean support3D) {
+    static GameUI create(Map<GameVariant, GameUIConfiguration> configMap, boolean support3D) {
         var ui = support3D ? new PacManGamesUI_3D() : new PacManGamesUI();
         if (support3D) {
             THE_ASSETS.addAssets3D();
