@@ -65,21 +65,23 @@ public class Keyboard {
         }
     }
 
-    public void onKeyPressed(KeyEvent keyPress) {
-        pressedKeys.add(keyPress.getCode());
-        knownCombinations.keySet().stream().filter(kcc -> kcc.match(keyPress)).forEach(matches::add);
+    public void onKeyPressed(KeyEvent key) {
+        pressedKeys.add(key.getCode());
+        knownCombinations.keySet().stream().filter(kcc -> kcc.match(key)).forEach(matches::add);
+        Logger.debug("Key pressed: {}", key);
     }
 
-    public void onKeyReleased(KeyEvent keyRelease) {
-        pressedKeys.remove(keyRelease.getCode());
+    public void onKeyReleased(KeyEvent key) {
+        pressedKeys.remove(key.getCode());
         matches.clear();
+        Logger.debug("Key released: {}", key);
     }
 
     public boolean isMatching(KeyCodeCombination combination) {
         return matches.contains(combination);
     }
 
-    public boolean pressed(KeyCode keyCode) {
+    public boolean isPressed(KeyCode keyCode) {
         return pressedKeys.contains(keyCode);
     }
 }

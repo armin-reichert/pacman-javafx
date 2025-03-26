@@ -70,7 +70,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
 
     protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
 
-    protected final ObjectProperty<Node> viewPy = new SimpleObjectProperty<>();
+    protected final ObjectProperty<View> viewPy = new SimpleObjectProperty<>();
 
     protected final Map<GameVariant, GameUIConfiguration> uiConfigMap = new EnumMap<>(GameVariant.class);
 
@@ -93,21 +93,21 @@ public class PacManGamesUI implements GameEventListener, GameUI {
     public PacManGamesUI() {
         THE_CLOCK.setPauseableCallback(this::runOnEveryTickExceptWhenPaused);
         THE_CLOCK.setPermanentCallback(this::runOnEveryTick);
-        viewPy.addListener((py, oldView, newView) -> {
-            if (oldView instanceof GameActionProvider oldActionProvider) {
-                oldActionProvider.unregisterGameActionKeyBindings();
-            }
-            if (newView instanceof GameActionProvider newActionProvider) {
-                newActionProvider.registerGameActionKeyBindings();
-            }
-            if (oldView instanceof GameEventListener oldGameEventListener) {
+        viewPy.addListener((py, ov, nv) -> {
+            if (ov instanceof GameEventListener oldGameEventListener) {
                 THE_GAME_CONTROLLER.game().removeGameEventListener(oldGameEventListener);
             }
-            if (newView instanceof GameEventListener newGameEventListener) {
+            if (nv instanceof GameEventListener newGameEventListener) {
                 THE_GAME_CONTROLLER.game().addGameEventListener(newGameEventListener);
             }
-            sceneRoot.getChildren().set(0, newView);
-            newView.requestFocus();
+            if (ov instanceof View oldView) {
+                oldView.unregisterGameActionKeyBindings();
+            }
+            if (nv instanceof View newView) {
+                newView.registerGameActionKeyBindings();
+                sceneRoot.getChildren().set(0, newView.node());
+                newView.node().requestFocus();
+            }
         });
     }
 
@@ -120,8 +120,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
     public void create(Stage stage, Dimension2D initialSize) {
         this.stage = assertNotNull(stage);
         createMainScene(assertNotNull(initialSize));
-        startPageSelectionView = new StartPageSelectionView();
-        startPageSelectionView().setBackground(THE_ASSETS.background("background.scene"));
+        createStartPageSelectionView();
         createGameView(mainScene);
         init(THE_GAME_CONTROLLER.selectedGameVariant());
         bindStageTitle();
@@ -247,6 +246,17 @@ public class PacManGamesUI implements GameEventListener, GameUI {
         }
         return editorView;
     }
+    protected void createStartPageSelectionView() {
+        startPageSelectionView = new StartPageSelectionView();
+        startPageSelectionView().setBackground(THE_ASSETS.background("background.scene"));
+        viewPy.addListener((py,ov,newView) -> {
+            if (newView == startPageSelectionView) {
+                startPageSelectionView.currentStartPage().ifPresent(startPage -> {
+                    startPage.onSelected(THE_GAME_CONTROLLER.selectedGameVariant());
+                });
+            }
+        });
+    }
 
     protected void createGameView(Scene parentScene) {
         gameView = new GameView(parentScene);
@@ -359,7 +369,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
     }
 
     @Override
-    public ObjectProperty<Node> viewProperty() { return viewPy; }
+    public ObjectProperty<View> viewProperty() { return viewPy; }
 
     @Override
     public GameView gameView() {
@@ -412,8 +422,8 @@ public class PacManGamesUI implements GameEventListener, GameUI {
         gameScenePy.set(null);
         gameView.hideDashboard(); // TODO use binding?
         viewPy.set(startPageSelectionView);
-        // Note: this must be called last such that option menu gets focus!
-        startPageSelectionView.currentSlide().ifPresent(Node::requestFocus);
+        //TODO this is needed for XXL option menu
+        startPageSelectionView.currentStartPage().ifPresent(startPage -> startPage.onSelected(THE_GAME_CONTROLLER.selectedGameVariant()));
     }
 
     @Override

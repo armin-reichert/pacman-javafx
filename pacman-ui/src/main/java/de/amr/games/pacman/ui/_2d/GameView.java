@@ -9,15 +9,13 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.CameraControlledView;
-import de.amr.games.pacman.ui.GameAction;
-import de.amr.games.pacman.ui.GameActionProvider;
-import de.amr.games.pacman.ui.GameScene;
+import de.amr.games.pacman.ui.*;
 import de.amr.games.pacman.ui.dashboard.*;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -49,7 +47,7 @@ import static de.amr.games.pacman.uilib.Ufx.*;
 /**
  * This view shows the game play and the overlays like dashboard and picture-in-picture view of the running play scene.
  */
-public class GameView extends StackPane implements GameActionProvider, GameEventListener {
+public class GameView extends StackPane implements View, GameEventListener {
 
     private static final double MAX_SCENE_SCALING = 5;
 
@@ -160,6 +158,11 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
         //TODO is this the recommended way to close an open context-menu?
         setOnMouseClicked(e -> { if (contextMenu != null) contextMenu.hide(); });
         bindGameActions();
+    }
+
+    @Override
+    public Node node() {
+        return this;
     }
 
     public ObjectProperty<GameScene> gameSceneProperty() { return gameScenePy; }

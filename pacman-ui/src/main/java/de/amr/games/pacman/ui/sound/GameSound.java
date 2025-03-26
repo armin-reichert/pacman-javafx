@@ -29,7 +29,7 @@ public class GameSound {
     private final BooleanProperty enabledPy = new SimpleBooleanProperty(true) {
         @Override
         protected void invalidated() {
-            Logger.info("Game sound is {}", get() ? "enabled" : "disabled");
+            Logger.debug("Game sound is {}", get() ? "enabled" : "disabled");
         }
     };
 
@@ -73,7 +73,7 @@ public class GameSound {
         player.setVolume(1.0);
         player.muteProperty().bind(mutedPy);
         player.statusProperty().addListener((py,ov,nv) -> logPlayerStatusChange(player, keySuffix, ov, nv));
-        Logger.info("Media player created from URL {}", url);
+        Logger.debug("Media player created from URL {}", url);
         return player;
     }
 
@@ -102,7 +102,7 @@ public class GameSound {
             }
 
             soundsByGameVariant.put(gameVariant, soundMap);
-            Logger.info("Created sound map for game variant {}", gameVariant);
+            Logger.debug("Created sound map for game variant {}", gameVariant);
         }
         siren = null;
         logPlayerStatus();
@@ -110,7 +110,7 @@ public class GameSound {
 
     public void playVoice(String voiceClipID, double delaySeconds) {
         if (voice != null) {
-            Logger.info("Cannot play voice {}, another voice is already playing", voiceClipID);
+            Logger.debug("Cannot play voice {}, another voice is already playing", voiceClipID);
             return;
         }
         URL url = THE_ASSETS.get(voiceClipID);
@@ -211,7 +211,7 @@ public class GameSound {
         stopMunchingSound(); // TODO check
         stopSiren();
         stopVoice();
-        Logger.info("All sounds stopped ({})", gameVariant);
+        Logger.debug("All sounds stopped ({})", gameVariant);
     }
 
     public void setEnabled(boolean enabled) {

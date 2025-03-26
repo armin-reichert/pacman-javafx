@@ -8,7 +8,9 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.tilemap.editor.TileMapEditor;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameActionProvider;
+import de.amr.games.pacman.ui.View;
 import de.amr.games.pacman.uilib.Ufx;
+import javafx.scene.Node;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.KeyCodeCombination;
@@ -23,7 +25,7 @@ import java.util.function.Consumer;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
 
-public class EditorView extends BorderPane implements GameActionProvider {
+public class EditorView extends BorderPane implements View {
 
     private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
     private final TileMapEditor editor;
@@ -44,6 +46,11 @@ public class EditorView extends BorderPane implements GameActionProvider {
         setBackground(Ufx.coloredBackground(Color.web("#dddddd"))); // JavaFX default grey
         setCenter(editor.getContentPane());
         setTop(editor.getMenuBar());
+    }
+
+    @Override
+    public Node node() {
+        return this;
     }
 
     @Override

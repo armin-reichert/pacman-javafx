@@ -6,15 +6,15 @@ package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.GameAction;
-import de.amr.games.pacman.ui.GameActionProvider;
+import de.amr.games.pacman.ui.View;
 import de.amr.games.pacman.uilib.Carousel;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.layout.Background;
 import org.tinylog.Logger;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static de.amr.games.pacman.ui.UIGlobals.THE_CLOCK;
 import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
@@ -22,7 +22,7 @@ import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 /**
  * Carousel containing the start pages for the different game variants (XXL game variants share common start page).
  */
-public class StartPageSelectionView extends Carousel implements GameActionProvider {
+public class StartPageSelectionView implements View {
 
     private final GameAction actionSelectGamePage = new GameAction() {
         @Override
@@ -36,20 +36,38 @@ public class StartPageSelectionView extends Carousel implements GameActionProvid
         }
     };
 
+    private final List<StartPage> startPageList = new ArrayList<>();
     private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
+    private final Carousel carousel;
 
     public StartPageSelectionView() {
-        setOnPrevSlideSelected(startPage -> {
-            var variant = (GameVariant) startPage.getUserData();
-            THE_UI.init(variant);
-            startPage.requestFocus();
+        carousel = new Carousel();
+        carousel.setOnPrevSlideSelected(startPage -> {
+            var gameVariant = (GameVariant) startPage.getUserData();
+            THE_UI.init(gameVariant);
         });
-        setOnNextSlideSelected(startPage -> {
-            var variant = (GameVariant) startPage.getUserData();
-            THE_UI.init(variant);
-            startPage.requestFocus();
+        carousel.setOnNextSlideSelected(startPage -> {
+            var gameVariant = (GameVariant) startPage.getUserData();
+            THE_UI.init(gameVariant);
+        });
+        carousel.selectedIndexProperty().addListener((py,ov,nv) -> {
+            int oldIndex = ov.intValue(), newIndex = nv.intValue();
+            if (oldIndex != -1) {
+                StartPage startPage = startPageList.get(oldIndex);
+                GameVariant gameVariant = (GameVariant) carousel.slide(oldIndex).getUserData();
+                startPage.onDeselected(gameVariant);
+            }
+            if (newIndex != -1) {
+                GameVariant gameVariant = (GameVariant) carousel.slide(newIndex).getUserData();
+                startPageList.get(newIndex).onSelected(gameVariant);
+            }
         });
         bindGameActions();
+    }
+
+    @Override
+    public Node node() {
+        return carousel;
     }
 
     @Override
@@ -59,25 +77,36 @@ public class StartPageSelectionView extends Carousel implements GameActionProvid
 
     @Override
     public void bindGameActions() {
-        bind(this::showPreviousSlide,     KeyCode.LEFT);
-        bind(this::showNextSlide,         KeyCode.RIGHT);
+        bind(carousel::showPreviousSlide, KeyCode.LEFT);
+        bind(carousel::showNextSlide,     KeyCode.RIGHT);
         bind(actionSelectGamePage,        KeyCode.ENTER);
         bind(GameActions2D.TOGGLE_PAUSED, KeyCode.P);
     }
 
+    public Carousel carousel() { return carousel; }
+
+    public Optional<StartPage> currentStartPage() {
+        if (carousel.selectedIndex() == -1) {
+            return Optional.empty();
+        }
+        return Optional.of(startPageList.get(carousel.selectedIndex()));
+    }
+
     public void addStartPage(GameVariant gameVariant, StartPage startPage) {
-        Node slide = startPage.root();
-        if (slides().contains(slide)) {
-            Logger.warn("Start page {} is already in carousel", startPage);
+        if (startPageList.contains(startPage)) {
+            Logger.warn("Start page {} has already been added", startPage);
             return;
         }
+        startPageList.add(startPage);
+        Node slide = startPage.root();
         slide.setUserData(gameVariant);
-        addSlide(slide);
-
-        setNavigationVisible(numSlides() >= 2);
-        //TODO check this
-        selectedIndexProperty().set(0);
-
+        carousel.addSlide(slide);
+        carousel.setNavigationVisible(carousel.numSlides() >= 2);
+        carousel.selectedIndexProperty().set(0); //TODO check this
         Logger.info("Start page {} added for game variant {}", startPage, gameVariant);
+    }
+
+    public void setBackground(Background background) {
+        carousel.setBackground(background);
     }
 }

@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman_xxl;
 
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._2d.StartPage;
 import de.amr.games.pacman.ui._3d.GlobalProperties3d;
 import de.amr.games.pacman.uilib.Flyer;
@@ -14,7 +16,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 
 public class PacManXXL_StartPage extends StackPane implements StartPage {
 
@@ -28,50 +29,24 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
 
         menu = new PacManXXL_OptionMenu();
         getChildren().addAll(flyer, menu.root());
-
         setBackground(Background.fill(Color.BLACK));
-
-        //TODO find a more elegant way to start/stop the animation loop of the menu
-        THE_UI.startPageSelectionView().selectedIndexProperty().addListener((py, ov, nv) -> {
-            THE_UI.startPageSelectionView().currentSlide().ifPresent(startPage -> {
-                if (startPage == this) {
-                    menu.startDrawingLoop();
-                } else {
-                    menu.stopDrawingLoop();
-                }
-            });
-        });
-        THE_UI.viewProperty().addListener((py, ov, view) -> {
-            if (view == THE_UI.startPageSelectionView()
-                    && THE_UI.startPageSelectionView().currentSlide().isPresent()
-                    && THE_UI.startPageSelectionView().currentSlide().get() == this) {
-                menu.startDrawingLoop();
-            } else {
-                menu.stopDrawingLoop();
-            }
-        });
     }
 
-    private void initMenuState() {
-        switch (THE_GAME_CONTROLLER.selectedGameVariant()) {
+    private void initMenuState(GameVariant gameVariant) {
+        GameModel game = THE_GAME_CONTROLLER.game(gameVariant);
+        switch (gameVariant) {
             case MS_PACMAN_XXL, PACMAN_XXL -> {
-                THE_GAME_CONTROLLER.game().mapSelector().loadAllMaps(THE_GAME_CONTROLLER.game());
+                game.mapSelector().loadAllMaps(game);
                 menu.setState(
                     GlobalProperties3d.PY_3D_ENABLED.get(),
-                        THE_GAME_CONTROLLER.selectedGameVariant(),
-                        THE_GAME_CONTROLLER.game().isCutScenesEnabled(),
-                        THE_GAME_CONTROLLER.game().mapSelector().mapSelectionMode(),
-                    !THE_GAME_CONTROLLER.game().mapSelector().customMaps().isEmpty()
+                    gameVariant,
+                    game.isCutScenesEnabled(),
+                    game.mapSelector().mapSelectionMode(),
+                    !game.mapSelector().customMaps().isEmpty()
                 );
             }
-            default -> throw new IllegalStateException();
+            default -> throw new IllegalStateException("Illegal game variant for this start page: %s".formatted(gameVariant));
         }
-    }
-
-    @Override
-    public void requestFocus() {
-        menu.root().requestFocus();
-        initMenuState();
     }
 
     @Override
@@ -83,12 +58,14 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
     }
 
     @Override
-    public void onSelected() {
-        menu.stopDrawingLoop();
+    public void onSelected(GameVariant gameVariant) {
+        initMenuState(gameVariant);
+        menu.startDrawingLoop();
+        menu.root().requestFocus();
     }
 
     @Override
-    public void onDeselected() {
+    public void onDeselected(GameVariant gameVariant) {
         menu.stopDrawingLoop();
     }
 }

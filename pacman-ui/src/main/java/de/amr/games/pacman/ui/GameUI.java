@@ -13,7 +13,6 @@ import de.amr.games.pacman.ui.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui.input.Keyboard;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
-import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.Pane;
@@ -62,7 +61,7 @@ public interface GameUI {
 
     void openEditor();
 
-    ObjectProperty<Node> viewProperty();
+    ObjectProperty<View> viewProperty();
 
     void setScoreVisible(boolean visible);
 

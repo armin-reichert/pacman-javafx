@@ -512,9 +512,9 @@ public abstract class GameModel {
         assertNotNull(listener);
         if (!gameEventListeners.contains(listener)) {
             gameEventListeners.add(listener);
-            Logger.info("{}: Game event listener registered: {}", this, listener);
+            Logger.info("{}: Game event listener registered: {}", getClass().getSimpleName(), listener);
         } else {
-            Logger.warn("{}: Game event listener already registered: {}", this, listener);
+            Logger.warn("{}: Game event listener already registered: {}", getClass().getSimpleName(), listener);
         }
     }
 
@@ -522,9 +522,9 @@ public abstract class GameModel {
         assertNotNull(listener);
         boolean removed = gameEventListeners.remove(listener);
         if (removed) {
-            Logger.info("{}: Game event listener removed: {}", this, listener);
+            Logger.info("{}: Game event listener removed: {}", getClass().getSimpleName(), listener);
         } else {
-            Logger.warn("{}: Game event listener not removed, as not registered: {}", this, listener);
+            Logger.warn("{}: Game event listener not removed, as not registered: {}", getClass().getSimpleName(), listener);
         }
     }
 
