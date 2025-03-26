@@ -365,9 +365,6 @@ public class PacManGamesUI implements GameEventListener, GameUI {
     }
 
     @Override
-    public ObjectProperty<View> viewProperty() { return viewPy; }
-
-    @Override
     public GameView gameView() {
         return gameView;
     }

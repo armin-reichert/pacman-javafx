@@ -61,8 +61,6 @@ public interface GameUI {
 
     void openEditor();
 
-    ObjectProperty<View> viewProperty();
-
     void setScoreVisible(boolean visible);
 
     void showStartView();
