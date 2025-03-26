@@ -5,6 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.Globals;
+import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameScene;
 import javafx.beans.property.*;
@@ -15,6 +17,7 @@ import javafx.scene.paint.Color;
 import java.util.HashMap;
 import java.util.Map;
 
+import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 
 /**
@@ -97,5 +100,11 @@ public abstract class GameScene2D implements GameScene {
         if (debugInfoVisiblePy.get()) {
             drawDebugInfo();
         }
+    }
+
+    protected Vector2i worldSizeInTilesOrElse(Vector2i defaultSize) {
+        if (THE_GAME_CONTROLLER.game().level().isEmpty()) { return defaultSize; }
+        WorldMap worldMap = THE_GAME_CONTROLLER.game().level().get().worldMap();
+        return new Vector2i(worldMap.numCols(), worldMap.numRows());
     }
 }

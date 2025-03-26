@@ -4,8 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui;
 
-import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._2d.StartPagesCarousel;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
@@ -74,10 +72,4 @@ public interface GameUI {
     StartPagesCarousel startPageSelectionView();
 
     void togglePlayScene2D3D();
-
-    default Vector2i worldSizeInTilesOrElse(Vector2i defaultSize) {
-        if (THE_GAME_CONTROLLER.game().level().isEmpty()) { return defaultSize; }
-        WorldMap worldMap = THE_GAME_CONTROLLER.game().level().get().worldMap();
-        return new Vector2i(worldMap.numCols(), worldMap.numRows());
-    }
 }

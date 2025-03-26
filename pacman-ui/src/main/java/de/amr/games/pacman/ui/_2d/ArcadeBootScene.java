@@ -98,7 +98,7 @@ public class ArcadeBootScene extends GameScene2D {
     private void paintScreenTestGrid(Vector2f sceneSize) {
         GraphicsContext g = gr.ctx();
         gr.clearCanvas();
-        Vector2i sizeInTiles = THE_UI.worldSizeInTilesOrElse(ARCADE_MAP_SIZE_IN_TILES);
+        Vector2i sizeInTiles = worldSizeInTilesOrElse(ARCADE_MAP_SIZE_IN_TILES);
         int numRows = sizeInTiles.y() / 2, numCols = sizeInTiles.y() / 2;
         g.setStroke(Color.web(Arcade.Palette.WHITE));
         g.setLineWidth(scaled(2.0));
