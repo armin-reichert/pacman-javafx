@@ -513,8 +513,6 @@ public abstract class GameModel {
         if (!gameEventListeners.contains(listener)) {
             gameEventListeners.add(listener);
             Logger.info("{}: Game event listener registered: {}", getClass().getSimpleName(), listener);
-        } else {
-            Logger.warn("{}: Game event listener already registered: {}", getClass().getSimpleName(), listener);
         }
     }
 
