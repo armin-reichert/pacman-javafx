@@ -7,7 +7,6 @@ package de.amr.games.pacman.arcade;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.GameUI;
-import de.amr.games.pacman.ui.UIGlobals;
 import javafx.application.Application;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
@@ -29,7 +28,7 @@ public class ArcadePacMan_App extends Application {
 
     @Override
     public void start(Stage stage) {
-        GameUI ui = UIGlobals.createGameUI(Map.of(
+        GameUI ui = GameUI.create(Map.of(
             GameVariant.PACMAN, new ArcadePacMan_UIConfig()
         ), true);
         ui.create(stage, initialSize());

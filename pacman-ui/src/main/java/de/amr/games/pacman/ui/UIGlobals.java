@@ -4,28 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui;
 
-import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui._3d.PacManGamesUI_3D;
 import de.amr.games.pacman.ui.input.Keyboard;
 import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.GameClockFX;
 
-import java.util.Map;
-
 public class UIGlobals {
-
-    public static PacManGamesUI createGameUI(Map<GameVariant, GameUIConfiguration> configMap, boolean support3D) {
-        var ui = support3D ? new PacManGamesUI_3D() : new PacManGamesUI();
-        if (support3D) {
-            THE_ASSETS.addAssets3D();
-        }
-        for (var entry : configMap.entrySet()) {
-            ui.configure(entry.getKey(), entry.getValue());
-        }
-        THE_UI = ui;
-        return ui;
-    }
-
     public static GameUI THE_UI;
     public static final GameAssets THE_ASSETS = new GameAssets();
     public static final GameClockFX THE_CLOCK = new GameClockFX();

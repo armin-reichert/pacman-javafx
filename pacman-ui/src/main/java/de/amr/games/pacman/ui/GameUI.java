@@ -8,6 +8,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._2d.GameView;
 import de.amr.games.pacman.ui._2d.StartPage;
 import de.amr.games.pacman.ui._2d.StartPagesCarousel;
+import de.amr.games.pacman.ui._3d.PacManGamesUI_3D;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui.input.Keyboard;
@@ -16,14 +17,29 @@ import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.geometry.Dimension2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
+import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
+import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 
 public interface GameUI {
+
+    static PacManGamesUI create(Map<GameVariant, GameUIConfiguration> configMap, boolean support3D) {
+        var ui = support3D ? new PacManGamesUI_3D() : new PacManGamesUI();
+        if (support3D) {
+            THE_ASSETS.addAssets3D();
+        }
+        for (var entry : configMap.entrySet()) {
+            ui.configure(entry.getKey(), entry.getValue());
+        }
+        THE_UI = ui;
+        return ui;
+    }
+
 
     KeyCodeCombination KEY_FULLSCREEN = Keyboard.naked(KeyCode.F11);
     KeyCodeCombination KEY_MUTE = Keyboard.alt(KeyCode.M);
