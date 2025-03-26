@@ -77,7 +77,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
     protected Scene mainScene;
     protected final StackPane sceneRoot = new StackPane();
 
-    protected StartPageSelectionView startPageSelectionView;
+    protected StartPagesCarousel startPagesCarousel;
     protected GameView gameView;
     protected EditorView editorView;
     protected final FlashMessageView flashMessageOverlay = new FlashMessageView();
@@ -119,7 +119,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
     public void create(Stage stage, Dimension2D initialSize) {
         this.stage = assertNotNull(stage);
         createMainScene(assertNotNull(initialSize));
-        createStartPageSelectionView();
+        createStartPagesCarousel();
         createGameView(mainScene);
         init(THE_GAME_CONTROLLER.selectedGameVariant());
         bindStageTitle();
@@ -245,14 +245,14 @@ public class PacManGamesUI implements GameEventListener, GameUI {
         }
         return editorView;
     }
-    protected void createStartPageSelectionView() {
-        startPageSelectionView = new StartPageSelectionView();
-        startPageSelectionView().setBackground(THE_ASSETS.background("background.scene"));
-        viewPy.addListener((py,ov,newView) -> {
-            if (newView == startPageSelectionView) {
-                startPageSelectionView.currentStartPage().ifPresent(startPage -> {
-                    startPage.onSelected(THE_GAME_CONTROLLER.selectedGameVariant());
-                });
+
+    protected void createStartPagesCarousel() {
+        startPagesCarousel = new StartPagesCarousel();
+        startPagesCarousel.setBackground(THE_ASSETS.background("background.scene"));
+        viewPy.addListener((py, ov, view) -> {
+            if (view == startPagesCarousel) {
+                startPagesCarousel.currentStartPage().ifPresent(startPage ->
+                    startPage.onSelected(THE_GAME_CONTROLLER.selectedGameVariant()));
             }
         });
     }
@@ -420,13 +420,13 @@ public class PacManGamesUI implements GameEventListener, GameUI {
         THE_CLOCK.stop();
         gameScenePy.set(null);
         gameView.hideDashboard(); // TODO use binding?
-        viewPy.set(startPageSelectionView);
+        viewPy.set(startPagesCarousel);
         //TODO this is needed for XXL option menu
-        startPageSelectionView.currentStartPage().ifPresent(startPage -> startPage.onSelected(THE_GAME_CONTROLLER.selectedGameVariant()));
+        startPagesCarousel.currentStartPage().ifPresent(startPage -> startPage.onSelected(THE_GAME_CONTROLLER.selectedGameVariant()));
     }
 
     @Override
-    public StartPageSelectionView startPageSelectionView() { return startPageSelectionView; }
+    public StartPagesCarousel startPageSelectionView() { return startPagesCarousel; }
 
     @Override
     public void showGameView() {
