@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui._2d;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.tilemap.editor.TileMapEditor;
 import de.amr.games.pacman.ui.GameAction;
-import de.amr.games.pacman.ui.GameActionProvider;
 import de.amr.games.pacman.ui.View;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.scene.Node;

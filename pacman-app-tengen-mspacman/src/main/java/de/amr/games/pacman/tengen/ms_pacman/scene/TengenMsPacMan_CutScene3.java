@@ -26,8 +26,8 @@ import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_S
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.BLUE_BAG_SPRITE;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.JUNIOR_PAC_SPRITE;
-import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
+import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 
 /**
  * Intermission scene 3: "Junior".
