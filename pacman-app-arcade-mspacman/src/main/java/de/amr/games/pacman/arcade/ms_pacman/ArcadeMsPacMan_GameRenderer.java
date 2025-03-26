@@ -22,7 +22,7 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.RectArea.rect;
-import static de.amr.games.pacman.ui.GameUI.THE_ASSETS;
+import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
 
 /**
  * @author Armin Reichert

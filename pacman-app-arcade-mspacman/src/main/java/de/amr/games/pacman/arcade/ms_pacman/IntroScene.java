@@ -24,8 +24,8 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui.GameUI.THE_CONTEXT;
-import static de.amr.games.pacman.ui.GameUI.THE_SOUND;
+import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
+import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindTestActions;
 
 /**
@@ -80,14 +80,14 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(GameActions2D.INSERT_COIN, THE_CONTEXT.arcadeKeys().key(Arcade.Button.COIN));
-        bind(GameActions2D.START_GAME, THE_CONTEXT.arcadeKeys().key(Arcade.Button.START));
+        bind(GameActions2D.INSERT_COIN, THE_UI.arcadeKeys().key(Arcade.Button.COIN));
+        bind(GameActions2D.START_GAME, THE_UI.arcadeKeys().key(Arcade.Button.START));
         bindTestActions(this);
     }
 
     @Override
     public void doInit() {
-        THE_CONTEXT.setScoreVisible(true);
+        THE_UI.setScoreVisible(true);
 
         msPacMan = new Pac();
         ghosts = new Ghost[] {
@@ -100,7 +100,7 @@ public class IntroScene extends GameScene2D {
         ghostID = 0;
         waitBeforeRising = 0;
 
-        ArcadeMsPacMan_SpriteSheet spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_CONTEXT.currentUIConfig().spriteSheet();
+        ArcadeMsPacMan_SpriteSheet spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_UI.currentUIConfig().spriteSheet();
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
         msPacMan.selectAnimation(ActorAnimations.ANIM_PAC_MUNCHING);
         for (Ghost ghost : ghosts) {

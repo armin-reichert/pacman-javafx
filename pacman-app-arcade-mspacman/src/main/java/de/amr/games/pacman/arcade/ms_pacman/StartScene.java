@@ -15,8 +15,8 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui.GameUI.THE_CONTEXT;
-import static de.amr.games.pacman.ui.GameUI.THE_SOUND;
+import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
+import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
 
 /**
  * @author Armin Reichert
@@ -25,13 +25,13 @@ public class StartScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(GameActions2D.INSERT_COIN, THE_CONTEXT.arcadeKeys().key(Arcade.Button.COIN));
-        bind(GameActions2D.START_GAME, THE_CONTEXT.arcadeKeys().key(Arcade.Button.START));
+        bind(GameActions2D.INSERT_COIN, THE_UI.arcadeKeys().key(Arcade.Button.COIN));
+        bind(GameActions2D.START_GAME, THE_UI.arcadeKeys().key(Arcade.Button.START));
     }
 
     @Override
     public void doInit() {
-        THE_CONTEXT.setScoreVisible(true);
+        THE_UI.setScoreVisible(true);
     }
 
     @Override

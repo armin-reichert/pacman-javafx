@@ -42,7 +42,7 @@ import java.util.Map;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui.GameUI.*;
+import static de.amr.games.pacman.ui.UIGlobals.*;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
 import static de.amr.games.pacman.ui.input.Keyboard.*;
 import static de.amr.games.pacman.uilib.Ufx.*;
@@ -65,7 +65,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
         newRate = clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
         THE_CLOCK.setTargetFrameRate(newRate);
         String prefix = newRate == SIMULATION_SPEED_MIN ? "At minimum speed: " : "";
-        THE_CONTEXT.showFlashMessageSec(0.75, prefix + newRate + "Hz");
+        THE_UI.showFlashMessageSec(0.75, prefix + newRate + "Hz");
     };
 
     private final GameAction actionSimulationSpeedFaster = () -> {
@@ -73,12 +73,12 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
         newRate = clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
         THE_CLOCK.setTargetFrameRate(newRate);
         String prefix = newRate == SIMULATION_SPEED_MAX ? "At maximum speed: " : "";
-        THE_CONTEXT.showFlashMessageSec(0.75, prefix + newRate + "Hz");
+        THE_UI.showFlashMessageSec(0.75, prefix + newRate + "Hz");
     };
 
     private final GameAction actionSimulationSpeedReset = () -> {
         THE_CLOCK.setTargetFrameRate(TICKS_PER_SECOND);
-        THE_CONTEXT.showFlashMessageSec(0.75, THE_CLOCK.getTargetFrameRate() + "Hz");
+        THE_UI.showFlashMessageSec(0.75, THE_CLOCK.getTargetFrameRate() + "Hz");
     };
 
     private final GameAction actionSimulationOneStep = new GameAction() {
@@ -108,7 +108,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
     private final GameAction actionToggleAutopilot = () -> {
         toggle(PY_AUTOPILOT);
         boolean auto = PY_AUTOPILOT.get();
-        THE_CONTEXT.showFlashMessage(THE_ASSETS.localizedText(auto ? "autopilot_on" : "autopilot_off"));
+        THE_UI.showFlashMessage(THE_ASSETS.localizedText(auto ? "autopilot_on" : "autopilot_off"));
         THE_SOUND.playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
     };
 
@@ -118,7 +118,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
 
     private final GameAction actionToggleImmunity = () -> {
         toggle(GlobalProperties2d.PY_IMMUNITY);
-        THE_CONTEXT.showFlashMessage(THE_ASSETS.localizedText(GlobalProperties2d.PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
+        THE_UI.showFlashMessage(THE_ASSETS.localizedText(GlobalProperties2d.PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
         THE_SOUND.playVoice(GlobalProperties2d.PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
     };
 
@@ -299,7 +299,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
 
     @Override
     public void handleInput() {
-        ifTriggeredRunActionElse(() -> THE_CONTEXT.currentGameScene().ifPresent(GameActionProvider::handleInput));
+        ifTriggeredRunActionElse(() -> THE_UI.currentGameScene().ifPresent(GameActionProvider::handleInput));
     }
 
     public void onTick() {
@@ -309,7 +309,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
         if (pipView.isVisible()) {
             pipView.draw();
         }
-        THE_CONTEXT.currentGameScene()
+        THE_UI.currentGameScene()
                 .filter(GameScene2D.class::isInstance)
                 .map(GameScene2D.class::cast)
                 .ifPresent(GameScene2D::draw);
@@ -341,7 +341,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
                 cameraControlledView.viewPortHeightProperty().bind(parentScene.heightProperty());
             }
             case GameScene2D gameScene2D -> {
-                GameRenderer renderer = THE_CONTEXT.currentUIConfig().createRenderer(canvas);
+                GameRenderer renderer = THE_UI.currentUIConfig().createRenderer(canvas);
                 Vector2f sceneSize = gameScene2D.sizeInPx();
                 canvasContainer.setUnscaledCanvasWidth(sceneSize.x());
                 canvasContainer.setUnscaledCanvasHeight(sceneSize.y());
@@ -359,7 +359,7 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
     }
 
     protected boolean isCurrentGameScene2D() {
-        return THE_CONTEXT.currentGameScene().map(GameScene2D.class::isInstance).orElse(false);
+        return THE_UI.currentGameScene().map(GameScene2D.class::isInstance).orElse(false);
     }
 
     public void showHelp() {
@@ -376,20 +376,20 @@ public class GameView extends StackPane implements GameActionProvider, GameEvent
         // dispatch event to overridden methods:
         GameEventListener.super.onGameEvent(event);
         // dispatch event to current game scene if any
-        THE_CONTEXT.currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(event));
+        THE_UI.currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(event));
     }
 
     @Override
     public void onLevelCreated(GameEvent event) {
         THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
             Logger.info("Game level {} ({}) created", level.number(), THE_GAME_CONTROLLER.selectedGameVariant());
-            THE_CONTEXT.currentUIConfig().createActorAnimations(level);
+            THE_UI.currentUIConfig().createActorAnimations(level);
             Logger.info("Actor animations ({}) created", THE_GAME_CONTROLLER.selectedGameVariant());
             THE_SOUND.setEnabled(!THE_GAME_CONTROLLER.game().isDemoLevel());
             Logger.info("Sounds ({}) {}", THE_GAME_CONTROLLER.selectedGameVariant(), THE_SOUND.isEnabled() ? "enabled" : "disabled");
             // size of game scene might have changed, so re-embed
-            THE_CONTEXT.currentGameScene().ifPresent(this::embedGameScene);
-            GameScene2D pipGameScene = THE_CONTEXT.currentUIConfig().createPiPScene(canvasContainer().canvas());
+            THE_UI.currentGameScene().ifPresent(this::embedGameScene);
+            GameScene2D pipGameScene = THE_UI.currentUIConfig().createPiPScene(canvasContainer().canvas());
             pipView.setScene2D(pipGameScene);
         });
     }

@@ -20,7 +20,7 @@ import java.util.List;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.ui.GameUI.THE_CONTEXT;
+import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_ENABLED;
 
 public class PacManXXL_OptionMenu extends OptionMenu {
@@ -49,7 +49,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         setOnStart(() -> {
             logMenuState();
             if (state.gameVariant == GameVariant.PACMAN_XXL || state.gameVariant == GameVariant.MS_PACMAN_XXL) {
-                THE_CONTEXT.setGameVariant(state.gameVariant);
+                THE_UI.setGameVariant(state.gameVariant);
                 PY_3D_ENABLED.set(state.play3D);
                 GameModel game = THE_GAME_CONTROLLER.game(state.gameVariant);
                 game.setCutScenesEnabled(state.cutScenesEnabled);
@@ -59,7 +59,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
                 Logger.error("Game variant {} is not allowed for XXL game", state.gameVariant);
             }
         });
-        scalingProperty().bind(THE_CONTEXT.heightProperty().multiply(RELATIVE_HEIGHT).divide(UNSCALED_HEIGHT));
+        scalingProperty().bind(THE_UI.heightProperty().multiply(RELATIVE_HEIGHT).divide(UNSCALED_HEIGHT));
 
         drawingLoop = new AnimationTimer() {
             @Override
@@ -149,7 +149,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     protected void handleKeyPress(KeyEvent e) {
         super.handleKeyPress(e);
         if (Keyboard.naked(KeyCode.E).match(e)) {
-            THE_CONTEXT.openEditor();
+            THE_UI.openEditor();
         }
     }
 

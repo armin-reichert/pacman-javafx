@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_TILES;
-import static de.amr.games.pacman.ui.GameUI.THE_CONTEXT;
+import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 
 public class ArcadeBootScene extends GameScene2D {
 
@@ -24,7 +24,7 @@ public class ArcadeBootScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        THE_CONTEXT.setScoreVisible(false);
+        THE_UI.setScoreVisible(false);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class ArcadeBootScene extends GameScene2D {
         } else if (timer.betweenSeconds(1, 2) && timer.tickCount() % 8 == 0) {
             paintRandomHexCodes(sceneSize);
         } else if (timer.betweenSeconds(2, 3.5) && timer.tickCount() % 4 == 0) {
-            paintRandomSprites(THE_CONTEXT.currentUIConfig().spriteSheet().sourceImage(), sceneSize);
+            paintRandomSprites(THE_UI.currentUIConfig().spriteSheet().sourceImage(), sceneSize);
         } else if (timer.atSecond(3.5)) {
             paintScreenTestGrid(sceneSize);
         }
@@ -98,7 +98,7 @@ public class ArcadeBootScene extends GameScene2D {
     private void paintScreenTestGrid(Vector2f sceneSize) {
         GraphicsContext g = gr.ctx();
         gr.clearCanvas();
-        Vector2i sizeInTiles = THE_CONTEXT.worldSizeInTilesOrElse(ARCADE_MAP_SIZE_IN_TILES);
+        Vector2i sizeInTiles = THE_UI.worldSizeInTilesOrElse(ARCADE_MAP_SIZE_IN_TILES);
         int numRows = sizeInTiles.y() / 2, numCols = sizeInTiles.y() / 2;
         g.setStroke(Color.web(Arcade.Palette.WHITE));
         g.setLineWidth(scaled(2.0));

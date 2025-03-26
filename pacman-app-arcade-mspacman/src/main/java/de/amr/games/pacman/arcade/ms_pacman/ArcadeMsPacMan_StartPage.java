@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade.ms_pacman;
 
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.PacManGamesUI;
+import de.amr.games.pacman.ui.GameAssets;
 import de.amr.games.pacman.ui._2d.StartPage;
 import de.amr.games.pacman.uilib.Flyer;
 import de.amr.games.pacman.uilib.ResourceManager;
@@ -16,8 +16,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 
-import static de.amr.games.pacman.ui.GameUI.THE_ASSETS;
-import static de.amr.games.pacman.ui.GameUI.THE_CONTEXT;
+import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
+import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 
 public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage {
 
@@ -44,9 +44,9 @@ public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage {
     }
 
     private Node startButton() {
-        ResourceManager rm = () -> PacManGamesUI.class;
+        ResourceManager rm = () -> GameAssets.class;
         Font startButtonFont = rm.loadFont("fonts/emulogic.ttf", 30);
-        Node btnStart = Ufx.createFancyButton(startButtonFont, THE_ASSETS.localizedText("play_button"), THE_CONTEXT::showGameView);
+        Node btnStart = Ufx.createFancyButton(startButtonFont, THE_ASSETS.localizedText("play_button"), THE_UI::showGameView);
         btnStart.setTranslateY(-50);
         StackPane.setAlignment(btnStart, Pos.BOTTOM_CENTER);
         return btnStart;
@@ -54,7 +54,7 @@ public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage {
 
     @Override
     public void start() {
-        THE_CONTEXT.showGameView();
+        THE_UI.showGameView();
     }
 
     @Override

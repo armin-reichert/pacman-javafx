@@ -23,8 +23,8 @@ import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_MR_PACMAN_MU
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
-import static de.amr.games.pacman.ui.GameUI.THE_CONTEXT;
-import static de.amr.games.pacman.ui.GameUI.THE_SOUND;
+import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
+import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
 
 /**
  * Intermission scene 2: "The chase".
@@ -54,16 +54,16 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(THE_GAME_CONTROLLER::terminateCurrentState, THE_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
+        bind(THE_GAME_CONTROLLER::terminateCurrentState, THE_UI.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
     }
 
     @Override
     public void doInit() {
         t = -1;
-        THE_CONTEXT.setScoreVisible(false);
+        THE_UI.setScoreVisible(false);
         pacMan = new Pac();
         msPacMan = new Pac();
-        var spriteSheet = (TengenMsPacMan_SpriteSheet) THE_CONTEXT.currentUIConfig().spriteSheet();
+        var spriteSheet = (TengenMsPacMan_SpriteSheet) THE_UI.currentUIConfig().spriteSheet();
         msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         pacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         music = THE_SOUND.makeSound("intermission.2");

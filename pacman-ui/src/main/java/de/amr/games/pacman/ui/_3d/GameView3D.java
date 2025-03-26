@@ -14,8 +14,8 @@ import javafx.scene.input.KeyCode;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.games.pacman.ui.GameUI.THE_ASSETS;
-import static de.amr.games.pacman.ui.GameUI.THE_CONTEXT;
+import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
+import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 import static de.amr.games.pacman.ui.input.Keyboard.alt;
 import static de.amr.games.pacman.uilib.Ufx.contextMenuTitleItem;
 
@@ -46,7 +46,7 @@ public class GameView3D extends GameView {
 
     protected List<MenuItem> createContextMenuItems(ContextMenuEvent event) {
         List<MenuItem> menuItems = new ArrayList<>();
-        if (THE_CONTEXT.currentGameSceneIsPlayScene2D()) {
+        if (THE_UI.currentGameSceneIsPlayScene2D()) {
             menuItems.add(contextMenuTitleItem(THE_ASSETS.localizedText("scene_display")));
             var item = new MenuItem(THE_ASSETS.localizedText("use_3D_scene"));
             item.setOnAction(ae -> GameActions3D.TOGGLE_PLAY_SCENE_2D_3D.execute());

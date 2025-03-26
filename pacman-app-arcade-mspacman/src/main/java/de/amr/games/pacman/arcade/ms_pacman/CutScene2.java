@@ -15,8 +15,8 @@ import javafx.scene.media.MediaPlayer;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_MR_PACMAN_MUNCHING;
-import static de.amr.games.pacman.ui.GameUI.THE_CONTEXT;
-import static de.amr.games.pacman.ui.GameUI.THE_SOUND;
+import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
+import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
 
 /**
  * Intermission scene 2: "The chase".
@@ -44,14 +44,14 @@ public class CutScene2 extends GameScene2D {
 
     @Override
     public void doInit() {
-        THE_CONTEXT.setScoreVisible(true);
+        THE_UI.setScoreVisible(true);
 
         pacMan = new Pac();
         msPacMan = new Pac();
 
         music = THE_SOUND.makeSound("intermission.2");
 
-        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_CONTEXT.currentUIConfig().spriteSheet();
+        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_UI.currentUIConfig().spriteSheet();
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
         pacMan.setAnimations(new PacAnimations(spriteSheet));
 

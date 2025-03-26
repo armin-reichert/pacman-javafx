@@ -29,7 +29,7 @@ import org.tinylog.Logger;
 import java.util.function.Predicate;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.ui.GameUI.THE_ASSETS;
+import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
 import static java.util.function.Predicate.not;
 
 /**

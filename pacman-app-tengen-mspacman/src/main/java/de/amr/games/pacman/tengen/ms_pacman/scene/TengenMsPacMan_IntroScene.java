@@ -34,7 +34,7 @@ import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.MS_PAC_MAN_TITLE_SPRITE;
-import static de.amr.games.pacman.ui.GameUI.*;
+import static de.amr.games.pacman.ui.UIGlobals.*;
 
 /**
  * @author Armin Reichert
@@ -70,21 +70,21 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(GameActions2D.START_GAME, THE_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
-        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, THE_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_SELECT));
+        bind(GameActions2D.START_GAME, THE_UI.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
+        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, THE_UI.joypadKeyBinding().key(NES_JoypadButton.BTN_SELECT));
     }
 
     @Override
     public void doInit() {
-        THE_CONTEXT.setScoreVisible(false);
-        THE_CONTEXT.joypadKeyBinding().register();
+        THE_UI.setScoreVisible(false);
+        THE_UI.joypadKeyBinding().register();
         sceneController.restart(SceneState.WAITING_FOR_START);
     }
 
     @Override
     protected void doEnd() {
         THE_SOUND.stopVoice(); // TODO check if needed
-        THE_CONTEXT.joypadKeyBinding().unregister();
+        THE_UI.joypadKeyBinding().unregister();
     }
 
     @Override
@@ -143,7 +143,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         }
 
         if (PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED.get()) {
-            r.drawJoypadBindings(THE_CONTEXT.joypadKeyBinding());
+            r.drawJoypadBindings(THE_UI.joypadKeyBinding());
         }
     }
 
@@ -226,7 +226,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 }
                 intro.ghostIndex = 0;
 
-                var spriteSheet = (TengenMsPacMan_SpriteSheet) THE_CONTEXT.currentUIConfig().spriteSheet();
+                var spriteSheet = (TengenMsPacMan_SpriteSheet) THE_UI.currentUIConfig().spriteSheet();
                 intro.msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
                 intro.msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
                 intro.msPacMan.startAnimation();

@@ -55,7 +55,7 @@ import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions.QUIT_DEMO_LEVEL;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
-import static de.amr.games.pacman.ui.GameUI.*;
+import static de.amr.games.pacman.ui.UIGlobals.*;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindCheatActions;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindFallbackPlayerControlActions;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_AUTOPILOT;
@@ -204,16 +204,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void doInit() {
         messageMovement = new MessageMovement();
-        THE_CONTEXT.joypadKeyBinding().register();
-        THE_CONTEXT.setScoreVisible(true);
-        setGameRenderer(THE_CONTEXT.currentUIConfig().createRenderer(canvas));
+        THE_UI.joypadKeyBinding().register();
+        THE_UI.setScoreVisible(true);
+        setGameRenderer(THE_UI.currentUIConfig().createRenderer(canvas));
         movingCamera.focusTopOfScene();
     }
 
     @Override
     protected void doEnd() {
         THE_SOUND.stopAll();
-        THE_CONTEXT.joypadKeyBinding().unregister();
+        THE_UI.joypadKeyBinding().unregister();
     }
 
     @Override
@@ -263,7 +263,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public Vector2f sizeInPx() {
-        return THE_CONTEXT.worldSizeInTilesOrElse(NES_TILES).toVector2f().scaled(TS);
+        return THE_UI.worldSizeInTilesOrElse(NES_TILES).toVector2f().scaled(TS);
     }
 
     @Override
@@ -279,7 +279,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void onLevelCreated(GameEvent e) {
         THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-            THE_CONTEXT.joypadKeyBinding().register();
+            THE_UI.joypadKeyBinding().register();
             setKeyBindings();
             if (THE_GAME_CONTROLLER.game().isDemoLevel()) {
                 level.pac().setImmune(false);
@@ -302,22 +302,22 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
         Logger.info("{} entered from {}", this, oldScene);
-        THE_CONTEXT.joypadKeyBinding().register();
+        THE_UI.joypadKeyBinding().register();
         setKeyBindings();
         THE_GAME_CONTROLLER.game().level().map(GameLevel::worldMap).ifPresent(worldMap -> gr.setWorldMap(worldMap));
     }
 
     private void setKeyBindings() {
         if (THE_GAME_CONTROLLER.game().isDemoLevel()) {
-            bind(QUIT_DEMO_LEVEL, THE_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
+            bind(QUIT_DEMO_LEVEL, THE_UI.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
         } else {
-            bind(GameActions2D.PLAYER_UP,    THE_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_UP));
-            bind(GameActions2D.PLAYER_DOWN,  THE_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_DOWN));
-            bind(GameActions2D.PLAYER_LEFT,  THE_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_LEFT));
-            bind(GameActions2D.PLAYER_RIGHT, THE_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_RIGHT));
+            bind(GameActions2D.PLAYER_UP,    THE_UI.joypadKeyBinding().key(NES_JoypadButton.BTN_UP));
+            bind(GameActions2D.PLAYER_DOWN,  THE_UI.joypadKeyBinding().key(NES_JoypadButton.BTN_DOWN));
+            bind(GameActions2D.PLAYER_LEFT,  THE_UI.joypadKeyBinding().key(NES_JoypadButton.BTN_LEFT));
+            bind(GameActions2D.PLAYER_RIGHT, THE_UI.joypadKeyBinding().key(NES_JoypadButton.BTN_RIGHT));
             bind(TengenMsPacMan_GameActions.TOGGLE_PAC_BOOSTER,
-                THE_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_A),
-                THE_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_B));
+                THE_UI.joypadKeyBinding().key(NES_JoypadButton.BTN_A),
+                THE_UI.joypadKeyBinding().key(NES_JoypadButton.BTN_B));
             bindFallbackPlayerControlActions(this);
             bindCheatActions(this);
         }
@@ -449,7 +449,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             Logger.warn("Cannot draw scene content, no game level exists");
             return;
         }
-        if (THE_CONTEXT.isScoreVisible()) {
+        if (THE_UI.isScoreVisible()) {
             r.drawScores();
         }
         Vector2f messageCenterPosition = centerPosBelowHouse(level);
@@ -470,7 +470,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             //TODO in the original game, the message is draw under the maze image but over the pellets!
             r.drawWorld(level, 0,  3 * TS);
             r.drawFood(level);
-            r.drawLevelMessage(THE_CONTEXT.currentUIConfig().assetNamespace(), level, game.isDemoLevel());
+            r.drawLevelMessage(THE_UI.currentUIConfig().assetNamespace(), level, game.isDemoLevel());
         }
 
         level.bonus().ifPresent(r::drawBonus);

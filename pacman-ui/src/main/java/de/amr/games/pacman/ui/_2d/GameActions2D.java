@@ -23,7 +23,7 @@ import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
-import static de.amr.games.pacman.ui.GameUI.*;
+import static de.amr.games.pacman.ui.UIGlobals.*;
 import static de.amr.games.pacman.uilib.Ufx.toggle;
 import static java.util.function.Predicate.not;
 
@@ -73,7 +73,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute() {
             THE_GAME_CONTROLLER.game().addLives(3);
-            THE_CONTEXT.showFlashMessage(THE_ASSETS.localizedText("cheat_add_lives", THE_GAME_CONTROLLER.game().lives()));
+            THE_UI.showFlashMessage(THE_ASSETS.localizedText("cheat_add_lives", THE_GAME_CONTROLLER.game().lives()));
         }
     },
 
@@ -169,9 +169,9 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute() {
             THE_SOUND.stopAll();
-            THE_CONTEXT.currentGameScene().ifPresent(GameScene::end);
+            THE_UI.currentGameScene().ifPresent(GameScene::end);
             THE_GAME_CONTROLLER.game().endGame();
-            THE_CONTEXT.showStartView();
+            THE_UI.showStartView();
         }
     },
 
@@ -179,7 +179,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute() {
             THE_SOUND.stopAll();
-            THE_CONTEXT.currentGameScene().ifPresent(GameScene::end);
+            THE_UI.currentGameScene().ifPresent(GameScene::end);
             if (THE_GAME_CONTROLLER.state() == GameState.TESTING_LEVELS) {
                 THE_GAME_CONTROLLER.state().onExit(THE_GAME_CONTROLLER.game()); //TODO exit other states too?
             }
@@ -208,7 +208,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute() {
             THE_GAME_CONTROLLER.changeState(GameState.TESTING_CUT_SCENES);
-            THE_CONTEXT.showFlashMessage("Cut scenes test"); //TODO localize
+            THE_UI.showFlashMessage("Cut scenes test"); //TODO localize
         }
     },
 
@@ -216,7 +216,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute() {
             THE_GAME_CONTROLLER.restart(GameState.TESTING_LEVELS);
-            THE_CONTEXT.showFlashMessageSec(3, "Level TEST MODE");
+            THE_UI.showFlashMessageSec(3, "Level TEST MODE");
         }
     },
 
@@ -224,7 +224,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute() {
             THE_GAME_CONTROLLER.restart(GameState.TESTING_LEVEL_TEASERS);
-            THE_CONTEXT.showFlashMessageSec(3, "Level TEST MODE");
+            THE_UI.showFlashMessageSec(3, "Level TEST MODE");
         }
     },
 

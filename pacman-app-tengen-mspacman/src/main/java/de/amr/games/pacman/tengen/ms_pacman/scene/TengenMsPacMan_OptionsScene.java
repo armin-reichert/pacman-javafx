@@ -24,7 +24,7 @@ import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.CONTINUES_SPRITES;
-import static de.amr.games.pacman.ui.GameUI.*;
+import static de.amr.games.pacman.ui.UIGlobals.*;
 import static de.amr.games.pacman.ui.input.Keyboard.alt;
 
 /**
@@ -67,15 +67,15 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     @Override
     public void bindGameActions() {
         bind(TengenMsPacMan_GameActions.SELECT_NEXT_JOYPAD_KEY_BINDING, alt(KeyCode.J));
-        bind(TengenMsPacMan_GameActions.START_PLAYING, THE_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
-        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, THE_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_SELECT));
+        bind(TengenMsPacMan_GameActions.START_PLAYING, THE_UI.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
+        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, THE_UI.joypadKeyBinding().key(NES_JoypadButton.BTN_SELECT));
         GameActions2D.bindTestActions(this);
     }
 
     @Override
     public void doInit() {
-        THE_CONTEXT.joypadKeyBinding().register();
-        THE_CONTEXT.setScoreVisible(false);
+        THE_UI.joypadKeyBinding().register();
+        THE_UI.setScoreVisible(false);
         selectedOption = OPTION_PAC_BOOSTER;
         tengenGame = THE_GAME_CONTROLLER.game();
         tengenGame.setCanStartNewGame(true);
@@ -85,7 +85,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        THE_CONTEXT.joypadKeyBinding().unregister();
+        THE_UI.joypadKeyBinding().unregister();
     }
 
     @Override
@@ -121,7 +121,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     private boolean isJoypadPressed(NES_JoypadButton button) {
-        return THE_KEYBOARD.isMatching(THE_CONTEXT.joypadKeyBinding().key(button));
+        return THE_KEYBOARD.isMatching(THE_UI.joypadKeyBinding().key(button));
     }
 
     @Override
@@ -299,7 +299,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), sizeInPx().x(), 212);
 
         if (PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED.get()) {
-            r.drawJoypadBindings(THE_CONTEXT.joypadKeyBinding());
+            r.drawJoypadBindings(THE_UI.joypadKeyBinding());
         }
     }
 

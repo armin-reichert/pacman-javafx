@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.games.pacman.ui.GameUI.THE_CONTEXT;
+import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 
 /**
  * Base class of all 2D scenes.
@@ -90,7 +90,7 @@ public abstract class GameScene2D implements GameScene {
         gr.setScaling(scaling());
         gr.setBackgroundColor(backgroundColor());
         gr.clearCanvas();
-        if (THE_CONTEXT.isScoreVisible()) {
+        if (THE_UI.isScoreVisible()) {
             gr.drawScores();
         }
         drawSceneContent();

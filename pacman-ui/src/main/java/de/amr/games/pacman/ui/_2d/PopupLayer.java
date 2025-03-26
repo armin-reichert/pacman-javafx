@@ -20,7 +20,7 @@ import javafx.util.Duration;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.ui.GameUI.THE_ASSETS;
+import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
 import static de.amr.games.pacman.uilib.Ufx.opaqueColor;
 
 /**

@@ -39,7 +39,7 @@ import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui.GameUI.*;
+import static de.amr.games.pacman.ui.UIGlobals.*;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_DEBUG_INFO_VISIBLE;
 import static de.amr.games.pacman.ui.input.ArcadeKeyBinding.DEFAULT_ARCADE_KEY_BINDING;
 import static de.amr.games.pacman.ui.input.JoypadKeyBinding.JOYPAD_CURSOR_KEYS;
@@ -51,7 +51,7 @@ import static de.amr.games.pacman.uilib.Ufx.createIcon;
  *
  * @author Armin Reichert
  */
-public class PacManGamesUI implements GameEventListener, GameContext {
+public class PacManGamesUI implements GameEventListener, GameUI {
 
     private static final KeyCodeCombination KEY_FULLSCREEN = Keyboard.naked(KeyCode.F11);
     private static final KeyCodeCombination KEY_MUTE = Keyboard.alt(KeyCode.M);

@@ -45,7 +45,7 @@ import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui.GameUI.*;
+import static de.amr.games.pacman.ui.UIGlobals.*;
 import static de.amr.games.pacman.ui._2d.GameActions2D.*;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
 import static de.amr.games.pacman.ui.input.Keyboard.alt;
@@ -107,7 +107,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     public void init() {
         bindGameActions();
         registerGameActionKeyBindings();
-        THE_CONTEXT.setScoreVisible(true);
+        THE_UI.setScoreVisible(true);
         perspectiveNamePy.bind(GlobalProperties3d.PY_3D_PERSPECTIVE);
         scores3D.setFont(THE_ASSETS.font("font.arcade", 8));
     }
@@ -126,9 +126,9 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         bind(GameActions3D.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
         bind(GameActions3D.TOGGLE_DRAW_MODE, alt(KeyCode.W));
         if (THE_GAME_CONTROLLER.game().isDemoLevel()) {
-            bind(GameActions2D.INSERT_COIN, THE_CONTEXT.arcadeKeys().key(Arcade.Button.COIN));
+            bind(GameActions2D.INSERT_COIN, THE_UI.arcadeKeys().key(Arcade.Button.COIN));
         } else {
-            bindDefaultArcadeControllerActions(this, THE_CONTEXT.arcadeKeys());
+            bindDefaultArcadeControllerActions(this, THE_UI.arcadeKeys());
             bindFallbackPlayerControlActions(this);
             bindCheatActions(this);
         }
@@ -235,7 +235,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             scores3D.showScore(score.points(), score.levelNumber());
         }
         else { // when score is disabled, show text "game over"
-            String assetNamespace = THE_CONTEXT.currentUIConfig().assetNamespace();
+            String assetNamespace = THE_UI.currentUIConfig().assetNamespace();
             Color color = THE_ASSETS.color(assetNamespace + ".color.game_over_message");
             scores3D.showTextAsScore(TEXT_GAME_OVER, color);
         }
@@ -331,7 +331,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
     private void onEnterStateGhostDying() {
         THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-            GameSpriteSheet spriteSheet = THE_CONTEXT.currentUIConfig().spriteSheet();
+            GameSpriteSheet spriteSheet = THE_UI.currentUIConfig().spriteSheet();
             RectArea[] numberSprites = spriteSheet.ghostNumberSprites();
             THE_GAME_CONTROLLER.game().eventLog().killedGhosts.forEach(ghost -> {
                 int victimIndex = level.victims().indexOf(ghost);
@@ -390,7 +390,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         // delay state exit for 3 seconds
         THE_GAME_CONTROLLER.state().timer().restartSeconds(3);
         if (!THE_GAME_CONTROLLER.game().isDemoLevel() && Globals.randomInt(0, 100) < 25) {
-            THE_CONTEXT.showFlashMessageSec(3, THE_ASSETS.localizedGameOverMessage());
+            THE_UI.showFlashMessageSec(3, THE_ASSETS.localizedGameOverMessage());
         }
         THE_SOUND.stopAll();
         THE_SOUND.playGameOverSound();
@@ -399,7 +399,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     @Override
     public void onBonusActivated(GameEvent event) {
         THE_GAME_CONTROLLER.game().level().flatMap(GameLevel::bonus).ifPresent(
-                bonus -> level3D.replaceBonus3D(bonus, THE_CONTEXT.currentUIConfig().spriteSheet()));
+                bonus -> level3D.replaceBonus3D(bonus, THE_UI.currentUIConfig().spriteSheet()));
         if (THE_GAME_CONTROLLER.selectedGameVariant() == GameVariant.MS_PACMAN) {
             THE_SOUND.playBonusBouncingSound();
         }

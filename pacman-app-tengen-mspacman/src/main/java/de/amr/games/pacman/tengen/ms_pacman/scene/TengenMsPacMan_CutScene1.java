@@ -24,8 +24,8 @@ import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.HEART_SPRITE;
-import static de.amr.games.pacman.ui.GameUI.THE_CONTEXT;
-import static de.amr.games.pacman.ui.GameUI.THE_SOUND;
+import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
+import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
 
 /**
  * Intermission scene 1: "They meet".
@@ -65,13 +65,13 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(THE_GAME_CONTROLLER::terminateCurrentState, THE_CONTEXT.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
+        bind(THE_GAME_CONTROLLER::terminateCurrentState, THE_UI.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
     }
 
     @Override
     public void doInit() {
         t = -1;
-        THE_CONTEXT.setScoreVisible(false);
+        THE_UI.setScoreVisible(false);
 
         mrPacMan = new Pac();
         msPacMan = new Pac();
@@ -79,7 +79,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         pinky = TengenMsPacMan_GameModel.pinky();
         heart = new Actor2D();
 
-        var spriteSheet = (TengenMsPacMan_SpriteSheet) THE_CONTEXT.currentUIConfig().spriteSheet();
+        var spriteSheet = (TengenMsPacMan_SpriteSheet) THE_UI.currentUIConfig().spriteSheet();
         msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         mrPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         inky.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, inky.id()));

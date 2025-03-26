@@ -14,7 +14,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.ui.GameUI.THE_CONTEXT;
+import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 
 public class PacManXXL_StartPage extends StackPane implements StartPage {
 
@@ -32,8 +32,8 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
         setBackground(Background.fill(Color.BLACK));
 
         //TODO find a more elegant way to start/stop the animation loop of the menu
-        THE_CONTEXT.startPageSelectionView().selectedIndexProperty().addListener((py, ov, nv) -> {
-            THE_CONTEXT.startPageSelectionView().currentSlide().ifPresent(startPage -> {
+        THE_UI.startPageSelectionView().selectedIndexProperty().addListener((py, ov, nv) -> {
+            THE_UI.startPageSelectionView().currentSlide().ifPresent(startPage -> {
                 if (startPage == this) {
                     menu.startDrawingLoop();
                 } else {
@@ -41,10 +41,10 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
                 }
             });
         });
-        THE_CONTEXT.viewProperty().addListener((py, ov, view) -> {
-            if (view == THE_CONTEXT.startPageSelectionView()
-                    && THE_CONTEXT.startPageSelectionView().currentSlide().isPresent()
-                    && THE_CONTEXT.startPageSelectionView().currentSlide().get() == this) {
+        THE_UI.viewProperty().addListener((py, ov, view) -> {
+            if (view == THE_UI.startPageSelectionView()
+                    && THE_UI.startPageSelectionView().currentSlide().isPresent()
+                    && THE_UI.startPageSelectionView().currentSlide().get() == this) {
                 menu.startDrawingLoop();
             } else {
                 menu.stopDrawingLoop();

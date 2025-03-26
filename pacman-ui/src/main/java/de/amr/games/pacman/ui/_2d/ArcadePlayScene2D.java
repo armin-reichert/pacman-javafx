@@ -34,7 +34,7 @@ import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_TILES;
-import static de.amr.games.pacman.ui.GameUI.*;
+import static de.amr.games.pacman.ui.UIGlobals.*;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_IMMUNITY;
 
@@ -52,8 +52,8 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     @Override
     protected void doInit() {
-        THE_CONTEXT.setScoreVisible(true);
-        GameActions2D.bindDefaultArcadeControllerActions(this, THE_CONTEXT.arcadeKeys());
+        THE_UI.setScoreVisible(true);
+        GameActions2D.bindDefaultArcadeControllerActions(this, THE_UI.arcadeKeys());
         GameActions2D.bindFallbackPlayerControlActions(this);
         registerGameActionKeyBindings();
     }
@@ -61,10 +61,10 @@ public class ArcadePlayScene2D extends GameScene2D {
     @Override
     public void onLevelCreated(GameEvent e) {
         if (THE_GAME_CONTROLLER.game().isDemoLevel()) {
-            bind(GameActions2D.INSERT_COIN, THE_CONTEXT.arcadeKeys().key(Arcade.Button.COIN));
+            bind(GameActions2D.INSERT_COIN, THE_UI.arcadeKeys().key(Arcade.Button.COIN));
         } else {
             GameActions2D.bindCheatActions(this);
-            GameActions2D.bindDefaultArcadeControllerActions(this, THE_CONTEXT.arcadeKeys());
+            GameActions2D.bindDefaultArcadeControllerActions(this, THE_UI.arcadeKeys());
             GameActions2D.bindFallbackPlayerControlActions(this);
         }
         registerGameActionKeyBindings();
@@ -129,7 +129,7 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     @Override
     public Vector2f sizeInPx() {
-        return THE_CONTEXT.worldSizeInTilesOrElse(ARCADE_MAP_SIZE_IN_TILES).scaled(TS).toVector2f();
+        return THE_UI.worldSizeInTilesOrElse(ARCADE_MAP_SIZE_IN_TILES).scaled(TS).toVector2f();
     }
 
     @Override
@@ -245,7 +245,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         bindGameActions();
         registerGameActionKeyBindings();
         if (gr == null) {
-            setGameRenderer(THE_CONTEXT.currentUIConfig().createRenderer(canvas));
+            setGameRenderer(THE_UI.currentUIConfig().createRenderer(canvas));
         }
         THE_GAME_CONTROLLER.game().level().map(GameLevel::worldMap).ifPresent(gr::setWorldMap);
     }

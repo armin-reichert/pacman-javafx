@@ -24,7 +24,7 @@ import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
-import static de.amr.games.pacman.ui.GameUI.*;
+import static de.amr.games.pacman.ui.UIGlobals.*;
 
 public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
@@ -51,14 +51,14 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     protected void doInit() {
         t = -1;
 
-        THE_CONTEXT.setScoreVisible(false);
+        THE_UI.setScoreVisible(false);
 
         mrPacMan = new Pac();
         msPacMan = new Pac();
         juniors = new ArrayList<>();
         juniorCreationTime = new ArrayList<>();
 
-        spriteSheet = (TengenMsPacMan_SpriteSheet) THE_CONTEXT.currentUIConfig().spriteSheet();
+        spriteSheet = (TengenMsPacMan_SpriteSheet) THE_UI.currentUIConfig().spriteSheet();
         mrPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
 
@@ -154,7 +154,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     }
 
     private void spawnJunior() {
-        String assetNamespace = THE_CONTEXT.currentUIConfig().assetNamespace();
+        String assetNamespace = THE_UI.currentUIConfig().assetNamespace();
         var junior = new Pac();
         double randomX = 8 * TS + (8 * TS) * Math.random();
         int rnd = Globals.randomInt(1, 3);
