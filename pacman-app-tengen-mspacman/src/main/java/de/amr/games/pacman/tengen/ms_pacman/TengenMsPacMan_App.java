@@ -30,8 +30,8 @@ public class TengenMsPacMan_App extends Application {
 
     @Override
     public void start(Stage stage) {
-        GameUI.create(Map.of(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_UIConfig()), true);
-        THE_UI.create(stage, initialSize());
+        GameUI.createInstance(Map.of(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_UIConfig()), true);
+        THE_UI.build(stage, initialSize());
         THE_UI.addStartPage(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_StartPage());
         THE_UI.addDefaultDashboardItems("README", "GENERAL", "GAME_CONTROL", "SETTINGS_3D", "GAME_INFO",
             "ACTOR_INFO", "JOYPAD", "KEYBOARD", "ABOUT");

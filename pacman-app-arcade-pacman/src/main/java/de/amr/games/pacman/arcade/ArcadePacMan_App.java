@@ -29,8 +29,8 @@ public class ArcadePacMan_App extends Application {
 
     @Override
     public void start(Stage stage) {
-        GameUI.create(Map.of(GameVariant.PACMAN, new ArcadePacMan_UIConfig()), true);
-        THE_UI.create(stage, initialSize());
+        GameUI.createInstance(Map.of(GameVariant.PACMAN, new ArcadePacMan_UIConfig()), true);
+        THE_UI.build(stage, initialSize());
         THE_UI.addStartPage(GameVariant.PACMAN, new ArcadePacMan_StartPage());
         THE_UI.addDefaultDashboardItems("README", "GENERAL", "GAME_CONTROL", "SETTINGS_3D", "GAME_INFO", "ACTOR_INFO", "KEYBOARD", "ABOUT");
         THE_UI.show();

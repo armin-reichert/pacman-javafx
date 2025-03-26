@@ -117,7 +117,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
      * @param initialSize initial UI size
      */
     @Override
-    public void create(Stage stage, Dimension2D initialSize) {
+    public void build(Stage stage, Dimension2D initialSize) {
         this.stage = assertNotNull(stage);
         createMainScene(assertNotNull(initialSize));
         createStartPagesCarousel();

@@ -69,14 +69,14 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        GameUI.create(Map.of(
+        GameUI.createInstance(Map.of(
             GameVariant.PACMAN, new ArcadePacMan_UIConfig(),
             GameVariant.MS_PACMAN, new ArcadeMsPacMan_UIConfig(),
             GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_UIConfig(),
             GameVariant.PACMAN_XXL, new PacManXXL_PacMan_UIConfig(),
             GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_UIConfig()
         ), true);
-        THE_UI.create(stage, initialSize());
+        THE_UI.build(stage, initialSize());
         THE_UI.addDefaultDashboardItems("README", "GENERAL", "GAME_CONTROL", "SETTINGS_3D", "GAME_INFO",
             "ACTOR_INFO", "CUSTOM_MAPS", "JOYPAD", "KEYBOARD", "ABOUT");
 

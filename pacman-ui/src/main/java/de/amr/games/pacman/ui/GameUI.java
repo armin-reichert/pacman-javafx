@@ -28,7 +28,7 @@ import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 
 public interface GameUI {
 
-    static void create(Map<GameVariant, GameUIConfiguration> configMap, boolean support3D) {
+    static void createInstance(Map<GameVariant, GameUIConfiguration> configMap, boolean support3D) {
         THE_UI = support3D ? new PacManGamesUI_3D() : new PacManGamesUI();
         if (support3D) {
             THE_ASSETS.addAssets3D();
@@ -53,7 +53,7 @@ public interface GameUI {
 
     void configure(GameVariant gameVariant, GameUIConfiguration configuration);
 
-    void create(Stage stage, Dimension2D size);
+    void build(Stage stage, Dimension2D size);
 
     default GameUIConfiguration currentUIConfig() { return uiConfiguration(THE_GAME_CONTROLLER.selectedGameVariant()); }
 
