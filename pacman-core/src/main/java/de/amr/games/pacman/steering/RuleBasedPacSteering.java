@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.steering;
 
+import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
@@ -18,7 +19,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static de.amr.games.pacman.Globals.tileAt;
-import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 
 /**
  * Pac-Man steering based on a set of rules.
@@ -130,7 +130,7 @@ public class RuleBasedPacSteering implements Steering {
         if (pac.moveInfo().moved && !level.isIntersection(pac.tile()))
             return;
 
-        if (!data.frightenedGhosts.isEmpty() && level.powerTimer().remainingTicks() >= TICKS_PER_SECOND) {
+        if (!data.frightenedGhosts.isEmpty() && level.powerTimer().remainingTicks() >= Globals.TICKS_PER_SECOND) {
             Ghost prey = data.frightenedGhosts.getFirst();
             Logger.trace("Detected frightened ghost {} {} tiles away", prey.name(),
                 prey.tile().manhattanDist(pac.tile()));

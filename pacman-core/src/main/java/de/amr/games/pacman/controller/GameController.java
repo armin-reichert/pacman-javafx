@@ -37,10 +37,7 @@ import static de.amr.games.pacman.Globals.assertNotNull;
  */
 public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
-    public static final byte TICKS_PER_SECOND = 60;
-    public static final int MAX_COINS = 99;
-
-    private final Map<GameVariant, GameModel> gameModelsByVariant = new EnumMap<>(GameVariant.class);
+    private final Map<GameVariant, GameModel> gameModelMap = new EnumMap<>(GameVariant.class);
     private GameModel currentGameModel;
     public int credit;
 
@@ -62,16 +59,16 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     public void setGameModel(GameVariant variant, GameModel gameModel) {
         assertNotNull(variant);
         assertNotNull(gameModel);
-        gameModelsByVariant.put(variant, gameModel);
+        gameModelMap.put(variant, gameModel);
     }
 
     @SuppressWarnings("unchecked")
     public <T extends GameModel> T game(GameVariant variant) {
         assertNotNull(variant);
-        return (T) gameModelsByVariant.get(variant);
+        return (T) gameModelMap.get(variant);
     }
 
-    public Stream<GameModel> games() { return gameModelsByVariant.values().stream(); }
+    public Stream<GameModel> games() { return gameModelMap.values().stream(); }
 
     public void selectGameVariant(GameVariant variant) {
         assertNotNull(variant);
@@ -83,11 +80,11 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     }
 
     public boolean isGameVariantSelected(GameVariant gameVariant) {
-        return gameModelsByVariant.get(gameVariant) == currentGameModel;
+        return gameModelMap.get(gameVariant) == currentGameModel;
     }
 
     public GameVariant selectedGameVariant() {
-        return gameModelsByVariant.entrySet().stream()
+        return gameModelMap.entrySet().stream()
             .filter(entry -> entry.getValue() == currentGameModel)
             .findFirst()
             .map(Map.Entry::getKey)

@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._2d;
 
-import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
@@ -19,7 +19,6 @@ import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
@@ -37,7 +36,7 @@ public enum GameActions2D implements GameAction {
     INSERT_COIN {
         @Override
         public void execute() {
-            if (THE_GAME_CONTROLLER.credit < GameController.MAX_COINS) {
+            if (THE_GAME_CONTROLLER.credit < Globals.MAX_COINS) {
                 THE_GAME_CONTROLLER.credit += 1;
                 THE_SOUND.enabledProperty().set(true);
                 THE_GAME_CONTROLLER.game().publishGameEvent(GameEventType.CREDIT_ADDED);
@@ -63,7 +62,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute() {
             THE_GAME_CONTROLLER.restart(GameState.BOOT);
-            THE_CLOCK.setTargetFrameRate(TICKS_PER_SECOND);
+            THE_CLOCK.setTargetFrameRate(Globals.TICKS_PER_SECOND);
             THE_CLOCK.pausedProperty().set(false);
             THE_CLOCK.start();
         }
@@ -183,7 +182,7 @@ public enum GameActions2D implements GameAction {
             if (THE_GAME_CONTROLLER.state() == GameState.TESTING_LEVELS) {
                 THE_GAME_CONTROLLER.state().onExit(THE_GAME_CONTROLLER.game()); //TODO exit other states too?
             }
-            THE_CLOCK.setTargetFrameRate(TICKS_PER_SECOND);
+            THE_CLOCK.setTargetFrameRate(Globals.TICKS_PER_SECOND);
             THE_GAME_CONTROLLER.restart(INTRO);
         }
     },

@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.dashboard;
 
-import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -42,7 +42,7 @@ public class InfoBoxGameControl extends InfoBox {
     private CheckBox cbImmunity;
 
     public void init() {
-        spinnerCredit      = addIntSpinner("Credit", 0, GameController.MAX_COINS, 0);
+        spinnerCredit      = addIntSpinner("Credit", 0, Globals.MAX_COINS, 0);
         comboGameVariant   = addComboBox("Variant", GameVariant.values());
         comboInitialLives  = addComboBox("Initial Lives", new Integer[] {3, 5});
         bgLevelActions     = addButtonList("Game Level", "Start", "Quit", "Next");

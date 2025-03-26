@@ -4,12 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.controller;
 
+import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import org.tinylog.Logger;
 
 import java.util.Optional;
 
-import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 
 /**
  * Hunting happens in a sequence of retreat (scatter) and attack (chasing) phases.
@@ -74,7 +74,7 @@ public abstract class HuntingTimer extends TickTimer {
         start();
         Logger.info("Hunting phase {} ({}, {} ticks / {} seconds) started. {}",
             this.phaseIndex, huntingPhase,
-            durationTicks(), (float) durationTicks() / TICKS_PER_SECOND, this);
+            durationTicks(), (float) durationTicks() / Globals.TICKS_PER_SECOND, this);
     }
 
     private byte checkHuntingPhaseIndex(int phaseIndex) {

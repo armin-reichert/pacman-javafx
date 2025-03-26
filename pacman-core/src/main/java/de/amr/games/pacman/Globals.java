@@ -23,6 +23,10 @@ public class Globals {
 
     public static final GameController THE_GAME_CONTROLLER = new GameController();
 
+    public static final byte TICKS_PER_SECOND = 60;
+
+    public static final int MAX_COINS = 99;
+
     /** Tile size (8px). */
     public static final int TS = 8;
 

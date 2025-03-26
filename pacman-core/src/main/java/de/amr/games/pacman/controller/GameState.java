@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.controller;
 
+import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.fsm.FsmState;
 import de.amr.games.pacman.lib.timer.Pulse;
@@ -20,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.controller.GameController.TICKS_PER_SECOND;
 
 /**
  * Game states of the Pac-Man game variants.
@@ -382,7 +382,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             GameLevel level = game.level().orElseThrow();
-            if (timer().tickCount() > 2 * TICKS_PER_SECOND) {
+            if (timer().tickCount() > 2 * Globals.TICKS_PER_SECOND) {
                 level.blinking().tick();
                 level.ghosts().forEach(ghost -> ghost.update(game));
                 level.bonus().ifPresent(bonus -> bonus.update(game));
@@ -400,7 +400,7 @@ public enum GameState implements FsmState<GameModel> {
                 game.activateNextBonus();
             }
             else if (timer().atSecond(4.5)) {
-                level.bonus().ifPresent(bonus -> bonus.setEaten(TICKS_PER_SECOND));
+                level.bonus().ifPresent(bonus -> bonus.setEaten(Globals.TICKS_PER_SECOND));
                 game.publishGameEvent(GameEventType.BONUS_EATEN);
             }
             else if (timer().atSecond(6.5)) {
@@ -408,7 +408,7 @@ public enum GameState implements FsmState<GameModel> {
                 game.activateNextBonus();
             }
             else if (timer().atSecond(7.5)) {
-                level.bonus().ifPresent(bonus -> bonus.setEaten(TICKS_PER_SECOND));
+                level.bonus().ifPresent(bonus -> bonus.setEaten(Globals.TICKS_PER_SECOND));
                 game.publishGameEvent(GameEventType.BONUS_EATEN);
             }
             else if (timer().atSecond(8.5)) {
