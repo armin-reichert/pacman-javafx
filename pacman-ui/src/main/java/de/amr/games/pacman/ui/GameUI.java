@@ -5,15 +5,19 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui;
 
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui._2d.GameView;
+import de.amr.games.pacman.ui._2d.StartPage;
 import de.amr.games.pacman.ui._2d.StartPagesCarousel;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui.input.Keyboard;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.geometry.Dimension2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 import java.util.Optional;
 
@@ -28,6 +32,12 @@ public interface GameUI {
     ArcadeKeyBinding arcadeKeys();
     JoypadKeyBinding joypadKeyBinding();
     void selectNextJoypadKeyBinding();
+
+    void addStartPage(GameVariant gameVariant, StartPage startPage);
+
+    void addDefaultDashboardItems(String... titles);
+
+    void create(Stage stage, Dimension2D size);
 
     default GameUIConfiguration currentUIConfig() { return uiConfiguration(THE_GAME_CONTROLLER.selectedGameVariant()); }
 
@@ -49,7 +59,7 @@ public interface GameUI {
 
     GameUIConfiguration uiConfiguration(GameVariant variant);
 
-    Pane gameView();
+    GameView gameView();
 
     ObjectProperty<GameScene> gameSceneProperty();
 
@@ -60,6 +70,8 @@ public interface GameUI {
     void openEditor();
 
     void setScoreVisible(boolean visible);
+
+    void show();
 
     void showStartView();
 

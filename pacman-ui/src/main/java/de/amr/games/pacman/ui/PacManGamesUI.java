@@ -116,6 +116,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
      * @param stage primary stage (window)
      * @param initialSize initial UI size
      */
+    @Override
     public void create(Stage stage, Dimension2D initialSize) {
         this.stage = assertNotNull(stage);
         createMainScene(assertNotNull(initialSize));
@@ -147,7 +148,22 @@ public class PacManGamesUI implements GameEventListener, GameUI {
         uiConfigMap.put(variant, uiConfig);
     }
 
-    public Stage stage() { return stage; }
+    @Override
+    public void addStartPage(GameVariant gameVariant, StartPage startPage) {
+        startPagesCarousel.addStartPage(gameVariant, startPage);
+    }
+
+    @Override
+    public void addDefaultDashboardItems(String... titles) {
+        for (String title : titles) {
+            gameView.addDefaultDashboardItem(title);
+        }
+    }
+
+    @Override
+    public void show() {
+        stage.show();
+    }
 
     protected void runOnEveryTickExceptWhenPaused() {
         try {

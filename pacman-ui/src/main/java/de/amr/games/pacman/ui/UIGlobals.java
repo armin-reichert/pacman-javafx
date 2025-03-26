@@ -14,18 +14,11 @@ import java.util.Map;
 
 public class UIGlobals {
 
-    public static PacManGamesUI createGameUI_2D(Map<GameVariant, GameUIConfiguration> configMap) {
-        var ui = new PacManGamesUI();
-        for (var entry : configMap.entrySet()) {
-            ui.configure(entry.getKey(), entry.getValue());
+    public static PacManGamesUI createGameUI(Map<GameVariant, GameUIConfiguration> configMap, boolean support3D) {
+        var ui = support3D ? new PacManGamesUI_3D() : new PacManGamesUI();
+        if (support3D) {
+            THE_ASSETS.addAssets3D();
         }
-        THE_UI = ui;
-        return ui;
-    }
-
-    public static PacManGamesUI_3D createGameUI_3D(Map<GameVariant, GameUIConfiguration> configMap) {
-        var ui = new PacManGamesUI_3D();
-        THE_ASSETS.addAssets3D();
         for (var entry : configMap.entrySet()) {
             ui.configure(entry.getKey(), entry.getValue());
         }

@@ -17,9 +17,9 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig;
+import de.amr.games.pacman.ui.GameUI;
 import de.amr.games.pacman.ui.UIGlobals;
 import de.amr.games.pacman.ui._2d.StartPage;
-import de.amr.games.pacman.ui._3d.PacManGamesUI_3D;
 import de.amr.games.pacman.ui.dashboard.InfoBoxCustomMaps;
 import de.amr.games.pacman.uilib.model3D.Model3D;
 import javafx.application.Application;
@@ -71,27 +71,29 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        PacManGamesUI_3D ui = UIGlobals.createGameUI_3D(Map.of(
+        GameUI ui = UIGlobals.createGameUI(Map.of(
             GameVariant.PACMAN, new ArcadePacMan_UIConfig(),
             GameVariant.MS_PACMAN, new ArcadeMsPacMan_UIConfig(),
             GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_UIConfig(),
             GameVariant.PACMAN_XXL, new PacManXXL_PacMan_UIConfig(),
             GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_UIConfig()
-        ));
+        ), true);
         ui.create(stage, initialSize());
-        ui.gameView().addDefaultDashboardItems("README", "GENERAL", "GAME_CONTROL", "SETTINGS_3D", "GAME_INFO",
+        ui.addDefaultDashboardItems("README", "GENERAL", "GAME_CONTROL", "SETTINGS_3D", "GAME_INFO",
             "ACTOR_INFO", "CUSTOM_MAPS", "JOYPAD", "KEYBOARD", "ABOUT");
 
         InfoBoxCustomMaps infoBoxCustomMaps = ui.gameView().dashboard().getItem("CUSTOM_MAPS");
         infoBoxCustomMaps.setTableItems(xxlMapSelector.customMaps());
 
-        ui.startPageSelectionView().addStartPage(GameVariant.PACMAN,           new ArcadePacMan_StartPage());
-        ui.startPageSelectionView().addStartPage(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_StartPage());
-        ui.startPageSelectionView().addStartPage(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_StartPage());
+        ui.addStartPage(GameVariant.PACMAN,           new ArcadePacMan_StartPage());
+        ui.addStartPage(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_StartPage());
+        ui.addStartPage(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_StartPage());
 
         StartPage xxlStartPage = new PacManXXL_StartPage();
-        ui.startPageSelectionView().addStartPage(GameVariant.PACMAN_XXL,    xxlStartPage);
-        ui.startPageSelectionView().addStartPage(GameVariant.MS_PACMAN_XXL, xxlStartPage);
+        ui.addStartPage(GameVariant.PACMAN_XXL,    xxlStartPage);
+        ui.addStartPage(GameVariant.MS_PACMAN_XXL, xxlStartPage);
+
+        ui.show();
 
         DirectoryWatchdog goodBoy = new DirectoryWatchdog(GameModel.CUSTOM_MAP_DIR);
         goodBoy.setEventConsumer(eventList -> {
@@ -100,8 +102,6 @@ public class PacManGames3dApp extends Application {
             xxlMapSelector.loadCustomMaps();
         });
         goodBoy.startWatching();
-
-        stage.show();
 
         Logger.info("Assets: {}", THE_ASSETS.summary(Map.of(
                 Model3D.class,"3D models",

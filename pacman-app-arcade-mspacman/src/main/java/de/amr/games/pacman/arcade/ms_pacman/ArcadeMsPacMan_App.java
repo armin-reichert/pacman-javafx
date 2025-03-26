@@ -6,6 +6,7 @@ package de.amr.games.pacman.arcade.ms_pacman;
 
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui.GameUI;
 import de.amr.games.pacman.ui.UIGlobals;
 import de.amr.games.pacman.ui._3d.PacManGamesUI_3D;
 import javafx.application.Application;
@@ -29,14 +30,14 @@ public class ArcadeMsPacMan_App extends Application {
 
     @Override
     public void start(Stage stage) {
-        PacManGamesUI_3D ui = UIGlobals.createGameUI_3D(Map.of(
+        GameUI ui = UIGlobals.createGameUI(Map.of(
             GameVariant.MS_PACMAN, new ArcadeMsPacMan_UIConfig()
-        ));
+        ), true);
         ui.create(stage, initialSize());
-        ui.startPageSelectionView().addStartPage(GameVariant.MS_PACMAN, new ArcadeMsPacMan_StartPage());
-        ui.gameView().addDefaultDashboardItems(
+        ui.addStartPage(GameVariant.MS_PACMAN, new ArcadeMsPacMan_StartPage());
+        ui.addDefaultDashboardItems(
             "README", "GENERAL", "GAME_CONTROL", "SETTINGS_3D", "GAME_INFO", "ACTOR_INFO", "KEYBOARD", "ABOUT");
-        ui.stage().show();
+        ui.show();
     }
 
     private static Dimension2D initialSize() {

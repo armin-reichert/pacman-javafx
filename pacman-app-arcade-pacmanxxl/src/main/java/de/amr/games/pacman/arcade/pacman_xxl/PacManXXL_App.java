@@ -6,6 +6,7 @@ package de.amr.games.pacman.arcade.pacman_xxl;
 
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui.GameUI;
 import de.amr.games.pacman.ui.UIGlobals;
 import de.amr.games.pacman.ui._2d.StartPage;
 import de.amr.games.pacman.ui._3d.PacManGamesUI_3D;
@@ -36,12 +37,12 @@ public class PacManXXL_App extends Application {
 
     @Override
     public void start(Stage stage) {
-        PacManGamesUI_3D ui = UIGlobals.createGameUI_3D(Map.of(
+        GameUI ui = UIGlobals.createGameUI(Map.of(
             GameVariant.PACMAN_XXL, new PacManXXL_PacMan_UIConfig(),
             GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_UIConfig()
-        ));
+        ), true);
         ui.create(stage, initialSize());
-        ui.gameView().addDefaultDashboardItems("README", "GENERAL", "GAME_CONTROL", "SETTINGS_3D", "GAME_INFO",
+        ui.addDefaultDashboardItems("README", "GENERAL", "GAME_CONTROL", "SETTINGS_3D", "GAME_INFO",
             "ACTOR_INFO", "CUSTOM_MAPS", "KEYBOARD", "ABOUT");
 
         InfoBoxCustomMaps infoBoxCustomMaps = ui.gameView().dashboard().getItem("CUSTOM_MAPS");

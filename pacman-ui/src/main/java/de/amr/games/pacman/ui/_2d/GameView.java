@@ -204,24 +204,20 @@ public class GameView extends StackPane implements View, GameEventListener {
     // Dashboard
     //
 
-    public void addDefaultDashboardItems(String... ids) {
-        for (var id : ids) addDefaultDashboardItem(id);
-    }
-
-    public void addDefaultDashboardItem(String id) {
-        switch (id) {
-            case "ABOUT"        -> addDashboardItem(id, THE_ASSETS.localizedText("infobox.about.title"),              new InfoBoxAbout());
-            case "ACTOR_INFO"   -> addDashboardItem(id, THE_ASSETS.localizedText("infobox.actor_info.title"),         new InfoBoxActorInfo());
-            case "CUSTOM_MAPS"  -> addDashboardItem(id, THE_ASSETS.localizedText("infobox.custom_maps.title"),        new InfoBoxCustomMaps());
-            case "GENERAL"      -> addDashboardItem(id, THE_ASSETS.localizedText("infobox.general.title"),            new InfoBoxGeneral());
-            case "GAME_CONTROL" -> addDashboardItem(id, THE_ASSETS.localizedText("infobox.game_control.title"),       new InfoBoxGameControl());
-            case "GAME_INFO"    -> addDashboardItem(id, THE_ASSETS.localizedText("infobox.game_info.title"),          new InfoBoxGameInfo());
-            case "JOYPAD"       -> addDashboardItem(id, THE_ASSETS.localizedText("infobox.joypad.title"),             new InfoBoxJoypad());
-            case "KEYBOARD"     -> addDashboardItem(id, THE_ASSETS.localizedText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
+    public void addDefaultDashboardItem(String title) {
+        switch (title) {
+            case "ABOUT"        -> addDashboardItem(title, THE_ASSETS.localizedText("infobox.about.title"),              new InfoBoxAbout());
+            case "ACTOR_INFO"   -> addDashboardItem(title, THE_ASSETS.localizedText("infobox.actor_info.title"),         new InfoBoxActorInfo());
+            case "CUSTOM_MAPS"  -> addDashboardItem(title, THE_ASSETS.localizedText("infobox.custom_maps.title"),        new InfoBoxCustomMaps());
+            case "GENERAL"      -> addDashboardItem(title, THE_ASSETS.localizedText("infobox.general.title"),            new InfoBoxGeneral());
+            case "GAME_CONTROL" -> addDashboardItem(title, THE_ASSETS.localizedText("infobox.game_control.title"),       new InfoBoxGameControl());
+            case "GAME_INFO"    -> addDashboardItem(title, THE_ASSETS.localizedText("infobox.game_info.title"),          new InfoBoxGameInfo());
+            case "JOYPAD"       -> addDashboardItem(title, THE_ASSETS.localizedText("infobox.joypad.title"),             new InfoBoxJoypad());
+            case "KEYBOARD"     -> addDashboardItem(title, THE_ASSETS.localizedText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
             case "README" -> {
                 InfoBox readMeBox = new InfoBoxReadmeFirst();
                 readMeBox.setExpanded(true);
-                addDashboardItem(id, THE_ASSETS.localizedText("infobox.readme.title"), readMeBox);
+                addDashboardItem(title, THE_ASSETS.localizedText("infobox.readme.title"), readMeBox);
             }
         }
     }
