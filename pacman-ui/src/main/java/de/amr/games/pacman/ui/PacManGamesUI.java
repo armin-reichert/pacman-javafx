@@ -264,14 +264,11 @@ public class PacManGamesUI implements GameEventListener, GameUI {
     }
 
     protected void handleGameVariantChange(GameVariant gameVariant) {
-        THE_GAME_CONTROLLER.game().removeGameEventListener(this);
-        THE_GAME_CONTROLLER.selectGameVariant(gameVariant);
-        THE_GAME_CONTROLLER.game().addGameEventListener(this);
-        THE_SOUND.selectGameVariant(gameVariant, gameConfiguration(gameVariant).assetNamespace());
-        stage.getIcons().setAll(gameConfiguration(gameVariant).appIcon());
-        //TODO check this
-        gameView.canvasContainer().decorationEnabledPy.set(gameConfiguration(gameVariant).isGameCanvasDecorated());
-        Logger.info("Game variant changed to {}", gameVariant);
+        THE_GAME_CONTROLLER.game().addGameEventListener(this); //TODO check this
+        GameUIConfiguration uiConfig = uiConfiguration(gameVariant);
+        THE_SOUND.selectGameVariant(gameVariant, uiConfig.assetNamespace());
+        stage.getIcons().setAll(uiConfig.appIcon());
+        gameView.canvasContainer().decorationEnabledPy.set(uiConfig.isGameCanvasDecorated());
     }
 
     protected void bindStageTitle() {
@@ -381,7 +378,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
     }
 
     @Override
-    public GameUIConfiguration gameConfiguration(GameVariant variant) {
+    public GameUIConfiguration uiConfiguration(GameVariant variant) {
         return uiConfigMap.get(variant);
     }
 
@@ -411,8 +408,9 @@ public class PacManGamesUI implements GameEventListener, GameUI {
     }
 
     @Override
-    public void init(GameVariant variant) {
-        handleGameVariantChange(variant);
+    public void init(GameVariant gameVariant) {
+        THE_GAME_CONTROLLER.selectGameVariant(gameVariant);
+        handleGameVariantChange(gameVariant);
     }
 
     @Override

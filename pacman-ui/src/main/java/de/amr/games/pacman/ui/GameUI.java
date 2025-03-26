@@ -31,7 +31,7 @@ public interface GameUI {
     JoypadKeyBinding joypadKeyBinding();
     void selectNextJoypadKeyBinding();
 
-    default GameUIConfiguration currentUIConfig() { return gameConfiguration(THE_GAME_CONTROLLER.selectedGameVariant()); }
+    default GameUIConfiguration currentUIConfig() { return uiConfiguration(THE_GAME_CONTROLLER.selectedGameVariant()); }
 
     Optional<GameScene> currentGameScene();
 
@@ -49,7 +49,7 @@ public interface GameUI {
 
     ReadOnlyDoubleProperty heightProperty();
 
-    GameUIConfiguration gameConfiguration(GameVariant variant);
+    GameUIConfiguration uiConfiguration(GameVariant variant);
 
     Pane gameView();
 
