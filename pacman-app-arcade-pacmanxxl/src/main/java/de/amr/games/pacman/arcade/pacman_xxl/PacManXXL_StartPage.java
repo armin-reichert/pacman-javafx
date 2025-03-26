@@ -81,4 +81,14 @@ public class PacManXXL_StartPage extends StackPane implements StartPage {
     public Node root() {
         return this;
     }
+
+    @Override
+    public void onSelected() {
+        menu.stopDrawingLoop();
+    }
+
+    @Override
+    public void onDeselected() {
+        menu.stopDrawingLoop();
+    }
 }

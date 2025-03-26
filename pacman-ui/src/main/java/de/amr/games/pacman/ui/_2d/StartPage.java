@@ -9,5 +9,8 @@ import org.tinylog.Logger;
 
 public interface StartPage {
     Node root();
+
+    default void onSelected() {}
+    default void onDeselected() {}
     default void start() { Logger.info("{} starts", getClass().getSimpleName()); }
 }
