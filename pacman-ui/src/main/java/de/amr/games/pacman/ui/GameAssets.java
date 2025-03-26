@@ -12,8 +12,6 @@ import de.amr.games.pacman.uilib.model3D.Model3D;
 
 import java.util.ResourceBundle;
 
-import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
-
 public class GameAssets extends AssetStorage implements ResourceManager {
 
     protected Picker<String> pickerForGameOverTexts;
@@ -50,20 +48,20 @@ public class GameAssets extends AssetStorage implements ResourceManager {
     }
 
     public void addAssets3D() {
-        THE_ASSETS.addBundle(getModuleBundle("de.amr.games.pacman.ui.texts.messages3d"));
+        addBundle(getModuleBundle("de.amr.games.pacman.ui.texts.messages3d"));
 
         ResourceManager uiLibResources = () -> Ufx.class;
-        THE_ASSETS.store("model3D.pacman", new Model3D(uiLibResources.url("model3D/pacman.obj")));
-        THE_ASSETS.store("model3D.pellet", new Model3D(uiLibResources.url("model3D/fruit.obj")));
+        store("model3D.pacman", new Model3D(uiLibResources.url("model3D/pacman.obj")));
+        store("model3D.pellet", new Model3D(uiLibResources.url("model3D/fruit.obj")));
 
         Model3D ghostModel3D = new Model3D(uiLibResources.url("model3D/ghost.obj"));
-        THE_ASSETS.store("model3D.ghost",               ghostModel3D);
-        THE_ASSETS.store("model3D.ghost.mesh.dress",    ghostModel3D.mesh("Sphere.004_Sphere.034_light_blue_ghost"));
-        THE_ASSETS.store("model3D.ghost.mesh.pupils",   ghostModel3D.mesh("Sphere.010_Sphere.039_grey_wall"));
-        THE_ASSETS.store("model3D.ghost.mesh.eyeballs", ghostModel3D.mesh("Sphere.009_Sphere.036_white"));
+        store("model3D.ghost",               ghostModel3D);
+        store("model3D.ghost.mesh.dress",    ghostModel3D.mesh("Sphere.004_Sphere.034_light_blue_ghost"));
+        store("model3D.ghost.mesh.pupils",   ghostModel3D.mesh("Sphere.010_Sphere.039_grey_wall"));
+        store("model3D.ghost.mesh.eyeballs", ghostModel3D.mesh("Sphere.009_Sphere.036_white"));
 
-        pickerForGameOverTexts = Picker.fromBundle(THE_ASSETS.bundles().getLast(), "game.over");
-        pickerForLevelCompleteTexts = Picker.fromBundle(THE_ASSETS.bundles().getLast(), "level.complete");
+        pickerForGameOverTexts = Picker.fromBundle(bundles().getLast(), "game.over");
+        pickerForLevelCompleteTexts = Picker.fromBundle(bundles().getLast(), "level.complete");
     }
 
     public String localizedGameOverMessage() {
