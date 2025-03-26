@@ -13,9 +13,6 @@ import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui.input.Keyboard;
 import de.amr.games.pacman.uilib.FlashMessageView;
-import de.amr.games.pacman.uilib.Picker;
-import de.amr.games.pacman.uilib.ResourceManager;
-import de.amr.games.pacman.uilib.Ufx;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
@@ -37,7 +34,6 @@ import org.tinylog.Logger;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
@@ -95,8 +91,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     protected final FlashMessageView flashMessageOverlay = new FlashMessageView();
 
     protected boolean scoreVisible;
-    protected Picker<String> pickerForGameOverTexts;
-    protected Picker<String> pickerForLevelCompleteTexts;
 
     //TODO maybe this is overdesign
     protected final JoypadKeyBinding[] joypadKeyBindings = new JoypadKeyBinding[] { JOYPAD_CURSOR_KEYS, JOYPAD_WASD };
@@ -144,33 +138,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
         stage.setScene(mainScene);
         stage.centerOnScreen();
         stage.setOnShowing(e -> showStartView());
-    }
-
-    public void loadAssets2D() {
-        ResourceManager rm = () -> PacManGamesUI.class;
-
-        ResourceBundle textResources = rm.getModuleBundle("de.amr.games.pacman.ui.texts.messages2d");
-        THE_ASSETS.addBundle(textResources);
-
-        pickerForGameOverTexts = Picker.fromBundle(textResources, "game.over");
-        pickerForLevelCompleteTexts = Picker.fromBundle(textResources, "level.complete");
-
-        THE_ASSETS.store("background.scene",  Ufx.imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
-        THE_ASSETS.store("background.play_scene3d", Ufx.imageBackground(rm.loadImage("graphics/blue_sky.jpg")));
-
-        THE_ASSETS.store("font.arcade",             rm.loadFont("fonts/emulogic.ttf", 8));
-        THE_ASSETS.store("font.handwriting",        rm.loadFont("fonts/Molle-Italic.ttf", 9));
-        THE_ASSETS.store("font.monospaced",         rm.loadFont("fonts/Inconsolata_Condensed-Bold.ttf", 12));
-
-        THE_ASSETS.store("icon.auto",               rm.loadImage("graphics/icons/auto.png"));
-        THE_ASSETS.store("icon.mute",               rm.loadImage("graphics/icons/mute.png"));
-        THE_ASSETS.store("icon.pause",              rm.loadImage("graphics/icons/pause.png"));
-
-        THE_ASSETS.store("voice.explain",           rm.url("sound/voice/press-key.mp3"));
-        THE_ASSETS.store("voice.autopilot.off",     rm.url("sound/voice/autopilot-off.mp3"));
-        THE_ASSETS.store("voice.autopilot.on",      rm.url("sound/voice/autopilot-on.mp3"));
-        THE_ASSETS.store("voice.immunity.off",      rm.url("sound/voice/immunity-off.mp3"));
-        THE_ASSETS.store("voice.immunity.on",       rm.url("sound/voice/immunity-on.mp3"));
     }
 
     /**
@@ -387,16 +354,6 @@ public class PacManGamesUI implements GameEventListener, GameContext {
     @Override
     public void selectNextJoypadKeyBinding() {
         joypadIndex = (joypadIndex + 1) % joypadKeyBindings.length;
-    }
-
-    @Override
-    public String localizedGameOverMessage() {
-        return pickerForGameOverTexts.next();
-    }
-
-    @Override
-    public String localizedLevelCompleteMessage(int levelNumber) {
-        return pickerForLevelCompleteTexts.next() + "\n\n" + THE_ASSETS.localizedText("level_complete", levelNumber);
     }
 
     @Override

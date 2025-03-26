@@ -340,7 +340,7 @@ public class GameLevel3D extends Group {
             new KeyFrame(Duration.ZERO, e -> {
                 livesCounter3D().light().setLightOn(false);
                 if (Globals.randomInt(1, 100) < 25) {
-                    THE_GAME_CONTEXT.showFlashMessageSec(3, THE_GAME_CONTEXT.localizedLevelCompleteMessage(level.number()));
+                    THE_GAME_CONTEXT.showFlashMessageSec(3, THE_ASSETS.localizedLevelCompleteMessage(level.number()));
                 }
             }),
             new KeyFrame(Duration.seconds(1.0), e -> level.ghosts().forEach(Ghost::hide)),

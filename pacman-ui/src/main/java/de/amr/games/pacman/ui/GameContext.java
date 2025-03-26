@@ -23,9 +23,6 @@ import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
  * @author Armin Reichert
  */
 public interface GameContext {
-    // Resources
-    String localizedGameOverMessage();
-    String localizedLevelCompleteMessage(int levelNumber);
 
     // Game model and controller
     void setGameVariant(GameVariant variant);
