@@ -14,7 +14,7 @@ import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameActionProvider;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
-import de.amr.games.pacman.ui.input.Keyboard;
+import de.amr.games.pacman.uilib.Keyboard;
 import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
 

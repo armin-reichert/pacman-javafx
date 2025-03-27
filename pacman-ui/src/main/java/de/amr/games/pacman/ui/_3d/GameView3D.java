@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.games.pacman.ui.Globals.THE_UI;
-import static de.amr.games.pacman.ui.input.Keyboard.alt;
+import static de.amr.games.pacman.uilib.Keyboard.alt;
 import static de.amr.games.pacman.uilib.Ufx.contextMenuTitleItem;
 
 /**

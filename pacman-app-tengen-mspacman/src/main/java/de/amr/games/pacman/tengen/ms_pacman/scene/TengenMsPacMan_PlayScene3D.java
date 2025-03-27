@@ -27,7 +27,7 @@ import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindCheatActions;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindFallbackPlayerControlActions;
-import static de.amr.games.pacman.ui.input.Keyboard.alt;
+import static de.amr.games.pacman.uilib.Keyboard.alt;
 
 public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 

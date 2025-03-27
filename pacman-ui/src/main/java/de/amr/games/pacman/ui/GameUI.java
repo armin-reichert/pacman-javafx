@@ -7,10 +7,9 @@ package de.amr.games.pacman.ui;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._2d.GameView;
 import de.amr.games.pacman.ui._2d.StartPage;
-import de.amr.games.pacman.ui._3d.PacManGamesUI_3D;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
-import de.amr.games.pacman.ui.input.Keyboard;
+import de.amr.games.pacman.uilib.Keyboard;
 import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.GameClockFX;
 import javafx.beans.property.ObjectProperty;
@@ -22,15 +21,7 @@ import javafx.stage.Stage;
 
 import java.util.Optional;
 
-import static de.amr.games.pacman.ui.Globals.THE_UI;
-
 public interface GameUI {
-
-    static void createUIWithout3DSupport() {
-        THE_UI = new PacManGamesUI();
-    }
-
-    static void createUIWith3DSupport() { THE_UI = new PacManGamesUI_3D(); }
 
     GameClockFX clock();
     Keyboard keyboard();

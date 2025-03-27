@@ -12,7 +12,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._2d.*;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
-import de.amr.games.pacman.ui.input.Keyboard;
+import de.amr.games.pacman.uilib.Keyboard;
 import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.FlashMessageView;
 import de.amr.games.pacman.uilib.GameClockFX;

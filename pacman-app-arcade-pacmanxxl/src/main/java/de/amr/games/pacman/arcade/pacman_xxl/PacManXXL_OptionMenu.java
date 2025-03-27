@@ -7,7 +7,7 @@ package de.amr.games.pacman.arcade.pacman_xxl;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.MapSelectionMode;
-import de.amr.games.pacman.ui.input.Keyboard;
+import de.amr.games.pacman.uilib.Keyboard;
 import de.amr.games.pacman.uilib.OptionMenu;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;

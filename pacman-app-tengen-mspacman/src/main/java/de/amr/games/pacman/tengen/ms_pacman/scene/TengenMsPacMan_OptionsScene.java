@@ -25,7 +25,7 @@ import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions.TO
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.CONTINUES_SPRITES;
 import static de.amr.games.pacman.ui.Globals.*;
-import static de.amr.games.pacman.ui.input.Keyboard.alt;
+import static de.amr.games.pacman.uilib.Keyboard.alt;
 
 /**
  * Options scene for Ms. Pac-Man Tengen.
