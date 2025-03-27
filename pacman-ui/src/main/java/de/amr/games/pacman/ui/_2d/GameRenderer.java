@@ -203,9 +203,15 @@ public interface GameRenderer {
         });
     }
 
-    void drawBonus(Bonus bonus);
+    default void drawBonus(Bonus bonus) {
+        if (bonus.state() == Bonus.STATE_EDIBLE) {
+            drawActorSprite(bonus.actor(), spriteSheet().bonusSymbolSprite(bonus.symbol()));
+        } else if (bonus.state() == Bonus.STATE_EATEN) {
+            drawActorSprite(bonus.actor(), spriteSheet().bonusValueSprite(bonus.symbol()));
+        }
+    }
 
-    void drawGameLevel(GameLevel level, double x, double y);
+    void drawMaze(GameLevel level, double x, double y);
 
     void setMazeHighlighted(boolean on);
 

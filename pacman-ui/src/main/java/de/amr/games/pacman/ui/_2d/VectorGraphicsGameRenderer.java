@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui._2d;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.tilemap.rendering.FoodMapRenderer;
 import de.amr.games.pacman.tilemap.rendering.TerrainMapColorScheme;
 import de.amr.games.pacman.tilemap.rendering.TerrainMapRenderer;
@@ -101,7 +100,7 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void drawGameLevel(GameLevel level, double x, double y) {
+    public void drawMaze(GameLevel level, double x, double y) {
         WorldMap worldMap = level.worldMap();
         if (mazeHighlighted) {
             terrainRenderer.setColorScheme(blinkingOn ? blinkingOnColors : blinkingOffColors);
@@ -125,14 +124,6 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
             if (blinkingOn) {
                 level.energizerTiles().filter(level::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx(), tile));
             }
-        }
-    }
-
-    public void drawBonus(Bonus bonus) {
-        if (bonus.state() == Bonus.STATE_EDIBLE) {
-            drawActorSprite(bonus.actor(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
-        } else if (bonus.state() == Bonus.STATE_EATEN) {
-            drawActorSprite(bonus.actor(), spriteSheet.bonusValueSprite(bonus.symbol()));
         }
     }
 }

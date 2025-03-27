@@ -81,7 +81,7 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
     public void setMessagePosition(Vector2f position) {}
 
     @Override
-    public void drawGameLevel(GameLevel level, double x, double y) {
+    public void drawMaze(GameLevel level, double x, double y) {
         double scaling = scaling();
         ctx().save();
         ctx().scale(scaling, scaling);
@@ -97,13 +97,5 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
             }
         }
         ctx().restore();
-    }
-
-    public void drawBonus(Bonus bonus) {
-        if (bonus.state() == Bonus.STATE_EDIBLE) {
-            drawActorSprite(bonus.actor(), spriteSheet().bonusSymbolSprite(bonus.symbol()));
-        } else if (bonus.state() == Bonus.STATE_EATEN) {
-            drawActorSprite(bonus.actor(), spriteSheet().bonusValueSprite(bonus.symbol()));
-        }
     }
 }

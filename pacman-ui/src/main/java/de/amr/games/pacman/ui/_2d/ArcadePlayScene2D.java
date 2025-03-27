@@ -168,7 +168,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         gr.setMazeHighlighted(highlighted);
         gr.setBlinking(level.blinking().isOn());
         gr.setWorldMap(level.worldMap()); //TODO fixme: avoid calling this in every frame
-        gr.drawGameLevel(level, 0, 3 * TS);
+        gr.drawMaze(level, 0, 3 * TS);
 
         // Draw bonus
         level.bonus().ifPresent(gr::drawBonus);

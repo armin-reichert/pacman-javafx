@@ -186,7 +186,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     @Override
-    public void drawGameLevel(GameLevel level, double x, double y) {}
+    public void drawMaze(GameLevel level, double x, double y) {}
 
     public void drawWorld(GameLevel level, double mapX, double mapY) {
         ctx.setImageSmoothing(false);
@@ -284,9 +284,10 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     @Override
     public void drawBonus(Bonus bonus) {
+        MovingBonus movingBonus = (MovingBonus) bonus;
         ctx.save();
         ctx.setImageSmoothing(false);
-        ctx.translate(0, ((MovingBonus) bonus).elongationY());
+        ctx.translate(0, movingBonus.elongationY());
         switch (bonus.state()) {
             case STATE_EDIBLE -> drawActorSprite(bonus.actor(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
             case STATE_EATEN  -> drawActorSprite(bonus.actor(), spriteSheet.bonusValueSprite(bonus.symbol()));

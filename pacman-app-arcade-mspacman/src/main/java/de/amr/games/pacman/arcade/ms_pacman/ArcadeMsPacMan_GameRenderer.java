@@ -127,7 +127,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     }
 
     @Override
-    public void drawGameLevel(GameLevel level, double x, double y) {
+    public void drawMaze(GameLevel level, double x, double y) {
         if (mazeHighlighted) {
             drawSubImageScaled(flashingMapSprite.source(), flashingMapSprite.area(), x, y);
         } else if (level.uneatenFoodCount() == 0) {
@@ -145,6 +145,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     public void drawBonus(Bonus bonus) {
         MovingBonus movingBonus = (MovingBonus) bonus;
         ctx().save();
+        ctx().setImageSmoothing(false);
         ctx().translate(0, movingBonus.elongationY());
         switch (bonus.state()) {
             case Bonus.STATE_EDIBLE -> drawActorSprite(bonus.actor(), spriteSheet().bonusSymbolSprite(bonus.symbol()));
