@@ -7,11 +7,10 @@ package de.amr.games.pacman.ui;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._2d.GameView;
 import de.amr.games.pacman.ui._2d.StartPage;
-import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
-import de.amr.games.pacman.ui.input.JoypadKeyBinding;
-import de.amr.games.pacman.uilib.Keyboard;
+import de.amr.games.pacman.ui.input.GameKeyboard;
 import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.GameClockFX;
+import de.amr.games.pacman.uilib.Keyboard;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.geometry.Dimension2D;
@@ -24,19 +23,9 @@ import java.util.Optional;
 public interface GameUI {
 
     GameClockFX clock();
-    Keyboard keyboard();
+    GameKeyboard keyboard();
     GameAssets assets();
     GameSound sound();
-
-    KeyCodeCombination KEY_FULLSCREEN = Keyboard.naked(KeyCode.F11);
-    KeyCodeCombination KEY_MUTE = Keyboard.alt(KeyCode.M);
-    KeyCodeCombination KEY_OPEN_EDITOR = Keyboard.shift_alt(KeyCode.E);
-
-    ArcadeKeyBinding arcadeKeys();
-
-    JoypadKeyBinding joypadKeyBinding();
-
-    void selectNextJoypadKeyBinding();
 
     void addStartPage(GameVariant gameVariant, StartPage startPage);
 

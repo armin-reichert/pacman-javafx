@@ -10,9 +10,7 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._2d.*;
-import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
-import de.amr.games.pacman.ui.input.JoypadKeyBinding;
-import de.amr.games.pacman.uilib.Keyboard;
+import de.amr.games.pacman.ui.input.GameKeyboard;
 import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.FlashMessageView;
 import de.amr.games.pacman.uilib.GameClockFX;
@@ -36,9 +34,6 @@ import java.util.Optional;
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui.input.ArcadeKeyBinding.DEFAULT_ARCADE_KEY_BINDING;
-import static de.amr.games.pacman.ui.input.JoypadKeyBinding.JOYPAD_CURSOR_KEYS;
-import static de.amr.games.pacman.ui.input.JoypadKeyBinding.JOYPAD_WASD;
 import static de.amr.games.pacman.uilib.Ufx.createIcon;
 
 /**
@@ -55,10 +50,10 @@ public class PacManGamesUI implements GameEventListener, GameUI {
         return clock;
     }
 
-    private final Keyboard keyboard = new Keyboard();
+    private final GameKeyboard keyboard = new GameKeyboard();
 
     @Override
-    public Keyboard keyboard() {
+    public GameKeyboard keyboard() {
         return keyboard;
     }
 
@@ -108,11 +103,6 @@ public class PacManGamesUI implements GameEventListener, GameUI {
     protected final FlashMessageView flashMessageOverlay = new FlashMessageView();
 
     protected boolean scoreVisible;
-
-    //TODO maybe this is overdesign
-    protected final JoypadKeyBinding[] joypadKeyBindings = new JoypadKeyBinding[] { JOYPAD_CURSOR_KEYS, JOYPAD_WASD };
-    protected int joypadIndex;
-    protected ArcadeKeyBinding arcadeKeyBinding = DEFAULT_ARCADE_KEY_BINDING;
 
     protected final UIConfigurationManager uiConfigurationManager = new UIConfigurationManager();
 
@@ -243,13 +233,13 @@ public class PacManGamesUI implements GameEventListener, GameUI {
         mainScene.addEventFilter(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
 
         mainScene.setOnKeyPressed(keyPress -> {
-            if (KEY_FULLSCREEN.match(keyPress)) {
+            if (GameKeyboard.KEY_FULLSCREEN.match(keyPress)) {
                 enterFullScreenMode();
             }
-            else if (KEY_MUTE.match(keyPress)) {
+            else if (GameKeyboard.KEY_MUTE.match(keyPress)) {
                 sound.toggleMuted();
             }
-            else if (KEY_OPEN_EDITOR.match(keyPress)) {
+            else if (GameKeyboard.KEY_OPEN_EDITOR.match(keyPress)) {
                 openEditor();
             }
             else if (viewPy.get() instanceof GameActionProvider actionProvider) {
@@ -362,21 +352,6 @@ public class PacManGamesUI implements GameEventListener, GameUI {
     // -----------------------------------------------------------------------------------------------------------------
     // GameContext interface implementation
     // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public ArcadeKeyBinding arcadeKeys() {
-        return arcadeKeyBinding;
-    }
-
-    @Override
-    public JoypadKeyBinding joypadKeyBinding() {
-        return joypadKeyBindings[joypadIndex];
-    }
-
-    @Override
-    public void selectNextJoypadKeyBinding() {
-        joypadIndex = (joypadIndex + 1) % joypadKeyBindings.length;
-    }
 
     @Override
     public void enterFullScreenMode() {

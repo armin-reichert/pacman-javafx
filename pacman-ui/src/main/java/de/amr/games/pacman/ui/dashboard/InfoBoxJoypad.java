@@ -25,7 +25,7 @@ public class InfoBoxJoypad extends InfoBox {
 
         setContentTextFont(Font.font("Monospace", 16));
 
-        joypad = THE_UI.joypadKeyBinding();
+        joypad = THE_UI.keyboard().joypadKeyBinding();
         String indent = "  "; // Urgh
         addLabeledValue("[SELECT]   [START]", () -> "%s%s  %s".formatted(
             indent,
@@ -49,7 +49,7 @@ public class InfoBoxJoypad extends InfoBox {
 
     @Override
     public void update() {
-        joypad = THE_UI.joypadKeyBinding();
+        joypad = THE_UI.keyboard().joypadKeyBinding();
         super.update();
     }
 }

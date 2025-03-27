@@ -203,7 +203,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void doInit() {
         messageMovement = new MessageMovement();
-        THE_UI.joypadKeyBinding().register();
+        THE_UI.keyboard().joypadKeyBinding().register();
         THE_UI.setScoreVisible(true);
         setGameRenderer(THE_UI.configurations().current().createRenderer(canvas));
         movingCamera.focusTopOfScene();
@@ -212,7 +212,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     protected void doEnd() {
         THE_UI.sound().stopAll();
-        THE_UI.joypadKeyBinding().unregister();
+        THE_UI.keyboard().joypadKeyBinding().unregister();
     }
 
     @Override
@@ -278,7 +278,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void onLevelCreated(GameEvent e) {
         THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-            THE_UI.joypadKeyBinding().register();
+            THE_UI.keyboard().joypadKeyBinding().register();
             setKeyBindings();
             if (THE_GAME_CONTROLLER.game().isDemoLevel()) {
                 level.pac().setImmune(false);
@@ -301,22 +301,22 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
         Logger.info("{} entered from {}", this, oldScene);
-        THE_UI.joypadKeyBinding().register();
+        THE_UI.keyboard().joypadKeyBinding().register();
         setKeyBindings();
         THE_GAME_CONTROLLER.game().level().map(GameLevel::worldMap).ifPresent(worldMap -> gr.setWorldMap(worldMap));
     }
 
     private void setKeyBindings() {
         if (THE_GAME_CONTROLLER.game().isDemoLevel()) {
-            bind(QUIT_DEMO_LEVEL, THE_UI.joypadKeyBinding().key(NES_JoypadButton.BTN_START));
+            bind(QUIT_DEMO_LEVEL, THE_UI.keyboard().joypadKeyBinding().key(NES_JoypadButton.BTN_START));
         } else {
-            bind(GameActions2D.PLAYER_UP,    THE_UI.joypadKeyBinding().key(NES_JoypadButton.BTN_UP));
-            bind(GameActions2D.PLAYER_DOWN,  THE_UI.joypadKeyBinding().key(NES_JoypadButton.BTN_DOWN));
-            bind(GameActions2D.PLAYER_LEFT,  THE_UI.joypadKeyBinding().key(NES_JoypadButton.BTN_LEFT));
-            bind(GameActions2D.PLAYER_RIGHT, THE_UI.joypadKeyBinding().key(NES_JoypadButton.BTN_RIGHT));
+            bind(GameActions2D.PLAYER_UP,    THE_UI.keyboard().joypadKeyBinding().key(NES_JoypadButton.BTN_UP));
+            bind(GameActions2D.PLAYER_DOWN,  THE_UI.keyboard().joypadKeyBinding().key(NES_JoypadButton.BTN_DOWN));
+            bind(GameActions2D.PLAYER_LEFT,  THE_UI.keyboard().joypadKeyBinding().key(NES_JoypadButton.BTN_LEFT));
+            bind(GameActions2D.PLAYER_RIGHT, THE_UI.keyboard().joypadKeyBinding().key(NES_JoypadButton.BTN_RIGHT));
             bind(TengenMsPacMan_GameActions.TOGGLE_PAC_BOOSTER,
-                THE_UI.joypadKeyBinding().key(NES_JoypadButton.BTN_A),
-                THE_UI.joypadKeyBinding().key(NES_JoypadButton.BTN_B));
+                THE_UI.keyboard().joypadKeyBinding().key(NES_JoypadButton.BTN_A),
+                THE_UI.keyboard().joypadKeyBinding().key(NES_JoypadButton.BTN_B));
             bindFallbackPlayerControlActions(this);
             bindCheatActions(this);
         }
