@@ -16,7 +16,7 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 /**
  * Carousel containing the start pages for the different game variants (XXL game variants share common start page).

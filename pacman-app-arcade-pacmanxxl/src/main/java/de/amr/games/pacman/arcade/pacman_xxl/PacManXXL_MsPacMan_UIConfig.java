@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
-import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 public class PacManXXL_MsPacMan_UIConfig implements GameUIConfiguration {
 

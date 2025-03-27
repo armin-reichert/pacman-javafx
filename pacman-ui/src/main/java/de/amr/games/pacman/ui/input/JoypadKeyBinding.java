@@ -10,7 +10,7 @@ import javafx.scene.input.KeyCodeCombination;
 
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 /**
  * @ see <a href="https://www.nesdev.org/wiki/Standard_controller">here</a>

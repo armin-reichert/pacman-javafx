@@ -20,7 +20,7 @@ import java.util.List;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_ENABLED;
 
 public class PacManXXL_OptionMenu extends OptionMenu {

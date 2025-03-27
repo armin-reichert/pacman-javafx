@@ -4,6 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui;
 
-public class UIGlobals {
+public class Globals {
     public static GameUI THE_UI;
 }

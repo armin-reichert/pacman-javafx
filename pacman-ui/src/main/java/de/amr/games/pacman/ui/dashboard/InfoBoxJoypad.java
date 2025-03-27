@@ -11,7 +11,7 @@ import de.amr.games.pacman.uilib.ResourceManager;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
 
-import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 public class InfoBoxJoypad extends InfoBox {
 

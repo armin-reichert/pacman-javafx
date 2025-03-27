@@ -13,10 +13,8 @@ import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import java.util.Map;
-
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 public class ArcadeMsPacMan_App extends Application {
 

@@ -39,7 +39,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 public class TengenMsPacMan_UIConfig implements GameUIConfiguration {
 

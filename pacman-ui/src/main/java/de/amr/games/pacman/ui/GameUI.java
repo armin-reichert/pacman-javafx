@@ -23,7 +23,7 @@ import javafx.stage.Stage;
 import java.util.Optional;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 public interface GameUI {
 

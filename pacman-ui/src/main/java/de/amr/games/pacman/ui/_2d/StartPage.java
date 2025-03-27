@@ -8,7 +8,7 @@ import de.amr.games.pacman.model.GameVariant;
 import javafx.scene.Node;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 public interface StartPage {
     Node root();

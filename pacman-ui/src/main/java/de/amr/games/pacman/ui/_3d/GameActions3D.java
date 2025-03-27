@@ -8,7 +8,7 @@ import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui._3d.scene3d.Perspective;
 import javafx.scene.shape.DrawMode;
 
-import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_PIP_ON;
 import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_DRAW_MODE;
 import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_PERSPECTIVE;

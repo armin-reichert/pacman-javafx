@@ -24,7 +24,7 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindTestActions;
 
 /**

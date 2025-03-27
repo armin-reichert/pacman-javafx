@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.Globals.assertNotNull;
-import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 /**
  * @author Armin Reichert

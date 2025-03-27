@@ -11,7 +11,7 @@ import org.tinylog.Logger;
 import java.util.Map;
 import java.util.Optional;
 
-import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 public interface GameActionProvider {
 

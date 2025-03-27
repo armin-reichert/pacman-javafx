@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 /**
  * Base class of all 2D scenes.

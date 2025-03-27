@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 
 /**
