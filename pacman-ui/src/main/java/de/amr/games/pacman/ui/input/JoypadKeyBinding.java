@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui.input;
 import de.amr.games.pacman.lib.nes.NES_JoypadButton;
 import javafx.scene.input.KeyCodeCombination;
 
-public record Joypad(
+public record JoypadKeyBinding(
         KeyCodeCombination select,
         KeyCodeCombination start,
         KeyCodeCombination b,

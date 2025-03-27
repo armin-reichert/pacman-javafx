@@ -21,7 +21,7 @@ public class GameKeyboard extends Keyboard {
     public static final KeyCodeCombination KEY_OPEN_EDITOR = Keyboard.shift_alt(KeyCode.E);
 
     // My current bindings, might be crap
-    static final Joypad JOYPAD_CURSOR_KEYS = new Joypad(
+    static final JoypadKeyBinding JOYPAD_CURSOR_KEYS = new JoypadKeyBinding(
             new KeyCodeCombination(KeyCode.SPACE),
             new KeyCodeCombination(KeyCode.ENTER),
             new KeyCodeCombination(KeyCode.B),
@@ -33,7 +33,7 @@ public class GameKeyboard extends Keyboard {
     );
 
     // Like Mesen emulator key set #2
-    static final Joypad JOYPAD_WASD = new Joypad(
+    static final JoypadKeyBinding JOYPAD_WASD = new JoypadKeyBinding(
             new KeyCodeCombination(KeyCode.U),
             new KeyCodeCombination(KeyCode.I),
             new KeyCodeCombination(KeyCode.J),
@@ -45,14 +45,14 @@ public class GameKeyboard extends Keyboard {
     );
 
     private final ArcadeKeyBinding arcadeKeyBinding = DEFAULT_ARCADE_KEY_BINDING;
-    private final Joypad[] joypads = { JOYPAD_CURSOR_KEYS, JOYPAD_WASD };
+    private final JoypadKeyBinding[] joypads = { JOYPAD_CURSOR_KEYS, JOYPAD_WASD };
     private int selectedJoypadIndex;
 
     public ArcadeKeyBinding arcade() {
         return arcadeKeyBinding;
     }
 
-    public Joypad selectedJoypad() {
+    public JoypadKeyBinding selectedJoypad() {
         return joypads[selectedJoypadIndex];
     }
 

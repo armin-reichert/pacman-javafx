@@ -22,7 +22,7 @@ import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
 import de.amr.games.pacman.tengen.ms_pacman.maps.MapRepository;
 import de.amr.games.pacman.ui._2d.GameRenderer;
 import de.amr.games.pacman.ui._2d.SpriteAnimationSet;
-import de.amr.games.pacman.ui.input.Joypad;
+import de.amr.games.pacman.ui.input.JoypadKeyBinding;
 import de.amr.games.pacman.uilib.SpriteAnimation;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
@@ -451,7 +451,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         }
     }
 
-    public void drawJoypadKeyBinding(Joypad joypad) {
+    public void drawJoypadKeyBinding(JoypadKeyBinding joypad) {
         String line1 = " [SELECT]=%s   [START]=%s   [BUTTON B]=%s   [BUTTON A]=%s";
         String line2 = " [UP]=%s   [DOWN]=%s   [LEFT]=%s   [RIGHT]=%s";
         ctx.setFont(Font.font("Sans", scaled(TS)));
