@@ -105,7 +105,7 @@ public class GameView extends StackPane implements View, GameEventListener {
     private final GameAction actionToggleAutopilot = () -> {
         toggle(PY_AUTOPILOT);
         boolean auto = PY_AUTOPILOT.get();
-        THE_UI.showFlashMessage(THE_UI.assets().localizedText(auto ? "autopilot_on" : "autopilot_off"));
+        THE_UI.showFlashMessage(THE_UI.assets().text(auto ? "autopilot_on" : "autopilot_off"));
         THE_UI.sound().playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
     };
 
@@ -115,7 +115,7 @@ public class GameView extends StackPane implements View, GameEventListener {
 
     private final GameAction actionToggleImmunity = () -> {
         toggle(GlobalProperties2d.PY_IMMUNITY);
-        THE_UI.showFlashMessage(THE_UI.assets().localizedText(GlobalProperties2d.PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
+        THE_UI.showFlashMessage(THE_UI.assets().text(GlobalProperties2d.PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
         THE_UI.sound().playVoice(GlobalProperties2d.PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
     };
 
@@ -206,18 +206,18 @@ public class GameView extends StackPane implements View, GameEventListener {
 
     public void addDefaultDashboardItem(String title) {
         switch (title) {
-            case "ABOUT"        -> addDashboardItem(title, THE_UI.assets().localizedText("infobox.about.title"),              new InfoBoxAbout());
-            case "ACTOR_INFO"   -> addDashboardItem(title, THE_UI.assets().localizedText("infobox.actor_info.title"),         new InfoBoxActorInfo());
-            case "CUSTOM_MAPS"  -> addDashboardItem(title, THE_UI.assets().localizedText("infobox.custom_maps.title"),        new InfoBoxCustomMaps());
-            case "GENERAL"      -> addDashboardItem(title, THE_UI.assets().localizedText("infobox.general.title"),            new InfoBoxGeneral());
-            case "GAME_CONTROL" -> addDashboardItem(title, THE_UI.assets().localizedText("infobox.game_control.title"),       new InfoBoxGameControl());
-            case "GAME_INFO"    -> addDashboardItem(title, THE_UI.assets().localizedText("infobox.game_info.title"),          new InfoBoxGameInfo());
-            case "JOYPAD"       -> addDashboardItem(title, THE_UI.assets().localizedText("infobox.joypad.title"),             new InfoBoxJoypad());
-            case "KEYBOARD"     -> addDashboardItem(title, THE_UI.assets().localizedText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
+            case "ABOUT"        -> addDashboardItem(title, THE_UI.assets().text("infobox.about.title"),              new InfoBoxAbout());
+            case "ACTOR_INFO"   -> addDashboardItem(title, THE_UI.assets().text("infobox.actor_info.title"),         new InfoBoxActorInfo());
+            case "CUSTOM_MAPS"  -> addDashboardItem(title, THE_UI.assets().text("infobox.custom_maps.title"),        new InfoBoxCustomMaps());
+            case "GENERAL"      -> addDashboardItem(title, THE_UI.assets().text("infobox.general.title"),            new InfoBoxGeneral());
+            case "GAME_CONTROL" -> addDashboardItem(title, THE_UI.assets().text("infobox.game_control.title"),       new InfoBoxGameControl());
+            case "GAME_INFO"    -> addDashboardItem(title, THE_UI.assets().text("infobox.game_info.title"),          new InfoBoxGameInfo());
+            case "JOYPAD"       -> addDashboardItem(title, THE_UI.assets().text("infobox.joypad.title"),             new InfoBoxJoypad());
+            case "KEYBOARD"     -> addDashboardItem(title, THE_UI.assets().text("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
             case "README" -> {
                 InfoBox readMeBox = new InfoBoxReadmeFirst();
                 readMeBox.setExpanded(true);
-                addDashboardItem(title, THE_UI.assets().localizedText("infobox.readme.title"), readMeBox);
+                addDashboardItem(title, THE_UI.assets().text("infobox.readme.title"), readMeBox);
             }
         }
     }

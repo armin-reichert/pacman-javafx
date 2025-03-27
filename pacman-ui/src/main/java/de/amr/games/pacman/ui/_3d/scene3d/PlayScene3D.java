@@ -516,23 +516,23 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e) {
         List<MenuItem> items = new ArrayList<>();
 
-        items.add(contextMenuTitleItem(THE_UI.assets().localizedText("scene_display")));
+        items.add(contextMenuTitleItem(THE_UI.assets().text("scene_display")));
 
-        var item = new MenuItem(THE_UI.assets().localizedText("use_2D_scene"));
+        var item = new MenuItem(THE_UI.assets().text("use_2D_scene"));
         item.setOnAction(ae -> GameActions3D.TOGGLE_PLAY_SCENE_2D_3D.execute());
         items.add(item);
 
         // Toggle picture-in-picture display
-        var miPiP = new CheckMenuItem(THE_UI.assets().localizedText("pip"));
+        var miPiP = new CheckMenuItem(THE_UI.assets().text("pip"));
         miPiP.selectedProperty().bindBidirectional(PY_PIP_ON);
         items.add(miPiP);
 
-        items.add(contextMenuTitleItem(THE_UI.assets().localizedText("select_perspective")));
+        items.add(contextMenuTitleItem(THE_UI.assets().text("select_perspective")));
 
         // Camera perspective radio buttons
         var radioButtonGroup = new ToggleGroup();
         for (var perspective : Perspective.Name.values()) {
-            var miPerspective = new RadioMenuItem(THE_UI.assets().localizedText(perspective.name()));
+            var miPerspective = new RadioMenuItem(THE_UI.assets().text(perspective.name()));
             miPerspective.setToggleGroup(radioButtonGroup);
             miPerspective.setUserData(perspective);
             if (perspective == GlobalProperties3d.PY_3D_PERSPECTIVE.get())  { // == allowed for enum values
@@ -555,23 +555,23 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         });
 
         // Common items
-        items.add(contextMenuTitleItem(THE_UI.assets().localizedText("pacman")));
+        items.add(contextMenuTitleItem(THE_UI.assets().text("pacman")));
 
-        var miAutopilot = new CheckMenuItem(THE_UI.assets().localizedText("autopilot"));
+        var miAutopilot = new CheckMenuItem(THE_UI.assets().text("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
         items.add(miAutopilot);
 
-        var miImmunity = new CheckMenuItem(THE_UI.assets().localizedText("immunity"));
+        var miImmunity = new CheckMenuItem(THE_UI.assets().text("immunity"));
         miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
         items.add(miImmunity);
 
         items.add(new SeparatorMenuItem());
 
-        var miMuted = new CheckMenuItem(THE_UI.assets().localizedText("muted"));
+        var miMuted = new CheckMenuItem(THE_UI.assets().text("muted"));
         miMuted.selectedProperty().bindBidirectional(THE_UI.sound().mutedProperty());
         items.add(miMuted);
 
-        var miQuit = new MenuItem(THE_UI.assets().localizedText("quit"));
+        var miQuit = new MenuItem(THE_UI.assets().text("quit"));
         miQuit.setOnAction(ae -> GameActions2D.SHOW_START_PAGE.execute());
         items.add(miQuit);
 

@@ -42,7 +42,7 @@ public class AssetStorage {
         bundles.addAll(other.bundles);
     }
 
-    public String localizedText(String keyOrPattern, Object... args) {
+    public String text(String keyOrPattern, Object... args) {
         assertNotNull(keyOrPattern);
         for (ResourceBundle bundle : bundles) {
             if (bundle.containsKey(keyOrPattern)) {

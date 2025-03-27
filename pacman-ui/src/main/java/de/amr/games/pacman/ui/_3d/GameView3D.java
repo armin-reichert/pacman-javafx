@@ -37,7 +37,7 @@ public class GameView3D extends GameView {
     @Override
     public void addDefaultDashboardItem(String title) {
         if ("SETTINGS_3D".equals(title)) {
-            addDashboardItem("SETTINGS_3D", THE_UI.assets().localizedText("infobox.3D_settings.title"), new InfoBox3D());
+            addDashboardItem("SETTINGS_3D", THE_UI.assets().text("infobox.3D_settings.title"), new InfoBox3D());
         } else {
             super.addDefaultDashboardItem(title);
         }
@@ -46,8 +46,8 @@ public class GameView3D extends GameView {
     protected List<MenuItem> createContextMenuItems(ContextMenuEvent event) {
         List<MenuItem> menuItems = new ArrayList<>();
         if (THE_UI.configurations().currentGameSceneIsPlayScene2D()) {
-            menuItems.add(contextMenuTitleItem(THE_UI.assets().localizedText("scene_display")));
-            var item = new MenuItem(THE_UI.assets().localizedText("use_3D_scene"));
+            menuItems.add(contextMenuTitleItem(THE_UI.assets().text("scene_display")));
+            var item = new MenuItem(THE_UI.assets().text("use_3D_scene"));
             item.setOnAction(ae -> GameActions3D.TOGGLE_PLAY_SCENE_2D_3D.execute());
             menuItems.add(item);
         }

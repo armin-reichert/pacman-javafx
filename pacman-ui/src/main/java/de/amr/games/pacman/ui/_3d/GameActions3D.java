@@ -24,7 +24,7 @@ public enum GameActions3D implements GameAction {
         public void execute() {
             Perspective.Name next = PY_3D_PERSPECTIVE.get().next();
             PY_3D_PERSPECTIVE.set(next);
-            THE_UI.showFlashMessage(THE_UI.assets().localizedText("camera_perspective", THE_UI.assets().localizedText(next.name())));
+            THE_UI.showFlashMessage(THE_UI.assets().text("camera_perspective", THE_UI.assets().text(next.name())));
         }
     },
 
@@ -33,7 +33,7 @@ public enum GameActions3D implements GameAction {
         public void execute() {
             Perspective.Name prev = PY_3D_PERSPECTIVE.get().prev();
             PY_3D_PERSPECTIVE.set(prev);
-            THE_UI.showFlashMessage(THE_UI.assets().localizedText("camera_perspective", THE_UI.assets().localizedText(prev.name())));
+            THE_UI.showFlashMessage(THE_UI.assets().text("camera_perspective", THE_UI.assets().text(prev.name())));
         }
     },
 
@@ -56,7 +56,7 @@ public enum GameActions3D implements GameAction {
         public void execute() {
             toggle(PY_PIP_ON);
             if (!THE_UI.configurations().currentGameSceneIsPlayScene3D()) {
-                THE_UI.showFlashMessage(THE_UI.assets().localizedText(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
+                THE_UI.showFlashMessage(THE_UI.assets().text(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
             }
         }
     }

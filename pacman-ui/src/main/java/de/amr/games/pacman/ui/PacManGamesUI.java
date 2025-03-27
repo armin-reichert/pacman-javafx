@@ -294,9 +294,9 @@ public class PacManGamesUI implements GameEventListener, GameUI {
                 String key = "app.title." + uiConfigurationManager.current().assetNamespace();
                 if (clock.isPaused()) { key += ".paused"; }
                 if (currentGameScene().isPresent() && currentGameScene().get() instanceof GameScene2D gameScene2D) {
-                    return assets.localizedText(key, "2D") + " (%.2fx)".formatted(gameScene2D.scaling());
+                    return assets.text(key, "2D") + " (%.2fx)".formatted(gameScene2D.scaling());
                 }
-                return assets.localizedText(key, "2D");
+                return assets.text(key, "2D");
             },
             clock.pausedProperty(), gameScenePy, gameView.heightProperty())
         );

@@ -67,13 +67,13 @@ public class HelpInfo {
 
         // add default entries:
         if (GlobalProperties2d.PY_AUTOPILOT.get()) {
-            var autoPilotEntry = text(THE_UI.assets().localizedText("help.autopilot_on"), Color.ORANGE);
+            var autoPilotEntry = text(THE_UI.assets().text("help.autopilot_on"), Color.ORANGE);
             autoPilotEntry.setFont(font);
             GridPane.setColumnSpan(autoPilotEntry, 2);
             grid.add(autoPilotEntry, 0, grid.getRowCount());
         }
         if (GlobalProperties2d.PY_IMMUNITY.get()) {
-            var immunityEntry = text(THE_UI.assets().localizedText("help.immunity_on"), Color.ORANGE);
+            var immunityEntry = text(THE_UI.assets().text("help.immunity_on"), Color.ORANGE);
             immunityEntry.setFont(font);
             GridPane.setColumnSpan(immunityEntry, 2);
             grid.add(immunityEntry, 0, grid.getRowCount() + 1);
@@ -99,7 +99,7 @@ public class HelpInfo {
     }
 
     private void addRow(String lhsKey, String keyboardKey) {
-        addRow(label(THE_UI.assets().localizedText(lhsKey), Color.gray(0.9)), text("[" + keyboardKey + "]", Color.YELLOW));
+        addRow(label(THE_UI.assets().text(lhsKey), Color.gray(0.9)), text("[" + keyboardKey + "]", Color.YELLOW));
     }
 
     private void addQuitEntry() {
@@ -123,10 +123,10 @@ public class HelpInfo {
     }
 
     private void addInfoForPlayScene() {
-        addRow("help.move_left", THE_UI.assets().localizedText("help.cursor_left"));
-        addRow("help.move_right", THE_UI.assets().localizedText("help.cursor_right"));
-        addRow("help.move_up", THE_UI.assets().localizedText("help.cursor_up"));
-        addRow("help.move_down", THE_UI.assets().localizedText("help.cursor_down"));
+        addRow("help.move_left", THE_UI.assets().text("help.cursor_left"));
+        addRow("help.move_right", THE_UI.assets().text("help.cursor_right"));
+        addRow("help.move_up", THE_UI.assets().text("help.cursor_up"));
+        addRow("help.move_down", THE_UI.assets().text("help.cursor_down"));
         addQuitEntry();
     }
 
