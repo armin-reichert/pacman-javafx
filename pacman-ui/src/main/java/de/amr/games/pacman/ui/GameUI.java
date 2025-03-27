@@ -22,7 +22,6 @@ import javafx.stage.Stage;
 
 import java.util.Optional;
 
-import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 public interface GameUI {
@@ -55,29 +54,13 @@ public interface GameUI {
 
     void addDefaultDashboardItems(String... titles);
 
-    void configure(GameVariant gameVariant, GameUIConfiguration configuration);
-
     void build(Stage stage, Dimension2D size);
 
-    default GameUIConfiguration currentUIConfig() { return uiConfiguration(THE_GAME_CONTROLLER.selectedGameVariant()); }
-
     Optional<GameScene> currentGameScene();
-
-    default boolean currentGameSceneIsPlayScene2D() {
-        return currentGameScene().isPresent()
-                && currentUIConfig().gameSceneHasID(currentGameScene().get(), "PlayScene2D");
-    }
-
-    default boolean currentGameSceneIsPlayScene3D() {
-        return currentGameScene().isPresent()
-                && currentUIConfig().gameSceneHasID(currentGameScene().get(), "PlayScene3D");
-    }
 
     void enterFullScreenMode();
 
     ReadOnlyDoubleProperty heightProperty();
-
-    GameUIConfiguration uiConfiguration(GameVariant variant);
 
     GameView gameView();
 
@@ -100,6 +83,8 @@ public interface GameUI {
     void showFlashMessageSec(double seconds, String message, Object... args);
 
     default void showFlashMessage(String message, Object... args) { showFlashMessageSec(1, message, args); }
+
+    UIConfigurationManager configurations();
 
     void togglePlayScene2D3D();
 }

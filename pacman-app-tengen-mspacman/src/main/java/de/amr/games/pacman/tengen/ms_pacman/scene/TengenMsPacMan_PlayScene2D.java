@@ -205,7 +205,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         messageMovement = new MessageMovement();
         THE_UI.joypadKeyBinding().register();
         THE_UI.setScoreVisible(true);
-        setGameRenderer(THE_UI.currentUIConfig().createRenderer(canvas));
+        setGameRenderer(THE_UI.configurations().current().createRenderer(canvas));
         movingCamera.focusTopOfScene();
     }
 
@@ -468,7 +468,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             //TODO in the original game, the message is draw under the maze image but over the pellets!
             r.drawWorld(level, 0,  3 * TS);
             r.drawFood(level);
-            r.drawLevelMessage(THE_UI.currentUIConfig().assetNamespace(), level, game.isDemoLevel());
+            r.drawLevelMessage(THE_UI.configurations().current().assetNamespace(), level, game.isDemoLevel());
         }
 
         level.bonus().ifPresent(r::drawBonus);

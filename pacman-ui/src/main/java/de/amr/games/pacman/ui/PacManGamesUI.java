@@ -31,14 +31,11 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.util.EnumMap;
-import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_DEBUG_INFO_VISIBLE;
 import static de.amr.games.pacman.ui.input.ArcadeKeyBinding.DEFAULT_ARCADE_KEY_BINDING;
 import static de.amr.games.pacman.ui.input.JoypadKeyBinding.JOYPAD_CURSOR_KEYS;
 import static de.amr.games.pacman.ui.input.JoypadKeyBinding.JOYPAD_WASD;
@@ -101,8 +98,6 @@ public class PacManGamesUI implements GameEventListener, GameUI {
 
     protected final ObjectProperty<View> viewPy = new SimpleObjectProperty<>();
 
-    protected final Map<GameVariant, GameUIConfiguration> uiConfigMap = new EnumMap<>(GameVariant.class);
-
     protected Stage stage;
     protected Scene mainScene;
     protected final StackPane sceneRoot = new StackPane();
@@ -118,6 +113,8 @@ public class PacManGamesUI implements GameEventListener, GameUI {
     protected final JoypadKeyBinding[] joypadKeyBindings = new JoypadKeyBinding[] { JOYPAD_CURSOR_KEYS, JOYPAD_WASD };
     protected int joypadIndex;
     protected ArcadeKeyBinding arcadeKeyBinding = DEFAULT_ARCADE_KEY_BINDING;
+
+    protected final UIConfigurationManager uiConfigurationManager = new UIConfigurationManager();
 
     public PacManGamesUI() {
         clock.setPauseableCallback(this::runOnEveryTickExceptWhenPaused);
@@ -159,23 +156,6 @@ public class PacManGamesUI implements GameEventListener, GameUI {
         stage.setScene(mainScene);
         stage.centerOnScreen();
         stage.setOnShowing(e -> showStartView());
-    }
-
-    /**
-     * Stores the UI configuration for a game variant and initializes the game scenes (assigns the game context).
-     *
-     * @param variant a game variant
-     * @param uiConfig the UI configuration for this variant
-     */
-    public void configure(GameVariant variant, GameUIConfiguration uiConfig) {
-        assertNotNull(variant);
-        assertNotNull(uiConfig);
-        uiConfig.gameScenes().forEach(scene -> {
-            if (scene instanceof GameScene2D gameScene2D) {
-                gameScene2D.debugInfoVisibleProperty().bind(PY_DEBUG_INFO_VISIBLE);
-            }
-        });
-        uiConfigMap.put(variant, uiConfig);
     }
 
     @Override
@@ -249,7 +229,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
         sceneRoot.getChildren().addAll(new Pane(), flashMessageOverlay);
         sceneRoot.setBackground(assets.get("background.scene"));
         sceneRoot.backgroundProperty().bind(gameScenePy.map(
-            gameScene -> currentGameSceneIsPlayScene3D()
+            gameScene -> uiConfigurationManager.currentGameSceneIsPlayScene3D()
                 ? assets.get("background.play_scene3d")
                 : assets.get("background.scene"))
         );
@@ -311,7 +291,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
 
     protected void handleGameVariantChange(GameVariant gameVariant) {
         THE_GAME_CONTROLLER.game().addGameEventListener(this); //TODO check this
-        GameUIConfiguration uiConfig = uiConfiguration(gameVariant);
+        GameUIConfiguration uiConfig = uiConfigurationManager.configuration(gameVariant);
         sound.selectGameVariant(gameVariant, uiConfig.assetNamespace());
         stage.getIcons().setAll(uiConfig.appIcon());
         gameView.canvasContainer().decorationEnabledPy.set(uiConfig.isGameCanvasDecorated());
@@ -321,7 +301,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
         stage.titleProperty().bind(Bindings.createStringBinding(
             () -> {
                 // "app.title.pacman" vs. "app.title.pacman.paused"
-                String key = "app.title." + currentUIConfig().assetNamespace();
+                String key = "app.title." + uiConfigurationManager.current().assetNamespace();
                 if (clock.isPaused()) { key += ".paused"; }
                 if (currentGameScene().isPresent() && currentGameScene().get() instanceof GameScene2D gameScene2D) {
                     return assets.localizedText(key, "2D") + " (%.2fx)".formatted(gameScene2D.scaling());
@@ -334,7 +314,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
 
     protected void updateGameScene(boolean reloadCurrent) {
         GameScene prevGameScene = gameScenePy.get();
-        GameScene nextGameScene = currentUIConfig().selectGameScene();
+        GameScene nextGameScene = uiConfigurationManager.current().selectGameScene();
         boolean sceneChanging = nextGameScene != prevGameScene;
         if (reloadCurrent || sceneChanging) {
             if (prevGameScene != null) {
@@ -366,7 +346,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
         if (oldGameScene == null) {
             return false; // first scene
         }
-        var cfg = currentUIConfig();
+        var cfg = uiConfigurationManager.current();
         return cfg.gameSceneHasID(oldGameScene, "PlayScene2D") && cfg.gameSceneHasID(newGameScene, "PlayScene3D")
             || cfg.gameSceneHasID(oldGameScene, "PlayScene3D") && cfg.gameSceneHasID(newGameScene, "PlayScene2D");
     }
@@ -421,8 +401,8 @@ public class PacManGamesUI implements GameEventListener, GameUI {
     }
 
     @Override
-    public GameUIConfiguration uiConfiguration(GameVariant variant) {
-        return uiConfigMap.get(variant);
+    public UIConfigurationManager configurations() {
+        return uiConfigurationManager;
     }
 
     @Override

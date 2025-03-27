@@ -63,11 +63,11 @@ public class PacManGames3dApp extends Application {
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
         double height = 0.8 * screenSize.getHeight(), width = 1.6 * height;
         GameUI.createUIWith3DSupport();
-        THE_UI.configure(GameVariant.PACMAN, new ArcadePacMan_UIConfig());
-        THE_UI.configure(GameVariant.MS_PACMAN, new ArcadeMsPacMan_UIConfig());
-        THE_UI.configure(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_UIConfig());
-        THE_UI.configure(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_UIConfig());
-        THE_UI.configure(GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_UIConfig());
+        THE_UI.configurations().set(GameVariant.PACMAN, new ArcadePacMan_UIConfig());
+        THE_UI.configurations().set(GameVariant.MS_PACMAN, new ArcadeMsPacMan_UIConfig());
+        THE_UI.configurations().set(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_UIConfig());
+        THE_UI.configurations().set(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_UIConfig());
+        THE_UI.configurations().set(GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_UIConfig());
         THE_UI.build(stage, new Dimension2D(width, height));
         THE_UI.addDefaultDashboardItems("README", "GENERAL", "GAME_CONTROL", "SETTINGS_3D", "GAME_INFO",
             "ACTOR_INFO", "CUSTOM_MAPS", "JOYPAD", "KEYBOARD", "ABOUT");

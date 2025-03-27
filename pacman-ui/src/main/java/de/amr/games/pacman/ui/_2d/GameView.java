@@ -339,7 +339,7 @@ public class GameView extends StackPane implements View, GameEventListener {
                 cameraControlledView.viewPortHeightProperty().bind(parentScene.heightProperty());
             }
             case GameScene2D gameScene2D -> {
-                GameRenderer renderer = THE_UI.currentUIConfig().createRenderer(canvas);
+                GameRenderer renderer = THE_UI.configurations().current().createRenderer(canvas);
                 Vector2f sceneSize = gameScene2D.sizeInPx();
                 canvasContainer.setUnscaledCanvasWidth(sceneSize.x());
                 canvasContainer.setUnscaledCanvasHeight(sceneSize.y());
@@ -381,13 +381,13 @@ public class GameView extends StackPane implements View, GameEventListener {
     public void onLevelCreated(GameEvent event) {
         THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
             Logger.info("Game level {} ({}) created", level.number(), THE_GAME_CONTROLLER.selectedGameVariant());
-            THE_UI.currentUIConfig().createActorAnimations(level);
+            THE_UI.configurations().current().createActorAnimations(level);
             Logger.info("Actor animations ({}) created", THE_GAME_CONTROLLER.selectedGameVariant());
             THE_UI.sound().setEnabled(!THE_GAME_CONTROLLER.game().isDemoLevel());
             Logger.info("Sounds ({}) {}", THE_GAME_CONTROLLER.selectedGameVariant(), THE_UI.sound().isEnabled() ? "enabled" : "disabled");
             // size of game scene might have changed, so re-embed
             THE_UI.currentGameScene().ifPresent(this::embedGameScene);
-            GameScene2D pipGameScene = THE_UI.currentUIConfig().createPiPScene(canvasContainer().canvas());
+            GameScene2D pipGameScene = THE_UI.configurations().current().createPiPScene(canvasContainer().canvas());
             pipView.setScene2D(pipGameScene);
         });
     }

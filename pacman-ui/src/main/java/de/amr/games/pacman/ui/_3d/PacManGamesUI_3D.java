@@ -38,7 +38,7 @@ public class PacManGamesUI_3D extends PacManGamesUI {
             () -> {
                 String sceneName = currentGameScene().map(gameScene -> gameScene.getClass().getSimpleName()).orElse(null);
                 String sceneNameText = sceneName != null && PY_DEBUG_INFO_VISIBLE.get() ? " [%s]".formatted(sceneName) : "";
-                String assetNamespace = currentUIConfig().assetNamespace();
+                String assetNamespace = configurations().current().assetNamespace();
                 String key = "app.title." + assetNamespace;
                 if (clock().isPaused()) {
                     key += ".paused";
@@ -57,7 +57,8 @@ public class PacManGamesUI_3D extends PacManGamesUI {
     public void togglePlayScene2D3D() {
         currentGameScene().ifPresent(gameScene -> {
             toggle(PY_3D_ENABLED);
-            if (currentGameSceneIsPlayScene2D() || currentGameSceneIsPlayScene3D()) {
+            if (configurations().currentGameSceneIsPlayScene2D()
+                || configurations().currentGameSceneIsPlayScene3D()) {
                 updateGameScene(true);
                 THE_GAME_CONTROLLER.update(); //TODO needed?
             }

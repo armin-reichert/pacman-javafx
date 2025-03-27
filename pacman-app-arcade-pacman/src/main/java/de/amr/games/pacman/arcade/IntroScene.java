@@ -84,7 +84,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        ArcadePacMan_SpriteSheet spriteSheet = (ArcadePacMan_SpriteSheet) THE_UI.currentUIConfig().spriteSheet();
+        var spriteSheet = (ArcadePacMan_SpriteSheet) THE_UI.configurations().current().spriteSheet();
         blinking = new Pulse(10, true);
         pacMan = new Pac();
         pacMan.setAnimations(new PacAnimations(spriteSheet));
@@ -163,7 +163,7 @@ public class IntroScene extends GameScene2D {
     }
 
     private void drawGallery() {
-        var spriteSheet = (ArcadePacMan_SpriteSheet) THE_UI.currentUIConfig().spriteSheet();
+        var spriteSheet = (ArcadePacMan_SpriteSheet) THE_UI.configurations().current().spriteSheet();
         Font font = gr.scaledArcadeFont(TS);
         if (titleVisible) {
             gr.drawText("CHARACTER / NICKNAME", Color.web(Arcade.Palette.WHITE), font, tiles2Px(LEFT_TILE_X + 3), tiles2Px(6));
