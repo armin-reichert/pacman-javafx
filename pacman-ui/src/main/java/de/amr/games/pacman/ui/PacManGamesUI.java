@@ -313,28 +313,27 @@ public class PacManGamesUI implements GameEventListener, GameUI {
     }
 
     protected void updateGameScene(boolean reloadCurrent) {
-        GameScene prevGameScene = gameScenePy.get();
-        GameScene nextGameScene = uiConfigurationManager.current().selectGameScene();
-        boolean sceneChanging = nextGameScene != prevGameScene;
-        if (reloadCurrent || sceneChanging) {
-            if (prevGameScene != null) {
-                prevGameScene.end();
-                Logger.info("Game scene ended: {}", prevGameScene.displayName());
-            }
-            if (nextGameScene != null) {
-                gameView.embedGameScene(nextGameScene);
-                nextGameScene.init();
-                if (is2D3DPlaySceneSwitch(prevGameScene, nextGameScene)) {
-                    nextGameScene.onSceneVariantSwitch(prevGameScene);
-                }
-            } else {
-                Logger.error("Could not determine next game scene");
-                return;
-            }
-            if (sceneChanging) {
-                gameScenePy.set(nextGameScene);
-                Logger.info("Game scene is now: {}", nextGameScene.displayName());
-            }
+        final GameScene nextGameScene = uiConfigurationManager.current().selectGameScene();
+        if (nextGameScene == null) {
+            throw new IllegalStateException("Could not determine next game scene");
+        }
+        final GameScene currentGameScene = gameScenePy.get();
+        final boolean changing = nextGameScene != currentGameScene;
+        if (!changing && !reloadCurrent) {
+            return;
+        }
+        if (currentGameScene != null) {
+            currentGameScene.end();
+            Logger.info("Game scene ended: {}", currentGameScene.displayName());
+        }
+        gameView.embedGameScene(nextGameScene);
+        nextGameScene.init();
+        if (is2D3DPlaySceneSwitch(currentGameScene, nextGameScene)) {
+            nextGameScene.onSceneVariantSwitch(currentGameScene);
+        }
+        if (changing) {
+            gameScenePy.set(nextGameScene);
+            Logger.info("Game scene is now: {}", nextGameScene.displayName());
         }
     }
 
