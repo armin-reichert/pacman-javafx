@@ -13,6 +13,7 @@ import de.amr.games.pacman.tilemap.rendering.TerrainMapRenderer;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import java.util.Map;
@@ -33,7 +34,7 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     static final Vector2f DEFAULT_MESSAGE_ANCHOR_POSITION = new Vector2f(14f * TS, 21 * TS);
 
     private final GameSpriteSheet spriteSheet;
-    private final Canvas canvas;
+    private final GraphicsContext ctx;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
@@ -45,8 +46,8 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     private TerrainMapColorScheme blinkingOffColors;
 
     public VectorGraphicsGameRenderer(GameSpriteSheet spriteSheet, Canvas canvas) {
-        this.canvas = assertNotNull(canvas);
         this.spriteSheet = assertNotNull(spriteSheet);
+        ctx = assertNotNull(canvas).getGraphicsContext2D();
         terrainRenderer.scalingProperty().bind(scalingPy);
         foodRenderer.scalingProperty().bind(scalingPy);
         messageAnchorPosition = DEFAULT_MESSAGE_ANCHOR_POSITION;
@@ -60,7 +61,7 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
 
     @Override
     public Canvas canvas() {
-        return canvas;
+        return ctx.getCanvas();
     }
 
     @Override
@@ -104,7 +105,7 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
         WorldMap worldMap = level.worldMap();
         if (mazeHighlighted) {
             terrainRenderer.setColorScheme(blinkingOn ? blinkingOnColors : blinkingOffColors);
-            terrainRenderer.drawTerrain(ctx(), worldMap, worldMap.obstacles());
+            terrainRenderer.drawTerrain(ctx, worldMap, worldMap.obstacles());
         }
         else {
             Map<String, String> colorMap = worldMap.getConfigValue("colorMap");
@@ -115,14 +116,14 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
                 Color.web(colorMap.get("door"))
             );
             terrainRenderer.setColorScheme(colors);
-            terrainRenderer.drawTerrain(ctx(), worldMap, worldMap.obstacles());
-            terrainRenderer.drawHouse(ctx(), level.houseMinTile(), level.houseSizeInTiles());
+            terrainRenderer.drawTerrain(ctx, worldMap, worldMap.obstacles());
+            terrainRenderer.drawHouse(ctx, level.houseMinTile(), level.houseSizeInTiles());
             foodRenderer.setPelletColor(Color.web(colorMap.get("pellet")));
             foodRenderer.setEnergizerColor(Color.web(colorMap.get("pellet")));
             worldMap.tiles().filter(level::hasFoodAt).filter(not(level::isEnergizerPosition))
-                .forEach(tile -> foodRenderer.drawPellet(ctx(), tile));
+                .forEach(tile -> foodRenderer.drawPellet(ctx, tile));
             if (blinkingOn) {
-                level.energizerTiles().filter(level::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx(), tile));
+                level.energizerTiles().filter(level::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx, tile));
             }
         }
     }

@@ -6,15 +6,14 @@ package de.amr.games.pacman.arcade;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.ui._2d.GameRenderer;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.arcade.ArcadePacMan_SpriteSheet.EMPTY_MAZE_SPRITE;
 import static de.amr.games.pacman.arcade.ArcadePacMan_SpriteSheet.FULL_MAZE_SPRITE;
@@ -27,14 +26,14 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
 
     private final ArcadePacMan_SpriteSheet spriteSheet;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
-    private final Canvas canvas;
+    private final GraphicsContext ctx;
     private boolean mazeHighlighted;
     private boolean blinkingOn;
     private Color bgColor = Color.BLACK;
 
     public ArcadePacMan_GameRenderer(ArcadePacMan_SpriteSheet spriteSheet, Canvas canvas) {
         this.spriteSheet = assertNotNull(spriteSheet);
-        this.canvas = assertNotNull(canvas);
+        ctx = assertNotNull(canvas).getGraphicsContext2D();
     }
 
     @Override
@@ -44,7 +43,7 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
 
     @Override
     public Canvas canvas() {
-        return canvas;
+        return ctx.getCanvas();
     }
 
     @Override
@@ -83,10 +82,10 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
     @Override
     public void drawMaze(GameLevel level, double x, double y) {
         double scaling = scaling();
-        ctx().save();
-        ctx().scale(scaling, scaling);
+        ctx.save();
+        ctx.scale(scaling, scaling);
         if (mazeHighlighted) {
-            ctx().drawImage(THE_UI.assets().image("pacman.flashing_maze"), x, y);
+            ctx.drawImage(THE_UI.assets().image("pacman.flashing_maze"), x, y);
         } else {
             if (level.uneatenFoodCount() == 0) {
                 drawSpriteUnscaled(EMPTY_MAZE_SPRITE, x, y);
@@ -96,6 +95,6 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
                 overPaintEnergizers(level, tile -> !blinkingOn || level.hasEatenFoodAt(tile));
             }
         }
-        ctx().restore();
+        ctx.restore();
     }
 }
