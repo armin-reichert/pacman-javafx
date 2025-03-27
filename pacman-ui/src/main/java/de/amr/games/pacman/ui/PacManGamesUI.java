@@ -18,8 +18,8 @@ import de.amr.games.pacman.uilib.FlashMessageView;
 import de.amr.games.pacman.uilib.GameClockFX;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableDoubleValue;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -386,7 +386,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
     }
 
     @Override
-    public ReadOnlyDoubleProperty heightProperty() {
+    public ObservableDoubleValue heightProperty() {
         return mainScene.heightProperty();
     }
 
