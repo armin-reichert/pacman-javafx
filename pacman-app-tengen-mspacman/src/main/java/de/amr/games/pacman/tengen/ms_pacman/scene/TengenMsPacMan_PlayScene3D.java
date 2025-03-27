@@ -75,16 +75,16 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         bind(GameActions3D.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
         bind(GameActions3D.TOGGLE_DRAW_MODE, alt(KeyCode.W));
         if (THE_GAME_CONTROLLER.game().isDemoLevel()) {
-            bind(TengenMsPacMan_GameActions.QUIT_DEMO_LEVEL, THE_UI.keyboard().joypadKeyBinding().key(NES_JoypadButton.BTN_START));
+            bind(TengenMsPacMan_GameActions.QUIT_DEMO_LEVEL, THE_UI.keyboard().joypad().key(NES_JoypadButton.BTN_START));
         }
         else {
-            bind(GameActions2D.PLAYER_UP,    THE_UI.keyboard().joypadKeyBinding().key(NES_JoypadButton.BTN_UP));
-            bind(GameActions2D.PLAYER_DOWN,  THE_UI.keyboard().joypadKeyBinding().key(NES_JoypadButton.BTN_DOWN));
-            bind(GameActions2D.PLAYER_LEFT,  THE_UI.keyboard().joypadKeyBinding().key(NES_JoypadButton.BTN_LEFT));
-            bind(GameActions2D.PLAYER_RIGHT, THE_UI.keyboard().joypadKeyBinding().key(NES_JoypadButton.BTN_RIGHT));
+            bind(GameActions2D.PLAYER_UP,    THE_UI.keyboard().joypad().key(NES_JoypadButton.BTN_UP));
+            bind(GameActions2D.PLAYER_DOWN,  THE_UI.keyboard().joypad().key(NES_JoypadButton.BTN_DOWN));
+            bind(GameActions2D.PLAYER_LEFT,  THE_UI.keyboard().joypad().key(NES_JoypadButton.BTN_LEFT));
+            bind(GameActions2D.PLAYER_RIGHT, THE_UI.keyboard().joypad().key(NES_JoypadButton.BTN_RIGHT));
             bind(TengenMsPacMan_GameActions.TOGGLE_PAC_BOOSTER,
-                THE_UI.keyboard().joypadKeyBinding().key(NES_JoypadButton.BTN_A),
-                THE_UI.keyboard().joypadKeyBinding().key(NES_JoypadButton.BTN_B));
+                THE_UI.keyboard().joypad().key(NES_JoypadButton.BTN_A),
+                THE_UI.keyboard().joypad().key(NES_JoypadButton.BTN_B));
             bindFallbackPlayerControlActions(this);
             bindCheatActions(this);
             bindFallbackPlayerControlActions(this);

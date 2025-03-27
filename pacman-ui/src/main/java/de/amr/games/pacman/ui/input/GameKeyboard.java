@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.games.pacman.ui.input;
 
 import de.amr.games.pacman.uilib.Keyboard;
@@ -18,11 +22,11 @@ public class GameKeyboard extends Keyboard {
     private final JoypadKeyBinding[] joypadKeyBindings = new JoypadKeyBinding[] { JOYPAD_CURSOR_KEYS, JOYPAD_WASD };
     private int joypadIndex;
 
-    public ArcadeKeyBinding arcadeKeys() {
+    public ArcadeKeyBinding arcade() {
         return arcadeKeyBinding;
     }
 
-    public JoypadKeyBinding joypadKeyBinding() {
+    public JoypadKeyBinding joypad() {
         return joypadKeyBindings[joypadIndex];
     }
 
