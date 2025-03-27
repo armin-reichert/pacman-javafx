@@ -185,19 +185,19 @@ public interface GameRenderer {
     /**
      * Draws animated entity (Pac-Man, ghost, moving bonus) if entity is visible.
      *
-     * @param character the animated entity
+     * @param animatedActor the animated entity
      */
-    default void drawAnimatedActor(AnimatedActor2D character) {
-        if (character == null || !character.actor().isVisible()) {
+    default void drawAnimatedActor(AnimatedActor2D animatedActor) {
+        if (animatedActor == null || !animatedActor.actor().isVisible()) {
             return;
         }
-        character.animations().ifPresent(animations -> {
+        animatedActor.animations().ifPresent(animations -> {
             if (animations instanceof SpriteAnimationSet spriteAnimations) {
                 SpriteAnimation currentAnimation = spriteAnimations.currentAnimation();
                 if (currentAnimation != null) {
-                    drawActorSprite(character.actor(), spriteAnimations.currentSprite(character));
+                    drawActorSprite(animatedActor.actor(), spriteAnimations.currentSprite(animatedActor));
                 } else {
-                    Logger.error("No current animation for character {}", character);
+                    Logger.error("No current animation for actor {}", animatedActor);
                 }
             }
         });

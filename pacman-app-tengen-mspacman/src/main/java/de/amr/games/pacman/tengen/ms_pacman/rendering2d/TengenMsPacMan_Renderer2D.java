@@ -111,12 +111,12 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     public void setBackgroundColor(Color color) {}
 
     @Override
-    public void drawAnimatedActor(AnimatedActor2D guy) {
+    public void drawAnimatedActor(AnimatedActor2D animatedActor) {
         ctx.setImageSmoothing(false);
-        if (guy instanceof Pac pac) {
+        if (animatedActor instanceof Pac pac) {
             drawMsOrMrPacMan(pac);
         } else {
-            GameRenderer.super.drawAnimatedActor(guy);
+            GameRenderer.super.drawAnimatedActor(animatedActor);
         }
     }
 
