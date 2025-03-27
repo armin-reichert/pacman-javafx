@@ -103,8 +103,8 @@ public abstract class GameScene2D implements GameScene {
     }
 
     protected Vector2i worldSizeInTilesOrElse(Vector2i defaultSize) {
-        if (THE_GAME_CONTROLLER.game().level().isEmpty()) { return defaultSize; }
-        WorldMap worldMap = THE_GAME_CONTROLLER.game().level().get().worldMap();
+        if (game().level().isEmpty()) { return defaultSize; }
+        WorldMap worldMap = game().level().get().worldMap();
         return new Vector2i(worldMap.numCols(), worldMap.numRows());
     }
 }

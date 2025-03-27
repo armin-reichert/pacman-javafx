@@ -4,8 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui;
 
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.model.GameModel;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
 
@@ -19,6 +21,9 @@ import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
  * @author Armin Reichert
  */
 public interface GameScene extends GameEventListener, GameActionProvider {
+
+    default <GAME extends GameModel> GAME game() { return THE_GAME_CONTROLLER.game(); }
+    default GameState gameState() { return THE_GAME_CONTROLLER.state(); }
 
     /**
      * Called when the scene becomes the current one.

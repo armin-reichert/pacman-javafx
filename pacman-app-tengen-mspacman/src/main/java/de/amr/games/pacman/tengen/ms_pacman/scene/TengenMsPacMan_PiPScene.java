@@ -8,22 +8,15 @@ import static de.amr.games.pacman.Globals.TS;
 
 public class TengenMsPacMan_PiPScene extends TengenMsPacMan_PlayScene2D {
 
-    private final Canvas canvas;
-
     public TengenMsPacMan_PiPScene() {
-        canvas = new Canvas();
+        canvas.widthProperty().unbind();
+        canvas.heightProperty().unbind();
         viewPortHeightProperty().bind(canvas.heightProperty());
         viewPortWidthProperty().bind(canvas.widthProperty());
     }
 
     @Override
-    public void update() {
-    }
-
-    @Override
-    public Canvas canvas() {
-        return canvas;
-    }
+    public void update() {}
 
     @Override
     public void draw() {
@@ -33,7 +26,7 @@ public class TengenMsPacMan_PiPScene extends TengenMsPacMan_PlayScene2D {
         setScaling(canvas.getHeight() / (sizeInPx().y() + 3 * TS));
         gr.setScaling(scaling());
         gr.clearCanvas();
-        THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
+        game().level().ifPresent(level -> {
             gr.ctx().save();
             gr.ctx().translate(scaled(TS), 0);
             drawSceneContent();

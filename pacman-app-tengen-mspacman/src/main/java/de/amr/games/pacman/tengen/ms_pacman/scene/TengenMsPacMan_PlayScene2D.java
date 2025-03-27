@@ -138,7 +138,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     }
 
     private final SubScene fxSubScene;
-    private final Canvas canvas;
     private final MovingCamera movingCamera;
     private final ParallelCamera fixedCamera;
     private final ObjectProperty<SceneDisplayMode> displayModePy = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
@@ -176,9 +175,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     }
 
     @Override
-    public void setCanvas(Canvas canvas) {
-        // use our own canvas
-    }
+    public void setCanvas(Canvas canvas) { /* ignore */ }
 
     public ObjectProperty<SceneDisplayMode> displayModeProperty() {
         return displayModePy;
