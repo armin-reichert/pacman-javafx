@@ -34,10 +34,17 @@ public class PacManXXL_App extends Application {
 
     @Override
     public void start(Stage stage) {
+        Rectangle2D screenSize = Screen.getPrimary().getBounds();
+        double aspect = screenSize.getWidth() / screenSize.getHeight();
+        double height = 0.8 * screenSize.getHeight(), width = aspect * height;
+
         GameUI.createUIWith3DSupport();
+
         THE_UI.configurations().set(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_UIConfig());
         THE_UI.configurations().set(GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_UIConfig());
-        THE_UI.build(stage, initialSize());
+
+        THE_UI.build(stage, new Dimension2D(width, height));
+
         THE_UI.addDefaultDashboardItems("README", "GENERAL", "GAME_CONTROL", "SETTINGS_3D", "GAME_INFO",
             "ACTOR_INFO", "CUSTOM_MAPS", "KEYBOARD", "ABOUT");
 
@@ -49,12 +56,5 @@ public class PacManXXL_App extends Application {
         THE_UI.addStartPage(GameVariant.MS_PACMAN_XXL, xxlStartPage);
 
         THE_UI.show();
-    }
-
-    private static Dimension2D initialSize() {
-        Rectangle2D screenSize = Screen.getPrimary().getBounds();
-        double aspect = screenSize.getWidth() / screenSize.getHeight();
-        double height = 0.8 * screenSize.getHeight();
-        return new Dimension2D(aspect * height, height);
     }
 }
