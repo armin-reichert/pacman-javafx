@@ -179,7 +179,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
         try {
             THE_GAME_CONTROLLER.update();
             currentGameScene().ifPresent(GameScene::update);
-            logUpdateResult();
+            logSimulationStep();
         } catch (Exception x) {
             clock.stop();
             Logger.error(x);
@@ -337,20 +337,19 @@ public class PacManGamesUI implements GameEventListener, GameUI {
         }
     }
 
-    private boolean is2D3DPlaySceneSwitch(GameScene oldGameScene, GameScene newGameScene) {
-        if (oldGameScene == null && newGameScene == null) {
-            Logger.error("WTF is going on here, old and new game scene are NULL!");
-            return false;
+    private boolean is2D3DPlaySceneSwitch(GameScene prevPlayScene, GameScene nextPlayScene) {
+        if (prevPlayScene == null && nextPlayScene == null) {
+            throw new IllegalStateException("WTF is going on here, old and new play scene are both NULL!");
         }
-        if (oldGameScene == null) {
-            return false; // first scene
+        if (prevPlayScene == null) {
+            return false; // may happen
         }
-        var cfg = uiConfigurationManager.current();
-        return cfg.gameSceneHasID(oldGameScene, "PlayScene2D") && cfg.gameSceneHasID(newGameScene, "PlayScene3D")
-            || cfg.gameSceneHasID(oldGameScene, "PlayScene3D") && cfg.gameSceneHasID(newGameScene, "PlayScene2D");
+        var config = uiConfigurationManager.current();
+        return config.gameSceneHasID(prevPlayScene, "PlayScene2D") && config.gameSceneHasID(nextPlayScene, "PlayScene3D")
+            || config.gameSceneHasID(prevPlayScene, "PlayScene3D") && config.gameSceneHasID(nextPlayScene, "PlayScene2D");
     }
 
-    private void logUpdateResult() {
+    private void logSimulationStep() {
         var messageList = THE_GAME_CONTROLLER.game().eventLog().createMessageList();
         if (!messageList.isEmpty()) {
             Logger.info("Simulation step #{}:", clock.updateCount());
