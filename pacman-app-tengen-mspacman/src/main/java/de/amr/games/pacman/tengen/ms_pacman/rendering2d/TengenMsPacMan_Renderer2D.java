@@ -22,7 +22,7 @@ import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
 import de.amr.games.pacman.tengen.ms_pacman.maps.MapRepository;
 import de.amr.games.pacman.ui._2d.GameRenderer;
 import de.amr.games.pacman.ui._2d.SpriteAnimationSet;
-import de.amr.games.pacman.ui.input.JoypadKeyBinding;
+import de.amr.games.pacman.ui.input.Joypad;
 import de.amr.games.pacman.uilib.SpriteAnimation;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
@@ -451,22 +451,22 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         }
     }
 
-    public void drawJoypadBindings(JoypadKeyBinding binding) {
+    public void drawJoypadKeyBinding(Joypad joypad) {
         String line1 = " [SELECT]=%s   [START]=%s   [BUTTON B]=%s   [BUTTON A]=%s";
         String line2 = " [UP]=%s   [DOWN]=%s   [LEFT]=%s   [RIGHT]=%s";
         ctx.setFont(Font.font("Sans", scaled(TS)));
         ctx.setStroke(Color.WHITE);
         ctx.strokeText(line1.formatted(
-            binding.key(NES_JoypadButton.BTN_SELECT),
-            binding.key(NES_JoypadButton.BTN_START),
-            binding.key(NES_JoypadButton.BTN_B),
-            binding.key(NES_JoypadButton.BTN_A)
+                joypad.key(NES_JoypadButton.BUTTON_SELECT),
+                joypad.key(NES_JoypadButton.BUTTON_START),
+                joypad.key(NES_JoypadButton.BUTTON_B),
+                joypad.key(NES_JoypadButton.BUTTON_A)
         ), 0, scaled(TS));
         ctx.strokeText(line2.formatted(
-            binding.key(NES_JoypadButton.BTN_UP),
-            binding.key(NES_JoypadButton.BTN_DOWN),
-            binding.key(NES_JoypadButton.BTN_LEFT),
-            binding.key(NES_JoypadButton.BTN_RIGHT)
+                joypad.key(NES_JoypadButton.BUTTON_UP),
+                joypad.key(NES_JoypadButton.BUTTON_DOWN),
+                joypad.key(NES_JoypadButton.BUTTON_LEFT),
+                joypad.key(NES_JoypadButton.BUTTON_RIGHT)
         ), 0, scaled(2*TS));
 
     }
