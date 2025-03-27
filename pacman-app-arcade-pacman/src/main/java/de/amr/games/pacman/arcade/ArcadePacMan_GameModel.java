@@ -6,6 +6,7 @@ package de.amr.games.pacman.arcade;
 
 import de.amr.games.pacman.controller.HuntingTimer;
 import de.amr.games.pacman.event.GameEventType;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.Waypoint;
 import de.amr.games.pacman.lib.tilemap.LayerID;
@@ -50,21 +51,7 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  */
 public class ArcadePacMan_GameModel extends GameModel {
 
-    public static Ghost blinky() {
-        return new Ghost(GameModel.RED_GHOST_ID, "Blinky");
-    }
-
-    public static Ghost pinky() {
-        return new Ghost(GameModel.PINK_GHOST_ID, "Pinky");
-    }
-
-    public static Ghost inky() {
-        return new Ghost(GameModel.CYAN_GHOST_ID, "Inky");
-    }
-
-    public static Ghost clyde() {
-        return new Ghost(GameModel.ORANGE_GHOST_ID, "Clyde");
-    }
+    public static final Vector2f MESSAGE_POSITION = new Vector2f(14 * TS, 21 * TS);
 
     // Level settings as specified in the dossier
     private static final byte[][] LEVEL_DATA = {
@@ -116,6 +103,22 @@ public class ArcadePacMan_GameModel extends GameModel {
     protected static final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {42, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
     // Bonus value = factor * 100
     protected static final byte[] BONUS_VALUE_FACTORS = {1, 3, 5, 7, 10, 20, 30, 50};
+
+    public static Ghost blinky() {
+        return new Ghost(GameModel.RED_GHOST_ID, "Blinky");
+    }
+
+    public static Ghost pinky() {
+        return new Ghost(GameModel.PINK_GHOST_ID, "Pinky");
+    }
+
+    public static Ghost inky() {
+        return new Ghost(GameModel.CYAN_GHOST_ID, "Inky");
+    }
+
+    public static Ghost clyde() {
+        return new Ghost(GameModel.ORANGE_GHOST_ID, "Clyde");
+    }
 
     protected final Steering autopilot = new RuleBasedPacSteering(this);
     protected Steering demoLevelSteering;

@@ -25,8 +25,6 @@ import static de.amr.games.pacman.ui.Globals.THE_UI;
  */
 public class ArcadePacMan_GameRenderer implements GameRenderer {
 
-    private static final Vector2f MESSAGE_POSITION = new Vector2f(14 * TS, 21 * TS);
-
     private final ArcadePacMan_SpriteSheet spriteSheet;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
     private final Canvas canvas;
@@ -76,7 +74,7 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
 
     @Override
     public Vector2f getMessagePosition() {
-        return MESSAGE_POSITION;
+        return ArcadePacMan_GameModel.MESSAGE_POSITION;
     }
 
     @Override
