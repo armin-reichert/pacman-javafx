@@ -25,7 +25,6 @@ import javafx.scene.text.Font;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
-import static de.amr.games.pacman.ui._2d.GameActions2D.bindTestActions;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -81,7 +80,7 @@ public class IntroScene extends GameScene2D {
     public void bindGameActions() {
         bind(GameActions2D.INSERT_COIN, THE_UI.keyboard().arcade().key(Arcade.Button.COIN));
         bind(GameActions2D.START_GAME, THE_UI.keyboard().arcade().key(Arcade.Button.START));
-        bindTestActions(this);
+        bindTestsStartingActions();
     }
 
     @Override

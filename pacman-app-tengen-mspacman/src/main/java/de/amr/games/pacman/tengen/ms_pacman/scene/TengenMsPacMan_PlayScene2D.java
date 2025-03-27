@@ -56,8 +56,6 @@ import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions.QUIT_DEMO_LEVEL;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
-import static de.amr.games.pacman.ui._2d.GameActions2D.bindCheatActions;
-import static de.amr.games.pacman.ui._2d.GameActions2D.bindFallbackPlayerControlActions;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_IMMUNITY;
 
@@ -313,8 +311,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             bind(TengenMsPacMan_GameActions.TOGGLE_PAC_BOOSTER,
                 joypad.key(NES_JoypadButton.BUTTON_A),
                 joypad.key(NES_JoypadButton.BUTTON_B));
-            bindFallbackPlayerControlActions(this);
-            bindCheatActions(this);
+            bindFallbackPlayerControlActions();
+            bindCheatActions();
         }
         registerGameActionKeyBindings();
     }

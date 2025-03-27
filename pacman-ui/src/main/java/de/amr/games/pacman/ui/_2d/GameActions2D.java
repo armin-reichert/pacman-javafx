@@ -8,21 +8,16 @@ import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.GameAction;
-import de.amr.games.pacman.ui.GameActionProvider;
 import de.amr.games.pacman.ui.GameScene;
-import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
-import de.amr.games.pacman.uilib.Keyboard;
-import javafx.scene.input.KeyCode;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
-import static de.amr.games.pacman.ui.Globals.*;
+import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.uilib.Ufx.toggle;
 import static java.util.function.Predicate.not;
 
@@ -236,34 +231,5 @@ public enum GameActions2D implements GameAction {
             }
             Logger.info("Game ({}) {}", THE_GAME_CONTROLLER.selectedGameVariant(), THE_UI.clock().isPaused() ? "paused" : "resumed");
         }
-    };
-
-    public static void bindDefaultArcadeControllerActions(GameActionProvider actionProvider, ArcadeKeyBinding arcadeKeys) {
-        actionProvider.bind(GameActions2D.INSERT_COIN,  arcadeKeys.key(Arcade.Button.COIN));
-        actionProvider.bind(GameActions2D.START_GAME,   arcadeKeys.key(Arcade.Button.START));
-        actionProvider.bind(GameActions2D.PLAYER_UP,    arcadeKeys.key(Arcade.Button.UP));
-        actionProvider.bind(GameActions2D.PLAYER_DOWN,  arcadeKeys.key(Arcade.Button.DOWN));
-        actionProvider.bind(GameActions2D.PLAYER_LEFT,  arcadeKeys.key(Arcade.Button.LEFT));
-        actionProvider.bind(GameActions2D.PLAYER_RIGHT, arcadeKeys.key(Arcade.Button.RIGHT));
-    }
-
-    public static void bindFallbackPlayerControlActions(GameActionProvider actionProvider) {
-        actionProvider.bind(GameActions2D.PLAYER_UP,    Keyboard.control(KeyCode.UP));
-        actionProvider.bind(GameActions2D.PLAYER_DOWN,  Keyboard.control(KeyCode.DOWN));
-        actionProvider.bind(GameActions2D.PLAYER_LEFT,  Keyboard.control(KeyCode.LEFT));
-        actionProvider.bind(GameActions2D.PLAYER_RIGHT, Keyboard.control(KeyCode.RIGHT));
-    }
-
-    public static void bindCheatActions(GameActionProvider actionProvider) {
-        actionProvider.bind(GameActions2D.CHEAT_EAT_ALL,     Keyboard.alt(KeyCode.E));
-        actionProvider.bind(GameActions2D.CHEAT_ADD_LIVES,   Keyboard.alt(KeyCode.L));
-        actionProvider.bind(GameActions2D.CHEAT_NEXT_LEVEL,  Keyboard.alt(KeyCode.N));
-        actionProvider.bind(GameActions2D.CHEAT_KILL_GHOSTS, Keyboard.alt(KeyCode.X));
-    }
-
-    public static void bindTestActions(GameActionProvider actionProvider) {
-        actionProvider.bind(GameActions2D.TEST_CUT_SCENES,     Keyboard.alt(KeyCode.C));
-        actionProvider.bind(GameActions2D.TEST_LEVELS_BONI,    Keyboard.alt(KeyCode.T));
-        actionProvider.bind(GameActions2D.TEST_LEVELS_TEASERS, Keyboard.shift_alt(KeyCode.T));
     }
 }

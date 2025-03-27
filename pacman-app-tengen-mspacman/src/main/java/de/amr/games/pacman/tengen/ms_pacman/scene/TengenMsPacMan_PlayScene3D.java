@@ -25,8 +25,6 @@ import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
-import static de.amr.games.pacman.ui._2d.GameActions2D.bindCheatActions;
-import static de.amr.games.pacman.ui._2d.GameActions2D.bindFallbackPlayerControlActions;
 import static de.amr.games.pacman.uilib.Keyboard.alt;
 
 public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
@@ -85,10 +83,10 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             bind(TengenMsPacMan_GameActions.TOGGLE_PAC_BOOSTER,
                 THE_UI.keyboard().selectedJoypad().key(NES_JoypadButton.BUTTON_A),
                 THE_UI.keyboard().selectedJoypad().key(NES_JoypadButton.BUTTON_B));
-            bindFallbackPlayerControlActions(this);
-            bindCheatActions(this);
-            bindFallbackPlayerControlActions(this);
-            bindCheatActions(this);
+            bindFallbackPlayerControlActions();
+            bindCheatActions();
+            bindFallbackPlayerControlActions();
+            bindCheatActions();
         }
         registerGameActionKeyBindings();
     }

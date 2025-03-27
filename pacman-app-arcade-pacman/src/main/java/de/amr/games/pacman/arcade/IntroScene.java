@@ -79,7 +79,7 @@ public class IntroScene extends GameScene2D {
     public void bindGameActions() {
         bind(GameActions2D.INSERT_COIN, THE_UI.keyboard().arcade().key(Arcade.Button.COIN));
         bind(GameActions2D.START_GAME, THE_UI.keyboard().arcade().key(Arcade.Button.START));
-        GameActions2D.bindTestActions(this);
+        bindTestsStartingActions();
     }
 
     @Override

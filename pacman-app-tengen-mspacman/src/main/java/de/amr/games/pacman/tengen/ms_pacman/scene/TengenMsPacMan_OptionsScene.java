@@ -13,7 +13,6 @@ import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
-import de.amr.games.pacman.ui._2d.GameActions2D;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -24,7 +23,7 @@ import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.CONTINUES_SPRITES;
-import static de.amr.games.pacman.ui.Globals.*;
+import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.uilib.Keyboard.alt;
 
 /**
@@ -69,7 +68,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         bind(TengenMsPacMan_GameActions.SELECT_NEXT_JOYPAD_KEY_BINDING, alt(KeyCode.J));
         bind(TengenMsPacMan_GameActions.START_PLAYING, THE_UI.keyboard().selectedJoypad().key(NES_JoypadButton.BUTTON_START));
         bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, THE_UI.keyboard().selectedJoypad().key(NES_JoypadButton.BUTTON_SELECT));
-        GameActions2D.bindTestActions(this);
+        bindTestsStartingActions();
     }
 
     @Override
