@@ -136,7 +136,7 @@ public class TengenMsPacMan_UIConfig implements GameUIConfiguration {
         THE_UI.assets().store("tengen.audio.sweep",                      rm.loadAudioClip("sound/common/sweep.mp3"));
 
         // Audio played by MediaPlayer
-        THE_UI.assets().store("tengen.audio.game_ready",                 rm.url("sound/ms-startButtonKey.wav"));
+        THE_UI.assets().store("tengen.audio.game_ready",                 rm.url("sound/ms-start.wav"));
         THE_UI.assets().store("tengen.audio.intermission.1",             rm.url("sound/theymeet.wav"));
         THE_UI.assets().store("tengen.audio.intermission.2",             rm.url("sound/thechase.wav"));
         THE_UI.assets().store("tengen.audio.intermission.3",             rm.url("sound/junior.wav"));
