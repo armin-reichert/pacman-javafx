@@ -11,7 +11,7 @@ import org.tinylog.Logger;
 import java.util.Map;
 import java.util.Optional;
 
-import static de.amr.games.pacman.ui.UIGlobals.THE_KEYBOARD;
+import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 
 public interface GameActionProvider {
 
@@ -25,14 +25,14 @@ public interface GameActionProvider {
     default void registerGameActionKeyBindings() {
         Logger.info("Register key bindings for {}", getClass().getSimpleName());
         for (KeyCodeCombination keyCodeCombination : actionBindings().keySet()) {
-            THE_KEYBOARD.register(keyCodeCombination, this);
+            THE_UI.keyboard().register(keyCodeCombination, this);
         }
     }
 
     default void unregisterGameActionKeyBindings() {
         Logger.info("Unregister key bindings for {}", getClass().getSimpleName());
         for (KeyCodeCombination keyCodeCombination : actionBindings().keySet()) {
-            THE_KEYBOARD.unregister(keyCodeCombination, this);
+            THE_UI.keyboard().unregister(keyCodeCombination, this);
         }
     }
 
@@ -50,7 +50,7 @@ public interface GameActionProvider {
 
     default Optional<GameAction> firstMatchedAction() {
         return actionBindings().entrySet().stream()
-            .filter(entry -> THE_KEYBOARD.isMatching(entry.getKey()))
+            .filter(entry -> THE_UI.keyboard().isMatching(entry.getKey()))
             .map(Map.Entry::getValue)
             .findFirst();
     }

@@ -22,7 +22,7 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.RectArea.rect;
-import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
+import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 
 /**
  * @author Armin Reichert
@@ -72,7 +72,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     public ArcadeMsPacMan_GameRenderer(ArcadeMsPacMan_SpriteSheet spriteSheet, Canvas canvas) {
         this.spriteSheet = assertNotNull(spriteSheet);
         this.canvas = assertNotNull(canvas);
-        flashingMazesImage = THE_ASSETS.get("ms_pacman.flashing_mazes");
+        flashingMazesImage = THE_UI.assets().get("ms_pacman.flashing_mazes");
     }
 
     @Override
@@ -169,7 +169,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     }
 
     public void drawMsPacManMidwayCopyright(double x, double y, Color color, Font font) {
-        Image image = THE_ASSETS.get("ms_pacman.logo.midway");
+        Image image = THE_UI.assets().get("ms_pacman.logo.midway");
         drawImageScaled(image, x, y + 2, tiles2Px(4) - 2, tiles2Px(4));
         ctx().setFont(font);
         ctx().setFill(color);

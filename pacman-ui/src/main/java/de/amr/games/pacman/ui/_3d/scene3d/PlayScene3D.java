@@ -109,7 +109,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         registerGameActionKeyBindings();
         THE_UI.setScoreVisible(true);
         perspectiveNamePy.bind(GlobalProperties3d.PY_3D_PERSPECTIVE);
-        scores3D.setFont(THE_ASSETS.font("font.arcade", 8));
+        scores3D.setFont(THE_UI.assets().font("font.arcade", 8));
     }
 
     @Override
@@ -181,7 +181,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             level3D.pac3D().update();
             if (THE_GAME_CONTROLLER.state() == GameState.HUNTING) {
                 if (level.powerTimer().isRunning()) {
-                    THE_SOUND.playPacPowerSound();
+                    THE_UI.sound().playPacPowerSound();
                 }
                 level3D.playLivesCounterAnimation();
             }
@@ -198,12 +198,12 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         GameLevel level = THE_GAME_CONTROLLER.game().level().orElse(null);
         if (level == null) {
             // Scene is visible for 1 (2?) ticks before game level has been created
-            Logger.warn("Tick #{}: Cannot update PlayScene3D: game level not yet available", THE_CLOCK.tickCount());
+            Logger.warn("Tick #{}: Cannot update PlayScene3D: game level not yet available", THE_UI.clock().tickCount());
             return;
         }
         // TODO: check this
         if (!hasLevel3D()) {
-            Logger.warn("Tick #{}: Cannot update 3D play scene, 3D game level not yet created?", THE_CLOCK.tickCount());
+            Logger.warn("Tick #{}: Cannot update 3D play scene, 3D game level not yet created?", THE_UI.clock().tickCount());
             return;
         }
 
@@ -236,7 +236,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         }
         else { // when score is disabled, show text "game over"
             String assetNamespace = THE_UI.currentUIConfig().assetNamespace();
-            Color color = THE_ASSETS.color(assetNamespace + ".color.game_over_message");
+            Color color = THE_UI.assets().color(assetNamespace + ".color.game_over_message");
             scores3D.showTextAsScore(TEXT_GAME_OVER, color);
         }
     }
@@ -244,17 +244,17 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     private void updateSound(GameLevel level) {
         if (THE_GAME_CONTROLLER.state() == GameState.HUNTING && !level.powerTimer().isRunning()) {
             int sirenNumber = 1 + THE_GAME_CONTROLLER.game().huntingTimer().phaseIndex() / 2;
-            THE_SOUND.selectSiren(sirenNumber);
-            THE_SOUND.playSiren();
+            THE_UI.sound().selectSiren(sirenNumber);
+            THE_UI.sound().playSiren();
         }
         if (level.pac().starvingTicks() > 8) { // TODO not sure how to do this right
-            THE_SOUND.stopMunchingSound();
+            THE_UI.sound().stopMunchingSound();
         }
         boolean ghostsReturning = level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
         if (level.pac().isAlive() && ghostsReturning) {
-            THE_SOUND.playGhostReturningHomeSound();
+            THE_UI.sound().playGhostReturningHomeSound();
         } else {
-            THE_SOUND.stopGhostReturningHomeSound();
+            THE_UI.sound().stopGhostReturningHomeSound();
         }
     }
 
@@ -323,7 +323,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
     private void onEnterStatePacManDying() {
         level3D.stopAnimations();
-        THE_SOUND.stopAll();
+        THE_UI.sound().stopAll();
         // last update before dying animation
         level3D.pac3D().update();
         playPacManDiesAnimation();
@@ -343,7 +343,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
     private void onEnterStateLevelComplete() {
         THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-            THE_SOUND.stopAll();
+            THE_UI.sound().stopAll();
             // if cheat has been used to complete level, food might still exist, so eat it:
             level.worldMap().tiles().filter(level::hasFoodAt).forEach(level::registerFoodEatenAt);
             level3D.pellets3D().forEach(Pellet3D::onEaten);
@@ -390,10 +390,10 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         // delay state exit for 3 seconds
         THE_GAME_CONTROLLER.state().timer().restartSeconds(3);
         if (!THE_GAME_CONTROLLER.game().isDemoLevel() && Globals.randomInt(0, 100) < 25) {
-            THE_UI.showFlashMessageSec(3, THE_ASSETS.localizedGameOverMessage());
+            THE_UI.showFlashMessageSec(3, THE_UI.assets().localizedGameOverMessage());
         }
-        THE_SOUND.stopAll();
-        THE_SOUND.playGameOverSound();
+        THE_UI.sound().stopAll();
+        THE_UI.sound().playGameOverSound();
     }
 
     @Override
@@ -401,7 +401,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         THE_GAME_CONTROLLER.game().level().flatMap(GameLevel::bonus).ifPresent(
                 bonus -> level3D.replaceBonus3D(bonus, THE_UI.currentUIConfig().spriteSheet()));
         if (THE_GAME_CONTROLLER.selectedGameVariant() == GameVariant.MS_PACMAN) {
-            THE_SOUND.playBonusBouncingSound();
+            THE_UI.sound().playBonusBouncingSound();
         }
     }
 
@@ -409,27 +409,27 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     public void onBonusEaten(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::showEaten);
         if (THE_GAME_CONTROLLER.selectedGameVariant() == GameVariant.MS_PACMAN) {
-            THE_SOUND.stopBonusBouncingSound();
+            THE_UI.sound().stopBonusBouncingSound();
         }
-        THE_SOUND.playBonusEatenSound();
+        THE_UI.sound().playBonusEatenSound();
     }
 
     @Override
     public void onBonusExpired(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::onBonusExpired);
         if (THE_GAME_CONTROLLER.selectedGameVariant() == GameVariant.MS_PACMAN) {
-            THE_SOUND.stopBonusBouncingSound();
+            THE_UI.sound().stopBonusBouncingSound();
         }
     }
 
     @Override
     public void onExtraLifeWon(GameEvent e) {
-        THE_SOUND.playExtraLifeSound();
+        THE_UI.sound().playExtraLifeSound();
     }
 
     @Override
     public void onGhostEaten(GameEvent e) {
-        THE_SOUND.playGhostEatenSound();
+        THE_UI.sound().playGhostEatenSound();
     }
 
     @Override
@@ -438,7 +438,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
                 THE_GAME_CONTROLLER.state() == TESTING_LEVELS ||
                 THE_GAME_CONTROLLER.state() == TESTING_LEVEL_TEASERS;
         if (!silent) {
-            THE_SOUND.playGameReadySound();
+            THE_UI.sound().playGameReadySound();
         }
     }
 
@@ -460,7 +460,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
                     .findFirst()
                     .ifPresent(Pellet3D::onEaten);
             }
-            THE_SOUND.playMunchingSound();
+            THE_UI.sound().playMunchingSound();
         }
     }
 
@@ -468,15 +468,15 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     public void onPacGetsPower(GameEvent event) {
         level3D.pac3D().setPowerMode(true);
         level3D.maze3D().playMaterialAnimation();
-        THE_SOUND.stopSiren();
-        THE_SOUND.playPacPowerSound();
+        THE_UI.sound().stopSiren();
+        THE_UI.sound().playPacPowerSound();
     }
 
     @Override
     public void onPacLostPower(GameEvent event) {
         level3D.pac3D().setPowerMode(false);
         level3D.maze3D().stopMaterialAnimation();
-        THE_SOUND.stopPacPowerSound();
+        THE_UI.sound().stopPacPowerSound();
     }
 
     protected void replaceGameLevel3D() {
@@ -516,23 +516,23 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e) {
         List<MenuItem> items = new ArrayList<>();
 
-        items.add(contextMenuTitleItem(THE_ASSETS.localizedText("scene_display")));
+        items.add(contextMenuTitleItem(THE_UI.assets().localizedText("scene_display")));
 
-        var item = new MenuItem(THE_ASSETS.localizedText("use_2D_scene"));
+        var item = new MenuItem(THE_UI.assets().localizedText("use_2D_scene"));
         item.setOnAction(ae -> GameActions3D.TOGGLE_PLAY_SCENE_2D_3D.execute());
         items.add(item);
 
         // Toggle picture-in-picture display
-        var miPiP = new CheckMenuItem(THE_ASSETS.localizedText("pip"));
+        var miPiP = new CheckMenuItem(THE_UI.assets().localizedText("pip"));
         miPiP.selectedProperty().bindBidirectional(PY_PIP_ON);
         items.add(miPiP);
 
-        items.add(contextMenuTitleItem(THE_ASSETS.localizedText("select_perspective")));
+        items.add(contextMenuTitleItem(THE_UI.assets().localizedText("select_perspective")));
 
         // Camera perspective radio buttons
         var radioButtonGroup = new ToggleGroup();
         for (var perspective : Perspective.Name.values()) {
-            var miPerspective = new RadioMenuItem(THE_ASSETS.localizedText(perspective.name()));
+            var miPerspective = new RadioMenuItem(THE_UI.assets().localizedText(perspective.name()));
             miPerspective.setToggleGroup(radioButtonGroup);
             miPerspective.setUserData(perspective);
             if (perspective == GlobalProperties3d.PY_3D_PERSPECTIVE.get())  { // == allowed for enum values
@@ -555,23 +555,23 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         });
 
         // Common items
-        items.add(contextMenuTitleItem(THE_ASSETS.localizedText("pacman")));
+        items.add(contextMenuTitleItem(THE_UI.assets().localizedText("pacman")));
 
-        var miAutopilot = new CheckMenuItem(THE_ASSETS.localizedText("autopilot"));
+        var miAutopilot = new CheckMenuItem(THE_UI.assets().localizedText("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
         items.add(miAutopilot);
 
-        var miImmunity = new CheckMenuItem(THE_ASSETS.localizedText("immunity"));
+        var miImmunity = new CheckMenuItem(THE_UI.assets().localizedText("immunity"));
         miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
         items.add(miImmunity);
 
         items.add(new SeparatorMenuItem());
 
-        var miMuted = new CheckMenuItem(THE_ASSETS.localizedText("muted"));
-        miMuted.selectedProperty().bindBidirectional(THE_SOUND.mutedProperty());
+        var miMuted = new CheckMenuItem(THE_UI.assets().localizedText("muted"));
+        miMuted.selectedProperty().bindBidirectional(THE_UI.sound().mutedProperty());
         items.add(miMuted);
 
-        var miQuit = new MenuItem(THE_ASSETS.localizedText("quit"));
+        var miQuit = new MenuItem(THE_UI.assets().localizedText("quit"));
         miQuit.setOnAction(ae -> GameActions2D.SHOW_START_PAGE.execute());
         items.add(miQuit);
 

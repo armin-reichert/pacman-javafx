@@ -16,7 +16,6 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.games.pacman.ui.UIGlobals.THE_CLOCK;
 import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 
 /**
@@ -32,7 +31,7 @@ public class StartPagesCarousel implements View {
 
         @Override
         public boolean isEnabled() {
-            return !THE_CLOCK.isPaused();
+            return !THE_UI.clock().isPaused();
         }
     };
 
@@ -82,8 +81,6 @@ public class StartPagesCarousel implements View {
         bind(actionSelectGamePage,        KeyCode.ENTER);
         bind(GameActions2D.TOGGLE_PAUSED, KeyCode.P);
     }
-
-    public Carousel carousel() { return carousel; }
 
     public Optional<StartPage> currentStartPage() {
         if (carousel.selectedIndex() == -1) {

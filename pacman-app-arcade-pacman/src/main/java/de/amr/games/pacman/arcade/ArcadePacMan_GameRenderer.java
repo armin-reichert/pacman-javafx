@@ -18,7 +18,7 @@ import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.arcade.ArcadePacMan_SpriteSheet.EMPTY_MAZE_SPRITE;
 import static de.amr.games.pacman.arcade.ArcadePacMan_SpriteSheet.FULL_MAZE_SPRITE;
-import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
+import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 
 /**
  * @author Armin Reichert
@@ -88,7 +88,7 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
         ctx().save();
         ctx().scale(scaling, scaling);
         if (mazeHighlighted) {
-            ctx().drawImage(THE_ASSETS.image("pacman.flashing_maze"), x, y);
+            ctx().drawImage(THE_UI.assets().image("pacman.flashing_maze"), x, y);
         } else {
             if (level.uneatenFoodCount() == 0) {
                 drawSpriteUnscaled(EMPTY_MAZE_SPRITE, x, y);

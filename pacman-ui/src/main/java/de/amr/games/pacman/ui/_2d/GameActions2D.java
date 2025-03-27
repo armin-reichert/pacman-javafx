@@ -38,7 +38,7 @@ public enum GameActions2D implements GameAction {
         public void execute() {
             if (THE_GAME_CONTROLLER.credit < Globals.MAX_COINS) {
                 THE_GAME_CONTROLLER.credit += 1;
-                THE_SOUND.enabledProperty().set(true);
+                THE_UI.sound().enabledProperty().set(true);
                 THE_GAME_CONTROLLER.game().publishGameEvent(GameEventType.CREDIT_ADDED);
             }
             if (THE_GAME_CONTROLLER.state() != GameState.SETTING_OPTIONS) {
@@ -62,9 +62,9 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute() {
             THE_GAME_CONTROLLER.restart(GameState.BOOT);
-            THE_CLOCK.setTargetFrameRate(Globals.TICKS_PER_SECOND);
-            THE_CLOCK.pausedProperty().set(false);
-            THE_CLOCK.start();
+            THE_UI.clock().setTargetFrameRate(Globals.TICKS_PER_SECOND);
+            THE_UI.clock().pausedProperty().set(false);
+            THE_UI.clock().start();
         }
     },
 
@@ -72,7 +72,7 @@ public enum GameActions2D implements GameAction {
         @Override
         public void execute() {
             THE_GAME_CONTROLLER.game().addLives(3);
-            THE_UI.showFlashMessage(THE_ASSETS.localizedText("cheat_add_lives", THE_GAME_CONTROLLER.game().lives()));
+            THE_UI.showFlashMessage(THE_UI.assets().localizedText("cheat_add_lives", THE_GAME_CONTROLLER.game().lives()));
         }
     },
 
@@ -86,7 +86,7 @@ public enum GameActions2D implements GameAction {
                         .filter(level::hasFoodAt)
                         .forEach(level::registerFoodEatenAt);
                     THE_GAME_CONTROLLER.game().publishGameEvent(GameEventType.PAC_FOUND_FOOD);
-                    THE_SOUND.stopMunchingSound();
+                    THE_UI.sound().stopMunchingSound();
                 });
             }
         }
@@ -167,7 +167,7 @@ public enum GameActions2D implements GameAction {
     SHOW_START_PAGE {
         @Override
         public void execute() {
-            THE_SOUND.stopAll();
+            THE_UI.sound().stopAll();
             THE_UI.currentGameScene().ifPresent(GameScene::end);
             THE_GAME_CONTROLLER.game().endGame();
             THE_UI.showStartView();
@@ -177,12 +177,12 @@ public enum GameActions2D implements GameAction {
     RESTART_INTRO {
         @Override
         public void execute() {
-            THE_SOUND.stopAll();
+            THE_UI.sound().stopAll();
             THE_UI.currentGameScene().ifPresent(GameScene::end);
             if (THE_GAME_CONTROLLER.state() == GameState.TESTING_LEVELS) {
                 THE_GAME_CONTROLLER.state().onExit(THE_GAME_CONTROLLER.game()); //TODO exit other states too?
             }
-            THE_CLOCK.setTargetFrameRate(Globals.TICKS_PER_SECOND);
+            THE_UI.clock().setTargetFrameRate(Globals.TICKS_PER_SECOND);
             THE_GAME_CONTROLLER.restart(INTRO);
         }
     },
@@ -193,7 +193,7 @@ public enum GameActions2D implements GameAction {
             if (THE_GAME_CONTROLLER.selectedGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                 THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
             } else if (THE_GAME_CONTROLLER.game().canStartNewGame()) {
-                THE_SOUND.stopVoice();
+                THE_UI.sound().stopVoice();
                 if (THE_GAME_CONTROLLER.state() == GameState.INTRO || THE_GAME_CONTROLLER.state() == GameState.SETTING_OPTIONS) {
                     THE_GAME_CONTROLLER.changeState(GameState.STARTING_GAME);
                 } else {
@@ -230,11 +230,11 @@ public enum GameActions2D implements GameAction {
     TOGGLE_PAUSED {
         @Override
         public void execute() {
-            toggle(THE_CLOCK.pausedProperty());
-            if (THE_CLOCK.isPaused()) {
-                THE_SOUND.stopAll();
+            toggle(THE_UI.clock().pausedProperty());
+            if (THE_UI.clock().isPaused()) {
+                THE_UI.sound().stopAll();
             }
-            Logger.info("Game ({}) {}", THE_GAME_CONTROLLER.selectedGameVariant(), THE_CLOCK.isPaused() ? "paused" : "resumed");
+            Logger.info("Game ({}) {}", THE_GAME_CONTROLLER.selectedGameVariant(), THE_UI.clock().isPaused() ? "paused" : "resumed");
         }
     };
 

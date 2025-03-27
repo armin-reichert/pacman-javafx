@@ -16,7 +16,6 @@ import javafx.scene.paint.Color;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
-import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
 import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 
 /**
@@ -41,7 +40,7 @@ public class CutScene3 extends GameScene2D {
         pac = new Pac();
         blinky = ArcadePacMan_GameModel.blinky();
 
-        music = THE_SOUND.makeSoundLoop("intermission");
+        music = THE_UI.sound().makeSoundLoop("intermission");
         music.setCycleCount(2);
 
         var spriteSheet = (ArcadePacMan_SpriteSheet) THE_UI.currentUIConfig().spriteSheet();

@@ -29,7 +29,7 @@ import org.tinylog.Logger;
 import java.util.function.Predicate;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
+import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 import static java.util.function.Predicate.not;
 
 /**
@@ -67,7 +67,7 @@ public interface GameRenderer {
     default float scaled(double value) { return scaling() * (float) value; }
 
     default Font scaledArcadeFont(float size) {
-        return THE_ASSETS.font("font.arcade", scaled(size));
+        return THE_UI.assets().font("font.arcade", scaled(size));
     }
 
     /**

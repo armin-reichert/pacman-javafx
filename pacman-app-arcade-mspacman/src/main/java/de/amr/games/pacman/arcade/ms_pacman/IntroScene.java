@@ -24,7 +24,6 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
 import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindTestActions;
 
@@ -112,7 +111,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        THE_SOUND.stopVoice();
+        THE_UI.sound().stopVoice();
     }
 
     @Override
@@ -127,7 +126,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        THE_SOUND.playInsertCoinSound();
+        THE_UI.sound().playInsertCoinSound();
     }
 
     @Override

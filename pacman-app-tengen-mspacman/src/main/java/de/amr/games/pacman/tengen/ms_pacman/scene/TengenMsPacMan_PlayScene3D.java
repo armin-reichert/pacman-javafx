@@ -24,7 +24,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
 import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindCheatActions;
 import static de.amr.games.pacman.ui._2d.GameActions2D.bindFallbackPlayerControlActions;
@@ -116,19 +115,19 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     public void onBonusActivated(GameEvent event) {
         THE_GAME_CONTROLLER.game().level().flatMap(GameLevel::bonus)
                 .ifPresent(bonus -> level3D.replaceBonus3D(bonus, THE_UI.currentUIConfig().spriteSheet()));
-        THE_SOUND.playBonusBouncingSound();
+        THE_UI.sound().playBonusBouncingSound();
     }
 
     @Override
     public void onBonusEaten(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::showEaten);
-        THE_SOUND.stopBonusBouncingSound();
-        THE_SOUND.playBonusEatenSound();
+        THE_UI.sound().stopBonusBouncingSound();
+        THE_UI.sound().playBonusEatenSound();
     }
 
     @Override
     public void onBonusExpired(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::onBonusExpired);
-        THE_SOUND.stopBonusBouncingSound();
+        THE_UI.sound().stopBonusBouncingSound();
     }
 }

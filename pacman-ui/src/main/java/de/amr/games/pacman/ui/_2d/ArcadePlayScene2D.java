@@ -16,7 +16,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.GameScene;
-import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckMenuItem;
@@ -80,13 +79,13 @@ public class ArcadePlayScene2D extends GameScene2D {
                 THE_GAME_CONTROLLER.state() == TESTING_LEVELS ||
                 THE_GAME_CONTROLLER.state() == TESTING_LEVEL_TEASERS;
         if (!silent) {
-            THE_SOUND.playGameReadySound();
+            THE_UI.sound().playGameReadySound();
         }
     }
 
     @Override
     protected void doEnd() {
-        THE_SOUND.stopAll();
+        THE_UI.sound().stopAll();
     }
 
     @Override
@@ -100,30 +99,30 @@ public class ArcadePlayScene2D extends GameScene2D {
             else {
                 level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
                 level.pac().setImmune(PY_IMMUNITY.get());
-                updateSound(level, THE_SOUND);
+                updateSound(level);
             }
             if (THE_GAME_CONTROLLER.state() == GameState.LEVEL_COMPLETE) {
                 levelCompleteAnimation.update();
             }
         }, () -> { // Scene is already visible 2 ticks before game level is created!
-            Logger.warn("Tick {}: Game level not yet available", THE_CLOCK.tickCount());
+            Logger.warn("Tick {}: Game level not yet available", THE_UI.clock().tickCount());
         });
     }
 
-    private void updateSound(GameLevel level, GameSound sound) {
+    private void updateSound(GameLevel level) {
         if (THE_GAME_CONTROLLER.state() == GameState.HUNTING && !level.powerTimer().isRunning()) {
             int sirenNumber = 1 + THE_GAME_CONTROLLER.game().huntingTimer().phaseIndex() / 2;
-            sound.selectSiren(sirenNumber);
-            sound.playSiren();
+            THE_UI.sound().selectSiren(sirenNumber);
+            THE_UI.sound().playSiren();
         }
         if (level.pac().starvingTicks() > 8) { // TODO not sure how to do this right
-            sound.stopMunchingSound();
+            THE_UI.sound().stopMunchingSound();
         }
         boolean ghostsReturning = level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
         if (level.pac().isAlive() && ghostsReturning) {
-            sound.playGhostReturningHomeSound();
+            THE_UI.sound().playGhostReturningHomeSound();
         } else {
-            sound.stopGhostReturningHomeSound();
+            THE_UI.sound().stopGhostReturningHomeSound();
         }
     }
 
@@ -136,7 +135,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     protected void drawSceneContent() {
         GameLevel level = THE_GAME_CONTROLLER.game().level().orElse(null);
         if (level == null) { // This happens on level start
-            Logger.warn("Tick {}: Cannot draw scene content: Game level not yet available!", THE_CLOCK.tickCount());
+            Logger.warn("Tick {}: Cannot draw scene content: Game level not yet available!", THE_UI.clock().tickCount());
             return;
         }
 
@@ -217,7 +216,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         gr.drawTileGrid(sizeInPx().x(), sizeInPx().y());
 
         if (THE_GAME_CONTROLLER.selectedGameVariant() == GameVariant.PACMAN) {
-            THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
+            THE_GAME_CONTROLLER.game().level().ifPresent(level ->
                 level.ghosts().forEach(ghost -> {
                     // Are currently the same for each ghost, but who knows what comes...
                     ghost.specialTerrainTiles().forEach(tile -> {
@@ -225,8 +224,8 @@ public class ArcadePlayScene2D extends GameScene2D {
                         double x = scaled(tile.x() * TS), y = scaled(tile.y() * TS + HTS), size = scaled(TS);
                         g.fillRect(x, y, size, 2);
                     });
-                });
-            });
+                })
+            );
         }
         g.setFill(Color.YELLOW);
         g.setFont(GameRenderer.DEBUG_FONT);
@@ -253,7 +252,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     @Override
     public void onEnterGameState(GameState state) {
         if (state == GameState.GAME_OVER) {
-            THE_SOUND.playGameOverSound();
+            THE_UI.sound().playGameOverSound();
         }
         else if (state == GameState.LEVEL_COMPLETE) {
             THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
@@ -267,76 +266,76 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     @Override
     public void onBonusActivated(GameEvent e) {
-        THE_SOUND.playBonusBouncingSound();
+        THE_UI.sound().playBonusBouncingSound();
     }
 
     @Override
     public void onBonusEaten(GameEvent e) {
-        THE_SOUND.stopBonusBouncingSound();
-        THE_SOUND.playBonusEatenSound();
+        THE_UI.sound().stopBonusBouncingSound();
+        THE_UI.sound().playBonusEatenSound();
     }
 
     @Override
     public void onBonusExpired(GameEvent e) {
-        THE_SOUND.stopBonusBouncingSound();
+        THE_UI.sound().stopBonusBouncingSound();
     }
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        THE_SOUND.playInsertCoinSound();
+        THE_UI.sound().playInsertCoinSound();
     }
 
     @Override
     public void onExtraLifeWon(GameEvent e) {
-        THE_SOUND.playExtraLifeSound();
+        THE_UI.sound().playExtraLifeSound();
     }
 
     @Override
     public void onGhostEaten(GameEvent e) {
-        THE_SOUND.playGhostEatenSound();
+        THE_UI.sound().playGhostEatenSound();
     }
 
     @Override
     public void onPacDying(GameEvent e) {
-        THE_SOUND.playPacDeathSound();
+        THE_UI.sound().playPacDeathSound();
     }
 
     @Override
     public void onPacFoundFood(GameEvent e) {
-        THE_SOUND.playMunchingSound();
+        THE_UI.sound().playMunchingSound();
     }
 
     @Override
     public void onPacGetsPower(GameEvent e) {
-        THE_SOUND.stopSiren();
-        THE_SOUND.playPacPowerSound();
+        THE_UI.sound().stopSiren();
+        THE_UI.sound().playPacPowerSound();
     }
 
     @Override
     public void onPacLostPower(GameEvent e) {
-        THE_SOUND.stopPacPowerSound();
+        THE_UI.sound().stopPacPowerSound();
     }
 
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e) {
         List<MenuItem> items = new ArrayList<>();
-        items.add(Ufx.contextMenuTitleItem(THE_ASSETS.localizedText("pacman")));
+        items.add(Ufx.contextMenuTitleItem(THE_UI.assets().localizedText("pacman")));
 
-        var miAutopilot = new CheckMenuItem(THE_ASSETS.localizedText("autopilot"));
+        var miAutopilot = new CheckMenuItem(THE_UI.assets().localizedText("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
         items.add(miAutopilot);
 
-        var miImmunity = new CheckMenuItem(THE_ASSETS.localizedText("immunity"));
+        var miImmunity = new CheckMenuItem(THE_UI.assets().localizedText("immunity"));
         miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
         items.add(miImmunity);
 
         items.add(new SeparatorMenuItem());
 
-        var miMuted = new CheckMenuItem(THE_ASSETS.localizedText("muted"));
-        miMuted.selectedProperty().bindBidirectional(THE_SOUND.mutedProperty());
+        var miMuted = new CheckMenuItem(THE_UI.assets().localizedText("muted"));
+        miMuted.selectedProperty().bindBidirectional(THE_UI.sound().mutedProperty());
         items.add(miMuted);
 
-        var miQuit = new MenuItem(THE_ASSETS.localizedText("quit"));
+        var miQuit = new MenuItem(THE_UI.assets().localizedText("quit"));
         miQuit.setOnAction(ae -> GameActions2D.SHOW_START_PAGE.execute());
         items.add(miQuit);
 

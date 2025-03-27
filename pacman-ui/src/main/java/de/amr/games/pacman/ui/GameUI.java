@@ -12,6 +12,8 @@ import de.amr.games.pacman.ui._3d.PacManGamesUI_3D;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
 import de.amr.games.pacman.ui.input.Keyboard;
+import de.amr.games.pacman.ui.sound.GameSound;
+import de.amr.games.pacman.uilib.GameClockFX;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.geometry.Dimension2D;
@@ -19,32 +21,35 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.stage.Stage;
 
-import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
 import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 
 public interface GameUI {
 
-    static void createInstance(Map<GameVariant, GameUIConfiguration> configMap, boolean support3D) {
-        THE_UI = support3D ? new PacManGamesUI_3D() : new PacManGamesUI();
-        if (support3D) {
-            THE_ASSETS.addAssets3D();
-        }
-        for (var entry : configMap.entrySet()) {
-            THE_UI.configure(entry.getKey(), entry.getValue());
-        }
+    static void createUIWithout3DSupport() {
+        THE_UI = new PacManGamesUI();
     }
 
+    static void createUIWith3DSupport() {
+        THE_UI = new PacManGamesUI_3D();
+        THE_UI.assets().addAssets3D();
+    }
+
+    GameClockFX clock();
+    Keyboard keyboard();
+    GameAssets assets();
+    GameSound sound();
 
     KeyCodeCombination KEY_FULLSCREEN = Keyboard.naked(KeyCode.F11);
     KeyCodeCombination KEY_MUTE = Keyboard.alt(KeyCode.M);
     KeyCodeCombination KEY_OPEN_EDITOR = Keyboard.shift_alt(KeyCode.E);
 
     ArcadeKeyBinding arcadeKeys();
+
     JoypadKeyBinding joypadKeyBinding();
+
     void selectNextJoypadKeyBinding();
 
     void addStartPage(GameVariant gameVariant, StartPage startPage);

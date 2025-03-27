@@ -13,8 +13,6 @@ import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import java.util.Map;
-
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 
@@ -29,7 +27,8 @@ public class ArcadePacMan_App extends Application {
 
     @Override
     public void start(Stage stage) {
-        GameUI.createInstance(Map.of(GameVariant.PACMAN, new ArcadePacMan_UIConfig()), true);
+        GameUI.createUIWith3DSupport();
+        THE_UI.configure(GameVariant.PACMAN, new ArcadePacMan_UIConfig());
         THE_UI.build(stage, initialSize());
         THE_UI.addStartPage(GameVariant.PACMAN, new ArcadePacMan_StartPage());
         THE_UI.addDefaultDashboardItems("README", "GENERAL", "GAME_CONTROL", "SETTINGS_3D", "GAME_INFO", "ACTOR_INFO", "KEYBOARD", "ABOUT");

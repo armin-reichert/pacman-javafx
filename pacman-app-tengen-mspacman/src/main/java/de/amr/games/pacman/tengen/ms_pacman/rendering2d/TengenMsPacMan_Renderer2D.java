@@ -39,8 +39,7 @@ import static de.amr.games.pacman.model.actors.Bonus.STATE_EDIBLE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.games.pacman.tengen.ms_pacman.maps.MapRepository.strangeMap15Sprite;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.*;
-import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
-import static de.amr.games.pacman.ui.UIGlobals.THE_CLOCK;
+import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 import static de.amr.games.pacman.ui._2d.GameSpriteSheet.NO_SPRITE;
 import static java.util.function.Predicate.not;
 
@@ -202,12 +201,12 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
         if (coloredMapSet == null) {
             // setWorldMap() not yet called?
-            Logger.warn("Tick {}: No maze available", THE_CLOCK.tickCount());
+            Logger.warn("Tick {}: No maze available", THE_UI.clock().tickCount());
             return;
         }
 
         RectArea area = mapCategory == MapCategory.STRANGE && mapNumber == 15
-            ? strangeMap15Sprite(THE_CLOCK.tickCount()) // Strange map #15: psychedelic animation
+            ? strangeMap15Sprite(THE_UI.clock().tickCount()) // Strange map #15: psychedelic animation
             : coloredMapSet.normalMaze().area();
         ctx.drawImage(coloredMapSet.normalMaze().source(),
             area.x(), area.y(), area.width(), area.height(),
@@ -300,9 +299,9 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         if (level.message() != null) {
             float x = getMessagePosition().x(), y = getMessagePosition().y();
             switch (level.message()) {
-                case READY -> drawTextCenteredOver("READY!", x, y, THE_ASSETS.color(assetNamespace + ".color.ready_message"));
+                case READY -> drawTextCenteredOver("READY!", x, y, THE_UI.assets().color(assetNamespace + ".color.ready_message"));
                 case GAME_OVER -> {
-                    Color color = THE_ASSETS.color(assetNamespace + ".color.game_over_message");
+                    Color color = THE_UI.assets().color(assetNamespace + ".color.game_over_message");
                     if (demoLevel) {
                         WorldMap worldMap = level.worldMap();
                         NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
@@ -362,7 +361,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     public void drawScores() {
         Color color = nesPaletteColor(0x20);
         Font font = scaledArcadeFont(TS);
-        if (THE_CLOCK.tickCount() % 60 < 30) { drawText("1UP", color, font, tiles2Px(2), tiles2Px(1)); }
+        if (THE_UI.clock().tickCount() % 60 < 30) { drawText("1UP", color, font, tiles2Px(2), tiles2Px(1)); }
         drawText("HIGH SCORE", color, font, tiles2Px(9), tiles2Px(1));
         drawText("%6d".formatted(THE_GAME_CONTROLLER.game().scoreManager().score().points()), color, font, 0, tiles2Px(2));
         drawText("%6d".formatted(THE_GAME_CONTROLLER.game().scoreManager().highScore().points()), color, font, tiles2Px(11), tiles2Px(2));

@@ -39,7 +39,7 @@ import java.util.Map;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui.UIGlobals.*;
+import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
 import static de.amr.games.pacman.ui.input.Keyboard.*;
 import static de.amr.games.pacman.uilib.Ufx.*;
@@ -58,55 +58,55 @@ public class GameView extends StackPane implements View, GameEventListener {
     private final GameAction actionShowHelp = this::showHelp;
 
     private final GameAction actionSimulationSpeedSlower = () -> {
-        double newRate = THE_CLOCK.getTargetFrameRate() - SIMULATION_SPEED_DELTA;
+        double newRate = THE_UI.clock().getTargetFrameRate() - SIMULATION_SPEED_DELTA;
         newRate = clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
-        THE_CLOCK.setTargetFrameRate(newRate);
+        THE_UI.clock().setTargetFrameRate(newRate);
         String prefix = newRate == SIMULATION_SPEED_MIN ? "At minimum speed: " : "";
         THE_UI.showFlashMessageSec(0.75, prefix + newRate + "Hz");
     };
 
     private final GameAction actionSimulationSpeedFaster = () -> {
-        double newRate = THE_CLOCK.getTargetFrameRate() + SIMULATION_SPEED_DELTA;
+        double newRate = THE_UI.clock().getTargetFrameRate() + SIMULATION_SPEED_DELTA;
         newRate = clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
-        THE_CLOCK.setTargetFrameRate(newRate);
+        THE_UI.clock().setTargetFrameRate(newRate);
         String prefix = newRate == SIMULATION_SPEED_MAX ? "At maximum speed: " : "";
         THE_UI.showFlashMessageSec(0.75, prefix + newRate + "Hz");
     };
 
     private final GameAction actionSimulationSpeedReset = () -> {
-        THE_CLOCK.setTargetFrameRate(TICKS_PER_SECOND);
-        THE_UI.showFlashMessageSec(0.75, THE_CLOCK.getTargetFrameRate() + "Hz");
+        THE_UI.clock().setTargetFrameRate(TICKS_PER_SECOND);
+        THE_UI.showFlashMessageSec(0.75, THE_UI.clock().getTargetFrameRate() + "Hz");
     };
 
     private final GameAction actionSimulationOneStep = new GameAction() {
         @Override
         public void execute() {
-            THE_CLOCK.makeOneStep(true);
+            THE_UI.clock().makeOneStep(true);
         }
 
         @Override
         public boolean isEnabled() {
-            return THE_CLOCK.isPaused();
+            return THE_UI.clock().isPaused();
         }
     };
 
     private final GameAction actionSimulationTenSteps = new GameAction() {
         @Override
         public void execute() {
-            THE_CLOCK.makeSteps(10, true);
+            THE_UI.clock().makeSteps(10, true);
         }
 
         @Override
         public boolean isEnabled() {
-            return THE_CLOCK.isPaused();
+            return THE_UI.clock().isPaused();
         }
     };
 
     private final GameAction actionToggleAutopilot = () -> {
         toggle(PY_AUTOPILOT);
         boolean auto = PY_AUTOPILOT.get();
-        THE_UI.showFlashMessage(THE_ASSETS.localizedText(auto ? "autopilot_on" : "autopilot_off"));
-        THE_SOUND.playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
+        THE_UI.showFlashMessage(THE_UI.assets().localizedText(auto ? "autopilot_on" : "autopilot_off"));
+        THE_UI.sound().playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
     };
 
     private final GameAction actionToggleDashboard = this::toggleDashboardVisibility;
@@ -115,8 +115,8 @@ public class GameView extends StackPane implements View, GameEventListener {
 
     private final GameAction actionToggleImmunity = () -> {
         toggle(GlobalProperties2d.PY_IMMUNITY);
-        THE_UI.showFlashMessage(THE_ASSETS.localizedText(GlobalProperties2d.PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
-        THE_SOUND.playVoice(GlobalProperties2d.PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
+        THE_UI.showFlashMessage(THE_UI.assets().localizedText(GlobalProperties2d.PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
+        THE_UI.sound().playVoice(GlobalProperties2d.PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
     };
 
     protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
@@ -206,18 +206,18 @@ public class GameView extends StackPane implements View, GameEventListener {
 
     public void addDefaultDashboardItem(String title) {
         switch (title) {
-            case "ABOUT"        -> addDashboardItem(title, THE_ASSETS.localizedText("infobox.about.title"),              new InfoBoxAbout());
-            case "ACTOR_INFO"   -> addDashboardItem(title, THE_ASSETS.localizedText("infobox.actor_info.title"),         new InfoBoxActorInfo());
-            case "CUSTOM_MAPS"  -> addDashboardItem(title, THE_ASSETS.localizedText("infobox.custom_maps.title"),        new InfoBoxCustomMaps());
-            case "GENERAL"      -> addDashboardItem(title, THE_ASSETS.localizedText("infobox.general.title"),            new InfoBoxGeneral());
-            case "GAME_CONTROL" -> addDashboardItem(title, THE_ASSETS.localizedText("infobox.game_control.title"),       new InfoBoxGameControl());
-            case "GAME_INFO"    -> addDashboardItem(title, THE_ASSETS.localizedText("infobox.game_info.title"),          new InfoBoxGameInfo());
-            case "JOYPAD"       -> addDashboardItem(title, THE_ASSETS.localizedText("infobox.joypad.title"),             new InfoBoxJoypad());
-            case "KEYBOARD"     -> addDashboardItem(title, THE_ASSETS.localizedText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
+            case "ABOUT"        -> addDashboardItem(title, THE_UI.assets().localizedText("infobox.about.title"),              new InfoBoxAbout());
+            case "ACTOR_INFO"   -> addDashboardItem(title, THE_UI.assets().localizedText("infobox.actor_info.title"),         new InfoBoxActorInfo());
+            case "CUSTOM_MAPS"  -> addDashboardItem(title, THE_UI.assets().localizedText("infobox.custom_maps.title"),        new InfoBoxCustomMaps());
+            case "GENERAL"      -> addDashboardItem(title, THE_UI.assets().localizedText("infobox.general.title"),            new InfoBoxGeneral());
+            case "GAME_CONTROL" -> addDashboardItem(title, THE_UI.assets().localizedText("infobox.game_control.title"),       new InfoBoxGameControl());
+            case "GAME_INFO"    -> addDashboardItem(title, THE_UI.assets().localizedText("infobox.game_info.title"),          new InfoBoxGameInfo());
+            case "JOYPAD"       -> addDashboardItem(title, THE_UI.assets().localizedText("infobox.joypad.title"),             new InfoBoxJoypad());
+            case "KEYBOARD"     -> addDashboardItem(title, THE_UI.assets().localizedText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
             case "README" -> {
                 InfoBox readMeBox = new InfoBoxReadmeFirst();
                 readMeBox.setExpanded(true);
-                addDashboardItem(title, THE_ASSETS.localizedText("infobox.readme.title"), readMeBox);
+                addDashboardItem(title, THE_UI.assets().localizedText("infobox.readme.title"), readMeBox);
             }
         }
     }
@@ -383,8 +383,8 @@ public class GameView extends StackPane implements View, GameEventListener {
             Logger.info("Game level {} ({}) created", level.number(), THE_GAME_CONTROLLER.selectedGameVariant());
             THE_UI.currentUIConfig().createActorAnimations(level);
             Logger.info("Actor animations ({}) created", THE_GAME_CONTROLLER.selectedGameVariant());
-            THE_SOUND.setEnabled(!THE_GAME_CONTROLLER.game().isDemoLevel());
-            Logger.info("Sounds ({}) {}", THE_GAME_CONTROLLER.selectedGameVariant(), THE_SOUND.isEnabled() ? "enabled" : "disabled");
+            THE_UI.sound().setEnabled(!THE_GAME_CONTROLLER.game().isDemoLevel());
+            Logger.info("Sounds ({}) {}", THE_GAME_CONTROLLER.selectedGameVariant(), THE_UI.sound().isEnabled() ? "enabled" : "disabled");
             // size of game scene might have changed, so re-embed
             THE_UI.currentGameScene().ifPresent(this::embedGameScene);
             GameScene2D pipGameScene = THE_UI.currentUIConfig().createPiPScene(canvasContainer().canvas());

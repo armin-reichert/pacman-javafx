@@ -31,7 +31,6 @@ import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.*;
 import static de.amr.games.pacman.model.actors.GhostState.EATEN;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
-import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
 import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 
 /**
@@ -111,7 +110,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        THE_SOUND.stopVoice();
+        THE_UI.sound().stopVoice();
     }
 
     @Override
@@ -121,7 +120,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        THE_SOUND.playInsertCoinSound();
+        THE_UI.sound().playInsertCoinSound();
     }
 
     @Override

@@ -10,8 +10,6 @@ import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
-import static de.amr.games.pacman.ui.UIGlobals.THE_CLOCK;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_DEBUG_INFO_VISIBLE;
 import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_ENABLED;
 import static de.amr.games.pacman.uilib.Ufx.toggle;
@@ -42,16 +40,16 @@ public class PacManGamesUI_3D extends PacManGamesUI {
                 String sceneNameText = sceneName != null && PY_DEBUG_INFO_VISIBLE.get() ? " [%s]".formatted(sceneName) : "";
                 String assetNamespace = currentUIConfig().assetNamespace();
                 String key = "app.title." + assetNamespace;
-                if (THE_CLOCK.isPaused()) {
+                if (clock().isPaused()) {
                     key += ".paused";
                 }
-                String modeKey = THE_ASSETS.localizedText(PY_3D_ENABLED.get() ? "threeD" : "twoD");
+                String modeKey = assets().localizedText(PY_3D_ENABLED.get() ? "threeD" : "twoD");
                 if (currentGameScene().isPresent() && currentGameScene().get() instanceof GameScene2D gameScene2D) {
-                    return THE_ASSETS.localizedText(key, modeKey) + sceneNameText + " (%.2fx)".formatted(gameScene2D.scaling());
+                    return assets().localizedText(key, modeKey) + sceneNameText + " (%.2fx)".formatted(gameScene2D.scaling());
                 }
-                return THE_ASSETS.localizedText(key, modeKey) + sceneNameText;
+                return assets().localizedText(key, modeKey) + sceneNameText;
             },
-            THE_CLOCK.pausedProperty(), gameScenePy, gameView.heightProperty(), PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE)
+            clock().pausedProperty(), gameScenePy, gameView.heightProperty(), PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE)
         );
     }
 
@@ -64,7 +62,7 @@ public class PacManGamesUI_3D extends PacManGamesUI {
                 THE_GAME_CONTROLLER.update(); //TODO needed?
             }
             if (!THE_GAME_CONTROLLER.game().isPlaying()) {
-                showFlashMessage(THE_ASSETS.localizedText(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
+                showFlashMessage(assets().localizedText(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
             }
         });
     }

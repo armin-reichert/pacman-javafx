@@ -12,7 +12,10 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._2d.*;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
+import de.amr.games.pacman.ui.input.Keyboard;
+import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.FlashMessageView;
+import de.amr.games.pacman.uilib.GameClockFX;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
@@ -35,7 +38,6 @@ import java.util.Optional;
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui.UIGlobals.*;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_DEBUG_INFO_VISIBLE;
 import static de.amr.games.pacman.ui.input.ArcadeKeyBinding.DEFAULT_ARCADE_KEY_BINDING;
 import static de.amr.games.pacman.ui.input.JoypadKeyBinding.JOYPAD_CURSOR_KEYS;
@@ -49,12 +51,40 @@ import static de.amr.games.pacman.uilib.Ufx.createIcon;
  */
 public class PacManGamesUI implements GameEventListener, GameUI {
 
+    private final GameClockFX CLOCK = new GameClockFX();
+
+    @Override
+    public GameClockFX clock() {
+        return CLOCK;
+    }
+
+    private final Keyboard KEYBOARD = new Keyboard();
+
+    @Override
+    public Keyboard keyboard() {
+        return KEYBOARD;
+    }
+
+    private final GameAssets ASSETS = new GameAssets();
+
+    @Override
+    public GameAssets assets() {
+        return ASSETS;
+    }
+
+    private final GameSound SOUND = new GameSound();
+
+    @Override
+    public GameSound sound() {
+        return SOUND;
+    }
+
     protected final GameAction actionOpenEditorView = new GameAction() {
         @Override
         public void execute() {
             currentGameScene().ifPresent(GameScene::end);
-            THE_CLOCK.stop();
-            THE_SOUND.stopAll();
+            CLOCK.stop();
+            SOUND.stopAll();
             EditorView editorView = getOrCreateEditorView();
             stage.titleProperty().bind(editorView.editor().titleProperty());
             editorView.editor().start();
@@ -90,8 +120,8 @@ public class PacManGamesUI implements GameEventListener, GameUI {
     protected ArcadeKeyBinding arcadeKeyBinding = DEFAULT_ARCADE_KEY_BINDING;
 
     public PacManGamesUI() {
-        THE_CLOCK.setPauseableCallback(this::runOnEveryTickExceptWhenPaused);
-        THE_CLOCK.setPermanentCallback(this::runOnEveryTick);
+        CLOCK.setPauseableCallback(this::runOnEveryTickExceptWhenPaused);
+        CLOCK.setPermanentCallback(this::runOnEveryTick);
         viewPy.addListener((py, ov, nv) -> {
             if (ov instanceof GameEventListener oldGameEventListener) {
                 THE_GAME_CONTROLLER.game().removeGameEventListener(oldGameEventListener);
@@ -171,7 +201,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
             currentGameScene().ifPresent(GameScene::update);
             logUpdateResult();
         } catch (Exception x) {
-            THE_CLOCK.stop();
+            CLOCK.stop();
             Logger.error(x);
             Logger.error("Something very bad happened, game clock has been stopped!");
         }
@@ -186,7 +216,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
                 Logger.warn("Should not happen: tick received when not on game view");
             }
         } catch (Exception x) {
-            THE_CLOCK.stop();
+            CLOCK.stop();
             Logger.error(x);
             Logger.error("Something very bad happened, game clock has been stopped!");
         }
@@ -194,8 +224,8 @@ public class PacManGamesUI implements GameEventListener, GameUI {
 
     //TODO use nice font icons instead
     private Pane createIconPane() {
-        ImageView mutedIcon = createIcon(THE_ASSETS.get("icon.mute"), 48, THE_SOUND.mutedProperty());
-        ImageView autoIcon  = createIcon(THE_ASSETS.get("icon.auto"), 48, GlobalProperties2d.PY_AUTOPILOT);
+        ImageView mutedIcon = createIcon(ASSETS.get("icon.mute"), 48, SOUND.mutedProperty());
+        ImageView autoIcon  = createIcon(ASSETS.get("icon.auto"), 48, GlobalProperties2d.PY_AUTOPILOT);
 
         var pane = new HBox(autoIcon, mutedIcon);
         pane.setMaxWidth(128);
@@ -207,9 +237,9 @@ public class PacManGamesUI implements GameEventListener, GameUI {
     // icons indicating autopilot, mute state
     private void addIconPane() {
         Pane iconPane = createIconPane();
-        ImageView pauseIcon = createIcon(THE_ASSETS.get("icon.pause"), 64, THE_CLOCK.pausedProperty());
+        ImageView pauseIcon = createIcon(ASSETS.get("icon.pause"), 64, CLOCK.pausedProperty());
         pauseIcon.visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> viewPy.get() != editorView && THE_CLOCK.isPaused(), viewPy, THE_CLOCK.pausedProperty()));
+            () -> viewPy.get() != editorView && CLOCK.isPaused(), viewPy, CLOCK.pausedProperty()));
         StackPane.setAlignment(pauseIcon, Pos.CENTER);
         StackPane.setAlignment(iconPane, Pos.BOTTOM_RIGHT);
         sceneRoot.getChildren().addAll(pauseIcon, iconPane);
@@ -217,11 +247,11 @@ public class PacManGamesUI implements GameEventListener, GameUI {
 
     protected void createMainScene(Dimension2D size) {
         sceneRoot.getChildren().addAll(new Pane(), flashMessageOverlay);
-        sceneRoot.setBackground(THE_ASSETS.get("background.scene"));
+        sceneRoot.setBackground(ASSETS.get("background.scene"));
         sceneRoot.backgroundProperty().bind(gameScenePy.map(
             gameScene -> currentGameSceneIsPlayScene3D()
-                ? THE_ASSETS.get("background.play_scene3d")
-                : THE_ASSETS.get("background.scene"))
+                ? ASSETS.get("background.play_scene3d")
+                : ASSETS.get("background.scene"))
         );
         addIconPane();
 
@@ -229,15 +259,15 @@ public class PacManGamesUI implements GameEventListener, GameUI {
         mainScene.widthProperty() .addListener((py,ov,nv) -> gameView.setSize(mainScene.getWidth(), mainScene.getHeight()));
         mainScene.heightProperty().addListener((py,ov,nv) -> gameView.setSize(mainScene.getWidth(), mainScene.getHeight()));
 
-        mainScene.addEventFilter(KeyEvent.KEY_PRESSED, THE_KEYBOARD::onKeyPressed);
-        mainScene.addEventFilter(KeyEvent.KEY_RELEASED, THE_KEYBOARD::onKeyReleased);
+        mainScene.addEventFilter(KeyEvent.KEY_PRESSED, KEYBOARD::onKeyPressed);
+        mainScene.addEventFilter(KeyEvent.KEY_RELEASED, KEYBOARD::onKeyReleased);
 
         mainScene.setOnKeyPressed(keyPress -> {
             if (KEY_FULLSCREEN.match(keyPress)) {
                 enterFullScreenMode();
             }
             else if (KEY_MUTE.match(keyPress)) {
-                THE_SOUND.toggleMuted();
+                SOUND.toggleMuted();
             }
             else if (KEY_OPEN_EDITOR.match(keyPress)) {
                 openEditor();
@@ -254,7 +284,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
             editorView.setCloseAction(editor -> {
                 editor.executeWithCheckForUnsavedChanges(this::bindStageTitle);
                 editor.stop();
-                THE_CLOCK.setTargetFrameRate(Globals.TICKS_PER_SECOND);
+                CLOCK.setTargetFrameRate(Globals.TICKS_PER_SECOND);
                 THE_GAME_CONTROLLER.restart(GameState.BOOT);
                 showStartView();
             });
@@ -264,7 +294,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
 
     protected void createStartPagesCarousel() {
         startPagesCarousel = new StartPagesCarousel();
-        startPagesCarousel.setBackground(THE_ASSETS.background("background.scene"));
+        startPagesCarousel.setBackground(ASSETS.background("background.scene"));
         viewPy.addListener((py, ov, view) -> {
             if (view == startPagesCarousel) {
                 startPagesCarousel.currentStartPage().ifPresent(startPage ->
@@ -282,7 +312,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
     protected void handleGameVariantChange(GameVariant gameVariant) {
         THE_GAME_CONTROLLER.game().addGameEventListener(this); //TODO check this
         GameUIConfiguration uiConfig = uiConfiguration(gameVariant);
-        THE_SOUND.selectGameVariant(gameVariant, uiConfig.assetNamespace());
+        SOUND.selectGameVariant(gameVariant, uiConfig.assetNamespace());
         stage.getIcons().setAll(uiConfig.appIcon());
         gameView.canvasContainer().decorationEnabledPy.set(uiConfig.isGameCanvasDecorated());
     }
@@ -292,13 +322,13 @@ public class PacManGamesUI implements GameEventListener, GameUI {
             () -> {
                 // "app.title.pacman" vs. "app.title.pacman.paused"
                 String key = "app.title." + currentUIConfig().assetNamespace();
-                if (THE_CLOCK.isPaused()) { key += ".paused"; }
+                if (CLOCK.isPaused()) { key += ".paused"; }
                 if (currentGameScene().isPresent() && currentGameScene().get() instanceof GameScene2D gameScene2D) {
-                    return THE_ASSETS.localizedText(key, "2D") + " (%.2fx)".formatted(gameScene2D.scaling());
+                    return ASSETS.localizedText(key, "2D") + " (%.2fx)".formatted(gameScene2D.scaling());
                 }
-                return THE_ASSETS.localizedText(key, "2D");
+                return ASSETS.localizedText(key, "2D");
             },
-            THE_CLOCK.pausedProperty(), gameScenePy, gameView.heightProperty())
+            CLOCK.pausedProperty(), gameScenePy, gameView.heightProperty())
         );
     }
 
@@ -344,7 +374,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
     private void logUpdateResult() {
         var messageList = THE_GAME_CONTROLLER.game().eventLog().createMessageList();
         if (!messageList.isEmpty()) {
-            Logger.info("Simulation step #{}:", THE_CLOCK.updateCount());
+            Logger.info("Simulation step #{}:", CLOCK.updateCount());
             for (var msg : messageList) {
                 Logger.info("- " + msg);
             }
@@ -428,7 +458,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
 
     @Override
     public void showStartView() {
-        THE_CLOCK.stop();
+        CLOCK.stop();
         gameScenePy.set(null);
         gameView.hideDashboard(); // TODO use binding?
         viewPy.set(startPagesCarousel);
@@ -443,7 +473,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
     public void showGameView() {
         viewPy.set(gameView);
         if (!THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN)) {
-            THE_SOUND.playVoice("voice.explain", 0);
+            SOUND.playVoice("voice.explain", 0);
         }
         gameView.setSize(mainScene.getWidth(), mainScene.getHeight());
         GameActions2D.BOOT.execute();
@@ -481,6 +511,6 @@ public class PacManGamesUI implements GameEventListener, GameUI {
 
     @Override
     public void onStopAllSounds(GameEvent event) {
-        THE_SOUND.stopAll();
+        SOUND.stopAll();
     }
 }

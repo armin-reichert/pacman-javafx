@@ -24,7 +24,6 @@ import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.HEART_SPRITE;
-import static de.amr.games.pacman.ui.UIGlobals.THE_SOUND;
 import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 
 /**
@@ -85,7 +84,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         inky.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, inky.id()));
         pinky.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, pinky.id()));
 
-        music = THE_SOUND.makeSound("intermission.1");
+        music = THE_UI.sound().makeSound("intermission.1");
     }
 
     @Override

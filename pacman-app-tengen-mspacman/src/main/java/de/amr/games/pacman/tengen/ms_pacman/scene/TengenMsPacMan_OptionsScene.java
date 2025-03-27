@@ -111,17 +111,17 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     private void optionSelectionChanged() {
-        THE_SOUND.playClipIfEnabled("option.selection_changed", 1);
+        THE_UI.sound().playClipIfEnabled("option.selection_changed", 1);
         resetIdleTimer();
     }
 
     private void optionValueChanged() {
-        THE_SOUND.playClipIfEnabled("option.value_changed", 1);
+        THE_UI.sound().playClipIfEnabled("option.value_changed", 1);
         resetIdleTimer();
     }
 
     private boolean isJoypadPressed(NES_JoypadButton button) {
-        return THE_KEYBOARD.isMatching(THE_UI.joypadKeyBinding().key(button));
+        return THE_UI.keyboard().isMatching(THE_UI.joypadKeyBinding().key(button));
     }
 
     @Override

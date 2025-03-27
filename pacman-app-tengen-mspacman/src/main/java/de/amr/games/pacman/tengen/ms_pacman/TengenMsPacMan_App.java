@@ -13,8 +13,6 @@ import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import java.util.Map;
-
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
@@ -30,7 +28,8 @@ public class TengenMsPacMan_App extends Application {
 
     @Override
     public void start(Stage stage) {
-        GameUI.createInstance(Map.of(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_UIConfig()), true);
+        GameUI.createUIWith3DSupport();
+        THE_UI.configure(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_UIConfig());
         THE_UI.build(stage, initialSize());
         THE_UI.addStartPage(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_StartPage());
         THE_UI.addDefaultDashboardItems("README", "GENERAL", "GAME_CONTROL", "SETTINGS_3D", "GAME_INFO",

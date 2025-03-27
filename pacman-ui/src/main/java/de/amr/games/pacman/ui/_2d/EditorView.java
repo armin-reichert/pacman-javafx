@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import static de.amr.games.pacman.Globals.assertNotNull;
-import static de.amr.games.pacman.ui.UIGlobals.THE_ASSETS;
+import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 
 public class EditorView extends BorderPane implements View {
 
@@ -37,7 +37,7 @@ public class EditorView extends BorderPane implements View {
         editor.createUI(stage);
         editor.init(GameModel.CUSTOM_MAP_DIR);
 
-        var miQuitEditor = new MenuItem(THE_ASSETS.localizedText("back_to_game"));
+        var miQuitEditor = new MenuItem(THE_UI.assets().localizedText("back_to_game"));
         miQuitEditor.setOnAction(e -> closeAction.accept(editor));
         editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);
 

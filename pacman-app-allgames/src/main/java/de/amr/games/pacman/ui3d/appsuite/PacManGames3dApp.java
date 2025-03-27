@@ -35,7 +35,7 @@ import org.tinylog.Logger;
 import java.util.Map;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.ui.UIGlobals.*;
+import static de.amr.games.pacman.ui.UIGlobals.THE_UI;
 
 /**
  * Application containing all game variants and including 3D play scene.
@@ -68,13 +68,12 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        GameUI.createInstance(Map.of(
-            GameVariant.PACMAN, new ArcadePacMan_UIConfig(),
-            GameVariant.MS_PACMAN, new ArcadeMsPacMan_UIConfig(),
-            GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_UIConfig(),
-            GameVariant.PACMAN_XXL, new PacManXXL_PacMan_UIConfig(),
-            GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_UIConfig()
-        ), true);
+        GameUI.createUIWith3DSupport();
+        THE_UI.configure(GameVariant.PACMAN, new ArcadePacMan_UIConfig());
+        THE_UI.configure(GameVariant.MS_PACMAN, new ArcadeMsPacMan_UIConfig());
+        THE_UI.configure(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_UIConfig());
+        THE_UI.configure(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_UIConfig());
+        THE_UI.configure(GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_UIConfig());
         THE_UI.build(stage, initialSize());
         THE_UI.addDefaultDashboardItems("README", "GENERAL", "GAME_CONTROL", "SETTINGS_3D", "GAME_INFO",
             "ACTOR_INFO", "CUSTOM_MAPS", "JOYPAD", "KEYBOARD", "ABOUT");
@@ -100,7 +99,7 @@ public class PacManGames3dApp extends Application {
         });
         goodBoy.startWatching();
 
-        Logger.info("Assets: {}", THE_ASSETS.summary(Map.of(
+        Logger.info("Assets: {}", THE_UI.assets().summary(Map.of(
                 Model3D.class,"3D models",
                 Image.class, "images",
                 Font.class, "fonts",
@@ -112,6 +111,6 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void stop() {
-        THE_CLOCK.stop();
+        THE_UI.clock().stop();
     }
 }
