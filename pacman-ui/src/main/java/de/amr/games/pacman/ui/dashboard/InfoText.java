@@ -12,7 +12,7 @@ import static de.amr.games.pacman.Globals.assertNotNull;
 
 public class InfoText extends Text {
 
-    public static final String NO_INFO = "n/a";
+    public static final String NO_INFO = "n/aButtonKey";
 
     private final Supplier<?> fnSupplyText;
 

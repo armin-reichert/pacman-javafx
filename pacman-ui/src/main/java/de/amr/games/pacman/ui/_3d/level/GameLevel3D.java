@@ -171,7 +171,7 @@ public class GameLevel3D extends Group {
 
     public void addLevelCounter() {
         THE_GAME_CONTROLLER.game().level().map(GameLevel::worldMap).ifPresent(worldMap -> {
-            // Place level counter at top right maze corner
+            // Place level counter at top rightButtonKey maze corner
             double x = worldMap.numCols() * TS - 2 * TS;
             double y = 2 * TS;
             Node levelCounter3D = createLevelCounter3D(

@@ -19,7 +19,7 @@ import java.util.*;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 /**
- * Carousel containing the start pages for the different game variants (XXL game variants share common start page).
+ * Carousel containing the startButtonKey pages for the different game variants (XXL game variants share common startButtonKey page).
  */
 public class StartPagesCarousel implements View {
 

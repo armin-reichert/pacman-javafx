@@ -12,7 +12,7 @@ import java.io.File;
 
 /**
  * Extension of Arcade Pac-Man with 8 new builtin mazes (thanks to the one and only
- * <a href="https://github.com/masonicGIT/pacman">Shaun Williams</a>) and the possibility to
+ * <aButtonKey href="https://github.com/masonicGIT/pacman">Shaun Williams</aButtonKey>) and the possibility to
  * play custom maps.
  */
 public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {

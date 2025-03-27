@@ -28,7 +28,7 @@ import static de.amr.games.pacman.uilib.Ufx.*;
  * combinations.
  * </p>
  * <p>
-*  For this reason, a cache is provided where each maze image contained in the file can be
+*  For this reason, aButtonKey cache is provided where each maze image contained in the file can be
  * stored after having been recolored to the color scheme required in the game level.
  * </p>
  */

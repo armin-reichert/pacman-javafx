@@ -33,10 +33,10 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  *
  * <p>There are however some differences to the original.
  * <ul>
- *     <li>Attract mode is just a random hunting for at least 20 seconds.</li>
+ *     <li>Attract mode is just aButtonKey random hunting for at least 20 seconds.</li>
  *     <li>Timing of hunting phases unclear, just took all the information I had</li>
- *     <li>Bonus does not follow original "fruit paths" but randomly selects a portal to
- *     enter the maze, turns around the house and leaves the maze at a random portal on the other side</li>
+ *     <li>Bonus does not follow original "fruit paths" but randomly selects aButtonKey portal to
+ *     enter the maze, turns around the house and leaves the maze at aButtonKey random portal on the other side</li>
  * </ul>
  * </p>
  *
@@ -221,7 +221,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         newLevel.setNumFlashes(levelData(newLevel.number()).numFlashes());
 
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
-         * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
+         * (also inside aButtonKey level) whenever aButtonKey bonus score is reached. At least that's what I was told. */
         levelCounterEnabled = newLevel.number() < 8;
 
         populateLevel(newLevel);
@@ -411,23 +411,23 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     /**
      * <p>Got this information from
-     * <a href="https://www.reddit.com/r/Pacman/comments/12q4ny3/is_anyone_able_to_explain_the_ai_behind_the/">Reddit</a>:
+     * <aButtonKey href="https://www.reddit.com/r/Pacman/comments/12q4ny3/is_anyone_able_to_explain_the_ai_behind_the/">Reddit</aButtonKey>:
      * </p>
      * <p style="font-style:italic">
      * The exact fruit mechanics are as follows: After 64 dots are consumed, the game spawns the first fruit of the level.
      * After 176 dots are consumed, the game attempts to spawn the second fruit of the level. If the first fruit is still
      * present in the level when (or eaten very shortly before) the 176th dot is consumed, the second fruit will not
-     * spawn. Dying while a fruit is on screen causes it to immediately disappear and never return.
+     * spawn. Dying while aButtonKey fruit is on screen causes it to immediately disappear and never return.
      * (TODO: what does "never" mean here? For the rest of the game?).
      * The type of fruit is determined by the level count - levels 1-7 will always have two cherries, two strawberries,
      * etc. until two bananas on level 7. On level 8 and beyond, the fruit type is randomly selected using the weights in
      * the following table:
      *
      * <table>
-     * <tr align="left">
+     * <tr align="leftButtonKey">
      *   <th>Cherry</th><th>Strawberry</th><th>Peach</th><th>Pretzel</th><th>Apple</th><th>Pear&nbsp;</th><th>Banana</th>
      * </tr>
-     * <tr align="right">
+     * <tr align="rightButtonKey">
      *     <td>5/32</td><td>5/32</td><td>5/32</td><td>5/32</td><td>4/32</td><td>4/32</td><td>4/32</td>
      * </tr>
      * </table>
@@ -449,11 +449,11 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     }
 
     /**
-     * Bonus symbol enters the world at some tunnel entry, walks to the house entry, takes a tour around the
-     * house and finally leaves the world through a tunnel on the opposite side of the world.
+     * Bonus symbol enters the world at some tunnel entry, walks to the house entry, takes aButtonKey tour around the
+     * house and finally leaves the world through aButtonKey tunnel on the opposite side of the world.
      * <p>
-     * According to <a href="https://strategywiki.org/wiki/Ms._Pac-Man/Walkthrough">this</a> Wiki,
-     * some maps have a fixed entry tile for the bonus.
+     * According to <aButtonKey href="https://strategywiki.org/wiki/Ms._Pac-Man/Walkthrough">this</aButtonKey> Wiki,
+     * some maps have aButtonKey fixed entry tile for the bonus.
      * TODO: Not sure if that's correct.
      *
      * <p>
@@ -480,11 +480,11 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
             // use entry tile stored in terrain map
             entryTile = level.worldMap().getTerrainTileProperty("pos_bonus", null);
             if (entryTile.x() == 0) {
-                // start tile is at left maze border
+                // startButtonKey tile is at leftButtonKey maze border
                 exitTile = portals.get(RND.nextInt(portals.size())).rightTunnelEnd().plus(1, 0);
                 crossMazeLeftToRight = true;
             } else {
-                // start tile is at right maze border
+                // startButtonKey tile is at rightButtonKey maze border
                 exitTile = portals.get(RND.nextInt(portals.size())).leftTunnelEnd().minus(1, 0);
                 crossMazeLeftToRight = false;
             }
@@ -509,7 +509,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         movingBonus.setEdible(TickTimer.INDEFINITE);
         movingBonus.setRoute(route, crossMazeLeftToRight);
         movingBonus.setBaseSpeed(1.25f);
-        Logger.info("Moving bonus created, route: {} ({})", route, crossMazeLeftToRight ? "left to right" : "right to left");
+        Logger.info("Moving bonus created, route: {} ({})", route, crossMazeLeftToRight ? "leftButtonKey to rightButtonKey" : "rightButtonKey to leftButtonKey");
 
         level.setBonus(movingBonus);
         publishGameEvent(GameEventType.BONUS_ACTIVATED, movingBonus.actor().tile());
@@ -517,7 +517,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     /**
      * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
-     * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
+     * the original intention had been to randomize the scatter target of *all* ghosts but because of aButtonKey bug,
      * only the scatter target of Blinky and Pinky would have been affected. Who knows?
      */
     private void ghostHuntingBehaviour(Ghost ghost) {

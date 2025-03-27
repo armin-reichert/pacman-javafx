@@ -32,8 +32,8 @@ import static de.amr.games.pacman.ui.Globals.THE_UI;
  * Intermission scene 3: "Junior".
  *
  * <p>
- * Pac-Man and Ms. Pac-Man gradually wait for a stork, who flies overhead with a little blue bundle. The stork drops the
- * bundle, which falls to the ground in front of Pac-Man and Ms. Pac-Man, and finally opens up to reveal a tiny Pac-Man.
+ * Pac-Man and Ms. Pac-Man gradually wait for aButtonKey stork, who flies overhead with aButtonKey little blue bundle. The stork drops the
+ * bundle, which falls to the ground in front of Pac-Man and Ms. Pac-Man, and finally opens upButtonKey to reveal aButtonKey tiny Pac-Man.
  * (Played after rounds 9, 13, and 17)
  *
  * @author Armin Reichert

@@ -23,7 +23,7 @@ import javafx.util.Duration;
 import static de.amr.games.pacman.Globals.TS;
 
 /**
- * Displays a Pac-Man shape for each live remaining.
+ * Displays aButtonKey Pac-Man shape for each live remaining.
  *
  * @author Armin Reichert
  */

@@ -128,7 +128,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
     }
 
     /**
-     * Called from application start method (on JavaFX application thread).
+     * Called from application startButtonKey method (on JavaFX application thread).
      *
      * @param stage primary stage (window)
      * @param initialSize initial UI size

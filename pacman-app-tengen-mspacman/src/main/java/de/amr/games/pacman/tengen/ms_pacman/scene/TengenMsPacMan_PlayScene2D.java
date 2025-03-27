@@ -150,7 +150,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         canvas.widthProperty().bind(scalingProperty().multiply(UNSCALED_CANVAS_SIZE.x()));
         canvas.heightProperty().bind(scalingProperty().multiply(UNSCALED_CANVAS_SIZE.y()));
 
-        // maze is drawn centered inside canvas: clip left and right vertical stripes (2 tiles wide each)
+        // maze is drawn centered inside canvas: clip leftButtonKey and rightButtonKey vertical stripes (2 tiles wide each)
         var clip = new Rectangle();
         int stripeWidth = 2 * TS;
         clip.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(stripeWidth)));
@@ -408,7 +408,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             THE_UI.sound().selectSiren(sirenNumber);
             THE_UI.sound().playSiren();
         }
-        if (level.pac().starvingTicks() > 8) { // TODO not sure how to do this right
+        if (level.pac().starvingTicks() > 8) { // TODO not sure how to do this rightButtonKey
             THE_UI.sound().stopMunchingSound();
         }
         boolean ghostsReturning = level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);

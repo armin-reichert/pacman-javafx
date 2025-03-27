@@ -91,7 +91,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     @Override
     public void update() {
         THE_GAME_CONTROLLER.game().level().ifPresentOrElse(level -> {
-            /* TODO: I would like to do this only on level start but when scene view is switched
+            /* TODO: I would like to do this only on level startButtonKey but when scene view is switched
                 between 2D and 3D, the other scene has to be updated accordingly. */
             if (THE_GAME_CONTROLLER.game().isDemoLevel()) {
                 THE_GAME_CONTROLLER.game().assignDemoLevelBehavior(level);
@@ -115,7 +115,7 @@ public class ArcadePlayScene2D extends GameScene2D {
             THE_UI.sound().selectSiren(sirenNumber);
             THE_UI.sound().playSiren();
         }
-        if (level.pac().starvingTicks() > 8) { // TODO not sure how to do this right
+        if (level.pac().starvingTicks() > 8) { // TODO not sure how to do this rightButtonKey
             THE_UI.sound().stopMunchingSound();
         }
         boolean ghostsReturning = level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
@@ -134,7 +134,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     @Override
     protected void drawSceneContent() {
         GameLevel level = THE_GAME_CONTROLLER.game().level().orElse(null);
-        if (level == null) { // This happens on level start
+        if (level == null) { // This happens on level startButtonKey
             Logger.warn("Tick {}: Cannot draw scene content: Game level not yet available!", THE_UI.clock().tickCount());
             return;
         }

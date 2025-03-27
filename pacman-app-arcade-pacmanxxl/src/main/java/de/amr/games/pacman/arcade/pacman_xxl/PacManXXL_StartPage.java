@@ -58,7 +58,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage, Resourc
                     !mapSelector.customMaps().isEmpty()
                 );
             }
-            default -> throw new IllegalStateException("Illegal game variant for this start page: %s".formatted(gameVariant));
+            default -> throw new IllegalStateException("Illegal game variant for this startButtonKey page: %s".formatted(gameVariant));
         }
         menu.root().requestFocus();
         menu.startDrawingLoop();

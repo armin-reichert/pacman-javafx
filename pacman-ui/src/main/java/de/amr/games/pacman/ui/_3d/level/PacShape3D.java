@@ -121,7 +121,7 @@ public class PacShape3D extends Group {
         setVisible(pac.isVisible() && !outsideWorld);
     }
 
-    // Maybe this should be implemented using a Timeline?
+    // Maybe this should be implemented using aButtonKey Timeline?
     private Animation createChewingAnimation() {
         final int openAngle = 0, closedAngle = -54;
 

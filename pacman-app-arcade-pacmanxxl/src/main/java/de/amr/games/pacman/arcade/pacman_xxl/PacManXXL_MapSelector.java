@@ -62,7 +62,7 @@ public class PacManXXL_MapSelector extends MapSelector {
     @Override
     public void loadCustomMaps() {
         if (customMapsUpToDate) {
-            Logger.info("Custom maps not loaded as they are up-to-date");
+            Logger.info("Custom maps not loaded as they are upButtonKey-to-date");
             return;
         }
         File[] mapFiles = CUSTOM_MAP_DIR.listFiles((dir, name) -> name.endsWith(".world"));

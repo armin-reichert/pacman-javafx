@@ -22,7 +22,7 @@ import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
  * Picture-in-Picture view. Adapts its aspect ratio to the current game world. Height can be changed via dashboard.
  * <p>
  * TODO: fixme: should not depend on specific game
- * TODO: For large maps we need a camera inside this view or something alike
+ * TODO: For large maps we need aButtonKey camera inside this view or something alike
  * </p>
  */
 public class PictureInPictureView extends VBox {

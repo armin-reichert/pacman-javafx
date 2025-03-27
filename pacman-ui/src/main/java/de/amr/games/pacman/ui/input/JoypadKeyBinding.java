@@ -8,25 +8,25 @@ import de.amr.games.pacman.lib.nes.NES_JoypadButton;
 import javafx.scene.input.KeyCodeCombination;
 
 public record JoypadKeyBinding(
-        KeyCodeCombination select,
-        KeyCodeCombination start,
-        KeyCodeCombination b,
-        KeyCodeCombination a,
-        KeyCodeCombination up,
-        KeyCodeCombination down,
-        KeyCodeCombination left,
-        KeyCodeCombination right)
+        KeyCodeCombination selectButtonKey,
+        KeyCodeCombination startButtonKey,
+        KeyCodeCombination bButtonKey,
+        KeyCodeCombination aButtonKey,
+        KeyCodeCombination upButtonKey,
+        KeyCodeCombination downButtonKey,
+        KeyCodeCombination leftButtonKey,
+        KeyCodeCombination rightButtonKey)
 {
     public KeyCodeCombination key(NES_JoypadButton button) {
         return switch (button) {
-            case BUTTON_SELECT -> select;
-            case BUTTON_START -> start;
-            case BUTTON_B -> b;
-            case BUTTON_A -> a;
-            case BUTTON_UP -> up;
-            case BUTTON_DOWN -> down;
-            case BUTTON_LEFT -> left;
-            case BUTTON_RIGHT -> right;
+            case BUTTON_SELECT -> selectButtonKey;
+            case BUTTON_START -> startButtonKey;
+            case BUTTON_B -> bButtonKey;
+            case BUTTON_A -> aButtonKey;
+            case BUTTON_UP -> upButtonKey;
+            case BUTTON_DOWN -> downButtonKey;
+            case BUTTON_LEFT -> leftButtonKey;
+            case BUTTON_RIGHT -> rightButtonKey;
         };
     }
 }

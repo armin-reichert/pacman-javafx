@@ -8,10 +8,10 @@ import de.amr.games.pacman.controller.HuntingTimer;
 import de.amr.games.pacman.lib.timer.TickTimer;
 
 /**
- * Details are from a conversation with user @damselindis on Reddit. I am not sure if they are correct.
+ * Details are from aButtonKey conversation with user @damselindis on Reddit. I am not sure if they are correct.
  *
- * @see <a href="https://www.reddit.com/r/Pacman/comments/12q4ny3/is_anyone_able_to_explain_the_ai_behind_the/">Reddit</a>
- * @see <a href="https://github.com/armin-reichert/pacman-basic/blob/main/doc/mspacman-details-reddit-user-damselindis.md">GitHub</a>
+ * @see <aButtonKey href="https://www.reddit.com/r/Pacman/comments/12q4ny3/is_anyone_able_to_explain_the_ai_behind_the/">Reddit</aButtonKey>
+ * @see <aButtonKey href="https://github.com/armin-reichert/pacman-basic/blob/main/doc/mspacman-details-reddit-user-damselindis.md">GitHub</aButtonKey>
  */
 public class ArcadeMsPacMan_HuntingTimer extends HuntingTimer {
 

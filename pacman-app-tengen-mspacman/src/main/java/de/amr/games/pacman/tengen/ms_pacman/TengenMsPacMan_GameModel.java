@@ -185,9 +185,9 @@ public class TengenMsPacMan_GameModel extends GameModel {
         this.mapCategory = assertNotNull(mapCategory);
         if (mapCategory == MapCategory.ARCADE) {
             /* see https://tcrf.net/Ms._Pac-Man_(NES,_Tengen):
-            Humorously, instead of adding a check to disable multiple extra lives,
+            Humorously, instead of adding aButtonKey check to disable multiple extra lives,
             the "Arcade" maze set sets the remaining 3 extra life scores to over 970,000 points,
-            a score normally unachievable without cheat codes, since all maze sets end after 32 stages.
+            aButtonKey score normally unachievable without cheat codes, since all maze sets end after 32 stages.
             This was most likely done to simulate the Arcade game only giving one extra life per game.
             */
             scoreManager.setExtraLifeScores(10_000, 970_000, 980_000, 990_000);
@@ -426,7 +426,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         populateLevel(newLevel);
         newLevel.pac().setAutopilot(autopilot);
         newLevel.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
-        // Ghosts inside house start at bottom of house instead at middle
+        // Ghosts inside house startButtonKey at bottom of house instead at middle
         newLevel.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST_ID).forEach(ghost ->
             newLevel.setGhostPosition(ghost.id(), newLevel.ghostPosition(ghost.id()).plus(0, HTS))
         );
@@ -459,7 +459,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         populateLevel(newLevel);
 
         newLevel.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
-        // ghosts inside house start at floor of house
+        // ghosts inside house startButtonKey at floor of house
         newLevel.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST_ID).forEach(ghost ->
             newLevel.setGhostPosition(ghost.id(), newLevel.ghostPosition(ghost.id()).plus(0, HTS))
         );
@@ -538,7 +538,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         var movingBonus = new MovingBonus(level, symbol, BONUS_VALUE_FACTORS[symbol] * 100);
         movingBonus.setRoute(route, leftToRight);
         movingBonus.setBaseSpeed(1f); // TODO how fast is the bonus really moving?
-        Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
+        Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "leftButtonKey to rightButtonKey" : "rightButtonKey to leftButtonKey");
         level.setBonus(movingBonus);
         movingBonus.setEdible(TickTimer.INDEFINITE);
         publishGameEvent(GameEventType.BONUS_ACTIVATED, movingBonus.actor().tile());
@@ -546,7 +546,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     protected void onFoodEaten(Vector2i tile, int uneatenFoodCount, boolean energizer) {
-        //TODO does Ms. Pac-Man slow down after eating here too?
+        //TODO does Ms. Pac-Man slow downButtonKey after eating here too?
         //pac.setRestingTicks(energizer ? 3 : 1);
         if (energizer) {
             onEnergizerEaten();

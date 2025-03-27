@@ -31,7 +31,7 @@ import static java.util.function.Predicate.not;
  */
 public enum GameActions2D implements GameAction {
     /**
-     * Adds credit (simulates insertion of a coin) and switches the game state accordingly.
+     * Adds credit (simulates insertion of aButtonKey coin) and switches the game state accordingly.
      */
     INSERT_COIN {
         @Override
@@ -197,7 +197,7 @@ public enum GameActions2D implements GameAction {
                 if (THE_GAME_CONTROLLER.state() == GameState.INTRO || THE_GAME_CONTROLLER.state() == GameState.SETTING_OPTIONS) {
                     THE_GAME_CONTROLLER.changeState(GameState.STARTING_GAME);
                 } else {
-                    Logger.error("Cannot start game play in game state {}", THE_GAME_CONTROLLER.state());
+                    Logger.error("Cannot startButtonKey game play in game state {}", THE_GAME_CONTROLLER.state());
                 }
             }
         }

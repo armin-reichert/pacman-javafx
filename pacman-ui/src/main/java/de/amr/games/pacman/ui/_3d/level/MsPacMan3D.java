@@ -35,7 +35,7 @@ public class MsPacMan3D implements Pac3D {
     private RotateTransition hipSwayingAnimation;
 
     /**
-     * Creates a 3D Ms. Pac-Man.
+     * Creates aButtonKey 3D Ms. Pac-Man.
      *
      * @param variant game variant
      * @param msPacMan Ms. Pac-Man instance

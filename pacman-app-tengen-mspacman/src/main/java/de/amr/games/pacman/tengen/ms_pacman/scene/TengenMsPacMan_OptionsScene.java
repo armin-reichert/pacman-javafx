@@ -31,7 +31,7 @@ import static de.amr.games.pacman.uilib.Keyboard.alt;
  * Options scene for Ms. Pac-Man Tengen.
  *
  * <p></p>The highscore is cleared if player type (1 player, 2 players etc.), map category or difficulty are
- * changed, see <a href="https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/MsPacManTENGENDis.asm:9545">disassembly</a>.
+ * changed, see <aButtonKey href="https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/MsPacManTENGENDis.asm:9545">disassembly</aButtonKey>.
  *
  * @author Armin Reichert
  */
@@ -134,7 +134,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
             selectPrevOption();
         }
 
-        // Button "A" is right of "B": select next value
+        // Button "A" is rightButtonKey of "B": selectButtonKey next value
         else if (isJoypadPressed(NES_JoypadButton.BUTTON_A)) {
             switch (selectedOption) {
                 case OPTION_PAC_BOOSTER    -> setNextPacBoosterValue();
@@ -145,7 +145,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
             }
         }
 
-        // Button "B" is left of "A": select previous value
+        // Button "B" is leftButtonKey of "A": selectButtonKey previous value
         else if (isJoypadPressed(NES_JoypadButton.BUTTON_B)) {
             switch (selectedOption) {
                 case OPTION_PAC_BOOSTER    -> setPrevPacBoosterValue();

@@ -15,11 +15,11 @@ import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_ENABLED;
 import static de.amr.games.pacman.uilib.Ufx.toggle;
 
 /**
- * User interface for all Pac-Man game variants with a 3D play scene. All others scenes are in 2D.
+ * User interface for all Pac-Man game variants with aButtonKey 3D play scene. All others scenes are in 2D.
  * </p>
- * <p>The separation of the 2D-only UI into its own project originally was done to create a
- * <a href="https://github.com/armin-reichert/webfx-pacman">WebFX-version</a> of the game.
- * WebFX is a technology that transpiles a JavaFX application into a (very small) GWT application that runs inside
+ * <p>The separation of the 2D-only UI into its own project originally was done to create aButtonKey
+ * <aButtonKey href="https://github.com/armin-reichert/webfx-pacman">WebFX-version</aButtonKey> of the game.
+ * WebFX is aButtonKey technology that transpiles aButtonKey JavaFX application into aButtonKey (very small) GWT application that runs inside
  * any browser supported by GWT. Unfortunately, WebFX has no support for JavaFX 3D so far.</p>
  *
  * @author Armin Reichert

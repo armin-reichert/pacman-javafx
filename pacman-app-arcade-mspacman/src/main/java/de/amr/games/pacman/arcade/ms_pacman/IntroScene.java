@@ -30,7 +30,7 @@ import static de.amr.games.pacman.ui._2d.GameActions2D.bindTestActions;
 /**
  * Intro scene of the Ms. Pac-Man game.
  * <p>
- * The ghosts and Ms. Pac-Man are introduced on a billboard and are marching in one after another.
+ * The ghosts and Ms. Pac-Man are introduced on aButtonKey billboard and are marching in one after another.
  *
  * @author Armin Reichert
  */
@@ -161,8 +161,8 @@ public class IntroScene extends GameScene2D {
     /**
      * 6 of the 96 light bulbs are lightning each frame, shifting counter-clockwise every tick.
      * <p>
-     * The bulbs on the left border however are switched off every second frame. This is
-     * probably a bug in the original Arcade game.
+     * The bulbs on the leftButtonKey border however are switched off every second frame. This is
+     * probably aButtonKey bug in the original Arcade game.
      * </p>
      */
     private void drawMarquee() {
@@ -174,10 +174,10 @@ public class IntroScene extends GameScene2D {
 
     private void drawBulb(int i, boolean on) {
         int x, y;
-        if (i <= 33)      { x = MARQUEE_XMIN + 4 * i; y = MARQUEE_YMAX; } // lower edge left-to-right
-        else if (i <= 48) { x = MARQUEE_XMAX;         y = 4 * (70 - i); } // right edge bottom-to-top
-        else if (i <= 81) { x = 4 * (96 - i);         y = MARQUEE_YMIN; } // upper edge right-to-left
-        else              { x = MARQUEE_XMIN;         y = 4 * (i - 59); } // left edge top-to-bottom
+        if (i <= 33)      { x = MARQUEE_XMIN + 4 * i; y = MARQUEE_YMAX; } // lower edge leftButtonKey-to-rightButtonKey
+        else if (i <= 48) { x = MARQUEE_XMAX;         y = 4 * (70 - i); } // rightButtonKey edge bottom-to-top
+        else if (i <= 81) { x = 4 * (96 - i);         y = MARQUEE_YMIN; } // upper edge rightButtonKey-to-leftButtonKey
+        else              { x = MARQUEE_XMIN;         y = 4 * (i - 59); } // leftButtonKey edge top-to-bottom
         gr.ctx().setFill(on ? COLOR_BULB_ON : COLOR_BULB_OFF);
         gr.ctx().fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }

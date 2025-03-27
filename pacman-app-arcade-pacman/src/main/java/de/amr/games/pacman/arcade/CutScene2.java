@@ -103,8 +103,8 @@ public class CutScene2 extends GameScene2D {
                 blinky.setSpeed(0);
                 blinkyStretching.nextFrame(); // Rapture
             }
-            case ANIMATION_START + 329 -> blinky.selectAnimation(GhostAnimations.ANIM_BLINKY_DAMAGED); // Eyes up
-            case ANIMATION_START + 389 -> blinkyDamaged.nextFrame(); // Eyes right-down
+            case ANIMATION_START + 329 -> blinky.selectAnimation(GhostAnimations.ANIM_BLINKY_DAMAGED); // Eyes upButtonKey
+            case ANIMATION_START + 389 -> blinkyDamaged.nextFrame(); // Eyes rightButtonKey-downButtonKey
             case ANIMATION_START + 508 -> {
                 blinky.setVisible(false);
                 THE_GAME_CONTROLLER.state().timer().expire();

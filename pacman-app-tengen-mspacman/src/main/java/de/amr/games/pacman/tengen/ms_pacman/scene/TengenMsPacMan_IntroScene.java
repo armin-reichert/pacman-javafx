@@ -162,13 +162,13 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         double xMin = MARQUEE_X, xMax = xMin + 132, yMin = MARQUEE_Y, yMax = yMin + 60;
         for (int i = 0; i < NUM_BULBS; ++i) {
             gr.ctx().setFill(marqueeState.get(i) ? nesPaletteColor(0x20) : nesPaletteColor(0x15));
-            if (i <= 33) { // lower border left-to-right
+            if (i <= 33) { // lower border leftButtonKey-to-rightButtonKey
                 drawBulb(xMin + 4 * i, yMax);
-            } else if (i <= 48) { // right border bottom-to-top
+            } else if (i <= 48) { // rightButtonKey border bottom-to-top
                 drawBulb(xMax, yMax - 4 * (i - 33));
-            } else if (i <= 81) { // upper border right-to-left
+            } else if (i <= 81) { // upper border rightButtonKey-to-leftButtonKey
                 drawBulb(xMax - 4 * (i - 48), yMin);
-            } else { // left border top-to-bottom
+            } else { // leftButtonKey border top-to-bottom
                 drawBulb(xMin, yMin + 4 * (i - 81));
             }
         }
@@ -315,7 +315,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                     intro.msPacMan.resetAnimation();
                 }
                 if (timer.atSecond(7)) {
-                    // start demo level or show options
+                    // startButtonKey demo level or show options
                     TengenMsPacMan_GameModel game = THE_GAME_CONTROLLER.game();
                     if (game.hasDefaultOptionValues()) {
                         game.setCanStartNewGame(false); // TODO check this

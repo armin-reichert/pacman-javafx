@@ -56,16 +56,16 @@ public class GameKeyboard extends Keyboard {
         return joypads[selectedJoypadIndex];
     }
 
-    public Stream<KeyCodeCombination> joypadKeys() {
+    public Stream<KeyCodeCombination> selectedJoypadKeys() {
         return Stream.of(NES_JoypadButton.values()).map(selectedJoypad()::key);
     }
 
     public void enableSelectedJoypad() {
-        joypadKeys().forEach(kcc -> THE_UI.keyboard().register(kcc, this));
+        selectedJoypadKeys().forEach(combination -> THE_UI.keyboard().register(combination, this));
     }
 
     public void disableSelectedJoypad() {
-        joypadKeys().forEach(combination -> THE_UI.keyboard().unregister(combination, this));
+        selectedJoypadKeys().forEach(combination -> THE_UI.keyboard().unregister(combination, this));
     }
 
     public void selectNextJoypad() {
