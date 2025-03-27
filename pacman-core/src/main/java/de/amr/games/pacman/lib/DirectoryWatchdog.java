@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.games.pacman.lib;
 
 import org.tinylog.Logger;
@@ -15,26 +19,29 @@ import static java.nio.file.StandardWatchEventKinds.*;
 
 public class DirectoryWatchdog {
 
-    private final File watchedDirectory;
+    private final File directory;
     private final WatchKey watchKey;
     private Consumer<List<WatchEvent<?>>> eventConsumer;
 
-    public DirectoryWatchdog(File watchedDirectory) throws IOException {
-        if (watchedDirectory == null) {
-            throw new IllegalArgumentException();
+    public DirectoryWatchdog(File directory) {
+        if (directory == null) {
+            throw new IllegalArgumentException("Watched directory is NULL");
         }
-        if (!watchedDirectory.isDirectory() || !watchedDirectory.exists()) {
-            throw new IllegalArgumentException();
+        if (!directory.isDirectory() || !directory.exists()) {
+            throw new IllegalArgumentException("Watched directory does not exist");
         }
-        this.watchedDirectory = watchedDirectory;
-        WatchService watchService = FileSystems.getDefault().newWatchService();
-        watchKey = watchedDirectory.toPath().register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
-
-        setEventConsumer(eventList -> {
-            for (var event : eventList) {
-                Logger.info(event);
-            }
-        });
+        this.directory = directory;
+        try {
+            WatchService watchService = FileSystems.getDefault().newWatchService();
+            watchKey = directory.toPath().register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+            setEventConsumer(eventList -> {
+                for (var event : eventList) {
+                    Logger.info(event);
+                }
+            });
+        } catch (IOException x) {
+            throw new RuntimeException(x);
+        }
     }
 
     public void setEventConsumer(Consumer<List<WatchEvent<?>>> eventConsumer) {
@@ -45,7 +52,7 @@ public class DirectoryWatchdog {
         Thread pollingThread = new Thread(this::pollingLoop);
         pollingThread.setDaemon(true);
         pollingThread.start();
-        Logger.info("Watching {}", watchedDirectory);
+        Logger.info("Start watching directory {}", directory);
     }
 
     private void pollingLoop() {

@@ -32,7 +32,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.io.IOException;
 import java.util.Map;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
@@ -68,7 +67,7 @@ public class PacManGames3dApp extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) {
         GameUI.createInstance(Map.of(
             GameVariant.PACMAN, new ArcadePacMan_UIConfig(),
             GameVariant.MS_PACMAN, new ArcadeMsPacMan_UIConfig(),
