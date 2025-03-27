@@ -15,7 +15,6 @@ import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.GameClockFX;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
-import javafx.beans.value.ObservableDoubleValue;
 import javafx.geometry.Dimension2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -31,10 +30,7 @@ public interface GameUI {
         THE_UI = new PacManGamesUI();
     }
 
-    static void createUIWith3DSupport() {
-        THE_UI = new PacManGamesUI_3D();
-        THE_UI.assets().addAssets3D();
-    }
+    static void createUIWith3DSupport() { THE_UI = new PacManGamesUI_3D(); }
 
     GameClockFX clock();
     Keyboard keyboard();
@@ -61,7 +57,7 @@ public interface GameUI {
 
     void enterFullScreenMode();
 
-    ObservableDoubleValue heightProperty();
+    ReadOnlyDoubleProperty heightProperty();
 
     GameView gameView();
 

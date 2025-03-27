@@ -26,6 +26,10 @@ import static de.amr.games.pacman.uilib.Ufx.toggle;
  */
 public class PacManGamesUI_3D extends PacManGamesUI {
 
+    public PacManGamesUI_3D() {
+        assets().addAssets3D();
+    }
+
     @Override
     protected void createGameView(Scene parentScene) {
         gameView = new GameView3D(parentScene);
