@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._2d.GameView;
 import de.amr.games.pacman.ui._2d.StartPage;
-import de.amr.games.pacman.ui._2d.StartPagesCarousel;
 import de.amr.games.pacman.ui._3d.PacManGamesUI_3D;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
@@ -101,8 +100,6 @@ public interface GameUI {
     void showFlashMessageSec(double seconds, String message, Object... args);
 
     default void showFlashMessage(String message, Object... args) { showFlashMessageSec(1, message, args); }
-
-    StartPagesCarousel startPageSelectionView();
 
     void togglePlayScene2D3D();
 }

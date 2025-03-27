@@ -467,9 +467,6 @@ public class PacManGamesUI implements GameEventListener, GameUI {
     }
 
     @Override
-    public StartPagesCarousel startPageSelectionView() { return startPagesCarousel; }
-
-    @Override
     public void showGameView() {
         viewPy.set(gameView);
         if (!THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN)) {
