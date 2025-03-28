@@ -41,14 +41,6 @@ public class StartPagesCarousel implements View {
 
     public StartPagesCarousel() {
         carousel = new Carousel();
-        carousel.setOnPrevSlideSelected(startPage -> {
-            var gameVariant = (GameVariant) startPage.getUserData();
-            THE_UI.init(gameVariant);
-        });
-        carousel.setOnNextSlideSelected(startPage -> {
-            var gameVariant = (GameVariant) startPage.getUserData();
-            THE_UI.init(gameVariant);
-        });
         carousel.selectedIndexProperty().addListener((py,ov,nv) -> {
             int oldIndex = ov.intValue(), newIndex = nv.intValue();
             if (oldIndex != -1) {
@@ -83,10 +75,10 @@ public class StartPagesCarousel implements View {
     }
 
     public Optional<StartPage> currentStartPage() {
-        if (carousel.selectedIndex() == -1) {
+        if (carousel.selectedSlideIndex() == -1) {
             return Optional.empty();
         }
-        return Optional.of(startPageList.get(carousel.selectedIndex()));
+        return Optional.of(startPageList.get(carousel.selectedSlideIndex()));
     }
 
     public void addStartPage(GameVariant gameVariant, StartPage startPage) {

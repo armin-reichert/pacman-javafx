@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 public class Carousel extends StackPane implements ResourceManager {
 
@@ -35,7 +34,7 @@ public class Carousel extends StackPane implements ResourceManager {
         return button;
     }
 
-    private final IntegerProperty selectedIndexPy = new SimpleIntegerProperty(-1) {
+    private final IntegerProperty selectedSlideIndexPy = new SimpleIntegerProperty(-1) {
         @Override
         protected void invalidated() {
             getChildren().clear();
@@ -48,8 +47,6 @@ public class Carousel extends StackPane implements ResourceManager {
     private final List<Node> slides = new ArrayList<>();
     private final Button btnPrevSlideSelector;
     private final Button btnNextSlideSelector;
-    private Consumer<Node> actionPrevSlideSelected;
-    private Consumer<Node> actionNextSlideSelected;
 
     @Override
     public Class<?> resourceRootClass() {
@@ -68,7 +65,7 @@ public class Carousel extends StackPane implements ResourceManager {
         StackPane.setAlignment(btnNextSlideSelector, Pos.CENTER_RIGHT);
     }
 
-    public int selectedIndex() { return selectedIndexPy.get(); }
+    public int selectedSlideIndex() { return selectedSlideIndexPy.get(); }
 
     public List<Node> slides() {
         return Collections.unmodifiableList(slides);
@@ -87,8 +84,8 @@ public class Carousel extends StackPane implements ResourceManager {
     }
 
     public Optional<Node> currentSlide() {
-        return selectedIndex() != -1
-            ? Optional.of(slides.get(selectedIndex()))
+        return selectedSlideIndex() != -1
+            ? Optional.of(slides.get(selectedSlideIndex()))
             : Optional.empty();
     }
 
@@ -98,31 +95,18 @@ public class Carousel extends StackPane implements ResourceManager {
     }
 
     public IntegerProperty selectedIndexProperty() {
-        return selectedIndexPy;
-    }
-
-    public void setOnPrevSlideSelected(Consumer<Node> action) {
-        actionPrevSlideSelected = action;
-    }
-
-    public void setOnNextSlideSelected(Consumer<Node> action) {
-        actionNextSlideSelected = action;
+        return selectedSlideIndexPy;
     }
 
     public void showPreviousSlide() {
         if (slides.isEmpty()) return;
-        int newIndex = selectedIndex() > 0 ? selectedIndex() - 1: slides.size() - 1;
-        selectedIndexPy.set(newIndex);
-        if (actionPrevSlideSelected != null) {
-            actionPrevSlideSelected.accept(slides.get(newIndex));
-        }
+        int newIndex = selectedSlideIndex() > 0 ? selectedSlideIndex() - 1: slides.size() - 1;
+        selectedSlideIndexPy.set(newIndex);
     }
 
     public void showNextSlide() {
-        int newIndex = selectedIndexPy.get() < slides.size() - 1 ? selectedIndexPy.get() + 1 : 0;
-        selectedIndexPy.set(newIndex);
-        if (actionNextSlideSelected != null) {
-            actionNextSlideSelected.accept(slides.get(newIndex));
-        }
+        if (slides.isEmpty()) return;
+        int newIndex = selectedSlideIndexPy.get() < slides.size() - 1 ? selectedSlideIndexPy.get() + 1 : 0;
+        selectedSlideIndexPy.set(newIndex);
     }
 }
