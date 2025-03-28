@@ -35,39 +35,39 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     protected void replaceGameLevel3D() {
         super.replaceGameLevel3D();
         TengenMsPacMan_GameModel game = THE_GAME_CONTROLLER.game();
-        if (!game.hasDefaultOptionValues()) {
-            addGameOptionsArea(game);
-        }
+        game.level().ifPresent(level -> {
+            if (!game.hasDefaultOptionValues()) {
+                addGameOptionsArea(game, level);
+            }
+        });
     }
 
     // displays level number boxes, maze category and difficulty as in 2D view at the bottom of the 3D maze
-    private void addGameOptionsArea(TengenMsPacMan_GameModel game) {
-        game.level().ifPresent(level -> {
-            WorldMap worldMap = level.worldMap();
-            int imageWidth = worldMap.numCols() * TS;
-            int imageHeight = 2 * TS;
+    private void addGameOptionsArea(TengenMsPacMan_GameModel game, GameLevel level) {
+        WorldMap worldMap = level.worldMap();
+        int imageWidth = worldMap.numCols() * TS;
+        int imageHeight = 2 * TS;
 
-            ImageView imageView = new ImageView();
-            imageView.setFitWidth(imageWidth);
-            imageView.setFitHeight(imageHeight);
-            imageView.setTranslateY((worldMap.numRows() - 2) * TS);
-            imageView.setTranslateZ(-level3D.floorThickness());
-            level3D.getChildren().add(imageView);
+        ImageView imageView = new ImageView();
+        imageView.setFitWidth(imageWidth);
+        imageView.setFitHeight(imageHeight);
+        imageView.setTranslateY((worldMap.numRows() - 2) * TS);
+        imageView.setTranslateZ(-level3D.floorThickness());
+        level3D.getChildren().add(imageView);
 
-            float quality = 5; // scale 5x for better quality of snapshot
-            var canvas = new Canvas(quality * imageWidth, quality * imageHeight);
-            canvas.getGraphicsContext2D().setImageSmoothing(false); // important!
+        float quality = 5; // scale 5x for better quality of snapshot
+        var canvas = new Canvas(quality * imageWidth, quality * imageHeight);
+        canvas.getGraphicsContext2D().setImageSmoothing(false); // important!
 
-            var renderer = (TengenMsPacMan_Renderer2D) THE_UI.configurations().current().createRenderer(canvas);
-            renderer.setScaling(quality);
-            renderer.ctx().setFill(level3D.floorColor());
-            renderer.ctx().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-            renderer.drawGameOptionsInfoCenteredAt(0.5 * imageWidth, TS+HTS, game);
-            renderer.drawLevelNumberBox(level.number(), 0, 0);
-            renderer.drawLevelNumberBox(level.number(), imageWidth - 2*TS, 0);
+        var renderer = (TengenMsPacMan_Renderer2D) THE_UI.configurations().current().createRenderer(canvas);
+        renderer.setScaling(quality);
+        renderer.ctx().setFill(level3D.floorColor());
+        renderer.ctx().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        renderer.drawGameOptionsInfoCenteredAt(0.5 * imageWidth, TS+HTS, game);
+        renderer.drawLevelNumberBox(level.number(), 0, 0);
+        renderer.drawLevelNumberBox(level.number(), imageWidth - 2*TS, 0);
 
-            imageView.setImage(canvas.snapshot(null, null));
-        });
+        imageView.setImage(canvas.snapshot(null, null));
     }
 
     @Override
