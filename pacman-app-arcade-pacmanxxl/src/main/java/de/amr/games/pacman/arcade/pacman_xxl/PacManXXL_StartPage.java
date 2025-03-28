@@ -17,6 +17,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
+import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 public class PacManXXL_StartPage extends StackPane implements StartPage, ResourceManager {
 
@@ -57,8 +58,9 @@ public class PacManXXL_StartPage extends StackPane implements StartPage, Resourc
                     mapSelector.mapSelectionMode(),
                     !mapSelector.customMaps().isEmpty()
                 );
+                THE_UI.init(gameVariant);
             }
-            default -> throw new IllegalStateException("Illegal game variant for this startButtonKey page: %s".formatted(gameVariant));
+            default -> throw new IllegalStateException("Illegal game variant for this start page: %s".formatted(gameVariant));
         }
         menu.root().requestFocus();
         menu.startDrawingLoop();

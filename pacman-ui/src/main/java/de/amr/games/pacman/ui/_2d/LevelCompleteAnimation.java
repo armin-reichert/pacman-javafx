@@ -30,7 +30,7 @@ public class LevelCompleteAnimation {
         t = 0;
         flashingIndex = 0;
         running = false;
-        Logger.info("Created: flashes={} f-duration={} f-startButtonKey={} f-after={} total={} index={}",
+        Logger.info("Created: flashes={} f-duration={} f-start={} f-after={} total={} index={}",
             numFlashes, 2*highlightDuration, flashingStartTick, ticksAfterFlashing, lastTick + 1, flashingIndex);
     }
 

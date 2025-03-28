@@ -23,7 +23,7 @@ import static de.amr.games.pacman.Globals.assertNotNull;
 import static java.util.function.Predicate.not;
 
 /**
- * As this game variant allows playing arbitrary custom maps, we use aButtonKey
+ * As this game variant allows playing arbitrary custom maps, we use a
  * vector graphics rendering that draws wall and obstacle paths generated from
  * the map data.
  *

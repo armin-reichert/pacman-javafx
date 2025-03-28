@@ -301,7 +301,7 @@ public class IntroScene extends GameScene2D {
                 if (timer.atSecond(1)) {
                     intro.blinking.start();
                 }
-                // Pac-Man reaches the energizer at the leftButtonKey and turns
+                // Pac-Man reaches the energizer at the left and turns
                 if (intro.pacMan.posX() <= TS * LEFT_TILE_X) {
                     intro.sceneController.changeState(CHASING_GHOSTS);
                 }

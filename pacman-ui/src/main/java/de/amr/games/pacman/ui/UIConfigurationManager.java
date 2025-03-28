@@ -21,9 +21,9 @@ public class UIConfigurationManager {
     protected final Map<GameVariant, GameUIConfiguration> configMap = new EnumMap<>(GameVariant.class);
 
     /**
-     * Stores the UI configuration for aButtonKey game variant and initializes the game scenes (assigns the game context).
+     * Stores the UI configuration for a game variant and initializes the game scenes (assigns the game context).
      *
-     * @param variant aButtonKey game variant
+     * @param variant a game variant
      * @param uiConfig the UI configuration for this variant
      */
     public void set(GameVariant variant, GameUIConfiguration uiConfig) {

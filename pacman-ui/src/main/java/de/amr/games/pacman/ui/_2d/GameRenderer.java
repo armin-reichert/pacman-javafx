@@ -98,7 +98,7 @@ public interface GameRenderer {
     }
 
     /**
-     * Draws aButtonKey sprite (section of the sprite sheet source) at the given (scaled) position.
+     * Draws a sprite (section of the sprite sheet source) at the given (scaled) position.
      *
      * @param sprite        the sprite sheet section to draw
      * @param x             scaled x-coordinate
@@ -109,7 +109,7 @@ public interface GameRenderer {
     }
 
     /**
-     * Draws aButtonKey sprite using the current scene scaling.
+     * Draws a sprite using the current scene scaling.
      *
      * @param sprite    sprite sheet region ("sprite")
      * @param x         UNSCALED x position
@@ -120,7 +120,7 @@ public interface GameRenderer {
     }
 
     /**
-     * Draws aButtonKey section of an source at the given (scaled) position.
+     * Draws a section of an source at the given (scaled) position.
      *
      * @param sourceImage   the source image
      * @param sprite        the source image area to draw
@@ -144,22 +144,22 @@ public interface GameRenderer {
     }
 
     /**
-     * Draws aButtonKey sprite centered over aButtonKey tile (e.g. the collision box of creature).
+     * Draws a sprite centered over a tile (e.g. the collision box of creature).
      * <p>
-     * The position specifies the leftButtonKey-upper corner of the tile. Note that the sprites for
+     * The position specifies the left-upper corner of the tile. Note that the sprites for
      * Pac-Man and the ghosts are larger than one tile but their collision box is exactly one tile large.
      * </p>
      *
      * @param sprite sprite (region in sprite sheet) (may be null)
-     * @param tileX  x-coordinate of leftButtonKey-upper corner of bounding box
-     * @param tileY  y-coordinate of leftButtonKey-upper corner of bounding box
+     * @param tileX  x-coordinate of left-upper corner of bounding box
+     * @param tileY  y-coordinate of left-upper corner of bounding box
      */
     default void drawSpriteCenteredOverTile(RectArea sprite, double tileX, double tileY) {
         drawSpriteCenteredOverPosition(sprite, tileX + HTS, tileY + HTS);
     }
 
     /**
-     * Draws aButtonKey sprite centered over aButtonKey position.
+     * Draws a sprite centered over a position.
      *
      * @param sprite sprite (region in sprite sheet) (may be null)
      * @param x  x-coordinate of the position
@@ -172,7 +172,7 @@ public interface GameRenderer {
     /**
      * Draws the sprite over the collision box (one tile large) of the given entity (if visible).
      *
-     * @param actor an entity e.g. Pac-Man or aButtonKey ghost
+     * @param actor an entity e.g. Pac-Man or a ghost
      * @param sprite sprite sheet region (can be null)
      */
     default void drawActorSprite(Actor2D actor, RectArea sprite) {
@@ -236,7 +236,7 @@ public interface GameRenderer {
     }
 
     /**
-     * Draws aButtonKey square of the given size in background color over the tile. Used to hide eaten food and energizers.
+     * Draws a square of the given size in background color over the tile. Used to hide eaten food and energizers.
      * Assumes to be called in scaled graphics context!
      */
     private void overPaint(Vector2i tile, double squareSize) {
@@ -274,7 +274,7 @@ public interface GameRenderer {
     }
 
     /**
-     * Draws aButtonKey text with the given style at the given (unscaled) position.
+     * Draws a text with the given style at the given (unscaled) position.
      *
      * @param text  text
      * @param color text color

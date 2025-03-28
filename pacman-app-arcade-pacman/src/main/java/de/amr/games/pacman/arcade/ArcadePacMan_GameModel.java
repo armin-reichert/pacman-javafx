@@ -47,7 +47,7 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  *
  * @author Armin Reichert
  *
- * @see <aButtonKey href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</aButtonKey>
+ * @see <a href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</a>
  */
 public class ArcadePacMan_GameModel extends GameModel {
 
@@ -440,7 +440,7 @@ public class ArcadePacMan_GameModel extends GameModel {
         return level.eatenFoodCount() == 70 || level.eatenFoodCount() == 170;
     }
 
-    // In the Pac-Man game variant, each level has aButtonKey single bonus symbol appearing twice during the level
+    // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level
     @Override
     public byte computeBonusSymbol(int levelNumber) {
         return levelNumber > 12 ? 7 : BONUS_SYMBOLS_BY_LEVEL_NUMBER[levelNumber];

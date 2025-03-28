@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tengen.ms_pacman.rendering2d;
 
 /**
- * Message starts at house center, moves to the rightButtonKey maze border, wraps around and moves to the house center again.
+ * Message starts at house center, moves to the right maze border, wraps around and moves to the house center again.
  */
 public class MessageMovement {
 

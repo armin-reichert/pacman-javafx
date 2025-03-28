@@ -246,7 +246,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             THE_UI.sound().selectSiren(sirenNumber);
             THE_UI.sound().playSiren();
         }
-        if (level.pac().starvingTicks() > 8) { // TODO not sure how to do this rightButtonKey
+        if (level.pac().starvingTicks() > 8) { // TODO not sure how to do this right
             THE_UI.sound().stopMunchingSound();
         }
         boolean ghostsReturning = level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);

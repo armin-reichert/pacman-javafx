@@ -94,7 +94,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     @Override
     public void update() {
         game().level().ifPresentOrElse(level -> {
-            /* TODO: I would like to do this only on level startButtonKey but when scene view is switched
+            /* TODO: I would like to do this only on level start but when scene view is switched
                 between 2D and 3D, the other scene has to be updated accordingly. */
             if (game().isDemoLevel()) {
                 game().assignDemoLevelBehavior(level);
@@ -118,7 +118,7 @@ public class ArcadePlayScene2D extends GameScene2D {
             THE_UI.sound().selectSiren(sirenNumber);
             THE_UI.sound().playSiren();
         }
-        if (level.pac().starvingTicks() > 8) { // TODO not sure how to do this rightButtonKey
+        if (level.pac().starvingTicks() > 8) { // TODO not sure how to do this right
             THE_UI.sound().stopMunchingSound();
         }
         boolean ghostsReturning = level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);

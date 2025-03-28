@@ -13,7 +13,7 @@ import static de.amr.games.pacman.model.GameModel.*;
 /**
  *  Got this information from @RussianManSMWC.
  *
- *  @see <aButtonKey href="https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/Data/PlayerAndGhostSpeeds.asm">here</aButtonKey>
+ *  @see <a href="https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/Data/PlayerAndGhostSpeeds.asm">here</a>
  */
 public interface SpeedConfiguration {
 

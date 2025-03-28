@@ -148,7 +148,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
                         Direction dir = Direction.UP;
                         if (animation.frameIndex() < 11) {
                             dir = switch (animation.frameIndex() % 4) {
-                                default -> Direction.DOWN; // startButtonKey with DOWN
+                                default -> Direction.DOWN; // start with DOWN
                                 case 1 -> Direction.LEFT;
                                 case 2 -> Direction.UP;
                                 case 3 -> Direction.RIGHT;
@@ -330,7 +330,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     private void overPaint(Vector2i tile) {
-        // Parameter tile denotes the leftButtonKey of the two tiles where actor is located between. Compute center position.
+        // Parameter tile denotes the left of the two tiles where actor is located between. Compute center position.
         double cx = tile.x() * TS;
         double cy = tile.y() * TS - HTS;
         ctx.setFill(CANVAS_BACKGROUND_COLOR);
@@ -374,8 +374,8 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
             TengenMsPacMan_GameModel game = THE_GAME_CONTROLLER.game();
             if (levelNumberBoxesVisible) {
-                drawLevelNumberBox(level.number(), 0, y); // leftButtonKey box
-                drawLevelNumberBox(level.number(), x, y); // rightButtonKey box
+                drawLevelNumberBox(level.number(), 0, y); // left box
+                drawLevelNumberBox(level.number(), x, y); // right box
             }
             double symbolX = x - 2 * TS;
             for (byte symbol : game.levelCounter()) {

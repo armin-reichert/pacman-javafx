@@ -82,7 +82,7 @@ public class TengenMsPacMan_SpriteSheet implements GameSpriteSheet {
         rect(218, 47, 5, 5),
     };
 
-    // there is only aButtonKey sprite pointing leftButtonKey in the sprite sheet, renderer makes the animation
+    // there is only a sprite pointing left in the sprite sheet, renderer makes the animation
     public static final RectArea[] MS_PAC_ROTATING_SPRITES = new RectArea[11];
     static {
         RectArea pacSprite = rect(51, 15, 15, 15);
@@ -133,10 +133,10 @@ public class TengenMsPacMan_SpriteSheet implements GameSpriteSheet {
     };
 
     public static final RectArea[] GHOST_EYES_SPRITES = {
-        rect(140, 173, 10, 5), // rightButtonKey
-        rect(140, 166, 10, 5), // leftButtonKey
-        rect(153, 166, 10, 5), // upButtonKey
-        rect(153, 173, 10, 5), // downButtonKey
+        rect(140, 173, 10, 5), // right
+        rect(140, 166, 10, 5), // left
+        rect(153, 166, 10, 5), // up
+        rect(153, 173, 10, 5), // down
     };
 
     public static final RectArea[] GHOST_NUMBER_SPRITES = {

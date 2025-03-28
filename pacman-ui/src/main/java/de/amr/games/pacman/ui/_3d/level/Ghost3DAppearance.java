@@ -132,7 +132,7 @@ public class Ghost3DAppearance extends Group {
         Vector2f center = ghost.position().plus(HTS, HTS);
         setTranslateX(center.x());
         setTranslateY(center.y());
-        setTranslateZ(-0.5 * size - 2.0); // aButtonKey little bit over the floor
+        setTranslateZ(-0.5 * size - 2.0); // a little bit over the floor
         ghost3D.turnTo(Ufx.angle(ghost.wishDir()));
         boolean outsideTerrain = center.x() < HTS || center.x() > ghost.level().worldMap().numCols() * TS - HTS;
         setVisible(ghost.isVisible() && !outsideTerrain);

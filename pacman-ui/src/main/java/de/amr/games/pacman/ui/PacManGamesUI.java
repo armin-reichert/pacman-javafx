@@ -128,7 +128,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
     }
 
     /**
-     * Called from application startButtonKey method (on JavaFX application thread).
+     * Called from application start method (on JavaFX application thread).
      *
      * @param stage primary stage (window)
      * @param initialSize initial UI size
@@ -405,6 +405,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
 
     @Override
     public void init(GameVariant gameVariant) {
+        Logger.info("Init UI for game variant {}...", gameVariant);
         THE_GAME_CONTROLLER.selectGameVariant(gameVariant);
         handleGameVariantChange(gameVariant);
     }

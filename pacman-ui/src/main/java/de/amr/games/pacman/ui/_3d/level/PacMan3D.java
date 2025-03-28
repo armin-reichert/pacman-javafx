@@ -33,7 +33,7 @@ public class PacMan3D implements Pac3D {
     private RotateTransition headBanging;
 
     /**
-     * Creates aButtonKey 3D Pac-Man.
+     * Creates a 3D Pac-Man.
      *
      * @param variant game variant
      * @param pacMan Pac-Man instance
@@ -147,7 +147,7 @@ public class PacMan3D implements Pac3D {
         setStrokeMode(false);
     }
 
-    // Note: Massive headbanging can lead to aButtonKey stroke!
+    // Note: Massive headbanging can lead to a stroke!
     private void setStrokeMode(boolean on) {
         headBanging.stop();
         float rate = on ? POWER_AMPLIFICATION : 1;

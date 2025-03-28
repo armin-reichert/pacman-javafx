@@ -96,7 +96,7 @@ public class Ghost3D {
         eyesGroup.getTransforms().add(centeredOverOrigin);
 
         dressAnimation = new RotateTransition(Duration.seconds(0.3), dressGroup);
-        // TODO I expected this should be the z-axis but... (transforms messed-upButtonKey?)
+        // TODO I expected this should be the z-axis but... (transforms messed-up?)
         dressAnimation.setAxis(Rotate.Y_AXIS);
         dressAnimation.setByAngle(30);
         dressAnimation.setCycleCount(Animation.INDEFINITE);

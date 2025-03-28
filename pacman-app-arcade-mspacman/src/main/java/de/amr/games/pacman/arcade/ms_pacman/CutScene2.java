@@ -21,7 +21,7 @@ import static de.amr.games.pacman.ui.Globals.THE_UI;
  * Intermission scene 2: "The chase".
  * <p>
  * Pac-Man and Ms. Pac-Man chase each other across the screen over and over. After three turns, they both rapidly run
- * from leftButtonKey to rightButtonKey and rightButtonKey to leftButtonKey. (Played after round 5)
+ * from left to right and right to left. (Played after round 5)
  *
  * @author Armin Reichert
  */
