@@ -21,7 +21,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
@@ -51,12 +50,10 @@ public interface GameRenderer {
 
     default GraphicsContext ctx() { return canvas().getGraphicsContext2D(); }
 
-    default void fillCanvas(Paint paint) {
-        ctx().setFill(paint);
+    default void clearCanvas() {
+        ctx().setFill(backgroundColor());
         ctx().fillRect(0, 0, canvas().getWidth(), canvas().getHeight());
     }
-
-    default void clearCanvas() { fillCanvas(backgroundColor()); }
 
     FloatProperty scalingProperty();
 
