@@ -180,26 +180,29 @@ public class ArcadePlayScene2D extends GameScene2D {
     }
 
     private void drawLevelMessage(GameLevel level) {
-        Color color = null;
-        String text = null;
         switch (level.message()) {
             case GAME_OVER -> {
-                color = Color.web(Arcade.Palette.RED);
-                text = "GAME  OVER";
+                String text = "GAME  OVER";
+                // this assumes fixed font width of one tile:
+                double x = gr.getMessagePosition().x() - (text.length() * HTS);
+                gr.setMessagePosition(centerPositionBelowHouse(level));
+                gr.drawText(text, Color.web(Arcade.Palette.RED), gr.scaledArcadeFont(TS), x, gr.getMessagePosition().y());
             }
             case READY -> {
-                color = Color.web(Arcade.Palette.YELLOW);
-                text = "READY!";
+                String text = "READY!";
+                // this assumes fixed font width of one tile:
+                double x = gr.getMessagePosition().x() - (text.length() * HTS);
+                gr.setMessagePosition(centerPositionBelowHouse(level));
+                gr.drawText(text, Color.web(Arcade.Palette.YELLOW), gr.scaledArcadeFont(TS), x, gr.getMessagePosition().y());
             }
             case TEST_LEVEL -> {
-                color = Color.web(Arcade.Palette.WHITE);
-                text = "TEST    L%03d".formatted(level.number());
+                String text = "TEST    L%03d".formatted(level.number());
+                // this assumes fixed font width of one tile:
+                double x = gr.getMessagePosition().x() - (text.length() * HTS);
+                gr.setMessagePosition(centerPositionBelowHouse(level));
+                gr.drawText(text, Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS), x, gr.getMessagePosition().y());
             }
         }
-        gr.setMessagePosition(centerPositionBelowHouse(level));
-        // this assumes fixed font width of one tile:
-        double x = gr.getMessagePosition().x() - (text.length() * HTS);
-        gr.drawText(text, color, gr.scaledArcadeFont(TS), x, gr.getMessagePosition().y());
     }
 
     private Vector2f centerPositionBelowHouse(GameLevel level) {
