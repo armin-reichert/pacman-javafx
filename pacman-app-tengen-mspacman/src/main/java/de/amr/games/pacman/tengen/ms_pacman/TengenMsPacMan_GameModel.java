@@ -415,26 +415,24 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public GameLevel buildNormalLevel(int levelNumber) {
+    public void buildNormalLevel(int levelNumber) {
         TengenMsPacMan_MapSelector tengenMsPacManMapSelector = (TengenMsPacMan_MapSelector) mapSelector;
         WorldMap worldMap = tengenMsPacManMapSelector.selectWorldMap(mapCategory, levelNumber);
 
-        GameLevel newLevel = new GameLevel(levelNumber, worldMap);
-        newLevel.setNumFlashes(5); // TODO check this
-        newLevel.setCutSceneNumber(cutSceneNumberAfterLevel(newLevel.number()));
+        level = new GameLevel(levelNumber, worldMap);
+        level.setNumFlashes(5); // TODO check this
+        level.setCutSceneNumber(cutSceneNumberAfterLevel(levelNumber));
 
-        populateLevel(newLevel);
-        newLevel.pac().setAutopilot(autopilot);
-        newLevel.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
+        populateLevel(level);
+        level.pac().setAutopilot(autopilot);
+        level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         // Ghosts inside house start at bottom of house instead at middle
-        newLevel.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST_ID).forEach(ghost ->
-            newLevel.setGhostPosition(ghost.id(), newLevel.ghostPosition(ghost.id()).plus(0, HTS))
+        level.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST_ID).forEach(ghost ->
+            level.setGhostPosition(ghost.id(), level.ghostPosition(ghost.id()).plus(0, HTS))
         );
 
-        levelCounterEnabled = newLevel.number() < 8;
+        levelCounterEnabled = levelNumber < 8;
         activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON
-
-        return newLevel;
     }
 
     private int cutSceneNumberAfterLevel(int levelNumber) {
@@ -448,20 +446,20 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public GameLevel buildDemoLevel() {
+    public void buildDemoLevel() {
         TengenMsPacMan_MapSelector tengenMsPacManMapSelector = (TengenMsPacMan_MapSelector) mapSelector;
         WorldMap worldMap = tengenMsPacManMapSelector.coloredWorldMap(mapCategory, 1);
 
-        GameLevel newLevel = new GameLevel(1, worldMap);
-        newLevel.setNumFlashes(5); // TODO check this
-        newLevel.setCutSceneNumber(0);
+        level = new GameLevel(1, worldMap);
+        level.setNumFlashes(5); // TODO check this
+        level.setCutSceneNumber(0);
 
-        populateLevel(newLevel);
+        populateLevel(level);
 
-        newLevel.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
+        level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         // ghosts inside house start at floor of house
-        newLevel.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST_ID).forEach(ghost ->
-            newLevel.setGhostPosition(ghost.id(), newLevel.ghostPosition(ghost.id()).plus(0, HTS))
+        level.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST_ID).forEach(ghost ->
+                level.setGhostPosition(ghost.id(), level.ghostPosition(ghost.id()).plus(0, HTS))
         );
 
         levelCounterEnabled = true;
@@ -470,10 +468,8 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
         activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON
 
-        assignDemoLevelBehavior(newLevel);
+        assignDemoLevelBehavior(level);
         demoLevelSteering.init();
-
-        return newLevel;
     }
 
     @Override

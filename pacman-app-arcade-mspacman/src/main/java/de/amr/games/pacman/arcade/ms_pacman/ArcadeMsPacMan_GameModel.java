@@ -213,31 +213,28 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public GameLevel buildNormalLevel(int levelNumber) {
+    public void buildNormalLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
 
-        GameLevel newLevel = new GameLevel(levelNumber, worldMap);
-        newLevel.setCutSceneNumber(cutScenesEnabled ? cutSceneNumberAfterLevel(newLevel.number()) : 0);
-        newLevel.setNumFlashes(levelData(newLevel.number()).numFlashes());
+        level = new GameLevel(levelNumber, worldMap);
+        level.setCutSceneNumber(cutScenesEnabled ? cutSceneNumberAfterLevel(levelNumber) : 0);
+        level.setNumFlashes(levelData(levelNumber).numFlashes());
 
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
-        levelCounterEnabled = newLevel.number() < 8;
+        levelCounterEnabled = levelNumber < 8;
 
-        populateLevel(newLevel);
-        newLevel.pac().setAutopilot(autopilot);
-        newLevel.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
-
-        return newLevel;
+        populateLevel(level);
+        level.pac().setAutopilot(autopilot);
+        level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
 
     @Override
-    public GameLevel buildDemoLevel() {
-        GameLevel newLevel = buildNormalLevel(1);
+    public void buildDemoLevel() {
+        buildNormalLevel(1);
+        assignDemoLevelBehavior(level);
         levelCounterEnabled = false;
-        assignDemoLevelBehavior(newLevel);
         demoLevelSteering.init();
-        return newLevel;
     }
 
     private int cutSceneNumberAfterLevel(int number) {

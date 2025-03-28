@@ -41,7 +41,7 @@ public abstract class GameModel {
     /**
      * Directory where custom maps are stored (default: <code>&lt;home_directory&gt;/maps</code>).
      */
-    public static final File CUSTOM_MAP_DIR = new File(HOME_DIR, "maps");;
+    public static final File CUSTOM_MAP_DIR = new File(HOME_DIR, "maps");
 
     static {
         String homeDirDesc = "Pac-Man FX home directory";
@@ -146,9 +146,9 @@ public abstract class GameModel {
 
     public abstract long gameOverStateTicks();
 
-    protected abstract GameLevel buildNormalLevel(int levelNumber);
+    protected abstract void buildNormalLevel(int levelNumber);
 
-    protected abstract GameLevel buildDemoLevel();
+    protected abstract void buildDemoLevel();
 
     public abstract void assignDemoLevelBehavior(GameLevel demoLevel);
 
@@ -242,7 +242,7 @@ public abstract class GameModel {
 
     public void createNormalLevel(int levelNumber) {
         setDemoLevel(false);
-        level = buildNormalLevel(levelNumber);
+        buildNormalLevel(levelNumber);
         scoreManager.setLevelNumber(levelNumber);
         huntingTimer.reset();
         updateLevelCounter();
@@ -251,7 +251,7 @@ public abstract class GameModel {
 
     public void createDemoLevel() {
         setDemoLevel(true);
-        level = buildDemoLevel();
+        buildDemoLevel();
         publishGameEvent(GameEventType.LEVEL_CREATED);
     }
 

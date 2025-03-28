@@ -222,13 +222,12 @@ public class ArcadePacMan_GameModel extends GameModel {
     }
 
     @Override
-    public GameLevel buildNormalLevel(int levelNumber) {
+    public void buildNormalLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
 
-        GameLevel newLevel = new GameLevel(levelNumber, worldMap);
-        newLevel.setNumFlashes(levelData(newLevel.number()).numFlashes());
-        newLevel.setCutSceneNumber(cutScenesEnabled ? cutSceneNumberAfterLevel(newLevel.number()) : 0);
-
+        level = new GameLevel(levelNumber, worldMap);
+        level.setNumFlashes(levelData(levelNumber).numFlashes());
+        level.setCutSceneNumber(cutScenesEnabled ? cutSceneNumberAfterLevel(levelNumber) : 0);
 
         if (!worldMap.hasProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MIN_TILE)) {
             Logger.warn("No house min tile found in map!");
@@ -240,46 +239,42 @@ public class ArcadePacMan_GameModel extends GameModel {
         }
         Vector2i minTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
         Vector2i maxTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
-        newLevel.createArcadeHouse(minTile.x(), minTile.y(), maxTile.x(), maxTile.y());
+        level.createArcadeHouse(minTile.x(), minTile.y(), maxTile.x(), maxTile.y());
 
         var pac = new Pac();
         pac.setName("Pac-Man");
-        pac.setGameLevel(newLevel);
+        pac.setGameLevel(level);
+        pac.setAutopilot(autopilot);
         pac.reset();
 
         var ghosts = new Ghost[] { blinky(), pinky(), inky(), clyde() };
         Stream.of(ghosts).forEach(ghost -> {
-            ghost.setGameLevel(newLevel);
-            ghost.setRevivalPosition(newLevel.ghostPosition(ghost.id()));
+            ghost.setGameLevel(level);
+            ghost.setRevivalPosition(level.ghostPosition(ghost.id()));
             ghost.reset();
         });
-        ghosts[RED_GHOST_ID].setRevivalPosition(newLevel.ghostPosition(PINK_GHOST_ID)); // middle house position
-        Stream.of(ghosts).forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
-
-        newLevel.setPac(pac);
-        newLevel.setGhosts(ghosts);
-        newLevel.setBonusSymbol(0, computeBonusSymbol(levelNumber));
-        newLevel.setBonusSymbol(1, computeBonusSymbol(levelNumber));
-
-        newLevel.pac().setAutopilot(autopilot);
-        setCruiseElroy(0);
+        ghosts[RED_GHOST_ID].setRevivalPosition(level.ghostPosition(PINK_GHOST_ID)); // middle house position
 
         List<Vector2i> oneWayDownTiles = worldMap.tiles()
                 .filter(tile -> worldMap.get(LayerID.TERRAIN, tile) == TerrainTiles.ONE_WAY_DOWN).toList();
-        newLevel.ghosts().forEach(ghost -> ghost.setSpecialTerrainTiles(oneWayDownTiles));
+        Stream.of(ghosts).forEach(ghost -> ghost.setSpecialTerrainTiles(oneWayDownTiles));
+        Stream.of(ghosts).forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
 
+        level.setPac(pac);
+        level.setGhosts(ghosts);
+        level.setBonusSymbol(0, computeBonusSymbol(levelNumber));
+        level.setBonusSymbol(1, computeBonusSymbol(levelNumber));
+
+        setCruiseElroy(0);
         levelCounterEnabled = true;
-
-        return newLevel;
     }
 
     @Override
-    public GameLevel buildDemoLevel() {
-        GameLevel demoLevel = buildNormalLevel(1);
-        assignDemoLevelBehavior(demoLevel);
+    public void buildDemoLevel() {
+        buildNormalLevel(1);
+        assignDemoLevelBehavior(level);
         levelCounterEnabled = false;
         demoLevelSteering.init();
-        return demoLevel;
     }
 
     protected int cutSceneNumberAfterLevel(int number) {
