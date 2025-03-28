@@ -12,7 +12,6 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui._2d.GameRenderer;
-import de.amr.games.pacman.uilib.ImageArea;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
@@ -30,7 +29,9 @@ import static de.amr.games.pacman.ui.Globals.THE_UI;
  */
 public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
 
-    private static final RectArea[] FULL_MAP_SPRITES = {
+    private record ImageRegion(Image image, RectArea area) {}
+
+    private static final RectArea[] FULL_MAZE_REGIONS = {
         rect(0,     0, 224, 248),
         rect(0,   248, 224, 248),
         rect(0, 2*248, 224, 248),
@@ -39,7 +40,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
         rect(0, 5*248, 224, 248),
     };
 
-    private static final RectArea[] EMPTY_MAP_SPRITES = {
+    private static final RectArea[] EMPTY_MAZE_REGIONS = {
         rect(228,     0, 224, 248),
         rect(228,   248, 224, 248),
         rect(228, 2*248, 224, 248),
@@ -48,7 +49,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
         rect(228, 5*258, 224, 248),
     };
 
-    private static final RectArea[] FLASHING_MAP_SPRITES = {
+    private static final RectArea[] FLASHING_MAZE_REGIONS = {
         rect(0,     0, 224, 248),
         rect(0,   248, 224, 248),
         rect(0, 2*248, 224, 248),
@@ -63,9 +64,9 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     private final GraphicsContext ctx;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
     private final Image flashingMazesImage;
-    private RectArea fullMapSprite;
-    private RectArea emptyMapSprite;
-    private ImageArea flashingMapSprite;
+    private RectArea fullMazeSpritesheetRegion;
+    private RectArea emptyMazeSpritesheetRegion;
+    private ImageRegion flashingMazeImageRegion;
     private boolean mazeHighlighted;
     private boolean blinking;
     private Color bgColor = Color.BLACK;
@@ -73,6 +74,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     public ArcadeMsPacMan_GameRenderer(ArcadeMsPacMan_SpriteSheet spriteSheet, Canvas canvas) {
         this.spriteSheet = assertNotNull(spriteSheet);
         ctx = assertNotNull(canvas).getGraphicsContext2D();
+        //TODO maybe create flashing maze from normal image at runtime by color exchanges?
         flashingMazesImage = THE_UI.assets().get("ms_pacman.flashing_mazes");
     }
 
@@ -122,19 +124,19 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     @Override
     public void setWorldMap(WorldMap worldMap) {
         int colorMapIndex = worldMap.getConfigValue("colorMapIndex");
-        fullMapSprite = FULL_MAP_SPRITES[colorMapIndex];
-        emptyMapSprite = EMPTY_MAP_SPRITES[colorMapIndex];
-        flashingMapSprite = new ImageArea(flashingMazesImage, FLASHING_MAP_SPRITES[colorMapIndex]);
+        fullMazeSpritesheetRegion = FULL_MAZE_REGIONS[colorMapIndex];
+        emptyMazeSpritesheetRegion = EMPTY_MAZE_REGIONS[colorMapIndex];
+        flashingMazeImageRegion = new ImageRegion(flashingMazesImage, FLASHING_MAZE_REGIONS[colorMapIndex]);
     }
 
     @Override
     public void drawMaze(GameLevel level, double x, double y) {
         if (mazeHighlighted) {
-            drawSubImageScaled(flashingMapSprite.source(), flashingMapSprite.area(), x, y);
+            drawSubImageScaled(flashingMazeImageRegion.image(), flashingMazeImageRegion.area(), x, y);
         } else if (level.uneatenFoodCount() == 0) {
-            drawSpriteScaled(emptyMapSprite, x, y);
+            drawSpriteScaled(emptyMazeSpritesheetRegion, x, y);
         } else {
-            drawSpriteScaled(fullMapSprite, x, y);
+            drawSpriteScaled(fullMazeSpritesheetRegion, x, y);
             ctx.save();
             ctx.scale(scaling(), scaling());
             overPaintEatenPellets(level);
