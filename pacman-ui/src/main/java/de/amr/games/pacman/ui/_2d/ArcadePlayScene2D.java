@@ -52,7 +52,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     @Override
     protected void doInit() {
         THE_UI.setScoreVisible(true);
-        bindDefaultArcadeControllerActions(THE_UI.keyboard().arcade());
+        bindDefaultArcadeControllerActions(THE_UI.keyboard().currentArcadeKeyBinding());
         bindFallbackPlayerControlActions();
         registerGameActionKeyBindings();
     }
@@ -60,10 +60,10 @@ public class ArcadePlayScene2D extends GameScene2D {
     @Override
     public void onLevelCreated(GameEvent e) {
         if (game().isDemoLevel()) {
-            bind(GameActions2D.INSERT_COIN, THE_UI.keyboard().arcade().key(Arcade.Button.COIN));
+            bind(GameActions2D.INSERT_COIN, THE_UI.keyboard().currentArcadeKeyBinding().key(Arcade.Button.COIN));
         } else {
             bindCheatActions();
-            bindDefaultArcadeControllerActions(THE_UI.keyboard().arcade());
+            bindDefaultArcadeControllerActions(THE_UI.keyboard().currentArcadeKeyBinding());
             bindFallbackPlayerControlActions();
         }
         registerGameActionKeyBindings();

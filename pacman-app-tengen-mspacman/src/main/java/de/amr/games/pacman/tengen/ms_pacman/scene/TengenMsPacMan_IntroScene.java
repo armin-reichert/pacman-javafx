@@ -9,7 +9,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.lib.fsm.FsmState;
-import de.amr.games.pacman.lib.nes.NES_JoypadButton;
+import de.amr.games.pacman.lib.nes.NES_JoypadButtonID;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -70,21 +70,21 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(GameActions2D.START_GAME, THE_UI.keyboard().selectedJoypad().key(NES_JoypadButton.BUTTON_START));
-        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, THE_UI.keyboard().selectedJoypad().key(NES_JoypadButton.BUTTON_SELECT));
+        bind(GameActions2D.START_GAME, THE_UI.keyboard().currentJoypadKeyBinding().key(NES_JoypadButtonID.START));
+        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, THE_UI.keyboard().currentJoypadKeyBinding().key(NES_JoypadButtonID.SELECT));
     }
 
     @Override
     public void doInit() {
         THE_UI.setScoreVisible(false);
-        THE_UI.keyboard().enableSelectedJoypad();
+        THE_UI.keyboard().enableCurrentJoypad();
         sceneController.restart(SceneState.WAITING_FOR_START);
     }
 
     @Override
     protected void doEnd() {
         THE_UI.sound().stopVoice();
-        THE_UI.keyboard().disableSelectedJoypad();
+        THE_UI.keyboard().disableCurrentJoypad();
     }
 
     @Override
@@ -143,7 +143,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         }
 
         if (PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED.get()) {
-            r.drawJoypadKeyBinding(THE_UI.keyboard().selectedJoypad());
+            r.drawJoypadKeyBinding(THE_UI.keyboard().currentJoypadKeyBinding());
         }
     }
 

@@ -6,7 +6,7 @@ package de.amr.games.pacman.tengen.ms_pacman.scene;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.nes.NES_JoypadButton;
+import de.amr.games.pacman.lib.nes.NES_JoypadButtonID;
 import de.amr.games.pacman.tengen.ms_pacman.Difficulty;
 import de.amr.games.pacman.tengen.ms_pacman.PacBooster;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions;
@@ -66,14 +66,14 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     @Override
     public void bindGameActions() {
         bind(TengenMsPacMan_GameActions.SELECT_NEXT_JOYPAD_KEY_BINDING, alt(KeyCode.J));
-        bind(TengenMsPacMan_GameActions.START_PLAYING, THE_UI.keyboard().selectedJoypad().key(NES_JoypadButton.BUTTON_START));
-        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, THE_UI.keyboard().selectedJoypad().key(NES_JoypadButton.BUTTON_SELECT));
+        bind(TengenMsPacMan_GameActions.START_PLAYING, THE_UI.keyboard().currentJoypadKeyBinding().key(NES_JoypadButtonID.START));
+        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, THE_UI.keyboard().currentJoypadKeyBinding().key(NES_JoypadButtonID.SELECT));
         bindTestsStartingActions();
     }
 
     @Override
     public void doInit() {
-        THE_UI.keyboard().enableSelectedJoypad();
+        THE_UI.keyboard().enableCurrentJoypad();
         THE_UI.setScoreVisible(false);
         selectedOption = OPTION_PAC_BOOSTER;
         tengenGame = THE_GAME_CONTROLLER.game();
@@ -84,7 +84,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        THE_UI.keyboard().disableSelectedJoypad();
+        THE_UI.keyboard().disableCurrentJoypad();
     }
 
     @Override
@@ -119,22 +119,22 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         resetIdleTimer();
     }
 
-    private boolean isJoypadPressed(NES_JoypadButton button) {
-        return THE_UI.keyboard().isMatching(THE_UI.keyboard().selectedJoypad().key(button));
+    private boolean isJoypadPressed(NES_JoypadButtonID button) {
+        return THE_UI.keyboard().isMatching(THE_UI.keyboard().currentJoypadKeyBinding().key(button));
     }
 
     @Override
     public void handleInput() {
 
-        if (isJoypadPressed(NES_JoypadButton.BUTTON_DOWN)) {
+        if (isJoypadPressed(NES_JoypadButtonID.DOWN)) {
             selectNextOption();
         }
-        else if (isJoypadPressed(NES_JoypadButton.BUTTON_UP)) {
+        else if (isJoypadPressed(NES_JoypadButtonID.UP)) {
             selectPrevOption();
         }
 
         // Button "A" is rightButtonKey of "B": selectButtonKey next value
-        else if (isJoypadPressed(NES_JoypadButton.BUTTON_A)) {
+        else if (isJoypadPressed(NES_JoypadButtonID.A)) {
             switch (selectedOption) {
                 case OPTION_PAC_BOOSTER    -> setNextPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setNextDifficultyValue();
@@ -145,7 +145,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         }
 
         // Button "B" is leftButtonKey of "A": selectButtonKey previous value
-        else if (isJoypadPressed(NES_JoypadButton.BUTTON_B)) {
+        else if (isJoypadPressed(NES_JoypadButtonID.B)) {
             switch (selectedOption) {
                 case OPTION_PAC_BOOSTER    -> setPrevPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setPrevDifficultyValue();
@@ -298,7 +298,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), sizeInPx().x(), 212);
 
         if (PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED.get()) {
-            r.drawJoypadKeyBinding(THE_UI.keyboard().selectedJoypad());
+            r.drawJoypadKeyBinding(THE_UI.keyboard().currentJoypadKeyBinding());
         }
     }
 

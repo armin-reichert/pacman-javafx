@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.dashboard;
 
-import de.amr.games.pacman.lib.nes.NES_JoypadButton;
+import de.amr.games.pacman.lib.nes.NES_JoypadButtonID;
 import de.amr.games.pacman.ui.PacManGamesUI;
 import de.amr.games.pacman.uilib.ResourceManager;
 import javafx.scene.image.ImageView;
@@ -22,24 +22,24 @@ public class InfoBoxJoypad extends InfoBox {
 
         setContentTextFont(Font.font("Monospace", 16));
 
-        var joypad = THE_UI.keyboard().selectedJoypad();
+        var joypad = THE_UI.keyboard().currentJoypadKeyBinding();
         String indent = "  "; // Urgh
         addLabeledValue("[SELECT]   [START]", () -> "%s%s  %s".formatted(
             indent,
-            joypad.key(NES_JoypadButton.BUTTON_SELECT).getDisplayText(),
-            joypad.key(NES_JoypadButton.BUTTON_START).getDisplayText())
+            joypad.key(NES_JoypadButtonID.SELECT).getDisplayText(),
+            joypad.key(NES_JoypadButtonID.START).getDisplayText())
         );
         addLabeledValue("[B]  [A]", () -> "%s%s   %s".formatted(
             indent,
-            joypad.key(NES_JoypadButton.BUTTON_B).getDisplayText(),
-            joypad.key(NES_JoypadButton.BUTTON_A).getDisplayText())
+            joypad.key(NES_JoypadButtonID.B).getDisplayText(),
+            joypad.key(NES_JoypadButtonID.A).getDisplayText())
         );
         addLabeledValue("UP/DOWN/LEFT/RIGHT", () -> "%s%s  %s  %s  %s".formatted(
             indent,
-            joypad.key(NES_JoypadButton.BUTTON_UP).getDisplayText(),
-            joypad.key(NES_JoypadButton.BUTTON_DOWN).getDisplayText(),
-            joypad.key(NES_JoypadButton.BUTTON_LEFT).getDisplayText(),
-            joypad.key(NES_JoypadButton.BUTTON_RIGHT).getDisplayText())
+            joypad.key(NES_JoypadButtonID.UP).getDisplayText(),
+            joypad.key(NES_JoypadButtonID.DOWN).getDisplayText(),
+            joypad.key(NES_JoypadButtonID.LEFT).getDisplayText(),
+            joypad.key(NES_JoypadButtonID.RIGHT).getDisplayText())
         );
         addRow(imageNesController);
     }

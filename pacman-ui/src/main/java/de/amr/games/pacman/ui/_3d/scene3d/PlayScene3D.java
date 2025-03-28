@@ -125,9 +125,9 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         bind(GameActions3D.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
         bind(GameActions3D.TOGGLE_DRAW_MODE, alt(KeyCode.W));
         if (THE_GAME_CONTROLLER.game().isDemoLevel()) {
-            bind(GameActions2D.INSERT_COIN, THE_UI.keyboard().arcade().key(Arcade.Button.COIN));
+            bind(GameActions2D.INSERT_COIN, THE_UI.keyboard().currentArcadeKeyBinding().key(Arcade.Button.COIN));
         } else {
-            bindDefaultArcadeControllerActions(THE_UI.keyboard().arcade());
+            bindDefaultArcadeControllerActions(THE_UI.keyboard().currentArcadeKeyBinding());
             bindFallbackPlayerControlActions();
             bindCheatActions();
         }

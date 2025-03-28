@@ -6,7 +6,7 @@ package de.amr.games.pacman.tengen.ms_pacman.scene;
 
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.nes.NES_ColorScheme;
-import de.amr.games.pacman.lib.nes.NES_JoypadButton;
+import de.amr.games.pacman.lib.nes.NES_JoypadButtonID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.Score;
@@ -73,16 +73,16 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         bind(GameActions3D.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
         bind(GameActions3D.TOGGLE_DRAW_MODE, alt(KeyCode.W));
         if (THE_GAME_CONTROLLER.game().isDemoLevel()) {
-            bind(TengenMsPacMan_GameActions.QUIT_DEMO_LEVEL, THE_UI.keyboard().selectedJoypad().key(NES_JoypadButton.BUTTON_START));
+            bind(TengenMsPacMan_GameActions.QUIT_DEMO_LEVEL, THE_UI.keyboard().currentJoypadKeyBinding().key(NES_JoypadButtonID.START));
         }
         else {
-            bind(GameActions2D.PLAYER_UP,    THE_UI.keyboard().selectedJoypad().key(NES_JoypadButton.BUTTON_UP));
-            bind(GameActions2D.PLAYER_DOWN,  THE_UI.keyboard().selectedJoypad().key(NES_JoypadButton.BUTTON_DOWN));
-            bind(GameActions2D.PLAYER_LEFT,  THE_UI.keyboard().selectedJoypad().key(NES_JoypadButton.BUTTON_LEFT));
-            bind(GameActions2D.PLAYER_RIGHT, THE_UI.keyboard().selectedJoypad().key(NES_JoypadButton.BUTTON_RIGHT));
+            bind(GameActions2D.PLAYER_UP,    THE_UI.keyboard().currentJoypadKeyBinding().key(NES_JoypadButtonID.UP));
+            bind(GameActions2D.PLAYER_DOWN,  THE_UI.keyboard().currentJoypadKeyBinding().key(NES_JoypadButtonID.DOWN));
+            bind(GameActions2D.PLAYER_LEFT,  THE_UI.keyboard().currentJoypadKeyBinding().key(NES_JoypadButtonID.LEFT));
+            bind(GameActions2D.PLAYER_RIGHT, THE_UI.keyboard().currentJoypadKeyBinding().key(NES_JoypadButtonID.RIGHT));
             bind(TengenMsPacMan_GameActions.TOGGLE_PAC_BOOSTER,
-                THE_UI.keyboard().selectedJoypad().key(NES_JoypadButton.BUTTON_A),
-                THE_UI.keyboard().selectedJoypad().key(NES_JoypadButton.BUTTON_B));
+                THE_UI.keyboard().currentJoypadKeyBinding().key(NES_JoypadButtonID.A),
+                THE_UI.keyboard().currentJoypadKeyBinding().key(NES_JoypadButtonID.B));
             bindFallbackPlayerControlActions();
             bindCheatActions();
             bindFallbackPlayerControlActions();
