@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.games.pacman.uilib;
 
 import javafx.beans.property.IntegerProperty;
@@ -15,11 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class Carousel extends StackPane {
-
-    private static final ResourceManager RESOURCE_MANAGER = () -> Carousel.class;
-    private static final Image ARROW_LEFT_IMAGE = RESOURCE_MANAGER.loadImage("graphics/arrow-left.png");
-    private static final Image ARROW_RIGHT_IMAGE = RESOURCE_MANAGER.loadImage("graphics/arrow-right.png");
+public class Carousel extends StackPane implements ResourceManager {
 
     private static Button createCarouselButton(Image image) {
         ImageView icon = new ImageView(image);
@@ -51,12 +51,19 @@ public class Carousel extends StackPane {
     private Consumer<Node> actionPrevSlideSelected;
     private Consumer<Node> actionNextSlideSelected;
 
+    @Override
+    public Class<?> resourceRootClass() {
+        return Carousel.class;
+    }
+
     public Carousel() {
-        btnPrevSlideSelector = createCarouselButton(ARROW_LEFT_IMAGE);
+        Image arrowLeftImage = loadImage("graphics/arrow-left.png");
+        btnPrevSlideSelector = createCarouselButton(arrowLeftImage);
         btnPrevSlideSelector.setOnAction(e -> showPreviousSlide());
         StackPane.setAlignment(btnPrevSlideSelector, Pos.CENTER_LEFT);
 
-        btnNextSlideSelector = createCarouselButton(ARROW_RIGHT_IMAGE);
+        Image arrowRightImage = loadImage("graphics/arrow-right.png");
+        btnNextSlideSelector = createCarouselButton(arrowRightImage);
         btnNextSlideSelector.setOnAction(e -> showNextSlide());
         StackPane.setAlignment(btnNextSlideSelector, Pos.CENTER_RIGHT);
     }
