@@ -105,7 +105,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     @Override
     public void init() {
         bindGameActions();
-        registerGameActionKeyBindings();
+        enableActionBindings();
         THE_UI.setScoreVisible(true);
         perspectiveNamePy.bind(GlobalProperties3d.PY_3D_PERSPECTIVE);
         scores3D.setFont(THE_UI.assets().font("font.arcade", 8));
@@ -113,7 +113,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
     @Override
     public final void end() {
-        unregisterGameActionKeyBindings();
+        disableActionBindings();
         perspectiveNamePy.unbind();
         level3D.stopAnimations();
         level3D = null;
@@ -128,10 +128,10 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             bind(GameActions2D.INSERT_COIN, THE_UI.keyboard().currentArcadeKeyBinding().key(Arcade.Button.COIN));
         } else {
             bindDefaultArcadeControllerActions(THE_UI.keyboard().currentArcadeKeyBinding());
-            bindFallbackPlayerControlActions();
+            bindAlternativePlayerControlActions();
             bindCheatActions();
         }
-        registerGameActionKeyBindings();
+        enableActionBindings();
     }
 
     @Override
@@ -164,7 +164,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     public void onSceneVariantSwitch(GameScene fromScene) {
         THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
             bindGameActions();
-            registerGameActionKeyBindings();
+            enableActionBindings();
             if (!hasLevel3D()) {
                 replaceGameLevel3D();
                 level3D.addLevelCounter();

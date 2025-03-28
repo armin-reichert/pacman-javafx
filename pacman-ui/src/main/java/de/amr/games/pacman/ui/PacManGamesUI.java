@@ -117,10 +117,10 @@ public class PacManGamesUI implements GameEventListener, GameUI {
                 THE_GAME_CONTROLLER.game().addGameEventListener(newGameEventListener);
             }
             if (ov instanceof View oldView) {
-                oldView.unregisterGameActionKeyBindings();
+                oldView.disableActionBindings();
             }
             if (nv instanceof View newView) {
-                newView.registerGameActionKeyBindings();
+                newView.enableActionBindings();
                 sceneRoot.getChildren().set(0, newView.node());
                 newView.node().requestFocus();
             }

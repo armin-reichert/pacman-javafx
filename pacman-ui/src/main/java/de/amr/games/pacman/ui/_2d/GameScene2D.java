@@ -17,7 +17,6 @@ import javafx.scene.paint.Color;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 /**
@@ -38,13 +37,13 @@ public abstract class GameScene2D implements GameScene {
     public final void init() {
         doInit();
         bindGameActions();
-        registerGameActionKeyBindings();
+        enableActionBindings();
     }
 
     @Override
     public final void end() {
         doEnd();
-        unregisterGameActionKeyBindings();
+        disableActionBindings();
     }
 
     @Override

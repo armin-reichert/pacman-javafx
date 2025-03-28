@@ -36,7 +36,7 @@ public interface GameScene extends GameEventListener, GameActionProvider {
         bind(GameActions2D.PLAYER_RIGHT, arcadeKeys.key(Arcade.Button.RIGHT));
     }
 
-    default void bindFallbackPlayerControlActions() {
+    default void bindAlternativePlayerControlActions() {
         bind(GameActions2D.PLAYER_UP,    Keyboard.control(KeyCode.UP));
         bind(GameActions2D.PLAYER_DOWN,  Keyboard.control(KeyCode.DOWN));
         bind(GameActions2D.PLAYER_LEFT,  Keyboard.control(KeyCode.LEFT));

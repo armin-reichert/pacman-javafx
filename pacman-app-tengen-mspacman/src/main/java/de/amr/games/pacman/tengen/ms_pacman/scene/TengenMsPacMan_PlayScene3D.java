@@ -83,12 +83,12 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             bind(TengenMsPacMan_GameActions.TOGGLE_PAC_BOOSTER,
                 THE_UI.keyboard().currentJoypadKeyBinding().key(NES_JoypadButtonID.A),
                 THE_UI.keyboard().currentJoypadKeyBinding().key(NES_JoypadButtonID.B));
-            bindFallbackPlayerControlActions();
+            bindAlternativePlayerControlActions();
             bindCheatActions();
-            bindFallbackPlayerControlActions();
+            bindAlternativePlayerControlActions();
             bindCheatActions();
         }
-        registerGameActionKeyBindings();
+        enableActionBindings();
     }
 
     @Override

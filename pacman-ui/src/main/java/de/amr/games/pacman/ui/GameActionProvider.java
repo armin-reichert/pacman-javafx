@@ -22,15 +22,15 @@ public interface GameActionProvider {
      */
     void bindGameActions();
 
-    default void registerGameActionKeyBindings() {
-        Logger.info("Register key bindings for {}", getClass().getSimpleName());
+    default void enableActionBindings() {
+        Logger.info("Enabled key bindings for {}", getClass().getSimpleName());
         for (KeyCodeCombination keyCodeCombination : actionBindings().keySet()) {
             THE_UI.keyboard().register(keyCodeCombination, this);
         }
     }
 
-    default void unregisterGameActionKeyBindings() {
-        Logger.info("Unregister key bindings for {}", getClass().getSimpleName());
+    default void disableActionBindings() {
+        Logger.info("Disable key bindings for {}", getClass().getSimpleName());
         for (KeyCodeCombination keyCodeCombination : actionBindings().keySet()) {
             THE_UI.keyboard().unregister(keyCodeCombination, this);
         }

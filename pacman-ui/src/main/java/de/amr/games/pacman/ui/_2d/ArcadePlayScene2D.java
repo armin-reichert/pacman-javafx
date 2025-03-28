@@ -16,6 +16,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.GameScene;
+import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckMenuItem;
@@ -38,13 +39,15 @@ import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_IMMUNITY;
 
 /**
- * 2D play scene for all game variants except Tengen Ms. Pac-Man.
+ * 2D play scene for Arcade game variants.
  *
  * @author Armin Reichert
  */
 public class ArcadePlayScene2D extends GameScene2D {
 
     private LevelCompleteAnimation levelCompleteAnimation;
+
+    private ArcadeKeyBinding arcadeKeyBinding() { return THE_UI.keyboard().currentArcadeKeyBinding(); }
 
     @Override
     public void bindGameActions() {}
@@ -53,20 +56,21 @@ public class ArcadePlayScene2D extends GameScene2D {
     protected void doInit() {
         THE_UI.setScoreVisible(true);
         bindDefaultArcadeControllerActions(THE_UI.keyboard().currentArcadeKeyBinding());
-        bindFallbackPlayerControlActions();
-        registerGameActionKeyBindings();
+        bindAlternativePlayerControlActions();
+        enableActionBindings();
     }
 
     @Override
     public void onLevelCreated(GameEvent e) {
         if (game().isDemoLevel()) {
-            bind(GameActions2D.INSERT_COIN, THE_UI.keyboard().currentArcadeKeyBinding().key(Arcade.Button.COIN));
+            bind(GameActions2D.INSERT_COIN, arcadeKeyBinding().key(Arcade.Button.COIN));
         } else {
             bindCheatActions();
-            bindDefaultArcadeControllerActions(THE_UI.keyboard().currentArcadeKeyBinding());
-            bindFallbackPlayerControlActions();
+            bindDefaultArcadeControllerActions(arcadeKeyBinding());
+            bindAlternativePlayerControlActions();
         }
-        registerGameActionKeyBindings();
+        enableActionBindings();
+
         game().level().ifPresent(level -> {
             gr.setWorldMap(level.worldMap());
             gr.setMessagePosition(centerPositionBelowHouse(level));
@@ -84,6 +88,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     @Override
     protected void doEnd() {
         THE_UI.sound().stopAll();
+        disableActionBindings();
     }
 
     @Override
@@ -132,48 +137,28 @@ public class ArcadePlayScene2D extends GameScene2D {
     @Override
     protected void drawSceneContent() {
         GameLevel level = game().level().orElse(null);
-        if (level == null) { // This happens on level startButtonKey
-            Logger.warn("Tick {}: Cannot draw scene content: Game level not yet available!", THE_UI.clock().tickCount());
+
+        // Scene is drawn already for 2 ticks before level has been created
+        if (level == null) {
+            Logger.warn("Tick {}: Game level not yet available, scene content not drawn", THE_UI.clock().tickCount());
             return;
         }
 
-        // Draw message
-        if (level.message() != null) {
-            Color color = null;
-            String text = null;
-            switch (level.message()) {
-                case GAME_OVER -> {
-                    color = Color.web(Arcade.Palette.RED);
-                    text = "GAME  OVER";
-                }
-                case READY -> {
-                    color = Color.web(Arcade.Palette.YELLOW);
-                    text = "READY!";
-                }
-                case TEST_LEVEL -> {
-                    color = Color.web(Arcade.Palette.WHITE);
-                    text = "TEST    L%03d".formatted(level.number());
-                }
-            }
-            gr.setMessagePosition(centerPositionBelowHouse(level));
-            // this assumes fixed width font of one tile size:
-            double x = gr.getMessagePosition().x() - (text.length() * HTS);
-            gr.drawText(text, color, gr.scaledArcadeFont(TS), x, gr.getMessagePosition().y());
-        }
-
         // Draw maze
-        boolean highlighted = levelCompleteAnimation != null && levelCompleteAnimation.isInHighlightPhase();
-        gr.setMazeHighlighted(highlighted);
+        gr.setMazeHighlighted(levelCompleteAnimation != null && levelCompleteAnimation.isInHighlightPhase());
         gr.setBlinking(level.blinking().isOn());
-        gr.setWorldMap(level.worldMap()); //TODO fixme: avoid calling this in every frame
+        gr.setWorldMap(level.worldMap());
         gr.drawMaze(level, 0, 3 * TS);
 
-        // Draw bonus
+        if (level.message() != null) {
+            drawLevelMessage(level);
+        }
+
         level.bonus().ifPresent(gr::drawBonus);
 
-        // Draw guys and debug info if activated
         gr.drawAnimatedActor(level.pac());
         ghostsInZOrder(level).forEach(gr::drawAnimatedActor);
+
         if (debugInfoVisiblePy.get()) {
             gr.drawAnimatedCreatureInfo(level.pac());
             ghostsInZOrder(level).forEach(gr::drawAnimatedCreatureInfo);
@@ -181,20 +166,40 @@ public class ArcadePlayScene2D extends GameScene2D {
 
         // Draw lives counter or remaining credit
         if (game().canStartNewGame()) {
-            //TODO: this code is ugly
+            //TODO: this code is ugly. Realizes effect that Pac is "picked" from the lives counter when game starts.
             int numLivesShown = game().lives() - 1;
             if (gameState() == GameState.STARTING_GAME && !level.pac().isVisible()) {
                 numLivesShown += 1;
             }
             gr.drawLivesCounter(numLivesShown, 5, 2 * TS, sizeInPx().y() - 2 * TS);
         } else {
-            int credit = THE_GAME_CONTROLLER.credit;
-            gr.drawText("CREDIT %2d".formatted(credit), Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS),
-                    2 * TS, sizeInPx().y() - 2);
+            gr.drawText("CREDIT %2d".formatted(THE_GAME_CONTROLLER.credit),
+                Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS), 2 * TS, sizeInPx().y() - 2);
         }
-
-        // Draw level counter
         gr.drawLevelCounter(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
+    }
+
+    private void drawLevelMessage(GameLevel level) {
+        Color color = null;
+        String text = null;
+        switch (level.message()) {
+            case GAME_OVER -> {
+                color = Color.web(Arcade.Palette.RED);
+                text = "GAME  OVER";
+            }
+            case READY -> {
+                color = Color.web(Arcade.Palette.YELLOW);
+                text = "READY!";
+            }
+            case TEST_LEVEL -> {
+                color = Color.web(Arcade.Palette.WHITE);
+                text = "TEST    L%03d".formatted(level.number());
+            }
+        }
+        gr.setMessagePosition(centerPositionBelowHouse(level));
+        // this assumes fixed font width of one tile:
+        double x = gr.getMessagePosition().x() - (text.length() * HTS);
+        gr.drawText(text, color, gr.scaledArcadeFont(TS), x, gr.getMessagePosition().y());
     }
 
     private Vector2f centerPositionBelowHouse(GameLevel level) {
@@ -212,35 +217,32 @@ public class ArcadePlayScene2D extends GameScene2D {
     protected void drawDebugInfo() {
         GraphicsContext g = gr.ctx();
         gr.drawTileGrid(sizeInPx().x(), sizeInPx().y());
-
-        if (THE_GAME_CONTROLLER.selectedGameVariant() == GameVariant.PACMAN) {
+        if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.PACMAN)) {
             game().level().ifPresent(level ->
-                level.ghosts().forEach(ghost -> {
-                    // Are currently the same for each ghost, but who knows what comes...
+                level.ghosts().forEach(ghost ->
                     ghost.specialTerrainTiles().forEach(tile -> {
-                        g.setFill(Color.RED);
                         double x = scaled(tile.x() * TS), y = scaled(tile.y() * TS + HTS), size = scaled(TS);
+                        g.setFill(Color.RED);
                         g.fillRect(x, y, size, 2);
-                    });
-                })
+                    }))
             );
         }
         g.setFill(Color.YELLOW);
         g.setFont(GameRenderer.DEBUG_FONT);
         String gameStateText = gameState().name() + " (Tick %d)".formatted(gameState().timer().tickCount());
-        String scatterChaseText = "";
+        String huntingPhaseText = "";
         if (gameState() == GameState.HUNTING) {
             HuntingTimer huntingTimer = game().huntingTimer();
-            scatterChaseText = " %s (Tick %d)".formatted(huntingTimer.huntingPhase(), huntingTimer.tickCount());
+            huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.huntingPhase(), huntingTimer.tickCount());
         }
-        g.fillText("%s%s".formatted(gameStateText, scatterChaseText), 0, 64);
+        g.fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, 64);
     }
 
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
         Logger.info("{} entered from {}", this, oldScene);
         bindGameActions();
-        registerGameActionKeyBindings();
+        enableActionBindings();
         if (gr == null) {
             setGameRenderer(THE_UI.configurations().current().createRenderer(canvas));
         }
