@@ -146,9 +146,9 @@ public abstract class GameModel {
 
     public abstract long gameOverStateTicks();
 
-    protected abstract GameLevel makeNormalLevel(int levelNumber);
+    protected abstract GameLevel buildNormalLevel(int levelNumber);
 
-    protected abstract GameLevel makeDemoLevel();
+    protected abstract GameLevel buildDemoLevel();
 
     public abstract void assignDemoLevelBehavior(GameLevel demoLevel);
 
@@ -242,7 +242,7 @@ public abstract class GameModel {
 
     public void createNormalLevel(int levelNumber) {
         setDemoLevel(false);
-        level = makeNormalLevel(levelNumber);
+        level = buildNormalLevel(levelNumber);
         scoreManager.setLevelNumber(levelNumber);
         huntingTimer.reset();
         updateLevelCounter();
@@ -251,7 +251,7 @@ public abstract class GameModel {
 
     public void createDemoLevel() {
         setDemoLevel(true);
-        level = makeDemoLevel();
+        level = buildDemoLevel();
         publishGameEvent(GameEventType.LEVEL_CREATED);
     }
 

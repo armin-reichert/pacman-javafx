@@ -215,8 +215,20 @@ public class ArcadePacMan_GameModel extends GameModel {
         publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
     }
 
-    protected void populateLevel(GameLevel level) {
-        WorldMap worldMap = level.worldMap();
+    @Override
+    protected void setActorBaseSpeed(int levelNumber) {
+        level.pac().setBaseSpeed(1.25f);
+        level.ghosts().forEach(ghost -> ghost.setBaseSpeed(1.25f));
+    }
+
+    @Override
+    public GameLevel buildNormalLevel(int levelNumber) {
+        WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
+
+        GameLevel newLevel = new GameLevel(levelNumber, worldMap);
+        newLevel.setNumFlashes(levelData(newLevel.number()).numFlashes());
+        newLevel.setCutSceneNumber(cutScenesEnabled ? cutSceneNumberAfterLevel(newLevel.number()) : 0);
+
 
         if (!worldMap.hasProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MIN_TILE)) {
             Logger.warn("No house min tile found in map!");
@@ -228,62 +240,46 @@ public class ArcadePacMan_GameModel extends GameModel {
         }
         Vector2i minTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
         Vector2i maxTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
-        level.createArcadeHouse(minTile.x(), minTile.y(), maxTile.x(), maxTile.y());
+        newLevel.createArcadeHouse(minTile.x(), minTile.y(), maxTile.x(), maxTile.y());
 
         var pac = new Pac();
         pac.setName("Pac-Man");
-        pac.setGameLevel(level);
+        pac.setGameLevel(newLevel);
         pac.reset();
 
         var ghosts = new Ghost[] { blinky(), pinky(), inky(), clyde() };
         Stream.of(ghosts).forEach(ghost -> {
-            ghost.setGameLevel(level);
-            ghost.setRevivalPosition(level.ghostPosition(ghost.id()));
+            ghost.setGameLevel(newLevel);
+            ghost.setRevivalPosition(newLevel.ghostPosition(ghost.id()));
             ghost.reset();
         });
-        ghosts[RED_GHOST_ID].setRevivalPosition(level.ghostPosition(PINK_GHOST_ID)); // middle house position
+        ghosts[RED_GHOST_ID].setRevivalPosition(newLevel.ghostPosition(PINK_GHOST_ID)); // middle house position
+        Stream.of(ghosts).forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
 
-        level.setPac(pac);
-        level.setGhosts(ghosts);
-        level.setBonusSymbol(0, computeBonusSymbol(level.number()));
-        level.setBonusSymbol(1, computeBonusSymbol(level.number()));
-    }
+        newLevel.setPac(pac);
+        newLevel.setGhosts(ghosts);
+        newLevel.setBonusSymbol(0, computeBonusSymbol(levelNumber));
+        newLevel.setBonusSymbol(1, computeBonusSymbol(levelNumber));
 
-    @Override
-    protected void setActorBaseSpeed(int levelNumber) {
-        level.pac().setBaseSpeed(1.25f);
-        level.ghosts().forEach(ghost -> ghost.setBaseSpeed(1.25f));
-    }
-
-    @Override
-    public GameLevel makeNormalLevel(int levelNumber) {
-        WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
-
-        GameLevel newLevel = new GameLevel(levelNumber, worldMap);
-        newLevel.setNumFlashes(levelData(newLevel.number()).numFlashes());
-        newLevel.setCutSceneNumber(cutScenesEnabled ? cutSceneNumberAfterLevel(newLevel.number()) : 0);
-
-        levelCounterEnabled = true;
-
-        populateLevel(newLevel);
         newLevel.pac().setAutopilot(autopilot);
         setCruiseElroy(0);
-        newLevel.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
 
         List<Vector2i> oneWayDownTiles = worldMap.tiles()
                 .filter(tile -> worldMap.get(LayerID.TERRAIN, tile) == TerrainTiles.ONE_WAY_DOWN).toList();
         newLevel.ghosts().forEach(ghost -> ghost.setSpecialTerrainTiles(oneWayDownTiles));
 
+        levelCounterEnabled = true;
+
         return newLevel;
     }
 
     @Override
-    public GameLevel makeDemoLevel() {
-        GameLevel newLevel = makeNormalLevel(1);
+    public GameLevel buildDemoLevel() {
+        GameLevel demoLevel = buildNormalLevel(1);
+        assignDemoLevelBehavior(demoLevel);
         levelCounterEnabled = false;
         demoLevelSteering.init();
-        assignDemoLevelBehavior(newLevel);
-        return newLevel;
+        return demoLevel;
     }
 
     protected int cutSceneNumberAfterLevel(int number) {

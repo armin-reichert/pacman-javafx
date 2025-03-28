@@ -415,7 +415,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public GameLevel makeNormalLevel(int levelNumber) {
+    public GameLevel buildNormalLevel(int levelNumber) {
         TengenMsPacMan_MapSelector tengenMsPacManMapSelector = (TengenMsPacMan_MapSelector) mapSelector;
         WorldMap worldMap = tengenMsPacManMapSelector.selectWorldMap(mapCategory, levelNumber);
 
@@ -448,7 +448,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public GameLevel makeDemoLevel() {
+    public GameLevel buildDemoLevel() {
         TengenMsPacMan_MapSelector tengenMsPacManMapSelector = (TengenMsPacMan_MapSelector) mapSelector;
         WorldMap worldMap = tengenMsPacManMapSelector.coloredWorldMap(mapCategory, 1);
 

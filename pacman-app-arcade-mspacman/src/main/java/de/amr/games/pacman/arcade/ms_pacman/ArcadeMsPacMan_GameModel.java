@@ -213,7 +213,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public GameLevel makeNormalLevel(int levelNumber) {
+    public GameLevel buildNormalLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
 
         GameLevel newLevel = new GameLevel(levelNumber, worldMap);
@@ -232,8 +232,8 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public GameLevel makeDemoLevel() {
-        GameLevel newLevel = makeNormalLevel(1);
+    public GameLevel buildDemoLevel() {
+        GameLevel newLevel = buildNormalLevel(1);
         levelCounterEnabled = false;
         assignDemoLevelBehavior(newLevel);
         demoLevelSteering.init();
