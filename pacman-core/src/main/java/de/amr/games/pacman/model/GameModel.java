@@ -12,10 +12,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.actors.Actor2D;
-import de.amr.games.pacman.model.actors.ActorAnimations;
-import de.amr.games.pacman.model.actors.Bonus;
-import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.*;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -150,7 +147,7 @@ public abstract class GameModel {
 
     protected abstract void buildDemoLevel();
 
-    public abstract void assignDemoLevelBehavior(GameLevel demoLevel);
+    public abstract void assignDemoLevelBehavior(Pac pac);
 
     protected abstract boolean isPacManKillingIgnored();
 

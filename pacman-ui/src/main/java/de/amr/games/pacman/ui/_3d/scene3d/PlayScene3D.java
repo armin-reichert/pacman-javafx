@@ -196,7 +196,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     public void update() {
         GameLevel level = THE_GAME_CONTROLLER.game().level().orElse(null);
         if (level == null) {
-            // Scene is visible for 1 (2?) ticks before game level has been created
+            // Scene is already visible for 3(?) ticks before game level has been created
             Logger.warn("Tick #{}: Cannot update PlayScene3D: game level not yet available", THE_UI.clock().tickCount());
             return;
         }
@@ -209,8 +209,8 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         level3D.update();
 
         //TODO check if this has to de done on every tick
-        if (THE_GAME_CONTROLLER.game().isDemoLevel()) {
-            THE_GAME_CONTROLLER.game().assignDemoLevelBehavior(level);
+        if (game().isDemoLevel()) {
+            game().assignDemoLevelBehavior(level.pac());
         }
         else {
             level.pac().setUsingAutopilot(PY_AUTOPILOT.get());

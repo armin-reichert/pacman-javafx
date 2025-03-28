@@ -468,15 +468,15 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
         activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON
 
-        assignDemoLevelBehavior(level);
+        assignDemoLevelBehavior(level.pac());
         demoLevelSteering.init();
     }
 
     @Override
-    public void assignDemoLevelBehavior(GameLevel demoLevel) {
-        demoLevel.pac().setAutopilot(demoLevelSteering);
-        demoLevel.pac().setUsingAutopilot(true);
-        demoLevel.pac().setImmune(false);
+    public void assignDemoLevelBehavior(Pac pac) {
+        pac.setAutopilot(demoLevelSteering);
+        pac.setUsingAutopilot(true);
+        pac.setImmune(false);
     }
 
     @Override

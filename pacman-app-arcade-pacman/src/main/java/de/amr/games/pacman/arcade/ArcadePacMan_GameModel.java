@@ -272,7 +272,7 @@ public class ArcadePacMan_GameModel extends GameModel {
     @Override
     public void buildDemoLevel() {
         buildNormalLevel(1);
-        assignDemoLevelBehavior(level);
+        assignDemoLevelBehavior(level.pac());
         levelCounterEnabled = false;
         demoLevelSteering.init();
     }
@@ -287,10 +287,10 @@ public class ArcadePacMan_GameModel extends GameModel {
     }
 
     @Override
-    public void assignDemoLevelBehavior(GameLevel demoLevel) {
-        demoLevel.pac().setAutopilot(demoLevelSteering);
-        demoLevel.pac().setUsingAutopilot(true);
-        demoLevel.pac().setImmune(false);
+    public void assignDemoLevelBehavior(Pac pac) {
+        pac.setAutopilot(demoLevelSteering);
+        pac.setUsingAutopilot(true);
+        pac.setImmune(false);
     }
 
     @Override

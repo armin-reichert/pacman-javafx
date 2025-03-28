@@ -215,7 +215,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     public void update() {
         game().level().ifPresent(level -> {
             if (game().isDemoLevel()) {
-                game().assignDemoLevelBehavior(level);
+                game().assignDemoLevelBehavior(level.pac());
             }
             else {
                 level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
