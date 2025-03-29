@@ -129,7 +129,9 @@ public class GameView extends StackPane implements View, GameEventListener {
     };
 
     protected final Scene parentScene;
-    protected final Canvas canvas = new Canvas();
+
+    // Common canvas for rendering 2D scenes
+    protected final Canvas gameScenesCanvas = new Canvas();
 
     protected BorderPane canvasLayer;
     protected PopupLayer popupLayer; // help, signature
@@ -145,6 +147,10 @@ public class GameView extends StackPane implements View, GameEventListener {
 
     public GameView(Scene parentScene) {
         this.parentScene = assertNotNull(parentScene);
+
+        GraphicsContext g = gameScenesCanvas.getGraphicsContext2D();
+        PY_CANVAS_FONT_SMOOTHING.addListener((py, ov, on) -> g.setFontSmoothingType(on ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
+        PY_CANVAS_IMAGE_SMOOTHING.addListener((py, ov, on) -> g.setImageSmoothing(on));
 
         createCanvasLayer();
         createDashboardLayer();
@@ -168,7 +174,7 @@ public class GameView extends StackPane implements View, GameEventListener {
     public ObjectProperty<GameScene> gameSceneProperty() { return gameScenePy; }
 
     private void createCanvasLayer() {
-        canvasContainer = new TooFancyCanvasContainer(canvas);
+        canvasContainer = new TooFancyCanvasContainer(gameScenesCanvas);
         canvasContainer.setMinScaling(0.5);
         canvasContainer.setUnscaledCanvasWidth(ARCADE_MAP_SIZE_IN_PIXELS.x());
         canvasContainer.setUnscaledCanvasHeight(ARCADE_MAP_SIZE_IN_PIXELS.y());
@@ -191,13 +197,6 @@ public class GameView extends StackPane implements View, GameEventListener {
                 canvasLayer.setBorder(null);
             }
         });
-
-        GraphicsContext g = canvas.getGraphicsContext2D();
-        g.setFontSmoothingType(FontSmoothingType.GRAY);
-        g.setImageSmoothing(false);
-        PY_CANVAS_FONT_SMOOTHING.addListener((py, ov, smooth) -> g.setFontSmoothingType(
-                smooth ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
-        PY_CANVAS_IMAGE_SMOOTHING.addListener((py, ov, smooth) -> g.setImageSmoothing(smooth));
     }
 
     //
@@ -339,7 +338,7 @@ public class GameView extends StackPane implements View, GameEventListener {
                 cameraControlledView.viewPortHeightProperty().bind(parentScene.heightProperty());
             }
             case GameScene2D gameScene2D -> {
-                GameRenderer renderer = THE_UI.configurations().current().createRenderer(canvas);
+                GameRenderer renderer = THE_UI.configurations().current().createRenderer(gameScenesCanvas);
                 Vector2f sceneSize = gameScene2D.sizeInPx();
                 canvasContainer.setUnscaledCanvasWidth(sceneSize.x());
                 canvasContainer.setUnscaledCanvasHeight(sceneSize.y());
@@ -347,7 +346,7 @@ public class GameView extends StackPane implements View, GameEventListener {
                 canvasContainer.backgroundProperty().bind(GlobalProperties2d.PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
                 gameScene2D.scalingProperty().bind(
                     canvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_SCALING)));
-                gameScene2D.setCanvas(canvas);
+                gameScene2D.setCanvas(gameScenesCanvas);
                 gameScene2D.backgroundColorProperty().bind(GlobalProperties2d.PY_CANVAS_BG_COLOR);
                 gameScene2D.setGameRenderer(renderer);
                 getChildren().set(0, canvasLayer);
