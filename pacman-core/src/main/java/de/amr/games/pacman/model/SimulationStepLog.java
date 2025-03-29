@@ -6,6 +6,7 @@ package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.actors.Ghost;
+import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,5 +59,15 @@ public class SimulationStepLog {
             messages.add("Ghosts killed: " + killedGhosts.stream().map(Ghost::name).toList());
         }
         return messages;
+    }
+
+    public void print(long step) {
+        var messageList = createMessageList();
+        if (!messageList.isEmpty()) {
+            Logger.info("Simulation step #{}:", step);
+            for (var msg : messageList) {
+                Logger.info("- " + msg);
+            }
+        }
     }
 }

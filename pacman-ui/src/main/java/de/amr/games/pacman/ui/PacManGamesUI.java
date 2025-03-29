@@ -166,7 +166,7 @@ public class PacManGamesUI implements GameUI {
         try {
             THE_GAME_CONTROLLER.update();
             currentGameScene().ifPresent(GameScene::update);
-            logSimulationStep();
+            THE_GAME_CONTROLLER.game().eventLog().print(clock.tickCount());
         } catch (Exception x) {
             clock.stop();
             Logger.error(x);
@@ -321,16 +321,6 @@ public class PacManGamesUI implements GameUI {
         if (changing) {
             gameScenePy.set(nextGameScene);
             Logger.info("Game scene is now: {}", nextGameScene.displayName());
-        }
-    }
-
-    private void logSimulationStep() {
-        var messageList = THE_GAME_CONTROLLER.game().eventLog().createMessageList();
-        if (!messageList.isEmpty()) {
-            Logger.info("Simulation step #{}:", clock.updateCount());
-            for (var msg : messageList) {
-                Logger.info("- " + msg);
-            }
         }
     }
 
