@@ -352,8 +352,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     @Override
-    public void drawScores() {
-        Color color = nesPaletteColor(0x20);
+    public void drawScores(Color color) {
         Font font = scaledArcadeFont(TS);
         if (THE_UI.clock().tickCount() % 60 < 30) { drawText("1UP", color, font, tiles2Px(2), tiles2Px(1)); }
         drawText("HIGH SCORE", color, font, tiles2Px(9), tiles2Px(1));

@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui._2d;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.Score;
@@ -215,25 +214,25 @@ public interface GameRenderer {
      * Over-paints all eaten pellet tiles.
      * Assumes to be called in scaled graphics context!
      */
-    default void overPaintEatenPellets(GameLevel level, Paint paint) {
+    default void overPaintEatenPelletTiles(GameLevel level, Paint paint) {
         level.worldMap().tiles()
             .filter(not(level::isEnergizerPosition))
-            .filter(level::hasEatenFoodAt).forEach(tile -> overPaint(tile, 4, paint));
+            .filter(level::hasEatenFoodAt).forEach(tile -> paintSquareInsideTile(tile, 4, paint));
     }
 
     /**
-     * Over-pains all eaten energizer tiles.
+     * Over-paints all eaten energizer tiles.
      * Assumes to be called in scaled graphics context!
      */
-    default void overPaintEnergizers(GameLevel level, Predicate<Vector2i> condition, Paint paint) {
-        level.energizerTiles().filter(condition).forEach(tile -> overPaint(tile, 10, paint));
+    default void overPaintEnergizerTiles(GameLevel level, Predicate<Vector2i> condition, Paint paint) {
+        level.energizerTiles().filter(condition).forEach(tile -> paintSquareInsideTile(tile, 10, paint));
     }
 
     /**
      * Draws a square of the given size in background color over the tile. Used to hide eaten food and energizers.
      * Assumes to be called in scaled graphics context!
      */
-    private void overPaint(Vector2i tile, double squareSize, Paint paint) {
+    private void paintSquareInsideTile(Vector2i tile, double squareSize, Paint paint) {
         double centerX = tile.x() * TS + HTS, centerY = tile.y() * TS + HTS;
         ctx().setFill(paint);
         ctx().fillRect(centerX - 0.5 * squareSize, centerY - 0.5 * squareSize, squareSize, squareSize);
@@ -298,15 +297,13 @@ public interface GameRenderer {
     }
 
     default void drawLevelCounter(double x, double y) {
-//        double x = sceneSize.x() - 4 * TS, y = sceneSize.y() - 2 * TS;
         for (byte symbol : THE_GAME_CONTROLLER.game().levelCounter()) {
             drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), x, y);
             x -= TS * 2;
         }
     }
 
-    default void drawScores() {
-        Color color = Color.web(Arcade.Palette.WHITE);
+    default void drawScores(Color color) {
         Font font = scaledArcadeFont(TS);
         drawScore(THE_GAME_CONTROLLER.game().scoreManager().score(),     "SCORE",      tiles2Px(1),  tiles2Px(1), font, color);
         drawScore(THE_GAME_CONTROLLER.game().scoreManager().highScore(), "HIGH SCORE", tiles2Px(14), tiles2Px(1), font, color);

@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameScene;
@@ -92,7 +93,7 @@ public abstract class GameScene2D implements GameScene {
         gr.setScaling(scaling());
         gr.clearCanvas(backgroundColor());
         if (THE_UI.isScoreVisible()) {
-            gr.drawScores();
+            gr.drawScores(Color.web(Arcade.Palette.WHITE));
         }
         drawSceneContent();
         if (debugInfoVisiblePy.get()) {

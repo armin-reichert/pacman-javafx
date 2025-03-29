@@ -80,8 +80,8 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
                 drawSpriteUnscaled(EMPTY_MAZE_SPRITE, x, y);
             } else {
                 drawSpriteUnscaled(FULL_MAZE_SPRITE, x, y);
-                overPaintEatenPellets(level, backgroundColor);
-                overPaintEnergizers(level, tile -> !blinkingOn || level.hasEatenFoodAt(tile), backgroundColor);
+                overPaintEatenPelletTiles(level, backgroundColor);
+                overPaintEnergizerTiles(level, tile -> !blinkingOn || level.hasEatenFoodAt(tile), backgroundColor);
             }
         }
         ctx.restore();
