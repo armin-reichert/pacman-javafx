@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.event.GameEvent;
-import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameVariant;
@@ -326,11 +325,14 @@ public class GameView extends StackPane implements View {
                 canvasContainer.setUnscaledCanvasWidth(sceneSize.x());
                 canvasContainer.setUnscaledCanvasHeight(sceneSize.y());
                 canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
-                canvasContainer.backgroundProperty().bind(GlobalProperties2d.PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
+                canvasContainer.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
                 gameScene2D.scalingProperty().bind(
                     canvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_SCALING)));
                 gameScene2D.setCanvas(gameScenesCanvas);
-                gameScene2D.backgroundColorProperty().bind(GlobalProperties2d.PY_CANVAS_BG_COLOR);
+                // avoid showing old content before new scene is rendered
+                gameScenesCanvas.getGraphicsContext2D().setFill(PY_CANVAS_BG_COLOR.get());
+                gameScenesCanvas.getGraphicsContext2D().fillRect(0, 0, gameScenesCanvas.getWidth(), gameScenesCanvas.getHeight());
+                gameScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
                 gameScene2D.setGameRenderer(renderer);
                 getChildren().set(0, canvasLayer);
             }
