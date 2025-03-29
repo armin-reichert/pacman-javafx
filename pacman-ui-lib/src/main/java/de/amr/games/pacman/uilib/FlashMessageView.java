@@ -6,7 +6,6 @@ package de.amr.games.pacman.uilib;
 
 import javafx.geometry.Pos;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -19,44 +18,42 @@ import java.time.Instant;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-/**
- * @author Armin Reichert
- */
+//TODO use JavaFX features for fading etc.
 public class FlashMessageView extends VBox {
 
-    private static class FlashMessage {
+    private static class Message {
+        private final String text;
+        private final double durationSeconds;
+        private Instant activationBegin;
+        private Instant activationEnd;
 
-        String text;
-        double durationSeconds;
-        Instant activeFrom;
-        Instant activeTo;
-
-        public FlashMessage(String text, double seconds) {
+        Message(String text, double seconds) {
             this.text = text;
             this.durationSeconds = seconds;
         }
 
-        public void activate() {
-            activeFrom = Instant.now();
-            activeTo = activeFrom.plusMillis(durationMillis());
+        void activate() {
+            activationBegin = Instant.now();
+            activationEnd = activationBegin.plusMillis(activationTimeMillis());
         }
 
-        public long durationMillis() {
+        long activationTimeMillis() {
             return Math.round(durationSeconds * 1000);
         }
 
-        public boolean hasExpired() {
-            return Instant.now().isAfter(activeTo);
+        boolean hasExpired() {
+            return Instant.now().isAfter(activationEnd);
         }
     }
 
-    private final Deque<FlashMessage> activeMessages = new ArrayDeque<>();
+    private  static final Font MESSAGE_FONT = Font.font("Sans", FontWeight.BOLD, 30);
+
+    private final Deque<Message> messageQ = new ArrayDeque<>();
     private final Text textView = new Text();
     private final Color textColor = Color.WHEAT;
 
     public FlashMessageView() {
-        Font textFont = Font.font("Sans", FontWeight.BOLD, 30);
-        textView.setFont(textFont);
+        textView.setFont(MESSAGE_FONT);
         textView.setTextAlignment(TextAlignment.CENTER);
         setAlignment(Pos.CENTER);
         setMouseTransparent(true);
@@ -64,34 +61,34 @@ public class FlashMessageView extends VBox {
     }
 
     public void clear() {
-        activeMessages.clear();
+        messageQ.clear();
     }
 
     public void showMessage(String messageText, double seconds) {
-        if (activeMessages.peek() != null && activeMessages.peek().text.equals(messageText)) {
-            activeMessages.poll();
+        if (messageQ.peek() != null && messageQ.peek().text.equals(messageText)) {
+            messageQ.poll();
         }
-        FlashMessage message = new FlashMessage(messageText, seconds);
-        activeMessages.add(message);
+        Message message = new Message(messageText, seconds);
+        messageQ.add(message);
         message.activate();
     }
 
     public void update() {
-        if (activeMessages.isEmpty()) {
+        if (messageQ.isEmpty()) {
             setVisible(false);
             return;
         }
-        FlashMessage message = activeMessages.peek();
+        Message message = messageQ.peek();
         if (message.hasExpired()) {
-            activeMessages.remove();
-            return;
+            messageQ.remove();
+        } else {
+            setVisible(true);
+            double activeMillis = Duration.between(message.activationBegin, Instant.now()).toMillis();
+            double alpha = Math.cos(0.5 * Math.PI * activeMillis / message.activationTimeMillis());
+            Color backgroundColor = Color.rgb(0, 0, 0, 0.2 + 0.5 * alpha);
+            setBackground(Background.fill(backgroundColor));
+            textView.setFill(textColor.deriveColor(0, 1, 1, alpha));
+            textView.setText(message.text);
         }
-        double activeMillis = Duration.between(message.activeFrom, Instant.now()).toMillis();
-        double alpha = Math.cos(0.5 * Math.PI * activeMillis / message.durationMillis());
-        Color color = Color.rgb(0, 0, 0, 0.2 + 0.5 * alpha);
-        setBackground(new Background(new BackgroundFill(color, null, null)));
-        textView.setFill(textColor.deriveColor(0, 1, 1, alpha));
-        textView.setText(message.text);
-        setVisible(true);
     }
 }

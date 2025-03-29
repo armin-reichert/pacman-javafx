@@ -98,42 +98,6 @@ public class PacManGamesUI implements GameUI {
         });
     }
 
-    /**
-     * Called from application start method (on JavaFX application thread).
-     *
-     * @param stage primary stage (window)
-     * @param initialSize initial UI size
-     */
-    @Override
-    public void build(Stage stage, Dimension2D initialSize) {
-        this.stage = assertNotNull(stage);
-        createMainScene(assertNotNull(initialSize));
-        createStartPagesCarousel();
-        createGameView(mainScene);
-        bindStageTitle();
-        stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
-        stage.setMinHeight(ARCADE_MAP_SIZE_IN_PIXELS.y() * 1.25);
-        stage.setScene(mainScene);
-        stage.centerOnScreen();
-        stage.setOnShowing(e -> showStartView());
-        init(THE_GAME_CONTROLLER.selectedGameVariant());
-    }
-
-    @Override
-    public void addStartPage(GameVariant gameVariant, StartPage startPage) {
-        startPagesCarousel.addStartPage(gameVariant, startPage);
-    }
-
-    @Override
-    public void addDefaultDashboardItems(String... ids) {
-        gameView.dashboard().addDefaultInfoBoxes(ids);
-    }
-
-    @Override
-    public void show() {
-        stage.show();
-    }
-
     protected void runOnEveryTickExceptWhenPaused() {
         try {
             THE_GAME_CONTROLLER.update();
@@ -161,21 +125,16 @@ public class PacManGamesUI implements GameUI {
         }
     }
 
-    //TODO use nice font icons instead
-    private Pane createIconPane() {
+    // icons indicating autopilot, mute state
+    private void addIconPane() {
         ImageView mutedIcon = createIcon(assets.get("icon.mute"), 48, sound.mutedProperty());
         ImageView autoIcon  = createIcon(assets.get("icon.auto"), 48, GlobalProperties2d.PY_AUTOPILOT);
 
-        var pane = new HBox(autoIcon, mutedIcon);
-        pane.setMaxWidth(128);
-        pane.setMaxHeight(64);
-        pane.visibleProperty().bind(Bindings.createBooleanBinding(() -> viewPy.get() != editorView, viewPy));
-        return pane;
-    }
+        var iconPane = new HBox(autoIcon, mutedIcon);
+        iconPane.setMaxWidth(128);
+        iconPane.setMaxHeight(64);
+        iconPane.visibleProperty().bind(Bindings.createBooleanBinding(() -> viewPy.get() != editorView, viewPy));
 
-    // icons indicating autopilot, mute state
-    private void addIconPane() {
-        Pane iconPane = createIconPane();
         ImageView pauseIcon = createIcon(assets.get("icon.pause"), 64, clock.pausedProperty());
         pauseIcon.visibleProperty().bind(Bindings.createBooleanBinding(
             () -> viewPy.get() != editorView && clock.isPaused(), viewPy, clock.pausedProperty()));
@@ -217,7 +176,7 @@ public class PacManGamesUI implements GameUI {
         });
     }
 
-    private EditorView getOrCreateEditorView() {
+    protected EditorView getOrCreateEditorView() {
         if (editorView == null) {
             editorView = new EditorView(stage);
             editorView.setCloseAction(editor -> {
@@ -263,35 +222,40 @@ public class PacManGamesUI implements GameUI {
         );
     }
 
-    @Override
-    public void updateGameScene(boolean reloadCurrent) {
-        final GameScene nextGameScene = uiConfigurationManager.current().selectGameScene();
-        if (nextGameScene == null) {
-            throw new IllegalStateException("Could not determine next game scene");
-        }
-        final GameScene currentGameScene = gameScenePy.get();
-        final boolean changing = nextGameScene != currentGameScene;
-        if (!changing && !reloadCurrent) {
-            return;
-        }
-        if (currentGameScene != null) {
-            currentGameScene.end();
-            Logger.info("Game scene ended: {}", currentGameScene.displayName());
-        }
-        gameView.embedGameScene(nextGameScene);
-        nextGameScene.init();
-        if (uiConfigurationManager.current().is2D3DPlaySceneSwitch(currentGameScene, nextGameScene)) {
-            nextGameScene.onSceneVariantSwitch(currentGameScene);
-        }
-        if (changing) {
-            gameScenePy.set(nextGameScene);
-            Logger.info("Game scene is now: {}", nextGameScene.displayName());
-        }
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
     // GameUI interface implementation
     // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void addDefaultDashboardItems(String... ids) {
+        gameView.dashboard().addDefaultInfoBoxes(ids);
+    }
+
+    @Override
+    public void addStartPage(GameVariant gameVariant, StartPage startPage) {
+        startPagesCarousel.addStartPage(gameVariant, startPage);
+    }
+
+    /**
+     * Called from application start method (on JavaFX application thread).
+     *
+     * @param stage primary stage (window)
+     * @param initialSize initial UI size
+     */
+    @Override
+    public void build(Stage stage, Dimension2D initialSize) {
+        this.stage = assertNotNull(stage);
+        createMainScene(assertNotNull(initialSize));
+        createStartPagesCarousel();
+        createGameView(mainScene);
+        bindStageTitle();
+        stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
+        stage.setMinHeight(ARCADE_MAP_SIZE_IN_PIXELS.y() * 1.25);
+        stage.setScene(mainScene);
+        stage.centerOnScreen();
+        stage.setOnShowing(e -> showStartView());
+        init(THE_GAME_CONTROLLER.selectedGameVariant());
+    }
 
     @Override
     public GameAssets assets() {
@@ -371,6 +335,11 @@ public class PacManGamesUI implements GameUI {
     }
 
     @Override
+    public void show() {
+        stage.show();
+    }
+
+    @Override
     public void showFlashMessageSec(double seconds, String message, Object... args) {
         gameView.flashMessageOverlay().showMessage(String.format(message, args), seconds);
     }
@@ -402,4 +371,30 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public void togglePlayScene2D3D() {}
+
+    @Override
+    public void updateGameScene(boolean reloadCurrent) {
+        final GameScene nextGameScene = uiConfigurationManager.current().selectGameScene();
+        if (nextGameScene == null) {
+            throw new IllegalStateException("Could not determine next game scene");
+        }
+        final GameScene currentGameScene = gameScenePy.get();
+        final boolean changing = nextGameScene != currentGameScene;
+        if (!changing && !reloadCurrent) {
+            return;
+        }
+        if (currentGameScene != null) {
+            currentGameScene.end();
+            Logger.info("Game scene ended: {}", currentGameScene.displayName());
+        }
+        gameView.embedGameScene(nextGameScene);
+        nextGameScene.init();
+        if (uiConfigurationManager.current().is2D3DPlaySceneSwitch(currentGameScene, nextGameScene)) {
+            nextGameScene.onSceneVariantSwitch(currentGameScene);
+        }
+        if (changing) {
+            gameScenePy.set(nextGameScene);
+            Logger.info("Game scene is now: {}", nextGameScene.displayName());
+        }
+    }
 }
