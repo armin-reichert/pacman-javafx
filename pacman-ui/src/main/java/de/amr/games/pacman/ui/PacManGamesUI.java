@@ -11,7 +11,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._2d.*;
 import de.amr.games.pacman.ui.input.GameKeyboard;
 import de.amr.games.pacman.ui.sound.GameSound;
-import de.amr.games.pacman.uilib.FlashMessageView;
 import de.amr.games.pacman.uilib.GameClockFX;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -69,7 +68,6 @@ public class PacManGamesUI implements GameUI {
     protected final GameKeyboard keyboard = new GameKeyboard();
     protected final GameSound sound = new GameSound();
     protected final UIConfigurationManager uiConfigurationManager = new UIConfigurationManager();
-    protected final FlashMessageView flashMessageOverlay = new FlashMessageView();
 
     protected Stage stage;
     protected Scene mainScene;
@@ -155,7 +153,6 @@ public class PacManGamesUI implements GameUI {
             //TODO this code should probably move into GameView
             if (viewPy.get() == gameView) {
                 gameView.onTick();
-                flashMessageOverlay.update();
             } else {
                 Logger.warn("Should not happen: tick received when not on game view");
             }
@@ -190,7 +187,7 @@ public class PacManGamesUI implements GameUI {
     }
 
     protected void createMainScene(Dimension2D size) {
-        sceneRoot.getChildren().addAll(new Pane(), flashMessageOverlay);
+        sceneRoot.getChildren().addAll(new Pane());
         sceneRoot.setBackground(assets.get("background.scene"));
         sceneRoot.backgroundProperty().bind(gameScenePy.map(
             gameScene -> uiConfigurationManager.currentGameSceneIsPlayScene3D()
@@ -377,7 +374,7 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public void showFlashMessageSec(double seconds, String message, Object... args) {
-        flashMessageOverlay.showMessage(String.format(message, args), seconds);
+        gameView.flashMessageOverlay().showMessage(String.format(message, args), seconds);
     }
 
     @Override

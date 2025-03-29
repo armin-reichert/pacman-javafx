@@ -11,6 +11,7 @@ import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.*;
 import de.amr.games.pacman.ui.dashboard.*;
+import de.amr.games.pacman.uilib.FlashMessageView;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -136,6 +137,7 @@ public class GameView extends StackPane implements View, GameEventListener {
     protected BorderPane canvasLayer;
     protected PopupLayer popupLayer; // help, signature
     protected final BorderPane dashboardLayer = new BorderPane();
+    protected final FlashMessageView flashMessageOverlay = new FlashMessageView();
 
     protected TooFancyCanvasContainer canvasContainer;
     protected ContextMenu contextMenu;
@@ -158,7 +160,7 @@ public class GameView extends StackPane implements View, GameEventListener {
         popupLayer = new PopupLayer(canvasContainer);
         popupLayer.setMouseTransparent(true);
 
-        getChildren().addAll(canvasLayer, dashboardLayer, popupLayer);
+        getChildren().addAll(canvasLayer, dashboardLayer, popupLayer, flashMessageOverlay);
 
         setOnContextMenuRequested(this::handleContextMenuRequest);
         //TODO is this the recommended way to close an open context-menu?
@@ -172,6 +174,10 @@ public class GameView extends StackPane implements View, GameEventListener {
     }
 
     public ObjectProperty<GameScene> gameSceneProperty() { return gameScenePy; }
+
+    public FlashMessageView flashMessageOverlay() {
+        return flashMessageOverlay;
+    }
 
     private void createCanvasLayer() {
         canvasContainer = new TooFancyCanvasContainer(gameScenesCanvas);
@@ -300,6 +306,7 @@ public class GameView extends StackPane implements View, GameEventListener {
     }
 
     public void onTick() {
+        flashMessageOverlay.update();
         if (dashboardLayer.isVisible()) {
             dashboard.entries().map(Dashboard.DashboardEntry::infoBox).filter(InfoBox::isExpanded).forEach(InfoBox::update);
         }
