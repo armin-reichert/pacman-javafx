@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._3d;
 
 import de.amr.games.pacman.ui._2d.GameView;
-import de.amr.games.pacman.ui._3d.dashboard.InfoBox3D;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
@@ -32,15 +31,6 @@ public class GameView3D extends GameView {
         super.bindGameActions();
         bind(GameActions3D.TOGGLE_PIP_VISIBILITY, KeyCode.F2);
         bind(GameActions3D.TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3));
-    }
-
-    @Override
-    public void addDefaultDashboardItem(String title) {
-        if ("SETTINGS_3D".equals(title)) {
-            addDashboardItem("SETTINGS_3D", THE_UI.assets().text("infobox.3D_settings.title"), new InfoBox3D());
-        } else {
-            super.addDefaultDashboardItem(title);
-        }
     }
 
     protected List<MenuItem> createContextMenuItems(ContextMenuEvent event) {

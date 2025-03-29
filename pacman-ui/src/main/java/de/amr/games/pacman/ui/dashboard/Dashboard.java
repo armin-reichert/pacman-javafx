@@ -1,0 +1,68 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
+package de.amr.games.pacman.ui.dashboard;
+
+import de.amr.games.pacman.ui._3d.dashboard.InfoBox3D;
+import javafx.scene.layout.Background;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Stream;
+
+import static de.amr.games.pacman.ui.Globals.THE_UI;
+
+public class Dashboard {
+
+    public static final int INFOBOX_MIN_LABEL_WIDTH = 110;
+    public static final int INFOBOX_MIN_WIDTH = 180;
+    public static final Color INFO_BOX_CONTENT_BG_COLOR = Color.rgb(0, 0, 50, 1.0);
+    public static final Color INFO_BOX_TEXT_COLOR = Color.WHITE;
+    public static final Font INFO_BOX_FONT = Font.font("Sans", 12);
+
+    private final Map<String, InfoBox> infoBoxMap = new LinkedHashMap<>();
+
+    private static InfoBox configureInfoBox(String title, InfoBox infoBox) {
+        infoBox.setText(title);
+        infoBox.setMinLabelWidth(INFOBOX_MIN_LABEL_WIDTH);
+        infoBox.setContentBackground(Background.fill(INFO_BOX_CONTENT_BG_COLOR));
+        infoBox.setTextColor(INFO_BOX_TEXT_COLOR);
+        infoBox.setContentTextFont(INFO_BOX_FONT);
+        infoBox.setLabelFont(INFO_BOX_FONT);
+        infoBox.init();
+        return infoBox;
+    }
+
+    public Stream<InfoBox> infoBoxes() { return infoBoxMap.values().stream(); }
+
+    @SuppressWarnings("unchecked")
+    public <I extends InfoBox> I getItem(String id) {
+        return (I) infoBoxMap.get(id);
+    }
+
+    public void addDefaultItems(String... titles) {
+        for (String title : titles) { addDefaultItem(title); }
+    }
+
+    public void addDefaultItem(String id) {
+        switch (id) {
+            case "ABOUT"        -> infoBoxMap.put(id, configureInfoBox(THE_UI.assets().text("infobox.about.title"), new InfoBoxAbout()));
+            case "ACTOR_INFO"   -> infoBoxMap.put(id, configureInfoBox(THE_UI.assets().text("infobox.actor_info.title"), new InfoBoxActorInfo()));
+            case "CUSTOM_MAPS"  -> infoBoxMap.put(id, configureInfoBox(THE_UI.assets().text("infobox.custom_maps.title"), new InfoBoxCustomMaps()));
+            case "GENERAL"      -> infoBoxMap.put(id, configureInfoBox(THE_UI.assets().text("infobox.general.title"), new InfoBoxGeneral()));
+            case "GAME_CONTROL" -> infoBoxMap.put(id, configureInfoBox(THE_UI.assets().text("infobox.game_control.title"), new InfoBoxGameControl()));
+            case "GAME_INFO"    -> infoBoxMap.put(id, configureInfoBox(THE_UI.assets().text("infobox.game_info.title"), new InfoBoxGameInfo()));
+            case "JOYPAD"       -> infoBoxMap.put(id, configureInfoBox(THE_UI.assets().text("infobox.joypad.title"), new InfoBoxJoypad()));
+            case "KEYBOARD"     -> infoBoxMap.put(id, configureInfoBox(THE_UI.assets().text("infobox.keyboard_shortcuts.title"), new InfoBoxKeys()));
+            case "README" -> {
+                InfoBox infoBox = new InfoBoxReadmeFirst();
+                infoBox.setExpanded(true);
+                infoBoxMap.put(id, configureInfoBox(THE_UI.assets().text("infobox.readme.title"), infoBox));
+            }
+            case "SETTINGS_3D" -> infoBoxMap.put(id, configureInfoBox(THE_UI.assets().text("infobox.3D_settings.title"), new InfoBox3D()));
+        }
+    }
+}

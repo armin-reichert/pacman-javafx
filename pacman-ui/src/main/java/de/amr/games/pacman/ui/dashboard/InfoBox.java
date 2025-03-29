@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui.dashboard;
 
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.ui.GameScene;
-import de.amr.games.pacman.ui._2d.Dashboard;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.WritableObjectValue;

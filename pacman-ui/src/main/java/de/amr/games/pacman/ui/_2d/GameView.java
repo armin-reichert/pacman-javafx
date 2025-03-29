@@ -10,7 +10,8 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.*;
-import de.amr.games.pacman.ui.dashboard.*;
+import de.amr.games.pacman.ui.dashboard.Dashboard;
+import de.amr.games.pacman.ui.dashboard.InfoBox;
 import de.amr.games.pacman.uilib.FlashMessageView;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.beans.binding.Bindings;
@@ -142,10 +143,10 @@ public class GameView extends StackPane implements View, GameEventListener {
     protected TooFancyCanvasContainer canvasContainer;
     protected ContextMenu contextMenu;
 
-    private VBox dashboardContainer;
-    private Dashboard dashboard;
-    private final VBox pipContainer = new VBox();
-    private PictureInPictureView pipView;
+    protected VBox dashboardContainer;
+    protected Dashboard dashboard;
+    protected final VBox pipContainer = new VBox();
+    protected PictureInPictureView pipView;
 
     public GameView(Scene parentScene) {
         this.parentScene = assertNotNull(parentScene);
@@ -209,28 +210,6 @@ public class GameView extends StackPane implements View, GameEventListener {
     // Dashboard
     //
 
-    public void addDefaultDashboardItem(String title) {
-        switch (title) {
-            case "ABOUT"        -> addDashboardItem(title, THE_UI.assets().text("infobox.about.title"),              new InfoBoxAbout());
-            case "ACTOR_INFO"   -> addDashboardItem(title, THE_UI.assets().text("infobox.actor_info.title"),         new InfoBoxActorInfo());
-            case "CUSTOM_MAPS"  -> addDashboardItem(title, THE_UI.assets().text("infobox.custom_maps.title"),        new InfoBoxCustomMaps());
-            case "GENERAL"      -> addDashboardItem(title, THE_UI.assets().text("infobox.general.title"),            new InfoBoxGeneral());
-            case "GAME_CONTROL" -> addDashboardItem(title, THE_UI.assets().text("infobox.game_control.title"),       new InfoBoxGameControl());
-            case "GAME_INFO"    -> addDashboardItem(title, THE_UI.assets().text("infobox.game_info.title"),          new InfoBoxGameInfo());
-            case "JOYPAD"       -> addDashboardItem(title, THE_UI.assets().text("infobox.joypad.title"),             new InfoBoxJoypad());
-            case "KEYBOARD"     -> addDashboardItem(title, THE_UI.assets().text("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
-            case "README" -> {
-                InfoBox readMeBox = new InfoBoxReadmeFirst();
-                readMeBox.setExpanded(true);
-                addDashboardItem(title, THE_UI.assets().text("infobox.readme.title"), readMeBox);
-            }
-        }
-    }
-
-    public void addDashboardItem(String id, String title, InfoBox infoBox) {
-        dashboard.addDashboardItem(id, title, infoBox);
-    }
-
     private void createDashboardLayer() {
         dashboard = new Dashboard();
         dashboardContainer = new VBox();
@@ -251,22 +230,19 @@ public class GameView extends StackPane implements View, GameEventListener {
         return dashboard;
     }
 
-    public void hideDashboard() {
-        dashboardContainer.setVisible(false);
-    }
+    public void setDashboardVisible(boolean visible) {
+        if (visible) {
+            InfoBox[] infoBoxes = dashboard.infoBoxes().toArray(InfoBox[]::new);
+            dashboardContainer.getChildren().setAll(infoBoxes);
+            dashboardContainer.setVisible(true);
 
-    public void showDashboard() {
-        dashboardContainer.getChildren().setAll(dashboard.entries()
-            .map(Dashboard.DashboardEntry::infoBox).toArray(InfoBox[]::new));
-        dashboardContainer.setVisible(true);
+        } else {
+            dashboardContainer.setVisible(false);
+        }
     }
 
     public void toggleDashboardVisibility() {
-        if (dashboardContainer.isVisible()) {
-            hideDashboard();
-        } else {
-            showDashboard();
-        }
+        setDashboardVisible(!dashboardContainer.isVisible());
     }
 
     @Override
@@ -308,7 +284,7 @@ public class GameView extends StackPane implements View, GameEventListener {
     public void onTick() {
         flashMessageOverlay.update();
         if (dashboardLayer.isVisible()) {
-            dashboard.entries().map(Dashboard.DashboardEntry::infoBox).filter(InfoBox::isExpanded).forEach(InfoBox::update);
+            dashboard.infoBoxes().filter(InfoBox::isExpanded).forEach(InfoBox::update);
         }
         if (pipView.isVisible()) {
             pipView.draw();

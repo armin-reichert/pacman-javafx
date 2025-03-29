@@ -126,9 +126,7 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public void addDefaultDashboardItems(String... titles) {
-        for (String title : titles) {
-            gameView.addDefaultDashboardItem(title);
-        }
+        gameView.dashboard().addDefaultItems(titles);
     }
 
     @Override
@@ -391,7 +389,7 @@ public class PacManGamesUI implements GameUI {
     public void showStartView() {
         clock.stop();
         gameScenePy.set(null);
-        gameView.hideDashboard(); // TODO use binding?
+        gameView.setDashboardVisible(false);
         viewPy.set(startPagesCarousel);
         //TODO this is needed for XXL option menu
         startPagesCarousel.currentStartPage().ifPresent(startPage -> startPage.onSelected(THE_GAME_CONTROLLER.selectedGameVariant()));
