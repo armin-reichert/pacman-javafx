@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._3d.scene3d;
 
-import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.RectArea;
@@ -15,7 +14,6 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.Score;
-import de.amr.games.pacman.model.ScoreManager;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.CameraControlledView;
@@ -47,6 +45,7 @@ import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
+import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_PERSPECTIVE;
 import static de.amr.games.pacman.uilib.Keyboard.alt;
 import static de.amr.games.pacman.uilib.Ufx.contextMenuTitleItem;
 
@@ -65,7 +64,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     protected final ObjectProperty<Perspective.Name> perspectiveNamePy = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
-            THE_GAME_CONTROLLER.game().level().ifPresent(level -> perspective().init(fxSubScene, level));
+            game().level().ifPresent(level -> perspective().init(fxSubScene, level));
         }
     };
 
@@ -77,7 +76,6 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
     protected GameLevel3D level3D;
 
-    // When constructor is called, context is not yet available!
     public PlayScene3D() {
         var axes = new CoordinateSystem();
         axes.visibleProperty().bind(GlobalProperties3d.PY_3D_AXES_VISIBLE);
@@ -99,7 +97,6 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
         scores3D.rotateProperty().bind(camera.rotateProperty());
-
     }
 
     @Override
@@ -107,7 +104,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         bindGameActions();
         enableActionBindings();
         THE_UI.setScoreVisible(true);
-        perspectiveNamePy.bind(GlobalProperties3d.PY_3D_PERSPECTIVE);
+        perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
         scores3D.setFont(THE_UI.assets().font("font.arcade", 8));
     }
 
@@ -124,7 +121,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         bind(GameActions3D.PREV_PERSPECTIVE, alt(KeyCode.LEFT));
         bind(GameActions3D.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
         bind(GameActions3D.TOGGLE_DRAW_MODE, alt(KeyCode.W));
-        if (THE_GAME_CONTROLLER.game().isDemoLevel()) {
+        if (game().isDemoLevel()) {
             bind(GameActions2D.INSERT_COIN, THE_UI.keyboard().currentArcadeKeyBinding().key(Arcade.Button.COIN));
         } else {
             bindDefaultArcadeControllerActions(THE_UI.keyboard().currentArcadeKeyBinding());
@@ -136,13 +133,13 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
     @Override
     public void onLevelStarted(GameEvent event) {
-        THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-            bindGameActions(); //TODO check this
-            if (!hasLevel3D()) {
+        game().level().ifPresent(level -> {
+            bindGameActions(); //TODO check if this is necessary
+            if (level3D == null) {
                 replaceGameLevel3D();
                 level3D.addLevelCounter();
             }
-            switch (THE_GAME_CONTROLLER.state()) {
+            switch (gameState()) {
                 case TESTING_LEVELS, TESTING_LEVEL_TEASERS -> {
                     replaceGameLevel3D();
                     level3D.playLivesCounterAnimation();
@@ -150,7 +147,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
                     showLevelTestMessage(level, "TEST LEVEL " + level.number());
                 }
                 default -> {
-                    if (!THE_GAME_CONTROLLER.game().isDemoLevel()) {
+                    if (!game().isDemoLevel()) {
                         showReadyMessage(level);
                     }
                 }
@@ -162,23 +159,23 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
     @Override
     public void onSceneVariantSwitch(GameScene fromScene) {
-        THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
+        game().level().ifPresent(level -> {
             bindGameActions();
             enableActionBindings();
-            if (!hasLevel3D()) {
+            if (level3D == null) {
                 replaceGameLevel3D();
                 level3D.addLevelCounter();
             }
             level3D.pellets3D().forEach(pellet -> pellet.shape3D().setVisible(!level.hasEatenFoodAt(pellet.tile())));
             level3D.energizers3D().forEach(energizer -> energizer.shape3D().setVisible(!level.hasEatenFoodAt(energizer.tile())));
-            if (oneOf(THE_GAME_CONTROLLER.state(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
+            if (oneOf(gameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
                 level3D.energizers3D().filter(energizer -> energizer.shape3D().isVisible()).forEach(Energizer3D::startPumping);
             }
             level.pac().show();
             level.ghosts().forEach(Ghost::show);
             level3D.pac3D().init();
             level3D.pac3D().update();
-            if (THE_GAME_CONTROLLER.state() == GameState.HUNTING) {
+            if (gameState() == GameState.HUNTING) {
                 if (level.powerTimer().isRunning()) {
                     THE_UI.sound().playPacPowerSound();
                 }
@@ -188,27 +185,22 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         });
     }
 
-    public boolean hasLevel3D() {
-        return level3D != null;
-    }
-
     @Override
     public void update() {
-        GameLevel level = THE_GAME_CONTROLLER.game().level().orElse(null);
+        GameLevel level = game().level().orElse(null);
         if (level == null) {
             // Scene is already visible for 3(?) ticks before game level has been created
             Logger.warn("Tick #{}: Cannot update PlayScene3D: game level not yet available", THE_UI.clock().tickCount());
             return;
         }
-        // TODO: check this
-        if (!hasLevel3D()) {
+        // TODO: may this happen?
+        if (level3D == null) {
             Logger.warn("Tick #{}: Cannot update 3D play scene, 3D game level not yet created?", THE_UI.clock().tickCount());
             return;
         }
-
         level3D.update();
 
-        //TODO check if this has to de done on every tick
+        //TODO how to avoid calling this on every tick?
         if (game().isDemoLevel()) {
             game().assignDemoLevelBehavior(level.pac());
         }
@@ -226,14 +218,12 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     }
 
     protected void updateScores() {
-        ScoreManager manager = THE_GAME_CONTROLLER.game().scoreManager();
-        Score score = manager.score(), highScore = manager.highScore();
-
+        Score score = game().scoreManager().score(), highScore = game().scoreManager().highScore();
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());
-        if (manager.isScoreEnabled()) {
+        if (game().scoreManager().isScoreEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
         }
-        else { // when score is disabled, show text "game over"
+        else { // score is disabled, show text "GAME OVER"
             String assetNamespace = THE_UI.configurations().current().assetNamespace();
             Color color = THE_UI.assets().color(assetNamespace + ".color.game_over_message");
             scores3D.showTextAsScore(TEXT_GAME_OVER, color);
@@ -241,8 +231,8 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     }
 
     private void updateSound(GameLevel level) {
-        if (THE_GAME_CONTROLLER.state() == GameState.HUNTING && !level.powerTimer().isRunning()) {
-            int sirenNumber = 1 + THE_GAME_CONTROLLER.game().huntingTimer().phaseIndex() / 2;
+        if (gameState() == GameState.HUNTING && !level.powerTimer().isRunning()) {
+            int sirenNumber = 1 + game().huntingTimer().phaseIndex() / 2;
             THE_UI.sound().selectSiren(sirenNumber);
             THE_UI.sound().playSiren();
         }
@@ -305,11 +295,11 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     }
 
     private void onEnterStateStartingGame() {
-        if (hasLevel3D()) {
+        if (level3D != null) {
             level3D.stopAnimations();
             level3D.pac3D().init();
             level3D.ghosts3D().forEach(Ghost3DAppearance::init);
-            THE_GAME_CONTROLLER.game().level().ifPresent(this::showReadyMessage);
+            game().level().ifPresent(this::showReadyMessage);
         }
     }
 
@@ -329,10 +319,10 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     }
 
     private void onEnterStateGhostDying() {
-        THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
+        game().level().ifPresent(level -> {
             GameSpriteSheet spriteSheet = THE_UI.configurations().current().spriteSheet();
             RectArea[] numberSprites = spriteSheet.ghostNumberSprites();
-            THE_GAME_CONTROLLER.game().eventLog().killedGhosts.forEach(ghost -> {
+            game().eventLog().killedGhosts.forEach(ghost -> {
                 int victimIndex = level.victims().indexOf(ghost);
                 var numberImage = spriteSheet.crop(numberSprites[victimIndex]);
                 level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
@@ -341,7 +331,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     }
 
     private void onEnterStateLevelComplete() {
-        THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
+        game().level().ifPresent(level -> {
             THE_UI.sound().stopAll();
             // if cheat has been used to complete level, food might still exist, so eat it:
             level.worldMap().tiles().filter(level::hasFoodAt).forEach(level::registerFoodEatenAt);
@@ -354,16 +344,16 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
                     perspectiveNamePy.unbind();
                     perspectiveNamePy.set(Perspective.Name.TOTAL);
                 },
-                () -> perspectiveNamePy.bind(GlobalProperties3d.PY_3D_PERSPECTIVE));
+                () -> perspectiveNamePy.bind(PY_3D_PERSPECTIVE));
         });
     }
 
     private void onEnterStateLevelTransition() {
-        THE_GAME_CONTROLLER.state().timer().restartSeconds(3);
+        gameState().timer().restartSeconds(3);
         replaceGameLevel3D();
         level3D.addLevelCounter();
         level3D.pac3D().init();
-        THE_GAME_CONTROLLER.game().level().ifPresent(level -> perspective().init(fxSubScene, level));
+        game().level().ifPresent(level -> perspective().init(fxSubScene, level));
     }
 
     private void onEnterStateTestingLevels() {
@@ -371,8 +361,8 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         level3D.addLevelCounter();
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(Ghost3DAppearance::init);
-        THE_GAME_CONTROLLER.game().level().ifPresent(level -> showLevelTestMessage(level, "TEST LEVEL" + level.number()));
-        GlobalProperties3d.PY_3D_PERSPECTIVE.set(Perspective.Name.TOTAL);
+        game().level().ifPresent(level -> showLevelTestMessage(level, "TEST LEVEL" + level.number()));
+        PY_3D_PERSPECTIVE.set(Perspective.Name.TOTAL);
     }
 
     private void onEnterStateTestingLevelTeasers() {
@@ -380,15 +370,15 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         level3D.addLevelCounter();
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(Ghost3DAppearance::init);
-        THE_GAME_CONTROLLER.game().level().ifPresent(level -> showLevelTestMessage(level, "PREVIEW LEVEL " + level.number()));
-        GlobalProperties3d.PY_3D_PERSPECTIVE.set(Perspective.Name.TOTAL);
+        game().level().ifPresent(level -> showLevelTestMessage(level, "PREVIEW LEVEL " + level.number()));
+        PY_3D_PERSPECTIVE.set(Perspective.Name.TOTAL);
     }
 
     private void onEnterStateGameOver() {
         level3D.stopAnimations();
         // delay state exit for 3 seconds
-        THE_GAME_CONTROLLER.state().timer().restartSeconds(3);
-        if (!THE_GAME_CONTROLLER.game().isDemoLevel() && Globals.randomInt(0, 100) < 25) {
+        gameState().timer().restartSeconds(3);
+        if (!game().isDemoLevel() && randomInt(0, 100) < 25) {
             THE_UI.showFlashMessageSec(3, THE_UI.assets().localizedGameOverMessage());
         }
         THE_UI.sound().stopAll();
@@ -397,9 +387,10 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
     @Override
     public void onBonusActivated(GameEvent event) {
-        THE_GAME_CONTROLLER.game().level().flatMap(GameLevel::bonus).ifPresent(
+        game().level().flatMap(GameLevel::bonus).ifPresent(
                 bonus -> level3D.replaceBonus3D(bonus, THE_UI.configurations().current().spriteSheet()));
-        if (THE_GAME_CONTROLLER.selectedGameVariant() == GameVariant.MS_PACMAN) {
+        //TODO check for moving bonus instead
+        if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN)) {
             THE_UI.sound().playBonusBouncingSound();
         }
     }
@@ -407,7 +398,8 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     @Override
     public void onBonusEaten(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::showEaten);
-        if (THE_GAME_CONTROLLER.selectedGameVariant() == GameVariant.MS_PACMAN) {
+        //TODO check for moving bonus instead
+        if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN)) {
             THE_UI.sound().stopBonusBouncingSound();
         }
         THE_UI.sound().playBonusEatenSound();
@@ -416,7 +408,8 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     @Override
     public void onBonusExpired(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::onBonusExpired);
-        if (THE_GAME_CONTROLLER.selectedGameVariant() == GameVariant.MS_PACMAN) {
+        //TODO check for moving bonus instead
+        if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN)) {
             THE_UI.sound().stopBonusBouncingSound();
         }
     }
@@ -433,9 +426,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
     @Override
     public void onGameStarted(GameEvent e) {
-        boolean silent = THE_GAME_CONTROLLER.game().isDemoLevel() ||
-                THE_GAME_CONTROLLER.state() == TESTING_LEVELS ||
-                THE_GAME_CONTROLLER.state() == TESTING_LEVEL_TEASERS;
+        boolean silent = game().isDemoLevel() || gameState() == TESTING_LEVELS || gameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {
             THE_UI.sound().playGameReadySound();
         }
@@ -479,7 +470,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     }
 
     protected void replaceGameLevel3D() {
-        level3D = new GameLevel3D(THE_GAME_CONTROLLER.game());
+        level3D = new GameLevel3D(game());
         int lastIndex = getChildren().size() - 1;
         getChildren().set(lastIndex, level3D);
         scores3D.translateXProperty().bind(level3D.translateXProperty().add(TS));
@@ -499,15 +490,15 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         Vector2i houseSize = level.houseSizeInTiles();
         double x = TS * (houseTopLeft.x() + 0.5 * houseSize.x());
         double y = TS * (houseTopLeft.y() +       houseSize.y());
-        double seconds = THE_GAME_CONTROLLER.game().isPlaying() ? 0.5 : 2.5;
+        double seconds = game().isPlaying() ? 0.5 : 2.5;
         level3D.showAnimatedMessage("READY!", seconds, x, y);
     }
 
     private void playPacManDiesAnimation() {
-        THE_GAME_CONTROLLER.state().timer().resetIndefiniteTime();
+        gameState().timer().resetIndefiniteTime();
         Animation animation = level3D.pac3D().createDyingAnimation();
         animation.setDelay(Duration.seconds(1));
-        animation.setOnFinished(e -> THE_GAME_CONTROLLER.state().timer().expire());
+        animation.setOnFinished(e -> gameState().timer().expire());
         animation.play();
     }
 
@@ -534,7 +525,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             var miPerspective = new RadioMenuItem(THE_UI.assets().text(perspective.name()));
             miPerspective.setToggleGroup(radioButtonGroup);
             miPerspective.setUserData(perspective);
-            if (perspective == GlobalProperties3d.PY_3D_PERSPECTIVE.get())  { // == allowed for enum values
+            if (perspective == PY_3D_PERSPECTIVE.get())  { // == allowed for enum values
                 miPerspective.setSelected(true);
             }
             items.add(miPerspective);
@@ -542,10 +533,10 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         // keep radio button group in sync with global property value
         radioButtonGroup.selectedToggleProperty().addListener((py, ov, radioButton) -> {
             if (radioButton != null) {
-                GlobalProperties3d.PY_3D_PERSPECTIVE.set((Perspective.Name) radioButton.getUserData());
+                PY_3D_PERSPECTIVE.set((Perspective.Name) radioButton.getUserData());
             }
         });
-        GlobalProperties3d.PY_3D_PERSPECTIVE.addListener((py, ov, name) -> {
+        PY_3D_PERSPECTIVE.addListener((py, ov, name) -> {
             for (Toggle toggle : radioButtonGroup.getToggles()) {
                 if (toggle.getUserData() == name) { // == allowed for enum values
                     radioButtonGroup.selectToggle(toggle);
