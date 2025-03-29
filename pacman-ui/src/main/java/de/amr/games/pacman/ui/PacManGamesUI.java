@@ -125,8 +125,8 @@ public class PacManGamesUI implements GameUI {
     }
 
     @Override
-    public void addDefaultDashboardItems(String... titles) {
-        gameView.dashboard().addDefaultInfoBoxes(titles);
+    public void addDefaultDashboardItems(String... ids) {
+        gameView.dashboard().addDefaultInfoBoxes(ids);
     }
 
     @Override
