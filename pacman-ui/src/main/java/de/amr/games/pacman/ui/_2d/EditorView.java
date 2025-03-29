@@ -53,6 +53,9 @@ public class EditorView extends BorderPane implements View {
     }
 
     @Override
+    public void onTick() {}
+
+    @Override
     public void bindGameActions() {}
 
     @Override

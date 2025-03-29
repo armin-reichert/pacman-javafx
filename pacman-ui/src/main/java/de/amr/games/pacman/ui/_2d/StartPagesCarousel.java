@@ -24,7 +24,7 @@ import static de.amr.games.pacman.ui.Globals.THE_UI;
 /**
  * Carousel containing the start pages for the different game variants (XXL game variants share common start page).
  */
-public class StartPagesCarousel implements View, GameEventListener {
+public class StartPagesCarousel implements View {
 
     private final GameAction actionSelectGamePage = new GameAction() {
         @Override
@@ -63,6 +63,9 @@ public class StartPagesCarousel implements View, GameEventListener {
     public Node node() {
         return carousel;
     }
+
+    @Override
+    public void onTick() {}
 
     @Override
     public Map<KeyCodeCombination, GameAction> actionBindings() {

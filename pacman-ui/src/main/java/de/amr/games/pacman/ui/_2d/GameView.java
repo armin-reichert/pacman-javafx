@@ -49,7 +49,7 @@ import static de.amr.games.pacman.uilib.Ufx.*;
 /**
  * This view shows the game play and the overlays like dashboard and picture-in-picture view of the running play scene.
  */
-public class GameView extends StackPane implements View, GameEventListener {
+public class GameView extends StackPane implements View {
 
     private static final double MAX_SCENE_SCALING = 5;
 
@@ -358,7 +358,7 @@ public class GameView extends StackPane implements View, GameEventListener {
     public void onGameEvent(GameEvent event) {
         Logger.trace("{} received game event {}", getClass().getSimpleName(), event);
         // dispatch event to event specific method:
-        GameEventListener.super.onGameEvent(event);
+        View.super.onGameEvent(event);
         // dispatch to current game scene
         THE_UI.currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(event));
         THE_UI.updateGameScene(false);

@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui;
 
 import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._2d.*;
 import de.amr.games.pacman.ui.input.GameKeyboard;
@@ -80,25 +79,21 @@ public class PacManGamesUI implements GameUI {
     protected boolean scoreVisible;
 
     public PacManGamesUI() {
-        clock.setPauseableCallback(this::runOnEveryTickExceptWhenPaused);
-        clock.setPermanentCallback(this::runOnEveryTick);
+        clock.setPauseableCallback(this::runEveryTickExceptWhenPaused);
+        clock.setPermanentCallback(this::runEveryTick);
         viewPy.addListener((py, oldView, newView) -> {
             if (oldView != null) {
                 oldView.disableActionBindings();
-                if (oldView instanceof GameEventListener listener) {
-                    THE_GAME_CONTROLLER.game().removeGameEventListener(listener);
-                }
+                THE_GAME_CONTROLLER.game().removeGameEventListener(oldView);
             }
             newView.enableActionBindings();
             sceneRoot.getChildren().set(0, newView.node());
             newView.node().requestFocus();
-            if (newView instanceof GameEventListener listener) {
-                THE_GAME_CONTROLLER.game().addGameEventListener(listener);
-            }
+            THE_GAME_CONTROLLER.game().addGameEventListener(newView);
         });
     }
 
-    protected void runOnEveryTickExceptWhenPaused() {
+    protected void runEveryTickExceptWhenPaused() {
         try {
             THE_GAME_CONTROLLER.update();
             currentGameScene().ifPresent(GameScene::update);
@@ -110,14 +105,9 @@ public class PacManGamesUI implements GameUI {
         }
     }
 
-    protected void runOnEveryTick() {
+    protected void runEveryTick() {
         try {
-            //TODO this code should probably move into GameView
-            if (viewPy.get() == gameView) {
-                gameView.onTick();
-            } else {
-                Logger.warn("Should not happen: tick received when not on game view");
-            }
+            viewPy.get().onTick();
         } catch (Exception x) {
             clock.stop();
             Logger.error(x);
