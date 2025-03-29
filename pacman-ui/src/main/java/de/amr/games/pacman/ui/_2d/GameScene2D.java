@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._2d;
 
-import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
@@ -19,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.Globals.TS;
+import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 /**
@@ -28,10 +28,12 @@ import static de.amr.games.pacman.ui.Globals.THE_UI;
  */
 public abstract class GameScene2D implements GameScene {
 
-    protected final FloatProperty scalingPy = new SimpleFloatProperty(this, "scaling", 1.0f);
-    protected final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(this, "backgroundColor", Color.BLACK);
-    protected final BooleanProperty debugInfoVisiblePy = new SimpleBooleanProperty(this, "debugInfoVisible", false);
+    protected final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
+    protected final BooleanProperty debugInfoVisiblePy = new SimpleBooleanProperty(false);
+    protected final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
+
     protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
+
     protected GameRenderer gr;
     protected Canvas canvas;
 
@@ -67,11 +69,11 @@ public abstract class GameScene2D implements GameScene {
     public BooleanProperty debugInfoVisibleProperty() { return debugInfoVisiblePy; }
 
     protected void doInit() {}
+
     protected void doEnd() {}
 
     public void setGameRenderer(GameRenderer renderer) {
-        gr = Globals.assertNotNull(renderer);
-        gr.clearCanvas(backgroundColor()); //TODO needed?
+        gr = assertNotNull(renderer);
     }
 
     public GameRenderer renderer() {
