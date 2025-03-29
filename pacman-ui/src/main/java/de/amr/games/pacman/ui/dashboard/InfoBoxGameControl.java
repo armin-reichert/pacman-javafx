@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui.dashboard;
 import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._2d.GameActions2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -34,7 +33,6 @@ public class InfoBoxGameControl extends InfoBox {
     private static final int CUT_SCENES_TEST_QUIT = 1;
 
     private Spinner<Integer> spinnerCredit;
-    private ComboBox<GameVariant> comboGameVariant;
     private ComboBox<Integer> comboInitialLives;
     private Button[] bgLevelActions;
     private Button[] bgCutScenesTest;
@@ -43,7 +41,6 @@ public class InfoBoxGameControl extends InfoBox {
 
     public void init() {
         spinnerCredit      = addIntSpinner("Credit", 0, Globals.MAX_COINS, 0);
-        comboGameVariant   = addComboBox("Variant", GameVariant.values());
         comboInitialLives  = addComboBox("Initial Lives", new Integer[] {3, 5});
         bgLevelActions     = addButtonList("Game Level", "Start", "Quit", "Next");
         bgCutScenesTest    = addButtonList("Cut Scenes Test", "Start", "Quit");
@@ -51,13 +48,6 @@ public class InfoBoxGameControl extends InfoBox {
         cbImmunity         = addCheckBox("Pac-Man Immune");
 
         spinnerCredit.valueProperty().addListener((py, ov, number) -> THE_GAME_CONTROLLER.credit = number);
-
-        comboGameVariant.setOnAction(e -> {
-            if (comboGameVariant.getValue() != THE_GAME_CONTROLLER.selectedGameVariant()) {
-                THE_GAME_CONTROLLER.selectGameVariant(comboGameVariant.getValue());
-                THE_GAME_CONTROLLER.restart(GameState.BOOT);
-            }
-        });
 
         setAction(bgCutScenesTest[CUT_SCENES_TEST_START], GameActions2D.TEST_CUT_SCENES::execute);
         setAction(bgCutScenesTest[CUT_SCENES_TEST_QUIT], GameActions2D.RESTART_INTRO::execute);
@@ -78,11 +68,9 @@ public class InfoBoxGameControl extends InfoBox {
         GameState state = THE_GAME_CONTROLLER.state();
 
         spinnerCredit.getValueFactory().setValue(THE_GAME_CONTROLLER.credit);
-        comboGameVariant.setValue(THE_GAME_CONTROLLER.selectedGameVariant());
         comboInitialLives.setValue(game.initialLives());
 
         spinnerCredit.setDisable(!(oneOf(state, GameState.INTRO, GameState.SETTING_OPTIONS)));
-        comboGameVariant.setDisable(state != GameState.INTRO);
         comboInitialLives.setDisable(state != GameState.INTRO);
 
         bgLevelActions[GAME_LEVEL_START].setDisable(isBooting() || !canStartLevel());

@@ -10,12 +10,9 @@ import de.amr.games.pacman.ui._2d.StartPage;
 import de.amr.games.pacman.ui.input.GameKeyboard;
 import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.GameClockFX;
-import de.amr.games.pacman.uilib.Keyboard;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.geometry.Dimension2D;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
 import javafx.stage.Stage;
 
 import java.util.Optional;
@@ -44,6 +41,8 @@ public interface GameUI {
     GameView gameView();
 
     ObjectProperty<GameScene> gameSceneProperty();
+
+    void handleGameVariantChange(GameVariant gameVariant);
 
     void init(GameVariant variant);
 

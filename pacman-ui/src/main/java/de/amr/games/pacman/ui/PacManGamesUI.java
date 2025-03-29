@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui;
 
 import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._2d.*;
@@ -41,7 +40,7 @@ import static de.amr.games.pacman.uilib.Ufx.createIcon;
  *
  * @author Armin Reichert
  */
-public class PacManGamesUI implements GameEventListener, GameUI {
+public class PacManGamesUI implements GameUI {
 
     private final GameClockFX clock = new GameClockFX();
 
@@ -277,8 +276,7 @@ public class PacManGamesUI implements GameEventListener, GameUI {
         gameView.setSize(mainScene.getWidth(), mainScene.getHeight());
     }
 
-    protected void handleGameVariantChange(GameVariant gameVariant) {
-        THE_GAME_CONTROLLER.game().addGameEventListener(this); //TODO check this
+    public void handleGameVariantChange(GameVariant gameVariant) {
         GameUIConfiguration uiConfig = uiConfigurationManager.configuration(gameVariant);
         sound.selectGameVariant(gameVariant, uiConfig.assetNamespace());
         stage.getIcons().setAll(uiConfig.appIcon());
@@ -432,21 +430,5 @@ public class PacManGamesUI implements GameEventListener, GameUI {
     @Override
     public void showFlashMessageSec(double seconds, String message, Object... args) {
         flashMessageOverlay.showMessage(String.format(message, args), seconds);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    // GameEventListener interface implementation
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public void onGameVariantChanged(GameEvent event) {
-        // TODO check if there is a cleaner solution
-        handleGameVariantChange(THE_GAME_CONTROLLER.selectedGameVariant());
-    }
-
-    @Override
-    public void onUnspecifiedChange(GameEvent event) {
-        // TODO this is only used by game state GameState.TESTING_CUT_SCENES
-        updateGameScene(true);
     }
 }

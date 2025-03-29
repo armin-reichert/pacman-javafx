@@ -399,7 +399,19 @@ public class GameView extends StackPane implements View, GameEventListener {
     }
 
     @Override
+    public void onGameVariantChanged(GameEvent event) {
+        // TODO check if there is a cleaner solution
+        THE_UI.handleGameVariantChange(THE_GAME_CONTROLLER.selectedGameVariant());
+    }
+
+    @Override
     public void onStopAllSounds(GameEvent event) {
         THE_UI.sound().stopAll();
+    }
+
+    @Override
+    public void onUnspecifiedChange(GameEvent event) {
+        // TODO this is only used by game state GameState.TESTING_CUT_SCENES
+        THE_UI.updateGameScene(true);
     }
 }

@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._2d;
 
+import de.amr.games.pacman.event.GameEvent;
+import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.View;
@@ -16,12 +18,13 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
+import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 /**
  * Carousel containing the start pages for the different game variants (XXL game variants share common start page).
  */
-public class StartPagesCarousel implements View {
+public class StartPagesCarousel implements View, GameEventListener {
 
     private final GameAction actionSelectGamePage = new GameAction() {
         @Override
@@ -72,6 +75,12 @@ public class StartPagesCarousel implements View {
         bind(carousel::showNextSlide,     KeyCode.RIGHT);
         bind(actionSelectGamePage,        KeyCode.ENTER);
         bind(GameActions2D.TOGGLE_PAUSED, KeyCode.P);
+    }
+
+    @Override
+    public void onGameVariantChanged(GameEvent event) {
+        // TODO check if there is a cleaner solution
+        THE_UI.handleGameVariantChange(THE_GAME_CONTROLLER.selectedGameVariant());
     }
 
     public Optional<StartPage> currentStartPage() {
