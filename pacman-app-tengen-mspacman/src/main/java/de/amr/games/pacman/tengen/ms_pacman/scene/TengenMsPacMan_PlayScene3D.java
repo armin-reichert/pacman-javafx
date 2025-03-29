@@ -10,7 +10,6 @@ import de.amr.games.pacman.lib.nes.NES_JoypadButtonID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.Score;
-import de.amr.games.pacman.model.ScoreManager;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
@@ -30,15 +29,13 @@ import static de.amr.games.pacman.uilib.Keyboard.alt;
 
 public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
-    public TengenMsPacMan_PlayScene3D() {}
-
     @Override
     protected void replaceGameLevel3D() {
         super.replaceGameLevel3D();
-        TengenMsPacMan_GameModel game = THE_GAME_CONTROLLER.game();
-        game.level().ifPresent(level -> {
-            if (!game.hasDefaultOptionValues()) {
-                addGameOptionsArea(game, level);
+        game().level().ifPresent(level -> {
+            TengenMsPacMan_GameModel tengenMsPacManGame = game();
+            if (!tengenMsPacManGame.hasDefaultOptionValues()) {
+                addGameOptionsArea(tengenMsPacManGame, level);
             }
         });
     }
@@ -94,25 +91,22 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void updateScores() {
-        ScoreManager manager = THE_GAME_CONTROLLER.game().scoreManager();
-        Score score = manager.score(), highScore = manager.highScore();
-
+        Score score = game().scoreManager().score(), highScore = game().scoreManager().highScore();
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());
-        if (manager.isScoreEnabled()) {
+        if (game().scoreManager().isScoreEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
         }
-        else { // when score is disabled, show text "game over"
-            THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
+        else { // score is disabled, show text "GAME OVER" instead, use maze-specific color
+            game().level().ifPresent(level -> {
                 NES_ColorScheme nesColorScheme = level.worldMap().getConfigValue("nesColorScheme");
-                Color color = Color.web(nesColorScheme.strokeColor());
-                scores3D.showTextAsScore(TEXT_GAME_OVER, color);
+                scores3D.showTextAsScore(TEXT_GAME_OVER, Color.web(nesColorScheme.strokeColor()));
             });
         }
     }
 
     @Override
     public void onBonusActivated(GameEvent event) {
-        THE_GAME_CONTROLLER.game().level().flatMap(GameLevel::bonus)
+        game().level().flatMap(GameLevel::bonus)
                 .ifPresent(bonus -> level3D.replaceBonus3D(bonus, THE_UI.configurations().current().spriteSheet()));
         THE_UI.sound().playBonusBouncingSound();
     }
