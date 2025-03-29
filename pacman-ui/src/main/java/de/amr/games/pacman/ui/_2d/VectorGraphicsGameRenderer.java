@@ -15,6 +15,7 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 import java.util.Map;
 
@@ -79,12 +80,6 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
         return scalingPy;
     }
 
-    @Override
-    public Color backgroundColor() {
-        return bgColor;
-    }
-
-    @Override
     public void setBackgroundColor(Color color) {
         bgColor = assertNotNull(color);
         blinkingOnColors = new TerrainMapColorScheme(bgColor, Color.BLACK, Color.WHITE, Color.BLACK);
@@ -101,7 +96,7 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void drawMaze(GameLevel level, double x, double y) {
+    public void drawMaze(GameLevel level, double x, double y, Paint backgroundColor) {
         WorldMap worldMap = level.worldMap();
         if (mazeHighlighted) {
             terrainRenderer.setColorScheme(blinkingOn ? blinkingOnColors : blinkingOffColors);

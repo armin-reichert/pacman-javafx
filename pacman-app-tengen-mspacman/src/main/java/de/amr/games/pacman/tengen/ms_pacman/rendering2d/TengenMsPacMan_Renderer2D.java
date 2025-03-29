@@ -29,6 +29,7 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
@@ -101,14 +102,6 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     public FloatProperty scalingProperty() {
         return scalingPy;
     }
-
-    @Override
-    public Color backgroundColor() {
-        return CANVAS_BACKGROUND_COLOR;
-    }
-
-    @Override
-    public void setBackgroundColor(Color color) {}
 
     @Override
     public void drawAnimatedActor(AnimatedActor2D animatedActor) {
@@ -186,7 +179,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     @Override
-    public void drawMaze(GameLevel level, double x, double y) {}
+    public void drawMaze(GameLevel level, double x, double y, Paint backgroundColor) {}
 
     public void drawWorld(GameLevel level, double mapX, double mapY) {
         ctx.setImageSmoothing(false);

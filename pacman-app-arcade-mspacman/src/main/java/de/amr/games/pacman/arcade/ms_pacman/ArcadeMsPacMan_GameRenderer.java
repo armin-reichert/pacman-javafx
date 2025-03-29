@@ -18,6 +18,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.*;
@@ -69,7 +70,6 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     private ImageRegion flashingMazeImageRegion;
     private boolean mazeHighlighted;
     private boolean blinking;
-    private Color bgColor = Color.BLACK;
 
     public ArcadeMsPacMan_GameRenderer(ArcadeMsPacMan_SpriteSheet spriteSheet, Canvas canvas) {
         this.spriteSheet = assertNotNull(spriteSheet);
@@ -104,16 +104,6 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     }
 
     @Override
-    public Color backgroundColor() {
-        return bgColor;
-    }
-
-    @Override
-    public void setBackgroundColor(Color color) {
-        bgColor = assertNotNull(color);
-    }
-
-    @Override
     public Vector2f getMessagePosition() {
         return MESSAGE_POSITION;
     }
@@ -130,7 +120,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     }
 
     @Override
-    public void drawMaze(GameLevel level, double x, double y) {
+    public void drawMaze(GameLevel level, double x, double y, Paint backgroundColor) {
         if (mazeHighlighted) {
             drawSubImageScaled(flashingMazeImageRegion.image(), flashingMazeImageRegion.area(), x, y);
         } else if (level.uneatenFoodCount() == 0) {
@@ -139,8 +129,8 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
             drawSpriteScaled(fullMazeSpritesheetRegion, x, y);
             ctx.save();
             ctx.scale(scaling(), scaling());
-            overPaintEatenPellets(level);
-            overPaintEnergizers(level, tile -> !blinking || level.hasEatenFoodAt(tile));
+            overPaintEatenPellets(level, backgroundColor);
+            overPaintEnergizers(level, tile -> !blinking || level.hasEatenFoodAt(tile), backgroundColor);
             ctx.restore();
         }
     }

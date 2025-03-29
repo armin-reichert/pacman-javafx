@@ -69,7 +69,7 @@ public abstract class GameScene2D implements GameScene {
 
     public void setGameRenderer(GameRenderer renderer) {
         gr = Globals.assertNotNull(renderer);
-        gr.clearCanvas();
+        gr.clearCanvas(backgroundColor()); //TODO needed?
     }
 
     public GameRenderer renderer() {
@@ -90,8 +90,7 @@ public abstract class GameScene2D implements GameScene {
 
     public void draw() {
         gr.setScaling(scaling());
-        gr.setBackgroundColor(backgroundColor());
-        gr.clearCanvas();
+        gr.clearCanvas(backgroundColor());
         if (THE_UI.isScoreVisible()) {
             gr.drawScores();
         }

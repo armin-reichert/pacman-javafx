@@ -12,7 +12,7 @@ import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.arcade.ArcadePacMan_SpriteSheet.EMPTY_MAZE_SPRITE;
@@ -29,7 +29,6 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
     private final GraphicsContext ctx;
     private boolean mazeHighlighted;
     private boolean blinkingOn;
-    private Color bgColor = Color.BLACK;
 
     public ArcadePacMan_GameRenderer(ArcadePacMan_SpriteSheet spriteSheet, Canvas canvas) {
         this.spriteSheet = assertNotNull(spriteSheet);
@@ -62,16 +61,6 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
     }
 
     @Override
-    public Color backgroundColor() {
-        return bgColor;
-    }
-
-    @Override
-    public void setBackgroundColor(Color color) {
-        bgColor = assertNotNull(color);
-    }
-
-    @Override
     public Vector2f getMessagePosition() {
         return ArcadePacMan_GameModel.MESSAGE_POSITION;
     }
@@ -80,7 +69,7 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
     public void setMessagePosition(Vector2f position) {}
 
     @Override
-    public void drawMaze(GameLevel level, double x, double y) {
+    public void drawMaze(GameLevel level, double x, double y, Paint backgroundColor) {
         double scaling = scaling();
         ctx.save();
         ctx.scale(scaling, scaling);
@@ -91,8 +80,8 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
                 drawSpriteUnscaled(EMPTY_MAZE_SPRITE, x, y);
             } else {
                 drawSpriteUnscaled(FULL_MAZE_SPRITE, x, y);
-                overPaintEatenPellets(level);
-                overPaintEnergizers(level, tile -> !blinkingOn || level.hasEatenFoodAt(tile));
+                overPaintEatenPellets(level, backgroundColor);
+                overPaintEnergizers(level, tile -> !blinkingOn || level.hasEatenFoodAt(tile), backgroundColor);
             }
         }
         ctx.restore();

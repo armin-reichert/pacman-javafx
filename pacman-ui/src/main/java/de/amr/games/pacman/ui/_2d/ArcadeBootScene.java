@@ -43,10 +43,9 @@ public class ArcadeBootScene extends GameScene2D {
     public void draw() {
         Vector2f sceneSize = sizeInPx();
         gr.setScaling(scaling());
-        gr.setBackgroundColor(backgroundColor());
         var timer = gameState().timer();
         if (timer.tickCount() == 1) {
-            gr.clearCanvas();
+            gr.clearCanvas(backgroundColor());
         } else if (timer.betweenSeconds(1, 2) && timer.tickCount() % 8 == 0) {
             paintRandomHexCodes(sceneSize);
         } else if (timer.betweenSeconds(2, 3.5) && timer.tickCount() % 4 == 0) {
@@ -60,7 +59,7 @@ public class ArcadeBootScene extends GameScene2D {
     protected void drawSceneContent() {}
 
     private void paintRandomHexCodes(Vector2f sceneSize) {
-        gr.clearCanvas();
+        gr.clearCanvas(backgroundColor());
         gr.ctx().setFill(Color.web(Arcade.Palette.WHITE));
         gr.ctx().setFont(gr.scaledArcadeFont(TS));
         int numRows = (int) (sceneSize.y() / TS), numCols = (int) (sceneSize.x() / TS);
@@ -73,7 +72,7 @@ public class ArcadeBootScene extends GameScene2D {
     }
 
     private void paintRandomSprites(Image spriteImage, Vector2f sceneSize) {
-        gr.clearCanvas();
+        gr.clearCanvas(backgroundColor());
         int numRows = (int) (sceneSize.y() / TS), numCols = (int) (sceneSize.x() / TS);
         for (int row = 0; row < numRows / 2; ++row) {
             if (RND.nextInt(100) > 20) {
@@ -97,7 +96,7 @@ public class ArcadeBootScene extends GameScene2D {
     // was probably used to correct screen geometry
     private void paintScreenTestGrid(Vector2f sceneSize) {
         GraphicsContext g = gr.ctx();
-        gr.clearCanvas();
+        gr.clearCanvas(backgroundColor());
         Vector2i sizeInTiles = worldSizeInTilesOrElse(ARCADE_MAP_SIZE_IN_TILES);
         int numRows = sizeInTiles.y() / 2, numCols = sizeInTiles.y() / 2;
         g.setStroke(Color.web(Arcade.Palette.WHITE));

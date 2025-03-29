@@ -21,6 +21,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
@@ -40,18 +41,14 @@ public interface GameRenderer {
 
     default void setWorldMap(WorldMap worldMap) {}
 
-    Color backgroundColor();
-
-    void setBackgroundColor(Color color);
-
     GameSpriteSheet spriteSheet();
 
     Canvas canvas();
 
     default GraphicsContext ctx() { return canvas().getGraphicsContext2D(); }
 
-    default void clearCanvas() {
-        ctx().setFill(backgroundColor());
+    default void clearCanvas(Paint paint) {
+        ctx().setFill(paint);
         ctx().fillRect(0, 0, canvas().getWidth(), canvas().getHeight());
     }
 
@@ -208,7 +205,7 @@ public interface GameRenderer {
         }
     }
 
-    void drawMaze(GameLevel level, double x, double y);
+    void drawMaze(GameLevel level, double x, double y, Paint backgroundColor);
 
     void setMazeHighlighted(boolean on);
 
@@ -218,27 +215,27 @@ public interface GameRenderer {
      * Over-paints all eaten pellet tiles.
      * Assumes to be called in scaled graphics context!
      */
-    default void overPaintEatenPellets(GameLevel level) {
+    default void overPaintEatenPellets(GameLevel level, Paint paint) {
         level.worldMap().tiles()
             .filter(not(level::isEnergizerPosition))
-            .filter(level::hasEatenFoodAt).forEach(tile -> overPaint(tile, 4));
+            .filter(level::hasEatenFoodAt).forEach(tile -> overPaint(tile, 4, paint));
     }
 
     /**
      * Over-pains all eaten energizer tiles.
      * Assumes to be called in scaled graphics context!
      */
-    default void overPaintEnergizers(GameLevel level, Predicate<Vector2i> condition) {
-        level.energizerTiles().filter(condition).forEach(tile -> overPaint(tile, 10));
+    default void overPaintEnergizers(GameLevel level, Predicate<Vector2i> condition, Paint paint) {
+        level.energizerTiles().filter(condition).forEach(tile -> overPaint(tile, 10, paint));
     }
 
     /**
      * Draws a square of the given size in background color over the tile. Used to hide eaten food and energizers.
      * Assumes to be called in scaled graphics context!
      */
-    private void overPaint(Vector2i tile, double squareSize) {
+    private void overPaint(Vector2i tile, double squareSize, Paint paint) {
         double centerX = tile.x() * TS + HTS, centerY = tile.y() * TS + HTS;
-        ctx().setFill(backgroundColor());
+        ctx().setFill(paint);
         ctx().fillRect(centerX - 0.5 * squareSize, centerY - 0.5 * squareSize, squareSize, squareSize);
     }
 

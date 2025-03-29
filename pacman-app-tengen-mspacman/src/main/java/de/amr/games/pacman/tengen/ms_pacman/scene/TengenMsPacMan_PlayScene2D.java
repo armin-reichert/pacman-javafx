@@ -423,7 +423,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
         var r = (TengenMsPacMan_Renderer2D) gr;
         r.setScaling(scaling());
-        r.clearCanvas();
+        r.clearCanvas(backgroundColor());
         game().level().ifPresent(level -> {
             r.ctx().save();
             r.ctx().translate(scaled(2 * TS), 0);
