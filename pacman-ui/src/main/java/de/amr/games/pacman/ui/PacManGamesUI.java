@@ -68,6 +68,8 @@ public class PacManGamesUI implements GameUI {
     protected final GameClockFX clock = new GameClockFX();
     protected final GameKeyboard keyboard = new GameKeyboard();
     protected final GameSound sound = new GameSound();
+    protected final UIConfigurationManager uiConfigurationManager = new UIConfigurationManager();
+    protected final FlashMessageView flashMessageOverlay = new FlashMessageView();
 
     protected Stage stage;
     protected Scene mainScene;
@@ -76,11 +78,8 @@ public class PacManGamesUI implements GameUI {
     protected StartPagesCarousel startPagesCarousel;
     protected GameView gameView;
     protected EditorView editorView;
-    protected final FlashMessageView flashMessageOverlay = new FlashMessageView();
 
     protected boolean scoreVisible;
-
-    protected final UIConfigurationManager uiConfigurationManager = new UIConfigurationManager();
 
     public PacManGamesUI() {
         clock.setPauseableCallback(this::runOnEveryTickExceptWhenPaused);
