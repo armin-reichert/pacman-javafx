@@ -223,7 +223,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         r.drawAnimatedActor(mrPacMan);
         juniors.forEach(r::drawAnimatedActor);
 
-        if (THE_GAME_CONTROLLER.game().level().isPresent()) { // avoid exception in cut scene test mode
+        if (game().level().isPresent()) { // avoid exception in cut scene test mode
             r.setLevelNumberBoxesVisible(false);
             r.drawLevelCounter(sizeInPx().x() - 4 * TS, sizeInPx().y() - 3 * TS);
         }
