@@ -42,34 +42,6 @@ import static de.amr.games.pacman.uilib.Ufx.createIcon;
  */
 public class PacManGamesUI implements GameUI {
 
-    private final GameClockFX clock = new GameClockFX();
-
-    @Override
-    public GameClockFX clock() {
-        return clock;
-    }
-
-    private final GameKeyboard keyboard = new GameKeyboard();
-
-    @Override
-    public GameKeyboard keyboard() {
-        return keyboard;
-    }
-
-    private final GameAssets assets = new GameAssets();
-
-    @Override
-    public GameAssets assets() {
-        return assets;
-    }
-
-    private final GameSound sound = new GameSound();
-
-    @Override
-    public GameSound sound() {
-        return sound;
-    }
-
     protected final GameAction actionOpenEditorView = new GameAction() {
         @Override
         public void execute() {
@@ -91,6 +63,11 @@ public class PacManGamesUI implements GameUI {
     protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
 
     protected final ObjectProperty<View> viewPy = new SimpleObjectProperty<>();
+
+    protected final GameAssets assets = new GameAssets();
+    protected final GameClockFX clock = new GameClockFX();
+    protected final GameKeyboard keyboard = new GameKeyboard();
+    protected final GameSound sound = new GameSound();
 
     protected Stage stage;
     protected Scene mainScene;
@@ -323,6 +300,16 @@ public class PacManGamesUI implements GameUI {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
+    public GameAssets assets() {
+        return assets;
+    }
+
+    @Override
+    public GameClockFX clock() {
+        return clock;
+    }
+
+    @Override
     public UIConfigurationManager configurations() {
         return uiConfigurationManager;
     }
@@ -362,6 +349,11 @@ public class PacManGamesUI implements GameUI {
     @Override
     public boolean isScoreVisible() {
         return scoreVisible;
+    }
+
+    @Override
+    public GameKeyboard keyboard() {
+        return keyboard;
     }
 
     @Override
@@ -407,6 +399,11 @@ public class PacManGamesUI implements GameUI {
         viewPy.set(startPagesCarousel);
         //TODO this is needed for XXL option menu
         startPagesCarousel.currentStartPage().ifPresent(startPage -> startPage.onSelected(THE_GAME_CONTROLLER.selectedGameVariant()));
+    }
+
+    @Override
+    public GameSound sound() {
+        return sound;
     }
 
     @Override
