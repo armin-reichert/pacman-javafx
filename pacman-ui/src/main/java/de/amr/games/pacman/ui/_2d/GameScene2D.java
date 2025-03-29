@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.arcade.Arcade;
-import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameScene;
 import javafx.beans.property.*;
@@ -17,8 +16,7 @@ import javafx.scene.paint.Color;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.Globals.assertNotNull;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 /**
@@ -104,9 +102,11 @@ public abstract class GameScene2D implements GameScene {
         }
     }
 
-    protected Vector2i worldSizeInTilesOrElse(Vector2i defaultSize) {
-        if (game().level().isEmpty()) { return defaultSize; }
-        WorldMap worldMap = game().level().get().worldMap();
-        return new Vector2i(worldMap.numCols(), worldMap.numRows());
+    /**
+     * @param defaultSize size returned if level is not existing yet
+     * @return level size in tiles
+     */
+    protected Vector2i levelSizeInTilesOrElse(Vector2i defaultSize) {
+        return game().level().map(level -> vec_2i(level.worldMap().numCols(), level.worldMap().numRows())).orElse(defaultSize);
     }
 }

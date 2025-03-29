@@ -131,7 +131,7 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     @Override
     public Vector2f sizeInPx() {
-        return worldSizeInTilesOrElse(ARCADE_MAP_SIZE_IN_TILES).scaled(TS).toVector2f();
+        return levelSizeInTilesOrElse(ARCADE_MAP_SIZE_IN_TILES).scaled(TS).toVector2f();
     }
 
     @Override
