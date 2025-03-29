@@ -514,6 +514,7 @@ public enum GameState implements FsmState<GameModel> {
                 if (number < lastCutSceneNumber) {
                     setProperty("intermissionTestNumber", number + 1);
                     timer.restartIndefinitely();
+                    //TODO find another solution and get rid of this event type
                     game.publishGameEvent(GameEventType.UNSPECIFIED_CHANGE);
                 } else {
                     gameController().changeState(INTRO);

@@ -367,6 +367,10 @@ public class GameView extends StackPane implements View, GameEventListener {
         }
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+    // GameEventListener interface implementation
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public void onGameEvent(GameEvent event) {
         Logger.info("{} received game event {}", getClass().getSimpleName(), event);
@@ -392,5 +396,10 @@ public class GameView extends StackPane implements View, GameEventListener {
             GameScene2D pipGameScene = THE_UI.configurations().current().createPiPScene(canvasContainer().canvas());
             pipView.setScene2D(pipGameScene);
         });
+    }
+
+    @Override
+    public void onStopAllSounds(GameEvent event) {
+        THE_UI.sound().stopAll();
     }
 }

@@ -440,16 +440,13 @@ public class PacManGamesUI implements GameEventListener, GameUI {
 
     @Override
     public void onGameVariantChanged(GameEvent event) {
+        // TODO check if there is a cleaner solution
         handleGameVariantChange(THE_GAME_CONTROLLER.selectedGameVariant());
     }
 
     @Override
     public void onUnspecifiedChange(GameEvent event) {
+        // TODO this is only used by game state GameState.TESTING_CUT_SCENES
         updateGameScene(true);
-    }
-
-    @Override
-    public void onStopAllSounds(GameEvent event) {
-        sound.stopAll();
     }
 }
