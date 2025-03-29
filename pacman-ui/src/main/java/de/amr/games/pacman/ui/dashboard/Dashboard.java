@@ -25,7 +25,7 @@ public class Dashboard {
 
     private final Map<String, InfoBox> infoBoxMap = new LinkedHashMap<>();
 
-    private static InfoBox configureInfoBox(String title, InfoBox infoBox) {
+    private static InfoBox configured(String title, InfoBox infoBox) {
         infoBox.setText(title);
         infoBox.setMinLabelWidth(INFOBOX_MIN_LABEL_WIDTH);
         infoBox.setContentBackground(Background.fill(INFO_BOX_CONTENT_BG_COLOR));
@@ -39,30 +39,34 @@ public class Dashboard {
     public Stream<InfoBox> infoBoxes() { return infoBoxMap.values().stream(); }
 
     @SuppressWarnings("unchecked")
-    public <I extends InfoBox> I getItem(String id) {
+    public <I extends InfoBox> I getInfoBox(String id) {
         return (I) infoBoxMap.get(id);
     }
 
-    public void addDefaultItems(String... titles) {
-        for (String title : titles) { addDefaultItem(title); }
+    public void addDefaultInfoBoxes(String... titles) {
+        for (String title : titles) { addInfoBox(title); }
     }
 
-    public void addDefaultItem(String id) {
+    public void addInfoBox(String id) {
         switch (id) {
-            case "ABOUT"        -> infoBoxMap.put(id, configureInfoBox(THE_UI.assets().text("infobox.about.title"), new InfoBoxAbout()));
-            case "ACTOR_INFO"   -> infoBoxMap.put(id, configureInfoBox(THE_UI.assets().text("infobox.actor_info.title"), new InfoBoxActorInfo()));
-            case "CUSTOM_MAPS"  -> infoBoxMap.put(id, configureInfoBox(THE_UI.assets().text("infobox.custom_maps.title"), new InfoBoxCustomMaps()));
-            case "GENERAL"      -> infoBoxMap.put(id, configureInfoBox(THE_UI.assets().text("infobox.general.title"), new InfoBoxGeneral()));
-            case "GAME_CONTROL" -> infoBoxMap.put(id, configureInfoBox(THE_UI.assets().text("infobox.game_control.title"), new InfoBoxGameControl()));
-            case "GAME_INFO"    -> infoBoxMap.put(id, configureInfoBox(THE_UI.assets().text("infobox.game_info.title"), new InfoBoxGameInfo()));
-            case "JOYPAD"       -> infoBoxMap.put(id, configureInfoBox(THE_UI.assets().text("infobox.joypad.title"), new InfoBoxJoypad()));
-            case "KEYBOARD"     -> infoBoxMap.put(id, configureInfoBox(THE_UI.assets().text("infobox.keyboard_shortcuts.title"), new InfoBoxKeys()));
+            case "ABOUT"        -> put(id, "infobox.about.title", new InfoBoxAbout());
+            case "ACTOR_INFO"   -> put(id, "infobox.actor_info.title", new InfoBoxActorInfo());
+            case "CUSTOM_MAPS"  -> put(id, "infobox.custom_maps.title", new InfoBoxCustomMaps());
+            case "GENERAL"      -> put(id, "infobox.general.title", new InfoBoxGeneral());
+            case "GAME_CONTROL" -> put(id, "infobox.game_control.title", new InfoBoxGameControl());
+            case "GAME_INFO"    -> put(id, "infobox.game_info.title", new InfoBoxGameInfo());
+            case "JOYPAD"       -> put(id, "infobox.joypad.title", new InfoBoxJoypad());
+            case "KEYBOARD"     -> put(id, "infobox.keyboard_shortcuts.title", new InfoBoxKeys());
             case "README" -> {
                 InfoBox infoBox = new InfoBoxReadmeFirst();
                 infoBox.setExpanded(true);
-                infoBoxMap.put(id, configureInfoBox(THE_UI.assets().text("infobox.readme.title"), infoBox));
+                put(id, "infobox.readme.title", infoBox);
             }
-            case "SETTINGS_3D" -> infoBoxMap.put(id, configureInfoBox(THE_UI.assets().text("infobox.3D_settings.title"), new InfoBox3D()));
+            case "SETTINGS_3D" -> put(id, "infobox.3D_settings.title", new InfoBox3D());
         }
+    }
+
+    private void put(String id, String titleKey, InfoBox infoBox) {
+        infoBoxMap.put(id, configured(THE_UI.assets().text(titleKey), infoBox));
     }
 }
