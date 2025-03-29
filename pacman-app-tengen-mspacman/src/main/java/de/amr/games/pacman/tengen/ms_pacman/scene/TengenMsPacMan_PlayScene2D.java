@@ -442,7 +442,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             return;
         }
         if (THE_UI.isScoreVisible()) {
-            r.drawScores(nesPaletteColor(0x20));
+            r.drawScores(nesPaletteColor(0x20), r.scaledArcadeFont(TS));
         }
         Vector2f messageCenterPosition = centerPosBelowHouse(level);
         if (messageMovement != null) {

@@ -352,8 +352,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     @Override
-    public void drawScores(Color color) {
-        Font font = scaledArcadeFont(TS);
+    public void drawScores(Color color, Font font) {
         if (THE_UI.clock().tickCount() % 60 < 30) { drawText("1UP", color, font, tiles2Px(2), tiles2Px(1)); }
         drawText("HIGH SCORE", color, font, tiles2Px(9), tiles2Px(1));
         drawText("%6d".formatted(THE_GAME_CONTROLLER.game().scoreManager().score().points()), color, font, 0, tiles2Px(2));

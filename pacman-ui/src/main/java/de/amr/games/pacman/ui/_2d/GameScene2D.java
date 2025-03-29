@@ -18,6 +18,7 @@ import javafx.scene.paint.Color;
 import java.util.HashMap;
 import java.util.Map;
 
+import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 /**
@@ -93,7 +94,7 @@ public abstract class GameScene2D implements GameScene {
         gr.setScaling(scaling());
         gr.clearCanvas(backgroundColor());
         if (THE_UI.isScoreVisible()) {
-            gr.drawScores(Color.web(Arcade.Palette.WHITE));
+            gr.drawScores(Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS));
         }
         drawSceneContent();
         if (debugInfoVisiblePy.get()) {

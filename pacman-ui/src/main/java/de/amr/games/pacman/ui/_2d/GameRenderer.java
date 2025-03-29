@@ -303,8 +303,7 @@ public interface GameRenderer {
         }
     }
 
-    default void drawScores(Color color) {
-        Font font = scaledArcadeFont(TS);
+    default void drawScores(Color color, Font font) {
         drawScore(THE_GAME_CONTROLLER.game().scoreManager().score(),     "SCORE",      tiles2Px(1),  tiles2Px(1), font, color);
         drawScore(THE_GAME_CONTROLLER.game().scoreManager().highScore(), "HIGH SCORE", tiles2Px(14), tiles2Px(1), font, color);
     }
