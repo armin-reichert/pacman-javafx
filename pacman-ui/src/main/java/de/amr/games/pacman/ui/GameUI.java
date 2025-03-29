@@ -42,11 +42,11 @@ public interface GameUI {
 
     ObjectProperty<GameScene> gameSceneProperty();
 
-    void handleGameVariantChange(GameVariant gameVariant);
-
     void init(GameVariant variant);
 
     boolean isScoreVisible();
+
+    void onGameVariantChange(GameVariant gameVariant);
 
     void openEditor();
 

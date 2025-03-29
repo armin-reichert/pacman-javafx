@@ -80,7 +80,7 @@ public class StartPagesCarousel implements View, GameEventListener {
     @Override
     public void onGameVariantChanged(GameEvent event) {
         // TODO check if there is a cleaner solution
-        THE_UI.handleGameVariantChange(THE_GAME_CONTROLLER.selectedGameVariant());
+        THE_UI.onGameVariantChange(THE_GAME_CONTROLLER.selectedGameVariant());
     }
 
     public Optional<StartPage> currentStartPage() {

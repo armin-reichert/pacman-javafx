@@ -136,13 +136,13 @@ public class PacManGamesUI implements GameUI {
         createMainScene(assertNotNull(initialSize));
         createStartPagesCarousel();
         createGameView(mainScene);
-        init(THE_GAME_CONTROLLER.selectedGameVariant());
         bindStageTitle();
         stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
         stage.setMinHeight(ARCADE_MAP_SIZE_IN_PIXELS.y() * 1.25);
         stage.setScene(mainScene);
         stage.centerOnScreen();
         stage.setOnShowing(e -> showStartView());
+        init(THE_GAME_CONTROLLER.selectedGameVariant());
     }
 
     @Override
@@ -176,6 +176,7 @@ public class PacManGamesUI implements GameUI {
 
     protected void runOnEveryTick() {
         try {
+            //TODO this code should probably move into GameView
             if (viewPy.get() == gameView) {
                 gameView.onTick();
                 flashMessageOverlay.update();
@@ -276,13 +277,6 @@ public class PacManGamesUI implements GameUI {
         gameView.setSize(mainScene.getWidth(), mainScene.getHeight());
     }
 
-    public void handleGameVariantChange(GameVariant gameVariant) {
-        GameUIConfiguration uiConfig = uiConfigurationManager.configuration(gameVariant);
-        sound.selectGameVariant(gameVariant, uiConfig.assetNamespace());
-        stage.getIcons().setAll(uiConfig.appIcon());
-        gameView.canvasContainer().decorationEnabledPy.set(uiConfig.isGameCanvasDecorated());
-    }
-
     protected void bindStageTitle() {
         stage.titleProperty().bind(Bindings.createStringBinding(
             () -> {
@@ -362,12 +356,20 @@ public class PacManGamesUI implements GameUI {
     public void init(GameVariant gameVariant) {
         Logger.info("Init UI for game variant {}...", gameVariant);
         THE_GAME_CONTROLLER.selectGameVariant(gameVariant);
-        handleGameVariantChange(gameVariant);
+        onGameVariantChange(gameVariant);
     }
 
     @Override
     public boolean isScoreVisible() {
         return scoreVisible;
+    }
+
+    @Override
+    public void onGameVariantChange(GameVariant gameVariant) {
+        GameUIConfiguration uiConfig = uiConfigurationManager.configuration(gameVariant);
+        sound.selectGameVariant(gameVariant, uiConfig.assetNamespace());
+        stage.getIcons().setAll(uiConfig.appIcon());
+        gameView.canvasContainer().decorationEnabledPy.set(uiConfig.isGameCanvasDecorated());
     }
 
     @Override
