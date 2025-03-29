@@ -35,9 +35,6 @@ public interface Globals {
 
     Random RND = new Random();
 
-    String MSG_TILE_NULL = "Tile must not be null";
-    String MSG_DIR_NULL = "Direction must not be null";
-
     static Vector2i vec_2i(int x, int y) {
         return new Vector2i(x, y);
     }
@@ -94,7 +91,7 @@ public interface Globals {
     }
 
     static Vector2i assertTileNotNull(Vector2i tile) {
-        return assertNotNull(tile, MSG_TILE_NULL);
+        return assertNotNull(tile, "Tile must not be null");
     }
 
     static byte assertValidGhostID(byte id) {
@@ -111,7 +108,7 @@ public interface Globals {
     }
 
     static Direction assertDirectionNotNull(Direction dir) {
-        return assertNotNull(dir, MSG_DIR_NULL);
+        return assertNotNull(dir, "Direction must not be null");
     }
 
     static double assertNonNegative(double value, String messageFormat) {
@@ -201,29 +198,8 @@ public interface Globals {
      * @return the value if inside the interval, the lower bound if the value is smaller, the upper bound if the value is
      * larger
      */
-    static float clamp(float value, float min, float max) {
-        return (value < min) ? min : Math.min(value, max);
-    }
-
     static double clamp(double value, double min, double max) {
         return (value < min) ? min : Math.min(value, max);
-    }
-
-    /**
-     * @param value some value
-     * @param min   lower bound of interval
-     * @param max   upper bound of interval
-     * @return the value if inside the interval, the lower bound if the value is smaller, the upper bound if the value is
-     * larger
-     */
-    static int clamp(int value, int min, int max) {
-        if (value < min) {
-            return min;
-        }
-        if (value > max) {
-            return max;
-        }
-        return value;
     }
 
     /**

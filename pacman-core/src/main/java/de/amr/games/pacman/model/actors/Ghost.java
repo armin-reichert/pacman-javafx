@@ -252,7 +252,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
             } else if (posY >= maxY) {
                 setMoveAndWishDir(UP);
             }
-            posY = clamp(posY, minY, maxY);
+            posY = (float) clamp(posY, minY, maxY);
         } else {
             setSpeed(0);
         }
