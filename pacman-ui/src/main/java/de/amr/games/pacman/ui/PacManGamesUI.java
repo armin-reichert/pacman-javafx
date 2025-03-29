@@ -109,20 +109,18 @@ public class PacManGamesUI implements GameEventListener, GameUI {
     public PacManGamesUI() {
         clock.setPauseableCallback(this::runOnEveryTickExceptWhenPaused);
         clock.setPermanentCallback(this::runOnEveryTick);
-        viewPy.addListener((py, ov, nv) -> {
-            if (ov instanceof GameEventListener oldGameEventListener) {
-                THE_GAME_CONTROLLER.game().removeGameEventListener(oldGameEventListener);
-            }
-            if (nv instanceof GameEventListener newGameEventListener) {
-                THE_GAME_CONTROLLER.game().addGameEventListener(newGameEventListener);
-            }
-            if (ov instanceof View oldView) {
+        viewPy.addListener((py, oldView, newView) -> {
+            if (oldView != null) {
                 oldView.disableActionBindings();
+                if (oldView instanceof GameEventListener listener) {
+                    THE_GAME_CONTROLLER.game().removeGameEventListener(listener);
+                }
             }
-            if (nv instanceof View newView) {
-                newView.enableActionBindings();
-                sceneRoot.getChildren().set(0, newView.node());
-                newView.node().requestFocus();
+            newView.enableActionBindings();
+            sceneRoot.getChildren().set(0, newView.node());
+            newView.node().requestFocus();
+            if (newView instanceof GameEventListener listener) {
+                THE_GAME_CONTROLLER.game().addGameEventListener(listener);
             }
         });
     }
