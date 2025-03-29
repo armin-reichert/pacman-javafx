@@ -18,17 +18,29 @@ import javafx.scene.image.Image;
 import java.util.stream.Stream;
 
 public interface GameUIConfiguration {
+    Image appIcon();
+    String assetNamespace();
+    void createActorAnimations(GameLevel level);
+    GameScene2D createPiPScene(Canvas canvas);
+    GameRenderer createRenderer(Canvas canvas);
     Stream<GameScene> gameScenes();
     boolean gameSceneHasID(GameScene gameScene, String sceneID);
-    GameScene2D createPiPScene(Canvas canvas);
-    GameSpriteSheet spriteSheet();
-    GameRenderer createRenderer(Canvas canvas);
-    WorldMapColorScheme worldMapColoring(WorldMap worldMap);
-    void createActorAnimations(GameLevel level);
-    GameScene selectGameScene();
-    String assetNamespace();
     default boolean isGameCanvasDecorated() { return true; }
-    Image appIcon();
+    GameScene selectGameScene();
+    GameSpriteSheet spriteSheet();
+    WorldMapColorScheme worldMapColoring(WorldMap worldMap);
+
     // 3D-only
     Node createLivesCounterShape(AssetStorage assets, double size);
+
+    default boolean is2D3DPlaySceneSwitch(GameScene prevPlayScene, GameScene nextPlayScene) {
+        if (prevPlayScene == null && nextPlayScene == null) {
+            throw new IllegalStateException("WTF is going on here, old and new play scene are both NULL!");
+        }
+        if (prevPlayScene == null) {
+            return false; // may happen
+        }
+        return gameSceneHasID(prevPlayScene, "PlayScene2D") && gameSceneHasID(nextPlayScene, "PlayScene3D")
+            || gameSceneHasID(prevPlayScene, "PlayScene3D") && gameSceneHasID(nextPlayScene, "PlayScene2D");
+    }
 }

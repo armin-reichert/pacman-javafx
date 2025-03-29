@@ -315,25 +315,13 @@ public class PacManGamesUI implements GameUI {
         }
         gameView.embedGameScene(nextGameScene);
         nextGameScene.init();
-        if (is2D3DPlaySceneSwitch(currentGameScene, nextGameScene)) {
+        if (uiConfigurationManager.current().is2D3DPlaySceneSwitch(currentGameScene, nextGameScene)) {
             nextGameScene.onSceneVariantSwitch(currentGameScene);
         }
         if (changing) {
             gameScenePy.set(nextGameScene);
             Logger.info("Game scene is now: {}", nextGameScene.displayName());
         }
-    }
-
-    private boolean is2D3DPlaySceneSwitch(GameScene prevPlayScene, GameScene nextPlayScene) {
-        if (prevPlayScene == null && nextPlayScene == null) {
-            throw new IllegalStateException("WTF is going on here, old and new play scene are both NULL!");
-        }
-        if (prevPlayScene == null) {
-            return false; // may happen
-        }
-        var config = uiConfigurationManager.current();
-        return config.gameSceneHasID(prevPlayScene, "PlayScene2D") && config.gameSceneHasID(nextPlayScene, "PlayScene3D")
-            || config.gameSceneHasID(prevPlayScene, "PlayScene3D") && config.gameSceneHasID(nextPlayScene, "PlayScene2D");
     }
 
     private void logSimulationStep() {
@@ -347,28 +335,8 @@ public class PacManGamesUI implements GameUI {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    // GameContext interface implementation
+    // GameUI interface implementation
     // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public void enterFullScreenMode() {
-        stage.setFullScreen(true);
-    }
-
-    @Override
-    public ReadOnlyDoubleProperty heightProperty() {
-        return mainScene.heightProperty();
-    }
-
-    @Override
-    public GameView gameView() {
-        return gameView;
-    }
-
-    @Override
-    public ObjectProperty<GameScene> gameSceneProperty() {
-        return gameScenePy;
-    }
 
     @Override
     public UIConfigurationManager configurations() {
@@ -381,23 +349,23 @@ public class PacManGamesUI implements GameUI {
     }
 
     @Override
-    public void openEditor() {
-        if (actionOpenEditorView.isEnabled()) {
-            actionOpenEditorView.execute();
-        }
+    public void enterFullScreenMode() {
+        stage.setFullScreen(true);
     }
 
     @Override
-    public void togglePlayScene2D3D() {}
-
-    @Override
-    public boolean isScoreVisible() {
-        return scoreVisible;
+    public ObjectProperty<GameScene> gameSceneProperty() {
+        return gameScenePy;
     }
 
     @Override
-    public void setScoreVisible(boolean visible) {
-        scoreVisible = visible;
+    public GameView gameView() {
+        return gameView;
+    }
+
+    @Override
+    public ReadOnlyDoubleProperty heightProperty() {
+        return mainScene.heightProperty();
     }
 
     @Override
@@ -408,13 +376,25 @@ public class PacManGamesUI implements GameUI {
     }
 
     @Override
-    public void showStartView() {
-        clock.stop();
-        gameScenePy.set(null);
-        gameView.hideDashboard(); // TODO use binding?
-        viewPy.set(startPagesCarousel);
-        //TODO this is needed for XXL option menu
-        startPagesCarousel.currentStartPage().ifPresent(startPage -> startPage.onSelected(THE_GAME_CONTROLLER.selectedGameVariant()));
+    public boolean isScoreVisible() {
+        return scoreVisible;
+    }
+
+    @Override
+    public void openEditor() {
+        if (actionOpenEditorView.isEnabled()) {
+            actionOpenEditorView.execute();
+        }
+    }
+
+    @Override
+    public void setScoreVisible(boolean visible) {
+        scoreVisible = visible;
+    }
+
+    @Override
+    public void showFlashMessageSec(double seconds, String message, Object... args) {
+        flashMessageOverlay.showMessage(String.format(message, args), seconds);
     }
 
     @Override
@@ -428,7 +408,15 @@ public class PacManGamesUI implements GameUI {
     }
 
     @Override
-    public void showFlashMessageSec(double seconds, String message, Object... args) {
-        flashMessageOverlay.showMessage(String.format(message, args), seconds);
+    public void showStartView() {
+        clock.stop();
+        gameScenePy.set(null);
+        gameView.hideDashboard(); // TODO use binding?
+        viewPy.set(startPagesCarousel);
+        //TODO this is needed for XXL option menu
+        startPagesCarousel.currentStartPage().ifPresent(startPage -> startPage.onSelected(THE_GAME_CONTROLLER.selectedGameVariant()));
     }
+
+    @Override
+    public void togglePlayScene2D3D() {}
 }
