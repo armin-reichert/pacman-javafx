@@ -369,11 +369,14 @@ public class GameView extends StackPane implements View, GameEventListener {
 
     @Override
     public void onGameEvent(GameEvent event) {
-        Logger.trace("{} received game event {}", getClass().getSimpleName(), event);
+        Logger.info("{} received game event {}", getClass().getSimpleName(), event);
         // dispatch event to overridden methods:
         GameEventListener.super.onGameEvent(event);
         // dispatch event to current game scene if any
-        THE_UI.currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(event));
+        THE_UI.currentGameScene().ifPresent(gameScene -> {
+            gameScene.onGameEvent(event);
+        });
+        THE_UI.updateGameScene(false);
     }
 
     @Override

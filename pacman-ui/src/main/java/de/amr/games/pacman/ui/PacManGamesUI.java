@@ -302,7 +302,8 @@ public class PacManGamesUI implements GameEventListener, GameUI {
         );
     }
 
-    protected void updateGameScene(boolean reloadCurrent) {
+    @Override
+    public void updateGameScene(boolean reloadCurrent) {
         final GameScene nextGameScene = uiConfigurationManager.current().selectGameScene();
         if (nextGameScene == null) {
             throw new IllegalStateException("Could not determine next game scene");
@@ -438,17 +439,6 @@ public class PacManGamesUI implements GameEventListener, GameUI {
     // -----------------------------------------------------------------------------------------------------------------
     // GameEventListener interface implementation
     // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public void onGameEvent(GameEvent event) {
-        Logger.trace("Received: {}", event);
-        // call event specific hook method:
-        GameEventListener.super.onGameEvent(event);
-        //TODO this looks like crap
-        if (viewPy.get() == gameView) {
-            updateGameScene(false);
-        }
-    }
 
     @Override
     public void onGameVariantChanged(GameEvent event) {

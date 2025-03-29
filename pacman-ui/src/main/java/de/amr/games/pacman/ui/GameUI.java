@@ -33,6 +33,8 @@ public interface GameUI {
 
     void build(Stage stage, Dimension2D size);
 
+    UIConfigurationManager configurations();
+
     Optional<GameScene> currentGameScene();
 
     void enterFullScreenMode();
@@ -61,7 +63,7 @@ public interface GameUI {
 
     default void showFlashMessage(String message, Object... args) { showFlashMessageSec(1, message, args); }
 
-    UIConfigurationManager configurations();
-
     void togglePlayScene2D3D();
+
+    void updateGameScene(boolean reload);
 }
