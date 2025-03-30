@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui._3d;
 import de.amr.games.pacman.ui.PacManGamesUI;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.beans.binding.Bindings;
-import javafx.scene.Scene;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_DEBUG_INFO_VISIBLE;
@@ -31,8 +30,8 @@ public class PacManGamesUI_3D extends PacManGamesUI {
     }
 
     @Override
-    protected void createGameView(Scene parentScene) {
-        gameView = new GameView3D(parentScene);
+    protected void createGameView() {
+        gameView = new GameView3D(mainScene);
         gameView.gameSceneProperty().bind(gameScenePy);
     }
 

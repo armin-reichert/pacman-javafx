@@ -42,14 +42,13 @@ public class TileMapEditorApp extends Application  {
         var scene = new Scene(layout, width, height);
         stage.setScene(scene);
 
-        stage.titleProperty().bind(editor.titleProperty());
         stage.setOnCloseRequest(e -> editor.executeWithCheckForUnsavedChanges(() -> {
             editor.stop();
             stage.close();
         }));
 
         editor.init(new File(System.getProperty("user.home")));
-        editor.start();
+        editor.start(stage);
 
         stage.show();
     }

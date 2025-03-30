@@ -425,8 +425,9 @@ public class TileMapEditor {
         setEditMode(EditMode.INSPECT);
     }
 
-    public void start() {
+    public void start(Stage stage) {
         titlePy.bind(createTitleBinding());
+        stage.titleProperty().bind(titlePy);
         setPropertyEditorsVisible(propertyEditorsVisiblePy.get());
         showEditHelpText();
         updateLoop.start();

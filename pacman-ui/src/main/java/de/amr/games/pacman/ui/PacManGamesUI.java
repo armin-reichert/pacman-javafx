@@ -47,9 +47,7 @@ public class PacManGamesUI implements GameUI {
             currentGameScene().ifPresent(GameScene::end);
             clock.stop();
             sound.stopAll();
-            EditorView editorView = getOrCreateEditorView();
-            stage.titleProperty().bind(editorView.editor().titleProperty());
-            editorView.editor().start();
+            editorView.editor().start(stage);
             viewPy.set(editorView);
         }
 
@@ -167,21 +165,18 @@ public class PacManGamesUI implements GameUI {
         });
     }
 
-    protected EditorView getOrCreateEditorView() {
-        if (editorView == null) {
-            editorView = new EditorView(stage);
-            editorView.setCloseAction(editor -> {
-                editor.executeWithCheckForUnsavedChanges(this::bindStageTitle);
-                editor.stop();
-                clock.setTargetFrameRate(Globals.TICKS_PER_SECOND);
-                THE_GAME_CONTROLLER.restart(GameState.BOOT);
-                showStartView();
-            });
-        }
-        return editorView;
+    protected void createEditorView() {
+        editorView = new EditorView(stage);
+        editorView.setCloseAction(editor -> {
+            editor.executeWithCheckForUnsavedChanges(this::bindStageTitle);
+            editor.stop();
+            clock.setTargetFrameRate(Globals.TICKS_PER_SECOND);
+            THE_GAME_CONTROLLER.restart(GameState.BOOT);
+            showStartView();
+        });
     }
 
-    protected void createStartPagesCarousel() {
+    protected void createStartView() {
         startPagesCarousel = new StartPagesCarousel();
         startPagesCarousel.setBackground(assets.background("background.scene"));
         viewPy.addListener((py, ov, view) -> {
@@ -192,8 +187,8 @@ public class PacManGamesUI implements GameUI {
         });
     }
 
-    protected void createGameView(Scene parentScene) {
-        gameView = new GameView(parentScene);
+    protected void createGameView() {
+        gameView = new GameView(mainScene);
         gameView.gameSceneProperty().bind(gameScenePy);
         gameView.setSize(mainScene.getWidth(), mainScene.getHeight());
     }
@@ -228,17 +223,18 @@ public class PacManGamesUI implements GameUI {
     }
 
     /**
-     * Called from application start method (on JavaFX application thread).
+     * Builds the layout and configures the stage.
      *
-     * @param stage primary stage (window)
-     * @param initialSize initial UI size
+     * @param stage the stage (window)
+     * @param mainSceneSize initial main scene size
      */
     @Override
-    public void build(Stage stage, Dimension2D initialSize) {
+    public void build(Stage stage, Dimension2D mainSceneSize) {
         this.stage = assertNotNull(stage);
-        createMainScene(assertNotNull(initialSize));
-        createStartPagesCarousel();
-        createGameView(mainScene);
+        createMainScene(assertNotNull(mainSceneSize));
+        createStartView();
+        createGameView();
+        createEditorView();
         bindStageTitle();
         stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
         stage.setMinHeight(ARCADE_MAP_SIZE_IN_PIXELS.y() * 1.25);
