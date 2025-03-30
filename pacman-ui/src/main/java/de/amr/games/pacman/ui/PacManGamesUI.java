@@ -200,7 +200,7 @@ public class PacManGamesUI implements GameUI {
                 }
                 return assets.text(key, "2D");
             },
-            clock.pausedProperty(), gameScenePy, gameView.heightProperty())
+            clock.pausedProperty(), gameScenePy, gameView.node().heightProperty())
         );
     }
 

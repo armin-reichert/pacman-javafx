@@ -45,7 +45,7 @@ import static de.amr.games.pacman.uilib.Ufx.*;
 /**
  * This view shows the game play and the overlays like dashboard and picture-in-picture view of the running play scene.
  */
-public class GameView extends StackPane implements View {
+public class GameView implements View {
 
     private static final double MAX_SCENE_SCALING = 5;
 
@@ -132,6 +132,7 @@ public class GameView extends StackPane implements View {
         }
     };
 
+    protected final StackPane root = new StackPane();
     protected final Scene parentScene;
 
     // Common canvas for rendering 2D scenes
@@ -163,17 +164,17 @@ public class GameView extends StackPane implements View {
         popupLayer = new PopupLayer(canvasContainer);
         popupLayer.setMouseTransparent(true);
 
-        getChildren().addAll(canvasLayer, dashboardLayer, popupLayer, flashMessageOverlay);
+        root.getChildren().addAll(canvasLayer, dashboardLayer, popupLayer, flashMessageOverlay);
 
-        setOnContextMenuRequested(this::handleContextMenuRequest);
+        root.setOnContextMenuRequested(this::handleContextMenuRequest);
         //TODO is this the recommended way to close an open context-menu?
-        setOnMouseClicked(e -> { if (contextMenu != null) contextMenu.hide(); });
+        root.setOnMouseClicked(e -> { if (contextMenu != null) contextMenu.hide(); });
         bindGameActions();
     }
 
     @Override
-    public Node node() {
-        return this;
+    public StackPane node() {
+        return root;
     }
 
     public ObjectProperty<GameScene> gameSceneProperty() { return gameScenePy; }
@@ -309,7 +310,7 @@ public class GameView extends StackPane implements View {
 
     protected void handleContextMenuRequest(ContextMenuEvent event) {
         contextMenu = new ContextMenu(createContextMenuItems(event).toArray(MenuItem[]::new));
-        contextMenu.show(this, event.getScreenX(), event.getScreenY());
+        contextMenu.show(root, event.getScreenX(), event.getScreenY());
         contextMenu.requestFocus();
         event.consume();
     }
@@ -328,7 +329,7 @@ public class GameView extends StackPane implements View {
         assertNotNull(gameScene);
         switch (gameScene) {
             case CameraControlledView cameraControlledView -> {
-                getChildren().set(0, cameraControlledView.viewPort());
+                root.getChildren().set(0, cameraControlledView.viewPort());
                 cameraControlledView.viewPortWidthProperty().bind(parentScene.widthProperty());
                 cameraControlledView.viewPortHeightProperty().bind(parentScene.heightProperty());
             }
@@ -347,7 +348,7 @@ public class GameView extends StackPane implements View {
                 gameScenesCanvas.getGraphicsContext2D().fillRect(0, 0, gameScenesCanvas.getWidth(), gameScenesCanvas.getHeight());
                 gameScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
                 gameScene2D.setGameRenderer(renderer);
-                getChildren().set(0, canvasLayer);
+                root.getChildren().set(0, canvasLayer);
             }
             default -> Logger.error("Cannot embed game scene of class {}", gameScene.getClass().getName());
         }
