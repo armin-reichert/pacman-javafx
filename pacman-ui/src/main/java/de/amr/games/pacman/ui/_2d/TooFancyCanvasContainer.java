@@ -178,6 +178,7 @@ public class TooFancyCanvasContainer extends BorderPane {
         } else {
             doLayout(height / unscaledCanvasHeight(), false);
         }
+        Logger.debug("Game canvas container resized to width={} height={}", getWidth(), getHeight());
     }
 
     public boolean isDecorationEnabled() {

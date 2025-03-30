@@ -16,7 +16,6 @@ import de.amr.games.pacman.uilib.Ufx;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -118,9 +117,9 @@ public class GameView implements View {
     private final GameAction actionToggleDebugInfo = () -> toggle(PY_DEBUG_INFO_VISIBLE);
 
     private final GameAction actionToggleImmunity = () -> {
-        toggle(GlobalProperties2d.PY_IMMUNITY);
-        THE_UI.showFlashMessage(THE_UI.assets().text(GlobalProperties2d.PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
-        THE_UI.sound().playVoice(GlobalProperties2d.PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
+        toggle(PY_IMMUNITY);
+        THE_UI.showFlashMessage(THE_UI.assets().text(PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
+        THE_UI.sound().playVoice(PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
     };
 
     protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
@@ -284,9 +283,8 @@ public class GameView implements View {
         return canvasContainer;
     }
 
-    public void setSize(double width, double height) {
+    public void resize(double width, double height) {
         canvasContainer.resizeTo(width, height);
-        Logger.debug("Game page size set to w={} h={}", canvasContainer.getWidth(), canvasContainer.getHeight());
     }
 
     @Override

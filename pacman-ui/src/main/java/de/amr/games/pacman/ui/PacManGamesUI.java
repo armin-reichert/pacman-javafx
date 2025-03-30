@@ -127,8 +127,8 @@ public class PacManGamesUI implements GameUI {
         addStatusIcons();
 
         mainScene = new Scene(sceneRoot, size.getWidth(), size.getHeight());
-        mainScene.widthProperty() .addListener((py,ov,nv) -> gameView.setSize(mainScene.getWidth(), mainScene.getHeight()));
-        mainScene.heightProperty().addListener((py,ov,nv) -> gameView.setSize(mainScene.getWidth(), mainScene.getHeight()));
+        mainScene.widthProperty() .addListener((py,ov,nv) -> gameView.resize(mainScene.getWidth(), mainScene.getHeight()));
+        mainScene.heightProperty().addListener((py,ov,nv) -> gameView.resize(mainScene.getWidth(), mainScene.getHeight()));
 
         mainScene.addEventFilter(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
         mainScene.addEventFilter(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
@@ -186,7 +186,7 @@ public class PacManGamesUI implements GameUI {
     protected void createGameView() {
         gameView = new GameView(mainScene);
         gameView.gameSceneProperty().bind(gameScenePy);
-        gameView.setSize(mainScene.getWidth(), mainScene.getHeight());
+        gameView.resize(mainScene.getWidth(), mainScene.getHeight());
     }
 
     protected void bindStageTitle() {
@@ -332,7 +332,7 @@ public class PacManGamesUI implements GameUI {
         if (!THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN)) {
             sound.playVoice("voice.explain", 0);
         }
-        gameView.setSize(mainScene.getWidth(), mainScene.getHeight());
+        gameView.resize(mainScene.getWidth(), mainScene.getHeight());
         GameActions2D.BOOT.execute();
     }
 
