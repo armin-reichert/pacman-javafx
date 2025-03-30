@@ -8,6 +8,7 @@ import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._2d.*;
+import de.amr.games.pacman.ui.dashboard.Dashboard;
 import de.amr.games.pacman.ui.input.GameKeyboard;
 import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.GameClockFX;
@@ -268,6 +269,11 @@ public class PacManGamesUI implements GameUI {
     }
 
     @Override
+    public Dashboard dashboard() {
+        return gameView.dashboard();
+    }
+
+    @Override
     public void enterFullScreenMode() {
         stage.setFullScreen(true);
     }
@@ -275,11 +281,6 @@ public class PacManGamesUI implements GameUI {
     @Override
     public ObjectProperty<GameScene> gameSceneProperty() {
         return gameScenePy;
-    }
-
-    @Override
-    public GameView gameView() {
-        return gameView;
     }
 
     @Override
