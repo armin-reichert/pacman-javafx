@@ -83,8 +83,8 @@ public class PacManGamesUI implements GameUI {
     protected boolean scoreVisible;
 
     public PacManGamesUI() {
-        clock.setPauseableCallback(this::runEveryTickExceptWhenPaused);
-        clock.setPermanentCallback(this::runEveryTick);
+        clock.setPauseableAction(this::makeSimulationStepAndUpdateCurrentGameScene);
+        clock.setPermanentAction(this::tickCurrentView);
         viewPy.addListener((py, oldView, newView) -> {
             if (oldView != null) {
                 oldView.disableActionBindings();
@@ -97,26 +97,17 @@ public class PacManGamesUI implements GameUI {
         });
     }
 
-    protected void runEveryTickExceptWhenPaused() {
-        try {
-            THE_GAME_CONTROLLER.update();
-            THE_GAME_CONTROLLER.game().eventLog().print(clock.tickCount());
-            currentGameScene().ifPresent(GameScene::update);
-        } catch (Exception x) {
-            clock.stop();
-            Logger.error(x);
-            Logger.error("Something very bad happened, game clock has been stopped!");
+    private void tickCurrentView() {
+        View currentView = viewPy.get();
+        if (currentView != null) {
+            currentView.onTick();
         }
     }
 
-    protected void runEveryTick() {
-        try {
-            viewPy.get().onTick();
-        } catch (Exception x) {
-            clock.stop();
-            Logger.error(x);
-            Logger.error("Something very bad happened, game clock has been stopped!");
-        }
+    protected void makeSimulationStepAndUpdateCurrentGameScene() {
+        THE_GAME_CONTROLLER.update();
+        THE_GAME_CONTROLLER.game().eventLog().print(clock.tickCount());
+        currentGameScene().ifPresent(GameScene::update);
     }
 
     // icons indicating autopilot, mute state

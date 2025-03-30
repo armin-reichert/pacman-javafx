@@ -82,7 +82,10 @@ public class GameView extends StackPane implements View {
     private final GameAction actionSimulationOneStep = new GameAction() {
         @Override
         public void execute() {
-            THE_UI.clock().makeOneStep(true);
+            boolean success = THE_UI.clock().makeOneStep(true);
+            if (!success) {
+                THE_UI.showFlashMessage("Simulation step error, clock stopped!");
+            }
         }
 
         @Override
@@ -94,7 +97,10 @@ public class GameView extends StackPane implements View {
     private final GameAction actionSimulationTenSteps = new GameAction() {
         @Override
         public void execute() {
-            THE_UI.clock().makeSteps(10, true);
+            boolean success = THE_UI.clock().makeSteps(10, true);
+            if (!success) {
+                THE_UI.showFlashMessage("Simulation step error, clock stopped!");
+            }
         }
 
         @Override

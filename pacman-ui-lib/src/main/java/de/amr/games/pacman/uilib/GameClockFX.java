@@ -33,8 +33,8 @@ public class GameClockFX {
 
     private final BooleanProperty timeMeasuredPy = new SimpleBooleanProperty(this, "timeMeasured", false);
 
-    private Runnable pauseableCallback = () -> {};
-    private Runnable permanentCallback = () -> {};
+    private Runnable pauseableAction = () -> {};
+    private Runnable permanentAction = () -> {};
     private Timeline animation;
     private long updateCount;
     private long tickCount;
@@ -47,12 +47,12 @@ public class GameClockFX {
         create(targetFrameRatePy.get());
     }
 
-    public void setPauseableCallback(Runnable callback) {
-        this.pauseableCallback = callback;
+    public void setPauseableAction(Runnable callback) {
+        this.pauseableAction = callback;
     }
 
-    public void setPermanentCallback(Runnable callback) {
-        this.permanentCallback = callback;
+    public void setPermanentAction(Runnable callback) {
+        this.permanentAction = callback;
     }
 
     public DoubleProperty targetFrameRateProperty() {
@@ -97,22 +97,37 @@ public class GameClockFX {
         return updateCount;
     }
 
-    public void makeSteps(int n, boolean pauseableCallbackEnabled) {
+    public boolean makeSteps(int n, boolean pauseableActionEnabled) {
         for (int i = 0; i < n; ++i) {
-            makeOneStep(pauseableCallbackEnabled);
+            boolean success = makeOneStep(pauseableActionEnabled);
+            if (!success) return false;
         }
+        return true;
     }
 
-    public void makeOneStep(boolean pauseableCallbackEnabled) {
+    public boolean makeOneStep(boolean pauseableActionEnabled) {
         long now = System.nanoTime();
-        if (pauseableCallbackEnabled) {
-            execute(pauseableCallback, "Pauseable phase: {} milliseconds");
-            updateCount++;
+        if (pauseableActionEnabled) {
+            try {
+                execute(pauseableAction, "Pauseable action took {} milliseconds");
+                updateCount++;
+            } catch (Throwable x) {
+                Logger.error(x);
+                Logger.error("Something very bad happened, game clock has been stopped!");
+                return false;
+            }
         }
-        execute(permanentCallback, "Continous phase: {} milliseconds");
-        ++tickCount;
-        ++ticksInFrame;
-        computeFrameRate(now);
+        try {
+            execute(permanentAction, "Permanent action took {} milliseconds");
+            ++tickCount;
+            ++ticksInFrame;
+            computeFrameRate(now);
+        } catch (Throwable x) {
+            Logger.error(x);
+            Logger.error("Something very bad happened, game clock has been stopped!");
+            return false;
+        }
+        return true;
     }
 
     private void create(double targetFPS) {
@@ -136,14 +151,14 @@ public class GameClockFX {
         }
     }
 
-    private void execute(Runnable callback, String logMessage) {
+    private void execute(Runnable action, String logMessage) {
         if (timeMeasuredPy.get()) {
             double start = System.nanoTime();
-            callback.run();
+            action.run();
             double duration = System.nanoTime() - start;
             Logger.info(logMessage, duration / 1e6);
         } else {
-            callback.run();
+            action.run();
         }
     }
 
