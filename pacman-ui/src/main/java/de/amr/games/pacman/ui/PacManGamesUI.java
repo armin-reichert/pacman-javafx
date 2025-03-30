@@ -57,14 +57,7 @@ public class PacManGamesUI implements GameUI {
         }
     };
 
-    protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>() {
-        @Override
-        protected void invalidated() {
-            GameScene gameScene = get();
-            Logger.info("Game scene is now: {}", gameScene != null ? gameScene.displayName() : "NONE");
-        }
-    };
-
+    protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
     protected final ObjectProperty<View> viewPy = new SimpleObjectProperty<>();
 
     protected final GameAssets assets = new GameAssets();
@@ -87,6 +80,7 @@ public class PacManGamesUI implements GameUI {
         clock.setPauseableAction(this::makeSimulationStepAndUpdateCurrentGameScene);
         clock.setPermanentAction(this::tickCurrentView);
         viewPy.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
+        gameScenePy.addListener((py, oldScene, newScene) -> handleGameSceneChange(oldScene, newScene));
     }
 
     private void handleViewChange(View oldView, View newView) {
@@ -102,6 +96,12 @@ public class PacManGamesUI implements GameUI {
             startPageView.currentStartPage().ifPresent(
                 startPage -> startPage.onEnter(THE_GAME_CONTROLLER.selectedGameVariant()));
         }
+    }
+
+    private void handleGameSceneChange(GameScene oldScene, GameScene newScene) {
+        String oldSceneName = oldScene != null ? oldScene.displayName() : "NONE";
+        String newSceneName = newScene != null ? newScene.displayName() : "NONE";
+        Logger.info("Game scene changed from {} to {}", oldSceneName, newSceneName);
     }
 
     private void tickCurrentView() {
