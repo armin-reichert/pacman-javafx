@@ -65,16 +65,7 @@ public class PacManGamesUI implements GameUI {
         }
     };
 
-    protected final ObjectProperty<View> viewPy = new SimpleObjectProperty<>() {
-        @Override
-        protected void invalidated() {
-            View view = get();
-            if (view == startPageView) {
-                startPageView.currentStartPage().ifPresent(
-                    startPage -> startPage.onEnter(THE_GAME_CONTROLLER.selectedGameVariant()));
-            }
-        }
-    };
+    protected final ObjectProperty<View> viewPy = new SimpleObjectProperty<>();
 
     protected final GameAssets assets = new GameAssets();
     protected final GameClockFX clock = new GameClockFX();
@@ -95,16 +86,22 @@ public class PacManGamesUI implements GameUI {
     public PacManGamesUI() {
         clock.setPauseableAction(this::makeSimulationStepAndUpdateCurrentGameScene);
         clock.setPermanentAction(this::tickCurrentView);
-        viewPy.addListener((py, oldView, newView) -> {
-            sceneRoot.getChildren().set(0, newView.node());
-            if (oldView != null) {
-                oldView.disableActionBindings();
-                THE_GAME_CONTROLLER.game().removeGameEventListener(oldView);
-            }
-            newView.enableActionBindings();
-            newView.node().requestFocus();
-            THE_GAME_CONTROLLER.game().addGameEventListener(newView);
-        });
+        viewPy.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
+    }
+
+    private void handleViewChange(View oldView, View newView) {
+        sceneRoot.getChildren().set(0, newView.node());
+        if (oldView != null) {
+            oldView.disableActionBindings();
+            THE_GAME_CONTROLLER.game().removeGameEventListener(oldView);
+        }
+        newView.enableActionBindings();
+        newView.node().requestFocus();
+        THE_GAME_CONTROLLER.game().addGameEventListener(newView);
+        if (newView == startPageView) {
+            startPageView.currentStartPage().ifPresent(
+                startPage -> startPage.onEnter(THE_GAME_CONTROLLER.selectedGameVariant()));
+        }
     }
 
     private void tickCurrentView() {
