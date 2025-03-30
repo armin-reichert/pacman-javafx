@@ -54,8 +54,8 @@ I also had to add the paths "C:\Program Files (x86)\WiX Toolset v3.11\bin" and "
 
 ### Running the application (including all games) using Gradle
 
-- All-game-variants app: `./gradlew pacman-app-allgames:run`
-- Map Editor: `./gradlew pacman-app-mapeditor:run`
+- All-game-variants app: `gradlew pacman-app-allgames:run`
+- Map Editor: `gradlew pacman-app-mapeditor:run`
 
 ## How to use the application
 
