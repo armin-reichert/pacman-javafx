@@ -31,26 +31,20 @@ public class PictureInPictureView extends VBox {
     private GameScene2D scene2D;
 
     public PictureInPictureView() {
+        setPadding(new Insets(5, 15, 5, 15));
         canvas = new Canvas();
         canvas.heightProperty().bind(PY_PIP_HEIGHT);
         canvas.heightProperty().addListener((py,ov,nv) -> recomputeLayout());
         getChildren().add(canvas);
-        setPadding(new Insets(5, 15, 5, 15));
-        backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Background::fill));
-        opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
-        visibleProperty().bind(Bindings.createObjectBinding(
-            () -> PY_PIP_ON.get() && THE_UI.configurations().currentGameSceneIsPlayScene3D(),
-            PY_PIP_ON, THE_UI.gameSceneProperty()
-        ));
         visibleProperty().addListener((py,ov,nv) -> recomputeLayout());
     }
 
     public void setScene2D(GameScene2D scene2D) {
         this.scene2D = assertNotNull(scene2D);
-        scene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
         GameRenderer renderer = THE_UI.configurations().current().createRenderer(canvas);
-        THE_GAME_CONTROLLER.game().level().map(GameLevel::worldMap).ifPresent(renderer::setWorldMap);
+        scene2D.game().level().map(GameLevel::worldMap).ifPresent(renderer::setWorldMap);
         scene2D.setGameRenderer(renderer);
+        scene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
         recomputeLayout();
     }
 

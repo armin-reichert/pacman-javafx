@@ -25,10 +25,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontSmoothingType;
 import org.tinylog.Logger;
@@ -150,7 +147,7 @@ public class GameView extends StackPane implements View {
 
     protected VBox dashboardContainer;
     protected Dashboard dashboard;
-    protected final VBox pipContainer = new VBox();
+    protected VBox pipContainer;
     protected PictureInPictureView pipView;
 
     public GameView(Scene parentScene) {
@@ -218,16 +215,26 @@ public class GameView extends StackPane implements View {
     private void createDashboardLayer() {
         dashboard = new Dashboard();
         dashboardContainer = new VBox();
+        createPiPView();
 
-        pipView = new PictureInPictureView();
+        pipContainer = new VBox();
         pipContainer.getChildren().setAll(pipView, new HBox());
 
+        dashboardLayer.visibleProperty().bind(Bindings.createObjectBinding(
+                () -> dashboardContainer.isVisible() || PY_PIP_ON.get(),
+                dashboardContainer.visibleProperty(), PY_PIP_ON
+        ));
         dashboardLayer.setLeft(dashboardContainer);
         dashboardLayer.setRight(pipContainer);
+    }
 
-        dashboardLayer.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> dashboardContainer.isVisible() || PY_PIP_ON.get(),
-            dashboardContainer.visibleProperty(), PY_PIP_ON
+    private void createPiPView() {
+        pipView = new PictureInPictureView();
+        pipView.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Background::fill));
+        pipView.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
+        pipView.visibleProperty().bind(Bindings.createObjectBinding(
+                () -> PY_PIP_ON.get() && THE_UI.configurations().currentGameSceneIsPlayScene3D(),
+                PY_PIP_ON, THE_UI.gameSceneProperty()
         ));
     }
 
