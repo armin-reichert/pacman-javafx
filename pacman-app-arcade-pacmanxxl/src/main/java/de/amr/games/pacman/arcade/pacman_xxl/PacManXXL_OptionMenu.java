@@ -25,9 +25,6 @@ import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_ENABLED;
 
 public class PacManXXL_OptionMenu extends OptionMenu {
 
-    private static final float UNSCALED_HEIGHT = 36 * TS;
-    private static final float RELATIVE_HEIGHT = 0.9f;
-
     private static class MenuState {
         GameVariant gameVariant;
         boolean play3D;
@@ -42,8 +39,11 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     private final MenuState state = new MenuState();
     private final AnimationTimer drawingLoop;
 
-    public PacManXXL_OptionMenu() {
-        super(UNSCALED_HEIGHT);
+    private float unscaledHeight;
+
+    public PacManXXL_OptionMenu(float unscaledHeight) {
+        super(unscaledHeight);
+        this.unscaledHeight = unscaledHeight;
         setBackgroundFill(Color.web("#0C1568"));
         setTitle("  Pac-Man XXL");
         setOnStart(() -> {
@@ -59,7 +59,6 @@ public class PacManXXL_OptionMenu extends OptionMenu {
                 Logger.error("Game variant {} is not allowed for XXL game", state.gameVariant);
             }
         });
-        scalingProperty().bind(THE_UI.heightProperty().multiply(RELATIVE_HEIGHT).divide(UNSCALED_HEIGHT));
 
         drawingLoop = new AnimationTimer() {
             @Override
@@ -163,6 +162,10 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         g.setFill(hintTextFill);
         g.fillText("      PRESS E TO OPEN EDITOR ", 0, 27 * TS);
         g.restore();
+    }
+
+    public float unscaledHeight() {
+        return unscaledHeight;
     }
 
     public void startDrawingLoop() {

@@ -5,14 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui;
 
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui._2d.GameView;
 import de.amr.games.pacman.ui._2d.StartPage;
 import de.amr.games.pacman.ui.dashboard.Dashboard;
 import de.amr.games.pacman.ui.input.GameKeyboard;
 import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.GameClockFX;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.geometry.Dimension2D;
 import javafx.stage.Stage;
 
@@ -28,7 +26,6 @@ public interface GameUI {
     Optional<GameScene> currentGameScene();
     Dashboard dashboard();
     void enterFullScreenMode();
-    ReadOnlyDoubleProperty heightProperty();
     ObjectProperty<GameScene> gameSceneProperty();
     GameKeyboard keyboard();
     void init(GameVariant variant);

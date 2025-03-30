@@ -17,11 +17,12 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
+import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 public class PacManXXL_StartPage extends StackPane implements StartPage, ResourceManager {
 
-    private final PacManXXL_OptionMenu menu = new PacManXXL_OptionMenu();
+    private final PacManXXL_OptionMenu menu;
 
     @Override
     public Class<?> resourceRootClass() {
@@ -33,6 +34,9 @@ public class PacManXXL_StartPage extends StackPane implements StartPage, Resourc
         Flyer flyer = new Flyer(loadImage("graphics/pacman_xxl_startpage.jpg"));
         flyer.selectFlyerPage(0);
         flyer.setLayoutMode(0, Flyer.LayoutMode.FILL);
+        menu = new PacManXXL_OptionMenu(36*TS);
+        menu.scalingProperty().bind(heightProperty().multiply(0.9).divide(menu.unscaledHeight()));
+
         getChildren().addAll(flyer, menu.root());
     }
 

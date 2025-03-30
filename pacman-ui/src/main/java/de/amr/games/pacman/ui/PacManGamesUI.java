@@ -14,7 +14,6 @@ import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.GameClockFX;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
@@ -276,11 +275,6 @@ public class PacManGamesUI implements GameUI {
     @Override
     public ObjectProperty<GameScene> gameSceneProperty() {
         return gameScenePy;
-    }
-
-    @Override
-    public ReadOnlyDoubleProperty heightProperty() {
-        return mainScene.heightProperty();
     }
 
     @Override
