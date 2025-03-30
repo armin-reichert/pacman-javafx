@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman_xxl;
 
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui.GameUI;
 import de.amr.games.pacman.ui.Globals;
 import de.amr.games.pacman.ui._2d.StartPage;
 import de.amr.games.pacman.ui.dashboard.InfoBoxCustomMaps;
@@ -43,11 +43,18 @@ public class PacManXXL_App extends Application {
         THE_UI.configurations().set(GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_UIConfig());
 
         THE_UI.build(stage, new Dimension2D(width, height));
+        THE_UI.addDefaultDashboardItems(
+                GameUI.DashboardID.README,
+                GameUI.DashboardID.GENERAL,
+                GameUI.DashboardID.GAME_CONTROL,
+                GameUI.DashboardID.SETTINGS_3D,
+                GameUI.DashboardID.GAME_INFO,
+                GameUI.DashboardID.ACTOR_INFO,
+                GameUI.DashboardID.CUSTOM_MAPS,
+                GameUI.DashboardID.KEYBOARD,
+                GameUI.DashboardID.ABOUT);
 
-        THE_UI.addDefaultDashboardItems("README", "GENERAL", "GAME_CONTROL", "SETTINGS_3D", "GAME_INFO",
-            "ACTOR_INFO", "CUSTOM_MAPS", "KEYBOARD", "ABOUT");
-
-        InfoBoxCustomMaps infoBoxCustomMaps = THE_UI.dashboard().getInfoBox("CUSTOM_MAPS");
+        InfoBoxCustomMaps infoBoxCustomMaps = THE_UI.dashboard().getInfoBox(GameUI.DashboardID.CUSTOM_MAPS);
         infoBoxCustomMaps.setTableItems(xxlMapSelector.customMaps());
 
         StartPage xxlStartPage = new PacManXXL_StartPage();

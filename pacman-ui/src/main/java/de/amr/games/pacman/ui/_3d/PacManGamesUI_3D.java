@@ -8,10 +8,8 @@ import de.amr.games.pacman.ui.PacManGamesUI;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.beans.binding.Bindings;
 
-import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_DEBUG_INFO_VISIBLE;
 import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_ENABLED;
-import static de.amr.games.pacman.uilib.Ufx.toggle;
 
 /**
  * User interface for all Pac-Man game variants with a 3D play scene. All others scenes are in 2D.

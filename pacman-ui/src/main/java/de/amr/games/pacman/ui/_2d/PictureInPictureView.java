@@ -6,17 +6,15 @@ package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameLevel;
-import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
-import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
+import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_CANVAS_BG_COLOR;
+import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_PIP_HEIGHT;
 
 /**
  * Picture-in-Picture view. Adapts its aspect ratio to the current game world. Height can be changed via dashboard.

@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.ms_pacman;
 
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui.GameUI;
 import de.amr.games.pacman.ui.Globals;
 import javafx.application.Application;
 import javafx.geometry.Dimension2D;
@@ -32,7 +32,15 @@ public class ArcadeMsPacMan_App extends Application {
         THE_UI.configurations().set(GameVariant.MS_PACMAN, new ArcadeMsPacMan_UIConfig());
         THE_UI.build(stage, new Dimension2D(width, height));
         THE_UI.addStartPage(GameVariant.MS_PACMAN, new ArcadeMsPacMan_StartPage());
-        THE_UI.addDefaultDashboardItems("README", "GENERAL", "GAME_CONTROL", "SETTINGS_3D", "GAME_INFO", "ACTOR_INFO", "KEYBOARD", "ABOUT");
+        THE_UI.addDefaultDashboardItems(
+                GameUI.DashboardID.README,
+                GameUI.DashboardID.GENERAL,
+                GameUI.DashboardID.GAME_CONTROL,
+                GameUI.DashboardID.SETTINGS_3D,
+                GameUI.DashboardID.GAME_INFO,
+                GameUI.DashboardID.ACTOR_INFO,
+                GameUI.DashboardID.KEYBOARD,
+                GameUI.DashboardID.ABOUT);
         THE_UI.show();
     }
 }
