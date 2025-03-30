@@ -31,11 +31,11 @@ public interface GameUI {
     void init(GameVariant variant);
     boolean isScoreVisible();
     void onGameVariantChange(GameVariant gameVariant);
-    void openEditor();
     void setScoreVisible(boolean visible);
     void show();
-    void showStartView();
+    void showEditorView();
     void showGameView();
+    void showStartView();
     void showFlashMessageSec(double seconds, String message, Object... args);
     default void showFlashMessage(String message, Object... args) { showFlashMessageSec(1, message, args); }
     GameSound sound();

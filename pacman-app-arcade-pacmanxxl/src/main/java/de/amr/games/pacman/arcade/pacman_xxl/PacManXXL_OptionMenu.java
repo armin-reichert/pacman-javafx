@@ -148,7 +148,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     protected void handleKeyPress(KeyEvent e) {
         super.handleKeyPress(e);
         if (Keyboard.naked(KeyCode.E).match(e)) {
-            THE_UI.openEditor();
+            THE_UI.showEditorView();
         }
     }
 

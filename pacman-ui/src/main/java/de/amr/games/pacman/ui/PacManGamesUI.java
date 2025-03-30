@@ -40,7 +40,7 @@ import static de.amr.games.pacman.uilib.Ufx.createIcon;
  */
 public class PacManGamesUI implements GameUI {
 
-    protected final GameAction actionOpenEditorView = new GameAction() {
+    protected final GameAction actionShowEditorView = new GameAction() {
         @Override
         public void execute() {
             currentGameScene().ifPresent(GameScene::end);
@@ -70,9 +70,9 @@ public class PacManGamesUI implements GameUI {
     protected Scene mainScene;
     protected final StackPane sceneRoot = new StackPane();
 
-    protected StartPagesCarousel startPagesCarousel;
-    protected GameView gameView;
     protected EditorView editorView;
+    protected GameView gameView;
+    protected StartPagesCarousel startPageView;
 
     protected boolean scoreVisible;
 
@@ -94,8 +94,8 @@ public class PacManGamesUI implements GameUI {
     protected void runEveryTickExceptWhenPaused() {
         try {
             THE_GAME_CONTROLLER.update();
-            currentGameScene().ifPresent(GameScene::update);
             THE_GAME_CONTROLLER.game().eventLog().print(clock.tickCount());
+            currentGameScene().ifPresent(GameScene::update);
         } catch (Exception x) {
             clock.stop();
             Logger.error(x);
@@ -156,7 +156,7 @@ public class PacManGamesUI implements GameUI {
                 sound.toggleMuted();
             }
             else if (GameKeyboard.KEY_OPEN_EDITOR.match(keyPress)) {
-                openEditor();
+                showEditorView();
             }
             else if (viewPy.get() instanceof GameActionProvider actionProvider) {
                 actionProvider.handleInput();
@@ -176,11 +176,11 @@ public class PacManGamesUI implements GameUI {
     }
 
     protected void createStartView() {
-        startPagesCarousel = new StartPagesCarousel();
-        startPagesCarousel.setBackground(assets.background("background.scene"));
+        startPageView = new StartPagesCarousel();
+        startPageView.setBackground(assets.background("background.scene"));
         viewPy.addListener((py, ov, view) -> {
-            if (view == startPagesCarousel) {
-                startPagesCarousel.currentStartPage().ifPresent(startPage ->
+            if (view == startPageView) {
+                startPageView.currentStartPage().ifPresent(startPage ->
                     startPage.onSelected(THE_GAME_CONTROLLER.selectedGameVariant()));
             }
         });
@@ -218,7 +218,7 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public void addStartPage(GameVariant gameVariant, StartPage startPage) {
-        startPagesCarousel.addStartPage(gameVariant, startPage);
+        startPageView.addStartPage(gameVariant, startPage);
     }
 
     /**
@@ -303,9 +303,9 @@ public class PacManGamesUI implements GameUI {
     }
 
     @Override
-    public void openEditor() {
-        if (actionOpenEditorView.isEnabled()) {
-            actionOpenEditorView.execute();
+    public void showEditorView() {
+        if (actionShowEditorView.isEnabled()) {
+            actionShowEditorView.execute();
         }
     }
 
@@ -339,9 +339,9 @@ public class PacManGamesUI implements GameUI {
         clock.stop();
         gameScenePy.set(null);
         gameView.setDashboardVisible(false);
-        viewPy.set(startPagesCarousel);
+        viewPy.set(startPageView);
         //TODO this is needed for XXL option menu
-        startPagesCarousel.currentStartPage().ifPresent(startPage -> startPage.onSelected(THE_GAME_CONTROLLER.selectedGameVariant()));
+        startPageView.currentStartPage().ifPresent(startPage -> startPage.onSelected(THE_GAME_CONTROLLER.selectedGameVariant()));
     }
 
     @Override
