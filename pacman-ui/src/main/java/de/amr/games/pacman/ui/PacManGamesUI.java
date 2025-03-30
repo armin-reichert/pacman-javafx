@@ -56,7 +56,13 @@ public class PacManGamesUI implements GameUI {
         }
     };
 
-    protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
+    protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>() {
+        @Override
+        protected void invalidated() {
+            GameScene gameScene = get();
+            Logger.info("Game scene is now: {}", gameScene != null ? gameScene.displayName() : "NONE");
+        }
+    };
 
     protected final ObjectProperty<View> viewPy = new SimpleObjectProperty<>();
 
@@ -374,7 +380,6 @@ public class PacManGamesUI implements GameUI {
         }
         if (changing) {
             gameScenePy.set(nextGameScene);
-            Logger.info("Game scene is now: {}", nextGameScene.displayName());
         }
     }
 }
