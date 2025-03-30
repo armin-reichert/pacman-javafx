@@ -23,6 +23,7 @@ public interface GameUI {
     void build(Stage stage, Dimension2D size);
     GameClockFX clock();
     UIConfigurationManager configurations();
+    View currentView();
     Optional<GameScene> currentGameScene();
     Dashboard dashboard();
     void enterFullScreenMode();

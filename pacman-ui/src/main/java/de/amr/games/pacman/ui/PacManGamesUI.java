@@ -105,9 +105,8 @@ public class PacManGamesUI implements GameUI {
     }
 
     private void tickCurrentView() {
-        View currentView = viewPy.get();
-        if (currentView != null) {
-            currentView.onTick();
+        if (currentView() != null) {
+            currentView().onTick();
         }
     }
 
@@ -144,7 +143,7 @@ public class PacManGamesUI implements GameUI {
             else if (GameKeyboard.KEY_OPEN_EDITOR.match(keyPress)) {
                 showEditorView();
             }
-            else if (viewPy.get() instanceof GameActionProvider actionProvider) {
+            else if (currentView() instanceof GameActionProvider actionProvider) {
                 actionProvider.handleInput();
             }
         });
@@ -158,11 +157,11 @@ public class PacManGamesUI implements GameUI {
         var pane = new HBox(iconAutopilot, iconMuted);
         pane.setMaxWidth(128);
         pane.setMaxHeight(64);
-        pane.visibleProperty().bind(Bindings.createBooleanBinding(() -> viewPy.get() != editorView, viewPy));
+        pane.visibleProperty().bind(Bindings.createBooleanBinding(() -> currentView() != editorView, viewPy));
         StackPane.setAlignment(pane, Pos.BOTTOM_RIGHT);
 
         iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> viewPy.get() != editorView && clock.isPaused(), viewPy, clock.pausedProperty()));
+            () -> currentView() != editorView && clock.isPaused(), viewPy, clock.pausedProperty()));
         StackPane.setAlignment(iconPaused, Pos.CENTER);
 
         sceneRoot.getChildren().addAll(iconPaused, pane);
@@ -258,6 +257,11 @@ public class PacManGamesUI implements GameUI {
     @Override
     public Optional<GameScene> currentGameScene() {
         return Optional.ofNullable(gameScenePy.get());
+    }
+
+    @Override
+    public View currentView() {
+        return viewPy.get();
     }
 
     @Override
