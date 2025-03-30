@@ -164,9 +164,9 @@ public class PacManGamesUI implements GameUI {
 
     protected void createEditorView() {
         editorView = new EditorView(stage);
-        editorView.setCloseAction(editor -> {
-            editor.executeWithCheckForUnsavedChanges(this::bindStageTitle);
+        editorView.setOnClose(editor -> {
             editor.stop();
+            editor.executeWithCheckForUnsavedChanges(this::bindStageTitle);
             clock.setTargetFrameRate(Globals.TICKS_PER_SECOND);
             THE_GAME_CONTROLLER.restart(GameState.BOOT);
             showStartView();

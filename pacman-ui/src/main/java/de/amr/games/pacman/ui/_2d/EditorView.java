@@ -67,7 +67,7 @@ public class EditorView extends BorderPane implements View {
         return editor;
     }
 
-    public void setCloseAction(Consumer<TileMapEditor> closeAction) {
-        this.closeAction = assertNotNull(closeAction);
+    public void setOnClose(Consumer<TileMapEditor> action) {
+        closeAction = assertNotNull(action);
     }
 }
