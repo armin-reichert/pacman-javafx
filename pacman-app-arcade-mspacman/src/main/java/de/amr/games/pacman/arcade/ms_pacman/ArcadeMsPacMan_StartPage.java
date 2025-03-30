@@ -52,11 +52,6 @@ public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage {
     }
 
     @Override
-    public void start() {
-        THE_UI.showGameView();
-    }
-
-    @Override
     public Node root() {
         return this;
     }

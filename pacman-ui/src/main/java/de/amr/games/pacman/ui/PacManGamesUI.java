@@ -65,7 +65,16 @@ public class PacManGamesUI implements GameUI {
         }
     };
 
-    protected final ObjectProperty<View> viewPy = new SimpleObjectProperty<>();
+    protected final ObjectProperty<View> viewPy = new SimpleObjectProperty<>() {
+        @Override
+        protected void invalidated() {
+            View view = get();
+            if (view == startPageView) {
+                startPageView.currentStartPage().ifPresent(
+                    startPage -> startPage.onEnter(THE_GAME_CONTROLLER.selectedGameVariant()));
+            }
+        }
+    };
 
     protected final GameAssets assets = new GameAssets();
     protected final GameClockFX clock = new GameClockFX();
@@ -176,12 +185,6 @@ public class PacManGamesUI implements GameUI {
     protected void createStartView() {
         startPageView = new StartPagesCarousel();
         startPageView.setBackground(assets.background("background.scene"));
-        viewPy.addListener((py, ov, view) -> {
-            if (view == startPageView) {
-                startPageView.currentStartPage().ifPresent(startPage ->
-                    startPage.onSelected(THE_GAME_CONTROLLER.selectedGameVariant()));
-            }
-        });
     }
 
     protected void createGameView() {
@@ -339,7 +342,7 @@ public class PacManGamesUI implements GameUI {
         gameView.setDashboardVisible(false);
         viewPy.set(startPageView);
         //TODO this is needed for XXL option menu
-        startPageView.currentStartPage().ifPresent(startPage -> startPage.onSelected(THE_GAME_CONTROLLER.selectedGameVariant()));
+        startPageView.currentStartPage().ifPresent(startPage -> startPage.onEnter(THE_GAME_CONTROLLER.selectedGameVariant()));
     }
 
     @Override

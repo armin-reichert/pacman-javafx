@@ -13,17 +13,13 @@ import static de.amr.games.pacman.ui.Globals.THE_UI;
 public interface StartPage {
     Node root();
 
-    default void onSelected(GameVariant gameVariant) {
+    default void onEnter(GameVariant gameVariant) {
         Logger.info("{} selected", getClass().getSimpleName());
         THE_UI.init(gameVariant);
         root().requestFocus();
     }
 
-    default void onDeselected(GameVariant gameVariant) {
+    default void onExit(GameVariant gameVariant) {
         Logger.info("{} deselected", getClass().getSimpleName());
-    }
-
-    default void start() {
-        Logger.info("{} started", getClass().getSimpleName());
     }
 }

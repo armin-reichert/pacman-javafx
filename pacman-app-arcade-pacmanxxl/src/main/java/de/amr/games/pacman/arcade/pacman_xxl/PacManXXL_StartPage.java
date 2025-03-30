@@ -41,15 +41,12 @@ public class PacManXXL_StartPage extends StackPane implements StartPage, Resourc
     }
 
     @Override
-    public void start() {}
-
-    @Override
     public Node root() {
         return this;
     }
 
     @Override
-    public void onSelected(GameVariant gameVariant) {
+    public void onEnter(GameVariant gameVariant) {
         switch (gameVariant) {
             case MS_PACMAN_XXL, PACMAN_XXL -> {
                 GameModel game = THE_GAME_CONTROLLER.game(gameVariant);
@@ -71,7 +68,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage, Resourc
     }
 
     @Override
-    public void onDeselected(GameVariant gameVariant) {
+    public void onExit(GameVariant gameVariant) {
         menu.stopDrawingLoop();
     }
 }

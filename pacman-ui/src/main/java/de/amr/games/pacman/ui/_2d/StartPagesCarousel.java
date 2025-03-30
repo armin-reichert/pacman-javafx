@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.event.GameEvent;
-import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.View;
@@ -49,11 +48,11 @@ public class StartPagesCarousel implements View {
             if (oldIndex != -1) {
                 StartPage startPage = startPageList.get(oldIndex);
                 GameVariant gameVariant = (GameVariant) carousel.slide(oldIndex).getUserData();
-                startPage.onDeselected(gameVariant);
+                startPage.onExit(gameVariant);
             }
             if (newIndex != -1) {
                 GameVariant gameVariant = (GameVariant) carousel.slide(newIndex).getUserData();
-                startPageList.get(newIndex).onSelected(gameVariant);
+                startPageList.get(newIndex).onEnter(gameVariant);
             }
         });
         bindGameActions();
