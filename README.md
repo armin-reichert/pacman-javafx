@@ -91,7 +91,7 @@ Play screen shortcuts:
 
 - <kbd>F1</kbd> or <kbd>Alt+B</kbd> Toggle the dashboard display
 - <kbd>F2</kbd> Toggle the picture-in-picture view
-- <kbd>Alt+Shift+E</kbd> Open the Map Editor (available only for Pac-Man XXL game variant)
+- <kbd>Alt+Shift+E</kbd> Open the Map Editor
 - <kbd>Alt+LEFT</kbd> Select previous camera perspective
 - <kbd>Alt+RIGHT</kbd> Select next camera perspective
 
