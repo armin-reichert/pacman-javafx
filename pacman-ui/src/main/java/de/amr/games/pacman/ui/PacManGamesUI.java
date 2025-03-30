@@ -86,12 +86,12 @@ public class PacManGamesUI implements GameUI {
         clock.setPauseableAction(this::makeSimulationStepAndUpdateCurrentGameScene);
         clock.setPermanentAction(this::tickCurrentView);
         viewPy.addListener((py, oldView, newView) -> {
+            sceneRoot.getChildren().setAll(newView.node());
             if (oldView != null) {
                 oldView.disableActionBindings();
                 THE_GAME_CONTROLLER.game().removeGameEventListener(oldView);
             }
             newView.enableActionBindings();
-            sceneRoot.getChildren().set(0, newView.node());
             newView.node().requestFocus();
             THE_GAME_CONTROLLER.game().addGameEventListener(newView);
         });
@@ -129,7 +129,7 @@ public class PacManGamesUI implements GameUI {
     }
 
     protected void createMainScene(Dimension2D size) {
-        sceneRoot.getChildren().addAll(new Pane());
+        sceneRoot.getChildren().setAll(new Pane()); // placeholder for view
         sceneRoot.setBackground(assets.get("background.scene"));
         sceneRoot.backgroundProperty().bind(gameScenePy.map(
             gameScene -> uiConfigurationManager.currentGameSceneIsPlayScene3D()
