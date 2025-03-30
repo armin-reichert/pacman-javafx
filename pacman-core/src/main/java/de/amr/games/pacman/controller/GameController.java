@@ -74,6 +74,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         assertNotNull(variant);
         GameVariant oldVariant = currentGameModel != null ? selectedGameVariant() : null;
         currentGameModel = game(variant);
+        currentGameModel.init();
         if (oldVariant != variant) {
             currentGameModel.publishGameEvent(GameEventType.GAME_VARIANT_CHANGED);
         }

@@ -245,7 +245,6 @@ public class PacManGamesUI implements GameUI {
         stage.setScene(mainScene);
         stage.centerOnScreen();
         stage.setOnShowing(e -> showStartView());
-        init(THE_GAME_CONTROLLER.selectedGameVariant());
     }
 
     @Override

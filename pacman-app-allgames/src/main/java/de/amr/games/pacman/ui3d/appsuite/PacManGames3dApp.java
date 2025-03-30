@@ -54,7 +54,6 @@ public class PacManGames3dApp extends Application {
         THE_GAME_CONTROLLER.setGameModel(GameVariant.PACMAN,           new ArcadePacMan_GameModel());
         THE_GAME_CONTROLLER.setGameModel(GameVariant.PACMAN_XXL,       new PacManXXL_PacMan_GameModel(xxlMapSelector));
         THE_GAME_CONTROLLER.setGameModel(GameVariant.MS_PACMAN_XXL,    new PacManXXL_MsPacMan_GameModel(xxlMapSelector));
-        THE_GAME_CONTROLLER.games().forEach(GameModel::init);
         THE_GAME_CONTROLLER.selectGameVariant(GameVariant.PACMAN);
     }
 
