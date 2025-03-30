@@ -55,19 +55,4 @@ public class PacManGamesUI_3D extends PacManGamesUI {
             clock().pausedProperty(), gameScenePy, gameView.node().heightProperty(), PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE)
         );
     }
-
-    @Override
-    public void togglePlayScene2D3D() {
-        currentGameScene().ifPresent(gameScene -> {
-            toggle(PY_3D_ENABLED);
-            if (configurations().currentGameSceneIsPlayScene2D()
-                || configurations().currentGameSceneIsPlayScene3D()) {
-                updateGameScene(true);
-                THE_GAME_CONTROLLER.update(); //TODO needed?
-            }
-            if (!THE_GAME_CONTROLLER.game().isPlaying()) {
-                showFlashMessage(assets().text(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
-            }
-        });
-    }
 }

@@ -352,9 +352,6 @@ public class PacManGamesUI implements GameUI {
     }
 
     @Override
-    public void togglePlayScene2D3D() {}
-
-    @Override
     public void updateGameScene(boolean reloadCurrent) {
         final GameScene nextGameScene = uiConfigurationManager.current().selectGameScene();
         if (nextGameScene == null) {

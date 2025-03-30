@@ -8,10 +8,11 @@ import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui._3d.scene3d.Perspective;
 import javafx.scene.shape.DrawMode;
 
+import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_PIP_ON;
-import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_DRAW_MODE;
-import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_PERSPECTIVE;
+import static de.amr.games.pacman.ui._3d.GlobalProperties3d.*;
+import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_ENABLED;
 import static de.amr.games.pacman.uilib.Ufx.toggle;
 
 /**
@@ -47,7 +48,17 @@ public enum GameActions3D implements GameAction {
     TOGGLE_PLAY_SCENE_2D_3D {
         @Override
         public void execute() {
-            THE_UI.togglePlayScene2D3D();
+            THE_UI.currentGameScene().ifPresent(gameScene -> {
+                toggle(PY_3D_ENABLED);
+                if (THE_UI.configurations().currentGameSceneIsPlayScene2D()
+                        || THE_UI.configurations().currentGameSceneIsPlayScene3D()) {
+                    THE_UI.updateGameScene(true);
+                    THE_GAME_CONTROLLER.update(); //TODO needed?
+                }
+                if (!THE_GAME_CONTROLLER.game().isPlaying()) {
+                    THE_UI.showFlashMessage(THE_UI.assets().text(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
+                }
+            });
         }
     },
 

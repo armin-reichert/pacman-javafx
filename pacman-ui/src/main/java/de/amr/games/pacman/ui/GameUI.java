@@ -40,6 +40,5 @@ public interface GameUI {
     void showFlashMessageSec(double seconds, String message, Object... args);
     default void showFlashMessage(String message, Object... args) { showFlashMessageSec(1, message, args); }
     GameSound sound();
-    void togglePlayScene2D3D();
     void updateGameScene(boolean reload);
 }
