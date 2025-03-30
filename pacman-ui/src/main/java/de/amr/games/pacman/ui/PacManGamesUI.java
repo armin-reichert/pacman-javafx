@@ -31,6 +31,7 @@ import java.util.Optional;
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_AUTOPILOT;
 import static de.amr.games.pacman.uilib.Ufx.createIcon;
 
 /**
@@ -86,7 +87,7 @@ public class PacManGamesUI implements GameUI {
         clock.setPauseableAction(this::makeSimulationStepAndUpdateCurrentGameScene);
         clock.setPermanentAction(this::tickCurrentView);
         viewPy.addListener((py, oldView, newView) -> {
-            sceneRoot.getChildren().setAll(newView.node());
+            sceneRoot.getChildren().set(0, newView.node());
             if (oldView != null) {
                 oldView.disableActionBindings();
                 THE_GAME_CONTROLLER.game().removeGameEventListener(oldView);
@@ -110,33 +111,15 @@ public class PacManGamesUI implements GameUI {
         currentGameScene().ifPresent(GameScene::update);
     }
 
-    // icons indicating autopilot, mute state
-    private void addIconPane() {
-        ImageView mutedIcon = createIcon(assets.get("icon.mute"), 48, sound.mutedProperty());
-        ImageView autoIcon  = createIcon(assets.get("icon.auto"), 48, GlobalProperties2d.PY_AUTOPILOT);
-
-        var iconPane = new HBox(autoIcon, mutedIcon);
-        iconPane.setMaxWidth(128);
-        iconPane.setMaxHeight(64);
-        iconPane.visibleProperty().bind(Bindings.createBooleanBinding(() -> viewPy.get() != editorView, viewPy));
-
-        ImageView pauseIcon = createIcon(assets.get("icon.pause"), 64, clock.pausedProperty());
-        pauseIcon.visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> viewPy.get() != editorView && clock.isPaused(), viewPy, clock.pausedProperty()));
-        StackPane.setAlignment(pauseIcon, Pos.CENTER);
-        StackPane.setAlignment(iconPane, Pos.BOTTOM_RIGHT);
-        sceneRoot.getChildren().addAll(pauseIcon, iconPane);
-    }
-
     protected void createMainScene(Dimension2D size) {
-        sceneRoot.getChildren().setAll(new Pane()); // placeholder for view
+        sceneRoot.getChildren().add(new Pane()); // placeholder for view
         sceneRoot.setBackground(assets.get("background.scene"));
         sceneRoot.backgroundProperty().bind(gameScenePy.map(
             gameScene -> uiConfigurationManager.currentGameSceneIsPlayScene3D()
                 ? assets.get("background.play_scene3d")
                 : assets.get("background.scene"))
         );
-        addIconPane();
+        addStatusIcons();
 
         mainScene = new Scene(sceneRoot, size.getWidth(), size.getHeight());
         mainScene.widthProperty() .addListener((py,ov,nv) -> gameView.setSize(mainScene.getWidth(), mainScene.getHeight()));
@@ -159,6 +142,24 @@ public class PacManGamesUI implements GameUI {
                 actionProvider.handleInput();
             }
         });
+    }
+
+    private void addStatusIcons() {
+        ImageView iconMuted = createIcon(assets.get("icon.mute"), 48, sound.mutedProperty());
+        ImageView iconAutopilot = createIcon(assets.get("icon.auto"), 48, PY_AUTOPILOT);
+        ImageView iconPaused = createIcon(assets.get("icon.pause"), 64, clock.pausedProperty());
+
+        var pane = new HBox(iconAutopilot, iconMuted);
+        pane.setMaxWidth(128);
+        pane.setMaxHeight(64);
+        pane.visibleProperty().bind(Bindings.createBooleanBinding(() -> viewPy.get() != editorView, viewPy));
+        StackPane.setAlignment(pane, Pos.BOTTOM_RIGHT);
+
+        iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
+            () -> viewPy.get() != editorView && clock.isPaused(), viewPy, clock.pausedProperty()));
+        StackPane.setAlignment(iconPaused, Pos.CENTER);
+
+        sceneRoot.getChildren().addAll(iconPaused, pane);
     }
 
     protected void createEditorView() {
