@@ -18,6 +18,7 @@ import org.tinylog.Logger;
 import java.util.*;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
+import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 /**
@@ -93,6 +94,8 @@ public class StartPagesCarousel implements View {
     }
 
     public void addStartPage(GameVariant gameVariant, StartPage startPage) {
+        assertNotNull(gameVariant);
+        assertNotNull(startPage);
         if (startPageList.contains(startPage)) {
             Logger.warn("Start page {} has already been added", startPage);
             return;
