@@ -43,7 +43,7 @@ public class CutScene2 extends GameScene2D {
 
     @Override
     public void doInit() {
-        THE_UI.setScoreVisible(true);
+        game().setScoreVisible(true);
 
         pacMan = new Pac();
         msPacMan = new Pac();

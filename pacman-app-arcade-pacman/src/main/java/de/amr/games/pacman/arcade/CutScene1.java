@@ -35,7 +35,7 @@ public class CutScene1 extends GameScene2D {
 
     @Override
     public void doInit() {
-        THE_UI.setScoreVisible(true);
+        game().setScoreVisible(true);
         pac = new Pac();
         blinky = ArcadePacMan_GameModel.blinky();
 

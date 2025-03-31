@@ -22,7 +22,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        THE_UI.setScoreVisible(false);
+        game().setScoreVisible(false);
         THE_UI.keyboard().enableCurrentJoypad();
         bind(GameActions2D.START_GAME, THE_UI.keyboard().currentJoypadKeyBinding().key(NES_JoypadButtonID.START));
     }

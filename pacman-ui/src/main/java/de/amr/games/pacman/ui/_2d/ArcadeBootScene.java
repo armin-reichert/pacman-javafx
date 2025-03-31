@@ -24,7 +24,7 @@ public class ArcadeBootScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        THE_UI.setScoreVisible(false);
+        game().setScoreVisible(false);
     }
 
     @Override

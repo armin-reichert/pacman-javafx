@@ -200,7 +200,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     public void doInit() {
         messageMovement = new MessageMovement();
         THE_UI.keyboard().enableCurrentJoypad();
-        THE_UI.setScoreVisible(true);
+        game().setScoreVisible(true);
         setGameRenderer(THE_UI.configurations().current().createRenderer(canvas));
         movingCamera.focusTopOfScene();
     }
@@ -441,7 +441,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             Logger.warn("Cannot draw scene content, no game level exists");
             return;
         }
-        if (THE_UI.isScoreVisible()) {
+        if (game.isScoreVisible()) {
             r.drawScores(nesPaletteColor(0x20), r.scaledArcadeFont(TS));
         }
         Vector2f messageCenterPosition = centerPosBelowHouse(level);

@@ -59,7 +59,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     @Override
     public void doInit() {
         t = -1;
-        THE_UI.setScoreVisible(false);
+        game().setScoreVisible(false);
         pacMan = new Pac();
         msPacMan = new Pac();
         var spriteSheet = (TengenMsPacMan_SpriteSheet) THE_UI.configurations().current().spriteSheet();

@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 /**
  * Base class of all 2D scenes.
@@ -93,7 +92,7 @@ public abstract class GameScene2D implements GameScene {
     public void draw() {
         gr.setScaling(scaling());
         gr.clearCanvas(backgroundColor());
-        if (THE_UI.isScoreVisible()) {
+        if (game().isScoreVisible()) {
             gr.drawScores(Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS));
         }
         drawSceneContent();

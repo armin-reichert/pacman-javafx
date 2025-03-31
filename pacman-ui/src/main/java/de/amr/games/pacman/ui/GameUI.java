@@ -31,10 +31,8 @@ public interface GameUI {
     ObjectProperty<GameScene> gameSceneProperty();
     GameKeyboard keyboard();
     void selectGameVariant(GameVariant variant);
-    boolean isScoreVisible();
     void onGameVariantChange(GameVariant gameVariant);
     void selectStartPage(int index);
-    void setScoreVisible(boolean visible);
     void show();
     void showEditorView();
     void showGameView();

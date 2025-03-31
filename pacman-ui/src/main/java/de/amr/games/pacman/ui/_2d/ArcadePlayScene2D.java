@@ -54,7 +54,7 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     @Override
     protected void doInit() {
-        THE_UI.setScoreVisible(true);
+        game().setScoreVisible(true);
         bindDefaultArcadeControllerActions(THE_UI.keyboard().currentArcadeKeyBinding());
         bindAlternativePlayerControlActions();
         enableActionBindings();

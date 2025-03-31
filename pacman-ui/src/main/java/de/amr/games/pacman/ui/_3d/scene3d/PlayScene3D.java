@@ -103,7 +103,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     public void init() {
         bindGameActions();
         enableActionBindings();
-        THE_UI.setScoreVisible(true);
+        game().setScoreVisible(true);
         perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
         scores3D.setFont(THE_UI.assets().font("font.arcade", 8));
     }

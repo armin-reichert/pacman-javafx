@@ -93,6 +93,7 @@ public abstract class GameModel {
     protected int initialLives;
     protected int lives;
     protected boolean demoLevel;
+    protected boolean scoreVisible;
 
     protected SimulationStepLog eventLog;
 
@@ -205,6 +206,14 @@ public abstract class GameModel {
 
     public ScoreManager scoreManager() {
         return scoreManager;
+    }
+
+    public void setScoreVisible(boolean scoreVisible) {
+        this.scoreVisible = scoreVisible;
+    }
+
+    public boolean isScoreVisible() {
+        return scoreVisible;
     }
 
     public void setPlaying(boolean playing) {

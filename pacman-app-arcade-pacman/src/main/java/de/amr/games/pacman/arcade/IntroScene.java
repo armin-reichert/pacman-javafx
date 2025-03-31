@@ -104,7 +104,7 @@ public class IntroScene extends GameScene2D {
         titleVisible = false;
         ghostIndex = 0;
         ghostKilledTime = 0;
-        THE_UI.setScoreVisible(true);
+        game().setScoreVisible(true);
         sceneController.restart(SceneState.STARTING);
     }
 

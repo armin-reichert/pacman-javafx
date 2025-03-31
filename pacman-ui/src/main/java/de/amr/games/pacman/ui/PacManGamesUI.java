@@ -74,8 +74,6 @@ public class PacManGamesUI implements GameUI {
     protected GameView gameView;
     protected StartPagesCarousel startPageView;
 
-    protected boolean scoreVisible;
-
     public PacManGamesUI() {
         clock.setPauseableAction(this::doSimulationStepAndUpdateGameScene);
         clock.setPermanentAction(() -> currentView().onTick());
@@ -274,11 +272,6 @@ public class PacManGamesUI implements GameUI {
     }
 
     @Override
-    public boolean isScoreVisible() {
-        return scoreVisible;
-    }
-
-    @Override
     public GameKeyboard keyboard() {
         return keyboard;
     }
@@ -301,11 +294,6 @@ public class PacManGamesUI implements GameUI {
         Logger.info("Init UI for game variant {}...", gameVariant);
         THE_GAME_CONTROLLER.selectGameVariant(gameVariant);
         onGameVariantChange(gameVariant);
-    }
-
-    @Override
-    public void setScoreVisible(boolean visible) {
-        scoreVisible = visible;
     }
 
     @Override
