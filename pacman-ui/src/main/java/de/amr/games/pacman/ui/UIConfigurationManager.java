@@ -56,4 +56,8 @@ public class UIConfigurationManager {
         return currentGameScene.isPresent()
             && current().gameSceneHasID(currentGameScene.get(), "PlayScene3D");
     }
+
+    public boolean currentGameSceneIs2D() {
+        return THE_UI.currentGameScene().map(GameScene2D.class::isInstance).orElse(false);
+    }
 }

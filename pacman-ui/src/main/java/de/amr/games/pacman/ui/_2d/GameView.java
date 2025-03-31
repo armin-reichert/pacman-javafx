@@ -177,7 +177,7 @@ public class GameView implements View {
         bind(GameActions2D.SHOW_START_PAGE,      KeyCode.Q);
         bind(GameActions2D.TOGGLE_PAUSED,        KeyCode.P);
         bind(GameActions2D.TOGGLE_DEBUG_INFO,    alt(KeyCode.D));
-        bind(this::showHelp,                     KeyCode.H);
+        bind(this::showGameSceneHelp,                     KeyCode.H);
         bind(GameActions2D.SIMULATION_SLOWER,    alt(KeyCode.MINUS));
         bind(GameActions2D.SIMULATION_FASTER,    alt(KeyCode.PLUS));
         bind(GameActions2D.SIMULATION_RESET,     alt(KeyCode.DIGIT0));
@@ -240,10 +240,10 @@ public class GameView implements View {
     public void embedGameScene(GameScene gameScene) {
         assertNotNull(gameScene);
         switch (gameScene) {
-            case CameraControlledView cameraControlledView -> {
-                root.getChildren().set(0, cameraControlledView.viewPort());
-                cameraControlledView.viewPortWidthProperty().bind(parentScene.widthProperty());
-                cameraControlledView.viewPortHeightProperty().bind(parentScene.heightProperty());
+            case CameraControlledView gameSceneUsingCamera -> {
+                root.getChildren().set(0, gameSceneUsingCamera.viewPort());
+                gameSceneUsingCamera.viewPortWidthProperty().bind(parentScene.widthProperty());
+                gameSceneUsingCamera.viewPortHeightProperty().bind(parentScene.heightProperty());
             }
             case GameScene2D gameScene2D -> {
                 GameRenderer renderer = THE_UI.configurations().current().createRenderer(gameScenesCanvas);
@@ -266,15 +266,10 @@ public class GameView implements View {
         }
     }
 
-    protected boolean isCurrentGameScene2D() {
-        return THE_UI.currentGameScene().map(GameScene2D.class::isInstance).orElse(false);
-    }
-
-    public void showHelp() {
-        if (THE_GAME_CONTROLLER.selectedGameVariant() != GameVariant.MS_PACMAN_TENGEN) {
-            if (isCurrentGameScene2D()) {
+    public void showGameSceneHelp() {
+        if (!THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN)
+            && THE_UI.configurations().currentGameSceneIs2D()) {
                 popupLayer.showHelp(canvasContainer.scaling());
-            }
         }
     }
 
