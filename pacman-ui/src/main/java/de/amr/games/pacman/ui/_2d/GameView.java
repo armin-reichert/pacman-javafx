@@ -308,12 +308,6 @@ public class GameView implements View {
     }
 
     @Override
-    public void onGameVariantChanged(GameEvent event) {
-        // TODO check if there is a cleaner solution
-        THE_UI.onGameVariantChange(THE_GAME_CONTROLLER.selectedGameVariant());
-    }
-
-    @Override
     public void onStopAllSounds(GameEvent event) {
         THE_UI.sound().stopAll();
     }
