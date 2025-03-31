@@ -60,32 +60,50 @@ public class GameView implements View {
     };
 
     protected final StackPane root = new StackPane();
-    protected final Scene parentScene;
-
-    // Common canvas for rendering 2D scenes
-    protected final Canvas gameScenesCanvas = new Canvas();
-
-    protected BorderPane canvasLayer;
-    protected PopupLayer popupLayer; // help, signature
-    protected final BorderPane dashboardLayer = new BorderPane();
     protected final FlashMessageView flashMessageOverlay = new FlashMessageView();
+    protected final Scene parentScene;
+    protected final BorderPane canvasLayer;
+    protected final PopupLayer popupLayer; // help, signature
+    protected final BorderPane dashboardLayer;
+    protected final VBox dashboardContainer;
+    protected final Dashboard dashboard;
+    protected final TooFancyCanvasContainer canvasContainer;
+    protected final Canvas canvas;
+    protected final VBox pipContainer;
+    protected final PictureInPictureView pipView;
 
-    protected TooFancyCanvasContainer canvasContainer;
     protected ContextMenu contextMenu;
-
-    protected VBox dashboardContainer;
-    protected Dashboard dashboard;
-    protected VBox pipContainer;
-    protected PictureInPictureView pipView;
 
     public GameView(PacManGamesUI ui) {
         this.parentScene = ui.mainScene();
 
-        GraphicsContext g = gameScenesCanvas.getGraphicsContext2D();
+        canvas = new Canvas();
+        canvasContainer = new TooFancyCanvasContainer(canvas);
+        canvasLayer = new BorderPane(canvasContainer);
+        popupLayer = new PopupLayer(canvasContainer);
+
+        dashboardLayer = new BorderPane();
+        dashboardContainer = new VBox();
+        dashboard = new Dashboard();
+
+        pipView = new PictureInPictureView();
+        pipContainer = new VBox(pipView, new HBox());
+
+        root.getChildren().addAll(canvasLayer, dashboardLayer, popupLayer, flashMessageOverlay);
+
+        GraphicsContext g = canvas.getGraphicsContext2D();
         PY_CANVAS_FONT_SMOOTHING.addListener((py, ov, on) -> g.setFontSmoothingType(on ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
         PY_CANVAS_IMAGE_SMOOTHING.addListener((py, ov, on) -> g.setImageSmoothing(on));
+        PY_DEBUG_INFO_VISIBLE.addListener((py, ov, debug) -> {
+            if (debug) {
+                canvasLayer.setBackground(coloredBackground(Color.DARKGREEN));
+                canvasLayer.setBorder(border(Color.LIGHTGREEN, 2));
+            } else {
+                canvasLayer.setBackground(null);
+                canvasLayer.setBorder(null);
+            }
+        });
 
-        canvasContainer = new TooFancyCanvasContainer(gameScenesCanvas);
         canvasContainer.setMinScaling(0.5);
         canvasContainer.setUnscaledCanvasWidth(ARCADE_MAP_SIZE_IN_PIXELS.x());
         canvasContainer.setUnscaledCanvasHeight(ARCADE_MAP_SIZE_IN_PIXELS.y());
@@ -97,31 +115,12 @@ public class GameView implements View {
             }
         });
 
-        canvasLayer = new BorderPane(canvasContainer);
-
-        PY_DEBUG_INFO_VISIBLE.addListener((py, ov, debug) -> {
-            if (debug) {
-                canvasLayer.setBackground(coloredBackground(Color.DARKGREEN));
-                canvasLayer.setBorder(border(Color.LIGHTGREEN, 2));
-            } else {
-                canvasLayer.setBackground(null);
-                canvasLayer.setBorder(null);
-            }
-        });
-
-        dashboard = new Dashboard();
-        dashboardContainer = new VBox();
-
-        pipView = new PictureInPictureView();
         pipView.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Background::fill));
         pipView.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
         pipView.visibleProperty().bind(Bindings.createObjectBinding(
                 () -> PY_PIP_ON.get() && ui.configurations().currentGameSceneIsPlayScene3D(),
                 PY_PIP_ON, ui.gameSceneProperty()
         ));
-
-        pipContainer = new VBox();
-        pipContainer.getChildren().setAll(pipView, new HBox());
 
         dashboardLayer.visibleProperty().bind(Bindings.createObjectBinding(
                 () -> dashboardContainer.isVisible() || PY_PIP_ON.get(),
@@ -130,14 +129,11 @@ public class GameView implements View {
         dashboardLayer.setLeft(dashboardContainer);
         dashboardLayer.setRight(pipContainer);
 
-        popupLayer = new PopupLayer(canvasContainer);
         popupLayer.setMouseTransparent(true);
-
-        root.getChildren().addAll(canvasLayer, dashboardLayer, popupLayer, flashMessageOverlay);
-
         root.setOnContextMenuRequested(this::handleContextMenuRequest);
         //TODO is this the recommended way to close an open context-menu?
         root.setOnMouseClicked(e -> { if (contextMenu != null) contextMenu.hide(); });
+
         bindGameActions();
     }
 
@@ -246,7 +242,7 @@ public class GameView implements View {
                 gameSceneUsingCamera.viewPortHeightProperty().bind(parentScene.heightProperty());
             }
             case GameScene2D gameScene2D -> {
-                GameRenderer renderer = THE_UI.configurations().current().createRenderer(gameScenesCanvas);
+                GameRenderer renderer = THE_UI.configurations().current().createRenderer(canvas);
                 Vector2f sceneSize = gameScene2D.sizeInPx();
                 canvasContainer.setUnscaledCanvasWidth(sceneSize.x());
                 canvasContainer.setUnscaledCanvasHeight(sceneSize.y());
@@ -254,10 +250,10 @@ public class GameView implements View {
                 canvasContainer.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
                 gameScene2D.scalingProperty().bind(
                     canvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_SCALING)));
-                gameScene2D.setCanvas(gameScenesCanvas);
+                gameScene2D.setCanvas(canvas);
                 // avoid showing old content before new scene is rendered
-                gameScenesCanvas.getGraphicsContext2D().setFill(PY_CANVAS_BG_COLOR.get());
-                gameScenesCanvas.getGraphicsContext2D().fillRect(0, 0, gameScenesCanvas.getWidth(), gameScenesCanvas.getHeight());
+                canvas.getGraphicsContext2D().setFill(PY_CANVAS_BG_COLOR.get());
+                canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
                 gameScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
                 gameScene2D.setGameRenderer(renderer);
                 root.getChildren().set(0, canvasLayer);
