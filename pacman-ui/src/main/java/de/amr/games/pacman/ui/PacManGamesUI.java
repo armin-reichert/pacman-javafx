@@ -178,9 +178,17 @@ public class PacManGamesUI implements GameUI {
     }
 
     protected void createGameView() {
-        gameView = new GameView(mainScene);
+        gameView = new GameView(this);
         gameView.gameSceneProperty().bind(gameScenePy);
         gameView.resize(mainScene.getWidth(), mainScene.getHeight());
+    }
+
+    public ObjectProperty<GameScene> gameSceneProperty() {
+        return gameScenePy;
+    }
+
+    public Scene mainScene() {
+        return mainScene;
     }
 
     protected void bindStageTitle() {
@@ -264,11 +272,6 @@ public class PacManGamesUI implements GameUI {
     @Override
     public void enterFullScreenMode() {
         stage.setFullScreen(true);
-    }
-
-    @Override
-    public ObjectProperty<GameScene> gameSceneProperty() {
-        return gameScenePy;
     }
 
     @Override

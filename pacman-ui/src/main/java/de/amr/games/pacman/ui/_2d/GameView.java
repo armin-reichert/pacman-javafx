@@ -150,39 +150,13 @@ public class GameView implements View {
     protected VBox pipContainer;
     protected PictureInPictureView pipView;
 
-    public GameView(Scene parentScene) {
-        this.parentScene = assertNotNull(parentScene);
+    public GameView(PacManGamesUI ui) {
+        this.parentScene = ui.mainScene();
 
         GraphicsContext g = gameScenesCanvas.getGraphicsContext2D();
         PY_CANVAS_FONT_SMOOTHING.addListener((py, ov, on) -> g.setFontSmoothingType(on ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
         PY_CANVAS_IMAGE_SMOOTHING.addListener((py, ov, on) -> g.setImageSmoothing(on));
 
-        createCanvasLayer();
-        createDashboardLayer();
-
-        popupLayer = new PopupLayer(canvasContainer);
-        popupLayer.setMouseTransparent(true);
-
-        root.getChildren().addAll(canvasLayer, dashboardLayer, popupLayer, flashMessageOverlay);
-
-        root.setOnContextMenuRequested(this::handleContextMenuRequest);
-        //TODO is this the recommended way to close an open context-menu?
-        root.setOnMouseClicked(e -> { if (contextMenu != null) contextMenu.hide(); });
-        bindGameActions();
-    }
-
-    @Override
-    public StackPane node() {
-        return root;
-    }
-
-    public ObjectProperty<GameScene> gameSceneProperty() { return gameScenePy; }
-
-    public FlashMessageView flashMessageOverlay() {
-        return flashMessageOverlay;
-    }
-
-    private void createCanvasLayer() {
         canvasContainer = new TooFancyCanvasContainer(gameScenesCanvas);
         canvasContainer.setMinScaling(0.5);
         canvasContainer.setUnscaledCanvasWidth(ARCADE_MAP_SIZE_IN_PIXELS.x());
@@ -206,16 +180,17 @@ public class GameView implements View {
                 canvasLayer.setBorder(null);
             }
         });
-    }
 
-    //
-    // Dashboard
-    //
-
-    private void createDashboardLayer() {
         dashboard = new Dashboard();
         dashboardContainer = new VBox();
-        createPiPView();
+
+        pipView = new PictureInPictureView();
+        pipView.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Background::fill));
+        pipView.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
+        pipView.visibleProperty().bind(Bindings.createObjectBinding(
+                () -> PY_PIP_ON.get() && ui.configurations().currentGameSceneIsPlayScene3D(),
+                PY_PIP_ON, ui.gameSceneProperty()
+        ));
 
         pipContainer = new VBox();
         pipContainer.getChildren().setAll(pipView, new HBox());
@@ -226,17 +201,32 @@ public class GameView implements View {
         ));
         dashboardLayer.setLeft(dashboardContainer);
         dashboardLayer.setRight(pipContainer);
+
+        popupLayer = new PopupLayer(canvasContainer);
+        popupLayer.setMouseTransparent(true);
+
+        root.getChildren().addAll(canvasLayer, dashboardLayer, popupLayer, flashMessageOverlay);
+
+        root.setOnContextMenuRequested(this::handleContextMenuRequest);
+        //TODO is this the recommended way to close an open context-menu?
+        root.setOnMouseClicked(e -> { if (contextMenu != null) contextMenu.hide(); });
+        bindGameActions();
     }
 
-    private void createPiPView() {
-        pipView = new PictureInPictureView();
-        pipView.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Background::fill));
-        pipView.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
-        pipView.visibleProperty().bind(Bindings.createObjectBinding(
-                () -> PY_PIP_ON.get() && THE_UI.configurations().currentGameSceneIsPlayScene3D(),
-                PY_PIP_ON, THE_UI.gameSceneProperty()
-        ));
+    @Override
+    public StackPane node() {
+        return root;
     }
+
+    public ObjectProperty<GameScene> gameSceneProperty() { return gameScenePy; }
+
+    public FlashMessageView flashMessageOverlay() {
+        return flashMessageOverlay;
+    }
+
+    //
+    // Dashboard
+    //
 
     public Dashboard dashboard() {
         return dashboard;

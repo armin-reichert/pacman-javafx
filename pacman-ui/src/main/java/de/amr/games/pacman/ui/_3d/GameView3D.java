@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._3d;
 
+import de.amr.games.pacman.ui.PacManGamesUI;
 import de.amr.games.pacman.ui._2d.GameView;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
@@ -22,8 +23,8 @@ import static de.amr.games.pacman.uilib.Ufx.contextMenuTitleItem;
  */
 public class GameView3D extends GameView {
 
-    public GameView3D(Scene parentScene) {
-        super(parentScene);
+    public GameView3D(PacManGamesUI ui) {
+        super(ui);
     }
 
     @Override
