@@ -344,7 +344,7 @@ public class PacManGamesUI implements GameUI {
         gameScenePy.set(null);
         gameView.setDashboardVisible(false);
         viewPy.set(startPageView);
-        startPageView.currentStartPage().ifPresent(startPage -> startPage.requestFocus());
+        startPageView.currentStartPage().ifPresent(StartPage::requestFocus);
     }
 
     @Override
