@@ -30,7 +30,7 @@ public interface GameUI {
     void enterFullScreenMode();
     ObjectProperty<GameScene> gameSceneProperty();
     GameKeyboard keyboard();
-    void init(GameVariant variant);
+    void selectGameVariant(GameVariant variant);
     boolean isScoreVisible();
     void onGameVariantChange(GameVariant gameVariant);
     void selectStartPage(int index);

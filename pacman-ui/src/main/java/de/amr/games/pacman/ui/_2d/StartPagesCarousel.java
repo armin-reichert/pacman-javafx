@@ -51,7 +51,7 @@ public class StartPagesCarousel implements View {
             }
             if (newIndex != -1) {
                 StartPage startPage = startPageList.get(newIndex);
-                THE_UI.init(startPage.currentGameVariant());
+                THE_UI.selectGameVariant(startPage.currentGameVariant());
                 startPage.requestFocus();
                 startPage.onEnter();
             }

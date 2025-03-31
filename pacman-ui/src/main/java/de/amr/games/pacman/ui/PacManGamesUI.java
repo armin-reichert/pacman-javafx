@@ -274,7 +274,7 @@ public class PacManGamesUI implements GameUI {
     }
 
     @Override
-    public void init(GameVariant gameVariant) {
+    public void selectGameVariant(GameVariant gameVariant) {
         Logger.info("Init UI for game variant {}...", gameVariant);
         THE_GAME_CONTROLLER.selectGameVariant(gameVariant);
         onGameVariantChange(gameVariant);
@@ -317,7 +317,7 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public void show() {
-        init(THE_GAME_CONTROLLER.selectedGameVariant());
+        selectGameVariant(THE_GAME_CONTROLLER.selectedGameVariant());
         showStartView();
         stage.centerOnScreen();
         stage.show();
