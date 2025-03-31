@@ -20,6 +20,7 @@ import javafx.scene.paint.Color;
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_ENABLED;
 
 public class PacManXXL_StartPage extends StackPane implements StartPage, ResourceManager {
 
@@ -32,15 +33,41 @@ public class PacManXXL_StartPage extends StackPane implements StartPage, Resourc
 
     public PacManXXL_StartPage(GameVariant gameVariant) {
         setBackground(Background.fill(Color.BLACK));
+
         Flyer flyer = new Flyer(loadImage("graphics/pacman_xxl_startpage.jpg"));
         flyer.selectFlyerPage(0);
         flyer.setLayoutMode(0, Flyer.LayoutMode.FILL);
+
         menu = new PacManXXL_OptionMenu(36*TS);
-        //TODO check this:
-        menu.setState(true, gameVariant, false, MapSelectionMode.CUSTOM_MAPS_FIRST, true);
         menu.scalingProperty().bind(heightProperty().multiply(0.9).divide(menu.unscaledHeight()));
 
+        //TODO check this:
+        GameModel game = THE_GAME_CONTROLLER.game(gameVariant);
+        game.mapSelector().loadAllMaps(game);
+        menu.setState(PY_3D_ENABLED.get(), gameVariant, game.isCutScenesEnabled(),
+            MapSelectionMode.CUSTOM_MAPS_FIRST, !game.mapSelector().customMaps().isEmpty());
+
         getChildren().addAll(flyer, menu.root());
+    }
+
+    @Override
+    public void onEnter() {
+        GameVariant gameVariant = currentGameVariant();
+        switch (gameVariant) {
+            case MS_PACMAN_XXL, PACMAN_XXL -> {
+                GameModel game = THE_GAME_CONTROLLER.game(gameVariant);
+                game.mapSelector().loadAllMaps(game);
+                menu.setState(
+                    PY_3D_ENABLED.get(),
+                    currentGameVariant(),
+                    game.isCutScenesEnabled(),
+                    game.mapSelector().mapSelectionMode(),
+                    !game.mapSelector().customMaps().isEmpty()
+                );
+                menu.startDrawingLoop();
+            }
+            default -> throw new IllegalStateException("Illegal game variant for this start page: %s".formatted(currentGameVariant()));
+        }
     }
 
     @Override
@@ -56,27 +83,6 @@ public class PacManXXL_StartPage extends StackPane implements StartPage, Resourc
     @Override
     public void requestFocus() {
         menu.root().requestFocus();
-    }
-
-    @Override
-    public void onEnter() {
-        switch (currentGameVariant()) {
-            case MS_PACMAN_XXL, PACMAN_XXL -> {
-                GameModel game = THE_GAME_CONTROLLER.game(currentGameVariant());
-                MapSelector mapSelector = game.mapSelector();
-                mapSelector.loadAllMaps(game);
-                menu.setState(
-                    GlobalProperties3d.PY_3D_ENABLED.get(),
-                    currentGameVariant(),
-                    game.isCutScenesEnabled(),
-                    mapSelector.mapSelectionMode(),
-                    !mapSelector.customMaps().isEmpty()
-                );
-                menu.root().requestFocus();
-                menu.startDrawingLoop();
-            }
-            default -> throw new IllegalStateException("Illegal game variant for this start page: %s".formatted(currentGameVariant()));
-        }
     }
 
     @Override

@@ -39,7 +39,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     private final MenuState state = new MenuState();
     private final AnimationTimer drawingLoop;
 
-    private float unscaledHeight;
+    private final float unscaledHeight;
 
     public PacManXXL_OptionMenu(float unscaledHeight) {
         super(unscaledHeight);
