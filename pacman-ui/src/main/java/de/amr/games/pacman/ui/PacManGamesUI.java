@@ -275,23 +275,17 @@ public class PacManGamesUI implements GameUI {
     }
 
     @Override
-    public void onGameVariantChange(GameVariant gameVariant) {
-        GameUIConfiguration uiConfig = uiConfigurationManager.configuration(gameVariant);
-        sound.selectGameVariant(gameVariant, uiConfig.assetNamespace());
-        stage.getIcons().setAll(uiConfig.appIcon());
-        gameView.canvasContainer().decorationEnabledPy.set(uiConfig.isGameCanvasDecorated());
-    }
-
-    @Override
     public void selectStartPage(int index) {
         startPageView.selectStartPage(index);
     }
 
     @Override
     public void selectGameVariant(GameVariant gameVariant) {
-        Logger.info("Init UI for game variant {}...", gameVariant);
         THE_GAME_CONTROLLER.selectGameVariant(gameVariant);
-        onGameVariantChange(gameVariant);
+        GameUIConfiguration uiConfig = uiConfigurationManager.configuration(gameVariant);
+        sound.selectGameVariant(gameVariant, uiConfig.assetNamespace());
+        stage.getIcons().setAll(uiConfig.appIcon());
+        gameView.canvasContainer().decorationEnabledPy.set(uiConfig.isGameCanvasDecorated());
     }
 
     @Override

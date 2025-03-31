@@ -29,7 +29,6 @@ public interface GameUI {
     Dashboard dashboard();
     GameKeyboard keyboard();
     void selectGameVariant(GameVariant variant);
-    void onGameVariantChange(GameVariant gameVariant);
     void selectStartPage(int index);
     void show();
     void showEditorView();
