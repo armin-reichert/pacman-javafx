@@ -20,9 +20,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
@@ -40,6 +39,8 @@ import static de.amr.games.pacman.uilib.Ufx.createIcon;
  * @author Armin Reichert
  */
 public class PacManGamesUI implements GameUI {
+
+    private static final byte STATUS_ICON_SIZE = 36;
 
     protected final GameAction actionShowEditorView = new GameAction() {
         @Override
@@ -145,10 +146,10 @@ public class PacManGamesUI implements GameUI {
     }
 
     private void addStatusIcons(Pane parent) {
-        ImageView iconMuted = createIcon(assets.get("icon.mute"), 48);
+        ImageView iconMuted = createIcon(assets.get("icon.mute"), STATUS_ICON_SIZE);
         iconMuted.visibleProperty().bind(sound.mutedProperty());
 
-        ImageView iconAutopilot = createIcon(assets.get("icon.auto"), 48);
+        ImageView iconAutopilot = createIcon(assets.get("icon.auto"), STATUS_ICON_SIZE);
         iconAutopilot.visibleProperty().bind(PY_AUTOPILOT);
 
         ImageView iconPaused = createIcon(assets.get("icon.pause"), 64);
@@ -156,9 +157,10 @@ public class PacManGamesUI implements GameUI {
             () -> currentView() != editorView && clock.isPaused(),
             viewPy, clock.pausedProperty()));
 
-        var hBox = new HBox(iconAutopilot, iconMuted);
-        hBox.setMaxWidth(128);
-        hBox.setMaxHeight(64);
+        Region spring = new Region();
+        HBox.setHgrow(spring, Priority.ALWAYS);
+        var hBox = new HBox(3, spring, iconAutopilot, iconMuted);
+        hBox.setMaxHeight(STATUS_ICON_SIZE);
         hBox.visibleProperty().bind(Bindings.createBooleanBinding(() -> currentView() != editorView, viewPy));
 
         parent.getChildren().addAll(iconPaused, hBox);
