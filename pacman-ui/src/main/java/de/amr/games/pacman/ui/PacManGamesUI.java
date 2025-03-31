@@ -274,13 +274,6 @@ public class PacManGamesUI implements GameUI {
     }
 
     @Override
-    public void selectGameVariant(GameVariant gameVariant) {
-        Logger.info("Init UI for game variant {}...", gameVariant);
-        THE_GAME_CONTROLLER.selectGameVariant(gameVariant);
-        onGameVariantChange(gameVariant);
-    }
-
-    @Override
     public boolean isScoreVisible() {
         return scoreVisible;
     }
@@ -304,10 +297,10 @@ public class PacManGamesUI implements GameUI {
     }
 
     @Override
-    public void showEditorView() {
-        if (actionShowEditorView.isEnabled()) {
-            actionShowEditorView.execute();
-        }
+    public void selectGameVariant(GameVariant gameVariant) {
+        Logger.info("Init UI for game variant {}...", gameVariant);
+        THE_GAME_CONTROLLER.selectGameVariant(gameVariant);
+        onGameVariantChange(gameVariant);
     }
 
     @Override
@@ -321,6 +314,13 @@ public class PacManGamesUI implements GameUI {
         showStartView();
         stage.centerOnScreen();
         stage.show();
+    }
+
+    @Override
+    public void showEditorView() {
+        if (actionShowEditorView.isEnabled()) {
+            actionShowEditorView.execute();
+        }
     }
 
     @Override
