@@ -231,7 +231,6 @@ public class PacManGamesUI implements GameUI {
         stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
         stage.setMinHeight(ARCADE_MAP_SIZE_IN_PIXELS.y() * 1.25);
         stage.setScene(mainScene);
-        stage.centerOnScreen();
     }
 
     @Override
@@ -320,6 +319,7 @@ public class PacManGamesUI implements GameUI {
     public void show() {
         init(THE_GAME_CONTROLLER.selectedGameVariant());
         showStartView();
+        stage.centerOnScreen();
         stage.show();
     }
 
