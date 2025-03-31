@@ -34,12 +34,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
+import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
 import static de.amr.games.pacman.uilib.Keyboard.*;
-import static de.amr.games.pacman.uilib.Ufx.*;
+import static de.amr.games.pacman.uilib.Ufx.border;
+import static de.amr.games.pacman.uilib.Ufx.coloredBackground;
 
 /**
  * This view shows the game play and the overlays like dashboard and picture-in-picture view of the running play scene.
@@ -47,80 +49,6 @@ import static de.amr.games.pacman.uilib.Ufx.*;
 public class GameView implements View {
 
     private static final double MAX_SCENE_SCALING = 5;
-
-    private static final int SIMULATION_SPEED_DELTA = 2;
-    private static final int SIMULATION_SPEED_MIN   = 10;
-    private static final int SIMULATION_SPEED_MAX   = 240;
-
-    private final GameAction actionShowHelp = this::showHelp;
-
-    private final GameAction actionSimulationSpeedSlower = () -> {
-        double newRate = THE_UI.clock().getTargetFrameRate() - SIMULATION_SPEED_DELTA;
-        newRate = clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
-        THE_UI.clock().setTargetFrameRate(newRate);
-        String prefix = newRate == SIMULATION_SPEED_MIN ? "At minimum speed: " : "";
-        THE_UI.showFlashMessageSec(0.75, prefix + newRate + "Hz");
-    };
-
-    private final GameAction actionSimulationSpeedFaster = () -> {
-        double newRate = THE_UI.clock().getTargetFrameRate() + SIMULATION_SPEED_DELTA;
-        newRate = clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
-        THE_UI.clock().setTargetFrameRate(newRate);
-        String prefix = newRate == SIMULATION_SPEED_MAX ? "At maximum speed: " : "";
-        THE_UI.showFlashMessageSec(0.75, prefix + newRate + "Hz");
-    };
-
-    private final GameAction actionSimulationSpeedReset = () -> {
-        THE_UI.clock().setTargetFrameRate(TICKS_PER_SECOND);
-        THE_UI.showFlashMessageSec(0.75, THE_UI.clock().getTargetFrameRate() + "Hz");
-    };
-
-    private final GameAction actionSimulationOneStep = new GameAction() {
-        @Override
-        public void execute() {
-            boolean success = THE_UI.clock().makeOneStep(true);
-            if (!success) {
-                THE_UI.showFlashMessage("Simulation step error, clock stopped!");
-            }
-        }
-
-        @Override
-        public boolean isEnabled() {
-            return THE_UI.clock().isPaused();
-        }
-    };
-
-    private final GameAction actionSimulationTenSteps = new GameAction() {
-        @Override
-        public void execute() {
-            boolean success = THE_UI.clock().makeSteps(10, true);
-            if (!success) {
-                THE_UI.showFlashMessage("Simulation step error, clock stopped!");
-            }
-        }
-
-        @Override
-        public boolean isEnabled() {
-            return THE_UI.clock().isPaused();
-        }
-    };
-
-    private final GameAction actionToggleAutopilot = () -> {
-        toggle(PY_AUTOPILOT);
-        boolean auto = PY_AUTOPILOT.get();
-        THE_UI.showFlashMessage(THE_UI.assets().text(auto ? "autopilot_on" : "autopilot_off"));
-        THE_UI.sound().playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
-    };
-
-    private final GameAction actionToggleDashboard = this::toggleDashboardVisibility;
-
-    private final GameAction actionToggleDebugInfo = () -> toggle(PY_DEBUG_INFO_VISIBLE);
-
-    private final GameAction actionToggleImmunity = () -> {
-        toggle(PY_IMMUNITY);
-        THE_UI.showFlashMessage(THE_UI.assets().text(PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
-        THE_UI.sound().playVoice(PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
-    };
 
     protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
 
@@ -224,10 +152,6 @@ public class GameView implements View {
         return flashMessageOverlay;
     }
 
-    //
-    // Dashboard
-    //
-
     public Dashboard dashboard() {
         return dashboard;
     }
@@ -249,19 +173,19 @@ public class GameView implements View {
 
     @Override
     public void bindGameActions() {
-        bind(GameActions2D.BOOT,            KeyCode.F3);
-        bind(GameActions2D.SHOW_START_PAGE, KeyCode.Q);
-        bind(GameActions2D.TOGGLE_PAUSED,   KeyCode.P);
-        bind(actionToggleDebugInfo,         alt(KeyCode.D));
-        bind(actionShowHelp,                KeyCode.H);
-        bind(actionSimulationSpeedSlower,   alt(KeyCode.MINUS));
-        bind(actionSimulationSpeedFaster,   alt(KeyCode.PLUS));
-        bind(actionSimulationSpeedReset,    alt(KeyCode.DIGIT0));
-        bind(actionSimulationOneStep,       shift(KeyCode.P));
-        bind(actionSimulationTenSteps,      shift(KeyCode.SPACE));
-        bind(actionToggleAutopilot,         alt(KeyCode.A));
-        bind(actionToggleDashboard,         naked(KeyCode.F1), alt(KeyCode.B));
-        bind(actionToggleImmunity,          alt(KeyCode.I));
+        bind(GameActions2D.BOOT,                 KeyCode.F3);
+        bind(GameActions2D.SHOW_START_PAGE,      KeyCode.Q);
+        bind(GameActions2D.TOGGLE_PAUSED,        KeyCode.P);
+        bind(GameActions2D.TOGGLE_DEBUG_INFO,    alt(KeyCode.D));
+        bind(this::showHelp,                     KeyCode.H);
+        bind(GameActions2D.SIMULATION_SLOWER,    alt(KeyCode.MINUS));
+        bind(GameActions2D.SIMULATION_FASTER,    alt(KeyCode.PLUS));
+        bind(GameActions2D.SIMULATION_RESET,     alt(KeyCode.DIGIT0));
+        bind(GameActions2D.SIMULATION_ONE_STEP,  shift(KeyCode.P));
+        bind(GameActions2D.SIMULATION_TEN_STEPS, shift(KeyCode.SPACE));
+        bind(GameActions2D.TOGGLE_AUTOPILOT,     alt(KeyCode.A));
+        bind(this::toggleDashboardVisibility,    naked(KeyCode.F1), alt(KeyCode.B));
+        bind(GameActions2D.TOGGLE_IMMUNITY,      alt(KeyCode.I));
     }
 
     @Override

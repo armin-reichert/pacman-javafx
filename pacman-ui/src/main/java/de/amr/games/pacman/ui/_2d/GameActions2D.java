@@ -13,11 +13,13 @@ import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameScene;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
+import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_IMMUNITY;
 import static de.amr.games.pacman.uilib.Ufx.toggle;
 import static java.util.function.Predicate.not;
 
@@ -25,6 +27,7 @@ import static java.util.function.Predicate.not;
  * @author Armin Reichert
  */
 public enum GameActions2D implements GameAction {
+
     /**
      * Adds credit (simulates insertion of a coin) and switches the game state accordingly.
      */
@@ -159,16 +162,6 @@ public enum GameActions2D implements GameAction {
         }
     },
 
-    SHOW_START_PAGE {
-        @Override
-        public void execute() {
-            THE_UI.sound().stopAll();
-            THE_UI.currentGameScene().ifPresent(GameScene::end);
-            THE_GAME_CONTROLLER.game().endGame();
-            THE_UI.showStartView();
-        }
-    },
-
     RESTART_INTRO {
         @Override
         public void execute() {
@@ -179,6 +172,76 @@ public enum GameActions2D implements GameAction {
             }
             THE_UI.clock().setTargetFrameRate(Globals.TICKS_PER_SECOND);
             THE_GAME_CONTROLLER.restart(INTRO);
+        }
+    },
+
+    SIMULATION_SLOWER {
+        @Override
+        public void execute() {
+            double newRate = THE_UI.clock().getTargetFrameRate() - SIMULATION_SPEED_DELTA;
+            newRate = clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
+            THE_UI.clock().setTargetFrameRate(newRate);
+            String prefix = newRate == SIMULATION_SPEED_MIN ? "At minimum speed: " : "";
+            THE_UI.showFlashMessageSec(0.75, prefix + newRate + "Hz");
+        }
+    },
+
+    SIMULATION_FASTER {
+        @Override
+        public void execute() {
+            double newRate = THE_UI.clock().getTargetFrameRate() + SIMULATION_SPEED_DELTA;
+            newRate = clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
+            THE_UI.clock().setTargetFrameRate(newRate);
+            String prefix = newRate == SIMULATION_SPEED_MAX ? "At maximum speed: " : "";
+            THE_UI.showFlashMessageSec(0.75, prefix + newRate + "Hz");
+        }
+    },
+
+    SIMULATION_ONE_STEP {
+        @Override
+        public void execute() {
+            boolean success = THE_UI.clock().makeOneStep(true);
+            if (!success) {
+                THE_UI.showFlashMessage("Simulation step error, clock stopped!");
+            }
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return THE_UI.clock().isPaused();
+        }
+    },
+
+    SIMULATION_TEN_STEPS {
+        @Override
+        public void execute() {
+            boolean success = THE_UI.clock().makeSteps(10, true);
+            if (!success) {
+                THE_UI.showFlashMessage("Simulation step error, clock stopped!");
+            }
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return THE_UI.clock().isPaused();
+        }
+    },
+
+    SIMULATION_RESET {
+        @Override
+        public void execute() {
+            THE_UI.clock().setTargetFrameRate(TICKS_PER_SECOND);
+            THE_UI.showFlashMessageSec(0.75, THE_UI.clock().getTargetFrameRate() + "Hz");
+        }
+    },
+
+    SHOW_START_PAGE {
+        @Override
+        public void execute() {
+            THE_UI.sound().stopAll();
+            THE_UI.currentGameScene().ifPresent(GameScene::end);
+            THE_GAME_CONTROLLER.game().endGame();
+            THE_UI.showStartView();
         }
     },
 
@@ -222,6 +285,32 @@ public enum GameActions2D implements GameAction {
         }
     },
 
+    TOGGLE_AUTOPILOT {
+        @Override
+        public void execute() {
+            toggle(PY_AUTOPILOT);
+            boolean auto = PY_AUTOPILOT.get();
+            THE_UI.showFlashMessage(THE_UI.assets().text(auto ? "autopilot_on" : "autopilot_off"));
+            THE_UI.sound().playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
+        }
+    },
+
+    TOGGLE_DEBUG_INFO {
+        @Override
+        public void execute() {
+            toggle(PY_DEBUG_INFO_VISIBLE);
+        }
+    },
+
+    TOGGLE_IMMUNITY {
+        @Override
+        public void execute() {
+            toggle(PY_IMMUNITY);
+            THE_UI.showFlashMessage(THE_UI.assets().text(PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
+            THE_UI.sound().playVoice(PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
+        }
+    },
+
     TOGGLE_PAUSED {
         @Override
         public void execute() {
@@ -231,5 +320,9 @@ public enum GameActions2D implements GameAction {
             }
             Logger.info("Game ({}) {}", THE_GAME_CONTROLLER.selectedGameVariant(), THE_UI.clock().isPaused() ? "paused" : "resumed");
         }
-    }
+    };
+
+    private static final int SIMULATION_SPEED_DELTA = 2;
+    private static final int SIMULATION_SPEED_MIN   = 10;
+    private static final int SIMULATION_SPEED_MAX   = 240;
 }
