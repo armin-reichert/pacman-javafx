@@ -18,7 +18,7 @@ import java.util.Optional;
 
 public interface GameUI {
     enum DashboardID { README, GENERAL, GAME_CONTROL, SETTINGS_3D, GAME_INFO, ACTOR_INFO, KEYBOARD, ABOUT, CUSTOM_MAPS, JOYPAD }
-    void addStartPage(GameVariant gameVariant, StartPage startPage);
+    void addStartPage(StartPage startPage);
     void addDefaultDashboardItems(DashboardID... ids);
     GameAssets assets();
     void build(Stage stage, Dimension2D size);

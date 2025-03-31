@@ -6,6 +6,7 @@ package de.amr.games.pacman.arcade.pacman_xxl;
 
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.MapSelectionMode;
 import de.amr.games.pacman.model.MapSelector;
 import de.amr.games.pacman.ui._2d.StartPage;
 import de.amr.games.pacman.ui._3d.GlobalProperties3d;
@@ -29,15 +30,22 @@ public class PacManXXL_StartPage extends StackPane implements StartPage, Resourc
         return PacManXXL_StartPage.class;
     }
 
-    public PacManXXL_StartPage() {
+    public PacManXXL_StartPage(GameVariant gameVariant) {
         setBackground(Background.fill(Color.BLACK));
         Flyer flyer = new Flyer(loadImage("graphics/pacman_xxl_startpage.jpg"));
         flyer.selectFlyerPage(0);
         flyer.setLayoutMode(0, Flyer.LayoutMode.FILL);
         menu = new PacManXXL_OptionMenu(36*TS);
+        //TODO check this:
+        menu.setState(true, gameVariant, false, MapSelectionMode.CUSTOM_MAPS_FIRST, true);
         menu.scalingProperty().bind(heightProperty().multiply(0.9).divide(menu.unscaledHeight()));
 
         getChildren().addAll(flyer, menu.root());
+    }
+
+    @Override
+    public GameVariant currentGameVariant() {
+        return menu.state().gameVariant;
     }
 
     @Override
@@ -46,29 +54,33 @@ public class PacManXXL_StartPage extends StackPane implements StartPage, Resourc
     }
 
     @Override
-    public void onEnter(GameVariant gameVariant) {
-        switch (gameVariant) {
+    public void requestFocus() {
+        menu.root().requestFocus();
+    }
+
+    @Override
+    public void onEnter() {
+        switch (currentGameVariant()) {
             case MS_PACMAN_XXL, PACMAN_XXL -> {
-                GameModel game = THE_GAME_CONTROLLER.game(gameVariant);
+                GameModel game = THE_GAME_CONTROLLER.game(currentGameVariant());
                 MapSelector mapSelector = game.mapSelector();
                 mapSelector.loadAllMaps(game);
                 menu.setState(
                     GlobalProperties3d.PY_3D_ENABLED.get(),
-                    gameVariant,
+                    currentGameVariant(),
                     game.isCutScenesEnabled(),
                     mapSelector.mapSelectionMode(),
                     !mapSelector.customMaps().isEmpty()
                 );
-                THE_UI.init(gameVariant);
+                menu.root().requestFocus();
+                menu.startDrawingLoop();
             }
-            default -> throw new IllegalStateException("Illegal game variant for this start page: %s".formatted(gameVariant));
+            default -> throw new IllegalStateException("Illegal game variant for this start page: %s".formatted(currentGameVariant()));
         }
-        menu.root().requestFocus();
-        menu.startDrawingLoop();
     }
 
     @Override
-    public void onExit(GameVariant gameVariant) {
+    public void onExit() {
         menu.stopDrawingLoop();
     }
 }

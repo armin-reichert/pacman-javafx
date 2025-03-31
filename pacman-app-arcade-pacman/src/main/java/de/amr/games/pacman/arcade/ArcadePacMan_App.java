@@ -31,7 +31,7 @@ public class ArcadePacMan_App extends Application {
         Globals.createUIWith3DSupport();
         THE_UI.configurations().set(GameVariant.PACMAN, new ArcadePacMan_UIConfig());
         THE_UI.build(stage, new Dimension2D(width, height));
-        THE_UI.addStartPage(GameVariant.PACMAN, new ArcadePacMan_StartPage());
+        THE_UI.addStartPage(new ArcadePacMan_StartPage(GameVariant.PACMAN));
         THE_UI.addDefaultDashboardItems(
                 GameUI.DashboardID.README,
                 GameUI.DashboardID.GENERAL,

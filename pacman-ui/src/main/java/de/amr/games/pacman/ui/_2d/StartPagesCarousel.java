@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.event.GameEvent;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.View;
 import de.amr.games.pacman.uilib.Carousel;
@@ -48,12 +47,13 @@ public class StartPagesCarousel implements View {
             int oldIndex = ov.intValue(), newIndex = nv.intValue();
             if (oldIndex != -1) {
                 StartPage startPage = startPageList.get(oldIndex);
-                GameVariant gameVariant = (GameVariant) carousel.slide(oldIndex).getUserData();
-                startPage.onExit(gameVariant);
+                startPage.onExit();
             }
             if (newIndex != -1) {
-                GameVariant gameVariant = (GameVariant) carousel.slide(newIndex).getUserData();
-                startPageList.get(newIndex).onEnter(gameVariant);
+                StartPage startPage = startPageList.get(newIndex);
+                startPage.root().requestFocus();
+                THE_UI.init(startPage.currentGameVariant());
+                startPage.onEnter();
             }
         });
         bindGameActions();
@@ -93,8 +93,7 @@ public class StartPagesCarousel implements View {
         return Optional.of(startPageList.get(carousel.selectedSlideIndex()));
     }
 
-    public void addStartPage(GameVariant gameVariant, StartPage startPage) {
-        assertNotNull(gameVariant);
+    public void addStartPage(StartPage startPage) {
         assertNotNull(startPage);
         if (startPageList.contains(startPage)) {
             Logger.warn("Start page {} has already been added", startPage);
@@ -102,10 +101,9 @@ public class StartPagesCarousel implements View {
         }
         startPageList.add(startPage);
         Node slide = startPage.root();
-        slide.setUserData(gameVariant);
         carousel.addSlide(slide);
         carousel.setNavigationVisible(carousel.numSlides() >= 2);
-        Logger.info("Start page {} added for game variant {}", startPage, gameVariant);
+        Logger.info("Start page {} added", startPage);
     }
 
     public void selectStartPage(int index) {

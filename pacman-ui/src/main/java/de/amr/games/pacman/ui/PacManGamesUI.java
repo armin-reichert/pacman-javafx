@@ -210,8 +210,8 @@ public class PacManGamesUI implements GameUI {
     }
 
     @Override
-    public void addStartPage(GameVariant gameVariant, StartPage startPage) {
-        startPageView.addStartPage(gameVariant, startPage);
+    public void addStartPage(StartPage startPage) {
+        startPageView.addStartPage(startPage);
     }
 
     /**
@@ -318,6 +318,7 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public void show() {
+        init(THE_GAME_CONTROLLER.selectedGameVariant());
         showStartView();
         stage.show();
     }
@@ -343,8 +344,7 @@ public class PacManGamesUI implements GameUI {
         gameScenePy.set(null);
         gameView.setDashboardVisible(false);
         viewPy.set(startPageView);
-        //TODO this is needed for XXL option menu
-        startPageView.currentStartPage().ifPresent(startPage -> startPage.onEnter(THE_GAME_CONTROLLER.selectedGameVariant()));
+        startPageView.currentStartPage().ifPresent(startPage -> startPage.requestFocus());
     }
 
     @Override

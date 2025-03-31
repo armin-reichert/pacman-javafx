@@ -25,7 +25,7 @@ import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_ENABLED;
 
 public class PacManXXL_OptionMenu extends OptionMenu {
 
-    private static class MenuState {
+    public static class MenuState {
         GameVariant gameVariant;
         boolean play3D;
         boolean cutScenesEnabled;
@@ -193,6 +193,10 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         entryMapSelectionMode.setEnabled(customMapsExist);
 
         logMenuState();
+    }
+
+    public MenuState state() {
+        return state;
     }
 
     private void logMenuState() {

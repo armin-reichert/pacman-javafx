@@ -7,7 +7,6 @@ package de.amr.games.pacman.arcade.pacman_xxl;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.GameUI;
 import de.amr.games.pacman.ui.Globals;
-import de.amr.games.pacman.ui._2d.StartPage;
 import de.amr.games.pacman.ui.dashboard.InfoBoxCustomMaps;
 import javafx.application.Application;
 import javafx.geometry.Dimension2D;
@@ -57,9 +56,7 @@ public class PacManXXL_App extends Application {
         InfoBoxCustomMaps infoBoxCustomMaps = THE_UI.dashboard().getInfoBox(GameUI.DashboardID.CUSTOM_MAPS);
         infoBoxCustomMaps.setTableItems(xxlMapSelector.customMaps());
 
-        StartPage xxlStartPage = new PacManXXL_StartPage();
-        THE_UI.addStartPage(GameVariant.PACMAN_XXL,    xxlStartPage);
-        THE_UI.addStartPage(GameVariant.MS_PACMAN_XXL, xxlStartPage);
+        THE_UI.addStartPage(new PacManXXL_StartPage(GameVariant.PACMAN_XXL));
         THE_UI.selectStartPage(0);
         THE_UI.show();
     }

@@ -16,13 +16,17 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 
+import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage {
 
+    private GameVariant gameVariant;
     private final Flyer flyer;
 
-    public ArcadeMsPacMan_StartPage() {
+    public ArcadeMsPacMan_StartPage(GameVariant gameVariant) {
+        this.gameVariant = assertNotNull(gameVariant);
+
         ResourceManager rm = this::getClass;
         flyer = new Flyer(
             rm.loadImage("graphics/f1.jpg"),
@@ -40,6 +44,11 @@ public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage {
                 case UP -> flyer.prevFlyerPage();
             }
         });
+    }
+
+    @Override
+    public GameVariant currentGameVariant() {
+        return gameVariant;
     }
 
     private Node startButton() {

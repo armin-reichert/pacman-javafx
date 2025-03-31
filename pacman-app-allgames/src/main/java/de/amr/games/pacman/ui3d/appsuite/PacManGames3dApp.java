@@ -19,7 +19,6 @@ import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.games.pacman.ui.GameUI;
 import de.amr.games.pacman.ui.Globals;
-import de.amr.games.pacman.ui._2d.StartPage;
 import de.amr.games.pacman.ui.dashboard.InfoBoxCustomMaps;
 import de.amr.games.pacman.uilib.model3D.Model3D;
 import javafx.application.Application;
@@ -83,12 +82,10 @@ public class PacManGames3dApp extends Application {
         InfoBoxCustomMaps infoBoxCustomMaps = THE_UI.dashboard().getInfoBox(GameUI.DashboardID.CUSTOM_MAPS);
         infoBoxCustomMaps.setTableItems(xxlMapSelector.customMaps());
 
-        StartPage pacManXXL_StartPage = new PacManXXL_StartPage();
-        THE_UI.addStartPage(GameVariant.PACMAN,           new ArcadePacMan_StartPage());
-        THE_UI.addStartPage(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_StartPage());
-        THE_UI.addStartPage(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_StartPage());
-        THE_UI.addStartPage(GameVariant.PACMAN_XXL,       pacManXXL_StartPage);
-        THE_UI.addStartPage(GameVariant.MS_PACMAN_XXL,    pacManXXL_StartPage);
+        THE_UI.addStartPage(new ArcadePacMan_StartPage(GameVariant.PACMAN));
+        THE_UI.addStartPage(new ArcadeMsPacMan_StartPage(GameVariant.MS_PACMAN));
+        THE_UI.addStartPage(new TengenMsPacMan_StartPage(GameVariant.MS_PACMAN_TENGEN));
+        THE_UI.addStartPage(new PacManXXL_StartPage(GameVariant.PACMAN_XXL));
         THE_UI.selectStartPage(0);
         THE_UI.show();
 
