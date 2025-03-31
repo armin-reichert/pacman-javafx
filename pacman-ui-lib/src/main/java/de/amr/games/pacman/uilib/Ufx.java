@@ -86,11 +86,10 @@ public interface Ufx {
         }
     }
 
-    static ImageView createIcon(Image iconImage, int size, ObservableBooleanValue visibleProperty) {
+    static ImageView createIcon(Image iconImage, int size) {
         var icon = new ImageView(iconImage);
         icon.setFitWidth(size);
         icon.setPreserveRatio(true);
-        icon.visibleProperty().bind(visibleProperty);
         return icon;
     }
 
