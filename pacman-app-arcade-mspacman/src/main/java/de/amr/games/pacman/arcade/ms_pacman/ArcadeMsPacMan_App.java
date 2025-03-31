@@ -41,6 +41,7 @@ public class ArcadeMsPacMan_App extends Application {
                 GameUI.DashboardID.ACTOR_INFO,
                 GameUI.DashboardID.KEYBOARD,
                 GameUI.DashboardID.ABOUT);
+        THE_UI.selectStartPage(0);
         THE_UI.show();
     }
 }

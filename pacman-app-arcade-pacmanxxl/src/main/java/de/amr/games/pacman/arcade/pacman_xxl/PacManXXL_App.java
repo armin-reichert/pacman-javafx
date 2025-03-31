@@ -60,7 +60,7 @@ public class PacManXXL_App extends Application {
         StartPage xxlStartPage = new PacManXXL_StartPage();
         THE_UI.addStartPage(GameVariant.PACMAN_XXL,    xxlStartPage);
         THE_UI.addStartPage(GameVariant.MS_PACMAN_XXL, xxlStartPage);
-
+        THE_UI.selectStartPage(0);
         THE_UI.show();
     }
 }

@@ -33,6 +33,7 @@ public interface GameUI {
     void init(GameVariant variant);
     boolean isScoreVisible();
     void onGameVariantChange(GameVariant gameVariant);
+    void selectStartPage(int index);
     void setScoreVisible(boolean visible);
     void show();
     void showEditorView();

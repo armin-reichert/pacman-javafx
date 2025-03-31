@@ -105,8 +105,11 @@ public class StartPagesCarousel implements View {
         slide.setUserData(gameVariant);
         carousel.addSlide(slide);
         carousel.setNavigationVisible(carousel.numSlides() >= 2);
-        carousel.selectedIndexProperty().set(0); //TODO check this
         Logger.info("Start page {} added for game variant {}", startPage, gameVariant);
+    }
+
+    public void selectStartPage(int index) {
+        carousel.selectedIndexProperty().set(index);
     }
 
     public void setBackground(Background background) {

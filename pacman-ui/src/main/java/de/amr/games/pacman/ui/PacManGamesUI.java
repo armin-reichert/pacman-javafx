@@ -21,7 +21,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
@@ -99,10 +98,6 @@ public class PacManGamesUI implements GameUI {
         newView.enableActionBindings();
         newView.node().requestFocus();
         THE_GAME_CONTROLLER.game().addGameEventListener(newView);
-        if (newView == startPageView) {
-            startPageView.currentStartPage().ifPresent(
-                startPage -> startPage.onEnter(THE_GAME_CONTROLLER.selectedGameVariant()));
-        }
     }
 
     private void handleGameSceneChange(GameScene oldScene, GameScene newScene) {
@@ -237,7 +232,6 @@ public class PacManGamesUI implements GameUI {
         stage.setMinHeight(ARCADE_MAP_SIZE_IN_PIXELS.y() * 1.25);
         stage.setScene(mainScene);
         stage.centerOnScreen();
-        stage.setOnShowing(e -> showStartView());
     }
 
     @Override
@@ -306,6 +300,11 @@ public class PacManGamesUI implements GameUI {
     }
 
     @Override
+    public void selectStartPage(int index) {
+        startPageView.selectStartPage(index);
+    }
+
+    @Override
     public void showEditorView() {
         if (actionShowEditorView.isEnabled()) {
             actionShowEditorView.execute();
@@ -319,6 +318,7 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public void show() {
+        showStartView();
         stage.show();
     }
 

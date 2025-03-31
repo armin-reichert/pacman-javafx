@@ -89,7 +89,7 @@ public class PacManGames3dApp extends Application {
         THE_UI.addStartPage(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_StartPage());
         THE_UI.addStartPage(GameVariant.PACMAN_XXL,       pacManXXL_StartPage);
         THE_UI.addStartPage(GameVariant.MS_PACMAN_XXL,    pacManXXL_StartPage);
-
+        THE_UI.selectStartPage(0);
         THE_UI.show();
 
         DirectoryWatchdog goodBoy = new DirectoryWatchdog(GameModel.CUSTOM_MAP_DIR);
