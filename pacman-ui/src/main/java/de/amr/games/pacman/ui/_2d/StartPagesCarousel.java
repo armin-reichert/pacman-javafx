@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._2d;
 
-import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.View;
 import de.amr.games.pacman.uilib.Carousel;
@@ -16,7 +15,6 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 
@@ -78,12 +76,6 @@ public class StartPagesCarousel implements View {
         bind(carousel::showNextSlide,     KeyCode.RIGHT);
         bind(actionSelectGamePage,        KeyCode.ENTER);
         bind(GameActions2D.TOGGLE_PAUSED, KeyCode.P);
-    }
-
-    @Override
-    public void onGameVariantChanged(GameEvent event) {
-        // TODO check if there is a cleaner solution
-        THE_UI.onGameVariantChange(THE_GAME_CONTROLLER.selectedGameVariant());
     }
 
     public Optional<StartPage> currentStartPage() {
