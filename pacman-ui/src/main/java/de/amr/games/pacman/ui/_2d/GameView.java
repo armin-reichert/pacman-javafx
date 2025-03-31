@@ -193,17 +193,17 @@ public class GameView implements View {
         return actionBindings;
     }
 
+    @Override
+    public void handleInput() {
+        ifTriggeredRunActionElse(() -> THE_UI.currentGameScene().ifPresent(GameActionProvider::handleInput));
+    }
+
     public TooFancyCanvasContainer canvasContainer() {
         return canvasContainer;
     }
 
     public void resize(double width, double height) {
         canvasContainer.resizeTo(width, height);
-    }
-
-    @Override
-    public void handleInput() {
-        ifTriggeredRunActionElse(() -> THE_UI.currentGameScene().ifPresent(GameActionProvider::handleInput));
     }
 
     public void onTick() {

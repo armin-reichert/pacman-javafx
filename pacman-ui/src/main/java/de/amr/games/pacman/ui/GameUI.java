@@ -27,7 +27,6 @@ public interface GameUI {
     View currentView();
     Optional<GameScene> currentGameScene();
     Dashboard dashboard();
-    void enterFullScreenMode();
     GameKeyboard keyboard();
     void selectGameVariant(GameVariant variant);
     void onGameVariantChange(GameVariant gameVariant);

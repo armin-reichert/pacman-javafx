@@ -124,7 +124,7 @@ public class PacManGamesUI implements GameUI {
 
         mainScene.setOnKeyPressed(keyPress -> {
             if (GameKeyboard.KEY_FULLSCREEN.match(keyPress)) {
-                enterFullScreenMode();
+                stage.setFullScreen(true);
             }
             else if (GameKeyboard.KEY_MUTE.match(keyPress)) {
                 sound.toggleMuted();
@@ -267,11 +267,6 @@ public class PacManGamesUI implements GameUI {
     @Override
     public Dashboard dashboard() {
         return gameView.dashboard();
-    }
-
-    @Override
-    public void enterFullScreenMode() {
-        stage.setFullScreen(true);
     }
 
     @Override
