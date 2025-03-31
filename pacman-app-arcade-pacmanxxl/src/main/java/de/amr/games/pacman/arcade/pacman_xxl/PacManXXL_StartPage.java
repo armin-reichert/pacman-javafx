@@ -7,9 +7,7 @@ package de.amr.games.pacman.arcade.pacman_xxl;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.MapSelectionMode;
-import de.amr.games.pacman.model.MapSelector;
 import de.amr.games.pacman.ui._2d.StartPage;
-import de.amr.games.pacman.ui._3d.GlobalProperties3d;
 import de.amr.games.pacman.uilib.Flyer;
 import de.amr.games.pacman.uilib.ResourceManager;
 import javafx.scene.Node;
@@ -19,11 +17,11 @@ import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_ENABLED;
 
-public class PacManXXL_StartPage extends StackPane implements StartPage, ResourceManager {
+public class PacManXXL_StartPage implements StartPage, ResourceManager {
 
+    private final StackPane root = new StackPane();
     private final PacManXXL_OptionMenu menu;
 
     @Override
@@ -32,14 +30,14 @@ public class PacManXXL_StartPage extends StackPane implements StartPage, Resourc
     }
 
     public PacManXXL_StartPage(GameVariant gameVariant) {
-        setBackground(Background.fill(Color.BLACK));
+        root.setBackground(Background.fill(Color.BLACK));
 
         Flyer flyer = new Flyer(loadImage("graphics/pacman_xxl_startpage.jpg"));
         flyer.selectFlyerPage(0);
         flyer.setLayoutMode(0, Flyer.LayoutMode.FILL);
 
         menu = new PacManXXL_OptionMenu(36*TS);
-        menu.scalingProperty().bind(heightProperty().multiply(0.9).divide(menu.unscaledHeight()));
+        menu.scalingProperty().bind(root.heightProperty().multiply(0.9).divide(menu.unscaledHeight()));
 
         //TODO check this:
         GameModel game = THE_GAME_CONTROLLER.game(gameVariant);
@@ -47,7 +45,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage, Resourc
         menu.setState(PY_3D_ENABLED.get(), gameVariant, game.isCutScenesEnabled(),
             MapSelectionMode.CUSTOM_MAPS_FIRST, !game.mapSelector().customMaps().isEmpty());
 
-        getChildren().addAll(flyer, menu.root());
+        root.getChildren().addAll(flyer, menu.root());
     }
 
     @Override
@@ -77,7 +75,7 @@ public class PacManXXL_StartPage extends StackPane implements StartPage, Resourc
 
     @Override
     public Node root() {
-        return this;
+        return root;
     }
 
     @Override
