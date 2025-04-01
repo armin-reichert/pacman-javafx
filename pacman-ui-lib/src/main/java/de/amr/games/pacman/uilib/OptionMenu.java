@@ -107,10 +107,10 @@ public class OptionMenu {
         this.tilesY = tilesY;
         float height = tilesY * TS;
 
-        setTitle("YOUR OPTIONS");
+        setTitle("OPTIONS");
         setCommandTexts(
             "SELECT OPTIONS WITH UP AND DOWN",
-            "PRESS SPACE TO CHANGE OPTIONS",
+            "PRESS SPACE TO CHANGE VALUE",
             "PRESS ENTER TO START"
         );
 

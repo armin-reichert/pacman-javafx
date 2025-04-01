@@ -43,7 +43,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         setTitle("Pac-Man XXL");
         setCommandTexts(
             "SELECT OPTIONS WITH UP AND DOWN",
-            "PRESS SPACE TO CHANGE OPTIONS",
+            "PRESS SPACE TO CHANGE VALUE",
             "PRESS E TO OPEN EDITOR",
             "PRESS ENTER TO START"
         );
