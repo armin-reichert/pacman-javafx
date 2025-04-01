@@ -25,6 +25,8 @@ import static de.amr.games.pacman.Globals.*;
 
 public class OptionMenu {
 
+    private static final float TITLE_FONT_SCALING = 3f;
+
     public static abstract class MenuEntry<T> {
         protected boolean enabled;
         protected final String text;
@@ -82,15 +84,15 @@ public class OptionMenu {
 
     private Runnable actionOnStart;
 
-    private String title = "123456789012345";
+    private String title = "";
     private String[] commandTexts = new String[0];
 
     private final BorderPane root = new BorderPane();
     protected final Canvas canvas = new Canvas();
     protected final FloatProperty scalingPy = new SimpleFloatProperty(2);
 
-    protected final Font arcadeFont8;
-    protected final Font arcadeFont20;
+    protected final Font textFont;
+    protected final Font titleFont;
 
     protected Paint backgroundFill = Color.BLACK;
     protected Paint borderStroke = Color.WHITESMOKE;
@@ -104,6 +106,8 @@ public class OptionMenu {
         this.tilesX = tilesX;
         this.tilesY = tilesY;
         float height = tilesY * TS;
+
+        setTitle("YOUR OPTIONS");
         setCommandTexts(
             "SELECT OPTIONS WITH UP AND DOWN",
             "PRESS SPACE TO CHANGE OPTIONS",
@@ -114,8 +118,8 @@ public class OptionMenu {
         root.setBorder(Border.stroke(borderStroke));
 
         ResourceManager rm = () -> OptionMenu.class;
-        arcadeFont8 = rm.loadFont("fonts/emulogic.ttf", 8);
-        arcadeFont20 = rm.loadFont("fonts/emulogic.ttf", 20);
+        textFont = rm.loadFont("fonts/emulogic.ttf", TS);
+        titleFont = rm.loadFont("fonts/emulogic.ttf", TITLE_FONT_SCALING * TS);
 
         selectEntrySound = rm.loadAudioClip("sounds/menu-select1.wav");
         selectValueSound = rm.loadAudioClip("sounds/menu-select2.wav");
@@ -127,6 +131,44 @@ public class OptionMenu {
         canvas.heightProperty().bind(scalingPy.multiply(height));
 
         root.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPress);
+    }
+
+    public void draw() {
+        GraphicsContext g = canvas.getGraphicsContext2D();
+        g.setFill(backgroundFill);
+        g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+        g.save();
+        g.scale(scalingPy.doubleValue(), scalingPy.doubleValue());
+
+        float x = (tilesX - TITLE_FONT_SCALING * title.length()) * 0.5f * TS;
+        g.setFont(titleFont);
+        g.setFill(titleTextFill);
+        g.fillText(title, x, 6 * TS);
+        g.setFont(textFont);
+
+        for (int i = 0; i < entries.size(); ++i) {
+            int y = (12 + 3 * i) * TS;
+            MenuEntry<?> entry = entries.get(i);
+            if (i == selectedEntryIndex) {
+                g.setFill(entryTextFill);
+                g.fillText("-", TS, y);
+                g.fillText(">", TS+HTS, y);
+            }
+            g.setFill(entryTextFill);
+            g.fillText(entry.text, 3 * TS, y);
+            g.setFill(entry.enabled ? entryValueFill : entryValueDisabledFill);
+            g.fillText(entry.selectedValueText(), 17 * TS, y);
+        }
+
+        g.setFill(hintTextFill);
+        int line = tilesY - 2 * commandTexts.length;
+        for (String commandText : commandTexts) {
+             int ox = (tilesX - commandText.length()) / 2;
+            g.fillText(commandText, ox * TS, line * TS);
+            line += 2;
+        }
+        g.restore();
     }
 
     protected void handleKeyPress(KeyEvent e) {
@@ -200,43 +242,6 @@ public class OptionMenu {
 
     public void setOnStart(Runnable action) {
         this.actionOnStart = action;
-    }
-
-    public void draw() {
-        GraphicsContext g = canvas.getGraphicsContext2D();
-        g.setFill(backgroundFill);
-        g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
-        g.save();
-        g.scale(scalingPy.doubleValue(), scalingPy.doubleValue());
-
-        g.setFont(arcadeFont20);
-        g.setFill(titleTextFill);
-        g.fillText(title, 0, 6 * TS);
-        g.setFont(arcadeFont8);
-
-        for (int i = 0; i < entries.size(); ++i) {
-            int y = (12 + 3 * i) * TS;
-            MenuEntry<?> entry = entries.get(i);
-            if (i == selectedEntryIndex) {
-                g.setFill(entryTextFill);
-                g.fillText("-", TS, y);
-                g.fillText(">", TS+HTS, y);
-            }
-            g.setFill(entryTextFill);
-            g.fillText(entry.text, 3 * TS, y);
-            g.setFill(entry.enabled ? entryValueFill : entryValueDisabledFill);
-            g.fillText(entry.selectedValueText(), 17 * TS, y);
-        }
-
-        g.setFill(hintTextFill);
-        int line = tilesY - 2 * commandTexts.length;
-        for (String commandText : commandTexts) {
-            int x = (tilesX - commandText.length()) / 2;
-            g.fillText(commandText, x*TS, line * TS);
-            line += 2;
-        }
-        g.restore();
     }
 
     public void setCommandTexts(String... lines) {

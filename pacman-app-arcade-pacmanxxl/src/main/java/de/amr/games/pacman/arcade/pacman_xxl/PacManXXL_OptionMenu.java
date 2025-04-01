@@ -40,7 +40,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     public PacManXXL_OptionMenu(int tilesX, int tilesY) {
         super(tilesX, tilesY);
         setBackgroundFill(Color.web("#0C1568"));
-        setTitle("  Pac-Man XXL");
+        setTitle("Pac-Man XXL");
         setCommandTexts(
             "SELECT OPTIONS WITH UP AND DOWN",
             "PRESS SPACE TO CHANGE OPTIONS",
