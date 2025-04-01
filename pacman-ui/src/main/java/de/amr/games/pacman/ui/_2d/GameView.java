@@ -170,16 +170,16 @@ public class GameView implements View {
     @Override
     public void bindGameActions() {
         bind(GameActions2D.BOOT,                 KeyCode.F3);
-        bind(GameActions2D.SHOW_START_PAGE,      KeyCode.Q);
-        bind(GameActions2D.TOGGLE_PAUSED,        KeyCode.P);
-        bind(GameActions2D.TOGGLE_DEBUG_INFO,    alt(KeyCode.D));
         bind(this::showGameSceneHelp,            KeyCode.H);
+        bind(GameActions2D.SHOW_START_PAGE,      KeyCode.Q);
         bind(GameActions2D.SIMULATION_SLOWER,    alt(KeyCode.MINUS));
         bind(GameActions2D.SIMULATION_FASTER,    alt(KeyCode.PLUS));
         bind(GameActions2D.SIMULATION_RESET,     alt(KeyCode.DIGIT0));
         bind(GameActions2D.SIMULATION_ONE_STEP,  shift(KeyCode.P));
         bind(GameActions2D.SIMULATION_TEN_STEPS, shift(KeyCode.SPACE));
         bind(GameActions2D.TOGGLE_AUTOPILOT,     alt(KeyCode.A));
+        bind(GameActions2D.TOGGLE_DEBUG_INFO,    alt(KeyCode.D));
+        bind(GameActions2D.TOGGLE_PAUSED,        KeyCode.P);
         bind(this::toggleDashboardVisibility,    naked(KeyCode.F1), alt(KeyCode.B));
         bind(GameActions2D.TOGGLE_IMMUNITY,      alt(KeyCode.I));
     }
