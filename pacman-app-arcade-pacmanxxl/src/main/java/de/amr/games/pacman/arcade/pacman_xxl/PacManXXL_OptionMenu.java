@@ -84,6 +84,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
                 };
             }
         };
+        addEntry(entryGameVariant);
 
         entryPlay3D = new OptionMenu.MenuEntry<>("SCENE DISPLAY",
             List.of(true, false))
@@ -99,6 +100,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
                 return selectedValue() ? "3D" : "2D";
             }
         };
+        addEntry(entryPlay3D);
 
         entryCutScenesEnabled = new OptionMenu.MenuEntry<>("CUTSCENES",
                 List.of(true, false))
@@ -114,6 +116,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
                 return selectedValue() ? "ON" : "OFF";
             }
         };
+        addEntry(entryCutScenesEnabled);
 
         entryMapSelectionMode = new OptionMenu.MenuEntry<>("MAP ORDER",
                 List.of(MapSelectionMode.CUSTOM_MAPS_FIRST, MapSelectionMode.ALL_RANDOM))
@@ -138,10 +141,6 @@ public class PacManXXL_OptionMenu extends OptionMenu {
                 };
             }
         };
-
-        addEntry(entryGameVariant);
-        addEntry(entryPlay3D);
-        addEntry(entryCutScenesEnabled);
         addEntry(entryMapSelectionMode);
     }
 
@@ -163,8 +162,12 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         Logger.trace("Menu drawing stopped");
     }
 
-    public void setState(boolean play3D, GameVariant gameVariant, boolean cutScenesEnabled,
-                         MapSelectionMode mapSelectionMode, boolean customMapsExist)
+    public void setState(
+        boolean play3D,
+        GameVariant gameVariant,
+        boolean cutScenesEnabled,
+        MapSelectionMode mapSelectionMode,
+        boolean customMapsExist)
     {
         state.play3D = play3D;
         state.gameVariant = gameVariant;
