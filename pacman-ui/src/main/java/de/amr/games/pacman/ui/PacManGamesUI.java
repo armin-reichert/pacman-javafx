@@ -56,7 +56,7 @@ public class PacManGamesUI implements GameUI {
 
     protected EditorView editorView;
     protected GameView gameView;
-    protected StartPagesCarousel startPageView;
+    protected StartPagesView startPagesView;
 
     public PacManGamesUI() {
         clock.setPauseableAction(this::doSimulationStepAndUpdateGameScene);
@@ -157,8 +157,8 @@ public class PacManGamesUI implements GameUI {
     }
 
     protected void createStartView() {
-        startPageView = new StartPagesCarousel();
-        startPageView.setBackground(assets.background("background.scene"));
+        startPagesView = new StartPagesView();
+        startPagesView.setBackground(assets.background("background.scene"));
     }
 
     protected void createGameView() {
@@ -201,7 +201,7 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public void addStartPage(StartPage startPage) {
-        startPageView.addStartPage(startPage);
+        startPagesView.addStartPage(startPage);
     }
 
     /**
@@ -269,7 +269,7 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public void selectStartPage(int index) {
-        startPageView.selectStartPage(index);
+        startPagesView.selectStartPage(index);
     }
 
     @Override
@@ -320,8 +320,8 @@ public class PacManGamesUI implements GameUI {
         clock.stop();
         gameScenePy.set(null);
         gameView.setDashboardVisible(false);
-        viewPy.set(startPageView);
-        startPageView.currentStartPage().ifPresent(StartPage::requestFocus);
+        viewPy.set(startPagesView);
+        startPagesView.currentStartPage().ifPresent(StartPage::requestFocus);
     }
 
     @Override

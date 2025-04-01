@@ -21,7 +21,7 @@ import static de.amr.games.pacman.ui.Globals.THE_UI;
 /**
  * Carousel containing the start pages for the different game variants (XXL game variants share common start page).
  */
-public class StartPagesCarousel implements View {
+public class StartPagesView implements View {
 
     private final GameAction actionSelectGamePage = new GameAction() {
         @Override
@@ -39,7 +39,7 @@ public class StartPagesCarousel implements View {
     private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
     private final Carousel carousel;
 
-    public StartPagesCarousel() {
+    public StartPagesView() {
         carousel = new Carousel();
         carousel.selectedIndexProperty().addListener((py,ov,nv) -> {
             int oldIndex = ov.intValue(), newIndex = nv.intValue();
