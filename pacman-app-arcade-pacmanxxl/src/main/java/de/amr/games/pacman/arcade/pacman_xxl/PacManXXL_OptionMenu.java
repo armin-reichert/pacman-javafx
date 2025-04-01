@@ -10,7 +10,6 @@ import de.amr.games.pacman.model.MapSelectionMode;
 import de.amr.games.pacman.uilib.Keyboard;
 import de.amr.games.pacman.uilib.OptionMenu;
 import javafx.animation.AnimationTimer;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
@@ -19,7 +18,6 @@ import org.tinylog.Logger;
 import java.util.List;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_ENABLED;
 
@@ -39,13 +37,16 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     private final MenuState state = new MenuState();
     private final AnimationTimer drawingLoop;
 
-    private final float unscaledHeight;
-
-    public PacManXXL_OptionMenu(float unscaledHeight) {
-        super(unscaledHeight);
-        this.unscaledHeight = unscaledHeight;
+    public PacManXXL_OptionMenu(int tilesX, int tilesY) {
+        super(tilesX, tilesY);
         setBackgroundFill(Color.web("#0C1568"));
         setTitle("  Pac-Man XXL");
+        setCommandTexts(
+            "SELECT OPTIONS WITH UP AND DOWN",
+            "PRESS SPACE TO CHANGE OPTIONS",
+            "PRESS E TO OPEN EDITOR",
+            "PRESS ENTER TO START"
+        );
         setOnStart(() -> {
             logMenuState();
             if (state.gameVariant == GameVariant.PACMAN_XXL || state.gameVariant == GameVariant.MS_PACMAN_XXL) {
@@ -150,22 +151,6 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         if (Keyboard.naked(KeyCode.E).match(e)) {
             THE_UI.showEditorView();
         }
-    }
-
-    @Override
-    public void draw() {
-        super.draw();
-        GraphicsContext g = canvas.getGraphicsContext2D();
-        g.save();
-        g.scale(scalingPy.doubleValue(), scalingPy.doubleValue());
-        g.setFont(arcadeFont8);
-        g.setFill(hintTextFill);
-        g.fillText("      PRESS E TO OPEN EDITOR ", 0, 27 * TS);
-        g.restore();
-    }
-
-    public float unscaledHeight() {
-        return unscaledHeight;
     }
 
     public void startDrawingLoop() {

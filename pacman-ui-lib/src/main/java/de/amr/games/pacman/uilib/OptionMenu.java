@@ -18,6 +18,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static de.amr.games.pacman.Globals.*;
@@ -70,6 +71,9 @@ public class OptionMenu {
         protected abstract void onValueChange(int index);
     }
 
+    private final int tilesX;
+    private final int tilesY;
+
     private final List<OptionMenu.MenuEntry<?>> entries = new ArrayList<>();
 
     private int selectedEntryIndex = 0;
@@ -79,6 +83,7 @@ public class OptionMenu {
     private Runnable actionOnStart;
 
     private String title = "123456789012345";
+    private String[] commandTexts = new String[0];
 
     private final BorderPane root = new BorderPane();
     protected final Canvas canvas = new Canvas();
@@ -95,7 +100,16 @@ public class OptionMenu {
     protected Paint entryValueDisabledFill = Color.GRAY;
     protected Paint hintTextFill = Color.YELLOW;
 
-    public OptionMenu(float height) {
+    public OptionMenu(int tilesX, int tilesY) {
+        this.tilesX = tilesX;
+        this.tilesY = tilesY;
+        float height = tilesY * TS;
+        setCommandTexts(
+            "SELECT OPTIONS WITH UP AND DOWN",
+            "PRESS SPACE TO CHANGE OPTIONS",
+            "PRESS ENTER TO START"
+        );
+
         root.setCenter(canvas);
         root.setBorder(Border.stroke(borderStroke));
 
@@ -216,10 +230,24 @@ public class OptionMenu {
         }
 
         g.setFill(hintTextFill);
-        g.fillText("  SELECT OPTIONS WITH UP AND DOWN   ", 0, 29 * TS);
-        g.fillText("   PRESS SPACE TO CHANGE OPTIONS    ", 0, 31 * TS);
-        g.fillText("        PRESS ENTER TO START        ", 0, 33 * TS);
-
+        int line = tilesY - 2 * commandTexts.length;
+        for (String commandText : commandTexts) {
+            int x = (tilesX - commandText.length()) / 2;
+            g.fillText(commandText, x*TS, line * TS);
+            line += 2;
+        }
         g.restore();
+    }
+
+    public void setCommandTexts(String... lines) {
+        commandTexts = Arrays.copyOf(lines, lines.length);
+    }
+
+    public int tilesX() {
+        return tilesX;
+    }
+
+    public int tilesY() {
+        return tilesY;
     }
 }
