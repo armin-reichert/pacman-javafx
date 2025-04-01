@@ -195,21 +195,15 @@ public class PacManGamesUI implements GameUI {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void buildDashboard(DashboardID... ids) {
-        gameView.dashboard().addDefaultInfoBoxes(ids);
-    }
-
-    @Override
     public void addStartPage(StartPage startPage) {
         startPagesView.addStartPage(startPage);
     }
 
-    /**
-     * Builds the layout and configures the stage.
-     *
-     * @param stage the stage (window)
-     * @param mainSceneSize initial main scene size
-     */
+    @Override
+    public GameAssets assets() {
+        return assets;
+    }
+
     @Override
     public void build(Stage stage, Dimension2D mainSceneSize) {
         this.stage = assertNotNull(stage);
@@ -224,8 +218,8 @@ public class PacManGamesUI implements GameUI {
     }
 
     @Override
-    public GameAssets assets() {
-        return assets;
+    public void buildDashboard(DashboardID... ids) {
+        gameView.dashboard().addDefaultInfoBoxes(ids);
     }
 
     @Override

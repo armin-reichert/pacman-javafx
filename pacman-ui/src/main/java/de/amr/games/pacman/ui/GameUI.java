@@ -18,24 +18,24 @@ import java.util.Optional;
 public interface GameUI {
     enum DashboardID { README, GENERAL, GAME_CONTROL, SETTINGS_3D, GAME_INFO, ACTOR_INFO, KEYBOARD, ABOUT, CUSTOM_MAPS, JOYPAD }
     void addStartPage(StartPage startPage);
-    void buildDashboard(DashboardID... ids);
     GameAssets assets();
     void boot();
     void build(Stage stage, Dimension2D size);
+    void buildDashboard(DashboardID... ids);
     GameClockFX clock();
     UIConfigurationManager configurations();
-    View currentView();
     Optional<GameScene> currentGameScene();
+    View currentView();
     Dashboard dashboard();
     GameKeyboard keyboard();
     void selectGameVariant(GameVariant variant);
     void selectStartPage(int index);
     void show();
     void showEditorView();
+    default void showFlashMessage(String message, Object... args) { showFlashMessageSec(1, message, args); }
+    void showFlashMessageSec(double seconds, String message, Object... args);
     void showGameView();
     void showStartView();
-    void showFlashMessageSec(double seconds, String message, Object... args);
-    default void showFlashMessage(String message, Object... args) { showFlashMessageSec(1, message, args); }
     GameSound sound();
     void updateGameScene(boolean reload);
 }
