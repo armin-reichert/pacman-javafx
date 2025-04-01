@@ -286,14 +286,15 @@ public class GameView implements View {
     @Override
     public void onLevelCreated(GameEvent event) {
         THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-            Logger.info("Game level {} ({}) created", level.number(), THE_GAME_CONTROLLER.selectedGameVariant());
+            GameVariant gameVariant = THE_GAME_CONTROLLER.selectedGameVariant();
+            Logger.info("Game level {} ({}) created", level.number(), gameVariant);
             THE_UI.configurations().current().createActorAnimations(level);
-            Logger.info("Actor animations ({}) created", THE_GAME_CONTROLLER.selectedGameVariant());
+            Logger.info("Actor animations ({}) created", gameVariant);
             THE_UI.sound().setEnabled(!THE_GAME_CONTROLLER.game().isDemoLevel());
-            Logger.info("Sounds ({}) {}", THE_GAME_CONTROLLER.selectedGameVariant(), THE_UI.sound().isEnabled() ? "enabled" : "disabled");
+            Logger.info("Sounds ({}) {}", gameVariant, THE_UI.sound().isEnabled() ? "enabled" : "disabled");
             // size of game scene might have changed, so re-embed
             THE_UI.currentGameScene().ifPresent(this::embedGameScene);
-            GameScene2D pipGameScene = THE_UI.configurations().current().createPiPScene(canvasContainer().canvas());
+            GameScene2D pipGameScene = THE_UI.configurations().current().createPiPScene(canvas);
             pipView.setScene2D(pipGameScene);
         });
     }
