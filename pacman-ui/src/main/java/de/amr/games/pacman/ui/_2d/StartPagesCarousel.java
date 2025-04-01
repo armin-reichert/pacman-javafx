@@ -87,15 +87,10 @@ public class StartPagesCarousel implements View {
 
     public void addStartPage(StartPage startPage) {
         assertNotNull(startPage);
-        if (startPageList.contains(startPage)) {
-            Logger.warn("Start page {} has already been added", startPage);
-            return;
-        }
         startPageList.add(startPage);
-        Node slide = startPage.root();
-        carousel.addSlide(slide);
+        carousel.addSlide(startPage.root());
         carousel.setNavigationVisible(carousel.numSlides() >= 2);
-        Logger.info("Start page {} added", startPage);
+        Logger.info("Start page {} added", startPage.getClass().getSimpleName());
     }
 
     public void selectStartPage(int index) {
