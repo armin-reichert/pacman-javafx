@@ -79,10 +79,8 @@ public class StartPagesCarousel implements View {
     }
 
     public Optional<StartPage> currentStartPage() {
-        if (carousel.selectedSlideIndex() == -1) {
-            return Optional.empty();
-        }
-        return Optional.of(startPageList.get(carousel.selectedSlideIndex()));
+        int selectedIndex = carousel.selectedIndex();
+        return selectedIndex >= 0 ? Optional.of(startPageList.get(selectedIndex)) : Optional.empty();
     }
 
     public void addStartPage(StartPage startPage) {
@@ -94,7 +92,7 @@ public class StartPagesCarousel implements View {
     }
 
     public void selectStartPage(int index) {
-        carousel.selectedIndexProperty().set(index);
+        carousel.setSelectedIndex(index);
     }
 
     public void setBackground(Background background) {
