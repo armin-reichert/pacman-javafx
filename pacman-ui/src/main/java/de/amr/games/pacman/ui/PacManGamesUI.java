@@ -41,22 +41,6 @@ public class PacManGamesUI implements GameUI {
 
     private static final byte STATUS_ICON_SIZE = 36;
 
-    protected final GameAction actionShowEditorView = new GameAction() {
-        @Override
-        public void execute() {
-            currentGameScene().ifPresent(GameScene::end);
-            clock.stop();
-            sound.stopAll();
-            editorView.editor().start(stage);
-            viewPy.set(editorView);
-        }
-
-        @Override
-        public boolean isEnabled() {
-            return !THE_GAME_CONTROLLER.game().isPlaying();
-        }
-    };
-
     protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
     protected final ObjectProperty<View> viewPy = new SimpleObjectProperty<>();
 
@@ -298,8 +282,12 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public void showEditorView() {
-        if (actionShowEditorView.isEnabled()) {
-            actionShowEditorView.execute();
+        if (!THE_GAME_CONTROLLER.game().isPlaying()) {
+            currentGameScene().ifPresent(GameScene::end);
+            clock.stop();
+            sound.stopAll();
+            editorView.editor().start(stage);
+            viewPy.set(editorView);
         }
     }
 
