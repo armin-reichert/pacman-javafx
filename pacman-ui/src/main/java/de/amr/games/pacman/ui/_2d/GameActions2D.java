@@ -19,7 +19,6 @@ import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
-import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_IMMUNITY;
 import static de.amr.games.pacman.uilib.Ufx.toggle;
 import static java.util.function.Predicate.not;
 
@@ -59,10 +58,7 @@ public enum GameActions2D implements GameAction {
     BOOT {
         @Override
         public void execute() {
-            THE_GAME_CONTROLLER.restart(GameState.BOOT);
-            THE_UI.clock().setTargetFrameRate(Globals.TICKS_PER_SECOND);
-            THE_UI.clock().pausedProperty().set(false);
-            THE_UI.clock().start();
+            THE_UI.boot();
         }
     },
 
