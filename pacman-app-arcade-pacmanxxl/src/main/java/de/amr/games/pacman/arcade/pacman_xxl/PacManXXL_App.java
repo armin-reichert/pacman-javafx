@@ -42,7 +42,7 @@ public class PacManXXL_App extends Application {
         THE_UI.configurations().set(GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_UIConfig());
 
         THE_UI.build(stage, new Dimension2D(width, height));
-        THE_UI.addDefaultDashboardItems(
+        THE_UI.buildDashboard(
                 GameUI.DashboardID.README,
                 GameUI.DashboardID.GENERAL,
                 GameUI.DashboardID.GAME_CONTROL,

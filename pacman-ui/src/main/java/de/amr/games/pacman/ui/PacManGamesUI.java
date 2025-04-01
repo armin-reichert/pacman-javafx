@@ -29,7 +29,6 @@ import java.util.Optional;
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_AUTOPILOT;
 import static de.amr.games.pacman.uilib.Ufx.createIcon;
 
@@ -196,7 +195,7 @@ public class PacManGamesUI implements GameUI {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void addDefaultDashboardItems(DashboardID... ids) {
+    public void buildDashboard(DashboardID... ids) {
         gameView.dashboard().addDefaultInfoBoxes(ids);
     }
 

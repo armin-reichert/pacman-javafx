@@ -10,7 +10,6 @@ import de.amr.games.pacman.ui.dashboard.Dashboard;
 import de.amr.games.pacman.ui.input.GameKeyboard;
 import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.GameClockFX;
-import javafx.beans.property.ObjectProperty;
 import javafx.geometry.Dimension2D;
 import javafx.stage.Stage;
 
@@ -19,7 +18,7 @@ import java.util.Optional;
 public interface GameUI {
     enum DashboardID { README, GENERAL, GAME_CONTROL, SETTINGS_3D, GAME_INFO, ACTOR_INFO, KEYBOARD, ABOUT, CUSTOM_MAPS, JOYPAD }
     void addStartPage(StartPage startPage);
-    void addDefaultDashboardItems(DashboardID... ids);
+    void buildDashboard(DashboardID... ids);
     GameAssets assets();
     void boot();
     void build(Stage stage, Dimension2D size);
