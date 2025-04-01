@@ -173,7 +173,7 @@ public class GameView implements View {
         bind(GameActions2D.SHOW_START_PAGE,      KeyCode.Q);
         bind(GameActions2D.TOGGLE_PAUSED,        KeyCode.P);
         bind(GameActions2D.TOGGLE_DEBUG_INFO,    alt(KeyCode.D));
-        bind(this::showGameSceneHelp,                     KeyCode.H);
+        bind(this::showGameSceneHelp,            KeyCode.H);
         bind(GameActions2D.SIMULATION_SLOWER,    alt(KeyCode.MINUS));
         bind(GameActions2D.SIMULATION_FASTER,    alt(KeyCode.PLUS));
         bind(GameActions2D.SIMULATION_RESET,     alt(KeyCode.DIGIT0));

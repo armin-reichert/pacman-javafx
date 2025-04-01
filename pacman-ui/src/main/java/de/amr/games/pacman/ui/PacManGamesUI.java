@@ -29,6 +29,7 @@ import java.util.Optional;
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_AUTOPILOT;
 import static de.amr.games.pacman.uilib.Ufx.createIcon;
 
@@ -229,6 +230,15 @@ public class PacManGamesUI implements GameUI {
     }
 
     @Override
+    public void boot() {
+        clock.stop();
+        clock.setTargetFrameRate(Globals.TICKS_PER_SECOND);
+        clock.pausedProperty().set(false);
+        clock.start();
+        THE_GAME_CONTROLLER.restart(GameState.BOOT);
+    }
+
+    @Override
     public GameClockFX clock() {
         return clock;
     }
@@ -303,7 +313,7 @@ public class PacManGamesUI implements GameUI {
             sound.playVoice("voice.explain", 0);
         }
         gameView.resize(mainScene.getWidth(), mainScene.getHeight());
-        GameActions2D.BOOT.execute();
+        boot();
     }
 
     @Override

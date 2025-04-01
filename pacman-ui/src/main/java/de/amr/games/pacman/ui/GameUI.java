@@ -21,6 +21,7 @@ public interface GameUI {
     void addStartPage(StartPage startPage);
     void addDefaultDashboardItems(DashboardID... ids);
     GameAssets assets();
+    void boot();
     void build(Stage stage, Dimension2D size);
     GameClockFX clock();
     UIConfigurationManager configurations();
