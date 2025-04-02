@@ -23,7 +23,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
@@ -147,22 +146,17 @@ public class PacManGamesUI implements GameUI {
         });
     }
 
-    private FontIcon createStatusIcon(Ikon iconCode) {
-        return FontIcon.of(iconCode, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
-    }
-
     private void addStatusIcons(Pane parent) {
-        var iconMuted = createStatusIcon(FontAwesomeSolid.DEAF);
+        var iconMuted = FontIcon.of(FontAwesomeSolid.DEAF, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
         iconMuted.visibleProperty().bind(sound.mutedProperty());
 
-        var iconAutopilot = createStatusIcon(FontAwesomeSolid.TAXI);
+        var iconAutopilot = FontIcon.of(FontAwesomeSolid.TAXI, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
         iconAutopilot.visibleProperty().bind(PY_AUTOPILOT);
 
-        var iconImmune = createStatusIcon(FontAwesomeSolid.USER_SECRET);
+        var iconImmune = FontIcon.of(FontAwesomeSolid.USER_SECRET, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
         iconImmune.visibleProperty().bind(PY_IMMUNITY);
 
-        var iconPaused = createStatusIcon(FontAwesomeSolid.PAUSE);
-        iconPaused.setIconSize(80);
+        var iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, STATUS_ICON_COLOR);
         iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
             () -> currentView() != editorView && clock.isPaused(),
             viewPy, clock.pausedProperty()));
