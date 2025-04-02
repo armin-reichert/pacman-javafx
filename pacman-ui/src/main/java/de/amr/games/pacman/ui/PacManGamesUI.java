@@ -210,15 +210,6 @@ public class PacManGamesUI implements GameUI {
     }
 
     @Override
-    public void boot() {
-        clock.stop();
-        clock.setTargetFrameRate(Globals.TICKS_PER_SECOND);
-        clock.pausedProperty().set(false);
-        clock.start();
-        THE_GAME_CONTROLLER.restart(GameState.BOOT);
-    }
-
-    @Override
     public GameClockFX clock() {
         return clock;
     }
@@ -246,6 +237,15 @@ public class PacManGamesUI implements GameUI {
     @Override
     public GameKeyboard keyboard() {
         return keyboard;
+    }
+
+    @Override
+    public void restart() {
+        clock.stop();
+        clock.setTargetFrameRate(Globals.TICKS_PER_SECOND);
+        clock.pausedProperty().set(false);
+        clock.start();
+        THE_GAME_CONTROLLER.restart(GameState.BOOT);
     }
 
     @Override
@@ -293,7 +293,7 @@ public class PacManGamesUI implements GameUI {
             sound.playVoice("voice.explain", 0);
         }
         gameView.resize(mainScene.getWidth(), mainScene.getHeight());
-        boot();
+        restart();
     }
 
     @Override

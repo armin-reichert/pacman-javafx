@@ -58,7 +58,7 @@ public enum GameActions2D implements GameAction {
     BOOT {
         @Override
         public void execute() {
-            THE_UI.boot();
+            THE_UI.restart();
         }
     },
 
