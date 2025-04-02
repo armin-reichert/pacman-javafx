@@ -70,7 +70,7 @@ public class PacManGamesUI implements GameUI {
             THE_GAME_CONTROLLER.update();
             THE_GAME_CONTROLLER.game().eventLog().print(clock.tickCount());
         } catch (Exception x) {
-            logErrorAndStopSimulation("Simulation failed", x);
+            showSimulationError(x);
         }
     }
 
@@ -84,11 +84,10 @@ public class PacManGamesUI implements GameUI {
         currentView().onTick();
     }
 
-    private void logErrorAndStopSimulation(String message, Exception x) {
+    private void showSimulationError(Exception x) {
         Logger.error(x);
-        Logger.error("SOMETHING VERY BAD HAPPENED!");
-        Logger.error(message);
-        showFlashMessageSec(10, "KATASTROPHE! " + message);
+        Logger.error("SOMETHING VERY BAD HAPPENED DURING SIMULATION STEP!");
+        showFlashMessageSec(10, "KA-TA-STROPHE!");
     }
 
     private void handleViewChange(View oldView, View newView) {
