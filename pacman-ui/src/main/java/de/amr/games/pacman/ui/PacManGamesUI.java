@@ -45,15 +45,7 @@ public class PacManGamesUI implements GameUI {
     private static final byte STATUS_ICON_SIZE = 36;
 
     protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
-    protected final ObjectProperty<View> viewPy = new SimpleObjectProperty<>() {
-        @Override
-        protected void invalidated() {
-            View currentView = get();
-            if (currentView != null) {
-                stage.titleProperty().bind(currentView.title());
-            }
-        }
-    };
+    protected final ObjectProperty<View> viewPy = new SimpleObjectProperty<>();
 
     protected final GameAssets assets = new GameAssets();
     protected final GameClockFX clock = new GameClockFX();
@@ -90,6 +82,7 @@ public class PacManGamesUI implements GameUI {
         }
         newView.enableActionBindings();
         newView.layoutRoot().requestFocus();
+        stage.titleProperty().bind(newView.title());
         THE_GAME_CONTROLLER.game().addGameEventListener(newView);
     }
 
