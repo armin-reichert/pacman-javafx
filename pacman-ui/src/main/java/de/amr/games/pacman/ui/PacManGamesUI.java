@@ -186,14 +186,6 @@ public class PacManGamesUI implements GameUI {
         gameView.resize(mainScene.getWidth(), mainScene.getHeight());
     }
 
-    public ObjectProperty<GameScene> gameSceneProperty() {
-        return gameScenePy;
-    }
-
-    public Scene mainScene() {
-        return mainScene;
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
     // GameUI interface implementation
     // -----------------------------------------------------------------------------------------------------------------
@@ -251,8 +243,18 @@ public class PacManGamesUI implements GameUI {
     }
 
     @Override
+    public ObjectProperty<GameScene> gameSceneProperty() {
+        return gameScenePy;
+    }
+
+    @Override
     public GameKeyboard keyboard() {
         return keyboard;
+    }
+
+    @Override
+    public Scene mainScene() {
+        return mainScene;
     }
 
     @Override
@@ -299,7 +301,7 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public void showFlashMessageSec(double seconds, String message, Object... args) {
-        gameView.flashMessageOverlay().showMessage(String.format(message, args), seconds);
+        gameView.flashMessageLayer().showMessage(String.format(message, args), seconds);
     }
 
     @Override

@@ -61,38 +61,46 @@ public class GameView implements View {
     };
 
     protected final StackPane root = new StackPane();
-    protected final FlashMessageView flashMessageOverlay = new FlashMessageView();
     protected final Scene parentScene;
-    protected final BorderPane canvasLayer;
-    protected final PopupLayer popupLayer; // help, signature
-    protected final BorderPane dashboardLayer;
-    protected final VBox dashboardContainer;
-    protected final Dashboard dashboard;
-    protected final TooFancyCanvasContainer canvasContainer;
-    protected final Canvas canvas;
-    protected final VBox pipContainer;
-    protected final PictureInPictureView pipView;
+
+    protected FlashMessageView flashMessageLayer;
+    protected BorderPane canvasLayer;
+    protected PopupLayer popupLayer; // help, signature
+    protected BorderPane dashboardLayer;
+
+    protected final VBox dashboardContainer = new VBox();
+    protected final Dashboard dashboard = new Dashboard();
+    protected final Canvas canvas = new Canvas();
+    protected final TooFancyCanvasContainer canvasContainer = new TooFancyCanvasContainer(canvas);
+    protected final PictureInPictureView pipView = new PictureInPictureView();
+    protected final VBox pipContainer = new VBox(pipView, new HBox());
 
     protected StringExpression titleExpression;
     protected ContextMenu contextMenu;
 
-    public GameView(PacManGamesUI ui) {
-        this.parentScene = ui.mainScene();
+    private void configureCanvasContainer() {
+        canvasContainer.setMinScaling(0.5);
+        canvasContainer.setUnscaledCanvasWidth(ARCADE_MAP_SIZE_IN_PIXELS.x());
+        canvasContainer.setUnscaledCanvasHeight(ARCADE_MAP_SIZE_IN_PIXELS.y());
+        canvasContainer.setBorderColor(Color.web(Arcade.Palette.WHITE));
+        canvasContainer.decorationEnabledPy.addListener((py, ov, nv) -> {
+            GameScene gameScene = gameScenePy.get();
+            if (gameScene != null) {
+                embedGameScene(gameScene); //TODO check this
+            }
+        });
+    }
 
-        canvas = new Canvas();
-        canvasContainer = new TooFancyCanvasContainer(canvas);
-        canvasLayer = new BorderPane(canvasContainer);
-        popupLayer = new PopupLayer(canvasContainer);
+    private void configurePiPView(GameUI ui) {
+        pipView.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Background::fill));
+        pipView.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
+        pipView.visibleProperty().bind(Bindings.createObjectBinding(
+            () -> PY_PIP_ON.get() && ui.configurations().currentGameSceneIsPlayScene3D(),
+            PY_PIP_ON, ui.gameSceneProperty()
+        ));
+    }
 
-        dashboardLayer = new BorderPane();
-        dashboardContainer = new VBox();
-        dashboard = new Dashboard();
-
-        pipView = new PictureInPictureView();
-        pipContainer = new VBox(pipView, new HBox());
-
-        root.getChildren().addAll(canvasLayer, dashboardLayer, popupLayer, flashMessageOverlay);
-
+    private void configurePropertyBindings() {
         GraphicsContext g = canvas.getGraphicsContext2D();
         PY_CANVAS_FONT_SMOOTHING.addListener((py, ov, on) -> g.setFontSmoothingType(on ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
         PY_CANVAS_IMAGE_SMOOTHING.addListener((py, ov, on) -> g.setImageSmoothing(on));
@@ -105,37 +113,9 @@ public class GameView implements View {
                 canvasLayer.setBorder(null);
             }
         });
+    }
 
-        canvasContainer.setMinScaling(0.5);
-        canvasContainer.setUnscaledCanvasWidth(ARCADE_MAP_SIZE_IN_PIXELS.x());
-        canvasContainer.setUnscaledCanvasHeight(ARCADE_MAP_SIZE_IN_PIXELS.y());
-        canvasContainer.setBorderColor(Color.web(Arcade.Palette.WHITE));
-        canvasContainer.decorationEnabledPy.addListener((py, ov, nv) -> {
-            GameScene gameScene = gameScenePy.get();
-            if (gameScene != null) {
-                embedGameScene(gameScene); //TODO check this
-            }
-        });
-
-        pipView.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Background::fill));
-        pipView.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
-        pipView.visibleProperty().bind(Bindings.createObjectBinding(
-                () -> PY_PIP_ON.get() && ui.configurations().currentGameSceneIsPlayScene3D(),
-                PY_PIP_ON, ui.gameSceneProperty()
-        ));
-
-        dashboardLayer.visibleProperty().bind(Bindings.createObjectBinding(
-                () -> dashboardContainer.isVisible() || PY_PIP_ON.get(),
-                dashboardContainer.visibleProperty(), PY_PIP_ON
-        ));
-        dashboardLayer.setLeft(dashboardContainer);
-        dashboardLayer.setRight(pipContainer);
-
-        popupLayer.setMouseTransparent(true);
-        root.setOnContextMenuRequested(this::handleContextMenuRequest);
-        //TODO is this the recommended way to close an open context-menu?
-        root.setOnMouseClicked(e -> { if (contextMenu != null) contextMenu.hide(); });
-
+    private void configureTitleBinding(GameUI ui) {
         titleExpression = Bindings.createStringBinding(
             () -> {
                 // "app.title.pacman" vs. "app.title.pacman.paused"
@@ -148,9 +128,42 @@ public class GameView implements View {
             },
             ui.clock().pausedProperty(), gameScenePy, root.heightProperty()
         );
+    }
+
+    public GameView(GameUI ui) {
+        this.parentScene = ui.mainScene();
+        configureCanvasContainer();
+        configurePiPView(ui);
+        createLayers();
+        configurePropertyBindings();
+        configureTitleBinding(ui);
+        root.setOnContextMenuRequested(this::handleContextMenuRequest);
+        //TODO is this the recommended way to close an open context-menu?
+        root.setOnMouseClicked(e -> { if (contextMenu != null) contextMenu.hide(); });
 
         gameScenePy.bind(ui.gameSceneProperty());
         bindGameActions();
+
+    }
+
+    private void createLayers() {
+        canvasLayer = new BorderPane(canvasContainer);
+
+        dashboardLayer = new BorderPane();
+        dashboardLayer.visibleProperty().bind(Bindings.createObjectBinding(
+            () -> dashboardContainer.isVisible() || PY_PIP_ON.get(),
+            dashboardContainer.visibleProperty(), PY_PIP_ON
+        ));
+        dashboardLayer.setLeft(dashboardContainer);
+        dashboardLayer.setRight(pipContainer);
+
+        //TODO reconsider this and the help functionality
+        popupLayer = new PopupLayer(canvasContainer);
+        popupLayer.setMouseTransparent(true);
+
+        flashMessageLayer = new FlashMessageView();
+
+        root.getChildren().addAll(canvasLayer, dashboardLayer, popupLayer, flashMessageLayer);
     }
 
     @Override
@@ -165,8 +178,8 @@ public class GameView implements View {
 
     public ObjectProperty<GameScene> gameSceneProperty() { return gameScenePy; }
 
-    public FlashMessageView flashMessageOverlay() {
-        return flashMessageOverlay;
+    public FlashMessageView flashMessageLayer() {
+        return flashMessageLayer;
     }
 
     public Dashboard dashboard() {
@@ -224,7 +237,7 @@ public class GameView implements View {
     }
 
     public void onTick() {
-        flashMessageOverlay.update();
+        flashMessageLayer.update();
         if (dashboardLayer.isVisible()) {
             dashboard.infoBoxes().filter(InfoBox::isExpanded).forEach(InfoBox::update);
         }

@@ -10,7 +10,9 @@ import de.amr.games.pacman.ui.dashboard.Dashboard;
 import de.amr.games.pacman.ui.input.GameKeyboard;
 import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.GameClockFX;
+import javafx.beans.property.ObjectProperty;
 import javafx.geometry.Dimension2D;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.util.Optional;
@@ -26,7 +28,9 @@ public interface GameUI {
     Optional<GameScene> currentGameScene();
     View currentView();
     Dashboard dashboard();
+    ObjectProperty<GameScene> gameSceneProperty();
     GameKeyboard keyboard();
+    Scene mainScene();
     void restart();
     void selectGameVariant(GameVariant variant);
     void selectStartPage(int index);

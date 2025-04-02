@@ -22,15 +22,15 @@ public class PopupLayer extends Pane {
 
     private final FadingPane helpPopUp = new FadingPane();
 
-    public PopupLayer(TooFancyCanvasContainer canvas) {
+    public PopupLayer(TooFancyCanvasContainer canvasContainer) {
         getChildren().addAll(helpPopUp);
 
-        minHeightProperty().bind(canvas.minHeightProperty());
-        maxHeightProperty().bind(canvas.maxHeightProperty());
-        prefHeightProperty().bind(canvas.prefHeightProperty());
-        minWidthProperty().bind(canvas.minWidthProperty());
-        maxWidthProperty().bind(canvas.maxWidthProperty());
-        prefWidthProperty().bind(canvas.prefWidthProperty());
+        minHeightProperty().bind(canvasContainer.minHeightProperty());
+        maxHeightProperty().bind(canvasContainer.maxHeightProperty());
+        prefHeightProperty().bind(canvasContainer.prefHeightProperty());
+        minWidthProperty().bind(canvasContainer.minWidthProperty());
+        maxWidthProperty().bind(canvasContainer.maxWidthProperty());
+        prefWidthProperty().bind(canvasContainer.prefWidthProperty());
     }
 
     public void showHelp(double scaling) {
