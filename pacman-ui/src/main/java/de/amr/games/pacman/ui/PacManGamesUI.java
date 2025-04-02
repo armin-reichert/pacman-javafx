@@ -19,13 +19,11 @@ import javafx.geometry.Dimension2D;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.Ikon;
-import org.kordamp.ikonli.fontawesome5.FontAwesomeRegular;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
@@ -37,7 +35,6 @@ import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_IMMUNITY;
-import static de.amr.games.pacman.uilib.Ufx.createIcon;
 
 /**
  * User interface for all Pac-Man game variants (2D only).
@@ -151,10 +148,7 @@ public class PacManGamesUI implements GameUI {
     }
 
     private FontIcon createStatusIcon(Ikon iconCode) {
-        var icon = new FontIcon(iconCode);
-        icon.setIconColor(STATUS_ICON_COLOR);
-        icon.setIconSize(STATUS_ICON_SIZE);
-        return icon;
+        return FontIcon.of(iconCode, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
     }
 
     private void addStatusIcons(Pane parent) {
