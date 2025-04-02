@@ -15,8 +15,6 @@ import javafx.scene.text.TextAlignment;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayDeque;
-import java.util.Deque;
 
 //TODO use JavaFX features for fading etc.
 public class FlashMessageView extends VBox {
@@ -48,9 +46,9 @@ public class FlashMessageView extends VBox {
 
     private  static final Font MESSAGE_FONT = Font.font("Sans", FontWeight.BOLD, 30);
 
-    private final Deque<Message> messageQ = new ArrayDeque<>();
     private final Text textView = new Text();
     private final Color textColor = Color.WHEAT;
+    private Message message;
 
     public FlashMessageView() {
         textView.setFont(MESSAGE_FONT);
@@ -61,28 +59,26 @@ public class FlashMessageView extends VBox {
     }
 
     public void clear() {
-        messageQ.clear();
+        message = null;
     }
 
     public void showMessage(String messageText, double seconds) {
-        if (messageQ.peek() != null && messageQ.peek().text.equals(messageText)) {
-            messageQ.poll();
+        if (message != null && message.text.equals(messageText)) {
+            return;
         }
-        Message message = new Message(messageText, seconds);
-        messageQ.add(message);
+        message = new Message(messageText, seconds);
         message.activate();
+        setVisible(true);
     }
 
     public void update() {
-        if (messageQ.isEmpty()) {
+        if (message == null) {
             setVisible(false);
             return;
         }
-        Message message = messageQ.peek();
         if (message.hasExpired()) {
-            messageQ.remove();
+            clear();
         } else {
-            setVisible(true);
             double activeMillis = Duration.between(message.activationBegin, Instant.now()).toMillis();
             double alpha = Math.cos(0.5 * Math.PI * activeMillis / message.activationTimeMillis());
             Color backgroundColor = Color.rgb(0, 0, 0, 0.2 + 0.5 * alpha);

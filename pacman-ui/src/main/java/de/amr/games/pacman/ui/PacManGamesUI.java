@@ -7,10 +7,7 @@ package de.amr.games.pacman.ui;
 import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui._2d.EditorView;
-import de.amr.games.pacman.ui._2d.GameView;
-import de.amr.games.pacman.ui._2d.StartPage;
-import de.amr.games.pacman.ui._2d.StartPagesView;
+import de.amr.games.pacman.ui._2d.*;
 import de.amr.games.pacman.ui.dashboard.Dashboard;
 import de.amr.games.pacman.ui.input.GameKeyboard;
 import de.amr.games.pacman.ui.sound.GameSound;
@@ -63,15 +60,35 @@ public class PacManGamesUI implements GameUI {
 
     public PacManGamesUI() {
         clock.setPauseableAction(this::doSimulationStepAndUpdateGameScene);
-        clock.setPermanentAction(() -> currentView().onTick());
+        clock.setPermanentAction(this::updateViewAndGameScene);
         viewPy.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
         gameScenePy.addListener((py, oldScene, newScene) -> handleGameSceneChange(oldScene, newScene));
     }
 
     private void doSimulationStepAndUpdateGameScene() {
-        THE_GAME_CONTROLLER.update();
-        THE_GAME_CONTROLLER.game().eventLog().print(clock.tickCount());
-        currentGameScene().ifPresent(GameScene::update);
+        try {
+            THE_GAME_CONTROLLER.update();
+            THE_GAME_CONTROLLER.game().eventLog().print(clock.tickCount());
+        } catch (Exception x) {
+            logErrorAndStopSimulation("Simulation failed", x);
+        }
+    }
+
+    private void updateViewAndGameScene() {
+        currentGameScene().ifPresent(gameScene -> {
+            gameScene.update();
+            if (gameScene instanceof GameScene2D gameScene2D) {
+                gameScene2D.draw();
+            }
+        });
+        currentView().onTick();
+    }
+
+    private void logErrorAndStopSimulation(String message, Exception x) {
+        Logger.error(x);
+        Logger.error("SOMETHING VERY BAD HAPPENED!");
+        Logger.error(message);
+        showFlashMessageSec(10, "KATASTROPHE! " + message);
     }
 
     private void handleViewChange(View oldView, View newView) {

@@ -231,10 +231,6 @@ public class GameView implements View {
         if (pipView.isVisible()) {
             pipView.draw();
         }
-        THE_UI.currentGameScene()
-                .filter(GameScene2D.class::isInstance)
-                .map(GameScene2D.class::cast)
-                .ifPresent(GameScene2D::draw);
     }
 
     protected void handleContextMenuRequest(ContextMenuEvent event) {

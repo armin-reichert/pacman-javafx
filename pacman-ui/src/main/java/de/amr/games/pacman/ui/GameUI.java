@@ -32,7 +32,7 @@ public interface GameUI {
     void selectStartPage(int index);
     void show();
     void showEditorView();
-    default void showFlashMessage(String message, Object... args) { showFlashMessageSec(1, message, args); }
+    default void showFlashMessage(String message, Object... args) { showFlashMessageSec(1.5, message, args); }
     void showFlashMessageSec(double seconds, String message, Object... args);
     void showGameView();
     void showStartView();
