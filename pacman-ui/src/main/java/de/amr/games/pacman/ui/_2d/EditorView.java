@@ -9,11 +9,12 @@ import de.amr.games.pacman.tilemap.editor.TileMapEditor;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.View;
 import de.amr.games.pacman.uilib.Ufx;
-import javafx.scene.Node;
+import javafx.beans.binding.StringExpression;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -48,12 +49,17 @@ public class EditorView extends BorderPane implements View {
     }
 
     @Override
-    public Node node() {
+    public Region layoutRoot() {
         return this;
     }
 
     @Override
     public void onTick() {}
+
+    @Override
+    public StringExpression title() {
+        return editor.titleProperty();
+    }
 
     @Override
     public void bindGameActions() {}

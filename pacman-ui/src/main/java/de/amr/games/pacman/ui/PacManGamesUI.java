@@ -7,7 +7,10 @@ package de.amr.games.pacman.ui;
 import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui._2d.*;
+import de.amr.games.pacman.ui._2d.EditorView;
+import de.amr.games.pacman.ui._2d.GameView;
+import de.amr.games.pacman.ui._2d.StartPage;
+import de.amr.games.pacman.ui._2d.StartPagesView;
 import de.amr.games.pacman.ui.dashboard.Dashboard;
 import de.amr.games.pacman.ui.input.GameKeyboard;
 import de.amr.games.pacman.ui.sound.GameSound;
@@ -42,7 +45,15 @@ public class PacManGamesUI implements GameUI {
     private static final byte STATUS_ICON_SIZE = 36;
 
     protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
-    protected final ObjectProperty<View> viewPy = new SimpleObjectProperty<>();
+    protected final ObjectProperty<View> viewPy = new SimpleObjectProperty<>() {
+        @Override
+        protected void invalidated() {
+            View currentView = get();
+            if (currentView != null) {
+                stage.titleProperty().bind(currentView.title());
+            }
+        }
+    };
 
     protected final GameAssets assets = new GameAssets();
     protected final GameClockFX clock = new GameClockFX();
@@ -72,13 +83,13 @@ public class PacManGamesUI implements GameUI {
     }
 
     private void handleViewChange(View oldView, View newView) {
-        mainSceneRoot.getChildren().set(0, newView.node());
+        mainSceneRoot.getChildren().set(0, newView.layoutRoot());
         if (oldView != null) {
             oldView.disableActionBindings();
             THE_GAME_CONTROLLER.game().removeGameEventListener(oldView);
         }
         newView.enableActionBindings();
-        newView.node().requestFocus();
+        newView.layoutRoot().requestFocus();
         THE_GAME_CONTROLLER.game().addGameEventListener(newView);
     }
 
@@ -149,7 +160,7 @@ public class PacManGamesUI implements GameUI {
         editorView = new EditorView(stage);
         editorView.setOnClose(editor -> {
             editor.stop();
-            editor.executeWithCheckForUnsavedChanges(this::bindStageTitle);
+            editor.executeWithCheckForUnsavedChanges(() -> {});
             clock.setTargetFrameRate(Globals.TICKS_PER_SECOND);
             THE_GAME_CONTROLLER.restart(GameState.BOOT);
             showStartView();
@@ -163,7 +174,6 @@ public class PacManGamesUI implements GameUI {
 
     protected void createGameView() {
         gameView = new GameView(this);
-        gameView.gameSceneProperty().bind(gameScenePy);
         gameView.resize(mainScene.getWidth(), mainScene.getHeight());
     }
 
@@ -173,21 +183,6 @@ public class PacManGamesUI implements GameUI {
 
     public Scene mainScene() {
         return mainScene;
-    }
-
-    protected void bindStageTitle() {
-        stage.titleProperty().bind(Bindings.createStringBinding(
-            () -> {
-                // "app.title.pacman" vs. "app.title.pacman.paused"
-                String key = "app.title." + uiConfigurationManager.current().assetNamespace();
-                if (clock.isPaused()) { key += ".paused"; }
-                if (currentGameScene().isPresent() && currentGameScene().get() instanceof GameScene2D gameScene2D) {
-                    return assets.text(key, "2D") + " (%.2fx)".formatted(gameScene2D.scaling());
-                }
-                return assets.text(key, "2D");
-            },
-            clock.pausedProperty(), gameScenePy, gameView.node().heightProperty())
-        );
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -211,7 +206,6 @@ public class PacManGamesUI implements GameUI {
         createStartView();
         createGameView();
         createEditorView();
-        bindStageTitle();
         stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
         stage.setMinHeight(ARCADE_MAP_SIZE_IN_PIXELS.y() * 1.25);
         stage.setScene(mainScene);

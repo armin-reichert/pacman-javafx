@@ -14,6 +14,7 @@ import de.amr.games.pacman.ui.dashboard.InfoBox;
 import de.amr.games.pacman.uilib.FlashMessageView;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringExpression;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
@@ -72,6 +73,7 @@ public class GameView implements View {
     protected final VBox pipContainer;
     protected final PictureInPictureView pipView;
 
+    protected StringExpression titleExpression;
     protected ContextMenu contextMenu;
 
     public GameView(PacManGamesUI ui) {
@@ -134,12 +136,31 @@ public class GameView implements View {
         //TODO is this the recommended way to close an open context-menu?
         root.setOnMouseClicked(e -> { if (contextMenu != null) contextMenu.hide(); });
 
+        titleExpression = Bindings.createStringBinding(
+            () -> {
+                // "app.title.pacman" vs. "app.title.pacman.paused"
+                String key = "app.title." + ui.configurations().current().assetNamespace();
+                if (ui.clock().isPaused()) { key += ".paused"; }
+                if (ui.currentGameScene().isPresent() && ui.currentGameScene().get() instanceof GameScene2D gameScene2D) {
+                    return ui.assets().text(key, "2D") + " (%.2fx)".formatted(gameScene2D.scaling());
+                }
+                return ui.assets().text(key, "2D");
+            },
+            ui.clock().pausedProperty(), gameScenePy, root.heightProperty()
+        );
+
+        gameScenePy.bind(ui.gameSceneProperty());
         bindGameActions();
     }
 
     @Override
-    public StackPane node() {
+    public StackPane layoutRoot() {
         return root;
+    }
+
+    @Override
+    public StringExpression title() {
+        return titleExpression;
     }
 
     public ObjectProperty<GameScene> gameSceneProperty() { return gameScenePy; }

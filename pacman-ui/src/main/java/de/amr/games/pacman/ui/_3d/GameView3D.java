@@ -5,8 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._3d;
 
 import de.amr.games.pacman.ui.PacManGamesUI;
+import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._2d.GameView;
-import javafx.scene.Scene;
+import javafx.beans.binding.Bindings;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
@@ -15,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_DEBUG_INFO_VISIBLE;
+import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_ENABLED;
 import static de.amr.games.pacman.uilib.Keyboard.alt;
 import static de.amr.games.pacman.uilib.Ufx.contextMenuTitleItem;
 
@@ -25,6 +28,23 @@ public class GameView3D extends GameView {
 
     public GameView3D(PacManGamesUI ui) {
         super(ui);
+
+        titleExpression = Bindings.createStringBinding(
+            () -> {
+                String sceneName = ui.currentGameScene().map(gameScene -> gameScene.getClass().getSimpleName()).orElse(null);
+                String sceneNameText = sceneName != null && PY_DEBUG_INFO_VISIBLE.get() ? " [%s]".formatted(sceneName) : "";
+                String assetNamespace = ui.configurations().current().assetNamespace();
+                String key = "app.title." + assetNamespace;
+                if (ui.clock().isPaused()) {
+                    key += ".paused";
+                }
+                String modeKey = ui.assets().text(PY_3D_ENABLED.get() ? "threeD" : "twoD");
+                if (ui.currentGameScene().isPresent() && ui.currentGameScene().get() instanceof GameScene2D gameScene2D) {
+                    return ui.assets().text(key, modeKey) + sceneNameText + " (%.2fx)".formatted(gameScene2D.scaling());
+                }
+                return ui.assets().text(key, modeKey) + sceneNameText;
+            },
+            ui.clock().pausedProperty(), gameScenePy, PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE);
     }
 
     @Override

@@ -6,17 +6,23 @@ package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.View;
+import de.amr.games.pacman.ui._3d.GlobalProperties3d;
 import de.amr.games.pacman.uilib.Carousel;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringExpression;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.Region;
 import org.tinylog.Logger;
 
 import java.util.*;
 
+import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_ENABLED;
 
 /**
  * Carousel containing the start pages for the different game variants (XXL game variants share common start page).
@@ -38,6 +44,7 @@ public class StartPagesView implements View {
     private final List<StartPage> startPageList = new ArrayList<>();
     private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
     private final Carousel carousel;
+    private StringExpression titleExpression;
 
     public StartPagesView() {
         carousel = new Carousel();
@@ -54,16 +61,22 @@ public class StartPagesView implements View {
                 startPage.onEnter();
             }
         });
+        titleExpression = Bindings.createStringBinding(() -> "JavaFX Pac-Man Games");
         bindGameActions();
     }
 
     @Override
-    public Node node() {
+    public Region layoutRoot() {
         return carousel;
     }
 
     @Override
     public void onTick() {}
+
+    @Override
+    public StringExpression title() {
+        return titleExpression;
+    }
 
     @Override
     public Map<KeyCodeCombination, GameAction> actionBindings() {
@@ -76,6 +89,10 @@ public class StartPagesView implements View {
         bind(carousel::showNextSlide,     KeyCode.RIGHT);
         bind(actionSelectGamePage,        KeyCode.ENTER);
         bind(GameActions2D.TOGGLE_PAUSED, KeyCode.P);
+    }
+
+    public void setTitleExpression(StringExpression stringExpression) {
+        titleExpression = assertNotNull(stringExpression);
     }
 
     public Optional<StartPage> currentStartPage() {
