@@ -36,7 +36,7 @@ import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_IMMUNITY;
 
 /**
- * User interface for all Pac-Man game variants (2D only).
+ * User interface for all Pac-Man game variants.
  *
  * @author Armin Reichert
  */
@@ -56,7 +56,7 @@ public class PacManGamesUI implements GameUI {
 
     protected Stage stage;
     protected Scene mainScene;
-    protected final StackPane mainSceneRoot = new StackPane();
+    protected final StackPane root = new StackPane();
 
     protected EditorView editorView;
     protected GameView gameView;
@@ -95,7 +95,7 @@ public class PacManGamesUI implements GameUI {
     }
 
     private void handleViewChange(View oldView, View newView) {
-        mainSceneRoot.getChildren().set(0, newView.layoutRoot());
+        root.getChildren().set(0, newView.layoutRoot());
         if (oldView != null) {
             oldView.disableActionBindings();
             THE_GAME_CONTROLLER.game().removeGameEventListener(oldView);
@@ -113,17 +113,17 @@ public class PacManGamesUI implements GameUI {
     }
 
     protected void createMainScene(Dimension2D size) {
-        mainSceneRoot.setBackground(assets.get("background.scene"));
-        mainSceneRoot.backgroundProperty().bind(gameScenePy.map(
+        root.setBackground(assets.get("background.scene"));
+        root.backgroundProperty().bind(gameScenePy.map(
             gameScene -> uiConfigurationManager.currentGameSceneIsPlayScene3D()
                 ? assets.get("background.play_scene3d")
                 : assets.get("background.scene"))
         );
 
-        mainSceneRoot.getChildren().add(new Pane()); // placeholder for root of current view
-        addStatusIcons(mainSceneRoot);
+        root.getChildren().add(new Pane()); // placeholder for root of current view
+        addStatusIcons(root);
 
-        mainScene = new Scene(mainSceneRoot, size.getWidth(), size.getHeight());
+        mainScene = new Scene(root, size.getWidth(), size.getHeight());
         mainScene.widthProperty() .addListener((py,ov,nv) -> gameView.resize(mainScene.getWidth(), mainScene.getHeight()));
         mainScene.heightProperty().addListener((py,ov,nv) -> gameView.resize(mainScene.getWidth(), mainScene.getHeight()));
 
