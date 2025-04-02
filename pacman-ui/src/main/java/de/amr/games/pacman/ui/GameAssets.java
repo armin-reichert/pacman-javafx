@@ -33,10 +33,6 @@ public class GameAssets extends AssetStorage implements ResourceManager {
         store("font.handwriting",        loadFont("fonts/Molle-Italic.ttf", 9));
         store("font.monospaced",         loadFont("fonts/Inconsolata_Condensed-Bold.ttf", 12));
 
-        store("icon.auto",               loadImage("graphics/icons/auto.png"));
-        store("icon.mute",               loadImage("graphics/icons/mute.png"));
-        store("icon.pause",              loadImage("graphics/icons/pause.png"));
-
         store("voice.explain",           url("sound/voice/press-key.mp3"));
         store("voice.autopilot.off",     url("sound/voice/autopilot-off.mp3"));
         store("voice.autopilot.on",      url("sound/voice/autopilot-on.mp3"));

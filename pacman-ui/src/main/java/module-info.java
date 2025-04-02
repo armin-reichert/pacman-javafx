@@ -14,12 +14,15 @@ open module de.amr.games.pacman.ui {
     requires de.amr.games.pacman.tilemap.editor.app;
     requires de.amr.games.pacman.uilib;
 
+    requires org.kordamp.ikonli.core;
+    requires org.kordamp.ikonli.javafx;
+    // add icon pack modules
+    requires org.kordamp.ikonli.fontawesome5;
+
     exports de.amr.games.pacman.ui.dashboard;
     exports de.amr.games.pacman.ui.input;
     exports de.amr.games.pacman.ui.sound;
-
     exports de.amr.games.pacman.ui._2d;
-
     exports de.amr.games.pacman.ui._3d;
     exports de.amr.games.pacman.ui._3d.animation;
     exports de.amr.games.pacman.ui._3d.dashboard;

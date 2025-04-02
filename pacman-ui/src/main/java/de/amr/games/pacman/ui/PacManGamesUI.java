@@ -16,12 +16,18 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Dimension2D;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.kordamp.ikonli.Ikon;
+import org.kordamp.ikonli.fontawesome5.FontAwesomeRegular;
+import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
+import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
 import java.util.Optional;
@@ -30,6 +36,7 @@ import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_AUTOPILOT;
+import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_IMMUNITY;
 import static de.amr.games.pacman.uilib.Ufx.createIcon;
 
 /**
@@ -39,6 +46,7 @@ import static de.amr.games.pacman.uilib.Ufx.createIcon;
  */
 public class PacManGamesUI implements GameUI {
 
+    private static final Color STATUS_ICON_COLOR = Color.RED;
     private static final byte STATUS_ICON_SIZE = 36;
 
     protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
@@ -142,27 +150,39 @@ public class PacManGamesUI implements GameUI {
         });
     }
 
+    private FontIcon createStatusIcon(Ikon iconCode) {
+        var icon = new FontIcon(iconCode);
+        icon.setIconColor(STATUS_ICON_COLOR);
+        icon.setIconSize(STATUS_ICON_SIZE);
+        return icon;
+    }
+
     private void addStatusIcons(Pane parent) {
-        ImageView iconMuted = createIcon(assets.get("icon.mute"), STATUS_ICON_SIZE);
+        var iconMuted = createStatusIcon(FontAwesomeSolid.DEAF);
         iconMuted.visibleProperty().bind(sound.mutedProperty());
 
-        ImageView iconAutopilot = createIcon(assets.get("icon.auto"), STATUS_ICON_SIZE);
+        var iconAutopilot = createStatusIcon(FontAwesomeSolid.TAXI);
         iconAutopilot.visibleProperty().bind(PY_AUTOPILOT);
 
-        ImageView iconPaused = createIcon(assets.get("icon.pause"), 64);
+        var iconImmune = createStatusIcon(FontAwesomeSolid.USER_SECRET);
+        iconImmune.visibleProperty().bind(PY_IMMUNITY);
+
+        var iconPaused = createStatusIcon(FontAwesomeSolid.PAUSE);
+        iconPaused.setIconSize(80);
         iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
             () -> currentView() != editorView && clock.isPaused(),
             viewPy, clock.pausedProperty()));
 
         Region spring = new Region();
         HBox.setHgrow(spring, Priority.ALWAYS);
-        var hBox = new HBox(3, spring, iconAutopilot, iconMuted);
-        hBox.setMaxHeight(STATUS_ICON_SIZE);
-        hBox.visibleProperty().bind(Bindings.createBooleanBinding(() -> currentView() != editorView, viewPy));
+        var iconBox = new HBox(3, spring, iconAutopilot, iconImmune, iconMuted);
+        iconBox.setPadding(new Insets(10));
+        iconBox.setMaxHeight(STATUS_ICON_SIZE);
+        iconBox.visibleProperty().bind(Bindings.createBooleanBinding(() -> currentView() != editorView, viewPy));
 
-        parent.getChildren().addAll(iconPaused, hBox);
+        parent.getChildren().addAll(iconPaused, iconBox);
         StackPane.setAlignment(iconPaused, Pos.CENTER);
-        StackPane.setAlignment(hBox, Pos.BOTTOM_RIGHT);
+        StackPane.setAlignment(iconBox, Pos.BOTTOM_RIGHT);
     }
 
     protected void createEditorView() {
