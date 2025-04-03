@@ -175,19 +175,22 @@ public class PacManGamesUI implements GameUI {
         StackPane.setAlignment(iconBox, Pos.BOTTOM_RIGHT);
     }
 
-    protected void createEditorView() {
+    private void createMapEditor() {
         editor = new TileMapEditor();
         editor.createUI(stage);
-        var miQuitEditor = new MenuItem(THE_UI.assets().text("back_to_game"));
-        miQuitEditor.setOnAction(e -> {
+        var miQuit = new MenuItem(THE_UI.assets().text("back_to_game"));
+        miQuit.setOnAction(e -> {
             editor.stop();
             editor.executeWithCheckForUnsavedChanges(() -> {});
             clock.setTargetFrameRate(Globals.TICKS_PER_SECOND);
             THE_GAME_CONTROLLER.restart(GameState.BOOT);
             showStartView();
         });
-        editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);
+        editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miQuit);
         editor.init(GameModel.CUSTOM_MAP_DIR);
+    }
+
+    protected void createMapEditorView() {
         editorView = new EditorView(editor);
     }
 
@@ -218,10 +221,11 @@ public class PacManGamesUI implements GameUI {
     @Override
     public void build(Stage stage, Dimension2D mainSceneSize) {
         this.stage = assertNotNull(stage);
+        createMapEditor();
         createMainScene(assertNotNull(mainSceneSize));
         createStartView();
         createGameView();
-        createEditorView();
+        createMapEditorView();
         stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
         stage.setMinHeight(ARCADE_MAP_SIZE_IN_PIXELS.y() * 1.25);
         stage.setScene(mainScene);
