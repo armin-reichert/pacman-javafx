@@ -22,9 +22,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontSmoothingType;
@@ -138,8 +136,12 @@ public class GameView implements View {
         configurePropertyBindings();
         configureTitleBinding(ui);
         root.setOnContextMenuRequested(this::handleContextMenuRequest);
-        //TODO is this the recommended way to close an open context-menu?
-        root.setOnMouseClicked(e -> { if (contextMenu != null) contextMenu.hide(); });
+        //TODO is this the recommended way to close a context-menu?
+        ui.mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+            if (contextMenu != null && contextMenu.isShowing() && e.getButton() == MouseButton.PRIMARY) {
+                contextMenu.hide();
+            }
+        });
 
         gameScenePy.bind(ui.gameSceneProperty());
         bindGameActions();
@@ -246,16 +248,19 @@ public class GameView implements View {
         }
     }
 
-    protected void handleContextMenuRequest(ContextMenuEvent event) {
-        contextMenu = new ContextMenu(createContextMenuItems(event).toArray(MenuItem[]::new));
-        contextMenu.show(root, event.getScreenX(), event.getScreenY());
+    protected void handleContextMenuRequest(ContextMenuEvent e) {
+        if (contextMenu != null) {
+            contextMenu.hide();
+        }
+        contextMenu = new ContextMenu(createContextMenuItems(e));
+        contextMenu.show(root, e.getScreenX(), e.getScreenY());
         contextMenu.requestFocus();
-        event.consume();
+        e.consume(); //TODO needed?
     }
 
-    protected List<MenuItem> createContextMenuItems(ContextMenuEvent event) {
+    protected MenuItem[] createContextMenuItems(ContextMenuEvent e) {
         GameScene gameScene = gameScenePy.get();
-        return new ArrayList<>(gameScene.supplyContextMenuItems(event));
+        return gameScene.supplyContextMenuItems(e).toArray(MenuItem[]::new);
     }
 
     protected void handleGameSceneChange(GameScene gameScene) {

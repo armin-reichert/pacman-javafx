@@ -54,7 +54,7 @@ public class GameView3D extends GameView {
         bind(GameActions3D.TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3));
     }
 
-    protected List<MenuItem> createContextMenuItems(ContextMenuEvent event) {
+    protected MenuItem[] createContextMenuItems(ContextMenuEvent e) {
         List<MenuItem> menuItems = new ArrayList<>();
         if (THE_UI.configurations().currentGameSceneIsPlayScene2D()) {
             menuItems.add(contextMenuTitleItem(THE_UI.assets().text("scene_display")));
@@ -62,7 +62,7 @@ public class GameView3D extends GameView {
             item.setOnAction(ae -> GameActions3D.TOGGLE_PLAY_SCENE_2D_3D.execute());
             menuItems.add(item);
         }
-        menuItems.addAll(super.createContextMenuItems(event));
-        return menuItems;
+        menuItems.addAll(List.of(super.createContextMenuItems(e)));
+        return menuItems.toArray(MenuItem[]::new);
     }
 }
