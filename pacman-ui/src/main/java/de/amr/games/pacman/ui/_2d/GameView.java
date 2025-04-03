@@ -204,21 +204,21 @@ public class GameView implements View {
 
     @Override
     public void bindGameActions() {
-        bind(GameAction.BOOT,                 KeyCode.F3);
-        bind(this::showGameSceneHelp,            KeyCode.H);
-        bind(GameAction.SHOW_START_PAGE,      KeyCode.Q);
-        bind(GameAction.SIMULATION_SLOWER,    alt(KeyCode.MINUS));
-        bind(GameAction.SIMULATION_FASTER,    alt(KeyCode.PLUS));
-        bind(GameAction.SIMULATION_RESET,     alt(KeyCode.DIGIT0));
-        bind(GameAction.SIMULATION_ONE_STEP,  shift(KeyCode.P));
-        bind(GameAction.SIMULATION_TEN_STEPS, shift(KeyCode.SPACE));
-        bind(GameAction.TOGGLE_AUTOPILOT,     alt(KeyCode.A));
-        bind(GameAction.TOGGLE_DEBUG_INFO,    alt(KeyCode.D));
-        bind(GameAction.TOGGLE_PAUSED,        KeyCode.P);
+        bind(GameAction.BOOT,                    naked(KeyCode.F3));
+        bind(this::showGameSceneHelp,            naked(KeyCode.H));
+        bind(GameAction.SHOW_START_PAGE,         naked(KeyCode.Q));
+        bind(GameAction.SIMULATION_SLOWER,       alt(KeyCode.MINUS));
+        bind(GameAction.SIMULATION_FASTER,       alt(KeyCode.PLUS));
+        bind(GameAction.SIMULATION_RESET,        alt(KeyCode.DIGIT0));
+        bind(GameAction.SIMULATION_ONE_STEP,     shift(KeyCode.P));
+        bind(GameAction.SIMULATION_TEN_STEPS,    shift(KeyCode.SPACE));
+        bind(GameAction.TOGGLE_AUTOPILOT,        alt(KeyCode.A));
+        bind(GameAction.TOGGLE_DEBUG_INFO,       alt(KeyCode.D));
+        bind(GameAction.TOGGLE_PAUSED,           naked(KeyCode.P));
         bind(this::toggleDashboardVisibility,    naked(KeyCode.F1), alt(KeyCode.B));
-        bind(GameAction.TOGGLE_IMMUNITY,      alt(KeyCode.I));
+        bind(GameAction.TOGGLE_IMMUNITY,         alt(KeyCode.I));
         // 3D only
-        bind(GameAction.TOGGLE_PIP_VISIBILITY, KeyCode.F2);
+        bind(GameAction.TOGGLE_PIP_VISIBILITY,   naked(KeyCode.F2));
         bind(GameAction.TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3));
     }
 
