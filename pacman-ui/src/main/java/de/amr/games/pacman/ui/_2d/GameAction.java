@@ -49,10 +49,10 @@ public enum GameAction implements Action {
             if (THE_GAME_CONTROLLER.game().isPlaying()) {
                 return false;
             }
-            return THE_GAME_CONTROLLER.state() == GameState.SETTING_OPTIONS ||
-                THE_GAME_CONTROLLER.state() == INTRO ||
-                THE_GAME_CONTROLLER.game().isDemoLevel() ||
-                THE_COIN_STORE.numCoins() == 0;
+            return THE_GAME_CONTROLLER.state() == GameState.SETTING_OPTIONS
+                || THE_GAME_CONTROLLER.state() == INTRO
+                || THE_GAME_CONTROLLER.game().isDemoLevel()
+                || THE_COIN_STORE.isEmpty();
         }
     },
 
