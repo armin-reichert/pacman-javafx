@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade;
 
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.ui._2d.GameRenderer;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
@@ -34,6 +35,9 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
         this.spriteSheet = assertNotNull(spriteSheet);
         ctx = assertNotNull(canvas).getGraphicsContext2D();
     }
+
+    @Override
+    public void setWorldMap(WorldMap worldMap) {}
 
     @Override
     public GameSpriteSheet spriteSheet() {

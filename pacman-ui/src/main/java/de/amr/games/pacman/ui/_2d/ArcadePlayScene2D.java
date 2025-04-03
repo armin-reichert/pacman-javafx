@@ -16,6 +16,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.GameScene;
+import de.amr.games.pacman.ui.GameUI;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.scene.canvas.GraphicsContext;
@@ -231,7 +232,7 @@ public class ArcadePlayScene2D extends GameScene2D {
             );
         }
         g.setFill(Color.YELLOW);
-        g.setFont(GameRenderer.DEBUG_FONT);
+        g.setFont(GameUI.DEBUG_FONT);
         String gameStateText = gameState().name() + " (Tick %d)".formatted(gameState().timer().tickCount());
         String huntingPhaseText = "";
         if (gameState() == GameState.HUNTING) {

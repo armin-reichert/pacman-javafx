@@ -5,12 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.model.GameLevel;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.VBox;
 import org.tinylog.Logger;
 
+import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_CANVAS_BG_COLOR;
@@ -40,7 +40,6 @@ public class PictureInPictureView extends VBox {
     public void setScene2D(GameScene2D scene2D) {
         this.scene2D = assertNotNull(scene2D);
         GameRenderer renderer = THE_UI.configurations().current().createRenderer(canvas);
-        scene2D.game().level().map(GameLevel::worldMap).ifPresent(renderer::setWorldMap);
         scene2D.setGameRenderer(renderer);
         scene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
         recomputeLayout();
@@ -48,7 +47,11 @@ public class PictureInPictureView extends VBox {
 
     public void draw() {
         if (scene2D != null && isVisible()) {
-            scene2D.draw();
+            THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
+                scene2D.renderer().setWorldMap(level.worldMap());
+                scene2D.draw();
+
+            });
         }
     }
 

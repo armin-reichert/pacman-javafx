@@ -36,12 +36,6 @@ import static java.util.function.Predicate.not;
  */
 public interface GameRenderer {
 
-    Font DEBUG_FONT = Font.font("Sans", FontWeight.BOLD, 20);
-
-    default void setWorldMap(WorldMap worldMap) {}
-
-    GameSpriteSheet spriteSheet();
-
     Canvas canvas();
 
     default GraphicsContext ctx() { return canvas().getGraphicsContext2D(); }
@@ -50,6 +44,10 @@ public interface GameRenderer {
         ctx().setFill(paint);
         ctx().fillRect(0, 0, canvas().getWidth(), canvas().getHeight());
     }
+
+    void setWorldMap(WorldMap worldMap);
+
+    GameSpriteSheet spriteSheet();
 
     FloatProperty scalingProperty();
 

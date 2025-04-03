@@ -21,8 +21,8 @@ import de.amr.games.pacman.tengen.ms_pacman.rendering2d.MessageMovement;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
 import de.amr.games.pacman.ui.CameraControlledView;
 import de.amr.games.pacman.ui.GameScene;
+import de.amr.games.pacman.ui.GameUI;
 import de.amr.games.pacman.ui._2d.GameAction;
-import de.amr.games.pacman.ui._2d.GameRenderer;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._2d.LevelCompleteAnimation;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
@@ -490,7 +490,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     protected void drawDebugInfo() {
         gr.drawTileGrid(canvas.getWidth(), canvas.getHeight());
         gr.ctx().setFill(Color.WHITE);
-        gr.ctx().setFont(GameRenderer.DEBUG_FONT);
+        gr.ctx().setFont(GameUI.DEBUG_FONT);
         gr.ctx().fillText("%s %d".formatted(gameState(), gameState().timer().tickCount()), 0, scaled(3 * TS));
     }
 

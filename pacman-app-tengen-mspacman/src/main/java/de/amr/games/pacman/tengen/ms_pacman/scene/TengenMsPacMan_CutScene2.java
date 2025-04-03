@@ -12,7 +12,7 @@ import de.amr.games.pacman.tengen.ms_pacman.rendering2d.ClapperboardAnimation;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_PacAnimations;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet;
-import de.amr.games.pacman.ui._2d.GameRenderer;
+import de.amr.games.pacman.ui.GameUI;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -169,7 +169,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     protected void drawDebugInfo() {
         gr.drawTileGrid(sizeInPx().x(), sizeInPx().y());
         gr.ctx().setFill(Color.WHITE);
-        gr.ctx().setFont(GameRenderer.DEBUG_FONT);
+        gr.ctx().setFont(GameUI.DEBUG_FONT);
         gr.ctx().fillText("Tick " + t, 20, 20);
     }
 }
