@@ -20,6 +20,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -148,6 +149,30 @@ public class PacManGamesUI implements GameUI {
         });
     }
 
+    private Pane createIconBox(Node... icons) {
+        var iconBox = new HBox(3);
+        // push icons to the right of the hbox
+        Region spring = new Region();
+        HBox.setHgrow(spring, Priority.ALWAYS);
+        iconBox.getChildren().add(spring);
+        iconBox.getChildren().addAll(icons);
+        iconBox.setPadding(new Insets(10));
+        iconBox.setMaxHeight(STATUS_ICON_SIZE);
+        for (var icon : icons) {
+            icon.visibleProperty().addListener((py, ov, nv) -> rebuildIconBox(iconBox, spring, icons));
+        }
+        return iconBox;
+    }
+
+    private void rebuildIconBox(Pane iconBox, Node spring, Node... icons) {
+        iconBox.getChildren().setAll(spring);
+        for (var icon : icons) {
+            if (icon.isVisible()) {
+                iconBox.getChildren().add(icon);
+            }
+        }
+    }
+
     private void addStatusIcons(Pane parent) {
         var iconMuted = FontIcon.of(FontAwesomeSolid.DEAF, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
         iconMuted.visibleProperty().bind(sound.mutedProperty());
@@ -163,11 +188,7 @@ public class PacManGamesUI implements GameUI {
             () -> currentView() != editorView && clock.isPaused(),
             viewPy, clock.pausedProperty()));
 
-        Region spring = new Region();
-        HBox.setHgrow(spring, Priority.ALWAYS);
-        var iconBox = new HBox(3, spring, iconAutopilot, iconImmune, iconMuted);
-        iconBox.setPadding(new Insets(10));
-        iconBox.setMaxHeight(STATUS_ICON_SIZE);
+        Pane iconBox = createIconBox(iconAutopilot, iconImmune, iconMuted);
         iconBox.visibleProperty().bind(Bindings.createBooleanBinding(() -> currentView() != editorView, viewPy));
 
         parent.getChildren().addAll(iconPaused, iconBox);
