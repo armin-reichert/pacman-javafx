@@ -281,7 +281,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 level.pac().setImmune(PY_IMMUNITY.get());
             }
             createLevelCompleteAnimation(level);
-            gr.setWorldMap(level.worldMap());
+            gr.applyMapSettings(level.worldMap());
         });
     }
 
@@ -297,7 +297,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         Logger.info("{} entered from {}", this, oldScene);
         THE_UI.keyboard().enableCurrentJoypad();
         setKeyBindings(THE_UI.keyboard().currentJoypadKeyBinding());
-        game().level().map(GameLevel::worldMap).ifPresent(worldMap -> gr.setWorldMap(worldMap));
+        game().level().map(GameLevel::worldMap).ifPresent(worldMap -> gr.applyMapSettings(worldMap));
     }
 
     private void setKeyBindings(JoypadKeyBinding joypad) {

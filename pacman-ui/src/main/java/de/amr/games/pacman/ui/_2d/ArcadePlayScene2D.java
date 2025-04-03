@@ -73,7 +73,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         enableActionBindings();
 
         game().level().ifPresent(level -> {
-            gr.setWorldMap(level.worldMap());
+            gr.applyMapSettings(level.worldMap());
             gr.setMessagePosition(centerPositionBelowHouse(level));
         });
     }
@@ -148,7 +148,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         // Draw maze
         gr.setMazeHighlighted(levelCompleteAnimation != null && levelCompleteAnimation.isInHighlightPhase());
         gr.setBlinking(level.blinking().isOn());
-        gr.setWorldMap(level.worldMap());
+        gr.applyMapSettings(level.worldMap());
         gr.drawMaze(level, 0, 3 * TS, backgroundColor());
 
         if (level.message() != null) {
@@ -250,7 +250,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         if (gr == null) {
             setGameRenderer(THE_UI.configurations().current().createRenderer(canvas));
         }
-        game().level().map(GameLevel::worldMap).ifPresent(gr::setWorldMap);
+        game().level().map(GameLevel::worldMap).ifPresent(gr::applyMapSettings);
     }
 
     @Override

@@ -112,7 +112,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     public void setMessagePosition(Vector2f position) {}
 
     @Override
-    public void setWorldMap(WorldMap worldMap) {
+    public void applyMapSettings(WorldMap worldMap) {
         int colorMapIndex = worldMap.getConfigValue("colorMapIndex");
         fullMazeSpritesheetRegion = FULL_MAZE_REGIONS[colorMapIndex];
         emptyMazeSpritesheetRegion = EMPTY_MAZE_REGIONS[colorMapIndex];

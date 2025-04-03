@@ -48,7 +48,7 @@ public class PictureInPictureView extends VBox {
     public void draw() {
         if (scene2D != null && isVisible()) {
             THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-                scene2D.renderer().setWorldMap(level.worldMap());
+                scene2D.renderer().applyMapSettings(level.worldMap());
                 scene2D.draw();
 
             });

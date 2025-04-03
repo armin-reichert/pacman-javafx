@@ -37,7 +37,7 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
     }
 
     @Override
-    public void setWorldMap(WorldMap worldMap) {}
+    public void applyMapSettings(WorldMap worldMap) {}
 
     @Override
     public GameSpriteSheet spriteSheet() {
