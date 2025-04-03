@@ -38,9 +38,9 @@ import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
+import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_ENABLED;
 import static de.amr.games.pacman.uilib.Keyboard.*;
-import static de.amr.games.pacman.uilib.Ufx.border;
-import static de.amr.games.pacman.uilib.Ufx.coloredBackground;
+import static de.amr.games.pacman.uilib.Ufx.*;
 
 /**
  * This view shows the game play and the overlays like dashboard and picture-in-picture view of the running play scene.
@@ -116,16 +116,20 @@ public class GameView implements View {
     private void configureTitleBinding(GameUI ui) {
         titleExpression = Bindings.createStringBinding(
             () -> {
-                // "app.title.pacman" vs. "app.title.pacman.paused"
-                String key = "app.title." + ui.configurations().current().assetNamespace();
-                if (ui.clock().isPaused()) { key += ".paused"; }
-                if (ui.currentGameScene().isPresent() && ui.currentGameScene().get() instanceof GameScene2D gameScene2D) {
-                    return ui.assets().text(key, "2D") + " (%.2fx)".formatted(gameScene2D.scaling());
+                String sceneName = ui.currentGameScene().map(gameScene -> gameScene.getClass().getSimpleName()).orElse(null);
+                String sceneNameText = sceneName != null && PY_DEBUG_INFO_VISIBLE.get() ? " [%s]".formatted(sceneName) : "";
+                String assetNamespace = ui.configurations().current().assetNamespace();
+                String key = "app.title." + assetNamespace;
+                if (ui.clock().isPaused()) {
+                    key += ".paused";
                 }
-                return ui.assets().text(key, "2D");
+                String modeKey = ui.assets().text(PY_3D_ENABLED.get() ? "threeD" : "twoD");
+                if (ui.currentGameScene().isPresent() && ui.currentGameScene().get() instanceof GameScene2D gameScene2D) {
+                    return ui.assets().text(key, modeKey) + sceneNameText + " (%.2fx)".formatted(gameScene2D.scaling());
+                }
+                return ui.assets().text(key, modeKey) + sceneNameText;
             },
-            ui.clock().pausedProperty(), gameScenePy, root.heightProperty()
-        );
+            ui.clock().pausedProperty(), gameScenePy, PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE);
     }
 
     public GameView(GameUI ui) {
@@ -145,7 +149,6 @@ public class GameView implements View {
 
         gameScenePy.bind(ui.gameSceneProperty());
         bindGameActions();
-
     }
 
     private void createLayers() {
@@ -218,6 +221,9 @@ public class GameView implements View {
         bind(GameActions.TOGGLE_PAUSED,        KeyCode.P);
         bind(this::toggleDashboardVisibility,    naked(KeyCode.F1), alt(KeyCode.B));
         bind(GameActions.TOGGLE_IMMUNITY,      alt(KeyCode.I));
+        // 3D only
+        bind(GameActions.TOGGLE_PIP_VISIBILITY, KeyCode.F2);
+        bind(GameActions.TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3));
     }
 
     @Override
@@ -259,7 +265,14 @@ public class GameView implements View {
     }
 
     protected List<MenuItem> createContextMenuItems(ContextMenuEvent e) {
-        return new ArrayList<>(gameScenePy.get().supplyContextMenuItems(e));
+        var menuItems = new ArrayList<>(gameScenePy.get().supplyContextMenuItems(e));
+        if (THE_UI.configurations().currentGameSceneIsPlayScene2D()) {
+            menuItems.add(contextMenuTitleItem(THE_UI.assets().text("scene_display")));
+            var item = new MenuItem(THE_UI.assets().text("use_3D_scene"));
+            item.setOnAction(ae -> GameActions.TOGGLE_PLAY_SCENE_2D_3D.execute());
+            menuItems.addFirst(item);
+        }
+        return menuItems;
     }
 
     protected void handleGameSceneChange(GameScene gameScene) {
