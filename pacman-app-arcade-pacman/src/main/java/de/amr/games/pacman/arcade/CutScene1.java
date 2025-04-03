@@ -92,7 +92,7 @@ public class CutScene1 extends GameScene2D {
                 pac.selectAnimation(PacAnimations.ANIM_PAC_BIG);
                 pac.startAnimation();
             }
-            case ANIMATION_START + 632 -> THE_GAME_CONTROLLER.state().timer().expire();
+            case ANIMATION_START + 632 -> THE_GAME_CONTROLLER.terminateCurrentState();
             default -> {}
         }
     }

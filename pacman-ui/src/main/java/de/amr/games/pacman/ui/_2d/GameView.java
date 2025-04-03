@@ -47,34 +47,32 @@ import static de.amr.games.pacman.uilib.Ufx.*;
  */
 public class GameView implements View {
 
-    private static final double MAX_SCENE_SCALING = 5;
+    private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
 
-    protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
-
-    protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene") {
+    private final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene") {
         @Override
         protected void invalidated() {
             handleGameSceneChange(get());
         }
     };
 
-    protected final StackPane root = new StackPane();
-    protected final Scene parentScene;
+    private final StackPane root = new StackPane();
+    private final Scene parentScene;
 
-    protected FlashMessageView flashMessageLayer;
-    protected BorderPane canvasLayer;
-    protected PopupLayer popupLayer; // help, signature
-    protected BorderPane dashboardLayer;
+    private FlashMessageView flashMessageLayer;
+    private BorderPane canvasLayer;
+    private PopupLayer popupLayer; // help, signature
+    private BorderPane dashboardLayer;
 
-    protected final VBox dashboardContainer = new VBox();
-    protected final Dashboard dashboard = new Dashboard();
-    protected final Canvas canvas = new Canvas();
-    protected final TooFancyCanvasContainer canvasContainer = new TooFancyCanvasContainer(canvas);
-    protected final PictureInPictureView pipView = new PictureInPictureView();
-    protected final VBox pipContainer = new VBox(pipView, new HBox());
+    private final VBox dashboardContainer = new VBox();
+    private final Dashboard dashboard = new Dashboard();
+    private final Canvas canvas = new Canvas();
+    private final TooFancyCanvasContainer canvasContainer = new TooFancyCanvasContainer(canvas);
+    private final PictureInPictureView pipView = new PictureInPictureView();
+    private final VBox pipContainer = new VBox(pipView, new HBox());
 
-    protected StringExpression titleExpression;
-    protected ContextMenu contextMenu;
+    private StringExpression titleExpression;
+    private ContextMenu contextMenu;
 
     private void configureCanvasContainer() {
         canvasContainer.setMinScaling(0.5);
@@ -181,8 +179,6 @@ public class GameView implements View {
         return titleExpression;
     }
 
-    public ObjectProperty<GameScene> gameSceneProperty() { return gameScenePy; }
-
     public FlashMessageView flashMessageLayer() {
         return flashMessageLayer;
     }
@@ -254,7 +250,7 @@ public class GameView implements View {
         }
     }
 
-    protected void handleContextMenuRequest(ContextMenuEvent e) {
+    private void handleContextMenuRequest(ContextMenuEvent e) {
         if (contextMenu != null) {
             contextMenu.hide();
         }
@@ -264,7 +260,7 @@ public class GameView implements View {
         contextMenu.show(root, e.getScreenX(), e.getScreenY());
     }
 
-    protected List<MenuItem> createContextMenuItems(ContextMenuEvent e) {
+    private List<MenuItem> createContextMenuItems(ContextMenuEvent e) {
         var menuItems = new ArrayList<>(gameScenePy.get().supplyContextMenuItems(e));
         if (THE_UI.configurations().currentGameSceneIsPlayScene2D()) {
             menuItems.add(contextMenuTitleItem(THE_UI.assets().text("scene_display")));
@@ -275,7 +271,7 @@ public class GameView implements View {
         return menuItems;
     }
 
-    protected void handleGameSceneChange(GameScene gameScene) {
+    private void handleGameSceneChange(GameScene gameScene) {
         if (gameScene != null) embedGameScene(gameScene);
         if (contextMenu != null) contextMenu.hide();
     }
@@ -296,7 +292,7 @@ public class GameView implements View {
                 canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
                 canvasContainer.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
                 gameScene2D.scalingProperty().bind(
-                    canvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_SCALING)));
+                    canvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), GameUI.MAX_SCENE_2D_SCALING)));
                 gameScene2D.setCanvas(canvas);
                 // avoid showing old content before new scene is rendered
                 canvas.getGraphicsContext2D().setFill(PY_CANVAS_BG_COLOR.get());

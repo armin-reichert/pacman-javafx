@@ -261,7 +261,7 @@ public class ArcadePlayScene2D extends GameScene2D {
             game().level().ifPresent(level -> {
                 levelCompleteAnimation = new LevelCompleteAnimation(level.numFlashes(), 10);
                 levelCompleteAnimation.setOnHideGhosts(() -> level.ghosts().forEach(Ghost::hide));
-                levelCompleteAnimation.setOnFinished(() -> state.timer().expire());
+                levelCompleteAnimation.setOnFinished(THE_GAME_CONTROLLER::terminateCurrentState);
                 levelCompleteAnimation.start();
             });
         }

@@ -497,7 +497,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         gameState().timer().resetIndefiniteTime();
         Animation animation = level3D.pac3D().createDyingAnimation();
         animation.setDelay(Duration.seconds(1));
-        animation.setOnFinished(e -> gameState().timer().expire());
+        animation.setOnFinished(e -> THE_GAME_CONTROLLER.terminateCurrentState());
         animation.play();
     }
 

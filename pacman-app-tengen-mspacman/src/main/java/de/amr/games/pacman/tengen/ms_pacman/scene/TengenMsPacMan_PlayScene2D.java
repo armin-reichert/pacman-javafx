@@ -505,7 +505,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     private void createLevelCompleteAnimation(GameLevel level) {
         levelCompleteAnimation = new LevelCompleteAnimation(level.numFlashes(), 10);
         levelCompleteAnimation.setOnHideGhosts(() -> level.ghosts().forEach(Ghost::hide));
-        levelCompleteAnimation.setOnFinished(() -> gameState().timer().expire());
+        levelCompleteAnimation.setOnFinished(THE_GAME_CONTROLLER::terminateCurrentState);
     }
 
     @Override

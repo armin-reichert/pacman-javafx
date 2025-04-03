@@ -336,6 +336,13 @@ public enum GameActions implements GameAction {
         }
     },
 
+    TERMINATE_GAME_STATE {
+        @Override
+        public void execute() {
+            THE_GAME_CONTROLLER.terminateCurrentState();
+        }
+    },
+
     TOGGLE_DRAW_MODE {
         @Override
         public void execute() {

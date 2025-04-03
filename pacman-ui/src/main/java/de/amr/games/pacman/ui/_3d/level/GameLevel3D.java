@@ -321,7 +321,7 @@ public class GameLevel3D extends Group {
         );
         levelCompleteAnimation.setOnFinished(e -> {
             onFinished.run();
-            THE_GAME_CONTROLLER.state().timer().expire();
+            THE_GAME_CONTROLLER.terminateCurrentState();
         });
         levelCompleteAnimation.setDelay(Duration.seconds(delaySeconds));
         levelCompleteAnimation.play();

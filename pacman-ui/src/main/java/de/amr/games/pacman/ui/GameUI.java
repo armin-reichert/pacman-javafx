@@ -21,8 +21,10 @@ import java.util.Optional;
 public interface GameUI {
     Color STATUS_ICON_COLOR = Color.LIGHTGRAY;
     byte STATUS_ICON_SIZE = 36;
+    double MAX_SCENE_2D_SCALING = 5;
 
     enum DashboardID { README, GENERAL, GAME_CONTROL, SETTINGS_3D, GAME_INFO, ACTOR_INFO, KEYBOARD, ABOUT, CUSTOM_MAPS, JOYPAD }
+
     void addStartPage(StartPage startPage);
     GameAssets assets();
     void build(Stage stage, Dimension2D size);
