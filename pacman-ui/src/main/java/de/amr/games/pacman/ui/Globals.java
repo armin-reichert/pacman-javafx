@@ -7,12 +7,10 @@ package de.amr.games.pacman.ui;
 public class Globals {
     public static GameUI THE_UI;
 
-    public static void createUIWithout3DSupport() {
+    public static void createUIAndSupport3D(boolean support3D) {
         THE_UI = new PacManGamesUI();
-    }
-
-    public static void createUIWith3DSupport() {
-        THE_UI = new PacManGamesUI();
-        THE_UI.assets().addAssets3D();
+        if (support3D) {
+            THE_UI.assets().addAssets3D();
+        }
     }
 }

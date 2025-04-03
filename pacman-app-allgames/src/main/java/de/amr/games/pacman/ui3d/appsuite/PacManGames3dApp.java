@@ -61,7 +61,7 @@ public class PacManGames3dApp extends Application {
     public void start(Stage stage) {
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
         double height = 0.8 * screenSize.getHeight(), width = 1.6 * height;
-        Globals.createUIWith3DSupport();
+        Globals.createUIAndSupport3D(true);
         THE_UI.configurations().set(GameVariant.PACMAN, new ArcadePacMan_UIConfig());
         THE_UI.configurations().set(GameVariant.MS_PACMAN, new ArcadeMsPacMan_UIConfig());
         THE_UI.configurations().set(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_UIConfig());
