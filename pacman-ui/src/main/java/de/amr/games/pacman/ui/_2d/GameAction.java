@@ -9,7 +9,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.GameAction;
+import de.amr.games.pacman.ui.Action;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui._3d.scene3d.Perspective;
 import javafx.scene.shape.DrawMode;
@@ -25,7 +25,7 @@ import static de.amr.games.pacman.ui._3d.GlobalProperties3d.*;
 import static de.amr.games.pacman.uilib.Ufx.toggle;
 import static java.util.function.Predicate.not;
 
-public enum GameActions implements GameAction {
+public enum GameAction implements Action {
 
     /**
      * Adds credit (simulates insertion of a coin) and switches the game state accordingly.

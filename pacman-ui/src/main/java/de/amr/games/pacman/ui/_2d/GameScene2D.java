@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.arcade.Arcade;
-import de.amr.games.pacman.ui.GameAction;
+import de.amr.games.pacman.ui.Action;
 import de.amr.games.pacman.ui.GameScene;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
@@ -29,7 +29,7 @@ public abstract class GameScene2D implements GameScene {
     protected final BooleanProperty debugInfoVisiblePy = new SimpleBooleanProperty(false);
     protected final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
 
-    protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
+    protected final Map<KeyCodeCombination, Action> actionBindings = new HashMap<>();
 
     protected GameRenderer gr;
     protected Canvas canvas;
@@ -48,7 +48,7 @@ public abstract class GameScene2D implements GameScene {
     }
 
     @Override
-    public Map<KeyCodeCombination, GameAction> actionBindings() {
+    public Map<KeyCodeCombination, Action> actionBindings() {
         return actionBindings;
     }
 

@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._2d;
 
-import de.amr.games.pacman.ui.GameAction;
+import de.amr.games.pacman.ui.Action;
 import de.amr.games.pacman.ui.View;
 import de.amr.games.pacman.uilib.Carousel;
 import javafx.beans.binding.Bindings;
@@ -25,7 +25,7 @@ import static de.amr.games.pacman.ui.Globals.THE_UI;
  */
 public class StartPagesView implements View {
 
-    private final GameAction actionSelectGamePage = new GameAction() {
+    private final Action actionSelectGamePage = new Action() {
         @Override
         public void execute() {
             THE_UI.showGameView();
@@ -38,7 +38,7 @@ public class StartPagesView implements View {
     };
 
     private final List<StartPage> startPageList = new ArrayList<>();
-    private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
+    private final Map<KeyCodeCombination, Action> actionBindings = new HashMap<>();
     private final Carousel carousel;
     private StringExpression titleExpression;
 
@@ -75,7 +75,7 @@ public class StartPagesView implements View {
     }
 
     @Override
-    public Map<KeyCodeCombination, GameAction> actionBindings() {
+    public Map<KeyCodeCombination, Action> actionBindings() {
         return actionBindings;
     }
 
@@ -84,7 +84,7 @@ public class StartPagesView implements View {
         bind(carousel::showPreviousSlide, KeyCode.LEFT);
         bind(carousel::showNextSlide,     KeyCode.RIGHT);
         bind(actionSelectGamePage,        KeyCode.ENTER);
-        bind(GameActions.TOGGLE_PAUSED, KeyCode.P);
+        bind(GameAction.TOGGLE_PAUSED, KeyCode.P);
     }
 
     public void setTitleExpression(StringExpression stringExpression) {

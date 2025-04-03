@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui;
 /**
  * @author Armin Reichert
  */
-public interface GameAction {
+public interface Action {
 
     void execute();
 

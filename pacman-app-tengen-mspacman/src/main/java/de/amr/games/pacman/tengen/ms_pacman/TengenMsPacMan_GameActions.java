@@ -6,7 +6,7 @@ package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.tengen.ms_pacman.scene.SceneDisplayMode;
-import de.amr.games.pacman.ui.GameAction;
+import de.amr.games.pacman.ui.Action;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
@@ -15,7 +15,7 @@ import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.PY_TE
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.uilib.Ufx.toggle;
 
-public enum TengenMsPacMan_GameActions implements GameAction {
+public enum TengenMsPacMan_GameActions implements Action {
 
     SELECT_NEXT_JOYPAD_KEY_BINDING {
         @Override

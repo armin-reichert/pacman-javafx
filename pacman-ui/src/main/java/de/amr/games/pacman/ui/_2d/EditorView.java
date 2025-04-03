@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.tilemap.editor.TileMapEditor;
-import de.amr.games.pacman.ui.GameAction;
+import de.amr.games.pacman.ui.Action;
 import de.amr.games.pacman.ui.View;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.beans.binding.StringExpression;
@@ -27,7 +27,7 @@ import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 public class EditorView extends BorderPane implements View {
 
-    private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
+    private final Map<KeyCodeCombination, Action> actionBindings = new HashMap<>();
     private final TileMapEditor editor;
     private Consumer<TileMapEditor> closeAction = editor -> {};
 
@@ -65,7 +65,7 @@ public class EditorView extends BorderPane implements View {
     public void bindGameActions() {}
 
     @Override
-    public Map<KeyCodeCombination, GameAction> actionBindings() {
+    public Map<KeyCodeCombination, Action> actionBindings() {
         return actionBindings;
     }
 

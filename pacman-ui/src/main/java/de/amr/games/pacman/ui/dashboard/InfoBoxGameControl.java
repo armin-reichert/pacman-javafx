@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui.dashboard;
 import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.ui._2d.GameActions;
+import de.amr.games.pacman.ui._2d.GameAction;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -49,11 +49,11 @@ public class InfoBoxGameControl extends InfoBox {
 
         spinnerCredit.valueProperty().addListener((py, ov, number) -> THE_GAME_CONTROLLER.credit = number);
 
-        setAction(bgCutScenesTest[CUT_SCENES_TEST_START], GameActions.TEST_CUT_SCENES::execute);
-        setAction(bgCutScenesTest[CUT_SCENES_TEST_QUIT], GameActions.RESTART_INTRO::execute);
-        setAction(bgLevelActions[GAME_LEVEL_START], GameActions.START_GAME::execute);
-        setAction(bgLevelActions[GAME_LEVEL_QUIT], GameActions.RESTART_INTRO::execute);
-        setAction(bgLevelActions[GAME_LEVEL_NEXT], GameActions.CHEAT_NEXT_LEVEL::execute);
+        setAction(bgCutScenesTest[CUT_SCENES_TEST_START], GameAction.TEST_CUT_SCENES::execute);
+        setAction(bgCutScenesTest[CUT_SCENES_TEST_QUIT], GameAction.RESTART_INTRO::execute);
+        setAction(bgLevelActions[GAME_LEVEL_START], GameAction.START_GAME::execute);
+        setAction(bgLevelActions[GAME_LEVEL_QUIT], GameAction.RESTART_INTRO::execute);
+        setAction(bgLevelActions[GAME_LEVEL_NEXT], GameAction.CHEAT_NEXT_LEVEL::execute);
         setAction(comboInitialLives, () -> THE_GAME_CONTROLLER.game().setInitialLives(comboInitialLives.getValue()));
 
         setEditor(cbAutopilot, PY_AUTOPILOT);

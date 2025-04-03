@@ -21,7 +21,7 @@ import de.amr.games.pacman.tengen.ms_pacman.rendering2d.MessageMovement;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
 import de.amr.games.pacman.ui.CameraControlledView;
 import de.amr.games.pacman.ui.GameScene;
-import de.amr.games.pacman.ui._2d.GameActions;
+import de.amr.games.pacman.ui._2d.GameAction;
 import de.amr.games.pacman.ui._2d.GameRenderer;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._2d.LevelCompleteAnimation;
@@ -304,10 +304,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         if (game().isDemoLevel()) {
             bind(QUIT_DEMO_LEVEL, joypad.key(NES_JoypadButtonID.START));
         } else {
-            bind(GameActions.PLAYER_UP,    joypad.key(NES_JoypadButtonID.UP));
-            bind(GameActions.PLAYER_DOWN,  joypad.key(NES_JoypadButtonID.DOWN));
-            bind(GameActions.PLAYER_LEFT,  joypad.key(NES_JoypadButtonID.LEFT));
-            bind(GameActions.PLAYER_RIGHT, joypad.key(NES_JoypadButtonID.RIGHT));
+            bind(GameAction.PLAYER_UP,    joypad.key(NES_JoypadButtonID.UP));
+            bind(GameAction.PLAYER_DOWN,  joypad.key(NES_JoypadButtonID.DOWN));
+            bind(GameAction.PLAYER_LEFT,  joypad.key(NES_JoypadButtonID.LEFT));
+            bind(GameAction.PLAYER_RIGHT, joypad.key(NES_JoypadButtonID.RIGHT));
             bind(TengenMsPacMan_GameActions.TOGGLE_PAC_BOOSTER,
                 joypad.key(NES_JoypadButtonID.A),
                 joypad.key(NES_JoypadButtonID.B));
@@ -549,7 +549,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         items.add(miMuted);
 
         var miQuit = new MenuItem(THE_UI.assets().text("quit"));
-        miQuit.setOnAction(ae -> GameActions.SHOW_START_PAGE.execute());
+        miQuit.setOnAction(ae -> GameAction.SHOW_START_PAGE.execute());
         items.add(miQuit);
 
         return items;

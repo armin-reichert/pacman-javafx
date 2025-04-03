@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.dashboard;
 
 import de.amr.games.pacman.ui.PacManGamesUI;
-import de.amr.games.pacman.ui._2d.GameActions;
+import de.amr.games.pacman.ui._2d.GameAction;
 import de.amr.games.pacman.uilib.ResourceManager;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
@@ -62,7 +62,7 @@ public class InfoBoxGeneral extends InfoBox {
         btnStep.setText(null);
         btnStep.setTooltip(new Tooltip("Single Step Mode"));
 
-        setAction(bgSimulation[0], GameActions.TOGGLE_PAUSED::execute);
+        setAction(bgSimulation[0], GameAction.TOGGLE_PAUSED::execute);
         setAction(bgSimulation[1], () -> THE_UI.clock().makeSteps(PY_SIMULATION_STEPS.get(), true));
         setEditor(sliderTargetFPS, THE_UI.clock().targetFrameRateProperty());
         setEditor(pickerCanvasColor, PY_CANVAS_BG_COLOR);

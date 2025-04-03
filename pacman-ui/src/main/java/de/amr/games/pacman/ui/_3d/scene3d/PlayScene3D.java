@@ -17,9 +17,9 @@ import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.CameraControlledView;
-import de.amr.games.pacman.ui.GameAction;
+import de.amr.games.pacman.ui.Action;
 import de.amr.games.pacman.ui.GameScene;
-import de.amr.games.pacman.ui._2d.GameActions;
+import de.amr.games.pacman.ui._2d.GameAction;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.ui._3d.GlobalProperties3d;
 import de.amr.games.pacman.ui._3d.level.*;
@@ -68,7 +68,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     };
 
     protected final Map<Perspective.Name, Perspective> perspectives = new EnumMap<>(Perspective.Name.class);
-    protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
+    protected final Map<KeyCodeCombination, Action> actionBindings = new HashMap<>();
     protected final SubScene fxSubScene;
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final Scores3D scores3D;
@@ -117,11 +117,11 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
     @Override
     public void bindGameActions() {
-        bind(GameActions.PREV_PERSPECTIVE, alt(KeyCode.LEFT));
-        bind(GameActions.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
-        bind(GameActions.TOGGLE_DRAW_MODE, alt(KeyCode.W));
+        bind(GameAction.PREV_PERSPECTIVE, alt(KeyCode.LEFT));
+        bind(GameAction.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
+        bind(GameAction.TOGGLE_DRAW_MODE, alt(KeyCode.W));
         if (game().isDemoLevel()) {
-            bind(GameActions.INSERT_COIN, THE_UI.keyboard().currentArcadeKeyBinding().key(Arcade.Button.COIN));
+            bind(GameAction.INSERT_COIN, THE_UI.keyboard().currentArcadeKeyBinding().key(Arcade.Button.COIN));
         } else {
             bindDefaultArcadeControllerActions(THE_UI.keyboard().currentArcadeKeyBinding());
             bindAlternativePlayerControlActions();
@@ -247,7 +247,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     }
 
     @Override
-    public Map<KeyCodeCombination, GameAction> actionBindings() {
+    public Map<KeyCodeCombination, Action> actionBindings() {
         return actionBindings;
     }
 
@@ -508,7 +508,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         items.add(contextMenuTitleItem(THE_UI.assets().text("scene_display")));
 
         var item = new MenuItem(THE_UI.assets().text("use_2D_scene"));
-        item.setOnAction(ae -> GameActions.TOGGLE_PLAY_SCENE_2D_3D.execute());
+        item.setOnAction(ae -> GameAction.TOGGLE_PLAY_SCENE_2D_3D.execute());
         items.add(item);
 
         // Toggle picture-in-picture display
@@ -561,7 +561,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         items.add(miMuted);
 
         var miQuit = new MenuItem(THE_UI.assets().text("quit"));
-        miQuit.setOnAction(ae -> GameActions.SHOW_START_PAGE.execute());
+        miQuit.setOnAction(ae -> GameAction.SHOW_START_PAGE.execute());
         items.add(miQuit);
 
         return items;

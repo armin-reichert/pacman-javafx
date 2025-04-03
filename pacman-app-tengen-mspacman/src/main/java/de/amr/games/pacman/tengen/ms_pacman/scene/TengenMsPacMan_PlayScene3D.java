@@ -13,7 +13,7 @@ import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
-import de.amr.games.pacman.ui._2d.GameActions;
+import de.amr.games.pacman.ui._2d.GameAction;
 import de.amr.games.pacman.ui._3d.level.Bonus3D;
 import de.amr.games.pacman.ui._3d.scene3d.PlayScene3D;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
@@ -71,17 +71,17 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     public void bindGameActions() {
         JoypadKeyBinding joypad = THE_UI.keyboard().currentJoypadKeyBinding();
-        bind(GameActions.PREV_PERSPECTIVE, alt(KeyCode.LEFT));
-        bind(GameActions.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
-        bind(GameActions.TOGGLE_DRAW_MODE, alt(KeyCode.W));
+        bind(GameAction.PREV_PERSPECTIVE, alt(KeyCode.LEFT));
+        bind(GameAction.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
+        bind(GameAction.TOGGLE_DRAW_MODE, alt(KeyCode.W));
         if (game().isDemoLevel()) {
             bind(TengenMsPacMan_GameActions.QUIT_DEMO_LEVEL, joypad.key(NES_JoypadButtonID.START));
         }
         else {
-            bind(GameActions.PLAYER_UP,    joypad.key(NES_JoypadButtonID.UP));
-            bind(GameActions.PLAYER_DOWN,  joypad.key(NES_JoypadButtonID.DOWN));
-            bind(GameActions.PLAYER_LEFT,  joypad.key(NES_JoypadButtonID.LEFT));
-            bind(GameActions.PLAYER_RIGHT, joypad.key(NES_JoypadButtonID.RIGHT));
+            bind(GameAction.PLAYER_UP,    joypad.key(NES_JoypadButtonID.UP));
+            bind(GameAction.PLAYER_DOWN,  joypad.key(NES_JoypadButtonID.DOWN));
+            bind(GameAction.PLAYER_LEFT,  joypad.key(NES_JoypadButtonID.LEFT));
+            bind(GameAction.PLAYER_RIGHT, joypad.key(NES_JoypadButtonID.RIGHT));
             bind(TengenMsPacMan_GameActions.TOGGLE_PAC_BOOSTER, joypad.key(NES_JoypadButtonID.A), joypad.key(NES_JoypadButtonID.B));
             bindAlternativePlayerControlActions();
             bindCheatActions();

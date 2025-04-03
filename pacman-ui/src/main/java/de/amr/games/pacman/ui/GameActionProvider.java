@@ -15,7 +15,7 @@ import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 public interface GameActionProvider {
 
-    Map<KeyCodeCombination, GameAction> actionBindings();
+    Map<KeyCodeCombination, Action> actionBindings();
 
     /**
      * Hook method where actions are bound to keyboard combinations.
@@ -36,19 +36,19 @@ public interface GameActionProvider {
         }
     }
 
-    default void bind(GameAction action, KeyCodeCombination... combinations) {
+    default void bind(Action action, KeyCodeCombination... combinations) {
         for (KeyCodeCombination kcc : combinations) {
             actionBindings().put(kcc, action);
         }
     }
 
-    default void bind(GameAction action, KeyCode... keyCodes) {
+    default void bind(Action action, KeyCode... keyCodes) {
         for (KeyCode keyCode : keyCodes) {
             actionBindings().put(new KeyCodeCombination(keyCode), action);
         }
     }
 
-    default Optional<GameAction> firstMatchedAction() {
+    default Optional<Action> firstMatchedAction() {
         return actionBindings().entrySet().stream()
             .filter(entry -> THE_UI.keyboard().isMatching(entry.getKey()))
             .map(Map.Entry::getValue)
