@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman;
 
+import de.amr.games.pacman.controller.CoinStore;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
@@ -21,11 +22,10 @@ import java.util.Random;
  */
 public interface Globals {
 
+    CoinStore THE_COIN_STORE = new CoinStore();
     GameController THE_GAME_CONTROLLER = new GameController();
 
     byte TICKS_PER_SECOND = 60;
-
-    int MAX_COINS = 99;
 
     /** Tile size (8px). */
     int TS = 8;

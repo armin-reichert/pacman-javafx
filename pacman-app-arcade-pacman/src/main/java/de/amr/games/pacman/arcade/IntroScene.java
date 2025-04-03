@@ -153,7 +153,7 @@ public class IntroScene extends GameScene2D {
             }
             default -> {}
         }
-        gr.drawText("CREDIT %2d".formatted(THE_GAME_CONTROLLER.credit), Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS), 2 * TS, sizeInPx().y() - 2);
+        gr.drawText("CREDIT %2d".formatted(THE_COIN_STORE.numCoins()), Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS), 2 * TS, sizeInPx().y() - 2);
         gr.drawLevelCounter(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 

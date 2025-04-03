@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.Globals;
+import de.amr.games.pacman.controller.CoinStore;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
@@ -33,8 +34,8 @@ public enum GameAction implements Action {
     INSERT_COIN {
         @Override
         public void execute() {
-            if (THE_GAME_CONTROLLER.credit < Globals.MAX_COINS) {
-                THE_GAME_CONTROLLER.credit += 1;
+            if (THE_COIN_STORE.numCoins() < CoinStore.MAX_COINS) {
+                THE_COIN_STORE.insertCoin();
                 THE_UI.sound().enabledProperty().set(true);
                 THE_GAME_CONTROLLER.game().publishGameEvent(GameEventType.CREDIT_ADDED);
             }
@@ -51,7 +52,7 @@ public enum GameAction implements Action {
             return THE_GAME_CONTROLLER.state() == GameState.SETTING_OPTIONS ||
                 THE_GAME_CONTROLLER.state() == INTRO ||
                 THE_GAME_CONTROLLER.game().isDemoLevel() ||
-                THE_GAME_CONTROLLER.credit == 0;
+                THE_COIN_STORE.numCoins() == 0;
         }
     },
 

@@ -153,7 +153,7 @@ public class IntroScene extends GameScene2D {
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
             r.drawMsPacManMidwayCopyright(tiles2Px(6), tiles2Px(28), COLOR_RED, font);
         }
-        gr.drawText("CREDIT %2d".formatted(THE_GAME_CONTROLLER.credit), COLOR_WHITE, font, 2 * TS, sizeInPx().y() - 2);
+        gr.drawText("CREDIT %2d".formatted(THE_COIN_STORE.numCoins()), COLOR_WHITE, font, 2 * TS, sizeInPx().y() - 2);
         gr.drawLevelCounter(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 

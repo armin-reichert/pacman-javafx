@@ -39,7 +39,6 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     private final Map<GameVariant, GameModel> gameModelMap = new EnumMap<>(GameVariant.class);
     private GameModel currentGameModel;
-    public int credit;
 
     public GameController() {
         super(GameState.values());
