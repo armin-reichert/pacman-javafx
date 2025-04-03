@@ -6,7 +6,9 @@ package de.amr.games.pacman.ui;
 
 import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.tilemap.editor.TileMapEditor;
 import de.amr.games.pacman.ui._2d.*;
 import de.amr.games.pacman.ui.dashboard.Dashboard;
 import de.amr.games.pacman.ui.input.GameKeyboard;
@@ -19,6 +21,8 @@ import javafx.geometry.Dimension2D;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -31,6 +35,7 @@ import java.util.Optional;
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_IMMUNITY;
 
@@ -54,6 +59,7 @@ public class PacManGamesUI implements GameUI {
     protected Scene mainScene;
     protected final StackPane root = new StackPane();
 
+    protected TileMapEditor editor;
     protected EditorView editorView;
     protected GameView gameView;
     protected StartPagesView startPagesView;
@@ -170,14 +176,19 @@ public class PacManGamesUI implements GameUI {
     }
 
     protected void createEditorView() {
-        editorView = new EditorView(stage);
-        editorView.setOnClose(editor -> {
+        editor = new TileMapEditor();
+        editor.createUI(stage);
+        var miQuitEditor = new MenuItem(THE_UI.assets().text("back_to_game"));
+        miQuitEditor.setOnAction(e -> {
             editor.stop();
             editor.executeWithCheckForUnsavedChanges(() -> {});
             clock.setTargetFrameRate(Globals.TICKS_PER_SECOND);
             THE_GAME_CONTROLLER.restart(GameState.BOOT);
             showStartView();
         });
+        editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miQuitEditor);
+        editor.init(GameModel.CUSTOM_MAP_DIR);
+        editorView = new EditorView(editor);
     }
 
     protected void createStartView() {
