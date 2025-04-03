@@ -46,23 +46,23 @@ import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_IMMUNITY;
  */
 public class PacManGamesUI implements GameUI {
 
-    protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
-    protected final ObjectProperty<View> viewPy = new SimpleObjectProperty<>();
+    private final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
+    private final ObjectProperty<View> viewPy = new SimpleObjectProperty<>();
 
-    protected final GameAssets assets = new GameAssets();
-    protected final GameClockFX clock = new GameClockFX();
-    protected final GameKeyboard keyboard = new GameKeyboard();
-    protected final GameSound sound = new GameSound();
-    protected final UIConfigurationManager uiConfigurationManager = new UIConfigurationManager();
+    private final GameAssets assets = new GameAssets();
+    private final GameClockFX clock = new GameClockFX();
+    private final GameKeyboard keyboard = new GameKeyboard();
+    private final GameSound sound = new GameSound();
+    private final UIConfigurationManager uiConfigurationManager = new UIConfigurationManager();
 
-    protected Stage stage;
-    protected Scene mainScene;
-    protected final StackPane root = new StackPane();
+    private Stage stage;
+    private Scene mainScene;
+    private final StackPane root = new StackPane();
 
-    protected TileMapEditor editor;
-    protected EditorView editorView;
-    protected GameView gameView;
-    protected StartPagesView startPagesView;
+    private TileMapEditor editor;
+    private EditorView editorView;
+    private GameView gameView;
+    private StartPagesView startPagesView;
 
     public PacManGamesUI() {
         clock.setPauseableAction(this::doSimulationStepAndUpdateGameScene);
@@ -114,7 +114,7 @@ public class PacManGamesUI implements GameUI {
         Logger.info("Game scene changed from {} to {}", oldSceneName, newSceneName);
     }
 
-    protected void createMainScene(Dimension2D size) {
+    private void createMainScene(Dimension2D size) {
         root.setBackground(assets.get("background.scene"));
         root.backgroundProperty().bind(gameScenePy.map(
             gameScene -> uiConfigurationManager.currentGameSceneIsPlayScene3D()
@@ -190,16 +190,16 @@ public class PacManGamesUI implements GameUI {
         editor.init(GameModel.CUSTOM_MAP_DIR);
     }
 
-    protected void createMapEditorView() {
+    private void createMapEditorView() {
         editorView = new EditorView(editor);
     }
 
-    protected void createStartView() {
+    private void createStartView() {
         startPagesView = new StartPagesView();
         startPagesView.setBackground(assets.background("background.scene"));
     }
 
-    protected void createGameView() {
+    private void createGameView() {
         gameView = new GameView(this);
         gameView.resize(mainScene.getWidth(), mainScene.getHeight());
     }
