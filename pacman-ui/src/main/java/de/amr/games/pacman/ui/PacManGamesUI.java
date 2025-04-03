@@ -26,11 +26,13 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
@@ -150,27 +152,17 @@ public class PacManGamesUI implements GameUI {
     }
 
     private Pane createIconBox(Node... icons) {
-        var iconBox = new HBox(3);
-        // push icons to the right of the hbox
-        Region spring = new Region();
-        HBox.setHgrow(spring, Priority.ALWAYS);
-        iconBox.getChildren().add(spring);
+        int spacing = 5, padding = 10, height = STATUS_ICON_SIZE + padding;
+        var iconBox = new HBox(spacing);
         iconBox.getChildren().addAll(icons);
-        iconBox.setPadding(new Insets(10));
-        iconBox.setMaxHeight(STATUS_ICON_SIZE);
+        iconBox.setPadding(new Insets(padding));
+        iconBox.setMaxHeight(height);
+        // keep box compact, show only visible items
         for (var icon : icons) {
-            icon.visibleProperty().addListener((py, ov, nv) -> rebuildIconBox(iconBox, spring, icons));
+            icon.visibleProperty().addListener(
+                (py, ov, nv) -> iconBox.getChildren().setAll(Arrays.stream(icons).filter(Node::isVisible).toList()));
         }
         return iconBox;
-    }
-
-    private void rebuildIconBox(Pane iconBox, Node spring, Node... icons) {
-        iconBox.getChildren().setAll(spring);
-        for (var icon : icons) {
-            if (icon.isVisible()) {
-                iconBox.getChildren().add(icon);
-            }
-        }
     }
 
     private void addStatusIcons(Pane parent) {
@@ -188,12 +180,12 @@ public class PacManGamesUI implements GameUI {
             () -> currentView() != editorView && clock.isPaused(),
             viewPy, clock.pausedProperty()));
 
-        Pane iconBox = createIconBox(iconAutopilot, iconImmune, iconMuted);
+        Pane iconBox = createIconBox(iconMuted, iconAutopilot, iconImmune);
         iconBox.visibleProperty().bind(Bindings.createBooleanBinding(() -> currentView() != editorView, viewPy));
 
         parent.getChildren().addAll(iconPaused, iconBox);
         StackPane.setAlignment(iconPaused, Pos.CENTER);
-        StackPane.setAlignment(iconBox, Pos.BOTTOM_RIGHT);
+        StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
     }
 
     private void createMapEditor() {
