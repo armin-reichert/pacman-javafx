@@ -263,10 +263,10 @@ public class GameView implements View {
     private List<MenuItem> createContextMenuItems(ContextMenuEvent e) {
         var menuItems = new ArrayList<>(gameScenePy.get().supplyContextMenuItems(e));
         if (THE_UI.configurations().currentGameSceneIsPlayScene2D()) {
-            menuItems.add(contextMenuTitleItem(THE_UI.assets().text("scene_display")));
             var item = new MenuItem(THE_UI.assets().text("use_3D_scene"));
             item.setOnAction(ae -> GameAction.TOGGLE_PLAY_SCENE_2D_3D.execute());
             menuItems.addFirst(item);
+            menuItems.addFirst(contextMenuTitleItem(THE_UI.assets().text("scene_display")));
         }
         return menuItems;
     }
