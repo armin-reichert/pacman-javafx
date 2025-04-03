@@ -313,7 +313,7 @@ public class PacManGamesUI implements GameUI {
             currentGameScene().ifPresent(GameScene::end);
             clock.stop();
             sound.stopAll();
-            editorView.editor().start(stage);
+            editor.start(stage);
             viewPy.set(editorView);
         }
     }

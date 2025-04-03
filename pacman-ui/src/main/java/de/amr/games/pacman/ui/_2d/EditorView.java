@@ -14,27 +14,26 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.Globals.assertNotNull;
 
-public class EditorView extends BorderPane implements View {
+public class EditorView implements View {
 
-    private final Map<KeyCodeCombination, Action> actionBindings = new HashMap<>();
+    private final BorderPane layout = new BorderPane();
     private final TileMapEditor editor;
 
     public EditorView(TileMapEditor editor) {
         this.editor = assertNotNull(editor);
         // without this, Pac-Man wallpaper shines through
-        setBackground(Ufx.coloredBackground(Color.web("#dddddd"))); // JavaFX default grey
-        setCenter(editor.getContentPane());
-        setTop(editor.getMenuBar());
+        layout.setBackground(Ufx.coloredBackground(Color.web("#dddddd"))); // JavaFX default grey
+        layout.setCenter(editor.getContentPane());
+        layout.setTop(editor.getMenuBar());
     }
 
     @Override
     public Region layoutRoot() {
-        return this;
+        return layout;
     }
 
     @Override
@@ -50,10 +49,6 @@ public class EditorView extends BorderPane implements View {
 
     @Override
     public Map<KeyCodeCombination, Action> actionBindings() {
-        return actionBindings;
-    }
-
-    public TileMapEditor editor() {
-        return editor;
+        return Map.of();
     }
 }
