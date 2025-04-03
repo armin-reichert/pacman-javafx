@@ -119,16 +119,6 @@ public class PacManGamesUI implements GameUI {
     }
 
     private void createMainScene(Dimension2D size) {
-        root.setBackground(assets.get("background.scene"));
-        root.backgroundProperty().bind(gameScenePy.map(
-            gameScene -> uiConfigurationManager.currentGameSceneIsPlayScene3D()
-                ? assets.get("background.play_scene3d")
-                : assets.get("background.scene"))
-        );
-
-        root.getChildren().add(new Pane()); // placeholder for root of current view
-        addStatusIcons(root);
-
         mainScene = new Scene(root, size.getWidth(), size.getHeight());
         mainScene.widthProperty() .addListener((py,ov,nv) -> gameView.resize(mainScene.getWidth(), mainScene.getHeight()));
         mainScene.heightProperty().addListener((py,ov,nv) -> gameView.resize(mainScene.getWidth(), mainScene.getHeight()));
@@ -235,6 +225,14 @@ public class PacManGamesUI implements GameUI {
     @Override
     public void build(Stage stage, Dimension2D mainSceneSize) {
         this.stage = assertNotNull(stage);
+        root.setBackground(assets.get("background.scene"));
+        root.backgroundProperty().bind(gameScenePy.map(
+                gameScene -> uiConfigurationManager.currentGameSceneIsPlayScene3D()
+                        ? assets.get("background.play_scene3d")
+                        : assets.get("background.scene"))
+        );
+        root.getChildren().add(new Pane()); // placeholder for root of current view
+        addStatusIcons(root);
         createMapEditor();
         createMainScene(assertNotNull(mainSceneSize));
         createStartView();
