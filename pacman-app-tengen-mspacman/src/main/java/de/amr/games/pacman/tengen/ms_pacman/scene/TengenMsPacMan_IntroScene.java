@@ -19,7 +19,7 @@ import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_GhostAnim
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_PacAnimations;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet;
-import de.amr.games.pacman.ui._2d.GameActions2D;
+import de.amr.games.pacman.ui._2d.GameActions;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -70,7 +70,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(GameActions2D.START_GAME, THE_UI.keyboard().currentJoypadKeyBinding().key(NES_JoypadButtonID.START));
+        bind(GameActions.START_GAME, THE_UI.keyboard().currentJoypadKeyBinding().key(NES_JoypadButtonID.START));
         bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, THE_UI.keyboard().currentJoypadKeyBinding().key(NES_JoypadButtonID.SELECT));
     }
 

@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._3d;
 
 import de.amr.games.pacman.ui.PacManGamesUI;
+import de.amr.games.pacman.ui._2d.GameActions;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._2d.GameView;
 import javafx.beans.binding.Bindings;
@@ -12,7 +13,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.games.pacman.ui.Globals.THE_UI;
@@ -50,8 +50,8 @@ public class GameView3D extends GameView {
     @Override
     public void bindGameActions() {
         super.bindGameActions();
-        bind(GameActions3D.TOGGLE_PIP_VISIBILITY, KeyCode.F2);
-        bind(GameActions3D.TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3));
+        bind(GameActions.TOGGLE_PIP_VISIBILITY, KeyCode.F2);
+        bind(GameActions.TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3));
     }
 
     protected List<MenuItem> createContextMenuItems(ContextMenuEvent e) {
@@ -59,7 +59,7 @@ public class GameView3D extends GameView {
         if (THE_UI.configurations().currentGameSceneIsPlayScene2D()) {
             menuItems.add(contextMenuTitleItem(THE_UI.assets().text("scene_display")));
             var item = new MenuItem(THE_UI.assets().text("use_3D_scene"));
-            item.setOnAction(ae -> GameActions3D.TOGGLE_PLAY_SCENE_2D_3D.execute());
+            item.setOnAction(ae -> GameActions.TOGGLE_PLAY_SCENE_2D_3D.execute());
             menuItems.addFirst(item);
         }
         return menuItems;

@@ -6,11 +6,9 @@ package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.View;
-import de.amr.games.pacman.ui._3d.GlobalProperties3d;
 import de.amr.games.pacman.uilib.Carousel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
-import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.Background;
@@ -19,10 +17,8 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
-import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_ENABLED;
 
 /**
  * Carousel containing the start pages for the different game variants (XXL game variants share common start page).
@@ -88,7 +84,7 @@ public class StartPagesView implements View {
         bind(carousel::showPreviousSlide, KeyCode.LEFT);
         bind(carousel::showNextSlide,     KeyCode.RIGHT);
         bind(actionSelectGamePage,        KeyCode.ENTER);
-        bind(GameActions2D.TOGGLE_PAUSED, KeyCode.P);
+        bind(GameActions.TOGGLE_PAUSED, KeyCode.P);
     }
 
     public void setTitleExpression(StringExpression stringExpression) {

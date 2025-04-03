@@ -63,7 +63,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     @Override
     public void onLevelCreated(GameEvent e) {
         if (game().isDemoLevel()) {
-            bind(GameActions2D.INSERT_COIN, arcadeKeyBinding().key(Arcade.Button.COIN));
+            bind(GameActions.INSERT_COIN, arcadeKeyBinding().key(Arcade.Button.COIN));
         } else {
             bindCheatActions();
             bindDefaultArcadeControllerActions(arcadeKeyBinding());
@@ -339,7 +339,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         items.add(miMuted);
 
         var miQuit = new MenuItem(THE_UI.assets().text("quit"));
-        miQuit.setOnAction(ae -> GameActions2D.SHOW_START_PAGE.execute());
+        miQuit.setOnAction(ae -> GameActions.SHOW_START_PAGE.execute());
         items.add(miQuit);
 
         return items;

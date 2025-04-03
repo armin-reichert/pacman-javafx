@@ -11,6 +11,8 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameScene;
+import de.amr.games.pacman.ui._3d.scene3d.Perspective;
+import javafx.scene.shape.DrawMode;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.*;
@@ -19,13 +21,11 @@ import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
+import static de.amr.games.pacman.ui._3d.GlobalProperties3d.*;
 import static de.amr.games.pacman.uilib.Ufx.toggle;
 import static java.util.function.Predicate.not;
 
-/**
- * @author Armin Reichert
- */
-public enum GameActions2D implements GameAction {
+public enum GameActions implements GameAction {
 
     /**
      * Adds credit (simulates insertion of a coin) and switches the game state accordingly.
@@ -316,7 +316,60 @@ public enum GameActions2D implements GameAction {
             }
             Logger.info("Game ({}) {}", THE_GAME_CONTROLLER.selectedGameVariant(), THE_UI.clock().isPaused() ? "paused" : "resumed");
         }
+    },
+
+    NEXT_PERSPECTIVE {
+        @Override
+        public void execute() {
+            Perspective.Name next = PY_3D_PERSPECTIVE.get().next();
+            PY_3D_PERSPECTIVE.set(next);
+            THE_UI.showFlashMessage(THE_UI.assets().text("camera_perspective", THE_UI.assets().text(next.name())));
+        }
+    },
+
+    PREV_PERSPECTIVE {
+        @Override
+        public void execute() {
+            Perspective.Name prev = PY_3D_PERSPECTIVE.get().prev();
+            PY_3D_PERSPECTIVE.set(prev);
+            THE_UI.showFlashMessage(THE_UI.assets().text("camera_perspective", THE_UI.assets().text(prev.name())));
+        }
+    },
+
+    TOGGLE_DRAW_MODE {
+        @Override
+        public void execute() {
+            PY_3D_DRAW_MODE.set(PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+        }
+    },
+
+    TOGGLE_PLAY_SCENE_2D_3D {
+        @Override
+        public void execute() {
+            THE_UI.currentGameScene().ifPresent(gameScene -> {
+                toggle(PY_3D_ENABLED);
+                if (THE_UI.configurations().currentGameSceneIsPlayScene2D()
+                    || THE_UI.configurations().currentGameSceneIsPlayScene3D()) {
+                    THE_UI.updateGameScene(true);
+                    THE_GAME_CONTROLLER.update(); //TODO needed?
+                }
+                if (!THE_GAME_CONTROLLER.game().isPlaying()) {
+                    THE_UI.showFlashMessage(THE_UI.assets().text(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
+                }
+            });
+        }
+    },
+
+    TOGGLE_PIP_VISIBILITY {
+        @Override
+        public void execute() {
+            toggle(PY_PIP_ON);
+            if (!THE_UI.configurations().currentGameSceneIsPlayScene3D()) {
+                THE_UI.showFlashMessage(THE_UI.assets().text(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
+            }
+        }
     };
+
 
     private static final int SIMULATION_SPEED_DELTA = 2;
     private static final int SIMULATION_SPEED_MIN   = 10;

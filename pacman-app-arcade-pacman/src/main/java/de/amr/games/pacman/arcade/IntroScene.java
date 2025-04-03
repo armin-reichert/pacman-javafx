@@ -17,7 +17,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui._2d.GameActions2D;
+import de.amr.games.pacman.ui._2d.GameActions;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -77,8 +77,8 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(GameActions2D.INSERT_COIN, THE_UI.keyboard().currentArcadeKeyBinding().key(Arcade.Button.COIN));
-        bind(GameActions2D.START_GAME, THE_UI.keyboard().currentArcadeKeyBinding().key(Arcade.Button.START));
+        bind(GameActions.INSERT_COIN, THE_UI.keyboard().currentArcadeKeyBinding().key(Arcade.Button.COIN));
+        bind(GameActions.START_GAME, THE_UI.keyboard().currentArcadeKeyBinding().key(Arcade.Button.START));
         bindTestsStartingActions();
     }
 

@@ -7,7 +7,7 @@ package de.amr.games.pacman.tengen.ms_pacman.scene;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.nes.NES_JoypadButtonID;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
-import de.amr.games.pacman.ui._2d.GameActions2D;
+import de.amr.games.pacman.ui._2d.GameActions;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.text.Font;
 
@@ -24,7 +24,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     public void bindGameActions() {
         game().setScoreVisible(false);
         THE_UI.keyboard().enableCurrentJoypad();
-        bind(GameActions2D.START_GAME, THE_UI.keyboard().currentJoypadKeyBinding().key(NES_JoypadButtonID.START));
+        bind(GameActions.START_GAME, THE_UI.keyboard().currentJoypadKeyBinding().key(NES_JoypadButtonID.START));
     }
 
     @Override
