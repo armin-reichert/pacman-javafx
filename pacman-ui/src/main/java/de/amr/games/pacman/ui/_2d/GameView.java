@@ -252,15 +252,14 @@ public class GameView implements View {
         if (contextMenu != null) {
             contextMenu.hide();
         }
-        contextMenu = new ContextMenu(createContextMenuItems(e));
-        contextMenu.show(root, e.getScreenX(), e.getScreenY());
+        contextMenu = new ContextMenu();
+        contextMenu.getItems().addAll(createContextMenuItems(e));
         contextMenu.requestFocus();
-        e.consume(); //TODO needed?
+        contextMenu.show(root, e.getScreenX(), e.getScreenY());
     }
 
-    protected MenuItem[] createContextMenuItems(ContextMenuEvent e) {
-        GameScene gameScene = gameScenePy.get();
-        return gameScene.supplyContextMenuItems(e).toArray(MenuItem[]::new);
+    protected List<MenuItem> createContextMenuItems(ContextMenuEvent e) {
+        return new ArrayList<>(gameScenePy.get().supplyContextMenuItems(e));
     }
 
     protected void handleGameSceneChange(GameScene gameScene) {
