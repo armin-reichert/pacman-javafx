@@ -13,11 +13,15 @@ import de.amr.games.pacman.uilib.GameClockFX;
 import javafx.beans.property.ObjectProperty;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.util.Optional;
 
 public interface GameUI {
+    Color STATUS_ICON_COLOR = Color.LIGHTGRAY;
+    byte STATUS_ICON_SIZE = 36;
+
     enum DashboardID { README, GENERAL, GAME_CONTROL, SETTINGS_3D, GAME_INFO, ACTOR_INFO, KEYBOARD, ABOUT, CUSTOM_MAPS, JOYPAD }
     void addStartPage(StartPage startPage);
     GameAssets assets();

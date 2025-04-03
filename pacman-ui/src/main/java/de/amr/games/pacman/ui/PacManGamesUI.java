@@ -21,7 +21,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -41,9 +40,6 @@ import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_IMMUNITY;
  * @author Armin Reichert
  */
 public class PacManGamesUI implements GameUI {
-
-    private static final Color STATUS_ICON_COLOR = Color.RED;
-    private static final byte STATUS_ICON_SIZE = 36;
 
     protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
     protected final ObjectProperty<View> viewPy = new SimpleObjectProperty<>();
