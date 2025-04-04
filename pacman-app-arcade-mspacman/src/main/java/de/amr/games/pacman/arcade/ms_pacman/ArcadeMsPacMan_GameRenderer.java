@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade.ms_pacman;
 
 import de.amr.games.pacman.lib.RectArea;
-import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
@@ -59,8 +58,6 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
         rect(0, 5*248, 224, 248),
     };
 
-    private static final Vector2f MESSAGE_POSITION = new Vector2f(14 * TS, 21 * TS);
-
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;
     private final GraphicsContext ctx;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
@@ -101,11 +98,6 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     @Override
     public FloatProperty scalingProperty() {
         return scalingPy;
-    }
-
-    @Override
-    public Vector2f getMessagePosition() {
-        return MESSAGE_POSITION;
     }
 
     @Override

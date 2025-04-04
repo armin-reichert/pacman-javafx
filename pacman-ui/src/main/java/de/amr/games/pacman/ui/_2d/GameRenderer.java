@@ -57,13 +57,6 @@ public interface GameRenderer {
     default float scaled(double value) { return scaling() * (float) value; }
 
     /**
-     * @return Unscaled position where message (READY etc.) is displayed.
-     *         Message text is centered horizontally to the x-coordinate
-     *         and text baseline is y-coordinate of given position
-     */
-    Vector2f getMessagePosition();
-
-    /**
      * Draws the given source scaled by the current scaling value.
      *
      * @param image     source

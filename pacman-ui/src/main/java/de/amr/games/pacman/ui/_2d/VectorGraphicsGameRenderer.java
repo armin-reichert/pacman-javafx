@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._2d;
 
-import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.tilemap.rendering.FoodMapRenderer;
@@ -19,7 +18,6 @@ import javafx.scene.paint.Paint;
 
 import java.util.Map;
 
-import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static java.util.function.Predicate.not;
 
@@ -32,14 +30,11 @@ import static java.util.function.Predicate.not;
  */
 public class VectorGraphicsGameRenderer implements GameRenderer {
 
-    static final Vector2f DEFAULT_MESSAGE_ANCHOR_POSITION = new Vector2f(14f * TS, 21 * TS);
-
     private final GameSpriteSheet spriteSheet;
     private final GraphicsContext ctx;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
-    private Vector2f messageAnchorPosition;
     private boolean mazeHighlighted;
     private boolean blinkingOn;
     private Color bgColor;
@@ -51,7 +46,6 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
         ctx = assertNotNull(canvas).getGraphicsContext2D();
         terrainRenderer.scalingProperty().bind(scalingPy);
         foodRenderer.scalingProperty().bind(scalingPy);
-        messageAnchorPosition = DEFAULT_MESSAGE_ANCHOR_POSITION;
         setBackgroundColor(Color.BLACK);
     }
 
@@ -87,15 +81,6 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
         bgColor = assertNotNull(color);
         blinkingOnColors = new TerrainMapColorScheme(bgColor, Color.BLACK, Color.WHITE, Color.BLACK);
         blinkingOffColors = new TerrainMapColorScheme(bgColor, Color.WHITE, Color.BLACK, Color.BLACK);
-    }
-
-    @Override
-    public Vector2f getMessagePosition() {
-        return messageAnchorPosition;
-    }
-
-    public void setMessagePosition(Vector2f messageAnchorPosition) {
-        this.messageAnchorPosition = messageAnchorPosition;
     }
 
     @Override

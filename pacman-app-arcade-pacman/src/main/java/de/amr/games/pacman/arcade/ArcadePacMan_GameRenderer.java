@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade;
 
-import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.ui._2d.GameRenderer;
@@ -62,11 +61,6 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
     @Override
     public FloatProperty scalingProperty() {
         return scalingPy;
-    }
-
-    @Override
-    public Vector2f getMessagePosition() {
-        return ArcadePacMan_GameModel.MESSAGE_POSITION;
     }
 
     @Override

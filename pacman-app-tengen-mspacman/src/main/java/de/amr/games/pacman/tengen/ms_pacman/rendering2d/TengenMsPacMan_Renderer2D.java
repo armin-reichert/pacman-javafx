@@ -10,6 +10,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.nes.NES_JoypadButtonID;
+import de.amr.games.pacman.lib.nes.NES_Palette;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.*;
@@ -49,8 +50,7 @@ import static java.util.function.Predicate.not;
  */
 public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
-    private static final Color CANVAS_BACKGROUND_COLOR = Color.BLACK;
-    private static final Vector2f DEFAULT_MESSAGE_ANCHOR_POS = new Vector2f(14f * TS, 21 * TS);
+    private static final Color CANVAS_BACKGROUND_COLOR = Color.web(NES_Palette.color(0x0f));
 
     private final TengenMsPacMan_SpriteSheet spriteSheet;
     private final MapRepository mapRepository;
@@ -60,7 +60,6 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     private ColoredMapSet coloredMapSet;
     private boolean blinking;
     private boolean levelNumberBoxesVisible;
-    private Vector2f messageAnchorPosition;
 
     public TengenMsPacMan_Renderer2D(
         TengenMsPacMan_SpriteSheet spriteSheet,
@@ -71,7 +70,6 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         this.mapRepository = mapRepository;
         assertNotNull(canvas);
         ctx = canvas.getGraphicsContext2D();
-        messageAnchorPosition = DEFAULT_MESSAGE_ANCHOR_POS;
     }
 
     @Override
@@ -111,15 +109,6 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         } else {
             GameRenderer.super.drawAnimatedActor(animatedActor);
         }
-    }
-
-    @Override
-    public Vector2f getMessagePosition() {
-        return messageAnchorPosition;
-    }
-
-    public void setMessagePosition(Vector2f position) {
-        messageAnchorPosition = position;
     }
 
     public void setLevelNumberBoxesVisible(boolean visible) {
