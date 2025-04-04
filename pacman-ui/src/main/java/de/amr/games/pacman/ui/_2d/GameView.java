@@ -133,12 +133,12 @@ public class GameView implements View {
     private String computeTitleText(GameUI ui) {
         String keyPattern = "app.title." + ui.configurations().current().assetNamespace() + (ui.clock().isPaused() ? ".paused" : "");
         if (ui.currentGameScene().isPresent()) {
-            return computeTitleWithGameScene(ui, ui.currentGameScene().get(), keyPattern);
+            return computeTitleIfGameScenePresent(ui, ui.currentGameScene().get(), keyPattern);
         }
         return ui.assets().text(keyPattern, ui.assets().text(PY_3D_ENABLED.get() ? "threeD" : "twoD"));
     }
 
-    private String computeTitleWithGameScene(GameUI ui, GameScene gameScene, String keyPattern) {
+    private String computeTitleIfGameScenePresent(GameUI ui, GameScene gameScene, String keyPattern) {
         String sceneNameSuffix = PY_DEBUG_INFO_VISIBLE.get() ? " [%s]".formatted(gameScene.getClass().getSimpleName()) : "";
         String modeKey = ui.assets().text(PY_3D_ENABLED.get() ? "threeD" : "twoD");
         return ui.assets().text(keyPattern, modeKey)
