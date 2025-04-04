@@ -49,7 +49,7 @@ public class CutScene1 extends GameScene2D {
     private Actor2D heart;
 
     private MediaPlayer music;
-    private ClapperboardAnimation clapAnimation;
+    private ClapperboardAnimation clapperboardAnimation;
 
     @Override
     public void bindGameActions() {}
@@ -72,10 +72,10 @@ public class CutScene1 extends GameScene2D {
         inky.setAnimations(new GhostAnimations(spriteSheet, inky.id()));
         pinky.setAnimations(new GhostAnimations(spriteSheet, pinky.id()));
 
-        clapAnimation = new ClapperboardAnimation("1", "THEY MEET");
-        clapAnimation.start();
+        clapperboardAnimation = new ClapperboardAnimation("1", "THEY MEET");
+        clapperboardAnimation.start();
 
-        setState(STATE_FLAP, 120);
+        setState(STATE_CLAPPERBOARD, 120);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class CutScene1 extends GameScene2D {
             gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
         }
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
-            r.drawClapperBoard(clapAnimation, tiles2Px(3), tiles2Px(10));
+            r.drawClapperBoard(clapperboardAnimation, tiles2Px(3), tiles2Px(10));
         }
         gr.drawAnimatedActor(msPac);
         gr.drawAnimatedActor(pacMan);
@@ -114,7 +114,7 @@ public class CutScene1 extends GameScene2D {
 
     // Scene controller state machine
 
-    static final byte STATE_FLAP = 0;
+    static final byte STATE_CLAPPERBOARD = 0;
     static final byte STATE_CHASED_BY_GHOSTS = 1;
     static final byte STATE_COMING_TOGETHER = 2;
     static final byte STATE_IN_HEAVEN = 3;
@@ -130,7 +130,7 @@ public class CutScene1 extends GameScene2D {
 
     private void updateSceneState() {
         switch (state) {
-            case STATE_FLAP -> updateStateFlap();
+            case STATE_CLAPPERBOARD -> updateStateClapperboard();
             case STATE_CHASED_BY_GHOSTS -> updateStateChasedByGhosts();
             case STATE_COMING_TOGETHER -> updateStateComingTogether();
             case STATE_IN_HEAVEN -> updateStateInHeaven();
@@ -139,8 +139,8 @@ public class CutScene1 extends GameScene2D {
         stateTimer.doTick();
     }
 
-    private void updateStateFlap() {
-        clapAnimation.tick();
+    private void updateStateClapperboard() {
+        clapperboardAnimation.tick();
         if (stateTimer.atSecond(1)) {
             music.play();
         } else if (stateTimer.hasExpired()) {

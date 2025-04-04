@@ -38,7 +38,7 @@ public class CutScene2 extends GameScene2D {
     private Pac msPacMan;
 
     private MediaPlayer music;
-    private ClapperboardAnimation clapAnimation;
+    private ClapperboardAnimation clapperboardAnimation;
 
     @Override
     public void bindGameActions() {
@@ -57,10 +57,10 @@ public class CutScene2 extends GameScene2D {
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
         pacMan.setAnimations(new PacAnimations(spriteSheet));
 
-        clapAnimation = new ClapperboardAnimation("2", "THE CHASE");
-        clapAnimation.start();
+        clapperboardAnimation = new ClapperboardAnimation("2", "THE CHASE");
+        clapperboardAnimation.start();
 
-        setSceneState(STATE_FLAP, 120);
+        setSceneState(STATE_CLAPPERBOARD, 120);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class CutScene2 extends GameScene2D {
             gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
         }
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
-            r.drawClapperBoard(clapAnimation, tiles2Px(3), tiles2Px(10));
+            r.drawClapperBoard(clapperboardAnimation, tiles2Px(3), tiles2Px(10));
         }
         gr.drawAnimatedActor(msPacMan);
         gr.drawAnimatedActor(pacMan);
@@ -96,7 +96,7 @@ public class CutScene2 extends GameScene2D {
 
     // Scene controller state machine
 
-    private static final byte STATE_FLAP = 0;
+    private static final byte STATE_CLAPPERBOARD = 0;
     private static final byte STATE_CHASING = 1;
 
     private byte state;
@@ -110,15 +110,15 @@ public class CutScene2 extends GameScene2D {
 
     private void updateSceneState() {
         switch (state) {
-            case STATE_FLAP -> updateStateFlap();
+            case STATE_CLAPPERBOARD -> updateStateClapperboard();
             case STATE_CHASING -> updateStateChasing();
             default -> throw new IllegalStateException("Illegal state: " + state);
         }
         stateTimer.doTick();
     }
 
-    private void updateStateFlap() {
-        clapAnimation.tick();
+    private void updateStateClapperboard() {
+        clapperboardAnimation.tick();
         if (stateTimer.hasExpired()) {
             music.play();
             enterStateChasing();

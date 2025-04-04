@@ -44,7 +44,7 @@ public class CutScene3 extends GameScene2D {
     private int numBagBounces;
 
     private MediaPlayer music;
-    private ClapperboardAnimation clapAnimation;
+    private ClapperboardAnimation clapperboardAnimation;
     private SpriteAnimation storkAnimation;
 
     @Override
@@ -67,10 +67,10 @@ public class CutScene3 extends GameScene2D {
         storkAnimation = spriteSheet.createStorkFlyingAnimation();
         storkAnimation.play();
 
-        clapAnimation = new ClapperboardAnimation("3", "JUNIOR");
-        clapAnimation.start();
+        clapperboardAnimation = new ClapperboardAnimation("3", "JUNIOR");
+        clapperboardAnimation.start();
 
-        setSceneState(STATE_FLAP, TickTimer.INDEFINITE);
+        setSceneState(STATE_CLAPPERBOARD, TickTimer.INDEFINITE);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class CutScene3 extends GameScene2D {
             gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
         }
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
-            r.drawClapperBoard(clapAnimation, tiles2Px(3), tiles2Px(10));
+            r.drawClapperBoard(clapperboardAnimation, tiles2Px(3), tiles2Px(10));
         }
         gr.drawAnimatedActor(msPacMan);
         gr.drawAnimatedActor(pacMan);
@@ -108,7 +108,7 @@ public class CutScene3 extends GameScene2D {
 
     // scene controller state machine
 
-    private static final byte STATE_FLAP = 0;
+    private static final byte STATE_CLAPPERBOARD = 0;
     private static final byte STATE_DELIVER_JUNIOR = 1;
     private static final byte STATE_STORK_LEAVES_SCENE = 2;
 
@@ -123,7 +123,7 @@ public class CutScene3 extends GameScene2D {
 
     private void updateSceneState() {
         switch (state) {
-            case STATE_FLAP -> updateStateFlap();
+            case STATE_CLAPPERBOARD -> updateStateClapperboard();
             case STATE_DELIVER_JUNIOR -> updateStateDeliverJunior();
             case STATE_STORK_LEAVES_SCENE -> updateStateStorkLeavesScene();
             default -> throw new IllegalStateException("Illegal state: " + state);
@@ -131,8 +131,8 @@ public class CutScene3 extends GameScene2D {
         stateTimer.doTick();
     }
 
-    private void updateStateFlap() {
-        clapAnimation.tick();
+    private void updateStateClapperboard() {
+        clapperboardAnimation.tick();
         if (stateTimer.atSecond(1)) {
             music.play();
         } else if (stateTimer.atSecond(3)) {
