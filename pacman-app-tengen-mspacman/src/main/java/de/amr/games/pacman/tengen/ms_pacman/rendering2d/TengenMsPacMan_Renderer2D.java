@@ -60,7 +60,6 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     private final Canvas canvas;
 
     private ColoredMapSet coloredMapSet;
-    private boolean levelNumberBoxesVisible;
 
     public TengenMsPacMan_Renderer2D(TengenMsPacMan_SpriteSheet spriteSheet, MapRepository mapRepository, Canvas canvas) {
         this.spriteSheet = assertNotNull(spriteSheet);
@@ -96,10 +95,6 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         } else {
             GameRenderer.super.drawAnimatedActor(animatedActor);
         }
-    }
-
-    public void setLevelNumberBoxesVisible(boolean visible) {
-        levelNumberBoxesVisible = visible;
     }
 
     private void drawMsOrMrPacMan(Pac pac) {
@@ -339,19 +334,17 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     @Override
-    public void drawLevelCounter(List<Byte> symbols, double x, double y) {
+    public void drawLevelCounter(int levelNumber, List<Byte> symbols, double x, double y) {
         ctx().setImageSmoothing(false);
-        THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-            if (levelNumberBoxesVisible) {
-                drawLevelNumberBox(level.number(), 0, y); // left box
-                drawLevelNumberBox(level.number(), x, y); // right box
-            }
-            double symbolX = x - 2 * TS;
-            for (byte symbol : symbols) {
-                drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), symbolX, y);
-                symbolX -= TS * 2;
-            }
-        });
+        if (levelNumber != 0) {
+            drawLevelNumberBox(levelNumber, 0, y); // left box
+            drawLevelNumberBox(levelNumber, x, y); // right box
+        }
+        double symbolX = x - 2 * TS;
+        for (byte symbol : symbols) {
+            drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), symbolX, y);
+            symbolX -= TS * 2;
+        }
     }
 
     public void drawLevelNumberBox(int levelNumber, double x, double y) {

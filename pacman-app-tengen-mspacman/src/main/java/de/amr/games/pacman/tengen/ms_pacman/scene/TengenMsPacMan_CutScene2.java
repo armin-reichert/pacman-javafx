@@ -163,12 +163,9 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         }
         var r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
-        r.setLevelNumberBoxesVisible(false);
         r.drawClapperBoard(clapAnimation, "THE CHASE", 2, CLAP_TILE_X, CLAP_TILE_Y);
         r.drawAnimatedActor(msPacMan);
         r.drawAnimatedActor(pacMan);
-        if (game().level().isPresent()) { // avoid exception in cut scene test mode
-            r.drawLevelCounter(game().levelCounter(), sizeInPx().x() - 4 * TS, sizeInPx().y() - 3 * TS);
-        }
+        r.drawLevelCounter(0, game().levelCounter(), sizeInPx().x() - 4 * TS, sizeInPx().y() - 3 * TS);
     }
 }

@@ -469,8 +469,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             livesCounterEntries += 1;
         }
         tr.drawLivesCounter(livesCounterEntries, 5, 2 * TS, sizeInPx().y() - TS);
-        tr.setLevelNumberBoxesVisible(!game.isDemoLevel() && game.mapCategory() != MapCategory.ARCADE);
-        tr.drawLevelCounter(game().levelCounter(), sizeInPx().x() - 2 * TS, sizeInPx().y() - TS);
+        // if level number is 0, no level number boxes are drawn
+        int levelNumber = game.isDemoLevel() || game.mapCategory() == MapCategory.ARCADE ? 0 : level.number();
+        tr.drawLevelCounter(levelNumber, game().levelCounter(), sizeInPx().x() - 2 * TS, sizeInPx().y() - TS);
 
         if (debugInfoVisiblePy.get()) {
             tr.drawAnimatedCreatureInfo(level.pac());

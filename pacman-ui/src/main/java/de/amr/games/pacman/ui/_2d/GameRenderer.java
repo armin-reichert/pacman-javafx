@@ -273,7 +273,7 @@ public interface GameRenderer {
         }
     }
 
-    default void drawLevelCounter(List<Byte> symbols, double x, double y) {
+    default void drawLevelCounter(int levelNumber, List<Byte> symbols, double x, double y) {
         for (byte symbol : symbols) {
             drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), x, y);
             x -= TS * 2;

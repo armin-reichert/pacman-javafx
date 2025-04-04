@@ -225,16 +225,12 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         }
         var r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
-        r.setLevelNumberBoxesVisible(false);
         r.drawClapperBoard(clapAnimation, "THEY MEET", 1, CLAP_TILE_X, CLAP_TILE_Y);
         r.drawAnimatedActor(msPacMan);
         r.drawAnimatedActor(mrPacMan);
         r.drawAnimatedActor(inky);
         r.drawAnimatedActor(pinky);
         r.drawActorSprite(heart, HEART_SPRITE);
-        if (game().level().isPresent()) {
-            // avoid exception in cut scene test mode
-            r.drawLevelCounter(game().levelCounter(), sizeInPx().x() - 4 * TS, sizeInPx().y() - 3 * TS);
-        }
+        r.drawLevelCounter(0, game().levelCounter(), sizeInPx().x() - 4 * TS, sizeInPx().y() - 3 * TS);
     }
 }
