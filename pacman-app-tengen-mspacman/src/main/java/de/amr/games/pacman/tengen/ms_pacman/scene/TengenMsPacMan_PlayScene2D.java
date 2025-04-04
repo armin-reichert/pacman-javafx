@@ -421,7 +421,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         updateCameraPosition(scaling());
         var r = (TengenMsPacMan_Renderer2D) gr;
         r.setScaling(scaling());
-        r.clearCanvas(backgroundColor());
+        r.fillCanvas(backgroundColor());
         game().level().ifPresent(level -> {
             r.ctx().save();
             r.ctx().translate(scaled(2 * TS), 0);
@@ -433,7 +433,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     protected void drawSceneContent() {
         gr.setScaling(scaling());
-        gr.clearCanvas(backgroundColor());
+        gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
             Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
             gr.drawScores(game().scoreManager(), nesPaletteColor(0x20), font);

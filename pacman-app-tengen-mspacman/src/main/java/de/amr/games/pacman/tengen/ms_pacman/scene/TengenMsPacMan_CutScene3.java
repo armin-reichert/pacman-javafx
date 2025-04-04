@@ -171,7 +171,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
             return;
         }
         gr.setScaling(scaling());
-        gr.clearCanvas(backgroundColor());
+        gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
             Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
             gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);

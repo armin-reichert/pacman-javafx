@@ -41,7 +41,7 @@ public interface GameRenderer {
 
     default GraphicsContext ctx() { return canvas().getGraphicsContext2D(); }
 
-    default void clearCanvas(Paint paint) {
+    default void fillCanvas(Paint paint) {
         ctx().setFill(paint);
         ctx().fillRect(0, 0, canvas().getWidth(), canvas().getHeight());
     }

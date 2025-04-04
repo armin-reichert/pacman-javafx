@@ -23,7 +23,7 @@ public class TengenMsPacMan_PiPScene extends TengenMsPacMan_PlayScene2D {
         canvas.setHeight(GlobalProperties2d.PY_PIP_HEIGHT.doubleValue());
         setScaling(canvas.getHeight() / (sizeInPx().y() + 3 * TS));
         gr.setScaling(scaling());
-        gr.clearCanvas(backgroundColor());
+        gr.fillCanvas(backgroundColor());
         game().level().ifPresent(level -> {
             gr.ctx().save();
             gr.ctx().translate(scaled(TS), 0);

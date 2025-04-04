@@ -139,7 +139,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     protected void drawSceneContent() {
         Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
         gr.setScaling(scaling());
-        gr.clearCanvas(backgroundColor());
+        gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
             gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
         }

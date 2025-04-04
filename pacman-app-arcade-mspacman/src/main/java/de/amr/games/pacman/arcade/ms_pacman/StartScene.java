@@ -47,7 +47,7 @@ public class StartScene extends GameScene2D {
         Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
         Font font6 = THE_UI.assets().scaledArcadeFont(scaled(6));
         gr.setScaling(scaling());
-        gr.clearCanvas(backgroundColor());
+        gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
             gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
         }
