@@ -246,12 +246,6 @@ public class GameView implements View {
     }
 
     private void handleContextMenuRequest(ContextMenuEvent e) {
-        contextMenu.getItems().setAll(createContextMenuItems(e));
-        contextMenu.show(root, e.getScreenX(), e.getScreenY());
-        contextMenu.requestFocus();
-    }
-
-    private List<MenuItem> createContextMenuItems(ContextMenuEvent e) {
         var menuItems = new ArrayList<>(gameScenePy.get().supplyContextMenuItems(e));
         if (THE_UI.configurations().currentGameSceneIsPlayScene2D()) {
             var item = new MenuItem(THE_UI.assets().text("use_3D_scene"));
@@ -259,7 +253,9 @@ public class GameView implements View {
             menuItems.addFirst(item);
             menuItems.addFirst(contextMenuTitleItem(THE_UI.assets().text("scene_display")));
         }
-        return menuItems;
+        contextMenu.getItems().setAll(menuItems);
+        contextMenu.show(root, e.getScreenX(), e.getScreenY());
+        contextMenu.requestFocus();
     }
 
     private void handleGameSceneChange(GameScene gameScene) {
