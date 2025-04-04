@@ -186,7 +186,8 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     public void drawFood(GameLevel level) {
         if (coloredMapSet == null) {
-            Logger.error("Cannot draw food: no map set available");
+            Logger.error("Draw food: no map set available?");
+            applyMapSettings(level.worldMap());
             return; //TODO check why this happens
         }
         ctx().save();
