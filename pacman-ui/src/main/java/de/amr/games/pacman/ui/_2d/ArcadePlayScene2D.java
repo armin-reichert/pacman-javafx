@@ -151,9 +151,10 @@ public class ArcadePlayScene2D extends GameScene2D {
         }
 
         // Draw maze
-        gr.setBlinking(level.blinking().isOn());
         gr.applyMapSettings(level.worldMap());
-        gr.drawMaze(level, 0, 3 * TS, backgroundColor(), levelCompleteAnimation != null && levelCompleteAnimation.isInHighlightPhase());
+        gr.drawMaze(level, 0, 3 * TS, backgroundColor(),
+            levelCompleteAnimation != null && levelCompleteAnimation.isInHighlightPhase(),
+            level.blinking().isOn());
 
         if (level.message() != null) {
             drawLevelMessage(level, font, centerPositionBelowHouse(level));

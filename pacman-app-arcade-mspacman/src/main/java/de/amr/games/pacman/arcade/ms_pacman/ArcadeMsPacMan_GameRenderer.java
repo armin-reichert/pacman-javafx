@@ -65,7 +65,6 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     private RectArea fullMazeSpritesheetRegion;
     private RectArea emptyMazeSpritesheetRegion;
     private ImageRegion flashingMazeImageRegion;
-    private boolean blinking;
 
     public ArcadeMsPacMan_GameRenderer(ArcadeMsPacMan_SpriteSheet spriteSheet, Canvas canvas) {
         this.spriteSheet = assertNotNull(spriteSheet);
@@ -85,11 +84,6 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     }
 
     @Override
-    public void setBlinking(boolean blinking) {
-        this.blinking = blinking;
-    }
-
-    @Override
     public FloatProperty scalingProperty() {
         return scalingPy;
     }
@@ -103,7 +97,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     }
 
     @Override
-    public void drawMaze(GameLevel level, double x, double y, Paint backgroundColor, boolean mazeHighlighted) {
+    public void drawMaze(GameLevel level, double x, double y, Paint backgroundColor, boolean mazeHighlighted, boolean blinking) {
         if (mazeHighlighted) {
             drawSubImageScaled(flashingMazeImageRegion.image(), flashingMazeImageRegion.area(), x, y);
         } else if (level.uneatenFoodCount() == 0) {

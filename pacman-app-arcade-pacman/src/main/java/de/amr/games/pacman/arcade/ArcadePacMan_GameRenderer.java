@@ -27,7 +27,6 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
     private final ArcadePacMan_SpriteSheet spriteSheet;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
     private final GraphicsContext ctx;
-    private boolean blinkingOn;
 
     public ArcadePacMan_GameRenderer(ArcadePacMan_SpriteSheet spriteSheet, Canvas canvas) {
         this.spriteSheet = assertNotNull(spriteSheet);
@@ -48,17 +47,12 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
     }
 
     @Override
-    public void setBlinking(boolean blinking) {
-        this.blinkingOn = blinking;
-    }
-
-    @Override
     public FloatProperty scalingProperty() {
         return scalingPy;
     }
 
     @Override
-    public void drawMaze(GameLevel level, double x, double y, Paint backgroundColor, boolean mazeHighlighted) {
+    public void drawMaze(GameLevel level, double x, double y, Paint backgroundColor, boolean mazeHighlighted, boolean blinking) {
         double scaling = scaling();
         ctx.save();
         ctx.scale(scaling, scaling);
@@ -70,7 +64,7 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
             } else {
                 drawSpriteUnscaled(FULL_MAZE_SPRITE, x, y);
                 overPaintEatenPelletTiles(level, backgroundColor);
-                overPaintEnergizerTiles(level, tile -> !blinkingOn || level.hasEatenFoodAt(tile), backgroundColor);
+                overPaintEnergizerTiles(level, tile -> !blinking || level.hasEatenFoodAt(tile), backgroundColor);
             }
         }
         ctx.restore();

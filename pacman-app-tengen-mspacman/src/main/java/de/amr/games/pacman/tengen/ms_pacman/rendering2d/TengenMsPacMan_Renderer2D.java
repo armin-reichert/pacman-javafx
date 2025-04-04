@@ -61,7 +61,6 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     private final GraphicsContext ctx;
 
     private ColoredMapSet coloredMapSet;
-    private boolean blinking;
     private boolean levelNumberBoxesVisible;
 
     public TengenMsPacMan_Renderer2D(
@@ -90,11 +89,6 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     @Override
     public Canvas canvas() { return ctx.getCanvas(); }
-
-    @Override
-    public void setBlinking(boolean blinking) {
-        this.blinking = blinking;
-    }
 
     @Override
     public FloatProperty scalingProperty() {
@@ -168,7 +162,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     @Override
-    public void drawMaze(GameLevel level, double x, double y, Paint backgroundColor, boolean mazeHighlighted) {}
+    public void drawMaze(GameLevel level, double x, double y, Paint backgroundColor, boolean mazeHighlighted, boolean blinking) {}
 
     public void drawWorld(GameLevel level, double mapX, double mapY) {
         ctx.setImageSmoothing(false);
@@ -254,7 +248,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             double x = energizerTile.x() * TS, y = energizerTile.y() * TS;
             ctx.setFill(CANVAS_BACKGROUND_COLOR);
             ctx.fillRect(x-1, y-1, TS + 2, TS + 2); // avoid blitzer
-            if (!level.hasEatenFoodAt(energizerTile) && blinking) {
+            if (!level.hasEatenFoodAt(energizerTile) && level.blinking().isOn()) {
                 ctx.setFill(pelletColor);
                 // draw pixelated "circle"
                 ctx.fillRect(x + offset, y, HTS, size);

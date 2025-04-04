@@ -448,7 +448,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         var tr = (TengenMsPacMan_Renderer2D) gr;
         TengenMsPacMan_GameModel game = game();
 
-        tr.setBlinking(level.blinking().isOn());
         boolean flashing = levelCompleteAnimation != null && levelCompleteAnimation.isFlashing();
         if (flashing && levelCompleteAnimation.isInHighlightPhase()) {
             tr.drawWorldHighlighted(level, 0, 3 * TS, levelCompleteAnimation.flashingIndex());

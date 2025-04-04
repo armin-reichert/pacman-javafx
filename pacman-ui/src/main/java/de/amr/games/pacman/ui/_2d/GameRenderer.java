@@ -185,9 +185,7 @@ public interface GameRenderer {
         }
     }
 
-    void drawMaze(GameLevel level, double x, double y, Paint backgroundColor, boolean highlighted);
-
-    void setBlinking(boolean on);
+    void drawMaze(GameLevel level, double x, double y, Paint backgroundColor, boolean highlighted, boolean blinking);
 
     /**
      * Over-paints all eaten pellet tiles.

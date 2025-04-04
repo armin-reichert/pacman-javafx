@@ -35,7 +35,6 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
-    private boolean blinkingOn;
     private Color bgColor;
     private TerrainMapColorScheme blinkingOnColors;
     private TerrainMapColorScheme blinkingOffColors;
@@ -62,11 +61,6 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void setBlinking(boolean blinking) {
-        this.blinkingOn = blinking;
-    }
-
-    @Override
     public FloatProperty scalingProperty() {
         return scalingPy;
     }
@@ -78,10 +72,10 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void drawMaze(GameLevel level, double x, double y, Paint backgroundColor, boolean mazeHighlighted) {
+    public void drawMaze(GameLevel level, double x, double y, Paint backgroundColor, boolean mazeHighlighted, boolean blinking) {
         WorldMap worldMap = level.worldMap();
         if (mazeHighlighted) {
-            terrainRenderer.setColorScheme(blinkingOn ? blinkingOnColors : blinkingOffColors);
+            terrainRenderer.setColorScheme(blinking ? blinkingOnColors : blinkingOffColors);
             terrainRenderer.drawTerrain(ctx, worldMap, worldMap.obstacles());
         }
         else {
@@ -99,7 +93,7 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
             foodRenderer.setEnergizerColor(Color.web(colorMap.get("pellet")));
             worldMap.tiles().filter(level::hasFoodAt).filter(not(level::isEnergizerPosition))
                 .forEach(tile -> foodRenderer.drawPellet(ctx, tile));
-            if (blinkingOn) {
+            if (blinking) {
                 level.energizerTiles().filter(level::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx, tile));
             }
         }
