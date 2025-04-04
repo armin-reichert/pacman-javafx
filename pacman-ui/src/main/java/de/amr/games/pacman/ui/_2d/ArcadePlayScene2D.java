@@ -19,7 +19,6 @@ import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui.GameUI;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.uilib.Ufx;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -222,28 +221,27 @@ public class ArcadePlayScene2D extends GameScene2D {
     }
 
     @Override
-    protected void drawDebugInfo() {
-        GraphicsContext g = gr.ctx();
-        gr.drawTileGrid(sizeInPx().x(), sizeInPx().y());
+    public void drawDebugInfo() {
+        gr.drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
         if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.PACMAN)) {
             game().level().ifPresent(level ->
                 level.ghosts().forEach(ghost ->
                     ghost.specialTerrainTiles().forEach(tile -> {
                         double x = scaled(tile.x() * TS), y = scaled(tile.y() * TS + HTS), size = scaled(TS);
-                        g.setFill(Color.RED);
-                        g.fillRect(x, y, size, 2);
+                        gr.ctx().setFill(Color.RED);
+                        gr.ctx().fillRect(x, y, size, 2);
                     }))
             );
         }
-        g.setFill(Color.YELLOW);
-        g.setFont(GameUI.DEBUG_FONT);
+        gr.ctx().setFill(Color.YELLOW);
+        gr.ctx().setFont(GameUI.DEBUG_FONT);
         String gameStateText = gameState().name() + " (Tick %d)".formatted(gameState().timer().tickCount());
         String huntingPhaseText = "";
         if (gameState() == GameState.HUNTING) {
             HuntingTimer huntingTimer = game().huntingTimer();
             huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.huntingPhase(), huntingTimer.tickCount());
         }
-        g.fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, 64);
+        gr.ctx().fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, 64);
     }
 
     @Override

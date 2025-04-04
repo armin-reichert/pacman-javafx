@@ -108,8 +108,8 @@ public class CutScene3 extends GameScene2D {
     }
 
     @Override
-    protected void drawDebugInfo() {
-        gr.drawTileGrid(sizeInPx().x(), sizeInPx().y());
+    public void drawDebugInfo() {
+        super.drawDebugInfo();
         String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
         gr.drawText(text, Color.YELLOW, GameUI.DEBUG_FONT, tiles2Px(1), tiles2Px(5));
     }

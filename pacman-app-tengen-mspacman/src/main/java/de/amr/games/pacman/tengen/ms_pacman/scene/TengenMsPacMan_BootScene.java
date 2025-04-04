@@ -126,8 +126,8 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     }
 
     @Override
-    protected void drawDebugInfo() {
-        gr.drawTileGrid(sizeInPx().x(), sizeInPx().y());
+    public void drawDebugInfo() {
+        super.drawDebugInfo();
         gr.ctx().setFill(Color.WHITE);
         gr.ctx().setFont(Font.font(20));
         gr.ctx().fillText("Tick " + t, 20, 20);

@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.ui.Action;
 import de.amr.games.pacman.ui.GameScene;
+import de.amr.games.pacman.ui.GameUI;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCodeCombination;
@@ -85,8 +86,11 @@ public abstract class GameScene2D implements GameScene {
 
     protected abstract void drawSceneContent();
 
-    protected void drawDebugInfo() {
-        gr.drawTileGrid(sizeInPx().x(), sizeInPx().y());
+    public void drawDebugInfo() {
+        gr.drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
+        gr.ctx().setFill(Color.YELLOW);
+        gr.ctx().setFont(GameUI.DEBUG_FONT);
+        gr.ctx().fillText("%s %d".formatted(gameState(), gameState().timer().tickCount()), 0, scaled(3 * TS));
     }
 
     public void draw() {

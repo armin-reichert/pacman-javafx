@@ -315,11 +315,12 @@ public interface GameRenderer {
         }
     }
 
-    default void drawTileGrid(double sizeX, double sizeY) {
+    default void drawTileGrid(double sizeX, double sizeY, Color strokeColor) {
         double thin = 0.2, medium = 0.4, thick = 0.8;
         int numCols = (int) (sizeX / TS), numRows = (int) (sizeY / TS);
         double width = scaled(numCols * TS), height = scaled(numRows * TS);
-        ctx().setStroke(Color.LIGHTGRAY);
+        ctx().save();
+        ctx().setStroke(strokeColor);
         for (int row = 0; row <= numRows; ++row) {
             double y = scaled(row * TS);
             ctx().setLineWidth(row % 10 == 0 ? thick : row % 5 == 0 ? medium : thin);
@@ -330,5 +331,6 @@ public interface GameRenderer {
             ctx().setLineWidth(col % 10 == 0 ? thick : col % 5 == 0? medium : thin);
             ctx().strokeLine(x, 0, x, height);
         }
+        ctx().restore();
     }
 }
