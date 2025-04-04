@@ -102,7 +102,7 @@ public class CutScene3 extends GameScene2D {
         gr.clearCanvas(backgroundColor());
         if (game().isScoreVisible()) {
             Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
-            gr.drawScores(Color.web(Arcade.Palette.WHITE), font);
+            gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
         }
         gr.drawAnimatedActor(pac);
         gr.drawAnimatedActor(blinky);

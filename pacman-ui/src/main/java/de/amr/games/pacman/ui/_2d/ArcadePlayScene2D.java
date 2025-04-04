@@ -141,7 +141,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         gr.setScaling(scaling());
         gr.clearCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(Color.web(Arcade.Palette.WHITE), font);
+            gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
         }
         GameLevel level = game().level().orElse(null);
         // Scene is drawn already for 2 ticks before level has been created

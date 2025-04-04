@@ -99,7 +99,7 @@ public class CutScene1 extends GameScene2D {
         gr.clearCanvas(backgroundColor());
         if (game().isScoreVisible()) {
             Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
-            gr.drawScores(Color.web(Arcade.Palette.WHITE), font);
+            gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
         }
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
             r.drawClapperBoard(clapAnimation, tiles2Px(3), tiles2Px(10));

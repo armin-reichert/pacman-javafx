@@ -10,6 +10,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.Score;
+import de.amr.games.pacman.model.ScoreManager;
 import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.AnimatedActor2D;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -283,9 +284,9 @@ public interface GameRenderer {
         }
     }
 
-    default void drawScores(Color color, Font font) {
-        drawScore(THE_GAME_CONTROLLER.game().scoreManager().score(),     "SCORE",      tiles2Px(1),  tiles2Px(1), font, color);
-        drawScore(THE_GAME_CONTROLLER.game().scoreManager().highScore(), "HIGH SCORE", tiles2Px(14), tiles2Px(1), font, color);
+    default void drawScores(ScoreManager scoreManager, Color color, Font font) {
+        drawScore(scoreManager.score(),     "SCORE",      tiles2Px(1),  tiles2Px(1), font, color);
+        drawScore(scoreManager.highScore(), "HIGH SCORE", tiles2Px(14), tiles2Px(1), font, color);
     }
 
     default void drawScore(Score score, String title, double x, double y, Font font, Color color) {

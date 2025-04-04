@@ -13,6 +13,7 @@ import de.amr.games.pacman.lib.nes.NES_JoypadButtonID;
 import de.amr.games.pacman.lib.nes.NES_Palette;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.ScoreManager;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.tengen.ms_pacman.Difficulty;
 import de.amr.games.pacman.tengen.ms_pacman.PacBooster;
@@ -345,11 +346,11 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     @Override
-    public void drawScores(Color color, Font font) {
+    public void drawScores(ScoreManager scoreManager, Color color, Font font) {
         if (THE_UI.clock().tickCount() % 60 < 30) { drawText("1UP", color, font, tiles2Px(2), tiles2Px(1)); }
         drawText("HIGH SCORE", color, font, tiles2Px(9), tiles2Px(1));
-        drawText("%6d".formatted(THE_GAME_CONTROLLER.game().scoreManager().score().points()), color, font, 0, tiles2Px(2));
-        drawText("%6d".formatted(THE_GAME_CONTROLLER.game().scoreManager().highScore().points()), color, font, tiles2Px(11), tiles2Px(2));
+        drawText("%6d".formatted(scoreManager.score().points()), color, font, 0, tiles2Px(2));
+        drawText("%6d".formatted(scoreManager.highScore().points()), color, font, tiles2Px(11), tiles2Px(2));
     }
 
     @Override

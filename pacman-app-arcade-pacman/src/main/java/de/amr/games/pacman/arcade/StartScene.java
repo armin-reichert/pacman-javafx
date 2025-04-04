@@ -50,7 +50,7 @@ public class StartScene extends GameScene2D {
         gr.setScaling(scaling());
         gr.clearCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(Color.web(Arcade.Palette.WHITE), font8);
+            gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font8);
         }
         Color cyan = Color.web(Arcade.Palette.CYAN);
         Color orange = Color.web(Arcade.Palette.ORANGE);

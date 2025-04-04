@@ -134,7 +134,7 @@ public class IntroScene extends GameScene2D {
         gr.setScaling(scaling());
         gr.clearCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(Color.web(Arcade.Palette.WHITE), font);
+            gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
         }
         drawMarquee();
         gr.drawText("\"MS PAC-MAN\"", COLOR_ORANGE, font, TITLE_X, TITLE_Y);
