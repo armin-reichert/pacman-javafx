@@ -117,18 +117,21 @@ public class GameView implements View {
     }
 
     private String computeTitleText(GameUI ui) {
-        String sceneName = ui.currentGameScene().map(gameScene -> gameScene.getClass().getSimpleName()).orElse(null);
-        String sceneNameText = sceneName != null && PY_DEBUG_INFO_VISIBLE.get() ? " [%s]".formatted(sceneName) : "";
-        String assetNamespace = ui.configurations().current().assetNamespace();
-        String key = "app.title." + assetNamespace;
-        if (ui.clock().isPaused()) {
-            key += ".paused";
+        if (ui.currentGameScene().isPresent()) {
+            return computeTitleWithGameScene(ui, ui.currentGameScene().get());
         }
+        String keyPattern = "app.title." + ui.configurations().current().assetNamespace() + (ui.clock().isPaused() ? ".paused" : "");
+        return ui.assets().text(keyPattern, ui.assets().text(PY_3D_ENABLED.get() ? "threeD" : "twoD"));
+    }
+
+    private String computeTitleWithGameScene(GameUI ui, GameScene gameScene) {
+        String sceneName = gameScene.getClass().getSimpleName();
+        String sceneNameText = PY_DEBUG_INFO_VISIBLE.get() ? " [%s]".formatted(sceneName) : "";
+        String key = "app.title." + ui.configurations().current().assetNamespace() + (ui.clock().isPaused() ? ".paused" : "");
         String modeKey = ui.assets().text(PY_3D_ENABLED.get() ? "threeD" : "twoD");
-        if (ui.currentGameScene().isPresent() && ui.currentGameScene().get() instanceof GameScene2D gameScene2D) {
-            return ui.assets().text(key, modeKey) + sceneNameText + " (%.2fx)".formatted(gameScene2D.scaling());
-        }
-        return ui.assets().text(key, modeKey) + sceneNameText;
+        return gameScene instanceof GameScene2D gameScene2D
+            ? ui.assets().text(key, modeKey) + sceneNameText + " (%.2fx)".formatted(gameScene2D.scaling())
+            : ui.assets().text(key, modeKey) + sceneNameText;
     }
 
     public GameView(GameUI ui) {
