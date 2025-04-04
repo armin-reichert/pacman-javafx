@@ -92,9 +92,6 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     public Canvas canvas() { return ctx.getCanvas(); }
 
     @Override
-    public void setMazeHighlighted(boolean flashMode) {}
-
-    @Override
     public void setBlinking(boolean blinking) {
         this.blinking = blinking;
     }
@@ -171,7 +168,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     @Override
-    public void drawMaze(GameLevel level, double x, double y, Paint backgroundColor) {}
+    public void drawMaze(GameLevel level, double x, double y, Paint backgroundColor, boolean mazeHighlighted) {}
 
     public void drawWorld(GameLevel level, double mapX, double mapY) {
         ctx.setImageSmoothing(false);
@@ -357,7 +354,6 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     public void drawLevelCounter(List<Byte> symbols, double x, double y) {
         ctx.setImageSmoothing(false);
         THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-            TengenMsPacMan_GameModel game = THE_GAME_CONTROLLER.game();
             if (levelNumberBoxesVisible) {
                 drawLevelNumberBox(level.number(), 0, y); // left box
                 drawLevelNumberBox(level.number(), x, y); // right box

@@ -35,7 +35,6 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
-    private boolean mazeHighlighted;
     private boolean blinkingOn;
     private Color bgColor;
     private TerrainMapColorScheme blinkingOnColors;
@@ -63,11 +62,6 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void setMazeHighlighted(boolean highlighted) {
-        mazeHighlighted = highlighted;
-    }
-
-    @Override
     public void setBlinking(boolean blinking) {
         this.blinkingOn = blinking;
     }
@@ -84,7 +78,7 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void drawMaze(GameLevel level, double x, double y, Paint backgroundColor) {
+    public void drawMaze(GameLevel level, double x, double y, Paint backgroundColor, boolean mazeHighlighted) {
         WorldMap worldMap = level.worldMap();
         if (mazeHighlighted) {
             terrainRenderer.setColorScheme(blinkingOn ? blinkingOnColors : blinkingOffColors);

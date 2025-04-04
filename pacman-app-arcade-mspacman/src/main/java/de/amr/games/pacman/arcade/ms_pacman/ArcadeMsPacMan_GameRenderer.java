@@ -65,7 +65,6 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     private RectArea fullMazeSpritesheetRegion;
     private RectArea emptyMazeSpritesheetRegion;
     private ImageRegion flashingMazeImageRegion;
-    private boolean mazeHighlighted;
     private boolean blinking;
 
     public ArcadeMsPacMan_GameRenderer(ArcadeMsPacMan_SpriteSheet spriteSheet, Canvas canvas) {
@@ -83,11 +82,6 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     @Override
     public Canvas canvas() {
         return ctx.getCanvas();
-    }
-
-    @Override
-    public void setMazeHighlighted(boolean highlighted) {
-        mazeHighlighted = highlighted;
     }
 
     @Override
@@ -109,7 +103,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     }
 
     @Override
-    public void drawMaze(GameLevel level, double x, double y, Paint backgroundColor) {
+    public void drawMaze(GameLevel level, double x, double y, Paint backgroundColor, boolean mazeHighlighted) {
         if (mazeHighlighted) {
             drawSubImageScaled(flashingMazeImageRegion.image(), flashingMazeImageRegion.area(), x, y);
         } else if (level.uneatenFoodCount() == 0) {

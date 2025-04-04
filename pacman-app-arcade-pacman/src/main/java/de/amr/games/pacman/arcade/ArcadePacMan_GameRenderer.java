@@ -27,7 +27,6 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
     private final ArcadePacMan_SpriteSheet spriteSheet;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
     private final GraphicsContext ctx;
-    private boolean mazeHighlighted;
     private boolean blinkingOn;
 
     public ArcadePacMan_GameRenderer(ArcadePacMan_SpriteSheet spriteSheet, Canvas canvas) {
@@ -49,11 +48,6 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
     }
 
     @Override
-    public void setMazeHighlighted(boolean highlighted) {
-        this.mazeHighlighted = highlighted;
-    }
-
-    @Override
     public void setBlinking(boolean blinking) {
         this.blinkingOn = blinking;
     }
@@ -64,7 +58,7 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
     }
 
     @Override
-    public void drawMaze(GameLevel level, double x, double y, Paint backgroundColor) {
+    public void drawMaze(GameLevel level, double x, double y, Paint backgroundColor, boolean mazeHighlighted) {
         double scaling = scaling();
         ctx.save();
         ctx.scale(scaling, scaling);
