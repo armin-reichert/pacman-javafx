@@ -160,7 +160,7 @@ public class IntroScene extends GameScene2D {
             default -> {}
         }
         gr.drawText("CREDIT %2d".formatted(THE_COIN_STORE.numCoins()), Color.web(Arcade.Palette.WHITE), font, 2 * TS, sizeInPx().y() - 2);
-        gr.drawLevelCounter(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
+        gr.drawLevelCounter(game().levelCounter(), sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 
     // TODO inspect in MAME what's really going on here

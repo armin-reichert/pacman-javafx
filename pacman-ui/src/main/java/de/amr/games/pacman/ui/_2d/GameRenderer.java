@@ -25,6 +25,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 import static de.amr.games.pacman.Globals.*;
@@ -275,8 +276,8 @@ public interface GameRenderer {
         }
     }
 
-    default void drawLevelCounter(double x, double y) {
-        for (byte symbol : THE_GAME_CONTROLLER.game().levelCounter()) {
+    default void drawLevelCounter(List<Byte> symbols, double x, double y) {
+        for (byte symbol : symbols) {
             drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), x, y);
             x -= TS * 2;
         }

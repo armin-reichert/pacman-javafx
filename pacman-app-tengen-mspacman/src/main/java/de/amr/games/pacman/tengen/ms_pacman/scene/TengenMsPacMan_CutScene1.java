@@ -234,7 +234,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         r.drawActorSprite(heart, HEART_SPRITE);
         if (game().level().isPresent()) {
             // avoid exception in cut scene test mode
-            r.drawLevelCounter(sizeInPx().x() - 4 * TS, sizeInPx().y() - 3 * TS);
+            r.drawLevelCounter(game().levelCounter(), sizeInPx().x() - 4 * TS, sizeInPx().y() - 3 * TS);
         }
     }
 }

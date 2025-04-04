@@ -34,6 +34,8 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
+import java.util.List;
+
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.model.actors.ActorAnimations.*;
 import static de.amr.games.pacman.model.actors.Bonus.STATE_EATEN;
@@ -351,7 +353,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     @Override
-    public void drawLevelCounter(double x, double y) {
+    public void drawLevelCounter(List<Byte> symbols, double x, double y) {
         ctx.setImageSmoothing(false);
         THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
             TengenMsPacMan_GameModel game = THE_GAME_CONTROLLER.game();
@@ -360,7 +362,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
                 drawLevelNumberBox(level.number(), x, y); // right box
             }
             double symbolX = x - 2 * TS;
-            for (byte symbol : game.levelCounter()) {
+            for (byte symbol : symbols) {
                 drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), symbolX, y);
                 symbolX -= TS * 2;
             }
