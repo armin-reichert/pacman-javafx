@@ -70,9 +70,28 @@ public class GameView implements View {
     private final TooFancyCanvasContainer canvasContainer = new TooFancyCanvasContainer(canvas);
     private final PictureInPictureView pipView = new PictureInPictureView();
     private final VBox pipContainer = new VBox(pipView, new HBox());
+    private final StringExpression titleExpression;
+    private final ContextMenu contextMenu = new ContextMenu();
 
-    private StringExpression titleExpression;
-    private ContextMenu contextMenu;
+    public GameView(GameUI ui) {
+        this.parentScene = ui.mainScene();
+        titleExpression = Bindings.createStringBinding(() -> computeTitleText(ui),
+                ui.clock().pausedProperty(), ui.mainScene().heightProperty(), ui.gameSceneProperty(),
+                PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE);
+        configureCanvasContainer();
+        configurePiPView(ui);
+        createLayers();
+        configurePropertyBindings();
+        root.setOnContextMenuRequested(this::handleContextMenuRequest);
+        //TODO is this the recommended way to close a context-menu?
+        ui.mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+            if (contextMenu.isShowing() && e.getButton() == MouseButton.PRIMARY) {
+                contextMenu.hide();
+            }
+        });
+        gameScenePy.bind(ui.gameSceneProperty());
+        bindGameActions();
+    }
 
     private void configureCanvasContainer() {
         canvasContainer.setMinScaling(0.5);
@@ -111,11 +130,6 @@ public class GameView implements View {
         });
     }
 
-    private void configureTitleBinding(GameUI ui) {
-        titleExpression = Bindings.createStringBinding(() -> computeTitleText(ui),
-            ui.clock().pausedProperty(), ui.mainScene().heightProperty(), ui.gameSceneProperty(), PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE);
-    }
-
     private String computeTitleText(GameUI ui) {
         String keyPattern = "app.title." + ui.configurations().current().assetNamespace() + (ui.clock().isPaused() ? ".paused" : "");
         if (ui.currentGameScene().isPresent()) {
@@ -130,25 +144,6 @@ public class GameView implements View {
         return ui.assets().text(keyPattern, modeKey)
             + sceneNameSuffix
             + (gameScene instanceof GameScene2D gameScene2D  ? " (%.2fx)".formatted(gameScene2D.scaling()) : "");
-    }
-
-    public GameView(GameUI ui) {
-        this.parentScene = ui.mainScene();
-        configureCanvasContainer();
-        configurePiPView(ui);
-        createLayers();
-        configurePropertyBindings();
-        configureTitleBinding(ui);
-        root.setOnContextMenuRequested(this::handleContextMenuRequest);
-        //TODO is this the recommended way to close a context-menu?
-        ui.mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
-            if (contextMenu != null && contextMenu.isShowing() && e.getButton() == MouseButton.PRIMARY) {
-                contextMenu.hide();
-            }
-        });
-
-        gameScenePy.bind(ui.gameSceneProperty());
-        bindGameActions();
     }
 
     private void createLayers() {
@@ -251,13 +246,9 @@ public class GameView implements View {
     }
 
     private void handleContextMenuRequest(ContextMenuEvent e) {
-        if (contextMenu != null) {
-            contextMenu.hide();
-        }
-        contextMenu = new ContextMenu();
-        contextMenu.getItems().addAll(createContextMenuItems(e));
-        contextMenu.requestFocus();
+        contextMenu.getItems().setAll(createContextMenuItems(e));
         contextMenu.show(root, e.getScreenX(), e.getScreenY());
+        contextMenu.requestFocus();
     }
 
     private List<MenuItem> createContextMenuItems(ContextMenuEvent e) {
@@ -273,7 +264,7 @@ public class GameView implements View {
 
     private void handleGameSceneChange(GameScene gameScene) {
         if (gameScene != null) embedGameScene(gameScene);
-        if (contextMenu != null) contextMenu.hide();
+        contextMenu.hide();
     }
 
     public void embedGameScene(GameScene gameScene) {
