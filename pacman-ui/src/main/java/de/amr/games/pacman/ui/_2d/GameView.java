@@ -112,22 +112,23 @@ public class GameView implements View {
     }
 
     private void configureTitleBinding(GameUI ui) {
-        titleExpression = Bindings.createStringBinding(
-            () -> {
-                String sceneName = ui.currentGameScene().map(gameScene -> gameScene.getClass().getSimpleName()).orElse(null);
-                String sceneNameText = sceneName != null && PY_DEBUG_INFO_VISIBLE.get() ? " [%s]".formatted(sceneName) : "";
-                String assetNamespace = ui.configurations().current().assetNamespace();
-                String key = "app.title." + assetNamespace;
-                if (ui.clock().isPaused()) {
-                    key += ".paused";
-                }
-                String modeKey = ui.assets().text(PY_3D_ENABLED.get() ? "threeD" : "twoD");
-                if (ui.currentGameScene().isPresent() && ui.currentGameScene().get() instanceof GameScene2D gameScene2D) {
-                    return ui.assets().text(key, modeKey) + sceneNameText + " (%.2fx)".formatted(gameScene2D.scaling());
-                }
-                return ui.assets().text(key, modeKey) + sceneNameText;
-            },
-            ui.clock().pausedProperty(), gameScenePy, PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE);
+        titleExpression = Bindings.createStringBinding(() -> computeTitleText(ui),
+            ui.clock().pausedProperty(), ui.mainScene().heightProperty(), ui.gameSceneProperty(), PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE);
+    }
+
+    private String computeTitleText(GameUI ui) {
+        String sceneName = ui.currentGameScene().map(gameScene -> gameScene.getClass().getSimpleName()).orElse(null);
+        String sceneNameText = sceneName != null && PY_DEBUG_INFO_VISIBLE.get() ? " [%s]".formatted(sceneName) : "";
+        String assetNamespace = ui.configurations().current().assetNamespace();
+        String key = "app.title." + assetNamespace;
+        if (ui.clock().isPaused()) {
+            key += ".paused";
+        }
+        String modeKey = ui.assets().text(PY_3D_ENABLED.get() ? "threeD" : "twoD");
+        if (ui.currentGameScene().isPresent() && ui.currentGameScene().get() instanceof GameScene2D gameScene2D) {
+            return ui.assets().text(key, modeKey) + sceneNameText + " (%.2fx)".formatted(gameScene2D.scaling());
+        }
+        return ui.assets().text(key, modeKey) + sceneNameText;
     }
 
     public GameView(GameUI ui) {
