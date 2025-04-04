@@ -30,7 +30,6 @@ import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
@@ -52,7 +51,9 @@ public class GameView implements View {
     private final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene") {
         @Override
         protected void invalidated() {
-            handleGameSceneChange(get());
+            GameScene gameScene = get();
+            if (gameScene != null) embedGameScene(gameScene);
+            contextMenu.hide();
         }
     };
 
@@ -256,11 +257,6 @@ public class GameView implements View {
         contextMenu.getItems().setAll(menuItems);
         contextMenu.show(root, e.getScreenX(), e.getScreenY());
         contextMenu.requestFocus();
-    }
-
-    private void handleGameSceneChange(GameScene gameScene) {
-        if (gameScene != null) embedGameScene(gameScene);
-        contextMenu.hide();
     }
 
     public void embedGameScene(GameScene gameScene) {
