@@ -74,7 +74,7 @@ public class ArcadePlayScene2D extends GameScene2D {
 
         game().level().ifPresent(level -> {
             gr.applyMapSettings(level.worldMap());
-            gr.setMessagePosition(centerPositionBelowHouse(level));
+            //gr.setMessagePosition(centerPositionBelowHouse(level));
         });
     }
 
@@ -185,28 +185,28 @@ public class ArcadePlayScene2D extends GameScene2D {
         gr.drawLevelCounter(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 
-    private void drawLevelMessage(GameLevel level, Font font, Vector2f centerOfText) {
+    private void drawLevelMessage(GameLevel level, Font font, Vector2f messageCenterPosition) {
         switch (level.message()) {
             case GAME_OVER -> {
                 String text = "GAME  OVER";
                 // this assumes fixed font width of one tile:
-                double x = gr.getMessagePosition().x() - (text.length() * HTS);
-                gr.setMessagePosition(centerOfText);
-                gr.drawText(text, Color.web(Arcade.Palette.RED), font, x, gr.getMessagePosition().y());
+                double x = messageCenterPosition.x() - (text.length() * HTS);
+                //gr.setMessagePosition(centerOfText);
+                gr.drawText(text, Color.web(Arcade.Palette.RED), font, x, messageCenterPosition.y());
             }
             case READY -> {
                 String text = "READY!";
                 // this assumes fixed font width of one tile:
-                double x = gr.getMessagePosition().x() - (text.length() * HTS);
-                gr.setMessagePosition(centerOfText);
-                gr.drawText(text, Color.web(Arcade.Palette.YELLOW), font, x, gr.getMessagePosition().y());
+                double x = messageCenterPosition.x() - (text.length() * HTS);
+                //gr.setMessagePosition(centerOfText);
+                gr.drawText(text, Color.web(Arcade.Palette.YELLOW), font, x, messageCenterPosition.y());
             }
             case TEST_LEVEL -> {
                 String text = "TEST    L%03d".formatted(level.number());
                 // this assumes fixed font width of one tile:
-                double x = centerOfText.x() - (text.length() * HTS);
-                gr.setMessagePosition(centerOfText);
-                gr.drawText(text, Color.web(Arcade.Palette.WHITE), font, x, gr.getMessagePosition().y());
+                double x = messageCenterPosition.x() - (text.length() * HTS);
+                //gr.setMessagePosition(centerOfText);
+                gr.drawText(text, Color.web(Arcade.Palette.WHITE), font, x, messageCenterPosition.y());
             }
         }
     }

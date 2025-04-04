@@ -70,9 +70,6 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
     }
 
     @Override
-    public void setMessagePosition(Vector2f position) {}
-
-    @Override
     public void drawMaze(GameLevel level, double x, double y, Paint backgroundColor) {
         double scaling = scaling();
         ctx.save();

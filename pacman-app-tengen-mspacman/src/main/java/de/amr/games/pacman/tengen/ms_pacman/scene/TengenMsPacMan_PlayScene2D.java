@@ -448,25 +448,15 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         var tr = (TengenMsPacMan_Renderer2D) gr;
         TengenMsPacMan_GameModel game = game();
 
-        Vector2f messageCenterPosition = centerPosBelowHouse(level);
-        if (messageMovement != null) {
-            tr.setMessagePosition(messageMovement.isRunning()
-                    ? new Vector2f(messageMovement.currentX(), messageCenterPosition.y())
-                    : messageCenterPosition
-            );
-        } else {
-            tr.setMessagePosition(messageCenterPosition);
-        }
-
         tr.setBlinking(level.blinking().isOn());
         boolean flashing = levelCompleteAnimation != null && levelCompleteAnimation.isFlashing();
         if (flashing && levelCompleteAnimation.isInHighlightPhase()) {
             tr.drawWorldHighlighted(level, 0, 3 * TS, levelCompleteAnimation.flashingIndex());
         } else {
-            //TODO in the original game, the message is draw under the maze image but over the pellets!
+            //TODO in the original game, the message is drawn under the maze image but over the pellets!
             tr.drawWorld(level, 0,  3 * TS);
             tr.drawFood(level);
-            tr.drawLevelMessage(level, game.isDemoLevel(), tr.getMessagePosition());
+            tr.drawLevelMessage(level, game.isDemoLevel(), getMessagePosition(level));
         }
 
         level.bonus().ifPresent(tr::drawBonus);
@@ -488,6 +478,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             ghostsInZOrder(level).forEach(tr::drawAnimatedCreatureInfo);
             drawDebugInfo();
         }
+    }
+
+    private Vector2f getMessagePosition(GameLevel level) {
+        Vector2f center = centerPosBelowHouse(level);
+        if (messageMovement != null && messageMovement.isRunning()) {
+            return new Vector2f(messageMovement.currentX(), center.y());
+        }
+        return center;
     }
 
     private Vector2f centerPosBelowHouse(GameLevel level) {

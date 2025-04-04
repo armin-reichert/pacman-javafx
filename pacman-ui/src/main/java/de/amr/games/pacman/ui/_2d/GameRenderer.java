@@ -28,7 +28,6 @@ import org.tinylog.Logger;
 import java.util.function.Predicate;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static java.util.function.Predicate.not;
 
 /**
@@ -56,13 +55,6 @@ public interface GameRenderer {
     default float scaling() { return scalingProperty().get(); }
 
     default float scaled(double value) { return scaling() * (float) value; }
-
-    /**
-     * @param position Unscaled position where message (READY etc.) is displayed.
-     *                 Message text is centered horizontally to the x-coordinate
-     *                 and text baseline is y-coordinate of given position
-     */
-    void setMessagePosition(Vector2f position);
 
     /**
      * @return Unscaled position where message (READY etc.) is displayed.

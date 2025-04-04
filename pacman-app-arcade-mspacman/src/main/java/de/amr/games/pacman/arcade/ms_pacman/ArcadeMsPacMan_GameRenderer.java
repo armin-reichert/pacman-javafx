@@ -109,9 +109,6 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     }
 
     @Override
-    public void setMessagePosition(Vector2f position) {}
-
-    @Override
     public void applyMapSettings(WorldMap worldMap) {
         int colorMapIndex = worldMap.getConfigValue("colorMapIndex");
         fullMazeSpritesheetRegion = FULL_MAZE_REGIONS[colorMapIndex];
