@@ -5,10 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tengen.ms_pacman.scene;
 
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.nes.NES_JoypadButtonID;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
 import de.amr.games.pacman.ui._2d.GameAction;
 import de.amr.games.pacman.ui._2d.GameScene2D;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
@@ -42,6 +44,11 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
+        gr.setScaling(scaling());
+        gr.clearCanvas(backgroundColor());
+        if (game().isScoreVisible()) {
+            gr.drawScores(Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS));
+        }
         var r = (TengenMsPacMan_Renderer2D) gr;
         Font scaledFont = r.scaledArcadeFont(TS);
         double width = sizeInPx().x();

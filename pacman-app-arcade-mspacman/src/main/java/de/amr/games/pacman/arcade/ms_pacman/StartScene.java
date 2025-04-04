@@ -44,6 +44,11 @@ public class StartScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
+        gr.setScaling(scaling());
+        gr.clearCanvas(backgroundColor());
+        if (game().isScoreVisible()) {
+            gr.drawScores(Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS));
+        }
         GameSpriteSheet spriteSheet = gr.spriteSheet();
         Color orange = Color.web(Arcade.Palette.ORANGE), red = Color.web(Arcade.Palette.RED), white = Color.web(Arcade.Palette.WHITE);
         Font font8 = gr.scaledArcadeFont(8), font6 = gr.scaledArcadeFont(6);

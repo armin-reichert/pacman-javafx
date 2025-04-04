@@ -6,6 +6,7 @@ package de.amr.games.pacman.arcade;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.GameUI;
@@ -96,6 +97,11 @@ public class CutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
+        gr.setScaling(scaling());
+        gr.clearCanvas(backgroundColor());
+        if (game().isScoreVisible()) {
+            gr.drawScores(Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS));
+        }
         gr.drawAnimatedActor(pac);
         gr.drawAnimatedActor(blinky);
         gr.drawLevelCounter(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);

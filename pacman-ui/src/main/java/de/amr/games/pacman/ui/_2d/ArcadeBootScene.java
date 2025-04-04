@@ -56,7 +56,8 @@ public class ArcadeBootScene extends GameScene2D {
     }
 
     @Override
-    protected void drawSceneContent() {}
+    protected void drawSceneContent() {
+    }
 
     private void paintRandomHexCodes(Vector2f sceneSize) {
         gr.clearCanvas(backgroundColor());

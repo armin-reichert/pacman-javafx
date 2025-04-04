@@ -7,6 +7,7 @@ package de.amr.games.pacman.tengen.ms_pacman.scene;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.lib.fsm.FsmState;
 import de.amr.games.pacman.lib.nes.NES_JoypadButtonID;
@@ -99,6 +100,11 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
+        gr.setScaling(scaling());
+        gr.clearCanvas(backgroundColor());
+        if (game().isScoreVisible()) {
+            gr.drawScores(Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS));
+        }
         TengenMsPacMan_Renderer2D r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
         TickTimer timer = sceneController.state().timer;

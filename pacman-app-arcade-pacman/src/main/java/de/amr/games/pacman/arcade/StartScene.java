@@ -44,6 +44,11 @@ public class StartScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
+        gr.setScaling(scaling());
+        gr.clearCanvas(backgroundColor());
+        if (game().isScoreVisible()) {
+            gr.drawScores(Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS));
+        }
         var font8 = gr.scaledArcadeFont(8);
         var font6 = gr.scaledArcadeFont(6);
         Color cyan = Color.web(Arcade.Palette.CYAN);

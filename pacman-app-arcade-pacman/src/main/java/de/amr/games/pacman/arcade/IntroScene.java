@@ -130,6 +130,11 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
+        gr.setScaling(scaling());
+        gr.clearCanvas(backgroundColor());
+        if (game().isScoreVisible()) {
+            gr.drawScores(Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS));
+        }
         TickTimer timer = sceneController.state().timer();
         drawGallery();
         switch (sceneController.state()) {

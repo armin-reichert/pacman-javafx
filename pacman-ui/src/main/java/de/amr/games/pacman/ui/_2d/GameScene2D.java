@@ -90,11 +90,6 @@ public abstract class GameScene2D implements GameScene {
     }
 
     public void draw() {
-        gr.setScaling(scaling());
-        gr.clearCanvas(backgroundColor());
-        if (game().isScoreVisible()) {
-            gr.drawScores(Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS));
-        }
         drawSceneContent();
         if (debugInfoVisiblePy.get()) {
             drawDebugInfo();
