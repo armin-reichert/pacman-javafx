@@ -9,6 +9,7 @@ import de.amr.games.pacman.uilib.Picker;
 import de.amr.games.pacman.uilib.ResourceManager;
 import de.amr.games.pacman.uilib.Ufx;
 import de.amr.games.pacman.uilib.model3D.Model3D;
+import javafx.scene.text.Font;
 
 import java.util.ResourceBundle;
 
@@ -58,6 +59,10 @@ public class GameAssets extends AssetStorage implements ResourceManager {
 
         pickerForGameOverTexts = Picker.fromBundle(bundles().getLast(), "game.over");
         pickerForLevelCompleteTexts = Picker.fromBundle(bundles().getLast(), "level.complete");
+    }
+
+    public Font scaledArcadeFont(float size) {
+        return font("font.arcade", size);
     }
 
     public String localizedGameOverMessage() {

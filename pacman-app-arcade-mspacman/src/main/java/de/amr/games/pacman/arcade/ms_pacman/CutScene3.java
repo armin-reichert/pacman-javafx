@@ -14,6 +14,7 @@ import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.uilib.SpriteAnimation;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
@@ -92,7 +93,8 @@ public class CutScene3 extends GameScene2D {
         gr.setScaling(scaling());
         gr.clearCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS));
+            Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
+            gr.drawScores(Color.web(Arcade.Palette.WHITE), font);
         }
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
             r.drawClapperBoard(clapAnimation, tiles2Px(3), tiles2Px(10));

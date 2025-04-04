@@ -13,6 +13,7 @@ import de.amr.games.pacman.ui.GameUI;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
@@ -100,7 +101,8 @@ public class CutScene3 extends GameScene2D {
         gr.setScaling(scaling());
         gr.clearCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS));
+            Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
+            gr.drawScores(Color.web(Arcade.Palette.WHITE), font);
         }
         gr.drawAnimatedActor(pac);
         gr.drawAnimatedActor(blinky);
@@ -111,6 +113,6 @@ public class CutScene3 extends GameScene2D {
     public void drawDebugInfo() {
         super.drawDebugInfo();
         String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-        gr.drawText(text, Color.YELLOW, GameUI.DEBUG_FONT, tiles2Px(1), tiles2Px(5));
+        gr.drawText(text, Color.YELLOW, GameUI.DEBUG_TEXT_FONT, tiles2Px(1), tiles2Px(5));
     }
 }

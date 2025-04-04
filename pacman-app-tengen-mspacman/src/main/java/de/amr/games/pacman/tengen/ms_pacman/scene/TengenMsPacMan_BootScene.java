@@ -108,10 +108,11 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
+        Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
         gr.setScaling(scaling());
         gr.clearCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS));
+            gr.drawScores(Color.web(Arcade.Palette.WHITE), font);
         }
         var r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
@@ -120,7 +121,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             r.ctx().setFill(nesPaletteColor(0x10));
             r.ctx().fillRect(0, 0, canvas().getWidth(), canvas().getHeight());
         } else {
-            r.drawText("TENGEN PRESENTS", r.shadeOfBlue(t), r.scaledArcadeFont(TS), TENGEN_PRESENTS_X, tengenPresentsY);
+            r.drawText("TENGEN PRESENTS", r.shadeOfBlue(t), font, TENGEN_PRESENTS_X, tengenPresentsY);
             r.drawAnimatedActor(ghost);
         }
     }

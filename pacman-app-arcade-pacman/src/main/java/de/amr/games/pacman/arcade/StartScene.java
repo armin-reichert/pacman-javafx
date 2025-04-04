@@ -11,6 +11,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._2d.GameAction;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.arcade.ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT;
@@ -44,13 +45,13 @@ public class StartScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
+        Font font8 = THE_UI.assets().scaledArcadeFont(scaled(8));
+        Font font6 = THE_UI.assets().scaledArcadeFont(scaled(6));
         gr.setScaling(scaling());
         gr.clearCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS));
+            gr.drawScores(Color.web(Arcade.Palette.WHITE), font8);
         }
-        var font8 = gr.scaledArcadeFont(8);
-        var font6 = gr.scaledArcadeFont(6);
         Color cyan = Color.web(Arcade.Palette.CYAN);
         Color orange = Color.web(Arcade.Palette.ORANGE);
         Color pink = Color.web(Arcade.Palette.PINK);

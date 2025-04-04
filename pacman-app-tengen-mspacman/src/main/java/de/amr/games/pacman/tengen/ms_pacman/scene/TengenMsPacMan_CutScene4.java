@@ -14,6 +14,7 @@ import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -219,7 +220,8 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         gr.setScaling(scaling());
         gr.clearCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS));
+            Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
+            gr.drawScores(Color.web(Arcade.Palette.WHITE), font);
         }
         var r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();

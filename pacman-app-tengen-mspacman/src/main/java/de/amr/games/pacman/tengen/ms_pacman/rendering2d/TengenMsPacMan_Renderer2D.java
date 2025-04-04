@@ -291,9 +291,11 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     public void drawLevelMessage(String assetNamespace, GameLevel level, boolean demoLevel) {
         if (level.message() != null) {
+            Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
             float x = getMessagePosition().x(), y = getMessagePosition().y();
             switch (level.message()) {
-                case READY -> drawTextCenteredOver("READY!", x, y, THE_UI.assets().color(assetNamespace + ".color.ready_message"));
+                case READY -> drawTextCenteredOver("READY!", x, y,
+                    THE_UI.assets().color(assetNamespace + ".color.ready_message"), font);
                 case GAME_OVER -> {
                     Color color = THE_UI.assets().color(assetNamespace + ".color.game_over_message");
                     if (demoLevel) {
@@ -301,9 +303,10 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
                         NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
                         color = Color.web(nesColorScheme.strokeColor());
                     }
-                    drawTextCenteredOver("GAME OVER", x, y, color);
+                    drawTextCenteredOver("GAME OVER", x, y, color, font);
                 }
-                case TEST_LEVEL -> drawTextCenteredOver("TEST L%02d".formatted(level.number()), x, y, nesPaletteColor(0x28));
+                case TEST_LEVEL -> drawTextCenteredOver("TEST L%02d".formatted(level.number()), x, y,
+                    nesPaletteColor(0x28), font);
             }
         }
     }
@@ -410,6 +413,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         double x, double y)
     {
         clap.sprite().ifPresent(sprite -> {
+            Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
             ctx.setImageSmoothing(false);
             drawSpriteCenteredOverTile(sprite, x, y);
             var numberX = x + 8;
@@ -419,7 +423,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             ctx.scale(scaling(), scaling());
             ctx.fillRect(numberX - 1, numberY - 8, 12, 8);
             ctx.restore();
-            ctx.setFont(scaledArcadeFont(TS));
+            ctx.setFont(font);
             ctx.setFill(nesPaletteColor(0x20));
             ctx.fillText(String.valueOf(number), scaled(numberX), scaled(numberY));
             if (clap.isTextVisible()) {
@@ -463,8 +467,8 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     }
 
-    private void drawTextCenteredOver(String text, double cx, double y, Color color) {
+    private void drawTextCenteredOver(String text, double cx, double y, Color color, Font font) {
         double x = (cx - text.length() * 0.5 * TS);
-        drawText(text, color, scaledArcadeFont(TS), x, y);
+        drawText(text, color, font, x, y);
     }
 }

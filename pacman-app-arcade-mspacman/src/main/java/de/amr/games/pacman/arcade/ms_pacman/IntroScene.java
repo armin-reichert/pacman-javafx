@@ -130,12 +130,12 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
+        Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
         gr.setScaling(scaling());
         gr.clearCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS));
+            gr.drawScores(Color.web(Arcade.Palette.WHITE), font);
         }
-        final Font font = gr.scaledArcadeFont(TS);
         drawMarquee();
         gr.drawText("\"MS PAC-MAN\"", COLOR_ORANGE, font, TITLE_X, TITLE_Y);
         if (sceneController.state() == SceneState.GHOSTS_MARCHING_IN) {

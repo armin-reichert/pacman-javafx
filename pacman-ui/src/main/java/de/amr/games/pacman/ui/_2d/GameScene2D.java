@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.ui.Action;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui.GameUI;
@@ -89,7 +88,7 @@ public abstract class GameScene2D implements GameScene {
     public void drawDebugInfo() {
         gr.drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
         gr.ctx().setFill(Color.YELLOW);
-        gr.ctx().setFont(GameUI.DEBUG_FONT);
+        gr.ctx().setFont(GameUI.DEBUG_TEXT_FONT);
         gr.ctx().fillText("%s %d".formatted(gameState(), gameState().timer().tickCount()), 0, scaled(3 * TS));
     }
 

@@ -16,6 +16,7 @@ import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteShe
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.TS;
@@ -157,7 +158,8 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         gr.setScaling(scaling());
         gr.clearCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS));
+            Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
+            gr.drawScores(Color.web(Arcade.Palette.WHITE), font);
         }
         var r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();

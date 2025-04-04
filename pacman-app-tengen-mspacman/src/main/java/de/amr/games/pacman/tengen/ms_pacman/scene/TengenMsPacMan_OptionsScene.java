@@ -241,10 +241,11 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
+        Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
         gr.setScaling(scaling());
         gr.clearCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS));
+            gr.drawScores(Color.web(Arcade.Palette.WHITE), font);
         }
         TengenMsPacMan_Renderer2D r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
@@ -253,53 +254,50 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
             return;
         }
         r.setScaling(scaling());
-        Font scaledFont = r.scaledArcadeFont(TS);
-
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), sizeInPx().x(), 20);
-
-        r.drawText("MS PAC-MAN OPTIONS", NES_YELLOW, scaledFont, COL_LABEL + 3 * TS, 48);
+        r.drawText("MS PAC-MAN OPTIONS", NES_YELLOW, font, COL_LABEL + 3 * TS, 48);
 
         // Players (not implemented)
-        drawArrowIfSelected(OPTION_PLAYERS, 72, scaledFont);
-        r.drawText("TYPE", NES_YELLOW, scaledFont, COL_LABEL, 72);
-        r.drawText(":", NES_YELLOW, scaledFont, COL_LABEL + 4 * TS + 4, 72);
-        r.drawText("1 PLAYER", NES_WHITE, scaledFont, COL_LABEL + 6 * TS  , 72);
+        drawArrowIfSelected(OPTION_PLAYERS, 72, font);
+        r.drawText("TYPE", NES_YELLOW, font, COL_LABEL, 72);
+        r.drawText(":", NES_YELLOW, font, COL_LABEL + 4 * TS + 4, 72);
+        r.drawText("1 PLAYER", NES_WHITE, font, COL_LABEL + 6 * TS  , 72);
 
         // Pac-Booster
-        drawArrowIfSelected(OPTION_PAC_BOOSTER, 96, scaledFont);
-        r.drawText("PAC BOOSTER", NES_YELLOW, scaledFont, COL_LABEL, 96);
-        r.drawText(":", NES_YELLOW, scaledFont, COL_COLON, 96);
+        drawArrowIfSelected(OPTION_PAC_BOOSTER, 96, font);
+        r.drawText("PAC BOOSTER", NES_YELLOW, font, COL_LABEL, 96);
+        r.drawText(":", NES_YELLOW, font, COL_COLON, 96);
         String pacBoosterText = switch (tengenGame.pacBooster()) {
             case OFF -> "OFF";
             case ALWAYS_ON -> "ALWAYS ON";
             case USE_A_OR_B -> "USE A OR B";
         };
-        r.drawText(pacBoosterText, NES_WHITE, scaledFont, COL_VALUE, 96);
+        r.drawText(pacBoosterText, NES_WHITE, font, COL_VALUE, 96);
 
         // Game difficulty
-        drawArrowIfSelected(OPTION_DIFFICULTY, 120, scaledFont);
-        r.drawText("GAME DIFFICULTY", NES_YELLOW, scaledFont, COL_LABEL, 120);
-        r.drawText(":", NES_YELLOW, scaledFont, COL_COLON, 120);
-        r.drawText(tengenGame.difficulty().name(), NES_WHITE, scaledFont, COL_VALUE, 120);
+        drawArrowIfSelected(OPTION_DIFFICULTY, 120, font);
+        r.drawText("GAME DIFFICULTY", NES_YELLOW, font, COL_LABEL, 120);
+        r.drawText(":", NES_YELLOW, font, COL_COLON, 120);
+        r.drawText(tengenGame.difficulty().name(), NES_WHITE, font, COL_VALUE, 120);
 
         // Maze (type) selection
-        drawArrowIfSelected(OPTION_MAZE_SELECTION, 144, scaledFont);
-        r.drawText("MAZE SELECTION", NES_YELLOW, scaledFont, COL_LABEL, 144);
-        r.drawText(":", NES_YELLOW, scaledFont, COL_COLON, 144);
-        r.drawText(tengenGame.mapCategory().name(), NES_WHITE, scaledFont, COL_VALUE, 144);
+        drawArrowIfSelected(OPTION_MAZE_SELECTION, 144, font);
+        r.drawText("MAZE SELECTION", NES_YELLOW, font, COL_LABEL, 144);
+        r.drawText(":", NES_YELLOW, font, COL_COLON, 144);
+        r.drawText(tengenGame.mapCategory().name(), NES_WHITE, font, COL_VALUE, 144);
 
         // Starting level number
-        drawArrowIfSelected(OPTION_STARTING_LEVEL, 168, scaledFont);
-        r.drawText("STARTING LEVEL", NES_YELLOW, scaledFont, COL_LABEL, 168);
-        r.drawText(":", NES_YELLOW, scaledFont, COL_COLON, 168);
-        r.drawText(String.valueOf(tengenGame.startLevelNumber()), NES_WHITE, scaledFont, COL_VALUE, 168);
+        drawArrowIfSelected(OPTION_STARTING_LEVEL, 168, font);
+        r.drawText("STARTING LEVEL", NES_YELLOW, font, COL_LABEL, 168);
+        r.drawText(":", NES_YELLOW, font, COL_COLON, 168);
+        r.drawText(String.valueOf(tengenGame.startLevelNumber()), NES_WHITE, font, COL_VALUE, 168);
         if (tengenGame.numContinues() < 4) {
             r.drawSpriteScaled(CONTINUES_SPRITES[tengenGame.numContinues()], COL_VALUE + 3 * TS, 160);
         }
 
-        r.drawText("MOVE ARROW WITH JOYPAD", NES_YELLOW, scaledFont, 4 * TS,  192);
-        r.drawText("CHOOSE OPTIONS WITH A AND B", NES_YELLOW, scaledFont, 2 * TS,  200);
-        r.drawText("PRESS START TO START GAME", NES_YELLOW, scaledFont, 3 * TS,  208);
+        r.drawText("MOVE ARROW WITH JOYPAD", NES_YELLOW, font, 4 * TS,  192);
+        r.drawText("CHOOSE OPTIONS WITH A AND B", NES_YELLOW, font, 2 * TS,  200);
+        r.drawText("PRESS START TO START GAME", NES_YELLOW, font, 3 * TS,  208);
 
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), sizeInPx().x(), 212);
 

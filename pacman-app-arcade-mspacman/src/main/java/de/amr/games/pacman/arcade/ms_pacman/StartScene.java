@@ -44,23 +44,24 @@ public class StartScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
+        Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
+        Font font6 = THE_UI.assets().scaledArcadeFont(scaled(6));
         gr.setScaling(scaling());
         gr.clearCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS));
+            gr.drawScores(Color.web(Arcade.Palette.WHITE), font);
         }
         GameSpriteSheet spriteSheet = gr.spriteSheet();
         Color orange = Color.web(Arcade.Palette.ORANGE), red = Color.web(Arcade.Palette.RED), white = Color.web(Arcade.Palette.WHITE);
-        Font font8 = gr.scaledArcadeFont(8), font6 = gr.scaledArcadeFont(6);
-        gr.drawText("PUSH START BUTTON", orange, font8, tiles2Px(6), tiles2Px(16));
-        gr.drawText("1 PLAYER ONLY", orange, font8, tiles2Px(8), tiles2Px(18));
-        gr.drawText("ADDITIONAL    AT 10000", orange, font8, tiles2Px(2), tiles2Px(25));
+        gr.drawText("PUSH START BUTTON", orange, font, tiles2Px(6), tiles2Px(16));
+        gr.drawText("1 PLAYER ONLY", orange, font, tiles2Px(8), tiles2Px(18));
+        gr.drawText("ADDITIONAL    AT 10000", orange, font, tiles2Px(2), tiles2Px(25));
         gr.drawSpriteScaled(spriteSheet.livesCounterSprite(), tiles2Px(13), tiles2Px(23) + 1);
         gr.drawText("PTS", orange, font6, tiles2Px(25), tiles2Px(25));
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
-            r.drawMsPacManMidwayCopyright(tiles2Px(6), tiles2Px(28), red, gr.scaledArcadeFont(TS));
+            r.drawMsPacManMidwayCopyright(tiles2Px(6), tiles2Px(28), red, font);
         }
-        gr.drawText("CREDIT %2d".formatted(THE_COIN_STORE.numCoins()), white, gr.scaledArcadeFont(TS),
+        gr.drawText("CREDIT %2d".formatted(THE_COIN_STORE.numCoins()), white, font,
             tiles2Px(2), sizeInPx().y() - 2);
         gr.drawLevelCounter(sizeInPx().x() - tiles2Px(4), sizeInPx().y() - tiles2Px(2));
     }

@@ -57,10 +57,6 @@ public interface GameRenderer {
 
     default float scaled(double value) { return scaling() * (float) value; }
 
-    default Font scaledArcadeFont(float size) {
-        return THE_UI.assets().font("font.arcade", scaled(size));
-    }
-
     /**
      * @param position Unscaled position where message (READY etc.) is displayed.
      *                 Message text is centered horizontally to the x-coordinate

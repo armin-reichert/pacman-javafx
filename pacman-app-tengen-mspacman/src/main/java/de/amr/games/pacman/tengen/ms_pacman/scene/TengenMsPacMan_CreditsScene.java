@@ -44,20 +44,20 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
+        Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
         gr.setScaling(scaling());
         gr.clearCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS));
+            gr.drawScores(Color.web(Arcade.Palette.WHITE), font);
         }
         var r = (TengenMsPacMan_Renderer2D) gr;
-        Font scaledFont = r.scaledArcadeFont(TS);
         double width = sizeInPx().x();
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), width, 20);
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), width, 212);
         if (gameState().timer().betweenSeconds(0.5 * DISPLAY_SECONDS, DISPLAY_SECONDS)) {
-            drawJavaFXVersionAuthors(r, scaledFont);
+            drawJavaFXVersionAuthors(r, font);
         } else {
-            drawOriginalGameAuthors(r, scaledFont);
+            drawOriginalGameAuthors(r, font);
         }
     }
 

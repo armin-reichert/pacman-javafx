@@ -9,7 +9,6 @@ import de.amr.games.pacman.controller.HuntingTimer;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.nes.NES_JoypadButtonID;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -41,8 +40,8 @@ import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -420,7 +419,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         // do this here because it should be run also when game is paused
         updateScaling();
         updateCameraPosition(scaling());
-
         var r = (TengenMsPacMan_Renderer2D) gr;
         r.setScaling(scaling());
         r.clearCanvas(backgroundColor());
@@ -428,9 +426,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             r.ctx().save();
             r.ctx().translate(scaled(2 * TS), 0);
             drawSceneContent();
-            if (game().isScoreVisible()) {
-                r.drawScores(nesPaletteColor(0x20), r.scaledArcadeFont(TS));
-            }
             r.ctx().restore();
         });
     }
@@ -440,7 +435,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         gr.setScaling(scaling());
         gr.clearCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(Color.web(Arcade.Palette.WHITE), gr.scaledArcadeFont(TS));
+            Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
+            gr.drawScores(nesPaletteColor(0x20), font);
         }
         GameLevel level = game().level().orElse(null);
         // Scene is drawn already for 2 ticks before level has been created
