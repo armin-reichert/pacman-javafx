@@ -80,7 +80,9 @@ public class PacManGamesUI implements GameUI {
             THE_GAME_CONTROLLER.update();
             THE_GAME_CONTROLLER.game().eventLog().print(clock.tickCount());
         } catch (Exception x) {
-            showSimulationError(x);
+            Logger.error(x);
+            Logger.error("SOMETHING VERY BAD HAPPENED DURING SIMULATION STEP!");
+            showFlashMessageSec(10, "KA-TA-STROPHE!");
         }
     }
 
@@ -92,12 +94,6 @@ public class PacManGamesUI implements GameUI {
             }
         });
         currentView().onTick();
-    }
-
-    private void showSimulationError(Exception x) {
-        Logger.error(x);
-        Logger.error("SOMETHING VERY BAD HAPPENED DURING SIMULATION STEP!");
-        showFlashMessageSec(10, "KA-TA-STROPHE!");
     }
 
     private void handleViewChange(View oldView, View newView) {
