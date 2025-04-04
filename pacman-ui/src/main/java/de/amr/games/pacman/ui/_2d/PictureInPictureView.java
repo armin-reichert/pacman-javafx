@@ -50,7 +50,6 @@ public class PictureInPictureView extends VBox {
             THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
                 scene2D.renderer().applyMapSettings(level.worldMap());
                 scene2D.draw();
-
             });
         }
     }

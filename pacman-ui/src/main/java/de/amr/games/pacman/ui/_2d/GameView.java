@@ -245,9 +245,7 @@ public class GameView implements View {
         if (dashboardLayer.isVisible()) {
             dashboard.infoBoxes().filter(InfoBox::isExpanded).forEach(InfoBox::update);
         }
-        if (pipView.isVisible()) {
-            pipView.draw();
-        }
+        pipView.draw();
     }
 
     private void handleContextMenuRequest(ContextMenuEvent e) {

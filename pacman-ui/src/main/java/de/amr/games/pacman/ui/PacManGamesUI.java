@@ -198,7 +198,7 @@ public class PacManGamesUI implements GameUI {
         editorView = new EditorView(editor);
     }
 
-    private void createStartView() {
+    private void createStartPagesView() {
         startPagesView = new StartPagesView();
         startPagesView.setBackground(assets.background("background.scene"));
     }
@@ -235,7 +235,7 @@ public class PacManGamesUI implements GameUI {
         addStatusIcons(root);
         createMapEditor();
         createMainScene(assertNotNull(mainSceneSize));
-        createStartView();
+        createStartPagesView();
         createGameView();
         createMapEditorView();
         stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
