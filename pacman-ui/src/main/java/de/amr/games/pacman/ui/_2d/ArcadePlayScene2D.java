@@ -138,7 +138,6 @@ public class ArcadePlayScene2D extends GameScene2D {
     @Override
     protected void drawSceneContent() {
         GameLevel level = game().level().orElse(null);
-
         // Scene is drawn already for 2 ticks before level has been created
         if (level == null) {
             Logger.warn("Tick {}: Game level not yet available, scene content not drawn", THE_UI.clock().tickCount());

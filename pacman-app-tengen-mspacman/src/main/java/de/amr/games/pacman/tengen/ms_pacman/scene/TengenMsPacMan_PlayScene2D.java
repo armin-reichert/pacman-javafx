@@ -428,60 +428,63 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             r.ctx().save();
             r.ctx().translate(scaled(2 * TS), 0);
             drawSceneContent();
+            if (game().isScoreVisible()) {
+                r.drawScores(nesPaletteColor(0x20), r.scaledArcadeFont(TS));
+            }
             r.ctx().restore();
         });
     }
 
     @Override
     protected void drawSceneContent() {
-        var r = (TengenMsPacMan_Renderer2D) gr;
-        TengenMsPacMan_GameModel game = game();
-        GameLevel level = game.level().orElse(null);
+        GameLevel level = game().level().orElse(null);
+        // Scene is drawn already for 2 ticks before level has been created
         if (level == null) {
-            Logger.warn("Cannot draw scene content, no game level exists");
+            Logger.warn("Tick {}: Game level not yet available, scene content not drawn", THE_UI.clock().tickCount());
             return;
         }
-        if (game.isScoreVisible()) {
-            r.drawScores(nesPaletteColor(0x20), r.scaledArcadeFont(TS));
-        }
+
+        var tr = (TengenMsPacMan_Renderer2D) gr;
+        TengenMsPacMan_GameModel game = game();
+
         Vector2f messageCenterPosition = centerPosBelowHouse(level);
         if (messageMovement != null) {
-            r.setMessagePosition(messageMovement.isRunning()
+            tr.setMessagePosition(messageMovement.isRunning()
                     ? new Vector2f(messageMovement.currentX(), messageCenterPosition.y())
                     : messageCenterPosition
             );
         } else {
-            r.setMessagePosition(messageCenterPosition);
+            tr.setMessagePosition(messageCenterPosition);
         }
 
-        r.setBlinking(level.blinking().isOn());
+        tr.setBlinking(level.blinking().isOn());
         boolean flashing = levelCompleteAnimation != null && levelCompleteAnimation.isFlashing();
         if (flashing && levelCompleteAnimation.isInHighlightPhase()) {
-            r.drawWorldHighlighted(level, 0, 3 * TS, levelCompleteAnimation.flashingIndex());
+            tr.drawWorldHighlighted(level, 0, 3 * TS, levelCompleteAnimation.flashingIndex());
         } else {
             //TODO in the original game, the message is draw under the maze image but over the pellets!
-            r.drawWorld(level, 0,  3 * TS);
-            r.drawFood(level);
-            r.drawLevelMessage(THE_UI.configurations().current().assetNamespace(), level, game.isDemoLevel());
+            tr.drawWorld(level, 0,  3 * TS);
+            tr.drawFood(level);
+            tr.drawLevelMessage(THE_UI.configurations().current().assetNamespace(), level, game.isDemoLevel());
         }
 
-        level.bonus().ifPresent(r::drawBonus);
+        level.bonus().ifPresent(tr::drawBonus);
 
-        r.drawAnimatedActor(level.pac());
-        ghostsInZOrder(level).forEach(r::drawAnimatedActor);
+        tr.drawAnimatedActor(level.pac());
+        ghostsInZOrder(level).forEach(tr::drawAnimatedActor);
 
         int livesCounterEntries = game.lives() - 1;
         if (gameState() == GameState.STARTING_GAME && !level.pac().isVisible()) {
             // as long as Pac-Man is invisible when the game is started, one entry more appears in the lives counter
             livesCounterEntries += 1;
         }
-        r.drawLivesCounter(livesCounterEntries, 5, 2 * TS, sizeInPx().y() - TS);
-        r.setLevelNumberBoxesVisible(!game.isDemoLevel() && game.mapCategory() != MapCategory.ARCADE);
-        r.drawLevelCounter(sizeInPx().x() - 2 * TS, sizeInPx().y() - TS);
+        tr.drawLivesCounter(livesCounterEntries, 5, 2 * TS, sizeInPx().y() - TS);
+        tr.setLevelNumberBoxesVisible(!game.isDemoLevel() && game.mapCategory() != MapCategory.ARCADE);
+        tr.drawLevelCounter(sizeInPx().x() - 2 * TS, sizeInPx().y() - TS);
 
         if (debugInfoVisiblePy.get()) {
-            r.drawAnimatedCreatureInfo(level.pac());
-            ghostsInZOrder(level).forEach(r::drawAnimatedCreatureInfo);
+            tr.drawAnimatedCreatureInfo(level.pac());
+            ghostsInZOrder(level).forEach(tr::drawAnimatedCreatureInfo);
             drawDebugInfo();
         }
     }
