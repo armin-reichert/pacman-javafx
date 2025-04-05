@@ -95,12 +95,12 @@ public class OptionMenu {
     protected final Font titleFont;
 
     protected Paint backgroundFill = Color.BLACK;
-    protected Paint borderStroke = Color.WHITESMOKE;
-    protected Paint titleTextFill = Color.RED;
-    protected Paint entryTextFill = Color.YELLOW;
-    protected Paint entryValueFill = Color.WHITESMOKE;
+    protected Paint borderStroke = Color.web("fffeff");
+    protected Paint titleTextFill = Color.web("b53120");
+    protected Paint entryTextFill = Color.web("bcbe00");
+    protected Paint entryValueFill = Color.web("fffeff");
     protected Paint entryValueDisabledFill = Color.GRAY;
-    protected Paint hintTextFill = Color.YELLOW;
+    protected Paint hintTextFill = Color.web("bcbe00");
 
     public OptionMenu(int tilesX, int tilesY) {
         this.tilesX = tilesX;

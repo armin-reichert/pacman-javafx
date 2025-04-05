@@ -20,6 +20,7 @@ import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_GhostAnim
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_PacAnimations;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet;
+import de.amr.games.pacman.ui.GlobalProperties;
 import de.amr.games.pacman.ui._2d.GameAction;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
@@ -90,7 +91,9 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void update() {
-        sceneController.update();
+        if (!THE_UI.clock().isPaused()) {
+            sceneController.update();
+        }
     }
 
     @Override
