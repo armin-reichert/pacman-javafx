@@ -25,7 +25,7 @@ import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
  *
  * @author Armin Reichert
  */
-public interface GameScene extends GameEventListener, GameActionProvider {
+public interface GameScene extends GameEventListener, ActionProvider {
 
     default void bindDefaultArcadeControllerActions(ArcadeKeyBinding arcadeKeys) {
         bind(GameAction.INSERT_COIN,  arcadeKeys.key(Arcade.Button.COIN));

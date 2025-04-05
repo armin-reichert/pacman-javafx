@@ -13,7 +13,7 @@ import java.util.Optional;
 
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 
-public interface GameActionProvider {
+public interface ActionProvider {
 
     Map<KeyCodeCombination, Action> actionBindings();
 

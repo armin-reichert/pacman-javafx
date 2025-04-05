@@ -9,7 +9,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
 import javafx.scene.layout.Region;
 
-public interface View extends GameActionProvider, GameEventListener {
+public interface View extends ActionProvider, GameEventListener {
     Region layoutRoot();
     void onTick();
     default StringExpression title() {

@@ -227,7 +227,7 @@ public class GameView implements View {
 
     @Override
     public void handleInput() {
-        ifTriggeredRunActionElse(() -> THE_UI.currentGameScene().ifPresent(GameActionProvider::handleInput));
+        ifTriggeredRunActionElse(() -> THE_UI.currentGameScene().ifPresent(ActionProvider::handleInput));
     }
 
     public TooFancyCanvasContainer canvasContainer() {

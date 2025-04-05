@@ -132,7 +132,7 @@ public class PacManGamesUI implements GameUI {
             else if (GameKeyboard.KEY_OPEN_EDITOR.match(keyPress)) {
                 showEditorView();
             }
-            else if (currentView() instanceof GameActionProvider actionProvider) {
+            else if (currentView() instanceof ActionProvider actionProvider) {
                 actionProvider.handleInput();
             }
         });
