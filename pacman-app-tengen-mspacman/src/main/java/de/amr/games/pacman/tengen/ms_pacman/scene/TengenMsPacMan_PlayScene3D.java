@@ -96,7 +96,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         else { // score is disabled, show text "GAME OVER" instead, use maze-specific color
             game().level().ifPresent(level -> {
                 NES_ColorScheme nesColorScheme = level.worldMap().getConfigValue("nesColorScheme");
-                scores3D.showTextAsScore(TEXT_GAME_OVER, Color.web(nesColorScheme.strokeColor()));
+                scores3D.showTextAsScore(THE_UI.assets().text("score.game_over"), Color.web(nesColorScheme.strokeColor()));
             });
         }
     }

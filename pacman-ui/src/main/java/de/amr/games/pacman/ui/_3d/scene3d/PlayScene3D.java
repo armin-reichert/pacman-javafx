@@ -56,10 +56,6 @@ import static de.amr.games.pacman.uilib.Ufx.contextMenuTitleItem;
  */
 public class PlayScene3D implements GameScene, CameraControlledView {
 
-    public static final String TEXT_SCORE = "SCORE";
-    public static final String TEXT_HIGH_SCORE = "HIGH SCORE";
-    public static final String TEXT_GAME_OVER = "GAME OVER!";
-
     protected final ObjectProperty<Perspective.Name> perspectiveNamePy = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
@@ -80,7 +76,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         var axes = new CoordinateSystem();
         axes.visibleProperty().bind(GlobalProperties3d.PY_3D_AXES_VISIBLE);
 
-        scores3D = new Scores3D(TEXT_SCORE, TEXT_HIGH_SCORE);
+        scores3D = new Scores3D(THE_UI.assets().text("score.score"), THE_UI.assets().text("score.high_score"));
 
         // last child is placeholder for level 3D
         root.getChildren().addAll(scores3D, axes, new Group());
@@ -226,7 +222,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         else { // score is disabled, show text "GAME OVER"
             String assetNamespace = THE_UI.configurations().current().assetNamespace();
             Color color = THE_UI.assets().color(assetNamespace + ".color.game_over_message");
-            scores3D.showTextAsScore(TEXT_GAME_OVER, color);
+            scores3D.showTextAsScore(THE_UI.assets().text("score.game_over"), color);
         }
     }
 
