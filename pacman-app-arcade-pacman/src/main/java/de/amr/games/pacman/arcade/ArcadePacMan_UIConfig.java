@@ -42,15 +42,6 @@ public class ArcadePacMan_UIConfig implements GameUIConfiguration {
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
     public ArcadePacMan_UIConfig() {
-        scenesByID.put("BootScene",   new ArcadeBootScene());
-        scenesByID.put("IntroScene",  new IntroScene());
-        scenesByID.put("StartScene",  new StartScene());
-        scenesByID.put("PlayScene2D", new ArcadePlayScene2D());
-        scenesByID.put("PlayScene3D", new PlayScene3D());
-        scenesByID.put("CutScene1",   new CutScene1());
-        scenesByID.put("CutScene2",   new CutScene2());
-        scenesByID.put("CutScene3",   new CutScene3());
-
         ResourceManager rm = this::getClass;
         appIcon = rm.loadImage("graphics/icons/pacman.png");
         spriteSheet = new ArcadePacMan_SpriteSheet(rm.loadImage("graphics/pacman_spritesheet.png"));
@@ -106,6 +97,15 @@ public class ArcadePacMan_UIConfig implements GameUIConfiguration {
         THE_UI.assets().store("pacman.audio.siren.3",                   rm.url("sound/siren_3.mp3"));
         THE_UI.assets().store("pacman.audio.siren.4",                   rm.url("sound/siren_4.mp3"));
         THE_UI.assets().store("pacman.audio.ghost_returns",             rm.url("sound/retreating.mp3"));
+
+        scenesByID.put("BootScene",   new ArcadeBootScene());
+        scenesByID.put("IntroScene",  new IntroScene());
+        scenesByID.put("StartScene",  new StartScene());
+        scenesByID.put("PlayScene2D", new ArcadePlayScene2D());
+        scenesByID.put("PlayScene3D", new PlayScene3D());
+        scenesByID.put("CutScene1",   new CutScene1());
+        scenesByID.put("CutScene2",   new CutScene2());
+        scenesByID.put("CutScene3",   new CutScene3());
     }
 
     @Override

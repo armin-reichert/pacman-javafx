@@ -59,21 +59,6 @@ public class TengenMsPacMan_UIConfig implements GameUIConfiguration {
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
     public TengenMsPacMan_UIConfig() {
-        scenesByID.put("BootScene",      new TengenMsPacMan_BootScene());
-        scenesByID.put("IntroScene",     new TengenMsPacMan_IntroScene());
-        scenesByID.put("StartScene",     new TengenMsPacMan_OptionsScene());
-        scenesByID.put("ShowingCredits", new TengenMsPacMan_CreditsScene());
-        scenesByID.put("PlayScene2D",    new TengenMsPacMan_PlayScene2D());
-        scenesByID.put("PlayScene3D",    new TengenMsPacMan_PlayScene3D());
-        scenesByID.put("CutScene1",      new TengenMsPacMan_CutScene1());
-        scenesByID.put("CutScene2",      new TengenMsPacMan_CutScene2());
-        scenesByID.put("CutScene3",      new TengenMsPacMan_CutScene3());
-        scenesByID.put("CutScene4",      new TengenMsPacMan_CutScene4());
-
-        //TODO where is the best place to do that?
-        var playScene2D = (TengenMsPacMan_PlayScene2D) scenesByID.get("PlayScene2D");
-        playScene2D.displayModeProperty().bind(PY_TENGEN_PLAY_SCENE_DISPLAY_MODE);
-
         ResourceManager rm = () -> TengenMsPacMan_UIConfig.class;
 
         appIcon = rm.loadImage("graphics/icons/mspacman.png");
@@ -150,6 +135,21 @@ public class TengenMsPacMan_UIConfig implements GameUIConfiguration {
         THE_UI.assets().store("tengen.audio.siren.4",                    rm.url("sound/ms-siren2.wav"));
         THE_UI.assets().store("tengen.audio.ghost_returns",              rm.url("sound/ms-eyes.wav"));
         THE_UI.assets().store("tengen.audio.bonus_bouncing",             rm.url("sound/fruitbounce.wav"));
+
+        scenesByID.put("BootScene",      new TengenMsPacMan_BootScene());
+        scenesByID.put("IntroScene",     new TengenMsPacMan_IntroScene());
+        scenesByID.put("StartScene",     new TengenMsPacMan_OptionsScene());
+        scenesByID.put("ShowingCredits", new TengenMsPacMan_CreditsScene());
+        scenesByID.put("PlayScene2D",    new TengenMsPacMan_PlayScene2D());
+        scenesByID.put("PlayScene3D",    new TengenMsPacMan_PlayScene3D());
+        scenesByID.put("CutScene1",      new TengenMsPacMan_CutScene1());
+        scenesByID.put("CutScene2",      new TengenMsPacMan_CutScene2());
+        scenesByID.put("CutScene3",      new TengenMsPacMan_CutScene3());
+        scenesByID.put("CutScene4",      new TengenMsPacMan_CutScene4());
+
+        //TODO where is the best place to do that?
+        var playScene2D = (TengenMsPacMan_PlayScene2D) scenesByID.get("PlayScene2D");
+        playScene2D.displayModeProperty().bind(PY_TENGEN_PLAY_SCENE_DISPLAY_MODE);
     }
 
     @Override

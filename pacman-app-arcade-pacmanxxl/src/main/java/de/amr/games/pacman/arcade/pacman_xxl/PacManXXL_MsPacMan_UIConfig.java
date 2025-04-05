@@ -38,15 +38,6 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUIConfiguration {
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
     public PacManXXL_MsPacMan_UIConfig() {
-        scenesByID.put("BootScene",   new ArcadeBootScene());
-        scenesByID.put("IntroScene",  new IntroScene());
-        scenesByID.put("StartScene",  new StartScene());
-        scenesByID.put("PlayScene2D", new ArcadePlayScene2D());
-        scenesByID.put("PlayScene3D", new PlayScene3D());
-        scenesByID.put("CutScene1",   new CutScene1());
-        scenesByID.put("CutScene2",   new CutScene2());
-        scenesByID.put("CutScene3",   new CutScene3());
-
         ResourceManager rm = () -> ArcadeMsPacMan_UIConfig.class;
 
         appIcon = rm.loadImage("graphics/icons/mspacman.png");
@@ -114,6 +105,15 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUIConfiguration {
         rm = this::getClass;
         THE_UI.assets().store("ms_pacman_xxl.audio.option.selection_changed",  rm.loadAudioClip("sound/ms-select1.wav"));
         THE_UI.assets().store("ms_pacman_xxl.audio.option.value_changed",      rm.loadAudioClip("sound/ms-select2.wav"));
+
+        scenesByID.put("BootScene",   new ArcadeBootScene());
+        scenesByID.put("IntroScene",  new IntroScene());
+        scenesByID.put("StartScene",  new StartScene());
+        scenesByID.put("PlayScene2D", new ArcadePlayScene2D());
+        scenesByID.put("PlayScene3D", new PlayScene3D());
+        scenesByID.put("CutScene1",   new CutScene1());
+        scenesByID.put("CutScene2",   new CutScene2());
+        scenesByID.put("CutScene3",   new CutScene3());
     }
 
     @Override
