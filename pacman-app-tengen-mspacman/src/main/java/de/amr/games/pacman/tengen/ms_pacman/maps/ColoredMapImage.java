@@ -8,4 +8,4 @@ import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import javafx.scene.image.Image;
 
-public record ColoredMapImage(Image source, RectArea area, NES_ColorScheme colorScheme) {}
+public record ColoredMapImage(Image source, RectArea region, NES_ColorScheme colorScheme) {}

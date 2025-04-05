@@ -170,7 +170,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
         RectArea area = mapCategory == MapCategory.STRANGE && mapNumber == 15
             ? strangeMap15Sprite(THE_UI.clock().tickCount()) // Strange map #15: psychedelic animation
-            : coloredMapSet.normalMaze().area();
+            : coloredMapSet.normalMaze().region();
         ctx().drawImage(coloredMapSet.normalMaze().source(),
             area.x(), area.y(), area.width(), area.height(),
             scaled(mapX), scaled(mapY), scaled(area.width()), scaled(area.height())
@@ -192,17 +192,17 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx().restore();
     }
 
-    public void drawWorldHighlighted(GameLevel level, double mapX, double mapY, int flashingIndex) {
+    public void drawMapHighlighted(GameLevel level, double mapX, double mapY, int flashingIndex) {
         ctx().setImageSmoothing(false);
         TengenMsPacMan_GameModel game = THE_GAME_CONTROLLER.game();
         if (!game.hasDefaultOptionValues()) {
             drawGameOptions(level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS, game);
         }
-        ColoredMapImage maze = coloredMapSet.flashingMazes().get(flashingIndex);
-        RectArea area = maze.area();
-        ctx().drawImage(maze.source(),
-            area.x(), area.y(), area.width(), area.height(),
-            scaled(mapX), scaled(mapY), scaled(area.width()), scaled(area.height())
+        ColoredMapImage mapImage = coloredMapSet.flashingMazes().get(flashingIndex);
+        RectArea region = mapImage.region();
+        ctx().drawImage(mapImage.source(),
+            region.x(), region.y(), region.width(), region.height(),
+            scaled(mapX), scaled(mapY), scaled(region.width()), scaled(region.height())
         );
         overPaintActors(level);
         // draw food to erase eaten food!
