@@ -59,19 +59,6 @@ public interface GameRenderer {
     default float scaled(double value) { return scaling() * (float) value; }
 
     /**
-     * Draws the given source scaled by the current scaling value.
-     *
-     * @param image     source
-     * @param x         unscaled x-coordinate
-     * @param y         unscaled y-coordinate
-     * @param width     unscaled width
-     * @param height    unscaled height
-     */
-    default void drawImageScaled(Image image, double x, double y, double width, double height) {
-        ctx().drawImage(image, scaled(x), scaled(y), scaled(width), scaled(height));
-    }
-
-    /**
      * Draws a sprite (section of the sprite sheet source) at the given (scaled) position.
      *
      * @param sprite        the sprite sheet section to draw
