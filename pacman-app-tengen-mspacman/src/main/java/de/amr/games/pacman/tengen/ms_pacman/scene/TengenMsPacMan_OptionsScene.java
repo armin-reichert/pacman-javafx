@@ -157,7 +157,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         }
 
         else {
-            ifTriggeredRunAction();
+            runTriggeredAction();
         }
     }
 

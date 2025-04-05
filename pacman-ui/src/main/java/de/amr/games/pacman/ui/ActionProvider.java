@@ -17,9 +17,6 @@ public interface ActionProvider {
 
     Map<KeyCodeCombination, Action> actionBindings();
 
-    /**
-     * Hook method where actions are bound to keyboard combinations.
-     */
     void bindGameActions();
 
     default void enableActionBindings() {
@@ -48,35 +45,34 @@ public interface ActionProvider {
         }
     }
 
-    default Optional<Action> firstMatchedAction() {
-        return actionBindings().entrySet().stream()
-            .filter(entry -> THE_UI.keyboard().isMatching(entry.getKey()))
-            .map(Map.Entry::getValue)
+    default Optional<Action> firstTriggeredAction() {
+        return actionBindings().keySet().stream()
+            .filter(combination -> THE_UI.keyboard().isMatching(combination))
+            .map(actionBindings()::get)
             .findFirst();
     }
 
-    // Actions
-    default void ifTriggeredRunAction() {
-        firstMatchedAction().ifPresent(action -> {
+    default void runTriggeredAction() {
+        firstTriggeredAction().ifPresent(action -> {
             if (action.isEnabled()) {
                 action.execute();
             } else {
-                Logger.info("Action '{}' not executed, not enabled", action);
+                Logger.info("Disabled action '{}' not executed", action);
             }
         });
     }
 
-    default void ifTriggeredRunActionElse(Runnable defaultAction) {
-        firstMatchedAction().ifPresentOrElse(action -> {
+    default void runTriggeredActionElse(Runnable defaultAction) {
+        firstTriggeredAction().ifPresentOrElse(action -> {
             if (action.isEnabled()) {
                 action.execute();
             } else {
-                Logger.info("Action '{}' not executed, not enabled", action);
+                Logger.info("Disabled action '{}' not executed", action);
             }
         }, defaultAction);
     }
 
     default void handleInput() {
-        ifTriggeredRunAction();
+        runTriggeredAction();
     }
 }
