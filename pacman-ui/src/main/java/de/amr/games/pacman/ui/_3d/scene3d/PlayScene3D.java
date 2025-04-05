@@ -21,7 +21,6 @@ import de.amr.games.pacman.ui.CameraControlledView;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui._2d.GameAction;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
-import de.amr.games.pacman.ui._3d.GlobalProperties3d;
 import de.amr.games.pacman.ui._3d.level.*;
 import javafx.animation.Animation;
 import javafx.beans.property.DoubleProperty;
@@ -43,8 +42,7 @@ import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
-import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
-import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_PERSPECTIVE;
+import static de.amr.games.pacman.ui.GlobalProperties.*;
 import static de.amr.games.pacman.uilib.Keyboard.alt;
 import static de.amr.games.pacman.uilib.Ufx.contextMenuTitleItem;
 
@@ -74,7 +72,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     public PlayScene3D() {
         var axes = new CoordinateSystem();
-        axes.visibleProperty().bind(GlobalProperties3d.PY_3D_AXES_VISIBLE);
+        axes.visibleProperty().bind(PY_3D_AXES_VISIBLE);
 
         scores3D = new Scores3D(THE_UI.assets().text("score.score"), THE_UI.assets().text("score.high_score"));
 

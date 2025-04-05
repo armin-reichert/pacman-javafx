@@ -14,7 +14,6 @@ import de.amr.games.pacman.ui._2d.ArcadeBootScene;
 import de.amr.games.pacman.ui._2d.ArcadePlayScene2D;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
-import de.amr.games.pacman.ui._3d.GlobalProperties3d;
 import de.amr.games.pacman.ui._3d.scene3d.PlayScene3D;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.ResourceManager;
@@ -31,6 +30,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
+import static de.amr.games.pacman.ui.GlobalProperties.PY_3D_ENABLED;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 public class ArcadePacMan_UIConfig implements GameUIConfiguration {
@@ -160,7 +160,7 @@ public class ArcadePacMan_UIConfig implements GameUIConfiguration {
             case GameState.INTRO              -> "IntroScene";
             case GameState.INTERMISSION       -> "CutScene" + THE_GAME_CONTROLLER.game().level().map(GameLevel::cutSceneNumber).orElseThrow();
             case GameState.TESTING_CUT_SCENES -> "CutScene" + THE_GAME_CONTROLLER.state().<Integer>getProperty("intermissionTestNumber");
-            default -> GlobalProperties3d.PY_3D_ENABLED.get() ?  "PlayScene3D" : "PlayScene2D";
+            default -> PY_3D_ENABLED.get() ?  "PlayScene3D" : "PlayScene2D";
         };
         return scenesByID.get(sceneID);
     }

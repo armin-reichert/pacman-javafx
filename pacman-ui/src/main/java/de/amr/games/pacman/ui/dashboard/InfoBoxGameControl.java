@@ -14,8 +14,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_AUTOPILOT;
-import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_IMMUNITY;
+import static de.amr.games.pacman.ui.GlobalProperties.PY_AUTOPILOT;
+import static de.amr.games.pacman.ui.GlobalProperties.PY_IMMUNITY;
 
 /**
  * Game related settings.

@@ -36,8 +36,7 @@ import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
-import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
-import static de.amr.games.pacman.ui._3d.GlobalProperties3d.PY_3D_ENABLED;
+import static de.amr.games.pacman.ui.GlobalProperties.*;
 import static de.amr.games.pacman.uilib.Keyboard.*;
 import static de.amr.games.pacman.uilib.Ufx.*;
 

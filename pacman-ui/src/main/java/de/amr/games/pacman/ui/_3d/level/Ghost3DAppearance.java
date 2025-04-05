@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui._3d.level;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.ui._3d.GlobalProperties3d;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.animation.Interpolator;
@@ -25,6 +24,7 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.ui.GlobalProperties.PY_3D_DRAW_MODE;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -74,7 +74,7 @@ public class Ghost3DAppearance extends Group {
         this.size = size;
         this.numFlashes = numFlashes;
 
-        drawModePy.bind(GlobalProperties3d.PY_3D_DRAW_MODE);
+        drawModePy.bind(PY_3D_DRAW_MODE);
 
         ghost3D = new Ghost3D(ghost.id(), dressShape, pupilsShape, eyeballsShape, assets, assetPrefix, size);
         ghost3D.drawModePy.bind(drawModePy);

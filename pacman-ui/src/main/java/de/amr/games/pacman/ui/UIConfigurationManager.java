@@ -14,7 +14,7 @@ import java.util.Optional;
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
-import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_DEBUG_INFO_VISIBLE;
+import static de.amr.games.pacman.ui.GlobalProperties.PY_DEBUG_INFO_VISIBLE;
 
 public class UIConfigurationManager {
 

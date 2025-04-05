@@ -36,8 +36,8 @@ import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
-import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_AUTOPILOT;
-import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_IMMUNITY;
+import static de.amr.games.pacman.ui.GlobalProperties.PY_AUTOPILOT;
+import static de.amr.games.pacman.ui.GlobalProperties.PY_IMMUNITY;
 
 /**
  * 2D play scene for Arcade game variants.

@@ -10,11 +10,10 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.VBox;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
-import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_CANVAS_BG_COLOR;
-import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_PIP_HEIGHT;
+import static de.amr.games.pacman.ui.GlobalProperties.PY_CANVAS_BG_COLOR;
+import static de.amr.games.pacman.ui.GlobalProperties.PY_PIP_HEIGHT;
 
 /**
  * Picture-in-Picture view. Adapts its aspect ratio to the current game world. Height can be changed via dashboard.

@@ -19,7 +19,6 @@ import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui.GameUIConfiguration;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
-import de.amr.games.pacman.ui._3d.GlobalProperties3d;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.ResourceManager;
 import de.amr.games.pacman.uilib.WorldMapColorScheme;
@@ -39,6 +38,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.ui.GlobalProperties.PY_3D_ENABLED;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 public class TengenMsPacMan_UIConfig implements GameUIConfiguration {
@@ -171,7 +171,7 @@ public class TengenMsPacMan_UIConfig implements GameUIConfiguration {
             case INTRO              -> "IntroScene";
             case INTERMISSION       -> "CutScene" + THE_GAME_CONTROLLER.game().level().map(GameLevel::cutSceneNumber).orElseThrow();
             case TESTING_CUT_SCENES -> "CutScene" + THE_GAME_CONTROLLER.state().<Integer>getProperty("intermissionTestNumber");
-            default                 -> GlobalProperties3d.PY_3D_ENABLED.get() ? "PlayScene3D" : "PlayScene2D";
+            default                 -> PY_3D_ENABLED.get() ? "PlayScene3D" : "PlayScene2D";
         };
         return scenesByID.get(sceneID);
     }

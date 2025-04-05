@@ -9,7 +9,6 @@ import de.amr.games.pacman.ui.CameraControlledView;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui._2d.GameAction;
 import de.amr.games.pacman.ui._2d.GameScene2D;
-import de.amr.games.pacman.ui._3d.GlobalProperties3d;
 import de.amr.games.pacman.ui._3d.scene3d.Perspective;
 import de.amr.games.pacman.ui.dashboard.InfoBox;
 import de.amr.games.pacman.ui.dashboard.InfoText;
@@ -20,7 +19,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
 
 import static de.amr.games.pacman.ui.Globals.THE_UI;
-import static de.amr.games.pacman.ui._2d.GlobalProperties2d.*;
+import static de.amr.games.pacman.ui.GlobalProperties.*;
 
 /**
  * 3D related settings.
@@ -50,8 +49,8 @@ public class InfoBox3D extends InfoBox {
         super.init();
 
         cbUsePlayScene3D     = addCheckBox("3D Play Scene");
-        pickerLightColor     = addColorPicker("Light Color", GlobalProperties3d.PY_3D_LIGHT_COLOR.get());
-        pickerFloorColor     = addColorPicker("Floor Color", GlobalProperties3d.PY_3D_FLOOR_COLOR.get());
+        pickerLightColor     = addColorPicker("Light Color", PY_3D_LIGHT_COLOR.get());
+        pickerFloorColor     = addColorPicker("Floor Color", PY_3D_FLOOR_COLOR.get());
         comboPerspectives    = addComboBox("Perspective", Perspective.Name.values());
         addLabeledValue("Camera",        this::sceneCameraInfo);
         addLabeledValue("Viewport Size", this::sceneViewportSizeInfo);
@@ -59,8 +58,8 @@ public class InfoBox3D extends InfoBox {
         cbPiPOn              = addCheckBox("Picture-In-Picture");
         sliderPiPSceneHeight = addSlider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get(), false, false);
         sliderPiPOpacity     = addSlider("- Opacity", 0, 100, PY_PIP_OPACITY_PERCENT.get(), false, false);
-        sliderWallHeight     = addSlider("Obstacle Height", 0, 16, GlobalProperties3d.PY_3D_WALL_HEIGHT.get(), false, false);
-        sliderWallOpacity    = addSlider("Wall Opacity", 0, 1, GlobalProperties3d.PY_3D_WALL_OPACITY.get(), false, false);
+        sliderWallHeight     = addSlider("Obstacle Height", 0, 16, PY_3D_WALL_HEIGHT.get(), false, false);
+        sliderWallOpacity    = addSlider("Wall Opacity", 0, 1, PY_3D_WALL_OPACITY.get(), false, false);
         cbEnergizerExplodes  = addCheckBox("Energizer Explosion");
         cbPacLighted         = addCheckBox("Pac-Man Lighted");
         cbAxesVisible        = addCheckBox("Show Axes");
@@ -69,18 +68,18 @@ public class InfoBox3D extends InfoBox {
         setTooltip(sliderPiPSceneHeight, sliderPiPSceneHeight.valueProperty(), "%.0f px");
         setTooltip(sliderPiPOpacity, sliderPiPOpacity.valueProperty(), "%.0f %%");
 
-        setEditor(pickerLightColor, GlobalProperties3d.PY_3D_LIGHT_COLOR);
-        setEditor(pickerFloorColor, GlobalProperties3d.PY_3D_FLOOR_COLOR);
-        setEditor(pickerLightColor, GlobalProperties3d.PY_3D_LIGHT_COLOR);
+        setEditor(pickerLightColor, PY_3D_LIGHT_COLOR);
+        setEditor(pickerFloorColor, PY_3D_FLOOR_COLOR);
+        setEditor(pickerLightColor, PY_3D_LIGHT_COLOR);
         setEditor(sliderPiPSceneHeight, PY_PIP_HEIGHT);
         setEditor(sliderPiPOpacity, PY_PIP_OPACITY_PERCENT);
-        setEditor(sliderWallHeight, GlobalProperties3d.PY_3D_WALL_HEIGHT);
-        setEditor(sliderWallOpacity, GlobalProperties3d.PY_3D_WALL_OPACITY);
+        setEditor(sliderWallHeight, PY_3D_WALL_HEIGHT);
+        setEditor(sliderWallOpacity, PY_3D_WALL_OPACITY);
         setEditor(cbPiPOn, PY_PIP_ON);
-        setEditor(comboPerspectives, GlobalProperties3d.PY_3D_PERSPECTIVE);
-        setEditor(cbEnergizerExplodes, GlobalProperties3d.PY_3D_ENERGIZER_EXPLODES);
-        setEditor(cbPacLighted, GlobalProperties3d.PY_3D_PAC_LIGHT_ENABLED);
-        setEditor(cbAxesVisible, GlobalProperties3d.PY_3D_AXES_VISIBLE);
+        setEditor(comboPerspectives, PY_3D_PERSPECTIVE);
+        setEditor(cbEnergizerExplodes, PY_3D_ENERGIZER_EXPLODES);
+        setEditor(cbPacLighted, PY_3D_PAC_LIGHT_ENABLED);
+        setEditor(cbAxesVisible, PY_3D_AXES_VISIBLE);
 
         //TODO check these
         cbUsePlayScene3D.setOnAction(e -> GameAction.TOGGLE_PLAY_SCENE_2D_3D.execute());
@@ -88,18 +87,18 @@ public class InfoBox3D extends InfoBox {
     }
 
     private void updateControlsFromProperties() {
-        comboPerspectives.setValue(GlobalProperties3d.PY_3D_PERSPECTIVE.get());
+        comboPerspectives.setValue(PY_3D_PERSPECTIVE.get());
         sliderPiPSceneHeight.setValue(PY_PIP_HEIGHT.get());
         sliderPiPOpacity.setValue(PY_PIP_OPACITY_PERCENT.get());
-        sliderWallHeight.setValue(GlobalProperties3d.PY_3D_WALL_HEIGHT.get());
-        sliderWallOpacity.setValue(GlobalProperties3d.PY_3D_WALL_OPACITY.get());
-        cbUsePlayScene3D.setSelected(GlobalProperties3d.PY_3D_ENABLED.get());
+        sliderWallHeight.setValue(PY_3D_WALL_HEIGHT.get());
+        sliderWallOpacity.setValue(PY_3D_WALL_OPACITY.get());
+        cbUsePlayScene3D.setSelected(PY_3D_ENABLED.get());
         cbPiPOn.setSelected(PY_PIP_ON.getValue());
-        comboPerspectives.setValue(GlobalProperties3d.PY_3D_PERSPECTIVE.get());
-        cbEnergizerExplodes.setSelected(GlobalProperties3d.PY_3D_ENERGIZER_EXPLODES.get());
-        cbPacLighted.setSelected(GlobalProperties3d.PY_3D_PAC_LIGHT_ENABLED.get());
-        cbAxesVisible.setSelected(GlobalProperties3d.PY_3D_AXES_VISIBLE.get());
-        cbWireframeMode.setSelected(GlobalProperties3d.PY_3D_DRAW_MODE.get() == DrawMode.LINE);
+        comboPerspectives.setValue(PY_3D_PERSPECTIVE.get());
+        cbEnergizerExplodes.setSelected(PY_3D_ENERGIZER_EXPLODES.get());
+        cbPacLighted.setSelected(PY_3D_PAC_LIGHT_ENABLED.get());
+        cbAxesVisible.setSelected(PY_3D_AXES_VISIBLE.get());
+        cbWireframeMode.setSelected(PY_3D_DRAW_MODE.get() == DrawMode.LINE);
     }
 
     @Override

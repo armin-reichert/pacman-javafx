@@ -23,7 +23,6 @@ open module de.amr.games.pacman.ui {
     exports de.amr.games.pacman.ui.input;
     exports de.amr.games.pacman.ui.sound;
     exports de.amr.games.pacman.ui._2d;
-    exports de.amr.games.pacman.ui._3d;
     exports de.amr.games.pacman.ui._3d.animation;
     exports de.amr.games.pacman.ui._3d.dashboard;
     exports de.amr.games.pacman.ui._3d.level;

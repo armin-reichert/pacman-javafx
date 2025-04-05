@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._2d;
 
+import de.amr.games.pacman.ui.GlobalProperties;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -66,13 +67,13 @@ public class HelpInfo {
         pane.setBackground(Ufx.coloredRoundedBackground(backgroundColor, 10));
 
         // add default entries:
-        if (GlobalProperties2d.PY_AUTOPILOT.get()) {
+        if (GlobalProperties.PY_AUTOPILOT.get()) {
             var autoPilotEntry = text(THE_UI.assets().text("help.autopilot_on"), Color.ORANGE);
             autoPilotEntry.setFont(font);
             GridPane.setColumnSpan(autoPilotEntry, 2);
             grid.add(autoPilotEntry, 0, grid.getRowCount());
         }
-        if (GlobalProperties2d.PY_IMMUNITY.get()) {
+        if (GlobalProperties.PY_IMMUNITY.get()) {
             var immunityEntry = text(THE_UI.assets().text("help.immunity_on"), Color.ORANGE);
             immunityEntry.setFont(font);
             GridPane.setColumnSpan(immunityEntry, 2);

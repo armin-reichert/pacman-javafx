@@ -9,7 +9,6 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui._3d.GlobalProperties3d;
 import de.amr.games.pacman.uilib.Ufx;
 import de.amr.games.pacman.uilib.model3D.Model3D;
 import de.amr.games.pacman.uilib.model3D.PacModel3D;
@@ -27,6 +26,7 @@ import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.HTS;
 import static de.amr.games.pacman.Globals.TS;
+import static de.amr.games.pacman.ui.GlobalProperties.PY_3D_PAC_LIGHT_ENABLED;
 import static de.amr.games.pacman.uilib.model3D.Model3D.meshViewById;
 
 /**
@@ -104,7 +104,7 @@ public class PacShape3D extends Group {
      */
      public void updateLight(Pac pac, GameLevel level) {
         TickTimer powerTimer = level.powerTimer();
-        if (GlobalProperties3d.PY_3D_PAC_LIGHT_ENABLED.get() && powerTimer.isRunning() && pac.isVisible()) {
+        if (PY_3D_PAC_LIGHT_ENABLED.get() && powerTimer.isRunning() && pac.isVisible()) {
             light.setLightOn(true);
             double remaining = powerTimer.remainingTicks();
             double maxRange = (remaining / powerTimer.durationTicks()) * 60 + 30;
