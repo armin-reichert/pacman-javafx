@@ -61,46 +61,27 @@ public interface GameRenderer {
     /**
      * Draws a sprite (section of the sprite sheet source) at the given (scaled) position.
      *
-     * @param sprite        the sprite sheet section to draw
+     * @param region        the sprite sheet region to draw
      * @param x             scaled x-coordinate
      * @param y             scaled y-coordinate
      */
-    default void drawSpriteUnscaled(RectArea sprite, double x, double y) {
-        drawSubImage(spriteSheet().sourceImage(), sprite, x, y);
-    }
-
-    /**
-     * Draws a sprite using the current scene scaling.
-     *
-     * @param sprite    sprite sheet region ("sprite")
-     * @param x         UNSCALED x position
-     * @param y         UNSCALED y position
-     */
-    default void drawSpriteScaled(RectArea sprite, double x, double y) {
-        drawSubImageScaled(spriteSheet().sourceImage(), sprite, x, y);
-    }
-
-    /**
-     * Draws a section of an source at the given (scaled) position.
-     *
-     * @param sourceImage   the source image
-     * @param sprite        the source image area to draw
-     * @param x             scaled x-coordinate
-     * @param y             scaled y-coordinate
-     */
-    default void drawSubImage(Image sourceImage, RectArea sprite, double x, double y) {
-        if (sprite != null) {
-            ctx().drawImage(sourceImage,
-                sprite.x(), sprite.y(), sprite.width(), sprite.height(),
-                x, y, sprite.width(), sprite.height());
+    default void drawSpriteSheetRegion(RectArea region, double x, double y) {
+        if (region != null) {
+            ctx().drawImage(spriteSheet().sourceImage(),
+                region.x(), region.y(), region.width(), region.height(),
+                x, y, region.width(), region.height());
         }
     }
 
-    default void drawSubImageScaled(Image sourceImage, RectArea sprite, double x, double y) {
-        if (sprite != null) {
-            ctx().drawImage(sourceImage,
-                sprite.x(), sprite.y(), sprite.width(), sprite.height(),
-                scaled(x), scaled(y), scaled(sprite.width()), scaled(sprite.height()));
+    default void drawSpriteScaled(RectArea sprite, double x, double y) {
+        drawImageRegionScaled(spriteSheet().sourceImage(), sprite, x, y);
+    }
+
+    default void drawImageRegionScaled(Image image, RectArea region, double x, double y) {
+        if (region != null) {
+            ctx().drawImage(image,
+                region.x(), region.y(), region.width(), region.height(),
+                scaled(x), scaled(y), scaled(region.width()), scaled(region.height()));
         }
     }
 
@@ -115,19 +96,19 @@ public interface GameRenderer {
      * @param tileX  x-coordinate of left-upper corner of bounding box
      * @param tileY  y-coordinate of left-upper corner of bounding box
      */
-    default void drawSpriteCenteredOverTile(RectArea sprite, double tileX, double tileY) {
-        drawSpriteCenteredOverPosition(sprite, tileX + HTS, tileY + HTS);
+    default void drawSpriteScaledCenteredOverTile(RectArea sprite, double tileX, double tileY) {
+        drawSpriteScaledCenteredAt(sprite, tileX + HTS, tileY + HTS);
     }
 
     /**
      * Draws a sprite centered over a position.
      *
-     * @param sprite sprite (region in sprite sheet) (may be null)
-     * @param x  x-coordinate of the position
-     * @param y  y-coordinate of the position
+     * @param sprite sprite (region in sprite sheet, can be null)
+     * @param centerX  x-coordinate of the center position
+     * @param centerY  y-coordinate of the center position
      */
-    default void drawSpriteCenteredOverPosition(RectArea sprite, double x, double y) {
-        drawSpriteScaled(sprite, x - 0.5 * sprite.width(), y - 0.5 * sprite.height());
+    default void drawSpriteScaledCenteredAt(RectArea sprite, double centerX, double centerY) {
+        drawSpriteScaled(sprite, centerX - 0.5 * sprite.width(), centerY - 0.5 * sprite.height());
     }
 
     /**
@@ -139,7 +120,7 @@ public interface GameRenderer {
     default void drawActorSprite(Actor2D actor, RectArea sprite) {
         assertNotNull(actor);
         if (actor.isVisible() && sprite != null) {
-            drawSpriteCenteredOverTile(sprite, actor.posX(), actor.posY());
+            drawSpriteScaledCenteredOverTile(sprite, actor.posX(), actor.posY());
         }
     }
 

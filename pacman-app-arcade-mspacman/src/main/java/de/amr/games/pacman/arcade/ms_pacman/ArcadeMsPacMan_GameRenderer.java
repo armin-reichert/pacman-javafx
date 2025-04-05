@@ -99,7 +99,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     @Override
     public void drawMaze(GameLevel level, double x, double y, Paint backgroundColor, boolean mazeHighlighted, boolean blinking) {
         if (mazeHighlighted) {
-            drawSubImageScaled(flashingMazeImageRegion.image(), flashingMazeImageRegion.area(), x, y);
+            drawImageRegionScaled(flashingMazeImageRegion.image(), flashingMazeImageRegion.area(), x, y);
         } else if (level.uneatenFoodCount() == 0) {
             drawSpriteScaled(emptyMazeSpritesheetRegion, x, y);
         } else {
@@ -127,7 +127,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     public void drawClapperBoard(ClapperboardAnimation clapperboardAnimation, double x, double y) {
         clapperboardAnimation.currentSprite().ifPresent(sprite -> {
             Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
-            drawSpriteCenteredOverTile(sprite, x, y);
+            drawSpriteScaledCenteredOverTile(sprite, x, y);
             Color textColor = Color.web(Arcade.Palette.WHITE);
             ctx.setFont(font);
             ctx.setFill(textColor.darker());

@@ -15,7 +15,6 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.ScoreManager;
 import de.amr.games.pacman.model.actors.*;
-import de.amr.games.pacman.tengen.ms_pacman.Difficulty;
 import de.amr.games.pacman.tengen.ms_pacman.PacBooster;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.maps.ColoredMapImage;
@@ -138,7 +137,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             case RIGHT -> ctx().scale(-1, 1);
             case DOWN  -> { ctx().scale(-1, 1); ctx().rotate(-90); }
         }
-        drawSpriteCenteredOverPosition(spriteLookingLeft, 0, 0);
+        drawSpriteScaledCenteredAt(spriteLookingLeft, 0, 0);
         ctx().restore();
     }
 
@@ -159,8 +158,8 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         MapCategory mapCategory = game.mapCategory();
         int mapNumber = level.worldMap().getConfigValue("mapNumber");
 
-        if (areGameOptionsChanged(game)) {
-            drawGameOptionsInfoCenteredAt(level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS, game);
+        if (!game.hasDefaultOptionValues()) {
+            drawGameOptions(level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS, game);
         }
 
         if (coloredMapSet == null) {
@@ -196,8 +195,8 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     public void drawWorldHighlighted(GameLevel level, double mapX, double mapY, int flashingIndex) {
         ctx().setImageSmoothing(false);
         TengenMsPacMan_GameModel game = THE_GAME_CONTROLLER.game();
-        if (areGameOptionsChanged(game)) {
-            drawGameOptionsInfoCenteredAt(level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS, game);
+        if (!game.hasDefaultOptionValues()) {
+            drawGameOptions(level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS, game);
         }
         ColoredMapImage maze = coloredMapSet.flashingMazes().get(flashingIndex);
         RectArea area = maze.area();
@@ -282,10 +281,6 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         }
     }
 
-    private boolean areGameOptionsChanged(TengenMsPacMan_GameModel game) {
-        return game.pacBooster() != PacBooster.OFF || game.difficulty() != Difficulty.NORMAL || game.mapCategory() != MapCategory.ARCADE;
-    }
-
     private void overPaintActors(GameLevel world) {
         Vector2f topLeftPosition = world.houseMinTile().plus(1, 2).scaled(TS * scaling());
         Vector2f size = new Vector2i(world.houseSizeInTiles().x() - 2, 2).scaled(TS * scaling());
@@ -304,7 +299,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx().fillRect(scaled(cx), scaled(cy), scaled(16), scaled(16));
     }
 
-    public void drawGameOptionsInfoCenteredAt(double centerX, double y, TengenMsPacMan_GameModel game) {
+    public void drawGameOptions(double centerX, double y, TengenMsPacMan_GameModel game) {
         RectArea categorySprite = switch (game.mapCategory()) {
             case BIG     -> BIG_SPRITE;
             case MINI    -> MINI_SPRITE;
@@ -318,11 +313,11 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             case NORMAL -> NO_SPRITE;
         };
         if (game.pacBooster() != PacBooster.OFF) {
-            drawSpriteCenteredOverPosition(BOOSTER_SPRITE, centerX - tiles_to_px(6), y);
+            drawSpriteScaledCenteredAt(BOOSTER_SPRITE, centerX - tiles_to_px(6), y);
         }
-        drawSpriteCenteredOverPosition(difficultySprite, centerX, y);
-        drawSpriteCenteredOverPosition(categorySprite, centerX + tiles_to_px(4.5), y);
-        drawSpriteCenteredOverPosition(INFO_FRAME_SPRITE, centerX, y);
+        drawSpriteScaledCenteredAt(difficultySprite, centerX, y);
+        drawSpriteScaledCenteredAt(categorySprite, centerX + tiles_to_px(4.5), y);
+        drawSpriteScaledCenteredAt(INFO_FRAME_SPRITE, centerX, y);
     }
 
     @Override
@@ -375,27 +370,26 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx().restore();
     }
 
-    public void drawClapperBoard(
-        ClapperboardAnimation clap,
-        String text, int number,
-        double x, double y)
-    {
-        clap.sprite().ifPresent(sprite -> {
-            Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
+    public void drawClapperBoard(ClapperboardAnimation animation, String text, int number, double x, double y) {
+        animation.sprite().ifPresent(clapperBoard -> {
             ctx().setImageSmoothing(false);
-            drawSpriteCenteredOverTile(sprite, x, y);
+            drawSpriteScaledCenteredOverTile(clapperBoard, x, y);
             var numberX = x + 8;
             var numberY = y + 18; // baseline
-            ctx().setFill(CANVAS_BACKGROUND_COLOR);
+
+            // overpaint number from sprite sheet
             ctx().save();
             ctx().scale(scaling(), scaling());
+            ctx().setFill(CANVAS_BACKGROUND_COLOR);
             ctx().fillRect(numberX - 1, numberY - 8, 12, 8);
             ctx().restore();
+
+            Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
             ctx().setFont(font);
             ctx().setFill(nesPaletteColor(0x20));
             ctx().fillText(String.valueOf(number), scaled(numberX), scaled(numberY));
-            if (clap.isTextVisible()) {
-                double textX = x + sprite.width();
+            if (animation.isTextVisible()) {
+                double textX = x + clapperBoard.width();
                 double textY = y + 2;
                 ctx().fillText(text, scaled(textX), scaled(textY));
             }

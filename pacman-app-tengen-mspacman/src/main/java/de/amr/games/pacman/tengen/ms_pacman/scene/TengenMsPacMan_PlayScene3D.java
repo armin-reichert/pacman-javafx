@@ -61,7 +61,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         renderer.setScaling(quality);
         renderer.ctx().setFill(level3D.floorColor());
         renderer.ctx().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        renderer.drawGameOptionsInfoCenteredAt(0.5 * imageWidth, TS+HTS, game);
+        renderer.drawGameOptions(0.5 * imageWidth, TS+HTS, game);
         renderer.drawLevelNumberBox(level.number(), 0, 0);
         renderer.drawLevelNumberBox(level.number(), imageWidth - 2*TS, 0);
 

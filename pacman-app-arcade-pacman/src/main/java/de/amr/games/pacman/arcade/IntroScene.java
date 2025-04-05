@@ -176,7 +176,7 @@ public class IntroScene extends GameScene2D {
         for (byte id = 0; id < 4; ++id) {
             int tileY = 7 + 3 * id;
             if (ghostImageVisible[id]) {
-                gr.drawSpriteCenteredOverTile(spriteSheet.ghostFacingRight(id), tiles_to_px(LEFT_TILE_X) + 4, tiles_to_px(tileY));
+                gr.drawSpriteScaledCenteredOverTile(spriteSheet.ghostFacingRight(id), tiles_to_px(LEFT_TILE_X) + 4, tiles_to_px(tileY));
             }
             if (ghostCharacterVisible[id]) {
                 String text = "-" + GHOST_CHARACTERS[id];

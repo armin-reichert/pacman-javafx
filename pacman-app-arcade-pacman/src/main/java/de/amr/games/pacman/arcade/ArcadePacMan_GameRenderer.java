@@ -60,9 +60,9 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
             ctx.drawImage(THE_UI.assets().image("pacman.flashing_maze"), x, y);
         } else {
             if (level.uneatenFoodCount() == 0) {
-                drawSpriteUnscaled(EMPTY_MAZE_SPRITE, x, y);
+                drawSpriteSheetRegion(EMPTY_MAZE_SPRITE, x, y);
             } else {
-                drawSpriteUnscaled(FULL_MAZE_SPRITE, x, y);
+                drawSpriteSheetRegion(FULL_MAZE_SPRITE, x, y);
                 overPaintEatenPelletTiles(level, backgroundColor);
                 overPaintEnergizerTiles(level, tile -> !blinking || level.hasEatenFoodAt(tile), backgroundColor);
             }
