@@ -35,9 +35,9 @@ import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_TILES;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.ui.GlobalProperties.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui.GlobalProperties.PY_IMMUNITY;
+import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 /**
  * 2D play scene for Arcade game variants.
@@ -56,7 +56,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     @Override
     protected void doInit() {
         game().setScoreVisible(true);
-        bindDefaultArcadeControllerActions(THE_UI.keyboard().currentArcadeKeyBinding());
+        bindDefaultArcadeControllerActions(arcadeKeyBinding());
         bindAlternativePlayerControlActions();
         enableActionBindings();
     }
@@ -71,11 +71,7 @@ public class ArcadePlayScene2D extends GameScene2D {
             bindAlternativePlayerControlActions();
         }
         enableActionBindings();
-
-        game().level().ifPresent(level -> {
-            gr.applyMapSettings(level.worldMap());
-            //gr.setMessagePosition(centerPositionBelowHouse(level));
-        });
+        game().level().ifPresent(level -> gr.applyMapSettings(level.worldMap()));
     }
 
     @Override
@@ -191,21 +187,18 @@ public class ArcadePlayScene2D extends GameScene2D {
                 String text = "GAME  OVER";
                 // this assumes fixed font width of one tile:
                 double x = messageCenterPosition.x() - (text.length() * HTS);
-                //gr.setMessagePosition(centerOfText);
                 gr.drawText(text, Color.web(Arcade.Palette.RED), font, x, messageCenterPosition.y());
             }
             case READY -> {
                 String text = "READY!";
                 // this assumes fixed font width of one tile:
                 double x = messageCenterPosition.x() - (text.length() * HTS);
-                //gr.setMessagePosition(centerOfText);
                 gr.drawText(text, Color.web(Arcade.Palette.YELLOW), font, x, messageCenterPosition.y());
             }
             case TEST_LEVEL -> {
                 String text = "TEST    L%03d".formatted(level.number());
                 // this assumes fixed font width of one tile:
                 double x = messageCenterPosition.x() - (text.length() * HTS);
-                //gr.setMessagePosition(centerOfText);
                 gr.drawText(text, Color.web(Arcade.Palette.WHITE), font, x, messageCenterPosition.y());
             }
         }
