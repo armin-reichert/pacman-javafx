@@ -159,7 +159,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         int mapNumber = level.worldMap().getConfigValue("mapNumber");
 
         if (!game.hasDefaultOptionValues()) {
-            drawGameOptions(level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS, game);
+            drawGameOptions(game, level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
         }
 
         if (coloredMapSet == null) {
@@ -196,7 +196,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx().setImageSmoothing(false);
         TengenMsPacMan_GameModel game = THE_GAME_CONTROLLER.game();
         if (!game.hasDefaultOptionValues()) {
-            drawGameOptions(level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS, game);
+            drawGameOptions(game, level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
         }
         ColoredMapImage mapImage = coloredMapSet.flashingMazes().get(flashingIndex);
         RectArea region = mapImage.region();
@@ -215,28 +215,25 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     private void drawPellets(GameLevel level, Color pelletColor) {
-        level.worldMap().tiles()
-            .filter(level::isFoodPosition)
-            .filter(not(level::isEnergizerPosition))
-            .forEach(tile -> {
-                double centerX = tile.x() * TS + HTS, centerY = tile.y() * TS + HTS;
-                ctx().setFill(CANVAS_BACKGROUND_COLOR);
-                ctx().fillRect(centerX - 2, centerY - 2, 4, 4);
-                if (!level.hasEatenFoodAt(tile)) {
-                    ctx().setFill(pelletColor);
-                    ctx().fillRect(centerX - 1, centerY - 1, 2, 2);
-                }
-            });
+        level.worldMap().tiles().filter(level::isFoodPosition).filter(not(level::isEnergizerPosition)).forEach(tile -> {
+            double cx = tile.x() * TS + HTS, cy = tile.y() * TS + HTS;
+            ctx().setFill(CANVAS_BACKGROUND_COLOR);
+            ctx().fillRect(cx - 2, cy - 2, 4, 4);
+            if (!level.hasEatenFoodAt(tile)) {
+                ctx().setFill(pelletColor);
+                ctx().fillRect(cx - 1, cy - 1, 2, 2);
+            }
+        });
     }
 
     private void drawEnergizers(GameLevel level, Color pelletColor) {
         double size = TS;
-        double offset = 0.5 * (HTS);
-        level.worldMap().tiles().filter(level::isEnergizerPosition).forEach(energizerTile -> {
-            double x = energizerTile.x() * TS, y = energizerTile.y() * TS;
+        double offset = 0.5 * HTS;
+        level.worldMap().tiles().filter(level::isEnergizerPosition).forEach(tile -> {
+            double x = tile.x() * TS, y = tile.y() * TS;
             ctx().setFill(CANVAS_BACKGROUND_COLOR);
-            ctx().fillRect(x-1, y-1, TS + 2, TS + 2); // avoid blitzer
-            if (!level.hasEatenFoodAt(energizerTile) && level.blinking().isOn()) {
+            ctx().fillRect(x - 1, y - 1, TS + 2, TS + 2); // avoid blitzer
+            if (!level.hasEatenFoodAt(tile) && level.blinking().isOn()) {
                 ctx().setFill(pelletColor);
                 // draw pixelated "circle"
                 ctx().fillRect(x + offset, y, HTS, size);
@@ -286,7 +283,6 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         Vector2f size = new Vector2i(world.houseSizeInTiles().x() - 2, 2).scaled(TS * scaling());
         ctx().setFill(CANVAS_BACKGROUND_COLOR);
         ctx().fillRect(topLeftPosition.x(), topLeftPosition.y(), size.x(), size.y());
-
         overPaint(world.worldMap().getTerrainTileProperty("pos_pac", vec_2i(14, 26)));
         overPaint(world.worldMap().getTerrainTileProperty("pos_ghost_1_red", vec_2i(13, 14)));
     }
@@ -299,7 +295,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx().fillRect(scaled(cx), scaled(cy), scaled(16), scaled(16));
     }
 
-    public void drawGameOptions(double centerX, double y, TengenMsPacMan_GameModel game) {
+    public void drawGameOptions(TengenMsPacMan_GameModel game, double centerX, double y) {
         RectArea categorySprite = switch (game.mapCategory()) {
             case BIG     -> BIG_SPRITE;
             case MINI    -> MINI_SPRITE;
