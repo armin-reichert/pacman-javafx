@@ -128,7 +128,7 @@ public class CutScene2 extends GameScene2D {
             Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
             gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
         }
-        gr.drawSpriteScaled(blinkyStretching.currentSprite(), tiles2Px(14), tiles2Px(19) + 3);
+        gr.drawSpriteScaled(blinkyStretching.currentSprite(), tiles_to_px(14), tiles_to_px(19) + 3);
         gr.drawAnimatedActor(blinky);
         gr.drawAnimatedActor(pac);
         gr.drawLevelCounter(0, game().levelCounter(), sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
@@ -138,6 +138,6 @@ public class CutScene2 extends GameScene2D {
     public void drawDebugInfo() {
         super.drawDebugInfo();
         String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-        gr.drawText(text, Color.YELLOW, GameUI.DEBUG_TEXT_FONT, tiles2Px(1), tiles2Px(5));
+        gr.drawText(text, Color.YELLOW, GameUI.DEBUG_TEXT_FONT, tiles_to_px(1), tiles_to_px(5));
     }
 }

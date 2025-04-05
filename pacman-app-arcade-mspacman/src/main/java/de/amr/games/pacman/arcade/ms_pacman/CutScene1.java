@@ -102,7 +102,7 @@ public class CutScene1 extends GameScene2D {
             gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
         }
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
-            r.drawClapperBoard(clapperboardAnimation, tiles2Px(3), tiles2Px(10));
+            r.drawClapperBoard(clapperboardAnimation, tiles_to_px(3), tiles_to_px(10));
         }
         gr.drawAnimatedActor(msPac);
         gr.drawAnimatedActor(pacMan);

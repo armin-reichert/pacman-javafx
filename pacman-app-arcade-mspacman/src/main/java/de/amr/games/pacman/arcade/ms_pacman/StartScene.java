@@ -53,17 +53,17 @@ public class StartScene extends GameScene2D {
         }
         GameSpriteSheet spriteSheet = gr.spriteSheet();
         Color orange = Color.web(Arcade.Palette.ORANGE), red = Color.web(Arcade.Palette.RED), white = Color.web(Arcade.Palette.WHITE);
-        gr.drawText("PUSH START BUTTON", orange, font, tiles2Px(6), tiles2Px(16));
-        gr.drawText("1 PLAYER ONLY", orange, font, tiles2Px(8), tiles2Px(18));
-        gr.drawText("ADDITIONAL    AT 10000", orange, font, tiles2Px(2), tiles2Px(25));
-        gr.drawSpriteScaled(spriteSheet.livesCounterSprite(), tiles2Px(13), tiles2Px(23) + 1);
-        gr.drawText("PTS", orange, font6, tiles2Px(25), tiles2Px(25));
+        gr.drawText("PUSH START BUTTON", orange, font, tiles_to_px(6), tiles_to_px(16));
+        gr.drawText("1 PLAYER ONLY", orange, font, tiles_to_px(8), tiles_to_px(18));
+        gr.drawText("ADDITIONAL    AT 10000", orange, font, tiles_to_px(2), tiles_to_px(25));
+        gr.drawSpriteScaled(spriteSheet.livesCounterSprite(), tiles_to_px(13), tiles_to_px(23) + 1);
+        gr.drawText("PTS", orange, font6, tiles_to_px(25), tiles_to_px(25));
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
-            r.drawMsPacManMidwayCopyright(tiles2Px(6), tiles2Px(28), red, font);
+            r.drawMsPacManMidwayCopyright(tiles_to_px(6), tiles_to_px(28), red, font);
         }
         gr.drawText("CREDIT %2d".formatted(THE_COIN_STORE.numCoins()), white, font,
-            tiles2Px(2), sizeInPx().y() - 2);
-        gr.drawLevelCounter(0, game().levelCounter(), sizeInPx().x() - tiles2Px(4), sizeInPx().y() - tiles2Px(2));
+            tiles_to_px(2), sizeInPx().y() - 2);
+        gr.drawLevelCounter(0, game().levelCounter(), sizeInPx().x() - tiles_to_px(4), sizeInPx().y() - tiles_to_px(2));
     }
 
     @Override

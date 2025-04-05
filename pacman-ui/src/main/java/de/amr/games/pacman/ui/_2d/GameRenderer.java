@@ -281,8 +281,8 @@ public interface GameRenderer {
     }
 
     default void drawScores(ScoreManager scoreManager, Color color, Font font) {
-        drawScore(scoreManager.score(),     "SCORE",      tiles2Px(1),  tiles2Px(1), font, color);
-        drawScore(scoreManager.highScore(), "HIGH SCORE", tiles2Px(14), tiles2Px(1), font, color);
+        drawScore(scoreManager.score(),     "SCORE",      tiles_to_px(1),  tiles_to_px(1), font, color);
+        drawScore(scoreManager.highScore(), "HIGH SCORE", tiles_to_px(14), tiles_to_px(1), font, color);
     }
 
     default void drawScore(Score score, String title, double x, double y, Font font, Color color) {
@@ -290,7 +290,7 @@ public interface GameRenderer {
         drawText(title, color, font, x, y);
         drawText(String.format("%7s", pointsText), color, font, x, y + TS + 1);
         if (score.points() != 0) {
-            drawText("L" + score.levelNumber(), color, font, x + tiles2Px(8), y + TS + 1);
+            drawText("L" + score.levelNumber(), color, font, x + tiles_to_px(8), y + TS + 1);
         }
     }
 

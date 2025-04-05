@@ -78,7 +78,7 @@ public interface Globals {
      * @param tiles amount of tiles
      * @return pixels corresponding to amount of tiles
      */
-    static float tiles2Px(double tiles) {
+    static float tiles_to_px(double tiles) {
         return (float) tiles * TS;
     }
 

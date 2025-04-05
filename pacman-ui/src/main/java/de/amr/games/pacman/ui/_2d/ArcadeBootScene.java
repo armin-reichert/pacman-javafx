@@ -69,7 +69,7 @@ public class ArcadeBootScene extends GameScene2D {
         for (int row = 0; row < numRows; ++row) {
             for (int col = 0; col < numCols; ++col) {
                 var hexCode = Integer.toHexString(RND.nextInt(16));
-                gr.ctx().fillText(hexCode, scaled(tiles2Px(col)), scaled(tiles2Px(row + 1)));
+                gr.ctx().fillText(hexCode, scaled(tiles_to_px(col)), scaled(tiles_to_px(row + 1)));
             }
         }
     }

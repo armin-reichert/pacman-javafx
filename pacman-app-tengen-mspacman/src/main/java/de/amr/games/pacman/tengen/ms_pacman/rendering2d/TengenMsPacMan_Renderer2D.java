@@ -160,7 +160,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         int mapNumber = level.worldMap().getConfigValue("mapNumber");
 
         if (areGameOptionsChanged(game)) {
-            drawGameOptionsInfoCenteredAt(level.worldMap().numCols() * HTS, tiles2Px(2) + HTS, game);
+            drawGameOptionsInfoCenteredAt(level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS, game);
         }
 
         if (coloredMapSet == null) {
@@ -197,7 +197,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx().setImageSmoothing(false);
         TengenMsPacMan_GameModel game = THE_GAME_CONTROLLER.game();
         if (areGameOptionsChanged(game)) {
-            drawGameOptionsInfoCenteredAt(level.worldMap().numCols() * HTS, tiles2Px(2) + HTS, game);
+            drawGameOptionsInfoCenteredAt(level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS, game);
         }
         ColoredMapImage maze = coloredMapSet.flashingMazes().get(flashingIndex);
         RectArea area = maze.area();
@@ -318,19 +318,19 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             case NORMAL -> NO_SPRITE;
         };
         if (game.pacBooster() != PacBooster.OFF) {
-            drawSpriteCenteredOverPosition(BOOSTER_SPRITE, centerX - tiles2Px(6), y);
+            drawSpriteCenteredOverPosition(BOOSTER_SPRITE, centerX - tiles_to_px(6), y);
         }
         drawSpriteCenteredOverPosition(difficultySprite, centerX, y);
-        drawSpriteCenteredOverPosition(categorySprite, centerX + tiles2Px(4.5), y);
+        drawSpriteCenteredOverPosition(categorySprite, centerX + tiles_to_px(4.5), y);
         drawSpriteCenteredOverPosition(INFO_FRAME_SPRITE, centerX, y);
     }
 
     @Override
     public void drawScores(ScoreManager scoreManager, Color color, Font font) {
-        if (THE_UI.clock().tickCount() % 60 < 30) { drawText("1UP", color, font, tiles2Px(2), tiles2Px(1)); }
-        drawText("HIGH SCORE", color, font, tiles2Px(9), tiles2Px(1));
-        drawText("%6d".formatted(scoreManager.score().points()), color, font, 0, tiles2Px(2));
-        drawText("%6d".formatted(scoreManager.highScore().points()), color, font, tiles2Px(11), tiles2Px(2));
+        if (THE_UI.clock().tickCount() % 60 < 30) { drawText("1UP", color, font, tiles_to_px(2), tiles_to_px(1)); }
+        drawText("HIGH SCORE", color, font, tiles_to_px(9), tiles_to_px(1));
+        drawText("%6d".formatted(scoreManager.score().points()), color, font, 0, tiles_to_px(2));
+        drawText("%6d".formatted(scoreManager.highScore().points()), color, font, tiles_to_px(11), tiles_to_px(2));
     }
 
     @Override
