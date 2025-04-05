@@ -10,7 +10,7 @@ import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.nes.NES_JoypadButtonID;
 import de.amr.games.pacman.tengen.ms_pacman.Difficulty;
 import de.amr.games.pacman.tengen.ms_pacman.PacBooster;
-import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions;
+import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
@@ -21,7 +21,7 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.CONTINUES_SPRITES;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
@@ -66,8 +66,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(TengenMsPacMan_GameActions.SELECT_NEXT_JOYPAD_KEY_BINDING, alt(KeyCode.J));
-        bind(TengenMsPacMan_GameActions.START_PLAYING, THE_UI.keyboard().currentJoypadKeyBinding().key(NES_JoypadButtonID.START));
+        bind(TengenMsPacMan_GameAction.SELECT_NEXT_JOYPAD_KEY_BINDING, alt(KeyCode.J));
+        bind(TengenMsPacMan_GameAction.START_PLAYING, THE_UI.keyboard().currentJoypadKeyBinding().key(NES_JoypadButtonID.START));
         bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, THE_UI.keyboard().currentJoypadKeyBinding().key(NES_JoypadButtonID.SELECT));
         bindTestsStartingActions();
     }

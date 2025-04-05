@@ -14,7 +14,7 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions;
+import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.MessageMovement;
@@ -52,7 +52,7 @@ import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.model.GameModel.*;
-import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameActions.QUIT_DEMO_LEVEL;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction.QUIT_DEMO_LEVEL;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.ui._2d.GlobalProperties2d.PY_AUTOPILOT;
@@ -192,7 +192,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void bindGameActions() {
-        bind(TengenMsPacMan_GameActions.TOGGLE_DISPLAY_MODE, Keyboard.alt(KeyCode.C));
+        bind(TengenMsPacMan_GameAction.TOGGLE_DISPLAY_MODE, Keyboard.alt(KeyCode.C));
     }
 
     @Override
@@ -307,7 +307,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             bind(GameAction.PLAYER_DOWN,  joypad.key(NES_JoypadButtonID.DOWN));
             bind(GameAction.PLAYER_LEFT,  joypad.key(NES_JoypadButtonID.LEFT));
             bind(GameAction.PLAYER_RIGHT, joypad.key(NES_JoypadButtonID.RIGHT));
-            bind(TengenMsPacMan_GameActions.TOGGLE_PAC_BOOSTER,
+            bind(TengenMsPacMan_GameAction.TOGGLE_PAC_BOOSTER,
                 joypad.key(NES_JoypadButtonID.A),
                 joypad.key(NES_JoypadButtonID.B));
             bindAlternativePlayerControlActions();

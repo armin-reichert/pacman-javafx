@@ -15,7 +15,7 @@ import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.PY_TE
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.uilib.Ufx.toggle;
 
-public enum TengenMsPacMan_GameActions implements Action {
+public enum TengenMsPacMan_GameAction implements Action {
 
     SELECT_NEXT_JOYPAD_KEY_BINDING {
         @Override
