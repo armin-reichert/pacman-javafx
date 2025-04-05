@@ -16,8 +16,8 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.ui.CameraControlledView;
 import de.amr.games.pacman.ui.Action;
+import de.amr.games.pacman.ui.CameraControlledView;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui._2d.GameAction;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
@@ -54,7 +54,7 @@ import static de.amr.games.pacman.uilib.Ufx.contextMenuTitleItem;
  *
  * @author Armin Reichert
  */
-public class PlayScene3D extends Group implements GameScene, CameraControlledView {
+public class PlayScene3D implements GameScene, CameraControlledView {
 
     public static final String TEXT_SCORE = "SCORE";
     public static final String TEXT_HIGH_SCORE = "HIGH SCORE";
@@ -69,6 +69,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
     protected final Map<Perspective.Name, Perspective> perspectives = new EnumMap<>(Perspective.Name.class);
     protected final Map<KeyCodeCombination, Action> actionBindings = new HashMap<>();
+    protected final Group root = new Group();
     protected final SubScene fxSubScene;
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final Scores3D scores3D;
@@ -82,10 +83,10 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         scores3D = new Scores3D(TEXT_SCORE, TEXT_HIGH_SCORE);
 
         // last child is placeholder for level 3D
-        getChildren().addAll(scores3D, axes, new Group());
+        root.getChildren().addAll(scores3D, axes, new Group());
 
         // initial size is irrelevant, gets bound to parent scene size later
-        fxSubScene = new SubScene(this, 88, 88, true, SceneAntialiasing.BALANCED);
+        fxSubScene = new SubScene(root, 88, 88, true, SceneAntialiasing.BALANCED);
         fxSubScene.setFill(Color.TRANSPARENT);
         fxSubScene.setCamera(camera);
 
@@ -470,8 +471,8 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
 
     protected void replaceGameLevel3D() {
         level3D = new GameLevel3D(game());
-        int lastIndex = getChildren().size() - 1;
-        getChildren().set(lastIndex, level3D);
+        int lastIndex = root.getChildren().size() - 1;
+        root.getChildren().set(lastIndex, level3D);
         scores3D.translateXProperty().bind(level3D.translateXProperty().add(TS));
         scores3D.translateYProperty().bind(level3D.translateYProperty().subtract(3.5 * TS));
         scores3D.translateZProperty().bind(level3D.translateZProperty().subtract(3.5 * TS));
