@@ -152,7 +152,7 @@ public class GameView implements View {
     @Override
     public void handleInput(Keyboard keyboard) {
         runTriggeredActionElse(keyboard,
-            () -> THE_UI.currentGameScene().ifPresent(gameScene -> gameScene.handleInput(keyboard)));
+            () -> currentGameScene().ifPresent(gameScene -> gameScene.handleInput(keyboard)));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -165,24 +165,19 @@ public class GameView implements View {
         // dispatch event to event specific method:
         View.super.onGameEvent(event);
         // dispatch to current game scene
-        THE_UI.currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(event));
-        THE_UI.updateGameScene(false);
+        currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(event));
+        updateGameScene(THE_UI.gameUIConfigManager().current(), false);
     }
 
     @Override
     public void onLevelCreated(GameEvent event) {
         THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-            GameVariant gameVariant = THE_GAME_CONTROLLER.selectedGameVariant();
-            Logger.info("Game level {} ({}) created", level.number(), gameVariant);
-            GameUIConfig gameUIConfig = THE_UI.gameUIConfigManager().current();
-            gameUIConfig.createActorAnimations(level);
-            Logger.info("Actor animations ({}) created", gameVariant);
+            GameUIConfig config = THE_UI.gameUIConfigManager().current();
+            config.createActorAnimations(level);
             THE_UI.sound().setEnabled(!THE_GAME_CONTROLLER.game().isDemoLevel());
-            Logger.info("Sounds ({}) {}", gameVariant, THE_UI.sound().isEnabled() ? "enabled" : "disabled");
             // size of game scene might have changed, so re-embed
-            currentGameScene().ifPresent(gameScene -> embedGameScene(gameUIConfig, gameScene));
-            GameScene2D pipGameScene = gameUIConfig.createPiPScene(canvas);
-            pipView.setScene2D(pipGameScene);
+            currentGameScene().ifPresent(gameScene -> embedGameScene(config, gameScene));
+            pipView.setScene2D(config.createPiPScene(canvas));
         });
     }
 
