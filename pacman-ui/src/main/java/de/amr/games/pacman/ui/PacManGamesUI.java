@@ -233,7 +233,7 @@ public class PacManGamesUI implements GameUI {
     }
 
     @Override
-    public GameUIConfigManager configurations() {
+    public GameUIConfigManager gameUIConfigManager() {
         return gameUIConfigManager;
     }
 
@@ -344,6 +344,6 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public void updateGameScene(boolean reloadCurrent) {
-        gameView.updateGameScene(gameUIConfigManager, reloadCurrent);
+        gameView.updateGameScene(gameUIConfigManager.current(), reloadCurrent);
     }
 }

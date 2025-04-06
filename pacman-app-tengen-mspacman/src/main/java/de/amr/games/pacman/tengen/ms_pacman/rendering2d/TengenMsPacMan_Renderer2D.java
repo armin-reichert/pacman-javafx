@@ -259,7 +259,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     public void drawLevelMessage(GameLevel level, boolean demoLevel, Vector2f position) {
         if (level.message() != null) {
-            String ans = THE_UI.configurations().current().assetNamespace();
+            String ans = THE_UI.gameUIConfigManager().current().assetNamespace();
             Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
             float x = position.x(), y = position.y();
             switch (level.message()) {

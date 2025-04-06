@@ -53,7 +53,7 @@ public class CutScene2 extends GameScene2D {
 
         music = THE_UI.sound().makeSound("intermission.2");
 
-        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_UI.configurations().current().spriteSheet();
+        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_UI.gameUIConfigManager().current().spriteSheet();
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
         pacMan.setAnimations(new PacAnimations(spriteSheet));
 

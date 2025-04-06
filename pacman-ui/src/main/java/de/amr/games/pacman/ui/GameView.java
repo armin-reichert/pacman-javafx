@@ -30,6 +30,7 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
@@ -49,7 +50,7 @@ public class GameView implements View {
         @Override
         protected void invalidated() {
             GameScene gameScene = get();
-            if (gameScene != null) embedGameScene(gameScene);
+            if (gameScene != null) embedGameScene(THE_UI.gameUIConfigManager().current(), gameScene);
             contextMenu.hide();
         }
     };
@@ -107,7 +108,7 @@ public class GameView implements View {
 
     @Override
     public void update() {
-        THE_UI.currentGameScene().ifPresent(gameScene -> {
+        currentGameScene().ifPresent(gameScene -> {
             gameScene.update();
             if (gameScene instanceof GameScene2D gameScene2D) {
                 gameScene2D.draw();
@@ -174,13 +175,14 @@ public class GameView implements View {
         THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
             GameVariant gameVariant = THE_GAME_CONTROLLER.selectedGameVariant();
             Logger.info("Game level {} ({}) created", level.number(), gameVariant);
-            THE_UI.configurations().current().createActorAnimations(level);
+            GameUIConfig gameUIConfig = THE_UI.gameUIConfigManager().current();
+            gameUIConfig.createActorAnimations(level);
             Logger.info("Actor animations ({}) created", gameVariant);
             THE_UI.sound().setEnabled(!THE_GAME_CONTROLLER.game().isDemoLevel());
             Logger.info("Sounds ({}) {}", gameVariant, THE_UI.sound().isEnabled() ? "enabled" : "disabled");
             // size of game scene might have changed, so re-embed
-            THE_UI.currentGameScene().ifPresent(this::embedGameScene);
-            GameScene2D pipGameScene = THE_UI.configurations().current().createPiPScene(canvas);
+            currentGameScene().ifPresent(gameScene -> embedGameScene(gameUIConfig, gameScene));
+            GameScene2D pipGameScene = gameUIConfig.createPiPScene(canvas);
             pipView.setScene2D(pipGameScene);
         });
     }
@@ -197,6 +199,8 @@ public class GameView implements View {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    public Optional<GameScene> currentGameScene() { return Optional.ofNullable(gameScenePy.get()); }
 
     public FlashMessageView flashMessageLayer() {
         return flashMessageLayer;
@@ -229,8 +233,8 @@ public class GameView implements View {
         canvasContainer.resizeTo(width, height);
     }
 
-    public void updateGameScene(GameUIConfigManager gameUIConfigManager, boolean reloadCurrent) {
-        final GameScene nextGameScene = gameUIConfigManager.current().selectGameScene();
+    public void updateGameScene(GameUIConfig gameUIConfig, boolean reloadCurrent) {
+        final GameScene nextGameScene = gameUIConfig.selectGameScene();
         if (nextGameScene == null) {
             throw new IllegalStateException("Could not determine next game scene");
         }
@@ -243,9 +247,9 @@ public class GameView implements View {
             currentGameScene.end();
             Logger.info("Game scene ended: {}", currentGameScene.displayName());
         }
-        embedGameScene(nextGameScene);
+        embedGameScene(gameUIConfig, nextGameScene);
         nextGameScene.init();
-        if (gameUIConfigManager.current().is2D3DPlaySceneSwitch(currentGameScene, nextGameScene)) {
+        if (gameUIConfig.is2D3DPlaySceneSwitch(currentGameScene, nextGameScene)) {
             nextGameScene.onSceneVariantSwitch(currentGameScene);
         }
         if (changing) {
@@ -253,7 +257,7 @@ public class GameView implements View {
         }
     }
 
-    public void embedGameScene(GameScene gameScene) {
+    public void embedGameScene(GameUIConfig gameUIConfig, GameScene gameScene) {
         assertNotNull(gameScene);
         switch (gameScene) {
             case CameraControlledView gameSceneUsingCamera -> {
@@ -262,7 +266,7 @@ public class GameView implements View {
                 gameSceneUsingCamera.viewPortHeightProperty().bind(parentScene.heightProperty());
             }
             case GameScene2D gameScene2D -> {
-                GameRenderer renderer = THE_UI.configurations().current().createRenderer(canvas);
+                GameRenderer renderer = gameUIConfig.createRenderer(canvas);
                 Vector2f sceneSize = gameScene2D.sizeInPx();
                 canvasContainer.setUnscaledCanvasWidth(sceneSize.x());
                 canvasContainer.setUnscaledCanvasHeight(sceneSize.y());
@@ -289,19 +293,16 @@ public class GameView implements View {
         canvasContainer.setUnscaledCanvasWidth(ARCADE_MAP_SIZE_IN_PIXELS.x());
         canvasContainer.setUnscaledCanvasHeight(ARCADE_MAP_SIZE_IN_PIXELS.y());
         canvasContainer.setBorderColor(Color.web(Arcade.Palette.WHITE));
-        canvasContainer.decorationEnabledPy.addListener((py, ov, nv) -> {
-            GameScene gameScene = gameScenePy.get();
-            if (gameScene != null) {
-                embedGameScene(gameScene); //TODO check this
-            }
-        });
+        //TODO check this:
+        canvasContainer.decorationEnabledPy.addListener((py, ov, nv) ->
+            currentGameScene().ifPresent(gameScene -> embedGameScene(THE_UI.gameUIConfigManager().current(), gameScene)));
     }
 
     private void configurePiPView(GameUI ui) {
         pipView.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Background::fill));
         pipView.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
         pipView.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> PY_PIP_ON.get() && ui.configurations().currentGameSceneIsPlayScene3D(),
+            () -> PY_PIP_ON.get() && ui.gameUIConfigManager().currentGameSceneIsPlayScene3D(),
             PY_PIP_ON, ui.gameSceneProperty()
         ));
     }
@@ -322,7 +323,7 @@ public class GameView implements View {
     }
 
     private String computeTitleText(GameUI ui) {
-        String keyPattern = "app.title." + ui.configurations().current().assetNamespace() + (ui.clock().isPaused() ? ".paused" : "");
+        String keyPattern = "app.title." + ui.gameUIConfigManager().current().assetNamespace() + (ui.clock().isPaused() ? ".paused" : "");
         if (ui.currentGameScene().isPresent()) {
             return computeTitleIfGameScenePresent(ui, ui.currentGameScene().get(), keyPattern);
         }
@@ -359,7 +360,7 @@ public class GameView implements View {
 
     private void handleContextMenuRequest(ContextMenuEvent e) {
         var menuItems = new ArrayList<>(gameScenePy.get().supplyContextMenuItems(e));
-        if (THE_UI.configurations().currentGameSceneIsPlayScene2D()) {
+        if (THE_UI.gameUIConfigManager().currentGameSceneIsPlayScene2D()) {
             var item = new MenuItem(THE_UI.assets().text("use_3D_scene"));
             item.setOnAction(ae -> GameAction.TOGGLE_PLAY_SCENE_2D_3D.execute());
             menuItems.addFirst(item);
@@ -372,7 +373,7 @@ public class GameView implements View {
 
     private void showGameSceneHelp() {
         if (!THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN)
-            && THE_UI.configurations().currentGameSceneIs2D()) {
+            && THE_UI.gameUIConfigManager().currentGameSceneIs2D()) {
             popupLayer.showHelp(canvasContainer.scaling());
         }
     }

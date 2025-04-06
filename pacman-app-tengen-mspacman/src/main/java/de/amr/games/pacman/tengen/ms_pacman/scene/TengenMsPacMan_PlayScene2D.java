@@ -19,7 +19,6 @@ import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.MessageMovement;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
-import de.amr.games.pacman.ui.Globals;
 import de.amr.games.pacman.uilib.CameraControlledView;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui.GameAction;
@@ -199,7 +198,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         messageMovement = new MessageMovement();
         THE_UI.keyboard().enableCurrentJoypad();
         game().setScoreVisible(true);
-        setGameRenderer(THE_UI.configurations().current().createRenderer(canvas));
+        setGameRenderer(THE_UI.gameUIConfigManager().current().createRenderer(canvas));
         movingCamera.focusTopOfScene();
     }
 
