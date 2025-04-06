@@ -33,7 +33,7 @@ public enum GameAction implements Action {
         public void execute() {
             if (THE_COIN_STORE.numCoins() < CoinStore.MAX_COINS) {
                 THE_COIN_STORE.insertCoin();
-                THE_UI.sound().enabledProperty().set(true);
+                THE_SOUND.enabledProperty().set(true);
                 THE_GAME_CONTROLLER.game().publishGameEvent(GameEventType.CREDIT_ADDED);
             }
             if (THE_GAME_CONTROLLER.state() != GameState.SETTING_OPTIONS) {
@@ -78,7 +78,7 @@ public enum GameAction implements Action {
                         .filter(level::hasFoodAt)
                         .forEach(level::registerFoodEatenAt);
                     THE_GAME_CONTROLLER.game().publishGameEvent(GameEventType.PAC_FOUND_FOOD);
-                    THE_UI.sound().stopMunchingSound();
+                    THE_SOUND.stopMunchingSound();
                 });
             }
         }
@@ -159,7 +159,7 @@ public enum GameAction implements Action {
     RESTART_INTRO {
         @Override
         public void execute() {
-            THE_UI.sound().stopAll();
+            THE_SOUND.stopAll();
             THE_UI.currentGameScene().ifPresent(GameScene::end);
             if (THE_GAME_CONTROLLER.state() == GameState.TESTING_LEVELS) {
                 THE_GAME_CONTROLLER.state().onExit(THE_GAME_CONTROLLER.game()); //TODO exit other states too?
@@ -244,7 +244,7 @@ public enum GameAction implements Action {
             if (THE_GAME_CONTROLLER.selectedGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
                 THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
             } else if (THE_GAME_CONTROLLER.game().canStartNewGame()) {
-                THE_UI.sound().stopVoice();
+                THE_SOUND.stopVoice();
                 if (THE_GAME_CONTROLLER.state() == GameState.INTRO || THE_GAME_CONTROLLER.state() == GameState.SETTING_OPTIONS) {
                     THE_GAME_CONTROLLER.changeState(GameState.STARTING_GAME);
                 } else {
@@ -284,7 +284,7 @@ public enum GameAction implements Action {
             toggle(PY_AUTOPILOT);
             boolean auto = PY_AUTOPILOT.get();
             THE_UI.showFlashMessage(THE_UI.assets().text(auto ? "autopilot_on" : "autopilot_off"));
-            THE_UI.sound().playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
+            THE_SOUND.playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
         }
     },
 
@@ -300,7 +300,7 @@ public enum GameAction implements Action {
         public void execute() {
             toggle(PY_IMMUNITY);
             THE_UI.showFlashMessage(THE_UI.assets().text(PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
-            THE_UI.sound().playVoice(PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
+            THE_SOUND.playVoice(PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
         }
     },
 
@@ -309,7 +309,7 @@ public enum GameAction implements Action {
         public void execute() {
             toggle(THE_UI.clock().pausedProperty());
             if (THE_UI.clock().isPaused()) {
-                THE_UI.sound().stopAll();
+                THE_SOUND.stopAll();
             }
             Logger.info("Game ({}) {}", THE_GAME_CONTROLLER.selectedGameVariant(), THE_UI.clock().isPaused() ? "paused" : "resumed");
         }

@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.dashboard.Dashboard;
 import de.amr.games.pacman.ui.input.GameKeyboard;
-import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.GameClockFX;
 import javafx.beans.property.ObjectProperty;
 import javafx.geometry.Dimension2D;
@@ -40,6 +39,5 @@ public interface GameUI {
     void showFlashMessageSec(double seconds, String message, Object... args);
     void showGameView();
     void showStartView();
-    GameSound sound();
     void updateGameScene(boolean reload);
 }

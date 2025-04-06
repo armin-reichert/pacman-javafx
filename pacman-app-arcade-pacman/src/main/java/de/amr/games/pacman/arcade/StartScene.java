@@ -15,6 +15,7 @@ import javafx.scene.text.Font;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.arcade.ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.games.pacman.ui.Globals.THE_SOUND;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 /**
@@ -68,6 +69,6 @@ public class StartScene extends GameScene2D {
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        THE_UI.sound().playInsertCoinSound();
+        THE_SOUND.playInsertCoinSound();
     }
 }

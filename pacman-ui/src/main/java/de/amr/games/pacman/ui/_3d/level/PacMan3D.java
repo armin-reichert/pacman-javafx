@@ -18,7 +18,7 @@ import javafx.util.Duration;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.THE_SOUND;
 import static de.amr.games.pacman.uilib.Ufx.doAfterSec;
 import static de.amr.games.pacman.uilib.Ufx.now;
 import static de.amr.games.pacman.uilib.model3D.Model3D.meshViewById;
@@ -125,7 +125,7 @@ public class PacMan3D implements Pac3D {
 
         return new SequentialTransition(
             now(this::init), // TODO check this
-            doAfterSec(0.5, THE_UI.sound()::playPacDeathSound),
+            doAfterSec(0.5, THE_SOUND::playPacDeathSound),
             new ParallelTransition(spins, new SequentialTransition(shrinks, expands), sinks),
             doAfterSec(1.0, () -> shape3D.setVisible(false))
         );

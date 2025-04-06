@@ -169,7 +169,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             level3D.pac3D().update();
             if (gameState() == GameState.HUNTING) {
                 if (level.powerTimer().isRunning()) {
-                    THE_UI.sound().playPacPowerSound();
+                    THE_SOUND.playPacPowerSound();
                 }
                 level3D.playLivesCounterAnimation();
             }
@@ -225,17 +225,17 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     private void updateSound(GameLevel level) {
         if (gameState() == GameState.HUNTING && !level.powerTimer().isRunning()) {
             int sirenNumber = 1 + game().huntingTimer().phaseIndex() / 2;
-            THE_UI.sound().selectSiren(sirenNumber);
-            THE_UI.sound().playSiren();
+            THE_SOUND.selectSiren(sirenNumber);
+            THE_SOUND.playSiren();
         }
         if (level.pac().starvingTicks() > 8) { // TODO not sure how to do this right
-            THE_UI.sound().stopMunchingSound();
+            THE_SOUND.stopMunchingSound();
         }
         boolean ghostsReturning = level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
         if (level.pac().isAlive() && ghostsReturning) {
-            THE_UI.sound().playGhostReturningHomeSound();
+            THE_SOUND.playGhostReturningHomeSound();
         } else {
-            THE_UI.sound().stopGhostReturningHomeSound();
+            THE_SOUND.stopGhostReturningHomeSound();
         }
     }
 
@@ -304,7 +304,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     private void onEnterStatePacManDying() {
         level3D.stopAnimations();
-        THE_UI.sound().stopAll();
+        THE_SOUND.stopAll();
         // last update before dying animation
         level3D.pac3D().update();
         playPacManDiesAnimation();
@@ -324,7 +324,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     private void onEnterStateLevelComplete() {
         game().level().ifPresent(level -> {
-            THE_UI.sound().stopAll();
+            THE_SOUND.stopAll();
             // if cheat has been used to complete level, food might still exist, so eat it:
             level.worldMap().tiles().filter(level::hasFoodAt).forEach(level::registerFoodEatenAt);
             level3D.pellets3D().forEach(Pellet3D::onEaten);
@@ -373,8 +373,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         if (!game().isDemoLevel() && randomInt(0, 100) < 25) {
             THE_UI.showFlashMessageSec(3, THE_UI.assets().localizedGameOverMessage());
         }
-        THE_UI.sound().stopAll();
-        THE_UI.sound().playGameOverSound();
+        THE_SOUND.stopAll();
+        THE_SOUND.playGameOverSound();
     }
 
     @Override
@@ -383,7 +383,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 bonus -> level3D.replaceBonus3D(bonus, THE_UI.gameUIConfigManager().current().spriteSheet()));
         //TODO check for moving bonus instead
         if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN)) {
-            THE_UI.sound().playBonusBouncingSound();
+            THE_SOUND.playBonusBouncingSound();
         }
     }
 
@@ -392,9 +392,9 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         level3D.bonus3D().ifPresent(Bonus3D::showEaten);
         //TODO check for moving bonus instead
         if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN)) {
-            THE_UI.sound().stopBonusBouncingSound();
+            THE_SOUND.stopBonusBouncingSound();
         }
-        THE_UI.sound().playBonusEatenSound();
+        THE_SOUND.playBonusEatenSound();
     }
 
     @Override
@@ -402,25 +402,25 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         level3D.bonus3D().ifPresent(Bonus3D::onBonusExpired);
         //TODO check for moving bonus instead
         if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN)) {
-            THE_UI.sound().stopBonusBouncingSound();
+            THE_SOUND.stopBonusBouncingSound();
         }
     }
 
     @Override
     public void onExtraLifeWon(GameEvent e) {
-        THE_UI.sound().playExtraLifeSound();
+        THE_SOUND.playExtraLifeSound();
     }
 
     @Override
     public void onGhostEaten(GameEvent e) {
-        THE_UI.sound().playGhostEatenSound();
+        THE_SOUND.playGhostEatenSound();
     }
 
     @Override
     public void onGameStarted(GameEvent e) {
         boolean silent = game().isDemoLevel() || gameState() == TESTING_LEVELS || gameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {
-            THE_UI.sound().playGameReadySound();
+            THE_SOUND.playGameReadySound();
         }
     }
 
@@ -442,7 +442,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                     .findFirst()
                     .ifPresent(Pellet3D::onEaten);
             }
-            THE_UI.sound().playMunchingSound();
+            THE_SOUND.playMunchingSound();
         }
     }
 
@@ -450,15 +450,15 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     public void onPacGetsPower(GameEvent event) {
         level3D.pac3D().setPowerMode(true);
         level3D.maze3D().playMaterialAnimation();
-        THE_UI.sound().stopSiren();
-        THE_UI.sound().playPacPowerSound();
+        THE_SOUND.stopSiren();
+        THE_SOUND.playPacPowerSound();
     }
 
     @Override
     public void onPacLostPower(GameEvent event) {
         level3D.pac3D().setPowerMode(false);
         level3D.maze3D().stopMaterialAnimation();
-        THE_UI.sound().stopPacPowerSound();
+        THE_SOUND.stopPacPowerSound();
     }
 
     protected void replaceGameLevel3D() {
@@ -550,7 +550,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         items.add(new SeparatorMenuItem());
 
         var miMuted = new CheckMenuItem(THE_UI.assets().text("muted"));
-        miMuted.selectedProperty().bindBidirectional(THE_UI.sound().mutedProperty());
+        miMuted.selectedProperty().bindBidirectional(THE_SOUND.mutedProperty());
         items.add(miMuted);
 
         var miQuit = new MenuItem(THE_UI.assets().text("quit"));

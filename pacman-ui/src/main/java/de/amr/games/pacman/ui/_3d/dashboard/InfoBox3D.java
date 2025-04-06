@@ -5,20 +5,19 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._3d.dashboard;
 
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.uilib.CameraControlledView;
-import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui.GameAction;
+import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._3d.scene3d.Perspective;
 import de.amr.games.pacman.ui.dashboard.InfoBox;
 import de.amr.games.pacman.ui.dashboard.InfoText;
+import de.amr.games.pacman.uilib.CameraControlledView;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
 
-import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.ui.Globals.*;
 
 /**

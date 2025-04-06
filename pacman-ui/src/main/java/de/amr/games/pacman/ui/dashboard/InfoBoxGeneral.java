@@ -4,14 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.dashboard;
 
-import de.amr.games.pacman.ui.PacManGamesUI;
 import de.amr.games.pacman.ui.GameAction;
+import de.amr.games.pacman.ui.PacManGamesUI;
 import de.amr.games.pacman.uilib.ResourceManager;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 
-import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.ui.Globals.*;
 
 /**

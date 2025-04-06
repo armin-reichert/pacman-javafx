@@ -44,7 +44,6 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.ui.Globals.*;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.uilib.Ufx.*;
 
 /**
@@ -349,9 +348,9 @@ public class GameLevel3D extends Group {
             new KeyFrame(Duration.seconds(5.0), e -> levelRotateAnimation(1.5).play()),
             new KeyFrame(Duration.seconds(7.0), e -> {
                 maze3D.wallsDisappearAnimation(2.0).play();
-                THE_UI.sound().playLevelCompleteSound();
+                THE_SOUND.playLevelCompleteSound();
             }),
-            new KeyFrame(Duration.seconds(9.5), e -> THE_UI.sound().playLevelChangedSound())
+            new KeyFrame(Duration.seconds(9.5), e -> THE_SOUND.playLevelChangedSound())
         );
     }
 

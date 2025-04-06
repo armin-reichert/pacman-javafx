@@ -73,13 +73,13 @@ public class ArcadePlayScene2D extends GameScene2D {
     public void onGameStarted(GameEvent e) {
         boolean silent = game().isDemoLevel() || gameState() == TESTING_LEVELS || gameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {
-            THE_UI.sound().playGameReadySound();
+            THE_SOUND.playGameReadySound();
         }
     }
 
     @Override
     protected void doEnd() {
-        THE_UI.sound().stopAll();
+        THE_SOUND.stopAll();
         disableActionBindings(THE_UI.keyboard());
     }
 
@@ -107,17 +107,17 @@ public class ArcadePlayScene2D extends GameScene2D {
     private void updateSound(GameLevel level) {
         if (gameState() == GameState.HUNTING && !level.powerTimer().isRunning()) {
             int sirenNumber = 1 + game().huntingTimer().phaseIndex() / 2;
-            THE_UI.sound().selectSiren(sirenNumber);
-            THE_UI.sound().playSiren();
+            THE_SOUND.selectSiren(sirenNumber);
+            THE_SOUND.playSiren();
         }
         if (level.pac().starvingTicks() > 8) { // TODO not sure how to do this right
-            THE_UI.sound().stopMunchingSound();
+            THE_SOUND.stopMunchingSound();
         }
         boolean ghostsReturning = level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
         if (level.pac().isAlive() && ghostsReturning) {
-            THE_UI.sound().playGhostReturningHomeSound();
+            THE_SOUND.playGhostReturningHomeSound();
         } else {
-            THE_UI.sound().stopGhostReturningHomeSound();
+            THE_SOUND.stopGhostReturningHomeSound();
         }
     }
 
@@ -248,7 +248,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     @Override
     public void onEnterGameState(GameState state) {
         if (state == GameState.GAME_OVER) {
-            THE_UI.sound().playGameOverSound();
+            THE_SOUND.playGameOverSound();
         }
         else if (state == GameState.LEVEL_COMPLETE) {
             game().level().ifPresent(level -> {
@@ -262,54 +262,54 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     @Override
     public void onBonusActivated(GameEvent e) {
-        THE_UI.sound().playBonusBouncingSound();
+        THE_SOUND.playBonusBouncingSound();
     }
 
     @Override
     public void onBonusEaten(GameEvent e) {
-        THE_UI.sound().stopBonusBouncingSound();
-        THE_UI.sound().playBonusEatenSound();
+        THE_SOUND.stopBonusBouncingSound();
+        THE_SOUND.playBonusEatenSound();
     }
 
     @Override
     public void onBonusExpired(GameEvent e) {
-        THE_UI.sound().stopBonusBouncingSound();
+        THE_SOUND.stopBonusBouncingSound();
     }
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        THE_UI.sound().playInsertCoinSound();
+        THE_SOUND.playInsertCoinSound();
     }
 
     @Override
     public void onExtraLifeWon(GameEvent e) {
-        THE_UI.sound().playExtraLifeSound();
+        THE_SOUND.playExtraLifeSound();
     }
 
     @Override
     public void onGhostEaten(GameEvent e) {
-        THE_UI.sound().playGhostEatenSound();
+        THE_SOUND.playGhostEatenSound();
     }
 
     @Override
     public void onPacDying(GameEvent e) {
-        THE_UI.sound().playPacDeathSound();
+        THE_SOUND.playPacDeathSound();
     }
 
     @Override
     public void onPacFoundFood(GameEvent e) {
-        THE_UI.sound().playMunchingSound();
+        THE_SOUND.playMunchingSound();
     }
 
     @Override
     public void onPacGetsPower(GameEvent e) {
-        THE_UI.sound().stopSiren();
-        THE_UI.sound().playPacPowerSound();
+        THE_SOUND.stopSiren();
+        THE_SOUND.playPacPowerSound();
     }
 
     @Override
     public void onPacLostPower(GameEvent e) {
-        THE_UI.sound().stopPacPowerSound();
+        THE_SOUND.stopPacPowerSound();
     }
 
     @Override
@@ -328,7 +328,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         items.add(new SeparatorMenuItem());
 
         var miMuted = new CheckMenuItem(THE_UI.assets().text("muted"));
-        miMuted.selectedProperty().bindBidirectional(THE_UI.sound().mutedProperty());
+        miMuted.selectedProperty().bindBidirectional(THE_SOUND.mutedProperty());
         items.add(miMuted);
 
         var miQuit = new MenuItem(THE_UI.assets().text("quit"));

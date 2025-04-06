@@ -18,8 +18,7 @@ import javafx.scene.text.Font;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.*;
-import static de.amr.games.pacman.ui.Globals.DEBUG_TEXT_FONT;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.*;
 
 /**
  * @author Armin Reichert
@@ -48,7 +47,7 @@ public class CutScene2 extends GameScene2D {
         blinky.setSpeed(0);
         blinky.hide();
 
-        music = THE_UI.sound().makeSound("intermission");
+        music = THE_SOUND.makeSound("intermission");
         music.setCycleCount(1);
 
         var spriteSheet = (ArcadePacMan_SpriteSheet) THE_UI.gameUIConfigManager().current().spriteSheet();

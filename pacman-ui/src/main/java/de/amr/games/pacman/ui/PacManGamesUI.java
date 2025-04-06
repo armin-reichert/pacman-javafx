@@ -11,7 +11,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tilemap.editor.TileMapEditor;
 import de.amr.games.pacman.ui.dashboard.Dashboard;
 import de.amr.games.pacman.ui.input.GameKeyboard;
-import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.GameClockFX;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -52,7 +51,6 @@ public class PacManGamesUI implements GameUI {
     private final GameAssets assets = new GameAssets();
     private final GameClockFX clock = new GameClockFX();
     private final GameKeyboard keyboard = new GameKeyboard();
-    private final GameSound sound = new GameSound();
     private final GameUIConfigManager gameUIConfigManager = new GameUIConfigManager();
 
     private Stage stage;
@@ -112,7 +110,7 @@ public class PacManGamesUI implements GameUI {
                 stage.setFullScreen(true);
             }
             else if (GameKeyboard.KEY_MUTE.match(keyPress)) {
-                sound.toggleMuted();
+                THE_SOUND.toggleMuted();
             }
             else if (GameKeyboard.KEY_OPEN_EDITOR.match(keyPress)) {
                 showEditorView();
@@ -139,7 +137,7 @@ public class PacManGamesUI implements GameUI {
 
     private void addStatusIcons(Pane parent) {
         var iconMuted = FontIcon.of(FontAwesomeSolid.DEAF, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
-        iconMuted.visibleProperty().bind(sound.mutedProperty());
+        iconMuted.visibleProperty().bind(THE_SOUND.mutedProperty());
 
         var iconAutopilot = FontIcon.of(FontAwesomeSolid.TAXI, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
         iconAutopilot.visibleProperty().bind(PY_AUTOPILOT);
@@ -289,7 +287,7 @@ public class PacManGamesUI implements GameUI {
     public void selectGameVariant(GameVariant gameVariant) {
         THE_GAME_CONTROLLER.selectGameVariant(gameVariant);
         GameUIConfig uiConfig = gameUIConfigManager.configuration(gameVariant);
-        sound.selectGameVariant(gameVariant, uiConfig.assetNamespace());
+        THE_SOUND.selectGameVariant(gameVariant, uiConfig.assetNamespace());
         stage.getIcons().setAll(uiConfig.appIcon());
         gameView.canvasContainer().decorationEnabledPy.set(uiConfig.isGameCanvasDecorated());
     }
@@ -325,7 +323,7 @@ public class PacManGamesUI implements GameUI {
     public void showGameView() {
         viewPy.set(gameView);
         if (!THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN)) {
-            sound.playVoice("voice.explain", 0);
+            THE_SOUND.playVoice("voice.explain", 0);
         }
         gameView.resize(mainScene.getWidth(), mainScene.getHeight());
         restart();
@@ -339,11 +337,6 @@ public class PacManGamesUI implements GameUI {
         gameView.setDashboardVisible(false);
         viewPy.set(startPagesView);
         startPagesView.currentStartPage().ifPresent(StartPage::requestFocus);
-    }
-
-    @Override
-    public GameSound sound() {
-        return sound;
     }
 
     @Override

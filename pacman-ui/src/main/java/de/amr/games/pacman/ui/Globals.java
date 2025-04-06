@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui;
 
 import de.amr.games.pacman.ui._3d.scene3d.Perspective;
+import de.amr.games.pacman.ui.sound.GameSound;
 import javafx.beans.property.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
@@ -16,6 +17,7 @@ import static de.amr.games.pacman.Globals.TS;
 public class Globals {
 
     public static GameUI THE_UI;
+    public static final GameSound THE_SOUND = new GameSound();
 
     public static void createUIAndSupport3D(boolean support3D) {
         THE_UI = new PacManGamesUI();
