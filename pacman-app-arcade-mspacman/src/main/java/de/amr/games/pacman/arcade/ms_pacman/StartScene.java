@@ -7,7 +7,7 @@ package de.amr.games.pacman.arcade.ms_pacman;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
-import de.amr.games.pacman.ui._2d.GameAction;
+import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import javafx.scene.paint.Color;

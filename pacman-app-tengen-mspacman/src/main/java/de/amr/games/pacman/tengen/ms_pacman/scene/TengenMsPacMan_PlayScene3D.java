@@ -12,7 +12,7 @@ import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
-import de.amr.games.pacman.ui._2d.GameAction;
+import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui._3d.level.Bonus3D;
 import de.amr.games.pacman.ui._3d.scene3d.PlayScene3D;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
@@ -83,7 +83,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             bindAlternativePlayerControlActions();
             bindCheatActions();
         }
-        enableActionBindings();
+        enableActionBindings(THE_UI.keyboard());
     }
 
     @Override

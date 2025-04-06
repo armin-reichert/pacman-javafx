@@ -8,11 +8,13 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.*;
+import de.amr.games.pacman.ui.GameAction;
+import de.amr.games.pacman.ui.GameScene;
+import de.amr.games.pacman.ui.GameUI;
+import de.amr.games.pacman.ui.View;
 import de.amr.games.pacman.ui.dashboard.Dashboard;
 import de.amr.games.pacman.ui.dashboard.InfoBox;
-import de.amr.games.pacman.uilib.FlashMessageView;
-import de.amr.games.pacman.uilib.Ufx;
+import de.amr.games.pacman.uilib.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.ObjectProperty;
@@ -35,7 +37,6 @@ import java.util.Map;
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.ui.Globals.*;
 import static de.amr.games.pacman.uilib.Keyboard.*;
 import static de.amr.games.pacman.uilib.Ufx.*;
@@ -225,8 +226,9 @@ public class GameView implements View {
     }
 
     @Override
-    public void handleInput() {
-        runTriggeredActionElse(() -> THE_UI.currentGameScene().ifPresent(ActionProvider::handleInput));
+    public void handleInput(Keyboard keyboard) {
+        runTriggeredActionElse(keyboard,
+            () -> THE_UI.currentGameScene().ifPresent(gameScene -> gameScene.handleInput(keyboard)));
     }
 
     public TooFancyCanvasContainer canvasContainer() {

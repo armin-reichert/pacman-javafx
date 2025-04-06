@@ -4,7 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._2d;
 
-import de.amr.games.pacman.ui.Action;
+import de.amr.games.pacman.uilib.Action;
+import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.View;
 import de.amr.games.pacman.uilib.Carousel;
 import javafx.beans.binding.Bindings;

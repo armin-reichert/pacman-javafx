@@ -15,6 +15,7 @@ import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
 import de.amr.games.pacman.ui._2d.GameScene2D;
+import de.amr.games.pacman.uilib.Keyboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -125,7 +126,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     @Override
-    public void handleInput() {
+    public void handleInput(Keyboard keyboard) {
 
         if (isJoypadPressed(NES_JoypadButtonID.DOWN)) {
             selectNextOption();
@@ -157,7 +158,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         }
 
         else {
-            runTriggeredAction();
+            runTriggeredAction(keyboard);
         }
     }
 

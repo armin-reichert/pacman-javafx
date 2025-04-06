@@ -5,9 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.ui.Action;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui.GameUI;
+import de.amr.games.pacman.uilib.Action;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCodeCombination;
@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 /**
  * Base class of all 2D scenes.
@@ -38,13 +39,13 @@ public abstract class GameScene2D implements GameScene {
     public final void init() {
         doInit();
         bindGameActions();
-        enableActionBindings();
+        enableActionBindings(THE_UI.keyboard());
     }
 
     @Override
     public final void end() {
         doEnd();
-        disableActionBindings();
+        disableActionBindings(THE_UI.keyboard());
     }
 
     @Override
@@ -71,10 +72,6 @@ public abstract class GameScene2D implements GameScene {
 
     public void setGameRenderer(GameRenderer renderer) {
         gr = assertNotNull(renderer);
-    }
-
-    public GameRenderer renderer() {
-        return gr;
     }
 
     public void setCanvas(Canvas canvas) {

@@ -19,9 +19,9 @@ import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.MessageMovement;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
-import de.amr.games.pacman.ui.CameraControlledView;
+import de.amr.games.pacman.uilib.CameraControlledView;
 import de.amr.games.pacman.ui.GameScene;
-import de.amr.games.pacman.ui._2d.GameAction;
+import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._2d.LevelCompleteAnimation;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
@@ -313,7 +313,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             bindAlternativePlayerControlActions();
             bindCheatActions();
         }
-        enableActionBindings();
+        enableActionBindings(THE_UI.keyboard());
     }
 
     @Override

@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui.dashboard;
 import de.amr.games.pacman.controller.CoinStore;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.ui._2d.GameAction;
+import de.amr.games.pacman.ui.GameAction;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;

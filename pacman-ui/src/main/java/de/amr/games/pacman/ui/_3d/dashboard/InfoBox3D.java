@@ -5,9 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._3d.dashboard;
 
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.ui.CameraControlledView;
+import de.amr.games.pacman.uilib.CameraControlledView;
 import de.amr.games.pacman.ui.GameScene;
-import de.amr.games.pacman.ui._2d.GameAction;
+import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._3d.scene3d.Perspective;
 import de.amr.games.pacman.ui.dashboard.InfoBox;

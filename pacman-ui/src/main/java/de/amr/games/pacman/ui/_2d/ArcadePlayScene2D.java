@@ -15,6 +15,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui.GameUI;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
@@ -58,7 +59,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         game().setScoreVisible(true);
         bindDefaultArcadeControllerActions(arcadeKeyBinding());
         bindAlternativePlayerControlActions();
-        enableActionBindings();
+        enableActionBindings(THE_UI.keyboard());
     }
 
     @Override
@@ -70,7 +71,7 @@ public class ArcadePlayScene2D extends GameScene2D {
             bindDefaultArcadeControllerActions(arcadeKeyBinding());
             bindAlternativePlayerControlActions();
         }
-        enableActionBindings();
+        enableActionBindings(THE_UI.keyboard());
         game().level().ifPresent(level -> gr.applyMapSettings(level.worldMap()));
     }
 
@@ -85,7 +86,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     @Override
     protected void doEnd() {
         THE_UI.sound().stopAll();
-        disableActionBindings();
+        disableActionBindings(THE_UI.keyboard());
     }
 
     @Override
@@ -243,7 +244,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     public void onSceneVariantSwitch(GameScene oldScene) {
         Logger.info("{} entered from {}", this, oldScene);
         bindGameActions();
-        enableActionBindings();
+        enableActionBindings(THE_UI.keyboard());
         if (gr == null) {
             setGameRenderer(THE_UI.configurations().current().createRenderer(canvas));
         }

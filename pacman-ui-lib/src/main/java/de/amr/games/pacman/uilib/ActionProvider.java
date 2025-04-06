@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui;
+package de.amr.games.pacman.uilib;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -11,25 +11,23 @@ import org.tinylog.Logger;
 import java.util.Map;
 import java.util.Optional;
 
-import static de.amr.games.pacman.ui.Globals.THE_UI;
-
 public interface ActionProvider {
 
     Map<KeyCodeCombination, Action> actionBindings();
 
     void bindGameActions();
 
-    default void enableActionBindings() {
+    default void enableActionBindings(Keyboard keyboard) {
         Logger.info("Enabled key bindings for {}", getClass().getSimpleName());
         for (KeyCodeCombination keyCodeCombination : actionBindings().keySet()) {
-            THE_UI.keyboard().register(keyCodeCombination, this);
+            keyboard.register(keyCodeCombination, this);
         }
     }
 
-    default void disableActionBindings() {
+    default void disableActionBindings(Keyboard keyboard) {
         Logger.info("Disable key bindings for {}", getClass().getSimpleName());
         for (KeyCodeCombination keyCodeCombination : actionBindings().keySet()) {
-            THE_UI.keyboard().unregister(keyCodeCombination, this);
+            keyboard.unregister(keyCodeCombination, this);
         }
     }
 
@@ -45,15 +43,15 @@ public interface ActionProvider {
         }
     }
 
-    default Optional<Action> firstTriggeredAction() {
+    default Optional<Action> firstTriggeredAction(Keyboard keyboard) {
         return actionBindings().keySet().stream()
-            .filter(combination -> THE_UI.keyboard().isMatching(combination))
+            .filter(keyboard::isMatching)
             .map(actionBindings()::get)
             .findFirst();
     }
 
-    default void runTriggeredAction() {
-        firstTriggeredAction().ifPresent(action -> {
+    default void runTriggeredAction(Keyboard keyboard) {
+        firstTriggeredAction(keyboard).ifPresent(action -> {
             if (action.isEnabled()) {
                 action.execute();
             } else {
@@ -62,8 +60,8 @@ public interface ActionProvider {
         });
     }
 
-    default void runTriggeredActionElse(Runnable defaultAction) {
-        firstTriggeredAction().ifPresentOrElse(action -> {
+    default void runTriggeredActionElse(Keyboard keyboard, Runnable defaultAction) {
+        firstTriggeredAction(keyboard).ifPresentOrElse(action -> {
             if (action.isEnabled()) {
                 action.execute();
             } else {
@@ -72,7 +70,7 @@ public interface ActionProvider {
         }, defaultAction);
     }
 
-    default void handleInput() {
-        runTriggeredAction();
+    default void handleInput(Keyboard keyboard) {
+        runTriggeredAction(keyboard);
     }
 }

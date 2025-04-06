@@ -13,6 +13,7 @@ import de.amr.games.pacman.ui._2d.*;
 import de.amr.games.pacman.ui.dashboard.Dashboard;
 import de.amr.games.pacman.ui.input.GameKeyboard;
 import de.amr.games.pacman.ui.sound.GameSound;
+import de.amr.games.pacman.uilib.ActionProvider;
 import de.amr.games.pacman.uilib.GameClockFX;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -97,10 +98,10 @@ public class PacManGamesUI implements GameUI {
     private void handleViewChange(View oldView, View newView) {
         root.getChildren().set(0, newView.layoutRoot());
         if (oldView != null) {
-            oldView.disableActionBindings();
+            oldView.disableActionBindings(THE_UI.keyboard());
             THE_GAME_CONTROLLER.game().removeGameEventListener(oldView);
         }
-        newView.enableActionBindings();
+        newView.enableActionBindings(THE_UI.keyboard());
         newView.layoutRoot().requestFocus();
         stage.titleProperty().bind(newView.title());
         THE_GAME_CONTROLLER.game().addGameEventListener(newView);
@@ -131,7 +132,7 @@ public class PacManGamesUI implements GameUI {
                 showEditorView();
             }
             else if (currentView() instanceof ActionProvider actionProvider) {
-                actionProvider.handleInput();
+                actionProvider.handleInput(THE_UI.keyboard());
             }
         });
     }

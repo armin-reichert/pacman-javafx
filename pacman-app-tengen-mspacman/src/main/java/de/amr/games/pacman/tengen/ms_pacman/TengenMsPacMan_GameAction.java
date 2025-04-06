@@ -6,7 +6,7 @@ package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.tengen.ms_pacman.scene.SceneDisplayMode;
-import de.amr.games.pacman.ui.Action;
+import de.amr.games.pacman.uilib.Action;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;

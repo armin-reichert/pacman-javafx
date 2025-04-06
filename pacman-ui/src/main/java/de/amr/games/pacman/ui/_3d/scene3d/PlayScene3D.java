@@ -16,12 +16,12 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.ui.Action;
-import de.amr.games.pacman.ui.CameraControlledView;
+import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameScene;
-import de.amr.games.pacman.ui._2d.GameAction;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.ui._3d.level.*;
+import de.amr.games.pacman.uilib.Action;
+import de.amr.games.pacman.uilib.CameraControlledView;
 import javafx.animation.Animation;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -41,7 +41,6 @@ import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.ui.Globals.*;
 import static de.amr.games.pacman.uilib.Keyboard.alt;
 import static de.amr.games.pacman.uilib.Ufx.contextMenuTitleItem;
@@ -96,7 +95,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void init() {
         bindGameActions();
-        enableActionBindings();
+        enableActionBindings(THE_UI.keyboard());
         game().setScoreVisible(true);
         perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
         scores3D.setFont(THE_UI.assets().font("font.arcade", 8));
@@ -104,7 +103,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public final void end() {
-        disableActionBindings();
+        disableActionBindings(THE_UI.keyboard());
         perspectiveNamePy.unbind();
         level3D.stopAnimations();
         level3D = null;
@@ -122,7 +121,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             bindAlternativePlayerControlActions();
             bindCheatActions();
         }
-        enableActionBindings();
+        enableActionBindings(THE_UI.keyboard());
     }
 
     @Override
@@ -155,7 +154,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     public void onSceneVariantSwitch(GameScene fromScene) {
         game().level().ifPresent(level -> {
             bindGameActions();
-            enableActionBindings();
+            enableActionBindings(THE_UI.keyboard());
             if (level3D == null) {
                 replaceGameLevel3D();
                 level3D.addLevelCounter();

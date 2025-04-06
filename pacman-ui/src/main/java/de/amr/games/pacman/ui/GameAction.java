@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui._2d;
+package de.amr.games.pacman.ui;
 
 import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.controller.CoinStore;
@@ -10,9 +10,8 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.Action;
-import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui._3d.scene3d.Perspective;
+import de.amr.games.pacman.uilib.Action;
 import javafx.scene.shape.DrawMode;
 import org.tinylog.Logger;
 
@@ -20,7 +19,6 @@ import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.ui.Globals.*;
 import static de.amr.games.pacman.uilib.Ufx.toggle;
 import static java.util.function.Predicate.not;
@@ -375,7 +373,6 @@ public enum GameAction implements Action {
             }
         }
     };
-
 
     private static final int SIMULATION_SPEED_DELTA = 2;
     private static final int SIMULATION_SPEED_MIN   = 10;
