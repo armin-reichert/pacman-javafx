@@ -42,7 +42,7 @@ public class Globals {
 
     public static final float ENERGIZER_3D_RADIUS      = 3.5f;
     public static final float FLOOR_3D_THICKNESS       = 0.5f;
-    public static final float GHOST_3D_SIZE            = 13.0f;
+    public static final float GHOST_3D_SIZE            = 16.0f;
     public static final float HOUSE_3D_BASE_HEIGHT     = 12.0f;
     public static final float HOUSE_3D_WALL_TOP_HEIGHT = 0.1f;
     public static final float HOUSE_3D_WALL_THICKNESS  = 1.5f;
@@ -52,7 +52,7 @@ public class Globals {
     public static final float OBSTACLE_3D_BASE_HEIGHT  = 7.0f;
     public static final float OBSTACLE_3D_TOP_HEIGHT   = 0.1f;
     public static final float OBSTACLE_3D_THICKNESS    = 1.25f;
-    public static final float PAC_3D_SIZE              = 15.0f;
+    public static final float PAC_3D_SIZE              = 17.0f;
     public static final float PELLET_3D_RADIUS         = 1.0f;
 
     public static final BooleanProperty PY_AUTOPILOT                       = new SimpleBooleanProperty(false);
