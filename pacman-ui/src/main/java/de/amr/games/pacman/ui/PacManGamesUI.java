@@ -11,7 +11,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tilemap.editor.TileMapEditor;
 import de.amr.games.pacman.ui.dashboard.Dashboard;
 import de.amr.games.pacman.ui.input.GameKeyboard;
-import de.amr.games.pacman.uilib.GameClockFX;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -48,7 +47,6 @@ public class PacManGamesUI implements GameUI {
 
     private final ObjectProperty<View> viewPy = new SimpleObjectProperty<>();
 
-    private final GameClockFX clock = new GameClockFX();
     private final GameUIConfigManager gameUIConfigManager = new GameUIConfigManager();
 
     private Stage stage;
@@ -61,15 +59,15 @@ public class PacManGamesUI implements GameUI {
     private StartPagesView startPagesView;
 
     public PacManGamesUI() {
-        clock.setPauseableAction(this::doSimulationStepAndUpdateGameScene);
-        clock.setPermanentAction(() -> currentView().update());
+        THE_CLOCK.setPauseableAction(this::doSimulationStepAndUpdateGameScene);
+        THE_CLOCK.setPermanentAction(() -> currentView().update());
         viewPy.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
     }
 
     private void doSimulationStepAndUpdateGameScene() {
         try {
             THE_GAME_CONTROLLER.update();
-            THE_GAME_CONTROLLER.game().eventLog().print(clock.tickCount());
+            THE_GAME_CONTROLLER.game().eventLog().print(THE_CLOCK.tickCount());
         } catch (Exception x) {
             Logger.error(x);
             Logger.error("SOMETHING VERY BAD HAPPENED DURING SIMULATION STEP!");
@@ -148,8 +146,8 @@ public class PacManGamesUI implements GameUI {
 
         var iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, STATUS_ICON_COLOR);
         iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> currentView() != editorView && clock.isPaused(),
-            viewPy, clock.pausedProperty()));
+            () -> currentView() != editorView && THE_CLOCK.isPaused(),
+            viewPy, THE_CLOCK.pausedProperty()));
 
         Pane iconBox = createIconBox(iconMuted, icon3D, iconAutopilot, iconImmune);
         iconBox.visibleProperty().bind(Bindings.createBooleanBinding(() -> currentView() != editorView, viewPy));
@@ -223,11 +221,6 @@ public class PacManGamesUI implements GameUI {
     }
 
     @Override
-    public GameClockFX clock() {
-        return clock;
-    }
-
-    @Override
     public GameUIConfigManager gameUIConfigManager() {
         return gameUIConfigManager;
     }
@@ -259,10 +252,10 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public void restart() {
-        clock.stop();
-        clock.setTargetFrameRate(Globals.TICKS_PER_SECOND);
-        clock.pausedProperty().set(false);
-        clock.start();
+        THE_CLOCK.stop();
+        THE_CLOCK.setTargetFrameRate(Globals.TICKS_PER_SECOND);
+        THE_CLOCK.pausedProperty().set(false);
+        THE_CLOCK.start();
         THE_GAME_CONTROLLER.restart(GameState.BOOT);
     }
 
@@ -291,10 +284,10 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public void showEditorView() {
-        if (!THE_GAME_CONTROLLER.game().isPlaying() || clock().isPaused()) {
+        if (!THE_GAME_CONTROLLER.game().isPlaying() || THE_CLOCK.isPaused()) {
             currentGameScene().ifPresent(GameScene::end);
             THE_GAME_CONTROLLER.game().endGame();
-            clock.stop();
+            THE_CLOCK.stop();
             editor.start(stage);
             viewPy.set(editorView);
         } else {
@@ -319,8 +312,8 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public void showStartView() {
-        clock.stop();
-        clock.setTargetFrameRate(Globals.TICKS_PER_SECOND);
+        THE_CLOCK.stop();
+        THE_CLOCK.setTargetFrameRate(Globals.TICKS_PER_SECOND);
         gameView.gameSceneProperty().set(null);
         gameView.setDashboardVisible(false);
         viewPy.set(startPagesView);

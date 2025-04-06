@@ -100,7 +100,7 @@ public class ArcadePlayScene2D extends GameScene2D {
                 levelCompleteAnimation.update();
             }
         }, () -> { // Scene is already visible 2 ticks before game level is created!
-            Logger.warn("Tick {}: Game level not yet available", THE_UI.clock().tickCount());
+            Logger.warn("Tick {}: Game level not yet available", THE_CLOCK.tickCount());
         });
     }
 
@@ -137,7 +137,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         GameLevel level = game().level().orElse(null);
         // Scene is drawn already for 2 ticks before level has been created
         if (level == null) {
-            Logger.warn("Tick {}: Game level not yet available, scene content not drawn", THE_UI.clock().tickCount());
+            Logger.warn("Tick {}: Game level not yet available, scene content not drawn", THE_CLOCK.tickCount());
             return;
         }
 

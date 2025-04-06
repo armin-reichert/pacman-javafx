@@ -42,8 +42,7 @@ import static de.amr.games.pacman.model.actors.Bonus.STATE_EDIBLE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.games.pacman.tengen.ms_pacman.maps.MapRepository.strangeMap15Sprite;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.*;
-import static de.amr.games.pacman.ui.Globals.THE_ASSETS;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.*;
 import static de.amr.games.pacman.ui._2d.GameSpriteSheet.NO_SPRITE;
 import static java.util.function.Predicate.not;
 
@@ -165,12 +164,12 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
         if (coloredMapSet == null) {
             // setWorldMap() not yet called?
-            Logger.warn("Tick {}: No maze available", THE_UI.clock().tickCount());
+            Logger.warn("Tick {}: No maze available", THE_CLOCK.tickCount());
             return;
         }
 
         RectArea area = mapCategory == MapCategory.STRANGE && mapNumber == 15
-            ? strangeMap15Sprite(THE_UI.clock().tickCount()) // Strange map #15: psychedelic animation
+            ? strangeMap15Sprite(THE_CLOCK.tickCount()) // Strange map #15: psychedelic animation
             : coloredMapSet.normalMaze().region();
         ctx().drawImage(coloredMapSet.normalMaze().source(),
             area.x(), area.y(), area.width(), area.height(),
@@ -319,7 +318,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     @Override
     public void drawScores(ScoreManager scoreManager, Color color, Font font) {
-        if (THE_UI.clock().tickCount() % 60 < 30) { drawText("1UP", color, font, tiles_to_px(2), tiles_to_px(1)); }
+        if (THE_CLOCK.tickCount() % 60 < 30) { drawText("1UP", color, font, tiles_to_px(2), tiles_to_px(1)); }
         drawText("HIGH SCORE", color, font, tiles_to_px(9), tiles_to_px(1));
         drawText("%6d".formatted(scoreManager.score().points()), color, font, 0, tiles_to_px(2));
         drawText("%6d".formatted(scoreManager.highScore().points()), color, font, tiles_to_px(11), tiles_to_px(2));

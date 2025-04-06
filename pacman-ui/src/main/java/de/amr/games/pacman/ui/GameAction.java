@@ -164,7 +164,7 @@ public enum GameAction implements Action {
             if (THE_GAME_CONTROLLER.state() == GameState.TESTING_LEVELS) {
                 THE_GAME_CONTROLLER.state().onExit(THE_GAME_CONTROLLER.game()); //TODO exit other states too?
             }
-            THE_UI.clock().setTargetFrameRate(Globals.TICKS_PER_SECOND);
+            THE_CLOCK.setTargetFrameRate(Globals.TICKS_PER_SECOND);
             THE_GAME_CONTROLLER.restart(INTRO);
         }
     },
@@ -172,9 +172,9 @@ public enum GameAction implements Action {
     SIMULATION_SLOWER {
         @Override
         public void execute() {
-            double newRate = THE_UI.clock().getTargetFrameRate() - SIMULATION_SPEED_DELTA;
+            double newRate = THE_CLOCK.getTargetFrameRate() - SIMULATION_SPEED_DELTA;
             newRate = clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
-            THE_UI.clock().setTargetFrameRate(newRate);
+            THE_CLOCK.setTargetFrameRate(newRate);
             String prefix = newRate == SIMULATION_SPEED_MIN ? "At minimum speed: " : "";
             THE_UI.showFlashMessageSec(0.75, prefix + newRate + "Hz");
         }
@@ -183,9 +183,9 @@ public enum GameAction implements Action {
     SIMULATION_FASTER {
         @Override
         public void execute() {
-            double newRate = THE_UI.clock().getTargetFrameRate() + SIMULATION_SPEED_DELTA;
+            double newRate = THE_CLOCK.getTargetFrameRate() + SIMULATION_SPEED_DELTA;
             newRate = clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
-            THE_UI.clock().setTargetFrameRate(newRate);
+            THE_CLOCK.setTargetFrameRate(newRate);
             String prefix = newRate == SIMULATION_SPEED_MAX ? "At maximum speed: " : "";
             THE_UI.showFlashMessageSec(0.75, prefix + newRate + "Hz");
         }
@@ -194,7 +194,7 @@ public enum GameAction implements Action {
     SIMULATION_ONE_STEP {
         @Override
         public void execute() {
-            boolean success = THE_UI.clock().makeOneStep(true);
+            boolean success = THE_CLOCK.makeOneStep(true);
             if (!success) {
                 THE_UI.showFlashMessage("Simulation step error, clock stopped!");
             }
@@ -202,14 +202,14 @@ public enum GameAction implements Action {
 
         @Override
         public boolean isEnabled() {
-            return THE_UI.clock().isPaused();
+            return THE_CLOCK.isPaused();
         }
     },
 
     SIMULATION_TEN_STEPS {
         @Override
         public void execute() {
-            boolean success = THE_UI.clock().makeSteps(10, true);
+            boolean success = THE_CLOCK.makeSteps(10, true);
             if (!success) {
                 THE_UI.showFlashMessage("Simulation step error, clock stopped!");
             }
@@ -217,15 +217,15 @@ public enum GameAction implements Action {
 
         @Override
         public boolean isEnabled() {
-            return THE_UI.clock().isPaused();
+            return THE_CLOCK.isPaused();
         }
     },
 
     SIMULATION_RESET {
         @Override
         public void execute() {
-            THE_UI.clock().setTargetFrameRate(TICKS_PER_SECOND);
-            THE_UI.showFlashMessageSec(0.75, THE_UI.clock().getTargetFrameRate() + "Hz");
+            THE_CLOCK.setTargetFrameRate(TICKS_PER_SECOND);
+            THE_UI.showFlashMessageSec(0.75, THE_CLOCK.getTargetFrameRate() + "Hz");
         }
     },
 
@@ -307,11 +307,11 @@ public enum GameAction implements Action {
     TOGGLE_PAUSED {
         @Override
         public void execute() {
-            toggle(THE_UI.clock().pausedProperty());
-            if (THE_UI.clock().isPaused()) {
+            toggle(THE_CLOCK.pausedProperty());
+            if (THE_CLOCK.isPaused()) {
                 THE_SOUND.stopAll();
             }
-            Logger.info("Game ({}) {}", THE_GAME_CONTROLLER.selectedGameVariant(), THE_UI.clock().isPaused() ? "paused" : "resumed");
+            Logger.info("Game ({}) {}", THE_GAME_CONTROLLER.selectedGameVariant(), THE_CLOCK.isPaused() ? "paused" : "resumed");
         }
     },
 

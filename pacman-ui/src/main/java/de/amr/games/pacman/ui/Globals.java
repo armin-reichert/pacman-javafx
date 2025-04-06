@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui;
 import de.amr.games.pacman.ui._3d.scene3d.Perspective;
 import de.amr.games.pacman.ui.input.GameKeyboard;
 import de.amr.games.pacman.ui.sound.GameSound;
+import de.amr.games.pacman.uilib.GameClockFX;
 import javafx.beans.property.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
@@ -18,6 +19,7 @@ import static de.amr.games.pacman.Globals.TS;
 public class Globals {
 
     public static final GameAssets THE_ASSETS = new GameAssets();
+    public static final  GameClockFX THE_CLOCK = new GameClockFX();
     public static final  GameKeyboard THE_KEYBOARD = new GameKeyboard();
     public static final GameSound THE_SOUND = new GameSound();
 

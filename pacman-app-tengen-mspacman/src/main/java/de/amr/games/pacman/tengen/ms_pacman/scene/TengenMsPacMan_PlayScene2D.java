@@ -439,7 +439,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         GameLevel level = game().level().orElse(null);
         // Scene is drawn already for 2 ticks before level has been created
         if (level == null) {
-            Logger.warn("Tick {}: Game level not yet available, scene content not drawn", THE_UI.clock().tickCount());
+            Logger.warn("Tick {}: Game level not yet available, scene content not drawn", THE_CLOCK.tickCount());
             return;
         }
 

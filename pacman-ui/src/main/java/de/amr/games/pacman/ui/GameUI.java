@@ -6,8 +6,6 @@ package de.amr.games.pacman.ui;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.dashboard.Dashboard;
-import de.amr.games.pacman.ui.input.GameKeyboard;
-import de.amr.games.pacman.uilib.GameClockFX;
 import javafx.beans.property.ObjectProperty;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
@@ -21,7 +19,6 @@ public interface GameUI {
     void addStartPage(StartPage startPage);
     void build(Stage stage, Dimension2D size);
     void buildDashboard(DashboardID... ids);
-    GameClockFX clock();
     GameUIConfigManager gameUIConfigManager();
     Optional<GameScene> currentGameScene();
     View currentView();

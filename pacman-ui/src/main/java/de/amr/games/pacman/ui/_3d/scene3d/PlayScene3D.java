@@ -182,12 +182,12 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         GameLevel level = game().level().orElse(null);
         if (level == null) {
             // Scene is already visible for 3(?) ticks before game level has been created
-            Logger.warn("Tick #{}: Cannot update PlayScene3D: game level not yet available", THE_UI.clock().tickCount());
+            Logger.warn("Tick #{}: Cannot update PlayScene3D: game level not yet available", THE_CLOCK.tickCount());
             return;
         }
         // TODO: may this happen?
         if (level3D == null) {
-            Logger.warn("Tick #{}: Cannot update 3D play scene, 3D game level not yet created?", THE_UI.clock().tickCount());
+            Logger.warn("Tick #{}: Cannot update 3D play scene, 3D game level not yet created?", THE_CLOCK.tickCount());
             return;
         }
         level3D.update();

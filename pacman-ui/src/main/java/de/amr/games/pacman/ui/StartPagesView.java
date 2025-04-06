@@ -17,6 +17,7 @@ import org.tinylog.Logger;
 import java.util.*;
 
 import static de.amr.games.pacman.Globals.assertNotNull;
+import static de.amr.games.pacman.ui.Globals.THE_CLOCK;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 /**
@@ -32,7 +33,7 @@ public class StartPagesView implements View {
 
         @Override
         public boolean isEnabled() {
-            return !THE_UI.clock().isPaused();
+            return !THE_CLOCK.isPaused();
         }
     };
 

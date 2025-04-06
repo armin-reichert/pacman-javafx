@@ -75,7 +75,7 @@ public class GameView implements View {
     public GameView(GameUI ui) {
         this.parentScene = ui.mainScene();
         titleExpression = Bindings.createStringBinding(() -> computeTitleText(ui),
-                ui.clock().pausedProperty(), ui.mainScene().heightProperty(), gameScenePy,
+                THE_CLOCK.pausedProperty(), ui.mainScene().heightProperty(), gameScenePy,
                 PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE);
         configureCanvasContainer();
         configurePiPView(ui);
@@ -319,7 +319,7 @@ public class GameView implements View {
     }
 
     private String computeTitleText(GameUI ui) {
-        String keyPattern = "app.title." + ui.gameUIConfigManager().current().assetNamespace() + (ui.clock().isPaused() ? ".paused" : "");
+        String keyPattern = "app.title." + ui.gameUIConfigManager().current().assetNamespace() + (THE_CLOCK.isPaused() ? ".paused" : "");
         if (ui.currentGameScene().isPresent()) {
             return computeTitleIfGameScenePresent(ui.currentGameScene().get(), keyPattern);
         }
