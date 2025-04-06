@@ -40,8 +40,8 @@ import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
-import static de.amr.games.pacman.ui.GlobalProperties.PY_AUTOPILOT;
-import static de.amr.games.pacman.ui.GlobalProperties.PY_IMMUNITY;
+import static de.amr.games.pacman.ui.Globals.PY_AUTOPILOT;
+import static de.amr.games.pacman.ui.Globals.PY_IMMUNITY;
 
 /**
  * User interface for all Pac-Man game variants.

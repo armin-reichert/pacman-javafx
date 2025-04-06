@@ -6,7 +6,6 @@ package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.GameUI;
-import de.amr.games.pacman.ui.Globals;
 import javafx.application.Application;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
@@ -16,6 +15,7 @@ import javafx.stage.Stage;
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.createUIAndSupport3D;
 
 public class TengenMsPacMan_App extends Application {
 
@@ -30,7 +30,7 @@ public class TengenMsPacMan_App extends Application {
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
         double aspect = (double) NES_SIZE.x() / NES_SIZE.y();
         double height = 0.8 * screenSize.getHeight(), width = aspect * height;
-        Globals.createUIAndSupport3D(true);
+        createUIAndSupport3D(true);
         THE_UI.configurations().set(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_UIConfig());
         THE_UI.build(stage, new Dimension2D(width, height));
         THE_UI.addStartPage(new TengenMsPacMan_StartPage(GameVariant.MS_PACMAN_TENGEN));

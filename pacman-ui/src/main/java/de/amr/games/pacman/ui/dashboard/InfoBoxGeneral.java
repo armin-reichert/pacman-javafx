@@ -12,7 +12,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 
 import static de.amr.games.pacman.ui.Globals.THE_UI;
-import static de.amr.games.pacman.ui.GlobalProperties.*;
+import static de.amr.games.pacman.ui.Globals.*;
 
 /**
  * General settings.

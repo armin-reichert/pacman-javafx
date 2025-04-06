@@ -6,7 +6,6 @@ package de.amr.games.pacman.arcade.pacman_xxl;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.GameUI;
-import de.amr.games.pacman.ui.Globals;
 import de.amr.games.pacman.ui.dashboard.InfoBoxCustomMaps;
 import javafx.application.Application;
 import javafx.geometry.Dimension2D;
@@ -16,6 +15,7 @@ import javafx.stage.Stage;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.createUIAndSupport3D;
 
 public class PacManXXL_App extends Application {
 
@@ -35,7 +35,7 @@ public class PacManXXL_App extends Application {
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
         double aspect = screenSize.getWidth() / screenSize.getHeight();
         double height = 0.8 * screenSize.getHeight(), width = aspect * height;
-        Globals.createUIAndSupport3D(true);
+        createUIAndSupport3D(true);
         THE_UI.configurations().set(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_UIConfig());
         THE_UI.configurations().set(GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_UIConfig());
         THE_UI.build(stage, new Dimension2D(width, height));

@@ -17,7 +17,7 @@ import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.ui.GlobalProperties.PY_3D_ENABLED;
+import static de.amr.games.pacman.ui.Globals.PY_3D_ENABLED;
 
 public class PacManXXL_StartPage implements StartPage, ResourceManager {
 

@@ -18,7 +18,6 @@ import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.games.pacman.ui.GameUI;
-import de.amr.games.pacman.ui.Globals;
 import de.amr.games.pacman.ui.dashboard.InfoBoxCustomMaps;
 import de.amr.games.pacman.uilib.model3D.Model3D;
 import javafx.application.Application;
@@ -36,6 +35,7 @@ import java.util.Map;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.createUIAndSupport3D;
 
 /**
  * Application containing all game variants and including 3D play scene.
@@ -61,7 +61,7 @@ public class PacManGames3dApp extends Application {
     public void start(Stage stage) {
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
         double height = 0.8 * screenSize.getHeight(), width = 1.6 * height;
-        Globals.createUIAndSupport3D(true);
+        createUIAndSupport3D(true);
         THE_UI.configurations().set(GameVariant.PACMAN, new ArcadePacMan_UIConfig());
         THE_UI.configurations().set(GameVariant.MS_PACMAN, new ArcadeMsPacMan_UIConfig());
         THE_UI.configurations().set(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_UIConfig());

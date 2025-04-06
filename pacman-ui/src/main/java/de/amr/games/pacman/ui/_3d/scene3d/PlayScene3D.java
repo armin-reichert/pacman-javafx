@@ -42,7 +42,7 @@ import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
-import static de.amr.games.pacman.ui.GlobalProperties.*;
+import static de.amr.games.pacman.ui.Globals.*;
 import static de.amr.games.pacman.uilib.Keyboard.alt;
 import static de.amr.games.pacman.uilib.Ufx.contextMenuTitleItem;
 

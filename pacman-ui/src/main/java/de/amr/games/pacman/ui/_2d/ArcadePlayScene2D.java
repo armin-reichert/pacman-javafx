@@ -35,8 +35,8 @@ import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_TILES;
-import static de.amr.games.pacman.ui.GlobalProperties.PY_AUTOPILOT;
-import static de.amr.games.pacman.ui.GlobalProperties.PY_IMMUNITY;
+import static de.amr.games.pacman.ui.Globals.PY_AUTOPILOT;
+import static de.amr.games.pacman.ui.Globals.PY_IMMUNITY;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 /**

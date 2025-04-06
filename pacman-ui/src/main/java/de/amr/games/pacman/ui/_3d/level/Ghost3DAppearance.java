@@ -24,7 +24,7 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.ui.GlobalProperties.PY_3D_DRAW_MODE;
+import static de.amr.games.pacman.ui.Globals.PY_3D_DRAW_MODE;
 import static java.util.Objects.requireNonNull;
 
 /**

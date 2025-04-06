@@ -1,6 +1,6 @@
 package de.amr.games.pacman.tengen.ms_pacman.scene;
 
-import de.amr.games.pacman.ui.GlobalProperties;
+import de.amr.games.pacman.ui.Globals;
 
 import static de.amr.games.pacman.Globals.TS;
 
@@ -19,8 +19,8 @@ public class TengenMsPacMan_PiPScene extends TengenMsPacMan_PlayScene2D {
     @Override
     public void draw() {
         double aspect = sizeInPx().x() / sizeInPx().y();
-        canvas.setWidth(GlobalProperties.PY_PIP_HEIGHT.doubleValue() * aspect);
-        canvas.setHeight(GlobalProperties.PY_PIP_HEIGHT.doubleValue());
+        canvas.setWidth(Globals.PY_PIP_HEIGHT.doubleValue() * aspect);
+        canvas.setHeight(Globals.PY_PIP_HEIGHT.doubleValue());
         setScaling(canvas.getHeight() / (sizeInPx().y() + 3 * TS));
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());

@@ -43,7 +43,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.ui.GlobalProperties.*;
+import static de.amr.games.pacman.ui.Globals.*;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.uilib.Ufx.*;
 

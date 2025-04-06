@@ -19,7 +19,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
 
 import static de.amr.games.pacman.ui.Globals.THE_UI;
-import static de.amr.games.pacman.ui.GlobalProperties.*;
+import static de.amr.games.pacman.ui.Globals.*;
 
 /**
  * 3D related settings.

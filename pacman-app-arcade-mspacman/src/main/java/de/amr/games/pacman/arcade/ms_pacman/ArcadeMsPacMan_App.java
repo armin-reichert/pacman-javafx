@@ -6,7 +6,6 @@ package de.amr.games.pacman.arcade.ms_pacman;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.GameUI;
-import de.amr.games.pacman.ui.Globals;
 import javafx.application.Application;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
@@ -15,6 +14,7 @@ import javafx.stage.Stage;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.createUIAndSupport3D;
 
 public class ArcadeMsPacMan_App extends Application {
 
@@ -28,7 +28,7 @@ public class ArcadeMsPacMan_App extends Application {
     public void start(Stage stage) {
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
         double height = 0.8 * screenSize.getHeight(), width = 1.2 * height;
-        Globals.createUIAndSupport3D(true);
+        createUIAndSupport3D(true);
         THE_UI.configurations().set(GameVariant.MS_PACMAN, new ArcadeMsPacMan_UIConfig());
         THE_UI.build(stage, new Dimension2D(width, height));
         THE_UI.addStartPage(new ArcadeMsPacMan_StartPage(GameVariant.MS_PACMAN));
