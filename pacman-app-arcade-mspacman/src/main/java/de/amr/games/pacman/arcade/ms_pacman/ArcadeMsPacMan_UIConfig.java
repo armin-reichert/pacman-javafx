@@ -30,9 +30,10 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
-import static de.amr.games.pacman.ui.Globals.*;
+import static de.amr.games.pacman.ui.Globals.PY_3D_ENABLED;
+import static de.amr.games.pacman.ui.Globals.THE_ASSETS;
 
-public class ArcadeMsPacMan_UIConfig implements GameUIConfig {
+public class ArcadeMsPacMan_UIConfig implements GameUIConfig, ResourceManager {
 
     private static final List<WorldMapColorScheme> WORLD_MAP_COLOR_SCHEMES = List.of(
         new WorldMapColorScheme("FFB7AE", "FF0000", "FCB5FF", "DEDEFF"),
@@ -47,16 +48,19 @@ public class ArcadeMsPacMan_UIConfig implements GameUIConfig {
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
+    @Override
+    public Class<?> resourceRootClass() {
+        return ArcadeMsPacMan_UIConfig.class;
+    }
+
     public ArcadeMsPacMan_UIConfig() {
-        ResourceManager rm = () -> ArcadeMsPacMan_UIConfig.class;
+        appIcon = loadImage("graphics/icons/mspacman.png");
+        spriteSheet = new ArcadeMsPacMan_SpriteSheet(loadImage("graphics/mspacman_spritesheet.png"));
 
-        appIcon = rm.loadImage("graphics/icons/mspacman.png");
-        spriteSheet = new ArcadeMsPacMan_SpriteSheet(rm.loadImage("graphics/mspacman_spritesheet.png"));
-
-        THE_ASSETS.store("ms_pacman.flashing_mazes",                  rm.loadImage("graphics/mazes_flashing.png"));
-        THE_ASSETS.store("ms_pacman.logo.midway",                     rm.loadImage("graphics/midway_logo.png"));
-        THE_ASSETS.store("ms_pacman.startpage.image1",                rm.loadImage("graphics/f1.jpg"));
-        THE_ASSETS.store("ms_pacman.startpage.image2",                rm.loadImage("graphics/f2.jpg"));
+        THE_ASSETS.store("ms_pacman.flashing_mazes",                  loadImage("graphics/mazes_flashing.png"));
+        THE_ASSETS.store("ms_pacman.logo.midway",                     loadImage("graphics/midway_logo.png"));
+        THE_ASSETS.store("ms_pacman.startpage.image1",                loadImage("graphics/f1.jpg"));
+        THE_ASSETS.store("ms_pacman.startpage.image2",                loadImage("graphics/f2.jpg"));
 
         THE_ASSETS.store("ms_pacman.color.game_over_message",         Color.web(Arcade.Palette.RED));
 
@@ -87,28 +91,28 @@ public class ArcadeMsPacMan_UIConfig implements GameUIConfig {
         THE_ASSETS.store("ms_pacman.ghost.color.flashing.pupils",     Color.web(Arcade.Palette.RED));
 
         // Clips
-        THE_ASSETS.store("ms_pacman.audio.bonus_eaten",             rm.loadAudioClip("sound/Fruit.mp3"));
-        THE_ASSETS.store("ms_pacman.audio.credit",                  rm.loadAudioClip("sound/credit.wav"));
-        THE_ASSETS.store("ms_pacman.audio.extra_life",              rm.loadAudioClip("sound/ExtraLife.mp3"));
-        THE_ASSETS.store("ms_pacman.audio.ghost_eaten",             rm.loadAudioClip("sound/Ghost.mp3"));
-        THE_ASSETS.store("ms_pacman.audio.sweep",                   rm.loadAudioClip("sound/sweep.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.bonus_eaten",             loadAudioClip("sound/Fruit.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.credit",                  loadAudioClip("sound/credit.wav"));
+        THE_ASSETS.store("ms_pacman.audio.extra_life",              loadAudioClip("sound/ExtraLife.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.ghost_eaten",             loadAudioClip("sound/Ghost.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.sweep",                   loadAudioClip("sound/sweep.mp3"));
 
         // Audio played by MediaPlayer
-        THE_ASSETS.store("ms_pacman.audio.bonus_bouncing",          rm.url("sound/Fruit Bounce.mp3"));
-        THE_ASSETS.store("ms_pacman.audio.game_ready",              rm.url("sound/Start.mp3"));
-        THE_ASSETS.store("ms_pacman.audio.game_over",               rm.url("sound/game-over.mp3"));
-        THE_ASSETS.store("ms_pacman.audio.intermission.1",          rm.url("sound/Act_1_They_Meet.mp3"));
-        THE_ASSETS.store("ms_pacman.audio.intermission.2",          rm.url("sound/Act_2_The_Chase.mp3"));
-        THE_ASSETS.store("ms_pacman.audio.intermission.3",          rm.url("sound/Act_3_Junior.mp3"));
-        THE_ASSETS.store("ms_pacman.audio.level_complete",          rm.url("sound/level-complete.mp3"));
-        THE_ASSETS.store("ms_pacman.audio.pacman_death",            rm.url("sound/Died.mp3"));
-        THE_ASSETS.store("ms_pacman.audio.pacman_munch",            rm.url("sound/munch.wav"));
-        THE_ASSETS.store("ms_pacman.audio.pacman_power",            rm.url("sound/ScaredGhost.mp3"));
-        THE_ASSETS.store("ms_pacman.audio.siren.1",                 rm.url("sound/GhostNoise1.wav"));
-        THE_ASSETS.store("ms_pacman.audio.siren.2",                 rm.url("sound/GhostNoise1.wav"));// TODO
-        THE_ASSETS.store("ms_pacman.audio.siren.3",                 rm.url("sound/GhostNoise1.wav"));// TODO
-        THE_ASSETS.store("ms_pacman.audio.siren.4",                 rm.url("sound/GhostNoise1.wav"));// TODO
-        THE_ASSETS.store("ms_pacman.audio.ghost_returns",           rm.url("sound/GhostEyes.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.bonus_bouncing",          url("sound/Fruit Bounce.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.game_ready",              url("sound/Start.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.game_over",               url("sound/game-over.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.intermission.1",          url("sound/Act_1_They_Meet.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.intermission.2",          url("sound/Act_2_The_Chase.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.intermission.3",          url("sound/Act_3_Junior.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.level_complete",          url("sound/level-complete.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.pacman_death",            url("sound/Died.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.pacman_munch",            url("sound/munch.wav"));
+        THE_ASSETS.store("ms_pacman.audio.pacman_power",            url("sound/ScaredGhost.mp3"));
+        THE_ASSETS.store("ms_pacman.audio.siren.1",                 url("sound/GhostNoise1.wav"));
+        THE_ASSETS.store("ms_pacman.audio.siren.2",                 url("sound/GhostNoise1.wav"));// TODO
+        THE_ASSETS.store("ms_pacman.audio.siren.3",                 url("sound/GhostNoise1.wav"));// TODO
+        THE_ASSETS.store("ms_pacman.audio.siren.4",                 url("sound/GhostNoise1.wav"));// TODO
+        THE_ASSETS.store("ms_pacman.audio.ghost_returns",           url("sound/GhostEyes.mp3"));
 
         scenesByID.put("BootScene",   new ArcadeBootScene2D());
         scenesByID.put("IntroScene",  new IntroScene());
