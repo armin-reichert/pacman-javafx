@@ -147,12 +147,15 @@ public class PacManGamesUI implements GameUI {
         var iconImmune = FontIcon.of(FontAwesomeSolid.USER_SECRET, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
         iconImmune.visibleProperty().bind(PY_IMMUNITY);
 
+        var icon3D = FontIcon.of(FontAwesomeSolid.CUBES, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
+        icon3D.visibleProperty().bind(PY_3D_ENABLED);
+
         var iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, STATUS_ICON_COLOR);
         iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
             () -> currentView() != editorView && clock.isPaused(),
             viewPy, clock.pausedProperty()));
 
-        Pane iconBox = createIconBox(iconMuted, iconAutopilot, iconImmune);
+        Pane iconBox = createIconBox(iconMuted, icon3D, iconAutopilot, iconImmune);
         iconBox.visibleProperty().bind(Bindings.createBooleanBinding(() -> currentView() != editorView, viewPy));
 
         parent.getChildren().addAll(iconPaused, iconBox);
