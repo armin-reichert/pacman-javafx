@@ -33,7 +33,7 @@ import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.ui.Globals.PY_3D_ENABLED;
 import static de.amr.games.pacman.ui.Globals.THE_ASSETS;
 
-public class ArcadePacMan_UIConfig implements GameUIConfig {
+public class ArcadePacMan_UIConfig implements GameUIConfig, ResourceManager {
 
     private static final WorldMapColorScheme MAP_COLORING = new WorldMapColorScheme("#000000", "#2121ff", "#fcb5ff", "#febdb4");
 
@@ -41,16 +41,20 @@ public class ArcadePacMan_UIConfig implements GameUIConfig {
     private final ArcadePacMan_SpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
+    @Override
+    public Class<?> resourceRootClass() {
+        return ArcadePacMan_UIConfig.class;
+    }
+
     public ArcadePacMan_UIConfig() {
-        ResourceManager rm = this::getClass;
-        appIcon = rm.loadImage("graphics/icons/pacman.png");
-        spriteSheet = new ArcadePacMan_SpriteSheet(rm.loadImage("graphics/pacman_spritesheet.png"));
+        appIcon = loadImage("graphics/icons/pacman.png");
+        spriteSheet = new ArcadePacMan_SpriteSheet(loadImage("graphics/pacman_spritesheet.png"));
 
-        THE_ASSETS.store("pacman.flashing_maze",                   rm.loadImage("graphics/maze_flashing.png"));
+        THE_ASSETS.store("pacman.flashing_maze",                   loadImage("graphics/maze_flashing.png"));
 
-        THE_ASSETS.store("pacman.startpage.image1",                rm.loadImage("graphics/f1.jpg"));
-        THE_ASSETS.store("pacman.startpage.image2",                rm.loadImage("graphics/f2.jpg"));
-        THE_ASSETS.store("pacman.startpage.image3",                rm.loadImage("graphics/f3.jpg"));
+        THE_ASSETS.store("pacman.startpage.image1",                loadImage("graphics/f1.jpg"));
+        THE_ASSETS.store("pacman.startpage.image2",                loadImage("graphics/f2.jpg"));
+        THE_ASSETS.store("pacman.startpage.image3",                loadImage("graphics/f3.jpg"));
 
         THE_ASSETS.store("pacman.color.game_over_message",         Color.web(Arcade.Palette.RED));
 
@@ -78,25 +82,25 @@ public class ArcadePacMan_UIConfig implements GameUIConfig {
         THE_ASSETS.store("pacman.ghost.color.flashing.pupils",     Color.web(Arcade.Palette.RED));
 
         // Clips
-        THE_ASSETS.store("pacman.audio.bonus_eaten",               rm.loadAudioClip("sound/eat_fruit.mp3"));
-        THE_ASSETS.store("pacman.audio.credit",                    rm.loadAudioClip("sound/credit.wav"));
-        THE_ASSETS.store("pacman.audio.extra_life",                rm.loadAudioClip("sound/extend.mp3"));
-        THE_ASSETS.store("pacman.audio.ghost_eaten",               rm.loadAudioClip("sound/eat_ghost.mp3"));
-        THE_ASSETS.store("pacman.audio.sweep",                     rm.loadAudioClip("sound/common/sweep.mp3"));
+        THE_ASSETS.store("pacman.audio.bonus_eaten",               loadAudioClip("sound/eat_fruit.mp3"));
+        THE_ASSETS.store("pacman.audio.credit",                    loadAudioClip("sound/credit.wav"));
+        THE_ASSETS.store("pacman.audio.extra_life",                loadAudioClip("sound/extend.mp3"));
+        THE_ASSETS.store("pacman.audio.ghost_eaten",               loadAudioClip("sound/eat_ghost.mp3"));
+        THE_ASSETS.store("pacman.audio.sweep",                     loadAudioClip("sound/common/sweep.mp3"));
 
         // Media player URL
-        THE_ASSETS.store("pacman.audio.game_ready",                rm.url("sound/game_start.mp3"));
-        THE_ASSETS.store("pacman.audio.game_over",                 rm.url("sound/common/game-over.mp3"));
-        THE_ASSETS.store("pacman.audio.intermission",              rm.url("sound/intermission.mp3"));
-        THE_ASSETS.store("pacman.audio.pacman_death",              rm.url("sound/pacman_death.wav"));
-        THE_ASSETS.store("pacman.audio.pacman_munch",              rm.url("sound/munch.wav"));
-        THE_ASSETS.store("pacman.audio.pacman_power",              rm.url("sound/ghost-turn-to-blue.mp3"));
-        THE_ASSETS.store("pacman.audio.level_complete",            rm.url("sound/common/level-complete.mp3"));
-        THE_ASSETS.store("pacman.audio.siren.1",                   rm.url("sound/siren_1.mp3"));
-        THE_ASSETS.store("pacman.audio.siren.2",                   rm.url("sound/siren_2.mp3"));
-        THE_ASSETS.store("pacman.audio.siren.3",                   rm.url("sound/siren_3.mp3"));
-        THE_ASSETS.store("pacman.audio.siren.4",                   rm.url("sound/siren_4.mp3"));
-        THE_ASSETS.store("pacman.audio.ghost_returns",             rm.url("sound/retreating.mp3"));
+        THE_ASSETS.store("pacman.audio.game_ready",                url("sound/game_start.mp3"));
+        THE_ASSETS.store("pacman.audio.game_over",                 url("sound/common/game-over.mp3"));
+        THE_ASSETS.store("pacman.audio.intermission",              url("sound/intermission.mp3"));
+        THE_ASSETS.store("pacman.audio.pacman_death",              url("sound/pacman_death.wav"));
+        THE_ASSETS.store("pacman.audio.pacman_munch",              url("sound/munch.wav"));
+        THE_ASSETS.store("pacman.audio.pacman_power",              url("sound/ghost-turn-to-blue.mp3"));
+        THE_ASSETS.store("pacman.audio.level_complete",            url("sound/common/level-complete.mp3"));
+        THE_ASSETS.store("pacman.audio.siren.1",                   url("sound/siren_1.mp3"));
+        THE_ASSETS.store("pacman.audio.siren.2",                   url("sound/siren_2.mp3"));
+        THE_ASSETS.store("pacman.audio.siren.3",                   url("sound/siren_3.mp3"));
+        THE_ASSETS.store("pacman.audio.siren.4",                   url("sound/siren_4.mp3"));
+        THE_ASSETS.store("pacman.audio.ghost_returns",             url("sound/retreating.mp3"));
 
         scenesByID.put("BootScene",   new ArcadeBootScene2D());
         scenesByID.put("IntroScene",  new IntroScene());
