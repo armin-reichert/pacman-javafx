@@ -40,7 +40,7 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.ui.Globals.*;
 
-public class TengenMsPacMan_UIConfig implements GameUIConfig {
+public class TengenMsPacMan_UIConfig implements GameUIConfig, ResourceManager {
 
     public static final BooleanProperty PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED = new SimpleBooleanProperty(false);
     public static final ObjectProperty<SceneDisplayMode> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
@@ -57,18 +57,21 @@ public class TengenMsPacMan_UIConfig implements GameUIConfig {
     private final MapRepository mapRepository;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public TengenMsPacMan_UIConfig() {
-        ResourceManager rm = () -> TengenMsPacMan_UIConfig.class;
+    @Override
+    public Class<?> resourceRootClass() {
+        return TengenMsPacMan_UIConfig.class;
+    }
 
-        appIcon = rm.loadImage("graphics/icons/mspacman.png");
-        spriteSheet = new TengenMsPacMan_SpriteSheet(rm.loadImage("graphics/spritesheet.png"));
+    public TengenMsPacMan_UIConfig() {
+        appIcon = loadImage("graphics/icons/mspacman.png");
+        spriteSheet = new TengenMsPacMan_SpriteSheet(loadImage("graphics/spritesheet.png"));
         mapRepository = new MapRepository(
-            rm.loadImage("graphics/arcade_mazes.png"),
-            rm.loadImage("graphics/non_arcade_mazes.png")
+            loadImage("graphics/arcade_mazes.png"),
+            loadImage("graphics/non_arcade_mazes.png")
         );
 
-        THE_ASSETS.store("tengen.startpage.image1",                 rm.loadImage("graphics/f1.png"));
-        THE_ASSETS.store("tengen.startpage.image2",                 rm.loadImage("graphics/f2.png"));
+        THE_ASSETS.store("tengen.startpage.image1",                 loadImage("graphics/f1.png"));
+        THE_ASSETS.store("tengen.startpage.image2",                 loadImage("graphics/f2.png"));
 
         THE_ASSETS.store("tengen.color.game_over_message",          nesPaletteColor(0x11));
         THE_ASSETS.store("tengen.color.ready_message",              nesPaletteColor(0x28));
@@ -104,36 +107,36 @@ public class TengenMsPacMan_UIConfig implements GameUIConfig {
         THE_ASSETS.store("tengen.ghost.color.flashing.dress",       nesPaletteColor(0x20));
         THE_ASSETS.store("tengen.ghost.color.flashing.eyeballs",    nesPaletteColor(0x20));
         THE_ASSETS.store("tengen.ghost.color.flashing.pupils",      nesPaletteColor(0x20));
-        THE_ASSETS.store("tengen.audio.option.selection_changed",   rm.loadAudioClip("sound/ms-select1.wav"));
-        THE_ASSETS.store("tengen.audio.option.value_changed",       rm.loadAudioClip("sound/ms-select2.wav"));
+        THE_ASSETS.store("tengen.audio.option.selection_changed",   loadAudioClip("sound/ms-select1.wav"));
+        THE_ASSETS.store("tengen.audio.option.value_changed",       loadAudioClip("sound/ms-select2.wav"));
 
-        THE_ASSETS.store("tengen.audio.bonus_eaten",                rm.loadAudioClip("sound/ms-fruit.wav"));
-        THE_ASSETS.store("tengen.audio.extra_life",                 rm.loadAudioClip("sound/ms-extralife.wav"));
-        THE_ASSETS.store("tengen.audio.ghost_eaten",                rm.loadAudioClip("sound/ms-ghosteat.wav"));
+        THE_ASSETS.store("tengen.audio.bonus_eaten",                loadAudioClip("sound/ms-fruit.wav"));
+        THE_ASSETS.store("tengen.audio.extra_life",                 loadAudioClip("sound/ms-extralife.wav"));
+        THE_ASSETS.store("tengen.audio.ghost_eaten",                loadAudioClip("sound/ms-ghosteat.wav"));
 
-        THE_ASSETS.store("tengen.audio.intermission.4.junior.1",    rm.loadAudioClip("sound/ms-theend1.wav"));
-        THE_ASSETS.store("tengen.audio.intermission.4.junior.2",    rm.loadAudioClip("sound/ms-theend2.wav"));
+        THE_ASSETS.store("tengen.audio.intermission.4.junior.1",    loadAudioClip("sound/ms-theend1.wav"));
+        THE_ASSETS.store("tengen.audio.intermission.4.junior.2",    loadAudioClip("sound/ms-theend2.wav"));
 
 
         // used only in 3D scene when level is completed:
-        THE_ASSETS.store("tengen.audio.level_complete",             rm.url("sound/common/level-complete.mp3"));
-        THE_ASSETS.store("tengen.audio.sweep",                      rm.loadAudioClip("sound/common/sweep.mp3"));
+        THE_ASSETS.store("tengen.audio.level_complete",             url("sound/common/level-complete.mp3"));
+        THE_ASSETS.store("tengen.audio.sweep",                      loadAudioClip("sound/common/sweep.mp3"));
 
         // Audio played by MediaPlayer
-        THE_ASSETS.store("tengen.audio.game_ready",                 rm.url("sound/ms-start.wav"));
-        THE_ASSETS.store("tengen.audio.intermission.1",             rm.url("sound/theymeet.wav"));
-        THE_ASSETS.store("tengen.audio.intermission.2",             rm.url("sound/thechase.wav"));
-        THE_ASSETS.store("tengen.audio.intermission.3",             rm.url("sound/junior.wav"));
-        THE_ASSETS.store("tengen.audio.intermission.4",             rm.url("sound/theend.wav"));
-        THE_ASSETS.store("tengen.audio.pacman_death",               rm.url("sound/ms-death.wav"));
-        THE_ASSETS.store("tengen.audio.pacman_munch",               rm.url("sound/ms-dot.wav"));
-        THE_ASSETS.store("tengen.audio.pacman_power",               rm.url("sound/ms-power.wav"));
-        THE_ASSETS.store("tengen.audio.siren.1",                    rm.url("sound/ms-siren1.wav"));
-        THE_ASSETS.store("tengen.audio.siren.2",                    rm.url("sound/ms-siren2.wav"));
-        THE_ASSETS.store("tengen.audio.siren.3",                    rm.url("sound/ms-siren2.wav"));
-        THE_ASSETS.store("tengen.audio.siren.4",                    rm.url("sound/ms-siren2.wav"));
-        THE_ASSETS.store("tengen.audio.ghost_returns",              rm.url("sound/ms-eyes.wav"));
-        THE_ASSETS.store("tengen.audio.bonus_bouncing",             rm.url("sound/fruitbounce.wav"));
+        THE_ASSETS.store("tengen.audio.game_ready",                 url("sound/ms-start.wav"));
+        THE_ASSETS.store("tengen.audio.intermission.1",             url("sound/theymeet.wav"));
+        THE_ASSETS.store("tengen.audio.intermission.2",             url("sound/thechase.wav"));
+        THE_ASSETS.store("tengen.audio.intermission.3",             url("sound/junior.wav"));
+        THE_ASSETS.store("tengen.audio.intermission.4",             url("sound/theend.wav"));
+        THE_ASSETS.store("tengen.audio.pacman_death",               url("sound/ms-death.wav"));
+        THE_ASSETS.store("tengen.audio.pacman_munch",               url("sound/ms-dot.wav"));
+        THE_ASSETS.store("tengen.audio.pacman_power",               url("sound/ms-power.wav"));
+        THE_ASSETS.store("tengen.audio.siren.1",                    url("sound/ms-siren1.wav"));
+        THE_ASSETS.store("tengen.audio.siren.2",                    url("sound/ms-siren2.wav"));
+        THE_ASSETS.store("tengen.audio.siren.3",                    url("sound/ms-siren2.wav"));
+        THE_ASSETS.store("tengen.audio.siren.4",                    url("sound/ms-siren2.wav"));
+        THE_ASSETS.store("tengen.audio.ghost_returns",              url("sound/ms-eyes.wav"));
+        THE_ASSETS.store("tengen.audio.bonus_bouncing",             url("sound/fruitbounce.wav"));
 
         scenesByID.put("BootScene",      new TengenMsPacMan_BootScene());
         scenesByID.put("IntroScene",     new TengenMsPacMan_IntroScene());
