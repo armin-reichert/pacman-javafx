@@ -24,27 +24,28 @@ public class Globals {
         }
     }
 
-    public static final Font DEBUG_TEXT_FONT        = Font.font("Sans", FontWeight.BOLD, 18);
-    public static final float FLOOR_THICKNESS       = 0.5f;
-    public static final float HOUSE_BASE_HEIGHT     = 12.0f;
-    public static final float HOUSE_WALL_TOP_HEIGHT = 0.1f;
-    public static final float HOUSE_WALL_THICKNESS  = 1.5f;
-    public static final float HOUSE_OPACITY         = 0.4f;
-    public static final float HOUSE_SENSITIVITY     = 1.5f * TS;
-    public static final int   LIVES_COUNTER_MAX     = 5;
-    public static final float LIVES_COUNTER_SIZE    = 12f;
-    public static final double MAX_SCENE_2D_SCALING = 5;
-    public static final float OBSTACLE_BASE_HEIGHT  = 7.0f;
-    public static final float OBSTACLE_TOP_HEIGHT   = 0.1f;
-    public static final float OBSTACLE_THICKNESS    = 1.25f;
-    public static final float PAC_SIZE              = 15.0f;
-    public static final float GHOST_SIZE            = 13.0f;
-    public static final float ENERGIZER_RADIUS      = 3.5f;
-    public static final float PELLET_RADIUS         = 1.0f;
-    public static final Color STATUS_ICON_COLOR     = Color.LIGHTGRAY;
-    public static final byte STATUS_ICON_SIZE       = 24;
-    public static final byte STATUS_ICON_SPACING    = 5;
-    public static final byte STATUS_ICON_PADDING    = 10;
+    public static final Font DEBUG_TEXT_FONT           = Font.font("Sans", FontWeight.BOLD, 18);
+    public static final int LIVES_COUNTER_MAX          = 5;
+    public static final double MAX_SCENE_2D_SCALING    = 5;
+    public static final Color STATUS_ICON_COLOR        = Color.LIGHTGRAY;
+    public static final byte STATUS_ICON_SIZE          = 24;
+    public static final byte STATUS_ICON_SPACING       = 5;
+    public static final byte STATUS_ICON_PADDING       = 10;
+
+    public static final float ENERGIZER_3D_RADIUS      = 3.5f;
+    public static final float FLOOR_3D_THICKNESS       = 0.5f;
+    public static final float GHOST_3D_SIZE            = 13.0f;
+    public static final float HOUSE_3D_BASE_HEIGHT     = 12.0f;
+    public static final float HOUSE_3D_WALL_TOP_HEIGHT = 0.1f;
+    public static final float HOUSE_3D_WALL_THICKNESS  = 1.5f;
+    public static final float HOUSE_3D_OPACITY         = 0.4f;
+    public static final float HOUSE_3D_SENSITIVITY     = 1.5f * TS;
+    public static final float LIVES_COUNTER_3D_SIZE    = 12f;
+    public static final float OBSTACLE_3D_BASE_HEIGHT  = 7.0f;
+    public static final float OBSTACLE_3D_TOP_HEIGHT   = 0.1f;
+    public static final float OBSTACLE_3D_THICKNESS    = 1.25f;
+    public static final float PAC_3D_SIZE              = 15.0f;
+    public static final float PELLET_3D_RADIUS         = 1.0f;
 
     public static final BooleanProperty PY_AUTOPILOT                       = new SimpleBooleanProperty(false);
     public static final ObjectProperty<Color> PY_CANVAS_BG_COLOR           = new SimpleObjectProperty<>(Color.BLACK);

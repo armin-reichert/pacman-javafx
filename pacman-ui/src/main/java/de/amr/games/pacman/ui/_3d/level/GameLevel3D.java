@@ -120,7 +120,7 @@ public class GameLevel3D extends Group {
             maze3D().setHouseLightOn(houseAccessRequired);
 
             boolean ghostNearHouseEntry = level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-                    .filter(ghost -> ghost.position().euclideanDist(level.houseEntryPosition()) <= HOUSE_SENSITIVITY)
+                    .filter(ghost -> ghost.position().euclideanDist(level.houseEntryPosition()) <= HOUSE_3D_SENSITIVITY)
                     .anyMatch(Ghost::isVisible);
             houseOpenPy.set(ghostNearHouseEntry);
 
@@ -136,8 +136,8 @@ public class GameLevel3D extends Group {
     private Pac3D createPac3D(Pac pac) {
         String assetNamespace = THE_UI.configurations().current().assetNamespace();
         Pac3D pac3D = switch (THE_GAME_CONTROLLER.selectedGameVariant()) {
-            case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL -> new MsPacMan3D(THE_GAME_CONTROLLER.selectedGameVariant(), pac, PAC_SIZE, THE_UI.assets(), assetNamespace);
-            case PACMAN, PACMAN_XXL -> new PacMan3D(THE_GAME_CONTROLLER.selectedGameVariant(), pac, PAC_SIZE, THE_UI.assets(), assetNamespace);
+            case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL -> new MsPacMan3D(THE_GAME_CONTROLLER.selectedGameVariant(), pac, PAC_3D_SIZE, THE_UI.assets(), assetNamespace);
+            case PACMAN, PACMAN_XXL -> new PacMan3D(THE_GAME_CONTROLLER.selectedGameVariant(), pac, PAC_3D_SIZE, THE_UI.assets(), assetNamespace);
         };
         pac3D.shape3D().light().setColor(THE_UI.assets().color(assetNamespace + ".pac.color.head").desaturate());
         pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
@@ -150,14 +150,14 @@ public class GameLevel3D extends Group {
         Shape3D pupilsShape   = new MeshView(THE_UI.assets().get("model3D.ghost.mesh.pupils"));
         Shape3D eyeballsShape = new MeshView(THE_UI.assets().get("model3D.ghost.mesh.eyeballs"));
         return new Ghost3DAppearance(dressShape, pupilsShape, eyeballsShape, THE_UI.assets(), assetNamespace,
-            ghost, GHOST_SIZE, numFlashes);
+            ghost, GHOST_3D_SIZE, numFlashes);
     }
 
     private LivesCounter3D createLivesCounter3D(boolean canStartNewGame) {
         GameUIConfig config3D = THE_UI.configurations().current();
         Node[] counterShapes = new Node[LIVES_COUNTER_MAX];
         for (int i = 0; i < counterShapes.length; ++i) {
-            counterShapes[i] = config3D.createLivesCounterShape(THE_UI.assets(), LIVES_COUNTER_SIZE);
+            counterShapes[i] = config3D.createLivesCounterShape(THE_UI.assets(), LIVES_COUNTER_3D_SIZE);
         }
         var counter3D = new LivesCounter3D(counterShapes);
         counter3D.setTranslateX(2 * TS);
@@ -216,11 +216,11 @@ public class GameLevel3D extends Group {
     private Box createFloor(double sizeX, double sizeY) {
         // add some extra space
         double extraSpace = 10;
-        var floor3D = new Box(sizeX + extraSpace, sizeY, FLOOR_THICKNESS);
+        var floor3D = new Box(sizeX + extraSpace, sizeY, FLOOR_3D_THICKNESS);
         floor3D.materialProperty().bind(PY_3D_FLOOR_COLOR.map(Ufx::coloredMaterial));
         floor3D.translateXProperty().bind(floor3D.widthProperty().multiply(0.5).subtract(0.5*extraSpace));
         floor3D.translateYProperty().bind(floor3D.heightProperty().multiply(0.5));
-        floor3D.translateZProperty().set(FLOOR_THICKNESS * 0.5);
+        floor3D.translateZProperty().set(FLOOR_3D_THICKNESS * 0.5);
         floor3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
         return floor3D;
     }
@@ -229,7 +229,7 @@ public class GameLevel3D extends Group {
         level.worldMap().tiles().filter(level::hasFoodAt).forEach(tile -> {
             Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
             if (level.isEnergizerPosition(tile)) {
-                var energizer3D = new Energizer3D(ENERGIZER_RADIUS);
+                var energizer3D = new Energizer3D(ENERGIZER_3D_RADIUS);
                 energizer3D.shape3D().setMaterial(foodMaterial);
                 energizer3D.setTile(tile);
                 energizer3D.setPosition(position);
@@ -241,7 +241,7 @@ public class GameLevel3D extends Group {
                 getChildren().add(energizer3D.shape3D());
                 energizers3D.add(energizer3D);
             } else {
-                var pellet3D = new Pellet3D(pelletModel3D, PELLET_RADIUS);
+                var pellet3D = new Pellet3D(pelletModel3D, PELLET_3D_RADIUS);
                 pellet3D.shape3D().setMaterial(foodMaterial);
                 pellet3D.setTile(tile);
                 pellet3D.setPosition(position);
@@ -270,7 +270,7 @@ public class GameLevel3D extends Group {
         message3D.setTranslateZ(halfHeight); // just under floor
 
         var moveUpAnimation = new TranslateTransition(Duration.seconds(1), message3D);
-        moveUpAnimation.setToZ(-(halfHeight + 0.5 * OBSTACLE_BASE_HEIGHT));
+        moveUpAnimation.setToZ(-(halfHeight + 0.5 * OBSTACLE_3D_BASE_HEIGHT));
 
         var moveDownAnimation = new TranslateTransition(Duration.seconds(1), message3D);
         moveDownAnimation.setDelay(Duration.seconds(displaySeconds));

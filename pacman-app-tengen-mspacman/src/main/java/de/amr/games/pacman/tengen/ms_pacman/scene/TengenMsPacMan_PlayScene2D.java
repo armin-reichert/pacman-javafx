@@ -19,6 +19,7 @@ import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.MessageMovement;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
+import de.amr.games.pacman.ui.Globals;
 import de.amr.games.pacman.uilib.CameraControlledView;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui.GameAction;
@@ -54,9 +55,7 @@ import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction.QUIT_DEMO_LEVEL;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
-import static de.amr.games.pacman.ui.Globals.PY_AUTOPILOT;
-import static de.amr.games.pacman.ui.Globals.PY_IMMUNITY;
+import static de.amr.games.pacman.ui.Globals.*;
 
 /**
  * Tengen play scene, uses vertical scrolling.
@@ -468,7 +467,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             // as long as Pac-Man is invisible when the game is started, one entry more appears in the lives counter
             livesCounterEntries += 1;
         }
-        tr.drawLivesCounter(livesCounterEntries, 5, 2 * TS, sizeInPx().y() - TS);
+        tr.drawLivesCounter(livesCounterEntries, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - TS);
         // if level number is 0, no level number boxes are drawn
         int levelNumber = game.isDemoLevel() || game.mapCategory() == MapCategory.ARCADE ? 0 : level.number();
         tr.drawLevelCounter(levelNumber, game().levelCounter(), sizeInPx().x() - 2 * TS, sizeInPx().y() - TS);

@@ -34,9 +34,9 @@ import static de.amr.games.pacman.uilib.Ufx.*;
 
 public class Maze3D extends Group {
 
-    private final DoubleProperty obstacleBaseHeightPy = new SimpleDoubleProperty(OBSTACLE_BASE_HEIGHT);
+    private final DoubleProperty obstacleBaseHeightPy = new SimpleDoubleProperty(OBSTACLE_3D_BASE_HEIGHT);
     private final DoubleProperty wallOpacityPy = new SimpleDoubleProperty(1);
-    private final DoubleProperty houseBaseHeightPy = new SimpleDoubleProperty(HOUSE_BASE_HEIGHT);
+    private final DoubleProperty houseBaseHeightPy = new SimpleDoubleProperty(HOUSE_3D_BASE_HEIGHT);
     private final BooleanProperty houseLightOnPy = new SimpleBooleanProperty(false);
 
     private final Door3D door3D;
@@ -71,7 +71,7 @@ public class Maze3D extends Group {
 
         TerrainMapRenderer3D r3D = new TerrainMapRenderer3D();
         r3D.setWallBaseHeightProperty(obstacleBaseHeightPy);
-        r3D.setWallTopHeight(OBSTACLE_TOP_HEIGHT);
+        r3D.setWallTopHeight(OBSTACLE_3D_TOP_HEIGHT);
         r3D.setWallTopMaterial(wallTopMaterial);
         r3D.setCornerBaseMaterial(cornerBaseMaterial);
         r3D.setCornerTopMaterial(wallTopMaterial); // for now such that power animation also affects corner top
@@ -81,7 +81,7 @@ public class Maze3D extends Group {
 
         for (Obstacle obstacle : level.worldMap().obstacles()) {
             if (!level.isPartOfHouse(tileAt(obstacle.startPoint().toVector2f()))) {
-                r3D.setWallThickness(OBSTACLE_THICKNESS);
+                r3D.setWallThickness(OBSTACLE_3D_THICKNESS);
                 r3D.setWallBaseMaterial(wallBaseMaterial);
                 r3D.setWallTopMaterial(wallTopMaterial);
                 r3D.renderObstacle3D(this, obstacle, isWorldBorder(level.worldMap(), obstacle));
@@ -89,12 +89,12 @@ public class Maze3D extends Group {
         }
 
         // House
-        houseBaseHeightPy.set(HOUSE_BASE_HEIGHT);
+        houseBaseHeightPy.set(HOUSE_3D_BASE_HEIGHT);
         door3D = addGhostHouse(
                 this, level, r3D,
                 coloring.fill(), coloring.stroke(), coloring.door(),
-                HOUSE_OPACITY,
-                houseBaseHeightPy, HOUSE_WALL_TOP_HEIGHT, HOUSE_WALL_THICKNESS,
+            HOUSE_3D_OPACITY,
+                houseBaseHeightPy, HOUSE_3D_WALL_TOP_HEIGHT, HOUSE_3D_WALL_THICKNESS,
                 houseLightOnPy);
         getChildren().add(door3D); //TODO check this
 
