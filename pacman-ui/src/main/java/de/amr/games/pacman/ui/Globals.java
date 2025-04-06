@@ -43,6 +43,8 @@ public class Globals {
     public static final float PELLET_RADIUS         = 1.0f;
     public static final Color STATUS_ICON_COLOR     = Color.LIGHTGRAY;
     public static final byte STATUS_ICON_SIZE       = 24;
+    public static final byte STATUS_ICON_SPACING    = 5;
+    public static final byte STATUS_ICON_PADDING    = 10;
 
     public static final BooleanProperty PY_AUTOPILOT                       = new SimpleBooleanProperty(false);
     public static final ObjectProperty<Color> PY_CANVAS_BG_COLOR           = new SimpleObjectProperty<>(Color.BLACK);

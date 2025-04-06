@@ -137,10 +137,10 @@ public class PacManGamesUI implements GameUI {
     }
 
     private Pane createIconBox(Node... icons) {
-        int spacing = 5, padding = 10, height = STATUS_ICON_SIZE + padding;
-        var iconBox = new HBox(spacing);
+        int height = STATUS_ICON_SIZE + STATUS_ICON_PADDING;
+        var iconBox = new HBox(STATUS_ICON_SPACING);
         iconBox.getChildren().addAll(icons);
-        iconBox.setPadding(new Insets(padding));
+        iconBox.setPadding(new Insets(STATUS_ICON_PADDING));
         iconBox.setMaxHeight(height);
         // keep box compact, show only visible items
         for (var icon : icons) {
