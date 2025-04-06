@@ -13,7 +13,6 @@ import de.amr.games.pacman.ui._2d.*;
 import de.amr.games.pacman.ui.dashboard.Dashboard;
 import de.amr.games.pacman.ui.input.GameKeyboard;
 import de.amr.games.pacman.ui.sound.GameSound;
-import de.amr.games.pacman.uilib.ActionProvider;
 import de.amr.games.pacman.uilib.GameClockFX;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -131,8 +130,8 @@ public class PacManGamesUI implements GameUI {
             else if (GameKeyboard.KEY_OPEN_EDITOR.match(keyPress)) {
                 showEditorView();
             }
-            else if (currentView() instanceof ActionProvider actionProvider) {
-                actionProvider.handleInput(THE_UI.keyboard());
+            else {
+                currentView().handleInput(THE_UI.keyboard());
             }
         });
     }
