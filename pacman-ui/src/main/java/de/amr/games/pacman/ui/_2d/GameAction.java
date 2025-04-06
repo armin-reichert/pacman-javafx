@@ -231,10 +231,9 @@ public enum GameAction implements Action {
         }
     },
 
-    SHOW_START_PAGE {
+    SHOW_START_VIEW {
         @Override
         public void execute() {
-            THE_UI.sound().stopAll();
             THE_UI.currentGameScene().ifPresent(GameScene::end);
             THE_GAME_CONTROLLER.game().endGame();
             THE_UI.showStartView();

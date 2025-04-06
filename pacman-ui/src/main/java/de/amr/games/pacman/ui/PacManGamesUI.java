@@ -39,9 +39,7 @@ import java.util.Optional;
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
-import static de.amr.games.pacman.ui.Globals.PY_AUTOPILOT;
-import static de.amr.games.pacman.ui.Globals.PY_IMMUNITY;
+import static de.amr.games.pacman.ui.Globals.*;
 
 /**
  * User interface for all Pac-Man game variants.
@@ -181,10 +179,7 @@ public class PacManGamesUI implements GameUI {
         var miQuit = new MenuItem(THE_UI.assets().text("back_to_game"));
         miQuit.setOnAction(e -> {
             editor.stop();
-            editor.executeWithCheckForUnsavedChanges(() -> {});
-            clock.setTargetFrameRate(Globals.TICKS_PER_SECOND);
-            THE_GAME_CONTROLLER.restart(GameState.BOOT);
-            showStartView();
+            editor.executeWithCheckForUnsavedChanges(this::showStartView);
         });
         editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miQuit);
         editor.init(GameModel.CUSTOM_MAP_DIR);
@@ -310,19 +305,22 @@ public class PacManGamesUI implements GameUI {
     @Override
     public void show() {
         selectGameVariant(THE_GAME_CONTROLLER.selectedGameVariant());
-        showStartView();
+        viewPy.set(startPagesView);
+        startPagesView.currentStartPage().ifPresent(StartPage::requestFocus);
         stage.centerOnScreen();
         stage.show();
     }
 
     @Override
     public void showEditorView() {
-        if (!THE_GAME_CONTROLLER.game().isPlaying()) {
+        if (!THE_GAME_CONTROLLER.game().isPlaying() || clock().isPaused()) {
             currentGameScene().ifPresent(GameScene::end);
+            THE_GAME_CONTROLLER.game().endGame();
             clock.stop();
-            sound.stopAll();
             editor.start(stage);
             viewPy.set(editorView);
+        } else {
+            Logger.info("Editor view cannot be opened, game is playing");
         }
     }
 
@@ -344,6 +342,7 @@ public class PacManGamesUI implements GameUI {
     @Override
     public void showStartView() {
         clock.stop();
+        clock.setTargetFrameRate(Globals.TICKS_PER_SECOND);
         gameScenePy.set(null);
         gameView.setDashboardVisible(false);
         viewPy.set(startPagesView);

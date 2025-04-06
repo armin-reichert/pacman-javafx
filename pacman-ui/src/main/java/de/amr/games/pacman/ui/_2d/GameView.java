@@ -203,7 +203,7 @@ public class GameView implements View {
     public void bindGameActions() {
         bind(GameAction.BOOT,                    naked(KeyCode.F3));
         bind(this::showGameSceneHelp,            naked(KeyCode.H));
-        bind(GameAction.SHOW_START_PAGE,         naked(KeyCode.Q));
+        bind(GameAction.SHOW_START_VIEW,         naked(KeyCode.Q));
         bind(GameAction.SIMULATION_SLOWER,       alt(KeyCode.MINUS));
         bind(GameAction.SIMULATION_FASTER,       alt(KeyCode.PLUS));
         bind(GameAction.SIMULATION_RESET,        alt(KeyCode.DIGIT0));

@@ -556,7 +556,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         items.add(miMuted);
 
         var miQuit = new MenuItem(THE_UI.assets().text("quit"));
-        miQuit.setOnAction(ae -> GameAction.SHOW_START_PAGE.execute());
+        miQuit.setOnAction(ae -> GameAction.SHOW_START_VIEW.execute());
         items.add(miQuit);
 
         return items;
