@@ -87,8 +87,8 @@ public class GameLevel3D extends Group {
             livesCounter3D.livesCountPy.bind(livesCountPy);
 
             floor3D = createFloor(level.worldMap().numCols() * TS, level.worldMap().numRows() * TS);
-            WorldMapColorScheme coloring = THE_UI.gameUIConfigManager().current().worldMapColoring(level.worldMap());
-            maze3D = new Maze3D(THE_UI.gameUIConfigManager().current(), level, coloring);
+            WorldMapColorScheme coloring = THE_UI_CONFIGS.current().worldMapColoring(level.worldMap());
+            maze3D = new Maze3D(THE_UI_CONFIGS.current(), level, coloring);
             addFood3D(level, THE_ASSETS.get("model3D.pellet"), coloredMaterial(coloring.pellet()));
 
             worldGroup.getChildren().addAll(floor3D, maze3D);
@@ -133,7 +133,7 @@ public class GameLevel3D extends Group {
     }
 
     private Pac3D createPac3D(Pac pac) {
-        String assetNamespace = THE_UI.gameUIConfigManager().current().assetNamespace();
+        String assetNamespace = THE_UI_CONFIGS.current().assetNamespace();
         Pac3D pac3D = switch (THE_GAME_CONTROLLER.selectedGameVariant()) {
             case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL -> new MsPacMan3D(THE_GAME_CONTROLLER.selectedGameVariant(), pac, PAC_3D_SIZE, THE_ASSETS, assetNamespace);
             case PACMAN, PACMAN_XXL -> new PacMan3D(THE_GAME_CONTROLLER.selectedGameVariant(), pac, PAC_3D_SIZE, THE_ASSETS, assetNamespace);
@@ -144,7 +144,7 @@ public class GameLevel3D extends Group {
     }
 
     private Ghost3DAppearance createGhost3D(Ghost ghost, int numFlashes) {
-        String assetNamespace = THE_UI.gameUIConfigManager().current().assetNamespace();
+        String assetNamespace = THE_UI_CONFIGS.current().assetNamespace();
         Shape3D dressShape    = new MeshView(THE_ASSETS.get("model3D.ghost.mesh.dress"));
         Shape3D pupilsShape   = new MeshView(THE_ASSETS.get("model3D.ghost.mesh.pupils"));
         Shape3D eyeballsShape = new MeshView(THE_ASSETS.get("model3D.ghost.mesh.eyeballs"));
@@ -153,7 +153,7 @@ public class GameLevel3D extends Group {
     }
 
     private LivesCounter3D createLivesCounter3D(boolean canStartNewGame) {
-        GameUIConfig config3D = THE_UI.gameUIConfigManager().current();
+        GameUIConfig config3D = THE_UI_CONFIGS.current();
         Node[] counterShapes = new Node[LIVES_COUNTER_MAX];
         for (int i = 0; i < counterShapes.length; ++i) {
             counterShapes[i] = config3D.createLivesCounterShape(THE_ASSETS, LIVES_COUNTER_3D_SIZE);
@@ -174,7 +174,7 @@ public class GameLevel3D extends Group {
             double x = worldMap.numCols() * TS - 2 * TS;
             double y = 2 * TS;
             Node levelCounter3D = createLevelCounter3D(
-                    THE_UI.gameUIConfigManager().current().spriteSheet(),
+                    THE_UI_CONFIGS.current().spriteSheet(),
                     THE_GAME_CONTROLLER.game().levelCounter(), x, y);
             getChildren().add(levelCounter3D);
         });

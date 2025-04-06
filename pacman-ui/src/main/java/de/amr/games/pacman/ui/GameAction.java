@@ -352,8 +352,8 @@ public enum GameAction implements Action {
         public void execute() {
             THE_UI.currentGameScene().ifPresent(gameScene -> {
                 toggle(PY_3D_ENABLED);
-                if (THE_UI.gameUIConfigManager().currentGameSceneIsPlayScene2D()
-                    || THE_UI.gameUIConfigManager().currentGameSceneIsPlayScene3D()) {
+                if (THE_UI_CONFIGS.currentGameSceneIsPlayScene2D()
+                    || THE_UI_CONFIGS.currentGameSceneIsPlayScene3D()) {
                     THE_UI.updateGameScene(true);
                     THE_GAME_CONTROLLER.update(); //TODO needed?
                 }
@@ -368,7 +368,7 @@ public enum GameAction implements Action {
         @Override
         public void execute() {
             toggle(PY_PIP_ON);
-            if (!THE_UI.gameUIConfigManager().currentGameSceneIsPlayScene3D()) {
+            if (!THE_UI_CONFIGS.currentGameSceneIsPlayScene3D()) {
                 THE_UI.showFlashMessage(THE_ASSETS.text(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
             }
         }

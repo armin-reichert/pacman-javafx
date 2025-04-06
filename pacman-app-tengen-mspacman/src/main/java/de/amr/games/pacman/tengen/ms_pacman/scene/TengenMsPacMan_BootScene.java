@@ -22,8 +22,7 @@ import org.tinylog.Logger;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
-import static de.amr.games.pacman.ui.Globals.THE_ASSETS;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.*;
 
 /**
  * Animated "TENGEN PRESENTS" text and ghost running through scene.
@@ -59,7 +58,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             ghost = TengenMsPacMan_GameModel.blinky();
             ghost.setSpeed(0);
             ghost.hide();
-            GameSpriteSheet spriteSheet = THE_UI.gameUIConfigManager().current().spriteSheet();
+            GameSpriteSheet spriteSheet = THE_UI_CONFIGS.current().spriteSheet();
             ghost.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, ghost.id()));
             ghost.selectAnimation(ActorAnimations.ANIM_GHOST_NORMAL);
         }

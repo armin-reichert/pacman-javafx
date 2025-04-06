@@ -54,7 +54,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         float quality = 5; // scale 5x for better quality of snapshot
         var canvas = new Canvas(quality * imageWidth, quality * imageHeight);
         canvas.getGraphicsContext2D().setImageSmoothing(false); // important!
-        var r2D = (TengenMsPacMan_Renderer2D) THE_UI.gameUIConfigManager().current().createRenderer(canvas);
+        var r2D = (TengenMsPacMan_Renderer2D) THE_UI_CONFIGS.current().createRenderer(canvas);
         r2D.setScaling(quality);
         r2D.ctx().setFill(level3D.floorColor());
         r2D.ctx().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -104,7 +104,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     public void onBonusActivated(GameEvent event) {
         game().level().flatMap(GameLevel::bonus)
-                .ifPresent(bonus -> level3D.replaceBonus3D(bonus, THE_UI.gameUIConfigManager().current().spriteSheet()));
+                .ifPresent(bonus -> level3D.replaceBonus3D(bonus, THE_UI_CONFIGS.current().spriteSheet()));
         THE_SOUND.playBonusBouncingSound();
     }
 

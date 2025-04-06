@@ -19,6 +19,7 @@ import static de.amr.games.pacman.Globals.TS;
 public class Globals {
 
     public static final GameAssets THE_ASSETS = new GameAssets();
+    public static final GameUIConfigManager THE_UI_CONFIGS = new GameUIConfigManager();
     public static final  GameClockFX THE_CLOCK = new GameClockFX();
     public static final  GameKeyboard THE_KEYBOARD = new GameKeyboard();
     public static final GameSound THE_SOUND = new GameSound();

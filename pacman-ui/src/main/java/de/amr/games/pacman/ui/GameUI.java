@@ -19,7 +19,6 @@ public interface GameUI {
     void addStartPage(StartPage startPage);
     void build(Stage stage, Dimension2D size);
     void buildDashboard(DashboardID... ids);
-    GameUIConfigManager gameUIConfigManager();
     Optional<GameScene> currentGameScene();
     View currentView();
     Dashboard dashboard();

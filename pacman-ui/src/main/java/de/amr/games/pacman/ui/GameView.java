@@ -50,7 +50,7 @@ public class GameView implements View {
         @Override
         protected void invalidated() {
             GameScene gameScene = get();
-            if (gameScene != null) embedGameScene(THE_UI.gameUIConfigManager().current(), gameScene);
+            if (gameScene != null) embedGameScene(THE_UI_CONFIGS.current(), gameScene);
             contextMenu.hide();
         }
     };
@@ -78,7 +78,7 @@ public class GameView implements View {
                 THE_CLOCK.pausedProperty(), ui.mainScene().heightProperty(), gameScenePy,
                 PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE);
         configureCanvasContainer();
-        configurePiPView(ui);
+        configurePiPView();
         createLayers();
         configurePropertyBindings();
         root.setOnContextMenuRequested(this::handleContextMenuRequest);
@@ -166,13 +166,13 @@ public class GameView implements View {
         View.super.onGameEvent(event);
         // dispatch to current game scene
         currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(event));
-        updateGameScene(THE_UI.gameUIConfigManager().current(), false);
+        updateGameScene(THE_UI_CONFIGS.current(), false);
     }
 
     @Override
     public void onLevelCreated(GameEvent event) {
         THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-            GameUIConfig config = THE_UI.gameUIConfigManager().current();
+            GameUIConfig config = THE_UI_CONFIGS.current();
             config.createActorAnimations(level);
             THE_SOUND.setEnabled(!THE_GAME_CONTROLLER.game().isDemoLevel());
             // size of game scene might have changed, so re-embed
@@ -291,14 +291,14 @@ public class GameView implements View {
         canvasContainer.setBorderColor(Color.web(Arcade.Palette.WHITE));
         //TODO check this:
         canvasContainer.decorationEnabledPy.addListener((py, ov, nv) ->
-            currentGameScene().ifPresent(gameScene -> embedGameScene(THE_UI.gameUIConfigManager().current(), gameScene)));
+            currentGameScene().ifPresent(gameScene -> embedGameScene(THE_UI_CONFIGS.current(), gameScene)));
     }
 
-    private void configurePiPView(GameUI ui) {
+    private void configurePiPView() {
         pipView.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Background::fill));
         pipView.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
         pipView.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> PY_PIP_ON.get() && ui.gameUIConfigManager().currentGameSceneIsPlayScene3D(),
+            () -> PY_PIP_ON.get() && THE_UI_CONFIGS.currentGameSceneIsPlayScene3D(),
             PY_PIP_ON, gameScenePy
         ));
     }
@@ -319,7 +319,7 @@ public class GameView implements View {
     }
 
     private String computeTitleText(GameUI ui) {
-        String keyPattern = "app.title." + ui.gameUIConfigManager().current().assetNamespace() + (THE_CLOCK.isPaused() ? ".paused" : "");
+        String keyPattern = "app.title." + THE_UI_CONFIGS.current().assetNamespace() + (THE_CLOCK.isPaused() ? ".paused" : "");
         if (ui.currentGameScene().isPresent()) {
             return computeTitleIfGameScenePresent(ui.currentGameScene().get(), keyPattern);
         }
@@ -356,7 +356,7 @@ public class GameView implements View {
 
     private void handleContextMenuRequest(ContextMenuEvent e) {
         var menuItems = new ArrayList<>(gameScenePy.get().supplyContextMenuItems(e));
-        if (THE_UI.gameUIConfigManager().currentGameSceneIsPlayScene2D()) {
+        if (THE_UI_CONFIGS.currentGameSceneIsPlayScene2D()) {
             var item = new MenuItem(THE_ASSETS.text("use_3D_scene"));
             item.setOnAction(ae -> GameAction.TOGGLE_PLAY_SCENE_2D_3D.execute());
             menuItems.addFirst(item);
@@ -369,7 +369,7 @@ public class GameView implements View {
 
     private void showGameSceneHelp() {
         if (!THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN)
-            && THE_UI.gameUIConfigManager().currentGameSceneIs2D()) {
+            && THE_UI_CONFIGS.currentGameSceneIs2D()) {
             popupLayer.showHelp(canvasContainer.scaling());
         }
     }

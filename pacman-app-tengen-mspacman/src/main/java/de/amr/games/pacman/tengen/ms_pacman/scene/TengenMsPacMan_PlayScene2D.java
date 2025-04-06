@@ -199,7 +199,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         messageMovement = new MessageMovement();
         THE_KEYBOARD.enableCurrentJoypad();
         game().setScoreVisible(true);
-        setGameRenderer(THE_UI.gameUIConfigManager().current().createRenderer(canvas));
+        setGameRenderer(THE_UI_CONFIGS.current().createRenderer(canvas));
         movingCamera.focusTopOfScene();
     }
 

@@ -47,8 +47,6 @@ public class PacManGamesUI implements GameUI {
 
     private final ObjectProperty<View> viewPy = new SimpleObjectProperty<>();
 
-    private final GameUIConfigManager gameUIConfigManager = new GameUIConfigManager();
-
     private Stage stage;
     private Scene mainScene;
     private final StackPane root = new StackPane();
@@ -205,7 +203,7 @@ public class PacManGamesUI implements GameUI {
         createMapEditorView();
 
         root.backgroundProperty().bind(gameView.gameSceneProperty().map(
-            gameScene -> gameUIConfigManager.currentGameSceneIsPlayScene3D()
+            gameScene -> THE_UI_CONFIGS.currentGameSceneIsPlayScene3D()
                 ? THE_ASSETS.get("background.play_scene3d")
                 : THE_ASSETS.get("background.scene"))
         );
@@ -218,11 +216,6 @@ public class PacManGamesUI implements GameUI {
     @Override
     public void buildDashboard(DashboardID... ids) {
         gameView.dashboard().addDefaultInfoBoxes(ids);
-    }
-
-    @Override
-    public GameUIConfigManager gameUIConfigManager() {
-        return gameUIConfigManager;
     }
 
     @Override
@@ -267,7 +260,7 @@ public class PacManGamesUI implements GameUI {
     @Override
     public void selectGameVariant(GameVariant gameVariant) {
         THE_GAME_CONTROLLER.selectGameVariant(gameVariant);
-        GameUIConfig uiConfig = gameUIConfigManager.configuration(gameVariant);
+        GameUIConfig uiConfig = THE_UI_CONFIGS.configuration(gameVariant);
         THE_SOUND.selectGameVariant(gameVariant, uiConfig.assetNamespace());
         stage.getIcons().setAll(uiConfig.appIcon());
         gameView.canvasContainer().decorationEnabledPy.set(uiConfig.isGameCanvasDecorated());
@@ -322,6 +315,6 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public void updateGameScene(boolean reloadCurrent) {
-        gameView.updateGameScene(gameUIConfigManager.current(), reloadCurrent);
+        gameView.updateGameScene(THE_UI_CONFIGS.current(), reloadCurrent);
     }
 }
