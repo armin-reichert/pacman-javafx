@@ -7,7 +7,7 @@ package de.amr.games.pacman.arcade.pacman_xxl;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.MapSelectionMode;
-import de.amr.games.pacman.ui._2d.StartPage;
+import de.amr.games.pacman.ui.StartPage;
 import de.amr.games.pacman.uilib.Flyer;
 import de.amr.games.pacman.uilib.ResourceManager;
 import javafx.scene.Node;

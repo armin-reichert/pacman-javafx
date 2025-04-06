@@ -2,11 +2,9 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui._2d;
+package de.amr.games.pacman.ui;
 
 import de.amr.games.pacman.uilib.Action;
-import de.amr.games.pacman.ui.GameAction;
-import de.amr.games.pacman.ui.View;
 import de.amr.games.pacman.uilib.Carousel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;

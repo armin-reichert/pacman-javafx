@@ -106,7 +106,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUIConfig {
         THE_UI.assets().store("ms_pacman_xxl.audio.option.selection_changed",  rm.loadAudioClip("sound/ms-select1.wav"));
         THE_UI.assets().store("ms_pacman_xxl.audio.option.value_changed",      rm.loadAudioClip("sound/ms-select2.wav"));
 
-        scenesByID.put("BootScene",   new ArcadeBootScene());
+        scenesByID.put("BootScene",   new ArcadeBootScene2D());
         scenesByID.put("IntroScene",  new IntroScene());
         scenesByID.put("StartScene",  new StartScene());
         scenesByID.put("PlayScene2D", new ArcadePlayScene2D());

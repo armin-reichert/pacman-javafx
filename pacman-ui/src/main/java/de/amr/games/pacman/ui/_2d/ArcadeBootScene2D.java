@@ -18,7 +18,7 @@ import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 
-public class ArcadeBootScene extends GameScene2D {
+public class ArcadeBootScene2D extends GameScene2D {
 
     @Override
     public void bindGameActions() {}

@@ -2,16 +2,13 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui._2d;
+package de.amr.games.pacman.ui;
 
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.GameAction;
-import de.amr.games.pacman.ui.GameScene;
-import de.amr.games.pacman.ui.GameUI;
-import de.amr.games.pacman.ui.View;
+import de.amr.games.pacman.ui._2d.*;
 import de.amr.games.pacman.ui.dashboard.Dashboard;
 import de.amr.games.pacman.ui.dashboard.InfoBox;
 import de.amr.games.pacman.uilib.*;

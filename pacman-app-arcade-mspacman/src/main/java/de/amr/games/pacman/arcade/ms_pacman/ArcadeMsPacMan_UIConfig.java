@@ -9,7 +9,7 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui.GameUIConfig;
-import de.amr.games.pacman.ui._2d.ArcadeBootScene;
+import de.amr.games.pacman.ui._2d.ArcadeBootScene2D;
 import de.amr.games.pacman.ui._2d.ArcadePlayScene2D;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._3d.scene3d.PlayScene3D;
@@ -111,7 +111,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUIConfig {
         THE_UI.assets().store("ms_pacman.audio.siren.4",                 rm.url("sound/GhostNoise1.wav"));// TODO
         THE_UI.assets().store("ms_pacman.audio.ghost_returns",           rm.url("sound/GhostEyes.mp3"));
 
-        scenesByID.put("BootScene",   new ArcadeBootScene());
+        scenesByID.put("BootScene",   new ArcadeBootScene2D());
         scenesByID.put("IntroScene",  new IntroScene());
         scenesByID.put("StartScene",  new StartScene());
         scenesByID.put("PlayScene2D", new ArcadePlayScene2D());
