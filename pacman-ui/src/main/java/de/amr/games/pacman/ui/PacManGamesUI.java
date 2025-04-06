@@ -9,7 +9,10 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tilemap.editor.TileMapEditor;
-import de.amr.games.pacman.ui._2d.*;
+import de.amr.games.pacman.ui._2d.EditorView;
+import de.amr.games.pacman.ui._2d.GameView;
+import de.amr.games.pacman.ui._2d.StartPage;
+import de.amr.games.pacman.ui._2d.StartPagesView;
 import de.amr.games.pacman.ui.dashboard.Dashboard;
 import de.amr.games.pacman.ui.input.GameKeyboard;
 import de.amr.games.pacman.ui.sound.GameSound;
@@ -68,7 +71,7 @@ public class PacManGamesUI implements GameUI {
 
     public PacManGamesUI() {
         clock.setPauseableAction(this::doSimulationStepAndUpdateGameScene);
-        clock.setPermanentAction(this::updateViewAndGameScene);
+        clock.setPermanentAction(() -> currentView().update());
         viewPy.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
         gameScenePy.addListener((py, oldScene, newScene) -> handleGameSceneChange(oldScene, newScene));
     }
@@ -82,16 +85,6 @@ public class PacManGamesUI implements GameUI {
             Logger.error("SOMETHING VERY BAD HAPPENED DURING SIMULATION STEP!");
             showFlashMessageSec(10, "KA-TA-STROPHE!");
         }
-    }
-
-    private void updateViewAndGameScene() {
-        currentGameScene().ifPresent(gameScene -> {
-            gameScene.update();
-            if (gameScene instanceof GameScene2D gameScene2D) {
-                gameScene2D.draw();
-            }
-        });
-        currentView().onTick();
     }
 
     private void handleViewChange(View oldView, View newView) {

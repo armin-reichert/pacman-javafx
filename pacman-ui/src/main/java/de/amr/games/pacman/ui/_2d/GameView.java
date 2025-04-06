@@ -94,6 +94,175 @@ public class GameView implements View {
         bindGameActions();
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+    // View interface implementation
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public StackPane layoutRoot() {
+        return root;
+    }
+
+    @Override
+    public StringExpression title() {
+        return titleExpression;
+    }
+
+    @Override
+    public void update() {
+        THE_UI.currentGameScene().ifPresent(gameScene -> {
+            gameScene.update();
+            if (gameScene instanceof GameScene2D gameScene2D) {
+                gameScene2D.draw();
+            }
+        });
+        flashMessageLayer.update();
+        if (dashboardLayer.isVisible()) {
+            dashboard.infoBoxes().filter(InfoBox::isExpanded).forEach(InfoBox::update);
+        }
+        pipView.draw();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // ActionProvider interface implementation
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public Map<KeyCodeCombination, Action> actionBindings() {
+        return actionBindings;
+    }
+
+    @Override
+    public void bindGameActions() {
+        bind(GameAction.BOOT,                    naked(KeyCode.F3));
+        bind(this::showGameSceneHelp,            naked(KeyCode.H));
+        bind(GameAction.SHOW_START_VIEW,         naked(KeyCode.Q));
+        bind(GameAction.SIMULATION_SLOWER,       alt(KeyCode.MINUS));
+        bind(GameAction.SIMULATION_FASTER,       alt(KeyCode.PLUS));
+        bind(GameAction.SIMULATION_RESET,        alt(KeyCode.DIGIT0));
+        bind(GameAction.SIMULATION_ONE_STEP,     shift(KeyCode.P));
+        bind(GameAction.SIMULATION_TEN_STEPS,    shift(KeyCode.SPACE));
+        bind(GameAction.TOGGLE_AUTOPILOT,        alt(KeyCode.A));
+        bind(GameAction.TOGGLE_DEBUG_INFO,       alt(KeyCode.D));
+        bind(GameAction.TOGGLE_PAUSED,           naked(KeyCode.P));
+        bind(this::toggleDashboardVisibility,    naked(KeyCode.F1), alt(KeyCode.B));
+        bind(GameAction.TOGGLE_IMMUNITY,         alt(KeyCode.I));
+        // 3D only
+        bind(GameAction.TOGGLE_PIP_VISIBILITY,   naked(KeyCode.F2));
+        bind(GameAction.TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3));
+    }
+
+    @Override
+    public void handleInput(Keyboard keyboard) {
+        runTriggeredActionElse(keyboard,
+            () -> THE_UI.currentGameScene().ifPresent(gameScene -> gameScene.handleInput(keyboard)));
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // GameEventListener interface implementation
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void onGameEvent(GameEvent event) {
+        Logger.trace("{} received game event {}", getClass().getSimpleName(), event);
+        // dispatch event to event specific method:
+        View.super.onGameEvent(event);
+        // dispatch to current game scene
+        THE_UI.currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(event));
+        THE_UI.updateGameScene(false);
+    }
+
+    @Override
+    public void onLevelCreated(GameEvent event) {
+        THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
+            GameVariant gameVariant = THE_GAME_CONTROLLER.selectedGameVariant();
+            Logger.info("Game level {} ({}) created", level.number(), gameVariant);
+            THE_UI.configurations().current().createActorAnimations(level);
+            Logger.info("Actor animations ({}) created", gameVariant);
+            THE_UI.sound().setEnabled(!THE_GAME_CONTROLLER.game().isDemoLevel());
+            Logger.info("Sounds ({}) {}", gameVariant, THE_UI.sound().isEnabled() ? "enabled" : "disabled");
+            // size of game scene might have changed, so re-embed
+            THE_UI.currentGameScene().ifPresent(this::embedGameScene);
+            GameScene2D pipGameScene = THE_UI.configurations().current().createPiPScene(canvas);
+            pipView.setScene2D(pipGameScene);
+        });
+    }
+
+    @Override
+    public void onStopAllSounds(GameEvent event) {
+        THE_UI.sound().stopAll();
+    }
+
+    @Override
+    public void onUnspecifiedChange(GameEvent event) {
+        // TODO this is only used by game state GameState.TESTING_CUT_SCENES
+        THE_UI.updateGameScene(true);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    public FlashMessageView flashMessageLayer() {
+        return flashMessageLayer;
+    }
+
+    public Dashboard dashboard() {
+        return dashboard;
+    }
+
+    public void setDashboardVisible(boolean visible) {
+        if (visible) {
+            InfoBox[] infoBoxes = dashboard.infoBoxes().toArray(InfoBox[]::new);
+            dashboardContainer.getChildren().setAll(infoBoxes);
+            dashboardContainer.setVisible(true);
+
+        } else {
+            dashboardContainer.setVisible(false);
+        }
+    }
+
+    public void toggleDashboardVisibility() {
+        setDashboardVisible(!dashboardContainer.isVisible());
+    }
+
+    public TooFancyCanvasContainer canvasContainer() {
+        return canvasContainer;
+    }
+
+    public void resize(double width, double height) {
+        canvasContainer.resizeTo(width, height);
+    }
+
+    public void embedGameScene(GameScene gameScene) {
+        assertNotNull(gameScene);
+        switch (gameScene) {
+            case CameraControlledView gameSceneUsingCamera -> {
+                root.getChildren().set(0, gameSceneUsingCamera.viewPort());
+                gameSceneUsingCamera.viewPortWidthProperty().bind(parentScene.widthProperty());
+                gameSceneUsingCamera.viewPortHeightProperty().bind(parentScene.heightProperty());
+            }
+            case GameScene2D gameScene2D -> {
+                GameRenderer renderer = THE_UI.configurations().current().createRenderer(canvas);
+                Vector2f sceneSize = gameScene2D.sizeInPx();
+                canvasContainer.setUnscaledCanvasWidth(sceneSize.x());
+                canvasContainer.setUnscaledCanvasHeight(sceneSize.y());
+                canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
+                canvasContainer.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
+                gameScene2D.scalingProperty().bind(
+                    canvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_2D_SCALING)));
+                gameScene2D.setCanvas(canvas);
+                // avoid showing old content before new scene is rendered
+                canvas.getGraphicsContext2D().setFill(PY_CANVAS_BG_COLOR.get());
+                canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                gameScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
+                gameScene2D.setGameRenderer(renderer);
+                root.getChildren().set(0, canvasLayer);
+            }
+            default -> Logger.error("Cannot embed game scene of class {}", gameScene.getClass().getName());
+        }
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
     private void configureCanvasContainer() {
         canvasContainer.setMinScaling(0.5);
         canvasContainer.setUnscaledCanvasWidth(ARCADE_MAP_SIZE_IN_PIXELS.x());
@@ -167,86 +336,6 @@ public class GameView implements View {
         root.getChildren().addAll(canvasLayer, dashboardLayer, popupLayer, flashMessageLayer);
     }
 
-    @Override
-    public StackPane layoutRoot() {
-        return root;
-    }
-
-    @Override
-    public StringExpression title() {
-        return titleExpression;
-    }
-
-    public FlashMessageView flashMessageLayer() {
-        return flashMessageLayer;
-    }
-
-    public Dashboard dashboard() {
-        return dashboard;
-    }
-
-    public void setDashboardVisible(boolean visible) {
-        if (visible) {
-            InfoBox[] infoBoxes = dashboard.infoBoxes().toArray(InfoBox[]::new);
-            dashboardContainer.getChildren().setAll(infoBoxes);
-            dashboardContainer.setVisible(true);
-
-        } else {
-            dashboardContainer.setVisible(false);
-        }
-    }
-
-    public void toggleDashboardVisibility() {
-        setDashboardVisible(!dashboardContainer.isVisible());
-    }
-
-    @Override
-    public void bindGameActions() {
-        bind(GameAction.BOOT,                    naked(KeyCode.F3));
-        bind(this::showGameSceneHelp,            naked(KeyCode.H));
-        bind(GameAction.SHOW_START_VIEW,         naked(KeyCode.Q));
-        bind(GameAction.SIMULATION_SLOWER,       alt(KeyCode.MINUS));
-        bind(GameAction.SIMULATION_FASTER,       alt(KeyCode.PLUS));
-        bind(GameAction.SIMULATION_RESET,        alt(KeyCode.DIGIT0));
-        bind(GameAction.SIMULATION_ONE_STEP,     shift(KeyCode.P));
-        bind(GameAction.SIMULATION_TEN_STEPS,    shift(KeyCode.SPACE));
-        bind(GameAction.TOGGLE_AUTOPILOT,        alt(KeyCode.A));
-        bind(GameAction.TOGGLE_DEBUG_INFO,       alt(KeyCode.D));
-        bind(GameAction.TOGGLE_PAUSED,           naked(KeyCode.P));
-        bind(this::toggleDashboardVisibility,    naked(KeyCode.F1), alt(KeyCode.B));
-        bind(GameAction.TOGGLE_IMMUNITY,         alt(KeyCode.I));
-        // 3D only
-        bind(GameAction.TOGGLE_PIP_VISIBILITY,   naked(KeyCode.F2));
-        bind(GameAction.TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3));
-    }
-
-    @Override
-    public Map<KeyCodeCombination, Action> actionBindings() {
-        return actionBindings;
-    }
-
-    @Override
-    public void handleInput(Keyboard keyboard) {
-        runTriggeredActionElse(keyboard,
-            () -> THE_UI.currentGameScene().ifPresent(gameScene -> gameScene.handleInput(keyboard)));
-    }
-
-    public TooFancyCanvasContainer canvasContainer() {
-        return canvasContainer;
-    }
-
-    public void resize(double width, double height) {
-        canvasContainer.resizeTo(width, height);
-    }
-
-    public void onTick() {
-        flashMessageLayer.update();
-        if (dashboardLayer.isVisible()) {
-            dashboard.infoBoxes().filter(InfoBox::isExpanded).forEach(InfoBox::update);
-        }
-        pipView.draw();
-    }
-
     private void handleContextMenuRequest(ContextMenuEvent e) {
         var menuItems = new ArrayList<>(gameScenePy.get().supplyContextMenuItems(e));
         if (THE_UI.configurations().currentGameSceneIsPlayScene2D()) {
@@ -260,80 +349,10 @@ public class GameView implements View {
         contextMenu.requestFocus();
     }
 
-    public void embedGameScene(GameScene gameScene) {
-        assertNotNull(gameScene);
-        switch (gameScene) {
-            case CameraControlledView gameSceneUsingCamera -> {
-                root.getChildren().set(0, gameSceneUsingCamera.viewPort());
-                gameSceneUsingCamera.viewPortWidthProperty().bind(parentScene.widthProperty());
-                gameSceneUsingCamera.viewPortHeightProperty().bind(parentScene.heightProperty());
-            }
-            case GameScene2D gameScene2D -> {
-                GameRenderer renderer = THE_UI.configurations().current().createRenderer(canvas);
-                Vector2f sceneSize = gameScene2D.sizeInPx();
-                canvasContainer.setUnscaledCanvasWidth(sceneSize.x());
-                canvasContainer.setUnscaledCanvasHeight(sceneSize.y());
-                canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
-                canvasContainer.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
-                gameScene2D.scalingProperty().bind(
-                    canvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_2D_SCALING)));
-                gameScene2D.setCanvas(canvas);
-                // avoid showing old content before new scene is rendered
-                canvas.getGraphicsContext2D().setFill(PY_CANVAS_BG_COLOR.get());
-                canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                gameScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
-                gameScene2D.setGameRenderer(renderer);
-                root.getChildren().set(0, canvasLayer);
-            }
-            default -> Logger.error("Cannot embed game scene of class {}", gameScene.getClass().getName());
-        }
-    }
-
-    public void showGameSceneHelp() {
+    private void showGameSceneHelp() {
         if (!THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN)
             && THE_UI.configurations().currentGameSceneIs2D()) {
-                popupLayer.showHelp(canvasContainer.scaling());
+            popupLayer.showHelp(canvasContainer.scaling());
         }
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    // GameEventListener interface implementation
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public void onGameEvent(GameEvent event) {
-        Logger.trace("{} received game event {}", getClass().getSimpleName(), event);
-        // dispatch event to event specific method:
-        View.super.onGameEvent(event);
-        // dispatch to current game scene
-        THE_UI.currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(event));
-        THE_UI.updateGameScene(false);
-    }
-
-    @Override
-    public void onLevelCreated(GameEvent event) {
-        THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-            GameVariant gameVariant = THE_GAME_CONTROLLER.selectedGameVariant();
-            Logger.info("Game level {} ({}) created", level.number(), gameVariant);
-            THE_UI.configurations().current().createActorAnimations(level);
-            Logger.info("Actor animations ({}) created", gameVariant);
-            THE_UI.sound().setEnabled(!THE_GAME_CONTROLLER.game().isDemoLevel());
-            Logger.info("Sounds ({}) {}", gameVariant, THE_UI.sound().isEnabled() ? "enabled" : "disabled");
-            // size of game scene might have changed, so re-embed
-            THE_UI.currentGameScene().ifPresent(this::embedGameScene);
-            GameScene2D pipGameScene = THE_UI.configurations().current().createPiPScene(canvas);
-            pipView.setScene2D(pipGameScene);
-        });
-    }
-
-    @Override
-    public void onStopAllSounds(GameEvent event) {
-        THE_UI.sound().stopAll();
-    }
-
-    @Override
-    public void onUnspecifiedChange(GameEvent event) {
-        // TODO this is only used by game state GameState.TESTING_CUT_SCENES
-        THE_UI.updateGameScene(true);
     }
 }

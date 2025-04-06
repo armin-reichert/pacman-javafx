@@ -68,7 +68,7 @@ public class StartPagesView implements View {
     }
 
     @Override
-    public void onTick() {}
+    public void update() {}
 
     @Override
     public StringExpression title() {
