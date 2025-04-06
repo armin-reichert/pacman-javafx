@@ -19,6 +19,7 @@ import javafx.scene.input.KeyCode;
 import java.util.List;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
+import static de.amr.games.pacman.uilib.Keyboard.*;
 
 /**
  * Common interface of all game scenes (2D and 3D).
@@ -28,8 +29,8 @@ import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 public interface GameScene extends GameEventListener, ActionProvider {
 
     default void bindDefaultArcadeControllerActions(ArcadeKeyBinding arcadeKeys) {
-        bind(GameAction.INSERT_COIN,  arcadeKeys.key(Arcade.Button.COIN));
-        bind(GameAction.START_GAME,   arcadeKeys.key(Arcade.Button.START));
+        bind(GameAction.INSERT_COIN,  arcadeKeys.key(Arcade.Button.COIN), naked(KeyCode.NUMPAD5));
+        bind(GameAction.START_GAME,   arcadeKeys.key(Arcade.Button.START), naked(KeyCode.NUMPAD1));
         bind(GameAction.PLAYER_UP,    arcadeKeys.key(Arcade.Button.UP));
         bind(GameAction.PLAYER_DOWN,  arcadeKeys.key(Arcade.Button.DOWN));
         bind(GameAction.PLAYER_LEFT,  arcadeKeys.key(Arcade.Button.LEFT));
@@ -37,22 +38,22 @@ public interface GameScene extends GameEventListener, ActionProvider {
     }
 
     default void bindAlternativePlayerControlActions() {
-        bind(GameAction.PLAYER_UP,    Keyboard.control(KeyCode.UP));
-        bind(GameAction.PLAYER_DOWN,  Keyboard.control(KeyCode.DOWN));
-        bind(GameAction.PLAYER_LEFT,  Keyboard.control(KeyCode.LEFT));
-        bind(GameAction.PLAYER_RIGHT, Keyboard.control(KeyCode.RIGHT));
+        bind(GameAction.PLAYER_UP,    control(KeyCode.UP));
+        bind(GameAction.PLAYER_DOWN,  control(KeyCode.DOWN));
+        bind(GameAction.PLAYER_LEFT,  control(KeyCode.LEFT));
+        bind(GameAction.PLAYER_RIGHT, control(KeyCode.RIGHT));
     }
 
     default void bindCheatActions() {
-        bind(GameAction.CHEAT_EAT_ALL,     Keyboard.alt(KeyCode.E));
-        bind(GameAction.CHEAT_ADD_LIVES,   Keyboard.alt(KeyCode.L));
-        bind(GameAction.CHEAT_NEXT_LEVEL,  Keyboard.alt(KeyCode.N));
-        bind(GameAction.CHEAT_KILL_GHOSTS, Keyboard.alt(KeyCode.X));
+        bind(GameAction.CHEAT_EAT_ALL,     alt(KeyCode.E));
+        bind(GameAction.CHEAT_ADD_LIVES,   alt(KeyCode.L));
+        bind(GameAction.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
+        bind(GameAction.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
     }
 
     default void bindTestsStartingActions() {
-        bind(GameAction.TEST_CUT_SCENES,     Keyboard.alt(KeyCode.C));
-        bind(GameAction.TEST_LEVELS_BONI,    Keyboard.alt(KeyCode.T));
+        bind(GameAction.TEST_CUT_SCENES,     alt(KeyCode.C));
+        bind(GameAction.TEST_LEVELS_BONI,    alt(KeyCode.T));
         bind(GameAction.TEST_LEVELS_TEASERS, Keyboard.shift_alt(KeyCode.T));
     }
 

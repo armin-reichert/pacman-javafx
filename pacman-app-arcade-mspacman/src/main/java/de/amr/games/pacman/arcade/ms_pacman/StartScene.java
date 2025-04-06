@@ -24,8 +24,7 @@ public class StartScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(GameAction.INSERT_COIN, THE_UI.keyboard().currentArcadeKeyBinding().key(Arcade.Button.COIN));
-        bind(GameAction.START_GAME, THE_UI.keyboard().currentArcadeKeyBinding().key(Arcade.Button.START));
+        bindDefaultArcadeControllerActions(THE_UI.keyboard().currentArcadeKeyBinding());
     }
 
     @Override
