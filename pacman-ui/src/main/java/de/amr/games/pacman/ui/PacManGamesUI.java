@@ -97,10 +97,10 @@ public class PacManGamesUI implements GameUI {
     private void handleViewChange(View oldView, View newView) {
         root.getChildren().set(0, newView.layoutRoot());
         if (oldView != null) {
-            oldView.disableActionBindings(THE_UI.keyboard());
+            oldView.disableActionBindings(keyboard);
             THE_GAME_CONTROLLER.game().removeGameEventListener(oldView);
         }
-        newView.enableActionBindings(THE_UI.keyboard());
+        newView.enableActionBindings(keyboard);
         newView.layoutRoot().requestFocus();
         stage.titleProperty().bind(newView.title());
         THE_GAME_CONTROLLER.game().addGameEventListener(newView);
@@ -131,7 +131,7 @@ public class PacManGamesUI implements GameUI {
                 showEditorView();
             }
             else {
-                currentView().handleInput(THE_UI.keyboard());
+                currentView().handleInput(keyboard);
             }
         });
     }
@@ -175,7 +175,7 @@ public class PacManGamesUI implements GameUI {
 
     private void createMapEditor() {
         editor = new TileMapEditor(stage);
-        var miQuit = new MenuItem(THE_UI.assets().text("back_to_game"));
+        var miQuit = new MenuItem(assets.text("back_to_game"));
         miQuit.setOnAction(e -> {
             editor.stop();
             editor.executeWithCheckForUnsavedChanges(this::showStartView);
