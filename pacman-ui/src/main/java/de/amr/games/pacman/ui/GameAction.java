@@ -64,7 +64,7 @@ public enum GameAction implements Action {
         @Override
         public void execute() {
             THE_GAME_CONTROLLER.game().addLives(3);
-            THE_UI.showFlashMessage(THE_UI.assets().text("cheat_add_lives", THE_GAME_CONTROLLER.game().lives()));
+            THE_UI.showFlashMessage(THE_ASSETS.text("cheat_add_lives", THE_GAME_CONTROLLER.game().lives()));
         }
     },
 
@@ -283,7 +283,7 @@ public enum GameAction implements Action {
         public void execute() {
             toggle(PY_AUTOPILOT);
             boolean auto = PY_AUTOPILOT.get();
-            THE_UI.showFlashMessage(THE_UI.assets().text(auto ? "autopilot_on" : "autopilot_off"));
+            THE_UI.showFlashMessage(THE_ASSETS.text(auto ? "autopilot_on" : "autopilot_off"));
             THE_SOUND.playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
         }
     },
@@ -299,7 +299,7 @@ public enum GameAction implements Action {
         @Override
         public void execute() {
             toggle(PY_IMMUNITY);
-            THE_UI.showFlashMessage(THE_UI.assets().text(PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
+            THE_UI.showFlashMessage(THE_ASSETS.text(PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
             THE_SOUND.playVoice(PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
         }
     },
@@ -320,7 +320,7 @@ public enum GameAction implements Action {
         public void execute() {
             Perspective.Name next = PY_3D_PERSPECTIVE.get().next();
             PY_3D_PERSPECTIVE.set(next);
-            THE_UI.showFlashMessage(THE_UI.assets().text("camera_perspective", THE_UI.assets().text(next.name())));
+            THE_UI.showFlashMessage(THE_ASSETS.text("camera_perspective", THE_ASSETS.text(next.name())));
         }
     },
 
@@ -329,7 +329,7 @@ public enum GameAction implements Action {
         public void execute() {
             Perspective.Name prev = PY_3D_PERSPECTIVE.get().prev();
             PY_3D_PERSPECTIVE.set(prev);
-            THE_UI.showFlashMessage(THE_UI.assets().text("camera_perspective", THE_UI.assets().text(prev.name())));
+            THE_UI.showFlashMessage(THE_ASSETS.text("camera_perspective", THE_ASSETS.text(prev.name())));
         }
     },
 
@@ -358,7 +358,7 @@ public enum GameAction implements Action {
                     THE_GAME_CONTROLLER.update(); //TODO needed?
                 }
                 if (!THE_GAME_CONTROLLER.game().isPlaying()) {
-                    THE_UI.showFlashMessage(THE_UI.assets().text(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
+                    THE_UI.showFlashMessage(THE_ASSETS.text(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
                 }
             });
         }
@@ -369,7 +369,7 @@ public enum GameAction implements Action {
         public void execute() {
             toggle(PY_PIP_ON);
             if (!THE_UI.gameUIConfigManager().currentGameSceneIsPlayScene3D()) {
-                THE_UI.showFlashMessage(THE_UI.assets().text(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
+                THE_UI.showFlashMessage(THE_ASSETS.text(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
             }
         }
     };

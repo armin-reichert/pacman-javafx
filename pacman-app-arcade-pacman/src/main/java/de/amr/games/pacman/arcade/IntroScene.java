@@ -30,8 +30,7 @@ import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.*;
 import static de.amr.games.pacman.model.actors.GhostState.EATEN;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
-import static de.amr.games.pacman.ui.Globals.THE_SOUND;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.*;
 
 /**
  * <p>
@@ -129,7 +128,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
+        Font font = THE_ASSETS.scaledArcadeFont(scaled(TS));
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
@@ -206,8 +205,8 @@ public class IntroScene extends GameScene2D {
 
     private void drawPoints() {
         var color = Color.web(Arcade.Palette.WHITE);
-        Font font8 = THE_UI.assets().scaledArcadeFont(scaled(8));
-        Font font6 = THE_UI.assets().scaledArcadeFont(scaled(6));
+        Font font8 = THE_ASSETS.scaledArcadeFont(scaled(8));
+        Font font6 = THE_ASSETS.scaledArcadeFont(scaled(6));
         int tileX = LEFT_TILE_X + 6;
         int tileY = 25;
         gr.ctx().setFill(PELLET_COLOR);

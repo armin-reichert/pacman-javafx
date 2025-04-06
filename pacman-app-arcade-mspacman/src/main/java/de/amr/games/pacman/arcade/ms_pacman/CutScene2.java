@@ -18,7 +18,7 @@ import javafx.scene.text.Font;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_MR_PACMAN_MUNCHING;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.*;
 
 /**
  * Intermission scene 2: "The chase".
@@ -51,7 +51,7 @@ public class CutScene2 extends GameScene2D {
         pacMan = new Pac();
         msPacMan = new Pac();
 
-        music = THE_UI.sound().makeSound("intermission.2");
+        music = THE_SOUND.makeSound("intermission.2");
 
         var spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_UI.gameUIConfigManager().current().spriteSheet();
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
@@ -83,7 +83,7 @@ public class CutScene2 extends GameScene2D {
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
+            Font font = THE_ASSETS.scaledArcadeFont(scaled(TS));
             gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
         }
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {

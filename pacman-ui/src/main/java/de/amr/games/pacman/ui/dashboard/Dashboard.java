@@ -14,7 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.THE_ASSETS;
 
 public class Dashboard {
 
@@ -68,6 +68,6 @@ public class Dashboard {
     }
 
     private void put(GameUI.DashboardID id, String titleKey, InfoBox infoBox) {
-        infoBoxMap.put(id, configured(THE_UI.assets().text(titleKey), infoBox));
+        infoBoxMap.put(id, configured(THE_ASSETS.text(titleKey), infoBox));
     }
 }

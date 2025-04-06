@@ -48,7 +48,6 @@ public class PacManGamesUI implements GameUI {
 
     private final ObjectProperty<View> viewPy = new SimpleObjectProperty<>();
 
-    private final GameAssets assets = new GameAssets();
     private final GameClockFX clock = new GameClockFX();
     private final GameKeyboard keyboard = new GameKeyboard();
     private final GameUIConfigManager gameUIConfigManager = new GameUIConfigManager();
@@ -163,7 +162,7 @@ public class PacManGamesUI implements GameUI {
 
     private void createMapEditor() {
         editor = new TileMapEditor(stage);
-        var miQuit = new MenuItem(assets.text("back_to_game"));
+        var miQuit = new MenuItem(THE_ASSETS.text("back_to_game"));
         miQuit.setOnAction(e -> {
             editor.stop();
             editor.executeWithCheckForUnsavedChanges(this::showStartView);
@@ -178,7 +177,7 @@ public class PacManGamesUI implements GameUI {
 
     private void createStartPagesView() {
         startPagesView = new StartPagesView();
-        startPagesView.setBackground(assets.background("background.scene"));
+        startPagesView.setBackground(THE_ASSETS.background("background.scene"));
     }
 
     private void createGameView() {
@@ -197,14 +196,9 @@ public class PacManGamesUI implements GameUI {
     }
 
     @Override
-    public GameAssets assets() {
-        return assets;
-    }
-
-    @Override
     public void build(Stage stage, Dimension2D mainSceneSize) {
         this.stage = assertNotNull(stage);
-        root.setBackground(assets.get("background.scene"));
+        root.setBackground(THE_ASSETS.get("background.scene"));
         root.getChildren().add(new Pane()); // placeholder for root of current view
         addStatusIcons(root);
         createMapEditor();
@@ -215,8 +209,8 @@ public class PacManGamesUI implements GameUI {
 
         root.backgroundProperty().bind(gameView.gameSceneProperty().map(
             gameScene -> gameUIConfigManager.currentGameSceneIsPlayScene3D()
-                ? assets.get("background.play_scene3d")
-                : assets.get("background.scene"))
+                ? THE_ASSETS.get("background.play_scene3d")
+                : THE_ASSETS.get("background.scene"))
         );
 
         stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);

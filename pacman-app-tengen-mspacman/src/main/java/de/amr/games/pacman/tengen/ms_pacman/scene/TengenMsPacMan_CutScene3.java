@@ -27,7 +27,7 @@ import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_S
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.BLUE_BAG_SPRITE;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.JUNIOR_PAC_SPRITE;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.*;
 
 /**
  * Intermission scene 3: "Junior".
@@ -84,7 +84,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         mrPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
 
-        music = THE_UI.sound().makeSound("intermission.3");
+        music = THE_SOUND.makeSound("intermission.3");
     }
 
     @Override
@@ -173,7 +173,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
+            Font font = THE_ASSETS.scaledArcadeFont(scaled(TS));
             gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
         }
         var r = (TengenMsPacMan_Renderer2D) gr;

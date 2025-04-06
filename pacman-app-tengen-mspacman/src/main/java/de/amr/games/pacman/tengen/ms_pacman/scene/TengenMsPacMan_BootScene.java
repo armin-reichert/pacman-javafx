@@ -22,6 +22,7 @@ import org.tinylog.Logger;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
+import static de.amr.games.pacman.ui.Globals.THE_ASSETS;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 /**
@@ -108,7 +109,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
+        Font font = THE_ASSETS.scaledArcadeFont(scaled(TS));
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {

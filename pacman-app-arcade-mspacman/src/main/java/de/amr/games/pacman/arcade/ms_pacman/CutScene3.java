@@ -20,7 +20,7 @@ import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_MR_PACMAN_MUNCHING;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.*;
 
 /**
  * Intermission scene 3: "Junior".
@@ -59,7 +59,7 @@ public class CutScene3 extends GameScene2D {
         stork = new Actor2D();
         bag = new Actor2D();
 
-        music = THE_UI.sound().makeSound("intermission.3");
+        music = THE_SOUND.makeSound("intermission.3");
         var spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_UI.gameUIConfigManager().current().spriteSheet();
         msPacMan.setAnimations(new PacAnimations(spriteSheet));
         pacMan.setAnimations(new PacAnimations(spriteSheet));
@@ -93,7 +93,7 @@ public class CutScene3 extends GameScene2D {
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
+            Font font = THE_ASSETS.scaledArcadeFont(scaled(TS));
             gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
         }
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {

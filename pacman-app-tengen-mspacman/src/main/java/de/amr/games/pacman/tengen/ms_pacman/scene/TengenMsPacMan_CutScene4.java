@@ -25,7 +25,7 @@ import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.*;
 
 public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
@@ -63,7 +63,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         mrPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
 
-        music = THE_UI.sound().makeSound("intermission.4");
+        music = THE_SOUND.makeSound("intermission.4");
     }
 
     @Override
@@ -159,7 +159,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         var junior = new Pac();
         double randomX = 8 * TS + (8 * TS) * Math.random();
         int rnd = Globals.randomInt(1, 3);
-        AudioClip clip = THE_UI.assets().get(assetNamespace + ".audio.intermission.4.junior." + rnd);
+        AudioClip clip = THE_ASSETS.get(assetNamespace + ".audio.intermission.4.junior." + rnd);
         junior.setPosition((float) randomX, sizeInPx().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
@@ -220,7 +220,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
+            Font font = THE_ASSETS.scaledArcadeFont(scaled(TS));
             gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
         }
         var r = (TengenMsPacMan_Renderer2D) gr;

@@ -73,7 +73,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         var axes = new CoordinateSystem();
         axes.visibleProperty().bind(PY_3D_AXES_VISIBLE);
 
-        scores3D = new Scores3D(THE_UI.assets().text("score.score"), THE_UI.assets().text("score.high_score"));
+        scores3D = new Scores3D(THE_ASSETS.text("score.score"), THE_ASSETS.text("score.high_score"));
 
         // last child is placeholder for level 3D
         root.getChildren().addAll(scores3D, axes, new Group());
@@ -98,7 +98,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         enableActionBindings(THE_UI.keyboard());
         game().setScoreVisible(true);
         perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
-        scores3D.setFont(THE_UI.assets().font("font.arcade", 8));
+        scores3D.setFont(THE_ASSETS.font("font.arcade", 8));
     }
 
     @Override
@@ -217,8 +217,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         }
         else { // score is disabled, show text "GAME OVER"
             String assetNamespace = THE_UI.gameUIConfigManager().current().assetNamespace();
-            Color color = THE_UI.assets().color(assetNamespace + ".color.game_over_message");
-            scores3D.showTextAsScore(THE_UI.assets().text("score.game_over"), color);
+            Color color = THE_ASSETS.color(assetNamespace + ".color.game_over_message");
+            scores3D.showTextAsScore(THE_ASSETS.text("score.game_over"), color);
         }
     }
 
@@ -371,7 +371,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         // delay state exit for 3 seconds
         gameState().timer().restartSeconds(3);
         if (!game().isDemoLevel() && randomInt(0, 100) < 25) {
-            THE_UI.showFlashMessageSec(3, THE_UI.assets().localizedGameOverMessage());
+            THE_UI.showFlashMessageSec(3, THE_ASSETS.localizedGameOverMessage());
         }
         THE_SOUND.stopAll();
         THE_SOUND.playGameOverSound();
@@ -498,23 +498,23 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e) {
         List<MenuItem> items = new ArrayList<>();
 
-        items.add(contextMenuTitleItem(THE_UI.assets().text("scene_display")));
+        items.add(contextMenuTitleItem(THE_ASSETS.text("scene_display")));
 
-        var item = new MenuItem(THE_UI.assets().text("use_2D_scene"));
+        var item = new MenuItem(THE_ASSETS.text("use_2D_scene"));
         item.setOnAction(ae -> GameAction.TOGGLE_PLAY_SCENE_2D_3D.execute());
         items.add(item);
 
         // Toggle picture-in-picture display
-        var miPiP = new CheckMenuItem(THE_UI.assets().text("pip"));
+        var miPiP = new CheckMenuItem(THE_ASSETS.text("pip"));
         miPiP.selectedProperty().bindBidirectional(PY_PIP_ON);
         items.add(miPiP);
 
-        items.add(contextMenuTitleItem(THE_UI.assets().text("select_perspective")));
+        items.add(contextMenuTitleItem(THE_ASSETS.text("select_perspective")));
 
         // Camera perspective radio buttons
         var radioButtonGroup = new ToggleGroup();
         for (var perspective : Perspective.Name.values()) {
-            var miPerspective = new RadioMenuItem(THE_UI.assets().text(perspective.name()));
+            var miPerspective = new RadioMenuItem(THE_ASSETS.text(perspective.name()));
             miPerspective.setToggleGroup(radioButtonGroup);
             miPerspective.setUserData(perspective);
             if (perspective == PY_3D_PERSPECTIVE.get())  { // == allowed for enum values
@@ -537,23 +537,23 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         });
 
         // Common items
-        items.add(contextMenuTitleItem(THE_UI.assets().text("pacman")));
+        items.add(contextMenuTitleItem(THE_ASSETS.text("pacman")));
 
-        var miAutopilot = new CheckMenuItem(THE_UI.assets().text("autopilot"));
+        var miAutopilot = new CheckMenuItem(THE_ASSETS.text("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
         items.add(miAutopilot);
 
-        var miImmunity = new CheckMenuItem(THE_UI.assets().text("immunity"));
+        var miImmunity = new CheckMenuItem(THE_ASSETS.text("immunity"));
         miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
         items.add(miImmunity);
 
         items.add(new SeparatorMenuItem());
 
-        var miMuted = new CheckMenuItem(THE_UI.assets().text("muted"));
+        var miMuted = new CheckMenuItem(THE_ASSETS.text("muted"));
         miMuted.selectedProperty().bindBidirectional(THE_SOUND.mutedProperty());
         items.add(miMuted);
 
-        var miQuit = new MenuItem(THE_UI.assets().text("quit"));
+        var miQuit = new MenuItem(THE_ASSETS.text("quit"));
         miQuit.setOnAction(ae -> GameAction.SHOW_START_VIEW.execute());
         items.add(miQuit);
 

@@ -23,7 +23,7 @@ import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.Globals.HTS;
 import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.*;
 import static de.amr.games.pacman.uilib.Keyboard.alt;
 import static de.amr.games.pacman.uilib.Keyboard.control;
 
@@ -96,7 +96,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         else { // score is disabled, show text "GAME OVER" instead, use maze-specific color
             game().level().ifPresent(level -> {
                 NES_ColorScheme nesColorScheme = level.worldMap().getConfigValue("nesColorScheme");
-                scores3D.showTextAsScore(THE_UI.assets().text("score.game_over"), Color.web(nesColorScheme.strokeColor()));
+                scores3D.showTextAsScore(THE_ASSETS.text("score.game_over"), Color.web(nesColorScheme.strokeColor()));
             });
         }
     }
@@ -105,19 +105,19 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     public void onBonusActivated(GameEvent event) {
         game().level().flatMap(GameLevel::bonus)
                 .ifPresent(bonus -> level3D.replaceBonus3D(bonus, THE_UI.gameUIConfigManager().current().spriteSheet()));
-        THE_UI.sound().playBonusBouncingSound();
+        THE_SOUND.playBonusBouncingSound();
     }
 
     @Override
     public void onBonusEaten(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::showEaten);
-        THE_UI.sound().stopBonusBouncingSound();
-        THE_UI.sound().playBonusEatenSound();
+        THE_SOUND.stopBonusBouncingSound();
+        THE_SOUND.playBonusEatenSound();
     }
 
     @Override
     public void onBonusExpired(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::onBonusExpired);
-        THE_UI.sound().stopBonusBouncingSound();
+        THE_SOUND.stopBonusBouncingSound();
     }
 }

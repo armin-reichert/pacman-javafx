@@ -16,6 +16,7 @@ import javafx.scene.text.Font;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_TILES;
+import static de.amr.games.pacman.ui.Globals.THE_ASSETS;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 public class ArcadeBootScene2D extends GameScene2D {
@@ -61,7 +62,7 @@ public class ArcadeBootScene2D extends GameScene2D {
     }
 
     private void paintRandomHexCodes(Vector2f sceneSize) {
-        Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
+        Font font = THE_ASSETS.scaledArcadeFont(scaled(TS));
         gr.fillCanvas(backgroundColor());
         gr.ctx().setFill(Color.web(Arcade.Palette.WHITE));
         gr.ctx().setFont(font);

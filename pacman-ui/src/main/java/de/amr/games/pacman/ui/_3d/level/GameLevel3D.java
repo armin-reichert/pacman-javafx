@@ -89,7 +89,7 @@ public class GameLevel3D extends Group {
             floor3D = createFloor(level.worldMap().numCols() * TS, level.worldMap().numRows() * TS);
             WorldMapColorScheme coloring = THE_UI.gameUIConfigManager().current().worldMapColoring(level.worldMap());
             maze3D = new Maze3D(THE_UI.gameUIConfigManager().current(), level, coloring);
-            addFood3D(level, THE_UI.assets().get("model3D.pellet"), coloredMaterial(coloring.pellet()));
+            addFood3D(level, THE_ASSETS.get("model3D.pellet"), coloredMaterial(coloring.pellet()));
 
             worldGroup.getChildren().addAll(floor3D, maze3D);
 
@@ -135,20 +135,20 @@ public class GameLevel3D extends Group {
     private Pac3D createPac3D(Pac pac) {
         String assetNamespace = THE_UI.gameUIConfigManager().current().assetNamespace();
         Pac3D pac3D = switch (THE_GAME_CONTROLLER.selectedGameVariant()) {
-            case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL -> new MsPacMan3D(THE_GAME_CONTROLLER.selectedGameVariant(), pac, PAC_3D_SIZE, THE_UI.assets(), assetNamespace);
-            case PACMAN, PACMAN_XXL -> new PacMan3D(THE_GAME_CONTROLLER.selectedGameVariant(), pac, PAC_3D_SIZE, THE_UI.assets(), assetNamespace);
+            case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL -> new MsPacMan3D(THE_GAME_CONTROLLER.selectedGameVariant(), pac, PAC_3D_SIZE, THE_ASSETS, assetNamespace);
+            case PACMAN, PACMAN_XXL -> new PacMan3D(THE_GAME_CONTROLLER.selectedGameVariant(), pac, PAC_3D_SIZE, THE_ASSETS, assetNamespace);
         };
-        pac3D.shape3D().light().setColor(THE_UI.assets().color(assetNamespace + ".pac.color.head").desaturate());
+        pac3D.shape3D().light().setColor(THE_ASSETS.color(assetNamespace + ".pac.color.head").desaturate());
         pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
         return pac3D;
     }
 
     private Ghost3DAppearance createGhost3D(Ghost ghost, int numFlashes) {
         String assetNamespace = THE_UI.gameUIConfigManager().current().assetNamespace();
-        Shape3D dressShape    = new MeshView(THE_UI.assets().get("model3D.ghost.mesh.dress"));
-        Shape3D pupilsShape   = new MeshView(THE_UI.assets().get("model3D.ghost.mesh.pupils"));
-        Shape3D eyeballsShape = new MeshView(THE_UI.assets().get("model3D.ghost.mesh.eyeballs"));
-        return new Ghost3DAppearance(dressShape, pupilsShape, eyeballsShape, THE_UI.assets(), assetNamespace,
+        Shape3D dressShape    = new MeshView(THE_ASSETS.get("model3D.ghost.mesh.dress"));
+        Shape3D pupilsShape   = new MeshView(THE_ASSETS.get("model3D.ghost.mesh.pupils"));
+        Shape3D eyeballsShape = new MeshView(THE_ASSETS.get("model3D.ghost.mesh.eyeballs"));
+        return new Ghost3DAppearance(dressShape, pupilsShape, eyeballsShape, THE_ASSETS, assetNamespace,
             ghost, GHOST_3D_SIZE, numFlashes);
     }
 
@@ -156,7 +156,7 @@ public class GameLevel3D extends Group {
         GameUIConfig config3D = THE_UI.gameUIConfigManager().current();
         Node[] counterShapes = new Node[LIVES_COUNTER_MAX];
         for (int i = 0; i < counterShapes.length; ++i) {
-            counterShapes[i] = config3D.createLivesCounterShape(THE_UI.assets(), LIVES_COUNTER_3D_SIZE);
+            counterShapes[i] = config3D.createLivesCounterShape(THE_ASSETS, LIVES_COUNTER_3D_SIZE);
         }
         var counter3D = new LivesCounter3D(counterShapes);
         counter3D.setTranslateX(2 * TS);
@@ -257,7 +257,7 @@ public class GameLevel3D extends Group {
         }
         message3D = Message3D.builder()
             .text(text)
-            .font(THE_UI.assets().font("font.arcade", 6))
+            .font(THE_ASSETS.font("font.arcade", 6))
             .borderColor(Color.WHITE)
             .textColor(Color.YELLOW)
             .build();
@@ -339,7 +339,7 @@ public class GameLevel3D extends Group {
             new KeyFrame(Duration.ZERO, e -> {
                 livesCounter3D().light().setLightOn(false);
                 if (Globals.randomInt(1, 100) < 25) {
-                    THE_UI.showFlashMessageSec(3, THE_UI.assets().localizedLevelCompleteMessage(level.number()));
+                    THE_UI.showFlashMessageSec(3, THE_ASSETS.localizedLevelCompleteMessage(level.number()));
                 }
             }),
             new KeyFrame(Duration.seconds(1.0), e -> level.ghosts().forEach(Ghost::hide)),

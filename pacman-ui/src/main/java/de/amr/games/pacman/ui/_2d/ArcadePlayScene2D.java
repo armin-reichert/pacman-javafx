@@ -128,7 +128,7 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
+        Font font = THE_ASSETS.scaledArcadeFont(scaled(TS));
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
@@ -315,23 +315,23 @@ public class ArcadePlayScene2D extends GameScene2D {
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e) {
         List<MenuItem> items = new ArrayList<>();
-        items.add(Ufx.contextMenuTitleItem(THE_UI.assets().text("pacman")));
+        items.add(Ufx.contextMenuTitleItem(THE_ASSETS.text("pacman")));
 
-        var miAutopilot = new CheckMenuItem(THE_UI.assets().text("autopilot"));
+        var miAutopilot = new CheckMenuItem(THE_ASSETS.text("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
         items.add(miAutopilot);
 
-        var miImmunity = new CheckMenuItem(THE_UI.assets().text("immunity"));
+        var miImmunity = new CheckMenuItem(THE_ASSETS.text("immunity"));
         miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
         items.add(miImmunity);
 
         items.add(new SeparatorMenuItem());
 
-        var miMuted = new CheckMenuItem(THE_UI.assets().text("muted"));
+        var miMuted = new CheckMenuItem(THE_ASSETS.text("muted"));
         miMuted.selectedProperty().bindBidirectional(THE_SOUND.mutedProperty());
         items.add(miMuted);
 
-        var miQuit = new MenuItem(THE_UI.assets().text("quit"));
+        var miQuit = new MenuItem(THE_ASSETS.text("quit"));
         miQuit.setOnAction(ae -> GameAction.SHOW_START_VIEW.execute());
         items.add(miQuit);
 

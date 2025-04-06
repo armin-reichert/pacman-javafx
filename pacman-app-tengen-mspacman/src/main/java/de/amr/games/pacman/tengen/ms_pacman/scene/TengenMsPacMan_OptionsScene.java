@@ -25,7 +25,7 @@ import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.CONTINUES_SPRITES;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.*;
 import static de.amr.games.pacman.uilib.Keyboard.alt;
 
 /**
@@ -112,12 +112,12 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     private void optionSelectionChanged() {
-        THE_UI.sound().playClipIfEnabled("option.selection_changed", 1);
+        THE_SOUND.playClipIfEnabled("option.selection_changed", 1);
         resetIdleTimer();
     }
 
     private void optionValueChanged() {
-        THE_UI.sound().playClipIfEnabled("option.value_changed", 1);
+        THE_SOUND.playClipIfEnabled("option.value_changed", 1);
         resetIdleTimer();
     }
 
@@ -242,7 +242,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
+        Font font = THE_ASSETS.scaledArcadeFont(scaled(TS));
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {

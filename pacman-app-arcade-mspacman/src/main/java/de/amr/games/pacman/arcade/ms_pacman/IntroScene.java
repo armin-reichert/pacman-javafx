@@ -23,7 +23,7 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.*;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -108,7 +108,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        THE_UI.sound().stopVoice();
+        THE_SOUND.stopVoice();
     }
 
     @Override
@@ -123,12 +123,12 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        THE_UI.sound().playInsertCoinSound();
+        THE_SOUND.playInsertCoinSound();
     }
 
     @Override
     public void drawSceneContent() {
-        Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
+        Font font = THE_ASSETS.scaledArcadeFont(scaled(TS));
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {

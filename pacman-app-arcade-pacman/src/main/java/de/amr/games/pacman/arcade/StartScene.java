@@ -15,8 +15,7 @@ import javafx.scene.text.Font;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.arcade.ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui.Globals.THE_SOUND;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.*;
 
 /**
  * @author Armin Reichert
@@ -44,8 +43,8 @@ public class StartScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        Font font8 = THE_UI.assets().scaledArcadeFont(scaled(8));
-        Font font6 = THE_UI.assets().scaledArcadeFont(scaled(6));
+        Font font8 = THE_ASSETS.scaledArcadeFont(scaled(8));
+        Font font6 = THE_ASSETS.scaledArcadeFont(scaled(6));
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {

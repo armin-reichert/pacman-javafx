@@ -16,13 +16,15 @@ import static de.amr.games.pacman.Globals.TS;
 
 public class Globals {
 
-    public static GameUI THE_UI;
+    public static final GameAssets THE_ASSETS = new GameAssets();
     public static final GameSound THE_SOUND = new GameSound();
+
+    public static GameUI THE_UI;
 
     public static void createUIAndSupport3D(boolean support3D) {
         THE_UI = new PacManGamesUI();
         if (support3D) {
-            THE_UI.assets().addAssets3D();
+            THE_ASSETS.addAssets3D();
         }
     }
 

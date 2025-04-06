@@ -17,11 +17,12 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.assertNotNull;
+import static de.amr.games.pacman.ui.Globals.THE_ASSETS;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage {
 
-    private GameVariant gameVariant;
+    private final GameVariant gameVariant;
     private final Flyer flyer;
 
     public ArcadeMsPacMan_StartPage(GameVariant gameVariant) {
@@ -54,7 +55,7 @@ public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage {
     private Node startButton() {
         ResourceManager rm = () -> GameAssets.class;
         Font startButtonFont = rm.loadFont("fonts/emulogic.ttf", 30);
-        Node btnStart = Ufx.createFancyButton(startButtonFont, THE_UI.assets().text("play_button"), THE_UI::showGameView);
+        Node btnStart = Ufx.createFancyButton(startButtonFont, THE_ASSETS.text("play_button"), THE_UI::showGameView);
         btnStart.setTranslateY(-50);
         StackPane.setAlignment(btnStart, Pos.BOTTOM_CENTER);
         return btnStart;

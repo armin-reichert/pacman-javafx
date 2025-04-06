@@ -19,7 +19,6 @@ public interface GameUI {
     enum DashboardID { README, GENERAL, GAME_CONTROL, SETTINGS_3D, GAME_INFO, ACTOR_INFO, KEYBOARD, ABOUT, CUSTOM_MAPS, JOYPAD }
 
     void addStartPage(StartPage startPage);
-    GameAssets assets();
     void build(Stage stage, Dimension2D size);
     void buildDashboard(DashboardID... ids);
     GameClockFX clock();

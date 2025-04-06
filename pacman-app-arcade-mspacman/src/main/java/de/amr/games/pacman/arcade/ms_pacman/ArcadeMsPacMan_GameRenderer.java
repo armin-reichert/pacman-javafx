@@ -22,7 +22,7 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.RectArea.rect;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.THE_ASSETS;
 
 /**
  * @author Armin Reichert
@@ -70,7 +70,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
         this.spriteSheet = assertNotNull(spriteSheet);
         ctx = assertNotNull(canvas).getGraphicsContext2D();
         //TODO maybe create flashing maze from normal image at runtime by color exchanges?
-        flashingMazesImage = THE_UI.assets().get("ms_pacman.flashing_mazes");
+        flashingMazesImage = THE_ASSETS.get("ms_pacman.flashing_mazes");
     }
 
     @Override
@@ -126,7 +126,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
 
     public void drawClapperBoard(ClapperboardAnimation clapperboardAnimation, double x, double y) {
         clapperboardAnimation.currentSprite().ifPresent(sprite -> {
-            Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
+            Font font = THE_ASSETS.scaledArcadeFont(scaled(TS));
             drawSpriteScaledCenteredOverTile(sprite, x, y);
             Color textColor = Color.web(Arcade.Palette.WHITE);
             ctx.setFont(font);
@@ -141,7 +141,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     }
 
     public void drawMsPacManMidwayCopyright(double x, double y, Color color, Font font) {
-        Image image = THE_UI.assets().get("ms_pacman.logo.midway");
+        Image image = THE_ASSETS.get("ms_pacman.logo.midway");
         ctx.drawImage(image, scaled(x), scaled(y + 2), scaled(tiles_to_px(4) - 2), scaled(tiles_to_px(4)));
         ctx.setFont(font);
         ctx.setFill(color);

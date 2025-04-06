@@ -321,15 +321,15 @@ public class GameView implements View {
     private String computeTitleText(GameUI ui) {
         String keyPattern = "app.title." + ui.gameUIConfigManager().current().assetNamespace() + (ui.clock().isPaused() ? ".paused" : "");
         if (ui.currentGameScene().isPresent()) {
-            return computeTitleIfGameScenePresent(ui, ui.currentGameScene().get(), keyPattern);
+            return computeTitleIfGameScenePresent(ui.currentGameScene().get(), keyPattern);
         }
-        return ui.assets().text(keyPattern, ui.assets().text(PY_3D_ENABLED.get() ? "threeD" : "twoD"));
+        return THE_ASSETS.text(keyPattern, THE_ASSETS.text(PY_3D_ENABLED.get() ? "threeD" : "twoD"));
     }
 
-    private String computeTitleIfGameScenePresent(GameUI ui, GameScene gameScene, String keyPattern) {
+    private String computeTitleIfGameScenePresent(GameScene gameScene, String keyPattern) {
         String sceneNameSuffix = PY_DEBUG_INFO_VISIBLE.get() ? " [%s]".formatted(gameScene.getClass().getSimpleName()) : "";
-        String modeKey = ui.assets().text(PY_3D_ENABLED.get() ? "threeD" : "twoD");
-        return ui.assets().text(keyPattern, modeKey)
+        String modeKey = THE_ASSETS.text(PY_3D_ENABLED.get() ? "threeD" : "twoD");
+        return THE_ASSETS.text(keyPattern, modeKey)
             + sceneNameSuffix
             + (gameScene instanceof GameScene2D gameScene2D  ? " (%.2fx)".formatted(gameScene2D.scaling()) : "");
     }
@@ -357,10 +357,10 @@ public class GameView implements View {
     private void handleContextMenuRequest(ContextMenuEvent e) {
         var menuItems = new ArrayList<>(gameScenePy.get().supplyContextMenuItems(e));
         if (THE_UI.gameUIConfigManager().currentGameSceneIsPlayScene2D()) {
-            var item = new MenuItem(THE_UI.assets().text("use_3D_scene"));
+            var item = new MenuItem(THE_ASSETS.text("use_3D_scene"));
             item.setOnAction(ae -> GameAction.TOGGLE_PLAY_SCENE_2D_3D.execute());
             menuItems.addFirst(item);
-            menuItems.addFirst(contextMenuTitleItem(THE_UI.assets().text("scene_display")));
+            menuItems.addFirst(contextMenuTitleItem(THE_ASSETS.text("scene_display")));
         }
         contextMenu.getItems().setAll(menuItems);
         contextMenu.show(root, e.getScreenX(), e.getScreenY());

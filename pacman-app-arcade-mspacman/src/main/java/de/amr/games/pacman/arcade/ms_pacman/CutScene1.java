@@ -20,7 +20,7 @@ import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.HEART_SPRITE;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.*;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.*;
 
 /**
  * Intermission scene 1: "They meet".
@@ -64,7 +64,7 @@ public class CutScene1 extends GameScene2D {
         pinky = ArcadeMsPacMan_GameModel.pinky();
         heart = new Actor2D();
 
-        music = THE_UI.sound().makeSound("intermission.1");
+        music = THE_SOUND.makeSound("intermission.1");
 
         var spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_UI.gameUIConfigManager().configuration(THE_GAME_CONTROLLER.selectedGameVariant()).spriteSheet();
         msPac.setAnimations(new PacAnimations(spriteSheet));
@@ -98,7 +98,7 @@ public class CutScene1 extends GameScene2D {
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
+            Font font = THE_ASSETS.scaledArcadeFont(scaled(TS));
             gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
         }
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {

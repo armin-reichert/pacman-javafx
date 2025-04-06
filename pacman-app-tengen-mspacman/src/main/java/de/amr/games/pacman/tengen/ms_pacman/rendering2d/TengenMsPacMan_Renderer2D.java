@@ -42,6 +42,7 @@ import static de.amr.games.pacman.model.actors.Bonus.STATE_EDIBLE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.games.pacman.tengen.ms_pacman.maps.MapRepository.strangeMap15Sprite;
 import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.*;
+import static de.amr.games.pacman.ui.Globals.THE_ASSETS;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.ui._2d.GameSpriteSheet.NO_SPRITE;
 import static java.util.function.Predicate.not;
@@ -260,12 +261,12 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     public void drawLevelMessage(GameLevel level, boolean demoLevel, Vector2f position) {
         if (level.message() != null) {
             String ans = THE_UI.gameUIConfigManager().current().assetNamespace();
-            Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
+            Font font = THE_ASSETS.scaledArcadeFont(scaled(TS));
             float x = position.x(), y = position.y();
             switch (level.message()) {
-                case READY -> drawTextCenteredOver("READY!", x, y, THE_UI.assets().color(ans + ".color.ready_message"), font);
+                case READY -> drawTextCenteredOver("READY!", x, y, THE_ASSETS.color(ans + ".color.ready_message"), font);
                 case GAME_OVER -> {
-                    Color color = THE_UI.assets().color(ans + ".color.game_over_message");
+                    Color color = THE_ASSETS.color(ans + ".color.game_over_message");
                     if (demoLevel) {
                         NES_ColorScheme nesColorScheme = level.worldMap().getConfigValue("nesColorScheme");
                         color = Color.web(nesColorScheme.strokeColor());
@@ -380,7 +381,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             ctx().fillRect(numberX - 1, numberY - 8, 12, 8);
             ctx().restore();
 
-            Font font = THE_UI.assets().scaledArcadeFont(scaled(TS));
+            Font font = THE_ASSETS.scaledArcadeFont(scaled(TS));
             ctx().setFont(font);
             ctx().setFill(nesPaletteColor(0x20));
             ctx().fillText(String.valueOf(number), scaled(numberX), scaled(numberY));

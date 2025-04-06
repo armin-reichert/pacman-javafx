@@ -34,8 +34,7 @@ import org.tinylog.Logger;
 import java.util.Map;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
-import static de.amr.games.pacman.ui.Globals.createUIAndSupport3D;
+import static de.amr.games.pacman.ui.Globals.*;
 
 /**
  * Application containing all game variants and including 3D play scene.
@@ -97,7 +96,7 @@ public class PacManGames3dApp extends Application {
         });
         goodBoy.startWatching();
 
-        Logger.info("Assets: {}", THE_UI.assets().summary(Map.of(
+        Logger.info("Assets: {}", THE_ASSETS.summary(Map.of(
                 Model3D.class,"3D models",
                 Image.class, "images",
                 Font.class, "fonts",
