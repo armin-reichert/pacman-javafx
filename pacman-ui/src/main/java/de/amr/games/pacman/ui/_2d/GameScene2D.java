@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.ui.GameScene;
-import de.amr.games.pacman.ui.GameUI;
 import de.amr.games.pacman.uilib.Action;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
@@ -17,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.ui.Globals.DEBUG_TEXT_FONT;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 /**
@@ -85,7 +85,7 @@ public abstract class GameScene2D implements GameScene {
     public void drawDebugInfo() {
         gr.drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
         gr.ctx().setFill(Color.YELLOW);
-        gr.ctx().setFont(GameUI.DEBUG_TEXT_FONT);
+        gr.ctx().setFont(DEBUG_TEXT_FONT);
         gr.ctx().fillText("%s %d".formatted(gameState(), gameState().timer().tickCount()), 0, scaled(3 * TS));
     }
 

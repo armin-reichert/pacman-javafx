@@ -9,7 +9,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui.GameUI;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.uilib.SpriteAnimation;
 import javafx.scene.media.MediaPlayer;
@@ -19,6 +18,7 @@ import javafx.scene.text.Font;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.*;
+import static de.amr.games.pacman.ui.Globals.DEBUG_TEXT_FONT;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 
 /**
@@ -138,6 +138,6 @@ public class CutScene2 extends GameScene2D {
     public void drawDebugInfo() {
         super.drawDebugInfo();
         String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-        gr.drawText(text, Color.YELLOW, GameUI.DEBUG_TEXT_FONT, tiles_to_px(1), tiles_to_px(5));
+        gr.drawText(text, Color.YELLOW, DEBUG_TEXT_FONT, tiles_to_px(1), tiles_to_px(5));
     }
 }

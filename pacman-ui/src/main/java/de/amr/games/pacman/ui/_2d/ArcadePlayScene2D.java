@@ -17,7 +17,6 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameScene;
-import de.amr.games.pacman.ui.GameUI;
 import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.scene.control.CheckMenuItem;
@@ -36,9 +35,7 @@ import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_TILES;
-import static de.amr.games.pacman.ui.Globals.PY_AUTOPILOT;
-import static de.amr.games.pacman.ui.Globals.PY_IMMUNITY;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.*;
 
 /**
  * 2D play scene for Arcade game variants.
@@ -230,7 +227,7 @@ public class ArcadePlayScene2D extends GameScene2D {
             );
         }
         gr.ctx().setFill(Color.YELLOW);
-        gr.ctx().setFont(GameUI.DEBUG_TEXT_FONT);
+        gr.ctx().setFont(DEBUG_TEXT_FONT);
         String gameStateText = gameState().name() + " (Tick %d)".formatted(gameState().timer().tickCount());
         String huntingPhaseText = "";
         if (gameState() == GameState.HUNTING) {

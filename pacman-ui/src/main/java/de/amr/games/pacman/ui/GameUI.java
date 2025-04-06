@@ -21,11 +21,6 @@ import javafx.stage.Stage;
 import java.util.Optional;
 
 public interface GameUI {
-    double MAX_SCENE_2D_SCALING = 5;
-    Color STATUS_ICON_COLOR = Color.LIGHTGRAY;
-    byte STATUS_ICON_SIZE = 36;
-    Font DEBUG_TEXT_FONT = Font.font("Sans", FontWeight.BOLD, 18);
-
     enum DashboardID { README, GENERAL, GAME_CONTROL, SETTINGS_3D, GAME_INFO, ACTOR_INFO, KEYBOARD, ABOUT, CUSTOM_MAPS, JOYPAD }
 
     void addStartPage(StartPage startPage);

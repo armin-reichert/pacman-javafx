@@ -276,7 +276,7 @@ public class GameView implements View {
                 canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
                 canvasContainer.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
                 gameScene2D.scalingProperty().bind(
-                    canvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), GameUI.MAX_SCENE_2D_SCALING)));
+                    canvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_2D_SCALING)));
                 gameScene2D.setCanvas(canvas);
                 // avoid showing old content before new scene is rendered
                 canvas.getGraphicsContext2D().setFill(PY_CANVAS_BG_COLOR.get());
