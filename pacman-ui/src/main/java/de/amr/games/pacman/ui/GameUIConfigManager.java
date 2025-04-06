@@ -16,9 +16,9 @@ import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.ui.Globals.PY_DEBUG_INFO_VISIBLE;
 
-public class UIConfigurationManager {
+public class GameUIConfigManager {
 
-    protected final Map<GameVariant, GameUIConfiguration> configMap = new EnumMap<>(GameVariant.class);
+    protected final Map<GameVariant, GameUIConfig> configMap = new EnumMap<>(GameVariant.class);
 
     /**
      * Stores the UI configuration for a game variant and initializes the game scenes (assigns the game context).
@@ -26,7 +26,7 @@ public class UIConfigurationManager {
      * @param variant a game variant
      * @param uiConfig the UI configuration for this variant
      */
-    public void set(GameVariant variant, GameUIConfiguration uiConfig) {
+    public void set(GameVariant variant, GameUIConfig uiConfig) {
         assertNotNull(variant);
         assertNotNull(uiConfig);
         uiConfig.gameScenes().forEach(scene -> {
@@ -37,11 +37,11 @@ public class UIConfigurationManager {
         configMap.put(variant, uiConfig);
     }
 
-    public GameUIConfiguration configuration(GameVariant gameVariant) {
+    public GameUIConfig configuration(GameVariant gameVariant) {
         return configMap.get(gameVariant);
     }
 
-    public GameUIConfiguration current() {
+    public GameUIConfig current() {
         return configMap.get(THE_GAME_CONTROLLER.selectedGameVariant());
     }
 

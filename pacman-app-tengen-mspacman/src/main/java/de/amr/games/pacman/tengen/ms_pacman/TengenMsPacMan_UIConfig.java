@@ -16,7 +16,7 @@ import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet;
 import de.amr.games.pacman.tengen.ms_pacman.scene.*;
 import de.amr.games.pacman.ui.GameScene;
-import de.amr.games.pacman.ui.GameUIConfiguration;
+import de.amr.games.pacman.ui.GameUIConfig;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.uilib.AssetStorage;
@@ -41,7 +41,7 @@ import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.ui.Globals.PY_3D_ENABLED;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 
-public class TengenMsPacMan_UIConfig implements GameUIConfiguration {
+public class TengenMsPacMan_UIConfig implements GameUIConfig {
 
     public static final BooleanProperty PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED = new SimpleBooleanProperty(false);
     public static final ObjectProperty<SceneDisplayMode> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);

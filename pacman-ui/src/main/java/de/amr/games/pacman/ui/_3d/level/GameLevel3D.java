@@ -12,7 +12,7 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui.GameUIConfiguration;
+import de.amr.games.pacman.ui.GameUIConfig;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.ui._3d.animation.Squirting;
 import de.amr.games.pacman.uilib.Ufx;
@@ -154,7 +154,7 @@ public class GameLevel3D extends Group {
     }
 
     private LivesCounter3D createLivesCounter3D(boolean canStartNewGame) {
-        GameUIConfiguration config3D = THE_UI.configurations().current();
+        GameUIConfig config3D = THE_UI.configurations().current();
         Node[] counterShapes = new Node[LIVES_COUNTER_MAX];
         for (int i = 0; i < counterShapes.length; ++i) {
             counterShapes[i] = config3D.createLivesCounterShape(THE_UI.assets(), LIVES_COUNTER_SIZE);

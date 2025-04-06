@@ -55,7 +55,7 @@ public class PacManGamesUI implements GameUI {
     private final GameClockFX clock = new GameClockFX();
     private final GameKeyboard keyboard = new GameKeyboard();
     private final GameSound sound = new GameSound();
-    private final UIConfigurationManager uiConfigurationManager = new UIConfigurationManager();
+    private final GameUIConfigManager gameUiConfigManager = new GameUIConfigManager();
 
     private Stage stage;
     private Scene mainScene;
@@ -218,7 +218,7 @@ public class PacManGamesUI implements GameUI {
         this.stage = assertNotNull(stage);
         root.setBackground(assets.get("background.scene"));
         root.backgroundProperty().bind(gameScenePy.map(
-                gameScene -> uiConfigurationManager.currentGameSceneIsPlayScene3D()
+                gameScene -> gameUiConfigManager.currentGameSceneIsPlayScene3D()
                         ? assets.get("background.play_scene3d")
                         : assets.get("background.scene"))
         );
@@ -245,8 +245,8 @@ public class PacManGamesUI implements GameUI {
     }
 
     @Override
-    public UIConfigurationManager configurations() {
-        return uiConfigurationManager;
+    public GameUIConfigManager configurations() {
+        return gameUiConfigManager;
     }
 
     @Override
@@ -296,7 +296,7 @@ public class PacManGamesUI implements GameUI {
     @Override
     public void selectGameVariant(GameVariant gameVariant) {
         THE_GAME_CONTROLLER.selectGameVariant(gameVariant);
-        GameUIConfiguration uiConfig = uiConfigurationManager.configuration(gameVariant);
+        GameUIConfig uiConfig = gameUiConfigManager.configuration(gameVariant);
         sound.selectGameVariant(gameVariant, uiConfig.assetNamespace());
         stage.getIcons().setAll(uiConfig.appIcon());
         gameView.canvasContainer().decorationEnabledPy.set(uiConfig.isGameCanvasDecorated());
@@ -356,7 +356,7 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public void updateGameScene(boolean reloadCurrent) {
-        final GameScene nextGameScene = uiConfigurationManager.current().selectGameScene();
+        final GameScene nextGameScene = gameUiConfigManager.current().selectGameScene();
         if (nextGameScene == null) {
             throw new IllegalStateException("Could not determine next game scene");
         }
@@ -371,7 +371,7 @@ public class PacManGamesUI implements GameUI {
         }
         gameView.embedGameScene(nextGameScene);
         nextGameScene.init();
-        if (uiConfigurationManager.current().is2D3DPlaySceneSwitch(currentGameScene, nextGameScene)) {
+        if (gameUiConfigManager.current().is2D3DPlaySceneSwitch(currentGameScene, nextGameScene)) {
             nextGameScene.onSceneVariantSwitch(currentGameScene);
         }
         if (changing) {

@@ -9,7 +9,7 @@ import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.ui.GameScene;
-import de.amr.games.pacman.ui.GameUIConfiguration;
+import de.amr.games.pacman.ui.GameUIConfig;
 import de.amr.games.pacman.ui._2d.*;
 import de.amr.games.pacman.ui._3d.scene3d.PlayScene3D;
 import de.amr.games.pacman.uilib.AssetStorage;
@@ -31,7 +31,7 @@ import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.ui.Globals.PY_3D_ENABLED;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 
-public class PacManXXL_MsPacMan_UIConfig implements GameUIConfiguration {
+public class PacManXXL_MsPacMan_UIConfig implements GameUIConfig {
 
     private final Image appIcon;
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;

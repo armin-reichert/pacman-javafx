@@ -8,7 +8,7 @@ import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.ui.GameScene;
-import de.amr.games.pacman.ui.GameUIConfiguration;
+import de.amr.games.pacman.ui.GameUIConfig;
 import de.amr.games.pacman.ui._2d.ArcadeBootScene;
 import de.amr.games.pacman.ui._2d.ArcadePlayScene2D;
 import de.amr.games.pacman.ui._2d.GameScene2D;
@@ -33,7 +33,7 @@ import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.ui.Globals.PY_3D_ENABLED;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 
-public class ArcadeMsPacMan_UIConfig implements GameUIConfiguration {
+public class ArcadeMsPacMan_UIConfig implements GameUIConfig {
 
     private static final List<WorldMapColorScheme> WORLD_MAP_COLOR_SCHEMES = List.of(
         new WorldMapColorScheme("FFB7AE", "FF0000", "FCB5FF", "DEDEFF"),

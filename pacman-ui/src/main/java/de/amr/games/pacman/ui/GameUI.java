@@ -33,7 +33,7 @@ public interface GameUI {
     void build(Stage stage, Dimension2D size);
     void buildDashboard(DashboardID... ids);
     GameClockFX clock();
-    UIConfigurationManager configurations();
+    GameUIConfigManager configurations();
     Optional<GameScene> currentGameScene();
     View currentView();
     Dashboard dashboard();
