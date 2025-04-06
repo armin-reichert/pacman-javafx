@@ -87,7 +87,7 @@ public class GameView implements View {
                 contextMenu.hide();
             }
         });
-        gameScenePy.bind(ui.gameSceneProperty());
+        gameScenePy.bindBidirectional(ui.gameSceneProperty());
         bindGameActions();
     }
 
@@ -227,6 +227,30 @@ public class GameView implements View {
 
     public void resize(double width, double height) {
         canvasContainer.resizeTo(width, height);
+    }
+
+    public void updateGameScene(GameUIConfigManager gameUIConfigManager, boolean reloadCurrent) {
+        final GameScene nextGameScene = gameUIConfigManager.current().selectGameScene();
+        if (nextGameScene == null) {
+            throw new IllegalStateException("Could not determine next game scene");
+        }
+        final GameScene currentGameScene = gameScenePy.get();
+        final boolean changing = nextGameScene != currentGameScene;
+        if (!changing && !reloadCurrent) {
+            return;
+        }
+        if (currentGameScene != null) {
+            currentGameScene.end();
+            Logger.info("Game scene ended: {}", currentGameScene.displayName());
+        }
+        embedGameScene(nextGameScene);
+        nextGameScene.init();
+        if (gameUIConfigManager.current().is2D3DPlaySceneSwitch(currentGameScene, nextGameScene)) {
+            nextGameScene.onSceneVariantSwitch(currentGameScene);
+        }
+        if (changing) {
+            gameScenePy.set(nextGameScene);
+        }
     }
 
     public void embedGameScene(GameScene gameScene) {

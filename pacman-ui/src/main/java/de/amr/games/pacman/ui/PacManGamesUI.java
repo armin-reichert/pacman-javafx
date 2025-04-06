@@ -54,7 +54,7 @@ public class PacManGamesUI implements GameUI {
     private final GameClockFX clock = new GameClockFX();
     private final GameKeyboard keyboard = new GameKeyboard();
     private final GameSound sound = new GameSound();
-    private final GameUIConfigManager gameUiConfigManager = new GameUIConfigManager();
+    private final GameUIConfigManager gameUIConfigManager = new GameUIConfigManager();
 
     private Stage stage;
     private Scene mainScene;
@@ -206,7 +206,7 @@ public class PacManGamesUI implements GameUI {
         this.stage = assertNotNull(stage);
         root.setBackground(assets.get("background.scene"));
         root.backgroundProperty().bind(gameScenePy.map(
-                gameScene -> gameUiConfigManager.currentGameSceneIsPlayScene3D()
+                gameScene -> gameUIConfigManager.currentGameSceneIsPlayScene3D()
                         ? assets.get("background.play_scene3d")
                         : assets.get("background.scene"))
         );
@@ -234,7 +234,7 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public GameUIConfigManager configurations() {
-        return gameUiConfigManager;
+        return gameUIConfigManager;
     }
 
     @Override
@@ -284,7 +284,7 @@ public class PacManGamesUI implements GameUI {
     @Override
     public void selectGameVariant(GameVariant gameVariant) {
         THE_GAME_CONTROLLER.selectGameVariant(gameVariant);
-        GameUIConfig uiConfig = gameUiConfigManager.configuration(gameVariant);
+        GameUIConfig uiConfig = gameUIConfigManager.configuration(gameVariant);
         sound.selectGameVariant(gameVariant, uiConfig.assetNamespace());
         stage.getIcons().setAll(uiConfig.appIcon());
         gameView.canvasContainer().decorationEnabledPy.set(uiConfig.isGameCanvasDecorated());
@@ -344,26 +344,6 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public void updateGameScene(boolean reloadCurrent) {
-        final GameScene nextGameScene = gameUiConfigManager.current().selectGameScene();
-        if (nextGameScene == null) {
-            throw new IllegalStateException("Could not determine next game scene");
-        }
-        final GameScene currentGameScene = gameScenePy.get();
-        final boolean changing = nextGameScene != currentGameScene;
-        if (!changing && !reloadCurrent) {
-            return;
-        }
-        if (currentGameScene != null) {
-            currentGameScene.end();
-            Logger.info("Game scene ended: {}", currentGameScene.displayName());
-        }
-        gameView.embedGameScene(nextGameScene);
-        nextGameScene.init();
-        if (gameUiConfigManager.current().is2D3DPlaySceneSwitch(currentGameScene, nextGameScene)) {
-            nextGameScene.onSceneVariantSwitch(currentGameScene);
-        }
-        if (changing) {
-            gameScenePy.set(nextGameScene);
-        }
+        gameView.updateGameScene(gameUIConfigManager, reloadCurrent);
     }
 }
