@@ -7,9 +7,7 @@ package de.amr.games.pacman.ui;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.uilib.ActionProvider;
 import de.amr.games.pacman.uilib.Keyboard;
 import javafx.scene.control.MenuItem;
@@ -28,20 +26,13 @@ import static de.amr.games.pacman.uilib.Keyboard.*;
  */
 public interface GameScene extends GameEventListener, ActionProvider {
 
-    default void bindDefaultArcadeControllerActions(ArcadeKeyBinding arcadeKeys) {
-        bind(GameAction.INSERT_COIN,  arcadeKeys.key(Arcade.Button.COIN), naked(KeyCode.NUMPAD5));
-        bind(GameAction.START_GAME,   arcadeKeys.key(Arcade.Button.START), naked(KeyCode.NUMPAD1));
-        bind(GameAction.PLAYER_UP,    arcadeKeys.key(Arcade.Button.UP));
-        bind(GameAction.PLAYER_DOWN,  arcadeKeys.key(Arcade.Button.DOWN));
-        bind(GameAction.PLAYER_LEFT,  arcadeKeys.key(Arcade.Button.LEFT));
-        bind(GameAction.PLAYER_RIGHT, arcadeKeys.key(Arcade.Button.RIGHT));
-    }
-
-    default void bindAlternativePlayerControlActions() {
-        bind(GameAction.PLAYER_UP,    control(KeyCode.UP));
-        bind(GameAction.PLAYER_DOWN,  control(KeyCode.DOWN));
-        bind(GameAction.PLAYER_LEFT,  control(KeyCode.LEFT));
-        bind(GameAction.PLAYER_RIGHT, control(KeyCode.RIGHT));
+    default void bindDefaultArcadeActions() {
+        bind(GameAction.INSERT_COIN,  naked(KeyCode.DIGIT5), naked(KeyCode.NUMPAD5));
+        bind(GameAction.START_GAME,   naked(KeyCode.DIGIT1), naked(KeyCode.NUMPAD1));
+        bind(GameAction.PLAYER_UP,    naked(KeyCode.UP),     control(KeyCode.UP));
+        bind(GameAction.PLAYER_DOWN,  naked(KeyCode.DOWN),   control(KeyCode.DOWN));
+        bind(GameAction.PLAYER_LEFT,  naked(KeyCode.LEFT),   control(KeyCode.LEFT));
+        bind(GameAction.PLAYER_RIGHT, naked(KeyCode.RIGHT),  control(KeyCode.RIGHT));
     }
 
     default void bindCheatActions() {

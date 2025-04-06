@@ -9,7 +9,6 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
@@ -43,6 +42,7 @@ import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.Globals.*;
 import static de.amr.games.pacman.uilib.Keyboard.alt;
+import static de.amr.games.pacman.uilib.Keyboard.naked;
 import static de.amr.games.pacman.uilib.Ufx.contextMenuTitleItem;
 
 /**
@@ -115,10 +115,9 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         bind(GameAction.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
         bind(GameAction.TOGGLE_DRAW_MODE, alt(KeyCode.W));
         if (game().isDemoLevel()) {
-            bind(GameAction.INSERT_COIN, THE_UI.keyboard().currentArcadeKeyBinding().key(Arcade.Button.COIN));
+            bind(GameAction.INSERT_COIN,  naked(KeyCode.DIGIT5), naked(KeyCode.NUMPAD5));
         } else {
-            bindDefaultArcadeControllerActions(THE_UI.keyboard().currentArcadeKeyBinding());
-            bindAlternativePlayerControlActions();
+            bindDefaultArcadeActions();
             bindCheatActions();
         }
         enableActionBindings(THE_UI.keyboard());

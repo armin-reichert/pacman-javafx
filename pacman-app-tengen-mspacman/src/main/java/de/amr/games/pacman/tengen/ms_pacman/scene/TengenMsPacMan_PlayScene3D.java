@@ -25,6 +25,7 @@ import static de.amr.games.pacman.Globals.HTS;
 import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.uilib.Keyboard.alt;
+import static de.amr.games.pacman.uilib.Keyboard.control;
 
 public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
@@ -75,12 +76,11 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             bind(TengenMsPacMan_GameAction.QUIT_DEMO_LEVEL, joypad.key(NES_JoypadButtonID.START));
         }
         else {
-            bind(GameAction.PLAYER_UP,    joypad.key(NES_JoypadButtonID.UP));
-            bind(GameAction.PLAYER_DOWN,  joypad.key(NES_JoypadButtonID.DOWN));
-            bind(GameAction.PLAYER_LEFT,  joypad.key(NES_JoypadButtonID.LEFT));
-            bind(GameAction.PLAYER_RIGHT, joypad.key(NES_JoypadButtonID.RIGHT));
+            bind(GameAction.PLAYER_UP,    joypad.key(NES_JoypadButtonID.UP),    control(KeyCode.UP));
+            bind(GameAction.PLAYER_DOWN,  joypad.key(NES_JoypadButtonID.DOWN),  control(KeyCode.DOWN));
+            bind(GameAction.PLAYER_LEFT,  joypad.key(NES_JoypadButtonID.LEFT),  control(KeyCode.LEFT));
+            bind(GameAction.PLAYER_RIGHT, joypad.key(NES_JoypadButtonID.RIGHT), control(KeyCode.RIGHT));
             bind(TengenMsPacMan_GameAction.TOGGLE_PAC_BOOSTER, joypad.key(NES_JoypadButtonID.A), joypad.key(NES_JoypadButtonID.B));
-            bindAlternativePlayerControlActions();
             bindCheatActions();
         }
         enableActionBindings(THE_UI.keyboard());

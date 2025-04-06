@@ -17,12 +17,12 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameScene;
-import de.amr.games.pacman.ui.input.ArcadeKeyBinding;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
@@ -36,6 +36,7 @@ import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.games.pacman.ui.Globals.*;
+import static de.amr.games.pacman.uilib.Keyboard.naked;
 
 /**
  * 2D play scene for Arcade game variants.
@@ -46,27 +47,23 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     private LevelCompleteAnimation levelCompleteAnimation;
 
-    private ArcadeKeyBinding arcadeKeyBinding() { return THE_UI.keyboard().currentArcadeKeyBinding(); }
-
     @Override
     public void bindGameActions() {}
 
     @Override
     protected void doInit() {
         game().setScoreVisible(true);
-        bindDefaultArcadeControllerActions(arcadeKeyBinding());
-        bindAlternativePlayerControlActions();
+        bindDefaultArcadeActions();
         enableActionBindings(THE_UI.keyboard());
     }
 
     @Override
     public void onLevelCreated(GameEvent e) {
         if (game().isDemoLevel()) {
-            bind(GameAction.INSERT_COIN, arcadeKeyBinding().key(Arcade.Button.COIN));
+            bind(GameAction.INSERT_COIN,  naked(KeyCode.DIGIT5), naked(KeyCode.NUMPAD5));
         } else {
             bindCheatActions();
-            bindDefaultArcadeControllerActions(arcadeKeyBinding());
-            bindAlternativePlayerControlActions();
+            bindDefaultArcadeActions();
         }
         enableActionBindings(THE_UI.keyboard());
         game().level().ifPresent(level -> gr.applyMapSettings(level.worldMap()));

@@ -19,12 +19,12 @@ import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.MessageMovement;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
-import de.amr.games.pacman.uilib.CameraControlledView;
-import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui.GameAction;
+import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._2d.LevelCompleteAnimation;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
+import de.amr.games.pacman.uilib.CameraControlledView;
 import de.amr.games.pacman.uilib.Keyboard;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.beans.property.DoubleProperty;
@@ -55,6 +55,7 @@ import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction.QUIT_DEMO_LEVEL;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.games.pacman.ui.Globals.*;
+import static de.amr.games.pacman.uilib.Keyboard.control;
 
 /**
  * Tengen play scene, uses vertical scrolling.
@@ -301,14 +302,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         if (game().isDemoLevel()) {
             bind(QUIT_DEMO_LEVEL, joypad.key(NES_JoypadButtonID.START));
         } else {
-            bind(GameAction.PLAYER_UP,    joypad.key(NES_JoypadButtonID.UP));
-            bind(GameAction.PLAYER_DOWN,  joypad.key(NES_JoypadButtonID.DOWN));
-            bind(GameAction.PLAYER_LEFT,  joypad.key(NES_JoypadButtonID.LEFT));
-            bind(GameAction.PLAYER_RIGHT, joypad.key(NES_JoypadButtonID.RIGHT));
+            bind(GameAction.PLAYER_UP,    joypad.key(NES_JoypadButtonID.UP),    control(KeyCode.UP));
+            bind(GameAction.PLAYER_DOWN,  joypad.key(NES_JoypadButtonID.DOWN),  control(KeyCode.DOWN));
+            bind(GameAction.PLAYER_LEFT,  joypad.key(NES_JoypadButtonID.LEFT),  control(KeyCode.LEFT));
+            bind(GameAction.PLAYER_RIGHT, joypad.key(NES_JoypadButtonID.RIGHT), control(KeyCode.RIGHT));
             bind(TengenMsPacMan_GameAction.TOGGLE_PAC_BOOSTER,
                 joypad.key(NES_JoypadButtonID.A),
                 joypad.key(NES_JoypadButtonID.B));
-            bindAlternativePlayerControlActions();
             bindCheatActions();
         }
         enableActionBindings(THE_UI.keyboard());

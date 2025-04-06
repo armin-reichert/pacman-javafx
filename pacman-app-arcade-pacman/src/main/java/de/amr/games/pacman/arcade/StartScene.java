@@ -8,7 +8,6 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -25,7 +24,7 @@ public class StartScene extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bindDefaultArcadeControllerActions(THE_UI.keyboard().currentArcadeKeyBinding());
+        bindDefaultArcadeActions();
     }
 
     @Override
