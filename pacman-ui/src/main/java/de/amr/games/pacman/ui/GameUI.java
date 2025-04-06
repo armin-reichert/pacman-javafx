@@ -27,7 +27,6 @@ public interface GameUI {
     View currentView();
     Dashboard dashboard();
     ObjectProperty<GameScene> gameSceneProperty();
-    GameKeyboard keyboard();
     Scene mainScene();
     void restart();
     void selectGameVariant(GameVariant variant);

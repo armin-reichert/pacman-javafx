@@ -10,7 +10,7 @@ import de.amr.games.pacman.uilib.ResourceManager;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
 
-import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.THE_KEYBOARD;
 
 public class InfoBoxJoypad extends InfoBox {
 
@@ -22,7 +22,7 @@ public class InfoBoxJoypad extends InfoBox {
 
         setContentTextFont(Font.font("Monospace", 16));
 
-        var joypad = THE_UI.keyboard().currentJoypadKeyBinding();
+        var joypad = THE_KEYBOARD.currentJoypadKeyBinding();
         String indent = "  "; // Urgh
         addLabeledValue("[SELECT]   [START]", () -> "%s%s  %s".formatted(
             indent,

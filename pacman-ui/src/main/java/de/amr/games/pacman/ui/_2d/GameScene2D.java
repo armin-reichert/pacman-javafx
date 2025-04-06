@@ -16,8 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.ui.Globals.DEBUG_TEXT_FONT;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.*;
 
 /**
  * Base class of all 2D scenes.
@@ -39,13 +38,13 @@ public abstract class GameScene2D implements GameScene {
     public final void init() {
         doInit();
         bindGameActions();
-        enableActionBindings(THE_UI.keyboard());
+        enableActionBindings(THE_KEYBOARD);
     }
 
     @Override
     public final void end() {
         doEnd();
-        disableActionBindings(THE_UI.keyboard());
+        disableActionBindings(THE_KEYBOARD);
     }
 
     @Override

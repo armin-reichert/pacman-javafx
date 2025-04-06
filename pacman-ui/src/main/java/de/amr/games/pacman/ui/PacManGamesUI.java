@@ -49,7 +49,6 @@ public class PacManGamesUI implements GameUI {
     private final ObjectProperty<View> viewPy = new SimpleObjectProperty<>();
 
     private final GameClockFX clock = new GameClockFX();
-    private final GameKeyboard keyboard = new GameKeyboard();
     private final GameUIConfigManager gameUIConfigManager = new GameUIConfigManager();
 
     private Stage stage;
@@ -81,10 +80,10 @@ public class PacManGamesUI implements GameUI {
     private void handleViewChange(View oldView, View newView) {
         root.getChildren().set(0, newView.layoutRoot());
         if (oldView != null) {
-            oldView.disableActionBindings(keyboard);
+            oldView.disableActionBindings(THE_KEYBOARD);
             THE_GAME_CONTROLLER.game().removeGameEventListener(oldView);
         }
-        newView.enableActionBindings(keyboard);
+        newView.enableActionBindings(THE_KEYBOARD);
         newView.layoutRoot().requestFocus();
         stage.titleProperty().bind(newView.title());
         THE_GAME_CONTROLLER.game().addGameEventListener(newView);
@@ -101,8 +100,8 @@ public class PacManGamesUI implements GameUI {
         mainScene.widthProperty() .addListener((py,ov,nv) -> gameView.resize(mainScene.getWidth(), mainScene.getHeight()));
         mainScene.heightProperty().addListener((py,ov,nv) -> gameView.resize(mainScene.getWidth(), mainScene.getHeight()));
 
-        mainScene.addEventFilter(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
-        mainScene.addEventFilter(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
+        mainScene.addEventFilter(KeyEvent.KEY_PRESSED, THE_KEYBOARD::onKeyPressed);
+        mainScene.addEventFilter(KeyEvent.KEY_RELEASED, THE_KEYBOARD::onKeyReleased);
 
         mainScene.setOnKeyPressed(keyPress -> {
             if (GameKeyboard.KEY_FULLSCREEN.match(keyPress)) {
@@ -115,7 +114,7 @@ public class PacManGamesUI implements GameUI {
                 showEditorView();
             }
             else {
-                currentView().handleInput(keyboard);
+                currentView().handleInput(THE_KEYBOARD);
             }
         });
     }
@@ -251,11 +250,6 @@ public class PacManGamesUI implements GameUI {
     @Override
     public ObjectProperty<GameScene> gameSceneProperty() {
         return gameView.gameSceneProperty();
-    }
-
-    @Override
-    public GameKeyboard keyboard() {
-        return keyboard;
     }
 
     @Override

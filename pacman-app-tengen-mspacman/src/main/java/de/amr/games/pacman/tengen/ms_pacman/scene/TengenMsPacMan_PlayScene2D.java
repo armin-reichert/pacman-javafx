@@ -197,7 +197,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void doInit() {
         messageMovement = new MessageMovement();
-        THE_UI.keyboard().enableCurrentJoypad();
+        THE_KEYBOARD.enableCurrentJoypad();
         game().setScoreVisible(true);
         setGameRenderer(THE_UI.gameUIConfigManager().current().createRenderer(canvas));
         movingCamera.focusTopOfScene();
@@ -206,7 +206,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     protected void doEnd() {
         THE_SOUND.stopAll();
-        THE_UI.keyboard().disableCurrentJoypad();
+        THE_KEYBOARD.disableCurrentJoypad();
     }
 
     @Override
@@ -270,8 +270,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void onLevelCreated(GameEvent e) {
         game().level().ifPresent(level -> {
-            THE_UI.keyboard().enableCurrentJoypad();
-            setKeyBindings(THE_UI.keyboard().currentJoypadKeyBinding());
+            THE_KEYBOARD.enableCurrentJoypad();
+            setKeyBindings(THE_KEYBOARD.currentJoypadKeyBinding());
             if (game().isDemoLevel()) {
                 level.pac().setImmune(false);
             } else {
@@ -293,8 +293,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
         Logger.info("{} entered from {}", this, oldScene);
-        THE_UI.keyboard().enableCurrentJoypad();
-        setKeyBindings(THE_UI.keyboard().currentJoypadKeyBinding());
+        THE_KEYBOARD.enableCurrentJoypad();
+        setKeyBindings(THE_KEYBOARD.currentJoypadKeyBinding());
         game().level().map(GameLevel::worldMap).ifPresent(worldMap -> gr.applyMapSettings(worldMap));
     }
 
@@ -311,7 +311,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 joypad.key(NES_JoypadButtonID.B));
             bindCheatActions();
         }
-        enableActionBindings(THE_UI.keyboard());
+        enableActionBindings(THE_KEYBOARD);
     }
 
     @Override

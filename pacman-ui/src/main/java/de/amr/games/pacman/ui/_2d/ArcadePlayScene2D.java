@@ -54,7 +54,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     protected void doInit() {
         game().setScoreVisible(true);
         bindDefaultArcadeActions();
-        enableActionBindings(THE_UI.keyboard());
+        enableActionBindings(THE_KEYBOARD);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class ArcadePlayScene2D extends GameScene2D {
             bindCheatActions();
             bindDefaultArcadeActions();
         }
-        enableActionBindings(THE_UI.keyboard());
+        enableActionBindings(THE_KEYBOARD);
         game().level().ifPresent(level -> gr.applyMapSettings(level.worldMap()));
     }
 
@@ -80,7 +80,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     @Override
     protected void doEnd() {
         THE_SOUND.stopAll();
-        disableActionBindings(THE_UI.keyboard());
+        disableActionBindings(THE_KEYBOARD);
     }
 
     @Override
@@ -238,7 +238,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     public void onSceneVariantSwitch(GameScene oldScene) {
         Logger.info("{} entered from {}", this, oldScene);
         bindGameActions();
-        enableActionBindings(THE_UI.keyboard());
+        enableActionBindings(THE_KEYBOARD);
         if (gr == null) {
             setGameRenderer(THE_UI.gameUIConfigManager().current().createRenderer(canvas));
         }

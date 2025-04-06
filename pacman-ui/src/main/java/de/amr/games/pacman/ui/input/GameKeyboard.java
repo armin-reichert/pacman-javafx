@@ -11,7 +11,7 @@ import javafx.scene.input.KeyCodeCombination;
 
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.THE_KEYBOARD;
 
 public class GameKeyboard extends Keyboard {
 
@@ -56,11 +56,11 @@ public class GameKeyboard extends Keyboard {
     }
 
     public void enableCurrentJoypad() {
-        currentJoypadKeys().forEach(combination -> THE_UI.keyboard().register(combination, this));
+        currentJoypadKeys().forEach(combination -> THE_KEYBOARD.register(combination, this));
     }
 
     public void disableCurrentJoypad() {
-        currentJoypadKeys().forEach(combination -> THE_UI.keyboard().unregister(combination, this));
+        currentJoypadKeys().forEach(combination -> THE_KEYBOARD.unregister(combination, this));
     }
 
     public void selectNextJoypad() {

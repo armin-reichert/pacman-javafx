@@ -68,7 +68,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     public void bindGameActions() {
-        JoypadKeyBinding joypad = THE_UI.keyboard().currentJoypadKeyBinding();
+        JoypadKeyBinding joypad = THE_KEYBOARD.currentJoypadKeyBinding();
         bind(GameAction.PREV_PERSPECTIVE, alt(KeyCode.LEFT));
         bind(GameAction.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
         bind(GameAction.TOGGLE_DRAW_MODE, alt(KeyCode.W));
@@ -83,7 +83,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             bind(TengenMsPacMan_GameAction.TOGGLE_PAC_BOOSTER, joypad.key(NES_JoypadButtonID.A), joypad.key(NES_JoypadButtonID.B));
             bindCheatActions();
         }
-        enableActionBindings(THE_UI.keyboard());
+        enableActionBindings(THE_KEYBOARD);
     }
 
     @Override

@@ -68,14 +68,14 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     @Override
     public void bindGameActions() {
         bind(TengenMsPacMan_GameAction.SELECT_NEXT_JOYPAD_KEY_BINDING, alt(KeyCode.J));
-        bind(TengenMsPacMan_GameAction.START_PLAYING, THE_UI.keyboard().currentJoypadKeyBinding().key(NES_JoypadButtonID.START));
-        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, THE_UI.keyboard().currentJoypadKeyBinding().key(NES_JoypadButtonID.SELECT));
+        bind(TengenMsPacMan_GameAction.START_PLAYING, THE_KEYBOARD.currentJoypadKeyBinding().key(NES_JoypadButtonID.START));
+        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, THE_KEYBOARD.currentJoypadKeyBinding().key(NES_JoypadButtonID.SELECT));
         bindTestsStartingActions();
     }
 
     @Override
     public void doInit() {
-        THE_UI.keyboard().enableCurrentJoypad();
+        THE_KEYBOARD.enableCurrentJoypad();
         game().setScoreVisible(false);
         selectedOption = OPTION_PAC_BOOSTER;
         tengenGame = THE_GAME_CONTROLLER.game();
@@ -86,7 +86,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        THE_UI.keyboard().disableCurrentJoypad();
+        THE_KEYBOARD.disableCurrentJoypad();
     }
 
     @Override
@@ -122,7 +122,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     private boolean isJoypadPressed(NES_JoypadButtonID button) {
-        return THE_UI.keyboard().isMatching(THE_UI.keyboard().currentJoypadKeyBinding().key(button));
+        return THE_KEYBOARD.isMatching(THE_KEYBOARD.currentJoypadKeyBinding().key(button));
     }
 
     @Override
@@ -303,7 +303,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), sizeInPx().x(), 212);
 
         if (PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED.get()) {
-            r.drawJoypadKeyBinding(THE_UI.keyboard().currentJoypadKeyBinding());
+            r.drawJoypadKeyBinding(THE_KEYBOARD.currentJoypadKeyBinding());
         }
     }
 
