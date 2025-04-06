@@ -24,8 +24,7 @@ public class TileMapEditorApp extends Application  {
 
     @Override
     public void start(Stage stage) {
-        var editor = new TileMapEditor();
-        editor.createUI(stage);
+        var editor = new TileMapEditor(stage);
 
         var miQuit = new MenuItem(tt("quit"));
         miQuit.setOnAction(e -> editor.executeWithCheckForUnsavedChanges(stage::close));

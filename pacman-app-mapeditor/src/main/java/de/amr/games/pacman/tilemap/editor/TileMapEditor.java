@@ -367,7 +367,7 @@ public class TileMapEditor {
         return tilesWithErrors;
     }
 
-    public void createUI(Stage stage) {
+    public TileMapEditor(Stage stage) {
         this.stage = assertNotNull(stage);
 
         TerrainMapColorScheme initialColors = new TerrainMapColorScheme(

@@ -174,8 +174,7 @@ public class PacManGamesUI implements GameUI {
     }
 
     private void createMapEditor() {
-        editor = new TileMapEditor();
-        editor.createUI(stage);
+        editor = new TileMapEditor(stage);
         var miQuit = new MenuItem(THE_UI.assets().text("back_to_game"));
         miQuit.setOnAction(e -> {
             editor.stop();
