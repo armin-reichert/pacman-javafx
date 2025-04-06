@@ -75,7 +75,7 @@ public class GameView implements View {
     public GameView(GameUI ui) {
         this.parentScene = ui.mainScene();
         titleExpression = Bindings.createStringBinding(() -> computeTitleText(ui),
-                ui.clock().pausedProperty(), ui.mainScene().heightProperty(), ui.gameSceneProperty(),
+                ui.clock().pausedProperty(), ui.mainScene().heightProperty(), gameScenePy,
                 PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE);
         configureCanvasContainer();
         configurePiPView(ui);
@@ -88,7 +88,6 @@ public class GameView implements View {
                 contextMenu.hide();
             }
         });
-        gameScenePy.bindBidirectional(ui.gameSceneProperty());
         bindGameActions();
     }
 
@@ -200,6 +199,8 @@ public class GameView implements View {
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    public ObjectProperty<GameScene> gameSceneProperty() { return gameScenePy; }
+
     public Optional<GameScene> currentGameScene() { return Optional.ofNullable(gameScenePy.get()); }
 
     public FlashMessageView flashMessageLayer() {
@@ -303,7 +304,7 @@ public class GameView implements View {
         pipView.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
         pipView.visibleProperty().bind(Bindings.createObjectBinding(
             () -> PY_PIP_ON.get() && ui.gameUIConfigManager().currentGameSceneIsPlayScene3D(),
-            PY_PIP_ON, ui.gameSceneProperty()
+            PY_PIP_ON, gameScenePy
         ));
     }
 

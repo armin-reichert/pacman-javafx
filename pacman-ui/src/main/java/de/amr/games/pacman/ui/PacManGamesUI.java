@@ -47,7 +47,6 @@ import static de.amr.games.pacman.ui.Globals.*;
  */
 public class PacManGamesUI implements GameUI {
 
-    private final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
     private final ObjectProperty<View> viewPy = new SimpleObjectProperty<>();
 
     private final GameAssets assets = new GameAssets();
@@ -69,7 +68,6 @@ public class PacManGamesUI implements GameUI {
         clock.setPauseableAction(this::doSimulationStepAndUpdateGameScene);
         clock.setPermanentAction(() -> currentView().update());
         viewPy.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
-        gameScenePy.addListener((py, oldScene, newScene) -> handleGameSceneChange(oldScene, newScene));
     }
 
     private void doSimulationStepAndUpdateGameScene() {
@@ -185,6 +183,7 @@ public class PacManGamesUI implements GameUI {
     private void createGameView() {
         gameView = new GameView(this);
         gameView.resize(mainScene.getWidth(), mainScene.getHeight());
+        gameView.gameSceneProperty().addListener((py, oldScene, newScene) -> handleGameSceneChange(oldScene, newScene));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -205,11 +204,6 @@ public class PacManGamesUI implements GameUI {
     public void build(Stage stage, Dimension2D mainSceneSize) {
         this.stage = assertNotNull(stage);
         root.setBackground(assets.get("background.scene"));
-        root.backgroundProperty().bind(gameScenePy.map(
-                gameScene -> gameUIConfigManager.currentGameSceneIsPlayScene3D()
-                        ? assets.get("background.play_scene3d")
-                        : assets.get("background.scene"))
-        );
         root.getChildren().add(new Pane()); // placeholder for root of current view
         addStatusIcons(root);
         createMapEditor();
@@ -217,6 +211,13 @@ public class PacManGamesUI implements GameUI {
         createStartPagesView();
         createGameView();
         createMapEditorView();
+
+        root.backgroundProperty().bind(gameView.gameSceneProperty().map(
+            gameScene -> gameUIConfigManager.currentGameSceneIsPlayScene3D()
+                ? assets.get("background.play_scene3d")
+                : assets.get("background.scene"))
+        );
+
         stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
         stage.setMinHeight(ARCADE_MAP_SIZE_IN_PIXELS.y() * 1.25);
         stage.setScene(mainScene);
@@ -239,7 +240,7 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public Optional<GameScene> currentGameScene() {
-        return Optional.ofNullable(gameScenePy.get());
+        return gameView.currentGameScene();
     }
 
     @Override
@@ -254,7 +255,7 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public ObjectProperty<GameScene> gameSceneProperty() {
-        return gameScenePy;
+        return gameView.gameSceneProperty();
     }
 
     @Override
@@ -331,7 +332,7 @@ public class PacManGamesUI implements GameUI {
     public void showStartView() {
         clock.stop();
         clock.setTargetFrameRate(Globals.TICKS_PER_SECOND);
-        gameScenePy.set(null);
+        gameView.gameSceneProperty().set(null);
         gameView.setDashboardVisible(false);
         viewPy.set(startPagesView);
         startPagesView.currentStartPage().ifPresent(StartPage::requestFocus);
