@@ -87,12 +87,11 @@ public class Keyboard {
 
     public void logCurrentBindings() {
         Logger.info("--------------------------");
-        List<KeyCodeCombination> keysSorted = knownCombinations.keySet().stream()
+        knownCombinations.keySet().stream()
             .sorted(Comparator.comparing(KeyCodeCombination::getDisplayText))
-            .toList();
-        keysSorted.forEach(combination -> {
-            ActionProvider actionProvider = knownCombinations.get(combination);
-            Logger.info("{}: {}", combination, actionProvider.getClass().getSimpleName());
+            .forEach(combination -> {
+                ActionProvider actionProvider = knownCombinations.get(combination);
+                Logger.info("{}: {}", combination, actionProvider.getClass().getSimpleName());
         });
         Logger.info("--------------------------");
     }
