@@ -39,6 +39,7 @@ public abstract class GameScene2D implements GameScene {
         doInit();
         bindGameActions();
         enableActionBindings(THE_KEYBOARD);
+        THE_KEYBOARD.logCurrentBindings();
     }
 
     @Override
