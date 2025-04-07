@@ -145,19 +145,19 @@ public class IntroScene extends GameScene2D {
                 }
                 drawGuys(flutter(timer.tickCount()));
                 if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.PACMAN)) {
-                    gr.drawText(ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT, Color.web(Arcade.Palette.PINK), font, tiles_to_px(4), tiles_to_px(32));
+                    gr.fillTextAtScaledPosition(ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT, Color.web(Arcade.Palette.PINK), font, tiles_to_px(4), tiles_to_px(32));
                 }
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints();
                 drawGuys(0);
                 if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.PACMAN)) {
-                    gr.drawText(ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT, Color.web(Arcade.Palette.PINK), font, tiles_to_px(4), tiles_to_px(32));
+                    gr.fillTextAtScaledPosition(ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT, Color.web(Arcade.Palette.PINK), font, tiles_to_px(4), tiles_to_px(32));
                 }
             }
             default -> {}
         }
-        gr.drawText("CREDIT %2d".formatted(THE_COIN_STORE.numCoins()), Color.web(Arcade.Palette.WHITE), font, 2 * TS, sizeInPx().y() - 2);
+        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_STORE.numCoins()), Color.web(Arcade.Palette.WHITE), font, 2 * TS, sizeInPx().y() - 2);
         gr.drawLevelCounter(0, game().levelCounter(), sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 
@@ -169,7 +169,7 @@ public class IntroScene extends GameScene2D {
     private void drawGallery(Font font) {
         var spriteSheet = (ArcadePacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
         if (titleVisible) {
-            gr.drawText("CHARACTER / NICKNAME", Color.web(Arcade.Palette.WHITE), font, tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(6));
+            gr.fillTextAtScaledPosition("CHARACTER / NICKNAME", Color.web(Arcade.Palette.WHITE), font, tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(6));
         }
         for (byte id = 0; id < 4; ++id) {
             int tileY = 7 + 3 * id;
@@ -178,11 +178,11 @@ public class IntroScene extends GameScene2D {
             }
             if (ghostCharacterVisible[id]) {
                 String text = "-" + GHOST_CHARACTERS[id];
-                gr.drawText(text, GHOST_COLORS[id], font, tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(tileY + 1));
+                gr.fillTextAtScaledPosition(text, GHOST_COLORS[id], font, tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(tileY + 1));
             }
             if (ghostNicknameVisible[id]) {
                 String text = '"' + ghosts[id].name().toUpperCase() + '"';
-                gr.drawText(text, GHOST_COLORS[id], font, tiles_to_px(LEFT_TILE_X + 14), tiles_to_px(tileY + 1));
+                gr.fillTextAtScaledPosition(text, GHOST_COLORS[id], font, tiles_to_px(LEFT_TILE_X + 14), tiles_to_px(tileY + 1));
             }
         }
     }
@@ -214,10 +214,10 @@ public class IntroScene extends GameScene2D {
         if (blinking.isOn()) {
             drawEnergizer(tiles_to_px(tileX), tiles_to_px(tileY + 1));
         }
-        gr.drawText("10",  color, font8, tiles_to_px(tileX + 2), tiles_to_px(tileY));
-        gr.drawText("PTS", color, font6, tiles_to_px(tileX + 5), tiles_to_px(tileY));
-        gr.drawText("50",  color, font8, tiles_to_px(tileX + 2), tiles_to_px(tileY + 2));
-        gr.drawText("PTS", color, font6, tiles_to_px(tileX + 5), tiles_to_px(tileY + 2));
+        gr.fillTextAtScaledPosition("10",  color, font8, tiles_to_px(tileX + 2), tiles_to_px(tileY));
+        gr.fillTextAtScaledPosition("PTS", color, font6, tiles_to_px(tileX + 5), tiles_to_px(tileY));
+        gr.fillTextAtScaledPosition("50",  color, font8, tiles_to_px(tileX + 2), tiles_to_px(tileY + 2));
+        gr.fillTextAtScaledPosition("PTS", color, font6, tiles_to_px(tileX + 5), tiles_to_px(tileY + 2));
     }
 
     // draw pixelated "circle"

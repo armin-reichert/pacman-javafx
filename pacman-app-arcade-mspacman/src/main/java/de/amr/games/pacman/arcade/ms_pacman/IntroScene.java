@@ -135,18 +135,18 @@ public class IntroScene extends GameScene2D {
             gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
         }
         drawMarquee();
-        gr.drawText("\"MS PAC-MAN\"", COLOR_ORANGE, font, TITLE_X, TITLE_Y);
+        gr.fillTextAtScaledPosition("\"MS PAC-MAN\"", COLOR_ORANGE, font, TITLE_X, TITLE_Y);
         if (sceneController.state() == SceneState.GHOSTS_MARCHING_IN) {
             String ghostName = ghosts[ghostID].name().toUpperCase();
             double dx = ghostName.length() < 4 ? tiles_to_px(1) : 0;
             if (ghostID == GameModel.RED_GHOST_ID) {
-                gr.drawText("WITH", COLOR_WHITE, font, TITLE_X, TOP_Y + tiles_to_px(3));
+                gr.fillTextAtScaledPosition("WITH", COLOR_WHITE, font, TITLE_X, TOP_Y + tiles_to_px(3));
             }
-            gr.drawText(ghostName, COLOR_GHOST[ghostID], font, TITLE_X + tiles_to_px(3) + dx, TOP_Y + tiles_to_px(6));
+            gr.fillTextAtScaledPosition(ghostName, COLOR_GHOST[ghostID], font, TITLE_X + tiles_to_px(3) + dx, TOP_Y + tiles_to_px(6));
         }
         else if (sceneController.state() == SceneState.MS_PACMAN_MARCHING_IN || sceneController.state() == SceneState.READY_TO_PLAY) {
-            gr.drawText("STARRING", COLOR_WHITE, font, TITLE_X, TOP_Y + tiles_to_px(3));
-            gr.drawText("MS PAC-MAN", COLOR_YELLOW, font, TITLE_X, TOP_Y + tiles_to_px(6));
+            gr.fillTextAtScaledPosition("STARRING", COLOR_WHITE, font, TITLE_X, TOP_Y + tiles_to_px(3));
+            gr.fillTextAtScaledPosition("MS PAC-MAN", COLOR_YELLOW, font, TITLE_X, TOP_Y + tiles_to_px(6));
         }
         for (Ghost ghost : ghosts) {
             gr.drawAnimatedActor(ghost);
@@ -156,7 +156,7 @@ public class IntroScene extends GameScene2D {
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
             r.drawMsPacManMidwayCopyright(tiles_to_px(6), tiles_to_px(28), COLOR_RED, font);
         }
-        gr.drawText("CREDIT %2d".formatted(THE_COIN_STORE.numCoins()), COLOR_WHITE, font, 2 * TS, sizeInPx().y() - 2);
+        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_STORE.numCoins()), COLOR_WHITE, font, 2 * TS, sizeInPx().y() - 2);
         gr.drawLevelCounter(0, game().levelCounter(), sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 

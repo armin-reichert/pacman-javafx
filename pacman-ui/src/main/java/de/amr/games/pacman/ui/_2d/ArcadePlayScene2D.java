@@ -172,7 +172,7 @@ public class ArcadePlayScene2D extends GameScene2D {
             }
             gr.drawLivesCounter(numLivesShown, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - 2 * TS);
         } else {
-            gr.drawText("CREDIT %2d".formatted(THE_COIN_STORE.numCoins()),
+            gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_STORE.numCoins()),
                 Color.web(Arcade.Palette.WHITE), font, 2 * TS, sizeInPx().y() - 2);
         }
         gr.drawLevelCounter(level.number(), game().levelCounter(), sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
@@ -184,19 +184,19 @@ public class ArcadePlayScene2D extends GameScene2D {
                 String text = "GAME  OVER";
                 // this assumes fixed font width of one tile:
                 double x = messageCenterPosition.x() - (text.length() * HTS);
-                gr.drawText(text, Color.web(Arcade.Palette.RED), font, x, messageCenterPosition.y());
+                gr.fillTextAtScaledPosition(text, Color.web(Arcade.Palette.RED), font, x, messageCenterPosition.y());
             }
             case READY -> {
                 String text = "READY!";
                 // this assumes fixed font width of one tile:
                 double x = messageCenterPosition.x() - (text.length() * HTS);
-                gr.drawText(text, Color.web(Arcade.Palette.YELLOW), font, x, messageCenterPosition.y());
+                gr.fillTextAtScaledPosition(text, Color.web(Arcade.Palette.YELLOW), font, x, messageCenterPosition.y());
             }
             case TEST_LEVEL -> {
                 String text = "TEST    L%03d".formatted(level.number());
                 // this assumes fixed font width of one tile:
                 double x = messageCenterPosition.x() - (text.length() * HTS);
-                gr.drawText(text, Color.web(Arcade.Palette.WHITE), font, x, messageCenterPosition.y());
+                gr.fillTextAtScaledPosition(text, Color.web(Arcade.Palette.WHITE), font, x, messageCenterPosition.y());
             }
         }
     }

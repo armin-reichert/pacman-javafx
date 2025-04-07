@@ -212,7 +212,7 @@ public interface GameRenderer {
     }
 
     /**
-     * Draws a text with the given style at the given (unscaled) position.
+     * Draws text at the given position (scaled by the current scaling value).
      *
      * @param text  text
      * @param color text color
@@ -220,7 +220,7 @@ public interface GameRenderer {
      * @param x     unscaled x-position
      * @param y     unscaled y-position (baseline)
      */
-    default void drawText(String text, Color color, Font font, double x, double y) {
+    default void fillTextAtScaledPosition(String text, Color color, Font font, double x, double y) {
         ctx().setFont(font);
         ctx().setFill(color);
         ctx().fillText(text, scaled(x), scaled(y));
@@ -237,7 +237,7 @@ public interface GameRenderer {
         int moreLivesThanSymbols = numLives - maxLives;
         if (moreLivesThanSymbols > 0) {
             Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-            drawText("+" + moreLivesThanSymbols, Color.YELLOW, font, x + TS * 10, y + TS);
+            fillTextAtScaledPosition("+" + moreLivesThanSymbols, Color.YELLOW, font, x + TS * 10, y + TS);
         }
     }
 
@@ -255,10 +255,10 @@ public interface GameRenderer {
 
     default void drawScore(Score score, String title, double x, double y, Font font, Color color) {
         var pointsText = String.format("%02d", score.points());
-        drawText(title, color, font, x, y);
-        drawText(String.format("%7s", pointsText), color, font, x, y + TS + 1);
+        fillTextAtScaledPosition(title, color, font, x, y);
+        fillTextAtScaledPosition(String.format("%7s", pointsText), color, font, x, y + TS + 1);
         if (score.points() != 0) {
-            drawText("L" + score.levelNumber(), color, font, x + tiles_to_px(8), y + TS + 1);
+            fillTextAtScaledPosition("L" + score.levelNumber(), color, font, x + tiles_to_px(8), y + TS + 1);
         }
     }
 
