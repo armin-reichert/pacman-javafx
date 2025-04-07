@@ -95,24 +95,24 @@ public class PacManGamesUI implements GameUI {
         mainScene = new Scene(root, size.getWidth(), size.getHeight());
         mainScene.widthProperty() .addListener((py,ov,nv) -> gameView.resize(mainScene.getWidth(), mainScene.getHeight()));
         mainScene.heightProperty().addListener((py,ov,nv) -> gameView.resize(mainScene.getWidth(), mainScene.getHeight()));
-
         mainScene.addEventFilter(KeyEvent.KEY_PRESSED, THE_KEYBOARD::onKeyPressed);
         mainScene.addEventFilter(KeyEvent.KEY_RELEASED, THE_KEYBOARD::onKeyReleased);
+        mainScene.setOnKeyPressed(this::onKeyPressed);
+    }
 
-        mainScene.setOnKeyPressed(keyPress -> {
-            if (GameKeyboard.KEY_FULLSCREEN.match(keyPress)) {
-                stage.setFullScreen(true);
-            }
-            else if (GameKeyboard.KEY_MUTE.match(keyPress)) {
-                THE_SOUND.toggleMuted();
-            }
-            else if (GameKeyboard.KEY_OPEN_EDITOR.match(keyPress)) {
-                showEditorView();
-            }
-            else {
-                currentView().handleInput(THE_KEYBOARD);
-            }
-        });
+    private void onKeyPressed(KeyEvent keyPress) {
+        if (GameKeyboard.KEY_FULLSCREEN.match(keyPress)) {
+            stage.setFullScreen(true);
+        }
+        else if (GameKeyboard.KEY_MUTE.match(keyPress)) {
+            THE_SOUND.toggleMuted();
+        }
+        else if (GameKeyboard.KEY_OPEN_EDITOR.match(keyPress)) {
+            showEditorView();
+        }
+        else {
+            currentView().handleInput(THE_KEYBOARD);
+        }
     }
 
     private Pane createIconBox(Node... icons) {
