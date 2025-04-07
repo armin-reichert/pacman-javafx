@@ -128,7 +128,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        Font font = THE_ASSETS.scaledArcadeFont(scaled(TS));
+        Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
@@ -205,8 +205,8 @@ public class IntroScene extends GameScene2D {
 
     private void drawPoints() {
         var color = Color.web(Arcade.Palette.WHITE);
-        Font font8 = THE_ASSETS.scaledArcadeFont(scaled(8));
-        Font font6 = THE_ASSETS.scaledArcadeFont(scaled(6));
+        Font font8 = THE_ASSETS.arcadeFontAtSize(scaled(8));
+        Font font6 = THE_ASSETS.arcadeFontAtSize(scaled(6));
         int tileX = LEFT_TILE_X + 6;
         int tileY = 25;
         gr.ctx().setFill(PELLET_COLOR);

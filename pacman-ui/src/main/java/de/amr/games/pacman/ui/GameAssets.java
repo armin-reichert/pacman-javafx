@@ -61,7 +61,7 @@ public class GameAssets extends AssetStorage implements ResourceManager {
         pickerForLevelCompleteTexts = Picker.fromBundle(bundles().getLast(), "level.complete");
     }
 
-    public Font scaledArcadeFont(float size) {
+    public Font arcadeFontAtSize(float size) {
         return font("font.arcade", size);
     }
 

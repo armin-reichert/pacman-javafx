@@ -260,7 +260,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     public void drawLevelMessage(GameLevel level, boolean demoLevel, Vector2f position) {
         if (level.message() != null) {
             String ans = THE_UI_CONFIGS.current().assetNamespace();
-            Font font = THE_ASSETS.scaledArcadeFont(scaled(TS));
+            Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
             float x = position.x(), y = position.y();
             switch (level.message()) {
                 case READY -> drawTextCenteredOver("READY!", x, y, THE_ASSETS.color(ans + ".color.ready_message"), font);
@@ -380,7 +380,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             ctx().fillRect(numberX - 1, numberY - 8, 12, 8);
             ctx().restore();
 
-            Font font = THE_ASSETS.scaledArcadeFont(scaled(TS));
+            Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
             ctx().setFont(font);
             ctx().setFill(nesPaletteColor(0x20));
             ctx().fillText(String.valueOf(number), scaled(numberX), scaled(numberY));

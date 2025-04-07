@@ -43,8 +43,8 @@ public class StartScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        Font font8 = THE_ASSETS.scaledArcadeFont(scaled(8));
-        Font font6 = THE_ASSETS.scaledArcadeFont(scaled(6));
+        Font font8 = THE_ASSETS.arcadeFontAtSize(scaled(8));
+        Font font6 = THE_ASSETS.arcadeFontAtSize(scaled(6));
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {

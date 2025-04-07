@@ -128,7 +128,7 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        Font font = THE_ASSETS.scaledArcadeFont(scaled(TS));
+        Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {

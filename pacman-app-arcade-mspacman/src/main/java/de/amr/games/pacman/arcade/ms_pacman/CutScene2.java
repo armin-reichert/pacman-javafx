@@ -83,7 +83,7 @@ public class CutScene2 extends GameScene2D {
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            Font font = THE_ASSETS.scaledArcadeFont(scaled(TS));
+            Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
             gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
         }
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
