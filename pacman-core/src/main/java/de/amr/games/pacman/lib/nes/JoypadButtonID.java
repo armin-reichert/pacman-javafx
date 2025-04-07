@@ -4,6 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib.nes;
 
-public enum NES_JoypadButtonID {
+public enum JoypadButtonID {
     SELECT, START, A, B, UP, DOWN, LEFT, RIGHT
 }

@@ -7,26 +7,14 @@ package de.amr.games.pacman.tengen.ms_pacman;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.tengen.ms_pacman.scene.SceneDisplayMode;
 import de.amr.games.pacman.uilib.Action;
-import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
-import static de.amr.games.pacman.ui.Globals.THE_KEYBOARD;
 import static de.amr.games.pacman.ui.Globals.THE_SOUND;
 import static de.amr.games.pacman.uilib.Ufx.toggle;
 
 public enum TengenMsPacMan_GameAction implements Action {
-
-    SELECT_NEXT_JOYPAD_KEY_BINDING {
-        @Override
-        public void execute() {
-            THE_KEYBOARD.disableCurrentJoypad();
-            THE_KEYBOARD.selectNextJoypad();
-            THE_KEYBOARD.enableCurrentJoypad();
-            Logger.info("Selected joypad: {} ", THE_KEYBOARD.currentJoypadKeyBinding());
-        }
-    },
 
     QUIT_DEMO_LEVEL {
         @Override

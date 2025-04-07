@@ -5,10 +5,13 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui;
 
 import de.amr.games.pacman.ui._3d.scene3d.Perspective;
-import de.amr.games.pacman.ui.input.GameKeyboard;
+import de.amr.games.pacman.ui.input.Joypad;
 import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.GameClockFX;
+import de.amr.games.pacman.uilib.Keyboard;
 import javafx.beans.property.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
@@ -20,7 +23,8 @@ public class Globals {
 
     public static final GameAssets THE_ASSETS = new GameAssets();
     public static final GameClockFX THE_CLOCK = new GameClockFX();
-    public static final GameKeyboard THE_KEYBOARD = new GameKeyboard();
+    public static final Joypad THE_JOYPAD = new Joypad();
+    public static final Keyboard THE_KEYBOARD = new Keyboard();
     public static final GameSound THE_SOUND = new GameSound();
     public static final GameUIConfigManager THE_UI_CONFIGS = new GameUIConfigManager();
     public static GameUI THE_UI;
@@ -54,6 +58,11 @@ public class Globals {
     public static final float OBSTACLE_3D_THICKNESS    = 1.25f;
     public static final float PAC_3D_SIZE              = 17.0f;
     public static final float PELLET_3D_RADIUS         = 1.0f;
+
+    public static final KeyCodeCombination KEY_FULLSCREEN = Keyboard.naked(KeyCode.F11);
+    public static final KeyCodeCombination KEY_MUTE = Keyboard.alt(KeyCode.M);
+    public static final KeyCodeCombination KEY_OPEN_EDITOR = Keyboard.shift_alt(KeyCode.E);
+
 
     public static final BooleanProperty PY_AUTOPILOT                       = new SimpleBooleanProperty(false);
     public static final ObjectProperty<Color> PY_CANVAS_BG_COLOR           = new SimpleObjectProperty<>(Color.BLACK);

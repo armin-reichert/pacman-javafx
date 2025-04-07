@@ -150,9 +150,9 @@ public class GameView implements View {
     }
 
     @Override
-    public void handleInput(Keyboard keyboard) {
+    public void handleKeyboardInput(Keyboard keyboard) {
         runTriggeredActionElse(keyboard,
-            () -> currentGameScene().ifPresent(gameScene -> gameScene.handleInput(keyboard)));
+            () -> currentGameScene().ifPresent(gameScene -> gameScene.handleKeyboardInput(keyboard)));
     }
 
     // -----------------------------------------------------------------------------------------------------------------

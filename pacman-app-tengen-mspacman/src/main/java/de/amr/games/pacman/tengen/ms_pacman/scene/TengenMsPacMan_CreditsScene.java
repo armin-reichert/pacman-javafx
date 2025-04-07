@@ -6,7 +6,7 @@ package de.amr.games.pacman.tengen.ms_pacman.scene;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
-import de.amr.games.pacman.lib.nes.NES_JoypadButtonID;
+import de.amr.games.pacman.lib.nes.JoypadButtonID;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui._2d.GameScene2D;
@@ -17,7 +17,8 @@ import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
-import static de.amr.games.pacman.ui.Globals.*;
+import static de.amr.games.pacman.ui.Globals.THE_ASSETS;
+import static de.amr.games.pacman.ui.Globals.THE_JOYPAD;
 
 public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
@@ -26,8 +27,8 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     @Override
     public void bindGameActions() {
         game().setScoreVisible(false);
-        THE_KEYBOARD.enableCurrentJoypad();
-        bind(GameAction.START_GAME, THE_KEYBOARD.currentJoypadKeyBinding().key(NES_JoypadButtonID.START));
+        //THE_JOYPAD.enable();
+        bind(GameAction.START_GAME, THE_JOYPAD.key(JoypadButtonID.START));
     }
 
     @Override

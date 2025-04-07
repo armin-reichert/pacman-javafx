@@ -46,10 +46,10 @@ public class Keyboard {
     }
 
     private final Set<KeyCode> pressedKeys = new HashSet<>();
-    private final Map<KeyCodeCombination, Object> knownCombinations = new HashMap<>();
+    private final Map<KeyCodeCombination, ActionProvider> knownCombinations = new HashMap<>();
     private final List<KeyCodeCombination> matches = new ArrayList<>(3);
 
-    public void register(KeyCodeCombination combination, Object client) {
+    public void register(KeyCodeCombination combination, ActionProvider client) {
         if (knownCombinations.get(combination) == client) {
             Logger.debug("Key code combination '{}' already registered by {}", combination, client);
         } else {
@@ -58,7 +58,7 @@ public class Keyboard {
         }
     }
 
-    public void unregister(KeyCodeCombination combination, Object client) {
+    public void unregister(KeyCodeCombination combination, ActionProvider client) {
         boolean removed = knownCombinations.remove(combination, client);
         if (removed) {
             Logger.debug("Key code combination '{}' removed by {}", combination, client);

@@ -6,7 +6,7 @@ package de.amr.games.pacman.tengen.ms_pacman.scene;
 
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.nes.NES_ColorScheme;
-import de.amr.games.pacman.lib.nes.NES_JoypadButtonID;
+import de.amr.games.pacman.lib.nes.JoypadButtonID;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction;
@@ -15,7 +15,6 @@ import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui._3d.level.Bonus3D;
 import de.amr.games.pacman.ui._3d.scene3d.PlayScene3D;
-import de.amr.games.pacman.ui.input.JoypadKeyBinding;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -23,6 +22,7 @@ import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.Globals.HTS;
 import static de.amr.games.pacman.Globals.TS;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction.TOGGLE_PAC_BOOSTER;
 import static de.amr.games.pacman.ui.Globals.*;
 import static de.amr.games.pacman.uilib.Keyboard.alt;
 import static de.amr.games.pacman.uilib.Keyboard.control;
@@ -68,19 +68,20 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     public void bindGameActions() {
-        JoypadKeyBinding joypad = THE_KEYBOARD.currentJoypadKeyBinding();
         bind(GameAction.PREV_PERSPECTIVE, alt(KeyCode.LEFT));
         bind(GameAction.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
         bind(GameAction.TOGGLE_DRAW_MODE, alt(KeyCode.W));
         if (game().isDemoLevel()) {
-            bind(TengenMsPacMan_GameAction.QUIT_DEMO_LEVEL, joypad.key(NES_JoypadButtonID.START));
+            bind(TengenMsPacMan_GameAction.QUIT_DEMO_LEVEL, THE_JOYPAD.key(JoypadButtonID.START));
         }
         else {
-            bind(GameAction.PLAYER_UP,    joypad.key(NES_JoypadButtonID.UP),    control(KeyCode.UP));
-            bind(GameAction.PLAYER_DOWN,  joypad.key(NES_JoypadButtonID.DOWN),  control(KeyCode.DOWN));
-            bind(GameAction.PLAYER_LEFT,  joypad.key(NES_JoypadButtonID.LEFT),  control(KeyCode.LEFT));
-            bind(GameAction.PLAYER_RIGHT, joypad.key(NES_JoypadButtonID.RIGHT), control(KeyCode.RIGHT));
-            bind(TengenMsPacMan_GameAction.TOGGLE_PAC_BOOSTER, joypad.key(NES_JoypadButtonID.A), joypad.key(NES_JoypadButtonID.B));
+            bind(GameAction.PLAYER_UP,    THE_JOYPAD.key(JoypadButtonID.UP),    control(KeyCode.UP));
+            bind(GameAction.PLAYER_DOWN,  THE_JOYPAD.key(JoypadButtonID.DOWN),  control(KeyCode.DOWN));
+            bind(GameAction.PLAYER_LEFT,  THE_JOYPAD.key(JoypadButtonID.LEFT),  control(KeyCode.LEFT));
+            bind(GameAction.PLAYER_RIGHT, THE_JOYPAD.key(JoypadButtonID.RIGHT), control(KeyCode.RIGHT));
+            bind(TOGGLE_PAC_BOOSTER,
+                THE_JOYPAD.key(JoypadButtonID.A),
+                THE_JOYPAD.key(JoypadButtonID.B));
             bindCheatActions();
         }
         enableActionBindings(THE_KEYBOARD);

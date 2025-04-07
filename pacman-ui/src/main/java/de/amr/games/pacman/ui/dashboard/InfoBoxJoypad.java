@@ -4,13 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.dashboard;
 
-import de.amr.games.pacman.lib.nes.NES_JoypadButtonID;
+import de.amr.games.pacman.lib.nes.JoypadButtonID;
 import de.amr.games.pacman.ui.PacManGamesUI;
 import de.amr.games.pacman.uilib.ResourceManager;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
 
-import static de.amr.games.pacman.ui.Globals.THE_KEYBOARD;
+import static de.amr.games.pacman.ui.Globals.THE_JOYPAD;
 
 public class InfoBoxJoypad extends InfoBox {
 
@@ -22,24 +22,24 @@ public class InfoBoxJoypad extends InfoBox {
 
         setContentTextFont(Font.font("Monospace", 16));
 
-        var joypad = THE_KEYBOARD.currentJoypadKeyBinding();
+        var joypadKeyBinding = THE_JOYPAD.currentKeyBinding();
         String indent = "  "; // Urgh
         addLabeledValue("[SELECT]   [START]", () -> "%s%s  %s".formatted(
             indent,
-            joypad.key(NES_JoypadButtonID.SELECT).getDisplayText(),
-            joypad.key(NES_JoypadButtonID.START).getDisplayText())
+            joypadKeyBinding.key(JoypadButtonID.SELECT).getDisplayText(),
+            joypadKeyBinding.key(JoypadButtonID.START).getDisplayText())
         );
         addLabeledValue("[B]  [A]", () -> "%s%s   %s".formatted(
             indent,
-            joypad.key(NES_JoypadButtonID.B).getDisplayText(),
-            joypad.key(NES_JoypadButtonID.A).getDisplayText())
+            joypadKeyBinding.key(JoypadButtonID.B).getDisplayText(),
+            joypadKeyBinding.key(JoypadButtonID.A).getDisplayText())
         );
         addLabeledValue("UP/DOWN/LEFT/RIGHT", () -> "%s%s  %s  %s  %s".formatted(
             indent,
-            joypad.key(NES_JoypadButtonID.UP).getDisplayText(),
-            joypad.key(NES_JoypadButtonID.DOWN).getDisplayText(),
-            joypad.key(NES_JoypadButtonID.LEFT).getDisplayText(),
-            joypad.key(NES_JoypadButtonID.RIGHT).getDisplayText())
+            joypadKeyBinding.key(JoypadButtonID.UP).getDisplayText(),
+            joypadKeyBinding.key(JoypadButtonID.DOWN).getDisplayText(),
+            joypadKeyBinding.key(JoypadButtonID.LEFT).getDisplayText(),
+            joypadKeyBinding.key(JoypadButtonID.RIGHT).getDisplayText())
         );
         addRow(imageNesController);
     }

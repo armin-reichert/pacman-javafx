@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.input;
 
-import de.amr.games.pacman.lib.nes.NES_JoypadButtonID;
+import de.amr.games.pacman.lib.nes.JoypadButtonID;
 import javafx.scene.input.KeyCodeCombination;
 
 public record JoypadKeyBinding(
@@ -17,7 +17,7 @@ public record JoypadKeyBinding(
         KeyCodeCombination leftButtonKey,
         KeyCodeCombination rightButtonKey)
 {
-    public KeyCodeCombination key(NES_JoypadButtonID buttonID) {
+    public KeyCodeCombination key(JoypadButtonID buttonID) {
         return switch (buttonID) {
             case SELECT -> selectButtonKey;
             case START -> startButtonKey;

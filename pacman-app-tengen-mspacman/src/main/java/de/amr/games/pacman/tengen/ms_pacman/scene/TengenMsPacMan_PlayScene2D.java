@@ -9,7 +9,7 @@ import de.amr.games.pacman.controller.HuntingTimer;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.nes.NES_JoypadButtonID;
+import de.amr.games.pacman.lib.nes.JoypadButtonID;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -23,7 +23,6 @@ import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._2d.LevelCompleteAnimation;
-import de.amr.games.pacman.ui.input.JoypadKeyBinding;
 import de.amr.games.pacman.uilib.CameraControlledView;
 import de.amr.games.pacman.uilib.Keyboard;
 import de.amr.games.pacman.uilib.Ufx;
@@ -197,7 +196,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void doInit() {
         messageMovement = new MessageMovement();
-        THE_KEYBOARD.enableCurrentJoypad();
         game().setScoreVisible(true);
         setGameRenderer(THE_UI_CONFIGS.current().createRenderer(canvas));
         movingCamera.focusTopOfScene();
@@ -206,7 +204,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     protected void doEnd() {
         THE_SOUND.stopAll();
-        THE_KEYBOARD.disableCurrentJoypad();
     }
 
     @Override
@@ -270,8 +267,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void onLevelCreated(GameEvent e) {
         game().level().ifPresent(level -> {
-            THE_KEYBOARD.enableCurrentJoypad();
-            setKeyBindings(THE_KEYBOARD.currentJoypadKeyBinding());
+            setJoypadKeyBindings();
             if (game().isDemoLevel()) {
                 level.pac().setImmune(false);
             } else {
@@ -293,22 +289,20 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
         Logger.info("{} entered from {}", this, oldScene);
-        THE_KEYBOARD.enableCurrentJoypad();
-        setKeyBindings(THE_KEYBOARD.currentJoypadKeyBinding());
+        setJoypadKeyBindings();
         game().level().map(GameLevel::worldMap).ifPresent(worldMap -> gr.applyMapSettings(worldMap));
     }
 
-    private void setKeyBindings(JoypadKeyBinding joypad) {
+    private void setJoypadKeyBindings() {
         if (game().isDemoLevel()) {
-            bind(QUIT_DEMO_LEVEL, joypad.key(NES_JoypadButtonID.START));
+            bind(QUIT_DEMO_LEVEL, THE_JOYPAD.key(JoypadButtonID.START));
         } else {
-            bind(GameAction.PLAYER_UP,    joypad.key(NES_JoypadButtonID.UP),    control(KeyCode.UP));
-            bind(GameAction.PLAYER_DOWN,  joypad.key(NES_JoypadButtonID.DOWN),  control(KeyCode.DOWN));
-            bind(GameAction.PLAYER_LEFT,  joypad.key(NES_JoypadButtonID.LEFT),  control(KeyCode.LEFT));
-            bind(GameAction.PLAYER_RIGHT, joypad.key(NES_JoypadButtonID.RIGHT), control(KeyCode.RIGHT));
+            bind(GameAction.PLAYER_UP,    THE_JOYPAD.key(JoypadButtonID.UP),    control(KeyCode.UP));
+            bind(GameAction.PLAYER_DOWN,  THE_JOYPAD.key(JoypadButtonID.DOWN),  control(KeyCode.DOWN));
+            bind(GameAction.PLAYER_LEFT,  THE_JOYPAD.key(JoypadButtonID.LEFT),  control(KeyCode.LEFT));
+            bind(GameAction.PLAYER_RIGHT, THE_JOYPAD.key(JoypadButtonID.RIGHT), control(KeyCode.RIGHT));
             bind(TengenMsPacMan_GameAction.TOGGLE_PAC_BOOSTER,
-                joypad.key(NES_JoypadButtonID.A),
-                joypad.key(NES_JoypadButtonID.B));
+                THE_JOYPAD.key(JoypadButtonID.A), THE_JOYPAD.key(JoypadButtonID.B));
             bindCheatActions();
         }
         enableActionBindings(THE_KEYBOARD);

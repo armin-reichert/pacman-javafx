@@ -7,7 +7,7 @@ package de.amr.games.pacman.tengen.ms_pacman.scene;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
-import de.amr.games.pacman.lib.nes.NES_JoypadButtonID;
+import de.amr.games.pacman.lib.nes.JoypadButtonID;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.ClapperboardAnimation;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_PacAnimations;
@@ -54,7 +54,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void bindGameActions() {
-        bind(THE_GAME_CONTROLLER::terminateCurrentState, THE_KEYBOARD.currentJoypadKeyBinding().key(NES_JoypadButtonID.START));
+        bind(THE_GAME_CONTROLLER::terminateCurrentState, THE_JOYPAD.key(JoypadButtonID.START));
     }
 
     @Override

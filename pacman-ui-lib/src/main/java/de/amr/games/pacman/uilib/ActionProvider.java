@@ -70,7 +70,7 @@ public interface ActionProvider {
         }, defaultAction);
     }
 
-    default void handleInput(Keyboard keyboard) {
+    default void handleKeyboardInput(Keyboard keyboard) {
         runTriggeredAction(keyboard);
     }
 }

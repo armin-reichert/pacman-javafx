@@ -10,7 +10,6 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tilemap.editor.TileMapEditor;
 import de.amr.games.pacman.ui.dashboard.Dashboard;
-import de.amr.games.pacman.ui.input.GameKeyboard;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -101,17 +100,17 @@ public class PacManGamesUI implements GameUI {
     }
 
     private void onKeyPressed(KeyEvent keyPress) {
-        if (GameKeyboard.KEY_FULLSCREEN.match(keyPress)) {
+        if (KEY_FULLSCREEN.match(keyPress)) {
             stage.setFullScreen(true);
         }
-        else if (GameKeyboard.KEY_MUTE.match(keyPress)) {
+        else if (KEY_MUTE.match(keyPress)) {
             THE_SOUND.toggleMuted();
         }
-        else if (GameKeyboard.KEY_OPEN_EDITOR.match(keyPress)) {
+        else if (KEY_OPEN_EDITOR.match(keyPress)) {
             showEditorView();
         }
         else {
-            currentView().handleInput(THE_KEYBOARD);
+            currentView().handleKeyboardInput(THE_KEYBOARD);
         }
     }
 
