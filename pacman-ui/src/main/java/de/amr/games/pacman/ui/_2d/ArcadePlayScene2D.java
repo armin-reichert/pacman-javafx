@@ -136,8 +136,10 @@ public class ArcadePlayScene2D extends GameScene2D {
         }
         GameLevel level = game().level().orElse(null);
         // Scene is drawn already for 2 ticks before level has been created
-        if (level == null && !THE_CLOCK.isPaused()) {
-            Logger.warn("Tick {}: Game level not yet available, scene content not drawn", THE_CLOCK.tickCount());
+        if (level == null) {
+            if (!THE_CLOCK.isPaused()) {
+                Logger.warn("Tick {}: Game level not yet available, scene content not drawn", THE_CLOCK.tickCount());
+            }
             return;
         }
 
