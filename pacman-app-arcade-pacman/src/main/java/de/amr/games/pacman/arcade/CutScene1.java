@@ -58,43 +58,42 @@ public class CutScene1 extends GameScene2D {
     @Override
     public void update() {
         ++frame;
+        if (frame == ANIMATION_START) {
+            music.play();
+
+            pac.placeAtTile(29, 20, 0, 0);
+            pac.setMoveDir(Direction.LEFT);
+            pac.setSpeed(1.25f);
+            pac.selectAnimation(ANIM_PAC_MUNCHING);
+            pac.startAnimation();
+            pac.show();
+
+            blinky.placeAtTile(32, 20, 0, 0);
+            blinky.setMoveAndWishDir(Direction.LEFT);
+            blinky.setSpeed(1.3f);
+            blinky.selectAnimation(ANIM_GHOST_NORMAL);
+            blinky.startAnimation();
+            blinky.show();
+        }
+        else if (frame == ANIMATION_START + 260) {
+            blinky.placeAtTile(-2, 20, 4, 0);
+            blinky.setMoveAndWishDir(Direction.RIGHT);
+            blinky.setSpeed(0.75f);
+            blinky.selectAnimation(ANIM_GHOST_FRIGHTENED);
+            blinky.startAnimation();
+        }
+        else if (frame == ANIMATION_START + 400) {
+            pac.placeAtTile(-3, 18, 0, 6.5f);
+            pac.setMoveDir(Direction.RIGHT);
+            pac.selectAnimation(PacAnimations.ANIM_PAC_BIG);
+            pac.startAnimation();
+        }
+        else if (frame == ANIMATION_START + 632) {
+            THE_GAME_CONTROLLER.terminateCurrentState();
+        }
         if (frame >= ANIMATION_START) {
             pac.move();
             blinky.move();
-        }
-        switch (frame) {
-            case ANIMATION_START -> {
-                music.play();
-
-                pac.placeAtTile(29, 20, 0, 0);
-                pac.setMoveDir(Direction.LEFT);
-                pac.setSpeed(1.25f);
-                pac.selectAnimation(ANIM_PAC_MUNCHING);
-                pac.startAnimation();
-                pac.show();
-
-                blinky.placeAtTile(32, 20, 0, 0);
-                blinky.setMoveAndWishDir(Direction.LEFT);
-                blinky.setSpeed(1.3f);
-                blinky.selectAnimation(ANIM_GHOST_NORMAL);
-                blinky.startAnimation();
-                blinky.show();
-            }
-            case ANIMATION_START + 260 -> {
-                blinky.placeAtTile(-2, 20, 4, 0);
-                blinky.setMoveAndWishDir(Direction.RIGHT);
-                blinky.setSpeed(0.75f);
-                blinky.selectAnimation(ANIM_GHOST_FRIGHTENED);
-                blinky.startAnimation();
-            }
-            case ANIMATION_START + 400 -> {
-                pac.placeAtTile(-3, 18, 0, 6.5f);
-                pac.setMoveDir(Direction.RIGHT);
-                pac.selectAnimation(PacAnimations.ANIM_PAC_BIG);
-                pac.startAnimation();
-            }
-            case ANIMATION_START + 632 -> THE_GAME_CONTROLLER.terminateCurrentState();
-            default -> {}
         }
     }
 
