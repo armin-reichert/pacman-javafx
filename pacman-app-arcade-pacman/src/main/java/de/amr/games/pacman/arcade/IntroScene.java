@@ -113,6 +113,9 @@ public class IntroScene extends GameScene2D {
 
     @Override
     public void update() {
+        if (THE_CLOCK.isPaused()) {
+            return;
+        }
         sceneController.update();
     }
 
