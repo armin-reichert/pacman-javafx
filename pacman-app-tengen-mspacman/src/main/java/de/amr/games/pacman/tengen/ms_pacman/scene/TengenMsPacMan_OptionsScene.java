@@ -74,7 +74,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     };
 
     @Override
-    public void bindGameActions() {
+    public void bindActions() {
         bind(selectNextJoypad, alt(KeyCode.J));
         bind(START_PLAYING, THE_JOYPAD.key(JoypadButtonID.START));
         bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, THE_JOYPAD.key(JoypadButtonID.SELECT));
@@ -162,7 +162,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         }
 
         else {
-            runTriggeredAction(keyboard);
+            super.handleKeyboardInput(keyboard);
         }
     }
 

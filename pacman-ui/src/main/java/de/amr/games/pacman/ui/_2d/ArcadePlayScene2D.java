@@ -48,7 +48,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     private LevelCompleteAnimation levelCompleteAnimation;
 
     @Override
-    public void bindGameActions() {}
+    public void bindActions() {}
 
     @Override
     protected void doInit() {
@@ -239,7 +239,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
         Logger.info("{} entered from {}", this, oldScene);
-        bindGameActions();
+        bindActions();
         enableActionBindings(THE_KEYBOARD);
         if (gr == null) {
             setGameRenderer(THE_UI_CONFIGS.current().createRenderer(canvas));

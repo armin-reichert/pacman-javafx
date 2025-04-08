@@ -67,7 +67,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     }
 
     @Override
-    public void bindGameActions() {
+    public void bindActions() {
         bind(GameAction.PREV_PERSPECTIVE, alt(KeyCode.LEFT));
         bind(GameAction.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
         bind(GameAction.TOGGLE_DRAW_MODE, alt(KeyCode.W));

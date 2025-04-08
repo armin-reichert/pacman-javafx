@@ -88,7 +88,7 @@ public class GameView implements View {
                 contextMenu.hide();
             }
         });
-        bindGameActions();
+        bindActions();
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -130,7 +130,7 @@ public class GameView implements View {
     }
 
     @Override
-    public void bindGameActions() {
+    public void bindActions() {
         bind(GameAction.BOOT,                    naked(KeyCode.F3));
         bind(this::showGameSceneHelp,            naked(KeyCode.H));
         bind(GameAction.SHOW_START_VIEW,         naked(KeyCode.Q));

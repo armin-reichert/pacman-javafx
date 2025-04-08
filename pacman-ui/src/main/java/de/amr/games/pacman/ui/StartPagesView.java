@@ -58,7 +58,7 @@ public class StartPagesView implements View {
             }
         });
         titleExpression = Bindings.createStringBinding(() -> "JavaFX Pac-Man Games");
-        bindGameActions();
+        bindActions();
     }
 
     @Override
@@ -80,7 +80,7 @@ public class StartPagesView implements View {
     }
 
     @Override
-    public void bindGameActions() {
+    public void bindActions() {
         bind(carousel::showPreviousSlide, KeyCode.LEFT);
         bind(carousel::showNextSlide,     KeyCode.RIGHT);
         bind(actionSelectGamePage,        KeyCode.ENTER);

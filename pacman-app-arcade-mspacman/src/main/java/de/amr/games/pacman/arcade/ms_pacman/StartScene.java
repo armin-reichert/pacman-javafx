@@ -23,7 +23,7 @@ import static de.amr.games.pacman.ui.Globals.THE_SOUND;
 public class StartScene extends GameScene2D {
 
     @Override
-    public void bindGameActions() {
+    public void bindActions() {
         bindDefaultArcadeActions();
     }
 

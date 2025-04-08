@@ -33,7 +33,7 @@ public class StartScene extends GameScene2D {
     public static final Color WHITE = Color.web(Arcade.Palette.WHITE);
 
     @Override
-    public void bindGameActions() {
+    public void bindActions() {
         bind(GameAction.INSERT_COIN,  naked(KeyCode.DIGIT5), naked(KeyCode.NUMPAD5));
         bind(GameAction.START_GAME,   naked(KeyCode.DIGIT1), naked(KeyCode.NUMPAD1));
     }

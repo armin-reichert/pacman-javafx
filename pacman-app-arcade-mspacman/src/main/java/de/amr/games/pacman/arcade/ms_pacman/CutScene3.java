@@ -48,7 +48,7 @@ public class CutScene3 extends GameScene2D {
     private SpriteAnimation storkAnimation;
 
     @Override
-    public void bindGameActions() {}
+    public void bindActions() {}
 
     @Override
     public void doInit() {

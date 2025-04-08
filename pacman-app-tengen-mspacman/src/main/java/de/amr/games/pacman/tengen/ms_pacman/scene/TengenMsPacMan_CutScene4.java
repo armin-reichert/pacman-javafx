@@ -213,7 +213,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     }
 
     @Override
-    public void bindGameActions() {}
+    public void bindActions() {}
 
     @Override
     protected void drawSceneContent() {

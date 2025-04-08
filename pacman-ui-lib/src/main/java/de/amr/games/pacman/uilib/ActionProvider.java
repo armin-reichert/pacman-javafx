@@ -15,25 +15,25 @@ public interface ActionProvider {
 
     Map<KeyCodeCombination, Action> actionBindings();
 
-    void bindGameActions();
+    void bindActions();
 
     default void enableActionBindings(Keyboard keyboard) {
         Logger.info("Enabled key bindings for {}", getClass().getSimpleName());
-        for (KeyCodeCombination keyCodeCombination : actionBindings().keySet()) {
-            keyboard.register(keyCodeCombination, this);
+        for (KeyCodeCombination combination : actionBindings().keySet()) {
+            keyboard.bind(combination, this);
         }
     }
 
     default void disableActionBindings(Keyboard keyboard) {
         Logger.info("Disable key bindings for {}", getClass().getSimpleName());
-        for (KeyCodeCombination keyCodeCombination : actionBindings().keySet()) {
-            keyboard.unregister(keyCodeCombination, this);
+        for (KeyCodeCombination combination : actionBindings().keySet()) {
+            keyboard.unbind(combination, this);
         }
     }
 
     default void bind(Action action, KeyCodeCombination... combinations) {
-        for (KeyCodeCombination kcc : combinations) {
-            actionBindings().put(kcc, action);
+        for (KeyCodeCombination combination : combinations) {
+            actionBindings().put(combination, action);
         }
     }
 

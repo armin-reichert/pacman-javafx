@@ -53,7 +53,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     private ClapperboardAnimation clapAnimation;
 
     @Override
-    public void bindGameActions() {
+    public void bindActions() {
         bind(THE_GAME_CONTROLLER::terminateCurrentState, THE_JOYPAD.key(JoypadButtonID.START));
     }
 

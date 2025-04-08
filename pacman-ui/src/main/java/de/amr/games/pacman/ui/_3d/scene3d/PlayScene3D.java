@@ -94,7 +94,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void init() {
-        bindGameActions();
+        bindActions();
         enableActionBindings(THE_KEYBOARD);
         game().setScoreVisible(true);
         perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
@@ -110,7 +110,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     @Override
-    public void bindGameActions() {
+    public void bindActions() {
         bind(GameAction.PREV_PERSPECTIVE, alt(KeyCode.LEFT));
         bind(GameAction.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
         bind(GameAction.TOGGLE_DRAW_MODE, alt(KeyCode.W));
@@ -126,7 +126,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void onLevelStarted(GameEvent event) {
         game().level().ifPresent(level -> {
-            bindGameActions(); //TODO check if this is necessary
+            bindActions(); //TODO check if this is necessary
             if (level3D == null) {
                 replaceGameLevel3D();
                 level3D.addLevelCounter();
@@ -152,7 +152,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void onSceneVariantSwitch(GameScene fromScene) {
         game().level().ifPresent(level -> {
-            bindGameActions();
+            bindActions();
             enableActionBindings(THE_KEYBOARD);
             if (level3D == null) {
                 replaceGameLevel3D();

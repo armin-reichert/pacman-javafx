@@ -40,14 +40,15 @@ import static de.amr.games.pacman.ui.Globals.*;
  */
 public class IntroScene extends GameScene2D {
 
+    public static final Color CYAN = Color.web(Arcade.Palette.CYAN);
+    public static final Color ORANGE = Color.web(Arcade.Palette.ORANGE);
+    public static final Color PINK = Color.web(Arcade.Palette.PINK);
+    public static final Color ROSE = Color.web(Arcade.Palette.ROSE);
+    public static final Color RED = Color.web(Arcade.Palette.RED);
+    public static final Color WHITE = Color.web(Arcade.Palette.WHITE);
+
     static final String[] GHOST_CHARACTERS = { "SHADOW", "SPEEDY", "BASHFUL", "POKEY" };
-    static final Color[] GHOST_COLORS = {
-        Color.web(Arcade.Palette.RED),
-        Color.web(Arcade.Palette.PINK),
-        Color.web(Arcade.Palette.CYAN),
-        Color.web(Arcade.Palette.ORANGE)
-    };
-    static final Color PELLET_COLOR = Color.web(Arcade.Palette.ROSE);
+    static final Color[] GHOST_COLORS = { RED, PINK, CYAN, ORANGE };
     static final float CHASE_SPEED = 1.1f;
     static final float GHOST_FRIGHTENED_SPEED = 0.6f;
     static final int LEFT_TILE_X = 4;
@@ -75,7 +76,7 @@ public class IntroScene extends GameScene2D {
     }
 
     @Override
-    public void bindGameActions() {
+    public void bindActions() {
         bindDefaultArcadeActions();
         bindTestsStartingActions();
     }
@@ -135,7 +136,7 @@ public class IntroScene extends GameScene2D {
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
+            gr.drawScores(game().scoreManager(), WHITE, font);
         }
         TickTimer timer = sceneController.state().timer();
         drawGallery(font);
@@ -148,19 +149,18 @@ public class IntroScene extends GameScene2D {
                 }
                 drawGuys(flutter(timer.tickCount()));
                 if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.PACMAN)) {
-                    gr.fillTextAtScaledPosition(ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT, Color.web(Arcade.Palette.PINK), font, tiles_to_px(4), tiles_to_px(32));
+                    gr.fillTextAtScaledPosition(ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT, PINK, font, tiles_to_px(4), tiles_to_px(32));
                 }
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints();
                 drawGuys(0);
                 if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.PACMAN)) {
-                    gr.fillTextAtScaledPosition(ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT, Color.web(Arcade.Palette.PINK), font, tiles_to_px(4), tiles_to_px(32));
+                    gr.fillTextAtScaledPosition(ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT, PINK, font, tiles_to_px(4), tiles_to_px(32));
                 }
             }
-            default -> {}
         }
-        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_STORE.numCoins()), Color.web(Arcade.Palette.WHITE), font, 2 * TS, sizeInPx().y() - 2);
+        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_STORE.numCoins()), WHITE, font, 2 * TS, sizeInPx().y() - 2);
         gr.drawLevelCounter(0, game().levelCounter(), sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 
@@ -172,7 +172,7 @@ public class IntroScene extends GameScene2D {
     private void drawGallery(Font font) {
         var spriteSheet = (ArcadePacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
         if (titleVisible) {
-            gr.fillTextAtScaledPosition("CHARACTER / NICKNAME", Color.web(Arcade.Palette.WHITE), font, tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(6));
+            gr.fillTextAtScaledPosition("CHARACTER / NICKNAME", WHITE, font, tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(6));
         }
         for (byte id = 0; id < 4; ++id) {
             int tileY = 7 + 3 * id;
@@ -212,7 +212,7 @@ public class IntroScene extends GameScene2D {
         Font font6 = THE_ASSETS.arcadeFontAtSize(scaled(6));
         int tileX = LEFT_TILE_X + 6;
         int tileY = 25;
-        gr.ctx().setFill(PELLET_COLOR);
+        gr.ctx().setFill(ROSE);
         gr.ctx().fillRect(scaled(tiles_to_px(tileX) + 4), scaled(tiles_to_px(tileY - 1) + 4), scaled(2), scaled(2));
         if (blinking.isOn()) {
             drawEnergizer(tiles_to_px(tileX), tiles_to_px(tileY + 1));
@@ -227,7 +227,7 @@ public class IntroScene extends GameScene2D {
     private void drawEnergizer(double x, double y) {
         gr.ctx().save();
         gr.ctx().scale(scaling(), scaling());
-        gr.ctx().setFill(PELLET_COLOR);
+        gr.ctx().setFill(ROSE);
         gr.ctx().fillRect(x + 2, y, 4, 8);
         gr.ctx().fillRect(x, y + 2, 8, 4);
         gr.ctx().fillRect(x + 1, y + 1, 6, 6);

@@ -76,7 +76,7 @@ public class IntroScene extends GameScene2D {
     }
 
     @Override
-    public void bindGameActions() {
+    public void bindActions() {
         bindDefaultArcadeActions();
         bindTestsStartingActions();
     }

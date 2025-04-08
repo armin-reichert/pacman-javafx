@@ -44,7 +44,7 @@ public class EditorView implements View {
     }
 
     @Override
-    public void bindGameActions() {}
+    public void bindActions() {}
 
     @Override
     public Map<KeyCodeCombination, Action> actionBindings() {

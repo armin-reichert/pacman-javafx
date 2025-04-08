@@ -70,7 +70,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    public void bindGameActions() {
+    public void bindActions() {
         bind(GameAction.START_GAME, THE_JOYPAD.key(JoypadButtonID.START));
         bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, THE_JOYPAD.key(JoypadButtonID.SELECT));
     }
