@@ -28,7 +28,7 @@ import static de.amr.games.pacman.ui.Globals.*;
  *
  * @author Armin Reichert
  */
-public class CutScene2 extends GameScene2D {
+public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     private static final int UPPER_LANE_Y  = TS * 12;
     private static final int MIDDLE_LANE_Y = TS * 18;

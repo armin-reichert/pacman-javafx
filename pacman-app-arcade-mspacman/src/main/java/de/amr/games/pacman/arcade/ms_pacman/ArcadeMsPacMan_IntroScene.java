@@ -32,7 +32,7 @@ import static de.amr.games.pacman.ui.Globals.*;
  *
  * @author Armin Reichert
  */
-public class IntroScene extends GameScene2D {
+public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     static final float SPEED = 1.1f;
 
@@ -58,7 +58,7 @@ public class IntroScene extends GameScene2D {
 
     static final Color[] COLOR_GHOST = { COLOR_RED, COLOR_PINK, COLOR_CYAN, COLOR_ORANGE };
 
-    private final FiniteStateMachine<SceneState, IntroScene> sceneController;
+    private final FiniteStateMachine<SceneState, ArcadeMsPacMan_IntroScene> sceneController;
 
     private Pac msPacMan;
     private Ghost[] ghosts;
@@ -66,11 +66,11 @@ public class IntroScene extends GameScene2D {
     private int ghostID;
     private int waitBeforeRising;
 
-    public IntroScene() {
+    public ArcadeMsPacMan_IntroScene() {
         sceneController = new FiniteStateMachine<>(SceneState.values()) {
             @Override
-            public IntroScene context() {
-                return IntroScene.this;
+            public ArcadeMsPacMan_IntroScene context() {
+                return ArcadeMsPacMan_IntroScene.this;
             }
         };
     }
@@ -186,11 +186,11 @@ public class IntroScene extends GameScene2D {
 
     // Scene controller FSM states
 
-    private enum SceneState implements FsmState<IntroScene> {
+    private enum SceneState implements FsmState<ArcadeMsPacMan_IntroScene> {
 
         STARTING {
             @Override
-            public void onEnter(IntroScene intro) {
+            public void onEnter(ArcadeMsPacMan_IntroScene intro) {
                 intro.marqueeTimer.restartIndefinitely();
                 intro.msPacMan.setPosition(TS * 31, TS * 20);
                 intro.msPacMan.setMoveDir(Direction.LEFT);
@@ -210,7 +210,7 @@ public class IntroScene extends GameScene2D {
             }
 
             @Override
-            public void onUpdate(IntroScene intro) {
+            public void onUpdate(ArcadeMsPacMan_IntroScene intro) {
                 intro.marqueeTimer.doTick();
                 if (timer.atSecond(1)) {
                     intro.sceneController.changeState(GHOSTS_MARCHING_IN);
@@ -221,7 +221,7 @@ public class IntroScene extends GameScene2D {
         GHOSTS_MARCHING_IN {
 
             @Override
-            public void onUpdate(IntroScene intro) {
+            public void onUpdate(ArcadeMsPacMan_IntroScene intro) {
                 intro.marqueeTimer.doTick();
                 boolean reachedEndPosition = letGhostMarchIn(intro);
                 if (reachedEndPosition) {
@@ -233,7 +233,7 @@ public class IntroScene extends GameScene2D {
                 }
             }
 
-            boolean letGhostMarchIn(IntroScene intro) {
+            boolean letGhostMarchIn(ArcadeMsPacMan_IntroScene intro) {
                 Ghost ghost = intro.ghosts[intro.ghostID];
                 if (ghost.moveDir() == Direction.LEFT) {
                     if (ghost.posX() <= STOP_X_GHOST) {
@@ -266,7 +266,7 @@ public class IntroScene extends GameScene2D {
         MS_PACMAN_MARCHING_IN {
 
             @Override
-            public void onUpdate(IntroScene intro) {
+            public void onUpdate(ArcadeMsPacMan_IntroScene intro) {
                 intro.marqueeTimer.doTick();
                 intro.msPacMan.move();
                 if (intro.msPacMan.posX() <= STOP_X_MSPAC) {
@@ -280,7 +280,7 @@ public class IntroScene extends GameScene2D {
         READY_TO_PLAY {
 
             @Override
-            public void onUpdate(IntroScene intro) {
+            public void onUpdate(ArcadeMsPacMan_IntroScene intro) {
                 intro.marqueeTimer.doTick();
                 if (timer.atSecond(2.0) && !THE_GAME_CONTROLLER.game().canStartNewGame()) {
                     THE_GAME_CONTROLLER.changeState(GameState.STARTING_GAME); // demo level

@@ -115,13 +115,13 @@ public class ArcadeMsPacMan_UIConfig implements GameUIConfig, ResourceManager {
         THE_ASSETS.store("ms_pacman.audio.ghost_returns",           url("sound/GhostEyes.mp3"));
 
         scenesByID.put("BootScene",   new ArcadeBootScene2D());
-        scenesByID.put("IntroScene",  new IntroScene());
-        scenesByID.put("StartScene",  new StartScene());
+        scenesByID.put("IntroScene",  new ArcadeMsPacMan_IntroScene());
+        scenesByID.put("StartScene",  new ArcadeMsPacMan_StartScene());
         scenesByID.put("PlayScene2D", new ArcadePlayScene2D());
         scenesByID.put("PlayScene3D", new PlayScene3D());
-        scenesByID.put("CutScene1",   new CutScene1());
-        scenesByID.put("CutScene2",   new CutScene2());
-        scenesByID.put("CutScene3",   new CutScene3());
+        scenesByID.put("CutScene1",   new ArcadeMsPacMan_CutScene1());
+        scenesByID.put("CutScene2",   new ArcadeMsPacMan_CutScene2());
+        scenesByID.put("CutScene3",   new ArcadeMsPacMan_CutScene3());
     }
 
     @Override

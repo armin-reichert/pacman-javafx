@@ -32,7 +32,7 @@ import static de.amr.games.pacman.ui.Globals.*;
  *
  * @author Armin Reichert
  */
-public class CutScene3 extends GameScene2D {
+public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     private static final int LANE_Y = TS * 24;
 

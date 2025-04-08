@@ -20,7 +20,7 @@ import static de.amr.games.pacman.ui.Globals.THE_SOUND;
 /**
  * @author Armin Reichert
  */
-public class StartScene extends GameScene2D {
+public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
     @Override
     public void bindActions() {
