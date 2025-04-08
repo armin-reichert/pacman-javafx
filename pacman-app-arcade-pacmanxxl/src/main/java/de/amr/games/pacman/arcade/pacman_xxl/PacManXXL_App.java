@@ -52,7 +52,7 @@ public class PacManXXL_App extends Application {
         InfoBoxCustomMaps infoBoxCustomMaps = THE_UI.dashboard().getInfoBox(GameUI.DashboardID.CUSTOM_MAPS);
         infoBoxCustomMaps.setTableItems(xxlMapSelector.customMaps());
 
-        THE_UI.addStartPage(new PacManXXL_StartPage(GameVariant.PACMAN_XXL));
+        THE_UI.addStartPage(new PacManXXL_StartPage());
         THE_UI.selectStartPage(0);
         THE_UI.show();
     }

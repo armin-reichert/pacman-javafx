@@ -84,7 +84,7 @@ public class PacManGames3dApp extends Application {
         THE_UI.addStartPage(new ArcadePacMan_StartPage(GameVariant.PACMAN));
         THE_UI.addStartPage(new ArcadeMsPacMan_StartPage(GameVariant.MS_PACMAN));
         THE_UI.addStartPage(new TengenMsPacMan_StartPage(GameVariant.MS_PACMAN_TENGEN));
-        THE_UI.addStartPage(new PacManXXL_StartPage(GameVariant.PACMAN_XXL));
+        THE_UI.addStartPage(new PacManXXL_StartPage());
         THE_UI.selectStartPage(0);
         THE_UI.show();
 

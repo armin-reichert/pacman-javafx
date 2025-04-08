@@ -6,7 +6,6 @@ package de.amr.games.pacman.arcade.pacman_xxl;
 
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.MapSelectionMode;
 import de.amr.games.pacman.ui.StartPage;
 import de.amr.games.pacman.uilib.Flyer;
 import de.amr.games.pacman.uilib.ResourceManager;
@@ -29,7 +28,7 @@ public class PacManXXL_StartPage implements StartPage, ResourceManager {
         return PacManXXL_StartPage.class;
     }
 
-    public PacManXXL_StartPage(GameVariant gameVariant) {
+    public PacManXXL_StartPage() {
         root.setBackground(Background.fill(Color.BLACK));
 
         Flyer flyer = new Flyer(loadImage("graphics/pacman_xxl_startpage.jpg"));
@@ -38,34 +37,30 @@ public class PacManXXL_StartPage implements StartPage, ResourceManager {
 
         menu = new PacManXXL_OptionMenu(36, 36);
         menu.scalingProperty().bind(root.heightProperty().multiply(0.9).divide(menu.tilesY() * TS));
-
-        //TODO check this:
-        GameModel game = THE_GAME_CONTROLLER.game(gameVariant);
-        game.mapSelector().loadAllMaps(game);
-        menu.setState(PY_3D_ENABLED.get(), gameVariant, game.isCutScenesEnabled(),
-            MapSelectionMode.CUSTOM_MAPS_FIRST, !game.mapSelector().customMaps().isEmpty());
+        initMenuState(THE_GAME_CONTROLLER.selectedGameVariant());
 
         root.getChildren().addAll(flyer, menu.root());
     }
 
+    private void initMenuState(GameVariant gameVariant) {
+        if (gameVariant != GameVariant.MS_PACMAN_XXL && gameVariant != GameVariant.PACMAN_XXL) {
+            gameVariant = GameVariant.PACMAN_XXL;
+        }
+        GameModel game = THE_GAME_CONTROLLER.game(gameVariant);
+        game.mapSelector().loadAllMaps(game);
+        menu.setState(
+            PY_3D_ENABLED.get(),
+            gameVariant,
+            game.isCutScenesEnabled(),
+            game.mapSelector().mapSelectionMode(),
+            !game.mapSelector().customMaps().isEmpty()
+        );
+    }
+
     @Override
     public void onEnter() {
-        GameVariant gameVariant = currentGameVariant();
-        switch (gameVariant) {
-            case MS_PACMAN_XXL, PACMAN_XXL -> {
-                GameModel game = THE_GAME_CONTROLLER.game(gameVariant);
-                game.mapSelector().loadAllMaps(game);
-                menu.setState(
-                    PY_3D_ENABLED.get(),
-                    currentGameVariant(),
-                    game.isCutScenesEnabled(),
-                    game.mapSelector().mapSelectionMode(),
-                    !game.mapSelector().customMaps().isEmpty()
-                );
-                menu.startDrawingLoop();
-            }
-            default -> throw new IllegalStateException("Illegal game variant for this start page: %s".formatted(currentGameVariant()));
-        }
+        initMenuState(currentGameVariant());
+        menu.startDrawingLoop();
     }
 
     @Override

@@ -78,8 +78,8 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             @Override
             public String selectedValueText() {
                 return switch (selectedValue()) {
-                    case PACMAN_XXL -> "PAC-MAN";
-                    case MS_PACMAN_XXL -> "MS.PAC-MAN";
+                    case PACMAN_XXL -> "PAC-MAN XXL";
+                    case MS_PACMAN_XXL -> "MS.PAC-MAN XXL";
                     default -> "";
                 };
             }
