@@ -45,4 +45,9 @@ public class TengenMsPacMan_App extends Application {
         THE_UI.selectStartPage(0);
         THE_UI.show();
     }
+
+    @Override
+    public void stop() {
+        THE_CLOCK.stop();
+    }
 }
