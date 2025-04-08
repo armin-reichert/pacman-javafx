@@ -213,7 +213,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void drawDebugInfo() {
+    protected void drawDebugInfo() {
         gr.drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
         if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.PACMAN)) {
             game().level().ifPresent(level ->

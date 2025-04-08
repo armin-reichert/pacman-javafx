@@ -80,20 +80,20 @@ public abstract class GameScene2D implements GameScene {
 
     public Canvas canvas() { return canvas; }
 
-    protected abstract void drawSceneContent();
-
-    public void drawDebugInfo() {
-        gr.drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
-        gr.ctx().setFill(Color.YELLOW);
-        gr.ctx().setFont(DEBUG_TEXT_FONT);
-        gr.ctx().fillText("%s %d".formatted(gameState(), gameState().timer().tickCount()), 0, scaled(3 * TS));
-    }
-
     public void draw() {
         drawSceneContent();
         if (debugInfoVisiblePy.get()) {
             drawDebugInfo();
         }
+    }
+
+    protected abstract void drawSceneContent();
+
+    protected void drawDebugInfo() {
+        gr.drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
+        gr.ctx().setFill(Color.YELLOW);
+        gr.ctx().setFont(DEBUG_TEXT_FONT);
+        gr.ctx().fillText("%s %d".formatted(gameState(), gameState().timer().tickCount()), 0, scaled(3 * TS));
     }
 
     /**
