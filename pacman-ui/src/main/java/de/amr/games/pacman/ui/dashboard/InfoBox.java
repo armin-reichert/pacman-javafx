@@ -169,11 +169,11 @@ public abstract class InfoBox extends TitledPane {
         return cb;
     }
 
-    protected <T> ComboBox<T> addComboBox(String labelText, T[] items) {
-        var combo = new ComboBox<>(FXCollections.observableArrayList(items));
-        combo.setStyle(fontCSS(textFont));
-        addRow(labelText, combo);
-        return combo;
+    protected <T> ChoiceBox<T> addChoiceBox(String labelText, T[] items) {
+        var selector = new ChoiceBox<>(FXCollections.observableArrayList(items));
+        selector.setStyle(fontCSS(textFont));
+        addRow(labelText, selector);
+        return selector;
     }
 
     protected ColorPicker addColorPicker(String labelText, Color color) {
@@ -190,12 +190,16 @@ public abstract class InfoBox extends TitledPane {
         picker.setOnAction(e -> property.set(picker.getValue()));
     }
 
-    protected <T> void setEditor(ComboBox<T> combo, WritableObjectValue<T> property) {
-        combo.setOnAction(e -> property.set(combo.getValue()));
+    protected <T> void setEditor(ChoiceBox<T> selector, WritableObjectValue<T> property) {
+        selector.setOnAction(e -> property.set(selector.getValue()));
     }
 
-    protected void setEditor(ComboBox<String> combo, StringProperty property) {
-        combo.setOnAction(e -> property.set(combo.getValue()));
+    protected void setEditor(ChoiceBox<String> selector, StringProperty property) {
+        selector.setOnAction(e -> property.set(selector.getValue()));
+    }
+
+    protected <T> void setEditor(ChoiceBox<T> selector, ObjectProperty<T> property) {
+        selector.setOnAction(e -> property.set(selector.getValue()));
     }
 
     protected void setEditor(Slider slider, Property<Number> property) {
@@ -240,8 +244,8 @@ public abstract class InfoBox extends TitledPane {
         checkBox.setOnAction(e -> action.run());
     }
 
-    protected void setAction(ComboBox<?> combo, Runnable action) {
-        combo.setOnAction(e -> action.run());
+    protected void setAction(ChoiceBox<?> selector, Runnable action) {
+        selector.setOnAction(e -> action.run());
     }
 
     protected void setTooltip(Control control, ObservableValue<?> property, String pattern) {

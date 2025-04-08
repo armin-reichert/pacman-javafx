@@ -8,10 +8,7 @@ import de.amr.games.pacman.controller.CoinStore;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.GameAction;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Spinner;
+import javafx.scene.control.*;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.ui.Globals.PY_AUTOPILOT;
@@ -32,7 +29,7 @@ public class InfoBoxGameControl extends InfoBox {
     private static final int CUT_SCENES_TEST_QUIT = 1;
 
     private Spinner<Integer> spinnerCredit;
-    private ComboBox<Integer> comboInitialLives;
+    private ChoiceBox<Integer> comboInitialLives;
     private Button[] bgLevelActions;
     private Button[] bgCutScenesTest;
     private CheckBox cbAutopilot;
@@ -40,7 +37,7 @@ public class InfoBoxGameControl extends InfoBox {
 
     public void init() {
         spinnerCredit      = addIntSpinner("Credit", 0, CoinStore.MAX_COINS, 0);
-        comboInitialLives  = addComboBox("Initial Lives", new Integer[] {3, 5});
+        comboInitialLives  = addChoiceBox("Initial Lives", new Integer[] {3, 5});
         bgLevelActions     = addButtonList("Game Level", "Start", "Quit", "Next");
         bgCutScenesTest    = addButtonList("Cut Scenes Test", "Start", "Quit");
         cbAutopilot        = addCheckBox("Autopilot");
