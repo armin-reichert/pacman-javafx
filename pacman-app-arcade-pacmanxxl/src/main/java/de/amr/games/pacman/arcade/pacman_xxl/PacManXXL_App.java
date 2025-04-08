@@ -35,8 +35,8 @@ public class PacManXXL_App extends Application {
         double aspect = screenSize.getWidth() / screenSize.getHeight();
         double height = 0.8 * screenSize.getHeight(), width = aspect * height;
         createUIAndSupport3D(true);
-        THE_UI_CONFIGS.set(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_UIConfig());
-        THE_UI_CONFIGS.set(GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_UIConfig());
+        THE_UI_CONFIGS.set(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_UIConfig(THE_ASSETS));
+        THE_UI_CONFIGS.set(GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_UIConfig(THE_ASSETS));
         THE_UI.build(stage, new Dimension2D(width, height));
         THE_UI.buildDashboard(
                 GameUI.DashboardID.README,
