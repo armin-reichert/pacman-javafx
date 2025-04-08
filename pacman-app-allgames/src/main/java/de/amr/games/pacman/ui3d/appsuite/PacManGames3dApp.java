@@ -11,8 +11,6 @@ import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
 import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.games.pacman.arcade.pacman_xxl.*;
-import de.amr.games.pacman.lib.DirectoryWatchdog;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_StartPage;
@@ -80,6 +78,7 @@ public class PacManGames3dApp extends Application {
 
         InfoBoxCustomMaps infoBoxCustomMaps = THE_UI.dashboard().getInfoBox(GameUI.DashboardID.CUSTOM_MAPS);
         infoBoxCustomMaps.setTableItems(xxlMapSelector.customMaps());
+        xxlMapSelector.startWatchingCustomMaps();
 
         THE_UI.addStartPage(new ArcadePacMan_StartPage(GameVariant.PACMAN));
         THE_UI.addStartPage(new ArcadeMsPacMan_StartPage(GameVariant.MS_PACMAN));
@@ -87,14 +86,6 @@ public class PacManGames3dApp extends Application {
         THE_UI.addStartPage(new PacManXXL_StartPage());
         THE_UI.selectStartPage(0);
         THE_UI.show();
-
-        DirectoryWatchdog goodBoy = new DirectoryWatchdog(GameModel.CUSTOM_MAP_DIR);
-        goodBoy.setEventConsumer(eventList -> {
-            Logger.info("Custom map change detected, reload custom maps...");
-            xxlMapSelector.setCustomMapsUpToDate(false);
-            xxlMapSelector.loadCustomMaps();
-        });
-        goodBoy.startWatching();
 
         Logger.info("Assets: {}", THE_ASSETS.summary(Map.of(
                 Model3D.class,"3D models",

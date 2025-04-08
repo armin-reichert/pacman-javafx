@@ -1,5 +1,6 @@
 package de.amr.games.pacman.arcade.pacman_xxl;
 
+import de.amr.games.pacman.lib.DirectoryWatchdog;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameModel;
@@ -34,11 +35,24 @@ public class PacManXXL_MapSelector extends MapSelector {
 
     private List<WorldMap> builtinMaps = new ArrayList<>();
     private final ObservableList<WorldMap> customMapsByFile = FXCollections.observableList(new ArrayList<>());
+    private final DirectoryWatchdog goodBoy = new DirectoryWatchdog(GameModel.CUSTOM_MAP_DIR);
     private boolean customMapsUpToDate;
 
     public PacManXXL_MapSelector() {
         setMapSelectionMode(MapSelectionMode.CUSTOM_MAPS_FIRST);
         customMapsUpToDate = false;
+        goodBoy.setEventConsumer(eventList -> {
+            Logger.info("Custom map change(s) detected: {}",
+                eventList.stream()
+                    .map(watchEvent -> String.format("%s: '%s'", watchEvent.kind(), watchEvent.context()))
+                    .toList());
+            setCustomMapsUpToDate(false);
+            loadCustomMaps();
+        });
+    }
+
+    public void startWatchingCustomMaps() {
+        goodBoy.startWatching();
     }
 
     public void setCustomMapsUpToDate(boolean customMapsUpToDate) {
