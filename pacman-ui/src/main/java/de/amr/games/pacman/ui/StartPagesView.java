@@ -61,27 +61,29 @@ public class StartPagesView implements View {
     private final Carousel carousel;
     private StringExpression titleExpression;
 
+    private static class StartPagesCarousel extends Carousel {
+        @Override
+        protected Node createCarouselButton(Direction dir) {
+            int size = 48;
+            FontIcon icon = switch (dir) {
+                case LEFT -> FontIcon.of(FontAwesomeSolid.CHEVRON_CIRCLE_LEFT, size, Color.gray(0.69));
+                case RIGHT -> FontIcon.of(FontAwesomeSolid.CHEVRON_CIRCLE_RIGHT, size, Color.gray(0.69));
+                default -> throw new IllegalArgumentException("Illegal carousel button direction: %s".formatted(dir));
+            };
+            icon.setOpacity(0.2);
+            icon.setOnMouseEntered(e -> icon.setOpacity(0.8));
+            icon.setOnMouseExited(e -> icon.setOpacity(0.2));
+            var box = new BorderPane(icon);
+            box.setMaxHeight(size);
+            box.setMaxWidth(size);
+            box.setPadding(new Insets(5));
+            StackPane.setAlignment(box, dir == Direction.LEFT ? Pos.CENTER_LEFT : Pos.CENTER_RIGHT);
+            return box;
+        }
+    }
+
     public StartPagesView() {
-        carousel = new Carousel() {
-            @Override
-            protected Node createCarouselButton(Direction dir) {
-                int size = 48;
-                FontIcon icon = switch (dir) {
-                    case LEFT -> FontIcon.of(FontAwesomeSolid.CHEVRON_CIRCLE_LEFT, size, Color.LIGHTGRAY);
-                    case RIGHT -> FontIcon.of(FontAwesomeSolid.CHEVRON_CIRCLE_RIGHT, size, Color.LIGHTGRAY);
-                    default -> throw new IllegalArgumentException("Illegal carousel button direction: %s".formatted(dir));
-                };
-                icon.setOpacity(0.2);
-                icon.setOnMouseEntered(e -> icon.setOpacity(0.8));
-                icon.setOnMouseExited(e -> icon.setOpacity(0.2));
-                var box = new BorderPane(icon);
-                box.setMaxHeight(size);
-                box.setMaxWidth(size);
-                box.setPadding(new Insets(5));
-                StackPane.setAlignment(box, dir == Direction.LEFT ? Pos.CENTER_LEFT : Pos.CENTER_RIGHT);
-                return box;
-            }
-        };
+        carousel = new StartPagesCarousel();
         carousel.selectedIndexProperty().addListener((py,ov,nv) -> {
             int oldIndex = ov.intValue(), newIndex = nv.intValue();
             if (oldIndex != -1) {
