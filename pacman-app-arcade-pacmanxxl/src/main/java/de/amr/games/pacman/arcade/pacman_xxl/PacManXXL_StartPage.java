@@ -10,8 +10,8 @@ import de.amr.games.pacman.model.MapSelectionMode;
 import de.amr.games.pacman.ui.StartPage;
 import de.amr.games.pacman.uilib.Flyer;
 import de.amr.games.pacman.uilib.ResourceManager;
-import javafx.scene.Node;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
@@ -74,7 +74,7 @@ public class PacManXXL_StartPage implements StartPage, ResourceManager {
     }
 
     @Override
-    public Node root() {
+    public Region layoutRoot() {
         return root;
     }
 

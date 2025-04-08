@@ -5,39 +5,35 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade.ms_pacman;
 
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.GameAssets;
 import de.amr.games.pacman.ui.StartPage;
+import de.amr.games.pacman.ui.StartPagesView;
 import de.amr.games.pacman.uilib.Flyer;
 import de.amr.games.pacman.uilib.ResourceManager;
-import de.amr.games.pacman.uilib.Ufx;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.assertNotNull;
-import static de.amr.games.pacman.ui.Globals.THE_ASSETS;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
 
-public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage {
+public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage, ResourceManager {
 
     private final GameVariant gameVariant;
     private final Flyer flyer;
 
+    @Override
+    public Class<?> resourceRootClass() {
+        return ArcadeMsPacMan_StartPage.class;
+    }
+
     public ArcadeMsPacMan_StartPage(GameVariant gameVariant) {
         this.gameVariant = assertNotNull(gameVariant);
 
-        ResourceManager rm = this::getClass;
         flyer = new Flyer(
-            rm.loadImage("graphics/f1.jpg"),
-            rm.loadImage("graphics/f2.jpg")
+            loadImage("graphics/f1.jpg"),
+            loadImage("graphics/f2.jpg")
         );
         flyer.setUserData(GameVariant.MS_PACMAN);
         flyer.selectFlyerPage(0);
-
-        Node startButton = startButton();
-        getChildren().addAll(flyer, startButton);
 
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
@@ -45,6 +41,7 @@ public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage {
                 case UP -> flyer.prevFlyerPage();
             }
         });
+        getChildren().addAll(flyer, StartPagesView.createDefaultStartButton());
     }
 
     @Override
@@ -52,17 +49,8 @@ public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage {
         return gameVariant;
     }
 
-    private Node startButton() {
-        ResourceManager rm = () -> GameAssets.class;
-        Font startButtonFont = rm.loadFont("fonts/emulogic.ttf", 30);
-        Node btnStart = Ufx.createFancyButton(startButtonFont, THE_ASSETS.text("play_button"), THE_UI::showGameView);
-        btnStart.setTranslateY(-50);
-        StackPane.setAlignment(btnStart, Pos.BOTTOM_CENTER);
-        return btnStart;
-    }
-
     @Override
-    public Node root() {
+    public Region layoutRoot() {
         return this;
     }
 }

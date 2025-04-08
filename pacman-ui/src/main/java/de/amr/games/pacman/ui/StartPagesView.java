@@ -6,24 +6,37 @@ package de.amr.games.pacman.ui;
 
 import de.amr.games.pacman.uilib.Action;
 import de.amr.games.pacman.uilib.Carousel;
+import de.amr.games.pacman.uilib.Ufx;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import org.tinylog.Logger;
 
 import java.util.*;
 
 import static de.amr.games.pacman.Globals.assertNotNull;
-import static de.amr.games.pacman.ui.Globals.THE_CLOCK;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.*;
 
 /**
  * Carousel containing the start pages for the different game variants (XXL game variants share common start page).
  */
 public class StartPagesView implements View {
+
+    public static Node createDefaultStartButton() {
+        Node button = Ufx.createFancyButton(
+            THE_ASSETS.arcadeFontAtSize(30),
+            THE_ASSETS.text("play_button"),
+            THE_UI::showGameView);
+        button.setTranslateY(-50);
+        StackPane.setAlignment(button, Pos.BOTTOM_CENTER);
+        return button;
+    }
 
     private final Action actionSelectGamePage = new Action() {
         @Override
@@ -99,7 +112,7 @@ public class StartPagesView implements View {
     public void addStartPage(StartPage startPage) {
         assertNotNull(startPage);
         startPageList.add(startPage);
-        carousel.addSlide(startPage.root());
+        carousel.addSlide(startPage.layoutRoot());
         carousel.setNavigationVisible(carousel.numSlides() >= 2);
         Logger.info("Start page {} added", startPage.getClass().getSimpleName());
     }
