@@ -4,18 +4,21 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui;
 
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.uilib.Action;
 import de.amr.games.pacman.uilib.Carousel;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
+import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
 import java.util.*;
@@ -56,7 +59,26 @@ public class StartPagesView implements View {
     private StringExpression titleExpression;
 
     public StartPagesView() {
-        carousel = new Carousel();
+        carousel = new Carousel() {
+            @Override
+            protected Node createCarouselButton(Direction dir) {
+                int size = 48;
+                FontIcon icon = switch (dir) {
+                    case LEFT -> FontIcon.of(FontAwesomeSolid.CHEVRON_LEFT, size, Color.LIGHTGRAY);
+                    case RIGHT -> FontIcon.of(FontAwesomeSolid.CHEVRON_RIGHT, size, Color.LIGHTGRAY);
+                    default -> throw new IllegalArgumentException("Illegal carousel button direction: %s".formatted(dir));
+                };
+                icon.setOpacity(0.2);
+                icon.setOnMouseEntered(e -> icon.setOpacity(0.8));
+                icon.setOnMouseExited(e -> icon.setOpacity(0.2));
+                var box = new BorderPane(icon);
+                box.setMaxHeight(size);
+                box.setMaxWidth(size);
+                box.setPadding(new Insets(5));
+                StackPane.setAlignment(box, dir == Direction.LEFT ? Pos.CENTER_LEFT : Pos.CENTER_RIGHT);
+                return box;
+            }
+        };
         carousel.selectedIndexProperty().addListener((py,ov,nv) -> {
             int oldIndex = ov.intValue(), newIndex = nv.intValue();
             if (oldIndex != -1) {
@@ -70,7 +92,7 @@ public class StartPagesView implements View {
                 startPage.onEnter();
             }
         });
-        titleExpression = Bindings.createStringBinding(() -> "JavaFX Pac-Man Games");
+        setTitleExpression(Bindings.createStringBinding(() -> "JavaFX Pac-Man Games"));
         bindActions();
     }
 

@@ -18,6 +18,7 @@ open module de.amr.games.pacman.ui {
     requires org.kordamp.ikonli.javafx;
     // add icon pack modules
     requires org.kordamp.ikonli.fontawesome5;
+    requires java.desktop;
 
     exports de.amr.games.pacman.ui.dashboard;
     exports de.amr.games.pacman.ui.input;
