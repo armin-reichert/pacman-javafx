@@ -12,6 +12,8 @@ import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.util.Map;
+
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.ui.Globals.*;
 
@@ -27,8 +29,7 @@ public class ArcadeMsPacMan_App extends Application {
     public void start(Stage stage) {
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
         double height = 0.8 * screenSize.getHeight(), width = 1.2 * height;
-        createUIAndSupport3D(true);
-        THE_UI_CONFIGS.set(GameVariant.MS_PACMAN, new ArcadeMsPacMan_UIConfig(THE_ASSETS));
+        createUIAndSupport3D(true, Map.of(GameVariant.MS_PACMAN, new ArcadeMsPacMan_UIConfig(THE_ASSETS)));
         THE_UI.build(stage, new Dimension2D(width, height));
         THE_UI.addStartPage(new ArcadeMsPacMan_StartPage(GameVariant.MS_PACMAN));
         THE_UI.buildDashboard(

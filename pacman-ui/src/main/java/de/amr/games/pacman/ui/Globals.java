@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui;
 
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._3d.scene3d.Perspective;
 import de.amr.games.pacman.ui.input.Joypad;
 import de.amr.games.pacman.ui.sound.GameSound;
@@ -17,6 +18,8 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import java.util.Map;
+
 import static de.amr.games.pacman.Globals.TS;
 
 public class Globals {
@@ -29,11 +32,15 @@ public class Globals {
     public static final GameUIConfigManager THE_UI_CONFIGS = new GameUIConfigManager();
     public static GameUI THE_UI;
 
-    public static void createUIAndSupport3D(boolean support3D) {
+    public static void createUIAndSupport3D(
+            boolean support3D,
+            Map<GameVariant, GameUIConfig> configMap)
+    {
         THE_UI = new PacManGamesUI();
         if (support3D) {
             THE_ASSETS.addAssets3D();
         }
+        configMap.forEach((THE_UI_CONFIGS::set));
     }
 
     public static final Font DEBUG_TEXT_FONT           = Font.font("Sans", FontWeight.BOLD, 18);
