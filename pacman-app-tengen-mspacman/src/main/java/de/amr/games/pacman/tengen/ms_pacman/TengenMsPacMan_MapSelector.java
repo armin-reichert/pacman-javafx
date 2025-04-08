@@ -8,7 +8,6 @@ import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.MapSelector;
-import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
 import org.tinylog.Logger;
 
 import java.io.IOException;
@@ -19,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.nes.NES_ColorScheme.*;
-import static de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory.*;
+import static de.amr.games.pacman.tengen.ms_pacman.MapCategory.*;
 
 public class TengenMsPacMan_MapSelector extends MapSelector {
 

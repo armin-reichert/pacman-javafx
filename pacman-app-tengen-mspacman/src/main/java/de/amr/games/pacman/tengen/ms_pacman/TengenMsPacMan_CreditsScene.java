@@ -7,7 +7,6 @@ package de.amr.games.pacman.tengen.ms_pacman;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.nes.JoypadButtonID;
-import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;

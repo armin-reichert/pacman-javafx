@@ -10,10 +10,6 @@ import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.nes.JoypadButtonID;
 import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.tengen.ms_pacman.rendering2d.ClapperboardAnimation;
-import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_PacAnimations;
-import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
-import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.uilib.SpriteAnimation;
 import javafx.scene.media.MediaPlayer;
@@ -25,8 +21,8 @@ import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
-import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.BLUE_BAG_SPRITE;
-import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.JUNIOR_PAC_SPRITE;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.BLUE_BAG_SPRITE;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.JUNIOR_PAC_SPRITE;
 import static de.amr.games.pacman.ui.Globals.*;
 
 /**

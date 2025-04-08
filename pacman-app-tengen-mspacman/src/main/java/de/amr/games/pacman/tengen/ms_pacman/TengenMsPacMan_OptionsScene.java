@@ -8,8 +8,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.nes.JoypadButtonID;
-import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
-import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.uilib.Action;
 import de.amr.games.pacman.uilib.Keyboard;
@@ -22,7 +20,7 @@ import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction.START_PLAYING;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
-import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.CONTINUES_SPRITES;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.CONTINUES_SPRITES;
 import static de.amr.games.pacman.ui.Globals.*;
 import static de.amr.games.pacman.uilib.Keyboard.alt;
 

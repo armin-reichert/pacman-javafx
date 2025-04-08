@@ -9,7 +9,6 @@ import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.nes.JoypadButtonID;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.Score;
-import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui._3d.level.Bonus3D;
 import de.amr.games.pacman.ui._3d.scene3d.PlayScene3D;

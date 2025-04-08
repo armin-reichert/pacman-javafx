@@ -17,7 +17,6 @@ import de.amr.games.pacman.model.Portal;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import de.amr.games.pacman.steering.Steering;
-import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
 import org.tinylog.Logger;
 
 import java.io.File;

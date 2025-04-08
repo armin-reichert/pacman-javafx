@@ -15,10 +15,6 @@ import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_GhostAnimations;
-import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_PacAnimations;
-import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
-import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
@@ -33,7 +29,7 @@ import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_GHOST_NORMAL
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
-import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.MS_PAC_MAN_TITLE_SPRITE;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.MS_PAC_MAN_TITLE_SPRITE;
 import static de.amr.games.pacman.ui.Globals.*;
 
 /**

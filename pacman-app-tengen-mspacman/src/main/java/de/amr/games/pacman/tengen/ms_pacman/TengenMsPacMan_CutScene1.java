@@ -11,7 +11,6 @@ import de.amr.games.pacman.lib.nes.JoypadButtonID;
 import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.tengen.ms_pacman.rendering2d.*;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -23,7 +22,7 @@ import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_GHOST_NORMAL
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
-import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.HEART_SPRITE;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.HEART_SPRITE;
 import static de.amr.games.pacman.ui.Globals.*;
 
 /**

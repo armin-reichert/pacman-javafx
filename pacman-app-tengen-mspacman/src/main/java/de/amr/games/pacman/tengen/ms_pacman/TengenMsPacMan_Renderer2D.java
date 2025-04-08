@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.tengen.ms_pacman.rendering2d;
+package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
@@ -15,12 +15,6 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.ScoreManager;
 import de.amr.games.pacman.model.actors.*;
-import de.amr.games.pacman.tengen.ms_pacman.PacBooster;
-import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
-import de.amr.games.pacman.tengen.ms_pacman.maps.ColoredMapImage;
-import de.amr.games.pacman.tengen.ms_pacman.maps.ColoredMapSet;
-import de.amr.games.pacman.tengen.ms_pacman.maps.MapCategory;
-import de.amr.games.pacman.tengen.ms_pacman.maps.MapRepository;
 import de.amr.games.pacman.ui._2d.GameRenderer;
 import de.amr.games.pacman.ui._2d.SpriteAnimationSet;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
@@ -40,8 +34,8 @@ import static de.amr.games.pacman.model.actors.ActorAnimations.*;
 import static de.amr.games.pacman.model.actors.Bonus.STATE_EATEN;
 import static de.amr.games.pacman.model.actors.Bonus.STATE_EDIBLE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
-import static de.amr.games.pacman.tengen.ms_pacman.maps.MapRepository.strangeMap15Sprite;
-import static de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet.*;
+import static de.amr.games.pacman.tengen.ms_pacman.MapRepository.strangeMap15Sprite;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.*;
 import static de.amr.games.pacman.ui.Globals.*;
 import static de.amr.games.pacman.ui._2d.GameSpriteSheet.NO_SPRITE;
 import static java.util.function.Predicate.not;
