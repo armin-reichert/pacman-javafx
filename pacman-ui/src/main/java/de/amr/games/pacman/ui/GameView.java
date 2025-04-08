@@ -230,7 +230,7 @@ public class GameView implements View {
     }
 
     public void updateGameScene(GameUIConfig gameUIConfig, boolean reloadCurrent) {
-        final GameScene nextGameScene = gameUIConfig.selectGameScene();
+        final GameScene nextGameScene = gameUIConfig.selectGameScene(THE_GAME_CONTROLLER);
         if (nextGameScene == null) {
             throw new IllegalStateException("Could not determine next game scene");
         }

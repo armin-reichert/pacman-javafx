@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
@@ -29,7 +30,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.ui.Globals.PY_3D_ENABLED;
 
@@ -157,13 +157,13 @@ public class ArcadePacMan_UIConfig implements GameUIConfig, ResourceManager {
     }
 
     @Override
-    public GameScene selectGameScene() {
-        String sceneID = switch (THE_GAME_CONTROLLER.state()) {
+    public GameScene selectGameScene(GameController gameController) {
+        String sceneID = switch (gameController.state()) {
             case GameState.BOOT               -> "BootScene";
             case GameState.SETTING_OPTIONS    -> "StartScene";
             case GameState.INTRO              -> "IntroScene";
-            case GameState.INTERMISSION       -> "CutScene" + THE_GAME_CONTROLLER.game().level().map(GameLevel::cutSceneNumber).orElseThrow();
-            case GameState.TESTING_CUT_SCENES -> "CutScene" + THE_GAME_CONTROLLER.state().<Integer>getProperty("intermissionTestNumber");
+            case GameState.INTERMISSION       -> "CutScene" + gameController.game().level().map(GameLevel::cutSceneNumber).orElseThrow();
+            case GameState.TESTING_CUT_SCENES -> "CutScene" + gameController.state().<Integer>getProperty("intermissionTestNumber");
             default -> PY_3D_ENABLED.get() ?  "PlayScene3D" : "PlayScene2D";
         };
         return scenesByID.get(sceneID);

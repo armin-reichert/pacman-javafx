@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.ui._2d.GameRenderer;
@@ -26,7 +27,7 @@ public interface GameUIConfig {
     Stream<GameScene> gameScenes();
     boolean gameSceneHasID(GameScene gameScene, String sceneID);
     default boolean isGameCanvasDecorated() { return true; }
-    GameScene selectGameScene();
+    GameScene selectGameScene(GameController gameController);
     GameSpriteSheet spriteSheet();
     WorldMapColorScheme worldMapColoring(WorldMap worldMap);
 
