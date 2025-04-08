@@ -15,7 +15,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -64,8 +67,8 @@ public class StartPagesView implements View {
             protected Node createCarouselButton(Direction dir) {
                 int size = 48;
                 FontIcon icon = switch (dir) {
-                    case LEFT -> FontIcon.of(FontAwesomeSolid.CHEVRON_LEFT, size, Color.LIGHTGRAY);
-                    case RIGHT -> FontIcon.of(FontAwesomeSolid.CHEVRON_RIGHT, size, Color.LIGHTGRAY);
+                    case LEFT -> FontIcon.of(FontAwesomeSolid.CHEVRON_CIRCLE_LEFT, size, Color.LIGHTGRAY);
+                    case RIGHT -> FontIcon.of(FontAwesomeSolid.CHEVRON_CIRCLE_RIGHT, size, Color.LIGHTGRAY);
                     default -> throw new IllegalArgumentException("Illegal carousel button direction: %s".formatted(dir));
                 };
                 icon.setOpacity(0.2);
