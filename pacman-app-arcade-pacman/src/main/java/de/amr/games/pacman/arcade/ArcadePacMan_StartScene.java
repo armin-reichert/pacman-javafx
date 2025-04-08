@@ -24,7 +24,7 @@ import static de.amr.games.pacman.uilib.Keyboard.naked;
 /**
  * Scene shown after credit has been added and where game can be started.
  */
-public class StartScene extends GameScene2D {
+public class ArcadePacMan_StartScene extends GameScene2D {
 
     public static final Color CYAN = Color.web(Arcade.Palette.CYAN);
     public static final Color ORANGE = Color.web(Arcade.Palette.ORANGE);

@@ -38,7 +38,7 @@ import static de.amr.games.pacman.ui.Globals.*;
  *
  * @author Armin Reichert
  */
-public class IntroScene extends GameScene2D {
+public class ArcadePacMan_IntroScene extends GameScene2D {
 
     public static final Color CYAN = Color.web(Arcade.Palette.CYAN);
     public static final Color ORANGE = Color.web(Arcade.Palette.ORANGE);
@@ -53,7 +53,7 @@ public class IntroScene extends GameScene2D {
     static final float GHOST_FRIGHTENED_SPEED = 0.6f;
     static final int LEFT_TILE_X = 4;
 
-    private final FiniteStateMachine<SceneState, IntroScene> sceneController;
+    private final FiniteStateMachine<SceneState, ArcadePacMan_IntroScene> sceneController;
 
     private Pulse blinking;
     private Pac pacMan;
@@ -66,11 +66,11 @@ public class IntroScene extends GameScene2D {
     private int ghostIndex;
     private long ghostKilledTime;
 
-    public IntroScene() {
+    public ArcadePacMan_IntroScene() {
         sceneController = new FiniteStateMachine<>(SceneState.values()) {
             @Override
-            public IntroScene context() {
-                return IntroScene.this;
+            public ArcadePacMan_IntroScene context() {
+                return ArcadePacMan_IntroScene.this;
             }
         };
     }
@@ -234,11 +234,11 @@ public class IntroScene extends GameScene2D {
         gr.ctx().restore();
     }
 
-    private enum SceneState implements FsmState<IntroScene> {
+    private enum SceneState implements FsmState<ArcadePacMan_IntroScene> {
 
         STARTING {
             @Override
-            public void onUpdate(IntroScene intro) {
+            public void onUpdate(ArcadePacMan_IntroScene intro) {
                 if (timer.tickCount() == 3) {
                     intro.titleVisible = true;
                 } else if (timer.atSecond(1)) {
@@ -249,7 +249,7 @@ public class IntroScene extends GameScene2D {
 
         PRESENTING_GHOSTS {
             @Override
-            public void onUpdate(IntroScene intro) {
+            public void onUpdate(ArcadePacMan_IntroScene intro) {
                 if (timer.tickCount() == 1) {
                     intro.ghostImageVisible[intro.ghostIndex] = true;
                 } else if (timer.atSecond(1.0)) {
@@ -269,12 +269,12 @@ public class IntroScene extends GameScene2D {
 
         SHOWING_POINTS {
             @Override
-            public void onEnter(IntroScene intro) {
+            public void onEnter(ArcadePacMan_IntroScene intro) {
                 intro.blinking.stop();
             }
 
             @Override
-            public void onUpdate(IntroScene intro) {
+            public void onUpdate(ArcadePacMan_IntroScene intro) {
                 if (timer.atSecond(1)) {
                     intro.sceneController.changeState(CHASING_PAC);
                 }
@@ -283,7 +283,7 @@ public class IntroScene extends GameScene2D {
 
         CHASING_PAC {
             @Override
-            public void onEnter(IntroScene intro) {
+            public void onEnter(ArcadePacMan_IntroScene intro) {
                 timer.restartIndefinitely();
                 intro.pacMan.setPosition(TS * 36, TS * 20);
                 intro.pacMan.setMoveDir(Direction.LEFT);
@@ -303,7 +303,7 @@ public class IntroScene extends GameScene2D {
             }
 
             @Override
-            public void onUpdate(IntroScene intro) {
+            public void onUpdate(ArcadePacMan_IntroScene intro) {
                 if (timer.atSecond(1)) {
                     intro.blinking.start();
                 }
@@ -331,7 +331,7 @@ public class IntroScene extends GameScene2D {
 
         CHASING_GHOSTS {
             @Override
-            public void onEnter(IntroScene intro) {
+            public void onEnter(ArcadePacMan_IntroScene intro) {
                 timer.restartIndefinitely();
                 intro.ghostKilledTime = timer.tickCount();
                 intro.pacMan.setMoveDir(Direction.RIGHT);
@@ -340,7 +340,7 @@ public class IntroScene extends GameScene2D {
             }
 
             @Override
-            public void onUpdate(IntroScene intro) {
+            public void onUpdate(ArcadePacMan_IntroScene intro) {
                 if (Stream.of(intro.ghosts).allMatch(ghost -> ghost.inState(EATEN))) {
                     intro.pacMan.hide();
                     intro.sceneController.changeState(READY_TO_PLAY);
@@ -386,7 +386,7 @@ public class IntroScene extends GameScene2D {
 
         READY_TO_PLAY {
             @Override
-            public void onUpdate(IntroScene intro) {
+            public void onUpdate(ArcadePacMan_IntroScene intro) {
                 if (timer.atSecond(0.75)) {
                     intro.ghosts[3].hide();
                     if (!THE_GAME_CONTROLLER.game().canStartNewGame()) {

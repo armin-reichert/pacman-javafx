@@ -10,25 +10,29 @@ import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui._2d.GameScene2D;
+import de.amr.games.pacman.uilib.SpriteAnimation;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
+import static de.amr.games.pacman.model.actors.ActorAnimations.*;
 import static de.amr.games.pacman.ui.Globals.*;
 
 /**
  * @author Armin Reichert
  */
-public class CutScene3 extends GameScene2D {
+public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     static final short ANIMATION_START = 120;
 
     private int frame;
     private Pac pac;
     private Ghost blinky;
+    private SpriteAnimation blinkyNormal;
+    private SpriteAnimation blinkyStretching;
+    private SpriteAnimation blinkyDamaged;
     private MediaPlayer music;
 
     @Override
@@ -37,13 +41,20 @@ public class CutScene3 extends GameScene2D {
 
         pac = new Pac();
         blinky = ArcadePacMan_GameModel.blinky();
+        blinky.setSpeed(0);
+        blinky.hide();
 
-        music = THE_SOUND.makeSoundLoop("intermission");
-        music.setCycleCount(2);
+        music = THE_SOUND.makeSound("intermission");
+        music.setCycleCount(1);
 
         var spriteSheet = (ArcadePacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
         pac.setAnimations(new PacAnimations(spriteSheet));
-        blinky.setAnimations(new GhostAnimations(spriteSheet, blinky.id()));
+
+        var blinkyAnimations = new GhostAnimations(spriteSheet, blinky.id());
+        blinkyNormal = blinkyAnimations.animation(ANIM_GHOST_NORMAL);
+        blinkyStretching = blinkyAnimations.animation(ANIM_BLINKY_STRETCHED);
+        blinkyDamaged = blinkyAnimations.animation(GhostAnimations.ANIM_BLINKY_DAMAGED);
+        blinky.setAnimations(blinkyAnimations);
 
         frame = -1;
     }
@@ -61,28 +72,41 @@ public class CutScene3 extends GameScene2D {
             blinky.move();
         }
         switch (frame) {
-            case ANIMATION_START -> {
-                music.play();
-                pac.centerOverTile(vec_2i(29, 20));
+            case ANIMATION_START -> music.play();
+            case ANIMATION_START + 1 -> blinkyStretching.setFrameIndex(0); // Show nail
+            case ANIMATION_START + 25 -> {
+                pac.placeAtTile(28, 20, 0, 0);
                 pac.setMoveDir(Direction.LEFT);
-                pac.setSpeed(1.25f);
-                pac.show();
+                pac.setSpeed(1.15f);
                 pac.selectAnimation(ANIM_PAC_MUNCHING);
                 pac.startAnimation();
-                blinky.centerOverTile(vec_2i(35, 20));
+                pac.show();
+            }
+            case ANIMATION_START + 111 -> {
+                blinky.placeAtTile(28, 20, -3, 0);
                 blinky.setMoveAndWishDir(Direction.LEFT);
                 blinky.setSpeed(1.25f);
+                blinky.selectAnimation(ANIM_GHOST_NORMAL);
+                blinky.startAnimation();
                 blinky.show();
-                blinky.selectAnimation(GhostAnimations.ANIM_BLINKY_PATCHED);
-                blinky.startAnimation();
             }
-            case ANIMATION_START + 400 -> {
-                blinky.centerOverTile(vec_2i(-1, 20));
-                blinky.setMoveAndWishDir(Direction.RIGHT);
-                blinky.selectAnimation(GhostAnimations.ANIM_BLINKY_NAKED);
-                blinky.startAnimation();
+            case ANIMATION_START + 194 -> {
+                blinky.setSpeed(0.09f);
+                blinkyNormal.setFrameTicks(32);
             }
-            case ANIMATION_START + 700 -> THE_GAME_CONTROLLER.terminateCurrentState();
+            case ANIMATION_START + 198,
+                 ANIMATION_START + 226,
+                 ANIMATION_START + 248 -> blinkyStretching.nextFrame(); // Stretched S-M-L
+            case ANIMATION_START + 328 -> {
+                blinky.setSpeed(0);
+                blinkyStretching.nextFrame(); // Rapture
+            }
+            case ANIMATION_START + 329 -> blinky.selectAnimation(GhostAnimations.ANIM_BLINKY_DAMAGED); // Eyes up
+            case ANIMATION_START + 389 -> blinkyDamaged.nextFrame(); // Eyes right-down
+            case ANIMATION_START + 508 -> {
+                blinky.setVisible(false);
+                THE_GAME_CONTROLLER.terminateCurrentState();
+            }
             default -> {}
         }
     }
@@ -100,8 +124,9 @@ public class CutScene3 extends GameScene2D {
             Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
             gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
         }
-        gr.drawAnimatedActor(pac);
+        gr.drawSpriteScaled(blinkyStretching.currentSprite(), tiles_to_px(14), tiles_to_px(19) + 3);
         gr.drawAnimatedActor(blinky);
+        gr.drawAnimatedActor(pac);
         gr.drawLevelCounter(0, game().levelCounter(), sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 

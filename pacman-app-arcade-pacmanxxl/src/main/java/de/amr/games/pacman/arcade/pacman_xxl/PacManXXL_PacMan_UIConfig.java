@@ -97,13 +97,13 @@ public class PacManXXL_PacMan_UIConfig implements GameUIConfig {
         THE_ASSETS.store("pacman_xxl.audio.option.value_changed",      rm.loadAudioClip("sound/ms-select2.wav"));
 
         scenesByID.put("BootScene",   new ArcadeBootScene2D());
-        scenesByID.put("IntroScene",  new IntroScene());
-        scenesByID.put("StartScene",  new StartScene());
+        scenesByID.put("IntroScene",  new ArcadePacMan_IntroScene());
+        scenesByID.put("StartScene",  new ArcadePacMan_StartScene());
         scenesByID.put("PlayScene2D", new ArcadePlayScene2D());
         scenesByID.put("PlayScene3D", new PlayScene3D());
-        scenesByID.put("CutScene1",   new CutScene1());
-        scenesByID.put("CutScene2",   new CutScene2());
-        scenesByID.put("CutScene3",   new CutScene3());
+        scenesByID.put("CutScene1",   new ArcadePacMan_CutScene1());
+        scenesByID.put("CutScene2",   new ArcadePacMan_CutScene2());
+        scenesByID.put("CutScene3",   new ArcadePacMan_CutScene3());
     }
 
     @Override
