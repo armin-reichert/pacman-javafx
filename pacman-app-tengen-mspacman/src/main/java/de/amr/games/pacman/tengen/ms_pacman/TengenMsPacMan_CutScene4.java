@@ -1,4 +1,4 @@
-package de.amr.games.pacman.tengen.ms_pacman.scene;
+package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.controller.GameState;

@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.tengen.ms_pacman.scene.SceneDisplayMode;
 import de.amr.games.pacman.uilib.Action;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;

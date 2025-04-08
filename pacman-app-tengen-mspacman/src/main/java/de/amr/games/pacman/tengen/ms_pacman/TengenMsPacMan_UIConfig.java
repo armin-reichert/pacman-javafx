@@ -14,7 +14,6 @@ import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_GhostAnim
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_PacAnimations;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_SpriteSheet;
-import de.amr.games.pacman.tengen.ms_pacman.scene.*;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui.GameUIConfig;
 import de.amr.games.pacman.ui._2d.GameScene2D;

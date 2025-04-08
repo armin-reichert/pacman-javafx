@@ -2,15 +2,13 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.tengen.ms_pacman.scene;
+package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.nes.JoypadButtonID;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.Score;
-import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction;
-import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.rendering2d.TengenMsPacMan_Renderer2D;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui._3d.level.Bonus3D;
