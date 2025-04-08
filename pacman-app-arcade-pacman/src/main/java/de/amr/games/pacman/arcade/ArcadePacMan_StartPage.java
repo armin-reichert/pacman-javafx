@@ -17,30 +17,27 @@ import static de.amr.games.pacman.Globals.assertNotNull;
 
 public class ArcadePacMan_StartPage extends StackPane implements StartPage, ResourceManager {
 
-    private final Flyer flyer;
-
     @Override
     public Class<?> resourceRootClass() {
         return ArcadePacMan_StartPage.class;
     }
 
     public ArcadePacMan_StartPage(GameVariant gameVariant) {
-        assertNotNull(gameVariant);
-        flyer = new Flyer(loadImage("graphics/f1.jpg"), loadImage("graphics/f2.jpg"), loadImage("graphics/f3.jpg"));
-        flyer.setUserData(GameVariant.PACMAN);
+        setUserData(assertNotNull(gameVariant));
+        var flyer = new Flyer(loadImage("graphics/f1.jpg"), loadImage("graphics/f2.jpg"), loadImage("graphics/f3.jpg"));
         flyer.selectFlyerPage(0);
-        getChildren().addAll(flyer, StartPagesView.createDefaultStartButton());
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
                 case DOWN -> flyer.nextFlyerPage();
                 case UP -> flyer.prevFlyerPage();
             }
         });
+        getChildren().addAll(flyer, StartPagesView.createDefaultStartButton());
     }
 
     @Override
     public GameVariant currentGameVariant() {
-        return (GameVariant) flyer.getUserData();
+        return (GameVariant) getUserData();
     }
 
     @Override
