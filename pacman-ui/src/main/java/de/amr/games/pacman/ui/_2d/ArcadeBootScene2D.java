@@ -21,9 +21,6 @@ import static de.amr.games.pacman.ui.Globals.*;
 public class ArcadeBootScene2D extends GameScene2D {
 
     @Override
-    public void bindActions() {}
-
-    @Override
     public void doInit() {
         game().setScoreVisible(false);
     }

@@ -53,6 +53,9 @@ public abstract class GameScene2D implements GameScene {
         return actionBindings;
     }
 
+    @Override
+    public void bindActions() {}
+
     public FloatProperty scalingProperty() { return scalingPy; }
     public void setScaling(double scaling) { scalingPy.set((float) scaling); }
     public float scaling() { return scalingPy.get(); }

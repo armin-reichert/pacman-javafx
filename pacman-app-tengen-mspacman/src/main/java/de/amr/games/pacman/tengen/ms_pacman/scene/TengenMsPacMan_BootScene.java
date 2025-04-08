@@ -40,9 +40,6 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     private float tengenPresentsSpeed;
 
     @Override
-    public void bindActions() {}
-
-    @Override
     public void doInit() {
         game().setScoreVisible(false);
         t = -1;

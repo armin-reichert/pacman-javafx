@@ -52,9 +52,6 @@ public class CutScene1 extends GameScene2D {
     private ClapperboardAnimation clapperboardAnimation;
 
     @Override
-    public void bindActions() {}
-
-    @Override
     public void doInit() {
         game().setScoreVisible(true);
 

@@ -48,9 +48,6 @@ public class ArcadePlayScene2D extends GameScene2D {
     private LevelCompleteAnimation levelCompleteAnimation;
 
     @Override
-    public void bindActions() {}
-
-    @Override
     protected void doInit() {
         game().setScoreVisible(true);
         bindDefaultArcadeActions();
