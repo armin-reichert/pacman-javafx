@@ -47,6 +47,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             "PRESS ENTER TO START"
         );
         setOnStart(() -> {
+            Logger.info("Start action from option menu triggered");
             if (state.gameVariant == GameVariant.PACMAN_XXL || state.gameVariant == GameVariant.MS_PACMAN_XXL) {
                 GameModel game = THE_GAME_CONTROLLER.game(state.gameVariant);
                 game.setCutScenesEnabled(state.cutScenesEnabled);

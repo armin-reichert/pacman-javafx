@@ -124,7 +124,7 @@ public class StartPagesView implements View {
         bind(carousel::showPreviousSlide, KeyCode.LEFT);
         bind(carousel::showNextSlide,     KeyCode.RIGHT);
         bind(actionSelectGamePage,        KeyCode.ENTER);
-        bind(GameAction.TOGGLE_PAUSED, KeyCode.P);
+        bind(GameAction.TOGGLE_PAUSED,    KeyCode.P);
     }
 
     public void setTitleExpression(StringExpression stringExpression) {

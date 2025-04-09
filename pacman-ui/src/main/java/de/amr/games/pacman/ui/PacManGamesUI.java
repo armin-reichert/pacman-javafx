@@ -57,7 +57,7 @@ public class PacManGamesUI implements GameUI {
 
     public PacManGamesUI() {
         THE_CLOCK.setPauseableAction(this::doSimulationStepAndUpdateGameScene);
-        THE_CLOCK.setPermanentAction(() -> currentView().update());
+        THE_CLOCK.setPermanentAction(this::updateCurrentView);
         viewPy.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
     }
 
@@ -65,6 +65,16 @@ public class PacManGamesUI implements GameUI {
         try {
             THE_GAME_CONTROLLER.update();
             THE_GAME_CONTROLLER.game().eventLog().print(THE_CLOCK.tickCount());
+        } catch (Exception x) {
+            Logger.error(x);
+            Logger.error("SOMETHING VERY BAD HAPPENED DURING SIMULATION STEP!");
+            showFlashMessageSec(10, "KA-TA-STROPHE!");
+        }
+    }
+
+    private void updateCurrentView() {
+        try {
+            currentView().update();
         } catch (Exception x) {
             Logger.error(x);
             Logger.error("SOMETHING VERY BAD HAPPENED DURING SIMULATION STEP!");
