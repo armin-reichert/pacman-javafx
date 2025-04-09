@@ -47,8 +47,9 @@ public class Globals {
             try {
                 GameUIConfig config = configClass.getDeclaredConstructor(GameAssets.class).newInstance(THE_ASSETS);
                 THE_UI_CONFIGS.set(gameVariant, config);
+                Logger.info("Game variant {} uses UI configuration: {}", gameVariant, config);
             } catch (Exception x) {
-                Logger.error("Could not create configuration of class {}", configClass);
+                Logger.error("Could not create UI configuration of class {}", configClass);
             }
         });
     }

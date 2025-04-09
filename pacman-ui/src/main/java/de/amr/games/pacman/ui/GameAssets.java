@@ -10,6 +10,7 @@ import de.amr.games.pacman.uilib.ResourceManager;
 import de.amr.games.pacman.uilib.Ufx;
 import de.amr.games.pacman.uilib.model3D.Model3D;
 import javafx.scene.text.Font;
+import org.tinylog.Logger;
 
 import java.util.ResourceBundle;
 
@@ -59,6 +60,8 @@ public class GameAssets extends AssetStorage implements ResourceManager {
 
         pickerForGameOverTexts = Picker.fromBundle(bundles().getLast(), "game.over");
         pickerForLevelCompleteTexts = Picker.fromBundle(bundles().getLast(), "level.complete");
+
+        Logger.info("3D assets loaded");
     }
 
     public Font arcadeFontAtSize(float size) {
