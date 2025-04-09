@@ -27,15 +27,89 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     boolean cutScenesEnabled;
     MapSelectionMode mapOrder;
 
-    private final MenuEntry<GameVariant> entryGameVariant;
-    private final MenuEntry<Boolean> entryPlay3D;
-    private final MenuEntry<Boolean> entryCutScenesEnabled;
-    private final MenuEntry<MapSelectionMode> entryMapOrder;
-    private final AnimationTimer drawingLoop;
+    private final MenuEntry<GameVariant> entryGameVariant = new MenuEntry<>("GAME VARIANT",
+            GameVariant.PACMAN_XXL, GameVariant.MS_PACMAN_XXL) {
+
+        @Override
+        protected void onValueChanged(int index) {
+            gameVariant = selectedValue();
+            logMenuState();
+        }
+
+        @Override
+        public String selectedValueText() {
+            return switch (selectedValue()) {
+                case PACMAN_XXL -> "PAC-MAN XXL";
+                case MS_PACMAN_XXL -> "MS.PAC-MAN XXL";
+                default -> "";
+            };
+        }
+    };
+
+    private final MenuEntry<Boolean> entryPlay3D = new MenuEntry<>("SCENE DISPLAY", true, false) {
+
+        @Override
+        protected void onValueChanged(int index) {
+            play3D = selectedValue();
+            PY_3D_ENABLED.set(play3D);
+            logMenuState();
+        }
+
+        @Override
+        public String selectedValueText() {
+            return selectedValue() ? "3D" : "2D";
+        }
+    };
+
+    private final MenuEntry<Boolean> entryCutScenesEnabled = new MenuEntry<>("CUTSCENES", true, false) {
+
+        @Override
+        protected void onValueChanged(int index) {
+            cutScenesEnabled = selectedValue();
+            logMenuState();
+        }
+
+        @Override
+        public String selectedValueText() {
+            return selectedValue() ? "ON" : "OFF";
+        }
+    };
+
+    private final MenuEntry<MapSelectionMode> entryMapOrder = new MenuEntry<>("MAP ORDER",
+            MapSelectionMode.CUSTOM_MAPS_FIRST, MapSelectionMode.ALL_RANDOM) {
+
+        @Override
+        protected void onValueChanged(int index) {
+            if (enabled) {
+                mapOrder = selectedValue();
+            }
+            logMenuState();
+        }
+
+        @Override
+        public String selectedValueText() {
+            if (!enabled) {
+                return "NO CUSTOM MAPS!";
+            }
+            return switch (selectedValue()) {
+                case CUSTOM_MAPS_FIRST -> "CUSTOM MAPS FIRST";
+                case ALL_RANDOM -> "RANDOM ORDER";
+                default -> "";
+            };
+        }
+    };
+
+    private final AnimationTimer drawingLoop = new AnimationTimer() {
+        @Override
+        public void handle(long now) { draw(); }
+    };
 
     public PacManXXL_OptionMenu(int tilesX, int tilesY) {
         super(tilesX, tilesY);
-
+        addEntry(entryGameVariant);
+        addEntry(entryPlay3D);
+        addEntry(entryCutScenesEnabled);
+        addEntry(entryMapOrder);
         setBackgroundFill(Color.web("#0C1568"));
         setTitle("Pac-Man XXL");
         setCommandTexts(
@@ -56,82 +130,6 @@ public class PacManXXL_OptionMenu extends OptionMenu {
                 Logger.error("Game variant {} is not allowed for XXL game", gameVariant);
             }
         });
-
-        drawingLoop = new AnimationTimer() {
-            @Override
-            public void handle(long now) { draw(); }
-        };
-
-        entryGameVariant = new MenuEntry<>("GAME VARIANT", GameVariant.PACMAN_XXL, GameVariant.MS_PACMAN_XXL) {
-            @Override
-            protected void onValueChanged(int index) {
-                gameVariant = selectedValue();
-                logMenuState();
-            }
-
-            @Override
-            public String selectedValueText() {
-                return switch (selectedValue()) {
-                    case PACMAN_XXL -> "PAC-MAN XXL";
-                    case MS_PACMAN_XXL -> "MS.PAC-MAN XXL";
-                    default -> "";
-                };
-            }
-        };
-
-        entryPlay3D = new MenuEntry<>("SCENE DISPLAY", true, false) {
-            @Override
-            protected void onValueChanged(int index) {
-                play3D = selectedValue();
-                PY_3D_ENABLED.set(play3D);
-                logMenuState();
-            }
-
-            @Override
-            public String selectedValueText() {
-                return selectedValue() ? "3D" : "2D";
-            }
-        };
-
-        entryCutScenesEnabled = new MenuEntry<>("CUTSCENES", true, false) {
-            @Override
-            protected void onValueChanged(int index) {
-                cutScenesEnabled = selectedValue();
-                logMenuState();
-            }
-
-            @Override
-            public String selectedValueText() {
-                return selectedValue() ? "ON" : "OFF";
-            }
-        };
-
-        entryMapOrder = new MenuEntry<>("MAP ORDER", MapSelectionMode.CUSTOM_MAPS_FIRST, MapSelectionMode.ALL_RANDOM) {
-            @Override
-            protected void onValueChanged(int index) {
-                if (enabled) {
-                    mapOrder = selectedValue();
-                }
-                logMenuState();
-            }
-
-            @Override
-            public String selectedValueText() {
-                if (!enabled) {
-                    return "NO CUSTOM MAPS!";
-                }
-                return switch (selectedValue()) {
-                    case CUSTOM_MAPS_FIRST -> "CUSTOM MAPS FIRST";
-                    case ALL_RANDOM -> "RANDOM ORDER";
-                    default -> "";
-                };
-            }
-        };
-
-        addEntry(entryGameVariant);
-        addEntry(entryPlay3D);
-        addEntry(entryCutScenesEnabled);
-        addEntry(entryMapOrder);
     }
 
     @Override
@@ -183,7 +181,6 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     }
 
     private void logMenuState() {
-        Logger.info("Menu state: gameVariant={}, play3D={}, cutScenesEnabled={}, mapOrder={}",
-            gameVariant, play3D, cutScenesEnabled, mapOrder);
+        Logger.info("Menu state: gameVariant={}, play3D={}, cutScenesEnabled={}, mapOrder={}", gameVariant, play3D, cutScenesEnabled, mapOrder);
     }
 }
