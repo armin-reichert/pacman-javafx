@@ -67,7 +67,7 @@ public class PacManXXL_StartPage implements StartPage, ResourceManager {
 
     @Override
     public GameVariant currentGameVariant() {
-        return menu.state().gameVariant;
+        return menu.gameVariant();
     }
 
     @Override
