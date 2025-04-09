@@ -258,11 +258,12 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public void selectGameVariant(GameVariant gameVariant) {
-        THE_GAME_CONTROLLER.selectGameVariant(gameVariant);
         GameUIConfig uiConfig = THE_UI_CONFIGS.configuration(gameVariant);
         THE_SOUND.selectGameVariant(gameVariant, uiConfig.assetNamespace());
         stage.getIcons().setAll(uiConfig.appIcon());
         gameView.canvasContainer().decorationEnabledPy.set(uiConfig.isGameCanvasDecorated());
+        // this triggers a game event and calling the event handlers:
+        THE_GAME_CONTROLLER.selectGameVariant(gameVariant);
     }
 
     @Override
