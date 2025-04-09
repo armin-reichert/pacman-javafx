@@ -11,12 +11,14 @@ import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.GameClockFX;
 import de.amr.games.pacman.uilib.Keyboard;
 import javafx.beans.property.*;
+import javafx.scene.chart.ScatterChart;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import org.tinylog.Logger;
 
 import java.util.Map;
 
@@ -33,14 +35,22 @@ public class Globals {
     public static GameUI THE_UI;
 
     public static void createUIAndSupport3D(
-            boolean support3D,
-            Map<GameVariant, GameUIConfig> configMap)
+        boolean support3D,
+        Map<GameVariant, Class<? extends GameUIConfig>> configClassesMap)
     {
         THE_UI = new PacManGamesUI();
         if (support3D) {
             THE_ASSETS.addAssets3D();
         }
-        configMap.forEach((THE_UI_CONFIGS::set));
+        // create configuration instances *after* assets have been filled!
+        configClassesMap.forEach((gameVariant, configClass) -> {
+            try {
+                GameUIConfig config = configClass.getDeclaredConstructor(GameAssets.class).newInstance(THE_ASSETS);
+                THE_UI_CONFIGS.set(gameVariant, config);
+            } catch (Exception x) {
+                Logger.error("Could not create configuration of class {}", configClass);
+            }
+        });
     }
 
     public static final Font DEBUG_TEXT_FONT           = Font.font("Sans", FontWeight.BOLD, 18);

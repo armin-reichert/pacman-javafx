@@ -29,7 +29,7 @@ public class ArcadePacMan_App extends Application {
     public void start(Stage stage) {
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
         double height = 0.8 * screenSize.getHeight(), width = 1.2 * height;
-        createUIAndSupport3D(true, Map.of(GameVariant.PACMAN, new ArcadePacMan_UIConfig(THE_ASSETS)));
+        createUIAndSupport3D(true, Map.of(GameVariant.PACMAN, ArcadePacMan_UIConfig.class));
         THE_UI.build(stage, new Dimension2D(width, height));
         THE_UI.addStartPage(new ArcadePacMan_StartPage(GameVariant.PACMAN));
         THE_UI.buildDashboard(
