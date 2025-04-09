@@ -33,6 +33,11 @@ public class OptionMenu {
         protected List<T> values;
         protected int selectedIndex;
 
+        @SafeVarargs
+        public MenuEntry(String text, T... values) {
+            this(text, List.of(values));
+        }
+
         public MenuEntry(String text, List<T> values) {
             enabled = true;
             this.text = assertNotNull(text);
@@ -70,13 +75,13 @@ public class OptionMenu {
 
         protected void onSelect() {}
 
-        protected abstract void onValueChange(int index);
+        protected abstract void onValueChanged(int index);
     }
 
     private final int tilesX;
     private final int tilesY;
 
-    private final List<OptionMenu.MenuEntry<?>> entries = new ArrayList<>();
+    private final List<MenuEntry<?>> entries = new ArrayList<>();
 
     private int selectedEntryIndex = 0;
     private final AudioClip selectEntrySound;
@@ -189,7 +194,7 @@ public class OptionMenu {
                 MenuEntry<?> entry = entries.get(selectedEntryIndex);
                 entry.selectedIndex++;
                 if (entry.selectedIndex == entry.values.size()) entry.selectedIndex = 0;
-                entry.onValueChange(entry.selectedIndex);
+                entry.onValueChanged(entry.selectedIndex);
                 selectValueSound.play();
             }
             case ENTER -> {
