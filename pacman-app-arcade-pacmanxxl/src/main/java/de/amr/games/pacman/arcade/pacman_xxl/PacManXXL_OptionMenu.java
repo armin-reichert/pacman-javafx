@@ -48,9 +48,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             "PRESS ENTER TO START"
         );
         setOnStart(() -> {
-            logMenuState();
             if (state.gameVariant == GameVariant.PACMAN_XXL || state.gameVariant == GameVariant.MS_PACMAN_XXL) {
-                PY_3D_ENABLED.set(state.play3D);
                 GameModel game = THE_GAME_CONTROLLER.game(state.gameVariant);
                 game.setCutScenesEnabled(state.cutScenesEnabled);
                 game.mapSelector().setMapSelectionMode(state.mapSelectionMode);
@@ -92,6 +90,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             @Override
             protected void onValueChange(int index) {
                 state.play3D = selectedValue();
+                PY_3D_ENABLED.set(state.play3D);
                 logMenuState();
             }
 
