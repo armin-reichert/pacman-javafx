@@ -143,6 +143,11 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         }
     }
 
+    public void requestFocus() {
+        Logger.info("XXL Option menu canvas requests focus");
+        canvas.requestFocus();
+    }
+
     public void startDrawingLoop() {
         drawingLoop.start();
         Logger.trace("Menu drawing started");

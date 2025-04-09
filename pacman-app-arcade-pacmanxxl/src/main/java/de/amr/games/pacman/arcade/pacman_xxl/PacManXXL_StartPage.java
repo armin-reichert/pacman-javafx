@@ -75,7 +75,7 @@ public class PacManXXL_StartPage implements StartPage, ResourceManager {
 
     @Override
     public void requestFocus() {
-        menu.root().requestFocus();
+        menu.requestFocus();
     }
 
     @Override

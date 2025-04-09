@@ -14,8 +14,8 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -99,13 +99,13 @@ public class OptionMenu {
     protected final Font textFont;
     protected final Font titleFont;
 
-    protected Paint backgroundFill = Color.BLACK;
-    protected Paint borderStroke = Color.web("fffeff");
-    protected Paint titleTextFill = Color.web("b53120");
-    protected Paint entryTextFill = Color.web("bcbe00");
-    protected Paint entryValueFill = Color.web("fffeff");
-    protected Paint entryValueDisabledFill = Color.GRAY;
-    protected Paint hintTextFill = Color.web("bcbe00");
+    protected Color backgroundFill = Color.BLACK;
+    protected Color borderStroke = Color.web("fffeff");
+    protected Color titleTextFill = Color.web("b53120");
+    protected Color entryTextFill = Color.web("bcbe00");
+    protected Color entryValueFill = Color.web("fffeff");
+    protected Color entryValueDisabledFill = Color.GRAY;
+    protected Color hintTextFill = Color.web("bcbe00");
 
     public OptionMenu(int tilesX, int tilesY) {
         this.tilesX = tilesX;
@@ -134,6 +134,12 @@ public class OptionMenu {
 
         canvas.widthProperty().bind(scalingPy.multiply(height));
         canvas.heightProperty().bind(scalingPy.multiply(height));
+
+        canvas.focusedProperty().addListener((py, ov, nv) -> {
+            Logger.info("Canvas has focus: {}" , nv);
+        });
+        root.borderProperty().bind(canvas.focusedProperty()
+                .map(hasFocus -> hasFocus ? Border.stroke(Color.LIGHTBLUE) : Border.stroke(borderStroke)));
 
         root.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPress);
     }
@@ -207,6 +213,10 @@ public class OptionMenu {
 
     public Node root() { return root; }
 
+    public Canvas canvas() {
+        return canvas;
+    }
+
     public FloatProperty scalingProperty() { return scalingPy; }
 
     public void addEntry(MenuEntry<?> entry) {
@@ -217,31 +227,31 @@ public class OptionMenu {
         this.title = title;
     }
 
-    public void setBackgroundFill(Paint backgroundFill) {
+    public void setBackgroundFill(Color backgroundFill) {
         this.backgroundFill = backgroundFill;
     }
 
-    public void setBorderStroke(Paint borderStroke) {
+    public void setBorderStroke(Color borderStroke) {
         this.borderStroke = borderStroke;
     }
 
-    public void setEntryTextFill(Paint entryTextFill) {
+    public void setEntryTextFill(Color entryTextFill) {
         this.entryTextFill = entryTextFill;
     }
 
-    public void setEntryValueFill(Paint entryValueFill) {
+    public void setEntryValueFill(Color entryValueFill) {
         this.entryValueFill = entryValueFill;
     }
 
-    public void setEntryValueDisabledFill(Paint entryValueDisabledFill) {
+    public void setEntryValueDisabledFill(Color entryValueDisabledFill) {
         this.entryValueDisabledFill = entryValueDisabledFill;
     }
 
-    public void setHintTextFill(Paint hintTextFill) {
+    public void setHintTextFill(Color hintTextFill) {
         this.hintTextFill = hintTextFill;
     }
 
-    public void setTitleTextFill(Paint titleTextFill) {
+    public void setTitleTextFill(Color titleTextFill) {
         this.titleTextFill = titleTextFill;
     }
 
