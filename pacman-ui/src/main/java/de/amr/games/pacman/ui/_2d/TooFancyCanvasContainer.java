@@ -58,6 +58,7 @@ public class TooFancyCanvasContainer extends BorderPane {
             doLayout(scaling(), true);
         }
     };
+
     public final DoubleProperty unscaledCanvasHeightPy = new SimpleDoubleProperty(400) {
         @Override
         protected void invalidated() {

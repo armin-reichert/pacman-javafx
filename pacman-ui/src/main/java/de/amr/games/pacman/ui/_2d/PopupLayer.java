@@ -13,7 +13,6 @@ import javafx.util.Duration;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.ui.Globals.THE_ASSETS;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.uilib.Ufx.opaqueColor;
 
 /**

@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.event.GameEvent;
-import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.nes.JoypadButtonID;
+import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.ui.GameAction;

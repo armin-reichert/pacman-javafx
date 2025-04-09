@@ -11,7 +11,6 @@ import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.GameClockFX;
 import de.amr.games.pacman.uilib.Keyboard;
 import javafx.beans.property.*;
-import javafx.scene.chart.ScatterChart;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.paint.Color;

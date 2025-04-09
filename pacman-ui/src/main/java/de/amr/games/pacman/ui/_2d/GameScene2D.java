@@ -16,7 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.ui.Globals.*;
+import static de.amr.games.pacman.ui.Globals.DEBUG_TEXT_FONT;
+import static de.amr.games.pacman.ui.Globals.THE_KEYBOARD;
 
 /**
  * Base class of all 2D scenes.

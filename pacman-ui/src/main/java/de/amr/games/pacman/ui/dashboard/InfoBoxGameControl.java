@@ -8,7 +8,10 @@ import de.amr.games.pacman.controller.CoinStore;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.GameAction;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Spinner;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.ui.Globals.PY_AUTOPILOT;
