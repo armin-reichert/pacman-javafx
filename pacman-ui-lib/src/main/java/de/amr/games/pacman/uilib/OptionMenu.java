@@ -30,8 +30,7 @@ public class OptionMenu {
 
     private static final float TITLE_FONT_SCALING = 3f;
 
-    private final int tilesX;
-    private final int tilesY;
+    private final int numTiles;
 
     private final List<OptionMenuEntry<?>> entries = new ArrayList<>();
 
@@ -68,10 +67,8 @@ public class OptionMenu {
         public void handle(long now) { draw(); }
     };
 
-    public OptionMenu(int tilesX, int tilesY) {
-        this.tilesX = tilesX;
-        this.tilesY = tilesY;
-        float height = tilesY * TS;
+    public OptionMenu(float height) {
+        numTiles = (int) (height / TS);
 
         setTitle("OPTIONS");
         setCommandTexts(
@@ -131,7 +128,7 @@ public class OptionMenu {
         g.scale(scalingPy.doubleValue(), scalingPy.doubleValue());
 
         g.setFont(titleFont);
-        drawAtTile((tilesX - TITLE_FONT_SCALING * title.length()) * 0.5f, 6, title, titleTextFill);
+        drawAtTile((numTiles - TITLE_FONT_SCALING * title.length()) * 0.5f, 6, title, titleTextFill);
 
         g.setFont(textFont);
         for (int i = 0; i < entries.size(); ++i) {
@@ -145,9 +142,9 @@ public class OptionMenu {
             drawAtTile(17, y, entry.selectedValueText(), entry.enabled ? entryValueFill : entryValueDisabledFill);
         }
 
-        int ty = tilesY - 2 * commandTexts.length;
+        int ty = numTiles - 2 * commandTexts.length;
         for (String commandText : commandTexts) {
-            int tx = (tilesX - commandText.length()) / 2;
+            int tx = (numTiles - commandText.length()) / 2;
             drawAtTile(tx, ty, commandText, hintTextFill);
             ty += 2;
         }
@@ -190,6 +187,10 @@ public class OptionMenu {
 
     public Canvas canvas() {
         return canvas;
+    }
+
+    public int numTiles() {
+        return numTiles;
     }
 
     public FloatProperty scalingProperty() { return scalingPy; }
@@ -236,13 +237,5 @@ public class OptionMenu {
 
     public void setCommandTexts(String... lines) {
         commandTexts = Arrays.copyOf(lines, lines.length);
-    }
-
-    public int tilesX() {
-        return tilesX;
-    }
-
-    public int tilesY() {
-        return tilesY;
     }
 }

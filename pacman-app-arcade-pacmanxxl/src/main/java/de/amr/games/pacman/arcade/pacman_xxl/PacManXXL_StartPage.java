@@ -38,7 +38,7 @@ public class PacManXXL_StartPage implements StartPage, ResourceManager {
         flyer.setLayoutMode(0, Flyer.LayoutMode.FILL);
 
         menu = new PacManXXL_OptionMenu();
-        menu.scalingProperty().bind(root.heightProperty().multiply(0.9).divide(menu.tilesY() * TS));
+        menu.scalingProperty().bind(root.heightProperty().multiply(0.9).divide(menu.numTiles() * TS));
         initMenuState(THE_GAME_CONTROLLER.selectedGameVariant());
 
         root.getChildren().addAll(flyer, menu.root());

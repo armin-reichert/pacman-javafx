@@ -16,6 +16,7 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
+import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.ui.Globals.*;
 
 public class PacManXXL_OptionMenu extends OptionMenu {
@@ -99,7 +100,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     };
 
     public PacManXXL_OptionMenu() {
-        super(36, 36);
+        super(36 * TS);
         addEntry(entryGameVariant);
         addEntry(entryPlay3D);
         addEntry(entryCutScenesEnabled);
