@@ -98,7 +98,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUIConfig, ResourceManager {
         assets.store("ms_pacman.audio.sweep",                   loadAudioClip("sound/sweep.mp3"));
 
         // Audio played by MediaPlayer
-        assets.store("ms_pacman.audio.bonus_bouncing",          url("sound/Fruit Bounce.mp3"));
+        assets.store("ms_pacman.audio.bonus_bouncing",          url("sound/Fruit_Bounce.mp3"));
         assets.store("ms_pacman.audio.game_ready",              url("sound/Start.mp3"));
         assets.store("ms_pacman.audio.game_over",               url("sound/game-over.mp3"));
         assets.store("ms_pacman.audio.intermission.1",          url("sound/Act_1_They_Meet.mp3"));

@@ -86,7 +86,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUIConfig {
         assets.store("ms_pacman_xxl.audio.sweep",                     rm.loadAudioClip("sound/sweep.mp3"));
 
         // Audio played by MediaPlayer
-        assets.store("ms_pacman_xxl.audio.bonus_bouncing",          rm.url("sound/Fruit Bounce.mp3"));
+        assets.store("ms_pacman_xxl.audio.bonus_bouncing",          rm.url("sound/Fruit_Bounce.mp3"));
         assets.store("ms_pacman_xxl.audio.game_ready",              rm.url("sound/Start.mp3"));
         assets.store("ms_pacman_xxl.audio.game_over",               rm.url("sound/game-over.mp3"));
         assets.store("ms_pacman_xxl.audio.intermission.1",          rm.url("sound/Act_1_They_Meet.mp3"));
