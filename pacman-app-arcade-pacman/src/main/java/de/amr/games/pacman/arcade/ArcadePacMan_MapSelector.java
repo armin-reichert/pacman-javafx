@@ -15,11 +15,11 @@ public class ArcadePacMan_MapSelector extends MapSelector {
 
     private static final String MAP_PATH = "/de/amr/games/pacman/arcade/maps/pacman.world";
 
-    private WorldMap map;
+    private List<WorldMap> maps = List.of();
 
     @Override
     public List<WorldMap> builtinMaps() {
-        return List.of(map);
+        return maps;
     }
 
     @Override
@@ -32,21 +32,21 @@ public class ArcadePacMan_MapSelector extends MapSelector {
 
     @Override
     public void loadAllMaps(GameModel game) {
-        if (map != null) {
-            return; // avoid loading map again
-        }
-        try {
-            map = new WorldMap(getClass().getResource(MAP_PATH));
-            map.setConfigValue("mapNumber", 1);
-            map.setConfigValue("colorMapIndex", 0);
-        } catch (Exception x) {
-            Logger.error("Could not load map from path {}", MAP_PATH);
-            throw new IllegalStateException(x);
+        if (maps.isEmpty()) {
+            try {
+                WorldMap map = new WorldMap(getClass().getResource(MAP_PATH));
+                map.setConfigValue("mapNumber", 1);
+                map.setConfigValue("colorMapIndex", 0);
+                maps = List.of(map);
+            } catch (Exception x) {
+                Logger.error("Could not load map from path {}", MAP_PATH);
+                throw new IllegalStateException(x);
+            }
         }
     }
 
     @Override
     public WorldMap selectWorldMap(int levelNumber) {
-        return map;
+        return maps.getFirst();
     }
 }
