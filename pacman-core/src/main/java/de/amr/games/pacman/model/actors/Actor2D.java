@@ -81,7 +81,7 @@ public class Actor2D {
      * @return upper left corner of the entity collision box which is a square of size one tile.
      */
     public Vector2f position() {
-        return vec_2f(posX, posY);
+        return Vector2f.of(posX, posY);
     }
 
     public void setPosition(float x, float y) {
@@ -96,7 +96,7 @@ public class Actor2D {
     }
 
     public Vector2f velocity() {
-        return vec_2f(velX, velY);
+        return Vector2f.of(velX, velY);
     }
 
     public void setVelocity(Vector2f velocity) {
@@ -111,7 +111,7 @@ public class Actor2D {
     }
 
     public Vector2f acceleration() {
-        return vec_2f(accX, accY);
+        return Vector2f.of(accX, accY);
     }
 
     public void setAcceleration(Vector2f acceleration) {
@@ -147,7 +147,7 @@ public class Actor2D {
      */
     public Vector2f offset() {
         var tile = tile();
-        return vec_2f(posX - TS * tile.x(), posY - TS * tile.y());
+        return Vector2f.of(posX - TS * tile.x(), posY - TS * tile.y());
     }
 
     /**

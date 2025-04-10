@@ -11,9 +11,13 @@ package de.amr.games.pacman.lib;
  */
 public record Vector2f(float x, float y) {
 
+    public static final float EPSILON = 1e-6f;
+
     public static final Vector2f ZERO = new Vector2f(0, 0);
 
-    public static final float EPSILON = 1e-6f;
+    public static Vector2f of(double x, double y) {
+        return new Vector2f((float) x, (float) y);
+    }
 
     public Vector2f plus(Vector2f v) {
         return new Vector2f(x + v.x, y + v.y);

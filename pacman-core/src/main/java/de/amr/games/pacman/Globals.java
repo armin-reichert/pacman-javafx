@@ -39,10 +39,6 @@ public interface Globals {
         return new Vector2i(x, y);
     }
 
-    static Vector2f vec_2f(double x, double y) {
-        return new Vector2f((float) x, (float) y);
-    }
-
     /**
      * @param position a position
      * @return tile containing given position
@@ -67,7 +63,7 @@ public interface Globals {
      * @return position  (scaled by tile size) half tile right of tile origin
      */
     static Vector2f halfTileRightOf(int tileX, int tileY) {
-        return vec_2f(TS * tileX + HTS, TS * tileY);
+        return Vector2f.of(TS * tileX + HTS, TS * tileY);
     }
 
     static Vector2f halfTileRightOf(Vector2i tile) {

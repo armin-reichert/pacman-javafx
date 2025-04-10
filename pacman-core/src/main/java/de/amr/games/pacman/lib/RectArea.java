@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib;
 
-import static de.amr.games.pacman.Globals.vec_2f;
 
 /**
  * A rectangular area with short precision to represent sprite sheet regions.
@@ -34,5 +33,5 @@ public record RectArea(short x, short y, short width, short height) {
         return contains(other.x(), other.y()) && contains(other.x() + other.width(), other.y() + other.height());
     }
 
-    public Vector2f center() { return vec_2f(x + width * 0.5f, y + height * 0.5f); }
+    public Vector2f center() { return Vector2f.of(x + width * 0.5f, y + height * 0.5f); }
 }
