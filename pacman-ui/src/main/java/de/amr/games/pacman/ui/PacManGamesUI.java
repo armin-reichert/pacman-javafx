@@ -268,6 +268,10 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public void selectGameVariant(GameVariant gameVariant) {
+        if (gameVariant == null) {
+            Logger.error("Cannot select game variant (NULL)");
+            return;
+        }
         GameUIConfig uiConfig = THE_UI_CONFIGS.configuration(gameVariant);
         THE_SOUND.selectGameVariant(gameVariant, uiConfig.assetNamespace());
         stage.getIcons().setAll(uiConfig.appIcon());
