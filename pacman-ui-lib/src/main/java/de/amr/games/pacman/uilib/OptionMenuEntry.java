@@ -13,7 +13,7 @@ import static de.amr.games.pacman.Globals.assertNotNull;
 public abstract class OptionMenuEntry<T> {
     protected final String text;
     protected final List<T> valueList;
-    protected int selectedIndex;
+    protected int selectedValueIndex;
     protected boolean enabled;
 
     @SafeVarargs
@@ -27,7 +27,7 @@ public abstract class OptionMenuEntry<T> {
         }
         valueList = List.of(values);
         enabled = true;
-        selectedIndex = 0;
+        selectedValueIndex = 0;
     }
 
     public void setEnabled(boolean enabled) {
@@ -37,7 +37,7 @@ public abstract class OptionMenuEntry<T> {
     public void selectValue(T value) {
         for (int i = 0; i < valueList.size(); ++i) {
             if (valueList.get(i).equals(value)) {
-                selectedIndex = i;
+                selectedValueIndex = i;
                 return;
             }
         }
@@ -45,14 +45,12 @@ public abstract class OptionMenuEntry<T> {
     }
 
     public T selectedValue() {
-        return valueList.get(selectedIndex);
+        return valueList.get(selectedValueIndex);
     }
 
     public String selectedValueText() {
-        return String.valueOf(selectedValue());
-    }
-
-    protected void onSelect() {
+        T selectedValue = selectedValue();
+        return selectedValue != null ? String.valueOf(selectedValue) : "No value";
     }
 
     protected abstract void onValueChanged(int index);

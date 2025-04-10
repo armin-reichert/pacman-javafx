@@ -21,7 +21,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.Globals.HTS;
+import static de.amr.games.pacman.Globals.TS;
 
 public class OptionMenu {
 
@@ -134,23 +135,21 @@ public class OptionMenu {
     protected void handleKeyPress(KeyEvent e) {
         switch (e.getCode()) {
             case DOWN -> {
+                selectEntrySound.play();
                 selectedEntryIndex++;
                 if (selectedEntryIndex == entries.size()) selectedEntryIndex = 0;
-                entries.get(selectedEntryIndex).onSelect();
-                selectEntrySound.play();
             }
             case UP -> {
+                selectEntrySound.play();
                 selectedEntryIndex--;
                 if (selectedEntryIndex == -1) selectedEntryIndex = entries.size() - 1;
-                entries.get(selectedEntryIndex).onSelect();
-                selectEntrySound.play();
             }
             case SPACE -> {
-                OptionMenuEntry<?> entry = entries.get(selectedEntryIndex);
-                entry.selectedIndex++;
-                if (entry.selectedIndex == entry.valueList.size()) entry.selectedIndex = 0;
-                entry.onValueChanged(entry.selectedIndex);
                 selectValueSound.play();
+                OptionMenuEntry<?> entry = entries.get(selectedEntryIndex);
+                entry.selectedValueIndex++;
+                if (entry.selectedValueIndex == entry.valueList.size()) entry.selectedValueIndex = 0;
+                entry.onValueChanged(entry.selectedValueIndex);
             }
             case ENTER -> {
                 if (actionOnStart != null) {
