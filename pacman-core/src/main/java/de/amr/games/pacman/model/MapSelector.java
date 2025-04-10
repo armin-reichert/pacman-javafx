@@ -53,9 +53,11 @@ public abstract class MapSelector {
 
     public abstract List<WorldMap> builtinMaps();
 
-    public abstract List<WorldMap> customMaps();
+    public List<WorldMap> customMaps() {
+        return List.of();
+    }
 
-    public abstract void loadCustomMaps();
+    public void loadCustomMaps() {}
 
     public abstract void loadAllMaps(GameModel game);
 }

@@ -38,14 +38,6 @@ public class TengenMsPacMan_MapSelector extends MapSelector {
     }
 
     @Override
-    public List<WorldMap> customMaps() {
-        return List.of();
-    }
-
-    @Override
-    public void loadCustomMaps() {}
-
-    @Override
     public void loadAllMaps(GameModel game) {
         if (mapRepository.isEmpty()) {
             mapRepository.put(MapCategory.ARCADE, createMaps(MAPS_ROOT + "arcade%d.world", 4));
