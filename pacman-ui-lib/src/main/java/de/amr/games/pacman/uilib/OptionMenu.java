@@ -50,6 +50,7 @@ public class OptionMenu {
 
     private final BorderPane root = new BorderPane();
     protected final Canvas canvas = new Canvas();
+    protected final GraphicsContext g = canvas.getGraphicsContext2D();
     protected final FloatProperty scalingPy = new SimpleFloatProperty(2);
 
     protected final Font textFont;
@@ -124,41 +125,39 @@ public class OptionMenu {
     }
 
     public void draw() {
-        GraphicsContext g = canvas.getGraphicsContext2D();
+        g.save();
         g.setFill(backgroundFill);
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        g.save();
         g.scale(scalingPy.doubleValue(), scalingPy.doubleValue());
 
-        float x = (tilesX - TITLE_FONT_SCALING * title.length()) * 0.5f * TS;
         g.setFont(titleFont);
-        g.setFill(titleTextFill);
-        g.fillText(title, x, 6 * TS);
-        g.setFont(textFont);
+        drawTextAtTile(title, titleTextFill, (tilesX - TITLE_FONT_SCALING * title.length()) * 0.5f, 6);
 
+        g.setFont(textFont);
         for (int i = 0; i < entries.size(); ++i) {
-            int y = (12 + 3 * i) * TS;
+            int y = (12 + 3 * i);
             OptionMenuEntry<?> entry = entries.get(i);
             if (i == selectedEntryIndex) {
-                g.setFill(entryTextFill);
-                g.fillText("-", TS, y);
-                g.fillText(">", TS+HTS, y);
+                drawTextAtTile("-", entryTextFill, 1, y);
+                drawTextAtTile(">", entryTextFill, 1.5f, y);
             }
-            g.setFill(entryTextFill);
-            g.fillText(entry.text, 3 * TS, y);
-            g.setFill(entry.enabled ? entryValueFill : entryValueDisabledFill);
-            g.fillText(entry.selectedValueText(), 17 * TS, y);
+            drawTextAtTile(entry.text, entryTextFill, 3, y);
+            drawTextAtTile(entry.selectedValueText(), entry.enabled ? entryValueFill : entryValueDisabledFill, 17, y);
         }
 
-        g.setFill(hintTextFill);
-        int line = tilesY - 2 * commandTexts.length;
+        int ty = tilesY - 2 * commandTexts.length;
         for (String commandText : commandTexts) {
-             int ox = (tilesX - commandText.length()) / 2;
-            g.fillText(commandText, ox * TS, line * TS);
-            line += 2;
+            int ox = (tilesX - commandText.length()) / 2;
+            drawTextAtTile(commandText, hintTextFill, ox, ty);
+            ty += 2;
         }
         g.restore();
+    }
+
+    private void drawTextAtTile(String text, Color fillColor, float tileX, float tileY) {
+        g.setFill(fillColor);
+        g.fillText(text, tileX * TS, tileY * TS);
     }
 
     protected void handleKeyPress(KeyEvent e) {
