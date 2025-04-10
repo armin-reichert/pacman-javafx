@@ -61,7 +61,7 @@ public class PacManXXL_StartPage implements StartPage, ResourceManager {
     @Override
     public void onEnter() {
         initMenuState(currentGameVariant());
-        menu.startDrawingLoop();
+        menu.startDrawing();
         THE_KEYBOARD.logCurrentBindings();
     }
 
@@ -82,6 +82,6 @@ public class PacManXXL_StartPage implements StartPage, ResourceManager {
 
     @Override
     public void onExit() {
-        menu.stopDrawingLoop();
+        menu.stopDrawing();
     }
 }

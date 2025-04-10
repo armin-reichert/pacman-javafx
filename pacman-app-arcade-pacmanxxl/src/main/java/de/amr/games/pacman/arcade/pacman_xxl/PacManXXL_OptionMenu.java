@@ -39,7 +39,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
         @Override
         public String selectedValueText() {
-            return switch (selectedValue()) {
+            return switch (gameVariant) {
                 case PACMAN_XXL -> "PAC-MAN XXL";
                 case MS_PACMAN_XXL -> "MS.PAC-MAN XXL";
                 default -> "";
@@ -58,7 +58,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
         @Override
         public String selectedValueText() {
-            return selectedValue() ? "3D" : "2D";
+            return play3D ? "3D" : "2D";
         }
     };
 
@@ -72,7 +72,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
 
         @Override
         public String selectedValueText() {
-            return selectedValue() ? "ON" : "OFF";
+            return cutScenesEnabled ? "ON" : "OFF";
         }
     };
 
@@ -92,17 +92,12 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             if (!enabled) {
                 return "NO CUSTOM MAPS!";
             }
-            return switch (selectedValue()) {
+            return switch (mapOrder) {
                 case CUSTOM_MAPS_FIRST -> "CUSTOM MAPS FIRST";
                 case ALL_RANDOM -> "RANDOM ORDER";
-                default -> "";
+                case NO_CUSTOM_MAPS -> "NO CUSTOM MAPS";
             };
         }
-    };
-
-    private final AnimationTimer drawingLoop = new AnimationTimer() {
-        @Override
-        public void handle(long now) { draw(); }
     };
 
     public PacManXXL_OptionMenu(int tilesX, int tilesY) {
@@ -148,16 +143,6 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     public void requestFocus() {
         Logger.info("XXL Option menu canvas requests focus");
         canvas.requestFocus();
-    }
-
-    public void startDrawingLoop() {
-        drawingLoop.start();
-        Logger.trace("Menu drawing started");
-    }
-
-    public void stopDrawingLoop() {
-        drawingLoop.stop();
-        Logger.trace("Menu drawing stopped");
     }
 
     public void setState(

@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.uilib;
 
+import javafx.animation.AnimationTimer;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.Node;
@@ -57,6 +58,11 @@ public class OptionMenu {
     protected Color entryValueDisabledFill = Color.GRAY;
     protected Color hintTextFill = Color.web("bcbe00");
 
+    private final AnimationTimer drawingTimer = new AnimationTimer() {
+        @Override
+        public void handle(long now) { draw(); }
+    };
+
     public OptionMenu(int tilesX, int tilesY) {
         this.tilesX = tilesX;
         this.tilesY = tilesY;
@@ -93,6 +99,17 @@ public class OptionMenu {
 
         root.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPress);
     }
+
+    public void startDrawing() {
+        drawingTimer.start();
+        Logger.trace("Menu drawing started");
+    }
+
+    public void stopDrawing() {
+        drawingTimer.stop();
+        Logger.trace("Menu drawing stopped");
+    }
+
 
     public void draw() {
         GraphicsContext g = canvas.getGraphicsContext2D();
