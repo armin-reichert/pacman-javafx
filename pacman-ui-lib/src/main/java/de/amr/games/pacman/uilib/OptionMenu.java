@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static de.amr.games.pacman.Globals.HTS;
 import static de.amr.games.pacman.Globals.TS;
 
 public class OptionMenu {
@@ -132,30 +131,30 @@ public class OptionMenu {
         g.scale(scalingPy.doubleValue(), scalingPy.doubleValue());
 
         g.setFont(titleFont);
-        drawTextAtTile(title, titleTextFill, (tilesX - TITLE_FONT_SCALING * title.length()) * 0.5f, 6);
+        drawAtTile((tilesX - TITLE_FONT_SCALING * title.length()) * 0.5f, 6, title, titleTextFill);
 
         g.setFont(textFont);
         for (int i = 0; i < entries.size(); ++i) {
             int y = (12 + 3 * i);
             OptionMenuEntry<?> entry = entries.get(i);
             if (i == selectedEntryIndex) {
-                drawTextAtTile("-", entryTextFill, 1, y);
-                drawTextAtTile(">", entryTextFill, 1.5f, y);
+                drawAtTile(1, y, "-", entryTextFill);
+                drawAtTile(1.5f, y, ">", entryTextFill);
             }
-            drawTextAtTile(entry.text, entryTextFill, 3, y);
-            drawTextAtTile(entry.selectedValueText(), entry.enabled ? entryValueFill : entryValueDisabledFill, 17, y);
+            drawAtTile(3, y, entry.text, entryTextFill);
+            drawAtTile(17, y, entry.selectedValueText(), entry.enabled ? entryValueFill : entryValueDisabledFill);
         }
 
         int ty = tilesY - 2 * commandTexts.length;
         for (String commandText : commandTexts) {
-            int ox = (tilesX - commandText.length()) / 2;
-            drawTextAtTile(commandText, hintTextFill, ox, ty);
+            int tx = (tilesX - commandText.length()) / 2;
+            drawAtTile(tx, ty, commandText, hintTextFill);
             ty += 2;
         }
         g.restore();
     }
 
-    private void drawTextAtTile(String text, Color fillColor, float tileX, float tileY) {
+    private void drawAtTile(float tileX, float tileY, String text, Color fillColor) {
         g.setFill(fillColor);
         g.fillText(text, tileX * TS, tileY * TS);
     }
