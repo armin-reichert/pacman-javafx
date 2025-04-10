@@ -98,8 +98,8 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         }
     };
 
-    public PacManXXL_OptionMenu(int tilesX, int tilesY) {
-        super(tilesX, tilesY);
+    public PacManXXL_OptionMenu() {
+        super(36, 36);
         addEntry(entryGameVariant);
         addEntry(entryPlay3D);
         addEntry(entryCutScenesEnabled);
