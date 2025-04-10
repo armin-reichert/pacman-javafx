@@ -60,7 +60,7 @@ public class Model3D {
 
     public Model3D(URL objFileURL) {
         Globals.assertNotNull(objFileURL);
-        Logger.info("Loading 3D OBJ model from URL: {}", objFileURL);
+        Logger.debug("Loading 3D OBJ model from URL: {}", objFileURL);
         try {
             importModel(new ObjImporter(objFileURL.toExternalForm()));
         } catch (Exception x) {
@@ -70,7 +70,7 @@ public class Model3D {
 
     public Model3D(File objFile) {
         Globals.assertNotNull(objFile);
-        Logger.info("Loading 3D OBJ model from file '{}'", objFile);
+        Logger.debug("Loading 3D OBJ model from file '{}'", objFile);
         try (var in = new FileInputStream(objFile)) {
             importModel(new ObjImporter(in));
         } catch (Exception x) {
@@ -83,7 +83,7 @@ public class Model3D {
             TriangleMesh mesh = importer.getMesh(meshName);
             ObjImporter.validateTriangleMesh(mesh);
             meshesByName.put(meshName, mesh);
-            Logger.info("Mesh ID: '{}'", meshName);
+            Logger.debug("Mesh ID: '{}'", meshName);
         }
         for (var materialMap : importer.materialLibrary()) {
             for (var entry : materialMap.entrySet()) {

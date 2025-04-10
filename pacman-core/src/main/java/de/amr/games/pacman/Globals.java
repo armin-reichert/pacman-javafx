@@ -24,6 +24,7 @@ public interface Globals {
 
     CoinStore THE_COIN_STORE = new CoinStore();
     GameController THE_GAME_CONTROLLER = new GameController();
+    Random RND = new Random();
 
     byte TICKS_PER_SECOND = 60;
 
@@ -32,8 +33,6 @@ public interface Globals {
 
     /** Half tile size (4px). */
     int HTS = 4;
-
-    Random RND = new Random();
 
     /**
      * @param position a position

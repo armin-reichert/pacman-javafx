@@ -11,9 +11,9 @@ import org.tinylog.Logger;
 public interface StartPage {
     Region layoutRoot();
     default void requestFocus() { layoutRoot().requestFocus(); }
-    default void onEnter() { Logger.info("{} onExit", getClass().getSimpleName()); }
+    default void onEnter() { Logger.trace("{} onExit", getClass().getSimpleName()); }
     default void onExit() {
-        Logger.info("{} onExit", getClass().getSimpleName());
+        Logger.trace("{} onExit", getClass().getSimpleName());
     }
     GameVariant currentGameVariant();
 }

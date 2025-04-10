@@ -87,14 +87,6 @@ public class PacManGames3dApp extends Application {
         THE_UI.addStartPage(new PacManXXL_StartPage());
         THE_UI.selectStartPage(0);
         THE_UI.show();
-
-        Logger.info("Assets: {}", THE_ASSETS.summary(Map.of(
-                Model3D.class,"3D models",
-                Image.class, "images",
-                Font.class, "fonts",
-                Color.class, "colors",
-                AudioClip.class, "audio clips")));
-
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
     }
 
