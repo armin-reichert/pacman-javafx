@@ -8,6 +8,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.MapSelectionMode;
 import de.amr.games.pacman.uilib.Keyboard;
+import de.amr.games.pacman.uilib.OptionMenuEntry;
 import de.amr.games.pacman.uilib.OptionMenu;
 import javafx.animation.AnimationTimer;
 import javafx.scene.input.KeyCode;
@@ -27,7 +28,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     boolean cutScenesEnabled;
     MapSelectionMode mapOrder;
 
-    private final MenuEntry<GameVariant> entryGameVariant = new MenuEntry<>("GAME VARIANT",
+    private final OptionMenuEntry<GameVariant> entryGameVariant = new OptionMenuEntry<>("GAME VARIANT",
             GameVariant.PACMAN_XXL, GameVariant.MS_PACMAN_XXL) {
 
         @Override
@@ -46,7 +47,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         }
     };
 
-    private final MenuEntry<Boolean> entryPlay3D = new MenuEntry<>("SCENE DISPLAY", true, false) {
+    private final OptionMenuEntry<Boolean> entryPlay3D = new OptionMenuEntry<>("SCENE DISPLAY", true, false) {
 
         @Override
         protected void onValueChanged(int index) {
@@ -61,7 +62,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         }
     };
 
-    private final MenuEntry<Boolean> entryCutScenesEnabled = new MenuEntry<>("CUTSCENES", true, false) {
+    private final OptionMenuEntry<Boolean> entryCutScenesEnabled = new OptionMenuEntry<>("CUTSCENES", true, false) {
 
         @Override
         protected void onValueChanged(int index) {
@@ -75,7 +76,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         }
     };
 
-    private final MenuEntry<MapSelectionMode> entryMapOrder = new MenuEntry<>("MAP ORDER",
+    private final OptionMenuEntry<MapSelectionMode> entryMapOrder = new OptionMenuEntry<>("MAP ORDER",
             MapSelectionMode.CUSTOM_MAPS_FIRST, MapSelectionMode.ALL_RANDOM) {
 
         @Override

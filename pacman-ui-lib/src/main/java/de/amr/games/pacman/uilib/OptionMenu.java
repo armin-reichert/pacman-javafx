@@ -27,61 +27,10 @@ public class OptionMenu {
 
     private static final float TITLE_FONT_SCALING = 3f;
 
-    public static abstract class MenuEntry<T> {
-        protected boolean enabled;
-        protected final String text;
-        protected List<T> values;
-        protected int selectedIndex;
-
-        @SafeVarargs
-        public MenuEntry(String text, T... values) {
-            this(text, List.of(values));
-        }
-
-        public MenuEntry(String text, List<T> values) {
-            enabled = true;
-            this.text = assertNotNull(text);
-            assertNotNull(values);
-            if (values.isEmpty()) {
-                throw new IllegalArgumentException("Menu entry must provide at least one value");
-            }
-            this.values = new ArrayList<>(values);
-            this.selectedIndex = 0;
-        }
-
-        public void setEnabled(boolean enabled) {
-            this.enabled = enabled;
-        }
-
-        public int selectedIndex() { return selectedIndex; }
-
-        public void setSelectedIndex(int index) {
-            this.selectedIndex = index;
-        }
-
-        public void selectValue(T value) {
-            for (int i = 0; i < values.size(); ++i) {
-                if (values.get(i).equals(value)) {
-                    selectedIndex = i;
-                    return;
-                }
-            }
-            throw new IllegalArgumentException("Cannot select value " + value);
-        }
-
-        public T selectedValue() { return values.get(selectedIndex); }
-
-        public String selectedValueText() { return String.valueOf(selectedValue()); }
-
-        protected void onSelect() {}
-
-        protected abstract void onValueChanged(int index);
-    }
-
     private final int tilesX;
     private final int tilesY;
 
-    private final List<MenuEntry<?>> entries = new ArrayList<>();
+    private final List<OptionMenuEntry<?>> entries = new ArrayList<>();
 
     private int selectedEntryIndex = 0;
     private final AudioClip selectEntrySound;
@@ -160,7 +109,7 @@ public class OptionMenu {
 
         for (int i = 0; i < entries.size(); ++i) {
             int y = (12 + 3 * i) * TS;
-            MenuEntry<?> entry = entries.get(i);
+            OptionMenuEntry<?> entry = entries.get(i);
             if (i == selectedEntryIndex) {
                 g.setFill(entryTextFill);
                 g.fillText("-", TS, y);
@@ -197,9 +146,9 @@ public class OptionMenu {
                 selectEntrySound.play();
             }
             case SPACE -> {
-                MenuEntry<?> entry = entries.get(selectedEntryIndex);
+                OptionMenuEntry<?> entry = entries.get(selectedEntryIndex);
                 entry.selectedIndex++;
-                if (entry.selectedIndex == entry.values.size()) entry.selectedIndex = 0;
+                if (entry.selectedIndex == entry.valueList.size()) entry.selectedIndex = 0;
                 entry.onValueChanged(entry.selectedIndex);
                 selectValueSound.play();
             }
@@ -219,7 +168,7 @@ public class OptionMenu {
 
     public FloatProperty scalingProperty() { return scalingPy; }
 
-    public void addEntry(MenuEntry<?> entry) {
+    public void addEntry(OptionMenuEntry<?> entry) {
         entries.add(entry);
     }
 
