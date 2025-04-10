@@ -5,7 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.uilib;
 
 import javafx.animation.AnimationTimer;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -35,8 +37,11 @@ public class OptionMenu {
     private final List<OptionMenuEntry<?>> entries = new ArrayList<>();
 
     private int selectedEntryIndex = 0;
-    private final AudioClip selectEntrySound;
-    private final AudioClip selectValueSound;
+
+    private final BooleanProperty soundEnabledPy = new SimpleBooleanProperty(true);
+
+    private final AudioClip entrySelectedSound;
+    private final AudioClip valueSelectedSound;
 
     private Runnable actionOnStart;
 
@@ -82,8 +87,8 @@ public class OptionMenu {
         textFont = rm.loadFont("fonts/emulogic.ttf", TS);
         titleFont = rm.loadFont("fonts/emulogic.ttf", TITLE_FONT_SCALING * TS);
 
-        selectEntrySound = rm.loadAudioClip("sounds/menu-select1.wav");
-        selectValueSound = rm.loadAudioClip("sounds/menu-select2.wav");
+        entrySelectedSound = rm.loadAudioClip("sounds/menu-select1.wav");
+        valueSelectedSound = rm.loadAudioClip("sounds/menu-select2.wav");
 
         root.maxWidthProperty().bind(scalingPy.multiply(height));
         root.maxHeightProperty().bind(scalingPy.multiply(height));
@@ -99,6 +104,14 @@ public class OptionMenu {
 
         root.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPress);
     }
+
+    private void playSound(AudioClip clip) {
+        if (soundEnabledPy.get()) {
+            clip.play();
+        }
+    }
+
+    public BooleanProperty soundEnabledProperty() { return soundEnabledPy; }
 
     public void startDrawing() {
         drawingTimer.start();
@@ -151,17 +164,17 @@ public class OptionMenu {
     protected void handleKeyPress(KeyEvent e) {
         switch (e.getCode()) {
             case DOWN -> {
-                selectEntrySound.play();
+                playSound(entrySelectedSound);
                 selectedEntryIndex++;
                 if (selectedEntryIndex == entries.size()) selectedEntryIndex = 0;
             }
             case UP -> {
-                selectEntrySound.play();
+                playSound(entrySelectedSound);
                 selectedEntryIndex--;
                 if (selectedEntryIndex == -1) selectedEntryIndex = entries.size() - 1;
             }
             case SPACE -> {
-                selectValueSound.play();
+                playSound(valueSelectedSound);
                 OptionMenuEntry<?> entry = entries.get(selectedEntryIndex);
                 entry.selectedValueIndex++;
                 if (entry.selectedValueIndex == entry.valueList.size()) entry.selectedValueIndex = 0;

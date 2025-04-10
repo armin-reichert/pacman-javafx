@@ -16,8 +16,7 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.ui.Globals.PY_3D_ENABLED;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.*;
 
 public class PacManXXL_OptionMenu extends OptionMenu {
 
@@ -125,6 +124,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
                 Logger.error("Game variant {} is not allowed for XXL game", gameVariant);
             }
         });
+        soundEnabledProperty().bind(THE_SOUND.mutedProperty().not());
     }
 
     @Override
