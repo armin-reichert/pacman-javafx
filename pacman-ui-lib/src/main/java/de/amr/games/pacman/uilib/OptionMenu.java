@@ -26,7 +26,7 @@ import java.util.List;
 
 import static de.amr.games.pacman.Globals.TS;
 
-public class OptionMenu {
+public class OptionMenu implements ResourceManager {
 
     private static final float TITLE_FONT_SCALING = 3f;
 
@@ -67,6 +67,11 @@ public class OptionMenu {
         public void handle(long now) { draw(); }
     };
 
+    @Override
+    public Class<?> resourceRootClass() {
+        return OptionMenu.class;
+    }
+
     public OptionMenu(float height) {
         numTiles = (int) (height / TS);
 
@@ -80,24 +85,17 @@ public class OptionMenu {
         root.setCenter(canvas);
         root.setBorder(Border.stroke(borderStroke));
 
-        ResourceManager rm = () -> OptionMenu.class;
-        textFont = rm.loadFont("fonts/emulogic.ttf", TS);
-        titleFont = rm.loadFont("fonts/emulogic.ttf", TITLE_FONT_SCALING * TS);
+        textFont = loadFont("fonts/emulogic.ttf", TS);
+        titleFont = loadFont("fonts/emulogic.ttf", TITLE_FONT_SCALING * TS);
 
-        entrySelectedSound = rm.loadAudioClip("sounds/menu-select1.wav");
-        valueSelectedSound = rm.loadAudioClip("sounds/menu-select2.wav");
+        entrySelectedSound = loadAudioClip("sounds/menu-select1.wav");
+        valueSelectedSound = loadAudioClip("sounds/menu-select2.wav");
 
         root.maxWidthProperty().bind(scalingPy.multiply(height));
         root.maxHeightProperty().bind(scalingPy.multiply(height));
 
         canvas.widthProperty().bind(scalingPy.multiply(height));
         canvas.heightProperty().bind(scalingPy.multiply(height));
-
-        canvas.focusedProperty().addListener((py, ov, nv) -> {
-            Logger.info("Canvas has focus: {}" , nv);
-        });
-        root.borderProperty().bind(canvas.focusedProperty()
-                .map(hasFocus -> hasFocus ? Border.stroke(Color.LIGHTBLUE) : Border.stroke(borderStroke)));
 
         root.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPress);
     }
