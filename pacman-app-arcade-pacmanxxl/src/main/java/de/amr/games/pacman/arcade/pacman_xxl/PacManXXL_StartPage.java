@@ -13,6 +13,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.TS;
@@ -45,17 +46,15 @@ public class PacManXXL_StartPage implements StartPage, ResourceManager {
 
     private void initMenuState(GameVariant gameVariant) {
         if (gameVariant != GameVariant.MS_PACMAN_XXL && gameVariant != GameVariant.PACMAN_XXL) {
+            Logger.warn("Game variant {} is not allowed in option menu, using {} instead", gameVariant, GameVariant.PACMAN_XXL);
             gameVariant = GameVariant.PACMAN_XXL;
         }
         GameModel game = THE_GAME_CONTROLLER.game(gameVariant);
         game.mapSelector().loadAllMaps(game);
-        menu.setState(
-            PY_3D_ENABLED.get(),
-            gameVariant,
-            game.isCutScenesEnabled(),
-            game.mapSelector().mapSelectionMode(),
-            !game.mapSelector().customMaps().isEmpty()
-        );
+        menu.setGameVariant(gameVariant);
+        menu.setPlay3D(PY_3D_ENABLED.get());
+        menu.setCutScenesEnabled(game.isCutScenesEnabled());
+        menu.setMapOrder(game.mapSelector().mapSelectionMode(), !game.mapSelector().customMaps().isEmpty());
     }
 
     @Override

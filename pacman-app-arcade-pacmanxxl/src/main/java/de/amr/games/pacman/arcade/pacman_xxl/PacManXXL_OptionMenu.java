@@ -144,25 +144,25 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         canvas.requestFocus();
     }
 
-    public void setState(
-        boolean play3D,
-        GameVariant gameVariant,
-        boolean cutScenesEnabled,
-        MapSelectionMode mapSelectionMode,
-        boolean customMapsExist)
-    {
-        this.play3D = play3D;
+    public void setGameVariant(GameVariant gameVariant) {
         this.gameVariant = gameVariant;
-        this.cutScenesEnabled = cutScenesEnabled;
-        this.mapOrder = mapSelectionMode;
-
-        entryPlay3D.selectValue(play3D);
         entryGameVariant.selectValue(gameVariant);
-        entryCutScenesEnabled.selectValue(cutScenesEnabled);
-        entryMapOrder.selectValue(mapSelectionMode);
-        entryMapOrder.setEnabled(customMapsExist);
+    }
 
-        logMenuState();
+    public void setPlay3D(boolean play3D) {
+        this.play3D = play3D;
+        entryPlay3D.selectValue(play3D);
+    }
+
+    public void setCutScenesEnabled(boolean cutScenesEnabled) {
+        this.cutScenesEnabled = cutScenesEnabled;
+        entryCutScenesEnabled.selectValue(cutScenesEnabled);
+    }
+
+    public void setMapOrder(MapSelectionMode mapOrder, boolean customMapsExist) {
+        this.mapOrder = mapOrder;
+        entryMapOrder.selectValue(mapOrder);
+        entryMapOrder.setEnabled(customMapsExist);
     }
 
     private void logMenuState() {
