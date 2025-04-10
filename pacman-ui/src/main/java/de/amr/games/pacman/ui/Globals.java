@@ -76,10 +76,9 @@ public class Globals {
     public static final float PAC_3D_SIZE              = 17.0f;
     public static final float PELLET_3D_RADIUS         = 1.0f;
 
-    public static final KeyCodeCombination KEY_FULLSCREEN = Keyboard.naked(KeyCode.F11);
-    public static final KeyCodeCombination KEY_MUTE = Keyboard.alt(KeyCode.M);
+    public static final KeyCodeCombination KEY_FULLSCREEN  = Keyboard.naked(KeyCode.F11);
+    public static final KeyCodeCombination KEY_MUTE        = Keyboard.alt(KeyCode.M);
     public static final KeyCodeCombination KEY_OPEN_EDITOR = Keyboard.shift_alt(KeyCode.E);
-
 
     public static final BooleanProperty          PY_AUTOPILOT              = new SimpleBooleanProperty(false);
     public static final ObjectProperty<Color>    PY_CANVAS_BG_COLOR        = new SimpleObjectProperty<>(Color.BLACK);
