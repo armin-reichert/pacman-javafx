@@ -110,7 +110,6 @@ public class OptionMenu {
         Logger.trace("Menu drawing stopped");
     }
 
-
     public void draw() {
         GraphicsContext g = canvas.getGraphicsContext2D();
         g.setFill(backgroundFill);
