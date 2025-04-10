@@ -209,8 +209,8 @@ public class Maze3D extends Group {
         if (houseMinTile == null || houseMaxTile == null) {
             return;
         }
-        Vector2i houseRightUpper = vec_2i(houseMaxTile.x(), houseMinTile.y());
-        Vector2i houseLeftLower = vec_2i(houseMinTile.x(), houseMaxTile.y());
+        Vector2i houseRightUpper = Vector2i.of(houseMaxTile.x(), houseMinTile.y());
+        Vector2i houseLeftLower = Vector2i.of(houseMinTile.x(), houseMaxTile.y());
 
         r3D.setWallBaseHeightProperty(houseBaseHeightPy);
         r3D.setWallTopHeight(0.2f);

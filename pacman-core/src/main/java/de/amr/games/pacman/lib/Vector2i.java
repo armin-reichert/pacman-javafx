@@ -15,6 +15,10 @@ public record Vector2i(int x, int y) {
 
     public static final Vector2i ZERO = new Vector2i(0, 0);
 
+    public static Vector2i of(int x, int y) {
+        return new Vector2i(x, y);
+    }
+
     /**
      * Access component by index
      *

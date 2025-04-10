@@ -135,19 +135,19 @@ public class ExperimentsApp extends Application {
                 addHorizontalWall(segment, currentPoint, endPoint);
             }
             else if (segment.isRoundedNWCorner()) {
-                endPoint = currentPoint.plus(segment.ccw() ? vec_2i(-HTS, HTS) : vec_2i(HTS, -HTS));
+                endPoint = currentPoint.plus(segment.ccw() ? Vector2i.of(-HTS, HTS) : Vector2i.of(HTS, -HTS));
                 addCorner(segment, prevSegment, nextSegment, currentPoint, endPoint);
             }
             else if (segment.isRoundedSWCorner()) {
-                endPoint = currentPoint.plus(segment.ccw() ? vec_2i(HTS, HTS) : vec_2i(-HTS, -HTS));
+                endPoint = currentPoint.plus(segment.ccw() ? Vector2i.of(HTS, HTS) : Vector2i.of(-HTS, -HTS));
                 addCorner(segment, prevSegment, nextSegment, currentPoint, endPoint);
             }
             else if (segment.isRoundedSECorner()) {
-                endPoint = currentPoint.plus(segment.ccw() ? vec_2i(HTS, -HTS) : vec_2i(-HTS, HTS));
+                endPoint = currentPoint.plus(segment.ccw() ? Vector2i.of(HTS, -HTS) : Vector2i.of(-HTS, HTS));
                 addCorner(segment, prevSegment, nextSegment, currentPoint, endPoint);
             }
             else if (segment.isRoundedNECorner()) {
-                endPoint = currentPoint.plus(segment.ccw() ? vec_2i(-HTS, -HTS) : vec_2i(HTS, HTS));
+                endPoint = currentPoint.plus(segment.ccw() ? Vector2i.of(-HTS, -HTS) : Vector2i.of(HTS, HTS));
                 addCorner(segment, prevSegment, nextSegment, currentPoint, endPoint);
             }
             currentPoint = endPoint;

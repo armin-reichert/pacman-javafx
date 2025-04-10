@@ -15,7 +15,8 @@ import javafx.scene.paint.Color;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.Globals.TS;
+import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.ui.Globals.DEBUG_TEXT_FONT;
 import static de.amr.games.pacman.ui.Globals.THE_KEYBOARD;
 
@@ -105,6 +106,6 @@ public abstract class GameScene2D implements GameScene {
      * @return level size in tiles
      */
     protected Vector2i levelSizeInTilesOrElse(Vector2i defaultSize) {
-        return game().level().map(level -> vec_2i(level.worldMap().numCols(), level.worldMap().numRows())).orElse(defaultSize);
+        return game().level().map(level -> Vector2i.of(level.worldMap().numCols(), level.worldMap().numRows())).orElse(defaultSize);
     }
 }

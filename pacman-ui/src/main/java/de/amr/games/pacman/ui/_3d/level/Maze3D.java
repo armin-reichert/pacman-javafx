@@ -134,11 +134,11 @@ public class Maze3D extends Group {
         var door3D = new Door3D(leftDoorTile, rightDoorTile, doorsColor, wallBaseHeightPy.get());
 
         parent.getChildren().addAll(
-            r3D.createWallBetweenTiles(vec_2i(xMin, yMin), vec_2i(leftDoorTile.x() - 1, yMin)),
-            r3D.createWallBetweenTiles(vec_2i(rightDoorTile.x() + 1, yMin), vec_2i(xMax, yMin)),
-            r3D.createWallBetweenTiles(vec_2i(xMin, yMin), vec_2i(xMin, yMax)),
-            r3D.createWallBetweenTiles(vec_2i(xMax, yMin), vec_2i(xMax, yMax)),
-            r3D.createWallBetweenTiles(vec_2i(xMin, yMax), vec_2i(xMax, yMax))
+            r3D.createWallBetweenTiles(Vector2i.of(xMin, yMin), Vector2i.of(leftDoorTile.x() - 1, yMin)),
+            r3D.createWallBetweenTiles(Vector2i.of(rightDoorTile.x() + 1, yMin), Vector2i.of(xMax, yMin)),
+            r3D.createWallBetweenTiles(Vector2i.of(xMin, yMin), Vector2i.of(xMin, yMax)),
+            r3D.createWallBetweenTiles(Vector2i.of(xMax, yMin), Vector2i.of(xMax, yMax)),
+            r3D.createWallBetweenTiles(Vector2i.of(xMin, yMax), Vector2i.of(xMax, yMax))
         );
 
         // pixel coordinates

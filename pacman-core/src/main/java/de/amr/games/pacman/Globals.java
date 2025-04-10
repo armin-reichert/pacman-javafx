@@ -35,10 +35,6 @@ public interface Globals {
 
     Random RND = new Random();
 
-    static Vector2i vec_2i(int x, int y) {
-        return new Vector2i(x, y);
-    }
-
     /**
      * @param position a position
      * @return tile containing given position
@@ -54,7 +50,7 @@ public interface Globals {
      * @return tile containing given position
      */
     static Vector2i tileAt(float x, float y) {
-        return vec_2i((int) (x / TS), (int) (y / TS));
+        return Vector2i.of((int) (x / TS), (int) (y / TS));
     }
 
     /**

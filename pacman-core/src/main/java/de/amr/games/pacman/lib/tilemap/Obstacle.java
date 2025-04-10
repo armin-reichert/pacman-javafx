@@ -12,7 +12,6 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.HTS;
-import static de.amr.games.pacman.Globals.vec_2i;
 import static java.lang.Math.signum;
 
 /**
@@ -160,7 +159,7 @@ public class Obstacle {
         for (ObstacleSegment segment : segments) {
             Vector2i v = segment.vector();
             if (v.x() != 0 && v.y() != 0) { // diagonal
-                Vector2i e = segment.isNWCorner() || segment.isSECorner() ? vec_2i(0, v.y()) : vec_2i(v.x(), 0);
+                Vector2i e = segment.isNWCorner() || segment.isSECorner() ? Vector2i.of(0, v.y()) : Vector2i.of(v.x(), 0);
                 edges.add(e);
                 edges.add(v.minus(e));
             } else {
@@ -221,27 +220,4 @@ public class Obstacle {
         return signum(v.x()) == signum(w.x()) && signum(v.y()) == signum(w.y());
     }
 
-    // experimental
-
-    public void checkParent(Obstacle other) {
-        for (RectArea parentRect : other.innerRectanglePartition) {
-            for (RectArea childRect : innerRectanglePartition) {
-                if (parentRect.contains(childRect)) {
-                    parent = other;
-                    Logger.info("Obstacle {} at {} is contained in obstacle {} at {}",
-                            encoding(), startPoint, other.encoding(), other.startPoint);
-                }
-            }
-        }
-    }
-
-    public boolean isContainedIn(Obstacle other) {
-        return other == parent;
-    }
-
-    private Obstacle parent;
-
-    public Obstacle getParent() {
-        return parent;
-    }
 }

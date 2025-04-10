@@ -421,7 +421,7 @@ public class WorldMap {
      * @return tile with given index
      */
     public Vector2i tile(int index) {
-        return vec_2i(index % numCols, index / numCols);
+        return Vector2i.of(index % numCols, index / numCols);
     }
 
     /**
@@ -434,7 +434,7 @@ public class WorldMap {
     }
 
     public Vector2i vSymmetricTile(Vector2i tile) {
-        return vec_2i(numCols - 1 - tile.x(), tile.y());
+        return Vector2i.of(numCols - 1 - tile.x(), tile.y());
     }
 
     public boolean outOfBounds(Vector2i tile) {

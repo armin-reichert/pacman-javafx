@@ -124,23 +124,23 @@ public class GameLevel {
         ghostPositions[ORANGE_GHOST_ID] = posHalfTileRightOf(orangeGhostTile);
 
         ghostScatterTiles[RED_GHOST_ID] = worldMap.getTerrainTileProperty(PROPERTY_POS_SCATTER_RED_GHOST,
-            vec_2i(0, worldMap.numCols() - 3));
+            Vector2i.of(0, worldMap.numCols() - 3));
 
         ghostScatterTiles[PINK_GHOST_ID] = worldMap.getTerrainTileProperty(PROPERTY_POS_SCATTER_PINK_GHOST,
-            vec_2i(0, 3));
+            Vector2i.of(0, 3));
 
         ghostScatterTiles[CYAN_GHOST_ID] = worldMap.getTerrainTileProperty(PROPERTY_POS_SCATTER_CYAN_GHOST,
-            vec_2i(worldMap.numRows() - EMPTY_ROWS_BELOW_MAZE, worldMap.numCols() - 1));
+            Vector2i.of(worldMap.numRows() - EMPTY_ROWS_BELOW_MAZE, worldMap.numCols() - 1));
 
         ghostScatterTiles[ORANGE_GHOST_ID] = worldMap.getTerrainTileProperty(PROPERTY_POS_SCATTER_ORANGE_GHOST,
-            vec_2i(worldMap.numRows() - EMPTY_ROWS_BELOW_MAZE, 0));
+            Vector2i.of(worldMap.numRows() - EMPTY_ROWS_BELOW_MAZE, 0));
     }
 
     private Portal[] findPortals(WorldMap worldMap) {
         var portals = new ArrayList<Portal>();
         int firstColumn = 0, lastColumn = worldMap.numCols() - 1;
         for (int row = 0; row < worldMap.numRows(); ++row) {
-            Vector2i leftBorderTile = vec_2i(firstColumn, row), rightBorderTile = vec_2i(lastColumn, row);
+            Vector2i leftBorderTile = Vector2i.of(firstColumn, row), rightBorderTile = Vector2i.of(lastColumn, row);
             if (worldMap.get(LayerID.TERRAIN, row, firstColumn) == TUNNEL
                 && worldMap.get(LayerID.TERRAIN, row, lastColumn) == TUNNEL) {
                 portals.add(new Portal(leftBorderTile, rightBorderTile, 2));
@@ -318,8 +318,8 @@ public class GameLevel {
      * @param maxY tile-y of bottom right corner
      */
     public void createArcadeHouse(int minX, int minY, int maxX, int maxY) {
-        leftDoorTile = vec_2i(minX + 3, minY);
-        rightDoorTile = vec_2i(minX + 4, minY);
+        leftDoorTile = Vector2i.of(minX + 3, minY);
+        rightDoorTile = Vector2i.of(minX + 4, minY);
         setGhostDirection(RED_GHOST_ID, Direction.LEFT);
         setGhostDirection(PINK_GHOST_ID, Direction.DOWN);
         setGhostDirection(CYAN_GHOST_ID, Direction.UP);
@@ -337,7 +337,7 @@ public class GameLevel {
                 else if (y == minY && (x == minX + 3 || x == minX + 4)) value = DOOR;
                 else if (x == minX || x == maxX) value = WALL_V;
                 else if (y == minY || y == maxY) value = WALL_H;
-                worldMap.set(LayerID.TERRAIN, vec_2i(x, y), value);
+                worldMap.set(LayerID.TERRAIN, Vector2i.of(x, y), value);
             }
         }
     }

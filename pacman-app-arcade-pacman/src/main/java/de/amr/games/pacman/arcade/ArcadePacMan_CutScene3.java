@@ -6,6 +6,7 @@ package de.amr.games.pacman.arcade;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
@@ -63,13 +64,13 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         switch (frame) {
             case ANIMATION_START -> {
                 music.play();
-                pac.centerOverTile(vec_2i(29, 20));
+                pac.centerOverTile(Vector2i.of(29, 20));
                 pac.setMoveDir(Direction.LEFT);
                 pac.setSpeed(1.25f);
                 pac.show();
                 pac.selectAnimation(ANIM_PAC_MUNCHING);
                 pac.startAnimation();
-                blinky.centerOverTile(vec_2i(35, 20));
+                blinky.centerOverTile(Vector2i.of(35, 20));
                 blinky.setMoveAndWishDir(Direction.LEFT);
                 blinky.setSpeed(1.25f);
                 blinky.show();
@@ -77,7 +78,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
                 blinky.startAnimation();
             }
             case ANIMATION_START + 400 -> {
-                blinky.centerOverTile(vec_2i(-1, 20));
+                blinky.centerOverTile(Vector2i.of(-1, 20));
                 blinky.setMoveAndWishDir(Direction.RIGHT);
                 blinky.selectAnimation(GhostAnimations.ANIM_BLINKY_NAKED);
                 blinky.startAnimation();

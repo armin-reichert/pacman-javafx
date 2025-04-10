@@ -59,7 +59,7 @@ import static de.amr.games.pacman.uilib.Keyboard.control;
 public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraControlledView {
 
     // (NES screen width, BIG map height (42 tiles) + 2 extra tile rows)
-    private static final Vector2i UNSCALED_CANVAS_SIZE = vec_2i(NES_SIZE.x(), 44 * TS);
+    private static final Vector2i UNSCALED_CANVAS_SIZE = Vector2i.of(NES_SIZE.x(), 44 * TS);
 
     private static final int MOVING_MESSAGE_DELAY = 120;
 

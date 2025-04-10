@@ -1378,7 +1378,7 @@ public class TileMapEditor {
         addBorderWall(worldMap);
         setDefaultScatterPositions(worldMap);
         if (worldMap.numRows() >= 20) {
-            Vector2i houseMinTile = vec_2i(tilesX / 2 - 4, tilesY / 2 - 3);
+            Vector2i houseMinTile = Vector2i.of(tilesX / 2 - 4, tilesY / 2 - 3);
             placeArcadeHouse(worldMap, houseMinTile);
             worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_PAC,   formatTile(houseMinTile.plus(3, 11)));
             worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_BONUS, formatTile(houseMinTile.plus(3, 5)));
@@ -1400,10 +1400,10 @@ public class TileMapEditor {
     private void setDefaultScatterPositions(WorldMap worldMap) {
         int numCols = worldMap.numCols(), numRows = worldMap.numRows();
         if (numCols >= 3 && numRows >= 2) {
-            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_RED_GHOST,    formatTile(vec_2i(numCols - 3, 0)));
-            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_PINK_GHOST,   formatTile(vec_2i(2, 0)));
-            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_CYAN_GHOST,   formatTile(vec_2i(numCols - 1, numRows - 2)));
-            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_ORANGE_GHOST, formatTile(vec_2i(0, numRows - 2)));
+            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_RED_GHOST,    formatTile(Vector2i.of(numCols - 3, 0)));
+            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_PINK_GHOST,   formatTile(Vector2i.of(2, 0)));
+            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_CYAN_GHOST,   formatTile(Vector2i.of(numCols - 1, numRows - 2)));
+            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_ORANGE_GHOST, formatTile(Vector2i.of(0, numRows - 2)));
             changeManager.setTerrainMapChanged();
         }
     }
@@ -1428,7 +1428,7 @@ public class TileMapEditor {
     private void addArcadeHouseAtMapCenter(WorldMap worldMap) {
         int numRows = worldMap.numRows(), numCols = worldMap.numCols();
         int houseMinX = numCols / 2 - 4, houseMinY = numRows / 2 - 3;
-        placeArcadeHouse(worldMap, vec_2i(houseMinX, houseMinY));
+        placeArcadeHouse(worldMap, Vector2i.of(houseMinX, houseMinY));
     }
 
     public void placeArcadeHouse(WorldMap worldMap, Vector2i houseMinTile) {
@@ -1625,7 +1625,7 @@ public class TileMapEditor {
         int numMazeCols = worldMap.numCols();
         for (int row = 0; row < numMazeRows; ++row) {
             for (int col = 0; col < numMazeCols; ++col) {
-                Vector2i worldMapTile = vec_2i(col, row + EMPTY_ROWS_BEFORE_MAZE);
+                Vector2i worldMapTile = Vector2i.of(col, row + EMPTY_ROWS_BEFORE_MAZE);
                 try {
                     int[] pixelsOfTile = new int[TS*TS]; // pixels row-wise
                     rdr.getPixels(col * TS, row * TS, TS, TS, pixelFormat, pixelsOfTile, 0, TS);
