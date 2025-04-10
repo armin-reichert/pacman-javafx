@@ -81,16 +81,16 @@ public class Globals {
     public static final KeyCodeCombination KEY_OPEN_EDITOR = Keyboard.shift_alt(KeyCode.E);
 
 
-    public static final BooleanProperty PY_AUTOPILOT                       = new SimpleBooleanProperty(false);
-    public static final ObjectProperty<Color> PY_CANVAS_BG_COLOR           = new SimpleObjectProperty<>(Color.BLACK);
-    public static final BooleanProperty PY_CANVAS_FONT_SMOOTHING           = new SimpleBooleanProperty(false);
-    public static final BooleanProperty PY_CANVAS_IMAGE_SMOOTHING          = new SimpleBooleanProperty(false);
-    public static final BooleanProperty PY_DEBUG_INFO_VISIBLE              = new SimpleBooleanProperty(false);
-    public static final BooleanProperty PY_IMMUNITY                        = new SimpleBooleanProperty(false);
-    public static final IntegerProperty PY_PIP_HEIGHT                      = new SimpleIntegerProperty(400);
-    public static final BooleanProperty PY_PIP_ON                          = new SimpleBooleanProperty(false);
-    public static final IntegerProperty PY_PIP_OPACITY_PERCENT             = new SimpleIntegerProperty(100);
-    public static final IntegerProperty PY_SIMULATION_STEPS                = new SimpleIntegerProperty(1);
+    public static final BooleanProperty          PY_AUTOPILOT              = new SimpleBooleanProperty(false);
+    public static final ObjectProperty<Color>    PY_CANVAS_BG_COLOR        = new SimpleObjectProperty<>(Color.BLACK);
+    public static final BooleanProperty          PY_CANVAS_FONT_SMOOTHING  = new SimpleBooleanProperty(false);
+    public static final BooleanProperty          PY_CANVAS_IMAGE_SMOOTHING = new SimpleBooleanProperty(false);
+    public static final BooleanProperty          PY_DEBUG_INFO_VISIBLE     = new SimpleBooleanProperty(false);
+    public static final BooleanProperty          PY_IMMUNITY               = new SimpleBooleanProperty(false);
+    public static final IntegerProperty          PY_PIP_HEIGHT             = new SimpleIntegerProperty(400);
+    public static final BooleanProperty          PY_PIP_ON                 = new SimpleBooleanProperty(false);
+    public static final IntegerProperty          PY_PIP_OPACITY_PERCENT    = new SimpleIntegerProperty(100);
+    public static final IntegerProperty          PY_SIMULATION_STEPS       = new SimpleIntegerProperty(1);
 
     public static final BooleanProperty          PY_3D_AXES_VISIBLE        = new SimpleBooleanProperty(false);
     public static final ObjectProperty<DrawMode> PY_3D_DRAW_MODE           = new SimpleObjectProperty<>(DrawMode.FILL);
