@@ -7,8 +7,6 @@ package de.amr.games.pacman.arcade.ms_pacman;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.MapSelector;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 import java.util.List;
 
@@ -16,7 +14,7 @@ import static de.amr.games.pacman.Globals.assertValidLevelNumber;
 
 public class ArcadeMsPacMan_MapSelector extends MapSelector {
 
-    private ObservableList<WorldMap> maps = FXCollections.emptyObservableList();
+    private List<WorldMap> maps = List.of();
 
     @Override
     public List<WorldMap> builtinMaps() {
@@ -34,7 +32,7 @@ public class ArcadeMsPacMan_MapSelector extends MapSelector {
     @Override
     public void loadAllMaps(GameModel game) {
         if (maps.isEmpty()) {
-            maps = FXCollections.observableList(loadMapsFromModule("maps/mspacman_%d.world", 4));
+            maps = loadMapsFromModule("maps/mspacman_%d.world", 4);
         }
     }
 
