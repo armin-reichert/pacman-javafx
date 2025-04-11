@@ -25,16 +25,6 @@ import static de.amr.games.pacman.ui.Globals.*;
  */
 public class PacManXXL_StartPage implements StartPage, ResourceManager {
 
-    private static final OptionMenu.MenuStyle STYLE = new OptionMenu.MenuStyle(
-        OptionMenu.DEFAULT_STYLE.backgroundFill(),
-        OptionMenu.DEFAULT_STYLE.borderStroke(),
-        Color.RED, // DEFAULT_STYLE.titleTextFill(),
-        OptionMenu.DEFAULT_STYLE.entryTextFill(),
-        OptionMenu.DEFAULT_STYLE.entryValueFill(),
-        OptionMenu.DEFAULT_STYLE.entryValueDisabledFill(),
-        OptionMenu.DEFAULT_STYLE.hintTextFill()
-    );
-
     private final StackPane root = new StackPane();
     private OptionMenu menu;
 
@@ -153,7 +143,16 @@ public class PacManXXL_StartPage implements StartPage, ResourceManager {
             "PRESS E TO OPEN EDITOR",
             "PRESS ENTER TO START"
         );
-        menu.setStyle(STYLE);
+        menu.setStyle(new OptionMenuStyle(
+            OptionMenu.DEFAULT_STYLE.backgroundFill(),
+            OptionMenu.DEFAULT_STYLE.borderStroke(),
+            Color.RED, // DEFAULT_STYLE.titleTextFill(),
+            OptionMenu.DEFAULT_STYLE.entryTextFill(),
+            OptionMenu.DEFAULT_STYLE.entryValueFill(),
+            OptionMenu.DEFAULT_STYLE.entryValueDisabledFill(),
+            OptionMenu.DEFAULT_STYLE.hintTextFill()
+        ));
+
         menu.setOnStart(() -> {
             if (gameVariant == GameVariant.PACMAN_XXL || gameVariant == GameVariant.MS_PACMAN_XXL) {
                 GameModel game = THE_GAME_CONTROLLER.game(gameVariant);

@@ -29,17 +29,7 @@ import static de.amr.games.pacman.Globals.assertNotNull;
 
 public class OptionMenu implements ResourceManager {
 
-    public record MenuStyle(
-        Color backgroundFill,
-        Color borderStroke,
-        Color titleTextFill,
-        Color entryTextFill,
-        Color entryValueFill,
-        Color entryValueDisabledFill,
-        Color hintTextFill
-    ) {}
-
-    public static final MenuStyle DEFAULT_STYLE = new MenuStyle(
+    public static final OptionMenuStyle DEFAULT_STYLE = new OptionMenuStyle(
         Color.web("#0C1568"),
         Color.web("fffeff"),
         Color.web("ffffff"),
@@ -66,7 +56,7 @@ public class OptionMenu implements ResourceManager {
     protected final Canvas canvas = new Canvas();
     protected final GraphicsContext g = canvas.getGraphicsContext2D();
 
-    protected MenuStyle style = DEFAULT_STYLE;
+    protected OptionMenuStyle style = DEFAULT_STYLE;
     protected Font textFont;
     protected Font titleFont;
     protected AudioClip entrySelectedSound;
@@ -209,7 +199,7 @@ public class OptionMenu implements ResourceManager {
         this.title = title;
     }
 
-    public void setStyle(MenuStyle style) {
+    public void setStyle(OptionMenuStyle style) {
         this.style = assertNotNull(style);
     }
 
