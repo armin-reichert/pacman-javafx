@@ -4,7 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.uilib;
 
-import javafx.animation.AnimationTimer;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -18,6 +20,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -28,6 +31,8 @@ import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.Globals.assertNotNull;
 
 public class OptionMenu implements ResourceManager {
+
+    private static final int REFRESH_RATE = 30;
 
     public static final OptionMenuStyle DEFAULT_STYLE = new OptionMenuStyle(
         Color.web("#0C1568"),
@@ -62,10 +67,7 @@ public class OptionMenu implements ResourceManager {
     protected AudioClip entrySelectedSound;
     protected AudioClip valueSelectedSound;
 
-    private final AnimationTimer drawingTimer = new AnimationTimer() {
-        @Override
-        public void handle(long now) { draw(); }
-    };
+    private final Timeline drawingTimer;
 
     public OptionMenu(float height) {
         numTiles = (int) (height / TS);
@@ -91,6 +93,9 @@ public class OptionMenu implements ResourceManager {
         canvas.heightProperty().bind(scalingPy.multiply(height));
 
         root.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPress);
+
+        drawingTimer = new Timeline(REFRESH_RATE, new KeyFrame(Duration.seconds(1.0 / REFRESH_RATE), e-> draw()));
+        drawingTimer.setCycleCount(Animation.INDEFINITE);
     }
 
     @Override
@@ -111,7 +116,7 @@ public class OptionMenu implements ResourceManager {
     public BooleanProperty soundEnabledProperty() { return soundEnabledPy; }
 
     public void startDrawing() {
-        drawingTimer.start();
+        drawingTimer.play();
         Logger.trace("Menu drawing started");
     }
 
@@ -120,7 +125,7 @@ public class OptionMenu implements ResourceManager {
         Logger.trace("Menu drawing stopped");
     }
 
-    public void draw() {
+    private void draw() {
         g.save();
         g.setFill(style.backgroundFill());
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -148,6 +153,7 @@ public class OptionMenu implements ResourceManager {
             drawAtTile(tx, ty, commandText, style.hintTextFill());
             ty += 2;
         }
+
         g.restore();
     }
 

@@ -6,6 +6,7 @@ open module de.amr.games.pacman.uilib {
     requires javafx.media;
     requires org.tinylog.api;
     requires de.amr.games.pacman;
+    requires java.sql;
 
     exports de.amr.games.pacman.uilib;
     exports de.amr.games.pacman.uilib.objimport;
