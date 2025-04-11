@@ -108,6 +108,10 @@ public class OptionMenu implements ResourceManager {
         return OptionMenu.class;
     }
 
+    public void requestFocus() {
+        canvas.requestFocus();
+    }
+
     private void playSound(AudioClip clip) {
         if (soundEnabledPy.get()) {
             clip.play();
