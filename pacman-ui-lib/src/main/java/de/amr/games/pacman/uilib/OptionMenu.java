@@ -19,7 +19,7 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -34,17 +34,17 @@ public class OptionMenu implements ResourceManager {
 
     private static final int REFRESH_RATE = 30;
 
-    public static final OptionMenuStyle DEFAULT_STYLE = new OptionMenuStyle(
-        Color.web("#0C1568"),
-        Color.web("fffeff"),
-        Color.web("ffffff"),
-        Color.web("bcbe00"),
-        Color.web("fffeff"),
-        Color.GRAY,
-        Color.web("bcbe00")
+    public final OptionMenuStyle DEFAULT_STYLE = new OptionMenuStyle(
+            loadFont("fonts/emulogic.ttf", 3 * TS),
+            loadFont("fonts/emulogic.ttf", TS),
+            Color.web("#0C1568"),
+            Color.web("fffeff"),
+            Color.web("ffffff"),
+            Color.web("bcbe00"),
+            Color.web("fffeff"),
+            Color.GRAY,
+            Color.web("bcbe00")
     );
-
-    private static final float TITLE_FONT_SCALING = 3f;
 
     protected final int numTiles;
     protected final List<OptionMenuEntry<?>> entries = new ArrayList<>();
@@ -62,8 +62,6 @@ public class OptionMenu implements ResourceManager {
     protected final GraphicsContext g = canvas.getGraphicsContext2D();
 
     protected OptionMenuStyle style = DEFAULT_STYLE;
-    protected Font textFont;
-    protected Font titleFont;
     protected AudioClip entrySelectedSound;
     protected AudioClip valueSelectedSound;
 
@@ -79,8 +77,6 @@ public class OptionMenu implements ResourceManager {
             "PRESS ENTER TO START"
         );
 
-        textFont = loadFont("fonts/emulogic.ttf", TS);
-        titleFont = loadFont("fonts/emulogic.ttf", TITLE_FONT_SCALING * TS);
         entrySelectedSound = loadAudioClip("sounds/menu-select1.wav");
         valueSelectedSound = loadAudioClip("sounds/menu-select2.wav");
 
@@ -132,10 +128,11 @@ public class OptionMenu implements ResourceManager {
 
         g.scale(scalingPy.doubleValue(), scalingPy.doubleValue());
 
-        g.setFont(titleFont);
-        drawAtTile((numTiles - TITLE_FONT_SCALING * title.length()) * 0.5f, 6, title, style.titleTextFill());
+        g.setFont(style.titleFont());
+        g.setFill(style.titleTextFill());
+        drawCentered(title, 6 * TS);
 
-        g.setFont(textFont);
+        g.setFont(style.textFont());
         for (int i = 0; i < entries.size(); ++i) {
             int y = (12 + 3 * i);
             OptionMenuEntry<?> entry = entries.get(i);
@@ -147,13 +144,21 @@ public class OptionMenu implements ResourceManager {
             drawAtTile(17, y, entry.selectedValueText(), entry.enabled ? style.entryValueFill() : style.entryValueDisabledFill());
         }
 
+        g.setFill(style.hintTextFill());
+        g.setFont(style.textFont());
         int ty = numTiles - 2 * commandTexts.length;
         for (String commandText : commandTexts) {
-            int tx = (numTiles - commandText.length()) / 2;
-            drawAtTile(tx, ty, commandText, style.hintTextFill());
+            drawCentered(commandText, ty * TS);
             ty += 2;
         }
 
+        g.restore();
+    }
+
+    private void drawCentered(String text, double y) {
+        g.save();
+        g.setTextAlign(TextAlignment.CENTER);
+        g.fillText(text, (canvas.getWidth() * 0.5) / scalingPy.get(), y);
         g.restore();
     }
 

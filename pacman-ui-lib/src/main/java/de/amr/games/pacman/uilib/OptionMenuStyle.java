@@ -5,8 +5,11 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.uilib;
 
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 public record OptionMenuStyle(
+    Font titleFont,
+    Font textFont,
     Color backgroundFill,
     Color borderStroke,
     Color titleTextFill,
