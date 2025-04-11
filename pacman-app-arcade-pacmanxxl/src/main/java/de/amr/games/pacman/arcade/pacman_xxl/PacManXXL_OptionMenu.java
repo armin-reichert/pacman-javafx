@@ -12,13 +12,23 @@ import de.amr.games.pacman.uilib.OptionMenu;
 import de.amr.games.pacman.uilib.OptionMenuEntry;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.Globals.TS;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.ui.Globals.*;
 
 public class PacManXXL_OptionMenu extends OptionMenu {
+
+    private static final MenuStyle STYLE = new MenuStyle(
+        DEFAULT_STYLE.backgroundFill(),
+        DEFAULT_STYLE.borderStroke(),
+        Color.RED, // DEFAULT_STYLE.titleTextFill(),
+        DEFAULT_STYLE.entryTextFill(),
+        DEFAULT_STYLE.entryValueFill(),
+        DEFAULT_STYLE.entryValueDisabledFill(),
+        DEFAULT_STYLE.hintTextFill()
+    );
 
     // State
     GameVariant gameVariant;
@@ -32,7 +42,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         @Override
         protected void onValueChanged(int index) {
             gameVariant = selectedValue();
-            logMenuState();
+            logState();
         }
 
         @Override
@@ -51,7 +61,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         protected void onValueChanged(int index) {
             play3D = selectedValue();
             PY_3D_ENABLED.set(play3D);
-            logMenuState();
+            logState();
         }
 
         @Override
@@ -65,7 +75,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         @Override
         protected void onValueChanged(int index) {
             cutScenesEnabled = selectedValue();
-            logMenuState();
+            logState();
         }
 
         @Override
@@ -82,7 +92,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             if (enabled) {
                 mapOrder = selectedValue();
             }
-            logMenuState();
+            logState();
         }
 
         @Override
@@ -111,8 +121,8 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             "PRESS E TO OPEN EDITOR",
             "PRESS ENTER TO START"
         );
+        setStyle(STYLE);
         setOnStart(() -> {
-            Logger.info("Start action from option menu triggered");
             if (gameVariant == GameVariant.PACMAN_XXL || gameVariant == GameVariant.MS_PACMAN_XXL) {
                 GameModel game = THE_GAME_CONTROLLER.game(gameVariant);
                 game.setCutScenesEnabled(cutScenesEnabled);
@@ -124,7 +134,6 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             }
         });
         soundEnabledProperty().bind(THE_SOUND.mutedProperty().not());
-        //setBackgroundFill(Color.web("#0C1568"));
     }
 
     @Override
@@ -135,17 +144,16 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         }
     }
 
+    public void requestFocus() {
+        canvas.requestFocus();
+    }
+
     public GameVariant gameVariant() {
         return gameVariant;
     }
 
-    public void requestFocus() {
-        Logger.info("XXL Option menu canvas requests focus");
-        canvas.requestFocus();
-    }
-
     public void setGameVariant(GameVariant gameVariant) {
-        this.gameVariant = gameVariant;
+        this.gameVariant = assertNotNull(gameVariant);
         entryGameVariant.selectValue(gameVariant);
     }
 
@@ -160,12 +168,12 @@ public class PacManXXL_OptionMenu extends OptionMenu {
     }
 
     public void setMapOrder(MapSelectionMode mapOrder, boolean customMapsExist) {
-        this.mapOrder = mapOrder;
+        this.mapOrder = assertNotNull(mapOrder);
         entryMapOrder.selectValue(mapOrder);
         entryMapOrder.setEnabled(customMapsExist);
     }
 
-    public void logMenuState() {
+    public void logState() {
         Logger.info("gameVariant={} play3D={} cutScenesEnabled={} mapOrder={}", gameVariant, play3D, cutScenesEnabled, mapOrder);
     }
 }

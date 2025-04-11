@@ -42,7 +42,7 @@ public class OptionMenu implements ResourceManager {
     public static final MenuStyle DEFAULT_STYLE = new MenuStyle(
         Color.web("#0C1568"),
         Color.web("fffeff"),
-        Color.web("ff0000"),
+        Color.web("ffffff"),
         Color.web("bcbe00"),
         Color.web("fffeff"),
         Color.GRAY,

@@ -80,6 +80,6 @@ public class PacManXXL_StartPage implements StartPage, ResourceManager {
         game.mapSelector().loadAllMaps(game);
         menu.setMapOrder(game.mapSelector().mapSelectionMode(), !game.mapSelector().customMaps().isEmpty());
         Logger.info("Option menu initialized");
-        menu.logMenuState();
+        menu.logState();
     }
 }
