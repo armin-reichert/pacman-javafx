@@ -25,7 +25,7 @@ public class ArcadePacMan_StartPage extends StackPane implements StartPage, Reso
     public ArcadePacMan_StartPage(GameVariant gameVariant) {
         setUserData(assertNotNull(gameVariant));
         var flyer = new Flyer(loadImage("graphics/f1.jpg"), loadImage("graphics/f2.jpg"), loadImage("graphics/f3.jpg"));
-        flyer.selectFlyerPage(0);
+        flyer.selectPage(0);
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
                 case DOWN -> flyer.nextFlyerPage();

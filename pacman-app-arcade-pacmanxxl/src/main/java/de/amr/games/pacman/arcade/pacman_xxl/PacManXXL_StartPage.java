@@ -18,50 +18,36 @@ import org.tinylog.Logger;
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.ui.Globals.PY_3D_ENABLED;
-import static de.amr.games.pacman.ui.Globals.THE_KEYBOARD;
 
+/**
+ * Displays an option menu where the game variant to be played and other options can be set.
+ */
 public class PacManXXL_StartPage implements StartPage, ResourceManager {
 
     private final StackPane root = new StackPane();
-    private final PacManXXL_OptionMenu menu;
+    private final PacManXXL_OptionMenu menu = new PacManXXL_OptionMenu();
+
+    public PacManXXL_StartPage() {
+        Flyer flyer = new Flyer(loadImage("graphics/pacman_xxl_startpage.jpg"));
+        flyer.setPageLayout(0, Flyer.LayoutMode.FILL);
+        flyer.selectPage(0);
+
+        // scale menu to take 90% of start page height
+        menu.scalingProperty().bind(root.heightProperty().multiply(0.9).divide(menu.numTiles() * TS));
+
+        root.setBackground(Background.fill(Color.BLACK));
+        root.getChildren().addAll(flyer, menu.root());
+    }
 
     @Override
     public Class<?> resourceRootClass() {
         return PacManXXL_StartPage.class;
     }
 
-    public PacManXXL_StartPage() {
-        root.setBackground(Background.fill(Color.BLACK));
-
-        Flyer flyer = new Flyer(loadImage("graphics/pacman_xxl_startpage.jpg"));
-        flyer.selectFlyerPage(0);
-        flyer.setLayoutMode(0, Flyer.LayoutMode.FILL);
-
-        menu = new PacManXXL_OptionMenu();
-        menu.scalingProperty().bind(root.heightProperty().multiply(0.9).divide(menu.numTiles() * TS));
-        initMenuState(THE_GAME_CONTROLLER.selectedGameVariant());
-
-        root.getChildren().addAll(flyer, menu.root());
-    }
-
-    private void initMenuState(GameVariant gameVariant) {
-        if (gameVariant != GameVariant.MS_PACMAN_XXL && gameVariant != GameVariant.PACMAN_XXL) {
-            Logger.warn("Game variant {} is not allowed in option menu, using {} instead", gameVariant, GameVariant.PACMAN_XXL);
-            gameVariant = GameVariant.PACMAN_XXL;
-        }
-        GameModel game = THE_GAME_CONTROLLER.game(gameVariant);
-        game.mapSelector().loadAllMaps(game);
-        menu.setGameVariant(gameVariant);
-        menu.setPlay3D(PY_3D_ENABLED.get());
-        menu.setCutScenesEnabled(game.isCutScenesEnabled());
-        menu.setMapOrder(game.mapSelector().mapSelectionMode(), !game.mapSelector().customMaps().isEmpty());
-    }
-
     @Override
     public void onEnter() {
-        initMenuState(currentGameVariant());
+        initMenuState();
         menu.startDrawing();
-        THE_KEYBOARD.logCurrentBindings();
     }
 
     @Override
@@ -82,5 +68,18 @@ public class PacManXXL_StartPage implements StartPage, ResourceManager {
     @Override
     public void onExit() {
         menu.stopDrawing();
+    }
+
+    private void initMenuState() {
+        if (menu.gameVariant == null) {
+            menu.setGameVariant(GameVariant.PACMAN_XXL);
+        }
+        GameModel game = THE_GAME_CONTROLLER.game(menu.gameVariant);
+        menu.setPlay3D(PY_3D_ENABLED.get());
+        menu.setCutScenesEnabled(game.isCutScenesEnabled());
+        game.mapSelector().loadAllMaps(game);
+        menu.setMapOrder(game.mapSelector().mapSelectionMode(), !game.mapSelector().customMaps().isEmpty());
+        Logger.info("Option menu initialized");
+        menu.logMenuState();
     }
 }

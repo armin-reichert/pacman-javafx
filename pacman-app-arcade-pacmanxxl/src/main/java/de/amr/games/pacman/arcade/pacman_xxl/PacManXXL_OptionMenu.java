@@ -166,7 +166,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         entryMapOrder.setEnabled(customMapsExist);
     }
 
-    private void logMenuState() {
-        Logger.info("Menu state: gameVariant={}, play3D={}, cutScenesEnabled={}, mapOrder={}", gameVariant, play3D, cutScenesEnabled, mapOrder);
+    public void logMenuState() {
+        Logger.info("gameVariant={} play3D={} cutScenesEnabled={} mapOrder={}", gameVariant, play3D, cutScenesEnabled, mapOrder);
     }
 }

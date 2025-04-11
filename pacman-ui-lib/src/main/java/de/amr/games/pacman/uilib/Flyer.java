@@ -24,7 +24,7 @@ public class Flyer extends StackPane {
         this.images = images;
         this.layoutModes = new LayoutMode[images.length];
         Arrays.fill(layoutModes, LayoutMode.FIT_HEIGHT);
-        selectFlyerPage(0);
+        selectPage(0);
     }
 
     private void fill(Image image) {
@@ -39,7 +39,7 @@ public class Flyer extends StackPane {
             BackgroundPosition.CENTER, Ufx.FIT_HEIGHT)));
     }
 
-    public void selectFlyerPage(int index) {
+    public void selectPage(int index) {
         this.index = index;
         if (layoutModes[index] == LayoutMode.FILL) {
             fill(images[index]);
@@ -48,15 +48,15 @@ public class Flyer extends StackPane {
         }
     }
 
-    public void setLayoutMode(int index, LayoutMode layoutMode) {
+    public void setPageLayout(int index, LayoutMode layoutMode) {
         layoutModes[index] = layoutMode;
     }
 
     public void nextFlyerPage() {
-        selectFlyerPage((index + 1) % images.length);
+        selectPage((index + 1) % images.length);
     }
 
     public void prevFlyerPage() {
-        selectFlyerPage((index - 1 + images.length) % images.length);
+        selectPage((index - 1 + images.length) % images.length);
     }
 }
