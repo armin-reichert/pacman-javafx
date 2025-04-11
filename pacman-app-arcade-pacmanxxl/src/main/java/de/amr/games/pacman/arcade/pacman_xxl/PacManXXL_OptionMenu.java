@@ -12,7 +12,6 @@ import de.amr.games.pacman.uilib.OptionMenu;
 import de.amr.games.pacman.uilib.OptionMenuEntry;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
@@ -105,7 +104,6 @@ public class PacManXXL_OptionMenu extends OptionMenu {
         addEntry(entryPlay3D);
         addEntry(entryCutScenesEnabled);
         addEntry(entryMapOrder);
-        setBackgroundFill(Color.web("#0C1568"));
         setTitle("Pac-Man XXL");
         setCommandTexts(
             "SELECT OPTIONS WITH UP AND DOWN",
@@ -126,6 +124,7 @@ public class PacManXXL_OptionMenu extends OptionMenu {
             }
         });
         soundEnabledProperty().bind(THE_SOUND.mutedProperty().not());
+        //setBackgroundFill(Color.web("#0C1568"));
     }
 
     @Override
