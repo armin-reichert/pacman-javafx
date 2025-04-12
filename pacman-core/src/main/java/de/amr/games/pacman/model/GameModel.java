@@ -50,7 +50,6 @@ public abstract class GameModel {
     protected long levelStartTime;
     protected int lastLevelNumber;
     protected boolean levelCounterEnabled;
-    protected boolean simulateOverflowBug;
 
     private final BooleanProperty cutScenesEnabledPy = new SimpleBooleanProperty(true);
     private final BooleanProperty demoLevelPy = new SimpleBooleanProperty(false);
@@ -58,6 +57,7 @@ public abstract class GameModel {
     private final IntegerProperty livesPy = new SimpleIntegerProperty(0);
     private final BooleanProperty playingPy = new SimpleBooleanProperty(false);
     private final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(false);
+    private final BooleanProperty simulateOverflowBugPy = new SimpleBooleanProperty(true);
 
     protected SimulationStepLog eventLog;
 
@@ -154,6 +154,7 @@ public abstract class GameModel {
     public IntegerProperty livesProperty() { return livesPy; }
     public BooleanProperty playingProperty() { return playingPy; }
     public BooleanProperty scoreVisibleProperty() { return scoreVisiblePy; }
+    public BooleanProperty simulateOverflowBugProperty() { return simulateOverflowBugPy; }
 
     public void loseLife() {
         int lives = livesProperty().get();
