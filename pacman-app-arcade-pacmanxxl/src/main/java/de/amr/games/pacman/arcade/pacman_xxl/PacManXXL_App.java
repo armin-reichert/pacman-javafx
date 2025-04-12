@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman_xxl;
 
+import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.GameUI;
 import de.amr.games.pacman.ui.dashboard.InfoBoxCustomMaps;
@@ -25,6 +26,7 @@ public class PacManXXL_App extends Application {
 
     @Override
     public void init() {
+        Globals.checkDirectories();
         var pacManGameModel = new PacManXXL_PacMan_GameModel(xxlMapSelector);
         var msPacManGameModel = new PacManXXL_MsPacMan_GameModel(xxlMapSelector);
         THE_GAME_CONTROLLER.registerGameModel(GameVariant.PACMAN_XXL, pacManGameModel);

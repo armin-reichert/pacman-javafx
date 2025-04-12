@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade;
 
+import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.GameUI;
 import javafx.application.Application;
@@ -21,6 +22,7 @@ public class ArcadePacMan_App extends Application {
 
     @Override
     public void init() {
+        Globals.checkDirectories();
         THE_GAME_CONTROLLER.registerGameModel(GameVariant.PACMAN, new ArcadePacMan_GameModel());
         THE_GAME_CONTROLLER.gameVariantProperty().set(GameVariant.PACMAN);
     }

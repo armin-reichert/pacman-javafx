@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.tengen.ms_pacman;
 
+import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.GameUI;
 import javafx.application.Application;
@@ -22,6 +23,7 @@ public class TengenMsPacMan_App extends Application {
 
     @Override
     public void init() {
+        Globals.checkDirectories();
         THE_GAME_CONTROLLER.registerGameModel(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
         THE_GAME_CONTROLLER.gameVariantProperty().set(GameVariant.MS_PACMAN_TENGEN);
     }

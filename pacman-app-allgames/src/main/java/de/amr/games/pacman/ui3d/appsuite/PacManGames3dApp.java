@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.appsuite;
 
+import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.arcade.ArcadePacMan_GameModel;
 import de.amr.games.pacman.arcade.ArcadePacMan_StartPage;
 import de.amr.games.pacman.arcade.ArcadePacMan_UIConfig;
@@ -41,6 +42,7 @@ public class PacManGames3dApp extends Application {
     @Override
     public void init() {
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
+        Globals.checkDirectories();
         THE_GAME_CONTROLLER.registerGameModel(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_GameModel());
         THE_GAME_CONTROLLER.registerGameModel(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
         THE_GAME_CONTROLLER.registerGameModel(GameVariant.PACMAN,           new ArcadePacMan_GameModel());

@@ -24,7 +24,7 @@ import java.util.Random;
  */
 public interface Globals {
 
-    static void init() {
+    static void checkDirectories() {
         String homeDirDesc = "Pac-Man FX home directory";
         String customMapDirDesc = "Pac-Man FX custom map directory";
         boolean success = ensureDirectoryExistsAndIsWritable(HOME_DIR, homeDirDesc);
@@ -34,6 +34,7 @@ public interface Globals {
             if (success) {
                 Logger.info(customMapDirDesc + " is " + CUSTOM_MAP_DIR);
             }
+            Logger.info("Directory check passed!");
         }
     }
 
