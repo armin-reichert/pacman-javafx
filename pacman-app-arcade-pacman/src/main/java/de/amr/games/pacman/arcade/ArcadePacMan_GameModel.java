@@ -133,7 +133,7 @@ public class ArcadePacMan_GameModel extends GameModel {
 
     @Override
     public void init() {
-        initialLives = 3;
+        initialLivesProperty().set(3);
         simulateOverflowBug = true;
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
@@ -149,7 +149,7 @@ public class ArcadePacMan_GameModel extends GameModel {
     @Override
     public void resetForStartingNewGame() {
         playingProperty().set(false);
-        livesProperty().set(initialLives);
+        livesProperty().set(initialLivesProperty().get());
         level = null;
         demoLevelProperty().set(false);
         cruiseElroy = 0;

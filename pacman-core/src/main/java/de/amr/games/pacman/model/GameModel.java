@@ -51,7 +51,6 @@ public abstract class GameModel {
     protected int lastLevelNumber;
     protected boolean levelCounterEnabled;
     protected boolean simulateOverflowBug;
-    protected int initialLives;
 
     private final BooleanProperty cutScenesEnabledPy = new SimpleBooleanProperty(true);
     private final BooleanProperty demoLevelPy = new SimpleBooleanProperty(false);

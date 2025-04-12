@@ -139,7 +139,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public void resetForStartingNewGame() {
-        livesProperty().set(initialLives);
+        livesProperty().set(initialLivesProperty().get());
         level = null;
         demoLevelProperty().set(false);
         playingProperty().set(false);
