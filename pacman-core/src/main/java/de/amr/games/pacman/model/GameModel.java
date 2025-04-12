@@ -49,11 +49,11 @@ public abstract class GameModel {
     protected GameLevel level;
     protected long levelStartTime;
     protected int lastLevelNumber;
-    protected boolean levelCounterEnabled;
 
     private final BooleanProperty cutScenesEnabledPy = new SimpleBooleanProperty(true);
     private final BooleanProperty demoLevelPy = new SimpleBooleanProperty(false);
     private final IntegerProperty initialLivesPy = new SimpleIntegerProperty(0);
+    private final BooleanProperty levelCounterEnabledPy = new SimpleBooleanProperty();
     private final IntegerProperty livesPy = new SimpleIntegerProperty(0);
     private final BooleanProperty playingPy = new SimpleBooleanProperty(false);
     private final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(false);
@@ -151,6 +151,7 @@ public abstract class GameModel {
     public BooleanProperty cutScenesEnabledProperty() { return cutScenesEnabledPy; }
     public BooleanProperty demoLevelProperty() { return demoLevelPy; }
     public IntegerProperty initialLivesProperty() { return initialLivesPy; }
+    public BooleanProperty levelCounterEnabledProperty() { return levelCounterEnabledPy; }
     public IntegerProperty livesProperty() { return livesPy; }
     public BooleanProperty playingProperty() { return playingPy; }
     public BooleanProperty scoreVisibleProperty() { return scoreVisiblePy; }
@@ -194,7 +195,7 @@ public abstract class GameModel {
         if (level.number() == 1) {
             levelCounter.clear();
         }
-        if (levelCounterEnabled) {
+        if (levelCounterEnabledProperty().get()) {
             levelCounter.add(level.bonusSymbol(0));
             if (levelCounter.size() > LEVEL_COUNTER_MAX_SIZE) {
                 levelCounter.removeFirst();

@@ -423,7 +423,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             level.setGhostPosition(ghost.id(), level.ghostPosition(ghost.id()).plus(0, HTS))
         );
 
-        levelCounterEnabled = levelNumber < 8;
+        levelCounterEnabledProperty().set(levelNumber < 8);
         activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON
     }
 
@@ -454,7 +454,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
                 level.setGhostPosition(ghost.id(), level.ghostPosition(ghost.id()).plus(0, HTS))
         );
 
-        levelCounterEnabled = true;
+        levelCounterEnabledProperty().set(true);
         levelCounter.clear();
         levelCounter.add((byte)0);
 

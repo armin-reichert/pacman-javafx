@@ -262,14 +262,14 @@ public class ArcadePacMan_GameModel extends GameModel {
         level.setBonusSymbol(1, computeBonusSymbol(levelNumber));
 
         setCruiseElroy(0);
-        levelCounterEnabled = true;
+        levelCounterEnabledProperty().set(true);
     }
 
     @Override
     public void buildDemoLevel() {
         buildNormalLevel(1);
         assignDemoLevelBehavior(level.pac());
-        levelCounterEnabled = false;
+        levelCounterEnabledProperty().set(false);
         demoLevelSteering.init();
     }
 
