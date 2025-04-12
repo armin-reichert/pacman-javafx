@@ -174,7 +174,7 @@ public class GameView implements View {
         THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
             GameUIConfig config = THE_UI_CONFIGS.current();
             config.createActorAnimations(level);
-            THE_SOUND.setEnabled(!THE_GAME_CONTROLLER.game().isDemoLevel());
+            THE_SOUND.setEnabled(!THE_GAME_CONTROLLER.game().demoLevelProperty().get());
             // size of game scene might have changed, so re-embed
             currentGameScene().ifPresent(gameScene -> embedGameScene(config, gameScene));
             pipView.setScene2D(config.createPiPScene(canvas));

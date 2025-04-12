@@ -151,7 +151,7 @@ public class ArcadePacMan_GameModel extends GameModel {
         playing = false;
         lives = initialLives;
         level = null;
-        demoLevel = false;
+        demoLevelProperty().set(false);
         cruiseElroy = 0;
         levelCounter().clear();
         scoreManager().loadHighScore();

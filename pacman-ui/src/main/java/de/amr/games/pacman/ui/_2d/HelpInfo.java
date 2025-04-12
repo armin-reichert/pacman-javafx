@@ -33,7 +33,7 @@ public class HelpInfo {
             case INTRO -> help.addInfoForIntroScene();
             case SETTING_OPTIONS -> help.addInfoForCreditScene();
             case STARTING_GAME, HUNTING, PACMAN_DYING, GHOST_DYING -> {
-                if (THE_GAME_CONTROLLER.game().isDemoLevel()) {
+                if (THE_GAME_CONTROLLER.game().demoLevelProperty().get()) {
                     help.addInfoForDemoLevelPlayScene();
                 } else {
                     help.addInfoForPlayScene();

@@ -191,12 +191,12 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             GameLevel level = game.level().orElseThrow();
-            if (gameController().isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN) && game.isDemoLevel()) {
+            if (gameController().isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN) && game.demoLevelProperty().get()) {
                 gameController().changeState(SHOWING_CREDITS);
                 return;
             }
             if (timer.hasExpired()) {
-                if (game.isDemoLevel()) { // just in case: if demo level is completed, go back to intro scene
+                if (game.demoLevelProperty().get()) { // just in case: if demo level is completed, go back to intro scene
                     gameController().changeState(INTRO);
                 } else if (game.cutScenesEnabledProperty().get() && level.cutSceneNumber() != 0) {
                     gameController().changeState(INTERMISSION);
@@ -273,7 +273,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onUpdate(GameModel game) {
             GameLevel level = game.level().orElseThrow();
             if (timer.hasExpired()) {
-                if (game.isDemoLevel()) {
+                if (game.demoLevelProperty().get()) {
                     gameController().changeState(GAME_OVER);
                 } else {
                     game.loseLife();
@@ -321,7 +321,7 @@ public enum GameState implements FsmState<GameModel> {
             if (timer.hasExpired()) {
                 //TODO find unified solution
                 if (gameController().isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN)) {
-                    if (game.isDemoLevel()) {
+                    if (game.demoLevelProperty().get()) {
                         gameController().changeState(SHOWING_CREDITS);
                     } else {
                         boolean canContinue = game.continueOnGameOver();

@@ -141,7 +141,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public void resetForStartingNewGame() {
         lives = initialLives;
         level = null;
-        demoLevel = false;
+        demoLevelProperty().set(false);
         playing = false;
         boosterActive = false;
         scoreManager.loadHighScore();
@@ -248,7 +248,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public long gameOverStateTicks() {
-        return isDemoLevel() ? 120 : 420; // TODO how much really?
+        return demoLevelProperty().get() ? 120 : 420; // TODO how much really?
     }
 
     @Override
@@ -481,7 +481,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     @Override
     public boolean isPacManKillingIgnored() {
         float levelRunningSeconds = (System.currentTimeMillis() - levelStartTime) / 1000f;
-        if (isDemoLevel() && levelRunningSeconds < DEMO_LEVEL_MIN_DURATION_SEC) {
+        if (demoLevelProperty().get() && levelRunningSeconds < DEMO_LEVEL_MIN_DURATION_SEC) {
             Logger.info("Pac-Man dead ignored, demo level is running since {} seconds", levelRunningSeconds);
             return true;
         }
