@@ -1,7 +1,6 @@
 package experiments;
 
 import de.amr.games.pacman.lib.DirectoryWatchdog;
-import de.amr.games.pacman.model.GameModel;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -20,11 +19,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.amr.games.pacman.Globals.CUSTOM_MAP_DIR;
 import static java.nio.file.StandardWatchEventKinds.*;
 
 public class WatchCustomMapsApp extends Application {
 
-    private final File watchedDirectory = GameModel.CUSTOM_MAP_DIR;
+    private final File watchedDirectory = CUSTOM_MAP_DIR;
     private final ObservableList<String> eventsDescriptions = FXCollections.observableList(new ArrayList<>());
 
     @Override
@@ -39,7 +39,7 @@ public class WatchCustomMapsApp extends Application {
         stage.setTitle("Watch " + watchedDirectory);
         stage.show();
 
-        DirectoryWatchdog dog = new DirectoryWatchdog(GameModel.CUSTOM_MAP_DIR);
+        DirectoryWatchdog dog = new DirectoryWatchdog(CUSTOM_MAP_DIR);
         dog.setEventConsumer(this::showEventsInList);
         dog.startWatching();
     }
