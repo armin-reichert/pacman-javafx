@@ -39,7 +39,7 @@ import static de.amr.games.pacman.Globals.assertNotNull;
  */
 public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
-    private final Map<GameVariant, GameModel> gameModelMap = new EnumMap<>(GameVariant.class);
+    private final Map<GameVariant, GameModel> registeredGameModels = new EnumMap<>(GameVariant.class);
 
     private final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>();
 
@@ -48,6 +48,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         gameVariantPy.addListener((py, ov, newGameVariant) -> {
             GameModel game = game(newGameVariant);
             game.init();
+            //TODO do we still need this game event now that we have a property?
             game.publishGameEvent(GameEventType.GAME_VARIANT_CHANGED);
 
         });
@@ -56,29 +57,28 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         Logger.info("Game controller created");
     }
 
+    public void registerGameModel(GameVariant variant, GameModel gameModel) {
+        registeredGameModels.put(assertNotNull(variant), assertNotNull(gameModel));
+    }
+
     /**
-     * @return The currently selected game (model).
+     * @return The game (model) registered for the currently selected game variant.
      */
     public <GAME extends GameModel> GAME game() {
         return game(gameVariantPy.get());
     }
 
-    public void defineGameModel(GameVariant variant, GameModel gameModel) {
-        gameModelMap.put(assertNotNull(variant), assertNotNull(gameModel));
-    }
-
     @SuppressWarnings("unchecked")
     public <T extends GameModel> T game(GameVariant variant) {
-        assertNotNull(variant);
-        return (T) gameModelMap.get(variant);
+        return (T) registeredGameModels.get(assertNotNull(variant));
     }
 
-    public Stream<GameModel> games() { return gameModelMap.values().stream(); }
+    public Stream<GameModel> games() { return registeredGameModels.values().stream(); }
 
     public ObjectProperty<GameVariant> gameVariantProperty() { return gameVariantPy; }
 
     public boolean isGameVariantSelected(GameVariant gameVariant) {
-        return gameVariant == gameVariantPy.get();
+        return assertNotNull(gameVariant) == gameVariantPy.get();
     }
 
     @Override
