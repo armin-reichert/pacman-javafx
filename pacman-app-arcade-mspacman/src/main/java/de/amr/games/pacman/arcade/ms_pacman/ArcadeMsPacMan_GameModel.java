@@ -113,7 +113,6 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     public void init() {
         initialLives = 3;
         simulateOverflowBug = true;
-        cutScenesEnabled = true;
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
         mapSelector.loadAllMaps(this);
@@ -217,7 +216,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
 
         level = new GameLevel(levelNumber, worldMap);
-        level.setCutSceneNumber(cutScenesEnabled ? cutSceneNumberAfterLevel(levelNumber) : 0);
+        level.setCutSceneNumber(cutSceneNumberAfterLevel(levelNumber));
         level.setNumFlashes(levelData(levelNumber).numFlashes());
 
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly

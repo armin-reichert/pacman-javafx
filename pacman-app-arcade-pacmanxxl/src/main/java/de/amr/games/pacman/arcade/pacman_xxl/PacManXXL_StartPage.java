@@ -163,7 +163,7 @@ public class PacManXXL_StartPage implements StartPage, ResourceManager {
         menu.setOnStart(() -> {
             if (gameVariant == GameVariant.PACMAN_XXL || gameVariant == GameVariant.MS_PACMAN_XXL) {
                 GameModel game = THE_GAME_CONTROLLER.game(gameVariant);
-                game.setCutScenesEnabled(cutScenesEnabled);
+                game.cutScenesEnabledProperty().set(cutScenesEnabled);
                 game.mapSelector().setMapSelectionMode(mapOrder);
                 game.mapSelector().loadAllMaps(game);
                 THE_UI.selectGameVariant(gameVariant);
@@ -211,7 +211,7 @@ public class PacManXXL_StartPage implements StartPage, ResourceManager {
         }
         GameModel game = THE_GAME_CONTROLLER.game(gameVariant);
         setPlay3D(PY_3D_ENABLED.get());
-        setCutScenesEnabled(game.isCutScenesEnabled());
+        setCutScenesEnabled(game.cutScenesEnabledProperty().get());
         game.mapSelector().loadAllMaps(game);
         setMapOrder(game.mapSelector().mapSelectionMode(), !game.mapSelector().customMaps().isEmpty());
         Logger.info("Option menu initialized");

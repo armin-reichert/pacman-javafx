@@ -6,7 +6,6 @@ package de.amr.games.pacman.arcade;
 
 import de.amr.games.pacman.controller.HuntingTimer;
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.Waypoint;
 import de.amr.games.pacman.lib.tilemap.LayerID;
@@ -50,8 +49,6 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  * @see <a href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</a>
  */
 public class ArcadePacMan_GameModel extends GameModel {
-
-    public static final Vector2f MESSAGE_POSITION = new Vector2f(14 * TS, 21 * TS);
 
     // Level settings as specified in the dossier
     private static final byte[][] LEVEL_DATA = {
@@ -138,7 +135,6 @@ public class ArcadePacMan_GameModel extends GameModel {
     public void init() {
         initialLives = 3;
         simulateOverflowBug = true;
-        cutScenesEnabled = true;
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
         mapSelector.loadAllMaps(this);
@@ -227,7 +223,7 @@ public class ArcadePacMan_GameModel extends GameModel {
 
         level = new GameLevel(levelNumber, worldMap);
         level.setNumFlashes(levelData(levelNumber).numFlashes());
-        level.setCutSceneNumber(cutScenesEnabled ? cutSceneNumberAfterLevel(levelNumber) : 0);
+        level.setCutSceneNumber(cutSceneNumberAfterLevel(levelNumber));
 
         if (!worldMap.hasProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MIN_TILE)) {
             Logger.warn("No house min tile found in map!");

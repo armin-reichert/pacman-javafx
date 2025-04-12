@@ -13,6 +13,8 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -89,11 +91,12 @@ public abstract class GameModel {
     protected boolean levelCounterEnabled;
     protected boolean playing;
     protected boolean simulateOverflowBug;
-    protected boolean cutScenesEnabled;
     protected int initialLives;
     protected int lives;
     protected boolean demoLevel;
     protected boolean scoreVisible;
+
+    private final BooleanProperty cutScenesEnabledPy = new SimpleBooleanProperty(true);
 
     protected SimulationStepLog eventLog;
 
@@ -232,13 +235,7 @@ public abstract class GameModel {
         return demoLevel;
     }
 
-    public void setCutScenesEnabled(boolean cutScenesEnabled) {
-        this.cutScenesEnabled = cutScenesEnabled;
-    }
-
-    public boolean isCutScenesEnabled() {
-        return cutScenesEnabled;
-    }
+    public BooleanProperty cutScenesEnabledProperty() { return cutScenesEnabledPy; }
 
     public void startNewGame() {
         resetForStartingNewGame();

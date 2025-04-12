@@ -4,6 +4,7 @@
 module de.amr.games.pacman {
 
     requires org.tinylog.api;
+    requires javafx.base;
 
     exports de.amr.games.pacman.controller;
     exports de.amr.games.pacman.event;
