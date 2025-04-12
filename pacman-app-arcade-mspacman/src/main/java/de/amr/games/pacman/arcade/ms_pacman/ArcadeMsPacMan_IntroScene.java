@@ -83,7 +83,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        game().setScoreVisible(true);
+        game().scoreVisibleProperty().set(true);
 
         msPacMan = new Pac();
         ghosts = new Ghost[] {
@@ -131,7 +131,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
-        if (game().isScoreVisible()) {
+        if (game().scoreVisibleProperty().get()) {
             gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
         }
         drawMarquee();

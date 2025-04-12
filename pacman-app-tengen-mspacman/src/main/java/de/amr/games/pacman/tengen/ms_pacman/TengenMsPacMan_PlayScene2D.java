@@ -191,7 +191,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void doInit() {
         messageMovement = new MessageMovement();
-        game().setScoreVisible(true);
+        game().scoreVisibleProperty().set(true);
         setGameRenderer(THE_UI_CONFIGS.current().createRenderer(canvas));
         movingCamera.focusTopOfScene();
     }
@@ -421,7 +421,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     protected void drawSceneContent() {
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
-        if (game().isScoreVisible()) {
+        if (game().scoreVisibleProperty().get()) {
             Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
             gr.drawScores(game().scoreManager(), nesPaletteColor(0x20), font);
         }

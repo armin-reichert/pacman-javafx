@@ -42,7 +42,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void doInit() {
-        game().setScoreVisible(true);
+        game().scoreVisibleProperty().set(true);
 
         pacMan = new Pac();
         msPacMan = new Pac();
@@ -78,7 +78,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     public void drawSceneContent() {
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
-        if (game().isScoreVisible()) {
+        if (game().scoreVisibleProperty().get()) {
             Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
             gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
         }

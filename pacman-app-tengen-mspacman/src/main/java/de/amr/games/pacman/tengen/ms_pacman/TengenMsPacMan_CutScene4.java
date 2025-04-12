@@ -48,7 +48,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     protected void doInit() {
         t = -1;
 
-        game().setScoreVisible(false);
+        game().scoreVisibleProperty().set(false);
 
         mrPacMan = new Pac();
         msPacMan = new Pac();
@@ -212,7 +212,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     protected void drawSceneContent() {
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
-        if (game().isScoreVisible()) {
+        if (game().scoreVisibleProperty().get()) {
             Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
             gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
         }

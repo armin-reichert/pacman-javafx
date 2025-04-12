@@ -53,11 +53,11 @@ public abstract class GameModel {
     protected boolean playing;
     protected boolean simulateOverflowBug;
     protected int initialLives;
-    protected boolean scoreVisible;
 
     private final BooleanProperty cutScenesEnabledPy = new SimpleBooleanProperty(true);
     private final BooleanProperty demoLevelPy = new SimpleBooleanProperty(false);
     private final IntegerProperty livesPy = new SimpleIntegerProperty(0);
+    private final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(false);
 
     protected SimulationStepLog eventLog;
 
@@ -156,14 +156,6 @@ public abstract class GameModel {
         return scoreManager;
     }
 
-    public void setScoreVisible(boolean scoreVisible) {
-        this.scoreVisible = scoreVisible;
-    }
-
-    public boolean isScoreVisible() {
-        return scoreVisible;
-    }
-
     public void setPlaying(boolean playing) {
         this.playing = playing;
     }
@@ -175,6 +167,7 @@ public abstract class GameModel {
     public BooleanProperty cutScenesEnabledProperty() { return cutScenesEnabledPy; }
     public BooleanProperty demoLevelProperty() { return demoLevelPy; }
     public IntegerProperty livesProperty() { return livesPy; }
+    public BooleanProperty scoreVisibleProperty() { return scoreVisiblePy; }
 
     public void loseLife() {
         int lives = livesProperty().get();

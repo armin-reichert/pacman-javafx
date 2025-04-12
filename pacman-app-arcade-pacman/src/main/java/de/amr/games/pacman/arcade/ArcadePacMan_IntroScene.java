@@ -103,7 +103,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         titleVisible = false;
         ghostIndex = 0;
         ghostKilledTime = 0;
-        game().setScoreVisible(true);
+        game().scoreVisibleProperty().set(true);
         sceneController.restart(SceneState.STARTING);
     }
 
@@ -135,7 +135,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
-        if (game().isScoreVisible()) {
+        if (game().scoreVisibleProperty().get()) {
             gr.drawScores(game().scoreManager(), WHITE, font);
         }
         TickTimer timer = sceneController.state().timer();

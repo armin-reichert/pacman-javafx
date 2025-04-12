@@ -25,7 +25,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     public void bindActions() {
-        game().setScoreVisible(false);
+        game().scoreVisibleProperty().set(false);
         bind(GameAction.START_GAME, THE_JOYPAD.key(JoypadButtonID.START));
     }
 
@@ -46,7 +46,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
         Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
-        if (game().isScoreVisible()) {
+        if (game().scoreVisibleProperty().get()) {
             gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
         }
         var r = (TengenMsPacMan_Renderer2D) gr;

@@ -72,7 +72,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        game().setScoreVisible(false);
+        game().scoreVisibleProperty().set(false);
         sceneController.restart(SceneState.WAITING_FOR_START);
     }
 
@@ -98,7 +98,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
-        if (game().isScoreVisible()) {
+        if (game().scoreVisibleProperty().get()) {
             gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
         }
         TengenMsPacMan_Renderer2D r = (TengenMsPacMan_Renderer2D) gr;

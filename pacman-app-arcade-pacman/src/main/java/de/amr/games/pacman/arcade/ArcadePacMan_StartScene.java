@@ -40,7 +40,7 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        game().setScoreVisible(true);
+        game().scoreVisibleProperty().set(true);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class ArcadePacMan_StartScene extends GameScene2D {
         Font font6 = THE_ASSETS.arcadeFontAtSize(scaled(6));
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
-        if (game().isScoreVisible()) {
+        if (game().scoreVisibleProperty().get()) {
             gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font8);
         }
         gr.fillTextAtScaledPosition("PUSH START BUTTON", ORANGE, font8, tiles_to_px(6), tiles_to_px(17));

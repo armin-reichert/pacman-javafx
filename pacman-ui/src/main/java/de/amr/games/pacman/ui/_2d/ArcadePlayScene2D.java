@@ -49,7 +49,7 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     @Override
     protected void doInit() {
-        game().setScoreVisible(true);
+        game().scoreVisibleProperty().set(true);
         bindDefaultArcadeActions();
         enableActionBindings(THE_KEYBOARD);
     }
@@ -128,7 +128,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
-        if (game().isScoreVisible()) {
+        if (game().scoreVisibleProperty().get()) {
             gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
         }
         GameLevel level = game().level().orElse(null);
