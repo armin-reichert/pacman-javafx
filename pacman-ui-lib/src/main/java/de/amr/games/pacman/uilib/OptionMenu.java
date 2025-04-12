@@ -27,8 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.Globals.assertNotNull;
+import static de.amr.games.pacman.Globals.*;
 
 public class OptionMenu implements ResourceManager {
 
@@ -131,14 +130,17 @@ public class OptionMenu implements ResourceManager {
 
         g.setFont(style.textFont());
         for (int i = 0; i < entries.size(); ++i) {
-            int y = (12 + 3 * i);
+            int y = (12 + 3 * i) * TS;
             OptionMenuEntry<?> entry = entries.get(i);
             if (i == selectedEntryIndex) {
-                drawAtTile(1, y, "-", style.entryTextFill());
-                drawAtTile(1.5f, y, ">", style.entryTextFill());
+                g.setFill(style.entryTextFill());
+                g.fillText("-", TS, y);
+                g.fillText(">", TS + HTS, y);
             }
-            drawAtTile(3, y, entry.text, style.entryTextFill());
-            drawAtTile(17, y, entry.selectedValueText(), entry.enabled ? style.entryValueFill() : style.entryValueDisabledFill());
+            g.setFill(style.entryTextFill());
+            g.fillText(entry.text, 3 * TS, y);
+            g.setFill(entry.enabled ? style.entryValueFill() : style.entryValueDisabledFill());
+            g.fillText(entry.selectedValueText(), 17 * TS, y);
         }
 
         g.setFill(style.hintTextFill());
@@ -157,11 +159,6 @@ public class OptionMenu implements ResourceManager {
         g.setTextAlign(TextAlignment.CENTER);
         g.fillText(text, (canvas.getWidth() * 0.5) / scalingPy.get(), y);
         g.restore();
-    }
-
-    private void drawAtTile(float tileX, float tileY, String text, Color fillColor) {
-        g.setFill(fillColor);
-        g.fillText(text, tileX * TS, tileY * TS);
     }
 
     protected void handleKeyPress(KeyEvent e) {
