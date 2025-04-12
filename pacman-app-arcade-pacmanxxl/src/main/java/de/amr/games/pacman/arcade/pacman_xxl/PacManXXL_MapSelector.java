@@ -16,9 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static de.amr.games.pacman.Globals.CUSTOM_MAP_DIR;
 import static de.amr.games.pacman.Globals.randomInt;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
-import static de.amr.games.pacman.model.GameModel.CUSTOM_MAP_DIR;
 
 public class PacManXXL_MapSelector extends MapSelector {
 
@@ -35,7 +35,7 @@ public class PacManXXL_MapSelector extends MapSelector {
 
     private List<WorldMap> builtinMaps = new ArrayList<>();
     private final ObservableList<WorldMap> customMapsByFile = FXCollections.observableList(new ArrayList<>());
-    private final DirectoryWatchdog goodBoy = new DirectoryWatchdog(GameModel.CUSTOM_MAP_DIR);
+    private final DirectoryWatchdog goodBoy = new DirectoryWatchdog(CUSTOM_MAP_DIR);
     private boolean customMapsUpToDate;
 
     public PacManXXL_MapSelector() {

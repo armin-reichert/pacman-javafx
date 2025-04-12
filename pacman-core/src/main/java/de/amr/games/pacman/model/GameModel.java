@@ -32,46 +32,6 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  */
 public abstract class GameModel {
 
-    /**
-     * Directory under which application stores high scores, maps etc. (default: <code>&lt;user_home/.pacmanfx&gt;</code>).
-     */
-    public static final File HOME_DIR = new File(System.getProperty("user.home"), ".pacmanfx");
-
-    /**
-     * Directory where custom maps are stored (default: <code>&lt;home_directory&gt;/maps</code>).
-     */
-    public static final File CUSTOM_MAP_DIR = new File(HOME_DIR, "maps");
-
-    static {
-        String homeDirDesc = "Pac-Man FX home directory";
-        String customMapDirDesc = "Pac-Man FX custom map directory";
-        boolean success = ensureDirectoryExistsAndIsWritable(HOME_DIR, homeDirDesc);
-        if (success) {
-            Logger.info(homeDirDesc + " is " + HOME_DIR);
-            success = ensureDirectoryExistsAndIsWritable(CUSTOM_MAP_DIR, customMapDirDesc);
-            if (success) {
-                Logger.info(customMapDirDesc + " is " + CUSTOM_MAP_DIR);
-            }
-        }
-    }
-
-    private static boolean ensureDirectoryExistsAndIsWritable(File dir, String description) {
-        assertNotNull(dir);
-        if (!dir.exists()) {
-            Logger.info(description + " does not exist, create it...");
-            if (!dir.mkdirs()) {
-                Logger.error(description + " could not be created");
-                return false;
-            }
-            Logger.error(description + " has been created");
-            if (!dir.canWrite()) {
-                Logger.error(description + " is not writeable");
-                return false;
-            }
-        }
-        return true;
-    }
-
     // Ghost IDs
     public static final byte RED_GHOST_ID = 0, PINK_GHOST_ID = 1, CYAN_GHOST_ID = 2, ORANGE_GHOST_ID = 3;
 

@@ -10,7 +10,9 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameException;
+import org.tinylog.Logger;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
@@ -22,9 +24,49 @@ import java.util.Random;
  */
 public interface Globals {
 
+    static void init() {
+        String homeDirDesc = "Pac-Man FX home directory";
+        String customMapDirDesc = "Pac-Man FX custom map directory";
+        boolean success = ensureDirectoryExistsAndIsWritable(HOME_DIR, homeDirDesc);
+        if (success) {
+            Logger.info(homeDirDesc + " is " + HOME_DIR);
+            success = ensureDirectoryExistsAndIsWritable(CUSTOM_MAP_DIR, customMapDirDesc);
+            if (success) {
+                Logger.info(customMapDirDesc + " is " + CUSTOM_MAP_DIR);
+            }
+        }
+    }
+
+    private static boolean ensureDirectoryExistsAndIsWritable(File dir, String description) {
+        assertNotNull(dir);
+        if (!dir.exists()) {
+            Logger.info(description + " does not exist, create it...");
+            if (!dir.mkdirs()) {
+                Logger.error(description + " could not be created");
+                return false;
+            }
+            Logger.error(description + " has been created");
+            if (!dir.canWrite()) {
+                Logger.error(description + " is not writeable");
+                return false;
+            }
+        }
+        return true;
+    }
+
     CoinStore THE_COIN_STORE = new CoinStore();
     GameController THE_GAME_CONTROLLER = new GameController();
     Random RND = new Random();
+
+    /**
+     * Directory under which application stores high scores, maps etc. (default: <code>&lt;user_home/.pacmanfx&gt;</code>).
+     */
+    File HOME_DIR = new File(System.getProperty("user.home"), ".pacmanfx");
+
+    /**
+     * Directory where custom maps are stored (default: <code>&lt;home_directory&gt;/maps</code>).
+     */
+    File CUSTOM_MAP_DIR = new File(HOME_DIR, "maps");
 
     byte TICKS_PER_SECOND = 60;
 

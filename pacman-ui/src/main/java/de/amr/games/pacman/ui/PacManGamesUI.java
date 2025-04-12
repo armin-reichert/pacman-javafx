@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui;
 
 import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tilemap.editor.TileMapEditor;
 import de.amr.games.pacman.ui.dashboard.Dashboard;
@@ -38,8 +37,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 
-import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.Globals.assertNotNull;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.Globals.*;
 
@@ -188,7 +186,7 @@ public class PacManGamesUI implements GameUI {
             editor.executeWithCheckForUnsavedChanges(this::showStartView);
         });
         editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miQuit);
-        editor.init(GameModel.CUSTOM_MAP_DIR);
+        editor.init(CUSTOM_MAP_DIR);
     }
 
     private void createMapEditorView() {
