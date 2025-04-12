@@ -119,7 +119,7 @@ public class PacManXXL_StartPage implements StartPage, ResourceManager {
     }
 
     private void createOptionMenu() {
-        menu = new OptionMenu(36 * TS) {
+        menu = new OptionMenu(42, 36, 6, 20) {
             @Override
             protected void handleKeyPress(KeyEvent e) {
                 super.handleKeyPress(e);
@@ -129,7 +129,7 @@ public class PacManXXL_StartPage implements StartPage, ResourceManager {
             }
         };
         // scale menu to take 90% of start page height
-        menu.scalingProperty().bind(root.heightProperty().multiply(0.9).divide(menu.numTiles() * TS));
+        menu.scalingProperty().bind(root.heightProperty().multiply(0.9).divide(menu.numTilesY() * TS));
 
         menu.addEntry(entryGameVariant);
         menu.addEntry(entryPlay3D);

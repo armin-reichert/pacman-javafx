@@ -47,7 +47,11 @@ public class OptionMenu implements ResourceManager {
             loadAudioClip("sounds/menu-select2.wav")
     );
 
-    private final int numTiles;
+    private final int numTilesX;
+    private final int numTilesY;
+    private final int textCol;
+    private final int valueCol;
+
     private final List<OptionMenuEntry<?>> entries = new ArrayList<>();
     private final BooleanProperty soundEnabledPy = new SimpleBooleanProperty(true);
     private final FloatProperty scalingPy = new SimpleFloatProperty(2);
@@ -65,8 +69,11 @@ public class OptionMenu implements ResourceManager {
 
     private OptionMenuStyle style = defaultStyle;
 
-    public OptionMenu(float height) {
-        numTiles = (int) (height / TS);
+    public OptionMenu(int numTilesX, int numTilesY, int textCol, int valueCol) {
+        this.numTilesX = numTilesX;
+        this.numTilesY = numTilesY;
+        this.textCol = textCol;
+        this.valueCol = valueCol;
 
         setTitle("OPTIONS");
         setCommandTexts(
@@ -75,15 +82,13 @@ public class OptionMenu implements ResourceManager {
             "PRESS ENTER TO START"
         );
 
+        canvas.widthProperty().bind(scalingPy.multiply(numTilesX*TS));
+        canvas.heightProperty().bind(scalingPy.multiply(numTilesY*TS));
 
         root.setCenter(canvas);
         root.setBorder(Border.stroke(style.borderStroke()));
-        root.maxWidthProperty().bind(scalingPy.multiply(height));
-        root.maxHeightProperty().bind(scalingPy.multiply(height));
-
-        canvas.widthProperty().bind(scalingPy.multiply(height));
-        canvas.heightProperty().bind(scalingPy.multiply(height));
-
+        root.maxWidthProperty().bind(canvas.widthProperty());
+        root.maxHeightProperty().bind(canvas.heightProperty());
         root.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPress);
 
         drawingTimer = new Timeline(REFRESH_RATE, new KeyFrame(Duration.seconds(1.0 / REFRESH_RATE), e-> draw()));
@@ -134,18 +139,18 @@ public class OptionMenu implements ResourceManager {
             OptionMenuEntry<?> entry = entries.get(i);
             if (i == selectedEntryIndex) {
                 g.setFill(style.entryTextFill());
-                g.fillText("-", TS, y);
-                g.fillText(">", TS + HTS, y);
+                g.fillText("-", (textCol - 2) * TS, y);
+                g.fillText(">", (textCol - 2) * TS + HTS, y);
             }
             g.setFill(style.entryTextFill());
-            g.fillText(entry.text, 3 * TS, y);
+            g.fillText(entry.text, textCol * TS, y);
             g.setFill(entry.enabled ? style.entryValueFill() : style.entryValueDisabledFill());
-            g.fillText(entry.selectedValueText(), 17 * TS, y);
+            g.fillText(entry.selectedValueText(), valueCol * TS, y);
         }
 
         g.setFill(style.hintTextFill());
         g.setFont(style.textFont());
-        int ty = numTiles - 2 * commandTexts.length;
+        int ty = numTilesY - 2 * commandTexts.length;
         for (String commandText : commandTexts) {
             drawCentered(commandText, ty * TS);
             ty += 2;
@@ -190,8 +195,12 @@ public class OptionMenu implements ResourceManager {
 
     public Node root() { return root; }
 
-    public int numTiles() {
-        return numTiles;
+    public int numTilesX() {
+        return numTilesX;
+    }
+
+    public int numTilesY() {
+        return numTilesY;
     }
 
     public FloatProperty scalingProperty() { return scalingPy; }
