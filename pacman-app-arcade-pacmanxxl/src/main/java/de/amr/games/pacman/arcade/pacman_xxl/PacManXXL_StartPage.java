@@ -122,14 +122,16 @@ public class PacManXXL_StartPage implements StartPage, ResourceManager {
         menu = new OptionMenu(42, 36, 6, 20) {
             @Override
             protected void handleKeyPress(KeyEvent e) {
-                super.handleKeyPress(e);
                 if (Keyboard.naked(KeyCode.E).match(e)) {
                     THE_UI.showEditorView();
+                } else {
+                    super.handleKeyPress(e);
                 }
             }
         };
         // scale menu to take 90% of start page height
         menu.scalingProperty().bind(root.heightProperty().multiply(0.9).divide(menu.numTilesY() * TS));
+        menu.soundEnabledProperty().bind(THE_SOUND.mutedProperty().not());
 
         menu.addEntry(entryGameVariant);
         menu.addEntry(entryPlay3D);
@@ -143,6 +145,7 @@ public class PacManXXL_StartPage implements StartPage, ResourceManager {
             "PRESS E TO OPEN EDITOR",
             "PRESS ENTER TO START"
         );
+
         menu.setStyle(new OptionMenuStyle(
             menu.defaultStyle.titleFont(),
             menu.defaultStyle.textFont(),
@@ -168,7 +171,6 @@ public class PacManXXL_StartPage implements StartPage, ResourceManager {
                 Logger.error("Game variant {} is not allowed for XXL game", gameVariant);
             }
         });
-        menu.soundEnabledProperty().bind(THE_SOUND.mutedProperty().not());
     }
 
     @Override
