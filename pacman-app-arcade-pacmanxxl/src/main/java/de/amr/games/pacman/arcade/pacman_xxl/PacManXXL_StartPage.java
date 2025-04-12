@@ -144,15 +144,17 @@ public class PacManXXL_StartPage implements StartPage, ResourceManager {
             "PRESS ENTER TO START"
         );
         menu.setStyle(new OptionMenuStyle(
-            menu.DEFAULT_STYLE.titleFont(),
-            menu.DEFAULT_STYLE.textFont(),
-            menu.DEFAULT_STYLE.backgroundFill(),
-            menu.DEFAULT_STYLE.borderStroke(),
+            menu.defaultStyle.titleFont(),
+            menu.defaultStyle.textFont(),
+            menu.defaultStyle.backgroundFill(),
+            menu.defaultStyle.borderStroke(),
             Color.RED, // DEFAULT_STYLE.titleTextFill(),
-            menu.DEFAULT_STYLE.entryTextFill(),
-            menu.DEFAULT_STYLE.entryValueFill(),
-            menu.DEFAULT_STYLE.entryValueDisabledFill(),
-            menu.DEFAULT_STYLE.hintTextFill()
+            menu.defaultStyle.entryTextFill(),
+            menu.defaultStyle.entryValueFill(),
+            menu.defaultStyle.entryValueDisabledFill(),
+            menu.defaultStyle.hintTextFill(),
+            menu.defaultStyle.entrySelectedSound(),
+            menu.defaultStyle.valueSelectedSound()
         ));
 
         menu.setOnStart(() -> {

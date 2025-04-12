@@ -34,22 +34,25 @@ public class OptionMenu implements ResourceManager {
 
     private static final int REFRESH_RATE = 30;
 
-    public final OptionMenuStyle DEFAULT_STYLE = new OptionMenuStyle(
+    public final OptionMenuStyle defaultStyle = new OptionMenuStyle(
             loadFont("fonts/emulogic.ttf", 3 * TS),
             loadFont("fonts/emulogic.ttf", TS),
-            Color.web("#0C1568"),
+            Color.web("0c1568"),
             Color.web("fffeff"),
-            Color.web("ffffff"),
+            Color.web("fffeff"),
             Color.web("bcbe00"),
             Color.web("fffeff"),
             Color.GRAY,
-            Color.web("bcbe00")
+            Color.web("bcbe00"),
+            loadAudioClip("sounds/menu-select1.wav"),
+            loadAudioClip("sounds/menu-select2.wav")
     );
 
-    protected final int numTiles;
-    protected final List<OptionMenuEntry<?>> entries = new ArrayList<>();
-    protected final BooleanProperty soundEnabledPy = new SimpleBooleanProperty(true);
-    protected final FloatProperty scalingPy = new SimpleFloatProperty(2);
+    private final int numTiles;
+    private final List<OptionMenuEntry<?>> entries = new ArrayList<>();
+    private final BooleanProperty soundEnabledPy = new SimpleBooleanProperty(true);
+    private final FloatProperty scalingPy = new SimpleFloatProperty(2);
+    private final Timeline drawingTimer;
 
     private int selectedEntryIndex = 0;
     private Runnable actionOnStart;
@@ -57,15 +60,11 @@ public class OptionMenu implements ResourceManager {
     private String title = "";
     private String[] commandTexts = new String[0];
 
-    protected final BorderPane root = new BorderPane();
-    protected final Canvas canvas = new Canvas();
-    protected final GraphicsContext g = canvas.getGraphicsContext2D();
+    private final BorderPane root = new BorderPane();
+    private final Canvas canvas = new Canvas();
+    private final GraphicsContext g = canvas.getGraphicsContext2D();
 
-    protected OptionMenuStyle style = DEFAULT_STYLE;
-    protected AudioClip entrySelectedSound;
-    protected AudioClip valueSelectedSound;
-
-    private final Timeline drawingTimer;
+    private OptionMenuStyle style = defaultStyle;
 
     public OptionMenu(float height) {
         numTiles = (int) (height / TS);
@@ -77,8 +76,6 @@ public class OptionMenu implements ResourceManager {
             "PRESS ENTER TO START"
         );
 
-        entrySelectedSound = loadAudioClip("sounds/menu-select1.wav");
-        valueSelectedSound = loadAudioClip("sounds/menu-select2.wav");
 
         root.setCenter(canvas);
         root.setBorder(Border.stroke(style.borderStroke()));
@@ -170,17 +167,17 @@ public class OptionMenu implements ResourceManager {
     protected void handleKeyPress(KeyEvent e) {
         switch (e.getCode()) {
             case DOWN -> {
-                playSound(entrySelectedSound);
+                playSound(style.entrySelectedSound());
                 selectedEntryIndex++;
                 if (selectedEntryIndex == entries.size()) selectedEntryIndex = 0;
             }
             case UP -> {
-                playSound(entrySelectedSound);
+                playSound(style.entrySelectedSound());
                 selectedEntryIndex--;
                 if (selectedEntryIndex == -1) selectedEntryIndex = entries.size() - 1;
             }
             case SPACE -> {
-                playSound(valueSelectedSound);
+                playSound(style.valueSelectedSound());
                 OptionMenuEntry<?> entry = entries.get(selectedEntryIndex);
                 entry.selectedValueIndex++;
                 if (entry.selectedValueIndex == entry.valueList.size()) entry.selectedValueIndex = 0;

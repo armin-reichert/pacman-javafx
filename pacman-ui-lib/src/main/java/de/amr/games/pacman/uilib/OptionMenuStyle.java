@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.uilib;
 
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -16,4 +17,7 @@ public record OptionMenuStyle(
     Color entryTextFill,
     Color entryValueFill,
     Color entryValueDisabledFill,
-    Color hintTextFill) {}
+    Color hintTextFill,
+    AudioClip entrySelectedSound,
+    AudioClip valueSelectedSound)
+{}
