@@ -158,6 +158,14 @@ public class PacManGamesUI implements GameUI {
         icon3D.visibleProperty().bind(PY_3D_ENABLED);
 
         var iconCutScenesOff = FontIcon.of(FontAwesomeSolid.AMBULANCE, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
+        //TODO make this work:
+        /*
+        iconCutScenesOff.visibleProperty().bind(Bindings.createBooleanBinding(
+            () -> !THE_GAME_CONTROLLER.game().cutScenesEnabledProperty().get(),
+            THE_GAME_CONTROLLER.game().cutScenesEnabledProperty(), THE_GAME_CONTROLLER.gameVariantProperty()
+        ));
+         */
+        iconCutScenesOff.setVisible(false);
 
         var iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, STATUS_ICON_COLOR);
         iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
