@@ -312,7 +312,7 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public void showEditorView() {
-        if (!THE_GAME_CONTROLLER.game().isPlaying() || THE_CLOCK.isPaused()) {
+        if (!THE_GAME_CONTROLLER.game().playingProperty().get() || THE_CLOCK.isPaused()) {
             currentGameScene().ifPresent(GameScene::end);
             THE_GAME_CONTROLLER.game().endGame();
             THE_CLOCK.stop();

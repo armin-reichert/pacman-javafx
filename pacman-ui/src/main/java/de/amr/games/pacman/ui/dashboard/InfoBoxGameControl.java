@@ -92,6 +92,6 @@ public class InfoBoxGameControl extends InfoBox {
     }
 
     private boolean canEnterNextLevel() {
-        return THE_GAME_CONTROLLER.game().isPlaying() && oneOf(THE_GAME_CONTROLLER.state(), GameState.HUNTING);
+        return THE_GAME_CONTROLLER.game().playingProperty().get() && oneOf(THE_GAME_CONTROLLER.state(), GameState.HUNTING);
     }
 }

@@ -27,7 +27,7 @@ public enum TengenMsPacMan_GameAction implements Action {
     SHOW_OPTIONS {
         @Override
         public void execute() {
-            THE_GAME_CONTROLLER.game().setPlaying(false);
+            THE_GAME_CONTROLLER.game().playingProperty().set(false);
             THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
         }
     },
@@ -36,7 +36,7 @@ public enum TengenMsPacMan_GameAction implements Action {
         @Override
         public void execute() {
             THE_SOUND.stopAll();
-            THE_GAME_CONTROLLER.game().setPlaying(false);
+            THE_GAME_CONTROLLER.game().playingProperty().set(false);
             THE_GAME_CONTROLLER.changeState(GameState.STARTING_GAME);
         }
     },

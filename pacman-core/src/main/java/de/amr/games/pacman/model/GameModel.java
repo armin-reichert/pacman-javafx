@@ -50,13 +50,13 @@ public abstract class GameModel {
     protected long levelStartTime;
     protected int lastLevelNumber;
     protected boolean levelCounterEnabled;
-    protected boolean playing;
     protected boolean simulateOverflowBug;
     protected int initialLives;
 
     private final BooleanProperty cutScenesEnabledPy = new SimpleBooleanProperty(true);
     private final BooleanProperty demoLevelPy = new SimpleBooleanProperty(false);
     private final IntegerProperty livesPy = new SimpleIntegerProperty(0);
+    private final BooleanProperty playingPy = new SimpleBooleanProperty(false);
     private final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(false);
 
     protected SimulationStepLog eventLog;
@@ -156,17 +156,10 @@ public abstract class GameModel {
         return scoreManager;
     }
 
-    public void setPlaying(boolean playing) {
-        this.playing = playing;
-    }
-
-    public boolean isPlaying() {
-        return playing;
-    }
-
     public BooleanProperty cutScenesEnabledProperty() { return cutScenesEnabledPy; }
     public BooleanProperty demoLevelProperty() { return demoLevelPy; }
     public IntegerProperty livesProperty() { return livesPy; }
+    public BooleanProperty playingProperty() { return playingPy; }
     public BooleanProperty scoreVisibleProperty() { return scoreVisiblePy; }
 
     public void loseLife() {

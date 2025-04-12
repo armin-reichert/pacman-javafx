@@ -99,7 +99,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            if (game.isPlaying()) {
+            if (game.playingProperty().get()) {
                 // resume running game
                 if (timer.tickCount() == 1) {
                     game.level().ifPresent(gameLevel -> gameLevel.showMessage(GameLevel.Message.READY));
@@ -121,7 +121,7 @@ public enum GameState implements FsmState<GameModel> {
                     game.showGuys();
                 }
                 else if (timer.tickCount() == TICK_NEW_GAME_START_PLAYING) {
-                    game.setPlaying(true);
+                    game.playingProperty().set(true);
                     gameController().changeState(GameState.HUNTING);
                 }
             }
@@ -340,7 +340,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onExit(GameModel game) {
-            game.setPlaying(false);
+            game.playingProperty().set(false);
             game.level().ifPresent(GameLevel::clearMessage);
         }
     },
@@ -355,7 +355,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
-                gameController().changeState(game.isPlaying() ? LEVEL_TRANSITION : INTRO);
+                gameController().changeState(game.playingProperty().get() ? LEVEL_TRANSITION : INTRO);
             }
         }
     },

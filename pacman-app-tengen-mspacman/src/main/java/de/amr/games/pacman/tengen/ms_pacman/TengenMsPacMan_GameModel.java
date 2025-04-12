@@ -142,7 +142,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         livesProperty().set(initialLives);
         level = null;
         demoLevelProperty().set(false);
-        playing = false;
+        playingProperty().set(false);
         boosterActive = false;
         scoreManager.loadHighScore();
         scoreManager.resetScore();
@@ -151,7 +151,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public void endGame() {
-        playing = false;
+        playingProperty().set(false);
         scoreManager.updateHighScore();
         publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
     }

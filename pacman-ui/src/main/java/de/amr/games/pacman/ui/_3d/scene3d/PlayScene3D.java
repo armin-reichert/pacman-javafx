@@ -482,7 +482,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         Vector2i houseSize = level.houseSizeInTiles();
         double x = TS * (houseTopLeft.x() + 0.5 * houseSize.x());
         double y = TS * (houseTopLeft.y() +       houseSize.y());
-        double seconds = game().isPlaying() ? 0.5 : 2.5;
+        double seconds = game().playingProperty().get() ? 0.5 : 2.5;
         level3D.showAnimatedMessage("READY!", seconds, x, y);
     }
 

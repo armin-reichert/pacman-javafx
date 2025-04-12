@@ -125,7 +125,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     @Override
     public void resetForStartingNewGame() {
-        playing = false;
+        playingProperty().set(false);
         livesProperty().set(initialLives);
         level = null;
         demoLevelProperty().set(false);
@@ -139,7 +139,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     @Override
     public void endGame() {
-        playing = false;
+        playingProperty().set(false);
         if (!THE_COIN_STORE.isEmpty()) {
             THE_COIN_STORE.consumeCoin();
         }
