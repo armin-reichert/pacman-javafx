@@ -123,11 +123,11 @@ public class OptionMenu implements ResourceManager {
     }
 
     private void draw() {
-        g.save();
         g.setFill(style.backgroundFill());
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        g.scale(scalingPy.doubleValue(), scalingPy.doubleValue());
+        g.save();
+        g.scale(scalingPy.get(), scalingPy.get());
 
         g.setFont(style.titleFont());
         g.setFill(style.titleTextFill());
@@ -148,14 +148,13 @@ public class OptionMenu implements ResourceManager {
             g.fillText(entry.selectedValueText(), valueCol * TS, y);
         }
 
-        g.setFill(style.hintTextFill());
-        g.setFont(style.textFont());
         int ty = numTilesY - 2 * commandTexts.length;
         for (String commandText : commandTexts) {
+            g.setFill(style.hintTextFill());
+            g.setFont(style.textFont());
             drawCentered(commandText, ty * TS);
             ty += 2;
         }
-
         g.restore();
     }
 
