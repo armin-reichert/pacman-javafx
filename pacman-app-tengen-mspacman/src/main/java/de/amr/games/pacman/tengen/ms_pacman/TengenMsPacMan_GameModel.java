@@ -125,7 +125,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public void init() {
         scoreManager.setHighScoreFile(new File(HOME_DIR, HIGH_SCORE_FILENAME));
         mapSelector.loadAllMaps(this);
-        setInitialLives(3);
+        initialLivesProperty().set(3);
         simulateOverflowBug = false; //TODO check this
         resetForStartingNewGame();
         resetOptions();

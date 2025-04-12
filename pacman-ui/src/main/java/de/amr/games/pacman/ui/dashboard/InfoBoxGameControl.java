@@ -53,7 +53,7 @@ public class InfoBoxGameControl extends InfoBox {
         setAction(bgLevelActions[GAME_LEVEL_START], GameAction.START_GAME::execute);
         setAction(bgLevelActions[GAME_LEVEL_QUIT], GameAction.RESTART_INTRO::execute);
         setAction(bgLevelActions[GAME_LEVEL_NEXT], GameAction.CHEAT_NEXT_LEVEL::execute);
-        setAction(comboInitialLives, () -> THE_GAME_CONTROLLER.game().setInitialLives(comboInitialLives.getValue()));
+        setAction(comboInitialLives, () -> THE_GAME_CONTROLLER.game().initialLivesProperty().set(comboInitialLives.getValue()));
 
         setEditor(cbAutopilot, PY_AUTOPILOT);
         setEditor(cbImmunity, PY_IMMUNITY);
@@ -67,7 +67,7 @@ public class InfoBoxGameControl extends InfoBox {
         GameState state = THE_GAME_CONTROLLER.state();
 
         spinnerCredit.getValueFactory().setValue(THE_COIN_STORE.numCoins());
-        comboInitialLives.setValue(game.initialLives());
+        comboInitialLives.setValue(game.initialLivesProperty().get());
 
         spinnerCredit.setDisable(!(oneOf(state, GameState.INTRO, GameState.SETTING_OPTIONS)));
         comboInitialLives.setDisable(state != GameState.INTRO);

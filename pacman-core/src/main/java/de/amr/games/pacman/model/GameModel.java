@@ -55,6 +55,7 @@ public abstract class GameModel {
 
     private final BooleanProperty cutScenesEnabledPy = new SimpleBooleanProperty(true);
     private final BooleanProperty demoLevelPy = new SimpleBooleanProperty(false);
+    private final IntegerProperty initialLivesPy = new SimpleIntegerProperty(0);
     private final IntegerProperty livesPy = new SimpleIntegerProperty(0);
     private final BooleanProperty playingPy = new SimpleBooleanProperty(false);
     private final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(false);
@@ -140,14 +141,6 @@ public abstract class GameModel {
         return lastLevelNumber;
     }
 
-    public int initialLives() {
-        return initialLives;
-    }
-
-    public void setInitialLives(int lives) {
-        initialLives = lives;
-    }
-
     public List<Byte> levelCounter() {
         return levelCounter;
     }
@@ -158,6 +151,7 @@ public abstract class GameModel {
 
     public BooleanProperty cutScenesEnabledProperty() { return cutScenesEnabledPy; }
     public BooleanProperty demoLevelProperty() { return demoLevelPy; }
+    public IntegerProperty initialLivesProperty() { return initialLivesPy; }
     public IntegerProperty livesProperty() { return livesPy; }
     public BooleanProperty playingProperty() { return playingPy; }
     public BooleanProperty scoreVisibleProperty() { return scoreVisiblePy; }
