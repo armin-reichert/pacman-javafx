@@ -8,6 +8,7 @@ import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -133,23 +134,23 @@ public class GameLevel3D extends Group {
     }
 
     private Pac3D createPac3D(Pac pac) {
-        String assetNamespace = THE_UI_CONFIGS.current().assetNamespace();
-        Pac3D pac3D = switch (THE_GAME_CONTROLLER.selectedGameVariant()) {
-            case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL -> new MsPacMan3D(THE_GAME_CONTROLLER.selectedGameVariant(), pac, PAC_3D_SIZE, THE_ASSETS, assetNamespace);
-            case PACMAN, PACMAN_XXL -> new PacMan3D(THE_GAME_CONTROLLER.selectedGameVariant(), pac, PAC_3D_SIZE, THE_ASSETS, assetNamespace);
+        String ans = THE_UI_CONFIGS.current().assetNamespace();
+        GameVariant selectedGameVariant = THE_GAME_CONTROLLER.gameVariantProperty().get();
+        Pac3D pac3D = switch (selectedGameVariant) {
+            case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL -> new MsPacMan3D(selectedGameVariant, pac, PAC_3D_SIZE, THE_ASSETS, ans);
+            case PACMAN, PACMAN_XXL -> new PacMan3D(selectedGameVariant, pac, PAC_3D_SIZE, THE_ASSETS, ans);
         };
-        pac3D.shape3D().light().setColor(THE_ASSETS.color(assetNamespace + ".pac.color.head").desaturate());
+        pac3D.shape3D().light().setColor(THE_ASSETS.color(ans + ".pac.color.head").desaturate());
         pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
         return pac3D;
     }
 
     private Ghost3DAppearance createGhost3D(Ghost ghost, int numFlashes) {
-        String assetNamespace = THE_UI_CONFIGS.current().assetNamespace();
+        String ans = THE_UI_CONFIGS.current().assetNamespace();
         Shape3D dressShape    = new MeshView(THE_ASSETS.get("model3D.ghost.mesh.dress"));
         Shape3D pupilsShape   = new MeshView(THE_ASSETS.get("model3D.ghost.mesh.pupils"));
         Shape3D eyeballsShape = new MeshView(THE_ASSETS.get("model3D.ghost.mesh.eyeballs"));
-        return new Ghost3DAppearance(dressShape, pupilsShape, eyeballsShape, THE_ASSETS, assetNamespace,
-            ghost, GHOST_3D_SIZE, numFlashes);
+        return new Ghost3DAppearance(dressShape, pupilsShape, eyeballsShape, THE_ASSETS, ans, ghost, GHOST_3D_SIZE, numFlashes);
     }
 
     private LivesCounter3D createLivesCounter3D(boolean canStartNewGame) {

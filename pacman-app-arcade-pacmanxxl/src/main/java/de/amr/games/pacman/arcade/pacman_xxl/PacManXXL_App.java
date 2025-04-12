@@ -27,9 +27,9 @@ public class PacManXXL_App extends Application {
     public void init() {
         var pacManGameModel = new PacManXXL_PacMan_GameModel(xxlMapSelector);
         var msPacManGameModel = new PacManXXL_MsPacMan_GameModel(xxlMapSelector);
-        THE_GAME_CONTROLLER.setGameModel(GameVariant.PACMAN_XXL, pacManGameModel);
-        THE_GAME_CONTROLLER.setGameModel(GameVariant.MS_PACMAN_XXL, msPacManGameModel);
-        THE_GAME_CONTROLLER.selectGameVariant(GameVariant.MS_PACMAN_XXL);
+        THE_GAME_CONTROLLER.defineGameModel(GameVariant.PACMAN_XXL, pacManGameModel);
+        THE_GAME_CONTROLLER.defineGameModel(GameVariant.MS_PACMAN_XXL, msPacManGameModel);
+        THE_GAME_CONTROLLER.gameVariantProperty().set(GameVariant.MS_PACMAN_XXL);
     }
 
     @Override

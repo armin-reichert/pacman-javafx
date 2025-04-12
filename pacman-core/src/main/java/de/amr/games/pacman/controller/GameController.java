@@ -9,6 +9,8 @@ import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
 
 import java.util.EnumMap;
@@ -38,27 +40,31 @@ import static de.amr.games.pacman.Globals.assertNotNull;
 public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     private final Map<GameVariant, GameModel> gameModelMap = new EnumMap<>(GameVariant.class);
-    private GameModel currentGameModel;
+
+    private final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>();
 
     public GameController() {
         super(GameState.values());
+        gameVariantPy.addListener((py, ov, newGameVariant) -> {
+            GameModel game = game(newGameVariant);
+            game.init();
+            game.publishGameEvent(GameEventType.GAME_VARIANT_CHANGED);
+
+        });
         // map state change events to game events
-        addStateChangeListener((oldState, newState) -> currentGameModel.publishGameEvent(new GameStateChangeEvent(currentGameModel, oldState, newState)));
+        addStateChangeListener((oldState, newState) -> game().publishGameEvent(new GameStateChangeEvent(game(), oldState, newState)));
         Logger.info("Game controller created");
     }
 
     /**
      * @return The currently selected game (model).
      */
-    @SuppressWarnings("unchecked")
     public <GAME extends GameModel> GAME game() {
-        return (GAME) currentGameModel;
+        return game(gameVariantPy.get());
     }
 
-    public void setGameModel(GameVariant variant, GameModel gameModel) {
-        assertNotNull(variant);
-        assertNotNull(gameModel);
-        gameModelMap.put(variant, gameModel);
+    public void defineGameModel(GameVariant variant, GameModel gameModel) {
+        gameModelMap.put(assertNotNull(variant), assertNotNull(gameModel));
     }
 
     @SuppressWarnings("unchecked")
@@ -69,36 +75,20 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     public Stream<GameModel> games() { return gameModelMap.values().stream(); }
 
-    public void selectGameVariant(GameVariant variant) {
-        assertNotNull(variant);
-        GameVariant oldVariant = currentGameModel != null ? selectedGameVariant() : null;
-        currentGameModel = game(variant);
-        currentGameModel.init();
-        if (oldVariant != variant) {
-            currentGameModel.publishGameEvent(GameEventType.GAME_VARIANT_CHANGED);
-        }
-    }
+    public ObjectProperty<GameVariant> gameVariantProperty() { return gameVariantPy; }
 
     public boolean isGameVariantSelected(GameVariant gameVariant) {
-        return gameModelMap.get(gameVariant) == currentGameModel;
-    }
-
-    public GameVariant selectedGameVariant() {
-        return gameModelMap.entrySet().stream()
-            .filter(entry -> entry.getValue() == currentGameModel)
-            .findFirst()
-            .map(Map.Entry::getKey)
-            .orElse(null);
+        return gameVariant == gameVariantPy.get();
     }
 
     @Override
     public GameModel context() {
-        return currentGameModel;
+        return game();
     }
 
     @Override
     public void update() {
-        currentGameModel.clearEventLog();
+        game().clearEventLog();
         super.update();
     }
 }

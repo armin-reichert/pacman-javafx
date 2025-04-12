@@ -157,12 +157,14 @@ public class PacManGamesUI implements GameUI {
         var icon3D = FontIcon.of(FontAwesomeSolid.CUBES, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
         icon3D.visibleProperty().bind(PY_3D_ENABLED);
 
+        var iconCutScenesOff = FontIcon.of(FontAwesomeSolid.AMBULANCE, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
+
         var iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, STATUS_ICON_COLOR);
         iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
             () -> currentView() != editorView && THE_CLOCK.isPaused(),
             viewPy, THE_CLOCK.pausedProperty()));
 
-        Pane iconBox = createIconBox(iconMuted, icon3D, iconAutopilot, iconImmune);
+        Pane iconBox = createIconBox(iconMuted, icon3D, iconAutopilot, iconImmune, iconCutScenesOff);
         iconBox.visibleProperty().bind(Bindings.createBooleanBinding(() -> currentView() != editorView, viewPy));
 
         parent.getChildren().addAll(iconPaused, iconBox);
@@ -290,12 +292,12 @@ public class PacManGamesUI implements GameUI {
         stage.getIcons().setAll(uiConfig.appIcon());
         gameView.canvasContainer().decorationEnabledPy.set(uiConfig.isGameCanvasDecorated());
         // this triggers a game event and calling the event handlers:
-        THE_GAME_CONTROLLER.selectGameVariant(gameVariant);
+        THE_GAME_CONTROLLER.gameVariantProperty().set(gameVariant);
     }
 
     @Override
     public void show() {
-        selectGameVariant(THE_GAME_CONTROLLER.selectedGameVariant());
+        selectGameVariant(THE_GAME_CONTROLLER.gameVariantProperty().get());
         viewPy.set(startPagesView);
         startPagesView.currentStartPage().ifPresent(StartPage::requestFocus);
         stage.centerOnScreen();

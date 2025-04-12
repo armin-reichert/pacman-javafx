@@ -88,6 +88,6 @@ public interface GameScene extends GameEventListener, ActionProvider {
      * @return scene name as used by logging output
      */
     default String displayName() {
-        return "%s (%s)".formatted(getClass().getSimpleName(), THE_GAME_CONTROLLER.selectedGameVariant());
+        return "%s (%s)".formatted(getClass().getSimpleName(), THE_GAME_CONTROLLER.gameVariantProperty().get());
     }
 }

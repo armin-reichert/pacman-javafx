@@ -42,7 +42,7 @@ public class GameUIConfigManager {
     }
 
     public GameUIConfig current() {
-        return configMap.get(THE_GAME_CONTROLLER.selectedGameVariant());
+        return configMap.get(THE_GAME_CONTROLLER.gameVariantProperty().get());
     }
 
     public boolean currentGameSceneIsPlayScene2D() {

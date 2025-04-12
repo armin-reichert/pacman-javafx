@@ -41,12 +41,12 @@ public class PacManGames3dApp extends Application {
     @Override
     public void init() {
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
-        THE_GAME_CONTROLLER.setGameModel(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_GameModel());
-        THE_GAME_CONTROLLER.setGameModel(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
-        THE_GAME_CONTROLLER.setGameModel(GameVariant.PACMAN,           new ArcadePacMan_GameModel());
-        THE_GAME_CONTROLLER.setGameModel(GameVariant.PACMAN_XXL,       new PacManXXL_PacMan_GameModel(xxlMapSelector));
-        THE_GAME_CONTROLLER.setGameModel(GameVariant.MS_PACMAN_XXL,    new PacManXXL_MsPacMan_GameModel(xxlMapSelector));
-        THE_GAME_CONTROLLER.selectGameVariant(GameVariant.PACMAN);
+        THE_GAME_CONTROLLER.defineGameModel(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_GameModel());
+        THE_GAME_CONTROLLER.defineGameModel(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
+        THE_GAME_CONTROLLER.defineGameModel(GameVariant.PACMAN,           new ArcadePacMan_GameModel());
+        THE_GAME_CONTROLLER.defineGameModel(GameVariant.PACMAN_XXL,       new PacManXXL_PacMan_GameModel(xxlMapSelector));
+        THE_GAME_CONTROLLER.defineGameModel(GameVariant.MS_PACMAN_XXL,    new PacManXXL_MsPacMan_GameModel(xxlMapSelector));
+        THE_GAME_CONTROLLER.gameVariantProperty().set(GameVariant.PACMAN);
     }
 
     @Override

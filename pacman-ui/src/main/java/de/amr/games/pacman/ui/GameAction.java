@@ -241,7 +241,7 @@ public enum GameAction implements Action {
     START_GAME {
         @Override
         public void execute() {
-            if (THE_GAME_CONTROLLER.selectedGameVariant() == GameVariant.MS_PACMAN_TENGEN) {
+            if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN)) {
                 THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
             } else if (THE_GAME_CONTROLLER.game().canStartNewGame()) {
                 THE_SOUND.stopVoice();
@@ -311,7 +311,7 @@ public enum GameAction implements Action {
             if (THE_CLOCK.isPaused()) {
                 THE_SOUND.stopAll();
             }
-            Logger.info("Game ({}) {}", THE_GAME_CONTROLLER.selectedGameVariant(), THE_CLOCK.isPaused() ? "paused" : "resumed");
+            Logger.info("Game ({}) {}", THE_GAME_CONTROLLER.gameVariantProperty().get(), THE_CLOCK.isPaused() ? "paused" : "resumed");
         }
     },
 
