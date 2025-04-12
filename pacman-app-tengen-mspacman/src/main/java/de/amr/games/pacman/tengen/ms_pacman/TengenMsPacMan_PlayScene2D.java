@@ -450,7 +450,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         tr.drawAnimatedActor(level.pac());
         ghostsInZOrder(level).forEach(tr::drawAnimatedActor);
 
-        int livesCounterEntries = game.lives() - 1;
+        int livesCounterEntries = game.livesProperty().get() - 1;
         if (gameState() == GameState.STARTING_GAME && !level.pac().isVisible()) {
             // as long as Pac-Man is invisible when the game is started, one entry more appears in the lives counter
             livesCounterEntries += 1;

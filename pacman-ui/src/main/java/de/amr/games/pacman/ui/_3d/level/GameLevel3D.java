@@ -124,7 +124,7 @@ public class GameLevel3D extends Group {
                     .anyMatch(Ghost::isVisible);
             houseOpenPy.set(ghostNearHouseEntry);
 
-            int symbolsDisplayed = Math.max(0, THE_GAME_CONTROLLER.game().lives() - 1);
+            int symbolsDisplayed = Math.max(0, THE_GAME_CONTROLLER.game().livesProperty().get() - 1);
             if (!level.pac().isVisible() && THE_GAME_CONTROLLER.state() == GameState.STARTING_GAME) {
                 livesCountPy.set(symbolsDisplayed + 1);
             } else {

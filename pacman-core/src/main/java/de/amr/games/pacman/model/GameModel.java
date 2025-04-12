@@ -14,10 +14,11 @@ import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.*;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import org.tinylog.Logger;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -52,11 +53,11 @@ public abstract class GameModel {
     protected boolean playing;
     protected boolean simulateOverflowBug;
     protected int initialLives;
-    protected int lives;
     protected boolean scoreVisible;
 
     private final BooleanProperty cutScenesEnabledPy = new SimpleBooleanProperty(true);
     private final BooleanProperty demoLevelPy = new SimpleBooleanProperty(false);
+    private final IntegerProperty livesPy = new SimpleIntegerProperty(0);
 
     protected SimulationStepLog eventLog;
 
@@ -147,22 +148,6 @@ public abstract class GameModel {
         initialLives = lives;
     }
 
-    public int lives() {
-        return lives;
-    }
-
-    public void addLives(int deltaLives) {
-        lives += deltaLives;
-    }
-
-    public void loseLife() {
-        if (lives == 0) {
-            Logger.error("No life left to lose :-(");
-        } else {
-            --lives;
-        }
-    }
-
     public List<Byte> levelCounter() {
         return levelCounter;
     }
@@ -189,6 +174,20 @@ public abstract class GameModel {
 
     public BooleanProperty cutScenesEnabledProperty() { return cutScenesEnabledPy; }
     public BooleanProperty demoLevelProperty() { return demoLevelPy; }
+    public IntegerProperty livesProperty() { return livesPy; }
+
+    public void loseLife() {
+        int lives = livesProperty().get();
+        if (lives > 0) {
+            livesProperty().set(lives - 1);
+        } else {
+            Logger.error("Cannot lose life, no lives left");
+        }
+    }
+
+    public void addLives(int lives) {
+        livesProperty().set(livesProperty().get() + lives);
+    }
 
     public void startNewGame() {
         resetForStartingNewGame();

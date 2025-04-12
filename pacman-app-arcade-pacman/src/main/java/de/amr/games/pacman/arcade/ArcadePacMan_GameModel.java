@@ -149,7 +149,7 @@ public class ArcadePacMan_GameModel extends GameModel {
     @Override
     public void resetForStartingNewGame() {
         playing = false;
-        lives = initialLives;
+        livesProperty().set(initialLives);
         level = null;
         demoLevelProperty().set(false);
         cruiseElroy = 0;
@@ -193,7 +193,7 @@ public class ArcadePacMan_GameModel extends GameModel {
 
     @Override
     public boolean isOver() {
-        return lives == 0;
+        return livesProperty().get() == 0;
     }
 
     @Override

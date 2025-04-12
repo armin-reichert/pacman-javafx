@@ -163,7 +163,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         // Draw lives counter or remaining credit
         if (game().canStartNewGame()) {
             //TODO: this code is ugly. Realizes effect that Pac is "picked" from the lives counter when game starts.
-            int numLivesShown = game().lives() - 1;
+            int numLivesShown = game().livesProperty().get() - 1;
             if (gameState() == GameState.STARTING_GAME && !level.pac().isVisible()) {
                 numLivesShown += 1;
             }
