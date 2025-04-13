@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.timer.TickTimer.State.*;
+import static java.util.Objects.requireNonNull;
 
 /**
  * A simple but useful passive timer counting ticks.
@@ -243,7 +243,7 @@ public class TickTimer {
     }
 
     public void addListener(Consumer<TickTimerEvent> subscriber) {
-        assertNotNull(subscriber);
+        requireNonNull(subscriber);
         if (listeners == null) {
             listeners = new ArrayList<>(3);
         }
@@ -251,14 +251,14 @@ public class TickTimer {
     }
 
     public void removeListener(Consumer<TickTimerEvent> subscriber) {
-        assertNotNull(subscriber);
+        requireNonNull(subscriber);
         if (listeners != null) {
             listeners.remove(subscriber);
         }
     }
 
     private void publishEvent(TickTimerEvent event) {
-        assertNotNull(event);
+        requireNonNull(event);
         if (listeners != null) {
             listeners.forEach(subscriber -> subscriber.accept(event));
         }

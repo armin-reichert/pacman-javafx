@@ -12,9 +12,9 @@ import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.ui.Globals.PY_DEBUG_INFO_VISIBLE;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static java.util.Objects.requireNonNull;
 
 public class GameUIConfigManager {
 
@@ -27,8 +27,8 @@ public class GameUIConfigManager {
      * @param uiConfig the UI configuration for this variant
      */
     public void set(GameVariant variant, GameUIConfig uiConfig) {
-        assertNotNull(variant);
-        assertNotNull(uiConfig);
+        requireNonNull(variant);
+        requireNonNull(uiConfig);
         uiConfig.gameScenes().forEach(scene -> {
             if (scene instanceof GameScene2D gameScene2D) {
                 gameScene2D.debugInfoVisibleProperty().bind(PY_DEBUG_INFO_VISIBLE);

@@ -34,12 +34,14 @@ import javafx.scene.transform.Translate;
 
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.Globals.HTS;
+import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.tilemap.editor.ArcadeMap.*;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.getColorFromMap;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.parseColor;
 import static de.amr.games.pacman.uilib.Ufx.opaqueColor;
+import static java.util.Objects.requireNonNull;
 
 public class Maze3D extends Group {
 
@@ -48,7 +50,7 @@ public class Maze3D extends Group {
     private static final double ACTOR_SIZE = 12.0;
 
     private static PhongMaterial coloredMaterial(Color color) {
-        assertNotNull(color);
+        requireNonNull(color);
         var material = new PhongMaterial(color);
         material.setSpecularColor(color.brighter());
         return material;

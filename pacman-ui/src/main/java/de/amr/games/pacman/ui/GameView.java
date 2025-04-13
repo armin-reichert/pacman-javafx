@@ -33,11 +33,11 @@ import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.Globals.*;
 import static de.amr.games.pacman.uilib.Keyboard.*;
 import static de.amr.games.pacman.uilib.Ufx.*;
+import static java.util.Objects.requireNonNull;
 
 /**
  * This view shows the game play and the overlays like dashboard and picture-in-picture view of the running play scene.
@@ -254,7 +254,7 @@ public class GameView implements View {
     }
 
     public void embedGameScene(GameUIConfig gameUIConfig, GameScene gameScene) {
-        assertNotNull(gameScene);
+        requireNonNull(gameScene);
         switch (gameScene) {
             case CameraControlledView gameSceneUsingCamera -> {
                 root.getChildren().set(0, gameSceneUsingCamera.viewPort());

@@ -4,12 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._3d.animation;
 
-import de.amr.games.pacman.Globals;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Armin Reichert
@@ -21,10 +22,10 @@ public class ColorChangeTransition extends Transition {
     private final ObjectProperty<Color> clientColorPy;
 
     public ColorChangeTransition(Duration duration, Color start, Color end, ObjectProperty<Color> clientColorPy) {
-        Globals.assertNotNull(duration);
-        Globals.assertNotNull(start);
-        Globals.assertNotNull(end);
-        Globals.assertNotNull(clientColorPy);
+        requireNonNull(duration);
+        requireNonNull(start);
+        requireNonNull(end);
+        requireNonNull(clientColorPy);
         this.start = start;
         this.end = end;
         this.clientColorPy = clientColorPy;

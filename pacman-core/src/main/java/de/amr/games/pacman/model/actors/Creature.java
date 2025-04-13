@@ -15,6 +15,7 @@ import java.util.Optional;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.Direction.*;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Base class for all creatures which can move through a level's world.
@@ -110,7 +111,7 @@ public abstract class Creature extends Actor2D {
     }
 
     public void setGameLevel(GameLevel level) {
-        this.level = assertNotNull(level);
+        this.level = requireNonNull(level);
     }
 
     public GameLevel level() {

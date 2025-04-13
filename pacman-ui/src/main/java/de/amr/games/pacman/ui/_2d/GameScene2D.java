@@ -16,9 +16,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.ui.Globals.DEBUG_TEXT_FONT;
 import static de.amr.games.pacman.ui.Globals.THE_KEYBOARD;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Base class of all 2D scenes.
@@ -76,7 +76,7 @@ public abstract class GameScene2D implements GameScene {
     protected void doEnd() {}
 
     public void setGameRenderer(GameRenderer renderer) {
-        gr = assertNotNull(renderer);
+        gr = requireNonNull(renderer);
     }
 
     public void setCanvas(Canvas canvas) {

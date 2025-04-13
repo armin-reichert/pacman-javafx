@@ -14,10 +14,10 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 
-import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.arcade.ArcadePacMan_SpriteSheet.EMPTY_MAZE_SPRITE;
 import static de.amr.games.pacman.arcade.ArcadePacMan_SpriteSheet.FULL_MAZE_SPRITE;
 import static de.amr.games.pacman.ui.Globals.THE_ASSETS;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Armin Reichert
@@ -29,8 +29,8 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
     private final GraphicsContext ctx;
 
     public ArcadePacMan_GameRenderer(ArcadePacMan_SpriteSheet spriteSheet, Canvas canvas) {
-        this.spriteSheet = assertNotNull(spriteSheet);
-        ctx = assertNotNull(canvas).getGraphicsContext2D();
+        this.spriteSheet = requireNonNull(spriteSheet);
+        ctx = requireNonNull(canvas).getGraphicsContext2D();
     }
 
     @Override

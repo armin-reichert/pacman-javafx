@@ -27,6 +27,7 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.model.actors.GhostState.*;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Ms. Pac-Man Arcade game.
@@ -107,7 +108,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     protected ArcadeMsPacMan_GameModel(MapSelector mapSelector) {
         super(new ArcadeMsPacMan_HuntingTimer());
-        this.mapSelector = assertNotNull(mapSelector);
+        this.mapSelector = requireNonNull(mapSelector);
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
         huntingTimer.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));

@@ -15,9 +15,9 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.Globals.isEven;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.mirroredTileValue;
+import static java.util.Objects.requireNonNull;
 
 public class ObstacleEditor {
 
@@ -52,14 +52,14 @@ public class ObstacleEditor {
     }
 
     public void startEditing(Vector2i tile) {
-        assertNotNull(tile);
+        requireNonNull(tile);
         if (enabled) {
             minTile = maxTile = anchor = frontier = tile;
         }
     }
 
     public void continueEditing(Vector2i tile) {
-        assertNotNull(tile);
+        requireNonNull(tile);
         if (!enabled || tile.equals(frontier)) {
             return;
         }

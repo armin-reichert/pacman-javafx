@@ -17,11 +17,11 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.ui.Globals.THE_SOUND;
 import static de.amr.games.pacman.uilib.Ufx.doAfterSec;
 import static de.amr.games.pacman.uilib.Ufx.now;
 import static de.amr.games.pacman.uilib.model3D.Model3D.meshViewById;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Armin Reichert
@@ -41,10 +41,10 @@ public class PacMan3D implements Pac3D {
      * @param assets asset map
      */
     public PacMan3D(GameVariant variant, Pac pacMan, double size, AssetStorage assets, String assetNamespace) {
-        assertNotNull(variant);
-        this.pacMan = assertNotNull(pacMan);
-        assertNotNull(assets);
-        assertNotNull(assetNamespace);
+        requireNonNull(variant);
+        this.pacMan = requireNonNull(pacMan);
+        requireNonNull(assets);
+        requireNonNull(assetNamespace);
 
         Model3D model3D = assets.get("model3D.pacman");
 

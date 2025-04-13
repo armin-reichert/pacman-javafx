@@ -4,12 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.uilib;
 
-import de.amr.games.pacman.Globals;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Selects entries randomly from a list without repetitions.
@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
 public class Picker<T> {
 
     public static Picker<String> fromBundle(ResourceBundle bundle, String prefix) {
-        Globals.assertNotNull(bundle);
+        requireNonNull(bundle);
         return new Picker<>(bundle.keySet().stream()//
             .filter(key -> key.startsWith(prefix))//
             .sorted()//

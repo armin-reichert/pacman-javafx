@@ -15,7 +15,7 @@ import de.amr.games.pacman.uilib.SpriteSheet;
 
 import java.util.Map;
 
-import static de.amr.games.pacman.Globals.assertNotNull;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Armin Reichert
@@ -23,7 +23,7 @@ import static de.amr.games.pacman.Globals.assertNotNull;
 public class PacAnimations extends SpriteAnimationSet {
 
     public PacAnimations(ArcadeMsPacMan_SpriteSheet spriteSheet) {
-        assertNotNull(spriteSheet);
+        requireNonNull(spriteSheet);
 
         var munching = SpriteAnimation
             .spriteSheet(spriteSheet)

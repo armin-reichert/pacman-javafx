@@ -20,9 +20,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 
-import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.Globals.TS;
+import static de.amr.games.pacman.Globals.tiles_to_px;
 import static de.amr.games.pacman.lib.RectArea.rect;
 import static de.amr.games.pacman.ui.Globals.THE_ASSETS;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Armin Reichert
@@ -67,8 +69,8 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     private ImageRegion flashingMazeImageRegion;
 
     public ArcadeMsPacMan_GameRenderer(ArcadeMsPacMan_SpriteSheet spriteSheet, Canvas canvas) {
-        this.spriteSheet = assertNotNull(spriteSheet);
-        ctx = assertNotNull(canvas).getGraphicsContext2D();
+        this.spriteSheet = requireNonNull(spriteSheet);
+        ctx = requireNonNull(canvas).getGraphicsContext2D();
         //TODO maybe create flashing maze from normal image at runtime by color exchanges?
         flashingMazesImage = THE_ASSETS.get("ms_pacman.flashing_mazes");
     }

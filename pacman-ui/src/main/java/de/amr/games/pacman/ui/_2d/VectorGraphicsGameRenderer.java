@@ -18,7 +18,7 @@ import javafx.scene.paint.Paint;
 
 import java.util.Map;
 
-import static de.amr.games.pacman.Globals.assertNotNull;
+import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
 /**
@@ -40,8 +40,8 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     private TerrainMapColorScheme blinkingOffColors;
 
     public VectorGraphicsGameRenderer(GameSpriteSheet spriteSheet, Canvas canvas) {
-        this.spriteSheet = assertNotNull(spriteSheet);
-        ctx = assertNotNull(canvas).getGraphicsContext2D();
+        this.spriteSheet = requireNonNull(spriteSheet);
+        ctx = requireNonNull(canvas).getGraphicsContext2D();
         terrainRenderer.scalingProperty().bind(scalingPy);
         foodRenderer.scalingProperty().bind(scalingPy);
         setBackgroundColor(Color.BLACK);
@@ -66,7 +66,7 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     }
 
     public void setBackgroundColor(Color color) {
-        bgColor = assertNotNull(color);
+        bgColor = requireNonNull(color);
         blinkingOnColors = new TerrainMapColorScheme(bgColor, Color.BLACK, Color.WHITE, Color.BLACK);
         blinkingOffColors = new TerrainMapColorScheme(bgColor, Color.WHITE, Color.BLACK, Color.BLACK);
     }

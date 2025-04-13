@@ -30,6 +30,7 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.model.actors.GhostState.*;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Classic Arcade Pac-Man.
@@ -129,7 +130,7 @@ public class ArcadePacMan_GameModel extends GameModel {
 
     protected ArcadePacMan_GameModel(MapSelector mapSelector) {
         super(new ArcadePacMan_HuntingTimer());
-        this.mapSelector = assertNotNull(mapSelector);
+        this.mapSelector = requireNonNull(mapSelector);
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
         huntingTimer.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));

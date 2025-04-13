@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static de.amr.games.pacman.Globals.THE_GAME_EVENT_MANAGER;
-import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.model.actors.GhostState.*;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Common base class of all Pac-Man game models.
@@ -60,7 +60,7 @@ public abstract class GameModel {
     protected SimulationStepLog eventLog;
 
     protected GameModel(HuntingTimer huntingTimer) {
-        this.huntingTimer = assertNotNull(huntingTimer);
+        this.huntingTimer = requireNonNull(huntingTimer);
         scoreManager.setOnExtraLifeWon(extraLifeScore -> {
             eventLog.extraLifeWon = true;
             eventLog.extraLifeScore = extraLifeScore;

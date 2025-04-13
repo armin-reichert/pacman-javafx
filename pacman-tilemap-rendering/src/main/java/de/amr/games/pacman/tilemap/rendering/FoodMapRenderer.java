@@ -13,7 +13,9 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.Globals.HTS;
+import static de.amr.games.pacman.Globals.TS;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Armin Reichert
@@ -41,11 +43,11 @@ public class FoodMapRenderer implements TileMapRenderer {
     }
 
     public void setEnergizerColor(Color color) {
-        energizerColorPy.set(assertNotNull(color));
+        energizerColorPy.set(requireNonNull(color));
     }
 
     public void setPelletColor(Color color) {
-        pelletColorPy.set(assertNotNull(color));
+        pelletColorPy.set(requireNonNull(color));
     }
 
     @Override

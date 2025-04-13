@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.LayerID.FOOD;
 import static de.amr.games.pacman.lib.tilemap.LayerID.TERRAIN;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Armin Reichert
@@ -73,7 +74,7 @@ public class WorldMap {
     private static final String BEGIN_DATA_SECTION  = "!data";
 
     public static Optional<Vector2i> parseTile(String text) {
-        assertNotNull(text);
+        requireNonNull(text);
         Matcher m = TILE_PATTERN.matcher(text);
         if (!m.matches()) {
             return Optional.empty();
@@ -88,7 +89,7 @@ public class WorldMap {
     }
 
     public static String formatTile(Vector2i tile) {
-        assertNotNull(tile);
+        requireNonNull(tile);
         return TILE_FORMAT.formatted(tile.x(), tile.y());
     }
 
@@ -101,7 +102,7 @@ public class WorldMap {
     private final Map<String, Object> config = new HashMap<>();
 
     public WorldMap(WorldMap other) {
-        assertNotNull(other);
+        requireNonNull(other);
         numRows = other.numRows;
         numCols = other.numCols;
         url = other.url;
@@ -121,7 +122,7 @@ public class WorldMap {
     }
 
     public WorldMap(URL url) throws IOException {
-        this.url = assertNotNull(url);
+        this.url = requireNonNull(url);
         var r = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
         parse(r.lines());
         updateObstacleList();
@@ -502,7 +503,7 @@ public class WorldMap {
      * @throws IllegalArgumentException if tile outside map bounds
      */
     public byte get(LayerID layerID, int row, int col) {
-        assertNotNull(layerID);
+        requireNonNull(layerID);
         if (outOfBounds(row, col)) {
             throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
         }
@@ -529,7 +530,7 @@ public class WorldMap {
      * @throws IllegalArgumentException if tile outside map bounds
      */
     public void set(LayerID layerID, int row, int col, byte value) {
-        assertNotNull(layerID);
+        requireNonNull(layerID);
         if (outOfBounds(row, col)) {
             throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
         }
@@ -549,7 +550,7 @@ public class WorldMap {
     }
 
     public void setAll(LayerID layerID, byte value) {
-        assertNotNull(layerID);
+        requireNonNull(layerID);
         for (byte[] row : layer(layerID).values) {
             Arrays.fill(row, value);
         }

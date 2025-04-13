@@ -16,6 +16,7 @@ import javafx.scene.paint.Color;
 import java.util.Set;
 
 import static de.amr.games.pacman.Globals.*;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Vector renderer for terrain tile maps.
@@ -39,7 +40,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
     }
 
     public void setColorScheme(TerrainMapColorScheme colors) {
-        this.colors = assertNotNull(colors);
+        this.colors = requireNonNull(colors);
     }
 
     public FloatProperty scalingProperty() { return scalingPy; }

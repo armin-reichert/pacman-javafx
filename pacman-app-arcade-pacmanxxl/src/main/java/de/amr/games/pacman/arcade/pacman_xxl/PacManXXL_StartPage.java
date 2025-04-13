@@ -17,8 +17,10 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
+import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.ui.Globals.*;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Displays an option menu where the game variant to be played and other options can be set.
@@ -229,7 +231,7 @@ public class PacManXXL_StartPage implements StartPage, ResourceManager {
     }
 
     private void setMapOrder(MapSelectionMode mapOrder, boolean customMapsExist) {
-        this.mapOrder = assertNotNull(mapOrder);
+        this.mapOrder = requireNonNull(mapOrder);
         entryMapOrder.selectValue(mapOrder);
         entryMapOrder.setEnabled(customMapsExist);
     }

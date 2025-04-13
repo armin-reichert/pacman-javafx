@@ -15,7 +15,7 @@ import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.Globals.assertNotNull;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Armin Reichert
@@ -43,7 +43,7 @@ public class AssetStorage {
     }
 
     public String text(String keyOrPattern, Object... args) {
-        assertNotNull(keyOrPattern);
+        requireNonNull(keyOrPattern);
         for (ResourceBundle bundle : bundles) {
             if (bundle.containsKey(keyOrPattern)) {
                 return MessageFormat.format(bundle.getString(keyOrPattern), args);

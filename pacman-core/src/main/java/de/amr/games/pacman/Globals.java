@@ -15,8 +15,9 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.Random;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Global is not evil.
@@ -63,7 +64,7 @@ public interface Globals {
     }
 
     private static boolean ensureDirectoryExistsAndIsWritable(File dir, String description) {
-        assertNotNull(dir);
+        requireNonNull(dir);
         if (!dir.exists()) {
             Logger.info(description + " does not exist, create it...");
             if (!dir.mkdirs()) {
@@ -84,7 +85,7 @@ public interface Globals {
      * @return tile containing given position
      */
     static Vector2i tileAt(Vector2f position) {
-        assertNotNull(position);
+        requireNonNull(position);
         return tileAt(position.x(), position.y());
     }
 
@@ -118,18 +119,6 @@ public interface Globals {
         return (float) tiles * TS;
     }
 
-    static <T> T assertNotNull(T value) {
-        return Objects.requireNonNull(value, "");
-    }
-
-    static <T> T assertNotNull(T value, String message) {
-        return Objects.requireNonNull(value, message);
-    }
-
-    static Vector2i assertTileNotNull(Vector2i tile) {
-        return assertNotNull(tile, "Tile must not be null");
-    }
-
     static byte assertValidGhostID(byte id) {
         if (id < 0 || id > 3) {
             throw GameException.invalidGhostID(id);
@@ -144,7 +133,7 @@ public interface Globals {
     }
 
     static Direction assertDirectionNotNull(Direction dir) {
-        return assertNotNull(dir, "Direction must not be null");
+        return requireNonNull(dir, "Direction must not be null");
     }
 
     static double assertNonNegative(double value, String messageFormat) {

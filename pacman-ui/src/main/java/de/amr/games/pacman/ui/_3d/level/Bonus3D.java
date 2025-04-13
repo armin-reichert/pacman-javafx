@@ -22,6 +22,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import static de.amr.games.pacman.Globals.*;
+import static java.util.Objects.requireNonNull;
 
 /**
  * 3D bonus symbol.
@@ -42,9 +43,9 @@ public class Bonus3D extends Box {
     public Bonus3D(Bonus bonus, Image symbolImage, Image pointsImage) {
         super(SYMBOL_WIDTH, TS, TS);
 
-        assertNotNull(bonus);
-        assertNotNull(symbolImage);
-        assertNotNull(pointsImage);
+        requireNonNull(bonus);
+        requireNonNull(symbolImage);
+        requireNonNull(pointsImage);
 
         this.bonus = bonus;
         symbolImageView = new ImageView(symbolImage);

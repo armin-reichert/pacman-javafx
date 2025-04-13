@@ -30,8 +30,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.ui.Globals.PY_3D_ENABLED;
+import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_UIConfig implements GameUIConfig, ResourceManager {
 
@@ -124,8 +124,8 @@ public class ArcadePacMan_UIConfig implements GameUIConfig, ResourceManager {
 
     @Override
     public boolean gameSceneHasID(GameScene gameScene, String sceneID) {
-        assertNotNull(gameScene);
-        assertNotNull(sceneID);
+        requireNonNull(gameScene);
+        requireNonNull(sceneID);
         return scenesByID.get(sceneID) == gameScene;
     }
 

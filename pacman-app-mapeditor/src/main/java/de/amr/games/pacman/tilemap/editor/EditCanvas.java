@@ -32,11 +32,11 @@ import org.tinylog.Logger;
 import java.util.function.Predicate;
 
 import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.PROPERTY_COLOR_FOOD;
 import static de.amr.games.pacman.tilemap.editor.ArcadeMap.MS_PACMAN_COLOR_FOOD;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditor.*;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.*;
+import static java.util.Objects.requireNonNull;
 
 public class EditCanvas {
 
@@ -55,7 +55,7 @@ public class EditCanvas {
     private boolean dragging = false;
 
     public EditCanvas(TileMapEditor editor) {
-        this.editor = assertNotNull(editor);
+        this.editor = requireNonNull(editor);
 
         obstacleEditor = new ObstacleEditor() {
             @Override

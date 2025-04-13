@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static de.amr.games.pacman.Globals.assertNotNull;
+import static java.util.Objects.requireNonNull;
 
 public abstract class OptionMenuEntry<T> {
     protected final String text;
@@ -18,8 +18,8 @@ public abstract class OptionMenuEntry<T> {
 
     @SafeVarargs
     public OptionMenuEntry(String text, T... values) {
-        this.text = assertNotNull(text);
-        if (assertNotNull(values).length == 0) {
+        this.text = requireNonNull(text);
+        if (requireNonNull(values).length == 0) {
             throw new IllegalArgumentException("Menu entry must provide at least one value");
         }
         if (Arrays.stream(values).anyMatch(Objects::isNull)) {

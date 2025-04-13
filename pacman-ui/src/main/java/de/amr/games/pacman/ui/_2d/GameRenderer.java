@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import static de.amr.games.pacman.Globals.*;
+import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
 /**
@@ -118,7 +119,7 @@ public interface GameRenderer {
      * @param sprite sprite sheet region (can be null)
      */
     default void drawActorSprite(Actor2D actor, RectArea sprite) {
-        assertNotNull(actor);
+        requireNonNull(actor);
         if (actor.isVisible() && sprite != null) {
             drawSpriteScaledCenteredOverTile(sprite, actor.posX(), actor.posY());
         }

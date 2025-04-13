@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._2d;
 
-import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -14,6 +13,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.tinylog.Logger;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Armin Reichert
@@ -70,7 +71,7 @@ public class TooFancyCanvasContainer extends BorderPane {
     private double minScaling = 1.0;
 
     public TooFancyCanvasContainer(Canvas canvas) {
-        this.canvas = Globals.assertNotNull(canvas);
+        this.canvas = requireNonNull(canvas);
         setCenter(canvas);
         canvas.widthProperty().bind(unscaledCanvasWidthPy.multiply(scalingPy));
         canvas.heightProperty().bind(unscaledCanvasHeightPy.multiply(scalingPy));

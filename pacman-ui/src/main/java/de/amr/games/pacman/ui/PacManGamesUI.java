@@ -40,6 +40,7 @@ import java.util.Optional;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.Globals.*;
+import static java.util.Objects.requireNonNull;
 
 /**
  * User interface for all Pac-Man game variants.
@@ -215,12 +216,12 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public void build(Stage stage, Dimension2D mainSceneSize) {
-        this.stage = assertNotNull(stage);
+        this.stage = requireNonNull(stage);
         root.setBackground(THE_ASSETS.get("background.scene"));
         root.getChildren().add(new Pane()); // placeholder for root of current view
         addStatusIcons(root);
         createMapEditor();
-        createMainScene(assertNotNull(mainSceneSize));
+        createMainScene(requireNonNull(mainSceneSize));
         createStartPagesView();
         createGameView();
         createMapEditorView();

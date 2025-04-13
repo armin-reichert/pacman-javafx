@@ -48,10 +48,12 @@ import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.Globals.HTS;
+import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.tilemap.editor.ArcadeMap.*;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.*;
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.IntStream.rangeClosed;
 
 /**
@@ -307,7 +309,7 @@ public class TileMapEditor {
 
     public WorldMap editedWorldMap() { return editedWorldMapPy.get(); }
 
-    public void setEditedWorldMap(WorldMap worldMap) { editedWorldMapPy.set(assertNotNull(worldMap)); }
+    public void setEditedWorldMap(WorldMap worldMap) { editedWorldMapPy.set(requireNonNull(worldMap)); }
 
     public IntegerProperty gridSizeProperty() { return gridSizePy; }
 
@@ -368,7 +370,7 @@ public class TileMapEditor {
     }
 
     public TileMapEditor(Stage stage) {
-        this.stage = assertNotNull(stage);
+        this.stage = requireNonNull(stage);
 
         TerrainMapColorScheme initialColors = new TerrainMapColorScheme(
             Color.BLACK,
@@ -527,7 +529,7 @@ public class TileMapEditor {
     }
 
     public void setTerrainMapPropertyValue(String propertyName, String value) {
-        assertNotNull(value);
+        requireNonNull(value);
         if (editedWorldMap().hasProperty(LayerID.TERRAIN, propertyName)
             && editedWorldMap().getProperty(LayerID.TERRAIN, propertyName).equals(value))
             return;
@@ -543,7 +545,7 @@ public class TileMapEditor {
     }
 
     public void setFoodMapPropertyValue(String propertyName, String value) {
-        assertNotNull(value);
+        requireNonNull(value);
         if (editedWorldMap().hasProperty(LayerID.FOOD, propertyName)
             && editedWorldMap().getProperty(LayerID.FOOD, propertyName).equals(value))
             return;
@@ -901,8 +903,8 @@ public class TileMapEditor {
 
     // also called from EditorPage
     public void addLoadMapMenuItem(String description, WorldMap map) {
-        assertNotNull(description);
-        assertNotNull(map);
+        requireNonNull(description);
+        requireNonNull(map);
         var miLoadMap = new MenuItem(description);
         miLoadMap.setOnAction(e -> loadMap(map));
         menuLoadMap.getItems().add(miLoadMap);
@@ -1224,7 +1226,7 @@ public class TileMapEditor {
     public boolean isEditMode(EditMode mode) { return editMode() == mode; }
 
     public void setEditMode(EditMode mode) {
-        editModePy.set(assertNotNull(mode));
+        editModePy.set(requireNonNull(mode));
     }
 
     public void editAtMousePosition(MouseEvent event) {
@@ -1316,9 +1318,9 @@ public class TileMapEditor {
      * This method should be used whenever a tile value has to be set and symmetric editing should be executed.
      */
     public void setTileValueAndRespectSymmetricEditing(WorldMap worldMap, LayerID layerID, Vector2i tile, byte value) {
-        assertNotNull(worldMap);
-        assertNotNull(layerID);
-        assertNotNull(tile);
+        requireNonNull(worldMap);
+        requireNonNull(layerID);
+        requireNonNull(tile);
 
         if (layerID == LayerID.FOOD && !canEditFoodAtTile(tile)) {
             return;

@@ -24,6 +24,7 @@ import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_MS_PACMAN_BOOSTER;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 import static de.amr.games.pacman.tengen.ms_pacman.SpeedConfiguration.*;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Ms. Pac-Man (Tengen).
@@ -185,7 +186,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     public void setMapCategory(MapCategory mapCategory) {
-        this.mapCategory = assertNotNull(mapCategory);
+        this.mapCategory = requireNonNull(mapCategory);
         if (mapCategory == MapCategory.ARCADE) {
             /* see https://tcrf.net/Ms._Pac-Man_(NES,_Tengen):
             Humorously, instead of adding a check to disable multiple extra lives,

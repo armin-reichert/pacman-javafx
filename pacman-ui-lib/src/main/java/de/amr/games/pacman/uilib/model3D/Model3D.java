@@ -59,7 +59,7 @@ public class Model3D {
     private final Map<String, PhongMaterial> materials = new HashMap<>();
 
     public Model3D(URL objFileURL) {
-        Globals.assertNotNull(objFileURL);
+        requireNonNull(objFileURL);
         Logger.debug("Loading 3D OBJ model from URL: {}", objFileURL);
         try {
             importModel(new ObjImporter(objFileURL.toExternalForm()));
@@ -69,7 +69,7 @@ public class Model3D {
     }
 
     public Model3D(File objFile) {
-        Globals.assertNotNull(objFile);
+        requireNonNull(objFile);
         Logger.debug("Loading 3D OBJ model from file '{}'", objFile);
         try (var in = new FileInputStream(objFile)) {
             importModel(new ObjImporter(in));

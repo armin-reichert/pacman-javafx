@@ -25,6 +25,7 @@ import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.TerrainTiles.*;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.model.GameModel.*;
+import static java.util.Objects.requireNonNull;
 
 public class GameLevel {
 
@@ -84,7 +85,7 @@ public class GameLevel {
             throw new IllegalArgumentException("Illegal level number: " + number);
         }
         this.number = number;
-        this.worldMap = assertNotNull(worldMap);
+        this.worldMap = requireNonNull(worldMap);
 
         portals = findPortals(worldMap);
         nextBonusIndex = -1;
@@ -175,7 +176,7 @@ public class GameLevel {
     }
 
     public void showMessage(Message message) {
-        this.message = assertNotNull(message);
+        this.message = requireNonNull(message);
     }
 
     public void clearMessage() {
@@ -193,7 +194,7 @@ public class GameLevel {
     public Pac pac() { return pac; }
 
     public void setGhosts(Ghost[] ghosts) {
-        this.ghosts = assertNotNull(ghosts);
+        this.ghosts = requireNonNull(ghosts);
     }
 
     public Ghost ghost(byte id) {
@@ -206,7 +207,7 @@ public class GameLevel {
     }
 
     public Stream<Ghost> ghosts(GhostState... states) {
-        assertNotNull(states);
+        requireNonNull(states);
         if (ghosts == null) {
             return Stream.empty();
         }
@@ -262,7 +263,7 @@ public class GameLevel {
     }
 
     public boolean outOfWorld(Vector2i tile) {
-        assertTileNotNull(tile);
+        requireNonNull(tile);
         return worldMap.outOfBounds(tile.y(), tile.x());
     }
 
@@ -283,12 +284,12 @@ public class GameLevel {
     }
 
     public boolean isPortalAt(Vector2i tile) {
-        assertTileNotNull(tile);
+        requireNonNull(tile);
         return portals().anyMatch(portal -> portal.contains(tile));
     }
 
     public boolean isDoorAt(Vector2i tile) {
-        assertTileNotNull(tile);
+        requireNonNull(tile);
         return tile.equals(leftDoorTile) || tile.equals(rightDoorTile);
     }
 
@@ -378,7 +379,7 @@ public class GameLevel {
      * @return tells if the given tile is part of the ghost house
      */
     public boolean isPartOfHouse(Vector2i tile) {
-        assertTileNotNull(tile);
+        requireNonNull(tile);
         return tile.x() >= houseMinTile().x() && tile.x() <= houseMaxTile().x()
                 && tile.y() >= houseMinTile().y() && tile.y() <= houseMaxTile().y();
     }
@@ -401,7 +402,7 @@ public class GameLevel {
 
     public void setGhostDirection(byte ghostID, Direction dir) {
         assertValidGhostID(ghostID);
-        assertNotNull(dir);
+        requireNonNull(dir);
         ghostDirections[ghostID] = dir;
     }
 

@@ -38,6 +38,7 @@ import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.games.pacman.ui.Globals.*;
 import static de.amr.games.pacman.ui._2d.GameSpriteSheet.NO_SPRITE;
+import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
 /**
@@ -55,9 +56,9 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     private ColoredMapSet coloredMapSet;
 
     public TengenMsPacMan_Renderer2D(TengenMsPacMan_SpriteSheet spriteSheet, MapRepository mapRepository, Canvas canvas) {
-        this.spriteSheet = assertNotNull(spriteSheet);
-        this.mapRepository = assertNotNull(mapRepository);
-        this.canvas = assertNotNull(canvas);
+        this.spriteSheet = requireNonNull(spriteSheet);
+        this.mapRepository = requireNonNull(mapRepository);
+        this.canvas = requireNonNull(canvas);
     }
 
     @Override

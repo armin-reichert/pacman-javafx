@@ -46,6 +46,7 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.ui.Globals.*;
 import static de.amr.games.pacman.uilib.Ufx.*;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Armin Reichert
@@ -281,7 +282,7 @@ public class GameLevel3D extends Group {
     }
 
     public void replaceBonus3D(Bonus bonus, GameSpriteSheet spriteSheet) {
-        assertNotNull(bonus);
+        requireNonNull(bonus);
         if (bonus3D != null) {
             worldGroup.getChildren().remove(bonus3D);
         }

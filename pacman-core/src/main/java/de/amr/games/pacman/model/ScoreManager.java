@@ -15,7 +15,7 @@ import java.time.LocalTime;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import static de.amr.games.pacman.Globals.assertNotNull;
+import static java.util.Objects.requireNonNull;
 
 public class ScoreManager {
 
@@ -76,7 +76,7 @@ public class ScoreManager {
     }
 
     public void setOnExtraLifeWon(Consumer<Integer> action) {
-        onExtraLifeWonAction = assertNotNull(action);
+        onExtraLifeWonAction = requireNonNull(action);
     }
 
     public Score score() {

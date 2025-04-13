@@ -26,8 +26,8 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.ui.Globals.*;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Carousel containing the start pages for the different game variants (XXL game variants share common start page).
@@ -128,7 +128,7 @@ public class StartPagesView implements View {
     }
 
     public void setTitleExpression(StringExpression stringExpression) {
-        titleExpression = assertNotNull(stringExpression);
+        titleExpression = requireNonNull(stringExpression);
     }
 
     public Optional<StartPage> currentStartPage() {
@@ -137,7 +137,7 @@ public class StartPagesView implements View {
     }
 
     public void addStartPage(StartPage startPage) {
-        assertNotNull(startPage);
+        requireNonNull(startPage);
         startPageList.add(startPage);
         carousel.addSlide(startPage.layoutRoot());
         carousel.setNavigationVisible(carousel.numSlides() >= 2);

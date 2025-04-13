@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.THE_GAME_EVENT_MANAGER;
-import static de.amr.games.pacman.Globals.assertNotNull;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Controller (in the sense of MVC) for all game variants.
@@ -59,7 +59,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     }
 
     public void registerGameModel(GameVariant variant, GameModel gameModel) {
-        registeredGameModels.put(assertNotNull(variant), assertNotNull(gameModel));
+        registeredGameModels.put(requireNonNull(variant), requireNonNull(gameModel));
     }
 
     /**
@@ -71,7 +71,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     @SuppressWarnings("unchecked")
     public <T extends GameModel> T game(GameVariant variant) {
-        return (T) registeredGameModels.get(assertNotNull(variant));
+        return (T) registeredGameModels.get(requireNonNull(variant));
     }
 
     public Stream<GameModel> games() { return registeredGameModels.values().stream(); }
@@ -79,7 +79,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     public ObjectProperty<GameVariant> gameVariantProperty() { return gameVariantPy; }
 
     public boolean isGameVariantSelected(GameVariant gameVariant) {
-        return assertNotNull(gameVariant) == gameVariantPy.get();
+        return requireNonNull(gameVariant) == gameVariantPy.get();
     }
 
     @Override

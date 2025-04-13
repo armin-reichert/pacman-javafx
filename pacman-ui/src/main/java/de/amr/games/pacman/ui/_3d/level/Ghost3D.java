@@ -23,6 +23,7 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.*;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Armin Reichert
@@ -61,11 +62,11 @@ public class Ghost3D {
         AssetStorage assets, String assetPrefix, double size) {
 
         assertValidGhostID(id);
-        assertNotNull(dressShape);
-        assertNotNull(pupilsShape);
-        assertNotNull(eyeballsShape);
-        assertNotNull(assets);
-        assertNotNull(assetPrefix);
+        requireNonNull(dressShape);
+        requireNonNull(pupilsShape);
+        requireNonNull(eyeballsShape);
+        requireNonNull(assets);
+        requireNonNull(assetPrefix);
         assertNonNegative(size);
 
         this.id = id;

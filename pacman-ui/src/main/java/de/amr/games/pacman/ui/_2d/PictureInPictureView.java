@@ -10,8 +10,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.VBox;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.ui.Globals.*;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Picture-in-Picture view. Adapts its aspect ratio to the current game world. Height can be changed via dashboard.
@@ -35,7 +35,7 @@ public class PictureInPictureView extends VBox {
     }
 
     public void setScene2D(GameScene2D scene2D) {
-        this.scene2D = assertNotNull(scene2D);
+        this.scene2D = requireNonNull(scene2D);
         GameRenderer renderer = THE_UI_CONFIGS.current().createRenderer(canvas);
         scene2D.setGameRenderer(renderer);
         scene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);

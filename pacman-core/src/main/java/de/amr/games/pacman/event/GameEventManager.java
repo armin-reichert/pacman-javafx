@@ -11,14 +11,14 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.games.pacman.Globals.assertNotNull;
+import static java.util.Objects.requireNonNull;
 
 public class GameEventManager {
 
     private final List<GameEventListener> eventListeners = new ArrayList<>();
 
     public void addEventListener(GameEventListener listener) {
-        assertNotNull(listener);
+        requireNonNull(listener);
         if (!eventListeners.contains(listener)) {
             eventListeners.add(listener);
             Logger.info("{}: Game event listener registered: {}", getClass().getSimpleName(), listener);
@@ -26,7 +26,7 @@ public class GameEventManager {
     }
 
     public void removeEventListener(GameEventListener listener) {
-        assertNotNull(listener);
+        requireNonNull(listener);
         boolean removed = eventListeners.remove(listener);
         if (removed) {
             Logger.info("{}: Game event listener removed: {}", getClass().getSimpleName(), listener);
@@ -36,20 +36,20 @@ public class GameEventManager {
     }
 
     public void publishEvent(GameEvent event) {
-        assertNotNull(event);
+        requireNonNull(event);
         eventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
         Logger.trace("Published game event: {}", event);
     }
 
     public void publishEvent(GameModel game, GameEventType type) {
-        assertNotNull(game);
-        assertNotNull(type);
+        requireNonNull(game);
+        requireNonNull(type);
         publishEvent(new GameEvent(game, type));
     }
 
     public void publishEvent(GameModel game, GameEventType type, Vector2i tile) {
-        assertNotNull(game);
-        assertNotNull(type);
+        requireNonNull(game);
+        requireNonNull(type);
         publishEvent(new GameEvent(game, type, tile));
     }
 }

@@ -4,13 +4,14 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._3d.animation;
 
-import de.amr.games.pacman.Globals;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Armin Reichert
@@ -32,8 +33,8 @@ public class ColorSwitchTransition extends Transition {
      * @param numSwitches switches made in total seconds interval
      */
     public ColorSwitchTransition(Color startColor, Color endColor, double intervalInSeconds, int numSwitches) {
-        Globals.assertNotNull(startColor);
-        Globals.assertNotNull(endColor);
+        requireNonNull(startColor);
+        requireNonNull(endColor);
         if (intervalInSeconds < 0) {
             throw new IllegalArgumentException("Interval duration must be non-negative but is " + intervalInSeconds);
         }

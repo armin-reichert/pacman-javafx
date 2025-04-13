@@ -9,7 +9,7 @@ import de.amr.games.pacman.model.GameModel;
 
 import java.util.Optional;
 
-import static de.amr.games.pacman.Globals.assertNotNull;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Armin Reichert
@@ -21,10 +21,8 @@ public class GameEvent {
     public final Vector2i tile;
 
     public GameEvent(GameModel game, GameEventType type, Vector2i tile) {
-        assertNotNull(game);
-        assertNotNull(type);
-        this.type = type;
-        this.game = game;
+        this.type = requireNonNull(type);
+        this.game = requireNonNull(game);
         this.tile = tile;
     }
 

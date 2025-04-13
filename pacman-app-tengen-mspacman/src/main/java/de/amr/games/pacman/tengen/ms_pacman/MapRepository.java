@@ -3,7 +3,6 @@
  */
 package de.amr.games.pacman.tengen.ms_pacman;
 
-import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
@@ -17,6 +16,7 @@ import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.lib.RectArea.rect;
 import static de.amr.games.pacman.lib.nes.NES_ColorScheme.*;
 import static de.amr.games.pacman.uilib.Ufx.*;
+import static java.util.Objects.requireNonNull;
 
 /**
  * This class provides an API to access the maze images in files {@code non_arcade_mazes.png} and {@code arcade_mazes.png}.
@@ -81,8 +81,8 @@ public class MapRepository {
     private final Image nonArcadeMazesImage;
 
     public MapRepository(Image arcadeMazesImage, Image nonArcadeMazesImage) {
-        this.arcadeMazesImage = Globals.assertNotNull(arcadeMazesImage);
-        this.nonArcadeMazesImage = Globals.assertNotNull(nonArcadeMazesImage);
+        this.arcadeMazesImage = requireNonNull(arcadeMazesImage);
+        this.nonArcadeMazesImage = requireNonNull(nonArcadeMazesImage);
     }
 
     public ColoredMapSet createMazeSet(WorldMap worldMap, int flashCount) {

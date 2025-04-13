@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.tilemap.editor;
 
-import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
@@ -253,7 +252,7 @@ public class PropertyEditorPane extends BorderPane {
     }
 
     public PropertyEditorPane(TileMapEditor editController) {
-        this.editor = Globals.assertNotNull(editController);
+        this.editor = requireNonNull(editController);
 
         var btnAddColorEntry = new Button("Color");
         btnAddColorEntry.setOnAction(e -> {

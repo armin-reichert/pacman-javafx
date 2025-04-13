@@ -18,8 +18,8 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.ui.Globals.THE_ASSETS;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Armin Reichert
@@ -82,8 +82,8 @@ public class GameSound {
     }
 
     public void selectGameVariant(GameVariant gameVariant, String assetNamespace) {
-        this.gameVariant = assertNotNull(gameVariant);
-        this.assetNamespace = assertNotNull(assetNamespace);
+        this.gameVariant = requireNonNull(gameVariant);
+        this.assetNamespace = requireNonNull(assetNamespace);
         if (soundsByGameVariant.get(gameVariant).isEmpty()) {
             var soundMap = new HashMap<String, MediaPlayer>();
             soundMap.put("game_over",      makeSound("game_over"));
@@ -181,7 +181,7 @@ public class GameSound {
     }
 
     public void playClipIfEnabled(String keySuffix, double volume) {
-        assertNotNull(keySuffix);
+        requireNonNull(keySuffix);
         String key = assetNamespace + ".audio." + keySuffix;
         AudioClip clip = THE_ASSETS.get(key);
         if (clip == null) {

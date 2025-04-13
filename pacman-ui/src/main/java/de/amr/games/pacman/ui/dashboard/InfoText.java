@@ -8,7 +8,7 @@ import javafx.scene.text.Text;
 
 import java.util.function.Supplier;
 
-import static de.amr.games.pacman.Globals.assertNotNull;
+import static java.util.Objects.requireNonNull;
 
 public class InfoText extends Text {
 
@@ -17,7 +17,7 @@ public class InfoText extends Text {
     private final Supplier<?> fnSupplyText;
 
     public InfoText(Supplier<?> fnSupplyText) {
-        this.fnSupplyText = assertNotNull(fnSupplyText);
+        this.fnSupplyText = requireNonNull(fnSupplyText);
     }
 
     public void update() {

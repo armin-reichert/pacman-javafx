@@ -23,6 +23,7 @@ import java.util.function.Consumer;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.model.actors.GhostState.*;
+import static java.util.Objects.requireNonNull;
 
 /**
  * There are 4 ghosts with different "personalities".
@@ -46,12 +47,12 @@ public class Ghost extends Creature implements AnimatedActor2D {
      */
     public Ghost(byte id, String name) {
         this.id = assertValidGhostID(id);
-        this.name = assertNotNull(name);
+        this.name = requireNonNull(name);
         corneringSpeedUp = -1.25f;
     }
 
     public void setHuntingBehaviour(Consumer<Ghost> huntingBehaviour) {
-        this.huntingBehaviour = assertNotNull(huntingBehaviour);
+        this.huntingBehaviour = requireNonNull(huntingBehaviour);
     }
 
     @Override
@@ -94,7 +95,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
     }
 
     public void setRevivalPosition(Vector2f position) {
-        assertNotNull(position);
+        requireNonNull(position);
         revivalPosition = position;
     }
 
@@ -143,7 +144,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
 
     @Override
     public boolean canAccessTile(Vector2i tile) {
-        assertTileNotNull(tile);
+        requireNonNull(tile);
 
         // hunting ghosts cannot move up at certain tiles in Pac-Man game
         if (state == HUNTING_PAC) {
@@ -197,7 +198,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
      * @param state the new state
      */
     public void setState(GhostState state) {
-        assertNotNull(state);
+        requireNonNull(state);
         if (this.state == state) {
             Logger.trace("{} is already in state {}", name, state);
         }
@@ -217,7 +218,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
      * @param game game variant
      */
     public void update(GameModel game) {
-        assertNotNull(game);
+        requireNonNull(game);
         switch (state) {
             case LOCKED             -> updateStateLocked(game);
             case LEAVING_HOUSE      -> updateStateLeavingHouse(game);

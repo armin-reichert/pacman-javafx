@@ -27,7 +27,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.Globals.HTS;
+import static de.amr.games.pacman.Globals.TS;
+import static java.util.Objects.requireNonNull;
 
 public class OptionMenu implements ResourceManager {
 
@@ -213,7 +215,7 @@ public class OptionMenu implements ResourceManager {
     }
 
     public void setStyle(OptionMenuStyle style) {
-        this.style = assertNotNull(style);
+        this.style = requireNonNull(style);
     }
 
     public void setOnStart(Runnable action) {

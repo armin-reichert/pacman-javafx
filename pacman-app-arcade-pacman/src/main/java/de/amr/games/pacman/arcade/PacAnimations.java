@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade;
 
-import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.actors.Actor2D;
@@ -17,13 +16,15 @@ import de.amr.games.pacman.uilib.SpriteSheet;
 
 import java.util.Map;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * @author Armin Reichert
  */
 public class PacAnimations extends SpriteAnimationSet {
 
     public PacAnimations(ArcadePacMan_SpriteSheet spriteSheet) {
-        Globals.assertNotNull(spriteSheet);
+        requireNonNull(spriteSheet);
         add(Map.of(
             ActorAnimations.ANIM_PAC_MUNCHING,
             SpriteAnimation.spriteSheet(spriteSheet)

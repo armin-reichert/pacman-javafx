@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.tengen.ms_pacman;
 
-import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.Pac;
@@ -14,13 +13,15 @@ import de.amr.games.pacman.uilib.SpriteSheet;
 
 import java.util.Map;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * @author Armin Reichert
  */
 public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet {
 
     public TengenMsPacMan_PacAnimations(TengenMsPacMan_SpriteSheet spriteSheet) {
-        Globals.assertNotNull(spriteSheet);
+        requireNonNull(spriteSheet);
 
         var msPacManMunching = SpriteAnimation
             .spriteSheet(spriteSheet)

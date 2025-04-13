@@ -13,7 +13,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 
-import static de.amr.games.pacman.Globals.assertNotNull;
+import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_StartPage extends StackPane implements StartPage, ResourceManager {
 
@@ -23,7 +23,7 @@ public class TengenMsPacMan_StartPage extends StackPane implements StartPage, Re
     }
 
     public TengenMsPacMan_StartPage(GameVariant gameVariant) {
-        setUserData(assertNotNull(gameVariant));
+        setUserData(requireNonNull(gameVariant));
         var flyer = new Flyer(loadImage("graphics/f1.png"), loadImage("graphics/f2.png"));
         flyer.selectPage(0);
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {

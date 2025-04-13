@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 
 import static de.amr.games.pacman.Globals.*;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Base class for all 2D game actors, e.g. creatures and bonus entities.
@@ -90,7 +91,7 @@ public class Actor2D {
     }
 
     public void setPosition(Vector2f position) {
-        assertNotNull(position, "Position of actor must not be null");
+        requireNonNull(position, "Position of actor must not be null");
         posX = position.x();
         posY = position.y();
     }
@@ -100,7 +101,7 @@ public class Actor2D {
     }
 
     public void setVelocity(Vector2f velocity) {
-        assertNotNull(velocity, "Velocity of actor must not be null");
+        requireNonNull(velocity, "Velocity of actor must not be null");
         velX = velocity.x();
         velY = velocity.y();
     }
@@ -115,7 +116,7 @@ public class Actor2D {
     }
 
     public void setAcceleration(Vector2f acceleration) {
-        assertNotNull(acceleration, "Acceleration of actor must not be null");
+        requireNonNull(acceleration, "Acceleration of actor must not be null");
         accX = acceleration.x();
         accY = acceleration.y();
     }
@@ -155,7 +156,7 @@ public class Actor2D {
      * @return <code>true</code> if both entities occupy same tile
      */
     public boolean sameTile(Actor2D other) {
-        assertNotNull(other, "Entity to check for same tile must not be null");
+        requireNonNull(other, "Entity to check for same tile must not be null");
         return tile().equals(other.tile());
     }
 }

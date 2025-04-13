@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 
-import static de.amr.games.pacman.Globals.assertNotNull;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Armin Reichert
@@ -23,10 +23,10 @@ public class Message3D extends ImageView {
         private Color borderColor;
         private Color textColor;
         private String text;
-        public Builder font(Font font) { this.font = assertNotNull(font); return this; }
-        public Builder borderColor(Color color) { this.borderColor = assertNotNull(color); return this; }
-        public Builder textColor(Color color) { this.textColor = assertNotNull(color); return this; }
-        public Builder text(String text) { this.text = assertNotNull(text); return this; }
+        public Builder font(Font font) { this.font = requireNonNull(font); return this; }
+        public Builder borderColor(Color color) { this.borderColor = requireNonNull(color); return this; }
+        public Builder textColor(Color color) { this.textColor = requireNonNull(color); return this; }
+        public Builder text(String text) { this.text = requireNonNull(text); return this; }
         public Message3D build() {
             Message3D message = new Message3D();
             double width = text.length() * font.getSize() + MARGIN;
