@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -11,6 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import static de.amr.games.pacman.Globals.assertNotNull;
 
@@ -19,25 +22,23 @@ public class ScoreManager {
     private final Score score = new Score();
     private final Score highScore = new Score();
     private Set<Integer> extraLifeScores = Set.of();
-    private boolean scoreEnabled;
-    private boolean highScoreEnabled;
+    private final BooleanProperty scoreEnabledPy = new SimpleBooleanProperty(true);
+    private final BooleanProperty highScoreEnabledPy= new SimpleBooleanProperty(true);
     private File highScoreFile;
-    private Runnable onExtraLifeWonAction;
+    private Consumer<Integer> onExtraLifeWonAction;
 
     public ScoreManager() {
-        scoreEnabled = true;
-        highScoreEnabled = true;
-        onExtraLifeWonAction = () -> Logger.info("Extra life won");
+        onExtraLifeWonAction = extraLifeScore -> Logger.info("Extra life score reached at {} points", extraLifeScore);
     }
 
     public void scorePoints(int points) {
-        if (!scoreEnabled) {
+        if (!isScoreEnabled()) {
             return;
         }
         int oldScore = score.points();
         int newScore = oldScore + points;
         score.setPoints(newScore);
-        if (highScoreEnabled) {
+        if (isHighScoreEnabled()) {
             if (newScore > highScore.points()) {
                 highScore.setPoints(newScore);
                 highScore.setLevelNumber(score.levelNumber());
@@ -46,7 +47,7 @@ public class ScoreManager {
         }
         for (Integer extraLifeScore : extraLifeScores) {
             if (oldScore < extraLifeScore && newScore >= extraLifeScore) {
-                onExtraLifeWonAction.run();
+                onExtraLifeWonAction.accept(extraLifeScore);
                 break;
             }
         }
@@ -74,7 +75,7 @@ public class ScoreManager {
         new Score().save(highScoreFile, "High Score, %s".formatted(LocalDateTime.now()));
     }
 
-    public void setOnExtraLifeWon(Runnable action) {
+    public void setOnExtraLifeWon(Consumer<Integer> action) {
         onExtraLifeWonAction = assertNotNull(action);
     }
 
@@ -86,17 +87,21 @@ public class ScoreManager {
         return highScore;
     }
 
+    public BooleanProperty scoreEnabledProperty() { return scoreEnabledPy; }
+
     public boolean isScoreEnabled() {
-        return scoreEnabled;
+        return scoreEnabledPy.get();
     }
 
-    public void setScoreEnabled(boolean scoreEnabled) {
-        this.scoreEnabled = scoreEnabled;
+    public void setScoreEnabled(boolean enabled) {
+        scoreEnabledProperty().set(enabled);
     }
 
-    public void setHighScoreEnabled(boolean highScoreEnabled) {
-        this.highScoreEnabled = highScoreEnabled;
-    }
+    public BooleanProperty highScoreEnabledProperty() { return highScoreEnabledPy; }
+
+    public boolean isHighScoreEnabled() { return highScoreEnabledProperty().get(); }
+
+    public void setHighScoreEnabled(boolean enabled) { highScoreEnabledProperty().set(enabled); }
 
     public void setHighScoreFile(File highScoreFile) {
         this.highScoreFile = highScoreFile;

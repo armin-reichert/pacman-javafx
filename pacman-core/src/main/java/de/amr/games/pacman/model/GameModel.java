@@ -64,8 +64,9 @@ public abstract class GameModel {
     protected GameModel(MapSelector mapSelector, HuntingTimer huntingTimer) {
         this.mapSelector = assertNotNull(mapSelector);
         this.huntingTimer = assertNotNull(huntingTimer);
-        scoreManager.setOnExtraLifeWon(() -> {
+        scoreManager.setOnExtraLifeWon(extraLifeScore -> {
             eventLog.extraLifeWon = true;
+            eventLog.extraLifeScore = extraLifeScore;
             addLives(1);
             publishGameEvent(GameEventType.EXTRA_LIFE_WON);
         });
