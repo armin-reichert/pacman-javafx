@@ -64,6 +64,11 @@ public abstract class GameModel {
     protected GameModel(MapSelector mapSelector, HuntingTimer huntingTimer) {
         this.mapSelector = assertNotNull(mapSelector);
         this.huntingTimer = assertNotNull(huntingTimer);
+        scoreManager.setOnExtraLifeWon(() -> {
+            eventLog.extraLifeWon = true;
+            addLives(1);
+            publishGameEvent(GameEventType.EXTRA_LIFE_WON);
+        });
     }
 
     public abstract void init();
@@ -431,7 +436,7 @@ public abstract class GameModel {
     private void updateBonus(Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE && areColliding(level.pac(), bonus.actor())) {
             bonus.setEaten(120); //TODO is 2 seconds correct?
-            scoreManager.scorePoints(this, bonus.points());
+            scoreManager.scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
             eventLog.bonusEaten = true;
             publishGameEvent(GameEventType.BONUS_EATEN);

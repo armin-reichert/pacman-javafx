@@ -25,6 +25,7 @@ public class SimulationStepLog {
     public boolean  pacStartsLosingPower = false;
     public boolean  pacLostPower = false;
     public boolean  pacKilled = false;
+    public boolean  extraLifeWon = false;
     public Ghost    releasedGhost = null;
     public String  ghostReleaseInfo = null;
     public final List<Ghost> killedGhosts = new ArrayList<>(4);
@@ -51,6 +52,9 @@ public class SimulationStepLog {
         }
         if (pacKilled) {
             messages.add("Pac died");
+        }
+        if (extraLifeWon) {
+            messages.add("Extra life won");
         }
         if (releasedGhost != null) {
             messages.add("Unlocked " + releasedGhost.name() + ": " + ghostReleaseInfo);

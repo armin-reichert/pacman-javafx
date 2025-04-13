@@ -105,6 +105,8 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     protected ArcadeMsPacMan_GameModel(MapSelector mapSelector) {
         super(mapSelector, new ArcadeMsPacMan_HuntingTimer());
+        scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman.xml"));
+        scoreManager.setExtraLifeScores(10_000);
         huntingTimer.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
         lastLevelNumber = Integer.MAX_VALUE;
     }
@@ -113,8 +115,6 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     public void init() {
         initialLivesProperty().set(3);
         simulateOverflowBugProperty().set(true);
-        scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman.xml"));
-        scoreManager.setExtraLifeScores(10_000);
         mapSelector.loadAllMaps(this);
     }
 
@@ -346,10 +346,10 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         }
         if (energizer) {
             onEnergizerEaten();
-            scoreManager().scorePoints(this, ENERGIZER_VALUE);
+            scoreManager().scorePoints(ENERGIZER_VALUE);
             Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
         } else {
-            scoreManager.scorePoints(this, PELLET_VALUE);
+            scoreManager.scorePoints(PELLET_VALUE);
         }
         gateKeeper.registerFoodEaten(level);
         if (isBonusReached()) {
@@ -377,11 +377,11 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         int points = 100 * KILLED_GHOST_VALUE_MULTIPLIER[killedSoFar];
         level.addVictim(ghost);
         ghost.eaten(killedSoFar);
-        scoreManager.scorePoints(this, points);
+        scoreManager.scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
         if (level.victimsCount() == 16) {
             int extraPoints = POINTS_ALL_GHOSTS_EATEN_IN_LEVEL;
-            scoreManager.scorePoints(this, extraPoints);
+            scoreManager.scorePoints(extraPoints);
             Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, level.number());
         }
     }

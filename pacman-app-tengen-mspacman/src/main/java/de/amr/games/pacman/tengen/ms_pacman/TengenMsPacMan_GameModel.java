@@ -538,10 +538,10 @@ public class TengenMsPacMan_GameModel extends GameModel {
         //pac.setRestingTicks(energizer ? 3 : 1);
         if (energizer) {
             onEnergizerEaten();
-            scoreManager.scorePoints(this, ENERGIZER_VALUE);
+            scoreManager.scorePoints(ENERGIZER_VALUE);
             Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
         } else {
-            scoreManager.scorePoints(this, PELLET_VALUE);
+            scoreManager.scorePoints(PELLET_VALUE);
         }
         gateKeeper.registerFoodEaten(level);
         if (isBonusReached()) {
@@ -568,7 +568,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         int points = 100 * KILLED_GHOST_VALUE_MULTIPLIER[killedSoFar];
         level.addVictim(ghost);
         ghost.eaten(killedSoFar);
-        scoreManager.scorePoints(this, points);
+        scoreManager.scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
     }
 
