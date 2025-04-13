@@ -6,7 +6,7 @@ package de.amr.games.pacman.controller;
 
 import org.tinylog.Logger;
 
-public class CoinStore {
+public class CoinSlot {
 
     public static byte MAX_COINS = 99;
 

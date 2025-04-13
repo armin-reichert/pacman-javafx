@@ -156,7 +156,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
             r.drawMsPacManMidwayCopyright(tiles_to_px(6), tiles_to_px(28), COLOR_RED, font);
         }
-        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_STORE.numCoins()), COLOR_WHITE, font, 2 * TS, sizeInPx().y() - 2);
+        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_SLOT.numCoins()), COLOR_WHITE, font, 2 * TS, sizeInPx().y() - 2);
         gr.drawLevelCounter(0, game().levelCounter(), sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 

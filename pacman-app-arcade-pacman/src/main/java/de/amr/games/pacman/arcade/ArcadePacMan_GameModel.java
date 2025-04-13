@@ -191,7 +191,7 @@ public class ArcadePacMan_GameModel extends GameModel {
 
     @Override
     public boolean canStartNewGame() {
-        return !THE_COIN_STORE.isEmpty();
+        return !THE_COIN_SLOT.isEmpty();
     }
 
     @Override
@@ -212,8 +212,8 @@ public class ArcadePacMan_GameModel extends GameModel {
     @Override
     public void endGame() {
         playingProperty().set(false);
-        if (!THE_COIN_STORE.isEmpty()) {
-            THE_COIN_STORE.consumeCoin();
+        if (!THE_COIN_SLOT.isEmpty()) {
+            THE_COIN_SLOT.consumeCoin();
         }
         scoreManager().updateHighScore();
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.STOP_ALL_SOUNDS);

@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman;
 
-import de.amr.games.pacman.controller.CoinStore;
+import de.amr.games.pacman.controller.CoinSlot;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEventManager;
 import de.amr.games.pacman.lib.Direction;
@@ -24,6 +24,29 @@ import java.util.Random;
  * @see <a href="https://www.youtube.com/watch?v=ogHl_OwcZWE">this video</a>
  */
 public interface Globals {
+
+    CoinSlot         THE_COIN_SLOT = new CoinSlot();
+    GameController   THE_GAME_CONTROLLER = new GameController();
+    GameEventManager THE_GAME_EVENT_MANAGER = new GameEventManager();
+    Random           THE_RNG = new Random();
+
+    byte TICKS_PER_SECOND = 60;
+
+    /** Tile size (8px). */
+    int TS = 8;
+
+    /** Half tile size (4px). */
+    int HTS = 4;
+
+    /**
+     * Directory under which application stores high scores, maps etc. (default: <code>&lt;user_home/.pacmanfx&gt;</code>).
+     */
+    File HOME_DIR = new File(System.getProperty("user.home"), ".pacmanfx");
+
+    /**
+     * Directory where custom maps are stored (default: <code>&lt;home_directory&gt;/maps</code>).
+     */
+    File CUSTOM_MAP_DIR = new File(HOME_DIR, "maps");
 
     static void checkDirectories() {
         String homeDirDesc = "Pac-Man FX home directory";
@@ -55,29 +78,6 @@ public interface Globals {
         }
         return true;
     }
-
-    CoinStore THE_COIN_STORE = new CoinStore();
-    GameController THE_GAME_CONTROLLER = new GameController();
-    GameEventManager THE_GAME_EVENT_MANAGER = new GameEventManager();
-    Random THE_RNG = new Random();
-
-    /**
-     * Directory under which application stores high scores, maps etc. (default: <code>&lt;user_home/.pacmanfx&gt;</code>).
-     */
-    File HOME_DIR = new File(System.getProperty("user.home"), ".pacmanfx");
-
-    /**
-     * Directory where custom maps are stored (default: <code>&lt;home_directory&gt;/maps</code>).
-     */
-    File CUSTOM_MAP_DIR = new File(HOME_DIR, "maps");
-
-    byte TICKS_PER_SECOND = 60;
-
-    /** Tile size (8px). */
-    int TS = 8;
-
-    /** Half tile size (4px). */
-    int HTS = 4;
 
     /**
      * @param position a position

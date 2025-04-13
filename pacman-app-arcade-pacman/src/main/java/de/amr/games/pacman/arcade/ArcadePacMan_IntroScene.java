@@ -160,7 +160,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 }
             }
         }
-        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_STORE.numCoins()), WHITE, font, 2 * TS, sizeInPx().y() - 2);
+        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_SLOT.numCoins()), WHITE, font, 2 * TS, sizeInPx().y() - 2);
         gr.drawLevelCounter(0, game().levelCounter(), sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
     }
 
