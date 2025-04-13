@@ -121,16 +121,24 @@ public class ArcadePacMan_GameModel extends GameModel {
     protected Steering demoLevelSteering;
     protected byte cruiseElroy;
 
+    protected final MapSelector mapSelector;
+
     public ArcadePacMan_GameModel() {
         this(new ArcadePacMan_MapSelector());
     }
 
     protected ArcadePacMan_GameModel(MapSelector mapSelector) {
-        super(mapSelector, new ArcadePacMan_HuntingTimer());
+        super(new ArcadePacMan_HuntingTimer());
+        this.mapSelector = assertNotNull(mapSelector);
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
         huntingTimer.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
         lastLevelNumber = Integer.MAX_VALUE;
+    }
+
+    @Override
+    public MapSelector mapSelector() {
+        return mapSelector;
     }
 
     @Override

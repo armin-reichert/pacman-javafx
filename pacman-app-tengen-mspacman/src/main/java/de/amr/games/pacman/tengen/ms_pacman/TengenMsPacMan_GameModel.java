@@ -10,10 +10,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.Waypoint;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.GameException;
-import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.Portal;
+import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import de.amr.games.pacman.steering.Steering;
@@ -106,6 +103,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     private static final String HIGH_SCORE_FILENAME = "highscore-ms_pacman_tengen.xml";
 
+    private final TengenMsPacMan_MapSelector mapSelector;
     private MapCategory mapCategory;
     private Difficulty difficulty;
     private PacBooster pacBooster;
@@ -117,9 +115,15 @@ public class TengenMsPacMan_GameModel extends GameModel {
     private final Steering demoLevelSteering = new RuleBasedPacSteering(this);
 
     public TengenMsPacMan_GameModel() {
-        super(new TengenMsPacMan_MapSelector(), new TengenMsPacMan_HuntingTimer());
+        super(new TengenMsPacMan_HuntingTimer());
+        mapSelector = new TengenMsPacMan_MapSelector();
         huntingTimer.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
         lastLevelNumber = MAX_LEVEL_NUMBER;
+    }
+
+    @Override
+    public MapSelector mapSelector() {
+        return mapSelector;
     }
 
     public void init() {

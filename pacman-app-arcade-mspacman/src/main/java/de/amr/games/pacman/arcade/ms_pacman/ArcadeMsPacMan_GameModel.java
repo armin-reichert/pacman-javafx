@@ -99,16 +99,24 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     private byte cruiseElroy; //TODO is this existing in Ms. Pac-Man at all?
 
+    protected final MapSelector mapSelector;
+
     public ArcadeMsPacMan_GameModel() {
         this(new ArcadeMsPacMan_MapSelector());
     }
 
     protected ArcadeMsPacMan_GameModel(MapSelector mapSelector) {
-        super(mapSelector, new ArcadeMsPacMan_HuntingTimer());
+        super(new ArcadeMsPacMan_HuntingTimer());
+        this.mapSelector = assertNotNull(mapSelector);
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
         huntingTimer.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
         lastLevelNumber = Integer.MAX_VALUE;
+    }
+
+    @Override
+    public MapSelector mapSelector() {
+        return mapSelector;
     }
 
     @Override

@@ -40,7 +40,6 @@ public abstract class GameModel {
     public static final short POINTS_ALL_GHOSTS_EATEN_IN_LEVEL = 12_000;
     public static final byte[] KILLED_GHOST_VALUE_MULTIPLIER = {2, 4, 8, 16}; // factor * 100 = value
 
-    protected final MapSelector mapSelector;
     protected final List<Byte> levelCounter = new ArrayList<>();
     protected final GateKeeper gateKeeper = new GateKeeper();
     protected final ScoreManager scoreManager = new ScoreManager();
@@ -61,8 +60,7 @@ public abstract class GameModel {
 
     protected SimulationStepLog eventLog;
 
-    protected GameModel(MapSelector mapSelector, HuntingTimer huntingTimer) {
-        this.mapSelector = assertNotNull(mapSelector);
+    protected GameModel(HuntingTimer huntingTimer) {
         this.huntingTimer = assertNotNull(huntingTimer);
         scoreManager.setOnExtraLifeWon(extraLifeScore -> {
             eventLog.extraLifeWon = true;
@@ -130,9 +128,7 @@ public abstract class GameModel {
 
     protected abstract void onGhostReleased(Ghost ghost);
 
-    public final MapSelector mapSelector() {
-        return mapSelector;
-    }
+    public abstract MapSelector mapSelector();
 
     public final HuntingTimer huntingTimer() {
         return huntingTimer;
