@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.LevelCounter;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.ScoreManager;
 import de.amr.games.pacman.model.actors.Actor2D;
@@ -154,6 +155,8 @@ public interface GameRenderer {
         }
     }
 
+    void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSizeInPx);
+
     void drawMaze(GameLevel level, double x, double y, Paint backgroundColor, boolean highlighted, boolean blinking);
 
     /**
@@ -239,13 +242,6 @@ public interface GameRenderer {
         if (moreLivesThanSymbols > 0) {
             Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
             fillTextAtScaledPosition("+" + moreLivesThanSymbols, Color.YELLOW, font, x + TS * 10, y + TS);
-        }
-    }
-
-    default void drawLevelCounter(int levelNumber, List<Byte> symbols, double x, double y) {
-        for (byte symbol : symbols) {
-            drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), x, y);
-            x -= TS * 2;
         }
     }
 

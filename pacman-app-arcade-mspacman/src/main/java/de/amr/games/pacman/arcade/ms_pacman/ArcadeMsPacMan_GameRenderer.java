@@ -5,9 +5,11 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade.ms_pacman;
 
 import de.amr.games.pacman.lib.RectArea;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.LevelCounter;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui._2d.GameRenderer;
@@ -111,6 +113,15 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
             overPaintEatenPelletTiles(level, backgroundColor);
             overPaintEnergizerTiles(level, tile -> !blinking || level.hasEatenFoodAt(tile), backgroundColor);
             ctx.restore();
+        }
+    }
+
+    @Override
+    public void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSizeInPx) {
+        float x = sceneSizeInPx.x() - 4 * TS, y = sceneSizeInPx.y() - 2 * TS;
+        for (byte symbol : levelCounter.symbols().toList()) {
+            drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), x, y);
+            x -= TS * 2;
         }
     }
 

@@ -4,8 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade;
 
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.LevelCounter;
 import de.amr.games.pacman.ui._2d.GameRenderer;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import javafx.beans.property.FloatProperty;
@@ -14,6 +16,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 
+import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.arcade.ArcadePacMan_SpriteSheet.EMPTY_MAZE_SPRITE;
 import static de.amr.games.pacman.arcade.ArcadePacMan_SpriteSheet.FULL_MAZE_SPRITE;
 import static de.amr.games.pacman.ui.Globals.THE_ASSETS;
@@ -68,5 +71,14 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
             }
         }
         ctx.restore();
+    }
+
+    @Override
+    public void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSizeInPx) {
+        float x = sceneSizeInPx.x() - 4 * TS, y = sceneSizeInPx.y() - 2 * TS;
+        for (byte symbol : levelCounter.symbols().toList()) {
+            drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), x, y);
+            x -= TS * 2;
+        }
     }
 }

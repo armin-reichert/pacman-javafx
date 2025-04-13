@@ -62,7 +62,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         }
         gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_SLOT.numCoins()), white, font,
             tiles_to_px(2), sizeInPx().y() - 2);
-        gr.drawLevelCounter(0, game().levelCounter(), sizeInPx().x() - tiles_to_px(4), sizeInPx().y() - tiles_to_px(2));
+        gr.drawLevelCounter(game().levelCounter(), sizeInPx());
     }
 
     @Override

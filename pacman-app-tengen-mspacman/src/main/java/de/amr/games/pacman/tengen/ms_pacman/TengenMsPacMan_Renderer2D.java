@@ -13,6 +13,7 @@ import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.nes.NES_Palette;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.LevelCounter;
 import de.amr.games.pacman.model.ScoreManager;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.ui._2d.GameRenderer;
@@ -319,17 +320,25 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         fillTextAtScaledPosition("%6d".formatted(scoreManager.highScore().points()), color, font, tiles_to_px(11), tiles_to_px(2));
     }
 
-    @Override
-    public void drawLevelCounter(int levelNumber, List<Byte> symbols, double x, double y) {
+    public void drawLevelCounterWithLevelNumbers(int levelNumber, LevelCounter levelCounter, Vector2f sizeInPx) {
         ctx().setImageSmoothing(false);
-        if (levelNumber != 0) {
-            drawLevelNumberBox(levelNumber, 0, y); // left box
-            drawLevelNumberBox(levelNumber, x, y); // right box
+        float x = sizeInPx.x() - 2 * TS, y = sizeInPx.y() - TS;
+        drawLevelNumberBox(levelNumber, 0, y); // left box
+        drawLevelNumberBox(levelNumber, x, y); // right box
+        x -= 2 * TS;
+        for (byte symbol : levelCounter.symbols().toList()) {
+            drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), x, y);
+            x -= TS * 2;
         }
-        double symbolX = x - 2 * TS;
-        for (byte symbol : symbols) {
-            drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), symbolX, y);
-            symbolX -= TS * 2;
+    }
+
+    @Override
+    public void drawLevelCounter(LevelCounter levelCounter, Vector2f sizeInPx) {
+        ctx().setImageSmoothing(false);
+        float x = sizeInPx.x() - 4 * TS, y = sizeInPx.y() - TS;
+        for (byte symbol : levelCounter.symbols().toList()) {
+            drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), x, y);
+            x -= TS * 2;
         }
     }
 

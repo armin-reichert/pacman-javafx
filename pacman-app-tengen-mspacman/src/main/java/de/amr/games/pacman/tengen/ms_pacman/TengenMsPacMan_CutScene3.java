@@ -185,6 +185,6 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
                 r.drawActorSprite(bagWithJunior, BLUE_BAG_SPRITE);
             }
         }
-        r.drawLevelCounter(0, game().levelCounter(), sizeInPx().x() - 4 * TS, sizeInPx().y() - 3 * TS);
+        r.drawLevelCounter(game().levelCounter(), sizeInPx().minus(0, 3*TS));
     }
 }

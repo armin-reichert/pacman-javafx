@@ -17,8 +17,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static de.amr.games.pacman.Globals.THE_GAME_EVENT_MANAGER;
@@ -35,11 +33,9 @@ public abstract class GameModel {
     // Ghost IDs
     public static final byte RED_GHOST_ID = 0, PINK_GHOST_ID = 1, CYAN_GHOST_ID = 2, ORANGE_GHOST_ID = 3;
 
-    public static final byte LEVEL_COUNTER_MAX_SIZE = 7;
     public static final short POINTS_ALL_GHOSTS_EATEN_IN_LEVEL = 12_000;
     public static final byte[] KILLED_GHOST_VALUE_MULTIPLIER = {2, 4, 8, 16}; // factor * 100 = value
 
-    protected final List<Byte> levelCounter = new ArrayList<>();
     protected final GateKeeper gateKeeper = new GateKeeper();
     protected final ScoreManager scoreManager = new ScoreManager();
     protected final HuntingTimer huntingTimer;
@@ -51,7 +47,6 @@ public abstract class GameModel {
     private final BooleanProperty cutScenesEnabledPy = new SimpleBooleanProperty(true);
     private final BooleanProperty demoLevelPy = new SimpleBooleanProperty(false);
     private final IntegerProperty initialLivesPy = new SimpleIntegerProperty(0);
-    private final BooleanProperty levelCounterEnabledPy = new SimpleBooleanProperty();
     private final IntegerProperty livesPy = new SimpleIntegerProperty(0);
     private final BooleanProperty playingPy = new SimpleBooleanProperty(false);
     private final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(false);
@@ -68,6 +63,8 @@ public abstract class GameModel {
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.EXTRA_LIFE_WON);
         });
     }
+
+    public abstract <T extends LevelCounter> T levelCounter();
 
     public abstract void init();
 
@@ -141,10 +138,6 @@ public abstract class GameModel {
         return lastLevelNumber;
     }
 
-    public List<Byte> levelCounter() {
-        return levelCounter;
-    }
-
     public ScoreManager scoreManager() {
         return scoreManager;
     }
@@ -152,7 +145,6 @@ public abstract class GameModel {
     public BooleanProperty cutScenesEnabledProperty() { return cutScenesEnabledPy; }
     public BooleanProperty demoLevelProperty() { return demoLevelPy; }
     public IntegerProperty initialLivesProperty() { return initialLivesPy; }
-    public BooleanProperty levelCounterEnabledProperty() { return levelCounterEnabledPy; }
     public IntegerProperty livesProperty() { return livesPy; }
     public BooleanProperty playingProperty() { return playingPy; }
     public BooleanProperty scoreVisibleProperty() { return scoreVisiblePy; }
@@ -177,31 +169,18 @@ public abstract class GameModel {
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.GAME_STARTED);
     }
 
-    public void createNormalLevel(int levelNumber) {
+    public final void createNormalLevel(int levelNumber) {
         demoLevelProperty().set(false);
         buildNormalLevel(levelNumber);
         scoreManager.setLevelNumber(levelNumber);
         huntingTimer.reset();
-        updateLevelCounter();
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 
-    public void createDemoLevel() {
+    public final void createDemoLevel() {
         demoLevelProperty().set(true);
         buildDemoLevel();
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
-    }
-
-    protected void updateLevelCounter() {
-        if (level.number() == 1) {
-            levelCounter.clear();
-        }
-        if (levelCounterEnabledProperty().get()) {
-            levelCounter.add(level.bonusSymbol(0));
-            if (levelCounter.size() > LEVEL_COUNTER_MAX_SIZE) {
-                levelCounter.removeFirst();
-            }
-        }
     }
 
     public void startLevel() {
@@ -216,6 +195,7 @@ public abstract class GameModel {
         level.showMessage(GameLevel.Message.READY);
         levelStartTime = System.currentTimeMillis();
         Logger.info("{} started", demoLevelProperty().get() ? "Demo Level" : "Level " + level.number());
+        levelCounter().update(level);
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_STARTED);
     }
 

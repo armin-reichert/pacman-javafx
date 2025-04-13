@@ -127,7 +127,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         gr.drawSpriteScaled(blinkyStretching.currentSprite(), tiles_to_px(14), tiles_to_px(19) + 3);
         gr.drawAnimatedActor(blinky);
         gr.drawAnimatedActor(pac);
-        gr.drawLevelCounter(0, game().levelCounter(), sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
+        gr.drawLevelCounter(game().levelCounter(), sizeInPx());
     }
 
     @Override

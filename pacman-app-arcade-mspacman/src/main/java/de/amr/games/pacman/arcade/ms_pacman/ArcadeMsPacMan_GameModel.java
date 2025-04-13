@@ -100,6 +100,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     private byte cruiseElroy; //TODO is this existing in Ms. Pac-Man at all?
 
+    private final ArcadeMsPacMan_LevelCounter levelCounter = new ArcadeMsPacMan_LevelCounter();
     protected final MapSelector mapSelector;
 
     public ArcadeMsPacMan_GameModel() {
@@ -113,6 +114,12 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         scoreManager.setExtraLifeScores(10_000);
         huntingTimer.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
         lastLevelNumber = Integer.MAX_VALUE;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends LevelCounter> T levelCounter() {
+        return (T) levelCounter;
     }
 
     @Override
@@ -139,7 +146,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         level = null;
         demoLevelProperty().set(false);
         cruiseElroy = 0;
-        levelCounter().clear();
+        levelCounter().reset();
         scoreManager().loadHighScore();
         scoreManager.resetScore();
         gateKeeper.reset();
@@ -230,7 +237,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
-        levelCounterEnabledProperty().set(levelNumber < 8);
+        levelCounter().setEnabled(levelNumber < 8);
 
         populateLevel(level);
         level.pac().setAutopilot(autopilot);
@@ -241,7 +248,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     public void buildDemoLevel() {
         buildNormalLevel(1);
         assignDemoLevelBehavior(level.pac());
-        levelCounterEnabledProperty().set(false);
+        levelCounter().setEnabled(false);
         demoLevelSteering.init();
     }
 

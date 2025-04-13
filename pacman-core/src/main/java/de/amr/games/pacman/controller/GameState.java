@@ -439,7 +439,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onExit(GameModel game) {
-            game.levelCounter().clear();
+            game.levelCounter().reset();
         }
     },
 
@@ -496,7 +496,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onExit(GameModel game) {
-            game.levelCounter().clear();
+            game.levelCounter().reset();
         }
     },
 

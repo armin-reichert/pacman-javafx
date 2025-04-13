@@ -4,8 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._2d;
 
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.LevelCounter;
 import de.amr.games.pacman.tilemap.rendering.FoodMapRenderer;
 import de.amr.games.pacman.tilemap.rendering.TerrainMapColorScheme;
 import de.amr.games.pacman.tilemap.rendering.TerrainMapRenderer;
@@ -18,6 +20,7 @@ import javafx.scene.paint.Paint;
 
 import java.util.Map;
 
+import static de.amr.games.pacman.Globals.TS;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -96,6 +99,15 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
             if (blinking) {
                 level.energizerTiles().filter(level::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx, tile));
             }
+        }
+    }
+
+    @Override
+    public void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSizeInPx) {
+        float x = sceneSizeInPx.x() - 4 * TS, y = sceneSizeInPx.y() - 2 * TS;
+        for (byte symbol : levelCounter.symbols().toList()) {
+            drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), x, y);
+            x -= TS * 2;
         }
     }
 }

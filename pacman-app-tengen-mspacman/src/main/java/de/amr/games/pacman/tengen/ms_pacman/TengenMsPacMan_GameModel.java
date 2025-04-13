@@ -104,6 +104,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     private static final String HIGH_SCORE_FILENAME = "highscore-ms_pacman_tengen.xml";
 
+    private final TengenMsPacMan_LevelCounter levelCounter;
     private final TengenMsPacMan_MapSelector mapSelector;
     private MapCategory mapCategory;
     private Difficulty difficulty;
@@ -117,9 +118,16 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     public TengenMsPacMan_GameModel() {
         super(new TengenMsPacMan_HuntingTimer());
+        levelCounter = new TengenMsPacMan_LevelCounter();
         mapSelector = new TengenMsPacMan_MapSelector();
         huntingTimer.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
         lastLevelNumber = MAX_LEVEL_NUMBER;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends LevelCounter> T levelCounter() {
+        return (T) levelCounter;
     }
 
     @Override
@@ -146,6 +154,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public void resetForStartingNewGame() {
         livesProperty().set(initialLivesProperty().get());
         level = null;
+        levelCounter.reset();
         demoLevelProperty().set(false);
         playingProperty().set(false);
         boosterActive = false;
@@ -340,12 +349,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public void startNewGame() {
         resetForStartingNewGame();
         createNormalLevel(startLevelNumber);
-        if (startLevelNumber > 1) {
-            levelCounter.clear();
-            for (int number = 1; number <= Math.min(startLevelNumber, LEVEL_COUNTER_MAX_SIZE); ++number) {
-                levelCounter.add((byte) (number - 1));
-            }
-        }
+        levelCounter.resetStartingFromLevel(startLevelNumber);
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.GAME_STARTED);
     }
 
@@ -426,19 +430,9 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST_ID).forEach(ghost ->
             level.setGhostPosition(ghost.id(), level.ghostPosition(ghost.id()).plus(0, HTS))
         );
+        levelCounter.setEnabled(levelNumber < 8);
 
-        levelCounterEnabledProperty().set(levelNumber < 8);
         activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON
-    }
-
-    private int cutSceneNumberAfterLevel(int levelNumber) {
-        return switch (levelNumber) {
-            case 2 -> 1;
-            case 5 -> 2;
-            case 9, 13, 17 -> 3;
-            case MAX_LEVEL_NUMBER -> 4;
-            default -> 0;
-        };
     }
 
     @Override
@@ -456,15 +450,22 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST_ID).forEach(ghost ->
                 level.setGhostPosition(ghost.id(), level.ghostPosition(ghost.id()).plus(0, HTS))
         );
-
-        levelCounterEnabledProperty().set(true);
-        levelCounter.clear();
-        levelCounter.add((byte)0);
+        levelCounter.setEnabled(true);
 
         activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON
 
         assignDemoLevelBehavior(level.pac());
         demoLevelSteering.init();
+    }
+
+    private int cutSceneNumberAfterLevel(int levelNumber) {
+        return switch (levelNumber) {
+            case 2 -> 1;
+            case 5 -> 2;
+            case 9, 13, 17 -> 3;
+            case MAX_LEVEL_NUMBER -> 4;
+            default -> 0;
+        };
     }
 
     @Override

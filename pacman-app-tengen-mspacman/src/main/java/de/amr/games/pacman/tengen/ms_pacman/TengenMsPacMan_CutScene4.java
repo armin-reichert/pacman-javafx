@@ -222,6 +222,6 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         r.drawAnimatedActor(msPacMan);
         r.drawAnimatedActor(mrPacMan);
         juniors.forEach(r::drawAnimatedActor);
-        r.drawLevelCounter(0, game().levelCounter(), sizeInPx().x() - 4 * TS, sizeInPx().y() - 3 * TS);
+        r.drawLevelCounter(game().levelCounter(), sizeInPx().minus(0, 3*TS));
     }
 }

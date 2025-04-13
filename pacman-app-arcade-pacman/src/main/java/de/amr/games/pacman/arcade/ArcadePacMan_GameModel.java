@@ -11,10 +11,7 @@ import de.amr.games.pacman.lib.Waypoint;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.TerrainTiles;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.LevelData;
-import de.amr.games.pacman.model.MapSelector;
+import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.actors.StaticBonus;
@@ -122,6 +119,7 @@ public class ArcadePacMan_GameModel extends GameModel {
     protected Steering demoLevelSteering;
     protected byte cruiseElroy;
 
+    protected final LevelCounter levelCounter = new ArcadePacMan_LevelCounter();
     protected final MapSelector mapSelector;
 
     public ArcadePacMan_GameModel() {
@@ -135,6 +133,12 @@ public class ArcadePacMan_GameModel extends GameModel {
         scoreManager.setExtraLifeScores(10_000);
         huntingTimer.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
         lastLevelNumber = Integer.MAX_VALUE;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends LevelCounter> T levelCounter() {
+        return (T) levelCounter;
     }
 
     @Override
@@ -162,7 +166,7 @@ public class ArcadePacMan_GameModel extends GameModel {
         level = null;
         demoLevelProperty().set(false);
         cruiseElroy = 0;
-        levelCounter().clear();
+        levelCounter().reset();
         scoreManager().loadHighScore();
         scoreManager.resetScore();
         gateKeeper.reset();
@@ -271,14 +275,14 @@ public class ArcadePacMan_GameModel extends GameModel {
         level.setBonusSymbol(1, computeBonusSymbol(levelNumber));
 
         setCruiseElroy(0);
-        levelCounterEnabledProperty().set(true);
+        levelCounter.setEnabled(true);
     }
 
     @Override
     public void buildDemoLevel() {
         buildNormalLevel(1);
         assignDemoLevelBehavior(level.pac());
-        levelCounterEnabledProperty().set(false);
+        levelCounter.setEnabled(false);
         demoLevelSteering.init();
     }
 
