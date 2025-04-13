@@ -5,8 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.controller.HuntingTimer;
-import de.amr.games.pacman.event.GameEvent;
-import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
@@ -23,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static de.amr.games.pacman.Globals.THE_GAME_EVENT_MANAGER;
 import static de.amr.games.pacman.Globals.assertNotNull;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
@@ -66,7 +65,7 @@ public abstract class GameModel {
             eventLog.extraLifeWon = true;
             eventLog.extraLifeScore = extraLifeScore;
             addLives(1);
-            publishGameEvent(GameEventType.EXTRA_LIFE_WON);
+            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.EXTRA_LIFE_WON);
         });
     }
 
@@ -175,7 +174,7 @@ public abstract class GameModel {
     public void startNewGame() {
         resetForStartingNewGame();
         createNormalLevel(1);
-        publishGameEvent(GameEventType.GAME_STARTED);
+        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.GAME_STARTED);
     }
 
     public void createNormalLevel(int levelNumber) {
@@ -184,13 +183,13 @@ public abstract class GameModel {
         scoreManager.setLevelNumber(levelNumber);
         huntingTimer.reset();
         updateLevelCounter();
-        publishGameEvent(GameEventType.LEVEL_CREATED);
+        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 
     public void createDemoLevel() {
         demoLevelProperty().set(true);
         buildDemoLevel();
-        publishGameEvent(GameEventType.LEVEL_CREATED);
+        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 
     protected void updateLevelCounter() {
@@ -217,7 +216,7 @@ public abstract class GameModel {
         level.showMessage(GameLevel.Message.READY);
         levelStartTime = System.currentTimeMillis();
         Logger.info("{} started", demoLevelProperty().get() ? "Demo Level" : "Level " + level.number());
-        publishGameEvent(GameEventType.LEVEL_STARTED);
+        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_STARTED);
     }
 
     public void startNextLevel() {
@@ -339,7 +338,7 @@ public abstract class GameModel {
         level.blinking().setStartPhase(Pulse.ON);
         level.blinking().restart(Integer.MAX_VALUE);
         huntingTimer.startFirstHuntingPhase(level.number());
-        publishGameEvent(GameEventType.HUNTING_PHASE_STARTED);
+        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.HUNTING_PHASE_STARTED);
     }
 
     public void doHuntingStep() {
@@ -376,7 +375,7 @@ public abstract class GameModel {
             level.registerFoodEatenAt(tile);
             onFoodEaten(tile, level.uneatenFoodCount(), eventLog.energizerFound);
             level.pac().endStarving();
-            publishGameEvent(GameEventType.PAC_FOUND_FOOD, tile);
+            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_FOUND_FOOD, tile);
         } else {
             level.pac().starve();
         }
@@ -397,7 +396,7 @@ public abstract class GameModel {
             level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             level.ghosts(FRIGHTENED).forEach(Ghost::reverseASAP);
             eventLog.pacGetsPower = true;
-            publishGameEvent(GameEventType.PAC_GETS_POWER);
+            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_GETS_POWER);
         } else {
             level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseASAP);
         }
@@ -407,7 +406,7 @@ public abstract class GameModel {
         level.powerTimer().doTick();
         if (isPowerFadingStarting(level.powerTimer())) {
             eventLog.pacStartsLosingPower = true;
-            publishGameEvent(GameEventType.PAC_STARTS_LOSING_POWER);
+            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (level.powerTimer().hasExpired()) {
             level.powerTimer().stop();
             level.powerTimer().reset(0);
@@ -417,7 +416,7 @@ public abstract class GameModel {
             Logger.info("Hunting timer restarted");
             level.ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
             eventLog.pacLostPower = true;
-            publishGameEvent(GameEventType.PAC_LOST_POWER);
+            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_LOST_POWER);
         }
     }
 
@@ -436,47 +435,10 @@ public abstract class GameModel {
             scoreManager.scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
             eventLog.bonusEaten = true;
-            publishGameEvent(GameEventType.BONUS_EATEN);
+            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.BONUS_EATEN);
         } else {
             bonus.update(this);
         }
     }
 
-    // Game Event Support
-
-    private final List<GameEventListener> gameEventListeners = new ArrayList<>();
-
-    public void addGameEventListener(GameEventListener listener) {
-        assertNotNull(listener);
-        if (!gameEventListeners.contains(listener)) {
-            gameEventListeners.add(listener);
-            Logger.info("{}: Game event listener registered: {}", getClass().getSimpleName(), listener);
-        }
-    }
-
-    public void removeGameEventListener(GameEventListener listener) {
-        assertNotNull(listener);
-        boolean removed = gameEventListeners.remove(listener);
-        if (removed) {
-            Logger.info("{}: Game event listener removed: {}", getClass().getSimpleName(), listener);
-        } else {
-            Logger.warn("{}: Game event listener not removed, as not registered: {}", getClass().getSimpleName(), listener);
-        }
-    }
-
-    public void publishGameEvent(GameEvent event) {
-        assertNotNull(event);
-        gameEventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
-        Logger.trace("Published game event: {}", event);
-    }
-
-    public void publishGameEvent(GameEventType type) {
-        assertNotNull(type);
-        publishGameEvent(new GameEvent(type, this));
-    }
-
-    public void publishGameEvent(GameEventType type, Vector2i tile) {
-        assertNotNull(type);
-        publishGameEvent(new GameEvent(type, this, tile));
-    }
 }

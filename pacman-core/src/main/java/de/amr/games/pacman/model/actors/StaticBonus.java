@@ -9,6 +9,8 @@ import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
 import org.tinylog.Logger;
 
+import static de.amr.games.pacman.Globals.THE_GAME_EVENT_MANAGER;
+
 
 /**
  * Bonus that appears for some time at a fixed position before it gets eaten or vanishes.
@@ -95,7 +97,7 @@ public class StaticBonus extends Actor2D implements Bonus {
             case STATE_EDIBLE, STATE_EATEN -> {
                 if (countdown == 0) {
                     setInactive();
-                    game.publishGameEvent(GameEventType.BONUS_EXPIRED, tile());
+                    THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.BONUS_EXPIRED, tile());
                 } else if (countdown != TickTimer.INDEFINITE) {
                     --countdown;
                 }

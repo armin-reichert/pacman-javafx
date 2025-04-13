@@ -17,6 +17,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.Globals.THE_GAME_EVENT_MANAGER;
 import static de.amr.games.pacman.Globals.assertNotNull;
 
 /**
@@ -49,11 +50,11 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
             GameModel game = game(newGameVariant);
             game.init();
             //TODO do we still need this game event now that we have a property?
-            game.publishGameEvent(GameEventType.GAME_VARIANT_CHANGED);
+            THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.GAME_VARIANT_CHANGED);
 
         });
         // map state change events to game events
-        addStateChangeListener((oldState, newState) -> game().publishGameEvent(new GameStateChangeEvent(game(), oldState, newState)));
+        addStateChangeListener((oldState, newState) -> THE_GAME_EVENT_MANAGER.publishEvent(new GameStateChangeEvent(game(), oldState, newState)));
         Logger.info("Game controller created");
     }
 

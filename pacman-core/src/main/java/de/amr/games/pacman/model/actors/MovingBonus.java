@@ -19,6 +19,8 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.amr.games.pacman.Globals.THE_GAME_EVENT_MANAGER;
+
 /**
  * A bonus that tumbles through the world, starting at some portal, making one round around the ghost house and leaving
  * the maze at some portal at the other border.
@@ -124,7 +126,7 @@ public class MovingBonus extends Creature implements Bonus {
         if (steering.isComplete()) {
             Logger.trace("Moving bonus reached target: {}", this);
             setInactive();
-            game.publishGameEvent(GameEventType.BONUS_EXPIRED, tile());
+            THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.BONUS_EXPIRED, tile());
         } else {
             navigateTowardsTarget();
             tryMoving();
@@ -144,7 +146,7 @@ public class MovingBonus extends Creature implements Bonus {
         if (countdown == 0) {
             Logger.trace("Bonus expired: {}", this);
             setInactive();
-            game.publishGameEvent(GameEventType.BONUS_EXPIRED, tile());
+            THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.BONUS_EXPIRED, tile());
         } else if (countdown != TickTimer.INDEFINITE) {
             --countdown;
         }

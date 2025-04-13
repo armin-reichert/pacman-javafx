@@ -34,7 +34,7 @@ public enum GameAction implements Action {
             if (THE_COIN_STORE.numCoins() < CoinStore.MAX_COINS) {
                 THE_COIN_STORE.insertCoin();
                 THE_SOUND.enabledProperty().set(true);
-                THE_GAME_CONTROLLER.game().publishGameEvent(GameEventType.CREDIT_ADDED);
+                THE_GAME_EVENT_MANAGER.publishEvent(THE_GAME_CONTROLLER.game(), GameEventType.CREDIT_ADDED);
             }
             if (THE_GAME_CONTROLLER.state() != GameState.SETTING_OPTIONS) {
                 THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
@@ -77,7 +77,7 @@ public enum GameAction implements Action {
                         .filter(not(level::isEnergizerPosition))
                         .filter(level::hasFoodAt)
                         .forEach(level::registerFoodEatenAt);
-                    THE_GAME_CONTROLLER.game().publishGameEvent(GameEventType.PAC_FOUND_FOOD);
+                    THE_GAME_EVENT_MANAGER.publishEvent(THE_GAME_CONTROLLER.game(), GameEventType.PAC_FOUND_FOOD);
                     THE_SOUND.stopMunchingSound();
                 });
             }

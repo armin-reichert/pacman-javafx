@@ -301,7 +301,7 @@ public class GameLevel3D extends Group {
 
     public RotateTransition levelRotateAnimation(double seconds) {
         var rotation = new RotateTransition(Duration.seconds(seconds), this);
-        rotation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
+        rotation.setAxis(THE_RNG.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
         rotation.setFromAngle(0);
         rotation.setToAngle(360);
         rotation.setInterpolator(Interpolator.LINEAR);

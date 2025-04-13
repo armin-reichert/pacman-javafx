@@ -20,6 +20,7 @@ import de.amr.games.pacman.model.actors.GhostState;
 import java.util.HashMap;
 import java.util.Map;
 
+import static de.amr.games.pacman.Globals.THE_GAME_EVENT_MANAGER;
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 
 /**
@@ -94,7 +95,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onEnter(GameModel game) {
-            game.publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
+            THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.STOP_ALL_SOUNDS);
         }
 
         @Override
@@ -185,7 +186,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onEnter(GameModel game) {
             timer.restartIndefinitely(); // UI expires timer e.g. when animation finishes
             game.onLevelCompleted();
-            game.publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
+            THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.STOP_ALL_SOUNDS);
         }
 
         @Override
@@ -231,7 +232,7 @@ public enum GameState implements FsmState<GameModel> {
             timer.restartSeconds(1);
             level.pac().hide();
             level.ghosts().forEach(Ghost::stopAnimation);
-            game.publishGameEvent(GameEventType.GHOST_EATEN);
+            THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.GHOST_EATEN);
         }
 
         @Override
@@ -266,7 +267,7 @@ public enum GameState implements FsmState<GameModel> {
             timer.reset(gameController().isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN) ? 300 : 240);
             timer.start();
             game.onPacKilled();
-            game.publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
+            THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.STOP_ALL_SOUNDS);
         }
 
         @Override
@@ -288,11 +289,11 @@ public enum GameState implements FsmState<GameModel> {
             }
             else if (timer.tickCount() == TICK_START_PAC_ANIMATION) {
                 level.pac().startAnimation();
-                game.publishGameEvent(GameEventType.PAC_DYING, level.pac().tile());
+                THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.PAC_DYING, level.pac().tile());
             }
             else if (timer.tickCount() == TICK_HIDE_PAC) {
                 level.pac().hide();
-                game.publishGameEvent(GameEventType.PAC_DEAD);
+                THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.PAC_DEAD);
             }
             else {
                 level.blinking().tick();
@@ -401,7 +402,7 @@ public enum GameState implements FsmState<GameModel> {
             }
             else if (timer().atSecond(4.5)) {
                 level.bonus().ifPresent(bonus -> bonus.setEaten(Globals.TICKS_PER_SECOND));
-                game.publishGameEvent(GameEventType.BONUS_EATEN);
+                THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.BONUS_EATEN);
             }
             else if (timer().atSecond(6.5)) {
                 level.bonus().ifPresent(Bonus::setInactive); // needed?
@@ -409,7 +410,7 @@ public enum GameState implements FsmState<GameModel> {
             }
             else if (timer().atSecond(7.5)) {
                 level.bonus().ifPresent(bonus -> bonus.setEaten(Globals.TICKS_PER_SECOND));
-                game.publishGameEvent(GameEventType.BONUS_EATEN);
+                THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.BONUS_EATEN);
             }
             else if (timer().atSecond(8.5)) {
                 game.hideGuys();
@@ -473,7 +474,7 @@ public enum GameState implements FsmState<GameModel> {
             GameLevel level = game.level().orElseThrow();
             if (timer().hasExpired()) {
                 if (level.number() == lastTestedLevelNumber) {
-                    game.publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
+                    THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.STOP_ALL_SOUNDS);
                     gameController().changeState(INTRO);
                 } else {
                     level.pac().freeze();
@@ -515,7 +516,7 @@ public enum GameState implements FsmState<GameModel> {
                     setProperty("intermissionTestNumber", number + 1);
                     timer.restartIndefinitely();
                     //TODO find another solution and get rid of this event type
-                    game.publishGameEvent(GameEventType.UNSPECIFIED_CHANGE);
+                    THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.UNSPECIFIED_CHANGE);
                 } else {
                     gameController().changeState(INTRO);
                 }

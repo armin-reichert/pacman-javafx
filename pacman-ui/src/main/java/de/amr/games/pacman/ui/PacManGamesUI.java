@@ -90,12 +90,12 @@ public class PacManGamesUI implements GameUI {
         root.getChildren().set(0, newView.layoutRoot());
         if (oldView != null) {
             oldView.disableActionBindings(THE_KEYBOARD);
-            THE_GAME_CONTROLLER.game().removeGameEventListener(oldView);
+            THE_GAME_EVENT_MANAGER.removeEventListener(oldView);
         }
         newView.enableActionBindings(THE_KEYBOARD);
         newView.layoutRoot().requestFocus();
         stage.titleProperty().bind(newView.title());
-        THE_GAME_CONTROLLER.game().addGameEventListener(newView);
+        THE_GAME_EVENT_MANAGER.addEventListener(newView);
     }
 
     private void handleGameSceneChange(GameScene oldScene, GameScene newScene) {

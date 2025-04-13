@@ -71,7 +71,7 @@ public class ArcadeBootScene2D extends GameScene2D {
         int numRows = (int) (sceneSize.y() / TS), numCols = (int) (sceneSize.x() / TS);
         for (int row = 0; row < numRows; ++row) {
             for (int col = 0; col < numCols; ++col) {
-                var hexCode = Integer.toHexString(RND.nextInt(16));
+                var hexCode = Integer.toHexString(THE_RNG.nextInt(16));
                 gr.ctx().fillText(hexCode, scaled(tiles_to_px(col)), scaled(tiles_to_px(row + 1)));
             }
         }
@@ -82,10 +82,10 @@ public class ArcadeBootScene2D extends GameScene2D {
         gr.fillCanvas(backgroundColor());
         int numRows = (int) (sceneSize.y() / TS), numCols = (int) (sceneSize.x() / TS);
         for (int row = 0; row < numRows / 2; ++row) {
-            if (RND.nextInt(100) > 20) {
+            if (THE_RNG.nextInt(100) > 20) {
                 var region1 = randomImageRegion(spriteImage, 16);
                 var region2 = randomImageRegion(spriteImage, 16);
-                var splitX = numCols / 8 + RND.nextInt(numCols / 4);
+                var splitX = numCols / 8 + THE_RNG.nextInt(numCols / 4);
                 for (int col = 0; col < numCols / 2; ++col) {
                     var region = col < splitX ? region1 : region2;
                     gr.drawSpriteScaled(region, region.width() * col, region.height() * row);
@@ -95,8 +95,8 @@ public class ArcadeBootScene2D extends GameScene2D {
     }
 
     private RectArea randomImageRegion(Image image, int size) {
-        int x = (int) (RND.nextDouble() * (image.getWidth() - size));
-        int y = (int) (RND.nextDouble() * (image.getHeight() - size));
+        int x = (int) (THE_RNG.nextDouble() * (image.getWidth() - size));
+        int y = (int) (THE_RNG.nextDouble() * (image.getHeight() - size));
         return new RectArea(x, y, size, size);
     }
 

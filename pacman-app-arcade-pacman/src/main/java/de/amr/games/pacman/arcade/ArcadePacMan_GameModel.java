@@ -216,7 +216,7 @@ public class ArcadePacMan_GameModel extends GameModel {
             THE_COIN_STORE.consumeCoin();
         }
         scoreManager().updateHighScore();
-        publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
+        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.STOP_ALL_SOUNDS);
     }
 
     @Override
@@ -455,7 +455,7 @@ public class ArcadePacMan_GameModel extends GameModel {
             staticBonus.actor().setPosition(halfTileRightOf(13, 20));
         }
         staticBonus.setEdible(bonusEdibleTicks());
-        publishGameEvent(GameEventType.BONUS_ACTIVATED, staticBonus.actor().tile());
+        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.BONUS_ACTIVATED, staticBonus.actor().tile());
     }
 
     protected int bonusEdibleTicks() {

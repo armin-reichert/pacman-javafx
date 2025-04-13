@@ -152,7 +152,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
             THE_COIN_STORE.consumeCoin();
         }
         scoreManager().updateHighScore();
-        publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
+        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.STOP_ALL_SOUNDS);
     }
 
     @Override
@@ -485,22 +485,22 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
             entryTile = level.worldMap().getTerrainTileProperty("pos_bonus", null);
             if (entryTile.x() == 0) {
                 // start tile is at left maze border
-                exitTile = portals.get(RND.nextInt(portals.size())).rightTunnelEnd().plus(1, 0);
+                exitTile = portals.get(THE_RNG.nextInt(portals.size())).rightTunnelEnd().plus(1, 0);
                 crossMazeLeftToRight = true;
             } else {
                 // start tile is at right maze border
-                exitTile = portals.get(RND.nextInt(portals.size())).leftTunnelEnd().minus(1, 0);
+                exitTile = portals.get(THE_RNG.nextInt(portals.size())).leftTunnelEnd().minus(1, 0);
                 crossMazeLeftToRight = false;
             }
         }
         else { // choose random portals for entry and exit
-            crossMazeLeftToRight = RND.nextBoolean();
+            crossMazeLeftToRight = THE_RNG.nextBoolean();
             if (crossMazeLeftToRight) {
-                entryTile = portals.get(RND.nextInt(portals.size())).leftTunnelEnd();
-                exitTile  = portals.get(RND.nextInt(portals.size())).rightTunnelEnd().plus(1, 0);
+                entryTile = portals.get(THE_RNG.nextInt(portals.size())).leftTunnelEnd();
+                exitTile  = portals.get(THE_RNG.nextInt(portals.size())).rightTunnelEnd().plus(1, 0);
             } else {
-                entryTile = portals.get(RND.nextInt(portals.size())).rightTunnelEnd();
-                exitTile = portals.get(RND.nextInt(portals.size())).leftTunnelEnd().minus(1, 0);
+                entryTile = portals.get(THE_RNG.nextInt(portals.size())).rightTunnelEnd();
+                exitTile = portals.get(THE_RNG.nextInt(portals.size())).leftTunnelEnd().minus(1, 0);
             }
         }
 
@@ -516,7 +516,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         Logger.info("Moving bonus created, route: {} ({})", route, crossMazeLeftToRight ? "left to right" : "right to left");
 
         level.setBonus(movingBonus);
-        publishGameEvent(GameEventType.BONUS_ACTIVATED, movingBonus.actor().tile());
+        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.BONUS_ACTIVATED, movingBonus.actor().tile());
     }
 
     /**

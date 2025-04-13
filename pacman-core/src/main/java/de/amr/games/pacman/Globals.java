@@ -6,6 +6,7 @@ package de.amr.games.pacman;
 
 import de.amr.games.pacman.controller.CoinStore;
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.event.GameEventManager;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
@@ -57,7 +58,8 @@ public interface Globals {
 
     CoinStore THE_COIN_STORE = new CoinStore();
     GameController THE_GAME_CONTROLLER = new GameController();
-    Random RND = new Random();
+    GameEventManager THE_GAME_EVENT_MANAGER = new GameEventManager();
+    Random THE_RNG = new Random();
 
     /**
      * Directory under which application stores high scores, maps etc. (default: <code>&lt;user_home/.pacmanfx&gt;</code>).
@@ -168,7 +170,7 @@ public interface Globals {
             lowerBound = upperBoundExclusive;
             upperBoundExclusive = tmp;
         }
-        return lowerBound + RND.nextInt(upperBoundExclusive - lowerBound);
+        return lowerBound + THE_RNG.nextInt(upperBoundExclusive - lowerBound);
     }
 
     /**
@@ -183,7 +185,7 @@ public interface Globals {
             a = b;
             b = tmp;
         }
-        return a + (b - a) * RND.nextFloat();
+        return a + (b - a) * THE_RNG.nextFloat();
     }
 
     /**
@@ -198,7 +200,7 @@ public interface Globals {
             a = b;
             b = tmp;
         }
-        return a + (b - a) * RND.nextDouble();
+        return a + (b - a) * THE_RNG.nextDouble();
     }
 
     static boolean isEven(int n) {

@@ -157,7 +157,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public void endGame() {
         playingProperty().set(false);
         scoreManager.updateHighScore();
-        publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
+        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.STOP_ALL_SOUNDS);
     }
 
     public void resetOptions() {
@@ -345,7 +345,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
                 levelCounter.add((byte) (number - 1));
             }
         }
-        publishGameEvent(GameEventType.GAME_STARTED);
+        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.GAME_STARTED);
     }
 
     @Override
@@ -412,8 +412,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public void buildNormalLevel(int levelNumber) {
-        TengenMsPacMan_MapSelector tengenMsPacManMapSelector = (TengenMsPacMan_MapSelector) mapSelector;
-        WorldMap worldMap = tengenMsPacManMapSelector.selectWorldMap(mapCategory, levelNumber);
+        WorldMap worldMap = mapSelector.selectWorldMap(mapCategory, levelNumber);
 
         level = new GameLevel(levelNumber, worldMap);
         level.setNumFlashes(5); // TODO check this
@@ -443,8 +442,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public void buildDemoLevel() {
-        TengenMsPacMan_MapSelector tengenMsPacManMapSelector = (TengenMsPacMan_MapSelector) mapSelector;
-        WorldMap worldMap = tengenMsPacManMapSelector.coloredWorldMap(mapCategory, 1);
+        WorldMap worldMap = mapSelector.coloredWorldMap(mapCategory, 1);
 
         level = new GameLevel(1, worldMap);
         level.setNumFlashes(5); // TODO check this
@@ -509,15 +507,15 @@ public class TengenMsPacMan_GameModel extends GameModel {
         }
         level.advanceNextBonus();
 
-        boolean leftToRight = RND.nextBoolean();
+        boolean leftToRight = THE_RNG.nextBoolean();
         Vector2i houseEntry = tileAt(level.houseEntryPosition());
         Vector2i houseEntryOpposite = houseEntry.plus(0, level.houseSizeInTiles().y() + 1);
         List<Portal> portals = level.portals().toList();
         if (portals.isEmpty()) {
             return; // there should be no mazes without portal but who knows?
         }
-        Portal entryPortal = portals.get(RND.nextInt(portals.size()));
-        Portal exitPortal  = portals.get(RND.nextInt(portals.size()));
+        Portal entryPortal = portals.get(THE_RNG.nextInt(portals.size()));
+        Portal exitPortal  = portals.get(THE_RNG.nextInt(portals.size()));
         List<Waypoint> route = Stream.of(
             leftToRight ? entryPortal.leftTunnelEnd() : entryPortal.rightTunnelEnd(),
             houseEntry,
@@ -533,7 +531,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
         level.setBonus(movingBonus);
         movingBonus.setEdible(TickTimer.INDEFINITE);
-        publishGameEvent(GameEventType.BONUS_ACTIVATED, movingBonus.actor().tile());
+        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.BONUS_ACTIVATED, movingBonus.actor().tile());
     }
 
     @Override
