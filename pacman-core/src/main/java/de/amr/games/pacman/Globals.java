@@ -7,7 +7,6 @@ package de.amr.games.pacman;
 import de.amr.games.pacman.controller.CoinSlot;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEventManager;
-import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameException;
@@ -130,10 +129,6 @@ public interface Globals {
         if (number < 1)
             throw GameException.invalidLevelNumber(number);
         return number;
-    }
-
-    static Direction assertDirectionNotNull(Direction dir) {
-        return requireNonNull(dir, "Direction must not be null");
     }
 
     static double assertNonNegative(double value, String messageFormat) {

@@ -148,7 +148,7 @@ public abstract class Creature extends Actor2D {
      * @param dir the move direction
      */
     public void setMoveDir(Direction dir) {
-        moveDir = assertDirectionNotNull(dir);
+        moveDir = requireNonNull(dir);
         setVelocity(moveDir.vector().scaled(velocity().length()));
         Logger.trace("{}: moveDir: {}. {}", name(), moveDir, this);
     }
@@ -166,7 +166,7 @@ public abstract class Creature extends Actor2D {
      * @param dir the wish direction
      */
     public void setWishDir(Direction dir) {
-        wishDir = assertDirectionNotNull(dir);
+        wishDir = requireNonNull(dir);
         Logger.trace("{}: wishDir: {}. {}", name(), wishDir, this);
     }
 
