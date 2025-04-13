@@ -122,7 +122,7 @@ public interface Perspective {
             double speedX = 0.03;
             double speedY = 0.06;
             double worldWidth = level.worldMap().numCols() * TS;
-            double targetX = clamp(spottedActor.posX(), 80, worldWidth - 80);
+            double targetX = Math.clamp(spottedActor.posX(), 80, worldWidth - 80);
             double targetY = spottedActor.posY() + 150;
             camera.setTranslateX(lerp(camera.getTranslateX(), targetX, speedX));
             camera.setTranslateY(lerp(camera.getTranslateY(), targetY, speedY));
@@ -152,7 +152,7 @@ public interface Perspective {
             double speedX = 0.04;
             double speedY = 0.04;
             double worldWidth = level.worldMap().numCols() * TS;
-            double targetX = clamp(spottedActor.posX(), 40, worldWidth - 40);
+            double targetX = Math.clamp(spottedActor.posX(), 40, worldWidth - 40);
             double targetY = spottedActor.position().y() + 100;
             camera.setTranslateX(lerp(camera.getTranslateX(), targetX, speedX));
             camera.setTranslateY(lerp(camera.getTranslateY(), targetY, speedY));

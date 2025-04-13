@@ -122,7 +122,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 targetY = lerp(camMinY(), camMaxY(), frac);
             }
             double y = lerp(getTranslateY(), targetY, CAM_SPEED);
-            setTranslateY(clamp(y, camMinY(), camMaxY()));
+            setTranslateY(Math.clamp(y, camMinY(), camMaxY()));
             Logger.debug("Camera: y={0.00} target={} top={} bottom={}", getTranslateY(), targetY, camMinY(), camMaxY());
         }
     }

@@ -212,17 +212,6 @@ public interface Globals {
     }
 
     /**
-     * @param value some value
-     * @param min   lower bound of interval
-     * @param max   upper bound of interval
-     * @return the value if inside the interval, the lower bound if the value is smaller, the upper bound if the value is
-     * larger
-     */
-    static double clamp(double value, double min, double max) {
-        return (value < min) ? min : Math.min(value, max);
-    }
-
-    /**
      * @param delta  maximum allowed deviation (non-negative number)
      * @param value  value
      * @param target target value

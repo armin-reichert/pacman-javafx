@@ -173,7 +173,7 @@ public enum GameAction implements Action {
         @Override
         public void execute() {
             double newRate = THE_CLOCK.getTargetFrameRate() - SIMULATION_SPEED_DELTA;
-            newRate = clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
+            newRate = Math.clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
             THE_CLOCK.setTargetFrameRate(newRate);
             String prefix = newRate == SIMULATION_SPEED_MIN ? "At minimum speed: " : "";
             THE_UI.showFlashMessageSec(0.75, prefix + newRate + "Hz");
@@ -184,7 +184,7 @@ public enum GameAction implements Action {
         @Override
         public void execute() {
             double newRate = THE_CLOCK.getTargetFrameRate() + SIMULATION_SPEED_DELTA;
-            newRate = clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
+            newRate = Math.clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
             THE_CLOCK.setTargetFrameRate(newRate);
             String prefix = newRate == SIMULATION_SPEED_MAX ? "At maximum speed: " : "";
             THE_UI.showFlashMessageSec(0.75, prefix + newRate + "Hz");
