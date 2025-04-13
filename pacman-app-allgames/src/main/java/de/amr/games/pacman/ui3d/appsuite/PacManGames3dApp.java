@@ -16,10 +16,9 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig;
-import de.amr.games.pacman.ui.GameUI;
+import de.amr.games.pacman.ui.DashboardID;
 import de.amr.games.pacman.ui.dashboard.InfoBoxCustomMaps;
 import javafx.application.Application;
-import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -62,19 +61,19 @@ public class PacManGames3dApp extends Application {
             GameVariant.PACMAN_XXL,       PacManXXL_PacMan_UIConfig.class,
             GameVariant.MS_PACMAN_XXL,    PacManXXL_MsPacMan_UIConfig.class
         ));
-        THE_UI.build(stage, new Dimension2D(width, height));
+        THE_UI.build(stage, width, height);
         THE_UI.buildDashboard(
-                GameUI.DashboardID.README,
-                GameUI.DashboardID.GENERAL,
-                GameUI.DashboardID.GAME_CONTROL,
-                GameUI.DashboardID.SETTINGS_3D,
-                GameUI.DashboardID.GAME_INFO,
-                GameUI.DashboardID.ACTOR_INFO,
-                GameUI.DashboardID.CUSTOM_MAPS,
-                GameUI.DashboardID.KEYBOARD,
-                GameUI.DashboardID.ABOUT);
+                DashboardID.README,
+                DashboardID.GENERAL,
+                DashboardID.GAME_CONTROL,
+                DashboardID.SETTINGS_3D,
+                DashboardID.GAME_INFO,
+                DashboardID.ACTOR_INFO,
+                DashboardID.CUSTOM_MAPS,
+                DashboardID.KEYBOARD,
+                DashboardID.ABOUT);
 
-        InfoBoxCustomMaps infoBoxCustomMaps = THE_UI.dashboard().getInfoBox(GameUI.DashboardID.CUSTOM_MAPS);
+        InfoBoxCustomMaps infoBoxCustomMaps = THE_UI.dashboard().getInfoBox(DashboardID.CUSTOM_MAPS);
         infoBoxCustomMaps.setTableItems(xxlMapSelector.customMaps());
         xxlMapSelector.startWatchingCustomMaps();
 

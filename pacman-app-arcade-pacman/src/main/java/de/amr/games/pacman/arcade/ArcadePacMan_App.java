@@ -6,9 +6,8 @@ package de.amr.games.pacman.arcade;
 
 import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.GameUI;
+import de.amr.games.pacman.ui.DashboardID;
 import javafx.application.Application;
-import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -32,17 +31,18 @@ public class ArcadePacMan_App extends Application {
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
         double height = 0.8 * screenSize.getHeight(), width = 1.2 * height;
         createUIAndSupport3D(true, Map.of(GameVariant.PACMAN, ArcadePacMan_UIConfig.class));
-        THE_UI.build(stage, new Dimension2D(width, height));
+        THE_UI.build(stage, width, height);
         THE_UI.addStartPage(new ArcadePacMan_StartPage(GameVariant.PACMAN));
         THE_UI.buildDashboard(
-                GameUI.DashboardID.README,
-                GameUI.DashboardID.GENERAL,
-                GameUI.DashboardID.GAME_CONTROL,
-                GameUI.DashboardID.SETTINGS_3D,
-                GameUI.DashboardID.GAME_INFO,
-                GameUI.DashboardID.ACTOR_INFO,
-                GameUI.DashboardID.KEYBOARD,
-                GameUI.DashboardID.ABOUT);
+            DashboardID.README,
+            DashboardID.GENERAL,
+            DashboardID.GAME_CONTROL,
+            DashboardID.SETTINGS_3D,
+            DashboardID.GAME_INFO,
+            DashboardID.ACTOR_INFO,
+            DashboardID.KEYBOARD,
+            DashboardID.ABOUT
+        );
         THE_UI.selectStartPage(0);
         THE_UI.show();
     }

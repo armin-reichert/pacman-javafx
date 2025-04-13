@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.dashboard;
 
-import de.amr.games.pacman.ui.GameUI;
+import de.amr.games.pacman.ui.DashboardID;
 import de.amr.games.pacman.ui._3d.dashboard.InfoBox3D;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
@@ -24,7 +24,7 @@ public class Dashboard {
     public static final Color INFO_BOX_TEXT_COLOR = Color.WHITE;
     public static final Font INFO_BOX_FONT = Font.font("Sans", 12);
 
-    private final Map<GameUI.DashboardID, InfoBox> infoBoxMap = new LinkedHashMap<>();
+    private final Map<DashboardID, InfoBox> infoBoxMap = new LinkedHashMap<>();
 
     private static InfoBox configured(String title, InfoBox infoBox) {
         infoBox.setText(title);
@@ -40,15 +40,15 @@ public class Dashboard {
     public Stream<InfoBox> infoBoxes() { return infoBoxMap.values().stream(); }
 
     @SuppressWarnings("unchecked")
-    public <I extends InfoBox> I getInfoBox(GameUI.DashboardID id) {
+    public <I extends InfoBox> I getInfoBox(DashboardID id) {
         return (I) infoBoxMap.get(id);
     }
 
-    public void addDefaultInfoBoxes(GameUI.DashboardID... titles) {
-        for (GameUI.DashboardID title : titles) { addInfoBox(title); }
+    public void addDefaultInfoBoxes(DashboardID... titles) {
+        for (DashboardID title : titles) { addInfoBox(title); }
     }
 
-    public void addInfoBox(GameUI.DashboardID id) {
+    public void addInfoBox(DashboardID id) {
         switch (id) {
             case ABOUT        -> put(id, "infobox.about.title", new InfoBoxAbout());
             case ACTOR_INFO   -> put(id, "infobox.actor_info.title", new InfoBoxActorInfo());
@@ -67,7 +67,7 @@ public class Dashboard {
         }
     }
 
-    private void put(GameUI.DashboardID id, String titleKey, InfoBox infoBox) {
+    private void put(DashboardID id, String titleKey, InfoBox infoBox) {
         infoBoxMap.put(id, configured(THE_ASSETS.text(titleKey), infoBox));
     }
 }

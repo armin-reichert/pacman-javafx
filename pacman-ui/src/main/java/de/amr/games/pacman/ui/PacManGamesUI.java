@@ -13,7 +13,6 @@ import de.amr.games.pacman.uilib.model3D.Model3D;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.geometry.Dimension2D;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -105,8 +104,8 @@ public class PacManGamesUI implements GameUI {
         Logger.info("Game scene changed from {} to {}", oldSceneName, newSceneName);
     }
 
-    private void createMainScene(Dimension2D size) {
-        mainScene = new Scene(root, size.getWidth(), size.getHeight());
+    private void createMainScene(double width, double height) {
+        mainScene = new Scene(root, width, height);
         mainScene.widthProperty() .addListener((py,ov,nv) -> gameView.resize(mainScene.getWidth(), mainScene.getHeight()));
         mainScene.heightProperty().addListener((py,ov,nv) -> gameView.resize(mainScene.getWidth(), mainScene.getHeight()));
         mainScene.addEventFilter(KeyEvent.KEY_PRESSED, THE_KEYBOARD::onKeyPressed);
@@ -215,13 +214,13 @@ public class PacManGamesUI implements GameUI {
     }
 
     @Override
-    public void build(Stage stage, Dimension2D mainSceneSize) {
+    public void build(Stage stage, double width, double height) {
         this.stage = requireNonNull(stage);
         root.setBackground(THE_ASSETS.get("background.scene"));
         root.getChildren().add(new Pane()); // placeholder for root of current view
         addStatusIcons(root);
         createMapEditor();
-        createMainScene(requireNonNull(mainSceneSize));
+        createMainScene(width, height);
         createStartPagesView();
         createGameView();
         createMapEditorView();

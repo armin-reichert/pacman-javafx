@@ -14,10 +14,9 @@ import javafx.stage.Stage;
 import java.util.Optional;
 
 public interface GameUI {
-    enum DashboardID { README, GENERAL, GAME_CONTROL, SETTINGS_3D, GAME_INFO, ACTOR_INFO, KEYBOARD, ABOUT, CUSTOM_MAPS, JOYPAD }
 
     void addStartPage(StartPage startPage);
-    void build(Stage stage, Dimension2D size);
+    void build(Stage stage, double width, double height);
     void buildDashboard(DashboardID... ids);
     Optional<GameScene> currentGameScene();
     View currentView();
