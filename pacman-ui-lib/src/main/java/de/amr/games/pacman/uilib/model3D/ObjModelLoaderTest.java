@@ -16,8 +16,12 @@ public class ObjModelLoaderTest {
         if (args.length > 0) {
             ResourceManager rm = () -> ObjModelLoaderTest.class;
             var url = rm.url(args[0]);
-            var model = new Model3D(url);
-            Logger.info(model.contentAsText(url));
+            try {
+                var model = new Model3D(url);
+                Logger.info(model.contentAsText(url));
+            } catch (Exception x) {
+
+            }
         } else {
             Logger.error("No model path program argument (e.g. 'model3D/ghost.obj') specified");
         }

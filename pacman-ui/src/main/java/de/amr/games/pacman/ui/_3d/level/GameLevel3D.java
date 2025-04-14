@@ -35,12 +35,15 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.*;
@@ -104,7 +107,7 @@ public class GameLevel3D extends Group {
             maze3D = new Maze3D(THE_UI_CONFIGS.current(), level, colorScheme);
             mazeGroup.getChildren().addAll(floor3D, maze3D);
 
-            createFood3D(level, pelletModel3D, foodMaterial);
+            createFood3D(level, pelletModel3D.mesh("Fruit"), foodMaterial);
 
             // Note: The order in which children are added matters!
             // Walls and house must be added last, otherwise, transparency is not working correctly.
@@ -115,8 +118,8 @@ public class GameLevel3D extends Group {
             getChildren().add(livesCounter3D);
             getChildren().add(mazeGroup);
 
-            // For wireframe mode view. Pac-Man and ghost shapes are already bound to global draw mode property
-            // Pellets are not included because this would cause huge performance loss
+            // For wireframe mode view. Pac-Man and ghost shapes are already bound to global draw mode property.
+            // Pellets are not included because this would cause huge performance penalty.
             Stream.concat(mazeGroup.lookupAll("*").stream(), livesCounter3D.lookupAll("*").stream())
                 .filter(Shape3D.class::isInstance)
                 .map(Shape3D.class::cast)
@@ -127,15 +130,14 @@ public class GameLevel3D extends Group {
         setMouseTransparent(true); //TODO does this really increase performance?
     }
 
-    private void createFood3D(GameLevel level, Model3D pelletModel3D, PhongMaterial foodMaterial) {
+    private void createFood3D(GameLevel level, Mesh pelletMesh, PhongMaterial foodMaterial) {
         level.worldMap().tiles().filter(level::hasFoodAt).forEach(tile -> {
             if (level.isEnergizerPosition(tile)) {
                 Energizer3D energizer3D = createEnergizer3D(tile, foodMaterial);
                 addSquirtingAnimation(level, energizer3D, foodMaterial);
                 energizers3D.add(energizer3D);
             } else {
-                var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
-                Pellet3D pellet3D = createPellet3D(tile, center, pelletModel3D, foodMaterial);
+                Pellet3D pellet3D = createPellet3D(tile, new MeshView(pelletMesh), foodMaterial);
                 pellets3D.add(pellet3D);
             }
         });
@@ -163,8 +165,9 @@ public class GameLevel3D extends Group {
         energizer3D.setEatenAnimation(squirting);
     }
 
-    private Pellet3D createPellet3D(Vector2i tile, Point3D center, Model3D pelletModel3D, PhongMaterial foodMaterial) {
-        var pellet3D = new Pellet3D(pelletModel3D, PELLET_3D_RADIUS);
+    private Pellet3D createPellet3D(Vector2i tile, Shape3D shape3D, PhongMaterial foodMaterial) {
+        var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
+        var pellet3D = new Pellet3D(shape3D, PELLET_3D_RADIUS);
         pellet3D.shape3D().setMaterial(foodMaterial);
         pellet3D.setTile(tile);
         pellet3D.setPosition(center);

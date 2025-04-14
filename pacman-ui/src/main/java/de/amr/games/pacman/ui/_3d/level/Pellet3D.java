@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._3d.level;
 
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.uilib.model3D.Model3D;
 import javafx.animation.Animation;
 import javafx.geometry.Point3D;
 import javafx.scene.shape.Shape3D;
@@ -25,15 +24,11 @@ import static java.util.Objects.requireNonNull;
  */
 public class Pellet3D implements Eatable3D {
 
-    public static final String MESH_ID_PELLET = "Fruit";
-
     private final Shape3D shape;
 
-    public Pellet3D(Model3D model3D, double radius) {
-        requireNonNull(model3D);
+    public Pellet3D(Shape3D shape, double radius) {
+        this.shape = requireNonNull(shape);
         assertNonNegative(radius, "Pellet3D radius must be positive but is %f");
-
-        shape = model3D.meshViewById(MESH_ID_PELLET);
         shape.setRotationAxis(Rotate.Z_AXIS);
         shape.setRotate(90);
         var bounds = shape.getBoundsInLocal();

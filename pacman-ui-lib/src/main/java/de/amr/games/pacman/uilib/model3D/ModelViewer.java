@@ -20,7 +20,8 @@ import java.io.File;
 public class ModelViewer extends Application {
 
     static final String REPOSITORY_DIR = System.getProperty("user.home") + "/git/pacman-javafx/";
-    static final String DIR = REPOSITORY_DIR + "ui-3d/src/main/resources/de/amr/games/pacman/ui3d/model3D";
+    static final String DIR = REPOSITORY_DIR
+        + "pacman-ui-lib/src/main/resources/de/amr/games/pacman/uilib/model3D";
 
     private Stage stage;
     private SubScene previewArea;
@@ -87,12 +88,17 @@ public class ModelViewer extends Application {
         File selectedFile = fileChooser.showOpenDialog(stage);
         if (selectedFile != null) {
             Logger.info("File {} selected", selectedFile);
-            Model3D model3D = new Model3D(selectedFile);
-            Node shape = PacModel3D.createPacShape(model3D, 16, Color.YELLOW, Color.BLACK, Color.PINK);
-            Model3D.meshViewById(shape, PacModel3D.MESH_ID_HEAD).setDrawMode(DrawMode.LINE);
-            Model3D.meshViewById(shape, PacModel3D.MESH_ID_PALATE).setDrawMode(DrawMode.LINE);
-            Model3D.meshViewById(shape, PacModel3D.MESH_ID_EYES).setDrawMode(DrawMode.LINE);
-            setCurrentNode(new Group(shape));
+            try {
+                Model3D model3D = new Model3D(selectedFile);
+                Node shape = PacModel3D.createPacShape(model3D, 16, Color.YELLOW, Color.BLACK, Color.PINK);
+                Model3D.meshViewById(shape, PacModel3D.MESH_ID_HEAD).setDrawMode(DrawMode.LINE);
+                Model3D.meshViewById(shape, PacModel3D.MESH_ID_PALATE).setDrawMode(DrawMode.LINE);
+                Model3D.meshViewById(shape, PacModel3D.MESH_ID_EYES).setDrawMode(DrawMode.LINE);
+                setCurrentNode(new Group(shape));
+            } catch (Exception x) {
+                Logger.error(x);
+                Logger.error("Could not open 3D model from file {}", selectedFile);
+            }
         }
     }
 

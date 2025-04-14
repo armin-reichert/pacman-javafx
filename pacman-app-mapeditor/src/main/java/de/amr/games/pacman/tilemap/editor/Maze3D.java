@@ -31,6 +31,7 @@ import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
+import org.tinylog.Logger;
 
 import java.util.stream.Stream;
 
@@ -71,38 +72,42 @@ public class Maze3D extends Group {
     private final DoubleProperty wallBaseHeightPy = new SimpleDoubleProperty(3.5);
     private final DoubleProperty houseBaseHeightPy = new SimpleDoubleProperty(12);
 
-    private final Node pacmanShape3D;
-    private final Node[] ghostShapes;
+    private Node pacmanShape3D;
+    private Node[] ghostShapes;
 
     public PerspectiveCamera camera() {
         return camera;
     }
 
     public Maze3D() {
-        r3D = new TerrainMapRenderer3D();
-
-        getChildren().addAll(mazeGroup, foodGroup);
-        foodGroup.visibleProperty().bind(foodVisiblePy);
-        mazeGroup.visibleProperty().bind(terrainVisiblePy);
-
-        ResourceManager uiLibResources = () -> Ufx.class;
-        Model3D pacmanModel3D = new Model3D(uiLibResources.url("model3D/pacman.obj"));
-        pacmanShape3D = PacModel3D.createPacShape(pacmanModel3D, ACTOR_SIZE, Color.YELLOW, Color.BLACK, Color.GRAY);
-
-        Model3D ghostModel3D = new Model3D(uiLibResources.url("model3D/ghost.obj"));
-        ghostShapes = new Node[4];
-        ghostShapes[0] = createGhostShape3D(ghostModel3D, Color.RED, 0);
-        ghostShapes[1] = createGhostShape3D(ghostModel3D, Color.PINK, 270);
-        ghostShapes[2] = createGhostShape3D(ghostModel3D, Color.CYAN, 90);
-        ghostShapes[3] = createGhostShape3D(ghostModel3D, Color.ORANGE, 90);
-
-        AmbientLight ambientLight = new AmbientLight(Color.WHITE);
-        getChildren().add(ambientLight);
-
         camera = new PerspectiveCamera(true);
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
         camera.setFieldOfView(40); // default: 30
+
+        r3D = new TerrainMapRenderer3D();
+
+        AmbientLight ambientLight = new AmbientLight(Color.WHITE);
+        getChildren().addAll(ambientLight, mazeGroup, foodGroup);
+
+        foodGroup.visibleProperty().bind(foodVisiblePy);
+        mazeGroup.visibleProperty().bind(terrainVisiblePy);
+
+        ResourceManager uiLibResources = () -> Ufx.class;
+        try {
+            Model3D pacmanModel3D = new Model3D(uiLibResources.url("model3D/pacman.obj"));
+            pacmanShape3D = PacModel3D.createPacShape(pacmanModel3D, ACTOR_SIZE, Color.YELLOW, Color.BLACK, Color.GRAY);
+
+            Model3D ghostModel3D = new Model3D(uiLibResources.url("model3D/ghost.obj"));
+            ghostShapes = new Node[4];
+            ghostShapes[0] = createGhostShape3D(ghostModel3D, Color.RED, 0);
+            ghostShapes[1] = createGhostShape3D(ghostModel3D, Color.PINK, 270);
+            ghostShapes[2] = createGhostShape3D(ghostModel3D, Color.CYAN, 90);
+            ghostShapes[3] = createGhostShape3D(ghostModel3D, Color.ORANGE, 90);
+        } catch (Exception x) {
+            Logger.error(x);
+            Logger.error("Could not open 3D models");
+        }
     }
 
     public void moveTowardsUser(double pixels) {

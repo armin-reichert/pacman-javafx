@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.uilib.model3D;
 
-import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.uilib.objimport.ObjImporter;
 import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
@@ -12,10 +11,10 @@ import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Scale;
-import org.tinylog.Logger;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,41 +54,21 @@ public class Model3D {
         return id.replace('.', '-');
     }
 
+    private final String url;
     private final Map<String, Mesh> meshesByName = new HashMap<>();
     private final Map<String, PhongMaterial> materials = new HashMap<>();
 
-    public Model3D(URL objFileURL) {
-        requireNonNull(objFileURL);
-        Logger.debug("Loading 3D OBJ model from URL: {}", objFileURL);
-        try {
-            importModel(new ObjImporter(objFileURL.toExternalForm()));
-        } catch (Exception x) {
-            Logger.error(x);
-        }
+    public Model3D(URL objFileURL) throws IOException, URISyntaxException {
+        url = requireNonNull(objFileURL).toExternalForm();
+        readMeshesAndMaterials(new ObjImporter(url));
     }
 
-    public Model3D(File objFile) {
-        requireNonNull(objFile);
-        Logger.debug("Loading 3D OBJ model from file '{}'", objFile);
-        try (var in = new FileInputStream(objFile)) {
-            importModel(new ObjImporter(in));
-        } catch (Exception x) {
-            Logger.error(x);
-        }
+    public Model3D(File objFile) throws IOException, URISyntaxException {
+        this(objFile.toURI().toURL());
     }
 
-    private void importModel(ObjImporter importer) {
-        for (String meshName : importer.getMeshNames()) {
-            TriangleMesh mesh = importer.getMesh(meshName);
-            ObjImporter.validateTriangleMesh(mesh);
-            meshesByName.put(meshName, mesh);
-            Logger.debug("Mesh ID: '{}'", meshName);
-        }
-        for (var materialMap : importer.materialLibrary()) {
-            for (var entry : materialMap.entrySet()) {
-                materials.put(entry.getKey(), (PhongMaterial) entry.getValue());
-            }
-        }
+    public String url() {
+        return url;
     }
 
     public String contentAsText(URL url) {
@@ -107,20 +86,29 @@ public class Model3D {
     }
 
     public Mesh mesh(String name) {
+        requireNonNull(name);
         if (meshesByName.containsKey(name)) {
             return meshesByName.get(name);
         }
         throw new Model3DException("No mesh with name %s found", name);
     }
 
-    public MeshView meshViewById(String name) {
-        return new MeshView(mesh(name));
-    }
-
     public PhongMaterial material(String name) {
+        requireNonNull(name);
         if (materials.containsKey(name)) {
             return materials.get(name);
         }
         throw new Model3DException("No material with name %s found", name);
+    }
+
+    private void readMeshesAndMaterials(ObjImporter importer) {
+        for (String meshName : importer.getMeshNames()) {
+            TriangleMesh mesh = importer.getMesh(meshName);
+            ObjImporter.validateTriangleMesh(mesh);
+            meshesByName.put(meshName, mesh);
+        }
+        for (var materialLibrary : importer.materialLibrary()) {
+            materialLibrary.forEach((materialName, material) -> materials.put(materialName, (PhongMaterial) material));
+        }
     }
 }
