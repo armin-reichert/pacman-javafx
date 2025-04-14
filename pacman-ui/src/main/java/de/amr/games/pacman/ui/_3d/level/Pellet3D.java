@@ -12,7 +12,6 @@ import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 
 import static de.amr.games.pacman.Globals.assertNonNegative;
-import static de.amr.games.pacman.uilib.Ufx.doAfterSec;
 import static java.util.Objects.requireNonNull;
 
 /**
