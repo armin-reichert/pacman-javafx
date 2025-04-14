@@ -137,7 +137,10 @@ public class GameLevel3D extends Group {
                 addSquirtingAnimation(level, energizer3D, foodMaterial);
                 energizers3D.add(energizer3D);
             } else {
-                Pellet3D pellet3D = createPellet3D(tile, new MeshView(pelletMesh), foodMaterial);
+                var pelletMeshView = new MeshView(pelletMesh);
+                pelletMeshView.setRotationAxis(Rotate.Z_AXIS);
+                pelletMeshView.setRotate(90);
+                Pellet3D pellet3D = createPellet3D(tile, pelletMeshView, foodMaterial);
                 pellets3D.add(pellet3D);
             }
         });
@@ -148,7 +151,9 @@ public class GameLevel3D extends Group {
         var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
         var energizer3D = new Energizer3D(ENERGIZER_3D_RADIUS);
         energizer3D.setTile(tile);
-        energizer3D.setPosition(center);
+        energizer3D.shape3D().setTranslateX(center.getX());
+        energizer3D.shape3D().setTranslateY(center.getY());
+        energizer3D.shape3D().setTranslateZ(center.getZ());
         energizer3D.shape3D().setMaterial(foodMaterial);
         return energizer3D;
     }
@@ -168,9 +173,11 @@ public class GameLevel3D extends Group {
     private Pellet3D createPellet3D(Vector2i tile, Shape3D shape3D, PhongMaterial foodMaterial) {
         var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
         var pellet3D = new Pellet3D(shape3D, PELLET_3D_RADIUS);
-        pellet3D.shape3D().setMaterial(foodMaterial);
         pellet3D.setTile(tile);
-        pellet3D.setPosition(center);
+        pellet3D.shape3D().setTranslateX(center.getX());
+        pellet3D.shape3D().setTranslateY(center.getY());
+        pellet3D.shape3D().setTranslateZ(center.getZ());
+        pellet3D.shape3D().setMaterial(foodMaterial);
         return pellet3D;
     }
 

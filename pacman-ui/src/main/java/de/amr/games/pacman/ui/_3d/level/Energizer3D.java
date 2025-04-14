@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._3d.level;
 
-import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
@@ -16,11 +15,8 @@ import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
 
-import java.util.Optional;
-
 import static de.amr.games.pacman.Globals.assertNonNegative;
 import static de.amr.games.pacman.uilib.Ufx.doAfterSec;
-import static java.util.Objects.requireNonNull;
 
 /**
  * 3D energizer pellet.
@@ -51,43 +47,12 @@ public class Energizer3D extends Sphere implements Eatable3D {
         pumping.setToZ(MIN_SCALE);
     }
 
-    @Override
-    public String toString() {
-        var pumpingText = pumping.getStatus() == Status.RUNNING ? ", pumping" : "";
-        return String.format("[Energizer%s, tile: %s]", pumpingText, tile());
+    public void startPumping() {
+        pumping.playFromStart();
     }
 
-    @Override
-    public void setPosition(Point3D position) {
-        requireNonNull(position);
-        setTranslateX(position.getX());
-        setTranslateY(position.getY());
-        setTranslateZ(position.getZ());
-    }
-
-    @Override
-    public Point3D position() {
-        return new Point3D(getTranslateX(), getTranslateY(), getTranslateZ());
-    }
-
-    @Override
-    public void setTile(Vector2i tile) {
-        setUserData(tile);
-    }
-
-    @Override
-    public Vector2i tile() {
-        return (Vector2i) getUserData();
-    }
-
-    @Override
-    public Shape3D shape3D() {
-        return this;
-    }
-
-    @Override
-    public Optional<Animation> getEatenAnimation() {
-        return Optional.ofNullable(eatenAnimation);
+    public void stopPumping() {
+        pumping.stop();
     }
 
     public void setEatenAnimation(Animation animation) {
@@ -105,11 +70,28 @@ public class Energizer3D extends Sphere implements Eatable3D {
         }
     }
 
-    public void startPumping() {
-        pumping.playFromStart();
+    @Override
+    public String toString() {
+        var pumpingText = pumping.getStatus() == Status.RUNNING ? ", pumping" : "";
+        return String.format("[Energizer%s, tile: %s]", pumpingText, tile());
     }
 
-    public void stopPumping() {
-        pumping.stop();
+    @Override
+    public Point3D position() {
+        return new Point3D(getTranslateX(), getTranslateY(), getTranslateZ());
+    }
+
+    public void setTile(Vector2i tile) {
+        setUserData(tile);
+    }
+
+    @Override
+    public Vector2i tile() {
+        return (Vector2i) getUserData();
+    }
+
+    @Override
+    public Shape3D shape3D() {
+        return this;
     }
 }

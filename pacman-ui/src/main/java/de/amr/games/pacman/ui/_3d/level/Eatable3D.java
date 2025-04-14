@@ -15,18 +15,8 @@ import java.util.Optional;
  * @author Armin Reichert
  */
 public interface Eatable3D {
-
     Node shape3D();
-
     void onEaten();
-
-    Optional<Animation> getEatenAnimation();
-
-    void setTile(Vector2i tile);
-
     Vector2i tile();
-
-    void setPosition(Point3D position);
-
     Point3D position();
 }
