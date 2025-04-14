@@ -34,7 +34,6 @@ public class Pellet3D implements Eatable3D {
 
         hideAfterSmallDelay = new PauseTransition(Duration.seconds(0.05));
         hideAfterSmallDelay.setOnFinished(e -> shape3D().setVisible(false));
-
     }
 
     @Override

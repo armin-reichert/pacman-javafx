@@ -39,7 +39,7 @@ import static de.amr.games.pacman.Globals.*;
 /**
  * @author Armin Reichert
  */
-public class Squirting extends Transition {
+public class SquirtingAnimation extends Transition {
 
     public static class Drop extends Sphere {
         private double vx, vy, vz;
@@ -77,7 +77,7 @@ public class Squirting extends Transition {
     private Point3D gravity = new Point3D(0, 0, 0.1f);
     private Predicate<Drop> dropReachesFinalPosition = drop -> false;
 
-    public Squirting(Duration duration) {
+    public SquirtingAnimation(Duration duration) {
         setCycleDuration(duration);
     }
 
@@ -117,7 +117,7 @@ public class Squirting extends Transition {
         }
     }
 
-    public void setDropReachesFinalPosition(Predicate<Drop> condition) {
+    public void setDropFinalPosition(Predicate<Drop> condition) {
         this.dropReachesFinalPosition = condition;
     }
 

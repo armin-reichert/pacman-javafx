@@ -271,10 +271,6 @@ public class GameLevel {
         return !outOfWorld(tile);
     }
 
-    public boolean containsPoint(double x, double y) {
-        return 0 <= x && x <= worldMap.numCols() * TS && 0 <= y && y <= worldMap.numRows() * TS;
-    }
-
     public Stream<Vector2i> energizerTiles() {
         return Arrays.stream(energizerTiles);
     }

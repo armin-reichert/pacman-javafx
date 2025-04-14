@@ -18,7 +18,7 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.GameUIConfig;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
-import de.amr.games.pacman.ui._3d.animation.Squirting;
+import de.amr.games.pacman.ui._3d.animation.SquirtingAnimation;
 import de.amr.games.pacman.uilib.Ufx;
 import de.amr.games.pacman.uilib.WorldMapColorScheme;
 import de.amr.games.pacman.uilib.model3D.Model3D;
@@ -134,7 +134,7 @@ public class GameLevel3D extends Group {
         level.worldMap().tiles().filter(level::hasFoodAt).forEach(tile -> {
             if (level.isEnergizerPosition(tile)) {
                 Energizer3D energizer3D = createEnergizer3D(tile, foodMaterial);
-                addSquirtingAnimation(level, energizer3D, foodMaterial);
+                addSquirtingAnimation(level.worldMap(), energizer3D, foodMaterial);
                 energizers3D.add(energizer3D);
             } else {
                 var pelletMeshView = new MeshView(pelletMesh);
@@ -158,13 +158,17 @@ public class GameLevel3D extends Group {
         return energizer3D;
     }
 
-    private void addSquirtingAnimation(GameLevel level, Energizer3D energizer3D, PhongMaterial dropMaterial) {
+    private boolean isInsideWorldMap(WorldMap worldMap, double x, double y) {
+        return 0 <= x && x <= worldMap.numCols() * TS && 0 <= y && y <= worldMap.numRows() * TS;
+    }
+
+    private void addSquirtingAnimation(WorldMap worldMap, Energizer3D energizer3D, PhongMaterial dropMaterial) {
         Vector2i tile = energizer3D.tile();
         var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
-        var squirting = new Squirting(Duration.seconds(2));
-        squirting.createDrops(15, 46, dropMaterial, center);
-        squirting.setDropReachesFinalPosition(drop ->
-            drop.getTranslateZ() >= -1 && level.containsPoint(drop.getTranslateX(), drop.getTranslateY()));
+        var squirting = new SquirtingAnimation(Duration.seconds(2));
+        squirting.createDrops(23, 69, dropMaterial, center);
+        squirting.setDropFinalPosition(drop -> drop.getTranslateZ() >= -1
+                && isInsideWorldMap(worldMap, drop.getTranslateX(), drop.getTranslateY()));
         squirting.setOnFinished(e -> getChildren().remove(squirting.root()));
         getChildren().add(squirting.root());
         energizer3D.setEatenAnimation(squirting);
