@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui._3d.level;
 
 import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -65,17 +66,17 @@ public class GameLevel3D extends Group {
 
     private final IntegerProperty livesCountPy = new SimpleIntegerProperty(0);
 
-    private final Group worldGroup = new Group();
-
     private final List<Pellet3D> pellets3D = new ArrayList<>();
     private final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
-    private Pac3D pac3D;
-    private List<Ghost3DAppearance> ghost3DAppearances;
-    private LivesCounter3D livesCounter3D;
+
+    private final LivesCounter3D livesCounter3D;
+    private final Group mazeGroup = new Group();
     private Box floor3D;
     private Maze3D maze3D;
     private Message3D message3D;
     private Bonus3D bonus3D;
+    private Pac3D pac3D;
+    private List<Ghost3DAppearance> ghost3DAppearances;
 
     private Animation levelCompleteAnimation;
     private Animation livesCounterAnimation;
@@ -88,21 +89,27 @@ public class GameLevel3D extends Group {
         livesCounter3D.livesCountPy.bind(livesCountPy);
 
         game.level().ifPresent(level -> {
+            final WorldMap worldMap = level.worldMap();
+            final int numRows = level.worldMap().numRows(), numCols = level.worldMap().numCols();
+
             pac3D = createPac3D(level.pac());
             ghost3DAppearances = level.ghosts().map(ghost -> createGhost3D(ghost, level.numFlashes())).toList();
 
-            floor3D = createFloor(level.worldMap().numCols() * TS, level.worldMap().numRows() * TS);
-            WorldMapColorScheme coloring = THE_UI_CONFIGS.current().worldMapColoring(level.worldMap());
-            maze3D = new Maze3D(THE_UI_CONFIGS.current(), level, coloring);
-            worldGroup.getChildren().addAll(floor3D, maze3D);
+            floor3D = createFloor(numCols * TS, numRows * TS);
+            WorldMapColorScheme colorScheme = THE_UI_CONFIGS.current().worldMapColoring(worldMap);
+            maze3D = new Maze3D(THE_UI_CONFIGS.current(), level, colorScheme);
+            mazeGroup.getChildren().addAll(floor3D, maze3D);
 
-            addFood3D(level, THE_ASSETS.get("model3D.pellet"), coloredMaterial(coloring.pellet()));
+            createFood3D(level, coloredMaterial(colorScheme.pellet()));
 
+            // Note: The order in which children are added matters!
+            // Walls and house must be added last, otherwise, transparency is not working correctly.
+            energizers3D.forEach(energizer3D -> getChildren().add(energizer3D.shape3D()));
+            pellets3D.forEach(pellet3D -> getChildren().add(pellet3D.shape3D()));
             getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
             getChildren().addAll(ghost3DAppearances);
             getChildren().add(livesCounter3D);
-            // Walls and house must be added last! Otherwise, transparency is not working correctly.
-            getChildren().add(worldGroup);
+            getChildren().add(mazeGroup);
         });
 
         getChildren().add(ambientLight);
@@ -115,27 +122,31 @@ public class GameLevel3D extends Group {
             .forEach(shape3D -> ((Shape3D) shape3D).drawModeProperty().bind(PY_3D_DRAW_MODE));
     }
 
-    public void update() {
-        pac3D.update();
-        ghosts3D().forEach(Ghost3DAppearance::update);
-        bonus3D().ifPresent(Bonus3D::update);
-        THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-            boolean houseAccessRequired = level.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-                    .anyMatch(Ghost::isVisible);
-            maze3D().setHouseLightOn(houseAccessRequired);
-
-            boolean ghostNearHouseEntry = level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-                    .filter(ghost -> ghost.position().euclideanDist(level.houseEntryPosition()) <= HOUSE_3D_SENSITIVITY)
-                    .anyMatch(Ghost::isVisible);
-            houseOpenPy.set(ghostNearHouseEntry);
-
-            int symbolsDisplayed = Math.max(0, THE_GAME_CONTROLLER.game().livesProperty().get() - 1);
-            if (!level.pac().isVisible() && THE_GAME_CONTROLLER.state() == GameState.STARTING_GAME) {
-                livesCountPy.set(symbolsDisplayed + 1);
+    private void createFood3D(GameLevel level, Material foodMaterial) {
+        final Model3D pelletModel3D = THE_ASSETS.get("model3D.pellet");
+        level.worldMap().tiles().filter(level::hasFoodAt).forEach(tile -> {
+            if (level.isEnergizerPosition(tile)) {
+                Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
+                var energizer3D = new Energizer3D(ENERGIZER_3D_RADIUS);
+                energizers3D.add(energizer3D);
+                energizer3D.shape3D().setMaterial(foodMaterial);
+                energizer3D.setTile(tile);
+                energizer3D.setPosition(position);
+                var squirting = new Squirting(this, Duration.seconds(2));
+                squirting.setDropReachesFinalPosition(drop ->
+                    drop.getTranslateZ() >= -1 && level.containsPoint(drop.getTranslateX(), drop.getTranslateY()));
+                squirting.createDrops(15, 46, foodMaterial, position);
+                energizer3D.setEatenAnimation(squirting);
             } else {
-                livesCountPy.set(symbolsDisplayed);
+                Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
+                var pellet3D = new Pellet3D(pelletModel3D, PELLET_3D_RADIUS);
+                pellets3D.add(pellet3D);
+                pellet3D.shape3D().setMaterial(foodMaterial);
+                pellet3D.setTile(tile);
+                pellet3D.setPosition(position);
             }
         });
+        energizers3D.trimToSize();
     }
 
     private Pac3D createPac3D(Pac pac) {
@@ -231,32 +242,27 @@ public class GameLevel3D extends Group {
         return floor3D;
     }
 
-    private void addFood3D(GameLevel level, Model3D pelletModel3D, Material foodMaterial) {
-        level.worldMap().tiles().filter(level::hasFoodAt).forEach(tile -> {
-            if (level.isEnergizerPosition(tile)) {
-                Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
-                var energizer3D = new Energizer3D(ENERGIZER_3D_RADIUS);
-                energizers3D.add(energizer3D);
-                energizer3D.shape3D().setMaterial(foodMaterial);
-                energizer3D.setTile(tile);
-                energizer3D.setPosition(position);
-                var squirting = new Squirting(this, Duration.seconds(2));
-                squirting.setDropReachesFinalPosition(drop ->
-                    drop.getTranslateZ() >= -1 && level.containsPoint(drop.getTranslateX(), drop.getTranslateY()));
-                squirting.createDrops(15, 46, foodMaterial, position);
-                energizer3D.setEatenAnimation(squirting);
-                getChildren().add(energizer3D.shape3D());
+    public void update() {
+        pac3D.update();
+        ghosts3D().forEach(Ghost3DAppearance::update);
+        bonus3D().ifPresent(Bonus3D::update);
+        THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
+            boolean houseAccessRequired = level.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+                .anyMatch(Ghost::isVisible);
+            maze3D().setHouseLightOn(houseAccessRequired);
+
+            boolean ghostNearHouseEntry = level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+                .filter(ghost -> ghost.position().euclideanDist(level.houseEntryPosition()) <= HOUSE_3D_SENSITIVITY)
+                .anyMatch(Ghost::isVisible);
+            houseOpenPy.set(ghostNearHouseEntry);
+
+            int symbolsDisplayed = Math.max(0, THE_GAME_CONTROLLER.game().livesProperty().get() - 1);
+            if (!level.pac().isVisible() && THE_GAME_CONTROLLER.state() == GameState.STARTING_GAME) {
+                livesCountPy.set(symbolsDisplayed + 1);
             } else {
-                Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
-                var pellet3D = new Pellet3D(pelletModel3D, PELLET_3D_RADIUS);
-                pellets3D.add(pellet3D);
-                pellet3D.shape3D().setMaterial(foodMaterial);
-                pellet3D.setTile(tile);
-                pellet3D.setPosition(position);
-                getChildren().add(pellet3D.shape3D());
+                livesCountPy.set(symbolsDisplayed);
             }
         });
-        energizers3D.trimToSize();
     }
 
     public void showAnimatedMessage(String text, double displaySeconds, double centerX, double y) {
@@ -290,13 +296,13 @@ public class GameLevel3D extends Group {
     public void replaceBonus3D(Bonus bonus, GameSpriteSheet spriteSheet) {
         requireNonNull(bonus);
         if (bonus3D != null) {
-            worldGroup.getChildren().remove(bonus3D);
+            mazeGroup.getChildren().remove(bonus3D);
         }
         bonus3D = new Bonus3D(bonus,
             spriteSheet.crop(spriteSheet.bonusSymbolSprite(bonus.symbol())),
             spriteSheet.crop(spriteSheet.bonusValueSprite(bonus.symbol())));
         bonus3D.showEdible();
-        worldGroup.getChildren().add(bonus3D);
+        mazeGroup.getChildren().add(bonus3D);
     }
 
     public void playLivesCounterAnimation() {
