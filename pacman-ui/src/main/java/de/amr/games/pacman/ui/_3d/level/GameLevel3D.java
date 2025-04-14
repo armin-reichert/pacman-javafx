@@ -148,11 +148,12 @@ public class GameLevel3D extends Group {
     }
 
     private Ghost3DAppearance createGhost3D(Ghost ghost, int numFlashes) {
-        String ans = THE_UI_CONFIGS.current().assetNamespace();
         Shape3D dressShape    = new MeshView(THE_ASSETS.get("model3D.ghost.mesh.dress"));
         Shape3D pupilsShape   = new MeshView(THE_ASSETS.get("model3D.ghost.mesh.pupils"));
         Shape3D eyeballsShape = new MeshView(THE_ASSETS.get("model3D.ghost.mesh.eyeballs"));
-        return new Ghost3DAppearance(dressShape, pupilsShape, eyeballsShape, THE_ASSETS, ans, ghost, GHOST_3D_SIZE, numFlashes);
+        return new Ghost3DAppearance(THE_UI_CONFIGS.current().assetNamespace(),
+            dressShape, pupilsShape, eyeballsShape,
+            ghost, GHOST_3D_SIZE, numFlashes);
     }
 
     private LivesCounter3D createLivesCounter3D(boolean canStartNewGame) {

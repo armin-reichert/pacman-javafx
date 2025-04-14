@@ -23,6 +23,7 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.ui.Globals.THE_ASSETS;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -37,7 +38,6 @@ public class Ghost3D {
     private final ObjectProperty<Color> pupilsColorPy   = new SimpleObjectProperty<>(this, "pupilsColor", Color.BLUE);
 
     private final byte id;
-    private final AssetStorage assets;
     private final String assetPrefix;
     private final Group root = new Group();
     private final Shape3D dress;
@@ -45,7 +45,7 @@ public class Ghost3D {
     private final RotateTransition dressAnimation;
     private Animation flashingAnimation;
 
-    private Color color(String assetKeySuffix) { return assets.color(assetPrefix + assetKeySuffix); }
+    private Color color(String assetKeySuffix) { return THE_ASSETS.color(assetPrefix + assetKeySuffix); }
 
     private Color normalDressColor()        { return color(".ghost.%d.color.normal.dress".formatted(id));  }
     private Color normalPupilsColor()       { return color(".ghost.%d.color.normal.pupils".formatted(id)); }
@@ -57,20 +57,19 @@ public class Ghost3D {
     private Color flashingPupilsColor()     { return color(".ghost.color.flashing.pupils"); }
 
     public Ghost3D(
-        byte id,
+        String assetPrefix, byte id,
         Shape3D dressShape, Shape3D pupilsShape, Shape3D eyeballsShape,
-        AssetStorage assets, String assetPrefix, double size) {
+        double size) {
 
+        requireNonNull(assetPrefix);
         assertValidGhostID(id);
         requireNonNull(dressShape);
         requireNonNull(pupilsShape);
         requireNonNull(eyeballsShape);
-        requireNonNull(assets);
         requireNonNull(assetPrefix);
         assertNonNegative(size);
 
         this.id = id;
-        this.assets = assets;
         this.assetPrefix = assetPrefix;
 
         dress = dressShape;

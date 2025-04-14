@@ -59,13 +59,14 @@ public class Ghost3DAppearance extends Group {
     private RotateTransition brakeAnimation;
 
     public Ghost3DAppearance(
+        String assetPrefix,
         Shape3D dressShape, Shape3D pupilsShape, Shape3D eyeballsShape,
-        AssetStorage assets, String assetPrefix, Ghost ghost, double size, int numFlashes) {
+        Ghost ghost, double size, int numFlashes) {
 
+        requireNonNull(assetPrefix);
         requireNonNull(dressShape);
         requireNonNull(pupilsShape);
         requireNonNull(eyeballsShape);
-        requireNonNull(assets);
         requireNonNull(ghost);
         assertNonNegative(size);
         assertNonNegative(numFlashes);
@@ -76,7 +77,7 @@ public class Ghost3DAppearance extends Group {
 
         drawModePy.bind(PY_3D_DRAW_MODE);
 
-        ghost3D = new Ghost3D(ghost.id(), dressShape, pupilsShape, eyeballsShape, assets, assetPrefix, size);
+        ghost3D = new Ghost3D(assetPrefix, ghost.id(), dressShape, pupilsShape, eyeballsShape, size);
         ghost3D.drawModePy.bind(drawModePy);
 
         numberCube = new Box(14, 8, 8);
