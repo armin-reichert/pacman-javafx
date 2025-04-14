@@ -19,7 +19,8 @@ import static de.amr.games.pacman.Globals.assertNonNegative;
  */
 public class Energizer3D extends Sphere implements Eatable3D {
 
-    private static final double MIN_SCALE = 0.25;
+    private static final double MIN_SCALING = 0.25;
+    private static final double MAX_SCALING = 1.00;
 
     private final ScaleTransition pumpingAnimation;
     private final Animation hideAfterSmallDelay;
@@ -28,18 +29,17 @@ public class Energizer3D extends Sphere implements Eatable3D {
     public Energizer3D(double radius) {
         assertNonNegative(radius, "Energizer radius must be positive but is %f");
         setRadius(radius);
-        setUserData(this);
 
         pumpingAnimation = new ScaleTransition(Duration.seconds(1.0 / 4), this);
         pumpingAnimation.setAutoReverse(true);
         pumpingAnimation.setCycleCount(Animation.INDEFINITE);
         pumpingAnimation.setInterpolator(Interpolator.EASE_BOTH);
-        pumpingAnimation.setFromX(1.0);
-        pumpingAnimation.setFromY(1.0);
-        pumpingAnimation.setFromZ(1.0);
-        pumpingAnimation.setToX(MIN_SCALE);
-        pumpingAnimation.setToY(MIN_SCALE);
-        pumpingAnimation.setToZ(MIN_SCALE);
+        pumpingAnimation.setFromX(MAX_SCALING);
+        pumpingAnimation.setFromY(MAX_SCALING);
+        pumpingAnimation.setFromZ(MAX_SCALING);
+        pumpingAnimation.setToX(MIN_SCALING);
+        pumpingAnimation.setToY(MIN_SCALING);
+        pumpingAnimation.setToZ(MIN_SCALING);
 
         hideAfterSmallDelay = new PauseTransition(Duration.seconds(0.05));
         hideAfterSmallDelay.setOnFinished(e -> setVisible(false));
