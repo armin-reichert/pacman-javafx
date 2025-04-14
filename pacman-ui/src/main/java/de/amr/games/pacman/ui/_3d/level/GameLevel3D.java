@@ -40,9 +40,7 @@ import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.*;
@@ -51,6 +49,8 @@ import static de.amr.games.pacman.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 
 /**
+ * 3D representation of game level.
+ *
  * @author Armin Reichert
  */
 public class GameLevel3D extends Group {
@@ -90,18 +90,20 @@ public class GameLevel3D extends Group {
 
         game.level().ifPresent(level -> {
             final WorldMap worldMap = level.worldMap();
-            final int numRows = level.worldMap().numRows(), numCols = level.worldMap().numCols();
+            final int numRows = worldMap.numRows(), numCols = worldMap.numCols();
+            final WorldMapColorScheme colorScheme = THE_UI_CONFIGS.current().worldMapColorScheme(worldMap);
+            final Model3D pelletModel3D = THE_ASSETS.get("model3D.pellet"); // TODO move into UI config?
+            final PhongMaterial foodMaterial = coloredMaterial(colorScheme.pellet()); // TODO move into UI config?
 
             pac3D = createPac3D(level.pac());
-            ghost3DAppearances = level.ghosts().map(ghost -> createGhost3D(ghost, level.numFlashes())).toList();
+            ghost3DAppearances = level.ghosts()
+                .map(ghost -> createGhostAppearance3D(ghost, level.numFlashes()))
+                .toList();
 
             floor3D = createFloor(numCols * TS, numRows * TS);
-            WorldMapColorScheme colorScheme = THE_UI_CONFIGS.current().worldMapColoring(worldMap);
             maze3D = new Maze3D(THE_UI_CONFIGS.current(), level, colorScheme);
             mazeGroup.getChildren().addAll(floor3D, maze3D);
 
-            final Model3D pelletModel3D = THE_ASSETS.get("model3D.pellet");
-            final PhongMaterial foodMaterial = coloredMaterial(colorScheme.pellet());
             createFood3D(level, pelletModel3D, foodMaterial);
 
             // Note: The order in which children are added matters!
@@ -112,16 +114,19 @@ public class GameLevel3D extends Group {
             getChildren().addAll(ghost3DAppearances);
             getChildren().add(livesCounter3D);
             getChildren().add(mazeGroup);
-        });
 
+            // For wireframe mode view. Pac-Man and ghost shapes are already bound to global draw mode property
+            // Pellets are not bound because this would cause huge performance loss
+            mazeGroup.lookupAll("*").stream().filter(Shape3D.class::isInstance).map(Shape3D.class::cast)
+                .forEach(shape3D -> shape3D.drawModeProperty().bind(PY_3D_DRAW_MODE));
+            livesCounter3D.lookupAll("*").stream().filter(Shape3D.class::isInstance).map(Shape3D.class::cast)
+                .forEach(shape3D -> shape3D.drawModeProperty().bind(PY_3D_DRAW_MODE));
+
+
+        });
         getChildren().add(ambientLight);
 
         setMouseTransparent(true); //TODO does this really increase performance?
-
-        // for wireframe mode view
-        lookupAll("*").stream()
-            .filter(Shape3D.class::isInstance)
-            .forEach(shape3D -> ((Shape3D) shape3D).drawModeProperty().bind(PY_3D_DRAW_MODE));
     }
 
     private void createFood3D(GameLevel level, Model3D pelletModel3D, PhongMaterial foodMaterial) {
@@ -180,7 +185,7 @@ public class GameLevel3D extends Group {
         return pac3D;
     }
 
-    private Ghost3DAppearance createGhost3D(Ghost ghost, int numFlashes) {
+    private Ghost3DAppearance createGhostAppearance3D(Ghost ghost, int numFlashes) {
         Shape3D dressShape    = new MeshView(THE_ASSETS.get("model3D.ghost.mesh.dress"));
         Shape3D pupilsShape   = new MeshView(THE_ASSETS.get("model3D.ghost.mesh.pupils"));
         Shape3D eyeballsShape = new MeshView(THE_ASSETS.get("model3D.ghost.mesh.eyeballs"));

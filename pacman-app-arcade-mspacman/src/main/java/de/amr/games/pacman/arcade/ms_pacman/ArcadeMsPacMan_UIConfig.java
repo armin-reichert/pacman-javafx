@@ -154,7 +154,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUIConfig, ResourceManager {
     }
 
     @Override
-    public WorldMapColorScheme worldMapColoring(WorldMap worldMap) {
+    public WorldMapColorScheme worldMapColorScheme(WorldMap worldMap) {
         return WORLD_MAP_COLOR_SCHEMES.get(worldMap.getConfigValue("colorMapIndex"));
     }
 

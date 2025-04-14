@@ -18,6 +18,7 @@ import javafx.util.Duration;
 
 import java.util.Optional;
 
+import static de.amr.games.pacman.Globals.assertNonNegative;
 import static de.amr.games.pacman.uilib.Ufx.doAfterSec;
 import static java.util.Objects.requireNonNull;
 
@@ -34,7 +35,7 @@ public class Energizer3D extends Sphere implements Eatable3D {
     private Animation eatenAnimation;
 
     public Energizer3D(double radius) {
-        Globals.assertNonNegative(radius, "Energizer radius must be positive but is %f");
+        assertNonNegative(radius, "Energizer radius must be positive but is %f");
         setRadius(radius);
         setUserData(this);
 

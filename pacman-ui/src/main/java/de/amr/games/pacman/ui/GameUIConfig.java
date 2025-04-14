@@ -29,7 +29,7 @@ public interface GameUIConfig {
     default boolean isGameCanvasDecorated() { return true; }
     GameScene selectGameScene(GameController gameController);
     GameSpriteSheet spriteSheet();
-    WorldMapColorScheme worldMapColoring(WorldMap worldMap);
+    WorldMapColorScheme worldMapColorScheme(WorldMap worldMap);
 
     // 3D-only
     Node createLivesCounterShape(AssetStorage assets, double size);
