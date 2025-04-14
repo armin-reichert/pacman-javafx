@@ -66,15 +66,14 @@ public class GameLevel3D extends Group {
     private final IntegerProperty livesCountPy = new SimpleIntegerProperty(0);
 
     private final Group worldGroup = new Group();
-    private AmbientLight ambientLight;
-    private Pac3D pac3D;
-    private List<Ghost3DAppearance> ghost3DAppearances;
+
     private final List<Pellet3D> pellets3D = new ArrayList<>();
     private final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
+    private Pac3D pac3D;
+    private List<Ghost3DAppearance> ghost3DAppearances;
     private LivesCounter3D livesCounter3D;
     private Box floor3D;
     private Maze3D maze3D;
-
     private Message3D message3D;
     private Bonus3D bonus3D;
 
@@ -100,15 +99,17 @@ public class GameLevel3D extends Group {
             worldGroup.lookupAll("*").stream().filter(Shape3D.class::isInstance)
                     .forEach(shape3D -> ((Shape3D) shape3D).drawModeProperty().bind(PY_3D_DRAW_MODE));
 
-            // Walls and house must be added after the guys! Otherwise, transparency is not working correctly.
             getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
             getChildren().addAll(ghost3DAppearances);
-            getChildren().addAll(livesCounter3D, worldGroup);
-
-            ambientLight = new AmbientLight();
-            ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
-            getChildren().add(ambientLight);
+            getChildren().add(livesCounter3D);
+            // Walls and house must be added last! Otherwise, transparency is not working correctly.
+            getChildren().add(worldGroup);
         });
+
+        var ambientLight = new AmbientLight();
+        ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
+        getChildren().add(ambientLight);
+
         setMouseTransparent(true); //TODO does this really increase performance?
     }
 
