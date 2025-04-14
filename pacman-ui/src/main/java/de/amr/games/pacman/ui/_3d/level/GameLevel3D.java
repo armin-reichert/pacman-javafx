@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui._3d.level;
 
 import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
@@ -32,7 +33,6 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.MeshView;
@@ -100,7 +100,7 @@ public class GameLevel3D extends Group {
             maze3D = new Maze3D(THE_UI_CONFIGS.current(), level, colorScheme);
             mazeGroup.getChildren().addAll(floor3D, maze3D);
 
-            createFood3D(level, coloredMaterial(colorScheme.pellet()));
+            createFood3D(level, colorScheme);
 
             // Note: The order in which children are added matters!
             // Walls and house must be added last, otherwise, transparency is not working correctly.
@@ -122,31 +122,42 @@ public class GameLevel3D extends Group {
             .forEach(shape3D -> ((Shape3D) shape3D).drawModeProperty().bind(PY_3D_DRAW_MODE));
     }
 
-    private void createFood3D(GameLevel level, Material foodMaterial) {
+    private void createFood3D(GameLevel level, WorldMapColorScheme colorScheme) {
         final Model3D pelletModel3D = THE_ASSETS.get("model3D.pellet");
+        final PhongMaterial foodMaterial = coloredMaterial(colorScheme.pellet());
         level.worldMap().tiles().filter(level::hasFoodAt).forEach(tile -> {
             if (level.isEnergizerPosition(tile)) {
-                Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
-                var energizer3D = new Energizer3D(ENERGIZER_3D_RADIUS);
-                energizers3D.add(energizer3D);
-                energizer3D.shape3D().setMaterial(foodMaterial);
-                energizer3D.setTile(tile);
-                energizer3D.setPosition(position);
+                var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
+                Energizer3D energizer3D = createEnergizer3D(tile, center, foodMaterial);
                 var squirting = new Squirting(this, Duration.seconds(2));
                 squirting.setDropReachesFinalPosition(drop ->
                     drop.getTranslateZ() >= -1 && level.containsPoint(drop.getTranslateX(), drop.getTranslateY()));
-                squirting.createDrops(15, 46, foodMaterial, position);
+                squirting.createDrops(15, 46, foodMaterial, center);
                 energizer3D.setEatenAnimation(squirting);
+                energizers3D.add(energizer3D);
             } else {
-                Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
-                var pellet3D = new Pellet3D(pelletModel3D, PELLET_3D_RADIUS);
+                var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
+                Pellet3D pellet3D = createPellet3D(tile, center, pelletModel3D, foodMaterial);
                 pellets3D.add(pellet3D);
-                pellet3D.shape3D().setMaterial(foodMaterial);
-                pellet3D.setTile(tile);
-                pellet3D.setPosition(position);
             }
         });
         energizers3D.trimToSize();
+    }
+
+    private Energizer3D createEnergizer3D(Vector2i tile, Point3D center, PhongMaterial foodMaterial) {
+        var energizer3D = new Energizer3D(ENERGIZER_3D_RADIUS);
+        energizer3D.setTile(tile);
+        energizer3D.setPosition(center);
+        energizer3D.shape3D().setMaterial(foodMaterial);
+        return energizer3D;
+    }
+
+    private Pellet3D createPellet3D(Vector2i tile, Point3D center, Model3D pelletModel3D, PhongMaterial foodMaterial) {
+        var pellet3D = new Pellet3D(pelletModel3D, PELLET_3D_RADIUS);
+        pellet3D.shape3D().setMaterial(foodMaterial);
+        pellet3D.setTile(tile);
+        pellet3D.setPosition(center);
+        return pellet3D;
     }
 
     private Pac3D createPac3D(Pac pac) {
