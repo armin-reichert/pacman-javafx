@@ -42,7 +42,7 @@ public class Energizer3D extends Sphere implements Eatable3D {
         pumpingAnimation.setToZ(MIN_SCALING);
 
         hideAfterSmallDelay = new PauseTransition(Duration.seconds(0.05));
-        hideAfterSmallDelay.setOnFinished(e -> setVisible(false));
+        hideAfterSmallDelay.setOnFinished(e -> shape3D().setVisible(false));
     }
 
     public void startPumping() {
