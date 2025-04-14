@@ -100,7 +100,9 @@ public class GameLevel3D extends Group {
             maze3D = new Maze3D(THE_UI_CONFIGS.current(), level, colorScheme);
             mazeGroup.getChildren().addAll(floor3D, maze3D);
 
-            createFood3D(level, colorScheme);
+            final Model3D pelletModel3D = THE_ASSETS.get("model3D.pellet");
+            final PhongMaterial foodMaterial = coloredMaterial(colorScheme.pellet());
+            createFood3D(level, pelletModel3D, foodMaterial);
 
             // Note: The order in which children are added matters!
             // Walls and house must be added last, otherwise, transparency is not working correctly.
@@ -122,18 +124,11 @@ public class GameLevel3D extends Group {
             .forEach(shape3D -> ((Shape3D) shape3D).drawModeProperty().bind(PY_3D_DRAW_MODE));
     }
 
-    private void createFood3D(GameLevel level, WorldMapColorScheme colorScheme) {
-        final Model3D pelletModel3D = THE_ASSETS.get("model3D.pellet");
-        final PhongMaterial foodMaterial = coloredMaterial(colorScheme.pellet());
+    private void createFood3D(GameLevel level, Model3D pelletModel3D, PhongMaterial foodMaterial) {
         level.worldMap().tiles().filter(level::hasFoodAt).forEach(tile -> {
             if (level.isEnergizerPosition(tile)) {
-                var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
-                Energizer3D energizer3D = createEnergizer3D(tile, center, foodMaterial);
-                var squirting = new Squirting(this, Duration.seconds(2));
-                squirting.setDropReachesFinalPosition(drop ->
-                    drop.getTranslateZ() >= -1 && level.containsPoint(drop.getTranslateX(), drop.getTranslateY()));
-                squirting.createDrops(15, 46, foodMaterial, center);
-                energizer3D.setEatenAnimation(squirting);
+                Energizer3D energizer3D = createEnergizer3D(tile, foodMaterial);
+                addSquirtingAnimation(level, energizer3D, foodMaterial);
                 energizers3D.add(energizer3D);
             } else {
                 var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
@@ -144,12 +139,25 @@ public class GameLevel3D extends Group {
         energizers3D.trimToSize();
     }
 
-    private Energizer3D createEnergizer3D(Vector2i tile, Point3D center, PhongMaterial foodMaterial) {
+    private Energizer3D createEnergizer3D(Vector2i tile, PhongMaterial foodMaterial) {
+        var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
         var energizer3D = new Energizer3D(ENERGIZER_3D_RADIUS);
         energizer3D.setTile(tile);
         energizer3D.setPosition(center);
         energizer3D.shape3D().setMaterial(foodMaterial);
         return energizer3D;
+    }
+
+    private void addSquirtingAnimation(GameLevel level, Energizer3D energizer3D, PhongMaterial dropMaterial) {
+        Vector2i tile = energizer3D.tile();
+        var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
+        var squirting = new Squirting(Duration.seconds(2));
+        squirting.createDrops(15, 46, dropMaterial, center);
+        squirting.setDropReachesFinalPosition(drop ->
+            drop.getTranslateZ() >= -1 && level.containsPoint(drop.getTranslateX(), drop.getTranslateY()));
+        squirting.setOnFinished(e -> getChildren().remove(squirting.root()));
+        getChildren().add(squirting.root());
+        energizer3D.setEatenAnimation(squirting);
     }
 
     private Pellet3D createPellet3D(Vector2i tile, Point3D center, Model3D pelletModel3D, PhongMaterial foodMaterial) {

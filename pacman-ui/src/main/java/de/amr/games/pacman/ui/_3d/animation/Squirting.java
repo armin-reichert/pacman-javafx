@@ -77,10 +77,8 @@ public class Squirting extends Transition {
     private Point3D gravity = new Point3D(0, 0, 0.1f);
     private Predicate<Drop> dropReachesFinalPosition = drop -> false;
 
-    public Squirting(Group parent, Duration duration) {
+    public Squirting(Duration duration) {
         setCycleDuration(duration);
-        setOnFinished(e -> parent.getChildren().remove(root));
-        parent.getChildren().add(root);
     }
 
     public void createDrops(int minCount, int maxCountEx, Material material, Point3D origin) {
