@@ -121,8 +121,6 @@ public class GameLevel3D extends Group {
                 .forEach(shape3D -> shape3D.drawModeProperty().bind(PY_3D_DRAW_MODE));
             livesCounter3D.lookupAll("*").stream().filter(Shape3D.class::isInstance).map(Shape3D.class::cast)
                 .forEach(shape3D -> shape3D.drawModeProperty().bind(PY_3D_DRAW_MODE));
-
-
         });
         getChildren().add(ambientLight);
 
