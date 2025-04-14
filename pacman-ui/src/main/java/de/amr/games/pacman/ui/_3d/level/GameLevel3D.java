@@ -56,7 +56,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Armin Reichert
  */
-public class GameLevel3D extends Group {
+public class GameLevel3D {
 
     private final BooleanProperty houseOpenPy = new SimpleBooleanProperty() {
         @Override
@@ -72,6 +72,7 @@ public class GameLevel3D extends Group {
     private final List<Pellet3D> pellets3D = new ArrayList<>();
     private final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
 
+    private final Group root = new Group();
     private final LivesCounter3D livesCounter3D;
     private final Group mazeGroup = new Group();
     private Box floor3D;
@@ -111,12 +112,12 @@ public class GameLevel3D extends Group {
 
             // Note: The order in which children are added matters!
             // Walls and house must be added last, otherwise, transparency is not working correctly.
-            energizers3D.forEach(energizer3D -> getChildren().add(energizer3D.shape3D()));
-            pellets3D.forEach(pellet3D -> getChildren().add(pellet3D.shape3D()));
-            getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
-            getChildren().addAll(ghost3DAppearances);
-            getChildren().add(livesCounter3D);
-            getChildren().add(mazeGroup);
+            energizers3D.forEach(energizer3D -> root.getChildren().add(energizer3D.shape3D()));
+            pellets3D.forEach(pellet3D -> root.getChildren().add(pellet3D.shape3D()));
+            root.getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
+            root.getChildren().addAll(ghost3DAppearances);
+            root.getChildren().add(livesCounter3D);
+            root.getChildren().add(mazeGroup);
 
             // For wireframe mode view. Pac-Man and ghost shapes are already bound to global draw mode property.
             // Pellets are not included because this would cause huge performance penalty.
@@ -125,9 +126,9 @@ public class GameLevel3D extends Group {
                 .map(Shape3D.class::cast)
                 .forEach(shape3D -> shape3D.drawModeProperty().bind(PY_3D_DRAW_MODE));
         });
-        getChildren().add(ambientLight);
+        root.getChildren().add(ambientLight);
 
-        setMouseTransparent(true); //TODO does this really increase performance?
+        root.setMouseTransparent(true); //TODO does this really increase performance?
     }
 
     private void createFood3D(GameLevel level, TriangleMesh pelletMesh, PhongMaterial foodMaterial) {
@@ -169,8 +170,8 @@ public class GameLevel3D extends Group {
         squirting.createDrops(23, 69, dropMaterial, center);
         squirting.setDropFinalPosition(drop -> drop.getTranslateZ() >= -1
                 && isInsideWorldMap(worldMap, drop.getTranslateX(), drop.getTranslateY()));
-        squirting.setOnFinished(e -> getChildren().remove(squirting.root()));
-        getChildren().add(squirting.root());
+        squirting.setOnFinished(e -> root.getChildren().remove(squirting.root()));
+        root.getChildren().add(squirting.root());
         energizer3D.setEatenAnimation(squirting);
     }
 
@@ -230,7 +231,7 @@ public class GameLevel3D extends Group {
             Node levelCounter3D = createLevelCounter3D(
                     THE_UI_CONFIGS.current().spriteSheet(),
                     THE_GAME_CONTROLLER.game().levelCounter(), x, y);
-            getChildren().add(levelCounter3D);
+            root.getChildren().add(levelCounter3D);
         });
     }
 
@@ -278,6 +279,8 @@ public class GameLevel3D extends Group {
         return floor3D;
     }
 
+    public Group root() { return root; }
+
     public void update() {
         pac3D.update();
         ghosts3D().forEach(Ghost3DAppearance::update);
@@ -303,7 +306,7 @@ public class GameLevel3D extends Group {
 
     public void showAnimatedMessage(String text, double displaySeconds, double centerX, double y) {
         if (message3D != null) {
-            getChildren().remove(message3D);
+            root.getChildren().remove(message3D);
         }
         message3D = Message3D.builder()
             .text(text)
@@ -311,7 +314,7 @@ public class GameLevel3D extends Group {
             .borderColor(Color.WHITE)
             .textColor(Color.YELLOW)
             .build();
-        getChildren().add(message3D);
+        root.getChildren().add(message3D);
 
         double halfHeight = 0.5 * message3D.getBoundsInLocal().getHeight();
         message3D.setTranslateX(centerX - 0.5 * message3D.getFitWidth());
@@ -349,7 +352,7 @@ public class GameLevel3D extends Group {
     }
 
     public RotateTransition levelRotateAnimation(double seconds) {
-        var rotation = new RotateTransition(Duration.seconds(seconds), this);
+        var rotation = new RotateTransition(Duration.seconds(seconds), root);
         rotation.setAxis(THE_RNG.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
         rotation.setFromAngle(0);
         rotation.setToAngle(360);

@@ -60,7 +60,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         r2D.drawLevelNumberBox(level.number(), imageWidth - 2 * TS, 0);
 
         imageView.setImage(canvas.snapshot(null, null));
-        level3D.getChildren().add(imageView);
+        level3D.root().getChildren().add(imageView);
     }
 
     @Override
