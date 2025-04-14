@@ -156,6 +156,8 @@ public abstract class GameModel {
 
     public BooleanProperty scoreVisibleProperty() { return scoreVisiblePy; }
 
+    public boolean isScoreVisible() { return scoreVisibleProperty().get(); }
+
     public BooleanProperty simulateOverflowBugProperty() { return simulateOverflowBugPy; }
 
     public void loseLife() {

@@ -47,7 +47,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         Font font6 = THE_ASSETS.arcadeFontAtSize(scaled(6));
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
-        if (game().scoreVisibleProperty().get()) {
+        if (game().isScoreVisible()) {
             gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
         }
         GameSpriteSheet spriteSheet = gr.spriteSheet();
