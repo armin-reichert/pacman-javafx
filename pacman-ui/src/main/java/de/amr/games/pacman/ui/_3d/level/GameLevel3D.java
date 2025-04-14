@@ -116,10 +116,10 @@ public class GameLevel3D extends Group {
             getChildren().add(mazeGroup);
 
             // For wireframe mode view. Pac-Man and ghost shapes are already bound to global draw mode property
-            // Pellets are not bound because this would cause huge performance loss
-            mazeGroup.lookupAll("*").stream().filter(Shape3D.class::isInstance).map(Shape3D.class::cast)
-                .forEach(shape3D -> shape3D.drawModeProperty().bind(PY_3D_DRAW_MODE));
-            livesCounter3D.lookupAll("*").stream().filter(Shape3D.class::isInstance).map(Shape3D.class::cast)
+            // Pellets are not included because this would cause huge performance loss
+            Stream.concat(mazeGroup.lookupAll("*").stream(), livesCounter3D.lookupAll("*").stream())
+                .filter(Shape3D.class::isInstance)
+                .map(Shape3D.class::cast)
                 .forEach(shape3D -> shape3D.drawModeProperty().bind(PY_3D_DRAW_MODE));
         });
         getChildren().add(ambientLight);
