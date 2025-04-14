@@ -73,21 +73,12 @@ public class Energizer3D extends Sphere implements Eatable3D {
     @Override
     public String toString() {
         var pumpingText = pumping.getStatus() == Status.RUNNING ? ", pumping" : "";
-        return String.format("[Energizer%s, tile: %s]", pumpingText, tile());
+        return String.format("[Energizer%s, tile: %s]", pumpingText, getProperties().get("tile"));
     }
 
     @Override
     public Point3D position() {
         return new Point3D(getTranslateX(), getTranslateY(), getTranslateZ());
-    }
-
-    public void setTile(Vector2i tile) {
-        setUserData(tile);
-    }
-
-    @Override
-    public Vector2i tile() {
-        return (Vector2i) getUserData();
     }
 
     @Override
