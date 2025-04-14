@@ -14,7 +14,9 @@ import javafx.scene.Node;
 public interface Eatable3D {
     Node shape3D();
     void onEaten();
-    Point3D position();
+    default Point3D position() {
+        return new Point3D(shape3D().getTranslateX(), shape3D().getTranslateY(), shape3D().getTranslateZ());
+    }
     default Vector2i tile() { return (Vector2i) shape3D().getProperties().get("tile"); }
     default void setTile(Vector2i tile) { shape3D().getProperties().put("tile", tile); }
 }

@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._3d.level;
 
-import javafx.geometry.Point3D;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Scale;
 
@@ -31,11 +30,6 @@ public class Pellet3D implements Eatable3D {
     }
 
     @Override
-    public Point3D position() {
-        return new Point3D(shape.getTranslateX(), shape.getTranslateY(), shape.getTranslateZ());
-    }
-
-    @Override
     public Shape3D shape3D() {
         return shape;
     }
@@ -47,6 +41,6 @@ public class Pellet3D implements Eatable3D {
 
     @Override
     public String toString() {
-        return String.format("[Pellet3D tile=%s]", shape.getProperties().get("tile"));
+        return String.format("[Pellet3D tile=%s]", tile());
     }
 }
