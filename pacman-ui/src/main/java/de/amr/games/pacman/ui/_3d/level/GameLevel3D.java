@@ -81,23 +81,22 @@ public class GameLevel3D extends Group {
     private Animation livesCounterAnimation;
 
     public GameLevel3D(GameModel game) {
+        var ambientLight = new AmbientLight();
+        ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
+
+        livesCounter3D = createLivesCounter3D(game.canStartNewGame());
+        livesCounter3D.livesCountPy.bind(livesCountPy);
+
         game.level().ifPresent(level -> {
             pac3D = createPac3D(level.pac());
             ghost3DAppearances = level.ghosts().map(ghost -> createGhost3D(ghost, level.numFlashes())).toList();
 
-            livesCounter3D = createLivesCounter3D(game.canStartNewGame());
-            livesCounter3D.livesCountPy.bind(livesCountPy);
-
             floor3D = createFloor(level.worldMap().numCols() * TS, level.worldMap().numRows() * TS);
             WorldMapColorScheme coloring = THE_UI_CONFIGS.current().worldMapColoring(level.worldMap());
             maze3D = new Maze3D(THE_UI_CONFIGS.current(), level, coloring);
-            addFood3D(level, THE_ASSETS.get("model3D.pellet"), coloredMaterial(coloring.pellet()));
-
             worldGroup.getChildren().addAll(floor3D, maze3D);
 
-            // for wireframe mode view
-            worldGroup.lookupAll("*").stream().filter(Shape3D.class::isInstance)
-                    .forEach(shape3D -> ((Shape3D) shape3D).drawModeProperty().bind(PY_3D_DRAW_MODE));
+            addFood3D(level, THE_ASSETS.get("model3D.pellet"), coloredMaterial(coloring.pellet()));
 
             getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
             getChildren().addAll(ghost3DAppearances);
@@ -106,11 +105,14 @@ public class GameLevel3D extends Group {
             getChildren().add(worldGroup);
         });
 
-        var ambientLight = new AmbientLight();
-        ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
         getChildren().add(ambientLight);
 
         setMouseTransparent(true); //TODO does this really increase performance?
+
+        // for wireframe mode view
+        lookupAll("*").stream()
+            .filter(Shape3D.class::isInstance)
+            .forEach(shape3D -> ((Shape3D) shape3D).drawModeProperty().bind(PY_3D_DRAW_MODE));
     }
 
     public void update() {
@@ -231,9 +233,10 @@ public class GameLevel3D extends Group {
 
     private void addFood3D(GameLevel level, Model3D pelletModel3D, Material foodMaterial) {
         level.worldMap().tiles().filter(level::hasFoodAt).forEach(tile -> {
-            Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
             if (level.isEnergizerPosition(tile)) {
+                Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
                 var energizer3D = new Energizer3D(ENERGIZER_3D_RADIUS);
+                energizers3D.add(energizer3D);
                 energizer3D.shape3D().setMaterial(foodMaterial);
                 energizer3D.setTile(tile);
                 energizer3D.setPosition(position);
@@ -243,14 +246,14 @@ public class GameLevel3D extends Group {
                 squirting.createDrops(15, 46, foodMaterial, position);
                 energizer3D.setEatenAnimation(squirting);
                 getChildren().add(energizer3D.shape3D());
-                energizers3D.add(energizer3D);
             } else {
+                Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
                 var pellet3D = new Pellet3D(pelletModel3D, PELLET_3D_RADIUS);
+                pellets3D.add(pellet3D);
                 pellet3D.shape3D().setMaterial(foodMaterial);
                 pellet3D.setTile(tile);
                 pellet3D.setPosition(position);
                 getChildren().add(pellet3D.shape3D());
-                pellets3D.add(pellet3D);
             }
         });
         energizers3D.trimToSize();
