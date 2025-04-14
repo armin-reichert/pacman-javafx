@@ -48,7 +48,7 @@ public enum GameAction implements Action {
             }
             return THE_GAME_CONTROLLER.state() == GameState.SETTING_OPTIONS
                 || THE_GAME_CONTROLLER.state() == INTRO
-                || THE_GAME_CONTROLLER.game().demoLevelProperty().get()
+                || THE_GAME_CONTROLLER.game().isDemoLevel()
                 || THE_COIN_SLOT.isEmpty();
         }
     },

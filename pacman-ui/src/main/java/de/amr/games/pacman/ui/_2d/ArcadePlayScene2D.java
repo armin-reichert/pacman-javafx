@@ -56,7 +56,7 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        if (game().demoLevelProperty().get()) {
+        if (game().isDemoLevel()) {
             bind(GameAction.INSERT_COIN,  naked(KeyCode.DIGIT5), naked(KeyCode.NUMPAD5));
         } else {
             bindCheatActions();
@@ -68,7 +68,7 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     @Override
     public void onGameStarted(GameEvent e) {
-        boolean silent = game().demoLevelProperty().get() || gameState() == TESTING_LEVELS || gameState() == TESTING_LEVEL_TEASERS;
+        boolean silent = game().isDemoLevel() || gameState() == TESTING_LEVELS || gameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {
             THE_SOUND.playGameReadySound();
         }
@@ -85,7 +85,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         game().level().ifPresentOrElse(level -> {
             /* TODO: I would like to do this only on level start but when scene view is switched
                 between 2D and 3D, the other scene has to be updated accordingly. */
-            if (game().demoLevelProperty().get()) {
+            if (game().isDemoLevel()) {
                 game().assignDemoLevelBehavior(level.pac());
             }
             else {

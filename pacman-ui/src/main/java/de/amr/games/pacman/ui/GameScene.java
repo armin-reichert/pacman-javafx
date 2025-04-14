@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui;
 
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
@@ -17,6 +18,8 @@ import javafx.scene.input.KeyCode;
 import java.util.List;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
+import static de.amr.games.pacman.ui.Globals.THE_SOUND;
+import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.uilib.Keyboard.*;
 
 /**
@@ -25,6 +28,17 @@ import static de.amr.games.pacman.uilib.Keyboard.*;
  * @author Armin Reichert
  */
 public interface GameScene extends GameEventListener, ActionProvider {
+
+    @Override
+    default void onStopAllSounds(GameEvent event) {
+        THE_SOUND.stopAll();
+    }
+
+    @Override
+    default void onUnspecifiedChange(GameEvent event) {
+        // TODO: remove (this is only used by game state GameState.TESTING_CUT_SCENES)
+        THE_UI.updateGameScene(true);
+    }
 
     default void bindDefaultArcadeActions() {
         bind(GameAction.INSERT_COIN,  naked(KeyCode.DIGIT5), naked(KeyCode.NUMPAD5));

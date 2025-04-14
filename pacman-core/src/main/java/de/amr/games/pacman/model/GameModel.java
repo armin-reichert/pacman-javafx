@@ -143,11 +143,19 @@ public abstract class GameModel {
     }
 
     public BooleanProperty cutScenesEnabledProperty() { return cutScenesEnabledPy; }
+
     public BooleanProperty demoLevelProperty() { return demoLevelPy; }
+
+    public boolean isDemoLevel() { return demoLevelProperty().get(); }
+
     public IntegerProperty initialLivesProperty() { return initialLivesPy; }
+
     public IntegerProperty livesProperty() { return livesPy; }
+
     public BooleanProperty playingProperty() { return playingPy; }
+
     public BooleanProperty scoreVisibleProperty() { return scoreVisiblePy; }
+
     public BooleanProperty simulateOverflowBugProperty() { return simulateOverflowBugPy; }
 
     public void loseLife() {
@@ -186,15 +194,15 @@ public abstract class GameModel {
     public void startLevel() {
         gateKeeper.setLevelNumber(level.number());
         scoreManager.setLevelNumber(level.number());
-        scoreManager.setScoreEnabled(!demoLevelProperty().get());
-        scoreManager.setHighScoreEnabled(!demoLevelProperty().get());
+        scoreManager.setScoreEnabled(!isDemoLevel());
+        scoreManager.setHighScoreEnabled(!isDemoLevel());
         letsGetReadyToRumble();
         setActorBaseSpeed(level.number());
         Logger.debug("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
         level.ghosts().forEach(ghost -> Logger.debug("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
         level.showMessage(GameLevel.Message.READY);
         levelStartTime = System.currentTimeMillis();
-        Logger.info("{} started", demoLevelProperty().get() ? "Demo Level" : "Level " + level.number());
+        Logger.info("{} started", isDemoLevel() ? "Demo Level" : "Level " + level.number());
         levelCounter().update(level);
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_STARTED);
     }
@@ -340,7 +348,7 @@ public abstract class GameModel {
 
     private void checkPacKilled() {
         boolean pacMeetsKiller = level.ghosts(HUNTING_PAC).anyMatch(ghost -> areColliding(level.pac(), ghost));
-        if (demoLevelProperty().get()) {
+        if (isDemoLevel()) {
             eventLog.pacKilled = pacMeetsKiller && !isPacManKillingIgnored();
         } else {
             eventLog.pacKilled = pacMeetsKiller && !level.pac().isImmune();

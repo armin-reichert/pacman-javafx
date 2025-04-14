@@ -114,7 +114,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         bind(GameAction.PREV_PERSPECTIVE, alt(KeyCode.LEFT));
         bind(GameAction.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
         bind(GameAction.TOGGLE_DRAW_MODE, alt(KeyCode.W));
-        if (game().demoLevelProperty().get()) {
+        if (game().isDemoLevel()) {
             bind(GameAction.INSERT_COIN,  naked(KeyCode.DIGIT5), naked(KeyCode.NUMPAD5));
         } else {
             bindDefaultArcadeActions();
@@ -139,7 +139,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                     showLevelTestMessage(level, "TEST LEVEL " + level.number());
                 }
                 default -> {
-                    if (!game().demoLevelProperty().get()) {
+                    if (!game().isDemoLevel()) {
                         showReadyMessage(level);
                     }
                 }
@@ -193,7 +193,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         level3D.update();
 
         //TODO how to avoid calling this on every tick?
-        if (game().demoLevelProperty().get()) {
+        if (game().isDemoLevel()) {
             game().assignDemoLevelBehavior(level.pac());
         }
         else {
@@ -370,7 +370,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         level3D.stopAnimations();
         // delay state exit for 3 seconds
         gameState().timer().restartSeconds(3);
-        if (!game().demoLevelProperty().get() && randomInt(0, 100) < 25) {
+        if (!game().isDemoLevel() && randomInt(0, 100) < 25) {
             THE_UI.showFlashMessageSec(3, THE_ASSETS.localizedGameOverMessage());
         }
         THE_SOUND.stopAll();
@@ -418,7 +418,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onGameStarted(GameEvent e) {
-        boolean silent = game().demoLevelProperty().get() || gameState() == TESTING_LEVELS || gameState() == TESTING_LEVEL_TEASERS;
+        boolean silent = game().isDemoLevel() || gameState() == TESTING_LEVELS || gameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {
             THE_SOUND.playGameReadySound();
         }

@@ -171,25 +171,15 @@ public class GameView implements View {
 
     @Override
     public void onLevelCreated(GameEvent event) {
+        //TODO find another point in time to do this
         THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
             GameUIConfig config = THE_UI_CONFIGS.current();
             config.createActorAnimations(level);
-            THE_SOUND.setEnabled(!THE_GAME_CONTROLLER.game().demoLevelProperty().get());
+            THE_SOUND.setEnabled(!THE_GAME_CONTROLLER.game().isDemoLevel());
             // size of game scene might have changed, so re-embed
             currentGameScene().ifPresent(gameScene -> embedGameScene(config, gameScene));
             pipView.setScene2D(config.createPiPScene(canvas));
         });
-    }
-
-    @Override
-    public void onStopAllSounds(GameEvent event) {
-        THE_SOUND.stopAll();
-    }
-
-    @Override
-    public void onUnspecifiedChange(GameEvent event) {
-        // TODO this is only used by game state GameState.TESTING_CUT_SCENES
-        THE_UI.updateGameScene(true);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
