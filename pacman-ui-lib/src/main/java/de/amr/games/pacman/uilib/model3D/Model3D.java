@@ -7,7 +7,6 @@ package de.amr.games.pacman.uilib.model3D;
 import de.amr.games.pacman.uilib.objimport.ObjImporter;
 import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Scale;
@@ -55,7 +54,7 @@ public class Model3D {
     }
 
     private final String url;
-    private final Map<String, Mesh> meshesByName = new HashMap<>();
+    private final Map<String, TriangleMesh> meshesByName = new HashMap<>();
     private final Map<String, PhongMaterial> materials = new HashMap<>();
 
     public Model3D(URL objFileURL) throws IOException, URISyntaxException {
@@ -85,7 +84,7 @@ public class Model3D {
         return sb.toString();
     }
 
-    public Mesh mesh(String name) {
+    public TriangleMesh mesh(String name) {
         requireNonNull(name);
         if (meshesByName.containsKey(name)) {
             return meshesByName.get(name);

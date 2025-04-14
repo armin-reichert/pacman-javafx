@@ -35,9 +35,9 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
+import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -130,7 +130,7 @@ public class GameLevel3D extends Group {
         setMouseTransparent(true); //TODO does this really increase performance?
     }
 
-    private void createFood3D(GameLevel level, Mesh pelletMesh, PhongMaterial foodMaterial) {
+    private void createFood3D(GameLevel level, TriangleMesh pelletMesh, PhongMaterial foodMaterial) {
         level.worldMap().tiles().filter(level::hasFoodAt).forEach(tile -> {
             if (level.isEnergizerPosition(tile)) {
                 Energizer3D energizer3D = createEnergizer3D(tile, foodMaterial);
