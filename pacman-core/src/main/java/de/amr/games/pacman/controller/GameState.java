@@ -100,7 +100,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            if (game.playingProperty().get()) {
+            if (game.isPlaying()) {
                 // resume running game
                 if (timer.tickCount() == 1) {
                     game.level().ifPresent(gameLevel -> gameLevel.showMessage(GameLevel.Message.READY));
@@ -356,7 +356,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
-                THE_GAME_CONTROLLER.changeState(game.playingProperty().get() ? LEVEL_TRANSITION : INTRO);
+                THE_GAME_CONTROLLER.changeState(game.isPlaying() ? LEVEL_TRANSITION : INTRO);
             }
         }
     },

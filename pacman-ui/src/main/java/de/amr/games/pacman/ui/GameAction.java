@@ -43,7 +43,7 @@ public enum GameAction implements Action {
 
         @Override
         public boolean isEnabled() {
-            if (THE_GAME_CONTROLLER.game().playingProperty().get()) {
+            if (THE_GAME_CONTROLLER.game().isPlaying()) {
                 return false;
             }
             return THE_GAME_CONTROLLER.state() == GameState.SETTING_OPTIONS
@@ -71,7 +71,7 @@ public enum GameAction implements Action {
     CHEAT_EAT_ALL {
         @Override
         public void execute() {
-            if (THE_GAME_CONTROLLER.game().playingProperty().get() && THE_GAME_CONTROLLER.state() == GameState.HUNTING) {
+            if (THE_GAME_CONTROLLER.game().isPlaying() && THE_GAME_CONTROLLER.state() == GameState.HUNTING) {
                 THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
                     level.worldMap().tiles()
                         .filter(not(level::isEnergizerPosition))
@@ -87,7 +87,7 @@ public enum GameAction implements Action {
     CHEAT_KILL_GHOSTS {
         @Override
         public void execute() {
-            if (THE_GAME_CONTROLLER.game().playingProperty().get() && THE_GAME_CONTROLLER.state() == GameState.HUNTING) {
+            if (THE_GAME_CONTROLLER.game().isPlaying() && THE_GAME_CONTROLLER.state() == GameState.HUNTING) {
                 THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
                     level.victims().clear();
                     level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(THE_GAME_CONTROLLER.game()::killGhost);
@@ -105,7 +105,7 @@ public enum GameAction implements Action {
 
         @Override
         public boolean isEnabled() {
-            return THE_GAME_CONTROLLER.game().playingProperty().get()
+            return THE_GAME_CONTROLLER.game().isPlaying()
                     && THE_GAME_CONTROLLER.state() == GameState.HUNTING
                     && THE_GAME_CONTROLLER.game().level().isPresent()
                     && THE_GAME_CONTROLLER.game().level().get().number() < THE_GAME_CONTROLLER.game().lastLevelNumber();
@@ -357,7 +357,7 @@ public enum GameAction implements Action {
                     THE_UI.updateGameScene(true);
                     THE_GAME_CONTROLLER.update(); //TODO needed?
                 }
-                if (!THE_GAME_CONTROLLER.game().playingProperty().get()) {
+                if (!THE_GAME_CONTROLLER.game().isPlaying()) {
                     THE_UI.showFlashMessage(THE_ASSETS.text(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
                 }
             });

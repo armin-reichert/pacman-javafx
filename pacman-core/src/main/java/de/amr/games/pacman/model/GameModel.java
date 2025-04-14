@@ -154,6 +154,8 @@ public abstract class GameModel {
 
     public BooleanProperty playingProperty() { return playingPy; }
 
+    public boolean isPlaying() { return playingProperty().get(); }
+
     public BooleanProperty scoreVisibleProperty() { return scoreVisiblePy; }
 
     public boolean isScoreVisible() { return scoreVisibleProperty().get(); }
