@@ -9,6 +9,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.LevelCounter;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -182,7 +183,7 @@ public class GameLevel3D extends Group {
         });
     }
 
-    private Node createLevelCounter3D(GameSpriteSheet spriteSheet, List<Byte> symbols, double x, double y) {
+    private Node createLevelCounter3D(GameSpriteSheet spriteSheet, LevelCounter levelCounter, double x, double y) {
         double spacing = 2 * TS;
         var levelCounter3D = new Group();
         levelCounter3D.setTranslateX(x);
@@ -190,7 +191,7 @@ public class GameLevel3D extends Group {
         levelCounter3D.setTranslateZ(-6);
         levelCounter3D.getChildren().clear();
         int n = 0;
-        for (byte symbol : symbols) {
+        for (byte symbol : levelCounter.symbols().toList()) {
             Box cube = new Box(TS, TS, TS);
             cube.setTranslateX(-n * spacing);
             cube.setTranslateZ(-HTS);
