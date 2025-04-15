@@ -154,8 +154,8 @@ public class PacManXXL_StartPage implements StartPage, ResourceManager {
         );
 
         menu.setStyle(new OptionMenuStyle(
-            menu.defaultStyle.titleFont(),
-            menu.defaultStyle.textFont(),
+            loadFont("fonts/emulogic.ttf", 3 * TS),
+            loadFont("fonts/emulogic.ttf", TS),
             menu.defaultStyle.backgroundFill(),
             menu.defaultStyle.borderStroke(),
             Color.RED, // DEFAULT_STYLE.titleTextFill(),

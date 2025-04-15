@@ -20,6 +20,7 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -37,8 +38,8 @@ public class OptionMenu implements ResourceManager {
     private static final int REFRESH_RATE = 30;
 
     public final OptionMenuStyle defaultStyle = new OptionMenuStyle(
-            loadFont("fonts/emulogic.ttf", 3 * TS),
-            loadFont("fonts/emulogic.ttf", TS),
+            Font.font("sans", 3 * TS),
+            Font.font("sans", TS),
             Color.web("0c1568"),
             Color.web("fffeff"),
             Color.web("fffeff"),
@@ -46,8 +47,8 @@ public class OptionMenu implements ResourceManager {
             Color.web("fffeff"),
             Color.GRAY,
             Color.web("bcbe00"),
-            loadAudioClip("sounds/menu-select1.wav"),
-            loadAudioClip("sounds/menu-select2.wav")
+            loadAudioClip("/de/amr/games/pacman/uilib/sounds/menu-select1.wav"),
+            loadAudioClip("/de/amr/games/pacman/uilib/sounds/menu-select2.wav")
     );
 
     private final int numTilesX;
