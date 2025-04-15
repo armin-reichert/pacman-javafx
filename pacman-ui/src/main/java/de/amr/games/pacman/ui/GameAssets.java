@@ -20,13 +20,14 @@ public class GameAssets extends AssetStorage implements ResourceManager {
     protected Picker<String> pickerForLevelCompleteTexts;
 
     @Override
-    public Class<?> resourceRootClass() {
-        return GameAssets.class;
-    }
+    public Class<?> resourceRootClass() { return GameAssets.class; }
 
     public GameAssets() {
-        ResourceBundle textResources = getModuleBundle("de.amr.games.pacman.ui.texts.messages2d");
-        addBundle(textResources);
+        ResourceBundle localizedTexts = getModuleBundle("de.amr.games.pacman.ui.localized_texts");
+        setLocalizedTexts(localizedTexts);
+
+        pickerForGameOverTexts = Picker.fromBundle(localizedTexts, "game.over");
+        pickerForLevelCompleteTexts = Picker.fromBundle(localizedTexts, "level.complete");
 
         store("background.scene",        Ufx.imageBackground(loadImage("graphics/pacman_wallpaper.png")));
         store("background.play_scene3d", Ufx.imageBackground(loadImage("graphics/blue_sky.jpg")));
@@ -40,9 +41,6 @@ public class GameAssets extends AssetStorage implements ResourceManager {
         store("voice.autopilot.on",      url("sound/voice/autopilot-on.mp3"));
         store("voice.immunity.off",      url("sound/voice/immunity-off.mp3"));
         store("voice.immunity.on",       url("sound/voice/immunity-on.mp3"));
-
-        pickerForGameOverTexts = Picker.fromBundle(textResources, "game.over");
-        pickerForLevelCompleteTexts = Picker.fromBundle(textResources, "level.complete");
     }
 
     public void addAssets3D(ResourceManager resourceManager3D) {

@@ -12,7 +12,10 @@ import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
@@ -22,32 +25,26 @@ import static java.util.Objects.requireNonNull;
  */
 public class AssetStorage {
 
-    private final List<ResourceBundle> bundles = new ArrayList<>();
+    private ResourceBundle localizedTexts;
     private final Map<String, Object> map = new HashMap<>();
 
-    public void addBundle(ResourceBundle bundle) {
-        bundles.add(bundle);
-    }
-
-    public List<ResourceBundle> bundles() {
-        return bundles;
+    public void setLocalizedTexts(ResourceBundle bundle) {
+        localizedTexts = requireNonNull(bundle);
     }
 
     public void store(String key, Object value) {
         map.put(key, value);
     }
 
-    public void addAll(AssetStorage other) {
-        map.putAll(other.map);
-        bundles.addAll(other.bundles);
-    }
-
     public String text(String keyOrPattern, Object... args) {
         requireNonNull(keyOrPattern);
-        for (ResourceBundle bundle : bundles) {
-            if (bundle.containsKey(keyOrPattern)) {
-                return MessageFormat.format(bundle.getString(keyOrPattern), args);
-            }
+        requireNonNull(args);
+        if (localizedTexts == null) {
+            Logger.error("No localized text resources available");
+            return ":-(";
+        }
+        if (localizedTexts.containsKey(keyOrPattern)) {
+            return MessageFormat.format(localizedTexts.getString(keyOrPattern), args);
         }
         Logger.error("Missing localized text for key {}", keyOrPattern);
         return "[" + keyOrPattern + "]";
