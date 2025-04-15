@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui.input;
+package de.amr.games.pacman.uilib.input;
 
 import de.amr.games.pacman.lib.nes.JoypadButtonID;
 import de.amr.games.pacman.uilib.ActionProvider;
@@ -11,7 +11,7 @@ import javafx.scene.input.KeyCodeCombination;
 
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.ui.Globals.THE_KEYBOARD;
+import static java.util.Objects.requireNonNull;
 
 public class Joypad {
 
@@ -43,7 +43,12 @@ public class Joypad {
         BINDING1, BINDING2
     };
 
+    private final Keyboard keyboard;
     private int selectedIndex;
+
+    public Joypad(Keyboard keyboard) {
+        this.keyboard = requireNonNull(keyboard);
+    }
 
     public JoypadKeyBinding currentKeyBinding() {
         return bindings[selectedIndex];
@@ -54,7 +59,7 @@ public class Joypad {
     }
 
     public boolean isButtonPressed(JoypadButtonID buttonID) {
-        return THE_KEYBOARD.isMatching(key(buttonID));
+        return keyboard.isMatching(key(buttonID));
     }
 
     public KeyCodeCombination key(JoypadButtonID buttonID) {
@@ -62,11 +67,11 @@ public class Joypad {
     }
 
     public void registerCurrentBinding(ActionProvider actionProvider) {
-        currentKeys().forEach(combination -> THE_KEYBOARD.bind(combination, actionProvider));
+        currentKeys().forEach(combination -> keyboard.bind(combination, actionProvider));
     }
 
     public void unregisterCurrentBinding(ActionProvider actionProvider) {
-        currentKeys().forEach(combination -> THE_KEYBOARD.unbind(combination, actionProvider));
+        currentKeys().forEach(combination -> keyboard.unbind(combination, actionProvider));
     }
 
     public void selectNextKeyBinding(ActionProvider actionProvider) {

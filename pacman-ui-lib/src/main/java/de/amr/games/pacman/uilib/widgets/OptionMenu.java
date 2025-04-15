@@ -41,17 +41,17 @@ public class OptionMenu implements ResourceManager {
     private static final int REFRESH_RATE = 30;
 
     public static final OptionMenuStyle DEFAULT_STYLE = new OptionMenuStyle(
-            Font.font("sans", FontWeight.BLACK, 30),
-            Font.font("sans", FontWeight.BOLD, 12),
-            Color.web("0c1568"),
-            Color.web("fffeff"),
-            Color.web("fffeff"),
-            Color.web("bcbe00"),
-            Color.web("fffeff"),
-            Color.GRAY,
-            Color.web("bcbe00"),
-            RESOURCE_MGR.loadAudioClip("/de/amr/games/pacman/uilib/sounds/menu-select1.wav"),
-            RESOURCE_MGR.loadAudioClip("/de/amr/games/pacman/uilib/sounds/menu-select2.wav")
+        Font.font("sans", FontWeight.BLACK, 30),
+        Font.font("sans", FontWeight.BOLD, 12),
+        Color.web("0c1568"),
+        Color.web("fffeff"),
+        Color.web("fffeff"),
+        Color.web("bcbe00"),
+        Color.web("fffeff"),
+        Color.GRAY,
+        Color.web("bcbe00"),
+        RESOURCE_MGR.loadAudioClip("/de/amr/games/pacman/uilib/sounds/menu-select1.wav"),
+        RESOURCE_MGR.loadAudioClip("/de/amr/games/pacman/uilib/sounds/menu-select2.wav")
     );
 
     private final int numTilesX;

@@ -10,7 +10,7 @@ import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.nes.JoypadButtonID;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.uilib.Action;
-import de.amr.games.pacman.uilib.Keyboard;
+import de.amr.games.pacman.uilib.input.Keyboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -22,7 +22,7 @@ import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction.TOG
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.CONTINUES_SPRITES;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.games.pacman.ui.Globals.*;
-import static de.amr.games.pacman.uilib.Keyboard.alt;
+import static de.amr.games.pacman.uilib.input.Keyboard.alt;
 
 /**
  * Options scene for Ms. Pac-Man Tengen.

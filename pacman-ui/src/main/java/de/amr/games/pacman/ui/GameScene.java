@@ -10,7 +10,7 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.uilib.ActionProvider;
-import de.amr.games.pacman.uilib.Keyboard;
+import de.amr.games.pacman.uilib.input.Keyboard;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
@@ -20,7 +20,7 @@ import java.util.List;
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.ui.Globals.THE_SOUND;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
-import static de.amr.games.pacman.uilib.Keyboard.*;
+import static de.amr.games.pacman.uilib.input.Keyboard.*;
 
 /**
  * Common interface of all game scenes (2D and 3D).

@@ -6,10 +6,10 @@ package de.amr.games.pacman.ui;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._3d.PerspectiveID;
-import de.amr.games.pacman.ui.input.Joypad;
+import de.amr.games.pacman.uilib.input.Joypad;
 import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.GameClockFX;
-import de.amr.games.pacman.uilib.Keyboard;
+import de.amr.games.pacman.uilib.input.Keyboard;
 import de.amr.games.pacman.uilib.assets.ResourceManager;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.beans.property.*;
@@ -29,8 +29,8 @@ public class Globals {
 
     public static final GameAssets THE_ASSETS = new GameAssets();
     public static final GameClockFX THE_CLOCK = new GameClockFX();
-    public static final Joypad THE_JOYPAD = new Joypad();
     public static final Keyboard THE_KEYBOARD = new Keyboard();
+    public static final Joypad THE_JOYPAD = new Joypad(THE_KEYBOARD);
     public static final GameSound THE_SOUND = new GameSound();
     public static final GameUIConfigManager THE_UI_CONFIGS = new GameUIConfigManager();
     public static GameUI THE_UI;

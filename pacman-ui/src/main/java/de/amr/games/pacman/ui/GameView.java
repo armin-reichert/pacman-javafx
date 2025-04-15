@@ -12,6 +12,7 @@ import de.amr.games.pacman.ui._2d.*;
 import de.amr.games.pacman.ui.dashboard.Dashboard;
 import de.amr.games.pacman.ui.dashboard.InfoBox;
 import de.amr.games.pacman.uilib.*;
+import de.amr.games.pacman.uilib.input.Keyboard;
 import de.amr.games.pacman.uilib.widgets.FlashMessageView;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
@@ -36,7 +37,7 @@ import java.util.Optional;
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.Globals.*;
-import static de.amr.games.pacman.uilib.Keyboard.*;
+import static de.amr.games.pacman.uilib.input.Keyboard.*;
 import static de.amr.games.pacman.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 

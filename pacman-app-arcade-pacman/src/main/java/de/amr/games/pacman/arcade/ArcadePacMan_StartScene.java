@@ -19,7 +19,7 @@ import static de.amr.games.pacman.arcade.ArcadePacMan_SpriteSheet.MIDWAY_COPYRIG
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.Globals.THE_ASSETS;
 import static de.amr.games.pacman.ui.Globals.THE_SOUND;
-import static de.amr.games.pacman.uilib.Keyboard.naked;
+import static de.amr.games.pacman.uilib.input.Keyboard.naked;
 
 /**
  * Scene shown after credit has been added and where game can be started.

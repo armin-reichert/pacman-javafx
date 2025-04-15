@@ -21,8 +21,8 @@ import static de.amr.games.pacman.Globals.HTS;
 import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction.TOGGLE_PAC_BOOSTER;
 import static de.amr.games.pacman.ui.Globals.*;
-import static de.amr.games.pacman.uilib.Keyboard.alt;
-import static de.amr.games.pacman.uilib.Keyboard.control;
+import static de.amr.games.pacman.uilib.input.Keyboard.alt;
+import static de.amr.games.pacman.uilib.input.Keyboard.control;
 
 public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 

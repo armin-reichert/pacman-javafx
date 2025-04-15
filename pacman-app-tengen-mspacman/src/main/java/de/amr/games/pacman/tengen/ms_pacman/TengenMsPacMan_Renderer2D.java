@@ -18,7 +18,7 @@ import de.amr.games.pacman.model.ScoreManager;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.ui._2d.GameRenderer;
 import de.amr.games.pacman.ui._2d.SpriteAnimationSet;
-import de.amr.games.pacman.ui.input.JoypadKeyBinding;
+import de.amr.games.pacman.uilib.input.JoypadKeyBinding;
 import de.amr.games.pacman.uilib.animation.SpriteAnimation;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
