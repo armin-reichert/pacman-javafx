@@ -190,20 +190,24 @@ public abstract class GameModel {
     }
 
     public void startLevel() {
+        levelStartTime = System.currentTimeMillis();
+
         gateKeeper.setLevelNumber(level.number());
         scoreManager.setLevelNumber(level.number());
         scoreManager.setScoreEnabled(!isDemoLevel());
         scoreManager.setHighScoreEnabled(!isDemoLevel());
         letsGetReadyToRumble();
         setActorBaseSpeed(level.number());
-        Logger.debug("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
-        level.ghosts().forEach(ghost -> Logger.debug("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
         if (!isDemoLevel()) {
             level.showMessage(GameLevel.Message.READY);
         }
-        levelStartTime = System.currentTimeMillis();
-        Logger.info("{} started", isDemoLevel() ? "Demo Level" : "Level " + level.number());
         levelCounter().update(level);
+
+        Logger.info("{} started", isDemoLevel() ? "Demo Level" : "Level " + level.number());
+        Logger.debug("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
+        level.ghosts().forEach(ghost -> Logger.debug("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
+
+        // Note: This event is very important because it triggers the creation of the actor animations!
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_STARTED);
     }
 
@@ -212,7 +216,7 @@ public abstract class GameModel {
         if (nextLevelNumber <= lastLevelNumber) {
             createGameLevel(nextLevelNumber);
             startLevel();
-            showGuys();
+            showPacAndGhosts();
         } else {
             Logger.warn("Last level ({}) reached, cannot start next level", lastLevelNumber);
         }
@@ -231,13 +235,15 @@ public abstract class GameModel {
             ghost.setMoveAndWishDir(level.ghostDirection(ghost.id()));
             ghost.setState(LOCKED);
         });
-        initActorAnimations();
         level.powerTimer().resetIndefiniteTime();
         level.blinking().setStartPhase(Pulse.ON); // Energizers are visible when ON
         level.blinking().reset();
+
+        //TODO this is dubious as actor animations are not always created at this point in time
+        initActorAnimationState();
     }
 
-    protected void initActorAnimations() {
+    protected void initActorAnimationState() {
         level.pac().selectAnimation(ActorAnimations.ANIM_PAC_MUNCHING);
         level.pac().resetAnimation();
         level.ghosts().forEach(ghost -> {
@@ -246,14 +252,14 @@ public abstract class GameModel {
         });
     }
 
-    public void showGuys() {
+    public void showPacAndGhosts() {
         level.pac().show();
-        level.ghosts().forEach(Actor2D::show);
+        level.ghosts().forEach(Ghost::show);
     }
 
-    public void hideGuys() {
+    public void hidePacAndGhosts() {
         level.pac().hide();
-        level.ghosts().forEach(Actor2D::hide);
+        level.ghosts().forEach(Ghost::hide);
     }
 
     public SimulationStepLog eventLog() {

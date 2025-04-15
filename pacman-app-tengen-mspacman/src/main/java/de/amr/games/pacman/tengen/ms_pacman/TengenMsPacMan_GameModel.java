@@ -368,7 +368,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    protected void initActorAnimations() {
+    protected void initActorAnimationState() {
         level.pac().selectAnimation(boosterActive
             ? ANIM_MS_PACMAN_BOOSTER : ActorAnimations.ANIM_PAC_MUNCHING);
         level.pac().resetAnimation();
@@ -437,6 +437,8 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public void buildDemoLevel() {
+        demoLevelProperty().set(true);
+
         WorldMap worldMap = mapSelector.coloredWorldMap(mapCategory, 1);
 
         level = new GameLevel(1, worldMap);
@@ -456,6 +458,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
         assignDemoLevelBehavior(level.pac());
         demoLevelSteering.init();
+        level.showMessage(GameLevel.Message.GAME_OVER);
     }
 
     private int cutSceneNumberAfterLevel(int levelNumber) {

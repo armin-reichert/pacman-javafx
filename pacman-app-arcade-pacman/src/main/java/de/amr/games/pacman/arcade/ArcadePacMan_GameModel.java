@@ -280,10 +280,12 @@ public class ArcadePacMan_GameModel extends GameModel {
 
     @Override
     public void buildDemoLevel() {
+        demoLevelProperty().set(true);
         buildGameLevel(1);
         assignDemoLevelBehavior(level.pac());
         levelCounter.setEnabled(false);
         demoLevelSteering.init();
+        level.showMessage(GameLevel.Message.GAME_OVER);
     }
 
     protected int cutSceneNumberAfterLevel(int number) {
