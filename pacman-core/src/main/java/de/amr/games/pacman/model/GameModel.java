@@ -297,21 +297,26 @@ public abstract class GameModel {
         };
     }
 
-    public void onLevelCompleted() {
-        level.blinking().setStartPhase(Pulse.OFF);
-        level.blinking().reset();
-        level.pac().freeze();
-        level.bonus().ifPresent(Bonus::setInactive);
-        // when cheating, there might still be food
-        level.worldMap().tiles()
-            .filter(level::hasFoodAt)
-            .forEach(level::registerFoodEatenAt);
+    public void endLevel() {
         huntingTimer.stop();
-        Logger.info("Hunting timer stopped");
+        Logger.info("Level complete, hunting timer stopped");
+
         level.powerTimer().stop();
         level.powerTimer().reset(0);
         Logger.info("Power timer stopped and reset to zero");
+
+        level.blinking().setStartPhase(Pulse.OFF);
+        level.blinking().reset();
+
+        level.pac().freeze();
+        level.bonus().ifPresent(Bonus::setInactive);
+
+        // when cheating, there might still be remaining food
+        level.worldMap().tiles().filter(level::hasFoodAt).forEach(level::registerFoodEatenAt);
+
         Logger.trace("Game level {} completed.", level.number());
+
+        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.STOP_ALL_SOUNDS);
     }
 
     public boolean isLevelComplete() {

@@ -247,9 +247,9 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     @Override
     public void buildDemoLevel() {
         demoLevelProperty().set(true);
+        levelCounter.setEnabled(false);
         buildGameLevel(1);
         assignDemoLevelBehavior(level.pac());
-        levelCounter().setEnabled(false);
         demoLevelSteering.init();
         level.showMessage(GameLevel.Message.GAME_OVER);
     }

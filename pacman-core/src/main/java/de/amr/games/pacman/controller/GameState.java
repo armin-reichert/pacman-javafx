@@ -190,9 +190,8 @@ public enum GameState implements FsmState<GameModel> {
     LEVEL_COMPLETE {
         @Override
         public void onEnter(GameModel game) {
-            timer.restartIndefinitely(); // UI expires timer e.g. when animation finishes
-            game.onLevelCompleted();
-            THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.STOP_ALL_SOUNDS);
+            timer.restartIndefinitely(); // UI triggers timeout e.g. when animation finishes
+            game.endLevel();
         }
 
         @Override
