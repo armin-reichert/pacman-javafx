@@ -21,6 +21,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -38,8 +39,8 @@ public class OptionMenu implements ResourceManager {
     private static final int REFRESH_RATE = 30;
 
     public final OptionMenuStyle defaultStyle = new OptionMenuStyle(
-            Font.font("sans", 3 * TS),
-            Font.font("sans", TS),
+            Font.font("sans", FontWeight.BLACK, 30),
+            Font.font("sans", FontWeight.BOLD, 12),
             Color.web("0c1568"),
             Color.web("fffeff"),
             Color.web("fffeff"),

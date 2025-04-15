@@ -8,7 +8,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.MapSelectionMode;
 import de.amr.games.pacman.ui.StartPage;
-import de.amr.games.pacman.uilib.*;
+import de.amr.games.pacman.uilib.Keyboard;
 import de.amr.games.pacman.uilib.assets.ResourceManager;
 import de.amr.games.pacman.uilib.widgets.Flyer;
 import de.amr.games.pacman.uilib.widgets.OptionMenu;
