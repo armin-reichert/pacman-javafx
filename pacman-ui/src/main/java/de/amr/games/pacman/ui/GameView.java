@@ -12,6 +12,7 @@ import de.amr.games.pacman.ui._2d.*;
 import de.amr.games.pacman.ui.dashboard.Dashboard;
 import de.amr.games.pacman.ui.dashboard.InfoBox;
 import de.amr.games.pacman.uilib.*;
+import de.amr.games.pacman.uilib.widgets.FlashMessageView;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.ObjectProperty;

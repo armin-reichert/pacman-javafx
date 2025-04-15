@@ -12,4 +12,6 @@ open module de.amr.games.pacman.uilib {
     exports de.amr.games.pacman.uilib.objimport;
     exports de.amr.games.pacman.uilib.model3D;
     exports de.amr.games.pacman.uilib.assets;
+    exports de.amr.games.pacman.uilib.widgets;
+    exports de.amr.games.pacman.uilib.animation;
 }

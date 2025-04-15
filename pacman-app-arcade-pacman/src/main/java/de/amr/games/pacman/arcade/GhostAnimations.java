@@ -11,7 +11,7 @@ import de.amr.games.pacman.model.actors.ActorAnimations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.ui._2d.SpriteAnimationSet;
-import de.amr.games.pacman.uilib.SpriteAnimation;
+import de.amr.games.pacman.uilib.animation.SpriteAnimation;
 import de.amr.games.pacman.uilib.assets.SpriteSheet;
 
 import java.util.Map;

@@ -10,7 +10,7 @@ import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui._2d.GameScene2D;
-import de.amr.games.pacman.uilib.SpriteAnimation;
+import de.amr.games.pacman.uilib.animation.SpriteAnimation;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;

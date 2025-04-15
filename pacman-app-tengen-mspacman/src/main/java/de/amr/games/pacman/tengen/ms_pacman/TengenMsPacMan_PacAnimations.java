@@ -8,7 +8,7 @@ import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui._2d.SpriteAnimationSet;
-import de.amr.games.pacman.uilib.SpriteAnimation;
+import de.amr.games.pacman.uilib.animation.SpriteAnimation;
 import de.amr.games.pacman.uilib.assets.SpriteSheet;
 
 import java.util.Map;

@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.uilib.Action;
-import de.amr.games.pacman.uilib.Carousel;
+import de.amr.games.pacman.uilib.widgets.Carousel;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;

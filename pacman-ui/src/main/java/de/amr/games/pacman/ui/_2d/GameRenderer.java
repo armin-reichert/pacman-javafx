@@ -16,7 +16,7 @@ import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.AnimatedActor2D;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Creature;
-import de.amr.games.pacman.uilib.SpriteAnimation;
+import de.amr.games.pacman.uilib.animation.SpriteAnimation;
 import javafx.beans.property.FloatProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -27,7 +27,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
 
-import java.util.List;
 import java.util.function.Predicate;
 
 import static de.amr.games.pacman.Globals.*;

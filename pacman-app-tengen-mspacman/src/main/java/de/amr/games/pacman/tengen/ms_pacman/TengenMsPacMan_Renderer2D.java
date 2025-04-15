@@ -19,7 +19,7 @@ import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.ui._2d.GameRenderer;
 import de.amr.games.pacman.ui._2d.SpriteAnimationSet;
 import de.amr.games.pacman.ui.input.JoypadKeyBinding;
-import de.amr.games.pacman.uilib.SpriteAnimation;
+import de.amr.games.pacman.uilib.animation.SpriteAnimation;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
@@ -27,8 +27,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
-
-import java.util.List;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.model.actors.ActorAnimations.*;

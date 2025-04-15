@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.uilib.FadingPane;
+import de.amr.games.pacman.uilib.widgets.FadingPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
