@@ -169,7 +169,7 @@ public class ArcadePlayScene2D extends GameScene2D {
             }
             gr.drawLivesCounter(numLivesShown, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - 2 * TS);
         } else {
-            gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_SLOT.numCoins()),
+            gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_MECHANISM.numCoins()),
                 Color.web(Arcade.Palette.WHITE), font, 2 * TS, sizeInPx().y() - 2);
         }
         gr.drawLevelCounter(game().levelCounter(), sizeInPx());

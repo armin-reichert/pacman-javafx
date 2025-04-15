@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman;
 
-import de.amr.games.pacman.controller.CoinSlot;
+import de.amr.games.pacman.controller.CoinMechanism;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEventManager;
 import de.amr.games.pacman.lib.Vector2f;
@@ -25,7 +25,7 @@ import static java.util.Objects.requireNonNull;
  */
 public interface Globals {
 
-    CoinSlot         THE_COIN_SLOT = new CoinSlot();
+    CoinMechanism    THE_COIN_MECHANISM = new CoinMechanism();
     GameController   THE_GAME_CONTROLLER = new GameController();
     GameEventManager THE_GAME_EVENT_MANAGER = new GameEventManager();
     Random           THE_RNG = new Random();

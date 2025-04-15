@@ -67,7 +67,7 @@ public class ArcadePacMan_StartScene extends GameScene2D {
         if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.PACMAN)) {
             gr.fillTextAtScaledPosition(MIDWAY_COPYRIGHT, PINK, font8, tiles_to_px(4), tiles_to_px(29));
         }
-        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_SLOT.numCoins()), WHITE, font8, 2 * TS, sizeInPx().y() - 2);
+        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_MECHANISM.numCoins()), WHITE, font8, 2 * TS, sizeInPx().y() - 2);
         gr.drawLevelCounter(game().levelCounter(), sizeInPx());
     }
 

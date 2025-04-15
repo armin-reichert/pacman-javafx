@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.dashboard;
 
-import de.amr.games.pacman.controller.CoinSlot;
+import de.amr.games.pacman.controller.CoinMechanism;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.GameAction;
@@ -39,14 +39,14 @@ public class InfoBoxGameControl extends InfoBox {
     private CheckBox cbImmunity;
 
     public void init() {
-        spinnerCredit      = addIntSpinner("Credit", 0, CoinSlot.MAX_COINS, 0);
+        spinnerCredit      = addIntSpinner("Credit", 0, CoinMechanism.MAX_COINS, 0);
         comboInitialLives  = addChoiceBox("Initial Lives", new Integer[] {3, 5});
         bgLevelActions     = addButtonList("Game Level", "Start", "Quit", "Next");
         bgCutScenesTest    = addButtonList("Cut Scenes Test", "Start", "Quit");
         cbAutopilot        = addCheckBox("Autopilot");
         cbImmunity         = addCheckBox("Pac-Man Immune");
 
-        spinnerCredit.valueProperty().addListener((py, ov, number) -> THE_COIN_SLOT.setNumCoins(number));
+        spinnerCredit.valueProperty().addListener((py, ov, number) -> THE_COIN_MECHANISM.setNumCoins(number));
 
         setAction(bgCutScenesTest[CUT_SCENES_TEST_START], GameAction.TEST_CUT_SCENES::execute);
         setAction(bgCutScenesTest[CUT_SCENES_TEST_QUIT], GameAction.RESTART_INTRO::execute);
@@ -66,7 +66,7 @@ public class InfoBoxGameControl extends InfoBox {
         GameModel game = THE_GAME_CONTROLLER.game();
         GameState state = THE_GAME_CONTROLLER.state();
 
-        spinnerCredit.getValueFactory().setValue(THE_COIN_SLOT.numCoins());
+        spinnerCredit.getValueFactory().setValue(THE_COIN_MECHANISM.numCoins());
         comboInitialLives.setValue(game.initialLivesProperty().get());
 
         spinnerCredit.setDisable(!(oneOf(state, GameState.INTRO, GameState.SETTING_OPTIONS)));
