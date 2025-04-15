@@ -16,7 +16,7 @@ import de.amr.games.pacman.ui._2d.ArcadeBootScene2D;
 import de.amr.games.pacman.ui._2d.ArcadePlayScene2D;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
-import de.amr.games.pacman.ui._3d.scene3d.PlayScene3D;
+import de.amr.games.pacman.ui._3d.PlayScene3D;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.ResourceManager;
 import de.amr.games.pacman.uilib.WorldMapColorScheme;

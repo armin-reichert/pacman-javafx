@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui._3d.scene3d;
+package de.amr.games.pacman.ui._3d;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
@@ -18,7 +18,6 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
-import de.amr.games.pacman.ui._3d.level.*;
 import de.amr.games.pacman.uilib.Action;
 import de.amr.games.pacman.uilib.CameraControlledView;
 import javafx.animation.Animation;

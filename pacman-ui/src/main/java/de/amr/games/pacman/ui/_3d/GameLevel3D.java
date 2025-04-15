@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui._3d.level;
+package de.amr.games.pacman.ui._3d;
 
 import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.controller.GameState;
@@ -18,7 +18,6 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.GameUIConfig;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
-import de.amr.games.pacman.ui._3d.animation.SquirtingAnimation;
 import de.amr.games.pacman.uilib.Ufx;
 import de.amr.games.pacman.uilib.WorldMapColorScheme;
 import de.amr.games.pacman.uilib.model3D.Model3D;

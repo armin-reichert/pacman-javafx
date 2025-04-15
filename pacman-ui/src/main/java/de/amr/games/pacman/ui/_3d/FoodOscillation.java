@@ -22,10 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.amr.games.pacman.ui._3d.animation;
+package de.amr.games.pacman.ui._3d;
 
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.ui._3d.level.Pellet3D;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.scene.Group;

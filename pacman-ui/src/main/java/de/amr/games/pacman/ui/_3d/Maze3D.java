@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui._3d.level;
+package de.amr.games.pacman.ui._3d;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
@@ -10,7 +10,6 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.tilemap.rendering.TerrainMapRenderer3D;
 import de.amr.games.pacman.ui.GameUIConfig;
-import de.amr.games.pacman.ui._3d.animation.MaterialColorAnimation;
 import de.amr.games.pacman.uilib.WorldMapColorScheme;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;

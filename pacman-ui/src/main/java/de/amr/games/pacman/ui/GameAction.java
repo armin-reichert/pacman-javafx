@@ -10,7 +10,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui._3d.scene3d.PerspectiveID;
+import de.amr.games.pacman.ui._3d.PerspectiveID;
 import de.amr.games.pacman.uilib.Action;
 import javafx.scene.shape.DrawMode;
 import org.tinylog.Logger;

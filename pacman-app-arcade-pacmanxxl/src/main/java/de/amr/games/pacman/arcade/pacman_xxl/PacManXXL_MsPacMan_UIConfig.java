@@ -13,7 +13,7 @@ import de.amr.games.pacman.ui.GameAssets;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui.GameUIConfig;
 import de.amr.games.pacman.ui._2d.*;
-import de.amr.games.pacman.ui._3d.scene3d.PlayScene3D;
+import de.amr.games.pacman.ui._3d.PlayScene3D;
 import de.amr.games.pacman.uilib.AssetStorage;
 import de.amr.games.pacman.uilib.ResourceManager;
 import de.amr.games.pacman.uilib.WorldMapColorScheme;

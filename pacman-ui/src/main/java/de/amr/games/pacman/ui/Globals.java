@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui;
 
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui._3d.scene3d.PerspectiveID;
+import de.amr.games.pacman.ui._3d.PerspectiveID;
 import de.amr.games.pacman.ui.input.Joypad;
 import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.GameClockFX;

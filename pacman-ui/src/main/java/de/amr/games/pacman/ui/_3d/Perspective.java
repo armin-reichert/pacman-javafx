@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui._3d.scene3d;
+package de.amr.games.pacman.ui._3d;
 
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Actor2D;

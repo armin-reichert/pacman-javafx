@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui._3d.scene3d;
+package de.amr.games.pacman.ui._3d;
 
 // Note: Be careful when changing these IDs because they are used to compose resource bundle keys
 public enum PerspectiveID {
