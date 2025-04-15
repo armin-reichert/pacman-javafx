@@ -318,9 +318,9 @@ public enum GameAction implements Action {
     PERSPECTIVE_NEXT {
         @Override
         public void execute() {
-            PerspectiveID perspectivePerspectiveID = PY_3D_PERSPECTIVE.get().next();
-            PY_3D_PERSPECTIVE.set(perspectivePerspectiveID);
-            String msgKey = THE_ASSETS.text("camera_perspective", THE_ASSETS.text("perspective_name_" + perspectivePerspectiveID.name()));
+            PerspectiveID id = PY_3D_PERSPECTIVE.get().next();
+            PY_3D_PERSPECTIVE.set(id);
+            String msgKey = THE_ASSETS.text("camera_perspective", THE_ASSETS.text("perspective_id_" + id.name()));
             THE_UI.showFlashMessage(msgKey);
         }
     },
@@ -328,9 +328,9 @@ public enum GameAction implements Action {
     PERSPECTIVE_PREVIOUS {
         @Override
         public void execute() {
-            PerspectiveID perspectivePerspectiveID = PY_3D_PERSPECTIVE.get().prev();
-            PY_3D_PERSPECTIVE.set(perspectivePerspectiveID);
-            String msgKey = THE_ASSETS.text("camera_perspective", THE_ASSETS.text("perspective_name_" + perspectivePerspectiveID.name()));
+            PerspectiveID id = PY_3D_PERSPECTIVE.get().prev();
+            PY_3D_PERSPECTIVE.set(id);
+            String msgKey = THE_ASSETS.text("camera_perspective", THE_ASSETS.text("perspective_id_" + id.name()));
             THE_UI.showFlashMessage(msgKey);
         }
     },
