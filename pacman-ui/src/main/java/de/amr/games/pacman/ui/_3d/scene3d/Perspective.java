@@ -19,19 +19,6 @@ import static de.amr.games.pacman.Globals.*;
  */
 public interface Perspective {
 
-    enum Name { DRONE, TOTAL, TRACK_PLAYER, NEAR_PLAYER;
-
-        public Name prev() {
-            int n = values().length, ord = ordinal();
-            return values()[ord == 0 ? n - 1 : ord - 1];
-        }
-
-        public Name next() {
-            int n = values().length, ord = ordinal();
-            return values()[ord < n - 1 ? ord + 1 : 0];
-        }
-    }
-
     void init(SubScene scene, GameLevel level);
     void update(SubScene scene, GameLevel level, Actor2D spottedActor);
 

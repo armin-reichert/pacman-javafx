@@ -53,14 +53,14 @@ import static de.amr.games.pacman.uilib.Ufx.contextMenuTitleItem;
  */
 public class PlayScene3D implements GameScene, CameraControlledView {
 
-    protected final ObjectProperty<Perspective.Name> perspectiveNamePy = new SimpleObjectProperty<>() {
+    protected final ObjectProperty<PerspectiveID> perspectiveNamePy = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
             game().level().ifPresent(level -> perspective().init(fxSubScene, level));
         }
     };
 
-    protected final Map<Perspective.Name, Perspective> perspectives = new EnumMap<>(Perspective.Name.class);
+    protected final Map<PerspectiveID, Perspective> perspectives = new EnumMap<>(PerspectiveID.class);
     protected final Map<KeyCodeCombination, Action> actionBindings = new HashMap<>();
     protected final Group root = new Group();
     protected final SubScene fxSubScene;
@@ -83,10 +83,10 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         fxSubScene.setFill(Color.TRANSPARENT);
         fxSubScene.setCamera(camera);
 
-        perspectives.put(Perspective.Name.DRONE, new Perspective.Drone());
-        perspectives.put(Perspective.Name.TOTAL, new Perspective.Total());
-        perspectives.put(Perspective.Name.TRACK_PLAYER, new Perspective.TrackingPlayer());
-        perspectives.put(Perspective.Name.NEAR_PLAYER, new Perspective.StalkingPlayer());
+        perspectives.put(PerspectiveID.DRONE, new Perspective.Drone());
+        perspectives.put(PerspectiveID.TOTAL, new Perspective.Total());
+        perspectives.put(PerspectiveID.TRACK_PLAYER, new Perspective.TrackingPlayer());
+        perspectives.put(PerspectiveID.NEAR_PLAYER, new Perspective.StalkingPlayer());
 
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
         scores3D.rotateProperty().bind(camera.rotateProperty());
@@ -334,7 +334,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             level3D.playLevelCompleteAnimation(level, 2.0,
                 () -> {
                     perspectiveNamePy.unbind();
-                    perspectiveNamePy.set(Perspective.Name.TOTAL);
+                    perspectiveNamePy.set(PerspectiveID.TOTAL);
                 },
                 () -> perspectiveNamePy.bind(PY_3D_PERSPECTIVE));
         });
@@ -354,7 +354,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(Ghost3DAppearance::init);
         game().level().ifPresent(level -> showLevelTestMessage(level, "TEST LEVEL" + level.number()));
-        PY_3D_PERSPECTIVE.set(Perspective.Name.TOTAL);
+        PY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
     }
 
     private void onEnterStateTestingLevelTeasers() {
@@ -363,7 +363,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(Ghost3DAppearance::init);
         game().level().ifPresent(level -> showLevelTestMessage(level, "PREVIEW LEVEL " + level.number()));
-        PY_3D_PERSPECTIVE.set(Perspective.Name.TOTAL);
+        PY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
     }
 
     private void onEnterStateGameOver() {
@@ -513,7 +513,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
         // Camera perspective radio buttons
         var radioButtonGroup = new ToggleGroup();
-        for (var perspective : Perspective.Name.values()) {
+        for (var perspective : PerspectiveID.values()) {
             var miPerspective = new RadioMenuItem(THE_ASSETS.text(perspective.name()));
             miPerspective.setToggleGroup(radioButtonGroup);
             miPerspective.setUserData(perspective);
@@ -525,7 +525,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         // keep radio button group in sync with global property value
         radioButtonGroup.selectedToggleProperty().addListener((py, ov, radioButton) -> {
             if (radioButton != null) {
-                PY_3D_PERSPECTIVE.set((Perspective.Name) radioButton.getUserData());
+                PY_3D_PERSPECTIVE.set((PerspectiveID) radioButton.getUserData());
             }
         });
         PY_3D_PERSPECTIVE.addListener((py, ov, name) -> {

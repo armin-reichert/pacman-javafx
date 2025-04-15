@@ -10,7 +10,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui._3d.scene3d.Perspective;
+import de.amr.games.pacman.ui._3d.scene3d.PerspectiveID;
 import de.amr.games.pacman.uilib.Action;
 import javafx.scene.shape.DrawMode;
 import org.tinylog.Logger;
@@ -318,9 +318,9 @@ public enum GameAction implements Action {
     PERSPECTIVE_NEXT {
         @Override
         public void execute() {
-            Perspective.Name perspectiveName = PY_3D_PERSPECTIVE.get().next();
-            PY_3D_PERSPECTIVE.set(perspectiveName);
-            String msgKey = THE_ASSETS.text("camera_perspective", THE_ASSETS.text("perspective_name_" + perspectiveName.name()));
+            PerspectiveID perspectivePerspectiveID = PY_3D_PERSPECTIVE.get().next();
+            PY_3D_PERSPECTIVE.set(perspectivePerspectiveID);
+            String msgKey = THE_ASSETS.text("camera_perspective", THE_ASSETS.text("perspective_name_" + perspectivePerspectiveID.name()));
             THE_UI.showFlashMessage(msgKey);
         }
     },
@@ -328,9 +328,9 @@ public enum GameAction implements Action {
     PERSPECTIVE_PREVIOUS {
         @Override
         public void execute() {
-            Perspective.Name perspectiveName = PY_3D_PERSPECTIVE.get().prev();
-            PY_3D_PERSPECTIVE.set(perspectiveName);
-            String msgKey = THE_ASSETS.text("camera_perspective", THE_ASSETS.text("perspective_name_" + perspectiveName.name()));
+            PerspectiveID perspectivePerspectiveID = PY_3D_PERSPECTIVE.get().prev();
+            PY_3D_PERSPECTIVE.set(perspectivePerspectiveID);
+            String msgKey = THE_ASSETS.text("camera_perspective", THE_ASSETS.text("perspective_name_" + perspectivePerspectiveID.name()));
             THE_UI.showFlashMessage(msgKey);
         }
     },

@@ -8,7 +8,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui._2d.GameScene2D;
-import de.amr.games.pacman.ui._3d.scene3d.Perspective;
+import de.amr.games.pacman.ui._3d.scene3d.PerspectiveID;
 import de.amr.games.pacman.ui.dashboard.InfoBox;
 import de.amr.games.pacman.ui.dashboard.InfoText;
 import de.amr.games.pacman.uilib.CameraControlledView;
@@ -33,7 +33,7 @@ public class InfoBox3D extends InfoBox {
     private CheckBox cbUsePlayScene3D;
     private ColorPicker pickerLightColor;
     private ColorPicker pickerFloorColor;
-    private ChoiceBox<Perspective.Name> comboPerspectives;
+    private ChoiceBox<PerspectiveID> comboPerspectives;
     private CheckBox cbPiPOn;
     private Slider sliderPiPSceneHeight;
     private Slider sliderPiPOpacity;
@@ -50,7 +50,7 @@ public class InfoBox3D extends InfoBox {
         cbUsePlayScene3D     = addCheckBox("3D Play Scene");
         pickerLightColor     = addColorPicker("Light Color", PY_3D_LIGHT_COLOR.get());
         pickerFloorColor     = addColorPicker("Floor Color", PY_3D_FLOOR_COLOR.get());
-        comboPerspectives    = addChoiceBox("Perspective", Perspective.Name.values());
+        comboPerspectives    = addChoiceBox("Perspective", PerspectiveID.values());
         addLabeledValue("Camera",        this::sceneCameraInfo);
         addLabeledValue("Viewport Size", this::sceneViewportSizeInfo);
         addLabeledValue("Scene Size",    this::sceneSizeInfo);

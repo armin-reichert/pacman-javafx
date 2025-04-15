@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui;
 
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui._3d.scene3d.Perspective;
+import de.amr.games.pacman.ui._3d.scene3d.PerspectiveID;
 import de.amr.games.pacman.ui.input.Joypad;
 import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.GameClockFX;
@@ -101,7 +101,7 @@ public class Globals {
     public static final ObjectProperty<Color>    PY_3D_FLOOR_COLOR         = new SimpleObjectProperty<>(Color.rgb(20,20,20));
     public static final ObjectProperty<Color>    PY_3D_LIGHT_COLOR         = new SimpleObjectProperty<>(Color.WHITE);
     public static final BooleanProperty          PY_3D_PAC_LIGHT_ENABLED   = new SimpleBooleanProperty(true);
-    public static final ObjectProperty<Perspective.Name> PY_3D_PERSPECTIVE = new SimpleObjectProperty<>(Perspective.Name.TRACK_PLAYER);
+    public static final ObjectProperty<PerspectiveID> PY_3D_PERSPECTIVE = new SimpleObjectProperty<>(PerspectiveID.TRACK_PLAYER);
     public static final DoubleProperty           PY_3D_WALL_HEIGHT         = new SimpleDoubleProperty(3.5);
     public static final DoubleProperty           PY_3D_WALL_OPACITY        = new SimpleDoubleProperty(1.0);
 }
