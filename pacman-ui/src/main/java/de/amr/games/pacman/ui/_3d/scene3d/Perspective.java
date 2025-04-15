@@ -19,11 +19,7 @@ import static de.amr.games.pacman.Globals.*;
  */
 public interface Perspective {
 
-    void init(SubScene scene, GameLevel level);
-    void update(SubScene scene, GameLevel level, Actor2D spottedActor);
-
-    enum Name {
-        DRONE, TOTAL, TRACK_PLAYER, NEAR_PLAYER;
+    enum Name { DRONE, TOTAL, TRACK_PLAYER, NEAR_PLAYER;
 
         public Name prev() {
             int n = values().length, ord = ordinal();
@@ -36,13 +32,11 @@ public interface Perspective {
         }
     }
 
+    void init(SubScene scene, GameLevel level);
+    void update(SubScene scene, GameLevel level, Actor2D spottedActor);
+
     class Drone implements Perspective {
         static final int HEIGHT_OVER_GROUND = 200;
-
-        @Override
-        public String toString() {
-            return "Drone";
-        }
 
         @Override
         public void init(SubScene scene, GameLevel level) {
@@ -73,11 +67,6 @@ public interface Perspective {
     class Total implements Perspective {
 
         @Override
-        public String toString() {
-            return "Total";
-        }
-
-        @Override
         public void init(SubScene scene, GameLevel level) {
             PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
             camera.setNearClip(0.1);
@@ -99,11 +88,6 @@ public interface Perspective {
     }
 
     class TrackingPlayer implements Perspective {
-
-        @Override
-        public String toString() {
-            return "Following Player";
-        }
 
         @Override
         public void init(SubScene scene, GameLevel level) {
@@ -130,11 +114,6 @@ public interface Perspective {
     }
 
     class StalkingPlayer implements Perspective {
-
-        @Override
-        public String toString() {
-            return "Near Player";
-        }
 
         @Override
         public void init(SubScene scene, GameLevel level) {

@@ -111,8 +111,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void bindActions() {
-        bind(GameAction.PREV_PERSPECTIVE, alt(KeyCode.LEFT));
-        bind(GameAction.NEXT_PERSPECTIVE, alt(KeyCode.RIGHT));
+        bind(GameAction.PERSPECTIVE_PREVIOUS, alt(KeyCode.LEFT));
+        bind(GameAction.PERSPECTIVE_NEXT, alt(KeyCode.RIGHT));
         bind(GameAction.TOGGLE_DRAW_MODE, alt(KeyCode.W));
         if (game().isDemoLevel()) {
             bind(GameAction.INSERT_COIN,  naked(KeyCode.DIGIT5), naked(KeyCode.NUMPAD5));

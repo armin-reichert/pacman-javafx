@@ -25,34 +25,6 @@ import static java.util.function.Predicate.not;
 
 public enum GameAction implements Action {
 
-    /**
-     * Adds credit (simulates insertion of a coin) and switches the game state accordingly.
-     */
-    INSERT_COIN {
-        @Override
-        public void execute() {
-            if (THE_COIN_SLOT.numCoins() < CoinSlot.MAX_COINS) {
-                THE_COIN_SLOT.insertCoin();
-                THE_SOUND.enabledProperty().set(true);
-                THE_GAME_EVENT_MANAGER.publishEvent(THE_GAME_CONTROLLER.game(), GameEventType.CREDIT_ADDED);
-            }
-            if (THE_GAME_CONTROLLER.state() != GameState.SETTING_OPTIONS) {
-                THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
-            }
-        }
-
-        @Override
-        public boolean isEnabled() {
-            if (THE_GAME_CONTROLLER.game().isPlaying()) {
-                return false;
-            }
-            return THE_GAME_CONTROLLER.state() == GameState.SETTING_OPTIONS
-                || THE_GAME_CONTROLLER.state() == INTRO
-                || THE_GAME_CONTROLLER.game().isDemoLevel()
-                || THE_COIN_SLOT.isEmpty();
-        }
-    },
-
     BOOT {
         @Override
         public void execute() {
@@ -109,6 +81,34 @@ public enum GameAction implements Action {
                     && THE_GAME_CONTROLLER.state() == GameState.HUNTING
                     && THE_GAME_CONTROLLER.game().level().isPresent()
                     && THE_GAME_CONTROLLER.game().level().get().number() < THE_GAME_CONTROLLER.game().lastLevelNumber();
+        }
+    },
+
+    /**
+     * Adds credit (simulates insertion of a coin) and switches the game state accordingly.
+     */
+    INSERT_COIN {
+        @Override
+        public void execute() {
+            if (THE_COIN_SLOT.numCoins() < CoinSlot.MAX_COINS) {
+                THE_COIN_SLOT.insertCoin();
+                THE_SOUND.enabledProperty().set(true);
+                THE_GAME_EVENT_MANAGER.publishEvent(THE_GAME_CONTROLLER.game(), GameEventType.CREDIT_ADDED);
+            }
+            if (THE_GAME_CONTROLLER.state() != GameState.SETTING_OPTIONS) {
+                THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
+            }
+        }
+
+        @Override
+        public boolean isEnabled() {
+            if (THE_GAME_CONTROLLER.game().isPlaying()) {
+                return false;
+            }
+            return THE_GAME_CONTROLLER.state() == GameState.SETTING_OPTIONS
+                || THE_GAME_CONTROLLER.state() == INTRO
+                || THE_GAME_CONTROLLER.game().isDemoLevel()
+                || THE_COIN_SLOT.isEmpty();
         }
     },
 
@@ -315,21 +315,23 @@ public enum GameAction implements Action {
         }
     },
 
-    NEXT_PERSPECTIVE {
+    PERSPECTIVE_NEXT {
         @Override
         public void execute() {
-            Perspective.Name next = PY_3D_PERSPECTIVE.get().next();
-            PY_3D_PERSPECTIVE.set(next);
-            THE_UI.showFlashMessage(THE_ASSETS.text("camera_perspective", THE_ASSETS.text(next.name())));
+            Perspective.Name perspectiveName = PY_3D_PERSPECTIVE.get().next();
+            PY_3D_PERSPECTIVE.set(perspectiveName);
+            String msgKey = THE_ASSETS.text("camera_perspective", THE_ASSETS.text("perspective_name_" + perspectiveName.name()));
+            THE_UI.showFlashMessage(msgKey);
         }
     },
 
-    PREV_PERSPECTIVE {
+    PERSPECTIVE_PREVIOUS {
         @Override
         public void execute() {
-            Perspective.Name prev = PY_3D_PERSPECTIVE.get().prev();
-            PY_3D_PERSPECTIVE.set(prev);
-            THE_UI.showFlashMessage(THE_ASSETS.text("camera_perspective", THE_ASSETS.text(prev.name())));
+            Perspective.Name perspectiveName = PY_3D_PERSPECTIVE.get().prev();
+            PY_3D_PERSPECTIVE.set(perspectiveName);
+            String msgKey = THE_ASSETS.text("camera_perspective", THE_ASSETS.text("perspective_name_" + perspectiveName.name()));
+            THE_UI.showFlashMessage(msgKey);
         }
     },
 
