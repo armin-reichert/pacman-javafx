@@ -10,7 +10,7 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.tilemap.rendering.TerrainMapRenderer3D;
 import de.amr.games.pacman.ui.GameUIConfig;
-import de.amr.games.pacman.uilib.WorldMapColorScheme;
+import de.amr.games.pacman.uilib.assets.WorldMapColorScheme;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;

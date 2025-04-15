@@ -9,7 +9,7 @@ import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.ActorAnimations;
 import de.amr.games.pacman.model.actors.AnimatedActor2D;
 import de.amr.games.pacman.uilib.SpriteAnimation;
-import de.amr.games.pacman.uilib.SpriteSheet;
+import de.amr.games.pacman.uilib.assets.SpriteSheet;
 import org.tinylog.Logger;
 
 import java.util.HashMap;

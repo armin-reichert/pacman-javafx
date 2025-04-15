@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui._3d;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.uilib.AssetStorage;
+import de.amr.games.pacman.uilib.assets.AssetStorage;
 import de.amr.games.pacman.uilib.model3D.Model3D;
 import de.amr.games.pacman.uilib.model3D.PacModel3D;
 import javafx.animation.*;

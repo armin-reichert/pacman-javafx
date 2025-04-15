@@ -11,7 +11,7 @@ import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.tilemap.rendering.TerrainMapRenderer3D;
-import de.amr.games.pacman.uilib.ResourceManager;
+import de.amr.games.pacman.uilib.assets.ResourceManager;
 import de.amr.games.pacman.uilib.Ufx;
 import de.amr.games.pacman.uilib.model3D.Model3D;
 import de.amr.games.pacman.uilib.model3D.PacModel3D;

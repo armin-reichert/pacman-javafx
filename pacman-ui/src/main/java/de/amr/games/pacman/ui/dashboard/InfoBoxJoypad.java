@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui.dashboard;
 
 import de.amr.games.pacman.lib.nes.JoypadButtonID;
 import de.amr.games.pacman.ui.PacManGamesUI;
-import de.amr.games.pacman.uilib.ResourceManager;
+import de.amr.games.pacman.uilib.assets.ResourceManager;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
 

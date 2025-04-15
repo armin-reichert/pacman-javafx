@@ -10,7 +10,7 @@ import de.amr.games.pacman.ui.input.Joypad;
 import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.GameClockFX;
 import de.amr.games.pacman.uilib.Keyboard;
-import de.amr.games.pacman.uilib.ResourceManager;
+import de.amr.games.pacman.uilib.assets.ResourceManager;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;

@@ -8,7 +8,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.StartPage;
 import de.amr.games.pacman.ui.StartPagesView;
 import de.amr.games.pacman.uilib.Flyer;
-import de.amr.games.pacman.uilib.ResourceManager;
+import de.amr.games.pacman.uilib.assets.ResourceManager;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;

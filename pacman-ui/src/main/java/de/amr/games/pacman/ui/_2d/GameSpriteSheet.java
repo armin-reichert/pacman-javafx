@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
-import de.amr.games.pacman.uilib.SpriteSheet;
+import de.amr.games.pacman.uilib.assets.SpriteSheet;
 
 public interface GameSpriteSheet extends SpriteSheet {
     RectArea[] pacMunchingSprites(Direction dir);

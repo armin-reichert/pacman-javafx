@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui;
 
-import de.amr.games.pacman.uilib.AssetStorage;
-import de.amr.games.pacman.uilib.Picker;
-import de.amr.games.pacman.uilib.ResourceManager;
+import de.amr.games.pacman.uilib.assets.AssetStorage;
+import de.amr.games.pacman.uilib.assets.Picker;
+import de.amr.games.pacman.uilib.assets.ResourceManager;
 import de.amr.games.pacman.uilib.Ufx;
 import de.amr.games.pacman.uilib.model3D.Model3D;
 import javafx.scene.text.Font;

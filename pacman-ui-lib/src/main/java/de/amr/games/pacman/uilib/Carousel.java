@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.uilib;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.uilib.assets.ResourceManager;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Pos;

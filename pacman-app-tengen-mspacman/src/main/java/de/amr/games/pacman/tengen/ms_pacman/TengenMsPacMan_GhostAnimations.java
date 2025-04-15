@@ -12,7 +12,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.ui._2d.SpriteAnimationSet;
 import de.amr.games.pacman.uilib.SpriteAnimation;
-import de.amr.games.pacman.uilib.SpriteSheet;
+import de.amr.games.pacman.uilib.assets.SpriteSheet;
 
 import java.util.Map;
 

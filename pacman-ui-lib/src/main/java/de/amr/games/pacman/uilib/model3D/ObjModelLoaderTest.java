@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.uilib.model3D;
 
-import de.amr.games.pacman.uilib.ResourceManager;
+import de.amr.games.pacman.uilib.assets.ResourceManager;
 import org.tinylog.Logger;
 
 /**

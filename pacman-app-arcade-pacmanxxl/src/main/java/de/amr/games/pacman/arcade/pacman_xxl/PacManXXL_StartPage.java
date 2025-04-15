@@ -9,6 +9,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.MapSelectionMode;
 import de.amr.games.pacman.ui.StartPage;
 import de.amr.games.pacman.uilib.*;
+import de.amr.games.pacman.uilib.assets.ResourceManager;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;

@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui.dashboard;
 
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.PacManGamesUI;
-import de.amr.games.pacman.uilib.ResourceManager;
+import de.amr.games.pacman.uilib.assets.ResourceManager;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;

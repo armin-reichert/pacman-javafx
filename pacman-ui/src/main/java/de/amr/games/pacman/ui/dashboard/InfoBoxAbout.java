@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.dashboard;
 
 import de.amr.games.pacman.ui.PacManGamesUI;
-import de.amr.games.pacman.uilib.ResourceManager;
+import de.amr.games.pacman.uilib.assets.ResourceManager;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

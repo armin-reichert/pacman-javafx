@@ -8,7 +8,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.uilib.SpriteAnimation;
-import de.amr.games.pacman.uilib.SpriteSheet;
+import de.amr.games.pacman.uilib.assets.SpriteSheet;
 import javafx.scene.image.Image;
 
 import java.util.List;

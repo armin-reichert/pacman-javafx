@@ -19,7 +19,7 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.GameUIConfig;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.uilib.Ufx;
-import de.amr.games.pacman.uilib.WorldMapColorScheme;
+import de.amr.games.pacman.uilib.assets.WorldMapColorScheme;
 import de.amr.games.pacman.uilib.model3D.Model3D;
 import javafx.animation.*;
 import javafx.beans.property.BooleanProperty;

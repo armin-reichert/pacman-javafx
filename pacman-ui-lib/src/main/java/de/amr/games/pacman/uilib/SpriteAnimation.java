@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.uilib;
 
 import de.amr.games.pacman.lib.RectArea;
+import de.amr.games.pacman.uilib.assets.SpriteSheet;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;

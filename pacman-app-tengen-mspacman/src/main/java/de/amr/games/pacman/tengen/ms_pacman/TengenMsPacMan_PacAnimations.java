@@ -9,7 +9,7 @@ import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui._2d.SpriteAnimationSet;
 import de.amr.games.pacman.uilib.SpriteAnimation;
-import de.amr.games.pacman.uilib.SpriteSheet;
+import de.amr.games.pacman.uilib.assets.SpriteSheet;
 
 import java.util.Map;
 
