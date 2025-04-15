@@ -8,7 +8,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.tilemap.rendering.TerrainMapRenderer3D;
+import de.amr.games.pacman.uilib.tilemap.TerrainMapRenderer3D;
 import de.amr.games.pacman.ui.GameUIConfig;
 import de.amr.games.pacman.uilib.assets.WorldMapColorScheme;
 import javafx.animation.*;

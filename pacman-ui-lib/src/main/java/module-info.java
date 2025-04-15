@@ -15,4 +15,5 @@ open module de.amr.games.pacman.uilib {
     exports de.amr.games.pacman.uilib.widgets;
     exports de.amr.games.pacman.uilib.animation;
     exports de.amr.games.pacman.uilib.input;
+    exports de.amr.games.pacman.uilib.tilemap;
 }

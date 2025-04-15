@@ -9,7 +9,7 @@ import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.*;
-import de.amr.games.pacman.tilemap.rendering.TerrainMapRenderer;
+import de.amr.games.pacman.uilib.tilemap.TerrainMapRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;

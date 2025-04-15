@@ -8,7 +8,6 @@ plugins {
 dependencies {
     implementation project(":pacman-core")
     implementation project(":pacman-ui-lib")
-    implementation project(":pacman-tilemap-rendering")
     implementation libs.bundles.tinylog
 }
 

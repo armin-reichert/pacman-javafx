@@ -17,7 +17,6 @@ open module de.amr.games.pacman.ui {
     requires org.kordamp.ikonli.fontawesome5;
 
     requires de.amr.games.pacman;
-    requires de.amr.games.pacman.tilemap;
     requires de.amr.games.pacman.tilemap.editor.app;
     requires de.amr.games.pacman.uilib;
 
