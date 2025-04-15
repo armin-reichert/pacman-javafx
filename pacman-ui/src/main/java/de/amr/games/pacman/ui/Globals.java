@@ -10,6 +10,8 @@ import de.amr.games.pacman.ui.input.Joypad;
 import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.GameClockFX;
 import de.amr.games.pacman.uilib.Keyboard;
+import de.amr.games.pacman.uilib.ResourceManager;
+import de.amr.games.pacman.uilib.Ufx;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -39,7 +41,8 @@ public class Globals {
     {
         THE_UI = new PacManGamesUI();
         if (support3D) {
-            THE_ASSETS.addAssets3D();
+            ResourceManager uiLibResourceMgr = () -> Ufx.class;
+            THE_ASSETS.addAssets3D(uiLibResourceMgr);
         }
         // create configuration instances *after* assets have been filled!
         configClassesMap.forEach((gameVariant, configClass) -> {

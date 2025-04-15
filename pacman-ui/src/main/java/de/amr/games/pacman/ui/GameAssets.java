@@ -45,28 +45,22 @@ public class GameAssets extends AssetStorage implements ResourceManager {
         pickerForLevelCompleteTexts = Picker.fromBundle(textResources, "level.complete");
     }
 
-    public void addAssets3D() {
-        addBundle(getModuleBundle("de.amr.games.pacman.ui.texts.messages3d"));
-
+    public void addAssets3D(ResourceManager resourceManager3D) {
         try {
-            ResourceManager uiLibResources = () -> Ufx.class;
-            store("model3D.pacman", new Model3D(uiLibResources.url("model3D/pacman.obj")));
-            store("model3D.pellet", new Model3D(uiLibResources.url("model3D/fruit.obj")));
-
-            Model3D ghostModel3D = new Model3D(uiLibResources.url("model3D/ghost.obj"));
+            Model3D pacManModel3D = new Model3D(resourceManager3D.url("model3D/pacman.obj"));
+            Model3D ghostModel3D  = new Model3D(resourceManager3D.url("model3D/ghost.obj"));
+            Model3D pelletModel3D = new Model3D(resourceManager3D.url("model3D/fruit.obj"));
+            store("model3D.pacman", pacManModel3D);
             store("model3D.ghost", ghostModel3D);
             store("model3D.ghost.mesh.dress", ghostModel3D.mesh("Sphere.004_Sphere.034_light_blue_ghost"));
             store("model3D.ghost.mesh.pupils", ghostModel3D.mesh("Sphere.010_Sphere.039_grey_wall"));
             store("model3D.ghost.mesh.eyeballs", ghostModel3D.mesh("Sphere.009_Sphere.036_white"));
+            store("model3D.pellet", pelletModel3D);
+            Logger.info("3D assets loaded");
         } catch (Exception x) {
             Logger.error(x);
-            Logger.error("An error occured while loading the 3D assets");
+            Logger.error("An error occurred while loading the 3D assets");
         }
-
-        pickerForGameOverTexts = Picker.fromBundle(bundles().getLast(), "game.over");
-        pickerForLevelCompleteTexts = Picker.fromBundle(bundles().getLast(), "level.complete");
-
-        Logger.info("3D assets loaded");
     }
 
     public Font arcadeFontAtSize(float size) {
