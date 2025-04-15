@@ -513,7 +513,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         // Camera perspective radio buttons
         var radioButtonGroup = new ToggleGroup();
         for (var perspective : PerspectiveID.values()) {
-            var miPerspective = new RadioMenuItem(THE_ASSETS.text(perspective.name()));
+            var miPerspective = new RadioMenuItem(THE_ASSETS.text("perspective_id_" + perspective.name()));
             miPerspective.setToggleGroup(radioButtonGroup);
             miPerspective.setUserData(perspective);
             if (perspective == PY_3D_PERSPECTIVE.get())  { // == allowed for enum values
