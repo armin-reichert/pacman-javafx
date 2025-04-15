@@ -187,8 +187,17 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         return new LevelData(LEVEL_DATA[Math.min(levelNumber - 1, LEVEL_DATA.length - 1)]);
     }
 
-    protected void populateLevel(GameLevel level) {
-        final WorldMap worldMap = level.worldMap();
+    @Override
+    public void buildGameLevel(int levelNumber) {
+        WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
+
+        level = new GameLevel(levelNumber, worldMap);
+        level.setCutSceneNumber(cutSceneNumberAfterLevel(levelNumber));
+        level.setNumFlashes(levelData(levelNumber).numFlashes());
+
+        /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
+         * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
+        levelCounter().setEnabled(levelNumber < 8);
 
         if (!worldMap.hasProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MIN_TILE)) {
             Logger.warn("No house min tile found in map!");
@@ -203,20 +212,22 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         level.createArcadeHouse(minTile.x(), minTile.y(), maxTile.x(), maxTile.y());
 
         var pac = new Pac();
+        level.setPac(pac);
         pac.setName("Ms. Pac-Man");
         pac.setGameLevel(level);
         pac.reset();
+        pac.setAutopilot(autopilot);
 
-        var ghosts = new Ghost[] { blinky(), pinky(), inky(), sue() };
-        Stream.of(ghosts).forEach(ghost -> {
+        var ghosts = List.of(blinky(), pinky(), inky(), sue());
+        level.setGhosts(ghosts.toArray(Ghost[]::new));
+        ghosts.forEach(ghost -> {
             ghost.setGameLevel(level);
             ghost.setRevivalPosition(level.ghostPosition(ghost.id()));
+            ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
             ghost.reset();
         });
-        ghosts[RED_GHOST_ID].setRevivalPosition(level.ghostPosition(PINK_GHOST_ID)); // middle house position
+        ghosts.get(RED_GHOST_ID).setRevivalPosition(level.ghostPosition(PINK_GHOST_ID)); // middle house position
 
-        level.setPac(pac);
-        level.setGhosts(ghosts);
         level.setBonusSymbol(0, computeBonusSymbol(level.number()));
         level.setBonusSymbol(1, computeBonusSymbol(level.number()));
     }
@@ -225,23 +236,6 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     protected void setActorBaseSpeed(int levelNumber) {
         level.pac().setBaseSpeed(1.25f);
         level.ghosts().forEach(ghost -> ghost.setBaseSpeed(1.25f));
-    }
-
-    @Override
-    public void buildGameLevel(int levelNumber) {
-        WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
-
-        level = new GameLevel(levelNumber, worldMap);
-        level.setCutSceneNumber(cutSceneNumberAfterLevel(levelNumber));
-        level.setNumFlashes(levelData(levelNumber).numFlashes());
-
-        /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
-         * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
-        levelCounter().setEnabled(levelNumber < 8);
-
-        populateLevel(level);
-        level.pac().setAutopilot(autopilot);
-        level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
 
     @Override

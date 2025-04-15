@@ -240,14 +240,12 @@ public class ArcadePacMan_GameModel extends GameModel {
 
         if (!worldMap.hasProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MIN_TILE)) {
             Logger.warn("No house min tile found in map!");
-            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MIN_TILE, formatTile(Vector2i.of(10, 15)));
         }
+        Vector2i minTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, Vector2i.of(10, 15));
         if (!worldMap.hasProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MAX_TILE)) {
             Logger.warn("No house max tile found in map!");
-            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MAX_TILE, formatTile(Vector2i.of(17, 19)));
         }
-        Vector2i minTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
-        Vector2i maxTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
+        Vector2i maxTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, Vector2i.of(17, 19));
         level.createArcadeHouse(minTile.x(), minTile.y(), maxTile.x(), maxTile.y());
 
         var pac = new Pac();
@@ -256,21 +254,21 @@ public class ArcadePacMan_GameModel extends GameModel {
         pac.setAutopilot(autopilot);
         pac.reset();
 
-        var ghosts = new Ghost[] { blinky(), pinky(), inky(), clyde() };
-        Stream.of(ghosts).forEach(ghost -> {
+        var ghosts = List.of(blinky(), pinky(), inky(), clyde());
+        ghosts.forEach(ghost -> {
             ghost.setGameLevel(level);
             ghost.setRevivalPosition(level.ghostPosition(ghost.id()));
             ghost.reset();
         });
-        ghosts[RED_GHOST_ID].setRevivalPosition(level.ghostPosition(PINK_GHOST_ID)); // middle house position
+        ghosts.get(RED_GHOST_ID).setRevivalPosition(level.ghostPosition(PINK_GHOST_ID)); // middle house position
 
         List<Vector2i> oneWayDownTiles = worldMap.tiles()
                 .filter(tile -> worldMap.get(LayerID.TERRAIN, tile) == TerrainTiles.ONE_WAY_DOWN).toList();
-        Stream.of(ghosts).forEach(ghost -> ghost.setSpecialTerrainTiles(oneWayDownTiles));
-        Stream.of(ghosts).forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
+        ghosts.forEach(ghost -> ghost.setSpecialTerrainTiles(oneWayDownTiles));
+        ghosts.forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
 
         level.setPac(pac);
-        level.setGhosts(ghosts);
+        level.setGhosts(ghosts.toArray(Ghost[]::new));
         level.setBonusSymbol(0, computeBonusSymbol(levelNumber));
         level.setBonusSymbol(1, computeBonusSymbol(levelNumber));
 
