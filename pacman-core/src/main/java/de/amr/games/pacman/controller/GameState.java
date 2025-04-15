@@ -90,7 +90,7 @@ public enum GameState implements FsmState<GameModel> {
     STARTING_GAME {
         static final short TICK_NEW_GAME_SHOW_GUYS       = 120;
         static final short TICK_NEW_GAME_START_PLAYING   = 240;
-        static final short TICK_DEMO_LEVEL_START_PLAYING = 120;
+        static final short TICK_DEMO_LEVEL_START         = 120;
         static final short TICK_RESUME_GAME              =  90;
 
         @Override
@@ -128,12 +128,20 @@ public enum GameState implements FsmState<GameModel> {
             }
             else { // start demo level
                 if (timer.tickCount() == 1) {
-                    game.createDemoLevel();
-                    game.startLevel();
-                    game.showGuys();
+                    game.demoLevelProperty().set(true);
+                    game.buildDemoLevel();
                     game.level().ifPresent(gameLevel -> gameLevel.showMessage(GameLevel.Message.GAME_OVER));
+                    THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.LEVEL_CREATED);
                 }
-                else if (timer.tickCount() == TICK_DEMO_LEVEL_START_PLAYING) {
+                else if (timer.tickCount() == 2) {
+                    // This publishes a LEVEL_STARTED event which triggers the actor animation UI creation
+                    game.startLevel();
+                }
+                else if (timer.tickCount() == 3) {
+                    // Now, actor animations are available
+                    game.showGuys();
+                }
+                else if (timer.tickCount() == TICK_DEMO_LEVEL_START) {
                     THE_GAME_CONTROLLER.changeState(GameState.HUNTING);
                 }
             }

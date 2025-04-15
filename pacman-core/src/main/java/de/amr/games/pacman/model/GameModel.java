@@ -108,9 +108,9 @@ public abstract class GameModel {
 
     public abstract long gameOverStateTicks();
 
-    protected abstract void buildGameLevel(int levelNumber);
+    public abstract void buildGameLevel(int levelNumber);
 
-    protected abstract void buildDemoLevel();
+    public abstract void buildDemoLevel();
 
     public abstract void assignDemoLevelBehavior(Pac pac);
 
@@ -189,12 +189,6 @@ public abstract class GameModel {
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 
-    public final void createDemoLevel() {
-        demoLevelProperty().set(true);
-        buildDemoLevel();
-        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
-    }
-
     public void startLevel() {
         gateKeeper.setLevelNumber(level.number());
         scoreManager.setLevelNumber(level.number());
@@ -204,7 +198,9 @@ public abstract class GameModel {
         setActorBaseSpeed(level.number());
         Logger.debug("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
         level.ghosts().forEach(ghost -> Logger.debug("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
-        level.showMessage(GameLevel.Message.READY);
+        if (!isDemoLevel()) {
+            level.showMessage(GameLevel.Message.READY);
+        }
         levelStartTime = System.currentTimeMillis();
         Logger.info("{} started", isDemoLevel() ? "Demo Level" : "Level " + level.number());
         levelCounter().update(level);
