@@ -211,21 +211,15 @@ public class OptionMenu implements ResourceManager {
 
     public FloatProperty scalingProperty() { return scalingPy; }
 
-    public void addEntry(OptionMenuEntry<?> entry) {
-        entries.add(entry);
-    }
+    public void addEntry(OptionMenuEntry<?> entry) { entries.add(requireNonNull(entry)); }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public void setTitle(String title) { this.title = requireNonNull(title); }
 
     public void setStyle(OptionMenuStyle style) {
         this.style = requireNonNull(style);
     }
 
-    public void setOnStart(Runnable action) {
-        this.actionOnStart = action;
-    }
+    public void setOnStart(Runnable action) { actionOnStart = requireNonNull(action); }
 
     public void setCommandTexts(String... lines) {
         commandTexts = Arrays.copyOf(lines, lines.length);
