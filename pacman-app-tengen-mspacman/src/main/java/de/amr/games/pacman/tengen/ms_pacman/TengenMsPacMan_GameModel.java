@@ -348,7 +348,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     @Override
     public void startNewGame() {
         resetForStartingNewGame();
-        createNormalLevel(startLevelNumber);
+        createGameLevel(startLevelNumber);
         levelCounter.resetStartingFromLevel(startLevelNumber);
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.GAME_STARTED);
     }
@@ -416,7 +416,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public void buildNormalLevel(int levelNumber) {
+    public void buildGameLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.selectWorldMap(mapCategory, levelNumber);
 
         level = new GameLevel(levelNumber, worldMap);
