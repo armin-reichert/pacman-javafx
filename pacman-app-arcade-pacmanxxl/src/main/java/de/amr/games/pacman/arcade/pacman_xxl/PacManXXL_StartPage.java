@@ -156,15 +156,15 @@ public class PacManXXL_StartPage implements StartPage, ResourceManager {
         menu.setStyle(new OptionMenuStyle(
             loadFont("fonts/emulogic.ttf", 3 * TS),
             loadFont("fonts/emulogic.ttf", TS),
-            menu.defaultStyle.backgroundFill(),
-            menu.defaultStyle.borderStroke(),
+            OptionMenu.DEFAULT_STYLE.backgroundFill(),
+            OptionMenu.DEFAULT_STYLE.borderStroke(),
             Color.RED, // DEFAULT_STYLE.titleTextFill(),
-            menu.defaultStyle.entryTextFill(),
-            menu.defaultStyle.entryValueFill(),
-            menu.defaultStyle.entryValueDisabledFill(),
-            menu.defaultStyle.hintTextFill(),
-            menu.defaultStyle.entrySelectedSound(),
-            menu.defaultStyle.valueSelectedSound()
+            OptionMenu.DEFAULT_STYLE.entryTextFill(),
+            OptionMenu.DEFAULT_STYLE.entryValueFill(),
+            OptionMenu.DEFAULT_STYLE.entryValueDisabledFill(),
+            OptionMenu.DEFAULT_STYLE.hintTextFill(),
+            OptionMenu.DEFAULT_STYLE.entrySelectedSound(),
+            OptionMenu.DEFAULT_STYLE.valueSelectedSound()
         ));
 
         menu.setOnStart(() -> {

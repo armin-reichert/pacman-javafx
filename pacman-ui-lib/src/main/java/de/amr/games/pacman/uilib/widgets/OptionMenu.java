@@ -36,9 +36,11 @@ import static java.util.Objects.requireNonNull;
 
 public class OptionMenu implements ResourceManager {
 
+    private static final ResourceManager RESOURCE_MGR = () -> OptionMenu.class;
+
     private static final int REFRESH_RATE = 30;
 
-    public final OptionMenuStyle defaultStyle = new OptionMenuStyle(
+    public static final OptionMenuStyle DEFAULT_STYLE = new OptionMenuStyle(
             Font.font("sans", FontWeight.BLACK, 30),
             Font.font("sans", FontWeight.BOLD, 12),
             Color.web("0c1568"),
@@ -48,8 +50,8 @@ public class OptionMenu implements ResourceManager {
             Color.web("fffeff"),
             Color.GRAY,
             Color.web("bcbe00"),
-            loadAudioClip("/de/amr/games/pacman/uilib/sounds/menu-select1.wav"),
-            loadAudioClip("/de/amr/games/pacman/uilib/sounds/menu-select2.wav")
+            RESOURCE_MGR.loadAudioClip("/de/amr/games/pacman/uilib/sounds/menu-select1.wav"),
+            RESOURCE_MGR.loadAudioClip("/de/amr/games/pacman/uilib/sounds/menu-select2.wav")
     );
 
     private final int numTilesX;
@@ -72,7 +74,7 @@ public class OptionMenu implements ResourceManager {
     private final Canvas canvas = new Canvas();
     private final GraphicsContext g = canvas.getGraphicsContext2D();
 
-    private OptionMenuStyle style = defaultStyle;
+    private OptionMenuStyle style = DEFAULT_STYLE;
 
     public OptionMenu(int numTilesX, int numTilesY, int textCol, int valueCol) {
         this.numTilesX = numTilesX;
