@@ -11,7 +11,6 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import org.tinylog.Logger;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -41,21 +40,27 @@ import static java.util.Objects.requireNonNull;
 public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     private final Map<GameVariant, GameModel> registeredGameModels = new EnumMap<>(GameVariant.class);
-
     private final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>();
 
     public GameController() {
         super(GameState.values());
+        addStateChangeListener((oldState, newState) -> THE_GAME_EVENT_MANAGER.publishEvent(
+                new GameStateChangeEvent(game(), oldState, newState)));
         gameVariantPy.addListener((py, ov, newGameVariant) -> {
             GameModel game = game(newGameVariant);
             game.init();
-            //TODO do we still need this game event now that we have a property?
             THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.GAME_VARIANT_CHANGED);
-
         });
-        // map state change events to game events
-        addStateChangeListener((oldState, newState) -> THE_GAME_EVENT_MANAGER.publishEvent(new GameStateChangeEvent(game(), oldState, newState)));
-        Logger.info("Game controller created");
+    }
+
+    @Override
+    public GameModel context() {
+        return game();
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends GameModel> T game(GameVariant variant) {
+        return (T) registeredGameModels.get(requireNonNull(variant));
     }
 
     public void registerGameModel(GameVariant variant, GameModel gameModel) {
@@ -69,21 +74,11 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         return game(gameVariantPy.get());
     }
 
-    @SuppressWarnings("unchecked")
-    public <T extends GameModel> T game(GameVariant variant) {
-        return (T) registeredGameModels.get(requireNonNull(variant));
-    }
-
     public Stream<GameModel> games() { return registeredGameModels.values().stream(); }
 
     public ObjectProperty<GameVariant> gameVariantProperty() { return gameVariantPy; }
 
     public boolean isGameVariantSelected(GameVariant gameVariant) {
         return requireNonNull(gameVariant) == gameVariantPy.get();
-    }
-
-    @Override
-    public GameModel context() {
-        return game();
     }
 }
