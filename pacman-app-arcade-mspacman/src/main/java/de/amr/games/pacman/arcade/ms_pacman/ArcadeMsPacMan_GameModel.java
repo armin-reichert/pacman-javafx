@@ -92,8 +92,10 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     private static final byte PELLET_VALUE = 10;
     private static final byte ENERGIZER_VALUE = 50;
+    private static final short POINTS_ALL_GHOSTS_EATEN_IN_LEVEL = 12_000;
 
     private static final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
+    private static final byte[] KILLED_GHOST_VALUE_MULTIPLIER = {2, 4, 8, 16}; // factor * 100 = value
 
     private final Steering autopilot = new RuleBasedPacSteering(this);
     protected Steering demoLevelSteering = new RuleBasedPacSteering(this);

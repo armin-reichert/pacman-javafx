@@ -31,9 +31,6 @@ public abstract class GameModel {
     // Ghost IDs
     public static final byte RED_GHOST_ID = 0, PINK_GHOST_ID = 1, CYAN_GHOST_ID = 2, ORANGE_GHOST_ID = 3;
 
-    public static final short POINTS_ALL_GHOSTS_EATEN_IN_LEVEL = 12_000;
-    public static final byte[] KILLED_GHOST_VALUE_MULTIPLIER = {2, 4, 8, 16}; // factor * 100 = value
-
     protected final GateKeeper gateKeeper = new GateKeeper();
     protected final ScoreManager scoreManager = new ScoreManager();
     protected GameLevel level;

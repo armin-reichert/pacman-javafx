@@ -92,11 +92,13 @@ public class ArcadePacMan_GameModel extends GameModel {
 
     private static final byte PELLET_VALUE = 10;
     private static final byte ENERGIZER_VALUE = 50;
+    private static final short POINTS_ALL_GHOSTS_EATEN_IN_LEVEL = 12_000;
 
     // Note: First level number is 1
     protected static final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {42, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
     // Bonus value = factor * 100
     protected static final byte[] BONUS_VALUE_FACTORS = {1, 3, 5, 7, 10, 20, 30, 50};
+    private static final byte[] KILLED_GHOST_VALUE_MULTIPLIER = {2, 4, 8, 16}; // factor * 100 = value
 
     public static Ghost blinky() {
         return new Ghost(GameModel.RED_GHOST_ID, "Blinky");

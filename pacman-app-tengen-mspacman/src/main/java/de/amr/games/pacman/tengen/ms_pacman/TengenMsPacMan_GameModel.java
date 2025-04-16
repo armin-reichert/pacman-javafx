@@ -100,6 +100,8 @@ public class TengenMsPacMan_GameModel extends GameModel {
         BONUS_VALUE_FACTORS[BONUS_FLOWER]        = 100;
     }
 
+    private static final byte[] KILLED_GHOST_VALUE_MULTIPLIER = {2, 4, 8, 16}; // factor * 100 = value
+
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
     private static final String HIGH_SCORE_FILENAME = "highscore-ms_pacman_tengen.xml";
