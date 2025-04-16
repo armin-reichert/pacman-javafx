@@ -434,5 +434,4 @@ public abstract class GameModel {
             bonus.update(this);
         }
     }
-
 }
