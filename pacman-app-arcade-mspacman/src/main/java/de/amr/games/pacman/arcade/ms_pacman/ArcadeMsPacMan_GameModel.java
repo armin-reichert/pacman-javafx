@@ -100,7 +100,8 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     private byte cruiseElroy; //TODO is this existing in Ms. Pac-Man at all?
 
-    private final ArcadeMsPacMan_LevelCounter levelCounter = new ArcadeMsPacMan_LevelCounter();
+    protected final ArcadeMsPacMan_HuntingTimer huntingTimer = new ArcadeMsPacMan_HuntingTimer();;
+    protected final ArcadeMsPacMan_LevelCounter levelCounter = new ArcadeMsPacMan_LevelCounter();
     protected final MapSelector mapSelector;
 
     public ArcadeMsPacMan_GameModel() {
@@ -108,7 +109,6 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     }
 
     protected ArcadeMsPacMan_GameModel(MapSelector mapSelector) {
-        super(new ArcadeMsPacMan_HuntingTimer());
         this.mapSelector = requireNonNull(mapSelector);
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
@@ -342,6 +342,11 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         return level !=null
             ? levelData(level.number()).ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed()
             : 0;
+    }
+
+    @Override
+    public HuntingTimer huntingTimer() {
+        return huntingTimer;
     }
 
     @Override

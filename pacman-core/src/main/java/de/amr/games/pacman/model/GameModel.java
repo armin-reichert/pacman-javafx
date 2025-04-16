@@ -21,7 +21,6 @@ import java.util.Optional;
 
 import static de.amr.games.pacman.Globals.THE_GAME_EVENT_MANAGER;
 import static de.amr.games.pacman.model.actors.GhostState.*;
-import static java.util.Objects.requireNonNull;
 
 /**
  * Common base class of all Pac-Man game models.
@@ -38,8 +37,6 @@ public abstract class GameModel {
 
     protected final GateKeeper gateKeeper = new GateKeeper();
     protected final ScoreManager scoreManager = new ScoreManager();
-    protected final HuntingTimer huntingTimer;
-
     protected GameLevel level;
     protected long levelStartTime;
     protected int lastLevelNumber;
@@ -54,8 +51,7 @@ public abstract class GameModel {
 
     protected SimulationStepLog eventLog;
 
-    protected GameModel(HuntingTimer huntingTimer) {
-        this.huntingTimer = requireNonNull(huntingTimer);
+    protected GameModel() {
         scoreManager.setOnExtraLifeWon(extraLifeScore -> {
             eventLog.extraLifeWon = true;
             eventLog.extraLifeScore = extraLifeScore;
@@ -128,9 +124,7 @@ public abstract class GameModel {
 
     public abstract MapSelector mapSelector();
 
-    public final HuntingTimer huntingTimer() {
-        return huntingTimer;
-    }
+    public abstract HuntingTimer huntingTimer();
 
     public Optional<GameLevel> level() {
         return Optional.ofNullable(level);
@@ -187,7 +181,7 @@ public abstract class GameModel {
         demoLevelProperty().set(false);
         buildGameLevel(levelNumber);
         scoreManager.setLevelNumber(levelNumber);
-        huntingTimer.reset();
+        huntingTimer().reset();
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 
@@ -300,7 +294,7 @@ public abstract class GameModel {
     }
 
     public void endLevel() {
-        huntingTimer.stop();
+        huntingTimer().stop();
         Logger.info("Level complete, hunting timer stopped");
 
         level.powerTimer().stop();
@@ -338,12 +332,12 @@ public abstract class GameModel {
         level.ghosts().forEach(Ghost::startAnimation);
         level.blinking().setStartPhase(Pulse.ON);
         level.blinking().restart(Integer.MAX_VALUE);
-        huntingTimer.startFirstHuntingPhase(level.number());
+        huntingTimer().startFirstHuntingPhase(level.number());
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.HUNTING_PHASE_STARTED);
     }
 
     public void doHuntingStep() {
-        huntingTimer.update(level.number());
+        huntingTimer().update(level.number());
         level.blinking().tick();
         gateKeeper.unlockGhosts(level, this::onGhostReleased, eventLog);
         checkForFood();
@@ -390,7 +384,7 @@ public abstract class GameModel {
         level.victims().clear(); // ghosts eaten using this energizer
         long powerTicks = pacPowerTicks();
         if (powerTicks > 0) {
-            huntingTimer.stop();
+            huntingTimer().stop();
             Logger.info("Hunting stopped");
             level.powerTimer().restartTicks(powerTicks);
             Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerTicks / 60.0);
@@ -413,7 +407,7 @@ public abstract class GameModel {
             level.powerTimer().reset(0);
             Logger.info("Power timer stopped and reset to zero");
             level.victims().clear();
-            huntingTimer.start();
+            huntingTimer().start();
             Logger.info("Hunting timer restarted");
             level.ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
             eventLog.pacLostPower = true;

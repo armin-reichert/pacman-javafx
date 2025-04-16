@@ -105,6 +105,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     private static final String HIGH_SCORE_FILENAME = "highscore-ms_pacman_tengen.xml";
 
     private final TengenMsPacMan_LevelCounter levelCounter;
+    private final TengenMsPacMan_HuntingTimer huntingTimer = new TengenMsPacMan_HuntingTimer();
     private final TengenMsPacMan_MapSelector mapSelector;
     private MapCategory mapCategory;
     private Difficulty difficulty;
@@ -117,7 +118,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
     private final Steering demoLevelSteering = new RuleBasedPacSteering(this);
 
     public TengenMsPacMan_GameModel() {
-        super(new TengenMsPacMan_HuntingTimer());
         levelCounter = new TengenMsPacMan_LevelCounter();
         mapSelector = new TengenMsPacMan_MapSelector();
         huntingTimer.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
@@ -133,6 +133,11 @@ public class TengenMsPacMan_GameModel extends GameModel {
     @Override
     public MapSelector mapSelector() {
         return mapSelector;
+    }
+
+    @Override
+    public HuntingTimer huntingTimer() {
+        return huntingTimer;
     }
 
     public void init() {

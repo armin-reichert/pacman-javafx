@@ -119,6 +119,7 @@ public class ArcadePacMan_GameModel extends GameModel {
     protected byte cruiseElroy;
 
     protected final LevelCounter levelCounter = new ArcadePacMan_LevelCounter();
+    protected final HuntingTimer huntingTimer = new ArcadePacMan_HuntingTimer();
     protected final MapSelector mapSelector;
 
     public ArcadePacMan_GameModel() {
@@ -126,7 +127,6 @@ public class ArcadePacMan_GameModel extends GameModel {
     }
 
     protected ArcadePacMan_GameModel(MapSelector mapSelector) {
-        super(new ArcadePacMan_HuntingTimer());
         this.mapSelector = requireNonNull(mapSelector);
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
@@ -361,6 +361,11 @@ public class ArcadePacMan_GameModel extends GameModel {
         return level != null
             ? levelData(level.number()).ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed()
             : 0;
+    }
+
+    @Override
+    public HuntingTimer huntingTimer() {
+        return huntingTimer;
     }
 
     @Override
