@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.controller.HuntingTimer;
+import de.amr.games.pacman.model.HuntingTimer;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;

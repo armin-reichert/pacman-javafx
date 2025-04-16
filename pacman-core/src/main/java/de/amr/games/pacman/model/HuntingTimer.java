@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.controller;
+package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.lib.timer.TickTimer;

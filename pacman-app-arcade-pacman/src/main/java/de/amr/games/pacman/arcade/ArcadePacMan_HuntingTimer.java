@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade;
 
-import de.amr.games.pacman.controller.HuntingTimer;
+import de.amr.games.pacman.model.HuntingTimer;
 import de.amr.games.pacman.lib.timer.TickTimer;
 
 public class ArcadePacMan_HuntingTimer extends HuntingTimer {
