@@ -118,73 +118,68 @@ public interface Globals {
         return (float) tiles * TS;
     }
 
-    static byte assertValidGhostID(byte id) {
-        if (id < 0 || id > 3) {
-            throw GameException.invalidGhostID(id);
-        }
+    static byte requireValidGhostID(byte id) {
+        if (id < 0 || id > 3) throw GameException.invalidGhostID(id);
         return id;
     }
 
-    static int assertValidLevelNumber(int number) {
-        if (number < 1)
-            throw GameException.invalidLevelNumber(number);
+    static int requireValidLevelNumber(int number) {
+        if (number < 1) throw GameException.invalidLevelNumber(number);
         return number;
     }
 
-    static double assertNonNegative(double value, String messageFormat) {
-        if (value < 0) {
-            throw new IllegalArgumentException(String.format(messageFormat, value));
-        }
+    static double requireNonNegative(double value, String messageFormat) {
+        if (value < 0) throw new IllegalArgumentException(String.format(messageFormat, value));
         return value;
     }
 
-    static double assertNonNegative(double value) {
-        return assertNonNegative(value, "%f must be zero or positive");
+    static double requireNonNegative(double value) {
+        return requireNonNegative(value, "%f must be zero or positive");
     }
 
     /**
-     * @param lowerBound left interval bound
-     * @param upperBoundExclusive right interval bound
+     * @param min left interval bound
+     * @param maxExclusive right (open) interval bound
      * @return Random integer number from right-open interval <code>[a; b[</code>. Interval bounds are rearranged to
      * guarantee <code>a<=b</code>
      */
-    static int randomInt(int lowerBound, int upperBoundExclusive) {
-        if (lowerBound > upperBoundExclusive) {
-            var tmp = lowerBound;
-            lowerBound = upperBoundExclusive;
-            upperBoundExclusive = tmp;
+    static int randomInt(int min, int maxExclusive) {
+        if (min > maxExclusive) {
+            var tmp = min;
+            min = maxExclusive;
+            maxExclusive = tmp;
         }
-        return lowerBound + THE_RNG.nextInt(upperBoundExclusive - lowerBound);
+        return min + THE_RNG.nextInt(maxExclusive - min);
     }
 
     /**
-     * @param a left interval bound
-     * @param b right interval bound
+     * @param min left interval bound
+     * @param maxExclusive right (open) interval bound
      * @return Random floating-point number from right-open interval <code>[a; b[</code>. Interval bounds are rearranged
      * to guarantee <code>a<=b</code>
      */
-    static float randomFloat(float a, float b) {
-        if (a > b) {
-            var tmp = a;
-            a = b;
-            b = tmp;
+    static float randomFloat(float min, float maxExclusive) {
+        if (min > maxExclusive) {
+            var tmp = min;
+            min = maxExclusive;
+            maxExclusive = tmp;
         }
-        return a + (b - a) * THE_RNG.nextFloat();
+        return min + (maxExclusive - min) * THE_RNG.nextFloat();
     }
 
     /**
-     * @param a left interval bound
-     * @param b right interval bound
+     * @param min left interval bound
+     * @param maxExclusive right (open) interval bound
      * @return Random double-precision floating-point number from right-open interval <code>[a; b[</code>. Interval bounds
      * are rearranged to guarantee <code>a<=b</code>
      */
-    static double randomDouble(double a, double b) {
-        if (a > b) {
-            var tmp = a;
-            a = b;
-            b = tmp;
+    static double randomDouble(double min, double maxExclusive) {
+        if (min > maxExclusive) {
+            var tmp = min;
+            min = maxExclusive;
+            maxExclusive = tmp;
         }
-        return a + (b - a) * THE_RNG.nextDouble();
+        return min + (maxExclusive - min) * THE_RNG.nextDouble();
     }
 
     static boolean isEven(int n) {

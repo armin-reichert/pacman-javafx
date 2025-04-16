@@ -10,7 +10,7 @@ import de.amr.games.pacman.model.MapSelector;
 
 import java.util.List;
 
-import static de.amr.games.pacman.Globals.assertValidLevelNumber;
+import static de.amr.games.pacman.Globals.requireValidLevelNumber;
 
 public class ArcadeMsPacMan_MapSelector extends MapSelector {
 
@@ -46,7 +46,7 @@ public class ArcadeMsPacMan_MapSelector extends MapSelector {
      */
     @Override
     public WorldMap selectWorldMap(int levelNumber) {
-        assertValidLevelNumber(levelNumber);
+        requireValidLevelNumber(levelNumber);
         final int mapNumber = switch (levelNumber) {
             case 1, 2 -> 1;
             case 3, 4, 5 -> 2;

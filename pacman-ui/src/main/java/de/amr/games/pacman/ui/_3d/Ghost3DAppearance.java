@@ -67,8 +67,8 @@ public class Ghost3DAppearance extends Group {
         requireNonNull(pupilsShape);
         requireNonNull(eyeballsShape);
         requireNonNull(ghost);
-        assertNonNegative(size);
-        assertNonNegative(numFlashes);
+        requireNonNegative(size);
+        requireNonNegative(numFlashes);
 
         this.ghost = ghost;
         this.size = size;

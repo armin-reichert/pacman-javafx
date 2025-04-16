@@ -46,7 +46,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
      * @param name readable name, used for logging or debug display
      */
     public Ghost(byte id, String name) {
-        this.id = assertValidGhostID(id);
+        this.id = requireValidGhostID(id);
         this.name = requireNonNull(name);
         corneringSpeedUp = -1.25f;
     }

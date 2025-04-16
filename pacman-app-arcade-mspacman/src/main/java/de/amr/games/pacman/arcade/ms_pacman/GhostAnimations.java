@@ -16,7 +16,7 @@ import de.amr.games.pacman.uilib.assets.SpriteSheet;
 
 import java.util.Map;
 
-import static de.amr.games.pacman.Globals.assertValidGhostID;
+import static de.amr.games.pacman.Globals.requireValidGhostID;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -26,7 +26,7 @@ public class GhostAnimations extends SpriteAnimationSet {
 
     public GhostAnimations(GameSpriteSheet spriteSheet, byte ghostID) {
         requireNonNull(spriteSheet);
-        assertValidGhostID(ghostID);
+        requireValidGhostID(ghostID);
 
         var normal = SpriteAnimation
             .spriteSheet(spriteSheet)

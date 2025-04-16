@@ -61,12 +61,12 @@ public class Ghost3D {
         double size) {
 
         requireNonNull(assetPrefix);
-        assertValidGhostID(id);
+        requireValidGhostID(id);
         requireNonNull(dressShape);
         requireNonNull(pupilsShape);
         requireNonNull(eyeballsShape);
         requireNonNull(assetPrefix);
-        assertNonNegative(size);
+        requireNonNegative(size);
 
         this.id = id;
         this.assetPrefix = assetPrefix;

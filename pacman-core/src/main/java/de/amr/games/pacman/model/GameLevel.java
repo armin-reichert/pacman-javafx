@@ -162,7 +162,6 @@ public class GameLevel {
     public void setNumFlashes(int numFlashes) {
         this.numFlashes = numFlashes;
     }
-
     public int numFlashes() {
         return numFlashes;
     }
@@ -170,7 +169,6 @@ public class GameLevel {
     public void setCutSceneNumber(int number) {
         this.cutSceneNumber = number;
     }
-
     public int cutSceneNumber() {
         return cutSceneNumber;
     }
@@ -178,29 +176,18 @@ public class GameLevel {
     public void showMessage(Message message) {
         this.message = requireNonNull(message);
     }
-
     public void clearMessage() {
         message = null;
     }
-
-    public Message message() {
-        return message;
-    }
+    public Message message() { return message; }
 
     public void setPac(Pac pac) {
         this.pac = pac;
     }
-
     public Pac pac() { return pac; }
 
-    public void setGhosts(Ghost[] ghosts) {
-        this.ghosts = requireNonNull(ghosts);
-    }
-
-    public Ghost ghost(byte id) {
-        assertValidGhostID(id);
-        return ghosts != null ? ghosts[id] : null;
-    }
+    public void setGhosts(Ghost[] ghosts) { this.ghosts = requireNonNull(ghosts); }
+    public Ghost ghost(byte id) { return ghosts != null ? ghosts[requireValidGhostID(id)] : null; }
 
     public Stream<Ghost> ghosts(GhostState... states) {
         requireNonNull(states);
@@ -247,7 +234,7 @@ public class GameLevel {
     }
 
     public Vector2i ghostScatterTile(byte ghostID) {
-        return ghostScatterTiles[assertValidGhostID(ghostID)];
+        return ghostScatterTiles[requireValidGhostID(ghostID)];
     }
 
     public int number() {
@@ -383,23 +370,23 @@ public class GameLevel {
     }
 
     public void setGhostPosition(byte ghostID, Vector2f position) {
-        assertValidGhostID(ghostID);
+        requireValidGhostID(ghostID);
         ghostPositions[ghostID] = position;
     }
 
     public Vector2f ghostPosition(byte ghostID) {
-        assertValidGhostID(ghostID);
+        requireValidGhostID(ghostID);
         return ghostPositions[ghostID];
     }
 
     public void setGhostDirection(byte ghostID, Direction dir) {
-        assertValidGhostID(ghostID);
+        requireValidGhostID(ghostID);
         requireNonNull(dir);
         ghostDirections[ghostID] = dir;
     }
 
     public Direction ghostDirection(byte ghostID) {
-        assertValidGhostID(ghostID);
+        requireValidGhostID(ghostID);
         return ghostDirections[ghostID];
     }
 
