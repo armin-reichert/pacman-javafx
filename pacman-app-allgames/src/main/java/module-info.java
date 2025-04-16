@@ -12,5 +12,5 @@ module de.amr.games.pacman.ui3d.appsuite {
     requires de.amr.games.pacman.arcade.pacman_xxl;
     requires de.amr.games.pacman.tengen.ms_pacman;
 
-    exports de.amr.games.pacman.ui3d.appsuite;
+    exports de.amr.games.pacman.allgames;
 }
