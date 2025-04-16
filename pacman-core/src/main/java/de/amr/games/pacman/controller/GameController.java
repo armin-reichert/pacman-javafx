@@ -86,10 +86,4 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     public GameModel context() {
         return game();
     }
-
-    @Override
-    public void update() {
-        game().clearEventLog();
-        super.update();
-    }
 }

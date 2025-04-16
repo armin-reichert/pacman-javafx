@@ -28,14 +28,7 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  */
 public abstract class GameModel {
 
-    // Ghost IDs
     public static final byte RED_GHOST_ID = 0, PINK_GHOST_ID = 1, CYAN_GHOST_ID = 2, ORANGE_GHOST_ID = 3;
-
-    protected final GateKeeper gateKeeper = new GateKeeper();
-    protected final ScoreManager scoreManager = new ScoreManager();
-    protected GameLevel level;
-    protected long levelStartTime;
-    protected int lastLevelNumber;
 
     private final BooleanProperty cutScenesEnabledPy = new SimpleBooleanProperty(true);
     private final BooleanProperty demoLevelPy = new SimpleBooleanProperty(false);
@@ -45,7 +38,13 @@ public abstract class GameModel {
     private final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(false);
     private final BooleanProperty simulateOverflowBugPy = new SimpleBooleanProperty(true);
 
+    protected final GateKeeper gateKeeper = new GateKeeper();
+    protected final ScoreManager scoreManager = new ScoreManager();
+
     protected SimulationStepLog eventLog;
+    protected GameLevel level;
+    protected long levelStartTime;
+    protected int lastLevelNumber;
 
     protected GameModel() {
         scoreManager.setOnExtraLifeWon(extraLifeScore -> {
@@ -258,8 +257,12 @@ public abstract class GameModel {
         return eventLog;
     }
 
-    public void clearEventLog() {
-        eventLog = new SimulationStepLog();
+    public void newEventLog(long tick) {
+        eventLog = new SimulationStepLog(tick);
+    }
+
+    public void printEventLog() {
+        eventLog.print();
     }
 
     /**

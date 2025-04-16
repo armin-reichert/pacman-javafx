@@ -17,6 +17,7 @@ import java.util.List;
  * @author Armin Reichert
  */
 public class SimulationStepLog {
+    public final long tick;
     public Vector2i foodFoundTile = null;
     public boolean  energizerFound = false;
     public int      bonusIndex = -1;
@@ -30,6 +31,10 @@ public class SimulationStepLog {
     public Ghost    releasedGhost = null;
     public String  ghostReleaseInfo = null;
     public final List<Ghost> killedGhosts = new ArrayList<>(4);
+
+    public SimulationStepLog(long tick) {
+        this.tick = tick;
+    }
 
     public List<String> createMessageList() {
         List<String> messages = new ArrayList<>();
@@ -66,10 +71,10 @@ public class SimulationStepLog {
         return messages;
     }
 
-    public void print(long step) {
+    public void print() {
         var messageList = createMessageList();
         if (!messageList.isEmpty()) {
-            Logger.info("Simulation step #{}:", step);
+            Logger.info("Simulation step #{}:", tick);
             for (var msg : messageList) {
                 Logger.info("- " + msg);
             }
