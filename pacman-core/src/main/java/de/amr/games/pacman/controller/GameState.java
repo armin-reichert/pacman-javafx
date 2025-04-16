@@ -319,7 +319,6 @@ public enum GameState implements FsmState<GameModel> {
         public void onEnter(GameModel game) {
             timer.restartTicks(game.gameOverStateTicks());
             game.endGame();
-            game.level().ifPresent(gameLevel -> gameLevel.showMessage(GameLevel.Message.GAME_OVER));
         }
 
         @Override

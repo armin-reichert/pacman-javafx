@@ -22,7 +22,6 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
@@ -221,6 +220,7 @@ public class ArcadePacMan_GameModel extends GameModel {
             THE_COIN_MECHANISM.consumeCoin();
         }
         scoreManager().updateHighScore();
+        level.showMessage(GameLevel.Message.GAME_OVER);
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.STOP_ALL_SOUNDS);
     }
 
@@ -232,11 +232,17 @@ public class ArcadePacMan_GameModel extends GameModel {
 
     @Override
     public void buildGameLevel(int levelNumber) {
+        requireValidLevelNumber(levelNumber);
         WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
 
         level = new GameLevel(levelNumber, worldMap);
         level.setNumFlashes(levelData(levelNumber).numFlashes());
-        level.setCutSceneNumber(cutSceneNumberAfterLevel(levelNumber));
+        level.setCutSceneNumber(switch (levelNumber) {
+            case 2 -> 1;
+            case 5 -> 2;
+            case 9, 13, 17 -> 3;
+            default -> 0;
+        });
 
         if (!worldMap.hasProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MIN_TILE)) {
             Logger.warn("No house min tile found in map!");
@@ -284,15 +290,6 @@ public class ArcadePacMan_GameModel extends GameModel {
         assignDemoLevelBehavior(level.pac());
         demoLevelSteering.init();
         level.showMessage(GameLevel.Message.GAME_OVER);
-    }
-
-    protected int cutSceneNumberAfterLevel(int number) {
-        return switch (number) {
-            case 2 -> 1;
-            case 5 -> 2;
-            case 9, 13, 17 -> 3;
-            default -> 0;
-        };
     }
 
     @Override
