@@ -100,6 +100,8 @@ public abstract class GameModel {
 
     public abstract float pacNormalSpeed();
 
+    public abstract long pacDyingTicks();
+
     public abstract long pacPowerTicks();
 
     public abstract long pacPowerFadingTicks();

@@ -318,6 +318,11 @@ public class ArcadePacMan_GameModel extends GameModel {
     }
 
     @Override
+    public long pacDyingTicks() {
+        return 240;
+    }
+
+    @Override
     public float ghostAttackSpeed(Ghost ghost) {
         LevelData levelData = levelData(level.number());
         if (level.isTunnel(ghost.tile())) {

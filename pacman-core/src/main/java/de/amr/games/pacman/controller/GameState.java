@@ -268,9 +268,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onEnter(GameModel game) {
-            //TODO find a better solution
-            timer.reset(THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN) ? 300 : 240);
-            timer.start();
+            timer.restartTicks(game.pacDyingTicks());
             game.onPacKilled();
             THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.STOP_ALL_SOUNDS);
         }

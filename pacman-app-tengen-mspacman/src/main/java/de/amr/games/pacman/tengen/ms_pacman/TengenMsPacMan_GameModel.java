@@ -289,6 +289,11 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
+    public long pacDyingTicks() {
+        return 300;
+    }
+
+    @Override
     public float pacNormalSpeed() {
         return level.pac() != null ? level.pac().baseSpeed() : 0;
     }
