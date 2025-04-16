@@ -345,7 +345,6 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onExit(GameModel game) {
-            game.playingProperty().set(false);
             game.level().ifPresent(GameLevel::clearMessage);
         }
     },
