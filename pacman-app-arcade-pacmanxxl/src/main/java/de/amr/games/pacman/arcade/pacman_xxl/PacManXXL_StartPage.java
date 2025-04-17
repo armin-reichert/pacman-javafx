@@ -4,10 +4,19 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman_xxl;
 
+import de.amr.games.pacman.arcade.ArcadePacMan_GameModel;
+import de.amr.games.pacman.arcade.ArcadePacMan_SpriteSheet;
+import de.amr.games.pacman.arcade.GhostAnimations;
+import de.amr.games.pacman.arcade.PacAnimations;
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.MapSelectionMode;
+import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.ui.GameUIConfig;
 import de.amr.games.pacman.ui.StartPage;
+import de.amr.games.pacman.ui._2d.GameRenderer;
 import de.amr.games.pacman.uilib.assets.ResourceManager;
 import de.amr.games.pacman.uilib.input.Keyboard;
 import de.amr.games.pacman.uilib.widgets.Flyer;
@@ -33,13 +42,18 @@ import static java.util.Objects.requireNonNull;
 public class PacManXXL_StartPage implements StartPage {
 
     private static class GameOptionMenu extends OptionMenu {
-
         // State
         GameVariant gameVariant;
         boolean play3D;
         boolean cutScenesEnabled;
         MapSelectionMode mapOrder;
 
+        // Animation
+        private Pac pac;
+        private Ghost[] ghosts = new Ghost[4];
+        private GameRenderer renderer;
+
+        // Entries
         private final OptionMenuEntry<GameVariant> entryGameVariant = new OptionMenuEntry<>("GAME VARIANT",
             GameVariant.PACMAN_XXL, GameVariant.MS_PACMAN_XXL) {
 
@@ -112,6 +126,7 @@ public class PacManXXL_StartPage implements StartPage {
             }
         };
 
+
         GameOptionMenu() {
             super(42, 36, 6, 20);
 
@@ -141,6 +156,8 @@ public class PacManXXL_StartPage implements StartPage {
                 "PRESS E TO OPEN EDITOR",
                 "PRESS ENTER TO START"
             );
+
+            createActors(GameVariant.PACMAN);
         }
 
         private void setPlay3D(boolean play3D) {
@@ -173,13 +190,70 @@ public class PacManXXL_StartPage implements StartPage {
         }
 
         @Override
+        protected void animationStep() {
+            updateActors();
+            draw();
+        }
+
+        @Override
         public void draw() {
             super.draw();
             drawActorAnimation();
         }
 
-        private void drawActorAnimation() {
+        private void createActors(GameVariant gameVariant) {
+            GameUIConfig config = THE_UI_CONFIGS.configuration(gameVariant);
+            renderer = config.createRenderer(canvas);
+            var spriteSheet = (ArcadePacMan_SpriteSheet) config.spriteSheet();
 
+            pac = new Pac();
+            pac.setPosX(42*TS);
+            pac.setMoveAndWishDir(Direction.LEFT);
+            pac.setSpeed(2.0f);
+            pac.setVisible(true);
+            pac.setAnimations(new PacAnimations(spriteSheet));
+            pac.selectAnimation(PacAnimations.ANIM_PAC_MUNCHING);
+            pac.startAnimation();
+
+            ghosts = new Ghost[] {
+                ArcadePacMan_GameModel.blinky(),
+                ArcadePacMan_GameModel.pinky(),
+                ArcadePacMan_GameModel.inky(),
+                ArcadePacMan_GameModel.clyde()
+            };
+            for (Ghost ghost : ghosts) {
+                ghost.setPosX(46*TS + ghost.id() * 2 *TS);
+                ghost.setMoveAndWishDir(Direction.LEFT);
+                ghost.setSpeed(2.1f);
+                ghost.setVisible(true);
+                ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id()));
+                ghost.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
+                ghost.startAnimation();
+            }
+        }
+
+        private void updateActors() {
+            if (ghosts[3].posX() < 0) {
+                pac.setPosX(42*TS);
+                for (Ghost ghost : ghosts) {
+                    ghost.setPosX(46*TS + ghost.id() * 2 *TS);
+                }
+            }
+            pac.move();
+            for (Ghost ghost : ghosts) {
+                ghost.move();
+            }
+        }
+
+        private void drawActorAnimation() {
+            g.save();
+            g.scale(scalingPy.get(), scalingPy.get());
+            g.translate(0, 23.5 * TS);
+            renderer.drawAnimatedActor(pac);
+            for (Ghost ghost : ghosts) {
+                renderer.drawAnimatedActor(ghost);
+            }
+            g.restore();
         }
     }
 
@@ -215,7 +289,7 @@ public class PacManXXL_StartPage implements StartPage {
     @Override
     public void onEnter() {
         initMenuState();
-        menu.startDrawing();
+        menu.startAnimation();
     }
 
     @Override
@@ -235,7 +309,7 @@ public class PacManXXL_StartPage implements StartPage {
 
     @Override
     public void onExit() {
-        menu.stopDrawing();
+        menu.stopAnimation();
     }
 
     private void initMenuState() {

@@ -61,8 +61,7 @@ public class OptionMenu {
 
     private final List<OptionMenuEntry<?>> entries = new ArrayList<>();
     private final BooleanProperty soundEnabledPy = new SimpleBooleanProperty(true);
-    private final FloatProperty scalingPy = new SimpleFloatProperty(2);
-    private final Timeline drawingTimer;
+    protected final FloatProperty scalingPy = new SimpleFloatProperty(2);
 
     private int selectedEntryIndex = 0;
     private Runnable actionOnStart;
@@ -71,10 +70,12 @@ public class OptionMenu {
     private String[] commandTexts = new String[0];
 
     private final BorderPane root = new BorderPane();
-    private final Canvas canvas = new Canvas();
-    private final GraphicsContext g = canvas.getGraphicsContext2D();
+    protected final Canvas canvas = new Canvas();
+    protected final GraphicsContext g = canvas.getGraphicsContext2D();
 
     private OptionMenuStyle style = DEFAULT_STYLE;
+
+    private final Timeline animation;
 
     public OptionMenu(int numTilesX, int numTilesY, int textCol, int valueCol) {
         this.numTilesX = numTilesX;
@@ -98,8 +99,13 @@ public class OptionMenu {
         root.maxHeightProperty().bind(canvas.heightProperty());
         root.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPress);
 
-        drawingTimer = new Timeline(REFRESH_RATE, new KeyFrame(Duration.seconds(1.0 / REFRESH_RATE), e-> draw()));
-        drawingTimer.setCycleCount(Animation.INDEFINITE);
+        animation = new Timeline(REFRESH_RATE,
+            new KeyFrame(Duration.seconds(1.0 / REFRESH_RATE), e-> animationStep()));
+        animation.setCycleCount(Animation.INDEFINITE);
+    }
+
+    protected void animationStep() {
+        draw();
     }
 
     public void requestFocus() {
@@ -114,14 +120,14 @@ public class OptionMenu {
 
     public BooleanProperty soundEnabledProperty() { return soundEnabledPy; }
 
-    public void startDrawing() {
-        drawingTimer.play();
-        Logger.trace("Menu drawing started");
+    public void startAnimation() {
+        animation.play();
+        Logger.trace("Menu animation started");
     }
 
-    public void stopDrawing() {
-        drawingTimer.stop();
-        Logger.trace("Menu drawing stopped");
+    public void stopAnimation() {
+        animation.stop();
+        Logger.trace("Menu animation stopped");
     }
 
     public void draw() {
