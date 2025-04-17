@@ -21,7 +21,7 @@ public class ArcadePacMan_App extends Application {
 
     @Override
     public void init() {
-        Globals.checkDirectories();
+        Globals.checkIfUserDirectoriesExistAndAreWritable();
         THE_GAME_CONTROLLER.registerGameModel(GameVariant.PACMAN, new ArcadePacMan_GameModel());
         THE_GAME_CONTROLLER.gameVariantProperty().set(GameVariant.PACMAN);
     }

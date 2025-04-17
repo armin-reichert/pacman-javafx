@@ -16,9 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static de.amr.games.pacman.Globals.CUSTOM_MAP_DIR;
 import static de.amr.games.pacman.Globals.randomInt;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
+import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_MapSelector extends MapSelector {
 
@@ -33,12 +33,15 @@ public class PacManXXL_MapSelector extends MapSelector {
             Map.of("fill", "#5036d9", "stroke", "#5f8bcf", "door", "#fcb5ff", "pellet", "#feb8ae")
     );
 
+    private final File customMapDir;
     private List<WorldMap> builtinMaps = new ArrayList<>();
     private final ObservableList<WorldMap> customMapsByFile = FXCollections.observableList(new ArrayList<>());
-    private final DirectoryWatchdog goodBoy = new DirectoryWatchdog(CUSTOM_MAP_DIR);
+    private final DirectoryWatchdog goodBoy;
     private boolean customMapsUpToDate;
 
-    public PacManXXL_MapSelector() {
+    public PacManXXL_MapSelector(File customMapDir) {
+        this.customMapDir = requireNonNull(customMapDir);
+        goodBoy = new DirectoryWatchdog(customMapDir);
         setMapSelectionMode(MapSelectionMode.CUSTOM_MAPS_FIRST);
         customMapsUpToDate = false;
         goodBoy.setEventConsumer(eventList -> {
@@ -79,9 +82,9 @@ public class PacManXXL_MapSelector extends MapSelector {
             Logger.info("Custom maps not loaded as they are up-to-date");
             return;
         }
-        File[] mapFiles = CUSTOM_MAP_DIR.listFiles((dir, name) -> name.endsWith(".world"));
+        File[] mapFiles = customMapDir.listFiles((dir, name) -> name.endsWith(".world"));
         if (mapFiles == null) {
-            Logger.error("An error occurred accessing custom map directory {}", CUSTOM_MAP_DIR);
+            Logger.error("An error occurred accessing custom map directory {}", customMapDir);
             return;
         }
         if (mapFiles.length == 0) {

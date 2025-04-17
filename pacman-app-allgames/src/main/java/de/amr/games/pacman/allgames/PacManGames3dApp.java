@@ -26,6 +26,7 @@ import org.tinylog.Logger;
 
 import java.util.Map;
 
+import static de.amr.games.pacman.Globals.CUSTOM_MAP_DIR;
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.ui.Globals.*;
 
@@ -36,12 +37,13 @@ import static de.amr.games.pacman.ui.Globals.*;
  */
 public class PacManGames3dApp extends Application {
 
-    private final PacManXXL_MapSelector xxlMapSelector = new PacManXXL_MapSelector();
+    private PacManXXL_MapSelector xxlMapSelector;
 
     @Override
     public void init() {
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
-        Globals.checkDirectories();
+        Globals.checkIfUserDirectoriesExistAndAreWritable();
+        xxlMapSelector = new PacManXXL_MapSelector(CUSTOM_MAP_DIR);
         THE_GAME_CONTROLLER.registerGameModel(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_GameModel());
         THE_GAME_CONTROLLER.registerGameModel(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
         THE_GAME_CONTROLLER.registerGameModel(GameVariant.PACMAN,           new ArcadePacMan_GameModel());

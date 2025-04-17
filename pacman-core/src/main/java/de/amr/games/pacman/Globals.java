@@ -48,7 +48,7 @@ public interface Globals {
      */
     File CUSTOM_MAP_DIR = new File(HOME_DIR, "maps");
 
-    static void checkDirectories() {
+    static void checkIfUserDirectoriesExistAndAreWritable() {
         String homeDirDesc = "Pac-Man FX home directory";
         String customMapDirDesc = "Pac-Man FX custom map directory";
         boolean success = ensureDirectoryExistsAndIsWritable(HOME_DIR, homeDirDesc);
