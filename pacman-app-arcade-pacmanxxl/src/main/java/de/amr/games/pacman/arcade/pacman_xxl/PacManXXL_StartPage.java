@@ -13,6 +13,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.MapSelectionMode;
+import de.amr.games.pacman.model.actors.ActorAnimations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.GameUIConfig;
@@ -214,7 +215,7 @@ public class PacManXXL_StartPage implements StartPage {
                 case PACMAN_XXL -> pac.setAnimations(new ArcadePacMan_PacAnimations(config.spriteSheet()));
                 case MS_PACMAN_XXL -> pac.setAnimations(new ArcadeMsPacMan_PacAnimations(config.spriteSheet()));
             }
-            pac.selectAnimation(ArcadePacMan_PacAnimations.ANIM_PAC_MUNCHING);
+            pac.selectAnimation(ActorAnimations.ANIM_PAC_MUNCHING);
             pac.startAnimation();
 
             for (Ghost ghost : ghosts) {
@@ -222,7 +223,7 @@ public class PacManXXL_StartPage implements StartPage {
                     case PACMAN_XXL -> ghost.setAnimations(new ArcadePacMan_GhostAnimations(config.spriteSheet(), ghost.id()));
                     case MS_PACMAN_XXL -> ghost.setAnimations(new ArcadeMsPacMan_GhostAnimations(config.spriteSheet(), ghost.id()));
                 }
-                ghost.selectAnimation(ArcadePacMan_GhostAnimations.ANIM_GHOST_NORMAL);
+                ghost.selectAnimation(ActorAnimations.ANIM_GHOST_NORMAL);
                 ghost.startAnimation();
             }
         }
@@ -251,10 +252,27 @@ public class PacManXXL_StartPage implements StartPage {
         }
 
         private void updateActorAnimation() {
-            if (ghosts[3].posX() < 0) {
+            if (ghosts[3].posX() < -4*TS && !chasingGhosts) {
+                chasingGhosts = true;
+                pac.setMoveAndWishDir(pac.moveDir().opposite());
+                pac.setPosX(ghosts[0].posX() - 14*TS);
+                for (Ghost ghost : ghosts) {
+                    ghost.setMoveAndWishDir(ghost.moveDir().opposite());
+                    ghost.setSpeed(0.8f);
+                    ghost.selectAnimation(ActorAnimations.ANIM_GHOST_FRIGHTENED);
+                    ghost.startAnimation();
+                }
+            }
+            else if (pac.posX() > 44*TS && chasingGhosts) {
+                chasingGhosts = false;
+                pac.setMoveAndWishDir(pac.moveDir().opposite());
                 pac.setPosX(42*TS);
                 for (Ghost ghost : ghosts) {
+                    ghost.setMoveAndWishDir(ghost.moveDir().opposite());
                     ghost.setPosX(46*TS + ghost.id() * 2 *TS);
+                    ghost.setSpeed(1.05f);
+                    ghost.selectAnimation(ActorAnimations.ANIM_GHOST_NORMAL);
+                    ghost.startAnimation();
                 }
             }
             pac.move();
