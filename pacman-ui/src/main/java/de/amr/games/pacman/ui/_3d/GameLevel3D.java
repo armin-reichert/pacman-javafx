@@ -280,27 +280,25 @@ public class GameLevel3D {
 
     public Group root() { return root; }
 
-    public void update() {
-        pac3D.update();
+    public void update(GameLevel level) {
+        pac3D.update(level);
         ghosts3D().forEach(Ghost3DAppearance::update);
         bonus3D().ifPresent(Bonus3D::update);
-        THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-            boolean houseAccessRequired = level.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-                .anyMatch(Ghost::isVisible);
-            maze3D().setHouseLightOn(houseAccessRequired);
+        boolean houseAccessRequired = level.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+            .anyMatch(Ghost::isVisible);
+        maze3D().setHouseLightOn(houseAccessRequired);
 
-            boolean ghostNearHouseEntry = level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-                .filter(ghost -> ghost.position().euclideanDist(level.houseEntryPosition()) <= HOUSE_3D_SENSITIVITY)
-                .anyMatch(Ghost::isVisible);
-            houseOpenPy.set(ghostNearHouseEntry);
+        boolean ghostNearHouseEntry = level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+            .filter(ghost -> ghost.position().euclideanDist(level.houseEntryPosition()) <= HOUSE_3D_SENSITIVITY)
+            .anyMatch(Ghost::isVisible);
+        houseOpenPy.set(ghostNearHouseEntry);
 
-            int symbolsDisplayed = Math.max(0, THE_GAME_CONTROLLER.game().livesProperty().get() - 1);
-            if (!level.pac().isVisible() && THE_GAME_CONTROLLER.state() == GameState.STARTING_GAME) {
-                livesCountPy.set(symbolsDisplayed + 1);
-            } else {
-                livesCountPy.set(symbolsDisplayed);
-            }
-        });
+        int symbolsDisplayed = Math.max(0, THE_GAME_CONTROLLER.game().livesProperty().get() - 1);
+        if (!level.pac().isVisible() && THE_GAME_CONTROLLER.state() == GameState.STARTING_GAME) {
+            livesCountPy.set(symbolsDisplayed + 1);
+        } else {
+            livesCountPy.set(symbolsDisplayed);
+        }
     }
 
     public void showAnimatedMessage(String text, double displaySeconds, double centerX, double y) {

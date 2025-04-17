@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._3d;
 
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.uilib.assets.AssetStorage;
@@ -16,7 +17,6 @@ import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.ui.Globals.THE_SOUND;
 import static de.amr.games.pacman.uilib.Ufx.doAfterSec;
 import static de.amr.games.pacman.uilib.Ufx.now;
@@ -78,21 +78,19 @@ public class PacMan3D implements Pac3D {
     }
 
     @Override
-    public void update() {
-        THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-            if (pacMan.isAlive()) {
-                shape3D.updatePosition(pacMan);
-                shape3D.updateLight(pacMan, level);
-                shape3D.updateVisibility(pacMan, level);
-            }
-            if (pacMan.isAlive() && !pacMan.isStandingStill()) {
-                updateHeadBanging(pacMan);
-                shape3D.chew();
-            } else {
-                stopHeadBanging();
-                shape3D.stopChewingAndOpenMouth();
-            }
-        });
+    public void update(GameLevel level) {
+        if (pacMan.isAlive()) {
+            shape3D.updatePosition(pacMan);
+            shape3D.updateLight(pacMan, level);
+            shape3D.updateVisibility(pacMan, level);
+        }
+        if (pacMan.isAlive() && !pacMan.isStandingStill()) {
+            updateHeadBanging(pacMan);
+            shape3D.chew();
+        } else {
+            stopHeadBanging();
+            shape3D.stopChewingAndOpenMouth();
+        }
     }
 
     @Override

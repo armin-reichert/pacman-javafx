@@ -40,9 +40,9 @@ import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.Globals.*;
+import static de.amr.games.pacman.uilib.Ufx.contextMenuTitleItem;
 import static de.amr.games.pacman.uilib.input.Keyboard.alt;
 import static de.amr.games.pacman.uilib.input.Keyboard.naked;
-import static de.amr.games.pacman.uilib.Ufx.contextMenuTitleItem;
 
 /**
  * 3D play scene. Provides different camera perspectives that can be stepped
@@ -165,7 +165,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             level.pac().show();
             level.ghosts().forEach(Ghost::show);
             level3D.pac3D().init();
-            level3D.pac3D().update();
+            level3D.pac3D().update(level);
             if (gameState() == GameState.HUNTING) {
                 if (level.powerTimer().isRunning()) {
                     THE_SOUND.playPacPowerSound();
@@ -189,7 +189,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             Logger.warn("Tick #{}: Cannot update 3D play scene, 3D game level not yet created?", THE_CLOCK.tickCount());
             return;
         }
-        level3D.update();
+        level3D.update(level);
 
         //TODO how to avoid calling this on every tick?
         if (game().isDemoLevel()) {
@@ -274,7 +274,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         switch (state) {
             case STARTING_GAME         -> onEnterStateStartingGame();
             case HUNTING               -> onEnterStateHunting();
-            case PACMAN_DYING          -> onEnterStatePacManDying();
+            case PACMAN_DYING          -> game().level().ifPresent(this::onEnterStatePacManDying);
             case GHOST_DYING           -> onEnterStateGhostDying();
             case LEVEL_COMPLETE        -> onEnterStateLevelComplete();
             case LEVEL_TRANSITION      -> onEnterStateLevelTransition();
@@ -301,11 +301,11 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         level3D.playLivesCounterAnimation();
     }
 
-    private void onEnterStatePacManDying() {
+    private void onEnterStatePacManDying(GameLevel level) {
         level3D.stopAnimations();
         THE_SOUND.stopAll();
         // last update before dying animation
-        level3D.pac3D().update();
+        level3D.pac3D().update(level);
         playPacManDiesAnimation();
     }
 

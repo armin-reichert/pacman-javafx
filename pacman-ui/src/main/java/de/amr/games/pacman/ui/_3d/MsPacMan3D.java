@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._3d;
 
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.uilib.assets.AssetStorage;
@@ -87,21 +88,19 @@ public class MsPacMan3D implements Pac3D {
     }
 
     @Override
-    public void update() {
-        THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-            if (msPacMan.isAlive()) {
-                shape3D.updatePosition(msPacMan);
-                shape3D.updateLight(msPacMan, level);
-                shape3D.updateVisibility(msPacMan, level);
-            }
-            if (msPacMan.isAlive() && !msPacMan.isStandingStill()) {
-                swayHips();
-                shape3D.chew();
-            } else {
-                stopSwayingHips();
-                shape3D.stopChewingAndOpenMouth();
-            }
-        });
+    public void update(GameLevel level) {
+        if (msPacMan.isAlive()) {
+            shape3D.updatePosition(msPacMan);
+            shape3D.updateLight(msPacMan, level);
+            shape3D.updateVisibility(msPacMan, level);
+        }
+        if (msPacMan.isAlive() && !msPacMan.isStandingStill()) {
+            swayHips();
+            shape3D.chew();
+        } else {
+            stopSwayingHips();
+            shape3D.stopChewingAndOpenMouth();
+        }
     }
 
     @Override

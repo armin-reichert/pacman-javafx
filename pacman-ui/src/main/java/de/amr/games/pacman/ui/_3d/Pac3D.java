@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._3d;
 
+import de.amr.games.pacman.model.GameLevel;
 import javafx.animation.Animation;
 
 /**
@@ -15,7 +16,7 @@ public interface Pac3D {
 
     void init();
 
-    void update();
+    void update(GameLevel level);
 
     Animation createDyingAnimation();
 
