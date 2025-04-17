@@ -162,7 +162,9 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
             THE_COIN_MECHANISM.consumeCoin();
         }
         scoreManager().updateHighScore();
-        level.showMessage(GameLevel.Message.GAME_OVER);
+        if (level != null) {
+            level.showMessage(GameLevel.Message.GAME_OVER);
+        }
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.STOP_ALL_SOUNDS);
     }
 
