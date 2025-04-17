@@ -196,7 +196,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     public void buildGameLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
 
-        level = new GameLevel(levelNumber, worldMap);
+        level = new GameLevel(this, levelNumber, worldMap);
         level.setCutSceneNumber(cutSceneNumberAfterLevel(levelNumber));
         level.setNumFlashes(levelData(levelNumber).numFlashes());
 

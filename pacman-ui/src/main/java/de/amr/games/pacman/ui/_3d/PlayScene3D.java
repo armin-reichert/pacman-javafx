@@ -461,7 +461,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     protected void replaceGameLevel3D(GameLevel level) {
-        level3D = new GameLevel3D(game(), level);
+        level3D = new GameLevel3D(level);
         int lastIndex = root.getChildren().size() - 1;
         root.getChildren().set(lastIndex, level3D.root());
         scores3D.translateXProperty().bind(level3D.root().translateXProperty().add(TS));

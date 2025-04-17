@@ -48,6 +48,7 @@ public class GameLevel {
         return tile.scaled(TS).plus(HTS, 0).toVector2f();
     }
 
+    private final GameModel game;
     private final int number; // 1=first level
     private final WorldMap worldMap;
     private final Vector2f pacPosition;
@@ -80,7 +81,8 @@ public class GameLevel {
     private final Pulse blinking = new Pulse(10, Pulse.OFF);
     private final TickTimer powerTimer = new TickTimer("PacPowerTimer");
 
-    public GameLevel(int number, WorldMap worldMap) {
+    public GameLevel(GameModel game, int number, WorldMap worldMap) {
+        this.game = requireNonNull(game);
         if (number < 1) {
             throw new IllegalArgumentException("Illegal level number: " + number);
         }
@@ -148,6 +150,10 @@ public class GameLevel {
             }
         }
         return portals.toArray(new Portal[0]);
+    }
+
+    public GameModel game() {
+        return game;
     }
 
     public void addVictim(Ghost ghost) {

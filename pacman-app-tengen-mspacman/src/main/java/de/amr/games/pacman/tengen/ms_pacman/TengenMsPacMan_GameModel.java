@@ -434,7 +434,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public void buildGameLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.selectWorldMap(mapCategory, levelNumber);
 
-        level = new GameLevel(levelNumber, worldMap);
+        level = new GameLevel(this, levelNumber, worldMap);
         level.setNumFlashes(5); // TODO check this
         level.setCutSceneNumber(cutSceneNumberAfterLevel(levelNumber));
 
@@ -456,7 +456,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
         WorldMap worldMap = mapSelector.coloredWorldMap(mapCategory, 1);
 
-        level = new GameLevel(1, worldMap);
+        level = new GameLevel(this, 1, worldMap);
         level.setNumFlashes(5); // TODO check this
         level.setCutSceneNumber(0);
 

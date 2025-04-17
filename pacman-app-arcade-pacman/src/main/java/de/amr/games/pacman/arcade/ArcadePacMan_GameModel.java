@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade;
 
-import de.amr.games.pacman.model.HuntingTimer;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.Waypoint;
@@ -239,7 +238,7 @@ public class ArcadePacMan_GameModel extends GameModel {
         requireValidLevelNumber(levelNumber);
         WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
 
-        level = new GameLevel(levelNumber, worldMap);
+        level = new GameLevel(this, levelNumber, worldMap);
         level.setNumFlashes(levelData(levelNumber).numFlashes());
         level.setCutSceneNumber(switch (levelNumber) {
             case 2 -> 1;

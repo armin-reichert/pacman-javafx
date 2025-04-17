@@ -9,7 +9,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.LevelCounter;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -84,12 +83,12 @@ public class GameLevel3D {
     private Animation levelCompleteAnimation;
     private Animation livesCounterAnimation;
 
-    public GameLevel3D(GameModel game, GameLevel level) {
+    public GameLevel3D(GameLevel level) {
 
         var ambientLight = new AmbientLight();
         ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
 
-        livesCounter3D = createLivesCounter3D(game.canStartNewGame());
+        livesCounter3D = createLivesCounter3D(level.game().canStartNewGame());
         livesCounter3D.livesCountPy.bind(livesCountPy);
 
         final WorldMap worldMap = level.worldMap();
@@ -377,9 +376,9 @@ public class GameLevel3D {
 
     private Animation levelTransformationBeforeIntermission(GameLevel level, int numFlashes) {
         return new SequentialTransition(
-            doAfterSec(1.0, () -> level.ghosts().forEach(Ghost::hide))
-            , maze3D.mazeFlashAnimation(numFlashes)
-            , doAfterSec(2.5, () -> level.pac().hide())
+                doAfterSec(1.0, () -> level.ghosts().forEach(Ghost::hide)),
+                maze3D.mazeFlashAnimation(numFlashes),
+                doAfterSec(2.5, () -> level.pac().hide())
         );
     }
 
