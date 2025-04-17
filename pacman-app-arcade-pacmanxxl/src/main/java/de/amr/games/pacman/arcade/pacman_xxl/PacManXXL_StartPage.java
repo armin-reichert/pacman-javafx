@@ -30,7 +30,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Displays an option menu where the game variant to be played and other options can be set.
  */
-public class PacManXXL_StartPage implements StartPage, ResourceManager {
+public class PacManXXL_StartPage implements StartPage {
 
     private static class GameOptionMenu extends OptionMenu {
 
@@ -187,7 +187,8 @@ public class PacManXXL_StartPage implements StartPage, ResourceManager {
     private final GameOptionMenu menu;
 
     public PacManXXL_StartPage() {
-        Flyer flyer = new Flyer(loadImage("graphics/pacman_xxl_startpage.jpg"));
+        ResourceManager rm = this::getClass;
+        Flyer flyer = new Flyer(rm.loadImage("graphics/pacman_xxl_startpage.jpg"));
         flyer.setPageLayout(0, Flyer.LayoutMode.FILL);
         flyer.selectPage(0);
 
@@ -209,11 +210,6 @@ public class PacManXXL_StartPage implements StartPage, ResourceManager {
 
         root.setBackground(Background.fill(Color.BLACK));
         root.getChildren().addAll(flyer, menu.root());
-    }
-
-    @Override
-    public Class<?> resourceRootClass() {
-        return PacManXXL_StartPage.class;
     }
 
     @Override
