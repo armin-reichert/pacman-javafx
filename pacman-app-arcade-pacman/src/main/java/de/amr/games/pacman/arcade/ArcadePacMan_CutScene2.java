@@ -48,12 +48,12 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         music.setCycleCount(1);
 
         var spriteSheet = (ArcadePacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
-        pac.setAnimations(new PacAnimations(spriteSheet));
+        pac.setAnimations(new ArcadePacMan_PacAnimations(spriteSheet));
 
-        var blinkyAnimations = new GhostAnimations(spriteSheet, blinky.id());
+        var blinkyAnimations = new ArcadePacMan_GhostAnimations(spriteSheet, blinky.id());
         blinkyNormal = blinkyAnimations.animation(ANIM_GHOST_NORMAL);
         blinkyStretching = blinkyAnimations.animation(ANIM_BLINKY_STRETCHED);
-        blinkyDamaged = blinkyAnimations.animation(GhostAnimations.ANIM_BLINKY_DAMAGED);
+        blinkyDamaged = blinkyAnimations.animation(ArcadePacMan_GhostAnimations.ANIM_BLINKY_DAMAGED);
         blinky.setAnimations(blinkyAnimations);
 
         frame = -1;
@@ -101,7 +101,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 blinky.setSpeed(0);
                 blinkyStretching.nextFrame(); // Rapture
             }
-            case ANIMATION_START + 329 -> blinky.selectAnimation(GhostAnimations.ANIM_BLINKY_DAMAGED); // Eyes up
+            case ANIMATION_START + 329 -> blinky.selectAnimation(ArcadePacMan_GhostAnimations.ANIM_BLINKY_DAMAGED); // Eyes up
             case ANIMATION_START + 389 -> blinkyDamaged.nextFrame(); // Eyes right-down
             case ANIMATION_START + 508 -> {
                 blinky.setVisible(false);

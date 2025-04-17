@@ -50,8 +50,8 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
         music = THE_SOUND.makeSound("intermission.2");
 
         var spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
-        msPacMan.setAnimations(new PacAnimations(spriteSheet));
-        pacMan.setAnimations(new PacAnimations(spriteSheet));
+        msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));
+        pacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));
 
         clapperboardAnimation = new ClapperboardAnimation("2", "THE CHASE");
         clapperboardAnimation.start();

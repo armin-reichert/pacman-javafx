@@ -21,9 +21,9 @@ import static java.util.Objects.requireNonNull;
 /**
  * @author Armin Reichert
  */
-public class PacAnimations extends SpriteAnimationSet {
+public class ArcadePacMan_PacAnimations extends SpriteAnimationSet {
 
-    public PacAnimations(ArcadePacMan_SpriteSheet spriteSheet) {
+    public ArcadePacMan_PacAnimations(ArcadePacMan_SpriteSheet spriteSheet) {
         requireNonNull(spriteSheet);
         add(Map.of(
             ActorAnimations.ANIM_PAC_MUNCHING,

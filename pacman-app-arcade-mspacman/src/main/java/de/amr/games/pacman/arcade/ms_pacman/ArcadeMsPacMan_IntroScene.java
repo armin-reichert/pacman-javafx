@@ -97,10 +97,10 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         waitBeforeRising = 0;
 
         ArcadeMsPacMan_SpriteSheet spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
-        msPacMan.setAnimations(new PacAnimations(spriteSheet));
+        msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));
         msPacMan.selectAnimation(ActorAnimations.ANIM_PAC_MUNCHING);
         for (Ghost ghost : ghosts) {
-            ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id()));
+            ghost.setAnimations(new ArcadeMsPacMan_GhostAnimations(spriteSheet, ghost.id()));
             ghost.selectAnimation(ActorAnimations.ANIM_GHOST_NORMAL);
         }
         sceneController.restart(SceneState.STARTING);

@@ -43,8 +43,8 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         music.setCycleCount(2);
 
         var spriteSheet = (ArcadePacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
-        pac.setAnimations(new PacAnimations(spriteSheet));
-        blinky.setAnimations(new GhostAnimations(spriteSheet, blinky.id()));
+        pac.setAnimations(new ArcadePacMan_PacAnimations(spriteSheet));
+        blinky.setAnimations(new ArcadePacMan_GhostAnimations(spriteSheet, blinky.id()));
 
         frame = -1;
     }
@@ -74,13 +74,13 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
                 blinky.setMoveAndWishDir(Direction.LEFT);
                 blinky.setSpeed(1.25f);
                 blinky.show();
-                blinky.selectAnimation(GhostAnimations.ANIM_BLINKY_PATCHED);
+                blinky.selectAnimation(ArcadePacMan_GhostAnimations.ANIM_BLINKY_PATCHED);
                 blinky.startAnimation();
             }
             case ANIMATION_START + 400 -> {
                 blinky.centerOverTile(Vector2i.of(-1, 20));
                 blinky.setMoveAndWishDir(Direction.RIGHT);
-                blinky.selectAnimation(GhostAnimations.ANIM_BLINKY_NAKED);
+                blinky.selectAnimation(ArcadePacMan_GhostAnimations.ANIM_BLINKY_NAKED);
                 blinky.startAnimation();
             }
             case ANIMATION_START + 700 -> THE_GAME_CONTROLLER.terminateCurrentState();

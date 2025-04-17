@@ -86,7 +86,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         var spriteSheet = (ArcadePacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
         blinking = new Pulse(10, true);
         pacMan = new Pac();
-        pacMan.setAnimations(new PacAnimations(spriteSheet));
+        pacMan.setAnimations(new ArcadePacMan_PacAnimations(spriteSheet));
         ghosts = new Ghost[] {
             ArcadePacMan_GameModel.blinky(),
             ArcadePacMan_GameModel.pinky(),
@@ -94,7 +94,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             ArcadePacMan_GameModel.clyde()
         };
         for (Ghost ghost : ghosts) {
-            ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id()));
+            ghost.setAnimations(new ArcadePacMan_GhostAnimations(spriteSheet, ghost.id()));
         }
         ghostImageVisible     = new boolean[4];
         ghostNicknameVisible  = new boolean[4];

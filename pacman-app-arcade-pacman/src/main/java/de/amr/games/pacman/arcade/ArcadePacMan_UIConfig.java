@@ -171,8 +171,8 @@ public class ArcadePacMan_UIConfig implements GameUIConfig, ResourceManager {
 
     @Override
     public void createActorAnimations(GameLevel level) {
-        level.pac().setAnimations(new PacAnimations(spriteSheet));
-        level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id())));
+        level.pac().setAnimations(new ArcadePacMan_PacAnimations(spriteSheet));
+        level.ghosts().forEach(ghost -> ghost.setAnimations(new ArcadePacMan_GhostAnimations(spriteSheet, ghost.id())));
     }
 
     @Override

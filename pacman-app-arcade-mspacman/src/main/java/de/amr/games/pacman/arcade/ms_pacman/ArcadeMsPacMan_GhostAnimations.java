@@ -22,9 +22,9 @@ import static java.util.Objects.requireNonNull;
 /**
  * @author Armin Reichert
  */
-public class GhostAnimations extends SpriteAnimationSet {
+public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationSet {
 
-    public GhostAnimations(GameSpriteSheet spriteSheet, byte ghostID) {
+    public ArcadeMsPacMan_GhostAnimations(GameSpriteSheet spriteSheet, byte ghostID) {
         requireNonNull(spriteSheet);
         requireValidGhostID(ghostID);
 

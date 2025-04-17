@@ -6,8 +6,11 @@ package de.amr.games.pacman.arcade.pacman_xxl;
 
 import de.amr.games.pacman.arcade.ArcadePacMan_GameModel;
 import de.amr.games.pacman.arcade.ArcadePacMan_SpriteSheet;
-import de.amr.games.pacman.arcade.GhostAnimations;
-import de.amr.games.pacman.arcade.PacAnimations;
+import de.amr.games.pacman.arcade.ArcadePacMan_GhostAnimations;
+import de.amr.games.pacman.arcade.ArcadePacMan_PacAnimations;
+import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GhostAnimations;
+import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_PacAnimations;
+import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -60,6 +63,7 @@ public class PacManXXL_StartPage implements StartPage {
             @Override
             protected void onValueChanged(int index) {
                 gameVariant = selectedValue();
+                createActors(gameVariant);
                 logMenuState();
             }
 
@@ -204,15 +208,17 @@ public class PacManXXL_StartPage implements StartPage {
         private void createActors(GameVariant gameVariant) {
             GameUIConfig config = THE_UI_CONFIGS.configuration(gameVariant);
             renderer = config.createRenderer(canvas);
-            var spriteSheet = (ArcadePacMan_SpriteSheet) config.spriteSheet();
 
             pac = new Pac();
             pac.setPosX(42*TS);
             pac.setMoveAndWishDir(Direction.LEFT);
             pac.setSpeed(2.0f);
             pac.setVisible(true);
-            pac.setAnimations(new PacAnimations(spriteSheet));
-            pac.selectAnimation(PacAnimations.ANIM_PAC_MUNCHING);
+            switch (gameVariant) {
+                case PACMAN_XXL -> pac.setAnimations(new ArcadePacMan_PacAnimations((ArcadePacMan_SpriteSheet) config.spriteSheet()));
+                case MS_PACMAN_XXL -> pac.setAnimations(new ArcadeMsPacMan_PacAnimations((ArcadeMsPacMan_SpriteSheet) config.spriteSheet()));
+            }
+            pac.selectAnimation(ArcadePacMan_PacAnimations.ANIM_PAC_MUNCHING);
             pac.startAnimation();
 
             ghosts = new Ghost[] {
@@ -226,8 +232,11 @@ public class PacManXXL_StartPage implements StartPage {
                 ghost.setMoveAndWishDir(Direction.LEFT);
                 ghost.setSpeed(2.1f);
                 ghost.setVisible(true);
-                ghost.setAnimations(new GhostAnimations(spriteSheet, ghost.id()));
-                ghost.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
+                switch (gameVariant) {
+                    case PACMAN_XXL -> ghost.setAnimations(new ArcadePacMan_GhostAnimations((ArcadePacMan_SpriteSheet) config.spriteSheet(), ghost.id()));
+                    case MS_PACMAN_XXL -> ghost.setAnimations(new ArcadeMsPacMan_GhostAnimations((ArcadeMsPacMan_SpriteSheet) config.spriteSheet(), ghost.id()));
+                }
+                ghost.selectAnimation(ArcadePacMan_GhostAnimations.ANIM_GHOST_NORMAL);
                 ghost.startAnimation();
             }
         }
@@ -247,8 +256,10 @@ public class PacManXXL_StartPage implements StartPage {
 
         private void drawActorAnimation() {
             g.save();
+            g.setImageSmoothing(false);
             g.scale(scalingPy.get(), scalingPy.get());
             g.translate(0, 23.5 * TS);
+            renderer.setScaling(1.5f);
             renderer.drawAnimatedActor(pac);
             for (Ghost ghost : ghosts) {
                 renderer.drawAnimatedActor(ghost);
@@ -316,6 +327,7 @@ public class PacManXXL_StartPage implements StartPage {
         if (menu.gameVariant == null) {
             menu.gameVariant = GameVariant.PACMAN_XXL;
             menu.entryGameVariant.selectValue(menu.gameVariant);
+            menu.createActors(menu.gameVariant);
         }
         GameModel game = THE_GAME_CONTROLLER.game(menu.gameVariant);
         menu.setPlay3D(PY_3D_ENABLED.get());

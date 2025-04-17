@@ -41,8 +41,8 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
         music.setCycleCount(2);
 
         var spriteSheet = (ArcadePacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
-        pac.setAnimations(new PacAnimations(spriteSheet));
-        blinky.setAnimations(new GhostAnimations(spriteSheet, blinky.id()));
+        pac.setAnimations(new ArcadePacMan_PacAnimations(spriteSheet));
+        blinky.setAnimations(new ArcadePacMan_GhostAnimations(spriteSheet, blinky.id()));
 
         frame = -1;
     }
@@ -82,7 +82,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
         else if (frame == ANIMATION_START + 400) {
             pac.placeAtTile(-3, 18, 0, 6.5f);
             pac.setMoveDir(Direction.RIGHT);
-            pac.selectAnimation(PacAnimations.ANIM_PAC_BIG);
+            pac.selectAnimation(ArcadePacMan_PacAnimations.ANIM_PAC_BIG);
             pac.startAnimation();
         }
         else if (frame == ANIMATION_START + 632) {

@@ -65,10 +65,10 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
         var spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_UI_CONFIGS.configuration(
             THE_GAME_CONTROLLER.gameVariantProperty().get()).spriteSheet();
-        msPac.setAnimations(new PacAnimations(spriteSheet));
-        pacMan.setAnimations(new PacAnimations(spriteSheet));
-        inky.setAnimations(new GhostAnimations(spriteSheet, inky.id()));
-        pinky.setAnimations(new GhostAnimations(spriteSheet, pinky.id()));
+        msPac.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));
+        pacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));
+        inky.setAnimations(new ArcadeMsPacMan_GhostAnimations(spriteSheet, inky.id()));
+        pinky.setAnimations(new ArcadeMsPacMan_GhostAnimations(spriteSheet, pinky.id()));
 
         clapperboardAnimation = new ClapperboardAnimation("1", "THEY MEET");
         clapperboardAnimation.start();

@@ -20,9 +20,9 @@ import static java.util.Objects.requireNonNull;
 /**
  * @author Armin Reichert
  */
-public class PacAnimations extends SpriteAnimationSet {
+public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationSet {
 
-    public PacAnimations(ArcadeMsPacMan_SpriteSheet spriteSheet) {
+    public ArcadeMsPacMan_PacAnimations(ArcadeMsPacMan_SpriteSheet spriteSheet) {
         requireNonNull(spriteSheet);
 
         var munching = SpriteAnimation
