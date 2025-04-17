@@ -74,20 +74,17 @@ public class GameLevel3D {
     private final Group root = new Group();
     private final LivesCounter3D livesCounter3D;
     private final Group mazeGroup = new Group();
-    private Box floor3D;
-    private Maze3D maze3D;
+    private final Box floor3D;
+    private final Maze3D maze3D;
     private Message3D message3D;
     private Bonus3D bonus3D;
-    private Pac3D pac3D;
-    private List<Ghost3DAppearance> ghost3DAppearances;
+    private final Pac3D pac3D;
+    private final List<Ghost3DAppearance> ghost3DAppearances;
 
     private Animation levelCompleteAnimation;
     private Animation livesCounterAnimation;
 
-    private final GameLevel level;
-
     public GameLevel3D(GameModel game, GameLevel level) {
-        this.level = level;
 
         var ambientLight = new AmbientLight();
         ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
