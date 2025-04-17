@@ -38,7 +38,7 @@ public class OptionMenu {
 
     private static final ResourceManager RESOURCE_MGR = () -> OptionMenu.class;
 
-    private static final int REFRESH_RATE = 30;
+    private static final int REFRESH_RATE = 60;
 
     public static final OptionMenuStyle DEFAULT_STYLE = new OptionMenuStyle(
         Font.font("sans", FontWeight.BLACK, 30),
