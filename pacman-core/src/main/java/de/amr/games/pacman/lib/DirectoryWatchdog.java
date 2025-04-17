@@ -19,21 +19,24 @@ import static java.nio.file.StandardWatchEventKinds.*;
 
 public class DirectoryWatchdog {
 
-    private final File directory;
+    private final File watchedDir;
     private final WatchKey watchKey;
     private Consumer<List<WatchEvent<?>>> eventConsumer;
 
-    public DirectoryWatchdog(File directory) {
-        if (directory == null) {
-            throw new IllegalArgumentException("Watched directory is NULL");
+    public DirectoryWatchdog(File path) {
+        if (path == null) {
+            throw new IllegalArgumentException("Watched path is NULL");
         }
-        if (!directory.isDirectory() || !directory.exists()) {
-            throw new IllegalArgumentException("Watched directory does not exist");
+        if (!path.isDirectory()) {
+            throw new IllegalArgumentException("Watched path %s is not a directory".formatted(path.getAbsolutePath()));
         }
-        this.directory = directory;
+        if (!path.exists()) {
+            throw new IllegalArgumentException("Watched directory %s does not exist".formatted(path.getAbsolutePath()));
+        }
+        watchedDir = path;
         try {
             WatchService watchService = FileSystems.getDefault().newWatchService();
-            watchKey = directory.toPath().register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+            watchKey = watchedDir.toPath().register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
             setEventConsumer(eventList -> {
                 for (var event : eventList) {
                     Logger.info(event);
@@ -52,7 +55,7 @@ public class DirectoryWatchdog {
         Thread pollingThread = new Thread(this::pollingLoop);
         pollingThread.setDaemon(true);
         pollingThread.start();
-        Logger.info("Start watching directory {}", directory);
+        Logger.info("Start watching directory {}", watchedDir);
     }
 
     private void pollingLoop() {
