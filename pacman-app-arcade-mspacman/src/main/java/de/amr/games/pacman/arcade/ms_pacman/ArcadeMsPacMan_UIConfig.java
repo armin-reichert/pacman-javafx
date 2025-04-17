@@ -14,6 +14,7 @@ import de.amr.games.pacman.ui.GameUIConfig;
 import de.amr.games.pacman.ui._2d.ArcadeBootScene2D;
 import de.amr.games.pacman.ui._2d.ArcadePlayScene2D;
 import de.amr.games.pacman.ui._2d.GameScene2D;
+import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.ui._3d.PlayScene3D;
 import de.amr.games.pacman.uilib.assets.AssetStorage;
 import de.amr.games.pacman.uilib.assets.ResourceManager;
@@ -182,8 +183,9 @@ public class ArcadeMsPacMan_UIConfig implements GameUIConfig, ResourceManager {
     }
 
     @Override
-    public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return spriteSheet;
+    @SuppressWarnings("unchecked")
+    public <T extends GameSpriteSheet> T spriteSheet() {
+        return (T) spriteSheet;
     }
 
     @Override

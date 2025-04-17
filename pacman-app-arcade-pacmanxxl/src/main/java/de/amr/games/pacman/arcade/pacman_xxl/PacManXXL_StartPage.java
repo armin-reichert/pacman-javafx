@@ -5,9 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade.pacman_xxl;
 
 import de.amr.games.pacman.arcade.ArcadePacMan_GameModel;
-import de.amr.games.pacman.arcade.ArcadePacMan_SpriteSheet;
 import de.amr.games.pacman.arcade.ArcadePacMan_GhostAnimations;
 import de.amr.games.pacman.arcade.ArcadePacMan_PacAnimations;
+import de.amr.games.pacman.arcade.ArcadePacMan_SpriteSheet;
 import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GhostAnimations;
 import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_PacAnimations;
 import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet;
@@ -215,8 +215,8 @@ public class PacManXXL_StartPage implements StartPage {
             pac.setSpeed(2.0f);
             pac.setVisible(true);
             switch (gameVariant) {
-                case PACMAN_XXL -> pac.setAnimations(new ArcadePacMan_PacAnimations((ArcadePacMan_SpriteSheet) config.spriteSheet()));
-                case MS_PACMAN_XXL -> pac.setAnimations(new ArcadeMsPacMan_PacAnimations((ArcadeMsPacMan_SpriteSheet) config.spriteSheet()));
+                case PACMAN_XXL -> pac.setAnimations(new ArcadePacMan_PacAnimations(config.spriteSheet()));
+                case MS_PACMAN_XXL -> pac.setAnimations(new ArcadeMsPacMan_PacAnimations(config.spriteSheet()));
             }
             pac.selectAnimation(ArcadePacMan_PacAnimations.ANIM_PAC_MUNCHING);
             pac.startAnimation();
@@ -233,8 +233,8 @@ public class PacManXXL_StartPage implements StartPage {
                 ghost.setSpeed(2.1f);
                 ghost.setVisible(true);
                 switch (gameVariant) {
-                    case PACMAN_XXL -> ghost.setAnimations(new ArcadePacMan_GhostAnimations((ArcadePacMan_SpriteSheet) config.spriteSheet(), ghost.id()));
-                    case MS_PACMAN_XXL -> ghost.setAnimations(new ArcadeMsPacMan_GhostAnimations((ArcadeMsPacMan_SpriteSheet) config.spriteSheet(), ghost.id()));
+                    case PACMAN_XXL -> ghost.setAnimations(new ArcadePacMan_GhostAnimations(config.spriteSheet(), ghost.id()));
+                    case MS_PACMAN_XXL -> ghost.setAnimations(new ArcadeMsPacMan_GhostAnimations(config.spriteSheet(), ghost.id()));
                 }
                 ghost.selectAnimation(ArcadePacMan_GhostAnimations.ANIM_GHOST_NORMAL);
                 ghost.startAnimation();

@@ -152,8 +152,9 @@ public class ArcadePacMan_UIConfig implements GameUIConfig, ResourceManager {
     }
 
     @Override
-    public GameSpriteSheet spriteSheet() {
-        return spriteSheet;
+    @SuppressWarnings("unchecked")
+    public <T extends GameSpriteSheet> T spriteSheet() {
+        return (T) spriteSheet;
     }
 
     @Override

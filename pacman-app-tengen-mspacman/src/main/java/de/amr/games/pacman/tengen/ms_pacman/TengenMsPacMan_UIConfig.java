@@ -198,8 +198,9 @@ public class TengenMsPacMan_UIConfig implements GameUIConfig, ResourceManager {
     public boolean isGameCanvasDecorated() { return false; }
 
     @Override
-    public GameSpriteSheet spriteSheet() {
-        return spriteSheet;
+    @SuppressWarnings("unchecked")
+    public <T extends GameSpriteSheet> T spriteSheet() {
+        return (T) spriteSheet;
     }
 
     @Override

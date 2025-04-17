@@ -176,8 +176,9 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUIConfig {
     }
 
     @Override
-    public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return spriteSheet;
+    @SuppressWarnings("unchecked")
+    public <T extends GameSpriteSheet> T spriteSheet() {
+        return (T) spriteSheet;
     }
 
     @Override

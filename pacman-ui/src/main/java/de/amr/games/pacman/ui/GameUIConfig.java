@@ -28,7 +28,7 @@ public interface GameUIConfig {
     boolean gameSceneHasID(GameScene gameScene, String sceneID);
     default boolean isGameCanvasDecorated() { return true; }
     GameScene selectGameScene(GameController gameController);
-    GameSpriteSheet spriteSheet();
+    <T extends GameSpriteSheet> T spriteSheet();
     WorldMapColorScheme worldMapColorScheme(WorldMap worldMap);
 
     // 3D-only
