@@ -127,12 +127,12 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         game().level().ifPresent(level -> {
             bindActions(); //TODO check if this is necessary
             if (level3D == null) {
-                replaceGameLevel3D();
+                replaceGameLevel3D(level);
                 level3D.addLevelCounter();
             }
             switch (gameState()) {
                 case TESTING_LEVELS, TESTING_LEVEL_TEASERS -> {
-                    replaceGameLevel3D();
+                    replaceGameLevel3D(level);
                     level3D.playLivesCounterAnimation();
                     level3D.energizers3D().forEach(Energizer3D::startPumping);
                     showLevelTestMessage(level, "TEST LEVEL " + level.number());
@@ -154,7 +154,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             bindActions();
             enableActionBindings(THE_KEYBOARD);
             if (level3D == null) {
-                replaceGameLevel3D();
+                replaceGameLevel3D(level);
                 level3D.addLevelCounter();
             }
             level3D.pellets3D().forEach(pellet -> pellet.shape3D().setVisible(!level.hasEatenFoodAt(pellet.tile())));
@@ -277,9 +277,9 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             case PACMAN_DYING          -> game().level().ifPresent(this::onEnterStatePacManDying);
             case GHOST_DYING           -> onEnterStateGhostDying();
             case LEVEL_COMPLETE        -> onEnterStateLevelComplete();
-            case LEVEL_TRANSITION      -> onEnterStateLevelTransition();
-            case TESTING_LEVELS        -> onEnterStateTestingLevels();
-            case TESTING_LEVEL_TEASERS -> onEnterStateTestingLevelTeasers();
+            case LEVEL_TRANSITION      -> game().level().ifPresent(this::onEnterStateLevelTransition);
+            case TESTING_LEVELS        -> game().level().ifPresent(this::onEnterStateTestingLevels);
+            case TESTING_LEVEL_TEASERS -> game().level().ifPresent(this::onEnterStateTestingLevelTeasers);
             case GAME_OVER             -> onEnterStateGameOver();
             default -> {}
         }
@@ -339,29 +339,29 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         });
     }
 
-    private void onEnterStateLevelTransition() {
+    private void onEnterStateLevelTransition(GameLevel level) {
         gameState().timer().restartSeconds(3);
-        replaceGameLevel3D();
+        replaceGameLevel3D(level);
         level3D.addLevelCounter();
         level3D.pac3D().init();
-        game().level().ifPresent(level -> perspective().init(fxSubScene, level));
+        perspective().init(fxSubScene, level);
     }
 
-    private void onEnterStateTestingLevels() {
-        replaceGameLevel3D();
+    private void onEnterStateTestingLevels(GameLevel level) {
+        replaceGameLevel3D(level);
         level3D.addLevelCounter();
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(Ghost3DAppearance::init);
-        game().level().ifPresent(level -> showLevelTestMessage(level, "TEST LEVEL" + level.number()));
+        showLevelTestMessage(level, "TEST LEVEL" + level.number());
         PY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
     }
 
-    private void onEnterStateTestingLevelTeasers() {
-        replaceGameLevel3D();
+    private void onEnterStateTestingLevelTeasers(GameLevel level) {
+        replaceGameLevel3D(level);
         level3D.addLevelCounter();
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(Ghost3DAppearance::init);
-        game().level().ifPresent(level -> showLevelTestMessage(level, "PREVIEW LEVEL " + level.number()));
+        showLevelTestMessage(level, "PREVIEW LEVEL " + level.number());
         PY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
     }
 
@@ -460,8 +460,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         THE_SOUND.stopPacPowerSound();
     }
 
-    protected void replaceGameLevel3D() {
-        level3D = new GameLevel3D(game());
+    protected void replaceGameLevel3D(GameLevel level) {
+        level3D = new GameLevel3D(game(), level);
         int lastIndex = root.getChildren().size() - 1;
         root.getChildren().set(lastIndex, level3D.root());
         scores3D.translateXProperty().bind(level3D.root().translateXProperty().add(TS));

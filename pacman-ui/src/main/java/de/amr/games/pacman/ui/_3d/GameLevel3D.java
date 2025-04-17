@@ -84,47 +84,49 @@ public class GameLevel3D {
     private Animation levelCompleteAnimation;
     private Animation livesCounterAnimation;
 
-    public GameLevel3D(GameModel game) {
+    private final GameLevel level;
+
+    public GameLevel3D(GameModel game, GameLevel level) {
+        this.level = level;
+
         var ambientLight = new AmbientLight();
         ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
 
         livesCounter3D = createLivesCounter3D(game.canStartNewGame());
         livesCounter3D.livesCountPy.bind(livesCountPy);
 
-        game.level().ifPresent(level -> {
-            final WorldMap worldMap = level.worldMap();
-            final int numRows = worldMap.numRows(), numCols = worldMap.numCols();
-            final WorldMapColorScheme colorScheme = THE_UI_CONFIGS.current().worldMapColorScheme(worldMap);
-            final Model3D pelletModel3D = THE_ASSETS.get("model3D.pellet"); // TODO move into UI config?
-            final PhongMaterial foodMaterial = coloredMaterial(colorScheme.pellet()); // TODO move into UI config?
+        final WorldMap worldMap = level.worldMap();
+        final int numRows = worldMap.numRows(), numCols = worldMap.numCols();
+        final WorldMapColorScheme colorScheme = THE_UI_CONFIGS.current().worldMapColorScheme(worldMap);
+        final Model3D pelletModel3D = THE_ASSETS.get("model3D.pellet"); // TODO move into UI config?
+        final PhongMaterial foodMaterial = coloredMaterial(colorScheme.pellet()); // TODO move into UI config?
 
-            pac3D = createPac3D(level.pac());
-            ghost3DAppearances = level.ghosts()
-                .map(ghost -> createGhostAppearance3D(ghost, level.numFlashes()))
-                .toList();
+        pac3D = createPac3D(level.pac());
+        ghost3DAppearances = level.ghosts()
+            .map(ghost -> createGhostAppearance3D(ghost, level.numFlashes()))
+            .toList();
 
-            floor3D = createFloor(numCols * TS, numRows * TS);
-            maze3D = new Maze3D(THE_UI_CONFIGS.current(), level, colorScheme);
-            mazeGroup.getChildren().addAll(floor3D, maze3D);
+        floor3D = createFloor(numCols * TS, numRows * TS);
+        maze3D = new Maze3D(THE_UI_CONFIGS.current(), level, colorScheme);
+        mazeGroup.getChildren().addAll(floor3D, maze3D);
 
-            createFood3D(level, pelletModel3D.mesh("Fruit"), foodMaterial);
+        createFood3D(level, pelletModel3D.mesh("Fruit"), foodMaterial);
 
-            // Note: The order in which children are added matters!
-            // Walls and house must be added last, otherwise, transparency is not working correctly.
-            energizers3D.forEach(energizer3D -> root.getChildren().add(energizer3D.shape3D()));
-            pellets3D.forEach(pellet3D -> root.getChildren().add(pellet3D.shape3D()));
-            root.getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
-            root.getChildren().addAll(ghost3DAppearances);
-            root.getChildren().add(livesCounter3D);
-            root.getChildren().add(mazeGroup);
+        // Note: The order in which children are added matters!
+        // Walls and house must be added last, otherwise, transparency is not working correctly.
+        energizers3D.forEach(energizer3D -> root.getChildren().add(energizer3D.shape3D()));
+        pellets3D.forEach(pellet3D -> root.getChildren().add(pellet3D.shape3D()));
+        root.getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
+        root.getChildren().addAll(ghost3DAppearances);
+        root.getChildren().add(livesCounter3D);
+        root.getChildren().add(mazeGroup);
 
-            // For wireframe mode view. Pac-Man and ghost shapes are already bound to global draw mode property.
-            // Pellets are not included because this would cause huge performance penalty.
-            Stream.concat(mazeGroup.lookupAll("*").stream(), livesCounter3D.lookupAll("*").stream())
-                .filter(Shape3D.class::isInstance)
-                .map(Shape3D.class::cast)
-                .forEach(shape3D -> shape3D.drawModeProperty().bind(PY_3D_DRAW_MODE));
-        });
+        // For wireframe mode view. Pac-Man and ghost shapes are already bound to global draw mode property.
+        // Pellets are not included because this would cause huge performance penalty.
+        Stream.concat(mazeGroup.lookupAll("*").stream(), livesCounter3D.lookupAll("*").stream())
+            .filter(Shape3D.class::isInstance)
+            .map(Shape3D.class::cast)
+            .forEach(shape3D -> shape3D.drawModeProperty().bind(PY_3D_DRAW_MODE));
         root.getChildren().add(ambientLight);
 
         root.setMouseTransparent(true); //TODO does this really increase performance?

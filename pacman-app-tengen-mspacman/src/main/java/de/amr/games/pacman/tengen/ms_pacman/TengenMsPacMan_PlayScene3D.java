@@ -27,14 +27,12 @@ import static de.amr.games.pacman.uilib.input.Keyboard.control;
 public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
-    protected void replaceGameLevel3D() {
-        super.replaceGameLevel3D();
-        game().level().ifPresent(level -> {
-            TengenMsPacMan_GameModel tengenMsPacManGame = game();
-            if (!tengenMsPacManGame.hasDefaultOptionValues()) {
-                addGameOptionsArea(tengenMsPacManGame, level);
-            }
-        });
+    protected void replaceGameLevel3D(GameLevel level) {
+        super.replaceGameLevel3D(level);
+        TengenMsPacMan_GameModel tengenMsPacManGame = game();
+        if (!tengenMsPacManGame.hasDefaultOptionValues()) {
+            addGameOptionsArea(tengenMsPacManGame, level);
+        }
     }
 
     // displays level number boxes, maze category and difficulty as in 2D view at the bottom of the 3D maze
