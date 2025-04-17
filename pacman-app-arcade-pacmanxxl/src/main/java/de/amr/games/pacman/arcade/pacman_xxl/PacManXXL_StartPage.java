@@ -255,10 +255,12 @@ public class PacManXXL_StartPage implements StartPage {
             if (ghosts[3].posX() < -4*TS && !chasingGhosts) {
                 chasingGhosts = true;
                 pac.setMoveAndWishDir(pac.moveDir().opposite());
-                pac.setPosX(ghosts[0].posX() - 14*TS);
+                pac.setPosX(-36*TS);
                 for (Ghost ghost : ghosts) {
+                    ghost.setVisible(true);
+                    ghost.setPosX(pac.posX() + 22*TS + ghost.id() * 2.5f *TS);
                     ghost.setMoveAndWishDir(ghost.moveDir().opposite());
-                    ghost.setSpeed(0.8f);
+                    ghost.setSpeed(0.55f);
                     ghost.selectAnimation(ActorAnimations.ANIM_GHOST_FRIGHTENED);
                     ghost.startAnimation();
                 }
@@ -268,11 +270,22 @@ public class PacManXXL_StartPage implements StartPage {
                 pac.setMoveAndWishDir(pac.moveDir().opposite());
                 pac.setPosX(42*TS);
                 for (Ghost ghost : ghosts) {
+                    ghost.setVisible(true);
                     ghost.setMoveAndWishDir(ghost.moveDir().opposite());
                     ghost.setPosX(46*TS + ghost.id() * 2 *TS);
                     ghost.setSpeed(1.05f);
                     ghost.selectAnimation(ActorAnimations.ANIM_GHOST_NORMAL);
                     ghost.startAnimation();
+                }
+            }
+            else if (chasingGhosts) {
+                for (int i = 0; i < 4; ++i) {
+                    if (Math.abs(pac.posX() - ghosts[i].posX()) < 1) {
+                        ghosts[i].selectAnimation(ActorAnimations.ANIM_GHOST_NUMBER, i);
+                        if (i > 0) {
+                            ghosts[i-1].setVisible(false);
+                        }
+                    }
                 }
             }
             pac.move();
@@ -287,10 +300,10 @@ public class PacManXXL_StartPage implements StartPage {
             g.scale(scalingPy.get(), scalingPy.get());
             g.translate(0, 23.5 * TS);
             renderer.setScaling(1.25f);
-            renderer.drawAnimatedActor(pac);
             for (Ghost ghost : ghosts) {
                 renderer.drawAnimatedActor(ghost);
             }
+            renderer.drawAnimatedActor(pac);
             g.restore();
         }
     }
