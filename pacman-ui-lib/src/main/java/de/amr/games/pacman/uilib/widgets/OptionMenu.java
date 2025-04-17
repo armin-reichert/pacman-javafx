@@ -34,7 +34,7 @@ import static de.amr.games.pacman.Globals.HTS;
 import static de.amr.games.pacman.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-public class OptionMenu implements ResourceManager {
+public class OptionMenu {
 
     private static final ResourceManager RESOURCE_MGR = () -> OptionMenu.class;
 
@@ -102,11 +102,6 @@ public class OptionMenu implements ResourceManager {
         drawingTimer.setCycleCount(Animation.INDEFINITE);
     }
 
-    @Override
-    public Class<?> resourceRootClass() {
-        return OptionMenu.class;
-    }
-
     public void requestFocus() {
         canvas.requestFocus();
     }
@@ -129,7 +124,7 @@ public class OptionMenu implements ResourceManager {
         Logger.trace("Menu drawing stopped");
     }
 
-    private void draw() {
+    public void draw() {
         g.setFill(style.backgroundFill());
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
