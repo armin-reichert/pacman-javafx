@@ -1,4 +1,4 @@
-module de.amr.games.pacman.ui3d.appsuite {
+module de.amr.games.pacman.ui3d.all {
     requires org.tinylog.api;
     requires javafx.controls;
     requires javafx.graphics;
