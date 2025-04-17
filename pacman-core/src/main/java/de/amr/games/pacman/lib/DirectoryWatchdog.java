@@ -28,7 +28,7 @@ public class DirectoryWatchdog {
             throw new IllegalArgumentException("Watched directory is NULL");
         }
         if (!directory.isDirectory() || !directory.exists()) {
-            throw new IllegalArgumentException("Watched directory does not exist");
+            throw new IllegalArgumentException("Watched directory does not exist: " + directory.getAbsolutePath());
         }
         this.directory = directory;
         try {
