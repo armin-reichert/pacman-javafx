@@ -32,36 +32,36 @@ import static java.util.Objects.requireNonNull;
 public class MsPacMan3D implements Pac3D {
     private final Pac pac;
     private final PacShape3D shape3D;
-    private RotateTransition hipSwayingAnimation;
     private final PointLight light = new PointLight();
+    private RotateTransition hipSwayingAnimation;
 
-    public MsPacMan3D(Pac pac, double size, AssetStorage assets, String assetNamespace) {
+    public MsPacMan3D(Pac pac, double size, Model3D model3D, AssetStorage assets, String ans) {
         this.pac = requireNonNull(pac);
+        requireNonNull(model3D);
         requireNonNull(assets);
-        requireNonNull(assetNamespace);
-
-        Model3D model3D = assets.get("model3D.pacman");
+        requireNonNull(ans);
 
         shape3D = new PacShape3D(model3D, size,
-            assets.color(assetNamespace + ".pac.color.head"),
-            assets.color(assetNamespace + ".pac.color.palate"));
+            assets.color(ans + ".pac.color.head"),
+            assets.color(ans + ".pac.color.palate"));
 
         Group body = PacModel3D.createPacShape(
             model3D, size,
-            assets.color(assetNamespace + ".pac.color.head"),
-            assets.color(assetNamespace + ".pac.color.eyes"),
-            assets.color(assetNamespace + ".pac.color.palate"));
+            assets.color(ans + ".pac.color.head"),
+            assets.color(ans + ".pac.color.eyes"),
+            assets.color(ans + ".pac.color.palate"));
 
         meshViewById(body, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(shape3D.drawModeProperty());
         meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(shape3D.drawModeProperty());
         meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(shape3D.drawModeProperty());
 
         Group femaleParts = PacModel3D.createFemaleParts(size,
-            assets.color(assetNamespace + ".pac.color.hairbow"),
-            assets.color(assetNamespace + ".pac.color.hairbow.pearls"),
-            assets.color(assetNamespace + ".pac.color.boobs"));
+            assets.color(ans + ".pac.color.hairbow"),
+            assets.color(ans + ".pac.color.hairbow.pearls"),
+            assets.color(ans + ".pac.color.boobs"));
 
         shape3D.getChildren().addAll(body, femaleParts);
+
         createHipSwayingAnimation(shape3D);
 
         light.translateXProperty().bind(shape3D.translateXProperty());
@@ -81,7 +81,13 @@ public class MsPacMan3D implements Pac3D {
 
     @Override
     public void init() {
-        shape3D.init(pac);
+        shape3D.updatePosition(pac);
+        shape3D.setVisible(pac.isVisible());
+        shape3D.setScaleX(1.0);
+        shape3D.setScaleY(1.0);
+        shape3D.setScaleZ(1.0);
+        shape3D.stopChewingAndOpenMouth();
+
         stopSwayingHips();
         setWinnetouchMode(false);
     }

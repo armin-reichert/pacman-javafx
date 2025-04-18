@@ -30,28 +30,30 @@ import static java.util.Objects.requireNonNull;
 public class PacMan3D implements Pac3D {
     private final Pac pac;
     private final PacShape3D shape3D;
-    private RotateTransition headBanging;
     private final PointLight light = new PointLight();
+    private RotateTransition headBanging;
 
-    public PacMan3D(Pac pac, double size, AssetStorage assets, String assetNamespace) {
+    public PacMan3D(Pac pac, double size, Model3D model3D, AssetStorage assets, String ans) {
         this.pac = requireNonNull(pac);
+        requireNonNull(model3D);
         requireNonNull(assets);
-        requireNonNull(assetNamespace);
-
-        Model3D model3D = assets.get("model3D.pacman");
+        requireNonNull(ans);
 
         shape3D = new PacShape3D(model3D, size,
-            assets.color(assetNamespace + ".pac.color.head"),
-            assets.color(assetNamespace + ".pac.color.palate"));
+            assets.color(ans + ".pac.color.head"),
+            assets.color(ans + ".pac.color.palate"));
 
-        Group body = PacModel3D.createPacShape(model3D, size,
-            assets.color(assetNamespace + ".pac.color.head"),
-            assets.color(assetNamespace + ".pac.color.eyes"),
-            assets.color(assetNamespace + ".pac.color.palate")
+        Group body = PacModel3D.createPacShape(
+            model3D, size,
+            assets.color(ans + ".pac.color.head"),
+            assets.color(ans + ".pac.color.eyes"),
+            assets.color(ans + ".pac.color.palate")
         );
+
         meshViewById(body, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(shape3D.drawModeProperty());
         meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(shape3D.drawModeProperty());
         meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(shape3D.drawModeProperty());
+
         shape3D.getChildren().add(body);
 
         createHeadBangingAnimation(shape3D);
@@ -73,7 +75,13 @@ public class PacMan3D implements Pac3D {
 
     @Override
     public void init() {
-        shape3D.init(pac);
+        shape3D.updatePosition(pac);
+        shape3D.setVisible(pac.isVisible());
+        shape3D.setScaleX(1.0);
+        shape3D.setScaleY(1.0);
+        shape3D.setScaleZ(1.0);
+        shape3D.stopChewingAndOpenMouth();
+
         stopHeadBanging();
         setExcited(false);
     }

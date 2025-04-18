@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui._3d;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.uilib.Ufx;
@@ -21,11 +20,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.HTS;
 import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.ui.Globals.PY_3D_PAC_LIGHT_ENABLED;
 import static de.amr.games.pacman.uilib.model3D.Model3D.meshViewById;
 
 /**
@@ -51,15 +48,6 @@ public class PacShape3D extends Group {
         setTranslateZ(initialZ);
 
         chewingAnimation = createChewingTimeline();
-    }
-
-    public void init(Pac pac) {
-        updatePosition(pac);
-        setVisible(pac.isVisible());
-        setScaleX(1.0);
-        setScaleY(1.0);
-        setScaleZ(1.0);
-        stopChewingAndOpenMouth();
     }
 
     public ObjectProperty<DrawMode> drawModeProperty() {
