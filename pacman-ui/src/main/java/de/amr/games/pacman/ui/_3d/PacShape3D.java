@@ -83,27 +83,6 @@ public class PacShape3D extends Group {
         setVisible(pac.isVisible() && !outsideWorld);
     }
 
-    // Maybe this should be implemented using a Timeline?
-    private Animation createChewingAnimation() {
-        final int openAngle = 0, closedAngle = -54;
-
-        var closeMouth = new RotateTransition(Duration.millis(30), jaw);
-        closeMouth.setAxis(Rotate.Y_AXIS);
-        closeMouth.setFromAngle(openAngle);
-        closeMouth.setToAngle(closedAngle);
-        closeMouth.setInterpolator(Interpolator.LINEAR);
-
-        var openMouth = new RotateTransition(Duration.millis(90), jaw);
-        openMouth.setAxis(Rotate.Y_AXIS);
-        openMouth.setFromAngle(closedAngle);
-        openMouth.setToAngle(openAngle);
-        openMouth.setInterpolator(Interpolator.LINEAR);
-
-        var chewingAnimation = new SequentialTransition(openMouth, Ufx.pauseSec(0.1), closeMouth);
-        chewingAnimation.setCycleCount(Animation.INDEFINITE);
-        return chewingAnimation;
-    }
-
     private Animation createChewingTimeline() {
         var closed = new KeyValue[] {
             new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
