@@ -84,7 +84,7 @@ public class MsPacMan3D implements Pac3D {
         meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
 
         chewingAnimation = PacMan3D.createChewingAnimation(jaw);
-        createHipSwayingAnimation(shape3D);
+        createHipSwayingAnimation();
 
         light.translateXProperty().bind(shape3D.translateXProperty());
         light.translateYProperty().bind(shape3D.translateYProperty());
@@ -203,8 +203,8 @@ public class MsPacMan3D implements Pac3D {
     static final short ANGLE_TO = 20;
     static final Duration DURATION = Duration.seconds(0.4);
 
-    private void createHipSwayingAnimation(Node target) {
-        hipSwayingAnimation = new RotateTransition(DURATION, target);
+    private void createHipSwayingAnimation() {
+        hipSwayingAnimation = new RotateTransition(DURATION, shape3D);
         hipSwayingAnimation.setAxis(Rotate.Z_AXIS);
         hipSwayingAnimation.setCycleCount(Animation.INDEFINITE);
         hipSwayingAnimation.setAutoReverse(true);
@@ -212,7 +212,6 @@ public class MsPacMan3D implements Pac3D {
         setExcited(false);
     }
 
-    // Note: Winnetouch is the gay twin-brother of Abahachi
     private void setExcited(boolean on) {
         double amplification = on ? 1.5 : 1;
         double rate = on ? 2 : 1;

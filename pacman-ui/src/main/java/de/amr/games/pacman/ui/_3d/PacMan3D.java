@@ -99,7 +99,7 @@ public class PacMan3D implements Pac3D {
         meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
 
         chewingAnimation = createChewingAnimation(jaw);
-        createHeadBangingAnimation(shape3D);
+        createHeadBangingAnimation();
 
         light.translateXProperty().bind(shape3D.translateXProperty());
         light.translateYProperty().bind(shape3D.translateYProperty());
@@ -140,7 +140,7 @@ public class PacMan3D implements Pac3D {
             updateLight(level);
         }
         if (pac.isAlive() && !pac.isStandingStill()) {
-            updateHeadBanging(pac);
+            updateHeadBanging();
             chew();
         } else {
             stopHeadBanging();
@@ -238,8 +238,8 @@ public class PacMan3D implements Pac3D {
     static final short ANGLE_TO = 15;
     static final Duration DURATION = Duration.seconds(0.3);
 
-    private void createHeadBangingAnimation(Node target) {
-        headBanging = new RotateTransition(DURATION, target);
+    private void createHeadBangingAnimation() {
+        headBanging = new RotateTransition(DURATION, shape3D);
         headBanging.setAxis(Rotate.X_AXIS);
         headBanging.setCycleCount(Animation.INDEFINITE);
         headBanging.setAutoReverse(true);
@@ -256,7 +256,7 @@ public class PacMan3D implements Pac3D {
         headBanging.setRate(rate);
     }
 
-    private void updateHeadBanging(Pac pac) {
+    private void updateHeadBanging() {
         if (pac.isStandingStill()) {
             stopHeadBanging();
         } else {
