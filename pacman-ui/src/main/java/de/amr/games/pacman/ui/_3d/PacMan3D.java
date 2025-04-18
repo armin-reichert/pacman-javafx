@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._3d;
 
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.uilib.assets.AssetStorage;
 import de.amr.games.pacman.uilib.model3D.Model3D;
@@ -35,13 +34,11 @@ public class PacMan3D implements Pac3D {
     /**
      * Creates a 3D Pac-Man.
      *
-     * @param variant game variant
      * @param pacMan Pac-Man instance
      * @param size diameter of Pac-Man
      * @param assets asset map
      */
-    public PacMan3D(GameVariant variant, Pac pacMan, double size, AssetStorage assets, String assetNamespace) {
-        requireNonNull(variant);
+    public PacMan3D(Pac pacMan, double size, AssetStorage assets, String assetNamespace) {
         this.pacMan = requireNonNull(pacMan);
         requireNonNull(assets);
         requireNonNull(assetNamespace);

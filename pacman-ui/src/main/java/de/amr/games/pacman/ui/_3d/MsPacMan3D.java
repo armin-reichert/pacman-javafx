@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._3d;
 
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.uilib.assets.AssetStorage;
 import de.amr.games.pacman.uilib.model3D.Model3D;
@@ -19,7 +18,6 @@ import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.ui.Globals.THE_SOUND;
 import static de.amr.games.pacman.uilib.Ufx.now;
 import static de.amr.games.pacman.uilib.Ufx.pauseSec;
@@ -38,14 +36,12 @@ public class MsPacMan3D implements Pac3D {
     /**
      * Creates a 3D Ms. Pac-Man.
      *
-     * @param variant game variant
      * @param msPacMan Ms. Pac-Man instance
      * @param size diameter of Pac-Man
      * @param assets asset storage
      * @param assetNamespace prefix of asset keys (depends on current game variant)
      */
-    public MsPacMan3D(GameVariant variant, Pac msPacMan, double size, AssetStorage assets, String assetNamespace) {
-        requireNonNull(variant);
+    public MsPacMan3D(Pac msPacMan, double size, AssetStorage assets, String assetNamespace) {
         this.msPacMan = requireNonNull(msPacMan);
         requireNonNull(assets);
         requireNonNull(assetNamespace);

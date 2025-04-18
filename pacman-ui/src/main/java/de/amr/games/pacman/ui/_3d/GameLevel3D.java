@@ -185,10 +185,10 @@ public class GameLevel3D {
 
     private Pac3D createPac3D(Pac pac) {
         String ans = THE_UI_CONFIGS.current().assetNamespace();
-        GameVariant selectedGameVariant = THE_GAME_CONTROLLER.gameVariantProperty().get();
-        Pac3D pac3D = switch (selectedGameVariant) {
-            case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL -> new MsPacMan3D(selectedGameVariant, pac, PAC_3D_SIZE, THE_ASSETS, ans);
-            case PACMAN, PACMAN_XXL -> new PacMan3D(selectedGameVariant, pac, PAC_3D_SIZE, THE_ASSETS, ans);
+        GameVariant gameVariant = THE_GAME_CONTROLLER.gameVariantProperty().get();
+        Pac3D pac3D = switch (gameVariant) {
+            case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL -> new MsPacMan3D(pac, PAC_3D_SIZE, THE_ASSETS, ans);
+            case PACMAN, PACMAN_XXL -> new PacMan3D(pac, PAC_3D_SIZE, THE_ASSETS, ans);
         };
         pac3D.shape3D().light().setColor(THE_ASSETS.color(ans + ".pac.color.head").desaturate());
         pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
