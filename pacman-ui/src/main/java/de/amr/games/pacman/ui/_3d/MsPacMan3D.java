@@ -27,12 +27,12 @@ public class MsPacMan3D extends Pac3D {
     public MsPacMan3D(Pac pac, double size, Model3D model3D, AssetStorage assets, String ans) {
         super(pac, size, model3D, assets, ans);
 
-        Group femaleParts = PacModel3D.createFemaleParts(size,
+        Group femaleBodyParts = PacModel3D.createFemaleBodyParts(size,
             assets.color(ans + ".pac.color.hairbow"),
             assets.color(ans + ".pac.color.hairbow.pearls"),
             assets.color(ans + ".pac.color.boobs"));
 
-        root.getChildren().add(femaleParts);
+        root.getChildren().add(femaleBodyParts);
     }
 
     @Override

@@ -83,7 +83,7 @@ public interface PacModel3D {
         return root;
     }
 
-    static Group createFemaleParts(double pacSize, Color hairBowColor, Color hairBowPearlsColor, Color boobsColor) {
+    static Group createFemaleBodyParts(double pacSize, Color hairBowColor, Color hairBowPearlsColor, Color boobsColor) {
         var bowMaterial = coloredMaterial(hairBowColor);
 
         var bowLeft = new Sphere(1.2);

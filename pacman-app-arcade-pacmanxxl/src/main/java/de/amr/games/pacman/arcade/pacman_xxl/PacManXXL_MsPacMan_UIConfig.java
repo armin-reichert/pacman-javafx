@@ -167,7 +167,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUIConfig {
                 assets.color(namespace + ".pac.color.eyes"),
                 assets.color(namespace + ".pac.color.palate")
             ),
-            PacModel3D.createFemaleParts(size,
+            PacModel3D.createFemaleBodyParts(size,
                 assets.color(namespace + ".pac.color.hairbow"),
                 assets.color(namespace + ".pac.color.hairbow.pearls"),
                 assets.color(namespace + ".pac.color.boobs")
