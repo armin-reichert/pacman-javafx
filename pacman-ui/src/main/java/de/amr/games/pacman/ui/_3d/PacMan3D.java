@@ -11,11 +11,14 @@ import de.amr.games.pacman.uilib.assets.AssetStorage;
 import de.amr.games.pacman.uilib.model3D.Model3D;
 import de.amr.games.pacman.uilib.model3D.PacModel3D;
 import javafx.animation.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.LightBase;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
+import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -28,6 +31,8 @@ import static de.amr.games.pacman.uilib.model3D.Model3D.meshViewById;
 import static java.util.Objects.requireNonNull;
 
 public class PacMan3D implements Pac3D {
+    private final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
+
     private final Pac pac;
     private final PacShape3D shape3D;
     private final PointLight light = new PointLight();
@@ -55,9 +60,11 @@ public class PacMan3D implements Pac3D {
         shape3D = new PacShape3D(jaw, size);
         shape3D.getChildren().add(body);
 
-        meshViewById(body, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(shape3D.drawModeProperty());
-        meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(shape3D.drawModeProperty());
-        meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(shape3D.drawModeProperty());
+        meshViewById(jaw, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
+        meshViewById(jaw, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
+        meshViewById(body, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(drawModePy);
+        meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
+        meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
 
         createHeadBangingAnimation(shape3D);
 
@@ -70,6 +77,9 @@ public class PacMan3D implements Pac3D {
     public PacShape3D shape3D() {
         return shape3D;
     }
+
+    @Override
+    public ObjectProperty<DrawMode> drawModeProperty() { return  drawModePy; }
 
     @Override
     public LightBase light() {

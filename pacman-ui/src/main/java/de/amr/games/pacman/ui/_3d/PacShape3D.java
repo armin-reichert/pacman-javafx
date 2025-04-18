@@ -31,8 +31,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class PacShape3D extends Group {
 
-    private final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
-
     private final double initialZ;
     private final Node jaw;
     private final Rotate moveRotation = new Rotate();
@@ -41,18 +39,12 @@ public class PacShape3D extends Group {
     public PacShape3D(Node jaw, double size) {
         this.jaw = requireNonNull(jaw);
         initialZ = -0.5 * size;
-        meshViewById(jaw, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
-        meshViewById(jaw, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
 
         getChildren().add(jaw);
         getTransforms().add(moveRotation);
         setTranslateZ(initialZ);
 
         chewingAnimation = createChewingTimeline();
-    }
-
-    public ObjectProperty<DrawMode> drawModeProperty() {
-        return drawModePy;
     }
 
     public void stopChewingAndOpenMouth() {

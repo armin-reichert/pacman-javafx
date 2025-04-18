@@ -193,7 +193,7 @@ public class GameLevel3D {
                 -> new PacMan3D(pac, PAC_3D_SIZE, THE_ASSETS.get("model3D.pacman"), THE_ASSETS, ans);
         };
         pac3D.light().setColor(THE_ASSETS.color(ans + ".pac.color.head").desaturate());
-        pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
+        pac3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
         return pac3D;
     }
 
