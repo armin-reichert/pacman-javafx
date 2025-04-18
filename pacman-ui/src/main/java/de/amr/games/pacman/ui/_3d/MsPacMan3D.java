@@ -27,6 +27,7 @@ import org.tinylog.Logger;
 
 import static de.amr.games.pacman.ui.Globals.PY_3D_PAC_LIGHT_ENABLED;
 import static de.amr.games.pacman.ui.Globals.THE_SOUND;
+import static de.amr.games.pacman.ui._3d.PacShape3D.createChewingAnimation;
 import static de.amr.games.pacman.uilib.Ufx.now;
 import static de.amr.games.pacman.uilib.Ufx.pauseSec;
 import static de.amr.games.pacman.uilib.model3D.Model3D.meshViewById;
@@ -37,7 +38,9 @@ public class MsPacMan3D implements Pac3D {
 
     private final Pac pac;
     private final PacShape3D shape3D;
+    private final Node jaw;
     private final PointLight light = new PointLight();
+    private final Animation chewingAnimation;
     private RotateTransition hipSwayingAnimation;
 
     public MsPacMan3D(Pac pac, double size, Model3D model3D, AssetStorage assets, String ans) {
@@ -46,7 +49,7 @@ public class MsPacMan3D implements Pac3D {
         requireNonNull(assets);
         requireNonNull(ans);
 
-        Node jaw = PacModel3D.createPacSkull(
+        jaw = PacModel3D.createPacSkull(
             model3D,
             size,
             assets.color(ans + ".pac.color.head"),
@@ -72,6 +75,7 @@ public class MsPacMan3D implements Pac3D {
         meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
         meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
 
+        chewingAnimation = createChewingAnimation(jaw);
         createHipSwayingAnimation(shape3D);
 
         light.translateXProperty().bind(shape3D.translateXProperty());
@@ -99,8 +103,8 @@ public class MsPacMan3D implements Pac3D {
         shape3D.setScaleX(1.0);
         shape3D.setScaleY(1.0);
         shape3D.setScaleZ(1.0);
-        shape3D.stopChewingAndOpenMouth();
 
+        stopChewingAndOpenMouth();
         stopSwayingHips();
         setWinnetouchMode(false);
     }
@@ -114,10 +118,10 @@ public class MsPacMan3D implements Pac3D {
         }
         if (pac.isAlive() && !pac.isStandingStill()) {
             swayHips();
-            shape3D.chew();
+            chew();
         } else {
             stopSwayingHips();
-            shape3D.stopChewingAndOpenMouth();
+            stopChewingAndOpenMouth();
         }
     }
 
@@ -154,6 +158,21 @@ public class MsPacMan3D implements Pac3D {
         }
     }
 
+    // Chewing animation
+
+    public void stopChewingAndOpenMouth() {
+        stopChewing();
+        jaw.setRotationAxis(Rotate.Y_AXIS);
+        jaw.setRotate(0);
+    }
+
+    public void chew() {
+        chewingAnimation.play();
+    }
+
+    public void stopChewing() {
+        chewingAnimation.stop();
+    }
 
     // Hip swaying animation
 

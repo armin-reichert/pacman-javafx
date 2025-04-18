@@ -9,21 +9,14 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.uilib.Ufx;
-import de.amr.games.pacman.uilib.model3D.Model3D;
-import de.amr.games.pacman.uilib.model3D.PacModel3D;
 import javafx.animation.*;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import static de.amr.games.pacman.Globals.HTS;
 import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.uilib.model3D.Model3D.meshViewById;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -34,7 +27,6 @@ public class PacShape3D extends Group {
     private final double initialZ;
     private final Node jaw;
     private final Rotate moveRotation = new Rotate();
-    private final Animation chewingAnimation;
 
     public PacShape3D(Node jaw, double size) {
         this.jaw = requireNonNull(jaw);
@@ -43,22 +35,6 @@ public class PacShape3D extends Group {
         getChildren().add(jaw);
         getTransforms().add(moveRotation);
         setTranslateZ(initialZ);
-
-        chewingAnimation = createChewingTimeline();
-    }
-
-    public void stopChewingAndOpenMouth() {
-        stopChewing();
-        jaw.setRotationAxis(Rotate.Y_AXIS);
-        jaw.setRotate(0);
-    }
-
-    public void chew() {
-        chewingAnimation.play();
-    }
-
-    public void stopChewing() {
-        chewingAnimation.stop();
     }
 
     public void updatePosition(Pac pac) {
@@ -76,7 +52,7 @@ public class PacShape3D extends Group {
         setVisible(pac.isVisible() && !outsideWorld);
     }
 
-    private Animation createChewingTimeline() {
+    public static Animation createChewingAnimation(Node jaw) {
         var closed = new KeyValue[] {
             new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
             new KeyValue(jaw.rotateProperty(), -54, Interpolator.LINEAR)

@@ -25,6 +25,7 @@ import org.tinylog.Logger;
 
 import static de.amr.games.pacman.ui.Globals.PY_3D_PAC_LIGHT_ENABLED;
 import static de.amr.games.pacman.ui.Globals.THE_SOUND;
+import static de.amr.games.pacman.ui._3d.PacShape3D.createChewingAnimation;
 import static de.amr.games.pacman.uilib.Ufx.doAfterSec;
 import static de.amr.games.pacman.uilib.Ufx.now;
 import static de.amr.games.pacman.uilib.model3D.Model3D.meshViewById;
@@ -35,7 +36,9 @@ public class PacMan3D implements Pac3D {
 
     private final Pac pac;
     private final PacShape3D shape3D;
+    private final Node jaw;
     private final PointLight light = new PointLight();
+    private final Animation chewingAnimation;
     private RotateTransition headBanging;
 
     public PacMan3D(Pac pac, double size, Model3D model3D, AssetStorage assets, String ans) {
@@ -44,7 +47,7 @@ public class PacMan3D implements Pac3D {
         requireNonNull(assets);
         requireNonNull(ans);
 
-        Node jaw = PacModel3D.createPacSkull(
+        jaw = PacModel3D.createPacSkull(
             model3D,
             size,
             assets.color(ans + ".pac.color.head"),
@@ -66,6 +69,7 @@ public class PacMan3D implements Pac3D {
         meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
         meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
 
+        chewingAnimation = createChewingAnimation(jaw);
         createHeadBangingAnimation(shape3D);
 
         light.translateXProperty().bind(shape3D.translateXProperty());
@@ -93,8 +97,8 @@ public class PacMan3D implements Pac3D {
         shape3D.setScaleX(1.0);
         shape3D.setScaleY(1.0);
         shape3D.setScaleZ(1.0);
-        shape3D.stopChewingAndOpenMouth();
 
+        stopChewingAndOpenMouth();
         stopHeadBanging();
         setExcited(false);
     }
@@ -108,10 +112,10 @@ public class PacMan3D implements Pac3D {
         }
         if (pac.isAlive() && !pac.isStandingStill()) {
             updateHeadBanging(pac);
-            shape3D.chew();
+            chew();
         } else {
             stopHeadBanging();
-            shape3D.stopChewingAndOpenMouth();
+            stopChewingAndOpenMouth();
         }
     }
 
@@ -165,6 +169,22 @@ public class PacMan3D implements Pac3D {
         } else {
             light.setLightOn(false);
         }
+    }
+
+    // Chewing animation
+
+    public void stopChewingAndOpenMouth() {
+        stopChewing();
+        jaw.setRotationAxis(Rotate.Y_AXIS);
+        jaw.setRotate(0);
+    }
+
+    public void chew() {
+        chewingAnimation.play();
+    }
+
+    public void stopChewing() {
+        chewingAnimation.stop();
     }
 
     // Head banging animation
