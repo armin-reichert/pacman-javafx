@@ -121,7 +121,7 @@ public class MsPacMan3D implements Pac3D {
     public void update(GameLevel level) {
         if (pac.isAlive()) {
             updatePosition();
-            updateVisibility(pac, level);
+            updateVisibility(level);
             updateLight(pac, level);
         }
         if (pac.isAlive() && !pac.isStandingStill()) {
@@ -159,12 +159,11 @@ public class MsPacMan3D implements Pac3D {
         moveRotation.setAngle(Ufx.angle(pac.moveDir()));
     }
 
-    private void updateVisibility(Pac pac, GameLevel level) {
+    private void updateVisibility(GameLevel level) {
         WorldMap worldMap = level.worldMap();
         boolean outsideWorld = shape3D.getTranslateX() < HTS || shape3D.getTranslateX() > TS * worldMap.numCols() - HTS;
         shape3D.setVisible(pac.isVisible() && !outsideWorld);
     }
-
 
     /**
      * When empowered, Pac-Man is lighted, light range shrinks with ceasing power.
