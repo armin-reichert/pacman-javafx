@@ -112,7 +112,7 @@ public class GameLevel3D {
         // Walls and house must be added last, otherwise, transparency is not working correctly.
         energizers3D.forEach(energizer3D -> root.getChildren().add(energizer3D.shape3D()));
         pellets3D.forEach(pellet3D -> root.getChildren().add(pellet3D.shape3D()));
-        root.getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
+        root.getChildren().addAll(pac3D.shape3D(), pac3D.light());
         root.getChildren().addAll(ghost3DAppearances);
         root.getChildren().add(livesCounter3D);
         root.getChildren().add(mazeGroup);
@@ -190,7 +190,7 @@ public class GameLevel3D {
             case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL -> new MsPacMan3D(pac, PAC_3D_SIZE, THE_ASSETS, ans);
             case PACMAN, PACMAN_XXL -> new PacMan3D(pac, PAC_3D_SIZE, THE_ASSETS, ans);
         };
-        pac3D.shape3D().light().setColor(THE_ASSETS.color(ans + ".pac.color.head").desaturate());
+        pac3D.light().setColor(THE_ASSETS.color(ans + ".pac.color.head").desaturate());
         pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
         return pac3D;
     }

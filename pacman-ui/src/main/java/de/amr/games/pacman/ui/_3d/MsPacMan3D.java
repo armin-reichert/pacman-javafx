@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._3d;
 
+import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.uilib.assets.AssetStorage;
@@ -14,35 +15,28 @@ import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
 import javafx.scene.Group;
+import javafx.scene.LightBase;
 import javafx.scene.Node;
+import javafx.scene.PointLight;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
+import static de.amr.games.pacman.ui.Globals.PY_3D_PAC_LIGHT_ENABLED;
 import static de.amr.games.pacman.ui.Globals.THE_SOUND;
 import static de.amr.games.pacman.uilib.Ufx.now;
 import static de.amr.games.pacman.uilib.Ufx.pauseSec;
 import static de.amr.games.pacman.uilib.model3D.Model3D.meshViewById;
 import static java.util.Objects.requireNonNull;
 
-/**
- * @author Armin Reichert
- */
 public class MsPacMan3D implements Pac3D {
-
-    private final Pac msPacMan;
+    private final Pac pac;
     private final PacShape3D shape3D;
     private RotateTransition hipSwayingAnimation;
+    private final PointLight light = new PointLight();
 
-    /**
-     * Creates a 3D Ms. Pac-Man.
-     *
-     * @param msPacMan Ms. Pac-Man instance
-     * @param size diameter of Pac-Man
-     * @param assets asset storage
-     * @param assetNamespace prefix of asset keys (depends on current game variant)
-     */
-    public MsPacMan3D(Pac msPacMan, double size, AssetStorage assets, String assetNamespace) {
-        this.msPacMan = requireNonNull(msPacMan);
+    public MsPacMan3D(Pac pac, double size, AssetStorage assets, String assetNamespace) {
+        this.pac = requireNonNull(pac);
         requireNonNull(assets);
         requireNonNull(assetNamespace);
 
@@ -69,6 +63,10 @@ public class MsPacMan3D implements Pac3D {
 
         shape3D.getChildren().addAll(body, femaleParts);
         createHipSwayingAnimation(shape3D);
+
+        light.translateXProperty().bind(shape3D.translateXProperty());
+        light.translateYProperty().bind(shape3D.translateYProperty());
+        light.setTranslateZ(-30);
     }
 
     @Override
@@ -77,20 +75,25 @@ public class MsPacMan3D implements Pac3D {
     }
 
     @Override
+    public LightBase light() {
+        return light;
+    }
+
+    @Override
     public void init() {
-        shape3D.init(msPacMan);
+        shape3D.init(pac);
         stopSwayingHips();
         setWinnetouchMode(false);
     }
 
     @Override
     public void update(GameLevel level) {
-        if (msPacMan.isAlive()) {
-            shape3D.updatePosition(msPacMan);
-            shape3D.updateLight(msPacMan, level);
-            shape3D.updateVisibility(msPacMan, level);
+        if (pac.isAlive()) {
+            shape3D.updatePosition(pac);
+            shape3D.updateVisibility(pac, level);
+            updateLight(pac, level);
         }
-        if (msPacMan.isAlive() && !msPacMan.isStandingStill()) {
+        if (pac.isAlive() && !pac.isStandingStill()) {
             swayHips();
             shape3D.chew();
         } else {
@@ -115,6 +118,23 @@ public class MsPacMan3D implements Pac3D {
         spinning.setCycleCount(4);
         return new SequentialTransition(pauseSec(1), now(THE_SOUND::playPacDeathSound), spinning, pauseSec(1.5));
     }
+
+    /**
+     * When empowered, Pac-Man is lighted, light range shrinks with ceasing power.
+     */
+    private void updateLight(Pac pac, GameLevel level) {
+        TickTimer powerTimer = level.powerTimer();
+        if (PY_3D_PAC_LIGHT_ENABLED.get() && powerTimer.isRunning() && pac.isVisible()) {
+            light.setLightOn(true);
+            double remaining = powerTimer.remainingTicks();
+            double maxRange = (remaining / powerTimer.durationTicks()) * 60 + 30;
+            light.setMaxRange(maxRange);
+            Logger.debug("Power remaining: {}, light max range: {0.00}", remaining, maxRange);
+        } else {
+            light.setLightOn(false);
+        }
+    }
+
 
     // Hip swaying animation
 

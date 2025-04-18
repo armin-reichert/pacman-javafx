@@ -17,7 +17,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
@@ -38,7 +37,6 @@ public class PacShape3D extends Group {
 
     private final double initialZ;
     private final Node jaw;
-    private final PointLight light = new PointLight();
     private final Rotate moveRotation = new Rotate();
     private final Animation chewingAnimation;
 
@@ -47,10 +45,6 @@ public class PacShape3D extends Group {
         jaw = PacModel3D.createPacSkull(model3D, size, headColor, palateColor);
         meshViewById(jaw, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
         meshViewById(jaw, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
-
-        light.translateXProperty().bind(translateXProperty());
-        light.translateYProperty().bind(translateYProperty());
-        light.setTranslateZ(-30);
 
         getChildren().add(jaw);
         getTransforms().add(moveRotation);
@@ -70,10 +64,6 @@ public class PacShape3D extends Group {
 
     public ObjectProperty<DrawMode> drawModeProperty() {
         return drawModePy;
-    }
-
-    public PointLight light() {
-        return light;
     }
 
     public void stopChewingAndOpenMouth() {
@@ -97,22 +87,6 @@ public class PacShape3D extends Group {
         setTranslateZ(initialZ);
         moveRotation.setAxis(Rotate.Z_AXIS);
         moveRotation.setAngle(Ufx.angle(pac.moveDir()));
-    }
-
-    /**
-     * When empowered, Pac-Man is lighted, light range shrinks with ceasing power.
-     */
-     public void updateLight(Pac pac, GameLevel level) {
-        TickTimer powerTimer = level.powerTimer();
-        if (PY_3D_PAC_LIGHT_ENABLED.get() && powerTimer.isRunning() && pac.isVisible()) {
-            light.setLightOn(true);
-            double remaining = powerTimer.remainingTicks();
-            double maxRange = (remaining / powerTimer.durationTicks()) * 60 + 30;
-            light.setMaxRange(maxRange);
-            Logger.debug("Power remaining: {}, light max range: {0.00}", remaining, maxRange);
-        } else {
-            light.setLightOn(false);
-        }
     }
 
     public void updateVisibility(Pac pac, GameLevel level) {

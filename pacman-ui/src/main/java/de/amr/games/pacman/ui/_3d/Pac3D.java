@@ -6,6 +6,8 @@ package de.amr.games.pacman.ui._3d;
 
 import de.amr.games.pacman.model.GameLevel;
 import javafx.animation.Animation;
+import javafx.scene.LightBase;
+import javafx.scene.effect.Light;
 
 /**
  * @author Armin Reichert
@@ -13,6 +15,8 @@ import javafx.animation.Animation;
 public interface Pac3D {
 
     PacShape3D shape3D();
+
+    LightBase light();
 
     void init();
 

@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._3d;
 
+import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.uilib.assets.AssetStorage;
@@ -12,34 +13,28 @@ import de.amr.games.pacman.uilib.model3D.PacModel3D;
 import javafx.animation.*;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
+import javafx.scene.LightBase;
 import javafx.scene.Node;
+import javafx.scene.PointLight;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
+import static de.amr.games.pacman.ui.Globals.PY_3D_PAC_LIGHT_ENABLED;
 import static de.amr.games.pacman.ui.Globals.THE_SOUND;
 import static de.amr.games.pacman.uilib.Ufx.doAfterSec;
 import static de.amr.games.pacman.uilib.Ufx.now;
 import static de.amr.games.pacman.uilib.model3D.Model3D.meshViewById;
 import static java.util.Objects.requireNonNull;
 
-/**
- * @author Armin Reichert
- */
 public class PacMan3D implements Pac3D {
-
-    private final Pac pacMan;
+    private final Pac pac;
     private final PacShape3D shape3D;
     private RotateTransition headBanging;
+    private final PointLight light = new PointLight();
 
-    /**
-     * Creates a 3D Pac-Man.
-     *
-     * @param pacMan Pac-Man instance
-     * @param size diameter of Pac-Man
-     * @param assets asset map
-     */
-    public PacMan3D(Pac pacMan, double size, AssetStorage assets, String assetNamespace) {
-        this.pacMan = requireNonNull(pacMan);
+    public PacMan3D(Pac pac, double size, AssetStorage assets, String assetNamespace) {
+        this.pac = requireNonNull(pac);
         requireNonNull(assets);
         requireNonNull(assetNamespace);
 
@@ -60,6 +55,10 @@ public class PacMan3D implements Pac3D {
         shape3D.getChildren().add(body);
 
         createHeadBangingAnimation(shape3D);
+
+        light.translateXProperty().bind(shape3D.translateXProperty());
+        light.translateYProperty().bind(shape3D.translateYProperty());
+        light.setTranslateZ(-30);
     }
 
     @Override
@@ -68,21 +67,26 @@ public class PacMan3D implements Pac3D {
     }
 
     @Override
+    public LightBase light() {
+        return light;
+    }
+
+    @Override
     public void init() {
-        shape3D.init(pacMan);
+        shape3D.init(pac);
         stopHeadBanging();
-        setStrokeMode(false);
+        setExcited(false);
     }
 
     @Override
     public void update(GameLevel level) {
-        if (pacMan.isAlive()) {
-            shape3D.updatePosition(pacMan);
-            shape3D.updateLight(pacMan, level);
-            shape3D.updateVisibility(pacMan, level);
+        if (pac.isAlive()) {
+            shape3D.updatePosition(pac);
+            shape3D.updateVisibility(pac, level);
+            updateLight(pac, level);
         }
-        if (pacMan.isAlive() && !pacMan.isStandingStill()) {
-            updateHeadBanging(pacMan);
+        if (pac.isAlive() && !pac.isStandingStill()) {
+            updateHeadBanging(pac);
             shape3D.chew();
         } else {
             stopHeadBanging();
@@ -92,7 +96,7 @@ public class PacMan3D implements Pac3D {
 
     @Override
     public void setPowerMode(boolean on) {
-        setStrokeMode(on);
+        setExcited(on);
     }
 
     @Override
@@ -126,6 +130,22 @@ public class PacMan3D implements Pac3D {
         );
     }
 
+    /**
+     * When empowered, Pac-Man is lighted, light range shrinks with ceasing power.
+     */
+    private void updateLight(Pac pac, GameLevel level) {
+        TickTimer powerTimer = level.powerTimer();
+        if (PY_3D_PAC_LIGHT_ENABLED.get() && powerTimer.isRunning() && pac.isVisible()) {
+            light.setLightOn(true);
+            double remaining = powerTimer.remainingTicks();
+            double maxRange = (remaining / powerTimer.durationTicks()) * 60 + 30;
+            light.setMaxRange(maxRange);
+            Logger.debug("Power remaining: {}, light max range: {0.00}", remaining, maxRange);
+        } else {
+            light.setLightOn(false);
+        }
+    }
+
     // Head banging animation
 
     static final float POWER_AMPLIFICATION = 2;
@@ -139,11 +159,11 @@ public class PacMan3D implements Pac3D {
         headBanging.setCycleCount(Animation.INDEFINITE);
         headBanging.setAutoReverse(true);
         headBanging.setInterpolator(Interpolator.EASE_BOTH);
-        setStrokeMode(false);
+        setExcited(false);
     }
 
     // Note: Massive headbanging can lead to a stroke!
-    private void setStrokeMode(boolean on) {
+    private void setExcited(boolean on) {
         headBanging.stop();
         float rate = on ? POWER_AMPLIFICATION : 1;
         headBanging.setFromAngle(ANGLE_FROM * rate);
