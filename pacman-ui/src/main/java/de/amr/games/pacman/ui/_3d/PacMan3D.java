@@ -129,7 +129,7 @@ public class PacMan3D implements Pac3D {
         updatePosition();
         stopChewingAndOpenMouth();
         stopHeadBanging();
-        setExcited(false);
+        setPowerMode(false);
     }
 
     @Override
@@ -150,7 +150,11 @@ public class PacMan3D implements Pac3D {
 
     @Override
     public void setPowerMode(boolean on) {
-        setExcited(on);
+        headBanging.stop();
+        float rate = on ? POWER_AMPLIFICATION : 1;
+        headBanging.setFromAngle(ANGLE_FROM * rate);
+        headBanging.setToAngle(ANGLE_TO * rate);
+        headBanging.setRate(rate);
     }
 
     @Override
@@ -244,16 +248,7 @@ public class PacMan3D implements Pac3D {
         headBanging.setCycleCount(Animation.INDEFINITE);
         headBanging.setAutoReverse(true);
         headBanging.setInterpolator(Interpolator.EASE_BOTH);
-        setExcited(false);
-    }
-
-    // Note: Massive headbanging can lead to a stroke!
-    private void setExcited(boolean on) {
-        headBanging.stop();
-        float rate = on ? POWER_AMPLIFICATION : 1;
-        headBanging.setFromAngle(ANGLE_FROM * rate);
-        headBanging.setToAngle(ANGLE_TO * rate);
-        headBanging.setRate(rate);
+        setPowerMode(false);
     }
 
     private void updateHeadBanging() {

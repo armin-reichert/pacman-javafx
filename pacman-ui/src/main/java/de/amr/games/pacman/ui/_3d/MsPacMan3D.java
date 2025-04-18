@@ -114,7 +114,7 @@ public class MsPacMan3D implements Pac3D {
         updatePosition();
         stopChewingAndOpenMouth();
         stopSwayingHips();
-        setExcited(false);
+        setPowerMode(false);
     }
 
     @Override
@@ -135,7 +135,12 @@ public class MsPacMan3D implements Pac3D {
 
     @Override
     public void setPowerMode(boolean on) {
-        setExcited(on);
+        double amplification = on ? 1.5 : 1;
+        double rate = on ? 2 : 1;
+        hipSwayingAnimation.stop();
+        hipSwayingAnimation.setFromAngle(ANGLE_FROM * amplification);
+        hipSwayingAnimation.setToAngle(ANGLE_TO * amplification);
+        hipSwayingAnimation.setRate(rate);
     }
 
     @Override
@@ -209,16 +214,7 @@ public class MsPacMan3D implements Pac3D {
         hipSwayingAnimation.setCycleCount(Animation.INDEFINITE);
         hipSwayingAnimation.setAutoReverse(true);
         hipSwayingAnimation.setInterpolator(Interpolator.EASE_BOTH);
-        setExcited(false);
-    }
-
-    private void setExcited(boolean on) {
-        double amplification = on ? 1.5 : 1;
-        double rate = on ? 2 : 1;
-        hipSwayingAnimation.stop();
-        hipSwayingAnimation.setFromAngle(ANGLE_FROM * amplification);
-        hipSwayingAnimation.setToAngle(ANGLE_TO * amplification);
-        hipSwayingAnimation.setRate(rate);
+        setPowerMode(false);
     }
 
     private void swayHips() {
