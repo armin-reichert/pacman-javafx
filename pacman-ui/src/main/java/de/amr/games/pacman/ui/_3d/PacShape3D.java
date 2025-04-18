@@ -52,23 +52,4 @@ public class PacShape3D extends Group {
         setVisible(pac.isVisible() && !outsideWorld);
     }
 
-    public static Animation createChewingAnimation(Node jaw) {
-        var closed = new KeyValue[] {
-            new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
-            new KeyValue(jaw.rotateProperty(), -54, Interpolator.LINEAR)
-        };
-        var open = new KeyValue[] {
-            new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
-            new KeyValue(jaw.rotateProperty(), 0, Interpolator.LINEAR)
-        };
-        Timeline animation = new Timeline(
-            new KeyFrame(Duration.ZERO,        "Open on Start", open),
-            new KeyFrame(Duration.millis(100), "Start Closing", open),
-            new KeyFrame(Duration.millis(130), "Closed",        closed),
-            new KeyFrame(Duration.millis(200), "Start Opening", closed),
-            new KeyFrame(Duration.millis(280), "Open",          open)
-        );
-        animation.setCycleCount(Animation.INDEFINITE);
-        return animation;
-    }
 }

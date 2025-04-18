@@ -25,13 +25,33 @@ import org.tinylog.Logger;
 
 import static de.amr.games.pacman.ui.Globals.PY_3D_PAC_LIGHT_ENABLED;
 import static de.amr.games.pacman.ui.Globals.THE_SOUND;
-import static de.amr.games.pacman.ui._3d.PacShape3D.createChewingAnimation;
 import static de.amr.games.pacman.uilib.Ufx.doAfterSec;
 import static de.amr.games.pacman.uilib.Ufx.now;
 import static de.amr.games.pacman.uilib.model3D.Model3D.meshViewById;
 import static java.util.Objects.requireNonNull;
 
 public class PacMan3D implements Pac3D {
+
+    public static Animation createChewingAnimation(Node jaw) {
+        var closed = new KeyValue[] {
+            new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
+            new KeyValue(jaw.rotateProperty(), -54, Interpolator.LINEAR)
+        };
+        var open = new KeyValue[] {
+            new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
+            new KeyValue(jaw.rotateProperty(), 0, Interpolator.LINEAR)
+        };
+        Timeline animation = new Timeline(
+            new KeyFrame(Duration.ZERO,        "Open on Start", open),
+            new KeyFrame(Duration.millis(100), "Start Closing", open),
+            new KeyFrame(Duration.millis(130), "Closed",        closed),
+            new KeyFrame(Duration.millis(200), "Start Opening", closed),
+            new KeyFrame(Duration.millis(280), "Open",          open)
+        );
+        animation.setCycleCount(Animation.INDEFINITE);
+        return animation;
+    }
+
     private final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
     private final Pac pac;

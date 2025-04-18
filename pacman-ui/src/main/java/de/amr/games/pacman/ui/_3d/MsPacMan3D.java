@@ -27,7 +27,6 @@ import org.tinylog.Logger;
 
 import static de.amr.games.pacman.ui.Globals.PY_3D_PAC_LIGHT_ENABLED;
 import static de.amr.games.pacman.ui.Globals.THE_SOUND;
-import static de.amr.games.pacman.ui._3d.PacShape3D.createChewingAnimation;
 import static de.amr.games.pacman.uilib.Ufx.now;
 import static de.amr.games.pacman.uilib.Ufx.pauseSec;
 import static de.amr.games.pacman.uilib.model3D.Model3D.meshViewById;
@@ -75,7 +74,7 @@ public class MsPacMan3D implements Pac3D {
         meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
         meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
 
-        chewingAnimation = createChewingAnimation(jaw);
+        chewingAnimation = PacMan3D.createChewingAnimation(jaw);
         createHipSwayingAnimation(shape3D);
 
         light.translateXProperty().bind(shape3D.translateXProperty());
