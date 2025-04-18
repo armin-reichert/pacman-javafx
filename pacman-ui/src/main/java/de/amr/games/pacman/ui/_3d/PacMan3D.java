@@ -25,20 +25,6 @@ public class PacMan3D extends Pac3D {
     }
 
     @Override
-    public void init() {
-        root.setVisible(pac.isVisible());
-        root.setScaleX(1.0);
-        root.setScaleY(1.0);
-        root.setScaleZ(1.0);
-
-        updatePosition();
-        stopChewingAndOpenMouth();
-        stopMoveAnimation();
-        setPowerMode(false);
-    }
-
-
-    @Override
     public void setPowerMode(boolean on) {
         float rate = on ? POWER_AMPLIFICATION : 1;
         movementAnimation.stop();

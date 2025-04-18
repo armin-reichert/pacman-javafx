@@ -55,52 +55,14 @@ public abstract class Pac3D {
 
     protected final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
-    protected Pac pac;
-    protected double size;
-    protected Group root = new Group();
-    protected Rotate moveRotation = new Rotate();
-    protected Node jaw;
+    protected final Pac pac;
+    protected final double size;
+    protected final Group root = new Group();
     protected Group body;
-    protected PointLight light = new PointLight();
+    protected final Rotate moveRotation = new Rotate();
+    protected final PointLight light = new PointLight();
     protected Animation chewingAnimation;
-
-    public Node shape3D() {
-        return root;
-    }
-
-    public ObjectProperty<DrawMode> drawModeProperty() { return  drawModePy; }
-
-    public LightBase light() {
-        return light;
-    }
-
-    public void init() {
-        root.setVisible(pac.isVisible());
-        root.setScaleX(1.0);
-        root.setScaleY(1.0);
-        root.setScaleZ(1.0);
-
-        updatePosition();
-        stopChewingAndOpenMouth();
-        stopMoveAnimation();
-        setPowerMode(false);
-    }
-
-    public void update(GameLevel level) {
-        if (pac.isAlive()) {
-            updatePosition();
-            updateVisibility(level);
-            updateMoveAnimation();
-            updateLight(level);
-        }
-        if (pac.isAlive() && !pac.isStandingStill()) {
-            startMoveAnimation();
-            chew();
-        } else {
-            stopMoveAnimation();
-            stopChewingAndOpenMouth();
-        }
-    }
+    protected Node jaw;
 
     public abstract Animation createDyingAnimation();
     public abstract void setPowerMode(boolean power);
@@ -148,6 +110,44 @@ public abstract class Pac3D {
         light.setTranslateZ(-30);
     }
 
+    public Node shape3D() {
+        return root;
+    }
+
+    public ObjectProperty<DrawMode> drawModeProperty() { return  drawModePy; }
+
+    public LightBase light() {
+        return light;
+    }
+
+    public void init() {
+        root.setVisible(pac.isVisible());
+        root.setScaleX(1.0);
+        root.setScaleY(1.0);
+        root.setScaleZ(1.0);
+
+        updatePosition();
+        stopChewingAndOpenMouth();
+        stopMoveAnimation();
+        setPowerMode(false);
+    }
+
+    public void update(GameLevel level) {
+        if (pac.isAlive()) {
+            updatePosition();
+            updateVisibility(level);
+            updateMoveAnimation();
+            updateLight(level);
+        }
+        if (pac.isAlive() && !pac.isStandingStill()) {
+            startMoveAnimation();
+            chewingAnimation.play();
+        } else {
+            stopMoveAnimation();
+            stopChewingAndOpenMouth();
+        }
+    }
+
     protected void updatePosition() {
         Vector2f center = pac.position().plus(HTS, HTS);
         root.setTranslateX(center.x());
@@ -179,20 +179,9 @@ public abstract class Pac3D {
         }
     }
 
-    // Chewing animation
-
-    public void stopChewingAndOpenMouth() {
-        stopChewing();
+    protected void stopChewingAndOpenMouth() {
+        chewingAnimation.stop();
         jaw.setRotationAxis(Rotate.Y_AXIS);
         jaw.setRotate(0);
     }
-
-    public void chew() {
-        chewingAnimation.play();
-    }
-
-    public void stopChewing() {
-        chewingAnimation.stop();
-    }
-
 }
