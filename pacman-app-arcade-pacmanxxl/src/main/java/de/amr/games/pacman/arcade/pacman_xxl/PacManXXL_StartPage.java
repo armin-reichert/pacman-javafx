@@ -202,7 +202,7 @@ public class PacManXXL_StartPage implements StartPage {
         @Override
         public void draw() {
             super.draw();
-            drawActorAnimation();
+            drawActorAnimation(scalingProperty().get());
         }
 
         private boolean chasingGhosts;
@@ -232,7 +232,7 @@ public class PacManXXL_StartPage implements StartPage {
             chasingGhosts = false;
 
             pac = new Pac();
-            pac.setPosX(42*TS);
+            pac.setPosX(42 * TS);
             pac.setMoveAndWishDir(Direction.LEFT);
             pac.setSpeed(1.0f);
             pac.setVisible(true);
@@ -244,7 +244,7 @@ public class PacManXXL_StartPage implements StartPage {
                 ArcadePacMan_GameModel.clyde()
             };
             for (Ghost ghost : ghosts) {
-                ghost.setPosX(46*TS + ghost.id() * 2 *TS);
+                ghost.setPosX(46 * TS + ghost.id() * 2 * TS);
                 ghost.setMoveAndWishDir(Direction.LEFT);
                 ghost.setSpeed(1.05f);
                 ghost.setVisible(true);
@@ -252,27 +252,27 @@ public class PacManXXL_StartPage implements StartPage {
         }
 
         private void updateActorAnimation() {
-            if (ghosts[3].posX() < -4*TS && !chasingGhosts) {
+            if (ghosts[3].posX() < -4 * TS && !chasingGhosts) {
                 chasingGhosts = true;
                 pac.setMoveAndWishDir(pac.moveDir().opposite());
-                pac.setPosX(-36*TS);
+                pac.setPosX(-36 * TS);
                 for (Ghost ghost : ghosts) {
                     ghost.setVisible(true);
-                    ghost.setPosX(pac.posX() + 22*TS + ghost.id() * 2.5f *TS);
+                    ghost.setPosX(pac.posX() + 22 * TS + ghost.id() * 2.5f * TS);
                     ghost.setMoveAndWishDir(ghost.moveDir().opposite());
-                    ghost.setSpeed(0.55f);
+                    ghost.setSpeed(0.58f);
                     ghost.selectAnimation(ActorAnimations.ANIM_GHOST_FRIGHTENED);
                     ghost.startAnimation();
                 }
             }
-            else if (pac.posX() > 44*TS && chasingGhosts) {
+            else if (pac.posX() > 56 * TS && chasingGhosts) {
                 chasingGhosts = false;
-                pac.setMoveAndWishDir(pac.moveDir().opposite());
-                pac.setPosX(42*TS);
+                pac.setMoveAndWishDir(Direction.LEFT);
+                pac.setPosX(42 * TS);
                 for (Ghost ghost : ghosts) {
                     ghost.setVisible(true);
-                    ghost.setMoveAndWishDir(ghost.moveDir().opposite());
-                    ghost.setPosX(46*TS + ghost.id() * 2 *TS);
+                    ghost.setMoveAndWishDir(Direction.LEFT);
+                    ghost.setPosX(46 * TS + ghost.id() * 2 * TS);
                     ghost.setSpeed(1.05f);
                     ghost.selectAnimation(ActorAnimations.ANIM_GHOST_NORMAL);
                     ghost.startAnimation();
@@ -294,15 +294,12 @@ public class PacManXXL_StartPage implements StartPage {
             }
         }
 
-        private void drawActorAnimation() {
+        private void drawActorAnimation(float scaling) {
             g.save();
+            g.translate(0, 23.5 * TS * scaling);
             g.setImageSmoothing(false);
-            g.scale(scalingPy.get(), scalingPy.get());
-            g.translate(0, 23.5 * TS);
-            renderer.setScaling(1.25f);
-            for (Ghost ghost : ghosts) {
-                renderer.drawAnimatedActor(ghost);
-            }
+            renderer.setScaling(scaling);
+            for (Ghost ghost : ghosts) { renderer.drawAnimatedActor(ghost); }
             renderer.drawAnimatedActor(pac);
             g.restore();
         }

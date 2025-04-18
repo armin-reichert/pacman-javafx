@@ -64,8 +64,6 @@ public class OptionMenu {
     protected final FloatProperty scalingPy = new SimpleFloatProperty(2);
 
     private int selectedEntryIndex = 0;
-    private Runnable actionOnStart;
-
     private String title = "";
     private String[] commandTexts = new String[0];
 
@@ -74,8 +72,8 @@ public class OptionMenu {
     protected final GraphicsContext g = canvas.getGraphicsContext2D();
 
     private OptionMenuStyle style = DEFAULT_STYLE;
-
     private final Timeline animation;
+    private Runnable actionOnStart;
 
     public OptionMenu(int numTilesX, int numTilesY, int textCol, int valueCol) {
         this.numTilesX = numTilesX;
@@ -112,7 +110,7 @@ public class OptionMenu {
         canvas.requestFocus();
     }
 
-    private void playSound(AudioClip clip) {
+    protected void playSound(AudioClip clip) {
         if (soundEnabledPy.get()) {
             clip.play();
         }
@@ -166,7 +164,7 @@ public class OptionMenu {
         g.restore();
     }
 
-    private void drawCentered(String text, double y) {
+    protected void drawCentered(String text, double y) {
         g.save();
         g.setTextAlign(TextAlignment.CENTER);
         g.fillText(text, (canvas.getWidth() * 0.5) / scalingPy.get(), y);
