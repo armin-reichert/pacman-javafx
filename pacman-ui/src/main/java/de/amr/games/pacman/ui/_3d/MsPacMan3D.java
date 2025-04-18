@@ -122,7 +122,7 @@ public class MsPacMan3D implements Pac3D {
         if (pac.isAlive()) {
             updatePosition();
             updateVisibility(level);
-            updateLight(pac, level);
+            updateLight(level);
         }
         if (pac.isAlive() && !pac.isStandingStill()) {
             swayHips();
@@ -168,7 +168,7 @@ public class MsPacMan3D implements Pac3D {
     /**
      * When empowered, Pac-Man is lighted, light range shrinks with ceasing power.
      */
-    private void updateLight(Pac pac, GameLevel level) {
+    private void updateLight(GameLevel level) {
         TickTimer powerTimer = level.powerTimer();
         if (PY_3D_PAC_LIGHT_ENABLED.get() && powerTimer.isRunning() && pac.isVisible()) {
             light.setLightOn(true);
