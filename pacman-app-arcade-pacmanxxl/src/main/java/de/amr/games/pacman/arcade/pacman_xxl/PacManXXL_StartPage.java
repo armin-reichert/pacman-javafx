@@ -44,11 +44,12 @@ import static java.util.Objects.requireNonNull;
 public class PacManXXL_StartPage implements StartPage {
 
     private static class GameOptionMenu extends OptionMenu {
+
         // State
-        GameVariant gameVariant;
-        boolean play3D;
-        boolean cutScenesEnabled;
-        MapSelectionMode mapOrder;
+        private GameVariant gameVariant = GameVariant.PACMAN_XXL;
+        private boolean play3D;
+        private boolean cutScenesEnabled;
+        private MapSelectionMode mapOrder;
 
         // Animation
         private Pac pac;
@@ -162,6 +163,23 @@ public class PacManXXL_StartPage implements StartPage {
 
             resetActorAnimation();
             setActorAnimationVariant(GameVariant.PACMAN);
+        }
+
+        private void initState() {
+            GameModel game = THE_GAME_CONTROLLER.game(gameVariant);
+            game.mapSelector().loadAllMaps(game);
+            boolean customMapsExist = !game.mapSelector().customMaps().isEmpty();
+
+            entryGameVariant.selectValue(gameVariant);
+            setPlay3D(PY_3D_ENABLED.get());
+            setCutScenesEnabled(game.cutScenesEnabledProperty().get());
+            setMapOrder(game.mapSelector().mapSelectionMode(), customMapsExist);
+
+            resetActorAnimation();
+            setActorAnimationVariant(gameVariant);
+
+            logMenuState();
+            Logger.info("Option menu initialized");
         }
 
         private void setPlay3D(boolean play3D) {
@@ -336,7 +354,7 @@ public class PacManXXL_StartPage implements StartPage {
 
     @Override
     public void onEnter() {
-        initMenuState();
+        menu.initState();
         menu.startAnimation();
     }
 
@@ -358,21 +376,5 @@ public class PacManXXL_StartPage implements StartPage {
     @Override
     public void onExit() {
         menu.stopAnimation();
-    }
-
-    private void initMenuState() {
-        if (menu.gameVariant == null) {
-            menu.gameVariant = GameVariant.PACMAN_XXL;
-            menu.entryGameVariant.selectValue(menu.gameVariant);
-            menu.resetActorAnimation();
-            menu.setActorAnimationVariant(menu.gameVariant);
-        }
-        GameModel game = THE_GAME_CONTROLLER.game(menu.gameVariant);
-        menu.setPlay3D(PY_3D_ENABLED.get());
-        menu.setCutScenesEnabled(game.cutScenesEnabledProperty().get());
-        game.mapSelector().loadAllMaps(game);
-        menu.setMapOrder(game.mapSelector().mapSelectionMode(), !game.mapSelector().customMaps().isEmpty());
-        menu.logMenuState();
-        Logger.info("Option menu initialized");
     }
 }
