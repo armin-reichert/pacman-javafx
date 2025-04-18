@@ -84,26 +84,23 @@ public class GameLevel3D {
     private Animation livesCounterAnimation;
 
     public GameLevel3D(GameLevel level) {
-
-        var ambientLight = new AmbientLight();
-        ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
+        final GameUIConfig uiConfig = THE_UI_CONFIGS.current();
+        final WorldMap worldMap = level.worldMap();
+        final int numRows = worldMap.numRows(), numCols = worldMap.numCols();
+        final WorldMapColorScheme colorScheme = uiConfig.worldMapColorScheme(worldMap);
+        final Model3D pelletModel3D = THE_ASSETS.get("model3D.pellet"); // TODO move into UI config?
+        final PhongMaterial foodMaterial = coloredMaterial(colorScheme.pellet()); // TODO move into UI config?
 
         livesCounter3D = createLivesCounter3D(level.game().canStartNewGame());
         livesCounter3D.livesCountPy.bind(livesCountPy);
 
-        final WorldMap worldMap = level.worldMap();
-        final int numRows = worldMap.numRows(), numCols = worldMap.numCols();
-        final WorldMapColorScheme colorScheme = THE_UI_CONFIGS.current().worldMapColorScheme(worldMap);
-        final Model3D pelletModel3D = THE_ASSETS.get("model3D.pellet"); // TODO move into UI config?
-        final PhongMaterial foodMaterial = coloredMaterial(colorScheme.pellet()); // TODO move into UI config?
-
-        pac3D = createPac3D(level.pac());
+        pac3D = createPac3D(uiConfig.assetNamespace(), level.pac());
         ghost3DAppearances = level.ghosts()
-            .map(ghost -> createGhostAppearance3D(ghost, level.numFlashes()))
+            .map(ghost -> createGhostAppearance3D(uiConfig.assetNamespace(), ghost, level.numFlashes()))
             .toList();
 
         floor3D = createFloor(numCols * TS, numRows * TS);
-        maze3D = new Maze3D(THE_UI_CONFIGS.current(), level, colorScheme);
+        maze3D = new Maze3D(uiConfig, level, colorScheme);
         mazeGroup.getChildren().addAll(floor3D, maze3D);
 
         createFood3D(level, pelletModel3D.mesh("Fruit"), foodMaterial);
@@ -123,6 +120,9 @@ public class GameLevel3D {
             .filter(Shape3D.class::isInstance)
             .map(Shape3D.class::cast)
             .forEach(shape3D -> shape3D.drawModeProperty().bind(PY_3D_DRAW_MODE));
+
+        var ambientLight = new AmbientLight();
+        ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
         root.getChildren().add(ambientLight);
 
         root.setMouseTransparent(true); //TODO does this really increase performance?
@@ -183,8 +183,7 @@ public class GameLevel3D {
         return pellet3D;
     }
 
-    private Pac3D createPac3D(Pac pac) {
-        String ans = THE_UI_CONFIGS.current().assetNamespace();
+    private Pac3D createPac3D(String ans, Pac pac) {
         GameVariant gameVariant = THE_GAME_CONTROLLER.gameVariantProperty().get();
         Pac3D pac3D = switch (gameVariant) {
             case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL
@@ -197,11 +196,11 @@ public class GameLevel3D {
         return pac3D;
     }
 
-    private Ghost3DAppearance createGhostAppearance3D(Ghost ghost, int numFlashes) {
+    private Ghost3DAppearance createGhostAppearance3D(String ans, Ghost ghost, int numFlashes) {
         Shape3D dressShape    = new MeshView(THE_ASSETS.get("model3D.ghost.mesh.dress"));
         Shape3D pupilsShape   = new MeshView(THE_ASSETS.get("model3D.ghost.mesh.pupils"));
         Shape3D eyeballsShape = new MeshView(THE_ASSETS.get("model3D.ghost.mesh.eyeballs"));
-        return new Ghost3DAppearance(THE_UI_CONFIGS.current().assetNamespace(),
+        return new Ghost3DAppearance(ans,
             dressShape, pupilsShape, eyeballsShape,
             ghost, GHOST_3D_SIZE, numFlashes);
     }
