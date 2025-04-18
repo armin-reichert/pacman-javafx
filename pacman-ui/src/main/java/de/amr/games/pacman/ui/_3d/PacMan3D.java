@@ -4,9 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._3d;
 
+import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.uilib.Ufx;
 import de.amr.games.pacman.uilib.assets.AssetStorage;
 import de.amr.games.pacman.uilib.model3D.Model3D;
 import de.amr.games.pacman.uilib.model3D.PacModel3D;
@@ -23,6 +26,8 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import static de.amr.games.pacman.Globals.HTS;
+import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.ui.Globals.PY_3D_PAC_LIGHT_ENABLED;
 import static de.amr.games.pacman.ui.Globals.THE_SOUND;
 import static de.amr.games.pacman.uilib.Ufx.doAfterSec;
@@ -55,7 +60,9 @@ public class PacMan3D implements Pac3D {
     private final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
     private final Pac pac;
-    private final PacShape3D shape3D;
+    private final double size;
+    private final Group shape3D = new Group();
+    private final Rotate moveRotation = new Rotate();
     private final Node jaw;
     private final PointLight light = new PointLight();
     private final Animation chewingAnimation;
@@ -63,6 +70,7 @@ public class PacMan3D implements Pac3D {
 
     public PacMan3D(Pac pac, double size, Model3D model3D, AssetStorage assets, String ans) {
         this.pac = requireNonNull(pac);
+        this.size = size;
         requireNonNull(model3D);
         requireNonNull(assets);
         requireNonNull(ans);
@@ -80,8 +88,9 @@ public class PacMan3D implements Pac3D {
             assets.color(ans + ".pac.color.palate")
         );
 
-        shape3D = new PacShape3D(jaw, size);
-        shape3D.getChildren().add(body);
+        shape3D.getChildren().addAll(jaw, body);
+        shape3D.setTranslateZ(-0.5 * size);
+        shape3D.getTransforms().add(moveRotation);
 
         meshViewById(jaw, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
         meshViewById(jaw, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
@@ -98,7 +107,7 @@ public class PacMan3D implements Pac3D {
     }
 
     @Override
-    public PacShape3D shape3D() {
+    public Node shape3D() {
         return shape3D;
     }
 
@@ -112,12 +121,12 @@ public class PacMan3D implements Pac3D {
 
     @Override
     public void init() {
-        shape3D.updatePosition(pac);
         shape3D.setVisible(pac.isVisible());
         shape3D.setScaleX(1.0);
         shape3D.setScaleY(1.0);
         shape3D.setScaleZ(1.0);
 
+        updatePosition();
         stopChewingAndOpenMouth();
         stopHeadBanging();
         setExcited(false);
@@ -126,8 +135,8 @@ public class PacMan3D implements Pac3D {
     @Override
     public void update(GameLevel level) {
         if (pac.isAlive()) {
-            shape3D.updatePosition(pac);
-            shape3D.updateVisibility(pac, level);
+            updatePosition();
+            updateVisibility(pac, level);
             updateLight(pac, level);
         }
         if (pac.isAlive() && !pac.isStandingStill()) {
@@ -173,6 +182,21 @@ public class PacMan3D implements Pac3D {
             new ParallelTransition(spins, new SequentialTransition(shrinks, expands), sinks),
             doAfterSec(1.0, () -> shape3D.setVisible(false))
         );
+    }
+
+    private void updatePosition() {
+        Vector2f center = pac.position().plus(HTS, HTS);
+        shape3D.setTranslateX(center.x());
+        shape3D.setTranslateY(center.y());
+        shape3D.setTranslateZ(-0.5 * size);
+        moveRotation.setAxis(Rotate.Z_AXIS);
+        moveRotation.setAngle(Ufx.angle(pac.moveDir()));
+    }
+
+    private void updateVisibility(Pac pac, GameLevel level) {
+        WorldMap worldMap = level.worldMap();
+        boolean outsideWorld = shape3D.getTranslateX() < HTS || shape3D.getTranslateX() > TS * worldMap.numCols() - HTS;
+        shape3D.setVisible(pac.isVisible() && !outsideWorld);
     }
 
     /**

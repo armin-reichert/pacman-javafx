@@ -8,6 +8,7 @@ import de.amr.games.pacman.model.GameLevel;
 import javafx.animation.Animation;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.LightBase;
+import javafx.scene.Node;
 import javafx.scene.effect.Light;
 import javafx.scene.shape.DrawMode;
 
@@ -16,7 +17,7 @@ import javafx.scene.shape.DrawMode;
  */
 public interface Pac3D {
 
-    PacShape3D shape3D();
+    Node shape3D();
 
     LightBase light();
 
