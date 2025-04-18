@@ -55,6 +55,7 @@ public class PacManXXL_StartPage implements StartPage {
         private Pac pac;
         private Ghost[] ghosts = new Ghost[4];
         private GameRenderer renderer;
+        private boolean chasingGhosts;
 
         // Entries
         private final OptionMenuEntry<GameVariant> entryGameVariant = new OptionMenuEntry<>("GAME VARIANT",
@@ -206,6 +207,8 @@ public class PacManXXL_StartPage implements StartPage {
         protected void handleKeyPress(KeyEvent e) {
             if (Keyboard.naked(KeyCode.E).match(e)) {
                 THE_UI.showEditorView();
+            } else if (Keyboard.naked(KeyCode.ENTER).match(e)) {
+                startGame();
             } else {
                 super.handleKeyPress(e);
             }
@@ -223,7 +226,17 @@ public class PacManXXL_StartPage implements StartPage {
             drawActorAnimation(scalingProperty().get());
         }
 
-        private boolean chasingGhosts;
+        private void startGame() {
+            if (gameVariant == GameVariant.PACMAN_XXL || gameVariant == GameVariant.MS_PACMAN_XXL) {
+                GameModel game = THE_GAME_CONTROLLER.game(gameVariant);
+                game.cutScenesEnabledProperty().set(cutScenesEnabled);
+                game.mapSelector().setMapSelectionMode(mapOrder);
+                game.mapSelector().loadAllMaps(game);
+                THE_UI.selectGameVariant(gameVariant);
+            } else {
+                Logger.error("Game variant {} is not allowed for XXL game", gameVariant);
+            }
+        }
 
         private void setActorAnimationVariant(GameVariant gameVariant) {
             GameUIConfig config = THE_UI_CONFIGS.configuration(gameVariant);
@@ -336,17 +349,6 @@ public class PacManXXL_StartPage implements StartPage {
         // scale menu to take 90% of start page height
         menu.scalingProperty().bind(root.heightProperty().multiply(0.9).divide(menu.numTilesY() * TS));
         menu.soundEnabledProperty().bind(THE_SOUND.mutedProperty().not());
-        menu.setOnStart(() -> {
-            if (menu.gameVariant == GameVariant.PACMAN_XXL || menu.gameVariant == GameVariant.MS_PACMAN_XXL) {
-                GameModel game = THE_GAME_CONTROLLER.game(menu.gameVariant);
-                game.cutScenesEnabledProperty().set(menu.cutScenesEnabled);
-                game.mapSelector().setMapSelectionMode(menu.mapOrder);
-                game.mapSelector().loadAllMaps(game);
-                THE_UI.selectGameVariant(menu.gameVariant);
-            } else {
-                Logger.error("Game variant {} is not allowed for XXL game", menu.gameVariant);
-            }
-        });
 
         root.setBackground(Background.fill(Color.BLACK));
         root.getChildren().addAll(flyer, menu.root());

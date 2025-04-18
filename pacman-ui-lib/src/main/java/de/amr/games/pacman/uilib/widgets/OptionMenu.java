@@ -73,7 +73,6 @@ public class OptionMenu {
 
     private OptionMenuStyle style = DEFAULT_STYLE;
     private final Timeline animation;
-    private Runnable actionOnStart;
 
     public OptionMenu(int numTilesX, int numTilesY, int textCol, int valueCol) {
         this.numTilesX = numTilesX;
@@ -84,8 +83,7 @@ public class OptionMenu {
         setTitle("OPTIONS");
         setCommandTexts(
             "SELECT OPTIONS WITH UP AND DOWN",
-            "PRESS SPACE TO CHANGE VALUE",
-            "PRESS ENTER TO START"
+            "PRESS SPACE TO CHANGE VALUE"
         );
 
         canvas.widthProperty().bind(scalingPy.multiply(numTilesX*TS));
@@ -190,11 +188,6 @@ public class OptionMenu {
                 if (entry.selectedValueIndex == entry.valueList.size()) entry.selectedValueIndex = 0;
                 entry.onValueChanged(entry.selectedValueIndex);
             }
-            case ENTER -> {
-                if (actionOnStart != null) {
-                    actionOnStart.run();
-                }
-            }
         }
     }
 
@@ -217,8 +210,6 @@ public class OptionMenu {
     public void setStyle(OptionMenuStyle style) {
         this.style = requireNonNull(style);
     }
-
-    public void setOnStart(Runnable action) { actionOnStart = requireNonNull(action); }
 
     public void setCommandTexts(String... lines) {
         commandTexts = Arrays.copyOf(lines, lines.length);
