@@ -24,6 +24,7 @@ import javafx.util.Duration;
 import static de.amr.games.pacman.Globals.HTS;
 import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.uilib.model3D.Model3D.meshViewById;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Armin Reichert
@@ -37,9 +38,9 @@ public class PacShape3D extends Group {
     private final Rotate moveRotation = new Rotate();
     private final Animation chewingAnimation;
 
-    public PacShape3D(Model3D model3D, double size, Color headColor, Color palateColor) {
+    public PacShape3D(Node jaw, double size) {
+        this.jaw = requireNonNull(jaw);
         initialZ = -0.5 * size;
-        jaw = PacModel3D.createPacSkull(model3D, size, headColor, palateColor);
         meshViewById(jaw, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
         meshViewById(jaw, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
 

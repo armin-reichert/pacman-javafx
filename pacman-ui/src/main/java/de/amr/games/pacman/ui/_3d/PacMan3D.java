@@ -39,7 +39,9 @@ public class PacMan3D implements Pac3D {
         requireNonNull(assets);
         requireNonNull(ans);
 
-        shape3D = new PacShape3D(model3D, size,
+        Node jaw = PacModel3D.createPacSkull(
+            model3D,
+            size,
             assets.color(ans + ".pac.color.head"),
             assets.color(ans + ".pac.color.palate"));
 
@@ -50,11 +52,12 @@ public class PacMan3D implements Pac3D {
             assets.color(ans + ".pac.color.palate")
         );
 
+        shape3D = new PacShape3D(jaw, size);
+        shape3D.getChildren().add(body);
+
         meshViewById(body, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(shape3D.drawModeProperty());
         meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(shape3D.drawModeProperty());
         meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(shape3D.drawModeProperty());
-
-        shape3D.getChildren().add(body);
 
         createHeadBangingAnimation(shape3D);
 

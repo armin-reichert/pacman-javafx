@@ -41,7 +41,9 @@ public class MsPacMan3D implements Pac3D {
         requireNonNull(assets);
         requireNonNull(ans);
 
-        shape3D = new PacShape3D(model3D, size,
+        Node jaw = PacModel3D.createPacSkull(
+            model3D,
+            size,
             assets.color(ans + ".pac.color.head"),
             assets.color(ans + ".pac.color.palate"));
 
@@ -51,16 +53,17 @@ public class MsPacMan3D implements Pac3D {
             assets.color(ans + ".pac.color.eyes"),
             assets.color(ans + ".pac.color.palate"));
 
-        meshViewById(body, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(shape3D.drawModeProperty());
-        meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(shape3D.drawModeProperty());
-        meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(shape3D.drawModeProperty());
-
         Group femaleParts = PacModel3D.createFemaleParts(size,
             assets.color(ans + ".pac.color.hairbow"),
             assets.color(ans + ".pac.color.hairbow.pearls"),
             assets.color(ans + ".pac.color.boobs"));
 
+        shape3D = new PacShape3D(jaw, size);
         shape3D.getChildren().addAll(body, femaleParts);
+
+        meshViewById(body, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(shape3D.drawModeProperty());
+        meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(shape3D.drawModeProperty());
+        meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(shape3D.drawModeProperty());
 
         createHipSwayingAnimation(shape3D);
 
