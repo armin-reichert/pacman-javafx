@@ -200,9 +200,9 @@ public class GameLevel3D {
         Shape3D dressShape    = new MeshView(THE_ASSETS.get("model3D.ghost.mesh.dress"));
         Shape3D pupilsShape   = new MeshView(THE_ASSETS.get("model3D.ghost.mesh.pupils"));
         Shape3D eyeballsShape = new MeshView(THE_ASSETS.get("model3D.ghost.mesh.eyeballs"));
-        return new Ghost3DAppearance(ans,
-            dressShape, pupilsShape, eyeballsShape,
-            ghost, GHOST_3D_SIZE, numFlashes);
+        var ghost3DAppearance = new Ghost3DAppearance(ans, dressShape, pupilsShape, eyeballsShape, ghost, GHOST_3D_SIZE, numFlashes);
+        Model3D.allMeshViewsUnder(ghost3DAppearance).map(MeshView::drawModeProperty).forEach(py -> py.bind(PY_3D_DRAW_MODE));
+        return ghost3DAppearance;
     }
 
     private LivesCounter3D createLivesCounter3D(boolean canStartNewGame) {

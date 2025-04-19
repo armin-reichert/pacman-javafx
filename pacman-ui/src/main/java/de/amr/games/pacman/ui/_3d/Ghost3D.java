@@ -13,7 +13,6 @@ import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -21,7 +20,8 @@ import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.Globals.requireNonNegative;
+import static de.amr.games.pacman.Globals.requireValidGhostID;
 import static de.amr.games.pacman.ui.Globals.THE_ASSETS;
 import static java.util.Objects.requireNonNull;
 
@@ -29,8 +29,6 @@ import static java.util.Objects.requireNonNull;
  * @author Armin Reichert
  */
 public class Ghost3D {
-
-    public final ObjectProperty<DrawMode> drawModePy    = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
     private final ObjectProperty<Color> dressColorPy    = new SimpleObjectProperty<>(this, "dressColor", Color.ORANGE);
     private final ObjectProperty<Color> eyeballsColorPy = new SimpleObjectProperty<>(this, "eyeballsColor", Color.WHITE);
@@ -73,13 +71,8 @@ public class Ghost3D {
 
         dress = dressShape;
         dress.materialProperty().bind(dressColorPy.map(Ufx::coloredMaterial));
-        dress.drawModeProperty().bind(drawModePy);
-
         pupilsShape.materialProperty().bind(pupilsColorPy.map(Ufx::coloredMaterial));
-        pupilsShape.drawModeProperty().bind(drawModePy);
-
         eyeballsShape.materialProperty().bind(eyeballsColorPy.map(Ufx::coloredMaterial));
-        eyeballsShape.drawModeProperty().bind(drawModePy);
 
         pupilsColorPy.set(normalPupilsColor());
         dressColorPy.set(normalDressColor());

@@ -16,14 +16,12 @@ import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.ui.Globals.PY_3D_DRAW_MODE;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -41,8 +39,6 @@ import static java.util.Objects.requireNonNull;
 public class Ghost3DAppearance extends Group {
 
     public enum Appearance { COLORED_GHOST, FRIGHTENED_GHOST, FLASHING_GHOST, GHOST_EYES, NUMBER }
-
-    public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
     private final ObjectProperty<Appearance> appearancePy = new SimpleObjectProperty<>(this, "appearance") {
         @Override
@@ -74,10 +70,7 @@ public class Ghost3DAppearance extends Group {
         this.size = size;
         this.numFlashes = numFlashes;
 
-        drawModePy.bind(PY_3D_DRAW_MODE);
-
         ghost3D = new Ghost3D(assetPrefix, ghost.id(), dressShape, pupilsShape, eyeballsShape, size);
-        ghost3D.drawModePy.bind(drawModePy);
 
         numberCube = new Box(14, 8, 8);
         numberCubeRotation = new RotateTransition(Duration.seconds(1), numberCube);
