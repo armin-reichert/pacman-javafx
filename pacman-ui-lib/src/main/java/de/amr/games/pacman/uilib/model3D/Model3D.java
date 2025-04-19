@@ -54,8 +54,7 @@ public class Model3D {
     }
 
     public static String toCSS_ID(String id) {
-        // what else need to be escaped?
-        return id.replace('.', '-');
+        return id.replace('.', '-'); //TODO what else needs to be escaped?
     }
 
     private final String url;
@@ -68,10 +67,7 @@ public class Model3D {
 
     public Model3D(URL objFileURL) throws IOException, URISyntaxException {
         url = requireNonNull(objFileURL).toExternalForm();
-        readMeshesAndMaterials(new ObjImporter(url));
-    }
-
-    private void readMeshesAndMaterials(ObjImporter importer) {
+        var importer = new ObjImporter(url);
         for (String meshName : importer.getMeshNames()) {
             TriangleMesh mesh = importer.getMesh(meshName);
             ObjImporter.validateTriangleMesh(mesh);
@@ -80,6 +76,22 @@ public class Model3D {
         for (var materialLibrary : importer.materialLibrary()) {
             materialLibrary.forEach((materialName, material) -> materials.put(materialName, (PhongMaterial) material));
         }
+    }
+
+    public TriangleMesh mesh(String name) {
+        requireNonNull(name);
+        if (meshesByName.containsKey(name)) {
+            return meshesByName.get(name);
+        }
+        throw new Model3DException("No mesh with name %s found", name);
+    }
+
+    public PhongMaterial material(String name) {
+        requireNonNull(name);
+        if (materials.containsKey(name)) {
+            return materials.get(name);
+        }
+        throw new Model3DException("No material with name %s found", name);
     }
 
     public String url() {
@@ -98,21 +110,5 @@ public class Model3D {
             sb.append("\t\t'%s': %s%n".formatted(entry.getKey(), entry.getValue()));
         }
         return sb.toString();
-    }
-
-    public TriangleMesh mesh(String name) {
-        requireNonNull(name);
-        if (meshesByName.containsKey(name)) {
-            return meshesByName.get(name);
-        }
-        throw new Model3DException("No mesh with name %s found", name);
-    }
-
-    public PhongMaterial material(String name) {
-        requireNonNull(name);
-        if (materials.containsKey(name)) {
-            return materials.get(name);
-        }
-        throw new Model3DException("No material with name %s found", name);
     }
 }
