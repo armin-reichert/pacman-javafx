@@ -18,7 +18,6 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.GameUIConfig;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.uilib.Ufx;
-import de.amr.games.pacman.uilib.assets.AssetStorage;
 import de.amr.games.pacman.uilib.assets.WorldMapColorScheme;
 import de.amr.games.pacman.uilib.model3D.*;
 import javafx.animation.*;
@@ -96,14 +95,14 @@ public class GameLevel3D {
 
         pac3D = createPac3D(gameVariant, uiConfig.assetNamespace(), level.pac());
         ghost3DAppearances = level.ghosts()
-            .map(ghost -> createGhostAppearance3D(THE_ASSETS, uiConfig.assetNamespace(), ghost, level.numFlashes()))
+            .map(ghost -> createGhost3D(uiConfig.assetNamespace(), ghost, level.numFlashes()))
             .toList();
 
         floor3D = createFloor(numCols * TS, numRows * TS);
         maze3D = new Maze3D(uiConfig, level, colorScheme);
         mazeGroup.getChildren().addAll(floor3D, maze3D);
 
-        createFood3D(level, Model3DRepository.instance().pelletMesh(), foodMaterial);
+        createFood3D(level, foodMaterial);
 
         // Note: The order in which children are added matters!
         // Walls and house must be added last, otherwise, transparency is not working correctly.
@@ -128,7 +127,18 @@ public class GameLevel3D {
         root.setMouseTransparent(true); //TODO does this really increase performance?
     }
 
-    private void createFood3D(GameLevel level, Mesh pelletMesh, PhongMaterial foodMaterial) {
+    private Ghost3DAppearance createGhost3D(String ans, Ghost ghost, int numFlashes) {
+        var ghost3D = new Ghost3DAppearance(THE_ASSETS, ans,
+            new MeshView(Model3DRepository.instance().ghostDressMesh()),
+            new MeshView(Model3DRepository.instance().ghostPupilsMesh()),
+            new MeshView(Model3DRepository.instance().ghostEyeballsMesh()),
+            ghost, GHOST_3D_SIZE, numFlashes);
+        Model3D.allMeshViewsUnder(ghost3D).map(MeshView::drawModeProperty).forEach(py -> py.bind(PY_3D_DRAW_MODE));
+        return ghost3D;
+    }
+
+    private void createFood3D(GameLevel level, PhongMaterial foodMaterial) {
+        final Mesh pelletMesh = Model3DRepository.instance().pelletMesh();
         level.worldMap().tiles().filter(level::hasFoodAt).forEach(tile -> {
             if (level.isEnergizerPosition(tile)) {
                 Energizer3D energizer3D = createEnergizer3D(tile, foodMaterial);
@@ -191,15 +201,6 @@ public class GameLevel3D {
         pac3D.light().setColor(THE_ASSETS.color(ans + ".pac.color.head").desaturate());
         Model3D.allMeshViewsUnder(pac3D.root()).map(MeshView::drawModeProperty).forEach(py -> py.bind(PY_3D_DRAW_MODE));
         return pac3D;
-    }
-
-    private Ghost3DAppearance createGhostAppearance3D(AssetStorage assets, String ans, Ghost ghost, int numFlashes) {
-        Shape3D dressShape    = new MeshView(Model3DRepository.instance().ghostDressMesh());
-        Shape3D pupilsShape   = new MeshView(Model3DRepository.instance().ghostPupilsMesh());
-        Shape3D eyeballsShape = new MeshView(Model3DRepository.instance().ghostEyeballsMesh());
-        var ghost3DAppearance = new Ghost3DAppearance(assets, ans, dressShape, pupilsShape, eyeballsShape, ghost, GHOST_3D_SIZE, numFlashes);
-        Model3D.allMeshViewsUnder(ghost3DAppearance).map(MeshView::drawModeProperty).forEach(py -> py.bind(PY_3D_DRAW_MODE));
-        return ghost3DAppearance;
     }
 
     private LivesCounter3D createLivesCounter3D(boolean canStartNewGame) {
