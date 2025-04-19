@@ -63,11 +63,10 @@ public abstract class Pac3DBase {
     protected abstract void stopMovementAnimation();
     protected abstract void updateMovementAnimation();
 
-    protected Pac3DBase(Pac pac, double size, Model3D model3D, AssetStorage assets, String ans) {
+    protected Pac3DBase(Pac pac, double size, AssetStorage assets, String ans) {
         this.pac = requireNonNull(pac);
         this.size = size;
 
-        requireNonNull(model3D);
         requireNonNull(assets);
         requireNonNull(ans);
 

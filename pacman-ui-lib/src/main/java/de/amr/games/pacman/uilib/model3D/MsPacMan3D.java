@@ -15,8 +15,8 @@ import javafx.util.Duration;
 
 public class MsPacMan3D extends Pac3DBase {
 
-    public MsPacMan3D(Pac pac, double size, Model3D model3D, AssetStorage assets, String ans) {
-        super(pac, size, model3D, assets, ans);
+    public MsPacMan3D(Pac pac, double size, AssetStorage assets, String ans) {
+        super(pac, size, assets, ans);
 
         Group femaleBodyParts = Model3DRepository.instance().createFemaleBodyParts(size,
             assets.color(ans + ".pac.color.hairbow"),

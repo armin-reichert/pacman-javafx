@@ -185,10 +185,8 @@ public class GameLevel3D {
     private Pac3DBase createPac3D(String ans, Pac pac) {
         GameVariant gameVariant = THE_GAME_CONTROLLER.gameVariantProperty().get();
         Pac3DBase pac3D = switch (gameVariant) {
-            case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL
-                -> new MsPacMan3D(pac, PAC_3D_SIZE, Model3DRepository.instance().pacManModel3D(), THE_ASSETS, ans);
-            case PACMAN, PACMAN_XXL
-                -> new PacMan3D(pac, PAC_3D_SIZE, Model3DRepository.instance().pacManModel3D(), THE_ASSETS, ans);
+            case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL -> new MsPacMan3D(pac, PAC_3D_SIZE, THE_ASSETS, ans);
+            case PACMAN, PACMAN_XXL -> new PacMan3D(pac, PAC_3D_SIZE, THE_ASSETS, ans);
         };
         pac3D.light().setColor(THE_ASSETS.color(ans + ".pac.color.head").desaturate());
         Model3D.allMeshViewsUnder(pac3D.root()).map(MeshView::drawModeProperty).forEach(py -> py.bind(PY_3D_DRAW_MODE));
