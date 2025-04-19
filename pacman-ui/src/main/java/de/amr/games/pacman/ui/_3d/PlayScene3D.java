@@ -275,7 +275,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     public void onEnterGameState(GameState state) {
         Logger.info("Entering game state {}", state);
         switch (state) {
-            case STARTING_GAME         -> onEnterStateStartingGame();
             case HUNTING               -> onEnterStateHunting();
             case PACMAN_DYING          -> game().level().ifPresent(this::onEnterStatePacManDying);
             case GHOST_DYING           -> onEnterStateGhostDying();
@@ -285,17 +284,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             case TESTING_LEVEL_TEASERS -> game().level().ifPresent(this::onEnterStateTestingLevelTeasers);
             case GAME_OVER             -> onEnterStateGameOver();
             default -> {}
-        }
-    }
-
-    private void onEnterStateStartingGame() {
-        if (level3D != null) {
-            game().level().ifPresent(level -> {
-                level3D.stopAnimations();
-                level3D.pac3D().init();
-                level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(level));
-                showReadyMessage(level);
-            });
         }
     }
 
