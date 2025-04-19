@@ -85,26 +85,27 @@ public interface PacModel3D {
 
     static Group createFemaleBodyParts(double pacSize, Color hairBowColor, Color hairBowPearlsColor, Color boobsColor) {
         var bowMaterial = coloredMaterial(hairBowColor);
+        int divisions = 16; // 64 is default
 
-        var bowLeft = new Sphere(1.2);
+        var bowLeft = new Sphere(1.2, divisions);
         bowLeft.getTransforms().addAll(new Translate(3.0, 1.5, -pacSize * 0.55));
         bowLeft.setMaterial(bowMaterial);
 
-        var bowRight = new Sphere(1.2);
+        var bowRight = new Sphere(1.2, divisions);
         bowRight.getTransforms().addAll(new Translate(3.0, -1.5, -pacSize * 0.55));
         bowRight.setMaterial(bowMaterial);
 
         var pearlMaterial = coloredMaterial(hairBowPearlsColor);
 
-        var pearlLeft = new Sphere(0.4);
+        var pearlLeft = new Sphere(0.4, divisions);
         pearlLeft.getTransforms().addAll(new Translate(2, 0.5, -pacSize * 0.58));
         pearlLeft.setMaterial(pearlMaterial);
 
-        var pearlRight = new Sphere(0.4);
+        var pearlRight = new Sphere(0.4, divisions);
         pearlRight.getTransforms().addAll(new Translate(2, -0.5, -pacSize * 0.58));
         pearlRight.setMaterial(pearlMaterial);
 
-        var beautySpot = new Sphere(0.5);
+        var beautySpot = new Sphere(0.5, divisions);
         beautySpot.getTransforms().addAll(new Translate(-0.33 * pacSize, -0.4 * pacSize, -0.14 * pacSize));
         beautySpot.setMaterial(coloredMaterial(Color.rgb(120, 120, 120)));
 
@@ -113,11 +114,11 @@ public interface PacModel3D {
         double bx = -0.2 * pacSize; // forward
         double by = 1.6; // or - 1.6 // sidewards
         double bz = 0.4 * pacSize; // up/down
-        var boobLeft = new Sphere(1.8);
+        var boobLeft = new Sphere(1.8, divisions);
         boobLeft.setMaterial(silicone);
         boobLeft.getTransforms().addAll(new Translate(bx, -by, bz));
 
-        var boobRight = new Sphere(1.8);
+        var boobRight = new Sphere(1.8, divisions);
         boobRight.setMaterial(silicone);
         boobRight.getTransforms().addAll(new Translate(bx, by, bz));
 
