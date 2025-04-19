@@ -47,7 +47,12 @@ public class PacMan3D extends XMan3D {
         return new SequentialTransition(
             now(this::init), // TODO check this
             new ParallelTransition(spinning, new SequentialTransition(shrinking, expanding), sinking),
-            doAfterSec(1.0, () -> root.setVisible(false))
+            doAfterSec(1.0, () -> {
+                root.setVisible(false);
+                root.setScaleX(1.0);
+                root.setScaleY(1.0);
+                root.setScaleZ(1.0);
+            })
         );
     }
 

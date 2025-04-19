@@ -21,10 +21,7 @@ import de.amr.games.pacman.uilib.Ufx;
 import de.amr.games.pacman.uilib.assets.WorldMapColorScheme;
 import de.amr.games.pacman.uilib.model3D.*;
 import javafx.animation.*;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.*;
 import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
@@ -101,7 +98,9 @@ public class GameLevel3D {
             .map(ghost -> createGhost3D(uiConfig.assetNamespace(), ghost, level.numFlashes()))
             .toList();
 
-        floor3D = createFloor(numCols * TS, numRows * TS);
+        floor3D = createFloor(numCols * TS, numRows * TS, FLOOR_3D_THICKNESS, PY_3D_FLOOR_COLOR);
+        floor3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
+
         maze3D = new Maze3D(uiConfig, level, colorScheme);
         mazeGroup.getChildren().addAll(floor3D, maze3D);
 
@@ -128,6 +127,16 @@ public class GameLevel3D {
         root.getChildren().add(ambientLight);
 
         root.setMouseTransparent(true); //TODO does this really increase performance?
+    }
+
+    private Box createFloor(double sizeX, double sizeY, double thickness, ObjectProperty<Color> colorProperty) {
+        double extraSpace = 10;
+        var floor3D = new Box(sizeX + extraSpace, sizeY, thickness);
+        floor3D.materialProperty().bind(colorProperty.map(Ufx::coloredPhongMaterial));
+        floor3D.translateXProperty().bind(floor3D.widthProperty().multiply(0.5).subtract(0.5*extraSpace));
+        floor3D.translateYProperty().bind(floor3D.heightProperty().multiply(0.5));
+        floor3D.translateZProperty().set(thickness * 0.5);
+        return floor3D;
     }
 
     private Ghost3DAppearance createGhost3D(String ans, Ghost ghost, int numFlashes) {
@@ -262,18 +271,6 @@ public class GameLevel3D {
             n += 1;
         }
         return levelCounter3D;
-    }
-
-    private Box createFloor(double sizeX, double sizeY) {
-        // add some extra space
-        double extraSpace = 10;
-        var floor3D = new Box(sizeX + extraSpace, sizeY, FLOOR_3D_THICKNESS);
-        floor3D.materialProperty().bind(PY_3D_FLOOR_COLOR.map(Ufx::coloredPhongMaterial));
-        floor3D.translateXProperty().bind(floor3D.widthProperty().multiply(0.5).subtract(0.5*extraSpace));
-        floor3D.translateYProperty().bind(floor3D.heightProperty().multiply(0.5));
-        floor3D.translateZProperty().set(FLOOR_3D_THICKNESS * 0.5);
-        floor3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
-        return floor3D;
     }
 
     public Group root() { return root; }
@@ -415,22 +412,13 @@ public class GameLevel3D {
     }
 
     public Maze3D maze3D() { return maze3D; }
-
     public XMan3D pac3D() { return pac3D; }
-
     public Stream<Ghost3DAppearance> ghosts3D() { return ghost3DAppearances.stream(); }
-
     public Ghost3DAppearance ghost3D(byte id) { return ghost3DAppearances.get(id); }
-
     public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
-
     public LivesCounter3D livesCounter3D() { return livesCounter3D; }
-
     public Stream<Pellet3D> pellets3D() { return pellets3D.stream(); }
-
     public Stream<Energizer3D> energizers3D() { return energizers3D.stream(); }
-
     public Color floorColor() { return PY_3D_FLOOR_COLOR.get(); }
-
     public double floorThickness() { return floor3D.getDepth(); }
 }
