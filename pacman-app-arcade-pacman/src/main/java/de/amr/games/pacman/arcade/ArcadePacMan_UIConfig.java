@@ -20,8 +20,7 @@ import de.amr.games.pacman.ui._3d.PlayScene3D;
 import de.amr.games.pacman.uilib.assets.AssetStorage;
 import de.amr.games.pacman.uilib.assets.ResourceManager;
 import de.amr.games.pacman.uilib.assets.WorldMapColorScheme;
-import de.amr.games.pacman.uilib.model3D.Model3D;
-import de.amr.games.pacman.uilib.model3D.PacModel3D;
+import de.amr.games.pacman.uilib.model3D.Model3DRepository;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -178,10 +177,10 @@ public class ArcadePacMan_UIConfig implements GameUIConfig, ResourceManager {
     }
 
     @Override
-    public Node createLivesCounterShape(Model3D model3D, AssetStorage assets, double size) {
+    public Node createLivesCounterShape(AssetStorage assets, double size) {
         String namespace = assetNamespace();
-        return PacModel3D.createPacShape(
-                model3D, size,
+        return Model3DRepository.instance().createPacShape(
+                size,
                 assets.color(namespace + ".pac.color.head"),
                 assets.color(namespace + ".pac.color.eyes"),
                 assets.color(namespace + ".pac.color.palate")

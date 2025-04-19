@@ -10,16 +10,12 @@ import de.amr.games.pacman.lib.tilemap.FoodTiles;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.uilib.Ufx;
-import de.amr.games.pacman.uilib.model3D.Model3D;
 import de.amr.games.pacman.uilib.model3D.Model3DRepository;
-import de.amr.games.pacman.uilib.model3D.PacModel3D;
 import de.amr.games.pacman.uilib.tilemap.TerrainMapRenderer3D;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
@@ -27,10 +23,11 @@ import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.*;
+import javafx.scene.shape.Box;
+import javafx.scene.shape.DrawMode;
+import javafx.scene.shape.Shape3D;
+import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Scale;
-import javafx.scene.transform.Translate;
 
 import java.util.stream.Stream;
 
@@ -71,8 +68,8 @@ public class Maze3D extends Group {
     private final DoubleProperty wallBaseHeightPy = new SimpleDoubleProperty(3.5);
     private final DoubleProperty houseBaseHeightPy = new SimpleDoubleProperty(12);
 
-    private Node pacmanShape3D;
-    private Node[] ghostShapes;
+    private final Node pacmanShape3D;
+    private final Node[] ghostShapes;
 
     public PerspectiveCamera camera() {
         return camera;
@@ -92,15 +89,13 @@ public class Maze3D extends Group {
         foodGroup.visibleProperty().bind(foodVisiblePy);
         mazeGroup.visibleProperty().bind(terrainVisiblePy);
 
-        Model3D pacmanModel3D = Model3DRepository.instance().pacManModel3D();
-        pacmanShape3D = PacModel3D.createPacShape(pacmanModel3D, ACTOR_SIZE, Color.YELLOW, Color.BLACK, Color.GRAY);
+        pacmanShape3D = Model3DRepository.instance().createPacShape(ACTOR_SIZE, Color.YELLOW, Color.BLACK, Color.GRAY);
 
-        Model3D ghostModel3D = Model3DRepository.instance().ghostModel3D();
         ghostShapes = new Node[4];
-        ghostShapes[0] = createGhostShape3D(ghostModel3D, Color.RED, 0);
-        ghostShapes[1] = createGhostShape3D(ghostModel3D, Color.PINK, 270);
-        ghostShapes[2] = createGhostShape3D(ghostModel3D, Color.CYAN, 90);
-        ghostShapes[3] = createGhostShape3D(ghostModel3D, Color.ORANGE, 90);
+        ghostShapes[0] = Model3DRepository.instance().createGhostShape3D(ACTOR_SIZE, Color.RED, 0);
+        ghostShapes[1] = Model3DRepository.instance().createGhostShape3D(ACTOR_SIZE, Color.PINK, 270);
+        ghostShapes[2] = Model3DRepository.instance().createGhostShape3D(ACTOR_SIZE, Color.CYAN, 90);
+        ghostShapes[3] = Model3DRepository.instance().createGhostShape3D(ACTOR_SIZE, Color.ORANGE, 90);
     }
 
     public void moveTowardsUser(double pixels) {
@@ -122,32 +117,6 @@ public class Maze3D extends Group {
 
     public void toggleWireframe() {
         wireframePy.set(!wireframePy.get());
-    }
-
-    private Node createGhostShape3D(Model3D model3D, Color dressColor, double rotate) {
-        MeshView dress = new MeshView(model3D.mesh("Sphere.004_Sphere.034_light_blue_ghost"));
-        dress.setMaterial(Ufx.coloredMaterial(dressColor));
-        Bounds dressBounds = dress.getBoundsInLocal();
-        var centeredOverOrigin = new Translate(-dressBounds.getCenterX(), -dressBounds.getCenterY(), -dressBounds.getCenterZ());
-        dress.getTransforms().add(centeredOverOrigin);
-
-        MeshView pupils = new MeshView(model3D.mesh("Sphere.010_Sphere.039_grey_wall"));
-        pupils.setMaterial(Ufx.coloredMaterial(Color.BLUE));
-
-        MeshView eyeballs = new MeshView(model3D.mesh("Sphere.009_Sphere.036_white"));
-        eyeballs.setMaterial(Ufx.coloredMaterial(Color.WHITE));
-        var eyesGroup = new Group(pupils, eyeballs);
-        eyesGroup.getTransforms().add(centeredOverOrigin);
-
-        var dressGroup = new Group(dress);
-
-        Group root = new Group(dressGroup, eyesGroup);
-        root.getTransforms().add(new Rotate(270, Rotate.X_AXIS));
-        root.getTransforms().add(new Rotate(rotate, Rotate.Y_AXIS));
-        Bounds b = root.getBoundsInLocal();
-        root.getTransforms().add(new Scale(ACTOR_SIZE / b.getWidth(), ACTOR_SIZE / b.getHeight(), ACTOR_SIZE / b.getDepth()));
-
-        return root;
     }
 
     public DoubleProperty widthProperty() { return widthPy; }

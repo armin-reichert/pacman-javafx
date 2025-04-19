@@ -71,17 +71,14 @@ public abstract class Pac3DBase {
         requireNonNull(assets);
         requireNonNull(ans);
 
-        jaw = PacModel3D.createPacSkull(
-                model3D,
-                size,
-                assets.color(ans + ".pac.color.head"),
-                assets.color(ans + ".pac.color.palate"));
+        jaw = Model3DRepository.instance().createPacSkull(size,
+            assets.color(ans + ".pac.color.head"),
+            assets.color(ans + ".pac.color.palate"));
 
-        Node body = PacModel3D.createPacShape(
-                model3D, size,
-                assets.color(ans + ".pac.color.head"),
-                assets.color(ans + ".pac.color.eyes"),
-                assets.color(ans + ".pac.color.palate"));
+        Node body = Model3DRepository.instance().createPacShape(size,
+            assets.color(ans + ".pac.color.head"),
+            assets.color(ans + ".pac.color.eyes"),
+            assets.color(ans + ".pac.color.palate"));
 
         root.getChildren().addAll(jaw, body);
         root.setTranslateZ(-0.5 * size);

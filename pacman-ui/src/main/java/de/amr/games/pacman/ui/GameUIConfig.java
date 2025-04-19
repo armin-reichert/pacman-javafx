@@ -33,7 +33,7 @@ public interface GameUIConfig {
     WorldMapColorScheme worldMapColorScheme(WorldMap worldMap);
 
     // 3D-only
-    Node createLivesCounterShape(Model3D model3D, AssetStorage assets, double size);
+    Node createLivesCounterShape(AssetStorage assets, double size);
 
     default boolean is2D3DPlaySceneSwitch(GameScene prevPlayScene, GameScene nextPlayScene) {
         if (prevPlayScene == null && nextPlayScene == null) {

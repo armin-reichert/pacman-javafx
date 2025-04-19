@@ -18,7 +18,7 @@ public class MsPacMan3D extends Pac3DBase {
     public MsPacMan3D(Pac pac, double size, Model3D model3D, AssetStorage assets, String ans) {
         super(pac, size, model3D, assets, ans);
 
-        Group femaleBodyParts = PacModel3D.createFemaleBodyParts(size,
+        Group femaleBodyParts = Model3DRepository.instance().createFemaleBodyParts(size,
             assets.color(ans + ".pac.color.hairbow"),
             assets.color(ans + ".pac.color.hairbow.pearls"),
             assets.color(ans + ".pac.color.boobs"));
