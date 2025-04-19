@@ -279,7 +279,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             case HUNTING               -> onEnterStateHunting();
             case PACMAN_DYING          -> game().level().ifPresent(this::onEnterStatePacManDying);
             case GHOST_DYING           -> onEnterStateGhostDying();
-            case LEVEL_COMPLETE        -> onEnterStateLevelComplete();
+            case LEVEL_COMPLETE        -> game().level().ifPresent(this::onEnterStateLevelComplete);
             case LEVEL_TRANSITION      -> game().level().ifPresent(this::onEnterStateLevelTransition);
             case TESTING_LEVELS        -> game().level().ifPresent(this::onEnterStateTestingLevels);
             case TESTING_LEVEL_TEASERS -> game().level().ifPresent(this::onEnterStateTestingLevelTeasers);
@@ -328,22 +328,20 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         });
     }
 
-    private void onEnterStateLevelComplete() {
-        game().level().ifPresent(level -> {
-            THE_SOUND.stopAll();
-            // if cheat has been used to complete level, food might still exist, so eat it:
-            level.worldMap().tiles().filter(level::hasFoodAt).forEach(level::registerFoodEatenAt);
-            level3D.pellets3D().forEach(Pellet3D::onEaten);
-            level3D.energizers3D().forEach(Energizer3D::onEaten);
-            level3D.maze3D().door3D().setVisible(false);
-            level3D.stopAnimations();
-            level3D.playLevelCompleteAnimation(2.0,
-                () -> {
-                    perspectiveNamePy.unbind();
-                    perspectiveNamePy.set(PerspectiveID.TOTAL);
-                },
-                () -> perspectiveNamePy.bind(PY_3D_PERSPECTIVE));
-        });
+    private void onEnterStateLevelComplete(GameLevel level) {
+        THE_SOUND.stopAll();
+        // if cheat has been used to complete level, food might still exist, so eat it:
+        level.worldMap().tiles().filter(level::hasFoodAt).forEach(level::registerFoodEatenAt);
+        level3D.pellets3D().forEach(Pellet3D::onEaten);
+        level3D.energizers3D().forEach(Energizer3D::onEaten);
+        level3D.maze3D().door3D().setVisible(false);
+        level3D.stopAnimations();
+        level3D.playLevelCompleteAnimation(gameState(), 2.0,
+            () -> {
+                perspectiveNamePy.unbind();
+                perspectiveNamePy.set(PerspectiveID.TOTAL);
+            },
+            () -> perspectiveNamePy.bind(PY_3D_PERSPECTIVE));
     }
 
     private void onEnterStateLevelTransition(GameLevel level) {

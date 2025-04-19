@@ -355,11 +355,11 @@ public class GameLevel3D {
         return rotation;
     }
 
-    public void playLevelCompleteAnimation(double delaySeconds, Runnable onStart, Runnable onFinished) {
+    public void playLevelCompleteAnimation(GameState gameState, double delaySeconds, Runnable onStart, Runnable onFinished) {
         levelCompleteAnimation = new SequentialTransition(
             now(() -> {
                 // keep game state until animation has finished
-                THE_GAME_CONTROLLER.state().timer().resetIndefiniteTime();
+                gameState.timer().resetIndefiniteTime();
                 onStart.run();
             }),
             level.cutSceneNumber() != 0
@@ -368,7 +368,7 @@ public class GameLevel3D {
         );
         levelCompleteAnimation.setOnFinished(e -> {
             onFinished.run();
-            THE_GAME_CONTROLLER.terminateCurrentState();
+            gameState.timer().expire();
         });
         levelCompleteAnimation.setDelay(Duration.seconds(delaySeconds));
         levelCompleteAnimation.play();
