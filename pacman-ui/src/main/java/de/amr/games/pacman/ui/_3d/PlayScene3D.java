@@ -290,18 +290,22 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     private void onEnterStateStartingGame() {
         if (level3D != null) {
-            level3D.stopAnimations();
-            level3D.pac3D().init();
-            level3D.ghosts3D().forEach(Ghost3DAppearance::init);
-            game().level().ifPresent(this::showReadyMessage);
+            game().level().ifPresent(level -> {
+                level3D.stopAnimations();
+                level3D.pac3D().init();
+                level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(level));
+                showReadyMessage(level);
+            });
         }
     }
 
     private void onEnterStateHunting() {
-        level3D.pac3D().init();
-        level3D.ghosts3D().forEach(Ghost3DAppearance::init);
-        level3D.energizers3D().forEach(Energizer3D::startPumping);
-        level3D.playLivesCounterAnimation();
+        game().level().ifPresent(level -> {
+            level3D.pac3D().init();
+            level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(level));
+            level3D.energizers3D().forEach(Energizer3D::startPumping);
+            level3D.playLivesCounterAnimation();
+        });
     }
 
     private void onEnterStatePacManDying(GameLevel level) {
@@ -354,7 +358,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         replaceGameLevel3D(level);
         level3D.addLevelCounter();
         level3D.pac3D().init();
-        level3D.ghosts3D().forEach(Ghost3DAppearance::init);
+        level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(level));
         showLevelTestMessage(level, "TEST LEVEL" + level.number());
         PY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
     }
@@ -363,7 +367,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         replaceGameLevel3D(level);
         level3D.addLevelCounter();
         level3D.pac3D().init();
-        level3D.ghosts3D().forEach(Ghost3DAppearance::init);
+        level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(level));
         showLevelTestMessage(level, "PREVIEW LEVEL " + level.number());
         PY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
     }

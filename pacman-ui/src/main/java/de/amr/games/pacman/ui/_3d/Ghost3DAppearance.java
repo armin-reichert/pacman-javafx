@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui._3d;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.uilib.Ufx;
 import de.amr.games.pacman.uilib.assets.AssetStorage;
@@ -106,15 +107,15 @@ public class Ghost3DAppearance extends Group {
         }
     }
 
-    public void init() {
+    public void init(GameLevel level) {
         stopAllAnimations();
         updateTransform();
-        updateAppearance();
+        updateAppearance(level);
     }
 
-    public void update() {
+    public void update(GameLevel level) {
         updateTransform();
-        updateAppearance();
+        updateAppearance(level);
         updateAnimations();
     }
 
@@ -164,25 +165,23 @@ public class Ghost3DAppearance extends Group {
         Logger.info("Ghost {} appearance changed to {}", ghost.id(), appearance);
     }
 
-    private void updateAppearance() {
+    private void updateAppearance(GameLevel level) {
         if (ghost.state() == null) { // TODO: can this happen?
             appearancePy.set(Appearance.COLORED_GHOST);
             return;
         }
-        THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-            Appearance nextAppearance = switch (ghost.state()) {
-                case LEAVING_HOUSE, LOCKED ->
-                    // ghost that have been killed by current energizer will not look frightened
-                        level.powerTimer().isRunning() && !level.victims().contains(ghost)
-                                ? frightenedOrFlashing(THE_GAME_CONTROLLER.game().isPowerFading(level.powerTimer()))
-                                : Appearance.COLORED_GHOST;
-                case FRIGHTENED -> frightenedOrFlashing(THE_GAME_CONTROLLER.game().isPowerFading(level.powerTimer()));
-                case ENTERING_HOUSE, RETURNING_HOME -> Appearance.GHOST_EYES;
-                case EATEN -> Appearance.NUMBER;
-                default -> Appearance.COLORED_GHOST;
-            };
-            appearancePy.set(nextAppearance);
-        });
+        Appearance nextAppearance = switch (ghost.state()) {
+            case LEAVING_HOUSE, LOCKED ->
+                // ghost that have been killed by current energizer will not look frightened
+                    level.powerTimer().isRunning() && !level.victims().contains(ghost)
+                            ? frightenedOrFlashing(THE_GAME_CONTROLLER.game().isPowerFading(level.powerTimer()))
+                            : Appearance.COLORED_GHOST;
+            case FRIGHTENED -> frightenedOrFlashing(THE_GAME_CONTROLLER.game().isPowerFading(level.powerTimer()));
+            case ENTERING_HOUSE, RETURNING_HOME -> Appearance.GHOST_EYES;
+            case EATEN -> Appearance.NUMBER;
+            default -> Appearance.COLORED_GHOST;
+        };
+        appearancePy.set(nextAppearance);
     }
 
     private Appearance frightenedOrFlashing(boolean powerFading) {

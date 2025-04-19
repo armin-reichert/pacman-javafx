@@ -279,7 +279,7 @@ public class GameLevel3D {
 
     public void update(GameLevel level) {
         pac3D.update(level);
-        ghosts3D().forEach(Ghost3DAppearance::update);
+        ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.update(level));
         bonus3D().ifPresent(Bonus3D::update);
         boolean houseAccessRequired = level.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
             .anyMatch(Ghost::isVisible);
