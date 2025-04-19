@@ -83,7 +83,10 @@ public class GameLevel3D {
     private Animation levelCompleteAnimation;
     private Animation livesCounterAnimation;
 
+    private final GameLevel level;
+
     public GameLevel3D(GameVariant gameVariant, GameLevel level) {
+        this.level = requireNonNull(level);
         final GameUIConfig uiConfig = THE_UI_CONFIGS.current();
         final WorldMap worldMap = level.worldMap();
         final int numRows = worldMap.numRows(), numCols = worldMap.numCols();
@@ -102,7 +105,7 @@ public class GameLevel3D {
         maze3D = new Maze3D(uiConfig, level, colorScheme);
         mazeGroup.getChildren().addAll(floor3D, maze3D);
 
-        createFood3D(level, foodMaterial);
+        createFood3D(foodMaterial);
 
         // Note: The order in which children are added matters!
         // Walls and house must be added last, otherwise, transparency is not working correctly.
@@ -137,7 +140,7 @@ public class GameLevel3D {
         return ghost3D;
     }
 
-    private void createFood3D(GameLevel level, PhongMaterial foodMaterial) {
+    private void createFood3D(PhongMaterial foodMaterial) {
         final Mesh pelletMesh = Model3DRepository.get().pelletMesh();
         level.worldMap().tiles().filter(level::hasFoodAt).forEach(tile -> {
             if (level.isEnergizerPosition(tile)) {
@@ -220,15 +223,13 @@ public class GameLevel3D {
     }
 
     public void addLevelCounter() {
-        THE_GAME_CONTROLLER.game().level().map(GameLevel::worldMap).ifPresent(worldMap -> {
-            // Place level counter at top right maze corner
-            double x = worldMap.numCols() * TS - 2 * TS;
-            double y = 2 * TS;
-            Node levelCounter3D = createLevelCounter3D(
-                    THE_UI_CONFIGS.current().spriteSheet(),
-                    THE_GAME_CONTROLLER.game().levelCounter(), x, y);
-            root.getChildren().add(levelCounter3D);
-        });
+        // Place level counter at top right maze corner
+        double x = level.worldMap().numCols() * TS - 2 * TS;
+        double y = 2 * TS;
+        Node levelCounter3D = createLevelCounter3D(
+                THE_UI_CONFIGS.current().spriteSheet(),
+                THE_GAME_CONTROLLER.game().levelCounter(), x, y);
+        root.getChildren().add(levelCounter3D);
     }
 
     private Node createLevelCounter3D(GameSpriteSheet spriteSheet, LevelCounter levelCounter, double x, double y) {
@@ -277,7 +278,7 @@ public class GameLevel3D {
 
     public Group root() { return root; }
 
-    public void update(GameLevel level) {
+    public void update() {
         pac3D.update(level);
         ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.update(level));
         bonus3D().ifPresent(Bonus3D::update);
@@ -354,7 +355,7 @@ public class GameLevel3D {
         return rotation;
     }
 
-    public void playLevelCompleteAnimation(GameLevel level, double delaySeconds, Runnable onStart, Runnable onFinished) {
+    public void playLevelCompleteAnimation(double delaySeconds, Runnable onStart, Runnable onFinished) {
         levelCompleteAnimation = new SequentialTransition(
             now(() -> {
                 // keep game state until animation has finished
@@ -362,8 +363,8 @@ public class GameLevel3D {
                 onStart.run();
             }),
             level.cutSceneNumber() != 0
-                ? levelTransformationBeforeIntermission(level, level.numFlashes())
-                : levelTransformation(level, level.numFlashes())
+                ? levelTransformationBeforeIntermission(level.numFlashes())
+                : levelTransformation(level.numFlashes())
         );
         levelCompleteAnimation.setOnFinished(e -> {
             onFinished.run();
@@ -373,7 +374,7 @@ public class GameLevel3D {
         levelCompleteAnimation.play();
     }
 
-    private Animation levelTransformationBeforeIntermission(GameLevel level, int numFlashes) {
+    private Animation levelTransformationBeforeIntermission(int numFlashes) {
         return new SequentialTransition(
                 doAfterSec(1.0, () -> level.ghosts().forEach(Ghost::hide)),
                 maze3D.mazeFlashAnimation(numFlashes),
@@ -381,7 +382,7 @@ public class GameLevel3D {
         );
     }
 
-    private Animation levelTransformation(GameLevel level, int numFlashes) {
+    private Animation levelTransformation(int numFlashes) {
         return new Timeline(
             new KeyFrame(Duration.ZERO, e -> {
                 livesCounter3D().light().setLightOn(false);

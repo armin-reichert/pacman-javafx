@@ -192,7 +192,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             Logger.warn("Tick #{}: Cannot update 3D play scene, 3D game level not yet created?", THE_CLOCK.tickCount());
             return;
         }
-        level3D.update(level);
+        level3D.update();
 
         //TODO how to avoid calling this on every tick?
         if (game().isDemoLevel()) {
@@ -337,7 +337,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             level3D.energizers3D().forEach(Energizer3D::onEaten);
             level3D.maze3D().door3D().setVisible(false);
             level3D.stopAnimations();
-            level3D.playLevelCompleteAnimation(level, 2.0,
+            level3D.playLevelCompleteAnimation(2.0,
                 () -> {
                     perspectiveNamePy.unbind();
                     perspectiveNamePy.set(PerspectiveID.TOTAL);
