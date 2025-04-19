@@ -1,6 +1,7 @@
 package experiments;
 
 import de.amr.games.pacman.uilib.model3D.Model3D;
+import de.amr.games.pacman.uilib.model3D.Model3DRepository;
 import javafx.application.Application;
 import javafx.scene.*;
 import javafx.scene.control.Menu;
@@ -26,17 +27,16 @@ public class ModelViewer extends Application {
 
     private Stage stage;
     private SubScene previewArea;
-    private PerspectiveCamera cam;
     private final BorderPane layoutPane = new BorderPane();
     private FileChooser fileChooser;
     private double lastX = -1;
     private double lastY = -1;
     private Node currentNode;
-    private Rotate rotX = new Rotate(0, Rotate.X_AXIS);
-    private Rotate rotY = new Rotate(0, Rotate.Y_AXIS);
+    private final Rotate rotX = new Rotate(0, Rotate.X_AXIS);
+    private final Rotate rotY = new Rotate(0, Rotate.Y_AXIS);
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         this.stage = stage;
         fileChooser = new FileChooser();
         var objFilter = new FileChooser.ExtensionFilter("Wavefront OBJ Files", "*.obj");
@@ -47,7 +47,7 @@ public class ModelViewer extends Application {
 
         Scene scene = new Scene(createSceneContent(), 800, 600);
 
-        cam = new PerspectiveCamera(true);
+        PerspectiveCamera cam = new PerspectiveCamera(true);
         cam.setTranslateZ(-100);
         previewArea.setCamera(cam);
 
@@ -90,11 +90,10 @@ public class ModelViewer extends Application {
         if (selectedFile != null) {
             Logger.info("File {} selected", selectedFile);
             try {
-                Model3D model3D = new Model3D(selectedFile.toURI());
-                Node shape = PacModel3D.createPacShape(model3D, 16, Color.YELLOW, Color.BLACK, Color.PINK);
-                Model3D.meshViewById(shape, PacModel3D.MESH_ID_HEAD).setDrawMode(DrawMode.LINE);
-                Model3D.meshViewById(shape, PacModel3D.MESH_ID_PALATE).setDrawMode(DrawMode.LINE);
-                Model3D.meshViewById(shape, PacModel3D.MESH_ID_EYES).setDrawMode(DrawMode.LINE);
+                Node shape = Model3DRepository.instance().createPacShape(16, Color.YELLOW, Color.BLACK, Color.PINK);
+                Model3D.meshViewById(shape, Model3DRepository.PAC_MAN_MESH_ID_HEAD).setDrawMode(DrawMode.LINE);
+                Model3D.meshViewById(shape, Model3DRepository.PAC_MAN_MESH_ID_PALATE).setDrawMode(DrawMode.LINE);
+                Model3D.meshViewById(shape, Model3DRepository.PAC_MAN_MESH_ID_EYES).setDrawMode(DrawMode.LINE);
                 setCurrentNode(new Group(shape));
             } catch (Exception x) {
                 Logger.error(x);
