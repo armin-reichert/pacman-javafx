@@ -18,7 +18,7 @@ public class MsPacMan3D extends XMan3D {
     public MsPacMan3D(Pac pac, double size, AssetStorage assets, String ans) {
         super(pac, size, assets, ans);
 
-        Group femaleBodyParts = Model3DRepository.instance().createFemaleBodyParts(size,
+        Group femaleBodyParts = Model3DRepository.get().createFemaleBodyParts(size,
             assets.color(ans + ".pac.color.hairbow"),
             assets.color(ans + ".pac.color.hairbow.pearls"),
             assets.color(ans + ".pac.color.boobs"));

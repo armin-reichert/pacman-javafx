@@ -33,7 +33,7 @@ public class Door3D extends Group {
     private final PhongMaterial barMaterial;
 
     public Door3D(Vector2i leftWingTile, Vector2i rightWingTile, Color color, double height) {
-        barMaterial = Ufx.coloredMaterial(color);
+        barMaterial = Ufx.coloredPhongMaterial(color);
         getChildren().addAll(createDoorWing(leftWingTile, height), createDoorWing(rightWingTile, height));
     }
 

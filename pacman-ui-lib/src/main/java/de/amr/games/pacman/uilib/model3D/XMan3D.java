@@ -70,11 +70,11 @@ public abstract class XMan3D {
         requireNonNull(assets);
         requireNonNull(ans);
 
-        jaw = Model3DRepository.instance().createPacSkull(size,
+        jaw = Model3DRepository.get().createPacSkull(size,
             assets.color(ans + ".pac.color.head"),
             assets.color(ans + ".pac.color.palate"));
 
-        Node body = Model3DRepository.instance().createPacShape(size,
+        Node body = Model3DRepository.get().createPacShape(size,
             assets.color(ans + ".pac.color.head"),
             assets.color(ans + ".pac.color.eyes"),
             assets.color(ans + ".pac.color.palate"));

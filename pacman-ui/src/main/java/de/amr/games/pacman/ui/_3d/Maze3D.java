@@ -122,8 +122,8 @@ public class Maze3D extends Group {
         r3D.setWallBaseHeightProperty(wallBaseHeightPy);
         r3D.setWallTopHeight(wallTopHeight);
         r3D.setWallThickness(wallThickness);
-        r3D.setWallBaseMaterial(coloredMaterial(opaqueColor(houseBaseColor, wallOpacity)));
-        r3D.setWallTopMaterial(coloredMaterial(houseTopColor));
+        r3D.setWallBaseMaterial(coloredPhongMaterial(opaqueColor(houseBaseColor, wallOpacity)));
+        r3D.setWallTopMaterial(coloredPhongMaterial(houseTopColor));
 
         int tilesX = houseSize.x(), tilesY = houseSize.y();
         int xMin = level.houseMinTile().x(), xMax = xMin + tilesX - 1;

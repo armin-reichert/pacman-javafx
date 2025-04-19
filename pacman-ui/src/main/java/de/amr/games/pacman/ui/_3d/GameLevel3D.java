@@ -88,7 +88,7 @@ public class GameLevel3D {
         final WorldMap worldMap = level.worldMap();
         final int numRows = worldMap.numRows(), numCols = worldMap.numCols();
         final WorldMapColorScheme colorScheme = uiConfig.worldMapColorScheme(worldMap);
-        final PhongMaterial foodMaterial = coloredMaterial(colorScheme.pellet()); // TODO move into UI config?
+        final PhongMaterial foodMaterial = coloredPhongMaterial(colorScheme.pellet()); // TODO move into UI config?
 
         livesCounter3D = createLivesCounter3D(level.game().canStartNewGame());
         livesCounter3D.livesCountPy.bind(livesCountPy);
@@ -129,16 +129,16 @@ public class GameLevel3D {
 
     private Ghost3DAppearance createGhost3D(String ans, Ghost ghost, int numFlashes) {
         var ghost3D = new Ghost3DAppearance(THE_ASSETS, ans,
-            new MeshView(Model3DRepository.instance().ghostDressMesh()),
-            new MeshView(Model3DRepository.instance().ghostPupilsMesh()),
-            new MeshView(Model3DRepository.instance().ghostEyeballsMesh()),
+            new MeshView(Model3DRepository.get().ghostDressMesh()),
+            new MeshView(Model3DRepository.get().ghostPupilsMesh()),
+            new MeshView(Model3DRepository.get().ghostEyeballsMesh()),
             ghost, GHOST_3D_SIZE, numFlashes);
         Model3D.allMeshViewsUnder(ghost3D).map(MeshView::drawModeProperty).forEach(py -> py.bind(PY_3D_DRAW_MODE));
         return ghost3D;
     }
 
     private void createFood3D(GameLevel level, PhongMaterial foodMaterial) {
-        final Mesh pelletMesh = Model3DRepository.instance().pelletMesh();
+        final Mesh pelletMesh = Model3DRepository.get().pelletMesh();
         level.worldMap().tiles().filter(level::hasFoodAt).forEach(tile -> {
             if (level.isEnergizerPosition(tile)) {
                 Energizer3D energizer3D = createEnergizer3D(tile, foodMaterial);
@@ -267,7 +267,7 @@ public class GameLevel3D {
         // add some extra space
         double extraSpace = 10;
         var floor3D = new Box(sizeX + extraSpace, sizeY, FLOOR_3D_THICKNESS);
-        floor3D.materialProperty().bind(PY_3D_FLOOR_COLOR.map(Ufx::coloredMaterial));
+        floor3D.materialProperty().bind(PY_3D_FLOOR_COLOR.map(Ufx::coloredPhongMaterial));
         floor3D.translateXProperty().bind(floor3D.widthProperty().multiply(0.5).subtract(0.5*extraSpace));
         floor3D.translateYProperty().bind(floor3D.heightProperty().multiply(0.5));
         floor3D.translateZProperty().set(FLOOR_3D_THICKNESS * 0.5);

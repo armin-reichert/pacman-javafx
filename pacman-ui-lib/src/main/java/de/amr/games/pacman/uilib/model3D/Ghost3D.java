@@ -70,9 +70,9 @@ public class Ghost3D {
         this.assetPrefix = requireNonNull(assetPrefix);
         this.dress = requireNonNull(dressShape);
 
-        dress.materialProperty().bind(dressColorPy.map(Ufx::coloredMaterial));
-        pupilsShape.materialProperty().bind(pupilsColorPy.map(Ufx::coloredMaterial));
-        eyeballsShape.materialProperty().bind(eyeballsColorPy.map(Ufx::coloredMaterial));
+        dress.materialProperty().bind(dressColorPy.map(Ufx::coloredPhongMaterial));
+        pupilsShape.materialProperty().bind(pupilsColorPy.map(Ufx::coloredPhongMaterial));
+        eyeballsShape.materialProperty().bind(eyeballsColorPy.map(Ufx::coloredPhongMaterial));
 
         pupilsColorPy.set(normalPupilsColor());
         dressColorPy.set(normalDressColor());

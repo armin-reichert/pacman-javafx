@@ -46,8 +46,8 @@ public class LivesCounter3D extends Group {
     public LivesCounter3D(Node[] pacShapes) {
         this.pacShapes = pacShapes;
 
-        pillarMaterialPy.bind(pillarColorPy.map(Ufx::coloredMaterial));
-        plateMaterialPy.bind((plateColorPy.map(Ufx::coloredMaterial)));
+        pillarMaterialPy.bind(pillarColorPy.map(Ufx::coloredPhongMaterial));
+        plateMaterialPy.bind((plateColorPy.map(Ufx::coloredPhongMaterial)));
 
         light.setMaxRange  (TS * (pacShapes.length + 1));
         light.setTranslateX(TS * (pacShapes.length - 1));

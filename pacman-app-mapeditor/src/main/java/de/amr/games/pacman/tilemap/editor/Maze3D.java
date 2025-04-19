@@ -89,13 +89,13 @@ public class Maze3D extends Group {
         foodGroup.visibleProperty().bind(foodVisiblePy);
         mazeGroup.visibleProperty().bind(terrainVisiblePy);
 
-        pacmanShape3D = Model3DRepository.instance().createPacShape(ACTOR_SIZE, Color.YELLOW, Color.BLACK, Color.GRAY);
+        pacmanShape3D = Model3DRepository.get().createPacShape(ACTOR_SIZE, Color.YELLOW, Color.BLACK, Color.GRAY);
 
         ghostShapes = new Node[4];
-        ghostShapes[0] = Model3DRepository.instance().createGhostShape3D(ACTOR_SIZE, Color.RED, 0);
-        ghostShapes[1] = Model3DRepository.instance().createGhostShape3D(ACTOR_SIZE, Color.PINK, 270);
-        ghostShapes[2] = Model3DRepository.instance().createGhostShape3D(ACTOR_SIZE, Color.CYAN, 90);
-        ghostShapes[3] = Model3DRepository.instance().createGhostShape3D(ACTOR_SIZE, Color.ORANGE, 90);
+        ghostShapes[0] = Model3DRepository.get().createGhostShape3D(ACTOR_SIZE, Color.RED, 0);
+        ghostShapes[1] = Model3DRepository.get().createGhostShape3D(ACTOR_SIZE, Color.PINK, 270);
+        ghostShapes[2] = Model3DRepository.get().createGhostShape3D(ACTOR_SIZE, Color.CYAN, 90);
+        ghostShapes[3] = Model3DRepository.get().createGhostShape3D(ACTOR_SIZE, Color.ORANGE, 90);
     }
 
     public void moveTowardsUser(double pixels) {

@@ -151,14 +151,14 @@ public interface Ufx {
         return Font.font(font.getFamily(), scaling * font.getSize());
     }
 
-    static PhongMaterial coloredMaterial(Color color) {
+    static PhongMaterial coloredPhongMaterial(Color color) {
         requireNonNull(color);
         var material = new PhongMaterial(color);
         material.setSpecularColor(color.brighter());
         return material;
     }
 
-    static PhongMaterial coloredMaterial(ObjectProperty<Color> colorProperty) {
+    static PhongMaterial coloredPhongMaterial(ObjectProperty<Color> colorProperty) {
         requireNonNull(colorProperty);
         var material = new PhongMaterial();
         material.diffuseColorProperty().bind(colorProperty);

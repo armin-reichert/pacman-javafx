@@ -179,7 +179,7 @@ public class ArcadePacMan_UIConfig implements GameUIConfig, ResourceManager {
     @Override
     public Node createLivesCounterShape(AssetStorage assets, double size) {
         String namespace = assetNamespace();
-        return Model3DRepository.instance().createPacShape(
+        return Model3DRepository.get().createPacShape(
                 size,
                 assets.color(namespace + ".pac.color.head"),
                 assets.color(namespace + ".pac.color.eyes"),
