@@ -447,7 +447,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onPacGetsPower(GameEvent event) {
-        level3D.pac3D().setPowerMode(true);
+        level3D.pac3D().setMovementPowerMode(true);
         level3D.maze3D().playMaterialAnimation();
         THE_SOUND.stopSiren();
         THE_SOUND.playPacPowerSound();
@@ -455,7 +455,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onPacLostPower(GameEvent event) {
-        level3D.pac3D().setPowerMode(false);
+        level3D.pac3D().setMovementPowerMode(false);
         level3D.maze3D().stopMaterialAnimation();
         THE_SOUND.stopPacPowerSound();
     }

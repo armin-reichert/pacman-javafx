@@ -56,21 +56,21 @@ public abstract class Pac3D {
     protected final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
     protected final Pac pac;
-    protected final double size;
-    protected final Group root = new Group();
-    protected Group body;
-    protected final Rotate moveRotation = new Rotate();
     protected final PointLight light = new PointLight();
+    protected final Group root = new Group();
+    protected final double size;
+    protected final Rotate moveRotation = new Rotate();
+    protected RotateTransition movementAnimation;
     protected Animation chewingAnimation;
     protected Node jaw;
 
     public abstract Animation createDyingAnimation();
-    public abstract void setPowerMode(boolean power);
+    public abstract void setMovementPowerMode(boolean power);
 
-    protected abstract void createMoveAnimation();
-    protected abstract void startMoveAnimation();
-    protected abstract void stopMoveAnimation();
-    protected abstract void updateMoveAnimation();
+    protected abstract void createMovementAnimation();
+    protected abstract void startMovementAnimation();
+    protected abstract void stopMovementAnimation();
+    protected abstract void updateMovementAnimation();
 
     protected Pac3D(Pac pac, double size, Model3D model3D, AssetStorage assets, String ans) {
         this.pac = requireNonNull(pac);
@@ -86,7 +86,7 @@ public abstract class Pac3D {
                 assets.color(ans + ".pac.color.head"),
                 assets.color(ans + ".pac.color.palate"));
 
-        body = PacModel3D.createPacShape(
+        Node body = PacModel3D.createPacShape(
                 model3D, size,
                 assets.color(ans + ".pac.color.head"),
                 assets.color(ans + ".pac.color.eyes"),
@@ -102,7 +102,7 @@ public abstract class Pac3D {
         meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
         meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
 
-        createMoveAnimation();
+        createMovementAnimation();
         chewingAnimation = createChewingAnimation(jaw);
 
         light.translateXProperty().bind(root.translateXProperty());
@@ -128,22 +128,22 @@ public abstract class Pac3D {
 
         updatePosition();
         stopChewingAndOpenMouth();
-        stopMoveAnimation();
-        setPowerMode(false);
+        stopMovementAnimation();
+        setMovementPowerMode(false);
     }
 
     public void update(GameLevel level) {
         if (pac.isAlive()) {
             updatePosition();
             updateVisibility(level);
-            updateMoveAnimation();
+            updateMovementAnimation();
             updateLight(level);
         }
         if (pac.isAlive() && !pac.isStandingStill()) {
-            startMoveAnimation();
+            startMovementAnimation();
             chewingAnimation.play();
         } else {
-            stopMoveAnimation();
+            stopMovementAnimation();
             stopChewingAndOpenMouth();
         }
     }

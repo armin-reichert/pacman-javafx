@@ -18,19 +18,8 @@ import static de.amr.games.pacman.uilib.Ufx.now;
 
 public class PacMan3D extends Pac3D {
 
-    private RotateTransition movementAnimation;
-
     public PacMan3D(Pac pac, double size, Model3D model3D, AssetStorage assets, String ans) {
         super(pac, size, model3D, assets, ans);
-    }
-
-    @Override
-    public void setPowerMode(boolean on) {
-        float rate = on ? POWER_AMPLIFICATION : 1;
-        movementAnimation.stop();
-        movementAnimation.setFromAngle(BANG_ANGLE_FROM * rate);
-        movementAnimation.setToAngle(BANG_ANGLE_TO * rate);
-        movementAnimation.setRate(rate);
     }
 
     @Override
@@ -67,23 +56,25 @@ public class PacMan3D extends Pac3D {
 
     // Movement animation: Head banging
 
-    static final float POWER_AMPLIFICATION = 2;
-    static final short BANG_ANGLE_FROM = -10;
-    static final short BANG_ANGLE_TO = 15;
-    static final Duration BANG_TIME = Duration.seconds(0.3);
+    private static final float POWER_AMPLIFICATION = 2;
+    private static final short BANG_ANGLE_FROM = -10;
+    private static final short BANG_ANGLE_TO = 15;
+    private static final Duration BANG_TIME = Duration.seconds(0.3);
 
-    protected void createMoveAnimation() {
+    @Override
+    protected void createMovementAnimation() {
         movementAnimation = new RotateTransition(BANG_TIME, root);
         movementAnimation.setAxis(Rotate.X_AXIS);
         movementAnimation.setCycleCount(Animation.INDEFINITE);
         movementAnimation.setAutoReverse(true);
         movementAnimation.setInterpolator(Interpolator.EASE_BOTH);
-        setPowerMode(false);
+        setMovementPowerMode(false);
     }
 
-    protected void updateMoveAnimation() {
+    @Override
+    protected void updateMovementAnimation() {
         if (pac.isStandingStill()) {
-            stopMoveAnimation();
+            stopMovementAnimation();
         } else {
             Point3D axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
             if (!axis.equals(movementAnimation.getAxis())) {
@@ -95,14 +86,23 @@ public class PacMan3D extends Pac3D {
     }
 
     @Override
-    protected void startMoveAnimation() {
+    protected void startMovementAnimation() {
         movementAnimation.play();
     }
 
     @Override
-    protected void stopMoveAnimation() {
+    protected void stopMovementAnimation() {
         movementAnimation.stop();
         movementAnimation.getNode().setRotationAxis(movementAnimation.getAxis());
         movementAnimation.getNode().setRotate(0);
+    }
+
+    @Override
+    public void setMovementPowerMode(boolean on) {
+        float rate = on ? POWER_AMPLIFICATION : 1;
+        movementAnimation.stop();
+        movementAnimation.setFromAngle(BANG_ANGLE_FROM * rate);
+        movementAnimation.setToAngle(BANG_ANGLE_TO * rate);
+        movementAnimation.setRate(rate);
     }
 }

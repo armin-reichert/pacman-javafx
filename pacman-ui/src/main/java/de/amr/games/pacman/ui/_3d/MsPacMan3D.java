@@ -22,8 +22,6 @@ import static de.amr.games.pacman.uilib.Ufx.pauseSec;
 
 public class MsPacMan3D extends Pac3D {
 
-    private RotateTransition movementAnimation;
-
     public MsPacMan3D(Pac pac, double size, Model3D model3D, AssetStorage assets, String ans) {
         super(pac, size, model3D, assets, ans);
 
@@ -33,16 +31,6 @@ public class MsPacMan3D extends Pac3D {
             assets.color(ans + ".pac.color.boobs"));
 
         root.getChildren().add(femaleBodyParts);
-    }
-
-    @Override
-    public void setPowerMode(boolean on) {
-        double amplification = on ? 1.5 : 1;
-        double rate = on ? 2 : 1;
-        movementAnimation.stop();
-        movementAnimation.setFromAngle(HIP_ANGLE_FROM * amplification);
-        movementAnimation.setToAngle(HIP_ANGLE_TO * amplification);
-        movementAnimation.setRate(rate);
     }
 
     @Override
@@ -58,32 +46,42 @@ public class MsPacMan3D extends Pac3D {
 
     // Movement animation: Hip swaying
 
-    static final short HIP_ANGLE_FROM = -20;
-    static final short HIP_ANGLE_TO = 20;
-    static final Duration SWING_TIME = Duration.seconds(0.4);
+    private static final short HIP_ANGLE_FROM = -20;
+    private static final short HIP_ANGLE_TO = 20;
+    private static final Duration SWING_TIME = Duration.seconds(0.4);
 
     @Override
-    protected void createMoveAnimation() {
+    protected void createMovementAnimation() {
         movementAnimation = new RotateTransition(SWING_TIME, root);
         movementAnimation.setAxis(Rotate.Z_AXIS);
         movementAnimation.setCycleCount(Animation.INDEFINITE);
         movementAnimation.setAutoReverse(true);
         movementAnimation.setInterpolator(Interpolator.EASE_BOTH);
-        setPowerMode(false);
+        setMovementPowerMode(false);
     }
 
     @Override
-    protected void startMoveAnimation() {
+    protected void startMovementAnimation() {
         movementAnimation.play();
     }
 
     @Override
-    protected void stopMoveAnimation() {
+    protected void stopMovementAnimation() {
         movementAnimation.stop();
         movementAnimation.getNode().setRotationAxis(movementAnimation.getAxis());
         movementAnimation.getNode().setRotate(0);
     }
 
     @Override
-    protected void updateMoveAnimation() {}
+    protected void updateMovementAnimation() {}
+
+    @Override
+    public void setMovementPowerMode(boolean on) {
+        double amplification = on ? 1.5 : 1;
+        double rate = on ? 2 : 1;
+        movementAnimation.stop();
+        movementAnimation.setFromAngle(HIP_ANGLE_FROM * amplification);
+        movementAnimation.setToAngle(HIP_ANGLE_TO * amplification);
+        movementAnimation.setRate(rate);
+    }
 }
