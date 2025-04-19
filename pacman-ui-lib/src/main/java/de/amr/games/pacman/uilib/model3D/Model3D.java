@@ -17,6 +17,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
@@ -32,6 +33,10 @@ public class Model3D {
     public static Scale scaled(Node node, double size) {
         var bounds = node.getBoundsInLocal();
         return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
+    }
+
+    public static Stream<MeshView> allMeshViewsUnder(Node root) {
+        return root.lookupAll("*").stream().filter(MeshView.class::isInstance).map(MeshView.class::cast);
     }
 
     public static MeshView meshViewById(Node root, String id) {

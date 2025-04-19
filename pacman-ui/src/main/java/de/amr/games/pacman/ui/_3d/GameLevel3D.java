@@ -77,7 +77,7 @@ public class GameLevel3D {
     private final Maze3D maze3D;
     private Message3D message3D;
     private Bonus3D bonus3D;
-    private final Pac3D pac3D;
+    private final Pac3DBase pac3D;
     private final List<Ghost3DAppearance> ghost3DAppearances;
 
     private Animation levelCompleteAnimation;
@@ -109,7 +109,7 @@ public class GameLevel3D {
         // Walls and house must be added last, otherwise, transparency is not working correctly.
         energizers3D.forEach(energizer3D -> root.getChildren().add(energizer3D.shape3D()));
         pellets3D.forEach(pellet3D -> root.getChildren().add(pellet3D.shape3D()));
-        root.getChildren().addAll(pac3D.shape3D(), pac3D.light());
+        root.getChildren().addAll(pac3D.root(), pac3D.light());
         root.getChildren().addAll(ghost3DAppearances);
         root.getChildren().add(livesCounter3D);
         root.getChildren().add(mazeGroup);
@@ -183,16 +183,16 @@ public class GameLevel3D {
         return pellet3D;
     }
 
-    private Pac3D createPac3D(String ans, Pac pac) {
+    private Pac3DBase createPac3D(String ans, Pac pac) {
         GameVariant gameVariant = THE_GAME_CONTROLLER.gameVariantProperty().get();
-        Pac3D pac3D = switch (gameVariant) {
+        Pac3DBase pac3D = switch (gameVariant) {
             case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL
                 -> new MsPacMan3D(pac, PAC_3D_SIZE, THE_ASSETS.get("model3D.pacman"), THE_ASSETS, ans);
             case PACMAN, PACMAN_XXL
                 -> new PacMan3D(pac, PAC_3D_SIZE, THE_ASSETS.get("model3D.pacman"), THE_ASSETS, ans);
         };
         pac3D.light().setColor(THE_ASSETS.color(ans + ".pac.color.head").desaturate());
-        pac3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
+        Model3D.allMeshViewsUnder(pac3D.root()).map(MeshView::drawModeProperty).forEach(py -> py.bind(PY_3D_DRAW_MODE));
         return pac3D;
     }
 
@@ -417,7 +417,7 @@ public class GameLevel3D {
 
     public Maze3D maze3D() { return maze3D; }
 
-    public Pac3D pac3D() { return pac3D; }
+    public Pac3DBase pac3D() { return pac3D; }
 
     public Stream<Ghost3DAppearance> ghosts3D() { return ghost3DAppearances.stream(); }
 

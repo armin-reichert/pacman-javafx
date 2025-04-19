@@ -20,7 +20,7 @@ import static de.amr.games.pacman.ui.Globals.THE_SOUND;
 import static de.amr.games.pacman.uilib.Ufx.now;
 import static de.amr.games.pacman.uilib.Ufx.pauseSec;
 
-public class MsPacMan3D extends Pac3D {
+public class MsPacMan3D extends Pac3DBase {
 
     public MsPacMan3D(Pac pac, double size, Model3D model3D, AssetStorage assets, String ans) {
         super(pac, size, model3D, assets, ans);

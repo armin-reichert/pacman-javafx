@@ -14,13 +14,10 @@ import de.amr.games.pacman.uilib.assets.AssetStorage;
 import de.amr.games.pacman.uilib.model3D.Model3D;
 import de.amr.games.pacman.uilib.model3D.PacModel3D;
 import javafx.animation.*;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.LightBase;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
-import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -28,10 +25,9 @@ import org.tinylog.Logger;
 import static de.amr.games.pacman.Globals.HTS;
 import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.ui.Globals.PY_3D_PAC_LIGHT_ENABLED;
-import static de.amr.games.pacman.uilib.model3D.Model3D.meshViewById;
 import static java.util.Objects.requireNonNull;
 
-public abstract class Pac3D {
+public abstract class Pac3DBase {
 
     public static Animation createChewingAnimation(Node jaw) {
         var closed = new KeyValue[] {
@@ -53,8 +49,6 @@ public abstract class Pac3D {
         return animation;
     }
 
-    protected final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
-
     protected final Pac pac;
     protected final PointLight light = new PointLight();
     protected final Group root = new Group();
@@ -72,7 +66,7 @@ public abstract class Pac3D {
     protected abstract void stopMovementAnimation();
     protected abstract void updateMovementAnimation();
 
-    protected Pac3D(Pac pac, double size, Model3D model3D, AssetStorage assets, String ans) {
+    protected Pac3DBase(Pac pac, double size, Model3D model3D, AssetStorage assets, String ans) {
         this.pac = requireNonNull(pac);
         this.size = size;
 
@@ -96,12 +90,6 @@ public abstract class Pac3D {
         root.setTranslateZ(-0.5 * size);
         root.getTransforms().add(moveRotation);
 
-        meshViewById(jaw, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
-        meshViewById(jaw, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
-        meshViewById(body, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(drawModePy);
-        meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
-        meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
-
         createMovementAnimation();
         chewingAnimation = createChewingAnimation(jaw);
 
@@ -110,11 +98,9 @@ public abstract class Pac3D {
         light.setTranslateZ(-30);
     }
 
-    public Node shape3D() {
+    public Node root() {
         return root;
     }
-
-    public ObjectProperty<DrawMode> drawModeProperty() { return  drawModePy; }
 
     public LightBase light() {
         return light;
