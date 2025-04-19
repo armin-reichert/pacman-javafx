@@ -77,7 +77,7 @@ public class GameLevel3D {
     private final Maze3D maze3D;
     private Message3D message3D;
     private Bonus3D bonus3D;
-    private final Pac3DBase pac3D;
+    private final XMan3D pac3D;
     private final List<Ghost3DAppearance> ghost3DAppearances;
 
     private Animation levelCompleteAnimation;
@@ -182,8 +182,8 @@ public class GameLevel3D {
         return pellet3D;
     }
 
-    private Pac3DBase createPac3D(GameVariant gameVariant, String ans, Pac pac) {
-        Pac3DBase pac3D = switch (gameVariant) {
+    private XMan3D createPac3D(GameVariant gameVariant, String ans, Pac pac) {
+        XMan3D pac3D = switch (gameVariant) {
             case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL -> new MsPacMan3D(pac, PAC_3D_SIZE, THE_ASSETS, ans);
             case PACMAN, PACMAN_XXL -> new PacMan3D(pac, PAC_3D_SIZE, THE_ASSETS, ans);
         };
@@ -413,7 +413,7 @@ public class GameLevel3D {
 
     public Maze3D maze3D() { return maze3D; }
 
-    public Pac3DBase pac3D() { return pac3D; }
+    public XMan3D pac3D() { return pac3D; }
 
     public Stream<Ghost3DAppearance> ghosts3D() { return ghost3DAppearances.stream(); }
 

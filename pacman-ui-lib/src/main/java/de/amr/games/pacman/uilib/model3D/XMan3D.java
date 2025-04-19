@@ -24,7 +24,7 @@ import static de.amr.games.pacman.Globals.HTS;
 import static de.amr.games.pacman.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-public abstract class Pac3DBase {
+public abstract class XMan3D {
 
     public static Animation createChewingAnimation(Node jaw) {
         var closed = new KeyValue[] {
@@ -63,7 +63,7 @@ public abstract class Pac3DBase {
     protected abstract void stopMovementAnimation();
     protected abstract void updateMovementAnimation();
 
-    protected Pac3DBase(Pac pac, double size, AssetStorage assets, String ans) {
+    protected XMan3D(Pac pac, double size, AssetStorage assets, String ans) {
         this.pac = requireNonNull(pac);
         this.size = size;
 
