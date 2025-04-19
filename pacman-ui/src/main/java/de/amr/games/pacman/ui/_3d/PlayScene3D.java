@@ -131,7 +131,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             bindActions(); //TODO check if this is necessary
             if (level3D == null) {
                 replaceGameLevel3D(level);
-                level3D.addLevelCounter();
             }
             switch (gameState()) {
                 case TESTING_LEVELS, TESTING_LEVEL_TEASERS -> {
@@ -158,7 +157,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             enableActionBindings(THE_KEYBOARD);
             if (level3D == null) {
                 replaceGameLevel3D(level);
-                level3D.addLevelCounter();
             }
             level3D.pellets3D().forEach(pellet -> pellet.shape3D().setVisible(!level.hasEatenFoodAt(pellet.tile())));
             level3D.energizers3D().forEach(energizer -> energizer.shape3D().setVisible(!level.hasEatenFoodAt(energizer.tile())));
@@ -335,14 +333,12 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     private void onEnterStateLevelTransition(GameLevel level) {
         gameState().timer().restartSeconds(3);
         replaceGameLevel3D(level);
-        level3D.addLevelCounter();
         level3D.pac3D().init();
         perspective().init(fxSubScene, level);
     }
 
     private void onEnterStateTestingLevels(GameLevel level) {
         replaceGameLevel3D(level);
-        level3D.addLevelCounter();
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(level));
         showLevelTestMessage(level, "TEST LEVEL" + level.number());
@@ -351,7 +347,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     private void onEnterStateTestingLevelTeasers(GameLevel level) {
         replaceGameLevel3D(level);
-        level3D.addLevelCounter();
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(level));
         showLevelTestMessage(level, "PREVIEW LEVEL " + level.number());
@@ -461,6 +456,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         scores3D.translateXProperty().bind(level3D.root().translateXProperty().add(TS));
         scores3D.translateYProperty().bind(level3D.root().translateYProperty().subtract(3.5 * TS));
         scores3D.translateZProperty().bind(level3D.root().translateZProperty().subtract(3.5 * TS));
+        level3D.addLevelCounter();
     }
 
     private void showLevelTestMessage(GameLevel level, String message) {
