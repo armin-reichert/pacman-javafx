@@ -2,9 +2,10 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui._3d;
+package de.amr.games.pacman.uilib.model3D;
 
 import de.amr.games.pacman.uilib.Ufx;
+import de.amr.games.pacman.uilib.assets.AssetStorage;
 import javafx.animation.*;
 import javafx.animation.Animation.Status;
 import javafx.beans.property.ObjectProperty;
@@ -22,7 +23,6 @@ import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.requireNonNegative;
 import static de.amr.games.pacman.Globals.requireValidGhostID;
-import static de.amr.games.pacman.ui.Globals.THE_ASSETS;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -34,6 +34,7 @@ public class Ghost3D {
     private final ObjectProperty<Color> eyeballsColorPy = new SimpleObjectProperty<>(this, "eyeballsColor", Color.WHITE);
     private final ObjectProperty<Color> pupilsColorPy   = new SimpleObjectProperty<>(this, "pupilsColor", Color.BLUE);
 
+    private final AssetStorage assets;
     private final byte id;
     private final String assetPrefix;
     private final Group root = new Group();
@@ -42,7 +43,7 @@ public class Ghost3D {
     private final RotateTransition dressAnimation;
     private Animation flashingAnimation;
 
-    private Color color(String assetKeySuffix) { return THE_ASSETS.color(assetPrefix + assetKeySuffix); }
+    private Color color(String assetKeySuffix) { return assets.color(assetPrefix + assetKeySuffix); }
 
     private Color normalDressColor()        { return color(".ghost.%d.color.normal.dress".formatted(id));  }
     private Color normalPupilsColor()       { return color(".ghost.%d.color.normal.pupils".formatted(id)); }
@@ -54,22 +55,21 @@ public class Ghost3D {
     private Color flashingPupilsColor()     { return color(".ghost.color.flashing.pupils"); }
 
     public Ghost3D(
+        AssetStorage assets,
         String assetPrefix, byte id,
         Shape3D dressShape, Shape3D pupilsShape, Shape3D eyeballsShape,
         double size) {
 
-        requireNonNull(assetPrefix);
-        requireValidGhostID(id);
-        requireNonNull(dressShape);
         requireNonNull(pupilsShape);
         requireNonNull(eyeballsShape);
         requireNonNull(assetPrefix);
         requireNonNegative(size);
 
-        this.id = id;
-        this.assetPrefix = assetPrefix;
+        this.assets = requireNonNull(assets);
+        this.id = requireValidGhostID(id);
+        this.assetPrefix = requireNonNull(assetPrefix);
+        this.dress = requireNonNull(dressShape);
 
-        dress = dressShape;
         dress.materialProperty().bind(dressColorPy.map(Ufx::coloredMaterial));
         pupilsShape.materialProperty().bind(pupilsColorPy.map(Ufx::coloredMaterial));
         eyeballsShape.materialProperty().bind(eyeballsColorPy.map(Ufx::coloredMaterial));

@@ -8,6 +8,8 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.uilib.Ufx;
+import de.amr.games.pacman.uilib.assets.AssetStorage;
+import de.amr.games.pacman.uilib.model3D.Ghost3D;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.beans.property.ObjectProperty;
@@ -54,6 +56,7 @@ public class Ghost3DAppearance extends Group {
     private RotateTransition brakeAnimation;
 
     public Ghost3DAppearance(
+        AssetStorage assets,
         String assetPrefix,
         Shape3D dressShape, Shape3D pupilsShape, Shape3D eyeballsShape,
         Ghost ghost, double size, int numFlashes) {
@@ -70,7 +73,7 @@ public class Ghost3DAppearance extends Group {
         this.size = size;
         this.numFlashes = numFlashes;
 
-        ghost3D = new Ghost3D(assetPrefix, ghost.id(), dressShape, pupilsShape, eyeballsShape, size);
+        ghost3D = new Ghost3D(assets, assetPrefix, ghost.id(), dressShape, pupilsShape, eyeballsShape, size);
 
         numberCube = new Box(14, 8, 8);
         numberCubeRotation = new RotateTransition(Duration.seconds(1), numberCube);

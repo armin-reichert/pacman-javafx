@@ -18,6 +18,7 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.GameUIConfig;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.uilib.Ufx;
+import de.amr.games.pacman.uilib.assets.AssetStorage;
 import de.amr.games.pacman.uilib.assets.WorldMapColorScheme;
 import de.amr.games.pacman.uilib.model3D.*;
 import javafx.animation.*;
@@ -95,7 +96,7 @@ public class GameLevel3D {
 
         pac3D = createPac3D(gameVariant, uiConfig.assetNamespace(), level.pac());
         ghost3DAppearances = level.ghosts()
-            .map(ghost -> createGhostAppearance3D(uiConfig.assetNamespace(), ghost, level.numFlashes()))
+            .map(ghost -> createGhostAppearance3D(THE_ASSETS, uiConfig.assetNamespace(), ghost, level.numFlashes()))
             .toList();
 
         floor3D = createFloor(numCols * TS, numRows * TS);
@@ -192,11 +193,11 @@ public class GameLevel3D {
         return pac3D;
     }
 
-    private Ghost3DAppearance createGhostAppearance3D(String ans, Ghost ghost, int numFlashes) {
+    private Ghost3DAppearance createGhostAppearance3D(AssetStorage assets, String ans, Ghost ghost, int numFlashes) {
         Shape3D dressShape    = new MeshView(Model3DRepository.instance().ghostDressMesh());
         Shape3D pupilsShape   = new MeshView(Model3DRepository.instance().ghostPupilsMesh());
         Shape3D eyeballsShape = new MeshView(Model3DRepository.instance().ghostEyeballsMesh());
-        var ghost3DAppearance = new Ghost3DAppearance(ans, dressShape, pupilsShape, eyeballsShape, ghost, GHOST_3D_SIZE, numFlashes);
+        var ghost3DAppearance = new Ghost3DAppearance(assets, ans, dressShape, pupilsShape, eyeballsShape, ghost, GHOST_3D_SIZE, numFlashes);
         Model3D.allMeshViewsUnder(ghost3DAppearance).map(MeshView::drawModeProperty).forEach(py -> py.bind(PY_3D_DRAW_MODE));
         return ghost3DAppearance;
     }
