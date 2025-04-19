@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui._3d;
+package de.amr.games.pacman.uilib.model3D;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
@@ -11,8 +11,6 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.uilib.Ufx;
 import de.amr.games.pacman.uilib.assets.AssetStorage;
-import de.amr.games.pacman.uilib.model3D.Model3D;
-import de.amr.games.pacman.uilib.model3D.PacModel3D;
 import javafx.animation.*;
 import javafx.scene.Group;
 import javafx.scene.LightBase;
@@ -24,7 +22,6 @@ import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.HTS;
 import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.ui.Globals.PY_3D_PAC_LIGHT_ENABLED;
 import static java.util.Objects.requireNonNull;
 
 public abstract class Pac3DBase {
@@ -154,7 +151,7 @@ public abstract class Pac3DBase {
      */
     protected void updateLight(GameLevel level) {
         TickTimer powerTimer = level.powerTimer();
-        if (PY_3D_PAC_LIGHT_ENABLED.get() && powerTimer.isRunning() && pac.isVisible()) {
+        if (powerTimer.isRunning() && pac.isVisible()) {
             light.setLightOn(true);
             double remaining = powerTimer.remainingTicks();
             double maxRange = (remaining / powerTimer.durationTicks()) * 60 + 30;

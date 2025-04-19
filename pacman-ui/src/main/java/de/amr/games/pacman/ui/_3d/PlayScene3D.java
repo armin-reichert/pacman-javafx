@@ -20,7 +20,10 @@ import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.uilib.Action;
 import de.amr.games.pacman.uilib.CameraControlledView;
+import de.amr.games.pacman.uilib.Ufx;
 import javafx.animation.Animation;
+import javafx.animation.ParallelTransition;
+import javafx.animation.SequentialTransition;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -487,9 +490,18 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     private void playPacManDiesAnimation() {
         gameState().timer().resetIndefiniteTime();
-        Animation animation = level3D.pac3D().createDyingAnimation();
-        animation.setDelay(Duration.seconds(1));
+        Animation pacDyingAnimation = level3D.pac3D().createDyingAnimation();
+        Animation animation =
+            new SequentialTransition(
+                new ParallelTransition(
+                    Ufx.now(THE_SOUND::playPacDeathSound),
+                    pacDyingAnimation
+                ),
+                Ufx.pauseSec(1)
+            );
+        animation.setDelay(Duration.seconds(2));
         animation.setOnFinished(e -> THE_GAME_CONTROLLER.terminateCurrentState());
+
         animation.play();
     }
 

@@ -17,10 +17,6 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.uilib.Ufx.coloredMaterial;
 
-
-/**
- * @author Armin Reichert
- */
 public interface PacModel3D {
 
     String MESH_ID_EYES   = "PacMan.Eyes";

@@ -2,17 +2,15 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui._3d;
+package de.amr.games.pacman.uilib.model3D;
 
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.uilib.assets.AssetStorage;
-import de.amr.games.pacman.uilib.model3D.Model3D;
 import javafx.animation.*;
 import javafx.geometry.Point3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import static de.amr.games.pacman.ui.Globals.THE_SOUND;
 import static de.amr.games.pacman.uilib.Ufx.doAfterSec;
 import static de.amr.games.pacman.uilib.Ufx.now;
 
@@ -48,11 +46,12 @@ public class PacMan3D extends Pac3DBase {
         //TODO convert to Timeline?
         return new SequentialTransition(
             now(this::init), // TODO check this
-            doAfterSec(0.5, THE_SOUND::playPacDeathSound),
+            //doAfterSec(0.5, THE_SOUND::playPacDeathSound),
             new ParallelTransition(spinning, new SequentialTransition(shrinking, expanding), sinking),
             doAfterSec(1.0, () -> root.setVisible(false))
         );
     }
+
 
     // Movement animation: Head banging
 

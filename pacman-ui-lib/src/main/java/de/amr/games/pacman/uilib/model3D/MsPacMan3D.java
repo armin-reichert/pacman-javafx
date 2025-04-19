@@ -2,23 +2,16 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui._3d;
+package de.amr.games.pacman.uilib.model3D;
 
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.uilib.assets.AssetStorage;
-import de.amr.games.pacman.uilib.model3D.Model3D;
-import de.amr.games.pacman.uilib.model3D.PacModel3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
-import javafx.animation.SequentialTransition;
 import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-
-import static de.amr.games.pacman.ui.Globals.THE_SOUND;
-import static de.amr.games.pacman.uilib.Ufx.now;
-import static de.amr.games.pacman.uilib.Ufx.pauseSec;
 
 public class MsPacMan3D extends Pac3DBase {
 
@@ -41,7 +34,7 @@ public class MsPacMan3D extends Pac3DBase {
         spinning.setToAngle(360);
         spinning.setInterpolator(Interpolator.LINEAR);
         spinning.setCycleCount(4);
-        return new SequentialTransition(pauseSec(1), now(THE_SOUND::playPacDeathSound), spinning, pauseSec(1.5));
+        return spinning;
     }
 
     // Movement animation: Hip swaying
