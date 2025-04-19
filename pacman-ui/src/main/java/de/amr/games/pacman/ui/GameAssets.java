@@ -4,13 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui;
 
+import de.amr.games.pacman.uilib.Ufx;
 import de.amr.games.pacman.uilib.assets.AssetStorage;
 import de.amr.games.pacman.uilib.assets.Picker;
 import de.amr.games.pacman.uilib.assets.ResourceManager;
-import de.amr.games.pacman.uilib.Ufx;
-import de.amr.games.pacman.uilib.model3D.Model3D;
 import javafx.scene.text.Font;
-import org.tinylog.Logger;
 
 import java.util.ResourceBundle;
 
@@ -41,24 +39,6 @@ public class GameAssets extends AssetStorage implements ResourceManager {
         store("voice.autopilot.on",      url("sound/voice/autopilot-on.mp3"));
         store("voice.immunity.off",      url("sound/voice/immunity-off.mp3"));
         store("voice.immunity.on",       url("sound/voice/immunity-on.mp3"));
-    }
-
-    public void addAssets3D(ResourceManager rm) {
-        try {
-            Model3D pacManModel3D = new Model3D(rm.url("model3D/pacman.obj"));
-            Model3D ghostModel3D  = new Model3D(rm.url("model3D/ghost.obj"));
-            Model3D pelletModel3D = new Model3D(rm.url("model3D/fruit.obj"));
-            store("model3D.pacman", pacManModel3D);
-            store("model3D.ghost", ghostModel3D);
-            store("model3D.ghost.mesh.dress", ghostModel3D.mesh("Sphere.004_Sphere.034_light_blue_ghost"));
-            store("model3D.ghost.mesh.pupils", ghostModel3D.mesh("Sphere.010_Sphere.039_grey_wall"));
-            store("model3D.ghost.mesh.eyeballs", ghostModel3D.mesh("Sphere.009_Sphere.036_white"));
-            store("model3D.pellet", pelletModel3D);
-            Logger.info("3D assets loaded");
-        } catch (Exception x) {
-            Logger.error(x);
-            Logger.error("An error occurred while loading the 3D assets");
-        }
     }
 
     public Font arcadeFontAtSize(float size) {

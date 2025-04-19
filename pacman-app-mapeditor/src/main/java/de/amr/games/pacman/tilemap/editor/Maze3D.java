@@ -11,8 +11,8 @@ import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.uilib.Ufx;
-import de.amr.games.pacman.uilib.assets.ResourceManager;
 import de.amr.games.pacman.uilib.model3D.Model3D;
+import de.amr.games.pacman.uilib.model3D.Model3DRepository;
 import de.amr.games.pacman.uilib.model3D.PacModel3D;
 import de.amr.games.pacman.uilib.tilemap.TerrainMapRenderer3D;
 import javafx.beans.property.BooleanProperty;
@@ -31,7 +31,6 @@ import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
-import org.tinylog.Logger;
 
 import java.util.stream.Stream;
 
@@ -93,21 +92,15 @@ public class Maze3D extends Group {
         foodGroup.visibleProperty().bind(foodVisiblePy);
         mazeGroup.visibleProperty().bind(terrainVisiblePy);
 
-        ResourceManager uiLibResources = () -> Ufx.class;
-        try {
-            Model3D pacmanModel3D = new Model3D(uiLibResources.url("model3D/pacman.obj"));
-            pacmanShape3D = PacModel3D.createPacShape(pacmanModel3D, ACTOR_SIZE, Color.YELLOW, Color.BLACK, Color.GRAY);
+        Model3D pacmanModel3D = Model3DRepository.instance().pacManModel3D();
+        pacmanShape3D = PacModel3D.createPacShape(pacmanModel3D, ACTOR_SIZE, Color.YELLOW, Color.BLACK, Color.GRAY);
 
-            Model3D ghostModel3D = new Model3D(uiLibResources.url("model3D/ghost.obj"));
-            ghostShapes = new Node[4];
-            ghostShapes[0] = createGhostShape3D(ghostModel3D, Color.RED, 0);
-            ghostShapes[1] = createGhostShape3D(ghostModel3D, Color.PINK, 270);
-            ghostShapes[2] = createGhostShape3D(ghostModel3D, Color.CYAN, 90);
-            ghostShapes[3] = createGhostShape3D(ghostModel3D, Color.ORANGE, 90);
-        } catch (Exception x) {
-            Logger.error(x);
-            Logger.error("Could not open 3D models");
-        }
+        Model3D ghostModel3D = Model3DRepository.instance().ghostModel3D();
+        ghostShapes = new Node[4];
+        ghostShapes[0] = createGhostShape3D(ghostModel3D, Color.RED, 0);
+        ghostShapes[1] = createGhostShape3D(ghostModel3D, Color.PINK, 270);
+        ghostShapes[2] = createGhostShape3D(ghostModel3D, Color.CYAN, 90);
+        ghostShapes[3] = createGhostShape3D(ghostModel3D, Color.ORANGE, 90);
     }
 
     public void moveTowardsUser(double pixels) {
