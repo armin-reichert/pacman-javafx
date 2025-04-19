@@ -43,11 +43,11 @@ public class GameAssets extends AssetStorage implements ResourceManager {
         store("voice.immunity.on",       url("sound/voice/immunity-on.mp3"));
     }
 
-    public void addAssets3D(ResourceManager resourceManager3D) {
+    public void addAssets3D(ResourceManager rm) {
         try {
-            Model3D pacManModel3D = new Model3D(resourceManager3D.url("model3D/pacman.obj"));
-            Model3D ghostModel3D  = new Model3D(resourceManager3D.url("model3D/ghost.obj"));
-            Model3D pelletModel3D = new Model3D(resourceManager3D.url("model3D/fruit.obj"));
+            Model3D pacManModel3D = new Model3D(rm.url("model3D/pacman.obj"));
+            Model3D ghostModel3D  = new Model3D(rm.url("model3D/ghost.obj"));
+            Model3D pelletModel3D = new Model3D(rm.url("model3D/fruit.obj"));
             store("model3D.pacman", pacManModel3D);
             store("model3D.ghost", ghostModel3D);
             store("model3D.ghost.mesh.dress", ghostModel3D.mesh("Sphere.004_Sphere.034_light_blue_ghost"));

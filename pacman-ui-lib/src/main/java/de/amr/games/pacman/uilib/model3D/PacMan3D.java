@@ -46,12 +46,10 @@ public class PacMan3D extends Pac3DBase {
         //TODO convert to Timeline?
         return new SequentialTransition(
             now(this::init), // TODO check this
-            //doAfterSec(0.5, THE_SOUND::playPacDeathSound),
             new ParallelTransition(spinning, new SequentialTransition(shrinking, expanding), sinking),
             doAfterSec(1.0, () -> root.setVisible(false))
         );
     }
-
 
     // Movement animation: Head banging
 

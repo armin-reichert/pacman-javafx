@@ -91,7 +91,7 @@ public class ModelViewer extends Application {
         if (selectedFile != null) {
             Logger.info("File {} selected", selectedFile);
             try {
-                Model3D model3D = new Model3D(selectedFile);
+                Model3D model3D = new Model3D(selectedFile.toURI());
                 Node shape = PacModel3D.createPacShape(model3D, 16, Color.YELLOW, Color.BLACK, Color.PINK);
                 Model3D.meshViewById(shape, PacModel3D.MESH_ID_HEAD).setDrawMode(DrawMode.LINE);
                 Model3D.meshViewById(shape, PacModel3D.MESH_ID_PALATE).setDrawMode(DrawMode.LINE);

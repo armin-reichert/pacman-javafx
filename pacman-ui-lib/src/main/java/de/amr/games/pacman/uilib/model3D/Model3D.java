@@ -11,8 +11,8 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Scale;
 
-import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
@@ -62,13 +62,24 @@ public class Model3D {
     private final Map<String, TriangleMesh> meshesByName = new HashMap<>();
     private final Map<String, PhongMaterial> materials = new HashMap<>();
 
+    public Model3D(URI objFileURI) throws IOException, URISyntaxException {
+        this(requireNonNull(objFileURI).toURL());
+    }
+
     public Model3D(URL objFileURL) throws IOException, URISyntaxException {
         url = requireNonNull(objFileURL).toExternalForm();
         readMeshesAndMaterials(new ObjImporter(url));
     }
 
-    public Model3D(File objFile) throws IOException, URISyntaxException {
-        this(objFile.toURI().toURL());
+    private void readMeshesAndMaterials(ObjImporter importer) {
+        for (String meshName : importer.getMeshNames()) {
+            TriangleMesh mesh = importer.getMesh(meshName);
+            ObjImporter.validateTriangleMesh(mesh);
+            meshesByName.put(meshName, mesh);
+        }
+        for (var materialLibrary : importer.materialLibrary()) {
+            materialLibrary.forEach((materialName, material) -> materials.put(materialName, (PhongMaterial) material));
+        }
     }
 
     public String url() {
@@ -103,16 +114,5 @@ public class Model3D {
             return materials.get(name);
         }
         throw new Model3DException("No material with name %s found", name);
-    }
-
-    private void readMeshesAndMaterials(ObjImporter importer) {
-        for (String meshName : importer.getMeshNames()) {
-            TriangleMesh mesh = importer.getMesh(meshName);
-            ObjImporter.validateTriangleMesh(mesh);
-            meshesByName.put(meshName, mesh);
-        }
-        for (var materialLibrary : importer.materialLibrary()) {
-            materialLibrary.forEach((materialName, material) -> materials.put(materialName, (PhongMaterial) material));
-        }
     }
 }
