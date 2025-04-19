@@ -83,7 +83,7 @@ public class GameLevel3D {
     private Animation levelCompleteAnimation;
     private Animation livesCounterAnimation;
 
-    public GameLevel3D(GameLevel level) {
+    public GameLevel3D(GameVariant gameVariant, GameLevel level) {
         final GameUIConfig uiConfig = THE_UI_CONFIGS.current();
         final WorldMap worldMap = level.worldMap();
         final int numRows = worldMap.numRows(), numCols = worldMap.numCols();
@@ -93,7 +93,7 @@ public class GameLevel3D {
         livesCounter3D = createLivesCounter3D(level.game().canStartNewGame());
         livesCounter3D.livesCountPy.bind(livesCountPy);
 
-        pac3D = createPac3D(uiConfig.assetNamespace(), level.pac());
+        pac3D = createPac3D(gameVariant, uiConfig.assetNamespace(), level.pac());
         ghost3DAppearances = level.ghosts()
             .map(ghost -> createGhostAppearance3D(uiConfig.assetNamespace(), ghost, level.numFlashes()))
             .toList();
@@ -182,8 +182,7 @@ public class GameLevel3D {
         return pellet3D;
     }
 
-    private Pac3DBase createPac3D(String ans, Pac pac) {
-        GameVariant gameVariant = THE_GAME_CONTROLLER.gameVariantProperty().get();
+    private Pac3DBase createPac3D(GameVariant gameVariant, String ans, Pac pac) {
         Pac3DBase pac3D = switch (gameVariant) {
             case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL -> new MsPacMan3D(pac, PAC_3D_SIZE, THE_ASSETS, ans);
             case PACMAN, PACMAN_XXL -> new PacMan3D(pac, PAC_3D_SIZE, THE_ASSETS, ans);
