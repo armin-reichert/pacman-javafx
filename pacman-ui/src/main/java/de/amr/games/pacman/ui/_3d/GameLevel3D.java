@@ -21,7 +21,10 @@ import de.amr.games.pacman.uilib.Ufx;
 import de.amr.games.pacman.uilib.assets.WorldMapColorScheme;
 import de.amr.games.pacman.uilib.model3D.*;
 import javafx.animation.*;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
@@ -98,7 +101,8 @@ public class GameLevel3D {
             .map(ghost -> createGhost3D(uiConfig.assetNamespace(), ghost, level.numFlashes()))
             .toList();
 
-        floor3D = createFloor(numCols * TS, numRows * TS, FLOOR_3D_THICKNESS, PY_3D_FLOOR_COLOR);
+        floor3D = createFloor(numCols * TS, numRows * TS);
+        floor3D.materialProperty().bind(PY_3D_FLOOR_COLOR.map(Ufx::coloredPhongMaterial));
         floor3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         maze3D = new Maze3D(uiConfig, level, colorScheme);
@@ -129,13 +133,12 @@ public class GameLevel3D {
         root.setMouseTransparent(true); //TODO does this really increase performance?
     }
 
-    private Box createFloor(double sizeX, double sizeY, double thickness, ObjectProperty<Color> colorProperty) {
+    private Box createFloor(double sizeX, double sizeY) {
         double extraSpace = 10;
-        var floor3D = new Box(sizeX + extraSpace, sizeY, thickness);
-        floor3D.materialProperty().bind(colorProperty.map(Ufx::coloredPhongMaterial));
+        var floor3D = new Box(sizeX + extraSpace, sizeY, FLOOR_3D_THICKNESS);
         floor3D.translateXProperty().bind(floor3D.widthProperty().multiply(0.5).subtract(0.5*extraSpace));
         floor3D.translateYProperty().bind(floor3D.heightProperty().multiply(0.5));
-        floor3D.translateZProperty().set(thickness * 0.5);
+        floor3D.translateZProperty().set(FLOOR_3D_THICKNESS * 0.5);
         return floor3D;
     }
 
