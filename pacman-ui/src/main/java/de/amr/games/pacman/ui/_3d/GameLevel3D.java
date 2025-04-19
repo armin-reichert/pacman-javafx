@@ -88,10 +88,11 @@ public class GameLevel3D {
         final WorldMap worldMap = level.worldMap();
         final int numRows = worldMap.numRows(), numCols = worldMap.numCols();
         final WorldMapColorScheme colorScheme = uiConfig.worldMapColorScheme(worldMap);
+        final Model3D pacManModel3D = THE_ASSETS.get("model3D.pacman");
         final Model3D pelletModel3D = THE_ASSETS.get("model3D.pellet"); // TODO move into UI config?
         final PhongMaterial foodMaterial = coloredMaterial(colorScheme.pellet()); // TODO move into UI config?
 
-        livesCounter3D = createLivesCounter3D(level.game().canStartNewGame());
+        livesCounter3D = createLivesCounter3D(pacManModel3D, level.game().canStartNewGame());
         livesCounter3D.livesCountPy.bind(livesCountPy);
 
         pac3D = createPac3D(uiConfig.assetNamespace(), level.pac());
@@ -205,11 +206,11 @@ public class GameLevel3D {
         return ghost3DAppearance;
     }
 
-    private LivesCounter3D createLivesCounter3D(boolean canStartNewGame) {
+    private LivesCounter3D createLivesCounter3D(Model3D model3D, boolean canStartNewGame) {
         GameUIConfig config3D = THE_UI_CONFIGS.current();
         Node[] counterShapes = new Node[LIVES_COUNTER_MAX];
         for (int i = 0; i < counterShapes.length; ++i) {
-            counterShapes[i] = config3D.createLivesCounterShape(THE_ASSETS, LIVES_COUNTER_3D_SIZE);
+            counterShapes[i] = config3D.createLivesCounterShape(model3D, THE_ASSETS, LIVES_COUNTER_3D_SIZE);
         }
         var counter3D = new LivesCounter3D(counterShapes);
         counter3D.setTranslateX(2 * TS);

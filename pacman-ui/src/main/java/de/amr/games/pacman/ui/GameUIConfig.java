@@ -12,6 +12,7 @@ import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.uilib.assets.AssetStorage;
 import de.amr.games.pacman.uilib.assets.WorldMapColorScheme;
+import de.amr.games.pacman.uilib.model3D.Model3D;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -32,7 +33,7 @@ public interface GameUIConfig {
     WorldMapColorScheme worldMapColorScheme(WorldMap worldMap);
 
     // 3D-only
-    Node createLivesCounterShape(AssetStorage assets, double size);
+    Node createLivesCounterShape(Model3D model3D, AssetStorage assets, double size);
 
     default boolean is2D3DPlaySceneSwitch(GameScene prevPlayScene, GameScene nextPlayScene) {
         if (prevPlayScene == null && nextPlayScene == null) {
