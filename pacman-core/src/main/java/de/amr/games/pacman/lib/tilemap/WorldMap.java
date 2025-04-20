@@ -29,9 +29,11 @@ public class WorldMap {
 
     public static class Layer {
         private final Map<String, String> properties = new HashMap<>();
-        private byte[][] values;
+        private final byte[][] values;
 
-        public Layer() {}
+        public Layer(int numRows, int numCols) {
+            values = new byte[numRows][numCols];
+        }
 
         public Layer(Layer other) {
             int numRows = other.values.length, numCols = other.values[0].length;
@@ -115,10 +117,8 @@ public class WorldMap {
         this.numRows = numRows;
         this.numCols = numCols;
         url = null;
-        terrainLayer = new Layer();
-        terrainLayer.values = new byte[numRows][numCols];
-        foodLayer = new Layer();
-        foodLayer.values = new byte[numRows][numCols];
+        terrainLayer = new Layer(numRows, numCols);
+        foodLayer = new Layer(numRows, numCols);
     }
 
     public WorldMap(URL url) throws IOException {
@@ -299,8 +299,7 @@ public class WorldMap {
         }
 
         // Second pass: read data and build new tile map
-        var tileMap = new Layer();
-        tileMap.values = new byte[numDataRows][numDataCols];
+        var tileMap = new Layer(numDataRows, numDataCols);
         tileMap.properties.putAll(parseProperties(propertySection.toString()));
 
         for (int lineIndex = dataStartIndex; lineIndex < lines.size(); ++lineIndex) {
