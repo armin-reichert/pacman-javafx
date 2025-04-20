@@ -100,7 +100,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     public void onBonusActivated(GameEvent event) {
         game().level().flatMap(GameLevel::bonus)
-                .ifPresent(bonus -> level3D.replaceBonus3D(bonus, THE_UI_CONFIGS.current().spriteSheet()));
+                .ifPresent(bonus -> level3D.updateBonus3D(bonus, THE_UI_CONFIGS.current().spriteSheet()));
         THE_SOUND.playBonusActiveSound();
     }
 

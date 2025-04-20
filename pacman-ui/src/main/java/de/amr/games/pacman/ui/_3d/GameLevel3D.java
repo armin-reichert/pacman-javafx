@@ -327,7 +327,7 @@ public class GameLevel3D {
         new SequentialTransition(moveUpAnimation, moveDownAnimation).play();
     }
 
-    public void replaceBonus3D(Bonus bonus, GameSpriteSheet spriteSheet) {
+    public void updateBonus3D(Bonus bonus, GameSpriteSheet spriteSheet) {
         requireNonNull(bonus);
         if (bonus3D != null) {
             mazeGroup.getChildren().remove(bonus3D);
