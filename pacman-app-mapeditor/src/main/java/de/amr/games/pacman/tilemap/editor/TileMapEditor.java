@@ -175,11 +175,11 @@ public class TileMapEditor {
     private final ChangeManager changeManager = new ChangeManager();
     private File currentDirectory;
     private Instant messageCloseTime;
-    private AnimationTimer updateLoop;
+    private final AnimationTimer updateLoop;
     private final List<Vector2i> tilesWithErrors = new ArrayList<>();
 
     private final BorderPane contentPane = new BorderPane();
-    private Stage stage;
+    private final Stage stage;
     private Pane propertyEditorsPane;
     private EditCanvas editCanvas;
     private ScrollPane spEditCanvas;
@@ -836,7 +836,7 @@ public class TileMapEditor {
 
         var miClearTerrain = new MenuItem(tt("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(e -> {
-            editedWorldMap().setAll(LayerID.TERRAIN, TerrainTiles.EMPTY);
+            editedWorldMap().layer(LayerID.TERRAIN).setAll(TerrainTiles.EMPTY);
             changeManager.setTerrainMapChanged();
             changeManager.setEdited(true);
         });
@@ -844,7 +844,7 @@ public class TileMapEditor {
 
         var miClearFood = new MenuItem(tt("menu.edit.clear_food"));
         miClearFood.setOnAction(e -> {
-            editedWorldMap().setAll(LayerID.FOOD, FoodTiles.EMPTY);
+            editedWorldMap().layer(LayerID.FOOD).setAll(FoodTiles.EMPTY);
             changeManager.setFoodMapChanged();
             changeManager.setEdited(true);
         });

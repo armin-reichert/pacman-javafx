@@ -27,29 +27,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class WorldMap {
 
-    public static class Layer {
-        private final Map<String, String> properties = new HashMap<>();
-        private final byte[][] values;
-
-        public Layer(int numRows, int numCols) {
-            values = new byte[numRows][numCols];
-        }
-
-        public Layer(Layer other) {
-            int numRows = other.values.length, numCols = other.values[0].length;
-            properties.putAll(other.properties);
-            values = new byte[numRows][];
-            for (int row = 0; row < numRows; ++row) {
-                values[row] = Arrays.copyOf(other.values[row], numCols);
-            }
-        }
-
-        public void replaceProperties(Map<String, String> otherProperties) {
-            properties.clear();
-            properties.putAll(otherProperties);
-        }
-    }
-
     private static final Pattern TILE_PATTERN = Pattern.compile("\\((\\d+),(\\d+)\\)");
     private static final String TILE_FORMAT = "(%d,%d)";
 
@@ -96,29 +73,23 @@ public class WorldMap {
     }
 
     private final URL url;
-    private int numRows;
-    private int numCols;
-    private Layer terrainLayer;
-    private Layer foodLayer;
+    private WorldMapLayer terrainLayer;
+    private WorldMapLayer foodLayer;
     private Set<Obstacle> obstacles = Collections.emptySet();
     private final Map<String, Object> config = new HashMap<>();
 
     public WorldMap(WorldMap other) {
         requireNonNull(other);
-        numRows = other.numRows;
-        numCols = other.numCols;
         url = other.url;
-        terrainLayer = new Layer(other.terrainLayer);
-        foodLayer = new Layer(other.foodLayer);
+        terrainLayer = new WorldMapLayer(other.terrainLayer);
+        foodLayer = new WorldMapLayer(other.foodLayer);
         obstacles = new HashSet<>(other.obstacles);
     }
 
     public WorldMap(int numRows, int numCols) {
-        this.numRows = numRows;
-        this.numCols = numCols;
         url = null;
-        terrainLayer = new Layer(numRows, numCols);
-        foodLayer = new Layer(numRows, numCols);
+        terrainLayer = new WorldMapLayer(numRows, numCols);
+        foodLayer = new WorldMapLayer(numRows, numCols);
     }
 
     public WorldMap(URL url) throws IOException {
@@ -140,8 +111,8 @@ public class WorldMap {
         StringBuilder s = new StringBuilder();
         s.append("WorldMap{");
         if (terrainLayer != null) {
-            s.append("numRows=").append(numRows);
-            s.append(", numCols=").append(numCols);
+            s.append("numRows=").append(numRows());
+            s.append(", numCols=").append(numCols());
         }
         s.append(", url=").append(url);
         s.append("}");
@@ -159,14 +130,14 @@ public class WorldMap {
     }
 
     public WorldMap insertRowBeforeIndex(int rowIndex) {
-        if (rowIndex < 0 || rowIndex > numRows) {
+        if (rowIndex < 0 || rowIndex > numRows()) {
             throw new IllegalArgumentException("Illegal row index for inserting row: " + rowIndex);
         }
-        WorldMap newMap = new WorldMap(numRows + 1, numCols);
-        newMap.terrainLayer.replaceProperties(terrainLayer.properties);
-        newMap.foodLayer.replaceProperties(foodLayer.properties);
-        for (int row = 0; row < newMap.numRows; ++row) {
-            for (int col = 0; col < newMap.numCols; ++col) {
+        WorldMap newMap = new WorldMap(numRows() + 1, numCols());
+        newMap.terrainLayer.replaceProperties(terrainLayer.properties());
+        newMap.foodLayer.replaceProperties(foodLayer.properties());
+        for (int row = 0; row < newMap.numRows(); ++row) {
+            for (int col = 0; col < newMap.numCols(); ++col) {
                 byte terrainValue = TerrainTiles.EMPTY;
                 byte foodValue = FoodTiles.EMPTY;
                 if (row < rowIndex) {
@@ -176,7 +147,7 @@ public class WorldMap {
                     terrainValue = get(TERRAIN, row - 1, col);
                     foodValue = get(FOOD, row - 1, col);
                 } else {
-                    if ((col == 0 || col == numCols - 1)
+                    if ((col == 0 || col == numCols() - 1)
                             && get(TERRAIN, row, col) == TerrainTiles.WALL_V) {
                         terrainValue = TerrainTiles.WALL_V; // keep vertical border wall
                     }
@@ -189,14 +160,14 @@ public class WorldMap {
     }
 
     public WorldMap deleteRowAtIndex(int rowIndexToDelete) {
-        if (rowIndexToDelete < 0 || rowIndexToDelete > numRows - 1) {
+        if (rowIndexToDelete < 0 || rowIndexToDelete > numRows() - 1) {
             throw new IllegalArgumentException("Illegal row index for deleting row: " + rowIndexToDelete);
         }
-        WorldMap newMap = new WorldMap(numRows - 1, numCols);
-        newMap.terrainLayer.replaceProperties(terrainLayer.properties);
-        newMap.foodLayer.replaceProperties(foodLayer.properties);
-        for (int row = 0; row < newMap.numRows; ++row) {
-            for (int col = 0; col < newMap.numCols; ++col) {
+        WorldMap newMap = new WorldMap(numRows() - 1, numCols());
+        newMap.terrainLayer.replaceProperties(terrainLayer.properties());
+        newMap.foodLayer.replaceProperties(foodLayer.properties());
+        for (int row = 0; row < newMap.numRows(); ++row) {
+            for (int col = 0; col < newMap.numCols(); ++col) {
                 if (row < rowIndexToDelete) {
                     newMap.set(TERRAIN, row, col, get(TERRAIN, row, col));
                     newMap.set(FOOD, row, col, get(FOOD, row, col));
@@ -209,17 +180,17 @@ public class WorldMap {
         return newMap;
     }
 
-    private void print(PrintWriter pw, Layer layer) {
-        layer.properties.keySet().stream()
+    private void print(PrintWriter pw, WorldMapLayer layer) {
+        layer.properties().keySet().stream()
                 .sorted()
-                .map(name -> name + "=" + layer.properties.get(name))
+                .map(name -> name + "=" + layer.properties().get(name))
                 .forEach(pw::println);
         pw.println(BEGIN_DATA_SECTION);
-        for (int row = 0; row < numRows; ++row) {
-            for (int col = 0; col < numCols; ++col) {
-                byte value = layer.values[row][col];
+        for (int row = 0; row < numRows(); ++row) {
+            for (int col = 0; col < numCols(); ++col) {
+                byte value = layer.get(row, col);
                 pw.printf("#%02X", value);
-                if (col < numCols - 1) {
+                if (col < numCols() - 1) {
                     pw.print(",");
                 }
             }
@@ -252,9 +223,6 @@ public class WorldMap {
         this.foodLayer = parseTileMap(foodLayerRows,
             value -> 0 <= value && value <= FoodTiles.ENERGIZER, FoodTiles.EMPTY);
 
-        numRows = this.terrainLayer.values.length;
-        numCols = this.terrainLayer.values[0].length;
-
         // Replace obsolete terrain tile values
         tiles().forEach(tile -> {
             byte content = get(TERRAIN, tile);
@@ -271,7 +239,7 @@ public class WorldMap {
         });
     }
 
-    private Layer parseTileMap(List<String> lines, Predicate<Byte> valueAllowed, byte emptyValue) {
+    private WorldMapLayer parseTileMap(List<String> lines, Predicate<Byte> valueAllowed, byte emptyValue) {
         // First pass: read property section and determine data section size
         int numDataRows = 0, numDataCols = -1;
         int dataStartIndex = -1;
@@ -299,8 +267,8 @@ public class WorldMap {
         }
 
         // Second pass: read data and build new tile map
-        var tileMap = new Layer(numDataRows, numDataCols);
-        tileMap.properties.putAll(parseProperties(propertySection.toString()));
+        var tileMap = new WorldMapLayer(numDataRows, numDataCols);
+        tileMap.properties().putAll(parseProperties(propertySection.toString()));
 
         for (int lineIndex = dataStartIndex; lineIndex < lines.size(); ++lineIndex) {
             String line = lines.get(lineIndex);
@@ -311,9 +279,9 @@ public class WorldMap {
                 try {
                     byte value = Byte.decode(entry);
                     if (valueAllowed.test(value)) {
-                        tileMap.values[row][col] = value;
+                        tileMap.set(row, col, value);
                     } else {
-                        tileMap.values[row][col] = emptyValue;
+                        tileMap.set(row, col, emptyValue);
                         Logger.error("Invalid tile map value {} at row {}, col {}", value, row, col);
                     }
                 } catch (NumberFormatException x) {
@@ -378,7 +346,8 @@ public class WorldMap {
         }
     }
 
-    private Layer layer(LayerID id) {
+    public WorldMapLayer layer(LayerID id) {
+        requireNonNull(id);
         return switch (id) {
             case TERRAIN -> terrainLayer;
             case FOOD -> foodLayer;
@@ -386,15 +355,15 @@ public class WorldMap {
     }
 
     private Map<String, String> properties(LayerID layerID) {
-        return layer(layerID).properties;
+        return layer(layerID).properties();
     }
 
     public int numCols() {
-        return numCols;
+        return terrainLayer.numCols();
     }
 
     public int numRows() {
-        return numRows;
+        return terrainLayer.numRows();
     }
 
     public URL url() {
@@ -406,14 +375,14 @@ public class WorldMap {
      * @return index in row-by-row order
      */
     public int index(Vector2i tile) {
-        return numCols * tile.y() + tile.x();
+        return numCols() * tile.y() + tile.x();
     }
 
     /**
      * @return stream of all tiles of this map (row-by-row)
      */
     public Stream<Vector2i> tiles() {
-        return IntStream.range(0, numCols * numRows).mapToObj(this::tile);
+        return IntStream.range(0, numCols() * numRows()).mapToObj(this::tile);
     }
 
     /**
@@ -421,7 +390,7 @@ public class WorldMap {
      * @return tile with given index
      */
     public Vector2i tile(int index) {
-        return Vector2i.of(index % numCols, index / numCols);
+        return Vector2i.of(index % numCols(), index / numCols());
     }
 
     /**
@@ -434,7 +403,7 @@ public class WorldMap {
     }
 
     public Vector2i vSymmetricTile(Vector2i tile) {
-        return Vector2i.of(numCols - 1 - tile.x(), tile.y());
+        return Vector2i.of(numCols() - 1 - tile.x(), tile.y());
     }
 
     public boolean outOfBounds(Vector2i tile) {
@@ -442,7 +411,7 @@ public class WorldMap {
     }
 
     public boolean outOfBounds(int row, int col) {
-        return row < 0 || row >= numRows || col < 0 || col >= numCols;
+        return row < 0 || row >= numRows() || col < 0 || col >= numCols();
     }
 
     public void setConfigValue(String key, Object value) {
@@ -459,7 +428,7 @@ public class WorldMap {
     }
 
     public Stream<String> propertyNames(LayerID layerID) {
-        return layer(layerID).properties.keySet().stream().sorted();
+        return layer(layerID).properties().keySet().stream().sorted();
     }
 
     public boolean hasProperty(LayerID layerID, String propertyName) {
@@ -506,7 +475,7 @@ public class WorldMap {
         if (outOfBounds(row, col)) {
             throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
         }
-        return layer(layerID).values[row][col];
+        return layer(layerID).get(row, col);
     }
 
     /**
@@ -533,7 +502,7 @@ public class WorldMap {
         if (outOfBounds(row, col)) {
             throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
         }
-        layer(layerID).values[row][col] = value;
+        layer(layerID).set(row, col, value);
     }
 
     /**
@@ -546,13 +515,6 @@ public class WorldMap {
      */
     public void set(LayerID layerID, Vector2i tile, byte value) {
         set(layerID, tile.y(), tile.x(), value);
-    }
-
-    public void setAll(LayerID layerID, byte value) {
-        requireNonNull(layerID);
-        for (byte[] row : layer(layerID).values) {
-            Arrays.fill(row, value);
-        }
     }
 
     public boolean isPartOfHouse(Vector2i tile) {
