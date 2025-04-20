@@ -39,7 +39,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         pac = new Pac();
         blinky = ArcadePacMan_GameModel.blinky();
 
-        music = THE_SOUND.makeSoundLoop("intermission");
+        music = THE_SOUND.createRepeatingSound("intermission");
         music.setCycleCount(2);
 
         var spriteSheet = (ArcadePacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();

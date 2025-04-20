@@ -44,7 +44,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         blinky.setSpeed(0);
         blinky.hide();
 
-        music = THE_SOUND.makeSound("intermission");
+        music = THE_SOUND.createSound("intermission");
         music.setCycleCount(1);
 
         var spriteSheet = (ArcadePacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();

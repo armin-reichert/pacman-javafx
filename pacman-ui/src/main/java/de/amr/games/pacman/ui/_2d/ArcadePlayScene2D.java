@@ -261,18 +261,18 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     @Override
     public void onBonusActivated(GameEvent e) {
-        THE_SOUND.playBonusBouncingSound();
+        THE_SOUND.playBonusActiveSound();
     }
 
     @Override
     public void onBonusEaten(GameEvent e) {
-        THE_SOUND.stopBonusBouncingSound();
+        THE_SOUND.stopBonusActiveSound();
         THE_SOUND.playBonusEatenSound();
     }
 
     @Override
     public void onBonusExpired(GameEvent e) {
-        THE_SOUND.stopBonusBouncingSound();
+        THE_SOUND.stopBonusActiveSound();
     }
 
     @Override

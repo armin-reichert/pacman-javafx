@@ -80,7 +80,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         mrPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
 
-        music = THE_SOUND.makeSound("intermission.3");
+        music = THE_SOUND.createSound("intermission.3");
     }
 
     @Override

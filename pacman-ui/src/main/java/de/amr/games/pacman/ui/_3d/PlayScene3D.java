@@ -370,7 +370,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 bonus -> level3D.replaceBonus3D(bonus, THE_UI_CONFIGS.current().spriteSheet()));
         //TODO check for moving bonus instead
         if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN)) {
-            THE_SOUND.playBonusBouncingSound();
+            THE_SOUND.playBonusActiveSound();
         }
     }
 
@@ -379,7 +379,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         level3D.bonus3D().ifPresent(Bonus3D::showEaten);
         //TODO check for moving bonus instead
         if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN)) {
-            THE_SOUND.stopBonusBouncingSound();
+            THE_SOUND.stopBonusActiveSound();
         }
         THE_SOUND.playBonusEatenSound();
     }
@@ -389,7 +389,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         level3D.bonus3D().ifPresent(Bonus3D::onBonusExpired);
         //TODO check for moving bonus instead
         if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN)) {
-            THE_SOUND.stopBonusBouncingSound();
+            THE_SOUND.stopBonusActiveSound();
         }
     }
 

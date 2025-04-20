@@ -61,7 +61,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         pinky = ArcadeMsPacMan_GameModel.pinky();
         heart = new Actor2D();
 
-        music = THE_SOUND.makeSound("intermission.1");
+        music = THE_SOUND.createSound("intermission.1");
 
         var spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_UI_CONFIGS.configuration(
             THE_GAME_CONTROLLER.gameVariantProperty().get()).spriteSheet();

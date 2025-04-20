@@ -56,7 +56,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         stork = new Actor2D();
         bag = new Actor2D();
 
-        music = THE_SOUND.makeSound("intermission.3");
+        music = THE_SOUND.createSound("intermission.3");
         var spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
         msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));
         pacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));

@@ -49,30 +49,30 @@ public class GameSound {
     private MediaPlayer voice;
 
     private String soundURL(String keySuffix) {
-        String assetKey = assetNamespace + ".audio." + keySuffix;
-        URL url = THE_ASSETS.get(assetKey);
+        String key = assetNamespace + ".audio." + keySuffix;
+        URL url = THE_ASSETS.get(key);
         return url != null ? url.toExternalForm() : null;
     }
 
-    public MediaPlayer makeSoundLoop(String keySuffix) {
-        return makeSound(keySuffix, true);
+    public MediaPlayer createRepeatingSound(String key) {
+        return createSound(key, true);
     }
 
-    public MediaPlayer makeSound(String keySuffix) {
-        return makeSound(keySuffix, false);
+    public MediaPlayer createSound(String key) {
+        return createSound(key, false);
     }
 
-    private MediaPlayer makeSound(String keySuffix, boolean loop) {
-        String url = soundURL(keySuffix);
+    private MediaPlayer createSound(String key, boolean repeat) {
+        String url = soundURL(key);
         if (url == null) {
-            Logger.warn("Missing audio resource '%s' (%s)".formatted(keySuffix, gameVariant));
+            Logger.warn("Missing audio resource '%s' (%s)".formatted(key, gameVariant));
             return null;
         }
         var player = new MediaPlayer(new Media(url));
-        player.setCycleCount(loop ? MediaPlayer.INDEFINITE : 1);
+        player.setCycleCount(repeat ? MediaPlayer.INDEFINITE : 1);
         player.setVolume(1.0);
         player.muteProperty().bind(mutedPy);
-        player.statusProperty().addListener((py,ov,nv) -> logPlayerStatusChange(player, keySuffix, ov, nv));
+        player.statusProperty().addListener((py,ov,nv) -> logPlayerStatusChange(player, key, ov, nv));
         Logger.debug("Media player created from URL {}", url);
         return player;
     }
@@ -86,14 +86,14 @@ public class GameSound {
         this.assetNamespace = requireNonNull(assetNamespace);
         if (soundsByGameVariant.get(gameVariant).isEmpty()) {
             var soundMap = new HashMap<String, MediaPlayer>();
-            soundMap.put("game_over",      makeSound("game_over"));
-            soundMap.put("game_ready",     makeSound("game_ready"));
-            soundMap.put("ghost_returns",  makeSoundLoop("ghost_returns"));
-            soundMap.put("level_complete", makeSound("level_complete"));
-            soundMap.put("pacman_munch",   makeSoundLoop("pacman_munch"));
-            soundMap.put("pacman_death",   makeSound("pacman_death"));
-            soundMap.put("pacman_power",   makeSoundLoop("pacman_power"));
-            soundMap.put("bonus_bouncing", makeSoundLoop("bonus_bouncing"));
+            soundMap.put("game_over",      createSound("game_over"));
+            soundMap.put("game_ready",     createSound("game_ready"));
+            soundMap.put("ghost_returns",  createRepeatingSound("ghost_returns"));
+            soundMap.put("level_complete", createSound("level_complete"));
+            soundMap.put("pacman_munch",   createRepeatingSound("pacman_munch"));
+            soundMap.put("pacman_death",   createSound("pacman_death"));
+            soundMap.put("pacman_power",   createRepeatingSound("pacman_power"));
+            soundMap.put("bonus_bouncing", createRepeatingSound("bonus_bouncing"));
 
             //TODO check this
             MediaPlayer bounceSound = soundMap.get("bonus_bouncing");
@@ -243,7 +243,7 @@ public class GameSound {
             if (siren != null) {
                 stop(siren.player());
             }
-            MediaPlayer sirenPlayer = makeSoundLoop("siren." + number);
+            MediaPlayer sirenPlayer = createRepeatingSound("siren." + number);
             if (sirenPlayer == null) {
                 //Logger.error("Could not create media player for siren number {}", number);
                 siren = null;
@@ -265,9 +265,9 @@ public class GameSound {
         }
     }
 
-    public void playBonusBouncingSound() { playIfEnabled("bonus_bouncing"); }
+    public void playBonusActiveSound() { playIfEnabled("bonus_bouncing"); }
 
-    public void stopBonusBouncingSound() { stop("bonus_bouncing"); }
+    public void stopBonusActiveSound() { stop("bonus_bouncing"); }
 
     public void playBonusEatenSound() {
         playClipIfEnabled("bonus_eaten", 1);

@@ -62,7 +62,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         var spriteSheet = (TengenMsPacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
         msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         pacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
-        music = THE_SOUND.makeSound("intermission.2");
+        music = THE_SOUND.createSound("intermission.2");
     }
 
     @Override
