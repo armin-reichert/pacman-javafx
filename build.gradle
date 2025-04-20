@@ -3,10 +3,19 @@ import org.gradle.internal.os.OperatingSystem
 buildscript {
     ext.versions = [ java: JavaLanguageVersion.of(21), javafx: "21" ]
     ext.set("os", OperatingSystem.current())
-    ext.set("arch", System.getProperty("os.arch"))
+}
+
+plugins {
+    id "java"
+    id "org.openjfx.javafxplugin" version "0.1.0"
 }
 
 allprojects {
+    java {
+        toolchain {
+            languageVersion = versions.java
+        }
+    }
     repositories {
         mavenCentral()
     }
@@ -17,5 +26,6 @@ allprojects {
         }
     }
 }
+
 
 println("Operating system: '$os'")

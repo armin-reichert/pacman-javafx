@@ -24,12 +24,6 @@ application {
     }
 }
 
-java {
-    toolchain {
-        languageVersion = versions.java
-    }
-}
-
 javafx {
     version = versions.javafx
     modules = ["javafx.base", "javafx.graphics", "javafx.controls", "javafx.media"]

@@ -3,12 +3,6 @@ plugins {
     id "org.openjfx.javafxplugin" version "0.1.0"
 }
 
-java {
-    toolchain {
-        languageVersion = versions.java
-    }
-}
-
 javafx {
     version = versions.javafx
     modules = ["javafx.base"]  // for JavFX properties and binding

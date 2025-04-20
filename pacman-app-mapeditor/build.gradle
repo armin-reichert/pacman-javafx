@@ -16,12 +16,6 @@ application {
     mainClass  = "de.amr.games.pacman.tilemap.editor.app.Main"
 }
 
-java {
-    toolchain {
-        languageVersion = versions.java
-    }
-}
-
 javafx {
     version = versions.javafx
     modules = ["javafx.base", "javafx.graphics", "javafx.controls"]
