@@ -95,6 +95,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         scores3D.rotateProperty().bind(camera.rotateProperty());
     }
 
+    protected Perspective perspective() { return perspectives.get(perspectiveNamePy.get()); }
+
     protected void replaceGameLevel3D(GameLevel level) {
         final GameVariant gameVariant = THE_GAME_CONTROLLER.gameVariantProperty().get();
         level3D = new GameLevel3D(gameVariant, level);
@@ -104,6 +106,72 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         scores3D.translateXProperty().bind(level3D.root().translateXProperty().add(TS));
         scores3D.translateYProperty().bind(level3D.root().translateYProperty().subtract(3.5 * TS));
         scores3D.translateZProperty().bind(level3D.root().translateZProperty().subtract(3.5 * TS));
+    }
+
+    @Override
+    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e) {
+        List<MenuItem> items = new ArrayList<>();
+
+        items.add(contextMenuTitleItem(THE_ASSETS.text("scene_display")));
+
+        var item = new MenuItem(THE_ASSETS.text("use_2D_scene"));
+        item.setOnAction(ae -> GameAction.TOGGLE_PLAY_SCENE_2D_3D.execute());
+        items.add(item);
+
+        // Toggle picture-in-picture display
+        var miPiP = new CheckMenuItem(THE_ASSETS.text("pip"));
+        miPiP.selectedProperty().bindBidirectional(PY_PIP_ON);
+        items.add(miPiP);
+
+        items.add(contextMenuTitleItem(THE_ASSETS.text("select_perspective")));
+
+        // Camera perspective radio buttons
+        var radioButtonGroup = new ToggleGroup();
+        for (var perspective : PerspectiveID.values()) {
+            var miPerspective = new RadioMenuItem(THE_ASSETS.text("perspective_id_" + perspective.name()));
+            miPerspective.setToggleGroup(radioButtonGroup);
+            miPerspective.setUserData(perspective);
+            if (perspective == PY_3D_PERSPECTIVE.get())  { // == allowed for enum values
+                miPerspective.setSelected(true);
+            }
+            items.add(miPerspective);
+        }
+        // keep radio button group in sync with global property value
+        radioButtonGroup.selectedToggleProperty().addListener((py, ov, radioButton) -> {
+            if (radioButton != null) {
+                PY_3D_PERSPECTIVE.set((PerspectiveID) radioButton.getUserData());
+            }
+        });
+        PY_3D_PERSPECTIVE.addListener((py, ov, name) -> {
+            for (Toggle toggle : radioButtonGroup.getToggles()) {
+                if (toggle.getUserData() == name) { // == allowed for enum values
+                    radioButtonGroup.selectToggle(toggle);
+                }
+            }
+        });
+
+        // Common items
+        items.add(contextMenuTitleItem(THE_ASSETS.text("pacman")));
+
+        var miAutopilot = new CheckMenuItem(THE_ASSETS.text("autopilot"));
+        miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
+        items.add(miAutopilot);
+
+        var miImmunity = new CheckMenuItem(THE_ASSETS.text("immunity"));
+        miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
+        items.add(miImmunity);
+
+        items.add(new SeparatorMenuItem());
+
+        var miMuted = new CheckMenuItem(THE_ASSETS.text("muted"));
+        miMuted.selectedProperty().bindBidirectional(THE_SOUND.mutedProperty());
+        items.add(miMuted);
+
+        var miQuit = new MenuItem(THE_ASSETS.text("quit"));
+        miQuit.setOnAction(ae -> GameAction.SHOW_START_VIEW.execute());
+        items.add(miQuit);
+
+        return items;
     }
 
     @Override
@@ -203,6 +271,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     protected void updateLevel(GameLevel level) {
         if (level3D != null) {
             level3D.update();
+
             //TODO how to avoid calling this on every tick?
             if (game().isDemoLevel()) {
                 game().assignDemoLevelBehavior(level.pac());
@@ -213,30 +282,14 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 updateScores();
                 updateSound(level);
             }
+
             perspective().update(fxSubScene, level, level.pac());
         } else { // TODO can this happen?
             Logger.error("Tick #{}: 3D game level not existing!", THE_CLOCK.tickCount());
         }
     }
 
-    protected Perspective perspective() {
-        return perspectives.get(perspectiveNamePy.get());
-    }
-
-    protected void updateScores() {
-        Score score = game().scoreManager().score(), highScore = game().scoreManager().highScore();
-        scores3D.showHighScore(highScore.points(), highScore.levelNumber());
-        if (game().scoreManager().isScoreEnabled()) {
-            scores3D.showScore(score.points(), score.levelNumber());
-        }
-        else { // score is disabled, show text "GAME OVER"
-            String assetNamespace = THE_UI_CONFIGS.current().assetNamespace();
-            Color color = THE_ASSETS.color(assetNamespace + ".color.game_over_message");
-            scores3D.showTextAsScore(THE_ASSETS.text("score.game_over"), color);
-        }
-    }
-
-    private void updateSound(GameLevel level) {
+    protected void updateSound(GameLevel level) {
         if (gameState() == GameState.HUNTING && !level.powerTimer().isRunning()) {
             int sirenNumber = 1 + game().huntingTimer().phaseIndex() / 2;
             THE_SOUND.selectSiren(sirenNumber);
@@ -250,6 +303,19 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             THE_SOUND.playGhostReturningHomeSound();
         } else {
             THE_SOUND.stopGhostReturningHomeSound();
+        }
+    }
+
+    protected void updateScores() {
+        Score score = game().scoreManager().score(), highScore = game().scoreManager().highScore();
+        scores3D.showHighScore(highScore.points(), highScore.levelNumber());
+        if (game().scoreManager().isScoreEnabled()) {
+            scores3D.showScore(score.points(), score.levelNumber());
+        }
+        else { // score is disabled, show text "GAME OVER"
+            String ans = THE_UI_CONFIGS.current().assetNamespace();
+            Color color = THE_ASSETS.color(ans + ".color.game_over_message");
+            scores3D.showTextAsScore(THE_ASSETS.text("score.game_over"), color);
         }
     }
 
@@ -285,27 +351,27 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onEnterGameState(GameState state) {
-        Logger.info("Entering game state {}", state);
-        switch (state) {
-            case HUNTING               -> onEnterStateHunting();
-            case PACMAN_DYING          -> game().level().ifPresent(this::onEnterStatePacManDying);
-            case GHOST_DYING           -> onEnterStateGhostDying();
-            case LEVEL_COMPLETE        -> game().level().ifPresent(this::onEnterStateLevelComplete);
-            case LEVEL_TRANSITION      -> game().level().ifPresent(this::onEnterStateLevelTransition);
-            case TESTING_LEVELS        -> game().level().ifPresent(this::onEnterStateTestingLevels);
-            case TESTING_LEVEL_TEASERS -> game().level().ifPresent(this::onEnterStateTestingLevelTeasers);
-            case GAME_OVER             -> onEnterStateGameOver();
-            default -> {}
-        }
+        Logger.trace("Entering game state {}", state);
+        game().level().ifPresent(level -> {
+            switch (state) {
+                case HUNTING               -> onEnterStateHunting(level);
+                case PACMAN_DYING          -> onEnterStatePacManDying(level);
+                case GHOST_DYING           -> onEnterStateGhostDying(level);
+                case LEVEL_COMPLETE        -> onEnterStateLevelComplete(level);
+                case LEVEL_TRANSITION      -> onEnterStateLevelTransition(level);
+                case TESTING_LEVELS        -> onEnterStateTestingLevels(level);
+                case TESTING_LEVEL_TEASERS -> onEnterStateTestingLevelTeasers(level);
+                case GAME_OVER             -> onEnterStateGameOver();
+                default -> {}
+            }
+        });
     }
 
-    private void onEnterStateHunting() {
-        game().level().ifPresent(level -> {
-            level3D.pac3D().init();
-            level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(level));
-            level3D.energizers3D().forEach(Energizer3D::startPumping);
-            level3D.playLivesCounterAnimation();
-        });
+    private void onEnterStateHunting(GameLevel level) {
+        level3D.pac3D().init();
+        level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(level));
+        level3D.energizers3D().forEach(Energizer3D::startPumping);
+        level3D.playLivesCounterAnimation();
     }
 
     private void onEnterStatePacManDying(GameLevel level) {
@@ -316,15 +382,13 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         playPacManDiesAnimation();
     }
 
-    private void onEnterStateGhostDying() {
-        game().level().ifPresent(level -> {
-            GameSpriteSheet spriteSheet = THE_UI_CONFIGS.current().spriteSheet();
-            RectArea[] numberSprites = spriteSheet.ghostNumberSprites();
-            game().eventLog().killedGhosts.forEach(ghost -> {
-                int victimIndex = level.victims().indexOf(ghost);
-                var numberImage = spriteSheet.crop(numberSprites[victimIndex]);
-                level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
-            });
+    private void onEnterStateGhostDying(GameLevel level) {
+        GameSpriteSheet spriteSheet = THE_UI_CONFIGS.current().spriteSheet();
+        RectArea[] numberSprites = spriteSheet.ghostNumberSprites();
+        game().eventLog().killedGhosts.forEach(ghost -> {
+            int victimIndex = level.victims().indexOf(ghost);
+            var numberImage = spriteSheet.crop(numberSprites[victimIndex]);
+            level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
         });
     }
 
@@ -496,71 +560,5 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         animation.setOnFinished(e -> THE_GAME_CONTROLLER.terminateCurrentState());
 
         animation.play();
-    }
-
-    @Override
-    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e) {
-        List<MenuItem> items = new ArrayList<>();
-
-        items.add(contextMenuTitleItem(THE_ASSETS.text("scene_display")));
-
-        var item = new MenuItem(THE_ASSETS.text("use_2D_scene"));
-        item.setOnAction(ae -> GameAction.TOGGLE_PLAY_SCENE_2D_3D.execute());
-        items.add(item);
-
-        // Toggle picture-in-picture display
-        var miPiP = new CheckMenuItem(THE_ASSETS.text("pip"));
-        miPiP.selectedProperty().bindBidirectional(PY_PIP_ON);
-        items.add(miPiP);
-
-        items.add(contextMenuTitleItem(THE_ASSETS.text("select_perspective")));
-
-        // Camera perspective radio buttons
-        var radioButtonGroup = new ToggleGroup();
-        for (var perspective : PerspectiveID.values()) {
-            var miPerspective = new RadioMenuItem(THE_ASSETS.text("perspective_id_" + perspective.name()));
-            miPerspective.setToggleGroup(radioButtonGroup);
-            miPerspective.setUserData(perspective);
-            if (perspective == PY_3D_PERSPECTIVE.get())  { // == allowed for enum values
-                miPerspective.setSelected(true);
-            }
-            items.add(miPerspective);
-        }
-        // keep radio button group in sync with global property value
-        radioButtonGroup.selectedToggleProperty().addListener((py, ov, radioButton) -> {
-            if (radioButton != null) {
-                PY_3D_PERSPECTIVE.set((PerspectiveID) radioButton.getUserData());
-            }
-        });
-        PY_3D_PERSPECTIVE.addListener((py, ov, name) -> {
-            for (Toggle toggle : radioButtonGroup.getToggles()) {
-                if (toggle.getUserData() == name) { // == allowed for enum values
-                    radioButtonGroup.selectToggle(toggle);
-                }
-            }
-        });
-
-        // Common items
-        items.add(contextMenuTitleItem(THE_ASSETS.text("pacman")));
-
-        var miAutopilot = new CheckMenuItem(THE_ASSETS.text("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
-        items.add(miAutopilot);
-
-        var miImmunity = new CheckMenuItem(THE_ASSETS.text("immunity"));
-        miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
-        items.add(miImmunity);
-
-        items.add(new SeparatorMenuItem());
-
-        var miMuted = new CheckMenuItem(THE_ASSETS.text("muted"));
-        miMuted.selectedProperty().bindBidirectional(THE_SOUND.mutedProperty());
-        items.add(miMuted);
-
-        var miQuit = new MenuItem(THE_ASSETS.text("quit"));
-        miQuit.setOnAction(ae -> GameAction.SHOW_START_VIEW.execute());
-        items.add(miQuit);
-
-        return items;
     }
 }
