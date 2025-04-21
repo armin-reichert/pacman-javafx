@@ -1,8 +1,8 @@
 plugins {
-    id "java"
-    id "org.openjfx.javafxplugin" version "0.1.0"
     id "application"
-    id "org.beryx.jlink" version "3.0.1" //  adds also "application" plugin
+    id "java"
+    id "org.beryx.jlink" version "3.0.1"
+    id "org.openjfx.javafxplugin" version "0.1.0"
 }
 
 dependencies {
@@ -25,12 +25,10 @@ application {
 }
 
 javafx {
-    version = versions.javafx
     modules = ["javafx.base", "javafx.graphics", "javafx.controls", "javafx.media"]
 }
 
 jlink {
-    imageZip = layout.buildDirectory.file("distributions/javafx-ui3d-${javafx.platform.classifier}.zip")
     options = ["--compress", "zip-9", "--strip-debug", "--no-header-files", "--no-man-pages"]
     launcher {
         name = "Pac-Man-FX-3D"
@@ -49,8 +47,4 @@ jlink {
             installerType = "dmg"
         }
     }
-}
-
-jlinkZip {
-    group = "distribution"
 }

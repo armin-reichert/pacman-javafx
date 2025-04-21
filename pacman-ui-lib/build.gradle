@@ -9,6 +9,5 @@ dependencies {
 }
 
 javafx {
-    version = versions.javafx
     modules = ["javafx.base", "javafx.graphics", "javafx.controls", "javafx.media"]
 }

@@ -1,8 +1,8 @@
 plugins {
-    id "java"
-    id "org.openjfx.javafxplugin" version "0.1.0"
     id "application"
+    id "java"
     id "org.beryx.jlink" version "3.0.1"
+    id "org.openjfx.javafxplugin" version "0.1.0"
 }
 
 dependencies {
@@ -17,7 +17,6 @@ application {
 }
 
 javafx {
-    version = versions.javafx
     modules = ["javafx.base", "javafx.graphics", "javafx.controls"]
 }
 

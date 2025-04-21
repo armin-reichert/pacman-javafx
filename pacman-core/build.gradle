@@ -4,8 +4,7 @@ plugins {
 }
 
 javafx {
-    version = versions.javafx
-    modules = ["javafx.base"]  // for JavFX properties and binding
+    modules = ["javafx.base"]  // for JavFX properties and data binding
 }
 
 dependencies {

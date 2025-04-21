@@ -1,7 +1,7 @@
 import org.gradle.internal.os.OperatingSystem
 
 buildscript {
-    ext.versions = [ javafx: "21" ]
+    // used in application and jpackage plugin calls of subprojects
     ext.set("os", OperatingSystem.current())
 }
 
@@ -10,11 +10,16 @@ plugins {
     id "org.openjfx.javafxplugin" version "0.1.0"
 }
 
-allprojects {
+subprojects {
+    apply(plugin: "java")
+    apply(plugin: "org.openjfx.javafxplugin")
     java {
         toolchain {
             languageVersion = JavaLanguageVersion.of(21)
         }
+    }
+    javafx {
+        version = "21"
     }
     repositories {
         mavenCentral()
