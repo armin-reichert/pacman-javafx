@@ -56,7 +56,7 @@ public class WorldMap {
     private final URL url;
     private WorldMapLayer terrainLayer;
     private WorldMapLayer foodLayer;
-    private Set<Obstacle> obstacles = Collections.emptySet();
+    private Set<Obstacle> obstacles;
     private Map<String, Object> configMap;
 
     public WorldMap(WorldMap other) {
@@ -64,7 +64,9 @@ public class WorldMap {
         url = other.url;
         terrainLayer = new WorldMapLayer(other.terrainLayer);
         foodLayer = new WorldMapLayer(other.foodLayer);
-        obstacles = new HashSet<>(other.obstacles);
+        if (other.obstacles != null) {
+            obstacles = new HashSet<>(other.obstacles);
+        }
         if (other.configMap != null) {
             configMap = new HashMap<>(other.configMap);
         }
@@ -80,14 +82,10 @@ public class WorldMap {
         this.url = requireNonNull(url);
         var r = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
         parse(r.lines());
-        updateObstacleList();
     }
 
     public WorldMap(File file) throws IOException {
-        url = file.toURI().toURL();
-        var r = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
-        parse(r.lines());
-        updateObstacleList();
+        this(file.toURI().toURL());
     }
 
     @Override
@@ -292,7 +290,7 @@ public class WorldMap {
         return properties;
     }
 
-    public List<Vector2i> updateObstacleList() {
+    public List<Vector2i> buildObstacleList() {
         List<Vector2i> tilesWithErrors = new ArrayList<>();
         obstacles = ObstacleBuilder.buildObstacles(this, tilesWithErrors);
 
@@ -309,11 +307,14 @@ public class WorldMap {
                         obstacles.remove(houseObstacle);
                     });
         }
-        Logger.debug("Obstacle list updated for {}", this);
+        Logger.info("{} obstacles found in map ", obstacles.size(), this);
         return tilesWithErrors;
     }
 
     public Set<Obstacle> obstacles() {
+        if (obstacles == null) { // first access
+            buildObstacleList();
+        }
         return Collections.unmodifiableSet(obstacles);
     }
 

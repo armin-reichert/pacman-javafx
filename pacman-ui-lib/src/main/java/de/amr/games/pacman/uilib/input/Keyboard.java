@@ -88,13 +88,13 @@ public class Keyboard {
     }
 
     public void logCurrentBindings() {
-        Logger.info("--------------------------");
+        Logger.debug("--------------------------");
         registeredBindings.keySet().stream()
             .sorted(Comparator.comparing(KeyCodeCombination::getDisplayText))
             .forEach(combination -> {
                 ActionProvider actionProvider = registeredBindings.get(combination);
-                Logger.info("{}: {}", combination, actionProvider.getClass().getSimpleName());
+                Logger.debug("{}: {}", combination, actionProvider.getClass().getSimpleName());
         });
-        Logger.info("--------------------------");
+        Logger.debug("--------------------------");
     }
 }

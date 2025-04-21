@@ -144,7 +144,7 @@ public class TileMapEditor {
         private void processChanges() {
             if (!obstaclesUpToDate) {
                 tilesWithErrors.clear();
-                tilesWithErrors.addAll(editedWorldMap().updateObstacleList());
+                tilesWithErrors.addAll(editedWorldMap().buildObstacleList());
                 obstaclesUpToDate = true;
                 requestRedraw();
             }
@@ -1386,7 +1386,7 @@ public class TileMapEditor {
             worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_PAC,   formatTile(houseMinTile.plus(3, 11)));
             worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_BONUS, formatTile(houseMinTile.plus(3, 5)));
         }
-        worldMap.updateObstacleList();
+        worldMap.buildObstacleList();
         setDefaultColors(worldMap);
         setEditedWorldMap(worldMap);
     }
