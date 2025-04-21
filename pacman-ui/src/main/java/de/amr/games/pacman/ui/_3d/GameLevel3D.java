@@ -86,8 +86,9 @@ public class GameLevel3D {
     private final GameLevel level;
 
     public GameLevel3D(GameVariant gameVariant, GameLevel level) {
+        requireNonNull(gameVariant);
         this.level = requireNonNull(level);
-        final GameUIConfig uiConfig = THE_UI_CONFIGS.current();
+        final GameUIConfig uiConfig = THE_UI_CONFIGS.configuration(gameVariant);
         final WorldMap worldMap = level.worldMap();
         final int numRows = worldMap.numRows(), numCols = worldMap.numCols();
         final WorldMapColorScheme colorScheme = uiConfig.worldMapColorScheme(worldMap);
@@ -119,6 +120,10 @@ public class GameLevel3D {
         root.getChildren().add(livesCounter3D);
         root.getChildren().add(mazeGroup);
 
+        var ambientLight = new AmbientLight();
+        ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
+        root.getChildren().add(ambientLight);
+
         // For wireframe mode view. Pac-Man and ghost shapes are already bound to global draw mode property.
         // Pellets are not included because this would cause huge performance penalty.
         Stream.concat(mazeGroup.lookupAll("*").stream(), livesCounter3D.lookupAll("*").stream())
@@ -126,19 +131,15 @@ public class GameLevel3D {
             .map(Shape3D.class::cast)
             .forEach(shape3D -> shape3D.drawModeProperty().bind(PY_3D_DRAW_MODE));
 
-        var ambientLight = new AmbientLight();
-        ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
-        root.getChildren().add(ambientLight);
-
         root.setMouseTransparent(true); //TODO does this really increase performance?
     }
 
     private Box createFloor(double sizeX, double sizeY) {
         double extraSpace = 10;
         var floor3D = new Box(sizeX + extraSpace, sizeY, FLOOR_3D_THICKNESS);
-        floor3D.translateXProperty().bind(floor3D.widthProperty().multiply(0.5).subtract(0.5*extraSpace));
-        floor3D.translateYProperty().bind(floor3D.heightProperty().multiply(0.5));
-        floor3D.translateZProperty().set(FLOOR_3D_THICKNESS * 0.5);
+        floor3D.translateXProperty().bind(floor3D.widthProperty().divide(2).subtract(0.5 * extraSpace));
+        floor3D.translateYProperty().bind(floor3D.heightProperty().divide(2));
+        floor3D.translateZProperty().bind(floor3D.depthProperty().divide(2));
         return floor3D;
     }
 
