@@ -57,7 +57,7 @@ public class WorldMap {
     private WorldMapLayer terrainLayer;
     private WorldMapLayer foodLayer;
     private Set<Obstacle> obstacles = Collections.emptySet();
-    private final Map<String, Object> config = new HashMap<>();
+    private Map<String, Object> configMap;
 
     public WorldMap(WorldMap other) {
         requireNonNull(other);
@@ -65,6 +65,9 @@ public class WorldMap {
         terrainLayer = new WorldMapLayer(other.terrainLayer);
         foodLayer = new WorldMapLayer(other.foodLayer);
         obstacles = new HashSet<>(other.obstacles);
+        if (other.configMap != null) {
+            configMap = new HashMap<>(other.configMap);
+        }
     }
 
     public WorldMap(int numRows, int numCols) {
@@ -396,16 +399,23 @@ public class WorldMap {
     }
 
     public void setConfigValue(String key, Object value) {
-        config.put(key, value);
+        getOrCreateConfigMap().put(key, value);
     }
 
     @SuppressWarnings("unchecked")
     public <T> T getConfigValue(String key) {
-        return (T) config.get(key);
+        return (T) getOrCreateConfigMap().get(key);
     }
 
     public boolean hasConfigValue(String key) {
-        return config.containsKey(key);
+        return getOrCreateConfigMap().containsKey(key);
+    }
+
+    private Map<String, Object> getOrCreateConfigMap() {
+        if (configMap == null) {
+            configMap = new HashMap<>();
+        }
+        return configMap;
     }
 
     public Stream<String> propertyNames(LayerID layerID) {
