@@ -284,7 +284,7 @@ public class GameLevel3D {
         bonus3D().ifPresent(Bonus3D::update);
         boolean houseAccessRequired = level.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
             .anyMatch(Ghost::isVisible);
-        maze3D().setHouseLightOn(houseAccessRequired);
+        maze3D.setHouseLightOn(houseAccessRequired);
 
         boolean ghostNearHouseEntry = level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
             .filter(ghost -> ghost.position().euclideanDist(level.houseEntryPosition()) <= HOUSE_3D_SENSITIVITY)
