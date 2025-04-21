@@ -80,8 +80,8 @@ public class WorldMap {
 
     public WorldMap(URL url) throws IOException {
         this.url = requireNonNull(url);
-        var r = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
-        parse(r.lines());
+        var reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
+        parse(reader.lines());
     }
 
     public WorldMap(File file) throws IOException {
@@ -102,13 +102,40 @@ public class WorldMap {
     }
 
     public String sourceText() {
-        var stringWriter = new StringWriter();
-        var pw = new PrintWriter(stringWriter);
+        var sw = new StringWriter();
+        var pw = new PrintWriter(sw);
         pw.println(BEGIN_TERRAIN_LAYER);
         print(pw, terrainLayer);
         pw.println(BEGIN_FOOD_LAYER);
         print(pw, foodLayer);
-        return stringWriter.toString();
+        return sw.toString();
+    }
+
+    public boolean save(File file) {
+        try (PrintWriter pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
+            pw.println(sourceText());
+            return true;
+        } catch (IOException x) {
+            Logger.error(x);
+            return false;
+        }
+    }
+
+    private void print(PrintWriter pw, WorldMapLayer layer) {
+        Map<String, String> properties = layer.properties();
+        properties.keySet().stream().sorted().map(name -> "%s=%s".formatted(name, properties.get(name))).forEach(pw::println);
+        pw.println(BEGIN_DATA_SECTION);
+        for (int row = 0; row < numRows(); ++row) {
+            for (int col = 0; col < numCols(); ++col) {
+                byte value = layer.get(row, col);
+                pw.printf("#%02X", value);
+                if (col < numCols() - 1) {
+                    pw.print(",");
+                }
+            }
+            pw.println();
+        }
+        pw.flush();
     }
 
     public WorldMap insertRowBeforeIndex(int rowIndex) {
@@ -160,25 +187,6 @@ public class WorldMap {
             }
         }
         return newMap;
-    }
-
-    private void print(PrintWriter pw, WorldMapLayer layer) {
-        layer.properties().keySet().stream()
-                .sorted()
-                .map(name -> name + "=" + layer.properties().get(name))
-                .forEach(pw::println);
-        pw.println(BEGIN_DATA_SECTION);
-        for (int row = 0; row < numRows(); ++row) {
-            for (int col = 0; col < numCols(); ++col) {
-                byte value = layer.get(row, col);
-                pw.printf("#%02X", value);
-                if (col < numCols() - 1) {
-                    pw.print(",");
-                }
-            }
-            pw.println();
-        }
-        pw.flush();
     }
 
     private void parse(Stream<String> rows) {
@@ -301,11 +309,11 @@ public class WorldMap {
         } else {
             Vector2i houseStartPoint = houseMinTile.scaled(TS).plus(TS, HTS);
             obstacles.stream()
-                    .filter(obstacle -> obstacle.startPoint().equals(houseStartPoint))
-                    .findFirst().ifPresent(houseObstacle -> {
-                        Logger.debug("Removing house placeholder-obstacle starting at tile {}, point {}", houseMinTile, houseStartPoint);
-                        obstacles.remove(houseObstacle);
-                    });
+                .filter(obstacle -> obstacle.startPoint().equals(houseStartPoint))
+                .findFirst().ifPresent(houseObstacle -> {
+                    Logger.debug("Removing house placeholder-obstacle starting at tile {}, point {}", houseMinTile, houseStartPoint);
+                    obstacles.remove(houseObstacle);
+                });
         }
         Logger.info("{} obstacles found in map ", obstacles.size(), this);
         return tilesWithErrors;
@@ -316,19 +324,6 @@ public class WorldMap {
             buildObstacleList();
         }
         return Collections.unmodifiableSet(obstacles);
-    }
-
-    public boolean save(File file) {
-        try (PrintWriter pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
-            pw.println(BEGIN_TERRAIN_LAYER);
-            print(pw, terrainLayer);
-            pw.println(BEGIN_FOOD_LAYER);
-            print(pw, foodLayer);
-            return true;
-        } catch (IOException x) {
-            Logger.error(x);
-            return false;
-        }
     }
 
     public WorldMapLayer layer(LayerID id) {

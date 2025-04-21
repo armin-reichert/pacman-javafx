@@ -4,6 +4,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.TerrainTiles;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.model.WorldMapProperty;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -53,8 +54,8 @@ public class UpdateMapFiles {
         });
         Vector2i houseMinTile = map.getTerrainTileProperty("pos_house_min_tile", new Vector2i(10, 15));
         Vector2i houseMaxTile = houseMinTile.plus(7, 4);
-        map.setProperty(LayerID.TERRAIN, WorldMap.PROPERTY_POS_HOUSE_MIN_TILE, WorldMap.formatTile(houseMinTile));
-        map.setProperty(LayerID.TERRAIN, WorldMap.PROPERTY_POS_HOUSE_MAX_TILE, WorldMap.formatTile(houseMaxTile));
+        map.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MIN_TILE, WorldMap.formatTile(houseMinTile));
+        map.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MAX_TILE, WorldMap.formatTile(houseMaxTile));
         for (int row = houseMinTile.y(); row <= houseMaxTile.y(); ++row) {
             for (int col = houseMinTile.x(); col <= houseMaxTile.x(); ++col) {
                 switch (map.get(LayerID.TERRAIN, row, col)) {
