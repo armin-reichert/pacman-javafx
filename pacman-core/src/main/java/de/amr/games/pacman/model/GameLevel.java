@@ -76,17 +76,16 @@ public class GameLevel {
     private int nextBonusIndex; // -1=no bonus, 0=first, 1=second
     private Message message;
 
-    private final Pulse blinking = new Pulse(10, Pulse.OFF);
+    private final Pulse blinking;
 
     public GameLevel(GameModel game, int number, WorldMap worldMap) {
         this.game = requireNonNull(game);
-        if (number < 1) {
-            throw new IllegalArgumentException("Illegal level number: " + number);
-        }
-        this.number = number;
+        this.number = requireValidLevelNumber(number);
         this.worldMap = requireNonNull(worldMap);
 
+        blinking = new Pulse(10, Pulse.OFF);
         portals = findPortals(worldMap);
+
         nextBonusIndex = -1;
         energizerTiles = worldMap.tilesContaining(LayerID.FOOD, FoodTiles.ENERGIZER).toArray(Vector2i[]::new);
         totalFoodCount = (int) worldMap.tilesContaining(LayerID.FOOD, FoodTiles.PELLET).count() + energizerTiles.length;
@@ -149,39 +148,21 @@ public class GameLevel {
         return portals.toArray(new Portal[0]);
     }
 
-    public GameModel game() {
-        return game;
-    }
+    public GameModel game() { return game; }
 
-    public List<Ghost> victims() {
-        return victims;
-    }
+    public List<Ghost> victims() { return victims; }
 
-    public void setNumFlashes(int numFlashes) {
-        this.numFlashes = numFlashes;
-    }
-    public int numFlashes() {
-        return numFlashes;
-    }
+    public void setNumFlashes(int numFlashes) { this.numFlashes = numFlashes; }
+    public int numFlashes() { return numFlashes; }
 
-    public void setCutSceneNumber(int number) {
-        this.cutSceneNumber = number;
-    }
-    public int cutSceneNumber() {
-        return cutSceneNumber;
-    }
+    public void setCutSceneNumber(int number) { cutSceneNumber = number; }
+    public int cutSceneNumber() { return cutSceneNumber; }
 
-    public void showMessage(Message message) {
-        this.message = requireNonNull(message);
-    }
-    public void clearMessage() {
-        message = null;
-    }
+    public void showMessage(Message message) { this.message = requireNonNull(message); }
+    public void clearMessage() { message = null; }
     public Message message() { return message; }
 
-    public void setPac(Pac pac) {
-        this.pac = pac;
-    }
+    public void setPac(Pac pac) { this.pac = pac; }
     public Pac pac() { return pac; }
 
     public void setGhosts(Ghost[] ghosts) { this.ghosts = requireNonNull(ghosts); }
@@ -227,23 +208,15 @@ public class GameLevel {
         return ghostScatterTiles[requireValidGhostID(ghostID)];
     }
 
-    public int number() {
-        return number;
-    }
+    public int number() { return number; }
 
-    public WorldMap worldMap() {
-        return worldMap;
-    }
+    public WorldMap worldMap() { return worldMap; }
 
     public boolean isInsideWorld(Vector2i tile) { return !worldMap.outOfBounds(tile); }
 
-    public Stream<Vector2i> energizerTiles() {
-        return Arrays.stream(energizerTiles);
-    }
+    public Stream<Vector2i> energizerTiles() { return Arrays.stream(energizerTiles); }
 
-    public Stream<Portal> portals() {
-        return Arrays.stream(portals);
-    }
+    public Stream<Portal> portals() { return Arrays.stream(portals); }
 
     public boolean isPortalAt(Vector2i tile) {
         requireNonNull(tile);
