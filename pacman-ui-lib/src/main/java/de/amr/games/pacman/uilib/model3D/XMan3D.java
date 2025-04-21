@@ -116,7 +116,7 @@ public abstract class XMan3D {
             updatePosition();
             updateVisibility(level);
             updateMovementAnimation();
-            updateLight(level);
+            updateLight();
         }
         if (pac.isAlive() && !pac.isStandingStill()) {
             startMovementAnimation();
@@ -145,8 +145,8 @@ public abstract class XMan3D {
     /**
      * When empowered, Pac-Man is lighted, light range shrinks with ceasing power.
      */
-    protected void updateLight(GameLevel level) {
-        TickTimer powerTimer = level.powerTimer();
+    protected void updateLight() {
+        TickTimer powerTimer = pac.powerTimer();
         if (powerTimer.isRunning() && pac.isVisible()) {
             light.setLightOn(true);
             double remaining = powerTimer.remainingTicks();

@@ -130,7 +130,7 @@ public class RuleBasedPacSteering implements Steering {
         if (pac.moveInfo().moved && !level.isIntersection(pac.tile()))
             return;
 
-        if (!data.frightenedGhosts.isEmpty() && level.powerTimer().remainingTicks() >= Globals.TICKS_PER_SECOND) {
+        if (!data.frightenedGhosts.isEmpty() && level.pac().powerTimer().remainingTicks() >= Globals.TICKS_PER_SECOND) {
             Ghost prey = data.frightenedGhosts.getFirst();
             Logger.trace("Detected frightened ghost {} {} tiles away", prey.name(),
                 prey.tile().manhattanDist(pac.tile()));
@@ -238,7 +238,7 @@ public class RuleBasedPacSteering implements Steering {
                 if (!level.isFoodPosition(tile) || level.hasEatenFoodAt(tile)) {
                     continue;
                 }
-                if (level.isEnergizerPosition(tile) && level.powerTimer().remainingTicks() > 2 * 60
+                if (level.isEnergizerPosition(tile) && level.pac().powerTimer().remainingTicks() > 2 * 60
                     && level.uneatenFoodCount() > 1) {
                     continue;
                 }

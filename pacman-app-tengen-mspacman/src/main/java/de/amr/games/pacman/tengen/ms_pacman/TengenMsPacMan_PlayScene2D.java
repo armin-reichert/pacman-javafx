@@ -382,7 +382,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     }
 
     private void updateSound(GameLevel level) {
-        if (gameState() == GameState.HUNTING && !level.powerTimer().isRunning()) {
+        if (gameState() == GameState.HUNTING && !level.pac().powerTimer().isRunning()) {
             HuntingTimer huntingControl = game().huntingTimer();
             int sirenNumber = 1 + huntingControl.phaseIndex() / 2; // TODO check how this works in original game
             THE_SOUND.selectSiren(sirenNumber);

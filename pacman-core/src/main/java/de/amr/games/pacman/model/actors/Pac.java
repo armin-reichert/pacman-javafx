@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model.actors;
 
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.steering.Steering;
@@ -28,6 +29,8 @@ public class Pac extends Creature implements AnimatedActor2D {
     private boolean usingAutopilot;
     private ActorAnimations animations;
     private boolean immune;
+
+    private final TickTimer powerTimer = new TickTimer("PacPowerTimer");
 
     public void setName(String name) {
         this.name = name;
@@ -104,6 +107,20 @@ public class Pac extends Creature implements AnimatedActor2D {
         this.immune = immune;
     }
 
+    public TickTimer powerTimer() {
+        return powerTimer;
+    }
+
+    public boolean isPowerFading(GameModel gameModel) {
+        return powerTimer.isRunning() && powerTimer.remainingTicks() <= gameModel.pacPowerFadingTicks();
+    }
+
+    public boolean isPowerFadingStarting(GameModel gameModel) {
+        return powerTimer.isRunning() && powerTimer.remainingTicks() == gameModel.pacPowerFadingTicks()
+            || powerTimer.durationTicks() < gameModel.pacPowerFadingTicks() && powerTimer.tickCount() == 1;
+    }
+
+
     public void update(GameModel game) {
         GameLevel level = game.level().orElseThrow();
         if (dead || restingTicks == REST_INDEFINITELY) {
@@ -113,7 +130,7 @@ public class Pac extends Creature implements AnimatedActor2D {
             if (usingAutopilot) {
                 autopilot.steer(this, level);
             }
-            setSpeed(level.powerTimer().isRunning() ? game.pacPowerSpeed() : game.pacNormalSpeed());
+            setSpeed(powerTimer.isRunning() ? game.pacPowerSpeed() : game.pacNormalSpeed());
             tryMoving();
             //Logger.info(moveInfo);
             if (moveInfo.moved) {

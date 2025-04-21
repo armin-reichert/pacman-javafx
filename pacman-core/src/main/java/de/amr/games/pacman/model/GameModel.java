@@ -220,13 +220,13 @@ public abstract class GameModel {
         level.pac().reset(); // invisible!
         level.pac().setPosition(level.pacPosition());
         level.pac().setMoveAndWishDir(Direction.LEFT);
+        level.pac().powerTimer().resetIndefiniteTime();
         level.ghosts().forEach(ghost -> {
             ghost.reset(); // invisible!
             ghost.setPosition(level.ghostPosition(ghost.id()));
             ghost.setMoveAndWishDir(level.ghostDirection(ghost.id()));
             ghost.setState(LOCKED);
         });
-        level.powerTimer().resetIndefiniteTime();
         level.blinking().setStartPhase(Pulse.ON); // Energizers are visible when ON
         level.blinking().reset();
 
@@ -296,14 +296,14 @@ public abstract class GameModel {
         huntingTimer().stop();
         Logger.info("Level complete, hunting timer stopped");
 
-        level.powerTimer().stop();
-        level.powerTimer().reset(0);
-        Logger.info("Power timer stopped and reset to zero");
-
         level.blinking().setStartPhase(Pulse.OFF);
         level.blinking().reset();
 
         level.pac().freeze();
+        level.pac().powerTimer().stop();
+        level.pac().powerTimer().reset(0);
+        Logger.info("Power timer stopped and reset to zero");
+
         level.bonus().ifPresent(Bonus::setInactive);
 
         // when cheating, there might still be remaining food
@@ -385,7 +385,7 @@ public abstract class GameModel {
         if (powerTicks > 0) {
             huntingTimer().stop();
             Logger.info("Hunting stopped");
-            level.powerTimer().restartTicks(powerTicks);
+            level.pac().powerTimer().restartTicks(powerTicks);
             Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerTicks / 60.0);
             level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             level.ghosts(FRIGHTENED).forEach(Ghost::reverseASAP);
@@ -397,13 +397,14 @@ public abstract class GameModel {
     }
 
     private void updatePacPower() {
-        level.powerTimer().doTick();
-        if (isPowerFadingStarting(level.powerTimer())) {
+        final TickTimer timer = level.pac().powerTimer();
+        timer.doTick();
+        if (level.pac().isPowerFadingStarting(this)) {
             eventLog.pacStartsLosingPower = true;
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_STARTS_LOSING_POWER);
-        } else if (level.powerTimer().hasExpired()) {
-            level.powerTimer().stop();
-            level.powerTimer().reset(0);
+        } else if (timer.hasExpired()) {
+            timer.stop();
+            timer.reset(0);
             Logger.info("Power timer stopped and reset to zero");
             level.victims().clear();
             huntingTimer().start();
@@ -412,15 +413,6 @@ public abstract class GameModel {
             eventLog.pacLostPower = true;
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_LOST_POWER);
         }
-    }
-
-    public boolean isPowerFading(TickTimer powerTimer) {
-        return powerTimer.isRunning() && powerTimer.remainingTicks() <= pacPowerFadingTicks();
-    }
-
-    public boolean isPowerFadingStarting(TickTimer powerTimer) {
-        return powerTimer.isRunning() && powerTimer.remainingTicks() == pacPowerFadingTicks()
-            || powerTimer.durationTicks() < pacPowerFadingTicks() && powerTimer.tickCount() == 1;
     }
 
     private void updateBonus(Bonus bonus) {

@@ -31,7 +31,7 @@ public class InfoBoxActorInfo extends InfoBox {
         addLabeledValue("Movement", pacInfo(this::movementInfo));
         addLabeledValue("Tile",     pacInfo(this::locationInfo));
         addLabeledValue("Power",    ifLevelPresent(level -> {
-            TickTimer powerTimer = level.powerTimer();
+            TickTimer powerTimer = level.pac().powerTimer();
             return powerTimer.isRunning()
                 ? "Remaining: %s".formatted(ticksToString(powerTimer.remainingTicks()))
                 : "No Power";

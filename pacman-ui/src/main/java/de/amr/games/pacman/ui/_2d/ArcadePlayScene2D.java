@@ -102,7 +102,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     }
 
     private void updateSound(GameLevel level) {
-        if (gameState() == GameState.HUNTING && !level.powerTimer().isRunning()) {
+        if (gameState() == GameState.HUNTING && !level.pac().powerTimer().isRunning()) {
             int sirenNumber = 1 + game().huntingTimer().phaseIndex() / 2;
             THE_SOUND.selectSiren(sirenNumber);
             THE_SOUND.playSiren();

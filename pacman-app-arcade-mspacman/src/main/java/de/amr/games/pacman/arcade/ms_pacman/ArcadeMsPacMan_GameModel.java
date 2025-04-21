@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.ms_pacman;
 
-import de.amr.games.pacman.model.HuntingTimer;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.Waypoint;
@@ -389,8 +388,8 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     public void onPacKilled() {
         huntingTimer.stop();
         Logger.info("Hunting timer stopped");
-        level.powerTimer().stop();
-        level.powerTimer().reset(0);
+        level.pac().powerTimer().stop();
+        level.pac().powerTimer().reset(0);
         Logger.info("Power timer stopped and set to zero");
         gateKeeper.resetCounterAndSetEnabled(true);
         setCruiseElroyEnabled(false);

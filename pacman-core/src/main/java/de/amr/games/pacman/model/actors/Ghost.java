@@ -10,7 +10,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.TerrainTiles;
-import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import org.tinylog.Logger;
@@ -222,7 +221,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
         switch (state) {
             case LOCKED             -> updateStateLocked(game);
             case LEAVING_HOUSE      -> updateStateLeavingHouse(game);
-            case HUNTING_PAC        -> updateStateHuntingPac(game);
+            case HUNTING_PAC        -> updateStateHuntingPac();
             case FRIGHTENED         -> updateStateFrightened(game);
             case EATEN              -> updateStateEaten();
             case RETURNING_HOME     -> updateStateReturningToHouse(game);
@@ -257,7 +256,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
         } else {
             setSpeed(0);
         }
-        if (level.powerTimer().isRunning() && !level.victims().contains(this)) {
+        if (level.pac().powerTimer().isRunning() && !level.victims().contains(this)) {
             updateFrightenedAnimation(game);
         } else {
             selectAnimation(ActorAnimations.ANIM_GHOST_NORMAL);
@@ -282,7 +281,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
             setPosition(houseEntryPosition);
             setMoveAndWishDir(LEFT);
             newTileEntered = false; // force moving left until new tile is entered
-            if (level.powerTimer().isRunning() && !level.victims().contains(this)) {
+            if (level.pac().powerTimer().isRunning() && !level.victims().contains(this)) {
                 setState(FRIGHTENED);
             } else {
                 setState(HUNTING_PAC);
@@ -302,7 +301,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
         }
         setSpeed(speedInsideHouse);
         move();
-        if (level.powerTimer().isRunning() && !level.victims().contains(this)) {
+        if (level.pac().powerTimer().isRunning() && !level.victims().contains(this)) {
             updateFrightenedAnimation(game);
         } else {
             selectAnimation(ActorAnimations.ANIM_GHOST_NORMAL);
@@ -318,7 +317,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
      * is an "infinite" chasing phase.
      * <p>
      */
-    private void updateStateHuntingPac(GameModel game) {
+    private void updateStateHuntingPac() {
         // The specific hunting behaviour is defined by the game variant. For example, in Ms. Pac-Man,
         // the red and pink ghosts are not chasing Pac-Man during the first scatter phase, but roam the maze randomly.
         huntingBehaviour.accept(this);
@@ -344,11 +343,10 @@ public class Ghost extends Creature implements AnimatedActor2D {
         updateFrightenedAnimation(game);
     }
 
-    private void updateFrightenedAnimation(GameModel game) {
-        TickTimer powerTimer = game.level().orElseThrow().powerTimer();
-        if (game.isPowerFadingStarting(powerTimer)) {
+    private void updateFrightenedAnimation(GameModel gameModel) {
+        if (level.pac().isPowerFadingStarting(gameModel)) {
             selectAnimation(ActorAnimations.ANIM_GHOST_FLASHING);
-        } else if (!game.isPowerFading(powerTimer)) {
+        } else if (!level.pac().isPowerFading(gameModel)) {
             selectAnimation(ActorAnimations.ANIM_GHOST_FRIGHTENED);
         }
     }

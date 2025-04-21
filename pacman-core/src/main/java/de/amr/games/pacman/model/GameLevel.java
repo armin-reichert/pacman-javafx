@@ -11,7 +11,6 @@ import de.amr.games.pacman.lib.tilemap.FoodTiles;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.Pulse;
-import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -79,7 +78,6 @@ public class GameLevel {
     private Message message;
 
     private final Pulse blinking = new Pulse(10, Pulse.OFF);
-    private final TickTimer powerTimer = new TickTimer("PacPowerTimer");
 
     public GameLevel(GameModel game, int number, WorldMap worldMap) {
         this.game = requireNonNull(game);
@@ -233,10 +231,6 @@ public class GameLevel {
 
     public Pulse blinking() {
         return blinking;
-    }
-
-    public TickTimer powerTimer() {
-        return powerTimer;
     }
 
     public Vector2i ghostScatterTile(byte ghostID) {

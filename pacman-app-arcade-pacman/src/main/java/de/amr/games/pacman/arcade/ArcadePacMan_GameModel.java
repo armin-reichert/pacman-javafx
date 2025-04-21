@@ -410,8 +410,8 @@ public class ArcadePacMan_GameModel extends GameModel {
     public void onPacKilled() {
         huntingTimer.stop();
         Logger.info("Hunting timer stopped");
-        level.powerTimer().stop();
-        level.powerTimer().reset(0);
+        level.pac().powerTimer().stop();
+        level.pac().powerTimer().reset(0);
         Logger.info("Power timer stopped and set to zero");
         gateKeeper.resetCounterAndSetEnabled(true);
         setCruiseElroyEnabled(false);

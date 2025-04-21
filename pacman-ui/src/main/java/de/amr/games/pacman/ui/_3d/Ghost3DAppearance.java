@@ -173,10 +173,10 @@ public class Ghost3DAppearance extends Group {
         Appearance nextAppearance = switch (ghost.state()) {
             case LEAVING_HOUSE, LOCKED ->
                 // ghost that have been killed by current energizer will not look frightened
-                    level.powerTimer().isRunning() && !level.victims().contains(ghost)
-                            ? frightenedOrFlashing(THE_GAME_CONTROLLER.game().isPowerFading(level.powerTimer()))
-                            : Appearance.COLORED_GHOST;
-            case FRIGHTENED -> frightenedOrFlashing(THE_GAME_CONTROLLER.game().isPowerFading(level.powerTimer()));
+                level.pac().powerTimer().isRunning() && !level.victims().contains(ghost)
+                        ? frightenedOrFlashing(level.pac().isPowerFading(THE_GAME_CONTROLLER.game()))
+                        : Appearance.COLORED_GHOST;
+            case FRIGHTENED -> frightenedOrFlashing(level.pac().isPowerFading(THE_GAME_CONTROLLER.game()));
             case ENTERING_HOUSE, RETURNING_HOME -> Appearance.GHOST_EYES;
             case EATEN -> Appearance.NUMBER;
             default -> Appearance.COLORED_GHOST;
