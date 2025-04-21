@@ -36,7 +36,7 @@ Prerequisites: You need to have [JDK 21](https://www.oracle.com/java/technologie
 
 - `git clone https://github.com/armin-reichert/pacman-javafx.git`
 - `cd pacman-javafx`
-- `./gradlew jpackage` or just `make` (Windows) or `./make.sh` (Linux)
+- `./gradlew jpackage` or just `make` (Windows) or `./make.sh` (Unix)
 
 This will create
 - an installer (.msi, .deb, or .dmg, depending on your platform) for the app containing all game variants (subdirectory `pacman-ui-3d-app-allgames/build/jpackage`)
