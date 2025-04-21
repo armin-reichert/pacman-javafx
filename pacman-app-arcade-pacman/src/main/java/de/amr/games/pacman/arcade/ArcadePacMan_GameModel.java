@@ -23,7 +23,6 @@ import java.io.File;
 import java.util.List;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 import static java.util.Objects.requireNonNull;
 
@@ -247,14 +246,14 @@ public class ArcadePacMan_GameModel extends GameModel {
             default -> 0;
         });
 
-        if (!worldMap.hasProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MIN_TILE)) {
+        if (!worldMap.hasProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MIN_TILE)) {
             Logger.warn("No house min tile found in map!");
         }
-        Vector2i minTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, Vector2i.of(10, 15));
-        if (!worldMap.hasProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MAX_TILE)) {
+        Vector2i minTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE, Vector2i.of(10, 15));
+        if (!worldMap.hasProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MAX_TILE)) {
             Logger.warn("No house max tile found in map!");
         }
-        Vector2i maxTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, Vector2i.of(17, 19));
+        Vector2i maxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE, Vector2i.of(17, 19));
         level.createArcadeHouse(minTile.x(), minTile.y(), maxTile.x(), maxTile.y());
 
         var pac = new Pac();
@@ -462,8 +461,8 @@ public class ArcadePacMan_GameModel extends GameModel {
         byte symbol = level.bonusSymbol(level.nextBonusIndex());
         StaticBonus staticBonus = new StaticBonus(symbol, ArcadePacMan_GameModel.BONUS_VALUE_FACTORS[symbol] * 100);
         level.setBonus(staticBonus);
-        if (level.worldMap().hasProperty(LayerID.TERRAIN, PROPERTY_POS_BONUS)) {
-            Vector2i bonusTile = level.worldMap().getTerrainTileProperty(PROPERTY_POS_BONUS, new Vector2i(13, 20));
+        if (level.worldMap().hasProperty(LayerID.TERRAIN, WorldMapProperty.POS_BONUS)) {
+            Vector2i bonusTile = level.worldMap().getTerrainTileProperty(WorldMapProperty.POS_BONUS, new Vector2i(13, 20));
             staticBonus.actor().setPosition(halfTileRightOf(bonusTile));
         } else {
             Logger.error("No bonus position found in map");

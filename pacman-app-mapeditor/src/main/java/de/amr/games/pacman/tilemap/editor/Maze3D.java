@@ -10,6 +10,7 @@ import de.amr.games.pacman.lib.tilemap.FoodTiles;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.model.WorldMapProperty;
 import de.amr.games.pacman.uilib.model3D.Model3DRepository;
 import de.amr.games.pacman.uilib.tilemap.TerrainMapRenderer3D;
 import javafx.beans.property.BooleanProperty;
@@ -33,7 +34,6 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.HTS;
 import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.tilemap.editor.ArcadeMap.*;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.getColorFromMap;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.parseColor;
@@ -142,9 +142,9 @@ public class Maze3D extends Group {
         floor.setMaterial(coloredMaterial(Color.BLACK));
         mazeGroup.getChildren().add(floor);
 
-        Color wallBaseColor = getColorFromMap(worldMap, LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE,
+        Color wallBaseColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE,
                 parseColor(MS_PACMAN_COLOR_WALL_STROKE));
-        Color wallTopColor = getColorFromMap(worldMap, LayerID.TERRAIN, PROPERTY_COLOR_WALL_FILL,
+        Color wallTopColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL,
                 parseColor(MS_PACMAN_COLOR_WALL_FILL));
         r3D.setWallBaseHeightProperty(wallBaseHeightPy);
         r3D.setWallBaseMaterial(coloredMaterial(wallBaseColor));
@@ -165,16 +165,16 @@ public class Maze3D extends Group {
                 .forEach(shape3D -> shape3D.drawModeProperty()
                         .bind(wireframePy.map(wireframe -> wireframe ? DrawMode.LINE : DrawMode.FILL)));
 
-        addActorShape(pacmanShape3D, worldMap, PROPERTY_POS_PAC);
-        addActorShape(ghostShapes[0], worldMap, PROPERTY_POS_RED_GHOST);
-        addActorShape(ghostShapes[1], worldMap, PROPERTY_POS_PINK_GHOST);
-        addActorShape(ghostShapes[2], worldMap, PROPERTY_POS_CYAN_GHOST);
-        addActorShape(ghostShapes[3], worldMap, PROPERTY_POS_ORANGE_GHOST);
+        addActorShape(pacmanShape3D, worldMap, WorldMapProperty.POS_PAC);
+        addActorShape(ghostShapes[0], worldMap, WorldMapProperty.POS_RED_GHOST);
+        addActorShape(ghostShapes[1], worldMap, WorldMapProperty.POS_PINK_GHOST);
+        addActorShape(ghostShapes[2], worldMap, WorldMapProperty.POS_CYAN_GHOST);
+        addActorShape(ghostShapes[3], worldMap, WorldMapProperty.POS_ORANGE_GHOST);
     }
 
     private void addHouse(WorldMap worldMap, Color wallBaseColor, Color wallTopColor) {
-        Vector2i houseMinTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
-        Vector2i houseMaxTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
+        Vector2i houseMinTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE, null);
+        Vector2i houseMaxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE, null);
         if (houseMinTile == null || houseMaxTile == null) {
             return;
         }
@@ -195,7 +195,7 @@ public class Maze3D extends Group {
             r3D.createWallBetweenTiles(houseMaxTile, houseRightUpper)
         );
 
-        Color doorColor = getColorFromMap(worldMap, LayerID.TERRAIN, PROPERTY_COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR));
+        Color doorColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR));
         var doorMaterial = coloredMaterial(doorColor);
         Stream.of(houseMinTile.plus(3.0f, 0), houseMinTile.plus(4.0f, 0)).forEach(doorTile -> {
             Box door = new Box(TS+HTS, 2, houseBaseHeightPy.get());
@@ -226,7 +226,7 @@ public class Maze3D extends Group {
     }
 
     public void updateFood(WorldMap worldMap) {
-        Color foodColor = getColorFromMap(worldMap, LayerID.FOOD, PROPERTY_COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
+        Color foodColor = getColorFromMap(worldMap, LayerID.FOOD, WorldMapProperty.COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
         var foodMaterial = coloredMaterial(foodColor);
         foodGroup.getChildren().clear();
         worldMap.tiles().filter(tile -> hasFoodAt(worldMap, tile)).forEach(tile -> {

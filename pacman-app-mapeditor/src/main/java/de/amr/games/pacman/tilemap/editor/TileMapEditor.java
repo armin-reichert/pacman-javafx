@@ -8,6 +8,7 @@ import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.*;
+import de.amr.games.pacman.model.WorldMapProperty;
 import de.amr.games.pacman.uilib.tilemap.FoodMapRenderer;
 import de.amr.games.pacman.uilib.tilemap.TerrainMapColorScheme;
 import de.amr.games.pacman.uilib.tilemap.TerrainMapRenderer;
@@ -50,7 +51,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.HTS;
 import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
+import static de.amr.games.pacman.lib.tilemap.WorldMap.formatTile;
 import static de.amr.games.pacman.tilemap.editor.ArcadeMap.*;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.*;
 import static java.util.Objects.requireNonNull;
@@ -410,9 +411,9 @@ public class TileMapEditor {
                 if (changeManager.isRedrawRequested()) {
                     var colors = new TerrainMapColorScheme(
                             COLOR_CANVAS_BACKGROUND,
-                            getColorFromMap(editedWorldMap(), LayerID.TERRAIN, PROPERTY_COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL)),
-                            getColorFromMap(editedWorldMap(), LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE)),
-                            getColorFromMap(editedWorldMap(), LayerID.TERRAIN, PROPERTY_COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR))
+                            getColorFromMap(editedWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, parseColor(MS_PACMAN_COLOR_WALL_FILL)),
+                            getColorFromMap(editedWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, parseColor(MS_PACMAN_COLOR_WALL_STROKE)),
+                            getColorFromMap(editedWorldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR))
                     );
                     draw(colors);
                 }
@@ -1097,12 +1098,12 @@ public class TileMapEditor {
     //
 
     public void drawActorSprites(GraphicsContext g, WorldMap worldMap, double gridSize) {
-        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(PROPERTY_POS_PAC, null), PAC_SPRITE, gridSize);
-        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(PROPERTY_POS_RED_GHOST, null), RED_GHOST_SPRITE, gridSize);
-        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(PROPERTY_POS_PINK_GHOST, null), PINK_GHOST_SPRITE, gridSize);
-        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(PROPERTY_POS_CYAN_GHOST, null), CYAN_GHOST_SPRITE, gridSize);
-        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(PROPERTY_POS_ORANGE_GHOST, null), ORANGE_GHOST_SPRITE, gridSize);
-        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(PROPERTY_POS_BONUS, null), BONUS_SPRITE, gridSize);
+        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(WorldMapProperty.POS_PAC, null), PAC_SPRITE, gridSize);
+        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(WorldMapProperty.POS_RED_GHOST, null), RED_GHOST_SPRITE, gridSize);
+        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(WorldMapProperty.POS_PINK_GHOST, null), PINK_GHOST_SPRITE, gridSize);
+        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(WorldMapProperty.POS_CYAN_GHOST, null), CYAN_GHOST_SPRITE, gridSize);
+        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(WorldMapProperty.POS_ORANGE_GHOST, null), ORANGE_GHOST_SPRITE, gridSize);
+        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(WorldMapProperty.POS_BONUS, null), BONUS_SPRITE, gridSize);
     }
 
     private void draw(TerrainMapColorScheme colors) {
@@ -1147,14 +1148,14 @@ public class TileMapEditor {
             terrainPathRenderer.setScaling(gridSize() / 8.0);
             terrainPathRenderer.setColorScheme(colors);
             terrainPathRenderer.drawTerrain(g, editedWorldMap(), editedWorldMap().obstacles());
-            Vector2i houseMinTile = editedWorldMap().getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
-            Vector2i houseMaxTile = editedWorldMap().getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
+            Vector2i houseMinTile = editedWorldMap().getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE, null);
+            Vector2i houseMaxTile = editedWorldMap().getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE, null);
             if (houseMinTile != null && houseMaxTile != null) {
                 terrainPathRenderer.drawHouse(g, houseMinTile, houseMaxTile.minus(houseMinTile).plus(1, 1));
             }
         }
         if (foodVisiblePy.get()) {
-            Color foodColor = getColorFromMap(editedWorldMap(), LayerID.FOOD, PROPERTY_COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
+            Color foodColor = getColorFromMap(editedWorldMap(), LayerID.FOOD, WorldMapProperty.COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
             foodRenderer.setScaling(gridSize() / 8.0);
             foodRenderer.setEnergizerColor(foodColor);
             foodRenderer.setPelletColor(foodColor);
@@ -1382,8 +1383,8 @@ public class TileMapEditor {
         if (worldMap.numRows() >= 20) {
             Vector2i houseMinTile = Vector2i.of(tilesX / 2 - 4, tilesY / 2 - 3);
             placeArcadeHouse(worldMap, houseMinTile);
-            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_PAC,   formatTile(houseMinTile.plus(3, 11)));
-            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_BONUS, formatTile(houseMinTile.plus(3, 5)));
+            worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_PAC,   formatTile(houseMinTile.plus(3, 11)));
+            worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_BONUS, formatTile(houseMinTile.plus(3, 5)));
         }
         worldMap.updateObstacleList();
         setDefaultColors(worldMap);
@@ -1391,10 +1392,10 @@ public class TileMapEditor {
     }
 
     private void setDefaultColors(WorldMap worldMap) {
-        worldMap.setProperty(LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE);
-        worldMap.setProperty(LayerID.TERRAIN, PROPERTY_COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL);
-        worldMap.setProperty(LayerID.TERRAIN, PROPERTY_COLOR_DOOR, MS_PACMAN_COLOR_DOOR);
-        worldMap.setProperty(LayerID.FOOD, PROPERTY_COLOR_FOOD, MS_PACMAN_COLOR_FOOD);
+        worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE);
+        worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL);
+        worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, MS_PACMAN_COLOR_DOOR);
+        worldMap.setProperty(LayerID.FOOD, WorldMapProperty.COLOR_FOOD, MS_PACMAN_COLOR_FOOD);
         changeManager.setTerrainMapChanged();
         changeManager.setFoodMapChanged();
     }
@@ -1402,10 +1403,10 @@ public class TileMapEditor {
     private void setDefaultScatterPositions(WorldMap worldMap) {
         int numCols = worldMap.numCols(), numRows = worldMap.numRows();
         if (numCols >= 3 && numRows >= 2) {
-            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_RED_GHOST,    formatTile(Vector2i.of(numCols - 3, 0)));
-            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_PINK_GHOST,   formatTile(Vector2i.of(2, 0)));
-            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_CYAN_GHOST,   formatTile(Vector2i.of(numCols - 1, numRows - 2)));
-            worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_SCATTER_ORANGE_GHOST, formatTile(Vector2i.of(0, numRows - 2)));
+            worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_SCATTER_RED_GHOST,    formatTile(Vector2i.of(numCols - 3, 0)));
+            worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_SCATTER_PINK_GHOST,   formatTile(Vector2i.of(2, 0)));
+            worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_SCATTER_CYAN_GHOST,   formatTile(Vector2i.of(numCols - 1, numRows - 2)));
+            worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_SCATTER_ORANGE_GHOST, formatTile(Vector2i.of(0, numRows - 2)));
             changeManager.setTerrainMapChanged();
         }
     }
@@ -1436,10 +1437,10 @@ public class TileMapEditor {
     public void placeArcadeHouse(WorldMap worldMap, Vector2i houseMinTile) {
         Vector2i houseMaxTile = houseMinTile.plus(7, 4);
 
-        Vector2i oldHouseMinTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
-        Vector2i oldHouseMaxTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
-        worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MIN_TILE, formatTile(houseMinTile));
-        worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_HOUSE_MAX_TILE, formatTile(houseMaxTile));
+        Vector2i oldHouseMinTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE, null);
+        Vector2i oldHouseMaxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE, null);
+        worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MIN_TILE, formatTile(houseMinTile));
+        worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MAX_TILE, formatTile(houseMaxTile));
 
         // clear tiles where house walls/doors were located (created at runtime!)
         if (oldHouseMinTile != null && oldHouseMaxTile != null) {
@@ -1450,14 +1451,14 @@ public class TileMapEditor {
         clearTerrainAreaOneSided(worldMap, houseMinTile, houseMaxTile);
         clearFoodAreaOneSided(worldMap, houseMinTile, houseMaxTile);
 
-        worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_RED_GHOST,      formatTile(houseMinTile.plus(3, -1)));
-        worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_CYAN_GHOST,     formatTile(houseMinTile.plus(1, 2)));
-        worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_PINK_GHOST,     formatTile(houseMinTile.plus(3, 2)));
-        worldMap.setProperty(LayerID.TERRAIN, PROPERTY_POS_ORANGE_GHOST,   formatTile(houseMinTile.plus(5, 2)));
+        worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_RED_GHOST,      formatTile(houseMinTile.plus(3, -1)));
+        worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_CYAN_GHOST,     formatTile(houseMinTile.plus(1, 2)));
+        worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_PINK_GHOST,     formatTile(houseMinTile.plus(3, 2)));
+        worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_ORANGE_GHOST,   formatTile(houseMinTile.plus(5, 2)));
 
         // clear pellets around house
-        Vector2i min = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null).minus(1, 1);
-        Vector2i max = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null).plus(1, 1);
+        Vector2i min = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE, null).minus(1, 1);
+        Vector2i max = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE, null).plus(1, 1);
         for (int x = min.x(); x <= max.x(); ++x) {
             // Note: parameters are row and col (y and x)
             worldMap.set(LayerID.FOOD, min.y(), x, FoodTiles.EMPTY);
@@ -1507,10 +1508,10 @@ public class TileMapEditor {
         int tilesX = (int) (templateImage.getWidth() / TS);
         int tilesY = EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE + (int) (templateImage.getHeight() / TS);
         setBlankMap(tilesX, tilesY);
-        removeTerrainMapProperty(PROPERTY_COLOR_WALL_FILL);
-        removeTerrainMapProperty(PROPERTY_COLOR_WALL_STROKE);
-        removeTerrainMapProperty(PROPERTY_COLOR_DOOR);
-        removeFoodMapProperty(PROPERTY_COLOR_FOOD);
+        removeTerrainMapProperty(WorldMapProperty.COLOR_WALL_FILL);
+        removeTerrainMapProperty(WorldMapProperty.COLOR_WALL_STROKE);
+        removeTerrainMapProperty(WorldMapProperty.COLOR_DOOR);
+        removeFoodMapProperty(WorldMapProperty.COLOR_FOOD);
         templateImagePy.set(templateImage);
         return true;
     }
@@ -1588,8 +1589,8 @@ public class TileMapEditor {
 
 
     private boolean isPartOfHouse(WorldMap worldMap, Vector2i tile) {
-        Vector2i minTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
-        Vector2i maxTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
+        Vector2i minTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE, null);
+        Vector2i maxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE, null);
         if (minTile != null && maxTile != null) {
             return minTile.x() <= tile.x() && tile.x() <= maxTile.x()
                 && minTile.y() <= tile.y() && tile.y() <= maxTile.y();
@@ -1603,22 +1604,22 @@ public class TileMapEditor {
             return;
         }
 
-        Color fillColor = getColorFromMap(worldMap, LayerID.TERRAIN, PROPERTY_COLOR_WALL_FILL, null);
+        Color fillColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, null);
         if (fillColor == null) {
             showMessage("No fill color defined", 3, MessageType.ERROR);
             return;
         }
-        Color strokeColor = getColorFromMap(worldMap, LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE, null);
+        Color strokeColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, null);
         if (strokeColor == null) {
             showMessage("No stroke color defined", 3, MessageType.ERROR);
             return;
         }
-        Color doorColor = getColorFromMap(worldMap, LayerID.TERRAIN, PROPERTY_COLOR_DOOR, Color.PINK);
+        Color doorColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, Color.PINK);
         if (doorColor == null) {
             showMessage("No door color defined", 3, MessageType.ERROR);
             return;
         }
-        Color foodColor = getColorFromMap(worldMap, LayerID.FOOD, PROPERTY_COLOR_FOOD, null);
+        Color foodColor = getColorFromMap(worldMap, LayerID.FOOD, WorldMapProperty.COLOR_FOOD, null);
         if (foodColor == null) {
             showMessage("No food color defined", 3, MessageType.ERROR);
             return;

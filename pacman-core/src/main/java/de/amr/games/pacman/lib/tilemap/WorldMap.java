@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.lib.tilemap;
 
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.model.WorldMapProperty;
 import org.tinylog.Logger;
 
 import java.io.*;
@@ -23,31 +24,10 @@ import static de.amr.games.pacman.lib.tilemap.LayerID.FOOD;
 import static de.amr.games.pacman.lib.tilemap.LayerID.TERRAIN;
 import static java.util.Objects.requireNonNull;
 
-/**
- * @author Armin Reichert
- */
 public class WorldMap {
 
     private static final Pattern TILE_PATTERN = Pattern.compile("\\((\\d+),(\\d+)\\)");
     private static final String TILE_FORMAT = "(%d,%d)";
-
-    public static final String PROPERTY_POS_BONUS                = "pos_bonus";
-    public static final String PROPERTY_POS_PAC                  = "pos_pac";
-    public static final String PROPERTY_POS_RED_GHOST            = "pos_ghost_1_red";
-    public static final String PROPERTY_POS_PINK_GHOST           = "pos_ghost_2_pink";
-    public static final String PROPERTY_POS_CYAN_GHOST           = "pos_ghost_3_cyan";
-    public static final String PROPERTY_POS_ORANGE_GHOST         = "pos_ghost_4_orange";
-    public static final String PROPERTY_POS_SCATTER_RED_GHOST    = "pos_scatter_ghost_1_red";
-    public static final String PROPERTY_POS_SCATTER_PINK_GHOST   = "pos_scatter_ghost_2_pink";
-    public static final String PROPERTY_POS_SCATTER_CYAN_GHOST   = "pos_scatter_ghost_3_cyan";
-    public static final String PROPERTY_POS_SCATTER_ORANGE_GHOST = "pos_scatter_ghost_4_orange";
-    public static final String PROPERTY_POS_HOUSE_MIN_TILE       = "pos_house_min";
-    public static final String PROPERTY_POS_HOUSE_MAX_TILE       = "pos_house_max";
-
-    public static final String PROPERTY_COLOR_FOOD               = "color_food";
-    public static final String PROPERTY_COLOR_WALL_STROKE        = "color_wall_stroke";
-    public static final String PROPERTY_COLOR_WALL_FILL          = "color_wall_fill";
-    public static final String PROPERTY_COLOR_DOOR               = "color_door";
 
     private static final String BEGIN_TERRAIN_LAYER = "!terrain";
     private static final String BEGIN_FOOD_LAYER    = "!food";
@@ -314,7 +294,7 @@ public class WorldMap {
         obstacles = ObstacleBuilder.buildObstacles(this, tilesWithErrors);
 
         // remove house obstacle
-        Vector2i houseMinTile = getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
+        Vector2i houseMinTile = getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE, null);
         if (houseMinTile == null) {
             Logger.info("Could not remove house placeholder from obstacle list, house min tile not set");
         } else {

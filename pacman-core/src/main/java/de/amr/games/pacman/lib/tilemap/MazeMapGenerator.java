@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.graph.Dir;
 import de.amr.games.pacman.lib.graph.GridGraph;
 import de.amr.games.pacman.lib.graph.GridGraphImpl;
+import de.amr.games.pacman.model.WorldMapProperty;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -134,10 +135,10 @@ public class MazeMapGenerator {
     }
 
     private void setColors(WorldMap map) {
-        map.setProperty(LayerID.TERRAIN, WorldMap.PROPERTY_COLOR_DOOR, "#fcb5ff");
-        map.setProperty(LayerID.TERRAIN, WorldMap.PROPERTY_COLOR_WALL_FILL, "#47b7ff");
-        map.setProperty(LayerID.TERRAIN, WorldMap.PROPERTY_COLOR_WALL_STROKE, "#dedeff");
-        map.setProperty(LayerID.FOOD,    WorldMap.PROPERTY_COLOR_FOOD, "#ffff00");
+        map.setProperty(LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, "#fcb5ff");
+        map.setProperty(LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, "#47b7ff");
+        map.setProperty(LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, "#dedeff");
+        map.setProperty(LayerID.FOOD,    WorldMapProperty.COLOR_FOOD, "#ffff00");
     }
 
     public static void main(String[] args)  {

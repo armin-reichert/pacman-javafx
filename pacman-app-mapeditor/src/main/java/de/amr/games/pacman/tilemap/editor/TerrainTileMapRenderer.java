@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.*;
+import de.amr.games.pacman.model.WorldMapProperty;
 import de.amr.games.pacman.uilib.tilemap.TerrainMapRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -21,7 +22,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
+import static de.amr.games.pacman.lib.tilemap.WorldMap.parseTile;
 import static de.amr.games.pacman.tilemap.editor.ArcadeMap.SPRITE_SHEET;
 
 /**
@@ -61,10 +62,10 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
         g.save();
         g.scale(scaling(), scaling());
         worldMap.tiles().forEach(tile -> drawTileUnscaled(g, tile, worldMap.get(LayerID.TERRAIN, tile)));
-        specialTile(worldMap, PROPERTY_POS_SCATTER_RED_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.RED));
-        specialTile(worldMap, PROPERTY_POS_SCATTER_PINK_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.PINK));
-        specialTile(worldMap, PROPERTY_POS_SCATTER_CYAN_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.CYAN));
-        specialTile(worldMap, PROPERTY_POS_SCATTER_ORANGE_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.ORANGE));
+        specialTile(worldMap, WorldMapProperty.POS_SCATTER_RED_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.RED));
+        specialTile(worldMap, WorldMapProperty.POS_SCATTER_PINK_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.PINK));
+        specialTile(worldMap, WorldMapProperty.POS_SCATTER_CYAN_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.CYAN));
+        specialTile(worldMap, WorldMapProperty.POS_SCATTER_ORANGE_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.ORANGE));
         if (segmentNumbersDisplayed) {
             obstacles.stream().filter(obstacle -> !startsAtBorder(obstacle, worldMap)).forEach(obstacle -> {
                 for (int i = 0; i < obstacle.numSegments(); ++i) {
@@ -112,8 +113,8 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
             });
         }
         g.restore();
-        Vector2i houseMinTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
-        Vector2i houseMaxTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
+        Vector2i houseMinTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE, null);
+        Vector2i houseMaxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE, null);
         if (houseMinTile != null && houseMaxTile != null) {
             drawHouse(g, houseMinTile, houseMaxTile.minus(houseMinTile).plus(1, 1));
         }

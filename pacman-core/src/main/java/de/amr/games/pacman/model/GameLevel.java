@@ -22,7 +22,6 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.TerrainTiles.*;
-import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.model.GameModel.*;
 import static java.util.Objects.requireNonNull;
 
@@ -92,46 +91,46 @@ public class GameLevel {
         uneatenFoodCount = totalFoodCount;
         eatenFoodBits = new BitSet(worldMap.numCols() * worldMap.numRows());
 
-        Vector2i pacTile = worldMap.getTerrainTileProperty(PROPERTY_POS_PAC, null);
+        Vector2i pacTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_PAC, null);
         if (pacTile == null) {
             throw new IllegalArgumentException("No Pac position stored in map");
         }
         pacPosition = posHalfTileRightOf(pacTile);
 
-        Vector2i redGhostTile = worldMap.getTerrainTileProperty(PROPERTY_POS_RED_GHOST, null);
+        Vector2i redGhostTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_RED_GHOST, null);
         if (redGhostTile == null) {
             throw new IllegalArgumentException("No red ghost position stored in map");
         }
         ghostPositions[RED_GHOST_ID] = posHalfTileRightOf(redGhostTile);
 
-        Vector2i pinkGhostTile = worldMap.getTerrainTileProperty(PROPERTY_POS_PINK_GHOST, null);
+        Vector2i pinkGhostTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_PINK_GHOST, null);
         if (pinkGhostTile == null) {
             throw new IllegalArgumentException("No pink ghost position stored in map");
         }
         ghostPositions[PINK_GHOST_ID] = posHalfTileRightOf(pinkGhostTile);
 
-        Vector2i cyanGhostTile = worldMap.getTerrainTileProperty(PROPERTY_POS_CYAN_GHOST, null);
+        Vector2i cyanGhostTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_CYAN_GHOST, null);
         if (cyanGhostTile == null) {
             throw new IllegalArgumentException("No cyan ghost position stored in map");
         }
         ghostPositions[CYAN_GHOST_ID] = posHalfTileRightOf(cyanGhostTile);
 
-        Vector2i orangeGhostTile = worldMap.getTerrainTileProperty(PROPERTY_POS_ORANGE_GHOST, null);
+        Vector2i orangeGhostTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_ORANGE_GHOST, null);
         if (orangeGhostTile == null) {
             throw new IllegalArgumentException("No orange ghost position stored in map");
         }
         ghostPositions[ORANGE_GHOST_ID] = posHalfTileRightOf(orangeGhostTile);
 
-        ghostScatterTiles[RED_GHOST_ID] = worldMap.getTerrainTileProperty(PROPERTY_POS_SCATTER_RED_GHOST,
+        ghostScatterTiles[RED_GHOST_ID] = worldMap.getTerrainTileProperty(WorldMapProperty.POS_SCATTER_RED_GHOST,
             Vector2i.of(0, worldMap.numCols() - 3));
 
-        ghostScatterTiles[PINK_GHOST_ID] = worldMap.getTerrainTileProperty(PROPERTY_POS_SCATTER_PINK_GHOST,
+        ghostScatterTiles[PINK_GHOST_ID] = worldMap.getTerrainTileProperty(WorldMapProperty.POS_SCATTER_PINK_GHOST,
             Vector2i.of(0, 3));
 
-        ghostScatterTiles[CYAN_GHOST_ID] = worldMap.getTerrainTileProperty(PROPERTY_POS_SCATTER_CYAN_GHOST,
+        ghostScatterTiles[CYAN_GHOST_ID] = worldMap.getTerrainTileProperty(WorldMapProperty.POS_SCATTER_CYAN_GHOST,
             Vector2i.of(worldMap.numRows() - EMPTY_ROWS_BELOW_MAZE, worldMap.numCols() - 1));
 
-        ghostScatterTiles[ORANGE_GHOST_ID] = worldMap.getTerrainTileProperty(PROPERTY_POS_SCATTER_ORANGE_GHOST,
+        ghostScatterTiles[ORANGE_GHOST_ID] = worldMap.getTerrainTileProperty(WorldMapProperty.POS_SCATTER_ORANGE_GHOST,
             Vector2i.of(worldMap.numRows() - EMPTY_ROWS_BELOW_MAZE, 0));
     }
 
@@ -279,11 +278,11 @@ public class GameLevel {
     }
 
     public Vector2i houseMinTile() {
-        return worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
+        return worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE, null);
     }
 
     public Vector2i houseMaxTile() {
-        return worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
+        return worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE, null);
     }
 
     public Vector2i houseSizeInTiles() {

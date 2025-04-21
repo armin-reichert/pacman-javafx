@@ -6,6 +6,7 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.MapSelectionMode;
 import de.amr.games.pacman.model.MapSelector;
+import de.amr.games.pacman.model.WorldMapProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.tinylog.Logger;
@@ -17,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 import static de.amr.games.pacman.Globals.randomInt;
-import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_MapSelector extends MapSelector {
@@ -149,9 +149,9 @@ public class PacManXXL_MapSelector extends MapSelector {
 
     private Map<String, String> coloringFromMap(WorldMap template) {
         return Map.of(
-                "fill",   template.getPropertyOrDefault(LayerID.TERRAIN, PROPERTY_COLOR_WALL_FILL,   "000000"),
-                "stroke", template.getPropertyOrDefault(LayerID.TERRAIN, PROPERTY_COLOR_WALL_STROKE, "0000ff"),
-                "door",   template.getPropertyOrDefault(LayerID.TERRAIN, PROPERTY_COLOR_DOOR,        "00ffff"),
-                "pellet", template.getPropertyOrDefault(LayerID.FOOD, PROPERTY_COLOR_FOOD,           "ffffff"));
+                "fill",   template.getPropertyOrDefault(LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL,   "000000"),
+                "stroke", template.getPropertyOrDefault(LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, "0000ff"),
+                "door",   template.getPropertyOrDefault(LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR,        "00ffff"),
+                "pellet", template.getPropertyOrDefault(LayerID.FOOD, WorldMapProperty.COLOR_FOOD,           "ffffff"));
     }
 }

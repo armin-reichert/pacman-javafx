@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.FoodTiles;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.model.WorldMapProperty;
 import de.amr.games.pacman.uilib.Ufx;
 import de.amr.games.pacman.uilib.tilemap.FoodMapRenderer;
 import de.amr.games.pacman.uilib.tilemap.TerrainMapColorScheme;
@@ -32,7 +33,6 @@ import org.tinylog.Logger;
 import java.util.function.Predicate;
 
 import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.lib.tilemap.WorldMap.PROPERTY_COLOR_FOOD;
 import static de.amr.games.pacman.tilemap.editor.ArcadeMap.MS_PACMAN_COLOR_FOOD;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditor.*;
 import static de.amr.games.pacman.tilemap.editor.TileMapEditorUtil.*;
@@ -186,7 +186,7 @@ public class EditCanvas {
         // Food
         if (editor.foodVisibleProperty().get()) {
             FoodMapRenderer renderer = editor.foodRenderer();
-            Color foodColor = getColorFromMap(worldMap(), LayerID.FOOD, PROPERTY_COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
+            Color foodColor = getColorFromMap(worldMap(), LayerID.FOOD, WorldMapProperty.COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
             renderer.setScaling(scaling);
             renderer.setEnergizerColor(foodColor);
             renderer.setPelletColor(foodColor);

@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.tilemap.FoodTiles;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.TerrainTiles;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.model.WorldMapProperty;
 import de.amr.games.pacman.uilib.tilemap.TileMapRenderer;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
@@ -20,7 +21,6 @@ import org.tinylog.Logger;
 import java.net.URL;
 import java.util.Locale;
 
-import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static java.util.Objects.requireNonNull;
 
 public interface TileMapEditorUtil {
@@ -115,16 +115,16 @@ public interface TileMapEditorUtil {
     static Palette createActorPalette(byte id, int toolSize, TileMapEditor editor, TerrainTileMapRenderer renderer) {
         var palette = new Palette(id, toolSize, 1, 11, renderer);
         palette.addTileTool(editor, TerrainTiles.EMPTY, "Nope");
-        palette.addPropertyTool(PROPERTY_POS_PAC, "Pac-Man");
-        palette.addPropertyTool(PROPERTY_POS_RED_GHOST, "Red Ghost");
-        palette.addPropertyTool(PROPERTY_POS_PINK_GHOST, "Pink Ghost");
-        palette.addPropertyTool(PROPERTY_POS_CYAN_GHOST, "Cyan Ghost");
-        palette.addPropertyTool(PROPERTY_POS_ORANGE_GHOST, "Orange Ghost");
-        palette.addPropertyTool(PROPERTY_POS_BONUS, "Bonus");
-        palette.addPropertyTool(PROPERTY_POS_SCATTER_RED_GHOST, "Red Ghost Scatter");
-        palette.addPropertyTool(PROPERTY_POS_SCATTER_PINK_GHOST, "Pink Ghost Scatter");
-        palette.addPropertyTool(PROPERTY_POS_SCATTER_CYAN_GHOST, "Cyan Ghost Scatter");
-        palette.addPropertyTool(PROPERTY_POS_SCATTER_ORANGE_GHOST, "Orange Ghost Scatter");
+        palette.addPropertyTool(WorldMapProperty.POS_PAC, "Pac-Man");
+        palette.addPropertyTool(WorldMapProperty.POS_RED_GHOST, "Red Ghost");
+        palette.addPropertyTool(WorldMapProperty.POS_PINK_GHOST, "Pink Ghost");
+        palette.addPropertyTool(WorldMapProperty.POS_CYAN_GHOST, "Cyan Ghost");
+        palette.addPropertyTool(WorldMapProperty.POS_ORANGE_GHOST, "Orange Ghost");
+        palette.addPropertyTool(WorldMapProperty.POS_BONUS, "Bonus");
+        palette.addPropertyTool(WorldMapProperty.POS_SCATTER_RED_GHOST, "Red Ghost Scatter");
+        palette.addPropertyTool(WorldMapProperty.POS_SCATTER_PINK_GHOST, "Pink Ghost Scatter");
+        palette.addPropertyTool(WorldMapProperty.POS_SCATTER_CYAN_GHOST, "Cyan Ghost Scatter");
+        palette.addPropertyTool(WorldMapProperty.POS_SCATTER_ORANGE_GHOST, "Orange Ghost Scatter");
         palette.selectTool(0); // "No actor"
         return palette;
     }

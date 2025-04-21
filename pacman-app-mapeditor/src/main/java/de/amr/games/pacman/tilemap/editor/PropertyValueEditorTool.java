@@ -8,12 +8,12 @@ import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.model.WorldMapProperty;
 import de.amr.games.pacman.uilib.tilemap.TileMapRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.tilemap.editor.ArcadeMap.PAC_SPRITE;
 import static de.amr.games.pacman.tilemap.editor.ArcadeMap.SPRITE_SHEET;
 
@@ -59,16 +59,16 @@ public class PropertyValueEditorTool implements Tool {
             Vector2i tile = new Vector2i(col, row);
             double x = col * TS, y = row * TS;
             switch (propertyName) {
-                case PROPERTY_POS_PAC -> drawSprite(g, x, y, PAC_SPRITE);
-                case PROPERTY_POS_RED_GHOST -> drawSprite(g, x, y, ArcadeMap.RED_GHOST_SPRITE);
-                case PROPERTY_POS_PINK_GHOST -> drawSprite(g, x, y, ArcadeMap.PINK_GHOST_SPRITE);
-                case PROPERTY_POS_CYAN_GHOST -> drawSprite(g, x, y, ArcadeMap.CYAN_GHOST_SPRITE);
-                case PROPERTY_POS_ORANGE_GHOST -> drawSprite(g, x, y, ArcadeMap.ORANGE_GHOST_SPRITE);
-                case PROPERTY_POS_BONUS -> drawSprite(g, x, y, ArcadeMap. BONUS_SPRITE);
-                case PROPERTY_POS_SCATTER_RED_GHOST -> tr.drawScatterTarget(g, tile, Color.RED);
-                case PROPERTY_POS_SCATTER_PINK_GHOST -> tr.drawScatterTarget(g, tile, Color.PINK);
-                case PROPERTY_POS_SCATTER_CYAN_GHOST -> tr.drawScatterTarget(g, tile, Color.CYAN);
-                case PROPERTY_POS_SCATTER_ORANGE_GHOST -> tr.drawScatterTarget(g, tile, Color.ORANGE);
+                case WorldMapProperty.POS_PAC -> drawSprite(g, x, y, PAC_SPRITE);
+                case WorldMapProperty.POS_RED_GHOST -> drawSprite(g, x, y, ArcadeMap.RED_GHOST_SPRITE);
+                case WorldMapProperty.POS_PINK_GHOST -> drawSprite(g, x, y, ArcadeMap.PINK_GHOST_SPRITE);
+                case WorldMapProperty.POS_CYAN_GHOST -> drawSprite(g, x, y, ArcadeMap.CYAN_GHOST_SPRITE);
+                case WorldMapProperty.POS_ORANGE_GHOST -> drawSprite(g, x, y, ArcadeMap.ORANGE_GHOST_SPRITE);
+                case WorldMapProperty.POS_BONUS -> drawSprite(g, x, y, ArcadeMap. BONUS_SPRITE);
+                case WorldMapProperty.POS_SCATTER_RED_GHOST -> tr.drawScatterTarget(g, tile, Color.RED);
+                case WorldMapProperty.POS_SCATTER_PINK_GHOST -> tr.drawScatterTarget(g, tile, Color.PINK);
+                case WorldMapProperty.POS_SCATTER_CYAN_GHOST -> tr.drawScatterTarget(g, tile, Color.CYAN);
+                case WorldMapProperty.POS_SCATTER_ORANGE_GHOST -> tr.drawScatterTarget(g, tile, Color.ORANGE);
                 default -> {}
             }
             g.restore();
