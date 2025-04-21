@@ -1,7 +1,7 @@
 import org.gradle.internal.os.OperatingSystem
 
 buildscript {
-    ext.versions = [ java: JavaLanguageVersion.of(21), javafx: "21" ]
+    ext.versions = [ javafx: "21" ]
     ext.set("os", OperatingSystem.current())
 }
 
@@ -13,19 +13,20 @@ plugins {
 allprojects {
     java {
         toolchain {
-            languageVersion = versions.java
+            languageVersion = JavaLanguageVersion.of(21)
         }
     }
     repositories {
         mavenCentral()
     }
-    tasks.withType(JavaCompile).configureEach {
-        options.encoding = "UTF-8"
-        configure(options) {
-            options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
+    tasks.withType(JavaCompile).tap {
+        configureEach {
+            options.encoding = "UTF-8"
+            configure(options) {
+                options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
+            }
         }
     }
 }
-
 
 println("Operating system: '$os'")

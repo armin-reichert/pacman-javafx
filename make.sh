@@ -1,2 +1,2 @@
 #!/bin/sh
-./gradlew clean jpackage --info --warning-mode all
+./gradlew --info --stacktrace --warning-mode all clean jpackage
