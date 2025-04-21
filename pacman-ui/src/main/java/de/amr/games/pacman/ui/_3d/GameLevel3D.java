@@ -67,23 +67,20 @@ public class GameLevel3D {
 
     private final IntegerProperty livesCountPy = new SimpleIntegerProperty(0);
 
-    private final List<Pellet3D> pellets3D = new ArrayList<>();
-    private final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
-
+    private final GameLevel level;
     private final Group root = new Group();
-    private final LivesCounter3D livesCounter3D;
     private final Group mazeGroup = new Group();
     private final Box floor3D;
     private final Maze3D maze3D;
-    private Message3D message3D;
-    private Bonus3D bonus3D;
+    private final LivesCounter3D livesCounter3D;
+    private final List<Pellet3D> pellets3D = new ArrayList<>();
+    private final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
     private final XMan3D pac3D;
     private final List<Ghost3DAppearance> ghost3DAppearances;
-
+    private Message3D message3D;
+    private Bonus3D bonus3D;
     private Animation levelCompleteAnimation;
     private Animation livesCounterAnimation;
-
-    private final GameLevel level;
 
     public GameLevel3D(GameVariant gameVariant, GameLevel level) {
         requireNonNull(gameVariant);
@@ -94,7 +91,7 @@ public class GameLevel3D {
         final WorldMapColorScheme colorScheme = uiConfig.worldMapColorScheme(worldMap);
         final PhongMaterial foodMaterial = coloredPhongMaterial(colorScheme.pellet()); // TODO move into UI config?
 
-        livesCounter3D = createLivesCounter3D(level.game().canStartNewGame());
+        livesCounter3D = createLivesCounter3D(uiConfig, level.game().canStartNewGame());
         livesCounter3D.livesCountPy.bind(livesCountPy);
 
         pac3D = createPac3D(gameVariant, uiConfig.assetNamespace(), level.pac());
@@ -219,11 +216,10 @@ public class GameLevel3D {
         return pac3D;
     }
 
-    private LivesCounter3D createLivesCounter3D(boolean canStartNewGame) {
-        GameUIConfig config3D = THE_UI_CONFIGS.current();
+    private LivesCounter3D createLivesCounter3D(GameUIConfig uiConfig, boolean canStartNewGame) {
         Node[] counterShapes = new Node[LIVES_COUNTER_MAX];
         for (int i = 0; i < counterShapes.length; ++i) {
-            counterShapes[i] = config3D.createLivesCounterShape(THE_ASSETS, LIVES_COUNTER_3D_SIZE);
+            counterShapes[i] = uiConfig.createLivesCounterShape(THE_ASSETS, LIVES_COUNTER_3D_SIZE);
         }
         var counter3D = new LivesCounter3D(counterShapes);
         counter3D.setTranslateX(2 * TS);
@@ -235,13 +231,11 @@ public class GameLevel3D {
         return counter3D;
     }
 
-    public void addLevelCounter() {
+    public void addLevelCounter(GameUIConfig uiConfig) {
         // Place level counter at top right maze corner
         double x = level.worldMap().numCols() * TS - 2 * TS;
         double y = 2 * TS;
-        Node levelCounter3D = createLevelCounter3D(
-                THE_UI_CONFIGS.current().spriteSheet(),
-                THE_GAME_CONTROLLER.game().levelCounter(), x, y);
+        Node levelCounter3D = createLevelCounter3D(uiConfig.spriteSheet(), THE_GAME_CONTROLLER.game().levelCounter(), x, y);
         root.getChildren().add(levelCounter3D);
     }
 
