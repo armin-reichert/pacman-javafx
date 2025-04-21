@@ -65,7 +65,6 @@ public class GameLevel {
     private final int totalFoodCount;
     private int uneatenFoodCount;
 
-    private int victimsCount;
     private int numFlashes;
     private int cutSceneNumber;
 
@@ -154,13 +153,8 @@ public class GameLevel {
         return game;
     }
 
-    public void addVictim(Ghost ghost) {
-        victimsCount += 1;
-        victims.add(ghost);
-    }
-
-    public int victimsCount() {
-        return victimsCount;
+    public List<Ghost> victims() {
+        return victims;
     }
 
     public void setNumFlashes(int numFlashes) {
@@ -199,10 +193,6 @@ public class GameLevel {
             return Stream.empty();
         }
         return states.length == 0 ? Stream.of(ghosts) : Stream.of(ghosts).filter(ghost -> ghost.inState(states));
-    }
-
-    public List<Ghost> victims() {
-        return victims;
     }
 
     public void setBonus(Bonus bonus) {
