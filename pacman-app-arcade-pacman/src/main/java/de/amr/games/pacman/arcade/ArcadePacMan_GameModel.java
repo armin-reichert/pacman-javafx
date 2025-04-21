@@ -458,7 +458,7 @@ public class ArcadePacMan_GameModel extends GameModel {
 
     @Override
     public void activateNextBonus() {
-        level.advanceNextBonus();
+        level.selectNextBonus();
         byte symbol = level.bonusSymbol(level.nextBonusIndex());
         StaticBonus staticBonus = new StaticBonus(symbol, ArcadePacMan_GameModel.BONUS_VALUE_FACTORS[symbol] * 100);
         level.setBonus(staticBonus);

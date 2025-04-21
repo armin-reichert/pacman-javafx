@@ -217,7 +217,7 @@ public class GameLevel {
         return nextBonusIndex;
     }
 
-    public void advanceNextBonus() {
+    public void selectNextBonus() {
         nextBonusIndex += 1;
     }
 

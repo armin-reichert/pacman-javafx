@@ -525,7 +525,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             Logger.info("Previous bonus is still active, skip this one");
             return;
         }
-        level.advanceNextBonus();
+        level.selectNextBonus();
 
         boolean leftToRight = THE_RNG.nextBoolean();
         Vector2i houseEntry = tileAt(level.houseEntryPosition());

@@ -487,7 +487,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
             Logger.info("Previous bonus is still active, skip this one");
             return;
         }
-        level.advanceNextBonus();
+        level.selectNextBonus();
 
         List<Portal> portals = level.portals().toList();
         if (portals.isEmpty()) {
