@@ -291,12 +291,15 @@ public class GameLevel3D {
             .anyMatch(Ghost::isVisible);
         houseOpenPy.set(ghostNearHouseEntry);
 
-        int symbolsDisplayed = Math.max(0, THE_GAME_CONTROLLER.game().livesProperty().get() - 1);
+        livesCountPy.set(livesCounterSize());
+    }
+
+    private int livesCounterSize() {
+        int n = THE_GAME_CONTROLLER.game().livesProperty().get();
         if (!level.pac().isVisible() && THE_GAME_CONTROLLER.state() == GameState.STARTING_GAME) {
-            livesCountPy.set(symbolsDisplayed + 1);
-        } else {
-            livesCountPy.set(symbolsDisplayed);
+            return n;
         }
+        return n - 1;
     }
 
     public void showAnimatedMessage(String text, double displaySeconds, double centerX, double y) {
