@@ -17,7 +17,8 @@ import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.Globals.HTS;
+import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.lib.tilemap.LayerID.FOOD;
 import static de.amr.games.pacman.lib.tilemap.LayerID.TERRAIN;
 import static java.util.Objects.requireNonNull;
@@ -515,15 +516,5 @@ public class WorldMap {
      */
     public void set(LayerID layerID, Vector2i tile, byte value) {
         set(layerID, tile.y(), tile.x(), value);
-    }
-
-    public boolean isPartOfHouse(Vector2i tile) {
-        Vector2i houseMinTile = getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
-        Vector2i houseMaxTile = getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
-        if (houseMinTile != null && houseMaxTile != null) {
-            return houseMinTile.x() <= tile.x() && tile.x() <= houseMaxTile.x()
-                && houseMinTile.y() <= tile.y() && tile.y() <= houseMaxTile.y();
-        }
-        return false;
     }
 }

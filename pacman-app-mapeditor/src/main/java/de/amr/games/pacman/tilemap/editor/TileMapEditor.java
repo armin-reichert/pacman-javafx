@@ -1582,8 +1582,19 @@ public class TileMapEditor {
         return !editedWorldMap().outOfBounds(tile)
                 && tile.y() >= EMPTY_ROWS_BEFORE_MAZE
                 && tile.y() < editedWorldMap().numRows() - EMPTY_ROWS_BELOW_MAZE
-                && !editedWorldMap().isPartOfHouse(tile)
+                && !isPartOfHouse(editedWorldMap(), tile)
                 && hasAccessibleTerrainAtTile(tile);
+    }
+
+
+    private boolean isPartOfHouse(WorldMap worldMap, Vector2i tile) {
+        Vector2i minTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MIN_TILE, null);
+        Vector2i maxTile = worldMap.getTerrainTileProperty(PROPERTY_POS_HOUSE_MAX_TILE, null);
+        if (minTile != null && maxTile != null) {
+            return minTile.x() <= tile.x() && tile.x() <= maxTile.x()
+                && minTile.y() <= tile.y() && tile.y() <= maxTile.y();
+        }
+        return false;
     }
 
     private void populateMapFromTemplateImage(WorldMap worldMap) {
