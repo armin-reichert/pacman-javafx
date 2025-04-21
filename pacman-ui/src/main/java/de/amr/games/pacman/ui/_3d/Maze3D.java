@@ -8,9 +8,8 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.Obstacle;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.uilib.tilemap.TerrainMapRenderer3D;
-import de.amr.games.pacman.ui.GameUIConfig;
 import de.amr.games.pacman.uilib.assets.WorldMapColorScheme;
+import de.amr.games.pacman.uilib.tilemap.TerrainMapRenderer3D;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -41,16 +40,16 @@ public class Maze3D extends Group {
     private final Door3D door3D;
     private final MaterialColorAnimation materialColorAnimation;
 
-    public Maze3D(GameUIConfig configuration3D, GameLevel level, WorldMapColorScheme coloring) {
-        Logger.info("Build world 3D. Map URL='{}'", URLDecoder.decode(level.worldMap().url().toExternalForm(), StandardCharsets.UTF_8));
+    public Maze3D(GameLevel level, WorldMapColorScheme colorScheme) {
+        Logger.info("Build 3D maze for map with URL '{}'", URLDecoder.decode(level.worldMap().url().toExternalForm(), StandardCharsets.UTF_8));
 
-        Color wallBaseColor = coloring.stroke();
-        // need some contrast with floor if fill color is black
-        Color wallTopColor = coloring.fill().equals(Color.BLACK) ? Color.grayRgb(42) : coloring.fill();
+        Color wallBaseColor = colorScheme.stroke();
+        // Add some contrast with floor if wall fill color is black:
+        Color wallTopColor = colorScheme.fill().equals(Color.BLACK) ? Color.grayRgb(42) : colorScheme.fill();
 
         PhongMaterial wallBaseMaterial = new PhongMaterial();
         wallBaseMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
-                () -> opaqueColor(wallBaseColor, wallOpacityPy.get()), wallOpacityPy
+            () -> opaqueColor(wallBaseColor, wallOpacityPy.get()), wallOpacityPy
         ));
         wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::brighter));
 
@@ -90,8 +89,8 @@ public class Maze3D extends Group {
         // House
         houseBaseHeightPy.set(HOUSE_3D_BASE_HEIGHT);
         door3D = addGhostHouse(
-                this, level, r3D,
-                coloring.fill(), coloring.stroke(), coloring.door(),
+                level, r3D,
+                colorScheme.fill(), colorScheme.stroke(), colorScheme.door(),
             HOUSE_3D_OPACITY,
                 houseBaseHeightPy, HOUSE_3D_WALL_TOP_HEIGHT, HOUSE_3D_WALL_THICKNESS,
                 houseLightOnPy);
@@ -111,7 +110,6 @@ public class Maze3D extends Group {
     }
 
     private Door3D addGhostHouse(
-        Group parent,
         GameLevel level,
         TerrainMapRenderer3D r3D,
         Color houseBaseColor, Color houseTopColor, Color doorsColor, float wallOpacity,
@@ -132,7 +130,7 @@ public class Maze3D extends Group {
 
         var door3D = new Door3D(leftDoorTile, rightDoorTile, doorsColor, wallBaseHeightPy.get());
 
-        parent.getChildren().addAll(
+        getChildren().addAll(
             r3D.createWallBetweenTiles(Vector2i.of(xMin, yMin), Vector2i.of(leftDoorTile.x() - 1, yMin)),
             r3D.createWallBetweenTiles(Vector2i.of(rightDoorTile.x() + 1, yMin), Vector2i.of(xMax, yMin)),
             r3D.createWallBetweenTiles(Vector2i.of(xMin, yMin), Vector2i.of(xMin, yMax)),
@@ -152,7 +150,7 @@ public class Maze3D extends Group {
         light.setTranslateY(centerY - 6);
         light.translateZProperty().bind(wallBaseHeightPy.multiply(-1));
 
-        parent.getChildren().add(light);
+        getChildren().add(light);
 
         return door3D;
     }

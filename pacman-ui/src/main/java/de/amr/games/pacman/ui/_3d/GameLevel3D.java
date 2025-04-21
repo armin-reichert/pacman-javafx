@@ -105,7 +105,7 @@ public class GameLevel3D {
         floor3D.materialProperty().bind(PY_3D_FLOOR_COLOR.map(Ufx::coloredPhongMaterial));
         floor3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
-        maze3D = new Maze3D(uiConfig, level, colorScheme);
+        maze3D = new Maze3D(level, colorScheme);
         mazeGroup.getChildren().addAll(floor3D, maze3D);
 
         createFood3D(foodMaterial);
