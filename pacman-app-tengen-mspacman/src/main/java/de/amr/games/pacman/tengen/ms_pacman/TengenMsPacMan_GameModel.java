@@ -122,7 +122,9 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public TengenMsPacMan_GameModel() {
         levelCounter = new TengenMsPacMan_LevelCounter();
         mapSelector = new TengenMsPacMan_MapSelector();
-        huntingTimer.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
+        huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
+            if (nv.intValue() > 0) level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP);
+        });
         lastLevelNumber = MAX_LEVEL_NUMBER;
     }
 
@@ -605,7 +607,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         if (huntingTimer.phaseIndex() == 0 && (ghost.id() == RED_GHOST_ID || ghost.id() == PINK_GHOST_ID)) {
             ghost.roam(speed);
         } else {
-            boolean chasing = huntingTimer.huntingPhase() == HuntingTimer.HuntingPhase.CHASING;
+            boolean chasing = huntingTimer.phase() == HuntingTimer.HuntingPhase.CHASING;
             Vector2i targetTile = chasing
                 ? chasingTargetTile(ghost.id(), level, simulateOverflowBugProperty().get())
                 : level.ghostScatterTile(ghost.id());

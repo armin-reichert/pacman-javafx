@@ -228,7 +228,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         String huntingPhaseText = "";
         if (gameState() == GameState.HUNTING) {
             HuntingTimer huntingTimer = game().huntingTimer();
-            huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.huntingPhase(), huntingTimer.tickCount());
+            huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.phase(), huntingTimer.tickCount());
         }
         gr.ctx().fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, 64);
     }

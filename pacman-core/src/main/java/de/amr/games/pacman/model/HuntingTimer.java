@@ -6,9 +6,13 @@ package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.lib.timer.TickTimer;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import org.tinylog.Logger;
 
 import java.util.Optional;
+
+import static de.amr.games.pacman.Globals.*;
 
 
 /**
@@ -19,88 +23,73 @@ public abstract class HuntingTimer extends TickTimer {
     public enum HuntingPhase {SCATTERING, CHASING}
 
     private final int numPhases;
-    private int phaseIndex;
-    private HuntingPhase huntingPhase;
-    private Runnable phaseChangeAction;
+
+    private final IntegerProperty phaseIndexPy = new SimpleIntegerProperty();
 
     protected HuntingTimer(int numPhases) {
         super("HuntingTimer");
-        this.numPhases = numPhases;
-        phaseIndex = 0;
-        huntingPhase = HuntingPhase.SCATTERING;
+        this.numPhases = requireNonNegativeInt(numPhases);
+        phaseIndexPy.addListener((py, ov, nv) -> logPhase());
+    }
+
+    protected void logPhase() {
+        Logger.info("Hunting phase {} ({}, {} ticks / {} seconds). {}",
+            phaseIndex(), phase(), durationTicks(), (float) durationTicks() / Globals.TICKS_PER_SECOND, this);
     }
 
     public void reset() {
         stop();
         reset(TickTimer.INDEFINITE);
-        phaseIndex = 0;
-        huntingPhase = HuntingPhase.SCATTERING;
+        phaseIndexPy.set(0);
     }
+
+    public IntegerProperty phaseIndexProperty() { return phaseIndexPy; }
+
+    public HuntingPhase phase() { return isEven(phaseIndex()) ? HuntingPhase.SCATTERING : HuntingPhase.CHASING; }
+
+    public int phaseIndex() { return phaseIndexPy.get(); }
 
     public abstract long huntingTicks(int levelNumber, int phaseIndex);
 
-    public void setOnPhaseChange(Runnable phaseChangeAction) {
-        this.phaseChangeAction = phaseChangeAction;
-    }
-
-    public void startFirstHuntingPhase(int levelNumber) {
-        startHuntingPhase(0, HuntingPhase.SCATTERING, huntingTicks(levelNumber, 0));
-    }
-
     public void update(int levelNumber) {
         if (hasExpired()) {
-            Logger.info("Hunting phase {} ({}) ends, tick={}", phaseIndex, huntingPhase, tickCount());
+            Logger.info("Hunting phase {} ({}) ends, tick={}", phaseIndex(), phase(), tickCount());
             startNextPhase(levelNumber);
         } else {
             doTick();
         }
     }
 
-    public void startNextPhase(int levelNumber) {
-        int nextPhaseIndex = phaseIndex + 1;
-        // alternate between CHASING and SCATTERING
-        HuntingPhase nextHuntingPhase = huntingPhase == HuntingPhase.SCATTERING
-            ? HuntingPhase.CHASING : HuntingPhase.SCATTERING;
-        startHuntingPhase(nextPhaseIndex, nextHuntingPhase, huntingTicks(levelNumber, nextPhaseIndex));
-        if (phaseChangeAction != null) {
-            phaseChangeAction.run();
-        }
-    }
-
-    private void startHuntingPhase(int phaseIndex, HuntingPhase type, long duration) {
-        this.phaseIndex = checkHuntingPhaseIndex(phaseIndex);
-        huntingPhase = type;
-        reset(duration);
-        start();
-        Logger.info("Hunting phase {} ({}, {} ticks / {} seconds) started. {}",
-            this.phaseIndex, huntingPhase,
-            durationTicks(), (float) durationTicks() / Globals.TICKS_PER_SECOND, this);
-    }
-
-    private byte checkHuntingPhaseIndex(int phaseIndex) {
+    private int requireValidPhaseIndex(int phaseIndex) {
         if (phaseIndex < 0 || phaseIndex > numPhases - 1) {
             throw new IllegalArgumentException("Hunting phase index must be 0..%d, but is %d".formatted(numPhases, phaseIndex));
         }
-        return (byte) phaseIndex;
-    }
-
-    public int phaseIndex() {
         return phaseIndex;
     }
 
-    public HuntingPhase huntingPhase() {
-        return huntingPhase;
+    public void startFirstHuntingPhase(int levelNumber) {
+        startPhase(0, requireValidLevelNumber(levelNumber));
+        logPhase(); // no change event!
+    }
+
+    public void startNextPhase(int levelNumber) {
+        requireValidLevelNumber(levelNumber);
+        int nextPhaseIndex = requireValidPhaseIndex(phaseIndex() + 1);
+        startPhase(nextPhaseIndex, levelNumber);
+    }
+
+    private void startPhase(int phaseIndex, int levelNumber) {
+        long duration = huntingTicks(levelNumber, phaseIndex);
+        reset(duration);
+        start();
+        phaseIndexPy.set(phaseIndex);
     }
 
     public Optional<Integer> currentScatterPhaseIndex() {
-        return huntingPhase == HuntingPhase.SCATTERING
-            ? Optional.of(phaseIndex / 2)
-            : Optional.empty();
+        return isEven(phaseIndex()) ? Optional.of(phaseIndex() / 2) : Optional.empty();
     }
 
     public Optional<Integer> currentChasingPhaseIndex() {
-        return huntingPhase == HuntingPhase.CHASING
-            ? Optional.of(phaseIndex / 2)
-            : Optional.empty();
+        return isOdd(phaseIndex()) ? Optional.of(phaseIndex() / 2) : Optional.empty();
     }
 }

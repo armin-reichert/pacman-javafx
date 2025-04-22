@@ -137,6 +137,11 @@ public interface Globals {
         return requireNonNegative(value, "%f must be zero or positive");
     }
 
+    static int requireNonNegativeInt(int value) {
+        if (value < 0) throw new IllegalArgumentException("Non-negative integer required, but got %d".formatted(value));
+        return value;
+    }
+
     /**
      * @param min left interval bound
      * @param maxExclusive right (open) interval bound
@@ -184,6 +189,9 @@ public interface Globals {
 
     static boolean isEven(int n) {
         return n % 2 == 0;
+    }
+    static boolean isOdd(int n) {
+        return n % 2 != 0;
     }
 
     /**

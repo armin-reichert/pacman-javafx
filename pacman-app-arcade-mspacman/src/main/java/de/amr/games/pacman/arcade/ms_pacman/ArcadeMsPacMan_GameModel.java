@@ -113,7 +113,9 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         this.mapSelector = requireNonNull(mapSelector);
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
-        huntingTimer.setOnPhaseChange(() -> level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP));
+        huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
+            if (nv.intValue() > 0) level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP);
+        });
         lastLevelNumber = Integer.MAX_VALUE;
     }
 
@@ -546,7 +548,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         if (huntingTimer.phaseIndex() == 0 && (ghost.id() == RED_GHOST_ID || ghost.id() == PINK_GHOST_ID)) {
             ghost.roam(ghostAttackSpeed(ghost));
         } else {
-            boolean chasing = huntingTimer.huntingPhase() == HuntingTimer.HuntingPhase.CHASING
+            boolean chasing = huntingTimer.phase() == HuntingTimer.HuntingPhase.CHASING
                 || ghost.id() == RED_GHOST_ID && cruiseElroy > 0;
             Vector2i targetTile = chasing
                     ? chasingTargetTile(ghost.id(), level, simulateOverflowBugProperty().get())
