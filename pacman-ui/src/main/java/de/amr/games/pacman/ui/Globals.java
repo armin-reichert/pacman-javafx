@@ -6,9 +6,9 @@ package de.amr.games.pacman.ui;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._3d.PerspectiveID;
-import de.amr.games.pacman.uilib.input.Joypad;
 import de.amr.games.pacman.ui.sound.GameSound;
 import de.amr.games.pacman.uilib.GameClockFX;
+import de.amr.games.pacman.uilib.input.Joypad;
 import de.amr.games.pacman.uilib.input.Keyboard;
 import de.amr.games.pacman.uilib.model3D.Model3DRepository;
 import javafx.beans.property.*;
@@ -61,6 +61,9 @@ public class Globals {
     public static final byte STATUS_ICON_SIZE          = 24;
     public static final byte STATUS_ICON_SPACING       = 5;
     public static final byte STATUS_ICON_PADDING       = 10;
+
+    public static final double BONUS_3D_SYMBOL_WIDTH  = TS;
+    public static final double BONUS_3D_POINTS_WIDTH  = 1.8 * TS;
 
     public static final float ENERGIZER_3D_RADIUS      = 3.5f;
     public static final float FLOOR_3D_THICKNESS       = 0.5f;

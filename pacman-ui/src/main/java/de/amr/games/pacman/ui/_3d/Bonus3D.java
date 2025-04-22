@@ -22,6 +22,8 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.ui.Globals.BONUS_3D_POINTS_WIDTH;
+import static de.amr.games.pacman.ui.Globals.BONUS_3D_SYMBOL_WIDTH;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -30,10 +32,6 @@ import static java.util.Objects.requireNonNull;
  * @author Armin Reichert
  */
 public class Bonus3D extends Box {
-
-    private static final double SYMBOL_WIDTH = TS;
-    private static final double POINTS_WIDTH = 1.8 * TS;
-
     private final Bonus bonus;
     private final ImageView symbolImageView;
     private final ImageView pointsImageView;
@@ -41,7 +39,7 @@ public class Bonus3D extends Box {
     private final RotateTransition edibleAnimation;
 
     public Bonus3D(Bonus bonus, Image symbolImage, Image pointsImage) {
-        super(SYMBOL_WIDTH, TS, TS);
+        super(BONUS_3D_SYMBOL_WIDTH, TS, TS);
 
         requireNonNull(bonus);
         requireNonNull(symbolImage);
@@ -50,11 +48,11 @@ public class Bonus3D extends Box {
         this.bonus = bonus;
         symbolImageView = new ImageView(symbolImage);
         symbolImageView.setPreserveRatio(true);
-        symbolImageView.setFitWidth(SYMBOL_WIDTH);
+        symbolImageView.setFitWidth(BONUS_3D_SYMBOL_WIDTH);
 
         pointsImageView = new ImageView(pointsImage);
         pointsImageView.setPreserveRatio(true);
-        pointsImageView.setFitWidth(POINTS_WIDTH);
+        pointsImageView.setFitWidth(BONUS_3D_POINTS_WIDTH);
 
         edibleAnimation = new RotateTransition(Duration.seconds(1), this);
         edibleAnimation.setAxis(Rotate.Z_AXIS); // to trigger initial change
@@ -98,7 +96,7 @@ public class Bonus3D extends Box {
 
     public void showEdible() {
         setVisible(true);
-        setWidth(SYMBOL_WIDTH);
+        setWidth(BONUS_3D_SYMBOL_WIDTH);
         setTexture(symbolImageView.getImage());
         if (bonus instanceof StaticBonus) {
             edibleAnimation.setAxis(Rotate.X_AXIS);
@@ -114,7 +112,7 @@ public class Bonus3D extends Box {
     public void showEaten() {
         edibleAnimation.stop();
         setVisible(true);
-        setWidth(POINTS_WIDTH);
+        setWidth(BONUS_3D_POINTS_WIDTH);
         setTexture(pointsImageView.getImage());
         setRotationAxis(Rotate.X_AXIS);
         setRotate(0);
