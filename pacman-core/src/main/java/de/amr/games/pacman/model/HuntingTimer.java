@@ -14,34 +14,38 @@ import java.util.Optional;
 
 import static de.amr.games.pacman.Globals.*;
 
-
 /**
- * Hunting happens in a sequence of retreat (scatter) and attack (chasing) phases.
+ * Controls timing of hunting phases (alternating scatter vs. chasing phases).
  */
-public abstract class HuntingTimer extends TickTimer {
+public abstract class HuntingTimer {
 
     public enum HuntingPhase {SCATTERING, CHASING}
 
+    private final TickTimer timer = new TickTimer("Timer-" + getClass().getSimpleName());
     private final int numPhases;
-
     private final IntegerProperty phaseIndexPy = new SimpleIntegerProperty();
 
     protected HuntingTimer(int numPhases) {
-        super("HuntingTimer");
         this.numPhases = requireNonNegativeInt(numPhases);
         phaseIndexPy.addListener((py, ov, nv) -> logPhase());
     }
 
     protected void logPhase() {
         Logger.info("Hunting phase {} ({}, {} ticks / {} seconds). {}",
-            phaseIndex(), phase(), durationTicks(), (float) durationTicks() / Globals.TICKS_PER_SECOND, this);
+            phaseIndex(), phase(), timer.durationTicks(), (float) timer.durationTicks() / Globals.TICKS_PER_SECOND, this);
     }
 
     public void reset() {
-        stop();
-        reset(TickTimer.INDEFINITE);
+        timer.stop();
+        timer.reset(TickTimer.INDEFINITE);
         phaseIndexPy.set(0);
     }
+
+    public void start() { timer.start(); }
+    public void stop() { timer.stop(); }
+    public boolean isStopped() { return timer.isStopped(); }
+    public long tickCount() { return timer.tickCount(); }
+    public long remainingTicks() { return timer.remainingTicks(); }
 
     public IntegerProperty phaseIndexProperty() { return phaseIndexPy; }
 
@@ -52,11 +56,11 @@ public abstract class HuntingTimer extends TickTimer {
     public abstract long huntingTicks(int levelNumber, int phaseIndex);
 
     public void update(int levelNumber) {
-        if (hasExpired()) {
-            Logger.info("Hunting phase {} ({}) ends, tick={}", phaseIndex(), phase(), tickCount());
+        if (timer.hasExpired()) {
+            Logger.info("Hunting phase {} ({}) ends, tick={}", phaseIndex(), phase(), timer.tickCount());
             startNextPhase(levelNumber);
         } else {
-            doTick();
+            timer.doTick();
         }
     }
 
@@ -80,8 +84,8 @@ public abstract class HuntingTimer extends TickTimer {
 
     private void startPhase(int phaseIndex, int levelNumber) {
         long duration = huntingTicks(levelNumber, phaseIndex);
-        reset(duration);
-        start();
+        timer.reset(duration);
+        timer.start();
         phaseIndexPy.set(phaseIndex);
     }
 
