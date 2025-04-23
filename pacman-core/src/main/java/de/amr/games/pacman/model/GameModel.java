@@ -328,10 +328,10 @@ public abstract class GameModel {
         level.pac().update(this);
         updatePacPower();
         checkPacKilled();
-        if (!eventsThisFrame().pacKilled) {
+        if (!hasPacManBeenKilled()) {
             level.ghosts().forEach(ghost -> ghost.update(this));
             level.ghosts(FRIGHTENED).filter(ghost -> areColliding(ghost, level.pac())).forEach(this::killGhost);
-            if (eventsThisFrame().killedGhosts.isEmpty()) {
+            if (!haveGhostsBeenKilled()) {
                 level.bonus().ifPresent(this::updateBonus);
             }
         }
@@ -369,12 +369,12 @@ public abstract class GameModel {
         long powerTicks = pacPowerTicks();
         if (powerTicks > 0) {
             huntingTimer().stop();
-            Logger.info("Hunting stopped");
+            Logger.info("Hunting Pac-Man stopped as he got power");
             level.pac().powerTimer().restartTicks(powerTicks);
             Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerTicks / 60.0);
             level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             level.ghosts(FRIGHTENED).forEach(Ghost::reverseASAP);
-            eventsThisFrame().pacGetsPower = true;
+            eventsThisFrame().pacGotPower = true;
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_GETS_POWER);
         } else {
             level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseASAP);
@@ -393,7 +393,7 @@ public abstract class GameModel {
             Logger.info("Power timer stopped and reset to zero");
             level.victims().clear();
             huntingTimer().start();
-            Logger.info("Hunting timer restarted");
+            Logger.info("Hunting timer restarted because Pac-Man lost power");
             level.ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
             eventsThisFrame().pacLostPower = true;
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_LOST_POWER);

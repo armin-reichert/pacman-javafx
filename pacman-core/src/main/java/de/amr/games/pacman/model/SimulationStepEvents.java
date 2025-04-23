@@ -22,7 +22,7 @@ public class SimulationStepEvents {
     public boolean  energizerFound = false;
     public int      bonusIndex = -1;
     public boolean  bonusEaten = false;
-    public boolean  pacGetsPower = false;
+    public boolean pacGotPower = false;
     public boolean  pacStartsLosingPower = false;
     public boolean  pacLostPower = false;
     public boolean  pacKilled = false;
@@ -47,7 +47,7 @@ public class SimulationStepEvents {
         if (bonusEaten) {
             messages.add("Bonus eaten");
         }
-        if (pacGetsPower) {
+        if (pacGotPower) {
             messages.add("Pac gained power");
         }
         if (pacStartsLosingPower) {
