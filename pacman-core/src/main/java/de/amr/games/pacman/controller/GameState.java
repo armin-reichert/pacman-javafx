@@ -170,9 +170,9 @@ public enum GameState implements FsmState<GameModel> {
             game.doHuntingStep();
             if (game.isLevelComplete()) {
                 THE_GAME_CONTROLLER.changeState(LEVEL_COMPLETE);
-            } else if (game.isPacManKilled()) {
+            } else if (game.hasPacManBeenKilled()) {
                 THE_GAME_CONTROLLER.changeState(PACMAN_DYING);
-            } else if (game.areGhostsKilled()) {
+            } else if (game.haveGhostsBeenKilled()) {
                 THE_GAME_CONTROLLER.changeState(GHOST_DYING);
             }
         }
@@ -488,9 +488,9 @@ public enum GameState implements FsmState<GameModel> {
             }
             else if (game.isLevelComplete()) {
                 THE_GAME_CONTROLLER.changeState(INTRO);
-            } else if (game.isPacManKilled()) {
+            } else if (game.hasPacManBeenKilled()) {
                 timer.expire();
-            } else if (game.areGhostsKilled()) {
+            } else if (game.haveGhostsBeenKilled()) {
                 THE_GAME_CONTROLLER.changeState(GHOST_DYING);
             }
         }

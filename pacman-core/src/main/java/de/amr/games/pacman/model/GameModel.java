@@ -303,11 +303,11 @@ public abstract class GameModel {
         return level.uneatenFoodCount() == 0;
     }
 
-    public boolean isPacManKilled() {
+    public boolean hasPacManBeenKilled() {
         return eventsThisFrame().pacKilled;
     }
 
-    public boolean areGhostsKilled() {
+    public boolean haveGhostsBeenKilled() {
         return !eventsThisFrame().killedGhosts.isEmpty();
     }
 
