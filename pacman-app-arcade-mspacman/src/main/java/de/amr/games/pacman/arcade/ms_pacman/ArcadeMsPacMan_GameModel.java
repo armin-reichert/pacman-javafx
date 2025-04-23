@@ -45,19 +45,19 @@ import static java.util.Objects.requireNonNull;
 public class ArcadeMsPacMan_GameModel extends GameModel {
 
     public static Ghost blinky() {
-        return new Ghost(GameModel.RED_GHOST_ID, "Blinky");
+        return new Ghost(RED_GHOST_ID, "Blinky");
     }
 
     public static Ghost pinky() {
-        return new Ghost(GameModel.PINK_GHOST_ID, "Pinky");
+        return new Ghost(PINK_GHOST_ID, "Pinky");
     }
 
     public static Ghost inky() {
-        return new Ghost(GameModel.CYAN_GHOST_ID, "Inky");
+        return new Ghost(CYAN_GHOST_ID, "Inky");
     }
 
     public static Ghost sue() {
-        return new Ghost(GameModel.ORANGE_GHOST_ID, "Sue");
+        return new Ghost(ORANGE_GHOST_ID, "Sue");
     }
 
     // These are the Pac-Man level data as given in the Pac-Man dossier.

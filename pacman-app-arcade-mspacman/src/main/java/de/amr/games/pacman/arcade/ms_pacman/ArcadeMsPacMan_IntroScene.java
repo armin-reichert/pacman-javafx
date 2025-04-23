@@ -12,7 +12,6 @@ import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.lib.fsm.FsmState;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.ActorAnimations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -139,7 +138,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         if (sceneController.state() == SceneState.GHOSTS_MARCHING_IN) {
             String ghostName = ghosts[ghostID].name().toUpperCase();
             double dx = ghostName.length() < 4 ? tiles_to_px(1) : 0;
-            if (ghostID == GameModel.RED_GHOST_ID) {
+            if (ghostID == RED_GHOST_ID) {
                 gr.fillTextAtScaledPosition("WITH", COLOR_WHITE, font, TITLE_X, TOP_Y + tiles_to_px(3));
             }
             gr.fillTextAtScaledPosition(ghostName, COLOR_GHOST[ghostID], font, TITLE_X + tiles_to_px(3) + dx, TOP_Y + tiles_to_px(6));

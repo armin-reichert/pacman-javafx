@@ -7,7 +7,7 @@ package de.amr.games.pacman.tengen.ms_pacman;
 import de.amr.games.pacman.model.GameException;
 import de.amr.games.pacman.model.GameLevel;
 
-import static de.amr.games.pacman.Globals.inClosedRange;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.model.GameModel.*;
 
 /**

@@ -11,8 +11,8 @@ import javafx.scene.image.Image;
 
 import java.util.Arrays;
 
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.RectArea.rect;
-import static de.amr.games.pacman.model.GameModel.*;
 
 /**
  * @author Armin Reichert

@@ -99,19 +99,19 @@ public class ArcadePacMan_GameModel extends GameModel {
     private static final byte[] KILLED_GHOST_VALUE_MULTIPLIER = {2, 4, 8, 16}; // factor * 100 = value
 
     public static Ghost blinky() {
-        return new Ghost(GameModel.RED_GHOST_ID, "Blinky");
+        return new Ghost(RED_GHOST_ID, "Blinky");
     }
 
     public static Ghost pinky() {
-        return new Ghost(GameModel.PINK_GHOST_ID, "Pinky");
+        return new Ghost(PINK_GHOST_ID, "Pinky");
     }
 
     public static Ghost inky() {
-        return new Ghost(GameModel.CYAN_GHOST_ID, "Inky");
+        return new Ghost(CYAN_GHOST_ID, "Inky");
     }
 
     public static Ghost clyde() {
-        return new Ghost(GameModel.ORANGE_GHOST_ID, "Clyde");
+        return new Ghost(ORANGE_GHOST_ID, "Clyde");
     }
 
     protected final Steering autopilot = new RuleBasedPacSteering(this);

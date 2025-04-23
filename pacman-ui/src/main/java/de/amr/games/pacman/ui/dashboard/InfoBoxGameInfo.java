@@ -4,12 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.dashboard;
 
-import de.amr.games.pacman.model.HuntingTimer;
 import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.HuntingTimer;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.uilib.assets.WorldMapColorScheme;
 import javafx.scene.paint.Color;
@@ -19,7 +18,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.timer.TickTimer.ticksToString;
 import static de.amr.games.pacman.ui.Globals.THE_UI_CONFIGS;
 import static de.amr.games.pacman.uilib.Ufx.formatColorHex;
@@ -126,17 +125,17 @@ public class InfoBoxGameInfo extends InfoBox {
 
     private String fmtGhostAttackSpeed(GameLevel level) {
         // use Pinky because Blinky could be in Elroy mode
-        Ghost pinky = level.ghost(GameModel.PINK_GHOST_ID);
+        Ghost pinky = level.ghost(PINK_GHOST_ID);
         return (pinky != null) ? "%.4f px/s".formatted(THE_GAME_CONTROLLER.game().ghostAttackSpeed(pinky) * 60) : InfoText.NO_INFO;
     }
 
     private String fmtGhostSpeedFrightened(GameLevel level) {
-        Ghost blinky = level.ghost(GameModel.RED_GHOST_ID);
+        Ghost blinky = level.ghost(RED_GHOST_ID);
         return (blinky != null) ? "%.4f px/s".formatted(THE_GAME_CONTROLLER.game().ghostFrightenedSpeed(blinky) * 60) : InfoText.NO_INFO;
     }
 
     private String fmtGhostSpeedTunnel(GameLevel level) {
-        Ghost blinky = level.ghost(GameModel.RED_GHOST_ID);
+        Ghost blinky = level.ghost(RED_GHOST_ID);
         return (blinky != null) ? "%.4f px/s".formatted(THE_GAME_CONTROLLER.game().ghostTunnelSpeed(blinky) * 60) : InfoText.NO_INFO;
     }
 

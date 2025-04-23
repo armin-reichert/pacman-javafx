@@ -17,7 +17,7 @@ import de.amr.games.pacman.ui._2d.SpriteAnimationSet;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.timer.TickTimer.ticksToString;
 import static de.amr.games.pacman.ui.dashboard.InfoText.NO_INFO;
 
@@ -37,13 +37,13 @@ public class InfoBoxActorInfo extends InfoBox {
                 : "No Power";
         }));
         addEmptyRow();
-        ghostInfo(GameModel.RED_GHOST_ID);
+        ghostInfo(RED_GHOST_ID);
         addEmptyRow();
-        ghostInfo(GameModel.PINK_GHOST_ID);
+        ghostInfo(PINK_GHOST_ID);
         addEmptyRow();
-        ghostInfo(GameModel.CYAN_GHOST_ID);
+        ghostInfo(CYAN_GHOST_ID);
         addEmptyRow();
-        ghostInfo(GameModel.ORANGE_GHOST_ID);
+        ghostInfo(ORANGE_GHOST_ID);
     }
 
     private Supplier<String> pacInfo(BiFunction<GameModel, Pac, String> fnPacInfo) {
@@ -89,10 +89,10 @@ public class InfoBoxActorInfo extends InfoBox {
 
     private String ghostColorName(byte ghostID) {
         return switch (ghostID) {
-            case GameModel.RED_GHOST_ID -> "Red";
-            case GameModel.PINK_GHOST_ID -> "Pink";
-            case GameModel.CYAN_GHOST_ID -> "Cyan";
-            case GameModel.ORANGE_GHOST_ID -> "Orange";
+            case RED_GHOST_ID -> "Red";
+            case PINK_GHOST_ID -> "Pink";
+            case CYAN_GHOST_ID -> "Cyan";
+            case ORANGE_GHOST_ID -> "Orange";
             default -> "";
         };
     }

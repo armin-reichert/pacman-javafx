@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.tengen.ms_pacman;
 
-import de.amr.games.pacman.model.HuntingTimer;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.Waypoint;
@@ -34,19 +33,19 @@ import static java.util.Objects.requireNonNull;
 public class TengenMsPacMan_GameModel extends GameModel {
 
     public static Ghost blinky() {
-        return new Ghost(GameModel.RED_GHOST_ID, "Blinky");
+        return new Ghost(RED_GHOST_ID, "Blinky");
     }
 
     public static Ghost pinky() {
-        return new Ghost(GameModel.PINK_GHOST_ID, "Pinky");
+        return new Ghost(PINK_GHOST_ID, "Pinky");
     }
 
     public static Ghost inky() {
-        return new Ghost(GameModel.CYAN_GHOST_ID, "Inky");
+        return new Ghost(CYAN_GHOST_ID, "Inky");
     }
 
     public static Ghost sue() {
-        return new Ghost(GameModel.ORANGE_GHOST_ID, "Sue");
+        return new Ghost(ORANGE_GHOST_ID, "Sue");
     }
 
     public static final byte MIN_LEVEL_NUMBER = 1;
@@ -444,7 +443,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.pac().setAutopilot(autopilot);
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         // Ghosts inside house start at bottom of house instead at middle
-        level.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST_ID).forEach(ghost ->
+        level.ghosts().filter(ghost -> ghost.id() != RED_GHOST_ID).forEach(ghost ->
             level.setGhostPosition(ghost.id(), level.ghostPosition(ghost.id()).plus(0, HTS))
         );
         levelCounter.setEnabled(levelNumber < 8);
@@ -466,7 +465,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         // ghosts inside house start at floor of house
-        level.ghosts().filter(ghost -> ghost.id() != GameModel.RED_GHOST_ID).forEach(ghost ->
+        level.ghosts().filter(ghost -> ghost.id() != RED_GHOST_ID).forEach(ghost ->
                 level.setGhostPosition(ghost.id(), level.ghostPosition(ghost.id()).plus(0, HTS))
         );
         levelCounter.setEnabled(true);

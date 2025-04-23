@@ -18,8 +18,7 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
-import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.Globals.THE_GAME_EVENT_MANAGER;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
 /**
@@ -28,8 +27,6 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  * @author Armin Reichert
  */
 public abstract class GameModel {
-
-    public static final byte RED_GHOST_ID = 0, PINK_GHOST_ID = 1, CYAN_GHOST_ID = 2, ORANGE_GHOST_ID = 3;
 
     private final BooleanProperty cutScenesEnabledPy = new SimpleBooleanProperty(true);
     private final BooleanProperty demoLevelPy = new SimpleBooleanProperty(false);

@@ -12,8 +12,8 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.Direction.LEFT;
-import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
 /**
