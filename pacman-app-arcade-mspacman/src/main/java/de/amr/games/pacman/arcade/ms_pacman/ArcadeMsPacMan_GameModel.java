@@ -101,7 +101,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     private byte cruiseElroy; //TODO is this existing in Ms. Pac-Man at all?
 
-    protected final ArcadeMsPacMan_HuntingTimer huntingTimer = new ArcadeMsPacMan_HuntingTimer();;
+    protected final ArcadeMsPacMan_HuntingTimer huntingTimer = new ArcadeMsPacMan_HuntingTimer();
     protected final ArcadeMsPacMan_LevelCounter levelCounter = new ArcadeMsPacMan_LevelCounter();
     protected final MapSelector mapSelector;
 
@@ -194,7 +194,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public void buildGameLevel(int levelNumber) {
+    public void buildLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
 
         level = new GameLevel(this, levelNumber, worldMap);
@@ -248,7 +248,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     public void buildDemoLevel() {
         demoLevelProperty().set(true);
         levelCounter.setEnabled(false);
-        buildGameLevel(1);
+        buildLevel(1);
         assignDemoLevelBehavior(level.pac());
         demoLevelSteering.init();
         level.showMessage(GameLevel.Message.GAME_OVER);
@@ -382,7 +382,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         gateKeeper.registerFoodEaten(level);
         if (isBonusReached()) {
             activateNextBonus();
-            eventLog.bonusIndex = level.nextBonusIndex();
+            eventsThisFrame().bonusIndex = level.nextBonusIndex();
         }
     }
 
@@ -400,7 +400,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     @Override
     public void killGhost(Ghost ghost) {
-        eventLog.killedGhosts.add(ghost);
+        eventsThisFrame().killedGhosts.add(ghost);
         int killedSoFar = level.victims().size();
         int points = 100 * KILLED_GHOST_VALUE_MULTIPLIER[killedSoFar];
         level.victims().add(ghost);

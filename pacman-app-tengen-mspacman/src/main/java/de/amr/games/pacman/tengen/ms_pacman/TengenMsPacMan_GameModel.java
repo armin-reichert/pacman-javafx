@@ -365,7 +365,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     @Override
     public void startNewGame() {
         resetForStartingNewGame();
-        createGameLevel(startLevelNumber);
+        createLevel(startLevelNumber);
         levelCounter.resetStartingFromLevel(startLevelNumber);
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.GAME_STARTED);
     }
@@ -433,7 +433,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public void buildGameLevel(int levelNumber) {
+    public void buildLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.selectWorldMap(mapCategory, levelNumber);
 
         level = new GameLevel(this, levelNumber, worldMap);
@@ -570,7 +570,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         gateKeeper.registerFoodEaten(level);
         if (isBonusReached()) {
             activateNextBonus();
-            eventLog.bonusIndex = level.nextBonusIndex();
+            eventsThisFrame().bonusIndex = level.nextBonusIndex();
         }
     }
 
@@ -587,7 +587,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public void killGhost(Ghost ghost) {
-        eventLog.killedGhosts.add(ghost);
+        eventsThisFrame().killedGhosts.add(ghost);
         int killedSoFar = level.victims().size();
         int points = 100 * KILLED_GHOST_VALUE_MULTIPLIER[killedSoFar];
         level.victims().add(ghost);

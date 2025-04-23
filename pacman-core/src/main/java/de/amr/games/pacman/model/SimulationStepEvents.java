@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @author Armin Reichert
  */
-public class SimulationStepLog {
+public class SimulationStepEvents {
     public final long tick;
     public Vector2i foodFoundTile = null;
     public boolean  energizerFound = false;
@@ -32,7 +32,7 @@ public class SimulationStepLog {
     public String  ghostReleaseInfo = null;
     public final List<Ghost> killedGhosts = new ArrayList<>(4);
 
-    public SimulationStepLog(long tick) {
+    public SimulationStepEvents(long tick) {
         this.tick = tick;
     }
 

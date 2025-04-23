@@ -67,9 +67,9 @@ public class PacManGamesUI implements GameUI {
 
     private void doSimulationStepAndUpdateGameScene() {
         try {
-            THE_GAME_CONTROLLER.game().newEventLog(THE_CLOCK.tickCount());
+            THE_GAME_CONTROLLER.newEventLog(THE_CLOCK.tickCount());
             THE_GAME_CONTROLLER.update();
-            THE_GAME_CONTROLLER.game().printEventLog();
+            THE_GAME_CONTROLLER.printEventLog();
         } catch (Exception x) {
             Logger.error(x);
             Logger.error("SOMETHING VERY BAD HAPPENED DURING SIMULATION STEP!");

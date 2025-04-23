@@ -385,7 +385,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     private void onEnterStateGhostDying(GameLevel level) {
         GameSpriteSheet spriteSheet = THE_UI_CONFIGS.current().spriteSheet();
         RectArea[] numberSprites = spriteSheet.ghostNumberSprites();
-        game().eventLog().killedGhosts.forEach(ghost -> {
+        THE_GAME_CONTROLLER.eventsThisFrame().killedGhosts.forEach(ghost -> {
             int victimIndex = level.victims().indexOf(ghost);
             var numberImage = spriteSheet.crop(numberSprites[victimIndex]);
             level3D.ghost3D(ghost.id()).setNumberImage(numberImage);

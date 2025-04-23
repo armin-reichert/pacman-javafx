@@ -180,7 +180,7 @@ public class GateKeeper {
         }
     }
 
-    public void unlockGhosts(GameLevel level, Consumer<Ghost> onGhostReleased, SimulationStepLog eventLog) {
+    public void unlockGhosts(GameLevel level, Consumer<Ghost> onGhostReleased, SimulationStepEvents eventLog) {
         Ghost blinky = level.ghost(RED_GHOST_ID);
         if (blinky.inState(LOCKED)) {
             if (blinky.insideHouse()) {

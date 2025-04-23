@@ -235,7 +235,7 @@ public class ArcadePacMan_GameModel extends GameModel {
     }
 
     @Override
-    public void buildGameLevel(int levelNumber) {
+    public void buildLevel(int levelNumber) {
         requireValidLevelNumber(levelNumber);
         WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
 
@@ -290,7 +290,7 @@ public class ArcadePacMan_GameModel extends GameModel {
     public void buildDemoLevel() {
         demoLevelProperty().set(true);
         levelCounter.setEnabled(false);
-        buildGameLevel(1);
+        buildLevel(1);
         assignDemoLevelBehavior(level.pac());
         demoLevelSteering.init();
         level.showMessage(GameLevel.Message.GAME_OVER);
@@ -395,7 +395,7 @@ public class ArcadePacMan_GameModel extends GameModel {
         gateKeeper.registerFoodEaten(level);
         if (isBonusReached()) {
             activateNextBonus();
-            eventLog.bonusIndex = level.nextBonusIndex();
+            eventsThisFrame().bonusIndex = level.nextBonusIndex();
         }
     }
 
@@ -421,7 +421,7 @@ public class ArcadePacMan_GameModel extends GameModel {
 
     @Override
     public void killGhost(Ghost ghost) {
-        eventLog.killedGhosts.add(ghost);
+        eventsThisFrame().killedGhosts.add(ghost);
         int killedSoFar = level.victims().size();
         int points = 100 * KILLED_GHOST_VALUE_MULTIPLIER[killedSoFar];
         level.victims().add(ghost);
