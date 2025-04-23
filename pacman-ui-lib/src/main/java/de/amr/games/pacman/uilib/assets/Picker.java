@@ -39,6 +39,10 @@ public class Picker<T> {
         current = 0;
     }
 
+    public boolean hasEntries() {
+        return !entries.isEmpty();
+    }
+
     public T next() {
         if (entries.size() == 1) {
             return entries.getFirst();

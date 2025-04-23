@@ -50,6 +50,8 @@ public class GameAssets extends AssetStorage implements ResourceManager {
     }
 
     public String localizedLevelCompleteMessage(int levelNumber) {
-        return pickerForLevelCompleteTexts.next() + "\n\n" + text("level_complete", levelNumber);
+        return pickerForLevelCompleteTexts.hasEntries()
+            ? pickerForLevelCompleteTexts.next() + "\n\n" + text("level_complete", levelNumber)
+            : "";
     }
 }

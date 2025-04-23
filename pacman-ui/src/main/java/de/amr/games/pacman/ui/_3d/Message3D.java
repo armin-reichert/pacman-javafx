@@ -44,6 +44,17 @@ public class Message3D extends ImageView {
         return new Builder();
     }
 
+    @Override
+    public String toString() {
+        return "{Message3D"
+                + ": translateX=" + getTranslateX()
+                + ", translateY=" + getTranslateY()
+                + ", translateZ=" + getTranslateZ()
+                + ", visible=" + isVisible()
+                + ". bounds=" + getBoundsInLocal()
+                + "}";
+    }
+
     private static final int MARGIN = 3;
     private static final int QUALITY = 3;
 

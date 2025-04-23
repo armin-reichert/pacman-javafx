@@ -38,6 +38,7 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -303,7 +304,7 @@ public class GameLevel3D {
         }
         message3D = Message3D.builder()
             .text(text)
-            .font(THE_ASSETS.font("font.arcade", 6))
+            .font(THE_ASSETS.arcadeFontAtSize(6))
             .borderColor(Color.WHITE)
             .textColor(Color.YELLOW)
             .build();
@@ -316,12 +317,19 @@ public class GameLevel3D {
 
         var moveUpAnimation = new TranslateTransition(Duration.seconds(1), message3D);
         moveUpAnimation.setToZ(-(halfHeight + 0.5 * OBSTACLE_3D_BASE_HEIGHT));
+        moveUpAnimation.setOnFinished(e -> {
+            Logger.info("Moving message3D up finished: {}", message3D);
+        });
 
         var moveDownAnimation = new TranslateTransition(Duration.seconds(1), message3D);
         moveDownAnimation.setDelay(Duration.seconds(displaySeconds));
         moveDownAnimation.setToZ(halfHeight);
-        moveDownAnimation.setOnFinished(e -> message3D.setVisible(false));
+        moveDownAnimation.setOnFinished(e -> {
+            message3D.setVisible(false);
+            Logger.info("Moving message3D down finished: {}", message3D);
+        });
 
+        Logger.info("Message3D before move: {}", message3D);
         new SequentialTransition(moveUpAnimation, moveDownAnimation).play();
     }
 
