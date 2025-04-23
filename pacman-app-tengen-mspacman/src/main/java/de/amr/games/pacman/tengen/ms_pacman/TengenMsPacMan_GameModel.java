@@ -162,7 +162,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         livesProperty().set(initialLivesProperty().get());
         level = null;
         levelCounter.reset();
-        demoLevelProperty().set(false);
+        demoLevelMode = false;
         playingProperty().set(false);
         boosterActive = false;
         scoreManager.loadHighScore();
@@ -452,7 +452,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public void buildDemoLevel() {
-        demoLevelProperty().set(true);
+        demoLevelMode = true;
 
         WorldMap worldMap = mapSelector.coloredWorldMap(mapCategory, 1);
 

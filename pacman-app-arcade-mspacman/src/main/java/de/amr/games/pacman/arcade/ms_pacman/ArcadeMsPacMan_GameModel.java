@@ -152,7 +152,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         playingProperty().set(false);
         livesProperty().set(initialLivesProperty().get());
         level = null;
-        demoLevelProperty().set(false);
+        demoLevelMode = false;
         cruiseElroy = 0;
         levelCounter().reset();
         scoreManager().loadHighScore();
@@ -251,7 +251,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     @Override
     public void buildDemoLevel() {
-        demoLevelProperty().set(true);
+        demoLevelMode = true;
         levelCounter.setEnabled(false);
         buildLevel(1);
         assignDemoLevelBehavior(level.pac());

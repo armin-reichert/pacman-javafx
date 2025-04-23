@@ -29,7 +29,6 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
 public abstract class GameModel {
 
     private final BooleanProperty cutScenesEnabledPy = new SimpleBooleanProperty(true);
-    private final BooleanProperty demoLevelPy = new SimpleBooleanProperty(false);
     private final IntegerProperty initialLivesPy = new SimpleIntegerProperty(3);
     private final IntegerProperty livesPy = new SimpleIntegerProperty(0);
     private final BooleanProperty playingPy = new SimpleBooleanProperty(false);
@@ -39,6 +38,7 @@ public abstract class GameModel {
     protected final ScoreManager scoreManager = new ScoreManager();
 
     protected GameLevel level;
+    protected boolean demoLevelMode;
     protected int lastLevelNumber;
 
     protected GameModel() {
@@ -130,9 +130,7 @@ public abstract class GameModel {
 
     public BooleanProperty cutScenesEnabledProperty() { return cutScenesEnabledPy; }
 
-    public BooleanProperty demoLevelProperty() { return demoLevelPy; }
-
-    public boolean isDemoLevel() { return demoLevelProperty().get(); }
+    public boolean isDemoLevel() { return demoLevelMode; }
 
     public IntegerProperty initialLivesProperty() { return initialLivesPy; }
 
@@ -166,7 +164,7 @@ public abstract class GameModel {
     }
 
     public final void createLevel(int levelNumber) {
-        demoLevelProperty().set(false);
+        demoLevelMode = false;
         buildLevel(levelNumber);
         scoreManager.setLevelNumber(levelNumber);
         huntingTimer().reset();
