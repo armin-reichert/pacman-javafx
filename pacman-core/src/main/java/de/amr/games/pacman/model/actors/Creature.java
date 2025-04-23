@@ -206,7 +206,7 @@ public abstract class Creature extends Actor2D {
     /**
      * Signals that this creature should reverse its move direction as soon as possible.
      */
-    public void reverseASAP() {
+    public void reverseAtNextOccasion() {
         gotReverseCommand = true;
         Logger.debug("Reverse! {}", this);
     }

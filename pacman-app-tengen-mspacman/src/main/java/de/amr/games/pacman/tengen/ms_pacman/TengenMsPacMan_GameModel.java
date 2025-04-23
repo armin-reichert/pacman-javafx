@@ -122,7 +122,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         levelCounter = new TengenMsPacMan_LevelCounter();
         mapSelector = new TengenMsPacMan_MapSelector();
         huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
-            if (nv.intValue() > 0) level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP);
+            if (nv.intValue() > 0) level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAtNextOccasion);
         });
         lastLevelNumber = MAX_LEVEL_NUMBER;
     }

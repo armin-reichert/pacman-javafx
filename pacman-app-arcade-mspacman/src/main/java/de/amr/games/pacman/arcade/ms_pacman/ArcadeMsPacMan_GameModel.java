@@ -115,7 +115,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
         huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
-            if (nv.intValue() > 0) level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP);
+            if (nv.intValue() > 0) level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAtNextOccasion);
         });
         gateKeeper.setOnGhostReleasedAction(ghost -> {
             if (ghost.id() == ORANGE_GHOST_ID && cruiseElroy < 0) {

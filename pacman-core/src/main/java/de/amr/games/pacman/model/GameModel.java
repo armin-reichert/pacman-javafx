@@ -324,7 +324,7 @@ public abstract class GameModel {
         checkPacKilled();
         if (!hasPacManBeenKilled()) {
             level.ghosts().forEach(ghost -> ghost.update(this));
-            level.ghosts(FRIGHTENED).filter(ghost -> areColliding(ghost, level.pac())).forEach(this::killGhost);
+            level.ghosts(FRIGHTENED).filter(ghost -> areActorsColliding(ghost, level.pac())).forEach(this::killGhost);
             if (!haveGhostsBeenKilled()) {
                 level.bonus().ifPresent(this::updateBonus);
             }
@@ -332,7 +332,7 @@ public abstract class GameModel {
     }
 
     private void checkPacKilled() {
-        boolean pacMeetsKiller = level.ghosts(HUNTING_PAC).anyMatch(ghost -> areColliding(level.pac(), ghost));
+        boolean pacMeetsKiller = level.ghosts(HUNTING_PAC).anyMatch(ghost -> areActorsColliding(level.pac(), ghost));
         if (isDemoLevel()) {
             eventsThisFrame().pacKilled = pacMeetsKiller && !isPacManKillingIgnored();
         } else {
@@ -354,8 +354,8 @@ public abstract class GameModel {
         }
     }
 
-    protected boolean areColliding(Actor2D actor, Actor2D otherActor) {
-        return actor.sameTile(otherActor);
+    protected boolean areActorsColliding(Actor2D either, Actor2D other) {
+        return either.sameTile(other);
     }
 
     protected void onEnergizerEaten() {
@@ -365,13 +365,13 @@ public abstract class GameModel {
             huntingTimer().stop();
             Logger.info("Hunting Pac-Man stopped as he got power");
             level.pac().powerTimer().restartTicks(powerTicks);
-            Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerTicks / 60.0);
+            Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerTicks / TICKS_PER_SECOND);
             level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
-            level.ghosts(FRIGHTENED).forEach(Ghost::reverseASAP);
+            level.ghosts(FRIGHTENED).forEach(Ghost::reverseAtNextOccasion);
             eventsThisFrame().pacGotPower = true;
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_GETS_POWER);
         } else {
-            level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseASAP);
+            level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseAtNextOccasion);
         }
     }
 
@@ -395,7 +395,7 @@ public abstract class GameModel {
     }
 
     private void updateBonus(Bonus bonus) {
-        if (bonus.state() == Bonus.STATE_EDIBLE && areColliding(level.pac(), bonus.actor())) {
+        if (bonus.state() == Bonus.STATE_EDIBLE && areActorsColliding(level.pac(), bonus.actor())) {
             bonus.setEaten(120); //TODO is 2 seconds correct?
             scoreManager.scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
