@@ -30,7 +30,7 @@ public abstract class GameModel {
 
     private final BooleanProperty cutScenesEnabledPy = new SimpleBooleanProperty(true);
     private final BooleanProperty demoLevelPy = new SimpleBooleanProperty(false);
-    private final IntegerProperty initialLivesPy = new SimpleIntegerProperty(0);
+    private final IntegerProperty initialLivesPy = new SimpleIntegerProperty(3);
     private final IntegerProperty livesPy = new SimpleIntegerProperty(0);
     private final BooleanProperty playingPy = new SimpleBooleanProperty(false);
     private final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(false);
@@ -40,7 +40,6 @@ public abstract class GameModel {
     protected final ScoreManager scoreManager = new ScoreManager();
 
     protected GameLevel level;
-    protected long levelStartTime;
     protected int lastLevelNumber;
 
     protected GameModel() {
@@ -178,7 +177,7 @@ public abstract class GameModel {
     }
 
     public void startLevel() {
-        levelStartTime = System.currentTimeMillis();
+        level.setStartTime(System.currentTimeMillis());
 
         gateKeeper.setLevelNumber(level.number());
         scoreManager.setLevelNumber(level.number());

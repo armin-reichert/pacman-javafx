@@ -22,7 +22,6 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.TerrainTiles.*;
-import static de.amr.games.pacman.model.GameModel.*;
 import static java.util.Objects.requireNonNull;
 
 public class GameLevel {
@@ -76,6 +75,8 @@ public class GameLevel {
     private Message message;
 
     private final Pulse blinking;
+
+    private long startTime;
 
     public GameLevel(GameModel game, int number, WorldMap worldMap) {
         this.game = requireNonNull(game);
@@ -150,6 +151,9 @@ public class GameLevel {
     public GameModel game() { return game; }
 
     public List<Ghost> victims() { return victims; }
+
+    public void setStartTime(long startTime) { this.startTime = startTime; }
+    public long startTime() { return startTime; }
 
     public void setNumFlashes(int numFlashes) { this.numFlashes = numFlashes; }
     public int numFlashes() { return numFlashes; }
