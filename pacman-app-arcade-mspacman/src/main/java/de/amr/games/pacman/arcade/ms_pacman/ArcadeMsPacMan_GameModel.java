@@ -139,7 +139,6 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     @Override
     public void init() {
         initialLivesProperty().set(3);
-        simulateOverflowBugProperty().set(true);
         mapSelector.loadAllMaps(this);
     }
 
@@ -549,7 +548,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
             boolean chasing = huntingTimer.phase() == HuntingTimer.HuntingPhase.CHASING
                 || ghost.id() == RED_GHOST_ID && cruiseElroy > 0;
             Vector2i targetTile = chasing
-                    ? chasingTargetTile(ghost.id(), level, simulateOverflowBugProperty().get())
+                    ? chasingTargetTile(ghost.id(), level, SIMULATE_OVERFLOW_BUG)
                     : level.ghostScatterTile(ghost.id());
             ghost.followTarget(targetTile, ghostAttackSpeed(ghost));
         }

@@ -30,6 +30,8 @@ public interface Globals {
     GameEventManager THE_GAME_EVENT_MANAGER = new GameEventManager();
     Random           THE_RNG = new Random();
 
+    boolean SIMULATE_OVERFLOW_BUG = true;
+
     byte RED_GHOST_ID = 0,
         PINK_GHOST_ID = 1,
         CYAN_GHOST_ID = 2,

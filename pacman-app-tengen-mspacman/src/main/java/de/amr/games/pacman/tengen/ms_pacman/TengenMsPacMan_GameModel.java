@@ -147,7 +147,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
         scoreManager.setHighScoreFile(new File(HOME_DIR, HIGH_SCORE_FILENAME));
         mapSelector.loadAllMaps(this);
         initialLivesProperty().set(3);
-        simulateOverflowBugProperty().set(false); //TODO check if this is correct
         resetForStartingNewGame();
         resetOptions();
     }
@@ -603,7 +602,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         } else {
             boolean chasing = huntingTimer.phase() == HuntingTimer.HuntingPhase.CHASING;
             Vector2i targetTile = chasing
-                ? chasingTargetTile(ghost.id(), level, simulateOverflowBugProperty().get())
+                ? chasingTargetTile(ghost.id(), level, false)
                 : level.ghostScatterTile(ghost.id());
             ghost.followTarget(targetTile, speed);
         }

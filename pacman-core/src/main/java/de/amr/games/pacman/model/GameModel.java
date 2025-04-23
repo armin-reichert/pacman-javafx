@@ -34,7 +34,6 @@ public abstract class GameModel {
     private final IntegerProperty livesPy = new SimpleIntegerProperty(0);
     private final BooleanProperty playingPy = new SimpleBooleanProperty(false);
     private final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(false);
-    private final BooleanProperty simulateOverflowBugPy = new SimpleBooleanProperty(true);
 
     protected final GateKeeper gateKeeper = new GateKeeper();
     protected final ScoreManager scoreManager = new ScoreManager();
@@ -146,8 +145,6 @@ public abstract class GameModel {
     public BooleanProperty scoreVisibleProperty() { return scoreVisiblePy; }
 
     public boolean isScoreVisible() { return scoreVisibleProperty().get(); }
-
-    public BooleanProperty simulateOverflowBugProperty() { return simulateOverflowBugPy; }
 
     public void loseLife() {
         int lives = livesProperty().get();
