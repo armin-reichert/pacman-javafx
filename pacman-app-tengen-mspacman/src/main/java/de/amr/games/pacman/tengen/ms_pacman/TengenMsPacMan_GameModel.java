@@ -595,11 +595,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
     }
 
-    @Override
-    protected void onGhostReleased(Ghost ghost) {
-        // code that is executed when ghost is released from jailhouse
-    }
-
     // TODO clarify what exactly Tengen Ms. Pac-Man does
     private void ghostHuntingBehaviour(Ghost ghost) {
         float speed = ghostAttackSpeed(ghost);

@@ -127,13 +127,19 @@ public class ArcadePacMan_GameModel extends GameModel {
     }
 
     protected ArcadePacMan_GameModel(MapSelector mapSelector) {
+        lastLevelNumber = Integer.MAX_VALUE;
         this.mapSelector = requireNonNull(mapSelector);
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-pacman.xml"));
         scoreManager.setExtraLifeScores(10_000);
         huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
             if (nv.intValue() > 0) level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseASAP);
         });
-        lastLevelNumber = Integer.MAX_VALUE;
+        gateKeeper.setOnGhostReleasedAction(ghost -> {
+            if (ghost.id() == ORANGE_GHOST_ID && cruiseElroy < 0) {
+                Logger.trace("Re-enable cruise elroy mode because {} exits house:", ghost.name());
+                setCruiseElroyEnabled(true);
+            }
+        });
     }
 
     @Override
@@ -396,14 +402,6 @@ public class ArcadePacMan_GameModel extends GameModel {
         if (isBonusReached()) {
             activateNextBonus();
             eventsThisFrame().bonusIndex = level.nextBonusIndex();
-        }
-    }
-
-    @Override
-    protected void onGhostReleased(Ghost ghost) {
-        if (ghost.id() == ORANGE_GHOST_ID && cruiseElroy < 0) {
-            Logger.trace("Re-enable cruise elroy mode because {} exits house:", ghost.name());
-            setCruiseElroyEnabled(true);
         }
     }
 

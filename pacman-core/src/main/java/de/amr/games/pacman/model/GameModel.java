@@ -114,8 +114,6 @@ public abstract class GameModel {
 
     protected abstract void onFoodEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
 
-    protected abstract void onGhostReleased(Ghost ghost);
-
     public abstract MapSelector mapSelector();
 
     public abstract HuntingTimer huntingTimer();
@@ -325,7 +323,7 @@ public abstract class GameModel {
     public void doHuntingStep() {
         huntingTimer().update(level.number());
         level.blinking().tick();
-        gateKeeper.unlockGhosts(level, this::onGhostReleased, eventsThisFrame());
+        gateKeeper.unlockGhosts(level, eventsThisFrame());
         checkForFood();
         level.pac().update(this);
         updatePacPower();

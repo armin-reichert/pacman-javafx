@@ -110,6 +110,12 @@ public class GateKeeper {
     private int          globalCounter;
     private boolean      globalCounterEnabled;
 
+    private Consumer<Ghost> onGhostReleasedAction = ghost -> Logger.info("Ghost {} released from house", ghost.name());
+
+    public void setOnGhostReleasedAction(Consumer<Ghost> onGhostReleasedAction) {
+        this.onGhostReleasedAction = onGhostReleasedAction;
+    }
+
     public void reset() {
         Arrays.fill(limitsByGhost, (byte)0);
         pacStarvingLimit = 0;
@@ -180,7 +186,7 @@ public class GateKeeper {
         }
     }
 
-    public void unlockGhosts(GameLevel level, Consumer<Ghost> onGhostReleased, SimulationStepEvents eventLog) {
+    public void unlockGhosts(GameLevel level, SimulationStepEvents eventLog) {
         Ghost blinky = level.ghost(RED_GHOST_ID);
         if (blinky.inState(LOCKED)) {
             if (blinky.insideHouse()) {
@@ -201,7 +207,7 @@ public class GateKeeper {
                     eventLog.ghostReleaseInfo = releaseInfo;
                     prisoner.setMoveAndWishDir(Direction.UP);
                     prisoner.setState(LEAVING_HOUSE);
-                    onGhostReleased.accept(prisoner);
+                    onGhostReleasedAction.accept(prisoner);
                 }
         });
     }
