@@ -34,7 +34,6 @@ public abstract class GameModel {
     private final BooleanProperty playingPy = new SimpleBooleanProperty(false);
     private final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(false);
 
-    protected final GateKeeper gateKeeper = new GateKeeper();
     protected final ScoreManager scoreManager = new ScoreManager();
 
     protected GameLevel level;
@@ -49,6 +48,8 @@ public abstract class GameModel {
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.EXTRA_LIFE_WON);
         });
     }
+
+    protected Optional<GateKeeper> gateKeeper() { return Optional.empty(); }
 
     protected SimulationStepEvents eventsThisFrame() { return THE_GAME_CONTROLLER.eventsThisFrame(); }
 
@@ -174,10 +175,12 @@ public abstract class GameModel {
     public void startLevel() {
         level.setStartTime(System.currentTimeMillis());
 
-        gateKeeper.setLevelNumber(level.number());
+        gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(level.number()));
+
         scoreManager.setLevelNumber(level.number());
         scoreManager.setScoreEnabled(!isDemoLevel());
         scoreManager.setHighScoreEnabled(!isDemoLevel());
+
         letsGetReadyToRumble();
         setActorBaseSpeed(level.number());
         if (!isDemoLevel()) {
@@ -317,7 +320,7 @@ public abstract class GameModel {
     public void doHuntingStep() {
         huntingTimer().update(level.number());
         level.blinking().tick();
-        gateKeeper.unlockGhosts(level, eventsThisFrame());
+        gateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(level, eventsThisFrame()));
         checkForFood();
         level.pac().update(this);
         updatePacPower();

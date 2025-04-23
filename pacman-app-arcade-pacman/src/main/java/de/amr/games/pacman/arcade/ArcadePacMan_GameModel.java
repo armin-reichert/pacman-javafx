@@ -21,6 +21,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.model.actors.GhostState.*;
@@ -120,6 +121,7 @@ public class ArcadePacMan_GameModel extends GameModel {
 
     protected final LevelCounter levelCounter = new ArcadePacMan_LevelCounter();
     protected final HuntingTimer huntingTimer = new ArcadePacMan_HuntingTimer();
+    protected final GateKeeper gateKeeper = new GateKeeper();
     protected final MapSelector mapSelector;
 
     public ArcadePacMan_GameModel() {
@@ -140,6 +142,11 @@ public class ArcadePacMan_GameModel extends GameModel {
                 setCruiseElroyEnabled(true);
             }
         });
+    }
+
+    @Override
+    protected Optional<GateKeeper> gateKeeper() {
+        return Optional.of(gateKeeper);
     }
 
     @Override

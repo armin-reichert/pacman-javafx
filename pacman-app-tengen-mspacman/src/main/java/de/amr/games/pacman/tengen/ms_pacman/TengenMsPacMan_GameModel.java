@@ -17,6 +17,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.*;
@@ -105,9 +106,11 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     private static final String HIGH_SCORE_FILENAME = "highscore-ms_pacman_tengen.xml";
 
-    private final TengenMsPacMan_LevelCounter levelCounter;
+    private final TengenMsPacMan_LevelCounter levelCounter = new TengenMsPacMan_LevelCounter();
+    private final GateKeeper gateKeeper = new GateKeeper();
     private final TengenMsPacMan_HuntingTimer huntingTimer = new TengenMsPacMan_HuntingTimer();
-    private final TengenMsPacMan_MapSelector mapSelector;
+    private final TengenMsPacMan_MapSelector mapSelector = new TengenMsPacMan_MapSelector();
+
     private MapCategory mapCategory;
     private Difficulty difficulty;
     private PacBooster pacBooster;
@@ -119,12 +122,15 @@ public class TengenMsPacMan_GameModel extends GameModel {
     private final Steering demoLevelSteering = new RuleBasedPacSteering(this);
 
     public TengenMsPacMan_GameModel() {
-        levelCounter = new TengenMsPacMan_LevelCounter();
-        mapSelector = new TengenMsPacMan_MapSelector();
         huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
             if (nv.intValue() > 0) level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAtNextOccasion);
         });
         lastLevelNumber = MAX_LEVEL_NUMBER;
+    }
+
+    @Override
+    protected Optional<GateKeeper> gateKeeper() {
+        return Optional.of(gateKeeper);
     }
 
     @Override

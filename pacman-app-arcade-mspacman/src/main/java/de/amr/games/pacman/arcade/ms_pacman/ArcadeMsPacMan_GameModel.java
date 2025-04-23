@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade.ms_pacman;
 
 import de.amr.games.pacman.event.GameEventType;
+import de.amr.games.pacman.lib.Option;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.Waypoint;
 import de.amr.games.pacman.lib.tilemap.LayerID;
@@ -21,6 +22,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.*;
@@ -101,6 +103,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     private byte cruiseElroy; //TODO is this existing in Ms. Pac-Man at all?
 
+    protected final GateKeeper gateKeeper = new GateKeeper();
     protected final ArcadeMsPacMan_HuntingTimer huntingTimer = new ArcadeMsPacMan_HuntingTimer();
     protected final ArcadeMsPacMan_LevelCounter levelCounter = new ArcadeMsPacMan_LevelCounter();
     protected final MapSelector mapSelector;
@@ -129,6 +132,11 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     @SuppressWarnings("unchecked")
     public <T extends LevelCounter> T levelCounter() {
         return (T) levelCounter;
+    }
+
+    @Override
+    protected Optional<GateKeeper> gateKeeper() {
+        return Optional.of(gateKeeper);
     }
 
     @Override
