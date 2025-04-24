@@ -257,15 +257,6 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         level.ghosts().forEach(ghost -> ghost.setBaseSpeed(1.25f));
     }
 
-    @Override
-    public void buildDemoLevel() {
-        demoLevelMode = true;
-        levelCounter.setEnabled(false);
-        buildLevel(1);
-        assignDemoLevelBehavior(level.pac());
-        demoLevelSteering.init();
-    }
-
     private int cutSceneNumberAfterLevel(int number) {
         return switch (number) {
             case 2 -> 1;
@@ -273,6 +264,15 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
             case 9, 13, 17 -> 3;
             default -> 0;
         };
+    }
+
+    @Override
+    public void buildDemoLevel() {
+        demoLevelMode = true;
+        buildLevel(1);
+        assignDemoLevelBehavior(level.pac());
+        demoLevelSteering.init();
+        levelCounter.setEnabled(false);
     }
 
     @Override
