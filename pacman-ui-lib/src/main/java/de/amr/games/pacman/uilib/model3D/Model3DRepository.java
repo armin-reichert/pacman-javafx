@@ -37,7 +37,7 @@ public final class Model3DRepository {
     public static Model3DRepository get() {
         if (instance == null) {
             instance = new Model3DRepository();
-            Logger.info("3D models loaded");
+            Logger.info("3D model repository loaded");
         }
         return instance;
     }
@@ -46,7 +46,7 @@ public final class Model3DRepository {
     private Model3D ghostModel;
     private Model3D pelletModel;
 
-    public Model3DRepository() {
+    private Model3DRepository() {
         ResourceManager rm = () -> Model3DRepository.class;
         try {
             pacManModel = new Model3D(rm.url("/de/amr/games/pacman/uilib/model3D/pacman.obj"));

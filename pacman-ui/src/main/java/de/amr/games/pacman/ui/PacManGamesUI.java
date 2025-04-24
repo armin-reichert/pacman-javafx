@@ -235,13 +235,6 @@ public class PacManGamesUI implements GameUI {
         stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
         stage.setMinHeight(ARCADE_MAP_SIZE_IN_PIXELS.y() * 1.25);
         stage.setScene(mainScene);
-
-        Logger.info("Assets: {}", THE_ASSETS.summary(Map.of(
-            Model3D.class,"3D models",
-            Image.class, "images",
-            Font.class, "fonts",
-            Color.class, "colors",
-            AudioClip.class, "audio clips")));
     }
 
     @Override

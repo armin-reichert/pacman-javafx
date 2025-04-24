@@ -40,7 +40,7 @@ public class Globals {
     {
         THE_UI = new PacManGamesUI();
         if (support3D) {
-            Model3DRepository.get(); // trigger 3D model loading
+            Model3DRepository.get(); // triggers 3D model loading
         }
         // create configuration instances *after* assets have been filled!
         configClassesMap.forEach((gameVariant, configClass) -> {

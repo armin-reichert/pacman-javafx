@@ -141,7 +141,7 @@ public class StartPagesView implements View {
         startPageList.add(startPage);
         carousel.addSlide(startPage.layoutRoot());
         carousel.setNavigationVisible(carousel.numSlides() >= 2);
-        Logger.info("Start page {} added", startPage.getClass().getSimpleName());
+        Logger.debug("Start page {} added", startPage.getClass().getSimpleName());
     }
 
     public void selectStartPage(int index) {
