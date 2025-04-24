@@ -351,6 +351,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     }
 
     @Override
+    public void onGameContinued(GameEvent e) {
+        game().level().ifPresent(level -> level.showMessage(GameLevel.Message.READY));
+    }
+
+    @Override
     public void onGhostEaten(GameEvent e) {
         THE_SOUND.playGhostEatenSound();
     }

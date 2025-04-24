@@ -103,9 +103,9 @@ public enum GameState implements FsmState<GameModel> {
             if (game.isPlaying()) {
                 // resume running game
                 if (timer.tickCount() == 1) {
-                    game.level().ifPresent(gameLevel -> gameLevel.showMessage(GameLevel.Message.READY));
                     game.letsGetReadyToRumble();
                     game.showPacAndGhosts();
+                    THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.GAME_CONTINUED);
                 } else if (timer.tickCount() == TICK_RESUME_GAME) {
                     THE_GAME_CONTROLLER.changeState(GameState.HUNTING);
                 }

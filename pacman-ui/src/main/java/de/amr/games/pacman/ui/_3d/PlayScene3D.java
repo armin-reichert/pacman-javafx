@@ -484,6 +484,11 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     @Override
+    public void onGameContinued(GameEvent e) {
+        game().level().ifPresent(this::showReadyMessage);
+    }
+
+    @Override
     public void onGameStarted(GameEvent e) {
         boolean silent = game().isDemoLevel() ||
             gameState() == TESTING_LEVELS || gameState() == TESTING_LEVEL_TEASERS;

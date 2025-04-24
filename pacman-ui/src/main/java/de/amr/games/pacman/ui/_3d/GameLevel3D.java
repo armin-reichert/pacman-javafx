@@ -322,7 +322,6 @@ public class GameLevel3D {
         });
 
         var moveDownAnimation = new TranslateTransition(Duration.seconds(1), message3D);
-        moveDownAnimation.setDelay(Duration.seconds(displaySeconds));
         moveDownAnimation.setToZ(halfHeight);
         moveDownAnimation.setOnFinished(e -> {
             message3D.setVisible(false);
@@ -330,7 +329,11 @@ public class GameLevel3D {
         });
 
         Logger.info("Message3D before move: {}", message3D);
-        new SequentialTransition(moveUpAnimation, moveDownAnimation).play();
+        new SequentialTransition(
+            moveUpAnimation,
+            new PauseTransition(Duration.seconds(displaySeconds)),
+            moveDownAnimation
+        ).play();
     }
 
     public void updateBonus3D(Bonus bonus, GameSpriteSheet spriteSheet) {

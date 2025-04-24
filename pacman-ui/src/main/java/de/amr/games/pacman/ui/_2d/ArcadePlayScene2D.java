@@ -66,6 +66,11 @@ public class ArcadePlayScene2D extends GameScene2D {
     }
 
     @Override
+    public void onGameContinued(GameEvent e) {
+        game().level().ifPresent(level -> level.showMessage(GameLevel.Message.READY));
+    }
+
+    @Override
     public void onGameStarted(GameEvent e) {
         boolean silent = game().isDemoLevel() || gameState() == TESTING_LEVELS || gameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {
