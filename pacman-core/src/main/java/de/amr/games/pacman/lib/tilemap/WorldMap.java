@@ -189,11 +189,23 @@ public class WorldMap {
         return newMap;
     }
 
-    private void parse(Stream<String> rows) {
+    private void parse(Stream<String> rowsStream) {
+        List<String> rows = new ArrayList<>(rowsStream.toList());
+        // delete empty lines at end
+        int i = rows.size() - 1;
+        int count = 0;
+        while (i >= 0 && rows.get(i).isBlank()) {
+            rows.remove(i);
+            ++count;
+            --i;
+        }
+        if (count > 0) {
+            Logger.info("{} empty line(s) at end of map file removed", count);
+        }
         var terrainLayerRows = new ArrayList<String>();
         var foodLayerRows = new ArrayList<String>();
         boolean insideTerrainLayer = false, insideFoodLayer = false;
-        for (var row : rows.toList()) {
+        for (var row : rows) {
             if (BEGIN_TERRAIN_LAYER.equals(row)) {
                 insideTerrainLayer = true;
             } else if (BEGIN_FOOD_LAYER.equals(row)) {
