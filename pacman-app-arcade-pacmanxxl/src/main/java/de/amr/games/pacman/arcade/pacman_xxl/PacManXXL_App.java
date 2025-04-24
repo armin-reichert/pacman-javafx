@@ -17,8 +17,7 @@ import java.util.Map;
 
 import static de.amr.games.pacman.Globals.CUSTOM_MAP_DIR;
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
-import static de.amr.games.pacman.ui.Globals.createUIAndSupport3D;
+import static de.amr.games.pacman.ui.Globals.*;
 
 public class PacManXXL_App extends Application {
 
@@ -40,7 +39,7 @@ public class PacManXXL_App extends Application {
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
         double aspect = screenSize.getWidth() / screenSize.getHeight();
         double height = 0.8 * screenSize.getHeight(), width = aspect * height;
-        createUIAndSupport3D(true, Map.of(
+        createUI(Map.of(
             GameVariant.PACMAN_XXL,    PacManXXL_PacMan_UIConfig.class,
             GameVariant.MS_PACMAN_XXL, PacManXXL_MsPacMan_UIConfig.class)
         );

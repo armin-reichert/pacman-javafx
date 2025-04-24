@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade;
 
-import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.DashboardID;
 import javafx.application.Application;
@@ -15,22 +14,23 @@ import javafx.stage.Stage;
 import java.util.Map;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
+import static de.amr.games.pacman.Globals.checkIfUserDirectoriesExistAndAreWritable;
 import static de.amr.games.pacman.ui.Globals.*;
 
 public class ArcadePacMan_App extends Application {
 
     @Override
     public void init() {
-        Globals.checkIfUserDirectoriesExistAndAreWritable();
+        checkIfUserDirectoriesExistAndAreWritable();
         THE_GAME_CONTROLLER.registerGameModel(GameVariant.PACMAN, new ArcadePacMan_GameModel());
         THE_GAME_CONTROLLER.gameVariantProperty().set(GameVariant.PACMAN);
     }
 
     @Override
     public void start(Stage stage) {
+        createUI(Map.of(GameVariant.PACMAN, ArcadePacMan_UIConfig.class));
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
         double height = 0.8 * screenSize.getHeight(), width = 1.2 * height;
-        createUIAndSupport3D(true, Map.of(GameVariant.PACMAN, ArcadePacMan_UIConfig.class));
         THE_UI.build(stage, width, height);
         THE_UI.addStartPage(new ArcadePacMan_StartPage(GameVariant.PACMAN));
         THE_UI.buildDashboard(

@@ -54,6 +54,10 @@ public class Globals {
         });
     }
 
+    public static void createUI(Map<GameVariant, Class<? extends GameUIConfig>> configClassesMap) {
+        createUIAndSupport3D(true, configClassesMap);
+    }
+
     public static final Font DEBUG_TEXT_FONT           = Font.font("Sans", FontWeight.BOLD, 18);
     public static final int LIVES_COUNTER_MAX          = 5;
     public static final double MAX_SCENE_2D_SCALING    = 5;
