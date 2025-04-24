@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade.ms_pacman;
 
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.Option;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.Waypoint;
 import de.amr.games.pacman.lib.tilemap.LayerID;
@@ -33,7 +32,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Ms. Pac-Man Arcade game.
  *
- * <p>There are however some differences to the original.
+ * <p>There are slight differences to the original Arcade game.
  * <ul>
  *     <li>Attract mode is just a random hunting for at least 20 seconds.</li>
  *     <li>Timing of hunting phases unclear, just took all the information I had</li>
@@ -41,29 +40,16 @@ import static java.util.Objects.requireNonNull;
  *     enter the maze, turns around the house and leaves the maze at a random portal on the other side</li>
  * </ul>
  * </p>
- *
- * @author Armin Reichert
  */
 public class ArcadeMsPacMan_GameModel extends GameModel {
 
-    public static Ghost blinky() {
-        return new Ghost(RED_GHOST_ID, "Blinky");
-    }
+    public static Ghost blinky() { return new Ghost(RED_GHOST_ID, "Blinky"); }
+    public static Ghost pinky()  { return new Ghost(PINK_GHOST_ID, "Pinky"); }
+    public static Ghost inky()   { return new Ghost(CYAN_GHOST_ID, "Inky");  }
+    public static Ghost sue()    { return new Ghost(ORANGE_GHOST_ID, "Sue"); }
 
-    public static Ghost pinky() {
-        return new Ghost(PINK_GHOST_ID, "Pinky");
-    }
-
-    public static Ghost inky() {
-        return new Ghost(CYAN_GHOST_ID, "Inky");
-    }
-
-    public static Ghost sue() {
-        return new Ghost(ORANGE_GHOST_ID, "Sue");
-    }
-
-    // These are the Pac-Man level data as given in the Pac-Man dossier.
-    // I have no information that Ms. Pac-Man uses different data.
+    // These are the *Pac-Man* level data as given in the Pac-Man dossier.
+    // I have no clue if Ms. Pac-Man uses different data.
     private static final byte[][] LEVEL_DATA = {
         /* 1*/ { 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5},
         /* 2*/ { 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5},
@@ -94,14 +80,14 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     private static final byte PELLET_VALUE = 10;
     private static final byte ENERGIZER_VALUE = 50;
     private static final short POINTS_ALL_GHOSTS_EATEN_IN_LEVEL = 12_000;
-
-    private static final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
-    private static final byte[] KILLED_GHOST_VALUE_MULTIPLIER = {2, 4, 8, 16}; // factor * 100 = value
+    private static final int EXTRA_LIFE_SCORE = 10_000;
+    private static final byte[] BONUS_VALUE_MULTIPLIERS = {1, 2, 5, 7, 10, 20, 50}; // points = value * 100
+    private static final byte[] KILLED_GHOST_VALUE_MULTIPLIER = {2, 4, 8, 16}; // points = value * 100
 
     private final Steering autopilot = new RuleBasedPacSteering(this);
     protected Steering demoLevelSteering = new RuleBasedPacSteering(this);
 
-    private byte cruiseElroy; //TODO is this existing in Ms. Pac-Man at all?
+    private byte cruiseElroy; //TODO is this existing in Ms. Pac-Man too?
 
     protected final GateKeeper gateKeeper = new GateKeeper();
     protected final ArcadeMsPacMan_HuntingTimer huntingTimer = new ArcadeMsPacMan_HuntingTimer();
@@ -112,11 +98,14 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         this(new ArcadeMsPacMan_MapSelector());
     }
 
+    /**
+     * @param mapSelector map selector e.g. selector that selects custom maps before standard maps
+     */
     protected ArcadeMsPacMan_GameModel(MapSelector mapSelector) {
-        lastLevelNumber = Integer.MAX_VALUE;
         this.mapSelector = requireNonNull(mapSelector);
+        lastLevelNumber = Integer.MAX_VALUE;
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman.xml"));
-        scoreManager.setExtraLifeScores(10_000);
+        scoreManager.setExtraLifeScores(EXTRA_LIFE_SCORE);
         huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
             if (nv.intValue() > 0) level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAtNextOccasion);
         });
@@ -231,14 +220,12 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         level.createArcadeHouse(minTile.x(), minTile.y(), maxTile.x(), maxTile.y());
 
         var pac = new Pac();
-        level.setPac(pac);
         pac.setName("Ms. Pac-Man");
         pac.setGameLevel(level);
         pac.reset();
         pac.setAutopilot(autopilot);
 
         var ghosts = List.of(blinky(), pinky(), inky(), sue());
-        level.setGhosts(ghosts.toArray(Ghost[]::new));
         ghosts.forEach(ghost -> {
             ghost.setGameLevel(level);
             ghost.setRevivalPosition(level.ghostPosition(ghost.id()));
@@ -247,23 +234,10 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         });
         ghosts.get(RED_GHOST_ID).setRevivalPosition(level.ghostPosition(PINK_GHOST_ID)); // middle house position
 
+        level.setPac(pac);
+        level.setGhosts(ghosts.toArray(Ghost[]::new));
         level.setBonusSymbol(0, computeBonusSymbol(level.number()));
         level.setBonusSymbol(1, computeBonusSymbol(level.number()));
-    }
-
-    @Override
-    protected void setActorBaseSpeed(int levelNumber) {
-        level.pac().setBaseSpeed(1.25f);
-        level.ghosts().forEach(ghost -> ghost.setBaseSpeed(1.25f));
-    }
-
-    private int cutSceneNumberAfterLevel(int number) {
-        return switch (number) {
-            case 2 -> 1;
-            case 5 -> 2;
-            case 9, 13, 17 -> 3;
-            default -> 0;
-        };
     }
 
     @Override
@@ -280,6 +254,12 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         pac.setAutopilot(demoLevelSteering);
         pac.setUsingAutopilot(true);
         pac.setImmune(false);
+    }
+
+    @Override
+    protected void setActorBaseSpeed(int levelNumber) {
+        level.pac().setBaseSpeed(1.25f);
+        level.ghosts().forEach(ghost -> ghost.setBaseSpeed(1.25f));
     }
 
     @Override
@@ -533,7 +513,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         List<Waypoint> route = Stream.of(entryTile, houseEntry, behindHouse, houseEntry, exitTile).map(Waypoint::new).toList();
 
         byte symbol = level.bonusSymbol(level.nextBonusIndex());
-        var movingBonus = new MovingBonus(level, symbol, BONUS_VALUE_FACTORS[symbol] * 100);
+        var movingBonus = new MovingBonus(level, symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
         movingBonus.setEdible(TickTimer.INDEFINITE);
         movingBonus.setRoute(route, crossMazeLeftToRight);
         movingBonus.setBaseSpeed(1.25f);
@@ -559,5 +539,14 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
                     : level.ghostScatterTile(ghost.id());
             ghost.followTarget(targetTile, ghostAttackSpeed(ghost));
         }
+    }
+
+    private int cutSceneNumberAfterLevel(int levelNumber) {
+        return switch (levelNumber) {
+            case 2 -> 1;
+            case 5 -> 2;
+            case 9, 13, 17 -> 3;
+            default -> 0; // no cut scene
+        };
     }
 }
