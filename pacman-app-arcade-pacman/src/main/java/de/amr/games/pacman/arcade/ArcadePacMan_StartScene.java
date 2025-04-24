@@ -15,7 +15,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.arcade.ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.Globals.THE_ASSETS;
 import static de.amr.games.pacman.ui.Globals.THE_SOUND;
@@ -53,22 +52,23 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        Font font8 = THE_ASSETS.arcadeFontAtSize(scaled(8));
-        Font font6 = THE_ASSETS.arcadeFontAtSize(scaled(6));
-        gr.setScaling(scaling());
-        gr.fillCanvas(backgroundColor());
+        final var r = (ArcadePacMan_GameRenderer) gr;
+        final Font font8 = THE_ASSETS.arcadeFontAtSize(scaled(8));
+        final Font font6 = THE_ASSETS.arcadeFontAtSize(scaled(6));
+        r.setScaling(scaling());
+        r.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font8);
+            r.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font8);
         }
-        gr.fillTextAtScaledPosition("PUSH START BUTTON", ORANGE, font8, tiles_to_px(6), tiles_to_px(17));
-        gr.fillTextAtScaledPosition("1 PLAYER ONLY", CYAN, font8, tiles_to_px(8), tiles_to_px(21));
-        gr.fillTextAtScaledPosition("BONUS PAC-MAN FOR 10000", ROSE, font8, tiles_to_px(1), tiles_to_px(25));
-        gr.fillTextAtScaledPosition("PTS", ROSE, font6, tiles_to_px(25), tiles_to_px(25));
+        r.fillTextAtScaledPosition("PUSH START BUTTON", ORANGE, font8, tiles_to_px(6), tiles_to_px(17));
+        r.fillTextAtScaledPosition("1 PLAYER ONLY", CYAN, font8, tiles_to_px(8), tiles_to_px(21));
+        r.fillTextAtScaledPosition("BONUS PAC-MAN FOR 10000", ROSE, font8, tiles_to_px(1), tiles_to_px(25));
+        r.fillTextAtScaledPosition("PTS", ROSE, font6, tiles_to_px(25), tiles_to_px(25));
         if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.PACMAN)) {
-            gr.fillTextAtScaledPosition(MIDWAY_COPYRIGHT, PINK, font8, tiles_to_px(4), tiles_to_px(29));
+            r.drawMidwayCopyright(4, 29, PINK, font8);
         }
-        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_MECHANISM.numCoins()), WHITE, font8, 2 * TS, sizeInPx().y() - 2);
-        gr.drawLevelCounter(game().levelCounter(), sizeInPx());
+        r.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_MECHANISM.numCoins()), WHITE, font8, 2 * TS, sizeInPx().y() - 2);
+        r.drawLevelCounter(game().levelCounter(), sizeInPx());
     }
 
     @Override

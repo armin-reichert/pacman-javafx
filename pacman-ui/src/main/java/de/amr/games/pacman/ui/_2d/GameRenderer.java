@@ -229,6 +229,12 @@ public interface GameRenderer {
         ctx().fillText(text, scaled(x), scaled(y));
     }
 
+    default void fillTextAtScaledTilePosition(String text, Color color, Font font, int tileX, int tileY) {
+        ctx().setFont(font);
+        ctx().setFill(color);
+        ctx().fillText(text, scaled(tiles_to_px(tileX)), scaled(tiles_to_px(tileY)));
+    }
+
     default void drawLivesCounter(int numLives, int maxLives, double x, double y) {
         if (numLives == 0) {
             return;

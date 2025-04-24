@@ -95,7 +95,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         ghostID = 0;
         waitBeforeRising = 0;
 
-        ArcadeMsPacMan_SpriteSheet spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
+        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
         msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));
         msPacMan.selectAnimation(ActorAnimations.ANIM_PAC_MUNCHING);
         for (Ghost ghost : ghosts) {
@@ -153,7 +153,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         gr.drawAnimatedActor(msPacMan);
         // might be PacManXXL renderer!
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
-            r.drawMsPacManMidwayCopyright(tiles_to_px(6), tiles_to_px(28), COLOR_RED, font);
+            r.drawMidwayCopyright(6, 28, COLOR_RED, font);
         }
         gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_MECHANISM.numCoins()), COLOR_WHITE, font, 2 * TS, sizeInPx().y() - 2);
         gr.drawLevelCounter(game().levelCounter(), sizeInPx());

@@ -52,13 +52,13 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         }
         GameSpriteSheet spriteSheet = gr.spriteSheet();
         Color orange = Color.web(Arcade.Palette.ORANGE), red = Color.web(Arcade.Palette.RED), white = Color.web(Arcade.Palette.WHITE);
-        gr.fillTextAtScaledPosition("PUSH START BUTTON", orange, font, tiles_to_px(6), tiles_to_px(16));
-        gr.fillTextAtScaledPosition("1 PLAYER ONLY", orange, font, tiles_to_px(8), tiles_to_px(18));
-        gr.fillTextAtScaledPosition("ADDITIONAL    AT 10000", orange, font, tiles_to_px(2), tiles_to_px(25));
-        gr.drawSpriteScaled(spriteSheet.livesCounterSprite(), tiles_to_px(13), tiles_to_px(23) + 1);
-        gr.fillTextAtScaledPosition("PTS", orange, font6, tiles_to_px(25), tiles_to_px(25));
+        gr.fillTextAtScaledTilePosition("PUSH START BUTTON", orange, font, 6, 16);
+        gr.fillTextAtScaledTilePosition("1 PLAYER ONLY", orange, font, 8, 18);
+        gr.fillTextAtScaledTilePosition("ADDITIONAL    AT 10000", orange, font, 2, 25);
+        gr.drawSpriteScaled(spriteSheet.livesCounterSprite(), tiles_to_px(13), tiles_to_px(23) + 1); //TODO check this
+        gr.fillTextAtScaledTilePosition("PTS", orange, font6, 25, 25);
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
-            r.drawMsPacManMidwayCopyright(tiles_to_px(6), tiles_to_px(28), red, font);
+            r.drawMidwayCopyright(6, 28, red, font);
         }
         gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_MECHANISM.numCoins()), white, font,
             tiles_to_px(2), sizeInPx().y() - 2);

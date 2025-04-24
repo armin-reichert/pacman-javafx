@@ -153,8 +153,9 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
         });
     }
 
-    public void drawMsPacManMidwayCopyright(double x, double y, Color color, Font font) {
+    public void drawMidwayCopyright(int tileX, int tileY, Color color, Font font) {
         Image image = THE_ASSETS.get("ms_pacman.logo.midway");
+        double x = tiles_to_px(tileX), y = tiles_to_px(tileY);
         ctx.drawImage(image, scaled(x), scaled(y + 2), scaled(tiles_to_px(4) - 2), scaled(tiles_to_px(4)));
         ctx.setFont(font);
         ctx.setFill(color);

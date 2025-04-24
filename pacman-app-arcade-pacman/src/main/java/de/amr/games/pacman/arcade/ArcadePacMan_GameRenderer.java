@@ -14,7 +14,9 @@ import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.arcade.ArcadePacMan_SpriteSheet.EMPTY_MAZE_SPRITE;
@@ -80,5 +82,9 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
             drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), x, y);
             x -= TS * 2;
         }
+    }
+
+    public void drawMidwayCopyright(int tileX, int tileY, Color color, Font font) {
+        fillTextAtScaledTilePosition("© 1980 MIDWAY MFG.CO.", color, font, tileX, tileY);
     }
 }

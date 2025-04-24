@@ -13,7 +13,6 @@ import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.lib.fsm.FsmState;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
@@ -132,7 +131,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
+        final Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
@@ -148,15 +147,15 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     drawEnergizer(tiles_to_px(LEFT_TILE_X), tiles_to_px(20));
                 }
                 drawGuys(flutter(timer.tickCount()));
-                if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.PACMAN)) {
-                    gr.fillTextAtScaledPosition(ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT, PINK, font, tiles_to_px(4), tiles_to_px(32));
+                if (gr instanceof ArcadePacMan_GameRenderer r) {
+                    r.drawMidwayCopyright(4, 32, PINK, font);
                 }
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints();
                 drawGuys(0);
-                if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.PACMAN)) {
-                    gr.fillTextAtScaledPosition(ArcadePacMan_SpriteSheet.MIDWAY_COPYRIGHT, PINK, font, tiles_to_px(4), tiles_to_px(32));
+                if (gr instanceof ArcadePacMan_GameRenderer r) {
+                    r.drawMidwayCopyright(4, 32, PINK, font);
                 }
             }
         }
