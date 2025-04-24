@@ -113,7 +113,7 @@ public class WorldMap {
 
     public boolean save(File file) {
         try (PrintWriter pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
-            pw.println(sourceText());
+            pw.print(sourceText());
             return true;
         } catch (IOException x) {
             Logger.error(x);
@@ -247,7 +247,7 @@ public class WorldMap {
                 if (numDataCols == -1) {
                     numDataCols = columns.length;
                 } else if (columns.length != numDataCols) {
-                    Logger.error("Inconsistent tile map data: {} columns in line {}, expected {}",
+                    Logger.error("Inconsistent tile map data: found {} column(s) in line {}, expected {}",
                             columns.length, lineIndex, numDataCols);
                 }
             }
