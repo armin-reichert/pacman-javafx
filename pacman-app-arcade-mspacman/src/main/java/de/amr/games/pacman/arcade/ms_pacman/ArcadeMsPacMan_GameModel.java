@@ -84,14 +84,14 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     private static final byte[] BONUS_VALUE_MULTIPLIERS = {1, 2, 5, 7, 10, 20, 50}; // points = value * 100
     private static final byte[] KILLED_GHOST_VALUE_MULTIPLIER = {2, 4, 8, 16}; // points = value * 100
 
-    private final Steering autopilot = new RuleBasedPacSteering(this);
-    protected Steering demoLevelSteering = new RuleBasedPacSteering(this);
+    protected final Steering autopilot = new RuleBasedPacSteering(this);
+    protected Steering demoLevelSteering;
 
-    private byte cruiseElroy; //TODO is this existing in Ms. Pac-Man too?
+    protected byte cruiseElroy; //TODO is this existing in Ms. Pac-Man too?
 
+    protected final LevelCounter levelCounter = new ArcadeMsPacMan_LevelCounter();
+    protected final HuntingTimer huntingTimer = new ArcadeMsPacMan_HuntingTimer();
     protected final GateKeeper gateKeeper = new GateKeeper();
-    protected final ArcadeMsPacMan_HuntingTimer huntingTimer = new ArcadeMsPacMan_HuntingTimer();
-    protected final ArcadeMsPacMan_LevelCounter levelCounter = new ArcadeMsPacMan_LevelCounter();
     protected final MapSelector mapSelector;
 
     public ArcadeMsPacMan_GameModel() {
@@ -115,12 +115,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
                 setCruiseElroyEnabled(true);
             }
         });
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T extends LevelCounter> T levelCounter() {
-        return (T) levelCounter;
+        demoLevelSteering = new RuleBasedPacSteering(this);
     }
 
     @Override
@@ -129,9 +124,11 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public MapSelector mapSelector() {
-        return mapSelector;
-    }
+    @SuppressWarnings("unchecked")
+    public <T extends LevelCounter> T levelCounter() { return (T) levelCounter; }
+
+    @Override
+    public MapSelector mapSelector() { return mapSelector; }
 
     @Override
     public void init() {
@@ -190,7 +187,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         return 150;
     }
 
-    private LevelData levelData(int levelNumber) {
+    protected LevelData levelData(int levelNumber) {
         return new LevelData(LEVEL_DATA[Math.min(levelNumber - 1, LEVEL_DATA.length - 1)]);
     }
 

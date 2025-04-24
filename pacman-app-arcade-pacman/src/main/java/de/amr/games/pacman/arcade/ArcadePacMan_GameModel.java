@@ -106,6 +106,7 @@ public class ArcadePacMan_GameModel extends GameModel {
 
     protected final Steering autopilot = new RuleBasedPacSteering(this);
     protected Steering demoLevelSteering;
+
     protected byte cruiseElroy;
 
     protected final LevelCounter levelCounter = new ArcadePacMan_LevelCounter();
@@ -117,6 +118,9 @@ public class ArcadePacMan_GameModel extends GameModel {
         this(new ArcadePacMan_MapSelector());
     }
 
+    /**
+     * @param mapSelector map selector e.g. selector that selects custom maps before standard maps
+     */
     protected ArcadePacMan_GameModel(MapSelector mapSelector) {
         this.mapSelector = requireNonNull(mapSelector);
         lastLevelNumber = Integer.MAX_VALUE;
