@@ -311,6 +311,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             case HUNTING -> movingCamera.focusPlayer(true);
             case LEVEL_COMPLETE ->
                 game().level().ifPresent(level -> {
+                    THE_SOUND.stopAll();
                     if (levelCompleteAnimation == null) {
                         // if 3D scene was active when level has been created, the animation has not been created!
                         createLevelCompleteAnimation(level);

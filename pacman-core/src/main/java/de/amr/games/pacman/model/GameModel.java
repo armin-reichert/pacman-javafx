@@ -287,8 +287,6 @@ public abstract class GameModel {
         level.worldMap().tiles().filter(level::hasFoodAt).forEach(level::registerFoodEatenAt);
 
         Logger.trace("Game level {} completed.", level.number());
-
-        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.STOP_ALL_SOUNDS);
     }
 
     public boolean isLevelComplete() {

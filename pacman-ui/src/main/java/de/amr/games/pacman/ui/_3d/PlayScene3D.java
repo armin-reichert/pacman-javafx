@@ -395,8 +395,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     private void onEnterStateLevelComplete(GameLevel level) {
         THE_SOUND.stopAll();
-        // if cheat has been used to complete level, food might still exist, so eat it:
-        level.worldMap().tiles().filter(level::hasFoodAt).forEach(level::registerFoodEatenAt);
         level3D.pellets3D().forEach(Pellet3D::onEaten);
         level3D.energizers3D().forEach(Energizer3D::onEaten);
         level3D.maze3D().door3D().setVisible(false);
