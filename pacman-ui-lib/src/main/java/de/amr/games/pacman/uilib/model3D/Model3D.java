@@ -5,8 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.uilib.model3D;
 
 import de.amr.games.pacman.uilib.objimport.ObjImporter;
+import javafx.beans.property.ObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Scale;
@@ -37,6 +39,10 @@ public class Model3D {
 
     public static Stream<MeshView> allMeshViewsUnder(Node root) {
         return root.lookupAll("*").stream().filter(MeshView.class::isInstance).map(MeshView.class::cast);
+    }
+
+    public static void bindDrawMode(Node root, ObjectProperty<DrawMode> property) {
+        allMeshViewsUnder(root).map(MeshView::drawModeProperty).forEach(py -> py.bind(property));
     }
 
     public static MeshView meshViewById(Node root, String id) {

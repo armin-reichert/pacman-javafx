@@ -147,7 +147,7 @@ public class GameLevel3D {
             new MeshView(Model3DRepository.get().ghostPupilsMesh()),
             new MeshView(Model3DRepository.get().ghostEyeballsMesh()),
             ghost, GHOST_3D_SIZE, numFlashes);
-        Model3D.allMeshViewsUnder(ghost3D).map(MeshView::drawModeProperty).forEach(py -> py.bind(PY_3D_DRAW_MODE));
+        Model3D.bindDrawMode(ghost3D, PY_3D_DRAW_MODE);
         return ghost3D;
     }
 
@@ -213,7 +213,7 @@ public class GameLevel3D {
             case PACMAN, PACMAN_XXL -> new PacMan3D(pac, PAC_3D_SIZE, THE_ASSETS, ans);
         };
         pac3D.light().setColor(THE_ASSETS.color(ans + ".pac.color.head").desaturate());
-        Model3D.allMeshViewsUnder(pac3D.root()).map(MeshView::drawModeProperty).forEach(py -> py.bind(PY_3D_DRAW_MODE));
+        Model3D.bindDrawMode(pac3D.root(), PY_3D_DRAW_MODE);
         return pac3D;
     }
 
