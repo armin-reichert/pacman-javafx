@@ -46,7 +46,12 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadePacMan_GameModel extends GameModel {
 
-    // Level settings as specified in the dossier
+    public static Ghost blinky() { return new Ghost(RED_GHOST_ID,    "Blinky"); }
+    public static Ghost pinky()  { return new Ghost(PINK_GHOST_ID,   "Pinky"); }
+    public static Ghost inky()   { return new Ghost(CYAN_GHOST_ID,   "Inky"); }
+    public static Ghost clyde()  { return new Ghost(ORANGE_GHOST_ID, "Clyde"); }
+
+    // Level settings as specified in the "Pac-Man dossier"
     private static final byte[][] LEVEL_DATA = {
         /* 1*/ { 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5},
         /* 2*/ { 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5},
@@ -89,31 +94,15 @@ public class ArcadePacMan_GameModel extends GameModel {
             wp(6,23) /* eaten at 3,23 in original game */
     };
 
-    private static final byte PELLET_VALUE = 10;
-    private static final byte ENERGIZER_VALUE = 50;
-    private static final short POINTS_ALL_GHOSTS_EATEN_IN_LEVEL = 12_000;
+    protected static final byte PELLET_VALUE = 10;
+    protected static final byte ENERGIZER_VALUE = 50;
+    protected static final short POINTS_ALL_GHOSTS_EATEN_IN_LEVEL = 12_000;
+    protected static final int EXTRA_LIFE_SCORE = 10_000;
 
     // Note: First level number is 1
-    protected static final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {42, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
-    // Bonus value = factor * 100
-    protected static final byte[] BONUS_VALUE_FACTORS = {1, 3, 5, 7, 10, 20, 30, 50};
-    private static final byte[] KILLED_GHOST_VALUE_MULTIPLIER = {2, 4, 8, 16}; // factor * 100 = value
-
-    public static Ghost blinky() {
-        return new Ghost(RED_GHOST_ID, "Blinky");
-    }
-
-    public static Ghost pinky() {
-        return new Ghost(PINK_GHOST_ID, "Pinky");
-    }
-
-    public static Ghost inky() {
-        return new Ghost(CYAN_GHOST_ID, "Inky");
-    }
-
-    public static Ghost clyde() {
-        return new Ghost(ORANGE_GHOST_ID, "Clyde");
-    }
+    protected static final byte[] BONUS_SYMBOL_CODES_BY_LEVEL = {42, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
+    protected static final byte[] BONUS_VALUE_MULTIPLIERS = {1, 3, 5, 7, 10, 20, 30, 50}; // points = value * 100
+    protected static final byte[] KILLED_GHOST_VALUE_MULTIPLIER = {2, 4, 8, 16}; // points = value * 100
 
     protected final Steering autopilot = new RuleBasedPacSteering(this);
     protected Steering demoLevelSteering;
@@ -129,10 +118,10 @@ public class ArcadePacMan_GameModel extends GameModel {
     }
 
     protected ArcadePacMan_GameModel(MapSelector mapSelector) {
-        lastLevelNumber = Integer.MAX_VALUE;
         this.mapSelector = requireNonNull(mapSelector);
+        lastLevelNumber = Integer.MAX_VALUE;
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-pacman.xml"));
-        scoreManager.setExtraLifeScores(10_000);
+        scoreManager.setExtraLifeScores(EXTRA_LIFE_SCORE);
         huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
             if (nv.intValue() > 0) level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAtNextOccasion);
         });
@@ -142,12 +131,11 @@ public class ArcadePacMan_GameModel extends GameModel {
                 setCruiseElroyEnabled(true);
             }
         });
+        demoLevelSteering = new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE));
     }
 
     @Override
-    protected Optional<GateKeeper> gateKeeper() {
-        return Optional.of(gateKeeper);
-    }
+    protected Optional<GateKeeper> gateKeeper() { return Optional.of(gateKeeper); }
 
     @Override
     @SuppressWarnings("unchecked")
@@ -164,7 +152,6 @@ public class ArcadePacMan_GameModel extends GameModel {
     public void init() {
         initialLivesProperty().set(3);
         mapSelector.loadAllMaps(this);
-        demoLevelSteering = new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE));
     }
 
     @Override
@@ -247,17 +234,16 @@ public class ArcadePacMan_GameModel extends GameModel {
 
     @Override
     public void buildLevel(int levelNumber) {
-        requireValidLevelNumber(levelNumber);
-        WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
+        WorldMap worldMap = mapSelector.selectWorldMap(requireValidLevelNumber(levelNumber));
 
         level = new GameLevel(this, levelNumber, worldMap);
-        level.setNumFlashes(levelData(levelNumber).numFlashes());
         level.setCutSceneNumber(switch (levelNumber) {
             case 2 -> 1;
             case 5 -> 2;
             case 9, 13, 17 -> 3;
             default -> 0;
         });
+        level.setNumFlashes(levelData(levelNumber).numFlashes());
 
         if (!worldMap.hasProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MIN_TILE)) {
             Logger.warn("No house min tile found in map!");
@@ -274,6 +260,7 @@ public class ArcadePacMan_GameModel extends GameModel {
         pac.setGameLevel(level);
         pac.setAutopilot(autopilot);
         pac.reset();
+        setCruiseElroy(0);
 
         var ghosts = List.of(blinky(), pinky(), inky(), clyde());
         ghosts.forEach(ghost -> {
@@ -293,17 +280,16 @@ public class ArcadePacMan_GameModel extends GameModel {
         level.setBonusSymbol(0, computeBonusSymbol(levelNumber));
         level.setBonusSymbol(1, computeBonusSymbol(levelNumber));
 
-        setCruiseElroy(0);
         levelCounter.setEnabled(true);
     }
 
     @Override
     public void buildDemoLevel() {
-        levelCounter.setEnabled(false);
         buildLevel(1);
         level.setDemoLevel(true);
         assignDemoLevelBehavior(level.pac());
         demoLevelSteering.init();
+        levelCounter.setEnabled(false);
     }
 
     @Override
@@ -456,14 +442,14 @@ public class ArcadePacMan_GameModel extends GameModel {
     // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level
     @Override
     public byte computeBonusSymbol(int levelNumber) {
-        return levelNumber > 12 ? 7 : BONUS_SYMBOLS_BY_LEVEL_NUMBER[levelNumber];
+        return levelNumber > 12 ? 7 : BONUS_SYMBOL_CODES_BY_LEVEL[levelNumber];
     }
 
     @Override
     public void activateNextBonus() {
         level.selectNextBonus();
         byte symbol = level.bonusSymbol(level.nextBonusIndex());
-        StaticBonus staticBonus = new StaticBonus(symbol, ArcadePacMan_GameModel.BONUS_VALUE_FACTORS[symbol] * 100);
+        StaticBonus staticBonus = new StaticBonus(symbol, ArcadePacMan_GameModel.BONUS_VALUE_MULTIPLIERS[symbol] * 100);
         level.setBonus(staticBonus);
         if (level.worldMap().hasProperty(LayerID.TERRAIN, WorldMapProperty.POS_BONUS)) {
             Vector2i bonusTile = level.worldMap().getTerrainTileProperty(WorldMapProperty.POS_BONUS, new Vector2i(13, 20));
