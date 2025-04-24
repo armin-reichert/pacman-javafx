@@ -197,12 +197,12 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             GameLevel level = game.level().orElseThrow();
-            if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN) && game.isDemoLevel()) {
+            if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN) && level.isDemoLevel()) {
                 THE_GAME_CONTROLLER.changeState(SHOWING_CREDITS);
                 return;
             }
             if (timer.hasExpired()) {
-                if (game.isDemoLevel()) { // just in case: if demo level is completed, go back to intro scene
+                if (level.isDemoLevel()) { // just in case: if demo level is completed, go back to intro scene
                     THE_GAME_CONTROLLER.changeState(INTRO);
                 } else if (game.cutScenesEnabledProperty().get() && level.cutSceneNumber() != 0) {
                     THE_GAME_CONTROLLER.changeState(INTERMISSION);
@@ -277,7 +277,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onUpdate(GameModel game) {
             GameLevel level = game.level().orElseThrow();
             if (timer.hasExpired()) {
-                if (game.isDemoLevel()) {
+                if (level.isDemoLevel()) {
                     THE_GAME_CONTROLLER.changeState(GAME_OVER);
                 } else {
                     game.loseLife();
@@ -322,9 +322,10 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
+                GameLevel level = game.level().orElseThrow();
                 //TODO find unified solution
                 if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN)) {
-                    if (game.isDemoLevel()) {
+                    if (level.isDemoLevel()) {
                         THE_GAME_CONTROLLER.changeState(SHOWING_CREDITS);
                     } else {
                         boolean canContinue = game.continueOnGameOver();

@@ -107,7 +107,7 @@ public enum GameAction implements Action {
             }
             return THE_GAME_CONTROLLER.state() == GameState.SETTING_OPTIONS
                 || THE_GAME_CONTROLLER.state() == INTRO
-                || THE_GAME_CONTROLLER.game().isDemoLevel()
+                || THE_GAME_CONTROLLER.game().level().isPresent() && THE_GAME_CONTROLLER.game().level().get().isDemoLevel()
                 || THE_COIN_MECHANISM.isEmpty();
         }
     },

@@ -37,7 +37,6 @@ public abstract class GameModel {
     protected final ScoreManager scoreManager = new ScoreManager();
 
     protected GameLevel level;
-    protected boolean demoLevelMode;
     protected int lastLevelNumber;
 
     protected GameModel() {
@@ -48,12 +47,6 @@ public abstract class GameModel {
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.EXTRA_LIFE_WON);
         });
     }
-
-    protected Optional<GateKeeper> gateKeeper() { return Optional.empty(); }
-
-    protected SimulationStepEvents eventsThisFrame() { return THE_GAME_CONTROLLER.eventsThisFrame(); }
-
-    public abstract <T extends LevelCounter> T levelCounter();
 
     public abstract void init();
 
@@ -117,9 +110,15 @@ public abstract class GameModel {
 
     public abstract HuntingTimer huntingTimer();
 
+    protected Optional<GateKeeper> gateKeeper() { return Optional.empty(); }
+
+    protected SimulationStepEvents eventsThisFrame() { return THE_GAME_CONTROLLER.eventsThisFrame(); }
+
     public Optional<GameLevel> level() {
         return Optional.ofNullable(level);
     }
+
+    public abstract <T extends LevelCounter> T levelCounter();
 
     public final int lastLevelNumber() {
         return lastLevelNumber;
@@ -130,8 +129,6 @@ public abstract class GameModel {
     }
 
     public BooleanProperty cutScenesEnabledProperty() { return cutScenesEnabledPy; }
-
-    public boolean isDemoLevel() { return demoLevelMode; }
 
     public IntegerProperty initialLivesProperty() { return initialLivesPy; }
 
@@ -165,8 +162,8 @@ public abstract class GameModel {
     }
 
     public final void createLevel(int levelNumber) {
-        demoLevelMode = false;
         buildLevel(levelNumber);
+        level.setDemoLevel(false);
         scoreManager.setLevelNumber(levelNumber);
         huntingTimer().reset();
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
@@ -174,19 +171,19 @@ public abstract class GameModel {
 
     public void startLevel() {
         level.setStartTime(System.currentTimeMillis());
-        level.showMessage(isDemoLevel() ? GameLevel.Message.GAME_OVER : GameLevel.Message.READY);
+        level.showMessage(level.isDemoLevel() ? GameLevel.Message.GAME_OVER : GameLevel.Message.READY);
 
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(level.number()));
 
         scoreManager.setLevelNumber(level.number());
-        scoreManager.setScoreEnabled(!isDemoLevel());
-        scoreManager.setHighScoreEnabled(!isDemoLevel());
+        scoreManager.setScoreEnabled(!level.isDemoLevel());
+        scoreManager.setHighScoreEnabled(!level.isDemoLevel());
 
         letsGetReadyToRumble();
         setActorBaseSpeed(level.number());
         levelCounter().update(level);
 
-        Logger.info("{} started", isDemoLevel() ? "Demo Level" : "Level " + level.number());
+        Logger.info("{} started", level.isDemoLevel() ? "Demo Level" : "Level " + level.number());
         Logger.debug("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
         level.ghosts().forEach(ghost -> Logger.debug("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
 
@@ -334,7 +331,7 @@ public abstract class GameModel {
 
     private void checkPacKilled() {
         boolean pacMeetsKiller = level.ghosts(HUNTING_PAC).anyMatch(ghost -> areActorsColliding(level.pac(), ghost));
-        if (isDemoLevel()) {
+        if (level.isDemoLevel()) {
             eventsThisFrame().pacKilled = pacMeetsKiller && !isPacManKillingIgnored();
         } else {
             eventsThisFrame().pacKilled = pacMeetsKiller && !level.pac().isImmune();

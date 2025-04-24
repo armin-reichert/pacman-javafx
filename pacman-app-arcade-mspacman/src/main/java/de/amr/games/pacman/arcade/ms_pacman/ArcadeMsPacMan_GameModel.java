@@ -149,7 +149,6 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         playingProperty().set(false);
         livesProperty().set(initialLivesProperty().get());
         level = null;
-        demoLevelMode = false;
         cruiseElroy = 0;
         levelCounter().reset();
         scoreManager().loadHighScore();
@@ -242,8 +241,8 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
 
     @Override
     public void buildDemoLevel() {
-        demoLevelMode = true;
         buildLevel(1);
+        level.setDemoLevel(true);
         assignDemoLevelBehavior(level.pac());
         demoLevelSteering.init();
         levelCounter.setEnabled(false);
@@ -349,7 +348,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     @Override
     public boolean isPacManKillingIgnored() {
         float levelRunningSeconds = (System.currentTimeMillis() - level.startTime()) / 1000f;
-        if (isDemoLevel() && levelRunningSeconds < DEMO_LEVEL_MIN_DURATION_SEC) {
+        if (level.isDemoLevel() && levelRunningSeconds < DEMO_LEVEL_MIN_DURATION_SEC) {
             Logger.info("Pac-Man killing ignored, demo level running for {} seconds", levelRunningSeconds);
             return true;
         }

@@ -47,6 +47,7 @@ public class GameLevel {
 
     private final GameModel game;
     private final int number; // 1=first level
+
     private final WorldMap worldMap;
     private final Vector2f pacPosition;
     private final Vector2f[] ghostPositions = new Vector2f[4];
@@ -63,6 +64,7 @@ public class GameLevel {
     private final int totalFoodCount;
     private int uneatenFoodCount;
 
+    private boolean demoLevel;
     private int numFlashes;
     private int cutSceneNumber;
 
@@ -151,6 +153,9 @@ public class GameLevel {
     public GameModel game() { return game; }
 
     public List<Ghost> victims() { return victims; }
+
+    public boolean isDemoLevel() { return demoLevel; }
+    public void setDemoLevel(boolean demoLevel) { this.demoLevel = demoLevel; }
 
     public void setStartTime(long startTime) { this.startTime = startTime; }
     public long startTime() { return startTime; }

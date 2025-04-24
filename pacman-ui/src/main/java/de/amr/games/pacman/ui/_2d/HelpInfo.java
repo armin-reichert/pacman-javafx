@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._2d;
 
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.Globals;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.geometry.Insets;
@@ -33,7 +34,8 @@ public class HelpInfo {
             case INTRO -> help.addInfoForIntroScene();
             case SETTING_OPTIONS -> help.addInfoForCreditScene();
             case STARTING_GAME, HUNTING, PACMAN_DYING, GHOST_DYING -> {
-                if (THE_GAME_CONTROLLER.game().isDemoLevel()) {
+                GameModel game = THE_GAME_CONTROLLER.game();
+                if (game.level().isPresent() && game.level().get().isDemoLevel()) {
                     help.addInfoForDemoLevelPlayScene();
                 } else {
                     help.addInfoForPlayScene();

@@ -204,7 +204,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void update() {
         game().level().ifPresent(level -> {
-            if (game().isDemoLevel()) {
+            if (level.isDemoLevel()) {
                 game().assignDemoLevelBehavior(level.pac());
             }
             else {
@@ -253,7 +253,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onGameStarted(GameEvent e) {
-        boolean silent = game().isDemoLevel() || gameState() == TESTING_LEVELS || gameState() == TESTING_LEVEL_TEASERS;
+        GameLevel level = game().level().orElseThrow();
+        boolean silent = level.isDemoLevel() || gameState() == TESTING_LEVELS || gameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {
             THE_SOUND.playGameReadySound();
         }
@@ -262,8 +263,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void onLevelCreated(GameEvent e) {
         game().level().ifPresent(level -> {
-            setJoypadKeyBindings();
-            if (game().isDemoLevel()) {
+            setJoypadKeyBindings(level);
+            if (level.isDemoLevel()) {
                 level.pac().setImmune(false);
             } else {
                 level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
@@ -284,12 +285,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
         Logger.info("{} entered from {}", this, oldScene);
-        setJoypadKeyBindings();
+        GameLevel level = game().level().orElseThrow();
+        setJoypadKeyBindings(level);
         game().level().map(GameLevel::worldMap).ifPresent(worldMap -> gr.applyMapSettings(worldMap));
     }
 
-    private void setJoypadKeyBindings() {
-        if (game().isDemoLevel()) {
+    private void setJoypadKeyBindings(GameLevel level) {
+        if (level.isDemoLevel()) {
             bind(QUIT_DEMO_LEVEL, THE_JOYPAD.key(JoypadButtonID.START));
         } else {
             bind(GameAction.PLAYER_UP,    THE_JOYPAD.key(JoypadButtonID.UP),    control(KeyCode.UP));
@@ -447,7 +449,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             //TODO in the original game, the message is drawn under the maze image but over the pellets!
             tr.drawWorld(level, 0,  3 * TS);
             tr.drawFood(level);
-            tr.drawLevelMessage(level, game.isDemoLevel(), getMessagePosition(level));
+            tr.drawLevelMessage(level, level.isDemoLevel(), getMessagePosition(level));
         }
 
         level.bonus().ifPresent(tr::drawBonus);
@@ -462,7 +464,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         }
         tr.drawLivesCounter(livesCounterEntries, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - TS);
 
-        if (game.isDemoLevel() || game.mapCategory() == MapCategory.ARCADE) {
+        if (level.isDemoLevel() || game.mapCategory() == MapCategory.ARCADE) {
             tr.drawLevelCounter(game.levelCounter(), sizeInPx());
         } else {
             tr.drawLevelCounterWithLevelNumbers(level.number(), game.levelCounter(), sizeInPx());
