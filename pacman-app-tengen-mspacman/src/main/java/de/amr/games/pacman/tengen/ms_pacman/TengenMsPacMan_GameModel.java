@@ -479,7 +479,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
         assignDemoLevelBehavior(level.pac());
         demoLevelSteering.init();
-        level.showMessage(GameLevel.Message.GAME_OVER);
     }
 
     private int cutSceneNumberAfterLevel(int levelNumber) {

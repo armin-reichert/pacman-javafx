@@ -305,7 +305,6 @@ public class ArcadePacMan_GameModel extends GameModel {
         buildLevel(1);
         assignDemoLevelBehavior(level.pac());
         demoLevelSteering.init();
-        level.showMessage(GameLevel.Message.GAME_OVER);
     }
 
     @Override

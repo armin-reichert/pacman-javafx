@@ -174,6 +174,7 @@ public abstract class GameModel {
 
     public void startLevel() {
         level.setStartTime(System.currentTimeMillis());
+        level.showMessage(isDemoLevel() ? GameLevel.Message.GAME_OVER : GameLevel.Message.READY);
 
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(level.number()));
 
@@ -183,9 +184,6 @@ public abstract class GameModel {
 
         letsGetReadyToRumble();
         setActorBaseSpeed(level.number());
-        if (!isDemoLevel()) {
-            level.showMessage(GameLevel.Message.READY);
-        }
         levelCounter().update(level);
 
         Logger.info("{} started", isDemoLevel() ? "Demo Level" : "Level " + level.number());
