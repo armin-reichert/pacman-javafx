@@ -33,8 +33,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.Globals.TS;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.ui.Globals.*;
 import static java.util.Objects.requireNonNull;
 
@@ -269,10 +268,10 @@ public class PacManXXL_StartPage implements StartPage {
             pac.setVisible(true);
 
             ghosts = new Ghost[] {
-                ArcadePacMan_GameModel.blinky(),
-                ArcadePacMan_GameModel.pinky(),
-                ArcadePacMan_GameModel.inky(),
-                ArcadePacMan_GameModel.clyde()
+                new Ghost(RED_GHOST_ID, "Blinky"),
+                new Ghost(PINK_GHOST_ID, "Pinky"),
+                new Ghost(CYAN_GHOST_ID, "Inky"),
+                new Ghost(ORANGE_GHOST_ID, "Clyde")
             };
             for (Ghost ghost : ghosts) {
                 ghost.setPosX(46 * TS + ghost.id() * 2 * TS);

@@ -40,7 +40,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         game().scoreVisibleProperty().set(true);
 
         pac = new Pac();
-        blinky = ArcadePacMan_GameModel.blinky();
+        blinky = new Ghost(RED_GHOST_ID, "Blinky");
         blinky.setSpeed(0);
         blinky.hide();
 

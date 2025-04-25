@@ -46,11 +46,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadePacMan_GameModel extends GameModel {
 
-    public static Ghost blinky() { return new Ghost(RED_GHOST_ID,    "Blinky"); }
-    public static Ghost pinky()  { return new Ghost(PINK_GHOST_ID,   "Pinky"); }
-    public static Ghost inky()   { return new Ghost(CYAN_GHOST_ID,   "Inky"); }
-    public static Ghost clyde()  { return new Ghost(ORANGE_GHOST_ID, "Clyde"); }
-
     // Level settings as specified in the "Pac-Man dossier"
     private static final byte[][] LEVEL_DATA = {
         /* 1*/ { 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5},
@@ -255,7 +250,11 @@ public class ArcadePacMan_GameModel extends GameModel {
         pac.reset();
         cruiseElroy = 0;
 
-        var ghosts = List.of(blinky(), pinky(), inky(), clyde());
+        var ghosts = List.of(
+            new Ghost(RED_GHOST_ID, "Blinky"),
+            new Ghost(PINK_GHOST_ID, "Pinky"),
+            new Ghost(CYAN_GHOST_ID, "Inky"),
+            new Ghost(ORANGE_GHOST_ID, "Clyde"));
         ghosts.forEach(ghost -> {
             ghost.setGameLevel(level);
             ghost.setRevivalPosition(level.ghostPosition(ghost.id()));
