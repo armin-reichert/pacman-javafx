@@ -42,7 +42,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadeMsPacMan_GameModel extends ArcadeXMan_GameModel {
 
-    // To assure that the demo level runs at least 20 seconds:
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
     public ArcadeMsPacMan_GameModel() {

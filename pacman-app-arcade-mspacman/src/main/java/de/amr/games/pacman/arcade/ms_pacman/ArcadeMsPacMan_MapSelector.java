@@ -54,7 +54,7 @@ public class ArcadeMsPacMan_MapSelector extends MapSelector {
             case 10, 11, 12, 13 -> 4;
             default -> (levelNumber - 14) % 8 < 4 ? 3 : 4;
         };
-        WorldMap worldMap = new WorldMap(maps.get(mapNumber - 1));
+        var worldMap = new WorldMap(maps.get(mapNumber - 1));
         worldMap.setConfigValue("mapNumber", mapNumber);
         // 1->0, 2->1, 3->2, 4->3 if level <= 13; 3->4; 4->5 if level >= 14
         worldMap.setConfigValue("colorMapIndex", levelNumber < 14 ? mapNumber - 1 : mapNumber + 1);
