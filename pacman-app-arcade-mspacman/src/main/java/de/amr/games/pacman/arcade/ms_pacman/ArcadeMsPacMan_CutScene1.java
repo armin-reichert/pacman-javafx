@@ -57,8 +57,8 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
         pacMan = new Pac();
         msPac = new Pac();
-        inky = ArcadeMsPacMan_GameModel.inky();
-        pinky = ArcadeMsPacMan_GameModel.pinky();
+        inky = new Ghost(CYAN_GHOST_ID, "Inky");
+        pinky = new Ghost(PINK_GHOST_ID, "Pinky");
         heart = new Actor2D();
 
         music = THE_SOUND.createSound("intermission.1");

@@ -43,11 +43,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadeMsPacMan_GameModel extends GameModel {
 
-    public static Ghost blinky() { return new Ghost(RED_GHOST_ID, "Blinky"); }
-    public static Ghost pinky()  { return new Ghost(PINK_GHOST_ID, "Pinky"); }
-    public static Ghost inky()   { return new Ghost(CYAN_GHOST_ID, "Inky");  }
-    public static Ghost sue()    { return new Ghost(ORANGE_GHOST_ID, "Sue"); }
-
     // These are the *Pac-Man* level data as given in the Pac-Man dossier.
     // I have no clue if Ms. Pac-Man uses different data.
     private static final byte[][] LEVEL_DATA = {
@@ -254,7 +249,12 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         pac.reset();
         pac.setAutopilot(autopilot);
 
-        var ghosts = List.of(blinky(), pinky(), inky(), sue());
+        var ghosts = List.of(
+            new Ghost(RED_GHOST_ID, "Blinky"),
+            new Ghost(PINK_GHOST_ID, "Pinky"),
+            new Ghost(CYAN_GHOST_ID, "Inky"),
+            new Ghost(ORANGE_GHOST_ID, "Sue")
+        );
         ghosts.forEach(ghost -> {
             ghost.setGameLevel(level);
             ghost.setRevivalPosition(level.ghostPosition(ghost.id()));
