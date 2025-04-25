@@ -149,6 +149,8 @@ public abstract class ArcadeXMan_GameModel extends GameModel {
     protected void setActorBaseSpeed(int levelNumber) {
         level.pac().setBaseSpeed(1.25f);
         level.ghosts().forEach(ghost -> ghost.setBaseSpeed(1.25f));
+        Logger.debug("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
+        level.ghosts().forEach(ghost -> Logger.debug("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
     }
 
     @Override

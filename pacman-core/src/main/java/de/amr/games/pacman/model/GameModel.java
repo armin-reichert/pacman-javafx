@@ -162,6 +162,10 @@ public abstract class GameModel {
         buildLevel(levelNumber);
         level.setDemoLevel(false);
         scoreManager.setLevelNumber(levelNumber);
+        scoreManager.setLevelNumber(levelNumber);
+        scoreManager.setScoreEnabled(!level.isDemoLevel());
+        scoreManager.setHighScoreEnabled(!level.isDemoLevel());
+        gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(levelNumber));
         huntingTimer().reset();
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
     }
@@ -169,21 +173,10 @@ public abstract class GameModel {
     public void startLevel() {
         level.setStartTime(System.currentTimeMillis());
         level.showMessage(level.isDemoLevel() ? GameLevel.Message.GAME_OVER : GameLevel.Message.READY);
-
-        gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(level.number()));
-
-        scoreManager.setLevelNumber(level.number());
-        scoreManager.setScoreEnabled(!level.isDemoLevel());
-        scoreManager.setHighScoreEnabled(!level.isDemoLevel());
-
         letsGetReadyToRumble();
         setActorBaseSpeed(level.number());
         levelCounter().update(level);
-
         Logger.info("{} started", level.isDemoLevel() ? "Demo Level" : "Level " + level.number());
-        Logger.debug("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
-        level.ghosts().forEach(ghost -> Logger.debug("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
-
         // Note: This event is very important because it triggers the creation of the actor animations!
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_STARTED);
     }

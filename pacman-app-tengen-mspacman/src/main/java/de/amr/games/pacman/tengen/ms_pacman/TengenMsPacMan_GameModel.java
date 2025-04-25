@@ -388,6 +388,8 @@ public class TengenMsPacMan_GameModel extends GameModel {
                 + ghostDifficultySpeedDelta(difficulty)
                 + ghostIDSpeedDelta(ghost.id()))
         );
+        Logger.info("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
+        level.ghosts().forEach(ghost -> Logger.info("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
     }
 
     @Override
