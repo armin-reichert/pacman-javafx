@@ -6,7 +6,6 @@ package de.amr.games.pacman.arcade;
 
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.Waypoint;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.TerrainTiles;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
@@ -16,12 +15,10 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.actors.StaticBonus;
 import de.amr.games.pacman.steering.RouteBasedSteering;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
-import de.amr.games.pacman.steering.Steering;
 import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.List;
-import java.util.Optional;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.model.actors.GhostState.*;
@@ -44,36 +41,48 @@ import static java.util.Objects.requireNonNull;
  *
  * @see <a href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</a>
  */
-public class ArcadePacMan_GameModel extends GameModel {
+public class ArcadePacMan_GameModel extends ArcadeXMan_GameModel {
 
-    // Level settings as specified in the "Pac-Man dossier"
-    private static final byte[][] LEVEL_DATA = {
-        /* 1*/ { 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5},
-        /* 2*/ { 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5},
-        /* 3*/ { 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5},
-        /* 4*/ { 90, 85, 45,  40,  90, 20,  95,  95, 55, 3, 5},
-        /* 5*/ {100, 95, 50,  40, 100, 20, 105, 100, 60, 2, 5},
-        /* 6*/ {100, 95, 50,  50, 100, 25, 105, 100, 60, 5, 5},
-        /* 7*/ {100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5},
-        /* 8*/ {100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5},
-        /* 9*/ {100, 95, 50,  60, 100, 30, 105, 100, 60, 1, 3},
-        /*10*/ {100, 95, 50,  60, 100, 30, 105, 100, 60, 5, 5},
-        /*11*/ {100, 95, 50,  60, 100, 30, 105, 100, 60, 2, 5},
-        /*12*/ {100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3},
-        /*13*/ {100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3},
-        /*14*/ {100, 95, 50,  80, 100, 40, 105, 100, 60, 3, 5},
-        /*15*/ {100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3},
-        /*16*/ {100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3},
-        /*17*/ {100, 95, 50, 100, 100, 50, 105,   0,  0, 0, 0},
-        /*18*/ {100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3},
-        /*19*/ {100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
-        /*20*/ {100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
-        /*21*/ { 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
+    // Note: First level number is 1
+    private static final byte[] BONUS_SYMBOL_CODES_BY_LEVEL = {
+        69, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6
     };
 
-    private static Waypoint wp(int x, int y) { return new Waypoint(x, y); }
+    // points = multiplier * 100
+    private static final byte[] BONUS_VALUE_MULTIPLIERS = {
+        1, 3, 5, 7, 10, 20, 30, 50
+    };
 
-    protected static final Waypoint[] PACMAN_DEMO_LEVEL_ROUTE = {
+    public ArcadePacMan_GameModel() {
+        this(new ArcadePacMan_MapSelector());
+    }
+
+    /**
+     * @param mapSelector map selector e.g. selector that selects custom maps before standard maps
+     */
+    protected ArcadePacMan_GameModel(MapSelector mapSelector) {
+        this.mapSelector = requireNonNull(mapSelector);
+
+        lastLevelNumber = Integer.MAX_VALUE;
+        levelCounter = new ArcadePacMan_LevelCounter();
+
+        scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-pacman.xml"));
+        scoreManager.setExtraLifeScores(EXTRA_LIFE_SCORE);
+
+        huntingTimer = new ArcadePacMan_HuntingTimer();
+        huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
+            if (nv.intValue() > 0) level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAtNextOccasion);
+        });
+
+        gateKeeper = new GateKeeper();
+        gateKeeper.setOnGhostReleasedAction(ghost -> {
+            if (ghost.id() == ORANGE_GHOST_ID && cruiseElroy < 0) {
+                Logger.trace("Re-enable cruise elroy mode because {} exits house:", ghost.name());
+                setCruiseElroyEnabled(true);
+            }
+        });
+
+        demoLevelSteering = new RouteBasedSteering(List.of(
             wp(9, 26), wp(9, 29), wp(12,29), wp(12, 32), wp(26,32),
             wp(26,29), wp(24,29), wp(24,26), wp(26,26), wp(26,23),
             wp(21,23), wp(18,23), wp(18,14), wp(9,14), wp(9,17),
@@ -87,113 +96,17 @@ public class ArcadePacMan_GameModel extends GameModel {
             wp(24,29), wp(26,29), wp(26,32), wp(1,32),
             wp(1,29), wp(3,29), wp(3,26), wp(1,26), wp(1,23),
             wp(6,23) /* eaten at 3,23 in original game */
-    };
-
-    protected static final byte PELLET_VALUE = 10;
-    protected static final byte ENERGIZER_VALUE = 50;
-    protected static final short POINTS_ALL_GHOSTS_EATEN_IN_LEVEL = 12_000;
-    protected static final int EXTRA_LIFE_SCORE = 10_000;
-
-    // Note: First level number is 1
-    protected static final byte[] BONUS_SYMBOL_CODES_BY_LEVEL = {42, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
-    protected static final byte[] BONUS_VALUE_MULTIPLIERS = {1, 3, 5, 7, 10, 20, 30, 50}; // points = value * 100
-    protected static final byte[] KILLED_GHOST_VALUE_MULTIPLIER = {2, 4, 8, 16}; // points = value * 100
-
-    protected final Steering autopilot = new RuleBasedPacSteering(this);
-    protected Steering demoLevelSteering;
-
-    protected byte cruiseElroy;
-
-    protected final LevelCounter levelCounter = new ArcadePacMan_LevelCounter();
-    protected final HuntingTimer huntingTimer = new ArcadePacMan_HuntingTimer();
-    protected final GateKeeper gateKeeper = new GateKeeper();
-    protected final MapSelector mapSelector;
-
-    public ArcadePacMan_GameModel() {
-        this(new ArcadePacMan_MapSelector());
+        ));
+        autopilot = new RuleBasedPacSteering(this);
     }
 
-    /**
-     * @param mapSelector map selector e.g. selector that selects custom maps before standard maps
-     */
-    protected ArcadePacMan_GameModel(MapSelector mapSelector) {
-        this.mapSelector = requireNonNull(mapSelector);
-        lastLevelNumber = Integer.MAX_VALUE;
-        scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-pacman.xml"));
-        scoreManager.setExtraLifeScores(EXTRA_LIFE_SCORE);
-        huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
-            if (nv.intValue() > 0) level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAtNextOccasion);
-        });
-        gateKeeper.setOnGhostReleasedAction(ghost -> {
-            if (ghost.id() == ORANGE_GHOST_ID && cruiseElroy < 0) {
-                Logger.trace("Re-enable cruise elroy mode because {} exits house:", ghost.name());
-                setCruiseElroyEnabled(true);
-            }
-        });
-        demoLevelSteering = new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE));
-    }
-
-    protected LevelData levelData(int levelNumber) {
-        return new LevelData(LEVEL_DATA[Math.min(levelNumber - 1, LEVEL_DATA.length - 1)]);
-    }
-
-    protected void setCruiseElroyEnabled(boolean enabled) {
-        if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
-            cruiseElroy = (byte) -cruiseElroy;
-        }
-    }
-
-    @Override
-    protected Optional<GateKeeper> gateKeeper() { return Optional.of(gateKeeper); }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T extends LevelCounter> T levelCounter() {
-        return (T) levelCounter;
-    }
-
-    @Override
-    public MapSelector mapSelector() {
-        return mapSelector;
-    }
-
-    @Override
-    public void init() {
-        initialLivesProperty().set(3);
-        mapSelector.loadAllMaps(this);
-    }
-
-    @Override
-    public void resetEverything() {
-        resetForStartingNewGame();
-    }
-
-    @Override
-    public void resetForStartingNewGame() {
-        playingProperty().set(false);
-        livesProperty().set(initialLivesProperty().get());
-        level = null;
-        cruiseElroy = 0;
-        levelCounter().reset();
-        scoreManager().loadHighScore();
-        scoreManager.resetScore();
-        gateKeeper.reset();
-        huntingTimer.reset();
-    }
-
-    @Override
-    public boolean canStartNewGame() {
-        return !THE_COIN_MECHANISM.isEmpty();
-    }
-
-    @Override
-    public boolean continueOnGameOver() {
-        return false;
-    }
-
-    @Override
-    public boolean isOver() {
-        return livesProperty().get() == 0;
+    protected void ghostHuntingBehaviour(Ghost ghost) {
+        boolean chase = huntingTimer.phase() == HuntingTimer.HuntingPhase.CHASING
+            || ghost.id() == RED_GHOST_ID && cruiseElroy > 0;
+        Vector2i targetTile = chase
+            ? chasingTargetTile(ghost.id(), level, SIMULATE_OVERFLOW_BUG)
+            : level.ghostScatterTile(ghost.id());
+        ghost.followTarget(targetTile, ghostAttackSpeed(ghost));
     }
 
     @Override
@@ -202,28 +115,8 @@ public class ArcadePacMan_GameModel extends GameModel {
     }
 
     @Override
-    public void endGame() {
-        playingProperty().set(false);
-        if (!THE_COIN_MECHANISM.isEmpty()) {
-            THE_COIN_MECHANISM.consumeCoin();
-        }
-        scoreManager().updateHighScore();
-        if (level != null) {
-            level.showMessage(GameLevel.Message.GAME_OVER);
-        }
-        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.STOP_ALL_SOUNDS);
-    }
-
-    @Override
-    protected void setActorBaseSpeed(int levelNumber) {
-        level.pac().setBaseSpeed(1.25f);
-        level.ghosts().forEach(ghost -> ghost.setBaseSpeed(1.25f));
-    }
-
-    @Override
     public void buildLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.selectWorldMap(requireValidLevelNumber(levelNumber));
-
         level = new GameLevel(this, levelNumber, worldMap);
         level.setCutSceneNumber(switch (levelNumber) {
             case 2 -> 1;
@@ -233,21 +126,14 @@ public class ArcadePacMan_GameModel extends GameModel {
         });
         level.setNumFlashes(levelData(levelNumber).numFlashes());
 
-        if (!worldMap.hasProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MIN_TILE)) {
-            Logger.warn("No house min tile found in map!");
-        }
-        Vector2i minTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE, Vector2i.of(10, 15));
-        if (!worldMap.hasProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MAX_TILE)) {
-            Logger.warn("No house max tile found in map!");
-        }
-        Vector2i maxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE, Vector2i.of(17, 19));
-        level.createArcadeHouse(minTile.x(), minTile.y(), maxTile.x(), maxTile.y());
+        addArcadeHouse(worldMap);
 
         var pac = new Pac();
         pac.setName("Pac-Man");
         pac.setGameLevel(level);
-        pac.setAutopilot(autopilot);
         pac.reset();
+        pac.setAutopilot(autopilot);
+
         cruiseElroy = 0;
 
         var ghosts = List.of(
@@ -255,58 +141,26 @@ public class ArcadePacMan_GameModel extends GameModel {
             new Ghost(PINK_GHOST_ID, "Pinky"),
             new Ghost(CYAN_GHOST_ID, "Inky"),
             new Ghost(ORANGE_GHOST_ID, "Clyde"));
+
         ghosts.forEach(ghost -> {
             ghost.setGameLevel(level);
             ghost.setRevivalPosition(level.ghostPosition(ghost.id()));
+            ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
             ghost.reset();
         });
         ghosts.get(RED_GHOST_ID).setRevivalPosition(level.ghostPosition(PINK_GHOST_ID)); // middle house position
-
-        List<Vector2i> oneWayDownTiles = worldMap.tiles()
-                .filter(tile -> worldMap.get(LayerID.TERRAIN, tile) == TerrainTiles.ONE_WAY_DOWN).toList();
-        ghosts.forEach(ghost -> ghost.setSpecialTerrainTiles(oneWayDownTiles));
-        ghosts.forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
 
         level.setPac(pac);
         level.setGhosts(ghosts.toArray(Ghost[]::new));
         level.setBonusSymbol(0, computeBonusSymbol(levelNumber));
         level.setBonusSymbol(1, computeBonusSymbol(levelNumber));
 
+        // Pac-Man specific: special tiles where attacking ghosts cannot move up
+        List<Vector2i> oneWayDownTiles = worldMap.tiles()
+            .filter(tile -> worldMap.get(LayerID.TERRAIN, tile) == TerrainTiles.ONE_WAY_DOWN).toList();
+        ghosts.forEach(ghost -> ghost.setSpecialTerrainTiles(oneWayDownTiles));
+
         levelCounter.setEnabled(true);
-    }
-
-    @Override
-    public void buildDemoLevel() {
-        buildLevel(1);
-        level.setDemoLevel(true);
-        assignDemoLevelBehavior(level.pac());
-        demoLevelSteering.init();
-        levelCounter.setEnabled(false);
-    }
-
-    @Override
-    public void assignDemoLevelBehavior(Pac pac) {
-        pac.setAutopilot(demoLevelSteering);
-        pac.setUsingAutopilot(true);
-        pac.setImmune(false);
-    }
-
-    @Override
-    public float pacNormalSpeed() {
-        if (level == null) {
-            return 0;
-        }
-        byte percentage = levelData(level.number()).pacSpeedPercentage();
-        return percentage > 0 ? percentage * 0.01f * level.pac().baseSpeed() : level.pac().baseSpeed();
-    }
-
-    @Override
-    public float pacPowerSpeed() {
-        if (level == null) {
-            return 0;
-        }
-        byte percentage = levelData(level.number()).pacSpeedPoweredPercentage();
-        return percentage > 0 ? percentage * 0.01f * level.pac().baseSpeed() : pacNormalSpeed();
     }
 
     @Override
@@ -315,109 +169,8 @@ public class ArcadePacMan_GameModel extends GameModel {
     }
 
     @Override
-    public float ghostAttackSpeed(Ghost ghost) {
-        LevelData levelData = levelData(level.number());
-        if (level.isTunnel(ghost.tile())) {
-            return levelData.ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed();
-        }
-        if (ghost.id() == RED_GHOST_ID && cruiseElroy == 1) {
-            return levelData.elroy1SpeedPercentage() * 0.01f * ghost.baseSpeed();
-        }
-        if (ghost.id() == RED_GHOST_ID && cruiseElroy == 2) {
-            return levelData.elroy2SpeedPercentage() * 0.01f * ghost.baseSpeed();
-        }
-        return levelData.ghostSpeedPercentage() * 0.01f * ghost.baseSpeed();
-    }
-
-    @Override
-    public float ghostSpeedInsideHouse(Ghost ghost) {
-        return 0.5f;
-    }
-
-    @Override
-    public float ghostSpeedReturningToHouse(Ghost ghost) {
-        return 2;
-    }
-
-    @Override
-    public float ghostFrightenedSpeed(Ghost ghost) {
-        if (level == null) {
-            return 0;
-        }
-        float percentage = levelData(level.number()).ghostSpeedFrightenedPercentage();
-        return percentage > 0 ? percentage * 0.01f * ghost.baseSpeed() : ghost.baseSpeed();
-    }
-
-    @Override
-    public float ghostTunnelSpeed(Ghost ghost) {
-        return level != null
-            ? levelData(level.number()).ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed()
-            : 0;
-    }
-
-    @Override
-    public HuntingTimer huntingTimer() {
-        return huntingTimer;
-    }
-
-    @Override
     public boolean isPacManKillingIgnored() {
         return false;
-    }
-
-    @Override
-    protected void onFoodEaten(Vector2i tile, int uneatenFoodCount, boolean energizer) {
-        level.pac().setRestingTicks(energizer ? 3 : 1);
-        if (uneatenFoodCount == levelData(level.number()).elroy1DotsLeft()) {
-            cruiseElroy = 1;
-        } else if (uneatenFoodCount == levelData(level.number()).elroy2DotsLeft()) {
-            cruiseElroy = 2;
-        }
-        if (energizer) {
-            onEnergizerEaten();
-            scoreManager.scorePoints(ENERGIZER_VALUE);
-            Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
-        } else {
-            scoreManager.scorePoints(PELLET_VALUE);
-        }
-        gateKeeper.registerFoodEaten(level);
-        if (isBonusReached()) {
-            activateNextBonus();
-            eventsThisFrame().bonusIndex = level.nextBonusIndex();
-        }
-    }
-
-    @Override
-    public void onPacKilled() {
-        huntingTimer.stop();
-        Logger.info("Hunting timer stopped");
-        level.pac().powerTimer().stop();
-        level.pac().powerTimer().reset(0);
-        Logger.info("Power timer stopped and set to zero");
-        gateKeeper.resetCounterAndSetEnabled(true);
-        setCruiseElroyEnabled(false);
-        level.pac().die();
-    }
-
-    @Override
-    public void killGhost(Ghost ghost) {
-        eventsThisFrame().killedGhosts.add(ghost);
-        int killedSoFar = level.victims().size();
-        int points = 100 * KILLED_GHOST_VALUE_MULTIPLIER[killedSoFar];
-        level.victims().add(ghost);
-        ghost.eaten(killedSoFar);
-        scoreManager.scorePoints(points);
-        Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
-        if (level.victims().size() == 16) {
-            int extraPoints = POINTS_ALL_GHOSTS_EATEN_IN_LEVEL;
-            scoreManager.scorePoints(extraPoints);
-            Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, level.number());
-        }
-    }
-
-    @Override
-    public long pacPowerTicks() {
-        return level != null ? 60 * levelData(level.number()).pacPowerSeconds() : 0;
     }
 
     @Override
@@ -441,7 +194,7 @@ public class ArcadePacMan_GameModel extends GameModel {
     public void activateNextBonus() {
         level.selectNextBonus();
         byte symbol = level.bonusSymbol(level.nextBonusIndex());
-        StaticBonus staticBonus = new StaticBonus(symbol, ArcadePacMan_GameModel.BONUS_VALUE_MULTIPLIERS[symbol] * 100);
+        StaticBonus staticBonus = new StaticBonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
         level.setBonus(staticBonus);
         if (level.worldMap().hasProperty(LayerID.TERRAIN, WorldMapProperty.POS_BONUS)) {
             Vector2i bonusTile = level.worldMap().getTerrainTileProperty(WorldMapProperty.POS_BONUS, new Vector2i(13, 20));
@@ -450,20 +203,7 @@ public class ArcadePacMan_GameModel extends GameModel {
             Logger.error("No bonus position found in map");
             staticBonus.actor().setPosition(halfTileRightOf(13, 20));
         }
-        staticBonus.setEdible(bonusEdibleTicks());
+        staticBonus.setEdible(randomInt(540, 600));
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.BONUS_ACTIVATED, staticBonus.actor().tile());
-    }
-
-    protected int bonusEdibleTicks() {
-        return randomInt(540, 600); // 9-10 seconds
-    }
-
-    protected void ghostHuntingBehaviour(Ghost ghost) {
-        boolean chasing = huntingTimer.phase() == HuntingTimer.HuntingPhase.CHASING
-            || ghost.id() == RED_GHOST_ID && cruiseElroy > 0;
-        Vector2i targetTile = chasing
-                ? chasingTargetTile(ghost.id(), level, SIMULATE_OVERFLOW_BUG)
-                : level.ghostScatterTile(ghost.id());
-        ghost.followTarget(targetTile, ghostAttackSpeed(ghost));
     }
 }

@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.ms_pacman;
 
+import de.amr.games.pacman.arcade.ArcadeXMan_GameModel;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.Waypoint;
@@ -16,12 +17,10 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
-import de.amr.games.pacman.steering.Steering;
 import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.*;
@@ -41,53 +40,10 @@ import static java.util.Objects.requireNonNull;
  * </ul>
  * </p>
  */
-public class ArcadeMsPacMan_GameModel extends GameModel {
-
-    // These are the *Pac-Man* level data as given in the Pac-Man dossier.
-    // I have no clue if Ms. Pac-Man uses different data.
-    private static final byte[][] LEVEL_DATA = {
-        /* 1*/ { 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5},
-        /* 2*/ { 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5},
-        /* 3*/ { 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5},
-        /* 4*/ { 90, 85, 45,  40,  90, 20,  95,  95, 55, 3, 5},
-        /* 5*/ {100, 95, 50,  40, 100, 20, 105, 100, 60, 2, 5},
-        /* 6*/ {100, 95, 50,  50, 100, 25, 105, 100, 60, 5, 5},
-        /* 7*/ {100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5},
-        /* 8*/ {100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5},
-        /* 9*/ {100, 95, 50,  60, 100, 30, 105, 100, 60, 1, 3},
-        /*10*/ {100, 95, 50,  60, 100, 30, 105, 100, 60, 5, 5},
-        /*11*/ {100, 95, 50,  60, 100, 30, 105, 100, 60, 2, 5},
-        /*12*/ {100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3},
-        /*13*/ {100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3},
-        /*14*/ {100, 95, 50,  80, 100, 40, 105, 100, 60, 3, 5},
-        /*15*/ {100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3},
-        /*16*/ {100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3},
-        /*17*/ {100, 95, 50, 100, 100, 50, 105,   0,  0, 0, 0},
-        /*18*/ {100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3},
-        /*19*/ {100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
-        /*20*/ {100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
-        /*21*/ { 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
-    };
+public class ArcadeMsPacMan_GameModel extends ArcadeXMan_GameModel {
 
     // To assure that the demo level runs at least 20 seconds:
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
-
-    private static final byte PELLET_VALUE = 10;
-    private static final byte ENERGIZER_VALUE = 50;
-    private static final short POINTS_ALL_GHOSTS_EATEN_IN_LEVEL = 12_000;
-    private static final int EXTRA_LIFE_SCORE = 10_000;
-    private static final byte[] BONUS_VALUE_MULTIPLIERS = {1, 2, 5, 7, 10, 20, 50}; // points = value * 100
-    private static final byte[] KILLED_GHOST_VALUE_MULTIPLIER = {2, 4, 8, 16}; // points = value * 100
-
-    protected final Steering autopilot = new RuleBasedPacSteering(this);
-    protected Steering demoLevelSteering;
-
-    protected byte cruiseElroy; //TODO is this existing in Ms. Pac-Man too?
-
-    protected final LevelCounter levelCounter = new ArcadeMsPacMan_LevelCounter();
-    protected final HuntingTimer huntingTimer = new ArcadeMsPacMan_HuntingTimer();
-    protected final GateKeeper gateKeeper = new GateKeeper();
-    protected final MapSelector mapSelector;
 
     public ArcadeMsPacMan_GameModel() {
         this(new ArcadeMsPacMan_MapSelector());
@@ -99,28 +55,27 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     protected ArcadeMsPacMan_GameModel(MapSelector mapSelector) {
         this.mapSelector = requireNonNull(mapSelector);
         lastLevelNumber = Integer.MAX_VALUE;
+
+        levelCounter = new ArcadeMsPacMan_LevelCounter();
+
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman.xml"));
         scoreManager.setExtraLifeScores(EXTRA_LIFE_SCORE);
+
+        huntingTimer = new ArcadeMsPacMan_HuntingTimer();
         huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
             if (nv.intValue() > 0) level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAtNextOccasion);
         });
+
+        gateKeeper = new GateKeeper();
         gateKeeper.setOnGhostReleasedAction(ghost -> {
             if (ghost.id() == ORANGE_GHOST_ID && cruiseElroy < 0) {
                 Logger.trace("Re-enable cruise elroy mode because {} exits house:", ghost.name());
                 setCruiseElroyEnabled(true);
             }
         });
+
         demoLevelSteering = new RuleBasedPacSteering(this);
-    }
-
-    protected LevelData levelData(int levelNumber) {
-        return new LevelData(LEVEL_DATA[Math.min(levelNumber - 1, LEVEL_DATA.length - 1)]);
-    }
-
-    protected void setCruiseElroyEnabled(boolean enabled) {
-        if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
-            cruiseElroy = (byte) -cruiseElroy;
-        }
+        autopilot = new RuleBasedPacSteering(this);
     }
 
     /**
@@ -141,113 +96,30 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         }
     }
 
-    protected int cutSceneNumberAfterLevel(int levelNumber) {
-        return switch (levelNumber) {
-            case 2 -> 1;
-            case 5 -> 2;
-            case 9, 13, 17 -> 3;
-            default -> 0; // no cut scene
-        };
-    }
-
     @Override
-    @SuppressWarnings("unchecked")
-    public <T extends LevelCounter> T levelCounter() { return (T) levelCounter; }
-
-    @Override
-    protected Optional<GateKeeper> gateKeeper() {
-        return Optional.of(gateKeeper);
-    }
-
-    @Override
-    public MapSelector mapSelector() { return mapSelector; }
-
-    @Override
-    public void init() {
-        initialLivesProperty().set(3);
-        mapSelector.loadAllMaps(this);
-    }
-
-    @Override
-    public void resetEverything() {
-        resetForStartingNewGame();
-    }
-
-    @Override
-    public void resetForStartingNewGame() {
-        playingProperty().set(false);
-        livesProperty().set(initialLivesProperty().get());
-        level = null;
-        cruiseElroy = 0;
-        levelCounter().reset();
-        scoreManager().loadHighScore();
-        scoreManager.resetScore();
-        gateKeeper.reset();
-        huntingTimer.reset();
-    }
-
-    @Override
-    public void endGame() {
-        playingProperty().set(false);
-        if (!THE_COIN_MECHANISM.isEmpty()) {
-            THE_COIN_MECHANISM.consumeCoin();
-        }
-        scoreManager().updateHighScore();
-        if (level != null) {
-            level.showMessage(GameLevel.Message.GAME_OVER);
-        }
-        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.STOP_ALL_SOUNDS);
-    }
-
-    @Override
-    public boolean canStartNewGame() {
-        return !THE_COIN_MECHANISM.isEmpty();
-    }
-
-    @Override
-    public boolean continueOnGameOver() {
-        return false;
-    }
-
-    @Override
-    public boolean isOver() {
-        return livesProperty().get() == 0;
-    }
-
-    @Override
-    public long gameOverStateTicks() {
-        return 150;
-    }
+    public long gameOverStateTicks() { return 150; }
 
     @Override
     public void buildLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
-
         level = new GameLevel(this, levelNumber, worldMap);
-        level.setCutSceneNumber(cutSceneNumberAfterLevel(levelNumber));
+        level.setCutSceneNumber(switch (levelNumber) {
+            case 2 -> 1;
+            case 5 -> 2;
+            case 9, 13, 17 -> 3;
+            default -> 0;
+        });
         level.setNumFlashes(levelData(levelNumber).numFlashes());
 
-        /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
-         * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
-        levelCounter().setEnabled(levelNumber < 8);
-
-        if (!worldMap.hasProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MIN_TILE)) {
-            Logger.warn("No house min tile found in map!");
-            worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MIN_TILE, formatTile(Vector2i.of(10, 15)));
-        }
-        if (!worldMap.hasProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MAX_TILE)) {
-            Logger.warn("No house max tile found in map!");
-            worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MAX_TILE, formatTile(Vector2i.of(17, 19)));
-        }
-        Vector2i minTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE, null);
-        Vector2i maxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE, null);
-        level.createArcadeHouse(minTile.x(), minTile.y(), maxTile.x(), maxTile.y());
+        addArcadeHouse(worldMap);
 
         var pac = new Pac();
         pac.setName("Ms. Pac-Man");
         pac.setGameLevel(level);
         pac.reset();
         pac.setAutopilot(autopilot);
+
+        cruiseElroy = 0;
 
         var ghosts = List.of(
             new Ghost(RED_GHOST_ID, "Blinky"),
@@ -267,112 +139,22 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         level.setGhosts(ghosts.toArray(Ghost[]::new));
         level.setBonusSymbol(0, computeBonusSymbol(level.number()));
         level.setBonusSymbol(1, computeBonusSymbol(level.number()));
-    }
 
-    @Override
-    public void buildDemoLevel() {
-        buildLevel(1);
-        level.setDemoLevel(true);
-        assignDemoLevelBehavior(level.pac());
-        demoLevelSteering.init();
-        levelCounter.setEnabled(false);
-    }
-
-    @Override
-    public void assignDemoLevelBehavior(Pac pac) {
-        pac.setAutopilot(demoLevelSteering);
-        pac.setUsingAutopilot(true);
-        pac.setImmune(false);
-    }
-
-    @Override
-    protected void setActorBaseSpeed(int levelNumber) {
-        level.pac().setBaseSpeed(1.25f);
-        level.ghosts().forEach(ghost -> ghost.setBaseSpeed(1.25f));
-    }
-
-    @Override
-    public float pacNormalSpeed() {
-        if (level == null) {
-            return 0;
-        }
-        byte percentage = levelData(level.number()).pacSpeedPercentage();
-        if (percentage == 0) {
-            percentage = 100;
-        }
-        return percentage * 0.01f * level.pac().baseSpeed();
-    }
-
-    @Override
-    public float pacPowerSpeed() {
-        if (level == null) {
-            return 0;
-        }
-        byte percentage = levelData(level.number()).pacSpeedPoweredPercentage();
-        if (percentage == 0) {
-            percentage = 100;
-        }
-        return percentage * 0.01f * level.pac().baseSpeed();
-    }
-
-    @Override
-    public long pacPowerTicks() {
-        return level != null ? 60 * levelData(level.number()).pacPowerSeconds() : 0;
+        /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
+         * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
+        levelCounter().setEnabled(levelNumber < 8);
     }
 
     @Override
     public long pacPowerFadingTicks() {
-        //TODO find better solution.
         // Ghost flashing animation has frame length 14 so one full flash takes 28 ticks
+        //TODO find better solution.
         return level != null ? level.numFlashes() * 28L : 0;
     }
 
     @Override
     public long pacDyingTicks() {
         return 240;
-    }
-
-    @Override
-    public float ghostAttackSpeed(Ghost ghost) {
-        if (level.isTunnel(ghost.tile()) && level.number() <= 3) {
-            return ghostTunnelSpeed(ghost);
-        }
-        if (ghost.id() == RED_GHOST_ID && cruiseElroy == 1) {
-            return levelData(level.number()).elroy1SpeedPercentage() * 0.01f * ghost.baseSpeed();
-        }
-        if (ghost.id() == RED_GHOST_ID && cruiseElroy == 2) {
-            return levelData(level.number()).elroy2SpeedPercentage() * 0.01f * ghost.baseSpeed();
-        }
-        return levelData(level.number()).ghostSpeedPercentage() * 0.01f * ghost.baseSpeed();
-    }
-
-    @Override
-    public float ghostSpeedInsideHouse(Ghost ghost) {
-        return 0.5f;
-    }
-
-    @Override
-    public float ghostSpeedReturningToHouse(Ghost ghost) {
-        return 2;
-    }
-
-    @Override
-    public float ghostFrightenedSpeed(Ghost ghost) {
-        return level !=null
-            ? levelData(level.number()).ghostSpeedFrightenedPercentage() * 0.01f * ghost.baseSpeed()
-            : 0;
-    }
-
-    @Override
-    public float ghostTunnelSpeed(Ghost ghost) {
-        return level !=null
-            ? levelData(level.number()).ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed()
-            : 0;
-    }
-
-    @Override
-    public HuntingTimer huntingTimer() {
-        return huntingTimer;
     }
 
     @Override
@@ -383,56 +165,6 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
             return true;
         }
         return false;
-    }
-
-    @Override
-    protected void onFoodEaten(Vector2i tile, int uneatenFoodCount, boolean energizer) {
-        level.pac().setRestingTicks(energizer ? 3 : 1);
-        if (uneatenFoodCount == levelData(level.number()).elroy1DotsLeft()) {
-            cruiseElroy = 1;
-        } else if (uneatenFoodCount == levelData(level.number()).elroy2DotsLeft()) {
-            cruiseElroy = 2;
-        }
-        if (energizer) {
-            onEnergizerEaten();
-            scoreManager().scorePoints(ENERGIZER_VALUE);
-            Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
-        } else {
-            scoreManager.scorePoints(PELLET_VALUE);
-        }
-        gateKeeper.registerFoodEaten(level);
-        if (isBonusReached()) {
-            activateNextBonus();
-            eventsThisFrame().bonusIndex = level.nextBonusIndex();
-        }
-    }
-
-    @Override
-    public void onPacKilled() {
-        huntingTimer.stop();
-        Logger.info("Hunting timer stopped");
-        level.pac().powerTimer().stop();
-        level.pac().powerTimer().reset(0);
-        Logger.info("Power timer stopped and set to zero");
-        gateKeeper.resetCounterAndSetEnabled(true);
-        setCruiseElroyEnabled(false);
-        level.pac().die();
-    }
-
-    @Override
-    public void killGhost(Ghost ghost) {
-        eventsThisFrame().killedGhosts.add(ghost);
-        int killedSoFar = level.victims().size();
-        int points = 100 * KILLED_GHOST_VALUE_MULTIPLIER[killedSoFar];
-        level.victims().add(ghost);
-        ghost.eaten(killedSoFar);
-        scoreManager.scorePoints(points);
-        Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
-        if (level.victims().size() == 16) {
-            int extraPoints = POINTS_ALL_GHOSTS_EATEN_IN_LEVEL;
-            scoreManager.scorePoints(extraPoints);
-            Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, level.number());
-        }
     }
 
     @Override
@@ -466,17 +198,15 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
      */
     @Override
     public byte computeBonusSymbol(int levelNumber) {
-        if (levelNumber <= 7) {
-            return (byte) (levelNumber - 1);
-        }
-        int choice = randomInt(0, 320);
-        if (choice <  50) return 0; // 5/32 probability
-        if (choice < 100) return 1; // 5/32
-        if (choice < 150) return 2; // 5/32
-        if (choice < 200) return 3; // 5/32
-        if (choice < 240) return 4; // 4/32
-        if (choice < 280) return 5; // 4/32
-        else              return 6; // 4/32
+        if (levelNumber <= 7) return (byte) (levelNumber - 1);
+        int coin = randomInt(0, 320);
+        if (coin <  50) return 0; // 5/32 probability
+        if (coin < 100) return 1; // 5/32
+        if (coin < 150) return 2; // 5/32
+        if (coin < 200) return 3; // 5/32
+        if (coin < 240) return 4; // 4/32
+        if (coin < 280) return 5; // 4/32
+        else            return 6; // 4/32
     }
 
     /**
@@ -545,5 +275,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         level.setBonus(movingBonus);
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.BONUS_ACTIVATED, movingBonus.actor().tile());
     }
+
+    private final byte[] BONUS_VALUE_MULTIPLIERS = {1, 2, 5, 7, 10, 20, 50}; // points = value * 100
 
 }
