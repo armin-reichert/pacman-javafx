@@ -152,7 +152,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         MapCategory mapCategory = game.mapCategory();
         int mapNumber = level.worldMap().getConfigValue("mapNumber");
 
-        if (!game.hasDefaultOptionValues()) {
+        if (!game.optionsHaveDefaultValues()) {
             drawGameOptions(game, level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
         }
 
@@ -189,7 +189,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     public void drawMapHighlighted(GameLevel level, double mapX, double mapY, int flashingIndex) {
         ctx().setImageSmoothing(false);
         TengenMsPacMan_GameModel game = THE_GAME_CONTROLLER.game();
-        if (!game.hasDefaultOptionValues()) {
+        if (!game.optionsHaveDefaultValues()) {
             drawGameOptions(game, level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
         }
         ColoredMapImage mapImage = coloredMapSet.flashingMazes().get(flashingIndex);

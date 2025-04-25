@@ -100,9 +100,11 @@ public class TengenMsPacMan_GameModel extends GameModel {
     private static final byte[] KILLED_GHOST_VALUE_MULTIPLIER = {2, 4, 8, 16}; // factor * 100 = value
 
     private final TengenMsPacMan_LevelCounter levelCounter;
+    private final TengenMsPacMan_MapSelector mapSelector;
     private final GateKeeper gateKeeper;
     private final HuntingTimer huntingTimer;
-    private final TengenMsPacMan_MapSelector mapSelector;
+    private final Steering autopilot;
+    private final Steering demoLevelSteering;
 
     private MapCategory mapCategory;
     private Difficulty difficulty;
@@ -111,8 +113,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
     private int startLevelNumber; // 1-7
     private boolean canStartNewGame;
     private int numContinues;
-    private final Steering autopilot = new RuleBasedPacSteering(this);
-    private final Steering demoLevelSteering = new RuleBasedPacSteering(this);
 
     public TengenMsPacMan_GameModel() {
         levelCounter = new TengenMsPacMan_LevelCounter();
@@ -123,6 +123,8 @@ public class TengenMsPacMan_GameModel extends GameModel {
             if (nv.intValue() > 0) level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAtNextOccasion);
         });
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman_tengen.xml"));
+        autopilot = new RuleBasedPacSteering(this);
+        demoLevelSteering = new RuleBasedPacSteering(this);
     }
 
     public void init() {
@@ -134,7 +136,11 @@ public class TengenMsPacMan_GameModel extends GameModel {
     @Override
     public void resetEverything() {
         resetForStartingNewGame();
-        resetOptions();
+        setPacBooster(PacBooster.OFF);
+        setDifficulty(Difficulty.NORMAL);
+        setMapCategory(MapCategory.ARCADE);
+        setStartLevelNumber(1);
+        numContinues = 4;
     }
 
     @Override
@@ -185,20 +191,12 @@ public class TengenMsPacMan_GameModel extends GameModel {
         return huntingTimer;
     }
 
-    public void resetOptions() {
-        setPacBooster(PacBooster.OFF);
-        setDifficulty(Difficulty.NORMAL);
-        setMapCategory(MapCategory.ARCADE);
-        setStartLevelNumber(1);
-        numContinues = 4;
-    }
-
-    public boolean hasDefaultOptionValues() {
-        return pacBooster == PacBooster.OFF &&
-                difficulty == Difficulty.NORMAL &&
-                mapCategory == MapCategory.ARCADE &&
-                startLevelNumber == 1 &&
-                numContinues == 4;
+    public boolean optionsHaveDefaultValues() {
+        return pacBooster == PacBooster.OFF
+            && difficulty == Difficulty.NORMAL
+            && mapCategory == MapCategory.ARCADE
+            && startLevelNumber == 1
+            && numContinues == 4;
     }
 
     public void setPacBooster(PacBooster mode) {
