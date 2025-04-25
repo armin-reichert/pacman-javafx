@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.TerrainTiles;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
@@ -69,7 +70,22 @@ public class ArcadePacMan_GameModel extends ArcadeXMan_GameModel {
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-pacman.xml"));
         scoreManager.setExtraLifeScores(EXTRA_LIFE_SCORE);
 
-        huntingTimer = new ArcadePacMan_HuntingTimer();
+        huntingTimer = new HuntingTimer(8) {
+            // Ticks of scatter and chasing phases, -1=INDEFINITE
+            final int[] HUNTING_TICKS_LEVEL_1 = {420, 1200, 420, 1200, 300,  1200, 300, -1};
+            final int[] HUNTING_TICKS_LEVEL_2_3_4 = {420, 1200, 420, 1200, 300, 61980,   1, -1};
+            final int[] HUNTING_TICKS_LEVEL_5_PLUS = {300, 1200, 300, 1200, 300, 62262,   1, -1};
+
+            @Override
+            public long huntingTicks(int levelNumber, int phaseIndex) {
+                long ticks = switch (levelNumber) {
+                    case 1 -> HUNTING_TICKS_LEVEL_1[phaseIndex];
+                    case 2, 3, 4 -> HUNTING_TICKS_LEVEL_2_3_4[phaseIndex];
+                    default -> HUNTING_TICKS_LEVEL_5_PLUS[phaseIndex];
+                };
+                return ticks != -1 ? ticks : TickTimer.INDEFINITE;
+            }
+        };
         huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
             if (nv.intValue() > 0) level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAtNextOccasion);
         });
