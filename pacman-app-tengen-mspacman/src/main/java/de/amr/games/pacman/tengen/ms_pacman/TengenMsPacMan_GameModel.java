@@ -36,52 +36,50 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public static Ghost blinky() {
         return new Ghost(RED_GHOST_ID, "Blinky");
     }
-
     public static Ghost pinky() {
         return new Ghost(PINK_GHOST_ID, "Pinky");
     }
-
     public static Ghost inky() {
         return new Ghost(CYAN_GHOST_ID, "Inky");
     }
-
     public static Ghost sue() {
         return new Ghost(ORANGE_GHOST_ID, "Sue");
     }
 
-    public static final byte MIN_LEVEL_NUMBER = 1;
+    private static final byte MIN_LEVEL_NUMBER = 1;
+    private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
-    static final byte PELLET_VALUE = 10;
-    static final byte ENERGIZER_VALUE = 50;
+    private static final byte PELLET_VALUE = 10;
+    private static final byte ENERGIZER_VALUE = 50;
 
     // See https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/Data/PowerPelletTimes.asm
     // Hex value divided by 16 gives the duration in seconds
-    static final byte[] POWER_PELLET_TIMES = {
+    private static final byte[] POWER_PELLET_TIMES = {
         0x60, 0x50, 0x40, 0x30, 0x20, 0x50, 0x20, 0x1C, // levels 1-8
         0x18, 0x40, 0x20, 0x1C, 0x18, 0x20, 0x1C, 0x18, // levels 9-16
         0x00, 0x18, 0x20                                // levels 17, 18, then 19+
     };
 
     // Bonus symbols in Arcade, Mini and Big mazes
-    public static final byte BONUS_CHERRY      = 0;
-    public static final byte BONUS_STRAWBERRY  = 1;
-    public static final byte BONUS_ORANGE      = 2;
-    public static final byte BONUS_PRETZEL     = 3;
-    public static final byte BONUS_APPLE       = 4;
-    public static final byte BONUS_PEAR        = 5;
-    public static final byte BONUS_BANANA      = 6;
+    private static final byte BONUS_CHERRY      = 0;
+    private static final byte BONUS_STRAWBERRY  = 1;
+    private static final byte BONUS_ORANGE      = 2;
+    private static final byte BONUS_PRETZEL     = 3;
+    private static final byte BONUS_APPLE       = 4;
+    private static final byte BONUS_PEAR        = 5;
+            static final byte BONUS_BANANA      = 6;
 
     // Additional bonus symbols in Strange mazes
-    public static final byte BONUS_MILK        = 7;
-    public static final byte BONUS_ICE_CREAM   = 8;
-    public static final byte BONUS_HIGH_HEELS  = 9;
-    public static final byte BONUS_STAR        = 10;
-    public static final byte BONUS_HAND        = 11;
-    public static final byte BONUS_RING        = 12;
-    public static final byte BONUS_FLOWER      = 13;
+            static final byte BONUS_MILK        = 7;
+            static final byte BONUS_ICE_CREAM   = 8;
+    private static final byte BONUS_HIGH_HEELS  = 9;
+    private static final byte BONUS_STAR        = 10;
+    private static final byte BONUS_HAND        = 11;
+    private static final byte BONUS_RING        = 12;
+    private static final byte BONUS_FLOWER      = 13;
 
     // Bonus value = factor * 100
-    static final byte[] BONUS_VALUE_FACTORS = new byte[14];
+    private static final byte[] BONUS_VALUE_FACTORS = new byte[14];
     static {
         BONUS_VALUE_FACTORS[BONUS_CHERRY]        = 1;
         BONUS_VALUE_FACTORS[BONUS_STRAWBERRY]    = 2;
@@ -101,14 +99,10 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     private static final byte[] KILLED_GHOST_VALUE_MULTIPLIER = {2, 4, 8, 16}; // factor * 100 = value
 
-    private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
-
-    private static final String HIGH_SCORE_FILENAME = "highscore-ms_pacman_tengen.xml";
-
-    private final TengenMsPacMan_LevelCounter levelCounter = new TengenMsPacMan_LevelCounter();
-    private final GateKeeper gateKeeper = new GateKeeper();
-    private final TengenMsPacMan_HuntingTimer huntingTimer = new TengenMsPacMan_HuntingTimer();
-    private final TengenMsPacMan_MapSelector mapSelector = new TengenMsPacMan_MapSelector();
+    private final TengenMsPacMan_LevelCounter levelCounter;
+    private final GateKeeper gateKeeper;
+    private final HuntingTimer huntingTimer;
+    private final TengenMsPacMan_MapSelector mapSelector;
 
     private MapCategory mapCategory;
     private Difficulty difficulty;
@@ -121,43 +115,20 @@ public class TengenMsPacMan_GameModel extends GameModel {
     private final Steering demoLevelSteering = new RuleBasedPacSteering(this);
 
     public TengenMsPacMan_GameModel() {
+        levelCounter = new TengenMsPacMan_LevelCounter();
+        mapSelector = new TengenMsPacMan_MapSelector();
+        gateKeeper = new GateKeeper();
+        huntingTimer = new TengenMsPacMan_HuntingTimer();
         huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
             if (nv.intValue() > 0) level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAtNextOccasion);
         });
-    }
-
-    @Override
-    public int lastLevelNumber() {
-        return 32;
-    }
-
-    @Override
-    protected Optional<GateKeeper> gateKeeper() {
-        return Optional.of(gateKeeper);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T extends LevelCounter> T levelCounter() {
-        return (T) levelCounter;
-    }
-
-    @Override
-    public MapSelector mapSelector() {
-        return mapSelector;
-    }
-
-    @Override
-    public HuntingTimer huntingTimer() {
-        return huntingTimer;
+        scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman_tengen.xml"));
     }
 
     public void init() {
-        scoreManager.setHighScoreFile(new File(HOME_DIR, HIGH_SCORE_FILENAME));
         mapSelector.loadAllMaps(this);
         initialLivesProperty().set(3);
-        resetForStartingNewGame();
-        resetOptions();
+        resetEverything();
     }
 
     @Override
@@ -186,6 +157,32 @@ public class TengenMsPacMan_GameModel extends GameModel {
             level.showMessage(GameLevel.Message.GAME_OVER);
         }
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.STOP_ALL_SOUNDS);
+    }
+
+    @Override
+    public int lastLevelNumber() {
+        return 32;
+    }
+
+    @Override
+    protected Optional<GateKeeper> gateKeeper() {
+        return Optional.of(gateKeeper);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends LevelCounter> T levelCounter() {
+        return (T) levelCounter;
+    }
+
+    @Override
+    public MapSelector mapSelector() {
+        return mapSelector;
+    }
+
+    @Override
+    public HuntingTimer huntingTimer() {
+        return huntingTimer;
     }
 
     public void resetOptions() {
