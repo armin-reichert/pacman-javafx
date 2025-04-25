@@ -138,6 +138,16 @@ public class ArcadePacMan_GameModel extends GameModel {
         demoLevelSteering = new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE));
     }
 
+    protected LevelData levelData(int levelNumber) {
+        return new LevelData(LEVEL_DATA[Math.min(levelNumber - 1, LEVEL_DATA.length - 1)]);
+    }
+
+    protected void setCruiseElroyEnabled(boolean enabled) {
+        if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
+            cruiseElroy = (byte) -cruiseElroy;
+        }
+    }
+
     @Override
     protected Optional<GateKeeper> gateKeeper() { return Optional.of(gateKeeper); }
 
@@ -174,27 +184,6 @@ public class ArcadePacMan_GameModel extends GameModel {
         scoreManager.resetScore();
         gateKeeper.reset();
         huntingTimer.reset();
-    }
-
-    protected LevelData levelData(int levelNumber) {
-        return new LevelData(LEVEL_DATA[Math.min(levelNumber - 1, LEVEL_DATA.length - 1)]);
-    }
-
-    public byte cruiseElroy() {
-        return cruiseElroy;
-    }
-
-    protected void setCruiseElroy(int value) {
-        if (!inClosedRange(value, 0, 2)) {
-            throw new IllegalArgumentException("Allowed Cruise Elroy values are 0, 1, 2, but value is " + value);
-        }
-        cruiseElroy = (byte) value;
-    }
-
-    protected void setCruiseElroyEnabled(boolean enabled) {
-        if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
-            cruiseElroy = (byte) -cruiseElroy;
-        }
     }
 
     @Override
@@ -264,7 +253,7 @@ public class ArcadePacMan_GameModel extends GameModel {
         pac.setGameLevel(level);
         pac.setAutopilot(autopilot);
         pac.reset();
-        setCruiseElroy(0);
+        cruiseElroy = 0;
 
         var ghosts = List.of(blinky(), pinky(), inky(), clyde());
         ghosts.forEach(ghost -> {
@@ -381,9 +370,9 @@ public class ArcadePacMan_GameModel extends GameModel {
     protected void onFoodEaten(Vector2i tile, int uneatenFoodCount, boolean energizer) {
         level.pac().setRestingTicks(energizer ? 3 : 1);
         if (uneatenFoodCount == levelData(level.number()).elroy1DotsLeft()) {
-            setCruiseElroy(1);
+            cruiseElroy = 1;
         } else if (uneatenFoodCount == levelData(level.number()).elroy2DotsLeft()) {
-            setCruiseElroy(2);
+            cruiseElroy = 2;
         }
         if (energizer) {
             onEnergizerEaten();

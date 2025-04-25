@@ -118,14 +118,51 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         demoLevelSteering = new RuleBasedPacSteering(this);
     }
 
-    @Override
-    protected Optional<GateKeeper> gateKeeper() {
-        return Optional.of(gateKeeper);
+    protected LevelData levelData(int levelNumber) {
+        return new LevelData(LEVEL_DATA[Math.min(levelNumber - 1, LEVEL_DATA.length - 1)]);
+    }
+
+    protected void setCruiseElroyEnabled(boolean enabled) {
+        if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
+            cruiseElroy = (byte) -cruiseElroy;
+        }
+    }
+
+    /**
+     * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
+     * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
+     * only the scatter target of Blinky and Pinky would have been affected. Who knows?
+     */
+    protected void ghostHuntingBehaviour(Ghost ghost) {
+        if (huntingTimer.phaseIndex() == 0 && (ghost.id() == RED_GHOST_ID || ghost.id() == PINK_GHOST_ID)) {
+            ghost.roam(ghostAttackSpeed(ghost));
+        } else {
+            boolean chasing = huntingTimer.phase() == HuntingTimer.HuntingPhase.CHASING
+                || ghost.id() == RED_GHOST_ID && cruiseElroy > 0;
+            Vector2i targetTile = chasing
+                ? chasingTargetTile(ghost.id(), level, SIMULATE_OVERFLOW_BUG)
+                : level.ghostScatterTile(ghost.id());
+            ghost.followTarget(targetTile, ghostAttackSpeed(ghost));
+        }
+    }
+
+    protected int cutSceneNumberAfterLevel(int levelNumber) {
+        return switch (levelNumber) {
+            case 2 -> 1;
+            case 5 -> 2;
+            case 9, 13, 17 -> 3;
+            default -> 0; // no cut scene
+        };
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T extends LevelCounter> T levelCounter() { return (T) levelCounter; }
+
+    @Override
+    protected Optional<GateKeeper> gateKeeper() {
+        return Optional.of(gateKeeper);
+    }
 
     @Override
     public MapSelector mapSelector() { return mapSelector; }
@@ -185,10 +222,6 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     @Override
     public long gameOverStateTicks() {
         return 150;
-    }
-
-    protected LevelData levelData(int levelNumber) {
-        return new LevelData(LEVEL_DATA[Math.min(levelNumber - 1, LEVEL_DATA.length - 1)]);
     }
 
     @Override
@@ -402,12 +435,6 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         }
     }
 
-    private void setCruiseElroyEnabled(boolean enabled) {
-        if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
-            cruiseElroy = (byte) -cruiseElroy;
-        }
-    }
-
     @Override
     public boolean isBonusReached() {
         return level.eatenFoodCount() == 64 || level.eatenFoodCount() == 176;
@@ -519,30 +546,4 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.BONUS_ACTIVATED, movingBonus.actor().tile());
     }
 
-    /**
-     * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
-     * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
-     * only the scatter target of Blinky and Pinky would have been affected. Who knows?
-     */
-    private void ghostHuntingBehaviour(Ghost ghost) {
-        if (huntingTimer.phaseIndex() == 0 && (ghost.id() == RED_GHOST_ID || ghost.id() == PINK_GHOST_ID)) {
-            ghost.roam(ghostAttackSpeed(ghost));
-        } else {
-            boolean chasing = huntingTimer.phase() == HuntingTimer.HuntingPhase.CHASING
-                || ghost.id() == RED_GHOST_ID && cruiseElroy > 0;
-            Vector2i targetTile = chasing
-                    ? chasingTargetTile(ghost.id(), level, SIMULATE_OVERFLOW_BUG)
-                    : level.ghostScatterTile(ghost.id());
-            ghost.followTarget(targetTile, ghostAttackSpeed(ghost));
-        }
-    }
-
-    private int cutSceneNumberAfterLevel(int levelNumber) {
-        return switch (levelNumber) {
-            case 2 -> 1;
-            case 5 -> 2;
-            case 9, 13, 17 -> 3;
-            default -> 0; // no cut scene
-        };
-    }
 }
