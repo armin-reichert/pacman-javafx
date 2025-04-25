@@ -52,23 +52,22 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        final var r = (ArcadePacMan_GameRenderer) gr;
         final Font font8 = THE_ASSETS.arcadeFontAtSize(scaled(8));
         final Font font6 = THE_ASSETS.arcadeFontAtSize(scaled(6));
-        r.setScaling(scaling());
-        r.fillCanvas(backgroundColor());
+        gr.setScaling(scaling());
+        gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            r.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font8);
+            gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font8);
         }
-        r.fillTextAtScaledPosition("PUSH START BUTTON", ORANGE, font8, tiles_to_px(6), tiles_to_px(17));
-        r.fillTextAtScaledPosition("1 PLAYER ONLY", CYAN, font8, tiles_to_px(8), tiles_to_px(21));
-        r.fillTextAtScaledPosition("BONUS PAC-MAN FOR 10000", ROSE, font8, tiles_to_px(1), tiles_to_px(25));
-        r.fillTextAtScaledPosition("PTS", ROSE, font6, tiles_to_px(25), tiles_to_px(25));
-        if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.PACMAN)) {
+        gr.fillTextAtScaledPosition("PUSH START BUTTON", ORANGE, font8, tiles_to_px(6), tiles_to_px(17));
+        gr.fillTextAtScaledPosition("1 PLAYER ONLY", CYAN, font8, tiles_to_px(8), tiles_to_px(21));
+        gr.fillTextAtScaledPosition("BONUS PAC-MAN FOR 10000", ROSE, font8, tiles_to_px(1), tiles_to_px(25));
+        gr.fillTextAtScaledPosition("PTS", ROSE, font6, tiles_to_px(25), tiles_to_px(25));
+        if (gr instanceof ArcadePacMan_GameRenderer r) {
             r.drawMidwayCopyright(4, 29, PINK, font8);
         }
-        r.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_MECHANISM.numCoins()), WHITE, font8, 2 * TS, sizeInPx().y() - 2);
-        r.drawLevelCounter(game().levelCounter(), sizeInPx());
+        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_MECHANISM.numCoins()), WHITE, font8, 2 * TS, sizeInPx().y() - 2);
+        gr.drawLevelCounter(game().levelCounter(), sizeInPx());
     }
 
     @Override
