@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.ms_pacman;
 
+import de.amr.games.pacman.arcade.ArcadePacMan_LevelCounter;
 import de.amr.games.pacman.arcade.ArcadeXMan_GameModel;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
@@ -55,7 +56,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeXMan_GameModel {
         this.mapSelector = requireNonNull(mapSelector);
         lastLevelNumber = Integer.MAX_VALUE;
 
-        levelCounter = new ArcadeMsPacMan_LevelCounter();
+        levelCounter = new ArcadePacMan_LevelCounter();
 
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman.xml"));
         scoreManager.setExtraLifeScores(EXTRA_LIFE_SCORE);
