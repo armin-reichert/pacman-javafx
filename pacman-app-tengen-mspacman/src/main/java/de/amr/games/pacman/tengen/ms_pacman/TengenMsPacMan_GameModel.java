@@ -50,7 +50,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     public static final byte MIN_LEVEL_NUMBER = 1;
-    public static final byte MAX_LEVEL_NUMBER = 32;
 
     static final byte PELLET_VALUE = 10;
     static final byte ENERGIZER_VALUE = 50;
@@ -125,7 +124,11 @@ public class TengenMsPacMan_GameModel extends GameModel {
         huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
             if (nv.intValue() > 0) level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAtNextOccasion);
         });
-        lastLevelNumber = MAX_LEVEL_NUMBER;
+    }
+
+    @Override
+    public int lastLevelNumber() {
+        return 32;
     }
 
     @Override
@@ -237,7 +240,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     public void setStartLevelNumber(int number) {
-        if (number < MIN_LEVEL_NUMBER || number > MAX_LEVEL_NUMBER) {
+        if (number < MIN_LEVEL_NUMBER || number > lastLevelNumber()) {
             throw GameException.invalidLevelNumber(number);
         }
         startLevelNumber = number;
@@ -440,7 +443,13 @@ public class TengenMsPacMan_GameModel extends GameModel {
         WorldMap worldMap = mapSelector.selectWorldMap(mapCategory, levelNumber);
         level = new GameLevel(this, levelNumber, worldMap);
         level.setNumFlashes(5); // TODO check this
-        level.setCutSceneNumber(cutSceneNumberAfterLevel(levelNumber));
+        level.setCutSceneNumber(switch (levelNumber) {
+            case 2 -> 1;
+            case 5 -> 2;
+            case 9, 13, 17 -> 3;
+            default -> levelNumber == lastLevelNumber() ? 4 : 0;
+        });
+
         populateLevel(level);
         level.pac().setAutopilot(autopilot);
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
@@ -458,16 +467,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.setDemoLevel(true);
         assignDemoLevelBehavior(level.pac());
         demoLevelSteering.init();
-    }
-
-    private int cutSceneNumberAfterLevel(int levelNumber) {
-        return switch (levelNumber) {
-            case 2 -> 1;
-            case 5 -> 2;
-            case 9, 13, 17 -> 3;
-            case MAX_LEVEL_NUMBER -> 4;
-            default -> 0;
-        };
     }
 
     @Override

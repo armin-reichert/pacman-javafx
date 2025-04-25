@@ -34,12 +34,11 @@ public abstract class GameModel {
     private final BooleanProperty playingPy = new SimpleBooleanProperty(false);
     private final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(false);
 
-    protected final ScoreManager scoreManager = new ScoreManager();
-
+    protected ScoreManager scoreManager;
     protected GameLevel level;
-    protected int lastLevelNumber;
 
     protected GameModel() {
+        scoreManager = new ScoreManager();
         scoreManager.setOnExtraLifeWon(extraLifeScore -> {
             eventsThisFrame().extraLifeWon = true;
             eventsThisFrame().extraLifeScore = extraLifeScore;
@@ -114,15 +113,13 @@ public abstract class GameModel {
 
     protected SimulationStepEvents eventsThisFrame() { return THE_GAME_CONTROLLER.eventsThisFrame(); }
 
+    public int lastLevelNumber() { return Integer.MAX_VALUE; }
+
     public Optional<GameLevel> level() {
         return Optional.ofNullable(level);
     }
 
     public abstract <T extends LevelCounter> T levelCounter();
-
-    public final int lastLevelNumber() {
-        return lastLevelNumber;
-    }
 
     public ScoreManager scoreManager() {
         return scoreManager;
@@ -193,12 +190,12 @@ public abstract class GameModel {
 
     public void startNextLevel() {
         int nextLevelNumber = level.number() + 1;
-        if (nextLevelNumber <= lastLevelNumber) {
+        if (nextLevelNumber <= lastLevelNumber()) {
             createLevel(nextLevelNumber);
             startLevel();
             showPacAndGhosts();
         } else {
-            Logger.warn("Last level ({}) reached, cannot start next level", lastLevelNumber);
+            Logger.warn("Last level ({}) reached, cannot start next level", lastLevelNumber());
         }
     }
 

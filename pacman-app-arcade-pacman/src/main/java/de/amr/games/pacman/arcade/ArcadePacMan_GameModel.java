@@ -64,7 +64,6 @@ public class ArcadePacMan_GameModel extends ArcadeXMan_GameModel {
     protected ArcadePacMan_GameModel(MapSelector mapSelector) {
         this.mapSelector = requireNonNull(mapSelector);
 
-        lastLevelNumber = Integer.MAX_VALUE;
         levelCounter = new ArcadePacMan_LevelCounter();
 
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-pacman.xml"));

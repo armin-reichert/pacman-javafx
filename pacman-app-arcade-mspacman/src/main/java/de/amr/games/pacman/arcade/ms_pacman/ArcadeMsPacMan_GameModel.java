@@ -53,7 +53,6 @@ public class ArcadeMsPacMan_GameModel extends ArcadeXMan_GameModel {
      */
     protected ArcadeMsPacMan_GameModel(MapSelector mapSelector) {
         this.mapSelector = requireNonNull(mapSelector);
-        lastLevelNumber = Integer.MAX_VALUE;
 
         levelCounter = new ArcadePacMan_LevelCounter();
 
