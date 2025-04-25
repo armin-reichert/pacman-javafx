@@ -7,6 +7,7 @@ package de.amr.games.pacman.arcade.pacman_xxl;
 import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.arcade.ArcadePacMan_GameModel;
 import de.amr.games.pacman.model.MapSelector;
+import de.amr.games.pacman.steering.RouteBasedSteering;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 
 import java.io.File;
@@ -20,17 +21,8 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
 
     public PacManXXL_PacMan_GameModel(MapSelector mapSelector) {
         super(mapSelector);
-    }
-
-    public void init() {
-        super.init();
-        demoLevelSteering = new RuleBasedPacSteering(this); // super class uses predefined steering
         scoreManager.setHighScoreFile(new File(Globals.HOME_DIR, "highscore-pacman_xxl.xml"));
-        mapSelector.loadAllMaps(this);
-    }
-
-    @Override
-    public void resetEverything() {
-        super.resetEverything();
+        // Demo level map could be custom map, so use generic automatic steering
+        demoLevelSteering = new RuleBasedPacSteering(this);
     }
 }
