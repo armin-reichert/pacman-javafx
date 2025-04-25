@@ -71,9 +71,9 @@ public class ArcadePacMan_GameModel extends ArcadeXMan_GameModel {
 
         huntingTimer = new HuntingTimer(8) {
             // Ticks of scatter and chasing phases, -1=INDEFINITE
-            final int[] HUNTING_TICKS_LEVEL_1 = {420, 1200, 420, 1200, 300,  1200, 300, -1};
-            final int[] HUNTING_TICKS_LEVEL_2_3_4 = {420, 1200, 420, 1200, 300, 61980,   1, -1};
-            final int[] HUNTING_TICKS_LEVEL_5_PLUS = {300, 1200, 300, 1200, 300, 62262,   1, -1};
+            static final int[] HUNTING_TICKS_LEVEL_1 = {420, 1200, 420, 1200, 300,  1200, 300, -1};
+            static final int[] HUNTING_TICKS_LEVEL_2_3_4 = {420, 1200, 420, 1200, 300, 61980,   1, -1};
+            static final int[] HUNTING_TICKS_LEVEL_5_PLUS = {300, 1200, 300, 1200, 300, 62262,   1, -1};
 
             @Override
             public long huntingTicks(int levelNumber, int phaseIndex) {
