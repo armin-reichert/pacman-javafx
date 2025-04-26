@@ -318,12 +318,16 @@ public abstract class GameModel {
     }
 
     private void checkPacKilled() {
-        boolean killerMet = level.ghosts(HUNTING_PAC).anyMatch(ghost -> areActorsColliding(level.pac(), ghost));
-        Vector2i pacTile = level.pac().tile();
+        Optional<Ghost> killer = level.ghosts(HUNTING_PAC).filter(ghost -> areActorsColliding(level.pac(), ghost)).findFirst();
+        boolean killed;
         if (level.isDemoLevel()) {
-            if (killerMet && !isPacManKillingIgnored()) eventsThisFrame().setPacKilledTile(pacTile);
+            killed = killer.isPresent() && !isPacManKillingIgnored();
         } else {
-            if (killerMet && !level.pac().isImmune()) eventsThisFrame().setPacKilledTile(pacTile);
+            killed = killer.isPresent() && !level.pac().isImmune();
+        }
+        if (killed) {
+            eventsThisFrame().setPacKiller(killer.get());
+            eventsThisFrame().setPacKilledTile(level.pac().tile());
         }
     }
 
@@ -334,7 +338,6 @@ public abstract class GameModel {
             if (energizer) {
                 eventsThisFrame().setFoundEnergizerTile(tile);
             }
-            eventsThisFrame().setFoodFoundTile(tile);
             level.registerFoodEatenAt(tile);
             onFoodEaten(tile, level.uneatenFoodCount(), energizer);
             level.pac().endStarving();

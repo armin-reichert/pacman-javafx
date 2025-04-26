@@ -18,26 +18,22 @@ import java.util.List;
  */
 public class SimulationStepEvents {
     private final long tick;
-    private Vector2i   foodFoundTile = null;
-    private Vector2i   foundEnergizerTile = null;
+    private Vector2i   foundEnergizerTile;
     private int        bonusIndex = -1;
-    private Vector2i   bonusEatenTile = null;
-    private boolean    pacGotPower = false;
-    private boolean    pacStartsLosingPower = false;
-    private boolean    pacLostPower = false;
-    private Vector2i   pacKilledTile = null;
-    private boolean    extraLifeWon = false;
-    private int        extraLifeScore = 0;
-    private Ghost      releasedGhost = null;
-    private String     ghostReleaseInfo = null;
-    private final List<Ghost> killedGhosts = new ArrayList<>(4);
+    private Vector2i   bonusEatenTile;
+    private boolean    pacGotPower;
+    private boolean    pacStartsLosingPower;
+    private boolean    pacLostPower;
+    private Vector2i   pacKilledTile;
+    private Ghost      pacKiller;
+    private boolean    extraLifeWon;
+    private int        extraLifeScore;
+    private Ghost      releasedGhost;
+    private String     ghostReleaseInfo;
+    private final List<Ghost> killedGhosts = new ArrayList<>();
 
     public SimulationStepEvents(long tick) {
         this.tick = tick;
-    }
-
-    public void setFoodFoundTile(Vector2i foodFoundTile) {
-        this.foodFoundTile = foodFoundTile;
     }
 
     public void setFoundEnergizerTile(Vector2i foundEnergizerTile) {
@@ -66,6 +62,10 @@ public class SimulationStepEvents {
 
     public void setPacKilledTile(Vector2i pacKilledTile) {
         this.pacKilledTile = pacKilledTile;
+    }
+
+    public void setPacKiller(Ghost pacKiller) {
+        this.pacKiller = pacKiller;
     }
 
     public void setExtraLifeWon() {
@@ -98,7 +98,7 @@ public class SimulationStepEvents {
             messages.add("Energizer found at " + foundEnergizerTile);
         }
         if (bonusIndex != -1) {
-            messages.add("Bonus reached, index=" + bonusIndex);
+            messages.add("Bonus score reached, index=" + bonusIndex);
         }
         if (bonusEatenTile != null) {
             messages.add("Bonus eaten at " + bonusEatenTile);
@@ -112,8 +112,8 @@ public class SimulationStepEvents {
         if (pacLostPower) {
             messages.add("Pac lost power");
         }
-        if (pacKilledTile != null) {
-            messages.add("Pac died at " + pacKilledTile);
+        if (pacKiller != null) {
+            messages.add("Pac killed by %s at %s".formatted(pacKiller.name(), pacKilledTile));
         }
         if (extraLifeWon) {
             messages.add("Extra life won for scoring %d points".formatted(extraLifeScore));
