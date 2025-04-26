@@ -164,7 +164,6 @@ public abstract class GameModel {
         buildLevel(levelNumber);
         level.setDemoLevel(false);
         scoreManager.setLevelNumber(levelNumber);
-        scoreManager.setLevelNumber(levelNumber);
         scoreManager.setScoreEnabled(!level.isDemoLevel());
         scoreManager.setHighScoreEnabled(!level.isDemoLevel());
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(levelNumber));
