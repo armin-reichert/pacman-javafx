@@ -535,20 +535,14 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    protected void onFoodEaten(Vector2i tile, int uneatenFoodCount, boolean energizer) {
-        //TODO does Ms. Pac-Man slow down after eating here too?
+    protected void onFoodEaten(Vector2i tile, boolean energizer) {
+        //TODO does Ms. Pac-Man slow down after eating as in Arcade game?
         //pac.setRestingTicks(energizer ? 3 : 1);
         if (energizer) {
-            onEnergizerEaten();
             scoreManager.scorePoints(ENERGIZER_VALUE);
             Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
         } else {
             scoreManager.scorePoints(PELLET_VALUE);
-        }
-        gateKeeper.registerFoodEaten(level);
-        if (isBonusReached()) {
-            activateNextBonus();
-            eventsThisFrame().setBonusIndex(level.nextBonusIndex());
         }
     }
 

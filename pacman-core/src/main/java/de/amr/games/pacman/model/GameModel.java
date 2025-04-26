@@ -103,7 +103,7 @@ public abstract class GameModel {
 
     protected abstract byte computeBonusSymbol(int levelNumber);
 
-    protected abstract void onFoodEaten(Vector2i tile, int remainingFoodCount, boolean energizer);
+    protected abstract void onFoodEaten(Vector2i tile, boolean energizer);
 
     public abstract MapSelector mapSelector();
 
@@ -339,16 +339,20 @@ public abstract class GameModel {
                 eventsThisFrame().setFoundEnergizerTile(tile);
             }
             level.registerFoodEatenAt(tile);
-            onFoodEaten(tile, level.uneatenFoodCount(), energizer);
+            gateKeeper().ifPresent(gateKeeper -> gateKeeper.registerFoodEaten(level));
+            onFoodEaten(tile, energizer);
+            if (energizer) {
+                onEnergizerEaten();
+            }
             level.pac().endStarving();
+            if (isBonusReached()) {
+                activateNextBonus();
+                eventsThisFrame().setBonusIndex(level.nextBonusIndex());
+            }
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_FOUND_FOOD, tile);
         } else {
             level.pac().starve();
         }
-    }
-
-    protected boolean areActorsColliding(Actor2D either, Actor2D other) {
-        return either.sameTile(other);
     }
 
     protected void onEnergizerEaten() {
@@ -366,6 +370,10 @@ public abstract class GameModel {
         } else {
             level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseAtNextOccasion);
         }
+    }
+
+    protected boolean areActorsColliding(Actor2D either, Actor2D other) {
+        return either.sameTile(other);
     }
 
     private void updatePacPower() {
