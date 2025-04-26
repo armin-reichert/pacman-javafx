@@ -377,7 +377,7 @@ public enum GameState implements FsmState<GameModel> {
             }
             timer.restartIndefinitely();
             game.resetForStartingNewGame();
-            game.createLevel(1);
+            game.createLevel(1, game.createLevelData(1));
             game.startLevel();
             game.showPacAndGhosts();
         }
@@ -462,7 +462,7 @@ public enum GameState implements FsmState<GameModel> {
             }
             timer.restartSeconds(TEASER_TIME_SECONDS);
             game.resetForStartingNewGame();
-            game.createLevel(1);
+            game.createLevel(1, game.createLevelData(1));
             game.startLevel();
             game.showPacAndGhosts();
             GameLevel level = game.level().orElseThrow();

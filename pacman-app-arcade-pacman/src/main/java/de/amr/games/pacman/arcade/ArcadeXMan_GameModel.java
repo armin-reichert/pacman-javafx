@@ -69,10 +69,6 @@ public abstract class ArcadeXMan_GameModel extends GameModel {
 
     protected byte cruiseElroy;
 
-    protected LevelData createLevelData(int levelNumber) {
-        return new LevelData(LEVEL_DATA[Math.min(levelNumber - 1, LEVEL_DATA.length - 1)]);
-    }
-
     protected void setCruiseElroyEnabled(boolean enabled) {
         if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
             cruiseElroy = (byte) -cruiseElroy;
@@ -292,8 +288,13 @@ public abstract class ArcadeXMan_GameModel extends GameModel {
     }
 
     @Override
+    public LevelData createLevelData(int levelNumber) {
+        return new LevelData(LEVEL_DATA[Math.min(levelNumber - 1, LEVEL_DATA.length - 1)]);
+    }
+
+    @Override
     public void buildDemoLevel() {
-        buildLevel(1);
+        buildLevel(1, createLevelData(1));
         level.setDemoLevel(true);
         assignDemoLevelBehavior(level.pac());
         demoLevelSteering.init();

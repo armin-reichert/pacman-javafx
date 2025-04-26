@@ -91,7 +91,9 @@ public abstract class GameModel {
 
     public abstract long gameOverStateTicks();
 
-    public abstract void buildLevel(int levelNumber);
+    public abstract LevelData createLevelData(int levelNumber);
+
+    public abstract void buildLevel(int levelNumber, LevelData data);
 
     public abstract void buildDemoLevel();
 
@@ -156,12 +158,12 @@ public abstract class GameModel {
 
     public void startNewGame() {
         resetForStartingNewGame();
-        createLevel(1);
+        createLevel(1, createLevelData(1));
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.GAME_STARTED);
     }
 
-    public final void createLevel(int levelNumber) {
-        buildLevel(levelNumber);
+    public final void createLevel(int levelNumber, LevelData data) {
+        buildLevel(levelNumber, data);
         level.setDemoLevel(false);
         scoreManager.setLevelNumber(levelNumber);
         scoreManager.setScoreEnabled(!level.isDemoLevel());
@@ -184,7 +186,7 @@ public abstract class GameModel {
 
     public void startNextLevel() {
         if (level.number() < lastLevelNumber()) {
-            createLevel(level.number() + 1);
+            createLevel(level.number() + 1, createLevelData(level.number() + 1));
             startLevel();
             showPacAndGhosts();
         } else {

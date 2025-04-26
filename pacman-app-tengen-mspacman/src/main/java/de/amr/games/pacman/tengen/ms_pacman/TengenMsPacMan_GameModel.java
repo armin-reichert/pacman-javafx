@@ -366,7 +366,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     @Override
     public void startNewGame() {
         resetForStartingNewGame();
-        createLevel(startLevelNumber);
+        createLevel(startLevelNumber, createLevelData(startLevelNumber));
         levelCounter.resetStartingFromLevel(startLevelNumber);
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.GAME_STARTED);
     }
@@ -436,22 +436,8 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public void buildLevel(int levelNumber) {
+    public void buildLevel(int levelNumber, LevelData data) {
         WorldMap worldMap = mapSelector.selectWorldMap(mapCategory, levelNumber);
-        // TODO what are the exact level data in Tengen Ms. Pac-Man?
-        LevelData data = new LevelData(
-            (byte) 0, // Pac speed %
-            (byte) 0, // Ghost speed %
-            (byte) 0, // Ghost tunnel speed %
-            (byte) 0, // Elroy dots 1
-            (byte) 0, // Elroy speed 1 %
-            (byte) 0, // Elroy dots 2
-            (byte) 0, // Elroy speed 2 %
-            (byte) 0, // Pac speed powered %
-            (byte) 0, // Ghost speed frightened %
-            (byte) 0, // Pac power seconds
-            (byte) 5  // Number of flashes
-        );
         level = new GameLevel(this, levelNumber, data, worldMap);
         level.setCutSceneNumber(switch (levelNumber) {
             case 2 -> 1;
@@ -472,8 +458,26 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
+    public LevelData createLevelData(int levelNumber) {
+        //TODO what are the data in Tengen Ms. Pac-Man?
+        return new LevelData(
+            (byte) 0, // Pac speed %
+            (byte) 0, // Ghost speed %
+            (byte) 0, // Ghost tunnel speed %
+            (byte) 0, // Elroy dots 1
+            (byte) 0, // Elroy speed 1 %
+            (byte) 0, // Elroy dots 2
+            (byte) 0, // Elroy speed 2 %
+            (byte) 0, // Pac speed powered %
+            (byte) 0, // Ghost speed frightened %
+            (byte) 0, // Pac power seconds
+            (byte) 5  // Number of flashes
+        );
+    }
+
+    @Override
     public void buildDemoLevel() {
-        buildLevel(1);
+        buildLevel(1, createLevelData(1));
         level.setDemoLevel(true);
         assignDemoLevelBehavior(level.pac());
         demoLevelSteering.init();
