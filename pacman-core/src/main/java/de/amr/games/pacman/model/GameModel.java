@@ -284,7 +284,7 @@ public abstract class GameModel {
     }
 
     public boolean hasPacManBeenKilled() {
-        return eventsThisFrame().pacKilled;
+        return eventsThisFrame().pacKilledTile != null;
     }
 
     public boolean haveGhostsBeenKilled() {
@@ -318,11 +318,12 @@ public abstract class GameModel {
     }
 
     private void checkPacKilled() {
-        boolean pacMeetsKiller = level.ghosts(HUNTING_PAC).anyMatch(ghost -> areActorsColliding(level.pac(), ghost));
+        boolean killerMet = level.ghosts(HUNTING_PAC).anyMatch(ghost -> areActorsColliding(level.pac(), ghost));
+        Vector2i pacTile = level.pac().tile();
         if (level.isDemoLevel()) {
-            eventsThisFrame().pacKilled = pacMeetsKiller && !isPacManKillingIgnored();
+            eventsThisFrame().pacKilledTile = (killerMet && !isPacManKillingIgnored()) ? pacTile : null;
         } else {
-            eventsThisFrame().pacKilled = pacMeetsKiller && !level.pac().isImmune();
+            eventsThisFrame().pacKilledTile = (killerMet && !level.pac().isImmune()) ? pacTile : null;
         }
     }
 
@@ -330,9 +331,9 @@ public abstract class GameModel {
         Vector2i tile = level.pac().tile();
         if (level.hasFoodAt(tile)) {
             eventsThisFrame().foodFoundTile = tile;
-            eventsThisFrame().energizerFound = level.isEnergizerPosition(tile);
+            eventsThisFrame().foundEnergizerTile = level.isEnergizerPosition(tile) ? tile : null;
             level.registerFoodEatenAt(tile);
-            onFoodEaten(tile, level.uneatenFoodCount(), eventsThisFrame().energizerFound);
+            onFoodEaten(tile, level.uneatenFoodCount(), level.isEnergizerPosition(tile));
             level.pac().endStarving();
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_FOUND_FOOD, tile);
         } else {
@@ -385,7 +386,7 @@ public abstract class GameModel {
             bonus.setEaten(120); //TODO is 2 seconds correct?
             scoreManager.scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-            eventsThisFrame().bonusEaten = true;
+            eventsThisFrame().bonusEatenTile = bonus.actor().tile();
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.BONUS_EATEN);
         } else {
             bonus.update(this);

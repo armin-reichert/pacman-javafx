@@ -18,18 +18,18 @@ import java.util.List;
  */
 public class SimulationStepEvents {
     public final long tick;
-    public Vector2i foodFoundTile = null;
-    public boolean  energizerFound = false;
-    public int      bonusIndex = -1;
-    public boolean  bonusEaten = false;
-    public boolean pacGotPower = false;
-    public boolean  pacStartsLosingPower = false;
-    public boolean  pacLostPower = false;
-    public boolean  pacKilled = false;
-    public boolean  extraLifeWon = false;
-    public int      extraLifeScore = 0;
-    public Ghost    releasedGhost = null;
-    public String  ghostReleaseInfo = null;
+    public Vector2i   foodFoundTile = null;
+    public Vector2i   foundEnergizerTile = null;
+    public int        bonusIndex = -1;
+    public Vector2i   bonusEatenTile = null;
+    public boolean    pacGotPower = false;
+    public boolean    pacStartsLosingPower = false;
+    public boolean    pacLostPower = false;
+    public Vector2i   pacKilledTile = null;
+    public boolean    extraLifeWon = false;
+    public int        extraLifeScore = 0;
+    public Ghost      releasedGhost = null;
+    public String     ghostReleaseInfo = null;
     public final List<Ghost> killedGhosts = new ArrayList<>(4);
 
     public SimulationStepEvents(long tick) {
@@ -37,15 +37,15 @@ public class SimulationStepEvents {
     }
 
     public List<String> createMessageList() {
-        List<String> messages = new ArrayList<>();
-        if (energizerFound) {
-            messages.add("Energizer found at " + foodFoundTile);
+        var messages = new ArrayList<String>();
+        if (foundEnergizerTile != null) {
+            messages.add("Energizer found at " + foundEnergizerTile);
         }
         if (bonusIndex != -1) {
             messages.add("Bonus reached, index=" + bonusIndex);
         }
-        if (bonusEaten) {
-            messages.add("Bonus eaten");
+        if (bonusEatenTile != null) {
+            messages.add("Bonus eaten at " + bonusEatenTile);
         }
         if (pacGotPower) {
             messages.add("Pac gained power");
@@ -56,17 +56,19 @@ public class SimulationStepEvents {
         if (pacLostPower) {
             messages.add("Pac lost power");
         }
-        if (pacKilled) {
-            messages.add("Pac died");
+        if (pacKilledTile != null) {
+            messages.add("Pac died at " + pacKilledTile);
         }
         if (extraLifeWon) {
             messages.add("Extra life won for scoring %d points".formatted(extraLifeScore));
         }
         if (releasedGhost != null) {
-            messages.add("Unlocked " + releasedGhost.name() + ": " + ghostReleaseInfo);
+            messages.add("%s unlocked: %s".formatted(releasedGhost.name(), ghostReleaseInfo));
         }
         if (!killedGhosts.isEmpty()) {
-            messages.add("Ghosts killed: " + killedGhosts.stream().map(Ghost::name).toList());
+            for (Ghost ghost : killedGhosts) {
+                messages.add("%s killed at %s".formatted(ghost.name(), ghost.tile()));
+            }
         }
         return messages;
     }
