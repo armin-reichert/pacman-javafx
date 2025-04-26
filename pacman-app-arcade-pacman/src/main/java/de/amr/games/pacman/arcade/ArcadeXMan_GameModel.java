@@ -214,18 +214,26 @@ public abstract class ArcadeXMan_GameModel extends GameModel {
     }
 
     @Override
-    protected void onFoodEaten(Vector2i tile, boolean energizer) {
-        level.pac().setRestingTicks(energizer ? 3 : 1);
+    protected void onPelletEaten(Vector2i tile) {
+        scoreManager.scorePoints(PELLET_VALUE);
+        level.pac().setRestingTicks(1);
+        checkCruiseElroy();
+    }
+
+    @Override
+    protected void onEnergizerEaten() {
+        scoreManager().scorePoints(ENERGIZER_VALUE);
+        level.pac().setRestingTicks(3);
+        Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
+        checkCruiseElroy();
+        super.onEnergizerEaten();
+    }
+
+    private void checkCruiseElroy() {
         if (level.uneatenFoodCount() == levelData(level.number()).elroy1DotsLeft()) {
             cruiseElroy = 1;
         } else if (level.uneatenFoodCount() == levelData(level.number()).elroy2DotsLeft()) {
             cruiseElroy = 2;
-        }
-        if (energizer) {
-            scoreManager().scorePoints(ENERGIZER_VALUE);
-            Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
-        } else {
-            scoreManager.scorePoints(PELLET_VALUE);
         }
     }
 

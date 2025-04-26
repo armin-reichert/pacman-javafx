@@ -103,7 +103,7 @@ public abstract class GameModel {
 
     protected abstract byte computeBonusSymbol(int levelNumber);
 
-    protected abstract void onFoodEaten(Vector2i tile, boolean energizer);
+    protected abstract void onPelletEaten(Vector2i tile);
 
     public abstract MapSelector mapSelector();
 
@@ -334,17 +334,16 @@ public abstract class GameModel {
     private void checkForFood() {
         Vector2i tile = level.pac().tile();
         if (level.hasFoodAt(tile)) {
+            level.pac().endStarving();
             boolean energizer = level.isEnergizerPosition(tile);
             if (energizer) {
                 eventsThisFrame().setFoundEnergizerTile(tile);
+                onEnergizerEaten();
+            } else {
+                onPelletEaten(tile);
             }
             level.registerFoodEatenAt(tile);
             gateKeeper().ifPresent(gateKeeper -> gateKeeper.registerFoodEaten(level));
-            onFoodEaten(tile, energizer);
-            if (energizer) {
-                onEnergizerEaten();
-            }
-            level.pac().endStarving();
             if (isBonusReached()) {
                 activateNextBonus();
                 eventsThisFrame().setBonusIndex(level.nextBonusIndex());
