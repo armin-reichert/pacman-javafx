@@ -172,9 +172,9 @@ public class ArcadeMsPacMan_GameModel extends ArcadeXMan_GameModel {
 
     @Override
     public boolean isPacManKillingIgnored() {
-        float levelRunningSeconds = (System.currentTimeMillis() - level.startTime()) / 1000f;
-        if (level.isDemoLevel() && levelRunningSeconds < DEMO_LEVEL_MIN_DURATION_SEC) {
-            Logger.info("Pac-Man killing ignored, demo level running for {} seconds", levelRunningSeconds);
+        float levelDurationInSec = (System.currentTimeMillis() - level.startTime()) / 1000f;
+        if (level.isDemoLevel() && levelDurationInSec < DEMO_LEVEL_MIN_DURATION_SEC) {
+            Logger.info("Pac-Man remains alive, demo level has just been running for {} sec", levelDurationInSec);
             return true;
         }
         return false;
@@ -223,15 +223,15 @@ public class ArcadeMsPacMan_GameModel extends ArcadeXMan_GameModel {
     }
 
     /**
-     * Bonus symbol enters the world at some tunnel entry, walks to the house entry, takes a tour around the
+     * Bonus symbol that enters the world at some tunnel entry, walks to the house entry, takes a tour around the
      * house and finally leaves the world through a tunnel on the opposite side of the world.
+     * <p>
+     * Note: This is not the exact behavior from the original Arcade game that uses fruit paths.
      * <p>
      * According to <a href="https://strategywiki.org/wiki/Ms._Pac-Man/Walkthrough">this</a> Wiki,
      * some maps have a fixed entry tile for the bonus.
      * TODO: Not sure if that's correct.
      *
-     * <p>
-     * Note: This is not the exact behavior from the original Arcade game that uses fruit paths.
      **/
     @Override
     public void activateNextBonus() {
@@ -246,26 +246,22 @@ public class ArcadeMsPacMan_GameModel extends ArcadeXMan_GameModel {
             return; // should not happen
         }
 
-        Vector2i entryTile, exitTile;
-        boolean crossMazeLeftToRight;
-
-        WorldMap worldMap = level.worldMap();
-        if (worldMap.hasProperty(LayerID.TERRAIN, "pos_bonus")) {
-            // use entry tile stored in terrain map
-            entryTile = level.worldMap().getTerrainTileProperty("pos_bonus", null);
-            if (entryTile.x() == 0) {
-                // start tile is at left maze border
-                exitTile = portals.get(THE_RNG.nextInt(portals.size())).rightTunnelEnd().plus(1, 0);
-                crossMazeLeftToRight = true;
-            } else {
-                // start tile is at right maze border
-                exitTile = portals.get(THE_RNG.nextInt(portals.size())).leftTunnelEnd().minus(1, 0);
-                crossMazeLeftToRight = false;
+        Vector2i entryTile = level.worldMap().getTerrainTileProperty(WorldMapProperty.POS_BONUS, null);
+        Vector2i exitTile;
+        boolean crossingLeftToRight;
+        if (entryTile != null) {
+            int exitPortalIndex = THE_RNG.nextInt(portals.size());
+            if (entryTile.x() == 0) { // enter maze at left border
+                exitTile = portals.get(exitPortalIndex).rightTunnelEnd().plus(1, 0);
+                crossingLeftToRight = true;
+            } else { // enter maze  at right border
+                exitTile = portals.get(exitPortalIndex).leftTunnelEnd().minus(1, 0);
+                crossingLeftToRight = false;
             }
         }
-        else { // choose random portals for entry and exit
-            crossMazeLeftToRight = THE_RNG.nextBoolean();
-            if (crossMazeLeftToRight) {
+        else { // choose random crossing direction and random entry and exit portals
+            crossingLeftToRight = THE_RNG.nextBoolean();
+            if (crossingLeftToRight) {
                 entryTile = portals.get(THE_RNG.nextInt(portals.size())).leftTunnelEnd();
                 exitTile  = portals.get(THE_RNG.nextInt(portals.size())).rightTunnelEnd().plus(1, 0);
             } else {
@@ -275,18 +271,18 @@ public class ArcadeMsPacMan_GameModel extends ArcadeXMan_GameModel {
         }
 
         Vector2i houseEntry = tileAt(level.houseEntryPosition());
-        Vector2i behindHouse = houseEntry.plus(0, level.houseSizeInTiles().y() + 1);
-        List<Waypoint> route = Stream.of(entryTile, houseEntry, behindHouse, houseEntry, exitTile).map(Waypoint::new).toList();
+        Vector2i backyard = houseEntry.plus(0, level.houseSizeInTiles().y() + 1);
+        List<Waypoint> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).map(Waypoint::new).toList();
 
         byte symbol = level.bonusSymbol(level.nextBonusIndex());
-        var movingBonus = new MovingBonus(level, symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
-        movingBonus.setEdible(TickTimer.INDEFINITE);
-        movingBonus.setRoute(route, crossMazeLeftToRight);
-        movingBonus.setBaseSpeed(1.25f);
-        Logger.info("Moving bonus created, route: {} ({})", route, crossMazeLeftToRight ? "left to right" : "right to left");
+        var bonus = new MovingBonus(level, symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
+        bonus.setEdible(TickTimer.INDEFINITE);
+        bonus.setRoute(route, crossingLeftToRight);
+        bonus.setBaseSpeed(1.25f);
+        Logger.info("Moving bonus created, route: {} (crossing {})", route, crossingLeftToRight ? "left to right" : "right to left");
 
-        level.setBonus(movingBonus);
-        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.BONUS_ACTIVATED, movingBonus.actor().tile());
+        level.setBonus(bonus);
+        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.BONUS_ACTIVATED, bonus.actor().tile());
     }
 
     private final byte[] BONUS_VALUE_MULTIPLIERS = {1, 2, 5, 7, 10, 20, 50}; // points = value * 100
