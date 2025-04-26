@@ -46,6 +46,7 @@ public class GameLevel {
     }
 
     private final GameModel game;
+    private final LevelData data;
     private final int number; // 1=first level
 
     private final WorldMap worldMap;
@@ -65,7 +66,6 @@ public class GameLevel {
     private int uneatenFoodCount;
 
     private boolean demoLevel;
-    private int numFlashes;
     private int cutSceneNumber;
 
     private Pac pac;
@@ -80,9 +80,10 @@ public class GameLevel {
 
     private long startTime;
 
-    public GameLevel(GameModel game, int number, WorldMap worldMap) {
+    public GameLevel(GameModel game, int number, LevelData data, WorldMap worldMap) {
         this.game = requireNonNull(game);
         this.number = requireValidLevelNumber(number);
+        this.data = requireNonNull(data);
         this.worldMap = requireNonNull(worldMap);
 
         blinking = new Pulse(10, Pulse.OFF);
@@ -152,6 +153,8 @@ public class GameLevel {
 
     public GameModel game() { return game; }
 
+    public LevelData data() { return data; }
+
     public List<Ghost> victims() { return victims; }
 
     public boolean isDemoLevel() { return demoLevel; }
@@ -159,9 +162,6 @@ public class GameLevel {
 
     public void setStartTime(long startTime) { this.startTime = startTime; }
     public long startTime() { return startTime; }
-
-    public void setNumFlashes(int numFlashes) { this.numFlashes = numFlashes; }
-    public int numFlashes() { return numFlashes; }
 
     public void setCutSceneNumber(int number) { cutSceneNumber = number; }
     public int cutSceneNumber() { return cutSceneNumber; }

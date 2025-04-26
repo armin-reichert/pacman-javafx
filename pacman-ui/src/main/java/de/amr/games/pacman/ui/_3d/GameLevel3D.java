@@ -97,7 +97,7 @@ public class GameLevel3D {
 
         pac3D = createPac3D(gameVariant, uiConfig.assetNamespace(), level.pac());
         ghost3DAppearances = level.ghosts()
-            .map(ghost -> createGhost3D(uiConfig.assetNamespace(), ghost, level.numFlashes()))
+            .map(ghost -> createGhost3D(uiConfig.assetNamespace(), ghost, level.data().numFlashes()))
             .toList();
 
         floor3D = createFloor(numCols * TS, numRows * TS);
@@ -372,8 +372,8 @@ public class GameLevel3D {
                 onStart.run();
             }),
             level.cutSceneNumber() != 0
-                ? levelTransformationBeforeIntermission(level.numFlashes())
-                : levelTransformation(level.numFlashes())
+                ? levelTransformationBeforeIntermission(level.data().numFlashes())
+                : levelTransformation(level.data().numFlashes())
         );
         levelCompleteAnimation.setOnFinished(e -> {
             onFinished.run();

@@ -297,7 +297,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public long pacPowerFadingTicks() {
-        return level != null ? level.numFlashes() * 28L : 0; // TODO check in emulator
+        return level != null ? level.data().numFlashes() * 28L : 0; // TODO check in emulator
     }
 
     @Override
@@ -438,8 +438,21 @@ public class TengenMsPacMan_GameModel extends GameModel {
     @Override
     public void buildLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.selectWorldMap(mapCategory, levelNumber);
-        level = new GameLevel(this, levelNumber, worldMap);
-        level.setNumFlashes(5); // TODO check this
+        // TODO what are the exact level data in Tengen Ms. Pac-Man?
+        LevelData data = new LevelData(
+            (byte) 0, // Pac speed %
+            (byte) 0, // Ghost speed %
+            (byte) 0, // Ghost tunnel speed %
+            (byte) 0, // Elroy dots 1
+            (byte) 0, // Elroy speed 1 %
+            (byte) 0, // Elroy dots 2
+            (byte) 0, // Elroy speed 2 %
+            (byte) 0, // Pac speed powered %
+            (byte) 0, // Ghost speed frightened %
+            (byte) 0, // Pac power seconds
+            (byte) 5  // Number of flashes
+        );
+        level = new GameLevel(this, levelNumber, data, worldMap);
         level.setCutSceneNumber(switch (levelNumber) {
             case 2 -> 1;
             case 5 -> 2;

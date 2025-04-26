@@ -5,12 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.model.HuntingTimer;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.nes.JoypadButtonID;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.HuntingTimer;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
@@ -19,8 +19,8 @@ import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._2d.LevelCompleteAnimation;
 import de.amr.games.pacman.uilib.CameraControlledView;
-import de.amr.games.pacman.uilib.input.Keyboard;
 import de.amr.games.pacman.uilib.Ufx;
+import de.amr.games.pacman.uilib.input.Keyboard;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -45,7 +45,6 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
-import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction.QUIT_DEMO_LEVEL;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.games.pacman.ui.Globals.*;
@@ -495,7 +494,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     }
 
     private void createLevelCompleteAnimation(GameLevel level) {
-        levelCompleteAnimation = new LevelCompleteAnimation(level.numFlashes(), 10);
+        levelCompleteAnimation = new LevelCompleteAnimation(level.data().numFlashes(), 10);
         levelCompleteAnimation.setOnHideGhosts(() -> level.ghosts().forEach(Ghost::hide));
         levelCompleteAnimation.setOnFinished(THE_GAME_CONTROLLER::terminateCurrentState);
     }

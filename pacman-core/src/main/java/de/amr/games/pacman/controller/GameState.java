@@ -423,7 +423,7 @@ public enum GameState implements FsmState<GameModel> {
             else if (timer().atSecond(9.5)) {
                 setProperty("mazeFlashing", true); //TODO fix
                 level.blinking().setStartPhase(Pulse.OFF);
-                level.blinking().restart(2 * level.numFlashes());
+                level.blinking().restart(2 * level.data().numFlashes());
             }
             else if (timer().atSecond(12.0)) {
                 setProperty("mazeFlashing", false); //TODO fix

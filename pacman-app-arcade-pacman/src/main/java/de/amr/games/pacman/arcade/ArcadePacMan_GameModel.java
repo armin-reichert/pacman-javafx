@@ -132,14 +132,13 @@ public class ArcadePacMan_GameModel extends ArcadeXMan_GameModel {
     @Override
     public void buildLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.selectWorldMap(requireValidLevelNumber(levelNumber));
-        level = new GameLevel(this, levelNumber, worldMap);
+        level = new GameLevel(this, levelNumber, levelData(levelNumber), worldMap);
         level.setCutSceneNumber(switch (levelNumber) {
             case 2 -> 1;
             case 5 -> 2;
             case 9, 13, 17 -> 3;
             default -> 0;
         });
-        level.setNumFlashes(levelData(levelNumber).numFlashes());
 
         addArcadeHouse(worldMap);
 
@@ -191,7 +190,7 @@ public class ArcadePacMan_GameModel extends ArcadeXMan_GameModel {
     @Override
     public long pacPowerFadingTicks() {
         // ghost flashing animation has frame length 14 so one full flash takes 28 ticks
-        return level != null ? level.numFlashes() * 28L : 0;
+        return level != null ? level.data().numFlashes() * 28L : 0;
     }
 
     @Override
