@@ -49,10 +49,10 @@ public class GameLevel {
     private final int number; // 1=first level
 
     private final WorldMap worldMap;
-    private final Vector2f pacPosition;
-    private final Vector2f[] ghostPositions = new Vector2f[4];
+    private final Vector2f pacStartPosition;
+    private final Vector2f[] ghostStartPositions = new Vector2f[4];
     private final Vector2i[] ghostScatterTiles = new Vector2i[4];
-    private final Direction[] ghostDirections = new Direction[4];
+    private final Direction[] ghostStartDirections = new Direction[4];
     private final Vector2i[] energizerTiles;
     private final Portal[] portals;
 
@@ -98,31 +98,31 @@ public class GameLevel {
         if (pacTile == null) {
             throw new IllegalArgumentException("No Pac position stored in map");
         }
-        pacPosition = posHalfTileRightOf(pacTile);
+        pacStartPosition = posHalfTileRightOf(pacTile);
 
         Vector2i redGhostTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_RED_GHOST, null);
         if (redGhostTile == null) {
             throw new IllegalArgumentException("No red ghost position stored in map");
         }
-        ghostPositions[RED_GHOST_ID] = posHalfTileRightOf(redGhostTile);
+        ghostStartPositions[RED_GHOST_ID] = posHalfTileRightOf(redGhostTile);
 
         Vector2i pinkGhostTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_PINK_GHOST, null);
         if (pinkGhostTile == null) {
             throw new IllegalArgumentException("No pink ghost position stored in map");
         }
-        ghostPositions[PINK_GHOST_ID] = posHalfTileRightOf(pinkGhostTile);
+        ghostStartPositions[PINK_GHOST_ID] = posHalfTileRightOf(pinkGhostTile);
 
         Vector2i cyanGhostTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_CYAN_GHOST, null);
         if (cyanGhostTile == null) {
             throw new IllegalArgumentException("No cyan ghost position stored in map");
         }
-        ghostPositions[CYAN_GHOST_ID] = posHalfTileRightOf(cyanGhostTile);
+        ghostStartPositions[CYAN_GHOST_ID] = posHalfTileRightOf(cyanGhostTile);
 
         Vector2i orangeGhostTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_ORANGE_GHOST, null);
         if (orangeGhostTile == null) {
             throw new IllegalArgumentException("No orange ghost position stored in map");
         }
-        ghostPositions[ORANGE_GHOST_ID] = posHalfTileRightOf(orangeGhostTile);
+        ghostStartPositions[ORANGE_GHOST_ID] = posHalfTileRightOf(orangeGhostTile);
 
         ghostScatterTiles[RED_GHOST_ID] = worldMap.getTerrainTileProperty(WorldMapProperty.POS_SCATTER_RED_GHOST,
             Vector2i.of(0, worldMap.numCols() - 3));
@@ -264,10 +264,10 @@ public class GameLevel {
     public void createArcadeHouse(int minX, int minY, int maxX, int maxY) {
         leftDoorTile = Vector2i.of(minX + 3, minY);
         rightDoorTile = Vector2i.of(minX + 4, minY);
-        setGhostDirection(RED_GHOST_ID, Direction.LEFT);
-        setGhostDirection(PINK_GHOST_ID, Direction.DOWN);
-        setGhostDirection(CYAN_GHOST_ID, Direction.UP);
-        setGhostDirection(ORANGE_GHOST_ID, Direction.UP);
+        setGhostStartDirection(RED_GHOST_ID, Direction.LEFT);
+        setGhostStartDirection(PINK_GHOST_ID, Direction.DOWN);
+        setGhostStartDirection(CYAN_GHOST_ID, Direction.UP);
+        setGhostStartDirection(ORANGE_GHOST_ID, Direction.UP);
 
         // Create an obstacle for the house!
         //TODO change attributes to min_tile and max_tiles
@@ -329,29 +329,29 @@ public class GameLevel {
 
     // Actor positions
 
-    public Vector2f pacPosition() {
-        return pacPosition;
+    public Vector2f pacStartPosition() {
+        return pacStartPosition;
     }
 
     public void setGhostPosition(byte ghostID, Vector2f position) {
         requireValidGhostID(ghostID);
-        ghostPositions[ghostID] = position;
+        ghostStartPositions[ghostID] = position;
     }
 
-    public Vector2f ghostPosition(byte ghostID) {
+    public Vector2f ghostStartPosition(byte ghostID) {
         requireValidGhostID(ghostID);
-        return ghostPositions[ghostID];
+        return ghostStartPositions[ghostID];
     }
 
-    public void setGhostDirection(byte ghostID, Direction dir) {
+    public void setGhostStartDirection(byte ghostID, Direction dir) {
         requireValidGhostID(ghostID);
         requireNonNull(dir);
-        ghostDirections[ghostID] = dir;
+        ghostStartDirections[ghostID] = dir;
     }
 
-    public Direction ghostDirection(byte ghostID) {
+    public Direction ghostStartDirection(byte ghostID) {
         requireValidGhostID(ghostID);
-        return ghostDirections[ghostID];
+        return ghostStartDirections[ghostID];
     }
 
     // Food

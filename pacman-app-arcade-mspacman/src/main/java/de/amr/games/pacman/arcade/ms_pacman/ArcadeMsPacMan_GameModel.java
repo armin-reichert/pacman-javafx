@@ -9,7 +9,6 @@ import de.amr.games.pacman.arcade.ArcadeXMan_GameModel;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.Waypoint;
-import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.*;
@@ -142,11 +141,11 @@ public class ArcadeMsPacMan_GameModel extends ArcadeXMan_GameModel {
         );
         ghosts.forEach(ghost -> {
             ghost.setGameLevel(level);
-            ghost.setRevivalPosition(level.ghostPosition(ghost.id()));
+            ghost.setRevivalPosition(level.ghostStartPosition(ghost.id()));
             ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
             ghost.reset();
         });
-        ghosts.get(RED_GHOST_ID).setRevivalPosition(level.ghostPosition(PINK_GHOST_ID)); // middle house position
+        ghosts.get(RED_GHOST_ID).setRevivalPosition(level.ghostStartPosition(PINK_GHOST_ID)); // middle house position
 
         level.setPac(pac);
         level.setGhosts(ghosts.toArray(Ghost[]::new));

@@ -422,10 +422,10 @@ public class TengenMsPacMan_GameModel extends GameModel {
         var ghosts = new Ghost[] { blinky(), pinky(), inky(), sue() };
         Stream.of(ghosts).forEach(ghost -> {
             ghost.setGameLevel(level);
-            ghost.setRevivalPosition(level.ghostPosition(ghost.id()));
+            ghost.setRevivalPosition(level.ghostStartPosition(ghost.id()));
             ghost.reset();
         });
-        ghosts[RED_GHOST_ID].setRevivalPosition(level.ghostPosition(PINK_GHOST_ID)); // middle house position
+        ghosts[RED_GHOST_ID].setRevivalPosition(level.ghostStartPosition(PINK_GHOST_ID)); // middle house position
 
         level.setPac(pac);
         level.setGhosts(ghosts);
@@ -452,7 +452,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
         // Ghosts inside house start at bottom of house instead at middle
         level.ghosts().filter(ghost -> ghost.id() != RED_GHOST_ID).forEach(ghost ->
-            level.setGhostPosition(ghost.id(), level.ghostPosition(ghost.id()).plus(0, HTS))
+            level.setGhostPosition(ghost.id(), level.ghostStartPosition(ghost.id()).plus(0, HTS))
         );
         levelCounter.setEnabled(levelNumber < 8);
         activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON

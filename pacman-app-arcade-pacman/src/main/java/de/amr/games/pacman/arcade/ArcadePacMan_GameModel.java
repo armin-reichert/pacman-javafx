@@ -159,11 +159,11 @@ public class ArcadePacMan_GameModel extends ArcadeXMan_GameModel {
 
         ghosts.forEach(ghost -> {
             ghost.setGameLevel(level);
-            ghost.setRevivalPosition(level.ghostPosition(ghost.id()));
+            ghost.setRevivalPosition(level.ghostStartPosition(ghost.id()));
             ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
             ghost.reset();
         });
-        ghosts.get(RED_GHOST_ID).setRevivalPosition(level.ghostPosition(PINK_GHOST_ID)); // middle house position
+        ghosts.get(RED_GHOST_ID).setRevivalPosition(level.ghostStartPosition(PINK_GHOST_ID)); // middle house position
 
         level.setPac(pac);
         level.setGhosts(ghosts.toArray(Ghost[]::new));

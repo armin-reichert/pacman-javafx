@@ -198,14 +198,14 @@ public abstract class GameModel {
      * Sets each guy to his start position and resets him to his initial state. The guys are all initially invisible!
      */
     public void letsGetReadyToRumble() {
-        level.pac().reset(); // invisible!
-        level.pac().setPosition(level.pacPosition());
+        level.pac().reset(); // initially invisible!
+        level.pac().setPosition(level.pacStartPosition());
         level.pac().setMoveAndWishDir(Direction.LEFT);
         level.pac().powerTimer().resetIndefiniteTime();
         level.ghosts().forEach(ghost -> {
-            ghost.reset(); // invisible!
-            ghost.setPosition(level.ghostPosition(ghost.id()));
-            ghost.setMoveAndWishDir(level.ghostDirection(ghost.id()));
+            ghost.reset(); // initially invisible!
+            ghost.setPosition(level.ghostStartPosition(ghost.id()));
+            ghost.setMoveAndWishDir(level.ghostStartDirection(ghost.id()));
             ghost.setState(LOCKED);
         });
         level.blinking().setStartPhase(Pulse.ON); // Energizers are visible when ON
