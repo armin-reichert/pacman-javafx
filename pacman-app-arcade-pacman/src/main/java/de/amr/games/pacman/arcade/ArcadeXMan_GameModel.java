@@ -19,6 +19,8 @@ import java.util.Optional;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.formatTile;
+import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
+import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
 
 /**
  * Common data and functionality of Pac-Man and Ms. Pac-Man Arcade games.
@@ -221,12 +223,26 @@ public abstract class ArcadeXMan_GameModel extends GameModel {
     }
 
     @Override
-    protected void onEnergizerEaten() {
+    protected void onEnergizerEaten(Vector2i tile) {
         scoreManager().scorePoints(ENERGIZER_VALUE);
-        level.pac().setRestingTicks(3);
         Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
+        level.pac().setRestingTicks(3);
+        Logger.info("Resting 3 ticks");
         checkCruiseElroy();
-        super.onEnergizerEaten();
+        level.victims().clear();
+        long powerTicks = pacPowerTicks();
+        if (powerTicks > 0) {
+            huntingTimer().stop();
+            Logger.info("Hunting Pac-Man stopped as he got power");
+            level.pac().powerTimer().restartTicks(powerTicks);
+            Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerTicks / TICKS_PER_SECOND);
+            level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
+            level.ghosts(FRIGHTENED).forEach(Ghost::reverseAtNextOccasion);
+            eventsThisFrame().setPacGotPower();
+            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_GETS_POWER);
+        } else {
+            level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseAtNextOccasion);
+        }
     }
 
     private void checkCruiseElroy() {

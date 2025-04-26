@@ -541,11 +541,24 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    protected void onEnergizerEaten() {
+    protected void onEnergizerEaten(Vector2i tile) {
         //TODO does Ms. Pac-Man slow down after eating as in Arcade game?
         scoreManager.scorePoints(ENERGIZER_VALUE);
         Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
-        super.onEnergizerEaten();
+        level.victims().clear();
+        long powerTicks = pacPowerTicks();
+        if (powerTicks > 0) {
+            huntingTimer().stop();
+            Logger.info("Hunting Pac-Man stopped as he got power");
+            level.pac().powerTimer().restartTicks(powerTicks);
+            Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerTicks / TICKS_PER_SECOND);
+            level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
+            level.ghosts(FRIGHTENED).forEach(Ghost::reverseAtNextOccasion);
+            eventsThisFrame().setPacGotPower();
+            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_GETS_POWER);
+        } else {
+            level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseAtNextOccasion);
+        }
     }
 
     @Override

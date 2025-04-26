@@ -103,6 +103,8 @@ public abstract class GameModel {
 
     protected abstract byte computeBonusSymbol(int levelNumber);
 
+    protected abstract void onEnergizerEaten(Vector2i tile);
+
     protected abstract void onPelletEaten(Vector2i tile);
 
     public abstract MapSelector mapSelector();
@@ -335,10 +337,9 @@ public abstract class GameModel {
         Vector2i tile = level.pac().tile();
         if (level.hasFoodAt(tile)) {
             level.pac().endStarving();
-            boolean energizer = level.isEnergizerPosition(tile);
-            if (energizer) {
+            if (level.isEnergizerPosition(tile)) {
                 eventsThisFrame().setFoundEnergizerTile(tile);
-                onEnergizerEaten();
+                onEnergizerEaten(tile);
             } else {
                 onPelletEaten(tile);
             }
@@ -351,23 +352,6 @@ public abstract class GameModel {
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_FOUND_FOOD, tile);
         } else {
             level.pac().starve();
-        }
-    }
-
-    protected void onEnergizerEaten() {
-        level.victims().clear(); // ghosts eaten using this energizer
-        long powerTicks = pacPowerTicks();
-        if (powerTicks > 0) {
-            huntingTimer().stop();
-            Logger.info("Hunting Pac-Man stopped as he got power");
-            level.pac().powerTimer().restartTicks(powerTicks);
-            Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerTicks / TICKS_PER_SECOND);
-            level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
-            level.ghosts(FRIGHTENED).forEach(Ghost::reverseAtNextOccasion);
-            eventsThisFrame().setPacGotPower();
-            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_GETS_POWER);
-        } else {
-            level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseAtNextOccasion);
         }
     }
 
