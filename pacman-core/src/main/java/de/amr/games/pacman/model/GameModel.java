@@ -39,9 +39,9 @@ public abstract class GameModel {
 
     protected GameModel() {
         scoreManager = new ScoreManager();
-        scoreManager.setOnExtraLifeWon(extraLifeScore -> {
-            eventsThisFrame().extraLifeWon = true;
-            eventsThisFrame().extraLifeScore = extraLifeScore;
+        scoreManager.setOnExtraLifeWon(score -> {
+            eventsThisFrame().setExtraLifeWon();
+            eventsThisFrame().setExtraLifeScore(score);
             addLives(1);
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.EXTRA_LIFE_WON);
         });
@@ -284,11 +284,11 @@ public abstract class GameModel {
     }
 
     public boolean hasPacManBeenKilled() {
-        return eventsThisFrame().pacKilledTile != null;
+        return eventsThisFrame().pacKilledTile() != null;
     }
 
     public boolean haveGhostsBeenKilled() {
-        return !eventsThisFrame().killedGhosts.isEmpty();
+        return !eventsThisFrame().killedGhosts().isEmpty();
     }
 
     public void startHunting() {
@@ -321,19 +321,22 @@ public abstract class GameModel {
         boolean killerMet = level.ghosts(HUNTING_PAC).anyMatch(ghost -> areActorsColliding(level.pac(), ghost));
         Vector2i pacTile = level.pac().tile();
         if (level.isDemoLevel()) {
-            eventsThisFrame().pacKilledTile = (killerMet && !isPacManKillingIgnored()) ? pacTile : null;
+            if (killerMet && !isPacManKillingIgnored()) eventsThisFrame().setPacKilledTile(pacTile);
         } else {
-            eventsThisFrame().pacKilledTile = (killerMet && !level.pac().isImmune()) ? pacTile : null;
+            if (killerMet && !level.pac().isImmune()) eventsThisFrame().setPacKilledTile(pacTile);
         }
     }
 
     private void checkForFood() {
         Vector2i tile = level.pac().tile();
         if (level.hasFoodAt(tile)) {
-            eventsThisFrame().foodFoundTile = tile;
-            eventsThisFrame().foundEnergizerTile = level.isEnergizerPosition(tile) ? tile : null;
+            boolean energizer = level.isEnergizerPosition(tile);
+            if (energizer) {
+                eventsThisFrame().setFoundEnergizerTile(tile);
+            }
+            eventsThisFrame().setFoodFoundTile(tile);
             level.registerFoodEatenAt(tile);
-            onFoodEaten(tile, level.uneatenFoodCount(), level.isEnergizerPosition(tile));
+            onFoodEaten(tile, level.uneatenFoodCount(), energizer);
             level.pac().endStarving();
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_FOUND_FOOD, tile);
         } else {
@@ -355,7 +358,7 @@ public abstract class GameModel {
             Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerTicks / TICKS_PER_SECOND);
             level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             level.ghosts(FRIGHTENED).forEach(Ghost::reverseAtNextOccasion);
-            eventsThisFrame().pacGotPower = true;
+            eventsThisFrame().setPacGotPower();
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_GETS_POWER);
         } else {
             level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseAtNextOccasion);
@@ -366,7 +369,7 @@ public abstract class GameModel {
         final TickTimer timer = level.pac().powerTimer();
         timer.doTick();
         if (level.pac().isPowerFadingStarting(this)) {
-            eventsThisFrame().pacStartsLosingPower = true;
+            eventsThisFrame().setPacStartsLosingPower();
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (timer.hasExpired()) {
             timer.stop();
@@ -376,7 +379,7 @@ public abstract class GameModel {
             huntingTimer().start();
             Logger.info("Hunting timer restarted because Pac-Man lost power");
             level.ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
-            eventsThisFrame().pacLostPower = true;
+            eventsThisFrame().setPacLostPower();
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_LOST_POWER);
         }
     }
@@ -386,7 +389,7 @@ public abstract class GameModel {
             bonus.setEaten(120); //TODO is 2 seconds correct?
             scoreManager.scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-            eventsThisFrame().bonusEatenTile = bonus.actor().tile();
+            eventsThisFrame().setBonusEatenTile(bonus.actor().tile());
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.BONUS_EATEN);
         } else {
             bonus.update(this);

@@ -17,23 +17,79 @@ import java.util.List;
  * @author Armin Reichert
  */
 public class SimulationStepEvents {
-    public final long tick;
-    public Vector2i   foodFoundTile = null;
-    public Vector2i   foundEnergizerTile = null;
-    public int        bonusIndex = -1;
-    public Vector2i   bonusEatenTile = null;
-    public boolean    pacGotPower = false;
-    public boolean    pacStartsLosingPower = false;
-    public boolean    pacLostPower = false;
-    public Vector2i   pacKilledTile = null;
-    public boolean    extraLifeWon = false;
-    public int        extraLifeScore = 0;
-    public Ghost      releasedGhost = null;
-    public String     ghostReleaseInfo = null;
-    public final List<Ghost> killedGhosts = new ArrayList<>(4);
+    private final long tick;
+    private Vector2i   foodFoundTile = null;
+    private Vector2i   foundEnergizerTile = null;
+    private int        bonusIndex = -1;
+    private Vector2i   bonusEatenTile = null;
+    private boolean    pacGotPower = false;
+    private boolean    pacStartsLosingPower = false;
+    private boolean    pacLostPower = false;
+    private Vector2i   pacKilledTile = null;
+    private boolean    extraLifeWon = false;
+    private int        extraLifeScore = 0;
+    private Ghost      releasedGhost = null;
+    private String     ghostReleaseInfo = null;
+    private final List<Ghost> killedGhosts = new ArrayList<>(4);
 
     public SimulationStepEvents(long tick) {
         this.tick = tick;
+    }
+
+    public void setFoodFoundTile(Vector2i foodFoundTile) {
+        this.foodFoundTile = foodFoundTile;
+    }
+
+    public void setFoundEnergizerTile(Vector2i foundEnergizerTile) {
+        this.foundEnergizerTile = foundEnergizerTile;
+    }
+
+    public void setBonusIndex(int bonusIndex) {
+        this.bonusIndex = bonusIndex;
+    }
+
+    public void setBonusEatenTile(Vector2i bonusEatenTile) {
+        this.bonusEatenTile = bonusEatenTile;
+    }
+
+    public void setPacGotPower() {
+        this.pacGotPower = true;
+    }
+
+    public void setPacStartsLosingPower() {
+        this.pacStartsLosingPower = true;
+    }
+
+    public void setPacLostPower() {
+        this.pacLostPower = true;
+    }
+
+    public void setPacKilledTile(Vector2i pacKilledTile) {
+        this.pacKilledTile = pacKilledTile;
+    }
+
+    public void setExtraLifeWon() {
+        this.extraLifeWon = true;
+    }
+
+    public void setExtraLifeScore(int extraLifeScore) {
+        this.extraLifeScore = extraLifeScore;
+    }
+
+    public void setReleasedGhost(Ghost releasedGhost) {
+        this.releasedGhost = releasedGhost;
+    }
+
+    public void setGhostReleaseInfo(String ghostReleaseInfo) {
+        this.ghostReleaseInfo = ghostReleaseInfo;
+    }
+
+    public Vector2i pacKilledTile() {
+        return pacKilledTile;
+    }
+
+    public List<Ghost> killedGhosts() {
+        return killedGhosts;
     }
 
     public List<String> createMessageList() {

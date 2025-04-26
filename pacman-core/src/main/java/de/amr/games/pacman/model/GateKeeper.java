@@ -201,10 +201,10 @@ public class GateKeeper {
             .map(level::ghost)
             .filter(ghost -> ghost.inState(LOCKED))
             .findFirst().ifPresent(prisoner -> {
-                String releaseInfo = checkReleaseOf(level, prisoner);
-                if (releaseInfo != null) {
-                    eventLog.releasedGhost = prisoner;
-                    eventLog.ghostReleaseInfo = releaseInfo;
+                String releaseReason = checkReleaseOf(level, prisoner);
+                if (releaseReason != null) {
+                    eventLog.setReleasedGhost(prisoner);
+                    eventLog.setGhostReleaseInfo(releaseReason);
                     prisoner.setMoveAndWishDir(Direction.UP);
                     prisoner.setState(LEAVING_HOUSE);
                     onGhostReleasedAction.accept(prisoner);

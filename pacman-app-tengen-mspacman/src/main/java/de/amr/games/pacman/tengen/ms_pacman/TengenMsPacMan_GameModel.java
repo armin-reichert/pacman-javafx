@@ -548,7 +548,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         gateKeeper.registerFoodEaten(level);
         if (isBonusReached()) {
             activateNextBonus();
-            eventsThisFrame().bonusIndex = level.nextBonusIndex();
+            eventsThisFrame().setBonusIndex(level.nextBonusIndex());
         }
     }
 
@@ -565,7 +565,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public void killGhost(Ghost ghost) {
-        eventsThisFrame().killedGhosts.add(ghost);
+        eventsThisFrame().killedGhosts().add(ghost);
         int killedSoFar = level.victims().size();
         int points = 100 * KILLED_GHOST_VALUE_MULTIPLIER[killedSoFar];
         level.victims().add(ghost);
