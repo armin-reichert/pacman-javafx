@@ -184,9 +184,8 @@ public abstract class GameModel {
     }
 
     public void startNextLevel() {
-        int nextLevelNumber = level.number() + 1;
-        if (nextLevelNumber <= lastLevelNumber()) {
-            createLevel(nextLevelNumber);
+        if (level.number() < lastLevelNumber()) {
+            createLevel(level.number() + 1);
             startLevel();
             showPacAndGhosts();
         } else {
