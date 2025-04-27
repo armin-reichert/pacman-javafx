@@ -262,8 +262,8 @@ public abstract class GameModel {
     }
 
     public void endLevel() {
+        Logger.info("Level complete, stop hunting timer");
         huntingTimer().stop();
-        Logger.info("Level complete, hunting timer stopped");
 
         level.blinking().setStartPhase(Pulse.OFF);
         level.blinking().reset();

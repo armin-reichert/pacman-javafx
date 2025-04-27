@@ -606,7 +606,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         if (huntingTimer.phaseIndex() == 0 && (ghost.id() == RED_GHOST_ID || ghost.id() == PINK_GHOST_ID)) {
             ghost.roam(speed);
         } else {
-            boolean chasing = huntingTimer.phase() == HuntingTimer.HuntingPhase.CHASING;
+            boolean chasing = huntingTimer.phase() == HuntingPhase.CHASING;
             Vector2i targetTile = chasing
                 ? chasingTargetTile(ghost.id(), level, false)
                 : level.ghostScatterTile(ghost.id());

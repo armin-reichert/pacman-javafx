@@ -15,11 +15,9 @@ import java.util.Optional;
 import static de.amr.games.pacman.Globals.*;
 
 /**
- * Controls timing of hunting phases (alternating scatter vs. chasing phases).
+ * Controls the timing of the hunting phases (alternating scattering and chasing).
  */
 public abstract class HuntingTimer {
-
-    public enum HuntingPhase {SCATTERING, CHASING}
 
     private final TickTimer timer = new TickTimer("Timer-" + getClass().getSimpleName());
     private final int numPhases;
@@ -30,7 +28,9 @@ public abstract class HuntingTimer {
         phaseIndexPy.addListener((py, ov, nv) -> logPhase());
     }
 
-    protected void logPhase() {
+    public abstract long huntingTicks(int levelNumber, int phaseIndex);
+
+    public void logPhase() {
         Logger.info("Hunting phase {} ({}, {} ticks / {} seconds). {}",
             phaseIndex(), phase(), timer.durationTicks(), (float) timer.durationTicks() / Globals.TICKS_PER_SECOND, this);
     }
@@ -41,20 +41,6 @@ public abstract class HuntingTimer {
         phaseIndexPy.set(0);
     }
 
-    public void start() { timer.start(); }
-    public void stop() { timer.stop(); }
-    public boolean isStopped() { return timer.isStopped(); }
-    public long tickCount() { return timer.tickCount(); }
-    public long remainingTicks() { return timer.remainingTicks(); }
-
-    public IntegerProperty phaseIndexProperty() { return phaseIndexPy; }
-
-    public HuntingPhase phase() { return isEven(phaseIndex()) ? HuntingPhase.SCATTERING : HuntingPhase.CHASING; }
-
-    public int phaseIndex() { return phaseIndexPy.get(); }
-
-    public abstract long huntingTicks(int levelNumber, int phaseIndex);
-
     public void update(int levelNumber) {
         if (timer.hasExpired()) {
             Logger.info("Hunting phase {} ({}) ends, tick={}", phaseIndex(), phase(), timer.tickCount());
@@ -64,6 +50,23 @@ public abstract class HuntingTimer {
         }
     }
 
+    public void start() { timer.start(); }
+    public void stop() { timer.stop(); }
+    public boolean isStopped() { return timer.isStopped(); }
+    public long tickCount() { return timer.tickCount(); }
+    public long remainingTicks() { return timer.remainingTicks(); }
+
+    public IntegerProperty phaseIndexProperty() { return phaseIndexPy; }
+    public int phaseIndex() { return phaseIndexPy.get(); }
+    public Optional<Integer> currentScatterPhaseIndex() {
+        return isEven(phaseIndex()) ? Optional.of(phaseIndex() / 2) : Optional.empty();
+    }
+    public Optional<Integer> currentChasingPhaseIndex() {
+        return isOdd(phaseIndex()) ? Optional.of(phaseIndex() / 2) : Optional.empty();
+    }
+
+    public HuntingPhase phase() { return isEven(phaseIndex()) ? HuntingPhase.SCATTERING : HuntingPhase.CHASING; }
+
     private int requireValidPhaseIndex(int phaseIndex) {
         if (phaseIndex < 0 || phaseIndex > numPhases - 1) {
             throw new IllegalArgumentException("Hunting phase index must be 0..%d, but is %d".formatted(numPhases, phaseIndex));
@@ -72,28 +75,20 @@ public abstract class HuntingTimer {
     }
 
     public void startFirstHuntingPhase(int levelNumber) {
-        startPhase(0, requireValidLevelNumber(levelNumber));
+        startPhase(requireValidLevelNumber(levelNumber), 0);
         logPhase(); // no change event!
     }
 
     public void startNextPhase(int levelNumber) {
         requireValidLevelNumber(levelNumber);
         int nextPhaseIndex = requireValidPhaseIndex(phaseIndex() + 1);
-        startPhase(nextPhaseIndex, levelNumber);
+        startPhase(levelNumber, nextPhaseIndex);
     }
 
-    private void startPhase(int phaseIndex, int levelNumber) {
+    private void startPhase(int levelNumber, int phaseIndex) {
         long duration = huntingTicks(levelNumber, phaseIndex);
         timer.reset(duration);
         timer.start();
         phaseIndexPy.set(phaseIndex);
-    }
-
-    public Optional<Integer> currentScatterPhaseIndex() {
-        return isEven(phaseIndex()) ? Optional.of(phaseIndex() / 2) : Optional.empty();
-    }
-
-    public Optional<Integer> currentChasingPhaseIndex() {
-        return isOdd(phaseIndex()) ? Optional.of(phaseIndex() / 2) : Optional.empty();
     }
 }

@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.HuntingPhase;
 import de.amr.games.pacman.model.HuntingTimer;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.uilib.assets.WorldMapColorScheme;
@@ -101,7 +102,7 @@ public class InfoBoxGameInfo extends InfoBox {
         HuntingTimer huntingTimer = game.huntingTimer();
         return "%s #%d%s".formatted(
             huntingTimer.phase().name(),
-            huntingTimer.phase() == HuntingTimer.HuntingPhase.CHASING
+            huntingTimer.phase() == HuntingPhase.CHASING
                 ? huntingTimer.currentChasingPhaseIndex().orElse(42)
                 : huntingTimer.currentScatterPhaseIndex().orElse(42),
             huntingTimer.isStopped() ? " STOPPED" : "");
