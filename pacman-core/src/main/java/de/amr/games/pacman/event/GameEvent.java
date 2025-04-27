@@ -23,7 +23,7 @@ public class GameEvent {
     private Map<String, Object> payloadMap;
 
     public void setPayload(String key, Object value) {
-        payloadMap().put(key, value);
+        payloadMap().put(key, requireNonNull(value));
     }
 
     @SuppressWarnings("unchecked")
@@ -45,7 +45,8 @@ public class GameEvent {
     }
 
     public GameEvent(GameModel game, GameEventType type) {
-        this(game, type, null);
+        this.type = requireNonNull(type);
+        this.game = requireNonNull(game);
     }
 
     @Override
