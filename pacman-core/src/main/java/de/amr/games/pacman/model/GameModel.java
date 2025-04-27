@@ -39,11 +39,11 @@ public abstract class GameModel {
 
     protected GameModel() {
         scoreManager = new ScoreManager();
-        scoreManager.setOnExtraLifeWon(score -> {
+        scoreManager.setOnSpecialScoreReached(score -> {
             eventsThisFrame().setExtraLifeWon();
             eventsThisFrame().setExtraLifeScore(score);
             addLives(1);
-            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.EXTRA_LIFE_WON);
+            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.SPECIAL_SCORE_REACHED);
         });
     }
 

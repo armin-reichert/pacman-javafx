@@ -216,9 +216,9 @@ public class TengenMsPacMan_GameModel extends GameModel {
             a score normally unachievable without cheat codes, since all maze sets end after 32 stages.
             This was most likely done to simulate the Arcade game only giving one extra life per game.
             */
-            scoreManager.setExtraLifeScores(10_000, 970_000, 980_000, 990_000);
+            scoreManager.setSpecialScores(10_000, 970_000, 980_000, 990_000);
         } else {
-            scoreManager.setExtraLifeScores(10_000, 50_000, 100_000, 300_000);
+            scoreManager.setSpecialScores(10_000, 50_000, 100_000, 300_000);
         }
     }
 

@@ -288,7 +288,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onExtraLifeWon(GameEvent e) {
+    public void onSpecialScoreReached(GameEvent e) {
         THE_SOUND.playExtraLifeSound();
     }
 

@@ -21,14 +21,14 @@ public class ScoreManager {
 
     private final Score score = new Score();
     private final Score highScore = new Score();
-    private Set<Integer> extraLifeScores = Set.of();
+    private Set<Integer> specialScores = Set.of();
     private final BooleanProperty scoreEnabledPy = new SimpleBooleanProperty(true);
     private final BooleanProperty highScoreEnabledPy= new SimpleBooleanProperty(true);
     private File highScoreFile;
-    private Consumer<Integer> onExtraLifeWonAction;
+    private Consumer<Integer> specialScoreReachedAction;
 
     public ScoreManager() {
-        onExtraLifeWonAction = extraLifeScore -> Logger.info("Extra life score reached at {} points", extraLifeScore);
+        specialScoreReachedAction = score -> Logger.info("Reached {} points", score);
     }
 
     public void scorePoints(int points) {
@@ -45,9 +45,9 @@ public class ScoreManager {
                 highScore.setDate(LocalDate.now());
             }
         }
-        for (Integer extraLifeScore : extraLifeScores) {
+        for (Integer extraLifeScore : specialScores) {
             if (oldScore < extraLifeScore && newScore >= extraLifeScore) {
-                onExtraLifeWonAction.accept(extraLifeScore);
+                specialScoreReachedAction.accept(extraLifeScore);
                 break;
             }
         }
@@ -75,8 +75,8 @@ public class ScoreManager {
         new Score().save(highScoreFile, "High Score, %s".formatted(LocalDateTime.now()));
     }
 
-    public void setOnExtraLifeWon(Consumer<Integer> action) {
-        onExtraLifeWonAction = requireNonNull(action);
+    public void setOnSpecialScoreReached(Consumer<Integer> action) {
+        specialScoreReachedAction = requireNonNull(action);
     }
 
     public Score score() {
@@ -111,7 +111,7 @@ public class ScoreManager {
         score.setLevelNumber(levelNumber);
     }
 
-    public void setExtraLifeScores(Integer... scores) {
-        extraLifeScores = Set.of(scores);
+    public void setSpecialScores(Integer... scores) {
+        specialScores = Set.of(scores);
     }
 }

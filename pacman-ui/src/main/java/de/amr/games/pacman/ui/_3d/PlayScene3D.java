@@ -474,7 +474,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     @Override
-    public void onExtraLifeWon(GameEvent e) {
+    public void onSpecialScoreReached(GameEvent e) {
         THE_SOUND.playExtraLifeSound();
     }
 
