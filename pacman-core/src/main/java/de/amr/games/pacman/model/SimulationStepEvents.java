@@ -12,13 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Stores important events that happened during a single simulation step.
+ * Stores what happened during a simulation step.
  *
  * @author Armin Reichert
  */
 public class SimulationStepEvents {
     private final long tick;
-    private Vector2i   foundEnergizerTile;
+    private Vector2i   foundEnergizerAtTile;
     private int        bonusIndex = -1;
     private Vector2i   bonusEatenTile;
     private boolean    pacGotPower;
@@ -36,16 +36,16 @@ public class SimulationStepEvents {
         this.tick = tick;
     }
 
-    public void setFoundEnergizerTile(Vector2i foundEnergizerTile) {
-        this.foundEnergizerTile = foundEnergizerTile;
+    public void setFoundEnergizerAtTile(Vector2i tile) {
+        this.foundEnergizerAtTile = tile;
     }
 
     public void setBonusIndex(int bonusIndex) {
         this.bonusIndex = bonusIndex;
     }
 
-    public void setBonusEatenTile(Vector2i bonusEatenTile) {
-        this.bonusEatenTile = bonusEatenTile;
+    public void setBonusEatenTile(Vector2i tile) {
+        this.bonusEatenTile = tile;
     }
 
     public void setPacGotPower() {
@@ -60,8 +60,8 @@ public class SimulationStepEvents {
         this.pacLostPower = true;
     }
 
-    public void setPacKilledTile(Vector2i pacKilledTile) {
-        this.pacKilledTile = pacKilledTile;
+    public void setPacKilledTile(Vector2i tile) {
+        this.pacKilledTile = tile;
     }
 
     public void setPacKiller(Ghost pacKiller) {
@@ -94,8 +94,8 @@ public class SimulationStepEvents {
 
     public List<String> createMessageList() {
         var messages = new ArrayList<String>();
-        if (foundEnergizerTile != null) {
-            messages.add("Energizer found at " + foundEnergizerTile);
+        if (foundEnergizerAtTile != null) {
+            messages.add("Energizer found at " + foundEnergizerAtTile);
         }
         if (bonusIndex != -1) {
             messages.add("Bonus score reached, index=" + bonusIndex);

@@ -341,7 +341,7 @@ public abstract class GameModel {
         if (level.hasFoodAt(tile)) {
             level.pac().endStarving();
             if (level.isEnergizerPosition(tile)) {
-                eventsThisFrame().setFoundEnergizerTile(tile);
+                eventsThisFrame().setFoundEnergizerAtTile(tile);
                 onEnergizerEaten(tile);
             } else {
                 onPelletEaten(tile);
