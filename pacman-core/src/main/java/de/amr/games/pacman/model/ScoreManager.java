@@ -12,24 +12,16 @@ import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Set;
-import java.util.function.Consumer;
-
-import static java.util.Objects.requireNonNull;
 
 public class ScoreManager {
 
     private final Score score = new Score();
     private final Score highScore = new Score();
-    private Set<Integer> specialScores = Set.of();
     private final BooleanProperty scoreEnabledPy = new SimpleBooleanProperty(true);
     private final BooleanProperty highScoreEnabledPy= new SimpleBooleanProperty(true);
     private File highScoreFile;
-    private Consumer<Integer> specialScoreReachedAction;
 
-    public ScoreManager() {
-        specialScoreReachedAction = score -> Logger.info("Reached {} points", score);
-    }
+    public ScoreManager() {}
 
     public void scorePoints(int points) {
         if (!isScoreEnabled()) {
@@ -37,7 +29,6 @@ public class ScoreManager {
         }
         int oldScore = score.points();
         int newScore = oldScore + points;
-        score.setPoints(newScore);
         if (isHighScoreEnabled()) {
             if (newScore > highScore.points()) {
                 highScore.setPoints(newScore);
@@ -45,12 +36,7 @@ public class ScoreManager {
                 highScore.setDate(LocalDate.now());
             }
         }
-        for (Integer extraLifeScore : specialScores) {
-            if (oldScore < extraLifeScore && newScore >= extraLifeScore) {
-                specialScoreReachedAction.accept(extraLifeScore);
-                break;
-            }
-        }
+        score.setPoints(newScore);
     }
 
     public void loadHighScore() {
@@ -73,15 +59,6 @@ public class ScoreManager {
 
     public void resetHighScore() {
         new Score().save(highScoreFile, "High Score, %s".formatted(LocalDateTime.now()));
-    }
-
-
-    public void setSpecialScores(Integer... scores) {
-        specialScores = Set.of(scores);
-    }
-
-    public void setOnSpecialScoreReached(Consumer<Integer> action) {
-        specialScoreReachedAction = requireNonNull(action);
     }
 
     public Score score() {

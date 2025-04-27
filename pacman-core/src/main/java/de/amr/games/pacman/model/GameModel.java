@@ -17,6 +17,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import org.tinylog.Logger;
 
+import java.util.List;
 import java.util.Optional;
 
 import static de.amr.games.pacman.Globals.*;
@@ -37,16 +38,23 @@ public abstract class GameModel {
 
     protected ScoreManager scoreManager;
     protected GameLevel level;
+    protected List<Integer> extraLifeScores = List.of();
 
     protected GameModel() {
         scoreManager = new ScoreManager();
-        scoreManager.setOnSpecialScoreReached(score -> {
-            eventsThisFrame().setExtraLifeWon();
-            eventsThisFrame().setExtraLifeScore(score);
-            addLives(1);
-            GameEvent event = new GameEvent(this, GameEventType.SPECIAL_SCORE_REACHED);
-            event.setPayload("score", score);
-            THE_GAME_EVENT_MANAGER.publishEvent(event);
+        scoreManager.score().pointsProperty().addListener((py, ov, nv) -> {
+            for (int extraLifeScore : extraLifeScores) {
+                // has extra life score been crossed?
+                if (ov.intValue() < extraLifeScore && nv.intValue() >= extraLifeScore) {
+                    eventsThisFrame().setExtraLifeWon();
+                    eventsThisFrame().setExtraLifeScore(extraLifeScore);
+                    addLives(1);
+                    GameEvent event = new GameEvent(this, GameEventType.SPECIAL_SCORE_REACHED);
+                    event.setPayload("score", extraLifeScore);
+                    THE_GAME_EVENT_MANAGER.publishEvent(event);
+                    break;
+                }
+            }
         });
     }
 
