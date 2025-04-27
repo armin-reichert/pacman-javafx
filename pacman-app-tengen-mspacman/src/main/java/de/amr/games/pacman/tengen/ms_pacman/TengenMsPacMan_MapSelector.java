@@ -30,11 +30,11 @@ public class TengenMsPacMan_MapSelector extends MapSelector {
 
     @Override
     public List<WorldMap> builtinMaps() {
-        List<WorldMap> all = new ArrayList<>();
+        List<WorldMap> maps = new ArrayList<>();
         for (MapCategory category : MapCategory.values()) {
-            all.addAll(mapRepository.get(category));
+            maps.addAll(mapRepository.get(category));
         }
-        return all;
+        return maps;
     }
 
     @Override
@@ -58,10 +58,10 @@ public class TengenMsPacMan_MapSelector extends MapSelector {
 
     public WorldMap coloredWorldMap(MapCategory mapCategory, int levelNumber) {
         return switch (mapCategory) {
-            case ARCADE  -> coloredArcadeMap(levelNumber);
-            case STRANGE -> coloredStrangeMap(levelNumber);
-            case MINI    -> coloredMiniMap(levelNumber);
-            case BIG     -> coloredBigMap(levelNumber);
+            case ARCADE  -> createArcadeMap(levelNumber);
+            case STRANGE -> createStrangeMap(levelNumber);
+            case MINI    -> createMiniMap(levelNumber);
+            case BIG     -> createBigMap(levelNumber);
         };
     }
 
@@ -87,131 +87,131 @@ public class TengenMsPacMan_MapSelector extends MapSelector {
         return maps;
     }
 
-    private WorldMap coloredArcadeMap(int levelNumber) {
+    private WorldMap createArcadeMap(int levelNumber) {
         return switch (levelNumber) {
-            case 1,2         -> coloredMap(ARCADE, 1, _36_15_20_PINK_RED_WHITE);
-            case 3,4,5       -> coloredMap(ARCADE, 2, _21_20_28_BLUE_WHITE_YELLOW);
-            case 6,7,8,9     -> coloredMap(ARCADE, 3, _16_20_15_ORANGE_WHITE_RED);
-            case 10,11,12,13 -> coloredMap(ARCADE, 4, _01_38_20_BLUE_YELLOW_WHITE);
-            case 14,15,16,17 -> coloredMap(ARCADE, 3, _35_28_20_PINK_YELLOW_WHITE);
-            case 18,19,20,21 -> coloredMap(ARCADE, 4, _36_15_20_PINK_RED_WHITE);
-            case 22,23,24,25 -> coloredMap(ARCADE, 3, _17_20_20_BROWN_WHITE_WHITE);
-            case 26,27,28,29 -> coloredMap(ARCADE, 4, _13_20_28_VIOLET_WHITE_YELLOW);
-            case 30,31,32    -> coloredMap(ARCADE, 3, _0F_20_28_BLACK_WHITE_YELLOW);
+            case 1,2         -> createRecoloredMap(ARCADE, 1, _36_15_20_PINK_RED_WHITE);
+            case 3,4,5       -> createRecoloredMap(ARCADE, 2, _21_20_28_BLUE_WHITE_YELLOW);
+            case 6,7,8,9     -> createRecoloredMap(ARCADE, 3, _16_20_15_ORANGE_WHITE_RED);
+            case 10,11,12,13 -> createRecoloredMap(ARCADE, 4, _01_38_20_BLUE_YELLOW_WHITE);
+            case 14,15,16,17 -> createRecoloredMap(ARCADE, 3, _35_28_20_PINK_YELLOW_WHITE);
+            case 18,19,20,21 -> createRecoloredMap(ARCADE, 4, _36_15_20_PINK_RED_WHITE);
+            case 22,23,24,25 -> createRecoloredMap(ARCADE, 3, _17_20_20_BROWN_WHITE_WHITE);
+            case 26,27,28,29 -> createRecoloredMap(ARCADE, 4, _13_20_28_VIOLET_WHITE_YELLOW);
+            case 30,31,32    -> createRecoloredMap(ARCADE, 3, _0F_20_28_BLACK_WHITE_YELLOW);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
     }
 
-    private WorldMap coloredMiniMap(int levelNumber) {
+    private WorldMap createMiniMap(int levelNumber) {
         return switch (levelNumber) {
-            case 1  -> coloredMap(MINI, 1, _36_15_20_PINK_RED_WHITE);
-            case 2  -> coloredMap(MINI, 2, _21_20_28_BLUE_WHITE_YELLOW);
-            case 3  -> coloredMap(MINI, 1, _16_20_15_ORANGE_WHITE_RED);
-            case 4  -> coloredMap(MINI, 2, _01_38_20_BLUE_YELLOW_WHITE);
-            case 5  -> coloredMap(MINI, 3, _35_28_20_PINK_YELLOW_WHITE);
-            case 6  -> coloredMap(MINI, 1, _36_15_20_PINK_RED_WHITE);
-            case 7  -> coloredMap(MINI, 2, _17_20_20_BROWN_WHITE_WHITE);
-            case 8  -> coloredMap(MINI, 3, _13_20_28_VIOLET_WHITE_YELLOW);
-            case 9  -> coloredMap(MINI, 4, _0F_20_28_BLACK_WHITE_YELLOW);
-            case 10 -> coloredMap(MINI, 1, _0F_01_20_BLACK_BLUE_WHITE);
-            case 11 -> coloredMap(MINI, 2, _14_25_20_VIOLET_ROSE_WHITE);
-            case 12 -> coloredMap(MINI, 3, _15_20_20_RED_WHITE_WHITE);
-            case 13 -> coloredMap(MINI, 4, _1B_20_20_GREEN_WHITE_WHITE);
-            case 14 -> coloredMap(MINI, 1, _28_20_2A_YELLOW_WHITE_GREEN);
-            case 15 -> coloredMap(MINI, 2, _1A_20_28_GREEN_WHITE_YELLOW);
-            case 16 -> coloredMap(MINI, 3, _18_20_20_KHAKI_WHITE_WHITE);
-            case 17 -> coloredMap(MINI, 4, _25_20_20_ROSE_WHITE_WHITE);
-            case 18 -> coloredMap(MINI, 5, _12_20_28_BLUE_WHITE_YELLOW);
-            case 19 -> coloredMap(MINI, 5, _07_20_20_BROWN_WHITE_WHITE);
-            case 20 -> coloredMap(MINI, 4, _15_25_20_RED_ROSE_WHITE);
-            case 21 -> coloredMap(MINI, 3, _0F_20_1C_BLACK_WHITE_GREEN);
-            case 22 -> coloredMap(MINI, 2, _19_20_20_GREEN_WHITE_WHITE);
-            case 23 -> coloredMap(MINI, 1, _0C_20_14_GREEN_WHITE_VIOLET);
-            case 24 -> coloredMap(MINI, 6, _23_20_2B_VIOLET_WHITE_GREEN);
-            case 25 -> coloredMap(MINI, 1, _10_20_28_GRAY_WHITE_YELLOW);
-            case 26 -> coloredMap(MINI, 2, _03_20_20_BLUE_WHITE_WHITE);
-            case 27 -> coloredMap(MINI, 3, _04_20_20_VIOLET_WHITE_WHITE);
-            case 28 -> randomlyColoredMap(MINI, 4);
-            case 29 -> randomlyColoredMap(MINI, 5);
-            case 30 -> randomlyColoredMap(MINI, 2);
-            case 31 -> randomlyColoredMap(MINI, 3);
-            case 32 -> coloredMap(MINI, 6, _15_25_20_RED_ROSE_WHITE);
+            case 1  -> createRecoloredMap(MINI, 1, _36_15_20_PINK_RED_WHITE);
+            case 2  -> createRecoloredMap(MINI, 2, _21_20_28_BLUE_WHITE_YELLOW);
+            case 3  -> createRecoloredMap(MINI, 1, _16_20_15_ORANGE_WHITE_RED);
+            case 4  -> createRecoloredMap(MINI, 2, _01_38_20_BLUE_YELLOW_WHITE);
+            case 5  -> createRecoloredMap(MINI, 3, _35_28_20_PINK_YELLOW_WHITE);
+            case 6  -> createRecoloredMap(MINI, 1, _36_15_20_PINK_RED_WHITE);
+            case 7  -> createRecoloredMap(MINI, 2, _17_20_20_BROWN_WHITE_WHITE);
+            case 8  -> createRecoloredMap(MINI, 3, _13_20_28_VIOLET_WHITE_YELLOW);
+            case 9  -> createRecoloredMap(MINI, 4, _0F_20_28_BLACK_WHITE_YELLOW);
+            case 10 -> createRecoloredMap(MINI, 1, _0F_01_20_BLACK_BLUE_WHITE);
+            case 11 -> createRecoloredMap(MINI, 2, _14_25_20_VIOLET_ROSE_WHITE);
+            case 12 -> createRecoloredMap(MINI, 3, _15_20_20_RED_WHITE_WHITE);
+            case 13 -> createRecoloredMap(MINI, 4, _1B_20_20_GREEN_WHITE_WHITE);
+            case 14 -> createRecoloredMap(MINI, 1, _28_20_2A_YELLOW_WHITE_GREEN);
+            case 15 -> createRecoloredMap(MINI, 2, _1A_20_28_GREEN_WHITE_YELLOW);
+            case 16 -> createRecoloredMap(MINI, 3, _18_20_20_KHAKI_WHITE_WHITE);
+            case 17 -> createRecoloredMap(MINI, 4, _25_20_20_ROSE_WHITE_WHITE);
+            case 18 -> createRecoloredMap(MINI, 5, _12_20_28_BLUE_WHITE_YELLOW);
+            case 19 -> createRecoloredMap(MINI, 5, _07_20_20_BROWN_WHITE_WHITE);
+            case 20 -> createRecoloredMap(MINI, 4, _15_25_20_RED_ROSE_WHITE);
+            case 21 -> createRecoloredMap(MINI, 3, _0F_20_1C_BLACK_WHITE_GREEN);
+            case 22 -> createRecoloredMap(MINI, 2, _19_20_20_GREEN_WHITE_WHITE);
+            case 23 -> createRecoloredMap(MINI, 1, _0C_20_14_GREEN_WHITE_VIOLET);
+            case 24 -> createRecoloredMap(MINI, 6, _23_20_2B_VIOLET_WHITE_GREEN);
+            case 25 -> createRecoloredMap(MINI, 1, _10_20_28_GRAY_WHITE_YELLOW);
+            case 26 -> createRecoloredMap(MINI, 2, _03_20_20_BLUE_WHITE_WHITE);
+            case 27 -> createRecoloredMap(MINI, 3, _04_20_20_VIOLET_WHITE_WHITE);
+            case 28 -> createRandomlyColoredMap(MINI, 4);
+            case 29 -> createRandomlyColoredMap(MINI, 5);
+            case 30 -> createRandomlyColoredMap(MINI, 2);
+            case 31 -> createRandomlyColoredMap(MINI, 3);
+            case 32 -> createRecoloredMap(MINI, 6, _15_25_20_RED_ROSE_WHITE);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
     }
 
-    private WorldMap coloredBigMap(int levelNumber) {
+    private WorldMap createBigMap(int levelNumber) {
         return switch (levelNumber) {
-            case 1  -> coloredMap(BIG,  1, _36_15_20_PINK_RED_WHITE);
-            case 2  -> coloredMap(BIG,  2, _21_20_28_BLUE_WHITE_YELLOW);
-            case 3  -> coloredMap(BIG,  3, _16_20_15_ORANGE_WHITE_RED);
-            case 4  -> coloredMap(BIG,  1, _01_38_20_BLUE_YELLOW_WHITE);
-            case 5  -> coloredMap(BIG,  2, _35_28_20_PINK_YELLOW_WHITE);
-            case 6  -> coloredMap(BIG,  3, _36_15_20_PINK_RED_WHITE);
-            case 7  -> coloredMap(BIG,  4, _17_20_20_BROWN_WHITE_WHITE);
-            case 8  -> coloredMap(BIG,  5, _13_20_28_VIOLET_WHITE_YELLOW);
-            case 9  -> coloredMap(BIG,  6, _0F_20_28_BLACK_WHITE_YELLOW);
-            case 10 -> coloredMap(BIG,  7, _0F_01_20_BLACK_BLUE_WHITE);
-            case 11 -> coloredMap(BIG,  5, _14_25_20_VIOLET_ROSE_WHITE);
-            case 12 -> coloredMap(BIG,  3, _15_20_20_RED_WHITE_WHITE);
-            case 13 -> coloredMap(BIG,  4, _1B_20_20_GREEN_WHITE_WHITE);
-            case 14 -> coloredMap(BIG,  8, _28_20_2A_YELLOW_WHITE_GREEN);
-            case 15 -> coloredMap(BIG,  2, _1A_20_28_GREEN_WHITE_YELLOW);
-            case 16 -> coloredMap(BIG,  1, _18_20_20_KHAKI_WHITE_WHITE);
-            case 17 -> coloredMap(BIG,  7, _25_20_20_ROSE_WHITE_WHITE);
-            case 18 -> coloredMap(BIG,  6, _12_20_28_BLUE_WHITE_YELLOW);
-            case 19 -> coloredMap(BIG,  7, _07_20_20_BROWN_WHITE_WHITE);
-            case 20 -> coloredMap(BIG,  1, _15_25_20_RED_ROSE_WHITE);
-            case 21 -> coloredMap(BIG,  9, _0F_20_1C_BLACK_WHITE_GREEN);
-            case 22 -> coloredMap(BIG,  3, _19_20_20_GREEN_WHITE_WHITE);
-            case 23 -> coloredMap(BIG,  4, _0C_20_14_GREEN_WHITE_VIOLET);
-            case 24 -> coloredMap(BIG,  5, _23_20_2B_VIOLET_WHITE_GREEN);
-            case 25 -> coloredMap(BIG,  8, _10_20_28_GRAY_WHITE_YELLOW);
-            case 26 -> coloredMap(BIG, 10, _03_20_20_BLUE_WHITE_WHITE);
-            case 27 -> coloredMap(BIG,  8, _04_20_20_VIOLET_WHITE_WHITE);
-            case 28 -> randomlyColoredMap(BIG,  5);
-            case 29 -> randomlyColoredMap(BIG,  9);
-            case 30 -> randomlyColoredMap(BIG,  2);
-            case 31 -> randomlyColoredMap(BIG, 10);
-            case 32 -> coloredMap(BIG, 11, _15_25_20_RED_ROSE_WHITE);
+            case 1  -> createRecoloredMap(BIG,  1, _36_15_20_PINK_RED_WHITE);
+            case 2  -> createRecoloredMap(BIG,  2, _21_20_28_BLUE_WHITE_YELLOW);
+            case 3  -> createRecoloredMap(BIG,  3, _16_20_15_ORANGE_WHITE_RED);
+            case 4  -> createRecoloredMap(BIG,  1, _01_38_20_BLUE_YELLOW_WHITE);
+            case 5  -> createRecoloredMap(BIG,  2, _35_28_20_PINK_YELLOW_WHITE);
+            case 6  -> createRecoloredMap(BIG,  3, _36_15_20_PINK_RED_WHITE);
+            case 7  -> createRecoloredMap(BIG,  4, _17_20_20_BROWN_WHITE_WHITE);
+            case 8  -> createRecoloredMap(BIG,  5, _13_20_28_VIOLET_WHITE_YELLOW);
+            case 9  -> createRecoloredMap(BIG,  6, _0F_20_28_BLACK_WHITE_YELLOW);
+            case 10 -> createRecoloredMap(BIG,  7, _0F_01_20_BLACK_BLUE_WHITE);
+            case 11 -> createRecoloredMap(BIG,  5, _14_25_20_VIOLET_ROSE_WHITE);
+            case 12 -> createRecoloredMap(BIG,  3, _15_20_20_RED_WHITE_WHITE);
+            case 13 -> createRecoloredMap(BIG,  4, _1B_20_20_GREEN_WHITE_WHITE);
+            case 14 -> createRecoloredMap(BIG,  8, _28_20_2A_YELLOW_WHITE_GREEN);
+            case 15 -> createRecoloredMap(BIG,  2, _1A_20_28_GREEN_WHITE_YELLOW);
+            case 16 -> createRecoloredMap(BIG,  1, _18_20_20_KHAKI_WHITE_WHITE);
+            case 17 -> createRecoloredMap(BIG,  7, _25_20_20_ROSE_WHITE_WHITE);
+            case 18 -> createRecoloredMap(BIG,  6, _12_20_28_BLUE_WHITE_YELLOW);
+            case 19 -> createRecoloredMap(BIG,  7, _07_20_20_BROWN_WHITE_WHITE);
+            case 20 -> createRecoloredMap(BIG,  1, _15_25_20_RED_ROSE_WHITE);
+            case 21 -> createRecoloredMap(BIG,  9, _0F_20_1C_BLACK_WHITE_GREEN);
+            case 22 -> createRecoloredMap(BIG,  3, _19_20_20_GREEN_WHITE_WHITE);
+            case 23 -> createRecoloredMap(BIG,  4, _0C_20_14_GREEN_WHITE_VIOLET);
+            case 24 -> createRecoloredMap(BIG,  5, _23_20_2B_VIOLET_WHITE_GREEN);
+            case 25 -> createRecoloredMap(BIG,  8, _10_20_28_GRAY_WHITE_YELLOW);
+            case 26 -> createRecoloredMap(BIG, 10, _03_20_20_BLUE_WHITE_WHITE);
+            case 27 -> createRecoloredMap(BIG,  8, _04_20_20_VIOLET_WHITE_WHITE);
+            case 28 -> createRandomlyColoredMap(BIG,  5);
+            case 29 -> createRandomlyColoredMap(BIG,  9);
+            case 30 -> createRandomlyColoredMap(BIG,  2);
+            case 31 -> createRandomlyColoredMap(BIG, 10);
+            case 32 -> createRecoloredMap(BIG, 11, _15_25_20_RED_ROSE_WHITE);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
     }
 
-    private WorldMap coloredStrangeMap(int levelNumber) {
+    private WorldMap createStrangeMap(int levelNumber) {
         WorldMap worldMap = switch (levelNumber) {
-            case  1 -> coloredMap(STRANGE,  1, _36_15_20_PINK_RED_WHITE);
-            case  2 -> coloredMap(STRANGE,  2, _21_20_28_BLUE_WHITE_YELLOW);
-            case  3 -> coloredMap(STRANGE,  3, _16_20_15_ORANGE_WHITE_RED);
-            case  4 -> coloredMap(STRANGE,  4, _01_38_20_BLUE_YELLOW_WHITE);
-            case  5 -> coloredMap(STRANGE,  5, _35_28_20_PINK_YELLOW_WHITE);
-            case  6 -> coloredMap(STRANGE,  6, _36_15_20_PINK_RED_WHITE);
-            case  7 -> coloredMap(STRANGE,  7, _17_20_20_BROWN_WHITE_WHITE);
-            case  8 -> coloredMap(STRANGE,  8, _13_20_28_VIOLET_WHITE_YELLOW);
-            case  9 -> coloredMap(STRANGE,  9, _0F_20_28_BLACK_WHITE_YELLOW);
-            case 10 -> coloredMap(BIG,      7, _0F_01_20_BLACK_BLUE_WHITE);
-            case 11 -> coloredMap(STRANGE, 10, _14_25_20_VIOLET_ROSE_WHITE);
-            case 12 -> coloredMap(STRANGE, 11, _15_20_20_RED_WHITE_WHITE);
-            case 13 -> coloredMap(STRANGE,  6, _1B_20_20_GREEN_WHITE_WHITE);
-            case 14 -> coloredMap(BIG,      8, _28_20_2A_YELLOW_WHITE_GREEN);
-            case 15 -> coloredMap(STRANGE, 12, _1A_20_28_GREEN_WHITE_YELLOW);
-            case 16 -> coloredMap(MINI,     5, _18_20_20_KHAKI_WHITE_WHITE);
-            case 17 -> coloredMap(BIG,      6, _25_20_20_ROSE_WHITE_WHITE);
-            case 18 -> coloredMap(STRANGE, 13, _12_20_28_BLUE_WHITE_YELLOW);
-            case 19 -> coloredMap(BIG,      1, _07_20_20_BROWN_WHITE_WHITE);
-            case 20 -> coloredMap(BIG,      2, _15_25_20_RED_ROSE_WHITE);
-            case 21 -> coloredMap(BIG,      3, _0F_20_1C_BLACK_WHITE_GREEN);
-            case 22 -> coloredMap(BIG,      4, _19_20_20_GREEN_WHITE_WHITE);
-            case 23 -> coloredMap(BIG,      5, _0C_20_14_GREEN_WHITE_VIOLET);
-            case 24 -> coloredMap(STRANGE,  4, _23_20_2B_VIOLET_WHITE_GREEN);
-            case 25 -> coloredMap(BIG,     10, _10_20_28_GRAY_WHITE_YELLOW);
-            case 26 -> coloredMap(BIG,      9, _03_20_20_BLUE_WHITE_WHITE);
-            case 27 -> coloredMap(STRANGE, 14, _04_20_20_VIOLET_WHITE_WHITE);
-            case 28 -> randomlyColoredMap(MINI,     5);
-            case 29 -> randomlyColoredMap(STRANGE,  8);
-            case 30 -> randomlyColoredMap(MINI,     4);
-            case 31 -> randomlyColoredMap(STRANGE, 11);
-            case 32 -> coloredMap(STRANGE, 15, _15_25_20_RED_ROSE_WHITE);
+            case  1 -> createRecoloredMap(STRANGE,  1, _36_15_20_PINK_RED_WHITE);
+            case  2 -> createRecoloredMap(STRANGE,  2, _21_20_28_BLUE_WHITE_YELLOW);
+            case  3 -> createRecoloredMap(STRANGE,  3, _16_20_15_ORANGE_WHITE_RED);
+            case  4 -> createRecoloredMap(STRANGE,  4, _01_38_20_BLUE_YELLOW_WHITE);
+            case  5 -> createRecoloredMap(STRANGE,  5, _35_28_20_PINK_YELLOW_WHITE);
+            case  6 -> createRecoloredMap(STRANGE,  6, _36_15_20_PINK_RED_WHITE);
+            case  7 -> createRecoloredMap(STRANGE,  7, _17_20_20_BROWN_WHITE_WHITE);
+            case  8 -> createRecoloredMap(STRANGE,  8, _13_20_28_VIOLET_WHITE_YELLOW);
+            case  9 -> createRecoloredMap(STRANGE,  9, _0F_20_28_BLACK_WHITE_YELLOW);
+            case 10 -> createRecoloredMap(BIG,      7, _0F_01_20_BLACK_BLUE_WHITE);
+            case 11 -> createRecoloredMap(STRANGE, 10, _14_25_20_VIOLET_ROSE_WHITE);
+            case 12 -> createRecoloredMap(STRANGE, 11, _15_20_20_RED_WHITE_WHITE);
+            case 13 -> createRecoloredMap(STRANGE,  6, _1B_20_20_GREEN_WHITE_WHITE);
+            case 14 -> createRecoloredMap(BIG,      8, _28_20_2A_YELLOW_WHITE_GREEN);
+            case 15 -> createRecoloredMap(STRANGE, 12, _1A_20_28_GREEN_WHITE_YELLOW);
+            case 16 -> createRecoloredMap(MINI,     5, _18_20_20_KHAKI_WHITE_WHITE);
+            case 17 -> createRecoloredMap(BIG,      6, _25_20_20_ROSE_WHITE_WHITE);
+            case 18 -> createRecoloredMap(STRANGE, 13, _12_20_28_BLUE_WHITE_YELLOW);
+            case 19 -> createRecoloredMap(BIG,      1, _07_20_20_BROWN_WHITE_WHITE);
+            case 20 -> createRecoloredMap(BIG,      2, _15_25_20_RED_ROSE_WHITE);
+            case 21 -> createRecoloredMap(BIG,      3, _0F_20_1C_BLACK_WHITE_GREEN);
+            case 22 -> createRecoloredMap(BIG,      4, _19_20_20_GREEN_WHITE_WHITE);
+            case 23 -> createRecoloredMap(BIG,      5, _0C_20_14_GREEN_WHITE_VIOLET);
+            case 24 -> createRecoloredMap(STRANGE,  4, _23_20_2B_VIOLET_WHITE_GREEN);
+            case 25 -> createRecoloredMap(BIG,     10, _10_20_28_GRAY_WHITE_YELLOW);
+            case 26 -> createRecoloredMap(BIG,      9, _03_20_20_BLUE_WHITE_WHITE);
+            case 27 -> createRecoloredMap(STRANGE, 14, _04_20_20_VIOLET_WHITE_WHITE);
+            case 28 -> createRandomlyColoredMap(MINI,     5);
+            case 29 -> createRandomlyColoredMap(STRANGE,  8);
+            case 30 -> createRandomlyColoredMap(MINI,     4);
+            case 31 -> createRandomlyColoredMap(STRANGE, 11);
+            case 32 -> createRecoloredMap(STRANGE, 15, _15_25_20_RED_ROSE_WHITE);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
         // TODO: Hack: Store level number in map such that the renderer can easily determine the map sprite
@@ -219,7 +219,7 @@ public class TengenMsPacMan_MapSelector extends MapSelector {
         return worldMap;
     }
 
-    private WorldMap coloredMap(MapCategory category, int number, NES_ColorScheme colorScheme) {
+    private WorldMap createRecoloredMap(MapCategory category, int number, NES_ColorScheme colorScheme) {
         WorldMap worldMap = new WorldMap(mapRepository.get(category).get(number - 1));
         worldMap.setConfigValue("mapCategory", category);
         worldMap.setConfigValue("mapNumber", number);
@@ -228,8 +228,8 @@ public class TengenMsPacMan_MapSelector extends MapSelector {
         return worldMap;
     }
 
-    private WorldMap randomlyColoredMap(MapCategory category, int number) {
-        WorldMap worldMap = coloredMap(category, number, NES_ColorScheme.random());
+    private WorldMap createRandomlyColoredMap(MapCategory category, int number) {
+        WorldMap worldMap = createRecoloredMap(category, number, NES_ColorScheme.random());
         worldMap.setConfigValue("randomColorScheme", true);
         return worldMap;
     }
