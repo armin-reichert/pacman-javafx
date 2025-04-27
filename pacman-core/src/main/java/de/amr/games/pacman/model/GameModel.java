@@ -320,17 +320,20 @@ public abstract class GameModel {
     }
 
     private void checkPacKilled() {
-        Optional<Ghost> killer = level.ghosts(HUNTING_PAC).filter(ghost -> areActorsColliding(level.pac(), ghost)).findFirst();
-        boolean killed;
-        if (level.isDemoLevel()) {
-            killed = killer.isPresent() && !isPacManKillingIgnored();
-        } else {
-            killed = killer.isPresent() && !level.pac().isImmune();
-        }
-        if (killed) {
-            eventsThisFrame().setPacKiller(killer.get());
-            eventsThisFrame().setPacKilledTile(level.pac().tile());
-        }
+        level.ghosts(HUNTING_PAC)
+            .filter(ghost -> areActorsColliding(level.pac(), ghost))
+            .findFirst().ifPresent(killer -> {
+                boolean killed;
+                if (level.isDemoLevel()) {
+                    killed = !isPacManKillingIgnored();
+                } else {
+                    killed = !level.pac().isImmune();
+                }
+                if (killed) {
+                    eventsThisFrame().setPacKiller(killer);
+                    eventsThisFrame().setPacKilledTile(killer.tile());
+                }
+            });
     }
 
     private void checkForFood() {
