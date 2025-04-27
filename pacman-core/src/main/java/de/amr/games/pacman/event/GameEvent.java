@@ -22,12 +22,12 @@ public class GameEvent {
     public final GameModel game;
     private Map<String, Object> payloadMap;
 
-    private void setPayload(String key, Object value) {
+    public void setPayload(String key, Object value) {
         payloadMap().put(key, value);
     }
 
     @SuppressWarnings("unchecked")
-    private <T> T payload(String key) {
+    public <T> T payload(String key) {
         return (T) payloadMap().get(key);
     }
 

@@ -75,6 +75,11 @@ public class ScoreManager {
         new Score().save(highScoreFile, "High Score, %s".formatted(LocalDateTime.now()));
     }
 
+
+    public void setSpecialScores(Integer... scores) {
+        specialScores = Set.of(scores);
+    }
+
     public void setOnSpecialScoreReached(Consumer<Integer> action) {
         specialScoreReachedAction = requireNonNull(action);
     }
@@ -109,9 +114,5 @@ public class ScoreManager {
 
     public void setLevelNumber(int levelNumber) {
         score.setLevelNumber(levelNumber);
-    }
-
-    public void setSpecialScores(Integer... scores) {
-        specialScores = Set.of(scores);
     }
 }

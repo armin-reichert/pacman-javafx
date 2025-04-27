@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
+import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
@@ -43,7 +44,9 @@ public abstract class GameModel {
             eventsThisFrame().setExtraLifeWon();
             eventsThisFrame().setExtraLifeScore(score);
             addLives(1);
-            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.SPECIAL_SCORE_REACHED);
+            GameEvent event = new GameEvent(this, GameEventType.SPECIAL_SCORE_REACHED);
+            event.setPayload("score", score);
+            THE_GAME_EVENT_MANAGER.publishEvent(event);
         });
     }
 

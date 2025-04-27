@@ -349,6 +349,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onSpecialScoreReached(GameEvent e) {
+        int score = e.payload("score");
+        Logger.info("Extra life won for reaching score of {}", score);
         THE_SOUND.playExtraLifeSound();
     }
 
