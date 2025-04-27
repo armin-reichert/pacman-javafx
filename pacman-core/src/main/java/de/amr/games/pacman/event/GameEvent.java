@@ -7,6 +7,8 @@ package de.amr.games.pacman.event;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
@@ -18,12 +20,28 @@ public class GameEvent {
 
     public final GameEventType type;
     public final GameModel game;
-    public final Vector2i tile;
+    private Map<String, Object> payloadMap;
+
+    private void setPayload(String key, Object value) {
+        payloadMap().put(key, value);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> T payload(String key) {
+        return (T) payloadMap().get(key);
+    }
+
+    private Map<String, Object> payloadMap() {
+        if (payloadMap == null) {
+            payloadMap = new HashMap<>(3);
+        }
+        return payloadMap;
+    }
 
     public GameEvent(GameModel game, GameEventType type, Vector2i tile) {
         this.type = requireNonNull(type);
         this.game = requireNonNull(game);
-        this.tile = tile;
+        setPayload("tile", tile);
     }
 
     public GameEvent(GameModel game, GameEventType type) {
@@ -32,14 +50,19 @@ public class GameEvent {
 
     @Override
     public String toString() {
-        return "GameEvent{" +
-            "game" + game +
-            "type=" + type +
-            ", tile=" + tile +
-            '}';
+        StringBuilder sb = new StringBuilder("GameEvent{");
+        sb.append("game=").append(game);
+        sb.append(", type=").append(type);
+        if (payloadMap != null) {
+            for (Map.Entry<String, Object> entry : payloadMap.entrySet()) {
+                sb.append(entry.getKey()).append("=").append(entry.getValue());
+            }
+        }
+        sb.append("}");
+        return sb.toString();
     }
 
     public Optional<Vector2i> tile() {
-        return Optional.ofNullable(tile);
+        return Optional.ofNullable(payload("tile"));
     }
 }
