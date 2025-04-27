@@ -30,6 +30,7 @@ public class ArcadePacMan_MapSelector extends MapSelector {
                 map.setConfigValue("mapNumber", 1);
                 map.setConfigValue("colorMapIndex", 0);
                 maps = List.of(map);
+                Logger.info("Pac-Man Arcade map loaded, URL={}", map.url());
             } catch (Exception x) {
                 Logger.error("Could not load map from path {}", MAP_PATH);
                 throw new IllegalStateException(x);

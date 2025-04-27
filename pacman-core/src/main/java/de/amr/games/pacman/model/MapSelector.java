@@ -33,15 +33,15 @@ public abstract class MapSelector {
                 try {
                     WorldMap worldMap = new WorldMap(url);
                     maps.add(worldMap);
+                    Logger.info("Map loaded, URL={}", worldMap.url());
                 } catch (IOException x) {
                     Logger.error(x);
-                    Logger.error("Could not create world map, url={}", url);
+                    Logger.error("Could not load world map, URL={}", url);
                 }
             } else {
-                Logger.error("Could not load world map, pattern={}, number={}", mapPattern, mapNumber);
+                Logger.error("Map not found, pattern={}, number={}", mapPattern, mapNumber);
             }
         }
-        Logger.info("{} maps loaded ({})", maps.size(), getClass().getSimpleName());
         return maps;
     }
 

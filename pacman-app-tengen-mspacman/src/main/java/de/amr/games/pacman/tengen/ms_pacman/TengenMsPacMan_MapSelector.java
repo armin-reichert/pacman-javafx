@@ -73,8 +73,8 @@ public class TengenMsPacMan_MapSelector extends MapSelector {
             if (url != null) {
                 try {
                     WorldMap worldMap = new WorldMap(url);
-                    Logger.info("World map #{} read. URL='{}'", num, url);
                     maps.add(worldMap);
+                    Logger.info("Map #{} loaded, URL={}", num, url);
                 } catch (IOException x) {
                     Logger.error(x);
                     Logger.error("Could not create world map, url={}", url);
