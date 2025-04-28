@@ -317,31 +317,19 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public float ghostSpeedInsideHouse(Ghost ghost) {
-        return 0.5f;
-    }
+    public float ghostSpeedInsideHouse(Ghost ghost) { return 0.5f; }
 
     @Override
-    public float ghostSpeedReturningToHouse(Ghost ghost) {
-        return 2;
-    }
+    public float ghostSpeedReturningToHouse(Ghost ghost) { return 2; }
 
     @Override
-    public float ghostFrightenedSpeed(Ghost ghost) {
-        //TODO is this correct?
-        return 0.5f * ghost.baseSpeed();
-    }
+    public float ghostFrightenedSpeed(Ghost ghost) { return 0.5f * ghost.baseSpeed(); } //TODO is this correct?
 
     @Override
-    public float ghostTunnelSpeed(Ghost ghost) {
-        //TODO is this correct?
-        return 0.4f * ghost.baseSpeed();
-    }
+    public float ghostTunnelSpeed(Ghost ghost) { return 0.4f * ghost.baseSpeed(); } //TODO is this correct?
 
     @Override
-    public boolean isOver() {
-        return livesProperty().get() == 0;
-    }
+    public boolean isOver() { return livesProperty().get() == 0; }
 
     @Override
     public void startNewGame() {
@@ -391,35 +379,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
         }
     }
 
-    private void populateLevel(GameLevel level) {
-        level.createArcadeHouse(10, 15, 17, 19);
-
-        var pac = new Pac();
-        pac.setName("Ms. Pac-Man");
-        pac.setGameLevel(level);
-        pac.reset();
-
-        var ghosts = new Ghost[] {
-            new Ghost(RED_GHOST_ID, "Blinky"),
-            new Ghost(PINK_GHOST_ID, "Pinky"),
-            new Ghost(CYAN_GHOST_ID, "Inky"),
-            new Ghost(ORANGE_GHOST_ID, "Sue")
-        };
-        Stream.of(ghosts).forEach(ghost -> {
-            ghost.setGameLevel(level);
-            ghost.setRevivalPosition(level.ghostStartPosition(ghost.id()));
-            ghost.reset();
-        });
-        ghosts[RED_GHOST_ID].setRevivalPosition(level.ghostStartPosition(PINK_GHOST_ID)); // middle house position
-
-        level.setPac(pac);
-        level.setGhosts(ghosts);
-
-        //TODO this might not be appropriate for Tengen Ms. Pac-Man
-        level.setBonusSymbol(0, computeBonusSymbol(level.number()));
-        level.setBonusSymbol(1, computeBonusSymbol(level.number()));
-    }
-
     @Override
     public void buildLevel(int levelNumber, LevelData data) {
         WorldMap worldMap = mapSelector.selectWorldMap(mapCategory, levelNumber);
@@ -431,13 +390,41 @@ public class TengenMsPacMan_GameModel extends GameModel {
             default -> levelNumber == lastLevelNumber() ? 4 : 0;
         });
 
-        populateLevel(level);
-        level.pac().setAutopilot(autopilot);
-        level.ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
-        // Ghosts inside house start at bottom of house instead at middle
-        level.ghosts().filter(ghost -> ghost.id() != RED_GHOST_ID).forEach(ghost ->
-            level.setGhostPosition(ghost.id(), level.ghostStartPosition(ghost.id()).plus(0, HTS))
+        level.createArcadeHouse(10, 15, 17, 19);
+
+        var pac = new Pac();
+        pac.setName("Ms. Pac-Man");
+        pac.setGameLevel(level);
+        pac.reset();
+        pac.setAutopilot(autopilot);
+
+        var ghosts = new Ghost[] {
+            new Ghost(RED_GHOST_ID, "Blinky"),
+            new Ghost(PINK_GHOST_ID, "Pinky"),
+            new Ghost(CYAN_GHOST_ID, "Inky"),
+            new Ghost(ORANGE_GHOST_ID, "Sue")
+        };
+        Stream.of(ghosts).forEach(ghost -> {
+            ghost.setGameLevel(level);
+            ghost.setRevivalPosition(level.ghostStartPosition(ghost.id()));
+            ghost.reset();
+            ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
+        });
+
+        // Ghosts inside house start at bottom of house instead at middle as marked in map
+        Stream.of(ghosts).filter(ghost -> ghost.id() != RED_GHOST_ID).forEach(ghost ->
+            level.setGhostStartPosition(ghost.id(), level.ghostStartPosition(ghost.id()).plus(0, HTS))
         );
+        ghosts[RED_GHOST_ID].setRevivalPosition(level.ghostStartPosition(PINK_GHOST_ID)); // middle house position
+
+        level.setPac(pac);
+        level.setGhosts(ghosts);
+
+        //TODO this might not be appropriate for Tengen Ms. Pac-Man
+        level.setBonusSymbol(0, computeBonusSymbol(level.number()));
+        level.setBonusSymbol(1, computeBonusSymbol(level.number()));
+
+
         levelCounter.setEnabled(levelNumber < 8);
         activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON
     }

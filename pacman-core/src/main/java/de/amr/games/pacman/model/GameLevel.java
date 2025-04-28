@@ -333,7 +333,7 @@ public class GameLevel {
         return pacStartPosition;
     }
 
-    public void setGhostPosition(byte ghostID, Vector2f position) {
+    public void setGhostStartPosition(byte ghostID, Vector2f position) {
         requireValidGhostID(ghostID);
         ghostStartPositions[ghostID] = position;
     }
