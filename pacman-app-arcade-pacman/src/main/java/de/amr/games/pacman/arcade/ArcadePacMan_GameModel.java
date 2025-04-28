@@ -63,11 +63,9 @@ public class ArcadePacMan_GameModel extends ArcadeXMan_GameModel {
      */
     protected ArcadePacMan_GameModel(MapSelector mapSelector) {
         this.mapSelector = requireNonNull(mapSelector);
-
-        levelCounter = new ArcadePacMan_LevelCounter();
-
-        setHighScoreFile(new File(HOME_DIR, "highscore-pacman.xml"));
+        highScoreFile = new File(HOME_DIR, "highscore-pacman.xml");
         extraLifeScores = List.of(EXTRA_LIFE_SCORE);
+        levelCounter = new ArcadePacMan_LevelCounter();
 
         huntingTimer = new HuntingTimer(8) {
             // Ticks of scatter and chasing phases, -1=INDEFINITE

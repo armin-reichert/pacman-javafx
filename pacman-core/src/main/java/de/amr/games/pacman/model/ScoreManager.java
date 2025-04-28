@@ -4,15 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
-import java.io.File;
-
 public interface ScoreManager {
     Score score();
     Score highScore();
     void scorePoints(int points);
     void resetScore();
     void loadHighScore();
-    void setHighScoreFile(File file);
     void resetHighScore();
     void updateHighScore();
     void setHighScoreEnabled(boolean enabled);

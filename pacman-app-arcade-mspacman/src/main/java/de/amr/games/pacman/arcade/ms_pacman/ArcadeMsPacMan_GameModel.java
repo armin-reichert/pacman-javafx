@@ -52,11 +52,9 @@ public class ArcadeMsPacMan_GameModel extends ArcadeXMan_GameModel {
      */
     protected ArcadeMsPacMan_GameModel(MapSelector mapSelector) {
         this.mapSelector = requireNonNull(mapSelector);
-
-        levelCounter = new ArcadePacMan_LevelCounter();
-
-        setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman.xml"));
+        highScoreFile = new File(HOME_DIR, "highscore-ms_pacman.xml");
         extraLifeScores = List.of(EXTRA_LIFE_SCORE);
+        levelCounter = new ArcadePacMan_LevelCounter();
 
         /*
          * Details are from a conversation with user @damselindis on Reddit. I am not sure if they are correct.

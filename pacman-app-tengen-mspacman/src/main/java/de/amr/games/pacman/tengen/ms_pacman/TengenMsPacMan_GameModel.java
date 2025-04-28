@@ -115,6 +115,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     private int numContinues;
 
     public TengenMsPacMan_GameModel() {
+        highScoreFile = new File(HOME_DIR, "highscore-ms_pacman_tengen.xml");
         levelCounter = new TengenMsPacMan_LevelCounter();
         mapSelector = new TengenMsPacMan_MapSelector();
         gateKeeper = new GateKeeper();
@@ -122,7 +123,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
         huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
             if (nv.intValue() > 0) level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAtNextOccasion);
         });
-        setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman_tengen.xml"));
         autopilot = new RuleBasedPacSteering(this);
         demoLevelSteering = new RuleBasedPacSteering(this);
     }

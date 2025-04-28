@@ -41,14 +41,14 @@ public abstract class GameModel implements ScoreManager {
     private final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(false);
 
     protected GameLevel level;
-    protected List<Integer> extraLifeScores = List.of();
 
     // Score management
     private final Score score = new Score();
     private final Score highScore = new Score();
     private final BooleanProperty scoreEnabledPy = new SimpleBooleanProperty(true);
     private final BooleanProperty highScoreEnabledPy= new SimpleBooleanProperty(true);
-    private File highScoreFile;
+    protected File highScoreFile;
+    protected List<Integer> extraLifeScores = List.of();
 
     protected GameModel() {
         score.pointsProperty().addListener((py, ov, nv) -> {
@@ -407,18 +407,16 @@ public abstract class GameModel implements ScoreManager {
     }
 
     // Score management
+
     public void scorePoints(int points) {
         if (!isScoreEnabled()) {
             return;
         }
-        int oldScore = score.points();
-        int newScore = oldScore + points;
-        if (isHighScoreEnabled()) {
-            if (newScore > highScore.points()) {
-                highScore.setPoints(newScore);
-                highScore.setLevelNumber(score.levelNumber());
-                highScore.setDate(LocalDate.now());
-            }
+        int oldScore = score.points(), newScore = oldScore + points;
+        if (isHighScoreEnabled() && newScore > highScore.points()) {
+            highScore.setPoints(newScore);
+            highScore.setLevelNumber(score.levelNumber());
+            highScore.setDate(LocalDate.now());
         }
         score.setPoints(newScore);
     }
@@ -469,12 +467,7 @@ public abstract class GameModel implements ScoreManager {
 
     public void setHighScoreEnabled(boolean enabled) { highScoreEnabledProperty().set(enabled); }
 
-    public void setHighScoreFile(File highScoreFile) {
-        this.highScoreFile = highScoreFile;
-    }
-
     public void setScoreLevelNumber(int levelNumber) {
         score.setLevelNumber(levelNumber);
     }
-
 }
