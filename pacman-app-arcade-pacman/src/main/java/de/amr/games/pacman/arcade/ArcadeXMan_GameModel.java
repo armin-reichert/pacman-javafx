@@ -233,7 +233,7 @@ public abstract class ArcadeXMan_GameModel extends GameModel {
             Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerTicks / TICKS_PER_SECOND);
             level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             level.ghosts(FRIGHTENED).forEach(Ghost::reverseAtNextOccasion);
-            eventsThisFrame().setPacGotPower();
+            THE_SIMULATION_STEP.setPacGotPower();
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_GETS_POWER);
         } else {
             level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseAtNextOccasion);
@@ -260,7 +260,7 @@ public abstract class ArcadeXMan_GameModel extends GameModel {
 
     @Override
     public void killGhost(Ghost ghost) {
-        eventsThisFrame().killedGhosts().add(ghost);
+        THE_SIMULATION_STEP.killedGhosts().add(ghost);
         int killedSoFar = level.victims().size();
         int points = 100 * KILLED_GHOST_VALUE_MULTIPLIER[killedSoFar];
         level.victims().add(ghost);

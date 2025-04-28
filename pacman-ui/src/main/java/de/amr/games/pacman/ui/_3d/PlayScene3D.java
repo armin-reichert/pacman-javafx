@@ -358,7 +358,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 case HUNTING               -> onEnterStateHunting(level);
                 case PACMAN_DYING          -> onEnterStatePacManDying(level);
                 case GHOST_DYING           -> onEnterStateGhostDying(level);
-                case LEVEL_COMPLETE        -> onEnterStateLevelComplete(level);
+                case LEVEL_COMPLETE        -> onEnterStateLevelComplete();
                 case LEVEL_TRANSITION      -> onEnterStateLevelTransition(level);
                 case TESTING_LEVELS        -> onEnterStateTestingLevels(level);
                 case TESTING_LEVEL_TEASERS -> onEnterStateTestingLevelTeasers(level);
@@ -386,14 +386,14 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     private void onEnterStateGhostDying(GameLevel level) {
         GameSpriteSheet spriteSheet = THE_UI_CONFIGS.current().spriteSheet();
         RectArea[] numberSprites = spriteSheet.ghostNumberSprites();
-        THE_GAME_CONTROLLER.eventsThisFrame().killedGhosts().forEach(ghost -> {
+        THE_SIMULATION_STEP.killedGhosts().forEach(ghost -> {
             int victimIndex = level.victims().indexOf(ghost);
             var numberImage = spriteSheet.crop(numberSprites[victimIndex]);
             level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
         });
     }
 
-    private void onEnterStateLevelComplete(GameLevel level) {
+    private void onEnterStateLevelComplete() {
         THE_SOUND.stopAll();
         level3D.pellets3D().forEach(Pellet3D::onEaten);
         level3D.energizers3D().forEach(Energizer3D::onEaten);

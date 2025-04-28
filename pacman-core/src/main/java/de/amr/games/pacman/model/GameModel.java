@@ -46,8 +46,8 @@ public abstract class GameModel {
             for (int extraLifeScore : extraLifeScores) {
                 // has extra life score been crossed?
                 if (ov.intValue() < extraLifeScore && nv.intValue() >= extraLifeScore) {
-                    eventsThisFrame().setExtraLifeWon();
-                    eventsThisFrame().setExtraLifeScore(extraLifeScore);
+                    THE_SIMULATION_STEP.setExtraLifeWon();
+                    THE_SIMULATION_STEP.setExtraLifeScore(extraLifeScore);
                     addLives(1);
                     GameEvent event = new GameEvent(this, GameEventType.SPECIAL_SCORE_REACHED);
                     event.setPayload("score", extraLifeScore);
@@ -126,19 +126,13 @@ public abstract class GameModel {
 
     protected Optional<GateKeeper> gateKeeper() { return Optional.empty(); }
 
-    protected SimulationStepEvents eventsThisFrame() { return THE_GAME_CONTROLLER.eventsThisFrame(); }
-
     public int lastLevelNumber() { return Integer.MAX_VALUE; }
 
-    public Optional<GameLevel> level() {
-        return Optional.ofNullable(level);
-    }
+    public Optional<GameLevel> level() { return Optional.ofNullable(level); }
 
     public abstract <T extends LevelCounter> T levelCounter();
 
-    public ScoreManager scoreManager() {
-        return scoreManager;
-    }
+    public ScoreManager scoreManager() { return scoreManager; }
 
     public BooleanProperty cutScenesEnabledProperty() { return cutScenesEnabledPy; }
 
@@ -297,11 +291,11 @@ public abstract class GameModel {
     }
 
     public boolean hasPacManBeenKilled() {
-        return eventsThisFrame().pacKilledTile() != null;
+        return THE_SIMULATION_STEP.pacKilledTile() != null;
     }
 
     public boolean haveGhostsBeenKilled() {
-        return !eventsThisFrame().killedGhosts().isEmpty();
+        return !THE_SIMULATION_STEP.killedGhosts().isEmpty();
     }
 
     public void startHunting() {
@@ -316,7 +310,7 @@ public abstract class GameModel {
     public void doHuntingStep() {
         huntingTimer().update(level.number());
         level.blinking().tick();
-        gateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(level, eventsThisFrame()));
+        gateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(level, THE_SIMULATION_STEP));
         checkForFood();
         level.pac().update(this);
         updatePacPower();
@@ -341,8 +335,8 @@ public abstract class GameModel {
                     killed = !level.pac().isImmune();
                 }
                 if (killed) {
-                    eventsThisFrame().setPacKiller(killer);
-                    eventsThisFrame().setPacKilledTile(killer.tile());
+                    THE_SIMULATION_STEP.setPacKiller(killer);
+                    THE_SIMULATION_STEP.setPacKilledTile(killer.tile());
                 }
             });
     }
@@ -352,7 +346,7 @@ public abstract class GameModel {
         if (level.hasFoodAt(tile)) {
             level.pac().endStarving();
             if (level.isEnergizerPosition(tile)) {
-                eventsThisFrame().setFoundEnergizerAtTile(tile);
+                THE_SIMULATION_STEP.setFoundEnergizerAtTile(tile);
                 onEnergizerEaten(tile);
             } else {
                 onPelletEaten(tile);
@@ -361,7 +355,7 @@ public abstract class GameModel {
             gateKeeper().ifPresent(gateKeeper -> gateKeeper.registerFoodEaten(level));
             if (isBonusReached()) {
                 activateNextBonus();
-                eventsThisFrame().setBonusIndex(level.nextBonusIndex());
+                THE_SIMULATION_STEP.setBonusIndex(level.nextBonusIndex());
             }
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_FOUND_FOOD, tile);
         } else {
@@ -377,7 +371,7 @@ public abstract class GameModel {
         final TickTimer timer = level.pac().powerTimer();
         timer.doTick();
         if (level.pac().isPowerFadingStarting(this)) {
-            eventsThisFrame().setPacStartsLosingPower();
+            THE_SIMULATION_STEP.setPacStartsLosingPower();
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (timer.hasExpired()) {
             timer.stop();
@@ -387,7 +381,7 @@ public abstract class GameModel {
             huntingTimer().start();
             Logger.info("Hunting timer restarted because Pac-Man lost power");
             level.ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
-            eventsThisFrame().setPacLostPower();
+            THE_SIMULATION_STEP.setPacLostPower();
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_LOST_POWER);
         }
     }
@@ -397,7 +391,7 @@ public abstract class GameModel {
             bonus.setEaten(120); //TODO is 2 seconds correct?
             scoreManager.scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-            eventsThisFrame().setBonusEatenTile(bonus.actor().tile());
+            THE_SIMULATION_STEP.setBonusEatenTile(bonus.actor().tile());
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.BONUS_EATEN);
         } else {
             bonus.update(this);

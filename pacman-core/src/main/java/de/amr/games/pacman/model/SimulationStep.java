@@ -16,8 +16,8 @@ import java.util.List;
  *
  * @author Armin Reichert
  */
-public class SimulationStepEvents {
-    private final long tick;
+public class SimulationStep {
+    private long       tick;
     private Vector2i   foundEnergizerAtTile;
     private int        bonusIndex = -1;
     private Vector2i   bonusEatenTile;
@@ -32,8 +32,21 @@ public class SimulationStepEvents {
     private String     ghostReleaseInfo;
     private final List<Ghost> killedGhosts = new ArrayList<>();
 
-    public SimulationStepEvents(long tick) {
+    public void init(long tick) {
         this.tick = tick;
+        foundEnergizerAtTile = null;
+        bonusIndex = -1;
+        bonusEatenTile = null;
+        pacGotPower = false;
+        pacStartsLosingPower = false;
+        pacLostPower = false;
+        pacKilledTile = null;
+        pacKiller = null;
+        extraLifeWon = false;
+        extraLifeScore = 0;
+        releasedGhost = null;
+        ghostReleaseInfo = null;
+        killedGhosts.clear();
     }
 
     public void setFoundEnergizerAtTile(Vector2i tile) {
@@ -129,7 +142,7 @@ public class SimulationStepEvents {
         return messages;
     }
 
-    public void print() {
+    public void log() {
         var messageList = createMessageList();
         if (!messageList.isEmpty()) {
             Logger.info("Simulation step #{}:", tick);

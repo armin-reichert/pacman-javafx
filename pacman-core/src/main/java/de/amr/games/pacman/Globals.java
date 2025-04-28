@@ -10,6 +10,7 @@ import de.amr.games.pacman.event.GameEventManager;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameException;
+import de.amr.games.pacman.model.SimulationStep;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -27,6 +28,7 @@ public interface Globals {
 
     CoinMechanism    THE_COIN_MECHANISM = new CoinMechanism();
     GameController   THE_GAME_CONTROLLER = new GameController();
+    SimulationStep   THE_SIMULATION_STEP = new SimulationStep();
     GameEventManager THE_GAME_EVENT_MANAGER = new GameEventManager();
     Random           THE_RNG = new Random();
 

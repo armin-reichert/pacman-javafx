@@ -9,7 +9,6 @@ import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.SimulationStepEvents;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
@@ -42,7 +41,6 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     private final Map<GameVariant, GameModel> registeredGameModels = new EnumMap<>(GameVariant.class);
     private final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>();
-    private SimulationStepEvents eventLog;
 
     public GameController() {
         super(GameState.values());
@@ -82,16 +80,5 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     public boolean isGameVariantSelected(GameVariant gameVariant) {
         return requireNonNull(gameVariant) == gameVariantPy.get();
-    }
-    public SimulationStepEvents eventsThisFrame() {
-        return eventLog;
-    }
-
-    public void newEventLog(long tick) {
-        eventLog = new SimulationStepEvents(tick);
-    }
-
-    public void printEventLog() {
-        eventLog.print();
     }
 }

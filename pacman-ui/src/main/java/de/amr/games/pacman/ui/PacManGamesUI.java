@@ -9,7 +9,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tilemap.editor.TileMapEditor;
 import de.amr.games.pacman.ui.dashboard.Dashboard;
-import de.amr.games.pacman.uilib.model3D.Model3D;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -19,21 +18,16 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.media.AudioClip;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
 import java.util.Arrays;
-import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.games.pacman.Globals.*;
@@ -67,9 +61,9 @@ public class PacManGamesUI implements GameUI {
 
     private void doSimulationStepAndUpdateGameScene() {
         try {
-            THE_GAME_CONTROLLER.newEventLog(THE_CLOCK.tickCount());
+            THE_SIMULATION_STEP.init(THE_CLOCK.tickCount());
             THE_GAME_CONTROLLER.update();
-            THE_GAME_CONTROLLER.printEventLog();
+            THE_SIMULATION_STEP.log();
         } catch (Exception x) {
             Logger.error(x);
             Logger.error("SOMETHING VERY BAD HAPPENED DURING SIMULATION STEP!");
