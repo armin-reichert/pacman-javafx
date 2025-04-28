@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import java.util.Map;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
+import static de.amr.games.pacman.Globals.checkUserDirsExistAndWritable;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.games.pacman.ui.Globals.*;
 
@@ -22,7 +23,7 @@ public class TengenMsPacMan_App extends Application {
 
     @Override
     public void init() {
-        Globals.checkIfUserDirectoriesExistAndAreWritable();
+        checkUserDirsExistAndWritable();
         THE_GAME_CONTROLLER.registerGameModel(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
         THE_GAME_CONTROLLER.gameVariantProperty().set(GameVariant.MS_PACMAN_TENGEN);
     }

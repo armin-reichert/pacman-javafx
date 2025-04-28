@@ -15,8 +15,7 @@ import javafx.stage.Stage;
 
 import java.util.Map;
 
-import static de.amr.games.pacman.Globals.CUSTOM_MAP_DIR;
-import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.ui.Globals.*;
 
 public class PacManXXL_App extends Application {
@@ -25,7 +24,7 @@ public class PacManXXL_App extends Application {
 
     @Override
     public void init() {
-        Globals.checkIfUserDirectoriesExistAndAreWritable();
+        checkUserDirsExistAndWritable();
         xxlMapSelector = new PacManXXL_MapSelector(CUSTOM_MAP_DIR);
         var pacManGameModel = new PacManXXL_PacMan_GameModel(xxlMapSelector);
         var msPacManGameModel = new PacManXXL_MsPacMan_GameModel(xxlMapSelector);

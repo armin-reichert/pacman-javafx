@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.ms_pacman;
 
-import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.DashboardID;
 import javafx.application.Application;
@@ -15,14 +14,14 @@ import javafx.stage.Stage;
 import java.util.Map;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.Globals.checkIfUserDirectoriesExistAndAreWritable;
+import static de.amr.games.pacman.Globals.checkUserDirsExistAndWritable;
 import static de.amr.games.pacman.ui.Globals.*;
 
 public class ArcadeMsPacMan_App extends Application {
 
     @Override
     public void init() {
-        checkIfUserDirectoriesExistAndAreWritable();
+        checkUserDirsExistAndWritable();
         THE_GAME_CONTROLLER.registerGameModel(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameModel());
         THE_GAME_CONTROLLER.gameVariantProperty().set(GameVariant.MS_PACMAN);
     }

@@ -26,38 +26,33 @@ import static java.util.Objects.requireNonNull;
  */
 public interface Globals {
 
-    CoinMechanism    THE_COIN_MECHANISM = new CoinMechanism();
-    GameController   THE_GAME_CONTROLLER = new GameController();
-    SimulationStep   THE_SIMULATION_STEP = new SimulationStep();
+    CoinMechanism    THE_COIN_MECHANISM     = new CoinMechanism();
+    GameController   THE_GAME_CONTROLLER    = new GameController();
     GameEventManager THE_GAME_EVENT_MANAGER = new GameEventManager();
-    Random           THE_RNG = new Random();
+    Random           THE_RNG                = new Random();
+    SimulationStep   THE_SIMULATION_STEP    = new SimulationStep();
 
-    boolean SIMULATE_OVERFLOW_BUG = true;
-
-    byte RED_GHOST_ID = 0,
-        PINK_GHOST_ID = 1,
-        CYAN_GHOST_ID = 2,
-        ORANGE_GHOST_ID = 3;
+    byte RED_GHOST_ID = 0, PINK_GHOST_ID = 1, CYAN_GHOST_ID = 2, ORANGE_GHOST_ID = 3;
 
     byte TICKS_PER_SECOND = 60;
 
-    /** Tile size (8px). */
-    int TS = 8;
+    boolean SIMULATE_ARCADE_OVERFLOW_BUG = true;
 
-    /** Half tile size (4px). */
-    int HTS = 4;
+    /** Tile size=8px, half tile size=4px. */
+    int TS = 8, HTS = 4;
 
     /**
-     * Directory under which application stores high scores, maps etc. (default: <code>&lt;user_home/.pacmanfx&gt;</code>).
+     * Directory under which high scores, maps etc. are stored.
+     * <p>Default: <code>&lt;user_home&gt;/.pacmanfx</code></p>
      */
     File HOME_DIR = new File(System.getProperty("user.home"), ".pacmanfx");
 
     /**
-     * Directory where custom maps are stored (default: <code>&lt;home_directory&gt;/maps</code>).
+     * Directory where custom maps are stored (default: <code>&lt;pacmanfx_home_dir&gt;/maps</code>).
      */
     File CUSTOM_MAP_DIR = new File(HOME_DIR, "maps");
 
-    static void checkIfUserDirectoriesExistAndAreWritable() {
+    static void checkUserDirsExistAndWritable() {
         String homeDirDesc = "Pac-Man FX home directory";
         String customMapDirDesc = "Pac-Man FX custom map directory";
         boolean success = ensureDirectoryExistsAndIsWritable(HOME_DIR, homeDirDesc);

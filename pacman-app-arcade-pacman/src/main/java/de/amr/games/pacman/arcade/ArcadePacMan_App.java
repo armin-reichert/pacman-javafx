@@ -14,14 +14,14 @@ import javafx.stage.Stage;
 import java.util.Map;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.Globals.checkIfUserDirectoriesExistAndAreWritable;
+import static de.amr.games.pacman.Globals.checkUserDirsExistAndWritable;
 import static de.amr.games.pacman.ui.Globals.*;
 
 public class ArcadePacMan_App extends Application {
 
     @Override
     public void init() {
-        checkIfUserDirectoriesExistAndAreWritable();
+        checkUserDirsExistAndWritable();
         THE_GAME_CONTROLLER.registerGameModel(GameVariant.PACMAN, new ArcadePacMan_GameModel());
         THE_GAME_CONTROLLER.gameVariantProperty().set(GameVariant.PACMAN);
     }
