@@ -122,7 +122,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
             Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
-            gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
+            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), font);
         }
         gr.drawSpriteScaled(blinkyStretching.currentSprite(), tiles_to_px(14), tiles_to_px(19) + 3);
         gr.drawAnimatedActor(blinky);

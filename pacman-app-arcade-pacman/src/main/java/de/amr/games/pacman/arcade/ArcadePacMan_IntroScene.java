@@ -135,7 +135,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(game().scoreManager(), WHITE, font);
+            gr.drawScores(game(), WHITE, font);
         }
         TickTimer timer = sceneController.state().timer();
         drawGallery(font);

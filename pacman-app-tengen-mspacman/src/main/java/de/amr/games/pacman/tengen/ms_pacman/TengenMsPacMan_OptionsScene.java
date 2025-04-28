@@ -190,7 +190,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         var values = MapCategory.values();
         int current = category.ordinal(), prev = (current == 0) ? values.length - 1 :  current - 1;
         tengenGame.setMapCategory(values[prev]);
-        tengenGame.scoreManager().resetHighScore();
+        tengenGame.resetHighScore();
         optionValueChanged();
     }
 
@@ -199,7 +199,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         var values = MapCategory.values();
         int current = category.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         tengenGame.setMapCategory(values[next]);
-        tengenGame.scoreManager().resetHighScore();
+        tengenGame.resetHighScore();
         optionValueChanged();
     }
 
@@ -208,7 +208,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         var values = Difficulty.values();
         int current = difficulty.ordinal(), prev = (current == 0) ? values.length - 1 : current - 1;
         tengenGame.setDifficulty(values[prev]);
-        tengenGame.scoreManager().resetHighScore();
+        tengenGame.resetHighScore();
         optionValueChanged();
     }
 
@@ -217,7 +217,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         var values = Difficulty.values();
         int current = difficulty.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         tengenGame.setDifficulty(values[next]);
-        tengenGame.scoreManager().resetHighScore();
+        tengenGame.resetHighScore();
         optionValueChanged();
     }
 
@@ -245,7 +245,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
+            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), font);
         }
         TengenMsPacMan_Renderer2D r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();

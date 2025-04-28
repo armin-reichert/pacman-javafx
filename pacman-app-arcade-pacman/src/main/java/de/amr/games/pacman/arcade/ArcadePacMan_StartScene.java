@@ -7,7 +7,6 @@ package de.amr.games.pacman.arcade;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.arcade.Arcade;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.input.KeyCode;
@@ -57,7 +56,7 @@ public class ArcadePacMan_StartScene extends GameScene2D {
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font8);
+            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), font8);
         }
         gr.fillTextAtScaledPosition("PUSH START BUTTON", ORANGE, font8, tiles_to_px(6), tiles_to_px(17));
         gr.fillTextAtScaledPosition("1 PLAYER ONLY", CYAN, font8, tiles_to_px(8), tiles_to_px(21));

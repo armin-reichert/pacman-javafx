@@ -48,7 +48,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(game().scoreManager(), Color.web(Arcade.Palette.WHITE), font);
+            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), font);
         }
         GameSpriteSheet spriteSheet = gr.spriteSheet();
         Color orange = Color.web(Arcade.Palette.ORANGE), red = Color.web(Arcade.Palette.RED), white = Color.web(Arcade.Palette.WHITE);

@@ -122,7 +122,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
             if (nv.intValue() > 0) level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAtNextOccasion);
         });
-        scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman_tengen.xml"));
+        setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman_tengen.xml"));
         autopilot = new RuleBasedPacSteering(this);
         demoLevelSteering = new RuleBasedPacSteering(this);
     }
@@ -150,15 +150,15 @@ public class TengenMsPacMan_GameModel extends GameModel {
         levelCounter.reset();
         playingProperty().set(false);
         boosterActive = false;
-        scoreManager.loadHighScore();
-        scoreManager.resetScore();
+        loadHighScore();
+        resetScore();
         gateKeeper.reset();
     }
 
     @Override
     public void endGame() {
         playingProperty().set(false);
-        scoreManager.updateHighScore();
+        updateHighScore();
         if (level != null) {
             level.showMessage(GameLevel.Message.GAME_OVER);
         }
@@ -282,7 +282,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public void startLevel() {
         super.startLevel();
         // Score runs also in demo level in contrast to Arcade games
-        scoreManager.setScoreEnabled(true);
+        setScoreEnabled(true);
     }
 
     @Override
@@ -554,13 +554,13 @@ public class TengenMsPacMan_GameModel extends GameModel {
     @Override
     protected void onPelletEaten(Vector2i tile) {
         //TODO does Ms. Pac-Man slow down after eating as in Arcade game?
-        scoreManager.scorePoints(PELLET_VALUE);
+        scorePoints(PELLET_VALUE);
     }
 
     @Override
     protected void onEnergizerEaten(Vector2i tile) {
         //TODO does Ms. Pac-Man slow down after eating as in Arcade game?
-        scoreManager.scorePoints(ENERGIZER_VALUE);
+        scorePoints(ENERGIZER_VALUE);
         Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
         level.victims().clear();
         long powerTicks = pacPowerTicks();
@@ -596,7 +596,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         int points = 100 * KILLED_GHOST_VALUE_MULTIPLIER[killedSoFar];
         level.victims().add(ghost);
         ghost.eaten(killedSoFar);
-        scoreManager.scorePoints(points);
+        scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
     }
 

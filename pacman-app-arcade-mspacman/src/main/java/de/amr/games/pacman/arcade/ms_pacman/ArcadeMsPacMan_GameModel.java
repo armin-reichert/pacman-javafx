@@ -55,7 +55,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeXMan_GameModel {
 
         levelCounter = new ArcadePacMan_LevelCounter();
 
-        scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman.xml"));
+        setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman.xml"));
         extraLifeScores = List.of(EXTRA_LIFE_SCORE);
 
         /*

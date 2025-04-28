@@ -432,7 +432,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
             Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
-            gr.drawScores(game().scoreManager(), nesPaletteColor(0x20), font);
+            gr.drawScores(game(), nesPaletteColor(0x20), font);
         }
         GameLevel level = game().level().orElse(null);
         // Scene is drawn already for 2 ticks before level has been created

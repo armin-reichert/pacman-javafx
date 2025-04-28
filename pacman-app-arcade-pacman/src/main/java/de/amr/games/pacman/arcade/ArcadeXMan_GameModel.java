@@ -126,8 +126,8 @@ public abstract class ArcadeXMan_GameModel extends GameModel {
         level = null;
         cruiseElroy = 0;
         levelCounter().reset();
-        scoreManager().loadHighScore();
-        scoreManager.resetScore();
+        loadHighScore();
+        resetScore();
         gateKeeper.reset();
         huntingTimer.reset();
     }
@@ -212,14 +212,14 @@ public abstract class ArcadeXMan_GameModel extends GameModel {
 
     @Override
     protected void onPelletEaten(Vector2i tile) {
-        scoreManager.scorePoints(PELLET_VALUE);
+        scorePoints(PELLET_VALUE);
         level.pac().setRestingTicks(1);
         checkCruiseElroy();
     }
 
     @Override
     protected void onEnergizerEaten(Vector2i tile) {
-        scoreManager().scorePoints(ENERGIZER_VALUE);
+        scorePoints(ENERGIZER_VALUE);
         Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
         level.pac().setRestingTicks(3);
         Logger.info("Resting 3 ticks");
@@ -265,11 +265,11 @@ public abstract class ArcadeXMan_GameModel extends GameModel {
         int points = 100 * KILLED_GHOST_VALUE_MULTIPLIER[killedSoFar];
         level.victims().add(ghost);
         ghost.eaten(killedSoFar);
-        scoreManager.scorePoints(points);
+        scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
         if (level.victims().size() == 16) {
             int extraPoints = POINTS_ALL_GHOSTS_EATEN_IN_LEVEL;
-            scoreManager.scorePoints(extraPoints);
+            scorePoints(extraPoints);
             Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, level.number());
         }
     }
@@ -280,7 +280,7 @@ public abstract class ArcadeXMan_GameModel extends GameModel {
         if (!THE_COIN_MECHANISM.isEmpty()) {
             THE_COIN_MECHANISM.consumeCoin();
         }
-        scoreManager().updateHighScore();
+        updateHighScore();
         if (level != null) {
             level.showMessage(GameLevel.Message.GAME_OVER);
         }

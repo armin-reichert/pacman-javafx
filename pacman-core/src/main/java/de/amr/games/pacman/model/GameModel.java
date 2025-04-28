@@ -17,6 +17,10 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import org.tinylog.Logger;
 
+import java.io.File;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +32,7 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  *
  * @author Armin Reichert
  */
-public abstract class GameModel {
+public abstract class GameModel implements ScoreManager {
 
     private final BooleanProperty cutScenesEnabledPy = new SimpleBooleanProperty(true);
     private final IntegerProperty initialLivesPy = new SimpleIntegerProperty(3);
@@ -36,19 +40,25 @@ public abstract class GameModel {
     private final BooleanProperty playingPy = new SimpleBooleanProperty(false);
     private final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(false);
 
-    protected ScoreManager scoreManager;
     protected GameLevel level;
     protected List<Integer> extraLifeScores = List.of();
 
+    // Score management
+    private final Score score = new Score();
+    private final Score highScore = new Score();
+    private final BooleanProperty scoreEnabledPy = new SimpleBooleanProperty(true);
+    private final BooleanProperty highScoreEnabledPy= new SimpleBooleanProperty(true);
+    private File highScoreFile;
+
     protected GameModel() {
-        scoreManager = new ScoreManager();
-        scoreManager.score().pointsProperty().addListener((py, ov, nv) -> {
+        score.pointsProperty().addListener((py, ov, nv) -> {
             for (int extraLifeScore : extraLifeScores) {
                 // has extra life score been crossed?
                 if (ov.intValue() < extraLifeScore && nv.intValue() >= extraLifeScore) {
                     THE_SIMULATION_STEP.setExtraLifeWon();
                     THE_SIMULATION_STEP.setExtraLifeScore(extraLifeScore);
                     addLives(1);
+                    // fire event such that UI can do its duty (sound, visual effects etc.)
                     GameEvent event = new GameEvent(this, GameEventType.SPECIAL_SCORE_REACHED);
                     event.setPayload("score", extraLifeScore);
                     THE_GAME_EVENT_MANAGER.publishEvent(event);
@@ -132,8 +142,6 @@ public abstract class GameModel {
 
     public abstract <T extends LevelCounter> T levelCounter();
 
-    public ScoreManager scoreManager() { return scoreManager; }
-
     public BooleanProperty cutScenesEnabledProperty() { return cutScenesEnabledPy; }
 
     public IntegerProperty initialLivesProperty() { return initialLivesPy; }
@@ -170,9 +178,9 @@ public abstract class GameModel {
     public final void createLevel(int levelNumber, LevelData data) {
         buildLevel(levelNumber, data);
         level.setDemoLevel(false);
-        scoreManager.setLevelNumber(levelNumber);
-        scoreManager.setScoreEnabled(!level.isDemoLevel());
-        scoreManager.setHighScoreEnabled(!level.isDemoLevel());
+        setScoreLevelNumber(levelNumber);
+        setScoreEnabled(!level.isDemoLevel());
+        setHighScoreEnabled(!level.isDemoLevel());
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(levelNumber));
         huntingTimer().reset();
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
@@ -389,7 +397,7 @@ public abstract class GameModel {
     private void updateBonus(Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE && areActorsColliding(level.pac(), bonus.actor())) {
             bonus.setEaten(120); //TODO is 2 seconds correct?
-            scoreManager.scorePoints(bonus.points());
+            scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
             THE_SIMULATION_STEP.setBonusEatenTile(bonus.actor().tile());
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.BONUS_EATEN);
@@ -397,4 +405,76 @@ public abstract class GameModel {
             bonus.update(this);
         }
     }
+
+    // Score management
+    public void scorePoints(int points) {
+        if (!isScoreEnabled()) {
+            return;
+        }
+        int oldScore = score.points();
+        int newScore = oldScore + points;
+        if (isHighScoreEnabled()) {
+            if (newScore > highScore.points()) {
+                highScore.setPoints(newScore);
+                highScore.setLevelNumber(score.levelNumber());
+                highScore.setDate(LocalDate.now());
+            }
+        }
+        score.setPoints(newScore);
+    }
+
+    public void loadHighScore() {
+        highScore.read(highScoreFile);
+        Logger.info("Highscore loaded. File: '{}', {} points, level {}",
+            highScoreFile, highScore.points(), highScore.levelNumber());
+    }
+
+    public void updateHighScore() {
+        var oldHighScore = new Score();
+        oldHighScore.read(highScoreFile);
+        if (highScore.points() > oldHighScore.points()) {
+            highScore.save(highScoreFile, "High Score, last update %s".formatted(LocalTime.now()));
+        }
+    }
+
+    public void resetScore() {
+        score.reset();
+    }
+
+    public void resetHighScore() {
+        new Score().save(highScoreFile, "High Score, %s".formatted(LocalDateTime.now()));
+    }
+
+    public Score score() {
+        return score;
+    }
+
+    public Score highScore() {
+        return highScore;
+    }
+
+    public BooleanProperty scoreEnabledProperty() { return scoreEnabledPy; }
+
+    public boolean isScoreEnabled() {
+        return scoreEnabledPy.get();
+    }
+
+    public void setScoreEnabled(boolean enabled) {
+        scoreEnabledProperty().set(enabled);
+    }
+
+    public BooleanProperty highScoreEnabledProperty() { return highScoreEnabledPy; }
+
+    public boolean isHighScoreEnabled() { return highScoreEnabledProperty().get(); }
+
+    public void setHighScoreEnabled(boolean enabled) { highScoreEnabledProperty().set(enabled); }
+
+    public void setHighScoreFile(File highScoreFile) {
+        this.highScoreFile = highScoreFile;
+    }
+
+    public void setScoreLevelNumber(int levelNumber) {
+        score.setLevelNumber(levelNumber);
+    }
+
 }
