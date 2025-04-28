@@ -16,8 +16,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.Globals.TS;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_GHOST_NORMAL;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.HEART_SPRITE;
@@ -73,8 +72,8 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
         mrPacMan = new Pac();
         msPacMan = new Pac();
-        inky = TengenMsPacMan_GameModel.inky();
-        pinky = TengenMsPacMan_GameModel.pinky();
+        inky = new Ghost(CYAN_GHOST_ID, "Inky");
+        pinky = new Ghost(PINK_GHOST_ID, "Pinky");
         heart = new Actor2D();
 
         var spriteSheet = (TengenMsPacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();

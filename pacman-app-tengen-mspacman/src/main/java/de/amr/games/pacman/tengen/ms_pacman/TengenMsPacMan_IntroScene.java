@@ -23,8 +23,7 @@ import org.tinylog.Logger;
 
 import java.util.BitSet;
 
-import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.Globals.TS;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_GHOST_NORMAL;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
@@ -213,10 +212,10 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 intro.msPacMan.setVisible(true);
 
                 intro.ghosts = new Ghost[] {
-                    TengenMsPacMan_GameModel.blinky(),
-                    TengenMsPacMan_GameModel.inky(),
-                    TengenMsPacMan_GameModel.pinky(),
-                    TengenMsPacMan_GameModel.sue()
+                    new Ghost(RED_GHOST_ID, "Blinky"),
+                    new Ghost(CYAN_GHOST_ID, "Inky"),
+                    new Ghost(PINK_GHOST_ID, "Pinky"),
+                    new Ghost(ORANGE_GHOST_ID, "Sue")
                 };
                 for (Ghost ghost : intro.ghosts) {
                     ghost.setPosition(TS * 33, ACTOR_Y);

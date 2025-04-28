@@ -33,19 +33,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class TengenMsPacMan_GameModel extends GameModel {
 
-    public static Ghost blinky() {
-        return new Ghost(RED_GHOST_ID, "Blinky");
-    }
-    public static Ghost pinky() {
-        return new Ghost(PINK_GHOST_ID, "Pinky");
-    }
-    public static Ghost inky() {
-        return new Ghost(CYAN_GHOST_ID, "Inky");
-    }
-    public static Ghost sue() {
-        return new Ghost(ORANGE_GHOST_ID, "Sue");
-    }
-
     private static final byte MIN_LEVEL_NUMBER = 1;
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
@@ -419,7 +406,12 @@ public class TengenMsPacMan_GameModel extends GameModel {
         pac.setGameLevel(level);
         pac.reset();
 
-        var ghosts = new Ghost[] { blinky(), pinky(), inky(), sue() };
+        var ghosts = new Ghost[] {
+            new Ghost(RED_GHOST_ID, "Blinky"),
+            new Ghost(PINK_GHOST_ID, "Pinky"),
+            new Ghost(CYAN_GHOST_ID, "Inky"),
+            new Ghost(ORANGE_GHOST_ID, "Sue")
+        };
         Stream.of(ghosts).forEach(ghost -> {
             ghost.setGameLevel(level);
             ghost.setRevivalPosition(level.ghostStartPosition(ghost.id()));
