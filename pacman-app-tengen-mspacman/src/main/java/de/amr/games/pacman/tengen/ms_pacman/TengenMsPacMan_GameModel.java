@@ -30,6 +30,7 @@ import static java.util.Objects.requireNonNull;
  * Ms. Pac-Man (Tengen).
  *
  * @author Armin Reichert
+ * @see <a href="https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly">Ms.Pac-Man-NES-Tengen-Disassembly</a>
  */
 public class TengenMsPacMan_GameModel extends GameModel {
 
@@ -274,9 +275,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public long pacPowerTicks() {
-        if (level == null) {
-            return 0;
-        }
+        if (level == null) return 0;
         int index = level.number() <= 19 ? level.number() - 1 : 18;
         double seconds = POWER_PELLET_TIMES[index] / 16.0;
         return (long) (seconds * 60); // 60 ticks/sec
@@ -299,18 +298,12 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public float pacPowerSpeed() {
-        if (level != null) {
-            //TODO is this correct?
-            return 1.1f * level.pac().baseSpeed();
-        }
-        return 0;
+        //TODO is this correct?
+        return 1.1f * level.pac().baseSpeed();
     }
 
     @Override
     public float ghostAttackSpeed(Ghost ghost) {
-        if (level == null) {
-            return 0;
-        }
         if (level.isTunnel(ghost.tile())) {
             return ghostTunnelSpeed(ghost);
         }
