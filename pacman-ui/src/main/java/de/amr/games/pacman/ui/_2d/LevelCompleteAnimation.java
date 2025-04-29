@@ -11,33 +11,45 @@ import org.tinylog.Logger;
 import static de.amr.games.pacman.Globals.inClosedRange;
 import static java.util.Objects.requireNonNull;
 
-//TODO use Timeline?
+/**
+ * Animation played when level is complete. Consists of the following steps:
+ * <pre>
+ *     Time (sec)         Action
+ *     0.0                Start animation
+ *     1.5                Hide ghosts
+ *     2.0                Start n flashing cycles, each cycle takes 1/3 sec
+ *     2.0 + n * 1/3 sec  Wait for 1 sec, then run the action specified for
+ * </pre>
+ * After each flashing cycle, the flashing index is incremented. This is used by the Tengen play scene renderer to
+ * draw a different map color for each flashing cycle (only for the non-ARCADE maps starting at level 28)
+ */
 public class LevelCompleteAnimation {
 
     private final GameLevel level;
 
-    private final int flashingStartTick = 120;
-    private final int ticksAfterFlashing = 60;
-    private final int ghostsHiddenTick = 90;
-    private final int singleFlashTicks = 20;
+    private static final int TICK_HIDE_GHOSTS = 90;
+    private static final int TICK_START_FLASHING_CYCLES = 120;
 
-    private final int flashingEndTick;
-    private final int lastTick;
+    private static final int TICKS_AFTER_FLASHING = 60;
+    private static final int TICKS_ONE_FLASHING_CYCLE = 20;
 
-    private int t;
+    private final int tickEndFlashing;
+    private final int tickEndAnimation;
+
+    private int tick;
     private int flashingIndex;
     private boolean running;
-    private Runnable onFinished;
+    private Runnable actionOnFinished;
 
     public LevelCompleteAnimation(GameLevel level) {
         this.level = requireNonNull(level);
-        t = 0;
+        tick = 0;
         flashingIndex = 0;
         running = false;
-        flashingEndTick = flashingStartTick + level.data().numFlashes() * singleFlashTicks - 1;
-        lastTick = flashingEndTick + ticksAfterFlashing;
+        tickEndFlashing = TICK_START_FLASHING_CYCLES + level.data().numFlashes() * TICKS_ONE_FLASHING_CYCLE - 1;
+        tickEndAnimation = tickEndFlashing + TICKS_AFTER_FLASHING;
         Logger.info("Created: num-flashes={} single-flash-duration={} flash-start={} flash-after={} total={} index={}",
-            level.data().numFlashes(), singleFlashTicks, flashingStartTick, ticksAfterFlashing, lastTick + 1, flashingIndex);
+            level.data().numFlashes(), TICKS_ONE_FLASHING_CYCLE, TICK_START_FLASHING_CYCLES, TICKS_AFTER_FLASHING, tickEndAnimation + 1, flashingIndex);
     }
 
     public void start() {
@@ -47,38 +59,38 @@ public class LevelCompleteAnimation {
     public void tick() {
         if (!running) return;
 
-        if (t == lastTick) {
+        if (tick == tickEndAnimation) {
             running = false;
-            if (onFinished != null) onFinished.run();
+            if (actionOnFinished != null) actionOnFinished.run();
             return;
         }
-        if (t == ghostsHiddenTick) {
+        if (tick == TICK_HIDE_GHOSTS) {
             level.ghosts().forEach(Ghost::hide);
         }
-        if (isFlashing()) {
-            int flashingTick = t - flashingStartTick;
-            if (flashingTick > 0 && flashingTick % singleFlashTicks == 0) {
+        if (inFlashingPhase()) {
+            int flashingTick = tick - TICK_START_FLASHING_CYCLES;
+            if (flashingTick > 0 && flashingTick % TICKS_ONE_FLASHING_CYCLE == 0) {
                 flashingIndex += 1;
-                Logger.debug("Flashing index -> {} on tick {}", flashingIndex, t);
+                Logger.debug("Flashing index -> {} on tick {}", flashingIndex, tick);
             }
         }
-        ++t;
-        Logger.debug("Tick {}: Level complete animation: {} {}", t,
-            isFlashing() ? "flashing" : "",
-            isInHighlightPhase() ? "highlight" : "");
+        ++tick;
+        Logger.debug("Tick {}: Level complete animation: {} {}", tick,
+            inFlashingPhase() ? "flashing" : "",
+            inHighlightPhase() ? "highlight" : "");
     }
 
-    public void setOnFinished(Runnable onFinished) {
-        this.onFinished = onFinished;
+    public void setActionOnFinished(Runnable action) {
+        actionOnFinished = action;
     }
 
-    public boolean isFlashing() {
-        return inClosedRange(t, flashingStartTick, flashingEndTick);
+    public boolean inFlashingPhase() {
+        return inClosedRange(tick, TICK_START_FLASHING_CYCLES, tickEndFlashing);
+    }
+
+    public boolean inHighlightPhase() {
+        return inFlashingPhase() && (tick - TICK_START_FLASHING_CYCLES) % TICKS_ONE_FLASHING_CYCLE >= TICKS_ONE_FLASHING_CYCLE / 2;
     }
 
     public int flashingIndex() { return flashingIndex; }
-
-    public boolean isInHighlightPhase() {
-        return isFlashing() && (t - flashingStartTick) % singleFlashTicks >= singleFlashTicks / 2;
-    }
 }

@@ -356,7 +356,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 game().level().ifPresent(level -> {
                     THE_SOUND.stopAll();
                     levelCompleteAnimation = new LevelCompleteAnimation(level);
-                    levelCompleteAnimation.setOnFinished(THE_GAME_CONTROLLER::letCurrentStateExpire);
+                    levelCompleteAnimation.setActionOnFinished(THE_GAME_CONTROLLER::letCurrentStateExpire);
                     levelCompleteAnimation.start();
                 });
 
@@ -487,9 +487,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         final var tr = (TengenMsPacMan_Renderer2D) gr;
         final TengenMsPacMan_GameModel tengenGame = game();
 
-        final boolean flashing = levelCompleteAnimation != null && levelCompleteAnimation.isFlashing();
+        final boolean flashing = levelCompleteAnimation != null && levelCompleteAnimation.inFlashingPhase();
         if (flashing) {
-            if (levelCompleteAnimation.isInHighlightPhase()) {
+            if (levelCompleteAnimation.inHighlightPhase()) {
                 tr.drawHighlightedWorld(level, 0, 3 * TS, levelCompleteAnimation.flashingIndex());
             } else {
                 tr.drawWorld(level, 0,  3 * TS);

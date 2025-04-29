@@ -149,7 +149,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         // Draw maze
         gr.applyMapSettings(level.worldMap());
         gr.drawMaze(level, 0, 3 * TS, backgroundColor(),
-            levelCompleteAnimation != null && levelCompleteAnimation.isInHighlightPhase(),
+            levelCompleteAnimation != null && levelCompleteAnimation.inHighlightPhase(),
             level.blinking().isOn());
 
         if (level.message() != null) {
@@ -259,7 +259,7 @@ public class ArcadePlayScene2D extends GameScene2D {
             game().level().ifPresent(level -> {
                 THE_SOUND.stopAll();
                 levelCompleteAnimation = new LevelCompleteAnimation(level);
-                levelCompleteAnimation.setOnFinished(THE_GAME_CONTROLLER::letCurrentStateExpire);
+                levelCompleteAnimation.setActionOnFinished(THE_GAME_CONTROLLER::letCurrentStateExpire);
                 levelCompleteAnimation.start();
             });
         }
