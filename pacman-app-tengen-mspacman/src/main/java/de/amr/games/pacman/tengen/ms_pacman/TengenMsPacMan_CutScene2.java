@@ -50,7 +50,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void bindActions() {
-        bind(THE_GAME_CONTROLLER::terminateCurrentState, THE_JOYPAD.key(JoypadButtonID.START));
+        bind(THE_GAME_CONTROLLER::letCurrentStateExpire, THE_JOYPAD.key(JoypadButtonID.START));
     }
 
     @Override
@@ -136,7 +136,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
             pacMan.setSpeed(4.0f);
         }
         else if (t == 1380) {
-            THE_GAME_CONTROLLER.terminateCurrentState();
+            THE_GAME_CONTROLLER.letCurrentStateExpire();
             return;
         }
         pacMan.move();

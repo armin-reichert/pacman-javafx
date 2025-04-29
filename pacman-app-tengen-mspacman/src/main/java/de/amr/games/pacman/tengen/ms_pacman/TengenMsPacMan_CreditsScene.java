@@ -32,7 +32,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     @Override
     public void update() {
         if (gameState().timer().atSecond(DISPLAY_SECONDS)) {
-            THE_GAME_CONTROLLER.terminateCurrentState();
+            THE_GAME_CONTROLLER.letCurrentStateExpire();
         }
     }
 

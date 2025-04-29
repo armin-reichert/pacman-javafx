@@ -260,7 +260,7 @@ public class ArcadePlayScene2D extends GameScene2D {
                 THE_SOUND.stopAll();
                 levelCompleteAnimation = new LevelCompleteAnimation(level.data().numFlashes(), 10);
                 levelCompleteAnimation.setOnHideGhosts(() -> level.ghosts().forEach(Ghost::hide));
-                levelCompleteAnimation.setOnFinished(THE_GAME_CONTROLLER::terminateCurrentState);
+                levelCompleteAnimation.setOnFinished(THE_GAME_CONTROLLER::letCurrentStateExpire);
                 levelCompleteAnimation.start();
             });
         }
@@ -301,7 +301,7 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     @Override
     public void onPacDead(GameEvent e) {
-        THE_GAME_CONTROLLER.terminateCurrentState();
+        THE_GAME_CONTROLLER.letCurrentStateExpire();
     }
 
     @Override

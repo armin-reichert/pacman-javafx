@@ -35,7 +35,6 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -164,6 +163,53 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     }
 
     @Override
+    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e) {
+        List<MenuItem> items = new ArrayList<>();
+        // Switching scene display mode
+        var miScaledToFit = new RadioMenuItem(THE_ASSETS.text("scaled_to_fit"));
+        miScaledToFit.selectedProperty().addListener(
+            (py,ov,nv) -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(nv? SceneDisplayMode.SCALED_TO_FIT:SceneDisplayMode.SCROLLING));
+        PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.addListener((py, ov, nv) -> miScaledToFit.setSelected(nv == SceneDisplayMode.SCALED_TO_FIT));
+        items.add(miScaledToFit);
+
+        var miScrolling = new RadioMenuItem(THE_ASSETS.text("scrolling"));
+        miScrolling.selectedProperty().addListener(
+            (py,ov,nv) -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(nv? SceneDisplayMode.SCROLLING:SceneDisplayMode.SCALED_TO_FIT));
+        PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.addListener((py, ov, nv) -> miScrolling.setSelected(nv == SceneDisplayMode.SCROLLING));
+        items.add(miScrolling);
+
+        ToggleGroup exclusion = new ToggleGroup();
+        miScaledToFit.setToggleGroup(exclusion);
+        miScrolling.setToggleGroup(exclusion);
+        if (PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.get() == SceneDisplayMode.SCALED_TO_FIT) {
+            miScaledToFit.setSelected(true);
+        } else {
+            miScrolling.setSelected(true);
+        }
+        items.add(Ufx.contextMenuTitleItem(THE_ASSETS.text("pacman")));
+
+        var miAutopilot = new CheckMenuItem(THE_ASSETS.text("autopilot"));
+        miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
+        items.add(miAutopilot);
+
+        var miImmunity = new CheckMenuItem(THE_ASSETS.text("immunity"));
+        miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
+        items.add(miImmunity);
+
+        items.add(new SeparatorMenuItem());
+
+        var miMuted = new CheckMenuItem(THE_ASSETS.text("muted"));
+        miMuted.selectedProperty().bindBidirectional(THE_SOUND.mutedProperty());
+        items.add(miMuted);
+
+        var miQuit = new MenuItem(THE_ASSETS.text("quit"));
+        miQuit.setOnAction(ae -> GameAction.SHOW_START_VIEW.execute());
+        items.add(miQuit);
+
+        return items;
+    }
+
+    @Override
     public void setCanvas(Canvas canvas) { /* ignore */ }
 
     public ObjectProperty<SceneDisplayMode> displayModeProperty() {
@@ -180,6 +226,21 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         int worldTilesY = game().level().map(level -> level.worldMap().numRows()).orElse(NES_TILES.y());
         double dy = scaling * (worldTilesY - 43) * HTS;
         fixedCamera.setTranslateY(dy);
+    }
+
+    private void setJoypadKeyBindings(GameLevel level) {
+        if (level.isDemoLevel()) {
+            bind(QUIT_DEMO_LEVEL, THE_JOYPAD.key(JoypadButtonID.START));
+        } else {
+            bind(GameAction.PLAYER_UP,    THE_JOYPAD.key(JoypadButtonID.UP),    control(KeyCode.UP));
+            bind(GameAction.PLAYER_DOWN,  THE_JOYPAD.key(JoypadButtonID.DOWN),  control(KeyCode.DOWN));
+            bind(GameAction.PLAYER_LEFT,  THE_JOYPAD.key(JoypadButtonID.LEFT),  control(KeyCode.LEFT));
+            bind(GameAction.PLAYER_RIGHT, THE_JOYPAD.key(JoypadButtonID.RIGHT), control(KeyCode.RIGHT));
+            bind(TengenMsPacMan_GameAction.TOGGLE_PAC_BOOSTER,
+                THE_JOYPAD.key(JoypadButtonID.A), THE_JOYPAD.key(JoypadButtonID.B));
+            bindCheatActions();
+        }
+        enableActionBindings(THE_KEYBOARD);
     }
 
     @Override
@@ -289,21 +350,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         game().level().map(GameLevel::worldMap).ifPresent(worldMap -> gr.applyMapSettings(worldMap));
     }
 
-    private void setJoypadKeyBindings(GameLevel level) {
-        if (level.isDemoLevel()) {
-            bind(QUIT_DEMO_LEVEL, THE_JOYPAD.key(JoypadButtonID.START));
-        } else {
-            bind(GameAction.PLAYER_UP,    THE_JOYPAD.key(JoypadButtonID.UP),    control(KeyCode.UP));
-            bind(GameAction.PLAYER_DOWN,  THE_JOYPAD.key(JoypadButtonID.DOWN),  control(KeyCode.DOWN));
-            bind(GameAction.PLAYER_LEFT,  THE_JOYPAD.key(JoypadButtonID.LEFT),  control(KeyCode.LEFT));
-            bind(GameAction.PLAYER_RIGHT, THE_JOYPAD.key(JoypadButtonID.RIGHT), control(KeyCode.RIGHT));
-            bind(TengenMsPacMan_GameAction.TOGGLE_PAC_BOOSTER,
-                THE_JOYPAD.key(JoypadButtonID.A), THE_JOYPAD.key(JoypadButtonID.B));
-            bindCheatActions();
-        }
-        enableActionBindings(THE_KEYBOARD);
-    }
-
     @Override
     public void onEnterGameState(GameState state) {
         switch (state) {
@@ -367,7 +413,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void onPacDead(GameEvent e) {
         movingCamera.focusTopOfScene();
-        THE_GAME_CONTROLLER.terminateCurrentState();
+        THE_GAME_CONTROLLER.letCurrentStateExpire();
     }
 
     @Override
@@ -431,46 +477,51 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     protected void drawSceneContent() {
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
+
         if (game().isScoreVisible()) {
-            Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
-            gr.drawScores(game(), nesPaletteColor(0x20), font);
+            gr.drawScores(game(), nesPaletteColor(0x20), THE_ASSETS.arcadeFontAtSize(scaled(TS)));
         }
-        GameLevel level = game().level().orElse(null);
-        // Scene is drawn already for 2 ticks before level has been created
+
+        final GameLevel level = game().level().orElse(null);
         if (level == null) {
+            // Scene is drawn already for 2 ticks before level has been created
             Logger.warn("Tick {}: Game level not yet available, scene content not drawn", THE_CLOCK.tickCount());
             return;
         }
 
-        var tr = (TengenMsPacMan_Renderer2D) gr;
-        TengenMsPacMan_GameModel game = game();
+        final var tr = (TengenMsPacMan_Renderer2D) gr;
+        final TengenMsPacMan_GameModel tengenGame = game();
 
-        boolean flashing = levelCompleteAnimation != null && levelCompleteAnimation.isFlashing();
-        if (flashing && levelCompleteAnimation.isInHighlightPhase()) {
-            tr.drawMapHighlighted(level, 0, 3 * TS, levelCompleteAnimation.flashingIndex());
-        } else {
-            //TODO in the original game, the message is drawn under the maze image but over the pellets!
+        final boolean flashing = levelCompleteAnimation != null && levelCompleteAnimation.isFlashing();
+        if (flashing) {
+            if (levelCompleteAnimation.isInHighlightPhase()) {
+                tr.drawHighlightedWorld(level, 0, 3 * TS, levelCompleteAnimation.flashingIndex());
+            } else {
+                tr.drawWorld(level, 0,  3 * TS);
+                tr.drawFood(level); // this also hides eaten food!
+            }
+        }
+        else {
             tr.drawWorld(level, 0,  3 * TS);
             tr.drawFood(level);
-            tr.drawLevelMessage(level, level.isDemoLevel(), getMessagePosition(level));
+            //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
+            tr.drawLevelMessage(level, level.isDemoLevel(), currentMessagePosition(level));
+            tr.drawAnimatedActor(level.pac());
+            ghostsInZOrder(level).forEach(tr::drawAnimatedActor);
+            level.bonus().ifPresent(tr::drawBonus);
         }
 
-        level.bonus().ifPresent(tr::drawBonus);
-
-        tr.drawAnimatedActor(level.pac());
-        ghostsInZOrder(level).forEach(tr::drawAnimatedActor);
-
-        int livesCounterEntries = game.livesProperty().get() - 1;
+        int livesCounterEntries = tengenGame.livesProperty().get() - 1;
         if (gameState() == GameState.STARTING_GAME && !level.pac().isVisible()) {
             // as long as Pac-Man is invisible when the game is started, one entry more appears in the lives counter
             livesCounterEntries += 1;
         }
         tr.drawLivesCounter(livesCounterEntries, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - TS);
 
-        if (level.isDemoLevel() || game.mapCategory() == MapCategory.ARCADE) {
-            tr.drawLevelCounter(game.levelCounter(), sizeInPx());
+        if (level.isDemoLevel() || tengenGame.mapCategory() == MapCategory.ARCADE) {
+            tr.drawLevelCounter(tengenGame.levelCounter(), sizeInPx());
         } else {
-            tr.drawLevelCounterWithLevelNumbers(level.number(), game.levelCounter(), sizeInPx());
+            tr.drawLevelCounterWithLevelNumbers(level.number(), tengenGame.levelCounter(), sizeInPx());
         }
 
         if (debugInfoVisiblePy.get()) {
@@ -480,7 +531,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         }
     }
 
-    private Vector2f getMessagePosition(GameLevel level) {
+    private Stream<Ghost> ghostsInZOrder(GameLevel level) {
+        return Stream.of(ORANGE_GHOST_ID, CYAN_GHOST_ID, PINK_GHOST_ID, RED_GHOST_ID).map(level::ghost);
+    }
+
+    private Vector2f currentMessagePosition(GameLevel level) {
         Vector2f center = centerPosBelowHouse(level);
         if (messageMovement != null && messageMovement.isRunning()) {
             return new Vector2f(messageMovement.currentX(), center.y());
@@ -492,60 +547,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         return level.houseMinTile().plus(0.5f * level.houseSizeInTiles().x(), level.houseSizeInTiles().y() + 1).scaled(TS);
     }
 
-    private Stream<Ghost> ghostsInZOrder(GameLevel level) {
-        return Stream.of(ORANGE_GHOST_ID, CYAN_GHOST_ID, PINK_GHOST_ID, RED_GHOST_ID).map(level::ghost);
-    }
-
     private void createLevelCompleteAnimation(GameLevel level) {
         levelCompleteAnimation = new LevelCompleteAnimation(level.data().numFlashes(), 10);
         levelCompleteAnimation.setOnHideGhosts(() -> level.ghosts().forEach(Ghost::hide));
-        levelCompleteAnimation.setOnFinished(THE_GAME_CONTROLLER::terminateCurrentState);
-    }
-
-    @Override
-    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e) {
-        List<MenuItem> items = new ArrayList<>();
-        // Switching scene display mode
-        var miScaledToFit = new RadioMenuItem(THE_ASSETS.text("scaled_to_fit"));
-        miScaledToFit.selectedProperty().addListener(
-                (py,ov,nv) -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(nv? SceneDisplayMode.SCALED_TO_FIT:SceneDisplayMode.SCROLLING));
-        PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.addListener((py, ov, nv) -> miScaledToFit.setSelected(nv == SceneDisplayMode.SCALED_TO_FIT));
-        items.add(miScaledToFit);
-
-        var miScrolling = new RadioMenuItem(THE_ASSETS.text("scrolling"));
-        miScrolling.selectedProperty().addListener(
-                (py,ov,nv) -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(nv? SceneDisplayMode.SCROLLING:SceneDisplayMode.SCALED_TO_FIT));
-        PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.addListener((py, ov, nv) -> miScrolling.setSelected(nv == SceneDisplayMode.SCROLLING));
-        items.add(miScrolling);
-
-        ToggleGroup exclusion = new ToggleGroup();
-        miScaledToFit.setToggleGroup(exclusion);
-        miScrolling.setToggleGroup(exclusion);
-        if (PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.get() == SceneDisplayMode.SCALED_TO_FIT) {
-            miScaledToFit.setSelected(true);
-        } else {
-            miScrolling.setSelected(true);
-        }
-        items.add(Ufx.contextMenuTitleItem(THE_ASSETS.text("pacman")));
-
-        var miAutopilot = new CheckMenuItem(THE_ASSETS.text("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
-        items.add(miAutopilot);
-
-        var miImmunity = new CheckMenuItem(THE_ASSETS.text("immunity"));
-        miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
-        items.add(miImmunity);
-
-        items.add(new SeparatorMenuItem());
-
-        var miMuted = new CheckMenuItem(THE_ASSETS.text("muted"));
-        miMuted.selectedProperty().bindBidirectional(THE_SOUND.mutedProperty());
-        items.add(miMuted);
-
-        var miQuit = new MenuItem(THE_ASSETS.text("quit"));
-        miQuit.setOnAction(ae -> GameAction.SHOW_START_VIEW.execute());
-        items.add(miQuit);
-
-        return items;
+        levelCompleteAnimation.setOnFinished(THE_GAME_CONTROLLER::letCurrentStateExpire);
     }
 }

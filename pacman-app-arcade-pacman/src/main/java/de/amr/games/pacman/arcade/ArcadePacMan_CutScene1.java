@@ -86,7 +86,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             pac.startAnimation();
         }
         else if (frame == ANIMATION_START + 632) {
-            THE_GAME_CONTROLLER.terminateCurrentState();
+            THE_GAME_CONTROLLER.letCurrentStateExpire();
         }
         if (frame >= ANIMATION_START) {
             pac.move();

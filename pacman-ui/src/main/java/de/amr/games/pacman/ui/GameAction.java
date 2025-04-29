@@ -338,7 +338,7 @@ public enum GameAction implements Action {
     TERMINATE_GAME_STATE {
         @Override
         public void execute() {
-            THE_GAME_CONTROLLER.terminateCurrentState();
+            THE_GAME_CONTROLLER.letCurrentStateExpire();
         }
     },
 

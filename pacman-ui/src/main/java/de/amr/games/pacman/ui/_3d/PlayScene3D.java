@@ -563,7 +563,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 Ufx.pauseSec(1)
             );
         animation.setDelay(Duration.seconds(2));
-        animation.setOnFinished(e -> THE_GAME_CONTROLLER.terminateCurrentState());
+        animation.setOnFinished(e -> THE_GAME_CONTROLLER.letCurrentStateExpire());
 
         animation.play();
     }

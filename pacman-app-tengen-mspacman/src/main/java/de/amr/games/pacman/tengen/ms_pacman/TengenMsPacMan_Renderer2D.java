@@ -186,7 +186,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx().restore();
     }
 
-    public void drawMapHighlighted(GameLevel level, double mapX, double mapY, int flashingIndex) {
+    public void drawHighlightedWorld(GameLevel level, double mapX, double mapY, int flashingIndex) {
         ctx().setImageSmoothing(false);
         TengenMsPacMan_GameModel game = THE_GAME_CONTROLLER.game();
         if (!game.optionsHaveDefaultValues()) {

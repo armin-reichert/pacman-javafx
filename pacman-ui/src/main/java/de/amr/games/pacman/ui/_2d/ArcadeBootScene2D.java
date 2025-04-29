@@ -36,7 +36,7 @@ public class ArcadeBootScene2D extends GameScene2D {
         isTickMultipleOf4 = tick % 4 == 0;
         isTickMultipleOf8 = tick % 8 == 0;
         if (gameState().timer().atSecond(4)) {
-            THE_GAME_CONTROLLER.terminateCurrentState();
+            THE_GAME_CONTROLLER.letCurrentStateExpire();
         }
     }
 
