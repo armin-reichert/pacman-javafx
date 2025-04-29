@@ -264,11 +264,12 @@ public enum GameState implements FsmState<GameModel> {
     PACMAN_DYING {
         static final int TICK_HIDE_GHOSTS = 60;
         static final int TICK_START_PAC_ANIMATION = 90;
-        static final int TICK_HIDE_PAC = 210;
+        static final int TICK_HIDE_PAC = 190;
+        static final int TICK_PAC_DEAD = 240;
 
         @Override
         public void onEnter(GameModel game) {
-            timer.restartTicks(game.pacDyingTicks());
+            timer.restartIndefinitely();
             game.onPacKilled();
             THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.STOP_ALL_SOUNDS);
         }
@@ -296,6 +297,8 @@ public enum GameState implements FsmState<GameModel> {
             }
             else if (timer.tickCount() == TICK_HIDE_PAC) {
                 level.pac().hide();
+            }
+            else if (timer.tickCount() == TICK_PAC_DEAD) {
                 THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.PAC_DEAD);
             }
             else {

@@ -367,6 +367,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void onPacDead(GameEvent e) {
         movingCamera.focusTopOfScene();
+        THE_GAME_CONTROLLER.terminateCurrentState();
     }
 
     @Override

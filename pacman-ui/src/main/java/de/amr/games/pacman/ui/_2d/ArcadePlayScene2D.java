@@ -300,6 +300,11 @@ public class ArcadePlayScene2D extends GameScene2D {
     }
 
     @Override
+    public void onPacDead(GameEvent e) {
+        THE_GAME_CONTROLLER.terminateCurrentState();
+    }
+
+    @Override
     public void onPacDying(GameEvent e) {
         THE_SOUND.playPacDeathSound();
     }
