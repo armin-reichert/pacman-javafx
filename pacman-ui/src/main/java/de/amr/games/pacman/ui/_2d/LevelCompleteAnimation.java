@@ -11,18 +11,21 @@ import org.tinylog.Logger;
 import static de.amr.games.pacman.Globals.inClosedRange;
 import static java.util.Objects.requireNonNull;
 
+//TODO use Timeline?
 public class LevelCompleteAnimation {
 
     private final GameLevel level;
-    private int flashingStartTick = 120;
-    private int ticksAfterFlashing = 60;
-    private int ghostsHiddenTick = 90;
+
+    private final int flashingStartTick = 120;
+    private final int ticksAfterFlashing = 60;
+    private final int ghostsHiddenTick = 90;
     private final int singleFlashTicks = 20;
+
     private final int flashingEndTick;
     private final int lastTick;
-    private int flashingIndex;
 
     private int t;
+    private int flashingIndex;
     private boolean running;
     private Runnable onFinished;
 
@@ -64,12 +67,6 @@ public class LevelCompleteAnimation {
             isFlashing() ? "flashing" : "",
             isInHighlightPhase() ? "highlight" : "");
     }
-
-    public void setFlashingStartTick(int tick) { flashingStartTick = tick; }
-
-    public void setTicksAfterFlashing(int ticks) { ticksAfterFlashing = ticks; }
-
-    public void setGhostsHiddenTick(int tick) { ghostsHiddenTick = tick; }
 
     public void setOnFinished(Runnable onFinished) {
         this.onFinished = onFinished;
