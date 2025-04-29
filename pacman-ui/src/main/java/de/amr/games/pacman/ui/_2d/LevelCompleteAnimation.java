@@ -17,7 +17,7 @@ public class LevelCompleteAnimation {
     private int flashingStartTick = 120;
     private int ticksAfterFlashing = 60;
     private int ghostsHiddenTick = 90;
-    private final int singleFlashDuration;
+    private final int singleFlashTicks = 20;
     private final int flashingEndTick;
     private final int lastTick;
     private int flashingIndex;
@@ -26,44 +26,43 @@ public class LevelCompleteAnimation {
     private boolean running;
     private Runnable onFinished;
 
-    public LevelCompleteAnimation(GameLevel level, int highlightDuration) {
+    public LevelCompleteAnimation(GameLevel level) {
         this.level = requireNonNull(level);
-        singleFlashDuration = 2 * highlightDuration;
-        flashingEndTick = flashingStartTick + level.data().numFlashes() * singleFlashDuration - 1;
-        lastTick = flashingEndTick + ticksAfterFlashing;
         t = 0;
         flashingIndex = 0;
         running = false;
-        Logger.info("Created: flashes={} f-duration={} f-start={} f-after={} total={} index={}",
-            level.data().numFlashes(), 2*highlightDuration, flashingStartTick, ticksAfterFlashing, lastTick + 1, flashingIndex);
+        flashingEndTick = flashingStartTick + level.data().numFlashes() * singleFlashTicks - 1;
+        lastTick = flashingEndTick + ticksAfterFlashing;
+        Logger.info("Created: num-flashes={} single-flash-duration={} flash-start={} flash-after={} total={} index={}",
+            level.data().numFlashes(), singleFlashTicks, flashingStartTick, ticksAfterFlashing, lastTick + 1, flashingIndex);
     }
 
     public void start() {
         running = true;
-        Logger.info("Level complete animation started");
     }
 
-    public void update() {
-        if (running) {
-            if (t == lastTick) {
-                running = false;
-                if (onFinished != null)  onFinished.run();
-                return;
-            }
-            if (t == ghostsHiddenTick) {
-                level.ghosts().forEach(Ghost::hide);
-            }
-            if (isFlashing()) {
-                int flashingTick = t - flashingStartTick;
-                if (flashingTick > 0 && flashingTick % singleFlashDuration == 0) {
-                    flashingIndex += 1;
-                    Logger.info("Flashing index -> {} on tick {}", flashingIndex, t);
-                }
-            }
-            ++t;
-            Logger.debug("Tick {}: Level complete animation: {} {}",  t,
-                    isFlashing() ? "flashing" : "", isInHighlightPhase() ? "highlight" : "");
+    public void tick() {
+        if (!running) return;
+
+        if (t == lastTick) {
+            running = false;
+            if (onFinished != null) onFinished.run();
+            return;
         }
+        if (t == ghostsHiddenTick) {
+            level.ghosts().forEach(Ghost::hide);
+        }
+        if (isFlashing()) {
+            int flashingTick = t - flashingStartTick;
+            if (flashingTick > 0 && flashingTick % singleFlashTicks == 0) {
+                flashingIndex += 1;
+                Logger.debug("Flashing index -> {} on tick {}", flashingIndex, t);
+            }
+        }
+        ++t;
+        Logger.debug("Tick {}: Level complete animation: {} {}", t,
+            isFlashing() ? "flashing" : "",
+            isInHighlightPhase() ? "highlight" : "");
     }
 
     public void setFlashingStartTick(int tick) { flashingStartTick = tick; }
@@ -83,6 +82,6 @@ public class LevelCompleteAnimation {
     public int flashingIndex() { return flashingIndex; }
 
     public boolean isInHighlightPhase() {
-        return isFlashing() && (t - flashingStartTick) % singleFlashDuration >= singleFlashDuration / 2;
+        return isFlashing() && (t - flashingStartTick) % singleFlashTicks >= singleFlashTicks / 2;
     }
 }

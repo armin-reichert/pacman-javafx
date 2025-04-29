@@ -100,7 +100,7 @@ public class ArcadePlayScene2D extends GameScene2D {
                 updateSound(level);
             }
             if (gameState() == GameState.LEVEL_COMPLETE) {
-                levelCompleteAnimation.update();
+                levelCompleteAnimation.tick();
             }
         }, () -> { // Scene is already visible 2 ticks before game level is created!
             Logger.warn("Tick {}: Game level not yet available", THE_CLOCK.tickCount());
@@ -258,7 +258,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         else if (state == GameState.LEVEL_COMPLETE) {
             game().level().ifPresent(level -> {
                 THE_SOUND.stopAll();
-                levelCompleteAnimation = new LevelCompleteAnimation(level, 10);
+                levelCompleteAnimation = new LevelCompleteAnimation(level);
                 levelCompleteAnimation.setOnFinished(THE_GAME_CONTROLLER::letCurrentStateExpire);
                 levelCompleteAnimation.start();
             });

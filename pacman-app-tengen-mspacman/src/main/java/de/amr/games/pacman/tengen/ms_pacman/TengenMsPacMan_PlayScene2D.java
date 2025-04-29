@@ -274,7 +274,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 updateSound(level);
             }
             if (gameState() == GameState.LEVEL_COMPLETE) {
-                levelCompleteAnimation.update();
+                levelCompleteAnimation.tick();
             }
             if (fxSubScene.getCamera() == movingCamera) {
                 if (gameState() == GameState.HUNTING) {
@@ -330,7 +330,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
                 level.pac().setImmune(PY_IMMUNITY.get());
             }
-            createLevelCompleteAnimation(level);
             gr.applyMapSettings(level.worldMap());
         });
     }
@@ -357,22 +356,19 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             case LEVEL_COMPLETE ->
                 game().level().ifPresent(level -> {
                     THE_SOUND.stopAll();
-                    if (levelCompleteAnimation == null) {
-                        // if 3D scene was active when level has been created, the animation has not been created!
-                        createLevelCompleteAnimation(level);
-                    }
+                    levelCompleteAnimation = new LevelCompleteAnimation(level);
+                    levelCompleteAnimation.setOnFinished(THE_GAME_CONTROLLER::letCurrentStateExpire);
                     levelCompleteAnimation.start();
                 });
-            case GAME_OVER -> {
-                TengenMsPacMan_GameModel game = game();
-                game.level().ifPresent(level -> {
+            case GAME_OVER ->
+                game().level().ifPresent(level -> {
+                    TengenMsPacMan_GameModel game = game();
                     if (game.mapCategory() != MapCategory.ARCADE) {
                         float belowHouse = centerPosBelowHouse(level).x();
                         messageMovement.start(MOVING_MESSAGE_DELAY, belowHouse, sizeInPx().x());
                     }
                     movingCamera.focusTopOfScene();
                 });
-            }
             default -> {}
         }
     }
@@ -547,8 +543,4 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         return level.houseMinTile().plus(0.5f * level.houseSizeInTiles().x(), level.houseSizeInTiles().y() + 1).scaled(TS);
     }
 
-    private void createLevelCompleteAnimation(GameLevel level) {
-        levelCompleteAnimation = new LevelCompleteAnimation(level, 10);
-        levelCompleteAnimation.setOnFinished(THE_GAME_CONTROLLER::letCurrentStateExpire);
-    }
 }
