@@ -322,16 +322,15 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        game().level().ifPresent(level -> {
-            setJoypadKeyBindings(level);
-            if (level.isDemoLevel()) {
-                level.pac().setImmune(false);
-            } else {
-                level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
-                level.pac().setImmune(PY_IMMUNITY.get());
-            }
-            gr.applyMapSettings(level.worldMap());
-        });
+        GameLevel level = game().level().orElseThrow();
+        setJoypadKeyBindings(level);
+        if (level.isDemoLevel()) {
+            level.pac().setImmune(false);
+        } else {
+            level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
+            level.pac().setImmune(PY_IMMUNITY.get());
+        }
+        gr.applyMapSettings(level.worldMap());
     }
 
     @Override
@@ -343,16 +342,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
-        Logger.info("{} entered from {}", this, oldScene);
         GameLevel level = game().level().orElseThrow();
         setJoypadKeyBindings(level);
-        game().level().map(GameLevel::worldMap).ifPresent(worldMap -> gr.applyMapSettings(worldMap));
+        gr.applyMapSettings(level.worldMap());
     }
 
     @Override
     public void onEnterGameState(GameState state) {
         switch (state) {
             case HUNTING -> movingCamera.focusPlayer(true);
+
             case LEVEL_COMPLETE ->
                 game().level().ifPresent(level -> {
                     THE_SOUND.stopAll();
@@ -360,6 +359,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                     levelCompleteAnimation.setOnFinished(THE_GAME_CONTROLLER::letCurrentStateExpire);
                     levelCompleteAnimation.start();
                 });
+
             case GAME_OVER ->
                 game().level().ifPresent(level -> {
                     TengenMsPacMan_GameModel game = game();
@@ -369,6 +369,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                     }
                     movingCamera.focusTopOfScene();
                 });
+
             default -> {}
         }
     }
@@ -455,17 +456,15 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void draw() {
-        // do this here because it should be run also when game is paused
         updateScaling();
         updateCameraPosition(scaling());
-        var r = (TengenMsPacMan_Renderer2D) gr;
-        r.setScaling(scaling());
-        r.fillCanvas(backgroundColor());
+        gr.setScaling(scaling());
+        gr.fillCanvas(backgroundColor());
         game().level().ifPresent(level -> {
-            r.ctx().save();
-            r.ctx().translate(scaled(2 * TS), 0);
+            gr.ctx().save();
+            gr.ctx().translate(scaled(2 * TS), 0);
             drawSceneContent();
-            r.ctx().restore();
+            gr.ctx().restore();
         });
     }
 
@@ -542,5 +541,4 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     private Vector2f centerPosBelowHouse(GameLevel level) {
         return level.houseMinTile().plus(0.5f * level.houseSizeInTiles().x(), level.houseSizeInTiles().y() + 1).scaled(TS);
     }
-
 }
