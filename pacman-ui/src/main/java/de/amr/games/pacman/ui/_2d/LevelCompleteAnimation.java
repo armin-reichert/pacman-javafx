@@ -4,12 +4,15 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._2d;
 
+import de.amr.games.pacman.model.GameLevel;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.inClosedRange;
+import static java.util.Objects.requireNonNull;
 
 public class LevelCompleteAnimation {
 
+    private final GameLevel level;
     private int flashingStartTick = 120;
     private int ticksAfterFlashing = 60;
     private int ghostsHiddenTick = 90;
@@ -23,15 +26,16 @@ public class LevelCompleteAnimation {
     private Runnable onFinished;
     private Runnable onHideGhosts;
 
-    public LevelCompleteAnimation(int numFlashes, int highlightDuration) {
+    public LevelCompleteAnimation(GameLevel level, int highlightDuration) {
+        this.level = requireNonNull(level);
         singleFlashDuration = 2 * highlightDuration;
-        flashingEndTick = flashingStartTick + numFlashes * singleFlashDuration - 1;
+        flashingEndTick = flashingStartTick + level.data().numFlashes() * singleFlashDuration - 1;
         lastTick = flashingEndTick + ticksAfterFlashing;
         t = 0;
         flashingIndex = 0;
         running = false;
         Logger.info("Created: flashes={} f-duration={} f-start={} f-after={} total={} index={}",
-            numFlashes, 2*highlightDuration, flashingStartTick, ticksAfterFlashing, lastTick + 1, flashingIndex);
+            level.data().numFlashes(), 2*highlightDuration, flashingStartTick, ticksAfterFlashing, lastTick + 1, flashingIndex);
     }
 
     public void start() {
