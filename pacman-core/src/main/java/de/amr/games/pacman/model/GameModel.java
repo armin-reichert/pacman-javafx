@@ -323,7 +323,7 @@ public abstract class GameModel implements ScoreManager {
         checkPacKilled();
         if (!hasPacManBeenKilled()) {
             level.ghosts().forEach(ghost -> ghost.update(this));
-            level.ghosts(FRIGHTENED).filter(ghost -> areActorsColliding(ghost, level.pac())).forEach(this::killGhost);
+            level.ghosts(FRIGHTENED).filter(ghost -> ghost.sameTile(level.pac())).forEach(this::killGhost);
             if (!haveGhostsBeenKilled()) {
                 level.bonus().ifPresent(this::updateBonus);
             }
@@ -332,7 +332,7 @@ public abstract class GameModel implements ScoreManager {
 
     private void checkPacKilled() {
         level.ghosts(HUNTING_PAC)
-            .filter(ghost -> areActorsColliding(level.pac(), ghost))
+            .filter(ghost -> level.pac().sameTile(ghost))
             .findFirst().ifPresent(killer -> {
                 boolean killed;
                 if (level.isDemoLevel()) {
@@ -369,10 +369,6 @@ public abstract class GameModel implements ScoreManager {
         }
     }
 
-    protected boolean areActorsColliding(Actor2D either, Actor2D other) {
-        return either.sameTile(other);
-    }
-
     private void updatePacPower() {
         final TickTimer timer = level.pac().powerTimer();
         timer.doTick();
@@ -393,7 +389,7 @@ public abstract class GameModel implements ScoreManager {
     }
 
     private void updateBonus(Bonus bonus) {
-        if (bonus.state() == Bonus.STATE_EDIBLE && areActorsColliding(level.pac(), bonus.actor())) {
+        if (bonus.state() == Bonus.STATE_EDIBLE && level.pac().sameTile(bonus.actor())) {
             bonus.setEaten(120); //TODO is 2 seconds correct?
             scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
