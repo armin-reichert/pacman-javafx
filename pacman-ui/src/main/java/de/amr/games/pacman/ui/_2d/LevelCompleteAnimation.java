@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.actors.Ghost;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.inClosedRange;
@@ -24,7 +25,6 @@ public class LevelCompleteAnimation {
     private int t;
     private boolean running;
     private Runnable onFinished;
-    private Runnable onHideGhosts;
 
     public LevelCompleteAnimation(GameLevel level, int highlightDuration) {
         this.level = requireNonNull(level);
@@ -51,7 +51,7 @@ public class LevelCompleteAnimation {
                 return;
             }
             if (t == ghostsHiddenTick) {
-                if (onHideGhosts != null) onHideGhosts.run();
+                level.ghosts().forEach(Ghost::hide);
             }
             if (isFlashing()) {
                 int flashingTick = t - flashingStartTick;
@@ -71,10 +71,6 @@ public class LevelCompleteAnimation {
     public void setTicksAfterFlashing(int ticks) { ticksAfterFlashing = ticks; }
 
     public void setGhostsHiddenTick(int tick) { ghostsHiddenTick = tick; }
-
-    public void setOnHideGhosts(Runnable onHideGhosts) {
-        this.onHideGhosts = onHideGhosts;
-    }
 
     public void setOnFinished(Runnable onFinished) {
         this.onFinished = onFinished;
