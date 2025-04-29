@@ -188,25 +188,17 @@ public class GameLevel {
         return states.length == 0 ? Stream.of(ghosts) : Stream.of(ghosts).filter(ghost -> ghost.inState(states));
     }
 
-    public void setBonus(Bonus bonus) {
-        this.bonus = bonus;
-    }
+    public void setBonus(Bonus bonus) { this.bonus = bonus; }
 
-    public Optional<Bonus> bonus() {
-        return Optional.ofNullable(bonus);
-    }
+    public Optional<Bonus> bonus() { return Optional.ofNullable(bonus); }
 
-    public int nextBonusIndex() {
-        return nextBonusIndex;
-    }
+    public boolean isBonusEdible() { return bonus != null && bonus.state() == Bonus.STATE_EDIBLE; }
 
-    public void selectNextBonus() {
-        nextBonusIndex += 1;
-    }
+    public int nextBonusIndex() { return nextBonusIndex; }
 
-    public byte bonusSymbol(int i) {
-        return bonusSymbols[i];
-    }
+    public void selectNextBonus() { nextBonusIndex += 1; }
+
+    public byte bonusSymbol(int i) { return bonusSymbols[i]; }
 
     public void setBonusSymbol(int i, byte symbol) {
         bonusSymbols[i] = symbol;

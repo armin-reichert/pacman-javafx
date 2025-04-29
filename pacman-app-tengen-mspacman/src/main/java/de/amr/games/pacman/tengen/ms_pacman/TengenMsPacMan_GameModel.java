@@ -486,7 +486,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     @Override
     public void activateNextBonus() {
         //TODO No idea how this behaves in Tengen
-        if (level.bonus().isPresent() && level.bonus().get().state() != Bonus.STATE_INACTIVE) {
+        if (level.isBonusEdible()) {
             Logger.info("Previous bonus is still active, skip this one");
             return;
         }
