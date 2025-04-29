@@ -364,6 +364,14 @@ public enum GameAction implements Action {
                 }
             });
         }
+
+        @Override
+        public boolean isEnabled() {
+            return Globals.oneOf(THE_GAME_CONTROLLER.state(),
+                GameState.BOOT, GameState.INTRO, GameState.SETTING_OPTIONS, GameState.HUNTING,
+                GameState.TESTING_LEVEL_TEASERS, GameState.TESTING_LEVELS
+            );
+        }
     },
 
     TOGGLE_PIP_VISIBILITY {
