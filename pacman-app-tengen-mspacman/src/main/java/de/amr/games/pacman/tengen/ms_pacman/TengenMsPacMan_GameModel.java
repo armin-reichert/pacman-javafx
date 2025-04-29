@@ -262,11 +262,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public long gameOverStateTicks() {
-        return level.isDemoLevel() ? 120 : 420; // TODO how much really?
-    }
-
-    @Override
     public void startLevel() {
         super.startLevel();
         // Score runs also in demo level in contrast to Arcade games
@@ -389,6 +384,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             case 9, 13, 17 -> 3;
             default -> levelNumber == lastLevelNumber() ? 4 : 0;
         });
+        level.setGameOverStateTicks(420);
 
         level.createArcadeHouse(10, 15, 17, 19);
 
@@ -424,14 +420,13 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.setBonusSymbol(0, computeBonusSymbol(level.number()));
         level.setBonusSymbol(1, computeBonusSymbol(level.number()));
 
-
         levelCounter.setEnabled(levelNumber < 8);
         activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON
     }
 
     @Override
     public LevelData createLevelData(int levelNumber) {
-        //TODO what are the data in Tengen Ms. Pac-Man?
+        // Note: only number of flashes is taken from level data
         return new LevelData(
             (byte) 0, // Pac speed %
             (byte) 0, // Ghost speed %
@@ -451,6 +446,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public void buildDemoLevel() {
         buildLevel(1, createLevelData(1));
         level.setDemoLevel(true);
+        level.setGameOverStateTicks(120);
         assignDemoLevelBehavior(level.pac());
         demoLevelSteering.init();
     }

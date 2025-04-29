@@ -110,8 +110,6 @@ public abstract class GameModel implements ScoreManager {
 
     public abstract float pacPowerSpeed();
 
-    public abstract long gameOverStateTicks();
-
     public abstract LevelData createLevelData(int levelNumber);
 
     public abstract void buildLevel(int levelNumber, LevelData data);

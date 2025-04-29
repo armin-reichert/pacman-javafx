@@ -97,17 +97,13 @@ public class ArcadeMsPacMan_GameModel extends ArcadeXMan_GameModel {
         if (huntingTimer.phaseIndex() == 0 && (ghost.id() == RED_GHOST_ID || ghost.id() == PINK_GHOST_ID)) {
             ghost.roam(ghostAttackSpeed(ghost));
         } else {
-            boolean chase = huntingTimer.phase() == HuntingPhase.CHASING
-                || ghost.id() == RED_GHOST_ID && cruiseElroy > 0;
+            boolean chase = huntingTimer.phase() == HuntingPhase.CHASING || ghost.id() == RED_GHOST_ID && cruiseElroy > 0;
             Vector2i targetTile = chase
                 ? chasingTargetTile(ghost.id(), level, SIMULATE_ARCADE_OVERFLOW_BUG)
                 : level.ghostScatterTile(ghost.id());
             ghost.followTarget(targetTile, ghostAttackSpeed(ghost));
         }
     }
-
-    @Override
-    public long gameOverStateTicks() { return 150; }
 
     @Override
     public void buildLevel(int levelNumber, LevelData data) {
@@ -119,6 +115,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeXMan_GameModel {
             case 9, 13, 17 -> 3;
             default -> 0;
         });
+        level.setGameOverStateTicks(150);
 
         addArcadeHouse(worldMap);
 

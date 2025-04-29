@@ -123,11 +123,6 @@ public class ArcadePacMan_GameModel extends ArcadeXMan_GameModel {
     }
 
     @Override
-    public long gameOverStateTicks() {
-        return 90;
-    }
-
-    @Override
     public void buildLevel(int levelNumber, LevelData data) {
         WorldMap worldMap = mapSelector.selectWorldMap(requireValidLevelNumber(levelNumber));
         level = new GameLevel(this, levelNumber, data, worldMap);
@@ -137,6 +132,7 @@ public class ArcadePacMan_GameModel extends ArcadeXMan_GameModel {
             case 9, 13, 17 -> 3;
             default -> 0;
         });
+        level.setGameOverStateTicks(90);
 
         addArcadeHouse(worldMap);
 

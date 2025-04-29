@@ -78,6 +78,7 @@ public class GameLevel {
 
     private final Pulse blinking;
 
+    private int gameOverStateTicks;
     private long startTime;
 
     public GameLevel(GameModel game, int number, LevelData data, WorldMap worldMap) {
@@ -162,6 +163,9 @@ public class GameLevel {
 
     public void setStartTime(long startTime) { this.startTime = startTime; }
     public long startTime() { return startTime; }
+
+    public void setGameOverStateTicks(int ticks) { gameOverStateTicks = ticks; }
+    public int gameOverStateTicks() { return gameOverStateTicks; }
 
     public void setCutSceneNumber(int number) { cutSceneNumber = number; }
     public int cutSceneNumber() { return cutSceneNumber; }
