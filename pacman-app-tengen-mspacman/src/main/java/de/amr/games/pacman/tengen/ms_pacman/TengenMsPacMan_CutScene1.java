@@ -216,11 +216,11 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), arcadeFontInScaledTileSize());
+            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), arcadeFontScaledTS());
         }
         var r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
-        r.drawClapperBoard(clapAnimation, "THEY MEET", 1, CLAP_TILE_X, CLAP_TILE_Y, arcadeFontInScaledTileSize());
+        r.drawClapperBoard(clapAnimation, "THEY MEET", 1, CLAP_TILE_X, CLAP_TILE_Y, arcadeFontScaledTS());
         r.drawAnimatedActor(msPacMan);
         r.drawAnimatedActor(mrPacMan);
         r.drawAnimatedActor(inky);

@@ -241,7 +241,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        final Font font = arcadeFontInScaledTileSize();
+        final Font font = arcadeFontScaledTS();
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {

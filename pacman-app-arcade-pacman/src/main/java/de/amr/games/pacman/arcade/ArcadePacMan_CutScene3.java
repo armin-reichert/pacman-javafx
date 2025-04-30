@@ -97,7 +97,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), arcadeFontInScaledTileSize());
+            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), arcadeFontScaledTS());
         }
         gr.drawAnimatedActor(pac);
         gr.drawAnimatedActor(blinky);

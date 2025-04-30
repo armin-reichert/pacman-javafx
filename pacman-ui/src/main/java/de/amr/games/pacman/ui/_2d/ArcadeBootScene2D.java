@@ -63,7 +63,7 @@ public class ArcadeBootScene2D extends GameScene2D {
     protected void drawSceneContent() {}
 
     private void paintRandomHexCodes(Vector2f sceneSize) {
-        final Font font = arcadeFontInScaledTileSize();
+        final Font font = arcadeFontScaledTS();
         gr.fillCanvas(backgroundColor());
         gr.ctx().setFill(WHITE);
         gr.ctx().setFont(font);
