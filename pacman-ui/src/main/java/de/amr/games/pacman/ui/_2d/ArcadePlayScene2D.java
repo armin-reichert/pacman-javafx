@@ -44,6 +44,10 @@ import static de.amr.games.pacman.uilib.input.Keyboard.naked;
  */
 public class ArcadePlayScene2D extends GameScene2D {
 
+    public static final Color WHITE = Color.web(Arcade.Palette.WHITE);
+    public static final Color RED = Color.web(Arcade.Palette.RED);
+    public static final Color YELLOW = Color.web(Arcade.Palette.YELLOW);
+
     private LevelCompleteAnimation levelCompleteAnimation;
 
     @Override
@@ -110,6 +114,32 @@ public class ArcadePlayScene2D extends GameScene2D {
             });
     }
 
+    @Override
+    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e) {
+        List<MenuItem> items = new ArrayList<>();
+        items.add(Ufx.contextMenuTitleItem(THE_ASSETS.text("pacman")));
+
+        var miAutopilot = new CheckMenuItem(THE_ASSETS.text("autopilot"));
+        miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
+        items.add(miAutopilot);
+
+        var miImmunity = new CheckMenuItem(THE_ASSETS.text("immunity"));
+        miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
+        items.add(miImmunity);
+
+        items.add(new SeparatorMenuItem());
+
+        var miMuted = new CheckMenuItem(THE_ASSETS.text("muted"));
+        miMuted.selectedProperty().bindBidirectional(THE_SOUND.mutedProperty());
+        items.add(miMuted);
+
+        var miQuit = new MenuItem(THE_ASSETS.text("quit"));
+        miQuit.setOnAction(ae -> GameAction.SHOW_START_VIEW.execute());
+        items.add(miQuit);
+
+        return items;
+    }
+
     private void updateSound(GameLevel level) {
         if (gameState() == GameState.HUNTING && !level.pac().powerTimer().isRunning()) {
             int sirenNumber = 1 + game().huntingTimer().phaseIndex() / 2;
@@ -138,7 +168,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), font);
+            gr.drawScores(game(), WHITE, font);
         }
         GameLevel level = game().level().orElse(null);
         // Scene is drawn already for 2 ticks before level has been created
@@ -179,7 +209,7 @@ public class ArcadePlayScene2D extends GameScene2D {
             gr.drawLivesCounter(numLivesShown, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - 2 * TS);
         } else {
             gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_MECHANISM.numCoins()),
-                Color.web(Arcade.Palette.WHITE), font, 2 * TS, sizeInPx().y() - 2);
+                WHITE, font, 2 * TS, sizeInPx().y() - 2);
         }
         gr.drawLevelCounter(game().levelCounter(), sizeInPx());
     }
@@ -190,19 +220,19 @@ public class ArcadePlayScene2D extends GameScene2D {
                 String text = "GAME  OVER";
                 // this assumes fixed font width of one tile:
                 double x = messageCenterPosition.x() - (text.length() * HTS);
-                gr.fillTextAtScaledPosition(text, Color.web(Arcade.Palette.RED), font, x, messageCenterPosition.y());
+                gr.fillTextAtScaledPosition(text, RED, font, x, messageCenterPosition.y());
             }
             case READY -> {
                 String text = "READY!";
                 // this assumes fixed font width of one tile:
                 double x = messageCenterPosition.x() - (text.length() * HTS);
-                gr.fillTextAtScaledPosition(text, Color.web(Arcade.Palette.YELLOW), font, x, messageCenterPosition.y());
+                gr.fillTextAtScaledPosition(text, YELLOW, font, x, messageCenterPosition.y());
             }
             case TEST_LEVEL -> {
                 String text = "TEST    L%03d".formatted(level.number());
                 // this assumes fixed font width of one tile:
                 double x = messageCenterPosition.x() - (text.length() * HTS);
-                gr.fillTextAtScaledPosition(text, Color.web(Arcade.Palette.WHITE), font, x, messageCenterPosition.y());
+                gr.fillTextAtScaledPosition(text, WHITE, font, x, messageCenterPosition.y());
             }
         }
     }
@@ -325,31 +355,5 @@ public class ArcadePlayScene2D extends GameScene2D {
     @Override
     public void onPacLostPower(GameEvent e) {
         THE_SOUND.stopPacPowerSound();
-    }
-
-    @Override
-    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e) {
-        List<MenuItem> items = new ArrayList<>();
-        items.add(Ufx.contextMenuTitleItem(THE_ASSETS.text("pacman")));
-
-        var miAutopilot = new CheckMenuItem(THE_ASSETS.text("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
-        items.add(miAutopilot);
-
-        var miImmunity = new CheckMenuItem(THE_ASSETS.text("immunity"));
-        miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
-        items.add(miImmunity);
-
-        items.add(new SeparatorMenuItem());
-
-        var miMuted = new CheckMenuItem(THE_ASSETS.text("muted"));
-        miMuted.selectedProperty().bindBidirectional(THE_SOUND.mutedProperty());
-        items.add(miMuted);
-
-        var miQuit = new MenuItem(THE_ASSETS.text("quit"));
-        miQuit.setOnAction(ae -> GameAction.SHOW_START_VIEW.execute());
-        items.add(miQuit);
-
-        return items;
     }
 }

@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.uilib.Action;
 import javafx.beans.property.*;
@@ -85,6 +86,17 @@ public abstract class GameScene2D implements GameScene {
 
     public Canvas canvas() { return canvas; }
 
+    /**
+     * @param defaultSize size in tiles (sizeX, sizeY) = (numCols, numRows) if level is not existing
+     * @return level size in tiles (sizeX, sizeY) = (numCols, numRows)
+     */
+    public final Vector2i levelSizeInTilesOrElse(Vector2i defaultSize) {
+        return game().level()
+            .map(GameLevel::worldMap)
+            .map(worldMap -> Vector2i.of(worldMap.numCols(), worldMap.numRows()))
+            .orElse(defaultSize);
+    }
+
     public void draw() {
         drawSceneContent();
         if (debugInfoVisiblePy.get()) {
@@ -99,13 +111,5 @@ public abstract class GameScene2D implements GameScene {
         gr.ctx().setFill(Color.YELLOW);
         gr.ctx().setFont(DEBUG_TEXT_FONT);
         gr.ctx().fillText("%s %d".formatted(gameState(), gameState().timer().tickCount()), 0, scaled(3 * TS));
-    }
-
-    /**
-     * @param defaultSize size returned if level is not existing yet
-     * @return level size in tiles
-     */
-    protected Vector2i levelSizeInTilesOrElse(Vector2i defaultSize) {
-        return game().level().map(level -> Vector2i.of(level.worldMap().numCols(), level.worldMap().numRows())).orElse(defaultSize);
     }
 }
