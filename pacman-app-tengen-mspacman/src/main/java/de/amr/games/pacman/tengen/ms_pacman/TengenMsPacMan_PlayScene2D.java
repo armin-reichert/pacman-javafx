@@ -470,7 +470,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     protected void drawSceneContent() {
-        gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
 
         if (game().isScoreVisible()) {

@@ -209,7 +209,6 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
             gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), arcadeFontScaledTS());

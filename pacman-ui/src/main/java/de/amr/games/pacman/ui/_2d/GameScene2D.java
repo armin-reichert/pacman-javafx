@@ -104,12 +104,16 @@ public abstract class GameScene2D implements GameScene {
     }
 
     public void draw() {
+        gr.setScaling(scaling());
         drawSceneContent();
         if (debugInfoVisiblePy.get()) {
             drawDebugInfo();
         }
     }
 
+    /**
+     * Draws the scene content using the already scaled game renderer.
+     */
     protected abstract void drawSceneContent();
 
     protected void drawDebugInfo() {

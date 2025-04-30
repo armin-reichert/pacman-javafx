@@ -132,7 +132,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     @Override
     public void drawSceneContent() {
         final Font font = arcadeFontScaledTS();
-        gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
             gr.drawScores(game(), WHITE, font);

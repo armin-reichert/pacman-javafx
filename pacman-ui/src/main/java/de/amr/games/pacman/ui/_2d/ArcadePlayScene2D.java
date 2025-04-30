@@ -167,7 +167,6 @@ public class ArcadePlayScene2D extends GameScene2D {
     @Override
     protected void drawSceneContent() {
         final Font font = arcadeFontScaledTS();
-        gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
             gr.drawScores(game(), WHITE, font);
