@@ -12,7 +12,6 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.TS;
@@ -154,11 +153,11 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), fontPy.get());
+            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), arcadeFontInScaledTileSize());
         }
         var r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
-        r.drawClapperBoard(clapAnimation, "THE CHASE", 2, CLAP_TILE_X, CLAP_TILE_Y, fontPy.get());
+        r.drawClapperBoard(clapAnimation, "THE CHASE", 2, CLAP_TILE_X, CLAP_TILE_Y, arcadeFontInScaledTileSize());
         r.drawAnimatedActor(msPacMan);
         r.drawAnimatedActor(pacMan);
         r.drawLevelCounter(game().levelCounter(), sizeInPx().minus(0, 3*TS));

@@ -17,8 +17,6 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.uilib.Ufx;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -168,7 +166,7 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        final Font font = fontPy.get();
+        final Font font = arcadeFontInScaledTileSize();
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {

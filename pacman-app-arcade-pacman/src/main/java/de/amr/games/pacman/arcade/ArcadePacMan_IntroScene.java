@@ -131,7 +131,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        final Font font = fontPy.get();
+        final Font font = arcadeFontInScaledTileSize();
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
@@ -207,7 +207,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     private void drawPoints() {
         var color = Color.web(Arcade.Palette.WHITE);
-        Font font8 = fontPy.get();
+        Font font8 = arcadeFontInScaledTileSize();
         Font font6 = THE_ASSETS.arcadeFontAtSize(scaled(6));
         int tileX = LEFT_TILE_X + 6;
         int tileY = 25;

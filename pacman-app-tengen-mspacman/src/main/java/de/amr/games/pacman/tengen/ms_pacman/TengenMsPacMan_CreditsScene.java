@@ -16,7 +16,6 @@ import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
-import static de.amr.games.pacman.ui.Globals.THE_ASSETS;
 import static de.amr.games.pacman.ui.Globals.THE_JOYPAD;
 
 public class TengenMsPacMan_CreditsScene extends GameScene2D {
@@ -43,7 +42,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        final Font font = fontPy.get();
+        final Font font = arcadeFontInScaledTileSize();
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {

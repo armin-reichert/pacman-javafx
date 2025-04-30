@@ -127,7 +127,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        final Font font = fontPy.get();
+        final Font font = arcadeFontInScaledTileSize();
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {

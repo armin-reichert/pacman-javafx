@@ -14,7 +14,6 @@ import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.uilib.animation.SpriteAnimation;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
 import static de.amr.games.pacman.Globals.TS;
@@ -169,11 +168,11 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), fontPy.get());
+            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), arcadeFontInScaledTileSize());
         }
         var r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
-        r.drawClapperBoard(clapAnimation, "JUNIOR", 3, CLAP_TILE_X, CLAP_TILE_Y, fontPy.get());
+        r.drawClapperBoard(clapAnimation, "JUNIOR", 3, CLAP_TILE_X, CLAP_TILE_Y, arcadeFontInScaledTileSize());
         r.drawStork(storkAnimation, stork, bagReleased);
         r.drawAnimatedActor(msPacMan);
         r.drawAnimatedActor(mrPacMan);

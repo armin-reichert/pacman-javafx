@@ -474,7 +474,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         gr.fillCanvas(backgroundColor());
 
         if (game().isScoreVisible()) {
-            gr.drawScores(game(), nesPaletteColor(0x20), fontPy.get());
+            gr.drawScores(game(), nesPaletteColor(0x20), arcadeFontInScaledTileSize());
         }
 
         final GameLevel level = game().level().orElse(null);
@@ -500,7 +500,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             tr.drawWorld(level, 0,  3 * TS);
             tr.drawFood(level);
             //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
-            tr.drawLevelMessage(level, level.isDemoLevel(), currentMessagePosition(level), fontPy.get());
+            tr.drawLevelMessage(level, level.isDemoLevel(), currentMessagePosition(level), arcadeFontInScaledTileSize());
             tr.drawAnimatedActor(level.pac());
             ghostsInZOrder(level).forEach(tr::drawAnimatedActor);
             level.bonus().ifPresent(tr::drawBonus);

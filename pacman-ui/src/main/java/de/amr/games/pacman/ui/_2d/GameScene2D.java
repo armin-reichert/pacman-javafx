@@ -31,7 +31,7 @@ public abstract class GameScene2D implements GameScene {
     protected final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     protected final BooleanProperty debugInfoVisiblePy = new SimpleBooleanProperty(false);
     protected final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
-    protected final ObjectProperty<Font> fontPy = new SimpleObjectProperty<>();
+    protected final ObjectProperty<Font> arcadeFontTS = new SimpleObjectProperty<>();
 
     protected final Map<KeyCodeCombination, Action> actionBindings = new HashMap<>();
 
@@ -40,7 +40,7 @@ public abstract class GameScene2D implements GameScene {
 
     @Override
     public final void init() {
-        fontPy.bind(scalingPy.map(scaling -> THE_ASSETS.arcadeFontAtSize((float) scaling * TS)));
+        arcadeFontTS.bind(scalingPy.map(scaling -> THE_ASSETS.arcadeFontAtSize((float) scaling * TS)));
         doInit();
         bindActions();
         enableActionBindings(THE_KEYBOARD);
@@ -68,6 +68,7 @@ public abstract class GameScene2D implements GameScene {
         return (float) value * scaling();
     }
 
+    public Font arcadeFontInScaledTileSize() { return arcadeFontTS.get(); }
     public ObjectProperty<Color> backgroundColorProperty() { return backgroundColorPy; }
     public void setBackgroundColor(Color color) { backgroundColorPy.set(color); }
     public Color backgroundColor() { return backgroundColorPy.get(); }
