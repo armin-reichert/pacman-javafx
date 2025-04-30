@@ -16,6 +16,7 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.LevelCounter;
 import de.amr.games.pacman.model.ScoreManager;
 import de.amr.games.pacman.model.actors.*;
+import de.amr.games.pacman.ui.Globals;
 import de.amr.games.pacman.ui._2d.GameRenderer;
 import de.amr.games.pacman.ui._2d.SpriteAnimationSet;
 import de.amr.games.pacman.uilib.animation.SpriteAnimation;
@@ -44,8 +45,6 @@ import static java.util.function.Predicate.not;
  * @author Armin Reichert
  */
 public class TengenMsPacMan_Renderer2D implements GameRenderer {
-
-    private static final Color CANVAS_BACKGROUND_COLOR = Color.web(NES_Palette.color(0x0f));
 
     private final FloatProperty scalingPy = new SimpleFloatProperty(1);
     private final TengenMsPacMan_SpriteSheet spriteSheet;
@@ -211,7 +210,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     private void drawPellets(GameLevel level, Color pelletColor) {
         level.worldMap().tiles().filter(level::isFoodPosition).filter(not(level::isEnergizerPosition)).forEach(tile -> {
             double cx = tile.x() * TS + HTS, cy = tile.y() * TS + HTS;
-            ctx().setFill(CANVAS_BACKGROUND_COLOR);
+            ctx().setFill(Color.BLACK); // TODO
             ctx().fillRect(cx - 2, cy - 2, 4, 4);
             if (!level.hasEatenFoodAt(tile)) {
                 ctx().setFill(pelletColor);
@@ -225,7 +224,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         double offset = 0.5 * HTS;
         level.worldMap().tiles().filter(level::isEnergizerPosition).forEach(tile -> {
             double x = tile.x() * TS, y = tile.y() * TS;
-            ctx().setFill(CANVAS_BACKGROUND_COLOR);
+            ctx().setFill(Color.BLACK); // TODO
             ctx().fillRect(x - 1, y - 1, TS + 2, TS + 2); // avoid blitzer
             if (!level.hasEatenFoodAt(tile) && level.blinking().isOn()) {
                 ctx().setFill(pelletColor);
@@ -274,17 +273,19 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     private void overPaintActors(GameLevel world) {
         Vector2f topLeftPosition = world.houseMinTile().plus(1, 2).scaled(TS * scaling());
         Vector2f size = new Vector2i(world.houseSizeInTiles().x() - 2, 2).scaled(TS * scaling());
-        ctx().setFill(CANVAS_BACKGROUND_COLOR);
+        //ctx().setFill(Globals.PY_CANVAS_BG_COLOR.get());
+        Color fillColor = Color.BLACK; // TODO
+        ctx().setFill(fillColor);
         ctx().fillRect(topLeftPosition.x(), topLeftPosition.y(), size.x(), size.y());
-        overPaint(world.worldMap().getTerrainTileProperty("pos_pac", Vector2i.of(14, 26)));
-        overPaint(world.worldMap().getTerrainTileProperty("pos_ghost_1_red", Vector2i.of(13, 14)));
+        overPaint(world.worldMap().getTerrainTileProperty("pos_pac", Vector2i.of(14, 26)), fillColor);
+        overPaint(world.worldMap().getTerrainTileProperty("pos_ghost_1_red", Vector2i.of(13, 14)), fillColor);
     }
 
-    private void overPaint(Vector2i tile) {
+    private void overPaint(Vector2i tile, Color fillColor) {
         // Parameter tile denotes the left of the two tiles where actor is located between. Compute center position.
         double cx = tile.x() * TS;
         double cy = tile.y() * TS - HTS;
-        ctx().setFill(CANVAS_BACKGROUND_COLOR);
+        ctx().setFill(fillColor);
         ctx().fillRect(scaled(cx), scaled(cy), scaled(16), scaled(16));
     }
 
@@ -377,7 +378,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             // overpaint number from sprite sheet
             ctx().save();
             ctx().scale(scaling(), scaling());
-            ctx().setFill(CANVAS_BACKGROUND_COLOR);
+            ctx().setFill(Globals.PY_CANVAS_BG_COLOR.get());
             ctx().fillRect(numberX - 1, numberY - 8, 12, 8);
             ctx().restore();
 
@@ -400,7 +401,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx().setImageSmoothing(false);
         drawSpriteScaled(storkAnimation.currentSprite(), pos.x(), pos.y());
         if (hideBag) { // over-paint bag under beak
-            ctx().setFill(CANVAS_BACKGROUND_COLOR);
+            ctx().setFill(Globals.PY_CANVAS_BG_COLOR.get());
             ctx().fillRect(scaled(pos.x() - 1), scaled(pos.y() + 7), scaled(9), scaled(9));
         }
     }

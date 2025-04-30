@@ -16,6 +16,7 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameScene;
+import de.amr.games.pacman.ui.Globals;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._2d.LevelCompleteAnimation;
 import de.amr.games.pacman.uilib.CameraControlledView;
@@ -151,7 +152,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         root.setBackground(null);
 
         fxSubScene = new SubScene(root, 42, 42);
-        fxSubScene.setFill(nesPaletteColor(0x0f));
+        fxSubScene.fillProperty().bind(PY_CANVAS_BG_COLOR);
 
         movingCamera = new MovingCamera();
         movingCamera.scalingProperty().bind(scalingProperty());
@@ -470,8 +471,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     protected void drawSceneContent() {
-        gr.fillCanvas(backgroundColor());
-
         if (game().isScoreVisible()) {
             gr.drawScores(game(), nesPaletteColor(0x20), arcadeFontScaledTS());
         }
