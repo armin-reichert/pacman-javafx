@@ -441,7 +441,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             THE_SOUND.selectSiren(sirenNumber);
             THE_SOUND.playSiren();
         }
-        if (level.pac().starvingTicks() > 8) { // TODO not sure how to do this right
+        if (level.pac().starvingTicks() > 5) { // TODO not sure how to do this right
             THE_SOUND.stopMunchingSound();
         }
         boolean ghostsReturning = level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
