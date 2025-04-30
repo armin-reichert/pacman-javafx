@@ -33,9 +33,9 @@ public class WorldMap {
     private static final String BEGIN_FOOD_LAYER    = "!food";
     private static final String BEGIN_DATA_SECTION  = "!data";
 
-    public static Optional<Vector2i> parseTile(String text) {
-        requireNonNull(text);
-        Matcher m = TILE_PATTERN.matcher(text);
+    public static Optional<Vector2i> parseTile(String s) {
+        requireNonNull(s);
+        Matcher m = TILE_PATTERN.matcher(s);
         if (!m.matches()) {
             return Optional.empty();
         }
@@ -44,13 +44,14 @@ public class WorldMap {
             int y = Integer.parseInt(m.group(2));
             return Optional.of(new Vector2i(x, y));
         } catch (NumberFormatException x) {
+            Logger.error("Could not parse tile from text '{}'", s);
             return Optional.empty();
         }
     }
 
     public static String formatTile(Vector2i tile) {
         requireNonNull(tile);
-        return TILE_FORMAT.formatted(tile.x(), tile.y());
+        return String.format(TILE_FORMAT, tile.x(), tile.y());
     }
 
     private final URL url;
@@ -81,7 +82,7 @@ public class WorldMap {
     public WorldMap(URL url) throws IOException {
         this.url = requireNonNull(url);
         var reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
-        parse(reader.lines());
+        parse(reader.lines().toList());
     }
 
     public WorldMap(File file) throws IOException {
@@ -189,13 +190,14 @@ public class WorldMap {
         return newMap;
     }
 
-    private void parse(Stream<String> rowsStream) {
-        List<String> rows = new ArrayList<>(rowsStream.toList());
+    private void parse(List<String> lines_) {
+        // ensure lines can be modified
+        List<String> lines = new ArrayList<>(lines_);
         // delete empty lines at end
-        int i = rows.size() - 1;
+        int i = lines.size() - 1;
         int count = 0;
-        while (i >= 0 && rows.get(i).isBlank()) {
-            rows.remove(i);
+        while (i >= 0 && lines.get(i).isBlank()) {
+            lines.remove(i);
             ++count;
             --i;
         }
@@ -205,18 +207,18 @@ public class WorldMap {
         var terrainLayerRows = new ArrayList<String>();
         var foodLayerRows = new ArrayList<String>();
         boolean insideTerrainLayer = false, insideFoodLayer = false;
-        for (var row : rows) {
-            if (BEGIN_TERRAIN_LAYER.equals(row)) {
+        for (String line : lines) {
+            if (BEGIN_TERRAIN_LAYER.equals(line)) {
                 insideTerrainLayer = true;
-            } else if (BEGIN_FOOD_LAYER.equals(row)) {
+            } else if (BEGIN_FOOD_LAYER.equals(line)) {
                 insideTerrainLayer = false;
                 insideFoodLayer = true;
             } else if (insideTerrainLayer) {
-                terrainLayerRows.add(row);
+                terrainLayerRows.add(line);
             } else if (insideFoodLayer) {
-                foodLayerRows.add(row);
+                foodLayerRows.add(line);
             } else {
-                Logger.error("Line skipped: '{}'", row);
+                Logger.error("Line skipped: '{}'", line);
             }
         }
         this.terrainLayer = parseTileMap(terrainLayerRows,
