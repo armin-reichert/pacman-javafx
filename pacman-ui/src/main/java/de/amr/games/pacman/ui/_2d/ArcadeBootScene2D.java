@@ -64,7 +64,7 @@ public class ArcadeBootScene2D extends GameScene2D {
     protected void drawSceneContent() {}
 
     private void paintRandomHexCodes(Vector2f sceneSize) {
-        Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
+        final Font font = fontPy.get();
         gr.fillCanvas(backgroundColor());
         gr.ctx().setFill(WHITE);
         gr.ctx().setFont(font);

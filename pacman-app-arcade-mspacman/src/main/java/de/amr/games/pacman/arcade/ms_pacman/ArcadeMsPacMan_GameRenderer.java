@@ -137,9 +137,8 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
         ctx.restore();
     }
 
-    public void drawClapperBoard(ClapperboardAnimation clapperboardAnimation, double x, double y) {
+    public void drawClapperBoard(ClapperboardAnimation clapperboardAnimation, double x, double y, Font font) {
         clapperboardAnimation.currentSprite().ifPresent(sprite -> {
-            Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
             drawSpriteScaledCenteredOverTile(sprite, x, y);
             Color textColor = Color.web(Arcade.Palette.WHITE);
             ctx.setFont(font);

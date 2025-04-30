@@ -94,7 +94,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
+        final Font font = fontPy.get();
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {

@@ -12,13 +12,13 @@ import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.ui.Globals.DEBUG_TEXT_FONT;
-import static de.amr.games.pacman.ui.Globals.THE_KEYBOARD;
+import static de.amr.games.pacman.ui.Globals.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -31,6 +31,7 @@ public abstract class GameScene2D implements GameScene {
     protected final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     protected final BooleanProperty debugInfoVisiblePy = new SimpleBooleanProperty(false);
     protected final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
+    protected final ObjectProperty<Font> fontPy = new SimpleObjectProperty<>();
 
     protected final Map<KeyCodeCombination, Action> actionBindings = new HashMap<>();
 
@@ -39,6 +40,7 @@ public abstract class GameScene2D implements GameScene {
 
     @Override
     public final void init() {
+        fontPy.bind(scalingPy.map(scaling -> THE_ASSETS.arcadeFontAtSize((float) scaling * TS)));
         doInit();
         bindActions();
         enableActionBindings(THE_KEYBOARD);

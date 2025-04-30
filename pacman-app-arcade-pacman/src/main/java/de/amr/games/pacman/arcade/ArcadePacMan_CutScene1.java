@@ -104,8 +104,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
-            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), font);
+            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), fontPy.get());
         }
         gr.drawAnimatedActor(pac);
         gr.drawAnimatedActor(blinky);

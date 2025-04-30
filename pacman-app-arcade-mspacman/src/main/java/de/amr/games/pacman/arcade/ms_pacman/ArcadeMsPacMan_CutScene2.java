@@ -79,11 +79,10 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
-            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), font);
+            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), fontPy.get());
         }
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
-            r.drawClapperBoard(clapperboardAnimation, tiles_to_px(3), tiles_to_px(10));
+            r.drawClapperBoard(clapperboardAnimation, tiles_to_px(3), tiles_to_px(10), fontPy.get());
         }
         gr.drawAnimatedActor(msPacMan);
         gr.drawAnimatedActor(pacMan);

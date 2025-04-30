@@ -43,7 +43,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
+        Font font = fontPy.get();
         Font font6 = THE_ASSETS.arcadeFontAtSize(scaled(6));
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());

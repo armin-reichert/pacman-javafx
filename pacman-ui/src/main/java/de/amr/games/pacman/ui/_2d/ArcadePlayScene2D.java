@@ -17,6 +17,8 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.uilib.Ufx;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -166,13 +168,14 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
+        final Font font = fontPy.get();
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
             gr.drawScores(game(), WHITE, font);
         }
-        GameLevel level = game().level().orElse(null);
+
+        final GameLevel level = game().level().orElse(null);
         // Scene is drawn already for 2 ticks before level has been created
         if (level == null) {
             if (!THE_CLOCK.isPaused()) {

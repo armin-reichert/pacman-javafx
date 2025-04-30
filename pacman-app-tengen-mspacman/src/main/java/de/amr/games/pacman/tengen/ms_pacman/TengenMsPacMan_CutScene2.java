@@ -154,12 +154,11 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
-            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), font);
+            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), fontPy.get());
         }
         var r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
-        r.drawClapperBoard(clapAnimation, "THE CHASE", 2, CLAP_TILE_X, CLAP_TILE_Y);
+        r.drawClapperBoard(clapAnimation, "THE CHASE", 2, CLAP_TILE_X, CLAP_TILE_Y, fontPy.get());
         r.drawAnimatedActor(msPacMan);
         r.drawAnimatedActor(pacMan);
         r.drawLevelCounter(game().levelCounter(), sizeInPx().minus(0, 3*TS));

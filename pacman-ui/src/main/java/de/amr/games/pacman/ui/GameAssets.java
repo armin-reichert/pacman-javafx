@@ -41,9 +41,7 @@ public class GameAssets extends AssetStorage implements ResourceManager {
         store("voice.immunity.on",       url("sound/voice/immunity-on.mp3"));
     }
 
-    public Font arcadeFontAtSize(float size) {
-        return font("font.arcade", size);
-    }
+    public Font arcadeFontAtSize(float size) { return font("font.arcade", size); }
 
     public String localizedGameOverMessage() {
         return pickerForGameOverTexts.next();

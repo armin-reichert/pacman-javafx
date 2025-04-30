@@ -43,7 +43,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        Font font = THE_ASSETS.arcadeFontAtSize(scaled(TS));
+        final Font font = fontPy.get();
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
