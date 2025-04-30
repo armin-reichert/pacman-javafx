@@ -1336,15 +1336,15 @@ public class TileMapEditor {
         changeManager.setWorldMapChanged();
 
         if (isSymmetricEdit()) {
-            Vector2i mirrorTile = worldMap.vSymmetricTile(tile);
+            Vector2i mirroredTile = worldMap.mirroredTile(tile);
             if (layerID == LayerID.FOOD) {
-                if (canEditFoodAtTile(mirrorTile)) {
-                    worldMap.set(layerID, mirrorTile, value);
+                if (canEditFoodAtTile(mirroredTile)) {
+                    worldMap.set(layerID, mirroredTile, value);
                 }
             } else {
                 byte mirroredValue = mirroredTileValue(value);
-                worldMap.set(layerID, mirrorTile, mirroredValue);
-                worldMap.set(LayerID.FOOD, mirrorTile, FoodTiles.EMPTY);
+                worldMap.set(layerID, mirroredTile, mirroredValue);
+                worldMap.set(LayerID.FOOD, mirroredTile, FoodTiles.EMPTY);
             }
         }
     }

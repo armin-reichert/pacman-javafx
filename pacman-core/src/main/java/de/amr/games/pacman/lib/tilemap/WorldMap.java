@@ -394,7 +394,11 @@ public class WorldMap {
         return tiles().filter(tile -> get(layerID, tile) == content);
     }
 
-    public Vector2i vSymmetricTile(Vector2i tile) {
+    /**
+     * @param tile some tile
+     * @return The tile at the mirrored position wrt vertical mirror axis.
+     */
+    public Vector2i mirroredTile(Vector2i tile) {
         return Vector2i.of(numCols() - 1 - tile.x(), tile.y());
     }
 

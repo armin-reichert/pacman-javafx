@@ -103,8 +103,8 @@ public class ObstacleEditor {
                     Vector2i tile = minTile.plus(col, row);
                     renderer.drawTile(g, tile, content[row][col]);
                     if (symmetricEditProperty().get()) {
-                        Vector2i symmetricTile = worldMapPy.get().vSymmetricTile(tile);
-                        renderer.drawTile(g, symmetricTile, mirroredTileValue(content[row][col]));
+                        Vector2i mirroredTile = worldMapPy.get().mirroredTile(tile);
+                        renderer.drawTile(g, mirroredTile, mirroredTileValue(content[row][col]));
                     }
                 }
             }
