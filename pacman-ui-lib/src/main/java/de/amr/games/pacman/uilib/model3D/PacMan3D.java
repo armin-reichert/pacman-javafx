@@ -22,8 +22,8 @@ public class PacMan3D extends XMan3D {
 
     @Override
     public Animation createDyingAnimation() {
-        Duration duration = Duration.seconds(1.5);
-        byte numSpins = 6;
+        Duration duration = Duration.seconds(1);
+        byte numSpins = 5;
 
         var spinning = new RotateTransition(duration.divide(numSpins), root);
         spinning.setAxis(Rotate.Z_AXIS);
