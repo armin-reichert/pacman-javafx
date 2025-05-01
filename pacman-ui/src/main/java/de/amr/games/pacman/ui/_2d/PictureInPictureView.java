@@ -10,6 +10,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.VBox;
 import org.tinylog.Logger;
 
+import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.ui.Globals.*;
 import static java.util.Objects.requireNonNull;
 
@@ -39,6 +40,7 @@ public class PictureInPictureView extends VBox {
         GameRenderer renderer = THE_UI_CONFIGS.current().createRenderer(canvas);
         scene2D.setGameRenderer(renderer);
         scene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
+        scene2D.arcadeFontScaledTS.bind(scene2D.scalingPy.map(scaling -> THE_ASSETS.arcadeFontAtSize((float) scaling * TS)));
         recomputeLayout();
     }
 
