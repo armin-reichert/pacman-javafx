@@ -16,7 +16,6 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameScene;
-import de.amr.games.pacman.ui.Globals;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._2d.LevelCompleteAnimation;
 import de.amr.games.pacman.uilib.CameraControlledView;
@@ -24,7 +23,6 @@ import de.amr.games.pacman.uilib.Ufx;
 import de.amr.games.pacman.uilib.input.Keyboard;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Camera;
 import javafx.scene.Node;
@@ -34,7 +32,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.tinylog.Logger;
 
@@ -62,10 +62,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     private static final int MOVING_MESSAGE_DELAY = 120;
 
-    private static class MovingCamera extends ParallelCamera {
+    private class MovingCamera extends ParallelCamera {
         private static final float CAM_SPEED = 0.03f;
-
-        private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
 
         private int idleTicks;
         private int verticalRangeTiles;
@@ -78,10 +76,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
         public void setVerticalRangeTiles(int numTiles) {
             verticalRangeTiles = numTiles;
-        }
-
-        public DoubleProperty scalingProperty() {
-            return scalingPy;
         }
 
         public void setCameraToTopOfScene() {
@@ -149,14 +143,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         canvas.setClip(clip);
 
         var root = new StackPane(canvas);
-        root.setBackground(null);
+        root.setBackground(Background.EMPTY);
 
         fxSubScene = new SubScene(root, 42, 42);
-        fxSubScene.fillProperty().bind(PY_CANVAS_BG_COLOR);
+        fxSubScene.setFill(Color.BLACK);
 
         movingCamera = new MovingCamera();
-        movingCamera.scalingProperty().bind(scalingProperty());
-
         fixedCamera = new ParallelCamera();
 
         fxSubScene.cameraProperty().bind(displayModeProperty()
