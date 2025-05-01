@@ -77,10 +77,6 @@ public class GameSound {
         return player;
     }
 
-    public void clearSounds(GameVariant gameVariant) {
-        soundsByGameVariant.get(gameVariant).clear();
-    }
-
     public void selectGameVariant(GameVariant gameVariant, String assetNamespace) {
         this.gameVariant = requireNonNull(gameVariant);
         this.assetNamespace = requireNonNull(assetNamespace);
@@ -321,9 +317,7 @@ public class GameSound {
         playIfEnabled("pacman_death");
     }
 
-    public void playPacPowerSound() {
-        playIfEnabled("pacman_power");
-    }
+    public void playPacPowerSound() { playIfEnabled("pacman_power"); }
 
     public void stopPacPowerSound() {
         stop("pacman_power");

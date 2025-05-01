@@ -23,7 +23,6 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -166,19 +165,13 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        final Font font = arcadeFontScaledTS();
-        gr.fillCanvas(backgroundColor());
-        if (game().isScoreVisible()) {
-            gr.drawScores(game(), WHITE, font);
-        }
-
         final GameLevel level = game().level().orElse(null);
-        // Scene is drawn already for 2 ticks before level has been created
-        if (level == null) {
-            if (!THE_CLOCK.isPaused()) {
-                Logger.warn("Tick {}: Game level not yet available, scene content not drawn", THE_CLOCK.tickCount());
-            }
-            return;
+        if (level == null) return; // Scene is drawn already 2 ticks before level has been created
+
+        gr.fillCanvas(backgroundColor());
+
+        if (game().isScoreVisible()) {
+            gr.drawScores(game(), WHITE, arcadeFontScaledTS());
         }
 
         // Draw maze
@@ -188,7 +181,7 @@ public class ArcadePlayScene2D extends GameScene2D {
             level.blinking().isOn());
 
         if (level.message() != null) {
-            drawLevelMessage(level, font, centerPositionBelowHouse(level));
+            drawLevelMessage(level, centerPositionBelowHouse(level));
         }
 
         level.bonus().ifPresent(gr::drawBonus);
@@ -210,30 +203,30 @@ public class ArcadePlayScene2D extends GameScene2D {
             gr.drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - 2 * TS);
         } else {
             gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_MECHANISM.numCoins()),
-                WHITE, font, 2 * TS, sizeInPx().y() - 2);
+                WHITE, arcadeFontScaledTS(), 2 * TS, sizeInPx().y() - 2);
         }
         gr.drawLevelCounter(game().levelCounter(), sizeInPx());
     }
 
-    private void drawLevelMessage(GameLevel level, Font font, Vector2f messageCenterPosition) {
+    private void drawLevelMessage(GameLevel level, Vector2f messageCenterPosition) {
         switch (level.message()) {
             case GAME_OVER -> {
                 String text = "GAME  OVER";
                 // this assumes fixed font width of one tile:
                 double x = messageCenterPosition.x() - (text.length() * HTS);
-                gr.fillTextAtScaledPosition(text, RED, font, x, messageCenterPosition.y());
+                gr.fillTextAtScaledPosition(text, RED, arcadeFontScaledTS(), x, messageCenterPosition.y());
             }
             case READY -> {
                 String text = "READY!";
                 // this assumes fixed font width of one tile:
                 double x = messageCenterPosition.x() - (text.length() * HTS);
-                gr.fillTextAtScaledPosition(text, YELLOW, font, x, messageCenterPosition.y());
+                gr.fillTextAtScaledPosition(text, YELLOW, arcadeFontScaledTS(), x, messageCenterPosition.y());
             }
             case TEST_LEVEL -> {
                 String text = "TEST    L%03d".formatted(level.number());
                 // this assumes fixed font width of one tile:
                 double x = messageCenterPosition.x() - (text.length() * HTS);
-                gr.fillTextAtScaledPosition(text, WHITE, font, x, messageCenterPosition.y());
+                gr.fillTextAtScaledPosition(text, WHITE, arcadeFontScaledTS(), x, messageCenterPosition.y());
             }
         }
     }
