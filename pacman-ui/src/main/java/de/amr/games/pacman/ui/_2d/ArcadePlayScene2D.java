@@ -201,14 +201,13 @@ public class ArcadePlayScene2D extends GameScene2D {
             ghostsInZOrder(level).forEach(gr::drawAnimatedCreatureInfo);
         }
 
-        // Draw lives counter or remaining credit
+        // Draw either lives counter or missing credit
         if (game().canStartNewGame()) {
-            //TODO: this code is ugly. Realizes effect that Pac is "picked" from the lives counter when game starts.
-            int numLivesShown = game().livesProperty().get() - 1;
-            if (gameState() == GameState.STARTING_GAME && !level.pac().isVisible()) {
-                numLivesShown += 1;
-            }
-            gr.drawLivesCounter(numLivesShown, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - 2 * TS);
+            // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
+            int numLivesDisplayed = gameState() == GameState.STARTING_GAME && !level.pac().isVisible()
+                ? game().livesProperty().get()
+                : game().livesProperty().get() - 1;
+            gr.drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - 2 * TS);
         } else {
             gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_MECHANISM.numCoins()),
                 WHITE, font, 2 * TS, sizeInPx().y() - 2);
