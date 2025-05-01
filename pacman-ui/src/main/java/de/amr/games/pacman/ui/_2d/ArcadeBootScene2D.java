@@ -111,7 +111,7 @@ public class ArcadeBootScene2D extends GameScene2D {
     // was probably used to correct screen geometry
     private void paintScreenTestGrid() {
         Vector2f sceneSize = sizeInPx();
-        Vector2i sizeInTiles = levelSizeInTilesOrElse(ARCADE_MAP_SIZE_IN_TILES);
+        Vector2i sizeInTiles = ARCADE_MAP_SIZE_IN_TILES;
         int numRows = sizeInTiles.y() / 2, numCols = sizeInTiles.y() / 2;
         gr.ctx().setStroke(WHITE);
         gr.ctx().setLineWidth(scaled(2.0));
