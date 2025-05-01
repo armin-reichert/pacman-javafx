@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.arcade.Arcade;
+import de.amr.games.pacman.lib.timer.TickTimer;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -19,21 +20,24 @@ import static de.amr.games.pacman.ui.Globals.THE_UI_CONFIGS;
 
 public class ArcadeBootScene2D extends GameScene2D {
 
-    public static final Color WHITE = Color.web(Arcade.Palette.WHITE);
+    private static final Color WHITE = Color.web(Arcade.Palette.WHITE);
+    private static final int FRAGMENT_SIZE = 16;
 
-    private boolean isTickMultipleOf4;
-    private boolean isTickMultipleOf8;
+    private double minX, maxX, minY, maxY;
 
     @Override
     public void doInit() {
         game().scoreVisibleProperty().set(false);
+        Image spriteImage = THE_UI_CONFIGS.current().spriteSheet().sourceImage();
+        // ignore left half of sprite sheet image
+        minX = spriteImage.getWidth() / 2;
+        maxX = spriteImage.getWidth() - FRAGMENT_SIZE;
+        minY = 0;
+        maxY = spriteImage.getHeight() - FRAGMENT_SIZE;
     }
 
     @Override
     public void update() {
-        long tick = gameState().timer().tickCount();
-        isTickMultipleOf4 = tick % 4 == 0;
-        isTickMultipleOf8 = tick % 8 == 0;
         if (gameState().timer().atSecond(4)) {
             THE_GAME_CONTROLLER.letCurrentStateExpire();
         }
@@ -46,28 +50,35 @@ public class ArcadeBootScene2D extends GameScene2D {
 
     @Override
     public void draw() {
-        long tick = gameState().timer().tickCount();
         gr.setScaling(scaling());
-        if (tick == 1) {
+        if (gameState().timer().tickCount() == 1) {
             gr.fillCanvas(backgroundColor());
-        } else if (gameState().timer().betweenSeconds(1, 2) && isTickMultipleOf8) {
-            paintRandomHexCodes(sizeInPx());
-        } else if (gameState().timer().betweenSeconds(2, 3.5) && isTickMultipleOf4) {
-            paintRandomSprites(sizeInPx());
-        } else if (gameState().timer().atSecond(3.5)) {
-            paintScreenTestGrid(sizeInPx());
+        } else {
+            drawSceneContent();
         }
     }
 
     @Override
-    protected void drawSceneContent() {}
+    protected void drawSceneContent() {
+        TickTimer timer = gameState().timer();
+        if (timer.betweenSeconds(1, 2) && timer.tickCount() % 4 == 0) {
+            gr.fillCanvas(backgroundColor());
+            paintRandomHexCodes();
+        } else if (timer.betweenSeconds(2, 3.5) && timer.tickCount() % 4 == 0) {
+            gr.fillCanvas(backgroundColor());
+            paintRandomSpriteFragments();
+        } else if (timer.atSecond(3.5)) {
+            gr.fillCanvas(backgroundColor());
+            paintScreenTestGrid();
+        }
+    }
 
-    private void paintRandomHexCodes(Vector2f sceneSize) {
+    private void paintRandomHexCodes() {
+        final Vector2f sceneSize = sizeInPx();
         final Font font = arcadeFontScaledTS();
-        gr.fillCanvas(backgroundColor());
+        final int numRows = (int) (sceneSize.y() / TS), numCols = (int) (sceneSize.x() / TS);
         gr.ctx().setFill(WHITE);
         gr.ctx().setFont(font);
-        int numRows = (int) (sceneSize.y() / TS), numCols = (int) (sceneSize.x() / TS);
         for (int row = 0; row < numRows; ++row) {
             for (int col = 0; col < numCols; ++col) {
                 var hexCode = Integer.toHexString(THE_RNG.nextInt(16));
@@ -76,32 +87,30 @@ public class ArcadeBootScene2D extends GameScene2D {
         }
     }
 
-    private void paintRandomSprites(Vector2f sceneSize) {
-        Image spriteImage = THE_UI_CONFIGS.current().spriteSheet().sourceImage();
-        gr.fillCanvas(backgroundColor());
-        int numRows = (int) (sceneSize.y() / TS), numCols = (int) (sceneSize.x() / TS);
-        for (int row = 0; row < numRows / 2; ++row) {
-            if (THE_RNG.nextInt(100) > 20) {
-                var region1 = randomImageRegion(spriteImage, 16);
-                var region2 = randomImageRegion(spriteImage, 16);
-                var splitX = numCols / 8 + THE_RNG.nextInt(numCols / 4);
-                for (int col = 0; col < numCols / 2; ++col) {
-                    var region = col < splitX ? region1 : region2;
-                    gr.drawSpriteScaled(region, region.width() * col, region.height() * row);
-                }
+    private void paintRandomSpriteFragments() {
+        final Vector2f sceneSize = sizeInPx();
+        final int numFragmentsX = (int) (sceneSize.x() / FRAGMENT_SIZE);
+        final int numFragmentsY = (int) (sceneSize.y() / FRAGMENT_SIZE);
+        for (int row = 0; row < numFragmentsY; ++row) {
+            if (THE_RNG.nextInt(100) < 20) continue;
+            RectArea fragment1 = randomFragment(), fragment2 = randomFragment();
+            int split = numFragmentsX / 8 + THE_RNG.nextInt(numFragmentsX / 4);
+            for (int col = 0; col < numFragmentsX; ++col) {
+                gr.drawSpriteScaled(col < split ? fragment1 : fragment2, FRAGMENT_SIZE * col, FRAGMENT_SIZE * row);
             }
         }
     }
 
-    private RectArea randomImageRegion(Image image, int size) {
-        int x = (int) (THE_RNG.nextDouble() * (image.getWidth() - size));
-        int y = (int) (THE_RNG.nextDouble() * (image.getHeight() - size));
-        return new RectArea(x, y, size, size);
+    private RectArea randomFragment() {
+        return new RectArea(
+            (int) lerp(minX, maxX, THE_RNG.nextDouble()),
+            (int) lerp(minY, maxY, THE_RNG.nextDouble()),
+            FRAGMENT_SIZE, FRAGMENT_SIZE);
     }
 
     // was probably used to correct screen geometry
-    private void paintScreenTestGrid(Vector2f sceneSize) {
-        gr.fillCanvas(backgroundColor());
+    private void paintScreenTestGrid() {
+        Vector2f sceneSize = sizeInPx();
         Vector2i sizeInTiles = levelSizeInTilesOrElse(ARCADE_MAP_SIZE_IN_TILES);
         int numRows = sizeInTiles.y() / 2, numCols = sizeInTiles.y() / 2;
         gr.ctx().setStroke(WHITE);
