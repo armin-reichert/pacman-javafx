@@ -22,7 +22,9 @@ import de.amr.games.pacman.ui._2d.SpriteAnimationSet;
 import de.amr.games.pacman.uilib.animation.SpriteAnimation;
 import de.amr.games.pacman.uilib.input.JoypadKeyBinding;
 import javafx.beans.property.FloatProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -46,6 +48,7 @@ import static java.util.function.Predicate.not;
  */
 public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
+    private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final FloatProperty scalingPy = new SimpleFloatProperty(1);
     private final TengenMsPacMan_SpriteSheet spriteSheet;
     private final MapRepository mapRepository;
@@ -58,6 +61,8 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         this.mapRepository = requireNonNull(mapRepository);
         this.canvas = requireNonNull(canvas);
     }
+
+    public ObjectProperty<Color> backgroundColorProperty() { return  backgroundColorPy; }
 
     @Override
     public void applyMapSettings(WorldMap worldMap) {
@@ -147,9 +152,9 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     public void drawWorld(GameLevel level, double mapX, double mapY) {
         ctx().setImageSmoothing(false);
 
-        TengenMsPacMan_GameModel game = THE_GAME_CONTROLLER.game();
-        MapCategory mapCategory = game.mapCategory();
-        int mapNumber = level.worldMap().getConfigValue("mapNumber");
+        final var game = (TengenMsPacMan_GameModel) level.game();
+        final MapCategory mapCategory = game.mapCategory();
+        final int mapNumber = level.worldMap().getConfigValue("mapNumber");
 
         if (!game.optionsHaveDefaultValues()) {
             drawGameOptions(game, level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
@@ -172,10 +177,11 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     public void drawFood(GameLevel level) {
+        //TODO may this happen?
         if (coloredMapSet == null) {
             Logger.error("Draw food: no map set available?");
             applyMapSettings(level.worldMap());
-            return; //TODO check why this happens
+            return;
         }
         ctx().save();
         ctx().scale(scaling(), scaling());
@@ -187,7 +193,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     public void drawHighlightedWorld(GameLevel level, double mapX, double mapY, int flashingIndex) {
         ctx().setImageSmoothing(false);
-        TengenMsPacMan_GameModel game = THE_GAME_CONTROLLER.game();
+        final var game = (TengenMsPacMan_GameModel) level.game();
         if (!game.optionsHaveDefaultValues()) {
             drawGameOptions(game, level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
         }
@@ -198,6 +204,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             scaled(mapX), scaled(mapY), scaled(region.width()), scaled(region.height())
         );
         overPaintActors(level);
+
         // draw food to erase eaten food!
         ctx().save();
         ctx().scale(scaling(), scaling());
@@ -210,7 +217,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     private void drawPellets(GameLevel level, Color pelletColor) {
         level.worldMap().tiles().filter(level::isFoodPosition).filter(not(level::isEnergizerPosition)).forEach(tile -> {
             double cx = tile.x() * TS + HTS, cy = tile.y() * TS + HTS;
-            ctx().setFill(Color.BLACK); // TODO
+            ctx().setFill(backgroundColorPy.get());
             ctx().fillRect(cx - 2, cy - 2, 4, 4);
             if (!level.hasEatenFoodAt(tile)) {
                 ctx().setFill(pelletColor);
@@ -224,7 +231,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         double offset = 0.5 * HTS;
         level.worldMap().tiles().filter(level::isEnergizerPosition).forEach(tile -> {
             double x = tile.x() * TS, y = tile.y() * TS;
-            ctx().setFill(Color.BLACK); // TODO
+            ctx().setFill(backgroundColorPy.get());
             ctx().fillRect(x - 1, y - 1, TS + 2, TS + 2); // avoid blitzer
             if (!level.hasEatenFoodAt(tile) && level.blinking().isOn()) {
                 ctx().setFill(pelletColor);
@@ -273,19 +280,17 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     private void overPaintActors(GameLevel world) {
         Vector2f topLeftPosition = world.houseMinTile().plus(1, 2).scaled(TS * scaling());
         Vector2f size = new Vector2i(world.houseSizeInTiles().x() - 2, 2).scaled(TS * scaling());
-        //ctx().setFill(Globals.PY_CANVAS_BG_COLOR.get());
-        Color fillColor = Color.BLACK; // TODO
-        ctx().setFill(fillColor);
+        ctx().setFill(backgroundColorPy.get());
         ctx().fillRect(topLeftPosition.x(), topLeftPosition.y(), size.x(), size.y());
-        overPaint(world.worldMap().getTerrainTileProperty("pos_pac", Vector2i.of(14, 26)), fillColor);
-        overPaint(world.worldMap().getTerrainTileProperty("pos_ghost_1_red", Vector2i.of(13, 14)), fillColor);
+        overPaint(world.worldMap().getTerrainTileProperty("pos_pac", Vector2i.of(14, 26)));
+        overPaint(world.worldMap().getTerrainTileProperty("pos_ghost_1_red", Vector2i.of(13, 14)));
     }
 
-    private void overPaint(Vector2i tile, Color fillColor) {
+    private void overPaint(Vector2i tile) {
         // Parameter tile denotes the left of the two tiles where actor is located between. Compute center position.
         double cx = tile.x() * TS;
         double cy = tile.y() * TS - HTS;
-        ctx().setFill(fillColor);
+        ctx().setFill(backgroundColorPy.get());
         ctx().fillRect(scaled(cx), scaled(cy), scaled(16), scaled(16));
     }
 
@@ -378,7 +383,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             // overpaint number from sprite sheet
             ctx().save();
             ctx().scale(scaling(), scaling());
-            ctx().setFill(Globals.PY_CANVAS_BG_COLOR.get());
+            ctx().setFill(backgroundColorPy.get());
             ctx().fillRect(numberX - 1, numberY - 8, 12, 8);
             ctx().restore();
 

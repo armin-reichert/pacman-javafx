@@ -35,6 +35,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.ui.Globals.PY_3D_ENABLED;
+import static de.amr.games.pacman.ui.Globals.PY_CANVAS_BG_COLOR;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_UIConfig implements GameUIConfig, ResourceManager {
@@ -205,7 +206,9 @@ public class TengenMsPacMan_UIConfig implements GameUIConfig, ResourceManager {
 
     @Override
     public TengenMsPacMan_Renderer2D createRenderer(Canvas canvas) {
-        return new TengenMsPacMan_Renderer2D(spriteSheet, mapRepository, canvas);
+        var renderer = new TengenMsPacMan_Renderer2D(spriteSheet, mapRepository, canvas);
+        renderer.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
+        return renderer;
     }
 
     @Override

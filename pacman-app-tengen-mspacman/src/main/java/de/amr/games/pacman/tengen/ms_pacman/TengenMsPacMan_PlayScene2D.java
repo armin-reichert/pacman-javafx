@@ -59,12 +59,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     // (NES screen width, BIG map height (42 tiles) + 2 extra tile rows)
     private static final Vector2i UNSCALED_CANVAS_SIZE = Vector2i.of(NES_SIZE.x(), 44 * TS);
-
+    private static final float CAM_SPEED = 0.03f;
     private static final int MOVING_MESSAGE_DELAY = 120;
 
     private class MovingCamera extends ParallelCamera {
-        private static final float CAM_SPEED = 0.03f;
-
         private int idleTicks;
         private int verticalRangeTiles;
         private double targetY;
@@ -129,6 +127,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     private LevelCompleteAnimation levelCompleteAnimation;
 
     public TengenMsPacMan_PlayScene2D() {
+        movingCamera = new MovingCamera();
+        fixedCamera = new ParallelCamera();
+
         canvas = new Canvas();
         canvas.widthProperty().bind(scalingProperty().multiply(UNSCALED_CANVAS_SIZE.x()));
         canvas.heightProperty().bind(scalingProperty().multiply(UNSCALED_CANVAS_SIZE.y()));
@@ -146,11 +147,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         root.setBackground(Background.EMPTY);
 
         fxSubScene = new SubScene(root, 42, 42);
-        fxSubScene.setFill(Color.BLACK);
-
-        movingCamera = new MovingCamera();
-        fixedCamera = new ParallelCamera();
-
+        fxSubScene.setFill(PY_CANVAS_BG_COLOR.get());
         fxSubScene.cameraProperty().bind(displayModeProperty()
             .map(mode -> mode == SceneDisplayMode.SCROLLING ? movingCamera : fixedCamera));
     }
@@ -449,45 +446,47 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void draw() {
+        final var tr = (TengenMsPacMan_Renderer2D) gr;
+        tr.fillCanvas(tr.backgroundColorProperty().get());
         updateScaling();
         updateCameraPosition(scaling());
-        gr.setScaling(scaling());
-        gr.fillCanvas(backgroundColor());
-        game().level().ifPresent(level -> {
-            gr.ctx().save();
-            gr.ctx().translate(scaled(2 * TS), 0);
-            drawSceneContent();
-            gr.ctx().restore();
-        });
+        drawSceneContent();
     }
 
     @Override
     protected void drawSceneContent() {
-        if (game().isScoreVisible()) {
-            gr.drawScores(game(), nesPaletteColor(0x20), arcadeFontScaledTS());
-        }
-
         final GameLevel level = game().level().orElse(null);
         if (level == null) {
-            // Scene is drawn already for 2 ticks before level has been created
+            // Scene is drawn already 2 ticks before level has been created
             Logger.warn("Tick {}: Game level not yet available, scene content not drawn", THE_CLOCK.tickCount());
             return;
         }
-
+        final TengenMsPacMan_GameModel tgame = game();
         final var tr = (TengenMsPacMan_Renderer2D) gr;
-        final TengenMsPacMan_GameModel tengenGame = game();
+        final int mazeTopY = 3 * TS;
+
+        tr.ctx().save();
+
+        // Tengen screen width is 32 tiles, each maze is 28 tiles wide, so reserve 2 tiles on each side
+        tr.ctx().translate(scaled(2 * TS), 0);
+
+        tr.setScaling(scaling());
+
+        if (tgame.isScoreVisible()) {
+            tr.drawScores(tgame, nesPaletteColor(0x20), arcadeFontScaledTS());
+        }
 
         final boolean flashing = levelCompleteAnimation != null && levelCompleteAnimation.inFlashingPhase();
         if (flashing) {
             if (levelCompleteAnimation.inHighlightPhase()) {
-                tr.drawHighlightedWorld(level, 0, 3 * TS, levelCompleteAnimation.flashingIndex());
+                tr.drawHighlightedWorld(level, 0, mazeTopY, levelCompleteAnimation.flashingIndex());
             } else {
-                tr.drawWorld(level, 0,  3 * TS);
+                tr.drawWorld(level, 0, mazeTopY);
                 tr.drawFood(level); // this also hides eaten food!
             }
         }
         else {
-            tr.drawWorld(level, 0,  3 * TS);
+            tr.drawWorld(level, 0, mazeTopY);
             tr.drawFood(level);
             //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
             tr.drawLevelMessage(level, level.isDemoLevel(), currentMessagePosition(level), arcadeFontScaledTS());
@@ -496,17 +495,17 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             level.bonus().ifPresent(tr::drawBonus);
         }
 
-        int livesCounterEntries = tengenGame.livesProperty().get() - 1;
+        int livesCounterEntries = tgame.livesProperty().get() - 1;
         if (gameState() == GameState.STARTING_GAME && !level.pac().isVisible()) {
             // as long as Pac-Man is invisible when the game is started, one entry more appears in the lives counter
             livesCounterEntries += 1;
         }
         tr.drawLivesCounter(livesCounterEntries, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - TS);
 
-        if (level.isDemoLevel() || tengenGame.mapCategory() == MapCategory.ARCADE) {
-            tr.drawLevelCounter(tengenGame.levelCounter(), sizeInPx());
+        if (level.isDemoLevel() || tgame.mapCategory() == MapCategory.ARCADE) {
+            tr.drawLevelCounter(tgame.levelCounter(), sizeInPx());
         } else {
-            tr.drawLevelCounterWithLevelNumbers(level.number(), tengenGame.levelCounter(), sizeInPx());
+            tr.drawLevelCounterWithLevelNumbers(level.number(), tgame.levelCounter(), sizeInPx());
         }
 
         if (debugInfoVisiblePy.get()) {
@@ -514,6 +513,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             ghostsInZOrder(level).forEach(tr::drawAnimatedCreatureInfo);
             drawDebugInfo();
         }
+
+        tr.ctx().restore();
     }
 
     private Stream<Ghost> ghostsInZOrder(GameLevel level) {
