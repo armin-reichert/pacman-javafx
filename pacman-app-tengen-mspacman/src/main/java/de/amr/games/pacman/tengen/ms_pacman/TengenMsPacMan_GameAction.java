@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.uilib.Action;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
@@ -31,6 +30,13 @@ public enum TengenMsPacMan_GameAction implements Action {
         @Override
         public void execute() {
             THE_GAME_CONTROLLER.game().playingProperty().set(false);
+            THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
+        }
+    },
+
+    START_GAME {
+        @Override
+        public void execute() {
             THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
         }
     },

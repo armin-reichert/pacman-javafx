@@ -25,8 +25,8 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
     @Override
     public void bindActions() {
-        bind(GameAction.INSERT_COIN,  naked(KeyCode.DIGIT5), naked(KeyCode.NUMPAD5));
-        bind(GameAction.START_GAME,   naked(KeyCode.DIGIT1), naked(KeyCode.NUMPAD1));
+        bindArcadeInsertCoinAction();
+        bindArcadeStartGameAction();
     }
 
     @Override
