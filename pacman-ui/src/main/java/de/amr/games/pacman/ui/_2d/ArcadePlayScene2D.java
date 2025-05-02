@@ -48,24 +48,22 @@ public class ArcadePlayScene2D extends GameScene2D {
     @Override
     protected void doInit() {
         game().scoreVisibleProperty().set(true);
-        bindArcadeInsertCoinAction();
-        enableActionBindings(THE_KEYBOARD);
     }
 
     @Override
     public void onLevelCreated(GameEvent e) {
         GameLevel level = game().level().orElseThrow();
         gr.applyMapSettings(level.worldMap());
-        bindArcadeStartGameAction();
+        if (level.isDemoLevel()) {
+            bindArcadeInsertCoinAction();
+        }
         enableActionBindings(THE_KEYBOARD);
     }
 
     @Override
     public void onLevelStarted(GameEvent e) {
         GameLevel level = game().level().orElseThrow();
-        if (level.isDemoLevel()) {
-            bind(GameAction.INSERT_COIN, naked(KeyCode.DIGIT5), naked(KeyCode.NUMPAD5));
-        } else {
+        if (!level.isDemoLevel()) {
             bindPlayerActions();
             bindCheatActions();
         }
