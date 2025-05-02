@@ -123,14 +123,14 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
+        final SceneState state = sceneController.state();
         final Font font = arcadeFontScaledTS();
-        gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
             gr.drawScores(game(), ARCADE_WHITE, font);
         }
         drawMarquee();
         gr.fillTextAtScaledPosition("\"MS PAC-MAN\"", ARCADE_ORANGE, font, TITLE_X, TITLE_Y);
-        if (sceneController.state() == SceneState.GHOSTS_MARCHING_IN) {
+        if (state == SceneState.GHOSTS_MARCHING_IN) {
             String ghostName = ghosts[ghostID].name().toUpperCase();
             double dx = ghostName.length() < 4 ? tiles_to_px(1) : 0;
             if (ghostID == RED_GHOST_ID) {
@@ -138,7 +138,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
             }
             gr.fillTextAtScaledPosition(ghostName, COLOR_GHOST[ghostID], font, TITLE_X + tiles_to_px(3) + dx, TOP_Y + tiles_to_px(6));
         }
-        else if (sceneController.state() == SceneState.MS_PACMAN_MARCHING_IN || sceneController.state() == SceneState.READY_TO_PLAY) {
+        else if (state == SceneState.MS_PACMAN_MARCHING_IN || state == SceneState.READY_TO_PLAY) {
             gr.fillTextAtScaledPosition("STARRING", ARCADE_WHITE, font, TITLE_X, TOP_Y + tiles_to_px(3));
             gr.fillTextAtScaledPosition("MS PAC-MAN", ARCADE_YELLOW, font, TITLE_X, TOP_Y + tiles_to_px(6));
         }
@@ -146,8 +146,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
             gr.drawAnimatedActor(ghost);
         }
         gr.drawAnimatedActor(msPacMan);
-        // might be PacManXXL renderer!
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
+            // might be PacManXXL vector renderer!
             r.drawMidwayCopyright(6, 28, ARCADE_RED, font);
         }
         gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_MECHANISM.numCoins()), ARCADE_WHITE, font, 2 * TS, sizeInPx().y() - 2);
@@ -171,14 +171,14 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     private void drawBulb(int i, boolean on) {
         int x, y;
         if (i <= 33)      { x = MARQUEE.x() + 4 * i; y = MARQUEE.yMax(); } // lower edge left-to-right
-        else if (i <= 48) { x = MARQUEE.xMax();      y = 4 * (70 - i); } // right edge bottom-to-top
-        else if (i <= 81) { x = 4 * (96 - i);        y = MARQUEE.y(); } // upper edge right-to-left
-        else              { x = MARQUEE.x();         y = 4 * (i - 59); } // left edge top-to-bottom
+        else if (i <= 48) { x = MARQUEE.xMax();      y = 4 * (70 - i); }   // right edge bottom-to-top
+        else if (i <= 81) { x = 4 * (96 - i);        y = MARQUEE.y(); }    // upper edge right-to-left
+        else              { x = MARQUEE.x();         y = 4 * (i - 59); }   // left edge top-to-bottom
         gr.ctx().setFill(on ? COLOR_BULB_ON : COLOR_BULB_OFF);
         gr.ctx().fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 
-    // Scene controller FSM states
+    // Scene controller FSM
 
     private enum SceneState implements FsmState<ArcadeMsPacMan_IntroScene> {
 
