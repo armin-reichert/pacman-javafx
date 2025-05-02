@@ -263,7 +263,7 @@ public abstract class GameModel implements ScoreManager {
         Logger.trace("Game level {} completed.", level.number());
     }
 
-    public boolean isLevelComplete() {
+    public boolean isLevelFinished() {
         return level.uneatenFoodCount() == 0;
     }
 
