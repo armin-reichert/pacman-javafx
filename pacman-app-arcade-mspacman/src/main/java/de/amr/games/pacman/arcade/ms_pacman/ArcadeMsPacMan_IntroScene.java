@@ -7,6 +7,7 @@ package de.amr.games.pacman.arcade.ms_pacman;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.lib.fsm.FsmState;
@@ -34,22 +35,23 @@ import static de.amr.games.pacman.ui.Globals.THE_UI_CONFIGS;
  */
 public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
-    static final float SPEED = 1.1f;
+    private static final float SPEED = 1.1f;
 
-    static final int TOP_Y        = TS * 11 + 1;
-    static final int TITLE_X      = TS * 10;
-    static final int TITLE_Y      = TS * 8;
-    static final int STOP_X_GHOST = TS * 6 - 4;
-    static final int STOP_X_MSPAC = TS * 15 + 2;
+    private static final int TOP_Y        = TS * 11 + 1;
+    private static final int TITLE_X      = TS * 10;
+    private static final int TITLE_Y      = TS * 8;
+    private static final int STOP_X_GHOST = TS * 6 - 4;
+    private static final int STOP_X_MSPAC = TS * 15 + 2;
 
-    static final int BULB_COUNT = 96;
-    static final int ACTIVE_BULBS_DIST = 16;
-    static final int MARQUEE_XMIN = 60, MARQUEE_XMAX = 192, MARQUEE_YMIN = 88, MARQUEE_YMAX = 148;
+    private static final int BULB_COUNT = 96;
+    private static final int ACTIVE_BULBS_DIST = 16;
+    private static final RectArea MARQUEE = new RectArea(60, 88, 132, 60);
+//    private static final int MARQUEE_XMIN = 60, MARQUEE_XMAX = 192, MARQUEE_YMIN = 88, MARQUEE_YMAX = 148;
 
-    static final Color COLOR_BULB_ON  = ARCADE_WHITE;
-    static final Color COLOR_BULB_OFF = ARCADE_RED;
+    private static final Color COLOR_BULB_ON  = ARCADE_WHITE;
+    private static final Color COLOR_BULB_OFF = ARCADE_RED;
 
-    static final Color[] COLOR_GHOST = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
+    private static final Color[] COLOR_GHOST = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
 
     private final FiniteStateMachine<SceneState, ArcadeMsPacMan_IntroScene> sceneController;
 
@@ -169,10 +171,10 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     private void drawBulb(int i, boolean on) {
         int x, y;
-        if (i <= 33)      { x = MARQUEE_XMIN + 4 * i; y = MARQUEE_YMAX; } // lower edge left-to-right
-        else if (i <= 48) { x = MARQUEE_XMAX;         y = 4 * (70 - i); } // right edge bottom-to-top
-        else if (i <= 81) { x = 4 * (96 - i);         y = MARQUEE_YMIN; } // upper edge right-to-left
-        else              { x = MARQUEE_XMIN;         y = 4 * (i - 59); } // left edge top-to-bottom
+        if (i <= 33)      { x = MARQUEE.x() + 4 * i; y = MARQUEE.yMax(); } // lower edge left-to-right
+        else if (i <= 48) { x = MARQUEE.xMax();      y = 4 * (70 - i); } // right edge bottom-to-top
+        else if (i <= 81) { x = 4 * (96 - i);        y = MARQUEE.y(); } // upper edge right-to-left
+        else              { x = MARQUEE.x();         y = 4 * (i - 59); } // left edge top-to-bottom
         gr.ctx().setFill(on ? COLOR_BULB_ON : COLOR_BULB_OFF);
         gr.ctx().fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }

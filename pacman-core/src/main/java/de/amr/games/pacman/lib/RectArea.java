@@ -25,6 +25,10 @@ public record RectArea(short x, short y, short width, short height) {
         this((short) x, (short) y, (short) width, (short) height);
     }
 
+    public int xMax() { return x + width; }
+
+    public int yMax() { return y + height; }
+
     public boolean contains(int x, int y) {
         return this.x <= x && x < this.x + width &&  this.y <= y && y < this.y + height;
     }
