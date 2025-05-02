@@ -20,7 +20,6 @@ import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
@@ -34,7 +33,6 @@ import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.games.pacman.ui.GameAssets.*;
 import static de.amr.games.pacman.ui.Globals.*;
-import static de.amr.games.pacman.uilib.input.Keyboard.naked;
 
 /**
  * 2D play scene for Arcade game variants.
@@ -54,21 +52,21 @@ public class ArcadePlayScene2D extends GameScene2D {
     public void onLevelCreated(GameEvent e) {
         GameLevel level = game().level().orElseThrow();
         gr.applyMapSettings(level.worldMap());
-        if (level.isDemoLevel()) {
-            bindArcadeInsertCoinAction();
-        }
-        enableActionBindings(THE_KEYBOARD);
     }
 
     @Override
     public void onLevelStarted(GameEvent e) {
         GameLevel level = game().level().orElseThrow();
-        if (!level.isDemoLevel()) {
+        if (level.isDemoLevel()) {
+            game().setScoreEnabled(false);
+            bindArcadeInsertCoinAction();
+            enableActionBindings(THE_KEYBOARD);
+        } else {
+            game().setScoreEnabled(true);
             bindPlayerActions();
             bindCheatActions();
+            enableActionBindings(THE_KEYBOARD);
         }
-        enableActionBindings(THE_KEYBOARD);
-        game().setScoreEnabled(!level.isDemoLevel());
     }
 
     @Override
