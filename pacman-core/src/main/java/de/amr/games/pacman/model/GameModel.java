@@ -188,7 +188,8 @@ public abstract class GameModel implements ScoreManager {
     public void startLevel() {
         level.setStartTime(System.currentTimeMillis());
         level.showMessage(level.isDemoLevel() ? GameLevel.Message.GAME_OVER : GameLevel.Message.READY);
-        letsGetReadyToRumble();
+        level.makeReadyForPlaying();
+        initActorAnimationState();
         setActorBaseSpeed(level.number());
         levelCounter().update(level);
         Logger.info("{} started", level.isDemoLevel() ? "Demo Level" : "Level " + level.number());
@@ -206,28 +207,7 @@ public abstract class GameModel implements ScoreManager {
         }
     }
 
-    /**
-     * Sets each guy to his start position and resets him to his initial state. The guys are all initially invisible!
-     */
-    public void letsGetReadyToRumble() {
-        level.pac().reset(); // initially invisible!
-        level.pac().setPosition(level.pacStartPosition());
-        level.pac().setMoveAndWishDir(Direction.LEFT);
-        level.pac().powerTimer().resetIndefiniteTime();
-        level.ghosts().forEach(ghost -> {
-            ghost.reset(); // initially invisible!
-            ghost.setPosition(level.ghostStartPosition(ghost.id()));
-            ghost.setMoveAndWishDir(level.ghostStartDirection(ghost.id()));
-            ghost.setState(LOCKED);
-        });
-        level.blinking().setStartPhase(Pulse.ON); // Energizers are visible when ON
-        level.blinking().reset();
-
-        //TODO this is dubious as actor animations are not always created at this point in time
-        initActorAnimationState();
-    }
-
-    protected void initActorAnimationState() {
+    public void initActorAnimationState() {
         level.pac().selectAnimation(ActorAnimations.ANIM_PAC_MUNCHING);
         level.pac().resetAnimation();
         level.ghosts().forEach(ghost -> {

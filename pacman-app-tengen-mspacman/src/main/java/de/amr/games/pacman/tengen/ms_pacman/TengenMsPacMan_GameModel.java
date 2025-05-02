@@ -351,7 +351,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    protected void initActorAnimationState() {
+    public void initActorAnimationState() {
         level.pac().selectAnimation(boosterActive
             ? ANIM_MS_PACMAN_BOOSTER : ActorAnimations.ANIM_PAC_MUNCHING);
         level.pac().resetAnimation();

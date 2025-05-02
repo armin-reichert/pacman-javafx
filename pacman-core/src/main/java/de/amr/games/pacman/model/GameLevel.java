@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.TerrainTiles.*;
+import static de.amr.games.pacman.model.actors.GhostState.LOCKED;
 import static java.util.Objects.requireNonNull;
 
 public class GameLevel {
@@ -150,6 +151,21 @@ public class GameLevel {
             }
         }
         return portals.toArray(new Portal[0]);
+    }
+
+    public void makeReadyForPlaying() {
+        pac.reset(); // initially invisible!
+        pac.setPosition(pacStartPosition());
+        pac.setMoveAndWishDir(Direction.LEFT);
+        pac.powerTimer().resetIndefiniteTime();
+        ghosts().forEach(ghost -> {
+            ghost.reset(); // initially invisible!
+            ghost.setPosition(ghostStartPosition(ghost.id()));
+            ghost.setMoveAndWishDir(ghostStartDirection(ghost.id()));
+            ghost.setState(LOCKED);
+        });
+        blinking.setStartPhase(Pulse.ON); // Energizers are visible when ON
+        blinking.reset();
     }
 
     public GameModel game() { return game; }

@@ -49,10 +49,10 @@ public interface GameScene extends GameEventListener, ActionProvider {
     }
 
     default void bindPlayerActions() {
-        bind(GameAction.PLAYER_UP,    naked(KeyCode.UP),     control(KeyCode.UP));
-        bind(GameAction.PLAYER_DOWN,  naked(KeyCode.DOWN),   control(KeyCode.DOWN));
-        bind(GameAction.PLAYER_LEFT,  naked(KeyCode.LEFT),   control(KeyCode.LEFT));
-        bind(GameAction.PLAYER_RIGHT, naked(KeyCode.RIGHT),  control(KeyCode.RIGHT));
+        bind(GameAction.PLAYER_UP,    naked(KeyCode.UP),    control(KeyCode.UP));
+        bind(GameAction.PLAYER_DOWN,  naked(KeyCode.DOWN),  control(KeyCode.DOWN));
+        bind(GameAction.PLAYER_LEFT,  naked(KeyCode.LEFT),  control(KeyCode.LEFT));
+        bind(GameAction.PLAYER_RIGHT, naked(KeyCode.RIGHT), control(KeyCode.RIGHT));
     }
 
     default void bindStartTestsActions() {
