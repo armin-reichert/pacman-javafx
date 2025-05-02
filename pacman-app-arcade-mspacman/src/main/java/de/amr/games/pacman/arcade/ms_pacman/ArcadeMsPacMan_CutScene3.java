@@ -55,8 +55,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         stork = new Actor2D();
         bag = new Actor2D();
 
-        music = THE_SOUND.createSound("intermission.3");
-        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
+        ArcadeMsPacMan_SpriteSheet  spriteSheet = THE_UI_CONFIGS.current().spriteSheet();
         msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));
         pacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));
 
@@ -66,6 +65,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         clapperboardAnimation = new ClapperboardAnimation("3", "JUNIOR");
         clapperboardAnimation.start();
 
+        music = THE_SOUND.createSound("intermission.3");
         setSceneState(STATE_CLAPPERBOARD, TickTimer.INDEFINITE);
     }
 
@@ -86,11 +86,11 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
             gr.drawScores(game(), ARCADE_WHITE, arcadeFontScaledTS());
         }
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
+            // Note: in Ms. Pac-Man XXL another renderer is used!
             r.drawClapperBoard(clapperboardAnimation, tiles_to_px(3), tiles_to_px(10), arcadeFontScaledTS());
         }
         gr.drawAnimatedActor(msPacMan);
@@ -100,7 +100,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         gr.drawLevelCounter(game().levelCounter(), sizeInPx());
     }
 
-    // scene controller state machine
+    // Scene controller state machine
 
     private static final byte STATE_CLAPPERBOARD = 0;
     private static final byte STATE_DELIVER_JUNIOR = 1;

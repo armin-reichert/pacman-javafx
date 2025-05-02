@@ -46,14 +46,14 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
         pacMan = new Pac();
         msPacMan = new Pac();
 
-        music = THE_SOUND.createSound("intermission.2");
-
-        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
+        ArcadeMsPacMan_SpriteSheet spriteSheet = THE_UI_CONFIGS.current().spriteSheet();
         msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));
         pacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));
 
         clapperboardAnimation = new ClapperboardAnimation("2", "THE CHASE");
         clapperboardAnimation.start();
+
+        music = THE_SOUND.createSound("intermission.2");
 
         setSceneState(STATE_CLAPPERBOARD, 120);
     }
@@ -75,7 +75,6 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
             gr.drawScores(game(), ARCADE_WHITE, arcadeFontScaledTS());
         }
