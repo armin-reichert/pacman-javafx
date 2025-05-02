@@ -168,30 +168,22 @@ public class ArcadePlayScene2D extends GameScene2D {
         final GameLevel level = game().level().orElse(null);
         if (level == null) return; // Scene is drawn already 2 ticks before level has been created
 
-        gr.fillCanvas(backgroundColor());
+        gr.applyMapSettings(level.worldMap());
 
         gr.drawScores(game(), ARCADE_WHITE, arcadeFontScaledTS());
-
-        // Draw maze
-        gr.applyMapSettings(level.worldMap());
         gr.drawMaze(level, 0, 3 * TS, backgroundColor(),
             levelCompleteAnimation != null && levelCompleteAnimation.inHighlightPhase(),
             level.blinking().isOn());
-
         if (level.message() != null) {
             drawLevelMessage(level, centerPositionBelowHouse(level));
         }
-
         level.bonus().ifPresent(gr::drawBonus);
-
         gr.drawAnimatedActor(level.pac());
         ghostsInZOrder(level).forEach(gr::drawAnimatedActor);
-
         if (debugInfoVisiblePy.get()) {
             gr.drawAnimatedCreatureInfo(level.pac());
             ghostsInZOrder(level).forEach(gr::drawAnimatedCreatureInfo);
         }
-
         // Draw either lives counter or missing credit
         if (game().canStartNewGame()) {
             // As long as Pac-Man is still invisible on game start, one live more is shown in the counter

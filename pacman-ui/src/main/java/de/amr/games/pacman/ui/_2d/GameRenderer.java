@@ -44,7 +44,7 @@ public interface GameRenderer {
         ctx().fillRect(0, 0, canvas().getWidth(), canvas().getHeight());
     }
 
-    void applyMapSettings(WorldMap worldMap);
+    default void applyMapSettings(WorldMap worldMap) {}
 
     GameSpriteSheet spriteSheet();
 

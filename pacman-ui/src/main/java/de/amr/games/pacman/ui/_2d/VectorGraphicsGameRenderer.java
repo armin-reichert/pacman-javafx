@@ -51,9 +51,6 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void applyMapSettings(WorldMap worldMap) {}
-
-    @Override
     public GameSpriteSheet spriteSheet() {
         return spriteSheet;
     }
