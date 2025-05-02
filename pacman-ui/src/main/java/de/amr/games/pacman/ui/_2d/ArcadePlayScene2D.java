@@ -91,26 +91,26 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     @Override
     public void update() {
-        game().level().ifPresentOrElse(
-            level -> {
-                /* TODO: Would like to do this only on level start, but when scene is switched between 2D and 3D,
-                    the corresponding scene has to be updated accordingly. */
-                if (level.isDemoLevel()) {
-                    game().assignDemoLevelBehavior(level.pac());
-                }
-                else {
-                    level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
-                    level.pac().setImmune(PY_IMMUNITY.get());
-                    updateSound(level);
-                }
-                if (gameState() == GameState.LEVEL_COMPLETE) {
-                    levelCompleteAnimation.tick();
-                }
-            },
-            () -> {
-                // Scene is already visible 2 ticks before game level is created!
-                Logger.info("Tick {}: Game level not yet available", THE_CLOCK.tickCount());
-            });
+        if (game().level().isPresent()) {
+            GameLevel level = game().level().get();
+            /* TODO: Would like to do this only on level start, but when scene is switched between 2D and 3D,
+                     the corresponding scene has to be updated accordingly. */
+            if (level.isDemoLevel()) {
+                game().assignDemoLevelBehavior(level.pac());
+            }
+            else {
+                level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
+                level.pac().setImmune(PY_IMMUNITY.get());
+                updateSound(level);
+            }
+            if (gameState() == GameState.LEVEL_COMPLETE) {
+                levelCompleteAnimation.tick();
+            }
+        }
+        else {
+            // Scene is already visible 2 ticks before game level is created!
+            Logger.info("Tick {}: Game level not yet available", THE_CLOCK.tickCount());
+        }
     }
 
     @Override
