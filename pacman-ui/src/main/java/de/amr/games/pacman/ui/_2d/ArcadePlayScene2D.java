@@ -58,6 +58,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         gr.applyMapSettings(level.worldMap());
         bindArcadeStartGameAction();
         enableActionBindings(THE_KEYBOARD);
+        game().setScoreEnabled(!level.isDemoLevel());
     }
 
     @Override
