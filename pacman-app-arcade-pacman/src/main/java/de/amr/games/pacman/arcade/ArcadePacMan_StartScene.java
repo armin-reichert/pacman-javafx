@@ -6,15 +6,14 @@ package de.amr.games.pacman.arcade;
 
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.input.KeyCode;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.games.pacman.ui.GameAssets.*;
 import static de.amr.games.pacman.ui.Globals.THE_ASSETS;
 import static de.amr.games.pacman.ui.Globals.THE_SOUND;
 import static de.amr.games.pacman.uilib.input.Keyboard.naked;
@@ -23,12 +22,6 @@ import static de.amr.games.pacman.uilib.input.Keyboard.naked;
  * Scene shown after credit has been added and where game can be started.
  */
 public class ArcadePacMan_StartScene extends GameScene2D {
-
-    public static final Color CYAN = Color.web(Arcade.Palette.CYAN);
-    public static final Color ORANGE = Color.web(Arcade.Palette.ORANGE);
-    public static final Color PINK = Color.web(Arcade.Palette.PINK);
-    public static final Color ROSE = Color.web(Arcade.Palette.ROSE);
-    public static final Color WHITE = Color.web(Arcade.Palette.WHITE);
 
     @Override
     public void bindActions() {
@@ -55,16 +48,16 @@ public class ArcadePacMan_StartScene extends GameScene2D {
         final Font font6 = THE_ASSETS.arcadeFontAtSize(scaled(6));
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), font8);
+            gr.drawScores(game(), ARCADE_WHITE, font8);
         }
-        gr.fillTextAtScaledPosition("PUSH START BUTTON", ORANGE, font8, tiles_to_px(6), tiles_to_px(17));
-        gr.fillTextAtScaledPosition("1 PLAYER ONLY", CYAN, font8, tiles_to_px(8), tiles_to_px(21));
-        gr.fillTextAtScaledPosition("BONUS PAC-MAN FOR 10000", ROSE, font8, tiles_to_px(1), tiles_to_px(25));
-        gr.fillTextAtScaledPosition("PTS", ROSE, font6, tiles_to_px(25), tiles_to_px(25));
+        gr.fillTextAtScaledPosition("PUSH START BUTTON", ARCADE_ORANGE, font8, tiles_to_px(6), tiles_to_px(17));
+        gr.fillTextAtScaledPosition("1 PLAYER ONLY", ARCADE_CYAN, font8, tiles_to_px(8), tiles_to_px(21));
+        gr.fillTextAtScaledPosition("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, font8, tiles_to_px(1), tiles_to_px(25));
+        gr.fillTextAtScaledPosition("PTS", ARCADE_ROSE, font6, tiles_to_px(25), tiles_to_px(25));
         if (gr instanceof ArcadePacMan_GameRenderer r) {
-            r.drawMidwayCopyright(4, 29, PINK, font8);
+            r.drawMidwayCopyright(4, 29, ARCADE_PINK, font8);
         }
-        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_MECHANISM.numCoins()), WHITE, font8, 2 * TS, sizeInPx().y() - 2);
+        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_MECHANISM.numCoins()), ARCADE_WHITE, font8, 2 * TS, sizeInPx().y() - 2);
         gr.drawLevelCounter(game().levelCounter(), sizeInPx());
     }
 

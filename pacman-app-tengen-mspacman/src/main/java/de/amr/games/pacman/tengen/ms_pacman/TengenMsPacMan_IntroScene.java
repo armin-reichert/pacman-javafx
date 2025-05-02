@@ -7,7 +7,6 @@ package de.amr.games.pacman.tengen.ms_pacman;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.lib.fsm.FsmState;
 import de.amr.games.pacman.lib.nes.JoypadButtonID;
@@ -97,7 +96,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         final Font font = arcadeFontScaledTS();
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), font);
+            gr.drawScores(game(), nesPaletteColor(0x20), font);
         }
         TengenMsPacMan_Renderer2D r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();

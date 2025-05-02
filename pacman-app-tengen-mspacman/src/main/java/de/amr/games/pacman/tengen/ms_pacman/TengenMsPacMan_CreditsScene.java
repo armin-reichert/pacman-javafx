@@ -5,11 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.nes.JoypadButtonID;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui._2d.GameScene2D;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
@@ -45,7 +43,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
         final Font font = arcadeFontScaledTS();
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), font);
+            gr.drawScores(game(), nesPaletteColor(0x20), font);
         }
         var r = (TengenMsPacMan_Renderer2D) gr;
         double width = sizeInPx().x();

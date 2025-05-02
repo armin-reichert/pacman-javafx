@@ -7,7 +7,6 @@ package de.amr.games.pacman.tengen.ms_pacman;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.actors.ActorAnimations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui._2d.GameScene2D;
@@ -19,6 +18,7 @@ import org.tinylog.Logger;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
+import static de.amr.games.pacman.ui.GameAssets.ARCADE_WHITE;
 import static de.amr.games.pacman.ui.Globals.THE_UI_CONFIGS;
 
 /**
@@ -105,7 +105,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         final Font font = arcadeFontScaledTS();
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), font);
+            gr.drawScores(game(), ARCADE_WHITE, font);
         }
         var r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();

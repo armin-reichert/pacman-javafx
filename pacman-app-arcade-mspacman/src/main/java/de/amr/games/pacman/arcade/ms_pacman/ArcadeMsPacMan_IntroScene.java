@@ -8,7 +8,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.lib.fsm.FsmState;
 import de.amr.games.pacman.lib.timer.TickTimer;
@@ -22,7 +21,9 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.ui.Globals.*;
+import static de.amr.games.pacman.ui.GameAssets.*;
+import static de.amr.games.pacman.ui.Globals.THE_SOUND;
+import static de.amr.games.pacman.ui.Globals.THE_UI_CONFIGS;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -45,17 +46,10 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     static final int ACTIVE_BULBS_DIST = 16;
     static final int MARQUEE_XMIN = 60, MARQUEE_XMAX = 192, MARQUEE_YMIN = 88, MARQUEE_YMAX = 148;
 
-    static final Color COLOR_CYAN   = Color.web(Arcade.Palette.CYAN);
-    static final Color COLOR_ORANGE = Color.web(Arcade.Palette.ORANGE);
-    static final Color COLOR_PINK   = Color.web(Arcade.Palette.PINK);
-    static final Color COLOR_RED    = Color.web(Arcade.Palette.RED);
-    static final Color COLOR_WHITE  = Color.web(Arcade.Palette.WHITE);
-    static final Color COLOR_YELLOW = Color.web(Arcade.Palette.YELLOW);
+    static final Color COLOR_BULB_ON  = ARCADE_WHITE;
+    static final Color COLOR_BULB_OFF = ARCADE_RED;
 
-    static final Color COLOR_BULB_ON  = COLOR_WHITE;
-    static final Color COLOR_BULB_OFF = COLOR_RED;
-
-    static final Color[] COLOR_GHOST = { COLOR_RED, COLOR_PINK, COLOR_CYAN, COLOR_ORANGE };
+    static final Color[] COLOR_GHOST = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
 
     private final FiniteStateMachine<SceneState, ArcadeMsPacMan_IntroScene> sceneController;
 
@@ -76,8 +70,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void bindActions() {
-        bindDefaultArcadeActions();
-        bindTestsStartingActions();
+        bindArcadeStartActions();
+        bindTestsStartActions();
     }
 
     @Override
@@ -130,21 +124,21 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         final Font font = arcadeFontScaledTS();
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), font);
+            gr.drawScores(game(), ARCADE_WHITE, font);
         }
         drawMarquee();
-        gr.fillTextAtScaledPosition("\"MS PAC-MAN\"", COLOR_ORANGE, font, TITLE_X, TITLE_Y);
+        gr.fillTextAtScaledPosition("\"MS PAC-MAN\"", ARCADE_ORANGE, font, TITLE_X, TITLE_Y);
         if (sceneController.state() == SceneState.GHOSTS_MARCHING_IN) {
             String ghostName = ghosts[ghostID].name().toUpperCase();
             double dx = ghostName.length() < 4 ? tiles_to_px(1) : 0;
             if (ghostID == RED_GHOST_ID) {
-                gr.fillTextAtScaledPosition("WITH", COLOR_WHITE, font, TITLE_X, TOP_Y + tiles_to_px(3));
+                gr.fillTextAtScaledPosition("WITH", ARCADE_WHITE, font, TITLE_X, TOP_Y + tiles_to_px(3));
             }
             gr.fillTextAtScaledPosition(ghostName, COLOR_GHOST[ghostID], font, TITLE_X + tiles_to_px(3) + dx, TOP_Y + tiles_to_px(6));
         }
         else if (sceneController.state() == SceneState.MS_PACMAN_MARCHING_IN || sceneController.state() == SceneState.READY_TO_PLAY) {
-            gr.fillTextAtScaledPosition("STARRING", COLOR_WHITE, font, TITLE_X, TOP_Y + tiles_to_px(3));
-            gr.fillTextAtScaledPosition("MS PAC-MAN", COLOR_YELLOW, font, TITLE_X, TOP_Y + tiles_to_px(6));
+            gr.fillTextAtScaledPosition("STARRING", ARCADE_WHITE, font, TITLE_X, TOP_Y + tiles_to_px(3));
+            gr.fillTextAtScaledPosition("MS PAC-MAN", ARCADE_YELLOW, font, TITLE_X, TOP_Y + tiles_to_px(6));
         }
         for (Ghost ghost : ghosts) {
             gr.drawAnimatedActor(ghost);
@@ -152,9 +146,9 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         gr.drawAnimatedActor(msPacMan);
         // might be PacManXXL renderer!
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
-            r.drawMidwayCopyright(6, 28, COLOR_RED, font);
+            r.drawMidwayCopyright(6, 28, ARCADE_RED, font);
         }
-        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_MECHANISM.numCoins()), COLOR_WHITE, font, 2 * TS, sizeInPx().y() - 2);
+        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_MECHANISM.numCoins()), ARCADE_WHITE, font, 2 * TS, sizeInPx().y() - 2);
         gr.drawLevelCounter(game().levelCounter(), sizeInPx());
     }
 

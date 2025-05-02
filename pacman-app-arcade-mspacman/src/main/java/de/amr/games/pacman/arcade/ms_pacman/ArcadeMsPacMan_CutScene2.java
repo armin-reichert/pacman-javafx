@@ -6,18 +6,18 @@ package de.amr.games.pacman.arcade.ms_pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.ActorAnimations;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_MR_PACMAN_MUNCHING;
-import static de.amr.games.pacman.ui.Globals.*;
+import static de.amr.games.pacman.ui.GameAssets.ARCADE_WHITE;
+import static de.amr.games.pacman.ui.Globals.THE_SOUND;
+import static de.amr.games.pacman.ui.Globals.THE_UI_CONFIGS;
 
 /**
  * Intermission scene 2: "The chase".
@@ -77,7 +77,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     public void drawSceneContent() {
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), arcadeFontScaledTS());
+            gr.drawScores(game(), ARCADE_WHITE, arcadeFontScaledTS());
         }
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
             r.drawClapperBoard(clapperboardAnimation, tiles_to_px(3), tiles_to_px(10), arcadeFontScaledTS());

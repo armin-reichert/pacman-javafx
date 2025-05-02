@@ -6,7 +6,6 @@ package de.amr.games.pacman.arcade;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui._2d.GameScene2D;
@@ -16,6 +15,7 @@ import javafx.scene.paint.Color;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.*;
+import static de.amr.games.pacman.ui.GameAssets.ARCADE_WHITE;
 import static de.amr.games.pacman.ui.Globals.*;
 
 /**
@@ -102,7 +102,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     public void drawSceneContent() {
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), arcadeFontScaledTS());
+            gr.drawScores(game(), ARCADE_WHITE, arcadeFontScaledTS());
         }
         gr.drawAnimatedActor(pac);
         gr.drawAnimatedActor(blinky);

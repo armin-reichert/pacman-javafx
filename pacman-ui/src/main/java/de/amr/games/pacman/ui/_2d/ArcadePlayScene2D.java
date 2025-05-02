@@ -8,7 +8,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.HuntingTimer;
@@ -33,6 +32,7 @@ import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVELS;
 import static de.amr.games.pacman.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_TILES;
+import static de.amr.games.pacman.ui.GameAssets.*;
 import static de.amr.games.pacman.ui.Globals.*;
 import static de.amr.games.pacman.uilib.input.Keyboard.naked;
 
@@ -43,30 +43,31 @@ import static de.amr.games.pacman.uilib.input.Keyboard.naked;
  */
 public class ArcadePlayScene2D extends GameScene2D {
 
-    public static final Color WHITE = Color.web(Arcade.Palette.WHITE);
-    public static final Color RED = Color.web(Arcade.Palette.RED);
-    public static final Color YELLOW = Color.web(Arcade.Palette.YELLOW);
-
     private LevelCompleteAnimation levelCompleteAnimation;
 
     @Override
     protected void doInit() {
         game().scoreVisibleProperty().set(true);
-        bindDefaultArcadeActions();
+        bindArcadeStartActions();
         enableActionBindings(THE_KEYBOARD);
     }
 
     @Override
     public void onLevelCreated(GameEvent e) {
         GameLevel level = game().level().orElseThrow();
+        gr.applyMapSettings(level.worldMap());
+    }
+
+    @Override
+    public void onLevelStarted(GameEvent e) {
+        GameLevel level = game().level().orElseThrow();
         if (level.isDemoLevel()) {
             bind(GameAction.INSERT_COIN, naked(KeyCode.DIGIT5), naked(KeyCode.NUMPAD5));
         } else {
+            bindPlayerActions();
             bindCheatActions();
-            bindDefaultArcadeActions();
         }
         enableActionBindings(THE_KEYBOARD);
-        gr.applyMapSettings(level.worldMap());
     }
 
     @Override
@@ -171,7 +172,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         gr.fillCanvas(backgroundColor());
 
         if (game().isScoreVisible()) {
-            gr.drawScores(game(), WHITE, arcadeFontScaledTS());
+            gr.drawScores(game(), ARCADE_WHITE, arcadeFontScaledTS());
         }
 
         // Draw maze
@@ -203,7 +204,7 @@ public class ArcadePlayScene2D extends GameScene2D {
             gr.drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - 2 * TS);
         } else {
             gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_MECHANISM.numCoins()),
-                WHITE, arcadeFontScaledTS(), 2 * TS, sizeInPx().y() - 2);
+                ARCADE_WHITE, arcadeFontScaledTS(), 2 * TS, sizeInPx().y() - 2);
         }
         gr.drawLevelCounter(game().levelCounter(), sizeInPx());
     }
@@ -214,19 +215,19 @@ public class ArcadePlayScene2D extends GameScene2D {
                 String text = "GAME  OVER";
                 // this assumes fixed font width of one tile:
                 double x = messageCenterPosition.x() - (text.length() * HTS);
-                gr.fillTextAtScaledPosition(text, RED, arcadeFontScaledTS(), x, messageCenterPosition.y());
+                gr.fillTextAtScaledPosition(text, ARCADE_RED, arcadeFontScaledTS(), x, messageCenterPosition.y());
             }
             case READY -> {
                 String text = "READY!";
                 // this assumes fixed font width of one tile:
                 double x = messageCenterPosition.x() - (text.length() * HTS);
-                gr.fillTextAtScaledPosition(text, YELLOW, arcadeFontScaledTS(), x, messageCenterPosition.y());
+                gr.fillTextAtScaledPosition(text, ARCADE_YELLOW, arcadeFontScaledTS(), x, messageCenterPosition.y());
             }
             case TEST_LEVEL -> {
                 String text = "TEST    L%03d".formatted(level.number());
                 // this assumes fixed font width of one tile:
                 double x = messageCenterPosition.x() - (text.length() * HTS);
-                gr.fillTextAtScaledPosition(text, WHITE, arcadeFontScaledTS(), x, messageCenterPosition.y());
+                gr.fillTextAtScaledPosition(text, ARCADE_WHITE, arcadeFontScaledTS(), x, messageCenterPosition.y());
             }
         }
     }
@@ -270,6 +271,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     public void onSceneVariantSwitch(GameScene oldScene) {
         Logger.info("{} entered from {}", this, oldScene);
         bindActions();
+        bindPlayerActions();
         enableActionBindings(THE_KEYBOARD);
         if (gr == null) {
             setGameRenderer(THE_UI_CONFIGS.current().createRenderer(canvas));

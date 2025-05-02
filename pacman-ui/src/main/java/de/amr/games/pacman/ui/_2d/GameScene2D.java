@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.uilib.Action;

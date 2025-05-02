@@ -40,9 +40,12 @@ public interface GameScene extends GameEventListener, ActionProvider {
         THE_UI.updateGameScene(true);
     }
 
-    default void bindDefaultArcadeActions() {
+    default void bindArcadeStartActions() {
         bind(GameAction.INSERT_COIN,  naked(KeyCode.DIGIT5), naked(KeyCode.NUMPAD5));
         bind(GameAction.START_GAME,   naked(KeyCode.DIGIT1), naked(KeyCode.NUMPAD1));
+    }
+
+    default void bindPlayerActions() {
         bind(GameAction.PLAYER_UP,    naked(KeyCode.UP),     control(KeyCode.UP));
         bind(GameAction.PLAYER_DOWN,  naked(KeyCode.DOWN),   control(KeyCode.DOWN));
         bind(GameAction.PLAYER_LEFT,  naked(KeyCode.LEFT),   control(KeyCode.LEFT));
@@ -56,7 +59,7 @@ public interface GameScene extends GameEventListener, ActionProvider {
         bind(GameAction.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
     }
 
-    default void bindTestsStartingActions() {
+    default void bindTestsStartActions() {
         bind(GameAction.TEST_CUT_SCENES,     alt(KeyCode.C));
         bind(GameAction.TEST_LEVELS_BONI,    alt(KeyCode.T));
         bind(GameAction.TEST_LEVELS_TEASERS, Keyboard.shift_alt(KeyCode.T));

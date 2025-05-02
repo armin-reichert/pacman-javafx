@@ -196,11 +196,10 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         bind(GameAction.PERSPECTIVE_PREVIOUS, alt(KeyCode.LEFT));
         bind(GameAction.PERSPECTIVE_NEXT, alt(KeyCode.RIGHT));
         bind(GameAction.TOGGLE_DRAW_MODE, alt(KeyCode.W));
-        //TODO check if this is called after level creation
         if (game().level().isPresent() && game().level().get().isDemoLevel()) {
             bind(GameAction.INSERT_COIN,  naked(KeyCode.DIGIT5), naked(KeyCode.NUMPAD5));
         } else {
-            bindDefaultArcadeActions();
+            bindArcadeStartActions();
             bindCheatActions();
         }
         enableActionBindings(THE_KEYBOARD);
@@ -222,6 +221,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 }
                 default -> {
                     if (!level.isDemoLevel()) {
+                        bindPlayerActions();
+                        enableActionBindings(THE_KEYBOARD);
                         showReadyMessage(level);
                     }
                 }
@@ -235,6 +236,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     public void onSceneVariantSwitch(GameScene fromScene) {
         game().level().ifPresent(level -> {
             bindActions();
+            bindPlayerActions();
             enableActionBindings(THE_KEYBOARD);
             if (level3D == null) {
                 replaceGameLevel3D(level);

@@ -6,7 +6,6 @@ package de.amr.games.pacman.arcade;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.ui.GameAssets;
@@ -30,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.ui.GameAssets.*;
 import static de.amr.games.pacman.ui.Globals.PY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
@@ -56,30 +56,30 @@ public class ArcadePacMan_UIConfig implements GameUIConfig, ResourceManager {
         assets.store("pacman.startpage.image2",                loadImage("graphics/f2.jpg"));
         assets.store("pacman.startpage.image3",                loadImage("graphics/f3.jpg"));
 
-        assets.store("pacman.color.game_over_message",         Color.web(Arcade.Palette.RED));
+        assets.store("pacman.color.game_over_message",         ARCADE_RED);
 
-        assets.store("pacman.pac.color.head",                  Color.web(Arcade.Palette.YELLOW));
+        assets.store("pacman.pac.color.head",                  ARCADE_YELLOW);
         assets.store("pacman.pac.color.eyes",                  Color.grayRgb(33));
         assets.store("pacman.pac.color.palate",                Color.rgb(240, 180, 160));
 
-        assets.store("pacman.ghost.0.color.normal.dress",      Color.web(Arcade.Palette.RED));
-        assets.store("pacman.ghost.0.color.normal.eyeballs",   Color.web(Arcade.Palette.WHITE));
-        assets.store("pacman.ghost.0.color.normal.pupils",     Color.web(Arcade.Palette.BLUE));
-        assets.store("pacman.ghost.1.color.normal.dress",      Color.web(Arcade.Palette.PINK));
-        assets.store("pacman.ghost.1.color.normal.eyeballs",   Color.web(Arcade.Palette.WHITE));
-        assets.store("pacman.ghost.1.color.normal.pupils",     Color.web(Arcade.Palette.BLUE));
-        assets.store("pacman.ghost.2.color.normal.dress",      Color.web(Arcade.Palette.CYAN));
-        assets.store("pacman.ghost.2.color.normal.eyeballs",   Color.web(Arcade.Palette.WHITE));
-        assets.store("pacman.ghost.2.color.normal.pupils",     Color.web(Arcade.Palette.BLUE));
-        assets.store("pacman.ghost.3.color.normal.dress",      Color.web(Arcade.Palette.ORANGE));
-        assets.store("pacman.ghost.3.color.normal.eyeballs",   Color.web(Arcade.Palette.WHITE));
-        assets.store("pacman.ghost.3.color.normal.pupils",     Color.web(Arcade.Palette.BLUE));
-        assets.store("pacman.ghost.color.frightened.dress",    Color.web(Arcade.Palette.BLUE));
-        assets.store("pacman.ghost.color.frightened.eyeballs", Color.web(Arcade.Palette.ROSE));
-        assets.store("pacman.ghost.color.frightened.pupils",   Color.web(Arcade.Palette.ROSE));
-        assets.store("pacman.ghost.color.flashing.dress",      Color.web(Arcade.Palette.WHITE));
-        assets.store("pacman.ghost.color.flashing.eyeballs",   Color.web(Arcade.Palette.ROSE));
-        assets.store("pacman.ghost.color.flashing.pupils",     Color.web(Arcade.Palette.RED));
+        assets.store("pacman.ghost.0.color.normal.dress",      ARCADE_RED);
+        assets.store("pacman.ghost.0.color.normal.eyeballs",   ARCADE_WHITE);
+        assets.store("pacman.ghost.0.color.normal.pupils",     ARCADE_BLUE);
+        assets.store("pacman.ghost.1.color.normal.dress",      ARCADE_PINK);
+        assets.store("pacman.ghost.1.color.normal.eyeballs",   ARCADE_WHITE);
+        assets.store("pacman.ghost.1.color.normal.pupils",     ARCADE_BLUE);
+        assets.store("pacman.ghost.2.color.normal.dress",      ARCADE_CYAN);
+        assets.store("pacman.ghost.2.color.normal.eyeballs",   ARCADE_WHITE);
+        assets.store("pacman.ghost.2.color.normal.pupils",     ARCADE_BLUE);
+        assets.store("pacman.ghost.3.color.normal.dress",      ARCADE_ORANGE);
+        assets.store("pacman.ghost.3.color.normal.eyeballs",   ARCADE_WHITE);
+        assets.store("pacman.ghost.3.color.normal.pupils",     ARCADE_BLUE);
+        assets.store("pacman.ghost.color.frightened.dress",    ARCADE_BLUE);
+        assets.store("pacman.ghost.color.frightened.eyeballs", ARCADE_ROSE);
+        assets.store("pacman.ghost.color.frightened.pupils",   ARCADE_ROSE);
+        assets.store("pacman.ghost.color.flashing.dress",      ARCADE_WHITE);
+        assets.store("pacman.ghost.color.flashing.eyeballs",   ARCADE_ROSE);
+        assets.store("pacman.ghost.color.flashing.pupils",     ARCADE_RED);
 
         // Clips
         assets.store("pacman.audio.bonus_eaten",               loadAudioClip("sound/eat_fruit.mp3"));

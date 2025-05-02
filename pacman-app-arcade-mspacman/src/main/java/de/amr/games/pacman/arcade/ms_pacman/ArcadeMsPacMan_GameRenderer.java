@@ -6,7 +6,6 @@ package de.amr.games.pacman.arcade.ms_pacman;
 
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.LevelCounter;
@@ -25,6 +24,7 @@ import javafx.scene.text.Font;
 import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.Globals.tiles_to_px;
 import static de.amr.games.pacman.lib.RectArea.rect;
+import static de.amr.games.pacman.ui.GameAssets.ARCADE_WHITE;
 import static de.amr.games.pacman.ui.Globals.THE_ASSETS;
 import static java.util.Objects.requireNonNull;
 
@@ -140,12 +140,11 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     public void drawClapperBoard(ClapperboardAnimation clapperboardAnimation, double x, double y, Font font) {
         clapperboardAnimation.currentSprite().ifPresent(sprite -> {
             drawSpriteScaledCenteredOverTile(sprite, x, y);
-            Color textColor = Color.web(Arcade.Palette.WHITE);
             ctx.setFont(font);
-            ctx.setFill(textColor.darker());
+            ctx.setFill(ARCADE_WHITE.darker());
             var numberX = scaled(x + sprite.width() - 25);
             var numberY = scaled(y + 18);
-            ctx.setFill(textColor);
+            ctx.setFill(ARCADE_WHITE);
             ctx.fillText(clapperboardAnimation.number(), numberX, numberY);
             var textX = scaled(x + sprite.width());
             ctx.fillText(clapperboardAnimation.text(), textX, numberY);

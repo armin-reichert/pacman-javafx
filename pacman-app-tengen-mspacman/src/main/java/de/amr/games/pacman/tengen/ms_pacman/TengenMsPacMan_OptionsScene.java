@@ -6,7 +6,6 @@ package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.nes.JoypadButtonID;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.uilib.Action;
@@ -21,7 +20,8 @@ import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction.STA
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.CONTINUES_SPRITES;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
-import static de.amr.games.pacman.ui.Globals.*;
+import static de.amr.games.pacman.ui.Globals.THE_JOYPAD;
+import static de.amr.games.pacman.ui.Globals.THE_SOUND;
 import static de.amr.games.pacman.uilib.input.Keyboard.alt;
 
 /**
@@ -73,7 +73,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         bind(selectNextJoypad, alt(KeyCode.J));
         bind(START_PLAYING, THE_JOYPAD.key(JoypadButtonID.START));
         bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, THE_JOYPAD.key(JoypadButtonID.SELECT));
-        bindTestsStartingActions();
+        bindTestsStartActions();
     }
 
     @Override
@@ -244,7 +244,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         final Font font = arcadeFontScaledTS();
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), font);
+            gr.drawScores(game(), nesPaletteColor(0x20), font);
         }
         TengenMsPacMan_Renderer2D r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();

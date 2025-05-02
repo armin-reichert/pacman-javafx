@@ -8,7 +8,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.lib.fsm.FsmState;
 import de.amr.games.pacman.lib.timer.Pulse;
@@ -29,6 +28,7 @@ import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.*;
 import static de.amr.games.pacman.model.actors.GhostState.EATEN;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
+import static de.amr.games.pacman.ui.GameAssets.*;
 import static de.amr.games.pacman.ui.Globals.*;
 
 /**
@@ -39,15 +39,8 @@ import static de.amr.games.pacman.ui.Globals.*;
  */
 public class ArcadePacMan_IntroScene extends GameScene2D {
 
-    public static final Color CYAN = Color.web(Arcade.Palette.CYAN);
-    public static final Color ORANGE = Color.web(Arcade.Palette.ORANGE);
-    public static final Color PINK = Color.web(Arcade.Palette.PINK);
-    public static final Color ROSE = Color.web(Arcade.Palette.ROSE);
-    public static final Color RED = Color.web(Arcade.Palette.RED);
-    public static final Color WHITE = Color.web(Arcade.Palette.WHITE);
-
     static final String[] GHOST_CHARACTERS = { "SHADOW", "SPEEDY", "BASHFUL", "POKEY" };
-    static final Color[] GHOST_COLORS = { RED, PINK, CYAN, ORANGE };
+    static final Color[] GHOST_COLORS = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
     static final float CHASE_SPEED = 1.1f;
     static final float GHOST_FRIGHTENED_SPEED = 0.6f;
     static final int LEFT_TILE_X = 4;
@@ -76,8 +69,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void bindActions() {
-        bindDefaultArcadeActions();
-        bindTestsStartingActions();
+        bindArcadeStartActions();
+        bindTestsStartActions();
     }
 
     @Override
@@ -134,7 +127,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         final Font font = arcadeFontScaledTS();
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(game(), WHITE, font);
+            gr.drawScores(game(), ARCADE_WHITE, font);
         }
         TickTimer timer = sceneController.state().timer();
         drawGallery(font);
@@ -147,18 +140,18 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 }
                 drawGuys(flutter(timer.tickCount()));
                 if (gr instanceof ArcadePacMan_GameRenderer r) {
-                    r.drawMidwayCopyright(4, 32, PINK, font);
+                    r.drawMidwayCopyright(4, 32, ARCADE_PINK, font);
                 }
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints();
                 drawGuys(0);
                 if (gr instanceof ArcadePacMan_GameRenderer r) {
-                    r.drawMidwayCopyright(4, 32, PINK, font);
+                    r.drawMidwayCopyright(4, 32, ARCADE_PINK, font);
                 }
             }
         }
-        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_MECHANISM.numCoins()), WHITE, font, 2 * TS, sizeInPx().y() - 2);
+        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_MECHANISM.numCoins()), ARCADE_WHITE, font, 2 * TS, sizeInPx().y() - 2);
         gr.drawLevelCounter(game().levelCounter(), sizeInPx());
     }
 
@@ -170,7 +163,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     private void drawGallery(Font font) {
         var spriteSheet = (ArcadePacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
         if (titleVisible) {
-            gr.fillTextAtScaledPosition("CHARACTER / NICKNAME", WHITE, font, tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(6));
+            gr.fillTextAtScaledPosition("CHARACTER / NICKNAME", ARCADE_WHITE, font, tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(6));
         }
         for (byte id = 0; id < 4; ++id) {
             int tileY = 7 + 3 * id;
@@ -205,27 +198,26 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     }
 
     private void drawPoints() {
-        var color = Color.web(Arcade.Palette.WHITE);
         Font font8 = arcadeFontScaledTS();
         Font font6 = THE_ASSETS.arcadeFontAtSize(scaled(6));
         int tileX = LEFT_TILE_X + 6;
         int tileY = 25;
-        gr.ctx().setFill(ROSE);
+        gr.ctx().setFill(ARCADE_ROSE);
         gr.ctx().fillRect(scaled(tiles_to_px(tileX) + 4), scaled(tiles_to_px(tileY - 1) + 4), scaled(2), scaled(2));
         if (blinking.isOn()) {
             drawEnergizer(tiles_to_px(tileX), tiles_to_px(tileY + 1));
         }
-        gr.fillTextAtScaledPosition("10",  color, font8, tiles_to_px(tileX + 2), tiles_to_px(tileY));
-        gr.fillTextAtScaledPosition("PTS", color, font6, tiles_to_px(tileX + 5), tiles_to_px(tileY));
-        gr.fillTextAtScaledPosition("50",  color, font8, tiles_to_px(tileX + 2), tiles_to_px(tileY + 2));
-        gr.fillTextAtScaledPosition("PTS", color, font6, tiles_to_px(tileX + 5), tiles_to_px(tileY + 2));
+        gr.fillTextAtScaledPosition("10",  ARCADE_WHITE, font8, tiles_to_px(tileX + 2), tiles_to_px(tileY));
+        gr.fillTextAtScaledPosition("PTS", ARCADE_WHITE, font6, tiles_to_px(tileX + 5), tiles_to_px(tileY));
+        gr.fillTextAtScaledPosition("50",  ARCADE_WHITE, font8, tiles_to_px(tileX + 2), tiles_to_px(tileY + 2));
+        gr.fillTextAtScaledPosition("PTS", ARCADE_WHITE, font6, tiles_to_px(tileX + 5), tiles_to_px(tileY + 2));
     }
 
     // draw pixelated "circle"
     private void drawEnergizer(double x, double y) {
         gr.ctx().save();
         gr.ctx().scale(scaling(), scaling());
-        gr.ctx().setFill(ROSE);
+        gr.ctx().setFill(ARCADE_ROSE);
         gr.ctx().fillRect(x + 2, y, 4, 8);
         gr.ctx().fillRect(x, y + 2, 8, 4);
         gr.ctx().fillRect(x + 1, y + 1, 6, 6);

@@ -6,21 +6,18 @@ package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.nes.JoypadButtonID;
 import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_GHOST_NORMAL;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.HEART_SPRITE;
-import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
-import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.games.pacman.ui.Globals.*;
 
 /**
@@ -215,7 +212,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     public void drawSceneContent() {
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), arcadeFontScaledTS());
+            gr.drawScores(game(), nesPaletteColor(0x20), arcadeFontScaledTS());
         }
         var r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();

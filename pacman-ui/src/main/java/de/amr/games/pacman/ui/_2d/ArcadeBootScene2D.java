@@ -7,20 +7,18 @@ package de.amr.games.pacman.ui._2d;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_TILES;
+import static de.amr.games.pacman.ui.GameAssets.ARCADE_WHITE;
 import static de.amr.games.pacman.ui.Globals.THE_UI_CONFIGS;
 
 public class ArcadeBootScene2D extends GameScene2D {
 
-    private static final Color WHITE = Color.web(Arcade.Palette.WHITE);
     private static final int FRAGMENT_SIZE = 16;
 
     private double minX, maxX, minY, maxY;
@@ -77,7 +75,7 @@ public class ArcadeBootScene2D extends GameScene2D {
         final Vector2f sceneSize = sizeInPx();
         final Font font = arcadeFontScaledTS();
         final int numRows = (int) (sceneSize.y() / TS), numCols = (int) (sceneSize.x() / TS);
-        gr.ctx().setFill(WHITE);
+        gr.ctx().setFill(ARCADE_WHITE);
         gr.ctx().setFont(font);
         for (int row = 0; row < numRows; ++row) {
             for (int col = 0; col < numCols; ++col) {
@@ -113,7 +111,7 @@ public class ArcadeBootScene2D extends GameScene2D {
         Vector2f sceneSize = sizeInPx();
         Vector2i sizeInTiles = ARCADE_MAP_SIZE_IN_TILES;
         int numRows = sizeInTiles.y() / 2, numCols = sizeInTiles.y() / 2;
-        gr.ctx().setStroke(WHITE);
+        gr.ctx().setStroke(ARCADE_WHITE);
         gr.ctx().setLineWidth(scaled(2.0));
         for (int row = 0; row <= numRows; ++row) {
             gr.ctx().setLineWidth(row == 0 || row == numRows ? scaled(4.0) : scaled(2.0));
