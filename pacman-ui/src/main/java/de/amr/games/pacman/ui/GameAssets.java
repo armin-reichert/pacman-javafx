@@ -17,13 +17,13 @@ import java.util.ResourceBundle;
 public class GameAssets extends AssetStorage implements ResourceManager {
 
     public static final Color ARCADE_BLUE   = Color.web(Arcade.Palette.BLUE);
-    public static final Color ARCADE_WHITE  = Color.web(Arcade.Palette.WHITE);
-    public static final Color ARCADE_RED    = Color.web(Arcade.Palette.RED);
-    public static final Color ARCADE_YELLOW = Color.web(Arcade.Palette.YELLOW);
     public static final Color ARCADE_CYAN   = Color.web(Arcade.Palette.CYAN);
     public static final Color ARCADE_ORANGE = Color.web(Arcade.Palette.ORANGE);
     public static final Color ARCADE_PINK   = Color.web(Arcade.Palette.PINK);
+    public static final Color ARCADE_RED    = Color.web(Arcade.Palette.RED);
     public static final Color ARCADE_ROSE   = Color.web(Arcade.Palette.ROSE);
+    public static final Color ARCADE_WHITE  = Color.web(Arcade.Palette.WHITE);
+    public static final Color ARCADE_YELLOW = Color.web(Arcade.Palette.YELLOW);
 
     protected Picker<String> pickerForGameOverTexts;
     protected Picker<String> pickerForLevelCompleteTexts;
