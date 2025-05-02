@@ -10,7 +10,10 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.actors.*;
+import de.amr.games.pacman.model.actors.ActorAnimations;
+import de.amr.games.pacman.model.actors.Bonus;
+import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.Pac;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -38,7 +41,6 @@ public abstract class GameModel implements ScoreManager {
     private final IntegerProperty initialLivesPy = new SimpleIntegerProperty(3);
     private final IntegerProperty livesPy = new SimpleIntegerProperty(0);
     private final BooleanProperty playingPy = new SimpleBooleanProperty(false);
-    private final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(false);
 
     protected GameLevel level;
 
@@ -47,6 +49,7 @@ public abstract class GameModel implements ScoreManager {
     private final Score highScore = new Score();
     private final BooleanProperty scoreEnabledPy = new SimpleBooleanProperty(true);
     private final BooleanProperty highScoreEnabledPy= new SimpleBooleanProperty(true);
+    private final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(false);
     protected File highScoreFile;
     protected List<Integer> extraLifeScores = List.of();
 
@@ -151,8 +154,6 @@ public abstract class GameModel implements ScoreManager {
     public boolean isPlaying() { return playingProperty().get(); }
 
     public BooleanProperty scoreVisibleProperty() { return scoreVisiblePy; }
-
-    public boolean isScoreVisible() { return scoreVisibleProperty().get(); }
 
     public void loseLife() {
         int lives = livesProperty().get();
@@ -402,6 +403,7 @@ public abstract class GameModel implements ScoreManager {
 
     // Score management
 
+    @Override
     public void scorePoints(int points) {
         if (!isScoreEnabled()) {
             return;
@@ -415,12 +417,14 @@ public abstract class GameModel implements ScoreManager {
         score.setPoints(newScore);
     }
 
+    @Override
     public void loadHighScore() {
         highScore.read(highScoreFile);
         Logger.info("Highscore loaded. File: '{}', {} points, level {}",
             highScoreFile, highScore.points(), highScore.levelNumber());
     }
 
+    @Override
     public void updateHighScore() {
         var oldHighScore = new Score();
         oldHighScore.read(highScoreFile);
@@ -429,38 +433,46 @@ public abstract class GameModel implements ScoreManager {
         }
     }
 
+    @Override
     public void resetScore() {
         score.reset();
     }
 
+    @Override
     public void resetHighScore() {
         new Score().save(highScoreFile, "High Score, %s".formatted(LocalDateTime.now()));
     }
 
+    @Override
     public Score score() {
         return score;
     }
 
+    @Override
     public Score highScore() {
         return highScore;
     }
 
-    public BooleanProperty scoreEnabledProperty() { return scoreEnabledPy; }
+    @Override
+    public boolean isScoreVisible() { return scoreVisibleProperty().get(); }
 
+    @Override
     public boolean isScoreEnabled() {
         return scoreEnabledPy.get();
     }
 
+    @Override
     public void setScoreEnabled(boolean enabled) {
-        scoreEnabledProperty().set(enabled);
+        scoreEnabledPy.set(enabled);
     }
 
-    public BooleanProperty highScoreEnabledProperty() { return highScoreEnabledPy; }
+    @Override
+    public boolean isHighScoreEnabled() { return highScoreEnabledPy.get(); }
 
-    public boolean isHighScoreEnabled() { return highScoreEnabledProperty().get(); }
+    @Override
+    public void setHighScoreEnabled(boolean enabled) { highScoreEnabledPy.set(enabled); }
 
-    public void setHighScoreEnabled(boolean enabled) { highScoreEnabledProperty().set(enabled); }
-
+    @Override
     public void setScoreLevelNumber(int levelNumber) {
         score.setLevelNumber(levelNumber);
     }
