@@ -104,9 +104,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     protected void drawSceneContent() {
         final Font font = arcadeFontScaledTS();
         gr.fillCanvas(backgroundColor());
-        if (game().isScoreVisible()) {
-            gr.drawScores(game(), ARCADE_WHITE, font);
-        }
+        gr.drawScores(game(), ARCADE_WHITE, font);
         var r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
         r.setScaling(scaling());

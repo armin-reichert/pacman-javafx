@@ -42,9 +42,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     protected void drawSceneContent() {
         final Font font = arcadeFontScaledTS();
         gr.fillCanvas(backgroundColor());
-        if (game().isScoreVisible()) {
-            gr.drawScores(game(), nesPaletteColor(0x20), font);
-        }
+        gr.drawScores(game(), nesPaletteColor(0x20), font);
         var r = (TengenMsPacMan_Renderer2D) gr;
         double width = sizeInPx().x();
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), width, 20);

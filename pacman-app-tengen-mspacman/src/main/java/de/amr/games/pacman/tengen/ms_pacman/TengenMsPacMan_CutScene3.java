@@ -163,9 +163,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
             return;
         }
         gr.fillCanvas(backgroundColor());
-        if (game().isScoreVisible()) {
-            gr.drawScores(game(), nesPaletteColor(0x20), arcadeFontScaledTS());
-        }
+        gr.drawScores(game(), nesPaletteColor(0x20), arcadeFontScaledTS());
         var r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
         r.drawClapperBoard(clapAnimation, "JUNIOR", 3, CLAP_TILE_X, CLAP_TILE_Y, arcadeFontScaledTS());

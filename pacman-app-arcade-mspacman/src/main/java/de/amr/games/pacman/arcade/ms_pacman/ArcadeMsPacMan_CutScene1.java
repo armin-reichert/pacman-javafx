@@ -90,9 +90,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         gr.setScaling(scaling());
-        if (game().isScoreVisible()) {
-            gr.drawScores(game(), ARCADE_WHITE, arcadeFontScaledTS());
-        }
+        gr.drawScores(game(), ARCADE_WHITE, arcadeFontScaledTS());
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) { // could also be VectorGraphicsRenderer!
             r.drawClapperBoard(clapperboardAnimation, tiles_to_px(3), tiles_to_px(10), arcadeFontScaledTS());
         }

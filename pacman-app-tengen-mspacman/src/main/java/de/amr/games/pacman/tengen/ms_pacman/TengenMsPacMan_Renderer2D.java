@@ -10,7 +10,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.nes.JoypadButtonID;
 import de.amr.games.pacman.lib.nes.NES_ColorScheme;
-import de.amr.games.pacman.lib.nes.NES_Palette;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.LevelCounter;
@@ -317,10 +316,14 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     @Override
     public void drawScores(ScoreManager scoreManager, Color color, Font font) {
-        if (THE_CLOCK.tickCount() % 60 < 30) { fillTextAtScaledPosition("1UP", color, font, tiles_to_px(2), tiles_to_px(1)); }
-        fillTextAtScaledPosition("HIGH SCORE", color, font, tiles_to_px(9), tiles_to_px(1));
-        fillTextAtScaledPosition("%6d".formatted(scoreManager.score().points()), color, font, 0, tiles_to_px(2));
-        fillTextAtScaledPosition("%6d".formatted(scoreManager.highScore().points()), color, font, tiles_to_px(11), tiles_to_px(2));
+        if (scoreManager.isScoreVisible()) {
+            if (THE_CLOCK.tickCount() % 60 < 30) {
+                fillTextAtScaledPosition("1UP", color, font, tiles_to_px(2), tiles_to_px(1));
+            }
+            fillTextAtScaledPosition("HIGH SCORE", color, font, tiles_to_px(9), tiles_to_px(1));
+            fillTextAtScaledPosition("%6d".formatted(scoreManager.score().points()), color, font, 0, tiles_to_px(2));
+            fillTextAtScaledPosition("%6d".formatted(scoreManager.highScore().points()), color, font, tiles_to_px(11), tiles_to_px(2));
+        }
     }
 
     public void drawLevelCounterWithLevelNumbers(int levelNumber, LevelCounter levelCounter, Vector2f sizeInPx) {

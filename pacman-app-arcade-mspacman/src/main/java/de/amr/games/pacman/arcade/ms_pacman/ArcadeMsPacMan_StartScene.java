@@ -47,9 +47,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         Font font = arcadeFontScaledTS();
         Font font6 = THE_ASSETS.arcadeFontAtSize(scaled(6));
         gr.fillCanvas(backgroundColor());
-        if (game().isScoreVisible()) {
-            gr.drawScores(game(), ARCADE_WHITE, font);
-        }
+        gr.drawScores(game(), ARCADE_WHITE, font);
         GameSpriteSheet spriteSheet = gr.spriteSheet();
         gr.fillTextAtScaledTilePosition("PUSH START BUTTON", ARCADE_ORANGE, font, 6, 16);
         gr.fillTextAtScaledTilePosition("1 PLAYER ONLY", ARCADE_ORANGE, font, 8, 18);

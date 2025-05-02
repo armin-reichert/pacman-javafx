@@ -96,9 +96,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     public void drawSceneContent() {
         final Font font = arcadeFontScaledTS();
         gr.fillCanvas(backgroundColor());
-        if (game().isScoreVisible()) {
-            gr.drawScores(game(), nesPaletteColor(0x20), font);
-        }
+        gr.drawScores(game(), nesPaletteColor(0x20), font);
         TengenMsPacMan_Renderer2D r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
         TickTimer timer = sceneController.state().timer;

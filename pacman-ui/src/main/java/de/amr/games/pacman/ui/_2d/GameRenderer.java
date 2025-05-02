@@ -248,8 +248,10 @@ public interface GameRenderer {
     }
 
     default void drawScores(ScoreManager scoreManager, Color color, Font font) {
-        drawScore(scoreManager.score(),     "SCORE",      tiles_to_px(1),  tiles_to_px(1), font, color);
-        drawScore(scoreManager.highScore(), "HIGH SCORE", tiles_to_px(14), tiles_to_px(1), font, color);
+        if (scoreManager.isScoreVisible()) {
+            drawScore(scoreManager.score(), "SCORE", tiles_to_px(1), tiles_to_px(1), font, color);
+            drawScore(scoreManager.highScore(), "HIGH SCORE", tiles_to_px(14), tiles_to_px(1), font, color);
+        }
     }
 
     default void drawScore(Score score, String title, double x, double y, Font font, Color color) {

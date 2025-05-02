@@ -100,9 +100,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        if (game().isScoreVisible()) {
-            gr.drawScores(game(), ARCADE_WHITE, arcadeFontScaledTS());
-        }
+        gr.drawScores(game(), ARCADE_WHITE, arcadeFontScaledTS());
         gr.drawAnimatedActor(pac);
         gr.drawAnimatedActor(blinky);
         gr.drawLevelCounter(game().levelCounter(), sizeInPx());

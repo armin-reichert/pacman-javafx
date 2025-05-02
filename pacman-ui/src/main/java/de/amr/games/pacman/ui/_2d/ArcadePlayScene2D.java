@@ -173,9 +173,7 @@ public class ArcadePlayScene2D extends GameScene2D {
 
         gr.fillCanvas(backgroundColor());
 
-        if (game().isScoreVisible()) {
-            gr.drawScores(game(), ARCADE_WHITE, arcadeFontScaledTS());
-        }
+        gr.drawScores(game(), ARCADE_WHITE, arcadeFontScaledTS());
 
         // Draw maze
         gr.applyMapSettings(level.worldMap());

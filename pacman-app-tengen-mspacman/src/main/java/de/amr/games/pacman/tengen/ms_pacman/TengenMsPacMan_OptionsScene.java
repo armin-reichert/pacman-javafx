@@ -243,9 +243,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     protected void drawSceneContent() {
         final Font font = arcadeFontScaledTS();
         gr.fillCanvas(backgroundColor());
-        if (game().isScoreVisible()) {
-            gr.drawScores(game(), nesPaletteColor(0x20), font);
-        }
+        gr.drawScores(game(), nesPaletteColor(0x20), font);
         TengenMsPacMan_Renderer2D r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
 

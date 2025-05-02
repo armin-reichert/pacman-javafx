@@ -211,9 +211,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         gr.fillCanvas(backgroundColor());
-        if (game().isScoreVisible()) {
-            gr.drawScores(game(), nesPaletteColor(0x20), arcadeFontScaledTS());
-        }
+        gr.drawScores(game(), nesPaletteColor(0x20), arcadeFontScaledTS());
         var r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
         r.drawClapperBoard(clapAnimation, "THEY MEET", 1, CLAP_TILE_X, CLAP_TILE_Y, arcadeFontScaledTS());

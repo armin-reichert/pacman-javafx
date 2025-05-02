@@ -125,9 +125,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     public void drawSceneContent() {
         final SceneState state = sceneController.state();
         final Font font = arcadeFontScaledTS();
-        if (game().isScoreVisible()) {
-            gr.drawScores(game(), ARCADE_WHITE, font);
-        }
+        gr.drawScores(game(), ARCADE_WHITE, font);
         drawMarquee();
         gr.fillTextAtScaledPosition("\"MS PAC-MAN\"", ARCADE_ORANGE, font, TITLE_X, TITLE_Y);
         if (state == SceneState.GHOSTS_MARCHING_IN) {

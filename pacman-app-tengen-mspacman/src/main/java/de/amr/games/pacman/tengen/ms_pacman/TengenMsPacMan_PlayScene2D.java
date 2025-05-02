@@ -472,9 +472,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
         tr.setScaling(scaling());
 
-        if (tgame.isScoreVisible()) {
-            tr.drawScores(tgame, nesPaletteColor(0x20), arcadeFontScaledTS());
-        }
+        tr.drawScores(tgame, nesPaletteColor(0x20), arcadeFontScaledTS());
 
         final boolean flashing = levelCompleteAnimation != null && levelCompleteAnimation.inFlashingPhase();
         if (flashing) {
