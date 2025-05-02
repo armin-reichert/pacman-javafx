@@ -70,7 +70,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void bindActions() {
-        bindArcadeStartActions();
+        bindArcadeInsertCoinAction();
+        bindArcadeStartGameAction();
         bindTestsStartActions();
     }
 

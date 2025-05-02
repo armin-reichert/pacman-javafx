@@ -18,7 +18,7 @@ import static java.util.Objects.requireNonNull;
  *     0.0                Start animation
  *     1.5                Hide ghosts
  *     2.0                Start n flashing cycles, each cycle takes 1/3 sec
- *     2.0 + n * 1/3 sec  Wait for 1 sec, then run the action specified for
+ *     2.0 + n * 1/3 sec  Wait for 1 sec, then run the action specified for finishing the animation
  * </pre>
  * After each flashing cycle, the flashing index is incremented. This is used by the Tengen play scene renderer to
  * draw a different map color for each flashing cycle (only for the non-ARCADE maps starting at level 28)

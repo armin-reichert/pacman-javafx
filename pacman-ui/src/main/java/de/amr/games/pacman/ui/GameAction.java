@@ -238,19 +238,31 @@ public enum GameAction implements Action {
         }
     },
 
+    //TODO separate action for Arcade and Tengen
     START_GAME {
         @Override
         public void execute() {
-            if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN)) {
-                THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
-            } else if (THE_GAME_CONTROLLER.game().canStartNewGame()) {
-                THE_SOUND.stopVoice();
-                if (THE_GAME_CONTROLLER.state() == GameState.INTRO || THE_GAME_CONTROLLER.state() == GameState.SETTING_OPTIONS) {
-                    THE_GAME_CONTROLLER.changeState(GameState.STARTING_GAME);
-                } else {
-                    Logger.error("Cannot start game play in game state {}", THE_GAME_CONTROLLER.state());
+            switch (THE_GAME_CONTROLLER.gameVariantProperty().get()) {
+                case MS_PACMAN_TENGEN -> THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
+                case MS_PACMAN, MS_PACMAN_XXL, PACMAN, PACMAN_XXL -> {
+                    if (THE_GAME_CONTROLLER.game().canStartNewGame()) {
+                        THE_SOUND.stopVoice();
+                        if (THE_GAME_CONTROLLER.state() == GameState.INTRO || THE_GAME_CONTROLLER.state() == GameState.SETTING_OPTIONS) {
+                            THE_GAME_CONTROLLER.changeState(GameState.STARTING_GAME);
+                        } else {
+                            Logger.error("Cannot start game play in game state {}", THE_GAME_CONTROLLER.state());
+                        }
+                    }
                 }
             }
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return switch (THE_GAME_CONTROLLER.gameVariantProperty().get()) {
+                case MS_PACMAN_TENGEN -> true;
+                case MS_PACMAN, MS_PACMAN_XXL, PACMAN, PACMAN_XXL -> !THE_COIN_MECHANISM.isEmpty();
+            };
         }
     },
 

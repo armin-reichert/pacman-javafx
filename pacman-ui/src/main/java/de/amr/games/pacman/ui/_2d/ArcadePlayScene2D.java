@@ -48,7 +48,7 @@ public class ArcadePlayScene2D extends GameScene2D {
     @Override
     protected void doInit() {
         game().scoreVisibleProperty().set(true);
-        bindArcadeStartActions();
+        bindArcadeInsertCoinAction();
         enableActionBindings(THE_KEYBOARD);
     }
 
@@ -56,6 +56,8 @@ public class ArcadePlayScene2D extends GameScene2D {
     public void onLevelCreated(GameEvent e) {
         GameLevel level = game().level().orElseThrow();
         gr.applyMapSettings(level.worldMap());
+        bindArcadeStartGameAction();
+        enableActionBindings(THE_KEYBOARD);
     }
 
     @Override

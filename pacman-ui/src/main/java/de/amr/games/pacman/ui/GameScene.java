@@ -40,8 +40,11 @@ public interface GameScene extends GameEventListener, ActionProvider {
         THE_UI.updateGameScene(true);
     }
 
-    default void bindArcadeStartActions() {
+    default void bindArcadeInsertCoinAction() {
         bind(GameAction.INSERT_COIN,  naked(KeyCode.DIGIT5), naked(KeyCode.NUMPAD5));
+    }
+
+    default void bindArcadeStartGameAction() {
         bind(GameAction.START_GAME,   naked(KeyCode.DIGIT1), naked(KeyCode.NUMPAD1));
     }
 

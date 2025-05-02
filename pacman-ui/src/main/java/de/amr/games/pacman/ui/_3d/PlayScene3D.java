@@ -46,7 +46,6 @@ import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.Globals.*;
 import static de.amr.games.pacman.uilib.Ufx.contextMenuTitleItem;
 import static de.amr.games.pacman.uilib.input.Keyboard.alt;
-import static de.amr.games.pacman.uilib.input.Keyboard.naked;
 
 /**
  * 3D play scene. Provides different camera perspectives that can be stepped
@@ -193,15 +192,14 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void bindActions() {
+        bindArcadeInsertCoinAction();
+        if (game().level().isPresent() && !game().level().get().isDemoLevel()) {
+            bindArcadeStartGameAction();
+            bindCheatActions();
+        }
         bind(GameAction.PERSPECTIVE_PREVIOUS, alt(KeyCode.LEFT));
         bind(GameAction.PERSPECTIVE_NEXT, alt(KeyCode.RIGHT));
         bind(GameAction.TOGGLE_DRAW_MODE, alt(KeyCode.W));
-        if (game().level().isPresent() && game().level().get().isDemoLevel()) {
-            bind(GameAction.INSERT_COIN,  naked(KeyCode.DIGIT5), naked(KeyCode.NUMPAD5));
-        } else {
-            bindArcadeStartActions();
-            bindCheatActions();
-        }
         enableActionBindings(THE_KEYBOARD);
     }
 
