@@ -13,6 +13,7 @@ import javafx.scene.layout.Region;
 public interface View extends ActionProvider, GameEventListener {
     Region layoutRoot();
     void update();
+    default void draw() {}
     default StringExpression title() {
         return Bindings.createStringBinding(() -> getClass().getSimpleName());
     }

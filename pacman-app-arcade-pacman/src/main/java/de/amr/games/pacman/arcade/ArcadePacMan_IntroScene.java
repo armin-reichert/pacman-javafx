@@ -39,11 +39,11 @@ import static de.amr.games.pacman.ui.Globals.*;
  */
 public class ArcadePacMan_IntroScene extends GameScene2D {
 
-    static final String[] GHOST_CHARACTERS = { "SHADOW", "SPEEDY", "BASHFUL", "POKEY" };
-    static final Color[] GHOST_COLORS = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
-    static final float CHASE_SPEED = 1.1f;
-    static final float GHOST_FRIGHTENED_SPEED = 0.6f;
-    static final int LEFT_TILE_X = 4;
+    private static final String[] GHOST_CHARACTERS = { "SHADOW", "SPEEDY", "BASHFUL", "POKEY" };
+    private static final Color[] GHOST_COLORS = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
+    private static final float CHASE_SPEED = 1.1f;
+    private static final float GHOST_FRIGHTENED_SPEED = 0.6f;
+    private static final int LEFT_TILE_X = 4;
 
     private final FiniteStateMachine<SceneState, ArcadePacMan_IntroScene> sceneController;
 
@@ -76,7 +76,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        var spriteSheet = (ArcadePacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
+        ArcadePacMan_SpriteSheet spriteSheet = THE_UI_CONFIGS.current().spriteSheet();
         blinking = new Pulse(10, true);
         pacMan = new Pac();
         pacMan.setAnimations(new ArcadePacMan_PacAnimations(spriteSheet));
@@ -107,9 +107,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void update() {
-        if (THE_CLOCK.isPaused()) {
-            return;
-        }
         sceneController.update();
     }
 

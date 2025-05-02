@@ -100,7 +100,6 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
             gr.drawScores(game(), ARCADE_WHITE, arcadeFontScaledTS());
         }

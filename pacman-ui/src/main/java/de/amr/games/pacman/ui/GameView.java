@@ -111,16 +111,19 @@ public class GameView implements View {
 
     @Override
     public void update() {
+        currentGameScene().ifPresent(GameScene::update);
+        if (dashboardLayer.isVisible()) {
+            dashboard.infoBoxes().filter(InfoBox::isExpanded).forEach(InfoBox::update);
+        }
+    }
+
+    public void draw() {
         currentGameScene().ifPresent(gameScene -> {
-            gameScene.update();
             if (gameScene instanceof GameScene2D gameScene2D) {
                 gameScene2D.draw();
             }
         });
         flashMessageLayer.update();
-        if (dashboardLayer.isVisible()) {
-            dashboard.infoBoxes().filter(InfoBox::isExpanded).forEach(InfoBox::update);
-        }
         pipView.draw();
     }
 

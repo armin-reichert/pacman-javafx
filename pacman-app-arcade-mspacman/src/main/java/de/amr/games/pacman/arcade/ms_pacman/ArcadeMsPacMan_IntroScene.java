@@ -46,7 +46,6 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     private static final int BULB_COUNT = 96;
     private static final int ACTIVE_BULBS_DIST = 16;
     private static final RectArea MARQUEE = new RectArea(60, 88, 132, 60);
-//    private static final int MARQUEE_XMIN = 60, MARQUEE_XMAX = 192, MARQUEE_YMIN = 88, MARQUEE_YMAX = 148;
 
     private static final Color COLOR_BULB_ON  = ARCADE_WHITE;
     private static final Color COLOR_BULB_OFF = ARCADE_RED;
