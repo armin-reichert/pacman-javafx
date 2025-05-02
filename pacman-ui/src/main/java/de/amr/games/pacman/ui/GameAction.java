@@ -9,7 +9,6 @@ import de.amr.games.pacman.controller.CoinMechanism;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui._3d.PerspectiveID;
 import de.amr.games.pacman.uilib.Action;
 import javafx.scene.shape.DrawMode;
@@ -238,12 +237,11 @@ public enum GameAction implements Action {
         }
     },
 
-    //TODO separate action for Arcade and Tengen
-    START_GAME {
+    ARCADE_START_GAME {
         @Override
         public void execute() {
             switch (THE_GAME_CONTROLLER.gameVariantProperty().get()) {
-                case MS_PACMAN_TENGEN -> THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
+                case MS_PACMAN_TENGEN -> Logger.error("Arcade game start action cannot be executed in Tengen Ms. Pac-Man");
                 case MS_PACMAN, MS_PACMAN_XXL, PACMAN, PACMAN_XXL -> {
                     if (THE_GAME_CONTROLLER.game().canStartNewGame()) {
                         THE_SOUND.stopVoice();
@@ -260,7 +258,7 @@ public enum GameAction implements Action {
         @Override
         public boolean isEnabled() {
             return switch (THE_GAME_CONTROLLER.gameVariantProperty().get()) {
-                case MS_PACMAN_TENGEN -> true;
+                case MS_PACMAN_TENGEN -> false;
                 case MS_PACMAN, MS_PACMAN_XXL, PACMAN, PACMAN_XXL -> !THE_COIN_MECHANISM.isEmpty();
             };
         }
