@@ -6,7 +6,6 @@ package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
@@ -28,7 +27,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.model.actors.GhostState.*;
+import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
+import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
 
 /**
  * Common base class of all Pac-Man game models.
@@ -201,7 +201,7 @@ public abstract class GameModel implements ScoreManager {
         if (level.number() < lastLevelNumber()) {
             createLevel(level.number() + 1, createLevelData(level.number() + 1));
             startLevel();
-            showPacAndGhosts();
+            level.showPacAndGhosts();
         } else {
             Logger.warn("Last level ({}) reached, cannot start next level", lastLevelNumber());
         }
@@ -214,16 +214,6 @@ public abstract class GameModel implements ScoreManager {
             ghost.selectAnimation(ActorAnimations.ANIM_GHOST_NORMAL);
             ghost.resetAnimation();
         });
-    }
-
-    public void showPacAndGhosts() {
-        level.pac().show();
-        level.ghosts().forEach(Ghost::show);
-    }
-
-    public void hidePacAndGhosts() {
-        level.pac().hide();
-        level.ghosts().forEach(Ghost::hide);
     }
 
     /**

@@ -168,6 +168,16 @@ public class GameLevel {
         blinking.reset();
     }
 
+    public void showPacAndGhosts() {
+        pac.show();
+        ghosts().forEach(Ghost::show);
+    }
+
+    public void hidePacAndGhosts() {
+        pac().hide();
+        ghosts().forEach(Ghost::hide);
+    }
+
     public GameModel game() { return game; }
 
     public LevelData data() { return data; }
