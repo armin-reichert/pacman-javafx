@@ -6,20 +6,20 @@ package de.amr.games.pacman.arcade.ms_pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.arcade.Arcade;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.Actor2D;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.HEART_SPRITE;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.*;
-import static de.amr.games.pacman.ui.Globals.*;
+import static de.amr.games.pacman.ui.GameAssets.ARCADE_WHITE;
+import static de.amr.games.pacman.ui.Globals.THE_SOUND;
+import static de.amr.games.pacman.ui.Globals.THE_UI_CONFIGS;
 
 /**
  * Intermission scene 1: "They meet".
@@ -32,21 +32,20 @@ import static de.amr.games.pacman.ui.Globals.*;
  */
 public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
-    static final int UPPER_LANE_Y  = TS * 12;
-    static final int MIDDLE_LANE_Y = TS * 18;
-    static final int LOWER_LANE_Y  = TS * 24;
+    private static final int UPPER_LANE_Y  = TS * 12;
+    private static final int MIDDLE_LANE_Y = TS * 18;
+    private static final int LOWER_LANE_Y  = TS * 24;
 
-    static final float SPEED_PAC_CHASING = 1.125f;
-    static final float SPEED_PAC_RISING = 0.75f;
-    static final float SPEED_GHOST_AFTER_COLLISION = 0.3f;
-    static final float SPEED_GHOST_CHASING = 1.25f;
+    private static final float SPEED_PAC_CHASING = 1.125f;
+    private static final float SPEED_PAC_RISING = 0.75f;
+    private static final float SPEED_GHOST_AFTER_COLLISION = 0.3f;
+    private static final float SPEED_GHOST_CHASING = 1.25f;
 
     private Pac pacMan;
-    private Pac msPac;
+    private Pac msPacMan;
     private Ghost inky;
     private Ghost pinky;
     private Actor2D heart;
-
     private MediaPlayer music;
     private ClapperboardAnimation clapperboardAnimation;
 
@@ -55,22 +54,20 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         game().scoreVisibleProperty().set(true);
 
         pacMan = new Pac();
-        msPac = new Pac();
+        msPacMan = new Pac();
         inky = new Ghost(CYAN_GHOST_ID, "Inky");
         pinky = new Ghost(PINK_GHOST_ID, "Pinky");
         heart = new Actor2D();
 
-        music = THE_SOUND.createSound("intermission.1");
-
-        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_UI_CONFIGS.configuration(
-            THE_GAME_CONTROLLER.gameVariantProperty().get()).spriteSheet();
-        msPac.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));
+        ArcadeMsPacMan_SpriteSheet spriteSheet = THE_UI_CONFIGS.current().spriteSheet();
+        msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));
         pacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));
         inky.setAnimations(new ArcadeMsPacMan_GhostAnimations(spriteSheet, inky.id()));
         pinky.setAnimations(new ArcadeMsPacMan_GhostAnimations(spriteSheet, pinky.id()));
 
         clapperboardAnimation = new ClapperboardAnimation("1", "THEY MEET");
         clapperboardAnimation.start();
+        music = THE_SOUND.createSound("intermission.1");
 
         setState(STATE_CLAPPERBOARD, 120);
     }
@@ -95,12 +92,12 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
         if (game().isScoreVisible()) {
-            gr.drawScores(game(), Color.web(Arcade.Palette.WHITE), arcadeFontScaledTS());
+            gr.drawScores(game(), ARCADE_WHITE, arcadeFontScaledTS());
         }
-        if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
+        if (gr instanceof ArcadeMsPacMan_GameRenderer r) { // could also be VectorGraphicsRenderer!
             r.drawClapperBoard(clapperboardAnimation, tiles_to_px(3), tiles_to_px(10), arcadeFontScaledTS());
         }
-        gr.drawAnimatedActor(msPac);
+        gr.drawAnimatedActor(msPacMan);
         gr.drawAnimatedActor(pacMan);
         gr.drawAnimatedActor(inky);
         gr.drawAnimatedActor(pinky);
@@ -110,10 +107,10 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     // Scene controller state machine
 
-    static final byte STATE_CLAPPERBOARD = 0;
-    static final byte STATE_CHASED_BY_GHOSTS = 1;
-    static final byte STATE_COMING_TOGETHER = 2;
-    static final byte STATE_IN_HEAVEN = 3;
+    private static final byte STATE_CLAPPERBOARD = 0;
+    private static final byte STATE_CHASED_BY_GHOSTS = 1;
+    private static final byte STATE_COMING_TOGETHER = 2;
+    private static final byte STATE_IN_HEAVEN = 3;
 
     private byte state;
     private final TickTimer stateTimer = new TickTimer("MsPacManCutScene1");
@@ -159,15 +156,15 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         inky.startAnimation();
         inky.show();
 
-        msPac.setMoveDir(Direction.LEFT);
-        msPac.setPosition(TS * 30, LOWER_LANE_Y);
-        msPac.setSpeed(SPEED_PAC_CHASING);
-        msPac.selectAnimation(ANIM_PAC_MUNCHING);
-        msPac.startAnimation();
-        msPac.show();
+        msPacMan.setMoveDir(Direction.LEFT);
+        msPacMan.setPosition(TS * 30, LOWER_LANE_Y);
+        msPacMan.setSpeed(SPEED_PAC_CHASING);
+        msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
+        msPacMan.startAnimation();
+        msPacMan.show();
 
         pinky.setMoveAndWishDir(Direction.LEFT);
-        pinky.setPosition(msPac.position().plus(TS * 6, 0));
+        pinky.setPosition(msPacMan.position().plus(TS * 6, 0));
         pinky.setSpeed(SPEED_GHOST_CHASING);
         pinky.selectAnimation(ANIM_GHOST_NORMAL);
         pinky.startAnimation();
@@ -182,17 +179,17 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         }
         else {
             pacMan.move();
-            msPac.move();
+            msPacMan.move();
             inky.move();
             pinky.move();
         }
     }
 
     private void enterStateComingTogether() {
-        msPac.setPosition(TS * (-3), MIDDLE_LANE_Y);
-        msPac.setMoveDir(Direction.RIGHT);
+        msPacMan.setPosition(TS * (-3), MIDDLE_LANE_Y);
+        msPacMan.setMoveDir(Direction.RIGHT);
 
-        pinky.setPosition(msPac.position().minus(TS * 5, 0));
+        pinky.setPosition(msPacMan.position().minus(TS * 5, 0));
         pinky.setMoveAndWishDir(Direction.RIGHT);
 
         pacMan.setPosition(TS * 31, MIDDLE_LANE_Y);
@@ -211,11 +208,11 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         }
 
         // Pac-Man and Ms. Pac-Man meet?
-        else if (pacMan.moveDir() == Direction.LEFT && pacMan.posX() - msPac.posX() < TS * (2)) {
+        else if (pacMan.moveDir() == Direction.LEFT && pacMan.posX() - msPacMan.posX() < TS * (2)) {
             pacMan.setMoveDir(Direction.UP);
             pacMan.setSpeed(SPEED_PAC_RISING);
-            msPac.setMoveDir(Direction.UP);
-            msPac.setSpeed(SPEED_PAC_RISING);
+            msPacMan.setMoveDir(Direction.UP);
+            msPacMan.setSpeed(SPEED_PAC_RISING);
         }
 
         // Inky and Pinky collide?
@@ -232,7 +229,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         }
         else {
             pacMan.move();
-            msPac.move();
+            msPacMan.move();
             inky.move();
             pinky.move();
             if (inky.posY() > MIDDLE_LANE_Y) {
@@ -252,10 +249,10 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         pacMan.stopAnimation();
         pacMan.resetAnimation();
 
-        msPac.setSpeed(0);
-        msPac.setMoveDir(Direction.RIGHT);
-        msPac.stopAnimation();
-        msPac.resetAnimation();
+        msPacMan.setSpeed(0);
+        msPacMan.setMoveDir(Direction.RIGHT);
+        msPacMan.stopAnimation();
+        msPacMan.resetAnimation();
 
         inky.setSpeed(0);
         inky.hide();
@@ -263,7 +260,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         pinky.setSpeed(0);
         pinky.hide();
 
-        heart.setPosition((pacMan.posX() + msPac.posX()) / 2, pacMan.posY() - TS * (2));
+        heart.setPosition((pacMan.posX() + msPacMan.posX()) / 2, pacMan.posY() - TS * (2));
         heart.show();
 
         setState(STATE_IN_HEAVEN, 3 * 60);

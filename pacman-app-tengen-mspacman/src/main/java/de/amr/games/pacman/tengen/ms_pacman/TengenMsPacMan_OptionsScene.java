@@ -73,7 +73,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         bind(selectNextJoypad, alt(KeyCode.J));
         bind(START_PLAYING, THE_JOYPAD.key(JoypadButtonID.START));
         bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, THE_JOYPAD.key(JoypadButtonID.SELECT));
-        bindTestsStartActions();
+        bindStartTestsActions();
     }
 
     @Override

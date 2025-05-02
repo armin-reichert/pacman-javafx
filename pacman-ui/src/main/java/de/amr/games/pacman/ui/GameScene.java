@@ -55,17 +55,17 @@ public interface GameScene extends GameEventListener, ActionProvider {
         bind(GameAction.PLAYER_RIGHT, naked(KeyCode.RIGHT),  control(KeyCode.RIGHT));
     }
 
+    default void bindStartTestsActions() {
+        bind(GameAction.TEST_CUT_SCENES,     alt(KeyCode.C));
+        bind(GameAction.TEST_LEVELS_BONI,    alt(KeyCode.T));
+        bind(GameAction.TEST_LEVELS_TEASERS, Keyboard.shift_alt(KeyCode.T));
+    }
+
     default void bindCheatActions() {
         bind(GameAction.CHEAT_EAT_ALL,     alt(KeyCode.E));
         bind(GameAction.CHEAT_ADD_LIVES,   alt(KeyCode.L));
         bind(GameAction.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
         bind(GameAction.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
-    }
-
-    default void bindTestsStartActions() {
-        bind(GameAction.TEST_CUT_SCENES,     alt(KeyCode.C));
-        bind(GameAction.TEST_LEVELS_BONI,    alt(KeyCode.T));
-        bind(GameAction.TEST_LEVELS_TEASERS, Keyboard.shift_alt(KeyCode.T));
     }
 
     default <GAME extends GameModel> GAME game() { return THE_GAME_CONTROLLER.game(); }
