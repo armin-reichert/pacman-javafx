@@ -263,9 +263,25 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public void startLevel() {
-        super.startLevel();
-        // Score is enabled also in demo level in contrast to Arcade games
-        setScoreEnabled(true);
+        level.setStartTime(System.currentTimeMillis());
+        level.makeReadyForPlaying();
+        initActorAnimationState();
+        setActorBaseSpeed(level.number());
+        levelCounter().update(level);
+        if (level.isDemoLevel()) {
+            level.showMessage(GameLevel.Message.GAME_OVER);
+            setScoreEnabled(true);
+            setHighScoreEnabled(false);
+            Logger.info("Demo level {} started", level.number());
+
+        } else {
+            level.showMessage(GameLevel.Message.READY);
+            setScoreEnabled(true);
+            setHighScoreEnabled(true);
+            Logger.info("Level {} started", level.number());
+        }
+        // Note: This event is very important because it triggers the creation of the actor animations!
+        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_STARTED);
     }
 
     @Override

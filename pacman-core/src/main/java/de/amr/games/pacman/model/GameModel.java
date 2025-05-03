@@ -79,6 +79,8 @@ public abstract class GameModel implements ScoreManager {
 
     public abstract boolean canStartNewGame();
 
+    public abstract void startLevel();
+
     public abstract boolean continueOnGameOver();
 
     public abstract boolean isOver();
@@ -181,28 +183,6 @@ public abstract class GameModel implements ScoreManager {
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(levelNumber));
         huntingTimer().reset();
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
-    }
-
-    public void startLevel() {
-        level.setStartTime(System.currentTimeMillis());
-        level.makeReadyForPlaying();
-        initActorAnimationState();
-        setActorBaseSpeed(level.number());
-        levelCounter().update(level);
-        if (level.isDemoLevel()) {
-            level.showMessage(GameLevel.Message.GAME_OVER);
-            setScoreEnabled(false);
-            setHighScoreEnabled(false);
-            Logger.info("Demo level {} started", level.number());
-
-        } else {
-            level.showMessage(GameLevel.Message.READY);
-            setScoreEnabled(true);
-            setHighScoreEnabled(true);
-            Logger.info("Level {} started", level.number());
-        }
-        // Note: This event is very important because it triggers the creation of the actor animations!
-        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_STARTED);
     }
 
     public void startNextLevel() {

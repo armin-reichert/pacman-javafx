@@ -307,4 +307,29 @@ public abstract class ArcadeXMan_GameModel extends GameModel {
         pac.setUsingAutopilot(true);
         pac.setImmune(false);
     }
+
+    @Override
+    public void startLevel() {
+        level.setStartTime(System.currentTimeMillis());
+        level.makeReadyForPlaying();
+        initActorAnimationState();
+        setActorBaseSpeed(level.number());
+        levelCounter().update(level);
+        if (level.isDemoLevel()) {
+            level.showMessage(GameLevel.Message.GAME_OVER);
+            setScoreEnabled(false);
+            setHighScoreEnabled(false);
+            Logger.info("Demo level {} started", level.number());
+
+        } else {
+            level.showMessage(GameLevel.Message.READY);
+            setScoreEnabled(true);
+            setHighScoreEnabled(true);
+            Logger.info("Level {} started", level.number());
+        }
+        // Note: This event is very important because it triggers the creation of the actor animations!
+        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_STARTED);
+    }
+
+
 }
