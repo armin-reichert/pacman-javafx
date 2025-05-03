@@ -123,7 +123,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public void resetEverything() {
-        resetForStartingNewGame();
+        prepareForNewGame();
         setPacBooster(PacBooster.OFF);
         setDifficulty(Difficulty.NORMAL);
         setMapCategory(MapCategory.ARCADE);
@@ -132,7 +132,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public void resetForStartingNewGame() {
+    public void prepareForNewGame() {
         livesProperty().set(initialLivesProperty().get());
         level = null;
         levelCounter.reset();
@@ -337,7 +337,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public void startNewGame() {
-        resetForStartingNewGame();
+        prepareForNewGame();
         createLevel(startLevelNumber, createLevelData(startLevelNumber));
         levelCounter.resetStartingFromLevel(startLevelNumber);
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.GAME_STARTED);

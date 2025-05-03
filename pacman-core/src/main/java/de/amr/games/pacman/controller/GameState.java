@@ -340,7 +340,7 @@ public enum GameState implements FsmState<GameModel> {
                         THE_GAME_CONTROLLER.changeState(canContinue ? SETTING_OPTIONS : INTRO);
                     }
                 } else {
-                    game.resetForStartingNewGame();
+                    game.prepareForNewGame();
                     if (game.canStartNewGame()) {
                         THE_GAME_CONTROLLER.changeState(SETTING_OPTIONS);
                     } else {
@@ -384,7 +384,7 @@ public enum GameState implements FsmState<GameModel> {
                 lastTestedLevelNumber = 32;
             }
             timer.restartIndefinitely();
-            game.resetForStartingNewGame();
+            game.prepareForNewGame();
             game.createLevel(1, game.createLevelData(1));
             game.startLevel();
             GameLevel level = game.level().orElseThrow();
@@ -471,7 +471,7 @@ public enum GameState implements FsmState<GameModel> {
                 lastTestedLevelNumber = 32;
             }
             timer.restartSeconds(TEASER_TIME_SECONDS);
-            game.resetForStartingNewGame();
+            game.prepareForNewGame();
             game.createLevel(1, game.createLevelData(1));
             game.startLevel();
             GameLevel level = game.level().orElseThrow();

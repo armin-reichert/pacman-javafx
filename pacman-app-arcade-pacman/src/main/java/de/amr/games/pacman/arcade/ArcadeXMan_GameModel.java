@@ -116,11 +116,11 @@ public abstract class ArcadeXMan_GameModel extends GameModel {
 
     @Override
     public void resetEverything() {
-        resetForStartingNewGame();
+        prepareForNewGame();
     }
 
     @Override
-    public void resetForStartingNewGame() {
+    public void prepareForNewGame() {
         playingProperty().set(false);
         livesProperty().set(initialLivesProperty().get());
         level = null;

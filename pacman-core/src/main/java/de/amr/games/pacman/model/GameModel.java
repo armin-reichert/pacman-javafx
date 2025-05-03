@@ -47,12 +47,7 @@ public abstract class GameModel implements ScoreManager {
 
     public abstract void    init();
     public abstract void    resetEverything();
-    public abstract void    resetForStartingNewGame();
-    public abstract boolean canStartNewGame();
-    public abstract void    startLevel();
     public abstract boolean continueOnGameOver();
-    public abstract boolean isOver();
-    public abstract void    onGameEnding();
 
     protected abstract void setActorBaseSpeed(int levelNumber);
 
@@ -99,8 +94,11 @@ public abstract class GameModel implements ScoreManager {
 
     // Game lifecycle
 
+    public abstract void prepareForNewGame();
+    public abstract boolean canStartNewGame();
+
     public void startNewGame() {
-        resetForStartingNewGame();
+        prepareForNewGame();
         createLevel(1, createLevelData(1));
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.GAME_STARTED);
     }
@@ -114,6 +112,8 @@ public abstract class GameModel implements ScoreManager {
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 
+    public abstract void startLevel();
+
     public void startNextLevel() {
         if (level.number() < lastLevelNumber()) {
             createLevel(level.number() + 1, createLevelData(level.number() + 1));
@@ -123,6 +123,11 @@ public abstract class GameModel implements ScoreManager {
             Logger.warn("Last level ({}) reached, cannot start next level", lastLevelNumber());
         }
     }
+
+    public abstract boolean isOver();
+    public abstract void onGameEnding();
+
+    // Actors
 
     public void initActorAnimationState() {
         level.pac().selectAnimation(ActorAnimations.ANIM_PAC_MUNCHING);
