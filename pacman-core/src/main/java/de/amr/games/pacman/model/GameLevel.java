@@ -399,6 +399,10 @@ public class GameLevel {
         }
     }
 
+    public void eatAllFood() {
+        worldMap.tiles().filter(this::hasFoodAt).forEach(this::registerFoodEatenAt);
+    }
+
     public boolean isFoodPosition(Vector2i tile) {
         return isInsideWorld(tile) && worldMap.get(LayerID.FOOD, tile) != FoodTiles.EMPTY;
     }

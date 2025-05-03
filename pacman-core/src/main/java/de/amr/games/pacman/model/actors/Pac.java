@@ -144,9 +144,9 @@ public class Pac extends Creature implements AnimatedActor2D {
     }
 
     /**
-     * When a level is complete, Pac-Man is displayed in its full beauty and does not move anymore.
+     * Pac-Man is displayed in its full beauty and does not move anymore.
      */
-    public void freeze() {
+    public void stopAndShowInFullBeauty() {
         setSpeed(0);
         setRestingTicks(Pac.REST_INDEFINITELY);
         animations.stop();

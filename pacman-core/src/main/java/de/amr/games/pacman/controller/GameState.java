@@ -172,7 +172,7 @@ public enum GameState implements FsmState<GameModel> {
                 }
             }
             game.doHuntingStep();
-            if (game.isLevelFinished()) {
+            if (game.isLevelCompleted()) {
                 THE_GAME_CONTROLLER.changeState(LEVEL_COMPLETE);
             } else if (game.hasPacManBeenKilled()) {
                 THE_GAME_CONTROLLER.changeState(PACMAN_DYING);
@@ -195,7 +195,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             timer.restartIndefinitely(); // UI triggers timeout e.g. when animation finishes
-            game.endLevel();
+            game.onLevelCompleted();
         }
 
         @Override
@@ -438,7 +438,7 @@ public enum GameState implements FsmState<GameModel> {
             else if (timer().atSecond(12.0)) {
                 setProperty("mazeFlashing", false); //TODO fix
                 level.blinking().reset();
-                level.pac().freeze();
+                level.pac().stopAndShowInFullBeauty();
                 level.bonus().ifPresent(Bonus::setInactive);
                 if (level.number() == lastTestedLevelNumber) {
                     THE_GAME_CONTROLLER.restart(GameState.BOOT);
@@ -489,7 +489,7 @@ public enum GameState implements FsmState<GameModel> {
                     THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.STOP_ALL_SOUNDS);
                     THE_GAME_CONTROLLER.changeState(INTRO);
                 } else {
-                    level.pac().freeze();
+                    level.pac().stopAndShowInFullBeauty();
                     level.bonus().ifPresent(Bonus::setInactive);
                     setProperty("mazeFlashing", false);
                     level.blinking().reset();
@@ -497,7 +497,7 @@ public enum GameState implements FsmState<GameModel> {
                     timer().restartSeconds(TEASER_TIME_SECONDS);
                 }
             }
-            else if (game.isLevelFinished()) {
+            else if (game.isLevelCompleted()) {
                 THE_GAME_CONTROLLER.changeState(INTRO);
             } else if (game.hasPacManBeenKilled()) {
                 timer.expire();

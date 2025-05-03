@@ -114,6 +114,49 @@ public abstract class GameModel implements ScoreManager {
 
     public abstract void startLevel();
 
+    public void startHunting() {
+        level.pac().startAnimation();
+        level.ghosts().forEach(Ghost::startAnimation);
+        level.blinking().setStartPhase(Pulse.ON);
+        level.blinking().restart(Integer.MAX_VALUE);
+        huntingTimer().startFirstHuntingPhase(level.number());
+        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.HUNTING_PHASE_STARTED);
+    }
+
+    public void doHuntingStep() {
+        huntingTimer().update(level.number());
+        level.blinking().tick();
+        gateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(level, THE_SIMULATION_STEP));
+        checkIfPacFindsFood();
+        level.pac().update(this);
+        updatePacPower();
+        checkPacKilled();
+        if (!hasPacManBeenKilled()) {
+            level.ghosts().forEach(ghost -> ghost.update(this));
+            level.ghosts(FRIGHTENED).filter(ghost -> ghost.sameTile(level.pac())).forEach(this::onGhostKilled);
+            if (!haveGhostsBeenKilled()) {
+                level.bonus().ifPresent(this::updateBonus);
+            }
+        }
+    }
+
+    public void onLevelCompleted() {
+        Logger.info("Level complete, stop hunting timer");
+        huntingTimer().stop();
+        level.blinking().setStartPhase(Pulse.OFF);
+        level.blinking().reset();
+        level.pac().stopAndShowInFullBeauty();
+        level.pac().powerTimer().stop();
+        level.pac().powerTimer().reset(0);
+        Logger.info("Power timer stopped and reset to zero");
+        level.bonus().ifPresent(Bonus::setInactive);
+        // when cheating to end level, there might still be food
+        level.eatAllFood();
+        Logger.trace("Game level {} completed.", level.number());
+    }
+
+    public boolean isLevelCompleted() { return level.uneatenFoodCount() == 0; }
+
     public void startNextLevel() {
         if (level.number() < lastLevelNumber()) {
             createLevel(level.number() + 1, createLevelData(level.number() + 1));
@@ -165,71 +208,11 @@ public abstract class GameModel implements ScoreManager {
         };
     }
 
-    public void endLevel() {
-        Logger.info("Level complete, stop hunting timer");
-        huntingTimer().stop();
-        level.blinking().setStartPhase(Pulse.OFF);
-        level.blinking().reset();
-        level.pac().freeze();
-        level.pac().powerTimer().stop();
-        level.pac().powerTimer().reset(0);
-        Logger.info("Power timer stopped and reset to zero");
-        level.bonus().ifPresent(Bonus::setInactive);
-        // when cheating, there might still be remaining food
-        level.worldMap().tiles().filter(level::hasFoodAt).forEach(level::registerFoodEatenAt);
-        Logger.trace("Game level {} completed.", level.number());
-    }
-
-    public boolean isLevelFinished() { return level.uneatenFoodCount() == 0; }
-
     public boolean hasPacManBeenKilled() { return THE_SIMULATION_STEP.pacKilledTile() != null; }
 
     public boolean haveGhostsBeenKilled() { return !THE_SIMULATION_STEP.killedGhosts().isEmpty(); }
 
-    public void startHunting() {
-        level.pac().startAnimation();
-        level.ghosts().forEach(Ghost::startAnimation);
-        level.blinking().setStartPhase(Pulse.ON);
-        level.blinking().restart(Integer.MAX_VALUE);
-        huntingTimer().startFirstHuntingPhase(level.number());
-        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.HUNTING_PHASE_STARTED);
-    }
-
-    public void doHuntingStep() {
-        huntingTimer().update(level.number());
-        level.blinking().tick();
-        gateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(level, THE_SIMULATION_STEP));
-        checkForFood();
-        level.pac().update(this);
-        updatePacPower();
-        checkPacKilled();
-        if (!hasPacManBeenKilled()) {
-            level.ghosts().forEach(ghost -> ghost.update(this));
-            level.ghosts(FRIGHTENED).filter(ghost -> ghost.sameTile(level.pac())).forEach(this::onGhostKilled);
-            if (!haveGhostsBeenKilled()) {
-                level.bonus().ifPresent(this::updateBonus);
-            }
-        }
-    }
-
-    private void checkPacKilled() {
-        level.ghosts(HUNTING_PAC)
-            .filter(ghost -> level.pac().sameTile(ghost))
-            .findFirst().ifPresent(killer -> {
-                boolean killed;
-                if (level.isDemoLevel()) {
-                    killed = !isPacManSafeInDemoLevel();
-                } else {
-                    killed = !level.pac().isImmune();
-                }
-                if (killed) {
-                    THE_SIMULATION_STEP.setPacKiller(killer);
-                    THE_SIMULATION_STEP.setPacKilledTile(killer.tile());
-                }
-            });
-    }
-
-    private void checkForFood() {
+    private void checkIfPacFindsFood() {
         Vector2i tile = level.pac().tile();
         if (level.hasFoodAt(tile)) {
             level.pac().endStarving();
@@ -249,6 +232,23 @@ public abstract class GameModel implements ScoreManager {
         } else {
             level.pac().starve();
         }
+    }
+
+    private void checkPacKilled() {
+        level.ghosts(HUNTING_PAC)
+            .filter(ghost -> level.pac().sameTile(ghost))
+            .findFirst().ifPresent(killer -> {
+                boolean killed;
+                if (level.isDemoLevel()) {
+                    killed = !isPacManSafeInDemoLevel();
+                } else {
+                    killed = !level.pac().isImmune();
+                }
+                if (killed) {
+                    THE_SIMULATION_STEP.setPacKiller(killer);
+                    THE_SIMULATION_STEP.setPacKilledTile(killer.tile());
+                }
+            });
     }
 
     private void updatePacPower() {
