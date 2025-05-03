@@ -44,15 +44,6 @@ public abstract class GameModel implements ScoreManager {
 
     protected GameLevel level;
 
-    // Score management
-    private final Score score = new Score();
-    private final Score highScore = new Score();
-    private final BooleanProperty scoreEnabledPy = new SimpleBooleanProperty(true);
-    private final BooleanProperty highScoreEnabledPy= new SimpleBooleanProperty(true);
-    private final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(false);
-    protected File highScoreFile;
-    protected List<Integer> extraLifeScores = List.of();
-
     protected GameModel() {
         score.pointsProperty().addListener((py, ov, nv) -> {
             for (int extraLifeScore : extraLifeScores) {
@@ -71,72 +62,46 @@ public abstract class GameModel implements ScoreManager {
         });
     }
 
-    public abstract void init();
-
-    public abstract void resetEverything();
-
-    public abstract void resetForStartingNewGame();
-
+    public abstract void    init();
+    public abstract void    resetEverything();
+    public abstract void    resetForStartingNewGame();
     public abstract boolean canStartNewGame();
-
-    public abstract void startLevel();
-
+    public abstract void    startLevel();
     public abstract boolean continueOnGameOver();
-
     public abstract boolean isOver();
-
-    public abstract void endGame();
-
-    public abstract void onPacKilled();
-
-    public abstract void killGhost(Ghost ghost);
-
-    public abstract void activateNextBonus();
+    public abstract void    onGameEnding();
 
     protected abstract void setActorBaseSpeed(int levelNumber);
 
     public abstract float ghostAttackSpeed(Ghost ghost);
-
     public abstract float ghostFrightenedSpeed(Ghost ghost);
-
     public abstract float ghostSpeedInsideHouse(Ghost ghost);
-
     public abstract float ghostSpeedReturningToHouse(Ghost ghost);
-
     public abstract float ghostTunnelSpeed(Ghost ghost);
 
     public abstract float pacNormalSpeed();
-
-    public abstract long pacDyingTicks();
-
-    public abstract long pacPowerTicks();
-
-    public abstract long pacPowerFadingTicks();
-
     public abstract float pacPowerSpeed();
+    public abstract long  pacPowerTicks();
+    public abstract long  pacPowerFadingTicks();
 
     public abstract LevelData createLevelData(int levelNumber);
-
     public abstract void buildLevel(int levelNumber, LevelData data);
-
     public abstract void buildDemoLevel();
-
     public abstract void assignDemoLevelBehavior(Pac pac);
+    protected abstract boolean isPacManSafeInDemoLevel();
 
-    protected abstract boolean isPacManKillingIgnored();
+    public abstract void onPacKilled();
+    public abstract void onGhostKilled(Ghost ghost);
 
     protected abstract boolean isBonusReached();
-
+    public abstract void activateNextBonus();
     protected abstract byte computeBonusSymbol(int levelNumber);
 
     protected abstract void onEnergizerEaten(Vector2i tile);
-
     protected abstract void onPelletEaten(Vector2i tile);
 
     public abstract MapSelector mapSelector();
-
     public abstract HuntingTimer huntingTimer();
-
     protected Optional<GateKeeper> gateKeeper() { return Optional.empty(); }
 
     public int lastLevelNumber() { return Integer.MAX_VALUE; }
@@ -152,10 +117,7 @@ public abstract class GameModel implements ScoreManager {
     public IntegerProperty livesProperty() { return livesPy; }
 
     public BooleanProperty playingProperty() { return playingPy; }
-
     public boolean isPlaying() { return playingProperty().get(); }
-
-    public BooleanProperty scoreVisibleProperty() { return scoreVisiblePy; }
 
     public void loseLife() {
         int lives = livesProperty().get();
@@ -234,34 +196,23 @@ public abstract class GameModel implements ScoreManager {
     public void endLevel() {
         Logger.info("Level complete, stop hunting timer");
         huntingTimer().stop();
-
         level.blinking().setStartPhase(Pulse.OFF);
         level.blinking().reset();
-
         level.pac().freeze();
         level.pac().powerTimer().stop();
         level.pac().powerTimer().reset(0);
         Logger.info("Power timer stopped and reset to zero");
-
         level.bonus().ifPresent(Bonus::setInactive);
-
         // when cheating, there might still be remaining food
         level.worldMap().tiles().filter(level::hasFoodAt).forEach(level::registerFoodEatenAt);
-
         Logger.trace("Game level {} completed.", level.number());
     }
 
-    public boolean isLevelFinished() {
-        return level.uneatenFoodCount() == 0;
-    }
+    public boolean isLevelFinished() { return level.uneatenFoodCount() == 0; }
 
-    public boolean hasPacManBeenKilled() {
-        return THE_SIMULATION_STEP.pacKilledTile() != null;
-    }
+    public boolean hasPacManBeenKilled() { return THE_SIMULATION_STEP.pacKilledTile() != null; }
 
-    public boolean haveGhostsBeenKilled() {
-        return !THE_SIMULATION_STEP.killedGhosts().isEmpty();
-    }
+    public boolean haveGhostsBeenKilled() { return !THE_SIMULATION_STEP.killedGhosts().isEmpty(); }
 
     public void startHunting() {
         level.pac().startAnimation();
@@ -282,7 +233,7 @@ public abstract class GameModel implements ScoreManager {
         checkPacKilled();
         if (!hasPacManBeenKilled()) {
             level.ghosts().forEach(ghost -> ghost.update(this));
-            level.ghosts(FRIGHTENED).filter(ghost -> ghost.sameTile(level.pac())).forEach(this::killGhost);
+            level.ghosts(FRIGHTENED).filter(ghost -> ghost.sameTile(level.pac())).forEach(this::onGhostKilled);
             if (!haveGhostsBeenKilled()) {
                 level.bonus().ifPresent(this::updateBonus);
             }
@@ -295,7 +246,7 @@ public abstract class GameModel implements ScoreManager {
             .findFirst().ifPresent(killer -> {
                 boolean killed;
                 if (level.isDemoLevel()) {
-                    killed = !isPacManKillingIgnored();
+                    killed = !isPacManSafeInDemoLevel();
                 } else {
                     killed = !level.pac().isImmune();
                 }
@@ -360,6 +311,17 @@ public abstract class GameModel implements ScoreManager {
     }
 
     // Score management
+
+    // Score management
+    private final Score score = new Score();
+    private final Score highScore = new Score();
+    private final BooleanProperty scoreEnabledPy = new SimpleBooleanProperty(true);
+    private final BooleanProperty highScoreEnabledPy= new SimpleBooleanProperty(true);
+    private final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(false);
+    protected File highScoreFile;
+    protected List<Integer> extraLifeScores = List.of();
+
+    public BooleanProperty scoreVisibleProperty() { return scoreVisiblePy; }
 
     @Override
     public void scorePoints(int points) {

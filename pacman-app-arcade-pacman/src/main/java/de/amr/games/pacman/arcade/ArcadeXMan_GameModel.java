@@ -259,7 +259,7 @@ public abstract class ArcadeXMan_GameModel extends GameModel {
     }
 
     @Override
-    public void killGhost(Ghost ghost) {
+    public void onGhostKilled(Ghost ghost) {
         THE_SIMULATION_STEP.killedGhosts().add(ghost);
         int killedSoFar = level.victims().size();
         int points = 100 * KILLED_GHOST_VALUE_MULTIPLIER[killedSoFar];
@@ -275,15 +275,13 @@ public abstract class ArcadeXMan_GameModel extends GameModel {
     }
 
     @Override
-    public void endGame() {
+    public void onGameEnding() {
         playingProperty().set(false);
         if (!THE_COIN_MECHANISM.isEmpty()) {
             THE_COIN_MECHANISM.consumeCoin();
         }
         updateHighScore();
-        if (level != null) {
-            level.showMessage(GameLevel.Message.GAME_OVER);
-        }
+        level.showMessage(GameLevel.Message.GAME_OVER);
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.STOP_ALL_SOUNDS);
     }
 

@@ -144,12 +144,10 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public void endGame() {
+    public void onGameEnding() {
         playingProperty().set(false);
         updateHighScore();
-        if (level != null) {
-            level.showMessage(GameLevel.Message.GAME_OVER);
-        }
+        level.showMessage(GameLevel.Message.GAME_OVER);
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.STOP_ALL_SOUNDS);
     }
 
@@ -295,11 +293,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
     @Override
     public long pacPowerFadingTicks() {
         return level != null ? level.data().numFlashes() * 28L : 0; // TODO check in emulator
-    }
-
-    @Override
-    public long pacDyingTicks() {
-        return 300;
     }
 
     @Override
@@ -475,7 +468,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public boolean isPacManKillingIgnored() {
+    public boolean isPacManSafeInDemoLevel() {
         float levelRunningSeconds = (System.currentTimeMillis() - level.startTime()) / 1000f;
         if (level.isDemoLevel() && levelRunningSeconds < DEMO_LEVEL_MIN_DURATION_SEC) {
             Logger.info("Pac-Man dead ignored, demo level is running since {} seconds", levelRunningSeconds);
@@ -574,7 +567,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public void killGhost(Ghost ghost) {
+    public void onGhostKilled(Ghost ghost) {
         THE_SIMULATION_STEP.killedGhosts().add(ghost);
         int killedSoFar = level.victims().size();
         int points = 100 * KILLED_GHOST_VALUE_MULTIPLIER[killedSoFar];

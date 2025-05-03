@@ -159,12 +159,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeXMan_GameModel {
     }
 
     @Override
-    public long pacDyingTicks() {
-        return 240;
-    }
-
-    @Override
-    public boolean isPacManKillingIgnored() {
+    public boolean isPacManSafeInDemoLevel() {
         float levelDurationInSec = (System.currentTimeMillis() - level.startTime()) / 1000f;
         if (level.isDemoLevel() && levelDurationInSec < DEMO_LEVEL_MIN_DURATION_SEC) {
             Logger.info("Pac-Man remains alive, demo level has just been running for {} sec", levelDurationInSec);

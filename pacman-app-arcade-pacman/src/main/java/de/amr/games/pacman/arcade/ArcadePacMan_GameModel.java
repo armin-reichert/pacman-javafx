@@ -172,12 +172,7 @@ public class ArcadePacMan_GameModel extends ArcadeXMan_GameModel {
     }
 
     @Override
-    public long pacDyingTicks() {
-        return 240;
-    }
-
-    @Override
-    public boolean isPacManKillingIgnored() {
+    public boolean isPacManSafeInDemoLevel() {
         return false;
     }
 

@@ -61,7 +61,7 @@ public enum GameAction implements Action {
             if (THE_GAME_CONTROLLER.game().isPlaying() && THE_GAME_CONTROLLER.state() == GameState.HUNTING) {
                 THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
                     level.victims().clear();
-                    level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(THE_GAME_CONTROLLER.game()::killGhost);
+                    level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(THE_GAME_CONTROLLER.game()::onGhostKilled);
                     THE_GAME_CONTROLLER.changeState(GameState.GHOST_DYING);
                 });
             }
@@ -232,7 +232,7 @@ public enum GameAction implements Action {
         @Override
         public void execute() {
             THE_UI.currentGameScene().ifPresent(GameScene::end);
-            THE_GAME_CONTROLLER.game().endGame();
+            THE_GAME_CONTROLLER.game().onGameEnding();
             THE_UI.showStartView();
         }
     },

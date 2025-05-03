@@ -324,7 +324,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onEnter(GameModel game) {
             GameLevel level = game.level().orElseThrow();
             timer.restartTicks(level.gameOverStateTicks());
-            game.endGame();
+            game.onGameEnding();
         }
 
         @Override
