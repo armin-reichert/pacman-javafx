@@ -263,7 +263,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
 
         byte symbol = level.bonusSymbol(level.nextBonusIndex());
         var bonus = new MovingBonus(level, symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
-        bonus.setEdible(TickTimer.INDEFINITE);
+        bonus.setEdibleTicks(TickTimer.INDEFINITE);
         bonus.setRoute(route, crossingLeftToRight);
         bonus.setBaseSpeed(1.25f);
         Logger.info("Moving bonus created, route: {} (crossing {})", route, crossingLeftToRight ? "left to right" : "right to left");

@@ -68,5 +68,5 @@ public interface Bonus {
      *
      * @param ticks how long the bonus stays in edible state
      */
-    void setEdible(long ticks);
+    void setEdibleTicks(long ticks);
 }

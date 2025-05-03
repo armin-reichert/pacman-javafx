@@ -70,7 +70,7 @@ public class StaticBonus extends Actor2D implements Bonus {
     }
 
     @Override
-    public void setEdible(long ticks) {
+    public void setEdibleTicks(long ticks) {
         if (ticks <= 0) {
             throw new IllegalArgumentException("Bonus edible time must be larger than zero");
         }

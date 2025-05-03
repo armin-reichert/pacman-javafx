@@ -613,7 +613,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         movingBonus.setBaseSpeed(1f); // TODO how fast is the bonus really moving?
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
         level.setBonus(movingBonus);
-        movingBonus.setEdible(TickTimer.INDEFINITE);
+        movingBonus.setEdibleTicks(TickTimer.INDEFINITE);
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.BONUS_ACTIVATED, movingBonus.actor().tile());
     }
 

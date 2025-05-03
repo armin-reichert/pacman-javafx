@@ -45,15 +45,11 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
 
-    // Note: First level number is 1
-    private static final byte[] BONUS_SYMBOL_CODES_BY_LEVEL = {
-        69, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6
-    };
+    // Note: level numbering start with 1
+    private static final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = { 69, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6 };
 
-    // points = multiplier * 100
-    private static final byte[] BONUS_VALUE_MULTIPLIERS = {
-        1, 3, 5, 7, 10, 20, 30, 50
-    };
+    // bonus points = multiplier * 100
+    private static final byte[] BONUS_VALUE_MULTIPLIERS = { 1, 3, 5, 7, 10, 20, 30, 50 };
 
     public ArcadePacMan_GameModel() {
         this(new ArcadePacMan_MapSelector());
@@ -115,8 +111,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
     }
 
     protected void ghostHuntingBehaviour(Ghost ghost) {
-        boolean chase = huntingTimer.phase() == HuntingPhase.CHASING
-            || ghost.id() == RED_GHOST_ID && cruiseElroy > 0;
+        boolean chase = huntingTimer.phase() == HuntingPhase.CHASING || ghost.id() == RED_GHOST_ID && cruiseElroy > 0;
         Vector2i targetTile = chase
             ? chasingTargetTile(ghost.id(), level, SIMULATE_ARCADE_OVERFLOW_BUG)
             : level.ghostScatterTile(ghost.id());
@@ -191,23 +186,23 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
     // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level
     @Override
     public byte computeBonusSymbol(int levelNumber) {
-        return levelNumber > 12 ? 7 : BONUS_SYMBOL_CODES_BY_LEVEL[levelNumber];
+        return levelNumber > 12 ? 7 : BONUS_SYMBOLS_BY_LEVEL_NUMBER[levelNumber];
     }
 
     @Override
     public void activateNextBonus() {
         level.selectNextBonus();
         byte symbol = level.bonusSymbol(level.nextBonusIndex());
-        StaticBonus staticBonus = new StaticBonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
-        level.setBonus(staticBonus);
+        var bonus = new StaticBonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
         if (level.worldMap().hasProperty(LayerID.TERRAIN, WorldMapProperty.POS_BONUS)) {
             Vector2i bonusTile = level.worldMap().getTerrainTileProperty(WorldMapProperty.POS_BONUS, new Vector2i(13, 20));
-            staticBonus.actor().setPosition(halfTileRightOf(bonusTile));
+            bonus.actor().setPosition(halfTileRightOf(bonusTile));
         } else {
             Logger.error("No bonus position found in map");
-            staticBonus.actor().setPosition(halfTileRightOf(13, 20));
+            bonus.actor().setPosition(halfTileRightOf(13, 20));
         }
-        staticBonus.setEdible(randomInt(540, 600));
-        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.BONUS_ACTIVATED, staticBonus.actor().tile());
+        bonus.setEdibleTicks(randomInt(9 * TICKS_PER_SECOND, 10 * TICKS_PER_SECOND));
+        level.setBonus(bonus);
+        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.BONUS_ACTIVATED, bonus.actor().tile());
     }
 }

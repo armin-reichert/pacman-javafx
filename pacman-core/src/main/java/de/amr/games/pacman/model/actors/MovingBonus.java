@@ -110,7 +110,7 @@ public class MovingBonus extends Creature implements Bonus {
     }
 
     @Override
-    public void setEdible(long ticks) {
+    public void setEdibleTicks(long ticks) {
         animation.restart();
         setSpeed(0.5f); // how fast in the original game?
         setTargetTile(null);
