@@ -238,6 +238,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     public TengenMsPacMan_GameModel() {
+        lastLevelNumber = 32;
         highScoreFile = new File(HOME_DIR, "highscore-ms_pacman_tengen.xml");
         levelCounter = new TengenMsPacMan_LevelCounter();
         mapSelector = new TengenMsPacMan_MapSelector();
@@ -284,11 +285,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
         updateHighScore();
         level.showMessage(GameLevel.Message.GAME_OVER);
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.STOP_ALL_SOUNDS);
-    }
-
-    @Override
-    public int lastLevelNumber() {
-        return 32;
     }
 
     @Override
@@ -686,24 +682,14 @@ public class TengenMsPacMan_GameModel extends GameModel {
      * @param ghostID the chasing ghost's ID
      * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
      */
-    private Vector2i chasingTargetTile(GameLevel level, byte ghostID) {
+    public Vector2i chasingTargetTile(GameLevel level, byte ghostID) {
         return switch (ghostID) {
-            // Blinky (red ghost) attacks Pac-Man directly
             case RED_GHOST_ID -> level.pac().tile();
-
-            // Pinky (pink ghost) ambushes Pac-Man
             case PINK_GHOST_ID -> level.pac().tilesAhead(4, false);
-
-            // Inky (cyan ghost) attacks from opposite side as Blinky
             case CYAN_GHOST_ID -> level.pac().tilesAhead(2, false).scaled(2).minus(level.ghost(RED_GHOST_ID).tile());
-
-            // Clyde/Sue (orange ghost) attacks directly or retreats towards scatter target if Pac is near
             case ORANGE_GHOST_ID -> level.ghost(ORANGE_GHOST_ID).tile().euclideanDist(level.pac().tile()) < 8
                     ? level.ghostScatterTile(ORANGE_GHOST_ID) : level.pac().tile();
-
             default -> throw GameException.invalidGhostID(ghostID);
         };
     }
-
-
 }

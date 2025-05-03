@@ -38,8 +38,10 @@ public abstract class GameModel implements ScoreManager {
     private final BooleanProperty playingPy = new SimpleBooleanProperty(false);
 
     protected GameLevel level;
+    protected int lastLevelNumber;
 
     protected GameModel() {
+        lastLevelNumber = Integer.MAX_VALUE;
         score.pointsProperty().addListener((py, ov, nv) -> onScoreChanged(ov.intValue(), nv.intValue()));
     }
 
@@ -52,7 +54,6 @@ public abstract class GameModel implements ScoreManager {
     protected Optional<GateKeeper> gateKeeper() { return Optional.empty(); }
     public abstract <T extends LevelCounter> T levelCounter();
 
-    public int lastLevelNumber() { return Integer.MAX_VALUE; }
     public Optional<GameLevel> level() { return Optional.ofNullable(level); }
 
     public BooleanProperty cutScenesEnabledProperty() { return cutScenesEnabledPy; }
@@ -74,6 +75,7 @@ public abstract class GameModel implements ScoreManager {
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 
+    public int lastLevelNumber() { return lastLevelNumber; }
     public abstract LevelData createLevelData(int levelNumber);
     public abstract void buildLevel(int levelNumber, LevelData data);
     public abstract void buildDemoLevel();
@@ -126,12 +128,12 @@ public abstract class GameModel implements ScoreManager {
     public boolean isLevelCompleted() { return level.uneatenFoodCount() == 0; }
 
     public void startNextLevel() {
-        if (level.number() < lastLevelNumber()) {
+        if (level.number() < lastLevelNumber) {
             createLevel(level.number() + 1, createLevelData(level.number() + 1));
             startLevel();
             level.showPacAndGhosts();
         } else {
-            Logger.warn("Last level ({}) reached, cannot start next level", lastLevelNumber());
+            Logger.warn("Last level ({}) reached, cannot start next level", lastLevelNumber);
         }
     }
 
