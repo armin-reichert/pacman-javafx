@@ -28,8 +28,6 @@ import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
  */
 public abstract class ArcadeAny_GameModel extends GameModel {
 
-    public static Waypoint wp(int x, int y) { return new Waypoint(x, y); }
-
     // Level settings as specified in the "Pac-Man dossier"
     public static final byte[][] LEVEL_DATA = {
         /* 1*/ { 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5},

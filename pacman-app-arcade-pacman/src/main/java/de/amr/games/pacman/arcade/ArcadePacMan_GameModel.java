@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.List;
 
 import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.lib.Waypoint.wp;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 import static java.util.Objects.requireNonNull;
 

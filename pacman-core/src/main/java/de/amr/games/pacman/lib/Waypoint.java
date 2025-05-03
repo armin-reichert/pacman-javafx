@@ -10,6 +10,8 @@ public record Waypoint(short x, short y) {
         this((short) x, (short) y);
     }
 
+    public static Waypoint wp(int x, int y) { return new Waypoint(x, y); }
+
     public Waypoint(Vector2i tile) {
         this((short) tile.x(), (short) tile.y());
     }
