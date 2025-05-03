@@ -42,7 +42,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @see <a href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</a>
  */
-public class ArcadePacMan_GameModel extends ArcadeXMan_GameModel {
+public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
 
     // Note: First level number is 1
     private static final byte[] BONUS_SYMBOL_CODES_BY_LEVEL = {

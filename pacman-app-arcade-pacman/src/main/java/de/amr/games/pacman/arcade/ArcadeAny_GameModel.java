@@ -26,7 +26,7 @@ import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
 /**
  * Common data and functionality of Pac-Man and Ms. Pac-Man Arcade games.
  */
-public abstract class ArcadeXMan_GameModel extends GameModel {
+public abstract class ArcadeAny_GameModel extends GameModel {
 
     public static Waypoint wp(int x, int y) { return new Waypoint(x, y); }
 
@@ -68,7 +68,7 @@ public abstract class ArcadeXMan_GameModel extends GameModel {
     protected Steering autopilot;
     protected Steering demoLevelSteering;
 
-    public class ArcadeActorSpeedControl implements  ActorSpeedControl {
+    public class ArcadeActorSpeedControl implements ActorSpeedControl {
         @Override
         public void setActorBaseSpeed(GameLevel level) {
             level.pac().setBaseSpeed(1.25f);

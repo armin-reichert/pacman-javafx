@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade.ms_pacman;
 
 import de.amr.games.pacman.arcade.ArcadePacMan_LevelCounter;
-import de.amr.games.pacman.arcade.ArcadeXMan_GameModel;
+import de.amr.games.pacman.arcade.ArcadeAny_GameModel;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.Waypoint;
@@ -38,7 +38,7 @@ import static java.util.Objects.requireNonNull;
  * </ul>
  * </p>
  */
-public class ArcadeMsPacMan_GameModel extends ArcadeXMan_GameModel {
+public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
