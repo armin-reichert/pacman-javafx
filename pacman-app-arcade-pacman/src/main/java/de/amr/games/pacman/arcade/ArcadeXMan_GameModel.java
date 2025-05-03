@@ -68,11 +68,67 @@ public abstract class ArcadeXMan_GameModel extends GameModel {
     protected Steering autopilot;
     protected Steering demoLevelSteering;
 
-    protected byte cruiseElroy;
+    public class ArcadeActorSpeedControl implements  ActorSpeedControl {
+        @Override
+        public void setActorBaseSpeed(GameLevel level) {
+            level.pac().setBaseSpeed(1.25f);
+            level.ghosts().forEach(ghost -> ghost.setBaseSpeed(1.25f));
+            Logger.debug("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
+            level.ghosts().forEach(ghost -> Logger.debug("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
+        }
 
-    protected void setCruiseElroyEnabled(boolean enabled) {
-        if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
-            cruiseElroy = (byte) -cruiseElroy;
+        @Override
+        public float pacNormalSpeed(GameLevel level) {
+            if (level == null) {
+                return 0;
+            }
+            byte percentage = level.data().pacSpeedPercentage();
+            return percentage > 0 ? percentage * 0.01f * level.pac().baseSpeed() : level.pac().baseSpeed();
+        }
+
+        @Override
+        public float pacPowerSpeed(GameLevel level) {
+            if (level == null) {
+                return 0;
+            }
+            byte percentage = level.data().pacSpeedPoweredPercentage();
+            return percentage > 0 ? percentage * 0.01f * level.pac().baseSpeed() : pacNormalSpeed(level);
+        }
+
+        @Override
+        public float ghostAttackSpeed(GameLevel level, Ghost ghost) {
+            if (level.isTunnel(ghost.tile())) {
+                return level.data().ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed();
+            }
+            if (ghost.id() == RED_GHOST_ID && cruiseElroy == 1) {
+                return level.data().elroy1SpeedPercentage() * 0.01f * ghost.baseSpeed();
+            }
+            if (ghost.id() == RED_GHOST_ID && cruiseElroy == 2) {
+                return level.data().elroy2SpeedPercentage() * 0.01f * ghost.baseSpeed();
+            }
+            return level.data().ghostSpeedPercentage() * 0.01f * ghost.baseSpeed();
+        }
+
+        @Override
+        public float ghostSpeedInsideHouse(GameLevel level, Ghost ghost) {
+            return 0.5f;
+        }
+
+        @Override
+        public float ghostSpeedReturningToHouse(GameLevel level, Ghost ghost) {
+            return 2;
+        }
+
+        @Override
+        public float ghostFrightenedSpeed(GameLevel level, Ghost ghost) {
+            if (level == null) return 0;
+            float percentage = level.data().ghostSpeedFrightenedPercentage();
+            return percentage > 0 ? percentage * 0.01f * ghost.baseSpeed() : ghost.baseSpeed();
+        }
+
+        @Override
+        public float ghostTunnelSpeed(GameLevel level, Ghost ghost) {
+            return level != null ? level.data().ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed() : 0;
         }
     }
 
@@ -153,69 +209,8 @@ public abstract class ArcadeXMan_GameModel extends GameModel {
 
     // Actors
 
-    protected ActorSpeedControl speedControl = new ActorSpeedControl() {
-        @Override
-        public void setActorBaseSpeed(GameLevel level) {
-            level.pac().setBaseSpeed(1.25f);
-            level.ghosts().forEach(ghost -> ghost.setBaseSpeed(1.25f));
-            Logger.debug("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
-            level.ghosts().forEach(ghost -> Logger.debug("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
-        }
-
-        @Override
-        public float pacNormalSpeed(GameLevel level) {
-            if (level == null) {
-                return 0;
-            }
-            byte percentage = level.data().pacSpeedPercentage();
-            return percentage > 0 ? percentage * 0.01f * level.pac().baseSpeed() : level.pac().baseSpeed();
-        }
-
-        @Override
-        public float pacPowerSpeed(GameLevel level) {
-            if (level == null) {
-                return 0;
-            }
-            byte percentage = level.data().pacSpeedPoweredPercentage();
-            return percentage > 0 ? percentage * 0.01f * level.pac().baseSpeed() : pacNormalSpeed(level);
-        }
-
-        @Override
-        public float ghostAttackSpeed(GameLevel level, Ghost ghost) {
-            if (level.isTunnel(ghost.tile())) {
-                return level.data().ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed();
-            }
-            if (ghost.id() == RED_GHOST_ID && cruiseElroy == 1) {
-                return level.data().elroy1SpeedPercentage() * 0.01f * ghost.baseSpeed();
-            }
-            if (ghost.id() == RED_GHOST_ID && cruiseElroy == 2) {
-                return level.data().elroy2SpeedPercentage() * 0.01f * ghost.baseSpeed();
-            }
-            return level.data().ghostSpeedPercentage() * 0.01f * ghost.baseSpeed();
-        }
-
-        @Override
-        public float ghostSpeedInsideHouse(GameLevel level, Ghost ghost) {
-            return 0.5f;
-        }
-
-        @Override
-        public float ghostSpeedReturningToHouse(GameLevel level, Ghost ghost) {
-            return 2;
-        }
-
-        @Override
-        public float ghostFrightenedSpeed(GameLevel level, Ghost ghost) {
-            if (level == null) return 0;
-            float percentage = level.data().ghostSpeedFrightenedPercentage();
-            return percentage > 0 ? percentage * 0.01f * ghost.baseSpeed() : ghost.baseSpeed();
-        }
-
-        @Override
-        public float ghostTunnelSpeed(GameLevel level, Ghost ghost) {
-            return level != null ? level.data().ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed() : 0;
-        }
-    };
+    protected byte cruiseElroy;
+    protected ActorSpeedControl speedControl = new ArcadeActorSpeedControl();
 
     @Override
     public ActorSpeedControl speedControl() {
@@ -232,6 +227,12 @@ public abstract class ArcadeXMan_GameModel extends GameModel {
             cruiseElroy = 1;
         } else if (level.uneatenFoodCount() == level.data().elroy2DotsLeft()) {
             cruiseElroy = 2;
+        }
+    }
+
+    protected void setCruiseElroyEnabled(boolean enabled) {
+        if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
+            cruiseElroy = (byte) -cruiseElroy;
         }
     }
 
