@@ -178,8 +178,6 @@ public abstract class GameModel implements ScoreManager {
         buildLevel(levelNumber, data);
         level.setDemoLevel(false);
         setScoreLevelNumber(levelNumber);
-        setScoreEnabled(!level.isDemoLevel());
-        setHighScoreEnabled(!level.isDemoLevel());
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(levelNumber));
         huntingTimer().reset();
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
@@ -192,6 +190,8 @@ public abstract class GameModel implements ScoreManager {
         initActorAnimationState();
         setActorBaseSpeed(level.number());
         levelCounter().update(level);
+        setScoreEnabled(!level.isDemoLevel());
+        setHighScoreEnabled(!level.isDemoLevel());
         Logger.info("{} started", level.isDemoLevel() ? "Demo Level" : "Level " + level.number());
         // Note: This event is very important because it triggers the creation of the actor animations!
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_STARTED);

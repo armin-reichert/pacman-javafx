@@ -58,11 +58,9 @@ public class ArcadePlayScene2D extends GameScene2D {
     public void onLevelStarted(GameEvent e) {
         GameLevel level = game().level().orElseThrow();
         if (level.isDemoLevel()) {
-            game().setScoreEnabled(false);
             bindArcadeInsertCoinAction();
             enableActionBindings(THE_KEYBOARD);
         } else {
-            game().setScoreEnabled(true);
             bindPlayerActions();
             bindCheatActions();
             enableActionBindings(THE_KEYBOARD);
