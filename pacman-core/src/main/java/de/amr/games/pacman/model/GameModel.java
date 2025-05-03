@@ -38,28 +38,11 @@ import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
 public abstract class GameModel implements ScoreManager {
 
     private final BooleanProperty cutScenesEnabledPy = new SimpleBooleanProperty(true);
-    private final IntegerProperty initialLivesPy = new SimpleIntegerProperty(3);
-    private final IntegerProperty livesPy = new SimpleIntegerProperty(0);
     private final BooleanProperty playingPy = new SimpleBooleanProperty(false);
-
     protected GameLevel level;
 
     protected GameModel() {
-        score.pointsProperty().addListener((py, ov, nv) -> {
-            for (int extraLifeScore : extraLifeScores) {
-                // has extra life score been crossed?
-                if (ov.intValue() < extraLifeScore && nv.intValue() >= extraLifeScore) {
-                    THE_SIMULATION_STEP.setExtraLifeWon();
-                    THE_SIMULATION_STEP.setExtraLifeScore(extraLifeScore);
-                    addLives(1);
-                    // fire event such that UI can do its duty (sound, visual effects etc.)
-                    GameEvent event = new GameEvent(this, GameEventType.SPECIAL_SCORE_REACHED);
-                    event.setPayload("score", extraLifeScore);
-                    THE_GAME_EVENT_MANAGER.publishEvent(event);
-                    break;
-                }
-            }
-        });
+        score.pointsProperty().addListener((py, ov, nv) -> onScoreChanged(ov.intValue(), nv.intValue()));
     }
 
     public abstract void    init();
@@ -105,32 +88,16 @@ public abstract class GameModel implements ScoreManager {
     protected Optional<GateKeeper> gateKeeper() { return Optional.empty(); }
 
     public int lastLevelNumber() { return Integer.MAX_VALUE; }
-
     public Optional<GameLevel> level() { return Optional.ofNullable(level); }
 
     public abstract <T extends LevelCounter> T levelCounter();
 
     public BooleanProperty cutScenesEnabledProperty() { return cutScenesEnabledPy; }
-
     public IntegerProperty initialLivesProperty() { return initialLivesPy; }
-
-    public IntegerProperty livesProperty() { return livesPy; }
-
     public BooleanProperty playingProperty() { return playingPy; }
     public boolean isPlaying() { return playingProperty().get(); }
 
-    public void loseLife() {
-        int lives = livesProperty().get();
-        if (lives > 0) {
-            livesProperty().set(lives - 1);
-        } else {
-            Logger.error("Cannot lose life, no lives left");
-        }
-    }
-
-    public void addLives(int lives) {
-        livesProperty().set(livesProperty().get() + lives);
-    }
+    // Game lifecycle
 
     public void startNewGame() {
         resetForStartingNewGame();
@@ -310,9 +277,28 @@ public abstract class GameModel implements ScoreManager {
         }
     }
 
-    // Score management
+    // Life management
+
+    private final IntegerProperty initialLivesPy = new SimpleIntegerProperty(3);
+    private final IntegerProperty livesPy = new SimpleIntegerProperty(0);
+
+    public IntegerProperty livesProperty() { return livesPy; }
+
+    public void loseLife() {
+        int lives = livesProperty().get();
+        if (lives > 0) {
+            livesProperty().set(lives - 1);
+        } else {
+            Logger.error("Cannot lose life, no lives left");
+        }
+    }
+
+    public void addLives(int lives) {
+        livesProperty().set(livesProperty().get() + lives);
+    }
 
     // Score management
+
     private final Score score = new Score();
     private final Score highScore = new Score();
     private final BooleanProperty scoreEnabledPy = new SimpleBooleanProperty(true);
@@ -335,6 +321,25 @@ public abstract class GameModel implements ScoreManager {
             highScore.setDate(LocalDate.now());
         }
         score.setPoints(newScore);
+    }
+
+    protected void onScoreChanged(int oldScore, int newScore) {
+        for (int extraLifeScore : extraLifeScores) {
+            // has extra life score been crossed?
+            if (oldScore < extraLifeScore && newScore >= extraLifeScore) {
+                THE_SIMULATION_STEP.setExtraLifeWon();
+                THE_SIMULATION_STEP.setExtraLifeScore(extraLifeScore);
+                handleExtraLifeScoreReached(extraLifeScore);
+                GameEvent event = new GameEvent(this, GameEventType.SPECIAL_SCORE_REACHED);
+                event.setPayload("score", extraLifeScore); // just for testing payload implementation
+                THE_GAME_EVENT_MANAGER.publishEvent(event);
+                break;
+            }
+        }
+    }
+
+    protected void handleExtraLifeScoreReached(int extraLifeScore) {
+        addLives(1);
     }
 
     @Override
