@@ -115,8 +115,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
             default -> 0;
         });
         level.setGameOverStateTicks(150);
-
-        addArcadeHouse(worldMap);
+        level.addArcadeHouse();
 
         var pac = new Pac();
         pac.setName("Ms. Pac-Man");

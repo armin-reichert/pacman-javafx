@@ -34,7 +34,6 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.tinylog.Logger;
 
@@ -193,7 +192,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         items.add(miMuted);
 
         var miQuit = new MenuItem(THE_ASSETS.text("quit"));
-        miQuit.setOnAction(ae -> GameAction.SHOW_START_VIEW.execute());
+        miQuit.setOnAction(ae -> GameAction.QUIT_GAME_SCENE.execute());
         items.add(miQuit);
 
         return items;

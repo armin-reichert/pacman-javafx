@@ -228,11 +228,11 @@ public enum GameAction implements Action {
         }
     },
 
-    SHOW_START_VIEW {
+    QUIT_GAME_SCENE {
         @Override
         public void execute() {
             THE_UI.currentGameScene().ifPresent(GameScene::end);
-            THE_GAME_CONTROLLER.game().onGameEnding();
+            THE_GAME_CONTROLLER.game().resetEverything();
             THE_UI.showStartView();
         }
     },

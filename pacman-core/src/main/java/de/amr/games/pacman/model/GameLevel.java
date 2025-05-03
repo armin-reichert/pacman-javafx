@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.TerrainTiles.*;
+import static de.amr.games.pacman.lib.tilemap.WorldMap.formatTile;
 import static de.amr.games.pacman.model.actors.GhostState.LOCKED;
 import static java.util.Objects.requireNonNull;
 
@@ -277,13 +278,7 @@ public class GameLevel {
 
     // House
 
-    /**
-     * @param minX tile-x of top left corner
-     * @param minY tile-y of top left corner
-     * @param maxX tile-x of bottom right corner
-     * @param maxY tile-y of bottom right corner
-     */
-    public void createArcadeHouse(int minX, int minY, int maxX, int maxY) {
+    private void createArcadeHouse(int minX, int minY, int maxX, int maxY) {
         leftDoorTile = Vector2i.of(minX + 3, minY);
         rightDoorTile = Vector2i.of(minX + 4, minY);
         setGhostStartDirection(RED_GHOST_ID, Direction.LEFT);
@@ -306,6 +301,20 @@ public class GameLevel {
                 worldMap.set(LayerID.TERRAIN, Vector2i.of(x, y), value);
             }
         }
+    }
+
+    public void addArcadeHouse() {
+        if (!worldMap.hasProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MIN_TILE)) {
+            Logger.warn("No house min tile found in map!");
+            worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MIN_TILE, formatTile(Vector2i.of(10, 15)));
+        }
+        if (!worldMap.hasProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MAX_TILE)) {
+            Logger.warn("No house max tile found in map!");
+            worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MAX_TILE, formatTile(Vector2i.of(17, 19)));
+        }
+        Vector2i minTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE, null);
+        Vector2i maxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE, null);
+        createArcadeHouse(minTile.x(), minTile.y(), maxTile.x(), maxTile.y());
     }
 
     public Vector2i houseMinTile() {

@@ -6,8 +6,6 @@ package de.amr.games.pacman.arcade;
 
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.LayerID;
-import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.model.actors.ActorSpeedControl;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -18,7 +16,6 @@ import org.tinylog.Logger;
 import java.util.Optional;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.lib.tilemap.WorldMap.formatTile;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
 
@@ -120,20 +117,6 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         public float ghostTunnelSpeed(GameLevel level, Ghost ghost) {
             return level.data().ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed();
         }
-    }
-
-    protected void addArcadeHouse(WorldMap worldMap) {
-        if (!worldMap.hasProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MIN_TILE)) {
-            Logger.warn("No house min tile found in map!");
-            worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MIN_TILE, formatTile(Vector2i.of(10, 15)));
-        }
-        if (!worldMap.hasProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MAX_TILE)) {
-            Logger.warn("No house max tile found in map!");
-            worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MAX_TILE, formatTile(Vector2i.of(17, 19)));
-        }
-        Vector2i minTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE, null);
-        Vector2i maxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE, null);
-        level.createArcadeHouse(minTile.x(), minTile.y(), maxTile.x(), maxTile.y());
     }
 
     @Override
@@ -338,6 +321,4 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         // Note: This event is very important because it triggers the creation of the actor animations!
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_STARTED);
     }
-
-
 }

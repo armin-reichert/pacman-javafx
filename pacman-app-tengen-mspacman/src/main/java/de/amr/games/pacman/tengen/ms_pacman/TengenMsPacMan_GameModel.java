@@ -483,8 +483,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             default -> levelNumber == lastLevelNumber() ? 4 : 0;
         });
         level.setGameOverStateTicks(420);
-
-        level.createArcadeHouse(10, 15, 17, 19);
+        level.addArcadeHouse();
 
         var pac = new Pac();
         pac.setName("Ms. Pac-Man");
