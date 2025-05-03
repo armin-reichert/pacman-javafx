@@ -263,7 +263,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public void startLevel() {
         level.setStartTime(System.currentTimeMillis());
         level.makeReadyForPlaying();
-        initActorAnimationState();
+        initAnimationOfPacManAndGhosts();
         setActorBaseSpeed(level.number());
         levelCounter().update(level);
         if (level.isDemoLevel()) {
@@ -360,7 +360,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public void initActorAnimationState() {
+    public void initAnimationOfPacManAndGhosts() {
         level.pac().selectAnimation(boosterActive
             ? ANIM_MS_PACMAN_BOOSTER : ActorAnimations.ANIM_PAC_MUNCHING);
         level.pac().resetAnimation();

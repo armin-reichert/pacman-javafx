@@ -39,6 +39,7 @@ public abstract class GameModel implements ScoreManager {
 
     private final BooleanProperty cutScenesEnabledPy = new SimpleBooleanProperty(true);
     private final BooleanProperty playingPy = new SimpleBooleanProperty(false);
+
     protected GameLevel level;
 
     protected GameModel() {
@@ -49,46 +50,15 @@ public abstract class GameModel implements ScoreManager {
     public abstract void    resetEverything();
     public abstract boolean continueOnGameOver();
 
-    protected abstract void setActorBaseSpeed(int levelNumber);
-
-    public abstract float ghostAttackSpeed(Ghost ghost);
-    public abstract float ghostFrightenedSpeed(Ghost ghost);
-    public abstract float ghostSpeedInsideHouse(Ghost ghost);
-    public abstract float ghostSpeedReturningToHouse(Ghost ghost);
-    public abstract float ghostTunnelSpeed(Ghost ghost);
-
-    public abstract float pacNormalSpeed();
-    public abstract float pacPowerSpeed();
-    public abstract long  pacPowerTicks();
-    public abstract long  pacPowerFadingTicks();
-
-    public abstract LevelData createLevelData(int levelNumber);
-    public abstract void buildLevel(int levelNumber, LevelData data);
-    public abstract void buildDemoLevel();
-    public abstract void assignDemoLevelBehavior(Pac pac);
-    protected abstract boolean isPacManSafeInDemoLevel();
-
-    public abstract void onPacKilled();
-    public abstract void onGhostKilled(Ghost ghost);
-
-    protected abstract boolean isBonusReached();
-    public abstract void activateNextBonus();
-    protected abstract byte computeBonusSymbol(int levelNumber);
-
-    protected abstract void onEnergizerEaten(Vector2i tile);
-    protected abstract void onPelletEaten(Vector2i tile);
-
     public abstract MapSelector mapSelector();
     public abstract HuntingTimer huntingTimer();
     protected Optional<GateKeeper> gateKeeper() { return Optional.empty(); }
+    public abstract <T extends LevelCounter> T levelCounter();
 
     public int lastLevelNumber() { return Integer.MAX_VALUE; }
     public Optional<GameLevel> level() { return Optional.ofNullable(level); }
 
-    public abstract <T extends LevelCounter> T levelCounter();
-
     public BooleanProperty cutScenesEnabledProperty() { return cutScenesEnabledPy; }
-    public IntegerProperty initialLivesProperty() { return initialLivesPy; }
     public BooleanProperty playingProperty() { return playingPy; }
     public boolean isPlaying() { return playingProperty().get(); }
 
@@ -112,6 +82,12 @@ public abstract class GameModel implements ScoreManager {
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 
+    public abstract LevelData createLevelData(int levelNumber);
+    public abstract void buildLevel(int levelNumber, LevelData data);
+    public abstract void buildDemoLevel();
+    public abstract void assignDemoLevelBehavior(Pac pac);
+    protected abstract boolean isPacManSafeInDemoLevel();
+
     public abstract void startLevel();
 
     public void startHunting() {
@@ -130,7 +106,7 @@ public abstract class GameModel implements ScoreManager {
         checkIfPacFindsFood();
         level.pac().update(this);
         updatePacPower();
-        checkPacKilled();
+        checkIfPacManGetsKilled();
         if (!hasPacManBeenKilled()) {
             level.ghosts().forEach(ghost -> ghost.update(this));
             level.ghosts(FRIGHTENED).filter(ghost -> ghost.sameTile(level.pac())).forEach(this::onGhostKilled);
@@ -172,7 +148,20 @@ public abstract class GameModel implements ScoreManager {
 
     // Actors
 
-    public void initActorAnimationState() {
+    protected abstract void setActorBaseSpeed(int levelNumber);
+
+    public abstract float ghostAttackSpeed(Ghost ghost);
+    public abstract float ghostFrightenedSpeed(Ghost ghost);
+    public abstract float ghostSpeedInsideHouse(Ghost ghost);
+    public abstract float ghostSpeedReturningToHouse(Ghost ghost);
+    public abstract float ghostTunnelSpeed(Ghost ghost);
+
+    public abstract float pacNormalSpeed();
+    public abstract float pacPowerSpeed();
+    public abstract long  pacPowerTicks();
+    public abstract long  pacPowerFadingTicks();
+
+    public void initAnimationOfPacManAndGhosts() {
         level.pac().selectAnimation(ActorAnimations.ANIM_PAC_MUNCHING);
         level.pac().resetAnimation();
         level.ghosts().forEach(ghost -> {
@@ -182,7 +171,7 @@ public abstract class GameModel implements ScoreManager {
     }
 
     /**
-     * Returns the chasing target tile for the given chaser.
+     * Returns the chasing target tile for the given ghost.
      *
      * @param ghostID the chasing ghost's ID
      * @param level the game level
@@ -208,36 +197,10 @@ public abstract class GameModel implements ScoreManager {
         };
     }
 
-    public boolean hasPacManBeenKilled() { return THE_SIMULATION_STEP.pacKilledTile() != null; }
-
-    public boolean haveGhostsBeenKilled() { return !THE_SIMULATION_STEP.killedGhosts().isEmpty(); }
-
-    private void checkIfPacFindsFood() {
-        Vector2i tile = level.pac().tile();
-        if (level.hasFoodAt(tile)) {
-            level.pac().endStarving();
-            if (level.isEnergizerPosition(tile)) {
-                THE_SIMULATION_STEP.setFoundEnergizerAtTile(tile);
-                onEnergizerEaten(tile);
-            } else {
-                onPelletEaten(tile);
-            }
-            level.registerFoodEatenAt(tile);
-            gateKeeper().ifPresent(gateKeeper -> gateKeeper.registerFoodEaten(level));
-            if (isBonusReached()) {
-                activateNextBonus();
-                THE_SIMULATION_STEP.setBonusIndex(level.nextBonusIndex());
-            }
-            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_FOUND_FOOD, tile);
-        } else {
-            level.pac().starve();
-        }
-    }
-
-    private void checkPacKilled() {
+    private void checkIfPacManGetsKilled() {
         level.ghosts(HUNTING_PAC)
             .filter(ghost -> level.pac().sameTile(ghost))
-            .findFirst().ifPresent(killer -> {
+            .findFirst().ifPresent(potentialKiller -> {
                 boolean killed;
                 if (level.isDemoLevel()) {
                     killed = !isPacManSafeInDemoLevel();
@@ -245,8 +208,8 @@ public abstract class GameModel implements ScoreManager {
                     killed = !level.pac().isImmune();
                 }
                 if (killed) {
-                    THE_SIMULATION_STEP.setPacKiller(killer);
-                    THE_SIMULATION_STEP.setPacKilledTile(killer.tile());
+                    THE_SIMULATION_STEP.setPacKiller(potentialKiller);
+                    THE_SIMULATION_STEP.setPacKilledTile(potentialKiller.tile());
                 }
             });
     }
@@ -270,6 +233,45 @@ public abstract class GameModel implements ScoreManager {
         }
     }
 
+    public boolean hasPacManBeenKilled() { return THE_SIMULATION_STEP.pacKilledTile() != null; }
+    public abstract void onPacKilled();
+
+    public boolean haveGhostsBeenKilled() { return !THE_SIMULATION_STEP.killedGhosts().isEmpty(); }
+    public abstract void onGhostKilled(Ghost ghost);
+
+    // Food handling
+
+    protected abstract void onEnergizerEaten(Vector2i tile);
+    protected abstract void onPelletEaten(Vector2i tile);
+
+    private void checkIfPacFindsFood() {
+        Vector2i tile = level.pac().tile();
+        if (level.hasFoodAt(tile)) {
+            level.pac().endStarving();
+            if (level.isEnergizerPosition(tile)) {
+                THE_SIMULATION_STEP.setFoundEnergizerAtTile(tile);
+                onEnergizerEaten(tile);
+            } else {
+                onPelletEaten(tile);
+            }
+            level.registerFoodEatenAt(tile);
+            gateKeeper().ifPresent(gateKeeper -> gateKeeper.registerFoodEaten(level));
+            if (isBonusReached()) {
+                activateNextBonus();
+                THE_SIMULATION_STEP.setBonusIndex(level.nextBonusIndex());
+            }
+            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_FOUND_FOOD, tile);
+        } else {
+            level.pac().starve();
+        }
+    }
+
+    // Bonus handling
+
+    protected abstract boolean isBonusReached();
+    public abstract void activateNextBonus();
+    protected abstract byte computeBonusSymbol(int levelNumber);
+
     private void updateBonus(Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE && level.pac().sameTile(bonus.actor())) {
             bonus.setEaten(120); //TODO is 2 seconds correct?
@@ -287,6 +289,7 @@ public abstract class GameModel implements ScoreManager {
     private final IntegerProperty initialLivesPy = new SimpleIntegerProperty(3);
     private final IntegerProperty livesPy = new SimpleIntegerProperty(0);
 
+    public IntegerProperty initialLivesProperty() { return initialLivesPy; }
     public IntegerProperty livesProperty() { return livesPy; }
 
     public void loseLife() {

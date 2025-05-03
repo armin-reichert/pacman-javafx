@@ -104,7 +104,7 @@ public enum GameState implements FsmState<GameModel> {
                 GameLevel level = game.level().orElseThrow();
                 // resume running game
                 if (timer.tickCount() == 1) {
-                    game.initActorAnimationState();
+                    game.initAnimationOfPacManAndGhosts();
                     level.makeReadyForPlaying();
                     level.showPacAndGhosts();
                     THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.GAME_CONTINUED);
@@ -400,7 +400,7 @@ public enum GameState implements FsmState<GameModel> {
                 level.bonus().ifPresent(bonus -> bonus.update(game));
             }
             if (timer().atSecond(1.0)) {
-                game.initActorAnimationState();
+                game.initAnimationOfPacManAndGhosts();
                 level.makeReadyForPlaying();
                 level.showPacAndGhosts();
             }

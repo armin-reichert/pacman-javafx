@@ -310,7 +310,7 @@ public abstract class ArcadeXMan_GameModel extends GameModel {
     public void startLevel() {
         level.setStartTime(System.currentTimeMillis());
         level.makeReadyForPlaying();
-        initActorAnimationState();
+        initAnimationOfPacManAndGhosts();
         setActorBaseSpeed(level.number());
         levelCounter().update(level);
         if (level.isDemoLevel()) {
