@@ -673,9 +673,37 @@ public class TengenMsPacMan_GameModel extends GameModel {
         } else {
             boolean chasing = huntingTimer.phase() == HuntingPhase.CHASING;
             Vector2i targetTile = chasing
-                ? chasingTargetTile(ghost.id(), level, false)
+                ? chasingTargetTile(level, ghost.id())
                 : level.ghostScatterTile(ghost.id());
             ghost.followTarget(targetTile, speed);
         }
     }
+
+    /**
+     * Returns the chasing target tile for the given ghost.
+     *
+     * @param level the game level
+     * @param ghostID the chasing ghost's ID
+     * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
+     */
+    private Vector2i chasingTargetTile(GameLevel level, byte ghostID) {
+        return switch (ghostID) {
+            // Blinky (red ghost) attacks Pac-Man directly
+            case RED_GHOST_ID -> level.pac().tile();
+
+            // Pinky (pink ghost) ambushes Pac-Man
+            case PINK_GHOST_ID -> level.pac().tilesAhead(4, false);
+
+            // Inky (cyan ghost) attacks from opposite side as Blinky
+            case CYAN_GHOST_ID -> level.pac().tilesAhead(2, false).scaled(2).minus(level.ghost(RED_GHOST_ID).tile());
+
+            // Clyde/Sue (orange ghost) attacks directly or retreats towards scatter target if Pac is near
+            case ORANGE_GHOST_ID -> level.ghost(ORANGE_GHOST_ID).tile().euclideanDist(level.pac().tile()) < 8
+                    ? level.ghostScatterTile(ORANGE_GHOST_ID) : level.pac().tile();
+
+            default -> throw GameException.invalidGhostID(ghostID);
+        };
+    }
+
+
 }

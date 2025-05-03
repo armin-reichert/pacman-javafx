@@ -36,8 +36,6 @@ public interface Globals {
 
     byte TICKS_PER_SECOND = 60;
 
-    boolean SIMULATE_ARCADE_OVERFLOW_BUG = true;
-
     /** Tile size=8px, half tile size=4px. */
     int TS = 8, HTS = 4;
 

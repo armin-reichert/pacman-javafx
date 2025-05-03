@@ -153,33 +153,6 @@ public abstract class GameModel implements ScoreManager {
         });
     }
 
-    /**
-     * Returns the chasing target tile for the given ghost.
-     *
-     * @param ghostID the chasing ghost's ID
-     * @param level the game level
-     * @param buggy if overflow bug from Arcade game is simulated
-     * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
-     */
-    protected Vector2i chasingTargetTile(byte ghostID, GameLevel level, boolean buggy) {
-        return switch (ghostID) {
-            // Blinky (red ghost) attacks Pac-Man directly
-            case RED_GHOST_ID -> level.pac().tile();
-
-            // Pinky (pink ghost) ambushes Pac-Man
-            case PINK_GHOST_ID -> level.pac().tilesAhead(4, buggy);
-
-            // Inky (cyan ghost) attacks from opposite side as Blinky
-            case CYAN_GHOST_ID -> level.pac().tilesAhead(2, buggy).scaled(2).minus(level.ghost(RED_GHOST_ID).tile());
-
-            // Clyde/Sue (orange ghost) attacks directly or retreats towards scatter target if Pac is near
-            case ORANGE_GHOST_ID -> level.ghost(ORANGE_GHOST_ID).tile().euclideanDist(level.pac().tile()) < 8
-                ? level.ghostScatterTile(ORANGE_GHOST_ID) : level.pac().tile();
-
-            default -> throw GameException.invalidGhostID(ghostID);
-        };
-    }
-
     private void checkIfPacManGetsKilled() {
         level.ghosts(HUNTING_PAC)
             .filter(ghost -> level.pac().sameTile(ghost))
@@ -329,9 +302,7 @@ public abstract class GameModel implements ScoreManager {
         }
     }
 
-    protected void handleExtraLifeScoreReached(int extraLifeScore) {
-        addLives(1);
-    }
+    protected void handleExtraLifeScoreReached(int extraLifeScore) { addLives(1); }
 
     @Override
     public void loadHighScore() {
