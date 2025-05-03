@@ -6,7 +6,6 @@ package de.amr.games.pacman.arcade;
 
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.Waypoint;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.*;
