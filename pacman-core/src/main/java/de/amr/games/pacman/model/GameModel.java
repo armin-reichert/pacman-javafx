@@ -185,14 +185,22 @@ public abstract class GameModel implements ScoreManager {
 
     public void startLevel() {
         level.setStartTime(System.currentTimeMillis());
-        level.showMessage(level.isDemoLevel() ? GameLevel.Message.GAME_OVER : GameLevel.Message.READY);
         level.makeReadyForPlaying();
         initActorAnimationState();
         setActorBaseSpeed(level.number());
         levelCounter().update(level);
-        setScoreEnabled(!level.isDemoLevel());
-        setHighScoreEnabled(!level.isDemoLevel());
-        Logger.info("{} started", level.isDemoLevel() ? "Demo Level" : "Level " + level.number());
+        if (level.isDemoLevel()) {
+            level.showMessage(GameLevel.Message.GAME_OVER);
+            setScoreEnabled(false);
+            setHighScoreEnabled(false);
+            Logger.info("Demo level {} started", level.number());
+
+        } else {
+            level.showMessage(GameLevel.Message.READY);
+            setScoreEnabled(true);
+            setHighScoreEnabled(true);
+            Logger.info("Level {} started", level.number());
+        }
         // Note: This event is very important because it triggers the creation of the actor animations!
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_STARTED);
     }

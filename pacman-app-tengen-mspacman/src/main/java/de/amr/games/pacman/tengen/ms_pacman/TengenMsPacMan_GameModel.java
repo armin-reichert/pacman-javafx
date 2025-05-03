@@ -264,7 +264,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     @Override
     public void startLevel() {
         super.startLevel();
-        // Score runs also in demo level in contrast to Arcade games
+        // Score is enabled also in demo level in contrast to Arcade games
         setScoreEnabled(true);
     }
 
