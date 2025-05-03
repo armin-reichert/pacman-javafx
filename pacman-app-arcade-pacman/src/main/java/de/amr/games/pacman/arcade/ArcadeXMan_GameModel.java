@@ -79,20 +79,14 @@ public abstract class ArcadeXMan_GameModel extends GameModel {
 
         @Override
         public float pacNormalSpeed(GameLevel level) {
-            if (level == null) {
-                return 0;
-            }
-            byte percentage = level.data().pacSpeedPercentage();
-            return percentage > 0 ? percentage * 0.01f * level.pac().baseSpeed() : level.pac().baseSpeed();
+            byte pct = level.data().pacSpeedPercentage();
+            return pct > 0 ? pct * 0.01f * level.pac().baseSpeed() : level.pac().baseSpeed();
         }
 
         @Override
         public float pacPowerSpeed(GameLevel level) {
-            if (level == null) {
-                return 0;
-            }
-            byte percentage = level.data().pacSpeedPoweredPercentage();
-            return percentage > 0 ? percentage * 0.01f * level.pac().baseSpeed() : pacNormalSpeed(level);
+            byte pct = level.data().pacSpeedPoweredPercentage();
+            return pct > 0 ? pct * 0.01f * level.pac().baseSpeed() : pacNormalSpeed(level);
         }
 
         @Override
@@ -121,14 +115,13 @@ public abstract class ArcadeXMan_GameModel extends GameModel {
 
         @Override
         public float ghostFrightenedSpeed(GameLevel level, Ghost ghost) {
-            if (level == null) return 0;
-            float percentage = level.data().ghostSpeedFrightenedPercentage();
-            return percentage > 0 ? percentage * 0.01f * ghost.baseSpeed() : ghost.baseSpeed();
+            float pct = level.data().ghostSpeedFrightenedPercentage();
+            return pct > 0 ? pct * 0.01f * ghost.baseSpeed() : ghost.baseSpeed();
         }
 
         @Override
         public float ghostTunnelSpeed(GameLevel level, Ghost ghost) {
-            return level != null ? level.data().ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed() : 0;
+            return level.data().ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed();
         }
     }
 
