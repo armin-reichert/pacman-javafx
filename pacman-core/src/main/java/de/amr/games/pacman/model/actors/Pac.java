@@ -112,12 +112,12 @@ public class Pac extends Creature implements AnimatedActor2D {
     }
 
     public boolean isPowerFading(GameModel gameModel) {
-        return powerTimer.isRunning() && powerTimer.remainingTicks() <= gameModel.pacPowerFadingTicks();
+        return powerTimer.isRunning() && powerTimer.remainingTicks() <= gameModel.pacPowerFadingTicks(level);
     }
 
     public boolean isPowerFadingStarting(GameModel gameModel) {
-        return powerTimer.isRunning() && powerTimer.remainingTicks() == gameModel.pacPowerFadingTicks()
-            || powerTimer.durationTicks() < gameModel.pacPowerFadingTicks() && powerTimer.tickCount() == 1;
+        return powerTimer.isRunning() && powerTimer.remainingTicks() == gameModel.pacPowerFadingTicks(level)
+            || powerTimer.durationTicks() < gameModel.pacPowerFadingTicks(level) && powerTimer.tickCount() == 1;
     }
 
 
@@ -130,7 +130,9 @@ public class Pac extends Creature implements AnimatedActor2D {
             if (usingAutopilot) {
                 autopilot.steer(this, level);
             }
-            setSpeed(powerTimer.isRunning() ? game.pacPowerSpeed() : game.pacNormalSpeed());
+            setSpeed(powerTimer.isRunning()
+                ? game.speedControl().pacPowerSpeed(level)
+                : game.speedControl().pacNormalSpeed(level));
             tryMoving();
             //Logger.info(moveInfo);
             if (moveInfo.moved) {

@@ -10,6 +10,7 @@ import de.amr.games.pacman.lib.Waypoint;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.*;
+import de.amr.games.pacman.model.actors.ActorSpeedControl;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.steering.Steering;
@@ -133,6 +134,13 @@ public abstract class ArcadeXMan_GameModel extends GameModel {
     }
 
     @Override
+    public void startNewGame() {
+        prepareForNewGame();
+        createLevel(1, createLevelData(1));
+        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.GAME_STARTED);
+    }
+
+    @Override
     public boolean canStartNewGame() { return !THE_COIN_MECHANISM.isEmpty(); }
 
     @Override
@@ -143,101 +151,80 @@ public abstract class ArcadeXMan_GameModel extends GameModel {
         return livesProperty().get() == 0;
     }
 
-    @Override
-    protected void setActorBaseSpeed(int levelNumber) {
-        level.pac().setBaseSpeed(1.25f);
-        level.ghosts().forEach(ghost -> ghost.setBaseSpeed(1.25f));
-        Logger.debug("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
-        level.ghosts().forEach(ghost -> Logger.debug("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
-    }
+    // Actors
 
-    @Override
-    public float pacNormalSpeed() {
-        if (level == null) {
-            return 0;
+    protected ActorSpeedControl speedControl = new ActorSpeedControl() {
+        @Override
+        public void setActorBaseSpeed(GameLevel level) {
+            level.pac().setBaseSpeed(1.25f);
+            level.ghosts().forEach(ghost -> ghost.setBaseSpeed(1.25f));
+            Logger.debug("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
+            level.ghosts().forEach(ghost -> Logger.debug("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
         }
-        byte percentage = level.data().pacSpeedPercentage();
-        return percentage > 0 ? percentage * 0.01f * level.pac().baseSpeed() : level.pac().baseSpeed();
-    }
 
-    @Override
-    public float pacPowerSpeed() {
-        if (level == null) {
-            return 0;
+        @Override
+        public float pacNormalSpeed(GameLevel level) {
+            if (level == null) {
+                return 0;
+            }
+            byte percentage = level.data().pacSpeedPercentage();
+            return percentage > 0 ? percentage * 0.01f * level.pac().baseSpeed() : level.pac().baseSpeed();
         }
-        byte percentage = level.data().pacSpeedPoweredPercentage();
-        return percentage > 0 ? percentage * 0.01f * level.pac().baseSpeed() : pacNormalSpeed();
+
+        @Override
+        public float pacPowerSpeed(GameLevel level) {
+            if (level == null) {
+                return 0;
+            }
+            byte percentage = level.data().pacSpeedPoweredPercentage();
+            return percentage > 0 ? percentage * 0.01f * level.pac().baseSpeed() : pacNormalSpeed(level);
+        }
+
+        @Override
+        public float ghostAttackSpeed(GameLevel level, Ghost ghost) {
+            if (level.isTunnel(ghost.tile())) {
+                return level.data().ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed();
+            }
+            if (ghost.id() == RED_GHOST_ID && cruiseElroy == 1) {
+                return level.data().elroy1SpeedPercentage() * 0.01f * ghost.baseSpeed();
+            }
+            if (ghost.id() == RED_GHOST_ID && cruiseElroy == 2) {
+                return level.data().elroy2SpeedPercentage() * 0.01f * ghost.baseSpeed();
+            }
+            return level.data().ghostSpeedPercentage() * 0.01f * ghost.baseSpeed();
+        }
+
+        @Override
+        public float ghostSpeedInsideHouse(GameLevel level, Ghost ghost) {
+            return 0.5f;
+        }
+
+        @Override
+        public float ghostSpeedReturningToHouse(GameLevel level, Ghost ghost) {
+            return 2;
+        }
+
+        @Override
+        public float ghostFrightenedSpeed(GameLevel level, Ghost ghost) {
+            if (level == null) return 0;
+            float percentage = level.data().ghostSpeedFrightenedPercentage();
+            return percentage > 0 ? percentage * 0.01f * ghost.baseSpeed() : ghost.baseSpeed();
+        }
+
+        @Override
+        public float ghostTunnelSpeed(GameLevel level, Ghost ghost) {
+            return level != null ? level.data().ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed() : 0;
+        }
+    };
+
+    @Override
+    public ActorSpeedControl speedControl() {
+        return speedControl;
     }
 
     @Override
-    public long pacPowerTicks() {
+    public long pacPowerTicks(GameLevel level) {
         return level != null ? 60 * level.data().pacPowerSeconds() : 0;
-    }
-
-    @Override
-    public float ghostAttackSpeed(Ghost ghost) {
-        if (level.isTunnel(ghost.tile())) {
-            return level.data().ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed();
-        }
-        if (ghost.id() == RED_GHOST_ID && cruiseElroy == 1) {
-            return level.data().elroy1SpeedPercentage() * 0.01f * ghost.baseSpeed();
-        }
-        if (ghost.id() == RED_GHOST_ID && cruiseElroy == 2) {
-            return level.data().elroy2SpeedPercentage() * 0.01f * ghost.baseSpeed();
-        }
-        return level.data().ghostSpeedPercentage() * 0.01f * ghost.baseSpeed();
-    }
-
-    @Override
-    public float ghostSpeedInsideHouse(Ghost ghost) {
-        return 0.5f;
-    }
-
-    @Override
-    public float ghostSpeedReturningToHouse(Ghost ghost) {
-        return 2;
-    }
-
-    @Override
-    public float ghostFrightenedSpeed(Ghost ghost) {
-        if (level == null) return 0;
-        float percentage = level.data().ghostSpeedFrightenedPercentage();
-        return percentage > 0 ? percentage * 0.01f * ghost.baseSpeed() : ghost.baseSpeed();
-    }
-
-    @Override
-    public float ghostTunnelSpeed(Ghost ghost) {
-        return level != null ? level.data().ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed() : 0;
-    }
-
-    @Override
-    protected void onPelletEaten(Vector2i tile) {
-        scorePoints(PELLET_VALUE);
-        level.pac().setRestingTicks(1);
-        checkCruiseElroy();
-    }
-
-    @Override
-    protected void onEnergizerEaten(Vector2i tile) {
-        scorePoints(ENERGIZER_VALUE);
-        Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
-        level.pac().setRestingTicks(3);
-        Logger.info("Resting 3 ticks");
-        checkCruiseElroy();
-        level.victims().clear();
-        long powerTicks = pacPowerTicks();
-        if (powerTicks > 0) {
-            huntingTimer().stop();
-            Logger.info("Hunting Pac-Man stopped as he got power");
-            level.pac().powerTimer().restartTicks(powerTicks);
-            Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerTicks / TICKS_PER_SECOND);
-            level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
-            level.ghosts(FRIGHTENED).forEach(Ghost::reverseAtNextOccasion);
-            THE_SIMULATION_STEP.setPacGotPower();
-            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_GETS_POWER);
-        } else {
-            level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseAtNextOccasion);
-        }
     }
 
     private void checkCruiseElroy() {
@@ -271,6 +258,38 @@ public abstract class ArcadeXMan_GameModel extends GameModel {
             int extraPoints = POINTS_ALL_GHOSTS_EATEN_IN_LEVEL;
             scorePoints(extraPoints);
             Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, level.number());
+        }
+    }
+
+    // Food handling
+
+    @Override
+    protected void onPelletEaten(Vector2i tile) {
+        scorePoints(PELLET_VALUE);
+        level.pac().setRestingTicks(1);
+        checkCruiseElroy();
+    }
+
+    @Override
+    protected void onEnergizerEaten(Vector2i tile) {
+        scorePoints(ENERGIZER_VALUE);
+        Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
+        level.pac().setRestingTicks(3);
+        Logger.info("Resting 3 ticks");
+        checkCruiseElroy();
+        level.victims().clear();
+        long powerTicks = pacPowerTicks(level);
+        if (powerTicks > 0) {
+            huntingTimer().stop();
+            Logger.info("Hunting Pac-Man stopped as he got power");
+            level.pac().powerTimer().restartTicks(powerTicks);
+            Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerTicks / TICKS_PER_SECOND);
+            level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
+            level.ghosts(FRIGHTENED).forEach(Ghost::reverseAtNextOccasion);
+            THE_SIMULATION_STEP.setPacGotPower();
+            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_GETS_POWER);
+        } else {
+            level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseAtNextOccasion);
         }
     }
 
@@ -311,7 +330,7 @@ public abstract class ArcadeXMan_GameModel extends GameModel {
         level.setStartTime(System.currentTimeMillis());
         level.makeReadyForPlaying();
         initAnimationOfPacManAndGhosts();
-        setActorBaseSpeed(level.number());
+        speedControl.setActorBaseSpeed(level);
         levelCounter().update(level);
         if (level.isDemoLevel()) {
             level.showMessage(GameLevel.Message.GAME_OVER);

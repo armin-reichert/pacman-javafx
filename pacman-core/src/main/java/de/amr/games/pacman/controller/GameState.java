@@ -113,7 +113,6 @@ public enum GameState implements FsmState<GameModel> {
                 }
             }
             else if (game.canStartNewGame()) {
-                // start new game
                 if (timer.tickCount() == 1) {
                     game.startNewGame();
                 }
@@ -135,7 +134,6 @@ public enum GameState implements FsmState<GameModel> {
                     THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.LEVEL_CREATED);
                 }
                 else if (timer.tickCount() == 2) {
-                    // This publishes a LEVEL_STARTED event which triggers the actor animation UI creation
                     game.startLevel();
                 }
                 else if (timer.tickCount() == 3) {

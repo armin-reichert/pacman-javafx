@@ -12,7 +12,6 @@ import de.amr.games.pacman.lib.Waypoint;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.*;
-import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.actors.Pac;
@@ -95,13 +94,13 @@ public class ArcadeMsPacMan_GameModel extends ArcadeXMan_GameModel {
      */
     protected void ghostHuntingBehaviour(Ghost ghost) {
         if (huntingTimer.phaseIndex() == 0 && (ghost.id() == RED_GHOST_ID || ghost.id() == PINK_GHOST_ID)) {
-            ghost.roam(ghostAttackSpeed(ghost));
+            ghost.roam(speedControl.ghostAttackSpeed(level, ghost));
         } else {
             boolean chase = huntingTimer.phase() == HuntingPhase.CHASING || ghost.id() == RED_GHOST_ID && cruiseElroy > 0;
             Vector2i targetTile = chase
                 ? chasingTargetTile(ghost.id(), level, SIMULATE_ARCADE_OVERFLOW_BUG)
                 : level.ghostScatterTile(ghost.id());
-            ghost.followTarget(targetTile, ghostAttackSpeed(ghost));
+            ghost.followTarget(targetTile, speedControl.ghostAttackSpeed(level, ghost));
         }
     }
 
@@ -152,7 +151,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeXMan_GameModel {
     }
 
     @Override
-    public long pacPowerFadingTicks() {
+    public long pacPowerFadingTicks(GameLevel level) {
         // Ghost flashing animation has frame length 14 so one full flash takes 28 ticks
         //TODO find better solution.
         return level != null ? level.data().numFlashes() * 28L : 0;

@@ -23,7 +23,6 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_MS_PACMAN_BOOSTER;
 import static de.amr.games.pacman.model.actors.GhostState.*;
-import static de.amr.games.pacman.tengen.ms_pacman.SpeedConfiguration.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -264,7 +263,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.setStartTime(System.currentTimeMillis());
         level.makeReadyForPlaying();
         initAnimationOfPacManAndGhosts();
-        setActorBaseSpeed(level.number());
+        speedControl.setActorBaseSpeed(level);
         levelCounter().update(level);
         if (level.isDemoLevel()) {
             level.showMessage(GameLevel.Message.GAME_OVER);
@@ -283,7 +282,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public long pacPowerTicks() {
+    public long pacPowerTicks(GameLevel level) {
         if (level == null) return 0;
         int index = level.number() <= 19 ? level.number() - 1 : 18;
         double seconds = POWER_PELLET_TIMES[index] / 16.0;
@@ -291,46 +290,158 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public long pacPowerFadingTicks() {
+    public long pacPowerFadingTicks(GameLevel level) {
         return level != null ? level.data().numFlashes() * 28L : 0; // TODO check in emulator
     }
 
-    @Override
-    public float pacNormalSpeed() {
-        return level.pac() != null ? level.pac().baseSpeed() : 0;
-    }
+    private final TengenActorSpeedControl speedControl = new TengenActorSpeedControl();
 
-    @Override
-    public float pacPowerSpeed() {
-        //TODO is this correct?
-        return 1.1f * level.pac().baseSpeed();
-    }
+    private class TengenActorSpeedControl implements  ActorSpeedControl {
 
-    @Override
-    public float ghostAttackSpeed(Ghost ghost) {
-        if (level.isTunnel(ghost.tile())) {
-            return ghostTunnelSpeed(ghost);
+        static float speedUnitsToPixels(float units) {
+            return units / 32f;
         }
-        float speed = ghost.baseSpeed();
-        float increase = ghostSpeedIncreaseByFoodRemaining(this);
-        if (increase > 0) {
-            speed += increase;
-            Logger.debug("Ghost speed increased by {} units to {0.00} px/tick for {}", increase, speed, ghost.name());
+
+        static float pacBoosterSpeedDelta() {
+            return 0.5f;
         }
-        return speed;
+
+        static float pacDifficultySpeedDelta(Difficulty difficulty) {
+            return speedUnitsToPixels(switch (difficulty) {
+                case EASY -> -4;
+                case NORMAL -> 0;
+                case HARD -> 12;
+                case CRAZY -> 24;
+            });
+        }
+
+        static float ghostDifficultySpeedDelta(Difficulty difficulty) {
+            return speedUnitsToPixels(switch (difficulty) {
+                case EASY -> -8;
+                case NORMAL -> 0;
+                case HARD -> 16;
+                case CRAZY -> 32;
+            });
+        }
+
+        static float ghostIDSpeedDelta(byte ghostID) {
+            return speedUnitsToPixels(switch (ghostID) {
+                case RED_GHOST_ID -> 3;
+                case ORANGE_GHOST_ID -> 2;
+                case CYAN_GHOST_ID -> 1;
+                case PINK_GHOST_ID -> 0;
+                default -> throw GameException.invalidGhostID(ghostID);
+            });
+        }
+
+        /**
+         * @RussianManSMWC on Discord:
+         * <p>
+         * By the way, there's an additional quirk regarding ghosts' speed.
+         * On normal difficulty ONLY and in levels 5 and above, the ghosts become slightly faster if there are few dots remain.
+         * if there are 31 or less dots, the speed is increased. the base increase value is 2, which is further increased by 1 for every 8 dots eaten.
+         * (I should note it's in subunits. it if was times 2, that would've been crazy)
+         * </p>
+         */
+        static float ghostSpeedIncreaseByFoodRemaining(TengenMsPacMan_GameModel game) {
+            GameLevel level = game.level().orElseThrow();
+            byte units = 0;
+            if (game.difficulty() == Difficulty.NORMAL && level.number() >= 5) {
+                int dotsLeft = level.uneatenFoodCount();
+                if (dotsLeft <= 7) {
+                    units = 5;
+                } else if (dotsLeft <= 15) {
+                    units = 4;
+                } else if (dotsLeft <= 23) {
+                    units = 3;
+                } else if (dotsLeft <= 31) {
+                    units = 2;
+                }
+            }
+            return speedUnitsToPixels(units);
+        }
+
+        static float pacBaseSpeedInLevel(int levelNumber) {
+            int units = 0;
+            if      (inClosedRange(levelNumber, 1, 4))   { units = 0x20; }
+            else if (inClosedRange(levelNumber, 5, 12))  { units = 0x24; }
+            else if (inClosedRange(levelNumber, 13, 16)) { units = 0x28; }
+            else if (inClosedRange(levelNumber, 17, 20)) { units = 0x27; }
+            else if (inClosedRange(levelNumber, 21, 24)) { units = 0x26; }
+            else if (inClosedRange(levelNumber, 25, 28)) { units = 0x25; }
+            else if (levelNumber >= 29)            { units = 0x24; }
+
+            return speedUnitsToPixels(units);
+        }
+
+        // TODO: do they all have the same base speed? Unclear from disassembly data.
+        static float ghostBaseSpeedInLevel(int levelNumber) {
+            int units = 0x20; // default: 32
+            if      (inClosedRange(levelNumber, 1, 4))  { units = 0x18; }
+            else if (inClosedRange(levelNumber, 5, 12)) { units = 0x20 + (levelNumber - 5); } // 0x20-0x27
+            else if (levelNumber >= 13)           { units = 0x28;}
+
+            return speedUnitsToPixels(units);
+        }
+
+        @Override
+        public void setActorBaseSpeed(GameLevel level) {
+            float pacBaseSpeed = pacBaseSpeedInLevel(level.number()) + pacDifficultySpeedDelta(difficulty);
+            level.pac().setBaseSpeed(pacBaseSpeed);
+            if (pacBooster == PacBooster.ALWAYS_ON) {
+                activatePacBooster(true);
+            }
+            level.ghosts().forEach(ghost ->
+                ghost.setBaseSpeed(ghostBaseSpeedInLevel(level.number())
+                    + ghostDifficultySpeedDelta(difficulty)
+                    + ghostIDSpeedDelta(ghost.id()))
+            );
+            Logger.info("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
+            level.ghosts().forEach(ghost -> Logger.info("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
+        }
+
+        @Override
+        public float pacNormalSpeed(GameLevel level) {
+            return level.pac() != null ? level.pac().baseSpeed() : 0;
+        }
+
+        @Override
+        public float pacPowerSpeed(GameLevel level) {
+            //TODO is this correct?
+            return 1.1f * level.pac().baseSpeed();
+        }
+
+        @Override
+        public float ghostAttackSpeed(GameLevel level, Ghost ghost) {
+            if (level.isTunnel(ghost.tile())) {
+                return speedControl.ghostTunnelSpeed(level, ghost);
+            }
+            float speed = ghost.baseSpeed();
+            float increase = ghostSpeedIncreaseByFoodRemaining((TengenMsPacMan_GameModel) level.game()); //TODO ugly
+            if (increase > 0) {
+                speed += increase;
+                Logger.debug("Ghost speed increased by {} units to {0.00} px/tick for {}", increase, speed, ghost.name());
+            }
+            return speed;
+        }
+
+        @Override
+        public float ghostSpeedInsideHouse(GameLevel level, Ghost ghost) { return 0.5f; }
+
+        @Override
+        public float ghostSpeedReturningToHouse(GameLevel level, Ghost ghost) { return 2; }
+
+        @Override
+        public float ghostFrightenedSpeed(GameLevel level, Ghost ghost) { return 0.5f * ghost.baseSpeed(); } //TODO is this correct?
+
+        @Override
+        public float ghostTunnelSpeed(GameLevel level, Ghost ghost) { return 0.4f * ghost.baseSpeed(); } //TODO is this correct?
+    };
+
+    @Override
+    public ActorSpeedControl speedControl() {
+        return speedControl;
     }
-
-    @Override
-    public float ghostSpeedInsideHouse(Ghost ghost) { return 0.5f; }
-
-    @Override
-    public float ghostSpeedReturningToHouse(Ghost ghost) { return 2; }
-
-    @Override
-    public float ghostFrightenedSpeed(Ghost ghost) { return 0.5f * ghost.baseSpeed(); } //TODO is this correct?
-
-    @Override
-    public float ghostTunnelSpeed(Ghost ghost) { return 0.4f * ghost.baseSpeed(); } //TODO is this correct?
 
     @Override
     public boolean isOver() { return livesProperty().get() == 0; }
@@ -338,25 +449,9 @@ public class TengenMsPacMan_GameModel extends GameModel {
     @Override
     public void startNewGame() {
         prepareForNewGame();
+        levelCounter.setStartLevel(startLevelNumber);
         createLevel(startLevelNumber, createLevelData(startLevelNumber));
-        levelCounter.resetStartingFromLevel(startLevelNumber);
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.GAME_STARTED);
-    }
-
-    @Override
-    protected void setActorBaseSpeed(int levelNumber) {
-        float pacBaseSpeed = pacBaseSpeedInLevel(levelNumber) + pacDifficultySpeedDelta(difficulty);
-        level.pac().setBaseSpeed(pacBaseSpeed);
-        if (pacBooster == PacBooster.ALWAYS_ON) {
-            activatePacBooster(true);
-        }
-        level.ghosts().forEach(ghost ->
-            ghost.setBaseSpeed(ghostBaseSpeedInLevel(levelNumber)
-                + ghostDifficultySpeedDelta(difficulty)
-                + ghostIDSpeedDelta(ghost.id()))
-        );
-        Logger.info("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
-        level.ghosts().forEach(ghost -> Logger.info("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
     }
 
     @Override
@@ -373,9 +468,10 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public void activatePacBooster(boolean active) {
         if (boosterActive != active) {
             boosterActive = active;
-            float speed = pacBaseSpeedInLevel(level.number()) + pacDifficultySpeedDelta(difficulty);
+            float speed = TengenActorSpeedControl.pacBaseSpeedInLevel(level.number())
+                + TengenActorSpeedControl.pacDifficultySpeedDelta(difficulty);
             if (boosterActive) {
-                speed += pacBoosterSpeedDelta();
+                speed += TengenActorSpeedControl.pacBoosterSpeedDelta();
             }
             level.pac().setBaseSpeed(speed);
             level.pac().selectAnimation(boosterActive
@@ -540,7 +636,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         scorePoints(ENERGIZER_VALUE);
         Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
         level.victims().clear();
-        long powerTicks = pacPowerTicks();
+        long powerTicks = pacPowerTicks(level);
         if (powerTicks > 0) {
             huntingTimer().stop();
             Logger.info("Hunting Pac-Man stopped as he got power");
@@ -579,7 +675,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     // TODO clarify what exactly Tengen Ms. Pac-Man does
     private void ghostHuntingBehaviour(Ghost ghost) {
-        float speed = ghostAttackSpeed(ghost);
+        float speed = speedControl.ghostAttackSpeed(level, ghost);
         if (huntingTimer.phaseIndex() == 0 && (ghost.id() == RED_GHOST_ID || ghost.id() == PINK_GHOST_ID)) {
             ghost.roam(speed);
         } else {

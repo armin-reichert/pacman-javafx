@@ -24,7 +24,7 @@ public class TengenMsPacMan_LevelCounter implements LevelCounter {
         return enabledPy;
     }
 
-    void resetStartingFromLevel(int startLevelNumber) {
+    void setStartLevel(int startLevelNumber) {
         if (startLevelNumber > 1) {
             symbols.clear();
             for (byte number = 1; number <= Math.min(startLevelNumber, LEVEL_COUNTER_MAX_SIZE); ++number) {

@@ -9,10 +9,7 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.actors.ActorAnimations;
-import de.amr.games.pacman.model.actors.Bonus;
-import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.actors.*;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -66,12 +63,7 @@ public abstract class GameModel implements ScoreManager {
 
     public abstract void prepareForNewGame();
     public abstract boolean canStartNewGame();
-
-    public void startNewGame() {
-        prepareForNewGame();
-        createLevel(1, createLevelData(1));
-        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.GAME_STARTED);
-    }
+    public abstract void startNewGame();
 
     public final void createLevel(int levelNumber, LevelData data) {
         buildLevel(levelNumber, data);
@@ -148,18 +140,9 @@ public abstract class GameModel implements ScoreManager {
 
     // Actors
 
-    protected abstract void setActorBaseSpeed(int levelNumber);
-
-    public abstract float ghostAttackSpeed(Ghost ghost);
-    public abstract float ghostFrightenedSpeed(Ghost ghost);
-    public abstract float ghostSpeedInsideHouse(Ghost ghost);
-    public abstract float ghostSpeedReturningToHouse(Ghost ghost);
-    public abstract float ghostTunnelSpeed(Ghost ghost);
-
-    public abstract float pacNormalSpeed();
-    public abstract float pacPowerSpeed();
-    public abstract long  pacPowerTicks();
-    public abstract long  pacPowerFadingTicks();
+    public abstract ActorSpeedControl speedControl();
+    public abstract long pacPowerTicks(GameLevel level);
+    public abstract long pacPowerFadingTicks(GameLevel level);
 
     public void initAnimationOfPacManAndGhosts() {
         level.pac().selectAnimation(ActorAnimations.ANIM_PAC_MUNCHING);

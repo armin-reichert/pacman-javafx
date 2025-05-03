@@ -119,7 +119,7 @@ public class ArcadePacMan_GameModel extends ArcadeXMan_GameModel {
         Vector2i targetTile = chase
             ? chasingTargetTile(ghost.id(), level, SIMULATE_ARCADE_OVERFLOW_BUG)
             : level.ghostScatterTile(ghost.id());
-        ghost.followTarget(targetTile, ghostAttackSpeed(ghost));
+        ghost.followTarget(targetTile, speedControl.ghostAttackSpeed(level, ghost));
     }
 
     @Override
@@ -177,7 +177,7 @@ public class ArcadePacMan_GameModel extends ArcadeXMan_GameModel {
     }
 
     @Override
-    public long pacPowerFadingTicks() {
+    public long pacPowerFadingTicks(GameLevel level) {
         // ghost flashing animation has frame length 14 so one full flash takes 28 ticks
         return level != null ? level.data().numFlashes() * 28L : 0;
     }

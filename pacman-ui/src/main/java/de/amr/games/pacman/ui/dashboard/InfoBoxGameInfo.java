@@ -127,29 +127,37 @@ public class InfoBoxGameInfo extends InfoBox {
     private String fmtGhostAttackSpeed(GameLevel level) {
         // use Pinky because Blinky could be in Elroy mode
         Ghost pinky = level.ghost(PINK_GHOST_ID);
-        return (pinky != null) ? "%.4f px/s".formatted(THE_GAME_CONTROLLER.game().ghostAttackSpeed(pinky) * 60) : InfoText.NO_INFO;
+        return (pinky != null)
+            ? "%.4f px/s".formatted(level.game().speedControl().ghostAttackSpeed(level, pinky) * 60)
+            : InfoText.NO_INFO;
     }
 
     private String fmtGhostSpeedFrightened(GameLevel level) {
         Ghost blinky = level.ghost(RED_GHOST_ID);
-        return (blinky != null) ? "%.4f px/s".formatted(THE_GAME_CONTROLLER.game().ghostFrightenedSpeed(blinky) * 60) : InfoText.NO_INFO;
+        return (blinky != null)
+            ? "%.4f px/s".formatted(level.game().speedControl().ghostFrightenedSpeed(level, blinky) * 60)
+            : InfoText.NO_INFO;
     }
 
     private String fmtGhostSpeedTunnel(GameLevel level) {
         Ghost blinky = level.ghost(RED_GHOST_ID);
-        return (blinky != null) ? "%.4f px/s".formatted(THE_GAME_CONTROLLER.game().ghostTunnelSpeed(blinky) * 60) : InfoText.NO_INFO;
+        return (blinky != null)
+            ? "%.4f px/s".formatted(level.game().speedControl().ghostTunnelSpeed(level, blinky) * 60)
+            : InfoText.NO_INFO;
     }
 
     private String fmtPacNormalSpeed(GameLevel level) {
-        return "%.4f px/s".formatted(THE_GAME_CONTROLLER.game().pacNormalSpeed() * 60);
+        return "%.4f px/s".formatted(level.game().speedControl().pacNormalSpeed(level) * 60);
     }
 
     private String fmtPacSpeedPowered(GameLevel level) {
-        return "%.4f px/s".formatted(THE_GAME_CONTROLLER.game().pacPowerSpeed() * 60);
+        return "%.4f px/s".formatted(level.game().speedControl().pacPowerSpeed(level) * 60);
     }
 
-    private String fmtPacPowerTime(GameLevel unused) {
-        return "%.2f sec (%d ticks)".formatted(THE_GAME_CONTROLLER.game().pacPowerTicks() / 60f, THE_GAME_CONTROLLER.game().pacPowerTicks());
+    private String fmtPacPowerTime(GameLevel level) {
+        return "%.2f sec (%d ticks)".formatted(
+            level.game().pacPowerTicks(level) / 60f,
+            level.game().pacPowerTicks(level));
     }
 
     private String fmtNumFlashes(GameLevel level) {
