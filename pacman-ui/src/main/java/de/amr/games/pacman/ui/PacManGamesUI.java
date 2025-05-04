@@ -303,7 +303,7 @@ public class PacManGamesUI implements GameUI {
     public void showEditorView() {
         if (!THE_GAME_CONTROLLER.game().isPlaying() || THE_CLOCK.isPaused()) {
             currentGameScene().ifPresent(GameScene::end);
-            THE_GAME_CONTROLLER.game().onGameEnding();
+            THE_SOUND.stopAll();
             THE_CLOCK.stop();
             editor.start(stage);
             viewPy.set(editorView);
