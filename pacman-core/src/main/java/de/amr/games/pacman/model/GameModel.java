@@ -97,10 +97,12 @@ public abstract class GameModel implements ScoreManager {
 
     public void doHuntingStep() {
         huntingTimer().update(level.number());
+        gateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(level, THE_SIMULATION_STEP));
         level.blinking().tick();
+
         level.pac().update(this);
         level.ghosts().forEach(ghost -> ghost.update(this));
-        updatePacPower();
+        level.bonus().ifPresent(bonus -> bonus.update(this));
 
         checkIfPacManKilled();
         if (hasPacManBeenKilled()) return;
@@ -109,9 +111,8 @@ public abstract class GameModel implements ScoreManager {
         if (haveGhostsBeenKilled()) return;
 
         checkIfPacManFindsFood();
+        updatePacPower();
         level.bonus().ifPresent(this::checkIfBonusEaten);
-
-        gateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(level, THE_SIMULATION_STEP));
     }
 
     public void onLevelCompleted() {
@@ -244,8 +245,6 @@ public abstract class GameModel implements ScoreManager {
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
             THE_SIMULATION_STEP.setBonusEatenTile(bonus.actor().tile());
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.BONUS_EATEN);
-        } else {
-            bonus.update(this);
         }
     }
 
