@@ -58,7 +58,7 @@ public class AsmMapImport {
                     if (tileString.startsWith("$")) {
                         tileString = tileString.substring(1);
                     }
-                    byte tile = -1;
+                    byte tile;
                     try {
                         tile = (byte) Integer.parseInt(tileString, 16);
                         currentRow.add(tile);

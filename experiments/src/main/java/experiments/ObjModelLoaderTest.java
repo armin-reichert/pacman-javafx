@@ -21,7 +21,7 @@ public class ObjModelLoaderTest {
                 var model = new Model3D(url);
                 Logger.info(model.contentAsText(url));
             } catch (Exception x) {
-
+                Logger.error(x);
             }
         } else {
             Logger.error("No model path program argument (e.g. 'model3D/ghost.obj') specified");

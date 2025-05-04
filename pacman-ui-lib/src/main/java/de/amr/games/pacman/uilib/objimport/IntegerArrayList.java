@@ -31,6 +31,7 @@
  */
 package de.amr.games.pacman.uilib.objimport;
 
+import java.io.Serial;
 import java.util.*;
 
 /**
@@ -654,6 +655,7 @@ public class IntegerArrayList extends AbstractList<Integer>
      * @serialData The length of the array backing the <tt>ArrayList</tt> instance is emitted (int), followed by all of
      * its elements (each an <tt>Object</tt>) in the proper order.
      */
+    @Serial
     private void writeObject(java.io.ObjectOutputStream s) throws java.io.IOException {
         // Write out element count, and any hidden stuff
         int expectedModCount = modCount;
@@ -675,6 +677,7 @@ public class IntegerArrayList extends AbstractList<Integer>
     /**
      * Reconstitute the <tt>ArrayList</tt> instance from a stream (that is, deserialize it).
      */
+    @Serial
     private void readObject(java.io.ObjectInputStream s) throws java.io.IOException, ClassNotFoundException {
         // Read in size, and any hidden stuff
         s.defaultReadObject();
