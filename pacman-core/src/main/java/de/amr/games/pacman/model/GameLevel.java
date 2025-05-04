@@ -48,8 +48,8 @@ public class GameLevel {
     }
 
     private final GameModel game;
-    private final LevelData data;
     private final int number; // 1=first level
+    private LevelData data;
 
     private final WorldMap worldMap;
     private final Vector2f pacStartPosition;
@@ -83,10 +83,9 @@ public class GameLevel {
     private int gameOverStateTicks;
     private long startTime;
 
-    public GameLevel(GameModel game, int number, LevelData data, WorldMap worldMap) {
+    public GameLevel(GameModel game, int number, WorldMap worldMap) {
         this.game = requireNonNull(game);
         this.number = requireValidLevelNumber(number);
-        this.data = requireNonNull(data);
         this.worldMap = requireNonNull(worldMap);
 
         blinking = new Pulse(10, Pulse.OFF);
@@ -152,6 +151,10 @@ public class GameLevel {
             }
         }
         return portals.toArray(new Portal[0]);
+    }
+
+    public void setData(LevelData data) {
+        this.data = requireNonNull(data);
     }
 
     public void makeReadyForPlaying() {

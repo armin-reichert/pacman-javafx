@@ -68,7 +68,7 @@ public abstract class GameModel implements ScoreManager {
     public abstract void startNewGame();
 
     public void buildNormalLevel(int levelNumber) {
-        newLevel(levelNumber, createLevelData(levelNumber));
+        createNewLevel(levelNumber);
         level.setDemoLevel(false);
         setScoreLevelNumber(levelNumber);
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(levelNumber));
@@ -78,7 +78,7 @@ public abstract class GameModel implements ScoreManager {
 
     public abstract void buildDemoLevel();
 
-    public abstract void newLevel(int levelNumber, LevelData data);
+    public abstract void createNewLevel(int levelNumber);
 
     public int lastLevelNumber() { return lastLevelNumber; }
     public abstract LevelData createLevelData(int levelNumber);

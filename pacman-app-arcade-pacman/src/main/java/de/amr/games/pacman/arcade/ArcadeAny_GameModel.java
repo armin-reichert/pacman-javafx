@@ -310,7 +310,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
 
     @Override
     public void buildDemoLevel() {
-        newLevel(1, createLevelData(1));
+        createNewLevel(1);
         level.setDemoLevel(true);
         assignDemoLevelBehavior(level.pac());
         demoLevelSteering.init();
