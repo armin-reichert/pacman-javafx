@@ -35,7 +35,7 @@ import static de.amr.games.pacman.ui.Globals.THE_UI_CONFIGS;
  */
 public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
-    private static final float SPEED = 1.1f;
+    private static final float SPEED = 1.11f;
 
     private static final int TOP_Y        = TS * 11 + 1;
     private static final int TITLE_X      = TS * 10;
