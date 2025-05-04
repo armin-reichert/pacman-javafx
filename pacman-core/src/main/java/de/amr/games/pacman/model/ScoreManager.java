@@ -10,7 +10,7 @@ public interface ScoreManager {
     void scorePoints(int points);
     void resetScore();
     void loadHighScore();
-    void resetHighScore();
+    void saveHighScore();
     void updateHighScore();
     void setScoreLevelNumber(int levelNumber);
     boolean isScoreVisible();

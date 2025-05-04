@@ -343,7 +343,7 @@ public abstract class GameModel implements ScoreManager {
     }
 
     @Override
-    public void resetHighScore() {
+    public void saveHighScore() {
         new Score().save(highScoreFile, "High Score, %s".formatted(LocalDateTime.now()));
     }
 
