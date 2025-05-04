@@ -183,8 +183,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
     }
 
     // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level
-    @Override
-    public byte computeBonusSymbol(int levelNumber) {
+    private byte computeBonusSymbol(int levelNumber) {
         return levelNumber > 12 ? 7 : BONUS_SYMBOLS_BY_LEVEL_NUMBER[levelNumber];
     }
 

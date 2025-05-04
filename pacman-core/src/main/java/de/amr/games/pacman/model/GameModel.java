@@ -98,18 +98,20 @@ public abstract class GameModel implements ScoreManager {
     public void doHuntingStep() {
         huntingTimer().update(level.number());
         level.blinking().tick();
-        gateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(level, THE_SIMULATION_STEP));
-        checkIfPacFindsFood();
         level.pac().update(this);
+        level.ghosts().forEach(ghost -> ghost.update(this));
         updatePacPower();
-        checkIfPacManGetsKilled();
-        if (!hasPacManBeenKilled()) {
-            level.ghosts().forEach(ghost -> ghost.update(this));
-            level.ghosts(FRIGHTENED).filter(ghost -> ghost.sameTile(level.pac())).forEach(this::onGhostKilled);
-            if (!haveGhostsBeenKilled()) {
-                level.bonus().ifPresent(this::updateBonus);
-            }
-        }
+
+        checkIfPacManKilled();
+        if (hasPacManBeenKilled()) return;
+
+        checkIfGhostsKilled();
+        if (haveGhostsBeenKilled()) return;
+
+        checkIfPacManFindsFood();
+        level.bonus().ifPresent(this::checkIfBonusEaten);
+
+        gateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(level, THE_SIMULATION_STEP));
     }
 
     public void onLevelCompleted() {
@@ -157,7 +159,7 @@ public abstract class GameModel implements ScoreManager {
         });
     }
 
-    private void checkIfPacManGetsKilled() {
+    private void checkIfPacManKilled() {
         level.ghosts(HUNTING_PAC)
             .filter(ghost -> level.pac().sameTile(ghost))
             .findFirst().ifPresent(potentialKiller -> {
@@ -199,12 +201,16 @@ public abstract class GameModel implements ScoreManager {
     public boolean haveGhostsBeenKilled() { return !THE_SIMULATION_STEP.killedGhosts().isEmpty(); }
     public abstract void onGhostKilled(Ghost ghost);
 
+    protected void checkIfGhostsKilled() {
+        level.ghosts(FRIGHTENED).filter(ghost -> ghost.sameTile(level.pac())).forEach(this::onGhostKilled);
+    }
+
     // Food handling
 
     protected abstract void onEnergizerEaten(Vector2i tile);
     protected abstract void onPelletEaten(Vector2i tile);
 
-    private void checkIfPacFindsFood() {
+    protected void checkIfPacManFindsFood() {
         Vector2i tile = level.pac().tile();
         if (level.hasFoodAt(tile)) {
             level.pac().endStarving();
@@ -228,11 +234,10 @@ public abstract class GameModel implements ScoreManager {
 
     // Bonus handling
 
-    protected abstract boolean isBonusReached();
+    public abstract boolean isBonusReached();
     public abstract void activateNextBonus();
-    protected abstract byte computeBonusSymbol(int levelNumber);
 
-    private void updateBonus(Bonus bonus) {
+    protected void checkIfBonusEaten(Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE && level.pac().sameTile(bonus.actor())) {
             bonus.setEaten(120); //TODO is 2 seconds correct?
             scorePoints(bonus.points());
@@ -243,6 +248,8 @@ public abstract class GameModel implements ScoreManager {
             bonus.update(this);
         }
     }
+
+    protected void handleExtraLifeScoreReached(int extraLifeScore) { addLives(1); }
 
     // Life management
 
@@ -306,13 +313,10 @@ public abstract class GameModel implements ScoreManager {
         }
     }
 
-    protected void handleExtraLifeScoreReached(int extraLifeScore) { addLives(1); }
-
     @Override
     public void loadHighScore() {
         highScore.read(highScoreFile);
-        Logger.info("Highscore loaded. File: '{}', {} points, level {}",
-            highScoreFile, highScore.points(), highScore.levelNumber());
+        Logger.info("High Score loaded from '{}': points={}, level={}", highScoreFile, highScore.points(), highScore.levelNumber());
     }
 
     @Override

@@ -195,8 +195,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
      * </table>
      * </p>
      */
-    @Override
-    public byte computeBonusSymbol(int levelNumber) {
+    private byte computeBonusSymbol(int levelNumber) {
         if (levelNumber <= 7) return (byte) (levelNumber - 1);
         int coin = randomInt(0, 320);
         if (coin <  50) return 0; // 5/32 probability

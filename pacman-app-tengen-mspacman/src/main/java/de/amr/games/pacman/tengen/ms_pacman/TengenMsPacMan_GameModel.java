@@ -566,8 +566,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         return level.eatenFoodCount() == 64 || level.eatenFoodCount() == 176;
     }
 
-    @Override
-    public byte computeBonusSymbol(int levelNumber) {
+    private byte computeBonusSymbol(int levelNumber) {
         //TODO: I have no idea yet how Tengen does this
         byte maxBonus = mapCategory == MapCategory.STRANGE ? BONUS_FLOWER : BONUS_BANANA;
         if (levelNumber - 1 <= maxBonus) {
