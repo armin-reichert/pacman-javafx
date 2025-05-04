@@ -18,8 +18,7 @@ import javafx.scene.input.KeyCode;
 import java.util.List;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.ui.Globals.THE_SOUND;
-import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.*;
 import static de.amr.games.pacman.uilib.input.Keyboard.*;
 
 /**
@@ -39,6 +38,9 @@ public interface GameScene extends GameEventListener, ActionProvider {
         // TODO: remove (this is only used by game state GameState.TESTING_CUT_SCENES)
         THE_UI.updateGameScene(true);
     }
+
+    @Override
+    default Keyboard keyboard() { return THE_KEYBOARD; }
 
     default void bindArcadeInsertCoinAction() {
         bind(GameAction.INSERT_COIN,  naked(KeyCode.DIGIT5), naked(KeyCode.NUMPAD5));

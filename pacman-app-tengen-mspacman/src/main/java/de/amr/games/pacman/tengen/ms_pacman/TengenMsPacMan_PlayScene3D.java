@@ -79,7 +79,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
                 THE_JOYPAD.key(JoypadButtonID.B));
             bindCheatActions();
         }
-        enableActionBindings(THE_KEYBOARD);
+        enableActionBindings();
     }
 
     @Override

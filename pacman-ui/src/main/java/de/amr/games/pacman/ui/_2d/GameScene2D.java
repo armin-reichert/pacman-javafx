@@ -43,14 +43,14 @@ public abstract class GameScene2D implements GameScene {
         arcadeFontScaledTS.bind(scalingPy.map(scaling -> THE_ASSETS.arcadeFontAtSize((float) scaling * TS)));
         doInit();
         bindActions();
-        enableActionBindings(THE_KEYBOARD);
+        enableActionBindings();
         THE_KEYBOARD.logCurrentBindings();
     }
 
     @Override
     public final void end() {
         doEnd();
-        disableActionBindings(THE_KEYBOARD);
+        disableActionBindings();
     }
 
     @Override

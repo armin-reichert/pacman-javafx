@@ -176,7 +176,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void init() {
         bindActions();
-        enableActionBindings(THE_KEYBOARD);
+        enableActionBindings();
         game().setScoreVisible(true);
         perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
         scores3D.setFont(THE_ASSETS.font("font.arcade", TS));
@@ -184,7 +184,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public final void end() {
-        disableActionBindings(THE_KEYBOARD);
+        disableActionBindings();
         perspectiveNamePy.unbind();
         level3D.stopAnimations();
         level3D = null;
@@ -200,7 +200,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         bind(GameAction.PERSPECTIVE_PREVIOUS, alt(KeyCode.LEFT));
         bind(GameAction.PERSPECTIVE_NEXT, alt(KeyCode.RIGHT));
         bind(GameAction.TOGGLE_DRAW_MODE, alt(KeyCode.W));
-        enableActionBindings(THE_KEYBOARD);
+        enableActionBindings();
     }
 
     @Override
@@ -220,7 +220,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 default -> {
                     if (!level.isDemoLevel()) {
                         bindPlayerActions();
-                        enableActionBindings(THE_KEYBOARD);
+                        enableActionBindings();
                         showReadyMessage(level);
                     }
                 }
@@ -235,7 +235,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         game().level().ifPresent(level -> {
             bindActions();
             bindPlayerActions();
-            enableActionBindings(THE_KEYBOARD);
+            enableActionBindings();
             if (level3D == null) {
                 replaceGameLevel3D(level);
             }

@@ -85,10 +85,10 @@ public class PacManGamesUI implements GameUI {
     private void handleViewChange(View oldView, View newView) {
         root.getChildren().set(0, newView.layoutRoot());
         if (oldView != null) {
-            oldView.disableActionBindings(THE_KEYBOARD);
+            oldView.disableActionBindings();
             THE_GAME_EVENT_MANAGER.removeEventListener(oldView);
         }
-        newView.enableActionBindings(THE_KEYBOARD);
+        newView.enableActionBindings();
         newView.layoutRoot().requestFocus();
         stage.titleProperty().bind(newView.title());
         THE_GAME_EVENT_MANAGER.addEventListener(newView);
@@ -120,7 +120,7 @@ public class PacManGamesUI implements GameUI {
             showEditorView();
         }
         else {
-            currentView().handleKeyboardInput(THE_KEYBOARD);
+            currentView().handleKeyboardInput();
         }
     }
 

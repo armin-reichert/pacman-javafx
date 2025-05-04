@@ -229,7 +229,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 THE_JOYPAD.key(JoypadButtonID.A), THE_JOYPAD.key(JoypadButtonID.B));
             bindCheatActions();
         }
-        enableActionBindings(THE_KEYBOARD);
+        enableActionBindings();
     }
 
     @Override

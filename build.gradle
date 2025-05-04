@@ -19,7 +19,7 @@ subprojects {
         }
     }
     javafx {
-        version = "21.0.2"
+        version = "21.0.7"
     }
     repositories {
         mavenCentral()

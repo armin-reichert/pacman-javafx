@@ -14,21 +14,22 @@ import java.util.Optional;
 
 public interface ActionProvider {
 
+    Keyboard keyboard();
     Map<KeyCodeCombination, Action> actionBindings();
 
     void bindActions();
 
-    default void enableActionBindings(Keyboard keyboard) {
+    default void enableActionBindings() {
         Logger.info("Enabled key bindings for {}", getClass().getSimpleName());
         for (KeyCodeCombination combination : actionBindings().keySet()) {
-            keyboard.bind(combination, this);
+            keyboard().bind(combination, this);
         }
     }
 
-    default void disableActionBindings(Keyboard keyboard) {
+    default void disableActionBindings() {
         Logger.info("Disable key bindings for {}", getClass().getSimpleName());
         for (KeyCodeCombination combination : actionBindings().keySet()) {
-            keyboard.unbind(combination, this);
+            keyboard().unbind(combination, this);
         }
     }
 
@@ -44,15 +45,15 @@ public interface ActionProvider {
         }
     }
 
-    default Optional<Action> firstTriggeredAction(Keyboard keyboard) {
+    default Optional<Action> firstTriggeredAction() {
         return actionBindings().keySet().stream()
-            .filter(keyboard::isMatching)
+            .filter(keyboard()::isMatching)
             .map(actionBindings()::get)
             .findFirst();
     }
 
-    default void runTriggeredAction(Keyboard keyboard) {
-        firstTriggeredAction(keyboard).ifPresent(action -> {
+    default void runTriggeredAction() {
+        firstTriggeredAction().ifPresent(action -> {
             if (action.isEnabled()) {
                 action.execute();
             } else {
@@ -61,8 +62,8 @@ public interface ActionProvider {
         });
     }
 
-    default void runTriggeredActionElse(Keyboard keyboard, Runnable defaultAction) {
-        firstTriggeredAction(keyboard).ifPresentOrElse(action -> {
+    default void runTriggeredActionElse(Runnable defaultAction) {
+        firstTriggeredAction().ifPresentOrElse(action -> {
             if (action.isEnabled()) {
                 action.execute();
             } else {
@@ -71,7 +72,7 @@ public interface ActionProvider {
         }, defaultAction);
     }
 
-    default void handleKeyboardInput(Keyboard keyboard) {
-        runTriggeredAction(keyboard);
+    default void handleKeyboardInput() {
+        runTriggeredAction();
     }
 }

@@ -9,7 +9,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.nes.JoypadButtonID;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.uilib.Action;
-import de.amr.games.pacman.uilib.input.Keyboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -61,12 +60,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     private long idleTicks;
     private int initialDelay;
 
-    private final Action selectNextJoypad = new Action() {
-        @Override
-        public void execute() {
-            THE_JOYPAD.selectNextKeyBinding(TengenMsPacMan_OptionsScene.this);
-        }
-    };
+    private final Action selectNextJoypad = () -> THE_JOYPAD.selectNextKeyBinding(TengenMsPacMan_OptionsScene.this);
 
     @Override
     public void bindActions() {
@@ -125,7 +119,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     @Override
-    public void handleKeyboardInput(Keyboard keyboard) {
+    public void handleKeyboardInput() {
 
         if (THE_JOYPAD.isButtonPressed(JoypadButtonID.DOWN)) {
             selectNextOption();
@@ -157,7 +151,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         }
 
         else {
-            super.handleKeyboardInput(keyboard);
+            super.handleKeyboardInput();
         }
     }
 

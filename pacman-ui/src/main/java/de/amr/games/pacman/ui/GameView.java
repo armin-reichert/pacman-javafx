@@ -11,9 +11,9 @@ import de.amr.games.pacman.ui._2d.*;
 import de.amr.games.pacman.ui.dashboard.Dashboard;
 import de.amr.games.pacman.ui.dashboard.InfoBox;
 import de.amr.games.pacman.uilib.Action;
+import de.amr.games.pacman.uilib.ActionProvider;
 import de.amr.games.pacman.uilib.CameraControlledView;
 import de.amr.games.pacman.uilib.Ufx;
-import de.amr.games.pacman.uilib.input.Keyboard;
 import de.amr.games.pacman.uilib.widgets.FlashMessageView;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
@@ -157,9 +157,8 @@ public class GameView implements View {
     }
 
     @Override
-    public void handleKeyboardInput(Keyboard keyboard) {
-        runTriggeredActionElse(keyboard,
-            () -> currentGameScene().ifPresent(gameScene -> gameScene.handleKeyboardInput(keyboard)));
+    public void handleKeyboardInput() {
+        runTriggeredActionElse(() -> currentGameScene().ifPresent(ActionProvider::handleKeyboardInput));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
