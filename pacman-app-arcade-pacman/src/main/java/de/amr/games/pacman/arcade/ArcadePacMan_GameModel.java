@@ -88,7 +88,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
         gateKeeper.setOnGhostReleasedAction(ghost -> {
             if (ghost.id() == ORANGE_GHOST_ID && cruiseElroy < 0) {
                 Logger.trace("Re-enable cruise elroy mode because {} exits house:", ghost.name());
-                setCruiseElroyEnabled(true);
+                setBlinkyCruiseElroyEnabled(true);
             }
         });
 

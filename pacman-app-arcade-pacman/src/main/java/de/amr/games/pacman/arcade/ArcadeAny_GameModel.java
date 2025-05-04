@@ -195,7 +195,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         return level != null ? 60 * level.data().pacPowerSeconds() : 0;
     }
 
-    private void checkCruiseElroy() {
+    private void updateBlinkyCruiseElroy() {
         if (level.uneatenFoodCount() == level.data().elroy1DotsLeft()) {
             cruiseElroy = 1;
         } else if (level.uneatenFoodCount() == level.data().elroy2DotsLeft()) {
@@ -203,7 +203,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         }
     }
 
-    protected void setCruiseElroyEnabled(boolean enabled) {
+    protected void setBlinkyCruiseElroyEnabled(boolean enabled) {
         if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
             cruiseElroy = (byte) -cruiseElroy;
         }
@@ -240,7 +240,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         level.pac().powerTimer().stop();
         level.pac().powerTimer().reset(0);
         gateKeeper.resetCounterAndSetEnabled(true);
-        setCruiseElroyEnabled(false);
+        setBlinkyCruiseElroyEnabled(false);
         level.pac().die();
     }
 
@@ -266,7 +266,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
     protected void onPelletEaten(Vector2i tile) {
         scorePoints(PELLET_VALUE);
         level.pac().setRestingTicks(1);
-        checkCruiseElroy();
+        updateBlinkyCruiseElroy();
     }
 
     @Override
@@ -275,7 +275,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
         level.pac().setRestingTicks(3);
         Logger.info("Resting 3 ticks");
-        checkCruiseElroy();
+        updateBlinkyCruiseElroy();
         level.victims().clear();
         long powerTicks = pacPowerTicks(level);
         if (powerTicks > 0) {
