@@ -333,14 +333,14 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         levelCounter().update(level);
         if (level.isDemoLevel()) {
             level.showMessage(GameLevel.Message.GAME_OVER);
-            setScoreEnabled(false);
-            setHighScoreEnabled(false);
+            score().setEnabled(false);
+            highScore().setEnabled(false);
             Logger.info("Demo level {} started", level.number());
 
         } else {
             level.showMessage(GameLevel.Message.READY);
-            setScoreEnabled(true);
-            setHighScoreEnabled(true);
+            score().setEnabled(true);
+            highScore().setEnabled(true);
             Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!

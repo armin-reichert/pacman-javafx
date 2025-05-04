@@ -4,10 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import org.tinylog.Logger;
 
 import java.io.*;
@@ -20,6 +17,7 @@ import java.util.Properties;
  */
 public class Score {
 
+    private final BooleanProperty enabledPy = new SimpleBooleanProperty(true);
     private final IntegerProperty pointsPy = new SimpleIntegerProperty();
     private final IntegerProperty levelNumberPy = new SimpleIntegerProperty();
     private final ObjectProperty<LocalDate> datePy = new SimpleObjectProperty<>();
@@ -33,6 +31,12 @@ public class Score {
         setLevelNumber(1);
         setDate(LocalDate.now());
     }
+
+    public BooleanProperty enabledProperty() { return enabledPy; }
+
+    public boolean isEnabled() { return enabledPy.get(); }
+
+    public void setEnabled(boolean enabled) { enabledPy.set(enabled); }
 
     public IntegerProperty pointsProperty() { return pointsPy; }
 

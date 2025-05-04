@@ -23,10 +23,10 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
-import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.Globals.THE_GAME_EVENT_MANAGER;
+import static de.amr.games.pacman.Globals.THE_SIMULATION_STEP;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
-import static java.util.Objects.requireNonNull;
 
 /**
  * Common base class of all Pac-Man game models.
@@ -287,8 +287,6 @@ public abstract class GameModel implements ScoreManager {
 
     private final Score score = new Score();
     private final Score highScore = new Score();
-    private final BooleanProperty scoreEnabledPy = new SimpleBooleanProperty(true);
-    private final BooleanProperty highScoreEnabledPy= new SimpleBooleanProperty(true);
     private final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(false);
     protected File highScoreFile;
     protected List<Integer> extraLifeScores = List.of();
@@ -297,11 +295,11 @@ public abstract class GameModel implements ScoreManager {
 
     @Override
     public void scorePoints(int points) {
-        if (!isScoreEnabled()) {
+        if (!score.isEnabled()) {
             return;
         }
         int oldScore = score.points(), newScore = oldScore + points;
-        if (isHighScoreEnabled() && newScore > highScore.points()) {
+        if (highScore().isEnabled() && newScore > highScore.points()) {
             highScore.setPoints(newScore);
             highScore.setLevelNumber(score.levelNumber());
             highScore.setDate(LocalDate.now());
@@ -361,22 +359,6 @@ public abstract class GameModel implements ScoreManager {
 
     @Override
     public boolean isScoreVisible() { return scoreVisibleProperty().get(); }
-
-    @Override
-    public boolean isScoreEnabled() {
-        return scoreEnabledPy.get();
-    }
-
-    @Override
-    public void setScoreEnabled(boolean enabled) {
-        scoreEnabledPy.set(enabled);
-    }
-
-    @Override
-    public boolean isHighScoreEnabled() { return highScoreEnabledPy.get(); }
-
-    @Override
-    public void setHighScoreEnabled(boolean enabled) { highScoreEnabledPy.set(enabled); }
 
     @Override
     public void setScoreLevelNumber(int levelNumber) {

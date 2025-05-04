@@ -86,7 +86,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     protected void updateScores() {
         Score score = game().score(), highScore = game().highScore();
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());
-        if (game().isScoreEnabled()) {
+        if (game().score().isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
         }
         else { // score is disabled, show text "GAME OVER" instead, use maze-specific color
