@@ -44,7 +44,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     protected void doInit() {
         t = -1;
 
-        game().scoreVisibleProperty().set(false);
+        game().setScoreVisible(false);
 
         mrPacMan = new Pac();
         msPacMan = new Pac();

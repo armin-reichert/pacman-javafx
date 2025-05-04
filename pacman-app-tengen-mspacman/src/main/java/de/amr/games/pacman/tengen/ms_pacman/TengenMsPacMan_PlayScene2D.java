@@ -240,7 +240,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void doInit() {
         messageMovement = new MessageMovement();
-        game().scoreVisibleProperty().set(true);
+        game().setScoreVisible(true);
         setGameRenderer(THE_UI_CONFIGS.current().createRenderer(canvas));
         movingCamera.focusTopOfScene();
     }

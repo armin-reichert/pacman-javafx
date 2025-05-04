@@ -71,7 +71,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        game().scoreVisibleProperty().set(false);
+        game().setScoreVisible(false);
         sceneController.restart(SceneState.WAITING_FOR_START);
     }
 

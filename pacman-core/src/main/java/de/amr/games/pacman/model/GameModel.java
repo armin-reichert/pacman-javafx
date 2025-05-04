@@ -287,11 +287,18 @@ public abstract class GameModel implements ScoreManager {
 
     private final Score score = new Score();
     private final Score highScore = new Score();
-    private final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(false);
     protected File highScoreFile;
     protected List<Integer> extraLifeScores = List.of();
 
-    public BooleanProperty scoreVisibleProperty() { return scoreVisiblePy; }
+    private boolean scoreVisible;
+
+    @Override
+    public boolean isScoreVisible() { return scoreVisible; }
+
+    @Override
+    public void setScoreVisible(boolean visible) {
+        scoreVisible = visible;
+    }
 
     @Override
     public void scorePoints(int points) {
@@ -356,9 +363,6 @@ public abstract class GameModel implements ScoreManager {
     public Score highScore() {
         return highScore;
     }
-
-    @Override
-    public boolean isScoreVisible() { return scoreVisibleProperty().get(); }
 
     @Override
     public void setScoreLevelNumber(int levelNumber) {

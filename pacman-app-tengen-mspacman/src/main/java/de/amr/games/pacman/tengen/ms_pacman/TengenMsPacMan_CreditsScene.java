@@ -22,7 +22,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     public void bindActions() {
-        game().scoreVisibleProperty().set(false);
+        game().setScoreVisible(false);
         bind(START_GAME, THE_JOYPAD.key(JoypadButtonID.START));
     }
 

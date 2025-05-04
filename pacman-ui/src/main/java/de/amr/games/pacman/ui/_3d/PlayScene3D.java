@@ -177,7 +177,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     public void init() {
         bindActions();
         enableActionBindings(THE_KEYBOARD);
-        game().scoreVisibleProperty().set(true);
+        game().setScoreVisible(true);
         perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
         scores3D.setFont(THE_ASSETS.font("font.arcade", TS));
     }

@@ -14,4 +14,5 @@ public interface ScoreManager {
     void updateHighScore();
     void setScoreLevelNumber(int levelNumber);
     boolean isScoreVisible();
+    void setScoreVisible(boolean visible);
 }

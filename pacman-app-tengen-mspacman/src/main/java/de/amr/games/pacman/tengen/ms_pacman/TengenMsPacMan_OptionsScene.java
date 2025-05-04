@@ -78,7 +78,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        game().scoreVisibleProperty().set(false);
+        game().setScoreVisible(false);
         selectedOption = OPTION_PAC_BOOSTER;
         tengenGame = THE_GAME_CONTROLLER.game();
         tengenGame.setCanStartNewGame(true);

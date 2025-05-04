@@ -32,7 +32,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void doInit() {
-        game().scoreVisibleProperty().set(true);
+        game().setScoreVisible(true);
         pac = new Pac();
         blinky = new Ghost(RED_GHOST_ID, "Blinky");
 

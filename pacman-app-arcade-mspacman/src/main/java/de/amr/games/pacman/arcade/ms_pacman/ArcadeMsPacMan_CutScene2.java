@@ -41,7 +41,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void doInit() {
-        game().scoreVisibleProperty().set(true);
+        game().setScoreVisible(true);
 
         pacMan = new Pac();
         msPacMan = new Pac();
