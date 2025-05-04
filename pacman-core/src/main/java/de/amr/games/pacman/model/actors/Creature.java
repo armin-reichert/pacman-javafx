@@ -22,7 +22,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Armin Reichert
  */
-public abstract class Creature extends Actor2D {
+public abstract class Creature extends Actor {
 
     /** Order in which directions are selected when navigation decision is met. */
     Direction[] DIRECTION_PRIORITY = {UP, LEFT, DOWN, RIGHT};

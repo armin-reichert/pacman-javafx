@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.lib.RectArea;
-import de.amr.games.pacman.model.actors.Actor2D;
+import de.amr.games.pacman.model.actors.Actor;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui._2d.SpriteAnimationSet;
 import de.amr.games.pacman.uilib.animation.SpriteAnimation;
@@ -96,7 +96,7 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet {
     }
 
     @Override
-    protected RectArea[] selectedSprites(SpriteSheet spriteSheet, Actor2D actor) {
+    protected RectArea[] selectedSprites(SpriteSheet spriteSheet, Actor actor) {
         TengenMsPacMan_SpriteSheet gss = (TengenMsPacMan_SpriteSheet) spriteSheet;
         if (actor instanceof Pac msPacMan) {
             if (isCurrentAnimationID(ANIM_PAC_MUNCHING)) {

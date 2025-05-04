@@ -58,7 +58,7 @@ public class Pac extends Creature implements AnimatedActor2D {
     }
 
     @Override
-    public Actor2D actor() {
+    public Actor actor() {
         return this;
     }
 

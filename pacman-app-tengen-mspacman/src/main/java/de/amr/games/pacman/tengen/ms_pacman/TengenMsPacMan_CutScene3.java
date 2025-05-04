@@ -7,7 +7,7 @@ package de.amr.games.pacman.tengen.ms_pacman;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.nes.JoypadButtonID;
-import de.amr.games.pacman.model.actors.Actor2D;
+import de.amr.games.pacman.model.actors.Actor;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.uilib.animation.SpriteAnimation;
@@ -43,8 +43,8 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     private MediaPlayer music;
     private Pac mrPacMan;
     private Pac msPacMan;
-    private Actor2D stork;
-    private Actor2D bagWithJunior;
+    private Actor stork;
+    private Actor bagWithJunior;
 
     private boolean bagReleased;
     private boolean bagOpen;
@@ -68,8 +68,8 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
         mrPacMan = new Pac();
         msPacMan = new Pac();
-        stork = new Actor2D();
-        bagWithJunior = new Actor2D();
+        stork = new Actor();
+        bagWithJunior = new Actor();
         bagWithJunior.hide();
 
         spriteSheet = (TengenMsPacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();

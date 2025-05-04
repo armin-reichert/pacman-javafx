@@ -401,7 +401,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         });
     }
 
-    public void drawStork(SpriteAnimation storkAnimation, Actor2D stork, boolean hideBag) {
+    public void drawStork(SpriteAnimation storkAnimation, Actor stork, boolean hideBag) {
         if (!stork.isVisible()) {
             return;
         }

@@ -6,7 +6,7 @@ package de.amr.games.pacman.arcade;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
-import de.amr.games.pacman.model.actors.Actor2D;
+import de.amr.games.pacman.model.actors.Actor;
 import de.amr.games.pacman.model.actors.ActorAnimations;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
@@ -41,7 +41,7 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationSet {
     }
 
     @Override
-    protected RectArea[] selectedSprites(SpriteSheet spriteSheet, Actor2D actor) {
+    protected RectArea[] selectedSprites(SpriteSheet spriteSheet, Actor actor) {
         GameSpriteSheet gss = (GameSpriteSheet) spriteSheet;
         if (actor instanceof Pac pac) {
             if (isCurrentAnimationID(ActorAnimations.ANIM_PAC_MUNCHING)) {

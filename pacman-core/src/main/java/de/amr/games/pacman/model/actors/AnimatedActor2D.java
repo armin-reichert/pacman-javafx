@@ -11,7 +11,7 @@ import java.util.Optional;
  */
 public interface AnimatedActor2D {
 
-    Actor2D actor();
+    Actor actor();
 
     Optional<ActorAnimations> animations();
 

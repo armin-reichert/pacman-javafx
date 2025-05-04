@@ -11,14 +11,14 @@ import static de.amr.games.pacman.Globals.*;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Base class for all 2D game actors, e.g. creatures and bonus entities.
+ * Base class for all game actors, e.g. creatures and bonus entities.
  * <p>
  * Each actor has a position velocity, acceleration (all sub-pixel precision) and a visibility.
  * </p>
  *
  * @author Armin Reichert
  */
-public class Actor2D {
+public class Actor {
 
     protected boolean visible;
     protected float posX, posY;
@@ -155,8 +155,8 @@ public class Actor2D {
      * @param other some actor
      * @return <code>true</code> if both entities occupy same tile
      */
-    public boolean sameTile(Actor2D other) {
-        requireNonNull(other, "Entity to check for same tile must not be null");
+    public boolean sameTile(Actor other) {
+        requireNonNull(other, "Actor to check for same tile must not be null");
         return tile().equals(other.tile());
     }
 }

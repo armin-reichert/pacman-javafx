@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._2d;
 
 import de.amr.games.pacman.lib.RectArea;
-import de.amr.games.pacman.model.actors.Actor2D;
+import de.amr.games.pacman.model.actors.Actor;
 import de.amr.games.pacman.model.actors.ActorAnimations;
 import de.amr.games.pacman.model.actors.AnimatedActor2D;
 import de.amr.games.pacman.uilib.animation.SpriteAnimation;
@@ -50,7 +50,7 @@ public class SpriteAnimationSet implements ActorAnimations {
         return currentAnimation.currentSprite();
     }
 
-    protected RectArea[] selectedSprites(SpriteSheet spriteSheet, Actor2D actor) {
+    protected RectArea[] selectedSprites(SpriteSheet spriteSheet, Actor actor) {
         return null;
     }
 

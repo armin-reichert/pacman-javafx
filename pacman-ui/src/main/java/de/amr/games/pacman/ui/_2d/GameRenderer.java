@@ -9,7 +9,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.*;
-import de.amr.games.pacman.model.actors.Actor2D;
+import de.amr.games.pacman.model.actors.Actor;
 import de.amr.games.pacman.model.actors.AnimatedActor2D;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Creature;
@@ -115,7 +115,7 @@ public interface GameRenderer {
      * @param actor an entity e.g. Pac-Man or a ghost
      * @param sprite sprite sheet region (can be null)
      */
-    default void drawActorSprite(Actor2D actor, RectArea sprite) {
+    default void drawActorSprite(Actor actor, RectArea sprite) {
         requireNonNull(actor);
         if (actor.isVisible() && sprite != null) {
             drawSpriteScaledCenteredOverTile(sprite, actor.posX(), actor.posY());

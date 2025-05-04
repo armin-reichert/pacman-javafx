@@ -7,7 +7,7 @@ package de.amr.games.pacman.arcade.ms_pacman;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.actors.Actor2D;
+import de.amr.games.pacman.model.actors.Actor;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.uilib.animation.SpriteAnimation;
@@ -37,8 +37,8 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     private Pac pacMan;
     private Pac msPacMan;
-    private Actor2D stork;
-    private Actor2D bag;
+    private Actor stork;
+    private Actor bag;
     private boolean bagOpen;
     private int numBagBounces;
 
@@ -52,8 +52,8 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
         pacMan = new Pac();
         msPacMan = new Pac();
-        stork = new Actor2D();
-        bag = new Actor2D();
+        stork = new Actor();
+        bag = new Actor();
 
         ArcadeMsPacMan_SpriteSheet  spriteSheet = THE_UI_CONFIGS.current().spriteSheet();
         msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));

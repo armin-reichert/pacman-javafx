@@ -17,7 +17,7 @@ import static de.amr.games.pacman.Globals.THE_GAME_EVENT_MANAGER;
  *
  * @author Armin Reichert
  */
-public class StaticBonus extends Actor2D implements Bonus {
+public class StaticBonus extends Actor implements Bonus {
 
     private final byte symbol;
     private final int points;

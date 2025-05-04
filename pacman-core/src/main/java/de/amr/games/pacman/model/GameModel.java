@@ -26,6 +26,7 @@ import java.util.Optional;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Common base class of all Pac-Man game models.
@@ -147,6 +148,16 @@ public abstract class GameModel implements ScoreManager {
 
     // Actors
 
+    /**
+     * Checks actor collision based on same tile position.
+     * @param either an actor
+     * @param other another actor
+     * @return if both actors have the same tile position
+     */
+    public boolean actorsCollide(Actor either, Actor other) {
+        return either.sameTile(other);
+    }
+
     public abstract ActorSpeedControl speedControl();
     public abstract long pacPowerTicks(GameLevel level);
     public abstract long pacPowerFadingTicks(GameLevel level);
@@ -162,7 +173,7 @@ public abstract class GameModel implements ScoreManager {
 
     private void checkIfPacManKilled() {
         level.ghosts(HUNTING_PAC)
-            .filter(ghost -> level.pac().sameTile(ghost))
+            .filter(ghost -> actorsCollide(ghost, level.pac()))
             .findFirst().ifPresent(potentialKiller -> {
                 boolean killed;
                 if (level.isDemoLevel()) {
@@ -203,7 +214,7 @@ public abstract class GameModel implements ScoreManager {
     public abstract void onGhostKilled(Ghost ghost);
 
     protected void checkIfGhostsKilled() {
-        level.ghosts(FRIGHTENED).filter(ghost -> ghost.sameTile(level.pac())).forEach(this::onGhostKilled);
+        level.ghosts(FRIGHTENED).filter(ghost -> actorsCollide(ghost, level.pac())).forEach(this::onGhostKilled);
     }
 
     // Food handling
@@ -239,7 +250,8 @@ public abstract class GameModel implements ScoreManager {
     public abstract void activateNextBonus();
 
     protected void checkIfBonusEaten(Bonus bonus) {
-        if (bonus.state() == Bonus.STATE_EDIBLE && level.pac().sameTile(bonus.actor())) {
+        if (bonus.state() != Bonus.STATE_EDIBLE) return;
+        if (actorsCollide(level.pac(), bonus.actor())) {
             bonus.setEaten(120); //TODO is 2 seconds correct?
             scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);

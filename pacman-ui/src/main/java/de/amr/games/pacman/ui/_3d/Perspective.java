@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui._3d;
 
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.actors.Actor2D;
+import de.amr.games.pacman.model.actors.Actor;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
 import javafx.scene.transform.Rotate;
@@ -20,7 +20,7 @@ import static de.amr.games.pacman.Globals.*;
 public interface Perspective {
 
     void init(SubScene scene, GameLevel level);
-    void update(SubScene scene, GameLevel level, Actor2D spottedActor);
+    void update(SubScene scene, GameLevel level, Actor spottedActor);
 
     class Drone implements Perspective {
         static final int HEIGHT_OVER_GROUND = 200;
@@ -39,7 +39,7 @@ public interface Perspective {
         }
 
         @Override
-        public void update(SubScene scene, GameLevel level, Actor2D focussedActor) {
+        public void update(SubScene scene, GameLevel level, Actor focussedActor) {
             PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
             var position = focussedActor.position();
             double speed = 0.02;
@@ -64,7 +64,7 @@ public interface Perspective {
         }
 
         @Override
-        public void update(SubScene scene, GameLevel level, Actor2D spottedActor) {
+        public void update(SubScene scene, GameLevel level, Actor spottedActor) {
             PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
             int sizeX = level.worldMap().numCols() * TS;
             int sizeY = level.worldMap().numRows() * TS;
@@ -88,7 +88,7 @@ public interface Perspective {
         }
 
         @Override
-        public void update(SubScene scene, GameLevel level, Actor2D spottedActor) {
+        public void update(SubScene scene, GameLevel level, Actor spottedActor) {
             PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
             double speedX = 0.03;
             double speedY = 0.06;
@@ -113,7 +113,7 @@ public interface Perspective {
         }
 
         @Override
-        public void update(SubScene scene, GameLevel level, Actor2D spottedActor) {
+        public void update(SubScene scene, GameLevel level, Actor spottedActor) {
             PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
             double speedX = 0.04;
             double speedY = 0.04;
