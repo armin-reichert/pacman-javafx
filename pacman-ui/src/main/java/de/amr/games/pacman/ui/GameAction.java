@@ -233,6 +233,7 @@ public enum GameAction implements Action {
         public void execute() {
             THE_UI.currentGameScene().ifPresent(GameScene::end);
             THE_GAME_CONTROLLER.game().resetEverything();
+            if (!THE_COIN_MECHANISM.isEmpty())  THE_COIN_MECHANISM.consumeCoin();
             THE_UI.showStartView();
         }
     },

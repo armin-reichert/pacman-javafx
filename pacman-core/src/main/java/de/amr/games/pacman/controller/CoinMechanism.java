@@ -31,8 +31,6 @@ public class CoinMechanism {
     public void consumeCoin() {
         if (numCoins > 0) {
             --numCoins;
-        } else {
-            Logger.error("Cannot consume coin, no coins in store");
         }
     }
 }
