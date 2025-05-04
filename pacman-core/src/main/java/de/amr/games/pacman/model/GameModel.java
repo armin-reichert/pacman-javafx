@@ -66,8 +66,8 @@ public abstract class GameModel implements ScoreManager {
     public abstract boolean canStartNewGame();
     public abstract void startNewGame();
 
-    public final void createLevel(int levelNumber, LevelData data) {
-        buildLevel(levelNumber, data);
+    public void buildNormalLevel(int levelNumber) {
+        newLevel(levelNumber, createLevelData(levelNumber));
         level.setDemoLevel(false);
         setScoreLevelNumber(levelNumber);
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(levelNumber));
@@ -75,10 +75,12 @@ public abstract class GameModel implements ScoreManager {
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 
+    public abstract void buildDemoLevel();
+
+    public abstract void newLevel(int levelNumber, LevelData data);
+
     public int lastLevelNumber() { return lastLevelNumber; }
     public abstract LevelData createLevelData(int levelNumber);
-    public abstract void buildLevel(int levelNumber, LevelData data);
-    public abstract void buildDemoLevel();
     public abstract void assignDemoLevelBehavior(Pac pac);
     protected abstract boolean isPacManSafeInDemoLevel();
 
@@ -129,7 +131,7 @@ public abstract class GameModel implements ScoreManager {
 
     public void startNextLevel() {
         if (level.number() < lastLevelNumber) {
-            createLevel(level.number() + 1, createLevelData(level.number() + 1));
+            buildNormalLevel(level.number() + 1);
             startLevel();
             level.showPacAndGhosts();
         } else {

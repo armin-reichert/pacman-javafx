@@ -35,7 +35,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         int levelNumber = levelNumbers[THE_RNG.nextInt(levelNumbers.length)];
         MapSelectionMode mapSelectionMode = mapSelector.mapSelectionMode();
         mapSelector.setMapSelectionMode(MapSelectionMode.NO_CUSTOM_MAPS);
-        buildLevel(levelNumber, createLevelData(1));
+        newLevel(levelNumber, createLevelData(1));
         mapSelector.setMapSelectionMode(mapSelectionMode);
         level.setDemoLevel(true);
         assignDemoLevelBehavior(level.pac());

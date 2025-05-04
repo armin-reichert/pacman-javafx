@@ -105,7 +105,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
     }
 
     @Override
-    public void buildLevel(int levelNumber, LevelData data) {
+    public void newLevel(int levelNumber, LevelData data) {
         WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
         level = new GameLevel(this, levelNumber, data, worldMap);
         level.setCutSceneNumber(switch (levelNumber) {

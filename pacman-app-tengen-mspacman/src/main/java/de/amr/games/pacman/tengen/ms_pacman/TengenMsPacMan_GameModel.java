@@ -440,7 +440,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public void startNewGame() {
         prepareForNewGame();
         levelCounter.setStartLevel(startLevelNumber);
-        createLevel(startLevelNumber, createLevelData(startLevelNumber));
+        buildNormalLevel(startLevelNumber);
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.GAME_STARTED);
     }
 
@@ -469,7 +469,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public void buildLevel(int levelNumber, LevelData data) {
+    public void newLevel(int levelNumber, LevelData data) {
         WorldMap worldMap = mapSelector.selectWorldMap(mapCategory, levelNumber);
         level = new GameLevel(this, levelNumber, data, worldMap);
         level.setCutSceneNumber(switch (levelNumber) {
@@ -537,7 +537,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public void buildDemoLevel() {
-        buildLevel(1, createLevelData(1));
+        newLevel(1, createLevelData(1));
         level.setDemoLevel(true);
         level.setGameOverStateTicks(120);
         assignDemoLevelBehavior(level.pac());
