@@ -64,13 +64,13 @@ public interface Ufx {
     }
 
     /**
-     * Launches the JavaFX application specified by the given class. In case an exception is thrown,
+     * Starts the JavaFX application specified by the given class. In case an exception is thrown,
      * the stacktrace is written to a log file ("oh_shit.txt").
      *
      * @param appClass application class
      * @param args application arguments
      */
-    static void startApp(Class<? extends Application> appClass, String... args) {
+    static void startApplication(Class<? extends Application> appClass, String... args) {
         try {
             Logger.info("Java version: {}", Runtime.version());
             Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
