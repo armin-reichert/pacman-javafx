@@ -99,14 +99,9 @@ public class InfoBoxActorInfo extends InfoBox {
 
     protected String ghostNameAndState(GameModel game, Ghost ghost) {
         String name = ghost.name();
-        //TODO make this work again
-        /*
-        if (game instanceof PacManGame pacManGame) {
-            if (ghost.id() == GameModel.RED_GHOST && pacManGame.cruiseElroy() > 0) {
-                name = "Elroy" + pacManGame.cruiseElroy();
-            }
+        if (ghost.cruiseElroy() > 0) {
+            name = "%s (Elroy %d)".formatted(name, ghost.cruiseElroy());
         }
-        */
         return String.format("%s (%s)", name, ghostState(game, ghost));
     }
 

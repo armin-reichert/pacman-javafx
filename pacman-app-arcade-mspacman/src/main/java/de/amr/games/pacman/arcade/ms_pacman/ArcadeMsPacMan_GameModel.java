@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.ms_pacman;
 
-import de.amr.games.pacman.arcade.ArcadePacMan_LevelCounter;
 import de.amr.games.pacman.arcade.ArcadeAny_GameModel;
+import de.amr.games.pacman.arcade.ArcadePacMan_LevelCounter;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.Waypoint;
@@ -106,10 +106,10 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
         });
 
         gateKeeper = new GateKeeper();
-        gateKeeper.setOnGhostReleasedAction(ghost -> {
-            if (ghost.id() == ORANGE_GHOST_ID && cruiseElroy < 0) {
-                Logger.trace("Re-enable cruise elroy mode because {} exits house:", ghost.name());
-                setBlinkyCruiseElroyEnabled(true);
+        gateKeeper.setOnGhostReleasedAction(prisoner -> {
+            if (prisoner.id() == ORANGE_GHOST_ID && level.ghost(RED_GHOST_ID).cruiseElroy() < 0) {
+                Logger.trace("Re-enable Blinky Cruise Elroy mode because {} exits house:", prisoner.name());
+                level.ghost(RED_GHOST_ID).enableCruiseElroyMode(true);
             }
         });
 
@@ -126,7 +126,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
         if (huntingTimer.phaseIndex() == 0 && (ghost.id() == RED_GHOST_ID || ghost.id() == PINK_GHOST_ID)) {
             ghost.roam(level.speedControl().ghostAttackSpeed(level, ghost));
         } else {
-            boolean chase = huntingTimer.phase() == HuntingPhase.CHASING || ghost.id() == RED_GHOST_ID && cruiseElroy > 0;
+            boolean chase = huntingTimer.phase() == HuntingPhase.CHASING || ghost.cruiseElroy() > 0;
             Vector2i targetTile = chase
                 ? chasingTargetTile(level, ghost.id())
                 : level.ghostScatterTile(ghost.id());
@@ -153,8 +153,6 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
         pac.setGameLevel(level);
         pac.reset();
         pac.setAutopilot(autopilot);
-
-        cruiseElroy = 0;
 
         var ghosts = List.of(
             new Ghost(RED_GHOST_ID, "Blinky"),

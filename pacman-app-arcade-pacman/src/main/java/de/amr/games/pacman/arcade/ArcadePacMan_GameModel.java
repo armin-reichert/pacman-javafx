@@ -114,10 +114,10 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
         });
 
         gateKeeper = new GateKeeper();
-        gateKeeper.setOnGhostReleasedAction(ghost -> {
-            if (ghost.id() == ORANGE_GHOST_ID && cruiseElroy < 0) {
-                Logger.trace("Re-enable cruise elroy mode because {} exits house:", ghost.name());
-                setBlinkyCruiseElroyEnabled(true);
+        gateKeeper.setOnGhostReleasedAction(prisoner -> {
+            if (prisoner.id() == ORANGE_GHOST_ID && level.ghost(RED_GHOST_ID).cruiseElroy() < 0) {
+                Logger.trace("Re-enable Blinky Cruise Elroy mode because {} exits house:", prisoner.name());
+                level.ghost(RED_GHOST_ID).enableCruiseElroyMode(true);
             }
         });
 
@@ -140,7 +140,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
     }
 
     protected void ghostHuntingBehaviour(Ghost ghost) {
-        boolean chase = huntingTimer.phase() == HuntingPhase.CHASING || ghost.id() == RED_GHOST_ID && cruiseElroy > 0;
+        boolean chase = huntingTimer.phase() == HuntingPhase.CHASING || ghost.cruiseElroy() > 0;
         Vector2i targetTile = chase
             ? chasingTargetTile(level, ghost.id())
             : level.ghostScatterTile(ghost.id());
@@ -166,8 +166,6 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
         pac.setGameLevel(level);
         pac.reset();
         pac.setAutopilot(autopilot);
-
-        cruiseElroy = 0;
 
         var ghosts = List.of(
             new Ghost(RED_GHOST_ID, "Blinky"),

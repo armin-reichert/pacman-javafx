@@ -36,6 +36,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
     private ActorAnimations animations;
     private Consumer<Ghost> huntingBehaviour = ghost -> {};
     private List<Vector2i> specialTerrainTiles = List.of();
+    private byte cruiseElroy;
 
     /**
      * Constructs a ghost without associated world like the ones in the cut scenes.
@@ -102,6 +103,28 @@ public class Ghost extends Creature implements AnimatedActor2D {
 
     public List<Vector2i> specialTerrainTiles() {
         return specialTerrainTiles;
+    }
+
+    public byte cruiseElroy() {
+        return cruiseElroy;
+    }
+
+    public void setCruiseElroy(int cruiseElroy) {
+        this.cruiseElroy = (byte) cruiseElroy;
+    }
+
+    public void updateCruiseElroyMode() {
+        if (level.uneatenFoodCount() == level.data().elroy1DotsLeft()) {
+            setCruiseElroy(1);
+        } else if (level.uneatenFoodCount() == level.data().elroy2DotsLeft()) {
+            setCruiseElroy(2);
+        }
+    }
+
+    public void enableCruiseElroyMode(boolean enabled) {
+        if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
+            setCruiseElroy(-level.ghost(RED_GHOST_ID).cruiseElroy());
+        }
     }
 
     /**

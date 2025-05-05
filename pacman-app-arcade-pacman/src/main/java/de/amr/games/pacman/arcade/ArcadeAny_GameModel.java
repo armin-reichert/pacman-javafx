@@ -37,7 +37,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
     protected Steering autopilot;
     protected Steering demoLevelSteering;
 
-    public class ArcadeActorSpeedControl implements ActorSpeedControl {
+    public static class ArcadeActorSpeedControl implements ActorSpeedControl {
         public void applyToActorsInLevel(GameLevel level) {
             level.pac().setBaseSpeed(1.25f);
             level.ghosts().forEach(ghost -> ghost.setBaseSpeed(1.25f));
@@ -62,10 +62,10 @@ public abstract class ArcadeAny_GameModel extends GameModel {
             if (level.isTunnel(ghost.tile())) {
                 return level.data().ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed();
             }
-            if (ghost.id() == RED_GHOST_ID && cruiseElroy == 1) {
+            if (ghost.cruiseElroy() == 1) {
                 return level.data().elroy1SpeedPercentage() * 0.01f * ghost.baseSpeed();
             }
-            if (ghost.id() == RED_GHOST_ID && cruiseElroy == 2) {
+            if (ghost.cruiseElroy() == 2) {
                 return level.data().elroy2SpeedPercentage() * 0.01f * ghost.baseSpeed();
             }
             return level.data().ghostSpeedPercentage() * 0.01f * ghost.baseSpeed();
@@ -128,7 +128,6 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         playingProperty().set(false);
         livesProperty().set(initialLivesProperty().get());
         level = null;
-        cruiseElroy = 0;
         levelCounter().reset();
         loadHighScore();
         resetScore();
@@ -156,25 +155,9 @@ public abstract class ArcadeAny_GameModel extends GameModel {
 
     // Actors
 
-    protected byte cruiseElroy;
-
     @Override
     public long pacPowerTicks(GameLevel level) {
         return level != null ? 60 * level.data().pacPowerSeconds() : 0;
-    }
-
-    private void updateBlinkyCruiseElroy() {
-        if (level.uneatenFoodCount() == level.data().elroy1DotsLeft()) {
-            cruiseElroy = 1;
-        } else if (level.uneatenFoodCount() == level.data().elroy2DotsLeft()) {
-            cruiseElroy = 2;
-        }
-    }
-
-    protected void setBlinkyCruiseElroyEnabled(boolean enabled) {
-        if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
-            cruiseElroy = (byte) -cruiseElroy;
-        }
     }
 
     /**
@@ -208,7 +191,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         level.pac().powerTimer().stop();
         level.pac().powerTimer().reset(0);
         gateKeeper.resetCounterAndSetEnabled(true);
-        setBlinkyCruiseElroyEnabled(false);
+        level.ghost(RED_GHOST_ID).enableCruiseElroyMode(false);
         level.pac().die();
     }
 
@@ -234,7 +217,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
     protected void onPelletEaten(Vector2i tile) {
         scorePoints(PELLET_VALUE);
         level.pac().setRestingTicks(1);
-        updateBlinkyCruiseElroy();
+        level.ghost(RED_GHOST_ID).updateCruiseElroyMode();
     }
 
     @Override
@@ -243,7 +226,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
         level.pac().setRestingTicks(3);
         Logger.info("Resting 3 ticks");
-        updateBlinkyCruiseElroy();
+        level.ghost(RED_GHOST_ID).updateCruiseElroyMode();
         level.victims().clear();
         long powerTicks = pacPowerTicks(level);
         if (powerTicks > 0) {
