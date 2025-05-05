@@ -158,12 +158,6 @@ public abstract class ArcadeAny_GameModel extends GameModel {
     // Actors
 
     protected byte cruiseElroy;
-    protected ActorSpeedControl speedControl = new ArcadeActorSpeedControl();
-
-    @Override
-    public ActorSpeedControl speedControl() {
-        return speedControl;
-    }
 
     @Override
     public long pacPowerTicks(GameLevel level) {
@@ -313,7 +307,6 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         level.setStartTime(System.currentTimeMillis());
         level.makeReadyForPlaying();
         initAnimationOfPacManAndGhosts();
-        speedControl.setActorBaseSpeed(level);
         levelCounter().update(level);
         if (level.isDemoLevel()) {
             level.showMessage(GameLevel.Message.GAME_OVER);

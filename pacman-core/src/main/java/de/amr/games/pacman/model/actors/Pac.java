@@ -130,8 +130,8 @@ public class Pac extends Creature implements AnimatedActor2D {
                 autopilot.steer(this, level);
             }
             setSpeed(powerTimer.isRunning()
-                ? level.game().speedControl().pacPowerSpeed(level)
-                : level.game().speedControl().pacNormalSpeed(level));
+                ? level.speedControl().pacPowerSpeed(level)
+                : level.speedControl().pacNormalSpeed(level));
             tryMoving();
             //Logger.info(moveInfo);
             if (moveInfo.moved) {

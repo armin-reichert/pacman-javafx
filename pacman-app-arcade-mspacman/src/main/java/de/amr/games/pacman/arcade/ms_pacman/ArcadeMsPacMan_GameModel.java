@@ -124,13 +124,13 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
      */
     protected void ghostHuntingBehaviour(Ghost ghost) {
         if (huntingTimer.phaseIndex() == 0 && (ghost.id() == RED_GHOST_ID || ghost.id() == PINK_GHOST_ID)) {
-            ghost.roam(speedControl.ghostAttackSpeed(level, ghost));
+            ghost.roam(level.speedControl().ghostAttackSpeed(level, ghost));
         } else {
             boolean chase = huntingTimer.phase() == HuntingPhase.CHASING || ghost.id() == RED_GHOST_ID && cruiseElroy > 0;
             Vector2i targetTile = chase
                 ? chasingTargetTile(level, ghost.id())
                 : level.ghostScatterTile(ghost.id());
-            ghost.followTarget(targetTile, speedControl.ghostAttackSpeed(level, ghost));
+            ghost.followTarget(targetTile, level.speedControl().ghostAttackSpeed(level, ghost));
         }
     }
 
@@ -139,6 +139,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
         WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
         level = new GameLevel(this, levelNumber, worldMap);
         level.setData(createLevelData(levelNumber));
+        level.setSpeedControl(new ArcadeActorSpeedControl());
         level.setCutSceneNumber(switch (levelNumber) {
             case 2 -> 1;
             case 5 -> 2;

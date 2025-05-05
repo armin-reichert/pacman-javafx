@@ -11,10 +11,7 @@ import de.amr.games.pacman.lib.tilemap.FoodTiles;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.Pulse;
-import de.amr.games.pacman.model.actors.Bonus;
-import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.actors.*;
 import org.tinylog.Logger;
 
 import java.util.*;
@@ -50,6 +47,7 @@ public class GameLevel {
     private final GameModel game;
     private final int number; // 1=first level
     private LevelData data;
+    private ActorSpeedControl speedControl;
 
     private final WorldMap worldMap;
     private final Vector2f pacStartPosition;
@@ -155,6 +153,14 @@ public class GameLevel {
 
     public void setData(LevelData data) {
         this.data = requireNonNull(data);
+    }
+
+    public void setSpeedControl(ActorSpeedControl speedControl) {
+        this.speedControl = speedControl;
+    }
+
+    public ActorSpeedControl speedControl() {
+        return speedControl;
     }
 
     public void makeReadyForPlaying() {

@@ -90,6 +90,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     private final TengenMsPacMan_LevelCounter levelCounter;
     private final TengenMsPacMan_MapSelector mapSelector;
+    private final TengenActorSpeedControl speedControl;
     private final GateKeeper gateKeeper;
     private final HuntingTimer huntingTimer;
     private final Steering autopilot;
@@ -242,6 +243,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public TengenMsPacMan_GameModel() {
         highScoreFile = new File(HOME_DIR, "highscore-ms_pacman_tengen.xml");
         levelCounter = new TengenMsPacMan_LevelCounter();
+        speedControl = new TengenActorSpeedControl();
         mapSelector = new TengenMsPacMan_MapSelector();
         gateKeeper = new GateKeeper();
         huntingTimer = new TengenMsPacMan_HuntingTimer();
@@ -437,13 +439,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
         return level != null ? level.data().numFlashes() * 28L : 0; // TODO check in emulator
     }
 
-    private final TengenActorSpeedControl speedControl = new TengenActorSpeedControl();
-
-    @Override
-    public ActorSpeedControl speedControl() {
-        return speedControl;
-    }
-
     @Override
     public boolean isOver() { return livesProperty().get() == 0; }
 
@@ -484,6 +479,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         WorldMap worldMap = mapSelector.selectWorldMap(mapCategory, levelNumber);
         level = new GameLevel(this, levelNumber, worldMap);
         level.setData(createLevelData(levelNumber));
+        level.setSpeedControl(speedControl);
         level.setCutSceneNumber(switch (levelNumber) {
             case 2 -> 1;
             case 5 -> 2;

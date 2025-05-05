@@ -137,7 +137,6 @@ public abstract class GameModel implements ScoreManager {
         return either.sameTile(other);
     }
 
-    public abstract ActorSpeedControl speedControl();
     public abstract long pacPowerTicks(GameLevel level);
     public abstract long pacPowerFadingTicks(GameLevel level);
 

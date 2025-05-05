@@ -243,7 +243,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
         if (insideHouse()) {
             float minY = (level.houseMinTile().y() + 1) * TS + HTS;
             float maxY = (level.houseMaxTile().y() - 1) * TS - HTS;
-            setSpeed(level.game().speedControl().ghostSpeedInsideHouse(level, this));
+            setSpeed(level.speedControl().ghostSpeedInsideHouse(level, this));
             move();
             if (posY <= minY) {
                 setMoveAndWishDir(DOWN);
@@ -271,7 +271,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
      * The ghost speed is slower than outside, but I do not know the exact value.
      */
     private void updateStateLeavingHouse() {
-        float speedInsideHouse = level.game().speedControl().ghostSpeedInsideHouse(level, this);
+        float speedInsideHouse = level.speedControl().ghostSpeedInsideHouse(level, this);
         Vector2f houseEntryPosition = level.houseEntryPosition();
         if (posY() <= houseEntryPosition.y()) {
             // has raised and is outside house
@@ -336,8 +336,8 @@ public class Ghost extends Creature implements AnimatedActor2D {
      */
     private void updateStateFrightened() {
         float speed = level.isTunnel(tile())
-            ? level.game().speedControl().ghostTunnelSpeed(level, this)
-            : level.game().speedControl().ghostFrightenedSpeed(level, this);
+            ? level.speedControl().ghostTunnelSpeed(level, this)
+            : level.speedControl().ghostFrightenedSpeed(level, this);
         roam(speed);
         updateFrightenedAnimation();
     }
@@ -366,7 +366,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
      * to the ghost house to be revived. Hallelujah!
      */
     private void updateStateReturningToHouse() {
-        float speedReturningToHouse = level.game().speedControl().ghostSpeedReturningToHouse(level, this);
+        float speedReturningToHouse = level.speedControl().ghostSpeedReturningToHouse(level, this);
         Vector2f houseEntry = level.houseEntryPosition();
         if (position().roughlyEquals(houseEntry, 0.5f * speedReturningToHouse, 0)) {
             setPosition(houseEntry);
@@ -387,7 +387,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
      * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
      */
     private void updateStateEnteringHouse() {
-        float speed = level.game().speedControl().ghostSpeedReturningToHouse(level, this);
+        float speed = level.speedControl().ghostSpeedReturningToHouse(level, this);
         if (position().roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {
             setPosition(revivalPosition);
             setMoveAndWishDir(UP);

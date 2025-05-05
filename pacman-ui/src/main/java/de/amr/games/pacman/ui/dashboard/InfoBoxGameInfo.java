@@ -128,30 +128,30 @@ public class InfoBoxGameInfo extends InfoBox {
         // use Pinky because Blinky could be in Elroy mode
         Ghost pinky = level.ghost(PINK_GHOST_ID);
         return (pinky != null)
-            ? "%.4f px/s".formatted(level.game().speedControl().ghostAttackSpeed(level, pinky) * 60)
+            ? "%.4f px/s".formatted(level.speedControl().ghostAttackSpeed(level, pinky) * 60)
             : InfoText.NO_INFO;
     }
 
     private String fmtGhostSpeedFrightened(GameLevel level) {
         Ghost blinky = level.ghost(RED_GHOST_ID);
         return (blinky != null)
-            ? "%.4f px/s".formatted(level.game().speedControl().ghostFrightenedSpeed(level, blinky) * 60)
+            ? "%.4f px/s".formatted(level.speedControl().ghostFrightenedSpeed(level, blinky) * 60)
             : InfoText.NO_INFO;
     }
 
     private String fmtGhostSpeedTunnel(GameLevel level) {
         Ghost blinky = level.ghost(RED_GHOST_ID);
         return (blinky != null)
-            ? "%.4f px/s".formatted(level.game().speedControl().ghostTunnelSpeed(level, blinky) * 60)
+            ? "%.4f px/s".formatted(level.speedControl().ghostTunnelSpeed(level, blinky) * 60)
             : InfoText.NO_INFO;
     }
 
     private String fmtPacNormalSpeed(GameLevel level) {
-        return "%.4f px/s".formatted(level.game().speedControl().pacNormalSpeed(level) * 60);
+        return "%.4f px/s".formatted(level.speedControl().pacNormalSpeed(level) * 60);
     }
 
     private String fmtPacSpeedPowered(GameLevel level) {
-        return "%.4f px/s".formatted(level.game().speedControl().pacPowerSpeed(level) * 60);
+        return "%.4f px/s".formatted(level.speedControl().pacPowerSpeed(level) * 60);
     }
 
     private String fmtPacPowerTime(GameLevel level) {

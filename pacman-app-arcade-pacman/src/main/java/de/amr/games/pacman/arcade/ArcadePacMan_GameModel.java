@@ -144,7 +144,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
         Vector2i targetTile = chase
             ? chasingTargetTile(level, ghost.id())
             : level.ghostScatterTile(ghost.id());
-        ghost.followTarget(targetTile, speedControl.ghostAttackSpeed(level, ghost));
+        ghost.followTarget(targetTile, level.speedControl().ghostAttackSpeed(level, ghost));
     }
 
     @Override
@@ -152,6 +152,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
         WorldMap worldMap = mapSelector.selectWorldMap(requireValidLevelNumber(levelNumber));
         level = new GameLevel(this, levelNumber, worldMap);
         level.setData(createLevelData(levelNumber));
+        level.setSpeedControl(new ArcadeActorSpeedControl());
         level.setCutSceneNumber(switch (levelNumber) {
             case 2 -> 1;
             case 5 -> 2;
