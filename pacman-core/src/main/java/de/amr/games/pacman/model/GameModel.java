@@ -49,7 +49,7 @@ public abstract class GameModel implements ScoreManager {
     public abstract boolean continueOnGameOver();
 
     public abstract MapSelector mapSelector();
-    protected Optional<GateKeeper> gateKeeper() { return Optional.empty(); }
+    public Optional<GateKeeper> gateKeeper() { return Optional.empty(); }
     public abstract <T extends LevelCounter> T levelCounter();
 
     public Optional<GameLevel> level() { return Optional.ofNullable(level); }

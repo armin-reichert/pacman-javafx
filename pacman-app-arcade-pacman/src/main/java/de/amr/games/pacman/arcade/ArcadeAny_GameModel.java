@@ -94,7 +94,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
     }
 
     @Override
-    protected Optional<GateKeeper> gateKeeper() { return Optional.of(gateKeeper); }
+    public Optional<GateKeeper> gateKeeper() { return Optional.of(gateKeeper); }
 
     @SuppressWarnings("unchecked")
     @Override

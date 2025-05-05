@@ -291,9 +291,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    protected Optional<GateKeeper> gateKeeper() {
-        return Optional.of(gateKeeper);
-    }
+    public Optional<GateKeeper> gateKeeper() { return Optional.of(gateKeeper); }
 
     @Override
     @SuppressWarnings("unchecked")
