@@ -311,7 +311,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
 
     @Override
     public void buildNormalLevel(int levelNumber) {
-        createNewLevel(levelNumber);
+        createLevel(levelNumber);
         level.setDemoLevel(false);
         setScoreLevelNumber(levelNumber);
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(levelNumber));
@@ -321,7 +321,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
 
     @Override
     public void buildDemoLevel() {
-        createNewLevel(1);
+        createLevel(1);
         level.setDemoLevel(true);
         assignDemoLevelBehavior(level.pac());
         demoLevelSteering.init();

@@ -119,7 +119,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
     }
 
     @Override
-    public void createNewLevel(int levelNumber) {
+    public void createLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.selectWorldMap(requireValidLevelNumber(levelNumber));
         level = new GameLevel(this, levelNumber, worldMap);
         level.setData(createLevelData(levelNumber));

@@ -469,7 +469,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public void createNewLevel(int levelNumber) {
+    public void createLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.selectWorldMap(mapCategory, levelNumber);
         level = new GameLevel(this, levelNumber, worldMap);
         level.setData(createLevelData(levelNumber));
@@ -538,7 +538,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public void buildNormalLevel(int levelNumber) {
-        createNewLevel(levelNumber);
+        createLevel(levelNumber);
         level.setDemoLevel(false);
         setScoreLevelNumber(levelNumber);
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(levelNumber));
@@ -549,7 +549,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public void buildDemoLevel() {
-        createNewLevel(1);
+        createLevel(1);
         level.setDemoLevel(true);
         level.setGameOverStateTicks(120);
         assignDemoLevelBehavior(level.pac());

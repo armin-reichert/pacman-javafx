@@ -70,7 +70,7 @@ public abstract class GameModel implements ScoreManager {
     public abstract void buildNormalLevel(int levelNumber);
     public abstract void buildDemoLevel();
 
-    public abstract void createNewLevel(int levelNumber);
+    public abstract void createLevel(int levelNumber);
 
     public int lastLevelNumber() { return lastLevelNumber; }
     public abstract LevelData createLevelData(int levelNumber);
