@@ -193,7 +193,8 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             timer.restartIndefinitely(); // UI triggers timeout e.g. when animation finishes
-            game.onLevelCompleted();
+            GameLevel level = game.level().orElseThrow();
+            level.onCompleted();
         }
 
         @Override

@@ -187,6 +187,21 @@ public class GameLevel {
         blinking.reset();
     }
 
+    public void onCompleted() {
+        Logger.info("Level complete, stop hunting timer");
+        huntingTimer.stop();
+        blinking.setStartPhase(Pulse.OFF);
+        blinking.reset();
+        pac.stopAndShowInFullBeauty();
+        pac.powerTimer().stop();
+        pac.powerTimer().reset(0);
+        Logger.info("Power timer stopped and reset to zero");
+        bonus().ifPresent(Bonus::setInactive);
+        // when cheating to end level, there might still be food
+        eatAllFood();
+        Logger.trace("Game level {} completed.", number);
+    }
+
     public void showPacAndGhosts() {
         pac.show();
         ghosts().forEach(Ghost::show);
