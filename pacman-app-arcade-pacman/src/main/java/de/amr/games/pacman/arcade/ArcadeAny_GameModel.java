@@ -24,31 +24,6 @@ import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
  */
 public abstract class ArcadeAny_GameModel extends GameModel {
 
-    // Level settings as specified in the "Pac-Man dossier"
-    public static final byte[][] LEVEL_DATA = {
-        /* 1*/ { 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5},
-        /* 2*/ { 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5},
-        /* 3*/ { 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5},
-        /* 4*/ { 90, 85, 45,  40,  90, 20,  95,  95, 55, 3, 5},
-        /* 5*/ {100, 95, 50,  40, 100, 20, 105, 100, 60, 2, 5},
-        /* 6*/ {100, 95, 50,  50, 100, 25, 105, 100, 60, 5, 5},
-        /* 7*/ {100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5},
-        /* 8*/ {100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5},
-        /* 9*/ {100, 95, 50,  60, 100, 30, 105, 100, 60, 1, 3},
-        /*10*/ {100, 95, 50,  60, 100, 30, 105, 100, 60, 5, 5},
-        /*11*/ {100, 95, 50,  60, 100, 30, 105, 100, 60, 2, 5},
-        /*12*/ {100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3},
-        /*13*/ {100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3},
-        /*14*/ {100, 95, 50,  80, 100, 40, 105, 100, 60, 3, 5},
-        /*15*/ {100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3},
-        /*16*/ {100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3},
-        /*17*/ {100, 95, 50, 100, 100, 50, 105,   0,  0, 0, 0},
-        /*18*/ {100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3},
-        /*19*/ {100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
-        /*20*/ {100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
-        /*21*/ { 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
-    };
-
     protected static final byte PELLET_VALUE = 10;
     protected static final byte ENERGIZER_VALUE = 50;
     protected static final int POINTS_ALL_GHOSTS_EATEN_IN_LEVEL = 12_000;
@@ -301,10 +276,6 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         updateHighScore();
         level.showMessage(GameLevel.Message.GAME_OVER);
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.STOP_ALL_SOUNDS);
-    }
-
-    protected LevelData createLevelData(int levelNumber) {
-        return new LevelData(LEVEL_DATA[Math.min(levelNumber - 1, LEVEL_DATA.length - 1)]);
     }
 
     @Override
