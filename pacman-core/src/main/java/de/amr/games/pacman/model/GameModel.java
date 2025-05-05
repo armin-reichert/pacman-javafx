@@ -90,8 +90,8 @@ public abstract class GameModel implements ScoreManager {
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(level, THE_SIMULATION_STEP));
         level.blinking().tick();
 
-        level.pac().update(this);
-        level.ghosts().forEach(ghost -> ghost.update(this));
+        level.pac().update();
+        level.ghosts().forEach(Ghost::update);
         level.bonus().ifPresent(bonus -> bonus.update(this));
 
         checkIfPacManKilled();
@@ -170,7 +170,7 @@ public abstract class GameModel implements ScoreManager {
     private void updatePacPower() {
         final TickTimer timer = level.pac().powerTimer();
         timer.doTick();
-        if (level.pac().isPowerFadingStarting(this)) {
+        if (level.pac().isPowerFadingStarting()) {
             THE_SIMULATION_STEP.setPacStartsLosingPower();
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (timer.hasExpired()) {

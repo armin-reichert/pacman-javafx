@@ -248,7 +248,7 @@ public enum GameState implements FsmState<GameModel> {
             if (timer.hasExpired()) {
                 THE_GAME_CONTROLLER.resumePreviousState();
             } else {
-                level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).forEach(ghost -> ghost.update(game));
+                level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).forEach(Ghost::update);
                 level.blinking().tick();
             }
         }
@@ -305,7 +305,7 @@ public enum GameState implements FsmState<GameModel> {
             }
             else {
                 level.blinking().tick();
-                level.pac().update(game);
+                level.pac().update();
             }
         }
 
@@ -394,7 +394,7 @@ public enum GameState implements FsmState<GameModel> {
             GameLevel level = game.level().orElseThrow();
             if (timer().tickCount() > 2 * Globals.TICKS_PER_SECOND) {
                 level.blinking().tick();
-                level.ghosts().forEach(ghost -> ghost.update(game));
+                level.ghosts().forEach(Ghost::update);
                 level.bonus().ifPresent(bonus -> bonus.update(game));
             }
             if (timer().atSecond(1.0)) {
