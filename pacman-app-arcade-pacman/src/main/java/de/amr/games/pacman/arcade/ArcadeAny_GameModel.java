@@ -303,11 +303,9 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.STOP_ALL_SOUNDS);
     }
 
-    @Override
-    public LevelData createLevelData(int levelNumber) {
+    protected LevelData createLevelData(int levelNumber) {
         return new LevelData(LEVEL_DATA[Math.min(levelNumber - 1, LEVEL_DATA.length - 1)]);
     }
-
 
     @Override
     public void buildNormalLevel(int levelNumber) {

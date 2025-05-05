@@ -67,15 +67,14 @@ public abstract class GameModel implements ScoreManager {
     public abstract boolean canStartNewGame();
     public abstract void startNewGame();
 
-    public abstract void buildNormalLevel(int levelNumber);
-    public abstract void buildDemoLevel();
-
     public abstract void createLevel(int levelNumber);
+    public abstract void buildNormalLevel(int levelNumber);
 
-    public int lastLevelNumber() { return lastLevelNumber; }
-    public abstract LevelData createLevelData(int levelNumber);
+    public abstract void buildDemoLevel();
     public abstract void assignDemoLevelBehavior(Pac pac);
     protected abstract boolean isPacManSafeInDemoLevel();
+
+    public int lastLevelNumber() { return lastLevelNumber; }
 
     public abstract void startLevel();
 

@@ -518,8 +518,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON
     }
 
-    @Override
-    public LevelData createLevelData(int levelNumber) {
+    private LevelData createLevelData(int levelNumber) {
         // Note: only number of flashes is taken from level data
         return new LevelData(
             (byte) 0, // Pac speed %
