@@ -72,8 +72,11 @@ public interface Ufx {
      */
     static void startApp(Class<? extends Application> appClass, String... args) {
         try {
-            Logger.info("Locale: {}", Locale.getDefault());
             Logger.info("Java version: {}", Runtime.version());
+            Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
+            Logger.info("User Language: {}", System.getProperty("user.language"));
+            Logger.info("User Country: {}", System.getProperty("user.country"));
+            Logger.info("Default Locale: {}", Locale.getDefault());
             Application.launch(appClass, args);
         } catch (Throwable x) {
             x.printStackTrace(System.err);
