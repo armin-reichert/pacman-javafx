@@ -516,8 +516,9 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.setPac(pac);
         level.setGhosts(ghosts);
 
+        level.setSpeedControl(speedControl);
         // Must be called after creation of the actors!
-        level.applySpeedControl(speedControl);
+        level.speedControl().applyToActorsInLevel(level);
 
         //TODO this might not be appropriate for Tengen Ms. Pac-Man
         level.setBonusSymbol(0, computeBonusSymbol(level.number()));

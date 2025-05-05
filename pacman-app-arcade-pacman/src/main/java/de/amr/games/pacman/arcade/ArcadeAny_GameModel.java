@@ -38,7 +38,6 @@ public abstract class ArcadeAny_GameModel extends GameModel {
     protected Steering demoLevelSteering;
 
     public class ArcadeActorSpeedControl implements ActorSpeedControl {
-        @Override
         public void applyToActorsInLevel(GameLevel level) {
             level.pac().setBaseSpeed(1.25f);
             level.ghosts().forEach(ghost -> ghost.setBaseSpeed(1.25f));

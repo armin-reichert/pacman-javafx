@@ -186,8 +186,9 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
         level.setPac(pac);
         level.setGhosts(ghosts.toArray(Ghost[]::new));
 
+        level.setSpeedControl(new ArcadeActorSpeedControl());
         // Must be called after creation of the actors!
-        level.applySpeedControl(new ArcadeActorSpeedControl());
+        level.speedControl().applyToActorsInLevel(level);
 
         level.setBonusSymbol(0, computeBonusSymbol(levelNumber));
         level.setBonusSymbol(1, computeBonusSymbol(levelNumber));
