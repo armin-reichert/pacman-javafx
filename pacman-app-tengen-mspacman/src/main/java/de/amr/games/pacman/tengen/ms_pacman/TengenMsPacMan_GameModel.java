@@ -306,11 +306,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
         return mapSelector;
     }
 
-    @Override
-    public HuntingTimer huntingTimer() {
-        return huntingTimer;
-    }
-
     public boolean optionsHaveDefaultValues() {
         return pacBooster == PacBooster.OFF
             && difficulty == Difficulty.NORMAL
@@ -479,6 +474,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         WorldMap worldMap = mapSelector.selectWorldMap(mapCategory, levelNumber);
         level = new GameLevel(this, levelNumber, worldMap);
         level.setData(createLevelData(levelNumber));
+        level.setHuntingTimer(huntingTimer);
         level.setCutSceneNumber(switch (levelNumber) {
             case 2 -> 1;
             case 5 -> 2;
@@ -551,7 +547,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.setDemoLevel(false);
         setScoreLevelNumber(levelNumber);
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(levelNumber));
-        huntingTimer().reset();
+        level.huntingTimer().reset();
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 
@@ -565,7 +561,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         demoLevelSteering.init();
         setScoreLevelNumber(1);
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(1));
-        huntingTimer().reset();
+        level.huntingTimer().reset();
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 
@@ -655,7 +651,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.victims().clear();
         long powerTicks = pacPowerTicks(level);
         if (powerTicks > 0) {
-            huntingTimer().stop();
+            level.huntingTimer().stop();
             Logger.info("Hunting Pac-Man stopped as he got power");
             level.pac().powerTimer().restartTicks(powerTicks);
             Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerTicks / TICKS_PER_SECOND);

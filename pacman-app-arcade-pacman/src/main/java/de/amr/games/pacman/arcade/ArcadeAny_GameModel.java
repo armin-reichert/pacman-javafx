@@ -96,11 +96,6 @@ public abstract class ArcadeAny_GameModel extends GameModel {
     @Override
     protected Optional<GateKeeper> gateKeeper() { return Optional.of(gateKeeper); }
 
-    @Override
-    public HuntingTimer huntingTimer() {
-        return huntingTimer;
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public <T extends LevelCounter> T levelCounter() {
@@ -230,7 +225,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         level.victims().clear();
         long powerTicks = pacPowerTicks(level);
         if (powerTicks > 0) {
-            huntingTimer().stop();
+            level.huntingTimer().stop();
             Logger.info("Hunting Pac-Man stopped as he got power");
             level.pac().powerTimer().restartTicks(powerTicks);
             Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerTicks / TICKS_PER_SECOND);
@@ -260,7 +255,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         level.setDemoLevel(false);
         setScoreLevelNumber(levelNumber);
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(levelNumber));
-        huntingTimer().reset();
+        level.huntingTimer().reset();
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 
@@ -273,7 +268,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         levelCounter.setEnabled(false);
         setScoreLevelNumber(1);
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(1));
-        huntingTimer().reset();
+        level.huntingTimer().reset();
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 

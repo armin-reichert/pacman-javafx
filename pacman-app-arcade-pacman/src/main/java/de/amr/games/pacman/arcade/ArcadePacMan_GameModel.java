@@ -152,6 +152,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
         WorldMap worldMap = mapSelector.selectWorldMap(requireValidLevelNumber(levelNumber));
         level = new GameLevel(this, levelNumber, worldMap);
         level.setData(createLevelData(levelNumber));
+        level.setHuntingTimer(huntingTimer);
         level.setCutSceneNumber(switch (levelNumber) {
             case 2 -> 1;
             case 5 -> 2;

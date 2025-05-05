@@ -98,8 +98,7 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String fmtHuntingPhase(GameLevel level) {
-        var game = THE_GAME_CONTROLLER.game();
-        HuntingTimer huntingTimer = game.huntingTimer();
+        HuntingTimer huntingTimer = level.huntingTimer();
         return "%s #%d%s".formatted(
             huntingTimer.phase().name(),
             huntingTimer.phase() == HuntingPhase.CHASING
@@ -109,11 +108,11 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String fmtHuntingTicksRunning(GameLevel level) {
-        return "Running:   %d".formatted(THE_GAME_CONTROLLER.game().huntingTimer().tickCount());
+        return "Running:   %d".formatted(level.huntingTimer().tickCount());
     }
 
     private String fmtHuntingTicksRemaining(GameLevel level) {
-        return "Remaining: %s".formatted(ticksToString(THE_GAME_CONTROLLER.game().huntingTimer().remainingTicks()));
+        return "Remaining: %s".formatted(ticksToString(level.huntingTimer().remainingTicks()));
     }
 
     private String fmtPelletCount(GameLevel level) {

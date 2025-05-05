@@ -49,7 +49,6 @@ public abstract class GameModel implements ScoreManager {
     public abstract boolean continueOnGameOver();
 
     public abstract MapSelector mapSelector();
-    public abstract HuntingTimer huntingTimer();
     protected Optional<GateKeeper> gateKeeper() { return Optional.empty(); }
     public abstract <T extends LevelCounter> T levelCounter();
 
@@ -81,13 +80,14 @@ public abstract class GameModel implements ScoreManager {
         level.ghosts().forEach(Ghost::startAnimation);
         level.blinking().setStartPhase(Pulse.ON);
         level.blinking().restart(Integer.MAX_VALUE);
-        huntingTimer().startFirstHuntingPhase(level.number());
+        level.huntingTimer().startFirstHuntingPhase(level.number());
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.HUNTING_PHASE_STARTED);
     }
 
     public void doHuntingStep() {
-        huntingTimer().update(level.number());
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(level, THE_SIMULATION_STEP));
+
+        level.huntingTimer().update(level.number());
         level.blinking().tick();
 
         level.pac().update();
@@ -107,7 +107,7 @@ public abstract class GameModel implements ScoreManager {
 
     public void onLevelCompleted() {
         Logger.info("Level complete, stop hunting timer");
-        huntingTimer().stop();
+        level.huntingTimer().stop();
         level.blinking().setStartPhase(Pulse.OFF);
         level.blinking().reset();
         level.pac().stopAndShowInFullBeauty();
@@ -177,7 +177,7 @@ public abstract class GameModel implements ScoreManager {
             timer.reset(0);
             Logger.info("Power timer stopped and reset to zero");
             level.victims().clear();
-            huntingTimer().start();
+            level.huntingTimer().start();
             Logger.info("Hunting timer restarted because Pac-Man lost power");
             level.ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
             THE_SIMULATION_STEP.setPacLostPower();

@@ -292,7 +292,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     protected void updateSound(GameLevel level) {
         if (gameState() == GameState.HUNTING && !level.pac().powerTimer().isRunning()) {
-            int sirenNumber = 1 + game().huntingTimer().phaseIndex() / 2;
+            int sirenNumber = 1 + level.huntingTimer().phaseIndex() / 2;
             THE_SOUND.selectSiren(sirenNumber);
             THE_SOUND.playSiren();
         }
