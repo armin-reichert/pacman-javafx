@@ -537,12 +537,27 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
+    public void buildNormalLevel(int levelNumber) {
+        createNewLevel(levelNumber);
+        level.setDemoLevel(false);
+        setScoreLevelNumber(levelNumber);
+        gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(levelNumber));
+        huntingTimer().reset();
+        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
+    }
+
+
+    @Override
     public void buildDemoLevel() {
         createNewLevel(1);
         level.setDemoLevel(true);
         level.setGameOverStateTicks(120);
         assignDemoLevelBehavior(level.pac());
         demoLevelSteering.init();
+        setScoreLevelNumber(1);
+        gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(1));
+        huntingTimer().reset();
+        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 
     @Override

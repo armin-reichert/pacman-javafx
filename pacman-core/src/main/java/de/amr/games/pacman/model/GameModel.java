@@ -67,15 +67,7 @@ public abstract class GameModel implements ScoreManager {
     public abstract boolean canStartNewGame();
     public abstract void startNewGame();
 
-    public void buildNormalLevel(int levelNumber) {
-        createNewLevel(levelNumber);
-        level.setDemoLevel(false);
-        setScoreLevelNumber(levelNumber);
-        gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(levelNumber));
-        huntingTimer().reset();
-        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
-    }
-
+    public abstract void buildNormalLevel(int levelNumber);
     public abstract void buildDemoLevel();
 
     public abstract void createNewLevel(int levelNumber);

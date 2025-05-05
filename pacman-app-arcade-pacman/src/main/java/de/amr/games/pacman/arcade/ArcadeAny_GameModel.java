@@ -308,6 +308,17 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         return new LevelData(LEVEL_DATA[Math.min(levelNumber - 1, LEVEL_DATA.length - 1)]);
     }
 
+
+    @Override
+    public void buildNormalLevel(int levelNumber) {
+        createNewLevel(levelNumber);
+        level.setDemoLevel(false);
+        setScoreLevelNumber(levelNumber);
+        gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(levelNumber));
+        huntingTimer().reset();
+        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
+    }
+
     @Override
     public void buildDemoLevel() {
         createNewLevel(1);
@@ -315,6 +326,10 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         assignDemoLevelBehavior(level.pac());
         demoLevelSteering.init();
         levelCounter.setEnabled(false);
+        setScoreLevelNumber(1);
+        gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(1));
+        huntingTimer().reset();
+        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 
     @Override
