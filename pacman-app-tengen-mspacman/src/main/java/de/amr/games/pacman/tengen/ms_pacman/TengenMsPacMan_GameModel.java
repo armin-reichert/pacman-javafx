@@ -33,7 +33,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class TengenMsPacMan_GameModel extends GameModel {
 
-    private static final byte MIN_LEVEL_NUMBER = 1;
+    private static final byte FIRST_LEVEL_NUMBER = 1;
+    private static final int LAST_LEVEL_NUMBER = 32;
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
     private static final byte PELLET_VALUE = 10;
@@ -67,6 +68,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     // Bonus value = factor * 100
     private static final byte[] BONUS_VALUE_FACTORS = new byte[14];
+
     static {
         BONUS_VALUE_FACTORS[BONUS_CHERRY]        = 1;
         BONUS_VALUE_FACTORS[BONUS_STRAWBERRY]    = 2;
@@ -238,7 +240,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     public TengenMsPacMan_GameModel() {
-        lastLevelNumber = 32;
         highScoreFile = new File(HOME_DIR, "highscore-ms_pacman_tengen.xml");
         levelCounter = new TengenMsPacMan_LevelCounter();
         mapSelector = new TengenMsPacMan_MapSelector();
@@ -352,7 +353,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     public void setStartLevelNumber(int number) {
-        if (number < MIN_LEVEL_NUMBER || number > lastLevelNumber()) {
+        if (number < FIRST_LEVEL_NUMBER || number > LAST_LEVEL_NUMBER) {
             throw GameException.invalidLevelNumber(number);
         }
         startLevelNumber = number;
@@ -411,6 +412,16 @@ public class TengenMsPacMan_GameModel extends GameModel {
         }
         // Note: This event is very important because it triggers the creation of the actor animations!
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_STARTED);
+    }
+
+    public void startNextLevel() {
+        if (level.number() < LAST_LEVEL_NUMBER) {
+            buildNormalLevel(level.number() + 1);
+            startLevel();
+            level.showPacAndGhosts();
+        } else {
+            Logger.warn("Last level ({}) reached, cannot start next level", LAST_LEVEL_NUMBER);
+        }
     }
 
     @Override
@@ -477,7 +488,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             case 2 -> 1;
             case 5 -> 2;
             case 9, 13, 17 -> 3;
-            default -> levelNumber == lastLevelNumber() ? 4 : 0;
+            default -> levelNumber == LAST_LEVEL_NUMBER ? 4 : 0;
         });
         level.setGameOverStateTicks(420);
         level.addArcadeHouse();
@@ -557,6 +568,11 @@ public class TengenMsPacMan_GameModel extends GameModel {
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(1));
         huntingTimer().reset();
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
+    }
+
+    @Override
+    public int lastLevelNumber() {
+        return LAST_LEVEL_NUMBER;
     }
 
     @Override

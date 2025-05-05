@@ -359,4 +359,16 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         // Note: This event is very important because it triggers the creation of the actor animations!
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_STARTED);
     }
+
+    @Override
+    public void startNextLevel() {
+        buildNormalLevel(level.number() + 1);
+        startLevel();
+        level.showPacAndGhosts();
+    }
+
+    @Override
+    public int lastLevelNumber() {
+        return Integer.MAX_VALUE;
+    }
 }

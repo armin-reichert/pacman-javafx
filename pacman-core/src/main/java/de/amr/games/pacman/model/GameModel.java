@@ -39,10 +39,8 @@ public abstract class GameModel implements ScoreManager {
     private final BooleanProperty playingPy = new SimpleBooleanProperty(false);
 
     protected GameLevel level;
-    protected int lastLevelNumber;
 
     protected GameModel() {
-        lastLevelNumber = Integer.MAX_VALUE;
         score.pointsProperty().addListener((py, ov, nv) -> onScoreChanged(ov.intValue(), nv.intValue()));
     }
 
@@ -74,9 +72,9 @@ public abstract class GameModel implements ScoreManager {
     public abstract void assignDemoLevelBehavior(Pac pac);
     protected abstract boolean isPacManSafeInDemoLevel();
 
-    public int lastLevelNumber() { return lastLevelNumber; }
-
     public abstract void startLevel();
+    public abstract void startNextLevel();
+    public abstract int lastLevelNumber();
 
     public void startHunting() {
         level.pac().startAnimation();
@@ -123,16 +121,6 @@ public abstract class GameModel implements ScoreManager {
     }
 
     public boolean isLevelCompleted() { return level.uneatenFoodCount() == 0; }
-
-    public void startNextLevel() {
-        if (level.number() < lastLevelNumber) {
-            buildNormalLevel(level.number() + 1);
-            startLevel();
-            level.showPacAndGhosts();
-        } else {
-            Logger.warn("Last level ({}) reached, cannot start next level", lastLevelNumber);
-        }
-    }
 
     public abstract boolean isOver();
     public abstract void onGameEnding();
