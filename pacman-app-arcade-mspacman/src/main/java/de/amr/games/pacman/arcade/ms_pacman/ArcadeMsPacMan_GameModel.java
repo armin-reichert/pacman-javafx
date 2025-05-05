@@ -139,7 +139,6 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
         WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
         level = new GameLevel(this, levelNumber, worldMap);
         level.setData(createLevelData(levelNumber));
-        level.setSpeedControl(new ArcadeActorSpeedControl());
         level.setCutSceneNumber(switch (levelNumber) {
             case 2 -> 1;
             case 5 -> 2;
@@ -173,6 +172,10 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
 
         level.setPac(pac);
         level.setGhosts(ghosts.toArray(Ghost[]::new));
+
+        // Must be called after creation of the actors!
+        level.applySpeedControl(new ArcadeActorSpeedControl());
+
         level.setBonusSymbol(0, computeBonusSymbol(level.number()));
         level.setBonusSymbol(1, computeBonusSymbol(level.number()));
 

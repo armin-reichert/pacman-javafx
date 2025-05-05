@@ -39,7 +39,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
 
     public class ArcadeActorSpeedControl implements ActorSpeedControl {
         @Override
-        public void setActorBaseSpeed(GameLevel level) {
+        public void applyToActorsInLevel(GameLevel level) {
             level.pac().setBaseSpeed(1.25f);
             level.ghosts().forEach(ghost -> ghost.setBaseSpeed(1.25f));
             Logger.debug("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());

@@ -155,8 +155,9 @@ public class GameLevel {
         this.data = requireNonNull(data);
     }
 
-    public void setSpeedControl(ActorSpeedControl speedControl) {
+    public void applySpeedControl(ActorSpeedControl speedControl) {
         this.speedControl = speedControl;
+        speedControl.applyToActorsInLevel(this);
     }
 
     public ActorSpeedControl speedControl() {

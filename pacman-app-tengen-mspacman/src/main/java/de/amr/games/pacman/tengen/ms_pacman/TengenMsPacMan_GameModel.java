@@ -187,7 +187,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         }
 
         @Override
-        public void setActorBaseSpeed(GameLevel level) {
+        public void applyToActorsInLevel(GameLevel level) {
             float pacBaseSpeed = pacBaseSpeedInLevel(level.number()) + pacDifficultySpeedDelta(difficulty);
             level.pac().setBaseSpeed(pacBaseSpeed);
             if (pacBooster == PacBooster.ALWAYS_ON) {
@@ -398,7 +398,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.setStartTime(System.currentTimeMillis());
         level.makeReadyForPlaying();
         initAnimationOfPacManAndGhosts();
-        speedControl.setActorBaseSpeed(level);
+        speedControl.applyToActorsInLevel(level);
         levelCounter().update(level);
         if (level.isDemoLevel()) {
             level.showMessage(GameLevel.Message.GAME_OVER);
@@ -479,7 +479,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
         WorldMap worldMap = mapSelector.selectWorldMap(mapCategory, levelNumber);
         level = new GameLevel(this, levelNumber, worldMap);
         level.setData(createLevelData(levelNumber));
-        level.setSpeedControl(speedControl);
         level.setCutSceneNumber(switch (levelNumber) {
             case 2 -> 1;
             case 5 -> 2;
@@ -516,6 +515,9 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
         level.setPac(pac);
         level.setGhosts(ghosts);
+
+        // Must be called after creation of the actors!
+        level.applySpeedControl(speedControl);
 
         //TODO this might not be appropriate for Tengen Ms. Pac-Man
         level.setBonusSymbol(0, computeBonusSymbol(level.number()));
