@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.ms_pacman;
 
+import de.amr.games.pacman.arcade.ArcadeAny_ActorSpeedControl;
 import de.amr.games.pacman.arcade.ArcadeAny_GameModel;
 import de.amr.games.pacman.arcade.ArcadePacMan_LevelCounter;
 import de.amr.games.pacman.event.GameEventType;
@@ -150,7 +151,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
             ghost.setGameLevel(level);
         });
 
-        level.setSpeedControl(new ArcadeActorSpeedControl());
+        level.setSpeedControl(new ArcadeAny_ActorSpeedControl());
         // Must be called after creation of the actors!
         level.speedControl().applyToActorsInLevel(level);
 
@@ -276,7 +277,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
         var bonus = new MovingBonus(level, symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
         bonus.setEdibleTicks(TickTimer.INDEFINITE);
         bonus.setRoute(route, crossingLeftToRight);
-        bonus.setBaseSpeed(1.25f);
+        bonus.setBaseSpeed(ArcadeAny_ActorSpeedControl.BASE_SPEED); //TODO how fast is it really?
         Logger.info("Moving bonus created, route: {} (crossing {})", route, crossingLeftToRight ? "left to right" : "right to left");
 
         level.setBonus(bonus);

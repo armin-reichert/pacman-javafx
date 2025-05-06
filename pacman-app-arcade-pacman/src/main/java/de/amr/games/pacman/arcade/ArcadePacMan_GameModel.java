@@ -179,7 +179,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
             ghost.setSpecialTerrainTiles(oneWayDownTiles);
         });
 
-        level.setSpeedControl(new ArcadeActorSpeedControl());
+        level.setSpeedControl(new ArcadeAny_ActorSpeedControl());
         // Must be called after creation of the actors!
         level.speedControl().applyToActorsInLevel(level);
 
