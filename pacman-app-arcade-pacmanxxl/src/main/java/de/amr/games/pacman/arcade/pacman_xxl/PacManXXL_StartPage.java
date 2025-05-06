@@ -250,12 +250,16 @@ public class PacManXXL_StartPage implements StartPage {
             pac.startAnimation();
 
             for (Ghost ghost : ghosts) {
-                switch (gameVariant) {
-                    case PACMAN_XXL -> ghost.setAnimations(new ArcadePacMan_GhostAnimations(config.spriteSheet(), ghost.id()));
-                    case MS_PACMAN_XXL -> ghost.setAnimations(new ArcadeMsPacMan_GhostAnimations(config.spriteSheet(), ghost.id()));
+                if (ghost.animations().isEmpty()) {
+                    switch (gameVariant) {
+                        case PACMAN_XXL ->
+                            ghost.setAnimations(new ArcadePacMan_GhostAnimations(config.spriteSheet(), ghost.id()));
+                        case MS_PACMAN_XXL ->
+                            ghost.setAnimations(new ArcadeMsPacMan_GhostAnimations(config.spriteSheet(), ghost.id()));
+                    }
+                    ghost.selectAnimation(ActorAnimations.ANIM_GHOST_NORMAL);
+                    ghost.startAnimation();
                 }
-                ghost.selectAnimation(ActorAnimations.ANIM_GHOST_NORMAL);
-                ghost.startAnimation();
             }
         }
 
