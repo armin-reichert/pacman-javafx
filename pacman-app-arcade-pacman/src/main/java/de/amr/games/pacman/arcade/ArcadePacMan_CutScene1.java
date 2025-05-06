@@ -23,7 +23,7 @@ import static de.amr.games.pacman.ui.Globals.*;
  */
 public class ArcadePacMan_CutScene1 extends GameScene2D {
 
-    static final short ANIMATION_START = 120;
+    private static final short ANIMATION_START = 120;
 
     private int frame;
     private Pac pac;
