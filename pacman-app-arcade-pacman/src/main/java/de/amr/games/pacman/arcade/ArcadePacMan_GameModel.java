@@ -154,10 +154,8 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
         level.setGameOverStateTicks(90);
         level.addArcadeHouse();
 
-        var pac = new Pac();
-        pac.setName("Pac-Man");
+        Pac pac = ArcadePacMan_ActorFactory.createPac();
         pac.setGameLevel(level);
-        pac.reset();
         pac.setAutopilot(autopilot);
         level.setPac(pac);
 
@@ -166,10 +164,10 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
             .filter(tile -> worldMap.get(LayerID.TERRAIN, tile) == TerrainTiles.ONE_WAY_DOWN)
             .toList();
         level.setGhosts(
-            ArcadePacMan_GhostFactory.createRedGhost(),
-            ArcadePacMan_GhostFactory.createPinkGhost(),
-            ArcadePacMan_GhostFactory.createCyanGhost(),
-            ArcadePacMan_GhostFactory.createOrangeGhost()
+            ArcadePacMan_ActorFactory.createRedGhost(),
+            ArcadePacMan_ActorFactory.createPinkGhost(),
+            ArcadePacMan_ActorFactory.createCyanGhost(),
+            ArcadePacMan_ActorFactory.createOrangeGhost()
         );
         level.ghosts().forEach(ghost -> {
             ghost.reset();

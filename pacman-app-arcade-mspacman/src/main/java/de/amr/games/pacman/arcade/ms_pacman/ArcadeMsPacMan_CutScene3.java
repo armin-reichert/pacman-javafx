@@ -50,8 +50,8 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     public void doInit() {
         game().setScoreVisible(true);
 
-        pacMan = new Pac();
-        msPacMan = new Pac();
+        pacMan = ArcadeMsPacMan_ActorFactory.createPacMan();
+        msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
         stork = new Actor();
         bag = new Actor();
 

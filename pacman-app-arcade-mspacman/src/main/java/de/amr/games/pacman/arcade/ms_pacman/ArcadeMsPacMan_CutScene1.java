@@ -53,10 +53,10 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     public void doInit() {
         game().setScoreVisible(true);
 
-        pacMan = new Pac();
-        msPacMan = new Pac();
-        inky = ArcadeMsPacMan_GhostFactory.createCyanGhost();
-        pinky = ArcadeMsPacMan_GhostFactory.createPinkGhost();
+        pacMan = ArcadeMsPacMan_ActorFactory.createPacMan();
+        msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
+        inky = ArcadeMsPacMan_ActorFactory.createCyanGhost();
+        pinky = ArcadeMsPacMan_ActorFactory.createPinkGhost();
         heart = new Actor();
 
         ArcadeMsPacMan_SpriteSheet spriteSheet = THE_UI_CONFIGS.current().spriteSheet();

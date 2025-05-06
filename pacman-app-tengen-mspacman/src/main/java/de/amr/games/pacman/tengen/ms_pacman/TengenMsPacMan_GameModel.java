@@ -482,19 +482,17 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.setGameOverStateTicks(420);
         level.addArcadeHouse();
 
-        var pac = new Pac();
-        pac.setName("Ms. Pac-Man");
-        pac.setGameLevel(level);
-        pac.reset();
-        pac.setAutopilot(autopilot);
-        level.setPac(pac);
+        var msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
+        msPacMan.setGameLevel(level);
+        msPacMan.setAutopilot(autopilot);
+        level.setPac(msPacMan);
 
         //TODO clarify hunting behavior
         level.setGhosts(
-            TengenMsPacMan_GhostFactory.createRedGhost(),
-            TengenMsPacMan_GhostFactory.createPinkGhost(),
-            TengenMsPacMan_GhostFactory.createCyanGhost(),
-            TengenMsPacMan_GhostFactory.createOrangeGhost()
+            TengenMsPacMan_ActorFactory.createRedGhost(),
+            TengenMsPacMan_ActorFactory.createPinkGhost(),
+            TengenMsPacMan_ActorFactory.createCyanGhost(),
+            TengenMsPacMan_ActorFactory.createOrangeGhost()
         );
         level.ghosts().forEach(ghost -> {
             ghost.reset();

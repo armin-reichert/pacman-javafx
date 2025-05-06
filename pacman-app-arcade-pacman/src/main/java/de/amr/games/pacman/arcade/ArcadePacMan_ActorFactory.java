@@ -7,10 +7,17 @@ package de.amr.games.pacman.arcade;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.HuntingPhase;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.Pac;
 
 import static de.amr.games.pacman.Globals.*;
 
-public interface ArcadePacMan_GhostFactory {
+public interface ArcadePacMan_ActorFactory {
+
+    static Pac createPac() {
+        var pac = new Pac("Pac-Man");
+        pac.reset();
+        return pac;
+    }
 
     static Ghost createRedGhost() {
         return new Ghost(RED_GHOST_ID, "Blinky") {

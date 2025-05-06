@@ -43,8 +43,8 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     public void doInit() {
         game().setScoreVisible(true);
 
-        pacMan = new Pac();
-        msPacMan = new Pac();
+        pacMan = ArcadeMsPacMan_ActorFactory.createPacMan();
+        msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
 
         ArcadeMsPacMan_SpriteSheet spriteSheet = THE_UI_CONFIGS.current().spriteSheet();
         msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));

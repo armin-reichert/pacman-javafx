@@ -53,8 +53,8 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     public void doInit() {
         t = -1;
         game().setScoreVisible(false);
-        pacMan = new Pac();
-        msPacMan = new Pac();
+        msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
+        pacMan = TengenMsPacMan_ActorFactory.createPacMan();
         var spriteSheet = (TengenMsPacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
         msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         pacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));

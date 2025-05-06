@@ -6,11 +6,11 @@ package de.amr.games.pacman.model.actors;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.steering.Steering;
 
 import java.util.Optional;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Pac-Man / Ms. Pac-Man.
@@ -21,7 +21,7 @@ public class Pac extends Creature implements AnimatedActor2D {
 
     public static final byte REST_INDEFINITELY = -1;
 
-    private String name;
+    private final String name;
     private boolean dead;
     private int restingTicks;
     private long starvingTicks;
@@ -32,8 +32,8 @@ public class Pac extends Creature implements AnimatedActor2D {
 
     private final TickTimer powerTimer = new TickTimer("PacPowerTimer");
 
-    public void setName(String name) {
-        this.name = name;
+    public Pac(String name) {
+        this.name = requireNonNull(name);
     }
 
     public String name() {

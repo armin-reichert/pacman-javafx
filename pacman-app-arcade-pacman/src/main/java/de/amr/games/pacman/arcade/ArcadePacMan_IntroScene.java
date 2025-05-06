@@ -78,13 +78,13 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public void doInit() {
         ArcadePacMan_SpriteSheet spriteSheet = THE_UI_CONFIGS.current().spriteSheet();
         blinking = new Pulse(10, true);
-        pacMan = new Pac();
+        pacMan = ArcadePacMan_ActorFactory.createPac();
         pacMan.setAnimations(new ArcadePacMan_PacAnimations(spriteSheet));
         ghosts = new Ghost[] {
-            ArcadePacMan_GhostFactory.createRedGhost(),
-            ArcadePacMan_GhostFactory.createPinkGhost(),
-            ArcadePacMan_GhostFactory.createCyanGhost(),
-            ArcadePacMan_GhostFactory.createOrangeGhost()
+            ArcadePacMan_ActorFactory.createRedGhost(),
+            ArcadePacMan_ActorFactory.createPinkGhost(),
+            ArcadePacMan_ActorFactory.createCyanGhost(),
+            ArcadePacMan_ActorFactory.createOrangeGhost()
         };
         for (Ghost ghost : ghosts) {
             ghost.setAnimations(new ArcadePacMan_GhostAnimations(spriteSheet, ghost.id()));

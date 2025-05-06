@@ -41,7 +41,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     static final int RIGHT_BORDER = TS * (NES_TILES.x() - 2);
 
     private MediaPlayer music;
-    private Pac mrPacMan;
+    private Pac pacMan;
     private Pac msPacMan;
     private Actor stork;
     private Actor bagWithJunior;
@@ -66,14 +66,14 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         t = -1;
         game().setScoreVisible(false);
 
-        mrPacMan = new Pac();
-        msPacMan = new Pac();
+        msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
+        pacMan = TengenMsPacMan_ActorFactory.createPacMan();
         stork = new Actor();
         bagWithJunior = new Actor();
         bagWithJunior.hide();
 
         spriteSheet = (TengenMsPacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
-        mrPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
+        pacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
 
         music = THE_SOUND.createSound("intermission.3");
@@ -94,10 +94,10 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
             music.play();
         }
         else if (t == 130) {
-            mrPacMan.setMoveDir(Direction.RIGHT);
-            mrPacMan.setPosition(TS * 3, GROUND_Y - 4);
-            mrPacMan.selectAnimation("pacman_munching");
-            mrPacMan.show();
+            pacMan.setMoveDir(Direction.RIGHT);
+            pacMan.setPosition(TS * 3, GROUND_Y - 4);
+            pacMan.selectAnimation("pacman_munching");
+            pacMan.show();
 
             msPacMan.setMoveDir(Direction.RIGHT);
             msPacMan.setPosition(TS * 5, GROUND_Y - 4);
@@ -169,7 +169,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         r.drawClapperBoard(clapAnimation, "JUNIOR", 3, CLAP_TILE_X, CLAP_TILE_Y, arcadeFontScaledTS());
         r.drawStork(storkAnimation, stork, bagReleased);
         r.drawAnimatedActor(msPacMan);
-        r.drawAnimatedActor(mrPacMan);
+        r.drawAnimatedActor(pacMan);
         if (bagWithJunior.isVisible()) {
             if (bagOpen) {
                 r.drawActorSprite(bagWithJunior, JUNIOR_PAC_SPRITE);

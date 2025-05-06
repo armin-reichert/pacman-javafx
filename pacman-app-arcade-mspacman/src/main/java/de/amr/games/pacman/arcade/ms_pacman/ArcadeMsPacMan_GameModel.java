@@ -14,7 +14,6 @@ import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
-import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
@@ -132,18 +131,16 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
         level.setGameOverStateTicks(150);
         level.addArcadeHouse();
 
-        var pac = new Pac();
-        pac.setName("Ms. Pac-Man");
-        pac.setGameLevel(level);
-        pac.reset();
-        pac.setAutopilot(autopilot);
-        level.setPac(pac);
+        var msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
+        msPacMan.setGameLevel(level);
+        msPacMan.setAutopilot(autopilot);
+        level.setPac(msPacMan);
 
         level.setGhosts(
-            ArcadeMsPacMan_GhostFactory.createRedGhost(),
-            ArcadeMsPacMan_GhostFactory.createPinkGhost(),
-            ArcadeMsPacMan_GhostFactory.createCyanGhost(),
-            ArcadeMsPacMan_GhostFactory.createOrangeGhost()
+            ArcadeMsPacMan_ActorFactory.createRedGhost(),
+            ArcadeMsPacMan_ActorFactory.createPinkGhost(),
+            ArcadeMsPacMan_ActorFactory.createCyanGhost(),
+            ArcadeMsPacMan_ActorFactory.createOrangeGhost()
         );
         level.ghosts().forEach(ghost -> {
             ghost.reset();

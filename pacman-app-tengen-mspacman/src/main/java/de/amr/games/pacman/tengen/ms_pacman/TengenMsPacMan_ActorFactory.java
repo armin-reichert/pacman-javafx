@@ -2,20 +2,29 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.arcade.ms_pacman;
+package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.HuntingPhase;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.Pac;
 
 import static de.amr.games.pacman.Globals.*;
 
-public interface ArcadeMsPacMan_GhostFactory {
-    /**
-     * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
-     * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
-     * only the scatter target of Blinky and Pinky would have been affected. Who knows?
-     */
+public class TengenMsPacMan_ActorFactory {
+
+    static Pac createMsPacMan() {
+        var msPacMan = new Pac("Ms. Pac-Man");
+        msPacMan.reset();
+        return msPacMan;
+    }
+
+    static Pac createPacMan() {
+        var msPacMan = new Pac("Pac-Man");
+        msPacMan.reset();
+        return msPacMan;
+    }
+
     static Ghost createRedGhost() {
         return new Ghost(RED_GHOST_ID, "Blinky") {
             @Override
@@ -29,15 +38,14 @@ public interface ArcadeMsPacMan_GhostFactory {
                     followTarget(targetTile, speed);
                 }
             }
+
             @Override
             public Vector2i chasingTargetTile() {
-                // Blinky (red ghost) attacks Pac-Man directly
                 return level.pac().tile();
             }
         };
     }
 
-    /** @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>. */
     static Ghost createPinkGhost() {
         return new Ghost(PINK_GHOST_ID, "Pinky") {
             @Override
@@ -51,10 +59,10 @@ public interface ArcadeMsPacMan_GhostFactory {
                     followTarget(targetTile, speed);
                 }
             }
+
             @Override
             public Vector2i chasingTargetTile() {
-                // Pinky (pink ghost) ambushes Pac-Man
-                return level.pac().tilesAhead(4, true);
+                return level.pac().tilesAhead(4, false);
             }
         };
     }
@@ -68,10 +76,10 @@ public interface ArcadeMsPacMan_GhostFactory {
                 Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
                 followTarget(targetTile, speed);
             }
+
             @Override
             public Vector2i chasingTargetTile() {
-                // Inky (cyan ghost) attacks from opposite side as Blinky
-                return level.pac().tilesAhead(2, true).scaled(2).minus(level.ghost(RED_GHOST_ID).tile());
+                return level.pac().tilesAhead(2, false).scaled(2).minus(level.ghost(RED_GHOST_ID).tile());
             }
         };
     }
@@ -85,12 +93,11 @@ public interface ArcadeMsPacMan_GhostFactory {
                 Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
                 followTarget(targetTile, speed);
             }
+
             @Override
             public Vector2i chasingTargetTile() {
-                // Attacks directly or retreats towards scatter target if Pac is near
                 return tile().euclideanDist(level.pac().tile()) < 8 ? level.ghostScatterTile(id()) : level.pac().tile();
             }
         };
     }
-
 }

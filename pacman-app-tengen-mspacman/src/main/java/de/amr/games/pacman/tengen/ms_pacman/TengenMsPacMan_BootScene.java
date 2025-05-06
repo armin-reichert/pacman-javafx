@@ -49,7 +49,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             grayScreen = false;
             tengenPresentsY = sizeInPx().y() + TS;  // just out of visible area
             tengenPresentsSpeed = 0;
-            ghost = TengenMsPacMan_GhostFactory.createRedGhost();
+            ghost = TengenMsPacMan_ActorFactory.createRedGhost();
             ghost.setSpeed(0);
             ghost.hide();
             GameSpriteSheet spriteSheet = THE_UI_CONFIGS.current().spriteSheet();

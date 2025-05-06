@@ -201,18 +201,17 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
             public void onEnter(TengenMsPacMan_IntroScene intro) {
                 timer.restartTicks(TickTimer.INDEFINITE);
 
-                intro.msPacMan = new Pac();
-                intro.msPacMan.setName("Ms. Pac-Man");
+                intro.msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
                 intro.msPacMan.setPosition(TS * 33, ACTOR_Y);
                 intro.msPacMan.setMoveDir(Direction.LEFT);
                 intro.msPacMan.setSpeed(SPEED);
                 intro.msPacMan.setVisible(true);
 
                 intro.ghosts = new Ghost[] {
-                    TengenMsPacMan_GhostFactory.createRedGhost(),
-                    TengenMsPacMan_GhostFactory.createCyanGhost(),
-                    TengenMsPacMan_GhostFactory.createPinkGhost(),
-                    TengenMsPacMan_GhostFactory.createOrangeGhost()
+                    TengenMsPacMan_ActorFactory.createRedGhost(),
+                    TengenMsPacMan_ActorFactory.createCyanGhost(),
+                    TengenMsPacMan_ActorFactory.createPinkGhost(),
+                    TengenMsPacMan_ActorFactory.createOrangeGhost()
                 };
                 for (Ghost ghost : intro.ghosts) {
                     ghost.setPosition(TS * 33, ACTOR_Y);

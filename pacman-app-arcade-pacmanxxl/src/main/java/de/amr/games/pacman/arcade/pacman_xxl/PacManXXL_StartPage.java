@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade.pacman_xxl;
 
 import de.amr.games.pacman.arcade.ArcadePacMan_GhostAnimations;
-import de.amr.games.pacman.arcade.ArcadePacMan_GhostFactory;
+import de.amr.games.pacman.arcade.ArcadePacMan_ActorFactory;
 import de.amr.games.pacman.arcade.ArcadePacMan_PacAnimations;
 import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GhostAnimations;
 import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_PacAnimations;
@@ -262,17 +262,17 @@ public class PacManXXL_StartPage implements StartPage {
         private void resetActorAnimation() {
             chasingGhosts = false;
 
-            pac = new Pac();
+            pac = ArcadePacMan_ActorFactory.createPac();
             pac.setPosX(42 * TS);
             pac.setMoveAndWishDir(Direction.LEFT);
             pac.setSpeed(1.0f);
             pac.setVisible(true);
 
             ghosts = new Ghost[] {
-                ArcadePacMan_GhostFactory.createRedGhost(),
-                ArcadePacMan_GhostFactory.createPinkGhost(),
-                ArcadePacMan_GhostFactory.createCyanGhost(),
-                ArcadePacMan_GhostFactory.createOrangeGhost()
+                ArcadePacMan_ActorFactory.createRedGhost(),
+                ArcadePacMan_ActorFactory.createPinkGhost(),
+                ArcadePacMan_ActorFactory.createCyanGhost(),
+                ArcadePacMan_ActorFactory.createOrangeGhost()
             };
             for (Ghost ghost : ghosts) {
                 ghost.setPosX(46 * TS + ghost.id() * 2 * TS);
