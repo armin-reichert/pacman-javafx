@@ -53,7 +53,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     static final int MAX_START_LEVEL = 32;  //TODO 7
 
     static final int INITIAL_DELAY = 20; //TODO verify
-    static final int IDLE_TIMEOUT = 22 * 60; // TODO verify
+    static final int IDLE_TIMEOUT = 1530; // 25,5 sec TODO verify
 
     private TengenMsPacMan_GameModel tengenGame;
     private int selectedOption;
