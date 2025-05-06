@@ -121,8 +121,9 @@ public class Ghost extends Creature implements AnimatedActor2D {
         }
     }
 
-    public void hunt() {
-    }
+    public void hunt() { }
+
+    public Vector2i chasingTargetTile() { return null; }
 
     /**
      * Lets the ghost randomly roam through the world.

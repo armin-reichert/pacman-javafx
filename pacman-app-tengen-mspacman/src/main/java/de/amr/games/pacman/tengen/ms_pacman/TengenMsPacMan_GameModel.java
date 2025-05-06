@@ -526,9 +526,14 @@ public class TengenMsPacMan_GameModel extends GameModel {
                     roam(speed);
                 } else {
                     boolean chase = huntingTimer.phase() == HuntingPhase.CHASING || cruiseElroy() > 0;
-                    Vector2i targetTile = chase ? chasingTargetTile(level, id()) : level.ghostScatterTile(id());
+                    Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
                     followTarget(targetTile, speed);
                 }
+            }
+
+            @Override
+            public Vector2i chasingTargetTile() {
+                return level.pac().tile();
             }
         };
     }
@@ -542,9 +547,14 @@ public class TengenMsPacMan_GameModel extends GameModel {
                     roam(speed);
                 } else {
                     boolean chase = huntingTimer.phase() == HuntingPhase.CHASING;
-                    Vector2i targetTile = chase ? chasingTargetTile(level, id()) : level.ghostScatterTile(id());
+                    Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
                     followTarget(targetTile, speed);
                 }
+            }
+
+            @Override
+            public Vector2i chasingTargetTile() {
+                return level.pac().tilesAhead(4, false);
             }
         };
     }
@@ -555,8 +565,13 @@ public class TengenMsPacMan_GameModel extends GameModel {
             public void hunt() {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
                 boolean chase = huntingTimer.phase() == HuntingPhase.CHASING;
-                Vector2i targetTile = chase ? chasingTargetTile(level, id()) : level.ghostScatterTile(id());
+                Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
                 followTarget(targetTile, speed);
+            }
+
+            @Override
+            public Vector2i chasingTargetTile() {
+                return level.pac().tilesAhead(2, false).scaled(2).minus(level.ghost(RED_GHOST_ID).tile());
             }
         };
     }
@@ -567,8 +582,13 @@ public class TengenMsPacMan_GameModel extends GameModel {
             public void hunt() {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
                 boolean chase = huntingTimer.phase() == HuntingPhase.CHASING;
-                Vector2i targetTile = chase ? chasingTargetTile(level, id()) : level.ghostScatterTile(id());
+                Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
                 followTarget(targetTile, speed);
+            }
+
+            @Override
+            public Vector2i chasingTargetTile() {
+                return tile().euclideanDist(level.pac().tile()) < 8 ? level.ghostScatterTile(id()) : level.pac().tile();
             }
         };
     }
@@ -733,23 +753,5 @@ public class TengenMsPacMan_GameModel extends GameModel {
         ghost.eaten(killedSoFar);
         scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
-    }
-
-    /**
-     * Returns the chasing target tile for the given ghost.
-     *
-     * @param level the game level
-     * @param ghostID the chasing ghost's ID
-     * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
-     */
-    public Vector2i chasingTargetTile(GameLevel level, byte ghostID) {
-        return switch (ghostID) {
-            case RED_GHOST_ID -> level.pac().tile();
-            case PINK_GHOST_ID -> level.pac().tilesAhead(4, false);
-            case CYAN_GHOST_ID -> level.pac().tilesAhead(2, false).scaled(2).minus(level.ghost(RED_GHOST_ID).tile());
-            case ORANGE_GHOST_ID -> level.ghost(ORANGE_GHOST_ID).tile().euclideanDist(level.pac().tile()) < 8
-                    ? level.ghostScatterTile(ORANGE_GHOST_ID) : level.pac().tile();
-            default -> throw GameException.invalidGhostID(ghostID);
-        };
     }
 }

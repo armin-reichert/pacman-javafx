@@ -174,13 +174,19 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
                     roam(speed);
                 } else {
                     boolean chase = huntingTimer.phase() == HuntingPhase.CHASING || cruiseElroy() > 0;
-                    Vector2i targetTile = chase ? chasingTargetTile(level, id()) : level.ghostScatterTile(id());
+                    Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
                     followTarget(targetTile, speed);
                 }
+            }
+            @Override
+            public Vector2i chasingTargetTile() {
+                // Blinky (red ghost) attacks Pac-Man directly
+                return level.pac().tile();
             }
         };
     }
 
+    /** @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>. */
     protected Ghost createPinkGhost() {
         return new Ghost(PINK_GHOST_ID, "Pinky") {
             @Override
@@ -190,9 +196,14 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
                     roam(speed);
                 } else {
                     boolean chase = huntingTimer.phase() == HuntingPhase.CHASING;
-                    Vector2i targetTile = chase ? chasingTargetTile(level, id()) : level.ghostScatterTile(id());
+                    Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
                     followTarget(targetTile, speed);
                 }
+            }
+            @Override
+            public Vector2i chasingTargetTile() {
+                // Pinky (pink ghost) ambushes Pac-Man
+                return level.pac().tilesAhead(4, true);
             }
         };
     }
@@ -203,8 +214,13 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
             public void hunt() {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
                 boolean chase = huntingTimer.phase() == HuntingPhase.CHASING;
-                Vector2i targetTile = chase ? chasingTargetTile(level, id()) : level.ghostScatterTile(id());
+                Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
                 followTarget(targetTile, speed);
+            }
+            @Override
+            public Vector2i chasingTargetTile() {
+                // Inky (cyan ghost) attacks from opposite side as Blinky
+                return level.pac().tilesAhead(2, true).scaled(2).minus(level.ghost(RED_GHOST_ID).tile());
             }
         };
     }
@@ -215,8 +231,13 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
             public void hunt() {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
                 boolean chase = huntingTimer.phase() == HuntingPhase.CHASING;
-                Vector2i targetTile = chase ? chasingTargetTile(level, id()) : level.ghostScatterTile(id());
+                Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
                 followTarget(targetTile, speed);
+            }
+            @Override
+            public Vector2i chasingTargetTile() {
+                // Attacks directly or retreats towards scatter target if Pac is near
+                return tile().euclideanDist(level.pac().tile()) < 8 ? level.ghostScatterTile(id()) : level.pac().tile();
             }
         };
     }
