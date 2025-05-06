@@ -34,7 +34,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     public void doInit() {
         game().setScoreVisible(true);
         pac = new Pac();
-        blinky = new Ghost(RED_GHOST_ID, "Blinky");
+        blinky = ArcadePacMan_GhostFactory.createRedGhost();
 
         music = THE_SOUND.createRepeatingSound("intermission");
         music.setCycleCount(2);

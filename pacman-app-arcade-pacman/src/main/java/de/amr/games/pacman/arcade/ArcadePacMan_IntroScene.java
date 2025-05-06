@@ -81,10 +81,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         pacMan = new Pac();
         pacMan.setAnimations(new ArcadePacMan_PacAnimations(spriteSheet));
         ghosts = new Ghost[] {
-            new Ghost(RED_GHOST_ID, "Blinky"),
-            new Ghost(PINK_GHOST_ID, "Pinky"),
-            new Ghost(CYAN_GHOST_ID, "Inky"),
-            new Ghost(ORANGE_GHOST_ID, "Clyde")
+            ArcadePacMan_GhostFactory.createRedGhost(),
+            ArcadePacMan_GhostFactory.createPinkGhost(),
+            ArcadePacMan_GhostFactory.createCyanGhost(),
+            ArcadePacMan_GhostFactory.createOrangeGhost()
         };
         for (Ghost ghost : ghosts) {
             ghost.setAnimations(new ArcadePacMan_GhostAnimations(spriteSheet, ghost.id()));

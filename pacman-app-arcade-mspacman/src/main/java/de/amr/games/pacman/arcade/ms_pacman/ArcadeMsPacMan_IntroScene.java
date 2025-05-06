@@ -82,10 +82,10 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
         msPacMan = new Pac();
         ghosts = new Ghost[] {
-            new Ghost(RED_GHOST_ID, "Blinky"),
-            new Ghost(PINK_GHOST_ID, "Pinky"),
-            new Ghost(CYAN_GHOST_ID, "Inky"),
-            new Ghost(ORANGE_GHOST_ID, "Sue")
+            ArcadeMsPacMan_GhostFactory.createRedGhost(),
+            ArcadeMsPacMan_GhostFactory.createPinkGhost(),
+            ArcadeMsPacMan_GhostFactory.createCyanGhost(),
+            ArcadeMsPacMan_GhostFactory.createOrangeGhost()
         };
         marqueeTimer = new TickTimer("marquee-timer");
         ghostID = 0;

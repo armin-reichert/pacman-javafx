@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman_xxl;
 
-import de.amr.games.pacman.arcade.ArcadePacMan_GameModel;
 import de.amr.games.pacman.arcade.ArcadePacMan_GhostAnimations;
+import de.amr.games.pacman.arcade.ArcadePacMan_GhostFactory;
 import de.amr.games.pacman.arcade.ArcadePacMan_PacAnimations;
 import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GhostAnimations;
 import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_PacAnimations;
@@ -33,7 +33,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
+import static de.amr.games.pacman.Globals.TS;
 import static de.amr.games.pacman.ui.Globals.*;
 import static java.util.Objects.requireNonNull;
 
@@ -268,10 +269,10 @@ public class PacManXXL_StartPage implements StartPage {
             pac.setVisible(true);
 
             ghosts = new Ghost[] {
-                new Ghost(RED_GHOST_ID, "Blinky"),
-                new Ghost(PINK_GHOST_ID, "Pinky"),
-                new Ghost(CYAN_GHOST_ID, "Inky"),
-                new Ghost(ORANGE_GHOST_ID, "Clyde")
+                ArcadePacMan_GhostFactory.createRedGhost(),
+                ArcadePacMan_GhostFactory.createPinkGhost(),
+                ArcadePacMan_GhostFactory.createCyanGhost(),
+                ArcadePacMan_GhostFactory.createOrangeGhost()
             };
             for (Ghost ghost : ghosts) {
                 ghost.setPosX(46 * TS + ghost.id() * 2 * TS);

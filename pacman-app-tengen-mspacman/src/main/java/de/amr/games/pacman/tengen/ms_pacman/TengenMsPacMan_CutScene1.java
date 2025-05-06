@@ -68,8 +68,8 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
         mrPacMan = new Pac();
         msPacMan = new Pac();
-        inky = new Ghost(CYAN_GHOST_ID, "Inky");
-        pinky = new Ghost(PINK_GHOST_ID, "Pinky");
+        inky = TengenMsPacMan_GhostFactory.createCyanGhost();
+        pinky = TengenMsPacMan_GhostFactory.createPinkGhost();
         heart = new Actor();
 
         var spriteSheet = (TengenMsPacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
