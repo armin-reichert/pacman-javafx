@@ -165,7 +165,12 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
         List<Vector2i> oneWayDownTiles = worldMap.tiles()
             .filter(tile -> worldMap.get(LayerID.TERRAIN, tile) == TerrainTiles.ONE_WAY_DOWN)
             .toList();
-        level.setGhosts(createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost());
+        level.setGhosts(
+            ArcadePacMan_GhostFactory.createRedGhost(),
+            ArcadePacMan_GhostFactory.createPinkGhost(),
+            ArcadePacMan_GhostFactory.createCyanGhost(),
+            ArcadePacMan_GhostFactory.createOrangeGhost()
+        );
         level.ghosts().forEach(ghost -> {
             ghost.reset();
             ghost.setRevivalPosition(ghost.id() == RED_GHOST_ID
@@ -183,76 +188,6 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
         level.setBonusSymbol(1, computeBonusSymbol(levelNumber));
 
         levelCounter.setEnabled(true);
-    }
-
-    protected static Ghost createRedGhost() {
-        return new Ghost(RED_GHOST_ID, "Blinky") {
-            @Override
-            public void hunt() {
-                float speed = level.speedControl().ghostAttackSpeed(level, this);
-                boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || cruiseElroy() > 0;
-                Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
-                followTarget(targetTile, speed);
-            }
-            @Override
-            public Vector2i chasingTargetTile() {
-                // Blinky (red ghost) attacks Pac-Man directly
-                return level.pac().tile();
-            }
-        };
-    }
-
-    /** @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>. */
-    protected static Ghost createPinkGhost() {
-        return new Ghost(PINK_GHOST_ID, "Pinky") {
-            @Override
-            public void hunt() {
-                float speed = level.speedControl().ghostAttackSpeed(level, this);
-                boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
-                Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
-                followTarget(targetTile, speed);
-            }
-            @Override
-            public Vector2i chasingTargetTile() {
-                // Pinky (pink ghost) ambushes Pac-Man
-                return level.pac().tilesAhead(4, true);
-            }
-        };
-    }
-
-    /** @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>. */
-    protected static Ghost createCyanGhost() {
-        return new Ghost(CYAN_GHOST_ID, "Inky") {
-            @Override
-            public void hunt() {
-                float speed = level.speedControl().ghostAttackSpeed(level, this);
-                boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
-                Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
-                followTarget(targetTile, speed);
-            }
-            @Override
-            public Vector2i chasingTargetTile() {
-                // Inky (cyan ghost) attacks from opposite side as Blinky
-                return level.pac().tilesAhead(2, true).scaled(2).minus(level.ghost(RED_GHOST_ID).tile());
-            }
-        };
-    }
-
-    protected static Ghost createOrangeGhost() {
-        return new Ghost(ORANGE_GHOST_ID, "Clyde") {
-            @Override
-            public void hunt() {
-                float speed = level.speedControl().ghostAttackSpeed(level, this);
-                boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
-                Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
-                followTarget(targetTile, speed);
-            }
-            @Override
-            public Vector2i chasingTargetTile() {
-                // Attacks directly or retreats towards scatter target if Pac is near
-                return tile().euclideanDist(level.pac().tile()) < 8 ? level.ghostScatterTile(id()) : level.pac().tile();
-            }
-        };
     }
 
     @Override

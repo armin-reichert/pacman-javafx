@@ -139,7 +139,12 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
         pac.setAutopilot(autopilot);
         level.setPac(pac);
 
-        level.setGhosts(createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost());
+        level.setGhosts(
+            ArcadeMsPacMan_GhostFactory.createRedGhost(),
+            ArcadeMsPacMan_GhostFactory.createPinkGhost(),
+            ArcadeMsPacMan_GhostFactory.createCyanGhost(),
+            ArcadeMsPacMan_GhostFactory.createOrangeGhost()
+        );
         level.ghosts().forEach(ghost -> {
             ghost.reset();
             ghost.setRevivalPosition(ghost.id() == RED_GHOST_ID
@@ -158,88 +163,6 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
         levelCounter().setEnabled(levelNumber < 8);
-    }
-
-    /**
-     * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
-     * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
-     * only the scatter target of Blinky and Pinky would have been affected. Who knows?
-     */
-    protected static Ghost createRedGhost() {
-        return new Ghost(RED_GHOST_ID, "Blinky") {
-            @Override
-            public void hunt() {
-                float speed = level.speedControl().ghostAttackSpeed(level, this);
-                if (level.huntingTimer().phaseIndex() == 0) {
-                    roam(speed);
-                } else {
-                    boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || cruiseElroy() > 0;
-                    Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
-                    followTarget(targetTile, speed);
-                }
-            }
-            @Override
-            public Vector2i chasingTargetTile() {
-                // Blinky (red ghost) attacks Pac-Man directly
-                return level.pac().tile();
-            }
-        };
-    }
-
-    /** @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>. */
-    protected static Ghost createPinkGhost() {
-        return new Ghost(PINK_GHOST_ID, "Pinky") {
-            @Override
-            public void hunt() {
-                float speed = level.speedControl().ghostAttackSpeed(level, this);
-                if (level.huntingTimer().phaseIndex() == 0) {
-                    roam(speed);
-                } else {
-                    boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
-                    Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
-                    followTarget(targetTile, speed);
-                }
-            }
-            @Override
-            public Vector2i chasingTargetTile() {
-                // Pinky (pink ghost) ambushes Pac-Man
-                return level.pac().tilesAhead(4, true);
-            }
-        };
-    }
-
-    protected static Ghost createCyanGhost() {
-        return new Ghost(CYAN_GHOST_ID, "Inky") {
-            @Override
-            public void hunt() {
-                float speed = level.speedControl().ghostAttackSpeed(level, this);
-                boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
-                Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
-                followTarget(targetTile, speed);
-            }
-            @Override
-            public Vector2i chasingTargetTile() {
-                // Inky (cyan ghost) attacks from opposite side as Blinky
-                return level.pac().tilesAhead(2, true).scaled(2).minus(level.ghost(RED_GHOST_ID).tile());
-            }
-        };
-    }
-
-    protected static Ghost createOrangeGhost() {
-        return new Ghost(ORANGE_GHOST_ID, "Sue") {
-            @Override
-            public void hunt() {
-                float speed = level.speedControl().ghostAttackSpeed(level, this);
-                boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
-                Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
-                followTarget(targetTile, speed);
-            }
-            @Override
-            public Vector2i chasingTargetTile() {
-                // Attacks directly or retreats towards scatter target if Pac is near
-                return tile().euclideanDist(level.pac().tile()) < 8 ? level.ghostScatterTile(id()) : level.pac().tile();
-            }
-        };
     }
 
     @Override
