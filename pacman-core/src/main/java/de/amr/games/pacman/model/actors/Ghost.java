@@ -10,6 +10,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.TerrainTiles;
+import de.amr.games.pacman.model.HuntingTimer;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;

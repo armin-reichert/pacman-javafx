@@ -165,15 +165,15 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
      * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
      * only the scatter target of Blinky and Pinky would have been affected. Who knows?
      */
-    protected Ghost createRedGhost() {
+    protected static Ghost createRedGhost() {
         return new Ghost(RED_GHOST_ID, "Blinky") {
             @Override
             public void hunt() {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
-                if (huntingTimer.phaseIndex() == 0) {
+                if (level.huntingTimer().phaseIndex() == 0) {
                     roam(speed);
                 } else {
-                    boolean chase = huntingTimer.phase() == HuntingPhase.CHASING || cruiseElroy() > 0;
+                    boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || cruiseElroy() > 0;
                     Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
                     followTarget(targetTile, speed);
                 }
@@ -187,15 +187,15 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
     }
 
     /** @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>. */
-    protected Ghost createPinkGhost() {
+    protected static Ghost createPinkGhost() {
         return new Ghost(PINK_GHOST_ID, "Pinky") {
             @Override
             public void hunt() {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
-                if (huntingTimer.phaseIndex() == 0) {
+                if (level.huntingTimer().phaseIndex() == 0) {
                     roam(speed);
                 } else {
-                    boolean chase = huntingTimer.phase() == HuntingPhase.CHASING;
+                    boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
                     Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
                     followTarget(targetTile, speed);
                 }
@@ -208,12 +208,12 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
         };
     }
 
-    protected Ghost createCyanGhost() {
+    protected static Ghost createCyanGhost() {
         return new Ghost(CYAN_GHOST_ID, "Inky") {
             @Override
             public void hunt() {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
-                boolean chase = huntingTimer.phase() == HuntingPhase.CHASING;
+                boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
                 Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
                 followTarget(targetTile, speed);
             }
@@ -225,12 +225,12 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
         };
     }
 
-    protected Ghost createOrangeGhost() {
+    protected static Ghost createOrangeGhost() {
         return new Ghost(ORANGE_GHOST_ID, "Sue") {
             @Override
             public void hunt() {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
-                boolean chase = huntingTimer.phase() == HuntingPhase.CHASING;
+                boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
                 Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
                 followTarget(targetTile, speed);
             }
