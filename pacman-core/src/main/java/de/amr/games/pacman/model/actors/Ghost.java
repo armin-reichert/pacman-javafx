@@ -15,7 +15,6 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.Direction.*;
@@ -34,7 +33,6 @@ public class Ghost extends Creature implements AnimatedActor2D {
     private GhostState state;
     private Vector2f revivalPosition;
     private ActorAnimations animations;
-    private Consumer<Ghost> huntingBehaviour = ghost -> {};
     private List<Vector2i> specialTerrainTiles = List.of();
     private byte cruiseElroy;
 
@@ -47,10 +45,6 @@ public class Ghost extends Creature implements AnimatedActor2D {
         this.id = requireValidGhostID(id);
         this.name = requireNonNull(name);
         corneringSpeedUp = -1.25f;
-    }
-
-    public void setHuntingBehaviour(Consumer<Ghost> huntingBehaviour) {
-        this.huntingBehaviour = requireNonNull(huntingBehaviour);
     }
 
     @Override
@@ -125,6 +119,9 @@ public class Ghost extends Creature implements AnimatedActor2D {
         if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
             setCruiseElroy(-level.ghost(RED_GHOST_ID).cruiseElroy());
         }
+    }
+
+    public void hunt() {
     }
 
     /**
@@ -340,7 +337,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
     private void updateStateHuntingPac() {
         // The specific hunting behaviour is defined by the game variant. For example, in Ms. Pac-Man,
         // the red and pink ghosts are not chasing Pac-Man during the first scatter phase, but roam the maze randomly.
-        huntingBehaviour.accept(this);
+        hunt();
     }
 
     // --- FRIGHTENED ---

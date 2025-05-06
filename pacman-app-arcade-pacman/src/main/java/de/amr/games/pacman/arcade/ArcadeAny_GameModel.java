@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade;
 
 import de.amr.games.pacman.event.GameEventType;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.model.actors.ActorSpeedControl;

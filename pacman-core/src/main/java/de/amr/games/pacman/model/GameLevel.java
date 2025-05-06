@@ -237,7 +237,7 @@ public class GameLevel {
     public void setPac(Pac pac) { this.pac = pac; }
     public Pac pac() { return pac; }
 
-    public void setGhosts(Ghost[] ghosts) { this.ghosts = requireNonNull(ghosts); }
+    public void setGhosts(Ghost... ghosts) { this.ghosts = requireNonNull(ghosts); }
     public Ghost ghost(byte id) { return ghosts != null ? ghosts[requireValidGhostID(id)] : null; }
 
     public Stream<Ghost> ghosts(GhostState... states) {

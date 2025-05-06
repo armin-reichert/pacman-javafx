@@ -117,23 +117,6 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
         autopilot = new RuleBasedPacSteering(this);
     }
 
-    /**
-     * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
-     * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
-     * only the scatter target of Blinky and Pinky would have been affected. Who knows?
-     */
-    protected void ghostHuntingBehaviour(Ghost ghost) {
-        if (huntingTimer.phaseIndex() == 0 && (ghost.id() == RED_GHOST_ID || ghost.id() == PINK_GHOST_ID)) {
-            ghost.roam(level.speedControl().ghostAttackSpeed(level, ghost));
-        } else {
-            boolean chase = huntingTimer.phase() == HuntingPhase.CHASING || ghost.cruiseElroy() > 0;
-            Vector2i targetTile = chase
-                ? chasingTargetTile(level, ghost.id())
-                : level.ghostScatterTile(ghost.id());
-            ghost.followTarget(targetTile, level.speedControl().ghostAttackSpeed(level, ghost));
-        }
-    }
-
     @Override
     public void createLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
@@ -154,23 +137,16 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
         pac.setGameLevel(level);
         pac.reset();
         pac.setAutopilot(autopilot);
-
-        var ghosts = List.of(
-            new Ghost(RED_GHOST_ID, "Blinky"),
-            new Ghost(PINK_GHOST_ID, "Pinky"),
-            new Ghost(CYAN_GHOST_ID, "Inky"),
-            new Ghost(ORANGE_GHOST_ID, "Sue")
-        );
-        ghosts.forEach(ghost -> {
-            ghost.setGameLevel(level);
-            ghost.setRevivalPosition(level.ghostStartPosition(ghost.id()));
-            ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
-            ghost.reset();
-        });
-        ghosts.get(RED_GHOST_ID).setRevivalPosition(level.ghostStartPosition(PINK_GHOST_ID)); // middle house position
-
         level.setPac(pac);
-        level.setGhosts(ghosts.toArray(Ghost[]::new));
+
+        level.setGhosts(createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost());
+        level.ghosts().forEach(ghost -> {
+            ghost.reset();
+            ghost.setRevivalPosition(ghost.id() == RED_GHOST_ID
+                ? level.ghostStartPosition(PINK_GHOST_ID)
+                : level.ghostStartPosition(ghost.id()));
+            ghost.setGameLevel(level);
+        });
 
         level.setSpeedControl(new ArcadeActorSpeedControl());
         // Must be called after creation of the actors!
@@ -182,6 +158,67 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
         levelCounter().setEnabled(levelNumber < 8);
+    }
+
+    /**
+     * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
+     * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
+     * only the scatter target of Blinky and Pinky would have been affected. Who knows?
+     */
+    protected Ghost createRedGhost() {
+        return new Ghost(RED_GHOST_ID, "Blinky") {
+            @Override
+            public void hunt() {
+                float speed = level.speedControl().ghostAttackSpeed(level, this);
+                if (huntingTimer.phaseIndex() == 0) {
+                    roam(speed);
+                } else {
+                    boolean chase = huntingTimer.phase() == HuntingPhase.CHASING || cruiseElroy() > 0;
+                    Vector2i targetTile = chase ? chasingTargetTile(level, id()) : level.ghostScatterTile(id());
+                    followTarget(targetTile, speed);
+                }
+            }
+        };
+    }
+
+    protected Ghost createPinkGhost() {
+        return new Ghost(PINK_GHOST_ID, "Pinky") {
+            @Override
+            public void hunt() {
+                float speed = level.speedControl().ghostAttackSpeed(level, this);
+                if (huntingTimer.phaseIndex() == 0) {
+                    roam(speed);
+                } else {
+                    boolean chase = huntingTimer.phase() == HuntingPhase.CHASING;
+                    Vector2i targetTile = chase ? chasingTargetTile(level, id()) : level.ghostScatterTile(id());
+                    followTarget(targetTile, speed);
+                }
+            }
+        };
+    }
+
+    protected Ghost createCyanGhost() {
+        return new Ghost(CYAN_GHOST_ID, "Inky") {
+            @Override
+            public void hunt() {
+                float speed = level.speedControl().ghostAttackSpeed(level, this);
+                boolean chase = huntingTimer.phase() == HuntingPhase.CHASING;
+                Vector2i targetTile = chase ? chasingTargetTile(level, id()) : level.ghostScatterTile(id());
+                followTarget(targetTile, speed);
+            }
+        };
+    }
+
+    protected Ghost createOrangeGhost() {
+        return new Ghost(ORANGE_GHOST_ID, "Sue") {
+            @Override
+            public void hunt() {
+                float speed = level.speedControl().ghostAttackSpeed(level, this);
+                boolean chase = huntingTimer.phase() == HuntingPhase.CHASING;
+                Vector2i targetTile = chase ? chasingTargetTile(level, id()) : level.ghostScatterTile(id());
+                followTarget(targetTile, speed);
+            }
+        };
     }
 
     @Override

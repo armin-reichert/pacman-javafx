@@ -487,28 +487,23 @@ public class TengenMsPacMan_GameModel extends GameModel {
         pac.setGameLevel(level);
         pac.reset();
         pac.setAutopilot(autopilot);
+        level.setPac(pac);
 
-        var ghosts = new Ghost[] {
-            new Ghost(RED_GHOST_ID, "Blinky"),
-            new Ghost(PINK_GHOST_ID, "Pinky"),
-            new Ghost(CYAN_GHOST_ID, "Inky"),
-            new Ghost(ORANGE_GHOST_ID, "Sue")
-        };
-        Stream.of(ghosts).forEach(ghost -> {
-            ghost.setGameLevel(level);
-            ghost.setRevivalPosition(level.ghostStartPosition(ghost.id()));
+        //TODO clarify hunting behavior
+        level.setGhosts(createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost());
+        level.ghosts().forEach(ghost -> {
             ghost.reset();
-            ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
+            ghost.setRevivalPosition(ghost.id() == RED_GHOST_ID
+                ? level.ghostStartPosition(PINK_GHOST_ID)
+                : level.ghostStartPosition(ghost.id()));
+            ghost.setGameLevel(level);
         });
 
-        // Ghosts inside house start at bottom of house instead at middle as marked in map
-        Stream.of(ghosts).filter(ghost -> ghost.id() != RED_GHOST_ID).forEach(ghost ->
-            level.setGhostStartPosition(ghost.id(), level.ghostStartPosition(ghost.id()).plus(0, HTS))
+        // Ghosts inside house start at bottom of house instead at middle (as marked in map)
+        Stream.of(PINK_GHOST_ID, CYAN_GHOST_ID, ORANGE_GHOST_ID)
+            .forEach(id -> level.setGhostStartPosition(id,
+                level.ghostStartPosition(id).plus(0, HTS))
         );
-        ghosts[RED_GHOST_ID].setRevivalPosition(level.ghostStartPosition(PINK_GHOST_ID)); // middle house position
-
-        level.setPac(pac);
-        level.setGhosts(ghosts);
 
         level.setSpeedControl(speedControl);
         // Must be called after creation of the actors!
@@ -520,6 +515,62 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
         levelCounter.setEnabled(levelNumber < 8);
         activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON
+    }
+
+    protected Ghost createRedGhost() {
+        return new Ghost(RED_GHOST_ID, "Blinky") {
+            @Override
+            public void hunt() {
+                float speed = level.speedControl().ghostAttackSpeed(level, this);
+                if (huntingTimer.phaseIndex() == 0) {
+                    roam(speed);
+                } else {
+                    boolean chase = huntingTimer.phase() == HuntingPhase.CHASING || cruiseElroy() > 0;
+                    Vector2i targetTile = chase ? chasingTargetTile(level, id()) : level.ghostScatterTile(id());
+                    followTarget(targetTile, speed);
+                }
+            }
+        };
+    }
+
+    protected Ghost createPinkGhost() {
+        return new Ghost(PINK_GHOST_ID, "Pinky") {
+            @Override
+            public void hunt() {
+                float speed = level.speedControl().ghostAttackSpeed(level, this);
+                if (huntingTimer.phaseIndex() == 0) {
+                    roam(speed);
+                } else {
+                    boolean chase = huntingTimer.phase() == HuntingPhase.CHASING;
+                    Vector2i targetTile = chase ? chasingTargetTile(level, id()) : level.ghostScatterTile(id());
+                    followTarget(targetTile, speed);
+                }
+            }
+        };
+    }
+
+    protected Ghost createCyanGhost() {
+        return new Ghost(CYAN_GHOST_ID, "Inky") {
+            @Override
+            public void hunt() {
+                float speed = level.speedControl().ghostAttackSpeed(level, this);
+                boolean chase = huntingTimer.phase() == HuntingPhase.CHASING;
+                Vector2i targetTile = chase ? chasingTargetTile(level, id()) : level.ghostScatterTile(id());
+                followTarget(targetTile, speed);
+            }
+        };
+    }
+
+    protected Ghost createOrangeGhost() {
+        return new Ghost(ORANGE_GHOST_ID, "Sue") {
+            @Override
+            public void hunt() {
+                float speed = level.speedControl().ghostAttackSpeed(level, this);
+                boolean chase = huntingTimer.phase() == HuntingPhase.CHASING;
+                Vector2i targetTile = chase ? chasingTargetTile(level, id()) : level.ghostScatterTile(id());
+                followTarget(targetTile, speed);
+            }
+        };
     }
 
     private LevelData createLevelData(int levelNumber) {
@@ -682,20 +733,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
         ghost.eaten(killedSoFar);
         scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
-    }
-
-    // TODO clarify what exactly Tengen Ms. Pac-Man does
-    private void ghostHuntingBehaviour(Ghost ghost) {
-        float speed = speedControl.ghostAttackSpeed(level, ghost);
-        if (huntingTimer.phaseIndex() == 0 && (ghost.id() == RED_GHOST_ID || ghost.id() == PINK_GHOST_ID)) {
-            ghost.roam(speed);
-        } else {
-            boolean chasing = huntingTimer.phase() == HuntingPhase.CHASING;
-            Vector2i targetTile = chasing
-                ? chasingTargetTile(level, ghost.id())
-                : level.ghostScatterTile(ghost.id());
-            ghost.followTarget(targetTile, speed);
-        }
     }
 
     /**

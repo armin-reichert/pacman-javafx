@@ -139,14 +139,6 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
         autopilot = new RuleBasedPacSteering(this);
     }
 
-    protected void ghostHuntingBehaviour(Ghost ghost) {
-        boolean chase = huntingTimer.phase() == HuntingPhase.CHASING || ghost.cruiseElroy() > 0;
-        Vector2i targetTile = chase
-            ? chasingTargetTile(level, ghost.id())
-            : level.ghostScatterTile(ghost.id());
-        ghost.followTarget(targetTile, level.speedControl().ghostAttackSpeed(level, ghost));
-    }
-
     @Override
     public void createLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.selectWorldMap(requireValidLevelNumber(levelNumber));
@@ -167,23 +159,21 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
         pac.setGameLevel(level);
         pac.reset();
         pac.setAutopilot(autopilot);
-
-        var ghosts = List.of(
-            new Ghost(RED_GHOST_ID, "Blinky"),
-            new Ghost(PINK_GHOST_ID, "Pinky"),
-            new Ghost(CYAN_GHOST_ID, "Inky"),
-            new Ghost(ORANGE_GHOST_ID, "Clyde"));
-
-        ghosts.forEach(ghost -> {
-            ghost.setGameLevel(level);
-            ghost.setRevivalPosition(level.ghostStartPosition(ghost.id()));
-            ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
-            ghost.reset();
-        });
-        ghosts.get(RED_GHOST_ID).setRevivalPosition(level.ghostStartPosition(PINK_GHOST_ID)); // middle house position
-
         level.setPac(pac);
-        level.setGhosts(ghosts.toArray(Ghost[]::new));
+
+        // Special tiles where attacking ghosts cannot move up
+        List<Vector2i> oneWayDownTiles = worldMap.tiles()
+            .filter(tile -> worldMap.get(LayerID.TERRAIN, tile) == TerrainTiles.ONE_WAY_DOWN)
+            .toList();
+        level.setGhosts(createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost());
+        level.ghosts().forEach(ghost -> {
+            ghost.reset();
+            ghost.setRevivalPosition(ghost.id() == RED_GHOST_ID
+                ? level.ghostStartPosition(PINK_GHOST_ID)
+                : level.ghostStartPosition(ghost.id()));
+            ghost.setGameLevel(level);
+            ghost.setSpecialTerrainTiles(oneWayDownTiles);
+        });
 
         level.setSpeedControl(new ArcadeActorSpeedControl());
         // Must be called after creation of the actors!
@@ -192,13 +182,66 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
         level.setBonusSymbol(0, computeBonusSymbol(levelNumber));
         level.setBonusSymbol(1, computeBonusSymbol(levelNumber));
 
-        // Pac-Man specific: special tiles where attacking ghosts cannot move up
-        List<Vector2i> oneWayDownTiles = worldMap.tiles()
-            .filter(tile -> worldMap.get(LayerID.TERRAIN, tile) == TerrainTiles.ONE_WAY_DOWN).toList();
-        ghosts.forEach(ghost -> ghost.setSpecialTerrainTiles(oneWayDownTiles));
-
         levelCounter.setEnabled(true);
     }
+
+    protected void ghostHuntingBehaviour(Ghost ghost) {
+        boolean chase = huntingTimer.phase() == HuntingPhase.CHASING || ghost.cruiseElroy() > 0;
+        Vector2i targetTile = chase
+            ? chasingTargetTile(level, ghost.id())
+            : level.ghostScatterTile(ghost.id());
+        ghost.followTarget(targetTile, level.speedControl().ghostAttackSpeed(level, ghost));
+    }
+
+    protected Ghost createRedGhost() {
+        return new Ghost(RED_GHOST_ID, "Blinky") {
+            @Override
+            public void hunt() {
+                float speed = level.speedControl().ghostAttackSpeed(level, this);
+                boolean chase = huntingTimer.phase() == HuntingPhase.CHASING || cruiseElroy() > 0;
+                Vector2i targetTile = chase ? chasingTargetTile(level, id()) : level.ghostScatterTile(id());
+                followTarget(targetTile, speed);
+            }
+        };
+    }
+
+    protected Ghost createPinkGhost() {
+        return new Ghost(PINK_GHOST_ID, "Pinky") {
+            @Override
+            public void hunt() {
+                float speed = level.speedControl().ghostAttackSpeed(level, this);
+                boolean chase = huntingTimer.phase() == HuntingPhase.CHASING;
+                Vector2i targetTile = chase ? chasingTargetTile(level, id()) : level.ghostScatterTile(id());
+                followTarget(targetTile, speed);
+            }
+        };
+    }
+
+    protected Ghost createCyanGhost() {
+        return new Ghost(CYAN_GHOST_ID, "Inky") {
+            @Override
+            public void hunt() {
+                float speed = level.speedControl().ghostAttackSpeed(level, this);
+                boolean chase = huntingTimer.phase() == HuntingPhase.CHASING;
+                Vector2i targetTile = chase ? chasingTargetTile(level, id()) : level.ghostScatterTile(id());
+                followTarget(targetTile, speed);
+            }
+        };
+    }
+
+    protected Ghost createOrangeGhost() {
+        return new Ghost(ORANGE_GHOST_ID, "Sue") {
+            @Override
+            public void hunt() {
+                float speed = level.speedControl().ghostAttackSpeed(level, this);
+                boolean chase = huntingTimer.phase() == HuntingPhase.CHASING;
+                Vector2i targetTile = chase ? chasingTargetTile(level, id()) : level.ghostScatterTile(id());
+                followTarget(targetTile, speed);
+            }
+        };
+    }
+
+
 
     @Override
     public boolean isPacManSafeInDemoLevel() {
