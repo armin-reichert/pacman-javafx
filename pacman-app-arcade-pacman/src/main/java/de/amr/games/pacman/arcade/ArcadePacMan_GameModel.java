@@ -230,7 +230,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
     }
 
     protected Ghost createOrangeGhost() {
-        return new Ghost(ORANGE_GHOST_ID, "Sue") {
+        return new Ghost(ORANGE_GHOST_ID, "Clyde") {
             @Override
             public void hunt() {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
@@ -240,8 +240,6 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
             }
         };
     }
-
-
 
     @Override
     public boolean isPacManSafeInDemoLevel() {
