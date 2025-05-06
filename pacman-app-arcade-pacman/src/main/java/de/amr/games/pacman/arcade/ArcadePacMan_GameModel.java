@@ -141,7 +141,8 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
 
     @Override
     public void createLevel(int levelNumber) {
-        WorldMap worldMap = mapSelector.selectWorldMap(requireValidLevelNumber(levelNumber));
+        requireValidLevelNumber(levelNumber);
+        WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
         level = new GameLevel(this, levelNumber, worldMap);
         level.setData(createLevelData(levelNumber));
         level.setHuntingTimer(huntingTimer);
@@ -212,7 +213,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
     @Override
     public void activateNextBonus() {
         level.selectNextBonus();
-        byte symbol = level.bonusSymbol(level.nextBonusIndex());
+        byte symbol = level.bonusSymbol(level.currentBonusIndex());
         var bonus = new StaticBonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
         if (level.worldMap().hasProperty(LayerID.TERRAIN, WorldMapProperty.POS_BONUS)) {
             Vector2i bonusTile = level.worldMap().getTerrainTileProperty(WorldMapProperty.POS_BONUS, new Vector2i(13, 20));

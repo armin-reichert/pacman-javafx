@@ -272,7 +272,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
         Vector2i backyard = houseEntry.plus(0, level.houseSizeInTiles().y() + 1);
         List<Waypoint> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).map(Waypoint::new).toList();
 
-        byte symbol = level.bonusSymbol(level.nextBonusIndex());
+        byte symbol = level.bonusSymbol(level.currentBonusIndex());
         var bonus = new MovingBonus(level, symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
         bonus.setEdibleTicks(TickTimer.INDEFINITE);
         bonus.setRoute(route, crossingLeftToRight);

@@ -186,7 +186,7 @@ public class GateKeeper {
         }
     }
 
-    public void unlockGhosts(GameLevel level, SimulationStep eventLog) {
+    public void unlockGhosts(GameLevel level) {
         Ghost blinky = level.ghost(RED_GHOST_ID);
         if (blinky.inState(LOCKED)) {
             if (blinky.insideHouse()) {
@@ -203,8 +203,8 @@ public class GateKeeper {
             .findFirst().ifPresent(prisoner -> {
                 String releaseReason = checkReleaseOf(level, prisoner);
                 if (releaseReason != null) {
-                    eventLog.setReleasedGhost(prisoner);
-                    eventLog.setGhostReleaseInfo(releaseReason);
+                    THE_SIMULATION_STEP.setReleasedGhost(prisoner);
+                    THE_SIMULATION_STEP.setGhostReleaseInfo(releaseReason);
                     prisoner.setMoveAndWishDir(Direction.UP);
                     prisoner.setState(LEAVING_HOUSE);
                     onGhostReleasedAction.accept(prisoner);

@@ -74,7 +74,7 @@ public class GameLevel {
     private final List<Ghost> victims = new ArrayList<>();
     private Bonus bonus;
     private final byte[] bonusSymbols = new byte[2];
-    private int nextBonusIndex; // -1=no bonus, 0=first, 1=second
+    private int currentBonusIndex; // -1=no bonus, 0=first, 1=second
     private Message message;
 
     private final Pulse blinking;
@@ -90,7 +90,7 @@ public class GameLevel {
         blinking = new Pulse(10, Pulse.OFF);
         portals = findPortals(worldMap);
 
-        nextBonusIndex = -1;
+        currentBonusIndex = -1;
         energizerTiles = worldMap.tilesContaining(LayerID.FOOD, FoodTiles.ENERGIZER).toArray(Vector2i[]::new);
         totalFoodCount = (int) worldMap.tilesContaining(LayerID.FOOD, FoodTiles.PELLET).count() + energizerTiles.length;
         uneatenFoodCount = totalFoodCount;
@@ -254,9 +254,9 @@ public class GameLevel {
 
     public boolean isBonusEdible() { return bonus != null && bonus.state() == Bonus.STATE_EDIBLE; }
 
-    public int nextBonusIndex() { return nextBonusIndex; }
+    public int currentBonusIndex() { return currentBonusIndex; }
 
-    public void selectNextBonus() { nextBonusIndex += 1; }
+    public void selectNextBonus() { currentBonusIndex += 1; }
 
     public byte bonusSymbol(int i) { return bonusSymbols[i]; }
 

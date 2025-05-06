@@ -599,38 +599,41 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public void activateNextBonus() {
-        //TODO No idea how this behaves in Tengen
+        //TODO Find out how Tengen really implemented this
         if (level.isBonusEdible()) {
-            Logger.info("Previous bonus is still active, skip this one");
+            Logger.info("Previous bonus is still active, skip");
             return;
         }
-        level.selectNextBonus();
 
+        // compute possible bonus route
+        List<Portal> portals = level.portals().toList();
+        if (portals.isEmpty()) {
+            Logger.error("No portal found in current maze");
+            return; // TODO: can this happen?
+        }
         boolean leftToRight = THE_RNG.nextBoolean();
         Vector2i houseEntry = tileAt(level.houseEntryPosition());
         Vector2i houseEntryOpposite = houseEntry.plus(0, level.houseSizeInTiles().y() + 1);
-        List<Portal> portals = level.portals().toList();
-        if (portals.isEmpty()) {
-            return; // there should be no mazes without portal but who knows?
-        }
         Portal entryPortal = portals.get(THE_RNG.nextInt(portals.size()));
         Portal exitPortal  = portals.get(THE_RNG.nextInt(portals.size()));
         List<Waypoint> route = Stream.of(
-            leftToRight ? entryPortal.leftTunnelEnd() : entryPortal.rightTunnelEnd(),
-            houseEntry,
-            houseEntryOpposite,
-            houseEntry,
-            leftToRight ? exitPortal.rightTunnelEnd().plus(1, 0) : exitPortal.leftTunnelEnd().minus(1, 0)
+                leftToRight ? entryPortal.leftTunnelEnd() : entryPortal.rightTunnelEnd(),
+                houseEntry,
+                houseEntryOpposite,
+                houseEntry,
+                leftToRight ? exitPortal.rightTunnelEnd().plus(1, 0) : exitPortal.leftTunnelEnd().minus(1, 0)
         ).map(Waypoint::new).toList();
 
-        byte symbol = level.bonusSymbol(level.nextBonusIndex());
-        var movingBonus = new MovingBonus(level, symbol, BONUS_VALUE_FACTORS[symbol] * 100);
-        movingBonus.setRoute(route, leftToRight);
-        movingBonus.setBaseSpeed(1f); // TODO how fast is the bonus really moving?
+        level.selectNextBonus();
+        byte symbol = level.bonusSymbol(level.currentBonusIndex());
+        var bonus = new MovingBonus(level, symbol, BONUS_VALUE_FACTORS[symbol] * 100);
+        bonus.setEdibleTicks(TickTimer.INDEFINITE);
+        bonus.setRoute(route, leftToRight);
+        bonus.setBaseSpeed(0.9f * level.speedControl().pacNormalSpeed(level)); // TODO how fast is the bonus really moving?
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
-        level.setBonus(movingBonus);
-        movingBonus.setEdibleTicks(TickTimer.INDEFINITE);
-        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.BONUS_ACTIVATED, movingBonus.actor().tile());
+
+        level.setBonus(bonus);
+        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.BONUS_ACTIVATED, bonus.actor().tile());
     }
 
     @Override

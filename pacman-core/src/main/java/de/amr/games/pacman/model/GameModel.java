@@ -85,7 +85,7 @@ public abstract class GameModel implements ScoreManager {
     }
 
     public void doHuntingStep() {
-        gateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(level, THE_SIMULATION_STEP));
+        gateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(level));
 
         level.huntingTimer().update(level.number());
         level.blinking().tick();
@@ -199,7 +199,7 @@ public abstract class GameModel implements ScoreManager {
             gateKeeper().ifPresent(gateKeeper -> gateKeeper.registerFoodEaten(level));
             if (isBonusReached()) {
                 activateNextBonus();
-                THE_SIMULATION_STEP.setBonusIndex(level.nextBonusIndex());
+                THE_SIMULATION_STEP.setBonusIndex(level.currentBonusIndex());
             }
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_FOUND_FOOD, tile);
         } else {
