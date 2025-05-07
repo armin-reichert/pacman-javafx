@@ -64,7 +64,7 @@ public class DefaultScoreManager implements ScoreManager {
             if (oldScore < extraLifeScore && newScore >= extraLifeScore) {
                 THE_SIMULATION_STEP.setExtraLifeWon();
                 THE_SIMULATION_STEP.setExtraLifeScore(extraLifeScore);
-                game.handleExtraLifeScoreReached(extraLifeScore);
+                game.addLives(1);
                 GameEvent event = new GameEvent(game, GameEventType.SPECIAL_SCORE_REACHED);
                 event.setPayload("score", extraLifeScore); // just for testing payload implementation
                 THE_GAME_EVENT_MANAGER.publishEvent(event);

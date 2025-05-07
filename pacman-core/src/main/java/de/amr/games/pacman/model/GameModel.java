@@ -216,8 +216,6 @@ public abstract class GameModel {
         }
     }
 
-    protected void handleExtraLifeScoreReached(int extraLifeScore) { addLives(1); }
-
     // Life management
 
     private final IntegerProperty initialLivesPy = new SimpleIntegerProperty(3);
