@@ -10,7 +10,10 @@ import de.amr.games.pacman.lib.Waypoint;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.*;
-import de.amr.games.pacman.model.actors.*;
+import de.amr.games.pacman.model.actors.ActorAnimations;
+import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.MovingBonus;
+import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import de.amr.games.pacman.steering.Steering;
 import org.tinylog.Logger;
@@ -34,8 +37,8 @@ import static java.util.Objects.requireNonNull;
 public class TengenMsPacMan_GameModel extends GameModel {
 
     private static final byte FIRST_LEVEL_NUMBER = 1;
-    private static final int LAST_LEVEL_NUMBER = 32;
-    private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
+    private static final byte LAST_LEVEL_NUMBER = 32;
+    private static final byte DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
     private static final byte PELLET_VALUE = 10;
     private static final byte ENERGIZER_VALUE = 50;
@@ -164,11 +167,9 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public MapSelector mapSelector() {
-        return mapSelector;
-    }
+    public MapSelector mapSelector() { return mapSelector; }
 
-    public boolean optionsHaveDefaultValues() {
+    public boolean optionsAreInitial() {
         return pacBooster == PacBooster.OFF
             && difficulty == Difficulty.NORMAL
             && mapCategory == MapCategory.ARCADE

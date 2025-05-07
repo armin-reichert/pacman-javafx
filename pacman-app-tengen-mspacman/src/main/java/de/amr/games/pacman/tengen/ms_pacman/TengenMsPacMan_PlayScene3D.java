@@ -31,7 +31,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     protected void replaceGameLevel3D(GameLevel level) {
         super.replaceGameLevel3D(level);
         TengenMsPacMan_GameModel tengenMsPacManGame = game();
-        if (!tengenMsPacManGame.optionsHaveDefaultValues()) {
+        if (!tengenMsPacManGame.optionsAreInitial()) {
             addGameOptionsArea(tengenMsPacManGame, level);
         }
     }

@@ -313,7 +313,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 if (timer.atSecond(8)) {
                     // start demo level or show options
                     TengenMsPacMan_GameModel game = THE_GAME_CONTROLLER.game();
-                    if (game.optionsHaveDefaultValues()) {
+                    if (game.optionsAreInitial()) {
                         game.setCanStartNewGame(false); // TODO check this
                         THE_GAME_CONTROLLER.restart(GameState.STARTING_GAME);
                     } else {
