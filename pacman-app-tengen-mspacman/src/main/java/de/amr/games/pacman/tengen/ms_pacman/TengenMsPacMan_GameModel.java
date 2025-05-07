@@ -161,10 +161,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public Optional<GateKeeper> gateKeeper() { return Optional.of(gateKeeper); }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T extends LevelCounter> T levelCounter() {
-        return (T) levelCounter;
-    }
+    public LevelCounter levelCounter() { return levelCounter; }
 
     @Override
     public MapSelector mapSelector() { return mapSelector; }

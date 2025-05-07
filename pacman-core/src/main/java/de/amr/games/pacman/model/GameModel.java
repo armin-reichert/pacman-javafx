@@ -37,14 +37,14 @@ public abstract class GameModel {
 
     protected GameModel() {
         scoreManager = new DefaultScoreManager();
-        scoreManager.score().pointsProperty().addListener((py, ov, nv) -> scoreManager.onScoreChanged(this, ov.intValue(), nv.intValue()));
+        scoreManager.score().pointsProperty().addListener(
+                (py, ov, nv) -> scoreManager.onScoreChanged(this, ov.intValue(), nv.intValue()));
     }
 
     public ScoreManager scoreManager() { return scoreManager; }
+    public abstract LevelCounter levelCounter();
     public abstract MapSelector mapSelector();
     public Optional<GateKeeper> gateKeeper() { return Optional.empty(); }
-    public abstract <T extends LevelCounter> T levelCounter();
-
     public Optional<GameLevel> level() { return Optional.ofNullable(level); }
 
     public BooleanProperty cutScenesEnabledProperty() { return cutScenesEnabledPy; }

@@ -39,10 +39,9 @@ public abstract class ArcadeAny_GameModel extends GameModel {
     @Override
     public Optional<GateKeeper> gateKeeper() { return Optional.of(gateKeeper); }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public <T extends LevelCounter> T levelCounter() {
-        return (T) levelCounter;
+    public LevelCounter levelCounter() {
+        return levelCounter;
     }
 
     @Override
