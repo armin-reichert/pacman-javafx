@@ -206,7 +206,6 @@ public abstract class ArcadeAny_GameModel extends GameModel {
             score().setEnabled(false);
             highScore().setEnabled(false);
             Logger.info("Demo level {} started", level.number());
-
         } else {
             level.showMessage(GameLevel.Message.READY);
             score().setEnabled(true);
@@ -221,7 +220,6 @@ public abstract class ArcadeAny_GameModel extends GameModel {
     public void startNextLevel() {
         buildNormalLevel(level.number() + 1);
         startLevel();
-        level.showPacAndGhosts();
     }
 
     @Override
