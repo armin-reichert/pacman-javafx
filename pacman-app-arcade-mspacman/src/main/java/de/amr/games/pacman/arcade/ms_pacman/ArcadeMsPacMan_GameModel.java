@@ -152,8 +152,10 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
         });
 
         level.setSpeedControl(new ArcadeAny_ActorSpeedControl());
-        // Must be called after creation of the actors!
-        level.speedControl().applyToActorsInLevel(level);
+        level.pac().setBaseSpeed(ArcadeAny_ActorSpeedControl.BASE_SPEED);
+        level.ghosts().forEach(ghost -> ghost.setBaseSpeed(ArcadeAny_ActorSpeedControl.BASE_SPEED));
+        Logger.debug("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
+        level.ghosts().forEach(ghost -> Logger.debug("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
 
         level.setBonusSymbol(0, computeBonusSymbol(level.number()));
         level.setBonusSymbol(1, computeBonusSymbol(level.number()));

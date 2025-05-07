@@ -12,13 +12,6 @@ import org.tinylog.Logger;
 public class ArcadeAny_ActorSpeedControl implements ActorSpeedControl {
     public static final float BASE_SPEED = 1.25f;
 
-    public void applyToActorsInLevel(GameLevel level) {
-        level.pac().setBaseSpeed(BASE_SPEED);
-        level.ghosts().forEach(ghost -> ghost.setBaseSpeed(BASE_SPEED));
-        Logger.debug("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
-        level.ghosts().forEach(ghost -> Logger.debug("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
-    }
-
     @Override
     public float pacNormalSpeed(GameLevel level) {
         byte pct = level.data().pacSpeedPercentage();

@@ -186,7 +186,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
             return speedUnitsToPixels(units);
         }
 
-        @Override
         public void applyToActorsInLevel(GameLevel level) {
             float pacBaseSpeed = pacBaseSpeedInLevel(level.number()) + pacDifficultySpeedDelta(difficulty);
             level.pac().setBaseSpeed(pacBaseSpeed);
@@ -509,8 +508,9 @@ public class TengenMsPacMan_GameModel extends GameModel {
         );
 
         level.setSpeedControl(speedControl);
+
         // Must be called after creation of the actors!
-        level.speedControl().applyToActorsInLevel(level);
+        speedControl.applyToActorsInLevel(level);
 
         //TODO this might not be appropriate for Tengen Ms. Pac-Man
         level.setBonusSymbol(0, computeBonusSymbol(level.number()));
