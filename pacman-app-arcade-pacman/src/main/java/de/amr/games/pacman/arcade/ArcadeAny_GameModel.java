@@ -141,18 +141,16 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         Logger.info("Resting 3 ticks");
         level.ghost(RED_GHOST_ID).updateCruiseElroyMode();
         level.victims().clear();
+        level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseAtNextOccasion);
         long powerTicks = pacPowerTicks(level);
         if (powerTicks > 0) {
             level.huntingTimer().stop();
-            Logger.info("Hunting Pac-Man stopped as he got power");
+            Logger.info("Hunting stopped because Pac-Man got power");
             level.pac().powerTimer().restartTicks(powerTicks);
             Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerTicks / NUM_TICKS_PER_SEC);
             level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
-            level.ghosts(FRIGHTENED).forEach(Ghost::reverseAtNextOccasion);
             THE_SIMULATION_STEP.setPacGotPower();
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_GETS_POWER);
-        } else {
-            level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseAtNextOccasion);
         }
     }
 
