@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
+import java.io.File;
+
 public interface ScoreManager {
     Score score();
     Score highScore();
@@ -15,4 +17,7 @@ public interface ScoreManager {
     void setScoreLevelNumber(int levelNumber);
     boolean isScoreVisible();
     void setScoreVisible(boolean visible);
+    void onScoreChanged(GameModel game, int oldScore, int newScore);
+    void setHighScoreFile(File file);
+    void setExtraLifeScores(Integer... scores);
 }

@@ -23,7 +23,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
 
     public PacManXXL_PacMan_GameModel(MapSelector mapSelector) {
         super(mapSelector);
-        highScoreFile = new File(Globals.HOME_DIR, "highscore-pacman_xxl.xml");
+        scoreManager.setHighScoreFile(new File(Globals.HOME_DIR, "highscore-pacman_xxl.xml"));
         // Demo level map could be custom map, so use generic automatic steering
         demoLevelSteering = new RuleBasedPacSteering(this);
     }

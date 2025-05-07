@@ -67,8 +67,8 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         livesProperty().set(initialLivesProperty().get());
         level = null;
         levelCounter().reset();
-        loadHighScore();
-        resetScore();
+        scoreManager.loadHighScore();
+        scoreManager.resetScore();
         gateKeeper.reset();
         huntingTimer.reset();
     }
@@ -115,11 +115,11 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         int points = 100 * KILLED_GHOST_VALUE_MULTIPLIER[killedSoFar];
         level.victims().add(ghost);
         ghost.eaten(killedSoFar);
-        scorePoints(points);
+        scoreManager.scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
         if (level.victims().size() == 16) {
             int extraPoints = POINTS_ALL_GHOSTS_EATEN_IN_LEVEL;
-            scorePoints(extraPoints);
+            scoreManager.scorePoints(extraPoints);
             Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, level.number());
         }
     }
@@ -128,14 +128,14 @@ public abstract class ArcadeAny_GameModel extends GameModel {
 
     @Override
     protected void onPelletEaten(Vector2i tile) {
-        scorePoints(PELLET_VALUE);
+        scoreManager.scorePoints(PELLET_VALUE);
         level.pac().setRestingTicks(1);
         level.ghost(RED_GHOST_ID).updateCruiseElroyMode();
     }
 
     @Override
     protected void onEnergizerEaten(Vector2i tile) {
-        scorePoints(ENERGIZER_VALUE);
+        scoreManager.scorePoints(ENERGIZER_VALUE);
         Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
         level.pac().setRestingTicks(3);
         Logger.info("Resting 3 ticks");
@@ -160,7 +160,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         if (!THE_COIN_MECHANISM.isEmpty()) {
             THE_COIN_MECHANISM.consumeCoin();
         }
-        updateHighScore();
+        scoreManager.updateHighScore();
         level.showMessage(GameLevel.Message.GAME_OVER);
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.STOP_ALL_SOUNDS);
     }
@@ -169,7 +169,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
     public void buildNormalLevel(int levelNumber) {
         createLevel(levelNumber);
         level.setDemoLevel(false);
-        setScoreLevelNumber(levelNumber);
+        scoreManager.setScoreLevelNumber(levelNumber);
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(levelNumber));
         level.huntingTimer().reset();
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
@@ -182,7 +182,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         assignDemoLevelBehavior(level.pac());
         demoLevelSteering.init();
         levelCounter.setEnabled(false);
-        setScoreLevelNumber(1);
+        scoreManager.setScoreLevelNumber(1);
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(1));
         level.huntingTimer().reset();
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
@@ -203,13 +203,13 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         levelCounter().update(level);
         if (level.isDemoLevel()) {
             level.showMessage(GameLevel.Message.GAME_OVER);
-            score().setEnabled(false);
-            highScore().setEnabled(false);
+            scoreManager.score().setEnabled(false);
+            scoreManager.highScore().setEnabled(false);
             Logger.info("Demo level {} started", level.number());
         } else {
             level.showMessage(GameLevel.Message.READY);
-            score().setEnabled(true);
-            highScore().setEnabled(true);
+            scoreManager.score().setEnabled(true);
+            scoreManager.highScore().setEnabled(true);
             Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!

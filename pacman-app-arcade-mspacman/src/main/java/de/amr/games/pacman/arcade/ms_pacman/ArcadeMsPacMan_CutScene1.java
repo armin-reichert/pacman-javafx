@@ -51,7 +51,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void doInit() {
-        game().setScoreVisible(true);
+        game().scoreManager().setScoreVisible(true);
 
         pacMan = ArcadeMsPacMan_ActorFactory.createPacMan();
         msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();

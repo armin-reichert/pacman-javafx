@@ -240,7 +240,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void doInit() {
         messageMovement = new MessageMovement();
-        game().setScoreVisible(true);
+        game().scoreManager().setScoreVisible(true);
         setGameRenderer(THE_UI_CONFIGS.current().createRenderer(canvas));
         movingCamera.focusTopOfScene();
     }
@@ -470,7 +470,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
         tr.setScaling(scaling());
 
-        tr.drawScores(tgame, nesPaletteColor(0x20), arcadeFontScaledTS());
+        tr.drawScores(tgame.scoreManager(), nesPaletteColor(0x20), arcadeFontScaledTS());
 
         final boolean flashing = levelCompleteAnimation != null && levelCompleteAnimation.inFlashingPhase();
         if (flashing) {

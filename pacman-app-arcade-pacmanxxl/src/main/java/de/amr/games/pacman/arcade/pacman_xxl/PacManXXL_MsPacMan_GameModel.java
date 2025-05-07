@@ -17,7 +17,7 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
 
     public PacManXXL_MsPacMan_GameModel(MapSelector mapSelector) {
         super(mapSelector);
-        highScoreFile = new File(Globals.HOME_DIR, "highscore-mspacman_xxl.xml");
+        scoreManager.setHighScoreFile(new File(Globals.HOME_DIR, "highscore-mspacman_xxl.xml"));
     }
 
     @Override

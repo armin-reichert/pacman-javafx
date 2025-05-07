@@ -78,7 +78,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        game().setScoreVisible(true);
+        game().scoreManager().setScoreVisible(true);
 
         msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
         ghosts = new Ghost[] {

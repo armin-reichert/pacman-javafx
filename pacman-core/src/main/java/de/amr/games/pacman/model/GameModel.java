@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
-import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.timer.Pulse;
@@ -16,11 +15,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import org.tinylog.Logger;
 
-import java.io.File;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.List;
 import java.util.Optional;
 
 import static de.amr.games.pacman.Globals.THE_GAME_EVENT_MANAGER;
@@ -33,21 +27,20 @@ import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
  *
  * @author Armin Reichert
  */
-public abstract class GameModel implements ScoreManager {
+public abstract class GameModel {
 
     private final BooleanProperty cutScenesEnabledPy = new SimpleBooleanProperty(true);
     private final BooleanProperty playingPy = new SimpleBooleanProperty(false);
 
     protected GameLevel level;
+    protected ScoreManager scoreManager;
 
     protected GameModel() {
-        score.pointsProperty().addListener((py, ov, nv) -> onScoreChanged(ov.intValue(), nv.intValue()));
+        scoreManager = new DefaultScoreManager();
+        scoreManager.score().pointsProperty().addListener((py, ov, nv) -> scoreManager.onScoreChanged(this, ov.intValue(), nv.intValue()));
     }
 
-    public abstract void    init();
-    public abstract void    resetEverything();
-    public abstract boolean continueOnGameOver();
-
+    public ScoreManager scoreManager() { return scoreManager; }
     public abstract MapSelector mapSelector();
     public Optional<GateKeeper> gateKeeper() { return Optional.empty(); }
     public abstract <T extends LevelCounter> T levelCounter();
@@ -60,20 +53,20 @@ public abstract class GameModel implements ScoreManager {
 
     // Game lifecycle
 
-    public abstract void prepareForNewGame();
+    public abstract void    init();
+    public abstract void    resetEverything();
+    public abstract void    prepareForNewGame();
     public abstract boolean canStartNewGame();
-    public abstract void startNewGame();
-
-    public abstract void createLevel(int levelNumber);
-    public abstract void buildNormalLevel(int levelNumber);
-
-    public abstract void buildDemoLevel();
-    public abstract void assignDemoLevelBehavior(Pac pac);
-    protected abstract boolean isPacManSafeInDemoLevel();
-
-    public abstract void startLevel();
-    public abstract void startNextLevel();
-    public abstract int lastLevelNumber();
+    public abstract void    startNewGame();
+    public abstract void    createLevel(int levelNumber);
+    public abstract void    buildNormalLevel(int levelNumber);
+    public abstract void    buildDemoLevel();
+    public abstract void    assignDemoLevelBehavior(Pac pac);
+    public abstract boolean isPacManSafeInDemoLevel();
+    public abstract void    startLevel();
+    public abstract void    startNextLevel();
+    public abstract int     lastLevelNumber();
+    public abstract boolean continueOnGameOver();
 
     public void startHunting() {
         level.pac().startAnimation();
@@ -216,7 +209,7 @@ public abstract class GameModel implements ScoreManager {
         if (bonus.state() != Bonus.STATE_EDIBLE) return;
         if (actorsCollide(level.pac(), bonus.actor())) {
             bonus.setEaten(120); //TODO is 2 seconds correct?
-            scorePoints(bonus.points());
+            scoreManager.scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
             THE_SIMULATION_STEP.setBonusEatenTile(bonus.actor().tile());
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.BONUS_EATEN);
@@ -244,91 +237,5 @@ public abstract class GameModel implements ScoreManager {
 
     public void addLives(int lives) {
         livesProperty().set(livesProperty().get() + lives);
-    }
-
-    // Score management
-
-    private final Score score = new Score();
-    private final Score highScore = new Score();
-    protected File highScoreFile;
-    protected List<Integer> extraLifeScores = List.of();
-
-    private boolean scoreVisible;
-
-    @Override
-    public boolean isScoreVisible() { return scoreVisible; }
-
-    @Override
-    public void setScoreVisible(boolean visible) {
-        scoreVisible = visible;
-    }
-
-    @Override
-    public void scorePoints(int points) {
-        if (!score.isEnabled()) {
-            return;
-        }
-        int oldScore = score.points(), newScore = oldScore + points;
-        if (highScore().isEnabled() && newScore > highScore.points()) {
-            highScore.setPoints(newScore);
-            highScore.setLevelNumber(score.levelNumber());
-            highScore.setDate(LocalDate.now());
-        }
-        score.setPoints(newScore);
-    }
-
-    protected void onScoreChanged(int oldScore, int newScore) {
-        for (int extraLifeScore : extraLifeScores) {
-            // has extra life score been crossed?
-            if (oldScore < extraLifeScore && newScore >= extraLifeScore) {
-                THE_SIMULATION_STEP.setExtraLifeWon();
-                THE_SIMULATION_STEP.setExtraLifeScore(extraLifeScore);
-                handleExtraLifeScoreReached(extraLifeScore);
-                GameEvent event = new GameEvent(this, GameEventType.SPECIAL_SCORE_REACHED);
-                event.setPayload("score", extraLifeScore); // just for testing payload implementation
-                THE_GAME_EVENT_MANAGER.publishEvent(event);
-                break;
-            }
-        }
-    }
-
-    @Override
-    public void loadHighScore() {
-        highScore.read(highScoreFile);
-        Logger.info("High Score loaded from '{}': points={}, level={}", highScoreFile, highScore.points(), highScore.levelNumber());
-    }
-
-    @Override
-    public void updateHighScore() {
-        var oldHighScore = new Score();
-        oldHighScore.read(highScoreFile);
-        if (highScore.points() > oldHighScore.points()) {
-            highScore.save(highScoreFile, "High Score, last update %s".formatted(LocalTime.now()));
-        }
-    }
-
-    @Override
-    public void resetScore() {
-        score.reset();
-    }
-
-    @Override
-    public void saveHighScore() {
-        new Score().save(highScoreFile, "High Score, %s".formatted(LocalDateTime.now()));
-    }
-
-    @Override
-    public Score score() {
-        return score;
-    }
-
-    @Override
-    public Score highScore() {
-        return highScore;
-    }
-
-    @Override
-    public void setScoreLevelNumber(int levelNumber) {
-        score.setLevelNumber(levelNumber);
     }
 }

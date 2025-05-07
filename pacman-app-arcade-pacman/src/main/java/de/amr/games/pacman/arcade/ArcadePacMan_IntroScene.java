@@ -96,7 +96,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         titleVisible = false;
         ghostIndex = 0;
         ghostKilledTime = 0;
-        game().setScoreVisible(true);
+        game().scoreManager().setScoreVisible(true);
         sceneController.restart(SceneState.STARTING);
     }
 

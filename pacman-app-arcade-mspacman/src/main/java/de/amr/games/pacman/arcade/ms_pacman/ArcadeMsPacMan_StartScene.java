@@ -30,7 +30,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        game().setScoreVisible(true);
+        game().scoreManager().setScoreVisible(true);
     }
 
     @Override

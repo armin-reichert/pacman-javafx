@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.nes.JoypadButtonID;
 import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.Score;
+import de.amr.games.pacman.model.ScoreManager;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui._3d.Bonus3D;
 import de.amr.games.pacman.ui._3d.PlayScene3D;
@@ -84,9 +85,10 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void updateScores() {
-        Score score = game().score(), highScore = game().highScore();
+        ScoreManager scoreManager = game().scoreManager();
+        Score score = scoreManager.score(), highScore = scoreManager.highScore();
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());
-        if (game().score().isEnabled()) {
+        if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
         }
         else { // score is disabled, show text "GAME OVER" instead, use maze-specific color

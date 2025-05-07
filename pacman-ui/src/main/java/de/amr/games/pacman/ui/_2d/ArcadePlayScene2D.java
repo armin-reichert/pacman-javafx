@@ -45,7 +45,7 @@ public class ArcadePlayScene2D extends GameScene2D {
 
     @Override
     protected void doInit() {
-        game().setScoreVisible(true);
+        game().scoreManager().setScoreVisible(true);
     }
 
     @Override

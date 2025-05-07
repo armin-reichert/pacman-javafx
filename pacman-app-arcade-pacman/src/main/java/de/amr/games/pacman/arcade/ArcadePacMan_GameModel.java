@@ -89,8 +89,8 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
      */
     protected ArcadePacMan_GameModel(MapSelector mapSelector) {
         this.mapSelector = requireNonNull(mapSelector);
-        highScoreFile = new File(HOME_DIR, "highscore-pacman.xml");
-        extraLifeScores = List.of(EXTRA_LIFE_SCORE);
+        scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-pacman.xml"));
+        scoreManager.setExtraLifeScores(EXTRA_LIFE_SCORE);
         levelCounter = new ArcadePacMan_LevelCounter();
 
         huntingTimer = new HuntingTimer(8) {
