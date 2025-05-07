@@ -52,7 +52,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
 
     @Override
     public void init() {
-        initialLivesProperty().set(3);
+        setInitialLives(3);
         mapSelector.loadAllMaps(this);
     }
 
@@ -64,7 +64,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
     @Override
     public void prepareForNewGame() {
         playingProperty().set(false);
-        livesProperty().set(initialLivesProperty().get());
+        livesProperty().set(initialLives());
         level = null;
         levelCounter().reset();
         scoreManager.loadHighScore();

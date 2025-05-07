@@ -218,10 +218,17 @@ public abstract class GameModel {
 
     // Life management
 
-    private final IntegerProperty initialLivesPy = new SimpleIntegerProperty(3);
+    private int initialLives;
     private final IntegerProperty livesPy = new SimpleIntegerProperty(0);
 
-    public IntegerProperty initialLivesProperty() { return initialLivesPy; }
+    public int initialLives() {
+        return initialLives;
+    }
+
+    public void setInitialLives(int initialLives) {
+        this.initialLives = initialLives;
+    }
+
     public IntegerProperty livesProperty() { return livesPy; }
 
     public void loseLife() {
