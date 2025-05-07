@@ -112,7 +112,7 @@ public class GateKeeper {
 
     private Consumer<Ghost> onGhostReleasedAction = ghost -> Logger.info("Ghost {} released from house", ghost.name());
 
-    public void setOnGhostReleasedAction(Consumer<Ghost> onGhostReleasedAction) {
+    public void setOnGhostReleased(Consumer<Ghost> onGhostReleasedAction) {
         this.onGhostReleasedAction = onGhostReleasedAction;
     }
 

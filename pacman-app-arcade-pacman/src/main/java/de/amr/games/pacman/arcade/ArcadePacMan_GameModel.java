@@ -45,37 +45,37 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
 
-    // Level settings as specified in the "Pac-Man dossier"
+    // Level data as given in the "Pac-Man dossier"
     protected static final byte[][] LEVEL_DATA = {
-            /* 1*/ { 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5},
-            /* 2*/ { 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5},
-            /* 3*/ { 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5},
-            /* 4*/ { 90, 85, 45,  40,  90, 20,  95,  95, 55, 3, 5},
-            /* 5*/ {100, 95, 50,  40, 100, 20, 105, 100, 60, 2, 5},
-            /* 6*/ {100, 95, 50,  50, 100, 25, 105, 100, 60, 5, 5},
-            /* 7*/ {100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5},
-            /* 8*/ {100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5},
-            /* 9*/ {100, 95, 50,  60, 100, 30, 105, 100, 60, 1, 3},
-            /*10*/ {100, 95, 50,  60, 100, 30, 105, 100, 60, 5, 5},
-            /*11*/ {100, 95, 50,  60, 100, 30, 105, 100, 60, 2, 5},
-            /*12*/ {100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3},
-            /*13*/ {100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3},
-            /*14*/ {100, 95, 50,  80, 100, 40, 105, 100, 60, 3, 5},
-            /*15*/ {100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3},
-            /*16*/ {100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3},
-            /*17*/ {100, 95, 50, 100, 100, 50, 105,   0,  0, 0, 0},
-            /*18*/ {100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3},
-            /*19*/ {100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
-            /*20*/ {100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
-            /*21*/ { 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
+        /* 1*/ { 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5},
+        /* 2*/ { 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5},
+        /* 3*/ { 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5},
+        /* 4*/ { 90, 85, 45,  40,  90, 20,  95,  95, 55, 3, 5},
+        /* 5*/ {100, 95, 50,  40, 100, 20, 105, 100, 60, 2, 5},
+        /* 6*/ {100, 95, 50,  50, 100, 25, 105, 100, 60, 5, 5},
+        /* 7*/ {100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5},
+        /* 8*/ {100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5},
+        /* 9*/ {100, 95, 50,  60, 100, 30, 105, 100, 60, 1, 3},
+        /*10*/ {100, 95, 50,  60, 100, 30, 105, 100, 60, 5, 5},
+        /*11*/ {100, 95, 50,  60, 100, 30, 105, 100, 60, 2, 5},
+        /*12*/ {100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3},
+        /*13*/ {100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3},
+        /*14*/ {100, 95, 50,  80, 100, 40, 105, 100, 60, 3, 5},
+        /*15*/ {100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3},
+        /*16*/ {100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3},
+        /*17*/ {100, 95, 50, 100, 100, 50, 105,   0,  0, 0, 0},
+        /*18*/ {100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3},
+        /*19*/ {100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
+        /*20*/ {100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
+        /*21*/ { 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0},
     };
 
-    protected LevelData createLevelData(int levelNumber) {
+    protected static LevelData createLevelData(int levelNumber) {
         return new LevelData(LEVEL_DATA[Math.min(levelNumber - 1, LEVEL_DATA.length - 1)]);
     }
 
-    // Note: level numbering start with 1
-    private static final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = { 69, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6 };
+    // Note: level numbering starts with 1
+    private static final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = { -1, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7 };
 
     // bonus points = multiplier * 100
     private static final byte[] BONUS_VALUE_MULTIPLIERS = { 1, 3, 5, 7, 10, 20, 30, 50 };
@@ -85,7 +85,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
     }
 
     /**
-     * @param mapSelector map selector e.g. selector that selects custom maps before standard maps
+     * @param mapSelector e.g. selector that selects custom maps before standard maps
      */
     protected ArcadePacMan_GameModel(MapSelector mapSelector) {
         this.mapSelector = requireNonNull(mapSelector);
@@ -94,17 +94,17 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
         levelCounter = new ArcadePacMan_LevelCounter();
 
         huntingTimer = new HuntingTimer(8) {
-            // Ticks of scatter and chasing phases, -1=INDEFINITE
-            static final int[] HUNTING_TICKS_LEVEL_1 = {420, 1200, 420, 1200, 300,  1200, 300, -1};
-            static final int[] HUNTING_TICKS_LEVEL_2_3_4 = {420, 1200, 420, 1200, 300, 61980,   1, -1};
-            static final int[] HUNTING_TICKS_LEVEL_5_PLUS = {300, 1200, 300, 1200, 300, 62262,   1, -1};
+            // Ticks of scatter and chasing phases, -1 = INFINITE
+            static final int[] TICKS_LEVEL_1     = {420, 1200, 420, 1200, 300,  1200, 300, -1};
+            static final int[] TICKS_LEVEL_2_3_4 = {420, 1200, 420, 1200, 300, 61980,   1, -1};
+            static final int[] TICKS_LEVEL_5_ON  = {300, 1200, 300, 1200, 300, 62262,   1, -1};
 
             @Override
             public long huntingTicks(int levelNumber, int phaseIndex) {
                 long ticks = switch (levelNumber) {
-                    case 1 -> HUNTING_TICKS_LEVEL_1[phaseIndex];
-                    case 2, 3, 4 -> HUNTING_TICKS_LEVEL_2_3_4[phaseIndex];
-                    default -> HUNTING_TICKS_LEVEL_5_PLUS[phaseIndex];
+                    case 1 -> TICKS_LEVEL_1[phaseIndex];
+                    case 2, 3, 4 -> TICKS_LEVEL_2_3_4[phaseIndex];
+                    default -> TICKS_LEVEL_5_ON[phaseIndex];
                 };
                 return ticks != -1 ? ticks : TickTimer.INDEFINITE;
             }
@@ -114,9 +114,9 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
         });
 
         gateKeeper = new GateKeeper();
-        gateKeeper.setOnGhostReleasedAction(prisoner -> {
+        gateKeeper.setOnGhostReleased(prisoner -> {
             if (prisoner.id() == ORANGE_GHOST_ID && level.ghost(RED_GHOST_ID).cruiseElroy() < 0) {
-                Logger.trace("Re-enable Blinky Cruise Elroy mode because {} exits house:", prisoner.name());
+                Logger.debug("Re-enable Blinky Cruise Elroy mode because {} got released:", prisoner.name());
                 level.ghost(RED_GHOST_ID).enableCruiseElroyMode(true);
             }
         });
@@ -185,7 +185,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
 
         // Each level has a single bonus symbol appearing twice during the level
         // From level 13 on, the same symbol (7 = "key") appears
-        byte bonusSymbol = levelNumber > 12 ? 7 : BONUS_SYMBOLS_BY_LEVEL_NUMBER[levelNumber];
+        byte bonusSymbol = levelNumber >= 13 ? BONUS_SYMBOLS_BY_LEVEL_NUMBER[13] : BONUS_SYMBOLS_BY_LEVEL_NUMBER[levelNumber];
         level.setBonusSymbol(0, bonusSymbol);
         level.setBonusSymbol(1, bonusSymbol);
 
