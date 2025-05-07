@@ -186,8 +186,7 @@ public class ArcadePlayScene2D extends GameScene2D {
         if (game().canStartNewGame()) {
             // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
             int numLivesDisplayed = gameState() == GameState.STARTING_GAME && !level.pac().isVisible()
-                ? game().livesProperty().get()
-                : game().livesProperty().get() - 1;
+                ? game().lives() : game().lives() - 1;
             gr.drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - 2 * TS);
         } else {
             gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_MECHANISM.numCoins()),

@@ -10,7 +10,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.nes.JoypadButtonID;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.HuntingTimer;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
@@ -493,8 +492,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
         // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
         int numLivesDisplayed = gameState() == GameState.STARTING_GAME && !level.pac().isVisible()
-            ? tgame.livesProperty().get()
-            : tgame.livesProperty().get() - 1;
+            ? tgame.lives() : tgame.lives() - 1;
         tr.drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - TS);
 
         if (level.isDemoLevel() || tgame.mapCategory() == MapCategory.ARCADE) {

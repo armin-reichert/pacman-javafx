@@ -64,7 +64,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
     @Override
     public void prepareForNewGame() {
         playingProperty().set(false);
-        livesProperty().set(initialLives());
+        setLives(initialLives());
         level = null;
         levelCounter().reset();
         scoreManager.loadHighScore();
@@ -88,7 +88,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
 
     @Override
     public boolean isOver() {
-        return livesProperty().get() == 0;
+        return lives() == 0;
     }
 
     // Actors

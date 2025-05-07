@@ -229,18 +229,19 @@ public abstract class GameModel {
         this.initialLives = initialLives;
     }
 
-    public IntegerProperty livesProperty() { return livesPy; }
+    public int lives() { return livesPy.get(); }
+
+    public void setLives(int n) { livesPy.set(n); }
 
     public void loseLife() {
-        int lives = livesProperty().get();
-        if (lives > 0) {
-            livesProperty().set(lives - 1);
+        if (lives() > 0) {
+            addLives(-1);
         } else {
             Logger.error("Cannot lose life, no lives left");
         }
     }
 
-    public void addLives(int lives) {
-        livesProperty().set(livesProperty().get() + lives);
+    public void addLives(int n) {
+        livesPy.set(lives() + n);
     }
 }

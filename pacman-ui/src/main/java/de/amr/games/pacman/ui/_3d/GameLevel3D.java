@@ -291,7 +291,7 @@ public class GameLevel3D {
     }
 
     private int livesCounterSize() {
-        int n = THE_GAME_CONTROLLER.game().livesProperty().get();
+        int n = THE_GAME_CONTROLLER.game().lives();
         if (!level.pac().isVisible() && THE_GAME_CONTROLLER.state() == GameState.STARTING_GAME) {
             return n;
         }
