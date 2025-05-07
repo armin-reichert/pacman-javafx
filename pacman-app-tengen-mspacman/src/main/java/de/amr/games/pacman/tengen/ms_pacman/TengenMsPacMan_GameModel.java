@@ -186,21 +186,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
             return speedUnitsToPixels(units);
         }
 
-        public void applyToActorsInLevel(GameLevel level) {
-            float pacBaseSpeed = pacBaseSpeedInLevel(level.number()) + pacDifficultySpeedDelta(difficulty);
-            level.pac().setBaseSpeed(pacBaseSpeed);
-            if (pacBooster == PacBooster.ALWAYS_ON) {
-                activatePacBooster(true);
-            }
-            level.ghosts().forEach(ghost ->
-                ghost.setBaseSpeed(ghostBaseSpeedInLevel(level.number())
-                    + ghostDifficultySpeedDelta(difficulty)
-                    + ghostIDSpeedDelta(ghost.id()))
-            );
-            Logger.info("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
-            level.ghosts().forEach(ghost -> Logger.info("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
-        }
-
         @Override
         public float pacNormalSpeed(GameLevel level) {
             return level.pac() != null ? level.pac().baseSpeed() : 0;
@@ -390,7 +375,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.setStartTime(System.currentTimeMillis());
         level.makeReadyForPlaying();
         initAnimationOfPacManAndGhosts();
-        speedControl.applyToActorsInLevel(level);
+        setActorsSpeed(level);
         levelCounter().update(level);
         if (level.isDemoLevel()) {
             level.showMessage(GameLevel.Message.GAME_OVER);
@@ -466,6 +451,22 @@ public class TengenMsPacMan_GameModel extends GameModel {
         }
     }
 
+    private void setActorsSpeed(GameLevel level) {
+        level.pac().setBaseSpeed(speedControl.pacBaseSpeedInLevel(level.number())
+                + speedControl.pacDifficultySpeedDelta(difficulty));
+        if (pacBooster == PacBooster.ALWAYS_ON) {
+            activatePacBooster(true);
+        }
+        Logger.info("Ms. Pac-Man base speed: {0.00} px/tick", level.pac().baseSpeed());
+
+        level.ghosts().forEach(ghost -> {
+            ghost.setBaseSpeed(speedControl.ghostBaseSpeedInLevel(level.number())
+                    + speedControl.ghostDifficultySpeedDelta(difficulty)
+                    + speedControl.ghostIDSpeedDelta(ghost.id()));
+            Logger.info("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed());
+        });
+    }
+
     @Override
     public void createLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.selectWorldMap(mapCategory, levelNumber);
@@ -510,7 +511,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.setSpeedControl(speedControl);
 
         // Must be called after creation of the actors!
-        speedControl.applyToActorsInLevel(level);
+        setActorsSpeed(level);
 
         //TODO this might not be appropriate for Tengen Ms. Pac-Man
         level.setBonusSymbol(0, computeBonusSymbol(level.number()));
