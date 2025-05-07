@@ -492,7 +492,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
         // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
         int numLivesDisplayed = gameState() == GameState.STARTING_GAME && !level.pac().isVisible()
-            ? tgame.lives() : tgame.lives() - 1;
+            ? tgame.lifeCount() : tgame.lifeCount() - 1;
         tr.drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - TS);
 
         if (level.isDemoLevel() || tgame.mapCategory() == MapCategory.ARCADE) {

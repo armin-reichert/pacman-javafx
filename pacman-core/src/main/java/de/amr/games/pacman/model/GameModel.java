@@ -218,30 +218,28 @@ public abstract class GameModel {
 
     // Life management
 
-    private int initialLives;
-    private final IntegerProperty livesPy = new SimpleIntegerProperty(0);
+    private int initialLifeCount;
+    private final IntegerProperty lifeCountPy = new SimpleIntegerProperty(0);
 
-    public int initialLives() {
-        return initialLives;
+    public int initialLifeCount() {
+        return initialLifeCount;
     }
 
-    public void setInitialLives(int initialLives) {
-        this.initialLives = initialLives;
+    public void setInitialLifeCount(int initialLifeCount) {
+        this.initialLifeCount = initialLifeCount;
     }
 
-    public int lives() { return livesPy.get(); }
+    public int lifeCount() { return lifeCountPy.get(); }
 
-    public void setLives(int n) { livesPy.set(n); }
-
-    public void loseLife() {
-        if (lives() > 0) {
-            addLives(-1);
+    public void setLifeCount(int n) {
+        if (n >= 0) {
+            lifeCountPy.set(n);
         } else {
-            Logger.error("Cannot lose life, no lives left");
+            Logger.error("Cannot set life count to negative number");
         }
     }
 
     public void addLives(int n) {
-        livesPy.set(lives() + n);
+        setLifeCount(lifeCount() + n);
     }
 }

@@ -284,7 +284,7 @@ public enum GameState implements FsmState<GameModel> {
                 if (level.isDemoLevel()) {
                     THE_GAME_CONTROLLER.changeState(GAME_OVER);
                 } else {
-                    game.loseLife();
+                    game.addLives(-1);
                     THE_GAME_CONTROLLER.changeState(game.isOver() ? GAME_OVER : STARTING_GAME);
                 }
             }

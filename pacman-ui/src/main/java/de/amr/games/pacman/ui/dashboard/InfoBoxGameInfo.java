@@ -69,7 +69,7 @@ public class InfoBoxGameInfo extends InfoBox {
             }
         }));
 
-        addLabeledValue("Lives",           ifLevelPresent(level -> "%d".formatted(THE_GAME_CONTROLLER.game().lives())));
+        addLabeledValue("Lives",           ifLevelPresent(level -> "%d".formatted(THE_GAME_CONTROLLER.game().lifeCount())));
 
         addLabeledValue("Hunting Phase",   ifLevelPresent(this::fmtHuntingPhase));
         addLabeledValue("",                ifLevelPresent(this::fmtHuntingTicksRunning));
