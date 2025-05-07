@@ -183,8 +183,11 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
         // Must be called after creation of the actors!
         level.speedControl().applyToActorsInLevel(level);
 
-        level.setBonusSymbol(0, computeBonusSymbol(levelNumber));
-        level.setBonusSymbol(1, computeBonusSymbol(levelNumber));
+        // Each level has a single bonus symbol appearing twice during the level
+        // From level 13 on, the same symbol (7 = "key") appears
+        byte bonusSymbol = levelNumber > 12 ? 7 : BONUS_SYMBOLS_BY_LEVEL_NUMBER[levelNumber];
+        level.setBonusSymbol(0, bonusSymbol);
+        level.setBonusSymbol(1, bonusSymbol);
 
         levelCounter.setEnabled(true);
     }
@@ -203,11 +206,6 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
     @Override
     public boolean isBonusReached() {
         return level.eatenFoodCount() == 70 || level.eatenFoodCount() == 170;
-    }
-
-    // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level
-    private byte computeBonusSymbol(int levelNumber) {
-        return levelNumber > 12 ? 7 : BONUS_SYMBOLS_BY_LEVEL_NUMBER[levelNumber];
     }
 
     @Override
