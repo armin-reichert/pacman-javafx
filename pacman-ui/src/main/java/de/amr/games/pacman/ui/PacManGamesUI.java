@@ -265,7 +265,7 @@ public class PacManGamesUI implements GameUI {
     @Override
     public void restart() {
         THE_CLOCK.stop();
-        THE_CLOCK.setTargetFrameRate(Globals.TICKS_PER_SECOND);
+        THE_CLOCK.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
         THE_CLOCK.pausedProperty().set(false);
         THE_CLOCK.start();
         THE_GAME_CONTROLLER.restart(GameState.BOOT);
@@ -330,7 +330,7 @@ public class PacManGamesUI implements GameUI {
     @Override
     public void showStartView() {
         THE_CLOCK.stop();
-        THE_CLOCK.setTargetFrameRate(Globals.TICKS_PER_SECOND);
+        THE_CLOCK.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
         gameView.gameSceneProperty().set(null);
         gameView.setDashboardVisible(false);
         viewPy.set(startPagesView);

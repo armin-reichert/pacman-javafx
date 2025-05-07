@@ -32,7 +32,7 @@ public abstract class HuntingTimer {
 
     public void logPhase() {
         Logger.info("Hunting phase {} ({}, {} ticks / {} seconds). {}",
-            phaseIndex(), phase(), timer.durationTicks(), (float) timer.durationTicks() / Globals.TICKS_PER_SECOND, this);
+            phaseIndex(), phase(), timer.durationTicks(), (float) timer.durationTicks() / Globals.NUM_TICKS_PER_SEC, this);
     }
 
     public void reset() {

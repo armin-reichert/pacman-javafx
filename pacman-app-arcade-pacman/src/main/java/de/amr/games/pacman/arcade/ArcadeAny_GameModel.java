@@ -5,10 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade;
 
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.*;
-import de.amr.games.pacman.model.actors.ActorSpeedControl;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.steering.Steering;
@@ -148,7 +146,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
             level.huntingTimer().stop();
             Logger.info("Hunting Pac-Man stopped as he got power");
             level.pac().powerTimer().restartTicks(powerTicks);
-            Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerTicks / TICKS_PER_SECOND);
+            Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerTicks / NUM_TICKS_PER_SEC);
             level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             level.ghosts(FRIGHTENED).forEach(Ghost::reverseAtNextOccasion);
             THE_SIMULATION_STEP.setPacGotPower();

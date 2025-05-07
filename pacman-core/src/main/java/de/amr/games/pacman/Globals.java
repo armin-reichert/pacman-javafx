@@ -34,7 +34,7 @@ public interface Globals {
 
     byte RED_GHOST_ID = 0, PINK_GHOST_ID = 1, CYAN_GHOST_ID = 2, ORANGE_GHOST_ID = 3;
 
-    byte TICKS_PER_SECOND = 60;
+    byte NUM_TICKS_PER_SEC = 60;
 
     /** Tile size=8px, half tile size=4px. */
     int TS = 8, HTS = 4;

@@ -163,7 +163,7 @@ public enum GameAction implements Action {
             if (THE_GAME_CONTROLLER.state() == GameState.TESTING_LEVELS) {
                 THE_GAME_CONTROLLER.state().onExit(THE_GAME_CONTROLLER.game()); //TODO exit other states too?
             }
-            THE_CLOCK.setTargetFrameRate(Globals.TICKS_PER_SECOND);
+            THE_CLOCK.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
             THE_GAME_CONTROLLER.restart(INTRO);
         }
     },
@@ -223,7 +223,7 @@ public enum GameAction implements Action {
     SIMULATION_RESET {
         @Override
         public void execute() {
-            THE_CLOCK.setTargetFrameRate(TICKS_PER_SECOND);
+            THE_CLOCK.setTargetFrameRate(NUM_TICKS_PER_SEC);
             THE_UI.showFlashMessageSec(0.75, THE_CLOCK.getTargetFrameRate() + "Hz");
         }
     },

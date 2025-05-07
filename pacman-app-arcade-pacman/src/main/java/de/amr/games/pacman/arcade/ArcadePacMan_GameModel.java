@@ -213,14 +213,9 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
         level.selectNextBonus();
         byte symbol = level.bonusSymbol(level.currentBonusIndex());
         var bonus = new StaticBonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
-        if (level.worldMap().hasProperty(LayerID.TERRAIN, WorldMapProperty.POS_BONUS)) {
-            Vector2i bonusTile = level.worldMap().getTerrainTileProperty(WorldMapProperty.POS_BONUS, new Vector2i(13, 20));
-            bonus.actor().setPosition(halfTileRightOf(bonusTile));
-        } else {
-            Logger.error("No bonus position found in map");
-            bonus.actor().setPosition(halfTileRightOf(13, 20));
-        }
-        bonus.setEdibleTicks(randomInt(9 * TICKS_PER_SECOND, 10 * TICKS_PER_SECOND));
+        Vector2i bonusTile = level.worldMap().getTerrainTileProperty(WorldMapProperty.POS_BONUS, new Vector2i(13, 20));
+        bonus.setPosition(halfTileRightOf(bonusTile));
+        bonus.setEdibleTicks(randomInt(9 * NUM_TICKS_PER_SEC, 10 * NUM_TICKS_PER_SEC));
         level.setBonus(bonus);
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.BONUS_ACTIVATED, bonus.actor().tile());
     }
