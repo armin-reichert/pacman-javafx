@@ -168,7 +168,7 @@ public class ArcadePlayScene2D extends GameScene2D {
 
         gr.applyMapSettings(level.worldMap());
 
-        gr.drawScores(game(), ARCADE_WHITE, arcadeFontScaledTS());
+        gr.drawScores(game().scoreManager(), ARCADE_WHITE, arcadeFontScaledTS());
         gr.drawMaze(level, 0, 3 * TS, backgroundColor(),
             levelCompleteAnimation != null && levelCompleteAnimation.inHighlightPhase(),
             level.blinking().isOn());

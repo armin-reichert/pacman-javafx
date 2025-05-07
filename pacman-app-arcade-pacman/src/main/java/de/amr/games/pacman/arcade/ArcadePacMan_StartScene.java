@@ -46,7 +46,7 @@ public class ArcadePacMan_StartScene extends GameScene2D {
     public void drawSceneContent() {
         final Font font8 = arcadeFontScaledTS();
         final Font font6 = THE_ASSETS.arcadeFontAtSize(scaled(6));
-        gr.drawScores(game(), ARCADE_WHITE, font8);
+        gr.drawScores(game().scoreManager(), ARCADE_WHITE, font8);
         gr.fillTextAtScaledPosition("PUSH START BUTTON", ARCADE_ORANGE, font8, tiles_to_px(6), tiles_to_px(17));
         gr.fillTextAtScaledPosition("1 PLAYER ONLY", ARCADE_CYAN, font8, tiles_to_px(8), tiles_to_px(21));
         gr.fillTextAtScaledPosition("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, font8, tiles_to_px(1), tiles_to_px(25));
