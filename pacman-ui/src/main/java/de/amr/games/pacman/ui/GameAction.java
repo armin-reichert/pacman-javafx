@@ -11,6 +11,7 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui._3d.PerspectiveID;
@@ -34,20 +35,20 @@ public enum GameAction implements Action {
     CHEAT_ADD_LIVES {
         @Override
         public void execute() {
-            THE_GAME_CONTROLLER.game().addLives(3);
-            THE_UI.showFlashMessage(THE_ASSETS.text("cheat_add_lives", THE_GAME_CONTROLLER.game().lifeCount()));
+            game().addLives(3);
+            THE_UI.showFlashMessage(THE_ASSETS.text("cheat_add_lives", game().lifeCount()));
         }
 
         @Override
         public boolean isEnabled() {
-            return THE_GAME_CONTROLLER.game().level().isPresent();
+            return level().isPresent();
         }
     },
 
     CHEAT_EAT_ALL_PELLETS {
         @Override
         public void execute() {
-            THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
+            level().ifPresent(level -> {
                 List<Vector2i> pelletTiles = level.worldMap().tiles()
                     .filter(not(level::isEnergizerPosition))
                     .filter(level::hasFoodAt)
@@ -55,27 +56,25 @@ public enum GameAction implements Action {
                 if (!pelletTiles.isEmpty()) {
                     pelletTiles.forEach(level::registerFoodEatenAt);
                     THE_SOUND.stopMunchingSound();
-                    THE_GAME_EVENT_MANAGER.publishEvent(THE_GAME_CONTROLLER.game(), GameEventType.PAC_FOUND_FOOD);
+                    THE_GAME_EVENT_MANAGER.publishEvent(game(), GameEventType.PAC_FOUND_FOOD);
                 }
             });
         }
 
         @Override
         public boolean isEnabled() {
-            return THE_GAME_CONTROLLER.game().level().isPresent()
-                && !THE_GAME_CONTROLLER.game().level().get().isDemoLevel()
-                && THE_GAME_CONTROLLER.state() == GameState.HUNTING;
+            return level().isPresent() && !level().get().isDemoLevel() && gameState() == GameState.HUNTING;
         }
     },
 
     CHEAT_KILL_GHOSTS {
         @Override
         public void execute() {
-            THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
+            level().ifPresent(level -> {
                 List<Ghost> vulnerableGhosts = level.ghosts(FRIGHTENED, HUNTING_PAC).toList();
                 if (!vulnerableGhosts.isEmpty()) {
                     level.victims().clear(); // resets value of next killed ghost to 200
-                    vulnerableGhosts.forEach(THE_GAME_CONTROLLER.game()::onGhostKilled);
+                    vulnerableGhosts.forEach(game()::onGhostKilled);
                     THE_GAME_CONTROLLER.changeState(GameState.GHOST_DYING);
                 }
             });
@@ -83,9 +82,7 @@ public enum GameAction implements Action {
 
         @Override
         public boolean isEnabled() {
-            return THE_GAME_CONTROLLER.state() == GameState.HUNTING
-                && THE_GAME_CONTROLLER.game().level().isPresent()
-                && !THE_GAME_CONTROLLER.game().level().get().isDemoLevel();
+            return gameState() == GameState.HUNTING && level().isPresent() && !level().get().isDemoLevel();
         }
     },
 
@@ -97,10 +94,8 @@ public enum GameAction implements Action {
 
         @Override
         public boolean isEnabled() {
-            return THE_GAME_CONTROLLER.game().isPlaying()
-                    && THE_GAME_CONTROLLER.state() == GameState.HUNTING
-                    && THE_GAME_CONTROLLER.game().level().isPresent()
-                    && THE_GAME_CONTROLLER.game().level().get().number() < THE_GAME_CONTROLLER.game().lastLevelNumber();
+            return game().isPlaying() && gameState() == GameState.HUNTING && level().isPresent()
+                && level().get().number() < game().lastLevelNumber();
         }
     },
 
@@ -113,91 +108,59 @@ public enum GameAction implements Action {
             if (THE_COIN_MECHANISM.numCoins() < CoinMechanism.MAX_COINS) {
                 THE_COIN_MECHANISM.insertCoin();
                 THE_SOUND.enabledProperty().set(true);
-                THE_GAME_EVENT_MANAGER.publishEvent(THE_GAME_CONTROLLER.game(), GameEventType.CREDIT_ADDED);
+                THE_GAME_EVENT_MANAGER.publishEvent(game(), GameEventType.CREDIT_ADDED);
             }
-            if (THE_GAME_CONTROLLER.state() != GameState.SETTING_OPTIONS) {
+            if (gameState() != GameState.SETTING_OPTIONS) {
                 THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
             }
         }
 
         @Override
         public boolean isEnabled() {
-            if (THE_GAME_CONTROLLER.game().isPlaying()) {
+            if (game().isPlaying()) {
                 return false;
             }
-            return THE_GAME_CONTROLLER.state() == GameState.SETTING_OPTIONS
-                || THE_GAME_CONTROLLER.state() == INTRO
-                || THE_GAME_CONTROLLER.game().level().isPresent() && THE_GAME_CONTROLLER.game().level().get().isDemoLevel()
+            return gameState() == GameState.SETTING_OPTIONS
+                || gameState() == INTRO
+                || level().isPresent() && level().get().isDemoLevel()
                 || THE_COIN_MECHANISM.isEmpty();
         }
     },
 
     PLAYER_UP {
-        private Optional<Pac> pac() {
-            return THE_GAME_CONTROLLER.game().level().map(GameLevel::pac);
-        }
-
         @Override
         public void execute() {
-            pac().ifPresent(pac -> pac.setWishDir(Direction.UP));
+            pac().get().setWishDir(Direction.UP);
         }
 
         @Override
-        public boolean isEnabled() {
-            Pac pac = pac().orElse(null);
-            return pac != null && !pac.isUsingAutopilot();
-        }
+        public boolean isEnabled() { return pac().isPresent() && !pac().get().isUsingAutopilot(); }
     },
 
     PLAYER_DOWN {
-        private Optional<Pac> pac() {
-            return THE_GAME_CONTROLLER.game().level().map(GameLevel::pac);
-        }
-
         @Override
         public void execute() {
-            pac().ifPresent(pac -> pac.setWishDir(Direction.DOWN));
+            pac().get().setWishDir(Direction.DOWN);
         }
 
         @Override
-        public boolean isEnabled() {
-            Pac pac = pac().orElse(null);
-            return pac != null && !pac.isUsingAutopilot();
-        }
+        public boolean isEnabled() { return pac().isPresent() && !pac().get().isUsingAutopilot(); }
     },
 
     PLAYER_LEFT {
-        private Optional<Pac> pac() {
-            return THE_GAME_CONTROLLER.game().level().map(GameLevel::pac);
-        }
+        @Override
+        public void execute() { pac().get().setWishDir(Direction.LEFT); }
 
         @Override
-        public void execute() {
-            pac().ifPresent(pac -> pac.setWishDir(Direction.LEFT));
-        }
-
-        @Override
-        public boolean isEnabled() {
-            Pac pac = pac().orElse(null);
-            return pac != null && !pac.isUsingAutopilot();
-        }
+        public boolean isEnabled() { return pac().isPresent() && !pac().get().isUsingAutopilot(); }
     },
 
     PLAYER_RIGHT {
-        private Optional<Pac> pac() {
-            return THE_GAME_CONTROLLER.game().level().map(GameLevel::pac);
-        }
+        @Override
+        public void execute() { pac().get().setWishDir(Direction.RIGHT); }
 
         @Override
-        public void execute() {
-            pac().ifPresent(pac -> pac.setWishDir(Direction.RIGHT));
-        }
-
-        @Override
-        public boolean isEnabled() {
-            Pac pac = pac().orElse(null);
-            return pac != null && !pac.isUsingAutopilot();
-        }
+        public boolean isEnabled() { return pac().isPresent() && !pac().get().isUsingAutopilot(); }
     },
 
     RESTART_INTRO {
@@ -205,8 +168,8 @@ public enum GameAction implements Action {
         public void execute() {
             THE_SOUND.stopAll();
             THE_UI.currentGameScene().ifPresent(GameScene::end);
-            if (THE_GAME_CONTROLLER.state() == GameState.TESTING_LEVELS) {
-                THE_GAME_CONTROLLER.state().onExit(THE_GAME_CONTROLLER.game()); //TODO exit other states too?
+            if (gameState() == GameState.TESTING_LEVELS) {
+                gameState().onExit(game()); //TODO exit other states too?
             }
             THE_CLOCK.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
             THE_GAME_CONTROLLER.restart(INTRO);
@@ -277,7 +240,7 @@ public enum GameAction implements Action {
         @Override
         public void execute() {
             THE_UI.currentGameScene().ifPresent(GameScene::end);
-            THE_GAME_CONTROLLER.game().resetEverything();
+            game().resetEverything();
             if (!THE_COIN_MECHANISM.isEmpty())  THE_COIN_MECHANISM.consumeCoin();
             THE_UI.showStartView();
         }
@@ -289,12 +252,12 @@ public enum GameAction implements Action {
             switch (THE_GAME_CONTROLLER.gameVariantProperty().get()) {
                 case MS_PACMAN_TENGEN -> Logger.error("Arcade game start action cannot be executed in Tengen Ms. Pac-Man");
                 case MS_PACMAN, MS_PACMAN_XXL, PACMAN, PACMAN_XXL -> {
-                    if (THE_GAME_CONTROLLER.game().canStartNewGame()) {
+                    if (game().canStartNewGame()) {
                         THE_SOUND.stopVoice();
-                        if (THE_GAME_CONTROLLER.state() == GameState.INTRO || THE_GAME_CONTROLLER.state() == GameState.SETTING_OPTIONS) {
+                        if (gameState() == GameState.INTRO || gameState() == GameState.SETTING_OPTIONS) {
                             THE_GAME_CONTROLLER.changeState(GameState.STARTING_GAME);
                         } else {
-                            Logger.error("Cannot start game play in game state {}", THE_GAME_CONTROLLER.state());
+                            Logger.error("Cannot start game play in game state {}", gameState());
                         }
                     }
                 }
@@ -415,7 +378,7 @@ public enum GameAction implements Action {
                     THE_UI.updateGameScene(true);
                     THE_GAME_CONTROLLER.update(); //TODO needed?
                 }
-                if (!THE_GAME_CONTROLLER.game().isPlaying()) {
+                if (!game().isPlaying()) {
                     THE_UI.showFlashMessage(THE_ASSETS.text(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
                 }
             });
@@ -423,7 +386,7 @@ public enum GameAction implements Action {
 
         @Override
         public boolean isEnabled() {
-            return Globals.oneOf(THE_GAME_CONTROLLER.state(),
+            return Globals.oneOf(gameState(),
                 GameState.BOOT, GameState.INTRO, GameState.SETTING_OPTIONS, GameState.HUNTING,
                 GameState.TESTING_LEVEL_TEASERS, GameState.TESTING_LEVELS
             );
@@ -439,6 +402,11 @@ public enum GameAction implements Action {
             }
         }
     };
+
+    GameModel game() { return THE_GAME_CONTROLLER.game(); }
+    GameState gameState() { return THE_GAME_CONTROLLER.state(); }
+    Optional<GameLevel> level() { return THE_GAME_CONTROLLER.game().level(); }
+    Optional<Pac> pac() { return level().map(GameLevel::pac); }
 
     private static final int SIMULATION_SPEED_DELTA = 2;
     private static final int SIMULATION_SPEED_MIN   = 10;
