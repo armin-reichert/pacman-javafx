@@ -51,6 +51,7 @@ public abstract class GameScene2D implements GameScene {
     public final void end() {
         doEnd();
         disableActionBindings();
+        THE_SOUND.stopAll();
     }
 
     @Override

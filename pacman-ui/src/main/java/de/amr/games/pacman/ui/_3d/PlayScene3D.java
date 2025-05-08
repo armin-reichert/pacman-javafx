@@ -189,6 +189,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         perspectiveNamePy.unbind();
         level3D.stopAnimations();
         level3D = null;
+        THE_SOUND.stopAll();
     }
 
     @Override
