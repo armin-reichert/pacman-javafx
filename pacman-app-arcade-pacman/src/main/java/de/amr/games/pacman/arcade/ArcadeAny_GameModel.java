@@ -65,7 +65,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         playingProperty().set(false);
         setLifeCount(initialLifeCount());
         level = null;
-        levelCounter().reset();
+        levelCounter().clear();
         scoreManager.loadHighScore();
         scoreManager.resetScore();
         gateKeeper.reset();
@@ -219,7 +219,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         level.setStartTime(System.currentTimeMillis());
         level.makeReadyForPlaying();
         initAnimationOfPacManAndGhosts();
-        levelCounter().update(level);
+        levelCounter().update(level.number(), level.bonusSymbol(0));
         if (level.isDemoLevel()) {
             level.showMessage(GameLevel.Message.GAME_OVER);
             scoreManager.score().setEnabled(false);

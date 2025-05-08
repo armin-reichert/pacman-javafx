@@ -141,7 +141,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public void prepareForNewGame() {
         setLifeCount(initialLifeCount());
         level = null;
-        levelCounter.reset();
+        levelCounter.clear();
         playingProperty().set(false);
         boosterActive = false;
         scoreManager.loadHighScore();
@@ -254,7 +254,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.makeReadyForPlaying();
         initAnimationOfPacManAndGhosts();
         setActorsSpeed(level);
-        levelCounter().update(level);
+        levelCounter().update(level.number(), level.bonusSymbol(0));
         if (level.isDemoLevel()) {
             level.showMessage(GameLevel.Message.GAME_OVER);
             scoreManager.score().setEnabled(true);

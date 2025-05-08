@@ -41,17 +41,17 @@ public class TengenMsPacMan_LevelCounter implements LevelCounter {
     }
 
     @Override
-    public void reset() {
+    public void clear() {
         symbols.clear();
     }
 
     @Override
-    public void update(GameLevel level) {
-        if (level.number() == 1) {
-            reset();
+    public void update(int levelNumber, byte symbol) {
+        if (levelNumber == 1) {
+            clear();
         }
         if (isEnabled()) {
-            symbols.add(level.bonusSymbol(0));
+            symbols.add(symbol);
             if (symbols.size() > LEVEL_COUNTER_MAX_SIZE) {
                 symbols.removeFirst();
             }

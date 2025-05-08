@@ -7,8 +7,8 @@ package de.amr.games.pacman.model;
 import java.util.stream.Stream;
 
 public interface LevelCounter {
-    void reset();
-    void update(GameLevel level);
+    void clear();
+    void update(int levelNumber, byte symbol);
     void setEnabled(boolean enabled);
     boolean isEnabled();
     Stream<Byte> symbols();
