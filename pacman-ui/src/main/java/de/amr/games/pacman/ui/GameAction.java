@@ -355,7 +355,7 @@ public enum GameAction implements Action {
 
         @Override
         public boolean isEnabled() {
-            return Globals.oneOf(gameState(),
+            return isOneOf(gameState(),
                 GameState.BOOT, GameState.INTRO, GameState.SETTING_OPTIONS, GameState.HUNTING,
                 GameState.TESTING_LEVEL_TEASERS, GameState.TESTING_LEVELS
             );

@@ -10,7 +10,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.LayerID;
 import de.amr.games.pacman.lib.tilemap.TerrainTiles;
-import de.amr.games.pacman.model.HuntingTimer;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -199,16 +198,13 @@ public class Ghost extends Creature implements AnimatedActor2D {
     }
 
     /**
-     * @param stateAlternatives ghost states to be checked
+     * @param alternatives ghost states to be checked
      * @return <code>true</code> if this ghost is in any of the given states.
      * If no alternatives are given, an exception is thrown.
      * <code>false</code>
      */
-    public boolean inState(GhostState... stateAlternatives) {
-        if (stateAlternatives.length == 0) {
-            throw new IllegalArgumentException("No states to check for ghost");
-        }
-        return oneOf(state, stateAlternatives);
+    public boolean inState(GhostState... alternatives) {
+        return state != null && isOneOf(state, alternatives);
     }
 
     /**

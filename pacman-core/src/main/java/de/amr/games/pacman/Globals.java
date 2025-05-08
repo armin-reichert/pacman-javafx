@@ -18,6 +18,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Random;
+import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
@@ -227,14 +228,13 @@ public interface Globals {
     }
 
     @SafeVarargs
-    static <T> boolean oneOf(T value, T... alternatives) {
+    static <T> boolean isOneOf(T value, T... alternatives) {
         if (value == null) {
-            return false;
+            throw new IllegalArgumentException("Value is null");
         }
-        return switch (alternatives.length) {
-            case 0 -> false;
-            case 1 -> value.equals(alternatives[0]);
-            default -> Arrays.asList(alternatives).contains(value);
-        };
+        if (alternatives.length == 0) {
+            throw new IllegalArgumentException("No alternatives given");
+        }
+        return Set.of(alternatives).contains(value);
     }
 }

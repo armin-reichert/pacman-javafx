@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui.dashboard;
 
 import de.amr.games.pacman.controller.CoinMechanism;
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.GameAction;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -53,7 +52,7 @@ public class InfoBoxGameControl extends InfoBox {
         setAction(bgLevelActions[GAME_LEVEL_START], GameAction.START_ARCADE_GAME::execute); //TODO this is the Arcade action!
         setAction(bgLevelActions[GAME_LEVEL_QUIT], GameAction.RESTART_INTRO::execute);
         setAction(bgLevelActions[GAME_LEVEL_NEXT], GameAction.CHEAT_ENTER_NEXT_LEVEL::execute);
-        setAction(comboInitialLives, () -> THE_GAME_CONTROLLER.game().setInitialLifeCount(comboInitialLives.getValue()));
+        setAction(comboInitialLives, () -> game().setInitialLifeCount(comboInitialLives.getValue()));
 
         setEditor(cbAutopilot, PY_AUTOPILOT);
         setEditor(cbImmunity, PY_IMMUNITY);
@@ -63,35 +62,32 @@ public class InfoBoxGameControl extends InfoBox {
     public void update() {
         super.update();
 
-        GameModel game = THE_GAME_CONTROLLER.game();
-        GameState state = THE_GAME_CONTROLLER.state();
-
         spinnerCredit.getValueFactory().setValue(THE_COIN_MECHANISM.numCoins());
-        comboInitialLives.setValue(game.initialLifeCount());
+        comboInitialLives.setValue(game().initialLifeCount());
 
-        spinnerCredit.setDisable(!(oneOf(state, GameState.INTRO, GameState.SETTING_OPTIONS)));
-        comboInitialLives.setDisable(state != GameState.INTRO);
+        spinnerCredit.setDisable(!(isOneOf(gameState(), GameState.INTRO, GameState.SETTING_OPTIONS)));
+        comboInitialLives.setDisable(gameState() != GameState.INTRO);
 
         bgLevelActions[GAME_LEVEL_START].setDisable(isBooting() || !canStartLevel());
-        bgLevelActions[GAME_LEVEL_QUIT].setDisable(isBooting() || game.level().isEmpty());
+        bgLevelActions[GAME_LEVEL_QUIT].setDisable(isBooting() || level().isEmpty());
         bgLevelActions[GAME_LEVEL_NEXT].setDisable(isBooting() || !canEnterNextLevel());
 
-        bgCutScenesTest[CUT_SCENES_TEST_START].setDisable(isBooting() || state != GameState.INTRO);
-        bgCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(isBooting() || state != GameState.TESTING_CUT_SCENES);
+        bgCutScenesTest[CUT_SCENES_TEST_START].setDisable(isBooting() || gameState() != GameState.INTRO);
+        bgCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(isBooting() || gameState() != GameState.TESTING_CUT_SCENES);
 
         cbAutopilot.setDisable(isBooting());
         cbImmunity.setDisable(isBooting());
     }
 
     private boolean isBooting() {
-        return THE_GAME_CONTROLLER.state() == GameState.BOOT;
+        return gameState() == GameState.BOOT;
     }
 
     private boolean canStartLevel() {
-        return THE_GAME_CONTROLLER.game().canStartNewGame() && oneOf(THE_GAME_CONTROLLER.state(), GameState.INTRO, GameState.SETTING_OPTIONS);
+        return game().canStartNewGame() && isOneOf(gameState(), GameState.INTRO, GameState.SETTING_OPTIONS);
     }
 
     private boolean canEnterNextLevel() {
-        return THE_GAME_CONTROLLER.game().isPlaying() && oneOf(THE_GAME_CONTROLLER.state(), GameState.HUNTING);
+        return game().isPlaying() && isOneOf(gameState(), GameState.HUNTING);
     }
 }
