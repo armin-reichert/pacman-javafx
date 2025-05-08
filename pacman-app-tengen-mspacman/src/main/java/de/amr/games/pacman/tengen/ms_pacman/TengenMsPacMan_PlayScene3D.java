@@ -18,8 +18,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 
-import static de.amr.games.pacman.Globals.HTS;
-import static de.amr.games.pacman.Globals.TS;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction.TOGGLE_PAC_BOOSTER;
 import static de.amr.games.pacman.ui.Globals.*;
 import static de.amr.games.pacman.uilib.input.Keyboard.alt;
@@ -30,9 +29,9 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     protected void replaceGameLevel3D(GameLevel level) {
         super.replaceGameLevel3D(level);
-        TengenMsPacMan_GameModel tengenMsPacManGame = game();
-        if (!tengenMsPacManGame.optionsAreInitial()) {
-            addGameOptionsArea(tengenMsPacManGame, level);
+        var tengenGame = (TengenMsPacMan_GameModel) game();
+        if (!tengenGame.optionsAreInitial()) {
+            addGameOptionsArea(tengenGame, level);
         }
     }
 

@@ -4,11 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui;
 
-import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.uilib.ActionProvider;
 import de.amr.games.pacman.uilib.input.Keyboard;
 import javafx.scene.control.MenuItem;
@@ -64,14 +62,11 @@ public interface GameScene extends GameEventListener, ActionProvider {
     }
 
     default void bindCheatActions() {
-        bind(GameAction.CHEAT_EAT_ALL_PELLETS,     alt(KeyCode.E));
-        bind(GameAction.CHEAT_ADD_LIVES,   alt(KeyCode.L));
-        bind(GameAction.CHEAT_ENTER_NEXT_LEVEL,  alt(KeyCode.N));
+        bind(GameAction.CHEAT_EAT_ALL_PELLETS, alt(KeyCode.E));
+        bind(GameAction.CHEAT_ADD_LIVES, alt(KeyCode.L));
+        bind(GameAction.CHEAT_ENTER_NEXT_LEVEL, alt(KeyCode.N));
         bind(GameAction.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
     }
-
-    default <GAME extends GameModel> GAME game() { return THE_GAME_CONTROLLER.game(); }
-    default GameState gameState() { return THE_GAME_CONTROLLER.state(); }
 
     /**
      * Called when the scene becomes the current one.

@@ -17,7 +17,7 @@ import javafx.scene.text.Font;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.games.pacman.Globals.TS;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.ui.Globals.*;
 import static java.util.Objects.requireNonNull;
 

@@ -6,10 +6,13 @@ package de.amr.games.pacman;
 
 import de.amr.games.pacman.controller.CoinMechanism;
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventManager;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameException;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.SimulationStep;
 import org.tinylog.Logger;
 
@@ -80,6 +83,10 @@ public interface Globals {
         }
         return true;
     }
+
+    static GameModel game() { return THE_GAME_CONTROLLER.game(); }
+    static GameVariant gameVariant() { return THE_GAME_CONTROLLER.gameVariantProperty().get(); }
+    static GameState gameState() { return THE_GAME_CONTROLLER.state(); }
 
     /**
      * @param position a position

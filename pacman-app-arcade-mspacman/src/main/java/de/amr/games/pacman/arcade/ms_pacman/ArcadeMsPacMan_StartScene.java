@@ -10,8 +10,7 @@ import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import javafx.scene.text.Font;
 
-import static de.amr.games.pacman.Globals.THE_COIN_MECHANISM;
-import static de.amr.games.pacman.Globals.tiles_to_px;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.GameAssets.*;
 import static de.amr.games.pacman.ui.Globals.THE_ASSETS;

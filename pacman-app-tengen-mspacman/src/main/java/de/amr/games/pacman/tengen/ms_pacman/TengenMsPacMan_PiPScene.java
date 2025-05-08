@@ -3,6 +3,7 @@ package de.amr.games.pacman.tengen.ms_pacman;
 import de.amr.games.pacman.ui.Globals;
 
 import static de.amr.games.pacman.Globals.TS;
+import static de.amr.games.pacman.Globals.game;
 
 public class TengenMsPacMan_PiPScene extends TengenMsPacMan_PlayScene2D {
 

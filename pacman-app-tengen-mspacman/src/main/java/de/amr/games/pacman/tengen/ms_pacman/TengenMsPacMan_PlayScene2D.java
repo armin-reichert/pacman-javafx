@@ -350,8 +350,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
             case GAME_OVER ->
                 game().level().ifPresent(level -> {
-                    TengenMsPacMan_GameModel game = game();
-                    if (game.mapCategory() != MapCategory.ARCADE) {
+                    var tengenGame = (TengenMsPacMan_GameModel) game();
+                    if (tengenGame.mapCategory() != MapCategory.ARCADE) {
                         float belowHouse = centerPosBelowHouse(level).x();
                         messageMovement.start(MOVING_MESSAGE_DELAY, belowHouse, sizeInPx().x());
                     }
@@ -458,7 +458,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             Logger.warn("Tick {}: Game level not yet available, scene content not drawn", THE_CLOCK.tickCount());
             return;
         }
-        final TengenMsPacMan_GameModel tgame = game();
+        final var tengenGame = (TengenMsPacMan_GameModel) game();
         final var tr = (TengenMsPacMan_Renderer2D) gr;
         final int mazeTopY = 3 * TS;
 
@@ -469,7 +469,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
         tr.setScaling(scaling());
 
-        tr.drawScores(tgame.scoreManager(), nesPaletteColor(0x20), arcadeFontScaledTS());
+        tr.drawScores(tengenGame.scoreManager(), nesPaletteColor(0x20), arcadeFontScaledTS());
 
         final boolean flashing = levelCompleteAnimation != null && levelCompleteAnimation.inFlashingPhase();
         if (flashing) {
@@ -492,13 +492,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
         // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
         int numLivesDisplayed = gameState() == GameState.STARTING_GAME && !level.pac().isVisible()
-            ? tgame.lifeCount() : tgame.lifeCount() - 1;
+            ? tengenGame.lifeCount() : tengenGame.lifeCount() - 1;
         tr.drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - TS);
 
-        if (level.isDemoLevel() || tgame.mapCategory() == MapCategory.ARCADE) {
-            tr.drawLevelCounter(tgame.levelCounter(), sizeInPx());
+        if (level.isDemoLevel() || tengenGame.mapCategory() == MapCategory.ARCADE) {
+            tr.drawLevelCounter(tengenGame.levelCounter(), sizeInPx());
         } else {
-            tr.drawLevelCounterWithLevelNumbers(level.number(), tgame.levelCounter(), sizeInPx());
+            tr.drawLevelCounterWithLevelNumbers(level.number(), tengenGame.levelCounter(), sizeInPx());
         }
 
         if (debugInfoVisiblePy.get()) {

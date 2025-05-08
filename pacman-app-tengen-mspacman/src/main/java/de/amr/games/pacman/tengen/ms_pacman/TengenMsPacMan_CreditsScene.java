@@ -9,8 +9,7 @@ import de.amr.games.pacman.lib.nes.JoypadButtonID;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.text.Font;
 
-import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.Globals.TS;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction.START_GAME;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
