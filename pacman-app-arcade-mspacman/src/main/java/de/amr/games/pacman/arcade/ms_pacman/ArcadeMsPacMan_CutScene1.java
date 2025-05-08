@@ -109,31 +109,31 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private static final byte STATE_COMING_TOGETHER = 2;
     private static final byte STATE_IN_HEAVEN = 3;
 
-    private byte state;
-    private final TickTimer stateTimer = new TickTimer("MsPacManCutScene1");
+    private byte sceneState;
+    private final TickTimer sceneTimer = new TickTimer("MsPacManCutScene1");
 
     private void setState(byte state, long ticks) {
-        this.state = state;
-        stateTimer.reset(ticks);
-        stateTimer.start();
+        this.sceneState = state;
+        sceneTimer.reset(ticks);
+        sceneTimer.start();
     }
 
     private void updateSceneState() {
-        switch (state) {
+        switch (sceneState) {
             case STATE_CLAPPERBOARD -> updateStateClapperboard();
             case STATE_CHASED_BY_GHOSTS -> updateStateChasedByGhosts();
             case STATE_COMING_TOGETHER -> updateStateComingTogether();
             case STATE_IN_HEAVEN -> updateStateInHeaven();
-            default -> throw new IllegalStateException("Illegal state: " + state);
+            default -> throw new IllegalStateException("Illegal state: " + sceneState);
         }
-        stateTimer.doTick();
+        sceneTimer.doTick();
     }
 
     private void updateStateClapperboard() {
         clapperboardAnimation.tick();
-        if (stateTimer.atSecond(1)) {
+        if (sceneTimer.atSecond(1)) {
             music.play();
-        } else if (stateTimer.hasExpired()) {
+        } else if (sceneTimer.hasExpired()) {
             enterStateChasedByGhosts();
         }
     }
@@ -264,7 +264,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     }
 
     private void updateStateInHeaven() {
-        if (stateTimer.hasExpired()) {
+        if (sceneTimer.hasExpired()) {
             THE_GAME_CONTROLLER.letCurrentStateExpire();
         }
     }

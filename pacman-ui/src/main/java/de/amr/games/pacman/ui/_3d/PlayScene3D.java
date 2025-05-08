@@ -98,7 +98,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     protected Perspective perspective() { return perspectives.get(perspectiveNamePy.get()); }
 
     protected void replaceGameLevel3D(GameLevel level) {
-        final GameVariant gameVariant = THE_GAME_CONTROLLER.gameVariantProperty().get();
+        final GameVariant gameVariant = gameVariant();
         level3D = new GameLevel3D(gameVariant, level);
         level3D.addLevelCounter(THE_UI_CONFIGS.configuration(gameVariant));
         int lastIndex = root.getChildren().size() - 1;

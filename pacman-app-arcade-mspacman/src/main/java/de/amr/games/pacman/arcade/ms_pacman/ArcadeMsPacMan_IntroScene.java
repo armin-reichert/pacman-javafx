@@ -57,7 +57,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     private Pac msPacMan;
     private Ghost[] ghosts;
     private TickTimer marqueeTimer;
-    private int ghostID;
+    private int presentedGhostID;
     private int waitBeforeRising;
 
     public ArcadeMsPacMan_IntroScene() {
@@ -88,7 +88,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
             ArcadeMsPacMan_ActorFactory.createOrangeGhost()
         };
         marqueeTimer = new TickTimer("marquee-timer");
-        ghostID = 0;
+        presentedGhostID = 0;
         waitBeforeRising = 0;
 
         var spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
@@ -129,12 +129,12 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         drawMarquee();
         gr.fillTextAtScaledPosition("\"MS PAC-MAN\"", ARCADE_ORANGE, font, TITLE_X, TITLE_Y);
         if (state == SceneState.GHOSTS_MARCHING_IN) {
-            String ghostName = ghosts[ghostID].name().toUpperCase();
+            String ghostName = ghosts[presentedGhostID].name().toUpperCase();
             double dx = ghostName.length() < 4 ? tiles_to_px(1) : 0;
-            if (ghostID == RED_GHOST_ID) {
+            if (presentedGhostID == RED_GHOST_ID) {
                 gr.fillTextAtScaledPosition("WITH", ARCADE_WHITE, font, TITLE_X, TOP_Y + tiles_to_px(3));
             }
-            gr.fillTextAtScaledPosition(ghostName, COLOR_GHOST[ghostID], font, TITLE_X + tiles_to_px(3) + dx, TOP_Y + tiles_to_px(6));
+            gr.fillTextAtScaledPosition(ghostName, COLOR_GHOST[presentedGhostID], font, TITLE_X + tiles_to_px(3) + dx, TOP_Y + tiles_to_px(6));
         }
         else if (state == SceneState.MS_PACMAN_MARCHING_IN || state == SceneState.READY_TO_PLAY) {
             gr.fillTextAtScaledPosition("STARRING", ARCADE_WHITE, font, TITLE_X, TOP_Y + tiles_to_px(3));
@@ -182,15 +182,15 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
         STARTING {
             @Override
-            public void onEnter(ArcadeMsPacMan_IntroScene intro) {
-                intro.marqueeTimer.restartIndefinitely();
-                intro.msPacMan.setPosition(TS * 31, TS * 20);
-                intro.msPacMan.setMoveDir(Direction.LEFT);
-                intro.msPacMan.setSpeed(SPEED);
-                intro.msPacMan.setVisible(true);
-                intro.msPacMan.selectAnimation(ActorAnimations.ANIM_PAC_MUNCHING);
-                intro.msPacMan.startAnimation();
-                for (Ghost ghost : intro.ghosts) {
+            public void onEnter(ArcadeMsPacMan_IntroScene scene) {
+                scene.marqueeTimer.restartIndefinitely();
+                scene.msPacMan.setPosition(TS * 31, TS * 20);
+                scene.msPacMan.setMoveDir(Direction.LEFT);
+                scene.msPacMan.setSpeed(SPEED);
+                scene.msPacMan.setVisible(true);
+                scene.msPacMan.selectAnimation(ActorAnimations.ANIM_PAC_MUNCHING);
+                scene.msPacMan.startAnimation();
+                for (Ghost ghost : scene.ghosts) {
                     ghost.setPosition(TS * 33.5f, TS * 20);
                     ghost.setMoveAndWishDir(Direction.LEFT);
                     ghost.setSpeed(SPEED);
@@ -198,48 +198,47 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                     ghost.setVisible(true);
                     ghost.startAnimation();
                 }
-                intro.ghostID = 0;
+                scene.presentedGhostID = 0;
             }
 
             @Override
-            public void onUpdate(ArcadeMsPacMan_IntroScene intro) {
-                intro.marqueeTimer.doTick();
-                if (timer.atSecond(1)) {
-                    intro.sceneController.changeState(GHOSTS_MARCHING_IN);
+            public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
+                scene.marqueeTimer.doTick();
+                if (sceneTimer.atSecond(1)) {
+                    scene.sceneController.changeState(GHOSTS_MARCHING_IN);
                 }
             }
         },
 
         GHOSTS_MARCHING_IN {
-
             @Override
-            public void onUpdate(ArcadeMsPacMan_IntroScene intro) {
-                intro.marqueeTimer.doTick();
-                boolean reachedEndPosition = letGhostMarchIn(intro);
+            public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
+                scene.marqueeTimer.doTick();
+                boolean reachedEndPosition = letGhostMarchIn(scene);
                 if (reachedEndPosition) {
-                    if (intro.ghostID == 3) {
-                        intro.sceneController.changeState(MS_PACMAN_MARCHING_IN);
+                    if (scene.presentedGhostID == 3) {
+                        scene.sceneController.changeState(MS_PACMAN_MARCHING_IN);
                     } else {
-                        ++intro.ghostID;
+                        ++scene.presentedGhostID;
                     }
                 }
             }
 
-            boolean letGhostMarchIn(ArcadeMsPacMan_IntroScene intro) {
-                Ghost ghost = intro.ghosts[intro.ghostID];
+            boolean letGhostMarchIn(ArcadeMsPacMan_IntroScene scene) {
+                Ghost ghost = scene.ghosts[scene.presentedGhostID];
                 if (ghost.moveDir() == Direction.LEFT) {
                     if (ghost.posX() <= STOP_X_GHOST) {
                         ghost.setPosX(STOP_X_GHOST);
                         ghost.setMoveAndWishDir(Direction.UP);
-                        intro.waitBeforeRising = 2;
+                        scene.waitBeforeRising = 2;
                     } else {
                         ghost.move();
                     }
                 }
                 else if (ghost.moveDir() == Direction.UP) {
-                    int endPositionY = TOP_Y + intro.ghostID * 16;
-                    if (intro.waitBeforeRising > 0) {
-                        intro.waitBeforeRising--;
+                    int endPositionY = TOP_Y + scene.presentedGhostID * 16;
+                    if (scene.waitBeforeRising > 0) {
+                        scene.waitBeforeRising--;
                     }
                     else if (ghost.posY() <= endPositionY) {
                         ghost.setSpeed(0);
@@ -256,37 +255,35 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         },
 
         MS_PACMAN_MARCHING_IN {
-
             @Override
-            public void onUpdate(ArcadeMsPacMan_IntroScene intro) {
-                intro.marqueeTimer.doTick();
-                intro.msPacMan.move();
-                if (intro.msPacMan.posX() <= STOP_X_MSPAC) {
-                    intro.msPacMan.setSpeed(0);
-                    intro.msPacMan.resetAnimation();
-                    intro.sceneController.changeState(READY_TO_PLAY);
+            public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
+                scene.marqueeTimer.doTick();
+                scene.msPacMan.move();
+                if (scene.msPacMan.posX() <= STOP_X_MSPAC) {
+                    scene.msPacMan.setSpeed(0);
+                    scene.msPacMan.resetAnimation();
+                    scene.sceneController.changeState(READY_TO_PLAY);
                 }
             }
         },
 
         READY_TO_PLAY {
-
             @Override
-            public void onUpdate(ArcadeMsPacMan_IntroScene intro) {
-                intro.marqueeTimer.doTick();
-                if (timer.atSecond(2.0) && !game().canStartNewGame()) {
+            public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
+                scene.marqueeTimer.doTick();
+                if (sceneTimer.atSecond(2.0) && !game().canStartNewGame()) {
                     THE_GAME_CONTROLLER.changeState(GameState.STARTING_GAME); // demo level
-                } else if (timer.atSecond(5)) {
+                } else if (sceneTimer.atSecond(5)) {
                     THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
                 }
             }
         };
 
-        final TickTimer timer = new TickTimer("Timer-" + name());
+        final TickTimer sceneTimer = new TickTimer("Timer-" + name());
 
         @Override
         public TickTimer timer() {
-            return timer;
+            return sceneTimer;
         }
     }
 }

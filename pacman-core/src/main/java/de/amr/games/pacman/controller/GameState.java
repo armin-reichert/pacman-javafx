@@ -154,6 +154,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onEnter(GameModel game) {
+            //TODO reconsider this
             delay = THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN) ? 60 : 0;
         }
 
@@ -200,6 +201,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             GameLevel level = game.level().orElseThrow();
+            //TODO ugly
             if (THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN) && level.isDemoLevel()) {
                 THE_GAME_CONTROLLER.changeState(SHOWING_CREDITS);
                 return;

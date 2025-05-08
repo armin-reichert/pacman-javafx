@@ -151,22 +151,12 @@ public class PacManGamesUI implements GameUI {
         var icon3D = FontIcon.of(FontAwesomeSolid.CUBES, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
         icon3D.visibleProperty().bind(PY_3D_ENABLED);
 
-        var iconCutScenesOff = FontIcon.of(FontAwesomeSolid.AMBULANCE, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
-        //TODO make this work:
-        /*
-        iconCutScenesOff.visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> !THE_GAME_CONTROLLER.game().cutScenesEnabledProperty().get(),
-            THE_GAME_CONTROLLER.game().cutScenesEnabledProperty(), THE_GAME_CONTROLLER.gameVariantProperty()
-        ));
-         */
-        iconCutScenesOff.setVisible(false);
-
         var iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, STATUS_ICON_COLOR);
         iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
             () -> currentView() != editorView && THE_CLOCK.isPaused(),
             viewPy, THE_CLOCK.pausedProperty()));
 
-        Pane iconBox = createIconBox(iconMuted, icon3D, iconAutopilot, iconImmune, iconCutScenesOff);
+        Pane iconBox = createIconBox(iconMuted, icon3D, iconAutopilot, iconImmune);
         iconBox.visibleProperty().bind(Bindings.createBooleanBinding(() -> currentView() != editorView, viewPy));
 
         parent.getChildren().addAll(iconPaused, iconBox);
@@ -292,7 +282,7 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public void show() {
-        selectGameVariant(THE_GAME_CONTROLLER.gameVariantProperty().get());
+        selectGameVariant(gameVariant());
         viewPy.set(startPagesView);
         startPagesView.currentStartPage().ifPresent(StartPage::requestFocus);
         stage.centerOnScreen();
@@ -301,7 +291,7 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public void showEditorView() {
-        if (!THE_GAME_CONTROLLER.game().isPlaying() || THE_CLOCK.isPaused()) {
+        if (!game().isPlaying() || THE_CLOCK.isPaused()) {
             currentGameScene().ifPresent(GameScene::end);
             THE_SOUND.stopAll();
             THE_CLOCK.stop();

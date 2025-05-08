@@ -56,8 +56,8 @@ public interface Globals {
     static GameModel game() { return THE_GAME_CONTROLLER.game(); }
     static GameVariant gameVariant() { return THE_GAME_CONTROLLER.gameVariantProperty().get(); }
     static GameState gameState() { return THE_GAME_CONTROLLER.state(); }
-    static Optional<GameLevel> level() { return game().level(); }
-    static Optional<Pac> pac() { return level().map(GameLevel::pac); }
+    static Optional<GameLevel> gameLevel() { return game().level(); }
+    static Optional<Pac> pac() { return gameLevel().map(GameLevel::pac); }
 
     static void checkUserDirsExistAndWritable() {
         String homeDirDesc = "Pac-Man FX home directory";

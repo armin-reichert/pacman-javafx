@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui._2d;
 
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.Globals;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.geometry.Insets;
@@ -19,7 +18,7 @@ import javafx.scene.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.ui.Globals.THE_ASSETS;
 
 
@@ -30,12 +29,11 @@ public class HelpInfo {
 
     public static HelpInfo build() {
         HelpInfo help = new HelpInfo();
-        switch (THE_GAME_CONTROLLER.state()) {
+        switch (gameState()) {
             case INTRO -> help.addInfoForIntroScene();
             case SETTING_OPTIONS -> help.addInfoForCreditScene();
             case STARTING_GAME, HUNTING, PACMAN_DYING, GHOST_DYING -> {
-                GameModel game = THE_GAME_CONTROLLER.game();
-                if (game.level().isPresent() && game.level().get().isDemoLevel()) {
+                if (gameLevel().isPresent() && gameLevel().get().isDemoLevel()) {
                     help.addInfoForDemoLevelPlayScene();
                 } else {
                     help.addInfoForPlayScene();
@@ -110,7 +108,7 @@ public class HelpInfo {
     }
 
     private void addInfoForIntroScene() {
-        if (THE_GAME_CONTROLLER.game().canStartNewGame()) {
+        if (game().canStartNewGame()) {
             addRow("help.start_game", "1");
         }
         addRow("help.add_credit", "5");
@@ -118,7 +116,7 @@ public class HelpInfo {
     }
 
     private void addInfoForCreditScene() {
-        if (THE_GAME_CONTROLLER.game().canStartNewGame()) {
+        if (game().canStartNewGame()) {
             addRow("help.start_game", "1");
         }
         addRow("help.add_credit", "5");

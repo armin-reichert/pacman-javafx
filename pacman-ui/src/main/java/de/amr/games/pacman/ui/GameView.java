@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
+import static de.amr.games.pacman.Globals.gameLevel;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.GameAssets.ARCADE_WHITE;
 import static de.amr.games.pacman.ui.Globals.*;
@@ -178,7 +179,7 @@ public class GameView implements View {
     @Override
     public void onLevelCreated(GameEvent event) {
         //TODO find another point in time to do this
-        THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
+        gameLevel().ifPresent(level -> {
             GameUIConfig config = THE_UI_CONFIGS.current();
             config.createActorAnimations(level);
             THE_SOUND.setEnabled(!level.isDemoLevel());

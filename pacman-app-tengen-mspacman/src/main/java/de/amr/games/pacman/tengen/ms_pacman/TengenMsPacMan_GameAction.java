@@ -18,12 +18,12 @@ public enum TengenMsPacMan_GameAction implements Action {
     QUIT_DEMO_LEVEL {
         @Override
         public void execute() {
-            level().ifPresent(level -> THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS));
+            gameLevel().ifPresent(level -> THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS));
         }
 
         @Override
         public boolean isEnabled() {
-            return level().isPresent() && level().get().isDemoLevel();
+            return gameLevel().isPresent() && gameLevel().get().isDemoLevel();
         }
     },
 

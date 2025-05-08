@@ -104,30 +104,30 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     private static final byte STATE_DELIVER_JUNIOR = 1;
     private static final byte STATE_STORK_LEAVES_SCENE = 2;
 
-    private byte state;
-    private final TickTimer stateTimer = new TickTimer("MsPacManCutScene3");
+    private byte sceneState;
+    private final TickTimer sceneTimer = new TickTimer("MsPacManCutScene3");
 
     private void setSceneState(byte state, long ticks) {
-        this.state = state;
-        stateTimer.reset(ticks);
-        stateTimer.start();
+        this.sceneState = state;
+        sceneTimer.reset(ticks);
+        sceneTimer.start();
     }
 
     private void updateSceneState() {
-        switch (state) {
+        switch (sceneState) {
             case STATE_CLAPPERBOARD -> updateStateClapperboard();
             case STATE_DELIVER_JUNIOR -> updateStateDeliverJunior();
             case STATE_STORK_LEAVES_SCENE -> updateStateStorkLeavesScene();
-            default -> throw new IllegalStateException("Illegal state: " + state);
+            default -> throw new IllegalStateException("Illegal state: " + sceneState);
         }
-        stateTimer.doTick();
+        sceneTimer.doTick();
     }
 
     private void updateStateClapperboard() {
         clapperboardAnimation.tick();
-        if (stateTimer.atSecond(1)) {
+        if (sceneTimer.atSecond(1)) {
             music.play();
-        } else if (stateTimer.atSecond(3)) {
+        } else if (sceneTimer.atSecond(3)) {
             enterStateDeliverJunior();
         }
     }
@@ -183,7 +183,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     private void updateStateStorkLeavesScene() {
         stork.move();
-        if (stateTimer.hasExpired()) {
+        if (sceneTimer.hasExpired()) {
             THE_GAME_CONTROLLER.letCurrentStateExpire();
         }
     }

@@ -236,7 +236,7 @@ public class GameLevel3D {
         // Place level counter at top right maze corner
         double x = level.worldMap().numCols() * TS - 2 * TS;
         double y = 2 * TS;
-        Node levelCounter3D = createLevelCounter3D(uiConfig.spriteSheet(), THE_GAME_CONTROLLER.game().levelCounter(), x, y);
+        Node levelCounter3D = createLevelCounter3D(uiConfig.spriteSheet(), game().levelCounter(), x, y);
         root.getChildren().add(levelCounter3D);
     }
 
@@ -291,8 +291,8 @@ public class GameLevel3D {
     }
 
     private int livesCounterSize() {
-        int n = THE_GAME_CONTROLLER.game().lifeCount();
-        if (!level.pac().isVisible() && THE_GAME_CONTROLLER.state() == GameState.STARTING_GAME) {
+        int n = game().lifeCount();
+        if (!level.pac().isVisible() && gameState() == GameState.STARTING_GAME) {
             return n;
         }
         return n - 1;

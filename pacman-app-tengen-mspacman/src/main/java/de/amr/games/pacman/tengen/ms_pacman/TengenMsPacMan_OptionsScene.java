@@ -73,7 +73,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     public void doInit() {
         game().scoreManager().setScoreVisible(false);
         selectedOption = OPTION_PAC_BOOSTER;
-        tengenGame = THE_GAME_CONTROLLER.game();
+        tengenGame = (TengenMsPacMan_GameModel) game();
         tengenGame.setCanStartNewGame(true);
         resetIdleTimer();
         initialDelay = INITIAL_DELAY;

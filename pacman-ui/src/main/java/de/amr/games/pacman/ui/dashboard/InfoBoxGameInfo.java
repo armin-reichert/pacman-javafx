@@ -32,7 +32,7 @@ public class InfoBoxGameInfo extends InfoBox {
     public void init() {
 
         addLabeledValue("Game Scene", ifGameScenePresent(gameScene -> gameScene.getClass().getSimpleName()));
-        addLabeledValue("Game State", () -> "%s".formatted(THE_GAME_CONTROLLER.state()));
+        addLabeledValue("Game State", () -> "%s".formatted(gameState()));
         addLabeledValue("State Timer", this::stateTimerInfo);
         addLabeledValue("Level Number", ifLevelPresent(level -> "%d".formatted(level.number())));
         addLabeledValue("Demo Level", ifLevelPresent(level -> level.isDemoLevel() ? "Yes" : "No"));
@@ -69,7 +69,7 @@ public class InfoBoxGameInfo extends InfoBox {
             }
         }));
 
-        addLabeledValue("Lives",           ifLevelPresent(level -> "%d".formatted(THE_GAME_CONTROLLER.game().lifeCount())));
+        addLabeledValue("Lives",           ifLevelPresent(level -> "%d".formatted(game().lifeCount())));
 
         addLabeledValue("Hunting Phase",   ifLevelPresent(this::fmtHuntingPhase));
         addLabeledValue("",                ifLevelPresent(this::fmtHuntingTicksRunning));
@@ -86,7 +86,7 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String stateTimerInfo() {
-        TickTimer t = THE_GAME_CONTROLLER.state().timer();
+        TickTimer t = gameState().timer();
         boolean indefinite = t.durationTicks() == TickTimer.INDEFINITE;
         if (t.isStopped()) {
             return "Stopped at tick %s of %s".formatted(t.tickCount(), indefinite ? "∞" : t.durationTicks());

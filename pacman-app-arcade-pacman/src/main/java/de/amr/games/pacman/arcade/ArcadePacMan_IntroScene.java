@@ -224,62 +224,62 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
         STARTING {
             @Override
-            public void onUpdate(ArcadePacMan_IntroScene intro) {
-                if (timer.tickCount() == 3) {
-                    intro.titleVisible = true;
-                } else if (timer.atSecond(1)) {
-                    intro.sceneController.changeState(PRESENTING_GHOSTS);
+            public void onUpdate(ArcadePacMan_IntroScene scene) {
+                if (sceneTimer.tickCount() == 3) {
+                    scene.titleVisible = true;
+                } else if (sceneTimer.atSecond(1)) {
+                    scene.sceneController.changeState(PRESENTING_GHOSTS);
                 }
             }
         },
 
         PRESENTING_GHOSTS {
             @Override
-            public void onUpdate(ArcadePacMan_IntroScene intro) {
-                if (timer.tickCount() == 1) {
-                    intro.ghostImageVisible[intro.ghostIndex] = true;
-                } else if (timer.atSecond(1.0)) {
-                    intro.ghostCharacterVisible[intro.ghostIndex] = true;
-                } else if (timer.atSecond(1.5)) {
-                    intro.ghostNicknameVisible[intro.ghostIndex] = true;
-                } else if (timer.atSecond(2.0)) {
-                    if (intro.ghostIndex < intro.ghosts.length - 1) {
-                        timer.resetIndefiniteTime();
+            public void onUpdate(ArcadePacMan_IntroScene scene) {
+                if (sceneTimer.tickCount() == 1) {
+                    scene.ghostImageVisible[scene.ghostIndex] = true;
+                } else if (sceneTimer.atSecond(1.0)) {
+                    scene.ghostCharacterVisible[scene.ghostIndex] = true;
+                } else if (sceneTimer.atSecond(1.5)) {
+                    scene.ghostNicknameVisible[scene.ghostIndex] = true;
+                } else if (sceneTimer.atSecond(2.0)) {
+                    if (scene.ghostIndex < scene.ghosts.length - 1) {
+                        sceneTimer.resetIndefiniteTime();
                     }
-                    intro.ghostIndex += 1;
-                } else if (timer.atSecond(2.5)) {
-                    intro.sceneController.changeState(SHOWING_POINTS);
+                    scene.ghostIndex += 1;
+                } else if (sceneTimer.atSecond(2.5)) {
+                    scene.sceneController.changeState(SHOWING_POINTS);
                 }
             }
         },
 
         SHOWING_POINTS {
             @Override
-            public void onEnter(ArcadePacMan_IntroScene intro) {
-                intro.blinking.stop();
+            public void onEnter(ArcadePacMan_IntroScene scene) {
+                scene.blinking.stop();
             }
 
             @Override
-            public void onUpdate(ArcadePacMan_IntroScene intro) {
-                if (timer.atSecond(1)) {
-                    intro.sceneController.changeState(CHASING_PAC);
+            public void onUpdate(ArcadePacMan_IntroScene scene) {
+                if (sceneTimer.atSecond(1)) {
+                    scene.sceneController.changeState(CHASING_PAC);
                 }
             }
         },
 
         CHASING_PAC {
             @Override
-            public void onEnter(ArcadePacMan_IntroScene intro) {
-                timer.restartIndefinitely();
-                intro.pacMan.setPosition(TS * 36, TS * 20);
-                intro.pacMan.setMoveDir(Direction.LEFT);
-                intro.pacMan.setSpeed(CHASE_SPEED);
-                intro.pacMan.show();
-                intro.pacMan.selectAnimation(ANIM_PAC_MUNCHING);
-                intro.pacMan.startAnimation();
-                Stream.of(intro.ghosts).forEach(ghost -> {
+            public void onEnter(ArcadePacMan_IntroScene scene) {
+                sceneTimer.restartIndefinitely();
+                scene.pacMan.setPosition(TS * 36, TS * 20);
+                scene.pacMan.setMoveDir(Direction.LEFT);
+                scene.pacMan.setSpeed(CHASE_SPEED);
+                scene.pacMan.show();
+                scene.pacMan.selectAnimation(ANIM_PAC_MUNCHING);
+                scene.pacMan.startAnimation();
+                Stream.of(scene.ghosts).forEach(ghost -> {
                     ghost.setState(GhostState.HUNTING_PAC);
-                    ghost.setPosition(intro.pacMan.position().plus(16 * (ghost.id() + 1), 0));
+                    ghost.setPosition(scene.pacMan.position().plus(16 * (ghost.id() + 1), 0));
                     ghost.setMoveAndWishDir(Direction.LEFT);
                     ghost.setSpeed(CHASE_SPEED);
                     ghost.show();
@@ -289,71 +289,71 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             }
 
             @Override
-            public void onUpdate(ArcadePacMan_IntroScene intro) {
-                if (timer.atSecond(1)) {
-                    intro.blinking.start();
+            public void onUpdate(ArcadePacMan_IntroScene scene) {
+                if (sceneTimer.atSecond(1)) {
+                    scene.blinking.start();
                 }
                 // Pac-Man reaches the energizer at the left and turns
-                if (intro.pacMan.posX() <= TS * LEFT_TILE_X) {
-                    intro.sceneController.changeState(CHASING_GHOSTS);
+                if (scene.pacMan.posX() <= TS * LEFT_TILE_X) {
+                    scene.sceneController.changeState(CHASING_GHOSTS);
                 }
                 // Ghosts already reverse direction before Pac-Man eats the energizer and turns!
-                else if (intro.pacMan.posX() <= TS * LEFT_TILE_X + HTS) {
-                    Stream.of(intro.ghosts).forEach(ghost -> {
+                else if (scene.pacMan.posX() <= TS * LEFT_TILE_X + HTS) {
+                    Stream.of(scene.ghosts).forEach(ghost -> {
                         ghost.setState(FRIGHTENED);
                         ghost.selectAnimation(ANIM_GHOST_FRIGHTENED);
                         ghost.setMoveAndWishDir(Direction.RIGHT);
                         ghost.setSpeed(GHOST_FRIGHTENED_SPEED);
                         ghost.move();
                     });
-                    intro.pacMan.move();
+                    scene.pacMan.move();
                 } else { // keep moving
-                    intro.blinking.tick();
-                    intro.pacMan.move();
-                    Stream.of(intro.ghosts).forEach(Ghost::move);
+                    scene.blinking.tick();
+                    scene.pacMan.move();
+                    Stream.of(scene.ghosts).forEach(Ghost::move);
                 }
             }
         },
 
         CHASING_GHOSTS {
             @Override
-            public void onEnter(ArcadePacMan_IntroScene intro) {
-                timer.restartIndefinitely();
-                intro.ghostKilledTime = timer.tickCount();
-                intro.pacMan.setMoveDir(Direction.RIGHT);
-                intro.pacMan.setSpeed(CHASE_SPEED);
-                intro.victims.clear();
+            public void onEnter(ArcadePacMan_IntroScene scene) {
+                sceneTimer.restartIndefinitely();
+                scene.ghostKilledTime = sceneTimer.tickCount();
+                scene.pacMan.setMoveDir(Direction.RIGHT);
+                scene.pacMan.setSpeed(CHASE_SPEED);
+                scene.victims.clear();
             }
 
             @Override
-            public void onUpdate(ArcadePacMan_IntroScene intro) {
-                if (Stream.of(intro.ghosts).allMatch(ghost -> ghost.inState(EATEN))) {
-                    intro.pacMan.hide();
-                    intro.sceneController.changeState(READY_TO_PLAY);
+            public void onUpdate(ArcadePacMan_IntroScene scene) {
+                if (Stream.of(scene.ghosts).allMatch(ghost -> ghost.inState(EATEN))) {
+                    scene.pacMan.hide();
+                    scene.sceneController.changeState(READY_TO_PLAY);
                     return;
                 }
 
-                Stream.of(intro.ghosts)
-                    .filter(ghost -> ghost.inState(FRIGHTENED) && ghost.sameTile(intro.pacMan))
+                Stream.of(scene.ghosts)
+                    .filter(ghost -> ghost.inState(FRIGHTENED) && ghost.sameTile(scene.pacMan))
                     .findFirst()
                     .ifPresent(victim -> {
-                        intro.victims.add(victim);
-                        intro.ghostKilledTime = timer.tickCount();
-                        intro.pacMan.hide();
-                        intro.pacMan.setSpeed(0);
-                        Stream.of(intro.ghosts).forEach(ghost -> {
+                        scene.victims.add(victim);
+                        scene.ghostKilledTime = sceneTimer.tickCount();
+                        scene.pacMan.hide();
+                        scene.pacMan.setSpeed(0);
+                        Stream.of(scene.ghosts).forEach(ghost -> {
                             ghost.setSpeed(0);
                             ghost.stopAnimation();
                         });
                         victim.setState(EATEN);
-                        victim.selectAnimation(ANIM_GHOST_NUMBER, intro.victims.size() - 1);
+                        victim.selectAnimation(ANIM_GHOST_NUMBER, scene.victims.size() - 1);
                     });
 
                 // After 50 ticks, Pac-Man and the surviving ghosts get visible again and move on
-                if (timer.tickCount() == intro.ghostKilledTime + 50) {
-                    intro.pacMan.show();
-                    intro.pacMan.setSpeed(CHASE_SPEED);
-                    Stream.of(intro.ghosts).forEach(ghost -> {
+                if (sceneTimer.tickCount() == scene.ghostKilledTime + 50) {
+                    scene.pacMan.show();
+                    scene.pacMan.setSpeed(CHASE_SPEED);
+                    Stream.of(scene.ghosts).forEach(ghost -> {
                         if (ghost.inState(EATEN)) {
                             ghost.hide();
                         } else {
@@ -364,31 +364,31 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     });
                 }
 
-                intro.pacMan.move();
-                Stream.of(intro.ghosts).forEach(Ghost::move);
-                intro.blinking.tick();
+                scene.pacMan.move();
+                Stream.of(scene.ghosts).forEach(Ghost::move);
+                scene.blinking.tick();
             }
         },
 
         READY_TO_PLAY {
             @Override
-            public void onUpdate(ArcadePacMan_IntroScene intro) {
-                if (timer.atSecond(0.75)) {
-                    intro.ghosts[3].hide();
+            public void onUpdate(ArcadePacMan_IntroScene scene) {
+                if (sceneTimer.atSecond(0.75)) {
+                    scene.ghosts[3].hide();
                     if (!game().canStartNewGame()) {
                         THE_GAME_CONTROLLER.changeState(GameState.STARTING_GAME);
                     }
-                } else if (timer.atSecond(5)) {
+                } else if (sceneTimer.atSecond(5)) {
                     THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
                 }
             }
         };
 
-        final TickTimer timer = new TickTimer("Timer-" + name());
+        final TickTimer sceneTimer = new TickTimer("Timer-" + name());
 
         @Override
         public TickTimer timer() {
-            return timer;
+            return sceneTimer;
         }
     }
 }
