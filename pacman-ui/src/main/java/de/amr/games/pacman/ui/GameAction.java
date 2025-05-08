@@ -19,6 +19,7 @@ import javafx.scene.shape.DrawMode;
 import org.tinylog.Logger;
 
 import java.util.List;
+import java.util.Optional;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.controller.GameState.INTRO;
@@ -88,7 +89,7 @@ public enum GameAction implements Action {
         }
     },
 
-    CHEAT_NEXT_LEVEL {
+    CHEAT_ENTER_NEXT_LEVEL {
         @Override
         public void execute() {
             THE_GAME_CONTROLLER.changeState(GameState.LEVEL_COMPLETE);
@@ -132,53 +133,69 @@ public enum GameAction implements Action {
     },
 
     PLAYER_UP {
+        private Optional<Pac> pac() {
+            return THE_GAME_CONTROLLER.game().level().map(GameLevel::pac);
+        }
+
         @Override
         public void execute() {
-            THE_GAME_CONTROLLER.game().level().ifPresent(level -> level.pac().setWishDir(Direction.UP));
+            pac().ifPresent(pac -> pac.setWishDir(Direction.UP));
         }
 
         @Override
         public boolean isEnabled() {
-            Pac pac = THE_GAME_CONTROLLER.game().level().map(GameLevel::pac).orElse(null);
+            Pac pac = pac().orElse(null);
             return pac != null && !pac.isUsingAutopilot();
         }
     },
 
     PLAYER_DOWN {
+        private Optional<Pac> pac() {
+            return THE_GAME_CONTROLLER.game().level().map(GameLevel::pac);
+        }
+
         @Override
         public void execute() {
-            THE_GAME_CONTROLLER.game().level().ifPresent(level -> level.pac().setWishDir(Direction.DOWN));
+            pac().ifPresent(pac -> pac.setWishDir(Direction.DOWN));
         }
 
         @Override
         public boolean isEnabled() {
-            Pac pac = THE_GAME_CONTROLLER.game().level().map(GameLevel::pac).orElse(null);
+            Pac pac = pac().orElse(null);
             return pac != null && !pac.isUsingAutopilot();
         }
     },
 
     PLAYER_LEFT {
+        private Optional<Pac> pac() {
+            return THE_GAME_CONTROLLER.game().level().map(GameLevel::pac);
+        }
+
         @Override
         public void execute() {
-            THE_GAME_CONTROLLER.game().level().ifPresent(level -> level.pac().setWishDir(Direction.LEFT));
+            pac().ifPresent(pac -> pac.setWishDir(Direction.LEFT));
         }
 
         @Override
         public boolean isEnabled() {
-            Pac pac = THE_GAME_CONTROLLER.game().level().map(GameLevel::pac).orElse(null);
+            Pac pac = pac().orElse(null);
             return pac != null && !pac.isUsingAutopilot();
         }
     },
 
     PLAYER_RIGHT {
+        private Optional<Pac> pac() {
+            return THE_GAME_CONTROLLER.game().level().map(GameLevel::pac);
+        }
+
         @Override
         public void execute() {
-            THE_GAME_CONTROLLER.game().level().ifPresent(level -> level.pac().setWishDir(Direction.RIGHT));
+            pac().ifPresent(pac -> pac.setWishDir(Direction.RIGHT));
         }
 
         @Override
         public boolean isEnabled() {
-            Pac pac = THE_GAME_CONTROLLER.game().level().map(GameLevel::pac).orElse(null);
+            Pac pac = pac().orElse(null);
             return pac != null && !pac.isUsingAutopilot();
         }
     },

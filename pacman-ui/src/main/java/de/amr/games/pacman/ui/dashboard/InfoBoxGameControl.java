@@ -52,7 +52,7 @@ public class InfoBoxGameControl extends InfoBox {
         setAction(bgCutScenesTest[CUT_SCENES_TEST_QUIT], GameAction.RESTART_INTRO::execute);
         setAction(bgLevelActions[GAME_LEVEL_START], GameAction.ARCADE_START_GAME::execute); //TODO this is the Arcade action!
         setAction(bgLevelActions[GAME_LEVEL_QUIT], GameAction.RESTART_INTRO::execute);
-        setAction(bgLevelActions[GAME_LEVEL_NEXT], GameAction.CHEAT_NEXT_LEVEL::execute);
+        setAction(bgLevelActions[GAME_LEVEL_NEXT], GameAction.CHEAT_ENTER_NEXT_LEVEL::execute);
         setAction(comboInitialLives, () -> THE_GAME_CONTROLLER.game().setInitialLifeCount(comboInitialLives.getValue()));
 
         setEditor(cbAutopilot, PY_AUTOPILOT);
