@@ -184,9 +184,7 @@ public class Pac extends Creature implements AnimatedActor2D {
         ++starvingTicks;
     }
 
-    public void endStarving() {
-        starvingTicks = 0;
-    }
+    public void endStarving() { starvingTicks = 0; }
 
     /**
      * @return {@code true} if Pac-Man has run against a wall and could not move, its speed is zero

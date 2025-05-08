@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.*;
@@ -175,30 +174,7 @@ public abstract class GameModel {
 
     // Food handling
 
-    protected abstract void onEnergizerEaten(Vector2i tile);
-    protected abstract void onPelletEaten(Vector2i tile);
-
-    protected void checkIfPacManFindsFood() {
-        Vector2i tile = level.pac().tile();
-        if (level.hasFoodAt(tile)) {
-            level.pac().endStarving();
-            if (level.isEnergizerPosition(tile)) {
-                THE_SIMULATION_STEP.setFoundEnergizerAtTile(tile);
-                onEnergizerEaten(tile);
-            } else {
-                onPelletEaten(tile);
-            }
-            level.registerFoodEatenAt(tile);
-            gateKeeper().ifPresent(gateKeeper -> gateKeeper.registerFoodEaten(level));
-            if (isBonusReached()) {
-                activateNextBonus();
-                THE_SIMULATION_STEP.setBonusIndex(level.currentBonusIndex());
-            }
-            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_FOUND_FOOD, tile);
-        } else {
-            level.pac().starve();
-        }
-    }
+    protected abstract void checkIfPacManFindsFood();
 
     // Bonus handling
 

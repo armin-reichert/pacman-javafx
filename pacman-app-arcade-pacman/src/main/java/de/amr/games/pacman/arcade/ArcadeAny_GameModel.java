@@ -125,15 +125,35 @@ public abstract class ArcadeAny_GameModel extends GameModel {
 
     // Food handling
 
-    @Override
-    protected void onPelletEaten(Vector2i tile) {
+    protected void checkIfPacManFindsFood() {
+        Vector2i tile = level.pac().tile();
+        if (level.hasFoodAt(tile)) {
+            level.pac().endStarving();
+            level.registerFoodEatenAt(tile);
+            gateKeeper().ifPresent(gateKeeper -> gateKeeper.registerFoodEaten(level));
+            if (level.isEnergizerPosition(tile)) {
+                THE_SIMULATION_STEP.setFoundEnergizerAtTile(tile);
+                onEnergizerEaten();
+            } else {
+                onPelletEaten();
+            }
+            if (isBonusReached()) {
+                activateNextBonus();
+                THE_SIMULATION_STEP.setBonusIndex(level.currentBonusIndex());
+            }
+            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_FOUND_FOOD, tile);
+        } else {
+            level.pac().starve();
+        }
+    }
+
+    protected void onPelletEaten() {
         scoreManager.scorePoints(PELLET_VALUE);
         level.pac().setRestingTicks(1);
         level.ghost(RED_GHOST_ID).updateCruiseElroyMode();
     }
 
-    @Override
-    protected void onEnergizerEaten(Vector2i tile) {
+    protected void onEnergizerEaten() {
         scoreManager.scorePoints(ENERGIZER_VALUE);
         Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
         level.pac().setRestingTicks(3);
