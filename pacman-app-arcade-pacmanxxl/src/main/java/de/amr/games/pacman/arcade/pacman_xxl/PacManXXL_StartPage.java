@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman_xxl;
 
-import de.amr.games.pacman.arcade.ArcadePacMan_GhostAnimations;
 import de.amr.games.pacman.arcade.ArcadePacMan_ActorFactory;
+import de.amr.games.pacman.arcade.ArcadePacMan_GhostAnimations;
 import de.amr.games.pacman.arcade.ArcadePacMan_PacAnimations;
 import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GhostAnimations;
 import de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_PacAnimations;

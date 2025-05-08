@@ -7,7 +7,6 @@ package de.amr.games.pacman.arcade;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.ActorSpeedControl;
 import de.amr.games.pacman.model.actors.Ghost;
-import org.tinylog.Logger;
 
 public class ArcadeAny_ActorSpeedControl implements ActorSpeedControl {
     public static final float BASE_SPEED = 1.25f;

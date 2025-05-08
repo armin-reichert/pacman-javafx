@@ -11,8 +11,6 @@ import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
 
-import static de.amr.games.pacman.Globals.requireNonNegative;
-
 /**
  * 3D energizer pellet.
  *

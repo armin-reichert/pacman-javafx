@@ -26,7 +26,6 @@ import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.HTS;
 import static de.amr.games.pacman.Globals.TS;
-import static de.amr.games.pacman.uilib.Ufx.coloredPhongMaterial;
 import static java.lang.Math.TAU;
 
 public class ExperimentsApp extends Application {

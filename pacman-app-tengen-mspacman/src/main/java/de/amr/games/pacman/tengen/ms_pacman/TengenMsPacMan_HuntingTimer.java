@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.tengen.ms_pacman;
 
-import de.amr.games.pacman.model.HuntingTimer;
 import de.amr.games.pacman.lib.timer.TickTimer;
+import de.amr.games.pacman.model.HuntingTimer;
 
 /**
  * TODO: I have no info about the timing so far, use (inofficial) Arcade game values for now.

@@ -12,7 +12,6 @@ import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 
-import static de.amr.games.pacman.Globals.requireNonNegative;
 import static java.util.Objects.requireNonNull;
 
 /**

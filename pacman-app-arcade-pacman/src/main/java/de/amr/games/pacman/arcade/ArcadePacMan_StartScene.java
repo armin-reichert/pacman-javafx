@@ -6,9 +6,7 @@ package de.amr.games.pacman.arcade;
 
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui._2d.GameScene2D;
-import javafx.scene.input.KeyCode;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.*;
@@ -16,7 +14,6 @@ import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.GameAssets.*;
 import static de.amr.games.pacman.ui.Globals.THE_ASSETS;
 import static de.amr.games.pacman.ui.Globals.THE_SOUND;
-import static de.amr.games.pacman.uilib.input.Keyboard.naked;
 
 /**
  * Scene shown after credit has been added and where game can be started.

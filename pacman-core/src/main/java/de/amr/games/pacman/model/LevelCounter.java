@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 public interface LevelCounter {
     void clear();

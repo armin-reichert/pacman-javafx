@@ -15,7 +15,8 @@ import javafx.stage.Stage;
 import java.util.Map;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.ui.Globals.*;
+import static de.amr.games.pacman.ui.Globals.THE_UI;
+import static de.amr.games.pacman.ui.Globals.createUI;
 
 public class PacManXXL_App extends Application {
 

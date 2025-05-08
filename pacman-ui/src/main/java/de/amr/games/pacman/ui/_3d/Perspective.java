@@ -10,7 +10,8 @@ import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
 import javafx.scene.transform.Rotate;
 
-import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.Globals.TS;
+import static de.amr.games.pacman.Globals.lerp;
 
 /**
  * Play scene perspectives.
