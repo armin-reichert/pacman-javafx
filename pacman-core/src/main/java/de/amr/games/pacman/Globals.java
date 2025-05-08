@@ -182,21 +182,6 @@ public interface Globals {
         return min + (maxExclusive - min) * THE_RNG.nextFloat();
     }
 
-    /**
-     * @param min left interval bound
-     * @param maxExclusive right (open) interval bound
-     * @return Random double-precision floating-point number from right-open interval <code>[a; b[</code>. Interval bounds
-     * are rearranged to guarantee <code>a<=b</code>
-     */
-    static double randomDouble(double min, double maxExclusive) {
-        if (min > maxExclusive) {
-            var tmp = min;
-            min = maxExclusive;
-            maxExclusive = tmp;
-        }
-        return min + (maxExclusive - min) * THE_RNG.nextDouble();
-    }
-
     static boolean isEven(int n) {
         return n % 2 == 0;
     }

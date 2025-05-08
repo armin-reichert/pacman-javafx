@@ -34,7 +34,8 @@ import org.tinylog.Logger;
 
 import java.util.function.Predicate;
 
-import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.Globals.randomFloat;
+import static de.amr.games.pacman.Globals.randomInt;
 
 /**
  * @author Armin Reichert
@@ -86,9 +87,9 @@ public class SquirtingAnimation extends Transition {
             var drop = new Drop(material, randomFloat(dropRadiusMin, dropRadiusMax), origin);
             drop.setVisible(false);
             drop.setVelocity(
-                randomDouble(dropVelocityMin.getX(), dropVelocityMax.getX()),
-                randomDouble(dropVelocityMin.getY(), dropVelocityMax.getY()),
-                randomDouble(dropVelocityMin.getZ(), dropVelocityMax.getZ()));
+                randomFloat((float)dropVelocityMin.getX(), (float)dropVelocityMax.getX()),
+                randomFloat((float)dropVelocityMin.getY(), (float)dropVelocityMax.getY()),
+                randomFloat((float)dropVelocityMin.getZ(), (float)dropVelocityMax.getZ()));
             root.getChildren().add(drop);
         }
         Logger.debug("{} drops created", root.getChildren().size());
