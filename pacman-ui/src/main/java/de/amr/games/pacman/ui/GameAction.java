@@ -334,13 +334,6 @@ public enum GameAction implements Action {
         }
     },
 
-    TERMINATE_GAME_STATE {
-        @Override
-        public void execute() {
-            THE_GAME_CONTROLLER.letCurrentStateExpire();
-        }
-    },
-
     TOGGLE_DRAW_MODE {
         @Override
         public void execute() {
@@ -389,7 +382,7 @@ public enum GameAction implements Action {
     Optional<GameLevel> level() { return THE_GAME_CONTROLLER.game().level(); }
     Optional<Pac> pac() { return level().map(GameLevel::pac); }
 
-    private static final int SIMULATION_SPEED_DELTA = 2;
-    private static final int SIMULATION_SPEED_MIN   = 10;
-    private static final int SIMULATION_SPEED_MAX   = 240;
+    static final int SIMULATION_SPEED_DELTA = 2;
+    static final int SIMULATION_SPEED_MIN   = 10;
+    static final int SIMULATION_SPEED_MAX   = 240;
 }
