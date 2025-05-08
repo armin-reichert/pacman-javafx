@@ -375,7 +375,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             public void onUpdate(ArcadePacMan_IntroScene intro) {
                 if (timer.atSecond(0.75)) {
                     intro.ghosts[3].hide();
-                    if (!THE_GAME_CONTROLLER.game().canStartNewGame()) {
+                    if (!game().canStartNewGame()) {
                         THE_GAME_CONTROLLER.changeState(GameState.STARTING_GAME);
                     }
                 } else if (timer.atSecond(5)) {

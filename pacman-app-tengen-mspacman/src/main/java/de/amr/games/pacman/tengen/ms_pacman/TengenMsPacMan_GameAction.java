@@ -7,7 +7,7 @@ package de.amr.games.pacman.tengen.ms_pacman;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.uilib.Action;
 
-import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.games.pacman.ui.Globals.THE_SOUND;
@@ -18,18 +18,19 @@ public enum TengenMsPacMan_GameAction implements Action {
     QUIT_DEMO_LEVEL {
         @Override
         public void execute() {
-            THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-                if (level.isDemoLevel()) {
-                    THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
-                }
-            });
+            level().ifPresent(level -> THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS));
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return level().isPresent() && level().get().isDemoLevel();
         }
     },
 
     SHOW_OPTIONS {
         @Override
         public void execute() {
-            THE_GAME_CONTROLLER.game().playingProperty().set(false);
+            game().playingProperty().set(false);
             THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
         }
     },
@@ -45,7 +46,7 @@ public enum TengenMsPacMan_GameAction implements Action {
         @Override
         public void execute() {
             THE_SOUND.stopAll();
-            THE_GAME_CONTROLLER.game().playingProperty().set(false);
+            game().playingProperty().set(false);
             THE_GAME_CONTROLLER.changeState(GameState.STARTING_GAME);
         }
     },
@@ -69,9 +70,9 @@ public enum TengenMsPacMan_GameAction implements Action {
     TOGGLE_PAC_BOOSTER {
         @Override
         public void execute() {
-            TengenMsPacMan_GameModel game = THE_GAME_CONTROLLER.game();
-            if (game.pacBooster() == PacBooster.USE_A_OR_B) {
-                game.activatePacBooster(!game.isBoosterActive());
+            var tengenGame = (TengenMsPacMan_GameModel) game();
+            if (tengenGame.pacBooster() == PacBooster.USE_A_OR_B) {
+                tengenGame.activatePacBooster(!tengenGame.isBoosterActive());
             }
         }
     }
