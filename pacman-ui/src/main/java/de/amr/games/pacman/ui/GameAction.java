@@ -26,13 +26,6 @@ import static java.util.function.Predicate.not;
 
 public enum GameAction implements Action {
 
-    BOOT {
-        @Override
-        public void execute() {
-            THE_UI.restart();
-        }
-    },
-
     CHEAT_ADD_LIVES {
         @Override
         public void execute() {

@@ -138,7 +138,7 @@ public class GameView implements View {
 
     @Override
     public void bindActions() {
-        bind(GameAction.BOOT,                    naked(KeyCode.F3));
+        bind(THE_UI::restart,                    naked(KeyCode.F3));
         bind(this::showGameSceneHelp,            naked(KeyCode.H));
         bind(GameAction.QUIT_GAME_SCENE,         naked(KeyCode.Q));
         bind(GameAction.SIMULATION_SLOWER,       alt(KeyCode.MINUS));
