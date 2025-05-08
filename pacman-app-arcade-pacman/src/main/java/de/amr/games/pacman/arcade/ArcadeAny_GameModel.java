@@ -128,7 +128,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
     protected void checkIfPacManFindsFood() {
         Vector2i tile = level.pac().tile();
         if (level.hasFoodAt(tile)) {
-            level.pac().endStarving();
+            level.pac().starvingEnds();
             level.registerFoodEatenAt(tile);
             gateKeeper().ifPresent(gateKeeper -> gateKeeper.registerFoodEaten(level));
             if (level.isEnergizerPosition(tile)) {
@@ -143,7 +143,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
             }
             THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_FOUND_FOOD, tile);
         } else {
-            level.pac().starve();
+            level.pac().starvingContinues();
         }
     }
 

@@ -9,6 +9,8 @@ import de.amr.games.pacman.controller.CoinMechanism;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui._3d.PerspectiveID;
 import de.amr.games.pacman.uilib.Action;
 import javafx.scene.shape.DrawMode;
@@ -114,44 +116,52 @@ public enum GameAction implements Action {
     PLAYER_UP {
         @Override
         public void execute() {
-            THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-                if (!level.pac().isUsingAutopilot()) {
-                    level.pac().setWishDir(Direction.UP);
-                }
-            });
+            THE_GAME_CONTROLLER.game().level().ifPresent(level -> level.pac().setWishDir(Direction.UP));
+        }
+
+        @Override
+        public boolean isEnabled() {
+            Pac pac = THE_GAME_CONTROLLER.game().level().map(GameLevel::pac).orElse(null);
+            return pac != null && !pac.isUsingAutopilot();
         }
     },
 
     PLAYER_DOWN {
         @Override
         public void execute() {
-            THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-                if (!level.pac().isUsingAutopilot()) {
-                    level.pac().setWishDir(Direction.DOWN);
-                }
-            });
+            THE_GAME_CONTROLLER.game().level().ifPresent(level -> level.pac().setWishDir(Direction.DOWN));
+        }
+
+        @Override
+        public boolean isEnabled() {
+            Pac pac = THE_GAME_CONTROLLER.game().level().map(GameLevel::pac).orElse(null);
+            return pac != null && !pac.isUsingAutopilot();
         }
     },
 
     PLAYER_LEFT {
         @Override
         public void execute() {
-            THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-                if (!level.pac().isUsingAutopilot()) {
-                    level.pac().setWishDir(Direction.LEFT);
-                }
-            });
+            THE_GAME_CONTROLLER.game().level().ifPresent(level -> level.pac().setWishDir(Direction.LEFT));
+        }
+
+        @Override
+        public boolean isEnabled() {
+            Pac pac = THE_GAME_CONTROLLER.game().level().map(GameLevel::pac).orElse(null);
+            return pac != null && !pac.isUsingAutopilot();
         }
     },
 
     PLAYER_RIGHT {
         @Override
         public void execute() {
-            THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-                if (!level.pac().isUsingAutopilot()) {
-                    level.pac().setWishDir(Direction.RIGHT);
-                }
-            });
+            THE_GAME_CONTROLLER.game().level().ifPresent(level -> level.pac().setWishDir(Direction.RIGHT));
+        }
+
+        @Override
+        public boolean isEnabled() {
+            Pac pac = THE_GAME_CONTROLLER.game().level().map(GameLevel::pac).orElse(null);
+            return pac != null && !pac.isUsingAutopilot();
         }
     },
 

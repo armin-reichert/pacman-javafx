@@ -157,7 +157,7 @@ public class GateKeeper {
         }
         // check Pac-Man starving time
         if (level.pac().starvingTicks() >= pacStarvingLimit) {
-            level.pac().endStarving();
+            level.pac().starvingEnds();
             return String.format("%s reached starving limit (%d ticks)", level.pac().name(), pacStarvingLimit);
         }
         return null;
