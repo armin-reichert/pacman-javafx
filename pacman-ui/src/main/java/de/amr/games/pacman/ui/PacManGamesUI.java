@@ -331,6 +331,7 @@ public class PacManGamesUI implements GameUI {
     public void showStartView() {
         THE_CLOCK.stop();
         THE_CLOCK.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+        THE_SOUND.stopAll();
         gameView.gameSceneProperty().set(null);
         gameView.setDashboardVisible(false);
         viewPy.set(startPagesView);
