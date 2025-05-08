@@ -277,7 +277,7 @@ public class PacManGamesUI implements GameUI {
         stage.getIcons().setAll(uiConfig.appIcon());
         gameView.canvasContainer().decorationEnabledPy.set(uiConfig.isGameCanvasDecorated());
         // this triggers a game event and calling the event handlers:
-        THE_GAME_CONTROLLER.gameVariantProperty().set(gameVariant);
+        THE_GAME_CONTROLLER.select(gameVariant);
     }
 
     @Override
@@ -310,7 +310,7 @@ public class PacManGamesUI implements GameUI {
     @Override
     public void showGameView() {
         viewPy.set(gameView);
-        if (!THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN)) {
+        if (!THE_GAME_CONTROLLER.isSelected(GameVariant.MS_PACMAN_TENGEN)) {
             THE_SOUND.playVoice("voice.explain", 0);
         }
         gameView.resize(mainScene.getWidth(), mainScene.getHeight());

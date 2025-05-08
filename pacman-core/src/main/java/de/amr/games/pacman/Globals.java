@@ -54,7 +54,7 @@ public interface Globals {
     File CUSTOM_MAP_DIR = new File(HOME_DIR, "maps");
 
     static GameModel game() { return THE_GAME_CONTROLLER.game(); }
-    static GameVariant gameVariant() { return THE_GAME_CONTROLLER.gameVariantProperty().get(); }
+    static GameVariant gameVariant() { return THE_GAME_CONTROLLER.selectedGameVariant(); }
     static GameState gameState() { return THE_GAME_CONTROLLER.state(); }
     static Optional<GameLevel> gameLevel() { return game().level(); }
     static Optional<Pac> pac() { return gameLevel().map(GameLevel::pac); }

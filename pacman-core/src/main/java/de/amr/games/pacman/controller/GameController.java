@@ -63,7 +63,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         return (T) registeredGameModels.get(requireNonNull(variant));
     }
 
-    public void registerGameModel(GameVariant variant, GameModel gameModel) {
+    public void register(GameVariant variant, GameModel gameModel) {
         registeredGameModels.put(requireNonNull(variant), requireNonNull(gameModel));
     }
 
@@ -76,9 +76,14 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     public Stream<GameModel> games() { return registeredGameModels.values().stream(); }
 
-    public ObjectProperty<GameVariant> gameVariantProperty() { return gameVariantPy; }
+    public GameVariant selectedGameVariant() { return gameVariantPy.get(); }
 
-    public boolean isGameVariantSelected(GameVariant gameVariant) {
+    public void select(GameVariant gameVariant) {
+        requireNonNull(gameVariant);
+        gameVariantPy.set(gameVariant);
+    }
+
+    public boolean isSelected(GameVariant gameVariant) {
         return requireNonNull(gameVariant) == gameVariantPy.get();
     }
 }
