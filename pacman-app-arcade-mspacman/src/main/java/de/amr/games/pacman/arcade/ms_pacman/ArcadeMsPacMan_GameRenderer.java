@@ -119,7 +119,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     @Override
     public void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSizeInPx) {
         float x = sceneSizeInPx.x() - 4 * TS, y = sceneSizeInPx.y() - 2 * TS;
-        for (byte symbol : levelCounter.symbols().toList()) {
+        for (byte symbol : levelCounter.symbols()) {
             drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), x, y);
             x -= TS * 2;
         }

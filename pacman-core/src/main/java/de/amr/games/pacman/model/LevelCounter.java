@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 public interface LevelCounter {
@@ -11,5 +12,5 @@ public interface LevelCounter {
     void update(int levelNumber, byte symbol);
     void setEnabled(boolean enabled);
     boolean isEnabled();
-    Stream<Byte> symbols();
+    List<Byte> symbols();
 }

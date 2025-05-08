@@ -332,7 +332,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         drawLevelNumberBox(levelNumber, 0, y); // left box
         drawLevelNumberBox(levelNumber, x, y); // right box
         x -= 2 * TS;
-        for (byte symbol : levelCounter.symbols().toList()) {
+        for (byte symbol : levelCounter.symbols()) {
             drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), x, y);
             x -= TS * 2;
         }
@@ -342,7 +342,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     public void drawLevelCounter(LevelCounter levelCounter, Vector2f sizeInPx) {
         ctx().setImageSmoothing(false);
         float x = sizeInPx.x() - 4 * TS, y = sizeInPx.y() - TS;
-        for (byte symbol : levelCounter.symbols().toList()) {
+        for (byte symbol : levelCounter.symbols()) {
             drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), x, y);
             x -= TS * 2;
         }

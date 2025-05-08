@@ -10,6 +10,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -25,8 +26,8 @@ public class ArcadePacMan_LevelCounter implements LevelCounter {
     }
 
     @Override
-    public Stream<Byte> symbols() {
-        return symbols.stream();
+    public List<Byte> symbols() {
+        return Collections.unmodifiableList(symbols);
     }
 
     @Override

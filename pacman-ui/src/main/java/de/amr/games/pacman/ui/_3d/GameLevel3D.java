@@ -248,7 +248,7 @@ public class GameLevel3D {
         levelCounter3D.setTranslateZ(-6);
         levelCounter3D.getChildren().clear();
         int n = 0;
-        for (byte symbol : levelCounter.symbols().toList()) {
+        for (byte symbol : levelCounter.symbols()) {
             Box cube = new Box(TS, TS, TS);
             cube.setTranslateX(-n * spacing);
             cube.setTranslateZ(-HTS);

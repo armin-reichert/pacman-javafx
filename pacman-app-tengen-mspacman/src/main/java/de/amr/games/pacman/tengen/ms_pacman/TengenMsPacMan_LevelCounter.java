@@ -4,14 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.tengen.ms_pacman;
 
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.LevelCounter;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class TengenMsPacMan_LevelCounter implements LevelCounter {
 
@@ -36,8 +35,8 @@ public class TengenMsPacMan_LevelCounter implements LevelCounter {
     }
 
     @Override
-    public Stream<Byte> symbols() {
-        return symbols.stream();
+    public List<Byte> symbols() {
+        return Collections.unmodifiableList(symbols);
     }
 
     @Override
