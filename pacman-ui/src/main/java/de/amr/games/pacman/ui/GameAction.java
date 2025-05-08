@@ -12,6 +12,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui._3d.PerspectiveID;
@@ -40,9 +41,7 @@ public enum GameAction implements Action {
         }
 
         @Override
-        public boolean isEnabled() {
-            return level().isPresent();
-        }
+        public boolean isEnabled() { return level().isPresent(); }
     },
 
     CHEAT_EAT_ALL_PELLETS {
@@ -129,9 +128,7 @@ public enum GameAction implements Action {
 
     PLAYER_UP {
         @Override
-        public void execute() {
-            pac().get().setWishDir(Direction.UP);
-        }
+        public void execute() { pac().get().setWishDir(Direction.UP); }
 
         @Override
         public boolean isEnabled() { return pac().isPresent() && !pac().get().isUsingAutopilot(); }
@@ -139,9 +136,7 @@ public enum GameAction implements Action {
 
     PLAYER_DOWN {
         @Override
-        public void execute() {
-            pac().get().setWishDir(Direction.DOWN);
-        }
+        public void execute() { pac().get().setWishDir(Direction.DOWN); }
 
         @Override
         public boolean isEnabled() { return pac().isPresent() && !pac().get().isUsingAutopilot(); }
@@ -161,6 +156,16 @@ public enum GameAction implements Action {
 
         @Override
         public boolean isEnabled() { return pac().isPresent() && !pac().get().isUsingAutopilot(); }
+    },
+
+    QUIT_GAME_SCENE {
+        @Override
+        public void execute() {
+            THE_UI.currentGameScene().ifPresent(GameScene::end);
+            game().resetEverything();
+            if (!THE_COIN_MECHANISM.isEmpty()) THE_COIN_MECHANISM.consumeCoin();
+            THE_UI.showStartView();
+        }
     },
 
     RESTART_INTRO {
@@ -208,9 +213,7 @@ public enum GameAction implements Action {
         }
 
         @Override
-        public boolean isEnabled() {
-            return THE_CLOCK.isPaused();
-        }
+        public boolean isEnabled() { return THE_CLOCK.isPaused(); }
     },
 
     SIMULATION_TEN_STEPS {
@@ -223,9 +226,7 @@ public enum GameAction implements Action {
         }
 
         @Override
-        public boolean isEnabled() {
-            return THE_CLOCK.isPaused();
-        }
+        public boolean isEnabled() { return THE_CLOCK.isPaused(); }
     },
 
     SIMULATION_RESET {
@@ -236,40 +237,19 @@ public enum GameAction implements Action {
         }
     },
 
-    QUIT_GAME_SCENE {
+    START_ARCADE_GAME {
         @Override
         public void execute() {
-            THE_UI.currentGameScene().ifPresent(GameScene::end);
-            game().resetEverything();
-            if (!THE_COIN_MECHANISM.isEmpty())  THE_COIN_MECHANISM.consumeCoin();
-            THE_UI.showStartView();
-        }
-    },
-
-    ARCADE_START_GAME {
-        @Override
-        public void execute() {
-            switch (THE_GAME_CONTROLLER.gameVariantProperty().get()) {
-                case MS_PACMAN_TENGEN -> Logger.error("Arcade game start action cannot be executed in Tengen Ms. Pac-Man");
-                case MS_PACMAN, MS_PACMAN_XXL, PACMAN, PACMAN_XXL -> {
-                    if (game().canStartNewGame()) {
-                        THE_SOUND.stopVoice();
-                        if (gameState() == GameState.INTRO || gameState() == GameState.SETTING_OPTIONS) {
-                            THE_GAME_CONTROLLER.changeState(GameState.STARTING_GAME);
-                        } else {
-                            Logger.error("Cannot start game play in game state {}", gameState());
-                        }
-                    }
-                }
-            }
+            THE_SOUND.stopVoice();
+            THE_GAME_CONTROLLER.changeState(GameState.STARTING_GAME);
         }
 
         @Override
         public boolean isEnabled() {
-            return switch (THE_GAME_CONTROLLER.gameVariantProperty().get()) {
-                case MS_PACMAN_TENGEN -> false;
-                case MS_PACMAN, MS_PACMAN_XXL, PACMAN, PACMAN_XXL -> !THE_COIN_MECHANISM.isEmpty();
-            };
+            return gameVariant() != GameVariant.MS_PACMAN_TENGEN
+                && !THE_COIN_MECHANISM.isEmpty()
+                && (gameState() == GameState.INTRO || gameState() == GameState.SETTING_OPTIONS)
+                && game().canStartNewGame();
         }
     },
 
@@ -404,6 +384,7 @@ public enum GameAction implements Action {
     };
 
     GameModel game() { return THE_GAME_CONTROLLER.game(); }
+    GameVariant gameVariant() { return THE_GAME_CONTROLLER.gameVariantProperty().get(); }
     GameState gameState() { return THE_GAME_CONTROLLER.state(); }
     Optional<GameLevel> level() { return THE_GAME_CONTROLLER.game().level(); }
     Optional<Pac> pac() { return level().map(GameLevel::pac); }

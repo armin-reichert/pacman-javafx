@@ -195,7 +195,9 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     public void bindActions() {
         bindArcadeInsertCoinAction();
         if (game().level().isPresent() && !game().level().get().isDemoLevel()) {
-            bindArcadeStartGameAction();
+            if (!THE_GAME_CONTROLLER.isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN)) {
+                bindArcadeStartGameAction();
+            }
             bindCheatActions();
         }
         bind(GameAction.PERSPECTIVE_PREVIOUS, alt(KeyCode.LEFT));

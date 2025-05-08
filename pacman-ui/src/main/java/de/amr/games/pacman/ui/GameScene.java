@@ -47,7 +47,7 @@ public interface GameScene extends GameEventListener, ActionProvider {
     }
 
     default void bindArcadeStartGameAction() {
-        bind(GameAction.ARCADE_START_GAME,   naked(KeyCode.DIGIT1), naked(KeyCode.NUMPAD1));
+        bind(GameAction.START_ARCADE_GAME, naked(KeyCode.DIGIT1), naked(KeyCode.NUMPAD1));
     }
 
     default void bindPlayerActions() {
