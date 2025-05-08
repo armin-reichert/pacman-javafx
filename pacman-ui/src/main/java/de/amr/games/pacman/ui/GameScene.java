@@ -64,7 +64,7 @@ public interface GameScene extends GameEventListener, ActionProvider {
     }
 
     default void bindCheatActions() {
-        bind(GameAction.CHEAT_EAT_ALL,     alt(KeyCode.E));
+        bind(GameAction.CHEAT_EAT_ALL_PELLETS,     alt(KeyCode.E));
         bind(GameAction.CHEAT_ADD_LIVES,   alt(KeyCode.L));
         bind(GameAction.CHEAT_NEXT_LEVEL,  alt(KeyCode.N));
         bind(GameAction.CHEAT_KILL_GHOSTS, alt(KeyCode.X));

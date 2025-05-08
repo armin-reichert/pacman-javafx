@@ -9,12 +9,16 @@ import de.amr.games.pacman.controller.CoinMechanism;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui._3d.PerspectiveID;
 import de.amr.games.pacman.uilib.Action;
 import javafx.scene.shape.DrawMode;
 import org.tinylog.Logger;
+
+import java.util.List;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.controller.GameState.INTRO;
@@ -32,34 +36,55 @@ public enum GameAction implements Action {
             THE_GAME_CONTROLLER.game().addLives(3);
             THE_UI.showFlashMessage(THE_ASSETS.text("cheat_add_lives", THE_GAME_CONTROLLER.game().lifeCount()));
         }
+
+        @Override
+        public boolean isEnabled() {
+            return THE_GAME_CONTROLLER.game().level().isPresent();
+        }
     },
 
-    CHEAT_EAT_ALL {
+    CHEAT_EAT_ALL_PELLETS {
         @Override
         public void execute() {
-            if (THE_GAME_CONTROLLER.game().isPlaying() && THE_GAME_CONTROLLER.state() == GameState.HUNTING) {
-                THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-                    level.worldMap().tiles()
-                        .filter(not(level::isEnergizerPosition))
-                        .filter(level::hasFoodAt)
-                        .forEach(level::registerFoodEatenAt);
-                    THE_GAME_EVENT_MANAGER.publishEvent(THE_GAME_CONTROLLER.game(), GameEventType.PAC_FOUND_FOOD);
+            THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
+                List<Vector2i> pelletTiles = level.worldMap().tiles()
+                    .filter(not(level::isEnergizerPosition))
+                    .filter(level::hasFoodAt)
+                    .toList();
+                if (!pelletTiles.isEmpty()) {
+                    pelletTiles.forEach(level::registerFoodEatenAt);
                     THE_SOUND.stopMunchingSound();
-                });
-            }
+                    THE_GAME_EVENT_MANAGER.publishEvent(THE_GAME_CONTROLLER.game(), GameEventType.PAC_FOUND_FOOD);
+                }
+            });
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return THE_GAME_CONTROLLER.game().level().isPresent()
+                && !THE_GAME_CONTROLLER.game().level().get().isDemoLevel()
+                && THE_GAME_CONTROLLER.state() == GameState.HUNTING;
         }
     },
 
     CHEAT_KILL_GHOSTS {
         @Override
         public void execute() {
-            if (THE_GAME_CONTROLLER.game().isPlaying() && THE_GAME_CONTROLLER.state() == GameState.HUNTING) {
-                THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
-                    level.victims().clear();
-                    level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(THE_GAME_CONTROLLER.game()::onGhostKilled);
+            THE_GAME_CONTROLLER.game().level().ifPresent(level -> {
+                List<Ghost> vulnerableGhosts = level.ghosts(FRIGHTENED, HUNTING_PAC).toList();
+                if (!vulnerableGhosts.isEmpty()) {
+                    level.victims().clear(); // resets value of next killed ghost to 200
+                    vulnerableGhosts.forEach(THE_GAME_CONTROLLER.game()::onGhostKilled);
                     THE_GAME_CONTROLLER.changeState(GameState.GHOST_DYING);
-                });
-            }
+                }
+            });
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return THE_GAME_CONTROLLER.state() == GameState.HUNTING
+                && THE_GAME_CONTROLLER.game().level().isPresent()
+                && !THE_GAME_CONTROLLER.game().level().get().isDemoLevel();
         }
     },
 
