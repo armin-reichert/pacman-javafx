@@ -10,14 +10,13 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventManager;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.GameException;
-import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.SimulationStep;
+import de.amr.games.pacman.model.*;
+import de.amr.games.pacman.model.actors.Pac;
 import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.Random;
 
 import static java.util.Objects.requireNonNull;
@@ -53,6 +52,12 @@ public interface Globals {
      */
     File CUSTOM_MAP_DIR = new File(HOME_DIR, "maps");
 
+    static GameModel game() { return THE_GAME_CONTROLLER.game(); }
+    static GameVariant gameVariant() { return THE_GAME_CONTROLLER.gameVariantProperty().get(); }
+    static GameState gameState() { return THE_GAME_CONTROLLER.state(); }
+    static Optional<GameLevel> level() { return game().level(); }
+    static Optional<Pac> pac() { return level().map(GameLevel::pac); }
+
     static void checkUserDirsExistAndWritable() {
         String homeDirDesc = "Pac-Man FX home directory";
         String customMapDirDesc = "Pac-Man FX custom map directory";
@@ -83,10 +88,6 @@ public interface Globals {
         }
         return true;
     }
-
-    static GameModel game() { return THE_GAME_CONTROLLER.game(); }
-    static GameVariant gameVariant() { return THE_GAME_CONTROLLER.gameVariantProperty().get(); }
-    static GameState gameState() { return THE_GAME_CONTROLLER.state(); }
 
     /**
      * @param position a position

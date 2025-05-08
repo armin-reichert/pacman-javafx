@@ -10,18 +10,14 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui._3d.PerspectiveID;
 import de.amr.games.pacman.uilib.Action;
 import javafx.scene.shape.DrawMode;
 import org.tinylog.Logger;
 
 import java.util.List;
-import java.util.Optional;
 
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.controller.GameState.INTRO;
@@ -375,12 +371,6 @@ public enum GameAction implements Action {
             }
         }
     };
-
-    GameModel game() { return THE_GAME_CONTROLLER.game(); }
-    GameVariant gameVariant() { return THE_GAME_CONTROLLER.gameVariantProperty().get(); }
-    GameState gameState() { return THE_GAME_CONTROLLER.state(); }
-    Optional<GameLevel> level() { return THE_GAME_CONTROLLER.game().level(); }
-    Optional<Pac> pac() { return level().map(GameLevel::pac); }
 
     static final int SIMULATION_SPEED_DELTA = 2;
     static final int SIMULATION_SPEED_MIN   = 10;
