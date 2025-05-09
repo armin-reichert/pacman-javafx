@@ -5,8 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui._2d.GameRenderer;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
@@ -27,7 +29,7 @@ public interface GameUIConfig {
     Stream<GameScene> gameScenes();
     boolean gameSceneHasID(GameScene gameScene, String sceneID);
     default boolean isGameCanvasDecorated() { return true; }
-    GameScene selectGameScene(GameController gameController);
+    GameScene selectGameScene(GameModel game, GameState gameState);
     <T extends GameSpriteSheet> T spriteSheet();
     WorldMapColorScheme worldMapColorScheme(WorldMap worldMap);
 

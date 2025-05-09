@@ -331,6 +331,6 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public void updateGameScene(boolean reloadCurrent) {
-        gameView.updateGameScene(THE_UI_CONFIGS.current(), reloadCurrent);
+        gameView.updateGameScene(reloadCurrent);
     }
 }

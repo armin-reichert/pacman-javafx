@@ -35,8 +35,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static de.amr.games.pacman.Globals.THE_GAME_CONTROLLER;
-import static de.amr.games.pacman.Globals.gameLevel;
+import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.GameAssets.ARCADE_WHITE;
 import static de.amr.games.pacman.ui.Globals.*;
@@ -228,7 +227,7 @@ public class GameView implements View {
 
     public void updateGameScene(boolean reloadCurrent) {
         GameUIConfig uiConfig = THE_UI_CONFIGS.current();
-        final GameScene nextGameScene = uiConfig.selectGameScene(THE_GAME_CONTROLLER);
+        final GameScene nextGameScene = uiConfig.selectGameScene(game(), gameState());
         if (nextGameScene == null) {
             throw new IllegalStateException("Could not determine next game scene");
         }

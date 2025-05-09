@@ -4,12 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.tengen.ms_pacman;
 
-import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.nes.NES_Palette;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.GameAssets;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui.GameUIConfig;
@@ -163,14 +164,14 @@ public class TengenMsPacMan_UIConfig implements GameUIConfig, ResourceManager {
     }
 
     @Override
-    public GameScene selectGameScene(GameController gameController) {
-        String sceneID = switch (gameController.state()) {
+    public GameScene selectGameScene(GameModel game, GameState gameState) {
+        String sceneID = switch (gameState) {
             case BOOT               -> "BootScene";
             case SETTING_OPTIONS    -> "StartScene";
             case SHOWING_CREDITS    -> "ShowingCredits";
             case INTRO              -> "IntroScene";
-            case INTERMISSION       -> "CutScene" + gameController.game().level().map(GameLevel::cutSceneNumber).orElseThrow();
-            case TESTING_CUT_SCENES -> "CutScene" + gameController.state().<Integer>getProperty("intermissionTestNumber");
+            case INTERMISSION       -> "CutScene" + game.level().map(GameLevel::cutSceneNumber).orElseThrow();
+            case TESTING_CUT_SCENES -> "CutScene" + gameState.<Integer>getProperty("intermissionTestNumber");
             default                 -> PY_3D_ENABLED.get() ? "PlayScene3D" : "PlayScene2D";
         };
         return scenesByID.get(sceneID);

@@ -8,8 +8,10 @@ import de.amr.games.pacman.arcade.ArcadeAny_BootScene2D;
 import de.amr.games.pacman.arcade.ArcadeAny_PlayScene2D;
 import de.amr.games.pacman.arcade.ms_pacman.*;
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.GameAssets;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui.GameUIConfig;
@@ -184,13 +186,13 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUIConfig {
     }
 
     @Override
-    public GameScene selectGameScene(GameController gameController) {
-        String sceneID = switch (gameController.state()) {
+    public GameScene selectGameScene(GameModel game, GameState gameState) {
+        String sceneID = switch (gameState) {
             case BOOT               -> "BootScene";
             case SETTING_OPTIONS    -> "StartScene";
             case INTRO              -> "IntroScene";
-            case INTERMISSION       -> "CutScene" + gameController.game().level().map(GameLevel::cutSceneNumber).orElseThrow();
-            case TESTING_CUT_SCENES -> "CutScene" + gameController.state().<Integer>getProperty("intermissionTestNumber");
+            case INTERMISSION       -> "CutScene" + game.level().map(GameLevel::cutSceneNumber).orElseThrow();
+            case TESTING_CUT_SCENES -> "CutScene" + gameState.<Integer>getProperty("intermissionTestNumber");
             default                 -> PY_3D_ENABLED.get() ? "PlayScene3D" : "PlayScene2D";
         };
         return scenesByID.get(sceneID);

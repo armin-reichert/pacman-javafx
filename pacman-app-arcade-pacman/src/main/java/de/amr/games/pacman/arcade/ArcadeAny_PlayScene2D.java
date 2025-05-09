@@ -15,6 +15,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameScene;
+import de.amr.games.pacman.ui._2d.FlashingMazeAnimation;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.scene.control.CheckMenuItem;
@@ -42,7 +43,7 @@ import static de.amr.games.pacman.ui.Globals.*;
  */
 public class ArcadeAny_PlayScene2D extends GameScene2D {
 
-    private ArcadeAny_FlashingMazeAnimation levelCompleteAnimation;
+    private FlashingMazeAnimation levelCompleteAnimation;
 
     @Override
     protected void doInit() {
@@ -275,7 +276,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         else if (state == GameState.LEVEL_COMPLETE) {
             game().level().ifPresent(level -> {
                 THE_SOUND.stopAll();
-                levelCompleteAnimation = new ArcadeAny_FlashingMazeAnimation(level);
+                levelCompleteAnimation = new FlashingMazeAnimation(level);
                 levelCompleteAnimation.setActionOnFinished(THE_GAME_CONTROLLER::letCurrentStateExpire);
                 levelCompleteAnimation.start();
             });

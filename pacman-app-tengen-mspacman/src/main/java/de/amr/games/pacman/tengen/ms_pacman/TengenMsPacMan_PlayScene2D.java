@@ -15,8 +15,8 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameScene;
+import de.amr.games.pacman.ui._2d.FlashingMazeAnimation;
 import de.amr.games.pacman.ui._2d.GameScene2D;
-import de.amr.games.pacman.ui._2d.LevelCompleteAnimation;
 import de.amr.games.pacman.uilib.CameraControlledView;
 import de.amr.games.pacman.uilib.Ufx;
 import de.amr.games.pacman.uilib.input.Keyboard;
@@ -122,7 +122,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     private final ObjectProperty<SceneDisplayMode> displayModePy = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
 
     private MessageMovement messageMovement;
-    private LevelCompleteAnimation levelCompleteAnimation;
+    private FlashingMazeAnimation levelCompleteAnimation;
 
     public TengenMsPacMan_PlayScene2D() {
         movingCamera = new MovingCamera();
@@ -343,7 +343,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             case LEVEL_COMPLETE ->
                 game().level().ifPresent(level -> {
                     THE_SOUND.stopAll();
-                    levelCompleteAnimation = new LevelCompleteAnimation(level);
+                    levelCompleteAnimation = new FlashingMazeAnimation(level);
                     levelCompleteAnimation.setActionOnFinished(THE_GAME_CONTROLLER::letCurrentStateExpire);
                     levelCompleteAnimation.start();
                 });
