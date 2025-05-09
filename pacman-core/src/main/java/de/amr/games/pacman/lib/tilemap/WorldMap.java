@@ -448,10 +448,6 @@ public class WorldMap {
         return getTileProperty(TERRAIN, propertyName, defaultTile);
     }
 
-    public void removeProperty(LayerID layerID, String propertyName) {
-        properties(layerID).remove(propertyName);
-    }
-
     /**
      * @param layerID Layer ID
      * @param row row inside map bounds

@@ -539,8 +539,8 @@ public class TileMapEditor {
         changeManager.setEdited(true);
     }
 
-    private void removeTerrainMapProperty(String name) {
-        editedWorldMap().removeProperty(LayerID.TERRAIN, name);
+    private void removeTerrainMapProperty(String key) {
+        editedWorldMap().properties(LayerID.TERRAIN).remove(key);
         changeManager.setTerrainMapChanged();
         changeManager.setEdited(true);
     }
@@ -555,8 +555,8 @@ public class TileMapEditor {
         changeManager.setEdited(true);
     }
 
-    private void removeFoodMapProperty(String name) {
-        editedWorldMap().removeProperty(LayerID.FOOD, name);
+    private void removeFoodMapProperty(String key) {
+        editedWorldMap().properties(LayerID.FOOD).remove(key);
         changeManager.setFoodMapChanged();
         changeManager.setEdited(true);
     }

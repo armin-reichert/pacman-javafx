@@ -120,7 +120,7 @@ public class PropertyEditorPane extends BorderPane {
                 nameEditor.setText(propertyName);
                 return;
             }
-            worldMap.removeProperty(layerID, propertyName);
+            worldMap.properties(layerID).remove(propertyName);
             worldMap.properties(layerID).put(editedName, formattedPropertyValue());
             editor.showMessage("Property %s renamed to %s".formatted(propertyName, editedName), 2, MessageType.INFO);
             propertyName = editedName;
@@ -330,7 +330,7 @@ public class PropertyEditorPane extends BorderPane {
     }
 
     void deleteProperty(String propertyName) {
-        worldMapPy.get().removeProperty(layerID, propertyName);
+        worldMapPy.get().properties(layerID).remove(propertyName);
         editor.getChangeManager().setWorldMapChanged();
         editor.getChangeManager().setEdited(true);
         editor.showMessage("Property %s deleted".formatted(propertyName), 3, MessageType.INFO);
