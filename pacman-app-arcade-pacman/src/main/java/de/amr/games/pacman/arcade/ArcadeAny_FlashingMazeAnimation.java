@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui._2d;
+package de.amr.games.pacman.arcade;
 
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -23,7 +23,7 @@ import static java.util.Objects.requireNonNull;
  * After each flashing cycle, the flashing index is incremented. This is used by the Tengen play scene renderer to
  * draw a different map color for each flashing cycle (only for the non-ARCADE maps starting at level 28)
  */
-public class LevelCompleteAnimation {
+public class ArcadeAny_FlashingMazeAnimation {
 
     private final GameLevel level;
 
@@ -41,7 +41,7 @@ public class LevelCompleteAnimation {
     private boolean running;
     private Runnable actionOnFinished;
 
-    public LevelCompleteAnimation(GameLevel level) {
+    public ArcadeAny_FlashingMazeAnimation(GameLevel level) {
         this.level = requireNonNull(level);
         tick = 0;
         flashingIndex = 0;
