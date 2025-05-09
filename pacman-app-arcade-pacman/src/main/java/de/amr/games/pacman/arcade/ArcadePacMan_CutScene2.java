@@ -24,7 +24,9 @@ import static de.amr.games.pacman.ui.Globals.*;
  */
 public class ArcadePacMan_CutScene2 extends GameScene2D {
 
-    static final short ANIMATION_START = 120;
+    private static final short ANIMATION_START = 120;
+
+    private static final byte NAIL = 0, STRETCHED_S = 1, STRETCHED_M = 2, STRETCHED_L = 3, RAPTURED = 4;
 
     private int frame;
     private Pac pac;
@@ -67,13 +69,12 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     @Override
     public void update() {
         ++frame;
-        if (frame >= ANIMATION_START) {
-            pac.move();
-            blinky.move();
+        if (frame < ANIMATION_START) {
+            return;
         }
         switch (frame) {
             case ANIMATION_START -> music.play();
-            case ANIMATION_START + 1 -> nailDressRaptureAnimation.setFrameIndex(0); // Show nail
+            case ANIMATION_START + 1 -> nailDressRaptureAnimation.setFrameIndex(NAIL);
             case ANIMATION_START + 25 -> {
                 pac.placeAtTile(28, 20, 0, 0);
                 pac.setMoveDir(Direction.LEFT);
@@ -94,21 +95,29 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 blinky.setSpeed(0.09f);
                 blinkyNormal.setFrameTicks(32);
             }
-            case ANIMATION_START + 198,
-                 ANIMATION_START + 226,
-                 ANIMATION_START + 248 -> nailDressRaptureAnimation.nextFrame(); // Stretched S-M-L
-            case ANIMATION_START + 328 -> {
-                blinky.setSpeed(0);
-                nailDressRaptureAnimation.nextFrame(); // Rapture
+            case ANIMATION_START + 198 -> nailDressRaptureAnimation.setFrameIndex(STRETCHED_S);
+            case ANIMATION_START + 230 -> nailDressRaptureAnimation.setFrameIndex(STRETCHED_M);
+            case ANIMATION_START + 262 -> {
+                nailDressRaptureAnimation.setFrameIndex(STRETCHED_L);
             }
-            case ANIMATION_START + 329 -> blinky.selectAnimation(ArcadePacMan_GhostAnimations.ANIM_BLINKY_DAMAGED); // Eyes up
-            case ANIMATION_START + 389 -> blinkyDamaged.nextFrame(); // Eyes right-down
+            case ANIMATION_START + 296 -> {
+                blinky.setSpeed(0);
+                blinky.stopAnimation();
+            }
+            case ANIMATION_START + 360 -> {
+                nailDressRaptureAnimation.setFrameIndex(RAPTURED);
+                blinky.setPosition(blinky.position().minus(5, 0));
+                blinky.selectAnimation(ArcadePacMan_GhostAnimations.ANIM_BLINKY_DAMAGED);
+            }
+            case ANIMATION_START + 420 -> blinkyDamaged.nextFrame(); // Eyes right-down
             case ANIMATION_START + 508 -> {
                 blinky.setVisible(false);
                 THE_GAME_CONTROLLER.letCurrentStateExpire();
             }
             default -> {}
         }
+        pac.move();
+        blinky.move();
     }
 
     @Override
