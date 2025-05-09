@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.dashboard.Dashboard;
+import de.amr.games.pacman.ui.dashboard.DashboardID;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

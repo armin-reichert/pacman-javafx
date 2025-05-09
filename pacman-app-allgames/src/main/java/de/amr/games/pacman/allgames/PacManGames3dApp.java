@@ -15,7 +15,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig;
-import de.amr.games.pacman.ui.DashboardID;
+import de.amr.games.pacman.ui.dashboard.DashboardID;
 import de.amr.games.pacman.ui.dashboard.InfoBoxCustomMaps;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;

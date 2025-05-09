@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.arcade.ms_pacman;
 
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.DashboardID;
+import de.amr.games.pacman.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;

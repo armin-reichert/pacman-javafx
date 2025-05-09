@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.dashboard;
 
-import de.amr.games.pacman.ui.DashboardID;
 import de.amr.games.pacman.ui._3d.InfoBox3D;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;

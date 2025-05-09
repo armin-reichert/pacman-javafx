@@ -9,6 +9,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tilemap.editor.TileMapEditor;
 import de.amr.games.pacman.ui.dashboard.Dashboard;
+import de.amr.games.pacman.ui.dashboard.DashboardID;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
