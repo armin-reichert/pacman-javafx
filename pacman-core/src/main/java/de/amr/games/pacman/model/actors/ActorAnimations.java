@@ -20,7 +20,7 @@ public interface ActorAnimations {
 
     // Pac-Man game specific
     String ANIM_BLINKY_DAMAGED   = "damaged";
-    String ANIM_BLINKY_STRETCHED = "stretched";
+    String ANIM_BLINKY_NAIL_DRESS_RAPTURE = "stretched";
     String ANIM_BLINKY_PATCHED   = "patched";
     String ANIM_BLINKY_NAKED     = "naked";
 

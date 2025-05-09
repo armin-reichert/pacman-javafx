@@ -80,7 +80,7 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationSet {
             ActorAnimations.ANIM_GHOST_EYES, eyes,
             ActorAnimations.ANIM_GHOST_NUMBER, number,
             ActorAnimations.ANIM_BLINKY_DAMAGED, damaged,
-            ActorAnimations.ANIM_BLINKY_STRETCHED, stretching,
+            ActorAnimations.ANIM_BLINKY_NAIL_DRESS_RAPTURE, stretching,
             ActorAnimations.ANIM_BLINKY_PATCHED, patched,
             ActorAnimations.ANIM_BLINKY_NAKED, naked));
 

@@ -30,8 +30,8 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     private Pac pac;
     private Ghost blinky;
     private SpriteAnimation blinkyNormal;
-    private SpriteAnimation blinkyStretching;
     private SpriteAnimation blinkyDamaged;
+    private SpriteAnimation nailDressRaptureAnimation;
     private MediaPlayer music;
 
     @Override
@@ -39,6 +39,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         game().scoreManager().setScoreVisible(true);
 
         pac = ArcadePacMan_ActorFactory.createPac();
+
         blinky = ArcadePacMan_ActorFactory.createRedGhost();
         blinky.setSpeed(0);
         blinky.hide();
@@ -51,7 +52,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
         var blinkyAnimations = new ArcadePacMan_GhostAnimations(spriteSheet, blinky.id());
         blinkyNormal = blinkyAnimations.animation(ANIM_GHOST_NORMAL);
-        blinkyStretching = blinkyAnimations.animation(ANIM_BLINKY_STRETCHED);
+        nailDressRaptureAnimation = blinkyAnimations.animation(ANIM_BLINKY_NAIL_DRESS_RAPTURE);
         blinkyDamaged = blinkyAnimations.animation(ArcadePacMan_GhostAnimations.ANIM_BLINKY_DAMAGED);
         blinky.setAnimations(blinkyAnimations);
 
@@ -72,7 +73,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         }
         switch (frame) {
             case ANIMATION_START -> music.play();
-            case ANIMATION_START + 1 -> blinkyStretching.setFrameIndex(0); // Show nail
+            case ANIMATION_START + 1 -> nailDressRaptureAnimation.setFrameIndex(0); // Show nail
             case ANIMATION_START + 25 -> {
                 pac.placeAtTile(28, 20, 0, 0);
                 pac.setMoveDir(Direction.LEFT);
@@ -95,10 +96,10 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             }
             case ANIMATION_START + 198,
                  ANIMATION_START + 226,
-                 ANIMATION_START + 248 -> blinkyStretching.nextFrame(); // Stretched S-M-L
+                 ANIMATION_START + 248 -> nailDressRaptureAnimation.nextFrame(); // Stretched S-M-L
             case ANIMATION_START + 328 -> {
                 blinky.setSpeed(0);
-                blinkyStretching.nextFrame(); // Rapture
+                nailDressRaptureAnimation.nextFrame(); // Rapture
             }
             case ANIMATION_START + 329 -> blinky.selectAnimation(ArcadePacMan_GhostAnimations.ANIM_BLINKY_DAMAGED); // Eyes up
             case ANIMATION_START + 389 -> blinkyDamaged.nextFrame(); // Eyes right-down
@@ -118,7 +119,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         gr.drawScores(game().scoreManager(), ARCADE_WHITE, arcadeFontScaledTS());
-        gr.drawSpriteScaled(blinkyStretching.currentSprite(), tiles_to_px(14), tiles_to_px(19) + 3);
+        gr.drawSpriteScaled(nailDressRaptureAnimation.currentSprite(), tiles_to_px(14), tiles_to_px(19) + 3);
         gr.drawAnimatedActor(blinky);
         gr.drawAnimatedActor(pac);
         gr.drawLevelCounter(game().levelCounter(), sizeInPx());
