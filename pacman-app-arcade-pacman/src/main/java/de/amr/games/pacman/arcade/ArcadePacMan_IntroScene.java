@@ -39,6 +39,7 @@ import static de.amr.games.pacman.ui.Globals.*;
  */
 public class ArcadePacMan_IntroScene extends GameScene2D {
 
+    private static final String[] GHOST_NICKNAME = { "\"BLINKY\"", "\"PINKY\"", "\"INKY\"", "\"CLYDE\"" };
     private static final String[] GHOST_CHARACTERS = { "SHADOW", "SPEEDY", "BASHFUL", "POKEY" };
     private static final Color[] GHOST_COLORS = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
     private static final float CHASE_SPEED = 1.1f;
@@ -162,17 +163,17 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             gr.fillTextAtScaledPosition("CHARACTER / NICKNAME", ARCADE_WHITE, font, tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(6));
         }
         for (byte id = 0; id < 4; ++id) {
-            int tileY = 7 + 3 * id;
             if (ghostImageVisible[id]) {
-                gr.drawSpriteScaledCenteredOverTile(spriteSheet.ghostFacingRight(id), tiles_to_px(LEFT_TILE_X) + 4, tiles_to_px(tileY));
+                gr.drawSpriteScaledCenteredOverTile(spriteSheet.ghostFacingRight(id),
+                    tiles_to_px(LEFT_TILE_X) + HTS, tiles_to_px(7 + 3 * id));
             }
             if (ghostCharacterVisible[id]) {
-                String text = "-" + GHOST_CHARACTERS[id];
-                gr.fillTextAtScaledPosition(text, GHOST_COLORS[id], font, tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(tileY + 1));
+                gr.fillTextAtScaledPosition("-" + GHOST_CHARACTERS[id], GHOST_COLORS[id], font,
+                    tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(8 + 3 * id));
             }
             if (ghostNicknameVisible[id]) {
-                String text = '"' + ghosts[id].name().toUpperCase() + '"';
-                gr.fillTextAtScaledPosition(text, GHOST_COLORS[id], font, tiles_to_px(LEFT_TILE_X + 14), tiles_to_px(tileY + 1));
+                gr.fillTextAtScaledPosition(GHOST_NICKNAME[id], GHOST_COLORS[id], font,
+                    tiles_to_px(LEFT_TILE_X + 14), tiles_to_px(8 + 3 * id));
             }
         }
     }
