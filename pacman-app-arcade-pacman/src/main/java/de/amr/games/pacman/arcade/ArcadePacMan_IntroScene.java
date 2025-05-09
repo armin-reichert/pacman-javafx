@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.arcade.ArcadePacMan_GameModel.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.*;
 import static de.amr.games.pacman.model.actors.GhostState.EATEN;
@@ -79,13 +80,13 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public void doInit() {
         ArcadePacMan_SpriteSheet spriteSheet = THE_UI_CONFIGS.current().spriteSheet();
         blinking = new Pulse(10, true);
-        pacMan = ArcadePacMan_ActorFactory.createPac();
+        pacMan = createPac();
         pacMan.setAnimations(new ArcadePacMan_PacAnimations(spriteSheet));
         ghosts = new Ghost[] {
-            ArcadePacMan_ActorFactory.createRedGhost(),
-            ArcadePacMan_ActorFactory.createPinkGhost(),
-            ArcadePacMan_ActorFactory.createCyanGhost(),
-            ArcadePacMan_ActorFactory.createOrangeGhost()
+            createRedGhost(),
+            createPinkGhost(),
+            createCyanGhost(),
+            createOrangeGhost()
         };
         for (Ghost ghost : ghosts) {
             ghost.setAnimations(new ArcadePacMan_GhostAnimations(spriteSheet, ghost.id()));

@@ -45,6 +45,82 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
 
+    public static Pac createPac() {
+        var pac = new Pac("Pac-Man");
+        pac.reset();
+        return pac;
+    }
+
+    public static Ghost createRedGhost() {
+        return new Ghost(RED_GHOST_ID, "Blinky") {
+            @Override
+            public void hunt() {
+                float speed = level.speedControl().ghostAttackSpeed(level, this);
+                boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || cruiseElroy() > 0;
+                Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
+                followTarget(targetTile, speed);
+            }
+            @Override
+            public Vector2i chasingTargetTile() {
+                // Blinky (red ghost) attacks Pac-Man directly
+                return level.pac().tile();
+            }
+        };
+    }
+
+    /** @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>. */
+    public static Ghost createPinkGhost() {
+        return new Ghost(PINK_GHOST_ID, "Pinky") {
+            @Override
+            public void hunt() {
+                float speed = level.speedControl().ghostAttackSpeed(level, this);
+                boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
+                Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
+                followTarget(targetTile, speed);
+            }
+            @Override
+            public Vector2i chasingTargetTile() {
+                // Pinky (pink ghost) ambushes Pac-Man
+                return level.pac().tilesAhead(4, true);
+            }
+        };
+    }
+
+    /** @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>. */
+    public static Ghost createCyanGhost() {
+        return new Ghost(CYAN_GHOST_ID, "Inky") {
+            @Override
+            public void hunt() {
+                float speed = level.speedControl().ghostAttackSpeed(level, this);
+                boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
+                Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
+                followTarget(targetTile, speed);
+            }
+            @Override
+            public Vector2i chasingTargetTile() {
+                // Inky (cyan ghost) attacks from opposite side as Blinky
+                return level.pac().tilesAhead(2, true).scaled(2).minus(level.ghost(RED_GHOST_ID).tile());
+            }
+        };
+    }
+
+    public static Ghost createOrangeGhost() {
+        return new Ghost(ORANGE_GHOST_ID, "Clyde") {
+            @Override
+            public void hunt() {
+                float speed = level.speedControl().ghostAttackSpeed(level, this);
+                boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
+                Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
+                followTarget(targetTile, speed);
+            }
+            @Override
+            public Vector2i chasingTargetTile() {
+                // Attacks directly or retreats towards scatter target if Pac is near
+                return tile().euclideanDist(level.pac().tile()) < 8 ? level.ghostScatterTile(id()) : level.pac().tile();
+            }
+        };
+    }
+
     // Level data as given in the "Pac-Man dossier"
     protected static final byte[][] LEVEL_DATA = {
         /* 1*/ { 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5},
@@ -155,7 +231,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
         level.setGameOverStateTicks(90);
         level.addArcadeHouse();
 
-        Pac pac = ArcadePacMan_ActorFactory.createPac();
+        Pac pac = createPac();
         pac.setGameLevel(level);
         pac.setAutopilot(autopilot);
         level.setPac(pac);
@@ -165,10 +241,10 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
             .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTiles.ONE_WAY_DOWN)
             .toList();
         level.setGhosts(
-            ArcadePacMan_ActorFactory.createRedGhost(),
-            ArcadePacMan_ActorFactory.createPinkGhost(),
-            ArcadePacMan_ActorFactory.createCyanGhost(),
-            ArcadePacMan_ActorFactory.createOrangeGhost()
+            createRedGhost(),
+            createPinkGhost(),
+            createCyanGhost(),
+            createOrangeGhost()
         );
         level.ghosts().forEach(ghost -> {
             ghost.reset();

@@ -14,6 +14,8 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.arcade.ArcadePacMan_GameModel.createPac;
+import static de.amr.games.pacman.arcade.ArcadePacMan_GameModel.createRedGhost;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.*;
 import static de.amr.games.pacman.ui.GameAssets.ARCADE_WHITE;
@@ -40,9 +42,9 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     public void doInit() {
         game().scoreManager().setScoreVisible(true);
 
-        pac = ArcadePacMan_ActorFactory.createPac();
+        pac = createPac();
 
-        blinky = ArcadePacMan_ActorFactory.createRedGhost();
+        blinky = createRedGhost();
         blinky.setSpeed(0);
         blinky.hide();
 
