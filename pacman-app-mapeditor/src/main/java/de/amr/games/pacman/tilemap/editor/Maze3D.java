@@ -242,10 +242,10 @@ public class Maze3D extends Group {
     }
 
     private boolean hasFoodAt(WorldMap worldMap, Vector2i tile) {
-        return worldMap.get(LayerID.FOOD, tile) != FoodTiles.EMPTY;
+        return worldMap.content(LayerID.FOOD, tile) != FoodTiles.EMPTY;
     }
 
     private boolean hasEnergizerAt(WorldMap worldMap, Vector2i tile) {
-        return worldMap.get(LayerID.FOOD, tile) == FoodTiles.ENERGIZER;
+        return worldMap.content(LayerID.FOOD, tile) == FoodTiles.ENERGIZER;
     }
 }

@@ -61,7 +61,7 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
     public void drawTerrain(GraphicsContext g, WorldMap worldMap, Set<Obstacle> obstacles) {
         g.save();
         g.scale(scaling(), scaling());
-        worldMap.tiles().forEach(tile -> drawTileUnscaled(g, tile, worldMap.get(LayerID.TERRAIN, tile)));
+        worldMap.tiles().forEach(tile -> drawTileUnscaled(g, tile, worldMap.content(LayerID.TERRAIN, tile)));
         specialTile(worldMap, WorldMapProperty.POS_SCATTER_RED_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.RED));
         specialTile(worldMap, WorldMapProperty.POS_SCATTER_PINK_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.PINK));
         specialTile(worldMap, WorldMapProperty.POS_SCATTER_CYAN_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.CYAN));

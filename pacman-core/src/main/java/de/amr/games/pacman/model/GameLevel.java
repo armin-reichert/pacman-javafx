@@ -144,8 +144,8 @@ public class GameLevel {
         int firstColumn = 0, lastColumn = worldMap.numCols() - 1;
         for (int row = 0; row < worldMap.numRows(); ++row) {
             Vector2i leftBorderTile = Vector2i.of(firstColumn, row), rightBorderTile = Vector2i.of(lastColumn, row);
-            if (worldMap.get(LayerID.TERRAIN, row, firstColumn) == TUNNEL
-                && worldMap.get(LayerID.TERRAIN, row, lastColumn) == TUNNEL) {
+            if (worldMap.content(LayerID.TERRAIN, row, firstColumn) == TUNNEL
+                && worldMap.content(LayerID.TERRAIN, row, lastColumn) == TUNNEL) {
                 portals.add(new Portal(leftBorderTile, rightBorderTile, 2));
             }
         }
@@ -293,11 +293,11 @@ public class GameLevel {
     }
 
     public boolean isBlockedTile(Vector2i tile) {
-        return isInsideWorld(tile) && isInaccessible(worldMap.get(LayerID.TERRAIN, tile));
+        return isInsideWorld(tile) && isInaccessible(worldMap.content(LayerID.TERRAIN, tile));
     }
 
     public boolean isTunnel(Vector2i tile) {
-        return isInsideWorld(tile) && worldMap.get(LayerID.TERRAIN, tile) == TUNNEL;
+        return isInsideWorld(tile) && worldMap.content(LayerID.TERRAIN, tile) == TUNNEL;
     }
 
     public boolean isIntersection(Vector2i tile) {
@@ -331,7 +331,7 @@ public class GameLevel {
                 else if (y == minY && (x == minX + 3 || x == minX + 4)) value = DOOR;
                 else if (x == minX || x == maxX) value = WALL_V;
                 else if (y == minY || y == maxY) value = WALL_H;
-                worldMap.set(LayerID.TERRAIN, Vector2i.of(x, y), value);
+                worldMap.setContent(LayerID.TERRAIN, Vector2i.of(x, y), value);
             }
         }
     }
@@ -446,11 +446,11 @@ public class GameLevel {
     }
 
     public boolean isFoodPosition(Vector2i tile) {
-        return isInsideWorld(tile) && worldMap.get(LayerID.FOOD, tile) != FoodTiles.EMPTY;
+        return isInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) != FoodTiles.EMPTY;
     }
 
     public boolean isEnergizerPosition(Vector2i tile) {
-        return isInsideWorld(tile) && worldMap.get(LayerID.FOOD, tile) == FoodTiles.ENERGIZER;
+        return isInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) == FoodTiles.ENERGIZER;
     }
 
     public boolean hasFoodAt(Vector2i tile) {

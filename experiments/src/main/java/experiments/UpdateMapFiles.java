@@ -40,7 +40,7 @@ public class UpdateMapFiles {
 
     private static void updateMapData(WorldMap map) {
         map.tiles().forEach(tile -> {
-            byte content = map.get(LayerID.TERRAIN, tile);
+            byte content = map.content(LayerID.TERRAIN, tile);
             byte newContent = switch (content) {
                 case TerrainTiles.OBSOLETE_DWALL_H -> TerrainTiles.WALL_H;
                 case TerrainTiles.OBSOLETE_DWALL_V -> TerrainTiles.WALL_V;
@@ -50,19 +50,19 @@ public class UpdateMapFiles {
                 case TerrainTiles.OBSOLETE_DCORNER_NE -> TerrainTiles.ARC_NE;
                 default -> content;
             };
-            map.set(LayerID.TERRAIN, tile, newContent);
+            map.setContent(LayerID.TERRAIN, tile, newContent);
         });
         Vector2i houseMinTile = map.getTerrainTileProperty("pos_house_min_tile", new Vector2i(10, 15));
         Vector2i houseMaxTile = houseMinTile.plus(7, 4);
-        map.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MIN_TILE, WorldMap.formatTile(houseMinTile));
-        map.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MAX_TILE, WorldMap.formatTile(houseMaxTile));
+        map.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MIN_TILE, WorldMap.formatTile(houseMinTile));
+        map.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MAX_TILE, WorldMap.formatTile(houseMaxTile));
         for (int row = houseMinTile.y(); row <= houseMaxTile.y(); ++row) {
             for (int col = houseMinTile.x(); col <= houseMaxTile.x(); ++col) {
-                switch (map.get(LayerID.TERRAIN, row, col)) {
-                    case TerrainTiles.DCORNER_NW -> map.set(LayerID.TERRAIN, row, col, TerrainTiles.ARC_NW);
-                    case TerrainTiles.DCORNER_SW -> map.set(LayerID.TERRAIN, row, col, TerrainTiles.ARC_SW);
-                    case TerrainTiles.DCORNER_SE -> map.set(LayerID.TERRAIN, row, col, TerrainTiles.ARC_SE);
-                    case TerrainTiles.DCORNER_NE -> map.set(LayerID.TERRAIN, row, col, TerrainTiles.ARC_NE);
+                switch (map.content(LayerID.TERRAIN, row, col)) {
+                    case TerrainTiles.DCORNER_NW -> map.setContent(LayerID.TERRAIN, row, col, TerrainTiles.ARC_NW);
+                    case TerrainTiles.DCORNER_SW -> map.setContent(LayerID.TERRAIN, row, col, TerrainTiles.ARC_SW);
+                    case TerrainTiles.DCORNER_SE -> map.setContent(LayerID.TERRAIN, row, col, TerrainTiles.ARC_SE);
+                    case TerrainTiles.DCORNER_NE -> map.setContent(LayerID.TERRAIN, row, col, TerrainTiles.ARC_NE);
                 }
             }
         }

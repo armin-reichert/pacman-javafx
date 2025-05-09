@@ -151,19 +151,19 @@ public class WorldMap {
                 byte terrainValue = TerrainTiles.EMPTY;
                 byte foodValue = FoodTiles.EMPTY;
                 if (row < rowIndex) {
-                    terrainValue = get(TERRAIN, row, col);
-                    foodValue = get(FOOD, row, col);
+                    terrainValue = content(TERRAIN, row, col);
+                    foodValue = content(FOOD, row, col);
                 } else if (row > rowIndex) {
-                    terrainValue = get(TERRAIN, row - 1, col);
-                    foodValue = get(FOOD, row - 1, col);
+                    terrainValue = content(TERRAIN, row - 1, col);
+                    foodValue = content(FOOD, row - 1, col);
                 } else {
                     if ((col == 0 || col == numCols() - 1)
-                            && get(TERRAIN, row, col) == TerrainTiles.WALL_V) {
+                            && content(TERRAIN, row, col) == TerrainTiles.WALL_V) {
                         terrainValue = TerrainTiles.WALL_V; // keep vertical border wall
                     }
                 }
-                newMap.set(TERRAIN, row, col, terrainValue);
-                newMap.set(FOOD, row, col, foodValue);
+                newMap.setContent(TERRAIN, row, col, terrainValue);
+                newMap.setContent(FOOD, row, col, foodValue);
             }
         }
         return newMap;
@@ -179,11 +179,11 @@ public class WorldMap {
         for (int row = 0; row < newMap.numRows(); ++row) {
             for (int col = 0; col < newMap.numCols(); ++col) {
                 if (row < rowIndexToDelete) {
-                    newMap.set(TERRAIN, row, col, get(TERRAIN, row, col));
-                    newMap.set(FOOD, row, col, get(FOOD, row, col));
+                    newMap.setContent(TERRAIN, row, col, content(TERRAIN, row, col));
+                    newMap.setContent(FOOD, row, col, content(FOOD, row, col));
                 } else {
-                    newMap.set(TERRAIN, row, col, get(TERRAIN, row + 1, col));
-                    newMap.set(FOOD, row, col, get(FOOD, row + 1, col));
+                    newMap.setContent(TERRAIN, row, col, content(TERRAIN, row + 1, col));
+                    newMap.setContent(FOOD, row, col, content(FOOD, row + 1, col));
                 }
             }
         }
@@ -229,7 +229,7 @@ public class WorldMap {
 
         // Replace obsolete terrain tile values
         tiles().forEach(tile -> {
-            byte content = get(TERRAIN, tile);
+            byte content = content(TERRAIN, tile);
             byte newContent = switch (content) {
                 case TerrainTiles.OBSOLETE_DWALL_H -> TerrainTiles.WALL_H;
                 case TerrainTiles.OBSOLETE_DWALL_V -> TerrainTiles.WALL_V;
@@ -239,7 +239,7 @@ public class WorldMap {
                 case TerrainTiles.OBSOLETE_DCORNER_NE -> TerrainTiles.ARC_NE;
                 default -> content;
             };
-            set(TERRAIN, tile, newContent);
+            setContent(TERRAIN, tile, newContent);
         });
     }
 
@@ -389,7 +389,7 @@ public class WorldMap {
      * @return stream of all tiles of this map with given content (row-by-row)
      */
     public Stream<Vector2i> tilesContaining(LayerID layerID, byte content) {
-        return tiles().filter(tile -> get(layerID, tile) == content);
+        return tiles().filter(tile -> content(layerID, tile) == content);
     }
 
     /**
@@ -455,7 +455,7 @@ public class WorldMap {
      * @return map data at position
      * @throws IllegalArgumentException if tile outside map bounds
      */
-    public byte get(LayerID layerID, int row, int col) {
+    public byte content(LayerID layerID, int row, int col) {
         requireNonNull(layerID);
         if (outOfBounds(row, col)) {
             throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
@@ -469,8 +469,8 @@ public class WorldMap {
      * @return map data at tile position
      * @throws IllegalArgumentException if tile outside map bounds
      */
-    public byte get(LayerID layerID, Vector2i tile) {
-        return get(layerID, tile.y(), tile.x());
+    public byte content(LayerID layerID, Vector2i tile) {
+        return content(layerID, tile.y(), tile.x());
     }
 
     /**
@@ -482,7 +482,7 @@ public class WorldMap {
      * @param value map value
      * @throws IllegalArgumentException if tile outside map bounds
      */
-    public void set(LayerID layerID, int row, int col, byte value) {
+    public void setContent(LayerID layerID, int row, int col, byte value) {
         requireNonNull(layerID);
         if (outOfBounds(row, col)) {
             throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
@@ -498,7 +498,7 @@ public class WorldMap {
      * @param value map value
      * @throws IllegalArgumentException if tile outside map bounds
      */
-    public void set(LayerID layerID, Vector2i tile, byte value) {
-        set(layerID, tile.y(), tile.x(), value);
+    public void setContent(LayerID layerID, Vector2i tile, byte value) {
+        setContent(layerID, tile.y(), tile.x(), value);
     }
 }

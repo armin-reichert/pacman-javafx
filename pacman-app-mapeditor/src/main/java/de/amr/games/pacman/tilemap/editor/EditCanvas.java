@@ -190,7 +190,7 @@ public class EditCanvas {
             renderer.setScaling(scaling);
             renderer.setEnergizerColor(foodColor);
             renderer.setPelletColor(foodColor);
-            worldMap().tiles().forEach(tile -> renderer.drawTile(g, tile, worldMap().get(LayerID.FOOD, tile)));
+            worldMap().tiles().forEach(tile -> renderer.drawTile(g, tile, worldMap().content(LayerID.FOOD, tile)));
         }
 
         if (editor.actorsVisibleProperty().get()) {
