@@ -531,10 +531,10 @@ public class TileMapEditor {
 
     public void setTerrainMapPropertyValue(String propertyName, String value) {
         requireNonNull(value);
-        if (editedWorldMap().hasProperty(LayerID.TERRAIN, propertyName)
-            && editedWorldMap().getProperty(LayerID.TERRAIN, propertyName).equals(value))
+        if (editedWorldMap().properties(LayerID.TERRAIN).containsKey(propertyName)
+            && editedWorldMap().properties(LayerID.TERRAIN).get(propertyName).equals(value))
             return;
-        editedWorldMap().setProperty(LayerID.TERRAIN, propertyName, value);
+        editedWorldMap().properties(LayerID.TERRAIN).put(propertyName, value);
         changeManager.setTerrainMapChanged();
         changeManager.setEdited(true);
     }
@@ -547,10 +547,10 @@ public class TileMapEditor {
 
     public void setFoodMapPropertyValue(String propertyName, String value) {
         requireNonNull(value);
-        if (editedWorldMap().hasProperty(LayerID.FOOD, propertyName)
-            && editedWorldMap().getProperty(LayerID.FOOD, propertyName).equals(value))
+        if (editedWorldMap().properties(LayerID.FOOD).containsKey(propertyName)
+            && editedWorldMap().properties(LayerID.FOOD).get(propertyName).equals(value))
             return;
-        editedWorldMap().setProperty(LayerID.FOOD, propertyName, value);
+        editedWorldMap().properties(LayerID.FOOD).put(propertyName, value);
         changeManager.setFoodMapChanged();
         changeManager.setEdited(true);
     }
@@ -1383,8 +1383,8 @@ public class TileMapEditor {
         if (worldMap.numRows() >= 20) {
             Vector2i houseMinTile = Vector2i.of(tilesX / 2 - 4, tilesY / 2 - 3);
             placeArcadeHouse(worldMap, houseMinTile);
-            worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_PAC,   formatTile(houseMinTile.plus(3, 11)));
-            worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_BONUS, formatTile(houseMinTile.plus(3, 5)));
+            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_PAC,   formatTile(houseMinTile.plus(3, 11)));
+            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_BONUS, formatTile(houseMinTile.plus(3, 5)));
         }
         worldMap.buildObstacleList();
         setDefaultColors(worldMap);
@@ -1392,10 +1392,10 @@ public class TileMapEditor {
     }
 
     private void setDefaultColors(WorldMap worldMap) {
-        worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE);
-        worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL);
-        worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, MS_PACMAN_COLOR_DOOR);
-        worldMap.setProperty(LayerID.FOOD, WorldMapProperty.COLOR_FOOD, MS_PACMAN_COLOR_FOOD);
+        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.COLOR_WALL_STROKE, MS_PACMAN_COLOR_WALL_STROKE);
+        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.COLOR_WALL_FILL, MS_PACMAN_COLOR_WALL_FILL);
+        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.COLOR_DOOR, MS_PACMAN_COLOR_DOOR);
+        worldMap.properties(LayerID.FOOD).put(WorldMapProperty.COLOR_FOOD, MS_PACMAN_COLOR_FOOD);
         changeManager.setTerrainMapChanged();
         changeManager.setFoodMapChanged();
     }
@@ -1403,10 +1403,10 @@ public class TileMapEditor {
     private void setDefaultScatterPositions(WorldMap worldMap) {
         int numCols = worldMap.numCols(), numRows = worldMap.numRows();
         if (numCols >= 3 && numRows >= 2) {
-            worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_SCATTER_RED_GHOST,    formatTile(Vector2i.of(numCols - 3, 0)));
-            worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_SCATTER_PINK_GHOST,   formatTile(Vector2i.of(2, 0)));
-            worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_SCATTER_CYAN_GHOST,   formatTile(Vector2i.of(numCols - 1, numRows - 2)));
-            worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_SCATTER_ORANGE_GHOST, formatTile(Vector2i.of(0, numRows - 2)));
+            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_SCATTER_RED_GHOST,    formatTile(Vector2i.of(numCols - 3, 0)));
+            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_SCATTER_PINK_GHOST,   formatTile(Vector2i.of(2, 0)));
+            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_SCATTER_CYAN_GHOST,   formatTile(Vector2i.of(numCols - 1, numRows - 2)));
+            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_SCATTER_ORANGE_GHOST, formatTile(Vector2i.of(0, numRows - 2)));
             changeManager.setTerrainMapChanged();
         }
     }
@@ -1439,8 +1439,8 @@ public class TileMapEditor {
 
         Vector2i oldHouseMinTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE, null);
         Vector2i oldHouseMaxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE, null);
-        worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MIN_TILE, formatTile(houseMinTile));
-        worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MAX_TILE, formatTile(houseMaxTile));
+        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MIN_TILE, formatTile(houseMinTile));
+        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MAX_TILE, formatTile(houseMaxTile));
 
         // clear tiles where house walls/doors were located (created at runtime!)
         if (oldHouseMinTile != null && oldHouseMaxTile != null) {
@@ -1451,10 +1451,10 @@ public class TileMapEditor {
         clearTerrainAreaOneSided(worldMap, houseMinTile, houseMaxTile);
         clearFoodAreaOneSided(worldMap, houseMinTile, houseMaxTile);
 
-        worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_RED_GHOST,      formatTile(houseMinTile.plus(3, -1)));
-        worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_CYAN_GHOST,     formatTile(houseMinTile.plus(1, 2)));
-        worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_PINK_GHOST,     formatTile(houseMinTile.plus(3, 2)));
-        worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_ORANGE_GHOST,   formatTile(houseMinTile.plus(5, 2)));
+        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_RED_GHOST,      formatTile(houseMinTile.plus(3, -1)));
+        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_CYAN_GHOST,     formatTile(houseMinTile.plus(1, 2)));
+        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_PINK_GHOST,     formatTile(houseMinTile.plus(3, 2)));
+        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_ORANGE_GHOST,   formatTile(houseMinTile.plus(5, 2)));
 
         // clear pellets around house
         Vector2i min = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE, null).minus(1, 1);

@@ -67,8 +67,8 @@ public interface TileMapEditorUtil {
     }
 
     static Color getColorFromMap(WorldMap worldMap, LayerID layerID, String key, Color defaultColor) {
-        if (worldMap.hasProperty(layerID, key)) {
-            String colorSpec = worldMap.getProperty(layerID, key);
+        if (worldMap.properties(layerID).containsKey(key)) {
+            String colorSpec = worldMap.properties(layerID).get(key);
             try {
                 return Color.web(colorSpec);
             } catch (Exception x) {

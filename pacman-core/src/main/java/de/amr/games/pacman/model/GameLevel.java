@@ -337,13 +337,13 @@ public class GameLevel {
     }
 
     public void addArcadeHouse() {
-        if (!worldMap.hasProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MIN_TILE)) {
+        if (!worldMap.properties(LayerID.TERRAIN).containsKey(WorldMapProperty.POS_HOUSE_MIN_TILE)) {
             Logger.warn("No house min tile found in map!");
-            worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MIN_TILE, formatTile(Vector2i.of(10, 15)));
+            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MIN_TILE, formatTile(Vector2i.of(10, 15)));
         }
-        if (!worldMap.hasProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MAX_TILE)) {
+        if (!worldMap.properties(LayerID.TERRAIN).containsKey(WorldMapProperty.POS_HOUSE_MAX_TILE)) {
             Logger.warn("No house max tile found in map!");
-            worldMap.setProperty(LayerID.TERRAIN, WorldMapProperty.POS_HOUSE_MAX_TILE, formatTile(Vector2i.of(17, 19)));
+            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MAX_TILE, formatTile(Vector2i.of(17, 19)));
         }
         Vector2i minTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE, null);
         Vector2i maxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE, null);

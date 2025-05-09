@@ -135,10 +135,10 @@ public class MazeMapGenerator {
     }
 
     private void setColors(WorldMap map) {
-        map.setProperty(LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, "#fcb5ff");
-        map.setProperty(LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, "#47b7ff");
-        map.setProperty(LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, "#dedeff");
-        map.setProperty(LayerID.FOOD,    WorldMapProperty.COLOR_FOOD, "#ffff00");
+        map.properties(LayerID.TERRAIN).put(WorldMapProperty.COLOR_DOOR, "#fcb5ff");
+        map.properties(LayerID.TERRAIN).put(WorldMapProperty.COLOR_WALL_FILL, "#47b7ff");
+        map.properties(LayerID.TERRAIN).put(WorldMapProperty.COLOR_WALL_STROKE, "#dedeff");
+        map.properties(LayerID.FOOD).put(WorldMapProperty.COLOR_FOOD, "#ffff00");
     }
 
     public static void main(String[] args)  {

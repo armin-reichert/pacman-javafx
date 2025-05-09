@@ -348,10 +348,6 @@ public class WorldMap {
         };
     }
 
-    private Map<String, String> properties(LayerID layerID) {
-        return layer(layerID).properties();
-    }
-
     public int numCols() {
         return terrainLayer.numCols();
     }
@@ -432,29 +428,17 @@ public class WorldMap {
         return configMap;
     }
 
+    public Map<String, String> properties(LayerID layerID) {
+        return layer(layerID).properties();
+    }
+
     public Stream<String> propertyNames(LayerID layerID) {
-        return layer(layerID).properties().keySet().stream().sorted();
-    }
-
-    public boolean hasProperty(LayerID layerID, String propertyName) {
-        return properties(layerID).containsKey(propertyName);
-    }
-
-    public String getProperty(LayerID layerID, String propertyName) {
-        return properties(layerID).get(propertyName);
-    }
-
-    public String getPropertyOrDefault(LayerID layerID, String propertyName, String defaultValue) {
-        return properties(layerID).getOrDefault(propertyName, defaultValue);
-    }
-
-    public void setProperty(LayerID layerID, String propertyName, String value) {
-        properties(layerID).put(propertyName, value);
+        return properties(layerID).keySet().stream().sorted();
     }
 
     public Vector2i getTileProperty(LayerID layerID, String propertyName, Vector2i defaultTile) {
-        if (hasProperty(layerID, propertyName)) {
-            String propertyValue = getProperty(layerID, propertyName);
+        if (properties(layerID).containsKey(propertyName)) {
+            String propertyValue = properties(layerID).get(propertyName);
             return parseTile(propertyValue).orElse(defaultTile);
         }
         return defaultTile;

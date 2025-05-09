@@ -129,8 +129,8 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
     }
 
     private Optional<Vector2i> specialTile(WorldMap worldMap, String propertyName) {
-        if (worldMap.hasProperty(LayerID.TERRAIN, propertyName)) {
-            return parseTile(worldMap.getProperty(LayerID.TERRAIN, propertyName));
+        if (worldMap.properties(LayerID.TERRAIN).containsKey(propertyName)) {
+            return parseTile(worldMap.properties(LayerID.TERRAIN).get(propertyName));
         }
         return Optional.empty();
     }

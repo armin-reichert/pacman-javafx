@@ -115,13 +115,13 @@ public class PropertyEditorPane extends BorderPane {
                 editor.showMessage("Property name %s is invalid".formatted(editedName), 2, MessageType.ERROR);
                 return;
             }
-            if (worldMap.hasProperty(layerID, editedName)) {
+            if (worldMap.properties(layerID).containsKey(editedName)) {
                 editor.showMessage("Property name already used", 2, MessageType.ERROR);
                 nameEditor.setText(propertyName);
                 return;
             }
             worldMap.removeProperty(layerID, propertyName);
-            worldMap.setProperty(layerID, editedName, formattedPropertyValue());
+            worldMap.properties(layerID).put(editedName, formattedPropertyValue());
             editor.showMessage("Property %s renamed to %s".formatted(propertyName, editedName), 2, MessageType.INFO);
             propertyName = editedName;
             rebuildPropertyEditors(); // sort order might have changed
@@ -131,7 +131,7 @@ public class PropertyEditorPane extends BorderPane {
 
         void storePropertyValue() {
             WorldMap worldMap = worldMapPy.get();
-            worldMap.setProperty(layerID, propertyName, formattedPropertyValue());
+            worldMap.properties(layerID).put(propertyName, formattedPropertyValue());
             editor.getChangeManager().setWorldMapChanged();
             editor.getChangeManager().setEdited(true);
         }
@@ -161,7 +161,7 @@ public class PropertyEditorPane extends BorderPane {
 
         @Override
         void updateEditorFromProperty() {
-            textEditor.setText(worldMapPy.get().getProperty(layerID, propertyName));
+            textEditor.setText(worldMapPy.get().properties(layerID).get(propertyName));
         }
 
         @Override
@@ -189,7 +189,7 @@ public class PropertyEditorPane extends BorderPane {
 
         @Override
         void updateEditorFromProperty() {
-            String propertyValue = worldMapPy.get().getProperty(layerID, propertyName);
+            String propertyValue = worldMapPy.get().properties(layerID).get(propertyName);
             colorPicker.setValue(parseColor(propertyValue));
         }
 
@@ -233,7 +233,7 @@ public class PropertyEditorPane extends BorderPane {
 
         @Override
         protected void updateEditorFromProperty() {
-            String propertyValue = worldMapPy.get().getProperty(layerID, propertyName);
+            String propertyValue = worldMapPy.get().properties(layerID).get(propertyName);
             parseTile(propertyValue).ifPresent(tile -> {
                 spinnerX.getValueFactory().setValue(tile.x());
                 spinnerY.getValueFactory().setValue(tile.y());
@@ -257,7 +257,7 @@ public class PropertyEditorPane extends BorderPane {
         var btnAddColorEntry = new Button("Color");
         btnAddColorEntry.setOnAction(e -> {
             String propertyName = "color_RENAME_ME";
-            worldMapPy.get().setProperty(layerID, propertyName, "green");
+            worldMapPy.get().properties(layerID).put(propertyName, "green");
             editController.showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
             rebuildPropertyEditors();
         });
@@ -266,7 +266,7 @@ public class PropertyEditorPane extends BorderPane {
         var btnAddPosEntry = new Button("Position");
         btnAddPosEntry.setOnAction(e -> {
             String propertyName = "pos_RENAME_ME";
-            worldMapPy.get().setProperty(layerID, propertyName, "(0,0)");
+            worldMapPy.get().properties(layerID).put(propertyName, "(0,0)");
             editController.showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
             rebuildPropertyEditors();
         });
@@ -275,7 +275,7 @@ public class PropertyEditorPane extends BorderPane {
         var btnAddGenericEntry = new Button("Text");
         btnAddGenericEntry.setOnAction(e -> {
             String propertyName = "RENAME_ME";
-            worldMapPy.get().setProperty(layerID, propertyName, "any text");
+            worldMapPy.get().properties(layerID).put(propertyName, "any text");
             editController.showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
             rebuildPropertyEditors();
         });
@@ -303,7 +303,7 @@ public class PropertyEditorPane extends BorderPane {
         Logger.debug("Rebuild editors");
         propertyEditors.clear();
         worldMapPy.get().propertyNames(layerID).forEach(propertyName -> {
-            String propertyValue = worldMapPy.get().getProperty(layerID, propertyName);
+            String propertyValue = worldMapPy.get().properties(layerID).get(propertyName);
             // primitive way of discriminating but fulfills its purpose
             if (propertyName.startsWith("color_")) {
                 propertyEditors.add(new ColorPropertyEditor(propertyName, propertyValue));
