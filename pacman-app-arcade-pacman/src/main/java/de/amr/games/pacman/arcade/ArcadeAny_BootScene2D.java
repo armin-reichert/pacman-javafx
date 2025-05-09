@@ -62,17 +62,17 @@ public class ArcadeAny_BootScene2D extends GameScene2D {
         TickTimer timer = gameState().timer();
         if (timer.betweenSeconds(1, 2) && timer.tickCount() % 4 == 0) {
             gr.fillCanvas(backgroundColor());
-            paintRandomHexCodes();
+            drawRandomHexCodes();
         } else if (timer.betweenSeconds(2, 3.5) && timer.tickCount() % 4 == 0) {
             gr.fillCanvas(backgroundColor());
-            paintRandomSpriteFragments();
+            drawRandomSpriteFragments();
         } else if (timer.atSecond(3.5)) {
             gr.fillCanvas(backgroundColor());
-            paintScreenTestGrid();
+            drawGridLines();
         }
     }
 
-    private void paintRandomHexCodes() {
+    private void drawRandomHexCodes() {
         final Vector2f sceneSize = sizeInPx();
         final Font font = arcadeFontScaledTS();
         final int numRows = (int) (sceneSize.y() / TS), numCols = (int) (sceneSize.x() / TS);
@@ -86,7 +86,7 @@ public class ArcadeAny_BootScene2D extends GameScene2D {
         }
     }
 
-    private void paintRandomSpriteFragments() {
+    private void drawRandomSpriteFragments() {
         final Vector2f sceneSize = sizeInPx();
         final int numFragmentsX = (int) (sceneSize.x() / FRAGMENT_SIZE);
         final int numFragmentsY = (int) (sceneSize.y() / FRAGMENT_SIZE);
@@ -107,8 +107,7 @@ public class ArcadeAny_BootScene2D extends GameScene2D {
             FRAGMENT_SIZE, FRAGMENT_SIZE);
     }
 
-    // was probably used to correct screen geometry
-    private void paintScreenTestGrid() {
+    private void drawGridLines() {
         Vector2f sceneSize = sizeInPx();
         Vector2i sizeInTiles = ARCADE_MAP_SIZE_IN_TILES;
         int numRows = sizeInTiles.y() / 2, numCols = sizeInTiles.y() / 2;
