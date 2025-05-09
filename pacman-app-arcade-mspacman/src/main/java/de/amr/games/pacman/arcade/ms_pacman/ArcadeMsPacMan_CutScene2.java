@@ -13,6 +13,8 @@ import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 
 import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createMsPacMan;
+import static de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createPacMan;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_MR_PACMAN_MUNCHING;
 import static de.amr.games.pacman.ui.GameAssets.ARCADE_WHITE;
@@ -43,8 +45,8 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     public void doInit() {
         game().scoreManager().setScoreVisible(true);
 
-        pacMan = ArcadeMsPacMan_ActorFactory.createPacMan();
-        msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
+        pacMan = createPacMan();
+        msPacMan = createMsPacMan();
 
         ArcadeMsPacMan_SpriteSheet spriteSheet = THE_UI_CONFIGS.current().spriteSheet();
         msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));

@@ -21,6 +21,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GameModel.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.ui.GameAssets.*;
 import static de.amr.games.pacman.ui.Globals.THE_SOUND;
@@ -80,12 +81,12 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     public void doInit() {
         game().scoreManager().setScoreVisible(true);
 
-        msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
+        msPacMan = createMsPacMan();
         ghosts = new Ghost[] {
-            ArcadeMsPacMan_ActorFactory.createRedGhost(),
-            ArcadeMsPacMan_ActorFactory.createPinkGhost(),
-            ArcadeMsPacMan_ActorFactory.createCyanGhost(),
-            ArcadeMsPacMan_ActorFactory.createOrangeGhost()
+            createRedGhost(),
+            createPinkGhost(),
+            createCyanGhost(),
+            createOrangeGhost()
         };
         marqueeTimer = new TickTimer("marquee-timer");
         presentedGhostID = 0;

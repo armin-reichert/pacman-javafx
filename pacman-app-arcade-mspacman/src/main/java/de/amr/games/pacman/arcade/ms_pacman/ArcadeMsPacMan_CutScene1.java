@@ -14,6 +14,7 @@ import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 
 import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GameModel.*;
 import static de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.HEART_SPRITE;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.games.pacman.model.actors.ActorAnimations.*;
@@ -53,10 +54,10 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     public void doInit() {
         game().scoreManager().setScoreVisible(true);
 
-        pacMan = ArcadeMsPacMan_ActorFactory.createPacMan();
-        msPacMan = ArcadeMsPacMan_ActorFactory.createMsPacMan();
-        inky = ArcadeMsPacMan_ActorFactory.createCyanGhost();
-        pinky = ArcadeMsPacMan_ActorFactory.createPinkGhost();
+        pacMan = createPacMan();
+        msPacMan = createMsPacMan();
+        inky = createCyanGhost();
+        pinky = createPinkGhost();
         heart = new Actor();
 
         ArcadeMsPacMan_SpriteSheet spriteSheet = THE_UI_CONFIGS.current().spriteSheet();
