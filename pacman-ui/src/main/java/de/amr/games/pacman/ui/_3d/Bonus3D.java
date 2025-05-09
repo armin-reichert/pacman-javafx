@@ -104,7 +104,7 @@ public class Bonus3D extends Box {
         edibleAnimation.playFromStart();
     }
 
-    public void onBonusExpired() {
+    public void expire() {
         edibleAnimation.stop();
         setVisible(false);
     }

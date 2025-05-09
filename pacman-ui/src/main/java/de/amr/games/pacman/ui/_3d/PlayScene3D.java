@@ -471,7 +471,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void onBonusExpired(GameEvent event) {
         game().level().flatMap(GameLevel::bonus).ifPresent(bonus -> {
-            level3D.bonus3D().ifPresent(Bonus3D::onBonusExpired);
+            level3D.bonus3D().ifPresent(Bonus3D::expire);
             if (bonus instanceof MovingBonus) {
                 THE_SOUND.stopBonusActiveSound();
             }
