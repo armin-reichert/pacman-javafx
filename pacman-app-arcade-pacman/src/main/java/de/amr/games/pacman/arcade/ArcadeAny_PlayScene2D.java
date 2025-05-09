@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui._2d;
+package de.amr.games.pacman.arcade;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
@@ -15,6 +15,8 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.GameAction;
 import de.amr.games.pacman.ui.GameScene;
+import de.amr.games.pacman.ui._2d.GameScene2D;
+import de.amr.games.pacman.ui._2d.LevelCompleteAnimation;
 import de.amr.games.pacman.uilib.Ufx;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
@@ -39,7 +41,7 @@ import static de.amr.games.pacman.ui.Globals.*;
  *
  * @author Armin Reichert
  */
-public class ArcadePlayScene2D extends GameScene2D {
+public class ArcadeAny_PlayScene2D extends GameScene2D {
 
     private LevelCompleteAnimation levelCompleteAnimation;
 

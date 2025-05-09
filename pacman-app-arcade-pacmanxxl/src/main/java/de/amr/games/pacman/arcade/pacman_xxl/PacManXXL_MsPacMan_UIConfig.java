@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.pacman_xxl;
 
+import de.amr.games.pacman.arcade.ArcadeAny_BootScene2D;
+import de.amr.games.pacman.arcade.ArcadeAny_PlayScene2D;
 import de.amr.games.pacman.arcade.ms_pacman.*;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
@@ -106,10 +108,10 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUIConfig {
         assets.store("ms_pacman_xxl.audio.option.selection_changed",  rm.loadAudioClip("sound/ms-select1.wav"));
         assets.store("ms_pacman_xxl.audio.option.value_changed",      rm.loadAudioClip("sound/ms-select2.wav"));
 
-        scenesByID.put("BootScene",   new ArcadeBootScene2D());
+        scenesByID.put("BootScene",   new ArcadeAny_BootScene2D());
         scenesByID.put("IntroScene",  new ArcadeMsPacMan_IntroScene());
         scenesByID.put("StartScene",  new ArcadeMsPacMan_StartScene());
-        scenesByID.put("PlayScene2D", new ArcadePlayScene2D());
+        scenesByID.put("PlayScene2D", new ArcadeAny_PlayScene2D());
         scenesByID.put("PlayScene3D", new PlayScene3D());
         scenesByID.put("CutScene1",   new ArcadeMsPacMan_CutScene1());
         scenesByID.put("CutScene2",   new ArcadeMsPacMan_CutScene2());
@@ -140,7 +142,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUIConfig {
 
     @Override
     public GameScene2D createPiPScene(Canvas canvas) {
-        var gameScene = new ArcadePlayScene2D();
+        var gameScene = new ArcadeAny_PlayScene2D();
         gameScene.setGameRenderer(createRenderer(canvas));
         return gameScene;
     }

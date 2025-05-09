@@ -2,12 +2,13 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui._2d;
+package de.amr.games.pacman.arcade;
 
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.timer.TickTimer;
+import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.image.Image;
 import javafx.scene.text.Font;
 
@@ -17,7 +18,7 @@ import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.games.pacman.ui.GameAssets.ARCADE_WHITE;
 import static de.amr.games.pacman.ui.Globals.THE_UI_CONFIGS;
 
-public class ArcadeBootScene2D extends GameScene2D {
+public class ArcadeAny_BootScene2D extends GameScene2D {
 
     private static final int FRAGMENT_SIZE = 16;
 
