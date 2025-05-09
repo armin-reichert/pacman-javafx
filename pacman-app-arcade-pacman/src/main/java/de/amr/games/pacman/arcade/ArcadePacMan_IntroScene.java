@@ -164,7 +164,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         }
         for (byte id = 0; id < 4; ++id) {
             if (ghostImageVisible[id]) {
-                gr.drawSpriteScaledCenteredOverTile(spriteSheet.ghostFacingRight(id),
+                gr.drawSpriteScaledOverSquare(spriteSheet.ghostFacingRight(id),
                     tiles_to_px(LEFT_TILE_X) + HTS, tiles_to_px(7 + 3 * id));
             }
             if (ghostCharacterVisible[id]) {

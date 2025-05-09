@@ -87,18 +87,14 @@ public interface GameRenderer {
     }
 
     /**
-     * Draws a sprite centered over a tile (e.g. the collision box of creature).
-     * <p>
-     * The position specifies the left-upper corner of the tile. Note that the sprites for
-     * Pac-Man and the ghosts are larger than one tile but their collision box is exactly one tile large.
-     * </p>
+     * Draws a sprite centered over a one-tile square.
      *
      * @param sprite sprite (region in sprite sheet) (may be null)
-     * @param tileX  x-coordinate of left-upper corner of bounding box
-     * @param tileY  y-coordinate of left-upper corner of bounding box
+     * @param originX  x-coordinate of left-upper corner of the square
+     * @param originY  y-coordinate of left-upper corner of the square
      */
-    default void drawSpriteScaledCenteredOverTile(RectArea sprite, double tileX, double tileY) {
-        drawSpriteScaledCenteredAt(sprite, tileX + HTS, tileY + HTS);
+    default void drawSpriteScaledOverSquare(RectArea sprite, double originX, double originY) {
+        drawSpriteScaledCentered(sprite, originX + HTS, originY + HTS);
     }
 
     /**
@@ -108,7 +104,7 @@ public interface GameRenderer {
      * @param centerX  x-coordinate of the center position
      * @param centerY  y-coordinate of the center position
      */
-    default void drawSpriteScaledCenteredAt(RectArea sprite, double centerX, double centerY) {
+    default void drawSpriteScaledCentered(RectArea sprite, double centerX, double centerY) {
         drawSpriteScaled(sprite, centerX - 0.5 * sprite.width(), centerY - 0.5 * sprite.height());
     }
 
@@ -121,7 +117,7 @@ public interface GameRenderer {
     default void drawActorSprite(Actor actor, RectArea sprite) {
         requireNonNull(actor);
         if (actor.isVisible() && sprite != null) {
-            drawSpriteScaledCenteredOverTile(sprite, actor.posX(), actor.posY());
+            drawSpriteScaledOverSquare(sprite, actor.posX(), actor.posY());
         }
     }
 

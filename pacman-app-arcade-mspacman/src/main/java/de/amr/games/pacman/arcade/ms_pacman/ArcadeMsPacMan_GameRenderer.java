@@ -139,7 +139,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
 
     public void drawClapperBoard(ClapperboardAnimation clapperboardAnimation, double x, double y, Font font) {
         clapperboardAnimation.currentSprite().ifPresent(sprite -> {
-            drawSpriteScaledCenteredOverTile(sprite, x, y);
+            drawSpriteScaledOverSquare(sprite, x, y);
             ctx.setFont(font);
             ctx.setFill(ARCADE_WHITE.darker());
             var numberX = scaled(x + sprite.width() - 25);
