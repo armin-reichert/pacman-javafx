@@ -33,15 +33,4 @@ public interface GameUIConfig {
 
     // 3D-only
     Node createLivesCounterShape(AssetStorage assets, double size);
-
-    default boolean is2D3DPlaySceneSwitch(GameScene prevPlayScene, GameScene nextPlayScene) {
-        if (prevPlayScene == null && nextPlayScene == null) {
-            throw new IllegalStateException("WTF is going on here, old and new play scene are both NULL!");
-        }
-        if (prevPlayScene == null) {
-            return false; // may happen
-        }
-        return gameSceneHasID(prevPlayScene, "PlayScene2D") && gameSceneHasID(nextPlayScene, "PlayScene3D")
-            || gameSceneHasID(prevPlayScene, "PlayScene3D") && gameSceneHasID(nextPlayScene, "PlayScene2D");
-    }
 }

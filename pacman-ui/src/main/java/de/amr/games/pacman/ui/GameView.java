@@ -173,7 +173,7 @@ public class GameView implements View {
         View.super.onGameEvent(event);
         // dispatch to current game scene
         currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(event));
-        updateGameScene(THE_UI_CONFIGS.current(), false);
+        updateGameScene(false);
     }
 
     @Override
@@ -226,8 +226,9 @@ public class GameView implements View {
         canvasContainer.resizeTo(width, height);
     }
 
-    public void updateGameScene(GameUIConfig gameUIConfig, boolean reloadCurrent) {
-        final GameScene nextGameScene = gameUIConfig.selectGameScene(THE_GAME_CONTROLLER);
+    public void updateGameScene(boolean reloadCurrent) {
+        GameUIConfig uiConfig = THE_UI_CONFIGS.current();
+        final GameScene nextGameScene = uiConfig.selectGameScene(THE_GAME_CONTROLLER);
         if (nextGameScene == null) {
             throw new IllegalStateException("Could not determine next game scene");
         }
@@ -240,9 +241,9 @@ public class GameView implements View {
             currentGameScene.end();
             Logger.info("Game scene ended: {}", currentGameScene.displayName());
         }
-        embedGameScene(gameUIConfig, nextGameScene);
+        embedGameScene(uiConfig, nextGameScene);
         nextGameScene.init();
-        if (gameUIConfig.is2D3DPlaySceneSwitch(currentGameScene, nextGameScene)) {
+        if (THE_UI_CONFIGS.is2D3DPlaySceneSwitch(uiConfig, currentGameScene, nextGameScene)) {
             nextGameScene.onSceneVariantSwitch(currentGameScene);
         }
         if (changing) {

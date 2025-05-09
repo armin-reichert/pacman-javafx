@@ -60,4 +60,15 @@ public class GameUIConfigManager {
     public boolean currentGameSceneIs2D() {
         return THE_UI.currentGameScene().map(GameScene2D.class::isInstance).orElse(false);
     }
+
+    public boolean is2D3DPlaySceneSwitch(GameUIConfig config, GameScene oldScene, GameScene newScene) {
+        if (oldScene == null && newScene == null) {
+            throw new IllegalStateException("WTF is going on here, both game scenes are NULL!");
+        }
+        if (oldScene == null) {
+            return false; // may happen, it's ok
+        }
+        return config.gameSceneHasID(oldScene, "PlayScene2D") && config.gameSceneHasID(newScene, "PlayScene3D")
+            || config.gameSceneHasID(oldScene, "PlayScene3D") && config.gameSceneHasID(newScene, "PlayScene2D");
+    }
 }
