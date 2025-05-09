@@ -383,7 +383,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             var numberX = x + 8;
             var numberY = y + 18; // baseline
 
-            // overpaint number from sprite sheet
+            // over-paint number from sprite sheet
             ctx().save();
             ctx().scale(scaling(), scaling());
             ctx().setFill(backgroundColorPy.get());

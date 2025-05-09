@@ -224,8 +224,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             bind(GameAction.PLAYER_DOWN,  THE_JOYPAD.key(JoypadButtonID.DOWN),  control(KeyCode.DOWN));
             bind(GameAction.PLAYER_LEFT,  THE_JOYPAD.key(JoypadButtonID.LEFT),  control(KeyCode.LEFT));
             bind(GameAction.PLAYER_RIGHT, THE_JOYPAD.key(JoypadButtonID.RIGHT), control(KeyCode.RIGHT));
-            bind(TengenMsPacMan_GameAction.TOGGLE_PAC_BOOSTER,
-                THE_JOYPAD.key(JoypadButtonID.A), THE_JOYPAD.key(JoypadButtonID.B));
+            bind(TengenMsPacMan_GameAction.TOGGLE_PAC_BOOSTER, THE_JOYPAD.key(JoypadButtonID.A), THE_JOYPAD.key(JoypadButtonID.B));
             bindCheatActions();
         }
         enableActionBindings();
@@ -251,7 +250,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void update() {
-        game().level().ifPresent(level -> {
+        gameLevel().ifPresent(level -> {
             if (level.isDemoLevel()) {
                 game().assignDemoLevelBehavior(level.pac());
             }
@@ -301,7 +300,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onGameStarted(GameEvent e) {
-        GameLevel level = game().level().orElseThrow();
+        GameLevel level = gameLevel().orElseThrow();
         boolean silent = level.isDemoLevel() || gameState() == TESTING_LEVELS || gameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {
             THE_SOUND.playGameReadySound();
@@ -310,7 +309,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        GameLevel level = game().level().orElseThrow();
+        GameLevel level = gameLevel().orElseThrow();
         setJoypadKeyBindings(level);
         if (level.isDemoLevel()) {
             level.pac().setImmune(false);
@@ -330,7 +329,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
-        GameLevel level = game().level().orElseThrow();
+        GameLevel level = gameLevel().orElseThrow();
         setJoypadKeyBindings(level);
         gr.applyMapSettings(level.worldMap());
     }
@@ -341,7 +340,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             case HUNTING -> movingCamera.focusPlayer(true);
 
             case LEVEL_COMPLETE ->
-                game().level().ifPresent(level -> {
+                gameLevel().ifPresent(level -> {
                     THE_SOUND.stopAll();
                     levelCompleteAnimation = new FlashingMazeAnimation(level);
                     levelCompleteAnimation.setActionOnFinished(THE_GAME_CONTROLLER::letCurrentStateExpire);
@@ -349,7 +348,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 });
 
             case GAME_OVER ->
-                game().level().ifPresent(level -> {
+                gameLevel().ifPresent(level -> {
                     var tengenGame = (TengenMsPacMan_GameModel) game();
                     if (tengenGame.mapCategory() != MapCategory.ARCADE) {
                         float belowHouse = centerPosBelowHouse(level).x();
@@ -387,7 +386,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onGameContinued(GameEvent e) {
-        game().level().ifPresent(level -> level.showMessage(GameLevel.Message.READY));
+        gameLevel().ifPresent(level -> level.showMessage(GameLevel.Message.READY));
     }
 
     @Override
@@ -452,7 +451,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     protected void drawSceneContent() {
-        final GameLevel level = game().level().orElse(null);
+        final GameLevel level = gameLevel().orElse(null);
         if (level == null) {
             // Scene is drawn already 2 ticks before level has been created
             Logger.warn("Tick {}: Game level not yet available, scene content not drawn", THE_CLOCK.tickCount());

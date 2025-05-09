@@ -180,54 +180,54 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         WAITING_FOR_START {
 
             @Override
-            public void onEnter(TengenMsPacMan_IntroScene intro) {
+            public void onEnter(TengenMsPacMan_IntroScene scene) {
                 timer.restartTicks(TickTimer.INDEFINITE);
-                intro.dark = false;
+                scene.dark = false;
             }
 
             @Override
-            public void onUpdate(TengenMsPacMan_IntroScene intro) {
+            public void onUpdate(TengenMsPacMan_IntroScene scene) {
                 if (timer.atSecond(7.8)) {
-                    intro.dark = true;
+                    scene.dark = true;
                 } else if (timer.atSecond(9)) {
-                    intro.dark = false;
-                    intro.sceneController.changeState(SHOWING_MARQUEE);
+                    scene.dark = false;
+                    scene.sceneController.changeState(SHOWING_MARQUEE);
                 }
             }
         },
 
         SHOWING_MARQUEE {
             @Override
-            public void onEnter(TengenMsPacMan_IntroScene intro) {
+            public void onEnter(TengenMsPacMan_IntroScene scene) {
                 timer.restartTicks(TickTimer.INDEFINITE);
 
-                intro.msPacMan = createMsPacMan();
-                intro.msPacMan.setPosition(TS * 33, ACTOR_Y);
-                intro.msPacMan.setMoveDir(Direction.LEFT);
-                intro.msPacMan.setSpeed(SPEED);
-                intro.msPacMan.setVisible(true);
+                scene.msPacMan = createMsPacMan();
+                scene.msPacMan.setPosition(TS * 33, ACTOR_Y);
+                scene.msPacMan.setMoveDir(Direction.LEFT);
+                scene.msPacMan.setSpeed(SPEED);
+                scene.msPacMan.setVisible(true);
 
-                intro.ghosts = new Ghost[] {
+                scene.ghosts = new Ghost[] {
                     createRedGhost(),
                     createCyanGhost(),
                     createPinkGhost(),
                     createOrangeGhost()
                 };
-                for (Ghost ghost : intro.ghosts) {
+                for (Ghost ghost : scene.ghosts) {
                     ghost.setPosition(TS * 33, ACTOR_Y);
                     ghost.setMoveAndWishDir(Direction.LEFT);
                     ghost.setSpeed(SPEED);
                     ghost.setState(GhostState.HUNTING_PAC);
                     ghost.setVisible(true);
                 }
-                intro.ghostIndex = 0;
+                scene.ghostIndex = 0;
 
                 var spriteSheet = (TengenMsPacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
-                intro.msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
-                intro.msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
-                intro.msPacMan.startAnimation();
+                scene.msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
+                scene.msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
+                scene.msPacMan.startAnimation();
 
-                for (Ghost ghost : intro.ghosts) {
+                for (Ghost ghost : scene.ghosts) {
                     ghost.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, ghost.id()));
                     ghost.selectAnimation(ANIM_GHOST_NORMAL);
                     ghost.startAnimation();
@@ -235,51 +235,51 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
             }
 
             @Override
-            public void onUpdate(TengenMsPacMan_IntroScene intro) {
-                intro.updateMarqueeState();
+            public void onUpdate(TengenMsPacMan_IntroScene scene) {
+                scene.updateMarqueeState();
                 if (timer.atSecond(1)) {
-                    intro.sceneController.changeState(GHOSTS_MARCHING_IN);
+                    scene.sceneController.changeState(GHOSTS_MARCHING_IN);
                 }
             }
         },
 
         GHOSTS_MARCHING_IN {
             @Override
-            public void onEnter(TengenMsPacMan_IntroScene intro) {
+            public void onEnter(TengenMsPacMan_IntroScene scene) {
                 timer.restartTicks(TickTimer.INDEFINITE);
-                intro.waitBeforeRising = 0;
+                scene.waitBeforeRising = 0;
             }
 
             @Override
-            public void onUpdate(TengenMsPacMan_IntroScene intro) {
-                intro.updateMarqueeState();
-                boolean reachedEndPosition = letGhostMarchIn(intro);
+            public void onUpdate(TengenMsPacMan_IntroScene scene) {
+                scene.updateMarqueeState();
+                boolean reachedEndPosition = letGhostMarchIn(scene);
                 if (reachedEndPosition) {
-                    if (intro.ghostIndex == 3) {
-                        intro.sceneController.changeState(MS_PACMAN_MARCHING_IN);
+                    if (scene.ghostIndex == 3) {
+                        scene.sceneController.changeState(MS_PACMAN_MARCHING_IN);
                     } else {
-                        ++intro.ghostIndex;
+                        ++scene.ghostIndex;
                     }
                 }
             }
 
-            boolean letGhostMarchIn(TengenMsPacMan_IntroScene intro) {
-                Ghost ghost = intro.ghosts[intro.ghostIndex];
+            boolean letGhostMarchIn(TengenMsPacMan_IntroScene scene) {
+                Ghost ghost = scene.ghosts[scene.ghostIndex];
                 Logger.debug("Tick {}: {} marching in", THE_CLOCK.tickCount(), ghost.name());
                 if (ghost.moveDir() == Direction.LEFT) {
                     if (ghost.posX() <= GHOST_STOP_X) {
                         ghost.setPosX(GHOST_STOP_X);
                         ghost.setMoveAndWishDir(Direction.UP);
-                        intro.waitBeforeRising = 2;
+                        scene.waitBeforeRising = 2;
                     } else {
                         ghost.move();
                         Logger.debug("{} moves {} x={}", ghost.name(), ghost.moveDir(), ghost.posX());
                     }
                 }
                 else if (ghost.moveDir() == Direction.UP) {
-                    int endPositionY = MARQUEE_Y + intro.ghostIndex * 16;
-                    if (intro.waitBeforeRising > 0) {
-                        intro.waitBeforeRising--;
+                    int endPositionY = MARQUEE_Y + scene.ghostIndex * 16;
+                    if (scene.waitBeforeRising > 0) {
+                        scene.waitBeforeRising--;
                     }
                     else if (ghost.posY() <= endPositionY) {
                         ghost.setSpeed(0);
@@ -297,18 +297,18 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
         MS_PACMAN_MARCHING_IN {
             @Override
-            public void onEnter(TengenMsPacMan_IntroScene context) {
+            public void onEnter(TengenMsPacMan_IntroScene scene) {
                 timer.restartTicks(TickTimer.INDEFINITE);
             }
 
             @Override
-            public void onUpdate(TengenMsPacMan_IntroScene intro) {
-                intro.updateMarqueeState();
-                Logger.debug("Tick {}: {} marching in", THE_CLOCK.tickCount(), intro.msPacMan.name());
-                intro.msPacMan.move();
-                if (intro.msPacMan.posX() <= MS_PAC_MAN_STOP_X) {
-                    intro.msPacMan.setSpeed(0);
-                    intro.msPacMan.resetAnimation();
+            public void onUpdate(TengenMsPacMan_IntroScene scene) {
+                scene.updateMarqueeState();
+                Logger.debug("Tick {}: {} marching in", THE_CLOCK.tickCount(), scene.msPacMan.name());
+                scene.msPacMan.move();
+                if (scene.msPacMan.posX() <= MS_PAC_MAN_STOP_X) {
+                    scene.msPacMan.setSpeed(0);
+                    scene.msPacMan.resetAnimation();
                 }
                 if (timer.atSecond(8)) {
                     // start demo level or show options
