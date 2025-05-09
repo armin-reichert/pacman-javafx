@@ -16,6 +16,7 @@ import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.*;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel.createRedGhost;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.games.pacman.ui.GameAssets.ARCADE_WHITE;
@@ -49,7 +50,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             grayScreen = false;
             tengenPresentsY = sizeInPx().y() + TS;  // just out of visible area
             tengenPresentsSpeed = 0;
-            ghost = TengenMsPacMan_ActorFactory.createRedGhost();
+            ghost = createRedGhost();
             ghost.setSpeed(0);
             ghost.hide();
             GameSpriteSheet spriteSheet = THE_UI_CONFIGS.current().spriteSheet();

@@ -26,6 +26,7 @@ import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_GHOST_NORMAL
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction.START_GAME;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.MS_PAC_MAN_TITLE_SPRITE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.games.pacman.ui.Globals.*;
@@ -200,17 +201,17 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
             public void onEnter(TengenMsPacMan_IntroScene intro) {
                 timer.restartTicks(TickTimer.INDEFINITE);
 
-                intro.msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
+                intro.msPacMan = createMsPacMan();
                 intro.msPacMan.setPosition(TS * 33, ACTOR_Y);
                 intro.msPacMan.setMoveDir(Direction.LEFT);
                 intro.msPacMan.setSpeed(SPEED);
                 intro.msPacMan.setVisible(true);
 
                 intro.ghosts = new Ghost[] {
-                    TengenMsPacMan_ActorFactory.createRedGhost(),
-                    TengenMsPacMan_ActorFactory.createCyanGhost(),
-                    TengenMsPacMan_ActorFactory.createPinkGhost(),
-                    TengenMsPacMan_ActorFactory.createOrangeGhost()
+                    createRedGhost(),
+                    createCyanGhost(),
+                    createPinkGhost(),
+                    createOrangeGhost()
                 };
                 for (Ghost ghost : intro.ghosts) {
                     ghost.setPosition(TS * 33, ACTOR_Y);

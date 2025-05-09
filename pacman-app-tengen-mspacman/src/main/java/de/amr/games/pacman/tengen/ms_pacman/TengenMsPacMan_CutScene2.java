@@ -14,6 +14,8 @@ import javafx.scene.media.MediaPlayer;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_MR_PACMAN_MUNCHING;
 import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel.createMsPacMan;
+import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel.createPacMan;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.games.pacman.ui.Globals.*;
 
@@ -52,8 +54,8 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     public void doInit() {
         t = -1;
         game().scoreManager().setScoreVisible(false);
-        msPacMan = TengenMsPacMan_ActorFactory.createMsPacMan();
-        pacMan = TengenMsPacMan_ActorFactory.createPacMan();
+        msPacMan = createMsPacMan();
+        pacMan = createPacMan();
         var spriteSheet = (TengenMsPacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
         msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         pacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
