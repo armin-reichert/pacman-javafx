@@ -21,6 +21,12 @@ import java.util.Map;
  */
 public class ArcadePacMan_GhostAnimations extends SpriteAnimationSet implements GhostAnimations {
 
+    // Pac-Man game specific
+    public static final String ANIM_BLINKY_DAMAGED   = "damaged";
+    public static final String ANIM_BLINKY_NAIL_DRESS_RAPTURE = "stretched";
+    public static final String ANIM_BLINKY_PATCHED   = "patched";
+    public static final String ANIM_BLINKY_NAKED     = "naked";
+
     public ArcadePacMan_GhostAnimations(ArcadePacMan_SpriteSheet spriteSheet, byte ghostID) {
 
         var normal = SpriteAnimation
@@ -79,10 +85,10 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationSet implements 
             GhostAnimations.ANIM_GHOST_FLASHING, flashing,
             GhostAnimations.ANIM_GHOST_EYES, eyes,
             GhostAnimations.ANIM_GHOST_NUMBER, number,
-            GhostAnimations.ANIM_BLINKY_DAMAGED, damaged,
-            GhostAnimations.ANIM_BLINKY_NAIL_DRESS_RAPTURE, stretching,
-            GhostAnimations.ANIM_BLINKY_PATCHED, patched,
-            GhostAnimations.ANIM_BLINKY_NAKED, naked));
+            ANIM_BLINKY_DAMAGED, damaged,
+            ANIM_BLINKY_NAIL_DRESS_RAPTURE, stretching,
+            ANIM_BLINKY_PATCHED, patched,
+            ANIM_BLINKY_NAKED, naked));
 
         eyes.play();
         frightened.play();

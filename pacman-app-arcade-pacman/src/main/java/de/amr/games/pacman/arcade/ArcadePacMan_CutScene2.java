@@ -57,7 +57,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
         var blinkyAnimations = new ArcadePacMan_GhostAnimations(spriteSheet, blinky.id());
         blinkyNormal = blinkyAnimations.animation(GhostAnimations.ANIM_GHOST_NORMAL);
-        nailDressRaptureAnimation = blinkyAnimations.animation(GhostAnimations.ANIM_BLINKY_NAIL_DRESS_RAPTURE);
+        nailDressRaptureAnimation = blinkyAnimations.animation(ArcadePacMan_GhostAnimations.ANIM_BLINKY_NAIL_DRESS_RAPTURE);
         blinkyDamaged = blinkyAnimations.animation(ArcadePacMan_GhostAnimations.ANIM_BLINKY_DAMAGED);
         blinky.setAnimations(blinkyAnimations);
 
@@ -100,9 +100,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             }
             case ANIMATION_START + 198 -> nailDressRaptureAnimation.setFrameIndex(STRETCHED_S);
             case ANIMATION_START + 230 -> nailDressRaptureAnimation.setFrameIndex(STRETCHED_M);
-            case ANIMATION_START + 262 -> {
-                nailDressRaptureAnimation.setFrameIndex(STRETCHED_L);
-            }
+            case ANIMATION_START + 262 -> nailDressRaptureAnimation.setFrameIndex(STRETCHED_L);
             case ANIMATION_START + 296 -> {
                 blinky.setSpeed(0);
                 blinky.stopAnimation();
