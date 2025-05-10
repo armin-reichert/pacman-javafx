@@ -76,7 +76,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setPosition(LEFT_BORDER, LOWER_LANE);
             pacMan.setSpeed(1f);
-            pacMan.selectAnimation("pacman_munching"); //TODO constant?
+            pacMan.selectAnimation(TengenMsPacMan_PacAnimations.PAC_MAN_MUNCHING);
             pacMan.startAnimation();
             pacMan.show();
 

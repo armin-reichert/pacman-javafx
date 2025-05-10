@@ -97,7 +97,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         else if (t == 130) {
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setPosition(TS * 3, GROUND_Y - 4);
-            pacMan.selectAnimation("pacman_munching");
+            pacMan.selectAnimation(TengenMsPacMan_PacAnimations.PAC_MAN_MUNCHING);
             pacMan.show();
 
             msPacMan.setMoveDir(Direction.RIGHT);
