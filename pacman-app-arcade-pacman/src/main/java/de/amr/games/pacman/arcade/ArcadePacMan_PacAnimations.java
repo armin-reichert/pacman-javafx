@@ -8,7 +8,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.actors.Actor;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.actors.PacAnimations;
+import de.amr.games.pacman.model.actors.AnyPacAnimations;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.ui._2d.SpriteAnimationSet;
 import de.amr.games.pacman.uilib.animation.SpriteAnimation;
@@ -21,22 +21,22 @@ import static java.util.Objects.requireNonNull;
 /**
  * @author Armin Reichert
  */
-public class ArcadePacMan_PacAnimations extends SpriteAnimationSet implements PacAnimations {
+public class ArcadePacMan_PacAnimations extends SpriteAnimationSet implements AnyPacAnimations {
 
-    public static final String ANIM_BIG_PAC_MAN = "big_pacman";
+    public static final String BIG_PAC_MAN = "big_pac_man";
 
     public ArcadePacMan_PacAnimations(ArcadePacMan_SpriteSheet spriteSheet) {
         requireNonNull(spriteSheet);
         add(Map.of(
-            PacAnimations.ANIM_MUNCHING,
+            AnyPacAnimations.MUNCHING,
             SpriteAnimation.spriteSheet(spriteSheet)
                 .sprites(spriteSheet.pacMunchingSprites(Direction.LEFT)).endLoop(),
 
-            PacAnimations.ANIM_DYING,
+            AnyPacAnimations.DYING,
             SpriteAnimation.spriteSheet(spriteSheet)
                 .sprites(spriteSheet.pacDyingSprites()).frameTicks(8).end(),
 
-            ANIM_BIG_PAC_MAN,
+            BIG_PAC_MAN,
             SpriteAnimation.spriteSheet(spriteSheet)
                 .sprites(spriteSheet.bigPacManSprites()).frameTicks(3).endLoop()
         ));
@@ -46,7 +46,7 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationSet implements Pa
     protected RectArea[] selectedSprites(SpriteSheet spriteSheet, Actor actor) {
         GameSpriteSheet gss = (GameSpriteSheet) spriteSheet;
         if (actor instanceof Pac pac) {
-            if (isCurrentAnimationID(PacAnimations.ANIM_MUNCHING)) {
+            if (isCurrentAnimationID(AnyPacAnimations.MUNCHING)) {
                 return gss.pacMunchingSprites(pac.moveDir());
             }
         }

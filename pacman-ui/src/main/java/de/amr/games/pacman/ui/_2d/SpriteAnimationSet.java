@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui._2d;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.actors.Actor;
 import de.amr.games.pacman.model.actors.Animations;
-import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.model.actors.AnimatedActor2D;
 import de.amr.games.pacman.uilib.animation.SpriteAnimation;
 import de.amr.games.pacman.uilib.assets.SpriteSheet;

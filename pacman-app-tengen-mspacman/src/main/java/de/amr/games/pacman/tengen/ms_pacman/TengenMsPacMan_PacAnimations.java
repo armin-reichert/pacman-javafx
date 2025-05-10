@@ -7,7 +7,7 @@ package de.amr.games.pacman.tengen.ms_pacman;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.actors.Actor;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.actors.PacAnimations;
+import de.amr.games.pacman.model.actors.AnyPacAnimations;
 import de.amr.games.pacman.ui._2d.SpriteAnimationSet;
 import de.amr.games.pacman.uilib.animation.SpriteAnimation;
 import de.amr.games.pacman.uilib.assets.SpriteSheet;
@@ -19,17 +19,16 @@ import static java.util.Objects.requireNonNull;
 /**
  * @author Armin Reichert
  */
-public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet implements PacAnimations {
+public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet implements AnyPacAnimations {
 
-    public static final String ANIM_PAC_MAN_MUNCHING = "pacman_munching";
-
-    public static final String ANIM_MS_PACMAN_BOOSTER      = "ms_pacman_booster";
-    public static final String ANIM_MR_PACMAN_BOOSTER      = "pacman_booster";
-    public static final String ANIM_MS_PACMAN_WAVING_HAND  = "ms_pacman_waving_hand";
-    public static final String ANIM_MR_PACMAN_WAVING_HAND  = "mr_pacman_waving_hand";
-    public static final String ANIM_MS_PACMAN_TURNING_AWAY = "ms_pacman_turning_away";
-    public static final String ANIM_MR_PACMAN_TURNING_AWAY = "mr_pacman_turning_away";
-    public static final String ANIM_JUNIOR_PACMAN          = "junior";
+    public static final String MS_PAC_MAN_BOOSTER = "ms_pac_man_booster";
+    public static final String MS_PAC_MAN_WAVING_HAND = "ms_pac_man_waving_hand";
+    public static final String MS_PAC_MAN_TURNING_AWAY = "ms_pac_man_turning_away";
+    public static final String PAC_MAN_MUNCHING = "pac_man_munching";
+    public static final String PAC_MAN_BOOSTER = "pac_man_booster";
+    public static final String PAC_MAN_WAVING_HAND = "pac_man_waving_hand";
+    public static final String PAC_MAN_TURNING_AWAY = "pac_man_turning_away";
+    public static final String JUNIOR = "junior";
 
     public TengenMsPacMan_PacAnimations(TengenMsPacMan_SpriteSheet spriteSheet) {
         requireNonNull(spriteSheet);
@@ -92,17 +91,17 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet implements 
             .end();
 
         add(Map.of(
-            ANIM_DYING, msPacmanDying,
-            ANIM_MUNCHING, msPacManMunching,
-            ANIM_MS_PACMAN_BOOSTER, msPacManMunchingBooster,
-            ANIM_MS_PACMAN_WAVING_HAND, msPacManWavingHand,
-            ANIM_MS_PACMAN_TURNING_AWAY, msPacManTurningAway,
+            DYING, msPacmanDying,
+            MUNCHING, msPacManMunching,
+            MS_PAC_MAN_BOOSTER, msPacManMunchingBooster,
+            MS_PAC_MAN_WAVING_HAND, msPacManWavingHand,
+            MS_PAC_MAN_TURNING_AWAY, msPacManTurningAway,
 
-            ANIM_PAC_MAN_MUNCHING, mrPacManMunching,
-            ANIM_MR_PACMAN_BOOSTER, mrPacManMunchingBooster,
-            ANIM_MR_PACMAN_WAVING_HAND, mrPacManWavingHand,
-            ANIM_MR_PACMAN_TURNING_AWAY, mrPacManTurningAway,
-            ANIM_JUNIOR_PACMAN, junior
+            PAC_MAN_MUNCHING, mrPacManMunching,
+            PAC_MAN_BOOSTER, mrPacManMunchingBooster,
+            PAC_MAN_WAVING_HAND, mrPacManWavingHand,
+            PAC_MAN_TURNING_AWAY, mrPacManTurningAway,
+            JUNIOR, junior
         ));
     }
 
@@ -110,13 +109,13 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet implements 
     protected RectArea[] selectedSprites(SpriteSheet spriteSheet, Actor actor) {
         TengenMsPacMan_SpriteSheet gss = (TengenMsPacMan_SpriteSheet) spriteSheet;
         if (actor instanceof Pac msPacMan) {
-            if (isCurrentAnimationID(ANIM_MUNCHING)) {
+            if (isCurrentAnimationID(MUNCHING)) {
                 return TengenMsPacMan_SpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT;
             }
-            if (isCurrentAnimationID(ANIM_MS_PACMAN_BOOSTER)) {
+            if (isCurrentAnimationID(MS_PAC_MAN_BOOSTER)) {
                 return TengenMsPacMan_SpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER;
             }
-            if (isCurrentAnimationID(ANIM_PAC_MAN_MUNCHING)) {
+            if (isCurrentAnimationID(PAC_MAN_MUNCHING)) {
                 return gss.pacManMunchingSprites(msPacMan.moveDir());
             }
         }

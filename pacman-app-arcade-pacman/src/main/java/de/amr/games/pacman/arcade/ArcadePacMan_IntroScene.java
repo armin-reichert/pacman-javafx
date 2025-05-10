@@ -274,7 +274,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 scene.pacMan.setMoveDir(Direction.LEFT);
                 scene.pacMan.setSpeed(CHASE_SPEED);
                 scene.pacMan.show();
-                scene.pacMan.selectAnimation(PacAnimations.ANIM_MUNCHING);
+                scene.pacMan.selectAnimation(AnyPacAnimations.MUNCHING);
                 scene.pacMan.startAnimation();
                 Stream.of(scene.ghosts).forEach(ghost -> {
                     ghost.setState(GhostState.HUNTING_PAC);

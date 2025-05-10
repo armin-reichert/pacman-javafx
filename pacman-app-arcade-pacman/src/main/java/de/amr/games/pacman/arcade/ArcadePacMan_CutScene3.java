@@ -9,7 +9,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.actors.PacAnimations;
+import de.amr.games.pacman.model.actors.AnyPacAnimations;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -69,7 +69,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
                 pac.setMoveDir(Direction.LEFT);
                 pac.setSpeed(1.25f);
                 pac.show();
-                pac.selectAnimation(PacAnimations.ANIM_MUNCHING);
+                pac.selectAnimation(AnyPacAnimations.MUNCHING);
                 pac.startAnimation();
                 blinky.centerOverTile(Vector2i.of(35, 20));
                 blinky.setMoveAndWishDir(Direction.LEFT);

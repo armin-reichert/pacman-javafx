@@ -7,7 +7,7 @@ package de.amr.games.pacman.arcade.ms_pacman;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.actors.PacAnimations;
+import de.amr.games.pacman.model.actors.AnyPacAnimations;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
@@ -118,10 +118,10 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     private void enterStateChasing() {
         pacMan.setMoveDir(Direction.RIGHT);
-        pacMan.selectAnimation(ArcadeMsPacMan_PacAnimations.ANIM_PAC_MAN_MUNCHING);
+        pacMan.selectAnimation(ArcadeMsPacMan_PacAnimations.PAC_MAN_MUNCHING);
         pacMan.startAnimation();
         msPacMan.setMoveDir(Direction.RIGHT);
-        msPacMan.selectAnimation(PacAnimations.ANIM_MUNCHING);
+        msPacMan.selectAnimation(AnyPacAnimations.MUNCHING);
         msPacMan.startAnimation();
 
         setSceneState(STATE_CHASING, TickTimer.INDEFINITE);

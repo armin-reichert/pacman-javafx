@@ -140,7 +140,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(TS * (-2), UPPER_LANE_Y);
         pacMan.setSpeed(SPEED_PAC_CHASING);
-        pacMan.selectAnimation(ArcadeMsPacMan_PacAnimations.ANIM_PAC_MAN_MUNCHING);
+        pacMan.selectAnimation(ArcadeMsPacMan_PacAnimations.PAC_MAN_MUNCHING);
         pacMan.startAnimation();
         pacMan.show();
 
@@ -154,7 +154,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.setPosition(TS * 30, LOWER_LANE_Y);
         msPacMan.setSpeed(SPEED_PAC_CHASING);
-        msPacMan.selectAnimation(PacAnimations.ANIM_MUNCHING);
+        msPacMan.selectAnimation(AnyPacAnimations.MUNCHING);
         msPacMan.startAnimation();
         msPacMan.show();
 

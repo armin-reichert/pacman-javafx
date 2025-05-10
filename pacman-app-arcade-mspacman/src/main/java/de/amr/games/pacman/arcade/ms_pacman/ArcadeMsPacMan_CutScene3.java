@@ -9,7 +9,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.Actor;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.actors.PacAnimations;
+import de.amr.games.pacman.model.actors.AnyPacAnimations;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.uilib.animation.SpriteAnimation;
 import javafx.scene.media.MediaPlayer;
@@ -136,12 +136,12 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     private void enterStateDeliverJunior() {
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(TS * 3, LANE_Y - 4);
-        pacMan.selectAnimation(ArcadeMsPacMan_PacAnimations.ANIM_PAC_MAN_MUNCHING);
+        pacMan.selectAnimation(ArcadeMsPacMan_PacAnimations.PAC_MAN_MUNCHING);
         pacMan.show();
 
         msPacMan.setMoveDir(Direction.RIGHT);
         msPacMan.setPosition(TS * 5, LANE_Y - 4);
-        msPacMan.selectAnimation(PacAnimations.ANIM_MUNCHING);
+        msPacMan.selectAnimation(AnyPacAnimations.MUNCHING);
         msPacMan.show();
 
         stork.setPosition(TS * 30, TS * 12);
