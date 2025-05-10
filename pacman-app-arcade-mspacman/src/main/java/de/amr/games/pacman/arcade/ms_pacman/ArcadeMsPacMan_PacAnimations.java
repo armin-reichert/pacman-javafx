@@ -7,8 +7,8 @@ package de.amr.games.pacman.arcade.ms_pacman;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.actors.Actor;
+import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.actors.AnyPacAnimations;
 import de.amr.games.pacman.ui._2d.SpriteAnimationSet;
 import de.amr.games.pacman.uilib.animation.SpriteAnimation;
 import de.amr.games.pacman.uilib.assets.SpriteSheet;
@@ -20,7 +20,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * @author Armin Reichert
  */
-public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationSet implements AnyPacAnimations {
+public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationSet implements Animations {
 
     public static final String PAC_MAN_MUNCHING = "pac_man_munching";
 
@@ -45,8 +45,8 @@ public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationSet implements 
             .endLoop();
 
         add(Map.of(
-            AnyPacAnimations.MUNCHING, munching,
-            AnyPacAnimations.DYING, dying,
+            Animations.ANY_PAC_MUNCHING, munching,
+            Animations.ANY_PAC_DYING, dying,
             PAC_MAN_MUNCHING, husbandMunching
         ));
     }
@@ -55,7 +55,7 @@ public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationSet implements 
     protected RectArea[] selectedSprites(SpriteSheet spriteSheet, Actor actor) {
         ArcadeMsPacMan_SpriteSheet gss = (ArcadeMsPacMan_SpriteSheet) spriteSheet;
         if (actor instanceof Pac msPacMan) {
-            if (isCurrentAnimationID(AnyPacAnimations.MUNCHING)) {
+            if (isCurrentAnimationID(Animations.ANY_PAC_MUNCHING)) {
                 return gss.pacMunchingSprites(msPacMan.moveDir());
             }
             if (isCurrentAnimationID(PAC_MAN_MUNCHING)) {

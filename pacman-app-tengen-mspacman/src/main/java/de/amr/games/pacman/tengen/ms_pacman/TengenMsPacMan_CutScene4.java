@@ -4,8 +4,8 @@ import de.amr.games.pacman.Globals;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.actors.AnyPacAnimations;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.MediaPlayer;
@@ -83,7 +83,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             msPacMan.setMoveDir(Direction.LEFT);
             msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
             msPacMan.setSpeed(1f);
-            msPacMan.selectAnimation(AnyPacAnimations.MUNCHING);
+            msPacMan.selectAnimation(Animations.ANY_PAC_MUNCHING);
             msPacMan.startAnimation();
             msPacMan.show();
         }

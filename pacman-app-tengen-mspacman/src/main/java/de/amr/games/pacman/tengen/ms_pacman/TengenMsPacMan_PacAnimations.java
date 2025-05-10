@@ -6,8 +6,8 @@ package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.actors.Actor;
+import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.actors.AnyPacAnimations;
 import de.amr.games.pacman.ui._2d.SpriteAnimationSet;
 import de.amr.games.pacman.uilib.animation.SpriteAnimation;
 import de.amr.games.pacman.uilib.assets.SpriteSheet;
@@ -19,7 +19,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * @author Armin Reichert
  */
-public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet implements AnyPacAnimations {
+public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet implements Animations {
 
     public static final String MS_PAC_MAN_BOOSTER = "ms_pac_man_booster";
     public static final String MS_PAC_MAN_WAVING_HAND = "ms_pac_man_waving_hand";
@@ -91,8 +91,8 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet implements 
             .end();
 
         add(Map.of(
-            DYING, msPacmanDying,
-            MUNCHING, msPacManMunching,
+            ANY_PAC_DYING, msPacmanDying,
+            ANY_PAC_MUNCHING, msPacManMunching,
             MS_PAC_MAN_BOOSTER, msPacManMunchingBooster,
             MS_PAC_MAN_WAVING_HAND, msPacManWavingHand,
             MS_PAC_MAN_TURNING_AWAY, msPacManTurningAway,
@@ -109,7 +109,7 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet implements 
     protected RectArea[] selectedSprites(SpriteSheet spriteSheet, Actor actor) {
         TengenMsPacMan_SpriteSheet gss = (TengenMsPacMan_SpriteSheet) spriteSheet;
         if (actor instanceof Pac msPacMan) {
-            if (isCurrentAnimationID(MUNCHING)) {
+            if (isCurrentAnimationID(ANY_PAC_MUNCHING)) {
                 return TengenMsPacMan_SpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT;
             }
             if (isCurrentAnimationID(MS_PAC_MAN_BOOSTER)) {

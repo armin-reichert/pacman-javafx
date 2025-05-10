@@ -12,8 +12,8 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.MapSelectionMode;
+import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.GhostAnimations;
-import de.amr.games.pacman.model.actors.AnyPacAnimations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.GameUIConfig;
@@ -247,7 +247,7 @@ public class PacManXXL_StartPage implements StartPage {
                 case PACMAN_XXL -> pac.setAnimations(new ArcadePacMan_PacAnimations(config.spriteSheet()));
                 case MS_PACMAN_XXL -> pac.setAnimations(new ArcadeMsPacMan_PacAnimations(config.spriteSheet()));
             }
-            pac.selectAnimation(AnyPacAnimations.MUNCHING);
+            pac.selectAnimation(Animations.ANY_PAC_MUNCHING);
             pac.startAnimation();
 
             for (Ghost ghost : ghosts) {

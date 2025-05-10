@@ -27,7 +27,7 @@ public class Pac extends Creature implements AnimatedActor2D {
     private long starvingTicks;
     private Steering autopilot;
     private boolean usingAutopilot;
-    private AnyPacAnimations animations;
+    private Animations animations;
     private boolean immune;
 
     private final TickTimer powerTimer = new TickTimer("PacPowerTimer");
@@ -62,7 +62,7 @@ public class Pac extends Creature implements AnimatedActor2D {
         return this;
     }
 
-    public void setAnimations(AnyPacAnimations animations) {
+    public void setAnimations(Animations animations) {
         this.animations = animations;
     }
 
@@ -95,7 +95,7 @@ public class Pac extends Creature implements AnimatedActor2D {
         starvingTicks = 0;
         corneringSpeedUp = 1.5f; // no real cornering implementation but better than nothing
         if (animations != null) {
-            animations.select(AnyPacAnimations.MUNCHING, 0);
+            animations.select(Animations.ANY_PAC_MUNCHING, 0);
         }
     }
 
@@ -151,7 +151,7 @@ public class Pac extends Creature implements AnimatedActor2D {
         setSpeed(0);
         setRestingTicks(Pac.REST_INDEFINITELY);
         animations.stop();
-        selectAnimation(AnyPacAnimations.MUNCHING);
+        selectAnimation(Animations.ANY_PAC_MUNCHING);
         animations.reset();
     }
 

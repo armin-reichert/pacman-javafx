@@ -91,7 +91,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
         var spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
         msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));
-        msPacMan.selectAnimation(AnyPacAnimations.MUNCHING);
+        msPacMan.selectAnimation(Animations.ANY_PAC_MUNCHING);
         for (Ghost ghost : ghosts) {
             ghost.setAnimations(new ArcadeMsPacMan_GhostAnimations(spriteSheet, ghost.id()));
             ghost.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
@@ -186,7 +186,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 scene.msPacMan.setMoveDir(Direction.LEFT);
                 scene.msPacMan.setSpeed(SPEED);
                 scene.msPacMan.setVisible(true);
-                scene.msPacMan.selectAnimation(AnyPacAnimations.MUNCHING);
+                scene.msPacMan.selectAnimation(Animations.ANY_PAC_MUNCHING);
                 scene.msPacMan.startAnimation();
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setPosition(TS * 33.5f, TS * 20);

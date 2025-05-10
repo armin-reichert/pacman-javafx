@@ -7,8 +7,8 @@ package de.amr.games.pacman.tengen.ms_pacman;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.nes.JoypadButtonID;
+import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.actors.AnyPacAnimations;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 
@@ -77,7 +77,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         else if (t == 270) {
             msPacMan.setPosition(LEFT_BORDER, UPPER_LANE);
             msPacMan.setMoveDir(Direction.RIGHT);
-            msPacMan.selectAnimation(AnyPacAnimations.MUNCHING);
+            msPacMan.selectAnimation(Animations.ANY_PAC_MUNCHING);
             msPacMan.startAnimation();
             msPacMan.setSpeed(2.0f);
             msPacMan.show();

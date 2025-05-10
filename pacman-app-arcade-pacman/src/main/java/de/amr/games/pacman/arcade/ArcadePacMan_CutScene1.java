@@ -6,10 +6,10 @@ package de.amr.games.pacman.arcade;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.actors.AnyPacAnimations;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -63,7 +63,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             pac.placeAtTile(29, 20, 0, 0);
             pac.setMoveDir(Direction.LEFT);
             pac.setSpeed(1.25f);
-            pac.selectAnimation(AnyPacAnimations.MUNCHING);
+            pac.selectAnimation(Animations.ANY_PAC_MUNCHING);
             pac.startAnimation();
             pac.show();
 
