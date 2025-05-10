@@ -9,7 +9,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.lib.fsm.FsmState;
-import de.amr.games.pacman.lib.nes.JoypadButtonID;
+import de.amr.games.pacman.lib.nes.JoypadButton;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.ui._2d.GameScene2D;
@@ -61,8 +61,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void bindActions() {
-        bind(START_GAME, THE_JOYPAD.key(JoypadButtonID.START));
-        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, THE_JOYPAD.key(JoypadButtonID.SELECT));
+        bind(START_GAME, THE_JOYPAD.key(JoypadButton.START));
+        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, THE_JOYPAD.key(JoypadButton.SELECT));
     }
 
     @Override

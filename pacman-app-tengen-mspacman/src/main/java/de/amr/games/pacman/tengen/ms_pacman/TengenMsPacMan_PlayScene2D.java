@@ -8,7 +8,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.nes.JoypadButtonID;
+import de.amr.games.pacman.lib.nes.JoypadButton;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -218,13 +218,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     private void setJoypadKeyBindings(GameLevel level) {
         if (level.isDemoLevel()) {
-            bind(QUIT_DEMO_LEVEL, THE_JOYPAD.key(JoypadButtonID.START));
+            bind(QUIT_DEMO_LEVEL, THE_JOYPAD.key(JoypadButton.START));
         } else {
-            bind(GameAction.PLAYER_UP,    THE_JOYPAD.key(JoypadButtonID.UP),    control(KeyCode.UP));
-            bind(GameAction.PLAYER_DOWN,  THE_JOYPAD.key(JoypadButtonID.DOWN),  control(KeyCode.DOWN));
-            bind(GameAction.PLAYER_LEFT,  THE_JOYPAD.key(JoypadButtonID.LEFT),  control(KeyCode.LEFT));
-            bind(GameAction.PLAYER_RIGHT, THE_JOYPAD.key(JoypadButtonID.RIGHT), control(KeyCode.RIGHT));
-            bind(TengenMsPacMan_GameAction.TOGGLE_PAC_BOOSTER, THE_JOYPAD.key(JoypadButtonID.A), THE_JOYPAD.key(JoypadButtonID.B));
+            bind(GameAction.PLAYER_UP,    THE_JOYPAD.key(JoypadButton.UP),    control(KeyCode.UP));
+            bind(GameAction.PLAYER_DOWN,  THE_JOYPAD.key(JoypadButton.DOWN),  control(KeyCode.DOWN));
+            bind(GameAction.PLAYER_LEFT,  THE_JOYPAD.key(JoypadButton.LEFT),  control(KeyCode.LEFT));
+            bind(GameAction.PLAYER_RIGHT, THE_JOYPAD.key(JoypadButton.RIGHT), control(KeyCode.RIGHT));
+            bind(TengenMsPacMan_GameAction.TOGGLE_PAC_BOOSTER, THE_JOYPAD.key(JoypadButton.A), THE_JOYPAD.key(JoypadButton.B));
             bindCheatActions();
         }
         enableActionBindings();

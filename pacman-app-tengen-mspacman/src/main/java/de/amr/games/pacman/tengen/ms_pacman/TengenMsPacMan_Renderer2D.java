@@ -8,7 +8,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.nes.JoypadButtonID;
+import de.amr.games.pacman.lib.nes.JoypadButton;
 import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
@@ -421,16 +421,16 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx().setFont(Font.font("Sans", scaled(TS)));
         ctx().setStroke(Color.WHITE);
         ctx().strokeText(line1.formatted(
-                joypad.key(JoypadButtonID.SELECT),
-                joypad.key(JoypadButtonID.START),
-                joypad.key(JoypadButtonID.B),
-                joypad.key(JoypadButtonID.A)
+                joypad.key(JoypadButton.SELECT),
+                joypad.key(JoypadButton.START),
+                joypad.key(JoypadButton.B),
+                joypad.key(JoypadButton.A)
         ), 0, scaled(TS));
         ctx().strokeText(line2.formatted(
-                joypad.key(JoypadButtonID.UP),
-                joypad.key(JoypadButtonID.DOWN),
-                joypad.key(JoypadButtonID.LEFT),
-                joypad.key(JoypadButtonID.RIGHT)
+                joypad.key(JoypadButton.UP),
+                joypad.key(JoypadButton.DOWN),
+                joypad.key(JoypadButton.LEFT),
+                joypad.key(JoypadButton.RIGHT)
         ), 0, scaled(2*TS));
 
     }

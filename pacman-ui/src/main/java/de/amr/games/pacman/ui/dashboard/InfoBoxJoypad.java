@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.dashboard;
 
-import de.amr.games.pacman.lib.nes.JoypadButtonID;
+import de.amr.games.pacman.lib.nes.JoypadButton;
 import de.amr.games.pacman.ui.PacManGamesUI;
 import de.amr.games.pacman.uilib.assets.ResourceManager;
 import javafx.scene.image.ImageView;
@@ -26,20 +26,20 @@ public class InfoBoxJoypad extends InfoBox {
         String indent = "  "; // Urgh
         addLabeledValue("[SELECT]   [START]", () -> "%s%s  %s".formatted(
             indent,
-            joypadKeyBinding.key(JoypadButtonID.SELECT).getDisplayText(),
-            joypadKeyBinding.key(JoypadButtonID.START).getDisplayText())
+            joypadKeyBinding.key(JoypadButton.SELECT).getDisplayText(),
+            joypadKeyBinding.key(JoypadButton.START).getDisplayText())
         );
         addLabeledValue("[B]  [A]", () -> "%s%s   %s".formatted(
             indent,
-            joypadKeyBinding.key(JoypadButtonID.B).getDisplayText(),
-            joypadKeyBinding.key(JoypadButtonID.A).getDisplayText())
+            joypadKeyBinding.key(JoypadButton.B).getDisplayText(),
+            joypadKeyBinding.key(JoypadButton.A).getDisplayText())
         );
         addLabeledValue("UP/DOWN/LEFT/RIGHT", () -> "%s%s  %s  %s  %s".formatted(
             indent,
-            joypadKeyBinding.key(JoypadButtonID.UP).getDisplayText(),
-            joypadKeyBinding.key(JoypadButtonID.DOWN).getDisplayText(),
-            joypadKeyBinding.key(JoypadButtonID.LEFT).getDisplayText(),
-            joypadKeyBinding.key(JoypadButtonID.RIGHT).getDisplayText())
+            joypadKeyBinding.key(JoypadButton.UP).getDisplayText(),
+            joypadKeyBinding.key(JoypadButton.DOWN).getDisplayText(),
+            joypadKeyBinding.key(JoypadButton.LEFT).getDisplayText(),
+            joypadKeyBinding.key(JoypadButton.RIGHT).getDisplayText())
         );
         addRow(imageNesController);
     }

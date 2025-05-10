@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.uilib.input;
 
-import de.amr.games.pacman.lib.nes.JoypadButtonID;
+import de.amr.games.pacman.lib.nes.JoypadButton;
 import de.amr.games.pacman.uilib.ActionProvider;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -56,14 +56,14 @@ public class Joypad {
     }
 
     public Stream<KeyCodeCombination> currentKeys() {
-        return Stream.of(JoypadButtonID.values()).map(currentKeyBinding()::key);
+        return Stream.of(JoypadButton.values()).map(currentKeyBinding()::key);
     }
 
-    public boolean isButtonPressed(JoypadButtonID buttonID) {
+    public boolean isButtonPressed(JoypadButton buttonID) {
         return keyboard.isMatching(key(buttonID));
     }
 
-    public KeyCodeCombination key(JoypadButtonID buttonID) {
+    public KeyCodeCombination key(JoypadButton buttonID) {
         return currentKeyBinding().key(buttonID);
     }
 

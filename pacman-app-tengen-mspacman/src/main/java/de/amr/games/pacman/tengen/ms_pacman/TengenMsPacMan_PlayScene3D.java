@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.event.GameEvent;
-import de.amr.games.pacman.lib.nes.JoypadButtonID;
+import de.amr.games.pacman.lib.nes.JoypadButton;
 import de.amr.games.pacman.lib.nes.NES_ColorScheme;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.Score;
@@ -32,14 +32,14 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         bind(GameAction.PERSPECTIVE_NEXT, alt(KeyCode.RIGHT));
         bind(GameAction.TOGGLE_DRAW_MODE, alt(KeyCode.W));
         if (gameLevel().isPresent() && gameLevel().get().isDemoLevel()) {
-            bind(TengenMsPacMan_GameAction.QUIT_DEMO_LEVEL, THE_JOYPAD.key(JoypadButtonID.START));
+            bind(TengenMsPacMan_GameAction.QUIT_DEMO_LEVEL, THE_JOYPAD.key(JoypadButton.START));
         }
         else {
-            bind(GameAction.PLAYER_UP,    THE_JOYPAD.key(JoypadButtonID.UP),    control(KeyCode.UP));
-            bind(GameAction.PLAYER_DOWN,  THE_JOYPAD.key(JoypadButtonID.DOWN),  control(KeyCode.DOWN));
-            bind(GameAction.PLAYER_LEFT,  THE_JOYPAD.key(JoypadButtonID.LEFT),  control(KeyCode.LEFT));
-            bind(GameAction.PLAYER_RIGHT, THE_JOYPAD.key(JoypadButtonID.RIGHT), control(KeyCode.RIGHT));
-            bind(TOGGLE_PAC_BOOSTER, THE_JOYPAD.key(JoypadButtonID.A), THE_JOYPAD.key(JoypadButtonID.B));
+            bind(GameAction.PLAYER_UP,    THE_JOYPAD.key(JoypadButton.UP),    control(KeyCode.UP));
+            bind(GameAction.PLAYER_DOWN,  THE_JOYPAD.key(JoypadButton.DOWN),  control(KeyCode.DOWN));
+            bind(GameAction.PLAYER_LEFT,  THE_JOYPAD.key(JoypadButton.LEFT),  control(KeyCode.LEFT));
+            bind(GameAction.PLAYER_RIGHT, THE_JOYPAD.key(JoypadButton.RIGHT), control(KeyCode.RIGHT));
+            bind(TOGGLE_PAC_BOOSTER, THE_JOYPAD.key(JoypadButton.A), THE_JOYPAD.key(JoypadButton.B));
             bindCheatActions();
         }
         enableActionBindings();

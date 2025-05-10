@@ -6,7 +6,7 @@ package de.amr.games.pacman.tengen.ms_pacman;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.nes.JoypadButtonID;
+import de.amr.games.pacman.lib.nes.JoypadButton;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -61,8 +61,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     @Override
     public void bindActions() {
         bind(() -> THE_JOYPAD.selectNextKeyBinding(this), alt(KeyCode.J));
-        bind(START_PLAYING, THE_JOYPAD.key(JoypadButtonID.START));
-        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, THE_JOYPAD.key(JoypadButtonID.SELECT));
+        bind(START_PLAYING, THE_JOYPAD.key(JoypadButton.START));
+        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, THE_JOYPAD.key(JoypadButton.SELECT));
         bindStartTestsActions();
     }
 
@@ -117,15 +117,15 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     @Override
     public void handleKeyboardInput() {
 
-        if (THE_JOYPAD.isButtonPressed(JoypadButtonID.DOWN)) {
+        if (THE_JOYPAD.isButtonPressed(JoypadButton.DOWN)) {
             selectNextOption();
         }
-        else if (THE_JOYPAD.isButtonPressed(JoypadButtonID.UP)) {
+        else if (THE_JOYPAD.isButtonPressed(JoypadButton.UP)) {
             selectPrevOption();
         }
 
         // Button "A" is right of "B": select next value
-        else if (THE_JOYPAD.isButtonPressed(JoypadButtonID.A)) {
+        else if (THE_JOYPAD.isButtonPressed(JoypadButton.A)) {
             switch (selectedOption) {
                 case OPTION_PAC_BOOSTER    -> setNextPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setNextDifficultyValue();
@@ -136,7 +136,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         }
 
         // Button "B" is left of "A": select previous value
-        else if (THE_JOYPAD.isButtonPressed(JoypadButtonID.B)) {
+        else if (THE_JOYPAD.isButtonPressed(JoypadButton.B)) {
             switch (selectedOption) {
                 case OPTION_PAC_BOOSTER    -> setPrevPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setPrevDifficultyValue();
