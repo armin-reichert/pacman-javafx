@@ -4,7 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.arcade.ms_pacman;
 
-import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.arcade.ArcadeAny_BootScene2D;
+import de.amr.games.pacman.arcade.ArcadeAny_PlayScene2D;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameLevel;
@@ -12,8 +13,6 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.GameAssets;
 import de.amr.games.pacman.ui.GameScene;
 import de.amr.games.pacman.ui.GameUIConfig;
-import de.amr.games.pacman.arcade.ArcadeAny_BootScene2D;
-import de.amr.games.pacman.arcade.ArcadeAny_PlayScene2D;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.ui._3d.PlayScene3D;
