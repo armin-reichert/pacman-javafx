@@ -21,6 +21,14 @@ import static java.util.Objects.requireNonNull;
  */
 public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet implements PacAnimations {
 
+    public static final String ANIM_MS_PACMAN_BOOSTER      = "ms_pacman_booster";
+    public static final String ANIM_MR_PACMAN_BOOSTER      = "pacman_booster";
+    public static final String ANIM_MS_PACMAN_WAVING_HAND  = "ms_pacman_waving_hand";
+    public static final String ANIM_MR_PACMAN_WAVING_HAND  = "mr_pacman_waving_hand";
+    public static final String ANIM_MS_PACMAN_TURNING_AWAY = "ms_pacman_turning_away";
+    public static final String ANIM_MR_PACMAN_TURNING_AWAY = "mr_pacman_turning_away";
+    public static final String ANIM_JUNIOR_PACMAN          = "junior";
+
     public TengenMsPacMan_PacAnimations(TengenMsPacMan_SpriteSheet spriteSheet) {
         requireNonNull(spriteSheet);
 

@@ -16,13 +16,4 @@ public interface PacAnimations extends Animations {
     // Ms. Pac-Man specific
     String ANIM_MR_PACMAN_MUNCHING = "pacman_munching";
     String ANIM_PAC_BIG            = "big_pacman";
-
-    // Ms. Pac-Man (Tengen)
-    String ANIM_MS_PACMAN_BOOSTER      = "ms_pacman_booster";
-    String ANIM_MR_PACMAN_BOOSTER      = "pacman_booster";
-    String ANIM_MS_PACMAN_WAVING_HAND  = "ms_pacman_waving_hand";
-    String ANIM_MR_PACMAN_WAVING_HAND  = "mr_pacman_waving_hand";
-    String ANIM_MS_PACMAN_TURNING_AWAY = "ms_pacman_turning_away";
-    String ANIM_MR_PACMAN_TURNING_AWAY = "mr_pacman_turning_away";
-    String ANIM_JUNIOR_PACMAN          = "junior";
 }

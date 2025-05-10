@@ -31,7 +31,6 @@ import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.model.actors.PacAnimations.*;
 import static de.amr.games.pacman.model.actors.Bonus.STATE_EATEN;
 import static de.amr.games.pacman.model.actors.Bonus.STATE_EDIBLE;
 import static de.amr.games.pacman.tengen.ms_pacman.MapRepository.strangeMap15Sprite;
@@ -101,10 +100,12 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             SpriteAnimation animation = spriteAnimations.currentAnimation();
             if (animation != null) {
                 switch (spriteAnimations.currentID()) {
-                    case ANIM_PAC_MUNCHING, ANIM_MS_PACMAN_BOOSTER,
-                         ANIM_MR_PACMAN_MUNCHING, ANIM_MR_PACMAN_BOOSTER,
-                         ANIM_JUNIOR_PACMAN -> drawGuy(pac, pac.moveDir(), animation.currentSprite());
-                    case ANIM_PAC_DYING -> {
+                    case PacAnimations.ANIM_PAC_MUNCHING,
+                         PacAnimations.ANIM_MR_PACMAN_MUNCHING,
+                         TengenMsPacMan_PacAnimations.ANIM_MS_PACMAN_BOOSTER,
+                         TengenMsPacMan_PacAnimations.ANIM_MR_PACMAN_BOOSTER,
+                         TengenMsPacMan_PacAnimations.ANIM_JUNIOR_PACMAN -> drawGuy(pac, pac.moveDir(), animation.currentSprite());
+                    case PacAnimations.ANIM_PAC_DYING -> {
                         Direction dir = Direction.UP;
                         if (animation.frameIndex() < 11) {
                             dir = switch (animation.frameIndex() % 4) {
