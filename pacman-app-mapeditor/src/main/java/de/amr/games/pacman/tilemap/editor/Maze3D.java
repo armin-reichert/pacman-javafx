@@ -29,6 +29,7 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
+import org.tinylog.Logger;
 
 import java.util.stream.Stream;
 
@@ -173,8 +174,8 @@ public class Maze3D extends Group {
     }
 
     private void addHouse(WorldMap worldMap, Color wallBaseColor, Color wallTopColor) {
-        Vector2i houseMinTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE, null);
-        Vector2i houseMaxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE, null);
+        Vector2i houseMinTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
+        Vector2i houseMaxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
         if (houseMinTile == null || houseMaxTile == null) {
             return;
         }
@@ -217,7 +218,11 @@ public class Maze3D extends Group {
     }
 
     private void addActorShape(Node actorShape, WorldMap worldMap, String actorTilePropertyName) {
-        Vector2i tile = worldMap.getTerrainTileProperty(actorTilePropertyName, Vector2i.ZERO);
+        Vector2i tile = worldMap.getTerrainTileProperty(actorTilePropertyName);
+        if (tile == null) {
+            Logger.error("Actor shape tile property '{}' has no value");
+            return;
+        }
         Vector2f center = tile.scaled(TS).toVector2f().plus(TS, HTS);
         actorShape.setTranslateX(center.x());
         actorShape.setTranslateY(center.y());

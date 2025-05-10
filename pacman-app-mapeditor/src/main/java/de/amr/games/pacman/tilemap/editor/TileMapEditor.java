@@ -1098,12 +1098,12 @@ public class TileMapEditor {
     //
 
     public void drawActorSprites(GraphicsContext g, WorldMap worldMap, double gridSize) {
-        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(WorldMapProperty.POS_PAC, null), PAC_SPRITE, gridSize);
-        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(WorldMapProperty.POS_RED_GHOST, null), RED_GHOST_SPRITE, gridSize);
-        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(WorldMapProperty.POS_PINK_GHOST, null), PINK_GHOST_SPRITE, gridSize);
-        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(WorldMapProperty.POS_CYAN_GHOST, null), CYAN_GHOST_SPRITE, gridSize);
-        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(WorldMapProperty.POS_ORANGE_GHOST, null), ORANGE_GHOST_SPRITE, gridSize);
-        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(WorldMapProperty.POS_BONUS, null), BONUS_SPRITE, gridSize);
+        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(WorldMapProperty.POS_PAC), PAC_SPRITE, gridSize);
+        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(WorldMapProperty.POS_RED_GHOST), RED_GHOST_SPRITE, gridSize);
+        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(WorldMapProperty.POS_PINK_GHOST), PINK_GHOST_SPRITE, gridSize);
+        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(WorldMapProperty.POS_CYAN_GHOST), CYAN_GHOST_SPRITE, gridSize);
+        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(WorldMapProperty.POS_ORANGE_GHOST), ORANGE_GHOST_SPRITE, gridSize);
+        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(WorldMapProperty.POS_BONUS), BONUS_SPRITE, gridSize);
     }
 
     private void draw(TerrainMapColorScheme colors) {
@@ -1148,8 +1148,8 @@ public class TileMapEditor {
             terrainPathRenderer.setScaling(gridSize() / 8.0);
             terrainPathRenderer.setColorScheme(colors);
             terrainPathRenderer.drawTerrain(g, editedWorldMap(), editedWorldMap().obstacles());
-            Vector2i houseMinTile = editedWorldMap().getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE, null);
-            Vector2i houseMaxTile = editedWorldMap().getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE, null);
+            Vector2i houseMinTile = editedWorldMap().getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
+            Vector2i houseMaxTile = editedWorldMap().getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
             if (houseMinTile != null && houseMaxTile != null) {
                 terrainPathRenderer.drawHouse(g, houseMinTile, houseMaxTile.minus(houseMinTile).plus(1, 1));
             }
@@ -1437,8 +1437,8 @@ public class TileMapEditor {
     public void placeArcadeHouse(WorldMap worldMap, Vector2i houseMinTile) {
         Vector2i houseMaxTile = houseMinTile.plus(7, 4);
 
-        Vector2i oldHouseMinTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE, null);
-        Vector2i oldHouseMaxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE, null);
+        Vector2i oldHouseMinTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
+        Vector2i oldHouseMaxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
         worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MIN_TILE, formatTile(houseMinTile));
         worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MAX_TILE, formatTile(houseMaxTile));
 
@@ -1457,8 +1457,8 @@ public class TileMapEditor {
         worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_ORANGE_GHOST,   formatTile(houseMinTile.plus(5, 2)));
 
         // clear pellets around house
-        Vector2i min = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE, null).minus(1, 1);
-        Vector2i max = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE, null).plus(1, 1);
+        Vector2i min = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE).minus(1, 1);
+        Vector2i max = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE).plus(1, 1);
         for (int x = min.x(); x <= max.x(); ++x) {
             // Note: parameters are row and col (y and x)
             worldMap.setContent(LayerID.FOOD, min.y(), x, FoodTiles.EMPTY);
@@ -1589,8 +1589,8 @@ public class TileMapEditor {
 
 
     private boolean isPartOfHouse(WorldMap worldMap, Vector2i tile) {
-        Vector2i minTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE, null);
-        Vector2i maxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE, null);
+        Vector2i minTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
+        Vector2i maxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
         if (minTile != null && maxTile != null) {
             return minTile.x() <= tile.x() && tile.x() <= maxTile.x()
                 && minTile.y() <= tile.y() && tile.y() <= maxTile.y();

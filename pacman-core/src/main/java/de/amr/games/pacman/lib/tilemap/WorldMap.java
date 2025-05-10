@@ -317,7 +317,7 @@ public class WorldMap {
         obstacles = ObstacleBuilder.buildObstacles(this, tilesWithErrors);
 
         // remove house obstacle
-        Vector2i houseMinTile = getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE, null);
+        Vector2i houseMinTile = getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
         if (houseMinTile == null) {
             Logger.info("Could not remove house placeholder from obstacle list, house min tile not set");
         } else {
@@ -438,14 +438,26 @@ public class WorldMap {
 
     public Vector2i getTileProperty(LayerID layerID, String propertyName, Vector2i defaultTile) {
         if (properties(layerID).containsKey(propertyName)) {
-            String propertyValue = properties(layerID).get(propertyName);
-            return parseTile(propertyValue).orElse(defaultTile);
+            String value = properties(layerID).get(propertyName);
+            return parseTile(value).orElse(defaultTile);
         }
         return defaultTile;
     }
 
+    /**
+     * @param propertyName property name
+     * @return tile value of property in terrain layer or default value
+     */
     public Vector2i getTerrainTileProperty(String propertyName, Vector2i defaultTile) {
         return getTileProperty(TERRAIN, propertyName, defaultTile);
+    }
+
+    /**
+     * @param propertyName property name
+     * @return tile value of property in terrain layer or <code>null</code>
+     */
+    public Vector2i getTerrainTileProperty(String propertyName) {
+        return getTileProperty(TERRAIN, propertyName, null);
     }
 
     /**

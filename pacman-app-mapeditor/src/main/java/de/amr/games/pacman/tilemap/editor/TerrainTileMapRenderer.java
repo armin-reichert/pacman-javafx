@@ -113,8 +113,8 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
             });
         }
         g.restore();
-        Vector2i houseMinTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE, null);
-        Vector2i houseMaxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE, null);
+        Vector2i houseMinTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
+        Vector2i houseMaxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
         if (houseMinTile != null && houseMaxTile != null) {
             drawHouse(g, houseMinTile, houseMaxTile.minus(houseMinTile).plus(1, 1));
         }

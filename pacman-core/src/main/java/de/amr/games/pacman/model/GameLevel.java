@@ -96,31 +96,31 @@ public class GameLevel {
         uneatenFoodCount = totalFoodCount;
         eatenFoodBits = new BitSet(worldMap.numCols() * worldMap.numRows());
 
-        Vector2i pacTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_PAC, null);
+        Vector2i pacTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_PAC);
         if (pacTile == null) {
             throw new IllegalArgumentException("No Pac position stored in map");
         }
         pacStartPosition = posHalfTileRightOf(pacTile);
 
-        Vector2i redGhostTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_RED_GHOST, null);
+        Vector2i redGhostTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_RED_GHOST);
         if (redGhostTile == null) {
             throw new IllegalArgumentException("No red ghost position stored in map");
         }
         ghostStartPositions[RED_GHOST_ID] = posHalfTileRightOf(redGhostTile);
 
-        Vector2i pinkGhostTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_PINK_GHOST, null);
+        Vector2i pinkGhostTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_PINK_GHOST);
         if (pinkGhostTile == null) {
             throw new IllegalArgumentException("No pink ghost position stored in map");
         }
         ghostStartPositions[PINK_GHOST_ID] = posHalfTileRightOf(pinkGhostTile);
 
-        Vector2i cyanGhostTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_CYAN_GHOST, null);
+        Vector2i cyanGhostTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_CYAN_GHOST);
         if (cyanGhostTile == null) {
             throw new IllegalArgumentException("No cyan ghost position stored in map");
         }
         ghostStartPositions[CYAN_GHOST_ID] = posHalfTileRightOf(cyanGhostTile);
 
-        Vector2i orangeGhostTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_ORANGE_GHOST, null);
+        Vector2i orangeGhostTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_ORANGE_GHOST);
         if (orangeGhostTile == null) {
             throw new IllegalArgumentException("No orange ghost position stored in map");
         }
@@ -345,17 +345,17 @@ public class GameLevel {
             Logger.warn("No house max tile found in map!");
             worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MAX_TILE, formatTile(Vector2i.of(17, 19)));
         }
-        Vector2i minTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE, null);
-        Vector2i maxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE, null);
+        Vector2i minTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
+        Vector2i maxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
         createArcadeHouse(minTile.x(), minTile.y(), maxTile.x(), maxTile.y());
     }
 
     public Vector2i houseMinTile() {
-        return worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE, null);
+        return worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
     }
 
     public Vector2i houseMaxTile() {
-        return worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE, null);
+        return worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
     }
 
     public Vector2i houseSizeInTiles() {
