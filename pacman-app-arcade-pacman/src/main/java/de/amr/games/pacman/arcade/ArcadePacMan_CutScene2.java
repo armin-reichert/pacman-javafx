@@ -130,8 +130,8 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     public void drawSceneContent() {
         gr.drawScores(game().scoreManager(), ARCADE_WHITE, arcadeFontScaledTS());
         gr.drawSpriteScaled(nailDressRaptureAnimation.currentSprite(), tiles_to_px(14), tiles_to_px(19) + 3);
-        gr.drawAnimatedActor(blinky);
-        gr.drawAnimatedActor(pac);
+        gr.drawActor(blinky);
+        gr.drawActor(pac);
         gr.drawLevelCounter(game().levelCounter(), sizeInPx());
     }
 

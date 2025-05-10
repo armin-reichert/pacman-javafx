@@ -13,7 +13,6 @@ import de.amr.games.pacman.model.LevelCounter;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.ScoreManager;
 import de.amr.games.pacman.model.actors.Actor;
-import de.amr.games.pacman.model.actors.AnimatedActor2D;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Creature;
 import de.amr.games.pacman.uilib.animation.SpriteAnimation;
@@ -124,19 +123,19 @@ public interface GameRenderer {
     /**
      * Draws animated entity (Pac-Man, ghost, moving bonus) if entity is visible.
      *
-     * @param animatedActor the animated entity
+     * @param actor the animated entity
      */
-    default void drawAnimatedActor(AnimatedActor2D animatedActor) {
-        if (animatedActor == null || !animatedActor.actor().isVisible()) {
+    default void drawActor(Actor actor) {
+        if (actor == null || !actor.isVisible()) {
             return;
         }
-        animatedActor.animations().ifPresent(animations -> {
+        actor.animations().ifPresent(animations -> {
             if (animations instanceof SpriteAnimationSet spriteAnimations) {
                 SpriteAnimation currentAnimation = spriteAnimations.currentAnimation();
                 if (currentAnimation != null) {
-                    drawActorSprite(animatedActor.actor(), spriteAnimations.currentSprite(animatedActor));
+                    drawActorSprite(actor, spriteAnimations.currentSprite(actor));
                 } else {
-                    Logger.error("No current animation for actor {}", animatedActor);
+                    Logger.error("No current animation for actor {}", actor);
                 }
             }
         });
@@ -182,29 +181,25 @@ public interface GameRenderer {
         ctx().fillRect(centerX - 0.5 * squareSize, centerY - 0.5 * squareSize, squareSize, squareSize);
     }
 
-    /**
-     * @param animatedCreature animated entity (must contain an entity of type {@link Creature}
-     */
-    default void drawAnimatedCreatureInfo(AnimatedActor2D animatedCreature) {
-        animatedCreature.animations().map(SpriteAnimationSet.class::cast).ifPresent(animations -> {
-            var guy = (Creature) animatedCreature.actor();
+    default void drawAnimatedCreatureInfo(Creature creature) {
+        creature.animations().map(SpriteAnimationSet.class::cast).ifPresent(animations -> {
             String animID = animations.currentID();
             if (animID != null) {
                 String text = animID + " " + animations.currentAnimation().frameIndex();
                 ctx().setFill(Color.WHITE);
                 ctx().setFont(Font.font("Monospaced", scaled(6)));
-                ctx().fillText(text, scaled(guy.posX() - 4), scaled(guy.posY() - 4));
+                ctx().fillText(text, scaled(creature.posX() - 4), scaled(creature.posY() - 4));
             }
-            if (guy.wishDir() != null) {
+            if (creature.wishDir() != null) {
                 float scaling = scaling();
-                Vector2f center = guy.position().plus(HTS, HTS);
-                Vector2f arrowHead = center.plus(guy.wishDir().vector().scaled(12f)).scaled(scaling);
+                Vector2f center = creature.position().plus(HTS, HTS);
+                Vector2f arrowHead = center.plus(creature.wishDir().vector().scaled(12f)).scaled(scaling);
                 Vector2f guyCenter = center.scaled(scaling);
                 float radius = scaling * 2, diameter = 2 * radius;
                 ctx().setStroke(Color.WHITE);
                 ctx().setLineWidth(0.5);
                 ctx().strokeLine(guyCenter.x(), guyCenter.y(), arrowHead.x(), arrowHead.y());
-                ctx().setFill(guy.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
+                ctx().setFill(creature.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
                 ctx().fillOval(arrowHead.x() - radius, arrowHead.y() - radius, diameter, diameter);
             }
         });

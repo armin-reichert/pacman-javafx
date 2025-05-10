@@ -212,9 +212,9 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         var r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
         r.drawClapperBoard(clapAnimation, "THE END", 4, CLAP_TILE_X, CLAP_TILE_Y, arcadeFontScaledTS());
-        r.drawAnimatedActor(msPacMan);
-        r.drawAnimatedActor(pacMan);
-        juniors.forEach(r::drawAnimatedActor);
+        r.drawActor(msPacMan);
+        r.drawActor(pacMan);
+        juniors.forEach(r::drawActor);
         r.drawLevelCounter(game().levelCounter(), sizeInPx().minus(0, 3*TS));
     }
 }

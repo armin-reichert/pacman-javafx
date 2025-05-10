@@ -17,7 +17,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Armin Reichert
  */
-public class Pac extends Creature implements AnimatedActor2D {
+public class Pac extends Creature {
 
     public static final byte REST_INDEFINITELY = -1;
 
@@ -55,11 +55,6 @@ public class Pac extends Creature implements AnimatedActor2D {
             ", acc_x=" + accX +
             ", acc_y=" + accY +
             '}';
-    }
-
-    @Override
-    public Actor actor() {
-        return this;
     }
 
     public void setAnimations(Animations animations) {

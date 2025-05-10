@@ -26,7 +26,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Armin Reichert
  */
-public class Ghost extends Creature implements AnimatedActor2D {
+public class Ghost extends Creature {
 
     private final byte id;
     private final String name;
@@ -66,11 +66,6 @@ public class Ghost extends Creature implements AnimatedActor2D {
 
     public String name() {
         return name;
-    }
-
-    @Override
-    public Actor actor() {
-        return this;
     }
 
     public void setAnimations(GhostAnimations animations) {

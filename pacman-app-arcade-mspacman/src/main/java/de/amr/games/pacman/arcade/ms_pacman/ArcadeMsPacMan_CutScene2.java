@@ -80,8 +80,8 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
             r.drawClapperBoard(clapperboardAnimation, tiles_to_px(3), tiles_to_px(10), arcadeFontScaledTS());
         }
-        gr.drawAnimatedActor(msPacMan);
-        gr.drawAnimatedActor(pacMan);
+        gr.drawActor(msPacMan);
+        gr.drawActor(pacMan);
         gr.drawLevelCounter(game().levelCounter(), sizeInPx());
     }
 

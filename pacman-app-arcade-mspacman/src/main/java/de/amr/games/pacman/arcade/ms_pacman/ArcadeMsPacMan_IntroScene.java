@@ -139,9 +139,9 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
             gr.fillTextAtScaledPosition("MS PAC-MAN", ARCADE_YELLOW, font, TITLE_X, TOP_Y + tiles_to_px(6));
         }
         for (Ghost ghost : ghosts) {
-            gr.drawAnimatedActor(ghost);
+            gr.drawActor(ghost);
         }
-        gr.drawAnimatedActor(msPacMan);
+        gr.drawActor(msPacMan);
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
             // might be PacManXXL vector renderer!
             r.drawMidwayCopyright(6, 28, ARCADE_RED, font);

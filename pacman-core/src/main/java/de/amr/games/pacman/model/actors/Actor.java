@@ -7,6 +7,8 @@ package de.amr.games.pacman.model.actors;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 
+import java.util.Optional;
+
 import static de.amr.games.pacman.Globals.*;
 import static java.util.Objects.requireNonNull;
 
@@ -158,5 +160,29 @@ public class Actor {
     public boolean sameTile(Actor other) {
         requireNonNull(other, "Actor to check for same tile must not be null");
         return tile().equals(other.tile());
+    }
+
+    // Optional animations
+
+    public Optional<Animations> animations() { return Optional.empty(); }
+
+    public void startAnimation() {
+        animations().ifPresent(Animations::start);
+    }
+
+    public void stopAnimation() {
+        animations().ifPresent(Animations::stop);
+    }
+
+    public void resetAnimation() {
+        animations().ifPresent(Animations::reset);
+    }
+
+    public void selectAnimation(String id, int index) {
+        animations().ifPresent(animations -> animations.select(id, index));
+    }
+
+    public void selectAnimation(String id) {
+        selectAnimation(id, 0);
     }
 }

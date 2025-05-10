@@ -83,12 +83,12 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     @Override
-    public void drawAnimatedActor(AnimatedActor2D animatedActor) {
+    public void drawActor(Actor actor) {
         ctx().setImageSmoothing(false);
-        if (animatedActor instanceof Pac pac) {
+        if (actor instanceof Pac pac) {
             drawMsOrMrPacMan(pac);
         } else {
-            GameRenderer.super.drawAnimatedActor(animatedActor);
+            GameRenderer.super.drawActor(actor);
         }
     }
 
@@ -117,7 +117,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
                         }
                         drawGuy(pac, dir, animation.currentSprite());
                     }
-                    default -> GameRenderer.super.drawAnimatedActor(pac);
+                    default -> GameRenderer.super.drawActor(pac);
                 }
             } else {
                 Logger.error("No current animation for character {}", pac);

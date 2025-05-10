@@ -123,15 +123,15 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 Ghost currentGhost = ghosts[ghostIndex];
                 Color ghostColor = THE_ASSETS.color("tengen.ghost.%d.color.normal.dress".formatted(currentGhost.id()));
                 r.fillTextAtScaledPosition(currentGhost.name().toUpperCase(), ghostColor, font, MARQUEE_X + 44, MARQUEE_Y + 41);
-                for (Ghost ghost : ghosts) { r.drawAnimatedActor(ghost); }
+                for (Ghost ghost : ghosts) { r.drawActor(ghost); }
             }
             case MS_PACMAN_MARCHING_IN -> {
                 drawMarquee();
                 r.fillTextAtScaledPosition("\"MS PAC-MAN\"", nesPaletteColor(0x28), font, MARQUEE_X + 20, MARQUEE_Y - 18);
                 r.fillTextAtScaledPosition("STARRING", nesPaletteColor(0x20), font, MARQUEE_X + 12, MARQUEE_Y + 22);
                 r.fillTextAtScaledPosition("MS PAC-MAN", nesPaletteColor(0x28), font, MARQUEE_X + 28, MARQUEE_Y + 38);
-                for (Ghost ghost : ghosts) { r.drawAnimatedActor(ghost); }
-                r.drawAnimatedActor(msPacMan);
+                for (Ghost ghost : ghosts) { r.drawActor(ghost); }
+                r.drawActor(msPacMan);
             }
         }
 

@@ -92,8 +92,8 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
             // Note: in Ms. Pac-Man XXL another renderer is used!
             r.drawClapperBoard(clapperboardAnimation, tiles_to_px(3), tiles_to_px(10), arcadeFontScaledTS());
         }
-        gr.drawAnimatedActor(msPacMan);
-        gr.drawAnimatedActor(pacMan);
+        gr.drawActor(msPacMan);
+        gr.drawActor(pacMan);
         gr.drawActorSprite(stork, storkAnimation.currentSprite());
         gr.drawActorSprite(bag, bagOpen ? ArcadeMsPacMan_SpriteSheet.JUNIOR_PAC_SPRITE : ArcadeMsPacMan_SpriteSheet.BLUE_BAG_SPRITE);
         gr.drawLevelCounter(game().levelCounter(), sizeInPx());

@@ -485,8 +485,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             level.bonus().ifPresent(tr::drawBonus);
             //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
             tr.drawLevelMessage(level, level.isDemoLevel(), currentMessagePosition(level), arcadeFontScaledTS());
-            tr.drawAnimatedActor(level.pac());
-            ghostsInZOrder(level).forEach(tr::drawAnimatedActor);
+            tr.drawActor(level.pac());
+            ghostsInZOrder(level).forEach(tr::drawActor);
         }
 
         // As long as Pac-Man is still invisible on game start, one live more is shown in the counter

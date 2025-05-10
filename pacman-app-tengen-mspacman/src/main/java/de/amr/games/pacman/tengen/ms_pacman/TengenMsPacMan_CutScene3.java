@@ -169,8 +169,8 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         r.drawSceneBorderLines();
         r.drawClapperBoard(clapAnimation, "JUNIOR", 3, CLAP_TILE_X, CLAP_TILE_Y, arcadeFontScaledTS());
         r.drawStork(storkAnimation, stork, bagReleased);
-        r.drawAnimatedActor(msPacMan);
-        r.drawAnimatedActor(pacMan);
+        r.drawActor(msPacMan);
+        r.drawActor(pacMan);
         if (bagWithJunior.isVisible()) {
             if (bagOpen) {
                 r.drawActorSprite(bagWithJunior, JUNIOR_PAC_SPRITE);

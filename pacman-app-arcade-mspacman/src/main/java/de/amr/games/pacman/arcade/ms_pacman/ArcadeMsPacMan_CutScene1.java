@@ -92,10 +92,10 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) { // could also be VectorGraphicsRenderer!
             r.drawClapperBoard(clapperboardAnimation, tiles_to_px(3), tiles_to_px(10), arcadeFontScaledTS());
         }
-        gr.drawAnimatedActor(msPacMan);
-        gr.drawAnimatedActor(pacMan);
-        gr.drawAnimatedActor(inky);
-        gr.drawAnimatedActor(pinky);
+        gr.drawActor(msPacMan);
+        gr.drawActor(pacMan);
+        gr.drawActor(inky);
+        gr.drawActor(pinky);
         gr.drawActorSprite(heart, HEART_SPRITE);
         gr.drawLevelCounter(game().levelCounter(), sizeInPx());
     }

@@ -178,8 +178,8 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
             drawLevelMessage(level, centerPositionBelowHouse(level));
         }
         level.bonus().ifPresent(gr::drawBonus);
-        gr.drawAnimatedActor(level.pac());
-        ghostsInZOrder(level).forEach(gr::drawAnimatedActor);
+        gr.drawActor(level.pac());
+        ghostsInZOrder(level).forEach(gr::drawActor);
         if (debugInfoVisiblePy.get()) {
             gr.drawAnimatedCreatureInfo(level.pac());
             ghostsInZOrder(level).forEach(gr::drawAnimatedCreatureInfo);

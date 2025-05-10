@@ -335,8 +335,8 @@ public class PacManXXL_StartPage implements StartPage {
             g.translate(0, 23.5 * TS * scaling);
             g.setImageSmoothing(false);
             renderer.setScaling(scaling);
-            for (Ghost ghost : ghosts) { renderer.drawAnimatedActor(ghost); }
-            renderer.drawAnimatedActor(pac);
+            for (Ghost ghost : ghosts) { renderer.drawActor(ghost); }
+            renderer.drawActor(pac);
             g.restore();
         }
     }

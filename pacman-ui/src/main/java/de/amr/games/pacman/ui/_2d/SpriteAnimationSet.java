@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui._2d;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.actors.Actor;
 import de.amr.games.pacman.model.actors.Animations;
-import de.amr.games.pacman.model.actors.AnimatedActor2D;
 import de.amr.games.pacman.uilib.animation.SpriteAnimation;
 import de.amr.games.pacman.uilib.assets.SpriteSheet;
 import org.tinylog.Logger;
@@ -38,12 +37,12 @@ public class SpriteAnimationSet implements Animations {
         return id.equals(currentAnimationID);
     }
 
-    public final RectArea currentSprite(AnimatedActor2D animatedActor2D) {
+    public final RectArea currentSprite(Actor actor) {
         var currentAnimation = currentAnimation();
         if (currentAnimation == null) {
             return null;
         }
-        RectArea[] newSelection = selectedSprites(currentAnimation().spriteSheet(), animatedActor2D.actor());
+        RectArea[] newSelection = selectedSprites(currentAnimation().spriteSheet(), actor);
         if (newSelection != null) {
             currentAnimation.setSprites(newSelection);
         }

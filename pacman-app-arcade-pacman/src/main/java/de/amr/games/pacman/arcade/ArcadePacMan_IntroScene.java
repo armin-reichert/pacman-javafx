@@ -178,18 +178,18 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     private void drawGuys(int shakingAmount) {
         if (shakingAmount == 0) {
-            Stream.of(ghosts).forEach(gr::drawAnimatedActor);
+            Stream.of(ghosts).forEach(gr::drawActor);
         } else {
-            gr.drawAnimatedActor(ghosts[0]);
-            gr.drawAnimatedActor(ghosts[3]);
+            gr.drawActor(ghosts[0]);
+            gr.drawActor(ghosts[3]);
             // shaking ghosts effect, not quite as in original game
             gr.ctx().save();
             gr.ctx().translate(shakingAmount, 0);
-            gr.drawAnimatedActor(ghosts[1]);
-            gr.drawAnimatedActor(ghosts[2]);
+            gr.drawActor(ghosts[1]);
+            gr.drawActor(ghosts[2]);
             gr.ctx().restore();
         }
-        gr.drawAnimatedActor(pacMan);
+        gr.drawActor(pacMan);
     }
 
     private void drawPoints() {
