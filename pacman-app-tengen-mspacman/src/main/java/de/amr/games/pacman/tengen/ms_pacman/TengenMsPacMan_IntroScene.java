@@ -13,6 +13,7 @@ import de.amr.games.pacman.lib.nes.JoypadButton;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.ui._2d.GameScene2D;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
@@ -20,12 +21,11 @@ import org.tinylog.Logger;
 import java.util.BitSet;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction.START_GAME;
-import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.MS_PAC_MAN_TITLE_SPRITE;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.games.pacman.ui.Globals.*;
+import static de.amr.games.pacman.uilib.input.Keyboard.naked;
 
 /**
  * @author Armin Reichert
@@ -61,8 +61,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void bindActions() {
-        bind(START_GAME, THE_JOYPAD.key(JoypadButton.START));
-        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, THE_JOYPAD.key(JoypadButton.SELECT));
+        bind(TengenMsPacMan_GameAction.START_GAME, THE_JOYPAD.key(JoypadButton.START));
+        bind(TengenMsPacMan_GameAction.TOGGLE_JOYPAD_BINDINGS_DISPLAYED, naked(KeyCode.SPACE));
     }
 
     @Override
