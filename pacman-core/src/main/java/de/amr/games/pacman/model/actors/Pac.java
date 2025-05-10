@@ -95,7 +95,7 @@ public class Pac extends Creature implements AnimatedActor2D {
         starvingTicks = 0;
         corneringSpeedUp = 1.5f; // no real cornering implementation but better than nothing
         if (animations != null) {
-            animations.select(PacAnimations.ANIM_PAC_MUNCHING, 0);
+            animations.select(PacAnimations.ANIM_MUNCHING, 0);
         }
     }
 
@@ -151,7 +151,7 @@ public class Pac extends Creature implements AnimatedActor2D {
         setSpeed(0);
         setRestingTicks(Pac.REST_INDEFINITELY);
         animations.stop();
-        selectAnimation(PacAnimations.ANIM_PAC_MUNCHING);
+        selectAnimation(PacAnimations.ANIM_MUNCHING);
         animations.reset();
     }
 

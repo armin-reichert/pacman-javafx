@@ -8,12 +8,7 @@ package de.amr.games.pacman.model.actors;
  * @author Armin Reichert
  */
 public interface PacAnimations extends Animations {
-
-    // Common animation IDs
-    String ANIM_PAC_MUNCHING     = "pac_munching";
-    String ANIM_PAC_DYING        = "pac_dying";
-
-    // Ms. Pac-Man specific
-    String ANIM_MR_PACMAN_MUNCHING = "pacman_munching";
-    String ANIM_PAC_BIG            = "big_pacman";
+    // Common animation IDs for Pac-Man or Ms. Pac-Man actors
+    String ANIM_MUNCHING = "pac_munching";
+    String ANIM_DYING = "pac_dying";
 }

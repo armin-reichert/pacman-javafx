@@ -23,18 +23,20 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadePacMan_PacAnimations extends SpriteAnimationSet implements PacAnimations {
 
+    public static final String ANIM_BIG_PAC_MAN = "big_pacman";
+
     public ArcadePacMan_PacAnimations(ArcadePacMan_SpriteSheet spriteSheet) {
         requireNonNull(spriteSheet);
         add(Map.of(
-            PacAnimations.ANIM_PAC_MUNCHING,
+            PacAnimations.ANIM_MUNCHING,
             SpriteAnimation.spriteSheet(spriteSheet)
                 .sprites(spriteSheet.pacMunchingSprites(Direction.LEFT)).endLoop(),
 
-            PacAnimations.ANIM_PAC_DYING,
+            PacAnimations.ANIM_DYING,
             SpriteAnimation.spriteSheet(spriteSheet)
                 .sprites(spriteSheet.pacDyingSprites()).frameTicks(8).end(),
 
-            PacAnimations.ANIM_PAC_BIG,
+            ANIM_BIG_PAC_MAN,
             SpriteAnimation.spriteSheet(spriteSheet)
                 .sprites(spriteSheet.bigPacManSprites()).frameTicks(3).endLoop()
         ));
@@ -44,7 +46,7 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationSet implements Pa
     protected RectArea[] selectedSprites(SpriteSheet spriteSheet, Actor actor) {
         GameSpriteSheet gss = (GameSpriteSheet) spriteSheet;
         if (actor instanceof Pac pac) {
-            if (isCurrentAnimationID(PacAnimations.ANIM_PAC_MUNCHING)) {
+            if (isCurrentAnimationID(PacAnimations.ANIM_MUNCHING)) {
                 return gss.pacMunchingSprites(pac.moveDir());
             }
         }

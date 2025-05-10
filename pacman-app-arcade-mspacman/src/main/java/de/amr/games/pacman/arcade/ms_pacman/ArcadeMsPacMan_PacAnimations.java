@@ -7,8 +7,8 @@ package de.amr.games.pacman.arcade.ms_pacman;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.actors.Actor;
-import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.ui._2d.SpriteAnimationSet;
 import de.amr.games.pacman.uilib.animation.SpriteAnimation;
 import de.amr.games.pacman.uilib.assets.SpriteSheet;
@@ -20,7 +20,9 @@ import static java.util.Objects.requireNonNull;
 /**
  * @author Armin Reichert
  */
-public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationSet implements PacAnimations{
+public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationSet implements PacAnimations {
+
+    public static final String ANIM_PAC_MAN_MUNCHING = "pacman_munching";
 
     public ArcadeMsPacMan_PacAnimations(ArcadeMsPacMan_SpriteSheet spriteSheet) {
         requireNonNull(spriteSheet);
@@ -43,9 +45,9 @@ public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationSet implements 
             .endLoop();
 
         add(Map.of(
-            PacAnimations.ANIM_PAC_MUNCHING, munching,
-            PacAnimations.ANIM_PAC_DYING, dying,
-            PacAnimations.ANIM_MR_PACMAN_MUNCHING, husbandMunching
+            PacAnimations.ANIM_MUNCHING, munching,
+            PacAnimations.ANIM_DYING, dying,
+            ANIM_PAC_MAN_MUNCHING, husbandMunching
         ));
     }
 
@@ -53,10 +55,10 @@ public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationSet implements 
     protected RectArea[] selectedSprites(SpriteSheet spriteSheet, Actor actor) {
         ArcadeMsPacMan_SpriteSheet gss = (ArcadeMsPacMan_SpriteSheet) spriteSheet;
         if (actor instanceof Pac msPacMan) {
-            if (isCurrentAnimationID(PacAnimations.ANIM_PAC_MUNCHING)) {
+            if (isCurrentAnimationID(PacAnimations.ANIM_MUNCHING)) {
                 return gss.pacMunchingSprites(msPacMan.moveDir());
             }
-            if (isCurrentAnimationID(PacAnimations.ANIM_MR_PACMAN_MUNCHING)) {
+            if (isCurrentAnimationID(ANIM_PAC_MAN_MUNCHING)) {
                 return gss.mrPacManMunchingSprites(msPacMan.moveDir());
             }
         }

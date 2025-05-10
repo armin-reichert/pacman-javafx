@@ -21,6 +21,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet implements PacAnimations {
 
+    public static final String ANIM_PAC_MAN_MUNCHING = "pacman_munching";
+
     public static final String ANIM_MS_PACMAN_BOOSTER      = "ms_pacman_booster";
     public static final String ANIM_MR_PACMAN_BOOSTER      = "pacman_booster";
     public static final String ANIM_MS_PACMAN_WAVING_HAND  = "ms_pacman_waving_hand";
@@ -90,13 +92,13 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet implements 
             .end();
 
         add(Map.of(
-            ANIM_PAC_DYING, msPacmanDying,
-            ANIM_PAC_MUNCHING, msPacManMunching,
+            ANIM_DYING, msPacmanDying,
+            ANIM_MUNCHING, msPacManMunching,
             ANIM_MS_PACMAN_BOOSTER, msPacManMunchingBooster,
             ANIM_MS_PACMAN_WAVING_HAND, msPacManWavingHand,
             ANIM_MS_PACMAN_TURNING_AWAY, msPacManTurningAway,
 
-            ANIM_MR_PACMAN_MUNCHING, mrPacManMunching,
+            ANIM_PAC_MAN_MUNCHING, mrPacManMunching,
             ANIM_MR_PACMAN_BOOSTER, mrPacManMunchingBooster,
             ANIM_MR_PACMAN_WAVING_HAND, mrPacManWavingHand,
             ANIM_MR_PACMAN_TURNING_AWAY, mrPacManTurningAway,
@@ -108,13 +110,13 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet implements 
     protected RectArea[] selectedSprites(SpriteSheet spriteSheet, Actor actor) {
         TengenMsPacMan_SpriteSheet gss = (TengenMsPacMan_SpriteSheet) spriteSheet;
         if (actor instanceof Pac msPacMan) {
-            if (isCurrentAnimationID(ANIM_PAC_MUNCHING)) {
+            if (isCurrentAnimationID(ANIM_MUNCHING)) {
                 return TengenMsPacMan_SpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT;
             }
             if (isCurrentAnimationID(ANIM_MS_PACMAN_BOOSTER)) {
                 return TengenMsPacMan_SpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER;
             }
-            if (isCurrentAnimationID(ANIM_MR_PACMAN_MUNCHING)) {
+            if (isCurrentAnimationID(ANIM_PAC_MAN_MUNCHING)) {
                 return gss.pacManMunchingSprites(msPacMan.moveDir());
             }
         }

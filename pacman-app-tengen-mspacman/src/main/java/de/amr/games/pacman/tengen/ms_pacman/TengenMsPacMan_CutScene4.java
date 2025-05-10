@@ -5,6 +5,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.MediaPlayer;
@@ -14,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.model.actors.PacAnimations.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel.createMsPacMan;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel.createPacMan;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
@@ -83,7 +83,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             msPacMan.setMoveDir(Direction.LEFT);
             msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
             msPacMan.setSpeed(1f);
-            msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
+            msPacMan.selectAnimation(PacAnimations.ANIM_MUNCHING);
             msPacMan.startAnimation();
             msPacMan.show();
         }

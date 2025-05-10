@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -17,7 +18,6 @@ import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.arcade.ArcadePacMan_GameModel.createPac;
 import static de.amr.games.pacman.arcade.ArcadePacMan_GameModel.createRedGhost;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.model.actors.PacAnimations.*;
 import static de.amr.games.pacman.ui.GameAssets.ARCADE_WHITE;
 import static de.amr.games.pacman.ui.Globals.*;
 
@@ -63,7 +63,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             pac.placeAtTile(29, 20, 0, 0);
             pac.setMoveDir(Direction.LEFT);
             pac.setSpeed(1.25f);
-            pac.selectAnimation(ANIM_PAC_MUNCHING);
+            pac.selectAnimation(PacAnimations.ANIM_MUNCHING);
             pac.startAnimation();
             pac.show();
 
@@ -84,7 +84,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
         else if (frame == ANIMATION_START + 400) {
             pac.placeAtTile(-3, 18, 0, 6.5f);
             pac.setMoveDir(Direction.RIGHT);
-            pac.selectAnimation(ArcadePacMan_PacAnimations.ANIM_PAC_BIG);
+            pac.selectAnimation(ArcadePacMan_PacAnimations.ANIM_BIG_PAC_MAN);
             pac.startAnimation();
         }
         else if (frame == ANIMATION_START + 632) {
