@@ -11,9 +11,7 @@ import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.lib.fsm.FsmState;
 import de.amr.games.pacman.lib.nes.JoypadButtonID;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -22,8 +20,6 @@ import org.tinylog.Logger;
 import java.util.BitSet;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_GHOST_NORMAL;
-import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction.START_GAME;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameAction.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel.*;
@@ -224,12 +220,12 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
                 var spriteSheet = (TengenMsPacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
                 scene.msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
-                scene.msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
+                scene.msPacMan.selectAnimation(PacAnimations.ANIM_PAC_MUNCHING);
                 scene.msPacMan.startAnimation();
 
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, ghost.id()));
-                    ghost.selectAnimation(ANIM_GHOST_NORMAL);
+                    ghost.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
                     ghost.startAnimation();
                 }
             }

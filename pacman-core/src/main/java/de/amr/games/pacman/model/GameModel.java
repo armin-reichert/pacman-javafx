@@ -118,10 +118,10 @@ public abstract class GameModel {
     public abstract long pacPowerFadingTicks(GameLevel level);
 
     public void initAnimationOfPacManAndGhosts() {
-        level.pac().selectAnimation(ActorAnimations.ANIM_PAC_MUNCHING);
+        level.pac().selectAnimation(PacAnimations.ANIM_PAC_MUNCHING);
         level.pac().resetAnimation();
         level.ghosts().forEach(ghost -> {
-            ghost.selectAnimation(ActorAnimations.ANIM_GHOST_NORMAL);
+            ghost.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
             ghost.resetAnimation();
         });
     }

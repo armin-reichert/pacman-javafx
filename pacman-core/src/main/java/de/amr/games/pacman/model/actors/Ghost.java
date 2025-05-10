@@ -32,7 +32,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
     private final String name;
     private GhostState state;
     private Vector2f revivalPosition;
-    private ActorAnimations animations;
+    private GhostAnimations animations;
     private List<Vector2i> specialTerrainTiles = List.of();
     private byte cruiseElroy;
 
@@ -73,12 +73,12 @@ public class Ghost extends Creature implements AnimatedActor2D {
         return this;
     }
 
-    public void setAnimations(ActorAnimations animations) {
+    public void setAnimations(GhostAnimations animations) {
         this.animations = animations;
     }
 
     @Override
-    public Optional<ActorAnimations> animations() {
+    public Optional<Animations> animations() {
         return Optional.ofNullable(animations);
     }
 
@@ -220,9 +220,9 @@ public class Ghost extends Creature implements AnimatedActor2D {
         this.state = state;
         // onEntry action:
         switch (state) {
-            case LOCKED, HUNTING_PAC -> selectAnimation(ActorAnimations.ANIM_GHOST_NORMAL);
-            case ENTERING_HOUSE, RETURNING_HOME -> selectAnimation(ActorAnimations.ANIM_GHOST_EYES);
-            case FRIGHTENED -> selectAnimation(ActorAnimations.ANIM_GHOST_FRIGHTENED);
+            case LOCKED, HUNTING_PAC -> selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
+            case ENTERING_HOUSE, RETURNING_HOME -> selectAnimation(GhostAnimations.ANIM_GHOST_EYES);
+            case FRIGHTENED -> selectAnimation(GhostAnimations.ANIM_GHOST_FRIGHTENED);
             case EATEN -> {}
         }
     }
@@ -248,7 +248,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
 
     public void eaten(int index) {
         setState(EATEN);
-        selectAnimation(ActorAnimations.ANIM_GHOST_NUMBER, index);
+        selectAnimation(GhostAnimations.ANIM_GHOST_NUMBER, index);
     }
 
     // --- LOCKED ---
@@ -275,7 +275,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
         if (level.pac().powerTimer().isRunning() && !level.victims().contains(this)) {
             updateFrightenedAnimation();
         } else {
-            selectAnimation(ActorAnimations.ANIM_GHOST_NORMAL);
+            selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
         }
     }
 
@@ -319,7 +319,7 @@ public class Ghost extends Creature implements AnimatedActor2D {
         if (level.pac().powerTimer().isRunning() && !level.victims().contains(this)) {
             updateFrightenedAnimation();
         } else {
-            selectAnimation(ActorAnimations.ANIM_GHOST_NORMAL);
+            selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
         }
     }
 
@@ -362,9 +362,9 @@ public class Ghost extends Creature implements AnimatedActor2D {
 
     private void updateFrightenedAnimation() {
         if (level.pac().isPowerFadingStarting()) {
-            selectAnimation(ActorAnimations.ANIM_GHOST_FLASHING);
+            selectAnimation(GhostAnimations.ANIM_GHOST_FLASHING);
         } else if (!level.pac().isPowerFading()) {
-            selectAnimation(ActorAnimations.ANIM_GHOST_FRIGHTENED);
+            selectAnimation(GhostAnimations.ANIM_GHOST_FRIGHTENED);
         }
     }
 

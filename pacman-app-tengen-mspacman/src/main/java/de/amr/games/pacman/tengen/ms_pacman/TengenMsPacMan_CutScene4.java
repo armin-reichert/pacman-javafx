@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.model.actors.ActorAnimations.*;
+import static de.amr.games.pacman.model.actors.PacAnimations.*;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel.createMsPacMan;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_GameModel.createPacMan;
 import static de.amr.games.pacman.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;

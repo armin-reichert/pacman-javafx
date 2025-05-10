@@ -7,6 +7,7 @@ package de.amr.games.pacman.arcade;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.uilib.animation.SpriteAnimation;
@@ -17,7 +18,7 @@ import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.arcade.ArcadePacMan_GameModel.createPac;
 import static de.amr.games.pacman.arcade.ArcadePacMan_GameModel.createRedGhost;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.model.actors.ActorAnimations.*;
+import static de.amr.games.pacman.model.actors.PacAnimations.*;
 import static de.amr.games.pacman.ui.GameAssets.ARCADE_WHITE;
 import static de.amr.games.pacman.ui.Globals.*;
 
@@ -55,8 +56,8 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         pac.setAnimations(new ArcadePacMan_PacAnimations(spriteSheet));
 
         var blinkyAnimations = new ArcadePacMan_GhostAnimations(spriteSheet, blinky.id());
-        blinkyNormal = blinkyAnimations.animation(ANIM_GHOST_NORMAL);
-        nailDressRaptureAnimation = blinkyAnimations.animation(ANIM_BLINKY_NAIL_DRESS_RAPTURE);
+        blinkyNormal = blinkyAnimations.animation(GhostAnimations.ANIM_GHOST_NORMAL);
+        nailDressRaptureAnimation = blinkyAnimations.animation(GhostAnimations.ANIM_BLINKY_NAIL_DRESS_RAPTURE);
         blinkyDamaged = blinkyAnimations.animation(ArcadePacMan_GhostAnimations.ANIM_BLINKY_DAMAGED);
         blinky.setAnimations(blinkyAnimations);
 
@@ -89,7 +90,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 blinky.placeAtTile(28, 20, -3, 0);
                 blinky.setMoveAndWishDir(Direction.LEFT);
                 blinky.setSpeed(1.25f);
-                blinky.selectAnimation(ANIM_GHOST_NORMAL);
+                blinky.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
                 blinky.startAnimation();
                 blinky.show();
             }

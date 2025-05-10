@@ -10,10 +10,7 @@ import de.amr.games.pacman.lib.Waypoint;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.*;
-import de.amr.games.pacman.model.actors.ActorAnimations;
-import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.actors.MovingBonus;
-import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import de.amr.games.pacman.steering.Steering;
 import org.tinylog.Logger;
@@ -24,7 +21,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.Globals.*;
-import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_MS_PACMAN_BOOSTER;
+import static de.amr.games.pacman.model.actors.PacAnimations.ANIM_MS_PACMAN_BOOSTER;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 import static java.util.Objects.requireNonNull;
 
@@ -396,10 +393,10 @@ public class TengenMsPacMan_GameModel extends GameModel {
     @Override
     public void initAnimationOfPacManAndGhosts() {
         level.pac().selectAnimation(boosterActive
-            ? ANIM_MS_PACMAN_BOOSTER : ActorAnimations.ANIM_PAC_MUNCHING);
+            ? ANIM_MS_PACMAN_BOOSTER : PacAnimations.ANIM_PAC_MUNCHING);
         level.pac().resetAnimation();
         level.ghosts().forEach(ghost -> {
-            ghost.selectAnimation(ActorAnimations.ANIM_GHOST_NORMAL);
+            ghost.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
             ghost.resetAnimation();
         });
     }
@@ -413,7 +410,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             }
             level.pac().setBaseSpeed(speed);
             level.pac().selectAnimation(boosterActive
-                ? ANIM_MS_PACMAN_BOOSTER : ActorAnimations.ANIM_PAC_MUNCHING);
+                ? ANIM_MS_PACMAN_BOOSTER : PacAnimations.ANIM_PAC_MUNCHING);
         }
     }
 

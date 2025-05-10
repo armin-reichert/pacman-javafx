@@ -12,7 +12,8 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.MapSelectionMode;
-import de.amr.games.pacman.model.actors.ActorAnimations;
+import de.amr.games.pacman.model.actors.GhostAnimations;
+import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.GameUIConfig;
@@ -246,7 +247,7 @@ public class PacManXXL_StartPage implements StartPage {
                 case PACMAN_XXL -> pac.setAnimations(new ArcadePacMan_PacAnimations(config.spriteSheet()));
                 case MS_PACMAN_XXL -> pac.setAnimations(new ArcadeMsPacMan_PacAnimations(config.spriteSheet()));
             }
-            pac.selectAnimation(ActorAnimations.ANIM_PAC_MUNCHING);
+            pac.selectAnimation(PacAnimations.ANIM_PAC_MUNCHING);
             pac.startAnimation();
 
             for (Ghost ghost : ghosts) {
@@ -257,7 +258,7 @@ public class PacManXXL_StartPage implements StartPage {
                         case MS_PACMAN_XXL ->
                             ghost.setAnimations(new ArcadeMsPacMan_GhostAnimations(config.spriteSheet(), ghost.id()));
                     }
-                    ghost.selectAnimation(ActorAnimations.ANIM_GHOST_NORMAL);
+                    ghost.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
                     ghost.startAnimation();
                 }
             }
@@ -296,7 +297,7 @@ public class PacManXXL_StartPage implements StartPage {
                     ghost.setPosX(pac.posX() + 22 * TS + ghost.id() * 2.5f * TS);
                     ghost.setMoveAndWishDir(ghost.moveDir().opposite());
                     ghost.setSpeed(0.58f);
-                    ghost.selectAnimation(ActorAnimations.ANIM_GHOST_FRIGHTENED);
+                    ghost.selectAnimation(GhostAnimations.ANIM_GHOST_FRIGHTENED);
                     ghost.startAnimation();
                 }
             }
@@ -309,14 +310,14 @@ public class PacManXXL_StartPage implements StartPage {
                     ghost.setMoveAndWishDir(Direction.LEFT);
                     ghost.setPosX(46 * TS + ghost.id() * 2 * TS);
                     ghost.setSpeed(1.05f);
-                    ghost.selectAnimation(ActorAnimations.ANIM_GHOST_NORMAL);
+                    ghost.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
                     ghost.startAnimation();
                 }
             }
             else if (chasingGhosts) {
                 for (int i = 0; i < 4; ++i) {
                     if (Math.abs(pac.posX() - ghosts[i].posX()) < 1) {
-                        ghosts[i].selectAnimation(ActorAnimations.ANIM_GHOST_NUMBER, i);
+                        ghosts[i].selectAnimation(GhostAnimations.ANIM_GHOST_NUMBER, i);
                         if (i > 0) {
                             ghosts[i-1].setVisible(false);
                         }

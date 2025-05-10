@@ -13,6 +13,7 @@ import de.amr.games.pacman.lib.fsm.FsmState;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui._2d.GameScene2D;
@@ -26,7 +27,7 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.arcade.ArcadePacMan_GameModel.*;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.model.actors.ActorAnimations.*;
+import static de.amr.games.pacman.model.actors.PacAnimations.*;
 import static de.amr.games.pacman.model.actors.GhostState.EATEN;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.ui.GameAssets.*;
@@ -285,7 +286,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     ghost.setMoveAndWishDir(Direction.LEFT);
                     ghost.setSpeed(CHASE_SPEED);
                     ghost.show();
-                    ghost.selectAnimation(ANIM_GHOST_NORMAL);
+                    ghost.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
                     ghost.startAnimation();
                 });
             }
@@ -303,7 +304,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 else if (scene.pacMan.posX() <= TS * LEFT_TILE_X + HTS) {
                     Stream.of(scene.ghosts).forEach(ghost -> {
                         ghost.setState(FRIGHTENED);
-                        ghost.selectAnimation(ANIM_GHOST_FRIGHTENED);
+                        ghost.selectAnimation(GhostAnimations.ANIM_GHOST_FRIGHTENED);
                         ghost.setMoveAndWishDir(Direction.RIGHT);
                         ghost.setSpeed(GHOST_FRIGHTENED_SPEED);
                         ghost.move();
@@ -348,7 +349,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                             ghost.stopAnimation();
                         });
                         victim.setState(EATEN);
-                        victim.selectAnimation(ANIM_GHOST_NUMBER, scene.victims.size() - 1);
+                        victim.selectAnimation(GhostAnimations.ANIM_GHOST_NUMBER, scene.victims.size() - 1);
                     });
 
                 // After 50 ticks, Pac-Man and the surviving ghosts get visible again and move on

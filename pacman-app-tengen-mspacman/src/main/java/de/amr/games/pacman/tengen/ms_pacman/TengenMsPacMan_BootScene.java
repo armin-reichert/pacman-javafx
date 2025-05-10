@@ -7,8 +7,8 @@ package de.amr.games.pacman.tengen.ms_pacman;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.model.actors.ActorAnimations;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import javafx.scene.paint.Color;
@@ -55,7 +55,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             ghost.hide();
             GameSpriteSheet spriteSheet = THE_UI_CONFIGS.current().spriteSheet();
             ghost.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, ghost.id()));
-            ghost.selectAnimation(ActorAnimations.ANIM_GHOST_NORMAL);
+            ghost.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
         }
         if (t == 7) {
             grayScreen = true;

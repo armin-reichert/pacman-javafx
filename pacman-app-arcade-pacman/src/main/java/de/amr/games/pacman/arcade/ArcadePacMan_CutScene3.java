@@ -17,7 +17,7 @@ import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.arcade.ArcadePacMan_GameModel.createPac;
 import static de.amr.games.pacman.arcade.ArcadePacMan_GameModel.createRedGhost;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_PAC_MUNCHING;
+import static de.amr.games.pacman.model.actors.PacAnimations.ANIM_PAC_MUNCHING;
 import static de.amr.games.pacman.ui.GameAssets.ARCADE_WHITE;
 import static de.amr.games.pacman.ui.Globals.*;
 

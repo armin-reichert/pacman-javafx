@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.Actor;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
@@ -17,7 +18,7 @@ import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GameModel.*;
 import static de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.HEART_SPRITE;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.model.actors.ActorAnimations.*;
+import static de.amr.games.pacman.model.actors.PacAnimations.*;
 import static de.amr.games.pacman.ui.GameAssets.ARCADE_WHITE;
 import static de.amr.games.pacman.ui.Globals.THE_SOUND;
 import static de.amr.games.pacman.ui.Globals.THE_UI_CONFIGS;
@@ -150,7 +151,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         inky.setMoveAndWishDir(Direction.RIGHT);
         inky.setPosition(pacMan.position().minus(TS * 6, 0));
         inky.setSpeed(SPEED_GHOST_CHASING);
-        inky.selectAnimation(ANIM_GHOST_NORMAL);
+        inky.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
         inky.startAnimation();
         inky.show();
 
@@ -164,7 +165,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         pinky.setMoveAndWishDir(Direction.LEFT);
         pinky.setPosition(msPacMan.position().plus(TS * 6, 0));
         pinky.setSpeed(SPEED_GHOST_CHASING);
-        pinky.selectAnimation(ANIM_GHOST_NORMAL);
+        pinky.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
         pinky.startAnimation();
         pinky.show();
 

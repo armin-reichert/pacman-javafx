@@ -7,7 +7,7 @@ package de.amr.games.pacman.arcade.ms_pacman;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.actors.ActorAnimations;
+import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
@@ -16,7 +16,7 @@ import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createMsPacMan;
 import static de.amr.games.pacman.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createPacMan;
 import static de.amr.games.pacman.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.games.pacman.model.actors.ActorAnimations.ANIM_MR_PACMAN_MUNCHING;
+import static de.amr.games.pacman.model.actors.PacAnimations.ANIM_MR_PACMAN_MUNCHING;
 import static de.amr.games.pacman.ui.GameAssets.ARCADE_WHITE;
 import static de.amr.games.pacman.ui.Globals.THE_SOUND;
 import static de.amr.games.pacman.ui.Globals.THE_UI_CONFIGS;
@@ -122,7 +122,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
         pacMan.selectAnimation(ANIM_MR_PACMAN_MUNCHING);
         pacMan.startAnimation();
         msPacMan.setMoveDir(Direction.RIGHT);
-        msPacMan.selectAnimation(ActorAnimations.ANIM_PAC_MUNCHING);
+        msPacMan.selectAnimation(PacAnimations.ANIM_PAC_MUNCHING);
         msPacMan.startAnimation();
 
         setSceneState(STATE_CHASING, TickTimer.INDEFINITE);

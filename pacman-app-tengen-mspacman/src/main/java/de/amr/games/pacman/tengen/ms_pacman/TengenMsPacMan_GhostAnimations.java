@@ -7,8 +7,8 @@ package de.amr.games.pacman.tengen.ms_pacman;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RectArea;
 import de.amr.games.pacman.model.actors.Actor;
-import de.amr.games.pacman.model.actors.ActorAnimations;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.ui._2d.GameSpriteSheet;
 import de.amr.games.pacman.ui._2d.SpriteAnimationSet;
 import de.amr.games.pacman.uilib.animation.SpriteAnimation;
@@ -21,7 +21,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * @author Armin Reichert
  */
-public class TengenMsPacMan_GhostAnimations extends SpriteAnimationSet {
+public class TengenMsPacMan_GhostAnimations extends SpriteAnimationSet implements GhostAnimations {
 
     public static final int NORMAL_FRAME_TICKS = 8;  // TODO check this in emulator
     public static final int FRIGHTENED_FRAME_TICKS = 8;  // TODO check this in emulator
@@ -59,11 +59,11 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationSet {
             .end();
 
         add(Map.of(
-            ActorAnimations.ANIM_GHOST_NORMAL, normal,
-            ActorAnimations.ANIM_GHOST_FRIGHTENED, frightened,
-            ActorAnimations.ANIM_GHOST_FLASHING, flashing,
-            ActorAnimations.ANIM_GHOST_EYES, eyes,
-            ActorAnimations.ANIM_GHOST_NUMBER, number));
+            GhostAnimations.ANIM_GHOST_NORMAL, normal,
+            GhostAnimations.ANIM_GHOST_FRIGHTENED, frightened,
+            GhostAnimations.ANIM_GHOST_FLASHING, flashing,
+            GhostAnimations.ANIM_GHOST_EYES, eyes,
+            GhostAnimations.ANIM_GHOST_NUMBER, number));
 
         // TODO check this
         eyes.play();
@@ -74,8 +74,8 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationSet {
     @Override
     public void select(String id, int frameIndex) {
         super.select(id, frameIndex);
-        if (ActorAnimations.ANIM_GHOST_NUMBER.equals(id)) {
-            animation(ActorAnimations.ANIM_GHOST_NUMBER).setFrameIndex(frameIndex);
+        if (GhostAnimations.ANIM_GHOST_NUMBER.equals(id)) {
+            animation(GhostAnimations.ANIM_GHOST_NUMBER).setFrameIndex(frameIndex);
         }
     }
 
@@ -83,10 +83,10 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationSet {
     protected RectArea[] selectedSprites(SpriteSheet spriteSheet, Actor actor) {
         GameSpriteSheet gss = (GameSpriteSheet) spriteSheet;
         if (actor instanceof Ghost ghost) {
-            if (isCurrentAnimationID(ActorAnimations.ANIM_GHOST_NORMAL)) {
+            if (isCurrentAnimationID(GhostAnimations.ANIM_GHOST_NORMAL)) {
                 return gss.ghostNormalSprites(ghost.id(), ghost.wishDir());
             }
-            if (isCurrentAnimationID(ActorAnimations.ANIM_GHOST_EYES)) {
+            if (isCurrentAnimationID(GhostAnimations.ANIM_GHOST_EYES)) {
                 return gss.ghostEyesSprites(ghost.wishDir());
             }
         }
