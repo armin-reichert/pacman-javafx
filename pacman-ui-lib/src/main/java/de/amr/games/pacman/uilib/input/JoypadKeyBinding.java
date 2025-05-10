@@ -29,4 +29,11 @@ public record JoypadKeyBinding(
             case RIGHT -> rightButtonKey;
         };
     }
+
+    @Override
+    public String toString() {
+        return "SELECT=[%s] START=[%s] B=[%s] A=[%s] UP=[%s] DOWN=[%s] LEFT=[%s] RIGHT=[%s]".formatted(
+            selectButtonKey, startButtonKey, bButtonKey, aButtonKey, upButtonKey, downButtonKey, leftButtonKey, rightButtonKey
+        );
+    }
 }

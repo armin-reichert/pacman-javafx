@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.nes.JoypadButtonID;
 import de.amr.games.pacman.uilib.ActionProvider;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
+import org.tinylog.Logger;
 
 import java.util.stream.Stream;
 
@@ -77,6 +78,7 @@ public class Joypad {
     public void selectNextKeyBinding(ActionProvider actionProvider) {
         selectedIndex = (selectedIndex + 1) % bindings.length;
         setBinding(selectedIndex, actionProvider);
+        Logger.info("Joypad keys: {}", currentKeyBinding());
     }
 
     private void setBinding(int index, ActionProvider actionProvider) {
