@@ -86,13 +86,13 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     public void drawActor(Actor actor) {
         ctx().setImageSmoothing(false);
         if (actor instanceof Pac pac) {
-            drawMsOrMrPacMan(pac);
+            drawAnyPac(pac);
         } else {
             GameRenderer.super.drawActor(actor);
         }
     }
 
-    private void drawMsOrMrPacMan(Pac pac) {
+    private void drawAnyPac(Pac pac) {
         if (!pac.isVisible()) {
             return;
         }
@@ -104,7 +104,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
                          TengenMsPacMan_PacAnimations.PAC_MAN_MUNCHING,
                          TengenMsPacMan_PacAnimations.MS_PAC_MAN_BOOSTER,
                          TengenMsPacMan_PacAnimations.PAC_MAN_BOOSTER,
-                         TengenMsPacMan_PacAnimations.JUNIOR -> drawGuy(pac, pac.moveDir(), animation.currentSprite());
+                         TengenMsPacMan_PacAnimations.JUNIOR -> drawCreature(pac, pac.moveDir(), animation.currentSprite());
                     case Animations.ANY_PAC_DYING -> {
                         Direction dir = Direction.UP;
                         if (animation.frameIndex() < 11) {
@@ -115,7 +115,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
                                 case 3 -> Direction.RIGHT;
                             };
                         }
-                        drawGuy(pac, dir, animation.currentSprite());
+                        drawCreature(pac, dir, animation.currentSprite());
                     }
                     default -> GameRenderer.super.drawActor(pac);
                 }
@@ -125,8 +125,8 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         });
     }
 
-    private void drawGuy(Creature guy, Direction dir, RectArea spriteLookingLeft) {
-        Vector2f center = guy.position().plus(HTS, HTS).scaled(scaling());
+    private void drawCreature(Creature creature, Direction dir, RectArea spriteLookingLeft) {
+        Vector2f center = creature.position().plus(HTS, HTS).scaled(scaling());
         ctx().save();
         ctx().translate(center.x(), center.y());
         switch (dir) {
