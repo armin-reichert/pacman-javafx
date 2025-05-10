@@ -408,25 +408,33 @@ public class WorldMap {
         return row < 0 || row >= numRows() || col < 0 || col >= numCols();
     }
 
+    // Configuration map, can store values of any data type. Keys and values must not be null.
+
     public void setConfigValue(String key, Object value) {
-        getOrCreateConfigMap().put(key, value);
+        requireNonNull(key);
+        requireNonNull(value);
+        configMap().put(key, value);
     }
 
     @SuppressWarnings("unchecked")
     public <T> T getConfigValue(String key) {
-        return (T) getOrCreateConfigMap().get(key);
+        requireNonNull(key);
+        return (T) configMap().get(key);
     }
 
     public boolean hasConfigValue(String key) {
-        return getOrCreateConfigMap().containsKey(key);
+        requireNonNull(key);
+        return configMap != null && configMap.containsKey(key);
     }
 
-    private Map<String, Object> getOrCreateConfigMap() {
+    private Map<String, Object> configMap() {
         if (configMap == null) {
             configMap = new HashMap<>();
         }
         return configMap;
     }
+
+    // Properties map by layer
 
     public Map<String, String> properties(LayerID layerID) {
         return layer(layerID).properties();
@@ -437,6 +445,7 @@ public class WorldMap {
     }
 
     public Vector2i getTileProperty(LayerID layerID, String propertyName, Vector2i defaultTile) {
+        requireNonNull(propertyName);
         if (properties(layerID).containsKey(propertyName)) {
             String value = properties(layerID).get(propertyName);
             return parseTile(value).orElse(defaultTile);
