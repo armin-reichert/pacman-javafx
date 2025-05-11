@@ -12,7 +12,7 @@ open module de.amr.games.pacman.tengen.ms_pacman {
     requires org.tinylog.api;
     requires de.amr.pacmanfx.core;
     requires de.amr.pacmanfx.uilib;
-    requires de.amr.games.pacman.ui;
+    requires de.amr.pacmanfx.ui;
 
     exports de.amr.pacmanfx.tengen.ms_pacman;
 }

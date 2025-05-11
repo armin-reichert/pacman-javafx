@@ -10,7 +10,7 @@ module de.amr.games.pacman.ui3d.all {
     requires org.tinylog.api;
     requires de.amr.pacmanfx.core;
     requires de.amr.pacmanfx.uilib;
-    requires de.amr.games.pacman.ui;
+    requires de.amr.pacmanfx.ui;
     requires de.amr.games.pacman.arcade.ms_pacman;
     requires de.amr.games.pacman.arcade.pacman;
     requires de.amr.games.pacman.arcade.pacman_xxl;

@@ -12,7 +12,7 @@ open module de.amr.games.pacman.arcade.ms_pacman {
     requires org.tinylog.api;
     requires de.amr.pacmanfx.core;
     requires de.amr.pacmanfx.uilib;
-    requires de.amr.games.pacman.ui;
+    requires de.amr.pacmanfx.ui;
     requires de.amr.games.pacman.arcade.pacman;
 
     exports de.amr.pacmanfx.arcade.ms_pacman;

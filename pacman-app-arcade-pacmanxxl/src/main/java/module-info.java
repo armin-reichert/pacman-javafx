@@ -11,10 +11,10 @@ open module de.amr.games.pacman.arcade.pacman_xxl {
     requires javafx.graphics;
     requires javafx.media;
     requires de.amr.pacmanfx.core;
+    requires de.amr.pacmanfx.uilib;
+    requires de.amr.pacmanfx.ui;
     requires de.amr.games.pacman.arcade.ms_pacman;
     requires de.amr.games.pacman.arcade.pacman;
-    requires de.amr.games.pacman.ui;
-    requires de.amr.pacmanfx.uilib;
 
     exports de.amr.pacmanfx.arcade.pacman_xxl;
 }

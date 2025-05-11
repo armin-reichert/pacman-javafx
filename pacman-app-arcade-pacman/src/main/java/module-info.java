@@ -12,7 +12,7 @@ open module de.amr.games.pacman.arcade.pacman {
     requires javafx.media;
     requires de.amr.pacmanfx.core;
     requires de.amr.pacmanfx.uilib;
-    requires de.amr.games.pacman.ui;
+    requires de.amr.pacmanfx.ui;
 
     exports de.amr.pacmanfx.arcade;
 }
