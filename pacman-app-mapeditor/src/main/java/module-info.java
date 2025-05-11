@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 
 // module is open to allow access to non-class resources
-open module de.amr.games.pacman.tilemap.editor.app {
+open module de.amr.pacmanfx.mapeditor {
     requires javafx.graphics;
     requires javafx.controls;
     requires org.tinylog.api;

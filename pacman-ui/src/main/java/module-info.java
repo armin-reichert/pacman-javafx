@@ -15,7 +15,7 @@ open module de.amr.pacmanfx.ui {
     requires org.kordamp.ikonli.fontawesome5;
     requires de.amr.pacmanfx.core;
     requires de.amr.pacmanfx.uilib;
-    requires de.amr.games.pacman.tilemap.editor.app;
+    requires de.amr.pacmanfx.mapeditor;
 
     exports de.amr.pacmanfx.ui.dashboard;
     exports de.amr.pacmanfx.ui.sound;
