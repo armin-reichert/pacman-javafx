@@ -20,7 +20,7 @@ import java.util.Map;
 import static de.amr.games.pacman.Globals.randomInt;
 import static java.util.Objects.requireNonNull;
 
-public class PacManXXL_MapSelector extends MapSelector {
+public class XXLAnyPacMan_MapSelector extends MapSelector {
 
     private static final List<Map<String, String>> MAP_COLORINGS = List.of(
             Map.of("fill", "#359c9c", "stroke", "#85e2ff", "door", "#fcb5ff", "pellet", "#feb8ae"),
@@ -39,7 +39,7 @@ public class PacManXXL_MapSelector extends MapSelector {
     private final DirectoryWatchdog goodBoy;
     private boolean customMapsUpToDate;
 
-    public PacManXXL_MapSelector(File customMapDir) {
+    public XXLAnyPacMan_MapSelector(File customMapDir) {
         this.customMapDir = requireNonNull(customMapDir);
         goodBoy = new DirectoryWatchdog(customMapDir);
         setMapSelectionMode(MapSelectionMode.CUSTOM_MAPS_FIRST);

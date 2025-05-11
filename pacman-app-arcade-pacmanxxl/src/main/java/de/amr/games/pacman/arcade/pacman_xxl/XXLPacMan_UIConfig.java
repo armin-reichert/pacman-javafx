@@ -33,13 +33,13 @@ import static de.amr.games.pacman.ui.GameAssets.*;
 import static de.amr.games.pacman.ui.Globals.PY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
-public class PacManXXL_PacMan_UIConfig implements GameUIConfig {
+public class XXLPacMan_UIConfig implements GameUIConfig {
 
     private final Image appIcon;
     private final ArcadePacMan_SpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public PacManXXL_PacMan_UIConfig(GameAssets assets) {
+    public XXLPacMan_UIConfig(GameAssets assets) {
         ResourceManager rm = () -> ArcadePacMan_UIConfig.class;
 
         appIcon = rm.loadImage("graphics/icons/pacman.png");

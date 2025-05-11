@@ -35,17 +35,17 @@ import static de.amr.games.pacman.ui.Globals.*;
  */
 public class PacManGames3dApp extends Application {
 
-    private PacManXXL_MapSelector xxlMapSelector;
+    private XXLAnyPacMan_MapSelector xxlMapSelector;
 
     @Override
     public void init() {
         checkUserDirsExistAndWritable();
-        xxlMapSelector = new PacManXXL_MapSelector(CUSTOM_MAP_DIR);
+        xxlMapSelector = new XXLAnyPacMan_MapSelector(CUSTOM_MAP_DIR);
         THE_GAME_CONTROLLER.register(GameVariant.MS_PACMAN,        new ArcadeMsPacMan_GameModel());
         THE_GAME_CONTROLLER.register(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
         THE_GAME_CONTROLLER.register(GameVariant.PACMAN,           new ArcadePacMan_GameModel());
-        THE_GAME_CONTROLLER.register(GameVariant.PACMAN_XXL,       new PacManXXL_PacMan_GameModel(xxlMapSelector));
-        THE_GAME_CONTROLLER.register(GameVariant.MS_PACMAN_XXL,    new PacManXXL_MsPacMan_GameModel(xxlMapSelector));
+        THE_GAME_CONTROLLER.register(GameVariant.PACMAN_XXL,       new XXLPacMan_GameModel(xxlMapSelector));
+        THE_GAME_CONTROLLER.register(GameVariant.MS_PACMAN_XXL,    new XXLMsPacMan_GameModel(xxlMapSelector));
         THE_GAME_CONTROLLER.select(GameVariant.PACMAN);
     }
 
@@ -57,8 +57,8 @@ public class PacManGames3dApp extends Application {
             GameVariant.PACMAN,           ArcadePacMan_UIConfig.class,
             GameVariant.MS_PACMAN,        ArcadeMsPacMan_UIConfig.class,
             GameVariant.MS_PACMAN_TENGEN, TengenMsPacMan_UIConfig.class,
-            GameVariant.PACMAN_XXL,       PacManXXL_PacMan_UIConfig.class,
-            GameVariant.MS_PACMAN_XXL,    PacManXXL_MsPacMan_UIConfig.class
+            GameVariant.PACMAN_XXL,       XXLPacMan_UIConfig.class,
+            GameVariant.MS_PACMAN_XXL,    XXLMsPacMan_UIConfig.class
         ));
         THE_UI.build(stage, width, height);
         THE_UI.buildDashboard(
@@ -79,7 +79,7 @@ public class PacManGames3dApp extends Application {
         THE_UI.addStartPage(new ArcadePacMan_StartPage(GameVariant.PACMAN));
         THE_UI.addStartPage(new ArcadeMsPacMan_StartPage(GameVariant.MS_PACMAN));
         THE_UI.addStartPage(new TengenMsPacMan_StartPage(GameVariant.MS_PACMAN_TENGEN));
-        THE_UI.addStartPage(new PacManXXL_StartPage());
+        THE_UI.addStartPage(new XXLAnyPacMan_StartPage());
         THE_UI.selectStartPage(0);
         THE_UI.show();
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());

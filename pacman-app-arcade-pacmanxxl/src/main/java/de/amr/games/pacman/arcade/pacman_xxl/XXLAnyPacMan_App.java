@@ -18,16 +18,16 @@ import static de.amr.games.pacman.Globals.*;
 import static de.amr.games.pacman.ui.Globals.THE_UI;
 import static de.amr.games.pacman.ui.Globals.createUI;
 
-public class PacManXXL_App extends Application {
+public class XXLAnyPacMan_App extends Application {
 
-    private PacManXXL_MapSelector xxlMapSelector;
+    private XXLAnyPacMan_MapSelector xxlMapSelector;
 
     @Override
     public void init() {
         checkUserDirsExistAndWritable();
-        xxlMapSelector = new PacManXXL_MapSelector(CUSTOM_MAP_DIR);
-        var pacManGameModel = new PacManXXL_PacMan_GameModel(xxlMapSelector);
-        var msPacManGameModel = new PacManXXL_MsPacMan_GameModel(xxlMapSelector);
+        xxlMapSelector = new XXLAnyPacMan_MapSelector(CUSTOM_MAP_DIR);
+        var pacManGameModel = new XXLPacMan_GameModel(xxlMapSelector);
+        var msPacManGameModel = new XXLMsPacMan_GameModel(xxlMapSelector);
         THE_GAME_CONTROLLER.register(GameVariant.PACMAN_XXL, pacManGameModel);
         THE_GAME_CONTROLLER.register(GameVariant.MS_PACMAN_XXL, msPacManGameModel);
         THE_GAME_CONTROLLER.select(GameVariant.MS_PACMAN_XXL);
@@ -39,8 +39,8 @@ public class PacManXXL_App extends Application {
         double aspect = screenSize.getWidth() / screenSize.getHeight();
         double height = 0.8 * screenSize.getHeight(), width = aspect * height;
         createUI(Map.of(
-            GameVariant.PACMAN_XXL,    PacManXXL_PacMan_UIConfig.class,
-            GameVariant.MS_PACMAN_XXL, PacManXXL_MsPacMan_UIConfig.class)
+            GameVariant.PACMAN_XXL,    XXLPacMan_UIConfig.class,
+            GameVariant.MS_PACMAN_XXL, XXLMsPacMan_UIConfig.class)
         );
         THE_UI.build(stage, width, height);
         THE_UI.buildDashboard(
@@ -57,7 +57,7 @@ public class PacManXXL_App extends Application {
         InfoBoxCustomMaps infoBoxCustomMaps = THE_UI.dashboard().getInfoBox(DashboardID.CUSTOM_MAPS);
         infoBoxCustomMaps.setTableItems(xxlMapSelector.customMaps());
 
-        THE_UI.addStartPage(new PacManXXL_StartPage());
+        THE_UI.addStartPage(new XXLAnyPacMan_StartPage());
         THE_UI.selectStartPage(0);
         THE_UI.show();
     }
