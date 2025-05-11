@@ -17,7 +17,7 @@ dependencies {
 }
 
 application {
-    mainModule = "allgames"
+    mainModule = "de.amr.pacmanfx.allgames"
     mainClass = "de.amr.pacmanfx.allgames.Main"
     if (os.isLinux()) {
         applicationDefaultJvmArgs = ["-Dprism.forceGPU=true"]
