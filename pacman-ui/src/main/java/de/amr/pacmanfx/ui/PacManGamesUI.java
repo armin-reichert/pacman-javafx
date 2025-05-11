@@ -55,8 +55,6 @@ public class PacManGamesUI implements GameUI {
     private StartPagesView startPagesView;
 
     public PacManGamesUI() {
-        THE_CLOCK.setPauseableAction(this::doSimulationStepAndUpdateGameScene);
-        THE_CLOCK.setPermanentAction(this::drawCurrentView);
         viewPy.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
     }
 
@@ -105,19 +103,19 @@ public class PacManGamesUI implements GameUI {
         mainScene = new Scene(root, width, height);
         mainScene.widthProperty() .addListener((py,ov,nv) -> gameView.resize(mainScene.getWidth(), mainScene.getHeight()));
         mainScene.heightProperty().addListener((py,ov,nv) -> gameView.resize(mainScene.getWidth(), mainScene.getHeight()));
-        mainScene.addEventFilter(KeyEvent.KEY_PRESSED, de.amr.pacmanfx.ui.Globals.THE_KEYBOARD::onKeyPressed);
-        mainScene.addEventFilter(KeyEvent.KEY_RELEASED, de.amr.pacmanfx.ui.Globals.THE_KEYBOARD::onKeyReleased);
+        mainScene.addEventFilter(KeyEvent.KEY_PRESSED, THE_KEYBOARD::onKeyPressed);
+        mainScene.addEventFilter(KeyEvent.KEY_RELEASED, THE_KEYBOARD::onKeyReleased);
         mainScene.setOnKeyPressed(this::onKeyPressed);
     }
 
     private void onKeyPressed(KeyEvent keyPress) {
-        if (de.amr.pacmanfx.ui.Globals.KEY_FULLSCREEN.match(keyPress)) {
+        if (KEY_FULLSCREEN.match(keyPress)) {
             stage.setFullScreen(true);
         }
-        else if (de.amr.pacmanfx.ui.Globals.KEY_MUTE.match(keyPress)) {
+        else if (KEY_MUTE.match(keyPress)) {
             THE_SOUND.toggleMuted();
         }
-        else if (de.amr.pacmanfx.ui.Globals.KEY_OPEN_EDITOR.match(keyPress)) {
+        else if (KEY_OPEN_EDITOR.match(keyPress)) {
             showEditorView();
         }
         else {
@@ -126,10 +124,10 @@ public class PacManGamesUI implements GameUI {
     }
 
     private Pane createIconBox(Node... icons) {
-        int height = de.amr.pacmanfx.ui.Globals.STATUS_ICON_SIZE + de.amr.pacmanfx.ui.Globals.STATUS_ICON_PADDING;
-        var iconBox = new HBox(de.amr.pacmanfx.ui.Globals.STATUS_ICON_SPACING);
+        int height = STATUS_ICON_SIZE + STATUS_ICON_PADDING;
+        var iconBox = new HBox(STATUS_ICON_SPACING);
         iconBox.getChildren().addAll(icons);
-        iconBox.setPadding(new Insets(de.amr.pacmanfx.ui.Globals.STATUS_ICON_PADDING));
+        iconBox.setPadding(new Insets(STATUS_ICON_PADDING));
         iconBox.setMaxHeight(height);
         // keep box compact, show only visible items
         for (var icon : icons) {
@@ -140,19 +138,19 @@ public class PacManGamesUI implements GameUI {
     }
 
     private void addStatusIcons(Pane parent) {
-        var iconMuted = FontIcon.of(FontAwesomeSolid.DEAF, de.amr.pacmanfx.ui.Globals.STATUS_ICON_SIZE, de.amr.pacmanfx.ui.Globals.STATUS_ICON_COLOR);
+        var iconMuted = FontIcon.of(FontAwesomeSolid.DEAF, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
         iconMuted.visibleProperty().bind(THE_SOUND.mutedProperty());
 
-        var iconAutopilot = FontIcon.of(FontAwesomeSolid.TAXI, de.amr.pacmanfx.ui.Globals.STATUS_ICON_SIZE, de.amr.pacmanfx.ui.Globals.STATUS_ICON_COLOR);
-        iconAutopilot.visibleProperty().bind(de.amr.pacmanfx.ui.Globals.PY_AUTOPILOT);
+        var iconAutopilot = FontIcon.of(FontAwesomeSolid.TAXI, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
+        iconAutopilot.visibleProperty().bind(PY_AUTOPILOT);
 
-        var iconImmune = FontIcon.of(FontAwesomeSolid.USER_SECRET, de.amr.pacmanfx.ui.Globals.STATUS_ICON_SIZE, de.amr.pacmanfx.ui.Globals.STATUS_ICON_COLOR);
-        iconImmune.visibleProperty().bind(de.amr.pacmanfx.ui.Globals.PY_IMMUNITY);
+        var iconImmune = FontIcon.of(FontAwesomeSolid.USER_SECRET, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
+        iconImmune.visibleProperty().bind(PY_IMMUNITY);
 
-        var icon3D = FontIcon.of(FontAwesomeSolid.CUBES, de.amr.pacmanfx.ui.Globals.STATUS_ICON_SIZE, de.amr.pacmanfx.ui.Globals.STATUS_ICON_COLOR);
-        icon3D.visibleProperty().bind(de.amr.pacmanfx.ui.Globals.PY_3D_ENABLED);
+        var icon3D = FontIcon.of(FontAwesomeSolid.CUBES, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
+        icon3D.visibleProperty().bind(PY_3D_ENABLED);
 
-        var iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, de.amr.pacmanfx.ui.Globals.STATUS_ICON_COLOR);
+        var iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, STATUS_ICON_COLOR);
         iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
             () -> currentView() != editorView && THE_CLOCK.isPaused(),
             viewPy, THE_CLOCK.pausedProperty()));
@@ -213,7 +211,7 @@ public class PacManGamesUI implements GameUI {
         createMapEditorView();
 
         root.backgroundProperty().bind(gameView.gameSceneProperty().map(
-            gameScene -> de.amr.pacmanfx.ui.Globals.THE_UI_CONFIGS.currentGameSceneIsPlayScene3D()
+            gameScene -> THE_UI_CONFIGS.currentGameSceneIsPlayScene3D()
                 ? THE_ASSETS.get("background.play_scene3d")
                 : THE_ASSETS.get("background.scene"))
         );
@@ -221,6 +219,9 @@ public class PacManGamesUI implements GameUI {
         stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
         stage.setMinHeight(ARCADE_MAP_SIZE_IN_PIXELS.y() * 1.25);
         stage.setScene(mainScene);
+
+        THE_CLOCK.setPauseableAction(this::doSimulationStepAndUpdateGameScene);
+        THE_CLOCK.setPermanentAction(this::drawCurrentView);
     }
 
     @Override
