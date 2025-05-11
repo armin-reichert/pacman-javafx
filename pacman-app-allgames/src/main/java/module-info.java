@@ -3,7 +3,7 @@ Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
 
-module de.amr.games.pacman.ui3d.all {
+module de.amr.pacmanfx.allgames {
     requires javafx.controls;
     requires javafx.graphics;
     requires javafx.media;
