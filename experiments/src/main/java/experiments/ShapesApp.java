@@ -1,6 +1,6 @@
 package experiments;
 
-import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import org.tinylog.Logger;
 
 import java.io.IOException;

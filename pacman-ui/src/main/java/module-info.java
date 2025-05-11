@@ -20,9 +20,9 @@ open module de.amr.games.pacman.ui {
     requires de.amr.games.pacman.tilemap.editor.app;
     requires de.amr.games.pacman.uilib;
 
-    exports de.amr.games.pacman.ui.dashboard;
-    exports de.amr.games.pacman.ui.sound;
-    exports de.amr.games.pacman.ui._2d;
-    exports de.amr.games.pacman.ui._3d;
-    exports de.amr.games.pacman.ui;
+    exports de.amr.pacmanfx.ui.dashboard;
+    exports de.amr.pacmanfx.ui.sound;
+    exports de.amr.pacmanfx.ui._2d;
+    exports de.amr.pacmanfx.ui._3d;
+    exports de.amr.pacmanfx.ui;
 }

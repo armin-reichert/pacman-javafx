@@ -1,6 +1,6 @@
 package experiments;
 
-import de.amr.games.pacman.lib.DirectoryWatchdog;
+import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -19,7 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.games.pacman.Globals.CUSTOM_MAP_DIR;
+import static de.amr.pacmanfx.Globals.CUSTOM_MAP_DIR;
 import static java.nio.file.StandardWatchEventKinds.*;
 
 public class WatchCustomMapsApp extends Application {

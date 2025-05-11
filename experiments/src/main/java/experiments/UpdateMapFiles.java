@@ -1,10 +1,10 @@
 package experiments;
 
-import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.LayerID;
-import de.amr.games.pacman.lib.tilemap.TerrainTiles;
-import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.WorldMapProperty;
+import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.tilemap.LayerID;
+import de.amr.pacmanfx.lib.tilemap.TerrainTiles;
+import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.model.WorldMapProperty;
 import org.tinylog.Logger;
 
 import java.io.File;

@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package experiments;
 
-import de.amr.games.pacman.uilib.assets.ResourceManager;
-import de.amr.games.pacman.uilib.model3D.Model3D;
+import de.amr.pacmanfx.uilib.assets.ResourceManager;
+import de.amr.pacmanfx.uilib.model3D.Model3D;
 import org.tinylog.Logger;
 
 /**

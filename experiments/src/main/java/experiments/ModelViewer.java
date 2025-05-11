@@ -1,7 +1,7 @@
 package experiments;
 
-import de.amr.games.pacman.uilib.model3D.Model3D;
-import de.amr.games.pacman.uilib.model3D.Model3DRepository;
+import de.amr.pacmanfx.uilib.model3D.Model3D;
+import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import javafx.application.Application;
 import javafx.scene.*;
 import javafx.scene.control.Menu;
@@ -23,7 +23,7 @@ public class ModelViewer extends Application {
 
     static final String REPOSITORY_DIR = System.getProperty("user.home") + "/git/pacman-javafx/";
     static final String DIR = REPOSITORY_DIR
-        + "pacman-ui-lib/src/main/resources/de/amr/games/pacman/uilib/model3D";
+        + "pacman-ui-lib/src/main/resources/de/amr/pacmanfx/uilib/model3D";
 
     private Stage stage;
     private SubScene previewArea;

@@ -13,7 +13,7 @@ dependencies {
 
 application {
     mainModule = "de.amr.games.pacman.tilemap.editor.app"
-    mainClass  = "de.amr.games.pacman.tilemap.editor.app.Main"
+    mainClass  = "de.amr.pacmanfx.tilemap.editor.app.Main"
 }
 
 javafx {

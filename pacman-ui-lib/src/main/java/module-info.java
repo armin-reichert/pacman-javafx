@@ -8,12 +8,12 @@ open module de.amr.games.pacman.uilib {
     requires de.amr.games.pacman;
     requires java.sql;
 
-    exports de.amr.games.pacman.uilib;
-    exports de.amr.games.pacman.uilib.objimport;
-    exports de.amr.games.pacman.uilib.model3D;
-    exports de.amr.games.pacman.uilib.assets;
-    exports de.amr.games.pacman.uilib.widgets;
-    exports de.amr.games.pacman.uilib.animation;
-    exports de.amr.games.pacman.uilib.input;
-    exports de.amr.games.pacman.uilib.tilemap;
+    exports de.amr.pacmanfx.uilib;
+    exports de.amr.pacmanfx.uilib.objimport;
+    exports de.amr.pacmanfx.uilib.model3D;
+    exports de.amr.pacmanfx.uilib.assets;
+    exports de.amr.pacmanfx.uilib.widgets;
+    exports de.amr.pacmanfx.uilib.animation;
+    exports de.amr.pacmanfx.uilib.input;
+    exports de.amr.pacmanfx.uilib.tilemap;
 }

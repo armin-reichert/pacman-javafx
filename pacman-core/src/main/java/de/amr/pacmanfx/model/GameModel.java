@@ -1,0 +1,219 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
+package de.amr.pacmanfx.model;
+
+import de.amr.pacmanfx.event.GameEventType;
+import de.amr.pacmanfx.lib.timer.Pulse;
+import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.model.actors.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import org.tinylog.Logger;
+
+import java.util.Optional;
+
+import static de.amr.pacmanfx.Globals.THE_GAME_EVENT_MANAGER;
+import static de.amr.pacmanfx.Globals.THE_SIMULATION_STEP;
+
+/**
+ * Common base class of all Pac-Man game models.
+ *
+ * @author Armin Reichert
+ */
+public abstract class GameModel {
+
+    private final BooleanProperty cutScenesEnabledPy = new SimpleBooleanProperty(true);
+    private final BooleanProperty playingPy = new SimpleBooleanProperty(false);
+
+    protected GameLevel level;
+    protected ScoreManager scoreManager;
+
+    protected GameModel() {
+        scoreManager = new DefaultScoreManager();
+        scoreManager.score().pointsProperty().addListener(
+                (py, ov, nv) -> scoreManager.onScoreChanged(this, ov.intValue(), nv.intValue()));
+    }
+
+    public ScoreManager scoreManager() { return scoreManager; }
+    public abstract LevelCounter levelCounter();
+    public abstract MapSelector mapSelector();
+    public Optional<GateKeeper> gateKeeper() { return Optional.empty(); }
+    public Optional<GameLevel> level() { return Optional.ofNullable(level); }
+
+    public BooleanProperty cutScenesEnabledProperty() { return cutScenesEnabledPy; }
+    public BooleanProperty playingProperty() { return playingPy; }
+    public boolean isPlaying() { return playingProperty().get(); }
+
+    // Game lifecycle
+
+    public abstract void    init();
+    public abstract void    resetEverything();
+    public abstract void    prepareForNewGame();
+    public abstract boolean canStartNewGame();
+    public abstract void    startNewGame();
+    public abstract void    createLevel(int levelNumber);
+    public abstract void    buildNormalLevel(int levelNumber);
+    public abstract void    buildDemoLevel();
+    public abstract void    assignDemoLevelBehavior(Pac pac);
+    public abstract boolean isPacManSafeInDemoLevel();
+    public abstract void    startLevel();
+    public abstract void    startNextLevel();
+    public abstract int     lastLevelNumber();
+    public abstract boolean continueOnGameOver();
+
+    public void startHunting() {
+        level.pac().startAnimation();
+        level.ghosts().forEach(Ghost::startAnimation);
+        level.blinking().setStartPhase(Pulse.ON);
+        level.blinking().restart(Integer.MAX_VALUE);
+        level.huntingTimer().startFirstHuntingPhase(level.number());
+        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.HUNTING_PHASE_STARTED);
+    }
+
+    public void doHuntingStep() {
+        gateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(level));
+
+        level.huntingTimer().update(level.number());
+        level.blinking().tick();
+
+        level.pac().update();
+        level.ghosts().forEach(Ghost::update);
+        level.bonus().ifPresent(bonus -> bonus.update(this));
+
+        checkIfPacManKilled();
+        if (hasPacManBeenKilled()) return;
+
+        checkIfGhostsKilled();
+        if (haveGhostsBeenKilled()) return;
+
+        checkIfPacManFindsFood();
+        updatePacPower();
+        level.bonus().ifPresent(this::checkIfBonusEaten);
+    }
+
+    public boolean isLevelCompleted() { return level.uneatenFoodCount() == 0; }
+
+    public abstract boolean isOver();
+    public abstract void onGameEnding();
+
+    // Actors
+
+    /**
+     * Checks actor collision based on same tile position.
+     * @param either an actor
+     * @param other another actor
+     * @return if both actors have the same tile position
+     */
+    public boolean actorsCollide(Actor either, Actor other) {
+        return either.sameTile(other);
+    }
+
+    public abstract long pacPowerTicks(GameLevel level);
+    public abstract long pacPowerFadingTicks(GameLevel level);
+
+    public void initAnimationOfPacManAndGhosts() {
+        level.pac().selectAnimation(Animations.ANY_PAC_MUNCHING);
+        level.pac().resetAnimation();
+        level.ghosts().forEach(ghost -> {
+            ghost.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
+            ghost.resetAnimation();
+        });
+    }
+
+    private void checkIfPacManKilled() {
+        level.ghosts(GhostState.HUNTING_PAC)
+            .filter(ghost -> actorsCollide(ghost, level.pac()))
+            .findFirst().ifPresent(potentialKiller -> {
+                boolean killed;
+                if (level.isDemoLevel()) {
+                    killed = !isPacManSafeInDemoLevel();
+                } else {
+                    killed = !level.pac().isImmune();
+                }
+                if (killed) {
+                    THE_SIMULATION_STEP.setPacKiller(potentialKiller);
+                    THE_SIMULATION_STEP.setPacKilledTile(potentialKiller.tile());
+                }
+            });
+    }
+
+    private void updatePacPower() {
+        final TickTimer timer = level.pac().powerTimer();
+        timer.doTick();
+        if (level.pac().isPowerFadingStarting()) {
+            THE_SIMULATION_STEP.setPacStartsLosingPower();
+            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_STARTS_LOSING_POWER);
+        } else if (timer.hasExpired()) {
+            timer.stop();
+            timer.reset(0);
+            Logger.info("Power timer stopped and reset to zero");
+            level.victims().clear();
+            level.huntingTimer().start();
+            Logger.info("Hunting timer restarted because Pac-Man lost power");
+            level.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
+            THE_SIMULATION_STEP.setPacLostPower();
+            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_LOST_POWER);
+        }
+    }
+
+    public boolean hasPacManBeenKilled() { return THE_SIMULATION_STEP.pacKilledTile() != null; }
+    public abstract void onPacKilled();
+
+    public boolean haveGhostsBeenKilled() { return !THE_SIMULATION_STEP.killedGhosts().isEmpty(); }
+    public abstract void onGhostKilled(Ghost ghost);
+
+    protected void checkIfGhostsKilled() {
+        level.ghosts(GhostState.FRIGHTENED).filter(ghost -> actorsCollide(ghost, level.pac())).forEach(this::onGhostKilled);
+    }
+
+    // Food handling
+
+    protected abstract void checkIfPacManFindsFood();
+
+    // Bonus handling
+
+    public abstract boolean isBonusReached();
+    public abstract void activateNextBonus();
+
+    protected void checkIfBonusEaten(Bonus bonus) {
+        if (bonus.state() != Bonus.STATE_EDIBLE) return;
+        if (actorsCollide(level.pac(), bonus.actor())) {
+            bonus.setEaten(120); //TODO is 2 seconds correct?
+            scoreManager.scorePoints(bonus.points());
+            Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
+            THE_SIMULATION_STEP.setBonusEatenTile(bonus.actor().tile());
+            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.BONUS_EATEN);
+        }
+    }
+
+    // Life management
+
+    private int initialLifeCount;
+    private final IntegerProperty lifeCountPy = new SimpleIntegerProperty(0);
+
+    public int initialLifeCount() {
+        return initialLifeCount;
+    }
+
+    public void setInitialLifeCount(int initialLifeCount) {
+        this.initialLifeCount = initialLifeCount;
+    }
+
+    public int lifeCount() { return lifeCountPy.get(); }
+
+    public void setLifeCount(int n) {
+        if (n >= 0) {
+            lifeCountPy.set(n);
+        } else {
+            Logger.error("Cannot set life count to negative number");
+        }
+    }
+
+    public void addLives(int n) {
+        setLifeCount(lifeCount() + n);
+    }
+}

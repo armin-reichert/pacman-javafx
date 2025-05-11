@@ -17,5 +17,5 @@ open module de.amr.games.pacman.arcade.ms_pacman {
     requires de.amr.games.pacman.uilib;
     requires de.amr.games.pacman.arcade.pacman;
 
-    exports de.amr.games.pacman.arcade.ms_pacman;
+    exports de.amr.pacmanfx.arcade.ms_pacman;
 }

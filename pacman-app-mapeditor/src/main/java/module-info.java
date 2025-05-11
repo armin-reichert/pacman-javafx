@@ -9,6 +9,6 @@ open module de.amr.games.pacman.tilemap.editor.app {
     requires de.amr.games.pacman;
     requires de.amr.games.pacman.uilib;
 
-    exports de.amr.games.pacman.tilemap.editor.app;
-    exports de.amr.games.pacman.tilemap.editor;
+    exports de.amr.pacmanfx.tilemap.editor.app;
+    exports de.amr.pacmanfx.tilemap.editor;
 }

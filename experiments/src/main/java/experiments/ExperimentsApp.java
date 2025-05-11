@@ -1,11 +1,11 @@
 package experiments;
 
-import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.Obstacle;
-import de.amr.games.pacman.lib.tilemap.ObstacleSegment;
-import de.amr.games.pacman.lib.tilemap.TerrainTiles;
-import de.amr.games.pacman.uilib.Ufx;
+import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.tilemap.Obstacle;
+import de.amr.pacmanfx.lib.tilemap.ObstacleSegment;
+import de.amr.pacmanfx.lib.tilemap.TerrainTiles;
+import de.amr.pacmanfx.uilib.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
@@ -24,8 +24,8 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.Globals.HTS;
-import static de.amr.games.pacman.Globals.TS;
+import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.Globals.TS;
 import static java.lang.Math.TAU;
 
 public class ExperimentsApp extends Application {

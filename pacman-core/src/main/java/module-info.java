@@ -6,17 +6,17 @@ module de.amr.games.pacman {
     requires org.tinylog.api;
     requires javafx.base;
 
-    exports de.amr.games.pacman.controller;
-    exports de.amr.games.pacman.event;
-    exports de.amr.games.pacman.model;
-    exports de.amr.games.pacman.model.actors;
-    exports de.amr.games.pacman.lib;
-    exports de.amr.games.pacman.lib.arcade;
-    exports de.amr.games.pacman.lib.fsm;
-    exports de.amr.games.pacman.lib.graph;
-    exports de.amr.games.pacman.lib.nes;
-    exports de.amr.games.pacman.lib.tilemap;
-    exports de.amr.games.pacman.lib.timer;
-    exports de.amr.games.pacman.steering;
-    exports de.amr.games.pacman;
+    exports de.amr.pacmanfx.controller;
+    exports de.amr.pacmanfx.event;
+    exports de.amr.pacmanfx.model;
+    exports de.amr.pacmanfx.model.actors;
+    exports de.amr.pacmanfx.lib;
+    exports de.amr.pacmanfx.lib.arcade;
+    exports de.amr.pacmanfx.lib.fsm;
+    exports de.amr.pacmanfx.lib.graph;
+    exports de.amr.pacmanfx.lib.nes;
+    exports de.amr.pacmanfx.lib.tilemap;
+    exports de.amr.pacmanfx.lib.timer;
+    exports de.amr.pacmanfx.steering;
+    exports de.amr.pacmanfx;
 }
