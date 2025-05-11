@@ -33,7 +33,7 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.pacmanfx.ui.Globals.THE_CLOCK;
+import static de.amr.pacmanfx.ui.Globals.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -115,7 +115,7 @@ public class PacManGamesUI implements GameUI {
             stage.setFullScreen(true);
         }
         else if (de.amr.pacmanfx.ui.Globals.KEY_MUTE.match(keyPress)) {
-            de.amr.pacmanfx.ui.Globals.THE_SOUND.toggleMuted();
+            THE_SOUND.toggleMuted();
         }
         else if (de.amr.pacmanfx.ui.Globals.KEY_OPEN_EDITOR.match(keyPress)) {
             showEditorView();
@@ -141,7 +141,7 @@ public class PacManGamesUI implements GameUI {
 
     private void addStatusIcons(Pane parent) {
         var iconMuted = FontIcon.of(FontAwesomeSolid.DEAF, de.amr.pacmanfx.ui.Globals.STATUS_ICON_SIZE, de.amr.pacmanfx.ui.Globals.STATUS_ICON_COLOR);
-        iconMuted.visibleProperty().bind(de.amr.pacmanfx.ui.Globals.THE_SOUND.mutedProperty());
+        iconMuted.visibleProperty().bind(THE_SOUND.mutedProperty());
 
         var iconAutopilot = FontIcon.of(FontAwesomeSolid.TAXI, de.amr.pacmanfx.ui.Globals.STATUS_ICON_SIZE, de.amr.pacmanfx.ui.Globals.STATUS_ICON_COLOR);
         iconAutopilot.visibleProperty().bind(de.amr.pacmanfx.ui.Globals.PY_AUTOPILOT);
@@ -167,7 +167,7 @@ public class PacManGamesUI implements GameUI {
 
     private void createMapEditor() {
         editor = new TileMapEditor(stage);
-        var miQuit = new MenuItem(de.amr.pacmanfx.ui.Globals.THE_ASSETS.text("back_to_game"));
+        var miQuit = new MenuItem(THE_ASSETS.text("back_to_game"));
         miQuit.setOnAction(e -> {
             editor.stop();
             editor.executeWithCheckForUnsavedChanges(this::showStartView);
@@ -182,7 +182,7 @@ public class PacManGamesUI implements GameUI {
 
     private void createStartPagesView() {
         startPagesView = new StartPagesView();
-        startPagesView.setBackground(de.amr.pacmanfx.ui.Globals.THE_ASSETS.background("background.scene"));
+        startPagesView.setBackground(THE_ASSETS.background("background.scene"));
     }
 
     private void createGameView() {
@@ -203,7 +203,7 @@ public class PacManGamesUI implements GameUI {
     @Override
     public void build(Stage stage, double width, double height) {
         this.stage = requireNonNull(stage);
-        root.setBackground(de.amr.pacmanfx.ui.Globals.THE_ASSETS.get("background.scene"));
+        root.setBackground(THE_ASSETS.get("background.scene"));
         root.getChildren().add(new Pane()); // placeholder for root of current view
         addStatusIcons(root);
         createMapEditor();
@@ -214,8 +214,8 @@ public class PacManGamesUI implements GameUI {
 
         root.backgroundProperty().bind(gameView.gameSceneProperty().map(
             gameScene -> de.amr.pacmanfx.ui.Globals.THE_UI_CONFIGS.currentGameSceneIsPlayScene3D()
-                ? de.amr.pacmanfx.ui.Globals.THE_ASSETS.get("background.play_scene3d")
-                : de.amr.pacmanfx.ui.Globals.THE_ASSETS.get("background.scene"))
+                ? THE_ASSETS.get("background.play_scene3d")
+                : THE_ASSETS.get("background.scene"))
         );
 
         stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
@@ -273,8 +273,8 @@ public class PacManGamesUI implements GameUI {
             Logger.error("Cannot select game variant (NULL)");
             return;
         }
-        GameUIConfig uiConfig = de.amr.pacmanfx.ui.Globals.THE_UI_CONFIGS.configuration(gameVariant);
-        de.amr.pacmanfx.ui.Globals.THE_SOUND.selectGameVariant(gameVariant, uiConfig.assetNamespace());
+        GameUIConfig uiConfig = THE_UI_CONFIGS.configuration(gameVariant);
+        THE_SOUND.selectGameVariant(gameVariant, uiConfig.assetNamespace());
         stage.getIcons().setAll(uiConfig.appIcon());
         gameView.canvasContainer().decorationEnabledPy.set(uiConfig.isGameCanvasDecorated());
         // this triggers a game event and calling the event handlers:
@@ -294,7 +294,7 @@ public class PacManGamesUI implements GameUI {
     public void showEditorView() {
         if (!game().isPlaying() || THE_CLOCK.isPaused()) {
             currentGameScene().ifPresent(GameScene::end);
-            de.amr.pacmanfx.ui.Globals.THE_SOUND.stopAll();
+            THE_SOUND.stopAll();
             THE_CLOCK.stop();
             editor.start(stage);
             viewPy.set(editorView);
@@ -312,7 +312,7 @@ public class PacManGamesUI implements GameUI {
     public void showGameView() {
         viewPy.set(gameView);
         if (!THE_GAME_CONTROLLER.isSelected(GameVariant.MS_PACMAN_TENGEN)) {
-            de.amr.pacmanfx.ui.Globals.THE_SOUND.playVoice("voice.explain", 0);
+            THE_SOUND.playVoice("voice.explain", 0);
         }
         gameView.resize(mainScene.getWidth(), mainScene.getHeight());
         restart();
@@ -322,7 +322,7 @@ public class PacManGamesUI implements GameUI {
     public void showStartView() {
         THE_CLOCK.stop();
         THE_CLOCK.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        de.amr.pacmanfx.ui.Globals.THE_SOUND.stopAll();
+        THE_SOUND.stopAll();
         gameView.gameSceneProperty().set(null);
         gameView.setDashboardVisible(false);
         viewPy.set(startPagesView);
