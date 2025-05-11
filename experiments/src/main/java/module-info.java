@@ -1,9 +1,9 @@
 module experiments {
     requires javafx.graphics;
 
-    requires de.amr.games.pacman;
-    requires de.amr.games.pacman.uilib;
-    requires de.amr.games.pacman.ui;
+    requires de.amr.pacmanfx.core;
+    requires de.amr.pacmanfx.uilib;
+    requires de.amr.pacmanfx.ui;
     requires javafx.controls;
     requires org.tinylog.api;
 
