@@ -1,13 +1,18 @@
-open module de.amr.games.pacman.tengen.ms_pacman {
-    requires de.amr.games.pacman;
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 
+// module is open to allow access to non-class resources
+open module de.amr.games.pacman.tengen.ms_pacman {
     requires javafx.base;
     requires javafx.controls;
     requires javafx.graphics;
     requires javafx.media;
-
     requires org.tinylog.api;
-    requires de.amr.games.pacman.uilib;
+    requires de.amr.pacmanfx.core;
+    requires de.amr.pacmanfx.uilib;
     requires de.amr.games.pacman.ui;
+
     exports de.amr.pacmanfx.tengen.ms_pacman;
 }

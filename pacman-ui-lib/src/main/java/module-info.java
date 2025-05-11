@@ -1,12 +1,10 @@
-open module de.amr.games.pacman.uilib {
-    // module is open to allow access to non-class resources
-
+// module is open to allow access to non-class resources
+open module de.amr.pacmanfx.uilib {
     requires javafx.graphics;
     requires javafx.controls;
     requires javafx.media;
     requires org.tinylog.api;
-    requires de.amr.games.pacman;
-    requires java.sql;
+    requires de.amr.pacmanfx.core;
 
     exports de.amr.pacmanfx.uilib;
     exports de.amr.pacmanfx.uilib.objimport;

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2025 Armin Reichert (MIT License) See file LICENSE in repository root directory for details.
  */
-module de.amr.games.pacman {
+module de.amr.pacmanfx.core {
 
     requires org.tinylog.api;
     requires javafx.base;
