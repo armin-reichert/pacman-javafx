@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 
 // module is open to allow access to non-class resources
-open module de.amr.games.pacman.tengen.ms_pacman {
+open module tengen.ms_pacman {
     requires javafx.base;
     requires javafx.controls;
     requires javafx.graphics;
