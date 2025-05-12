@@ -136,7 +136,7 @@ public class GameView implements View {
 
     @Override
     public void bindActions() {
-        bind(Globals.THE_UI::restart,                    naked(KeyCode.F3));
+        bind(Globals.THE_UI::restart,            naked(KeyCode.F3));
         bind(this::showGameSceneHelp,            naked(KeyCode.H));
         bind(GameAction.QUIT_GAME_SCENE,         naked(KeyCode.Q));
         bind(GameAction.SIMULATION_SLOWER,       alt(KeyCode.MINUS));
@@ -332,6 +332,7 @@ public class GameView implements View {
     private void createLayers() {
         canvasLayer = new BorderPane(canvasContainer);
 
+        dashboardContainer.setVisible(false);
         dashboardLayer = new BorderPane();
         dashboardLayer.visibleProperty().bind(Bindings.createObjectBinding(
             () -> dashboardContainer.isVisible() || Globals.PY_PIP_ON.get(),
