@@ -56,8 +56,6 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        Rectangle2D screenSize = Screen.getPrimary().getBounds();
-        double height = 0.8 * screenSize.getHeight(), width = 1.6 * height;
         createUI(Map.of(
             GameVariant.PACMAN,           ArcadePacMan_UIConfig.class,
             GameVariant.MS_PACMAN,        ArcadeMsPacMan_UIConfig.class,
@@ -65,7 +63,12 @@ public class PacManGames3dApp extends Application {
             GameVariant.PACMAN_XXL,       XXLPacMan_UIConfig.class,
             GameVariant.MS_PACMAN_XXL,    XXLMsPacMan_UIConfig.class
         ));
+
+        // UI size: 80% of available screen height, aspect 16:10
+        Rectangle2D screenSize = Screen.getPrimary().getBounds();
+        double height = 0.8 * screenSize.getHeight(), width = 1.6 * height;
         THE_UI.build(stage, width, height);
+
         THE_UI.buildDashboard(
                 DashboardID.README,
                 DashboardID.GENERAL,
@@ -86,6 +89,7 @@ public class PacManGames3dApp extends Application {
         THE_UI.addStartPage(new TengenMsPacMan_StartPage(GameVariant.MS_PACMAN_TENGEN));
         THE_UI.addStartPage(new XXLAnyPacMan_StartPage());
         THE_UI.selectStartPage(0);
+
         THE_UI.show();
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
     }
