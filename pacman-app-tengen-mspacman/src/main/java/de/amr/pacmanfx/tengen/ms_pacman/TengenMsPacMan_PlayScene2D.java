@@ -45,7 +45,7 @@ import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameAction.QUIT_DEMO_LEVEL;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
-import static de.amr.pacmanfx.ui.Globals.*;
+import static de.amr.pacmanfx.ui.PacManGamesEnvironment.*;
 import static de.amr.pacmanfx.uilib.input.Keyboard.control;
 
 /**

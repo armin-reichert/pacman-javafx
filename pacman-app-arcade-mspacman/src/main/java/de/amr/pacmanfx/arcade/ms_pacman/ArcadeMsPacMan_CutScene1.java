@@ -16,8 +16,8 @@ import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.HEART_SPRITE;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.GameAssets.ARCADE_WHITE;
-import static de.amr.pacmanfx.ui.Globals.THE_SOUND;
-import static de.amr.pacmanfx.ui.Globals.THE_UI_CONFIGS;
+import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_SOUND;
+import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_UI_CONFIGS;
 
 /**
  * Intermission scene 1: "They meet".

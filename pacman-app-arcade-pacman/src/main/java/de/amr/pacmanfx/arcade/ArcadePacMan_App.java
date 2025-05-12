@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade;
 
 import de.amr.pacmanfx.model.GameVariant;
+import de.amr.pacmanfx.ui.PacManGamesEnvironment;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
@@ -14,15 +15,13 @@ import javafx.stage.Stage;
 import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.THE_GAME_CONTROLLER;
-import static de.amr.pacmanfx.Globals.checkUserDirsExistAndWritable;
-import static de.amr.pacmanfx.ui.Globals.*;
+import static de.amr.pacmanfx.ui.PacManGamesEnvironment.*;
 
 public class ArcadePacMan_App extends Application {
 
     @Override
     public void init() {
-        checkUserDirsExistAndWritable();
-        THE_ASSETS.load();
+        PacManGamesEnvironment.init();
         THE_GAME_CONTROLLER.register(GameVariant.PACMAN, new ArcadePacMan_GameModel());
         THE_GAME_CONTROLLER.select(GameVariant.PACMAN);
     }

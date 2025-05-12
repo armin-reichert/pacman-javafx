@@ -31,7 +31,7 @@ public class GameAssets extends AssetStorage implements ResourceManager {
     @Override
     public Class<?> resourceRootClass() { return GameAssets.class; }
 
-    public void load() {
+    public GameAssets() {
         ResourceBundle localizedTexts = getModuleBundle("de.amr.pacmanfx.ui.localized_texts");
         setLocalizedTexts(localizedTexts);
 

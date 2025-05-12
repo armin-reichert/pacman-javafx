@@ -18,7 +18,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.pacmanfx.ui.Globals.THE_ASSETS;
+import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_ASSETS;
 import static java.util.Objects.requireNonNull;
 
 /**

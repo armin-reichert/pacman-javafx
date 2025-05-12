@@ -27,7 +27,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.Globals.*;
+import static de.amr.pacmanfx.ui.PacManGamesEnvironment.*;
 import static de.amr.pacmanfx.uilib.Ufx.*;
 
 public class Maze3D extends Group {

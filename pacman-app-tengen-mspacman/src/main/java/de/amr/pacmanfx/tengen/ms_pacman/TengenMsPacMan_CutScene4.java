@@ -18,7 +18,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
-import static de.amr.pacmanfx.ui.Globals.*;
+import static de.amr.pacmanfx.ui.PacManGamesEnvironment.*;
 
 public class TengenMsPacMan_CutScene4 extends GameScene2D {
 

@@ -17,8 +17,8 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameAction.START_P
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameAction.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.CONTINUES_SPRITES;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
-import static de.amr.pacmanfx.ui.Globals.THE_JOYPAD;
-import static de.amr.pacmanfx.ui.Globals.THE_SOUND;
+import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_JOYPAD;
+import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_SOUND;
 import static de.amr.pacmanfx.uilib.input.Keyboard.alt;
 
 /**

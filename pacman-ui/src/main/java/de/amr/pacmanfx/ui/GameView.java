@@ -52,7 +52,7 @@ public class GameView implements View {
         @Override
         protected void invalidated() {
             GameScene gameScene = get();
-            if (gameScene != null) embedGameScene(Globals.THE_UI_CONFIGS.current(), gameScene);
+            if (gameScene != null) embedGameScene(PacManGamesEnvironment.THE_UI_CONFIGS.current(), gameScene);
             contextMenu.hide();
         }
     };
@@ -77,8 +77,8 @@ public class GameView implements View {
     public GameView(GameUI ui) {
         this.parentScene = ui.mainScene();
         titleExpression = Bindings.createStringBinding(() -> computeTitleText(ui),
-                Globals.THE_CLOCK.pausedProperty(), ui.mainScene().heightProperty(), gameScenePy,
-                Globals.PY_3D_ENABLED, Globals.PY_DEBUG_INFO_VISIBLE);
+                PacManGamesEnvironment.THE_CLOCK.pausedProperty(), ui.mainScene().heightProperty(), gameScenePy,
+                PacManGamesEnvironment.PY_3D_ENABLED, PacManGamesEnvironment.PY_DEBUG_INFO_VISIBLE);
         configureCanvasContainer();
         configurePiPView();
         createLayers();
@@ -136,7 +136,7 @@ public class GameView implements View {
 
     @Override
     public void bindActions() {
-        bind(Globals.THE_UI::restart,            naked(KeyCode.F3));
+        bind(PacManGamesEnvironment.THE_UI::restart,            naked(KeyCode.F3));
         bind(this::showGameSceneHelp,            naked(KeyCode.H));
         bind(GameAction.QUIT_GAME_SCENE,         naked(KeyCode.Q));
         bind(GameAction.SIMULATION_SLOWER,       alt(KeyCode.MINUS));
@@ -177,9 +177,9 @@ public class GameView implements View {
     public void onLevelCreated(GameEvent event) {
         //TODO find another point in time to do this
         gameLevel().ifPresent(level -> {
-            GameUIConfig config = Globals.THE_UI_CONFIGS.current();
+            GameUIConfig config = PacManGamesEnvironment.THE_UI_CONFIGS.current();
             config.createActorAnimations(level);
-            Globals.THE_SOUND.setEnabled(!level.isDemoLevel());
+            PacManGamesEnvironment.THE_SOUND.setEnabled(!level.isDemoLevel());
             // size of game scene might have changed, so re-embed
             currentGameScene().ifPresent(gameScene -> embedGameScene(config, gameScene));
             pipView.setScene2D(config.createPiPScene(canvas));
@@ -224,7 +224,7 @@ public class GameView implements View {
     }
 
     public void updateGameScene(boolean reloadCurrent) {
-        GameUIConfig uiConfig = Globals.THE_UI_CONFIGS.current();
+        GameUIConfig uiConfig = PacManGamesEnvironment.THE_UI_CONFIGS.current();
         final GameScene nextGameScene = uiConfig.selectGameScene(game(), gameState());
         if (nextGameScene == null) {
             throw new IllegalStateException("Could not determine next game scene");
@@ -240,7 +240,7 @@ public class GameView implements View {
         }
         embedGameScene(uiConfig, nextGameScene);
         nextGameScene.init();
-        if (Globals.THE_UI_CONFIGS.is2D3DPlaySceneSwitch(uiConfig, currentGameScene, nextGameScene)) {
+        if (PacManGamesEnvironment.THE_UI_CONFIGS.is2D3DPlaySceneSwitch(uiConfig, currentGameScene, nextGameScene)) {
             nextGameScene.onSceneVariantSwitch(currentGameScene);
         }
         if (changing) {
@@ -262,14 +262,14 @@ public class GameView implements View {
                 canvasContainer.setUnscaledCanvasWidth(sceneSize.x());
                 canvasContainer.setUnscaledCanvasHeight(sceneSize.y());
                 canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
-                canvasContainer.backgroundProperty().bind(Globals.PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
+                canvasContainer.backgroundProperty().bind(PacManGamesEnvironment.PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
                 gameScene2D.scalingProperty().bind(
-                    canvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), Globals.MAX_SCENE_2D_SCALING)));
+                    canvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), PacManGamesEnvironment.MAX_SCENE_2D_SCALING)));
                 gameScene2D.setCanvas(canvas);
                 // avoid showing old content before new scene is rendered
-                canvas.getGraphicsContext2D().setFill(Globals.PY_CANVAS_BG_COLOR.get());
+                canvas.getGraphicsContext2D().setFill(PacManGamesEnvironment.PY_CANVAS_BG_COLOR.get());
                 canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                gameScene2D.backgroundColorProperty().bind(Globals.PY_CANVAS_BG_COLOR);
+                gameScene2D.backgroundColorProperty().bind(PacManGamesEnvironment.PY_CANVAS_BG_COLOR);
                 gameScene2D.setGameRenderer(renderer);
                 root.getChildren().set(0, canvasLayer);
             }
@@ -286,23 +286,23 @@ public class GameView implements View {
         canvasContainer.setBorderColor(GameAssets.ARCADE_WHITE);
         //TODO check this:
         canvasContainer.decorationEnabledPy.addListener((py, ov, nv) ->
-            currentGameScene().ifPresent(gameScene -> embedGameScene(Globals.THE_UI_CONFIGS.current(), gameScene)));
+            currentGameScene().ifPresent(gameScene -> embedGameScene(PacManGamesEnvironment.THE_UI_CONFIGS.current(), gameScene)));
     }
 
     private void configurePiPView() {
-        pipView.backgroundProperty().bind(Globals.PY_CANVAS_BG_COLOR.map(Background::fill));
-        pipView.opacityProperty().bind(Globals.PY_PIP_OPACITY_PERCENT.divide(100.0));
+        pipView.backgroundProperty().bind(PacManGamesEnvironment.PY_CANVAS_BG_COLOR.map(Background::fill));
+        pipView.opacityProperty().bind(PacManGamesEnvironment.PY_PIP_OPACITY_PERCENT.divide(100.0));
         pipView.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> Globals.PY_PIP_ON.get() && Globals.THE_UI_CONFIGS.currentGameSceneIsPlayScene3D(),
-            Globals.PY_PIP_ON, gameScenePy
+            () -> PacManGamesEnvironment.PY_PIP_ON.get() && PacManGamesEnvironment.THE_UI_CONFIGS.currentGameSceneIsPlayScene3D(),
+            PacManGamesEnvironment.PY_PIP_ON, gameScenePy
         ));
     }
 
     private void configurePropertyBindings() {
         GraphicsContext g = canvas.getGraphicsContext2D();
-        Globals.PY_CANVAS_FONT_SMOOTHING.addListener((py, ov, on) -> g.setFontSmoothingType(on ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
-        Globals.PY_CANVAS_IMAGE_SMOOTHING.addListener((py, ov, on) -> g.setImageSmoothing(on));
-        Globals.PY_DEBUG_INFO_VISIBLE.addListener((py, ov, debug) -> {
+        PacManGamesEnvironment.PY_CANVAS_FONT_SMOOTHING.addListener((py, ov, on) -> g.setFontSmoothingType(on ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
+        PacManGamesEnvironment.PY_CANVAS_IMAGE_SMOOTHING.addListener((py, ov, on) -> g.setImageSmoothing(on));
+        PacManGamesEnvironment.PY_DEBUG_INFO_VISIBLE.addListener((py, ov, debug) -> {
             if (debug) {
                 canvasLayer.setBackground(coloredBackground(Color.DARKGREEN));
                 canvasLayer.setBorder(border(Color.LIGHTGREEN, 2));
@@ -314,17 +314,17 @@ public class GameView implements View {
     }
 
     private String computeTitleText(GameUI ui) {
-        String keyPattern = "app.title." + Globals.THE_UI_CONFIGS.current().assetNamespace() + (Globals.THE_CLOCK.isPaused() ? ".paused" : "");
+        String keyPattern = "app.title." + PacManGamesEnvironment.THE_UI_CONFIGS.current().assetNamespace() + (PacManGamesEnvironment.THE_CLOCK.isPaused() ? ".paused" : "");
         if (ui.currentGameScene().isPresent()) {
             return computeTitleIfGameScenePresent(ui.currentGameScene().get(), keyPattern);
         }
-        return Globals.THE_ASSETS.text(keyPattern, Globals.THE_ASSETS.text(Globals.PY_3D_ENABLED.get() ? "threeD" : "twoD"));
+        return PacManGamesEnvironment.THE_ASSETS.text(keyPattern, PacManGamesEnvironment.THE_ASSETS.text(PacManGamesEnvironment.PY_3D_ENABLED.get() ? "threeD" : "twoD"));
     }
 
     private String computeTitleIfGameScenePresent(GameScene gameScene, String keyPattern) {
-        String sceneNameSuffix = Globals.PY_DEBUG_INFO_VISIBLE.get() ? " [%s]".formatted(gameScene.getClass().getSimpleName()) : "";
-        String modeKey = Globals.THE_ASSETS.text(Globals.PY_3D_ENABLED.get() ? "threeD" : "twoD");
-        return Globals.THE_ASSETS.text(keyPattern, modeKey)
+        String sceneNameSuffix = PacManGamesEnvironment.PY_DEBUG_INFO_VISIBLE.get() ? " [%s]".formatted(gameScene.getClass().getSimpleName()) : "";
+        String modeKey = PacManGamesEnvironment.THE_ASSETS.text(PacManGamesEnvironment.PY_3D_ENABLED.get() ? "threeD" : "twoD");
+        return PacManGamesEnvironment.THE_ASSETS.text(keyPattern, modeKey)
             + sceneNameSuffix
             + (gameScene instanceof GameScene2D gameScene2D  ? " (%.2fx)".formatted(gameScene2D.scaling()) : "");
     }
@@ -335,8 +335,8 @@ public class GameView implements View {
         dashboardContainer.setVisible(false);
         dashboardLayer = new BorderPane();
         dashboardLayer.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> dashboardContainer.isVisible() || Globals.PY_PIP_ON.get(),
-            dashboardContainer.visibleProperty(), Globals.PY_PIP_ON
+            () -> dashboardContainer.isVisible() || PacManGamesEnvironment.PY_PIP_ON.get(),
+            dashboardContainer.visibleProperty(), PacManGamesEnvironment.PY_PIP_ON
         ));
         dashboardLayer.setLeft(dashboardContainer);
         dashboardLayer.setRight(pipContainer);
@@ -352,11 +352,11 @@ public class GameView implements View {
 
     private void handleContextMenuRequest(ContextMenuEvent e) {
         var menuItems = new ArrayList<>(gameScenePy.get().supplyContextMenuItems(e));
-        if (Globals.THE_UI_CONFIGS.currentGameSceneIsPlayScene2D()) {
-            var item = new MenuItem(Globals.THE_ASSETS.text("use_3D_scene"));
+        if (PacManGamesEnvironment.THE_UI_CONFIGS.currentGameSceneIsPlayScene2D()) {
+            var item = new MenuItem(PacManGamesEnvironment.THE_ASSETS.text("use_3D_scene"));
             item.setOnAction(ae -> GameAction.TOGGLE_PLAY_SCENE_2D_3D.execute());
             menuItems.addFirst(item);
-            menuItems.addFirst(contextMenuTitleItem(Globals.THE_ASSETS.text("scene_display")));
+            menuItems.addFirst(contextMenuTitleItem(PacManGamesEnvironment.THE_ASSETS.text("scene_display")));
         }
         contextMenu.getItems().setAll(menuItems);
         contextMenu.show(root, e.getScreenX(), e.getScreenY());
@@ -365,7 +365,7 @@ public class GameView implements View {
 
     private void showGameSceneHelp() {
         if (!THE_GAME_CONTROLLER.isSelected(GameVariant.MS_PACMAN_TENGEN)
-            && Globals.THE_UI_CONFIGS.currentGameSceneIs2D()) {
+            && PacManGamesEnvironment.THE_UI_CONFIGS.currentGameSceneIs2D()) {
             popupLayer.showHelp(canvasContainer.scaling());
         }
     }

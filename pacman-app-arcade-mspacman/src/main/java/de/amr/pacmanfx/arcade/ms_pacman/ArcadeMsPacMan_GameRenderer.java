@@ -25,7 +25,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Globals.tiles_to_px;
 import static de.amr.pacmanfx.lib.RectArea.rect;
 import static de.amr.pacmanfx.ui.GameAssets.ARCADE_WHITE;
-import static de.amr.pacmanfx.ui.Globals.THE_ASSETS;
+import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_ASSETS;
 import static java.util.Objects.requireNonNull;
 
 /**

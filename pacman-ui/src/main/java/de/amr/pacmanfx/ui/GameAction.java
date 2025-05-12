@@ -32,7 +32,7 @@ public enum GameAction implements Action {
         @Override
         public void execute() {
             game().addLives(3);
-            de.amr.pacmanfx.ui.Globals.THE_UI.showFlashMessage(de.amr.pacmanfx.ui.Globals.THE_ASSETS.text("cheat_add_lives", game().lifeCount()));
+            PacManGamesEnvironment.THE_UI.showFlashMessage(PacManGamesEnvironment.THE_ASSETS.text("cheat_add_lives", game().lifeCount()));
         }
 
         @Override
@@ -49,7 +49,7 @@ public enum GameAction implements Action {
                     .toList();
                 if (!pelletTiles.isEmpty()) {
                     pelletTiles.forEach(level::registerFoodEatenAt);
-                    de.amr.pacmanfx.ui.Globals.THE_SOUND.stopMunchingSound();
+                    PacManGamesEnvironment.THE_SOUND.stopMunchingSound();
                     THE_GAME_EVENT_MANAGER.publishEvent(game(), GameEventType.PAC_FOUND_FOOD);
                 }
             });
@@ -101,7 +101,7 @@ public enum GameAction implements Action {
         public void execute() {
             if (THE_COIN_MECHANISM.numCoins() < CoinMechanism.MAX_COINS) {
                 THE_COIN_MECHANISM.insertCoin();
-                de.amr.pacmanfx.ui.Globals.THE_SOUND.enabledProperty().set(true);
+                PacManGamesEnvironment.THE_SOUND.enabledProperty().set(true);
                 THE_GAME_EVENT_MANAGER.publishEvent(game(), GameEventType.CREDIT_ADDED);
             }
             if (gameState() != GameState.SETTING_OPTIONS) {
@@ -156,22 +156,22 @@ public enum GameAction implements Action {
     QUIT_GAME_SCENE {
         @Override
         public void execute() {
-            de.amr.pacmanfx.ui.Globals.THE_UI.currentGameScene().ifPresent(GameScene::end);
+            PacManGamesEnvironment.THE_UI.currentGameScene().ifPresent(GameScene::end);
             game().resetEverything();
             if (!THE_COIN_MECHANISM.isEmpty()) THE_COIN_MECHANISM.consumeCoin();
-            de.amr.pacmanfx.ui.Globals.THE_UI.showStartView();
+            PacManGamesEnvironment.THE_UI.showStartView();
         }
     },
 
     RESTART_INTRO {
         @Override
         public void execute() {
-            de.amr.pacmanfx.ui.Globals.THE_SOUND.stopAll();
-            de.amr.pacmanfx.ui.Globals.THE_UI.currentGameScene().ifPresent(GameScene::end);
+            PacManGamesEnvironment.THE_SOUND.stopAll();
+            PacManGamesEnvironment.THE_UI.currentGameScene().ifPresent(GameScene::end);
             if (gameState() == GameState.TESTING_LEVELS) {
                 gameState().onExit(game()); //TODO exit other states too?
             }
-            de.amr.pacmanfx.ui.Globals.THE_CLOCK.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+            PacManGamesEnvironment.THE_CLOCK.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
             THE_GAME_CONTROLLER.restart(INTRO);
         }
     },
@@ -179,63 +179,63 @@ public enum GameAction implements Action {
     SIMULATION_SLOWER {
         @Override
         public void execute() {
-            double newRate = de.amr.pacmanfx.ui.Globals.THE_CLOCK.getTargetFrameRate() - SIMULATION_SPEED_DELTA;
+            double newRate = PacManGamesEnvironment.THE_CLOCK.getTargetFrameRate() - SIMULATION_SPEED_DELTA;
             newRate = Math.clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
-            de.amr.pacmanfx.ui.Globals.THE_CLOCK.setTargetFrameRate(newRate);
+            PacManGamesEnvironment.THE_CLOCK.setTargetFrameRate(newRate);
             String prefix = newRate == SIMULATION_SPEED_MIN ? "At minimum speed: " : "";
-            de.amr.pacmanfx.ui.Globals.THE_UI.showFlashMessageSec(0.75, prefix + newRate + "Hz");
+            PacManGamesEnvironment.THE_UI.showFlashMessageSec(0.75, prefix + newRate + "Hz");
         }
     },
 
     SIMULATION_FASTER {
         @Override
         public void execute() {
-            double newRate = de.amr.pacmanfx.ui.Globals.THE_CLOCK.getTargetFrameRate() + SIMULATION_SPEED_DELTA;
+            double newRate = PacManGamesEnvironment.THE_CLOCK.getTargetFrameRate() + SIMULATION_SPEED_DELTA;
             newRate = Math.clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
-            de.amr.pacmanfx.ui.Globals.THE_CLOCK.setTargetFrameRate(newRate);
+            PacManGamesEnvironment.THE_CLOCK.setTargetFrameRate(newRate);
             String prefix = newRate == SIMULATION_SPEED_MAX ? "At maximum speed: " : "";
-            de.amr.pacmanfx.ui.Globals.THE_UI.showFlashMessageSec(0.75, prefix + newRate + "Hz");
+            PacManGamesEnvironment.THE_UI.showFlashMessageSec(0.75, prefix + newRate + "Hz");
         }
     },
 
     SIMULATION_ONE_STEP {
         @Override
         public void execute() {
-            boolean success = de.amr.pacmanfx.ui.Globals.THE_CLOCK.makeOneStep(true);
+            boolean success = PacManGamesEnvironment.THE_CLOCK.makeOneStep(true);
             if (!success) {
-                de.amr.pacmanfx.ui.Globals.THE_UI.showFlashMessage("Simulation step error, clock stopped!");
+                PacManGamesEnvironment.THE_UI.showFlashMessage("Simulation step error, clock stopped!");
             }
         }
 
         @Override
-        public boolean isEnabled() { return de.amr.pacmanfx.ui.Globals.THE_CLOCK.isPaused(); }
+        public boolean isEnabled() { return PacManGamesEnvironment.THE_CLOCK.isPaused(); }
     },
 
     SIMULATION_TEN_STEPS {
         @Override
         public void execute() {
-            boolean success = de.amr.pacmanfx.ui.Globals.THE_CLOCK.makeSteps(10, true);
+            boolean success = PacManGamesEnvironment.THE_CLOCK.makeSteps(10, true);
             if (!success) {
-                de.amr.pacmanfx.ui.Globals.THE_UI.showFlashMessage("Simulation step error, clock stopped!");
+                PacManGamesEnvironment.THE_UI.showFlashMessage("Simulation step error, clock stopped!");
             }
         }
 
         @Override
-        public boolean isEnabled() { return de.amr.pacmanfx.ui.Globals.THE_CLOCK.isPaused(); }
+        public boolean isEnabled() { return PacManGamesEnvironment.THE_CLOCK.isPaused(); }
     },
 
     SIMULATION_RESET {
         @Override
         public void execute() {
-            de.amr.pacmanfx.ui.Globals.THE_CLOCK.setTargetFrameRate(NUM_TICKS_PER_SEC);
-            de.amr.pacmanfx.ui.Globals.THE_UI.showFlashMessageSec(0.75, de.amr.pacmanfx.ui.Globals.THE_CLOCK.getTargetFrameRate() + "Hz");
+            PacManGamesEnvironment.THE_CLOCK.setTargetFrameRate(NUM_TICKS_PER_SEC);
+            PacManGamesEnvironment.THE_UI.showFlashMessageSec(0.75, PacManGamesEnvironment.THE_CLOCK.getTargetFrameRate() + "Hz");
         }
     },
 
     START_ARCADE_GAME {
         @Override
         public void execute() {
-            de.amr.pacmanfx.ui.Globals.THE_SOUND.stopVoice();
+            PacManGamesEnvironment.THE_SOUND.stopVoice();
             THE_GAME_CONTROLLER.changeState(GameState.STARTING_GAME);
         }
 
@@ -252,7 +252,7 @@ public enum GameAction implements Action {
         @Override
         public void execute() {
             THE_GAME_CONTROLLER.changeState(GameState.TESTING_CUT_SCENES);
-            de.amr.pacmanfx.ui.Globals.THE_UI.showFlashMessage("Cut scenes test"); //TODO localize
+            PacManGamesEnvironment.THE_UI.showFlashMessage("Cut scenes test"); //TODO localize
         }
     },
 
@@ -260,7 +260,7 @@ public enum GameAction implements Action {
         @Override
         public void execute() {
             THE_GAME_CONTROLLER.restart(GameState.TESTING_LEVELS);
-            de.amr.pacmanfx.ui.Globals.THE_UI.showFlashMessageSec(3, "Level TEST MODE");
+            PacManGamesEnvironment.THE_UI.showFlashMessageSec(3, "Level TEST MODE");
         }
     },
 
@@ -268,86 +268,86 @@ public enum GameAction implements Action {
         @Override
         public void execute() {
             THE_GAME_CONTROLLER.restart(GameState.TESTING_LEVEL_TEASERS);
-            de.amr.pacmanfx.ui.Globals.THE_UI.showFlashMessageSec(3, "Level TEST MODE");
+            PacManGamesEnvironment.THE_UI.showFlashMessageSec(3, "Level TEST MODE");
         }
     },
 
     TOGGLE_AUTOPILOT {
         @Override
         public void execute() {
-            toggle(de.amr.pacmanfx.ui.Globals.PY_AUTOPILOT);
-            boolean auto = de.amr.pacmanfx.ui.Globals.PY_AUTOPILOT.get();
-            de.amr.pacmanfx.ui.Globals.THE_UI.showFlashMessage(de.amr.pacmanfx.ui.Globals.THE_ASSETS.text(auto ? "autopilot_on" : "autopilot_off"));
-            de.amr.pacmanfx.ui.Globals.THE_SOUND.playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
+            toggle(PacManGamesEnvironment.PY_AUTOPILOT);
+            boolean auto = PacManGamesEnvironment.PY_AUTOPILOT.get();
+            PacManGamesEnvironment.THE_UI.showFlashMessage(PacManGamesEnvironment.THE_ASSETS.text(auto ? "autopilot_on" : "autopilot_off"));
+            PacManGamesEnvironment.THE_SOUND.playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
         }
     },
 
     TOGGLE_DEBUG_INFO {
         @Override
         public void execute() {
-            toggle(de.amr.pacmanfx.ui.Globals.PY_DEBUG_INFO_VISIBLE);
+            toggle(PacManGamesEnvironment.PY_DEBUG_INFO_VISIBLE);
         }
     },
 
     TOGGLE_IMMUNITY {
         @Override
         public void execute() {
-            toggle(de.amr.pacmanfx.ui.Globals.PY_IMMUNITY);
-            de.amr.pacmanfx.ui.Globals.THE_UI.showFlashMessage(de.amr.pacmanfx.ui.Globals.THE_ASSETS.text(de.amr.pacmanfx.ui.Globals.PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
-            de.amr.pacmanfx.ui.Globals.THE_SOUND.playVoice(de.amr.pacmanfx.ui.Globals.PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
+            toggle(PacManGamesEnvironment.PY_IMMUNITY);
+            PacManGamesEnvironment.THE_UI.showFlashMessage(PacManGamesEnvironment.THE_ASSETS.text(PacManGamesEnvironment.PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
+            PacManGamesEnvironment.THE_SOUND.playVoice(PacManGamesEnvironment.PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
         }
     },
 
     TOGGLE_PAUSED {
         @Override
         public void execute() {
-            toggle(de.amr.pacmanfx.ui.Globals.THE_CLOCK.pausedProperty());
-            if (de.amr.pacmanfx.ui.Globals.THE_CLOCK.isPaused()) {
-                de.amr.pacmanfx.ui.Globals.THE_SOUND.stopAll();
+            toggle(PacManGamesEnvironment.THE_CLOCK.pausedProperty());
+            if (PacManGamesEnvironment.THE_CLOCK.isPaused()) {
+                PacManGamesEnvironment.THE_SOUND.stopAll();
             }
-            Logger.info("Game ({}) {}", gameVariant(), de.amr.pacmanfx.ui.Globals.THE_CLOCK.isPaused() ? "paused" : "resumed");
+            Logger.info("Game ({}) {}", gameVariant(), PacManGamesEnvironment.THE_CLOCK.isPaused() ? "paused" : "resumed");
         }
     },
 
     PERSPECTIVE_NEXT {
         @Override
         public void execute() {
-            PerspectiveID id = de.amr.pacmanfx.ui.Globals.PY_3D_PERSPECTIVE.get().next();
-            de.amr.pacmanfx.ui.Globals.PY_3D_PERSPECTIVE.set(id);
-            String msgKey = de.amr.pacmanfx.ui.Globals.THE_ASSETS.text("camera_perspective", de.amr.pacmanfx.ui.Globals.THE_ASSETS.text("perspective_id_" + id.name()));
-            de.amr.pacmanfx.ui.Globals.THE_UI.showFlashMessage(msgKey);
+            PerspectiveID id = PacManGamesEnvironment.PY_3D_PERSPECTIVE.get().next();
+            PacManGamesEnvironment.PY_3D_PERSPECTIVE.set(id);
+            String msgKey = PacManGamesEnvironment.THE_ASSETS.text("camera_perspective", PacManGamesEnvironment.THE_ASSETS.text("perspective_id_" + id.name()));
+            PacManGamesEnvironment.THE_UI.showFlashMessage(msgKey);
         }
     },
 
     PERSPECTIVE_PREVIOUS {
         @Override
         public void execute() {
-            PerspectiveID id = de.amr.pacmanfx.ui.Globals.PY_3D_PERSPECTIVE.get().prev();
-            de.amr.pacmanfx.ui.Globals.PY_3D_PERSPECTIVE.set(id);
-            String msgKey = de.amr.pacmanfx.ui.Globals.THE_ASSETS.text("camera_perspective", de.amr.pacmanfx.ui.Globals.THE_ASSETS.text("perspective_id_" + id.name()));
-            de.amr.pacmanfx.ui.Globals.THE_UI.showFlashMessage(msgKey);
+            PerspectiveID id = PacManGamesEnvironment.PY_3D_PERSPECTIVE.get().prev();
+            PacManGamesEnvironment.PY_3D_PERSPECTIVE.set(id);
+            String msgKey = PacManGamesEnvironment.THE_ASSETS.text("camera_perspective", PacManGamesEnvironment.THE_ASSETS.text("perspective_id_" + id.name()));
+            PacManGamesEnvironment.THE_UI.showFlashMessage(msgKey);
         }
     },
 
     TOGGLE_DRAW_MODE {
         @Override
         public void execute() {
-            de.amr.pacmanfx.ui.Globals.PY_3D_DRAW_MODE.set(de.amr.pacmanfx.ui.Globals.PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+            PacManGamesEnvironment.PY_3D_DRAW_MODE.set(PacManGamesEnvironment.PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
         }
     },
 
     TOGGLE_PLAY_SCENE_2D_3D {
         @Override
         public void execute() {
-            de.amr.pacmanfx.ui.Globals.THE_UI.currentGameScene().ifPresent(gameScene -> {
-                toggle(de.amr.pacmanfx.ui.Globals.PY_3D_ENABLED);
-                if (de.amr.pacmanfx.ui.Globals.THE_UI_CONFIGS.currentGameSceneIsPlayScene2D()
-                    || de.amr.pacmanfx.ui.Globals.THE_UI_CONFIGS.currentGameSceneIsPlayScene3D()) {
-                    de.amr.pacmanfx.ui.Globals.THE_UI.updateGameScene(true);
+            PacManGamesEnvironment.THE_UI.currentGameScene().ifPresent(gameScene -> {
+                toggle(PacManGamesEnvironment.PY_3D_ENABLED);
+                if (PacManGamesEnvironment.THE_UI_CONFIGS.currentGameSceneIsPlayScene2D()
+                    || PacManGamesEnvironment.THE_UI_CONFIGS.currentGameSceneIsPlayScene3D()) {
+                    PacManGamesEnvironment.THE_UI.updateGameScene(true);
                     THE_GAME_CONTROLLER.update(); //TODO needed?
                 }
                 if (!game().isPlaying()) {
-                    de.amr.pacmanfx.ui.Globals.THE_UI.showFlashMessage(de.amr.pacmanfx.ui.Globals.THE_ASSETS.text(de.amr.pacmanfx.ui.Globals.PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
+                    PacManGamesEnvironment.THE_UI.showFlashMessage(PacManGamesEnvironment.THE_ASSETS.text(PacManGamesEnvironment.PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
                 }
             });
         }
@@ -364,9 +364,9 @@ public enum GameAction implements Action {
     TOGGLE_PIP_VISIBILITY {
         @Override
         public void execute() {
-            toggle(de.amr.pacmanfx.ui.Globals.PY_PIP_ON);
-            if (!de.amr.pacmanfx.ui.Globals.THE_UI_CONFIGS.currentGameSceneIsPlayScene3D()) {
-                de.amr.pacmanfx.ui.Globals.THE_UI.showFlashMessage(de.amr.pacmanfx.ui.Globals.THE_ASSETS.text(de.amr.pacmanfx.ui.Globals.PY_PIP_ON.get() ? "pip_on" : "pip_off"));
+            toggle(PacManGamesEnvironment.PY_PIP_ON);
+            if (!PacManGamesEnvironment.THE_UI_CONFIGS.currentGameSceneIsPlayScene3D()) {
+                PacManGamesEnvironment.THE_UI.showFlashMessage(PacManGamesEnvironment.THE_ASSETS.text(PacManGamesEnvironment.PY_PIP_ON.get() ? "pip_on" : "pip_off"));
             }
         }
     };

@@ -12,8 +12,8 @@ import javafx.scene.text.Font;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.GameAssets.*;
-import static de.amr.pacmanfx.ui.Globals.THE_ASSETS;
-import static de.amr.pacmanfx.ui.Globals.THE_SOUND;
+import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_ASSETS;
+import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_SOUND;
 
 /**
  * Scene shown after credit has been added and where game can be started.

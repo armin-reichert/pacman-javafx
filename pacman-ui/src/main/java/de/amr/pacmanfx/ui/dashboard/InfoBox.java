@@ -26,7 +26,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static de.amr.pacmanfx.Globals.gameLevel;
-import static de.amr.pacmanfx.ui.Globals.THE_UI;
+import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_UI;
 
 /**
  * Base class for area displaying UI info/editors.

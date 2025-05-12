@@ -13,7 +13,7 @@ import javafx.scene.layout.Region;
 
 public interface View extends ActionProvider, GameEventListener {
     @Override
-    default Keyboard keyboard() { return Globals.THE_KEYBOARD; }
+    default Keyboard keyboard() { return PacManGamesEnvironment.THE_KEYBOARD; }
     Region layoutRoot();
     void update();
     default void draw() {}

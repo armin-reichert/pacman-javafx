@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
+import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.sound.GameSound;
@@ -20,26 +21,30 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
 
+import java.io.File;
 import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.TS;
+import static java.util.Objects.requireNonNull;
 
-public class Globals {
+public class PacManGamesEnvironment {
 
-    public static final GameAssets THE_ASSETS;
-    public static final GameClockFX THE_CLOCK;
-    public static final Keyboard THE_KEYBOARD;
-    public static final Joypad THE_JOYPAD;
-    public static final GameSound THE_SOUND;
-    public static final GameUIConfigManager THE_UI_CONFIGS;
+    public static GameAssets THE_ASSETS;
+    public static GameClockFX THE_CLOCK;
+    public static Keyboard THE_KEYBOARD;
+    public static Joypad THE_JOYPAD;
+    public static GameSound THE_SOUND;
+    public static GameUIConfigManager THE_UI_CONFIGS;
 
-    static {
+    public static void init() {
+        checkUserDirsExistAndWritable();
         THE_ASSETS = new GameAssets();
         THE_CLOCK = new GameClockFX();
         THE_KEYBOARD = new Keyboard();
         THE_JOYPAD = new Joypad(THE_KEYBOARD);
         THE_SOUND = new GameSound();
         THE_UI_CONFIGS = new GameUIConfigManager();
+        Logger.info("Application environment initialized.");
     }
 
     public static GameUI THE_UI;
@@ -67,6 +72,38 @@ public class Globals {
     public static void createUI(Map<GameVariant, Class<? extends GameUIConfig>> configClassesMap) {
         createUIAndSupport3D(true, configClassesMap);
     }
+
+   private  static void checkUserDirsExistAndWritable() {
+        String homeDirDesc = "Pac-Man FX home directory";
+        String customMapDirDesc = "Pac-Man FX custom map directory";
+        boolean success = ensureDirectoryExistsAndIsWritable(Globals.HOME_DIR, homeDirDesc);
+        if (success) {
+            Logger.info(homeDirDesc + " is " + Globals.HOME_DIR);
+            success = ensureDirectoryExistsAndIsWritable(Globals.CUSTOM_MAP_DIR, customMapDirDesc);
+            if (success) {
+                Logger.info(customMapDirDesc + " is " + Globals.CUSTOM_MAP_DIR);
+            }
+            Logger.info("Directory check passed!");
+        }
+    }
+
+    private static boolean ensureDirectoryExistsAndIsWritable(File dir, String description) {
+        requireNonNull(dir);
+        if (!dir.exists()) {
+            Logger.info(description + " does not exist, create it...");
+            if (!dir.mkdirs()) {
+                Logger.error(description + " could not be created");
+                return false;
+            }
+            Logger.error(description + " has been created");
+            if (!dir.canWrite()) {
+                Logger.error(description + " is not writeable");
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     public static final Font DEBUG_TEXT_FONT           = Font.font("Sans", FontWeight.BOLD, 18);
     public static final int LIVES_COUNTER_MAX          = 5;

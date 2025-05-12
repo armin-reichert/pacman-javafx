@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.model.GameVariant;
+import de.amr.pacmanfx.ui.PacManGamesEnvironment;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
@@ -14,16 +15,14 @@ import javafx.stage.Stage;
 import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.THE_GAME_CONTROLLER;
-import static de.amr.pacmanfx.Globals.checkUserDirsExistAndWritable;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
-import static de.amr.pacmanfx.ui.Globals.*;
+import static de.amr.pacmanfx.ui.PacManGamesEnvironment.*;
 
 public class TengenMsPacMan_App extends Application {
 
     @Override
     public void init() {
-        checkUserDirsExistAndWritable();
-        THE_ASSETS.load();
+        PacManGamesEnvironment.init();
         THE_GAME_CONTROLLER.register(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
         THE_GAME_CONTROLLER.select(GameVariant.MS_PACMAN_TENGEN);
     }

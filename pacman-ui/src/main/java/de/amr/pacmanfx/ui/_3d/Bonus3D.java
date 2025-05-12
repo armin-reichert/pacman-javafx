@@ -22,8 +22,8 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.Globals.BONUS_3D_POINTS_WIDTH;
-import static de.amr.pacmanfx.ui.Globals.BONUS_3D_SYMBOL_WIDTH;
+import static de.amr.pacmanfx.ui.PacManGamesEnvironment.BONUS_3D_POINTS_WIDTH;
+import static de.amr.pacmanfx.ui.PacManGamesEnvironment.BONUS_3D_SYMBOL_WIDTH;
 import static java.util.Objects.requireNonNull;
 
 /**

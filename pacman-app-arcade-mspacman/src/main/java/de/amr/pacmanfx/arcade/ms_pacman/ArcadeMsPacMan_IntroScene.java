@@ -21,8 +21,8 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.GameAssets.*;
-import static de.amr.pacmanfx.ui.Globals.THE_SOUND;
-import static de.amr.pacmanfx.ui.Globals.THE_UI_CONFIGS;
+import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_SOUND;
+import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_UI_CONFIGS;
 
 /**
  * Intro scene of the Ms. Pac-Man game.

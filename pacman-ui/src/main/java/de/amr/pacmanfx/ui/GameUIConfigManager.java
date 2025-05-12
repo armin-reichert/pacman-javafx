@@ -29,7 +29,7 @@ public class GameUIConfigManager {
         requireNonNull(uiConfig);
         uiConfig.gameScenes().forEach(scene -> {
             if (scene instanceof GameScene2D gameScene2D) {
-                gameScene2D.debugInfoVisibleProperty().bind(Globals.PY_DEBUG_INFO_VISIBLE);
+                gameScene2D.debugInfoVisibleProperty().bind(PacManGamesEnvironment.PY_DEBUG_INFO_VISIBLE);
             }
         });
         configMap.put(variant, uiConfig);
@@ -44,19 +44,19 @@ public class GameUIConfigManager {
     }
 
     public boolean currentGameSceneIsPlayScene2D() {
-        Optional<GameScene> currentGameScene = Globals.THE_UI.currentGameScene();
+        Optional<GameScene> currentGameScene = PacManGamesEnvironment.THE_UI.currentGameScene();
         return currentGameScene.isPresent()
             && current().gameSceneHasID(currentGameScene.get(), "PlayScene2D");
     }
 
     public boolean currentGameSceneIsPlayScene3D() {
-        Optional<GameScene> currentGameScene = Globals.THE_UI.currentGameScene();
+        Optional<GameScene> currentGameScene = PacManGamesEnvironment.THE_UI.currentGameScene();
         return currentGameScene.isPresent()
             && current().gameSceneHasID(currentGameScene.get(), "PlayScene3D");
     }
 
     public boolean currentGameSceneIs2D() {
-        return Globals.THE_UI.currentGameScene().map(GameScene2D.class::isInstance).orElse(false);
+        return PacManGamesEnvironment.THE_UI.currentGameScene().map(GameScene2D.class::isInstance).orElse(false);
     }
 
     public boolean is2D3DPlaySceneSwitch(GameUIConfig config, GameScene oldScene, GameScene newScene) {

@@ -16,7 +16,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.pacmanfx.ui.GameAssets.ARCADE_WHITE;
-import static de.amr.pacmanfx.ui.Globals.THE_UI_CONFIGS;
+import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_UI_CONFIGS;
 
 public class ArcadeAny_BootScene2D extends GameScene2D {
 

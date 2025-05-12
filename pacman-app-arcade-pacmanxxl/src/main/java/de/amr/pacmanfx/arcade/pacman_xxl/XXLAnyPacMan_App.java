@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.model.GameVariant;
+import de.amr.pacmanfx.ui.PacManGamesEnvironment;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.dashboard.InfoBoxCustomMaps;
 import javafx.application.Application;
@@ -15,7 +16,7 @@ import javafx.stage.Stage;
 import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.Globals.*;
+import static de.amr.pacmanfx.ui.PacManGamesEnvironment.*;
 
 public class XXLAnyPacMan_App extends Application {
 
@@ -23,8 +24,7 @@ public class XXLAnyPacMan_App extends Application {
 
     @Override
     public void init() {
-        checkUserDirsExistAndWritable();
-        THE_ASSETS.load();
+        PacManGamesEnvironment.init();
         xxlMapSelector = new XXLAnyPacMan_MapSelector(CUSTOM_MAP_DIR);
         var pacManGameModel = new XXLPacMan_GameModel(xxlMapSelector);
         var msPacManGameModel = new XXLMsPacMan_GameModel(xxlMapSelector);
@@ -35,6 +35,7 @@ public class XXLAnyPacMan_App extends Application {
 
     @Override
     public void start(Stage stage) {
+        PacManGamesEnvironment.init();
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
         double aspect = screenSize.getWidth() / screenSize.getHeight();
         double height = 0.8 * screenSize.getHeight(), width = aspect * height;

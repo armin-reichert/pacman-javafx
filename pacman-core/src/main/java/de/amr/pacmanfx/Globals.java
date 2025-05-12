@@ -59,37 +59,6 @@ public interface Globals {
     static Optional<GameLevel> gameLevel() { return game().level(); }
     static Optional<Pac> pac() { return gameLevel().map(GameLevel::pac); }
 
-    static void checkUserDirsExistAndWritable() {
-        String homeDirDesc = "Pac-Man FX home directory";
-        String customMapDirDesc = "Pac-Man FX custom map directory";
-        boolean success = ensureDirectoryExistsAndIsWritable(HOME_DIR, homeDirDesc);
-        if (success) {
-            Logger.info(homeDirDesc + " is " + HOME_DIR);
-            success = ensureDirectoryExistsAndIsWritable(CUSTOM_MAP_DIR, customMapDirDesc);
-            if (success) {
-                Logger.info(customMapDirDesc + " is " + CUSTOM_MAP_DIR);
-            }
-            Logger.info("Directory check passed!");
-        }
-    }
-
-    private static boolean ensureDirectoryExistsAndIsWritable(File dir, String description) {
-        requireNonNull(dir);
-        if (!dir.exists()) {
-            Logger.info(description + " does not exist, create it...");
-            if (!dir.mkdirs()) {
-                Logger.error(description + " could not be created");
-                return false;
-            }
-            Logger.error(description + " has been created");
-            if (!dir.canWrite()) {
-                Logger.error(description + " is not writeable");
-                return false;
-            }
-        }
-        return true;
-    }
-
     /**
      * @param position a position
      * @return tile containing given position

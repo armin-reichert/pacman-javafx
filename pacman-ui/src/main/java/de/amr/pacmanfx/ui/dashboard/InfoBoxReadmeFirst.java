@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-import static de.amr.pacmanfx.ui.Globals.THE_ASSETS;
+import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_ASSETS;
 
 public class InfoBoxReadmeFirst extends InfoBox {
 

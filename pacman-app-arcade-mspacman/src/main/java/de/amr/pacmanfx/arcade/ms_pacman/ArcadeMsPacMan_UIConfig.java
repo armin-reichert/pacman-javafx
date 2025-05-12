@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.ui.GameAssets.*;
-import static de.amr.pacmanfx.ui.Globals.PY_3D_ENABLED;
+import static de.amr.pacmanfx.ui.PacManGamesEnvironment.PY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_UIConfig implements GameUIConfig, ResourceManager {

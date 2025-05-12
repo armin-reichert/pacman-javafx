@@ -35,9 +35,9 @@ public class StartPagesView implements View {
 
     public static Node createDefaultStartButton() {
         Node button = Ufx.createFancyButton(
-            Globals.THE_ASSETS.arcadeFontAtSize(30),
-            Globals.THE_ASSETS.text("play_button"),
-            Globals.THE_UI::showGameView);
+            PacManGamesEnvironment.THE_ASSETS.arcadeFontAtSize(30),
+            PacManGamesEnvironment.THE_ASSETS.text("play_button"),
+            PacManGamesEnvironment.THE_UI::showGameView);
         button.setTranslateY(-50);
         StackPane.setAlignment(button, Pos.BOTTOM_CENTER);
         return button;
@@ -46,12 +46,12 @@ public class StartPagesView implements View {
     private final Action actionSelectGamePage = new Action() {
         @Override
         public void execute() {
-            Globals.THE_UI.showGameView();
+            PacManGamesEnvironment.THE_UI.showGameView();
         }
 
         @Override
         public boolean isEnabled() {
-            return !Globals.THE_CLOCK.isPaused();
+            return !PacManGamesEnvironment.THE_CLOCK.isPaused();
         }
     };
 
@@ -91,7 +91,7 @@ public class StartPagesView implements View {
             }
             if (newIndex != -1) {
                 StartPage startPage = startPageList.get(newIndex);
-                Globals.THE_UI.selectGameVariant(startPage.currentGameVariant());
+                PacManGamesEnvironment.THE_UI.selectGameVariant(startPage.currentGameVariant());
                 startPage.requestFocus();
                 startPage.onEnter();
             }

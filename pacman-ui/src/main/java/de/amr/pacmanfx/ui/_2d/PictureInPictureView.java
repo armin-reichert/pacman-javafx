@@ -11,7 +11,7 @@ import javafx.scene.layout.VBox;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.Globals.*;
+import static de.amr.pacmanfx.ui.PacManGamesEnvironment.*;
 import static java.util.Objects.requireNonNull;
 
 /**
