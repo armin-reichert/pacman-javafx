@@ -2,8 +2,11 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.arcade;
+package de.amr.pacmanfx.arcade.app;
 
+import de.amr.pacmanfx.arcade.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.arcade.ArcadePacMan_StartPage;
+import de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.PacManGamesEnvironment;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;

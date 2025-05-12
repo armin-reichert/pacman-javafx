@@ -1,6 +1,7 @@
 plugins {
     id "java"
     id "org.openjfx.javafxplugin" version "0.1.0"
+    id "org.beryx.jlink" version "3.0.1"
 }
 
 dependencies {
@@ -12,4 +13,26 @@ dependencies {
 
 javafx {
     modules = ["javafx.base", "javafx.graphics", "javafx.controls", "javafx.media"]
+}
+
+application {
+    mainModule = "arcade.pacman"
+    mainClass = "de.amr.pacmanfx.arcade.app.Main"
+}
+
+jlink {
+    launcher {
+        name = "Arcade Pac-Man"
+    }
+    jpackage {
+        if (os.isWindows()) {
+            installerType = "msi"
+        }
+        else if (os.isLinux()) {
+            installerType = "deb"
+        }
+        else if (os.isMacOsX()) {
+            installerType = "dmg"
+        }
+    }
 }

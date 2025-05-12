@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.arcade;
+package de.amr.pacmanfx.arcade.app;
 
 import de.amr.pacmanfx.uilib.Ufx;
 

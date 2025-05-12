@@ -15,4 +15,5 @@ open module arcade.pacman {
     requires de.amr.pacmanfx.ui;
 
     exports de.amr.pacmanfx.arcade;
+    exports de.amr.pacmanfx.arcade.app;
 }
