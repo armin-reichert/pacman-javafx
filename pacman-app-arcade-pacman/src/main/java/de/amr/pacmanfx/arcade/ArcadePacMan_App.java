@@ -33,7 +33,6 @@ public class ArcadePacMan_App extends Application {
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
         double height = 0.8 * screenSize.getHeight(), width = 1.2 * height;
         THE_UI.build(stage, width, height);
-        THE_UI.addStartPage(new ArcadePacMan_StartPage(GameVariant.PACMAN));
         THE_UI.buildDashboard(
             DashboardID.README,
             DashboardID.GENERAL,
@@ -44,6 +43,7 @@ public class ArcadePacMan_App extends Application {
             DashboardID.KEYBOARD,
             DashboardID.ABOUT
         );
+        THE_UI.addStartPage(new ArcadePacMan_StartPage(GameVariant.PACMAN));
         THE_UI.selectStartPage(0);
         THE_UI.show();
     }
