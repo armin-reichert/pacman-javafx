@@ -41,7 +41,9 @@ public class PacManGames3dApp extends Application {
     public void init() {
         try {
             checkUserDirsExistAndWritable();
+            THE_ASSETS.load();
             xxlMapSelector = new XXLAnyPacMan_MapSelector(CUSTOM_MAP_DIR);
+            THE_ASSETS.load();
             THE_GAME_CONTROLLER.register(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameModel());
             THE_GAME_CONTROLLER.register(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
             THE_GAME_CONTROLLER.register(GameVariant.PACMAN, new ArcadePacMan_GameModel());

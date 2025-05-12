@@ -22,6 +22,7 @@ public class ArcadeMsPacMan_App extends Application {
     @Override
     public void init() {
         checkUserDirsExistAndWritable();
+        THE_ASSETS.load();
         THE_GAME_CONTROLLER.register(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameModel());
         THE_GAME_CONTROLLER.select(GameVariant.MS_PACMAN);
     }
