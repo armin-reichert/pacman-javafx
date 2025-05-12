@@ -378,14 +378,14 @@ public class Ghost extends Creature {
      * to the ghost house to be revived. Hallelujah!
      */
     private void updateStateReturningToHouse() {
-        float speedReturningToHouse = level.speedControl().ghostSpeedReturningToHouse(level, this);
+        float speed = level.speedControl().ghostSpeedReturningToHouse(level, this);
         Vector2f houseEntry = level.houseEntryPosition();
-        if (position().roughlyEquals(houseEntry, 0.5f * speedReturningToHouse, 0)) {
+        if (position().roughlyEquals(houseEntry, 0.5f * speed, 0)) {
             setPosition(houseEntry);
             setMoveAndWishDir(DOWN);
             setState(GhostState.ENTERING_HOUSE);
         } else {
-            setSpeed(speedReturningToHouse);
+            setSpeed(speed);
             setTargetTile(level.houseLeftDoorTile());
             navigateTowardsTarget();
             tryMoving();
