@@ -34,8 +34,12 @@ public class PacManGamesEnvironment {
     public static Keyboard THE_KEYBOARD;
     public static Joypad THE_JOYPAD;
     public static GameSound THE_SOUND;
+    public static GameUI THE_UI;
     public static GameUIConfigManager THE_UI_CONFIGS;
 
+    /**
+     * Should be called as first method in Application.init() method.
+     */
     public static void init() {
         checkUserDirsExistAndWritable();
         THE_ASSETS = new GameAssets();
@@ -47,8 +51,12 @@ public class PacManGamesEnvironment {
         Logger.info("Application environment initialized.");
     }
 
-    public static GameUI THE_UI;
-
+    /**
+     * Should be called in the Application.start() method.
+     *
+     * @param support3D if the UI has 3D support
+     * @param configClassesMap a map specifying the UI configuration for each supported game variant
+     */
     public static void createUIAndSupport3D(
         boolean support3D,
         Map<GameVariant, Class<? extends GameUIConfig>> configClassesMap)
@@ -73,7 +81,7 @@ public class PacManGamesEnvironment {
         createUIAndSupport3D(true, configClassesMap);
     }
 
-   private  static void checkUserDirsExistAndWritable() {
+   private static void checkUserDirsExistAndWritable() {
         String homeDirDesc = "Pac-Man FX home directory";
         String customMapDirDesc = "Pac-Man FX custom map directory";
         boolean success = ensureDirectoryExistsAndIsWritable(Globals.HOME_DIR, homeDirDesc);
@@ -103,7 +111,6 @@ public class PacManGamesEnvironment {
         }
         return true;
     }
-
 
     public static final Font DEBUG_TEXT_FONT           = Font.font("Sans", FontWeight.BOLD, 18);
     public static final int LIVES_COUNTER_MAX          = 5;
@@ -153,7 +160,7 @@ public class PacManGamesEnvironment {
     public static final ObjectProperty<Color>    PY_3D_FLOOR_COLOR         = new SimpleObjectProperty<>(Color.rgb(20,20,20));
     public static final ObjectProperty<Color>    PY_3D_LIGHT_COLOR         = new SimpleObjectProperty<>(Color.WHITE);
     public static final BooleanProperty          PY_3D_PAC_LIGHT_ENABLED   = new SimpleBooleanProperty(true);
-    public static final ObjectProperty<PerspectiveID> PY_3D_PERSPECTIVE = new SimpleObjectProperty<>(PerspectiveID.TRACK_PLAYER);
+    public static final ObjectProperty<PerspectiveID> PY_3D_PERSPECTIVE    = new SimpleObjectProperty<>(PerspectiveID.TRACK_PLAYER);
     public static final DoubleProperty           PY_3D_WALL_HEIGHT         = new SimpleDoubleProperty(3.5);
     public static final DoubleProperty           PY_3D_WALL_OPACITY        = new SimpleDoubleProperty(1.0);
 }
