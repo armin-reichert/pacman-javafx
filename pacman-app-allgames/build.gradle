@@ -17,8 +17,10 @@ dependencies {
 }
 
 application {
-    mainModule = "de.amr.pacmanfx.allgames"
-    mainClass = "de.amr.pacmanfx.allgames.Main"
+    // Do NOT ask me what is going on here! Without the "x." prefix the exe does not work
+    // and an error message "module de.amr.pacmanfx.allgames not in boot Layer" appears
+    mainModule = "x.de.amr.pacmanfx.allgames"
+    mainClass = "de.amr.pacmanfx.allgames.app.Main"
     if (os.isLinux()) {
         applicationDefaultJvmArgs = ["-Dprism.forceGPU=true"]
     }
@@ -41,6 +43,7 @@ jlink {
             icon = "pacman.ico"
             installerType = "msi"
             installerOptions += ["--win-dir-chooser", "--win-menu", "--win-menu-group", "Pac-Man FX", "--win-shortcut"]
+            //imageOptions = ["--win-console"]
         } else if (os.isLinux()) {
             installerType = "deb"
         } else if (os.isMacOsX()) {

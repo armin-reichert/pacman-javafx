@@ -52,7 +52,6 @@ public class Globals {
         if (support3D) {
             Model3DRepository.get(); // triggers 3D model loading
         }
-        // create configuration instances *after* assets have been filled!
         configClassesMap.forEach((gameVariant, configClass) -> {
             try {
                 GameUIConfig config = configClass.getDeclaredConstructor(GameAssets.class).newInstance(THE_ASSETS);
@@ -60,6 +59,7 @@ public class Globals {
                 Logger.info("Game variant {} uses UI configuration: {}", gameVariant, config);
             } catch (Exception x) {
                 Logger.error("Could not create UI configuration of class {}", configClass);
+                throw new IllegalStateException(x);
             }
         });
     }
