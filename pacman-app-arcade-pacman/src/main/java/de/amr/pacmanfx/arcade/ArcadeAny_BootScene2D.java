@@ -40,7 +40,7 @@ public class ArcadeAny_BootScene2D extends GameScene2D {
     @Override
     public void update() {
         if (gameState().timer().atSecond(4)) {
-            THE_GAME_CONTROLLER.letCurrentStateExpire();
+            theGameController().letCurrentStateExpire();
         }
     }
 
@@ -82,7 +82,7 @@ public class ArcadeAny_BootScene2D extends GameScene2D {
         gr.ctx().setFont(font);
         for (int row = 0; row < numRows; ++row) {
             for (int col = 0; col < numCols; ++col) {
-                var hexCode = Integer.toHexString(THE_RNG.nextInt(16));
+                var hexCode = Integer.toHexString(theRNG().nextInt(16));
                 gr.ctx().fillText(hexCode, scaled(tiles_to_px(col)), scaled(tiles_to_px(row + 1)));
             }
         }
@@ -93,9 +93,9 @@ public class ArcadeAny_BootScene2D extends GameScene2D {
         final int numFragmentsX = (int) (sceneSize.x() / FRAGMENT_SIZE);
         final int numFragmentsY = (int) (sceneSize.y() / FRAGMENT_SIZE);
         for (int row = 0; row < numFragmentsY; ++row) {
-            if (THE_RNG.nextInt(100) < 20) continue;
+            if (theRNG().nextInt(100) < 20) continue;
             RectArea fragment1 = randomFragment(), fragment2 = randomFragment();
-            int split = numFragmentsX / 8 + THE_RNG.nextInt(numFragmentsX / 4);
+            int split = numFragmentsX / 8 + theRNG().nextInt(numFragmentsX / 4);
             for (int col = 0; col < numFragmentsX; ++col) {
                 gr.drawSpriteScaled(col < split ? fragment1 : fragment2, FRAGMENT_SIZE * col, FRAGMENT_SIZE * row);
             }
@@ -104,8 +104,8 @@ public class ArcadeAny_BootScene2D extends GameScene2D {
 
     private RectArea randomFragment() {
         return new RectArea(
-            (int) lerp(minX, maxX, THE_RNG.nextDouble()),
-            (int) lerp(minY, maxY, THE_RNG.nextDouble()),
+            (int) lerp(minX, maxX, theRNG().nextDouble()),
+            (int) lerp(minY, maxY, theRNG().nextDouble()),
             FRAGMENT_SIZE, FRAGMENT_SIZE);
     }
 

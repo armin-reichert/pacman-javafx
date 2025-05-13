@@ -28,9 +28,9 @@ public class XXLAnyPacMan_App extends Application {
         xxlMapSelector = new XXLAnyPacMan_MapSelector(CUSTOM_MAP_DIR);
         var pacManGameModel = new XXLPacMan_GameModel(xxlMapSelector);
         var msPacManGameModel = new XXLMsPacMan_GameModel(xxlMapSelector);
-        THE_GAME_CONTROLLER.register(GameVariant.PACMAN_XXL, pacManGameModel);
-        THE_GAME_CONTROLLER.register(GameVariant.MS_PACMAN_XXL, msPacManGameModel);
-        THE_GAME_CONTROLLER.select(GameVariant.MS_PACMAN_XXL);
+        theGameController().register(GameVariant.PACMAN_XXL, pacManGameModel);
+        theGameController().register(GameVariant.MS_PACMAN_XXL, msPacManGameModel);
+        theGameController().select(GameVariant.MS_PACMAN_XXL);
     }
 
     @Override

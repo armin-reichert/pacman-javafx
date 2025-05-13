@@ -76,11 +76,11 @@ public abstract class ArcadeAny_GameModel extends GameModel {
     public void startNewGame() {
         prepareForNewGame();
         buildNormalLevel(1);
-        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.GAME_STARTED);
+        theGameEventManager().publishEvent(this, GameEventType.GAME_STARTED);
     }
 
     @Override
-    public boolean canStartNewGame() { return !THE_COIN_MECHANISM.isEmpty(); }
+    public boolean canStartNewGame() { return !theCoinMechanism().isEmpty(); }
 
     @Override
     public boolean continueOnGameOver() { return false; }
@@ -109,7 +109,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
 
     @Override
     public void onGhostKilled(Ghost ghost) {
-        THE_SIMULATION_STEP.killedGhosts().add(ghost);
+        theSimulationStep().killedGhosts().add(ghost);
         int killedSoFar = level.victims().size();
         int points = 100 * KILLED_GHOST_VALUE_MULTIPLIER[killedSoFar];
         level.victims().add(ghost);
@@ -132,16 +132,16 @@ public abstract class ArcadeAny_GameModel extends GameModel {
             level.registerFoodEatenAt(tile);
             gateKeeper().ifPresent(gateKeeper -> gateKeeper.registerFoodEaten(level));
             if (level.isEnergizerPosition(tile)) {
-                THE_SIMULATION_STEP.setFoundEnergizerAtTile(tile);
+                theSimulationStep().setFoundEnergizerAtTile(tile);
                 onEnergizerEaten();
             } else {
                 onPelletEaten();
             }
             if (isBonusReached()) {
                 activateNextBonus();
-                THE_SIMULATION_STEP.setBonusIndex(level.currentBonusIndex());
+                theSimulationStep().setBonusIndex(level.currentBonusIndex());
             }
-            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_FOUND_FOOD, tile);
+            theGameEventManager().publishEvent(this, GameEventType.PAC_FOUND_FOOD, tile);
         } else {
             level.pac().starvingContinues();
         }
@@ -168,20 +168,20 @@ public abstract class ArcadeAny_GameModel extends GameModel {
             level.pac().powerTimer().restartTicks(powerTicks);
             Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerTicks / NUM_TICKS_PER_SEC);
             level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
-            THE_SIMULATION_STEP.setPacGotPower();
-            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_GETS_POWER);
+            theSimulationStep().setPacGotPower();
+            theGameEventManager().publishEvent(this, GameEventType.PAC_GETS_POWER);
         }
     }
 
     @Override
     public void onGameEnding() {
         playingProperty().set(false);
-        if (!THE_COIN_MECHANISM.isEmpty()) {
-            THE_COIN_MECHANISM.consumeCoin();
+        if (!theCoinMechanism().isEmpty()) {
+            theCoinMechanism().consumeCoin();
         }
         scoreManager.updateHighScore();
         level.showMessage(GameLevel.Message.GAME_OVER);
-        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.STOP_ALL_SOUNDS);
+        theGameEventManager().publishEvent(this, GameEventType.STOP_ALL_SOUNDS);
     }
 
     @Override
@@ -191,7 +191,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         scoreManager.setScoreLevelNumber(levelNumber);
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(levelNumber));
         level.huntingTimer().reset();
-        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
+        theGameEventManager().publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 
     @Override
@@ -204,7 +204,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         scoreManager.setScoreLevelNumber(1);
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(1));
         level.huntingTimer().reset();
-        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
+        theGameEventManager().publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 
     @Override
@@ -232,7 +232,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
             Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!
-        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_STARTED);
+        theGameEventManager().publishEvent(this, GameEventType.LEVEL_STARTED);
     }
 
     @Override

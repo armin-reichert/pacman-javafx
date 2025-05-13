@@ -33,8 +33,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.Globals.THE_GAME_CONTROLLER;
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.Globals.theGameController;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.*;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 import static java.util.Objects.requireNonNull;
@@ -168,7 +168,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
         }
 
         private void initState() {
-            GameModel game = THE_GAME_CONTROLLER.game(gameVariant);
+            GameModel game = theGameController().game(gameVariant);
             game.mapSelector().loadAllMaps(game);
             boolean customMapsExist = !game.mapSelector().customMaps().isEmpty();
 
@@ -229,7 +229,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
 
         private void startGame() {
             if (gameVariant == GameVariant.PACMAN_XXL || gameVariant == GameVariant.MS_PACMAN_XXL) {
-                GameModel game = THE_GAME_CONTROLLER.game(gameVariant);
+                GameModel game = theGameController().game(gameVariant);
                 game.cutScenesEnabledProperty().set(cutScenesEnabled);
                 game.mapSelector().setMapSelectionMode(mapOrder);
                 game.mapSelector().loadAllMaps(game);

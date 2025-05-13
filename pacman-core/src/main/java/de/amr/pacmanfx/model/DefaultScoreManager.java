@@ -11,8 +11,8 @@ import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 
-import static de.amr.pacmanfx.Globals.THE_GAME_EVENT_MANAGER;
-import static de.amr.pacmanfx.Globals.THE_SIMULATION_STEP;
+import static de.amr.pacmanfx.Globals.theGameEventManager;
+import static de.amr.pacmanfx.Globals.theSimulationStep;
 import static java.util.Objects.requireNonNull;
 
 public class DefaultScoreManager implements ScoreManager {
@@ -62,12 +62,12 @@ public class DefaultScoreManager implements ScoreManager {
         for (int extraLifeScore : extraLifeScores) {
             // has extra life score been crossed?
             if (oldScore < extraLifeScore && newScore >= extraLifeScore) {
-                THE_SIMULATION_STEP.setExtraLifeWon();
-                THE_SIMULATION_STEP.setExtraLifeScore(extraLifeScore);
+                theSimulationStep().setExtraLifeWon();
+                theSimulationStep().setExtraLifeScore(extraLifeScore);
                 game.addLives(1);
                 GameEvent event = new GameEvent(game, GameEventType.SPECIAL_SCORE_REACHED);
                 event.setPayload("score", extraLifeScore); // just for testing payload implementation
-                THE_GAME_EVENT_MANAGER.publishEvent(event);
+                theGameEventManager().publishEvent(event);
                 break;
             }
         }

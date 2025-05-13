@@ -52,7 +52,7 @@ public class ArcadePacMan_StartScene extends GameScene2D {
         if (gr instanceof ArcadePacMan_GameRenderer r) {
             r.drawMidwayCopyright(4, 29, ARCADE_PINK, font8);
         }
-        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_MECHANISM.numCoins()), ARCADE_WHITE, font8, 2 * TS, sizeInPx().y() - 2);
+        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()), ARCADE_WHITE, font8, 2 * TS, sizeInPx().y() - 2);
         gr.drawLevelCounter(game().levelCounter(), sizeInPx());
     }
 

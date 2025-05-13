@@ -357,7 +357,7 @@ public class GameLevel3D {
 
     public RotateTransition levelRotateAnimation(double seconds) {
         var rotation = new RotateTransition(Duration.seconds(seconds), root);
-        rotation.setAxis(THE_RNG.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
+        rotation.setAxis(theRNG().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
         rotation.setFromAngle(0);
         rotation.setToAngle(360);
         rotation.setInterpolator(Interpolator.LINEAR);

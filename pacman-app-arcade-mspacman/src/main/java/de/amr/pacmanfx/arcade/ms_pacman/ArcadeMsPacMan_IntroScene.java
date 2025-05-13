@@ -147,7 +147,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) { // might be PacManXXL vector renderer!
             r.drawMidwayCopyright(6, 28, ARCADE_RED, font);
         }
-        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_MECHANISM.numCoins()), ARCADE_WHITE, font, 2 * TS, sizeInPx().y() - 2);
+        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()), ARCADE_WHITE, font, 2 * TS, sizeInPx().y() - 2);
         gr.drawLevelCounter(game().levelCounter(), sizeInPx());
     }
 
@@ -271,9 +271,9 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
                 scene.marqueeTimer.doTick();
                 if (sceneTimer.atSecond(2.0) && !game().canStartNewGame()) {
-                    THE_GAME_CONTROLLER.changeState(GameState.STARTING_GAME); // demo level
+                    theGameController().changeState(GameState.STARTING_GAME); // demo level
                 } else if (sceneTimer.atSecond(5)) {
-                    THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
+                    theGameController().changeState(GameState.SETTING_OPTIONS);
                 }
             }
         };

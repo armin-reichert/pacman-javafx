@@ -15,8 +15,8 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.Globals.THE_GAME_CONTROLLER;
 import static de.amr.pacmanfx.Globals.game;
+import static de.amr.pacmanfx.Globals.theGameController;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.createPac;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.createRedGhost;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
@@ -115,7 +115,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             case ANIMATION_START + 420 -> blinkyDamaged.nextFrame(); // Eyes right-down
             case ANIMATION_START + 508 -> {
                 blinky.setVisible(false);
-                THE_GAME_CONTROLLER.letCurrentStateExpire();
+                theGameController().letCurrentStateExpire();
             }
             default -> {}
         }

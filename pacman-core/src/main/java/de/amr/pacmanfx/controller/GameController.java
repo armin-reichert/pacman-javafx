@@ -16,7 +16,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.Globals.THE_GAME_EVENT_MANAGER;
+import static de.amr.pacmanfx.Globals.theGameEventManager;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -44,12 +44,12 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     public GameController() {
         super(GameState.values());
-        addStateChangeListener((oldState, newState) -> THE_GAME_EVENT_MANAGER.publishEvent(
+        addStateChangeListener((oldState, newState) -> theGameEventManager().publishEvent(
                 new GameStateChangeEvent(game(), oldState, newState)));
         gameVariantPy.addListener((py, ov, newGameVariant) -> {
             GameModel game = game(newGameVariant);
             game.init();
-            THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.GAME_VARIANT_CHANGED);
+            theGameEventManager().publishEvent(game, GameEventType.GAME_VARIANT_CHANGED);
         });
     }
 

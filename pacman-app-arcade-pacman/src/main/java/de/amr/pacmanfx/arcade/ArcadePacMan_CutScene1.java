@@ -14,8 +14,8 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.Globals.THE_GAME_CONTROLLER;
 import static de.amr.pacmanfx.Globals.game;
+import static de.amr.pacmanfx.Globals.theGameController;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.createPac;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.createRedGhost;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
@@ -90,7 +90,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             pac.startAnimation();
         }
         else if (frame == ANIMATION_START + 632) {
-            THE_GAME_CONTROLLER.letCurrentStateExpire();
+             theGameController().letCurrentStateExpire();
         }
         if (frame >= ANIMATION_START) {
             pac.move();

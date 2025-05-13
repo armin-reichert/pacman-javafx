@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.GameModel;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.Globals.THE_GAME_EVENT_MANAGER;
+import static de.amr.pacmanfx.Globals.theGameEventManager;
 
 
 /**
@@ -97,7 +97,7 @@ public class StaticBonus extends Actor implements Bonus {
             case STATE_EDIBLE, STATE_EATEN -> {
                 if (countdown == 0) {
                     setInactive();
-                    THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.BONUS_EXPIRED, tile());
+                    theGameEventManager().publishEvent(game, GameEventType.BONUS_EXPIRED, tile());
                 } else if (countdown != TickTimer.INDEFINITE) {
                     --countdown;
                 }

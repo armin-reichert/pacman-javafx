@@ -12,7 +12,7 @@ import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 
 import java.io.File;
 
-import static de.amr.pacmanfx.Globals.THE_RNG;
+import static de.amr.pacmanfx.Globals.theRNG;
 
 /**
  * Extension of Arcade Pac-Man with 8 new builtin mazes (thanks to the one and only
@@ -32,7 +32,7 @@ public class XXLPacMan_GameModel extends ArcadePacMan_GameModel {
     public void buildDemoLevel() {
         // Select random (standard) level with different map and map color scheme for each choice
         int[] levelNumbers = { 1, 3, 6, 10, 14, 18 };
-        int levelNumber = levelNumbers[THE_RNG.nextInt(levelNumbers.length)];
+        int levelNumber = levelNumbers[theRNG().nextInt(levelNumbers.length)];
         MapSelectionMode mapSelectionMode = mapSelector.mapSelectionMode();
         mapSelector.setMapSelectionMode(MapSelectionMode.NO_CUSTOM_MAPS);
         createLevel(levelNumber);

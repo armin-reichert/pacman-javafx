@@ -14,8 +14,8 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.Globals.THE_GAME_CONTROLLER;
 import static de.amr.pacmanfx.Globals.game;
+import static de.amr.pacmanfx.Globals.theGameController;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.createPac;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.createRedGhost;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
@@ -86,7 +86,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
                 blinky.selectAnimation(ArcadePacMan_GhostAnimations.ANIM_BLINKY_NAKED);
                 blinky.startAnimation();
             }
-            case ANIMATION_START + 700 -> THE_GAME_CONTROLLER.letCurrentStateExpire();
+            case ANIMATION_START + 700 -> theGameController().letCurrentStateExpire();
             default -> {}
         }
     }

@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 
 import java.util.Map;
 
-import static de.amr.pacmanfx.Globals.THE_GAME_CONTROLLER;
+import static de.amr.pacmanfx.Globals.theGameController;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
 public class ArcadeMsPacMan_App extends Application {
@@ -22,8 +22,8 @@ public class ArcadeMsPacMan_App extends Application {
     @Override
     public void init() {
         PacManGamesEnv.init();
-        THE_GAME_CONTROLLER.register(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameModel());
-        THE_GAME_CONTROLLER.select(GameVariant.MS_PACMAN);
+        theGameController().register(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameModel());
+        theGameController().select(GameVariant.MS_PACMAN);
     }
 
     @Override

@@ -18,7 +18,7 @@ public enum TengenMsPacMan_GameAction implements Action {
     QUIT_DEMO_LEVEL {
         @Override
         public void execute() {
-            gameLevel().ifPresent(level -> THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS));
+            gameLevel().ifPresent(level -> theGameController().changeState(GameState.SETTING_OPTIONS));
         }
 
         @Override
@@ -31,14 +31,14 @@ public enum TengenMsPacMan_GameAction implements Action {
         @Override
         public void execute() {
             game().playingProperty().set(false);
-            THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
+            theGameController().changeState(GameState.SETTING_OPTIONS);
         }
     },
 
     START_GAME {
         @Override
         public void execute() {
-            THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
+            theGameController().changeState(GameState.SETTING_OPTIONS);
         }
     },
 
@@ -47,7 +47,7 @@ public enum TengenMsPacMan_GameAction implements Action {
         public void execute() {
             theSound().stopAll();
             game().playingProperty().set(false);
-            THE_GAME_CONTROLLER.changeState(GameState.STARTING_GAME);
+            theGameController().changeState(GameState.STARTING_GAME);
         }
     },
 

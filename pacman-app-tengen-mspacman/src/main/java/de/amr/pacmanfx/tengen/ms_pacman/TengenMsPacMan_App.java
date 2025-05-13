@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 
 import java.util.Map;
 
-import static de.amr.pacmanfx.Globals.THE_GAME_CONTROLLER;
+import static de.amr.pacmanfx.Globals.theGameController;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
@@ -23,8 +23,8 @@ public class TengenMsPacMan_App extends Application {
     @Override
     public void init() {
         PacManGamesEnv.init();
-        THE_GAME_CONTROLLER.register(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
-        THE_GAME_CONTROLLER.select(GameVariant.MS_PACMAN_TENGEN);
+        theGameController().register(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
+        theGameController().select(GameVariant.MS_PACMAN_TENGEN);
     }
 
     @Override

@@ -198,7 +198,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     public void bindActions() {
         bindArcadeInsertCoinAction();
         if (game().level().isPresent() && !game().level().get().isDemoLevel()) {
-            if (!THE_GAME_CONTROLLER.isSelected(GameVariant.MS_PACMAN_TENGEN)) {
+            if (!theGameController().isSelected(GameVariant.MS_PACMAN_TENGEN)) {
                 bindArcadeStartGameAction();
             }
             bindCheatActions();
@@ -393,7 +393,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     private void onEnterStateGhostDying(GameLevel level) {
         GameSpriteSheet spriteSheet = theUIConfig().current().spriteSheet();
         RectArea[] numberSprites = spriteSheet.ghostNumberSprites();
-        THE_SIMULATION_STEP.killedGhosts().forEach(ghost -> {
+        theSimulationStep().killedGhosts().forEach(ghost -> {
             int victimIndex = level.victims().indexOf(ghost);
             var numberImage = spriteSheet.crop(numberSprites[victimIndex]);
             level3D.ghost3D(ghost.personality()).setNumberImage(numberImage);
@@ -570,7 +570,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 Ufx.pauseSec(1)
             );
         animation.setDelay(Duration.seconds(2));
-        animation.setOnFinished(e -> THE_GAME_CONTROLLER.letCurrentStateExpire());
+        animation.setOnFinished(e -> theGameController().letCurrentStateExpire());
 
         animation.play();
     }

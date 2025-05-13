@@ -147,7 +147,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 }
             }
         }
-        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_MECHANISM.numCoins()), ARCADE_WHITE, font, 2 * TS, sizeInPx().y() - 2);
+        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()), ARCADE_WHITE, font, 2 * TS, sizeInPx().y() - 2);
         gr.drawLevelCounter(game().levelCounter(), sizeInPx());
     }
 
@@ -376,10 +376,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 if (sceneTimer.atSecond(0.75)) {
                     scene.ghosts[3].hide();
                     if (!game().canStartNewGame()) {
-                        THE_GAME_CONTROLLER.changeState(GameState.STARTING_GAME);
+                        theGameController().changeState(GameState.STARTING_GAME);
                     }
                 } else if (sceneTimer.atSecond(5)) {
-                    THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
+                    theGameController().changeState(GameState.SETTING_OPTIONS);
                 }
             }
         };

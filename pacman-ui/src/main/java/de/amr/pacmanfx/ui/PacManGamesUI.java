@@ -60,9 +60,9 @@ public class PacManGamesUI implements GameUI {
 
     private void doSimulationStepAndUpdateGameScene() {
         try {
-            THE_SIMULATION_STEP.init(theClock().tickCount());
-            THE_GAME_CONTROLLER.update();
-            THE_SIMULATION_STEP.log();
+            theSimulationStep().init(theClock().tickCount());
+            theGameController().update();
+            theSimulationStep().log();
             currentView().update();
         } catch (Exception x) {
             Logger.error(x);
@@ -85,12 +85,12 @@ public class PacManGamesUI implements GameUI {
         root.getChildren().set(0, newView.layoutRoot());
         if (oldView != null) {
             oldView.disableActionBindings();
-            THE_GAME_EVENT_MANAGER.removeEventListener(oldView);
+            theGameEventManager().removeEventListener(oldView);
         }
         newView.enableActionBindings();
         newView.layoutRoot().requestFocus();
         stage.titleProperty().bind(newView.title());
-        THE_GAME_EVENT_MANAGER.addEventListener(newView);
+        theGameEventManager().addEventListener(newView);
     }
 
     private void handleGameSceneChange(GameScene oldScene, GameScene newScene) {
@@ -260,7 +260,7 @@ public class PacManGamesUI implements GameUI {
         theClock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
         theClock().pausedProperty().set(false);
         theClock().start();
-        THE_GAME_CONTROLLER.restart(GameState.BOOT);
+        theGameController().restart(GameState.BOOT);
     }
 
     @Override
@@ -279,7 +279,7 @@ public class PacManGamesUI implements GameUI {
         stage.getIcons().setAll(uiConfig.appIcon());
         gameView.canvasContainer().decorationEnabledPy.set(uiConfig.isGameCanvasDecorated());
         // this triggers a game event and calling the event handlers:
-        THE_GAME_CONTROLLER.select(gameVariant);
+        theGameController().select(gameVariant);
     }
 
     @Override
@@ -312,7 +312,7 @@ public class PacManGamesUI implements GameUI {
     @Override
     public void showGameView() {
         viewPy.set(gameView);
-        if (!THE_GAME_CONTROLLER.isSelected(GameVariant.MS_PACMAN_TENGEN)) {
+        if (!theGameController().isSelected(GameVariant.MS_PACMAN_TENGEN)) {
             theSound().playVoice("voice.explain", 0);
         }
         gameView.resize(mainScene.getWidth(), mainScene.getHeight());

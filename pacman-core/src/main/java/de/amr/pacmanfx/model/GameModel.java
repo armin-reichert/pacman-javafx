@@ -16,8 +16,8 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.THE_GAME_EVENT_MANAGER;
-import static de.amr.pacmanfx.Globals.THE_SIMULATION_STEP;
+import static de.amr.pacmanfx.Globals.theGameEventManager;
+import static de.amr.pacmanfx.Globals.theSimulationStep;
 
 /**
  * Common base class of all Pac-Man game models.
@@ -71,7 +71,7 @@ public abstract class GameModel {
         level.blinking().setStartPhase(Pulse.ON);
         level.blinking().restart(Integer.MAX_VALUE);
         level.huntingTimer().startFirstHuntingPhase(level.number());
-        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.HUNTING_PHASE_STARTED);
+        theGameEventManager().publishEvent(this, GameEventType.HUNTING_PHASE_STARTED);
     }
 
     public void doHuntingStep() {
@@ -135,8 +135,8 @@ public abstract class GameModel {
                     killed = !level.pac().isImmune();
                 }
                 if (killed) {
-                    THE_SIMULATION_STEP.setPacKiller(potentialKiller);
-                    THE_SIMULATION_STEP.setPacKilledTile(potentialKiller.tile());
+                    theSimulationStep().setPacKiller(potentialKiller);
+                    theSimulationStep().setPacKilledTile(potentialKiller.tile());
                 }
             });
     }
@@ -145,8 +145,8 @@ public abstract class GameModel {
         final TickTimer timer = level.pac().powerTimer();
         timer.doTick();
         if (level.pac().isPowerFadingStarting()) {
-            THE_SIMULATION_STEP.setPacStartsLosingPower();
-            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_STARTS_LOSING_POWER);
+            theSimulationStep().setPacStartsLosingPower();
+            theGameEventManager().publishEvent(this, GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (timer.hasExpired()) {
             timer.stop();
             timer.reset(0);
@@ -155,15 +155,15 @@ public abstract class GameModel {
             level.huntingTimer().start();
             Logger.info("Hunting timer restarted because Pac-Man lost power");
             level.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
-            THE_SIMULATION_STEP.setPacLostPower();
-            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_LOST_POWER);
+            theSimulationStep().setPacLostPower();
+            theGameEventManager().publishEvent(this, GameEventType.PAC_LOST_POWER);
         }
     }
 
-    public boolean hasPacManBeenKilled() { return THE_SIMULATION_STEP.pacKilledTile() != null; }
+    public boolean hasPacManBeenKilled() { return theSimulationStep().pacKilledTile() != null; }
     public abstract void onPacKilled();
 
-    public boolean haveGhostsBeenKilled() { return !THE_SIMULATION_STEP.killedGhosts().isEmpty(); }
+    public boolean haveGhostsBeenKilled() { return !theSimulationStep().killedGhosts().isEmpty(); }
     public abstract void onGhostKilled(Ghost ghost);
 
     protected void checkIfGhostsKilled() {
@@ -185,8 +185,8 @@ public abstract class GameModel {
             bonus.setEaten(120); //TODO is 2 seconds correct?
             scoreManager.scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-            THE_SIMULATION_STEP.setBonusEatenTile(bonus.actor().tile());
-            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.BONUS_EATEN);
+            theSimulationStep().setBonusEatenTile(bonus.actor().tile());
+            theGameEventManager().publishEvent(this, GameEventType.BONUS_EATEN);
         }
     }
 

@@ -46,7 +46,7 @@ public class InfoBoxGameControl extends InfoBox {
         cbAutopilot        = addCheckBox("Autopilot");
         cbImmunity         = addCheckBox("Pac-Man Immune");
 
-        spinnerCredit.valueProperty().addListener((py, ov, number) -> THE_COIN_MECHANISM.setNumCoins(number));
+        spinnerCredit.valueProperty().addListener((py, ov, number) -> theCoinMechanism().setNumCoins(number));
 
         setAction(bgCutScenesTest[CUT_SCENES_TEST_START], GameAction.TEST_CUT_SCENES::execute);
         setAction(bgCutScenesTest[CUT_SCENES_TEST_QUIT], GameAction.RESTART_INTRO::execute);
@@ -63,7 +63,7 @@ public class InfoBoxGameControl extends InfoBox {
     public void update() {
         super.update();
 
-        spinnerCredit.getValueFactory().setValue(THE_COIN_MECHANISM.numCoins());
+        spinnerCredit.getValueFactory().setValue(theCoinMechanism().numCoins());
         comboInitialLives.setValue(game().initialLifeCount());
 
         spinnerCredit.setDisable(!(Validations.isOneOf(gameState(), GameState.INTRO, GameState.SETTING_OPTIONS)));

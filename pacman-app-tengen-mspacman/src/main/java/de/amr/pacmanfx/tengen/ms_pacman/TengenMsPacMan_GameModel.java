@@ -5,15 +5,14 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.event.GameEventType;
-import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.steering.RuleBasedPacSteering;
-import de.amr.pacmanfx.steering.Steering;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.steering.RuleBasedPacSteering;
+import de.amr.pacmanfx.steering.Steering;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -240,7 +239,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         playingProperty().set(false);
         scoreManager.updateHighScore();
         level.showMessage(GameLevel.Message.GAME_OVER);
-        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.STOP_ALL_SOUNDS);
+        theGameEventManager().publishEvent(this, GameEventType.STOP_ALL_SOUNDS);
     }
 
     @Override
@@ -354,7 +353,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!
-        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_STARTED);
+        theGameEventManager().publishEvent(this, GameEventType.LEVEL_STARTED);
     }
 
     public void startNextLevel() {
@@ -388,7 +387,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         prepareForNewGame();
         levelCounter.setStartLevel(startLevelNumber);
         buildNormalLevel(startLevelNumber);
-        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.GAME_STARTED);
+        theGameEventManager().publishEvent(this, GameEventType.GAME_STARTED);
     }
 
     @Override
@@ -510,7 +509,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         scoreManager.setScoreLevelNumber(levelNumber);
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(levelNumber));
         level.huntingTimer().reset();
-        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
+        theGameEventManager().publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 
 
@@ -524,7 +523,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         scoreManager.setScoreLevelNumber(1);
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(1));
         level.huntingTimer().reset();
-        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.LEVEL_CREATED);
+        theGameEventManager().publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 
     @Override
@@ -577,11 +576,11 @@ public class TengenMsPacMan_GameModel extends GameModel {
             Logger.error("No portal found in current maze");
             return; // TODO: can this happen?
         }
-        boolean leftToRight = THE_RNG.nextBoolean();
+        boolean leftToRight = theRNG().nextBoolean();
         Vector2i houseEntry = tileAt(level.houseEntryPosition());
         Vector2i houseEntryOpposite = houseEntry.plus(0, level.houseSizeInTiles().y() + 1);
-        Portal entryPortal = portals.get(THE_RNG.nextInt(portals.size()));
-        Portal exitPortal  = portals.get(THE_RNG.nextInt(portals.size()));
+        Portal entryPortal = portals.get(theRNG().nextInt(portals.size()));
+        Portal exitPortal  = portals.get(theRNG().nextInt(portals.size()));
         List<Waypoint> route = Stream.of(
                 leftToRight ? entryPortal.leftTunnelEnd() : entryPortal.rightTunnelEnd(),
                 houseEntry,
@@ -599,7 +598,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
 
         level.setBonus(bonus);
-        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.BONUS_ACTIVATED, bonus.actor().tile());
+        theGameEventManager().publishEvent(this, GameEventType.BONUS_ACTIVATED, bonus.actor().tile());
     }
 
     @Override
@@ -610,16 +609,16 @@ public class TengenMsPacMan_GameModel extends GameModel {
             level.registerFoodEatenAt(tile);
             gateKeeper().ifPresent(gateKeeper -> gateKeeper.registerFoodEaten(level));
             if (level.isEnergizerPosition(tile)) {
-                THE_SIMULATION_STEP.setFoundEnergizerAtTile(tile);
+                theSimulationStep().setFoundEnergizerAtTile(tile);
                 onEnergizerEaten(tile);
             } else {
                 scoreManager.scorePoints(PELLET_VALUE);
             }
             if (isBonusReached()) {
                 activateNextBonus();
-                THE_SIMULATION_STEP.setBonusIndex(level.currentBonusIndex());
+                theSimulationStep().setBonusIndex(level.currentBonusIndex());
             }
-            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_FOUND_FOOD, tile);
+            theGameEventManager().publishEvent(this, GameEventType.PAC_FOUND_FOOD, tile);
         } else {
             level.pac().starvingContinues();
         }
@@ -637,8 +636,8 @@ public class TengenMsPacMan_GameModel extends GameModel {
             Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerTicks / NUM_TICKS_PER_SEC);
             level.ghosts(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
             level.ghosts(GhostState.FRIGHTENED).forEach(Ghost::reverseAtNextOccasion);
-            THE_SIMULATION_STEP.setPacGotPower();
-            THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.PAC_GETS_POWER);
+            theSimulationStep().setPacGotPower();
+            theGameEventManager().publishEvent(this, GameEventType.PAC_GETS_POWER);
         } else {
             level.ghosts(GhostState.FRIGHTENED, GhostState.HUNTING_PAC).forEach(Ghost::reverseAtNextOccasion);
         }
@@ -657,7 +656,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public void onGhostKilled(Ghost ghost) {
-        THE_SIMULATION_STEP.killedGhosts().add(ghost);
+        theSimulationStep().killedGhosts().add(ghost);
         int killedSoFar = level.victims().size();
         int points = 100 * KILLED_GHOST_VALUE_MULTIPLIER[killedSoFar];
         level.victims().add(ghost);

@@ -8,7 +8,6 @@ import de.amr.pacmanfx.arcade.ArcadeAny_ActorSpeedControl;
 import de.amr.pacmanfx.arcade.ArcadeAny_GameModel;
 import de.amr.pacmanfx.arcade.ArcadePacMan_LevelCounter;
 import de.amr.pacmanfx.event.GameEventType;
-import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
@@ -349,7 +348,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
         Vector2i exitTile;
         boolean crossingLeftToRight;
         if (entryTile != null) {
-            int exitPortalIndex = THE_RNG.nextInt(portals.size());
+            int exitPortalIndex = theRNG().nextInt(portals.size());
             if (entryTile.x() == 0) { // enter maze at left border
                 exitTile = portals.get(exitPortalIndex).rightTunnelEnd().plus(1, 0);
                 crossingLeftToRight = true;
@@ -359,13 +358,13 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
             }
         }
         else { // choose random crossing direction and random entry and exit portals
-            crossingLeftToRight = THE_RNG.nextBoolean();
+            crossingLeftToRight = theRNG().nextBoolean();
             if (crossingLeftToRight) {
-                entryTile = portals.get(THE_RNG.nextInt(portals.size())).leftTunnelEnd();
-                exitTile  = portals.get(THE_RNG.nextInt(portals.size())).rightTunnelEnd().plus(1, 0);
+                entryTile = portals.get(theRNG().nextInt(portals.size())).leftTunnelEnd();
+                exitTile  = portals.get(theRNG().nextInt(portals.size())).rightTunnelEnd().plus(1, 0);
             } else {
-                entryTile = portals.get(THE_RNG.nextInt(portals.size())).rightTunnelEnd();
-                exitTile = portals.get(THE_RNG.nextInt(portals.size())).leftTunnelEnd().minus(1, 0);
+                entryTile = portals.get(theRNG().nextInt(portals.size())).rightTunnelEnd();
+                exitTile = portals.get(theRNG().nextInt(portals.size())).leftTunnelEnd().minus(1, 0);
             }
         }
 
@@ -381,7 +380,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
         Logger.info("Moving bonus created, route: {} (crossing {})", route, crossingLeftToRight ? "left to right" : "right to left");
 
         level.setBonus(bonus);
-        THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.BONUS_ACTIVATED, bonus.actor().tile());
+        theGameEventManager().publishEvent(this, GameEventType.BONUS_ACTIVATED, bonus.actor().tile());
     }
 
     private final byte[] BONUS_VALUE_MULTIPLIERS = {1, 2, 5, 7, 10, 20, 50}; // points = value * 100

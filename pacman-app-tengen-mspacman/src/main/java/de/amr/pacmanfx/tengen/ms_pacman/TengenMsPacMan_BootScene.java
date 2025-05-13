@@ -90,7 +90,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             grayScreen = false;
         }
         else if (t == 220) {
-            THE_GAME_CONTROLLER.changeState(GameState.INTRO);
+            theGameController().changeState(GameState.INTRO);
         }
         ghost.move();
         tengenPresentsY += tengenPresentsSpeed;

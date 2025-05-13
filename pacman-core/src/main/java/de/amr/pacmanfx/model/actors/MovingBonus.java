@@ -18,7 +18,7 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.pacmanfx.Globals.THE_GAME_EVENT_MANAGER;
+import static de.amr.pacmanfx.Globals.theGameEventManager;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -126,7 +126,7 @@ public class MovingBonus extends Creature implements Bonus {
         if (steering.isComplete()) {
             Logger.trace("Moving bonus reached target: {}", this);
             setInactive();
-            THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.BONUS_EXPIRED, tile());
+            theGameEventManager().publishEvent(game, GameEventType.BONUS_EXPIRED, tile());
         } else {
             navigateTowardsTarget();
             tryMoving();
@@ -146,7 +146,7 @@ public class MovingBonus extends Creature implements Bonus {
         if (countdown == 0) {
             Logger.trace("Bonus expired: {}", this);
             setInactive();
-            THE_GAME_EVENT_MANAGER.publishEvent(game, GameEventType.BONUS_EXPIRED, tile());
+            theGameEventManager().publishEvent(game, GameEventType.BONUS_EXPIRED, tile());
         } else if (countdown != TickTimer.INDEFINITE) {
             --countdown;
         }

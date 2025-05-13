@@ -52,7 +52,7 @@ public enum GameAction implements Action {
                 if (!pelletTiles.isEmpty()) {
                     pelletTiles.forEach(level::registerFoodEatenAt);
                     theSound().stopMunchingSound();
-                    THE_GAME_EVENT_MANAGER.publishEvent(game(), GameEventType.PAC_FOUND_FOOD);
+                    theGameEventManager().publishEvent(game(), GameEventType.PAC_FOUND_FOOD);
                 }
             });
         }
@@ -71,7 +71,7 @@ public enum GameAction implements Action {
                 if (!vulnerableGhosts.isEmpty()) {
                     level.victims().clear(); // resets value of next killed ghost to 200
                     vulnerableGhosts.forEach(game()::onGhostKilled);
-                    THE_GAME_CONTROLLER.changeState(GameState.GHOST_DYING);
+                    theGameController().changeState(GameState.GHOST_DYING);
                 }
             });
         }
@@ -85,7 +85,7 @@ public enum GameAction implements Action {
     CHEAT_ENTER_NEXT_LEVEL {
         @Override
         public void execute() {
-            THE_GAME_CONTROLLER.changeState(GameState.LEVEL_COMPLETE);
+            theGameController().changeState(GameState.LEVEL_COMPLETE);
         }
 
         @Override
@@ -101,13 +101,13 @@ public enum GameAction implements Action {
     INSERT_COIN {
         @Override
         public void execute() {
-            if (THE_COIN_MECHANISM.numCoins() < CoinMechanism.MAX_COINS) {
-                THE_COIN_MECHANISM.insertCoin();
+            if (theCoinMechanism().numCoins() < CoinMechanism.MAX_COINS) {
+                theCoinMechanism().insertCoin();
                 theSound().enabledProperty().set(true);
-                THE_GAME_EVENT_MANAGER.publishEvent(game(), GameEventType.CREDIT_ADDED);
+                theGameEventManager().publishEvent(game(), GameEventType.CREDIT_ADDED);
             }
             if (gameState() != GameState.SETTING_OPTIONS) {
-                THE_GAME_CONTROLLER.changeState(GameState.SETTING_OPTIONS);
+                theGameController().changeState(GameState.SETTING_OPTIONS);
             }
         }
 
@@ -119,7 +119,7 @@ public enum GameAction implements Action {
             return gameState() == GameState.SETTING_OPTIONS
                 || gameState() == INTRO
                 || gameLevel().isPresent() && gameLevel().get().isDemoLevel()
-                || THE_COIN_MECHANISM.isEmpty();
+                || theCoinMechanism().isEmpty();
         }
     },
 
@@ -160,7 +160,7 @@ public enum GameAction implements Action {
         public void execute() {
             theUI().currentGameScene().ifPresent(GameScene::end);
             game().resetEverything();
-            if (!THE_COIN_MECHANISM.isEmpty()) THE_COIN_MECHANISM.consumeCoin();
+            if (!theCoinMechanism().isEmpty()) theCoinMechanism().consumeCoin();
             theUI().showStartView();
         }
     },
@@ -174,7 +174,7 @@ public enum GameAction implements Action {
                 gameState().onExit(game()); //TODO exit other states too?
             }
             theClock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-            THE_GAME_CONTROLLER.restart(INTRO);
+            theGameController().restart(INTRO);
         }
     },
 
@@ -238,13 +238,13 @@ public enum GameAction implements Action {
         @Override
         public void execute() {
             theSound().stopVoice();
-            THE_GAME_CONTROLLER.changeState(GameState.STARTING_GAME);
+            theGameController().changeState(GameState.STARTING_GAME);
         }
 
         @Override
         public boolean isEnabled() {
             return gameVariant() != GameVariant.MS_PACMAN_TENGEN
-                && !THE_COIN_MECHANISM.isEmpty()
+                && !theCoinMechanism().isEmpty()
                 && (gameState() == GameState.INTRO || gameState() == GameState.SETTING_OPTIONS)
                 && game().canStartNewGame();
         }
@@ -253,7 +253,7 @@ public enum GameAction implements Action {
     TEST_CUT_SCENES {
         @Override
         public void execute() {
-            THE_GAME_CONTROLLER.changeState(GameState.TESTING_CUT_SCENES);
+            theGameController().changeState(GameState.TESTING_CUT_SCENES);
             theUI().showFlashMessage("Cut scenes test"); //TODO localize
         }
     },
@@ -261,7 +261,7 @@ public enum GameAction implements Action {
     TEST_LEVELS_BONI {
         @Override
         public void execute() {
-            THE_GAME_CONTROLLER.restart(GameState.TESTING_LEVELS);
+            theGameController().restart(GameState.TESTING_LEVELS);
             theUI().showFlashMessageSec(3, "Level TEST MODE");
         }
     },
@@ -269,7 +269,7 @@ public enum GameAction implements Action {
     TEST_LEVELS_TEASERS {
         @Override
         public void execute() {
-            THE_GAME_CONTROLLER.restart(GameState.TESTING_LEVEL_TEASERS);
+            theGameController().restart(GameState.TESTING_LEVEL_TEASERS);
             theUI().showFlashMessageSec(3, "Level TEST MODE");
         }
     },
@@ -346,7 +346,7 @@ public enum GameAction implements Action {
                 if (theUIConfig().currentGameSceneIsPlayScene2D()
                     || theUIConfig().currentGameSceneIsPlayScene3D()) {
                     theUI().updateGameScene(true);
-                    THE_GAME_CONTROLLER.update(); //TODO needed?
+                    theGameController().update(); //TODO needed?
                 }
                 if (!game().isPlaying()) {
                     theUI().showFlashMessage(theAssets().text(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));

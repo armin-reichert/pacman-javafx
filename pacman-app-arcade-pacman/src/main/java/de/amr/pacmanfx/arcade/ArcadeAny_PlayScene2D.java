@@ -191,7 +191,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
                 ? game().lifeCount() : game().lifeCount() - 1;
             gr.drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - 2 * TS);
         } else {
-            gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_MECHANISM.numCoins()),
+            gr.fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 ARCADE_WHITE, arcadeFontScaledTS(), 2 * TS, sizeInPx().y() - 2);
         }
         gr.drawLevelCounter(game().levelCounter(), sizeInPx());
@@ -234,7 +234,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
     @Override
     protected void drawDebugInfo() {
         gr.drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
-        if (THE_GAME_CONTROLLER.isSelected(GameVariant.PACMAN)) {
+        if (theGameController().isSelected(GameVariant.PACMAN)) {
             game().level().ifPresent(level -> {
                 level.ghosts().forEach(ghost ->
                     ghost.specialTerrainTiles().forEach(tile -> {
@@ -277,7 +277,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
             game().level().ifPresent(level -> {
                 theSound().stopAll();
                 levelCompleteAnimation = new FlashingMazeAnimation(level);
-                levelCompleteAnimation.setActionOnFinished(THE_GAME_CONTROLLER::letCurrentStateExpire);
+                levelCompleteAnimation.setActionOnFinished(theGameController()::letCurrentStateExpire);
                 levelCompleteAnimation.start();
             });
         }
@@ -318,7 +318,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacDead(GameEvent e) {
-        THE_GAME_CONTROLLER.letCurrentStateExpire();
+        theGameController().letCurrentStateExpire();
     }
 
     @Override
