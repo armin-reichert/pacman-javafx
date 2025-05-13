@@ -108,36 +108,36 @@ public class GameLevel {
         if (redGhostTile == null) {
             throw new IllegalArgumentException("No red ghost position stored in map");
         }
-        ghostStartPositions[RED_GHOST_ID] = posHalfTileRightOf(redGhostTile);
+        ghostStartPositions[RED_GHOST_SHADOW] = posHalfTileRightOf(redGhostTile);
 
         Vector2i pinkGhostTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_PINK_GHOST);
         if (pinkGhostTile == null) {
             throw new IllegalArgumentException("No pink ghost position stored in map");
         }
-        ghostStartPositions[PINK_GHOST_ID] = posHalfTileRightOf(pinkGhostTile);
+        ghostStartPositions[PINK_GHOST_SPEEDY] = posHalfTileRightOf(pinkGhostTile);
 
         Vector2i cyanGhostTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_CYAN_GHOST);
         if (cyanGhostTile == null) {
             throw new IllegalArgumentException("No cyan ghost position stored in map");
         }
-        ghostStartPositions[CYAN_GHOST_ID] = posHalfTileRightOf(cyanGhostTile);
+        ghostStartPositions[CYAN_GHOST_BASHFUL] = posHalfTileRightOf(cyanGhostTile);
 
         Vector2i orangeGhostTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_ORANGE_GHOST);
         if (orangeGhostTile == null) {
             throw new IllegalArgumentException("No orange ghost position stored in map");
         }
-        ghostStartPositions[ORANGE_GHOST_ID] = posHalfTileRightOf(orangeGhostTile);
+        ghostStartPositions[ORANGE_GHOST_POKEY] = posHalfTileRightOf(orangeGhostTile);
 
-        ghostScatterTiles[RED_GHOST_ID] = worldMap.getTerrainTileProperty(WorldMapProperty.POS_SCATTER_RED_GHOST,
+        ghostScatterTiles[RED_GHOST_SHADOW] = worldMap.getTerrainTileProperty(WorldMapProperty.POS_SCATTER_RED_GHOST,
             Vector2i.of(0, worldMap.numCols() - 3));
 
-        ghostScatterTiles[PINK_GHOST_ID] = worldMap.getTerrainTileProperty(WorldMapProperty.POS_SCATTER_PINK_GHOST,
+        ghostScatterTiles[PINK_GHOST_SPEEDY] = worldMap.getTerrainTileProperty(WorldMapProperty.POS_SCATTER_PINK_GHOST,
             Vector2i.of(0, 3));
 
-        ghostScatterTiles[CYAN_GHOST_ID] = worldMap.getTerrainTileProperty(WorldMapProperty.POS_SCATTER_CYAN_GHOST,
+        ghostScatterTiles[CYAN_GHOST_BASHFUL] = worldMap.getTerrainTileProperty(WorldMapProperty.POS_SCATTER_CYAN_GHOST,
             Vector2i.of(worldMap.numRows() - EMPTY_ROWS_BELOW_MAZE, worldMap.numCols() - 1));
 
-        ghostScatterTiles[ORANGE_GHOST_ID] = worldMap.getTerrainTileProperty(WorldMapProperty.POS_SCATTER_ORANGE_GHOST,
+        ghostScatterTiles[ORANGE_GHOST_POKEY] = worldMap.getTerrainTileProperty(WorldMapProperty.POS_SCATTER_ORANGE_GHOST,
             Vector2i.of(worldMap.numRows() - EMPTY_ROWS_BELOW_MAZE, 0));
     }
 
@@ -316,10 +316,10 @@ public class GameLevel {
     private void createArcadeHouse(int minX, int minY, int maxX, int maxY) {
         leftDoorTile = Vector2i.of(minX + 3, minY);
         rightDoorTile = Vector2i.of(minX + 4, minY);
-        setGhostStartDirection(RED_GHOST_ID, Direction.LEFT);
-        setGhostStartDirection(PINK_GHOST_ID, Direction.DOWN);
-        setGhostStartDirection(CYAN_GHOST_ID, Direction.UP);
-        setGhostStartDirection(ORANGE_GHOST_ID, Direction.UP);
+        setGhostStartDirection(RED_GHOST_SHADOW, Direction.LEFT);
+        setGhostStartDirection(PINK_GHOST_SPEEDY, Direction.DOWN);
+        setGhostStartDirection(CYAN_GHOST_BASHFUL, Direction.UP);
+        setGhostStartDirection(ORANGE_GHOST_POKEY, Direction.UP);
 
         // Create an obstacle for the house!
         //TODO change attributes to min_tile and max_tiles

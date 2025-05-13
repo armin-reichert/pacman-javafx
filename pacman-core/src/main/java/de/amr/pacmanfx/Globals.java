@@ -30,7 +30,8 @@ public interface Globals {
     Random           THE_RNG                = new Random();
     SimulationStep   THE_SIMULATION_STEP    = new SimulationStep();
 
-    byte RED_GHOST_ID = 0, PINK_GHOST_ID = 1, CYAN_GHOST_ID = 2, ORANGE_GHOST_ID = 3;
+    // Ghost characters
+    byte RED_GHOST_SHADOW = 0, PINK_GHOST_SPEEDY = 1, CYAN_GHOST_BASHFUL = 2, ORANGE_GHOST_POKEY = 3;
 
     byte NUM_TICKS_PER_SEC = 60;
 

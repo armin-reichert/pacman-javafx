@@ -49,10 +49,10 @@ public class TengenActorSpeedControl implements ActorSpeedControl {
 
     public float ghostIDSpeedDelta(byte ghostID) {
         return speedUnitsToPixels(switch (ghostID) {
-            case RED_GHOST_ID -> 3;
-            case ORANGE_GHOST_ID -> 2;
-            case CYAN_GHOST_ID -> 1;
-            case PINK_GHOST_ID -> 0;
+            case RED_GHOST_SHADOW -> 3;
+            case ORANGE_GHOST_POKEY -> 2;
+            case CYAN_GHOST_BASHFUL -> 1;
+            case PINK_GHOST_SPEEDY -> 0;
             default -> throw GameException.invalidGhostID(ghostID);
         });
     }

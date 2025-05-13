@@ -100,7 +100,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     public static Ghost createRedGhost() {
-        return new Ghost(RED_GHOST_ID, "Blinky") {
+        return new Ghost(RED_GHOST_SHADOW, "Blinky") {
             @Override
             public void hunt() {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
@@ -121,7 +121,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     public static Ghost createPinkGhost() {
-        return new Ghost(PINK_GHOST_ID, "Pinky") {
+        return new Ghost(PINK_GHOST_SPEEDY, "Pinky") {
             @Override
             public void hunt() {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
@@ -142,7 +142,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     public static Ghost createCyanGhost() {
-        return new Ghost(CYAN_GHOST_ID, "Inky") {
+        return new Ghost(CYAN_GHOST_BASHFUL, "Inky") {
             @Override
             public void hunt() {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
@@ -153,13 +153,13 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
             @Override
             public Vector2i chasingTargetTile() {
-                return level.pac().tilesAhead(2, false).scaled(2).minus(level.ghost(RED_GHOST_ID).tile());
+                return level.pac().tilesAhead(2, false).scaled(2).minus(level.ghost(RED_GHOST_SHADOW).tile());
             }
         };
     }
 
     public static Ghost createOrangeGhost() {
-        return new Ghost(ORANGE_GHOST_ID, "Sue") {
+        return new Ghost(ORANGE_GHOST_POKEY, "Sue") {
             @Override
             public void hunt() {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
@@ -458,14 +458,14 @@ public class TengenMsPacMan_GameModel extends GameModel {
         );
         level.ghosts().forEach(ghost -> {
             ghost.reset();
-            ghost.setRevivalPosition(ghost.id() == RED_GHOST_ID
-                ? level.ghostStartPosition(PINK_GHOST_ID)
+            ghost.setRevivalPosition(ghost.id() == RED_GHOST_SHADOW
+                ? level.ghostStartPosition(PINK_GHOST_SPEEDY)
                 : level.ghostStartPosition(ghost.id()));
             ghost.setGameLevel(level);
         });
 
         // Ghosts inside house start at bottom of house instead at middle (as marked in map)
-        Stream.of(PINK_GHOST_ID, CYAN_GHOST_ID, ORANGE_GHOST_ID)
+        Stream.of(PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
             .forEach(id -> level.setGhostStartPosition(id,
                 level.ghostStartPosition(id).plus(0, HTS))
         );

@@ -130,7 +130,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         if (state == SceneState.GHOSTS_MARCHING_IN) {
             String ghostName = ghosts[presentedGhostID].name().toUpperCase();
             double dx = ghostName.length() < 4 ? UsefulFunctions.tiles_to_px(1) : 0;
-            if (presentedGhostID == RED_GHOST_ID) {
+            if (presentedGhostID == RED_GHOST_SHADOW) {
                 gr.fillTextAtScaledPosition("WITH", ARCADE_WHITE, font, TITLE_X, TOP_Y + UsefulFunctions.tiles_to_px(3));
             }
             gr.fillTextAtScaledPosition(ghostName, COLOR_GHOST[presentedGhostID], font, TITLE_X + UsefulFunctions.tiles_to_px(3) + dx, TOP_Y + UsefulFunctions.tiles_to_px(6));

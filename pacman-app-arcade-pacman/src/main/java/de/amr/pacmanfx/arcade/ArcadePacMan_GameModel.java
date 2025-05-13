@@ -54,7 +54,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
     }
 
     public static Ghost createRedGhost() {
-        return new Ghost(RED_GHOST_ID, "Blinky") {
+        return new Ghost(RED_GHOST_SHADOW, "Blinky") {
             @Override
             public void hunt() {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
@@ -72,7 +72,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
 
     /** @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>. */
     public static Ghost createPinkGhost() {
-        return new Ghost(PINK_GHOST_ID, "Pinky") {
+        return new Ghost(PINK_GHOST_SPEEDY, "Pinky") {
             @Override
             public void hunt() {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
@@ -90,7 +90,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
 
     /** @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>. */
     public static Ghost createCyanGhost() {
-        return new Ghost(CYAN_GHOST_ID, "Inky") {
+        return new Ghost(CYAN_GHOST_BASHFUL, "Inky") {
             @Override
             public void hunt() {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
@@ -101,13 +101,13 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
             @Override
             public Vector2i chasingTargetTile() {
                 // Inky (cyan ghost) attacks from opposite side as Blinky
-                return level.pac().tilesAhead(2, true).scaled(2).minus(level.ghost(RED_GHOST_ID).tile());
+                return level.pac().tilesAhead(2, true).scaled(2).minus(level.ghost(RED_GHOST_SHADOW).tile());
             }
         };
     }
 
     public static Ghost createOrangeGhost() {
-        return new Ghost(ORANGE_GHOST_ID, "Clyde") {
+        return new Ghost(ORANGE_GHOST_POKEY, "Clyde") {
             @Override
             public void hunt() {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
@@ -193,9 +193,9 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
 
         gateKeeper = new GateKeeper();
         gateKeeper.setOnGhostReleased(prisoner -> {
-            if (prisoner.id() == ORANGE_GHOST_ID && level.ghost(RED_GHOST_ID).cruiseElroy() < 0) {
+            if (prisoner.id() == ORANGE_GHOST_POKEY && level.ghost(RED_GHOST_SHADOW).cruiseElroy() < 0) {
                 Logger.debug("Re-enable Blinky Cruise Elroy mode because {} got released:", prisoner.name());
-                level.ghost(RED_GHOST_ID).enableCruiseElroyMode(true);
+                level.ghost(RED_GHOST_SHADOW).enableCruiseElroyMode(true);
             }
         });
 
@@ -250,8 +250,8 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
         );
         level.ghosts().forEach(ghost -> {
             ghost.reset();
-            ghost.setRevivalPosition(ghost.id() == RED_GHOST_ID
-                ? level.ghostStartPosition(PINK_GHOST_ID)
+            ghost.setRevivalPosition(ghost.id() == RED_GHOST_SHADOW
+                ? level.ghostStartPosition(PINK_GHOST_SPEEDY)
                 : level.ghostStartPosition(ghost.id()));
             ghost.setGameLevel(level);
             ghost.setSpecialTerrainTiles(oneWayDownTiles);

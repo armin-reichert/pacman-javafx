@@ -127,10 +127,10 @@ public class GateKeeper {
     public void setLevelNumber(int levelNumber) {
         Arrays.fill(limitsByGhost, (byte) 0);
         if (levelNumber == 1) {
-            limitsByGhost[CYAN_GHOST_ID]   = 30;
-            limitsByGhost[ORANGE_GHOST_ID] = 60;
+            limitsByGhost[CYAN_GHOST_BASHFUL]   = 30;
+            limitsByGhost[ORANGE_GHOST_POKEY] = 60;
         } else if (levelNumber == 2) {
-            limitsByGhost[ORANGE_GHOST_ID] = 50;
+            limitsByGhost[ORANGE_GHOST_POKEY] = 50;
         }
         pacStarvingLimit = levelNumber < 5 ? 240 : 180; // 4 sec : 3 sec
         Arrays.fill(countersByGhost, 0);
@@ -144,7 +144,7 @@ public class GateKeeper {
      */
     public String checkReleaseOf(GameLevel level, Ghost prisoner) {
         byte id = prisoner.id();
-        if (id == RED_GHOST_ID) {
+        if (id == RED_GHOST_SHADOW) {
             return "Red ghost gets released unconditionally";
         }
         // check individual dot counter first (if enabled)
@@ -171,8 +171,8 @@ public class GateKeeper {
 
     public void registerFoodEaten(GameLevel level) {
         if (globalCounterEnabled) {
-            if (level.ghost(ORANGE_GHOST_ID).inState(GhostState.LOCKED) && globalCounter == 32) {
-                Logger.info("{} inside house when global counter reached 32", level.ghost(ORANGE_GHOST_ID).name());
+            if (level.ghost(ORANGE_GHOST_POKEY).inState(GhostState.LOCKED) && globalCounter == 32) {
+                Logger.info("{} inside house when global counter reached 32", level.ghost(ORANGE_GHOST_POKEY).name());
                 resetCounterAndSetEnabled(false);
             } else {
                 globalCounter++;
@@ -187,7 +187,7 @@ public class GateKeeper {
     }
 
     public void unlockGhosts(GameLevel level) {
-        Ghost blinky = level.ghost(RED_GHOST_ID);
+        Ghost blinky = level.ghost(RED_GHOST_SHADOW);
         if (blinky.inState(GhostState.LOCKED)) {
             if (blinky.insideHouse()) {
                 blinky.setMoveAndWishDir(Direction.UP);
@@ -197,7 +197,7 @@ public class GateKeeper {
                 blinky.setState(GhostState.HUNTING_PAC);
             }
         }
-        Stream.of(PINK_GHOST_ID, CYAN_GHOST_ID, ORANGE_GHOST_ID)
+        Stream.of(PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
             .map(level::ghost)
             .filter(ghost -> ghost.inState(GhostState.LOCKED))
             .findFirst().ifPresent(prisoner -> {

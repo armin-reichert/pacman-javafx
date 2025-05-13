@@ -112,7 +112,7 @@ public class Ghost extends Creature {
 
     public void enableCruiseElroyMode(boolean enabled) {
         if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
-            setCruiseElroy(-level.ghost(RED_GHOST_ID).cruiseElroy());
+            setCruiseElroy(-level.ghost(RED_GHOST_SHADOW).cruiseElroy());
         }
     }
 

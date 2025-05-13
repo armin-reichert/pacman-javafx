@@ -223,10 +223,10 @@ public class TengenMsPacMan_SpriteSheet implements GameSpriteSheet {
     @Override
     public RectArea[] ghostNormalSprites(byte id, Direction dir) {
         return switch (id) {
-            case RED_GHOST_ID -> RED_GHOST_SPRITES[dirIndex(dir)];
-            case PINK_GHOST_ID -> PINK_GHOST_SPRITES[dirIndex(dir)];
-            case CYAN_GHOST_ID -> CYAN_GHOST_SPRITES[dirIndex(dir)];
-            case ORANGE_GHOST_ID -> ORANGE_GHOST_SPRITES[dirIndex(dir)];
+            case RED_GHOST_SHADOW -> RED_GHOST_SPRITES[dirIndex(dir)];
+            case PINK_GHOST_SPEEDY -> PINK_GHOST_SPRITES[dirIndex(dir)];
+            case CYAN_GHOST_BASHFUL -> CYAN_GHOST_SPRITES[dirIndex(dir)];
+            case ORANGE_GHOST_POKEY -> ORANGE_GHOST_SPRITES[dirIndex(dir)];
             default -> throw new IllegalArgumentException();
         };
     }
