@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -40,18 +41,18 @@ public abstract class GameScene2D implements GameScene {
 
     @Override
     public final void init() {
-        arcadeFontScaledTS.bind(scalingPy.map(scaling -> PacManGamesEnv.theAssets().arcadeFontAtSize((float) scaling * TS)));
+        arcadeFontScaledTS.bind(scalingPy.map(scaling -> theAssets().arcadeFontAtSize((float) scaling * TS)));
         doInit();
         bindActions();
         enableActionBindings();
-        PacManGamesEnv.theKeyboard().logCurrentBindings();
+        theKeyboard().logCurrentBindings();
     }
 
     @Override
     public final void end() {
         doEnd();
         disableActionBindings();
-        PacManGamesEnv.theSound().stopAll();
+        theSound().stopAll();
     }
 
     @Override
@@ -121,7 +122,7 @@ public abstract class GameScene2D implements GameScene {
     protected void drawDebugInfo() {
         gr.drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
         gr.ctx().setFill(Color.YELLOW);
-        gr.ctx().setFont(PacManGamesEnv.DEBUG_TEXT_FONT);
+        gr.ctx().setFont(DEBUG_TEXT_FONT);
         gr.ctx().fillText("%s %d".formatted(gameState(), gameState().timer().tickCount()), 0, scaled(3 * TS));
     }
 }

@@ -4,6 +4,7 @@ import de.amr.pacmanfx.ui.PacManGamesEnv;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Globals.game;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.PY_PIP_HEIGHT;
 
 public class TengenMsPacMan_PiPScene extends TengenMsPacMan_PlayScene2D {
 
@@ -20,8 +21,8 @@ public class TengenMsPacMan_PiPScene extends TengenMsPacMan_PlayScene2D {
     @Override
     public void draw() {
         double aspect = sizeInPx().x() / sizeInPx().y();
-        canvas.setWidth(PacManGamesEnv.PY_PIP_HEIGHT.doubleValue() * aspect);
-        canvas.setHeight(PacManGamesEnv.PY_PIP_HEIGHT.doubleValue());
+        canvas.setWidth(PY_PIP_HEIGHT.doubleValue() * aspect);
+        canvas.setHeight(PY_PIP_HEIGHT.doubleValue());
         setScaling(canvas.getHeight() / (sizeInPx().y() + 3 * TS));
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());

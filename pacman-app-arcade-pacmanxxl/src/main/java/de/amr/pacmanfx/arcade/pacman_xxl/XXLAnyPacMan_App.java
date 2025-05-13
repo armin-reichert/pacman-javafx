@@ -35,7 +35,6 @@ public class XXLAnyPacMan_App extends Application {
 
     @Override
     public void start(Stage stage) {
-        PacManGamesEnv.init();
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
         double aspect = screenSize.getWidth() / screenSize.getHeight();
         double height = 0.8 * screenSize.getHeight(), width = aspect * height;

@@ -408,7 +408,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx().setImageSmoothing(false);
         drawSpriteScaled(storkAnimation.currentSprite(), pos.x(), pos.y());
         if (hideBag) { // over-paint bag under beak
-            ctx().setFill(PacManGamesEnv.PY_CANVAS_BG_COLOR.get());
+            ctx().setFill(PY_CANVAS_BG_COLOR.get());
             ctx().fillRect(scaled(pos.x() - 1), scaled(pos.y() + 7), scaled(9), scaled(9));
         }
     }

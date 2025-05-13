@@ -16,6 +16,7 @@ import javafx.scene.input.KeyCode;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.gameVariant;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 import static de.amr.pacmanfx.uilib.input.Keyboard.*;
 
 /**
@@ -27,17 +28,17 @@ public interface GameScene extends GameEventListener, ActionProvider {
 
     @Override
     default void onStopAllSounds(GameEvent event) {
-        PacManGamesEnv.theSound().stopAll();
+        theSound().stopAll();
     }
 
     @Override
     default void onUnspecifiedChange(GameEvent event) {
         // TODO: remove (this is only used by game state GameState.TESTING_CUT_SCENES)
-        PacManGamesEnv.theUI().updateGameScene(true);
+        theUI().updateGameScene(true);
     }
 
     @Override
-    default Keyboard keyboard() { return PacManGamesEnv.theKeyboard(); }
+    default Keyboard keyboard() { return theKeyboard(); }
 
     default void bindArcadeInsertCoinAction() {
         bind(GameAction.INSERT_COIN,  naked(KeyCode.DIGIT5), naked(KeyCode.NUMPAD5));

@@ -137,7 +137,7 @@ public class GameView implements View {
 
     @Override
     public void bindActions() {
-        bind(PacManGamesEnv.theUI()::restart,            naked(KeyCode.F3));
+        bind(theUI()::restart,                   naked(KeyCode.F3));
         bind(this::showGameSceneHelp,            naked(KeyCode.H));
         bind(GameAction.QUIT_GAME_SCENE,         naked(KeyCode.Q));
         bind(GameAction.SIMULATION_SLOWER,       alt(KeyCode.MINUS));
@@ -180,7 +180,7 @@ public class GameView implements View {
         gameLevel().ifPresent(level -> {
             GameUIConfig config = theUIConfig().current();
             config.createActorAnimations(level);
-            PacManGamesEnv.theSound().setEnabled(!level.isDemoLevel());
+            theSound().setEnabled(!level.isDemoLevel());
             // size of game scene might have changed, so re-embed
             currentGameScene().ifPresent(gameScene -> embedGameScene(config, gameScene));
             pipView.setScene2D(config.createPiPScene(canvas));
@@ -263,14 +263,14 @@ public class GameView implements View {
                 canvasContainer.setUnscaledCanvasWidth(sceneSize.x());
                 canvasContainer.setUnscaledCanvasHeight(sceneSize.y());
                 canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
-                canvasContainer.backgroundProperty().bind(PacManGamesEnv.PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
+                canvasContainer.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
                 gameScene2D.scalingProperty().bind(
-                    canvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), PacManGamesEnv.MAX_SCENE_2D_SCALING)));
+                    canvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_2D_SCALING)));
                 gameScene2D.setCanvas(canvas);
                 // avoid showing old content before new scene is rendered
-                canvas.getGraphicsContext2D().setFill(PacManGamesEnv.PY_CANVAS_BG_COLOR.get());
+                canvas.getGraphicsContext2D().setFill(PY_CANVAS_BG_COLOR.get());
                 canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                gameScene2D.backgroundColorProperty().bind(PacManGamesEnv.PY_CANVAS_BG_COLOR);
+                gameScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
                 gameScene2D.setGameRenderer(renderer);
                 root.getChildren().set(0, canvasLayer);
             }
@@ -291,18 +291,18 @@ public class GameView implements View {
     }
 
     private void configurePiPView() {
-        pipView.backgroundProperty().bind(PacManGamesEnv.PY_CANVAS_BG_COLOR.map(Background::fill));
-        pipView.opacityProperty().bind(PacManGamesEnv.PY_PIP_OPACITY_PERCENT.divide(100.0));
+        pipView.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Background::fill));
+        pipView.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
         pipView.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> PacManGamesEnv.PY_PIP_ON.get() && theUIConfig().currentGameSceneIsPlayScene3D(),
-            PacManGamesEnv.PY_PIP_ON, gameScenePy
+            () -> PY_PIP_ON.get() && theUIConfig().currentGameSceneIsPlayScene3D(),
+            PY_PIP_ON, gameScenePy
         ));
     }
 
     private void configurePropertyBindings() {
         GraphicsContext g = canvas.getGraphicsContext2D();
-        PacManGamesEnv.PY_CANVAS_FONT_SMOOTHING.addListener((py, ov, on) -> g.setFontSmoothingType(on ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
-        PacManGamesEnv.PY_CANVAS_IMAGE_SMOOTHING.addListener((py, ov, on) -> g.setImageSmoothing(on));
+        PY_CANVAS_FONT_SMOOTHING.addListener((py, ov, on) -> g.setFontSmoothingType(on ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
+        PY_CANVAS_IMAGE_SMOOTHING.addListener((py, ov, on) -> g.setImageSmoothing(on));
         PY_DEBUG_INFO_VISIBLE.addListener((py, ov, debug) -> {
             if (debug) {
                 canvasLayer.setBackground(coloredBackground(Color.DARKGREEN));
@@ -319,13 +319,13 @@ public class GameView implements View {
         if (ui.currentGameScene().isPresent()) {
             return computeTitleIfGameScenePresent(ui.currentGameScene().get(), keyPattern);
         }
-        return PacManGamesEnv.theAssets().text(keyPattern, PacManGamesEnv.theAssets().text(PY_3D_ENABLED.get() ? "threeD" : "twoD"));
+        return theAssets().text(keyPattern, theAssets().text(PY_3D_ENABLED.get() ? "threeD" : "twoD"));
     }
 
     private String computeTitleIfGameScenePresent(GameScene gameScene, String keyPattern) {
         String sceneNameSuffix = PY_DEBUG_INFO_VISIBLE.get() ? " [%s]".formatted(gameScene.getClass().getSimpleName()) : "";
-        String modeKey = PacManGamesEnv.theAssets().text(PY_3D_ENABLED.get() ? "threeD" : "twoD");
-        return PacManGamesEnv.theAssets().text(keyPattern, modeKey)
+        String modeKey = theAssets().text(PY_3D_ENABLED.get() ? "threeD" : "twoD");
+        return theAssets().text(keyPattern, modeKey)
             + sceneNameSuffix
             + (gameScene instanceof GameScene2D gameScene2D  ? " (%.2fx)".formatted(gameScene2D.scaling()) : "");
     }
@@ -336,8 +336,8 @@ public class GameView implements View {
         dashboardContainer.setVisible(false);
         dashboardLayer = new BorderPane();
         dashboardLayer.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> dashboardContainer.isVisible() || PacManGamesEnv.PY_PIP_ON.get(),
-            dashboardContainer.visibleProperty(), PacManGamesEnv.PY_PIP_ON
+            () -> dashboardContainer.isVisible() || PY_PIP_ON.get(),
+            dashboardContainer.visibleProperty(), PY_PIP_ON
         ));
         dashboardLayer.setLeft(dashboardContainer);
         dashboardLayer.setRight(pipContainer);
@@ -354,10 +354,10 @@ public class GameView implements View {
     private void handleContextMenuRequest(ContextMenuEvent e) {
         var menuItems = new ArrayList<>(gameScenePy.get().supplyContextMenuItems(e));
         if (theUIConfig().currentGameSceneIsPlayScene2D()) {
-            var item = new MenuItem(PacManGamesEnv.theAssets().text("use_3D_scene"));
+            var item = new MenuItem(theAssets().text("use_3D_scene"));
             item.setOnAction(ae -> GameAction.TOGGLE_PLAY_SCENE_2D_3D.execute());
             menuItems.addFirst(item);
-            menuItems.addFirst(contextMenuTitleItem(PacManGamesEnv.theAssets().text("scene_display")));
+            menuItems.addFirst(contextMenuTitleItem(theAssets().text("scene_display")));
         }
         contextMenu.getItems().setAll(menuItems);
         contextMenu.show(root, e.getScreenX(), e.getScreenY());

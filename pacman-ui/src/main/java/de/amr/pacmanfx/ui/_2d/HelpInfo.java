@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.theAssets;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
 
 /**
@@ -67,13 +67,13 @@ public class HelpInfo {
         pane.setBackground(Ufx.coloredRoundedBackground(backgroundColor, 10));
 
         // add default entries:
-        if (PacManGamesEnv.PY_AUTOPILOT.get()) {
+        if (PY_AUTOPILOT.get()) {
             var autoPilotEntry = text(theAssets().text("help.autopilot_on"), Color.ORANGE);
             autoPilotEntry.setFont(font);
             GridPane.setColumnSpan(autoPilotEntry, 2);
             grid.add(autoPilotEntry, 0, grid.getRowCount());
         }
-        if (PacManGamesEnv.PY_IMMUNITY.get()) {
+        if (PY_IMMUNITY.get()) {
             var immunityEntry = text(theAssets().text("help.immunity_on"), Color.ORANGE);
             immunityEntry.setFont(font);
             GridPane.setColumnSpan(immunityEntry, 2);
