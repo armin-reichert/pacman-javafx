@@ -207,8 +207,8 @@ public class ArcadePacMan_SpriteSheet implements GameSpriteSheet {
         return GHOST_EYES_SPRITES[ORDER.indexOf(dir)];
     }
 
-    public RectArea ghostFacingRight(byte ghostID) {
-        return GHOST_FACING_RIGHT_SPRITES[ghostID];
+    public RectArea ghostFacingRight(byte personality) {
+        return GHOST_FACING_RIGHT_SPRITES[personality];
     }
 
     public RectArea[] bigPacManSprites() {

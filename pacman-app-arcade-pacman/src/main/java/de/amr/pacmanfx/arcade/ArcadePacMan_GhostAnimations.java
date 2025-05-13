@@ -27,11 +27,11 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationSet implements 
     public static final String ANIM_BLINKY_PATCHED   = "patched";
     public static final String ANIM_BLINKY_NAKED     = "naked";
 
-    public ArcadePacMan_GhostAnimations(ArcadePacMan_SpriteSheet spriteSheet, byte ghostID) {
+    public ArcadePacMan_GhostAnimations(ArcadePacMan_SpriteSheet spriteSheet, byte personality) {
 
         var normal = SpriteAnimation
             .spriteSheet(spriteSheet)
-            .sprites(spriteSheet.ghostNormalSprites(ghostID, Direction.LEFT))
+            .sprites(spriteSheet.ghostNormalSprites(personality, Direction.LEFT))
             .frameTicks(8)
             .endLoop();
 

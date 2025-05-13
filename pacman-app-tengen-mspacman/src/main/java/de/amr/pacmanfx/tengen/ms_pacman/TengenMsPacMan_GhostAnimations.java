@@ -27,12 +27,12 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationSet implement
     public static final int FRIGHTENED_FRAME_TICKS = 8;  // TODO check this in emulator
     public static final int FLASH_FRAME_TICKS = 7;  // TODO check this in emulator
 
-    public TengenMsPacMan_GhostAnimations(GameSpriteSheet spriteSheet, byte ghostID) {
+    public TengenMsPacMan_GhostAnimations(GameSpriteSheet spriteSheet, byte personality) {
         requireNonNull(spriteSheet);
 
         var normal = SpriteAnimation
             .spriteSheet(spriteSheet)
-            .sprites(spriteSheet.ghostNormalSprites(ghostID, Direction.LEFT))
+            .sprites(spriteSheet.ghostNormalSprites(personality, Direction.LEFT))
             .frameTicks(NORMAL_FRAME_TICKS)
             .endLoop();
 

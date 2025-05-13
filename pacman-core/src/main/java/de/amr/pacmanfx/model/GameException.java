@@ -9,7 +9,7 @@ package de.amr.pacmanfx.model;
  */
 public class GameException extends RuntimeException {
 
-    public static GameException invalidGhostID(byte id) {
+    public static GameException invalidGhostPersonality(byte id) {
         return new GameException(String.format("Illegal ghost ID value '%d' (Allowed values: 0-3)", id));
     }
 

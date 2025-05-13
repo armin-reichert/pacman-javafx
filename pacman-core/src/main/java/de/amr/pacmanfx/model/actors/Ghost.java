@@ -42,7 +42,7 @@ public class Ghost extends Creature {
      * @param name readable name, used for logging or debug display
      */
     public Ghost(byte personality, String name) {
-        this.personality = Validations.requireValidGhostID(personality);
+        this.personality = Validations.requireValidGhostPersonality(personality);
         this.name = requireNonNull(name);
         corneringSpeedUp = -1.25f;
     }

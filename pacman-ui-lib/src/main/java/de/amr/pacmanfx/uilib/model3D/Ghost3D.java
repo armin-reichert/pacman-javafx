@@ -22,7 +22,7 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
-import static de.amr.pacmanfx.Validations.requireValidGhostID;
+import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -66,7 +66,7 @@ public class Ghost3D {
         requireNonNegative(size);
 
         this.assets = requireNonNull(assets);
-        this.id = requireValidGhostID(id);
+        this.id = requireValidGhostPersonality(id);
         this.assetPrefix = requireNonNull(assetPrefix);
         this.dress = requireNonNull(dressShape);
 

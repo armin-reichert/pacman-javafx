@@ -70,25 +70,25 @@ public class InfoBoxActorInfo extends InfoBox {
             : "%.2fpx/s %s (%s)%s".formatted(speed, guy.moveDir(), guy.wishDir(), reverseText);
     }
 
-    private void ghostInfo(byte ghostID) {
-        addLabeledValue(ghostColorName(ghostID) + " Ghost", fnGhostInfo(this::ghostNameAndState, ghostID));
-        addLabeledValue("Animation",      fnGhostInfo(this::ghostAnimation, ghostID));
-        addLabeledValue("Movement",       fnGhostInfo(this::movementInfo, ghostID));
-        addLabeledValue("Tile",           fnGhostInfo(this::locationInfo, ghostID));
+    private void ghostInfo(byte personality) {
+        addLabeledValue(ghostColorName(personality) + " Ghost", fnGhostInfo(this::ghostNameAndState, personality));
+        addLabeledValue("Animation",      fnGhostInfo(this::ghostAnimation, personality));
+        addLabeledValue("Movement",       fnGhostInfo(this::movementInfo, personality));
+        addLabeledValue("Tile",           fnGhostInfo(this::locationInfo, personality));
     }
 
     private Supplier<String> fnGhostInfo(
-        BiFunction<GameModel, Ghost, String> fnGhostInfo, byte ghostID) {
+        BiFunction<GameModel, Ghost, String> fnGhostInfo, byte personality) {
         return ifLevelPresent(level -> {
             if (level.ghosts().findAny().isPresent()) {
-                return fnGhostInfo.apply(game(), level.ghost(ghostID));
+                return fnGhostInfo.apply(game(), level.ghost(personality));
             }
             return NO_INFO;
         });
     }
 
-    private String ghostColorName(byte ghostID) {
-        return switch (ghostID) {
+    private String ghostColorName(byte personality) {
+        return switch (personality) {
             case RED_GHOST_SHADOW -> "Red";
             case PINK_GHOST_SPEEDY -> "Pink";
             case CYAN_GHOST_BASHFUL -> "Cyan";

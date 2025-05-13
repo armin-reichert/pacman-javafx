@@ -16,7 +16,7 @@ import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 import java.util.Map;
 
-import static de.amr.pacmanfx.Validations.requireValidGhostID;
+import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -24,13 +24,13 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationSet implements GhostAnimations {
 
-    public ArcadeMsPacMan_GhostAnimations(GameSpriteSheet spriteSheet, byte ghostID) {
+    public ArcadeMsPacMan_GhostAnimations(GameSpriteSheet spriteSheet, byte personality) {
         requireNonNull(spriteSheet);
-        requireValidGhostID(ghostID);
+        requireValidGhostPersonality(personality);
 
         var normal = SpriteAnimation
             .spriteSheet(spriteSheet)
-            .sprites(spriteSheet.ghostNormalSprites(ghostID, Direction.LEFT))
+            .sprites(spriteSheet.ghostNormalSprites(personality, Direction.LEFT))
             .frameTicks(8)
             .endLoop();
 

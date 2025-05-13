@@ -240,7 +240,7 @@ public class GameLevel {
     public Pac pac() { return pac; }
 
     public void setGhosts(Ghost... ghosts) { this.ghosts = requireNonNull(ghosts); }
-    public Ghost ghost(byte id) { return ghosts != null ? ghosts[Validations.requireValidGhostID(id)] : null; }
+    public Ghost ghost(byte id) { return ghosts != null ? ghosts[Validations.requireValidGhostPersonality(id)] : null; }
 
     public Stream<Ghost> ghosts(GhostState... states) {
         requireNonNull(states);
@@ -270,8 +270,8 @@ public class GameLevel {
         return blinking;
     }
 
-    public Vector2i ghostScatterTile(byte ghostID) {
-        return ghostScatterTiles[Validations.requireValidGhostID(ghostID)];
+    public Vector2i ghostScatterTile(byte personality) {
+        return ghostScatterTiles[Validations.requireValidGhostPersonality(personality)];
     }
 
     public int number() { return number; }
@@ -399,25 +399,25 @@ public class GameLevel {
         return pacStartPosition;
     }
 
-    public void setGhostStartPosition(byte ghostID, Vector2f position) {
-        Validations.requireValidGhostID(ghostID);
-        ghostStartPositions[ghostID] = position;
+    public void setGhostStartPosition(byte personality, Vector2f position) {
+        Validations.requireValidGhostPersonality(personality);
+        ghostStartPositions[personality] = position;
     }
 
-    public Vector2f ghostStartPosition(byte ghostID) {
-        Validations.requireValidGhostID(ghostID);
-        return ghostStartPositions[ghostID];
+    public Vector2f ghostStartPosition(byte personality) {
+        Validations.requireValidGhostPersonality(personality);
+        return ghostStartPositions[personality];
     }
 
-    public void setGhostStartDirection(byte ghostID, Direction dir) {
-        Validations.requireValidGhostID(ghostID);
+    public void setGhostStartDirection(byte personality, Direction dir) {
+        Validations.requireValidGhostPersonality(personality);
         requireNonNull(dir);
-        ghostStartDirections[ghostID] = dir;
+        ghostStartDirections[personality] = dir;
     }
 
-    public Direction ghostStartDirection(byte ghostID) {
-        Validations.requireValidGhostID(ghostID);
-        return ghostStartDirections[ghostID];
+    public Direction ghostStartDirection(byte personality) {
+        Validations.requireValidGhostPersonality(personality);
+        return ghostStartDirections[personality];
     }
 
     // Food

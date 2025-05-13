@@ -9,8 +9,8 @@ import de.amr.pacmanfx.model.GameException;
 import java.util.Set;
 
 public interface Validations {
-    static byte requireValidGhostID(byte id) {
-        if (id < 0 || id > 3) throw GameException.invalidGhostID(id);
+    static byte requireValidGhostPersonality(byte id) {
+        if (id < 0 || id > 3) throw GameException.invalidGhostPersonality(id);
         return id;
     }
 

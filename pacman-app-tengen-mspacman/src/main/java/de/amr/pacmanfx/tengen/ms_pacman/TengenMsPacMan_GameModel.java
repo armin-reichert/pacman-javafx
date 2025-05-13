@@ -424,7 +424,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.ghosts().forEach(ghost -> {
             ghost.setBaseSpeed(speedControl.ghostBaseSpeedInLevel(level.number())
                     + speedControl.ghostDifficultySpeedDelta(difficulty)
-                    + speedControl.ghostIDSpeedDelta(ghost.personality()));
+                    + speedControl.ghostSpeedDelta(ghost.personality()));
             Logger.info("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed());
         });
     }
