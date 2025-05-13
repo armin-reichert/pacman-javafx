@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.Globals;
+import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEventType;
@@ -354,7 +355,7 @@ public enum GameAction implements Action {
 
         @Override
         public boolean isEnabled() {
-            return isOneOf(gameState(),
+            return Validations.isOneOf(gameState(),
                 GameState.BOOT, GameState.INTRO, GameState.SETTING_OPTIONS, GameState.HUNTING,
                 GameState.TESTING_LEVEL_TEASERS, GameState.TESTING_LEVELS
             );

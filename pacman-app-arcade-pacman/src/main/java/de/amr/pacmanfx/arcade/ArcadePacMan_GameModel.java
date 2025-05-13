@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade;
 
+import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
@@ -217,7 +218,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
 
     @Override
     public void createLevel(int levelNumber) {
-        requireValidLevelNumber(levelNumber);
+        Validations.requireValidLevelNumber(levelNumber);
         WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
         level = new GameLevel(this, levelNumber, worldMap);
         level.setData(createLevelData(levelNumber));

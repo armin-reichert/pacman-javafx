@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
+import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
@@ -85,7 +86,7 @@ public class GameLevel {
 
     public GameLevel(GameModel game, int number, WorldMap worldMap) {
         this.game = requireNonNull(game);
-        this.number = requireValidLevelNumber(number);
+        this.number = Validations.requireValidLevelNumber(number);
         this.worldMap = requireNonNull(worldMap);
 
         blinking = new Pulse(10, Pulse.OFF);
@@ -239,7 +240,7 @@ public class GameLevel {
     public Pac pac() { return pac; }
 
     public void setGhosts(Ghost... ghosts) { this.ghosts = requireNonNull(ghosts); }
-    public Ghost ghost(byte id) { return ghosts != null ? ghosts[requireValidGhostID(id)] : null; }
+    public Ghost ghost(byte id) { return ghosts != null ? ghosts[Validations.requireValidGhostID(id)] : null; }
 
     public Stream<Ghost> ghosts(GhostState... states) {
         requireNonNull(states);
@@ -270,7 +271,7 @@ public class GameLevel {
     }
 
     public Vector2i ghostScatterTile(byte ghostID) {
-        return ghostScatterTiles[requireValidGhostID(ghostID)];
+        return ghostScatterTiles[Validations.requireValidGhostID(ghostID)];
     }
 
     public int number() { return number; }
@@ -399,23 +400,23 @@ public class GameLevel {
     }
 
     public void setGhostStartPosition(byte ghostID, Vector2f position) {
-        requireValidGhostID(ghostID);
+        Validations.requireValidGhostID(ghostID);
         ghostStartPositions[ghostID] = position;
     }
 
     public Vector2f ghostStartPosition(byte ghostID) {
-        requireValidGhostID(ghostID);
+        Validations.requireValidGhostID(ghostID);
         return ghostStartPositions[ghostID];
     }
 
     public void setGhostStartDirection(byte ghostID, Direction dir) {
-        requireValidGhostID(ghostID);
+        Validations.requireValidGhostID(ghostID);
         requireNonNull(dir);
         ghostStartDirections[ghostID] = dir;
     }
 
     public Direction ghostStartDirection(byte ghostID) {
-        requireValidGhostID(ghostID);
+        Validations.requireValidGhostID(ghostID);
         return ghostStartDirections[ghostID];
     }
 

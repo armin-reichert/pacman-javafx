@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.MapSelector;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.Globals.requireValidLevelNumber;
+import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 
 public class ArcadeMsPacMan_MapSelector extends MapSelector {
 

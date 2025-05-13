@@ -16,7 +16,7 @@ import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 import java.util.Map;
 
-import static de.amr.pacmanfx.Globals.requireValidGhostID;
+import static de.amr.pacmanfx.Validations.requireValidGhostID;
 import static java.util.Objects.requireNonNull;
 
 /**

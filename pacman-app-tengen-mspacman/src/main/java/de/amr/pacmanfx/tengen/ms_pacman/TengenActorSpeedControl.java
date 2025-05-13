@@ -4,12 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman;
 
+import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.model.GameException;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.tengen.ms_pacman.Difficulty;
-import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -86,17 +85,17 @@ public class TengenActorSpeedControl implements ActorSpeedControl {
 
     public float pacBaseSpeedInLevel(int levelNumber) {
         int units = 0;
-        if (inClosedRange(levelNumber, 1, 4)) {
+        if (Validations.inClosedRange(levelNumber, 1, 4)) {
             units = 0x20;
-        } else if (inClosedRange(levelNumber, 5, 12)) {
+        } else if (Validations.inClosedRange(levelNumber, 5, 12)) {
             units = 0x24;
-        } else if (inClosedRange(levelNumber, 13, 16)) {
+        } else if (Validations.inClosedRange(levelNumber, 13, 16)) {
             units = 0x28;
-        } else if (inClosedRange(levelNumber, 17, 20)) {
+        } else if (Validations.inClosedRange(levelNumber, 17, 20)) {
             units = 0x27;
-        } else if (inClosedRange(levelNumber, 21, 24)) {
+        } else if (Validations.inClosedRange(levelNumber, 21, 24)) {
             units = 0x26;
-        } else if (inClosedRange(levelNumber, 25, 28)) {
+        } else if (Validations.inClosedRange(levelNumber, 25, 28)) {
             units = 0x25;
         } else if (levelNumber >= 29) {
             units = 0x24;
@@ -108,9 +107,9 @@ public class TengenActorSpeedControl implements ActorSpeedControl {
     // TODO: do they all have the same base speed? Unclear from disassembly data.
     public float ghostBaseSpeedInLevel(int levelNumber) {
         int units = 0x20; // default: 32
-        if (inClosedRange(levelNumber, 1, 4)) {
+        if (Validations.inClosedRange(levelNumber, 1, 4)) {
             units = 0x18;
-        } else if (inClosedRange(levelNumber, 5, 12)) {
+        } else if (Validations.inClosedRange(levelNumber, 5, 12)) {
             units = 0x20 + (levelNumber - 5);
         } // 0x20-0x27
         else if (levelNumber >= 13) {

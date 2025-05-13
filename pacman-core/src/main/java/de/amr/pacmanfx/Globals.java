@@ -12,13 +12,11 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Pac;
-import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Random;
-import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
@@ -33,7 +31,7 @@ public interface Globals {
     GameController   THE_GAME_CONTROLLER    = new GameController();
     GameEventManager THE_GAME_EVENT_MANAGER = new GameEventManager();
     Random           THE_RNG                = new Random();
-    SimulationStep THE_SIMULATION_STEP    = new SimulationStep();
+    SimulationStep   THE_SIMULATION_STEP    = new SimulationStep();
 
     byte RED_GHOST_ID = 0, PINK_GHOST_ID = 1, CYAN_GHOST_ID = 2, ORANGE_GHOST_ID = 3;
 
@@ -98,30 +96,6 @@ public interface Globals {
         return (float) tiles * TS;
     }
 
-    static byte requireValidGhostID(byte id) {
-        if (id < 0 || id > 3) throw GameException.invalidGhostID(id);
-        return id;
-    }
-
-    static int requireValidLevelNumber(int number) {
-        if (number < 1) throw GameException.invalidLevelNumber(number);
-        return number;
-    }
-
-    static double requireNonNegative(double value, String messageFormat) {
-        if (value < 0) throw new IllegalArgumentException(String.format(messageFormat, value));
-        return value;
-    }
-
-    static double requireNonNegative(double value) {
-        return requireNonNegative(value, "%f must be zero or positive");
-    }
-
-    static int requireNonNegativeInt(int value) {
-        if (value < 0) throw new IllegalArgumentException("Non-negative integer required, but got %d".formatted(value));
-        return value;
-    }
-
     /**
      * @param min left interval bound
      * @param maxExclusive right (open) interval bound
@@ -160,16 +134,6 @@ public interface Globals {
     }
 
     /**
-     * @param value some value
-     * @param from lower bound (inclusive)
-     * @param to upper bound (inclusive)
-     * @return {@code true} if value is in closed interval {@code [from; to]}
-     */
-    static boolean inClosedRange(long value, long from, long to) {
-        return from <= value && value <= to;
-    }
-
-    /**
      * @param value1 value1
      * @param value2 value2
      * @param t      "time" between 0 and 1
@@ -179,31 +143,8 @@ public interface Globals {
         return (1 - t) * value1 + t * value2;
     }
 
-    /**
-     * @param delta  maximum allowed deviation (non-negative number)
-     * @param value  value
-     * @param target target value
-     * @return {@code true} if the given values differ at most by the given difference
-     */
-    static boolean differsAtMost(double delta, double value, double target) {
-        if (delta < 0) {
-            throw new IllegalArgumentException(String.format("Difference must not be negative but is %f", delta));
-        }
-        return value >= (target - delta) && value <= (target + delta);
-    }
-
     static byte[][] copyArray2D(byte[][] array) {
         return Arrays.stream(array).map(byte[]::clone).toArray(byte[][]::new);
     }
 
-    @SafeVarargs
-    static <T> boolean isOneOf(T value, T... alternatives) {
-        if (value == null) {
-            throw new IllegalArgumentException("Value is null");
-        }
-        if (alternatives.length == 0) {
-            throw new IllegalArgumentException("No alternatives given");
-        }
-        return Set.of(alternatives).contains(value);
-    }
 }

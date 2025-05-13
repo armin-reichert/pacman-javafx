@@ -8,7 +8,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.Globals.inClosedRange;
+import static de.amr.pacmanfx.Validations.inClosedRange;
 import static java.util.Objects.requireNonNull;
 
 /**

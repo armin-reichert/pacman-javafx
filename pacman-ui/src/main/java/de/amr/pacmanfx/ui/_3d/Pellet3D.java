@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
-import de.amr.pacmanfx.Globals;
+import de.amr.pacmanfx.Validations;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.geometry.Bounds;
@@ -26,7 +26,7 @@ public class Pellet3D implements Eatable3D {
 
     public Pellet3D(Shape3D shape, double radius) {
         this.shape = requireNonNull(shape);
-        Globals.requireNonNegative(radius, "Pellet3D radius must be positive but is %f");
+        Validations.requireNonNegative(radius, "Pellet3D radius must be positive but is %f");
         Bounds bounds = shape.getBoundsInLocal();
         double diameter = 2 * radius;
         double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());

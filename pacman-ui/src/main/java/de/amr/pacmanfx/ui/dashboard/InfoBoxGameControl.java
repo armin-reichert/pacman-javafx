@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
+import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.ui.GameAction;
@@ -65,7 +66,7 @@ public class InfoBoxGameControl extends InfoBox {
         spinnerCredit.getValueFactory().setValue(THE_COIN_MECHANISM.numCoins());
         comboInitialLives.setValue(game().initialLifeCount());
 
-        spinnerCredit.setDisable(!(isOneOf(gameState(), GameState.INTRO, GameState.SETTING_OPTIONS)));
+        spinnerCredit.setDisable(!(Validations.isOneOf(gameState(), GameState.INTRO, GameState.SETTING_OPTIONS)));
         comboInitialLives.setDisable(gameState() != GameState.INTRO);
 
         bgLevelActions[GAME_LEVEL_START].setDisable(isBooting() || !canStartLevel());
@@ -84,10 +85,10 @@ public class InfoBoxGameControl extends InfoBox {
     }
 
     private boolean canStartLevel() {
-        return game().canStartNewGame() && isOneOf(gameState(), GameState.INTRO, GameState.SETTING_OPTIONS);
+        return game().canStartNewGame() && Validations.isOneOf(gameState(), GameState.INTRO, GameState.SETTING_OPTIONS);
     }
 
     private boolean canEnterNextLevel() {
-        return game().isPlaying() && isOneOf(gameState(), GameState.HUNTING);
+        return game().isPlaying() && Validations.isOneOf(gameState(), GameState.HUNTING);
     }
 }

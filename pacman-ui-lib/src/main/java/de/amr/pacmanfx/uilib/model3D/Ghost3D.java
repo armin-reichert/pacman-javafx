@@ -21,8 +21,8 @@ import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.Globals.requireNonNegative;
-import static de.amr.pacmanfx.Globals.requireValidGhostID;
+import static de.amr.pacmanfx.Validations.requireNonNegative;
+import static de.amr.pacmanfx.Validations.requireValidGhostID;
 import static java.util.Objects.requireNonNull;
 
 /**

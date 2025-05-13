@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
+import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.RectArea;
@@ -245,7 +246,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             }
             level3D.pellets3D().forEach(pellet -> pellet.shape3D().setVisible(!level.hasEatenFoodAt(pellet.tile())));
             level3D.energizers3D().forEach(energizer -> energizer.shape3D().setVisible(!level.hasEatenFoodAt(energizer.tile())));
-            if (isOneOf(gameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
+            if (Validations.isOneOf(gameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
                 level3D.energizers3D().filter(energizer -> energizer.shape3D().isVisible()).forEach(Energizer3D::startPumping);
             }
             level.pac().show();

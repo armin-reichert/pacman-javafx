@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
+import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
@@ -67,8 +68,8 @@ public class Ghost3DAppearance extends Group {
         requireNonNull(pupilsShape);
         requireNonNull(eyeballsShape);
         requireNonNull(ghost);
-        requireNonNegative(size);
-        requireNonNegative(numFlashes);
+        Validations.requireNonNegative(size);
+        Validations.requireNonNegative(numFlashes);
 
         this.ghost = ghost;
         this.size = size;

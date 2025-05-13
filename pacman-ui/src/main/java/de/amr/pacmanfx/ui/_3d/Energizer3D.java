@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
-import de.amr.pacmanfx.Globals;
+import de.amr.pacmanfx.Validations;
 import javafx.animation.*;
 import javafx.animation.Animation.Status;
 import javafx.scene.shape.Shape3D;
@@ -26,7 +26,7 @@ public class Energizer3D extends Sphere implements Eatable3D {
     private Animation eatenAnimation;
 
     public Energizer3D(double radius) {
-        Globals.requireNonNegative(radius, "Energizer radius must be positive but is %f");
+        Validations.requireNonNegative(radius, "Energizer radius must be positive but is %f");
         setRadius(radius);
 
         pumpingAnimation = new ScaleTransition(Duration.seconds(1.0 / 4), this);

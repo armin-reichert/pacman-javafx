@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.lib.nes;
 
-import static de.amr.pacmanfx.Globals.inClosedRange;
+import static de.amr.pacmanfx.Validations.inClosedRange;
 
 public interface NES_Palette {
 

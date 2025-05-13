@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model.actors;
 
 import de.amr.pacmanfx.Globals;
+import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
@@ -41,7 +42,7 @@ public class Ghost extends Creature {
      * @param name readable name, used for logging or debug display
      */
     public Ghost(byte id, String name) {
-        this.id = requireValidGhostID(id);
+        this.id = Validations.requireValidGhostID(id);
         this.name = requireNonNull(name);
         corneringSpeedUp = -1.25f;
     }
@@ -198,7 +199,7 @@ public class Ghost extends Creature {
      * <code>false</code>
      */
     public boolean inState(GhostState... alternatives) {
-        return state != null && isOneOf(state, alternatives);
+        return state != null && Validations.isOneOf(state, alternatives);
     }
 
     /**
@@ -300,7 +301,7 @@ public class Ghost extends Creature {
         // move inside house
         float centerX = posX + HTS;
         float houseCenterX = level.houseCenter().x();
-        if (differsAtMost(0.5f * speedInsideHouse, centerX, houseCenterX)) {
+        if (Validations.differsAtMost(0.5f * speedInsideHouse, centerX, houseCenterX)) {
             // align horizontally and raise
             setPosX(houseCenterX - HTS);
             setMoveAndWishDir(UP);
