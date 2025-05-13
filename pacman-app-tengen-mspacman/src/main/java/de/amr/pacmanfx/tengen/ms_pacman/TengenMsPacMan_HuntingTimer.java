@@ -18,7 +18,7 @@ public class TengenMsPacMan_HuntingTimer extends HuntingTimer {
     private static final long[] TICKS_LEVEL_5_PLUS = { 300, 1200, 1, 62220, 1, 62220, 1, TickTimer.INDEFINITE };
 
     public TengenMsPacMan_HuntingTimer() {
-        super(NUM_PHASES);
+        super("TengenMsPacMan-HuntingTimer", NUM_PHASES);
     }
 
     @Override
