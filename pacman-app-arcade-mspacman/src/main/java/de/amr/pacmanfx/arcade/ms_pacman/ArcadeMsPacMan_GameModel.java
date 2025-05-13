@@ -186,7 +186,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
          * @see <a href="https://www.reddit.com/r/Pacman/comments/12q4ny3/is_anyone_able_to_explain_the_ai_behind_the/">Reddit</a>
          * @see <a href="https://github.com/armin-reichert/pacman-basic/blob/main/doc/mspacman-details-reddit-user-damselindis.md">GitHub</a>
          */
-        huntingTimer = new HuntingTimer(8) {
+        huntingTimer = new HuntingTimer("ArcadeMsPacMan-HuntingTimer", 8) {
             static final int[] HUNTING_TICKS_LEVEL_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, -1};
             static final int[] HUNTING_TICKS_LEVEL_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
 

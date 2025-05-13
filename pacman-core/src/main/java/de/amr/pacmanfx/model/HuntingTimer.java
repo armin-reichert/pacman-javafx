@@ -13,18 +13,20 @@ import org.tinylog.Logger;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Controls the timing of the hunting phases (alternating scattering and chasing).
  */
 public abstract class HuntingTimer {
 
-    private final TickTimer timer = new TickTimer("Timer-" + getClass().getSimpleName());
+    private final TickTimer timer;
     private final int numPhases;
     private final IntegerProperty phaseIndexPy = new SimpleIntegerProperty();
 
-    protected HuntingTimer(int numPhases) {
+    protected HuntingTimer(String name, int numPhases) {
         this.numPhases = requireNonNegativeInt(numPhases);
+        timer = new TickTimer(requireNonNull(name));
         phaseIndexPy.addListener((py, ov, nv) -> logPhase());
     }
 

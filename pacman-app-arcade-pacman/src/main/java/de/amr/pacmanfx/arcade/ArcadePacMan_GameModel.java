@@ -169,7 +169,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
         scoreManager.setExtraLifeScores(EXTRA_LIFE_SCORE);
         levelCounter = new ArcadePacMan_LevelCounter();
 
-        huntingTimer = new HuntingTimer(8) {
+        huntingTimer = new HuntingTimer("ArcadePacMan-HuntingTimer", 8) {
             // Ticks of scatter and chasing phases, -1 = INFINITE
             static final int[] TICKS_LEVEL_1     = {420, 1200, 420, 1200, 300,  1200, 300, -1};
             static final int[] TICKS_LEVEL_2_3_4 = {420, 1200, 420, 1200, 300, 61980,   1, -1};
