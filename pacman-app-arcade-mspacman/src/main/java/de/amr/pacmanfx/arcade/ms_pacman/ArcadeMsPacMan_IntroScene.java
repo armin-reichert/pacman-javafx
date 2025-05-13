@@ -8,7 +8,6 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectArea;
-import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.fsm.FiniteStateMachine;
 import de.amr.pacmanfx.lib.fsm.FsmState;
@@ -20,6 +19,7 @@ import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.*;
+import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.GameAssets.*;
 import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_SOUND;
@@ -49,15 +49,16 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     private static final Color COLOR_BULB_ON  = ARCADE_WHITE;
     private static final Color COLOR_BULB_OFF = ARCADE_RED;
 
-    private static final Color[] COLOR_GHOST = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
+    private static final String[] GHOST_NAMES = { "BLINKY", "PINKY", "INKY", "SUE" };
+    private static final Color[] GHOST_COLORS = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
 
     private final FiniteStateMachine<SceneState, ArcadeMsPacMan_IntroScene> sceneController;
 
     private Pac msPacMan;
     private Ghost[] ghosts;
     private TickTimer marqueeTimer;
-    private int presentedGhostPersonality;
-    private int waitBeforeRising;
+    private byte currentPersonality;
+    private int numTicksBeforeRising;
 
     public ArcadeMsPacMan_IntroScene() {
         sceneController = new FiniteStateMachine<>(SceneState.values()) {
@@ -87,8 +88,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
             createOrangeGhost()
         };
         marqueeTimer = new TickTimer("marquee-timer");
-        presentedGhostPersonality = 0;
-        waitBeforeRising = 0;
+        currentPersonality = RED_GHOST_SHADOW;
+        numTicksBeforeRising = 0;
 
         var spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
         msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));
@@ -128,23 +129,22 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         drawMarquee();
         gr.fillTextAtScaledPosition("\"MS PAC-MAN\"", ARCADE_ORANGE, font, TITLE_X, TITLE_Y);
         if (state == SceneState.GHOSTS_MARCHING_IN) {
-            String ghostName = ghosts[presentedGhostPersonality].name().toUpperCase();
-            double dx = ghostName.length() < 4 ? UsefulFunctions.tiles_to_px(1) : 0;
-            if (presentedGhostPersonality == RED_GHOST_SHADOW) {
-                gr.fillTextAtScaledPosition("WITH", ARCADE_WHITE, font, TITLE_X, TOP_Y + UsefulFunctions.tiles_to_px(3));
+            if (currentPersonality == RED_GHOST_SHADOW) {
+                gr.fillTextAtScaledPosition("WITH", ARCADE_WHITE, font, TITLE_X, TOP_Y + tiles_to_px(3));
             }
-            gr.fillTextAtScaledPosition(ghostName, COLOR_GHOST[presentedGhostPersonality], font, TITLE_X + UsefulFunctions.tiles_to_px(3) + dx, TOP_Y + UsefulFunctions.tiles_to_px(6));
+            double dx = GHOST_NAMES[currentPersonality].length() < 4 ? tiles_to_px(1) : 0;
+            gr.fillTextAtScaledPosition(GHOST_NAMES[currentPersonality], GHOST_COLORS[currentPersonality], font,
+                TITLE_X + tiles_to_px(3) + dx, TOP_Y + tiles_to_px(6));
         }
         else if (state == SceneState.MS_PACMAN_MARCHING_IN || state == SceneState.READY_TO_PLAY) {
-            gr.fillTextAtScaledPosition("STARRING", ARCADE_WHITE, font, TITLE_X, TOP_Y + UsefulFunctions.tiles_to_px(3));
-            gr.fillTextAtScaledPosition("MS PAC-MAN", ARCADE_YELLOW, font, TITLE_X, TOP_Y + UsefulFunctions.tiles_to_px(6));
+            gr.fillTextAtScaledPosition("STARRING", ARCADE_WHITE, font, TITLE_X, TOP_Y + tiles_to_px(3));
+            gr.fillTextAtScaledPosition("MS PAC-MAN", ARCADE_YELLOW, font, TITLE_X, TOP_Y + tiles_to_px(6));
         }
         for (Ghost ghost : ghosts) {
             gr.drawActor(ghost);
         }
         gr.drawActor(msPacMan);
-        if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
-            // might be PacManXXL vector renderer!
+        if (gr instanceof ArcadeMsPacMan_GameRenderer r) { // might be PacManXXL vector renderer!
             r.drawMidwayCopyright(6, 28, ARCADE_RED, font);
         }
         gr.fillTextAtScaledPosition("CREDIT %2d".formatted(THE_COIN_MECHANISM.numCoins()), ARCADE_WHITE, font, 2 * TS, sizeInPx().y() - 2);
@@ -197,7 +197,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                     ghost.setVisible(true);
                     ghost.startAnimation();
                 }
-                scene.presentedGhostPersonality = 0;
+                scene.currentPersonality = RED_GHOST_SHADOW;
             }
 
             @Override
@@ -213,31 +213,31 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
                 scene.marqueeTimer.doTick();
-                boolean reachedEndPosition = letGhostMarchIn(scene);
-                if (reachedEndPosition) {
-                    if (scene.presentedGhostPersonality == 3) {
+                boolean atEndPosition = letGhostWalkIn(scene);
+                if (atEndPosition) {
+                    if (scene.currentPersonality == ORANGE_GHOST_POKEY) {
                         scene.sceneController.changeState(MS_PACMAN_MARCHING_IN);
                     } else {
-                        ++scene.presentedGhostPersonality;
+                        ++scene.currentPersonality;
                     }
                 }
             }
 
-            boolean letGhostMarchIn(ArcadeMsPacMan_IntroScene scene) {
-                Ghost ghost = scene.ghosts[scene.presentedGhostPersonality];
+            boolean letGhostWalkIn(ArcadeMsPacMan_IntroScene scene) {
+                Ghost ghost = scene.ghosts[scene.currentPersonality];
                 if (ghost.moveDir() == Direction.LEFT) {
                     if (ghost.posX() <= STOP_X_GHOST) {
                         ghost.setPosX(STOP_X_GHOST);
                         ghost.setMoveAndWishDir(Direction.UP);
-                        scene.waitBeforeRising = 2;
+                        scene.numTicksBeforeRising = 2;
                     } else {
                         ghost.move();
                     }
                 }
                 else if (ghost.moveDir() == Direction.UP) {
-                    int endPositionY = TOP_Y + scene.presentedGhostPersonality * 16;
-                    if (scene.waitBeforeRising > 0) {
-                        scene.waitBeforeRising--;
+                    int endPositionY = TOP_Y + scene.currentPersonality * 16;
+                    if (scene.numTicksBeforeRising > 0) {
+                        scene.numTicksBeforeRising--;
                     }
                     else if (ghost.posY() <= endPositionY) {
                         ghost.setSpeed(0);
