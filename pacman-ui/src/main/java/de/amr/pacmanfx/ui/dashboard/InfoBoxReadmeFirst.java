@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_ASSETS;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theAssets;
 
 public class InfoBoxReadmeFirst extends InfoBox {
 
@@ -19,7 +19,7 @@ public class InfoBoxReadmeFirst extends InfoBox {
     public void init() {
         super.init();
         Text readmeText = new Text();
-        readmeText.setText(THE_ASSETS.text("infobox.readme.content"));
+        readmeText.setText(theAssets().text("infobox.readme.content"));
         readmeText.setFont(Font.font("Serif", 16));
         readmeText.setFill(Color.WHITE);
         Pane pane = new BorderPane(readmeText);

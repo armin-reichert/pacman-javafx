@@ -27,17 +27,17 @@ public interface GameScene extends GameEventListener, ActionProvider {
 
     @Override
     default void onStopAllSounds(GameEvent event) {
-        PacManGamesEnvironment.THE_SOUND.stopAll();
+        PacManGamesEnv.theSound().stopAll();
     }
 
     @Override
     default void onUnspecifiedChange(GameEvent event) {
         // TODO: remove (this is only used by game state GameState.TESTING_CUT_SCENES)
-        PacManGamesEnvironment.THE_UI.updateGameScene(true);
+        PacManGamesEnv.theUI().updateGameScene(true);
     }
 
     @Override
-    default Keyboard keyboard() { return PacManGamesEnvironment.THE_KEYBOARD; }
+    default Keyboard keyboard() { return PacManGamesEnv.theKeyboard(); }
 
     default void bindArcadeInsertCoinAction() {
         bind(GameAction.INSERT_COIN,  naked(KeyCode.DIGIT5), naked(KeyCode.NUMPAD5));

@@ -17,7 +17,7 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
 
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.*;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
 /**
  * 3D related settings.
@@ -107,8 +107,8 @@ public class InfoBox3D extends InfoBox {
     }
 
     private String sceneViewportSizeInfo() {
-        if (THE_UI.currentGameScene().isPresent()
-            && THE_UI.currentGameScene().get() instanceof CameraControlledView sgs) {
+        if (theUI().currentGameScene().isPresent()
+            && theUI().currentGameScene().get() instanceof CameraControlledView sgs) {
             return "%.0fx%.0f".formatted(
                 sgs.viewPortWidthProperty().get(),
                 sgs.viewPortHeightProperty().get()
@@ -118,8 +118,8 @@ public class InfoBox3D extends InfoBox {
     }
 
     private String sceneSizeInfo() {
-        if (THE_UI.currentGameScene().isPresent()) {
-            GameScene gameScene = THE_UI.currentGameScene().get();
+        if (theUI().currentGameScene().isPresent()) {
+            GameScene gameScene = theUI().currentGameScene().get();
             Vector2f size = gameScene.sizeInPx();
             if (gameScene instanceof GameScene2D gameScene2D) {
                 double scaling = gameScene2D.scaling();
@@ -133,8 +133,8 @@ public class InfoBox3D extends InfoBox {
     }
 
     private String sceneCameraInfo() {
-        if (THE_UI.currentGameScene().isPresent()
-            && THE_UI.currentGameScene().get() instanceof CameraControlledView scrollableGameScene) {
+        if (theUI().currentGameScene().isPresent()
+            && theUI().currentGameScene().get() instanceof CameraControlledView scrollableGameScene) {
             var cam = scrollableGameScene.camera();
             return String.format("rot=%.0f x=%.0f y=%.0f z=%.0f",
                 cam.getRotate(), cam.getTranslateX(), cam.getTranslateY(), cam.getTranslateZ());

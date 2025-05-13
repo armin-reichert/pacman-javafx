@@ -7,14 +7,13 @@ package de.amr.pacmanfx.arcade;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.fsm.FiniteStateMachine;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -29,7 +28,7 @@ import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.model.actors.GhostState.EATEN;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.ui.GameAssets.*;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.*;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
 /**
  * <p>
@@ -77,7 +76,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        ArcadePacMan_SpriteSheet spriteSheet = THE_UI_CONFIGS.current().spriteSheet();
+        ArcadePacMan_SpriteSheet spriteSheet = theUIConfig().current().spriteSheet();
         blinking = new Pulse(10, true);
         pacMan = createPac();
         pacMan.setAnimations(new ArcadePacMan_PacAnimations(spriteSheet));
@@ -103,7 +102,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        THE_SOUND.stopVoice();
+        theSound().stopVoice();
     }
 
     @Override
@@ -113,7 +112,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        THE_SOUND.playInsertCoinSound();
+        theSound().playInsertCoinSound();
     }
 
     @Override
@@ -158,7 +157,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     }
 
     private void drawGallery(Font font) {
-        var spriteSheet = (ArcadePacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
+        var spriteSheet = (ArcadePacMan_SpriteSheet) theUIConfig().current().spriteSheet();
         if (titleVisible) {
             gr.fillTextAtScaledPosition("CHARACTER / NICKNAME", ARCADE_WHITE, font, tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(6));
         }
@@ -196,7 +195,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     private void drawPoints() {
         Font font8 = arcadeFontScaledTS();
-        Font font6 = THE_ASSETS.arcadeFontAtSize(scaled(6));
+        Font font6 = theAssets().arcadeFontAtSize(scaled(6));
         int tileX = LEFT_TILE_X + 6;
         int tileY = 25;
         gr.ctx().setFill(ARCADE_ROSE);

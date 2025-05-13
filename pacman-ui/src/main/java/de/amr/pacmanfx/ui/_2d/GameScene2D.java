@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui._2d;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameScene;
-import de.amr.pacmanfx.ui.PacManGamesEnvironment;
+import de.amr.pacmanfx.ui.PacManGamesEnv;
 import de.amr.pacmanfx.uilib.Action;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
@@ -40,18 +40,18 @@ public abstract class GameScene2D implements GameScene {
 
     @Override
     public final void init() {
-        arcadeFontScaledTS.bind(scalingPy.map(scaling -> PacManGamesEnvironment.THE_ASSETS.arcadeFontAtSize((float) scaling * TS)));
+        arcadeFontScaledTS.bind(scalingPy.map(scaling -> PacManGamesEnv.theAssets().arcadeFontAtSize((float) scaling * TS)));
         doInit();
         bindActions();
         enableActionBindings();
-        PacManGamesEnvironment.THE_KEYBOARD.logCurrentBindings();
+        PacManGamesEnv.theKeyboard().logCurrentBindings();
     }
 
     @Override
     public final void end() {
         doEnd();
         disableActionBindings();
-        PacManGamesEnvironment.THE_SOUND.stopAll();
+        PacManGamesEnv.theSound().stopAll();
     }
 
     @Override
@@ -121,7 +121,7 @@ public abstract class GameScene2D implements GameScene {
     protected void drawDebugInfo() {
         gr.drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
         gr.ctx().setFill(Color.YELLOW);
-        gr.ctx().setFont(PacManGamesEnvironment.DEBUG_TEXT_FONT);
+        gr.ctx().setFont(PacManGamesEnv.DEBUG_TEXT_FONT);
         gr.ctx().fillText("%s %d".formatted(gameState(), gameState().timer().tickCount()), 0, scaled(3 * TS));
     }
 }

@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Actor;
@@ -21,8 +20,8 @@ import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createPa
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.GameAssets.ARCADE_WHITE;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_SOUND;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_UI_CONFIGS;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theSound;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theUIConfig;
 
 /**
  * Intermission scene 3: "Junior".
@@ -58,7 +57,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         stork = new Actor();
         bag = new Actor();
 
-        ArcadeMsPacMan_SpriteSheet  spriteSheet = THE_UI_CONFIGS.current().spriteSheet();
+        ArcadeMsPacMan_SpriteSheet  spriteSheet = theUIConfig().current().spriteSheet();
         msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));
         pacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));
 
@@ -68,7 +67,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         clapperboardAnimation = new ClapperboardAnimation("3", "JUNIOR");
         clapperboardAnimation.start();
 
-        music = THE_SOUND.createSound("intermission.3");
+        music = theSound().createSound("intermission.3");
         setSceneState(STATE_CLAPPERBOARD, TickTimer.INDEFINITE);
     }
 

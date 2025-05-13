@@ -21,7 +21,7 @@ import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.timer.TickTimer.ticksToString;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_UI_CONFIGS;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theUIConfig;
 import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
 
 /**
@@ -62,7 +62,7 @@ public class InfoBoxGameInfo extends InfoBox {
                 return "%s / %s / %s".formatted(formatColorHex(fillColor), formatColorHex(strokeColor), formatColorHex(pelletColor));
             } else if (worldMap.hasConfigValue("colorMapIndex")) {
                 // Arcade games
-                WorldMapColorScheme coloring = THE_UI_CONFIGS.current().worldMapColorScheme(worldMap);
+                WorldMapColorScheme coloring = theUIConfig().current().worldMapColorScheme(worldMap);
                 return "%s / %s / %s".formatted(formatColorHex(coloring.fill()), formatColorHex(coloring.stroke()), formatColorHex(coloring.pellet()));
             } else {
                 return InfoText.NO_INFO;

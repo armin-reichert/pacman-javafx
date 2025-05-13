@@ -18,7 +18,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_ASSETS;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theAssets;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -50,7 +50,7 @@ public class GameSound {
 
     private String soundURL(String keySuffix) {
         String key = assetNamespace + ".audio." + keySuffix;
-        URL url = THE_ASSETS.get(key);
+        URL url = theAssets().get(key);
         return url != null ? url.toExternalForm() : null;
     }
 
@@ -109,7 +109,7 @@ public class GameSound {
             Logger.debug("Cannot play voice {}, another voice is already playing", voiceClipID);
             return;
         }
-        URL url = THE_ASSETS.get(voiceClipID);
+        URL url = theAssets().get(voiceClipID);
         voice = new MediaPlayer(new Media(url.toExternalForm()));
         // media player stays in state PLAYING, so we remove the reference when it reaches the end
         voice.setOnEndOfMedia(() -> voice = null);
@@ -179,7 +179,7 @@ public class GameSound {
     public void playClipIfEnabled(String keySuffix, double volume) {
         requireNonNull(keySuffix);
         String key = assetNamespace + ".audio." + keySuffix;
-        AudioClip clip = THE_ASSETS.get(key);
+        AudioClip clip = theAssets().get(key);
         if (clip == null) {
             Logger.error("No audio clip with key {}", key);
             return;

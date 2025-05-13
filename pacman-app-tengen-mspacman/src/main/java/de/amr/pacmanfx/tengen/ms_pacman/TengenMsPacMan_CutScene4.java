@@ -2,7 +2,6 @@ package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Animations;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -19,7 +18,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.*;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
 public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
@@ -53,11 +52,11 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         juniors = new ArrayList<>();
         juniorCreationTime = new ArrayList<>();
 
-        spriteSheet = THE_UI_CONFIGS.current().spriteSheet();
+        spriteSheet = theUIConfig().current().spriteSheet();
         pacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
 
-        music = THE_SOUND.createSound("intermission.4");
+        music = theSound().createSound("intermission.4");
     }
 
     @Override
@@ -149,11 +148,11 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     }
 
     private void spawnJunior() {
-        String assetNamespace = THE_UI_CONFIGS.current().assetNamespace();
+        String assetNamespace = theUIConfig().current().assetNamespace();
         var junior = createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
         int rnd = randomInt(1, 3);
-        AudioClip clip = THE_ASSETS.get(assetNamespace + ".audio.intermission.4.junior." + rnd);
+        AudioClip clip = theAssets().get(assetNamespace + ".audio.intermission.4.junior." + rnd);
         junior.setPosition((float) randomX, sizeInPx().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);

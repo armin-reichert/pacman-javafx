@@ -20,7 +20,7 @@ import javafx.scene.text.Font;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.EMPTY_MAZE_SPRITE;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.FULL_MAZE_SPRITE;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_ASSETS;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theAssets;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -58,7 +58,7 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
         ctx.save();
         ctx.scale(scaling, scaling);
         if (mazeHighlighted) {
-            ctx.drawImage(THE_ASSETS.image("pacman.flashing_maze"), x, y);
+            ctx.drawImage(theAssets().image("pacman.flashing_maze"), x, y);
         } else {
             if (level.uneatenFoodCount() == 0) {
                 drawSpriteSheetRegion(EMPTY_MAZE_SPRITE, x, y);

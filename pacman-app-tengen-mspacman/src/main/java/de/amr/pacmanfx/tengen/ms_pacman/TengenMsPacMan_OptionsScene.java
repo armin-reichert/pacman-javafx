@@ -17,8 +17,8 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameAction.START_P
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameAction.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.CONTINUES_SPRITES;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_JOYPAD;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_SOUND;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theJoypad;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theSound;
 import static de.amr.pacmanfx.uilib.input.Keyboard.alt;
 
 /**
@@ -60,9 +60,9 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     public void bindActions() {
-        bind(() -> THE_JOYPAD.selectNextKeyBinding(this), alt(KeyCode.J));
-        bind(START_PLAYING, THE_JOYPAD.key(JoypadButton.START));
-        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, THE_JOYPAD.key(JoypadButton.SELECT));
+        bind(() -> theJoypad().selectNextKeyBinding(this), alt(KeyCode.J));
+        bind(START_PLAYING, theJoypad().key(JoypadButton.START));
+        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, theJoypad().key(JoypadButton.SELECT));
         bindStartTestsActions();
     }
 
@@ -74,12 +74,12 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         tengenGame.setCanStartNewGame(true);
         resetIdleTimer();
         initialDelay = INITIAL_DELAY;
-        THE_JOYPAD.registerCurrentBinding(this);
+        theJoypad().registerCurrentBinding(this);
     }
 
     @Override
     protected void doEnd() {
-        THE_JOYPAD.unregisterCurrentBinding(this);
+        theJoypad().unregisterCurrentBinding(this);
     }
 
     @Override
@@ -105,27 +105,27 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     private void optionSelectionChanged() {
-        THE_SOUND.playClipIfEnabled("option.selection_changed", 1);
+        theSound().playClipIfEnabled("option.selection_changed", 1);
         resetIdleTimer();
     }
 
     private void optionValueChanged() {
-        THE_SOUND.playClipIfEnabled("option.value_changed", 1);
+        theSound().playClipIfEnabled("option.value_changed", 1);
         resetIdleTimer();
     }
 
     @Override
     public void handleKeyboardInput() {
 
-        if (THE_JOYPAD.isButtonPressed(JoypadButton.DOWN)) {
+        if (theJoypad().isButtonPressed(JoypadButton.DOWN)) {
             selectNextOption();
         }
-        else if (THE_JOYPAD.isButtonPressed(JoypadButton.UP)) {
+        else if (theJoypad().isButtonPressed(JoypadButton.UP)) {
             selectPrevOption();
         }
 
         // Button "A" is right of "B": select next value
-        else if (THE_JOYPAD.isButtonPressed(JoypadButton.A)) {
+        else if (theJoypad().isButtonPressed(JoypadButton.A)) {
             switch (selectedOption) {
                 case OPTION_PAC_BOOSTER    -> setNextPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setNextDifficultyValue();
@@ -136,7 +136,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         }
 
         // Button "B" is left of "A": select previous value
-        else if (THE_JOYPAD.isButtonPressed(JoypadButton.B)) {
+        else if (theJoypad().isButtonPressed(JoypadButton.B)) {
             switch (selectedOption) {
                 case OPTION_PAC_BOOSTER    -> setPrevPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setPrevDifficultyValue();
@@ -289,7 +289,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), sizeInPx().x(), 212);
 
         if (PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED.get()) {
-            r.drawJoypadKeyBinding(THE_JOYPAD.currentKeyBinding());
+            r.drawJoypadKeyBinding(theJoypad().currentKeyBinding());
         }
     }
 

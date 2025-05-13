@@ -13,7 +13,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameAction.START_GAME;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_JOYPAD;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theJoypad;
 
 public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
@@ -22,7 +22,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     @Override
     public void bindActions() {
         game().scoreManager().setScoreVisible(false);
-        bind(START_GAME, THE_JOYPAD.key(JoypadButton.START));
+        bind(START_GAME, theJoypad().key(JoypadButton.START));
     }
 
     @Override

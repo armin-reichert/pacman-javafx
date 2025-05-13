@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._2d;
 
-import de.amr.pacmanfx.ui.PacManGamesEnvironment;
+import de.amr.pacmanfx.ui.PacManGamesEnv;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_ASSETS;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theAssets;
 
 
 /**
@@ -67,14 +67,14 @@ public class HelpInfo {
         pane.setBackground(Ufx.coloredRoundedBackground(backgroundColor, 10));
 
         // add default entries:
-        if (PacManGamesEnvironment.PY_AUTOPILOT.get()) {
-            var autoPilotEntry = text(THE_ASSETS.text("help.autopilot_on"), Color.ORANGE);
+        if (PacManGamesEnv.PY_AUTOPILOT.get()) {
+            var autoPilotEntry = text(theAssets().text("help.autopilot_on"), Color.ORANGE);
             autoPilotEntry.setFont(font);
             GridPane.setColumnSpan(autoPilotEntry, 2);
             grid.add(autoPilotEntry, 0, grid.getRowCount());
         }
-        if (PacManGamesEnvironment.PY_IMMUNITY.get()) {
-            var immunityEntry = text(THE_ASSETS.text("help.immunity_on"), Color.ORANGE);
+        if (PacManGamesEnv.PY_IMMUNITY.get()) {
+            var immunityEntry = text(theAssets().text("help.immunity_on"), Color.ORANGE);
             immunityEntry.setFont(font);
             GridPane.setColumnSpan(immunityEntry, 2);
             grid.add(immunityEntry, 0, grid.getRowCount() + 1);
@@ -100,7 +100,7 @@ public class HelpInfo {
     }
 
     private void addRow(String lhsKey, String keyboardKey) {
-        addRow(label(THE_ASSETS.text(lhsKey), Color.gray(0.9)), text("[" + keyboardKey + "]", Color.YELLOW));
+        addRow(label(theAssets().text(lhsKey), Color.gray(0.9)), text("[" + keyboardKey + "]", Color.YELLOW));
     }
 
     private void addQuitEntry() {
@@ -124,10 +124,10 @@ public class HelpInfo {
     }
 
     private void addInfoForPlayScene() {
-        addRow("help.move_left", THE_ASSETS.text("help.cursor_left"));
-        addRow("help.move_right", THE_ASSETS.text("help.cursor_right"));
-        addRow("help.move_up", THE_ASSETS.text("help.cursor_up"));
-        addRow("help.move_down", THE_ASSETS.text("help.cursor_down"));
+        addRow("help.move_left", theAssets().text("help.cursor_left"));
+        addRow("help.move_right", theAssets().text("help.cursor_right"));
+        addRow("help.move_up", theAssets().text("help.cursor_up"));
+        addRow("help.move_down", theAssets().text("help.cursor_down"));
         addQuitEntry();
     }
 

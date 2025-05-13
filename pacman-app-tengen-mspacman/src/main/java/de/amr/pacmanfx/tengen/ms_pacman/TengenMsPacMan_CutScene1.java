@@ -15,7 +15,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.HEART_SPRITE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.*;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
 /**
  * Intermission scene 1: "They meet".
@@ -55,7 +55,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void bindActions() {
-        bind(THE_GAME_CONTROLLER::letCurrentStateExpire, THE_JOYPAD.key(JoypadButton.START));
+        bind(THE_GAME_CONTROLLER::letCurrentStateExpire, theJoypad().key(JoypadButton.START));
     }
 
     @Override
@@ -69,13 +69,13 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         pinky = createPinkGhost();
         heart = new Actor();
 
-        var spriteSheet = (TengenMsPacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
+        var spriteSheet = (TengenMsPacMan_SpriteSheet) theUIConfig().current().spriteSheet();
         msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         pacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         inky.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, inky.personality()));
         pinky.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, pinky.personality()));
 
-        music = THE_SOUND.createSound("intermission.1");
+        music = theSound().createSound("intermission.1");
     }
 
     @Override

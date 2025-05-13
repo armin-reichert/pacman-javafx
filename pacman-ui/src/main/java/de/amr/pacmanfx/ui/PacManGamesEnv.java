@@ -27,29 +27,37 @@ import java.util.Map;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-public class PacManGamesEnvironment {
+public class PacManGamesEnv {
 
-    public static GameAssets THE_ASSETS;
-    public static GameClockFX THE_CLOCK;
-    public static Keyboard THE_KEYBOARD;
-    public static Joypad THE_JOYPAD;
-    public static GameSound THE_SOUND;
-    public static GameUI THE_UI;
-    public static GameUIConfigManager THE_UI_CONFIGS;
+    private static GameAssets theAssets;
+    private static GameClockFX theClock;
+    private static Keyboard theKeyboard;
+    private static Joypad theJoypad;
+    private static GameSound theSound;
+    private static GameUI theUI;
+    private static GameUIConfigManager theUIConfigManager;
 
     /**
      * Should be called as first method in Application.init() method.
      */
     public static void init() {
         checkUserDirsExistAndWritable();
-        THE_ASSETS = new GameAssets();
-        THE_CLOCK = new GameClockFX();
-        THE_KEYBOARD = new Keyboard();
-        THE_JOYPAD = new Joypad(THE_KEYBOARD);
-        THE_SOUND = new GameSound();
-        THE_UI_CONFIGS = new GameUIConfigManager();
+        theAssets = new GameAssets();
+        theClock = new GameClockFX();
+        theKeyboard = new Keyboard();
+        theJoypad = new Joypad(theKeyboard);
+        theSound = new GameSound();
+        theUIConfigManager = new GameUIConfigManager();
         Logger.info("Application environment initialized.");
     }
+
+    public static GameAssets theAssets() { return theAssets; }
+    public static GameClockFX theClock() { return theClock; }
+    public static Keyboard theKeyboard() { return theKeyboard; }
+    public static Joypad theJoypad() { return theJoypad; }
+    public static GameSound theSound() { return theSound; }
+    public static GameUI theUI() { return theUI; }
+    public static GameUIConfigManager theUIConfig() { return theUIConfigManager; }
 
     /**
      * Should be called in the Application.start() method.
@@ -61,14 +69,14 @@ public class PacManGamesEnvironment {
         boolean support3D,
         Map<GameVariant, Class<? extends GameUIConfig>> configClassesMap)
     {
-        THE_UI = new PacManGamesUI();
+        theUI = new PacManGamesUI();
         if (support3D) {
             Model3DRepository.get(); // triggers 3D model loading
         }
         configClassesMap.forEach((gameVariant, configClass) -> {
             try {
-                GameUIConfig config = configClass.getDeclaredConstructor(GameAssets.class).newInstance(THE_ASSETS);
-                THE_UI_CONFIGS.set(gameVariant, config);
+                GameUIConfig config = configClass.getDeclaredConstructor(GameAssets.class).newInstance(theAssets);
+                theUIConfigManager.set(gameVariant, config);
                 Logger.info("Game variant {} uses UI configuration: {}", gameVariant, config);
             } catch (Exception x) {
                 Logger.error("Could not create UI configuration of class {}", configClass);

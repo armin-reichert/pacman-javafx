@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.controller.GameState;
-import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
@@ -47,7 +46,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.*;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 
@@ -87,7 +86,7 @@ public class GameLevel3D {
     public GameLevel3D(GameVariant gameVariant, GameLevel level) {
         requireNonNull(gameVariant);
         this.level = requireNonNull(level);
-        final GameUIConfig uiConfig = THE_UI_CONFIGS.configuration(gameVariant);
+        final GameUIConfig uiConfig = theUIConfig().configuration(gameVariant);
         final WorldMap worldMap = level.worldMap();
         final int numRows = worldMap.numRows(), numCols = worldMap.numCols();
         final WorldMapColorScheme colorScheme = uiConfig.worldMapColorScheme(worldMap);
@@ -143,7 +142,7 @@ public class GameLevel3D {
     }
 
     private Ghost3DAppearance createGhost3D(String ans, Ghost ghost, int numFlashes) {
-        var ghost3D = new Ghost3DAppearance(THE_ASSETS, ans,
+        var ghost3D = new Ghost3DAppearance(theAssets(), ans,
             new MeshView(Model3DRepository.get().ghostDressMesh()),
             new MeshView(Model3DRepository.get().ghostPupilsMesh()),
             new MeshView(Model3DRepository.get().ghostEyeballsMesh()),
@@ -210,10 +209,10 @@ public class GameLevel3D {
 
     private XMan3D createPac3D(GameVariant gameVariant, String ans, Pac pac) {
         XMan3D pac3D = switch (gameVariant) {
-            case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL -> new MsPacMan3D(pac, PAC_3D_SIZE, THE_ASSETS, ans);
-            case PACMAN, PACMAN_XXL -> new PacMan3D(pac, PAC_3D_SIZE, THE_ASSETS, ans);
+            case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL -> new MsPacMan3D(pac, PAC_3D_SIZE, theAssets(), ans);
+            case PACMAN, PACMAN_XXL -> new PacMan3D(pac, PAC_3D_SIZE, theAssets(), ans);
         };
-        pac3D.light().setColor(THE_ASSETS.color(ans + ".pac.color.head").desaturate());
+        pac3D.light().setColor(theAssets().color(ans + ".pac.color.head").desaturate());
         Model3D.bindDrawMode(pac3D.root(), PY_3D_DRAW_MODE);
         return pac3D;
     }
@@ -221,7 +220,7 @@ public class GameLevel3D {
     private LivesCounter3D createLivesCounter3D(GameUIConfig uiConfig, boolean canStartNewGame) {
         Node[] counterShapes = new Node[LIVES_COUNTER_MAX];
         for (int i = 0; i < counterShapes.length; ++i) {
-            counterShapes[i] = uiConfig.createLivesCounterShape(THE_ASSETS, LIVES_COUNTER_3D_SIZE);
+            counterShapes[i] = uiConfig.createLivesCounterShape(theAssets(), LIVES_COUNTER_3D_SIZE);
         }
         var counter3D = new LivesCounter3D(counterShapes);
         counter3D.setTranslateX(2 * TS);
@@ -305,7 +304,7 @@ public class GameLevel3D {
         }
         message3D = Message3D.builder()
             .text(text)
-            .font(THE_ASSETS.arcadeFontAtSize(6))
+            .font(theAssets().arcadeFontAtSize(6))
             .borderColor(Color.WHITE)
             .textColor(Color.YELLOW)
             .build();
@@ -397,7 +396,7 @@ public class GameLevel3D {
             new KeyFrame(Duration.ZERO, e -> {
                 livesCounter3D().light().setLightOn(false);
                 if (randomInt(1, 100) < 25) {
-                    THE_UI.showFlashMessageSec(3, THE_ASSETS.localizedLevelCompleteMessage(level.number()));
+                    theUI().showFlashMessageSec(3, theAssets().localizedLevelCompleteMessage(level.number()));
                 }
             }),
             new KeyFrame(Duration.seconds(1.0), e -> level.ghosts().forEach(Ghost::hide)),
@@ -406,9 +405,9 @@ public class GameLevel3D {
             new KeyFrame(Duration.seconds(5.0), e -> levelRotateAnimation(1.5).play()),
             new KeyFrame(Duration.seconds(7.0), e -> {
                 maze3D.wallsDisappearAnimation(2.0).play();
-                THE_SOUND.playLevelCompleteSound();
+                theSound().playLevelCompleteSound();
             }),
-            new KeyFrame(Duration.seconds(9.5), e -> THE_SOUND.playLevelChangedSound())
+            new KeyFrame(Duration.seconds(9.5), e -> theSound().playLevelChangedSound())
         );
     }
 

@@ -20,7 +20,7 @@ import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameAction.TOGGLE_PAC_BOOSTER;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.*;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 import static de.amr.pacmanfx.uilib.input.Keyboard.alt;
 import static de.amr.pacmanfx.uilib.input.Keyboard.control;
 
@@ -32,14 +32,14 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         bind(GameAction.PERSPECTIVE_NEXT, alt(KeyCode.RIGHT));
         bind(GameAction.TOGGLE_DRAW_MODE, alt(KeyCode.W));
         if (gameLevel().isPresent() && gameLevel().get().isDemoLevel()) {
-            bind(TengenMsPacMan_GameAction.QUIT_DEMO_LEVEL, THE_JOYPAD.key(JoypadButton.START));
+            bind(TengenMsPacMan_GameAction.QUIT_DEMO_LEVEL, theJoypad().key(JoypadButton.START));
         }
         else {
-            bind(GameAction.PLAYER_UP,    THE_JOYPAD.key(JoypadButton.UP),    control(KeyCode.UP));
-            bind(GameAction.PLAYER_DOWN,  THE_JOYPAD.key(JoypadButton.DOWN),  control(KeyCode.DOWN));
-            bind(GameAction.PLAYER_LEFT,  THE_JOYPAD.key(JoypadButton.LEFT),  control(KeyCode.LEFT));
-            bind(GameAction.PLAYER_RIGHT, THE_JOYPAD.key(JoypadButton.RIGHT), control(KeyCode.RIGHT));
-            bind(TOGGLE_PAC_BOOSTER, THE_JOYPAD.key(JoypadButton.A), THE_JOYPAD.key(JoypadButton.B));
+            bind(GameAction.PLAYER_UP,    theJoypad().key(JoypadButton.UP),    control(KeyCode.UP));
+            bind(GameAction.PLAYER_DOWN,  theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN));
+            bind(GameAction.PLAYER_LEFT,  theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT));
+            bind(GameAction.PLAYER_RIGHT, theJoypad().key(JoypadButton.RIGHT), control(KeyCode.RIGHT));
+            bind(TOGGLE_PAC_BOOSTER, theJoypad().key(JoypadButton.A), theJoypad().key(JoypadButton.B));
             bindCheatActions();
         }
         enableActionBindings();
@@ -63,7 +63,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             float quality = 5; // scale 5x for better quality of snapshot
             var canvas = new Canvas(quality * imageWidth, quality * imageHeight);
             canvas.getGraphicsContext2D().setImageSmoothing(false); // important!
-            var r2D = (TengenMsPacMan_Renderer2D) THE_UI_CONFIGS.current().createRenderer(canvas);
+            var r2D = (TengenMsPacMan_Renderer2D) theUIConfig().current().createRenderer(canvas);
             r2D.setScaling(quality);
             r2D.ctx().setFill(level3D.floorColor());
             r2D.ctx().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -87,7 +87,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         else { // score is disabled, show text "GAME OVER" instead, use maze-specific color
             gameLevel().ifPresent(level -> {
                 NES_ColorScheme nesColorScheme = level.worldMap().getConfigValue("nesColorScheme");
-                scores3D.showTextAsScore(THE_ASSETS.text("score.game_over"), Color.web(nesColorScheme.strokeColor()));
+                scores3D.showTextAsScore(theAssets().text("score.game_over"), Color.web(nesColorScheme.strokeColor()));
             });
         }
     }
@@ -95,20 +95,20 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     public void onBonusActivated(GameEvent event) {
         gameLevel().flatMap(GameLevel::bonus)
-                .ifPresent(bonus -> level3D.updateBonus3D(bonus, THE_UI_CONFIGS.current().spriteSheet()));
-        THE_SOUND.playBonusActiveSound();
+                .ifPresent(bonus -> level3D.updateBonus3D(bonus, theUIConfig().current().spriteSheet()));
+        theSound().playBonusActiveSound();
     }
 
     @Override
     public void onBonusEaten(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::showEaten);
-        THE_SOUND.stopBonusActiveSound();
-        THE_SOUND.playBonusEatenSound();
+        theSound().stopBonusActiveSound();
+        theSound().playBonusEatenSound();
     }
 
     @Override
     public void onBonusExpired(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::expire);
-        THE_SOUND.stopBonusActiveSound();
+        theSound().stopBonusActiveSound();
     }
 }

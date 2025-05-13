@@ -5,18 +5,18 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import javafx.scene.text.Font;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.THE_COIN_MECHANISM;
+import static de.amr.pacmanfx.Globals.game;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.GameAssets.*;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_ASSETS;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_SOUND;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theAssets;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theSound;
 
 /**
  * @author Armin Reichert
@@ -46,7 +46,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
     @Override
     public void drawSceneContent() {
         Font font = arcadeFontScaledTS();
-        Font font6 = THE_ASSETS.arcadeFontAtSize(scaled(6));
+        Font font6 = theAssets().arcadeFontAtSize(scaled(6));
         gr.fillCanvas(backgroundColor());
         gr.drawScores(game().scoreManager(), ARCADE_WHITE, font);
         GameSpriteSheet spriteSheet = gr.spriteSheet();
@@ -65,6 +65,6 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        THE_SOUND.playInsertCoinSound();
+        theSound().playInsertCoinSound();
     }
 }

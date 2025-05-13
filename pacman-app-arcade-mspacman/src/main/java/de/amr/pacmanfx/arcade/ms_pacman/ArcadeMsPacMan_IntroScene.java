@@ -22,8 +22,8 @@ import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.GameAssets.*;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_SOUND;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_UI_CONFIGS;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theSound;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theUIConfig;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -91,7 +91,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         currentPersonality = RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
 
-        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
+        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) theUIConfig().current().spriteSheet();
         msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));
         msPacMan.selectAnimation(Animations.ANY_PAC_MUNCHING);
         for (Ghost ghost : ghosts) {
@@ -103,7 +103,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        THE_SOUND.stopVoice();
+        theSound().stopVoice();
     }
 
     @Override
@@ -118,7 +118,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        THE_SOUND.playInsertCoinSound();
+        theSound().playInsertCoinSound();
     }
 
     @Override

@@ -14,8 +14,8 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Spinner;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.PY_AUTOPILOT;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.PY_IMMUNITY;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.PY_AUTOPILOT;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.PY_IMMUNITY;
 
 /**
  * Game related settings.

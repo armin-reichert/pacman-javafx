@@ -11,7 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.*;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
 /**
  * General settings.
@@ -42,8 +42,8 @@ public class InfoBoxGeneral extends InfoBox {
         bgSimulation = addButtonList("Simulation", "Pause", "Step(s)");
         addIntSpinner("Num Steps", 1, 50, PY_SIMULATION_STEPS);
         var sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
-        addLabeledValue("", () -> "FPS: %.1f (Tgt: %.1f)".formatted(THE_CLOCK.getActualFrameRate(), THE_CLOCK.getTargetFrameRate()));
-        addLabeledValue("Total Updates",  THE_CLOCK::updateCount);
+        addLabeledValue("", () -> "FPS: %.1f (Tgt: %.1f)".formatted(theClock().getActualFrameRate(), theClock().getTargetFrameRate()));
+        addLabeledValue("Total Updates",  theClock()::updateCount);
         var pickerCanvasColor = addColorPicker("Canvas Color", PY_CANVAS_BG_COLOR.get());
         var cbCanvasImageSmoothing = addCheckBox("Image Smoothing");
         var cbCanvasFontSmoothing = addCheckBox("Font Smoothing");
@@ -62,19 +62,19 @@ public class InfoBoxGeneral extends InfoBox {
         btnStep.setTooltip(new Tooltip("Single Step Mode"));
 
         setAction(bgSimulation[0], GameAction.TOGGLE_PAUSED::execute);
-        setAction(bgSimulation[1], () -> THE_CLOCK.makeSteps(PY_SIMULATION_STEPS.get(), true));
-        setEditor(sliderTargetFPS, THE_CLOCK.targetFrameRateProperty());
+        setAction(bgSimulation[1], () -> theClock().makeSteps(PY_SIMULATION_STEPS.get(), true));
+        setEditor(sliderTargetFPS, theClock().targetFrameRateProperty());
         setEditor(pickerCanvasColor, PY_CANVAS_BG_COLOR);
         setEditor(cbCanvasImageSmoothing, PY_CANVAS_IMAGE_SMOOTHING);
         setEditor(cbCanvasFontSmoothing, PY_CANVAS_FONT_SMOOTHING);
         setEditor(cbDebugUI, PY_DEBUG_INFO_VISIBLE);
-        setEditor(cbTimeMeasured, THE_CLOCK.timeMeasuredProperty());
+        setEditor(cbTimeMeasured, theClock().timeMeasuredProperty());
     }
 
     @Override
     public void update() {
         super.update();
-        boolean paused = THE_CLOCK.pausedProperty().get();
+        boolean paused = theClock().pausedProperty().get();
         bgSimulation[0].setGraphic(paused ? iconPlay : iconStop);
         bgSimulation[0].setTooltip(paused ? tooltipPlay : tooltipStop);
         bgSimulation[1].setDisable(!paused);

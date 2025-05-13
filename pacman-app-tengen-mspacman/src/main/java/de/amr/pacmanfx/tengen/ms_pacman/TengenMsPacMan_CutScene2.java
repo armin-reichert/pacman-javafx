@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.*;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createPacMan;
@@ -46,7 +46,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void bindActions() {
-        bind(THE_GAME_CONTROLLER::letCurrentStateExpire, THE_JOYPAD.key(JoypadButton.START));
+        bind(THE_GAME_CONTROLLER::letCurrentStateExpire, theJoypad().key(JoypadButton.START));
     }
 
     @Override
@@ -55,10 +55,10 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         game().scoreManager().setScoreVisible(false);
         msPacMan = createMsPacMan();
         pacMan = createPacMan();
-        var spriteSheet = (TengenMsPacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
+        var spriteSheet = (TengenMsPacMan_SpriteSheet) theUIConfig().current().spriteSheet();
         msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         pacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
-        music = THE_SOUND.createSound("intermission.2");
+        music = theSound().createSound("intermission.2");
     }
 
     @Override

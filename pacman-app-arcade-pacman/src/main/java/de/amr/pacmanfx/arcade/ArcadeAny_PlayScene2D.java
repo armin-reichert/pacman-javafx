@@ -34,7 +34,7 @@ import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.pacmanfx.ui.GameAssets.*;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.*;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
 /**
  * 2D play scene for Arcade game variants.
@@ -79,13 +79,13 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         GameLevel level = game().level().orElseThrow();
         boolean silent = level.isDemoLevel() || gameState() == TESTING_LEVELS || gameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {
-            THE_SOUND.playGameReadySound();
+            theSound().playGameReadySound();
         }
     }
 
     @Override
     protected void doEnd() {
-        THE_SOUND.stopAll();
+        theSound().stopAll();
         disableActionBindings();
     }
 
@@ -109,30 +109,30 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         }
         else {
             // Scene is already visible 2 ticks before game level is created!
-            Logger.info("Tick {}: Game level not yet available", THE_CLOCK.tickCount());
+            Logger.info("Tick {}: Game level not yet available", theClock().tickCount());
         }
     }
 
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e) {
         List<MenuItem> items = new ArrayList<>();
-        items.add(Ufx.contextMenuTitleItem(THE_ASSETS.text("pacman")));
+        items.add(Ufx.contextMenuTitleItem(theAssets().text("pacman")));
 
-        var miAutopilot = new CheckMenuItem(THE_ASSETS.text("autopilot"));
+        var miAutopilot = new CheckMenuItem(theAssets().text("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
         items.add(miAutopilot);
 
-        var miImmunity = new CheckMenuItem(THE_ASSETS.text("immunity"));
+        var miImmunity = new CheckMenuItem(theAssets().text("immunity"));
         miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
         items.add(miImmunity);
 
         items.add(new SeparatorMenuItem());
 
-        var miMuted = new CheckMenuItem(THE_ASSETS.text("muted"));
-        miMuted.selectedProperty().bindBidirectional(THE_SOUND.mutedProperty());
+        var miMuted = new CheckMenuItem(theAssets().text("muted"));
+        miMuted.selectedProperty().bindBidirectional(theSound().mutedProperty());
         items.add(miMuted);
 
-        var miQuit = new MenuItem(THE_ASSETS.text("quit"));
+        var miQuit = new MenuItem(theAssets().text("quit"));
         miQuit.setOnAction(ae -> GameAction.QUIT_GAME_SCENE.execute());
         items.add(miQuit);
 
@@ -143,18 +143,18 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         boolean pacChased = gameState() == GameState.HUNTING && !level.pac().powerTimer().isRunning();
         if (pacChased) {
             int sirenNumber = 1 + level.huntingTimer().phaseIndex() / 2;
-            THE_SOUND.selectSiren(sirenNumber);
-            THE_SOUND.playSiren();
+            theSound().selectSiren(sirenNumber);
+            theSound().playSiren();
         }
         // TODO: how exactly is the munching sound created in the original game?
         if (level.pac().starvingTicks() > 5) {
-            THE_SOUND.stopMunchingSound();
+            theSound().stopMunchingSound();
         }
         boolean ghostsReturning = level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
         if (level.pac().isAlive() && ghostsReturning) {
-            THE_SOUND.playGhostReturningHomeSound();
+            theSound().playGhostReturningHomeSound();
         } else {
-            THE_SOUND.stopGhostReturningHomeSound();
+            theSound().stopGhostReturningHomeSound();
         }
     }
 
@@ -263,7 +263,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         bindPlayerActions();
         enableActionBindings();
         if (gr == null) {
-            setGameRenderer(THE_UI_CONFIGS.current().createRenderer(canvas));
+            setGameRenderer(theUIConfig().current().createRenderer(canvas));
         }
         game().level().map(GameLevel::worldMap).ifPresent(gr::applyMapSettings);
     }
@@ -271,11 +271,11 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
     @Override
     public void onEnterGameState(GameState state) {
         if (state == GameState.GAME_OVER) {
-            THE_SOUND.playGameOverSound();
+            theSound().playGameOverSound();
         }
         else if (state == GameState.LEVEL_COMPLETE) {
             game().level().ifPresent(level -> {
-                THE_SOUND.stopAll();
+                theSound().stopAll();
                 levelCompleteAnimation = new FlashingMazeAnimation(level);
                 levelCompleteAnimation.setActionOnFinished(THE_GAME_CONTROLLER::letCurrentStateExpire);
                 levelCompleteAnimation.start();
@@ -285,35 +285,35 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
     @Override
     public void onBonusActivated(GameEvent e) {
-        THE_SOUND.playBonusActiveSound();
+        theSound().playBonusActiveSound();
     }
 
     @Override
     public void onBonusEaten(GameEvent e) {
-        THE_SOUND.stopBonusActiveSound();
-        THE_SOUND.playBonusEatenSound();
+        theSound().stopBonusActiveSound();
+        theSound().playBonusEatenSound();
     }
 
     @Override
     public void onBonusExpired(GameEvent e) {
-        THE_SOUND.stopBonusActiveSound();
+        theSound().stopBonusActiveSound();
     }
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        THE_SOUND.playInsertCoinSound();
+        theSound().playInsertCoinSound();
     }
 
     @Override
     public void onSpecialScoreReached(GameEvent e) {
         int score = e.payload("score");
         Logger.info("Extra life won for reaching score of {}", score);
-        THE_SOUND.playExtraLifeSound();
+        theSound().playExtraLifeSound();
     }
 
     @Override
     public void onGhostEaten(GameEvent e) {
-        THE_SOUND.playGhostEatenSound();
+        theSound().playGhostEatenSound();
     }
 
     @Override
@@ -323,22 +323,22 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacDying(GameEvent e) {
-        THE_SOUND.playPacDeathSound();
+        theSound().playPacDeathSound();
     }
 
     @Override
     public void onPacFoundFood(GameEvent e) {
-        THE_SOUND.playMunchingSound();
+        theSound().playMunchingSound();
     }
 
     @Override
     public void onPacGetsPower(GameEvent e) {
-        THE_SOUND.stopSiren();
-        THE_SOUND.playPacPowerSound();
+        theSound().stopSiren();
+        theSound().playPacPowerSound();
     }
 
     @Override
     public void onPacLostPower(GameEvent e) {
-        THE_SOUND.stopPacPowerSound();
+        theSound().stopPacPowerSound();
     }
 }

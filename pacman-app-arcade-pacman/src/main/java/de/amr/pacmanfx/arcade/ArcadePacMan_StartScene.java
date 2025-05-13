@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade;
 
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.text.Font;
@@ -14,8 +13,8 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.GameAssets.*;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_ASSETS;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_SOUND;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theAssets;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theSound;
 
 /**
  * Scene shown after credit has been added and where game can be started.
@@ -44,7 +43,7 @@ public class ArcadePacMan_StartScene extends GameScene2D {
     @Override
     public void drawSceneContent() {
         final Font font8 = arcadeFontScaledTS();
-        final Font font6 = THE_ASSETS.arcadeFontAtSize(scaled(6));
+        final Font font6 = theAssets().arcadeFontAtSize(scaled(6));
         gr.drawScores(game().scoreManager(), ARCADE_WHITE, font8);
         gr.fillTextAtScaledPosition("PUSH START BUTTON", ARCADE_ORANGE, font8, tiles_to_px(6), tiles_to_px(17));
         gr.fillTextAtScaledPosition("1 PLAYER ONLY", ARCADE_CYAN, font8, tiles_to_px(8), tiles_to_px(21));
@@ -59,6 +58,6 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        THE_SOUND.playInsertCoinSound();
+        theSound().playInsertCoinSound();
     }
 }

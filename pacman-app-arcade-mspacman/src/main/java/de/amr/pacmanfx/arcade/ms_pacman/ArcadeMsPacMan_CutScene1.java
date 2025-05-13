@@ -8,8 +8,8 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -17,8 +17,8 @@ import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.HEART_SPRITE;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.GameAssets.ARCADE_WHITE;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_SOUND;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_UI_CONFIGS;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theSound;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theUIConfig;
 
 /**
  * Intermission scene 1: "They meet".
@@ -58,7 +58,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         pinky = createPinkGhost();
         heart = new Actor();
 
-        ArcadeMsPacMan_SpriteSheet spriteSheet = THE_UI_CONFIGS.current().spriteSheet();
+        ArcadeMsPacMan_SpriteSheet spriteSheet = theUIConfig().current().spriteSheet();
         msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));
         pacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));
         inky.setAnimations(new ArcadeMsPacMan_GhostAnimations(spriteSheet, inky.personality()));
@@ -66,7 +66,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
         clapperboardAnimation = new ClapperboardAnimation("1", "THEY MEET");
         clapperboardAnimation.start();
-        music = THE_SOUND.createSound("intermission.1");
+        music = theSound().createSound("intermission.1");
 
         setState(STATE_CLAPPERBOARD, 120);
     }

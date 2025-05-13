@@ -11,9 +11,11 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
 import javafx.scene.layout.Region;
 
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theKeyboard;
+
 public interface View extends ActionProvider, GameEventListener {
     @Override
-    default Keyboard keyboard() { return PacManGamesEnvironment.THE_KEYBOARD; }
+    default Keyboard keyboard() { return theKeyboard(); }
     Region layoutRoot();
     void update();
     default void draw() {}

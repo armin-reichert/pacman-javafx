@@ -22,10 +22,10 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.RectArea.rect;
+import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.GameAssets.ARCADE_WHITE;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_ASSETS;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theAssets;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -74,7 +74,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
         this.spriteSheet = requireNonNull(spriteSheet);
         ctx = requireNonNull(canvas).getGraphicsContext2D();
         //TODO maybe create flashing maze from normal image at runtime by color exchanges?
-        flashingMazesImage = THE_ASSETS.get("ms_pacman.flashing_mazes");
+        flashingMazesImage = theAssets().get("ms_pacman.flashing_mazes");
     }
 
     @Override
@@ -152,7 +152,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     }
 
     public void drawMidwayCopyright(int tileX, int tileY, Color color, Font font) {
-        Image image = THE_ASSETS.get("ms_pacman.logo.midway");
+        Image image = theAssets().get("ms_pacman.logo.midway");
         double x = tiles_to_px(tileX), y = tiles_to_px(tileY);
         ctx.drawImage(image, scaled(x), scaled(y + 2), scaled(tiles_to_px(4) - 2), scaled(tiles_to_px(4)));
         ctx.setFont(font);

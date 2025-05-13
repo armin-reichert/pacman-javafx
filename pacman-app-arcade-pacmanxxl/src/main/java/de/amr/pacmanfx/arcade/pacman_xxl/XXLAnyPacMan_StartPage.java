@@ -36,7 +36,7 @@ import org.tinylog.Logger;
 import static de.amr.pacmanfx.Globals.THE_GAME_CONTROLLER;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.*;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.*;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -207,7 +207,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
         @Override
         protected void handleKeyPress(KeyEvent e) {
             if (Keyboard.naked(KeyCode.E).match(e)) {
-                THE_UI.showEditorView();
+                theUI().showEditorView();
             } else if (Keyboard.naked(KeyCode.ENTER).match(e)) {
                 startGame();
             } else {
@@ -233,14 +233,14 @@ public class XXLAnyPacMan_StartPage implements StartPage {
                 game.cutScenesEnabledProperty().set(cutScenesEnabled);
                 game.mapSelector().setMapSelectionMode(mapOrder);
                 game.mapSelector().loadAllMaps(game);
-                THE_UI.selectGameVariant(gameVariant);
+                theUI().selectGameVariant(gameVariant);
             } else {
                 Logger.error("Game variant {} is not allowed for XXL game", gameVariant);
             }
         }
 
         private void setActorAnimationVariant(GameVariant gameVariant) {
-            GameUIConfig config = THE_UI_CONFIGS.configuration(gameVariant);
+            GameUIConfig config = theUIConfig().configuration(gameVariant);
             renderer = config.createRenderer(canvas);
 
             switch (gameVariant) {
@@ -353,7 +353,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
         menu = new GameOptionMenu();
         // scale menu to take 90% of start page height
         menu.scalingProperty().bind(root.heightProperty().multiply(0.9).divide(menu.numTilesY() * TS));
-        menu.soundEnabledProperty().bind(THE_SOUND.mutedProperty().not());
+        menu.soundEnabledProperty().bind(theSound().mutedProperty().not());
 
         root.setBackground(Background.fill(Color.BLACK));
         root.getChildren().addAll(flyer, menu.root());

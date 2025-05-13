@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade;
 
 import de.amr.pacmanfx.lib.RectArea;
-import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -19,7 +18,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.pacmanfx.ui.GameAssets.ARCADE_WHITE;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_UI_CONFIGS;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theUIConfig;
 
 public class ArcadeAny_BootScene2D extends GameScene2D {
 
@@ -30,7 +29,7 @@ public class ArcadeAny_BootScene2D extends GameScene2D {
     @Override
     public void doInit() {
         game().scoreManager().setScoreVisible(false);
-        Image spriteImage = THE_UI_CONFIGS.current().spriteSheet().sourceImage();
+        Image spriteImage = theUIConfig().current().spriteSheet().sourceImage();
         // ignore left half of sprite sheet image
         minX = spriteImage.getWidth() / 2;
         maxX = spriteImage.getWidth() - FRAGMENT_SIZE;

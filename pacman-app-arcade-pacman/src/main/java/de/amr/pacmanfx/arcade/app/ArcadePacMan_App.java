@@ -8,7 +8,7 @@ import de.amr.pacmanfx.arcade.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.model.GameVariant;
-import de.amr.pacmanfx.ui.PacManGamesEnvironment;
+import de.amr.pacmanfx.ui.PacManGamesEnv;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
@@ -18,13 +18,13 @@ import javafx.stage.Stage;
 import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.THE_GAME_CONTROLLER;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.*;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
 public class ArcadePacMan_App extends Application {
 
     @Override
     public void init() {
-        PacManGamesEnvironment.init();
+        PacManGamesEnv.init();
         THE_GAME_CONTROLLER.register(GameVariant.PACMAN, new ArcadePacMan_GameModel());
         THE_GAME_CONTROLLER.select(GameVariant.PACMAN);
     }
@@ -34,8 +34,8 @@ public class ArcadePacMan_App extends Application {
         createUI(Map.of(GameVariant.PACMAN, ArcadePacMan_UIConfig.class));
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
         double height = 0.8 * screenSize.getHeight(), width = 1.2 * height;
-        THE_UI.build(stage, width, height);
-        THE_UI.buildDashboard(
+        theUI().build(stage, width, height);
+        theUI().buildDashboard(
             DashboardID.README,
             DashboardID.GENERAL,
             DashboardID.GAME_CONTROL,
@@ -45,13 +45,13 @@ public class ArcadePacMan_App extends Application {
             DashboardID.KEYBOARD,
             DashboardID.ABOUT
         );
-        THE_UI.addStartPage(new ArcadePacMan_StartPage(GameVariant.PACMAN));
-        THE_UI.selectStartPage(0);
-        THE_UI.show();
+        theUI().addStartPage(new ArcadePacMan_StartPage(GameVariant.PACMAN));
+        theUI().selectStartPage(0);
+        theUI().show();
     }
 
     @Override
     public void stop() {
-        THE_CLOCK.stop();
+        theClock().stop();
     }
 }

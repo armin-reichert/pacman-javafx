@@ -13,7 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_ASSETS;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theAssets;
 
 public class Dashboard {
 
@@ -67,6 +67,6 @@ public class Dashboard {
     }
 
     private void put(DashboardID id, String titleKey, InfoBox infoBox) {
-        infoBoxMap.put(id, configured(THE_ASSETS.text(titleKey), infoBox));
+        infoBoxMap.put(id, configured(theAssets().text(titleKey), infoBox));
     }
 }

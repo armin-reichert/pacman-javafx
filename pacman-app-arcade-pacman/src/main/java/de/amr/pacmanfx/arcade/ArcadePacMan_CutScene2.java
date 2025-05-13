@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Animations;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -16,13 +15,14 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.THE_GAME_CONTROLLER;
+import static de.amr.pacmanfx.Globals.game;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.createPac;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.createRedGhost;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.GameAssets.ARCADE_WHITE;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.*;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
 /**
  * @author Armin Reichert
@@ -51,10 +51,10 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         blinky.setSpeed(0);
         blinky.hide();
 
-        music = THE_SOUND.createSound("intermission");
+        music = theSound().createSound("intermission");
         music.setCycleCount(1);
 
-        var spriteSheet = (ArcadePacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
+        var spriteSheet = (ArcadePacMan_SpriteSheet) theUIConfig().current().spriteSheet();
         pac.setAnimations(new ArcadePacMan_PacAnimations(spriteSheet));
 
         var blinkyAnimations = new ArcadePacMan_GhostAnimations(spriteSheet, blinky.personality());

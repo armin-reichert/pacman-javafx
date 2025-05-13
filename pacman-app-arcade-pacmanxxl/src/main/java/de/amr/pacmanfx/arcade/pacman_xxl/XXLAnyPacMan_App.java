@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.model.GameVariant;
-import de.amr.pacmanfx.ui.PacManGamesEnvironment;
+import de.amr.pacmanfx.ui.PacManGamesEnv;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.dashboard.InfoBoxCustomMaps;
 import javafx.application.Application;
@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.*;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
 public class XXLAnyPacMan_App extends Application {
 
@@ -24,7 +24,7 @@ public class XXLAnyPacMan_App extends Application {
 
     @Override
     public void init() {
-        PacManGamesEnvironment.init();
+        PacManGamesEnv.init();
         xxlMapSelector = new XXLAnyPacMan_MapSelector(CUSTOM_MAP_DIR);
         var pacManGameModel = new XXLPacMan_GameModel(xxlMapSelector);
         var msPacManGameModel = new XXLMsPacMan_GameModel(xxlMapSelector);
@@ -35,7 +35,7 @@ public class XXLAnyPacMan_App extends Application {
 
     @Override
     public void start(Stage stage) {
-        PacManGamesEnvironment.init();
+        PacManGamesEnv.init();
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
         double aspect = screenSize.getWidth() / screenSize.getHeight();
         double height = 0.8 * screenSize.getHeight(), width = aspect * height;
@@ -43,8 +43,8 @@ public class XXLAnyPacMan_App extends Application {
             GameVariant.PACMAN_XXL,    XXLPacMan_UIConfig.class,
             GameVariant.MS_PACMAN_XXL, XXLMsPacMan_UIConfig.class)
         );
-        THE_UI.build(stage, width, height);
-        THE_UI.buildDashboard(
+        theUI().build(stage, width, height);
+        theUI().buildDashboard(
                 DashboardID.README,
                 DashboardID.GENERAL,
                 DashboardID.GAME_CONTROL,
@@ -55,11 +55,11 @@ public class XXLAnyPacMan_App extends Application {
                 DashboardID.KEYBOARD,
                 DashboardID.ABOUT);
 
-        InfoBoxCustomMaps infoBoxCustomMaps = THE_UI.dashboard().getInfoBox(DashboardID.CUSTOM_MAPS);
+        InfoBoxCustomMaps infoBoxCustomMaps = theUI().dashboard().getInfoBox(DashboardID.CUSTOM_MAPS);
         infoBoxCustomMaps.setTableItems(xxlMapSelector.customMaps());
 
-        THE_UI.addStartPage(new XXLAnyPacMan_StartPage());
-        THE_UI.selectStartPage(0);
-        THE_UI.show();
+        theUI().addStartPage(new XXLAnyPacMan_StartPage());
+        theUI().selectStartPage(0);
+        theUI().show();
     }
 }

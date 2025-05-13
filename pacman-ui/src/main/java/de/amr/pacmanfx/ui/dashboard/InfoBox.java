@@ -26,7 +26,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static de.amr.pacmanfx.Globals.gameLevel;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_UI;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theUI;
 
 /**
  * Base class for area displaying UI info/editors.
@@ -84,7 +84,7 @@ public abstract class InfoBox extends TitledPane {
     }
 
     protected Supplier<String> ifGameScenePresent(Function<GameScene, String> fnInfo) {
-        return () -> THE_UI.currentGameScene().map(fnInfo).orElse(InfoText.NO_INFO);
+        return () -> theUI().currentGameScene().map(fnInfo).orElse(InfoText.NO_INFO);
     }
 
     protected Supplier<String> ifLevelPresent(Function<GameLevel, String> fnInfo) {

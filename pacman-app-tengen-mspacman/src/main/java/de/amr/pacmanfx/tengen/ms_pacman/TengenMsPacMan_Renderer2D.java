@@ -11,7 +11,7 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.ScoreManager;
-import de.amr.pacmanfx.ui.PacManGamesEnvironment;
+import de.amr.pacmanfx.ui.PacManGamesEnv;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.ui._2d.SpriteAnimationSet;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
@@ -34,7 +34,7 @@ import static de.amr.pacmanfx.model.actors.Bonus.STATE_EDIBLE;
 import static de.amr.pacmanfx.tengen.ms_pacman.MapRepository.strangeMap15Sprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
-import static de.amr.pacmanfx.ui.PacManGamesEnvironment.*;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 import static de.amr.pacmanfx.ui._2d.GameSpriteSheet.NO_SPRITE;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
@@ -160,12 +160,12 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
         if (coloredMapSet == null) {
             // setWorldMap() not yet called?
-            Logger.warn("Tick {}: No maze available", THE_CLOCK.tickCount());
+            Logger.warn("Tick {}: No maze available", theClock().tickCount());
             return;
         }
 
         RectArea area = mapCategory == MapCategory.STRANGE && mapNumber == 15
-            ? strangeMap15Sprite(THE_CLOCK.tickCount()) // Strange map #15: psychedelic animation
+            ? strangeMap15Sprite(theClock().tickCount()) // Strange map #15: psychedelic animation
             : coloredMapSet.normalMaze().region();
         ctx().drawImage(coloredMapSet.normalMaze().source(),
             area.x(), area.y(), area.width(), area.height(),
@@ -257,12 +257,12 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     public void drawLevelMessage(GameLevel level, boolean demoLevel, Vector2f position, Font font) {
         if (level.message() != null) {
-            String ans = THE_UI_CONFIGS.current().assetNamespace();
+            String ans = theUIConfig().current().assetNamespace();
             float x = position.x(), y = position.y();
             switch (level.message()) {
-                case READY -> drawTextCenteredOver("READY!", x, y, THE_ASSETS.color(ans + ".color.ready_message"), font);
+                case READY -> drawTextCenteredOver("READY!", x, y, theAssets().color(ans + ".color.ready_message"), font);
                 case GAME_OVER -> {
-                    Color color = THE_ASSETS.color(ans + ".color.game_over_message");
+                    Color color = theAssets().color(ans + ".color.game_over_message");
                     if (demoLevel) {
                         NES_ColorScheme nesColorScheme = level.worldMap().getConfigValue("nesColorScheme");
                         color = Color.web(nesColorScheme.strokeColor());
@@ -316,7 +316,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     @Override
     public void drawScores(ScoreManager scoreManager, Color color, Font font) {
         if (scoreManager.isScoreVisible()) {
-            if (THE_CLOCK.tickCount() % 60 < 30) {
+            if (theClock().tickCount() % 60 < 30) {
                 fillTextAtScaledPosition("1UP", color, font, tiles_to_px(2), tiles_to_px(1));
             }
             fillTextAtScaledPosition("HIGH SCORE", color, font, tiles_to_px(9), tiles_to_px(1));
@@ -408,7 +408,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx().setImageSmoothing(false);
         drawSpriteScaled(storkAnimation.currentSprite(), pos.x(), pos.y());
         if (hideBag) { // over-paint bag under beak
-            ctx().setFill(PacManGamesEnvironment.PY_CANVAS_BG_COLOR.get());
+            ctx().setFill(PacManGamesEnv.PY_CANVAS_BG_COLOR.get());
             ctx().fillRect(scaled(pos.x() - 1), scaled(pos.y() + 7), scaled(9), scaled(9));
         }
     }
