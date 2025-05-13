@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade;
 
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Animations;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -129,7 +130,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         gr.drawScores(game().scoreManager(), ARCADE_WHITE, arcadeFontScaledTS());
-        gr.drawSpriteScaled(nailDressRaptureAnimation.currentSprite(), tiles_to_px(14), tiles_to_px(19) + 3);
+        gr.drawSpriteScaled(nailDressRaptureAnimation.currentSprite(), UsefulFunctions.tiles_to_px(14), UsefulFunctions.tiles_to_px(19) + 3);
         gr.drawActor(blinky);
         gr.drawActor(pac);
         gr.drawLevelCounter(game().levelCounter(), sizeInPx());
@@ -139,6 +140,6 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     protected void drawDebugInfo() {
         super.drawDebugInfo();
         String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-        gr.fillTextAtScaledPosition(text, Color.YELLOW, DEBUG_TEXT_FONT, tiles_to_px(1), tiles_to_px(5));
+        gr.fillTextAtScaledPosition(text, Color.YELLOW, DEBUG_TEXT_FONT, UsefulFunctions.tiles_to_px(1), UsefulFunctions.tiles_to_px(5));
     }
 }

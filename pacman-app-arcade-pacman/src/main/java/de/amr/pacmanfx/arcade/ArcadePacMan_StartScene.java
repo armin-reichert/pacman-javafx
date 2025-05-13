@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade;
 
 import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.text.Font;
@@ -44,10 +45,10 @@ public class ArcadePacMan_StartScene extends GameScene2D {
         final Font font8 = arcadeFontScaledTS();
         final Font font6 = THE_ASSETS.arcadeFontAtSize(scaled(6));
         gr.drawScores(game().scoreManager(), ARCADE_WHITE, font8);
-        gr.fillTextAtScaledPosition("PUSH START BUTTON", ARCADE_ORANGE, font8, tiles_to_px(6), tiles_to_px(17));
-        gr.fillTextAtScaledPosition("1 PLAYER ONLY", ARCADE_CYAN, font8, tiles_to_px(8), tiles_to_px(21));
-        gr.fillTextAtScaledPosition("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, font8, tiles_to_px(1), tiles_to_px(25));
-        gr.fillTextAtScaledPosition("PTS", ARCADE_ROSE, font6, tiles_to_px(25), tiles_to_px(25));
+        gr.fillTextAtScaledPosition("PUSH START BUTTON", ARCADE_ORANGE, font8, UsefulFunctions.tiles_to_px(6), UsefulFunctions.tiles_to_px(17));
+        gr.fillTextAtScaledPosition("1 PLAYER ONLY", ARCADE_CYAN, font8, UsefulFunctions.tiles_to_px(8), UsefulFunctions.tiles_to_px(21));
+        gr.fillTextAtScaledPosition("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, font8, UsefulFunctions.tiles_to_px(1), UsefulFunctions.tiles_to_px(25));
+        gr.fillTextAtScaledPosition("PTS", ARCADE_ROSE, font6, UsefulFunctions.tiles_to_px(25), UsefulFunctions.tiles_to_px(25));
         if (gr instanceof ArcadePacMan_GameRenderer r) {
             r.drawMidwayCopyright(4, 29, ARCADE_PINK, font8);
         }

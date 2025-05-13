@@ -4,10 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tilemap.editor;
 
+import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
-import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.*;
@@ -1294,7 +1294,7 @@ public class TileMapEditor {
 
     private void identifyObstacleAtTile(Vector2i tile) {
         Obstacle obstacleAtTile = editedWorldMap().obstacles().stream()
-            .filter(obstacle -> Globals.tileAt(obstacle.startPoint().minus(HTS, 0).toVector2f()).equals(tile))
+            .filter(obstacle -> UsefulFunctions.tileAt(obstacle.startPoint().minus(HTS, 0).toVector2f()).equals(tile))
             .findFirst().orElse(null);
         if (obstacleAtTile != null) {
             String encoding = obstacleAtTile.encoding();

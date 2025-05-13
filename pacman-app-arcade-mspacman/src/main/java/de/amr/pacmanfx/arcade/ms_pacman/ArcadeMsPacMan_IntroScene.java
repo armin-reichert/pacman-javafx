@@ -8,6 +8,7 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.fsm.FiniteStateMachine;
 import de.amr.pacmanfx.lib.fsm.FsmState;
@@ -128,15 +129,15 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         gr.fillTextAtScaledPosition("\"MS PAC-MAN\"", ARCADE_ORANGE, font, TITLE_X, TITLE_Y);
         if (state == SceneState.GHOSTS_MARCHING_IN) {
             String ghostName = ghosts[presentedGhostID].name().toUpperCase();
-            double dx = ghostName.length() < 4 ? tiles_to_px(1) : 0;
+            double dx = ghostName.length() < 4 ? UsefulFunctions.tiles_to_px(1) : 0;
             if (presentedGhostID == RED_GHOST_ID) {
-                gr.fillTextAtScaledPosition("WITH", ARCADE_WHITE, font, TITLE_X, TOP_Y + tiles_to_px(3));
+                gr.fillTextAtScaledPosition("WITH", ARCADE_WHITE, font, TITLE_X, TOP_Y + UsefulFunctions.tiles_to_px(3));
             }
-            gr.fillTextAtScaledPosition(ghostName, COLOR_GHOST[presentedGhostID], font, TITLE_X + tiles_to_px(3) + dx, TOP_Y + tiles_to_px(6));
+            gr.fillTextAtScaledPosition(ghostName, COLOR_GHOST[presentedGhostID], font, TITLE_X + UsefulFunctions.tiles_to_px(3) + dx, TOP_Y + UsefulFunctions.tiles_to_px(6));
         }
         else if (state == SceneState.MS_PACMAN_MARCHING_IN || state == SceneState.READY_TO_PLAY) {
-            gr.fillTextAtScaledPosition("STARRING", ARCADE_WHITE, font, TITLE_X, TOP_Y + tiles_to_px(3));
-            gr.fillTextAtScaledPosition("MS PAC-MAN", ARCADE_YELLOW, font, TITLE_X, TOP_Y + tiles_to_px(6));
+            gr.fillTextAtScaledPosition("STARRING", ARCADE_WHITE, font, TITLE_X, TOP_Y + UsefulFunctions.tiles_to_px(3));
+            gr.fillTextAtScaledPosition("MS PAC-MAN", ARCADE_YELLOW, font, TITLE_X, TOP_Y + UsefulFunctions.tiles_to_px(6));
         }
         for (Ghost ghost : ghosts) {
             gr.drawActor(ghost);

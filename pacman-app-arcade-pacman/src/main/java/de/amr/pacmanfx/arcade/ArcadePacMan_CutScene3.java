@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade;
 
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.actors.Animations;
@@ -106,6 +107,6 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     protected void drawDebugInfo() {
         super.drawDebugInfo();
         String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-        gr.fillTextAtScaledPosition(text, Color.YELLOW, DEBUG_TEXT_FONT, tiles_to_px(1), tiles_to_px(5));
+        gr.fillTextAtScaledPosition(text, Color.YELLOW, DEBUG_TEXT_FONT, UsefulFunctions.tiles_to_px(1), UsefulFunctions.tiles_to_px(5));
     }
 }

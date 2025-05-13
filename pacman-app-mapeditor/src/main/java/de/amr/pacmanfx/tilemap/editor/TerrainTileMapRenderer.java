@@ -4,10 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tilemap.editor;
 
-import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.RectArea;
-import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.*;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
 import de.amr.pacmanfx.lib.tilemap.*;
@@ -33,7 +30,7 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
     private static final Color[] RANDOM_COLORS = new Color[30];
     static {
         for (int i = 0; i < RANDOM_COLORS.length; ++i) {
-            RANDOM_COLORS[i] = Color.rgb(randomInt(0, 256),randomInt(0, 256), randomInt(0, 256));
+            RANDOM_COLORS[i] = Color.rgb(UsefulFunctions.randomInt(0, 256), UsefulFunctions.randomInt(0, 256), UsefulFunctions.randomInt(0, 256));
         }
     }
     private static final Color SEGMENT_NUMBER_FILL_COLOR = Color.LIGHTGRAY;

@@ -6,6 +6,7 @@ package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.Validations;
+import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -13,7 +14,6 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -62,13 +62,13 @@ public abstract class HuntingTimer {
     public IntegerProperty phaseIndexProperty() { return phaseIndexPy; }
     public int phaseIndex() { return phaseIndexPy.get(); }
     public Optional<Integer> currentScatterPhaseIndex() {
-        return isEven(phaseIndex()) ? Optional.of(phaseIndex() / 2) : Optional.empty();
+        return UsefulFunctions.isEven(phaseIndex()) ? Optional.of(phaseIndex() / 2) : Optional.empty();
     }
     public Optional<Integer> currentChasingPhaseIndex() {
-        return isOdd(phaseIndex()) ? Optional.of(phaseIndex() / 2) : Optional.empty();
+        return UsefulFunctions.isOdd(phaseIndex()) ? Optional.of(phaseIndex() / 2) : Optional.empty();
     }
 
-    public HuntingPhase phase() { return isEven(phaseIndex()) ? HuntingPhase.SCATTERING : HuntingPhase.CHASING; }
+    public HuntingPhase phase() { return UsefulFunctions.isEven(phaseIndex()) ? HuntingPhase.SCATTERING : HuntingPhase.CHASING; }
 
     private int requireValidPhaseIndex(int phaseIndex) {
         if (phaseIndex < 0 || phaseIndex > numPhases - 1) {

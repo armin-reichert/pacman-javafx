@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
+import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
@@ -78,7 +79,7 @@ public class Maze3D extends Group {
         obstacleBaseHeightPy.set(PY_3D_WALL_HEIGHT.get());
 
         for (Obstacle obstacle : level.worldMap().obstacles()) {
-            if (!level.isPartOfHouse(tileAt(obstacle.startPoint().toVector2f()))) {
+            if (!level.isPartOfHouse(UsefulFunctions.tileAt(obstacle.startPoint().toVector2f()))) {
                 r3D.setWallThickness(OBSTACLE_3D_THICKNESS);
                 r3D.setWallBaseMaterial(wallBaseMaterial);
                 r3D.setWallTopMaterial(wallTopMaterial);

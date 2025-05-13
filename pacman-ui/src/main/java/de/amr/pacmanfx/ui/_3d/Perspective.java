@@ -11,7 +11,7 @@ import javafx.scene.SubScene;
 import javafx.scene.transform.Rotate;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.Globals.lerp;
+import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 
 /**
  * Play scene perspectives.

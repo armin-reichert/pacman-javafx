@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Animations;
@@ -78,7 +79,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     public void drawSceneContent() {
         gr.drawScores(game().scoreManager(), ARCADE_WHITE, arcadeFontScaledTS());
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
-            r.drawClapperBoard(clapperboardAnimation, tiles_to_px(3), tiles_to_px(10), arcadeFontScaledTS());
+            r.drawClapperBoard(clapperboardAnimation, UsefulFunctions.tiles_to_px(3), UsefulFunctions.tiles_to_px(10), arcadeFontScaledTS());
         }
         gr.drawActor(msPacMan);
         gr.drawActor(pacMan);

@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
-import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
@@ -395,7 +395,7 @@ public class GameLevel3D {
         return new Timeline(
             new KeyFrame(Duration.ZERO, e -> {
                 livesCounter3D().light().setLightOn(false);
-                if (Globals.randomInt(1, 100) < 25) {
+                if (UsefulFunctions.randomInt(1, 100) < 25) {
                     THE_UI.showFlashMessageSec(3, THE_ASSETS.localizedLevelCompleteMessage(level.number()));
                 }
             }),

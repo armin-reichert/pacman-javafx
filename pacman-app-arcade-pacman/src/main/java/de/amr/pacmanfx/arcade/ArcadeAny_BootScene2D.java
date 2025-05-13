@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade;
 
 import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -81,7 +82,7 @@ public class ArcadeAny_BootScene2D extends GameScene2D {
         for (int row = 0; row < numRows; ++row) {
             for (int col = 0; col < numCols; ++col) {
                 var hexCode = Integer.toHexString(THE_RNG.nextInt(16));
-                gr.ctx().fillText(hexCode, scaled(tiles_to_px(col)), scaled(tiles_to_px(row + 1)));
+                gr.ctx().fillText(hexCode, scaled(UsefulFunctions.tiles_to_px(col)), scaled(UsefulFunctions.tiles_to_px(row + 1)));
             }
         }
     }
@@ -102,8 +103,8 @@ public class ArcadeAny_BootScene2D extends GameScene2D {
 
     private RectArea randomFragment() {
         return new RectArea(
-            (int) lerp(minX, maxX, THE_RNG.nextDouble()),
-            (int) lerp(minY, maxY, THE_RNG.nextDouble()),
+            (int) UsefulFunctions.lerp(minX, maxX, THE_RNG.nextDouble()),
+            (int) UsefulFunctions.lerp(minY, maxY, THE_RNG.nextDouble()),
             FRAGMENT_SIZE, FRAGMENT_SIZE);
     }
 

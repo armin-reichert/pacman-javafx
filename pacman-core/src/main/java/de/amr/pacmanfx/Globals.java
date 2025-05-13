@@ -8,13 +8,10 @@ import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.controller.GameController;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEventManager;
-import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Pac;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.Random;
 
@@ -56,95 +53,4 @@ public interface Globals {
     static GameState gameState() { return THE_GAME_CONTROLLER.state(); }
     static Optional<GameLevel> gameLevel() { return game().level(); }
     static Optional<Pac> pac() { return gameLevel().map(GameLevel::pac); }
-
-    /**
-     * @param position a position
-     * @return tile containing given position
-     */
-    static Vector2i tileAt(Vector2f position) {
-        requireNonNull(position);
-        return tileAt(position.x(), position.y());
-    }
-
-    /**
-     * @param x x position
-     * @param y y position
-     * @return tile containing given position
-     */
-    static Vector2i tileAt(float x, float y) {
-        return Vector2i.of((int) (x / TS), (int) (y / TS));
-    }
-
-    /**
-     * @param tileX tile x coordinate
-     * @param tileY tile y coordinate
-     * @return position  (scaled by tile size) half tile right of tile origin
-     */
-    static Vector2f halfTileRightOf(int tileX, int tileY) {
-        return Vector2f.of(TS * tileX + HTS, TS * tileY);
-    }
-
-    static Vector2f halfTileRightOf(Vector2i tile) {
-        return halfTileRightOf(tile.x(), tile.y());
-    }
-
-    /**
-     * @param tiles amount of tiles
-     * @return pixels corresponding to amount of tiles
-     */
-    static float tiles_to_px(double tiles) {
-        return (float) tiles * TS;
-    }
-
-    /**
-     * @param min left interval bound
-     * @param maxExclusive right (open) interval bound
-     * @return Random integer number from right-open interval <code>[a; b[</code>. Interval bounds are rearranged to
-     * guarantee <code>a<=b</code>
-     */
-    static int randomInt(int min, int maxExclusive) {
-        if (min > maxExclusive) {
-            var tmp = min;
-            min = maxExclusive;
-            maxExclusive = tmp;
-        }
-        return min + THE_RNG.nextInt(maxExclusive - min);
-    }
-
-    /**
-     * @param min left interval bound
-     * @param maxExclusive right (open) interval bound
-     * @return Random floating-point number from right-open interval <code>[a; b[</code>. Interval bounds are rearranged
-     * to guarantee <code>a<=b</code>
-     */
-    static float randomFloat(float min, float maxExclusive) {
-        if (min > maxExclusive) {
-            var tmp = min;
-            min = maxExclusive;
-            maxExclusive = tmp;
-        }
-        return min + (maxExclusive - min) * THE_RNG.nextFloat();
-    }
-
-    static boolean isEven(int n) {
-        return n % 2 == 0;
-    }
-    static boolean isOdd(int n) {
-        return n % 2 != 0;
-    }
-
-    /**
-     * @param value1 value1
-     * @param value2 value2
-     * @param t      "time" between 0 and 1
-     * @return linear interpolation between {@code value1} and {@code value2} values
-     */
-    static double lerp(double value1, double value2, double t) {
-        return (1 - t) * value1 + t * value2;
-    }
-
-    static byte[][] copyArray2D(byte[][] array) {
-        return Arrays.stream(array).map(byte[]::clone).toArray(byte[][]::new);
-    }
-
 }

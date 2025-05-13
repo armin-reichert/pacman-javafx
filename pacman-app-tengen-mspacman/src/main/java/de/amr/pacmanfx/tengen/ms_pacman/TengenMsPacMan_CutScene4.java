@@ -1,8 +1,8 @@
 package de.amr.pacmanfx.tengen.ms_pacman;
 
-import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Animations;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -151,7 +151,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         String assetNamespace = THE_UI_CONFIGS.current().assetNamespace();
         var junior = createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
-        int rnd = Globals.randomInt(1, 3);
+        int rnd = UsefulFunctions.randomInt(1, 3);
         AudioClip clip = THE_ASSETS.get(assetNamespace + ".audio.intermission.4.junior." + rnd);
         junior.setPosition((float) randomX, sizeInPx().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);
@@ -187,8 +187,8 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         possibleDirs.remove(oldMoveDir.opposite());
         List<Direction> dirsByMinCenterDist = possibleDirs.stream().sorted((d1, d2) -> bySmallestDistanceToToCenter(junior, d1, d2)).toList();
         Direction bestDir = dirsByMinCenterDist.getFirst();
-        Direction randomDir = possibleDirs.get(Globals.randomInt(0, possibleDirs.size()));
-        boolean chooseBestDir = Globals.randomInt(0, 100) < 40;
+        Direction randomDir = possibleDirs.get(UsefulFunctions.randomInt(0, possibleDirs.size()));
+        boolean chooseBestDir = UsefulFunctions.randomInt(0, 100) < 40;
         junior.setMoveDir(chooseBestDir ? bestDir : randomDir);
     }
 

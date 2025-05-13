@@ -34,8 +34,8 @@ import org.tinylog.Logger;
 
 import java.util.function.Predicate;
 
-import static de.amr.pacmanfx.Globals.randomFloat;
-import static de.amr.pacmanfx.Globals.randomInt;
+import static de.amr.pacmanfx.lib.UsefulFunctions.randomFloat;
+import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 
 /**
  * @author Armin Reichert

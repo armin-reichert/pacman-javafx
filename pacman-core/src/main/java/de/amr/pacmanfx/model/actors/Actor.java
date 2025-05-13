@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.actors;
 
+import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 
@@ -142,7 +143,7 @@ public class Actor {
      * @return Tile containing the center of the actor collision box.
      */
     public Vector2i tile() {
-        return tileAt(posX + HTS, posY + HTS);
+        return UsefulFunctions.tileAt(posX + HTS, posY + HTS);
     }
 
     /**

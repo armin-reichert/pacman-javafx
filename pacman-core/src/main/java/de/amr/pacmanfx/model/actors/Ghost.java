@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.actors;
 
-import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
@@ -148,7 +148,7 @@ public class Ghost extends Creature {
     }
 
     private Direction pseudoRandomDirection() {
-        int rnd = Globals.randomInt(0, 1000);
+        int rnd = UsefulFunctions.randomInt(0, 1000);
         if (rnd < 163)             return UP;
         if (rnd < 163 + 252)       return RIGHT;
         if (rnd < 163 + 252 + 285) return DOWN;

@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade;
 
 import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.event.GameEventType;
+import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.TerrainTiles;
@@ -294,8 +295,8 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
         byte symbol = level.bonusSymbol(level.currentBonusIndex());
         var bonus = new StaticBonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
         Vector2i bonusTile = level.worldMap().getTerrainTileProperty(WorldMapProperty.POS_BONUS, new Vector2i(13, 20));
-        bonus.setPosition(halfTileRightOf(bonusTile));
-        bonus.setEdibleTicks(randomInt(9 * NUM_TICKS_PER_SEC, 10 * NUM_TICKS_PER_SEC));
+        bonus.setPosition(UsefulFunctions.halfTileRightOf(bonusTile));
+        bonus.setEdibleTicks(UsefulFunctions.randomInt(9 * NUM_TICKS_PER_SEC, 10 * NUM_TICKS_PER_SEC));
         level.setBonus(bonus);
         THE_GAME_EVENT_MANAGER.publishEvent(this, GameEventType.BONUS_ACTIVATED, bonus.actor().tile());
     }

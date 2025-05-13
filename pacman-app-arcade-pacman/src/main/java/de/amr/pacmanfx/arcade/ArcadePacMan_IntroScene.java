@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.fsm.FiniteStateMachine;
 import de.amr.pacmanfx.lib.fsm.FsmState;
@@ -131,7 +132,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             case CHASING_PAC -> {
                 drawPoints();
                 if (blinking.isOn()) {
-                    drawEnergizer(tiles_to_px(LEFT_TILE_X), tiles_to_px(20));
+                    drawEnergizer(UsefulFunctions.tiles_to_px(LEFT_TILE_X), UsefulFunctions.tiles_to_px(20));
                 }
                 drawGuys(flutter(timer.tickCount()));
                 if (gr instanceof ArcadePacMan_GameRenderer r) {
@@ -158,20 +159,20 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     private void drawGallery(Font font) {
         var spriteSheet = (ArcadePacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
         if (titleVisible) {
-            gr.fillTextAtScaledPosition("CHARACTER / NICKNAME", ARCADE_WHITE, font, tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(6));
+            gr.fillTextAtScaledPosition("CHARACTER / NICKNAME", ARCADE_WHITE, font, UsefulFunctions.tiles_to_px(LEFT_TILE_X + 3), UsefulFunctions.tiles_to_px(6));
         }
         for (byte id = 0; id < 4; ++id) {
             if (ghostImageVisible[id]) {
                 gr.drawSpriteScaledOverSquare(spriteSheet.ghostFacingRight(id),
-                    tiles_to_px(LEFT_TILE_X) + HTS, tiles_to_px(7 + 3 * id));
+                    UsefulFunctions.tiles_to_px(LEFT_TILE_X) + HTS, UsefulFunctions.tiles_to_px(7 + 3 * id));
             }
             if (ghostCharacterVisible[id]) {
                 gr.fillTextAtScaledPosition("-" + GHOST_CHARACTERS[id], GHOST_COLORS[id], font,
-                    tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(8 + 3 * id));
+                    UsefulFunctions.tiles_to_px(LEFT_TILE_X + 3), UsefulFunctions.tiles_to_px(8 + 3 * id));
             }
             if (ghostNicknameVisible[id]) {
                 gr.fillTextAtScaledPosition(GHOST_NICKNAME[id], GHOST_COLORS[id], font,
-                    tiles_to_px(LEFT_TILE_X + 14), tiles_to_px(8 + 3 * id));
+                    UsefulFunctions.tiles_to_px(LEFT_TILE_X + 14), UsefulFunctions.tiles_to_px(8 + 3 * id));
             }
         }
     }
@@ -198,14 +199,14 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         int tileX = LEFT_TILE_X + 6;
         int tileY = 25;
         gr.ctx().setFill(ARCADE_ROSE);
-        gr.ctx().fillRect(scaled(tiles_to_px(tileX) + 4), scaled(tiles_to_px(tileY - 1) + 4), scaled(2), scaled(2));
+        gr.ctx().fillRect(scaled(UsefulFunctions.tiles_to_px(tileX) + 4), scaled(UsefulFunctions.tiles_to_px(tileY - 1) + 4), scaled(2), scaled(2));
         if (blinking.isOn()) {
-            drawEnergizer(tiles_to_px(tileX), tiles_to_px(tileY + 1));
+            drawEnergizer(UsefulFunctions.tiles_to_px(tileX), UsefulFunctions.tiles_to_px(tileY + 1));
         }
-        gr.fillTextAtScaledPosition("10",  ARCADE_WHITE, font8, tiles_to_px(tileX + 2), tiles_to_px(tileY));
-        gr.fillTextAtScaledPosition("PTS", ARCADE_WHITE, font6, tiles_to_px(tileX + 5), tiles_to_px(tileY));
-        gr.fillTextAtScaledPosition("50",  ARCADE_WHITE, font8, tiles_to_px(tileX + 2), tiles_to_px(tileY + 2));
-        gr.fillTextAtScaledPosition("PTS", ARCADE_WHITE, font6, tiles_to_px(tileX + 5), tiles_to_px(tileY + 2));
+        gr.fillTextAtScaledPosition("10",  ARCADE_WHITE, font8, UsefulFunctions.tiles_to_px(tileX + 2), UsefulFunctions.tiles_to_px(tileY));
+        gr.fillTextAtScaledPosition("PTS", ARCADE_WHITE, font6, UsefulFunctions.tiles_to_px(tileX + 5), UsefulFunctions.tiles_to_px(tileY));
+        gr.fillTextAtScaledPosition("50",  ARCADE_WHITE, font8, UsefulFunctions.tiles_to_px(tileX + 2), UsefulFunctions.tiles_to_px(tileY + 2));
+        gr.fillTextAtScaledPosition("PTS", ARCADE_WHITE, font6, UsefulFunctions.tiles_to_px(tileX + 5), UsefulFunctions.tiles_to_px(tileY + 2));
     }
 
     // draw pixelated "circle"

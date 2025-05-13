@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.event.GameEventType;
+import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
@@ -557,7 +558,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         if (levelNumber - 1 <= maxBonus) {
             return (byte) (levelNumber - 1);
         }
-        return (byte) randomInt(0, maxBonus);
+        return (byte) UsefulFunctions.randomInt(0, maxBonus);
     }
 
     @Override
@@ -575,7 +576,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             return; // TODO: can this happen?
         }
         boolean leftToRight = THE_RNG.nextBoolean();
-        Vector2i houseEntry = tileAt(level.houseEntryPosition());
+        Vector2i houseEntry = UsefulFunctions.tileAt(level.houseEntryPosition());
         Vector2i houseEntryOpposite = houseEntry.plus(0, level.houseSizeInTiles().y() + 1);
         Portal entryPortal = portals.get(THE_RNG.nextInt(portals.size()));
         Portal exitPortal  = portals.get(THE_RNG.nextInt(portals.size()));

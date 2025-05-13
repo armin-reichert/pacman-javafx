@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model.actors;
 
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
@@ -349,7 +350,7 @@ public abstract class Creature extends Actor {
         final Vector2i tileBeforeMove = tile();
         final Vector2f newVelocity = dir.vector().scaled(velocity().length());
         final Vector2f touchPosition = position().plus(HTS, HTS).plus(dir.vector().scaled((float) HTS)).plus(newVelocity);
-        final Vector2i touchedTile = tileAt(touchPosition);
+        final Vector2i touchedTile = UsefulFunctions.tileAt(touchPosition);
 
         if (!canAccessTile(touchedTile)) {
             if (!isTurn) {

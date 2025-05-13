@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
@@ -223,7 +224,7 @@ public interface GameRenderer {
     default void fillTextAtScaledTilePosition(String text, Color color, Font font, int tileX, int tileY) {
         ctx().setFont(font);
         ctx().setFill(color);
-        ctx().fillText(text, scaled(tiles_to_px(tileX)), scaled(tiles_to_px(tileY)));
+        ctx().fillText(text, scaled(UsefulFunctions.tiles_to_px(tileX)), scaled(UsefulFunctions.tiles_to_px(tileY)));
     }
 
     default void drawLivesCounter(int numLives, int maxLives, double x, double y) {
@@ -243,8 +244,8 @@ public interface GameRenderer {
 
     default void drawScores(ScoreManager scoreManager, Color color, Font font) {
         if (scoreManager.isScoreVisible()) {
-            drawScore(scoreManager.score(), "SCORE", tiles_to_px(1), tiles_to_px(1), font, color);
-            drawScore(scoreManager.highScore(), "HIGH SCORE", tiles_to_px(14), tiles_to_px(1), font, color);
+            drawScore(scoreManager.score(), "SCORE", UsefulFunctions.tiles_to_px(1), UsefulFunctions.tiles_to_px(1), font, color);
+            drawScore(scoreManager.highScore(), "HIGH SCORE", UsefulFunctions.tiles_to_px(14), UsefulFunctions.tiles_to_px(1), font, color);
         }
     }
 
@@ -253,7 +254,7 @@ public interface GameRenderer {
         fillTextAtScaledPosition(title, color, font, x, y);
         fillTextAtScaledPosition(String.format("%7s", pointsText), color, font, x, y + TS + 1);
         if (score.points() != 0) {
-            fillTextAtScaledPosition("L" + score.levelNumber(), color, font, x + tiles_to_px(8), y + TS + 1);
+            fillTextAtScaledPosition("L" + score.levelNumber(), color, font, x + UsefulFunctions.tiles_to_px(8), y + TS + 1);
         }
     }
 

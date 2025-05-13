@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static de.amr.pacmanfx.Globals.randomInt;
+import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static java.util.Objects.requireNonNull;
 
 public class XXLAnyPacMan_MapSelector extends MapSelector {

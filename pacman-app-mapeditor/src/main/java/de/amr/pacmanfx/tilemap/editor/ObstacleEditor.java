@@ -15,7 +15,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.Globals.isEven;
+import static de.amr.pacmanfx.lib.UsefulFunctions.isEven;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.mirroredTileValue;
 import static java.util.Objects.requireNonNull;
 

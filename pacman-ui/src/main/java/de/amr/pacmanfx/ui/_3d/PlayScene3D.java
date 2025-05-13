@@ -8,6 +8,7 @@ import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
@@ -441,7 +442,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         level3D.stopAnimations();
         // delay state exit for 3 seconds
         gameState().timer().restartSeconds(3);
-        if (!level.isDemoLevel() && randomInt(0, 100) < 25) {
+        if (!level.isDemoLevel() && UsefulFunctions.randomInt(0, 100) < 25) {
             THE_UI.showFlashMessageSec(3, THE_ASSETS.localizedGameOverMessage());
         }
         THE_SOUND.stopAll();

@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
@@ -108,9 +109,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             if (focusPlayer) {
                 double frac = (double) pac.tile().y() / verticalRangeTiles;
                 if (frac < 0.4) { frac = 0; } else if (frac > 0.6) { frac = 1.0; }
-                targetY = lerp(camMinY(), camMaxY(), frac);
+                targetY = UsefulFunctions.lerp(camMinY(), camMaxY(), frac);
             }
-            double y = lerp(getTranslateY(), targetY, CAM_SPEED);
+            double y = UsefulFunctions.lerp(getTranslateY(), targetY, CAM_SPEED);
             setTranslateY(Math.clamp(y, camMinY(), camMaxY()));
             Logger.debug("Camera: y={0.00} target={} top={} bottom={}", getTranslateY(), targetY, camMinY(), camMaxY());
         }
