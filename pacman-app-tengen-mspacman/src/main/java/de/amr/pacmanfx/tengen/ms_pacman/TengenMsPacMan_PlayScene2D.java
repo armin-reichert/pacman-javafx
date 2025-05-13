@@ -212,7 +212,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     }
 
     private void updateCameraPosition(double scaling) {
-        int worldTilesY = theGame().level().map(level -> level.worldMap().numRows()).orElse(NES_TILES.y());
+        int worldTilesY = theGameLevel().map(level -> level.worldMap().numRows()).orElse(NES_TILES.y());
         double dy = scaling * (worldTilesY - 43) * HTS;
         fixedCamera.setTranslateY(dy);
     }
