@@ -28,6 +28,7 @@ import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.Bonus.STATE_EATEN;
 import static de.amr.pacmanfx.model.actors.Bonus.STATE_EDIBLE;
 import static de.amr.pacmanfx.tengen.ms_pacman.MapRepository.strangeMap15Sprite;
@@ -154,7 +155,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         final int mapNumber = level.worldMap().getConfigValue("mapNumber");
 
         if (!game.optionsAreInitial()) {
-            drawGameOptions(game, level.worldMap().numCols() * HTS, UsefulFunctions.tiles_to_px(2) + HTS);
+            drawGameOptions(game, level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
         }
 
         if (coloredMapSet == null) {
@@ -192,7 +193,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx().setImageSmoothing(false);
         final var game = (TengenMsPacMan_GameModel) level.game();
         if (!game.optionsAreInitial()) {
-            drawGameOptions(game, level.worldMap().numCols() * HTS, UsefulFunctions.tiles_to_px(2) + HTS);
+            drawGameOptions(game, level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
         }
         ColoredMapImage mapImage = coloredMapSet.flashingMazes().get(flashingIndex);
         RectArea region = mapImage.region();
@@ -305,10 +306,10 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             case NORMAL -> NO_SPRITE;
         };
         if (game.pacBooster() != PacBooster.OFF) {
-            drawSpriteScaledCentered(BOOSTER_SPRITE, centerX - UsefulFunctions.tiles_to_px(6), y);
+            drawSpriteScaledCentered(BOOSTER_SPRITE, centerX - tiles_to_px(6), y);
         }
         drawSpriteScaledCentered(difficultySprite, centerX, y);
-        drawSpriteScaledCentered(categorySprite, centerX + UsefulFunctions.tiles_to_px(4.5), y);
+        drawSpriteScaledCentered(categorySprite, centerX + tiles_to_px(4.5), y);
         drawSpriteScaledCentered(INFO_FRAME_SPRITE, centerX, y);
     }
 
@@ -316,11 +317,11 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     public void drawScores(ScoreManager scoreManager, Color color, Font font) {
         if (scoreManager.isScoreVisible()) {
             if (THE_CLOCK.tickCount() % 60 < 30) {
-                fillTextAtScaledPosition("1UP", color, font, UsefulFunctions.tiles_to_px(2), UsefulFunctions.tiles_to_px(1));
+                fillTextAtScaledPosition("1UP", color, font, tiles_to_px(2), tiles_to_px(1));
             }
-            fillTextAtScaledPosition("HIGH SCORE", color, font, UsefulFunctions.tiles_to_px(9), UsefulFunctions.tiles_to_px(1));
-            fillTextAtScaledPosition("%6d".formatted(scoreManager.score().points()), color, font, 0, UsefulFunctions.tiles_to_px(2));
-            fillTextAtScaledPosition("%6d".formatted(scoreManager.highScore().points()), color, font, UsefulFunctions.tiles_to_px(11), UsefulFunctions.tiles_to_px(2));
+            fillTextAtScaledPosition("HIGH SCORE", color, font, tiles_to_px(9), tiles_to_px(1));
+            fillTextAtScaledPosition("%6d".formatted(scoreManager.score().points()), color, font, 0, tiles_to_px(2));
+            fillTextAtScaledPosition("%6d".formatted(scoreManager.highScore().points()), color, font, tiles_to_px(11), tiles_to_px(2));
         }
     }
 

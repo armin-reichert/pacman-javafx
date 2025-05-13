@@ -46,6 +46,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.ui.PacManGamesEnvironment.*;
 import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
@@ -395,7 +396,7 @@ public class GameLevel3D {
         return new Timeline(
             new KeyFrame(Duration.ZERO, e -> {
                 livesCounter3D().light().setLightOn(false);
-                if (UsefulFunctions.randomInt(1, 100) < 25) {
+                if (randomInt(1, 100) < 25) {
                     THE_UI.showFlashMessageSec(3, THE_ASSETS.localizedLevelCompleteMessage(level.number()));
                 }
             }),

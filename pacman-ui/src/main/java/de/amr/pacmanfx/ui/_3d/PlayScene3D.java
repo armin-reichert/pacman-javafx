@@ -45,6 +45,7 @@ import java.util.*;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
+import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.PacManGamesEnvironment.*;
 import static de.amr.pacmanfx.uilib.Ufx.contextMenuTitleItem;
@@ -442,7 +443,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         level3D.stopAnimations();
         // delay state exit for 3 seconds
         gameState().timer().restartSeconds(3);
-        if (!level.isDemoLevel() && UsefulFunctions.randomInt(0, 100) < 25) {
+        if (!level.isDemoLevel() && randomInt(0, 100) < 25) {
             THE_UI.showFlashMessageSec(3, THE_ASSETS.localizedGameOverMessage());
         }
         THE_SOUND.stopAll();

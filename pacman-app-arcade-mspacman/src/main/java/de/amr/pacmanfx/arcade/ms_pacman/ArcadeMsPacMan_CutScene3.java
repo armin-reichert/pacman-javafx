@@ -18,6 +18,7 @@ import javafx.scene.media.MediaPlayer;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createPacMan;
+import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.GameAssets.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui.PacManGamesEnvironment.THE_SOUND;
@@ -91,7 +92,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         gr.drawScores(game().scoreManager(), ARCADE_WHITE, arcadeFontScaledTS());
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
             // Note: in Ms. Pac-Man XXL another renderer is used!
-            r.drawClapperBoard(clapperboardAnimation, UsefulFunctions.tiles_to_px(3), UsefulFunctions.tiles_to_px(10), arcadeFontScaledTS());
+            r.drawClapperBoard(clapperboardAnimation, tiles_to_px(3), tiles_to_px(10), arcadeFontScaledTS());
         }
         gr.drawActor(msPacMan);
         gr.drawActor(pacMan);

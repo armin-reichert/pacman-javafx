@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
+import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -309,7 +311,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
      */
     private byte computeBonusSymbol(int levelNumber) {
         if (levelNumber <= 7) return (byte) (levelNumber - 1);
-        int coin = UsefulFunctions.randomInt(0, 320);
+        int coin = randomInt(0, 320);
         if (coin <  50) return 0; // 5/32 probability
         if (coin < 100) return 1; // 5/32
         if (coin < 150) return 2; // 5/32
@@ -367,7 +369,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
             }
         }
 
-        Vector2i houseEntry = UsefulFunctions.tileAt(level.houseEntryPosition());
+        Vector2i houseEntry = tileAt(level.houseEntryPosition());
         Vector2i backyard = houseEntry.plus(0, level.houseSizeInTiles().y() + 1);
         List<Waypoint> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).map(Waypoint::new).toList();
 

@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.lib.tilemap.WorldMap.parseTile;
 import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.SPRITE_SHEET;
 
@@ -30,7 +31,7 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
     private static final Color[] RANDOM_COLORS = new Color[30];
     static {
         for (int i = 0; i < RANDOM_COLORS.length; ++i) {
-            RANDOM_COLORS[i] = Color.rgb(UsefulFunctions.randomInt(0, 256), UsefulFunctions.randomInt(0, 256), UsefulFunctions.randomInt(0, 256));
+            RANDOM_COLORS[i] = Color.rgb(randomInt(0, 256), randomInt(0, 256), randomInt(0, 256));
         }
     }
     private static final Color SEGMENT_NUMBER_FILL_COLOR = Color.LIGHTGRAY;

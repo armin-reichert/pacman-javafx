@@ -22,6 +22,8 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
+import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -558,7 +560,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         if (levelNumber - 1 <= maxBonus) {
             return (byte) (levelNumber - 1);
         }
-        return (byte) UsefulFunctions.randomInt(0, maxBonus);
+        return (byte) randomInt(0, maxBonus);
     }
 
     @Override
@@ -576,7 +578,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             return; // TODO: can this happen?
         }
         boolean leftToRight = THE_RNG.nextBoolean();
-        Vector2i houseEntry = UsefulFunctions.tileAt(level.houseEntryPosition());
+        Vector2i houseEntry = tileAt(level.houseEntryPosition());
         Vector2i houseEntryOpposite = houseEntry.plus(0, level.houseSizeInTiles().y() + 1);
         Portal entryPortal = portals.get(THE_RNG.nextInt(portals.size()));
         Portal exitPortal  = portals.get(THE_RNG.nextInt(portals.size()));

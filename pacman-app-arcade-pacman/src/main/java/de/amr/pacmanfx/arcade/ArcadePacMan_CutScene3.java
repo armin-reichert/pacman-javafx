@@ -18,6 +18,7 @@ import javafx.scene.paint.Color;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.createPac;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.createRedGhost;
+import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.GameAssets.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui.PacManGamesEnvironment.*;
@@ -107,6 +108,6 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     protected void drawDebugInfo() {
         super.drawDebugInfo();
         String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-        gr.fillTextAtScaledPosition(text, Color.YELLOW, DEBUG_TEXT_FONT, UsefulFunctions.tiles_to_px(1), UsefulFunctions.tiles_to_px(5));
+        gr.fillTextAtScaledPosition(text, Color.YELLOW, DEBUG_TEXT_FONT, tiles_to_px(1), tiles_to_px(5));
     }
 }

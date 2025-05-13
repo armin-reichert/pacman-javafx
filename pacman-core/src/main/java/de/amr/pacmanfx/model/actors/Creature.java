@@ -16,6 +16,7 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.Direction.*;
+import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -350,7 +351,7 @@ public abstract class Creature extends Actor {
         final Vector2i tileBeforeMove = tile();
         final Vector2f newVelocity = dir.vector().scaled(velocity().length());
         final Vector2f touchPosition = position().plus(HTS, HTS).plus(dir.vector().scaled((float) HTS)).plus(newVelocity);
-        final Vector2i touchedTile = UsefulFunctions.tileAt(touchPosition);
+        final Vector2i touchedTile = tileAt(touchPosition);
 
         if (!canAccessTile(touchedTile)) {
             if (!isTurn) {

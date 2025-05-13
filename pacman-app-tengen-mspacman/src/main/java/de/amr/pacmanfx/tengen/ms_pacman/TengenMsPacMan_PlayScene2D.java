@@ -44,6 +44,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
+import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameAction.QUIT_DEMO_LEVEL;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGamesEnvironment.*;
@@ -109,9 +110,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             if (focusPlayer) {
                 double frac = (double) pac.tile().y() / verticalRangeTiles;
                 if (frac < 0.4) { frac = 0; } else if (frac > 0.6) { frac = 1.0; }
-                targetY = UsefulFunctions.lerp(camMinY(), camMaxY(), frac);
+                targetY = lerp(camMinY(), camMaxY(), frac);
             }
-            double y = UsefulFunctions.lerp(getTranslateY(), targetY, CAM_SPEED);
+            double y = lerp(getTranslateY(), targetY, CAM_SPEED);
             setTranslateY(Math.clamp(y, camMinY(), camMaxY()));
             Logger.debug("Camera: y={0.00} target={} top={} bottom={}", getTranslateY(), targetY, camMinY(), camMaxY());
         }

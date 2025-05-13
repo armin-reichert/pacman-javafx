@@ -51,6 +51,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.lib.tilemap.WorldMap.formatTile;
 import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
@@ -1294,7 +1295,7 @@ public class TileMapEditor {
 
     private void identifyObstacleAtTile(Vector2i tile) {
         Obstacle obstacleAtTile = editedWorldMap().obstacles().stream()
-            .filter(obstacle -> UsefulFunctions.tileAt(obstacle.startPoint().minus(HTS, 0).toVector2f()).equals(tile))
+            .filter(obstacle -> tileAt(obstacle.startPoint().minus(HTS, 0).toVector2f()).equals(tile))
             .findFirst().orElse(null);
         if (obstacleAtTile != null) {
             String encoding = obstacleAtTile.encoding();

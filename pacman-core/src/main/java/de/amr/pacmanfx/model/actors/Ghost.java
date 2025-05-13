@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.Direction.*;
+import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -148,7 +149,7 @@ public class Ghost extends Creature {
     }
 
     private Direction pseudoRandomDirection() {
-        int rnd = UsefulFunctions.randomInt(0, 1000);
+        int rnd = randomInt(0, 1000);
         if (rnd < 163)             return UP;
         if (rnd < 163 + 252)       return RIGHT;
         if (rnd < 163 + 252 + 285) return DOWN;

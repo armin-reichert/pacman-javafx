@@ -11,6 +11,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -143,7 +144,7 @@ public class Actor {
      * @return Tile containing the center of the actor collision box.
      */
     public Vector2i tile() {
-        return UsefulFunctions.tileAt(posX + HTS, posY + HTS);
+        return tileAt(posX + HTS, posY + HTS);
     }
 
     /**
