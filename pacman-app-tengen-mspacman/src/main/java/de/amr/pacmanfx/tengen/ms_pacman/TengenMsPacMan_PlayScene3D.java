@@ -31,7 +31,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         bind(GameAction.PERSPECTIVE_PREVIOUS, alt(KeyCode.LEFT));
         bind(GameAction.PERSPECTIVE_NEXT, alt(KeyCode.RIGHT));
         bind(GameAction.TOGGLE_DRAW_MODE, alt(KeyCode.W));
-        if (theGameLevel().isPresent() && theGameLevel().get().isDemoLevel()) {
+        if (optGameLevel().isPresent() && optGameLevel().get().isDemoLevel()) {
             bind(TengenMsPacMan_GameAction.QUIT_DEMO_LEVEL, theJoypad().key(JoypadButton.START));
         }
         else {
@@ -85,7 +85,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             scores3D.showScore(score.points(), score.levelNumber());
         }
         else { // score is disabled, show text "GAME OVER" instead, use maze-specific color
-            theGameLevel().ifPresent(level -> {
+            optGameLevel().ifPresent(level -> {
                 NES_ColorScheme nesColorScheme = level.worldMap().getConfigValue("nesColorScheme");
                 scores3D.showTextAsScore(theAssets().text("score.game_over"), Color.web(nesColorScheme.strokeColor()));
             });
@@ -94,7 +94,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     public void onBonusActivated(GameEvent event) {
-        theGameLevel().flatMap(GameLevel::bonus)
+        optGameLevel().flatMap(GameLevel::bonus)
                 .ifPresent(bonus -> level3D.updateBonus3D(bonus, theUIConfig().current().spriteSheet()));
         theSound().playBonusActiveSound();
     }

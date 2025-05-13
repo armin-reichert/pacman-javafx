@@ -52,8 +52,12 @@ public class Globals {
     public static GameModel theGame() { return GAME_CONTROLLER.game(); }
     public static GameVariant theGameVariant() { return GAME_CONTROLLER.selectedGameVariant(); }
     public static GameState theGameState() { return GAME_CONTROLLER.state(); }
-    public static Optional<GameLevel> theGameLevel() { return theGame().level(); }
-    public static Pac pac() { return theGameLevel().map(GameLevel::pac).orElse(null); }
+
+    public static Optional<GameLevel> optGameLevel() { return theGame().level(); }
+    public static GameLevel theGameLevel() { return optGameLevel().orElse(null); }
+    public static GameLevel reqGameLevel() { return optGameLevel().orElseThrow(); }
+
+    public static Pac pac() { return optGameLevel().map(GameLevel::pac).orElse(null); }
 
     private static final CoinMechanism COIN_MECHANISM = new CoinMechanism();
     private static final GameController GAME_CONTROLLER = new GameController();

@@ -38,13 +38,13 @@ public enum GameAction implements Action {
         }
 
         @Override
-        public boolean isEnabled() { return theGameLevel().isPresent(); }
+        public boolean isEnabled() { return optGameLevel().isPresent(); }
     },
 
     CHEAT_EAT_ALL_PELLETS {
         @Override
         public void execute() {
-            theGameLevel().ifPresent(level -> {
+            optGameLevel().ifPresent(level -> {
                 List<Vector2i> pelletTiles = level.worldMap().tiles()
                     .filter(not(level::isEnergizerPosition))
                     .filter(level::hasFoodAt)
@@ -59,14 +59,14 @@ public enum GameAction implements Action {
 
         @Override
         public boolean isEnabled() {
-            return theGameLevel().isPresent() && !theGameLevel().get().isDemoLevel() && theGameState() == GameState.HUNTING;
+            return optGameLevel().isPresent() && !optGameLevel().get().isDemoLevel() && theGameState() == GameState.HUNTING;
         }
     },
 
     CHEAT_KILL_GHOSTS {
         @Override
         public void execute() {
-            theGameLevel().ifPresent(level -> {
+            optGameLevel().ifPresent(level -> {
                 List<Ghost> vulnerableGhosts = level.ghosts(FRIGHTENED, HUNTING_PAC).toList();
                 if (!vulnerableGhosts.isEmpty()) {
                     level.victims().clear(); // resets value of next killed ghost to 200
@@ -78,7 +78,7 @@ public enum GameAction implements Action {
 
         @Override
         public boolean isEnabled() {
-            return theGameState() == GameState.HUNTING && theGameLevel().isPresent() && !theGameLevel().get().isDemoLevel();
+            return theGameState() == GameState.HUNTING && optGameLevel().isPresent() && !optGameLevel().get().isDemoLevel();
         }
     },
 
@@ -90,8 +90,8 @@ public enum GameAction implements Action {
 
         @Override
         public boolean isEnabled() {
-            return theGame().isPlaying() && theGameState() == GameState.HUNTING && theGameLevel().isPresent()
-                && theGameLevel().get().number() < theGame().lastLevelNumber();
+            return theGame().isPlaying() && theGameState() == GameState.HUNTING && optGameLevel().isPresent()
+                && optGameLevel().get().number() < theGame().lastLevelNumber();
         }
     },
 
@@ -118,7 +118,7 @@ public enum GameAction implements Action {
             }
             return theGameState() == GameState.SETTING_OPTIONS
                 || theGameState() == INTRO
-                || theGameLevel().isPresent() && theGameLevel().get().isDemoLevel()
+                || optGameLevel().isPresent() && optGameLevel().get().isDemoLevel()
                 || theCoinMechanism().isEmpty();
         }
     },
