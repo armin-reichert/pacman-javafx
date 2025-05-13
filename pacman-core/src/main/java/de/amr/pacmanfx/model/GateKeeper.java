@@ -143,7 +143,7 @@ public class GateKeeper {
      * @return description why ghost has been released or {@code null} if ghost is not released
      */
     public String checkReleaseOf(GameLevel level, Ghost prisoner) {
-        byte id = prisoner.id();
+        byte id = prisoner.personality();
         if (id == RED_GHOST_SHADOW) {
             return "Red ghost gets released unconditionally";
         }
@@ -180,8 +180,8 @@ public class GateKeeper {
             }
         } else {
             level.ghosts(GhostState.LOCKED).filter(Ghost::insideHouse).findFirst().ifPresent(ghost -> {
-                countersByGhost[ghost.id()]++;
-                Logger.trace("{} dot counter = {}", ghost.name(), countersByGhost[ghost.id()]);
+                countersByGhost[ghost.personality()]++;
+                Logger.trace("{} dot counter = {}", ghost.name(), countersByGhost[ghost.personality()]);
             });
         }
     }

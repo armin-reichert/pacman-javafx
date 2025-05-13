@@ -254,9 +254,9 @@ public class XXLAnyPacMan_StartPage implements StartPage {
                 if (ghost.animations().isEmpty()) {
                     switch (gameVariant) {
                         case PACMAN_XXL ->
-                            ghost.setAnimations(new ArcadePacMan_GhostAnimations(config.spriteSheet(), ghost.id()));
+                            ghost.setAnimations(new ArcadePacMan_GhostAnimations(config.spriteSheet(), ghost.personality()));
                         case MS_PACMAN_XXL ->
-                            ghost.setAnimations(new ArcadeMsPacMan_GhostAnimations(config.spriteSheet(), ghost.id()));
+                            ghost.setAnimations(new ArcadeMsPacMan_GhostAnimations(config.spriteSheet(), ghost.personality()));
                     }
                     ghost.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
                     ghost.startAnimation();
@@ -280,7 +280,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
                 createOrangeGhost()
             };
             for (Ghost ghost : ghosts) {
-                ghost.setPosX(46 * TS + ghost.id() * 2 * TS);
+                ghost.setPosX(46 * TS + ghost.personality() * 2 * TS);
                 ghost.setMoveAndWishDir(Direction.LEFT);
                 ghost.setSpeed(1.05f);
                 ghost.setVisible(true);
@@ -294,7 +294,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
                 pac.setPosX(-36 * TS);
                 for (Ghost ghost : ghosts) {
                     ghost.setVisible(true);
-                    ghost.setPosX(pac.posX() + 22 * TS + ghost.id() * 2.5f * TS);
+                    ghost.setPosX(pac.posX() + 22 * TS + ghost.personality() * 2.5f * TS);
                     ghost.setMoveAndWishDir(ghost.moveDir().opposite());
                     ghost.setSpeed(0.58f);
                     ghost.selectAnimation(GhostAnimations.ANIM_GHOST_FRIGHTENED);
@@ -308,7 +308,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
                 for (Ghost ghost : ghosts) {
                     ghost.setVisible(true);
                     ghost.setMoveAndWishDir(Direction.LEFT);
-                    ghost.setPosX(46 * TS + ghost.id() * 2 * TS);
+                    ghost.setPosX(46 * TS + ghost.personality() * 2 * TS);
                     ghost.setSpeed(1.05f);
                     ghost.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
                     ghost.startAnimation();

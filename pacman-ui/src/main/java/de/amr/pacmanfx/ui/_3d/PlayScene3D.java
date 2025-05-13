@@ -396,7 +396,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         THE_SIMULATION_STEP.killedGhosts().forEach(ghost -> {
             int victimIndex = level.victims().indexOf(ghost);
             var numberImage = spriteSheet.crop(numberSprites[victimIndex]);
-            level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
+            level3D.ghost3D(ghost.personality()).setNumberImage(numberImage);
         });
     }
 

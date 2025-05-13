@@ -108,7 +108,7 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationSet implements 
         GameSpriteSheet gss = (GameSpriteSheet) spriteSheet;
         if (actor instanceof Ghost ghost) {
             if (isCurrentAnimationID(GhostAnimations.ANIM_GHOST_NORMAL)) {
-                return gss.ghostNormalSprites(ghost.id(), ghost.wishDir());
+                return gss.ghostNormalSprites(ghost.personality(), ghost.wishDir());
             }
             if (isCurrentAnimationID(GhostAnimations.ANIM_GHOST_EYES)) {
                 return gss.ghostEyesSprites(ghost.wishDir());

@@ -87,7 +87,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             createOrangeGhost()
         };
         for (Ghost ghost : ghosts) {
-            ghost.setAnimations(new ArcadePacMan_GhostAnimations(spriteSheet, ghost.id()));
+            ghost.setAnimations(new ArcadePacMan_GhostAnimations(spriteSheet, ghost.personality()));
         }
         ghostImageVisible     = new boolean[4];
         ghostNicknameVisible  = new boolean[4];
@@ -279,7 +279,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 scene.pacMan.startAnimation();
                 Stream.of(scene.ghosts).forEach(ghost -> {
                     ghost.setState(GhostState.HUNTING_PAC);
-                    ghost.setPosition(scene.pacMan.position().plus(16 * (ghost.id() + 1), 0));
+                    ghost.setPosition(scene.pacMan.position().plus(16 * (ghost.personality() + 1), 0));
                     ghost.setMoveAndWishDir(Direction.LEFT);
                     ghost.setSpeed(CHASE_SPEED);
                     ghost.show();

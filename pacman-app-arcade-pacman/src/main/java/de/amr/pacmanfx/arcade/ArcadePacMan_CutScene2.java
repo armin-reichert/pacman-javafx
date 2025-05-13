@@ -56,7 +56,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         var spriteSheet = (ArcadePacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
         pac.setAnimations(new ArcadePacMan_PacAnimations(spriteSheet));
 
-        var blinkyAnimations = new ArcadePacMan_GhostAnimations(spriteSheet, blinky.id());
+        var blinkyAnimations = new ArcadePacMan_GhostAnimations(spriteSheet, blinky.personality());
         blinkyNormal = blinkyAnimations.animation(GhostAnimations.ANIM_GHOST_NORMAL);
         nailDressRaptureAnimation = blinkyAnimations.animation(ArcadePacMan_GhostAnimations.ANIM_BLINKY_NAIL_DRESS_RAPTURE);
         blinkyDamaged = blinkyAnimations.animation(ArcadePacMan_GhostAnimations.ANIM_BLINKY_DAMAGED);

@@ -28,7 +28,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Ghost extends Creature {
 
-    private final byte id;
+    private final byte personality;
     private final String name;
     private GhostState state;
     private Vector2f revivalPosition;
@@ -38,11 +38,11 @@ public class Ghost extends Creature {
 
     /**
      * Constructs a ghost without associated world like the ones in the cut scenes.
-     * @param id ghost ID
+     * @param personality ghost ID
      * @param name readable name, used for logging or debug display
      */
-    public Ghost(byte id, String name) {
-        this.id = Validations.requireValidGhostID(id);
+    public Ghost(byte personality, String name) {
+        this.personality = Validations.requireValidGhostID(personality);
         this.name = requireNonNull(name);
         corneringSpeedUp = -1.25f;
     }
@@ -60,8 +60,8 @@ public class Ghost extends Creature {
             '}';
     }
 
-    public byte id() {
-        return id;
+    public byte personality() {
+        return personality;
     }
 
     public String name() {

@@ -75,7 +75,7 @@ public class Ghost3DAppearance extends Group {
         this.size = size;
         this.numFlashes = numFlashes;
 
-        ghost3D = new Ghost3D(assets, assetPrefix, ghost.id(), dressShape, pupilsShape, eyeballsShape, size);
+        ghost3D = new Ghost3D(assets, assetPrefix, ghost.personality(), dressShape, pupilsShape, eyeballsShape, size);
 
         numberCube = new Box(14, 8, 8);
         numberCubeRotation = new RotateTransition(Duration.seconds(1), numberCube);
@@ -163,7 +163,7 @@ public class Ghost3DAppearance extends Group {
             case FLASHING_GHOST -> ghost3D.appearFlashing(numFlashes);
             case NUMBER     -> numberCubeRotation.playFromStart();
         }
-        Logger.info("Ghost {} appearance changed to {}", ghost.id(), appearance);
+        Logger.info("Ghost {} appearance changed to {}", ghost.personality(), appearance);
     }
 
     private void updateAppearance(GameLevel level) {

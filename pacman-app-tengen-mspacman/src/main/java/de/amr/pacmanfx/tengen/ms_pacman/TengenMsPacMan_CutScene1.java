@@ -72,8 +72,8 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         var spriteSheet = (TengenMsPacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
         msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
         pacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
-        inky.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, inky.id()));
-        pinky.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, pinky.id()));
+        inky.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, inky.personality()));
+        pinky.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, pinky.personality()));
 
         music = THE_SOUND.createSound("intermission.1");
     }

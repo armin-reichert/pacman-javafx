@@ -108,7 +108,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
                     roam(speed);
                 } else {
                     boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || cruiseElroy() > 0;
-                    Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
+                    Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(personality());
                     followTarget(targetTile, speed);
                 }
             }
@@ -129,7 +129,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
                     roam(speed);
                 } else {
                     boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
-                    Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
+                    Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(personality());
                     followTarget(targetTile, speed);
                 }
             }
@@ -147,7 +147,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             public void hunt() {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
                 boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
-                Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
+                Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(personality());
                 followTarget(targetTile, speed);
             }
 
@@ -164,13 +164,13 @@ public class TengenMsPacMan_GameModel extends GameModel {
             public void hunt() {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
                 boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
-                Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
+                Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(personality());
                 followTarget(targetTile, speed);
             }
 
             @Override
             public Vector2i chasingTargetTile() {
-                return tile().euclideanDist(level.pac().tile()) < 8 ? level.ghostScatterTile(id()) : level.pac().tile();
+                return tile().euclideanDist(level.pac().tile()) < 8 ? level.ghostScatterTile(personality()) : level.pac().tile();
             }
         };
     }
@@ -424,7 +424,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.ghosts().forEach(ghost -> {
             ghost.setBaseSpeed(speedControl.ghostBaseSpeedInLevel(level.number())
                     + speedControl.ghostDifficultySpeedDelta(difficulty)
-                    + speedControl.ghostIDSpeedDelta(ghost.id()));
+                    + speedControl.ghostIDSpeedDelta(ghost.personality()));
             Logger.info("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed());
         });
     }
@@ -458,9 +458,9 @@ public class TengenMsPacMan_GameModel extends GameModel {
         );
         level.ghosts().forEach(ghost -> {
             ghost.reset();
-            ghost.setRevivalPosition(ghost.id() == RED_GHOST_SHADOW
+            ghost.setRevivalPosition(ghost.personality() == RED_GHOST_SHADOW
                 ? level.ghostStartPosition(PINK_GHOST_SPEEDY)
-                : level.ghostStartPosition(ghost.id()));
+                : level.ghostStartPosition(ghost.personality()));
             ghost.setGameLevel(level);
         });
 

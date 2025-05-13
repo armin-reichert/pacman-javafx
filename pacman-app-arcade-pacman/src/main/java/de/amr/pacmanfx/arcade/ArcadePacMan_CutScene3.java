@@ -46,7 +46,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
 
         var spriteSheet = (ArcadePacMan_SpriteSheet) THE_UI_CONFIGS.current().spriteSheet();
         pac.setAnimations(new ArcadePacMan_PacAnimations(spriteSheet));
-        blinky.setAnimations(new ArcadePacMan_GhostAnimations(spriteSheet, blinky.id()));
+        blinky.setAnimations(new ArcadePacMan_GhostAnimations(spriteSheet, blinky.personality()));
 
         frame = -1;
     }

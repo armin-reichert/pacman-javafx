@@ -121,7 +121,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                     r.fillTextAtScaledPosition("WITH", nesPaletteColor(0x20), font, MARQUEE_X + 12, MARQUEE_Y + 23);
                 }
                 Ghost currentGhost = ghosts[ghostIndex];
-                Color ghostColor = THE_ASSETS.color("tengen.ghost.%d.color.normal.dress".formatted(currentGhost.id()));
+                Color ghostColor = THE_ASSETS.color("tengen.ghost.%d.color.normal.dress".formatted(currentGhost.personality()));
                 r.fillTextAtScaledPosition(currentGhost.name().toUpperCase(), ghostColor, font, MARQUEE_X + 44, MARQUEE_Y + 41);
                 for (Ghost ghost : ghosts) { r.drawActor(ghost); }
             }
@@ -224,7 +224,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 scene.msPacMan.startAnimation();
 
                 for (Ghost ghost : scene.ghosts) {
-                    ghost.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, ghost.id()));
+                    ghost.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, ghost.personality()));
                     ghost.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
                     ghost.startAnimation();
                 }

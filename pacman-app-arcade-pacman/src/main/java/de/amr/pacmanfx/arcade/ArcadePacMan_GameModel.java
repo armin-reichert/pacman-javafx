@@ -59,7 +59,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
             public void hunt() {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
                 boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || cruiseElroy() > 0;
-                Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
+                Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(personality());
                 followTarget(targetTile, speed);
             }
             @Override
@@ -77,7 +77,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
             public void hunt() {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
                 boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
-                Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
+                Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(personality());
                 followTarget(targetTile, speed);
             }
             @Override
@@ -95,7 +95,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
             public void hunt() {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
                 boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
-                Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
+                Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(personality());
                 followTarget(targetTile, speed);
             }
             @Override
@@ -112,13 +112,13 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
             public void hunt() {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
                 boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
-                Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(id());
+                Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(personality());
                 followTarget(targetTile, speed);
             }
             @Override
             public Vector2i chasingTargetTile() {
                 // Attacks directly or retreats towards scatter target if Pac is near
-                return tile().euclideanDist(level.pac().tile()) < 8 ? level.ghostScatterTile(id()) : level.pac().tile();
+                return tile().euclideanDist(level.pac().tile()) < 8 ? level.ghostScatterTile(personality()) : level.pac().tile();
             }
         };
     }
@@ -193,7 +193,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
 
         gateKeeper = new GateKeeper();
         gateKeeper.setOnGhostReleased(prisoner -> {
-            if (prisoner.id() == ORANGE_GHOST_POKEY && level.ghost(RED_GHOST_SHADOW).cruiseElroy() < 0) {
+            if (prisoner.personality() == ORANGE_GHOST_POKEY && level.ghost(RED_GHOST_SHADOW).cruiseElroy() < 0) {
                 Logger.debug("Re-enable Blinky Cruise Elroy mode because {} got released:", prisoner.name());
                 level.ghost(RED_GHOST_SHADOW).enableCruiseElroyMode(true);
             }
@@ -250,9 +250,9 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
         );
         level.ghosts().forEach(ghost -> {
             ghost.reset();
-            ghost.setRevivalPosition(ghost.id() == RED_GHOST_SHADOW
+            ghost.setRevivalPosition(ghost.personality() == RED_GHOST_SHADOW
                 ? level.ghostStartPosition(PINK_GHOST_SPEEDY)
-                : level.ghostStartPosition(ghost.id()));
+                : level.ghostStartPosition(ghost.personality()));
             ghost.setGameLevel(level);
             ghost.setSpecialTerrainTiles(oneWayDownTiles);
         });
