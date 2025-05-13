@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 
 // module is open to allow access to non-class resources
-open module arcade.pacman {
+open module x.arcade.pacman {
     requires org.tinylog.api;
     requires javafx.base;
     requires javafx.controls;

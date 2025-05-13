@@ -14,7 +14,7 @@ open module arcade.pacman_xxl {
     requires de.amr.pacmanfx.uilib;
     requires de.amr.pacmanfx.ui;
     requires arcade.ms_pacman;
-    requires arcade.pacman;
+    requires x.arcade.pacman;
 
     exports de.amr.pacmanfx.arcade.pacman_xxl;
 }

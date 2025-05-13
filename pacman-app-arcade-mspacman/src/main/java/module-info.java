@@ -13,7 +13,7 @@ open module arcade.ms_pacman {
     requires de.amr.pacmanfx.core;
     requires de.amr.pacmanfx.uilib;
     requires de.amr.pacmanfx.ui;
-    requires arcade.pacman;
+    requires x.arcade.pacman;
 
     exports de.amr.pacmanfx.arcade.ms_pacman;
 }

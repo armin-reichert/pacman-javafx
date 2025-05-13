@@ -12,7 +12,7 @@ open module x.de.amr.pacmanfx.allgames {
     requires de.amr.pacmanfx.uilib;
     requires de.amr.pacmanfx.ui;
     requires arcade.ms_pacman;
-    requires arcade.pacman;
+    requires x.arcade.pacman;
     requires arcade.pacman_xxl;
     requires tengen.ms_pacman;
 
