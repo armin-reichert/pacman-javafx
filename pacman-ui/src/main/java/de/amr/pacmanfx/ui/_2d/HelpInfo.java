@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._2d;
 
-import de.amr.pacmanfx.ui.PacManGamesEnv;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -29,11 +28,11 @@ public class HelpInfo {
 
     public static HelpInfo build() {
         HelpInfo help = new HelpInfo();
-        switch (gameState()) {
+        switch (theGameState()) {
             case INTRO -> help.addInfoForIntroScene();
             case SETTING_OPTIONS -> help.addInfoForCreditScene();
             case STARTING_GAME, HUNTING, PACMAN_DYING, GHOST_DYING -> {
-                if (gameLevel().isPresent() && gameLevel().get().isDemoLevel()) {
+                if (theGameLevel().isPresent() && theGameLevel().get().isDemoLevel()) {
                     help.addInfoForDemoLevelPlayScene();
                 } else {
                     help.addInfoForPlayScene();
@@ -108,7 +107,7 @@ public class HelpInfo {
     }
 
     private void addInfoForIntroScene() {
-        if (game().canStartNewGame()) {
+        if (theGame().canStartNewGame()) {
             addRow("help.start_game", "1");
         }
         addRow("help.add_credit", "5");
@@ -116,7 +115,7 @@ public class HelpInfo {
     }
 
     private void addInfoForCreditScene() {
-        if (game().canStartNewGame()) {
+        if (theGame().canStartNewGame()) {
             addRow("help.start_game", "1");
         }
         addRow("help.add_credit", "5");

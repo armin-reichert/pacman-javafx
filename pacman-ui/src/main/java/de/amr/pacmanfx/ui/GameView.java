@@ -177,7 +177,7 @@ public class GameView implements View {
     @Override
     public void onLevelCreated(GameEvent event) {
         //TODO find another point in time to do this
-        gameLevel().ifPresent(level -> {
+        theGameLevel().ifPresent(level -> {
             GameUIConfig config = theUIConfig().current();
             config.createActorAnimations(level);
             theSound().setEnabled(!level.isDemoLevel());
@@ -226,7 +226,7 @@ public class GameView implements View {
 
     public void updateGameScene(boolean reloadCurrent) {
         GameUIConfig uiConfig = theUIConfig().current();
-        final GameScene nextGameScene = uiConfig.selectGameScene(game(), gameState());
+        final GameScene nextGameScene = uiConfig.selectGameScene(theGame(), theGameState());
         if (nextGameScene == null) {
             throw new IllegalStateException("Could not determine next game scene");
         }

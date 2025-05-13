@@ -67,7 +67,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        game().scoreManager().setScoreVisible(false);
+        theGame().scoreManager().setScoreVisible(false);
         sceneController.restart(SceneState.WAITING_FOR_START);
     }
 
@@ -92,7 +92,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     public void drawSceneContent() {
         final Font font = arcadeFontScaledTS();
         gr.fillCanvas(backgroundColor());
-        gr.drawScores(game().scoreManager(), nesPaletteColor(0x20), font);
+        gr.drawScores(theGame().scoreManager(), nesPaletteColor(0x20), font);
         TengenMsPacMan_Renderer2D r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
         TickTimer timer = sceneController.state().timer;
@@ -308,7 +308,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 }
                 if (timer.atSecond(8)) {
                     // start demo level or show options
-                    var tengenGame = (TengenMsPacMan_GameModel) game();
+                    var tengenGame = (TengenMsPacMan_GameModel) theGame();
                     if (tengenGame.optionsAreInitial()) {
                         tengenGame.setCanStartNewGame(false); // TODO check this
                         theGameController().restart(GameState.STARTING_GAME);

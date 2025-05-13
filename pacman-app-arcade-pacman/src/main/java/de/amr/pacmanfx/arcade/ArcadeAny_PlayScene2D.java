@@ -47,18 +47,18 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
     @Override
     protected void doInit() {
-        game().scoreManager().setScoreVisible(true);
+        theGame().scoreManager().setScoreVisible(true);
     }
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        GameLevel level = game().level().orElseThrow();
+        GameLevel level = theGame().level().orElseThrow();
         gr.applyMapSettings(level.worldMap());
     }
 
     @Override
     public void onLevelStarted(GameEvent e) {
-        GameLevel level = game().level().orElseThrow();
+        GameLevel level = theGame().level().orElseThrow();
         if (level.isDemoLevel()) {
             bindArcadeInsertCoinAction();
             enableActionBindings();
@@ -71,13 +71,13 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameContinued(GameEvent e) {
-        game().level().ifPresent(level -> level.showMessage(GameLevel.Message.READY));
+        theGame().level().ifPresent(level -> level.showMessage(GameLevel.Message.READY));
     }
 
     @Override
     public void onGameStarted(GameEvent e) {
-        GameLevel level = game().level().orElseThrow();
-        boolean silent = level.isDemoLevel() || gameState() == TESTING_LEVELS || gameState() == TESTING_LEVEL_TEASERS;
+        GameLevel level = theGame().level().orElseThrow();
+        boolean silent = level.isDemoLevel() || theGameState() == TESTING_LEVELS || theGameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {
             theSound().playGameReadySound();
         }
@@ -91,19 +91,19 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
     @Override
     public void update() {
-        if (game().level().isPresent()) {
-            GameLevel level = game().level().get();
+        if (theGame().level().isPresent()) {
+            GameLevel level = theGame().level().get();
             /* TODO: Would like to do this only on level start, but when scene is switched between 2D and 3D,
                      the corresponding scene has to be updated accordingly. */
             if (level.isDemoLevel()) {
-                game().assignDemoLevelBehavior(level.pac());
+                theGame().assignDemoLevelBehavior(level.pac());
             }
             else {
                 level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
                 level.pac().setImmune(PY_IMMUNITY.get());
                 updateSound(level);
             }
-            if (gameState() == GameState.LEVEL_COMPLETE) {
+            if (theGameState() == GameState.LEVEL_COMPLETE) {
                 levelCompleteAnimation.tick();
             }
         }
@@ -140,7 +140,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
     }
 
     private void updateSound(GameLevel level) {
-        boolean pacChased = gameState() == GameState.HUNTING && !level.pac().powerTimer().isRunning();
+        boolean pacChased = theGameState() == GameState.HUNTING && !level.pac().powerTimer().isRunning();
         if (pacChased) {
             int sirenNumber = 1 + level.huntingTimer().phaseIndex() / 2;
             theSound().selectSiren(sirenNumber);
@@ -165,12 +165,12 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        final GameLevel level = game().level().orElse(null);
+        final GameLevel level = theGame().level().orElse(null);
         if (level == null) return; // Scene is drawn already 2 ticks before level has been created
 
         gr.applyMapSettings(level.worldMap());
 
-        gr.drawScores(game().scoreManager(), ARCADE_WHITE, arcadeFontScaledTS());
+        gr.drawScores(theGame().scoreManager(), ARCADE_WHITE, arcadeFontScaledTS());
         gr.drawMaze(level, 0, 3 * TS, backgroundColor(),
             levelCompleteAnimation != null && levelCompleteAnimation.inHighlightPhase(),
             level.blinking().isOn());
@@ -185,16 +185,16 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
             ghostsInZOrder(level).forEach(gr::drawAnimatedCreatureInfo);
         }
         // Draw either lives counter or missing credit
-        if (game().canStartNewGame()) {
+        if (theGame().canStartNewGame()) {
             // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
-            int numLivesDisplayed = gameState() == GameState.STARTING_GAME && !level.pac().isVisible()
-                ? game().lifeCount() : game().lifeCount() - 1;
+            int numLivesDisplayed = theGameState() == GameState.STARTING_GAME && !level.pac().isVisible()
+                ? theGame().lifeCount() : theGame().lifeCount() - 1;
             gr.drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - 2 * TS);
         } else {
             gr.fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 ARCADE_WHITE, arcadeFontScaledTS(), 2 * TS, sizeInPx().y() - 2);
         }
-        gr.drawLevelCounter(game().levelCounter(), sizeInPx());
+        gr.drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 
     private void drawLevelMessage(GameLevel level, Vector2f messageCenterPosition) {
@@ -235,7 +235,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
     protected void drawDebugInfo() {
         gr.drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
         if (theGameController().isSelected(GameVariant.PACMAN)) {
-            game().level().ifPresent(level -> {
+            theGame().level().ifPresent(level -> {
                 level.ghosts().forEach(ghost ->
                     ghost.specialTerrainTiles().forEach(tile -> {
                         double x = scaled(tile.x() * TS), y = scaled(tile.y() * TS + HTS), size = scaled(TS);
@@ -245,9 +245,9 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
                 );
                 gr.ctx().setFill(Color.YELLOW);
                 gr.ctx().setFont(DEBUG_TEXT_FONT);
-                String gameStateText = gameState().name() + " (Tick %d)".formatted(gameState().timer().tickCount());
+                String gameStateText = theGameState().name() + " (Tick %d)".formatted(theGameState().timer().tickCount());
                 String huntingPhaseText = "";
-                if (gameState() == GameState.HUNTING) {
+                if (theGameState() == GameState.HUNTING) {
                     HuntingTimer huntingTimer = level.huntingTimer();
                     huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.phase(), huntingTimer.tickCount());
                 }
@@ -265,7 +265,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         if (gr == null) {
             setGameRenderer(theUIConfig().current().createRenderer(canvas));
         }
-        game().level().map(GameLevel::worldMap).ifPresent(gr::applyMapSettings);
+        theGame().level().map(GameLevel::worldMap).ifPresent(gr::applyMapSettings);
     }
 
     @Override
@@ -274,7 +274,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
             theSound().playGameOverSound();
         }
         else if (state == GameState.LEVEL_COMPLETE) {
-            game().level().ifPresent(level -> {
+            theGame().level().ifPresent(level -> {
                 theSound().stopAll();
                 levelCompleteAnimation = new FlashingMazeAnimation(level);
                 levelCompleteAnimation.setActionOnFinished(theGameController()::letCurrentStateExpire);

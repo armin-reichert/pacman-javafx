@@ -44,22 +44,20 @@ public class Globals {
      */
     public static final File CUSTOM_MAP_DIR = new File(HOME_DIR, "maps");
 
-    public static CoinMechanism theCoinMechanism() { return theCoinMechanism; }
-    public static GameController theGameController() { return theGameController; }
-    public static GameEventManager theGameEventManager() { return theGameEventManager; }
-    public static Random theRNG() { return theRandomNumberGenerator; }
-    public static SimulationStep theSimulationStep() { return theSimulationStep; }
-    public static GameModel game() { return theGameController.game(); }
-    public static GameVariant gameVariant() { return theGameController.selectedGameVariant(); }
-    public static GameState gameState() { return theGameController.state(); }
-    public static Optional<GameLevel> gameLevel() { return game().level(); }
-    public static Optional<Pac> pac() { return gameLevel().map(GameLevel::pac); }
+    public static CoinMechanism theCoinMechanism() { return COIN_MECHANISM; }
+    public static GameController theGameController() { return GAME_CONTROLLER; }
+    public static GameEventManager theGameEventManager() { return GAME_EVENT_MANAGER; }
+    public static Random theRNG() { return RANDOM; }
+    public static SimulationStep theSimulationStep() { return SIMULATION_STEP; }
+    public static GameModel theGame() { return GAME_CONTROLLER.game(); }
+    public static GameVariant theGameVariant() { return GAME_CONTROLLER.selectedGameVariant(); }
+    public static GameState theGameState() { return GAME_CONTROLLER.state(); }
+    public static Optional<GameLevel> theGameLevel() { return theGame().level(); }
+    public static Pac pac() { return theGameLevel().map(GameLevel::pac).orElse(null); }
 
-
-    private static final CoinMechanism theCoinMechanism = new CoinMechanism();
-    private static final GameController theGameController = new GameController();
-    private static final GameEventManager theGameEventManager = new GameEventManager();
-    private static final Random theRandomNumberGenerator = new Random();
-    private static final SimulationStep theSimulationStep = new SimulationStep();
-
+    private static final CoinMechanism COIN_MECHANISM = new CoinMechanism();
+    private static final GameController GAME_CONTROLLER = new GameController();
+    private static final GameEventManager GAME_EVENT_MANAGER = new GameEventManager();
+    private static final Random RANDOM = new Random();
+    private static final SimulationStep SIMULATION_STEP = new SimulationStep();
 }

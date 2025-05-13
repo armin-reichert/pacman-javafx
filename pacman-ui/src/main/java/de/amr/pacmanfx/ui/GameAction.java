@@ -33,18 +33,18 @@ public enum GameAction implements Action {
     CHEAT_ADD_LIVES {
         @Override
         public void execute() {
-            game().addLives(3);
-            theUI().showFlashMessage(theAssets().text("cheat_add_lives", game().lifeCount()));
+            theGame().addLives(3);
+            theUI().showFlashMessage(theAssets().text("cheat_add_lives", theGame().lifeCount()));
         }
 
         @Override
-        public boolean isEnabled() { return gameLevel().isPresent(); }
+        public boolean isEnabled() { return theGameLevel().isPresent(); }
     },
 
     CHEAT_EAT_ALL_PELLETS {
         @Override
         public void execute() {
-            gameLevel().ifPresent(level -> {
+            theGameLevel().ifPresent(level -> {
                 List<Vector2i> pelletTiles = level.worldMap().tiles()
                     .filter(not(level::isEnergizerPosition))
                     .filter(level::hasFoodAt)
@@ -52,25 +52,25 @@ public enum GameAction implements Action {
                 if (!pelletTiles.isEmpty()) {
                     pelletTiles.forEach(level::registerFoodEatenAt);
                     theSound().stopMunchingSound();
-                    theGameEventManager().publishEvent(game(), GameEventType.PAC_FOUND_FOOD);
+                    theGameEventManager().publishEvent(theGame(), GameEventType.PAC_FOUND_FOOD);
                 }
             });
         }
 
         @Override
         public boolean isEnabled() {
-            return gameLevel().isPresent() && !gameLevel().get().isDemoLevel() && gameState() == GameState.HUNTING;
+            return theGameLevel().isPresent() && !theGameLevel().get().isDemoLevel() && theGameState() == GameState.HUNTING;
         }
     },
 
     CHEAT_KILL_GHOSTS {
         @Override
         public void execute() {
-            gameLevel().ifPresent(level -> {
+            theGameLevel().ifPresent(level -> {
                 List<Ghost> vulnerableGhosts = level.ghosts(FRIGHTENED, HUNTING_PAC).toList();
                 if (!vulnerableGhosts.isEmpty()) {
                     level.victims().clear(); // resets value of next killed ghost to 200
-                    vulnerableGhosts.forEach(game()::onGhostKilled);
+                    vulnerableGhosts.forEach(theGame()::onGhostKilled);
                     theGameController().changeState(GameState.GHOST_DYING);
                 }
             });
@@ -78,7 +78,7 @@ public enum GameAction implements Action {
 
         @Override
         public boolean isEnabled() {
-            return gameState() == GameState.HUNTING && gameLevel().isPresent() && !gameLevel().get().isDemoLevel();
+            return theGameState() == GameState.HUNTING && theGameLevel().isPresent() && !theGameLevel().get().isDemoLevel();
         }
     },
 
@@ -90,8 +90,8 @@ public enum GameAction implements Action {
 
         @Override
         public boolean isEnabled() {
-            return game().isPlaying() && gameState() == GameState.HUNTING && gameLevel().isPresent()
-                && gameLevel().get().number() < game().lastLevelNumber();
+            return theGame().isPlaying() && theGameState() == GameState.HUNTING && theGameLevel().isPresent()
+                && theGameLevel().get().number() < theGame().lastLevelNumber();
         }
     },
 
@@ -104,62 +104,62 @@ public enum GameAction implements Action {
             if (theCoinMechanism().numCoins() < CoinMechanism.MAX_COINS) {
                 theCoinMechanism().insertCoin();
                 theSound().enabledProperty().set(true);
-                theGameEventManager().publishEvent(game(), GameEventType.CREDIT_ADDED);
+                theGameEventManager().publishEvent(theGame(), GameEventType.CREDIT_ADDED);
             }
-            if (gameState() != GameState.SETTING_OPTIONS) {
+            if (theGameState() != GameState.SETTING_OPTIONS) {
                 theGameController().changeState(GameState.SETTING_OPTIONS);
             }
         }
 
         @Override
         public boolean isEnabled() {
-            if (game().isPlaying()) {
+            if (theGame().isPlaying()) {
                 return false;
             }
-            return gameState() == GameState.SETTING_OPTIONS
-                || gameState() == INTRO
-                || gameLevel().isPresent() && gameLevel().get().isDemoLevel()
+            return theGameState() == GameState.SETTING_OPTIONS
+                || theGameState() == INTRO
+                || theGameLevel().isPresent() && theGameLevel().get().isDemoLevel()
                 || theCoinMechanism().isEmpty();
         }
     },
 
     PLAYER_UP {
         @Override
-        public void execute() { pac().get().setWishDir(Direction.UP); }
+        public void execute() { pac().setWishDir(Direction.UP); }
 
         @Override
-        public boolean isEnabled() { return pac().isPresent() && !pac().get().isUsingAutopilot(); }
+        public boolean isEnabled() { return pac() != null && !pac().isUsingAutopilot(); }
     },
 
     PLAYER_DOWN {
         @Override
-        public void execute() { pac().get().setWishDir(Direction.DOWN); }
+        public void execute() { pac().setWishDir(Direction.DOWN); }
 
         @Override
-        public boolean isEnabled() { return pac().isPresent() && !pac().get().isUsingAutopilot(); }
+        public boolean isEnabled() { return pac() != null && !pac().isUsingAutopilot(); }
     },
 
     PLAYER_LEFT {
         @Override
-        public void execute() { pac().get().setWishDir(Direction.LEFT); }
+        public void execute() { pac().setWishDir(Direction.LEFT); }
 
         @Override
-        public boolean isEnabled() { return pac().isPresent() && !pac().get().isUsingAutopilot(); }
+        public boolean isEnabled() { return pac() != null && !pac().isUsingAutopilot(); }
     },
 
     PLAYER_RIGHT {
         @Override
-        public void execute() { pac().get().setWishDir(Direction.RIGHT); }
+        public void execute() { pac().setWishDir(Direction.RIGHT); }
 
         @Override
-        public boolean isEnabled() { return pac().isPresent() && !pac().get().isUsingAutopilot(); }
+        public boolean isEnabled() { return pac() != null && !pac().isUsingAutopilot(); }
     },
 
     QUIT_GAME_SCENE {
         @Override
         public void execute() {
             theUI().currentGameScene().ifPresent(GameScene::end);
-            game().resetEverything();
+            theGame().resetEverything();
             if (!theCoinMechanism().isEmpty()) theCoinMechanism().consumeCoin();
             theUI().showStartView();
         }
@@ -170,8 +170,8 @@ public enum GameAction implements Action {
         public void execute() {
             theSound().stopAll();
             theUI().currentGameScene().ifPresent(GameScene::end);
-            if (gameState() == GameState.TESTING_LEVELS) {
-                gameState().onExit(game()); //TODO exit other states too?
+            if (theGameState() == GameState.TESTING_LEVELS) {
+                theGameState().onExit(theGame()); //TODO exit other states too?
             }
             theClock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
             theGameController().restart(INTRO);
@@ -243,10 +243,10 @@ public enum GameAction implements Action {
 
         @Override
         public boolean isEnabled() {
-            return gameVariant() != GameVariant.MS_PACMAN_TENGEN
+            return theGameVariant() != GameVariant.MS_PACMAN_TENGEN
                 && !theCoinMechanism().isEmpty()
-                && (gameState() == GameState.INTRO || gameState() == GameState.SETTING_OPTIONS)
-                && game().canStartNewGame();
+                && (theGameState() == GameState.INTRO || theGameState() == GameState.SETTING_OPTIONS)
+                && theGame().canStartNewGame();
         }
     },
 
@@ -307,7 +307,7 @@ public enum GameAction implements Action {
             if (theClock().isPaused()) {
                 theSound().stopAll();
             }
-            Logger.info("Game ({}) {}", gameVariant(), theClock().isPaused() ? "paused" : "resumed");
+            Logger.info("Game ({}) {}", theGameVariant(), theClock().isPaused() ? "paused" : "resumed");
         }
     },
 
@@ -348,7 +348,7 @@ public enum GameAction implements Action {
                     theUI().updateGameScene(true);
                     theGameController().update(); //TODO needed?
                 }
-                if (!game().isPlaying()) {
+                if (!theGame().isPlaying()) {
                     theUI().showFlashMessage(theAssets().text(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
                 }
             });
@@ -356,7 +356,7 @@ public enum GameAction implements Action {
 
         @Override
         public boolean isEnabled() {
-            return Validations.isOneOf(gameState(),
+            return Validations.isOneOf(theGameState(),
                 GameState.BOOT, GameState.INTRO, GameState.SETTING_OPTIONS, GameState.HUNTING,
                 GameState.TESTING_LEVEL_TEASERS, GameState.TESTING_LEVELS
             );

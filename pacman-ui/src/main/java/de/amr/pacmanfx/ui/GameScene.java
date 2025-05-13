@@ -15,7 +15,7 @@ import javafx.scene.input.KeyCode;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.Globals.gameVariant;
+import static de.amr.pacmanfx.Globals.theGameVariant;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 import static de.amr.pacmanfx.uilib.input.Keyboard.*;
 
@@ -105,6 +105,6 @@ public interface GameScene extends GameEventListener, ActionProvider {
      * @return scene name as used by logging output
      */
     default String displayName() {
-        return "%s (%s)".formatted(getClass().getSimpleName(), gameVariant());
+        return "%s (%s)".formatted(getClass().getSimpleName(), theGameVariant());
     }
 }

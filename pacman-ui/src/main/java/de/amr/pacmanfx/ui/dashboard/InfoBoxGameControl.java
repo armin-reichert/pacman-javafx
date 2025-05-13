@@ -53,7 +53,7 @@ public class InfoBoxGameControl extends InfoBox {
         setAction(bgLevelActions[GAME_LEVEL_START], GameAction.START_ARCADE_GAME::execute); //TODO this is the Arcade action!
         setAction(bgLevelActions[GAME_LEVEL_QUIT], GameAction.RESTART_INTRO::execute);
         setAction(bgLevelActions[GAME_LEVEL_NEXT], GameAction.CHEAT_ENTER_NEXT_LEVEL::execute);
-        setAction(comboInitialLives, () -> game().setInitialLifeCount(comboInitialLives.getValue()));
+        setAction(comboInitialLives, () -> theGame().setInitialLifeCount(comboInitialLives.getValue()));
 
         setEditor(cbAutopilot, PY_AUTOPILOT);
         setEditor(cbImmunity, PY_IMMUNITY);
@@ -64,31 +64,31 @@ public class InfoBoxGameControl extends InfoBox {
         super.update();
 
         spinnerCredit.getValueFactory().setValue(theCoinMechanism().numCoins());
-        comboInitialLives.setValue(game().initialLifeCount());
+        comboInitialLives.setValue(theGame().initialLifeCount());
 
-        spinnerCredit.setDisable(!(Validations.isOneOf(gameState(), GameState.INTRO, GameState.SETTING_OPTIONS)));
-        comboInitialLives.setDisable(gameState() != GameState.INTRO);
+        spinnerCredit.setDisable(!(Validations.isOneOf(theGameState(), GameState.INTRO, GameState.SETTING_OPTIONS)));
+        comboInitialLives.setDisable(theGameState() != GameState.INTRO);
 
         bgLevelActions[GAME_LEVEL_START].setDisable(isBooting() || !canStartLevel());
-        bgLevelActions[GAME_LEVEL_QUIT].setDisable(isBooting() || gameLevel().isEmpty());
+        bgLevelActions[GAME_LEVEL_QUIT].setDisable(isBooting() || theGameLevel().isEmpty());
         bgLevelActions[GAME_LEVEL_NEXT].setDisable(isBooting() || !canEnterNextLevel());
 
-        bgCutScenesTest[CUT_SCENES_TEST_START].setDisable(isBooting() || gameState() != GameState.INTRO);
-        bgCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(isBooting() || gameState() != GameState.TESTING_CUT_SCENES);
+        bgCutScenesTest[CUT_SCENES_TEST_START].setDisable(isBooting() || theGameState() != GameState.INTRO);
+        bgCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(isBooting() || theGameState() != GameState.TESTING_CUT_SCENES);
 
         cbAutopilot.setDisable(isBooting());
         cbImmunity.setDisable(isBooting());
     }
 
     private boolean isBooting() {
-        return gameState() == GameState.BOOT;
+        return theGameState() == GameState.BOOT;
     }
 
     private boolean canStartLevel() {
-        return game().canStartNewGame() && Validations.isOneOf(gameState(), GameState.INTRO, GameState.SETTING_OPTIONS);
+        return theGame().canStartNewGame() && Validations.isOneOf(theGameState(), GameState.INTRO, GameState.SETTING_OPTIONS);
     }
 
     private boolean canEnterNextLevel() {
-        return game().isPlaying() && Validations.isOneOf(gameState(), GameState.HUNTING);
+        return theGame().isPlaying() && Validations.isOneOf(theGameState(), GameState.HUNTING);
     }
 }

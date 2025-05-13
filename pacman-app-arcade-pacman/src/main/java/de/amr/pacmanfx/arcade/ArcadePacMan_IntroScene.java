@@ -96,7 +96,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         titleVisible = false;
         ghostIndex = 0;
         ghostKilledTime = 0;
-        game().scoreManager().setScoreVisible(true);
+        theGame().scoreManager().setScoreVisible(true);
         sceneController.restart(SceneState.STARTING);
     }
 
@@ -124,7 +124,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public void drawSceneContent() {
         final Font font = arcadeFontScaledTS();
         gr.fillCanvas(backgroundColor());
-        gr.drawScores(game().scoreManager(), ARCADE_WHITE, font);
+        gr.drawScores(theGame().scoreManager(), ARCADE_WHITE, font);
         TickTimer timer = sceneController.state().timer();
         drawGallery(font);
         switch (sceneController.state()) {
@@ -148,7 +148,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             }
         }
         gr.fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()), ARCADE_WHITE, font, 2 * TS, sizeInPx().y() - 2);
-        gr.drawLevelCounter(game().levelCounter(), sizeInPx());
+        gr.drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 
     // TODO inspect in MAME what's really going on here
@@ -375,7 +375,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             public void onUpdate(ArcadePacMan_IntroScene scene) {
                 if (sceneTimer.atSecond(0.75)) {
                     scene.ghosts[3].hide();
-                    if (!game().canStartNewGame()) {
+                    if (!theGame().canStartNewGame()) {
                         theGameController().changeState(GameState.STARTING_GAME);
                     }
                 } else if (sceneTimer.atSecond(5)) {

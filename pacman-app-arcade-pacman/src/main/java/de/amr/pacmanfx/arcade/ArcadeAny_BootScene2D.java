@@ -28,7 +28,7 @@ public class ArcadeAny_BootScene2D extends GameScene2D {
 
     @Override
     public void doInit() {
-        game().scoreManager().setScoreVisible(false);
+        theGame().scoreManager().setScoreVisible(false);
         Image spriteImage = theUIConfig().current().spriteSheet().sourceImage();
         // ignore left half of sprite sheet image
         minX = spriteImage.getWidth() / 2;
@@ -39,7 +39,7 @@ public class ArcadeAny_BootScene2D extends GameScene2D {
 
     @Override
     public void update() {
-        if (gameState().timer().atSecond(4)) {
+        if (theGameState().timer().atSecond(4)) {
             theGameController().letCurrentStateExpire();
         }
     }
@@ -52,7 +52,7 @@ public class ArcadeAny_BootScene2D extends GameScene2D {
     @Override
     public void draw() {
         gr.setScaling(scaling());
-        if (gameState().timer().tickCount() == 1) {
+        if (theGameState().timer().tickCount() == 1) {
             gr.fillCanvas(backgroundColor());
         } else {
             drawSceneContent();
@@ -61,7 +61,7 @@ public class ArcadeAny_BootScene2D extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        TickTimer timer = gameState().timer();
+        TickTimer timer = theGameState().timer();
         if (timer.betweenSeconds(1, 2) && timer.tickCount() % 4 == 0) {
             gr.fillCanvas(backgroundColor());
             drawRandomHexCodes();

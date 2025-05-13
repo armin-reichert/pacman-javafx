@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui._2d;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameScene;
-import de.amr.pacmanfx.ui.PacManGamesEnv;
 import de.amr.pacmanfx.uilib.Action;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
@@ -99,7 +98,7 @@ public abstract class GameScene2D implements GameScene {
      * @return level size in tiles (sizeX, sizeY) = (numCols, numRows)
      */
     public final Vector2i levelSizeInTilesOrElse(Vector2i defaultSize) {
-        return game().level()
+        return theGame().level()
             .map(GameLevel::worldMap)
             .map(worldMap -> Vector2i.of(worldMap.numCols(), worldMap.numRows()))
             .orElse(defaultSize);
@@ -123,6 +122,6 @@ public abstract class GameScene2D implements GameScene {
         gr.drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
         gr.ctx().setFill(Color.YELLOW);
         gr.ctx().setFont(DEBUG_TEXT_FONT);
-        gr.ctx().fillText("%s %d".formatted(gameState(), gameState().timer().tickCount()), 0, scaled(3 * TS));
+        gr.ctx().fillText("%s %d".formatted(theGameState(), theGameState().timer().tickCount()), 0, scaled(3 * TS));
     }
 }

@@ -65,7 +65,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     @Override
     public void doInit() {
         t = -1;
-        game().scoreManager().setScoreVisible(false);
+        theGame().scoreManager().setScoreVisible(false);
 
         msPacMan = createMsPacMan();
         pacMan = createPacMan();
@@ -164,7 +164,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
             return;
         }
         gr.fillCanvas(backgroundColor());
-        gr.drawScores(game().scoreManager(), nesPaletteColor(0x20), arcadeFontScaledTS());
+        gr.drawScores(theGame().scoreManager(), nesPaletteColor(0x20), arcadeFontScaledTS());
         var r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
         r.drawClapperBoard(clapAnimation, "JUNIOR", 3, CLAP_TILE_X, CLAP_TILE_Y, arcadeFontScaledTS());
@@ -178,6 +178,6 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
                 r.drawActorSprite(bagWithJunior, BLUE_BAG_SPRITE);
             }
         }
-        r.drawLevelCounter(game().levelCounter(), sizeInPx().minus(0, 3*TS));
+        r.drawLevelCounter(theGame().levelCounter(), sizeInPx().minus(0, 3*TS));
     }
 }

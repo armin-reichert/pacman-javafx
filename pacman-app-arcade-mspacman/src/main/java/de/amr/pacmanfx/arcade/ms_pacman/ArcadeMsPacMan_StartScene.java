@@ -10,7 +10,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import javafx.scene.text.Font;
 
-import static de.amr.pacmanfx.Globals.game;
+import static de.amr.pacmanfx.Globals.theGame;
 import static de.amr.pacmanfx.Globals.theCoinMechanism;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
@@ -31,7 +31,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        game().scoreManager().setScoreVisible(true);
+        theGame().scoreManager().setScoreVisible(true);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         Font font = arcadeFontScaledTS();
         Font font6 = theAssets().arcadeFontAtSize(scaled(6));
         gr.fillCanvas(backgroundColor());
-        gr.drawScores(game().scoreManager(), ARCADE_WHITE, font);
+        gr.drawScores(theGame().scoreManager(), ARCADE_WHITE, font);
         GameSpriteSheet spriteSheet = gr.spriteSheet();
         gr.fillTextAtScaledTilePosition("PUSH START BUTTON", ARCADE_ORANGE, font, 6, 16);
         gr.fillTextAtScaledTilePosition("1 PLAYER ONLY", ARCADE_ORANGE, font, 8, 18);
@@ -60,7 +60,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         }
         gr.fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()), ARCADE_WHITE, font,
             tiles_to_px(2), sizeInPx().y() - 2);
-        gr.drawLevelCounter(game().levelCounter(), sizeInPx());
+        gr.drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 
     @Override

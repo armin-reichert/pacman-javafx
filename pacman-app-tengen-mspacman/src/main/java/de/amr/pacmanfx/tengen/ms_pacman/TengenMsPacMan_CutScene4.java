@@ -45,7 +45,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     protected void doInit() {
         t = -1;
 
-        game().scoreManager().setScoreVisible(false);
+        theGame().scoreManager().setScoreVisible(false);
 
         msPacMan = createMsPacMan();
         pacMan = createPacMan();
@@ -208,13 +208,13 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     @Override
     protected void drawSceneContent() {
         gr.fillCanvas(backgroundColor());
-        gr.drawScores(game().scoreManager(), nesPaletteColor(0x20), arcadeFontScaledTS());
+        gr.drawScores(theGame().scoreManager(), nesPaletteColor(0x20), arcadeFontScaledTS());
         var r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
         r.drawClapperBoard(clapAnimation, "THE END", 4, CLAP_TILE_X, CLAP_TILE_Y, arcadeFontScaledTS());
         r.drawActor(msPacMan);
         r.drawActor(pacMan);
         juniors.forEach(r::drawActor);
-        r.drawLevelCounter(game().levelCounter(), sizeInPx().minus(0, 3*TS));
+        r.drawLevelCounter(theGame().levelCounter(), sizeInPx().minus(0, 3*TS));
     }
 }

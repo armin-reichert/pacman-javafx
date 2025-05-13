@@ -78,7 +78,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        game().scoreManager().setScoreVisible(true);
+        theGame().scoreManager().setScoreVisible(true);
 
         msPacMan = createMsPacMan();
         ghosts = new Ghost[] {
@@ -125,7 +125,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     public void drawSceneContent() {
         final SceneState state = sceneController.state();
         final Font font = arcadeFontScaledTS();
-        gr.drawScores(game().scoreManager(), ARCADE_WHITE, font);
+        gr.drawScores(theGame().scoreManager(), ARCADE_WHITE, font);
         drawMarquee();
         gr.fillTextAtScaledPosition("\"MS PAC-MAN\"", ARCADE_ORANGE, font, TITLE_X, TITLE_Y);
         if (state == SceneState.GHOSTS_MARCHING_IN) {
@@ -148,7 +148,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
             r.drawMidwayCopyright(6, 28, ARCADE_RED, font);
         }
         gr.fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()), ARCADE_WHITE, font, 2 * TS, sizeInPx().y() - 2);
-        gr.drawLevelCounter(game().levelCounter(), sizeInPx());
+        gr.drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 
     /**
@@ -270,7 +270,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
                 scene.marqueeTimer.doTick();
-                if (sceneTimer.atSecond(2.0) && !game().canStartNewGame()) {
+                if (sceneTimer.atSecond(2.0) && !theGame().canStartNewGame()) {
                     theGameController().changeState(GameState.STARTING_GAME); // demo level
                 } else if (sceneTimer.atSecond(5)) {
                     theGameController().changeState(GameState.SETTING_OPTIONS);

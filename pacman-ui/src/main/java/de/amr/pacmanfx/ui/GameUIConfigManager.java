@@ -11,7 +11,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.gameVariant;
+import static de.amr.pacmanfx.Globals.theGameVariant;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.PY_DEBUG_INFO_VISIBLE;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.theUI;
 import static java.util.Objects.requireNonNull;
@@ -42,7 +42,7 @@ public class GameUIConfigManager {
     }
 
     public GameUIConfig current() {
-        return configMap.get(gameVariant());
+        return configMap.get(theGameVariant());
     }
 
     public boolean currentGameSceneIsPlayScene2D() {

@@ -31,7 +31,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         bind(GameAction.PERSPECTIVE_PREVIOUS, alt(KeyCode.LEFT));
         bind(GameAction.PERSPECTIVE_NEXT, alt(KeyCode.RIGHT));
         bind(GameAction.TOGGLE_DRAW_MODE, alt(KeyCode.W));
-        if (gameLevel().isPresent() && gameLevel().get().isDemoLevel()) {
+        if (theGameLevel().isPresent() && theGameLevel().get().isDemoLevel()) {
             bind(TengenMsPacMan_GameAction.QUIT_DEMO_LEVEL, theJoypad().key(JoypadButton.START));
         }
         else {
@@ -49,7 +49,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     protected void replaceGameLevel3D(GameLevel level) {
         super.replaceGameLevel3D(level);
         // display also level number boxes, maze category and difficulty like in 2D view at the bottom of the 3D maze
-        var tengenGame = (TengenMsPacMan_GameModel) game();
+        var tengenGame = (TengenMsPacMan_GameModel) theGame();
         if (!tengenGame.optionsAreInitial()) {
             int imageWidth = level.worldMap().numCols() * TS;
             int imageHeight = 2 * TS;
@@ -78,14 +78,14 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void updateScores() {
-        ScoreManager scoreManager = game().scoreManager();
+        ScoreManager scoreManager = theGame().scoreManager();
         Score score = scoreManager.score(), highScore = scoreManager.highScore();
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
         }
         else { // score is disabled, show text "GAME OVER" instead, use maze-specific color
-            gameLevel().ifPresent(level -> {
+            theGameLevel().ifPresent(level -> {
                 NES_ColorScheme nesColorScheme = level.worldMap().getConfigValue("nesColorScheme");
                 scores3D.showTextAsScore(theAssets().text("score.game_over"), Color.web(nesColorScheme.strokeColor()));
             });
@@ -94,7 +94,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     public void onBonusActivated(GameEvent event) {
-        gameLevel().flatMap(GameLevel::bonus)
+        theGameLevel().flatMap(GameLevel::bonus)
                 .ifPresent(bonus -> level3D.updateBonus3D(bonus, theUIConfig().current().spriteSheet()));
         theSound().playBonusActiveSound();
     }

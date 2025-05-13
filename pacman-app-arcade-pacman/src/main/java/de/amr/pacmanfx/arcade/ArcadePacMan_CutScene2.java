@@ -15,7 +15,7 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.Globals.game;
+import static de.amr.pacmanfx.Globals.theGame;
 import static de.amr.pacmanfx.Globals.theGameController;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.createPac;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.createRedGhost;
@@ -43,7 +43,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void doInit() {
-        game().scoreManager().setScoreVisible(true);
+        theGame().scoreManager().setScoreVisible(true);
 
         pac = createPac();
 
@@ -130,11 +130,11 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gr.drawScores(game().scoreManager(), ARCADE_WHITE, arcadeFontScaledTS());
+        gr.drawScores(theGame().scoreManager(), ARCADE_WHITE, arcadeFontScaledTS());
         gr.drawSpriteScaled(nailDressRaptureAnimation.currentSprite(), tiles_to_px(14), tiles_to_px(19) + 3);
         gr.drawActor(blinky);
         gr.drawActor(pac);
-        gr.drawLevelCounter(game().levelCounter(), sizeInPx());
+        gr.drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 
     @Override

@@ -29,7 +29,7 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        game().scoreManager().setScoreVisible(true);
+        theGame().scoreManager().setScoreVisible(true);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ArcadePacMan_StartScene extends GameScene2D {
     public void drawSceneContent() {
         final Font font8 = arcadeFontScaledTS();
         final Font font6 = theAssets().arcadeFontAtSize(scaled(6));
-        gr.drawScores(game().scoreManager(), ARCADE_WHITE, font8);
+        gr.drawScores(theGame().scoreManager(), ARCADE_WHITE, font8);
         gr.fillTextAtScaledPosition("PUSH START BUTTON", ARCADE_ORANGE, font8, tiles_to_px(6), tiles_to_px(17));
         gr.fillTextAtScaledPosition("1 PLAYER ONLY", ARCADE_CYAN, font8, tiles_to_px(8), tiles_to_px(21));
         gr.fillTextAtScaledPosition("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, font8, tiles_to_px(1), tiles_to_px(25));
@@ -53,7 +53,7 @@ public class ArcadePacMan_StartScene extends GameScene2D {
             r.drawMidwayCopyright(4, 29, ARCADE_PINK, font8);
         }
         gr.fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()), ARCADE_WHITE, font8, 2 * TS, sizeInPx().y() - 2);
-        gr.drawLevelCounter(game().levelCounter(), sizeInPx());
+        gr.drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 
     @Override

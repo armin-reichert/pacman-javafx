@@ -68,9 +68,9 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        game().scoreManager().setScoreVisible(false);
+        theGame().scoreManager().setScoreVisible(false);
         selectedOption = OPTION_PAC_BOOSTER;
-        tengenGame = (TengenMsPacMan_GameModel) game();
+        tengenGame = (TengenMsPacMan_GameModel) theGame();
         tengenGame.setCanStartNewGame(true);
         resetIdleTimer();
         initialDelay = INITIAL_DELAY;
@@ -233,7 +233,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     protected void drawSceneContent() {
         final Font font = arcadeFontScaledTS();
         gr.fillCanvas(backgroundColor());
-        gr.drawScores(game().scoreManager(), nesPaletteColor(0x20), font);
+        gr.drawScores(theGame().scoreManager(), nesPaletteColor(0x20), font);
         TengenMsPacMan_Renderer2D r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
 

@@ -50,7 +50,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void doInit() {
-        game().scoreManager().setScoreVisible(true);
+        theGame().scoreManager().setScoreVisible(true);
 
         pacMan = createPacMan();
         msPacMan = createMsPacMan();
@@ -89,7 +89,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         gr.setScaling(scaling());
-        gr.drawScores(game().scoreManager(), ARCADE_WHITE, arcadeFontScaledTS());
+        gr.drawScores(theGame().scoreManager(), ARCADE_WHITE, arcadeFontScaledTS());
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) { // could also be VectorGraphicsRenderer!
             r.drawClapperBoard(clapperboardAnimation, UsefulFunctions.tiles_to_px(3), UsefulFunctions.tiles_to_px(10), arcadeFontScaledTS());
         }
@@ -98,7 +98,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         gr.drawActor(inky);
         gr.drawActor(pinky);
         gr.drawActorSprite(heart, HEART_SPRITE);
-        gr.drawLevelCounter(game().levelCounter(), sizeInPx());
+        gr.drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 
     // Scene controller state machine

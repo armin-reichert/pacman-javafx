@@ -39,7 +39,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        game().scoreManager().setScoreVisible(false);
+        theGame().scoreManager().setScoreVisible(false);
         t = -1;
     }
 
@@ -105,7 +105,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     protected void drawSceneContent() {
         final Font font = arcadeFontScaledTS();
         gr.fillCanvas(backgroundColor());
-        gr.drawScores(game().scoreManager(), ARCADE_WHITE, font);
+        gr.drawScores(theGame().scoreManager(), ARCADE_WHITE, font);
         var r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
         r.setScaling(scaling());

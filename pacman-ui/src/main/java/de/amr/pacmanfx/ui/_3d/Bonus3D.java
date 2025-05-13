@@ -74,7 +74,7 @@ public class Bonus3D extends Box {
         setTranslateX(center.x());
         setTranslateY(center.y());
         setTranslateZ(-HTS);
-        gameLevel().ifPresent(level -> {
+        theGameLevel().ifPresent(level -> {
             boolean outsideWorld = center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
             boolean visible = !(bonus.state() == Bonus.STATE_INACTIVE || outsideWorld);
             setVisible(visible);

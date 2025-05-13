@@ -284,7 +284,7 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public void show() {
-        selectGameVariant(gameVariant());
+        selectGameVariant(theGameVariant());
         viewPy.set(startPagesView);
         startPagesView.currentStartPage().ifPresent(StartPage::requestFocus);
         stage.centerOnScreen();
@@ -293,7 +293,7 @@ public class PacManGamesUI implements GameUI {
 
     @Override
     public void showEditorView() {
-        if (!game().isPlaying() || theClock().isPaused()) {
+        if (!theGame().isPlaying() || theClock().isPaused()) {
             currentGameScene().ifPresent(GameScene::end);
             theSound().stopAll();
             theClock().stop();

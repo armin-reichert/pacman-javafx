@@ -21,13 +21,13 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     public void bindActions() {
-        game().scoreManager().setScoreVisible(false);
+        theGame().scoreManager().setScoreVisible(false);
         bind(START_GAME, theJoypad().key(JoypadButton.START));
     }
 
     @Override
     public void update() {
-        if (gameState().timer().atSecond(DISPLAY_SECONDS)) {
+        if (theGameState().timer().atSecond(DISPLAY_SECONDS)) {
             theGameController().letCurrentStateExpire();
         }
     }
@@ -41,12 +41,12 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     protected void drawSceneContent() {
         final Font font = arcadeFontScaledTS();
         gr.fillCanvas(backgroundColor());
-        gr.drawScores(game().scoreManager(), nesPaletteColor(0x20), font);
+        gr.drawScores(theGame().scoreManager(), nesPaletteColor(0x20), font);
         var r = (TengenMsPacMan_Renderer2D) gr;
         double width = sizeInPx().x();
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), width, 20);
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), width, 212);
-        if (gameState().timer().betweenSeconds(0.5 * DISPLAY_SECONDS, DISPLAY_SECONDS)) {
+        if (theGameState().timer().betweenSeconds(0.5 * DISPLAY_SECONDS, DISPLAY_SECONDS)) {
             drawJavaFXVersionAuthors(r, font);
         } else {
             drawOriginalGameAuthors(r, font);

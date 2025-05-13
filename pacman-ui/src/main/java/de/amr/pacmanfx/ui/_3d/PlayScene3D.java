@@ -61,7 +61,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     protected final ObjectProperty<PerspectiveID> perspectiveNamePy = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
-            game().level().ifPresent(level -> perspective().init(fxSubScene, level));
+            theGame().level().ifPresent(level -> perspective().init(fxSubScene, level));
         }
     };
 
@@ -100,7 +100,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     protected Perspective perspective() { return perspectives.get(perspectiveNamePy.get()); }
 
     protected void replaceGameLevel3D(GameLevel level) {
-        final GameVariant gameVariant = gameVariant();
+        final GameVariant gameVariant = theGameVariant();
         level3D = new GameLevel3D(gameVariant, level);
         level3D.addLevelCounter(theUIConfig().configuration(gameVariant));
         int lastIndex = root.getChildren().size() - 1;
@@ -180,7 +180,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     public void init() {
         bindActions();
         enableActionBindings();
-        game().scoreManager().setScoreVisible(true);
+        theGame().scoreManager().setScoreVisible(true);
         perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
         scores3D.setFont(theAssets().font("font.arcade", TS));
     }
@@ -197,7 +197,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void bindActions() {
         bindArcadeInsertCoinAction();
-        if (game().level().isPresent() && !game().level().get().isDemoLevel()) {
+        if (theGame().level().isPresent() && !theGame().level().get().isDemoLevel()) {
             if (!theGameController().isSelected(GameVariant.MS_PACMAN_TENGEN)) {
                 bindArcadeStartGameAction();
             }
@@ -211,12 +211,12 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onLevelStarted(GameEvent event) {
-        game().level().ifPresent(level -> {
+        theGame().level().ifPresent(level -> {
             bindActions(); //TODO check if this is necessary
             if (level3D == null) {
                 replaceGameLevel3D(level);
             }
-            switch (gameState()) {
+            switch (theGameState()) {
                 case TESTING_LEVELS, TESTING_LEVEL_TEASERS -> {
                     replaceGameLevel3D(level);
                     level3D.playLivesCounterAnimation();
@@ -238,7 +238,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onSceneVariantSwitch(GameScene fromScene) {
-        game().level().ifPresent(level -> {
+        theGame().level().ifPresent(level -> {
             bindActions();
             bindPlayerActions();
             enableActionBindings();
@@ -247,14 +247,14 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             }
             level3D.pellets3D().forEach(pellet -> pellet.shape3D().setVisible(!level.hasEatenFoodAt(pellet.tile())));
             level3D.energizers3D().forEach(energizer -> energizer.shape3D().setVisible(!level.hasEatenFoodAt(energizer.tile())));
-            if (Validations.isOneOf(gameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
+            if (Validations.isOneOf(theGameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
                 level3D.energizers3D().filter(energizer -> energizer.shape3D().isVisible()).forEach(Energizer3D::startPumping);
             }
             level.pac().show();
             level.ghosts().forEach(Ghost::show);
             level3D.pac3D().init();
             level3D.pac3D().update(level);
-            if (gameState() == GameState.HUNTING) {
+            if (theGameState() == GameState.HUNTING) {
                 if (level.pac().powerTimer().isRunning()) {
                     theSound().playPacPowerSound();
                 }
@@ -266,7 +266,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public final void update() {
-        GameLevel level = game().level().orElse(null);
+        GameLevel level = theGame().level().orElse(null);
         if (level != null) {
             updateLevel(level);
         }
@@ -281,7 +281,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
             //TODO how to avoid calling this on every tick?
             if (level.isDemoLevel()) {
-                game().assignDemoLevelBehavior(level.pac());
+                theGame().assignDemoLevelBehavior(level.pac());
             }
             else {
                 level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
@@ -297,7 +297,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     protected void updateSound(GameLevel level) {
-        if (gameState() == GameState.HUNTING && !level.pac().powerTimer().isRunning()) {
+        if (theGameState() == GameState.HUNTING && !level.pac().powerTimer().isRunning()) {
             int sirenNumber = 1 + level.huntingTimer().phaseIndex() / 2;
             theSound().selectSiren(sirenNumber);
             theSound().playSiren();
@@ -314,7 +314,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     protected void updateScores() {
-        ScoreManager scoreManager = game().scoreManager();
+        ScoreManager scoreManager = theGame().scoreManager();
         Score score = scoreManager.score(), highScore = scoreManager.highScore();
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());
         if (score.isEnabled()) {
@@ -360,7 +360,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void onEnterGameState(GameState state) {
         Logger.trace("Entering game state {}", state);
-        game().level().ifPresent(level -> {
+        theGame().level().ifPresent(level -> {
             switch (state) {
                 case HUNTING               -> onEnterStateHunting(level);
                 case PACMAN_DYING          -> onEnterStatePacManDying(level);
@@ -406,7 +406,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         level3D.energizers3D().forEach(Energizer3D::onEaten);
         level3D.maze3D().door3D().setVisible(false);
         level3D.stopAnimations();
-        level3D.playLevelCompleteAnimation(gameState(), 2.0,
+        level3D.playLevelCompleteAnimation(theGameState(), 2.0,
             () -> {
                 perspectiveNamePy.unbind();
                 perspectiveNamePy.set(PerspectiveID.TOTAL);
@@ -415,7 +415,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     private void onEnterStateLevelTransition(GameLevel level) {
-        gameState().timer().restartSeconds(3);
+        theGameState().timer().restartSeconds(3);
         replaceGameLevel3D(level);
         level3D.pac3D().init();
         perspective().init(fxSubScene, level);
@@ -438,10 +438,10 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     private void onEnterStateGameOver() {
-        GameLevel level = game().level().orElseThrow();
+        GameLevel level = theGame().level().orElseThrow();
         level3D.stopAnimations();
         // delay state exit for 3 seconds
-        gameState().timer().restartSeconds(3);
+        theGameState().timer().restartSeconds(3);
         if (!level.isDemoLevel() && randomInt(0, 100) < 25) {
             theUI().showFlashMessageSec(3, theAssets().localizedGameOverMessage());
         }
@@ -451,7 +451,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onBonusActivated(GameEvent event) {
-        game().level().flatMap(GameLevel::bonus).ifPresent(bonus -> {
+        theGame().level().flatMap(GameLevel::bonus).ifPresent(bonus -> {
             level3D.updateBonus3D(bonus, theUIConfig().current().spriteSheet());
             if (bonus instanceof MovingBonus) {
                 theSound().playBonusActiveSound();
@@ -461,7 +461,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onBonusEaten(GameEvent event) {
-        game().level().flatMap(GameLevel::bonus).ifPresent(bonus -> {
+        theGame().level().flatMap(GameLevel::bonus).ifPresent(bonus -> {
             level3D.bonus3D().ifPresent(Bonus3D::showEaten);
             if (bonus instanceof MovingBonus) {
                 theSound().stopBonusActiveSound();
@@ -472,7 +472,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onBonusExpired(GameEvent event) {
-        game().level().flatMap(GameLevel::bonus).ifPresent(bonus -> {
+        theGame().level().flatMap(GameLevel::bonus).ifPresent(bonus -> {
             level3D.bonus3D().ifPresent(Bonus3D::expire);
             if (bonus instanceof MovingBonus) {
                 theSound().stopBonusActiveSound();
@@ -492,14 +492,14 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onGameContinued(GameEvent e) {
-        game().level().ifPresent(this::showReadyMessage);
+        theGame().level().ifPresent(this::showReadyMessage);
     }
 
     @Override
     public void onGameStarted(GameEvent e) {
-        GameLevel level = game().level().orElseThrow();
+        GameLevel level = theGame().level().orElseThrow();
         boolean silent = level.isDemoLevel() ||
-            gameState() == TESTING_LEVELS || gameState() == TESTING_LEVEL_TEASERS;
+            theGameState() == TESTING_LEVELS || theGameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {
             theSound().playGameReadySound();
         }
@@ -554,12 +554,12 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         Vector2i houseSize = level.houseSizeInTiles();
         double x = TS * (houseTopLeft.x() + 0.5 * houseSize.x());
         double y = TS * (houseTopLeft.y() +       houseSize.y());
-        double seconds = game().isPlaying() ? 0.5 : 2.5;
+        double seconds = theGame().isPlaying() ? 0.5 : 2.5;
         level3D.showAnimatedMessage("READY!", seconds, x, y);
     }
 
     private void playPacManDiesAnimation() {
-        gameState().timer().resetIndefiniteTime();
+        theGameState().timer().resetIndefiniteTime();
         Animation pacDyingAnimation = level3D.pac3D().createDyingAnimation();
         Animation animation =
             new SequentialTransition(

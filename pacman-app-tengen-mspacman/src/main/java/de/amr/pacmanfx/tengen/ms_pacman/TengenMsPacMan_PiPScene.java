@@ -1,9 +1,7 @@
 package de.amr.pacmanfx.tengen.ms_pacman;
 
-import de.amr.pacmanfx.ui.PacManGamesEnv;
-
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.Globals.game;
+import static de.amr.pacmanfx.Globals.theGame;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.PY_PIP_HEIGHT;
 
 public class TengenMsPacMan_PiPScene extends TengenMsPacMan_PlayScene2D {
@@ -26,7 +24,7 @@ public class TengenMsPacMan_PiPScene extends TengenMsPacMan_PlayScene2D {
         setScaling(canvas.getHeight() / (sizeInPx().y() + 3 * TS));
         gr.setScaling(scaling());
         gr.fillCanvas(backgroundColor());
-        game().level().ifPresent(level -> {
+        theGame().level().ifPresent(level -> {
             gr.ctx().save();
             gr.ctx().translate(scaled(TS), 0);
             drawSceneContent();
