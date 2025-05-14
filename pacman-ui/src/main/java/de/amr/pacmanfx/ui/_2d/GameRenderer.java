@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.lib.RectArea;
-import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
@@ -61,30 +60,40 @@ public interface GameRenderer {
     default float scaled(double value) { return scaling() * (float) value; }
 
     /**
-     * Draws a sprite (section of the sprite sheet source) at the given (scaled) position.
+     * Draws a sprite (region inside sprite sheet) unscaled at the given position.
      *
-     * @param region        the sprite sheet region to draw
-     * @param x             scaled x-coordinate
-     * @param y             scaled y-coordinate
+     * @param sprite        the sprite sheet region to draw
+     * @param x             x-coordinate of left-upper corner
+     * @param y             y-coordinate of left-upper corner
      */
-    default void drawSpriteSheetRegion(RectArea region, double x, double y) {
-        if (region != null) {
+    default void drawSprite(RectArea sprite, double x, double y) {
+        if (sprite != null) {
             ctx().drawImage(spriteSheet().sourceImage(),
-                region.x(), region.y(), region.width(), region.height(),
-                x, y, region.width(), region.height());
+                sprite.x(), sprite.y(), sprite.width(), sprite.height(),
+                x, y, sprite.width(), sprite.height());
         }
     }
 
+    /**
+     * Draws a sprite (region inside sprite sheet) the given position. The sprite size and the position are scaled using
+     * the current scale factor.
+     *
+     * @param sprite        the sprite sheet region to draw
+     * @param x             x-coordinate of left-upper corner (unscaled)
+     * @param y             y-coordinate of left-upper corner (unscaled)
+     */
     default void drawSpriteScaled(RectArea sprite, double x, double y) {
-        drawImageRegionScaled(spriteSheet().sourceImage(), sprite, x, y);
+        if (sprite != null) {
+            drawImageRegionScaled(spriteSheet().sourceImage(), sprite, x, y);
+        }
     }
 
     default void drawImageRegionScaled(Image image, RectArea region, double x, double y) {
-        if (region != null) {
-            ctx().drawImage(image,
-                region.x(), region.y(), region.width(), region.height(),
-                scaled(x), scaled(y), scaled(region.width()), scaled(region.height()));
-        }
+        requireNonNull(image);
+        requireNonNull(region);
+        ctx().drawImage(image,
+            region.x(), region.y(), region.width(), region.height(),
+            scaled(x), scaled(y), scaled(region.width()), scaled(region.height()));
     }
 
     /**

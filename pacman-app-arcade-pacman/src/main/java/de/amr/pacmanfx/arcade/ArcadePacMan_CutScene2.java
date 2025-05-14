@@ -44,25 +44,18 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     @Override
     public void doInit() {
         theGame().scoreManager().setScoreVisible(true);
-
         pac = createPac();
-
         blinky = createRedGhost();
         blinky.setSpeed(0);
         blinky.hide();
-
         music = theSound().createSound("intermission");
-        music.setCycleCount(1);
-
         var spriteSheet = (ArcadePacMan_SpriteSheet) theUIConfig().current().spriteSheet();
         pac.setAnimations(new ArcadePacMan_PacAnimations(spriteSheet));
-
         var blinkyAnimations = new ArcadePacMan_GhostAnimations(spriteSheet, blinky.personality());
         blinkyNormal = blinkyAnimations.animation(GhostAnimations.ANIM_GHOST_NORMAL);
         nailDressRaptureAnimation = blinkyAnimations.animation(ArcadePacMan_GhostAnimations.ANIM_BLINKY_NAIL_DRESS_RAPTURE);
         blinkyDamaged = blinkyAnimations.animation(ArcadePacMan_GhostAnimations.ANIM_BLINKY_DAMAGED);
         blinky.setAnimations(blinkyAnimations);
-
         frame = -1;
     }
 
