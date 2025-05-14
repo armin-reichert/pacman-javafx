@@ -58,8 +58,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelStarted(GameEvent e) {
-        GameLevel level = reqGameLevel();
-        if (level.isDemoLevel()) {
+        if (reqGameLevel().isDemoLevel()) {
             bindArcadeInsertCoinAction();
             enableActionBindings();
         } else {
@@ -71,13 +70,12 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameContinued(GameEvent e) {
-        optGameLevel().ifPresent(level -> level.showMessage(GameLevel.Message.READY));
+        reqGameLevel().showMessage(GameLevel.Message.READY);
     }
 
     @Override
     public void onGameStarted(GameEvent e) {
-        GameLevel level = reqGameLevel();
-        boolean silent = level.isDemoLevel() || theGameState() == TESTING_LEVELS || theGameState() == TESTING_LEVEL_TEASERS;
+        boolean silent = reqGameLevel().isDemoLevel() || theGameState() == TESTING_LEVELS || theGameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {
             theSound().playGameReadySound();
         }
@@ -108,7 +106,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
             }
         }
         else {
-            // Scene is already visible 2 ticks before game level is created!
+            // Scene is already active 2 ticks before game level is created!
             Logger.info("Tick {}: Game level not yet available", theClock().tickCount());
         }
     }
@@ -165,8 +163,10 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        final GameLevel level = optGameLevel().orElse(null);
-        if (level == null) return; // Scene is drawn already 2 ticks before level has been created
+        if (optGameLevel().isEmpty())
+            return; // Scene is drawn already 2 ticks before level has been created
+
+        final GameLevel level = theGameLevel();
 
         gr.applyMapSettings(level.worldMap());
 
@@ -175,7 +175,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
             levelCompleteAnimation != null && levelCompleteAnimation.inHighlightPhase(),
             level.blinking().isOn());
         if (level.message() != null) {
-            drawLevelMessage(level, centerPositionBelowHouse(level));
+            drawLevelMessage(level.message(), level.number(), centerPositionBelowHouse(level));
         }
         level.bonus().ifPresent(gr::drawBonus);
         gr.drawActor(level.pac());
@@ -197,8 +197,8 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         gr.drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 
-    private void drawLevelMessage(GameLevel level, Vector2f messageCenterPosition) {
-        switch (level.message()) {
+    private void drawLevelMessage(GameLevel.Message message, int levelNumber, Vector2f messageCenterPosition) {
+        switch (message) {
             case GAME_OVER -> {
                 String text = "GAME  OVER";
                 // this assumes fixed font width of one tile:
@@ -212,7 +212,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
                 gr.fillTextAtScaledPosition(text, ARCADE_YELLOW, arcadeFontScaledTS(), x, messageCenterPosition.y());
             }
             case TEST_LEVEL -> {
-                String text = "TEST    L%03d".formatted(level.number());
+                String text = "TEST    L%03d".formatted(levelNumber);
                 // this assumes fixed font width of one tile:
                 double x = messageCenterPosition.x() - (text.length() * HTS);
                 gr.fillTextAtScaledPosition(text, ARCADE_WHITE, arcadeFontScaledTS(), x, messageCenterPosition.y());
