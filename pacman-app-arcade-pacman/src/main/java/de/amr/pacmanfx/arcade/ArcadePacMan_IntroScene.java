@@ -41,7 +41,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     private static final String[] GHOST_NICKNAME = { "\"BLINKY\"", "\"PINKY\"", "\"INKY\"", "\"CLYDE\"" };
     private static final String[] GHOST_CHARACTERS = { "SHADOW", "SPEEDY", "BASHFUL", "POKEY" };
     private static final Color[] GHOST_COLORS = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
-    private static final float CHASE_SPEED = 1.1f;
+
+    private static final float CHASING_SPEED = 1.1f;
     private static final float GHOST_FRIGHTENED_SPEED = 0.6f;
     private static final int LEFT_TILE_X = 4;
 
@@ -76,6 +77,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
+        theGame().scoreManager().setScoreVisible(true);
         ArcadePacMan_SpriteSheet spriteSheet = theUIConfig().current().spriteSheet();
         blinking = new Pulse(10, true);
         pacMan = createPac();
@@ -96,7 +98,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         titleVisible = false;
         ghostIndex = 0;
         ghostKilledTime = 0;
-        theGame().scoreManager().setScoreVisible(true);
         sceneController.restart(SceneState.STARTING);
     }
 
@@ -122,11 +123,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        final Font font = arcadeFontScaledTS();
         gr.fillCanvas(backgroundColor());
-        gr.drawScores(theGame().scoreManager(), ARCADE_WHITE, font);
+        gr.drawScores(theGame().scoreManager(), ARCADE_WHITE, arcadeFontScaledTS());
         TickTimer timer = sceneController.state().timer();
-        drawGallery(font);
+        drawGallery();
         switch (sceneController.state()) {
             case SHOWING_POINTS -> drawPoints();
             case CHASING_PAC -> {
@@ -136,18 +136,19 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 }
                 drawGuys(flutter(timer.tickCount()));
                 if (gr instanceof ArcadePacMan_GameRenderer r) {
-                    r.drawMidwayCopyright(4, 32, ARCADE_PINK, font);
+                    r.drawMidwayCopyright(4, 32, ARCADE_PINK, arcadeFontScaledTS());
                 }
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints();
                 drawGuys(0);
                 if (gr instanceof ArcadePacMan_GameRenderer r) {
-                    r.drawMidwayCopyright(4, 32, ARCADE_PINK, font);
+                    r.drawMidwayCopyright(4, 32, ARCADE_PINK, arcadeFontScaledTS());
                 }
             }
         }
-        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()), ARCADE_WHITE, font, 2 * TS, sizeInPx().y() - 2);
+        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()), ARCADE_WHITE,
+            arcadeFontScaledTS(), 2 * TS, sizeInPx().y() - 2);
         gr.drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 
@@ -156,23 +157,24 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         return time % 5 < 2 ? 0 : -1;
     }
 
-    private void drawGallery(Font font) {
+    private void drawGallery() {
         var spriteSheet = (ArcadePacMan_SpriteSheet) theUIConfig().current().spriteSheet();
         if (titleVisible) {
-            gr.fillTextAtScaledPosition("CHARACTER / NICKNAME", ARCADE_WHITE, font, tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(6));
+            gr.fillTextAtScaledPosition("CHARACTER / NICKNAME", ARCADE_WHITE,
+                arcadeFontScaledTS(), tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(6));
         }
-        for (byte id = 0; id < 4; ++id) {
-            if (ghostImageVisible[id]) {
-                gr.drawSpriteScaledOverSquare(spriteSheet.ghostFacingRight(id),
-                    tiles_to_px(LEFT_TILE_X) + HTS, tiles_to_px(7 + 3 * id));
+        for (byte personality = RED_GHOST_SHADOW; personality <= ORANGE_GHOST_POKEY; ++personality) {
+            if (ghostImageVisible[personality]) {
+                gr.drawSpriteScaledOverSquare(spriteSheet.ghostFacingRight(personality),
+                    tiles_to_px(LEFT_TILE_X) + HTS, tiles_to_px(7 + 3 * personality));
             }
-            if (ghostCharacterVisible[id]) {
-                gr.fillTextAtScaledPosition("-" + GHOST_CHARACTERS[id], GHOST_COLORS[id], font,
-                    tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(8 + 3 * id));
+            if (ghostCharacterVisible[personality]) {
+                gr.fillTextAtScaledPosition("-" + GHOST_CHARACTERS[personality], GHOST_COLORS[personality],
+                    arcadeFontScaledTS(), tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(8 + 3 * personality));
             }
-            if (ghostNicknameVisible[id]) {
-                gr.fillTextAtScaledPosition(GHOST_NICKNAME[id], GHOST_COLORS[id], font,
-                    tiles_to_px(LEFT_TILE_X + 14), tiles_to_px(8 + 3 * id));
+            if (ghostNicknameVisible[personality]) {
+                gr.fillTextAtScaledPosition(GHOST_NICKNAME[personality], GHOST_COLORS[personality],
+                    arcadeFontScaledTS(), tiles_to_px(LEFT_TILE_X + 14), tiles_to_px(8 + 3 * personality));
             }
         }
     }
@@ -181,13 +183,13 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         if (shakingAmount == 0) {
             Stream.of(ghosts).forEach(gr::drawActor);
         } else {
-            gr.drawActor(ghosts[0]);
-            gr.drawActor(ghosts[3]);
-            // shaking ghosts effect, not quite as in original game
+            gr.drawActor(ghosts[RED_GHOST_SHADOW]);
+            gr.drawActor(ghosts[ORANGE_GHOST_POKEY]);
+            // TODO make shaking ghosts effect look exactly as in original game
             gr.ctx().save();
             gr.ctx().translate(shakingAmount, 0);
-            gr.drawActor(ghosts[1]);
-            gr.drawActor(ghosts[2]);
+            gr.drawActor(ghosts[PINK_GHOST_SPEEDY]);
+            gr.drawActor(ghosts[CYAN_GHOST_BASHFUL]);
             gr.ctx().restore();
         }
         gr.drawActor(pacMan);
@@ -273,7 +275,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 sceneTimer.restartIndefinitely();
                 scene.pacMan.setPosition(TS * 36, TS * 20);
                 scene.pacMan.setMoveDir(Direction.LEFT);
-                scene.pacMan.setSpeed(CHASE_SPEED);
+                scene.pacMan.setSpeed(CHASING_SPEED);
                 scene.pacMan.show();
                 scene.pacMan.selectAnimation(Animations.ANY_PAC_MUNCHING);
                 scene.pacMan.startAnimation();
@@ -281,7 +283,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     ghost.setState(GhostState.HUNTING_PAC);
                     ghost.setPosition(scene.pacMan.position().plus(16 * (ghost.personality() + 1), 0));
                     ghost.setMoveAndWishDir(Direction.LEFT);
-                    ghost.setSpeed(CHASE_SPEED);
+                    ghost.setSpeed(CHASING_SPEED);
                     ghost.show();
                     ghost.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
                     ghost.startAnimation();
@@ -321,7 +323,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 sceneTimer.restartIndefinitely();
                 scene.ghostKilledTime = sceneTimer.tickCount();
                 scene.pacMan.setMoveDir(Direction.RIGHT);
-                scene.pacMan.setSpeed(CHASE_SPEED);
+                scene.pacMan.setSpeed(CHASING_SPEED);
                 scene.victims.clear();
             }
 
@@ -352,7 +354,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 // After 50 ticks, Pac-Man and the surviving ghosts get visible again and move on
                 if (sceneTimer.tickCount() == scene.ghostKilledTime + 50) {
                     scene.pacMan.show();
-                    scene.pacMan.setSpeed(CHASE_SPEED);
+                    scene.pacMan.setSpeed(CHASING_SPEED);
                     Stream.of(scene.ghosts).forEach(ghost -> {
                         if (ghost.inState(EATEN)) {
                             ghost.hide();
@@ -374,7 +376,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
                 if (sceneTimer.atSecond(0.75)) {
-                    scene.ghosts[3].hide();
+                    scene.ghosts[ORANGE_GHOST_POKEY].hide();
                     if (!theGame().canStartNewGame()) {
                         theGameController().changeState(GameState.STARTING_GAME);
                     }
