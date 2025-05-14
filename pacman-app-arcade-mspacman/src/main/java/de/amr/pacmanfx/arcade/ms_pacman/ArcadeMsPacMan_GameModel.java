@@ -249,8 +249,8 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
         });
 
         level.setSpeedControl(new ArcadeAny_ActorSpeedControl());
-        level.pac().setBaseSpeed(ArcadeAny_ActorSpeedControl.BASE_SPEED);
-        level.ghosts().forEach(ghost -> ghost.setBaseSpeed(ArcadeAny_ActorSpeedControl.BASE_SPEED));
+        level.pac().setBaseSpeed(ArcadeAny_ActorSpeedControl.BASE_SPEED_PX_PER_TICK);
+        level.ghosts().forEach(ghost -> ghost.setBaseSpeed(ArcadeAny_ActorSpeedControl.BASE_SPEED_PX_PER_TICK));
         Logger.debug("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
         level.ghosts().forEach(ghost -> Logger.debug("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
 
@@ -376,7 +376,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
         var bonus = new MovingBonus(level, symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
         bonus.setEdibleTicks(TickTimer.INDEFINITE);
         bonus.setRoute(route, crossingLeftToRight);
-        bonus.setBaseSpeed(ArcadeAny_ActorSpeedControl.BASE_SPEED); //TODO how fast is it really?
+        bonus.setBaseSpeed(ArcadeAny_ActorSpeedControl.BASE_SPEED_PX_PER_TICK); //TODO how fast is it really?
         Logger.info("Moving bonus created, route: {} (crossing {})", route, crossingLeftToRight ? "left to right" : "right to left");
 
         level.setBonus(bonus);

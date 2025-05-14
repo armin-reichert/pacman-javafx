@@ -260,8 +260,8 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
 
         level.setSpeedControl(new ArcadeAny_ActorSpeedControl());
 
-        level.pac().setBaseSpeed(ArcadeAny_ActorSpeedControl.BASE_SPEED);
-        level.ghosts().forEach(ghost -> ghost.setBaseSpeed(ArcadeAny_ActorSpeedControl.BASE_SPEED));
+        level.pac().setBaseSpeed(ArcadeAny_ActorSpeedControl.BASE_SPEED_PX_PER_TICK);
+        level.ghosts().forEach(ghost -> ghost.setBaseSpeed(ArcadeAny_ActorSpeedControl.BASE_SPEED_PX_PER_TICK));
         Logger.debug("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
         level.ghosts().forEach(ghost -> Logger.debug("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
 

@@ -50,6 +50,7 @@ public class ArcadePacMan_StartScene extends GameScene2D {
         gr.fillTextAtScaledPosition("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, font8, tiles_to_px(1), tiles_to_px(25));
         gr.fillTextAtScaledPosition("PTS", ARCADE_ROSE, font6, tiles_to_px(25), tiles_to_px(25));
         if (gr instanceof ArcadePacMan_GameRenderer r) {
+            // In Pac-Man XXL, another renderer is used!
             r.drawMidwayCopyright(4, 29, ARCADE_PINK, font8);
         }
         gr.fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()), ARCADE_WHITE, font8, 2 * TS, sizeInPx().y() - 2);
