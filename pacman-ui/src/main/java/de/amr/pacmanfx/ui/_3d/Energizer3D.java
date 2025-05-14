@@ -11,6 +11,8 @@ import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
 
+import static de.amr.pacmanfx.Validations.requireNonNegative;
+
 /**
  * 3D energizer pellet.
  *
@@ -26,7 +28,7 @@ public class Energizer3D extends Sphere implements Eatable3D {
     private Animation eatenAnimation;
 
     public Energizer3D(double radius) {
-        Validations.requireNonNegative(radius, "Energizer radius must be positive but is %f");
+        requireNonNegative(radius, "Energizer radius must be positive but is %f");
         setRadius(radius);
 
         pumpingAnimation = new ScaleTransition(Duration.seconds(1.0 / 4), this);

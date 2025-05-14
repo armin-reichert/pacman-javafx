@@ -26,6 +26,7 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -68,8 +69,8 @@ public class Ghost3DAppearance extends Group {
         requireNonNull(pupilsShape);
         requireNonNull(eyeballsShape);
         requireNonNull(ghost);
-        Validations.requireNonNegative(size);
-        Validations.requireNonNegative(numFlashes);
+        requireNonNegative(size);
+        requireNonNegative(numFlashes);
 
         this.ghost = ghost;
         this.size = size;

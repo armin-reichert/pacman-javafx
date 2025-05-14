@@ -24,6 +24,7 @@ import java.io.File;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.lib.Waypoint.wp;
@@ -220,7 +221,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
 
     @Override
     public void createLevel(int levelNumber) {
-        Validations.requireValidLevelNumber(levelNumber);
+        requireValidLevelNumber(levelNumber);
         WorldMap worldMap = mapSelector.selectWorldMap(levelNumber);
         level = new GameLevel(this, levelNumber, worldMap);
         level.setData(createLevelData(levelNumber));

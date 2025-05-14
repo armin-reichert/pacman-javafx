@@ -12,6 +12,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Validations.inClosedRange;
 
 public class TengenActorSpeedControl implements ActorSpeedControl {
 
@@ -85,17 +86,17 @@ public class TengenActorSpeedControl implements ActorSpeedControl {
 
     public float pacBaseSpeedInLevel(int levelNumber) {
         int units = 0;
-        if (Validations.inClosedRange(levelNumber, 1, 4)) {
+        if (inClosedRange(levelNumber, 1, 4)) {
             units = 0x20;
-        } else if (Validations.inClosedRange(levelNumber, 5, 12)) {
+        } else if (inClosedRange(levelNumber, 5, 12)) {
             units = 0x24;
-        } else if (Validations.inClosedRange(levelNumber, 13, 16)) {
+        } else if (inClosedRange(levelNumber, 13, 16)) {
             units = 0x28;
-        } else if (Validations.inClosedRange(levelNumber, 17, 20)) {
+        } else if (inClosedRange(levelNumber, 17, 20)) {
             units = 0x27;
-        } else if (Validations.inClosedRange(levelNumber, 21, 24)) {
+        } else if (inClosedRange(levelNumber, 21, 24)) {
             units = 0x26;
-        } else if (Validations.inClosedRange(levelNumber, 25, 28)) {
+        } else if (inClosedRange(levelNumber, 25, 28)) {
             units = 0x25;
         } else if (levelNumber >= 29) {
             units = 0x24;
@@ -107,9 +108,9 @@ public class TengenActorSpeedControl implements ActorSpeedControl {
     // TODO: do they all have the same base speed? Unclear from disassembly data.
     public float ghostBaseSpeedInLevel(int levelNumber) {
         int units = 0x20; // default: 32
-        if (Validations.inClosedRange(levelNumber, 1, 4)) {
+        if (inClosedRange(levelNumber, 1, 4)) {
             units = 0x18;
-        } else if (Validations.inClosedRange(levelNumber, 5, 12)) {
+        } else if (inClosedRange(levelNumber, 5, 12)) {
             units = 0x20 + (levelNumber - 5);
         } // 0x20-0x27
         else if (levelNumber >= 13) {

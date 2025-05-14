@@ -21,6 +21,7 @@ import org.tinylog.Logger;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Validations.isOneOf;
 import static de.amr.pacmanfx.controller.GameState.INTRO;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
@@ -356,7 +357,7 @@ public enum GameAction implements Action {
 
         @Override
         public boolean isEnabled() {
-            return Validations.isOneOf(theGameState(),
+            return isOneOf(theGameState(),
                 GameState.BOOT, GameState.INTRO, GameState.SETTING_OPTIONS, GameState.HUNTING,
                 GameState.TESTING_LEVEL_TEASERS, GameState.TESTING_LEVELS
             );

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Validations.*;
 import static de.amr.pacmanfx.lib.Direction.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static java.util.Objects.requireNonNull;
@@ -43,7 +44,7 @@ public class Ghost extends Creature {
      * @param name readable name, used for logging or debug display
      */
     public Ghost(byte personality, String name) {
-        this.personality = Validations.requireValidGhostPersonality(personality);
+        this.personality = requireValidGhostPersonality(personality);
         this.name = requireNonNull(name);
         corneringSpeedUp = -1.25f;
     }
@@ -200,7 +201,7 @@ public class Ghost extends Creature {
      * <code>false</code>
      */
     public boolean inState(GhostState... alternatives) {
-        return state != null && Validations.isOneOf(state, alternatives);
+        return state != null && isOneOf(state, alternatives);
     }
 
     /**
@@ -302,7 +303,7 @@ public class Ghost extends Creature {
         // move inside house
         float centerX = posX + HTS;
         float houseCenterX = level.houseCenter().x();
-        if (Validations.differsAtMost(0.5f * speedInsideHouse, centerX, houseCenterX)) {
+        if (differsAtMost(0.5f * speedInsideHouse, centerX, houseCenterX)) {
             // align horizontally and raise
             setPosX(houseCenterX - HTS);
             setMoveAndWishDir(UP);

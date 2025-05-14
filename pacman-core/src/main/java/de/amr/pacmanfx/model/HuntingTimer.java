@@ -14,6 +14,8 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
+import static de.amr.pacmanfx.Validations.requireNonNegativeInt;
+import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.lib.UsefulFunctions.isEven;
 import static de.amr.pacmanfx.lib.UsefulFunctions.isOdd;
 import static java.util.Objects.requireNonNull;
@@ -28,7 +30,7 @@ public abstract class HuntingTimer {
     private final IntegerProperty phaseIndexPy = new SimpleIntegerProperty();
 
     protected HuntingTimer(String name, int numPhases) {
-        this.numPhases = Validations.requireNonNegativeInt(numPhases);
+        this.numPhases = requireNonNegativeInt(numPhases);
         timer = new TickTimer(requireNonNull(name));
         phaseIndexPy.addListener((py, ov, nv) -> logPhase());
     }
@@ -80,12 +82,12 @@ public abstract class HuntingTimer {
     }
 
     public void startFirstHuntingPhase(int levelNumber) {
-        startPhase(Validations.requireValidLevelNumber(levelNumber), 0);
+        startPhase(requireValidLevelNumber(levelNumber), 0);
         logPhase(); // no change event!
     }
 
     public void startNextPhase(int levelNumber) {
-        Validations.requireValidLevelNumber(levelNumber);
+        requireValidLevelNumber(levelNumber);
         int nextPhaseIndex = requireValidPhaseIndex(phaseIndex() + 1);
         startPhase(levelNumber, nextPhaseIndex);
     }

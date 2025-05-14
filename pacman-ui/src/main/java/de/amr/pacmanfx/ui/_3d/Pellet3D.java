@@ -12,6 +12,7 @@ import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 
+import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -26,7 +27,7 @@ public class Pellet3D implements Eatable3D {
 
     public Pellet3D(Shape3D shape, double radius) {
         this.shape = requireNonNull(shape);
-        Validations.requireNonNegative(radius, "Pellet3D radius must be positive but is %f");
+        requireNonNegative(radius, "Pellet3D radius must be positive but is %f");
         Bounds bounds = shape.getBoundsInLocal();
         double diameter = 2 * radius;
         double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());

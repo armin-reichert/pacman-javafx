@@ -14,6 +14,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Spinner;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Validations.isOneOf;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.PY_AUTOPILOT;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.PY_IMMUNITY;
 
@@ -66,7 +67,7 @@ public class InfoBoxGameControl extends InfoBox {
         spinnerCredit.getValueFactory().setValue(theCoinMechanism().numCoins());
         comboInitialLives.setValue(theGame().initialLifeCount());
 
-        spinnerCredit.setDisable(!(Validations.isOneOf(theGameState(), GameState.INTRO, GameState.SETTING_OPTIONS)));
+        spinnerCredit.setDisable(!(isOneOf(theGameState(), GameState.INTRO, GameState.SETTING_OPTIONS)));
         comboInitialLives.setDisable(theGameState() != GameState.INTRO);
 
         bgLevelActions[GAME_LEVEL_START].setDisable(isBooting() || !canStartLevel());
@@ -85,10 +86,10 @@ public class InfoBoxGameControl extends InfoBox {
     }
 
     private boolean canStartLevel() {
-        return theGame().canStartNewGame() && Validations.isOneOf(theGameState(), GameState.INTRO, GameState.SETTING_OPTIONS);
+        return theGame().canStartNewGame() && isOneOf(theGameState(), GameState.INTRO, GameState.SETTING_OPTIONS);
     }
 
     private boolean canEnterNextLevel() {
-        return theGame().isPlaying() && Validations.isOneOf(theGameState(), GameState.HUNTING);
+        return theGame().isPlaying() && isOneOf(theGameState(), GameState.HUNTING);
     }
 }

@@ -20,6 +20,8 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
+import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.lib.tilemap.WorldMap.formatTile;
 import static java.util.Objects.requireNonNull;
 
@@ -87,7 +89,7 @@ public class GameLevel {
 
     public GameLevel(GameModel game, int number, WorldMap worldMap) {
         this.game = requireNonNull(game);
-        this.number = Validations.requireValidLevelNumber(number);
+        this.number = requireValidLevelNumber(number);
         this.worldMap = requireNonNull(worldMap);
 
         blinking = new Pulse(10, Pulse.OFF);
@@ -241,7 +243,7 @@ public class GameLevel {
     public Pac pac() { return pac; }
 
     public void setGhosts(Ghost... ghosts) { this.ghosts = requireNonNull(ghosts); }
-    public Ghost ghost(byte id) { return ghosts != null ? ghosts[Validations.requireValidGhostPersonality(id)] : null; }
+    public Ghost ghost(byte id) { return ghosts != null ? ghosts[requireValidGhostPersonality(id)] : null; }
 
     public Stream<Ghost> ghosts(GhostState... states) {
         requireNonNull(states);
@@ -275,7 +277,7 @@ public class GameLevel {
     }
 
     public Vector2i ghostScatterTile(byte personality) {
-        return ghostScatterTiles[Validations.requireValidGhostPersonality(personality)];
+        return ghostScatterTiles[requireValidGhostPersonality(personality)];
     }
 
     public int number() { return number; }
@@ -404,23 +406,23 @@ public class GameLevel {
     }
 
     public void setGhostStartPosition(byte personality, Vector2f position) {
-        Validations.requireValidGhostPersonality(personality);
+        requireValidGhostPersonality(personality);
         ghostStartPositions[personality] = position;
     }
 
     public Vector2f ghostStartPosition(byte personality) {
-        Validations.requireValidGhostPersonality(personality);
+        requireValidGhostPersonality(personality);
         return ghostStartPositions[personality];
     }
 
     public void setGhostStartDirection(byte personality, Direction dir) {
-        Validations.requireValidGhostPersonality(personality);
+        requireValidGhostPersonality(personality);
         requireNonNull(dir);
         ghostStartDirections[personality] = dir;
     }
 
     public Direction ghostStartDirection(byte personality) {
-        Validations.requireValidGhostPersonality(personality);
+        requireValidGhostPersonality(personality);
         return ghostStartDirections[personality];
     }
 
