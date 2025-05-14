@@ -364,23 +364,11 @@ public class GameLevel3D {
         return rotation;
     }
 
-    public void playLevelCompleteAnimation(GameState gameState, double delaySeconds, Runnable onStart, Runnable onFinished) {
-        levelCompleteAnimation = new SequentialTransition(
-            now(() -> {
-                // keep game state until animation has finished
-                gameState.timer().resetIndefiniteTime();
-                onStart.run();
-            }),
-            level.cutSceneNumber() != 0
-                ? levelTransformationBeforeIntermission(level.data().numFlashes())
-                : levelTransformation(level.data().numFlashes())
-        );
-        levelCompleteAnimation.setOnFinished(e -> {
-            onFinished.run();
-            gameState.timer().expire();
-        });
-        levelCompleteAnimation.setDelay(Duration.seconds(delaySeconds));
-        levelCompleteAnimation.play();
+    public Animation createLevelCompleteAnimation() {
+        levelCompleteAnimation = level.cutSceneNumber() != 0
+            ? levelTransformationBeforeIntermission(level.data().numFlashes())
+            : levelTransformation(level.data().numFlashes());
+        return levelCompleteAnimation;
     }
 
     private Animation levelTransformationBeforeIntermission(int numFlashes) {

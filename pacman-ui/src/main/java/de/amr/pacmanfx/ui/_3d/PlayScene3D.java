@@ -14,7 +14,6 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.ScoreManager;
-import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingBonus;
@@ -407,12 +406,16 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         level3D.energizers3D().forEach(Energizer3D::onEaten);
         level3D.maze3D().door3D().setVisible(false);
         level3D.stopAnimations();
-        level3D.playLevelCompleteAnimation(theGameState(), 2.0,
-            () -> {
-                perspectiveNamePy.unbind();
-                perspectiveNamePy.set(PerspectiveID.TOTAL);
-            },
-            () -> perspectiveNamePy.bind(PY_3D_PERSPECTIVE));
+        Animation animation = level3D.createLevelCompleteAnimation();
+        animation.setDelay(Duration.seconds(2));
+        perspectiveNamePy.unbind();
+        perspectiveNamePy.set(PerspectiveID.TOTAL);
+        animation.setOnFinished(e -> {
+            perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
+            theGameController().letCurrentStateExpire();
+        });
+        theGameState().timer().resetIndefiniteTime();
+        animation.play();
     }
 
     private void onEnterStateLevelTransition(GameLevel level) {
