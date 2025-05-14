@@ -266,34 +266,28 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public final void update() {
-        GameLevel level = theGameLevel();
-        if (level != null) {
-            updateLevel(level);
+        if (optionalGameLevel().isEmpty()) {
+            // Scene is already visible 2 ticks before level has been created
+            Logger.warn("Tick #{}: Game level not yet existing", theClock().tickCount());
+            return;
         }
-        else { // Scene is already visible 2 ticks before level has been created
-            Logger.warn("Tick #{}: level not yet existing", theClock().tickCount());
+        final GameLevel level = requireGameLevel();
+        if (level3D == null) {
+            Logger.warn("Tick #{}: 3D game level not yet existing", theClock().tickCount());
+            return;
         }
-    }
-
-    protected void updateLevel(GameLevel level) {
-        if (level3D != null) {
-            level3D.update();
-
-            //TODO how to avoid calling this on every tick?
-            if (level.isDemoLevel()) {
-                theGame().assignDemoLevelBehavior(level.pac());
-            }
-            else {
-                level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
-                level.pac().setImmune(PY_IMMUNITY.get());
-                updateScores();
-                updateSound(level);
-            }
-
-            perspective().update(fxSubScene, level, level.pac());
-        } else { // TODO can this happen?
-            Logger.error("Tick #{}: 3D game level not existing!", theClock().tickCount());
+        level3D.update();
+        //TODO how to avoid calling this on every tick?
+        if (level.isDemoLevel()) {
+            theGame().assignDemoLevelBehavior(level.pac());
         }
+        else {
+            level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
+            level.pac().setImmune(PY_IMMUNITY.get());
+            updateScores();
+            updateSound(level);
+        }
+        perspective().update(fxSubScene, level, level.pac());
     }
 
     protected void updateSound(GameLevel level) {
@@ -408,13 +402,13 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         level3D.stopAnimations();
         Animation animation = level3D.createLevelCompleteAnimation();
         animation.setDelay(Duration.seconds(2));
-        perspectiveNamePy.unbind();
-        perspectiveNamePy.set(PerspectiveID.TOTAL);
         animation.setOnFinished(e -> {
             perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
             theGameController().letCurrentStateExpire();
         });
         theGameState().timer().resetIndefiniteTime();
+        perspectiveNamePy.unbind();
+        perspectiveNamePy.set(PerspectiveID.TOTAL);
         animation.play();
     }
 
