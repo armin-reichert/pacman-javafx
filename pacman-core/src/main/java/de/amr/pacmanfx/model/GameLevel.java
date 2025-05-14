@@ -81,6 +81,7 @@ public class GameLevel {
 
     private final Pulse blinking;
 
+    private int numGhostsKilled;
     private int gameOverStateTicks;
     private long startTime;
 
@@ -249,6 +250,9 @@ public class GameLevel {
         }
         return states.length == 0 ? Stream.of(ghosts) : Stream.of(ghosts).filter(ghost -> ghost.inState(states));
     }
+
+    public void registerGhostKilled() { numGhostsKilled++; }
+    public int numGhostsKilled() { return numGhostsKilled; }
 
     public void setBonus(Bonus bonus) { this.bonus = bonus; }
 

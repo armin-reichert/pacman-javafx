@@ -116,7 +116,8 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         ghost.eaten(killedSoFar);
         scoreManager.scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
-        if (level.victims().size() == 16) {
+        level.registerGhostKilled();
+        if (level.numGhostsKilled() == 16) {
             int extraPoints = POINTS_ALL_GHOSTS_EATEN_IN_LEVEL;
             scoreManager.scorePoints(extraPoints);
             Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, level.number());
