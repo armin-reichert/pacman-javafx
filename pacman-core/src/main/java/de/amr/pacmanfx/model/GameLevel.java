@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
-import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
@@ -24,6 +23,7 @@ import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.lib.tilemap.WorldMap.formatTile;
 import static java.util.Objects.requireNonNull;
+import static java.util.function.Predicate.not;
 
 public class GameLevel {
 
@@ -203,7 +203,7 @@ public class GameLevel {
         Logger.info("Power timer stopped and reset to zero");
         bonus().ifPresent(Bonus::setInactive);
         // when cheating to end level, there might still be food
-        eatAllFood();
+        eatAll();
         Logger.trace("Game level {} completed.", number);
     }
 
@@ -449,8 +449,17 @@ public class GameLevel {
         }
     }
 
-    public void eatAllFood() {
-        worldMap.tiles().filter(this::hasFoodAt).forEach(this::registerFoodEatenAt);
+    public void eatAllPellets() {
+        worldMap.tiles()
+                .filter(not(this::isEnergizerPosition))
+                .filter(this::hasFoodAt)
+                .forEach(this::registerFoodEatenAt);
+    }
+
+    public void eatAll() {
+        worldMap.tiles()
+                .filter(this::hasFoodAt)
+                .forEach(this::registerFoodEatenAt);
     }
 
     public boolean isFoodPosition(Vector2i tile) {

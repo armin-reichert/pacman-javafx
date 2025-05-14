@@ -9,7 +9,7 @@ import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
@@ -26,7 +26,6 @@ import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
-import static java.util.function.Predicate.not;
 
 public enum GameAction implements Action {
 
@@ -44,41 +43,36 @@ public enum GameAction implements Action {
     CHEAT_EAT_ALL_PELLETS {
         @Override
         public void execute() {
-            optionalGameLevel().ifPresent(level -> {
-                List<Vector2i> pelletTiles = level.worldMap().tiles()
-                    .filter(not(level::isEnergizerPosition))
-                    .filter(level::hasFoodAt)
-                    .toList();
-                if (!pelletTiles.isEmpty()) {
-                    pelletTiles.forEach(level::registerFoodEatenAt);
-                    theSound().stopMunchingSound();
-                    theGameEventManager().publishEvent(theGame(), GameEventType.PAC_FOUND_FOOD);
-                }
-            });
+            requiredGameLevel().eatAllPellets();
+            theSound().stopMunchingSound();
+            theGameEventManager().publishEvent(theGame(), GameEventType.PAC_FOUND_FOOD);
         }
 
         @Override
         public boolean isEnabled() {
-            return optionalGameLevel().isPresent() && !optionalGameLevel().get().isDemoLevel() && theGameState() == GameState.HUNTING;
+            return optionalGameLevel().isPresent()
+                    && !requiredGameLevel().isDemoLevel()
+                    && theGameState() == GameState.HUNTING;
         }
     },
 
     CHEAT_KILL_GHOSTS {
         @Override
         public void execute() {
-            optionalGameLevel().ifPresent(level -> {
-                List<Ghost> vulnerableGhosts = level.ghosts(FRIGHTENED, HUNTING_PAC).toList();
-                if (!vulnerableGhosts.isEmpty()) {
-                    level.victims().clear(); // resets value of next killed ghost to 200
-                    vulnerableGhosts.forEach(theGame()::onGhostKilled);
-                    theGameController().changeState(GameState.GHOST_DYING);
-                }
-            });
+            GameLevel level = requiredGameLevel();
+            List<Ghost> vulnerableGhosts = level.ghosts(FRIGHTENED, HUNTING_PAC).toList();
+            if (!vulnerableGhosts.isEmpty()) {
+                level.victims().clear(); // resets value of next killed ghost to 200
+                vulnerableGhosts.forEach(theGame()::onGhostKilled);
+                theGameController().changeState(GameState.GHOST_DYING);
+            }
         }
 
         @Override
         public boolean isEnabled() {
-            return theGameState() == GameState.HUNTING && optionalGameLevel().isPresent() && !optionalGameLevel().get().isDemoLevel();
+            return theGameState() == GameState.HUNTING
+                    && optionalGameLevel().isPresent()
+                    && !requiredGameLevel().isDemoLevel();
         }
     },
 
@@ -90,8 +84,10 @@ public enum GameAction implements Action {
 
         @Override
         public boolean isEnabled() {
-            return theGame().isPlaying() && theGameState() == GameState.HUNTING && optionalGameLevel().isPresent()
-                && optionalGameLevel().get().number() < theGame().lastLevelNumber();
+            return theGame().isPlaying()
+                    && theGameState() == GameState.HUNTING
+                    && optionalGameLevel().isPresent()
+                    && requiredGameLevel().number() < theGame().lastLevelNumber();
         }
     },
 
@@ -106,9 +102,7 @@ public enum GameAction implements Action {
                 theSound().enabledProperty().set(true);
                 theGameEventManager().publishEvent(theGame(), GameEventType.CREDIT_ADDED);
             }
-            if (theGameState() != GameState.SETTING_OPTIONS) {
-                theGameController().changeState(GameState.SETTING_OPTIONS);
-            }
+            theGameController().changeState(GameState.SETTING_OPTIONS);
         }
 
         @Override
@@ -125,34 +119,34 @@ public enum GameAction implements Action {
 
     PLAYER_UP {
         @Override
-        public void execute() { requirePac().setWishDir(Direction.UP); }
+        public void execute() { requiredPac().setWishDir(Direction.UP); }
 
         @Override
-        public boolean isEnabled() { return requirePac() != null && !requirePac().isUsingAutopilot(); }
+        public boolean isEnabled() { return requiredPac() != null && !requiredPac().isUsingAutopilot(); }
     },
 
     PLAYER_DOWN {
         @Override
-        public void execute() { requirePac().setWishDir(Direction.DOWN); }
+        public void execute() { requiredPac().setWishDir(Direction.DOWN); }
 
         @Override
-        public boolean isEnabled() { return requirePac() != null && !requirePac().isUsingAutopilot(); }
+        public boolean isEnabled() { return requiredPac() != null && !requiredPac().isUsingAutopilot(); }
     },
 
     PLAYER_LEFT {
         @Override
-        public void execute() { requirePac().setWishDir(Direction.LEFT); }
+        public void execute() { requiredPac().setWishDir(Direction.LEFT); }
 
         @Override
-        public boolean isEnabled() { return requirePac() != null && !requirePac().isUsingAutopilot(); }
+        public boolean isEnabled() { return requiredPac() != null && !requiredPac().isUsingAutopilot(); }
     },
 
     PLAYER_RIGHT {
         @Override
-        public void execute() { requirePac().setWishDir(Direction.RIGHT); }
+        public void execute() { requiredPac().setWishDir(Direction.RIGHT); }
 
         @Override
-        public boolean isEnabled() { return requirePac() != null && !requirePac().isUsingAutopilot(); }
+        public boolean isEnabled() { return requiredPac() != null && !requiredPac().isUsingAutopilot(); }
     },
 
     QUIT_GAME_SCENE {

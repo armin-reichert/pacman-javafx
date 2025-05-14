@@ -55,8 +55,8 @@ public class Globals {
     public static SimulationStep     theSimulationStep() { return SIMULATION_STEP; }
 
     public static Optional<GameLevel> optionalGameLevel() { return theGame().level(); }
-    public static GameLevel           requireGameLevel() { return optionalGameLevel().orElseThrow(); }
-    public static Pac                 requirePac() { return optionalGameLevel().map(GameLevel::pac).orElse(null); }
+    public static GameLevel           requiredGameLevel() { return optionalGameLevel().orElseThrow(); }
+    public static Pac                 requiredPac() { return optionalGameLevel().map(GameLevel::pac).orElse(null); }
 
     private static final CoinMechanism COIN_MECHANISM = new CoinMechanism();
     private static final GameController GAME_CONTROLLER = new GameController();

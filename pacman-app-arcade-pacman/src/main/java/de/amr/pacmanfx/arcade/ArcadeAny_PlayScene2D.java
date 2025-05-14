@@ -52,13 +52,13 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        GameLevel level = requireGameLevel();
+        GameLevel level = requiredGameLevel();
         gr.applyMapSettings(level.worldMap());
     }
 
     @Override
     public void onLevelStarted(GameEvent e) {
-        if (requireGameLevel().isDemoLevel()) {
+        if (requiredGameLevel().isDemoLevel()) {
             bindArcadeInsertCoinAction();
             enableActionBindings();
         } else {
@@ -70,12 +70,12 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameContinued(GameEvent e) {
-        requireGameLevel().showMessage(GameLevel.Message.READY);
+        requiredGameLevel().showMessage(GameLevel.Message.READY);
     }
 
     @Override
     public void onGameStarted(GameEvent e) {
-        boolean silent = requireGameLevel().isDemoLevel() || theGameState() == TESTING_LEVELS || theGameState() == TESTING_LEVEL_TEASERS;
+        boolean silent = requiredGameLevel().isDemoLevel() || theGameState() == TESTING_LEVELS || theGameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {
             theSound().playGameReadySound();
         }
