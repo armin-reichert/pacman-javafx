@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static de.amr.pacmanfx.Globals.optGameLevel;
+import static de.amr.pacmanfx.Globals.optionalGameLevel;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.theUI;
 
 /**
@@ -88,7 +88,7 @@ public abstract class InfoBox extends TitledPane {
     }
 
     protected Supplier<String> ifLevelPresent(Function<GameLevel, String> fnInfo) {
-        return () -> optGameLevel().map(fnInfo).orElse(InfoText.NO_INFO);
+        return () -> optionalGameLevel().map(fnInfo).orElse(InfoText.NO_INFO);
     }
 
     protected void clearGrid() {

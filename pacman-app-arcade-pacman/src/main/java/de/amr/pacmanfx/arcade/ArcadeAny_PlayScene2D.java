@@ -52,13 +52,13 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        GameLevel level = reqGameLevel();
+        GameLevel level = requireGameLevel();
         gr.applyMapSettings(level.worldMap());
     }
 
     @Override
     public void onLevelStarted(GameEvent e) {
-        if (reqGameLevel().isDemoLevel()) {
+        if (requireGameLevel().isDemoLevel()) {
             bindArcadeInsertCoinAction();
             enableActionBindings();
         } else {
@@ -70,12 +70,12 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameContinued(GameEvent e) {
-        reqGameLevel().showMessage(GameLevel.Message.READY);
+        requireGameLevel().showMessage(GameLevel.Message.READY);
     }
 
     @Override
     public void onGameStarted(GameEvent e) {
-        boolean silent = reqGameLevel().isDemoLevel() || theGameState() == TESTING_LEVELS || theGameState() == TESTING_LEVEL_TEASERS;
+        boolean silent = requireGameLevel().isDemoLevel() || theGameState() == TESTING_LEVELS || theGameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {
             theSound().playGameReadySound();
         }
@@ -89,8 +89,8 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
     @Override
     public void update() {
-        if (optGameLevel().isPresent()) {
-            GameLevel level = optGameLevel().get();
+        if (optionalGameLevel().isPresent()) {
+            GameLevel level = optionalGameLevel().get();
             /* TODO: Would like to do this only on level start, but when scene is switched between 2D and 3D,
                      the corresponding scene has to be updated accordingly. */
             if (level.isDemoLevel()) {
@@ -163,7 +163,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        if (optGameLevel().isEmpty())
+        if (optionalGameLevel().isEmpty())
             return; // Scene is drawn already 2 ticks before level has been created
 
         final GameLevel level = theGameLevel();
@@ -235,7 +235,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
     protected void drawDebugInfo() {
         gr.drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
         if (theGameController().isSelected(GameVariant.PACMAN)) {
-            optGameLevel().ifPresent(level -> {
+            optionalGameLevel().ifPresent(level -> {
                 level.ghosts().forEach(ghost ->
                     ghost.specialTerrainTiles().forEach(tile -> {
                         double x = scaled(tile.x() * TS), y = scaled(tile.y() * TS + HTS), size = scaled(TS);
@@ -265,7 +265,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         if (gr == null) {
             setGameRenderer(theUIConfig().current().createRenderer(canvas));
         }
-        optGameLevel().map(GameLevel::worldMap).ifPresent(gr::applyMapSettings);
+        optionalGameLevel().map(GameLevel::worldMap).ifPresent(gr::applyMapSettings);
     }
 
     @Override
@@ -274,7 +274,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
             theSound().playGameOverSound();
         }
         else if (state == GameState.LEVEL_COMPLETE) {
-            optGameLevel().ifPresent(level -> {
+            optionalGameLevel().ifPresent(level -> {
                 theSound().stopAll();
                 levelCompleteAnimation = new FlashingMazeAnimation(level);
                 levelCompleteAnimation.setActionOnFinished(theGameController()::letCurrentStateExpire);

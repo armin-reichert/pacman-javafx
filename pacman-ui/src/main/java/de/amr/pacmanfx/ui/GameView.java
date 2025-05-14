@@ -177,7 +177,7 @@ public class GameView implements View {
     @Override
     public void onLevelCreated(GameEvent event) {
         //TODO find another point in time to do this
-        optGameLevel().ifPresent(level -> {
+        optionalGameLevel().ifPresent(level -> {
             GameUIConfig config = theUIConfig().current();
             config.createActorAnimations(level);
             theSound().setEnabled(!level.isDemoLevel());

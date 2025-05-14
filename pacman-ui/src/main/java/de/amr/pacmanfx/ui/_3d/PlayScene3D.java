@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
-import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.RectArea;
@@ -62,7 +61,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     protected final ObjectProperty<PerspectiveID> perspectiveNamePy = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
-            optGameLevel().ifPresent(level -> perspective().init(fxSubScene, level));
+            optionalGameLevel().ifPresent(level -> perspective().init(fxSubScene, level));
         }
     };
 
@@ -198,7 +197,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void bindActions() {
         bindArcadeInsertCoinAction();
-        if (optGameLevel().isPresent() && !optGameLevel().get().isDemoLevel()) {
+        if (optionalGameLevel().isPresent() && !optionalGameLevel().get().isDemoLevel()) {
             if (!theGameController().isSelected(GameVariant.MS_PACMAN_TENGEN)) {
                 bindArcadeStartGameAction();
             }
@@ -212,7 +211,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onLevelStarted(GameEvent event) {
-        optGameLevel().ifPresent(level -> {
+        optionalGameLevel().ifPresent(level -> {
             bindActions(); //TODO check if this is necessary
             if (level3D == null) {
                 replaceGameLevel3D(level);
@@ -239,7 +238,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onSceneVariantSwitch(GameScene fromScene) {
-        optGameLevel().ifPresent(level -> {
+        optionalGameLevel().ifPresent(level -> {
             bindActions();
             bindPlayerActions();
             enableActionBindings();
@@ -361,7 +360,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void onEnterGameState(GameState state) {
         Logger.trace("Entering game state {}", state);
-        optGameLevel().ifPresent(level -> {
+        optionalGameLevel().ifPresent(level -> {
             switch (state) {
                 case HUNTING               -> onEnterStateHunting(level);
                 case PACMAN_DYING          -> onEnterStatePacManDying(level);
@@ -439,7 +438,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     private void onEnterStateGameOver() {
-        GameLevel level = reqGameLevel();
+        GameLevel level = requireGameLevel();
         level3D.stopAnimations();
         // delay state exit for 3 seconds
         theGameState().timer().restartSeconds(3);
@@ -452,7 +451,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onBonusActivated(GameEvent event) {
-        optGameLevel().flatMap(GameLevel::bonus).ifPresent(bonus -> {
+        optionalGameLevel().flatMap(GameLevel::bonus).ifPresent(bonus -> {
             level3D.updateBonus3D(bonus, theUIConfig().current().spriteSheet());
             if (bonus instanceof MovingBonus) {
                 theSound().playBonusActiveSound();
@@ -462,7 +461,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onBonusEaten(GameEvent event) {
-        optGameLevel().flatMap(GameLevel::bonus).ifPresent(bonus -> {
+        optionalGameLevel().flatMap(GameLevel::bonus).ifPresent(bonus -> {
             level3D.bonus3D().ifPresent(Bonus3D::showEaten);
             if (bonus instanceof MovingBonus) {
                 theSound().stopBonusActiveSound();
@@ -473,7 +472,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onBonusExpired(GameEvent event) {
-        optGameLevel().flatMap(GameLevel::bonus).ifPresent(bonus -> {
+        optionalGameLevel().flatMap(GameLevel::bonus).ifPresent(bonus -> {
             level3D.bonus3D().ifPresent(Bonus3D::expire);
             if (bonus instanceof MovingBonus) {
                 theSound().stopBonusActiveSound();
@@ -493,12 +492,12 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onGameContinued(GameEvent e) {
-        optGameLevel().ifPresent(this::showReadyMessage);
+        optionalGameLevel().ifPresent(this::showReadyMessage);
     }
 
     @Override
     public void onGameStarted(GameEvent e) {
-        GameLevel level = reqGameLevel();
+        GameLevel level = requireGameLevel();
         boolean silent = level.isDemoLevel() ||
             theGameState() == TESTING_LEVELS || theGameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {

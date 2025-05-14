@@ -98,7 +98,7 @@ public abstract class GameScene2D implements GameScene {
      * @return level size in tiles (sizeX, sizeY) = (numCols, numRows)
      */
     public final Vector2i levelSizeInTilesOrElse(Vector2i defaultSize) {
-        return optGameLevel()
+        return optionalGameLevel()
             .map(GameLevel::worldMap)
             .map(worldMap -> Vector2i.of(worldMap.numCols(), worldMap.numRows()))
             .orElse(defaultSize);

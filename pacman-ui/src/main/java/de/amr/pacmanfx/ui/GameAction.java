@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.Globals;
-import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEventType;
@@ -39,13 +38,13 @@ public enum GameAction implements Action {
         }
 
         @Override
-        public boolean isEnabled() { return optGameLevel().isPresent(); }
+        public boolean isEnabled() { return optionalGameLevel().isPresent(); }
     },
 
     CHEAT_EAT_ALL_PELLETS {
         @Override
         public void execute() {
-            optGameLevel().ifPresent(level -> {
+            optionalGameLevel().ifPresent(level -> {
                 List<Vector2i> pelletTiles = level.worldMap().tiles()
                     .filter(not(level::isEnergizerPosition))
                     .filter(level::hasFoodAt)
@@ -60,14 +59,14 @@ public enum GameAction implements Action {
 
         @Override
         public boolean isEnabled() {
-            return optGameLevel().isPresent() && !optGameLevel().get().isDemoLevel() && theGameState() == GameState.HUNTING;
+            return optionalGameLevel().isPresent() && !optionalGameLevel().get().isDemoLevel() && theGameState() == GameState.HUNTING;
         }
     },
 
     CHEAT_KILL_GHOSTS {
         @Override
         public void execute() {
-            optGameLevel().ifPresent(level -> {
+            optionalGameLevel().ifPresent(level -> {
                 List<Ghost> vulnerableGhosts = level.ghosts(FRIGHTENED, HUNTING_PAC).toList();
                 if (!vulnerableGhosts.isEmpty()) {
                     level.victims().clear(); // resets value of next killed ghost to 200
@@ -79,7 +78,7 @@ public enum GameAction implements Action {
 
         @Override
         public boolean isEnabled() {
-            return theGameState() == GameState.HUNTING && optGameLevel().isPresent() && !optGameLevel().get().isDemoLevel();
+            return theGameState() == GameState.HUNTING && optionalGameLevel().isPresent() && !optionalGameLevel().get().isDemoLevel();
         }
     },
 
@@ -91,8 +90,8 @@ public enum GameAction implements Action {
 
         @Override
         public boolean isEnabled() {
-            return theGame().isPlaying() && theGameState() == GameState.HUNTING && optGameLevel().isPresent()
-                && optGameLevel().get().number() < theGame().lastLevelNumber();
+            return theGame().isPlaying() && theGameState() == GameState.HUNTING && optionalGameLevel().isPresent()
+                && optionalGameLevel().get().number() < theGame().lastLevelNumber();
         }
     },
 
@@ -119,41 +118,41 @@ public enum GameAction implements Action {
             }
             return theGameState() == GameState.SETTING_OPTIONS
                 || theGameState() == INTRO
-                || optGameLevel().isPresent() && optGameLevel().get().isDemoLevel()
+                || optionalGameLevel().isPresent() && optionalGameLevel().get().isDemoLevel()
                 || theCoinMechanism().isEmpty();
         }
     },
 
     PLAYER_UP {
         @Override
-        public void execute() { pac().setWishDir(Direction.UP); }
+        public void execute() { requirePac().setWishDir(Direction.UP); }
 
         @Override
-        public boolean isEnabled() { return pac() != null && !pac().isUsingAutopilot(); }
+        public boolean isEnabled() { return requirePac() != null && !requirePac().isUsingAutopilot(); }
     },
 
     PLAYER_DOWN {
         @Override
-        public void execute() { pac().setWishDir(Direction.DOWN); }
+        public void execute() { requirePac().setWishDir(Direction.DOWN); }
 
         @Override
-        public boolean isEnabled() { return pac() != null && !pac().isUsingAutopilot(); }
+        public boolean isEnabled() { return requirePac() != null && !requirePac().isUsingAutopilot(); }
     },
 
     PLAYER_LEFT {
         @Override
-        public void execute() { pac().setWishDir(Direction.LEFT); }
+        public void execute() { requirePac().setWishDir(Direction.LEFT); }
 
         @Override
-        public boolean isEnabled() { return pac() != null && !pac().isUsingAutopilot(); }
+        public boolean isEnabled() { return requirePac() != null && !requirePac().isUsingAutopilot(); }
     },
 
     PLAYER_RIGHT {
         @Override
-        public void execute() { pac().setWishDir(Direction.RIGHT); }
+        public void execute() { requirePac().setWishDir(Direction.RIGHT); }
 
         @Override
-        public boolean isEnabled() { return pac() != null && !pac().isUsingAutopilot(); }
+        public boolean isEnabled() { return requirePac() != null && !requirePac().isUsingAutopilot(); }
     },
 
     QUIT_GAME_SCENE {
