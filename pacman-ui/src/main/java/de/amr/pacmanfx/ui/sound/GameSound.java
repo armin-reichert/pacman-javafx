@@ -54,22 +54,18 @@ public class GameSound {
         return url != null ? url.toExternalForm() : null;
     }
 
-    public MediaPlayer createRepeatingSound(String key) {
-        return createSound(key, true);
-    }
-
     public MediaPlayer createSound(String key) {
-        return createSound(key, false);
+        return createSound(key, 1);
     }
 
-    private MediaPlayer createSound(String key, boolean repeat) {
+    public MediaPlayer createSound(String key, int repetitions) {
         String url = soundURL(key);
         if (url == null) {
             Logger.warn("Missing audio resource '%s' (%s)".formatted(key, gameVariant));
             return null;
         }
         var player = new MediaPlayer(new Media(url));
-        player.setCycleCount(repeat ? MediaPlayer.INDEFINITE : 1);
+        player.setCycleCount(repetitions);
         player.setVolume(1.0);
         player.muteProperty().bind(mutedPy);
         player.statusProperty().addListener((py,ov,nv) -> logPlayerStatusChange(player, key, ov, nv));
@@ -84,12 +80,12 @@ public class GameSound {
             var soundMap = new HashMap<String, MediaPlayer>();
             soundMap.put("game_over",      createSound("game_over"));
             soundMap.put("game_ready",     createSound("game_ready"));
-            soundMap.put("ghost_returns",  createRepeatingSound("ghost_returns"));
+            soundMap.put("ghost_returns",  createSound("ghost_returns", MediaPlayer.INDEFINITE));
             soundMap.put("level_complete", createSound("level_complete"));
-            soundMap.put("pacman_munch",   createRepeatingSound("pacman_munch"));
+            soundMap.put("pacman_munch",   createSound("pacman_munch", MediaPlayer.INDEFINITE));
             soundMap.put("pacman_death",   createSound("pacman_death"));
-            soundMap.put("pacman_power",   createRepeatingSound("pacman_power"));
-            soundMap.put("bonus_bouncing", createRepeatingSound("bonus_bouncing"));
+            soundMap.put("pacman_power",   createSound("pacman_power", MediaPlayer.INDEFINITE));
+            soundMap.put("bonus_bouncing", createSound("bonus_bouncing", MediaPlayer.INDEFINITE));
 
             //TODO check this
             MediaPlayer bounceSound = soundMap.get("bonus_bouncing");
@@ -239,7 +235,7 @@ public class GameSound {
             if (siren != null) {
                 stop(siren.player());
             }
-            MediaPlayer sirenPlayer = createRepeatingSound("siren." + number);
+            MediaPlayer sirenPlayer = createSound("siren." + number, MediaPlayer.INDEFINITE);
             if (sirenPlayer == null) {
                 //Logger.error("Could not create media player for siren number {}", number);
                 siren = null;
