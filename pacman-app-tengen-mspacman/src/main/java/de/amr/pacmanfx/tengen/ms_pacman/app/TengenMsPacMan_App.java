@@ -2,9 +2,12 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.tengen.ms_pacman;
+package de.amr.pacmanfx.tengen.ms_pacman.app;
 
 import de.amr.pacmanfx.model.GameVariant;
+import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_StartPage;
+import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.ui.PacManGamesEnv;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;

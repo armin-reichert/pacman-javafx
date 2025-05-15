@@ -15,4 +15,5 @@ open module tengen.ms_pacman {
     requires de.amr.pacmanfx.ui;
 
     exports de.amr.pacmanfx.tengen.ms_pacman;
+    exports de.amr.pacmanfx.tengen.ms_pacman.app;
 }

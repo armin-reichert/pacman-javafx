@@ -1,15 +1,38 @@
 plugins {
-  id "java"
-  id "org.openjfx.javafxplugin" version "0.1.0"
+    id "java"
+    id "org.openjfx.javafxplugin" version "0.1.0"
+    id "org.beryx.jlink" version "3.1.1"
 }
 
 dependencies {
-  implementation project(":pacman-core")
-  implementation project(":pacman-ui-lib")
-  implementation project(":pacman-ui")
-  implementation libs.bundles.tinylog
+    implementation project(":pacman-core")
+    implementation project(":pacman-ui-lib")
+    implementation project(":pacman-ui")
+    implementation libs.bundles.tinylog
 }
 
 javafx {
-  modules = ["javafx.base", "javafx.graphics", "javafx.controls", "javafx.media"]
+    modules = ["javafx.base", "javafx.graphics", "javafx.controls", "javafx.media"]
 }
+
+application {
+    mainModule = "tengen.ms_pacman"
+    mainClass = "de.amr.pacmanfx.tengen.ms_pacman.app"
+}
+
+jlink {
+    launcher {
+        name = "Tengen Ms. Pac-Man"
+    }
+    jpackage {
+        if (os.isWindows()) {
+            installerType = "msi"
+            //imageOptions = ["--win-console"]
+        } else if (os.isLinux()) {
+            installerType = "deb"
+        } else if (os.isMacOsX()) {
+            installerType = "dmg"
+        }
+    }
+}
+
