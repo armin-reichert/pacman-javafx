@@ -17,7 +17,7 @@ javafx {
 
 application {
     mainModule = "tengen.ms_pacman"
-    mainClass = "de.amr.pacmanfx.tengen.ms_pacman.app"
+    mainClass = "de.amr.pacmanfx.tengen.ms_pacman.app.Main"
 }
 
 jlink {
