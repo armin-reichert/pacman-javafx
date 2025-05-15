@@ -57,7 +57,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         stork = new Actor();
         bag = new Actor();
 
-        ArcadeMsPacMan_SpriteSheet  spriteSheet = theUIConfig().current().spriteSheet();
+        ArcadeMsPacMan_SpriteSheet spriteSheet = theUIConfig().current().spriteSheet();
         msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));
         pacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));
 
@@ -78,7 +78,13 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void update() {
-        updateSceneState();
+        switch (sceneState) {
+            case STATE_CLAPPERBOARD -> updateStateClapperboard();
+            case STATE_DELIVER_JUNIOR -> updateStateDeliverJunior();
+            case STATE_STORK_LEAVES_SCENE -> updateStateStorkLeavesScene();
+            default -> throw new IllegalStateException("Illegal scene state: " + sceneState);
+        }
+        sceneTimer.doTick();
     }
 
     @Override
@@ -107,22 +113,12 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     private static final byte STATE_STORK_LEAVES_SCENE = 2;
 
     private byte sceneState;
-    private final TickTimer sceneTimer = new TickTimer("MsPacManCutScene3");
+    private final TickTimer sceneTimer = new TickTimer("MsPacMan_CutScene3");
 
     private void setSceneState(byte state, long ticks) {
-        this.sceneState = state;
+        sceneState = state;
         sceneTimer.reset(ticks);
         sceneTimer.start();
-    }
-
-    private void updateSceneState() {
-        switch (sceneState) {
-            case STATE_CLAPPERBOARD -> updateStateClapperboard();
-            case STATE_DELIVER_JUNIOR -> updateStateDeliverJunior();
-            case STATE_STORK_LEAVES_SCENE -> updateStateStorkLeavesScene();
-            default -> throw new IllegalStateException("Illegal state: " + sceneState);
-        }
-        sceneTimer.doTick();
     }
 
     private void updateStateClapperboard() {
