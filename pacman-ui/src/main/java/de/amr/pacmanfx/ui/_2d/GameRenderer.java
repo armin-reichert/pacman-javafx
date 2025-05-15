@@ -162,7 +162,7 @@ public interface GameRenderer {
 
     void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSizeInPx);
 
-    void drawMaze(GameLevel level, double x, double y, Paint backgroundColor, boolean highlighted, boolean blinking);
+    void drawMaze(GameLevel level, double x, double y, Color backgroundColor, boolean highlighted, boolean blinking);
 
     /**
      * Over-paints all eaten pellet tiles.

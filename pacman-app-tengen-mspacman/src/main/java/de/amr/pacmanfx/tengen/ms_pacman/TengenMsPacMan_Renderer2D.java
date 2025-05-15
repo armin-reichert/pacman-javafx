@@ -4,26 +4,27 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman;
 
-import de.amr.pacmanfx.lib.*;
+import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.ScoreManager;
-import de.amr.pacmanfx.ui.PacManGamesEnv;
+import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.ui._2d.SpriteAnimationSet;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.input.JoypadKeyBinding;
-import de.amr.pacmanfx.model.actors.*;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
@@ -145,40 +146,35 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     @Override
-    public void drawMaze(GameLevel level, double x, double y, Paint backgroundColor, boolean mazeHighlighted, boolean blinking) {}
-
-    public void drawWorld(GameLevel level, double mapX, double mapY) {
-        ctx().setImageSmoothing(false);
-
-        final var game = (TengenMsPacMan_GameModel) level.game();
-        final MapCategory mapCategory = game.mapCategory();
-        final int mapNumber = level.worldMap().getConfigValue("mapNumber");
-
-        if (!game.optionsAreInitial()) {
-            drawGameOptions(game, level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
-        }
-
+    public void drawMaze(GameLevel level, double x, double y, Color unusedBackgroundColor, boolean unusedHighlighted, boolean unusedBlinking) {
         if (coloredMapSet == null) {
-            // setWorldMap() not yet called?
-            Logger.warn("Tick {}: No maze available", theClock().tickCount());
+            Logger.warn("Tick {}: Maze cannot be drawn, no map set found", theClock().tickCount());
             return;
         }
 
-        RectArea area = mapCategory == MapCategory.STRANGE && mapNumber == 15
+        final var tengenGame = (TengenMsPacMan_GameModel) theGame();
+        final int mapNumber = level.worldMap().getConfigValue("mapNumber");
+
+        ctx().setImageSmoothing(false);
+
+        if (!tengenGame.optionsAreInitial()) {
+            drawGameOptions(tengenGame, level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
+        }
+
+        RectArea area = tengenGame.mapCategory() == MapCategory.STRANGE && mapNumber == 15
             ? strangeMap15Sprite(theClock().tickCount()) // Strange map #15: psychedelic animation
             : coloredMapSet.normalMaze().region();
         ctx().drawImage(coloredMapSet.normalMaze().source(),
             area.x(), area.y(), area.width(), area.height(),
-            scaled(mapX), scaled(mapY), scaled(area.width()), scaled(area.height())
+            scaled(x), scaled(y), scaled(area.width()), scaled(area.height())
         );
+        // The maze images also contain the ghost and Ms. Pac-Man sprites at their initial positions
         overPaintActors(level);
     }
 
     public void drawFood(GameLevel level) {
-        //TODO may this happen?
         if (coloredMapSet == null) {
-            Logger.error("Draw food: no map set available?");
-            applyMapSettings(level.worldMap());
+            Logger.error("Draw food: no map set found");
             return;
         }
         ctx().save();

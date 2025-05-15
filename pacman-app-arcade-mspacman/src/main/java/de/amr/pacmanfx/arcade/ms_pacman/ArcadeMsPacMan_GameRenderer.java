@@ -33,7 +33,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
 
-    private static final RectArea[] FULL_MAZE_REGIONS = {
+    private static final RectArea[] FULL_MAZES = {
         rect(0,     0, 224, 248),
         rect(0,   248, 224, 248),
         rect(0, 2*248, 224, 248),
@@ -42,7 +42,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
         rect(0, 5*248, 224, 248),
     };
 
-    private static final RectArea[] EMPTY_MAZE_REGIONS = {
+    private static final RectArea[] EMPTY_MAZES = {
         rect(228,     0, 224, 248),
         rect(228,   248, 224, 248),
         rect(228, 2*248, 224, 248),
@@ -51,7 +51,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
         rect(228, 5*258, 224, 248),
     };
 
-    private static final RectArea[] FLASHING_MAZE_REGIONS = {
+    private static final RectArea[] HIGHLIGHTED_MAZES = {
         rect(0,     0, 224, 248),
         rect(0,   248, 224, 248),
         rect(0, 2*248, 224, 248),
@@ -63,14 +63,12 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;
     private final GraphicsContext ctx;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
-    private final Image flashingMazesImage;
-    private int colorMapIndex;
+    private int mazeIndex;
 
     public ArcadeMsPacMan_GameRenderer(ArcadeMsPacMan_SpriteSheet spriteSheet, Canvas canvas) {
         this.spriteSheet = requireNonNull(spriteSheet);
         ctx = requireNonNull(canvas).getGraphicsContext2D();
-        flashingMazesImage = theAssets().get("ms_pacman.flashing_mazes");
-        colorMapIndex = -1; // undefined
+        mazeIndex = -1; // undefined
     }
 
     @Override
@@ -90,17 +88,17 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
 
     @Override
     public void applyMapSettings(WorldMap worldMap) {
-        colorMapIndex = worldMap.getConfigValue("colorMapIndex");
+        mazeIndex = worldMap.getConfigValue("colorMapIndex");
     }
 
     @Override
-    public void drawMaze(GameLevel level, double x, double y, Paint backgroundColor, boolean mazeHighlighted, boolean blinking) {
-        if (mazeHighlighted) {
-            drawImageRegionScaled(flashingMazesImage, FLASHING_MAZE_REGIONS[colorMapIndex], x, y);
+    public void drawMaze(GameLevel level, double x, double y, Color backgroundColor, boolean highlighted, boolean blinking) {
+        if (highlighted) {
+            drawImageRegionScaled(theAssets().get("ms_pacman.flashing_mazes"), HIGHLIGHTED_MAZES[mazeIndex], x, y);
         } else if (level.uneatenFoodCount() == 0) {
-            drawSpriteScaled(EMPTY_MAZE_REGIONS[colorMapIndex], x, y);
+            drawSpriteScaled(EMPTY_MAZES[mazeIndex], x, y);
         } else {
-            drawSpriteScaled(FULL_MAZE_REGIONS[colorMapIndex], x, y);
+            drawSpriteScaled(FULL_MAZES[mazeIndex], x, y);
             ctx.save();
             ctx.scale(scaling(), scaling());
             overPaintEatenPelletTiles(level, backgroundColor);

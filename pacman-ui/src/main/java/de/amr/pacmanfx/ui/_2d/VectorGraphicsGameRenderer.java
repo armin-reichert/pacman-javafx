@@ -72,9 +72,9 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void drawMaze(GameLevel level, double x, double y, Paint backgroundColor, boolean mazeHighlighted, boolean blinking) {
+    public void drawMaze(GameLevel level, double x, double y, Color backgroundColor, boolean highlighted, boolean blinking) {
         WorldMap worldMap = level.worldMap();
-        if (mazeHighlighted) {
+        if (highlighted) {
             terrainRenderer.setColorScheme(blinking ? blinkingOnColors : blinkingOffColors);
             terrainRenderer.drawTerrain(ctx, worldMap, worldMap.obstacles());
         }
