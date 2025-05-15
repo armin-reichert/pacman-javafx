@@ -18,7 +18,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.TS;
@@ -28,9 +27,6 @@ import static de.amr.pacmanfx.ui.GameAssets.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.theAssets;
 import static java.util.Objects.requireNonNull;
 
-/**
- * @author Armin Reichert
- */
 public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
 
     private static final RectArea[] FULL_MAZES = {

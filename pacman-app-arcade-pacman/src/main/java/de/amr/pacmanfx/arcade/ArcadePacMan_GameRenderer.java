@@ -14,7 +14,6 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.TS;
@@ -23,9 +22,6 @@ import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.FULL_MAZE_SPRITE;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.theAssets;
 import static java.util.Objects.requireNonNull;
 
-/**
- * @author Armin Reichert
- */
 public class ArcadePacMan_GameRenderer implements GameRenderer {
 
     private final ArcadePacMan_SpriteSheet spriteSheet;

@@ -40,9 +40,6 @@ import static de.amr.pacmanfx.ui._2d.GameSpriteSheet.NO_SPRITE;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-/**
- * @author Armin Reichert
- */
 public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
