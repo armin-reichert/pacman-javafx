@@ -20,7 +20,7 @@ import org.tinylog.Logger;
  *
  * @author Armin Reichert
  */
-public class GameClockFX {
+public class GameClock {
 
     private final DoubleProperty targetFrameRatePy = new SimpleDoubleProperty(this, "targetFrameRate", 60) {
         @Override
@@ -33,7 +33,7 @@ public class GameClockFX {
 
     private final BooleanProperty timeMeasuredPy = new SimpleBooleanProperty(this, "timeMeasured", false);
 
-    private Runnable pauseableAction = () -> {};
+    private Runnable pausableAction = () -> {};
     private Runnable permanentAction = () -> {};
     private Timeline animation;
     private long updateCount;
@@ -43,16 +43,16 @@ public class GameClockFX {
     private long countTicksStartTime;
     private long ticksInFrame;
 
-    public GameClockFX() {
+    public GameClock() {
         create(targetFrameRatePy.get());
     }
 
-    public void setPauseableAction(Runnable callback) {
-        this.pauseableAction = callback;
+    public void setPausableAction(Runnable action) {
+        this.pausableAction = action;
     }
 
-    public void setPermanentAction(Runnable callback) {
-        this.permanentAction = callback;
+    public void setPermanentAction(Runnable action) {
+        this.permanentAction = action;
     }
 
     public DoubleProperty targetFrameRateProperty() {
@@ -97,19 +97,19 @@ public class GameClockFX {
         return updateCount;
     }
 
-    public boolean makeSteps(int n, boolean pauseableActionEnabled) {
+    public boolean makeSteps(int n, boolean pausableActionEnabled) {
         for (int i = 0; i < n; ++i) {
-            boolean success = makeOneStep(pauseableActionEnabled);
+            boolean success = makeOneStep(pausableActionEnabled);
             if (!success) return false;
         }
         return true;
     }
 
-    public boolean makeOneStep(boolean pauseableActionEnabled) {
+    public boolean makeOneStep(boolean pausableActionEnabled) {
         long now = System.nanoTime();
-        if (pauseableActionEnabled) {
+        if (pausableActionEnabled) {
             try {
-                execute(pauseableAction, "Pauseable action took {} milliseconds");
+                execute(pausableAction, "Pausable action took {} milliseconds");
                 updateCount++;
             } catch (Throwable x) {
                 Logger.error(x);
@@ -121,7 +121,11 @@ public class GameClockFX {
             execute(permanentAction, "Permanent action took {} milliseconds");
             ++tickCount;
             ++ticksInFrame;
-            computeFrameRate(now);
+            if (now - countTicksStartTime > 1e9) {
+                ticksPerSec = ticksInFrame;
+                ticksInFrame = 0;
+                countTicksStartTime = now;
+            }
         } catch (Throwable x) {
             Logger.error(x);
             Logger.error("Something very bad happened, game clock has been stopped!");
@@ -159,14 +163,6 @@ public class GameClockFX {
             Logger.info(logMessage, duration / 1e6);
         } else {
             action.run();
-        }
-    }
-
-    private void computeFrameRate(long time) {
-        if (time - countTicksStartTime > 1e9) {
-            ticksPerSec = ticksInFrame;
-            ticksInFrame = 0;
-            countTicksStartTime = time;
         }
     }
 }

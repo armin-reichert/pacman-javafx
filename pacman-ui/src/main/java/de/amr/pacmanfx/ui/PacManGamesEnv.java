@@ -8,7 +8,7 @@ import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.sound.GameSound;
-import de.amr.pacmanfx.uilib.GameClockFX;
+import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.input.Joypad;
 import de.amr.pacmanfx.uilib.input.Keyboard;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
@@ -30,7 +30,7 @@ import static java.util.Objects.requireNonNull;
 public class PacManGamesEnv {
 
     private static GameAssets theAssets;
-    private static GameClockFX theClock;
+    private static GameClock theClock;
     private static Keyboard theKeyboard;
     private static Joypad theJoypad;
     private static GameSound theSound;
@@ -43,7 +43,7 @@ public class PacManGamesEnv {
     public static void init() {
         checkUserDirsExistAndWritable();
         theAssets = new GameAssets();
-        theClock = new GameClockFX();
+        theClock = new GameClock();
         theKeyboard = new Keyboard();
         theJoypad = new Joypad(theKeyboard);
         theSound = new GameSound();
@@ -52,7 +52,7 @@ public class PacManGamesEnv {
     }
 
     public static GameAssets theAssets() { return theAssets; }
-    public static GameClockFX theClock() { return theClock; }
+    public static GameClock theClock() { return theClock; }
     public static Keyboard theKeyboard() { return theKeyboard; }
     public static Joypad theJoypad() { return theJoypad; }
     public static GameSound theSound() { return theSound; }

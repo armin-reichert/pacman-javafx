@@ -220,7 +220,7 @@ public class PacManGamesUI implements GameUI {
         stage.setMinHeight(ARCADE_MAP_SIZE_IN_PIXELS.y() * 1.25);
         stage.setScene(mainScene);
 
-        theClock().setPauseableAction(this::doSimulationStepAndUpdateGameScene);
+        theClock().setPausableAction(this::doSimulationStepAndUpdateGameScene);
         theClock().setPermanentAction(this::drawCurrentView);
     }
 
