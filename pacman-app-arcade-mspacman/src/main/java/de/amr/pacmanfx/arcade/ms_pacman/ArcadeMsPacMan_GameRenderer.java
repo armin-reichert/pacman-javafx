@@ -33,8 +33,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
 
-    private record ImageRegion(Image image, RectArea area) {}
-
     private static final RectArea[] FULL_MAZE_REGIONS = {
         rect(0,     0, 224, 248),
         rect(0,   248, 224, 248),
@@ -66,15 +64,13 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     private final GraphicsContext ctx;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
     private final Image flashingMazesImage;
-    private RectArea fullMazeSpritesheetRegion;
-    private RectArea emptyMazeSpritesheetRegion;
-    private ImageRegion flashingMazeImageRegion;
+    private int colorMapIndex;
 
     public ArcadeMsPacMan_GameRenderer(ArcadeMsPacMan_SpriteSheet spriteSheet, Canvas canvas) {
         this.spriteSheet = requireNonNull(spriteSheet);
         ctx = requireNonNull(canvas).getGraphicsContext2D();
-        //TODO maybe create flashing maze from normal image at runtime by color exchanges?
         flashingMazesImage = theAssets().get("ms_pacman.flashing_mazes");
+        colorMapIndex = -1; // undefined
     }
 
     @Override
@@ -94,20 +90,17 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
 
     @Override
     public void applyMapSettings(WorldMap worldMap) {
-        int colorMapIndex = worldMap.getConfigValue("colorMapIndex");
-        fullMazeSpritesheetRegion = FULL_MAZE_REGIONS[colorMapIndex];
-        emptyMazeSpritesheetRegion = EMPTY_MAZE_REGIONS[colorMapIndex];
-        flashingMazeImageRegion = new ImageRegion(flashingMazesImage, FLASHING_MAZE_REGIONS[colorMapIndex]);
+        colorMapIndex = worldMap.getConfigValue("colorMapIndex");
     }
 
     @Override
     public void drawMaze(GameLevel level, double x, double y, Paint backgroundColor, boolean mazeHighlighted, boolean blinking) {
         if (mazeHighlighted) {
-            drawImageRegionScaled(flashingMazeImageRegion.image(), flashingMazeImageRegion.area(), x, y);
+            drawImageRegionScaled(flashingMazesImage, FLASHING_MAZE_REGIONS[colorMapIndex], x, y);
         } else if (level.uneatenFoodCount() == 0) {
-            drawSpriteScaled(emptyMazeSpritesheetRegion, x, y);
+            drawSpriteScaled(EMPTY_MAZE_REGIONS[colorMapIndex], x, y);
         } else {
-            drawSpriteScaled(fullMazeSpritesheetRegion, x, y);
+            drawSpriteScaled(FULL_MAZE_REGIONS[colorMapIndex], x, y);
             ctx.save();
             ctx.scale(scaling(), scaling());
             overPaintEatenPelletTiles(level, backgroundColor);
@@ -126,7 +119,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     }
 
     public void drawBonus(Bonus bonus) {
-        MovingBonus movingBonus = (MovingBonus) bonus;
+        var movingBonus = (MovingBonus) bonus;
         ctx.save();
         ctx.setImageSmoothing(false);
         ctx.translate(0, movingBonus.elongationY());
