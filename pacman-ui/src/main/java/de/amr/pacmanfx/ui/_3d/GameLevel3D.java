@@ -47,7 +47,8 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
-import static de.amr.pacmanfx.uilib.Ufx.*;
+import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
+import static de.amr.pacmanfx.uilib.Ufx.doAfterSec;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -92,7 +93,7 @@ public class GameLevel3D {
         final WorldMapColorScheme colorScheme = uiConfig.worldMapColorScheme(worldMap);
         final PhongMaterial foodMaterial = coloredPhongMaterial(colorScheme.pellet()); // TODO move into UI config?
 
-        livesCounter3D = createLivesCounter3D(uiConfig, level.game().canStartNewGame());
+        livesCounter3D = createLivesCounter3D(uiConfig, theGame().canStartNewGame());
         livesCounter3D.livesCountPy.bind(livesCountPy);
 
         pac3D = createPac3D(gameVariant, uiConfig.assetNamespace(), level.pac());

@@ -48,7 +48,6 @@ public class GameLevel {
         return tile.scaled(TS).plus(HTS, 0).toVector2f();
     }
 
-    private final GameModel game;
     private final int number; // 1=first level
     private LevelData data;
     private ActorSpeedControl speedControl;
@@ -87,8 +86,7 @@ public class GameLevel {
     private int gameOverStateTicks;
     private long startTime;
 
-    public GameLevel(GameModel game, int number, WorldMap worldMap) {
-        this.game = requireNonNull(game);
+    public GameLevel(int number, WorldMap worldMap) {
         this.number = requireValidLevelNumber(number);
         this.worldMap = requireNonNull(worldMap);
 
@@ -216,8 +214,6 @@ public class GameLevel {
         pac().hide();
         ghosts().forEach(Ghost::hide);
     }
-
-    public GameModel game() { return game; }
 
     public LevelData data() { return data; }
 

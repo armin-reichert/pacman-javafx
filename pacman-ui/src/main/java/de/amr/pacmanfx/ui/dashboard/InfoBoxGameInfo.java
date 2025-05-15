@@ -155,8 +155,8 @@ public class InfoBoxGameInfo extends InfoBox {
 
     private String fmtPacPowerTime(GameLevel level) {
         return "%.2f sec (%d ticks)".formatted(
-            level.game().pacPowerTicks(level) / 60f,
-            level.game().pacPowerTicks(level));
+            theGame().pacPowerTicks(level) / 60f,
+            theGame().pacPowerTicks(level));
     }
 
     private String fmtNumFlashes(GameLevel level) {

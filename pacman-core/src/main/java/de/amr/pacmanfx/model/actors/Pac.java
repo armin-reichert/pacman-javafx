@@ -10,6 +10,7 @@ import de.amr.pacmanfx.steering.Steering;
 
 import java.util.Optional;
 
+import static de.amr.pacmanfx.Globals.theGame;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -107,12 +108,12 @@ public class Pac extends Creature {
     }
 
     public boolean isPowerFading() {
-        return powerTimer.isRunning() && powerTimer.remainingTicks() <= level.game().pacPowerFadingTicks(level);
+        return powerTimer.isRunning() && powerTimer.remainingTicks() <= theGame().pacPowerFadingTicks(level);
     }
 
     public boolean isPowerFadingStarting() {
-        return powerTimer.isRunning() && powerTimer.remainingTicks() == level.game().pacPowerFadingTicks(level)
-            || powerTimer.durationTicks() < level.game().pacPowerFadingTicks(level) && powerTimer.tickCount() == 1;
+        return powerTimer.isRunning() && powerTimer.remainingTicks() == theGame().pacPowerFadingTicks(level)
+            || powerTimer.durationTicks() < theGame().pacPowerFadingTicks(level) && powerTimer.tickCount() == 1;
     }
 
 

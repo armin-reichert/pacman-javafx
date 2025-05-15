@@ -186,10 +186,10 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     public void drawHighlightedWorld(GameLevel level, double mapX, double mapY, int flashingIndex) {
+        final var tengenGame = (TengenMsPacMan_GameModel) theGame();
         ctx().setImageSmoothing(false);
-        final var game = (TengenMsPacMan_GameModel) level.game();
-        if (!game.optionsAreInitial()) {
-            drawGameOptions(game, level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
+        if (!tengenGame.optionsAreInitial()) {
+            drawGameOptions(tengenGame, level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
         }
         ColoredMapImage mapImage = coloredMapSet.flashingMazes().get(flashingIndex);
         RectArea region = mapImage.region();
