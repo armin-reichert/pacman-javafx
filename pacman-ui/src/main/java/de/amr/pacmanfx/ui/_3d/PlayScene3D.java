@@ -404,7 +404,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         animation.setDelay(Duration.seconds(2));
         animation.setOnFinished(e -> {
             perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
-            theGameController().letCurrentStateExpire();
+            theGameController().letCurrentGameStateExpire();
         });
         theGameState().timer().resetIndefiniteTime();
         perspectiveNamePy.unbind();
@@ -567,7 +567,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 Ufx.pauseSec(1)
             );
         animation.setDelay(Duration.seconds(2));
-        animation.setOnFinished(e -> theGameController().letCurrentStateExpire());
+        animation.setOnFinished(e -> theGameController().letCurrentGameStateExpire());
 
         animation.play();
     }

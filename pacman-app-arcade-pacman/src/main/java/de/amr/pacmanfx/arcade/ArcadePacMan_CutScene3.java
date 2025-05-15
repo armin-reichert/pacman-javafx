@@ -81,7 +81,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
                 blinky.selectAnimation(ArcadePacMan_GhostAnimations.ANIM_BLINKY_NAKED);
                 blinky.startAnimation();
             }
-            case ANIMATION_START + 700 -> theGameController().letCurrentStateExpire();
+            case ANIMATION_START + 700 -> theGameController().letCurrentGameStateExpire();
             default -> {}
         }
     }

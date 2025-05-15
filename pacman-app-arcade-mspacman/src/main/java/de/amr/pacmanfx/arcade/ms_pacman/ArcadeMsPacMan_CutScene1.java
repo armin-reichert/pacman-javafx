@@ -78,7 +78,14 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void update() {
-        updateSceneState();
+        switch (sceneState) {
+            case STATE_CLAPPERBOARD -> updateStateClapperboard();
+            case STATE_CHASED_BY_GHOSTS -> updateStateChasedByGhosts();
+            case STATE_COMING_TOGETHER -> updateStateComingTogether();
+            case STATE_IN_HEAVEN -> updateStateInHeaven();
+            default -> throw new IllegalStateException("Illegal scene state: " + sceneState);
+        }
+        sceneTimer.doTick();
     }
 
     @Override
@@ -109,23 +116,12 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private static final byte STATE_IN_HEAVEN = 3;
 
     private byte sceneState;
-    private final TickTimer sceneTimer = new TickTimer("MsPacManCutScene1");
+    private final TickTimer sceneTimer = new TickTimer("MsPacMan_CutScene1");
 
     private void setState(byte state, long ticks) {
-        this.sceneState = state;
+        sceneState = state;
         sceneTimer.reset(ticks);
         sceneTimer.start();
-    }
-
-    private void updateSceneState() {
-        switch (sceneState) {
-            case STATE_CLAPPERBOARD -> updateStateClapperboard();
-            case STATE_CHASED_BY_GHOSTS -> updateStateChasedByGhosts();
-            case STATE_COMING_TOGETHER -> updateStateComingTogether();
-            case STATE_IN_HEAVEN -> updateStateInHeaven();
-            default -> throw new IllegalStateException("Illegal state: " + sceneState);
-        }
-        sceneTimer.doTick();
     }
 
     private void updateStateClapperboard() {
@@ -204,7 +200,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         }
 
         // Pac-Man and Ms. Pac-Man meet?
-        else if (pacMan.moveDir() == Direction.LEFT && pacMan.posX() - msPacMan.posX() < TS * (2)) {
+        else if (pacMan.moveDir() == Direction.LEFT && pacMan.posX() - msPacMan.posX() < TS * 2) {
             pacMan.setMoveDir(Direction.UP);
             pacMan.setSpeed(SPEED_PAC_RISING);
             msPacMan.setMoveDir(Direction.UP);
@@ -212,7 +208,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         }
 
         // Inky and Pinky collide?
-        else if (inky.moveDir() == Direction.LEFT && inky.posX() - pinky.posX() < TS * (2)) {
+        else if (inky.moveDir() == Direction.LEFT && inky.posX() - pinky.posX() < TS * 2) {
             inky.setMoveAndWishDir(Direction.RIGHT);
             inky.setSpeed(SPEED_GHOST_AFTER_COLLISION);
             inky.setVelocity(inky.velocity().minus(0, 2.0f));
@@ -223,17 +219,20 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
             pinky.setVelocity(pinky.velocity().minus(0, 2.0f));
             pinky.setAcceleration(0, 0.4f);
         }
+
         else {
             pacMan.move();
             msPacMan.move();
             inky.move();
             pinky.move();
+
+            // Collision with ground?
             if (inky.posY() > MIDDLE_LANE_Y) {
-                inky.setPosition(inky.posX(), MIDDLE_LANE_Y);
+                inky.setPosY(MIDDLE_LANE_Y);
                 inky.setAcceleration(Vector2f.ZERO);
             }
             if (pinky.posY() > MIDDLE_LANE_Y) {
-                pinky.setPosition(pinky.posX(), MIDDLE_LANE_Y);
+                pinky.setPosY(MIDDLE_LANE_Y);
                 pinky.setAcceleration(Vector2f.ZERO);
             }
         }
@@ -250,21 +249,18 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         msPacMan.stopAnimation();
         msPacMan.resetAnimation();
 
-        inky.setSpeed(0);
         inky.hide();
-
-        pinky.setSpeed(0);
         pinky.hide();
 
-        heart.setPosition((pacMan.posX() + msPacMan.posX()) / 2, pacMan.posY() - TS * (2));
+        heart.setPosition((pacMan.posX() + msPacMan.posX()) * 0.5f, pacMan.posY() - TS * 2);
         heart.show();
 
-        setState(STATE_IN_HEAVEN, 3 * 60);
+        setState(STATE_IN_HEAVEN, 3 * NUM_TICKS_PER_SEC);
     }
 
     private void updateStateInHeaven() {
         if (sceneTimer.hasExpired()) {
-            theGameController().letCurrentStateExpire();
+            theGameController().letCurrentGameStateExpire();
         }
     }
 }

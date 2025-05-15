@@ -344,7 +344,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 optionalGameLevel().ifPresent(level -> {
                     theSound().stopAll();
                     levelCompleteAnimation = new FlashingMazeAnimation(level);
-                    levelCompleteAnimation.setActionOnFinished(theGameController()::letCurrentStateExpire);
+                    levelCompleteAnimation.setActionOnFinished(theGameController()::letCurrentGameStateExpire);
                     levelCompleteAnimation.start();
                 });
 
@@ -398,7 +398,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void onPacDead(GameEvent e) {
         movingCamera.focusTopOfScene();
-        theGameController().letCurrentStateExpire();
+        theGameController().letCurrentGameStateExpire();
     }
 
     @Override

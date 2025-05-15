@@ -108,7 +108,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             case ANIMATION_START + 420 -> blinkyDamaged.nextFrame(); // Eyes right-down
             case ANIMATION_START + 508 -> {
                 blinky.setVisible(false);
-                theGameController().letCurrentStateExpire();
+                theGameController().letCurrentGameStateExpire();
             }
             default -> {}
         }

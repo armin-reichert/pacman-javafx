@@ -277,7 +277,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
             optionalGameLevel().ifPresent(level -> {
                 theSound().stopAll();
                 levelCompleteAnimation = new FlashingMazeAnimation(level);
-                levelCompleteAnimation.setActionOnFinished(theGameController()::letCurrentStateExpire);
+                levelCompleteAnimation.setActionOnFinished(theGameController()::letCurrentGameStateExpire);
                 levelCompleteAnimation.start();
             });
         }
@@ -318,7 +318,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacDead(GameEvent e) {
-        theGameController().letCurrentStateExpire();
+        theGameController().letCurrentGameStateExpire();
     }
 
     @Override
