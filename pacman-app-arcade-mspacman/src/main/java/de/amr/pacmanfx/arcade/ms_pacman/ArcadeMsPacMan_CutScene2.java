@@ -67,7 +67,12 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void update() {
-        updateSceneState();
+        switch (sceneState) {
+            case STATE_CLAPPERBOARD -> updateStateClapperboard();
+            case STATE_CHASING -> updateStateChasing();
+            default -> throw new IllegalStateException("Illegal scene state: " + sceneState);
+        }
+        sceneTimer.doTick();
     }
 
     @Override
@@ -92,21 +97,12 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     private static final byte STATE_CHASING = 1;
 
     private byte sceneState;
-    private final TickTimer sceneTimer = new TickTimer("MsPacManCutScene2");
+    private final TickTimer sceneTimer = new TickTimer("MsPacMan_CutScene2");
 
     private void setSceneState(byte state, long ticks) {
-        this.sceneState = state;
+        sceneState = state;
         sceneTimer.reset(ticks);
         sceneTimer.start();
-    }
-
-    private void updateSceneState() {
-        switch (sceneState) {
-            case STATE_CLAPPERBOARD -> updateStateClapperboard();
-            case STATE_CHASING -> updateStateChasing();
-            default -> throw new IllegalStateException("Illegal state: " + sceneState);
-        }
-        sceneTimer.doTick();
     }
 
     private void updateStateClapperboard() {
@@ -121,6 +117,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.selectAnimation(ArcadeMsPacMan_PacAnimations.PAC_MAN_MUNCHING);
         pacMan.startAnimation();
+
         msPacMan.setMoveDir(Direction.RIGHT);
         msPacMan.selectAnimation(Animations.ANY_PAC_MUNCHING);
         msPacMan.startAnimation();
@@ -134,6 +131,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setSpeed(2.0f);
             pacMan.show();
+
             msPacMan.setPosition(TS * (-8), UPPER_LANE_Y);
             msPacMan.setMoveDir(Direction.RIGHT);
             msPacMan.setSpeed(2.0f);
@@ -143,22 +141,25 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
             pacMan.setPosition(TS * 36, LOWER_LANE_Y);
             pacMan.setMoveDir(Direction.LEFT);
             pacMan.setSpeed(2.0f);
+
             msPacMan.setPosition(TS * 30, LOWER_LANE_Y);
             msPacMan.setMoveDir(Direction.LEFT);
             msPacMan.setSpeed(2.0f);
         }
         else if (sceneTimer.atSecond(13.5)) {
+            pacMan.setPosition(TS * (-2), MIDDLE_LANE_Y);
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setSpeed(2.0f);
+
             msPacMan.setPosition(TS * (-8), MIDDLE_LANE_Y);
             msPacMan.setMoveDir(Direction.RIGHT);
             msPacMan.setSpeed(2.0f);
-            pacMan.setPosition(TS * (-2), MIDDLE_LANE_Y);
         }
         else if (sceneTimer.atSecond(17.5)) {
             pacMan.setPosition(TS * 42, UPPER_LANE_Y);
             pacMan.setMoveDir(Direction.LEFT);
             pacMan.setSpeed(4.0f);
+
             msPacMan.setPosition(TS * 30, UPPER_LANE_Y);
             msPacMan.setMoveDir(Direction.LEFT);
             msPacMan.setSpeed(4.0f);
@@ -167,6 +168,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
             pacMan.setPosition(TS * (-2), LOWER_LANE_Y);
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setSpeed(4.0f);
+
             msPacMan.setPosition(TS * (-14), LOWER_LANE_Y);
             msPacMan.setMoveDir(Direction.RIGHT);
             msPacMan.setSpeed(4.0f);
