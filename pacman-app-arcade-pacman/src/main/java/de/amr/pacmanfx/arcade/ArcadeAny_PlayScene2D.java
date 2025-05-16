@@ -156,30 +156,28 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         if (optGameLevel().isEmpty())
             return; // Scene is drawn already 2 ticks before level has been created
 
-        final GameLevel level = theGameLevel();
-
-        gr.applyMapSettings(level.worldMap());
+        gr.applyMapSettings(theGameLevel().worldMap());
 
         gr.drawScores(theGame().scoreManager(), ARCADE_WHITE, arcadeFontScaledTS());
-        gr.drawMaze(level, 0, 3 * TS, backgroundColor(),
+        gr.drawMaze(theGameLevel(), 0, 3 * TS, backgroundColor(),
             levelCompleteAnimation != null && levelCompleteAnimation.inHighlightPhase(),
-            level.blinking().isOn());
-        if (level.message() != null) {
-            drawLevelMessage(level.message(), level.number(), centerPositionBelowHouse(level));
+            theGameLevel().blinking().isOn());
+        if (theGameLevel().message() != null) {
+            drawLevelMessage(theGameLevel().message(), theGameLevel().number(), centerPositionBelowHouse());
         }
-        level.bonus().ifPresent(gr::drawBonus);
-        gr.drawActor(level.pac());
-        ghostsInZOrder(level).forEach(gr::drawActor);
+        theGameLevel().bonus().ifPresent(gr::drawBonus);
+        gr.drawActor(theGameLevel().pac());
+        ghostsInZOrder().forEach(gr::drawActor);
 
         if (debugInfoVisiblePy.get()) {
-            gr.drawAnimatedCreatureInfo(level.pac());
-            ghostsInZOrder(level).forEach(gr::drawAnimatedCreatureInfo);
+            gr.drawAnimatedCreatureInfo(theGameLevel().pac());
+            ghostsInZOrder().forEach(gr::drawAnimatedCreatureInfo);
         }
 
         // Draw either lives counter or missing credit
         if (theGame().canStartNewGame()) {
             // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
-            int numLivesDisplayed = theGameState() == GameState.STARTING_GAME && !level.pac().isVisible()
+            int numLivesDisplayed = theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()
                 ? theGame().lifeCount() : theGame().lifeCount() - 1;
             gr.drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - 2 * TS);
         } else {
@@ -212,15 +210,15 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         }
     }
 
-    private Vector2f centerPositionBelowHouse(GameLevel level) {
-        Vector2i houseTopLeft = level.houseMinTile(), houseSize = level.houseSizeInTiles();
+    private Vector2f centerPositionBelowHouse() {
+        Vector2i houseTopLeft = theGameLevel().houseMinTile(), houseSize = theGameLevel().houseSizeInTiles();
         float x = TS * (houseTopLeft.x() + houseSize.x() * 0.5f);
         float y = TS * (houseTopLeft.y() + houseSize.y() + 1);
         return new Vector2f(x, y);
     }
 
-    private Stream<Ghost> ghostsInZOrder(GameLevel level) {
-        return Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(level::ghost);
+    private Stream<Ghost> ghostsInZOrder() {
+        return Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(theGameLevel()::ghost);
     }
 
     @Override
