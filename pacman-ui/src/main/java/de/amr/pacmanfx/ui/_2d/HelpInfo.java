@@ -32,7 +32,7 @@ public class HelpInfo {
             case INTRO -> help.addInfoForIntroScene();
             case SETTING_OPTIONS -> help.addInfoForCreditScene();
             case STARTING_GAME, HUNTING, PACMAN_DYING, GHOST_DYING -> {
-                if (optionalGameLevel().isPresent() && optionalGameLevel().get().isDemoLevel()) {
+                if (optGameLevel().isPresent() && optGameLevel().get().isDemoLevel()) {
                     help.addInfoForDemoLevelPlayScene();
                 } else {
                     help.addInfoForPlayScene();

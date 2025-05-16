@@ -15,9 +15,9 @@ import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.ui.GameAction;
-import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.ui._2d.FlashingMazeAnimation;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
@@ -100,25 +100,27 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
     @Override
     public void update() {
-        if (optionalGameLevel().isPresent()) {
-            GameLevel level = optionalGameLevel().get();
-            /* TODO: Would like to do this only on level start, but when scene is switched between 2D and 3D,
-                     the corresponding scene has to be updated accordingly. */
-            if (level.isDemoLevel()) {
-                theGame().assignDemoLevelBehavior(level.pac());
-            }
-            else {
-                level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
-                level.pac().setImmune(PY_IMMUNITY.get());
-                updateSound(level);
-            }
-            if (theGameState() == GameState.LEVEL_COMPLETE) {
-                levelCompleteAnimation.tick();
-            }
-        }
-        else {
+        if (optGameLevel().isPresent()) {
+            updateLevel(theGameLevel());
+        } else {
             // Scene is already active 2 ticks before game level is created!
             Logger.info("Tick {}: Game level not yet available", theClock().tickCount());
+        }
+    }
+
+    private void updateLevel(GameLevel level) {
+        if (level.isDemoLevel()) {
+            //TODO this should not be done on every tick
+            theGame().assignDemoLevelBehavior(level.pac());
+        }
+        else {
+            //TODO use binding?
+            level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
+            level.pac().setImmune(PY_IMMUNITY.get());
+            updateSound(level);
+        }
+        if (theGameState() == GameState.LEVEL_COMPLETE) {
+            levelCompleteAnimation.tick();
         }
     }
 
@@ -174,7 +176,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        if (optionalGameLevel().isEmpty())
+        if (optGameLevel().isEmpty())
             return; // Scene is drawn already 2 ticks before level has been created
 
         final GameLevel level = theGameLevel();
@@ -246,7 +248,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
     protected void drawDebugInfo() {
         gr.drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
         if (theGameController().isSelected(GameVariant.PACMAN)) {
-            optionalGameLevel().ifPresent(level -> {
+            optGameLevel().ifPresent(level -> {
                 level.ghosts().forEach(ghost ->
                     ghost.specialTerrainTiles().forEach(tile -> {
                         double x = scaled(tile.x() * TS), y = scaled(tile.y() * TS + HTS), size = scaled(TS);
@@ -276,7 +278,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         if (gr == null) {
             setGameRenderer(theUIConfig().current().createRenderer(canvas));
         }
-        optionalGameLevel().map(GameLevel::worldMap).ifPresent(gr::applyMapSettings);
+        optGameLevel().map(GameLevel::worldMap).ifPresent(gr::applyMapSettings);
     }
 
     @Override
@@ -285,7 +287,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
             theSound().playGameOverSound();
         }
         else if (state == GameState.LEVEL_COMPLETE) {
-            optionalGameLevel().ifPresent(level -> {
+            optGameLevel().ifPresent(level -> {
                 theSound().stopAll();
                 levelCompleteAnimation = new FlashingMazeAnimation(level);
                 levelCompleteAnimation.setActionOnFinished(theGameController()::letCurrentGameStateExpire);

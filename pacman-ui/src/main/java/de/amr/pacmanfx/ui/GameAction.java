@@ -38,7 +38,7 @@ public enum GameAction implements Action {
         }
 
         @Override
-        public boolean isEnabled() { return optionalGameLevel().isPresent(); }
+        public boolean isEnabled() { return optGameLevel().isPresent(); }
     },
 
     CHEAT_EAT_ALL_PELLETS {
@@ -51,7 +51,7 @@ public enum GameAction implements Action {
 
         @Override
         public boolean isEnabled() {
-            return optionalGameLevel().isPresent()
+            return optGameLevel().isPresent()
                     && !theGameLevel().isDemoLevel()
                     && theGameState() == GameState.HUNTING;
         }
@@ -72,7 +72,7 @@ public enum GameAction implements Action {
         @Override
         public boolean isEnabled() {
             return theGameState() == GameState.HUNTING
-                    && optionalGameLevel().isPresent()
+                    && optGameLevel().isPresent()
                     && !theGameLevel().isDemoLevel();
         }
     },
@@ -87,7 +87,7 @@ public enum GameAction implements Action {
         public boolean isEnabled() {
             return theGame().isPlaying()
                     && theGameState() == GameState.HUNTING
-                    && optionalGameLevel().isPresent()
+                    && optGameLevel().isPresent()
                     && theGameLevel().number() < theGame().lastLevelNumber();
         }
     },
@@ -113,7 +113,7 @@ public enum GameAction implements Action {
             }
             return theGameState() == GameState.SETTING_OPTIONS
                 || theGameState() == INTRO
-                || optionalGameLevel().isPresent() && optionalGameLevel().get().isDemoLevel()
+                || optGameLevel().isPresent() && optGameLevel().get().isDemoLevel()
                 || theCoinMechanism().isEmpty();
         }
     },

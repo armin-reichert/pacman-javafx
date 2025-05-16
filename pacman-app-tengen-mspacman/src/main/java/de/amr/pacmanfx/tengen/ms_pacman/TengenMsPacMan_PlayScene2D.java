@@ -211,7 +211,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     }
 
     private void updateCameraPosition(double scaling) {
-        int worldTilesY = optionalGameLevel().map(level -> level.worldMap().numRows()).orElse(NES_TILES.y());
+        int worldTilesY = optGameLevel().map(level -> level.worldMap().numRows()).orElse(NES_TILES.y());
         double dy = scaling * (worldTilesY - 43) * HTS;
         fixedCamera.setTranslateY(dy);
     }
@@ -247,7 +247,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void update() {
-        optionalGameLevel().ifPresent(level -> {
+        optGameLevel().ifPresent(level -> {
             if (level.isDemoLevel()) {
                 theGame().assignDemoLevelBehavior(level.pac());
             }
@@ -337,7 +337,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             case HUNTING -> movingCamera.focusPlayer(true);
 
             case LEVEL_COMPLETE ->
-                optionalGameLevel().ifPresent(level -> {
+                optGameLevel().ifPresent(level -> {
                     theSound().stopAll();
                     levelCompleteAnimation = new FlashingMazeAnimation(level);
                     levelCompleteAnimation.setActionOnFinished(theGameController()::letCurrentGameStateExpire);
@@ -345,7 +345,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 });
 
             case GAME_OVER ->
-                optionalGameLevel().ifPresent(level -> {
+                optGameLevel().ifPresent(level -> {
                     var tengenGame = (TengenMsPacMan_GameModel) theGame();
                     if (tengenGame.mapCategory() != MapCategory.ARCADE) {
                         float belowHouse = centerPosBelowHouse(level).x();
@@ -383,7 +383,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onGameContinued(GameEvent e) {
-        optionalGameLevel().ifPresent(level -> level.showMessage(GameLevel.Message.READY));
+        optGameLevel().ifPresent(level -> level.showMessage(GameLevel.Message.READY));
     }
 
     @Override
@@ -448,7 +448,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     protected void drawSceneContent() {
-        final GameLevel level = optionalGameLevel().orElse(null);
+        final GameLevel level = optGameLevel().orElse(null);
         if (level == null) {
             // Scene is drawn already 2 ticks before level has been created
             Logger.warn("Tick {}: Game level not yet available, scene content not drawn", theClock().tickCount());

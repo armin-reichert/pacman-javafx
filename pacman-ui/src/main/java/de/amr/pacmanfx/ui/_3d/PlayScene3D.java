@@ -63,7 +63,7 @@ public class PlayScene3D implements GameScene, CommonActionProvider, CameraContr
     protected final ObjectProperty<PerspectiveID> perspectiveNamePy = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
-            optionalGameLevel().ifPresent(level -> perspective().init(fxSubScene, level));
+            optGameLevel().ifPresent(level -> perspective().init(fxSubScene, level));
         }
     };
 
@@ -201,7 +201,7 @@ public class PlayScene3D implements GameScene, CommonActionProvider, CameraContr
     @Override
     public void bindActions() {
         bindArcadeInsertCoinAction();
-        if (optionalGameLevel().isPresent() && !optionalGameLevel().get().isDemoLevel()) {
+        if (optGameLevel().isPresent() && !optGameLevel().get().isDemoLevel()) {
             if (!theGameController().isSelected(GameVariant.MS_PACMAN_TENGEN)) {
                 bindArcadeStartGameAction();
             }
@@ -218,7 +218,7 @@ public class PlayScene3D implements GameScene, CommonActionProvider, CameraContr
 
     @Override
     public void onLevelStarted(GameEvent event) {
-        optionalGameLevel().ifPresent(level -> {
+        optGameLevel().ifPresent(level -> {
             bindActions(); //TODO check if this is necessary
             if (level3D == null) {
                 replaceGameLevel3D(level);
@@ -245,7 +245,7 @@ public class PlayScene3D implements GameScene, CommonActionProvider, CameraContr
 
     @Override
     public void onSceneVariantSwitch(GameScene fromScene) {
-        optionalGameLevel().ifPresent(level -> {
+        optGameLevel().ifPresent(level -> {
             bindPlayerActions();
             bindActions();
             if (level3D == null) {
@@ -272,7 +272,7 @@ public class PlayScene3D implements GameScene, CommonActionProvider, CameraContr
 
     @Override
     public final void update() {
-        if (optionalGameLevel().isEmpty()) {
+        if (optGameLevel().isEmpty()) {
             // Scene is already visible 2 ticks before level has been created
             Logger.warn("Tick #{}: Game level not yet existing", theClock().tickCount());
             return;
@@ -360,7 +360,7 @@ public class PlayScene3D implements GameScene, CommonActionProvider, CameraContr
     @Override
     public void onEnterGameState(GameState state) {
         Logger.trace("Entering game state {}", state);
-        optionalGameLevel().ifPresent(level -> {
+        optGameLevel().ifPresent(level -> {
             switch (state) {
                 case HUNTING               -> onEnterStateHunting(level);
                 case PACMAN_DYING          -> onEnterStatePacManDying(level);
@@ -495,7 +495,7 @@ public class PlayScene3D implements GameScene, CommonActionProvider, CameraContr
 
     @Override
     public void onGameContinued(GameEvent e) {
-        optionalGameLevel().ifPresent(this::showReadyMessage);
+        optGameLevel().ifPresent(this::showReadyMessage);
     }
 
     @Override
