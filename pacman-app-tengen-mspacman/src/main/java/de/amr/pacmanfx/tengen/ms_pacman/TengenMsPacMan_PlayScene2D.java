@@ -334,7 +334,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             case GAME_OVER -> {
                 var tengenGame = (TengenMsPacMan_GameModel) theGame();
                 if (tengenGame.mapCategory() != MapCategory.ARCADE) {
-                    float belowHouse = centerPosBelowHouse(theGameLevel()).x();
+                    float belowHouse = centerPosBelowHouse().x();
                     messageMovement.start(MOVING_MESSAGE_DELAY, belowHouse, sizeInPx().x());
                 }
                 movingCamera.focusTopOfScene();
@@ -440,70 +440,68 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         }
 
         final var tengenGame = (TengenMsPacMan_GameModel) theGame();
-        final GameLevel level = theGameLevel();
-        final var tr = (TengenMsPacMan_Renderer2D) gr;
-        final int mazeTopY = 3 * TS;
+        final var r = (TengenMsPacMan_Renderer2D) gr;
 
-        tr.ctx().save();
-
+        r.ctx().save();
         // Tengen screen width is 32 tiles, each maze is 28 tiles wide, so reserve 2 tiles on each side
-        tr.ctx().translate(scaled(2 * TS), 0);
+        r.ctx().translate(scaled(2 * TS), 0);
+        r.setScaling(scaling());
 
-        tr.setScaling(scaling());
-
-        tr.drawScores(tengenGame.scoreManager(), nesPaletteColor(0x20), arcadeFontScaledTS());
-
+        r.drawScores(tengenGame.scoreManager(), nesPaletteColor(0x20), arcadeFontScaledTS());
+        final int mazeTopY = 3 * TS;
         final boolean flashing = levelCompleteAnimation != null && levelCompleteAnimation.inFlashingPhase();
         if (flashing) {
             if (levelCompleteAnimation.inHighlightPhase()) {
-                tr.drawHighlightedWorld(level, 0, mazeTopY, levelCompleteAnimation.flashingIndex());
+                r.drawHighlightedWorld(theGameLevel(), 0, mazeTopY, levelCompleteAnimation.flashingIndex());
             } else {
-                tr.drawMaze(level, 0, mazeTopY, null, false, false);
-                tr.drawFood(level); // this also hides the eaten food!
+                r.drawMaze(theGameLevel(), 0, mazeTopY, null, false, false);
+                r.drawFood(theGameLevel()); // this also hides the eaten food!
             }
         }
         else {
-            tr.drawMaze(level, 0, mazeTopY, null, false, false);
-            tr.drawFood(level);
-            level.bonus().ifPresent(tr::drawBonus);
+            r.drawMaze(theGameLevel(), 0, mazeTopY, null, false, false);
+            r.drawFood(theGameLevel());
+            theGameLevel().bonus().ifPresent(r::drawBonus);
             //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
-            tr.drawLevelMessage(level, currentMessagePosition(level), arcadeFontScaledTS());
-            tr.drawActor(level.pac());
-            ghostsInZOrder(level).forEach(tr::drawActor);
+            r.drawLevelMessage(theGameLevel(), currentMessagePosition(), arcadeFontScaledTS());
+            r.drawActor(theGameLevel().pac());
+            ghostsInZOrder().forEach(r::drawActor);
         }
 
         // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
-        int numLivesDisplayed = theGameState() == GameState.STARTING_GAME && !level.pac().isVisible()
+        int numLivesDisplayed = theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()
             ? tengenGame.lifeCount() : tengenGame.lifeCount() - 1;
-        tr.drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - TS);
+        r.drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - TS);
 
-        if (level.isDemoLevel() || tengenGame.mapCategory() == MapCategory.ARCADE) {
-            tr.drawLevelCounter(tengenGame.levelCounter(), sizeInPx());
+        if (theGameLevel().isDemoLevel() || tengenGame.mapCategory() == MapCategory.ARCADE) {
+            r.drawLevelCounter(tengenGame.levelCounter(), sizeInPx());
         } else {
-            tr.drawLevelCounterWithLevelNumbers(level.number(), tengenGame.levelCounter(), sizeInPx());
+            r.drawLevelCounterWithLevelNumbers(theGameLevel().number(), tengenGame.levelCounter(), sizeInPx());
         }
 
         if (debugInfoVisiblePy.get()) {
-            tr.drawAnimatedCreatureInfo(level.pac());
-            ghostsInZOrder(level).forEach(tr::drawAnimatedCreatureInfo);
+            r.drawAnimatedCreatureInfo(theGameLevel().pac());
+            ghostsInZOrder().forEach(r::drawAnimatedCreatureInfo);
             drawDebugInfo();
         }
 
-        tr.ctx().restore();
+        r.ctx().restore();
     }
 
-    private Stream<Ghost> ghostsInZOrder(GameLevel level) {
-        return Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(level::ghost);
+    private Stream<Ghost> ghostsInZOrder() {
+        return Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(theGameLevel()::ghost);
     }
 
-    private Vector2f currentMessagePosition(GameLevel level) {
-        Vector2f center = centerPosBelowHouse(level);
+    private Vector2f currentMessagePosition() {
+        Vector2f center = centerPosBelowHouse();
         return messageMovement != null && messageMovement.isRunning()
             ? new Vector2f(messageMovement.currentX(), center.y())
             : center;
     }
 
-    private Vector2f centerPosBelowHouse(GameLevel level) {
-        return level.houseMinTile().plus(0.5f * level.houseSizeInTiles().x(), level.houseSizeInTiles().y() + 1).scaled(TS);
+    private Vector2f centerPosBelowHouse() {
+        return theGameLevel().houseMinTile()
+                .plus(0.5f * theGameLevel().houseSizeInTiles().x(), theGameLevel().houseSizeInTiles().y() + 1)
+                .scaled(TS);
     }
 }
