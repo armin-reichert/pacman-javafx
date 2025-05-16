@@ -11,21 +11,18 @@ import java.util.Optional;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.CLAPPERBOARD_SPRITES;
 
 /**
- * @author Armin Reichert
+ * Animated move clapperboard.
  */
 public class ClapperboardAnimation {
 
-    private static final RectArea
-        WIDE_SPRITE = CLAPPERBOARD_SPRITES[0],
-        OPEN_SPRITE = CLAPPERBOARD_SPRITES[1],
-        CLOSED_SPRITE = CLAPPERBOARD_SPRITES[2];
+    private static final byte HIDDEN = -1, WIDE_OPEN = 0, OPEN = 1, CLOSED = 2;
 
     private final String number;
     private final String text;
 
     private int tick;
     private boolean running;
-    private RectArea currentSprite;
+    private byte state;
 
     public ClapperboardAnimation(String number, String text) {
         this.number = number;
@@ -42,27 +39,26 @@ public class ClapperboardAnimation {
 
     public void start() {
         tick = 0;
-        currentSprite = CLOSED_SPRITE;
+        state = WIDE_OPEN;
         running = true;
     }
 
     public void tick() {
         if (running) {
+            switch (tick) {
+                case 48 -> state = OPEN;
+                case 54 -> state = CLOSED;
+                case 59 -> state = WIDE_OPEN;
+                case 88 -> {
+                    state = HIDDEN;
+                    running = false;
+                }
+            }
             ++tick;
         }
     }
 
     public Optional<RectArea> currentSprite() {
-        switch (tick) {
-            case  1 -> currentSprite = WIDE_SPRITE;
-            case 48 -> currentSprite = OPEN_SPRITE;
-            case 54 -> currentSprite = CLOSED_SPRITE;
-            case 59 -> currentSprite = WIDE_SPRITE;
-            case 88 -> {
-                currentSprite = null;
-                running = false;
-            }
-        }
-        return Optional.ofNullable(currentSprite);
+        return state == HIDDEN ? Optional.empty() : Optional.of(CLAPPERBOARD_SPRITES[state]);
     }
 }
