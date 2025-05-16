@@ -68,11 +68,11 @@ public class Joypad {
     }
 
     public void registerCurrentBinding(ActionProvider actionProvider) {
-        currentKeys().forEach(combination -> keyboard.bind(combination, actionProvider));
+        currentKeys().forEach(combination -> keyboard.addBinding(combination, actionProvider));
     }
 
     public void unregisterCurrentBinding(ActionProvider actionProvider) {
-        currentKeys().forEach(combination -> keyboard.unbind(combination, actionProvider));
+        currentKeys().forEach(combination -> keyboard.removeBinding(combination, actionProvider));
     }
 
     public void selectNextKeyBinding(ActionProvider actionProvider) {

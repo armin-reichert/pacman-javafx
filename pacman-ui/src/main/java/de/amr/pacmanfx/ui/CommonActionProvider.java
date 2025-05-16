@@ -33,5 +33,4 @@ public interface CommonActionProvider extends ActionProvider {
         bind(GameAction.CHEAT_ENTER_NEXT_LEVEL, alt(KeyCode.N));
         bind(GameAction.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
     }
-
 }

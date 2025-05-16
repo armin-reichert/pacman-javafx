@@ -226,7 +226,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             bind(TengenMsPacMan_GameAction.TOGGLE_PAC_BOOSTER, theJoypad().key(JoypadButton.A), theJoypad().key(JoypadButton.B));
             bindCheatActions();
         }
-        enableActionBindings();
+        updateActionBindings();
     }
 
     private void bindPlayerActions() {

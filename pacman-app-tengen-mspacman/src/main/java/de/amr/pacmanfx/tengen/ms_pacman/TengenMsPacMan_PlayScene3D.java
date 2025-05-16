@@ -40,7 +40,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             bind(TOGGLE_PAC_BOOSTER, theJoypad().key(JoypadButton.A), theJoypad().key(JoypadButton.B));
             bindCheatActions();
         }
-        enableActionBindings();
+        updateActionBindings();
     }
 
     private void bindPlayerActions() {

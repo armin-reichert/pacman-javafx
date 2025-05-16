@@ -182,7 +182,7 @@ public class PlayScene3D implements GameScene, CommonActionProvider, CameraContr
     @Override
     public void init() {
         bindActions();
-        enableActionBindings();
+        updateActionBindings();
         theGame().scoreManager().setScoreVisible(true);
         perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
         scores3D.setFont(theAssets().font("font.arcade", TS));
@@ -190,7 +190,7 @@ public class PlayScene3D implements GameScene, CommonActionProvider, CameraContr
 
     @Override
     public final void end() {
-        disableActionBindings();
+        clearActionBindings();
         perspectiveNamePy.unbind();
         level3D.stopAnimations();
         level3D = null;
@@ -212,7 +212,7 @@ public class PlayScene3D implements GameScene, CommonActionProvider, CameraContr
         bind(GameAction.PERSPECTIVE_PREVIOUS, alt(KeyCode.LEFT));
         bind(GameAction.PERSPECTIVE_NEXT, alt(KeyCode.RIGHT));
         bind(GameAction.TOGGLE_DRAW_MODE, alt(KeyCode.W));
-        enableActionBindings();
+        updateActionBindings();
     }
 
     private void bindPlayerActions() {
@@ -239,7 +239,7 @@ public class PlayScene3D implements GameScene, CommonActionProvider, CameraContr
                 default -> {
                     if (!level.isDemoLevel()) {
                         bindPlayerActions();
-                        enableActionBindings();
+                        updateActionBindings();
                         showReadyMessage(level);
                     }
                 }
@@ -254,7 +254,7 @@ public class PlayScene3D implements GameScene, CommonActionProvider, CameraContr
         optionalGameLevel().ifPresent(level -> {
             bindActions();
             bindPlayerActions();
-            enableActionBindings();
+            updateActionBindings();
             if (level3D == null) {
                 replaceGameLevel3D(level);
             }

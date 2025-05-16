@@ -19,17 +19,17 @@ public interface ActionProvider {
 
     void bindActions();
 
-    default void enableActionBindings() {
-        Logger.info("Enabled key bindings for {}", getClass().getSimpleName());
+    default void updateActionBindings() {
+        Logger.info("Key bindings updated for {}", getClass().getSimpleName());
         for (KeyCodeCombination combination : actionBindings().keySet()) {
-            keyboard().bind(combination, this);
+            keyboard().addBinding(combination, this);
         }
     }
 
-    default void disableActionBindings() {
-        Logger.info("Disable key bindings for {}", getClass().getSimpleName());
+    default void clearActionBindings() {
+        Logger.info("Key bindings cleared for {}", getClass().getSimpleName());
         for (KeyCodeCombination combination : actionBindings().keySet()) {
-            keyboard().unbind(combination, this);
+            keyboard().removeBinding(combination, this);
         }
     }
 

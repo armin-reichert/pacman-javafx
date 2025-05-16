@@ -51,7 +51,7 @@ public class Keyboard {
     private final Map<KeyCodeCombination, ActionProvider> registeredBindings = new HashMap<>();
     private final List<KeyCodeCombination> matches = new ArrayList<>(3);
 
-    public void bind(KeyCodeCombination combination, ActionProvider actionProvider) {
+    public void addBinding(KeyCodeCombination combination, ActionProvider actionProvider) {
         if (registeredBindings.get(combination) == actionProvider) {
             Logger.debug("Key code combination '{}' already bound to {}", combination, actionProvider);
         } else {
@@ -60,7 +60,7 @@ public class Keyboard {
         }
     }
 
-    public void unbind(KeyCodeCombination combination, ActionProvider client) {
+    public void removeBinding(KeyCodeCombination combination, ActionProvider client) {
         boolean removed = registeredBindings.remove(combination, client);
         if (removed) {
             Logger.debug("Key code combination '{}' bound to {}", combination, client);

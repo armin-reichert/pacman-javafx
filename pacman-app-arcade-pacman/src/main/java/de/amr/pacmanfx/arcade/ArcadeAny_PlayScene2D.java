@@ -64,11 +64,11 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
     public void onLevelStarted(GameEvent e) {
         if (theGameLevel().isDemoLevel()) {
             bindArcadeInsertCoinAction();
-            enableActionBindings();
+            updateActionBindings();
         } else {
             bindPlayerActions();
             bindCheatActions();
-            enableActionBindings();
+            updateActionBindings();
         }
     }
 
@@ -95,7 +95,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
     @Override
     protected void doEnd() {
         theSound().stopAll();
-        disableActionBindings();
+        clearActionBindings();
     }
 
     @Override
@@ -272,7 +272,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         Logger.info("{} entered from {}", this, oldScene);
         bindActions();
         bindPlayerActions();
-        enableActionBindings();
+        updateActionBindings();
         if (gr == null) {
             setGameRenderer(theUIConfig().current().createRenderer(canvas));
         }
