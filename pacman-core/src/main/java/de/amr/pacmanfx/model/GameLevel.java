@@ -30,8 +30,6 @@ public class GameLevel {
     public static final int EMPTY_ROWS_OVER_MAZE  = 3;
     public static final int EMPTY_ROWS_BELOW_MAZE = 2;
 
-    public enum Message { READY, GAME_OVER, TEST_LEVEL }
-
     private static boolean isInaccessible(byte content) {
         return content == TerrainTiles.WALL_H  || content == TerrainTiles.WALL_V
             || content == TerrainTiles.ARC_NE || content == TerrainTiles.ARC_NW
@@ -78,7 +76,7 @@ public class GameLevel {
     private Bonus bonus;
     private final byte[] bonusSymbols = new byte[2];
     private int currentBonusIndex; // -1=no bonus, 0=first, 1=second
-    private Message message;
+    private LevelMessage message;
 
     private final Pulse blinking;
 
@@ -231,9 +229,9 @@ public class GameLevel {
     public void setCutSceneNumber(int number) { cutSceneNumber = number; }
     public int cutSceneNumber() { return cutSceneNumber; }
 
-    public void showMessage(Message message) { this.message = requireNonNull(message); }
+    public void showMessage(LevelMessage message) { this.message = requireNonNull(message); }
     public void clearMessage() { message = null; }
-    public Message message() { return message; }
+    public LevelMessage message() { return message; }
 
     public void setPac(Pac pac) { this.pac = pac; }
     public Pac pac() { return pac; }

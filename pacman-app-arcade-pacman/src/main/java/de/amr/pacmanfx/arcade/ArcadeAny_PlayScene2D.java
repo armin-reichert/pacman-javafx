@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingTimer;
+import de.amr.pacmanfx.model.LevelMessage;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.ui.GameAction;
@@ -51,8 +52,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        GameLevel level = theGameLevel();
-        gr.applyMapSettings(level.worldMap());
+        gr.applyMapSettings(theGameLevel().worldMap());
     }
 
     @Override
@@ -69,7 +69,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameContinued(GameEvent e) {
-        theGameLevel().showMessage(GameLevel.Message.READY);
+        theGameLevel().showMessage(LevelMessage.READY);
     }
 
     @Override
@@ -187,7 +187,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         gr.drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 
-    private void drawLevelMessage(GameLevel.Message message, int levelNumber, Vector2f messageCenterPosition) {
+    private void drawLevelMessage(LevelMessage message, int levelNumber, Vector2f messageCenterPosition) {
         switch (message) {
             case GAME_OVER -> {
                 String text = "GAME  OVER";

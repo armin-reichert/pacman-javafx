@@ -12,6 +12,7 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameVariant;
+import de.amr.pacmanfx.model.LevelMessage;
 import de.amr.pacmanfx.model.actors.Animations;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -166,7 +167,7 @@ public enum GameState implements FsmState<GameModel> {
             }
             if (timer.tickCount() == delay) {
                 game.startHunting();
-                if (level.message() != null && level.message() == GameLevel.Message.READY) {
+                if (level.message() != null && level.message() == LevelMessage.READY) {
                     level.clearMessage();
                 }
             }
@@ -183,7 +184,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onExit(GameModel game) {
             GameLevel level = game.level().orElseThrow();
-            if (level.message() != null && level.message() == GameLevel.Message.READY) {
+            if (level.message() != null && level.message() == LevelMessage.READY) {
                 level.clearMessage();
             }
         }

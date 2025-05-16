@@ -8,7 +8,6 @@ import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.steering.Steering;
 import de.amr.pacmanfx.ui.PacManGamesEnv;
 import org.tinylog.Logger;
@@ -182,7 +181,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
             theCoinMechanism().consumeCoin();
         }
         scoreManager.updateHighScore();
-        level.showMessage(GameLevel.Message.GAME_OVER);
+        level.showMessage(LevelMessage.GAME_OVER);
         theGameEventManager().publishEvent(this, GameEventType.STOP_ALL_SOUNDS);
     }
 
@@ -220,12 +219,12 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         initAnimationOfPacManAndGhosts();
         levelCounter().update(level.number(), level.bonusSymbol(0));
         if (level.isDemoLevel()) {
-            level.showMessage(GameLevel.Message.GAME_OVER);
+            level.showMessage(LevelMessage.GAME_OVER);
             scoreManager.score().setEnabled(false);
             scoreManager.highScore().setEnabled(false);
             Logger.info("Demo level {} started", level.number());
         } else {
-            level.showMessage(GameLevel.Message.READY);
+            level.showMessage(LevelMessage.READY);
             scoreManager.score().setEnabled(true);
             scoreManager.highScore().setEnabled(true);
             Logger.info("Level {} started", level.number());
