@@ -171,10 +171,9 @@ public class TengenMsPacMan_SpriteSheet implements GameSpriteSheet {
 
     public static final RectArea MS_PAC_MAN_TITLE_SPRITE = rect(15, 191, 152, 40);
 
-    public static final RectArea[] CLAPPERBOARD_SPRITES = { // open, middle, closed
-        rect(91, 361, 32, 32),
-        rect(53, 361, 32, 32),
-        rect(14, 361, 32, 32),
+    public static final RectArea[] CLAPPERBOARD_SPRITES = {
+        // wide open, open, closed
+        rect(91, 361, 32, 32), rect(53, 361, 32, 32), rect(14, 361, 32, 32),
     };
 
     public static final RectArea HEART_SPRITE = rect(162, 270, 18, 18);
