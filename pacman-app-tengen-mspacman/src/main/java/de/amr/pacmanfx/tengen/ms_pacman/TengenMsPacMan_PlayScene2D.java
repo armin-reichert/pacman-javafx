@@ -485,7 +485,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             tr.drawFood(level);
             level.bonus().ifPresent(tr::drawBonus);
             //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
-            tr.drawLevelMessage(level, level.isDemoLevel(), currentMessagePosition(level), arcadeFontScaledTS());
+            tr.drawLevelMessage(level, currentMessagePosition(level), arcadeFontScaledTS());
             tr.drawActor(level.pac());
             ghostsInZOrder(level).forEach(tr::drawActor);
         }
@@ -516,10 +516,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     private Vector2f currentMessagePosition(GameLevel level) {
         Vector2f center = centerPosBelowHouse(level);
-        if (messageMovement != null && messageMovement.isRunning()) {
-            return new Vector2f(messageMovement.currentX(), center.y());
-        }
-        return center;
+        return messageMovement != null && messageMovement.isRunning()
+            ? new Vector2f(messageMovement.currentX(), center.y())
+            : center;
     }
 
     private Vector2f centerPosBelowHouse(GameLevel level) {
