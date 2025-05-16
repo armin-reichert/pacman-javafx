@@ -301,7 +301,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onGameStarted(GameEvent e) {
-        GameLevel level = requiredGameLevel();
+        GameLevel level = theGameLevel();
         boolean silent = level.isDemoLevel() || theGameState() == TESTING_LEVELS || theGameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {
             theSound().playGameReadySound();
@@ -310,7 +310,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        GameLevel level = requiredGameLevel();
+        GameLevel level = theGameLevel();
         setJoypadKeyBindings(level);
         if (level.isDemoLevel()) {
             level.pac().setImmune(false);
@@ -330,7 +330,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
-        GameLevel level = requiredGameLevel();
+        GameLevel level = theGameLevel();
         setJoypadKeyBindings(level);
         gr.applyMapSettings(level.worldMap());
     }

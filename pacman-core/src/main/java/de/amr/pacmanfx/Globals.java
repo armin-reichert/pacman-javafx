@@ -44,18 +44,17 @@ public class Globals {
      */
     public static final File CUSTOM_MAP_DIR = new File(HOME_DIR, "maps");
 
-    public static CoinMechanism      theCoinMechanism() { return COIN_MECHANISM; }
-    public static GameModel          theGame() { return GAME_CONTROLLER.game(); }
-    public static GameController     theGameController() { return GAME_CONTROLLER; }
-    public static GameEventManager   theGameEventManager() { return GAME_EVENT_MANAGER; }
-    public static GameLevel          theGameLevel() { return optionalGameLevel().orElse(null); }
-    public static GameState          theGameState() { return GAME_CONTROLLER.state(); }
-    public static GameVariant        theGameVariant() { return GAME_CONTROLLER.selectedGameVariant(); }
-    public static Random             theRNG() { return RANDOM; }
-    public static SimulationStep     theSimulationStep() { return SIMULATION_STEP; }
-
+    public static CoinMechanism       theCoinMechanism() { return COIN_MECHANISM; }
+    public static GameModel           theGame() { return GAME_CONTROLLER.game(); }
+    public static GameController      theGameController() { return GAME_CONTROLLER; }
+    public static GameEventManager    theGameEventManager() { return GAME_EVENT_MANAGER; }
     public static Optional<GameLevel> optionalGameLevel() { return theGame().level(); }
-    public static GameLevel           requiredGameLevel() { return optionalGameLevel().orElseThrow(); }
+    public static GameLevel           theGameLevel() { return optionalGameLevel().orElse(null); }
+    public static GameState           theGameState() { return GAME_CONTROLLER.state(); }
+    public static GameVariant         theGameVariant() { return GAME_CONTROLLER.selectedGameVariant(); }
+    public static Random              theRNG() { return RANDOM; }
+    public static SimulationStep      theSimulationStep() { return SIMULATION_STEP; }
+
     public static Pac                 requiredPac() { return optionalGameLevel().map(GameLevel::pac).orElse(null); }
 
     private static final CoinMechanism COIN_MECHANISM = new CoinMechanism();

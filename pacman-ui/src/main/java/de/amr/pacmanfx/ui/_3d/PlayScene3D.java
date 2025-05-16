@@ -271,7 +271,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             Logger.warn("Tick #{}: Game level not yet existing", theClock().tickCount());
             return;
         }
-        final GameLevel level = requiredGameLevel();
+        final GameLevel level = theGameLevel();
         if (level3D == null) {
             Logger.warn("Tick #{}: 3D game level not yet existing", theClock().tickCount());
             return;
@@ -439,7 +439,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         // delay state exit for 3 seconds:
         theGameState().timer().restartSeconds(3);
         level3D.stopAnimations();
-        if (!requiredGameLevel().isDemoLevel() && randomInt(0, 100) < 25) {
+        if (!theGameLevel().isDemoLevel() && randomInt(0, 100) < 25) {
             theUI().showFlashMessageSec(3, theAssets().localizedGameOverMessage());
         }
         theSound().stopAll();
@@ -448,7 +448,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onBonusActivated(GameEvent event) {
-        requiredGameLevel().bonus().ifPresent(bonus -> {
+        theGameLevel().bonus().ifPresent(bonus -> {
             level3D.updateBonus3D(bonus, theUIConfig().current().spriteSheet());
             if (bonus instanceof MovingBonus) {
                 theSound().playBonusActiveSound();
@@ -459,7 +459,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void onBonusEaten(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::showEaten);
-        requiredGameLevel().bonus().ifPresent(bonus -> {
+        theGameLevel().bonus().ifPresent(bonus -> {
             if (bonus instanceof MovingBonus) {
                 theSound().stopBonusActiveSound();
             }
@@ -470,7 +470,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void onBonusExpired(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::expire);
-        requiredGameLevel().bonus().ifPresent(bonus -> {
+        theGameLevel().bonus().ifPresent(bonus -> {
             if (bonus instanceof MovingBonus) {
                 theSound().stopBonusActiveSound();
             }
@@ -494,7 +494,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onGameStarted(GameEvent e) {
-        GameLevel level = requiredGameLevel();
+        GameLevel level = theGameLevel();
         boolean silent = level.isDemoLevel() ||
             theGameState() == TESTING_LEVELS || theGameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {

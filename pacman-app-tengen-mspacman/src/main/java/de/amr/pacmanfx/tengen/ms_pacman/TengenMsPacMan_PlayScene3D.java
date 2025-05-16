@@ -31,7 +31,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         bind(GameAction.PERSPECTIVE_PREVIOUS, alt(KeyCode.LEFT));
         bind(GameAction.PERSPECTIVE_NEXT, alt(KeyCode.RIGHT));
         bind(GameAction.TOGGLE_DRAW_MODE, alt(KeyCode.W));
-        if (optionalGameLevel().isPresent() && optionalGameLevel().get().isDemoLevel()) {
+        if (optionalGameLevel().isPresent() && theGameLevel().isDemoLevel()) {
             bind(TengenMsPacMan_GameAction.QUIT_DEMO_LEVEL, theJoypad().key(JoypadButton.START));
         }
         else {

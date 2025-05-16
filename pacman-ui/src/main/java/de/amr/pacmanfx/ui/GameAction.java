@@ -43,7 +43,7 @@ public enum GameAction implements Action {
     CHEAT_EAT_ALL_PELLETS {
         @Override
         public void execute() {
-            requiredGameLevel().eatAllPellets();
+            theGameLevel().eatAllPellets();
             theSound().stopMunchingSound();
             theGameEventManager().publishEvent(theGame(), GameEventType.PAC_FOUND_FOOD);
         }
@@ -51,7 +51,7 @@ public enum GameAction implements Action {
         @Override
         public boolean isEnabled() {
             return optionalGameLevel().isPresent()
-                    && !requiredGameLevel().isDemoLevel()
+                    && !theGameLevel().isDemoLevel()
                     && theGameState() == GameState.HUNTING;
         }
     },
@@ -59,7 +59,7 @@ public enum GameAction implements Action {
     CHEAT_KILL_GHOSTS {
         @Override
         public void execute() {
-            GameLevel level = requiredGameLevel();
+            GameLevel level = theGameLevel();
             List<Ghost> vulnerableGhosts = level.ghosts(FRIGHTENED, HUNTING_PAC).toList();
             if (!vulnerableGhosts.isEmpty()) {
                 level.victims().clear(); // resets value of next killed ghost to 200
@@ -72,7 +72,7 @@ public enum GameAction implements Action {
         public boolean isEnabled() {
             return theGameState() == GameState.HUNTING
                     && optionalGameLevel().isPresent()
-                    && !requiredGameLevel().isDemoLevel();
+                    && !theGameLevel().isDemoLevel();
         }
     },
 
@@ -87,7 +87,7 @@ public enum GameAction implements Action {
             return theGame().isPlaying()
                     && theGameState() == GameState.HUNTING
                     && optionalGameLevel().isPresent()
-                    && requiredGameLevel().number() < theGame().lastLevelNumber();
+                    && theGameLevel().number() < theGame().lastLevelNumber();
         }
     },
 
