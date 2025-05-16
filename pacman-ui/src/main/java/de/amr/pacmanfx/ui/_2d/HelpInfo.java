@@ -66,7 +66,7 @@ public class HelpInfo {
         pane.setBackground(Ufx.coloredRoundedBackground(backgroundColor, 10));
 
         // add default entries:
-        if (PY_AUTOPILOT.get()) {
+        if (PY_USING_AUTOPILOT.get()) {
             var autoPilotEntry = text(theAssets().text("help.autopilot_on"), Color.ORANGE);
             autoPilotEntry.setFont(font);
             GridPane.setColumnSpan(autoPilotEntry, 2);

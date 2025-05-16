@@ -14,7 +14,7 @@ import javafx.scene.control.Spinner;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.isOneOf;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.PY_AUTOPILOT;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.PY_USING_AUTOPILOT;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.PY_IMMUNITY;
 
 /**
@@ -55,7 +55,7 @@ public class InfoBoxGameControl extends InfoBox {
         setAction(bgLevelActions[GAME_LEVEL_NEXT], GameAction.CHEAT_ENTER_NEXT_LEVEL::execute);
         setAction(comboInitialLives, () -> theGame().setInitialLifeCount(comboInitialLives.getValue()));
 
-        setEditor(cbAutopilot, PY_AUTOPILOT);
+        setEditor(cbAutopilot, PY_USING_AUTOPILOT);
         setEditor(cbImmunity, PY_IMMUNITY);
     }
 

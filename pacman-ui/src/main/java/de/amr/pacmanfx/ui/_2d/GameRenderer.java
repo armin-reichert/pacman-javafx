@@ -15,6 +15,8 @@ import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Creature;
+import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.PacManGamesEnv;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import javafx.beans.property.FloatProperty;
 import javafx.scene.canvas.Canvas;
@@ -214,6 +216,14 @@ public interface GameRenderer {
                 ctx().fillOval(arrowHead.x() - radius, arrowHead.y() - radius, diameter, diameter);
             }
         });
+        if (creature instanceof Pac pac) {
+            String autopilot = pac.isUsingAutopilot() ? "autopilot" : "";
+            String immune = pac.isImmune() ? "immune" : "";
+            String text = "%s\n%s".formatted(autopilot, immune).trim();
+            ctx().setFill(Color.WHITE);
+            ctx().setFont(Font.font("Monospaced", scaled(6)));
+            ctx().fillText(text, scaled(pac.posX() - 4), scaled(pac.posY() + 16));
+        }
     }
 
     /**

@@ -240,8 +240,8 @@ public enum GameAction implements Action {
     TOGGLE_AUTOPILOT {
         @Override
         public void execute() {
-            toggle(PY_AUTOPILOT);
-            boolean auto = PY_AUTOPILOT.get();
+            toggle(PY_USING_AUTOPILOT);
+            boolean auto = PY_USING_AUTOPILOT.get();
             theUI().showFlashMessage(theAssets().text(auto ? "autopilot_on" : "autopilot_off"));
             theSound().playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
         }

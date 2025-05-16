@@ -58,7 +58,6 @@ public abstract class GameModel {
     public abstract void    createLevel(int levelNumber);
     public abstract void    buildNormalLevel(int levelNumber);
     public abstract void    buildDemoLevel();
-    public abstract void    assignDemoLevelBehavior(Pac pac);
     public abstract boolean isPacManSafeInDemoLevel();
     public abstract void    startLevel();
     public abstract void    startNextLevel();

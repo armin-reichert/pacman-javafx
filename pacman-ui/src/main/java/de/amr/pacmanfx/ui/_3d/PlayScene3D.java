@@ -158,7 +158,7 @@ public class PlayScene3D implements GameScene, CommonActionProvider, CameraContr
         items.add(contextMenuTitleItem(theAssets().text("pacman")));
 
         var miAutopilot = new CheckMenuItem(theAssets().text("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
+        miAutopilot.selectedProperty().bindBidirectional(PY_USING_AUTOPILOT);
         items.add(miAutopilot);
 
         var miImmunity = new CheckMenuItem(theAssets().text("immunity"));
@@ -283,13 +283,7 @@ public class PlayScene3D implements GameScene, CommonActionProvider, CameraContr
             return;
         }
         level3D.update();
-        //TODO how to avoid calling this on every tick?
-        if (level.isDemoLevel()) {
-            theGame().assignDemoLevelBehavior(level.pac());
-        }
-        else {
-            level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
-            level.pac().setImmune(PY_IMMUNITY.get());
+        if (!level.isDemoLevel()) {
             updateScores();
             updateSound(level);
         }

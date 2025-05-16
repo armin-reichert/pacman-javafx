@@ -177,7 +177,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         items.add(Ufx.contextMenuTitleItem(theAssets().text("pacman")));
 
         var miAutopilot = new CheckMenuItem(theAssets().text("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
+        miAutopilot.selectedProperty().bindBidirectional(PY_USING_AUTOPILOT);
         items.add(miAutopilot);
 
         var miImmunity = new CheckMenuItem(theAssets().text("immunity"));
@@ -248,12 +248,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void update() {
         optGameLevel().ifPresent(level -> {
-            if (level.isDemoLevel()) {
-                theGame().assignDemoLevelBehavior(level.pac());
-            }
-            else {
-                level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
-                level.pac().setImmune(PY_IMMUNITY.get());
+            if (!level.isDemoLevel()) {
                 messageMovement.update();
                 updateSound(level);
             }
@@ -308,12 +303,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     public void onLevelCreated(GameEvent e) {
         GameLevel level = theGameLevel();
         setJoypadKeyBindings(level);
-        if (level.isDemoLevel()) {
-            level.pac().setImmune(false);
-        } else {
-            level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
-            level.pac().setImmune(PY_IMMUNITY.get());
-        }
         gr.applyMapSettings(level.worldMap());
     }
 

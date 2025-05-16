@@ -39,7 +39,9 @@ public class XXLPacMan_GameModel extends ArcadePacMan_GameModel {
         level.setData(createLevelData(1)); // overwrite to always run as fast as first level
         mapSelector.setMapSelectionMode(mapSelectionMode);
         level.setDemoLevel(true);
-        assignDemoLevelBehavior(level.pac());
+        level.pac().setImmune(false);
+        level.pac().setUsingAutopilot(true);
+        level.pac().setAutopilotAlgorithm(demoLevelSteering);
         demoLevelSteering.init();
         levelCounter.setEnabled(false);
     }

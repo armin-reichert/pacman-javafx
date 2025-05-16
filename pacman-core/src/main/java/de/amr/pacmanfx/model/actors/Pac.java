@@ -28,10 +28,11 @@ public class Pac extends Creature {
     private boolean dead;
     private int restingTicks;
     private long starvingTicks;
-    private Steering autopilot;
-    private boolean usingAutopilot;
+    private Steering autopilotAlgorithm;
     private Animations animations;
+
     private final BooleanProperty immunePy = new SimpleBooleanProperty(false);
+    private final BooleanProperty usingAutopilotPy = new SimpleBooleanProperty(false);
 
     private final TickTimer powerTimer = new TickTimer("PacPowerTimer");
 
@@ -125,8 +126,8 @@ public class Pac extends Creature {
             return;
         }
         if (restingTicks == 0) {
-            if (usingAutopilot) {
-                autopilot.steer(this, level);
+            if (isUsingAutopilot()) {
+                autopilotAlgorithm.steer(this, level);
             }
             setSpeed(powerTimer.isRunning()
                 ? level.speedControl().pacPowerSpeed(level)
@@ -193,15 +194,17 @@ public class Pac extends Creature {
         return velocity().length() == 0 || !moveInfo.moved || restingTicks == REST_INDEFINITELY;
     }
 
-    public void setAutopilot(Steering steering) {
-        autopilot = steering;
+    public void setAutopilotAlgorithm(Steering steering) {
+        autopilotAlgorithm = steering;
     }
 
     public boolean isUsingAutopilot() {
-        return usingAutopilot;
+        return usingAutopilotPy.get();
     }
 
     public void setUsingAutopilot(boolean value) {
-        usingAutopilot = value;
+        usingAutopilotPy.set(value);
     }
+
+    public BooleanProperty usingAutopilotProperty() { return usingAutopilotPy; }
 }

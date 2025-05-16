@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
-import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.arcade.ArcadeAny_ActorSpeedControl;
 import de.amr.pacmanfx.arcade.ArcadeAny_GameModel;
 import de.amr.pacmanfx.arcade.ArcadePacMan_LevelCounter;
@@ -233,8 +232,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
 
         var msPacMan = createMsPacMan();
         msPacMan.setGameLevel(level);
-        msPacMan.setAutopilot(autopilot);
-        msPacMan.immuneProperty().bind(PacManGamesEnv.PY_IMMUNITY);
+        msPacMan.setAutopilotAlgorithm(autopilot);
         level.setPac(msPacMan);
 
         level.setGhosts(

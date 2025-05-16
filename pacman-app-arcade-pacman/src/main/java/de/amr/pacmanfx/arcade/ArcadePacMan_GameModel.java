@@ -237,8 +237,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
 
         Pac pacMan = createPac();
         pacMan.setGameLevel(level);
-        pacMan.setAutopilot(autopilot);
-        pacMan.immuneProperty().bind(PacManGamesEnv.PY_IMMUNITY);
+        pacMan.setAutopilotAlgorithm(autopilot);
         level.setPac(pacMan);
 
         // Special tiles where attacking ghosts cannot move up

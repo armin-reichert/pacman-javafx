@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.steering.Steering;
+import de.amr.pacmanfx.ui.PacManGamesEnv;
 import org.tinylog.Logger;
 
 import java.util.Optional;
@@ -189,6 +190,8 @@ public abstract class ArcadeAny_GameModel extends GameModel {
     public void buildNormalLevel(int levelNumber) {
         createLevel(levelNumber);
         level.setDemoLevel(false);
+        level.pac().immuneProperty().bind(PacManGamesEnv.PY_IMMUNITY);
+        level.pac().usingAutopilotProperty().bind(PacManGamesEnv.PY_USING_AUTOPILOT);
         scoreManager.setScoreLevelNumber(levelNumber);
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(levelNumber));
         level.huntingTimer().reset();
@@ -199,20 +202,15 @@ public abstract class ArcadeAny_GameModel extends GameModel {
     public void buildDemoLevel() {
         createLevel(1);
         level.setDemoLevel(true);
-        assignDemoLevelBehavior(level.pac());
+        level.pac().setImmune(false);
+        level.pac().setUsingAutopilot(true);
+        level.pac().setAutopilotAlgorithm(demoLevelSteering);
         demoLevelSteering.init();
         levelCounter.setEnabled(false);
         scoreManager.setScoreLevelNumber(1);
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(1));
         level.huntingTimer().reset();
         theGameEventManager().publishEvent(this, GameEventType.LEVEL_CREATED);
-    }
-
-    @Override
-    public void assignDemoLevelBehavior(Pac pac) {
-        pac.setAutopilot(demoLevelSteering);
-        pac.setUsingAutopilot(true);
-        pac.setImmune(false);
     }
 
     @Override

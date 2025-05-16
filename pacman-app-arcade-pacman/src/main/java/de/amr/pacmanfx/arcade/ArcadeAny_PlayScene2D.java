@@ -98,13 +98,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
     }
 
     private void updateLevel(GameLevel level) {
-        if (level.isDemoLevel()) {
-            //TODO this should not be done on every tick
-            theGame().assignDemoLevelBehavior(level.pac());
-        }
-        else {
-            //TODO use binding?
-            level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
+        if (!level.isDemoLevel()) {
             updateSound(level);
         }
         if (theGameState() == GameState.LEVEL_COMPLETE) {
@@ -118,7 +112,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         items.add(Ufx.contextMenuTitleItem(theAssets().text("pacman")));
 
         var miAutopilot = new CheckMenuItem(theAssets().text("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
+        miAutopilot.selectedProperty().bindBidirectional(PY_USING_AUTOPILOT);
         items.add(miAutopilot);
 
         var miImmunity = new CheckMenuItem(theAssets().text("immunity"));
@@ -181,10 +175,12 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         level.bonus().ifPresent(gr::drawBonus);
         gr.drawActor(level.pac());
         ghostsInZOrder(level).forEach(gr::drawActor);
+
         if (debugInfoVisiblePy.get()) {
             gr.drawAnimatedCreatureInfo(level.pac());
             ghostsInZOrder(level).forEach(gr::drawAnimatedCreatureInfo);
         }
+
         // Draw either lives counter or missing credit
         if (theGame().canStartNewGame()) {
             // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
@@ -235,26 +231,23 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
     @Override
     protected void drawDebugInfo() {
         gr.drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
-        if (theGameController().isSelected(GameVariant.PACMAN)) {
-            optGameLevel().ifPresent(level -> {
-                level.ghosts().forEach(ghost ->
-                    ghost.specialTerrainTiles().forEach(tile -> {
-                        double x = scaled(tile.x() * TS), y = scaled(tile.y() * TS + HTS), size = scaled(TS);
-                        gr.ctx().setFill(Color.RED);
-                        gr.ctx().fillRect(x, y, size, 2);
-                    })
-                );
-                gr.ctx().setFill(Color.YELLOW);
-                gr.ctx().setFont(DEBUG_TEXT_FONT);
-                String gameStateText = theGameState().name() + " (Tick %d)".formatted(theGameState().timer().tickCount());
-                String huntingPhaseText = "";
-                if (theGameState() == GameState.HUNTING) {
-                    HuntingTimer huntingTimer = level.huntingTimer();
-                    huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.phase(), huntingTimer.tickCount());
-                }
-                gr.ctx().fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, 64);
+        optGameLevel().ifPresent(level -> {
+            // assume all ghosts have the same special tiles
+            level.ghost(RED_GHOST_SHADOW).specialTerrainTiles().forEach(tile -> {
+                double x = scaled(tile.x() * TS), y = scaled(tile.y() * TS + HTS), size = scaled(TS);
+                gr.ctx().setFill(Color.RED);
+                gr.ctx().fillRect(x, y, size, 2);
             });
-        }
+            gr.ctx().setFill(Color.YELLOW);
+            gr.ctx().setFont(DEBUG_TEXT_FONT);
+            String gameStateText = theGameState().name() + " (Tick %d)".formatted(theGameState().timer().tickCount());
+            String huntingPhaseText = "";
+            if (theGameState() == GameState.HUNTING) {
+                HuntingTimer huntingTimer = level.huntingTimer();
+                huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.phase(), huntingTimer.tickCount());
+            }
+            gr.ctx().fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, 64);
+        });
     }
 
     @Override

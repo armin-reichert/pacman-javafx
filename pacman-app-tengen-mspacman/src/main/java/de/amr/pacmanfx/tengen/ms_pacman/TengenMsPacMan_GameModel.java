@@ -448,8 +448,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
         var msPacMan = createMsPacMan();
         msPacMan.setGameLevel(level);
-        msPacMan.setAutopilot(autopilot);
-        msPacMan.immuneProperty().bind(PacManGamesEnv.PY_IMMUNITY);
+        msPacMan.setAutopilotAlgorithm(autopilot);
         level.setPac(msPacMan);
 
         //TODO clarify hunting behavior
@@ -508,6 +507,8 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public void buildNormalLevel(int levelNumber) {
         createLevel(levelNumber);
         level.setDemoLevel(false);
+        level.pac().immuneProperty().bind(PacManGamesEnv.PY_IMMUNITY);
+        level.pac().usingAutopilotProperty().bind(PacManGamesEnv.PY_USING_AUTOPILOT);
         scoreManager.setScoreLevelNumber(levelNumber);
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(levelNumber));
         level.huntingTimer().reset();
@@ -520,7 +521,9 @@ public class TengenMsPacMan_GameModel extends GameModel {
         createLevel(1);
         level.setDemoLevel(true);
         level.setGameOverStateTicks(120);
-        assignDemoLevelBehavior(level.pac());
+        level.pac().setImmune(false);
+        level.pac().setUsingAutopilot(true);
+        level.pac().setAutopilotAlgorithm(demoLevelSteering);
         demoLevelSteering.init();
         scoreManager.setScoreLevelNumber(1);
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(1));
@@ -531,13 +534,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
     @Override
     public int lastLevelNumber() {
         return LAST_LEVEL_NUMBER;
-    }
-
-    @Override
-    public void assignDemoLevelBehavior(Pac pac) {
-        pac.setAutopilot(demoLevelSteering);
-        pac.setUsingAutopilot(true);
-        pac.setImmune(false);
     }
 
     @Override

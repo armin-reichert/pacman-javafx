@@ -143,7 +143,7 @@ public class PacManGamesUI implements GameUI {
         iconMuted.visibleProperty().bind(theSound().mutedProperty());
 
         var iconAutopilot = FontIcon.of(FontAwesomeSolid.TAXI, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
-        iconAutopilot.visibleProperty().bind(PY_AUTOPILOT);
+        iconAutopilot.visibleProperty().bind(PY_USING_AUTOPILOT);
 
         var iconImmune = FontIcon.of(FontAwesomeSolid.USER_SECRET, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
         iconImmune.visibleProperty().bind(PY_IMMUNITY);
