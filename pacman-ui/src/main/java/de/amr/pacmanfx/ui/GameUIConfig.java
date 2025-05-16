@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
+import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import javafx.scene.Node;

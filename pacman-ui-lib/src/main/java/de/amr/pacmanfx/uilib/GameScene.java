@@ -2,22 +2,16 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.ui;
+package de.amr.pacmanfx.uilib;
 
-import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.uilib.ActionProvider;
-import de.amr.pacmanfx.uilib.input.Keyboard;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.KeyCode;
 
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.theGameVariant;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
-import static de.amr.pacmanfx.uilib.input.Keyboard.*;
 
 /**
  * Common interface of all game scenes (2D and 3D).
@@ -25,41 +19,6 @@ import static de.amr.pacmanfx.uilib.input.Keyboard.*;
  * @author Armin Reichert
  */
 public interface GameScene extends GameEventListener, ActionProvider {
-
-    @Override
-    default void onStopAllSounds(GameEvent event) {
-        theSound().stopAll();
-    }
-
-    @Override
-    default void onUnspecifiedChange(GameEvent event) {
-        // TODO: remove (this is only used by game state GameState.TESTING_CUT_SCENES)
-        theUI().updateGameScene(true);
-    }
-
-    @Override
-    default Keyboard keyboard() { return theKeyboard(); }
-
-    default void bindArcadeInsertCoinAction() {
-        bind(GameAction.INSERT_COIN,  naked(KeyCode.DIGIT5), naked(KeyCode.NUMPAD5));
-    }
-
-    default void bindArcadeStartGameAction() {
-        bind(GameAction.START_ARCADE_GAME, naked(KeyCode.DIGIT1), naked(KeyCode.NUMPAD1));
-    }
-
-    default void bindStartTestsActions() {
-        bind(GameAction.TEST_CUT_SCENES,     alt(KeyCode.C));
-        bind(GameAction.TEST_LEVELS_BONI,    alt(KeyCode.T));
-        bind(GameAction.TEST_LEVELS_TEASERS, Keyboard.shift_alt(KeyCode.T));
-    }
-
-    default void bindCheatActions() {
-        bind(GameAction.CHEAT_EAT_ALL_PELLETS, alt(KeyCode.E));
-        bind(GameAction.CHEAT_ADD_LIVES, alt(KeyCode.L));
-        bind(GameAction.CHEAT_ENTER_NEXT_LEVEL, alt(KeyCode.N));
-        bind(GameAction.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
-    }
 
     /**
      * Called when the scene becomes the current one.

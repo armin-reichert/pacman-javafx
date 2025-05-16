@@ -4,10 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._2d;
 
+import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.ui.GameScene;
+import de.amr.pacmanfx.ui.CommonActionProvider;
+import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.Action;
+import de.amr.pacmanfx.uilib.input.Keyboard;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCodeCombination;
@@ -26,7 +29,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Armin Reichert
  */
-public abstract class GameScene2D implements GameScene {
+public abstract class GameScene2D implements GameScene, CommonActionProvider {
 
     protected final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     protected final BooleanProperty debugInfoVisiblePy = new SimpleBooleanProperty(false);
@@ -61,6 +64,20 @@ public abstract class GameScene2D implements GameScene {
 
     @Override
     public void bindActions() {}
+
+    @Override
+    public void onStopAllSounds(GameEvent event) {
+        theSound().stopAll();
+    }
+
+    @Override
+    public void onUnspecifiedChange(GameEvent event) {
+        // TODO: remove (this is only used by game state GameState.TESTING_CUT_SCENES)
+        theUI().updateGameScene(true);
+    }
+
+    @Override
+    public Keyboard keyboard() { return theKeyboard(); }
 
     public FloatProperty scalingProperty() { return scalingPy; }
     public void setScaling(double scaling) { scalingPy.set((float) scaling); }

@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.uilib.GameScene;
 
 import java.util.EnumMap;
 import java.util.Map;

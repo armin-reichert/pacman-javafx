@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.ui.GameScene;
+import de.amr.pacmanfx.uilib.GameScene;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.WritableObjectValue;

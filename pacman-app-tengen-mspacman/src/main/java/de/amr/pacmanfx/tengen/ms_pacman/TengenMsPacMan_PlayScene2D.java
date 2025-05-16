@@ -15,7 +15,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameAction;
-import de.amr.pacmanfx.ui.GameScene;
+import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.ui._2d.FlashingMazeAnimation;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.CameraControlledView;
@@ -49,7 +49,6 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameAction.QUIT_DE
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 import static de.amr.pacmanfx.uilib.input.Keyboard.control;
-import static de.amr.pacmanfx.uilib.input.Keyboard.naked;
 
 /**
  * Tengen play scene, uses vertical scrolling.

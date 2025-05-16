@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.GameAssets;
-import de.amr.pacmanfx.ui.GameScene;
+import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.ui.GameUIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;

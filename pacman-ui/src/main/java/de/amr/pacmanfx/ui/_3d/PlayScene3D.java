@@ -18,12 +18,14 @@ import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingBonus;
+import de.amr.pacmanfx.ui.CommonActionProvider;
 import de.amr.pacmanfx.ui.GameAction;
-import de.amr.pacmanfx.ui.GameScene;
+import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.uilib.Action;
 import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.input.Keyboard;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
@@ -57,7 +59,7 @@ import static de.amr.pacmanfx.uilib.input.Keyboard.*;
  *
  * @author Armin Reichert
  */
-public class PlayScene3D implements GameScene, CameraControlledView {
+public class PlayScene3D implements GameScene, CommonActionProvider, CameraControlledView {
 
     protected final ObjectProperty<PerspectiveID> perspectiveNamePy = new SimpleObjectProperty<>() {
         @Override
@@ -194,6 +196,9 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         level3D = null;
         theSound().stopAll();
     }
+
+    @Override
+    public Keyboard keyboard() { return theKeyboard(); }
 
     @Override
     public void bindActions() {
@@ -545,6 +550,17 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         level3D.pac3D().setMovementPowerMode(false);
         level3D.maze3D().stopMaterialAnimation();
         theSound().stopPacPowerSound();
+    }
+
+    @Override
+    public void onStopAllSounds(GameEvent event) {
+        theSound().stopAll();
+    }
+
+    @Override
+    public void onUnspecifiedChange(GameEvent event) {
+        // TODO: remove (this is only used by game state GameState.TESTING_CUT_SCENES)
+        theUI().updateGameScene(true);
     }
 
     private void showLevelTestMessage(GameLevel level, String message) {

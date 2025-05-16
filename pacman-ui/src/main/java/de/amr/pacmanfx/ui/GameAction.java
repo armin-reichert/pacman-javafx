@@ -14,6 +14,7 @@ import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.uilib.Action;
+import de.amr.pacmanfx.uilib.GameScene;
 import javafx.scene.shape.DrawMode;
 import org.tinylog.Logger;
 

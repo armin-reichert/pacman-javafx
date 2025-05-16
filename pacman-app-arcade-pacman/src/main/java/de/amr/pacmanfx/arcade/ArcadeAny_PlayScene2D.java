@@ -15,7 +15,7 @@ import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.ui.GameAction;
-import de.amr.pacmanfx.ui.GameScene;
+import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.ui._2d.FlashingMazeAnimation;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.Ufx;

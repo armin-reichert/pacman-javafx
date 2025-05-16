@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
+import de.amr.pacmanfx.uilib.GameScene;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

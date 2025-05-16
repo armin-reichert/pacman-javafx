@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui.GameAction;
-import de.amr.pacmanfx.ui.GameScene;
+import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.dashboard.InfoBox;
 import de.amr.pacmanfx.ui.dashboard.InfoText;
