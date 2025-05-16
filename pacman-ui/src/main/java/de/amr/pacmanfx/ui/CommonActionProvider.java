@@ -4,12 +4,14 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
+import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.uilib.ActionProvider;
 import de.amr.pacmanfx.uilib.input.Keyboard;
 import javafx.scene.input.KeyCode;
 
-import static de.amr.pacmanfx.uilib.input.Keyboard.alt;
-import static de.amr.pacmanfx.uilib.input.Keyboard.naked;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theJoypad;
+import static de.amr.pacmanfx.uilib.input.Keyboard.*;
 
 public interface CommonActionProvider extends ActionProvider {
 
@@ -21,16 +23,30 @@ public interface CommonActionProvider extends ActionProvider {
         bind(GameAction.START_ARCADE_GAME, naked(KeyCode.DIGIT1), naked(KeyCode.NUMPAD1));
     }
 
-    default void bindStartTestsActions() {
-        bind(GameAction.TEST_CUT_SCENES,     alt(KeyCode.C));
-        bind(GameAction.TEST_LEVELS_BONI,    alt(KeyCode.T));
-        bind(GameAction.TEST_LEVELS_TEASERS, Keyboard.shift_alt(KeyCode.T));
-    }
-
     default void bindCheatActions() {
         bind(GameAction.CHEAT_EAT_ALL_PELLETS, alt(KeyCode.E));
         bind(GameAction.CHEAT_ADD_LIVES, alt(KeyCode.L));
         bind(GameAction.CHEAT_ENTER_NEXT_LEVEL, alt(KeyCode.N));
         bind(GameAction.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
+    }
+
+    default void bindArcadePlayerActions() {
+        bind(GameAction.createPlayerAction(Direction.UP),    naked(KeyCode.UP),    control(KeyCode.UP));
+        bind(GameAction.createPlayerAction(Direction.DOWN),  naked(KeyCode.DOWN),  control(KeyCode.DOWN));
+        bind(GameAction.createPlayerAction(Direction.LEFT),  naked(KeyCode.LEFT),  control(KeyCode.LEFT));
+        bind(GameAction.createPlayerAction(Direction.RIGHT), naked(KeyCode.RIGHT), control(KeyCode.RIGHT));
+    }
+
+    default void bindJoypadPlayerActions() {
+        bind(GameAction.createPlayerAction(Direction.UP),    theJoypad().key(JoypadButton.UP),    control(KeyCode.UP));
+        bind(GameAction.createPlayerAction(Direction.DOWN),  theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN));
+        bind(GameAction.createPlayerAction(Direction.LEFT),  theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT));
+        bind(GameAction.createPlayerAction(Direction.RIGHT), theJoypad().key(JoypadButton.RIGHT), control(KeyCode.RIGHT));
+    }
+
+    default void bindStartTestsActions() {
+        bind(GameAction.TEST_CUT_SCENES,     alt(KeyCode.C));
+        bind(GameAction.TEST_LEVELS_BONI,    alt(KeyCode.T));
+        bind(GameAction.TEST_LEVELS_TEASERS, Keyboard.shift_alt(KeyCode.T));
     }
 }

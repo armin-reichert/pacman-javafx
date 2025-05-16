@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
@@ -15,10 +14,10 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameAction;
-import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.ui._2d.FlashingMazeAnimation;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.CameraControlledView;
+import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.input.Keyboard;
 import javafx.beans.property.DoubleProperty;
@@ -48,7 +47,6 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameAction.QUIT_DEMO_LEVEL;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
-import static de.amr.pacmanfx.uilib.input.Keyboard.control;
 
 /**
  * Tengen play scene, uses vertical scrolling.
@@ -222,18 +220,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         if (level.isDemoLevel()) {
             bind(QUIT_DEMO_LEVEL, theJoypad().key(JoypadButton.START));
         } else {
-            bindPlayerActions();
+            bindJoypadPlayerActions();
             bind(TengenMsPacMan_GameAction.TOGGLE_PAC_BOOSTER, theJoypad().key(JoypadButton.A), theJoypad().key(JoypadButton.B));
             bindCheatActions();
         }
         updateActionBindings();
-    }
-
-    private void bindPlayerActions() {
-        bind(GameAction.createPlayerAction(Direction.UP),    theJoypad().key(JoypadButton.UP),    control(KeyCode.UP));
-        bind(GameAction.createPlayerAction(Direction.DOWN),  theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN));
-        bind(GameAction.createPlayerAction(Direction.LEFT),  theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT));
-        bind(GameAction.createPlayerAction(Direction.RIGHT), theJoypad().key(JoypadButton.RIGHT), control(KeyCode.RIGHT));
     }
 
     @Override

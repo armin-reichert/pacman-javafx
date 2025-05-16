@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.model.GameLevel;
@@ -23,7 +22,6 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameAction.TOGGLE_PAC_BOOSTER;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 import static de.amr.pacmanfx.uilib.input.Keyboard.alt;
-import static de.amr.pacmanfx.uilib.input.Keyboard.control;
 
 public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
@@ -43,12 +41,8 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         updateActionBindings();
     }
 
-    private void bindPlayerActions() {
-        bind(GameAction.createPlayerAction(Direction.UP),    theJoypad().key(JoypadButton.UP),    control(KeyCode.UP));
-        bind(GameAction.createPlayerAction(Direction.DOWN),  theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN));
-        bind(GameAction.createPlayerAction(Direction.LEFT),  theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT));
-        bind(GameAction.createPlayerAction(Direction.RIGHT), theJoypad().key(JoypadButton.RIGHT), control(KeyCode.RIGHT));
-    }
+    @Override
+    protected void bindPlayerActions() { bindJoypadPlayerActions(); }
 
     @Override
     protected void replaceGameLevel3D(GameLevel level) {

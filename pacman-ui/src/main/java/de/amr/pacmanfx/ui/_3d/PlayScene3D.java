@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
@@ -20,10 +19,10 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingBonus;
 import de.amr.pacmanfx.ui.CommonActionProvider;
 import de.amr.pacmanfx.ui.GameAction;
-import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.uilib.Action;
 import de.amr.pacmanfx.uilib.CameraControlledView;
+import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.input.Keyboard;
 import javafx.animation.Animation;
@@ -51,7 +50,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 import static de.amr.pacmanfx.uilib.Ufx.contextMenuTitleItem;
-import static de.amr.pacmanfx.uilib.input.Keyboard.*;
+import static de.amr.pacmanfx.uilib.input.Keyboard.alt;
 
 /**
  * 3D play scene. Provides different camera perspectives that can be stepped
@@ -214,12 +213,8 @@ public class PlayScene3D implements GameScene, CommonActionProvider, CameraContr
         updateActionBindings();
     }
 
-    private void bindPlayerActions() {
-        bind(GameAction.createPlayerAction(Direction.UP),    naked(KeyCode.UP),    control(KeyCode.UP));
-        bind(GameAction.createPlayerAction(Direction.DOWN),  naked(KeyCode.DOWN),  control(KeyCode.DOWN));
-        bind(GameAction.createPlayerAction(Direction.LEFT),  naked(KeyCode.LEFT),  control(KeyCode.LEFT));
-        bind(GameAction.createPlayerAction(Direction.RIGHT), naked(KeyCode.RIGHT), control(KeyCode.RIGHT));
-    }
+    // Tengen scene overrides this
+    protected void bindPlayerActions() { bindArcadePlayerActions(); }
 
     @Override
     public void onLevelStarted(GameEvent event) {
