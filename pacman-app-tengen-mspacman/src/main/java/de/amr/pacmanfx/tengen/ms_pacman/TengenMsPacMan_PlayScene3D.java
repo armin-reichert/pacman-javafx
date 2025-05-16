@@ -48,28 +48,29 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     protected void replaceGameLevel3D(GameLevel level) {
         super.replaceGameLevel3D(level);
-        // display also level number boxes, maze category and difficulty like in 2D view at the bottom of the 3D maze
+
+        // At the bottom of the 3D maze, display level number boxes, maze category and difficulty as in 2D view
         var tengenGame = (TengenMsPacMan_GameModel) theGame();
         if (!tengenGame.optionsAreInitial()) {
-            int imageWidth = level.worldMap().numCols() * TS;
-            int imageHeight = 2 * TS;
+            int imgWidth = level.worldMap().numCols() * TS, imgHeight = 2 * TS;
 
             ImageView imageView = new ImageView();
-            imageView.setFitWidth(imageWidth);
-            imageView.setFitHeight(imageHeight);
+            imageView.setFitWidth(imgWidth);
+            imageView.setFitHeight(imgHeight);
             imageView.setTranslateY((level.worldMap().numRows() - 2) * TS);
             imageView.setTranslateZ(-level3D.floorThickness());
 
             float quality = 5; // scale 5x for better quality of snapshot
-            var canvas = new Canvas(quality * imageWidth, quality * imageHeight);
+            var canvas = new Canvas(quality * imgWidth, quality * imgHeight);
             canvas.getGraphicsContext2D().setImageSmoothing(false); // important!
-            var r2D = (TengenMsPacMan_Renderer2D) theUIConfig().current().createRenderer(canvas);
-            r2D.setScaling(quality);
-            r2D.ctx().setFill(level3D.floorColor());
-            r2D.ctx().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-            r2D.drawGameOptions(tengenGame, 0.5 * imageWidth, TS + HTS);
-            r2D.drawLevelNumberBox(level.number(), 0, 0);
-            r2D.drawLevelNumberBox(level.number(), imageWidth - 2 * TS, 0);
+
+            var r = (TengenMsPacMan_Renderer2D) theUIConfig().current().createRenderer(canvas);
+            r.setScaling(quality);
+            r.ctx().setFill(level3D.floorColor());
+            r.ctx().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            r.drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBooster(), 0.5 * imgWidth, TS + HTS);
+            r.drawLevelNumberBox(level.number(), 0, 0);
+            r.drawLevelNumberBox(level.number(), imgWidth - 2 * TS, 0);
 
             imageView.setImage(canvas.snapshot(null, null));
             level3D.root().getChildren().add(imageView);

@@ -155,7 +155,8 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx().setImageSmoothing(false);
 
         if (!tengenGame.optionsAreInitial()) {
-            drawGameOptions(tengenGame, level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
+            drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBooster(),
+                level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
         }
 
         RectArea area = tengenGame.mapCategory() == MapCategory.STRANGE && mapNumber == 15
@@ -186,7 +187,8 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         final var tengenGame = (TengenMsPacMan_GameModel) theGame();
         ctx().setImageSmoothing(false);
         if (!tengenGame.optionsAreInitial()) {
-            drawGameOptions(tengenGame, level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
+            drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBooster(),
+                level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
         }
         ColoredMapImage mapImage = coloredMapSet.flashingMazes().get(flashingIndex);
         RectArea region = mapImage.region();
@@ -285,20 +287,20 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx().fillRect(scaled(cx), scaled(cy), scaled(16), scaled(16));
     }
 
-    public void drawGameOptions(TengenMsPacMan_GameModel game, double centerX, double y) {
-        RectArea categorySprite = switch (game.mapCategory()) {
+    public void drawGameOptions(MapCategory mapCategory, Difficulty difficulty, PacBooster pacBooster, double centerX, double y) {
+        RectArea categorySprite = switch (mapCategory) {
             case BIG     -> BIG_SPRITE;
             case MINI    -> MINI_SPRITE;
             case STRANGE -> STRANGE_SPRITE;
             case ARCADE  -> NO_SPRITE;
         };
-        RectArea difficultySprite = switch (game.difficulty()) {
+        RectArea difficultySprite = switch (difficulty) {
             case EASY   -> EASY_SPRITE;
             case HARD   -> HARD_SPRITE;
             case CRAZY  -> CRAZY_SPRITE;
             case NORMAL -> NO_SPRITE;
         };
-        if (game.pacBooster() != PacBooster.OFF) {
+        if (pacBooster != PacBooster.OFF) {
             drawSpriteScaledCentered(BOOSTER_SPRITE, centerX - tiles_to_px(6), y);
         }
         drawSpriteScaledCentered(difficultySprite, centerX, y);
