@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
@@ -48,6 +49,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameAction.QUIT_DE
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 import static de.amr.pacmanfx.uilib.input.Keyboard.control;
+import static de.amr.pacmanfx.uilib.input.Keyboard.naked;
 
 /**
  * Tengen play scene, uses vertical scrolling.
@@ -221,14 +223,18 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         if (level.isDemoLevel()) {
             bind(QUIT_DEMO_LEVEL, theJoypad().key(JoypadButton.START));
         } else {
-            bind(GameAction.PLAYER_UP,    theJoypad().key(JoypadButton.UP),    control(KeyCode.UP));
-            bind(GameAction.PLAYER_DOWN,  theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN));
-            bind(GameAction.PLAYER_LEFT,  theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT));
-            bind(GameAction.PLAYER_RIGHT, theJoypad().key(JoypadButton.RIGHT), control(KeyCode.RIGHT));
+            bindPlayerActions();
             bind(TengenMsPacMan_GameAction.TOGGLE_PAC_BOOSTER, theJoypad().key(JoypadButton.A), theJoypad().key(JoypadButton.B));
             bindCheatActions();
         }
         enableActionBindings();
+    }
+
+    private void bindPlayerActions() {
+        bind(GameAction.createPlayerAction(Direction.UP),    theJoypad().key(JoypadButton.UP),    control(KeyCode.UP));
+        bind(GameAction.createPlayerAction(Direction.DOWN),  theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN));
+        bind(GameAction.createPlayerAction(Direction.LEFT),  theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT));
+        bind(GameAction.createPlayerAction(Direction.RIGHT), theJoypad().key(JoypadButton.RIGHT), control(KeyCode.RIGHT));
     }
 
     @Override

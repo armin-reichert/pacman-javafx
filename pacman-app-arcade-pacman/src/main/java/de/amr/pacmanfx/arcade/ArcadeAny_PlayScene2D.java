@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade;
 
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
@@ -72,10 +73,10 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
     }
 
     private void bindPlayerActions() {
-        bind(GameAction.PLAYER_UP,    naked(KeyCode.UP),    control(KeyCode.UP));
-        bind(GameAction.PLAYER_DOWN,  naked(KeyCode.DOWN),  control(KeyCode.DOWN));
-        bind(GameAction.PLAYER_LEFT,  naked(KeyCode.LEFT),  control(KeyCode.LEFT));
-        bind(GameAction.PLAYER_RIGHT, naked(KeyCode.RIGHT), control(KeyCode.RIGHT));
+        bind(GameAction.createPlayerAction(Direction.UP),    naked(KeyCode.UP),    control(KeyCode.UP));
+        bind(GameAction.createPlayerAction(Direction.DOWN),  naked(KeyCode.DOWN),  control(KeyCode.DOWN));
+        bind(GameAction.createPlayerAction(Direction.LEFT),  naked(KeyCode.LEFT),  control(KeyCode.LEFT));
+        bind(GameAction.createPlayerAction(Direction.RIGHT), naked(KeyCode.RIGHT), control(KeyCode.RIGHT));
     }
 
     @Override

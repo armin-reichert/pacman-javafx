@@ -117,38 +117,6 @@ public enum GameAction implements Action {
         }
     },
 
-    PLAYER_UP {
-        @Override
-        public void execute() { theGameLevel().pac().setWishDir(Direction.UP); }
-
-        @Override
-        public boolean isEnabled() { return theGameLevel() != null && !theGameLevel().pac().isUsingAutopilot(); }
-    },
-
-    PLAYER_DOWN {
-        @Override
-        public void execute() { theGameLevel().pac().setWishDir(Direction.DOWN); }
-
-        @Override
-        public boolean isEnabled() { return theGameLevel() != null && !theGameLevel().pac().isUsingAutopilot(); }
-    },
-
-    PLAYER_LEFT {
-        @Override
-        public void execute() { theGameLevel().pac().setWishDir(Direction.LEFT); }
-
-        @Override
-        public boolean isEnabled() { return theGameLevel() != null && !theGameLevel().pac().isUsingAutopilot(); }
-    },
-
-    PLAYER_RIGHT {
-        @Override
-        public void execute() { theGameLevel().pac().setWishDir(Direction.RIGHT); }
-
-        @Override
-        public boolean isEnabled() { return theGameLevel() != null && !theGameLevel().pac().isUsingAutopilot(); }
-    },
-
     QUIT_GAME_SCENE {
         @Override
         public void execute() {
@@ -370,4 +338,15 @@ public enum GameAction implements Action {
     static final int SIMULATION_SPEED_DELTA = 2;
     static final int SIMULATION_SPEED_MIN   = 10;
     static final int SIMULATION_SPEED_MAX   = 240;
+
+    public static Action createPlayerAction(Direction wishDir) {
+        return new Action() {
+            @Override
+            public void execute() { theGameLevel().pac().setWishDir(wishDir); }
+
+            @Override
+            public boolean isEnabled() { return theGameLevel() != null && !theGameLevel().pac().isUsingAutopilot(); }
+        };
+    }
+
 }
