@@ -9,7 +9,6 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -90,19 +89,15 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
     @Override
     public void update() {
         if (optGameLevel().isPresent()) {
-            updateLevel(theGameLevel());
+            if (!theGameLevel().isDemoLevel()) {
+                updateSound();
+            }
+            if (theGameState() == GameState.LEVEL_COMPLETE) {
+                levelCompleteAnimation.tick();
+            }
         } else {
             // Scene is already active 2 ticks before game level is created!
             Logger.info("Tick {}: Game level not yet available", theClock().tickCount());
-        }
-    }
-
-    private void updateLevel(GameLevel level) {
-        if (!level.isDemoLevel()) {
-            updateSound(level);
-        }
-        if (theGameState() == GameState.LEVEL_COMPLETE) {
-            levelCompleteAnimation.tick();
         }
     }
 
@@ -132,19 +127,19 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         return items;
     }
 
-    private void updateSound(GameLevel level) {
-        boolean pacChased = theGameState() == GameState.HUNTING && !level.pac().powerTimer().isRunning();
+    private void updateSound() {
+        boolean pacChased = theGameState() == GameState.HUNTING && !theGameLevel().pac().powerTimer().isRunning();
         if (pacChased) {
-            int sirenNumber = 1 + level.huntingTimer().phaseIndex() / 2;
+            int sirenNumber = 1 + theGameLevel().huntingTimer().phaseIndex() / 2;
             theSound().selectSiren(sirenNumber);
             theSound().playSiren();
         }
         // TODO: how exactly is the munching sound created in the original game?
-        if (level.pac().starvingTicks() > 5) {
+        if (theGameLevel().pac().starvingTicks() > 5) {
             theSound().stopMunchingSound();
         }
-        boolean ghostsReturning = level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
-        if (level.pac().isAlive() && ghostsReturning) {
+        boolean ghostsReturning = theGameLevel().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
+        if (theGameLevel().pac().isAlive() && ghostsReturning) {
             theSound().playGhostReturningHomeSound();
         } else {
             theSound().stopGhostReturningHomeSound();
