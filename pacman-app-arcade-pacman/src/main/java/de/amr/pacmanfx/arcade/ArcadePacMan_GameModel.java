@@ -17,6 +17,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.actors.StaticBonus;
 import de.amr.pacmanfx.steering.RouteBasedSteering;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
+import de.amr.pacmanfx.ui.PacManGamesEnv;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -234,10 +235,11 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
         level.setGameOverStateTicks(90);
         level.addArcadeHouse();
 
-        Pac pac = createPac();
-        pac.setGameLevel(level);
-        pac.setAutopilot(autopilot);
-        level.setPac(pac);
+        Pac pacMan = createPac();
+        pacMan.setGameLevel(level);
+        pacMan.setAutopilot(autopilot);
+        pacMan.immuneProperty().bind(PacManGamesEnv.PY_IMMUNITY);
+        level.setPac(pacMan);
 
         // Special tiles where attacking ghosts cannot move up
         List<Vector2i> oneWayDownTiles = worldMap.tiles()

@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.steering.Steering;
+import de.amr.pacmanfx.ui.PacManGamesEnv;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -448,6 +449,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         var msPacMan = createMsPacMan();
         msPacMan.setGameLevel(level);
         msPacMan.setAutopilot(autopilot);
+        msPacMan.immuneProperty().bind(PacManGamesEnv.PY_IMMUNITY);
         level.setPac(msPacMan);
 
         //TODO clarify hunting behavior

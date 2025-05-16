@@ -105,7 +105,6 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         else {
             //TODO use binding?
             level.pac().setUsingAutopilot(PY_AUTOPILOT.get());
-            level.pac().setImmune(PY_IMMUNITY.get());
             updateSound(level);
         }
         if (theGameState() == GameState.LEVEL_COMPLETE) {

@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
+import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.arcade.ArcadeAny_ActorSpeedControl;
 import de.amr.pacmanfx.arcade.ArcadeAny_GameModel;
 import de.amr.pacmanfx.arcade.ArcadePacMan_LevelCounter;
@@ -18,6 +19,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingBonus;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
+import de.amr.pacmanfx.ui.PacManGamesEnv;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -232,6 +234,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
         var msPacMan = createMsPacMan();
         msPacMan.setGameLevel(level);
         msPacMan.setAutopilot(autopilot);
+        msPacMan.immuneProperty().bind(PacManGamesEnv.PY_IMMUNITY);
         level.setPac(msPacMan);
 
         level.setGhosts(

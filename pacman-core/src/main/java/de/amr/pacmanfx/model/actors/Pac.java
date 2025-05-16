@@ -7,6 +7,8 @@ package de.amr.pacmanfx.model.actors;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.steering.Steering;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 import java.util.Optional;
 
@@ -29,7 +31,7 @@ public class Pac extends Creature {
     private Steering autopilot;
     private boolean usingAutopilot;
     private Animations animations;
-    private boolean immune;
+    private final BooleanProperty immunePy = new SimpleBooleanProperty(false);
 
     private final TickTimer powerTimer = new TickTimer("PacPowerTimer");
 
@@ -44,7 +46,7 @@ public class Pac extends Creature {
     @Override
     public String toString() {
         return "Pac{" +
-            "immune=" + immune +
+            "immune=" + immunePy.get() +
             ", dead=" + dead +
             ", restingTicks=" + restingTicks +
             ", starvingTicks=" + starvingTicks +
@@ -96,12 +98,14 @@ public class Pac extends Creature {
     }
 
     public boolean isImmune() {
-        return immune;
+        return immunePy.get();
     }
 
     public void setImmune(boolean immune) {
-        this.immune = immune;
+        immunePy.set(immune);
     }
+
+    public BooleanProperty immuneProperty() { return immunePy; }
 
     public TickTimer powerTimer() {
         return powerTimer;
@@ -115,7 +119,6 @@ public class Pac extends Creature {
         return powerTimer.isRunning() && powerTimer.remainingTicks() == theGame().pacPowerFadingTicks(level)
             || powerTimer.durationTicks() < theGame().pacPowerFadingTicks(level) && powerTimer.tickCount() == 1;
     }
-
 
     public void update() {
         if (dead || restingTicks == REST_INDEFINITELY) {
