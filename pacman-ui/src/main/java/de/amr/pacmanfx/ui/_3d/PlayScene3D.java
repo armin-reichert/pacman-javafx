@@ -182,7 +182,6 @@ public class PlayScene3D implements GameScene, CommonActionProvider, CameraContr
     @Override
     public void init() {
         bindActions();
-        updateActionBindings();
         theGame().scoreManager().setScoreVisible(true);
         perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
         scores3D.setFont(theAssets().font("font.arcade", TS));
@@ -252,9 +251,8 @@ public class PlayScene3D implements GameScene, CommonActionProvider, CameraContr
     @Override
     public void onSceneVariantSwitch(GameScene fromScene) {
         optionalGameLevel().ifPresent(level -> {
-            bindActions();
             bindPlayerActions();
-            updateActionBindings();
+            bindActions();
             if (level3D == null) {
                 replaceGameLevel3D(level);
             }
