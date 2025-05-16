@@ -213,34 +213,32 @@ public class PlayScene3D implements GameScene, CommonActionProvider, CameraContr
         updateActionBindings();
     }
 
-    // Tengen scene overrides this
+    // Tengen 3D play scene overrides this
     protected void bindPlayerActions() { bindArcadePlayerActions(); }
 
     @Override
     public void onLevelStarted(GameEvent event) {
-        optGameLevel().ifPresent(level -> {
-            bindActions(); //TODO check if this is necessary
-            if (level3D == null) {
-                replaceGameLevel3D(level);
+        bindActions(); //TODO check if this is necessary
+        if (level3D == null) {
+            replaceGameLevel3D(theGameLevel());
+        }
+        switch (theGameState()) {
+            case TESTING_LEVELS, TESTING_LEVEL_TEASERS -> {
+                replaceGameLevel3D(theGameLevel());
+                level3D.playLivesCounterAnimation();
+                level3D.energizers3D().forEach(Energizer3D::startPumping);
+                showLevelTestMessage("TEST LEVEL " + theGameLevel().number());
             }
-            switch (theGameState()) {
-                case TESTING_LEVELS, TESTING_LEVEL_TEASERS -> {
-                    replaceGameLevel3D(level);
-                    level3D.playLivesCounterAnimation();
-                    level3D.energizers3D().forEach(Energizer3D::startPumping);
-                    showLevelTestMessage(level, "TEST LEVEL " + level.number());
-                }
-                default -> {
-                    if (!level.isDemoLevel()) {
-                        bindPlayerActions();
-                        updateActionBindings();
-                        showReadyMessage(level);
-                    }
+            default -> {
+                if (!theGameLevel().isDemoLevel()) {
+                    bindPlayerActions();
+                    updateActionBindings();
+                    showReadyMessage();
                 }
             }
-            updateScores();
-            perspective().init(fxSubScene, level);
-        });
+        }
+        updateScores();
+        perspective().init(fxSubScene, theGameLevel());
     }
 
     @Override
@@ -277,30 +275,29 @@ public class PlayScene3D implements GameScene, CommonActionProvider, CameraContr
             Logger.warn("Tick #{}: Game level not yet existing", theClock().tickCount());
             return;
         }
-        final GameLevel level = theGameLevel();
         if (level3D == null) {
             Logger.warn("Tick #{}: 3D game level not yet existing", theClock().tickCount());
             return;
         }
         level3D.update();
-        if (!level.isDemoLevel()) {
+        if (!theGameLevel().isDemoLevel()) {
             updateScores();
-            updateSound(level);
+            updateSound();
         }
-        perspective().update(fxSubScene, level, level.pac());
+        perspective().update(fxSubScene, theGameLevel(), theGameLevel().pac());
     }
 
-    protected void updateSound(GameLevel level) {
-        if (theGameState() == GameState.HUNTING && !level.pac().powerTimer().isRunning()) {
-            int sirenNumber = 1 + level.huntingTimer().phaseIndex() / 2;
+    protected void updateSound() {
+        if (theGameState() == GameState.HUNTING && !theGameLevel().pac().powerTimer().isRunning()) {
+            int sirenNumber = 1 + theGameLevel().huntingTimer().phaseIndex() / 2;
             theSound().selectSiren(sirenNumber);
             theSound().playSiren();
         }
-        if (level.pac().starvingTicks() > 5) { // TODO not sure how to do this right
+        if (theGameLevel().pac().starvingTicks() > 5) { // TODO not sure how to do this right
             theSound().stopMunchingSound();
         }
-        boolean ghostsReturning = level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
-        if (level.pac().isAlive() && ghostsReturning) {
+        boolean ghostsReturning = theGameLevel().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
+        if (theGameLevel().pac().isAlive() && ghostsReturning) {
             theSound().playGhostReturningHomeSound();
         } else {
             theSound().stopGhostReturningHomeSound();
@@ -423,7 +420,7 @@ public class PlayScene3D implements GameScene, CommonActionProvider, CameraContr
         replaceGameLevel3D(theGameLevel());
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(theGameLevel()));
-        showLevelTestMessage(theGameLevel(), "TEST LEVEL" + theGameLevel().number());
+        showLevelTestMessage("TEST LEVEL" + theGameLevel().number());
         PY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
     }
 
@@ -431,7 +428,7 @@ public class PlayScene3D implements GameScene, CommonActionProvider, CameraContr
         replaceGameLevel3D(theGameLevel());
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(theGameLevel()));
-        showLevelTestMessage(theGameLevel(), "PREVIEW LEVEL " + theGameLevel().number());
+        showLevelTestMessage("PREVIEW LEVEL " + theGameLevel().number());
         PY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
     }
 
@@ -489,14 +486,13 @@ public class PlayScene3D implements GameScene, CommonActionProvider, CameraContr
 
     @Override
     public void onGameContinued(GameEvent e) {
-        optGameLevel().ifPresent(this::showReadyMessage);
+        showReadyMessage();
     }
 
     @Override
     public void onGameStarted(GameEvent e) {
-        GameLevel level = theGameLevel();
-        boolean silent = level.isDemoLevel() ||
-            theGameState() == TESTING_LEVELS || theGameState() == TESTING_LEVEL_TEASERS;
+        boolean silent = theGameLevel().isDemoLevel()
+                || theGameState() == TESTING_LEVELS || theGameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {
             theSound().playGameReadySound();
         }
@@ -550,16 +546,16 @@ public class PlayScene3D implements GameScene, CommonActionProvider, CameraContr
         theUI().updateGameScene(true);
     }
 
-    private void showLevelTestMessage(GameLevel level, String message) {
-        WorldMap worldMap = level.worldMap();
+    private void showLevelTestMessage(String message) {
+        WorldMap worldMap = theGameLevel().worldMap();
         double x = worldMap.numCols() * HTS;
         double y = (worldMap.numRows() - 2) * TS;
         level3D.showAnimatedMessage(message, 5, x, y);
     }
 
-    private void showReadyMessage(GameLevel level) {
-        Vector2i houseTopLeft = level.houseMinTile();
-        Vector2i houseSize = level.houseSizeInTiles();
+    private void showReadyMessage() {
+        Vector2i houseTopLeft = theGameLevel().houseMinTile();
+        Vector2i houseSize = theGameLevel().houseSizeInTiles();
         double x = TS * (houseTopLeft.x() + 0.5 * houseSize.x());
         double y = TS * (houseTopLeft.y() +       houseSize.y());
         double seconds = theGame().isPlaying() ? 0.5 : 2.5;
