@@ -22,6 +22,7 @@ import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
@@ -35,6 +36,8 @@ import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.pacmanfx.ui.GameAssets.*;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
+import static de.amr.pacmanfx.uilib.input.Keyboard.control;
+import static de.amr.pacmanfx.uilib.input.Keyboard.naked;
 
 /**
  * 2D play scene for Arcade game variants.
@@ -66,6 +69,13 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
             bindCheatActions();
             enableActionBindings();
         }
+    }
+
+    private void bindPlayerActions() {
+        bind(GameAction.PLAYER_UP,    naked(KeyCode.UP),    control(KeyCode.UP));
+        bind(GameAction.PLAYER_DOWN,  naked(KeyCode.DOWN),  control(KeyCode.DOWN));
+        bind(GameAction.PLAYER_LEFT,  naked(KeyCode.LEFT),  control(KeyCode.LEFT));
+        bind(GameAction.PLAYER_RIGHT, naked(KeyCode.RIGHT), control(KeyCode.RIGHT));
     }
 
     @Override

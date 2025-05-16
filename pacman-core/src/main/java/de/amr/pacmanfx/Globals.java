@@ -55,7 +55,6 @@ public class Globals {
     public static Random              theRNG() { return RANDOM; }
     public static SimulationStep      theSimulationStep() { return SIMULATION_STEP; }
 
-    public static Pac                 requiredPac() { return optionalGameLevel().map(GameLevel::pac).orElse(null); }
 
     private static final CoinMechanism COIN_MECHANISM = new CoinMechanism();
     private static final GameController GAME_CONTROLLER = new GameController();

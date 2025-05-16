@@ -48,7 +48,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 import static de.amr.pacmanfx.uilib.Ufx.contextMenuTitleItem;
-import static de.amr.pacmanfx.uilib.input.Keyboard.alt;
+import static de.amr.pacmanfx.uilib.input.Keyboard.*;
 
 /**
  * 3D play scene. Provides different camera perspectives that can be stepped
@@ -207,6 +207,13 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         bind(GameAction.PERSPECTIVE_NEXT, alt(KeyCode.RIGHT));
         bind(GameAction.TOGGLE_DRAW_MODE, alt(KeyCode.W));
         enableActionBindings();
+    }
+
+    private void bindPlayerActions() {
+        bind(GameAction.PLAYER_UP,    naked(KeyCode.UP),    control(KeyCode.UP));
+        bind(GameAction.PLAYER_DOWN,  naked(KeyCode.DOWN),  control(KeyCode.DOWN));
+        bind(GameAction.PLAYER_LEFT,  naked(KeyCode.LEFT),  control(KeyCode.LEFT));
+        bind(GameAction.PLAYER_RIGHT, naked(KeyCode.RIGHT), control(KeyCode.RIGHT));
     }
 
     @Override

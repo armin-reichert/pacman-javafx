@@ -119,34 +119,34 @@ public enum GameAction implements Action {
 
     PLAYER_UP {
         @Override
-        public void execute() { requiredPac().setWishDir(Direction.UP); }
+        public void execute() { theGameLevel().pac().setWishDir(Direction.UP); }
 
         @Override
-        public boolean isEnabled() { return requiredPac() != null && !requiredPac().isUsingAutopilot(); }
+        public boolean isEnabled() { return theGameLevel() != null && !theGameLevel().pac().isUsingAutopilot(); }
     },
 
     PLAYER_DOWN {
         @Override
-        public void execute() { requiredPac().setWishDir(Direction.DOWN); }
+        public void execute() { theGameLevel().pac().setWishDir(Direction.DOWN); }
 
         @Override
-        public boolean isEnabled() { return requiredPac() != null && !requiredPac().isUsingAutopilot(); }
+        public boolean isEnabled() { return theGameLevel() != null && !theGameLevel().pac().isUsingAutopilot(); }
     },
 
     PLAYER_LEFT {
         @Override
-        public void execute() { requiredPac().setWishDir(Direction.LEFT); }
+        public void execute() { theGameLevel().pac().setWishDir(Direction.LEFT); }
 
         @Override
-        public boolean isEnabled() { return requiredPac() != null && !requiredPac().isUsingAutopilot(); }
+        public boolean isEnabled() { return theGameLevel() != null && !theGameLevel().pac().isUsingAutopilot(); }
     },
 
     PLAYER_RIGHT {
         @Override
-        public void execute() { requiredPac().setWishDir(Direction.RIGHT); }
+        public void execute() { theGameLevel().pac().setWishDir(Direction.RIGHT); }
 
         @Override
-        public boolean isEnabled() { return requiredPac() != null && !requiredPac().isUsingAutopilot(); }
+        public boolean isEnabled() { return theGameLevel() != null && !theGameLevel().pac().isUsingAutopilot(); }
     },
 
     QUIT_GAME_SCENE {
