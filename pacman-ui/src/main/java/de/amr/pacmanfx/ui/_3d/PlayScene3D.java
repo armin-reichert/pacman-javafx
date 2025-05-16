@@ -356,39 +356,39 @@ public class PlayScene3D implements GameScene, CommonActionProvider, CameraContr
         Logger.trace("Entering game state {}", state);
         optGameLevel().ifPresent(level -> {
             switch (state) {
-                case HUNTING               -> onEnterStateHunting(level);
-                case PACMAN_DYING          -> onEnterStatePacManDying(level);
-                case GHOST_DYING           -> onEnterStateGhostDying(level);
+                case HUNTING               -> onEnterStateHunting();
+                case PACMAN_DYING          -> onEnterStatePacManDying();
+                case GHOST_DYING           -> onEnterStateGhostDying();
                 case LEVEL_COMPLETE        -> onEnterStateLevelComplete();
-                case LEVEL_TRANSITION      -> onEnterStateLevelTransition(level);
-                case TESTING_LEVELS        -> onEnterStateTestingLevels(level);
-                case TESTING_LEVEL_TEASERS -> onEnterStateTestingLevelTeasers(level);
+                case LEVEL_TRANSITION      -> onEnterStateLevelTransition();
+                case TESTING_LEVELS        -> onEnterStateTestingLevels();
+                case TESTING_LEVEL_TEASERS -> onEnterStateTestingLevelTeasers();
                 case GAME_OVER             -> onEnterStateGameOver();
                 default -> {}
             }
         });
     }
 
-    private void onEnterStateHunting(GameLevel level) {
+    private void onEnterStateHunting() {
         level3D.pac3D().init();
-        level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(level));
+        level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(theGameLevel()));
         level3D.energizers3D().forEach(Energizer3D::startPumping);
         level3D.playLivesCounterAnimation();
     }
 
-    private void onEnterStatePacManDying(GameLevel level) {
+    private void onEnterStatePacManDying() {
         level3D.stopAnimations();
         theSound().stopAll();
         // last update before dying animation
-        level3D.pac3D().update(level);
+        level3D.pac3D().update(theGameLevel());
         playPacManDiesAnimation();
     }
 
-    private void onEnterStateGhostDying(GameLevel level) {
+    private void onEnterStateGhostDying() {
         GameSpriteSheet spriteSheet = theUIConfig().current().spriteSheet();
         RectArea[] numberSprites = spriteSheet.ghostNumberSprites();
         theSimulationStep().killedGhosts().forEach(ghost -> {
-            int victimIndex = level.victims().indexOf(ghost);
+            int victimIndex = theGameLevel().victims().indexOf(ghost);
             var numberImage = spriteSheet.crop(numberSprites[victimIndex]);
             level3D.ghost3D(ghost.personality()).setNumberImage(numberImage);
         });
@@ -412,26 +412,26 @@ public class PlayScene3D implements GameScene, CommonActionProvider, CameraContr
         animation.play();
     }
 
-    private void onEnterStateLevelTransition(GameLevel level) {
+    private void onEnterStateLevelTransition() {
         theGameState().timer().restartSeconds(3);
-        replaceGameLevel3D(level);
+        replaceGameLevel3D(theGameLevel());
         level3D.pac3D().init();
-        perspective().init(fxSubScene, level);
+        perspective().init(fxSubScene, theGameLevel());
     }
 
-    private void onEnterStateTestingLevels(GameLevel level) {
-        replaceGameLevel3D(level);
+    private void onEnterStateTestingLevels() {
+        replaceGameLevel3D(theGameLevel());
         level3D.pac3D().init();
-        level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(level));
-        showLevelTestMessage(level, "TEST LEVEL" + level.number());
+        level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(theGameLevel()));
+        showLevelTestMessage(theGameLevel(), "TEST LEVEL" + theGameLevel().number());
         PY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
     }
 
-    private void onEnterStateTestingLevelTeasers(GameLevel level) {
-        replaceGameLevel3D(level);
+    private void onEnterStateTestingLevelTeasers() {
+        replaceGameLevel3D(theGameLevel());
         level3D.pac3D().init();
-        level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(level));
-        showLevelTestMessage(level, "PREVIEW LEVEL " + level.number());
+        level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(theGameLevel()));
+        showLevelTestMessage(theGameLevel(), "PREVIEW LEVEL " + theGameLevel().number());
         PY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
     }
 
