@@ -20,6 +20,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -226,11 +227,12 @@ public abstract class InfoBox extends TitledPane {
         return spinner;
     }
 
-    protected Spinner<Integer> addIntSpinner(String labelText, int min, int max, IntegerProperty property) {
-        var spinner = new Spinner<Integer>(min, max, property.getValue());
-        spinner.getValueFactory().valueProperty().bindBidirectional(property.asObject());
-        spinner.valueProperty().addListener((py, ov, newValue) -> property.set(newValue));
+    protected Spinner<Integer> addIntSpinner(String labelText, int min, int max, IntegerProperty valuePy) {
+        var spinner = new Spinner<Integer>(min, max, valuePy.getValue());
         spinner.setStyle(fontCSS(textFont));
+        //TODO bidirectional binding does not work for me. Why? Is it me or is it a bug?
+        spinner.getValueFactory().valueProperty().addListener((py,ov,nv) -> valuePy.set(nv));
+        valuePy.addListener((py,ov,nv) -> spinner.getValueFactory().setValue(nv.intValue()));
         addRow(labelText, spinner);
         return spinner;
     }

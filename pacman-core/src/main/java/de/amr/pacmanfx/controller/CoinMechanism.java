@@ -4,33 +4,37 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.controller;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import org.tinylog.Logger;
 
 public class CoinMechanism {
 
     public static byte MAX_COINS = 99;
 
-    private byte numCoins;
+    private final IntegerProperty numCoinsPy = new SimpleIntegerProperty(0);
 
-    public int numCoins() { return numCoins; }
+    public IntegerProperty numCoinsProperty() { return numCoinsPy; }
 
-    public boolean isEmpty() { return numCoins == 0; }
+    public int numCoins() { return numCoinsPy.get(); }
 
-    public void setNumCoins(int numCoins) {
-        if (numCoins >= 0 && numCoins <= MAX_COINS) {
-            this.numCoins = (byte) numCoins;
+    public boolean isEmpty() { return numCoins() == 0; }
+
+    public void setNumCoins(int n) {
+        if (n >= 0 && n <= MAX_COINS) {
+            numCoinsPy.set(n);
         } else {
-            Logger.error("Cannot set number of coins to illegal value {}", numCoins);
+            Logger.error("Cannot set number of coins to {}", n);
         }
     }
 
     public void insertCoin() {
-        numCoins++;
+        setNumCoins(numCoins() + 1);
     }
 
     public void consumeCoin() {
-        if (numCoins > 0) {
-            --numCoins;
+        if (numCoins() > 0) {
+            setNumCoins(numCoins() - 1);
         }
     }
 }

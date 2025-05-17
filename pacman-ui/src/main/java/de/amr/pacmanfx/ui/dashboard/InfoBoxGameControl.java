@@ -41,15 +41,14 @@ public class InfoBoxGameControl extends InfoBox {
     private CheckBox cbImmunity;
 
     public void init() {
-        spinnerCredit      = addIntSpinner("Credit", 0, CoinMechanism.MAX_COINS, 0);
+        spinnerCredit      = addIntSpinner("Credit", 0, CoinMechanism.MAX_COINS, theCoinMechanism().numCoinsProperty());
+
         comboInitialLives  = addChoiceBox("Initial Lives", new Integer[] {3, 5});
         bgLevelActions     = addButtonList("Game Level", List.of("Start", "Quit", "Next"));
         bgCutScenesTest    = addButtonList("Cut Scenes Test", List.of("Start", "Quit"));
 
         cbAutopilot        = addCheckBox("Autopilot", PY_USING_AUTOPILOT);
         cbImmunity         = addCheckBox("Pac-Man Immune", PY_IMMUNITY);
-
-        spinnerCredit.valueProperty().addListener((py, ov, number) -> theCoinMechanism().setNumCoins(number));
 
         setAction(bgCutScenesTest[CUT_SCENES_TEST_START], GameAction.TEST_CUT_SCENES::execute);
         setAction(bgCutScenesTest[CUT_SCENES_TEST_QUIT], GameAction.RESTART_INTRO::execute);
@@ -63,7 +62,6 @@ public class InfoBoxGameControl extends InfoBox {
     public void update() {
         super.update();
 
-        spinnerCredit.getValueFactory().setValue(theCoinMechanism().numCoins());
         comboInitialLives.setValue(theGame().initialLifeCount());
 
         spinnerCredit.setDisable(!(isOneOf(theGameState(), GameState.INTRO, GameState.SETTING_OPTIONS)));
