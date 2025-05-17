@@ -108,9 +108,6 @@ public class GameView implements View {
     @Override
     public void update() {
         currentGameScene().ifPresent(GameScene::update);
-        if (dashboardLayer.isVisible()) {
-            dashboard.infoBoxes().filter(InfoBox::isExpanded).forEach(InfoBox::update);
-        }
     }
 
     public void draw() {
@@ -119,8 +116,12 @@ public class GameView implements View {
                 gameScene2D.draw();
             }
         });
-        flashMessageLayer.update();
         pipView.draw();
+        flashMessageLayer.update();
+        // Dashboard updates must be called from permanent clock task too!
+        if (dashboardLayer.isVisible()) {
+            dashboard.infoBoxes().filter(InfoBox::isExpanded).forEach(InfoBox::update);
+        }
     }
 
     // -----------------------------------------------------------------------------------------------------------------
