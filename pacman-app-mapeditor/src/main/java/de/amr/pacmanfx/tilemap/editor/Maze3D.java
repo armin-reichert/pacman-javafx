@@ -94,9 +94,9 @@ public class Maze3D extends Group {
 
         ghostShapes = new Node[4];
         ghostShapes[0] = Model3DRepository.get().createGhostShape3D(ACTOR_SIZE, Color.RED, 0);
-        ghostShapes[1] = Model3DRepository.get().createGhostShape3D(ACTOR_SIZE, Color.PINK, 270);
-        ghostShapes[2] = Model3DRepository.get().createGhostShape3D(ACTOR_SIZE, Color.CYAN, 90);
-        ghostShapes[3] = Model3DRepository.get().createGhostShape3D(ACTOR_SIZE, Color.ORANGE, 90);
+        ghostShapes[1] = Model3DRepository.get().createGhostShape3D(ACTOR_SIZE, Color.PINK, 90);
+        ghostShapes[2] = Model3DRepository.get().createGhostShape3D(ACTOR_SIZE, Color.CYAN, 270);
+        ghostShapes[3] = Model3DRepository.get().createGhostShape3D(ACTOR_SIZE, Color.ORANGE, 270);
     }
 
     public void moveTowardsUser(double pixels) {
