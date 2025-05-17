@@ -12,6 +12,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Spinner;
 
+import java.util.List;
+
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.isOneOf;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.PY_USING_AUTOPILOT;
@@ -41,8 +43,8 @@ public class InfoBoxGameControl extends InfoBox {
     public void init() {
         spinnerCredit      = addIntSpinner("Credit", 0, CoinMechanism.MAX_COINS, 0);
         comboInitialLives  = addChoiceBox("Initial Lives", new Integer[] {3, 5});
-        bgLevelActions     = addButtonList("Game Level", "Start", "Quit", "Next");
-        bgCutScenesTest    = addButtonList("Cut Scenes Test", "Start", "Quit");
+        bgLevelActions     = addButtonList("Game Level", List.of("Start", "Quit", "Next"));
+        bgCutScenesTest    = addButtonList("Cut Scenes Test", List.of("Start", "Quit"));
         cbAutopilot        = addCheckBox("Autopilot");
         cbImmunity         = addCheckBox("Pac-Man Immune");
 

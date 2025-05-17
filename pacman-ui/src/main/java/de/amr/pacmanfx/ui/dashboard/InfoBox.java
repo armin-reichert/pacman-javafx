@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.uilib.GameScene;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
@@ -137,11 +138,11 @@ public abstract class InfoBox extends TitledPane {
         addLabeledValue("", "");
     }
 
-    protected Button[] addButtonList(String labelText, String... buttonTexts) {
+    protected Button[] addButtonList(String labelText, List<String> buttonTexts) {
         var hbox = new HBox();
-        var buttons = new Button[buttonTexts.length];
-        for (int i = 0; i < buttonTexts.length; ++i) {
-            buttons[i] = new Button(buttonTexts[i]);
+        var buttons = new Button[buttonTexts.size()];
+        for (int i = 0; i < buttonTexts.size(); ++i) {
+            buttons[i] = new Button(buttonTexts.get(i));
             buttons[i].setFont(textFont);
             hbox.getChildren().add(buttons[i]);
         }
@@ -237,6 +238,11 @@ public abstract class InfoBox extends TitledPane {
 
     protected void setAction(Button button, Runnable action) {
         button.setOnAction(e -> action.run());
+    }
+
+    protected void setAction(Button button, GameAction gameAction) {
+        button.setOnAction(e -> gameAction.execute());
+        //TODO add boolean property for enabled-state to game action and bind against it
     }
 
     protected void setAction(CheckBox checkBox, Runnable action) {
