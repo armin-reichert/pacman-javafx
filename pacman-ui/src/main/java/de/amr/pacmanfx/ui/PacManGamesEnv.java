@@ -12,6 +12,7 @@ import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.input.Joypad;
 import de.amr.pacmanfx.uilib.input.Keyboard;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
+import javafx.application.Application;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -19,6 +20,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -37,18 +39,51 @@ public class PacManGamesEnv {
     private static GameUI theUI;
     private static GameUIConfigManager theUIConfigManager;
 
+    private static void checkUserDirsExistingAndWritable() {
+        String homeDirDesc = "Pac-Man FX home directory";
+        String customMapDirDesc = "Pac-Man FX custom map directory";
+        boolean success = checkDirExistingAndWritable(Globals.HOME_DIR, homeDirDesc);
+        if (success) {
+            Logger.info(homeDirDesc + " is " + Globals.HOME_DIR);
+            success = checkDirExistingAndWritable(Globals.CUSTOM_MAP_DIR, customMapDirDesc);
+            if (success) {
+                Logger.info(customMapDirDesc + " is " + Globals.CUSTOM_MAP_DIR);
+            }
+            Logger.info("User directories exist and are writable!");
+        }
+    }
+
+    private static boolean checkDirExistingAndWritable(File dir, String description) {
+        requireNonNull(dir);
+        if (!dir.exists()) {
+            Logger.info(description + " does not exist, create it...");
+            if (!dir.mkdirs()) {
+                Logger.error(description + " could not be created");
+                return false;
+            }
+            Logger.info(description + " has been created");
+            if (!dir.canWrite()) {
+                Logger.error(description + " is not writable");
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
-     * Should be called as first method in Application.init() method.
+     * Initializes the global game objects like game assets, clock, keyboard input etc.
+     *
+     * <p>Call this method at the start of the {@link Application#init()} method!</p>
      */
     public static void init() {
-        checkUserDirsExistAndWritable();
+        checkUserDirsExistingAndWritable();
         theAssets = new GameAssets();
         theClock = new GameClock();
         theKeyboard = new Keyboard();
         theJoypad = new Joypad(theKeyboard);
         theSound = new GameSound();
         theUIConfigManager = new GameUIConfigManager();
-        Logger.info("Application environment initialized.");
+        Logger.info("Game environment initialized.");
     }
 
     public static GameAssets theAssets() { return theAssets; }
@@ -60,14 +95,15 @@ public class PacManGamesEnv {
     public static GameUIConfigManager theUIConfig() { return theUIConfigManager; }
 
     /**
-     * Should be called in the Application.start() method.
+     * Creates the global UI instance and stores the configurations of the supported game variants.
+     * <p>
+     * Call this method in {@link javafx.application.Application#start(Stage)}!
+     * </p>
      *
      * @param support3D if the UI has 3D support
      * @param configClassesMap a map specifying the UI configuration for each supported game variant
      */
-    public static void createUIAndSupport3D(
-        boolean support3D,
-        Map<GameVariant, Class<? extends GameUIConfig>> configClassesMap)
+    public static void createUI(boolean support3D, Map<GameVariant, Class<? extends GameUIConfig>> configClassesMap)
     {
         theUI = new PacManGamesUI();
         if (support3D) {
@@ -85,39 +121,16 @@ public class PacManGamesEnv {
         });
     }
 
+    /**
+     * Creates the global UI instance (with 3D scenes) and stores the configurations of the supported game variants.
+     * <p>
+     * Call this method in {@link javafx.application.Application#start(Stage)}!
+     * </p>
+     *
+     * @param configClassesMap a map specifying the UI configuration for each supported game variant
+     */
     public static void createUI(Map<GameVariant, Class<? extends GameUIConfig>> configClassesMap) {
-        createUIAndSupport3D(true, configClassesMap);
-    }
-
-   private static void checkUserDirsExistAndWritable() {
-        String homeDirDesc = "Pac-Man FX home directory";
-        String customMapDirDesc = "Pac-Man FX custom map directory";
-        boolean success = ensureDirectoryExistsAndIsWritable(Globals.HOME_DIR, homeDirDesc);
-        if (success) {
-            Logger.info(homeDirDesc + " is " + Globals.HOME_DIR);
-            success = ensureDirectoryExistsAndIsWritable(Globals.CUSTOM_MAP_DIR, customMapDirDesc);
-            if (success) {
-                Logger.info(customMapDirDesc + " is " + Globals.CUSTOM_MAP_DIR);
-            }
-            Logger.info("Directory check passed!");
-        }
-    }
-
-    private static boolean ensureDirectoryExistsAndIsWritable(File dir, String description) {
-        requireNonNull(dir);
-        if (!dir.exists()) {
-            Logger.info(description + " does not exist, create it...");
-            if (!dir.mkdirs()) {
-                Logger.error(description + " could not be created");
-                return false;
-            }
-            Logger.error(description + " has been created");
-            if (!dir.canWrite()) {
-                Logger.error(description + " is not writeable");
-                return false;
-            }
-        }
-        return true;
+        createUI(true, configClassesMap);
     }
 
     public static final Font DEBUG_TEXT_FONT           = Font.font("Sans", FontWeight.BOLD, 18);
