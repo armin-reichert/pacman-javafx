@@ -169,6 +169,12 @@ public abstract class InfoBox extends TitledPane {
         return cb;
     }
 
+    protected CheckBox addCheckBox(String labelText, BooleanProperty property) {
+        CheckBox checkBox = addCheckBox(labelText);
+        checkBox.selectedProperty().bindBidirectional(property);
+        return checkBox;
+    }
+
     protected <T> ChoiceBox<T> addChoiceBox(String labelText, T[] items) {
         var selector = new ChoiceBox<>(FXCollections.observableArrayList(items));
         selector.setStyle(fontCSS(textFont));
@@ -180,10 +186,6 @@ public abstract class InfoBox extends TitledPane {
         var colorPicker = new ColorPicker(color);
         addRow(labelText, colorPicker);
         return colorPicker;
-    }
-
-    protected void setEditor(CheckBox checkBox, BooleanProperty property) {
-        checkBox.selectedProperty().bindBidirectional(property);
     }
 
     protected void setEditor(ColorPicker picker, ObjectProperty<Color> property) {

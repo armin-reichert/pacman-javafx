@@ -55,21 +55,17 @@ public class InfoBoxGeneral extends InfoBox {
 
         addIntSpinner("Num Steps", 1, 50, PY_SIMULATION_STEPS);
         var sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
+        setEditor(sliderTargetFPS, theClock().targetFrameRateProperty());
 
         addLabeledValue("", () -> "FPS: %.1f (Tgt: %.1f)".formatted(theClock().getActualFrameRate(), theClock().getTargetFrameRate()));
         addLabeledValue("Total Updates",  theClock()::updateCount);
 
         var pickerCanvasColor = addColorPicker("Canvas Color", PY_CANVAS_BG_COLOR.get());
-        var cbCanvasImageSmoothing = addCheckBox("Image Smoothing");
-        var cbCanvasFontSmoothing = addCheckBox("Font Smoothing");
-        var cbDebugUI = addCheckBox("Show Debug Info");
-        var cbTimeMeasured = addCheckBox("Time Measured");
-
-        setEditor(sliderTargetFPS, theClock().targetFrameRateProperty());
         setEditor(pickerCanvasColor, PY_CANVAS_BG_COLOR);
-        setEditor(cbCanvasImageSmoothing, PY_CANVAS_IMAGE_SMOOTHING);
-        setEditor(cbCanvasFontSmoothing, PY_CANVAS_FONT_SMOOTHING);
-        setEditor(cbDebugUI, PY_DEBUG_INFO_VISIBLE);
-        setEditor(cbTimeMeasured, theClock().timeMeasuredProperty());
+
+        addCheckBox("Image Smoothing", PY_CANVAS_IMAGE_SMOOTHING);
+        addCheckBox("Font Smoothing", PY_CANVAS_FONT_SMOOTHING);
+        addCheckBox("Show Debug Info", PY_DEBUG_INFO_VISIBLE);
+        addCheckBox("Time Measured", theClock().timeMeasuredProperty());
     }
 }

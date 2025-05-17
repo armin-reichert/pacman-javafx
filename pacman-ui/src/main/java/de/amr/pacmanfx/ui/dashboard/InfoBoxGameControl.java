@@ -45,8 +45,9 @@ public class InfoBoxGameControl extends InfoBox {
         comboInitialLives  = addChoiceBox("Initial Lives", new Integer[] {3, 5});
         bgLevelActions     = addButtonList("Game Level", List.of("Start", "Quit", "Next"));
         bgCutScenesTest    = addButtonList("Cut Scenes Test", List.of("Start", "Quit"));
-        cbAutopilot        = addCheckBox("Autopilot");
-        cbImmunity         = addCheckBox("Pac-Man Immune");
+
+        cbAutopilot        = addCheckBox("Autopilot", PY_USING_AUTOPILOT);
+        cbImmunity         = addCheckBox("Pac-Man Immune", PY_IMMUNITY);
 
         spinnerCredit.valueProperty().addListener((py, ov, number) -> theCoinMechanism().setNumCoins(number));
 
@@ -56,9 +57,6 @@ public class InfoBoxGameControl extends InfoBox {
         setAction(bgLevelActions[GAME_LEVEL_QUIT], GameAction.RESTART_INTRO::execute);
         setAction(bgLevelActions[GAME_LEVEL_NEXT], GameAction.CHEAT_ENTER_NEXT_LEVEL::execute);
         setAction(comboInitialLives, () -> theGame().setInitialLifeCount(comboInitialLives.getValue()));
-
-        setEditor(cbAutopilot, PY_USING_AUTOPILOT);
-        setEditor(cbImmunity, PY_IMMUNITY);
     }
 
     @Override

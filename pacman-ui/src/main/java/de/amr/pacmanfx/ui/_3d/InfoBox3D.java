@@ -53,14 +53,14 @@ public class InfoBox3D extends InfoBox {
         addLabeledValue("Camera",        this::sceneCameraInfo);
         addLabeledValue("Viewport Size", this::sceneViewportSizeInfo);
         addLabeledValue("Scene Size",    this::sceneSizeInfo);
-        cbPiPOn              = addCheckBox("Picture-In-Picture");
+        cbPiPOn              = addCheckBox("Picture-In-Picture", PY_PIP_ON);
         sliderPiPSceneHeight = addSlider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get(), false, false);
         sliderPiPOpacity     = addSlider("- Opacity", 0, 100, PY_PIP_OPACITY_PERCENT.get(), false, false);
         sliderWallHeight     = addSlider("Obstacle Height", 0, 16, PY_3D_WALL_HEIGHT.get(), false, false);
         sliderWallOpacity    = addSlider("Wall Opacity", 0, 1, PY_3D_WALL_OPACITY.get(), false, false);
-        cbEnergizerExplodes  = addCheckBox("Energizer Explosion");
-        cbPacLighted         = addCheckBox("Pac-Man Lighted");
-        cbAxesVisible        = addCheckBox("Show Axes");
+        cbEnergizerExplodes  = addCheckBox("Energizer Explosion", PY_3D_ENERGIZER_EXPLODES);
+        cbPacLighted         = addCheckBox("Pac-Man Lighted", PY_3D_PAC_LIGHT_ENABLED);
+        cbAxesVisible        = addCheckBox("Show Axes", PY_3D_AXES_VISIBLE);
         cbWireframeMode      = addCheckBox("Wireframe Mode");
 
         setTooltip(sliderPiPSceneHeight, sliderPiPSceneHeight.valueProperty(), "%.0f px");
@@ -73,11 +73,7 @@ public class InfoBox3D extends InfoBox {
         setEditor(sliderPiPOpacity, PY_PIP_OPACITY_PERCENT);
         setEditor(sliderWallHeight, PY_3D_WALL_HEIGHT);
         setEditor(sliderWallOpacity, PY_3D_WALL_OPACITY);
-        setEditor(cbPiPOn, PY_PIP_ON);
         setEditor(comboPerspectives, PY_3D_PERSPECTIVE);
-        setEditor(cbEnergizerExplodes, PY_3D_ENERGIZER_EXPLODES);
-        setEditor(cbPacLighted, PY_3D_PAC_LIGHT_ENABLED);
-        setEditor(cbAxesVisible, PY_3D_AXES_VISIBLE);
 
         //TODO check these
         cbUsePlayScene3D.setOnAction(e -> GameAction.TOGGLE_PLAY_SCENE_2D_3D.execute());
