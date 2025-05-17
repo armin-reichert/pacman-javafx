@@ -7,9 +7,11 @@ package de.amr.pacmanfx.ui.dashboard;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.uilib.GameScene;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
 import javafx.beans.value.ObservableValue;
-import javafx.beans.value.WritableObjectValue;
 import javafx.collections.FXCollections;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -20,7 +22,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
-import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -158,12 +159,6 @@ public abstract class InfoBox extends TitledPane {
         return cb;
     }
 
-    protected CheckBox addCheckBox(String labelText, String cbText) {
-        var cb = createCheckBox(cbText);
-        addRow(labelText, cb);
-        return cb;
-    }
-
     protected CheckBox addCheckBox(String labelText) {
         var cb = createCheckBox("");
         addRow(labelText, cb);
@@ -190,14 +185,6 @@ public abstract class InfoBox extends TitledPane {
         return picker;
     }
 
-    protected <T> void setEditor(ChoiceBox<T> selector, WritableObjectValue<T> property) {
-        selector.setOnAction(e -> property.set(selector.getValue()));
-    }
-
-    protected void setEditor(ChoiceBox<String> selector, StringProperty property) {
-        selector.setOnAction(e -> property.set(selector.getValue()));
-    }
-
     protected <T> void setEditor(ChoiceBox<T> selector, ObjectProperty<T> property) {
         selector.setOnAction(e -> property.set(selector.getValue()));
     }
@@ -220,13 +207,6 @@ public abstract class InfoBox extends TitledPane {
         return slider;
     }
 
-    protected Spinner<Integer> addIntSpinner(String labelText, int min, int max, int initialValue) {
-        var spinner = new Spinner<Integer>(min, max, initialValue);
-        spinner.setStyle(fontCSS(textFont));
-        addRow(labelText, spinner);
-        return spinner;
-    }
-
     protected Spinner<Integer> addIntSpinner(String labelText, int min, int max, IntegerProperty valuePy) {
         var spinner = new Spinner<Integer>(min, max, valuePy.getValue());
         spinner.setStyle(fontCSS(textFont));
@@ -244,10 +224,6 @@ public abstract class InfoBox extends TitledPane {
     protected void setAction(Button button, GameAction gameAction) {
         button.setOnAction(e -> gameAction.execute());
         //TODO add boolean property for enabled-state to game action and bind against it
-    }
-
-    protected void setAction(CheckBox checkBox, Runnable action) {
-        checkBox.setOnAction(e -> action.run());
     }
 
     protected void setAction(ChoiceBox<?> selector, Runnable action) {
