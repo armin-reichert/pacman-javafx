@@ -261,12 +261,10 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
             theSound().playGameOverSound();
         }
         else if (state == GameState.LEVEL_COMPLETE) {
-            optGameLevel().ifPresent(level -> {
-                theSound().stopAll();
-                levelCompleteAnimation = new FlashingMazeAnimation(level);
-                levelCompleteAnimation.setActionOnFinished(theGameController()::letCurrentGameStateExpire);
-                levelCompleteAnimation.start();
-            });
+            theSound().stopAll();
+            levelCompleteAnimation = new FlashingMazeAnimation(theGameLevel());
+            levelCompleteAnimation.setActionOnFinished(theGameController()::letCurrentGameStateExpire);
+            levelCompleteAnimation.start();
         }
     }
 
