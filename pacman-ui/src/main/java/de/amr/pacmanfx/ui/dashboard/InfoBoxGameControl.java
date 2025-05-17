@@ -34,45 +34,44 @@ public class InfoBoxGameControl extends InfoBox {
     private static final int CUT_SCENES_TEST_QUIT = 1;
 
     private Spinner<Integer> spinnerCredit;
-    private ChoiceBox<Integer> comboInitialLives;
-    private Button[] bgLevelActions;
-    private Button[] bgCutScenesTest;
+    private ChoiceBox<Integer> choiceBoxInitialLives;
+    private Button[] buttonGroupLevelActions;
+    private Button[] buttonGroupCutScenesTest;
     private CheckBox cbAutopilot;
     private CheckBox cbImmunity;
 
     public void init() {
-        spinnerCredit      = addIntSpinner("Credit", 0, CoinMechanism.MAX_COINS, theCoinMechanism().numCoinsProperty());
+        spinnerCredit            = addIntSpinner("Credit", 0, CoinMechanism.MAX_COINS, theCoinMechanism().numCoinsProperty());
+        choiceBoxInitialLives    = addChoiceBox("Initial Lives", new Integer[] {3, 5});
+        buttonGroupLevelActions  = addButtonList("Game Level", List.of("Start", "Quit", "Next"));
+        buttonGroupCutScenesTest = addButtonList("Cut Scenes Test", List.of("Start", "Quit"));
+        cbAutopilot              = addCheckBox("Autopilot", PY_USING_AUTOPILOT);
+        cbImmunity               = addCheckBox("Pac-Man Immune", PY_IMMUNITY);
 
-        comboInitialLives  = addChoiceBox("Initial Lives", new Integer[] {3, 5});
-        bgLevelActions     = addButtonList("Game Level", List.of("Start", "Quit", "Next"));
-        bgCutScenesTest    = addButtonList("Cut Scenes Test", List.of("Start", "Quit"));
-
-        cbAutopilot        = addCheckBox("Autopilot", PY_USING_AUTOPILOT);
-        cbImmunity         = addCheckBox("Pac-Man Immune", PY_IMMUNITY);
-
-        setAction(bgCutScenesTest[CUT_SCENES_TEST_START], GameAction.TEST_CUT_SCENES::execute);
-        setAction(bgCutScenesTest[CUT_SCENES_TEST_QUIT], GameAction.RESTART_INTRO::execute);
-        setAction(bgLevelActions[GAME_LEVEL_START], GameAction.START_ARCADE_GAME::execute); //TODO this is the Arcade action!
-        setAction(bgLevelActions[GAME_LEVEL_QUIT], GameAction.RESTART_INTRO::execute);
-        setAction(bgLevelActions[GAME_LEVEL_NEXT], GameAction.CHEAT_ENTER_NEXT_LEVEL::execute);
-        setAction(comboInitialLives, () -> theGame().setInitialLifeCount(comboInitialLives.getValue()));
+        setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_START], GameAction.TEST_CUT_SCENES);
+        setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], GameAction.RESTART_INTRO);
+        setAction(buttonGroupLevelActions[GAME_LEVEL_START], GameAction.START_ARCADE_GAME); //TODO Tengen?
+        setAction(buttonGroupLevelActions[GAME_LEVEL_QUIT], GameAction.RESTART_INTRO);
+        setAction(buttonGroupLevelActions[GAME_LEVEL_NEXT], GameAction.CHEAT_ENTER_NEXT_LEVEL);
+        setAction(choiceBoxInitialLives, () -> theGame().setInitialLifeCount(choiceBoxInitialLives.getValue()));
     }
 
     @Override
     public void update() {
         super.update();
 
-        comboInitialLives.setValue(theGame().initialLifeCount());
+        //TODO use binding
+        choiceBoxInitialLives.setValue(theGame().initialLifeCount());
 
         spinnerCredit.setDisable(!(isOneOf(theGameState(), GameState.INTRO, GameState.SETTING_OPTIONS)));
-        comboInitialLives.setDisable(theGameState() != GameState.INTRO);
+        choiceBoxInitialLives.setDisable(theGameState() != GameState.INTRO);
 
-        bgLevelActions[GAME_LEVEL_START].setDisable(isBooting() || !canStartLevel());
-        bgLevelActions[GAME_LEVEL_QUIT].setDisable(isBooting() || optGameLevel().isEmpty());
-        bgLevelActions[GAME_LEVEL_NEXT].setDisable(isBooting() || !canEnterNextLevel());
+        buttonGroupLevelActions[GAME_LEVEL_START].setDisable(isBooting() || !canStartLevel());
+        buttonGroupLevelActions[GAME_LEVEL_QUIT].setDisable(isBooting() || optGameLevel().isEmpty());
+        buttonGroupLevelActions[GAME_LEVEL_NEXT].setDisable(isBooting() || !canEnterNextLevel());
 
-        bgCutScenesTest[CUT_SCENES_TEST_START].setDisable(isBooting() || theGameState() != GameState.INTRO);
-        bgCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(isBooting() || theGameState() != GameState.TESTING_CUT_SCENES);
+        buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(isBooting() || theGameState() != GameState.INTRO);
+        buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(isBooting() || theGameState() != GameState.TESTING_CUT_SCENES);
 
         cbAutopilot.setDisable(isBooting());
         cbImmunity.setDisable(isBooting());
