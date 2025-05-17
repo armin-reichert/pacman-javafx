@@ -6,11 +6,11 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui.GameAction;
-import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.dashboard.InfoBox;
 import de.amr.pacmanfx.ui.dashboard.InfoText;
 import de.amr.pacmanfx.uilib.CameraControlledView;
+import de.amr.pacmanfx.uilib.GameScene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
@@ -47,8 +47,8 @@ public class InfoBox3D extends InfoBox {
         super.init();
 
         cbUsePlayScene3D     = addCheckBox("3D Play Scene");
-        pickerLightColor     = addColorPicker("Light Color", PY_3D_LIGHT_COLOR.get());
-        pickerFloorColor     = addColorPicker("Floor Color", PY_3D_FLOOR_COLOR.get());
+        pickerLightColor     = addColorPicker("Light Color", PY_3D_LIGHT_COLOR);
+        pickerFloorColor     = addColorPicker("Floor Color", PY_3D_FLOOR_COLOR);
         comboPerspectives    = addChoiceBox("Perspective", PerspectiveID.values());
         addLabeledValue("Camera",        this::sceneCameraInfo);
         addLabeledValue("Viewport Size", this::sceneViewportSizeInfo);
@@ -66,9 +66,6 @@ public class InfoBox3D extends InfoBox {
         setTooltip(sliderPiPSceneHeight, sliderPiPSceneHeight.valueProperty(), "%.0f px");
         setTooltip(sliderPiPOpacity, sliderPiPOpacity.valueProperty(), "%.0f %%");
 
-        setEditor(pickerLightColor, PY_3D_LIGHT_COLOR);
-        setEditor(pickerFloorColor, PY_3D_FLOOR_COLOR);
-        setEditor(pickerLightColor, PY_3D_LIGHT_COLOR);
         setEditor(sliderPiPSceneHeight, PY_PIP_HEIGHT);
         setEditor(sliderPiPOpacity, PY_PIP_OPACITY_PERCENT);
         setEditor(sliderWallHeight, PY_3D_WALL_HEIGHT);

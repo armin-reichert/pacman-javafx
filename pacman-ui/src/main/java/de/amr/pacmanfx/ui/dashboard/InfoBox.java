@@ -182,14 +182,11 @@ public abstract class InfoBox extends TitledPane {
         return selector;
     }
 
-    protected ColorPicker addColorPicker(String labelText, Color color) {
-        var colorPicker = new ColorPicker(color);
-        addRow(labelText, colorPicker);
-        return colorPicker;
-    }
-
-    protected void setEditor(ColorPicker picker, ObjectProperty<Color> property) {
-        picker.setOnAction(e -> property.set(picker.getValue()));
+    protected ColorPicker addColorPicker(String labelText, ObjectProperty<Color> colorProperty) {
+        var picker = new ColorPicker(colorProperty.get());
+        addRow(labelText, picker);
+        picker.setOnAction(e -> colorProperty.set(picker.getValue()));
+        return picker;
     }
 
     protected <T> void setEditor(ChoiceBox<T> selector, WritableObjectValue<T> property) {

@@ -60,9 +60,7 @@ public class InfoBoxGeneral extends InfoBox {
         addLabeledValue("", () -> "FPS: %.1f (Tgt: %.1f)".formatted(theClock().getActualFrameRate(), theClock().getTargetFrameRate()));
         addLabeledValue("Total Updates",  theClock()::updateCount);
 
-        var pickerCanvasColor = addColorPicker("Canvas Color", PY_CANVAS_BG_COLOR.get());
-        setEditor(pickerCanvasColor, PY_CANVAS_BG_COLOR);
-
+        addColorPicker("Canvas Color", PY_CANVAS_BG_COLOR);
         addCheckBox("Image Smoothing", PY_CANVAS_IMAGE_SMOOTHING);
         addCheckBox("Font Smoothing", PY_CANVAS_FONT_SMOOTHING);
         addCheckBox("Show Debug Info", PY_DEBUG_INFO_VISIBLE);
