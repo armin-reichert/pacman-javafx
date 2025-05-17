@@ -19,14 +19,13 @@ import de.amr.pacmanfx.ui.PacManGamesEnv;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.dashboard.InfoBoxCustomMaps;
 import javafx.application.Application;
-import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.tinylog.Logger;
 
 import java.util.Map;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.CUSTOM_MAP_DIR;
+import static de.amr.pacmanfx.Globals.theGameController;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
 /**
@@ -40,18 +39,14 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void init() {
-        try {
-            PacManGamesEnv.init();
-            xxlMapSelector = new XXLAnyPacMan_MapSelector(CUSTOM_MAP_DIR);
-            theGameController().register(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameModel());
-            theGameController().register(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
-            theGameController().register(GameVariant.PACMAN, new ArcadePacMan_GameModel());
-            theGameController().register(GameVariant.PACMAN_XXL, new XXLPacMan_GameModel(xxlMapSelector));
-            theGameController().register(GameVariant.MS_PACMAN_XXL, new XXLMsPacMan_GameModel(xxlMapSelector));
-            theGameController().select(GameVariant.PACMAN);
-        } catch (Exception x) {
-            Logger.error(x);
-        }
+        PacManGamesEnv.init();
+        xxlMapSelector = new XXLAnyPacMan_MapSelector(CUSTOM_MAP_DIR);
+        theGameController().register(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameModel());
+        theGameController().register(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
+        theGameController().register(GameVariant.PACMAN, new ArcadePacMan_GameModel());
+        theGameController().register(GameVariant.PACMAN_XXL, new XXLPacMan_GameModel(xxlMapSelector));
+        theGameController().register(GameVariant.MS_PACMAN_XXL, new XXLMsPacMan_GameModel(xxlMapSelector));
+        theGameController().select(GameVariant.PACMAN);
     }
 
     @Override
@@ -65,9 +60,8 @@ public class PacManGames3dApp extends Application {
         ));
 
         // UI size: 80% of available screen height, aspect 16:10
-        Rectangle2D screenSize = Screen.getPrimary().getBounds();
-        double height = 0.8 * screenSize.getHeight(), width = 1.6 * height;
-        theUI().build(stage, width, height);
+        double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
+        theUI().build(stage, 1.6 * height, height);
 
         theUI().buildDashboard(
                 DashboardID.README,
@@ -91,7 +85,6 @@ public class PacManGames3dApp extends Application {
         theUI().selectStartPage(0);
 
         theUI().show();
-        Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
     }
 
     @Override

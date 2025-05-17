@@ -8,7 +8,6 @@ import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.PacManGamesEnv;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
-import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -28,10 +27,12 @@ public class ArcadeMsPacMan_App extends Application {
 
     @Override
     public void start(Stage stage) {
-        Rectangle2D screenSize = Screen.getPrimary().getBounds();
-        double height = 0.8 * screenSize.getHeight(), width = 1.2 * height;
         createUI(Map.of(GameVariant.MS_PACMAN, ArcadeMsPacMan_UIConfig.class));
-        theUI().build(stage, width, height);
+
+        // UI size: 80% of available screen height, aspect 12:10
+        double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
+        theUI().build(stage, 1.2 * height, height);
+
         theUI().buildDashboard(
                 DashboardID.README,
                 DashboardID.GENERAL,
@@ -41,8 +42,10 @@ public class ArcadeMsPacMan_App extends Application {
                 DashboardID.ACTOR_INFO,
                 DashboardID.KEYBOARD,
                 DashboardID.ABOUT);
+
         theUI().addStartPage(new ArcadeMsPacMan_StartPage(GameVariant.MS_PACMAN));
         theUI().selectStartPage(0);
+
         theUI().show();
     }
 
