@@ -32,12 +32,10 @@ public class TengenMsPacMan_App extends Application {
 
     @Override
     public void start(Stage stage) {
-        Rectangle2D screenSize = Screen.getPrimary().getBounds();
-        double aspect = (double) NES_SIZE.x() / NES_SIZE.y();
-        double height = 0.8 * screenSize.getHeight(), width = aspect * height;
         createUI(Map.of(GameVariant.MS_PACMAN_TENGEN, TengenMsPacMan_UIConfig.class));
-        theUI().build(stage, width, height);
-        theUI().addStartPage(new TengenMsPacMan_StartPage(GameVariant.MS_PACMAN_TENGEN));
+        double aspect = (double) NES_SIZE.x() / NES_SIZE.y();
+        double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
+        theUI().build(stage, aspect * height, height);
         theUI().buildDashboard(
                 DashboardID.README,
                 DashboardID.GENERAL,
@@ -47,6 +45,7 @@ public class TengenMsPacMan_App extends Application {
                 DashboardID.ACTOR_INFO,
                 DashboardID.KEYBOARD,
                 DashboardID.ABOUT);
+        theUI().addStartPage(new TengenMsPacMan_StartPage(GameVariant.MS_PACMAN_TENGEN));
         theUI().selectStartPage(0);
         theUI().show();
     }
