@@ -45,7 +45,7 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationSet implement
     }
 
     @Override
-    protected RectArea[] selectedSprites(SpriteSheet spriteSheet, Actor actor) {
+    protected RectArea[] updateActorSprites(SpriteSheet spriteSheet, Actor actor) {
         if (actor instanceof Ghost ghost) {
             GameSpriteSheet gss = (GameSpriteSheet) spriteSheet;
             if (isCurrentAnimationID(ANIM_GHOST_NORMAL)) {

@@ -44,7 +44,7 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet implements 
     }
 
     @Override
-    protected RectArea[] selectedSprites(SpriteSheet spriteSheet, Actor actor) {
+    protected RectArea[] updateActorSprites(SpriteSheet spriteSheet, Actor actor) {
         if (actor instanceof Pac msPacMan) {
             var gss = (TengenMsPacMan_SpriteSheet) spriteSheet;
             if (isCurrentAnimationID(ANY_PAC_MUNCHING)) {

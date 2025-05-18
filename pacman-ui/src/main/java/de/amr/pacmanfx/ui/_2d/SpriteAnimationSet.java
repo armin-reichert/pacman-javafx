@@ -16,15 +16,12 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-/**
- * @author Armin Reichert
- */
 public abstract class SpriteAnimationSet implements Animations {
 
     protected final Map<String, SpriteAnimation> animationsByID = new HashMap<>();
     protected String currentAnimationID;
 
-    protected abstract RectArea[] selectedSprites(SpriteSheet spriteSheet, Actor actor);
+    protected abstract RectArea[] updateActorSprites(SpriteSheet spriteSheet, Actor actor);
 
     public void add(String key, SpriteAnimation animation) {
         animationsByID.put(key, animation);
@@ -44,9 +41,10 @@ public abstract class SpriteAnimationSet implements Animations {
         if (currentAnimation == null) {
             return null;
         }
-        RectArea[] newSelection = selectedSprites(currentAnimation().from(), actor);
-        if (newSelection != null) {
-            currentAnimation.setSprites(newSelection);
+        //TODO this is somewhat crude but currently the way to keep e.g. the sprites up-to-date with an actors' direction etc.
+        RectArea[] sprites = updateActorSprites(currentAnimation().from(), actor);
+        if (sprites != null) {
+            currentAnimation.setSprites(sprites);
         }
         return currentAnimation.currentSprite();
     }

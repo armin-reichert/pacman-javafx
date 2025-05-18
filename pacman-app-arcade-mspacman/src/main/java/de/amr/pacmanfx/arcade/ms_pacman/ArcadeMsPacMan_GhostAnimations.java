@@ -42,7 +42,7 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationSet implement
     }
 
     @Override
-    protected RectArea[] selectedSprites(SpriteSheet ss, Actor actor) {
+    protected RectArea[] updateActorSprites(SpriteSheet ss, Actor actor) {
         if (actor instanceof Ghost ghost) {
             GameSpriteSheet gss = (GameSpriteSheet) ss;
             switch (currentAnimationID) {

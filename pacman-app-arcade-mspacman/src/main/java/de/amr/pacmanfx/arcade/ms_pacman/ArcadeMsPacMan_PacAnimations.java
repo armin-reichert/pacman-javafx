@@ -27,7 +27,7 @@ public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationSet implements 
     }
 
     @Override
-    protected RectArea[] selectedSprites(SpriteSheet ss, Actor actor) {
+    protected RectArea[] updateActorSprites(SpriteSheet ss, Actor actor) {
         if (actor instanceof Pac pac) {
             var gss = (ArcadeMsPacMan_SpriteSheet) ss;
             switch (currentAnimationID) {

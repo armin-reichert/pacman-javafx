@@ -28,7 +28,7 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationSet implements An
     }
 
     @Override
-    protected RectArea[] selectedSprites(SpriteSheet ss, Actor actor) {
+    protected RectArea[] updateActorSprites(SpriteSheet ss, Actor actor) {
         if (actor instanceof Pac pac && isCurrentAnimationID(ANY_PAC_MUNCHING)) {
             var gss = (GameSpriteSheet) ss;
             return gss.pacMunchingSprites(pac.moveDir());
