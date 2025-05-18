@@ -96,7 +96,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         msPacMan.selectAnimation(Animations.ANY_PAC_MUNCHING);
         for (Ghost ghost : ghosts) {
             ghost.setAnimations(new ArcadeMsPacMan_GhostAnimations(spriteSheet, ghost.personality()));
-            ghost.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
+            ghost.selectAnimation(GhostAnimationID.ANIM_GHOST_NORMAL);
         }
         sceneController.restart(SceneState.STARTING);
     }

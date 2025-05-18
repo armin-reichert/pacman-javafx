@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Animations;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostAnimations;
+import de.amr.pacmanfx.model.actors.GhostAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
@@ -52,9 +52,9 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         var spriteSheet = (ArcadePacMan_SpriteSheet) theUIConfig().current().spriteSheet();
         pac.setAnimations(new ArcadePacMan_PacAnimations(spriteSheet));
         var blinkyAnimations = new ArcadePacMan_GhostAnimations(spriteSheet, blinky.personality());
-        blinkyNormal = blinkyAnimations.animation(GhostAnimations.ANIM_GHOST_NORMAL);
-        nailDressRaptureAnimation = blinkyAnimations.animation(ArcadePacMan_GhostAnimations.ANIM_BLINKY_NAIL_DRESS_RAPTURE);
-        blinkyDamaged = blinkyAnimations.animation(ArcadePacMan_GhostAnimations.ANIM_BLINKY_DAMAGED);
+        blinkyNormal = blinkyAnimations.animation(GhostAnimationID.ANIM_GHOST_NORMAL);
+        nailDressRaptureAnimation = blinkyAnimations.animation(ArcadePacMan_GhostAnimations.AnimationID.ANIM_BLINKY_NAIL_DRESS_RAPTURE);
+        blinkyDamaged = blinkyAnimations.animation(ArcadePacMan_GhostAnimations.AnimationID.ANIM_BLINKY_DAMAGED);
         blinky.setAnimations(blinkyAnimations);
         frame = -1;
     }
@@ -85,7 +85,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 blinky.placeAtTile(28, 20, -3, 0);
                 blinky.setMoveAndWishDir(Direction.LEFT);
                 blinky.setSpeed(1.25f);
-                blinky.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
+                blinky.selectAnimation(GhostAnimationID.ANIM_GHOST_NORMAL);
                 blinky.startAnimation();
                 blinky.show();
             }
@@ -103,7 +103,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             case ANIMATION_START + 360 -> {
                 nailDressRaptureAnimation.setFrameIndex(RAPTURED);
                 blinky.setPosition(blinky.position().minus(5, 0));
-                blinky.selectAnimation(ArcadePacMan_GhostAnimations.ANIM_BLINKY_DAMAGED);
+                blinky.selectAnimation(ArcadePacMan_GhostAnimations.AnimationID.ANIM_BLINKY_DAMAGED);
             }
             case ANIMATION_START + 420 -> blinkyDamaged.nextFrame(); // Eyes right-down
             case ANIMATION_START + 508 -> {

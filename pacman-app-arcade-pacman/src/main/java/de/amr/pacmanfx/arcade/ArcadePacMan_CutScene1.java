@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Animations;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostAnimations;
+import de.amr.pacmanfx.model.actors.GhostAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
@@ -68,7 +68,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             blinky.placeAtTile(32, 20, 0, 0);
             blinky.setMoveAndWishDir(Direction.LEFT);
             blinky.setSpeed(1.3f);
-            blinky.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
+            blinky.selectAnimation(GhostAnimationID.ANIM_GHOST_NORMAL);
             blinky.startAnimation();
             blinky.show();
         }
@@ -76,7 +76,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             blinky.placeAtTile(-2, 20, 4, 0);
             blinky.setMoveAndWishDir(Direction.RIGHT);
             blinky.setSpeed(0.75f);
-            blinky.selectAnimation(GhostAnimations.ANIM_GHOST_FRIGHTENED);
+            blinky.selectAnimation(GhostAnimationID.ANIM_GHOST_FRIGHTENED);
             blinky.startAnimation();
         }
         else if (frame == ANIMATION_START + 400) {

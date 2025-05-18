@@ -1,6 +1,11 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.pacmanfx.model.actors;
 
 public interface Animations {
+
     // Common animation IDs for Pac-Man and Ms. Pac-Man
     String ANY_PAC_MUNCHING = "munching";
     String ANY_PAC_DYING = "dying";

@@ -14,7 +14,7 @@ import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.MapSelectionMode;
 import de.amr.pacmanfx.model.actors.Animations;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostAnimations;
+import de.amr.pacmanfx.model.actors.GhostAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUIConfig;
 import de.amr.pacmanfx.ui.StartPage;
@@ -258,7 +258,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
                         case MS_PACMAN_XXL ->
                             ghost.setAnimations(new ArcadeMsPacMan_GhostAnimations(config.spriteSheet(), ghost.personality()));
                     }
-                    ghost.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
+                    ghost.selectAnimation(GhostAnimationID.ANIM_GHOST_NORMAL);
                     ghost.startAnimation();
                 }
             }
@@ -297,7 +297,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
                     ghost.setPosX(pac.posX() + 22 * TS + ghost.personality() * 2.5f * TS);
                     ghost.setMoveAndWishDir(ghost.moveDir().opposite());
                     ghost.setSpeed(0.58f);
-                    ghost.selectAnimation(GhostAnimations.ANIM_GHOST_FRIGHTENED);
+                    ghost.selectAnimation(GhostAnimationID.ANIM_GHOST_FRIGHTENED);
                     ghost.startAnimation();
                 }
             }
@@ -310,14 +310,14 @@ public class XXLAnyPacMan_StartPage implements StartPage {
                     ghost.setMoveAndWishDir(Direction.LEFT);
                     ghost.setPosX(46 * TS + ghost.personality() * 2 * TS);
                     ghost.setSpeed(1.05f);
-                    ghost.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
+                    ghost.selectAnimation(GhostAnimationID.ANIM_GHOST_NORMAL);
                     ghost.startAnimation();
                 }
             }
             else if (chasingGhosts) {
                 for (int i = 0; i < 4; ++i) {
                     if (Math.abs(pac.posX() - ghosts[i].posX()) < 1) {
-                        ghosts[i].selectAnimation(GhostAnimations.ANIM_GHOST_NUMBER, i);
+                        ghosts[i].selectAnimation(GhostAnimationID.ANIM_GHOST_NUMBER, i);
                         if (i > 0) {
                             ghosts[i-1].setVisible(false);
                         }

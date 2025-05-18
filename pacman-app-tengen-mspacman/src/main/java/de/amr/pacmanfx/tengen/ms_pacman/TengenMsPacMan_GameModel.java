@@ -397,7 +397,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             ? TengenMsPacMan_PacAnimations.MS_PAC_MAN_BOOSTER : Animations.ANY_PAC_MUNCHING);
         level.pac().resetAnimation();
         level.ghosts().forEach(ghost -> {
-            ghost.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
+            ghost.selectAnimation(GhostAnimationID.ANIM_GHOST_NORMAL);
             ghost.resetAnimation();
         });
     }

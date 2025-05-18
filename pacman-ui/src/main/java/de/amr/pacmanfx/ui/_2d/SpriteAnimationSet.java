@@ -51,13 +51,13 @@ public abstract class SpriteAnimationSet implements Animations {
         return currentAnimation.currentSprite();
     }
 
+    public SpriteAnimation currentAnimation() {
+        return currentAnimationID != null ? animation(currentAnimationID) : null;
+    }
+
     @Override
     public String currentID() {
         return currentAnimationID;
-    }
-
-    public SpriteAnimation currentAnimation() {
-        return currentAnimationID != null ? animation(currentAnimationID) : null;
     }
 
     @Override

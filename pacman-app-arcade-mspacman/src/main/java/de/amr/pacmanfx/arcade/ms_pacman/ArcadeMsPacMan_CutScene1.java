@@ -144,7 +144,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         inky.setMoveAndWishDir(Direction.RIGHT);
         inky.setPosition(pacMan.position().minus(TS * 6, 0));
         inky.setSpeed(SPEED_GHOST_CHASING);
-        inky.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
+        inky.selectAnimation(GhostAnimationID.ANIM_GHOST_NORMAL);
         inky.startAnimation();
         inky.show();
 
@@ -158,7 +158,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         pinky.setMoveAndWishDir(Direction.LEFT);
         pinky.setPosition(msPacMan.position().plus(TS * 6, 0));
         pinky.setSpeed(SPEED_GHOST_CHASING);
-        pinky.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
+        pinky.selectAnimation(GhostAnimationID.ANIM_GHOST_NORMAL);
         pinky.startAnimation();
         pinky.show();
 

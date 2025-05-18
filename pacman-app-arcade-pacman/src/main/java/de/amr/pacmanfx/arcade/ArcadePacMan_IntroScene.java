@@ -285,7 +285,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     ghost.setMoveAndWishDir(Direction.LEFT);
                     ghost.setSpeed(CHASING_SPEED);
                     ghost.show();
-                    ghost.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
+                    ghost.selectAnimation(GhostAnimationID.ANIM_GHOST_NORMAL);
                     ghost.startAnimation();
                 });
             }
@@ -303,7 +303,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 else if (scene.pacMan.posX() <= TS * LEFT_TILE_X + HTS) {
                     Stream.of(scene.ghosts).forEach(ghost -> {
                         ghost.setState(FRIGHTENED);
-                        ghost.selectAnimation(GhostAnimations.ANIM_GHOST_FRIGHTENED);
+                        ghost.selectAnimation(GhostAnimationID.ANIM_GHOST_FRIGHTENED);
                         ghost.setMoveAndWishDir(Direction.RIGHT);
                         ghost.setSpeed(GHOST_FRIGHTENED_SPEED);
                         ghost.move();
@@ -348,7 +348,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                             ghost.stopAnimation();
                         });
                         victim.setState(EATEN);
-                        victim.selectAnimation(GhostAnimations.ANIM_GHOST_NUMBER, scene.victims.size() - 1);
+                        victim.selectAnimation(GhostAnimationID.ANIM_GHOST_NUMBER, scene.victims.size() - 1);
                     });
 
                 // After 50 ticks, Pac-Man and the surviving ghosts get visible again and move on

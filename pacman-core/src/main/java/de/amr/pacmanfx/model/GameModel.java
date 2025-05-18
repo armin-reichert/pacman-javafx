@@ -118,7 +118,7 @@ public abstract class GameModel {
         level.pac().selectAnimation(Animations.ANY_PAC_MUNCHING);
         level.pac().resetAnimation();
         level.ghosts().forEach(ghost -> {
-            ghost.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
+            ghost.selectAnimation(GhostAnimationID.ANIM_GHOST_NORMAL);
             ghost.resetAnimation();
         });
     }

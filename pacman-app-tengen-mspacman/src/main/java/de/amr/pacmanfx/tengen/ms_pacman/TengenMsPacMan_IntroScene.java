@@ -225,7 +225,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, ghost.personality()));
-                    ghost.selectAnimation(GhostAnimations.ANIM_GHOST_NORMAL);
+                    ghost.selectAnimation(GhostAnimationID.ANIM_GHOST_NORMAL);
                     ghost.startAnimation();
                 }
             }
