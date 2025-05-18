@@ -58,6 +58,6 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationSet implements 
                 return gss.ghostEyesSprites(ghost.wishDir());
             }
         }
-        return super.selectedSprites(spriteSheet, actor);
+        return null;
     }
 }

@@ -19,10 +19,12 @@ import static java.util.Objects.requireNonNull;
 /**
  * @author Armin Reichert
  */
-public class SpriteAnimationSet implements Animations {
+public abstract class SpriteAnimationSet implements Animations {
 
     protected final Map<String, SpriteAnimation> animationsByID = new HashMap<>();
     protected String currentAnimationID;
+
+    protected abstract RectArea[] selectedSprites(SpriteSheet spriteSheet, Actor actor);
 
     public void add(String key, SpriteAnimation animation) {
         animationsByID.put(key, animation);
@@ -47,10 +49,6 @@ public class SpriteAnimationSet implements Animations {
             currentAnimation.setSprites(newSelection);
         }
         return currentAnimation.currentSprite();
-    }
-
-    protected RectArea[] selectedSprites(SpriteSheet spriteSheet, Actor actor) {
-        return null;
     }
 
     @Override

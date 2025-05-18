@@ -54,6 +54,6 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationSet implement
                 }
             }
         }
-        return super.selectedSprites(ss, actor);
+        return null;
     }
 }

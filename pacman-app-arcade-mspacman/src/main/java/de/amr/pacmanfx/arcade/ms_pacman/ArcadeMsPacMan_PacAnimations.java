@@ -39,6 +39,6 @@ public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationSet implements 
                 }
             }
         }
-        return super.selectedSprites(ss, actor);
+        return null;
     }
 }

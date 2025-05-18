@@ -33,6 +33,6 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationSet implements An
             var gss = (GameSpriteSheet) ss;
             return gss.pacMunchingSprites(pac.moveDir());
         }
-        return super.selectedSprites(ss, actor);
+        return null;
     }
 }

@@ -57,6 +57,6 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet implements 
                 return gss.pacManMunchingSprites(msPacMan.moveDir());
             }
         }
-        return super.selectedSprites(spriteSheet, actor);
+        return null;
     }
 }

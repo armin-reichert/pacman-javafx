@@ -55,6 +55,6 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationSet implement
                 return gss.ghostEyesSprites(ghost.wishDir());
             }
         }
-        return super.selectedSprites(spriteSheet, actor);
+        return null;
     }
 }
