@@ -11,16 +11,13 @@ import de.amr.pacmanfx.model.actors.Animations;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.ui._2d.SpriteAnimationSet;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 import java.util.Map;
 
+import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.from;
 import static java.util.Objects.requireNonNull;
 
-/**
- * @author Armin Reichert
- */
 public class ArcadePacMan_PacAnimations extends SpriteAnimationSet implements Animations {
 
     public static final String BIG_PAC_MAN = "big_pac_man";
@@ -28,9 +25,9 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationSet implements An
     public ArcadePacMan_PacAnimations(ArcadePacMan_SpriteSheet ss) {
         requireNonNull(ss);
         add(Map.of(
-            ANY_PAC_MUNCHING, SpriteAnimation.from(ss).take(ss.pacMunchingSprites(Direction.LEFT)).endless(),
-            ANY_PAC_DYING,    SpriteAnimation.from(ss).take(ss.pacDyingSprites()).frameTicks(8).end(),
-            BIG_PAC_MAN,      SpriteAnimation.from(ss).take(ss.bigPacManSprites()).frameTicks(3).endless()
+            ANY_PAC_MUNCHING, from(ss).take(ss.pacMunchingSprites(Direction.LEFT)).endless(),
+            ANY_PAC_DYING,    from(ss).take(ss.pacDyingSprites()).frameTicks(8).end(),
+            BIG_PAC_MAN,      from(ss).take(ss.bigPacManSprites()).frameTicks(3).endless()
         ));
     }
 

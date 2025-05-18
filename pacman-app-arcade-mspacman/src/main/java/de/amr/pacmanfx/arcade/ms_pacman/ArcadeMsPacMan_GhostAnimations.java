@@ -19,9 +19,6 @@ import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.from;
 import static java.util.Objects.requireNonNull;
 
-/**
- * @author Armin Reichert
- */
 public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationSet implements GhostAnimations {
 
     public ArcadeMsPacMan_GhostAnimations(GameSpriteSheet ss, byte personality) {
