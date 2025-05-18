@@ -15,7 +15,6 @@ import javafx.animation.Animation;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.from;
-import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GhostAnimations extends SpriteAnimationSet implements GhostAnimations {
 

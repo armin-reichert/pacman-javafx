@@ -10,7 +10,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostAnimations;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.ui._2d.SpriteAnimationSet;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.animation.Animation;
 
 import java.util.stream.Stream;
