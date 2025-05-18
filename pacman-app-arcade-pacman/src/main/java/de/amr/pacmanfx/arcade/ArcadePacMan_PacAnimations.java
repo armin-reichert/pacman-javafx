@@ -28,11 +28,11 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationSet implements An
     public ArcadePacMan_PacAnimations(ArcadePacMan_SpriteSheet spriteSheet) {
         requireNonNull(spriteSheet);
         add(Map.of(
-            Animations.ANY_PAC_MUNCHING,
+            ANY_PAC_MUNCHING,
             SpriteAnimation.spriteSheet(spriteSheet)
                 .sprites(spriteSheet.pacMunchingSprites(Direction.LEFT)).endLoop(),
 
-            Animations.ANY_PAC_DYING,
+            ANY_PAC_DYING,
             SpriteAnimation.spriteSheet(spriteSheet)
                 .sprites(spriteSheet.pacDyingSprites()).frameTicks(8).end(),
 
