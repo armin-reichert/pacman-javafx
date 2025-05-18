@@ -9,16 +9,14 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Animations;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.SpriteAnimationSet;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 import java.util.Map;
 
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.*;
+import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.from;
 import static java.util.Objects.requireNonNull;
 
-/**
- * @author Armin Reichert
- */
 public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet implements Animations {
 
     public static final String MS_PAC_MAN_BOOSTER = "ms_pac_man_booster";
@@ -30,90 +28,34 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet implements 
     public static final String PAC_MAN_TURNING_AWAY = "pac_man_turning_away";
     public static final String JUNIOR = "junior";
 
-    public TengenMsPacMan_PacAnimations(TengenMsPacMan_SpriteSheet spriteSheet) {
-        requireNonNull(spriteSheet);
-
-        var msPacManMunching = SpriteAnimation
-            .from(spriteSheet)
-            .take(TengenMsPacMan_SpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT)
-            .endless();
-
-        var msPacManMunchingBooster = SpriteAnimation
-            .from(spriteSheet)
-            .take(TengenMsPacMan_SpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER)
-            .endless();
-
-        var msPacManWavingHand = SpriteAnimation
-            .from(spriteSheet)
-            .take(TengenMsPacMan_SpriteSheet.MS_PAC_WAVING_HAND)
-            .frameTicks(8)
-            .endless();
-
-        var msPacManTurningAway = SpriteAnimation
-            .from(spriteSheet)
-            .take(TengenMsPacMan_SpriteSheet.MS_PAC_TURNING_AWAY)
-            .frameTicks(15)
-            .end();
-
-        var msPacmanDying = SpriteAnimation
-            .from(spriteSheet)
-            .take(spriteSheet.pacDyingSprites())
-            .frameTicks(8)
-            .end();
-
-        var mrPacManMunching = SpriteAnimation
-            .from(spriteSheet)
-            .take(TengenMsPacMan_SpriteSheet.MR_PAC_MUNCHING_SPRITES_LEFT)
-            .frameTicks(2)
-            .endless();
-
-        var mrPacManMunchingBooster = SpriteAnimation
-            .from(spriteSheet)
-            .take(TengenMsPacMan_SpriteSheet.MR_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER)
-            .frameTicks(2)
-            .endless();
-
-        var mrPacManWavingHand = SpriteAnimation
-            .from(spriteSheet)
-            .take(TengenMsPacMan_SpriteSheet.MR_PAC_WAVING_HAND)
-            .frameTicks(8)
-            .endless();
-
-        var mrPacManTurningAway = SpriteAnimation
-            .from(spriteSheet)
-            .take(TengenMsPacMan_SpriteSheet.MR_PAC_TURNING_AWAY)
-            .frameTicks(15)
-            .end();
-
-        var junior = SpriteAnimation
-            .from(spriteSheet)
-            .take(TengenMsPacMan_SpriteSheet.JUNIOR_PAC_SPRITE)
-            .end();
-
+    public TengenMsPacMan_PacAnimations(TengenMsPacMan_SpriteSheet ss) {
+        requireNonNull(ss);
         add(Map.of(
-            ANY_PAC_DYING, msPacmanDying,
-            ANY_PAC_MUNCHING, msPacManMunching,
-            MS_PAC_MAN_BOOSTER, msPacManMunchingBooster,
-            MS_PAC_MAN_WAVING_HAND, msPacManWavingHand,
-            MS_PAC_MAN_TURNING_AWAY, msPacManTurningAway,
+            ANY_PAC_DYING,           from(ss).take(ss.pacDyingSprites()).frameTicks(8).end(),
+            ANY_PAC_MUNCHING,        from(ss).take(MS_PAC_MUNCHING_SPRITES_LEFT).endless(),
 
-            PAC_MAN_MUNCHING, mrPacManMunching,
-            PAC_MAN_BOOSTER, mrPacManMunchingBooster,
-            PAC_MAN_WAVING_HAND, mrPacManWavingHand,
-            PAC_MAN_TURNING_AWAY, mrPacManTurningAway,
-            JUNIOR, junior
+            MS_PAC_MAN_BOOSTER,      from(ss).take(MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER).endless(),
+            MS_PAC_MAN_WAVING_HAND,  from(ss).take(MS_PAC_WAVING_HAND).frameTicks(8).endless(),
+            MS_PAC_MAN_TURNING_AWAY, from(ss).take(MS_PAC_TURNING_AWAY).frameTicks(15).end(),
+
+            PAC_MAN_MUNCHING,        from(ss).take(MR_PAC_MUNCHING_SPRITES_LEFT).frameTicks(2).endless(),
+            PAC_MAN_BOOSTER,         from(ss).take(MR_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER).frameTicks(2).endless(),
+            PAC_MAN_WAVING_HAND,     from(ss).take(MR_PAC_WAVING_HAND).frameTicks(8).endless(),
+            PAC_MAN_TURNING_AWAY,    from(ss).take(MR_PAC_TURNING_AWAY).frameTicks(15).end(),
+
+            JUNIOR,                  from(ss).take(JUNIOR_PAC_SPRITE).end()
         ));
     }
 
     @Override
     protected RectArea[] selectedSprites(SpriteSheet spriteSheet, Actor actor) {
-        TengenMsPacMan_SpriteSheet gss = (TengenMsPacMan_SpriteSheet) spriteSheet;
         if (actor instanceof Pac msPacMan) {
+            var gss = (TengenMsPacMan_SpriteSheet) spriteSheet;
             if (isCurrentAnimationID(ANY_PAC_MUNCHING)) {
-                return TengenMsPacMan_SpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT;
+                return MS_PAC_MUNCHING_SPRITES_LEFT;
             }
             if (isCurrentAnimationID(MS_PAC_MAN_BOOSTER)) {
-                return TengenMsPacMan_SpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER;
+                return MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER;
             }
             if (isCurrentAnimationID(PAC_MAN_MUNCHING)) {
                 return gss.pacManMunchingSprites(msPacMan.moveDir());
