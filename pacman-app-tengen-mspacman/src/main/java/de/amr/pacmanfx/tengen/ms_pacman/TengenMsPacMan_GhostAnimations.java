@@ -14,7 +14,6 @@ import de.amr.pacmanfx.ui._2d.SpriteAnimationSet;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.animation.Animation;
 
-import java.util.Map;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.from;
@@ -28,13 +27,11 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationSet implement
 
     public TengenMsPacMan_GhostAnimations(GameSpriteSheet ss, byte personality) {
         requireNonNull(ss);
-        add(Map.of(
-            ANIM_GHOST_NORMAL,     from(ss).take(ss.ghostNormalSprites(personality, Direction.LEFT)).frameTicks(NORMAL_TICKS).endless(),
-            ANIM_GHOST_FRIGHTENED, from(ss).take(ss.ghostFrightenedSprites()).frameTicks(FRIGHTENED_TICKS).endless(),
-            ANIM_GHOST_FLASHING,   from(ss).take(ss.ghostFlashingSprites()).frameTicks(FLASH_TICKS).endless(),
-            ANIM_GHOST_EYES,       from(ss).take(ss.ghostEyesSprites(Direction.LEFT)).end(),
-            ANIM_GHOST_NUMBER,     from(ss).take(ss.ghostNumberSprites()).end()
-        ));
+        add(ANIM_GHOST_NORMAL,     from(ss).take(ss.ghostNormalSprites(personality, Direction.LEFT)).frameTicks(NORMAL_TICKS).endless());
+        add(ANIM_GHOST_FRIGHTENED, from(ss).take(ss.ghostFrightenedSprites()).frameTicks(FRIGHTENED_TICKS).endless());
+        add(ANIM_GHOST_FLASHING,   from(ss).take(ss.ghostFlashingSprites()).frameTicks(FLASH_TICKS).endless());
+        add(ANIM_GHOST_EYES,       from(ss).take(ss.ghostEyesSprites(Direction.LEFT)).end());
+        add(ANIM_GHOST_NUMBER,     from(ss).take(ss.ghostNumberSprites()).end());
         // TODO start animations when selected
         Stream.of(ANIM_GHOST_EYES, ANIM_GHOST_FRIGHTENED, ANIM_GHOST_FLASHING).map(this::animation).forEach(Animation::play);
     }

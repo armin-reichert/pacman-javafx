@@ -11,8 +11,6 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.SpriteAnimationSet;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
-import java.util.Map;
-
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.*;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.from;
 import static java.util.Objects.requireNonNull;
@@ -30,21 +28,19 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet implements 
 
     public TengenMsPacMan_PacAnimations(TengenMsPacMan_SpriteSheet ss) {
         requireNonNull(ss);
-        add(Map.of(
-            ANY_PAC_DYING,           from(ss).take(ss.pacDyingSprites()).frameTicks(8).end(),
-            ANY_PAC_MUNCHING,        from(ss).take(MS_PAC_MUNCHING_SPRITES_LEFT).endless(),
+        add(ANY_PAC_DYING,           from(ss).take(ss.pacDyingSprites()).frameTicks(8).end());
+        add(ANY_PAC_MUNCHING,        from(ss).take(MS_PAC_MUNCHING_SPRITES_LEFT).endless());
 
-            MS_PAC_MAN_BOOSTER,      from(ss).take(MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER).endless(),
-            MS_PAC_MAN_WAVING_HAND,  from(ss).take(MS_PAC_WAVING_HAND).frameTicks(8).endless(),
-            MS_PAC_MAN_TURNING_AWAY, from(ss).take(MS_PAC_TURNING_AWAY).frameTicks(15).end(),
+        add(MS_PAC_MAN_BOOSTER,      from(ss).take(MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER).endless());
+        add(MS_PAC_MAN_WAVING_HAND,  from(ss).take(MS_PAC_WAVING_HAND).frameTicks(8).endless());
+        add(MS_PAC_MAN_TURNING_AWAY, from(ss).take(MS_PAC_TURNING_AWAY).frameTicks(15).end());
 
-            PAC_MAN_MUNCHING,        from(ss).take(MR_PAC_MUNCHING_SPRITES_LEFT).frameTicks(2).endless(),
-            PAC_MAN_BOOSTER,         from(ss).take(MR_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER).frameTicks(2).endless(),
-            PAC_MAN_WAVING_HAND,     from(ss).take(MR_PAC_WAVING_HAND).frameTicks(8).endless(),
-            PAC_MAN_TURNING_AWAY,    from(ss).take(MR_PAC_TURNING_AWAY).frameTicks(15).end(),
+        add(PAC_MAN_MUNCHING,        from(ss).take(MR_PAC_MUNCHING_SPRITES_LEFT).frameTicks(2).endless());
+        add(PAC_MAN_BOOSTER,         from(ss).take(MR_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER).frameTicks(2).endless());
+        add(PAC_MAN_WAVING_HAND,     from(ss).take(MR_PAC_WAVING_HAND).frameTicks(8).endless());
+        add(PAC_MAN_TURNING_AWAY,    from(ss).take(MR_PAC_TURNING_AWAY).frameTicks(15).end());
 
-            JUNIOR,                  from(ss).take(JUNIOR_PAC_SPRITE).end()
-        ));
+        add(JUNIOR,                  from(ss).take(JUNIOR_PAC_SPRITE).end());
     }
 
     @Override

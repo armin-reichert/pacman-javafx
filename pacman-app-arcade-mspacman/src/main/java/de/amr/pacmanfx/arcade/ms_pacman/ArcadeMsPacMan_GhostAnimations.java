@@ -13,8 +13,6 @@ import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.ui._2d.SpriteAnimationSet;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
-import java.util.Map;
-
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.from;
 import static java.util.Objects.requireNonNull;
@@ -24,13 +22,11 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationSet implement
     public ArcadeMsPacMan_GhostAnimations(GameSpriteSheet ss, byte personality) {
         requireNonNull(ss);
         requireValidGhostPersonality(personality);
-        add(Map.of(
-            ANIM_GHOST_NORMAL,     from(ss).take(ss.ghostNormalSprites(personality, Direction.LEFT)).frameTicks(8).endless(),
-            ANIM_GHOST_FRIGHTENED, from(ss).take(ss.ghostFrightenedSprites()).frameTicks(8).endless(),
-            ANIM_GHOST_FLASHING,   from(ss).take(ss.ghostFlashingSprites()).frameTicks(7).endless(),
-            ANIM_GHOST_EYES,       from(ss).take(ss.ghostEyesSprites(Direction.LEFT)).end(),
-            ANIM_GHOST_NUMBER,     from(ss).take(ss.ghostNumberSprites()).end()
-        ));
+        add(ANIM_GHOST_NORMAL,     from(ss).take(ss.ghostNormalSprites(personality, Direction.LEFT)).frameTicks(8).endless());
+        add(ANIM_GHOST_FRIGHTENED, from(ss).take(ss.ghostFrightenedSprites()).frameTicks(8).endless());
+        add(ANIM_GHOST_FLASHING,   from(ss).take(ss.ghostFlashingSprites()).frameTicks(7).endless());
+        add(ANIM_GHOST_EYES,       from(ss).take(ss.ghostEyesSprites(Direction.LEFT)).end());
+        add(ANIM_GHOST_NUMBER,     from(ss).take(ss.ghostNumberSprites()).end());
         //TODO start animations when selected
         animation(ANIM_GHOST_EYES).play();
         animation(ANIM_GHOST_FRIGHTENED).play();

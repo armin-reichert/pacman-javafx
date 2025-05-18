@@ -24,8 +24,8 @@ public class SpriteAnimationSet implements Animations {
     protected final Map<String, SpriteAnimation> animationsByID = new HashMap<>();
     protected String currentAnimationID;
 
-    public void add(Map<String, SpriteAnimation> entries) {
-        animationsByID.putAll(entries);
+    public void add(String key, SpriteAnimation animation) {
+        animationsByID.put(key, animation);
     }
 
     public SpriteAnimation animation(String id) {

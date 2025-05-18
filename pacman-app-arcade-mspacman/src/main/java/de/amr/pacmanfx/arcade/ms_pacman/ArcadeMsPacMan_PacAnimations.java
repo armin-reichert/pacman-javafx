@@ -12,8 +12,6 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.SpriteAnimationSet;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
-import java.util.Map;
-
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.from;
 import static java.util.Objects.requireNonNull;
 
@@ -23,11 +21,9 @@ public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationSet implements 
 
     public ArcadeMsPacMan_PacAnimations(ArcadeMsPacMan_SpriteSheet ss) {
         requireNonNull(ss);
-        add(Map.of(
-            ANY_PAC_MUNCHING, from(ss).take(ss.pacMunchingSprites(Direction.LEFT)).endless(),
-            ANY_PAC_DYING,    from(ss).take(ss.pacDyingSprites()).frameTicks(8).end(),
-            PAC_MAN_MUNCHING, from(ss).take(ss.mrPacManMunchingSprites(Direction.LEFT)).frameTicks(2).endless()
-        ));
+        add(ANY_PAC_MUNCHING, from(ss).take(ss.pacMunchingSprites(Direction.LEFT)).endless());
+        add(ANY_PAC_DYING,    from(ss).take(ss.pacDyingSprites()).frameTicks(8).end());
+        add(PAC_MAN_MUNCHING, from(ss).take(ss.mrPacManMunchingSprites(Direction.LEFT)).frameTicks(2).endless());
     }
 
     @Override
