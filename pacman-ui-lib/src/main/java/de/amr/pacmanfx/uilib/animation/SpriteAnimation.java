@@ -32,12 +32,12 @@ public class SpriteAnimation extends Transition {
             return this;
         }
 
-        public Builder sprites(RectArea... sprites) {
+        public Builder take(RectArea... sprites) {
             workPiece.sprites = sprites;
             return this;
         }
 
-        public SpriteAnimation endLoop() {
+        public SpriteAnimation endless() {
             return build(Animation.INDEFINITE);
         }
 
@@ -54,7 +54,7 @@ public class SpriteAnimation extends Transition {
         }
     }
 
-    public static Builder spriteSheet(SpriteSheet spriteSheet) {
+    public static Builder from(SpriteSheet spriteSheet) {
         return new Builder(spriteSheet);
     }
 
@@ -80,7 +80,7 @@ public class SpriteAnimation extends Transition {
         frameIndex = 0;
     }
 
-    public SpriteSheet spriteSheet() {
+    public SpriteSheet from() {
         return spriteSheet;
     }
 

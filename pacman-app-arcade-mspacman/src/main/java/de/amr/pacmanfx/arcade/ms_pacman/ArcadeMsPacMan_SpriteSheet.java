@@ -161,9 +161,9 @@ public class ArcadeMsPacMan_SpriteSheet implements GameSpriteSheet {
 
     public SpriteAnimation createStorkFlyingAnimation() {
         return SpriteAnimation
-            .spriteSheet(this)
-            .sprites(rect(489, 176, 32, 16), rect(521, 176, 32, 16))
+            .from(this)
+            .take(rect(489, 176, 32, 16), rect(521, 176, 32, 16))
             .frameTicks(8)
-            .endLoop();
+            .endless();
     }
 }

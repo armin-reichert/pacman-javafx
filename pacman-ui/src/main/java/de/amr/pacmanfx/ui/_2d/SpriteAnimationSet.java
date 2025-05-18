@@ -42,7 +42,7 @@ public class SpriteAnimationSet implements Animations {
         if (currentAnimation == null) {
             return null;
         }
-        RectArea[] newSelection = selectedSprites(currentAnimation().spriteSheet(), actor);
+        RectArea[] newSelection = selectedSprites(currentAnimation().from(), actor);
         if (newSelection != null) {
             currentAnimation.setSprites(newSelection);
         }

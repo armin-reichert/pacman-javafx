@@ -11,12 +11,12 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostAnimations;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.ui._2d.SpriteAnimationSet;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 import java.util.Map;
 
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
+import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.from;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -24,69 +24,43 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationSet implements GhostAnimations {
 
-    public ArcadeMsPacMan_GhostAnimations(GameSpriteSheet spriteSheet, byte personality) {
-        requireNonNull(spriteSheet);
+    public ArcadeMsPacMan_GhostAnimations(GameSpriteSheet ss, byte personality) {
+        requireNonNull(ss);
         requireValidGhostPersonality(personality);
-
-        var normal = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(spriteSheet.ghostNormalSprites(personality, Direction.LEFT))
-            .frameTicks(8)
-            .endLoop();
-
-        var frightened = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(spriteSheet.ghostFrightenedSprites())
-            .frameTicks(8)
-            .endLoop();
-
-        var flashing = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(spriteSheet.ghostFlashingSprites())
-            .frameTicks(7)
-            .endLoop();
-
-        var eyes = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(spriteSheet.ghostEyesSprites(Direction.LEFT))
-            .end();
-
-        var number = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(spriteSheet.ghostNumberSprites())
-            .end();
-
         add(Map.of(
-            GhostAnimations.ANIM_GHOST_NORMAL, normal,
-            GhostAnimations.ANIM_GHOST_FRIGHTENED, frightened,
-            GhostAnimations.ANIM_GHOST_FLASHING, flashing,
-            GhostAnimations.ANIM_GHOST_EYES, eyes,
-            GhostAnimations.ANIM_GHOST_NUMBER, number));
-
-        eyes.play();
-        frightened.play();
-        flashing.play();
+            ANIM_GHOST_NORMAL,     from(ss).take(ss.ghostNormalSprites(personality, Direction.LEFT)).frameTicks(8).endless(),
+            ANIM_GHOST_FRIGHTENED, from(ss).take(ss.ghostFrightenedSprites()).frameTicks(8).endless(),
+            ANIM_GHOST_FLASHING,   from(ss).take(ss.ghostFlashingSprites()).frameTicks(7).endless(),
+            ANIM_GHOST_EYES,       from(ss).take(ss.ghostEyesSprites(Direction.LEFT)).end(),
+            ANIM_GHOST_NUMBER,     from(ss).take(ss.ghostNumberSprites()).end()
+        ));
+        //TODO start animations when selected
+        animation(ANIM_GHOST_EYES).play();
+        animation(ANIM_GHOST_FRIGHTENED).play();
+        animation(ANIM_GHOST_FLASHING).play();
     }
 
     @Override
     public void select(String id, int frameIndex) {
         super.select(id, frameIndex);
-        if (GhostAnimations.ANIM_GHOST_NUMBER.equals(id)) {
-            animation(GhostAnimations.ANIM_GHOST_NUMBER).setFrameIndex(frameIndex);
+        if (ANIM_GHOST_NUMBER.equals(id)) {
+            animation(ANIM_GHOST_NUMBER).setFrameIndex(frameIndex);
         }
     }
 
     @Override
-    protected RectArea[] selectedSprites(SpriteSheet spriteSheet, Actor actor) {
-        GameSpriteSheet gss = (GameSpriteSheet) spriteSheet;
+    protected RectArea[] selectedSprites(SpriteSheet ss, Actor actor) {
         if (actor instanceof Ghost ghost) {
-            if (isCurrentAnimationID(GhostAnimations.ANIM_GHOST_NORMAL)) {
-                return gss.ghostNormalSprites(ghost.personality(), ghost.wishDir());
-            }
-            if (isCurrentAnimationID(GhostAnimations.ANIM_GHOST_EYES)) {
-                return gss.ghostEyesSprites(ghost.wishDir());
+            GameSpriteSheet gss = (GameSpriteSheet) ss;
+            switch (currentAnimationID) {
+                case ANIM_GHOST_NORMAL -> {
+                    return gss.ghostNormalSprites(ghost.personality(), ghost.wishDir());
+                }
+                case ANIM_GHOST_EYES -> {
+                    return gss.ghostEyesSprites(ghost.wishDir());
+                }
             }
         }
-        return super.selectedSprites(spriteSheet, actor);
+        return super.selectedSprites(ss, actor);
     }
 }

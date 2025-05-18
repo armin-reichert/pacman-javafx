@@ -34,60 +34,60 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet implements 
         requireNonNull(spriteSheet);
 
         var msPacManMunching = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(TengenMsPacMan_SpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT)
-            .endLoop();
+            .from(spriteSheet)
+            .take(TengenMsPacMan_SpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT)
+            .endless();
 
         var msPacManMunchingBooster = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(TengenMsPacMan_SpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER)
-            .endLoop();
+            .from(spriteSheet)
+            .take(TengenMsPacMan_SpriteSheet.MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER)
+            .endless();
 
         var msPacManWavingHand = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(TengenMsPacMan_SpriteSheet.MS_PAC_WAVING_HAND)
+            .from(spriteSheet)
+            .take(TengenMsPacMan_SpriteSheet.MS_PAC_WAVING_HAND)
             .frameTicks(8)
-            .endLoop();
+            .endless();
 
         var msPacManTurningAway = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(TengenMsPacMan_SpriteSheet.MS_PAC_TURNING_AWAY)
+            .from(spriteSheet)
+            .take(TengenMsPacMan_SpriteSheet.MS_PAC_TURNING_AWAY)
             .frameTicks(15)
             .end();
 
         var msPacmanDying = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(spriteSheet.pacDyingSprites())
+            .from(spriteSheet)
+            .take(spriteSheet.pacDyingSprites())
             .frameTicks(8)
             .end();
 
         var mrPacManMunching = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(TengenMsPacMan_SpriteSheet.MR_PAC_MUNCHING_SPRITES_LEFT)
+            .from(spriteSheet)
+            .take(TengenMsPacMan_SpriteSheet.MR_PAC_MUNCHING_SPRITES_LEFT)
             .frameTicks(2)
-            .endLoop();
+            .endless();
 
         var mrPacManMunchingBooster = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(TengenMsPacMan_SpriteSheet.MR_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER)
+            .from(spriteSheet)
+            .take(TengenMsPacMan_SpriteSheet.MR_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER)
             .frameTicks(2)
-            .endLoop();
+            .endless();
 
         var mrPacManWavingHand = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(TengenMsPacMan_SpriteSheet.MR_PAC_WAVING_HAND)
+            .from(spriteSheet)
+            .take(TengenMsPacMan_SpriteSheet.MR_PAC_WAVING_HAND)
             .frameTicks(8)
-            .endLoop();
+            .endless();
 
         var mrPacManTurningAway = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(TengenMsPacMan_SpriteSheet.MR_PAC_TURNING_AWAY)
+            .from(spriteSheet)
+            .take(TengenMsPacMan_SpriteSheet.MR_PAC_TURNING_AWAY)
             .frameTicks(15)
             .end();
 
         var junior = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(TengenMsPacMan_SpriteSheet.JUNIOR_PAC_SPRITE)
+            .from(spriteSheet)
+            .take(TengenMsPacMan_SpriteSheet.JUNIOR_PAC_SPRITE)
             .end();
 
         add(Map.of(

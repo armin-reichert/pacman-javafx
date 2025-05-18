@@ -30,54 +30,54 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationSet implements 
     public ArcadePacMan_GhostAnimations(ArcadePacMan_SpriteSheet spriteSheet, byte personality) {
 
         var normal = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(spriteSheet.ghostNormalSprites(personality, Direction.LEFT))
+            .from(spriteSheet)
+            .take(spriteSheet.ghostNormalSprites(personality, Direction.LEFT))
             .frameTicks(8)
-            .endLoop();
+            .endless();
 
         var frightened = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(spriteSheet.ghostFrightenedSprites())
+            .from(spriteSheet)
+            .take(spriteSheet.ghostFrightenedSprites())
             .frameTicks(8)
-            .endLoop();
+            .endless();
 
         var flashing = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(spriteSheet.ghostFlashingSprites())
+            .from(spriteSheet)
+            .take(spriteSheet.ghostFlashingSprites())
             .frameTicks(7)
-            .endLoop();
+            .endless();
 
         var eyes = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(spriteSheet.ghostEyesSprites(Direction.LEFT))
+            .from(spriteSheet)
+            .take(spriteSheet.ghostEyesSprites(Direction.LEFT))
             .end();
 
         var number = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(spriteSheet.ghostNumberSprites())
+            .from(spriteSheet)
+            .take(spriteSheet.ghostNumberSprites())
             .end();
 
         var damaged = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(spriteSheet.blinkyDamagedSprites())
+            .from(spriteSheet)
+            .take(spriteSheet.blinkyDamagedSprites())
             .end();
 
         var stretching = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(spriteSheet.blinkyStretchedSprites())
+            .from(spriteSheet)
+            .take(spriteSheet.blinkyStretchedSprites())
             .end();
 
         var patched = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(spriteSheet.blinkyPatchedSprites())
+            .from(spriteSheet)
+            .take(spriteSheet.blinkyPatchedSprites())
             .frameTicks(4)
-            .endLoop();
+            .endless();
 
         var naked = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(spriteSheet.blinkyNakedSprites())
+            .from(spriteSheet)
+            .take(spriteSheet.blinkyNakedSprites())
             .frameTicks(4)
-            .endLoop();
+            .endless();
 
         add(Map.of(
             GhostAnimations.ANIM_GHOST_NORMAL, normal,

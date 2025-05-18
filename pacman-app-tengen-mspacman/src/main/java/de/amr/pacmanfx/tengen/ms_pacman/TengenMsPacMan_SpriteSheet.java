@@ -265,11 +265,11 @@ public class TengenMsPacMan_SpriteSheet implements GameSpriteSheet {
     }
 
     public SpriteAnimation createStorkFlyingAnimation() {
-        return SpriteAnimation.spriteSheet(this)
-            .sprites(
+        return SpriteAnimation.from(this)
+            .take(
                 rect(157, 355, 33, 16),
                 rect(198, 355, 33, 16)
-            ).frameTicks(8).endLoop();
+            ).frameTicks(8).endless();
     }
 
     // Tengen-specific

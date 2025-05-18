@@ -25,29 +25,21 @@ public class ArcadePacMan_PacAnimations extends SpriteAnimationSet implements An
 
     public static final String BIG_PAC_MAN = "big_pac_man";
 
-    public ArcadePacMan_PacAnimations(ArcadePacMan_SpriteSheet spriteSheet) {
-        requireNonNull(spriteSheet);
+    public ArcadePacMan_PacAnimations(ArcadePacMan_SpriteSheet ss) {
+        requireNonNull(ss);
         add(Map.of(
-            ANY_PAC_MUNCHING,
-            SpriteAnimation.spriteSheet(spriteSheet)
-                .sprites(spriteSheet.pacMunchingSprites(Direction.LEFT)).endLoop(),
-
-            ANY_PAC_DYING,
-            SpriteAnimation.spriteSheet(spriteSheet)
-                .sprites(spriteSheet.pacDyingSprites()).frameTicks(8).end(),
-
-            BIG_PAC_MAN,
-            SpriteAnimation.spriteSheet(spriteSheet)
-                .sprites(spriteSheet.bigPacManSprites()).frameTicks(3).endLoop()
+            ANY_PAC_MUNCHING, SpriteAnimation.from(ss).take(ss.pacMunchingSprites(Direction.LEFT)).endless(),
+            ANY_PAC_DYING,    SpriteAnimation.from(ss).take(ss.pacDyingSprites()).frameTicks(8).end(),
+            BIG_PAC_MAN,      SpriteAnimation.from(ss).take(ss.bigPacManSprites()).frameTicks(3).endless()
         ));
     }
 
     @Override
-    protected RectArea[] selectedSprites(SpriteSheet spriteSheet, Actor actor) {
+    protected RectArea[] selectedSprites(SpriteSheet ss, Actor actor) {
         if (actor instanceof Pac pac && isCurrentAnimationID(ANY_PAC_MUNCHING)) {
-            var gss = (GameSpriteSheet) spriteSheet;
+            var gss = (GameSpriteSheet) ss;
             return gss.pacMunchingSprites(pac.moveDir());
         }
-        return super.selectedSprites(spriteSheet, actor);
+        return super.selectedSprites(ss, actor);
     }
 }

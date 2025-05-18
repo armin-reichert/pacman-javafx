@@ -31,31 +31,31 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationSet implement
         requireNonNull(spriteSheet);
 
         var normal = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(spriteSheet.ghostNormalSprites(personality, Direction.LEFT))
+            .from(spriteSheet)
+            .take(spriteSheet.ghostNormalSprites(personality, Direction.LEFT))
             .frameTicks(NORMAL_FRAME_TICKS)
-            .endLoop();
+            .endless();
 
         var frightened = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(spriteSheet.ghostFrightenedSprites())
+            .from(spriteSheet)
+            .take(spriteSheet.ghostFrightenedSprites())
             .frameTicks(FRIGHTENED_FRAME_TICKS)
-            .endLoop();
+            .endless();
 
         var flashing = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(spriteSheet.ghostFlashingSprites())
+            .from(spriteSheet)
+            .take(spriteSheet.ghostFlashingSprites())
             .frameTicks(FLASH_FRAME_TICKS)
-            .endLoop();
+            .endless();
 
         var eyes = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(spriteSheet.ghostEyesSprites(Direction.LEFT))
+            .from(spriteSheet)
+            .take(spriteSheet.ghostEyesSprites(Direction.LEFT))
             .end();
 
         var number = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(spriteSheet.ghostNumberSprites())
+            .from(spriteSheet)
+            .take(spriteSheet.ghostNumberSprites())
             .end();
 
         add(Map.of(

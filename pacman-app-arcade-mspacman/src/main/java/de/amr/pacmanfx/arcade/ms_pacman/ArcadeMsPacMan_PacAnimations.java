@@ -17,51 +17,32 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-/**
- * @author Armin Reichert
- */
 public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationSet implements Animations {
 
     public static final String PAC_MAN_MUNCHING = "pac_man_munching";
 
-    public ArcadeMsPacMan_PacAnimations(ArcadeMsPacMan_SpriteSheet spriteSheet) {
-        requireNonNull(spriteSheet);
-
-        var munching = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(spriteSheet.pacMunchingSprites(Direction.LEFT))
-            .endLoop();
-
-        var dying = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(spriteSheet.pacDyingSprites())
-            .frameTicks(8)
-            .end();
-
-        var husbandMunching = SpriteAnimation
-            .spriteSheet(spriteSheet)
-            .sprites(spriteSheet.mrPacManMunchingSprites(Direction.LEFT))
-            .frameTicks(2)
-            .endLoop();
-
+    public ArcadeMsPacMan_PacAnimations(ArcadeMsPacMan_SpriteSheet ss) {
+        requireNonNull(ss);
         add(Map.of(
-            Animations.ANY_PAC_MUNCHING, munching,
-            Animations.ANY_PAC_DYING, dying,
-            PAC_MAN_MUNCHING, husbandMunching
+            ANY_PAC_MUNCHING, SpriteAnimation.from(ss).take(ss.pacMunchingSprites(Direction.LEFT)).endless(),
+            ANY_PAC_DYING,    SpriteAnimation.from(ss).take(ss.pacDyingSprites()).frameTicks(8).end(),
+            PAC_MAN_MUNCHING, SpriteAnimation.from(ss).take(ss.mrPacManMunchingSprites(Direction.LEFT)).frameTicks(2).endless()
         ));
     }
 
     @Override
-    protected RectArea[] selectedSprites(SpriteSheet spriteSheet, Actor actor) {
-        ArcadeMsPacMan_SpriteSheet gss = (ArcadeMsPacMan_SpriteSheet) spriteSheet;
-        if (actor instanceof Pac msPacMan) {
-            if (isCurrentAnimationID(Animations.ANY_PAC_MUNCHING)) {
-                return gss.pacMunchingSprites(msPacMan.moveDir());
-            }
-            if (isCurrentAnimationID(PAC_MAN_MUNCHING)) {
-                return gss.mrPacManMunchingSprites(msPacMan.moveDir());
+    protected RectArea[] selectedSprites(SpriteSheet ss, Actor actor) {
+        if (actor instanceof Pac pac) {
+            var gss = (ArcadeMsPacMan_SpriteSheet) ss;
+            switch (currentAnimationID) {
+                case ANY_PAC_MUNCHING -> {
+                    return gss.pacMunchingSprites(pac.moveDir());
+                }
+                case PAC_MAN_MUNCHING -> {
+                    return gss.mrPacManMunchingSprites(pac.moveDir());
+                }
             }
         }
-        return super.selectedSprites(spriteSheet, actor);
+        return super.selectedSprites(ss, actor);
     }
 }
