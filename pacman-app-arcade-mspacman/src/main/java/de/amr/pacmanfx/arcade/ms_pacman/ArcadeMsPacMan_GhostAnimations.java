@@ -5,22 +5,19 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostAnimations;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.ui._2d.SpriteAnimationSet;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.from;
-import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationSet implements GhostAnimations {
 
     public ArcadeMsPacMan_GhostAnimations(GameSpriteSheet ss, byte personality) {
-        requireNonNull(ss);
+        super(ss);
         requireValidGhostPersonality(personality);
         add(ANIM_GHOST_NORMAL,     from(ss).take(ss.ghostNormalSprites(personality, Direction.LEFT)).frameTicks(8).endless());
         add(ANIM_GHOST_FRIGHTENED, from(ss).take(ss.ghostFrightenedSprites()).frameTicks(8).endless());
@@ -42,18 +39,13 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationSet implement
     }
 
     @Override
-    protected RectArea[] updateActorSprites(SpriteSheet ss, Actor actor) {
+    protected void updateActorSprites(Actor actor) {
         if (actor instanceof Ghost ghost) {
-            GameSpriteSheet gss = (GameSpriteSheet) ss;
+            GameSpriteSheet gss = (GameSpriteSheet) spriteSheet;
             switch (currentAnimationID) {
-                case ANIM_GHOST_NORMAL -> {
-                    return gss.ghostNormalSprites(ghost.personality(), ghost.wishDir());
-                }
-                case ANIM_GHOST_EYES -> {
-                    return gss.ghostEyesSprites(ghost.wishDir());
-                }
+                case ANIM_GHOST_NORMAL -> currentAnimation().setSprites(gss.ghostNormalSprites(ghost.personality(), ghost.wishDir()));
+                case ANIM_GHOST_EYES   -> currentAnimation().setSprites(gss.ghostEyesSprites(ghost.wishDir()));
             }
         }
-        return null;
     }
 }

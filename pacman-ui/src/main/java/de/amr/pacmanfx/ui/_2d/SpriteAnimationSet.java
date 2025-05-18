@@ -18,10 +18,16 @@ import static java.util.Objects.requireNonNull;
 
 public abstract class SpriteAnimationSet implements Animations {
 
+    protected final SpriteSheet spriteSheet;
     protected final Map<String, SpriteAnimation> animationsByID = new HashMap<>();
     protected String currentAnimationID;
 
-    protected abstract RectArea[] updateActorSprites(SpriteSheet spriteSheet, Actor actor);
+    protected SpriteAnimationSet(SpriteSheet spriteSheet) {
+        this.spriteSheet = requireNonNull(spriteSheet);
+    }
+
+    //TODO this is somewhat crude but currently the way to keep e.g. the sprites up-to-date with an actors' direction etc.
+    protected abstract void updateActorSprites(Actor actor);
 
     public void add(String key, SpriteAnimation animation) {
         animationsByID.put(key, animation);
@@ -41,11 +47,7 @@ public abstract class SpriteAnimationSet implements Animations {
         if (currentAnimation == null) {
             return null;
         }
-        //TODO this is somewhat crude but currently the way to keep e.g. the sprites up-to-date with an actors' direction etc.
-        RectArea[] sprites = updateActorSprites(currentAnimation().from(), actor);
-        if (sprites != null) {
-            currentAnimation.setSprites(sprites);
-        }
+        updateActorSprites(actor);
         return currentAnimation.currentSprite();
     }
 

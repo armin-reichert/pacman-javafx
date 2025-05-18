@@ -5,13 +5,11 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostAnimations;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.ui._2d.SpriteAnimationSet;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.animation.Animation;
 
 import java.util.stream.Stream;
@@ -26,7 +24,7 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationSet implement
     public static final int FLASH_TICKS = 7;  // TODO check this in emulator
 
     public TengenMsPacMan_GhostAnimations(GameSpriteSheet ss, byte personality) {
-        requireNonNull(ss);
+        super(ss);
         add(ANIM_GHOST_NORMAL,     from(ss).take(ss.ghostNormalSprites(personality, Direction.LEFT)).frameTicks(NORMAL_TICKS).endless());
         add(ANIM_GHOST_FRIGHTENED, from(ss).take(ss.ghostFrightenedSprites()).frameTicks(FRIGHTENED_TICKS).endless());
         add(ANIM_GHOST_FLASHING,   from(ss).take(ss.ghostFlashingSprites()).frameTicks(FLASH_TICKS).endless());
@@ -45,16 +43,15 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationSet implement
     }
 
     @Override
-    protected RectArea[] updateActorSprites(SpriteSheet spriteSheet, Actor actor) {
+    protected void updateActorSprites(Actor actor) {
         if (actor instanceof Ghost ghost) {
             GameSpriteSheet gss = (GameSpriteSheet) spriteSheet;
             if (isCurrentAnimationID(ANIM_GHOST_NORMAL)) {
-                return gss.ghostNormalSprites(ghost.personality(), ghost.wishDir());
+                currentAnimation().setSprites(gss.ghostNormalSprites(ghost.personality(), ghost.wishDir()));
             }
             if (isCurrentAnimationID(ANIM_GHOST_EYES)) {
-                return gss.ghostEyesSprites(ghost.wishDir());
+                currentAnimation().setSprites(gss.ghostEyesSprites(ghost.wishDir()));
             }
         }
-        return null;
     }
 }
