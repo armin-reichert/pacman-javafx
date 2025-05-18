@@ -7,16 +7,16 @@ package de.amr.pacmanfx.tengen.ms_pacman;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
-import de.amr.pacmanfx.model.actors.Animations;
+import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 
-import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
 /**
  * Intermission scene 2: "The chase".
@@ -77,7 +77,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         else if (t == 270) {
             msPacMan.setPosition(LEFT_BORDER, UPPER_LANE);
             msPacMan.setMoveDir(Direction.RIGHT);
-            msPacMan.selectAnimation(Animations.ANY_PAC_MUNCHING);
+            msPacMan.selectAnimation(CommonAnimationID.ANY_PAC_MUNCHING);
             msPacMan.startAnimation();
             msPacMan.setSpeed(2.0f);
             msPacMan.show();

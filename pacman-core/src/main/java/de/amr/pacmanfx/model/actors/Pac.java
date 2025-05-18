@@ -94,7 +94,7 @@ public class Pac extends Creature {
         starvingTicks = 0;
         corneringSpeedUp = 1.5f; // no real cornering implementation but better than nothing
         if (animations != null) {
-            animations.select(Animations.ANY_PAC_MUNCHING, 0);
+            animations.select(CommonAnimationID.ANY_PAC_MUNCHING, 0);
         }
     }
 
@@ -151,7 +151,7 @@ public class Pac extends Creature {
         setSpeed(0);
         setRestingTicks(Pac.REST_INDEFINITELY);
         animations.stop();
-        selectAnimation(Animations.ANY_PAC_MUNCHING);
+        selectAnimation(CommonAnimationID.ANY_PAC_MUNCHING);
         animations.reset();
     }
 

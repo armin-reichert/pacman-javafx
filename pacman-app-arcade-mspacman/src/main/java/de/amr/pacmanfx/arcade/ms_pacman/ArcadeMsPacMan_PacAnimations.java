@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Animations;
+import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.SpriteAnimationSet;
 
@@ -18,8 +19,8 @@ public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationSet implements 
 
     public ArcadeMsPacMan_PacAnimations(ArcadeMsPacMan_SpriteSheet ss) {
         super(ss);
-        add(ANY_PAC_MUNCHING, from(ss).take(ss.pacMunchingSprites(Direction.LEFT)).endless());
-        add(ANY_PAC_DYING,    from(ss).take(ss.pacDyingSprites()).frameTicks(8).end());
+        add(CommonAnimationID.ANY_PAC_MUNCHING, from(ss).take(ss.pacMunchingSprites(Direction.LEFT)).endless());
+        add(CommonAnimationID.ANY_PAC_DYING,    from(ss).take(ss.pacDyingSprites()).frameTicks(8).end());
         add(PAC_MAN_MUNCHING, from(ss).take(ss.mrPacManMunchingSprites(Direction.LEFT)).frameTicks(2).endless());
     }
 
@@ -28,7 +29,7 @@ public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationSet implements 
         if (actor instanceof Pac pac) {
             var gss = (ArcadeMsPacMan_SpriteSheet) spriteSheet;
             switch (currentAnimationID) {
-                case ANY_PAC_MUNCHING -> currentAnimation().setSprites(gss.pacMunchingSprites(pac.moveDir()));
+                case CommonAnimationID.ANY_PAC_MUNCHING -> currentAnimation().setSprites(gss.pacMunchingSprites(pac.moveDir()));
                 case PAC_MAN_MUNCHING -> currentAnimation().setSprites(gss.mrPacManMunchingSprites(pac.moveDir()));
             }
         }

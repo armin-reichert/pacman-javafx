@@ -13,10 +13,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.LevelMessage;
-import de.amr.pacmanfx.model.actors.Animations;
-import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.model.actors.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -294,7 +291,7 @@ public enum GameState implements FsmState<GameModel> {
             else if (timer.tickCount() == TICK_HIDE_GHOSTS) {
                 level.ghosts().forEach(Ghost::hide);
                 //TODO this does not belong here
-                level.pac().selectAnimation(Animations.ANY_PAC_DYING);
+                level.pac().selectAnimation(CommonAnimationID.ANY_PAC_DYING);
                 level.pac().resetAnimation();
             }
             else if (timer.tickCount() == TICK_START_PAC_ANIMATION) {

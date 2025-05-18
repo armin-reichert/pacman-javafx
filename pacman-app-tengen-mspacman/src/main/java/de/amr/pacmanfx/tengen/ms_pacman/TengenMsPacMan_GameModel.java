@@ -394,7 +394,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     @Override
     public void initAnimationOfPacManAndGhosts() {
         level.pac().selectAnimation(boosterActive
-            ? TengenMsPacMan_PacAnimations.MS_PAC_MAN_BOOSTER : Animations.ANY_PAC_MUNCHING);
+            ? TengenMsPacMan_PacAnimations.MS_PAC_MAN_BOOSTER : CommonAnimationID.ANY_PAC_MUNCHING);
         level.pac().resetAnimation();
         level.ghosts().forEach(ghost -> {
             ghost.selectAnimation(GhostAnimationID.ANIM_GHOST_NORMAL);
@@ -411,7 +411,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             }
             level.pac().setBaseSpeed(speed);
             level.pac().selectAnimation(boosterActive
-                ? TengenMsPacMan_PacAnimations.MS_PAC_MAN_BOOSTER : Animations.ANY_PAC_MUNCHING);
+                ? TengenMsPacMan_PacAnimations.MS_PAC_MAN_BOOSTER : CommonAnimationID.ANY_PAC_MUNCHING);
         }
     }
 
@@ -608,7 +608,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             gateKeeper().ifPresent(gateKeeper -> gateKeeper.registerFoodEaten(level));
             if (level.isEnergizerPosition(tile)) {
                 theSimulationStep().setFoundEnergizerAtTile(tile);
-                onEnergizerEaten(tile);
+                onEnergizerEaten();
             } else {
                 scoreManager.scorePoints(PELLET_VALUE);
             }
@@ -622,7 +622,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         }
     }
 
-    private void onEnergizerEaten(Vector2i tile) {
+    private void onEnergizerEaten() {
         scoreManager.scorePoints(ENERGIZER_VALUE);
         Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
         level.victims().clear();

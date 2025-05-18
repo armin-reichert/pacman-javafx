@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.model.actors.Animations;
+import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -66,7 +66,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
                 pac.setMoveDir(Direction.LEFT);
                 pac.setSpeed(1.25f);
                 pac.show();
-                pac.selectAnimation(Animations.ANY_PAC_MUNCHING);
+                pac.selectAnimation(CommonAnimationID.ANY_PAC_MUNCHING);
                 pac.startAnimation();
                 blinky.centerOverTile(Vector2i.of(35, 20));
                 blinky.setMoveAndWishDir(Direction.LEFT);
