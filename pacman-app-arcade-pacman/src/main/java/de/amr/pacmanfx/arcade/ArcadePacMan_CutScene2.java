@@ -16,14 +16,14 @@ import static de.amr.pacmanfx.Globals.theGame;
 import static de.amr.pacmanfx.Globals.theGameController;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.createPac;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.createRedGhost;
+import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ANIM_BLINKY_DAMAGED;
+import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ANIM_BLINKY_NAIL_DRESS_RAPTURE;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.pacmanfx.model.actors.GhostAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.ui.GameAssets.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
-/**
- * @author Armin Reichert
- */
 public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     private static final short ANIMATION_START = 120;
@@ -49,9 +49,9 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         var spriteSheet = (ArcadePacMan_SpriteSheet) theUIConfig().current().spriteSheet();
         pac.setAnimations(new ArcadePacMan_PacAnimations(spriteSheet));
         var blinkyAnimations = new ArcadePacMan_GhostAnimations(spriteSheet, blinky.personality());
-        blinkyNormal = blinkyAnimations.animation(GhostAnimationID.ANIM_GHOST_NORMAL);
-        nailDressRaptureAnimation = blinkyAnimations.animation(ArcadePacMan_GhostAnimations.AnimationID.ANIM_BLINKY_NAIL_DRESS_RAPTURE);
-        blinkyDamaged = blinkyAnimations.animation(ArcadePacMan_GhostAnimations.AnimationID.ANIM_BLINKY_DAMAGED);
+        blinkyNormal = blinkyAnimations.animation(ANIM_GHOST_NORMAL);
+        nailDressRaptureAnimation = blinkyAnimations.animation(ANIM_BLINKY_NAIL_DRESS_RAPTURE);
+        blinkyDamaged = blinkyAnimations.animation(ANIM_BLINKY_DAMAGED);
         blinky.setAnimations(blinkyAnimations);
         frame = -1;
     }
@@ -82,7 +82,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 blinky.placeAtTile(28, 20, -3, 0);
                 blinky.setMoveAndWishDir(Direction.LEFT);
                 blinky.setSpeed(1.25f);
-                blinky.selectAnimation(GhostAnimationID.ANIM_GHOST_NORMAL);
+                blinky.selectAnimation(ANIM_GHOST_NORMAL);
                 blinky.startAnimation();
                 blinky.show();
             }
@@ -100,7 +100,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             case ANIMATION_START + 360 -> {
                 nailDressRaptureAnimation.setFrameIndex(RAPTURED);
                 blinky.setPosition(blinky.position().minus(5, 0));
-                blinky.selectAnimation(ArcadePacMan_GhostAnimations.AnimationID.ANIM_BLINKY_DAMAGED);
+                blinky.selectAnimation(ANIM_BLINKY_DAMAGED);
             }
             case ANIMATION_START + 420 -> blinkyDamaged.nextFrame(); // Eyes right-down
             case ANIMATION_START + 508 -> {

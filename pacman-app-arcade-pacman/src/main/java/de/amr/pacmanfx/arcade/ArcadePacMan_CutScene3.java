@@ -18,6 +18,8 @@ import static de.amr.pacmanfx.Globals.theGame;
 import static de.amr.pacmanfx.Globals.theGameController;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.createPac;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.createRedGhost;
+import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ANIM_BLINKY_NAKED;
+import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ANIM_BLINKY_PATCHED;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.GameAssets.ARCADE_WHITE;
@@ -72,13 +74,13 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
                 blinky.setMoveAndWishDir(Direction.LEFT);
                 blinky.setSpeed(1.25f);
                 blinky.show();
-                blinky.selectAnimation(ArcadePacMan_GhostAnimations.AnimationID.ANIM_BLINKY_PATCHED);
+                blinky.selectAnimation(ANIM_BLINKY_PATCHED);
                 blinky.startAnimation();
             }
             case ANIMATION_START + 400 -> {
                 blinky.centerOverTile(Vector2i.of(-1, 20));
                 blinky.setMoveAndWishDir(Direction.RIGHT);
-                blinky.selectAnimation(ArcadePacMan_GhostAnimations.AnimationID.ANIM_BLINKY_NAKED);
+                blinky.selectAnimation(ANIM_BLINKY_NAKED);
                 blinky.startAnimation();
             }
             case ANIMATION_START + 700 -> theGameController().letCurrentGameStateExpire();

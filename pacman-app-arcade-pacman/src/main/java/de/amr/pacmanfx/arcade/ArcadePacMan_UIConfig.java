@@ -33,6 +33,11 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_UIConfig implements GameUIConfig, ResourceManager {
 
+    public static final String ANIM_BLINKY_DAMAGED            = "damaged";
+    public static final String ANIM_BLINKY_PATCHED            = "patched";
+    public static final String ANIM_BLINKY_NAIL_DRESS_RAPTURE = "nail_dress_rapture";
+    public static final String ANIM_BLINKY_NAKED              = "naked";
+
     private static final WorldMapColorScheme MAP_COLORING = new WorldMapColorScheme("#000000", "#2121ff", "#fcb5ff", "#febdb4");
 
     private final Image appIcon;
