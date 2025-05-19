@@ -280,16 +280,14 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 scene.pacMan.setMoveDir(Direction.LEFT);
                 scene.pacMan.setSpeed(CHASING_SPEED);
                 scene.pacMan.show();
-                scene.pacMan.selectAnimation(ANIM_ANY_PAC_MUNCHING);
-                scene.pacMan.playAnimation();
+                scene.pacMan.playAnimation(ANIM_ANY_PAC_MUNCHING);
                 Stream.of(scene.ghosts).forEach(ghost -> {
                     ghost.setState(GhostState.HUNTING_PAC);
                     ghost.setPosition(scene.pacMan.position().plus(16 * (ghost.personality() + 1), 0));
                     ghost.setMoveAndWishDir(Direction.LEFT);
                     ghost.setSpeed(CHASING_SPEED);
                     ghost.show();
-                    ghost.selectAnimation(ANIM_GHOST_NORMAL);
-                    ghost.playAnimation();
+                    ghost.playAnimation(ANIM_GHOST_NORMAL);
                 });
             }
 
@@ -364,7 +362,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                         } else {
                             ghost.show();
                             ghost.setSpeed(GHOST_FRIGHTENED_SPEED);
-                            ghost.playAnimation();
+                            ghost.playAnimation(ANIM_GHOST_FRIGHTENED);
                         }
                     });
                 }

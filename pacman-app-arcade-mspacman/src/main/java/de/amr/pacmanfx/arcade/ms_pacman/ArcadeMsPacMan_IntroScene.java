@@ -191,15 +191,14 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 scene.msPacMan.setMoveDir(Direction.LEFT);
                 scene.msPacMan.setSpeed(SPEED);
                 scene.msPacMan.setVisible(true);
-                scene.msPacMan.selectAnimation(ANIM_ANY_PAC_MUNCHING);
-                scene.msPacMan.playAnimation();
+                scene.msPacMan.playAnimation(ANIM_ANY_PAC_MUNCHING);
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setPosition(TS * 33.5f, TS * 20);
                     ghost.setMoveAndWishDir(Direction.LEFT);
                     ghost.setSpeed(SPEED);
                     ghost.setState(GhostState.HUNTING_PAC);
                     ghost.setVisible(true);
-                    ghost.playAnimation();
+                    ghost.playAnimation(ANIM_GHOST_NORMAL);
                 }
                 scene.currentPersonality = RED_GHOST_SHADOW;
             }

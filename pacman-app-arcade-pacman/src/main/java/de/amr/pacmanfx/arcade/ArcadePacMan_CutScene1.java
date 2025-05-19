@@ -61,29 +61,25 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             pac.placeAtTile(29, 20, 0, 0);
             pac.setMoveDir(Direction.LEFT);
             pac.setSpeed(1.25f);
-            pac.selectAnimation(ANIM_ANY_PAC_MUNCHING);
-            pac.playAnimation();
+            pac.playAnimation(ANIM_ANY_PAC_MUNCHING);
             pac.show();
 
             blinky.placeAtTile(32, 20, 0, 0);
             blinky.setMoveAndWishDir(Direction.LEFT);
             blinky.setSpeed(1.3f);
-            blinky.selectAnimation(ANIM_GHOST_NORMAL);
-            blinky.playAnimation();
+            blinky.playAnimation(ANIM_GHOST_NORMAL);
             blinky.show();
         }
         else if (frame == ANIMATION_START + 260) {
             blinky.placeAtTile(-2, 20, 4, 0);
             blinky.setMoveAndWishDir(Direction.RIGHT);
             blinky.setSpeed(0.75f);
-            blinky.selectAnimation(ANIM_GHOST_FRIGHTENED);
-            blinky.playAnimation();
+            blinky.playAnimation(ANIM_GHOST_FRIGHTENED);
         }
         else if (frame == ANIMATION_START + 400) {
             pac.placeAtTile(-3, 18, 0, 6.5f);
             pac.setMoveDir(Direction.RIGHT);
-            pac.selectAnimation(ANIM_BIG_PAC_MAN);
-            pac.playAnimation();
+            pac.playAnimation(ANIM_BIG_PAC_MAN);
         }
         else if (frame == ANIMATION_START + 632) {
              theGameController().letCurrentGameStateExpire();

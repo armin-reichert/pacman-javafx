@@ -17,6 +17,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationSet.ANIM_PAC_MAN_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.HEART_SPRITE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
@@ -99,30 +100,26 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
             pacMan.setSpeed(SPEED_CHASING);
-            pacMan.selectAnimation(TengenMsPacMan_PacAnimationSet.ANIM_PAC_MAN_MUNCHING);
-            pacMan.playAnimation();
+            pacMan.playAnimation(ANIM_PAC_MAN_MUNCHING);
             pacMan.show();
 
             msPacMan.setMoveDir(Direction.LEFT);
             msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
             msPacMan.setSpeed(SPEED_CHASING);
-            msPacMan.selectAnimation(ANIM_ANY_PAC_MUNCHING);
-            msPacMan.playAnimation();
+            msPacMan.playAnimation(ANIM_ANY_PAC_MUNCHING);
             msPacMan.show();
         }
         else if (t == 160) {
             inky.setMoveAndWishDir(Direction.RIGHT);
             inky.setPosition(LEFT_BORDER, UPPER_LANE);
             inky.setSpeed(SPEED_CHASING);
-            inky.selectAnimation(ANIM_GHOST_NORMAL);
-            inky.playAnimation();
+            inky.playAnimation(ANIM_GHOST_NORMAL);
             inky.show();
 
             pinky.setMoveAndWishDir(Direction.LEFT);
             pinky.setPosition(RIGHT_BORDER, LOWER_LANE);
             pinky.setSpeed(SPEED_CHASING);
-            pinky.selectAnimation(ANIM_GHOST_NORMAL);
-            pinky.playAnimation();
+            pinky.playAnimation(ANIM_GHOST_NORMAL);
             pinky.show();
 
             collided = false;

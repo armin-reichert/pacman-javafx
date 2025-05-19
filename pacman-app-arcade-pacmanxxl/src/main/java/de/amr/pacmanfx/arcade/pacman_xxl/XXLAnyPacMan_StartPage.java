@@ -246,8 +246,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
                 case PACMAN_XXL -> pac.setAnimations(new ArcadePacMan_PacAnimationSet(config.spriteSheet()));
                 case MS_PACMAN_XXL -> pac.setAnimations(new ArcadeMsPacMan_PacAnimationSet(config.spriteSheet()));
             }
-            pac.selectAnimation(ANIM_ANY_PAC_MUNCHING);
-            pac.playAnimation();
+            pac.playAnimation(ANIM_ANY_PAC_MUNCHING);
 
             for (Ghost ghost : ghosts) {
                 if (ghost.animations().isEmpty()) {
@@ -257,8 +256,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
                         case MS_PACMAN_XXL ->
                             ghost.setAnimations(new ArcadeMsPacMan_GhostAnimationSet(config.spriteSheet(), ghost.personality()));
                     }
-                    ghost.selectAnimation(ANIM_GHOST_NORMAL);
-                    ghost.playAnimation();
+                    ghost.playAnimation(ANIM_GHOST_NORMAL);
                 }
             }
         }
@@ -296,8 +294,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
                     ghost.setPosX(pac.posX() + 22 * TS + ghost.personality() * 2.5f * TS);
                     ghost.setMoveAndWishDir(ghost.moveDir().opposite());
                     ghost.setSpeed(0.58f);
-                    ghost.selectAnimation(ANIM_GHOST_FRIGHTENED);
-                    ghost.playAnimation();
+                    ghost.playAnimation(ANIM_GHOST_FRIGHTENED);
                 }
             }
             else if (pac.posX() > 56 * TS && chasingGhosts) {
@@ -309,8 +306,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
                     ghost.setMoveAndWishDir(Direction.LEFT);
                     ghost.setPosX(46 * TS + ghost.personality() * 2 * TS);
                     ghost.setSpeed(1.05f);
-                    ghost.selectAnimation(ANIM_GHOST_NORMAL);
-                    ghost.playAnimation();
+                    ghost.playAnimation(ANIM_GHOST_NORMAL);
                 }
             }
             else if (chasingGhosts) {

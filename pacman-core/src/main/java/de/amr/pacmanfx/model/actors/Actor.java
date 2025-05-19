@@ -176,6 +176,8 @@ public class Actor {
 
     public void playAnimation() { animations().ifPresent(ActorAnimationSet::play); }
 
+    public void playAnimation(String id) { animations().ifPresent(animations -> animations.playAnimation(id)); }
+
     public void stopAnimation() {
         animations().ifPresent(ActorAnimationSet::stop);
     }

@@ -17,6 +17,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createPacMan;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationSet.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
@@ -76,15 +77,13 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setPosition(LEFT_BORDER, LOWER_LANE);
             pacMan.setSpeed(1f);
-            pacMan.selectAnimation(TengenMsPacMan_PacAnimationSet.ANIM_PAC_MAN_MUNCHING);
-            pacMan.playAnimation();
+            pacMan.playAnimation(ANIM_PAC_MAN_MUNCHING);
             pacMan.show();
 
             msPacMan.setMoveDir(Direction.LEFT);
             msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
             msPacMan.setSpeed(1f);
-            msPacMan.selectAnimation(ANIM_ANY_PAC_MUNCHING);
-            msPacMan.playAnimation();
+            msPacMan.playAnimation(ANIM_ANY_PAC_MUNCHING);
             msPacMan.show();
         }
         else if (t == 230) {
@@ -96,22 +95,20 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             msPacMan.resetAnimation();
         }
         else if (t == 400) {
-            pacMan.playAnimation();
-            msPacMan.playAnimation();
+            pacMan.playAnimation(ANIM_PAC_MAN_MUNCHING);
+            msPacMan.playAnimation(ANIM_ANY_PAC_MUNCHING);
         }
         else if (t == 520) {
-            pacMan.selectAnimation(TengenMsPacMan_PacAnimationSet.ANIM_PAC_MAN_WAVING_HAND);
-            msPacMan.selectAnimation(TengenMsPacMan_PacAnimationSet.ANIM_MS_PAC_MAN_WAVING_HAND);
+            pacMan.selectAnimation(ANIM_PAC_MAN_WAVING_HAND);
+            msPacMan.selectAnimation(ANIM_MS_PAC_MAN_WAVING_HAND);
         }
         else if (t == 527) {
             pacMan.playAnimation();
             msPacMan.playAnimation();
         }
         else if (t == 648) {
-            pacMan.selectAnimation(TengenMsPacMan_PacAnimationSet.ANIM_PAC_MAN_TURNING_AWAY);
-            pacMan.playAnimation();
-            msPacMan.selectAnimation(TengenMsPacMan_PacAnimationSet.ANIM_MS_PAC_MAN_TURNING_AWAY);
-            msPacMan.playAnimation();
+            pacMan.playAnimation(ANIM_PAC_MAN_TURNING_AWAY);
+            msPacMan.playAnimation(ANIM_MS_PAC_MAN_TURNING_AWAY);
         }
         else if (t == 650) {
             pacMan.setSpeed(1.5f); // TODO not sure

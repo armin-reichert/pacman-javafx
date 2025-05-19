@@ -8,6 +8,7 @@ public interface ActorAnimationSet {
     String selectedAnimationID();
     void selectAnimationAtFrame(String id, int frameIndex);
     default void selectAnimation(String id) { selectAnimationAtFrame(id, 0); }
+    default void playAnimation(String id) { selectAnimation(id); play(); }
     void play();
     void stop();
     void reset();
