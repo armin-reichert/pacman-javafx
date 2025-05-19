@@ -29,7 +29,8 @@ import org.tinylog.Logger;
 
 import java.util.function.Predicate;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;

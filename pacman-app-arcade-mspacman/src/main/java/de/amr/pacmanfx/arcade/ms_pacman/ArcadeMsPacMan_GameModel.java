@@ -18,7 +18,6 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingBonus;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
-import de.amr.pacmanfx.ui.PacManGamesEnv;
 import org.tinylog.Logger;
 
 import java.io.File;

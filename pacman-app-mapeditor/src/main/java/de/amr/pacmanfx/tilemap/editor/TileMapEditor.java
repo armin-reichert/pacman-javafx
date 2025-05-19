@@ -4,14 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tilemap.editor;
 
-import de.amr.pacmanfx.lib.UsefulFunctions;
-import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
-import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
-import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.*;
 import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
+import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
+import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
 import javafx.animation.AnimationTimer;
 import javafx.animation.FadeTransition;
 import javafx.beans.binding.Bindings;

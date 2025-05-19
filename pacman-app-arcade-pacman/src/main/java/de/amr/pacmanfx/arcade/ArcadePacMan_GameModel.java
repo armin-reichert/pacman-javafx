@@ -17,7 +17,6 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.model.actors.StaticBonus;
 import de.amr.pacmanfx.steering.RouteBasedSteering;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
-import de.amr.pacmanfx.ui.PacManGamesEnv;
 import org.tinylog.Logger;
 
 import java.io.File;

@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
-import de.amr.pacmanfx.Validations;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.geometry.Bounds;
