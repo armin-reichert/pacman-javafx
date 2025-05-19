@@ -203,7 +203,10 @@ public class Ghost extends Creature {
         switch (state) {
             case LOCKED, HUNTING_PAC -> selectAnimation(ANIM_GHOST_NORMAL);
             case ENTERING_HOUSE, RETURNING_HOME -> selectAnimation(ANIM_GHOST_EYES);
-            case FRIGHTENED -> selectAnimation(ANIM_GHOST_FRIGHTENED);
+            case FRIGHTENED -> {
+                selectAnimation(ANIM_GHOST_FRIGHTENED);
+                playAnimation();
+            }
             case EATEN -> {}
         }
     }
@@ -344,8 +347,10 @@ public class Ghost extends Creature {
     private void updateFrightenedAnimation() {
         if (level.pac().isPowerFadingStarting()) {
             selectAnimation(ANIM_GHOST_FLASHING);
+            playAnimation();
         } else if (!level.pac().isPowerFading()) {
             selectAnimation(ANIM_GHOST_FRIGHTENED);
+            playAnimation();
         }
     }
 

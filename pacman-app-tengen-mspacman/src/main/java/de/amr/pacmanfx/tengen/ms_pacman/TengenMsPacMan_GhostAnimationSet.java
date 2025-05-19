@@ -9,9 +9,6 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.ui._2d.SpriteAnimationSet;
-import javafx.animation.Animation;
-
-import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.from;
@@ -29,8 +26,6 @@ public class TengenMsPacMan_GhostAnimationSet extends SpriteAnimationSet {
         set(ANIM_GHOST_FLASHING,   from(ss).take(ss.ghostFlashingSprites()).frameTicks(FLASH_TICKS).endless());
         set(ANIM_GHOST_EYES,       from(ss).take(ss.ghostEyesSprites(Direction.LEFT)).end());
         set(ANIM_GHOST_NUMBER,     from(ss).take(ss.ghostNumberSprites()).end());
-        // TODO start animations when selected
-        Stream.of(ANIM_GHOST_EYES, ANIM_GHOST_FRIGHTENED, ANIM_GHOST_FLASHING).map(this::animation).forEach(Animation::play);
     }
 
     @Override

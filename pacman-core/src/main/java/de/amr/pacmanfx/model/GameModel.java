@@ -70,8 +70,8 @@ public abstract class GameModel {
     public abstract boolean continueOnGameOver();
 
     public void startHunting() {
-        level.pac().startAnimation();
-        level.ghosts().forEach(Ghost::startAnimation);
+        level.pac().playAnimation();
+        level.ghosts().forEach(Ghost::playAnimation);
         level.blinking().setStartPhase(Pulse.ON);
         level.blinking().restart(Integer.MAX_VALUE);
         level.huntingTimer().startFirstHuntingPhase(level.number());

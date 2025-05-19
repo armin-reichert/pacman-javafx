@@ -262,7 +262,7 @@ public enum GameState implements FsmState<GameModel> {
             GameLevel level = game.level().orElseThrow();
             level.pac().show();
             level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
-            level.ghosts().forEach(Ghost::startAnimation);
+            level.ghosts().forEach(Ghost::playAnimation);
         }
     },
 
@@ -298,7 +298,7 @@ public enum GameState implements FsmState<GameModel> {
                 level.pac().resetAnimation();
             }
             else if (timer.tickCount() == TICK_START_PAC_ANIMATION) {
-                level.pac().startAnimation();
+                level.pac().playAnimation();
                 theGameEventManager().publishEvent(game, GameEventType.PAC_DYING, level.pac().tile());
             }
             else if (timer.tickCount() == TICK_HIDE_PAC) {
@@ -478,8 +478,8 @@ public enum GameState implements FsmState<GameModel> {
             game.startLevel();
             GameLevel level = game.level().orElseThrow();
             level.showPacAndGhosts();
-            level.pac().startAnimation();
-            level.ghosts().forEach(Ghost::startAnimation);
+            level.pac().playAnimation();
+            level.ghosts().forEach(Ghost::playAnimation);
         }
 
         @Override

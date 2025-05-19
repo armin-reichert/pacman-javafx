@@ -247,7 +247,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
                 case MS_PACMAN_XXL -> pac.setAnimations(new ArcadeMsPacMan_PacAnimationSet(config.spriteSheet()));
             }
             pac.selectAnimation(ANIM_ANY_PAC_MUNCHING);
-            pac.startAnimation();
+            pac.playAnimation();
 
             for (Ghost ghost : ghosts) {
                 if (ghost.animations().isEmpty()) {
@@ -258,7 +258,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
                             ghost.setAnimations(new ArcadeMsPacMan_GhostAnimationSet(config.spriteSheet(), ghost.personality()));
                     }
                     ghost.selectAnimation(ANIM_GHOST_NORMAL);
-                    ghost.startAnimation();
+                    ghost.playAnimation();
                 }
             }
         }
@@ -297,7 +297,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
                     ghost.setMoveAndWishDir(ghost.moveDir().opposite());
                     ghost.setSpeed(0.58f);
                     ghost.selectAnimation(ANIM_GHOST_FRIGHTENED);
-                    ghost.startAnimation();
+                    ghost.playAnimation();
                 }
             }
             else if (pac.posX() > 56 * TS && chasingGhosts) {
@@ -310,7 +310,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
                     ghost.setPosX(46 * TS + ghost.personality() * 2 * TS);
                     ghost.setSpeed(1.05f);
                     ghost.selectAnimation(ANIM_GHOST_NORMAL);
-                    ghost.startAnimation();
+                    ghost.playAnimation();
                 }
             }
             else if (chasingGhosts) {

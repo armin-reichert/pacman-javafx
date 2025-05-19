@@ -24,10 +24,6 @@ public class ArcadeMsPacMan_GhostAnimationSet extends SpriteAnimationSet {
         set(ANIM_GHOST_FLASHING,   from(ss).take(ss.ghostFlashingSprites()).frameTicks(7).endless());
         set(ANIM_GHOST_EYES,       from(ss).take(ss.ghostEyesSprites(Direction.LEFT)).end());
         set(ANIM_GHOST_NUMBER,     from(ss).take(ss.ghostNumberSprites()).end());
-        //TODO start animations when selected
-        animation(ANIM_GHOST_EYES).play();
-        animation(ANIM_GHOST_FRIGHTENED).play();
-        animation(ANIM_GHOST_FLASHING).play();
     }
 
     @Override

@@ -73,7 +73,7 @@ public abstract class SpriteAnimationSet implements ActorAnimationSet {
     }
 
     @Override
-    public void start() {
+    public void play() {
         if (currentAnimation() != null) {
             currentAnimation().play();
         }

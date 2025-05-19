@@ -121,7 +121,7 @@ public class Pac extends Creature {
                 : level.speedControl().pacNormalSpeed(level));
             tryMoving();
             if (moveInfo.moved) {
-                startAnimation();
+                playAnimation();
             } else {
                 stopAnimation();
             }

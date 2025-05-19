@@ -77,7 +77,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 pac.setMoveDir(Direction.LEFT);
                 pac.setSpeed(1.15f);
                 pac.selectAnimation(ANIM_ANY_PAC_MUNCHING);
-                pac.startAnimation();
+                pac.playAnimation();
                 pac.show();
             }
             case ANIMATION_START + 111 -> {
@@ -85,7 +85,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 blinky.setMoveAndWishDir(Direction.LEFT);
                 blinky.setSpeed(1.25f);
                 blinky.selectAnimation(ANIM_GHOST_NORMAL);
-                blinky.startAnimation();
+                blinky.playAnimation();
                 blinky.show();
             }
             case ANIMATION_START + 194 -> {

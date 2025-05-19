@@ -174,9 +174,7 @@ public class Actor {
 
     public Optional<ActorAnimationSet> animations() { return Optional.ofNullable(animations); }
 
-    public void startAnimation() {
-        animations().ifPresent(ActorAnimationSet::start);
-    }
+    public void playAnimation() { animations().ifPresent(ActorAnimationSet::play); }
 
     public void stopAnimation() {
         animations().ifPresent(ActorAnimationSet::stop);
