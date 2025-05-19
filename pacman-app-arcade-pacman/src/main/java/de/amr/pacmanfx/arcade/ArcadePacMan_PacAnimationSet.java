@@ -19,9 +19,9 @@ public class ArcadePacMan_PacAnimationSet extends SpriteAnimationSet {
 
     public ArcadePacMan_PacAnimationSet(ArcadePacMan_SpriteSheet ss) {
         super(ss);
-        add(ANIM_ANY_PAC_MUNCHING, from(ss).take(ss.pacMunchingSprites(Direction.LEFT)).endless());
-        add(ANIM_ANY_PAC_DYING,    from(ss).take(ss.pacDyingSprites()).frameTicks(8).end());
-        add(ANIM_BIG_PAC_MAN,      from(ss).take(ss.bigPacManSprites()).frameTicks(3).endless());
+        set(ANIM_ANY_PAC_MUNCHING, from(ss).take(ss.pacMunchingSprites(Direction.LEFT)).endless());
+        set(ANIM_ANY_PAC_DYING,    from(ss).take(ss.pacDyingSprites()).frameTicks(8).end());
+        set(ANIM_BIG_PAC_MAN,      from(ss).take(ss.bigPacManSprites()).frameTicks(3).endless());
     }
 
     @Override

@@ -24,11 +24,11 @@ public class TengenMsPacMan_GhostAnimationSet extends SpriteAnimationSet {
 
     public TengenMsPacMan_GhostAnimationSet(GameSpriteSheet ss, byte personality) {
         super(ss);
-        add(ANIM_GHOST_NORMAL,     from(ss).take(ss.ghostNormalSprites(personality, Direction.LEFT)).frameTicks(NORMAL_TICKS).endless());
-        add(ANIM_GHOST_FRIGHTENED, from(ss).take(ss.ghostFrightenedSprites()).frameTicks(FRIGHTENED_TICKS).endless());
-        add(ANIM_GHOST_FLASHING,   from(ss).take(ss.ghostFlashingSprites()).frameTicks(FLASH_TICKS).endless());
-        add(ANIM_GHOST_EYES,       from(ss).take(ss.ghostEyesSprites(Direction.LEFT)).end());
-        add(ANIM_GHOST_NUMBER,     from(ss).take(ss.ghostNumberSprites()).end());
+        set(ANIM_GHOST_NORMAL,     from(ss).take(ss.ghostNormalSprites(personality, Direction.LEFT)).frameTicks(NORMAL_TICKS).endless());
+        set(ANIM_GHOST_FRIGHTENED, from(ss).take(ss.ghostFrightenedSprites()).frameTicks(FRIGHTENED_TICKS).endless());
+        set(ANIM_GHOST_FLASHING,   from(ss).take(ss.ghostFlashingSprites()).frameTicks(FLASH_TICKS).endless());
+        set(ANIM_GHOST_EYES,       from(ss).take(ss.ghostEyesSprites(Direction.LEFT)).end());
+        set(ANIM_GHOST_NUMBER,     from(ss).take(ss.ghostNumberSprites()).end());
         // TODO start animations when selected
         Stream.of(ANIM_GHOST_EYES, ANIM_GHOST_FRIGHTENED, ANIM_GHOST_FLASHING).map(this::animation).forEach(Animation::play);
     }

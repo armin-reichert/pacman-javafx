@@ -29,7 +29,7 @@ public abstract class SpriteAnimationSet implements ActorAnimationSet {
     //TODO this is somewhat crude but currently the way to keep e.g. the sprites up-to-date with an actors' direction etc.
     protected abstract void updateActorSprites(Actor actor);
 
-    public void add(String key, SpriteAnimation animation) {
+    public void set(String key, SpriteAnimation animation) {
         animationsByID.put(key, animation);
     }
 

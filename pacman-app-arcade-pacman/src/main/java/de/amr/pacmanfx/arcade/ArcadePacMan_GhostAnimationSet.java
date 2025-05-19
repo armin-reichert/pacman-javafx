@@ -21,15 +21,15 @@ public class ArcadePacMan_GhostAnimationSet extends SpriteAnimationSet {
 
     public ArcadePacMan_GhostAnimationSet(ArcadePacMan_SpriteSheet ss, byte personality) {
         super(ss);
-        add(ANIM_GHOST_NORMAL,              from(ss).take(ss.ghostNormalSprites(personality, Direction.LEFT)).frameTicks(8).endless());
-        add(ANIM_GHOST_FRIGHTENED,          from(ss).take(ss.ghostFrightenedSprites()).frameTicks(8).endless());
-        add(ANIM_GHOST_FLASHING,            from(ss).take(ss.ghostFlashingSprites()).frameTicks(7).endless());
-        add(ANIM_GHOST_EYES,                from(ss).take(ss.ghostEyesSprites(Direction.LEFT)).end());
-        add(ANIM_GHOST_NUMBER,              from(ss).take(ss.ghostNumberSprites()).end());
-        add(ANIM_BLINKY_DAMAGED,            from(ss).take(ss.blinkyDamagedSprites()).end());
-        add(ANIM_BLINKY_NAIL_DRESS_RAPTURE, from(ss).take(ss.blinkyStretchedSprites()).end());
-        add(ANIM_BLINKY_PATCHED,            from(ss).take(ss.blinkyPatchedSprites()).frameTicks(4).endless());
-        add(ANIM_BLINKY_NAKED,              from(ss).take(ss.blinkyNakedSprites()).frameTicks(4).endless());
+        set(ANIM_GHOST_NORMAL,              from(ss).take(ss.ghostNormalSprites(personality, Direction.LEFT)).frameTicks(8).endless());
+        set(ANIM_GHOST_FRIGHTENED,          from(ss).take(ss.ghostFrightenedSprites()).frameTicks(8).endless());
+        set(ANIM_GHOST_FLASHING,            from(ss).take(ss.ghostFlashingSprites()).frameTicks(7).endless());
+        set(ANIM_GHOST_EYES,                from(ss).take(ss.ghostEyesSprites(Direction.LEFT)).end());
+        set(ANIM_GHOST_NUMBER,              from(ss).take(ss.ghostNumberSprites()).end());
+        set(ANIM_BLINKY_DAMAGED,            from(ss).take(ss.blinkyDamagedSprites()).end());
+        set(ANIM_BLINKY_NAIL_DRESS_RAPTURE, from(ss).take(ss.blinkyStretchedSprites()).end());
+        set(ANIM_BLINKY_PATCHED,            from(ss).take(ss.blinkyPatchedSprites()).frameTicks(4).endless());
+        set(ANIM_BLINKY_NAKED,              from(ss).take(ss.blinkyNakedSprites()).frameTicks(4).endless());
         //TODO start animations when selected
         Stream.of(ANIM_GHOST_EYES, ANIM_GHOST_FRIGHTENED, ANIM_GHOST_FLASHING).map(this::animation).forEach(Animation::play);
     }

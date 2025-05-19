@@ -26,19 +26,19 @@ public class TengenMsPacMan_PacAnimationSet extends SpriteAnimationSet {
 
     public TengenMsPacMan_PacAnimationSet(TengenMsPacMan_SpriteSheet ss) {
         super(ss);
-        add(ANIM_ANY_PAC_DYING,           from(ss).take(ss.pacDyingSprites()).frameTicks(8).end());
-        add(ANIM_ANY_PAC_MUNCHING,        from(ss).take(MS_PAC_MUNCHING_SPRITES_LEFT).endless());
+        set(ANIM_ANY_PAC_DYING,           from(ss).take(ss.pacDyingSprites()).frameTicks(8).end());
+        set(ANIM_ANY_PAC_MUNCHING,        from(ss).take(MS_PAC_MUNCHING_SPRITES_LEFT).endless());
 
-        add(ANIM_MS_PAC_MAN_BOOSTER,      from(ss).take(MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER).endless());
-        add(ANIM_MS_PAC_MAN_WAVING_HAND,  from(ss).take(MS_PAC_WAVING_HAND).frameTicks(8).endless());
-        add(ANIM_MS_PAC_MAN_TURNING_AWAY, from(ss).take(MS_PAC_TURNING_AWAY).frameTicks(15).end());
+        set(ANIM_MS_PAC_MAN_BOOSTER,      from(ss).take(MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER).endless());
+        set(ANIM_MS_PAC_MAN_WAVING_HAND,  from(ss).take(MS_PAC_WAVING_HAND).frameTicks(8).endless());
+        set(ANIM_MS_PAC_MAN_TURNING_AWAY, from(ss).take(MS_PAC_TURNING_AWAY).frameTicks(15).end());
 
-        add(ANIM_PAC_MAN_MUNCHING,        from(ss).take(MR_PAC_MUNCHING_SPRITES_LEFT).frameTicks(2).endless());
-        add(ANIM_PAC_MAN_BOOSTER,         from(ss).take(MR_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER).frameTicks(2).endless());
-        add(ANIM_PAC_MAN_WAVING_HAND,     from(ss).take(MR_PAC_WAVING_HAND).frameTicks(8).endless());
-        add(ANIM_PAC_MAN_TURNING_AWAY,    from(ss).take(MR_PAC_TURNING_AWAY).frameTicks(15).end());
+        set(ANIM_PAC_MAN_MUNCHING,        from(ss).take(MR_PAC_MUNCHING_SPRITES_LEFT).frameTicks(2).endless());
+        set(ANIM_PAC_MAN_BOOSTER,         from(ss).take(MR_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER).frameTicks(2).endless());
+        set(ANIM_PAC_MAN_WAVING_HAND,     from(ss).take(MR_PAC_WAVING_HAND).frameTicks(8).endless());
+        set(ANIM_PAC_MAN_TURNING_AWAY,    from(ss).take(MR_PAC_TURNING_AWAY).frameTicks(15).end());
 
-        add(ANIM_JUNIOR,                  from(ss).take(JUNIOR_PAC_SPRITE).end());
+        set(ANIM_JUNIOR,                  from(ss).take(JUNIOR_PAC_SPRITE).end());
     }
 
     @Override
