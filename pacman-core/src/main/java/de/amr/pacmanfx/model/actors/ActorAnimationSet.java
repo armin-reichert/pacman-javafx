@@ -4,10 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.actors;
 
-public interface ActorAnimations {
+public interface ActorAnimationSet {
     String currentID();
-    void selectAtFrame(String id, int frameIndex);
-    default void select(String id) { selectAtFrame(id, 0); }
+    void selectAnimationAtFrame(String id, int frameIndex);
+    default void selectAnimation(String id) { selectAnimationAtFrame(id, 0); }
     void start();
     void stop();
     void reset();

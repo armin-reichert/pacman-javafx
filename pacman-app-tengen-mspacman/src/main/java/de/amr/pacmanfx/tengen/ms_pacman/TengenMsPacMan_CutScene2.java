@@ -15,7 +15,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createPacMan;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimations.ANIM_PAC_MAN_MUNCHING;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationSet.ANIM_PAC_MAN_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
@@ -57,8 +57,8 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         msPacMan = createMsPacMan();
         pacMan = createPacMan();
         var spriteSheet = (TengenMsPacMan_SpriteSheet) theUIConfig().current().spriteSheet();
-        msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
-        pacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
+        msPacMan.setAnimations(new TengenMsPacMan_PacAnimationSet(spriteSheet));
+        pacMan.setAnimations(new TengenMsPacMan_PacAnimationSet(spriteSheet));
         music = theSound().createSound("intermission.2");
     }
 

@@ -172,8 +172,8 @@ public class XXLPacMan_UIConfig implements GameUIConfig {
 
     @Override
     public void createActorAnimations(GameLevel level) {
-        level.pac().setAnimations(new ArcadePacMan_PacAnimations(spriteSheet));
-        level.ghosts().forEach(ghost -> ghost.setAnimations(new ArcadePacMan_GhostAnimations(spriteSheet, ghost.personality())));
+        level.pac().setAnimations(new ArcadePacMan_PacAnimationSet(spriteSheet));
+        level.ghosts().forEach(ghost -> ghost.setAnimations(new ArcadePacMan_GhostAnimationSet(spriteSheet, ghost.personality())));
     }
 
     @Override

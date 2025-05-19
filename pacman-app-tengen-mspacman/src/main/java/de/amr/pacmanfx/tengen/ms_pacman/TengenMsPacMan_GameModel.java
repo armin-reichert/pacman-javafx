@@ -26,7 +26,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimations.ANIM_MS_PAC_MAN_BOOSTER;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationSet.ANIM_MS_PAC_MAN_BOOSTER;
 import static java.util.Objects.requireNonNull;
 
 /**

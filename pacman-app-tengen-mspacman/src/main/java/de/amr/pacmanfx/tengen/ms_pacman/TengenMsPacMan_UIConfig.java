@@ -221,8 +221,8 @@ public class TengenMsPacMan_UIConfig implements GameUIConfig, ResourceManager {
 
     @Override
     public void createActorAnimations(GameLevel level) {
-        level.pac().setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
-        level.ghosts().forEach(ghost -> ghost.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, ghost.personality())));
+        level.pac().setAnimations(new TengenMsPacMan_PacAnimationSet(spriteSheet));
+        level.ghosts().forEach(ghost -> ghost.setAnimations(new TengenMsPacMan_GhostAnimationSet(spriteSheet, ghost.personality())));
     }
 
     @Override

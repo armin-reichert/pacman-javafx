@@ -61,10 +61,10 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         heart = new Actor();
 
         ArcadeMsPacMan_SpriteSheet spriteSheet = theUIConfig().current().spriteSheet();
-        msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));
-        pacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));
-        inky.setAnimations(new ArcadeMsPacMan_GhostAnimations(spriteSheet, inky.personality()));
-        pinky.setAnimations(new ArcadeMsPacMan_GhostAnimations(spriteSheet, pinky.personality()));
+        msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimationSet(spriteSheet));
+        pacMan.setAnimations(new ArcadeMsPacMan_PacAnimationSet(spriteSheet));
+        inky.setAnimations(new ArcadeMsPacMan_GhostAnimationSet(spriteSheet, inky.personality()));
+        pinky.setAnimations(new ArcadeMsPacMan_GhostAnimationSet(spriteSheet, pinky.personality()));
 
         clapperboardAnimation = new ClapperboardAnimation("1", "THEY MEET");
         clapperboardAnimation.start();
@@ -139,7 +139,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(TS * (-2), UPPER_LANE_Y);
         pacMan.setSpeed(SPEED_PAC_CHASING);
-        pacMan.selectAnimation(ArcadeMsPacMan_PacAnimations.PAC_MAN_MUNCHING);
+        pacMan.selectAnimation(ArcadeMsPacMan_PacAnimationSet.PAC_MAN_MUNCHING);
         pacMan.startAnimation();
         pacMan.show();
 

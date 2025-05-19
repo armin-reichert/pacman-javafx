@@ -7,7 +7,6 @@ package de.amr.pacmanfx.arcade;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -45,8 +44,8 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         blinky = createRedGhost();
         music = theSound().createSound("intermission", 2);
         var spriteSheet = (ArcadePacMan_SpriteSheet) theUIConfig().current().spriteSheet();
-        pac.setAnimations(new ArcadePacMan_PacAnimations(spriteSheet));
-        blinky.setAnimations(new ArcadePacMan_GhostAnimations(spriteSheet, blinky.personality()));
+        pac.setAnimations(new ArcadePacMan_PacAnimationSet(spriteSheet));
+        blinky.setAnimations(new ArcadePacMan_GhostAnimationSet(spriteSheet, blinky.personality()));
         frame = -1;
     }
 

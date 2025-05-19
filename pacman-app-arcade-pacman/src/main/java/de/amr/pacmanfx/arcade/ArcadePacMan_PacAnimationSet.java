@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.ActorAnimations;
+import de.amr.pacmanfx.model.actors.ActorAnimationSet;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.ui._2d.SpriteAnimationSet;
@@ -16,9 +16,9 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.from;
 
-public class ArcadePacMan_PacAnimations extends SpriteAnimationSet implements ActorAnimations {
+public class ArcadePacMan_PacAnimationSet extends SpriteAnimationSet implements ActorAnimationSet {
 
-    public ArcadePacMan_PacAnimations(ArcadePacMan_SpriteSheet ss) {
+    public ArcadePacMan_PacAnimationSet(ArcadePacMan_SpriteSheet ss) {
         super(ss);
         add(ANIM_ANY_PAC_MUNCHING, from(ss).take(ss.pacMunchingSprites(Direction.LEFT)).endless());
         add(ANIM_ANY_PAC_DYING,    from(ss).take(ss.pacDyingSprites()).frameTicks(8).end());

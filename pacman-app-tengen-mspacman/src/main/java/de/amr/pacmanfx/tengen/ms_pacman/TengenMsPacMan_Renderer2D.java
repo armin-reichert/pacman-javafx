@@ -35,7 +35,7 @@ import static de.amr.pacmanfx.model.actors.Bonus.STATE_EDIBLE;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.MapRepository.strangeMap15Sprite;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimations.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationSet.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;

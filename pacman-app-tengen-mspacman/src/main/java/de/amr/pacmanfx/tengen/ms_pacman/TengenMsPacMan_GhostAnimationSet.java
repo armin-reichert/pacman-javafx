@@ -16,13 +16,13 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.from;
 
-public class TengenMsPacMan_GhostAnimations extends SpriteAnimationSet {
+public class TengenMsPacMan_GhostAnimationSet extends SpriteAnimationSet {
 
     public static final int NORMAL_TICKS = 8;  // TODO check this in emulator
     public static final int FRIGHTENED_TICKS = 8;  // TODO check this in emulator
     public static final int FLASH_TICKS = 7;  // TODO check this in emulator
 
-    public TengenMsPacMan_GhostAnimations(GameSpriteSheet ss, byte personality) {
+    public TengenMsPacMan_GhostAnimationSet(GameSpriteSheet ss, byte personality) {
         super(ss);
         add(ANIM_GHOST_NORMAL,     from(ss).take(ss.ghostNormalSprites(personality, Direction.LEFT)).frameTicks(NORMAL_TICKS).endless());
         add(ANIM_GHOST_FRIGHTENED, from(ss).take(ss.ghostFrightenedSprites()).frameTicks(FRIGHTENED_TICKS).endless());
@@ -34,8 +34,8 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationSet {
     }
 
     @Override
-    public void selectAtFrame(String id, int frameIndex) {
-        super.selectAtFrame(id, frameIndex);
+    public void selectAnimationAtFrame(String id, int frameIndex) {
+        super.selectAnimationAtFrame(id, frameIndex);
         if (ANIM_GHOST_NUMBER.equals(id)) {
             animation(ANIM_GHOST_NUMBER).setFrameIndex(frameIndex);
         }

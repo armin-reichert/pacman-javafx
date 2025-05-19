@@ -54,7 +54,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             ghost.setSpeed(0);
             ghost.hide();
             GameSpriteSheet spriteSheet = theUIConfig().current().spriteSheet();
-            ghost.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, ghost.personality()));
+            ghost.setAnimations(new TengenMsPacMan_GhostAnimationSet(spriteSheet, ghost.personality()));
             ghost.selectAnimation(ANIM_GHOST_NORMAL);
         }
         if (t == 7) {

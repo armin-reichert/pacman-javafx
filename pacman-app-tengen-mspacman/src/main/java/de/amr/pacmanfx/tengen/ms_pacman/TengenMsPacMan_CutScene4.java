@@ -53,8 +53,8 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         juniorCreationTime = new ArrayList<>();
 
         spriteSheet = theUIConfig().current().spriteSheet();
-        pacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
-        msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
+        pacMan.setAnimations(new TengenMsPacMan_PacAnimationSet(spriteSheet));
+        msPacMan.setAnimations(new TengenMsPacMan_PacAnimationSet(spriteSheet));
 
         music = theSound().createSound("intermission.4");
     }
@@ -76,7 +76,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setPosition(LEFT_BORDER, LOWER_LANE);
             pacMan.setSpeed(1f);
-            pacMan.selectAnimation(TengenMsPacMan_PacAnimations.ANIM_PAC_MAN_MUNCHING);
+            pacMan.selectAnimation(TengenMsPacMan_PacAnimationSet.ANIM_PAC_MAN_MUNCHING);
             pacMan.startAnimation();
             pacMan.show();
 
@@ -100,17 +100,17 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             msPacMan.startAnimation();
         }
         else if (t == 520) {
-            pacMan.selectAnimation(TengenMsPacMan_PacAnimations.ANIM_PAC_MAN_WAVING_HAND);
-            msPacMan.selectAnimation(TengenMsPacMan_PacAnimations.ANIM_MS_PAC_MAN_WAVING_HAND);
+            pacMan.selectAnimation(TengenMsPacMan_PacAnimationSet.ANIM_PAC_MAN_WAVING_HAND);
+            msPacMan.selectAnimation(TengenMsPacMan_PacAnimationSet.ANIM_MS_PAC_MAN_WAVING_HAND);
         }
         else if (t == 527) {
             pacMan.startAnimation();
             msPacMan.startAnimation();
         }
         else if (t == 648) {
-            pacMan.selectAnimation(TengenMsPacMan_PacAnimations.ANIM_PAC_MAN_TURNING_AWAY);
+            pacMan.selectAnimation(TengenMsPacMan_PacAnimationSet.ANIM_PAC_MAN_TURNING_AWAY);
             pacMan.startAnimation();
-            msPacMan.selectAnimation(TengenMsPacMan_PacAnimations.ANIM_MS_PAC_MAN_TURNING_AWAY);
+            msPacMan.selectAnimation(TengenMsPacMan_PacAnimationSet.ANIM_MS_PAC_MAN_TURNING_AWAY);
             msPacMan.startAnimation();
         }
         else if (t == 650) {
@@ -156,8 +156,8 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         junior.setPosition((float) randomX, sizeInPx().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
-        junior.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
-        junior.selectAnimation(TengenMsPacMan_PacAnimations.ANIM_JUNIOR);
+        junior.setAnimations(new TengenMsPacMan_PacAnimationSet(spriteSheet));
+        junior.selectAnimation(TengenMsPacMan_PacAnimationSet.ANIM_JUNIOR);
         junior.show();
         juniors.add(junior);
         juniorCreationTime.add(t);

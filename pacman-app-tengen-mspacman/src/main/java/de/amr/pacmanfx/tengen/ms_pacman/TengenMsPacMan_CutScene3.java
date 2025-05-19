@@ -74,8 +74,8 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         bagWithJunior.hide();
 
         spriteSheet = theUIConfig().current().spriteSheet();
-        pacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
-        msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
+        pacMan.setAnimations(new TengenMsPacMan_PacAnimationSet(spriteSheet));
+        msPacMan.setAnimations(new TengenMsPacMan_PacAnimationSet(spriteSheet));
 
         music = theSound().createSound("intermission.3");
     }
@@ -97,7 +97,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         else if (t == 130) {
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setPosition(TS * 3, GROUND_Y - 4);
-            pacMan.selectAnimation(TengenMsPacMan_PacAnimations.ANIM_PAC_MAN_MUNCHING);
+            pacMan.selectAnimation(TengenMsPacMan_PacAnimationSet.ANIM_PAC_MAN_MUNCHING);
             pacMan.show();
 
             msPacMan.setMoveDir(Direction.RIGHT);

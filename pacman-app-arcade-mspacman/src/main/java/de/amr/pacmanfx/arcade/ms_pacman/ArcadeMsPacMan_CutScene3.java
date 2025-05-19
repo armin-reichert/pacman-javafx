@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
@@ -17,7 +16,7 @@ import javafx.scene.media.MediaPlayer;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createPacMan;
-import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_PacAnimations.PAC_MAN_MUNCHING;
+import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_PacAnimationSet.PAC_MAN_MUNCHING;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
@@ -60,8 +59,8 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         bag = new Actor();
 
         ArcadeMsPacMan_SpriteSheet spriteSheet = theUIConfig().current().spriteSheet();
-        msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));
-        pacMan.setAnimations(new ArcadeMsPacMan_PacAnimations(spriteSheet));
+        msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimationSet(spriteSheet));
+        pacMan.setAnimations(new ArcadeMsPacMan_PacAnimationSet(spriteSheet));
 
         storkAnimation = spriteSheet.createStorkFlyingAnimation();
         storkAnimation.play();

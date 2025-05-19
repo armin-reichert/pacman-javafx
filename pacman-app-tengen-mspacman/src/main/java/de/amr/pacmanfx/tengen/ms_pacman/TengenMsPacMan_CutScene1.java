@@ -72,10 +72,10 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         heart = new Actor();
 
         var spriteSheet = (TengenMsPacMan_SpriteSheet) theUIConfig().current().spriteSheet();
-        msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
-        pacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
-        inky.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, inky.personality()));
-        pinky.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, pinky.personality()));
+        msPacMan.setAnimations(new TengenMsPacMan_PacAnimationSet(spriteSheet));
+        pacMan.setAnimations(new TengenMsPacMan_PacAnimationSet(spriteSheet));
+        inky.setAnimations(new TengenMsPacMan_GhostAnimationSet(spriteSheet, inky.personality()));
+        pinky.setAnimations(new TengenMsPacMan_GhostAnimationSet(spriteSheet, pinky.personality()));
 
         music = theSound().createSound("intermission.1");
     }
@@ -97,7 +97,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
             pacMan.setSpeed(SPEED_CHASING);
-            pacMan.selectAnimation(TengenMsPacMan_PacAnimations.ANIM_PAC_MAN_MUNCHING);
+            pacMan.selectAnimation(TengenMsPacMan_PacAnimationSet.ANIM_PAC_MAN_MUNCHING);
             pacMan.startAnimation();
             pacMan.show();
 
