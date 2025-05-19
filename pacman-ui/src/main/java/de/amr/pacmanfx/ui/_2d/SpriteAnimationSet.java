@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.Animations;
+import de.amr.pacmanfx.model.actors.ActorAnimations;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import org.tinylog.Logger;
@@ -16,7 +16,7 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public abstract class SpriteAnimationSet implements Animations {
+public abstract class SpriteAnimationSet implements ActorAnimations {
 
     protected final SpriteSheet spriteSheet;
     protected final Map<String, SpriteAnimation> animationsByID = new HashMap<>();
@@ -61,7 +61,7 @@ public abstract class SpriteAnimationSet implements Animations {
     }
 
     @Override
-    public void select(String id, int frameIndex) {
+    public void selectAtFrame(String id, int frameIndex) {
         if (!id.equals(currentAnimationID)) {
             currentAnimationID = id;
             if (currentAnimation() != null) {

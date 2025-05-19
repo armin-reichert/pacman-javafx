@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.ui._2d.SpriteAnimationSet;
@@ -35,8 +34,8 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationSet {
     }
 
     @Override
-    public void select(String id, int frameIndex) {
-        super.select(id, frameIndex);
+    public void selectAtFrame(String id, int frameIndex) {
+        super.selectAtFrame(id, frameIndex);
         if (ANIM_GHOST_NUMBER.equals(id)) {
             animation(ANIM_GHOST_NUMBER).setFrameIndex(frameIndex);
         }

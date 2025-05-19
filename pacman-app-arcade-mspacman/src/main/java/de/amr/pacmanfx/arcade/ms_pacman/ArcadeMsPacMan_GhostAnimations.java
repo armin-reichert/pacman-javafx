@@ -13,7 +13,7 @@ import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.from;
 
-public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationSet implements Animations {
+public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationSet implements ActorAnimations {
 
     public ArcadeMsPacMan_GhostAnimations(GameSpriteSheet ss, byte personality) {
         super(ss);
@@ -30,8 +30,8 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationSet implement
     }
 
     @Override
-    public void select(String id, int frameIndex) {
-        super.select(id, frameIndex);
+    public void selectAtFrame(String id, int frameIndex) {
+        super.selectAtFrame(id, frameIndex);
         if (ANIM_GHOST_NUMBER.equals(id)) {
             animation(ANIM_GHOST_NUMBER).setFrameIndex(frameIndex);
         }

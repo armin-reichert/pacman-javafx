@@ -33,7 +33,7 @@ public class Ghost extends Creature {
     private final String name;
     private GhostState state;
     private Vector2f revivalPosition;
-    private Animations animations;
+    private ActorAnimations animations;
     private List<Vector2i> specialTerrainTiles = List.of();
     private byte cruiseElroy;
 
@@ -69,12 +69,12 @@ public class Ghost extends Creature {
         return name;
     }
 
-    public void setAnimations(Animations animations) {
+    public void setAnimations(ActorAnimations animations) {
         this.animations = animations;
     }
 
     @Override
-    public Optional<Animations> animations() {
+    public Optional<ActorAnimations> animations() {
         return Optional.ofNullable(animations);
     }
 

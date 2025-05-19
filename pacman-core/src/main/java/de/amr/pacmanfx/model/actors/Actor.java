@@ -4,13 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.actors;
 
-import de.amr.pacmanfx.lib.UsefulFunctions;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static java.util.Objects.requireNonNull;
 
@@ -164,27 +164,27 @@ public class Actor {
         return tile().equals(other.tile());
     }
 
-    // Optional animations
+    // Optional animations API
 
-    public Optional<Animations> animations() { return Optional.empty(); }
+    public Optional<ActorAnimations> animations() { return Optional.empty(); }
 
     public void startAnimation() {
-        animations().ifPresent(Animations::start);
+        animations().ifPresent(ActorAnimations::start);
     }
 
     public void stopAnimation() {
-        animations().ifPresent(Animations::stop);
+        animations().ifPresent(ActorAnimations::stop);
     }
 
     public void resetAnimation() {
-        animations().ifPresent(Animations::reset);
+        animations().ifPresent(ActorAnimations::reset);
     }
 
     public void selectAnimation(String id, int index) {
-        animations().ifPresent(animations -> animations.select(id, index));
+        animations().ifPresent(animations -> animations.selectAtFrame(id, index));
     }
 
     public void selectAnimation(String id) {
-        selectAnimation(id, 0);
+        animations().ifPresent(animations -> animations.select(id));
     }
 }

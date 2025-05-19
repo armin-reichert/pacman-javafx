@@ -30,7 +30,7 @@ public class Pac extends Creature {
     private int restingTicks;
     private long starvingTicks;
     private Steering autopilotAlgorithm;
-    private Animations animations;
+    private ActorAnimations animations;
 
     private final BooleanProperty immunePy = new SimpleBooleanProperty(false);
     private final BooleanProperty usingAutopilotPy = new SimpleBooleanProperty(false);
@@ -62,12 +62,12 @@ public class Pac extends Creature {
             '}';
     }
 
-    public void setAnimations(Animations animations) {
-        this.animations = animations;
+    public void setAnimations(ActorAnimations animations) {
+        this.animations = requireNonNull(animations);
     }
 
     @Override
-    public Optional<Animations> animations() {
+    public Optional<ActorAnimations> animations() {
         return Optional.ofNullable(animations);
     }
 
@@ -94,9 +94,7 @@ public class Pac extends Creature {
         restingTicks = 0;
         starvingTicks = 0;
         corneringSpeedUp = 1.5f; // no real cornering implementation but better than nothing
-        if (animations != null) {
-            animations.select(ANIM_ANY_PAC_MUNCHING, 0);
-        }
+        selectAnimation(ANIM_ANY_PAC_MUNCHING);
     }
 
     public boolean isImmune() {
@@ -134,11 +132,10 @@ public class Pac extends Creature {
                 ? level.speedControl().pacPowerSpeed(level)
                 : level.speedControl().pacNormalSpeed(level));
             tryMoving();
-            //Logger.info(moveInfo);
             if (moveInfo.moved) {
-                animations.start();
+                startAnimation();
             } else {
-                animations.stop();
+                stopAnimation();
             }
         } else {
             --restingTicks;
@@ -151,14 +148,14 @@ public class Pac extends Creature {
     public void stopAndShowInFullBeauty() {
         setSpeed(0);
         setRestingTicks(Pac.REST_INDEFINITELY);
-        animations.stop();
+        stopAnimation();
         selectAnimation(ANIM_ANY_PAC_MUNCHING);
-        animations.reset();
+        resetAnimation();
     }
 
     public void die() {
         setSpeed(0);
-        animations.stop();
+        stopAnimation();
         dead = true;
     }
 

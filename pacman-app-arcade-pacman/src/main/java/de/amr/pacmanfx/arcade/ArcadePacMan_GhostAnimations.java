@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.Animations;
+import de.amr.pacmanfx.model.actors.ActorAnimations;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.ui._2d.SpriteAnimationSet;
@@ -18,7 +18,7 @@ import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.from;
 
-public class ArcadePacMan_GhostAnimations extends SpriteAnimationSet implements Animations {
+public class ArcadePacMan_GhostAnimations extends SpriteAnimationSet implements ActorAnimations {
 
     public ArcadePacMan_GhostAnimations(ArcadePacMan_SpriteSheet ss, byte personality) {
         super(ss);
@@ -36,8 +36,8 @@ public class ArcadePacMan_GhostAnimations extends SpriteAnimationSet implements 
     }
 
     @Override
-    public void select(String id, int frameIndex) {
-        super.select(id, frameIndex);
+    public void selectAtFrame(String id, int frameIndex) {
+        super.selectAtFrame(id, frameIndex);
         if (ANIM_GHOST_NUMBER.equals(id)) {
             animation(ANIM_GHOST_NUMBER).setFrameIndex(frameIndex);
         }
