@@ -14,7 +14,7 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHI
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.*;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.from;
 
-public class TengenMsPacMan_PacAnimationSet extends SpriteAnimationSet implements ActorAnimationSet {
+public class TengenMsPacMan_PacAnimationSet extends SpriteAnimationSet {
 
     public static final String ANIM_MS_PAC_MAN_BOOSTER = "ms_pac_man_booster";
     public static final String ANIM_MS_PAC_MAN_WAVING_HAND = "ms_pac_man_waving_hand";

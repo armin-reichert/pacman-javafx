@@ -18,7 +18,7 @@ import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.from;
 
-public class ArcadePacMan_GhostAnimationSet extends SpriteAnimationSet implements ActorAnimationSet {
+public class ArcadePacMan_GhostAnimationSet extends SpriteAnimationSet {
 
     public ArcadePacMan_GhostAnimationSet(ArcadePacMan_SpriteSheet ss, byte personality) {
         super(ss);

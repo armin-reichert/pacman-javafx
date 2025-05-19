@@ -13,7 +13,7 @@ import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.from;
 
-public class ArcadeMsPacMan_GhostAnimationSet extends SpriteAnimationSet implements ActorAnimationSet {
+public class ArcadeMsPacMan_GhostAnimationSet extends SpriteAnimationSet {
 
     public ArcadeMsPacMan_GhostAnimationSet(GameSpriteSheet ss, byte personality) {
         super(ss);
