@@ -166,7 +166,7 @@ public class Actor {
 
     // Optional animations API
 
-    protected ActorAnimations animations;
+    private ActorAnimations animations;
 
     public void setAnimations(ActorAnimations animations) {
         this.animations = requireNonNull(animations);

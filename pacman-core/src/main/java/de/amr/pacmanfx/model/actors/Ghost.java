@@ -67,10 +67,6 @@ public class Ghost extends Creature {
         return name;
     }
 
-    public boolean insideHouse() {
-        return level.isPartOfHouse(tile());
-    }
-
     public void setRevivalPosition(Vector2f position) {
         requireNonNull(position);
         revivalPosition = position;
@@ -243,7 +239,7 @@ public class Ghost extends Creature {
      * and start blinking when Pac-Man's power starts fading. After that, they return to their normal color.
      */
     private void updateStateLocked() {
-        if (insideHouse()) {
+        if (level.isInsideHouse(this)) {
             float minY = (level.houseMinTile().y() + 1) * TS + HTS;
             float maxY = (level.houseMaxTile().y() - 1) * TS - HTS;
             setSpeed(level.speedControl().ghostSpeedInsideHouse(level, this));

@@ -66,7 +66,7 @@ public class Pac extends Creature {
 
     @Override
     public boolean canAccessTile(Vector2i tile) {
-        if (level.isPartOfHouse(tile)) {
+        if (level.isCoveredByHouse(tile)) {
             return false;
         }
         if (level.isInsideWorld(tile)) {

@@ -61,7 +61,7 @@ public class MovingBonus extends Creature implements Bonus {
 
     @Override
     public boolean canAccessTile(Vector2i tile) {
-        if (level.isPartOfHouse(tile)) {
+        if (level.isCoveredByHouse(tile)) {
             return false;
         }
         if (level.isInsideWorld(tile)) {

@@ -179,7 +179,7 @@ public class GateKeeper {
                 Logger.trace("Global dot counter = {}", globalCounter);
             }
         } else {
-            level.ghosts(GhostState.LOCKED).filter(Ghost::insideHouse).findFirst().ifPresent(ghost -> {
+            level.ghosts(GhostState.LOCKED).filter(level::isInsideHouse).findFirst().ifPresent(ghost -> {
                 countersByGhost[ghost.personality()]++;
                 Logger.trace("{} dot counter = {}", ghost.name(), countersByGhost[ghost.personality()]);
             });
@@ -189,7 +189,7 @@ public class GateKeeper {
     public void unlockGhosts(GameLevel level) {
         Ghost blinky = level.ghost(RED_GHOST_SHADOW);
         if (blinky.inState(GhostState.LOCKED)) {
-            if (blinky.insideHouse()) {
+            if (level.isInsideHouse(blinky)) {
                 blinky.setMoveAndWishDir(Direction.UP);
                 blinky.setState(GhostState.LEAVING_HOUSE);
             } else {

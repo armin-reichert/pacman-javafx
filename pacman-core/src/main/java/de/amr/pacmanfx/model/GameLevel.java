@@ -303,7 +303,7 @@ public class GameLevel {
     }
 
     public boolean isIntersection(Vector2i tile) {
-        if (worldMap.outOfBounds(tile) || isPartOfHouse(tile)) {
+        if (worldMap.outOfBounds(tile) || isCoveredByHouse(tile)) {
             return false;
         }
         long numBlockedNeighbors = tile.neighbors().filter(this::isInsideWorld).filter(this::isBlockedTile).count();
@@ -384,13 +384,17 @@ public class GameLevel {
     }
 
     /**
-     * @param tile some tile
-     * @return tells if the given tile is part of the ghost house
+     * @param actor some actor
+     * @return tells if the given actor is located inside the house
      */
-    public boolean isPartOfHouse(Vector2i tile) {
+    public boolean isInsideHouse(Actor actor) {
+        return isCoveredByHouse(requireNonNull(actor).tile());
+    }
+
+    public boolean isCoveredByHouse(Vector2i tile) {
         requireNonNull(tile);
         return tile.x() >= houseMinTile().x() && tile.x() <= houseMaxTile().x()
-                && tile.y() >= houseMinTile().y() && tile.y() <= houseMaxTile().y();
+            && tile.y() >= houseMinTile().y() && tile.y() <= houseMaxTile().y();
     }
 
     // Actor positions
