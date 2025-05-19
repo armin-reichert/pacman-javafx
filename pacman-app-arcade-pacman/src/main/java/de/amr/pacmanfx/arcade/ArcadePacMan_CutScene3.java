@@ -68,7 +68,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
                 pac.setMoveDir(Direction.LEFT);
                 pac.setSpeed(1.25f);
                 pac.show();
-                pac.selectAnimation(CommonAnimationID.ANY_PAC_MUNCHING);
+                pac.selectAnimation(CommonAnimationID.ANIM_ANY_PAC_MUNCHING);
                 pac.startAnimation();
                 blinky.centerOverTile(Vector2i.of(35, 20));
                 blinky.setMoveAndWishDir(Direction.LEFT);

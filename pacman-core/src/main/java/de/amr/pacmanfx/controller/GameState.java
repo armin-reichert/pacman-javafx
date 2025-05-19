@@ -291,7 +291,7 @@ public enum GameState implements FsmState<GameModel> {
             else if (timer.tickCount() == TICK_HIDE_GHOSTS) {
                 level.ghosts().forEach(Ghost::hide);
                 //TODO this does not belong here
-                level.pac().selectAnimation(CommonAnimationID.ANY_PAC_DYING);
+                level.pac().selectAnimation(CommonAnimationID.ANIM_ANY_PAC_DYING);
                 level.pac().resetAnimation();
             }
             else if (timer.tickCount() == TICK_START_PAC_ANIMATION) {

@@ -9,11 +9,11 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.GameAssets;
-import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.ui.GameUIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
+import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
@@ -33,10 +33,11 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_UIConfig implements GameUIConfig, ResourceManager {
 
-    public static final String ANIM_BLINKY_DAMAGED            = "damaged";
-    public static final String ANIM_BLINKY_PATCHED            = "patched";
-    public static final String ANIM_BLINKY_NAIL_DRESS_RAPTURE = "nail_dress_rapture";
-    public static final String ANIM_BLINKY_NAKED              = "naked";
+    public static final String ANIM_BIG_PAC_MAN               = "big_pac_man";
+    public static final String ANIM_BLINKY_DAMAGED            = "blinky_damaged";
+    public static final String ANIM_BLINKY_PATCHED            = "blinky_patched";
+    public static final String ANIM_BLINKY_NAIL_DRESS_RAPTURE = "blinky_nail_dress_rapture";
+    public static final String ANIM_BLINKY_NAKED              = "blinky_naked";
 
     private static final WorldMapColorScheme MAP_COLORING = new WorldMapColorScheme("#000000", "#2121ff", "#fcb5ff", "#febdb4");
 

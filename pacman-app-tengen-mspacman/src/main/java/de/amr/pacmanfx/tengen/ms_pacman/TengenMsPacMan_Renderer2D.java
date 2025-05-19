@@ -96,12 +96,12 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             SpriteAnimation animation = spriteAnimations.currentAnimation();
             if (animation != null) {
                 switch (spriteAnimations.currentID()) {
-                    case CommonAnimationID.ANY_PAC_MUNCHING,
+                    case CommonAnimationID.ANIM_ANY_PAC_MUNCHING,
                          TengenMsPacMan_PacAnimations.PAC_MAN_MUNCHING,
                          TengenMsPacMan_PacAnimations.MS_PAC_MAN_BOOSTER,
                          TengenMsPacMan_PacAnimations.PAC_MAN_BOOSTER,
                          TengenMsPacMan_PacAnimations.JUNIOR -> drawCreature(pac, pac.moveDir(), animation.currentSprite());
-                    case CommonAnimationID.ANY_PAC_DYING -> {
+                    case CommonAnimationID.ANIM_ANY_PAC_DYING -> {
                         Direction dir = Direction.UP;
                         if (animation.frameIndex() < 11) {
                             dir = switch (animation.frameIndex() % 4) {

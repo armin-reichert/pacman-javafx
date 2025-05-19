@@ -26,8 +26,8 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet implements 
 
     public TengenMsPacMan_PacAnimations(TengenMsPacMan_SpriteSheet ss) {
         super(ss);
-        add(CommonAnimationID.ANY_PAC_DYING,           from(ss).take(ss.pacDyingSprites()).frameTicks(8).end());
-        add(CommonAnimationID.ANY_PAC_MUNCHING,        from(ss).take(MS_PAC_MUNCHING_SPRITES_LEFT).endless());
+        add(CommonAnimationID.ANIM_ANY_PAC_DYING,           from(ss).take(ss.pacDyingSprites()).frameTicks(8).end());
+        add(CommonAnimationID.ANIM_ANY_PAC_MUNCHING,        from(ss).take(MS_PAC_MUNCHING_SPRITES_LEFT).endless());
 
         add(MS_PAC_MAN_BOOSTER,      from(ss).take(MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER).endless());
         add(MS_PAC_MAN_WAVING_HAND,  from(ss).take(MS_PAC_WAVING_HAND).frameTicks(8).endless());
@@ -45,7 +45,7 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationSet implements 
     protected void updateActorSprites(Actor actor) {
         if (actor instanceof Pac msPacMan) {
             var gss = (TengenMsPacMan_SpriteSheet) spriteSheet;
-            if (isCurrentAnimationID(CommonAnimationID.ANY_PAC_MUNCHING)) {
+            if (isCurrentAnimationID(CommonAnimationID.ANIM_ANY_PAC_MUNCHING)) {
                 currentAnimation().setSprites(MS_PAC_MUNCHING_SPRITES_LEFT);
             }
             if (isCurrentAnimationID(MS_PAC_MAN_BOOSTER)) {

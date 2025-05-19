@@ -244,7 +244,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
                 case PACMAN_XXL -> pac.setAnimations(new ArcadePacMan_PacAnimations(config.spriteSheet()));
                 case MS_PACMAN_XXL -> pac.setAnimations(new ArcadeMsPacMan_PacAnimations(config.spriteSheet()));
             }
-            pac.selectAnimation(CommonAnimationID.ANY_PAC_MUNCHING);
+            pac.selectAnimation(CommonAnimationID.ANIM_ANY_PAC_MUNCHING);
             pac.startAnimation();
 
             for (Ghost ghost : ghosts) {

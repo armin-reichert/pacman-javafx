@@ -102,7 +102,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
             msPacMan.setMoveDir(Direction.RIGHT);
             msPacMan.setPosition(TS * 5, GROUND_Y - 4);
-            msPacMan.selectAnimation(CommonAnimationID.ANY_PAC_MUNCHING);
+            msPacMan.selectAnimation(CommonAnimationID.ANIM_ANY_PAC_MUNCHING);
             msPacMan.show();
 
             bagOpen = false;

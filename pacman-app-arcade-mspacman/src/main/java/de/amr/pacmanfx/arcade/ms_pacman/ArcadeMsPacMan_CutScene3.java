@@ -138,7 +138,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
         msPacMan.setMoveDir(Direction.RIGHT);
         msPacMan.setPosition(TS * 5, LANE_Y - 4);
-        msPacMan.selectAnimation(CommonAnimationID.ANY_PAC_MUNCHING);
+        msPacMan.selectAnimation(CommonAnimationID.ANIM_ANY_PAC_MUNCHING);
         msPacMan.show();
 
         stork.setPosition(TS * 30, TS * 12);

@@ -15,6 +15,7 @@ import static de.amr.pacmanfx.Globals.theGame;
 import static de.amr.pacmanfx.Globals.theGameController;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.createPac;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.createRedGhost;
+import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ANIM_BIG_PAC_MAN;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.GameAssets.ARCADE_WHITE;
@@ -58,7 +59,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             pac.placeAtTile(29, 20, 0, 0);
             pac.setMoveDir(Direction.LEFT);
             pac.setSpeed(1.25f);
-            pac.selectAnimation(CommonAnimationID.ANY_PAC_MUNCHING);
+            pac.selectAnimation(CommonAnimationID.ANIM_ANY_PAC_MUNCHING);
             pac.startAnimation();
             pac.show();
 
@@ -79,7 +80,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
         else if (frame == ANIMATION_START + 400) {
             pac.placeAtTile(-3, 18, 0, 6.5f);
             pac.setMoveDir(Direction.RIGHT);
-            pac.selectAnimation(ArcadePacMan_PacAnimations.BIG_PAC_MAN);
+            pac.selectAnimation(ANIM_BIG_PAC_MAN);
             pac.startAnimation();
         }
         else if (frame == ANIMATION_START + 632) {

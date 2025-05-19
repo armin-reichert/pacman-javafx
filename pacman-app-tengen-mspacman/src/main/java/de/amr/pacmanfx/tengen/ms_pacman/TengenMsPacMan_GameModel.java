@@ -394,7 +394,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     @Override
     public void initAnimationOfPacManAndGhosts() {
         level.pac().selectAnimation(boosterActive
-            ? TengenMsPacMan_PacAnimations.MS_PAC_MAN_BOOSTER : CommonAnimationID.ANY_PAC_MUNCHING);
+            ? TengenMsPacMan_PacAnimations.MS_PAC_MAN_BOOSTER : CommonAnimationID.ANIM_ANY_PAC_MUNCHING);
         level.pac().resetAnimation();
         level.ghosts().forEach(ghost -> {
             ghost.selectAnimation(GhostAnimationID.ANIM_GHOST_NORMAL);
@@ -411,7 +411,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             }
             level.pac().setBaseSpeed(speed);
             level.pac().selectAnimation(boosterActive
-                ? TengenMsPacMan_PacAnimations.MS_PAC_MAN_BOOSTER : CommonAnimationID.ANY_PAC_MUNCHING);
+                ? TengenMsPacMan_PacAnimations.MS_PAC_MAN_BOOSTER : CommonAnimationID.ANIM_ANY_PAC_MUNCHING);
         }
     }
 

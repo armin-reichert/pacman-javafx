@@ -220,7 +220,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
                 var spriteSheet = (TengenMsPacMan_SpriteSheet) theUIConfig().current().spriteSheet();
                 scene.msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
-                scene.msPacMan.selectAnimation(CommonAnimationID.ANY_PAC_MUNCHING);
+                scene.msPacMan.selectAnimation(CommonAnimationID.ANIM_ANY_PAC_MUNCHING);
                 scene.msPacMan.startAnimation();
 
                 for (Ghost ghost : scene.ghosts) {
