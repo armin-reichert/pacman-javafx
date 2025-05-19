@@ -16,7 +16,6 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Creature;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.PacManGamesEnv;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import javafx.beans.property.FloatProperty;
 import javafx.scene.canvas.Canvas;
@@ -196,7 +195,7 @@ public interface GameRenderer {
 
     default void drawAnimatedCreatureInfo(Creature creature) {
         creature.animations().map(SpriteAnimationSet.class::cast).ifPresent(animations -> {
-            String animID = animations.currentID();
+            String animID = animations.selectedAnimationID();
             if (animID != null) {
                 String text = animID + " " + animations.currentAnimation().frameIndex();
                 ctx().setFill(Color.WHITE);

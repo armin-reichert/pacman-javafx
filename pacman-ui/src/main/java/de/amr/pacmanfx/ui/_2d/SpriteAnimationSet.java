@@ -56,7 +56,7 @@ public abstract class SpriteAnimationSet implements ActorAnimationSet {
     }
 
     @Override
-    public String currentID() {
+    public String selectedAnimationID() {
         return currentAnimationID;
     }
 

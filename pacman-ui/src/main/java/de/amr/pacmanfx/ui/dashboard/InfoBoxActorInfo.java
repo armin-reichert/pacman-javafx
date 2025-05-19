@@ -110,7 +110,7 @@ public class InfoBoxActorInfo extends InfoBox {
             return NO_INFO;
         }
         SpriteAnimationSet sa = (SpriteAnimationSet) ghost.animations().get();
-        return sa.currentID() != null ? sa.currentID() : NO_INFO;
+        return sa.selectedAnimationID() != null ? sa.selectedAnimationID() : NO_INFO;
     }
 
     private String ghostState(GameModel game, Ghost ghost) {

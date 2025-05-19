@@ -98,7 +98,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         pac.animations().map(SpriteAnimationSet.class::cast).ifPresent(spriteAnimations -> {
             SpriteAnimation animation = spriteAnimations.currentAnimation();
             if (animation != null) {
-                switch (spriteAnimations.currentID()) {
+                switch (spriteAnimations.selectedAnimationID()) {
                     case ANIM_ANY_PAC_MUNCHING,
                          ANIM_PAC_MAN_MUNCHING,
                          ANIM_MS_PAC_MAN_BOOSTER,
