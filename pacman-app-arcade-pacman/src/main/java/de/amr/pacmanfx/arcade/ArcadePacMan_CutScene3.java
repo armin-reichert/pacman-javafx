@@ -22,6 +22,7 @@ import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ANIM_BLINKY_NAKED;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ANIM_BLINKY_PATCHED;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
 import static de.amr.pacmanfx.ui.GameAssets.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
@@ -68,7 +69,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
                 pac.setMoveDir(Direction.LEFT);
                 pac.setSpeed(1.25f);
                 pac.show();
-                pac.selectAnimation(CommonAnimationID.ANIM_ANY_PAC_MUNCHING);
+                pac.selectAnimation(ANIM_ANY_PAC_MUNCHING);
                 pac.startAnimation();
                 blinky.centerOverTile(Vector2i.of(35, 20));
                 blinky.setMoveAndWishDir(Direction.LEFT);

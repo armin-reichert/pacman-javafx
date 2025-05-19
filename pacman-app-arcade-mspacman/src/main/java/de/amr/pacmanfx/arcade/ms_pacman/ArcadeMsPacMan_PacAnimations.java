@@ -7,10 +7,11 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Animations;
-import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.SpriteAnimationSet;
 
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_DYING;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.from;
 
 public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationSet implements Animations {
@@ -19,9 +20,9 @@ public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationSet implements 
 
     public ArcadeMsPacMan_PacAnimations(ArcadeMsPacMan_SpriteSheet ss) {
         super(ss);
-        add(CommonAnimationID.ANIM_ANY_PAC_MUNCHING, from(ss).take(ss.pacMunchingSprites(Direction.LEFT)).endless());
-        add(CommonAnimationID.ANIM_ANY_PAC_DYING,    from(ss).take(ss.pacDyingSprites()).frameTicks(8).end());
-        add(PAC_MAN_MUNCHING, from(ss).take(ss.mrPacManMunchingSprites(Direction.LEFT)).frameTicks(2).endless());
+        add(ANIM_ANY_PAC_MUNCHING, from(ss).take(ss.pacMunchingSprites(Direction.LEFT)).endless());
+        add(ANIM_ANY_PAC_DYING,    from(ss).take(ss.pacDyingSprites()).frameTicks(8).end());
+        add(PAC_MAN_MUNCHING,      from(ss).take(ss.mrPacManMunchingSprites(Direction.LEFT)).frameTicks(2).endless());
     }
 
     @Override
@@ -29,7 +30,7 @@ public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationSet implements 
         if (actor instanceof Pac pac) {
             var gss = (ArcadeMsPacMan_SpriteSheet) spriteSheet;
             switch (currentAnimationID) {
-                case CommonAnimationID.ANIM_ANY_PAC_MUNCHING -> currentAnimation().setSprites(gss.pacMunchingSprites(pac.moveDir()));
+                case ANIM_ANY_PAC_MUNCHING -> currentAnimation().setSprites(gss.pacMunchingSprites(pac.moveDir()));
                 case PAC_MAN_MUNCHING -> currentAnimation().setSprites(gss.mrPacManMunchingSprites(pac.moveDir()));
             }
         }

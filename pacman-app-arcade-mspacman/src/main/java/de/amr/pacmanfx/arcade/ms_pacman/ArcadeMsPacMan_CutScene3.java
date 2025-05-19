@@ -17,8 +17,10 @@ import javafx.scene.media.MediaPlayer;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createPacMan;
+import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_PacAnimations.PAC_MAN_MUNCHING;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
 import static de.amr.pacmanfx.ui.GameAssets.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.theSound;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.theUIConfig;
@@ -133,12 +135,12 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     private void enterStateDeliverJunior() {
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(TS * 3, LANE_Y - 4);
-        pacMan.selectAnimation(ArcadeMsPacMan_PacAnimations.PAC_MAN_MUNCHING);
+        pacMan.selectAnimation(PAC_MAN_MUNCHING);
         pacMan.show();
 
         msPacMan.setMoveDir(Direction.RIGHT);
         msPacMan.setPosition(TS * 5, LANE_Y - 4);
-        msPacMan.selectAnimation(CommonAnimationID.ANIM_ANY_PAC_MUNCHING);
+        msPacMan.selectAnimation(ANIM_ANY_PAC_MUNCHING);
         msPacMan.show();
 
         stork.setPosition(TS * 30, TS * 12);

@@ -16,6 +16,8 @@ import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.HEART_SPRITE;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.ui.GameAssets.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.theSound;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.theUIConfig;
@@ -144,21 +146,21 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         inky.setMoveAndWishDir(Direction.RIGHT);
         inky.setPosition(pacMan.position().minus(TS * 6, 0));
         inky.setSpeed(SPEED_GHOST_CHASING);
-        inky.selectAnimation(GhostAnimationID.ANIM_GHOST_NORMAL);
+        inky.selectAnimation(ANIM_GHOST_NORMAL);
         inky.startAnimation();
         inky.show();
 
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.setPosition(TS * 30, LOWER_LANE_Y);
         msPacMan.setSpeed(SPEED_PAC_CHASING);
-        msPacMan.selectAnimation(CommonAnimationID.ANIM_ANY_PAC_MUNCHING);
+        msPacMan.selectAnimation(ANIM_ANY_PAC_MUNCHING);
         msPacMan.startAnimation();
         msPacMan.show();
 
         pinky.setMoveAndWishDir(Direction.LEFT);
         pinky.setPosition(msPacMan.position().plus(TS * 6, 0));
         pinky.setSpeed(SPEED_GHOST_CHASING);
-        pinky.selectAnimation(GhostAnimationID.ANIM_GHOST_NORMAL);
+        pinky.selectAnimation(ANIM_GHOST_NORMAL);
         pinky.startAnimation();
         pinky.show();
 

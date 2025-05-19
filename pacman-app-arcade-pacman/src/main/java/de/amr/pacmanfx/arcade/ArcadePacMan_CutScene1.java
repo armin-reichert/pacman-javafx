@@ -18,6 +18,7 @@ import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.createRedGhost;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ANIM_BIG_PAC_MAN;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.ui.GameAssets.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
@@ -59,14 +60,14 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             pac.placeAtTile(29, 20, 0, 0);
             pac.setMoveDir(Direction.LEFT);
             pac.setSpeed(1.25f);
-            pac.selectAnimation(CommonAnimationID.ANIM_ANY_PAC_MUNCHING);
+            pac.selectAnimation(ANIM_ANY_PAC_MUNCHING);
             pac.startAnimation();
             pac.show();
 
             blinky.placeAtTile(32, 20, 0, 0);
             blinky.setMoveAndWishDir(Direction.LEFT);
             blinky.setSpeed(1.3f);
-            blinky.selectAnimation(GhostAnimationID.ANIM_GHOST_NORMAL);
+            blinky.selectAnimation(ANIM_GHOST_NORMAL);
             blinky.startAnimation();
             blinky.show();
         }
@@ -74,7 +75,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             blinky.placeAtTile(-2, 20, 4, 0);
             blinky.setMoveAndWishDir(Direction.RIGHT);
             blinky.setSpeed(0.75f);
-            blinky.selectAnimation(GhostAnimationID.ANIM_GHOST_FRIGHTENED);
+            blinky.selectAnimation(ANIM_GHOST_FRIGHTENED);
             blinky.startAnimation();
         }
         else if (frame == ANIMATION_START + 400) {

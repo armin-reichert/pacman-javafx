@@ -18,6 +18,8 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.theGameEventManager;
 import static de.amr.pacmanfx.Globals.theSimulationStep;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 
 /**
  * Common base class of all Pac-Man game models.
@@ -115,10 +117,10 @@ public abstract class GameModel {
     public abstract long pacPowerFadingTicks(GameLevel level);
 
     public void initAnimationOfPacManAndGhosts() {
-        level.pac().selectAnimation(CommonAnimationID.ANIM_ANY_PAC_MUNCHING);
+        level.pac().selectAnimation(ANIM_ANY_PAC_MUNCHING);
         level.pac().resetAnimation();
         level.ghosts().forEach(ghost -> {
-            ghost.selectAnimation(GhostAnimationID.ANIM_GHOST_NORMAL);
+            ghost.selectAnimation(ANIM_GHOST_NORMAL);
             ghost.resetAnimation();
         });
     }

@@ -21,6 +21,8 @@ import org.tinylog.Logger;
 import java.util.BitSet;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.MS_PAC_MAN_TITLE_SPRITE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
@@ -220,12 +222,12 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
                 var spriteSheet = (TengenMsPacMan_SpriteSheet) theUIConfig().current().spriteSheet();
                 scene.msPacMan.setAnimations(new TengenMsPacMan_PacAnimations(spriteSheet));
-                scene.msPacMan.selectAnimation(CommonAnimationID.ANIM_ANY_PAC_MUNCHING);
+                scene.msPacMan.selectAnimation(ANIM_ANY_PAC_MUNCHING);
                 scene.msPacMan.startAnimation();
 
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, ghost.personality()));
-                    ghost.selectAnimation(GhostAnimationID.ANIM_GHOST_NORMAL);
+                    ghost.selectAnimation(ANIM_GHOST_NORMAL);
                     ghost.startAnimation();
                 }
             }

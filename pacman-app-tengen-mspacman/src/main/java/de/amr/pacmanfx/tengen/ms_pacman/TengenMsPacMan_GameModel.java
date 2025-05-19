@@ -24,6 +24,9 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimations.ANIM_MS_PAC_MAN_BOOSTER;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -394,10 +397,10 @@ public class TengenMsPacMan_GameModel extends GameModel {
     @Override
     public void initAnimationOfPacManAndGhosts() {
         level.pac().selectAnimation(boosterActive
-            ? TengenMsPacMan_PacAnimations.MS_PAC_MAN_BOOSTER : CommonAnimationID.ANIM_ANY_PAC_MUNCHING);
+            ? ANIM_MS_PAC_MAN_BOOSTER : ANIM_ANY_PAC_MUNCHING);
         level.pac().resetAnimation();
         level.ghosts().forEach(ghost -> {
-            ghost.selectAnimation(GhostAnimationID.ANIM_GHOST_NORMAL);
+            ghost.selectAnimation(ANIM_GHOST_NORMAL);
             ghost.resetAnimation();
         });
     }
@@ -411,7 +414,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             }
             level.pac().setBaseSpeed(speed);
             level.pac().selectAnimation(boosterActive
-                ? TengenMsPacMan_PacAnimations.MS_PAC_MAN_BOOSTER : CommonAnimationID.ANIM_ANY_PAC_MUNCHING);
+                ? ANIM_MS_PAC_MAN_BOOSTER : ANIM_ANY_PAC_MUNCHING);
         }
     }
 

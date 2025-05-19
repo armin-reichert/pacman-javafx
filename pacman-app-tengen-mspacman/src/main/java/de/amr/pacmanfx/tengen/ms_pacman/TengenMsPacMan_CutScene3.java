@@ -8,13 +8,13 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import javafx.scene.media.MediaPlayer;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.BLUE_BAG_SPRITE;
@@ -97,12 +97,12 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         else if (t == 130) {
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setPosition(TS * 3, GROUND_Y - 4);
-            pacMan.selectAnimation(TengenMsPacMan_PacAnimations.PAC_MAN_MUNCHING);
+            pacMan.selectAnimation(TengenMsPacMan_PacAnimations.ANIM_PAC_MAN_MUNCHING);
             pacMan.show();
 
             msPacMan.setMoveDir(Direction.RIGHT);
             msPacMan.setPosition(TS * 5, GROUND_Y - 4);
-            msPacMan.selectAnimation(CommonAnimationID.ANIM_ANY_PAC_MUNCHING);
+            msPacMan.selectAnimation(ANIM_ANY_PAC_MUNCHING);
             msPacMan.show();
 
             bagOpen = false;

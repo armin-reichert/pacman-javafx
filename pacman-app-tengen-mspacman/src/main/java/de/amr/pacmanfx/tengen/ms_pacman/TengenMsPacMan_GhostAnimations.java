@@ -6,17 +6,18 @@ package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostAnimationID;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.ui._2d.SpriteAnimationSet;
 import javafx.animation.Animation;
 
 import java.util.stream.Stream;
 
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.from;
 
-public class TengenMsPacMan_GhostAnimations extends SpriteAnimationSet implements GhostAnimationID {
+public class TengenMsPacMan_GhostAnimations extends SpriteAnimationSet {
 
     public static final int NORMAL_TICKS = 8;  // TODO check this in emulator
     public static final int FRIGHTENED_TICKS = 8;  // TODO check this in emulator

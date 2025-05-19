@@ -8,7 +8,6 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostAnimationID;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import javafx.scene.paint.Color;
@@ -16,6 +15,7 @@ import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createRedGhost;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
@@ -55,7 +55,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             ghost.hide();
             GameSpriteSheet spriteSheet = theUIConfig().current().spriteSheet();
             ghost.setAnimations(new TengenMsPacMan_GhostAnimations(spriteSheet, ghost.personality()));
-            ghost.selectAnimation(GhostAnimationID.ANIM_GHOST_NORMAL);
+            ghost.selectAnimation(ANIM_GHOST_NORMAL);
         }
         if (t == 7) {
             grayScreen = true;

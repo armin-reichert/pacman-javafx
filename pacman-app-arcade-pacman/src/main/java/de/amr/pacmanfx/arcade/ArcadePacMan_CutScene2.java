@@ -20,7 +20,8 @@ import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ANIM_BLINKY_DAMAGED;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ANIM_BLINKY_NAIL_DRESS_RAPTURE;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.pacmanfx.model.actors.GhostAnimationID.ANIM_GHOST_NORMAL;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.ui.GameAssets.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
@@ -74,7 +75,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 pac.placeAtTile(28, 20, 0, 0);
                 pac.setMoveDir(Direction.LEFT);
                 pac.setSpeed(1.15f);
-                pac.selectAnimation(CommonAnimationID.ANIM_ANY_PAC_MUNCHING);
+                pac.selectAnimation(ANIM_ANY_PAC_MUNCHING);
                 pac.startAnimation();
                 pac.show();
             }

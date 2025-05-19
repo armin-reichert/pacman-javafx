@@ -19,6 +19,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.*;
 import static de.amr.pacmanfx.lib.Direction.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -215,9 +216,9 @@ public class Ghost extends Creature {
         this.state = state;
         // onEntry action:
         switch (state) {
-            case LOCKED, HUNTING_PAC -> selectAnimation(GhostAnimationID.ANIM_GHOST_NORMAL);
-            case ENTERING_HOUSE, RETURNING_HOME -> selectAnimation(GhostAnimationID.ANIM_GHOST_EYES);
-            case FRIGHTENED -> selectAnimation(GhostAnimationID.ANIM_GHOST_FRIGHTENED);
+            case LOCKED, HUNTING_PAC -> selectAnimation(ANIM_GHOST_NORMAL);
+            case ENTERING_HOUSE, RETURNING_HOME -> selectAnimation(ANIM_GHOST_EYES);
+            case FRIGHTENED -> selectAnimation(ANIM_GHOST_FRIGHTENED);
             case EATEN -> {}
         }
     }
@@ -243,7 +244,7 @@ public class Ghost extends Creature {
 
     public void eaten(int index) {
         setState(GhostState.EATEN);
-        selectAnimation(GhostAnimationID.ANIM_GHOST_NUMBER, index);
+        selectAnimation(ANIM_GHOST_NUMBER, index);
     }
 
     // --- LOCKED ---
@@ -270,7 +271,7 @@ public class Ghost extends Creature {
         if (level.pac().powerTimer().isRunning() && !level.victims().contains(this)) {
             updateFrightenedAnimation();
         } else {
-            selectAnimation(GhostAnimationID.ANIM_GHOST_NORMAL);
+            selectAnimation(ANIM_GHOST_NORMAL);
         }
     }
 
@@ -314,7 +315,7 @@ public class Ghost extends Creature {
         if (level.pac().powerTimer().isRunning() && !level.victims().contains(this)) {
             updateFrightenedAnimation();
         } else {
-            selectAnimation(GhostAnimationID.ANIM_GHOST_NORMAL);
+            selectAnimation(ANIM_GHOST_NORMAL);
         }
     }
 
@@ -357,9 +358,9 @@ public class Ghost extends Creature {
 
     private void updateFrightenedAnimation() {
         if (level.pac().isPowerFadingStarting()) {
-            selectAnimation(GhostAnimationID.ANIM_GHOST_FLASHING);
+            selectAnimation(ANIM_GHOST_FLASHING);
         } else if (!level.pac().isPowerFading()) {
-            selectAnimation(GhostAnimationID.ANIM_GHOST_FRIGHTENED);
+            selectAnimation(ANIM_GHOST_FRIGHTENED);
         }
     }
 

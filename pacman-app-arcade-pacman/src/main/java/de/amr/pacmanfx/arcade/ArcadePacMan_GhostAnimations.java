@@ -15,7 +15,7 @@ import javafx.animation.Animation;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.*;
-import static de.amr.pacmanfx.model.actors.GhostAnimationID.*;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.from;
 
 public class ArcadePacMan_GhostAnimations extends SpriteAnimationSet implements Animations {

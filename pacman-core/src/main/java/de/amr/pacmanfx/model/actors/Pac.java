@@ -13,6 +13,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.theGame;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -94,7 +95,7 @@ public class Pac extends Creature {
         starvingTicks = 0;
         corneringSpeedUp = 1.5f; // no real cornering implementation but better than nothing
         if (animations != null) {
-            animations.select(CommonAnimationID.ANIM_ANY_PAC_MUNCHING, 0);
+            animations.select(ANIM_ANY_PAC_MUNCHING, 0);
         }
     }
 
@@ -151,7 +152,7 @@ public class Pac extends Creature {
         setSpeed(0);
         setRestingTicks(Pac.REST_INDEFINITELY);
         animations.stop();
-        selectAnimation(CommonAnimationID.ANIM_ANY_PAC_MUNCHING);
+        selectAnimation(ANIM_ANY_PAC_MUNCHING);
         animations.reset();
     }
 

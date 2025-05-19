@@ -12,6 +12,8 @@ import de.amr.pacmanfx.model.actors.*;
 import javafx.scene.media.MediaPlayer;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.HEART_SPRITE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
@@ -95,14 +97,14 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
             pacMan.setSpeed(SPEED_CHASING);
-            pacMan.selectAnimation(TengenMsPacMan_PacAnimations.PAC_MAN_MUNCHING);
+            pacMan.selectAnimation(TengenMsPacMan_PacAnimations.ANIM_PAC_MAN_MUNCHING);
             pacMan.startAnimation();
             pacMan.show();
 
             msPacMan.setMoveDir(Direction.LEFT);
             msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
             msPacMan.setSpeed(SPEED_CHASING);
-            msPacMan.selectAnimation(CommonAnimationID.ANIM_ANY_PAC_MUNCHING);
+            msPacMan.selectAnimation(ANIM_ANY_PAC_MUNCHING);
             msPacMan.startAnimation();
             msPacMan.show();
         }
@@ -110,14 +112,14 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             inky.setMoveAndWishDir(Direction.RIGHT);
             inky.setPosition(LEFT_BORDER, UPPER_LANE);
             inky.setSpeed(SPEED_CHASING);
-            inky.selectAnimation(GhostAnimationID.ANIM_GHOST_NORMAL);
+            inky.selectAnimation(ANIM_GHOST_NORMAL);
             inky.startAnimation();
             inky.show();
 
             pinky.setMoveAndWishDir(Direction.LEFT);
             pinky.setPosition(RIGHT_BORDER, LOWER_LANE);
             pinky.setSpeed(SPEED_CHASING);
-            pinky.selectAnimation(GhostAnimationID.ANIM_GHOST_NORMAL);
+            pinky.selectAnimation(ANIM_GHOST_NORMAL);
             pinky.startAnimation();
             pinky.show();
 

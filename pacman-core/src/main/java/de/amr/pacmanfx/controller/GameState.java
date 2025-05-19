@@ -20,6 +20,7 @@ import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.theGameController;
 import static de.amr.pacmanfx.Globals.theGameEventManager;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_DYING;
 
 /**
  * Game states of the Pac-Man game variants.
@@ -291,7 +292,7 @@ public enum GameState implements FsmState<GameModel> {
             else if (timer.tickCount() == TICK_HIDE_GHOSTS) {
                 level.ghosts().forEach(Ghost::hide);
                 //TODO this does not belong here
-                level.pac().selectAnimation(CommonAnimationID.ANIM_ANY_PAC_DYING);
+                level.pac().selectAnimation(ANIM_ANY_PAC_DYING);
                 level.pac().resetAnimation();
             }
             else if (timer.tickCount() == TICK_START_PAC_ANIMATION) {
