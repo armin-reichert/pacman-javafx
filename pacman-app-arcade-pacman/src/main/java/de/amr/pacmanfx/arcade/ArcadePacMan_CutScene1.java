@@ -41,7 +41,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
         pac = createPac();
         blinky = createRedGhost();
         music = theSound().createSound("intermission", 2);
-        var spriteSheet = (ArcadePacMan_SpriteSheet) theUIConfig().current().spriteSheet();
+        ArcadePacMan_SpriteSheet spriteSheet = theUIConfig().current().spriteSheet();
         pac.setAnimations(new ArcadePacMan_PacAnimationSet(spriteSheet));
         blinky.setAnimations(new ArcadePacMan_GhostAnimationSet(spriteSheet, blinky.personality()));
         frame = -1;
