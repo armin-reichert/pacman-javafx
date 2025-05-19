@@ -10,8 +10,6 @@ import de.amr.pacmanfx.steering.Steering;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
-import java.util.Optional;
-
 import static de.amr.pacmanfx.Globals.theGame;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
 import static java.util.Objects.requireNonNull;
@@ -30,7 +28,6 @@ public class Pac extends Creature {
     private int restingTicks;
     private long starvingTicks;
     private Steering autopilotAlgorithm;
-    private ActorAnimations animations;
 
     private final BooleanProperty immunePy = new SimpleBooleanProperty(false);
     private final BooleanProperty usingAutopilotPy = new SimpleBooleanProperty(false);
@@ -60,15 +57,6 @@ public class Pac extends Creature {
             ", acc_x=" + accX +
             ", acc_y=" + accY +
             '}';
-    }
-
-    public void setAnimations(ActorAnimations animations) {
-        this.animations = requireNonNull(animations);
-    }
-
-    @Override
-    public Optional<ActorAnimations> animations() {
-        return Optional.ofNullable(animations);
     }
 
     @Override

@@ -166,7 +166,13 @@ public class Actor {
 
     // Optional animations API
 
-    public Optional<ActorAnimations> animations() { return Optional.empty(); }
+    protected ActorAnimations animations;
+
+    public void setAnimations(ActorAnimations animations) {
+        this.animations = requireNonNull(animations);
+    }
+
+    public Optional<ActorAnimations> animations() { return Optional.ofNullable(animations); }
 
     public void startAnimation() {
         animations().ifPresent(ActorAnimations::start);

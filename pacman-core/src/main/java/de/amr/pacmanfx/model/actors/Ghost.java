@@ -13,7 +13,6 @@ import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.*;
@@ -33,7 +32,6 @@ public class Ghost extends Creature {
     private final String name;
     private GhostState state;
     private Vector2f revivalPosition;
-    private ActorAnimations animations;
     private List<Vector2i> specialTerrainTiles = List.of();
     private byte cruiseElroy;
 
@@ -67,15 +65,6 @@ public class Ghost extends Creature {
 
     public String name() {
         return name;
-    }
-
-    public void setAnimations(ActorAnimations animations) {
-        this.animations = animations;
-    }
-
-    @Override
-    public Optional<ActorAnimations> animations() {
-        return Optional.ofNullable(animations);
     }
 
     public boolean insideHouse() {
