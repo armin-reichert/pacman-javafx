@@ -17,7 +17,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createPacMan;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationSet.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationMap.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
@@ -54,8 +54,8 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         juniorCreationTime = new ArrayList<>();
 
         spriteSheet = theUIConfig().current().spriteSheet();
-        pacMan.setAnimations(new TengenMsPacMan_PacAnimationSet(spriteSheet));
-        msPacMan.setAnimations(new TengenMsPacMan_PacAnimationSet(spriteSheet));
+        pacMan.setAnimations(new TengenMsPacMan_PacAnimationMap(spriteSheet));
+        msPacMan.setAnimations(new TengenMsPacMan_PacAnimationMap(spriteSheet));
 
         music = theSound().createSound("intermission.4");
     }
@@ -153,8 +153,8 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         junior.setPosition((float) randomX, sizeInPx().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
-        junior.setAnimations(new TengenMsPacMan_PacAnimationSet(spriteSheet));
-        junior.selectAnimation(TengenMsPacMan_PacAnimationSet.ANIM_JUNIOR);
+        junior.setAnimations(new TengenMsPacMan_PacAnimationMap(spriteSheet));
+        junior.selectAnimation(TengenMsPacMan_PacAnimationMap.ANIM_JUNIOR);
         junior.show();
         juniors.add(junior);
         juniorCreationTime.add(t);

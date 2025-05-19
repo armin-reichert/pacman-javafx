@@ -16,7 +16,7 @@ import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
-import de.amr.pacmanfx.ui._2d.SpriteAnimationSet;
+import de.amr.pacmanfx.ui._2d.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.input.JoypadKeyBinding;
 import javafx.beans.property.FloatProperty;
@@ -35,7 +35,7 @@ import static de.amr.pacmanfx.model.actors.Bonus.STATE_EDIBLE;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.MapRepository.strangeMap15Sprite;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationSet.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationMap.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
@@ -95,7 +95,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         if (!pac.isVisible()) {
             return;
         }
-        pac.animations().map(SpriteAnimationSet.class::cast).ifPresent(spriteAnimations -> {
+        pac.animations().map(SpriteAnimationMap.class::cast).ifPresent(spriteAnimations -> {
             SpriteAnimation animation = spriteAnimations.currentAnimation();
             if (animation != null) {
                 switch (spriteAnimations.selectedAnimationID()) {

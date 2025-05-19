@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.actors.Creature;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui._2d.SpriteAnimationSet;
+import de.amr.pacmanfx.ui._2d.SpriteAnimationMap;
 
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
@@ -109,7 +109,7 @@ public class InfoBoxActorInfo extends InfoBox {
         if (ghost.animations().isEmpty()) {
             return NO_INFO;
         }
-        SpriteAnimationSet sa = (SpriteAnimationSet) ghost.animations().get();
+        SpriteAnimationMap sa = (SpriteAnimationMap) ghost.animations().get();
         return sa.selectedAnimationID() != null ? sa.selectedAnimationID() : NO_INFO;
     }
 

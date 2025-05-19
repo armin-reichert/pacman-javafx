@@ -143,7 +143,7 @@ public interface GameRenderer {
             return;
         }
         actor.animations().ifPresent(animations -> {
-            if (animations instanceof SpriteAnimationSet spriteAnimations) {
+            if (animations instanceof SpriteAnimationMap spriteAnimations) {
                 SpriteAnimation currentAnimation = spriteAnimations.currentAnimation();
                 if (currentAnimation != null) {
                     drawActorSprite(actor, spriteAnimations.currentSprite(actor));
@@ -195,7 +195,7 @@ public interface GameRenderer {
     }
 
     default void drawAnimatedCreatureInfo(Creature creature) {
-        creature.animations().map(SpriteAnimationSet.class::cast).ifPresent(animations -> {
+        creature.animations().map(SpriteAnimationMap.class::cast).ifPresent(animations -> {
             String animID = animations.selectedAnimationID();
             if (animID != null) {
                 String text = animID + " " + animations.currentAnimation().frameIndex();

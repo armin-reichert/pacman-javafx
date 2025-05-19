@@ -15,7 +15,7 @@ import javafx.scene.media.MediaPlayer;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.*;
-import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_PacAnimationSet.PAC_MAN_MUNCHING;
+import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_PacAnimationMap.PAC_MAN_MUNCHING;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.HEART_SPRITE;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
@@ -64,10 +64,10 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         heart = new Actor();
 
         ArcadeMsPacMan_SpriteSheet spriteSheet = theUIConfig().current().spriteSheet();
-        msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimationSet(spriteSheet));
-        pacMan.setAnimations(new ArcadeMsPacMan_PacAnimationSet(spriteSheet));
-        inky.setAnimations(new ArcadeMsPacMan_GhostAnimationSet(spriteSheet, inky.personality()));
-        pinky.setAnimations(new ArcadeMsPacMan_GhostAnimationSet(spriteSheet, pinky.personality()));
+        msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimationMap(spriteSheet));
+        pacMan.setAnimations(new ArcadeMsPacMan_PacAnimationMap(spriteSheet));
+        inky.setAnimations(new ArcadeMsPacMan_GhostAnimationMap(spriteSheet, inky.personality()));
+        pinky.setAnimations(new ArcadeMsPacMan_GhostAnimationMap(spriteSheet, pinky.personality()));
 
         clapperboardAnimation = new ClapperboardAnimation("1", "THEY MEET");
         clapperboardAnimation.start();

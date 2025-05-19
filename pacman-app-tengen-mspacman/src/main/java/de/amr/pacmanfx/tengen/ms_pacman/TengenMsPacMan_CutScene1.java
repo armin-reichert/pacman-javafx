@@ -17,7 +17,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.*;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationSet.ANIM_PAC_MAN_MUNCHING;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationMap.ANIM_PAC_MAN_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.HEART_SPRITE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
@@ -75,10 +75,10 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         heart = new Actor();
 
         var spriteSheet = (TengenMsPacMan_SpriteSheet) theUIConfig().current().spriteSheet();
-        msPacMan.setAnimations(new TengenMsPacMan_PacAnimationSet(spriteSheet));
-        pacMan.setAnimations(new TengenMsPacMan_PacAnimationSet(spriteSheet));
-        inky.setAnimations(new TengenMsPacMan_GhostAnimationSet(spriteSheet, inky.personality()));
-        pinky.setAnimations(new TengenMsPacMan_GhostAnimationSet(spriteSheet, pinky.personality()));
+        msPacMan.setAnimations(new TengenMsPacMan_PacAnimationMap(spriteSheet));
+        pacMan.setAnimations(new TengenMsPacMan_PacAnimationMap(spriteSheet));
+        inky.setAnimations(new TengenMsPacMan_GhostAnimationMap(spriteSheet, inky.personality()));
+        pinky.setAnimations(new TengenMsPacMan_GhostAnimationMap(spriteSheet, pinky.personality()));
 
         music = theSound().createSound("intermission.1");
     }

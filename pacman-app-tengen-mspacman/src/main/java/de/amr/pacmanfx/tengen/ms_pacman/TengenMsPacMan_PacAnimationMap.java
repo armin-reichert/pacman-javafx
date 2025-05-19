@@ -6,14 +6,14 @@ package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui._2d.SpriteAnimationSet;
+import de.amr.pacmanfx.ui._2d.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.*;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.from;
 
-public class TengenMsPacMan_PacAnimationSet extends SpriteAnimationSet {
+public class TengenMsPacMan_PacAnimationMap extends SpriteAnimationMap {
 
     public static final String ANIM_MS_PAC_MAN_BOOSTER = "ms_pac_man_booster";
     public static final String ANIM_MS_PAC_MAN_WAVING_HAND = "ms_pac_man_waving_hand";
@@ -24,7 +24,7 @@ public class TengenMsPacMan_PacAnimationSet extends SpriteAnimationSet {
     public static final String ANIM_PAC_MAN_TURNING_AWAY = "pac_man_turning_away";
     public static final String ANIM_JUNIOR = "junior";
 
-    public TengenMsPacMan_PacAnimationSet(TengenMsPacMan_SpriteSheet ss) {
+    public TengenMsPacMan_PacAnimationMap(TengenMsPacMan_SpriteSheet ss) {
         super(ss);
         set(ANIM_ANY_PAC_DYING,           from(ss).take(ss.pacDyingSprites()).frameTicks(8).end());
         set(ANIM_ANY_PAC_MUNCHING,        from(ss).take(MS_PAC_MUNCHING_SPRITES_LEFT).endless());

@@ -8,18 +8,18 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
-import de.amr.pacmanfx.ui._2d.SpriteAnimationSet;
+import de.amr.pacmanfx.ui._2d.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.from;
 
-public class TengenMsPacMan_GhostAnimationSet extends SpriteAnimationSet {
+public class TengenMsPacMan_GhostAnimationMap extends SpriteAnimationMap {
 
     public static final int NORMAL_TICKS = 8;  // TODO check this in emulator
     public static final int FRIGHTENED_TICKS = 8;  // TODO check this in emulator
     public static final int FLASH_TICKS = 7;  // TODO check this in emulator
 
-    public TengenMsPacMan_GhostAnimationSet(GameSpriteSheet ss, byte personality) {
+    public TengenMsPacMan_GhostAnimationMap(GameSpriteSheet ss, byte personality) {
         super(ss);
         set(ANIM_GHOST_NORMAL,     from(ss).take(ss.ghostNormalSprites(personality, Direction.LEFT)).frameTicks(NORMAL_TICKS).endless());
         set(ANIM_GHOST_FRIGHTENED, from(ss).take(ss.ghostFrightenedSprites()).frameTicks(FRIGHTENED_TICKS).endless());

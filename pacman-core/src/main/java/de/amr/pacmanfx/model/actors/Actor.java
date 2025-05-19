@@ -166,24 +166,24 @@ public class Actor {
 
     // Optional animations API
 
-    private ActorAnimationSet animations;
+    private ActorAnimationMap animations;
 
-    public void setAnimations(ActorAnimationSet animations) {
+    public void setAnimations(ActorAnimationMap animations) {
         this.animations = requireNonNull(animations);
     }
 
-    public Optional<ActorAnimationSet> animations() { return Optional.ofNullable(animations); }
+    public Optional<ActorAnimationMap> animations() { return Optional.ofNullable(animations); }
 
-    public void playAnimation() { animations().ifPresent(ActorAnimationSet::play); }
+    public void playAnimation() { animations().ifPresent(ActorAnimationMap::play); }
 
     public void playAnimation(String id) { animations().ifPresent(animations -> animations.playAnimation(id)); }
 
     public void stopAnimation() {
-        animations().ifPresent(ActorAnimationSet::stop);
+        animations().ifPresent(ActorAnimationMap::stop);
     }
 
     public void resetAnimation() {
-        animations().ifPresent(ActorAnimationSet::reset);
+        animations().ifPresent(ActorAnimationMap::reset);
     }
 
     public void selectAnimation(String id, int index) {

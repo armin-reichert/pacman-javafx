@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.ActorAnimationSet;
+import de.amr.pacmanfx.model.actors.ActorAnimationMap;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import org.tinylog.Logger;
@@ -16,13 +16,13 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public abstract class SpriteAnimationSet implements ActorAnimationSet {
+public abstract class SpriteAnimationMap implements ActorAnimationMap {
 
     protected final SpriteSheet spriteSheet;
     protected final Map<String, SpriteAnimation> animationsByID = new HashMap<>();
     protected String currentAnimationID;
 
-    protected SpriteAnimationSet(SpriteSheet spriteSheet) {
+    protected SpriteAnimationMap(SpriteSheet spriteSheet) {
         this.spriteSheet = requireNonNull(spriteSheet);
     }
 

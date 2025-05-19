@@ -84,7 +84,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         ArcadePacMan_SpriteSheet spriteSheet = theUIConfig().current().spriteSheet();
         blinking = new Pulse(10, true);
         pacMan = createPac();
-        pacMan.setAnimations(new ArcadePacMan_PacAnimationSet(spriteSheet));
+        pacMan.setAnimations(new ArcadePacMan_PacAnimationMap(spriteSheet));
         ghosts = new Ghost[] {
             createRedGhost(),
             createPinkGhost(),
@@ -92,7 +92,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             createOrangeGhost()
         };
         for (Ghost ghost : ghosts) {
-            ghost.setAnimations(new ArcadePacMan_GhostAnimationSet(spriteSheet, ghost.personality()));
+            ghost.setAnimations(new ArcadePacMan_GhostAnimationMap(spriteSheet, ghost.personality()));
         }
         ghostImageVisible     = new boolean[4];
         ghostNicknameVisible  = new boolean[4];

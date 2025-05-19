@@ -8,15 +8,15 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
-import de.amr.pacmanfx.ui._2d.SpriteAnimationSet;
+import de.amr.pacmanfx.ui._2d.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.from;
 
-public class ArcadeMsPacMan_GhostAnimationSet extends SpriteAnimationSet {
+public class ArcadeMsPacMan_GhostAnimationMap extends SpriteAnimationMap {
 
-    public ArcadeMsPacMan_GhostAnimationSet(GameSpriteSheet ss, byte personality) {
+    public ArcadeMsPacMan_GhostAnimationMap(GameSpriteSheet ss, byte personality) {
         super(ss);
         requireValidGhostPersonality(personality);
         set(ANIM_GHOST_NORMAL,     from(ss).take(ss.ghostNormalSprites(personality, Direction.LEFT)).frameTicks(8).endless());

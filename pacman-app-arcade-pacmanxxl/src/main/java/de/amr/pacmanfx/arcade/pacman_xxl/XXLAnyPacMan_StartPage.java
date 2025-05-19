@@ -4,10 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.arcade.ArcadePacMan_GhostAnimationSet;
-import de.amr.pacmanfx.arcade.ArcadePacMan_PacAnimationSet;
-import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GhostAnimationSet;
-import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_PacAnimationSet;
+import de.amr.pacmanfx.arcade.ArcadePacMan_GhostAnimationMap;
+import de.amr.pacmanfx.arcade.ArcadePacMan_PacAnimationMap;
+import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GhostAnimationMap;
+import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_PacAnimationMap;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameVariant;
@@ -243,8 +243,8 @@ public class XXLAnyPacMan_StartPage implements StartPage {
             renderer = config.createRenderer(canvas);
 
             switch (gameVariant) {
-                case PACMAN_XXL -> pac.setAnimations(new ArcadePacMan_PacAnimationSet(config.spriteSheet()));
-                case MS_PACMAN_XXL -> pac.setAnimations(new ArcadeMsPacMan_PacAnimationSet(config.spriteSheet()));
+                case PACMAN_XXL -> pac.setAnimations(new ArcadePacMan_PacAnimationMap(config.spriteSheet()));
+                case MS_PACMAN_XXL -> pac.setAnimations(new ArcadeMsPacMan_PacAnimationMap(config.spriteSheet()));
             }
             pac.playAnimation(ANIM_ANY_PAC_MUNCHING);
 
@@ -252,9 +252,9 @@ public class XXLAnyPacMan_StartPage implements StartPage {
                 if (ghost.animations().isEmpty()) {
                     switch (gameVariant) {
                         case PACMAN_XXL ->
-                            ghost.setAnimations(new ArcadePacMan_GhostAnimationSet(config.spriteSheet(), ghost.personality()));
+                            ghost.setAnimations(new ArcadePacMan_GhostAnimationMap(config.spriteSheet(), ghost.personality()));
                         case MS_PACMAN_XXL ->
-                            ghost.setAnimations(new ArcadeMsPacMan_GhostAnimationSet(config.spriteSheet(), ghost.personality()));
+                            ghost.setAnimations(new ArcadeMsPacMan_GhostAnimationMap(config.spriteSheet(), ghost.personality()));
                     }
                     ghost.playAnimation(ANIM_GHOST_NORMAL);
                 }
