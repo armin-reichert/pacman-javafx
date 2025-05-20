@@ -8,8 +8,8 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.lib.fsm.FiniteStateMachine;
 import de.amr.pacmanfx.lib.fsm.FsmState;
+import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -36,20 +36,23 @@ import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 /**
  * <p>
  * The ghosts are presented one by one, Pac-Man is chased by the ghosts, turns the cards and hunts the ghosts himself.
+ * </p>
  *
  * @author Armin Reichert
  */
 public class ArcadePacMan_IntroScene extends GameScene2D {
 
-    private static final String[] GHOST_NICKNAME = { "\"BLINKY\"", "\"PINKY\"", "\"INKY\"", "\"CLYDE\"" };
+    private static final String[] GHOST_NICKNAMES  = { "\"BLINKY\"", "\"PINKY\"", "\"INKY\"", "\"CLYDE\"" };
     private static final String[] GHOST_CHARACTERS = { "SHADOW", "SPEEDY", "BASHFUL", "POKEY" };
-    private static final Color[] GHOST_COLORS = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
+    private static final Color[]  GHOST_COLORS     = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
 
     private static final float CHASING_SPEED = 1.1f;
     private static final float GHOST_FRIGHTENED_SPEED = 0.6f;
     private static final int LEFT_TILE_X = 4;
 
-    private final FiniteStateMachine<SceneState, ArcadePacMan_IntroScene> sceneController;
+    private final StateMachine<SceneState, ArcadePacMan_IntroScene> sceneController = new StateMachine<>(SceneState.values()) {
+        @Override public ArcadePacMan_IntroScene context() { return ArcadePacMan_IntroScene.this; }
+    };
 
     private Pulse blinking;
     private Pac pacMan;
@@ -62,15 +65,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     private int ghostIndex;
     private long ghostKilledTime;
 
-    public ArcadePacMan_IntroScene() {
-        sceneController = new FiniteStateMachine<>(SceneState.values()) {
-            @Override
-            public ArcadePacMan_IntroScene context() {
-                return ArcadePacMan_IntroScene.this;
-            }
-        };
-    }
-
     @Override
     public void bindActions() {
         bindArcadeInsertCoinAction();
@@ -80,27 +74,23 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        theGame().scoreManager().setScoreVisible(true);
         ArcadePacMan_SpriteSheet spriteSheet = theUIConfig().current().spriteSheet();
+        theGame().scoreManager().setScoreVisible(true);
         blinking = new Pulse(10, true);
         pacMan = createPac();
         pacMan.setAnimations(new ArcadePacMan_PacAnimationMap(spriteSheet));
-        ghosts = new Ghost[] {
-            createRedGhost(),
-            createPinkGhost(),
-            createCyanGhost(),
-            createOrangeGhost()
-        };
+        ghosts = new Ghost[] { createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost() };
         for (Ghost ghost : ghosts) {
             ghost.setAnimations(new ArcadePacMan_GhostAnimationMap(spriteSheet, ghost.personality()));
         }
         ghostImageVisible     = new boolean[4];
         ghostNicknameVisible  = new boolean[4];
         ghostCharacterVisible = new boolean[4];
-        victims = new ArrayList<>(4);
+        victims = new ArrayList<>(ghosts.length);
         titleVisible = false;
         ghostIndex = 0;
         ghostKilledTime = 0;
+
         sceneController.restart(SceneState.STARTING);
     }
 
@@ -128,7 +118,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public void drawSceneContent() {
         gr.fillCanvas(backgroundColor());
         gr.drawScores(theGame().scoreManager(), ARCADE_WHITE, arcadeFontScaledTS());
-        TickTimer timer = sceneController.state().timer();
+        gr.fillTextAtScaledPosition(
+            "CREDIT %2d".formatted(theCoinMechanism().numCoins()),
+            ARCADE_WHITE, arcadeFontScaledTS(), 2 * TS, sizeInPx().y() - 2);
+        gr.drawLevelCounter(theGame().levelCounter(), sizeInPx());
+
         drawGallery();
         switch (sceneController.state()) {
             case SHOWING_POINTS -> drawPoints();
@@ -137,27 +131,19 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 if (blinking.isOn()) {
                     drawEnergizer(tiles_to_px(LEFT_TILE_X), tiles_to_px(20));
                 }
-                drawGuys(flutter(timer.tickCount()));
+                drawGuys(true);
                 if (gr instanceof ArcadePacMan_GameRenderer r) {
                     r.drawMidwayCopyright(4, 32, ARCADE_PINK, arcadeFontScaledTS());
                 }
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints();
-                drawGuys(0);
+                drawGuys(false);
                 if (gr instanceof ArcadePacMan_GameRenderer r) {
                     r.drawMidwayCopyright(4, 32, ARCADE_PINK, arcadeFontScaledTS());
                 }
             }
         }
-        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()), ARCADE_WHITE,
-            arcadeFontScaledTS(), 2 * TS, sizeInPx().y() - 2);
-        gr.drawLevelCounter(theGame().levelCounter(), sizeInPx());
-    }
-
-    // TODO inspect in MAME what's really going on here
-    private int flutter(long time) {
-        return time % 5 < 2 ? 0 : -1;
     }
 
     private void drawGallery() {
@@ -176,19 +162,21 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     arcadeFontScaledTS(), tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(8 + 3 * personality));
             }
             if (ghostNicknameVisible[personality]) {
-                gr.fillTextAtScaledPosition(GHOST_NICKNAME[personality], GHOST_COLORS[personality],
+                gr.fillTextAtScaledPosition(GHOST_NICKNAMES[personality], GHOST_COLORS[personality],
                     arcadeFontScaledTS(), tiles_to_px(LEFT_TILE_X + 14), tiles_to_px(8 + 3 * personality));
             }
         }
     }
 
-    private void drawGuys(int shakingAmount) {
+    // TODO make shaking effect look exactly as in original game, find out what's exactly is going on here
+    private void drawGuys(boolean shaking) {
+        long tick = sceneController.state().timer().tickCount();
+        int shakingAmount = shaking ? (tick % 5 < 2 ? 0 : -1) : 0;
         if (shakingAmount == 0) {
             Stream.of(ghosts).forEach(gr::drawActor);
         } else {
             gr.drawActor(ghosts[RED_GHOST_SHADOW]);
             gr.drawActor(ghosts[ORANGE_GHOST_POKEY]);
-            // TODO make shaking ghosts effect look exactly as in original game
             gr.ctx().save();
             gr.ctx().translate(shakingAmount, 0);
             gr.drawActor(ghosts[PINK_GHOST_SPEEDY]);
@@ -201,17 +189,15 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     private void drawPoints() {
         Font font8 = arcadeFontScaledTS();
         Font font6 = theAssets().arcadeFontAtSize(scaled(6));
-        int tileX = LEFT_TILE_X + 6;
-        int tileY = 25;
         gr.ctx().setFill(ARCADE_ROSE);
-        gr.ctx().fillRect(scaled(tiles_to_px(tileX) + 4), scaled(tiles_to_px(tileY - 1) + 4), scaled(2), scaled(2));
+        gr.ctx().fillRect(scaled(tiles_to_px(LEFT_TILE_X + 6) + 4), scaled(tiles_to_px(24) + 4), scaled(2), scaled(2));
         if (blinking.isOn()) {
-            drawEnergizer(tiles_to_px(tileX), tiles_to_px(tileY + 1));
+            drawEnergizer(tiles_to_px(LEFT_TILE_X + 6), tiles_to_px(26));
         }
-        gr.fillTextAtScaledPosition("10",  ARCADE_WHITE, font8, tiles_to_px(tileX + 2), tiles_to_px(tileY));
-        gr.fillTextAtScaledPosition("PTS", ARCADE_WHITE, font6, tiles_to_px(tileX + 5), tiles_to_px(tileY));
-        gr.fillTextAtScaledPosition("50",  ARCADE_WHITE, font8, tiles_to_px(tileX + 2), tiles_to_px(tileY + 2));
-        gr.fillTextAtScaledPosition("PTS", ARCADE_WHITE, font6, tiles_to_px(tileX + 5), tiles_to_px(tileY + 2));
+        gr.fillTextAtScaledPosition("10",  ARCADE_WHITE, font8, tiles_to_px(LEFT_TILE_X + 8), tiles_to_px(25));
+        gr.fillTextAtScaledPosition("PTS", ARCADE_WHITE, font6, tiles_to_px(LEFT_TILE_X + 11), tiles_to_px(25));
+        gr.fillTextAtScaledPosition("50",  ARCADE_WHITE, font8, tiles_to_px(LEFT_TILE_X + 8), tiles_to_px(27));
+        gr.fillTextAtScaledPosition("PTS", ARCADE_WHITE, font6, tiles_to_px(LEFT_TILE_X + 11), tiles_to_px(27));
     }
 
     // draw pixelated "circle"

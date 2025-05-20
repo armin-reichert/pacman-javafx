@@ -6,7 +6,7 @@ package de.amr.pacmanfx.controller;
 
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
-import de.amr.pacmanfx.lib.fsm.FiniteStateMachine;
+import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameVariant;
 import javafx.beans.property.ObjectProperty;
@@ -22,7 +22,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Controller (in the sense of MVC) for all game variants.
  * <p>
- * This is a finite-state machine ({@link FiniteStateMachine}) with states defined in {@link GameState}.
+ * This is a finite-state machine ({@link StateMachine}) with states defined in {@link GameState}.
  * Each game variant ({@link GameVariant}) is represented by an instance of a game model ({@link GameModel}).
  * <p>Scene selection is not controlled by this class but left to the specific user interface implementations.
  * <ul>
@@ -37,7 +37,7 @@ import static java.util.Objects.requireNonNull;
  * behavior</a>
  * @see <a href="http://superpacman.com/mspacman/">Ms. Pac-Man</a>
  */
-public class GameController extends FiniteStateMachine<GameState, GameModel> {
+public class GameController extends StateMachine<GameState, GameModel> {
 
     private final Map<GameVariant, GameModel> registeredGameModels = new EnumMap<>(GameVariant.class);
     private final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>();

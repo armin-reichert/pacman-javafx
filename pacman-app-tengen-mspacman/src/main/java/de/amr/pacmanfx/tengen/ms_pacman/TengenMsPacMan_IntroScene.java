@@ -7,7 +7,7 @@ package de.amr.pacmanfx.tengen.ms_pacman;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.lib.fsm.FiniteStateMachine;
+import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -44,7 +44,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     private static final int NUM_BULBS = 96;
     private static final float SPEED = 2.2f; //TODO check exact speed
 
-    private final FiniteStateMachine<SceneState, TengenMsPacMan_IntroScene> sceneController;
+    private final StateMachine<SceneState, TengenMsPacMan_IntroScene> sceneController;
 
     private long marqueeTick;
     private final BitSet marqueeState = new BitSet(NUM_BULBS);
@@ -55,7 +55,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     private boolean dark;
 
     public TengenMsPacMan_IntroScene() {
-        sceneController = new FiniteStateMachine<>(SceneState.values()) {
+        sceneController = new StateMachine<>(SceneState.values()) {
             @Override
             public TengenMsPacMan_IntroScene context() {
                 return TengenMsPacMan_IntroScene.this;

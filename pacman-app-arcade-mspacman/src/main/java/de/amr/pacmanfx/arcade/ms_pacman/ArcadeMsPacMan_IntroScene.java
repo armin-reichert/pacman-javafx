@@ -9,7 +9,7 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.lib.fsm.FiniteStateMachine;
+import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -56,7 +56,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     private static final String[] GHOST_NAMES = { "BLINKY", "PINKY", "INKY", "SUE" };
     private static final Color[] GHOST_COLORS = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
 
-    private final FiniteStateMachine<SceneState, ArcadeMsPacMan_IntroScene> sceneController;
+    private final StateMachine<SceneState, ArcadeMsPacMan_IntroScene> sceneController;
 
     private Pac msPacMan;
     private Ghost[] ghosts;
@@ -65,7 +65,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     private int numTicksBeforeRising;
 
     public ArcadeMsPacMan_IntroScene() {
-        sceneController = new FiniteStateMachine<>(SceneState.values()) {
+        sceneController = new StateMachine<>(SceneState.values()) {
             @Override
             public ArcadeMsPacMan_IntroScene context() {
                 return ArcadeMsPacMan_IntroScene.this;
