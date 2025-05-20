@@ -58,6 +58,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
     @Override
     public void resetEverything() {
         prepareForNewGame();
+        levelCounter.clear();
     }
 
     @Override
@@ -65,7 +66,6 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         playingProperty().set(false);
         setLifeCount(initialLifeCount());
         level = null;
-        levelCounter().clear();
         scoreManager.loadHighScore();
         scoreManager.resetScore();
         gateKeeper.reset();
@@ -75,6 +75,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
     @Override
     public void startNewGame() {
         prepareForNewGame();
+        levelCounter.clear();
         buildNormalLevel(1);
         theGameEventManager().publishEvent(this, GameEventType.GAME_STARTED);
     }
@@ -217,13 +218,13 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         level.setStartTime(System.currentTimeMillis());
         level.makeReadyForPlaying();
         initAnimationOfPacManAndGhosts();
-        levelCounter().update(level.number(), level.bonusSymbol(0));
         if (level.isDemoLevel()) {
             level.showMessage(LevelMessage.GAME_OVER);
             scoreManager.score().setEnabled(false);
             scoreManager.highScore().setEnabled(false);
             Logger.info("Demo level {} started", level.number());
         } else {
+            levelCounter().update(level.number(), level.bonusSymbol(0));
             level.showMessage(LevelMessage.READY);
             scoreManager.score().setEnabled(true);
             scoreManager.highScore().setEnabled(true);
