@@ -165,12 +165,12 @@ public class TengenActorSpeedControl implements ActorSpeedControl {
     @Override
     public float ghostFrightenedSpeed(GameLevel level, Ghost ghost) {
         //TODO is this correct?
-        return 0.5f * ghostBaseSpeedInLevel(level.number());
+        return 0.5f * ghostAttackSpeed(level, ghost);
     }
 
     @Override
     public float ghostTunnelSpeed(GameLevel level, Ghost ghost) {
         //TODO is this correct?
-        return 0.4f * ghostBaseSpeedInLevel(level.number());
+        return 0.4f;
     }
 }
