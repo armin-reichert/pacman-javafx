@@ -15,10 +15,8 @@ import static de.amr.pacmanfx.Validations.inClosedRange;
 
 public class TengenActorSpeedControl implements ActorSpeedControl {
 
-    private final TengenMsPacMan_GameModel game;
-
-    public TengenActorSpeedControl(TengenMsPacMan_GameModel game) {
-        this.game = game;
+    private TengenMsPacMan_GameModel game() {
+        return (TengenMsPacMan_GameModel) theGame();
     }
 
     public float speedUnitsToPixels(float units) {
@@ -68,7 +66,7 @@ public class TengenActorSpeedControl implements ActorSpeedControl {
      */
     public float ghostSpeedIncreaseByFoodRemaining(GameLevel level) {
         byte units = 0;
-        if (game.difficulty() == Difficulty.NORMAL && level.number() >= 5) {
+        if (game().difficulty() == Difficulty.NORMAL && level.number() >= 5) {
             int dotsLeft = level.uneatenFoodCount();
             if (dotsLeft <= 7) {
                 units = 5;
@@ -124,9 +122,9 @@ public class TengenActorSpeedControl implements ActorSpeedControl {
             return 0;
         }
         float speed = pacBaseSpeedInLevel(level.number());
-        speed += pacDifficultySpeedDelta(game.difficulty());
-        if (game.pacBooster() == PacBooster.ALWAYS_ON
-            || game.pacBooster() == PacBooster.USE_A_OR_B && game.isBoosterActive()) {
+        speed += pacDifficultySpeedDelta(game().difficulty());
+        if (game().pacBooster() == PacBooster.ALWAYS_ON
+            || game().pacBooster() == PacBooster.USE_A_OR_B && game().isBoosterActive()) {
             speed += pacBoosterSpeedDelta();
         }
         return speed;
@@ -144,7 +142,7 @@ public class TengenActorSpeedControl implements ActorSpeedControl {
             return ghostTunnelSpeed(level, ghost);
         }
         float speed = ghostBaseSpeedInLevel(level.number());
-        speed += ghostDifficultySpeedDelta(game.difficulty());
+        speed += ghostDifficultySpeedDelta(game().difficulty());
         speed += ghostSpeedDelta(ghost.personality());
         float foodDelta = ghostSpeedIncreaseByFoodRemaining(level);
         if (foodDelta > 0) {

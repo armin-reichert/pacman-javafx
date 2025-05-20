@@ -202,7 +202,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public TengenMsPacMan_GameModel() {
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman_tengen.xml"));
         levelCounter = new TengenMsPacMan_LevelCounter();
-        speedControl = new TengenActorSpeedControl(this);
+        speedControl = new TengenActorSpeedControl();
         mapSelector = new TengenMsPacMan_MapSelector();
         gateKeeper = new GateKeeper();
         huntingTimer = new TengenMsPacMan_HuntingTimer();
