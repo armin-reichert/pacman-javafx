@@ -205,7 +205,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         level.pac().setUsingAutopilot(true);
         level.pac().setAutopilotAlgorithm(demoLevelSteering);
         demoLevelSteering.init();
-        levelCounter.setEnabled(false);
+        levelCounter.setEnabled(true);
         scoreManager.setScoreLevelNumber(1);
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(1));
         level.huntingTimer().reset();
