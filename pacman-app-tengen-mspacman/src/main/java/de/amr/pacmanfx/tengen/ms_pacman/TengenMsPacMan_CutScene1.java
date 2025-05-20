@@ -171,7 +171,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             msPacMan.resetAnimation();
         }
         else if (t == 560) {
-            heart.setPosition((pacMan.posX() + msPacMan.posX()) / 2, pacMan.posY() - TS * (2));
+            heart.setPosition((pacMan.x() + msPacMan.x()) / 2, pacMan.y() - TS * (2));
             heart.show();
         }
         else if (t == 760) {
@@ -190,11 +190,11 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         inky.move();
         pinky.move();
         if (collided) {
-            if (inky.posY() > MIDDLE_LANE) {
-                inky.setPosition(inky.posX(), MIDDLE_LANE);
+            if (inky.y() > MIDDLE_LANE) {
+                inky.setPosition(inky.x(), MIDDLE_LANE);
             }
-            if (pinky.posY() > MIDDLE_LANE) {
-                pinky.setPosition(pinky.posX(), MIDDLE_LANE);
+            if (pinky.y() > MIDDLE_LANE) {
+                pinky.setPosition(pinky.x(), MIDDLE_LANE);
             }
         }
 

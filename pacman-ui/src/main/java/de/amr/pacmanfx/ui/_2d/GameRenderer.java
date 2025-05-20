@@ -129,7 +129,7 @@ public interface GameRenderer {
     default void drawActorSprite(Actor actor, RectArea sprite) {
         requireNonNull(actor);
         if (actor.isVisible() && sprite != null) {
-            drawSpriteScaledOverSquare(sprite, actor.posX(), actor.posY());
+            drawSpriteScaledOverSquare(sprite, actor.x(), actor.y());
         }
     }
 
@@ -201,7 +201,7 @@ public interface GameRenderer {
                 String text = animID + " " + animations.currentAnimation().frameIndex();
                 ctx().setFill(Color.WHITE);
                 ctx().setFont(Font.font("Monospaced", scaled(6)));
-                ctx().fillText(text, scaled(creature.posX() - 4), scaled(creature.posY() - 4));
+                ctx().fillText(text, scaled(creature.x() - 4), scaled(creature.y() - 4));
             }
             if (creature.wishDir() != null) {
                 float scaling = scaling();
@@ -222,7 +222,7 @@ public interface GameRenderer {
             String text = "%s\n%s".formatted(autopilot, immune).trim();
             ctx().setFill(Color.WHITE);
             ctx().setFont(Font.font("Monospaced", scaled(6)));
-            ctx().fillText(text, scaled(pac.posX() - 4), scaled(pac.posY() + 16));
+            ctx().fillText(text, scaled(pac.x() - 4), scaled(pac.y() + 16));
         }
     }
 

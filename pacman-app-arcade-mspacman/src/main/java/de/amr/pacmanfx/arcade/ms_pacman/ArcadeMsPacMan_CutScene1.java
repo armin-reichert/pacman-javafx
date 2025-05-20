@@ -167,7 +167,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     }
 
     private void updateStateChasedByGhosts() {
-        if (inky.posX() > TS * 30) {
+        if (inky.x() > TS * 30) {
             enterStateComingTogether();
         }
         else {
@@ -196,12 +196,12 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     private void updateStateComingTogether() {
         // Pac-Man and Ms. Pac-Man reach end position?
-        if (pacMan.moveDir() == Direction.UP && pacMan.posY() < UPPER_LANE_Y) {
+        if (pacMan.moveDir() == Direction.UP && pacMan.y() < UPPER_LANE_Y) {
             enterStateInHeaven();
         }
 
         // Pac-Man and Ms. Pac-Man meet?
-        else if (pacMan.moveDir() == Direction.LEFT && pacMan.posX() - msPacMan.posX() < TS * 2) {
+        else if (pacMan.moveDir() == Direction.LEFT && pacMan.x() - msPacMan.x() < TS * 2) {
             pacMan.setMoveDir(Direction.UP);
             pacMan.setSpeed(SPEED_PAC_RISING);
             msPacMan.setMoveDir(Direction.UP);
@@ -209,7 +209,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         }
 
         // Inky and Pinky collide?
-        else if (inky.moveDir() == Direction.LEFT && inky.posX() - pinky.posX() < TS * 2) {
+        else if (inky.moveDir() == Direction.LEFT && inky.x() - pinky.x() < TS * 2) {
             inky.setMoveAndWishDir(Direction.RIGHT);
             inky.setSpeed(SPEED_GHOST_AFTER_COLLISION);
             inky.setVelocity(inky.velocity().minus(0, 2.0f));
@@ -228,12 +228,12 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
             pinky.move();
 
             // Collision with ground?
-            if (inky.posY() > MIDDLE_LANE_Y) {
-                inky.setPosY(MIDDLE_LANE_Y);
+            if (inky.y() > MIDDLE_LANE_Y) {
+                inky.setY(MIDDLE_LANE_Y);
                 inky.setAcceleration(Vector2f.ZERO);
             }
-            if (pinky.posY() > MIDDLE_LANE_Y) {
-                pinky.setPosY(MIDDLE_LANE_Y);
+            if (pinky.y() > MIDDLE_LANE_Y) {
+                pinky.setY(MIDDLE_LANE_Y);
                 pinky.setAcceleration(Vector2f.ZERO);
             }
         }
@@ -253,7 +253,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         inky.hide();
         pinky.hide();
 
-        heart.setPosition((pacMan.posX() + msPacMan.posX()) * 0.5f, pacMan.posY() - TS * 2);
+        heart.setPosition((pacMan.x() + msPacMan.x()) * 0.5f, pacMan.y() - TS * 2);
         heart.show();
 
         setState(STATE_IN_HEAVEN, 3 * NUM_TICKS_PER_SEC);

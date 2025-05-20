@@ -54,8 +54,8 @@ public class Ghost extends Creature {
             ". tile=" + tile() +
             ", newTileEntered=" + newTileEntered +
             ", gotReverseCommand=" + gotReverseCommand +
-            ", posX=" + posX +
-            ", posY=" + posY +
+            ", posX=" + x +
+            ", posY=" + y +
             '}';
     }
 
@@ -244,12 +244,12 @@ public class Ghost extends Creature {
             float maxY = (level.houseMaxTile().y() - 1) * TS - HTS;
             setSpeed(level.speedControl().ghostSpeedInsideHouse(level, this));
             move();
-            if (posY <= minY) {
+            if (y <= minY) {
                 setMoveAndWishDir(DOWN);
-            } else if (posY >= maxY) {
+            } else if (y >= maxY) {
                 setMoveAndWishDir(UP);
             }
-            posY = Math.clamp(posY, minY, maxY);
+            y = Math.clamp(y, minY, maxY);
         } else {
             setSpeed(0);
         }
@@ -272,7 +272,7 @@ public class Ghost extends Creature {
     private void updateStateLeavingHouse() {
         float speedInsideHouse = level.speedControl().ghostSpeedInsideHouse(level, this);
         Vector2f houseEntryPosition = level.houseEntryPosition();
-        if (posY() <= houseEntryPosition.y()) {
+        if (y() <= houseEntryPosition.y()) {
             // has raised and is outside house
             setPosition(houseEntryPosition);
             setMoveAndWishDir(LEFT);
@@ -285,11 +285,11 @@ public class Ghost extends Creature {
             return;
         }
         // move inside house
-        float centerX = posX + HTS;
+        float centerX = x + HTS;
         float houseCenterX = level.houseCenter().x();
         if (differsAtMost(0.5f * speedInsideHouse, centerX, houseCenterX)) {
             // align horizontally and raise
-            setPosX(houseCenterX - HTS);
+            setX(houseCenterX - HTS);
             setMoveAndWishDir(UP);
         } else {
             // move sidewards until center axis is reached
@@ -393,11 +393,11 @@ public class Ghost extends Creature {
             setState(GhostState.LOCKED);
             return;
         }
-        if (posY < revivalPosition.y()) {
+        if (y < revivalPosition.y()) {
             setMoveAndWishDir(DOWN);
-        } else if (posX > revivalPosition.x()) {
+        } else if (x > revivalPosition.x()) {
             setMoveAndWishDir(LEFT);
-        } else if (posX < revivalPosition.x()) {
+        } else if (x < revivalPosition.x()) {
             setMoveAndWishDir(RIGHT);
         }
         setSpeed(speed);

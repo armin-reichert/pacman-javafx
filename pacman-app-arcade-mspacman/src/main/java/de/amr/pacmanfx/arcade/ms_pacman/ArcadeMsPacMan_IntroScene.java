@@ -229,8 +229,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
             boolean letGhostWalkIn(ArcadeMsPacMan_IntroScene scene) {
                 Ghost ghost = scene.ghosts[scene.currentPersonality];
                 if (ghost.moveDir() == Direction.LEFT) {
-                    if (ghost.posX() <= STOP_X_GHOST) {
-                        ghost.setPosX(STOP_X_GHOST);
+                    if (ghost.x() <= STOP_X_GHOST) {
+                        ghost.setX(STOP_X_GHOST);
                         ghost.setMoveAndWishDir(Direction.UP);
                         scene.numTicksBeforeRising = 2;
                     } else {
@@ -242,7 +242,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                     if (scene.numTicksBeforeRising > 0) {
                         scene.numTicksBeforeRising--;
                     }
-                    else if (ghost.posY() <= endPositionY) {
+                    else if (ghost.y() <= endPositionY) {
                         ghost.setSpeed(0);
                         ghost.stopAnimation();
                         ghost.resetAnimation();
@@ -261,7 +261,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
                 scene.marqueeTimer.doTick();
                 scene.msPacMan.move();
-                if (scene.msPacMan.posX() <= STOP_X_MSPAC) {
+                if (scene.msPacMan.x() <= STOP_X_MSPAC) {
                     scene.msPacMan.setSpeed(0);
                     scene.msPacMan.resetAnimation();
                     scene.sceneController.changeState(READY_TO_PLAY);

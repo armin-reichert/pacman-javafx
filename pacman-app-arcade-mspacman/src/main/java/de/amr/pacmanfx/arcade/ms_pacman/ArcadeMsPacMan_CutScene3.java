@@ -167,11 +167,11 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         }
 
         // (closed) bag reaches ground for first time?
-        if (!bagOpen && bag.posY() > LANE_Y) {
+        if (!bagOpen && bag.y() > LANE_Y) {
             ++numBagBounces;
             if (numBagBounces < 3) {
                 bag.setVelocity(-0.2f, -1f / numBagBounces);
-                bag.setPosY(LANE_Y);
+                bag.setY(LANE_Y);
             } else {
                 bagOpen = true;
                 bag.setVelocity(Vector2f.ZERO);

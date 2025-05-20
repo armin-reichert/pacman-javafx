@@ -265,13 +265,13 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 Ghost ghost = scene.ghosts[scene.ghostIndex];
                 Logger.debug("Tick {}: {} marching in", theClock().tickCount(), ghost.name());
                 if (ghost.moveDir() == Direction.LEFT) {
-                    if (ghost.posX() <= GHOST_STOP_X) {
-                        ghost.setPosX(GHOST_STOP_X);
+                    if (ghost.x() <= GHOST_STOP_X) {
+                        ghost.setX(GHOST_STOP_X);
                         ghost.setMoveAndWishDir(Direction.UP);
                         scene.waitBeforeRising = 2;
                     } else {
                         ghost.move();
-                        Logger.debug("{} moves {} x={}", ghost.name(), ghost.moveDir(), ghost.posX());
+                        Logger.debug("{} moves {} x={}", ghost.name(), ghost.moveDir(), ghost.x());
                     }
                 }
                 else if (ghost.moveDir() == Direction.UP) {
@@ -279,7 +279,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                     if (scene.waitBeforeRising > 0) {
                         scene.waitBeforeRising--;
                     }
-                    else if (ghost.posY() <= endPositionY) {
+                    else if (ghost.y() <= endPositionY) {
                         ghost.setSpeed(0);
                         ghost.setMoveAndWishDir(Direction.RIGHT);
                         return true;
@@ -304,7 +304,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 scene.updateMarqueeState();
                 Logger.debug("Tick {}: {} marching in", theClock().tickCount(), scene.msPacMan.name());
                 scene.msPacMan.move();
-                if (scene.msPacMan.posX() <= MS_PAC_MAN_STOP_X) {
+                if (scene.msPacMan.x() <= MS_PAC_MAN_STOP_X) {
                     scene.msPacMan.setSpeed(0);
                     scene.msPacMan.resetAnimation();
                 }

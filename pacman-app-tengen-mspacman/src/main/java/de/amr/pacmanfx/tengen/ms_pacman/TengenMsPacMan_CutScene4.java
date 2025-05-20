@@ -170,11 +170,11 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             computeNewMoveDir(junior);
         }
         junior.move();
-        if (junior.posX() > sizeInPx().x()) {
-            junior.setPosX(0);
+        if (junior.x() > sizeInPx().x()) {
+            junior.setX(0);
         }
-        if (junior.posX() < 0) {
-            junior.setPosX(sizeInPx().x());
+        if (junior.x() < 0) {
+            junior.setX(sizeInPx().x());
         }
     }
 

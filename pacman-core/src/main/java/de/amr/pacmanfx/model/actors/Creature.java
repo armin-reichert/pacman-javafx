@@ -46,8 +46,8 @@ public abstract class Creature extends Actor {
     @Override
     public String toString() {
         return "Creature{" +
-            "posX=" + posX +
-            ", posY=" + posY +
+            "posX=" + x +
+            ", posY=" + y +
             ", moveDir=" + moveDir +
             ", wishDir=" + wishDir +
             ", newTileEntered=" + newTileEntered +
@@ -326,18 +326,18 @@ public abstract class Creature extends Actor {
     }
 
     private void tryTeleport(Vector2i currentTile, Portal portal) {
-        var oldX = posX;
-        var oldY = posY;
-        if (currentTile.y() == portal.leftTunnelEnd().y() && posX < portal.leftTunnelEnd().x() - portal.depth() * TS) {
+        var oldX = x;
+        var oldY = y;
+        if (currentTile.y() == portal.leftTunnelEnd().y() && x < portal.leftTunnelEnd().x() - portal.depth() * TS) {
             centerOverTile(portal.rightTunnelEnd());
             moveInfo.teleported = true;
             moveInfo.log(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)",
-                name(), oldX, oldY, posX, posY));
+                name(), oldX, oldY, x, y));
         } else if (currentTile.equals(portal.rightTunnelEnd().plus(portal.depth(), 0))) {
             centerOverTile(portal.leftTunnelEnd().minus(portal.depth(), 0));
             moveInfo.teleported = true;
             moveInfo.log(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)",
-                name(), oldX, oldY, posX, posY));
+                name(), oldX, oldY, x, y));
         }
     }
 

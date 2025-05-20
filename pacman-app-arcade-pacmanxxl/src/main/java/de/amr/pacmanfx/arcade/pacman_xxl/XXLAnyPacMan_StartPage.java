@@ -265,7 +265,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
             chasingGhosts = false;
 
             pac = createPac();
-            pac.setPosX(42 * TS);
+            pac.setX(42 * TS);
             pac.setMoveAndWishDir(Direction.LEFT);
             pac.setSpeed(1.0f);
             pac.setVisible(true);
@@ -277,7 +277,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
                 createOrangeGhost()
             };
             for (Ghost ghost : ghosts) {
-                ghost.setPosX(46 * TS + ghost.personality() * 2 * TS);
+                ghost.setX(46 * TS + ghost.personality() * 2 * TS);
                 ghost.setMoveAndWishDir(Direction.LEFT);
                 ghost.setSpeed(1.05f);
                 ghost.setVisible(true);
@@ -285,33 +285,33 @@ public class XXLAnyPacMan_StartPage implements StartPage {
         }
 
         private void updateActorAnimation() {
-            if (ghosts[3].posX() < -4 * TS && !chasingGhosts) {
+            if (ghosts[3].x() < -4 * TS && !chasingGhosts) {
                 chasingGhosts = true;
                 pac.setMoveAndWishDir(pac.moveDir().opposite());
-                pac.setPosX(-36 * TS);
+                pac.setX(-36 * TS);
                 for (Ghost ghost : ghosts) {
                     ghost.setVisible(true);
-                    ghost.setPosX(pac.posX() + 22 * TS + ghost.personality() * 2.5f * TS);
+                    ghost.setX(pac.x() + 22 * TS + ghost.personality() * 2.5f * TS);
                     ghost.setMoveAndWishDir(ghost.moveDir().opposite());
                     ghost.setSpeed(0.58f);
                     ghost.playAnimation(ANIM_GHOST_FRIGHTENED);
                 }
             }
-            else if (pac.posX() > 56 * TS && chasingGhosts) {
+            else if (pac.x() > 56 * TS && chasingGhosts) {
                 chasingGhosts = false;
                 pac.setMoveAndWishDir(Direction.LEFT);
-                pac.setPosX(42 * TS);
+                pac.setX(42 * TS);
                 for (Ghost ghost : ghosts) {
                     ghost.setVisible(true);
                     ghost.setMoveAndWishDir(Direction.LEFT);
-                    ghost.setPosX(46 * TS + ghost.personality() * 2 * TS);
+                    ghost.setX(46 * TS + ghost.personality() * 2 * TS);
                     ghost.setSpeed(1.05f);
                     ghost.playAnimation(ANIM_GHOST_NORMAL);
                 }
             }
             else if (chasingGhosts) {
                 for (int i = 0; i < 4; ++i) {
-                    if (Math.abs(pac.posX() - ghosts[i].posX()) < 1) {
+                    if (Math.abs(pac.x() - ghosts[i].x()) < 1) {
                         ghosts[i].selectAnimation(ANIM_GHOST_NUMBER, i);
                         if (i > 0) {
                             ghosts[i-1].setVisible(false);

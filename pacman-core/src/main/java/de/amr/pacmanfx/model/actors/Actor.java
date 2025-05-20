@@ -18,6 +18,7 @@ import static java.util.Objects.requireNonNull;
  * Base class for all game actors, e.g. creatures and bonus entities.
  * <p>
  * Each actor has a position velocity, acceleration (all sub-pixel precision) and a visibility.
+ * Optionally, an animation map can be assigned.
  * </p>
  *
  * @author Armin Reichert
@@ -25,20 +26,20 @@ import static java.util.Objects.requireNonNull;
 public class Actor {
 
     protected boolean visible;
-    protected float posX, posY;
-    protected float velX, velY;
-    protected float accX, accY;
+    protected float x, y;
+    protected float vx, vy;
+    protected float ax, ay;
 
     @Override
     public String toString() {
         return "Actor{" +
             "visible=" + visible +
-            ", posX=" + posX +
-            ", posY=" + posY +
-            ", velX=" + velX +
-            ", velY=" + velY +
-            ", accX=" + accX +
-            ", accY=" + accY +
+            ", x=" + x +
+            ", y=" + y +
+            ", vx=" + vx +
+            ", vy=" + vy +
+            ", ax=" + ax +
+            ", ay=" + ay +
             '}';
     }
 
@@ -47,7 +48,7 @@ public class Actor {
      */
     public void reset() {
         visible = false;
-        posX = posY = velX = velY = accX = accY = 0;
+        x = y = vx = vy = ax = ay = 0;
     }
 
     public boolean isVisible() {
@@ -66,85 +67,85 @@ public class Actor {
         visible = false;
     }
 
-    public void setPosX(float value) {
-        posX = value;
+    public void setX(float value) {
+        x = value;
     }
 
-    public float posX() {
-        return posX;
+    public float x() {
+        return x;
     }
 
-    public void setPosY(float value) {
-        posY = value;
+    public void setY(float value) {
+        y = value;
     }
 
-    public float posY() {
-        return posY;
+    public float y() {
+        return y;
     }
 
     /**
      * @return upper left corner of the entity collision box which is a square of size one tile.
      */
     public Vector2f position() {
-        return Vector2f.of(posX, posY);
+        return Vector2f.of(x, y);
     }
 
     public void setPosition(float x, float y) {
-        posX = x;
-        posY = y;
+        this.x = x;
+        this.y = y;
     }
 
     public void setPosition(Vector2f position) {
         requireNonNull(position, "Position of actor must not be null");
-        posX = position.x();
-        posY = position.y();
+        x = position.x();
+        y = position.y();
     }
 
     public Vector2f velocity() {
-        return Vector2f.of(velX, velY);
+        return Vector2f.of(vx, vy);
     }
 
     public void setVelocity(Vector2f velocity) {
         requireNonNull(velocity, "Velocity of actor must not be null");
-        velX = velocity.x();
-        velY = velocity.y();
+        vx = velocity.x();
+        vy = velocity.y();
     }
 
     public void setVelocity(float vx, float vy) {
-        velX = vx;
-        velY = vy;
+        this.vx = vx;
+        this.vy = vy;
     }
 
     public Vector2f acceleration() {
-        return Vector2f.of(accX, accY);
+        return Vector2f.of(ax, ay);
     }
 
     public void setAcceleration(Vector2f acceleration) {
         requireNonNull(acceleration, "Acceleration of actor must not be null");
-        accX = acceleration.x();
-        accY = acceleration.y();
+        ax = acceleration.x();
+        ay = acceleration.y();
     }
 
     public void setAcceleration(float ax, float ay) {
-        accX = ax;
-        accY = ay;
+        this.ax = ax;
+        this.ay = ay;
     }
 
     /**
      * Moves this actor by its current velocity and increases its velocity by its current acceleration.
      */
     public void move() {
-        posX += velX;
-        posY += velY;
-        velX += accX;
-        velY += accY;
+        x += vx;
+        y += vy;
+        vx += ax;
+        vy += ay;
     }
 
     /**
      * @return Tile containing the center of the actor collision box.
      */
     public Vector2i tile() {
-        return tileAt(posX + HTS, posY + HTS);
+        return tileAt(x + HTS, y + HTS);
     }
 
     /**
@@ -152,7 +153,7 @@ public class Actor {
      */
     public Vector2f offset() {
         var tile = tile();
-        return Vector2f.of(posX - TS * tile.x(), posY - TS * tile.y());
+        return Vector2f.of(x - TS * tile.x(), y - TS * tile.y());
     }
 
     /**

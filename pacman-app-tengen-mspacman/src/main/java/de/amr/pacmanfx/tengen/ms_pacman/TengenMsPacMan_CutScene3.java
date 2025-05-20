@@ -118,7 +118,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
             // stork releases bag, bag starts falling
             stork.setVelocity(-1f, 0);
             bagReleased = true;
-            bagWithJunior.setPosition(stork.posX(), stork.posY() + 8);
+            bagWithJunior.setPosition(stork.x(), stork.y() + 8);
             bagWithJunior.setVelocity(-0.25f, 0);
             bagWithJunior.setAcceleration(0, 0.1f);
             bagWithJunior.show();
@@ -145,7 +145,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
             bagWithJunior.move();
             Vector2f bv = bagWithJunior.velocity();
             if (bagWithJunior.position().y() > GROUND_Y) {
-                bagWithJunior.setPosY(GROUND_Y);
+                bagWithJunior.setY(GROUND_Y);
                 bagWithJunior.setVelocity(0.9f * bv.x(), -0.3f * bv.y());
             }
         }

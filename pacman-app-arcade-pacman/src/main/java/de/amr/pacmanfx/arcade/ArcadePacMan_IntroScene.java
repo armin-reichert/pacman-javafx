@@ -283,11 +283,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     scene.blinking.start();
                 }
                 // Pac-Man reaches the energizer at the left and turns
-                if (scene.pacMan.posX() <= TS * LEFT_TILE_X) {
+                if (scene.pacMan.x() <= TS * LEFT_TILE_X) {
                     scene.sceneController.changeState(CHASING_GHOSTS);
                 }
                 // Ghosts already reverse direction before Pac-Man eats the energizer and turns!
-                else if (scene.pacMan.posX() <= TS * LEFT_TILE_X + HTS) {
+                else if (scene.pacMan.x() <= TS * LEFT_TILE_X + HTS) {
                     Stream.of(scene.ghosts).forEach(ghost -> {
                         ghost.setState(FRIGHTENED);
                         ghost.selectAnimation(ANIM_GHOST_FRIGHTENED);
