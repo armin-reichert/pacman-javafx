@@ -258,11 +258,6 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
 
         level.setSpeedControl(new ArcadeAny_ActorSpeedControl());
 
-        level.pac().setBaseSpeed(ArcadeAny_ActorSpeedControl.BASE_SPEED_PX_PER_TICK);
-        level.ghosts().forEach(ghost -> ghost.setBaseSpeed(ArcadeAny_ActorSpeedControl.BASE_SPEED_PX_PER_TICK));
-        Logger.debug("{} base speed: {0.00} px/tick", level.pac().name(), level.pac().baseSpeed());
-        level.ghosts().forEach(ghost -> Logger.debug("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed()));
-
         // Each level has a single bonus symbol appearing twice during the level
         // From level 13 on, the same symbol (7 = "key") appears
         byte bonusSymbol = levelNumber >= 13 ? BONUS_SYMBOLS_BY_LEVEL_NUMBER[13] : BONUS_SYMBOLS_BY_LEVEL_NUMBER[levelNumber];

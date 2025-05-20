@@ -345,7 +345,9 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.setStartTime(System.currentTimeMillis());
         level.makeReadyForPlaying();
         initAnimationOfPacManAndGhosts();
-        setActorsSpeed(level);
+        if (pacBooster == PacBooster.ALWAYS_ON) {
+            activatePacBooster(true);
+        }
         if (level.isDemoLevel()) {
             level.showMessage(LevelMessage.GAME_OVER);
             scoreManager.score().setEnabled(true);
@@ -408,33 +410,9 @@ public class TengenMsPacMan_GameModel extends GameModel {
         });
     }
 
-    public void activatePacBooster(boolean active) {
-        if (boosterActive != active) {
-            boosterActive = active;
-            float speed = speedControl.pacBaseSpeedInLevel(level.number()) + speedControl.pacDifficultySpeedDelta(difficulty);
-            if (boosterActive) {
-                speed += speedControl.pacBoosterSpeedDelta();
-            }
-            level.pac().setBaseSpeed(speed);
-            level.pac().selectAnimation(boosterActive
-                ? ANIM_MS_PAC_MAN_BOOSTER : ANIM_ANY_PAC_MUNCHING);
-        }
-    }
-
-    private void setActorsSpeed(GameLevel level) {
-        level.pac().setBaseSpeed(speedControl.pacBaseSpeedInLevel(level.number())
-                + speedControl.pacDifficultySpeedDelta(difficulty));
-        if (pacBooster == PacBooster.ALWAYS_ON) {
-            activatePacBooster(true);
-        }
-        Logger.info("Ms. Pac-Man base speed: {0.00} px/tick", level.pac().baseSpeed());
-
-        level.ghosts().forEach(ghost -> {
-            ghost.setBaseSpeed(speedControl.ghostBaseSpeedInLevel(level.number())
-                    + speedControl.ghostDifficultySpeedDelta(difficulty)
-                    + speedControl.ghostSpeedDelta(ghost.personality()));
-            Logger.info("{} base speed: {0.00} px/tick", ghost.name(), ghost.baseSpeed());
-        });
+    public void activatePacBooster(boolean state) {
+        boosterActive = state;
+        level.pac().selectAnimation(boosterActive ? ANIM_MS_PAC_MAN_BOOSTER : ANIM_ANY_PAC_MUNCHING);
     }
 
     @Override
@@ -479,7 +457,9 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.setSpeedControl(speedControl);
 
         // Must be called after creation of the actors!
-        setActorsSpeed(level);
+        if (pacBooster == PacBooster.ALWAYS_ON) {
+            activatePacBooster(true);
+        }
 
         //TODO this might not be appropriate for Tengen Ms. Pac-Man
         level.setBonusSymbol(0, computeBonusSymbol(level.number()));
@@ -596,7 +576,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         var bonus = new MovingBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
         bonus.setEdibleTicks(TickTimer.INDEFINITE);
         bonus.setRoute(route, leftToRight);
-        bonus.setBaseSpeed(0.9f * level.speedControl().pacNormalSpeed(level)); // TODO how fast is the bonus really moving?
+        //bonus.setBaseSpeed(0.9f * level.speedControl().pacNormalSpeed(level)); // TODO how fast is the bonus really moving?
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
 
         level.setBonus(bonus);

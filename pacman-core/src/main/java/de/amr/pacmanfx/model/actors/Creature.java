@@ -34,7 +34,6 @@ public abstract class Creature extends Actor {
     protected Direction moveDir;
     protected Direction wishDir;
     protected Vector2i targetTile;
-    protected float baseSpeed;
 
     protected boolean newTileEntered;
     protected boolean gotReverseCommand;
@@ -65,17 +64,6 @@ public abstract class Creature extends Actor {
 
     public MoveResult moveInfo() {
         return moveInfo;
-    }
-
-    public float baseSpeed() {
-        return baseSpeed;
-    }
-
-    /**
-     * @param pixelsPerTick number of pixels the creature moves in one tick
-     */
-    public void setBaseSpeed(float pixelsPerTick) {
-        baseSpeed = pixelsPerTick;
     }
 
     /**

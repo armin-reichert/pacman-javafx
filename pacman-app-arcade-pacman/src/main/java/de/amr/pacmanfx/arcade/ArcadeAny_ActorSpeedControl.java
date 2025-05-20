@@ -11,18 +11,18 @@ import de.amr.pacmanfx.model.actors.Ghost;
 public class ArcadeAny_ActorSpeedControl implements ActorSpeedControl {
 
     /** Base speed is 75px per second (=1.25 px/tick). */
-    public static final float BASE_SPEED_PX_PER_TICK = 1.25f;
+    public static final float BASE_SPEED = 1.25f;
 
     @Override
     public float pacNormalSpeed(GameLevel level) {
         byte pct = level.data().pacSpeedPercentage();
-        return pct > 0 ? pct * 0.01f * level.pac().baseSpeed() : level.pac().baseSpeed();
+        return pct > 0 ? pct * 0.01f * BASE_SPEED : BASE_SPEED;
     }
 
     @Override
     public float pacPowerSpeed(GameLevel level) {
         byte pct = level.data().pacSpeedPoweredPercentage();
-        return pct > 0 ? pct * 0.01f * level.pac().baseSpeed() : pacNormalSpeed(level);
+        return pct > 0 ? pct * 0.01f * BASE_SPEED : pacNormalSpeed(level);
     }
 
     @Override
@@ -31,12 +31,12 @@ public class ArcadeAny_ActorSpeedControl implements ActorSpeedControl {
             return ghostTunnelSpeed(level, ghost);
         }
         if (ghost.cruiseElroy() == 1) {
-            return level.data().elroy1SpeedPercentage() * 0.01f * ghost.baseSpeed();
+            return level.data().elroy1SpeedPercentage() * 0.01f * BASE_SPEED;
         }
         if (ghost.cruiseElroy() == 2) {
-            return level.data().elroy2SpeedPercentage() * 0.01f * ghost.baseSpeed();
+            return level.data().elroy2SpeedPercentage() * 0.01f * BASE_SPEED;
         }
-        return level.data().ghostSpeedPercentage() * 0.01f * ghost.baseSpeed();
+        return level.data().ghostSpeedPercentage() * 0.01f * BASE_SPEED;
     }
 
     @Override
@@ -52,11 +52,11 @@ public class ArcadeAny_ActorSpeedControl implements ActorSpeedControl {
     @Override
     public float ghostFrightenedSpeed(GameLevel level, Ghost ghost) {
         float pct = level.data().ghostSpeedFrightenedPercentage();
-        return pct > 0 ? pct * 0.01f * ghost.baseSpeed() : ghost.baseSpeed();
+        return pct > 0 ? pct * 0.01f * BASE_SPEED : BASE_SPEED;
     }
 
     @Override
     public float ghostTunnelSpeed(GameLevel level, Ghost ghost) {
-        return level.data().ghostSpeedTunnelPercentage() * 0.01f * ghost.baseSpeed();
+        return level.data().ghostSpeedTunnelPercentage() * 0.01f * BASE_SPEED;
     }
 }

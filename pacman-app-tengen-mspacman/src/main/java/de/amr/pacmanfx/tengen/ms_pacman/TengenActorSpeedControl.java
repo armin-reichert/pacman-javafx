@@ -120,13 +120,22 @@ public class TengenActorSpeedControl implements ActorSpeedControl {
 
     @Override
     public float pacNormalSpeed(GameLevel level) {
-        return level.pac() != null ? level.pac().baseSpeed() : 0;
+        if (level == null) {
+            return 0;
+        }
+        float speed = pacBaseSpeedInLevel(level.number());
+        speed += pacDifficultySpeedDelta(game.difficulty());
+        if (game.pacBooster() == PacBooster.ALWAYS_ON
+            || game.pacBooster() == PacBooster.USE_A_OR_B && game.isBoosterActive()) {
+            speed += pacBoosterSpeedDelta();
+        }
+        return speed;
     }
 
     @Override
     public float pacPowerSpeed(GameLevel level) {
         //TODO is this correct?
-        return 1.1f * level.pac().baseSpeed();
+        return level.pac() != null ? 1.1f * pacNormalSpeed(level) : 0;
     }
 
     @Override
@@ -134,11 +143,13 @@ public class TengenActorSpeedControl implements ActorSpeedControl {
         if (level.isTunnel(ghost.tile())) {
             return ghostTunnelSpeed(level, ghost);
         }
-        float speed = ghost.baseSpeed();
-        float increase = ghostSpeedIncreaseByFoodRemaining(level);
-        if (increase > 0) {
-            speed += increase;
-            Logger.debug("Ghost speed increased by {} units to {0.00} px/tick for {}", increase, speed, ghost.name());
+        float speed = ghostBaseSpeedInLevel(level.number());
+        speed += ghostDifficultySpeedDelta(game.difficulty());
+        speed += ghostSpeedDelta(ghost.personality());
+        float foodDelta = ghostSpeedIncreaseByFoodRemaining(level);
+        if (foodDelta > 0) {
+            speed += foodDelta;
+            Logger.debug("Ghost speed increased by {} units to {0.00} px/tick for {}", foodDelta, speed, ghost.name());
         }
         return speed;
     }
@@ -156,12 +167,12 @@ public class TengenActorSpeedControl implements ActorSpeedControl {
     @Override
     public float ghostFrightenedSpeed(GameLevel level, Ghost ghost) {
         //TODO is this correct?
-        return 0.5f * ghost.baseSpeed();
+        return 0.5f * ghostBaseSpeedInLevel(level.number());
     }
 
     @Override
     public float ghostTunnelSpeed(GameLevel level, Ghost ghost) {
         //TODO is this correct?
-        return 0.4f * ghost.baseSpeed();
+        return 0.4f * ghostBaseSpeedInLevel(level.number());
     }
 }
