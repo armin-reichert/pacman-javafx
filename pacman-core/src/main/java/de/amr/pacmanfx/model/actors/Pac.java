@@ -6,6 +6,7 @@ package de.amr.pacmanfx.model.actors;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.steering.Steering;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -65,7 +66,7 @@ public class Pac extends Creature {
     }
 
     @Override
-    public boolean canAccessTile(Vector2i tile) {
+    public boolean canAccessTile(GameLevel level, Vector2i tile) {
         if (level.isCoveredByHouse(tile)) {
             return false;
         }
@@ -99,16 +100,16 @@ public class Pac extends Creature {
         return powerTimer;
     }
 
-    public boolean isPowerFading() {
+    public boolean isPowerFading(GameLevel level) {
         return powerTimer.isRunning() && powerTimer.remainingTicks() <= theGame().pacPowerFadingTicks(level);
     }
 
-    public boolean isPowerFadingStarting() {
+    public boolean isPowerFadingStarting(GameLevel level) {
         return powerTimer.isRunning() && powerTimer.remainingTicks() == theGame().pacPowerFadingTicks(level)
             || powerTimer.durationTicks() < theGame().pacPowerFadingTicks(level) && powerTimer.tickCount() == 1;
     }
 
-    public void update() {
+    public void update(GameLevel level) {
         if (dead || restingTicks == REST_INDEFINITELY) {
             return;
         }
@@ -119,7 +120,7 @@ public class Pac extends Creature {
             setSpeed(powerTimer.isRunning()
                 ? level.speedControl().pacPowerSpeed(level)
                 : level.speedControl().pacNormalSpeed(level));
-            tryMoving();
+            tryMoving(level);
             if (moveInfo.moved) {
                 playAnimation();
             } else {

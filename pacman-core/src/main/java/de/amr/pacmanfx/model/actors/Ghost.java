@@ -9,6 +9,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.TerrainTiles;
+import de.amr.pacmanfx.model.GameLevel;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -88,7 +89,7 @@ public class Ghost extends Creature {
         this.cruiseElroy = (byte) cruiseElroy;
     }
 
-    public void updateCruiseElroyMode() {
+    public void updateCruiseElroyMode(GameLevel level) {
         if (level.uneatenFoodCount() == level.data().elroy1DotsLeft()) {
             setCruiseElroy(1);
         } else if (level.uneatenFoodCount() == level.data().elroy2DotsLeft()) {
@@ -96,35 +97,35 @@ public class Ghost extends Creature {
         }
     }
 
-    public void enableCruiseElroyMode(boolean enabled) {
+    public void enableCruiseElroyMode(GameLevel level, boolean enabled) {
         if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
             setCruiseElroy(-level.ghost(RED_GHOST_SHADOW).cruiseElroy());
         }
     }
 
-    public void hunt() { }
+    public void hunt(GameLevel level) {}
 
-    public Vector2i chasingTargetTile() { return null; }
+    public Vector2i chasingTargetTile(GameLevel level) { return null; }
 
     /**
      * Lets the ghost randomly roam through the world.
      *
      * @param speed the speed (in pixels/tick)
      */
-    public void roam(float speed) {
+    public void roam(GameLevel level, float speed) {
         Vector2i currentTile = tile();
         if (!level.isPortalAt(currentTile) && (isNewTileEntered() || !moveInfo.moved)) {
-            setWishDir(determineNextDirection(currentTile));
+            setWishDir(determineNextDirection(level, currentTile));
         }
         setSpeed(speed);
-        tryMoving();
+        tryMoving(level);
     }
 
     // try a random direction towards an accessible tile, do not turn back unless there is no other way
-    private Direction determineNextDirection(Vector2i currentTile) {
+    private Direction determineNextDirection(GameLevel level, Vector2i currentTile) {
         Direction dir = pseudoRandomDirection();
         int turns = 0;
-        while (dir == moveDir.opposite() || !canAccessTile(currentTile.plus(dir.vector()))) {
+        while (dir == moveDir.opposite() || !canAccessTile(level, currentTile.plus(dir.vector()))) {
             dir = dir.nextClockwise();
             if (++turns > 4) {
                 return moveDir.opposite();  // avoid endless loop
@@ -142,7 +143,7 @@ public class Ghost extends Creature {
     }
 
     @Override
-    public boolean canAccessTile(Vector2i tile) {
+    public boolean canAccessTile(GameLevel level, Vector2i tile) {
         requireNonNull(tile);
 
         // hunting ghosts cannot move up at certain tiles in Pac-Man game
@@ -211,19 +212,19 @@ public class Ghost extends Creature {
     /**
      * Executes a single simulation step for this ghost in the current game level.
      */
-    public void update() {
+    public void update(GameLevel level) {
         if (level == null) {
             Logger.warn("Cannot update ghost, no game level set");
             return;
         }
         switch (state) {
-            case LOCKED             -> updateStateLocked();
-            case LEAVING_HOUSE      -> updateStateLeavingHouse();
-            case HUNTING_PAC        -> updateStateHuntingPac();
-            case FRIGHTENED         -> updateStateFrightened();
+            case LOCKED             -> updateStateLocked(level);
+            case LEAVING_HOUSE      -> updateStateLeavingHouse(level);
+            case HUNTING_PAC        -> updateStateHuntingPac(level);
+            case FRIGHTENED         -> updateStateFrightened(level);
             case EATEN              -> updateStateEaten();
-            case RETURNING_HOME     -> updateStateReturningToHouse();
-            case ENTERING_HOUSE     -> updateStateEnteringHouse();
+            case RETURNING_HOME     -> updateStateReturningToHouse(level);
+            case ENTERING_HOUSE     -> updateStateEnteringHouse(level);
         }
     }
 
@@ -238,7 +239,7 @@ public class Ghost extends Creature {
      * In locked state, ghosts inside the house are bouncing up and down. They become blue when Pac-Man gets power
      * and start blinking when Pac-Man's power starts fading. After that, they return to their normal color.
      */
-    private void updateStateLocked() {
+    private void updateStateLocked(GameLevel level) {
         if (level.isInsideHouse(this)) {
             float minY = (level.houseMinTile().y() + 1) * TS + HTS;
             float maxY = (level.houseMaxTile().y() - 1) * TS - HTS;
@@ -254,7 +255,7 @@ public class Ghost extends Creature {
             setSpeed(0);
         }
         if (level.pac().powerTimer().isRunning() && !level.victims().contains(this)) {
-            updateFrightenedAnimation();
+            updateFrightenedAnimation(level);
         } else {
             selectAnimation(ANIM_GHOST_NORMAL);
         }
@@ -269,7 +270,7 @@ public class Ghost extends Creature {
      * <p>
      * The ghost speed is slower than outside, but I do not know the exact value.
      */
-    private void updateStateLeavingHouse() {
+    private void updateStateLeavingHouse(GameLevel level) {
         float speedInsideHouse = level.speedControl().ghostSpeedInsideHouse(level, this);
         Vector2f houseEntryPosition = level.houseEntryPosition();
         if (y() <= houseEntryPosition.y()) {
@@ -298,7 +299,7 @@ public class Ghost extends Creature {
         setSpeed(speedInsideHouse);
         move();
         if (level.pac().powerTimer().isRunning() && !level.victims().contains(this)) {
-            updateFrightenedAnimation();
+            updateFrightenedAnimation(level);
         } else {
             selectAnimation(ANIM_GHOST_NORMAL);
         }
@@ -313,10 +314,10 @@ public class Ghost extends Creature {
      * is an "infinite" chasing phase.
      * <p>
      */
-    private void updateStateHuntingPac() {
+    private void updateStateHuntingPac(GameLevel level) {
         // The specific hunting behaviour is defined by the game variant. For example, in Ms. Pac-Man,
         // the red and pink ghosts are not chasing Pac-Man during the first scatter phase, but roam the maze randomly.
-        hunt();
+        hunt(level);
     }
 
     // --- FRIGHTENED ---
@@ -333,18 +334,18 @@ public class Ghost extends Creature {
      *
      * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
      */
-    private void updateStateFrightened() {
+    private void updateStateFrightened(GameLevel level) {
         float speed = level.isTunnel(tile())
             ? level.speedControl().ghostTunnelSpeed(level, this)
             : level.speedControl().ghostFrightenedSpeed(level, this);
-        roam(speed);
-        updateFrightenedAnimation();
+        roam(level, speed);
+        updateFrightenedAnimation(level);
     }
 
-    private void updateFrightenedAnimation() {
-        if (level.pac().isPowerFadingStarting()) {
+    private void updateFrightenedAnimation(GameLevel level) {
+        if (level.pac().isPowerFadingStarting(level)) {
             playAnimation(ANIM_GHOST_FLASHING);
-        } else if (!level.pac().isPowerFading()) {
+        } else if (!level.pac().isPowerFading(level)) {
             playAnimation(ANIM_GHOST_FRIGHTENED);
         }
     }
@@ -364,7 +365,7 @@ public class Ghost extends Creature {
      * After the short time being displayed by his value, the eaten ghost is displayed by his eyes only and returns
      * to the ghost house to be revived. Hallelujah!
      */
-    private void updateStateReturningToHouse() {
+    private void updateStateReturningToHouse(GameLevel level) {
         float speed = level.speedControl().ghostSpeedReturningToHouse(level, this);
         Vector2f houseEntry = level.houseEntryPosition();
         if (position().roughlyEquals(houseEntry, 0.5f * speed, 0)) {
@@ -374,8 +375,8 @@ public class Ghost extends Creature {
         } else {
             setSpeed(speed);
             setTargetTile(level.houseLeftDoorTile());
-            navigateTowardsTarget();
-            tryMoving();
+            navigateTowardsTarget(level);
+            tryMoving(level);
         }
     }
 
@@ -385,7 +386,7 @@ public class Ghost extends Creature {
      * When an eaten ghost has arrived at the ghost house door, he falls down to the center of the house,
      * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
      */
-    private void updateStateEnteringHouse() {
+    private void updateStateEnteringHouse(GameLevel level) {
         float speed = level.speedControl().ghostSpeedReturningToHouse(level, this);
         if (position().roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {
             setPosition(revivalPosition);

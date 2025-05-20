@@ -102,7 +102,7 @@ public class InfoBoxActorInfo extends InfoBox {
         if (ghost.cruiseElroy() > 0) {
             name = "%s (Elroy %d)".formatted(name, ghost.cruiseElroy());
         }
-        return String.format("%s (%s)", name, ghostState(game, ghost));
+        return String.format("%s (%s)", name, ghostState(ghost));
     }
 
     private String ghostAnimation(GameModel game, Ghost ghost) {
@@ -113,10 +113,10 @@ public class InfoBoxActorInfo extends InfoBox {
         return sa.selectedAnimationID() != null ? sa.selectedAnimationID() : NO_INFO;
     }
 
-    private String ghostState(GameModel game, Ghost ghost) {
+    private String ghostState(Ghost ghost) {
         var stateText = ghost.state() != null ? ghost.state().name() : "undefined";
         if (ghost.state() == GhostState.HUNTING_PAC) {
-            stateText = ghost.level().huntingTimer().phase().name();
+            stateText = theGameLevel().huntingTimer().phase().name();
         }
         return stateText;
     }

@@ -27,11 +27,9 @@ import static java.util.Objects.requireNonNull;
 public abstract class Creature extends Actor {
 
     /** Order in which directions are selected when navigation decision is met. */
-    Direction[] DIRECTION_PRIORITY = {UP, LEFT, DOWN, RIGHT};
+    private static final Direction[] DIRECTION_PRIORITY = {UP, LEFT, DOWN, RIGHT};
 
     protected final MoveResult moveInfo = new MoveResult();
-
-    protected GameLevel level;
 
     protected Direction moveDir;
     protected Direction wishDir;
@@ -91,10 +89,11 @@ public abstract class Creature extends Actor {
     public abstract boolean canReverse();
 
     /**
+     * @param level game level
      * @param tile some tile inside or outside the world
      * @return if this creature can access the given tile
      */
-    public abstract boolean canAccessTile(Vector2i tile);
+    public abstract boolean canAccessTile(GameLevel level, Vector2i tile);
 
     /**
      * Sets the tile this creature tries to reach (can be an unreachable tile or <code>null</code>).
@@ -110,14 +109,6 @@ public abstract class Creature extends Actor {
      */
     public Optional<Vector2i> targetTile() {
         return Optional.ofNullable(targetTile);
-    }
-
-    public void setGameLevel(GameLevel level) {
-        this.level = requireNonNull(level);
-    }
-
-    public GameLevel level() {
-        return level;
     }
 
     /**
@@ -237,7 +228,7 @@ public abstract class Creature extends Actor {
         return newTileEntered;
     }
 
-    private Optional<Direction> computeTargetDirection(Vector2i currentTile, Vector2i targetTile) {
+    private Optional<Direction> computeTargetDirection(GameLevel level, Vector2i currentTile, Vector2i targetTile) {
         Direction targetDir = null;
         double minDistToTarget = Double.MAX_VALUE;
         for (Direction dir : DIRECTION_PRIORITY) {
@@ -245,7 +236,7 @@ public abstract class Creature extends Actor {
                 continue; // reversing the move direction is not allowed
             }
             Vector2i neighborTile = currentTile.plus(dir.vector());
-            if (canAccessTile(neighborTile)) {
+            if (canAccessTile(level, neighborTile)) {
                 double d = neighborTile.euclideanDist(targetTile);
                 if (d < minDistToTarget) {
                     minDistToTarget = d;
@@ -262,13 +253,13 @@ public abstract class Creature extends Actor {
     /**
      * Sets the new wish direction for reaching the target tile.
      */
-    public void navigateTowardsTarget() {
+    public void navigateTowardsTarget(GameLevel level) {
         if (!newTileEntered && moveInfo.moved || targetTile == null) {
             return; // we don't need no navigation, dim dit didit didit...
         }
         Vector2i currentTile = tile();
         if (!level.isPortalAt(currentTile)) {
-            computeTargetDirection(currentTile, targetTile).ifPresent(this::setWishDir);
+            computeTargetDirection(level, currentTile, targetTile).ifPresent(this::setWishDir);
         }
     }
 
@@ -278,11 +269,11 @@ public abstract class Creature extends Actor {
      * @param targetTile target tile this creature tries to reach
      * @param speed speed (in pixels/tick)
      */
-    public void followTarget(Vector2i targetTile, float speed) {
+    public void followTarget(GameLevel level, Vector2i targetTile, float speed) {
         setSpeed(speed);
         setTargetTile(targetTile);
-        navigateTowardsTarget();
-        tryMoving();
+        navigateTowardsTarget(level);
+        tryMoving(level);
     }
 
     /**
@@ -291,20 +282,20 @@ public abstract class Creature extends Actor {
      * First checks if the creature can teleport, then if the creature can move to its wish direction. If this is not
      * possible, it keeps moving to its current move direction.
      */
-    public void tryMoving() {
+    public void tryMoving(GameLevel level) {
         moveInfo.clear();
-        tryTeleport();
+        tryTeleport(level);
         if (!moveInfo.teleported) {
             if (gotReverseCommand && canReverse()) {
                 setWishDir(moveDir.opposite());
                 Logger.trace("{}: turned around at tile {}", name(), tile());
                 gotReverseCommand = false;
             }
-            tryMoving(wishDir);
+            tryMoving(level, wishDir);
             if (moveInfo.moved) {
                 setMoveDir(wishDir);
             } else {
-                tryMoving(moveDir);
+                tryMoving(level, moveDir);
             }
         }
         if (moveInfo.teleported || moveInfo.moved) {
@@ -312,7 +303,7 @@ public abstract class Creature extends Actor {
         }
     }
 
-    private void tryTeleport() {
+    private void tryTeleport(GameLevel level) {
         if (!canTeleport) {
             return;
         }
@@ -346,14 +337,14 @@ public abstract class Creature extends Actor {
      *
      * @param dir the direction to move
      */
-    protected void tryMoving(Direction dir) {
+    protected void tryMoving(GameLevel level, Direction dir) {
         final boolean isTurn = !dir.sameOrientation(moveDir);
         final Vector2i tileBeforeMove = tile();
         final Vector2f newVelocity = dir.vector().scaled(velocity().length());
         final Vector2f touchPosition = position().plus(HTS, HTS).plus(dir.vector().scaled((float) HTS)).plus(newVelocity);
         final Vector2i touchedTile = tileAt(touchPosition);
 
-        if (!canAccessTile(touchedTile)) {
+        if (!canAccessTile(level, touchedTile)) {
             if (!isTurn) {
                 centerOverTile(tile()); // adjust over tile (would move forward against wall)
             }

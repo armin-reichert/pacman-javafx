@@ -84,8 +84,8 @@ public abstract class GameModel {
         level.huntingTimer().update(level.number());
         level.blinking().tick();
 
-        level.pac().update();
-        level.ghosts().forEach(Ghost::update);
+        level.pac().update(level);
+        level.ghosts().forEach(ghost -> ghost.update(level));
         level.bonus().ifPresent(bonus -> bonus.update(this));
 
         checkIfPacManKilled();
@@ -148,7 +148,7 @@ public abstract class GameModel {
     private void updatePacPower() {
         final TickTimer timer = level.pac().powerTimer();
         timer.doTick();
-        if (level.pac().isPowerFadingStarting()) {
+        if (level.pac().isPowerFadingStarting(level)) {
             theSimulationStep().setPacStartsLosingPower();
             theGameEventManager().publishEvent(this, GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (timer.hasExpired()) {

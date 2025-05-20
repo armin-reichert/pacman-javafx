@@ -39,8 +39,7 @@ public class MovingBonus extends Creature implements Bonus {
     private long countdown;
     private RouteBasedSteering steering;
 
-    public MovingBonus(GameLevel level, byte symbol, int points) {
-        super.level = requireNonNull(level);
+    public MovingBonus(byte symbol, int points) {
         this.symbol = symbol;
         this.points = points;
         reset();
@@ -60,7 +59,7 @@ public class MovingBonus extends Creature implements Bonus {
     }
 
     @Override
-    public boolean canAccessTile(Vector2i tile) {
+    public boolean canAccessTile(GameLevel level, Vector2i tile) {
         if (level.isCoveredByHouse(tile)) {
             return false;
         }
@@ -128,8 +127,8 @@ public class MovingBonus extends Creature implements Bonus {
             setInactive();
             theGameEventManager().publishEvent(game, GameEventType.BONUS_EXPIRED, tile());
         } else {
-            navigateTowardsTarget();
-            tryMoving();
+            navigateTowardsTarget(level);
+            tryMoving(level);
             animation.tick();
         }
     }

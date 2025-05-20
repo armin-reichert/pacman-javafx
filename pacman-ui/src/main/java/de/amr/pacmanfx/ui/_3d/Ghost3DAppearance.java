@@ -111,12 +111,12 @@ public class Ghost3DAppearance extends Group {
 
     public void init(GameLevel level) {
         stopAllAnimations();
-        updateTransform();
+        updateTransform(level);
         updateAppearance(level);
     }
 
     public void update(GameLevel level) {
-        updateTransform();
+        updateTransform(level);
         updateAppearance(level);
         updateAnimations();
     }
@@ -127,13 +127,13 @@ public class Ghost3DAppearance extends Group {
         numberCube.setMaterial(texture);
     }
 
-    private void updateTransform() {
+    private void updateTransform(GameLevel level) {
         Vector2f center = ghost.position().plus(HTS, HTS);
         setTranslateX(center.x());
         setTranslateY(center.y());
         setTranslateZ(-0.5 * size - 2.0); // a little bit over the floor
         ghost3D.turnTo(Ufx.angle(ghost.wishDir()));
-        boolean outsideTerrain = center.x() < HTS || center.x() > ghost.level().worldMap().numCols() * TS - HTS;
+        boolean outsideTerrain = center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
         setVisible(ghost.isVisible() && !outsideTerrain);
     }
 
@@ -176,9 +176,9 @@ public class Ghost3DAppearance extends Group {
             case LEAVING_HOUSE, LOCKED ->
                 // ghost that have been killed by current energizer will not look frightened
                 level.pac().powerTimer().isRunning() && !level.victims().contains(ghost)
-                        ? frightenedOrFlashing(level.pac().isPowerFading())
+                        ? frightenedOrFlashing(level.pac().isPowerFading(level))
                         : Appearance.COLORED_GHOST;
-            case FRIGHTENED -> frightenedOrFlashing(level.pac().isPowerFading());
+            case FRIGHTENED -> frightenedOrFlashing(level.pac().isPowerFading(level));
             case ENTERING_HOUSE, RETURNING_HOME -> Appearance.GHOST_EYES;
             case EATEN -> Appearance.NUMBER;
             default -> Appearance.COLORED_GHOST;

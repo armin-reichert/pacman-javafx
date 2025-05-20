@@ -41,24 +41,24 @@ public class RouteBasedSteering implements Steering {
 
     @Override
     public void steer(Creature creature, GameLevel level) {
-        creature.navigateTowardsTarget();
+        creature.navigateTowardsTarget(level);
         if (targetIndex == route.size()) {
             complete = true;
         } else if (creature.targetTile().isEmpty()) {
             creature.setTargetTile(currentTarget().tile());
-            creature.navigateTowardsTarget();
+            creature.navigateTowardsTarget(level);
             Logger.trace("New target tile for {}={}s", creature.name(), creature.targetTile().get());
         } else if (creature.tile().equals(currentTarget().tile())) {
-            nextTarget(creature);
+            nextTarget(level, creature);
             Logger.trace("New target tile for {}={}", creature.name(), creature.targetTile().get());
         }
     }
 
-    private void nextTarget(Creature creature) {
+    private void nextTarget(GameLevel level, Creature creature) {
         ++targetIndex;
         if (targetIndex < route.size()) {
             creature.setTargetTile(currentTarget().tile());
-            creature.navigateTowardsTarget();
+            creature.navigateTowardsTarget(level);
         }
     }
 
