@@ -56,22 +56,22 @@ public class TengenMsPacMan_GameModel extends GameModel {
     };
 
     // Bonus symbols in Arcade, Mini and Big mazes
-    private static final byte BONUS_CHERRY      = 0;
-    private static final byte BONUS_STRAWBERRY  = 1;
-    private static final byte BONUS_ORANGE      = 2;
-    private static final byte BONUS_PRETZEL     = 3;
-    private static final byte BONUS_APPLE       = 4;
-    private static final byte BONUS_PEAR        = 5;
-            static final byte BONUS_BANANA      = 6;
+    public static final byte BONUS_CHERRY      = 0;
+    public static final byte BONUS_STRAWBERRY  = 1;
+    public static final byte BONUS_ORANGE      = 2;
+    public static final byte BONUS_PRETZEL     = 3;
+    public static final byte BONUS_APPLE       = 4;
+    public static final byte BONUS_PEAR        = 5;
+    public static final byte BONUS_BANANA      = 6;
 
     // Additional bonus symbols in Strange mazes
-            static final byte BONUS_MILK        = 7;
-            static final byte BONUS_ICE_CREAM   = 8;
-    private static final byte BONUS_HIGH_HEELS  = 9;
-    private static final byte BONUS_STAR        = 10;
-    private static final byte BONUS_HAND        = 11;
-    private static final byte BONUS_RING        = 12;
-    private static final byte BONUS_FLOWER      = 13;
+    public static final byte BONUS_MILK        = 7;
+    public static final byte BONUS_ICE_CREAM   = 8;
+    public static final byte BONUS_HIGH_HEELS  = 9;
+    public static final byte BONUS_STAR        = 10;
+    public static final byte BONUS_HAND        = 11;
+    public static final byte BONUS_RING        = 12;
+    public static final byte BONUS_FLOWER      = 13;
 
     // Bonus value = factor * 100
     private static final byte[] BONUS_VALUE_FACTORS = new byte[14];
