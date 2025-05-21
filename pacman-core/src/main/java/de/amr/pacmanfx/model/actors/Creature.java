@@ -43,12 +43,20 @@ public abstract class Creature extends Actor {
     @Override
     public String toString() {
         return "Creature{" +
-            "posX=" + x +
-            ", posY=" + y +
+            "visible=" + visible +
+            ", x=" + x +
+            ", y=" + y +
+            ", vx=" + vx +
+            ", vy=" + vy +
+            ", ax=" + ax +
+            ", ay=" + ay +
             ", moveDir=" + moveDir +
             ", wishDir=" + wishDir +
+            ", targetTile=" + targetTile +
             ", newTileEntered=" + newTileEntered +
             ", gotReverseCommand=" + gotReverseCommand +
+            ", canTeleport=" + canTeleport +
+            ", corneringSpeedUp" + corneringSpeedUp +
             '}';
     }
 

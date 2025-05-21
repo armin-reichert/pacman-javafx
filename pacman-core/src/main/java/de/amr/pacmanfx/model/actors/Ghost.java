@@ -50,13 +50,22 @@ public class Ghost extends Creature {
     @Override
     public String toString() {
         return "Ghost{" +
-            "name='" + name + '\'' +
-            ", state=" + state +
-            ". tile=" + tile() +
-            ", newTileEntered=" + newTileEntered +
-            ", gotReverseCommand=" + gotReverseCommand +
-            ", posX=" + x +
-            ", posY=" + y +
+                "name='" + name + '\'' +
+                ", state=" + state +
+                ", visible=" + visible +
+                ", x=" + x +
+                ", y=" + y +
+                ", vx=" + vx +
+                ", vy=" + vy +
+                ", ax=" + ax +
+                ", ay=" + ay +
+                ", moveDir=" + moveDir +
+                ", wishDir=" + wishDir +
+                ", targetTile=" + targetTile +
+                ", newTileEntered=" + newTileEntered +
+                ", gotReverseCommand=" + gotReverseCommand +
+                ", canTeleport=" + canTeleport +
+                ", corneringSpeedUp" + corneringSpeedUp +
             '}';
     }
 
