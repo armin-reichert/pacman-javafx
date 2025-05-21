@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static de.amr.pacmanfx.Globals.*;
 import static java.util.function.Predicate.not;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestEatingFood {
 
@@ -36,6 +36,32 @@ public class TestEatingFood {
                 theGameLevel().registerFoodEatenAt(tile);
                 pacManGame().onEnergizerEaten(tile);
             });
+    }
+
+    @Test
+    @DisplayName("Test Food Counting")
+    public void testFoodCounting() {
+        int eaten = theGameLevel().eatenFoodCount(), uneaten = theGameLevel().uneatenFoodCount();
+        eatNextPellet();
+        assertEquals(eaten + 1, theGameLevel().eatenFoodCount());
+        assertEquals(uneaten - 1, theGameLevel().uneatenFoodCount());
+
+        eaten = theGameLevel().eatenFoodCount();
+        uneaten = theGameLevel().uneatenFoodCount();
+        eatNextEnergizer();
+        assertEquals(eaten + 1, theGameLevel().eatenFoodCount());
+        assertEquals(uneaten - 1, theGameLevel().uneatenFoodCount());
+    }
+
+    @Test
+    @DisplayName("Test Level Completion")
+    public void testLevelCompletion() {
+        while (theGameLevel().uneatenFoodCount() > 0) {
+            assertFalse(theGame().isLevelCompleted());
+            eatNextPellet();
+            eatNextEnergizer();
+        }
+        assertTrue(theGame().isLevelCompleted());
     }
 
     @Test
