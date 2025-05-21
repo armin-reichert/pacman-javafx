@@ -169,13 +169,13 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         }
     }
 
-    protected void onPelletEaten() {
+    public void onPelletEaten() {
         scoreManager.scorePoints(PELLET_VALUE);
         level.pac().setRestingTicks(1);
         updateCruiseElroyMode();
     }
 
-    protected void onEnergizerEaten() {
+    public void onEnergizerEaten() {
         scoreManager.scorePoints(ENERGIZER_VALUE);
         Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
         level.pac().setRestingTicks(3);
