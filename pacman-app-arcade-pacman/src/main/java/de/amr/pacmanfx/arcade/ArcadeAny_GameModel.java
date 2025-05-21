@@ -132,7 +132,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
 
     public boolean isCruiseElroyModeActive() { return cruiseElroy > 0; }
 
-    protected void updateCruiseElroyMode() {
+    public void updateCruiseElroyMode() {
         if (level.uneatenFoodCount() == level.data().elroy1DotsLeft()) {
             cruiseElroy = 1;
         } else if (level.uneatenFoodCount() == level.data().elroy2DotsLeft()) {
@@ -152,13 +152,14 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         if (level.hasFoodAt(tile)) {
             level.pac().starvingEnds();
             level.registerFoodEatenAt(tile);
-            gateKeeper().ifPresent(gateKeeper -> gateKeeper.registerFoodEaten(level));
             if (level.isEnergizerPosition(tile)) {
-                theSimulationStep().setFoundEnergizerAtTile(tile);
-                onEnergizerEaten();
+                onEnergizerEaten(tile);
             } else {
-                onPelletEaten();
+                scoreManager.scorePoints(PELLET_VALUE);
+                level.pac().setRestingTicks(1);
             }
+            updateCruiseElroyMode();
+            gateKeeper().ifPresent(gateKeeper -> gateKeeper.registerFoodEaten(level));
             if (isBonusReached()) {
                 activateNextBonus();
                 theSimulationStep().setBonusIndex(level.currentBonusIndex());
@@ -169,18 +170,12 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         }
     }
 
-    public void onPelletEaten() {
-        scoreManager.scorePoints(PELLET_VALUE);
-        level.pac().setRestingTicks(1);
-        updateCruiseElroyMode();
-    }
-
-    public void onEnergizerEaten() {
+    public void onEnergizerEaten(Vector2i tile) {
+        theSimulationStep().setFoundEnergizerAtTile(tile);
         scoreManager.scorePoints(ENERGIZER_VALUE);
         Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
         level.pac().setRestingTicks(3);
         Logger.info("Resting 3 ticks");
-        updateCruiseElroyMode();
         level.victims().clear();
         level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseAtNextOccasion);
         long powerTicks = pacPowerTicks(level);

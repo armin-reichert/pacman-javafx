@@ -25,7 +25,7 @@ public class TestCruiseElroy {
             .filter(not(theGameLevel()::isEnergizerPosition))
             .findFirst().ifPresent(tile -> {
                 theGameLevel().registerFoodEatenAt(tile);
-                pacManGame().onPelletEaten();
+                pacManGame().updateCruiseElroyMode();
             });
     }
 
@@ -34,7 +34,7 @@ public class TestCruiseElroy {
             .filter(theGameLevel()::hasFoodAt)
             .findFirst().ifPresent(tile -> {
                 theGameLevel().registerFoodEatenAt(tile);
-                pacManGame().onEnergizerEaten();
+                pacManGame().updateCruiseElroyMode();
             });
     }
 
