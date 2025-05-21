@@ -155,10 +155,8 @@ public abstract class ArcadeAny_GameModel extends GameModel {
             if (level.isEnergizerPosition(tile)) {
                 onEnergizerEaten(tile);
             } else {
-                scoreManager.scorePoints(PELLET_VALUE);
-                level.pac().setRestingTicks(1);
+                onPelletEaten();
             }
-            updateCruiseElroyMode();
             gateKeeper().ifPresent(gateKeeper -> gateKeeper.registerFoodEaten(level));
             if (isBonusReached()) {
                 activateNextBonus();
@@ -170,20 +168,25 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         }
     }
 
+    public void onPelletEaten() {
+        scoreManager.scorePoints(PELLET_VALUE);
+        level.pac().setRestingTicks(1);
+        updateCruiseElroyMode();
+    }
+
     public void onEnergizerEaten(Vector2i tile) {
         theSimulationStep().setFoundEnergizerAtTile(tile);
         scoreManager.scorePoints(ENERGIZER_VALUE);
-        Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
         level.pac().setRestingTicks(3);
-        Logger.info("Resting 3 ticks");
+        updateCruiseElroyMode();
         level.victims().clear();
         level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseAtNextOccasion);
         long powerTicks = pacPowerTicks(level);
         if (powerTicks > 0) {
             level.huntingTimer().stop();
-            Logger.info("Hunting stopped because Pac-Man got power");
+            Logger.debug("Hunting stopped because Pac-Man got power");
             level.pac().powerTimer().restartTicks(powerTicks);
-            Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerTicks / NUM_TICKS_PER_SEC);
+            Logger.debug("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerTicks / NUM_TICKS_PER_SEC);
             level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             theSimulationStep().setPacGotPower();
             theGameEventManager().publishEvent(this, GameEventType.PAC_GETS_POWER);

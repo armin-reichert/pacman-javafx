@@ -8,7 +8,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static java.util.function.Predicate.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TestCruiseElroy {
+public class TestEatingFood {
 
     @BeforeAll
     static void setup() {
@@ -25,7 +25,7 @@ public class TestCruiseElroy {
             .filter(not(theGameLevel()::isEnergizerPosition))
             .findFirst().ifPresent(tile -> {
                 theGameLevel().registerFoodEatenAt(tile);
-                pacManGame().updateCruiseElroyMode();
+                pacManGame().onPelletEaten();
             });
     }
 
@@ -34,7 +34,7 @@ public class TestCruiseElroy {
             .filter(theGameLevel()::hasFoodAt)
             .findFirst().ifPresent(tile -> {
                 theGameLevel().registerFoodEatenAt(tile);
-                pacManGame().updateCruiseElroyMode();
+                pacManGame().onEnergizerEaten(tile);
             });
     }
 
@@ -62,4 +62,14 @@ public class TestCruiseElroy {
         }
         assertEquals(2, pacManGame().cruiseElroy());
     }
+
+    @Test
+    @DisplayName("Test Resting")
+    public void testResting() {
+        eatNextPellet();
+        assertEquals(1, theGameLevel().pac().restingTicks());
+        eatNextEnergizer();
+        assertEquals(3, theGameLevel().pac().restingTicks());
+    }
+
 }

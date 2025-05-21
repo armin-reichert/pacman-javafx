@@ -152,6 +152,8 @@ public class Pac extends Creature {
         return !dead;
     }
 
+    public int restingTicks() { return restingTicks; }
+
     public void setRestingTicks(int ticks) {
         if (ticks == REST_INDEFINITELY || ticks >= 0) {
             restingTicks = ticks;
