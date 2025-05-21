@@ -144,7 +144,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
             @Override
             public Vector2i chasingTargetTile(GameLevel level) {
-                return level.pac().tilesAhead(4, false);
+                return level.pac().tilesAhead(4);
             }
         };
     }
@@ -161,7 +161,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
             @Override
             public Vector2i chasingTargetTile(GameLevel level) {
-                return level.pac().tilesAhead(2, false).scaled(2).minus(level.ghost(RED_GHOST_SHADOW).tile());
+                return level.pac().tilesAhead(2).scaled(2).minus(level.ghost(RED_GHOST_SHADOW).tile());
             }
         };
     }

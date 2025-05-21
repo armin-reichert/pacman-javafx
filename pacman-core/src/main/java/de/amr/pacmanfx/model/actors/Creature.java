@@ -170,18 +170,26 @@ public abstract class Creature extends Actor {
 
     /**
      * @param numTiles number of tiles
-     * @param overflowBug if {@code true} the Arcade game overflow bug is simulated
      * @return the tile located the given number of tiles towards the current move direction of the creature.
-     *          Overflow bug: In case the creature looks UP, additional {@code numTiles} tiles are added towards LEFT.
      */
-    public Vector2i tilesAhead(int numTiles, boolean overflowBug) {
+    public Vector2i tilesAhead(int numTiles) {
         Vector2i currentTile = tile();
         int x = currentTile.x() + moveDir.vector().x() * numTiles;
         int y = currentTile.y() + moveDir.vector().y() * numTiles;
-        if (overflowBug && moveDir == UP) {
-            x -= numTiles;
-        }
         return new Vector2i(x, y);
+    }
+
+    /**
+     * @param numTiles number of tiles
+     * @return the tile located the given number of tiles towards the current move direction of the creature.
+     *          Overflow bug: In case the creature looks UP, additional {@code numTiles} tiles are added towards LEFT.
+     */
+    public Vector2i tilesAheadWithArcadeOverflowBug(int numTiles) {
+        Vector2i ahead = tilesAhead(numTiles);
+        if (moveDir == UP) {
+            ahead = ahead.minus(numTiles, 0);
+        }
+        return ahead;
     }
 
     /**
