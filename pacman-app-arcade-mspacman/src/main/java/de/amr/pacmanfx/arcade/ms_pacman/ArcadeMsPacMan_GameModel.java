@@ -43,6 +43,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
 
+    private static final byte[] BONUS_VALUE_MULTIPLIERS = {1, 2, 5, 7, 10, 20, 50}; // points = value * 100
+
     public static Pac createMsPacMan() {
         var pac = new Pac("Ms. Pac-Man");
         pac.reset();
@@ -133,7 +135,9 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
             @Override
             public Vector2i chasingTargetTile(GameLevel level) {
                 // Attacks directly or retreats towards scatter target if Pac is near
-                return tile().euclideanDist(level.pac().tile()) < 8 ? level.ghostScatterTile(personality()) : level.pac().tile();
+                return tile().euclideanDist(level.pac().tile()) < 8
+                    ? level.ghostScatterTile(personality())
+                    : level.pac().tile();
             }
         };
     }
@@ -368,18 +372,17 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
 
         Vector2i houseEntry = tileAt(level.houseEntryPosition());
         Vector2i backyard = houseEntry.plus(0, level.houseSizeInTiles().y() + 1);
-        List<Waypoint> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).map(Waypoint::new).toList();
+        List<Waypoint> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile)
+            .map(Waypoint::new).toList();
 
         byte symbol = level.bonusSymbol(level.currentBonusIndex());
         var bonus = new MovingBonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
         bonus.setEdibleTicks(TickTimer.INDEFINITE);
         bonus.setRoute(route, crossingLeftToRight);
-        Logger.info("Moving bonus created, route: {} (crossing {})", route, crossingLeftToRight ? "left to right" : "right to left");
+        Logger.info("Moving bonus created, route: {} (crossing {})", route,
+            crossingLeftToRight ? "left to right" : "right to left");
 
         level.setBonus(bonus);
         theGameEventManager().publishEvent(this, GameEventType.BONUS_ACTIVATED, bonus.actor().tile());
     }
-
-    private final byte[] BONUS_VALUE_MULTIPLIERS = {1, 2, 5, 7, 10, 20, 50}; // points = value * 100
-
 }
