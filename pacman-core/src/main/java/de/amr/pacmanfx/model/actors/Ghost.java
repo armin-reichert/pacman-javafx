@@ -15,7 +15,8 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Validations.*;
 import static de.amr.pacmanfx.lib.Direction.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
@@ -34,7 +35,6 @@ public class Ghost extends Creature {
     private GhostState state;
     private Vector2f revivalPosition;
     private List<Vector2i> specialTerrainTiles = List.of();
-    private byte cruiseElroy;
 
     /**
      * Constructs a ghost without associated world like the ones in the cut scenes.
@@ -79,14 +79,6 @@ public class Ghost extends Creature {
 
     public List<Vector2i> specialTerrainTiles() {
         return specialTerrainTiles;
-    }
-
-    public byte cruiseElroy() {
-        return cruiseElroy;
-    }
-
-    public void setCruiseElroy(int cruiseElroy) {
-        this.cruiseElroy = (byte) cruiseElroy;
     }
 
     public void hunt(GameLevel level) {}

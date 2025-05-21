@@ -35,6 +35,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
     protected GateKeeper gateKeeper;
     protected Steering autopilot;
     protected Steering demoLevelSteering;
+    protected int cruiseElroy;
 
     @Override
     public Optional<GateKeeper> gateKeeper() { return Optional.of(gateKeeper); }
@@ -104,7 +105,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         level.pac().powerTimer().stop();
         level.pac().powerTimer().reset(0);
         gateKeeper.resetCounterAndSetEnabled(true);
-        setCruiseElroyModeEnabled(level.ghost(RED_GHOST_SHADOW), false);
+        activateCruiseElroyMode(false);
         level.pac().die();
     }
 
@@ -125,17 +126,23 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         }
     }
 
-    protected void updateCruiseElroyMode(Ghost ghost) {
+    public int cruiseElroy() {
+        return cruiseElroy;
+    }
+
+    public boolean isCruiseElroyModeActive() { return cruiseElroy > 0; }
+
+    protected void updateCruiseElroyMode() {
         if (level.uneatenFoodCount() == level.data().elroy1DotsLeft()) {
-            ghost.setCruiseElroy(1);
+            cruiseElroy = 1;
         } else if (level.uneatenFoodCount() == level.data().elroy2DotsLeft()) {
-            ghost.setCruiseElroy(2);
+            cruiseElroy = 2;
         }
     }
 
-    protected void setCruiseElroyModeEnabled(Ghost ghost, boolean enabled) {
-        int value = Math.abs(ghost.cruiseElroy());
-        ghost.setCruiseElroy(enabled ? value : -value);
+    protected void activateCruiseElroyMode(boolean active) {
+        int absValue = Math.abs(cruiseElroy);
+        cruiseElroy = active ? absValue : -absValue;
     }
 
     // Food handling
@@ -165,7 +172,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
     protected void onPelletEaten() {
         scoreManager.scorePoints(PELLET_VALUE);
         level.pac().setRestingTicks(1);
-        updateCruiseElroyMode(level.ghost(RED_GHOST_SHADOW));
+        updateCruiseElroyMode();
     }
 
     protected void onEnergizerEaten() {
@@ -173,7 +180,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
         level.pac().setRestingTicks(3);
         Logger.info("Resting 3 ticks");
-        updateCruiseElroyMode(level.ghost(RED_GHOST_SHADOW));
+        updateCruiseElroyMode();
         level.victims().clear();
         level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseAtNextOccasion);
         long powerTicks = pacPowerTicks(level);

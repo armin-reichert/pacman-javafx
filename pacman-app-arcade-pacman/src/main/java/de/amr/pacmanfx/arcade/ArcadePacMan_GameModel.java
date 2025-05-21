@@ -58,8 +58,9 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
         return new Ghost(RED_GHOST_SHADOW, "Blinky") {
             @Override
             public void hunt(GameLevel level) {
+                var arcadeGame = (ArcadeAny_GameModel) theGame();
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
-                boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || cruiseElroy() > 0;
+                boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || arcadeGame.cruiseElroy() > 0;
                 Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                 followTarget(level, targetTile, speed);
             }
@@ -194,9 +195,9 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
 
         gateKeeper = new GateKeeper();
         gateKeeper.setOnGhostReleased(prisoner -> {
-            if (prisoner.personality() == ORANGE_GHOST_POKEY && level.ghost(RED_GHOST_SHADOW).cruiseElroy() < 0) {
-                Logger.debug("Re-enable Blinky Cruise Elroy mode because {} got released:", prisoner.name());
-                setCruiseElroyModeEnabled(level.ghost(RED_GHOST_SHADOW), true);
+            if (prisoner.personality() == ORANGE_GHOST_POKEY && !isCruiseElroyModeActive()) {
+                Logger.debug("Re-enable 'Cruise Elroy' mode because {} got released:", prisoner.name());
+                activateCruiseElroyMode(true);
             }
         });
 

@@ -98,11 +98,7 @@ public class InfoBoxActorInfo extends InfoBox {
     }
 
     protected String ghostNameAndState(GameModel game, Ghost ghost) {
-        String name = ghost.name();
-        if (ghost.cruiseElroy() > 0) {
-            name = "%s (Elroy %d)".formatted(name, ghost.cruiseElroy());
-        }
-        return String.format("%s (%s)", name, ghostState(ghost));
+        return String.format("%s (%s)", ghost.name(), ghostState(ghost));
     }
 
     private String ghostAnimation(GameModel game, Ghost ghost) {

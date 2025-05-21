@@ -68,7 +68,8 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
                 if (level.huntingTimer().phaseIndex() == 0) {
                     roam(level, speed);
                 } else {
-                    boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || cruiseElroy() > 0;
+                    var arcadeGame = (ArcadeAny_GameModel) theGame();
+                    boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || arcadeGame.isCruiseElroyModeActive();
                     Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                     followTarget(level, targetTile, speed);
                 }
@@ -199,14 +200,17 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
             }
         };
         huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
-            if (nv.intValue() > 0) level.ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE).forEach(Ghost::reverseAtNextOccasion);
+            if (nv.intValue() > 0) {
+                level.ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
+                    .forEach(Ghost::reverseAtNextOccasion);
+            }
         });
 
         gateKeeper = new GateKeeper();
         gateKeeper.setOnGhostReleased(prisoner -> {
-            if (prisoner.personality() == ORANGE_GHOST_POKEY && level.ghost(RED_GHOST_SHADOW).cruiseElroy() < 0) {
-                Logger.trace("Re-enable Blinky Cruise Elroy mode because {} exits house:", prisoner.name());
-                setCruiseElroyModeEnabled(level.ghost(RED_GHOST_SHADOW), true);
+            if (prisoner.personality() == ORANGE_GHOST_POKEY && !isCruiseElroyModeActive()) {
+                Logger.trace("Re-enable 'Cruise Elroy' mode because {} exits house:", prisoner.name());
+                activateCruiseElroyMode(true);
             }
         });
 

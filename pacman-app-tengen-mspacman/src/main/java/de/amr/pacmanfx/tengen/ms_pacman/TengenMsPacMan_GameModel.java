@@ -115,7 +115,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
                 if (level.huntingTimer().phaseIndex() == 0) {
                     roam(level, speed);
                 } else {
-                    boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || cruiseElroy() > 0;
+                    boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
                     Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                     followTarget(level, targetTile, speed);
                 }
