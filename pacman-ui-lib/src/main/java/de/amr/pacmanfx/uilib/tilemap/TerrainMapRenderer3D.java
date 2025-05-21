@@ -138,7 +138,9 @@ public class TerrainMapRenderer3D {
             //TODO provide more general solution for polygons with holes
             if ("dcgbfceb".equals(encoding) && !oShapeFilled) { // O-shape with hole
                 Vector2i[] cornerCenters = obstacle.cornerCenters();
-                addTowers(og, cornerCenters);
+                for (Vector2i center : cornerCenters) {
+                    og.getChildren().add(createCircularWall(center, HTS));
+                }
                 addWallBetween(og, cornerCenters[0], cornerCenters[1], TS);
                 addWallBetween(og, cornerCenters[1], cornerCenters[2], TS);
                 addWallBetween(og, cornerCenters[2], cornerCenters[3], TS);
@@ -152,15 +154,11 @@ public class TerrainMapRenderer3D {
     }
 
     private void render_ClosedSingleWallObstacle(Group parent, Obstacle obstacle) {
-        addTowers(parent, obstacle.cornerCenters());
-        obstacle.innerAreaRectPartition()
-            .forEach(r -> parent.getChildren().add( createWallCenteredAt(r.center(), r.width(), r.height()) ));
-    }
-
-    private void addTowers(Group parent, Vector2i... centers) {
-        for (Vector2i center : centers) {
+        for (Vector2i center : obstacle.cornerCenters()) {
             parent.getChildren().add(createCircularWall(center, HTS));
         }
+        obstacle.innerAreaRectPartition()
+            .forEach(r -> parent.getChildren().add( createWallCenteredAt(r.center(), r.width(), r.height()) ));
     }
 
     private void render_UnfilledObstacle(Group parent, Obstacle obstacle){
