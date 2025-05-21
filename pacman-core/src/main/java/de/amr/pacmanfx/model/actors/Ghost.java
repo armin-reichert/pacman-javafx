@@ -89,20 +89,6 @@ public class Ghost extends Creature {
         this.cruiseElroy = (byte) cruiseElroy;
     }
 
-    public void updateCruiseElroyMode(GameLevel level) {
-        if (level.uneatenFoodCount() == level.data().elroy1DotsLeft()) {
-            setCruiseElroy(1);
-        } else if (level.uneatenFoodCount() == level.data().elroy2DotsLeft()) {
-            setCruiseElroy(2);
-        }
-    }
-
-    public void enableCruiseElroyMode(GameLevel level, boolean enabled) {
-        if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
-            setCruiseElroy(-level.ghost(RED_GHOST_SHADOW).cruiseElroy());
-        }
-    }
-
     public void hunt(GameLevel level) {}
 
     public Vector2i chasingTargetTile(GameLevel level) { return null; }

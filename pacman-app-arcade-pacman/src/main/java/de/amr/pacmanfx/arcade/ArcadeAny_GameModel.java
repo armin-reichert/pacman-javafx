@@ -104,7 +104,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         level.pac().powerTimer().stop();
         level.pac().powerTimer().reset(0);
         gateKeeper.resetCounterAndSetEnabled(true);
-        level.ghost(RED_GHOST_SHADOW).enableCruiseElroyMode(level, false);
+        setCruiseElroyModeEnabled(level.ghost(RED_GHOST_SHADOW), false);
         level.pac().die();
     }
 
@@ -123,6 +123,19 @@ public abstract class ArcadeAny_GameModel extends GameModel {
             scoreManager.scorePoints(extraPoints);
             Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, level.number());
         }
+    }
+
+    protected void updateCruiseElroyMode(Ghost ghost) {
+        if (level.uneatenFoodCount() == level.data().elroy1DotsLeft()) {
+            ghost.setCruiseElroy(1);
+        } else if (level.uneatenFoodCount() == level.data().elroy2DotsLeft()) {
+            ghost.setCruiseElroy(2);
+        }
+    }
+
+    protected void setCruiseElroyModeEnabled(Ghost ghost, boolean enabled) {
+        int value = Math.abs(ghost.cruiseElroy());
+        ghost.setCruiseElroy(enabled ? value : -value);
     }
 
     // Food handling
@@ -152,7 +165,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
     protected void onPelletEaten() {
         scoreManager.scorePoints(PELLET_VALUE);
         level.pac().setRestingTicks(1);
-        level.ghost(RED_GHOST_SHADOW).updateCruiseElroyMode(level);
+        updateCruiseElroyMode(level.ghost(RED_GHOST_SHADOW));
     }
 
     protected void onEnergizerEaten() {
@@ -160,7 +173,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
         level.pac().setRestingTicks(3);
         Logger.info("Resting 3 ticks");
-        level.ghost(RED_GHOST_SHADOW).updateCruiseElroyMode(level);
+        updateCruiseElroyMode(level.ghost(RED_GHOST_SHADOW));
         level.victims().clear();
         level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseAtNextOccasion);
         long powerTicks = pacPowerTicks(level);

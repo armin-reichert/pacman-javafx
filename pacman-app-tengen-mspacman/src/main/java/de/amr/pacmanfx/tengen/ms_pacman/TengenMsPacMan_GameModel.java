@@ -204,7 +204,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         levelCounter = new TengenMsPacMan_LevelCounter();
         speedControl = new TengenActorSpeedControl();
         mapSelector = new TengenMsPacMan_MapSelector();
-        gateKeeper = new GateKeeper();
+        gateKeeper = new GateKeeper(); //TODO implement Tengen logic
         huntingTimer = new TengenMsPacMan_HuntingTimer();
         huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
             if (nv.intValue() > 0) level.ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE).forEach(Ghost::reverseAtNextOccasion);
