@@ -51,7 +51,7 @@ public class TestCruiseElroy {
             eatNextPellet();
         }
         assertEquals(2, pacManGame().cruiseElroy());
-        while (theGameLevel().uneatenFoodCount() > 4) {
+        while (theGameLevel().uneatenFoodCount() > theGameLevel().energizerTiles().count()) {
             assertEquals(2, pacManGame().cruiseElroy());
             eatNextPellet();
         }
