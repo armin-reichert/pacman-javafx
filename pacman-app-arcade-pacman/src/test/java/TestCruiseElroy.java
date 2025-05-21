@@ -39,8 +39,8 @@ public class TestCruiseElroy {
     }
 
     @Test
-    @DisplayName("Test Cruise Elroy Mode 1")
-    public void testCruiseElroyMode1() {
+    @DisplayName("Test Cruise Elroy Mode")
+    public void testCruiseElroyMode() {
         while (theGameLevel().uneatenFoodCount() > theGameLevel().data().elroy1DotsLeft()) {
             assertEquals(0, pacManGame().cruiseElroy());
             eatNextPellet();
