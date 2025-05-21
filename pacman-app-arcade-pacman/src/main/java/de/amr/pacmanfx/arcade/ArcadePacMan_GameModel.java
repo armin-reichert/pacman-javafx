@@ -120,7 +120,9 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
             @Override
             public Vector2i chasingTargetTile(GameLevel level) {
                 // Attacks directly or retreats towards scatter target if Pac is near
-                return tile().euclideanDist(level.pac().tile()) < 8 ? level.ghostScatterTile(personality()) : level.pac().tile();
+                return tile().euclideanDist(level.pac().tile()) < 8
+                    ? level.ghostScatterTile(personality())
+                    : level.pac().tile();
             }
         };
     }
@@ -190,7 +192,10 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
             }
         };
         huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
-            if (nv.intValue() > 0) level.ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE).forEach(Ghost::reverseAtNextOccasion);
+            if (nv.intValue() > 0) {
+                level.ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
+                    .forEach(Ghost::reverseAtNextOccasion);
+            }
         });
 
         gateKeeper = new GateKeeper();
@@ -261,7 +266,9 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
 
         // Each level has a single bonus symbol appearing twice during the level
         // From level 13 on, the same symbol (7 = "key") appears
-        byte bonusSymbol = levelNumber >= 13 ? BONUS_SYMBOLS_BY_LEVEL_NUMBER[13] : BONUS_SYMBOLS_BY_LEVEL_NUMBER[levelNumber];
+        byte bonusSymbol = levelNumber >= 13
+            ? BONUS_SYMBOLS_BY_LEVEL_NUMBER[13]
+            : BONUS_SYMBOLS_BY_LEVEL_NUMBER[levelNumber];
         level.setBonusSymbol(0, bonusSymbol);
         level.setBonusSymbol(1, bonusSymbol);
 
