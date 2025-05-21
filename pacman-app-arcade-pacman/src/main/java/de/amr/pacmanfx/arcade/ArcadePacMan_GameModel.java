@@ -248,12 +248,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
         List<Vector2i> oneWayDownTiles = worldMap.tiles()
             .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTiles.ONE_WAY_DOWN)
             .toList();
-        level.setGhosts(
-            createRedGhost(),
-            createPinkGhost(),
-            createCyanGhost(),
-            createOrangeGhost()
-        );
+        level.setGhosts(createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost());
         level.ghosts().forEach(ghost -> {
             ghost.reset();
             ghost.setRevivalPosition(ghost.personality() == RED_GHOST_SHADOW

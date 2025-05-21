@@ -241,12 +241,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
         msPacMan.setAutopilotAlgorithm(autopilot);
         level.setPac(msPacMan);
 
-        level.setGhosts(
-            createRedGhost(),
-            createPinkGhost(),
-            createCyanGhost(),
-            createOrangeGhost()
-        );
+        level.setGhosts(createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost());
         level.ghosts().forEach(ghost -> {
             ghost.reset();
             ghost.setRevivalPosition(ghost.personality() == RED_GHOST_SHADOW
