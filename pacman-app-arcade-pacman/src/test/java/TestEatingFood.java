@@ -1,6 +1,7 @@
 import de.amr.pacmanfx.arcade.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.model.GameVariant;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -14,6 +15,10 @@ public class TestEatingFood {
     static void setup() {
         theGameController().register(GameVariant.PACMAN, new ArcadePacMan_GameModel());
         theGameController().select(GameVariant.PACMAN);
+    }
+
+    @BeforeEach
+    public void prepareLevel() {
         theGame().buildNormalLevel(1);
     }
 
@@ -30,7 +35,7 @@ public class TestEatingFood {
     }
 
     private void eatNextEnergizer() {
-        theGameLevel(). energizerTiles()
+        theGameLevel().energizerTiles()
             .filter(theGameLevel()::hasFoodAt)
             .findFirst().ifPresent(tile -> {
                 theGameLevel().registerFoodEatenAt(tile);
