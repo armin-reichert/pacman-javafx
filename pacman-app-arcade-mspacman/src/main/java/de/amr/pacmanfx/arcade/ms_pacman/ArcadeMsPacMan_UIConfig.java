@@ -64,6 +64,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUIConfig, ResourceManager {
         assets.store("ms_pacman.startpage.image1",                loadImage("graphics/f1.jpg"));
         assets.store("ms_pacman.startpage.image2",                loadImage("graphics/f2.jpg"));
 
+        assets.store("ms_pacman.color.score",                     ARCADE_WHITE);
         assets.store("ms_pacman.color.game_over_message",         ARCADE_RED);
 
         assets.store("ms_pacman.pac.color.head",                  ARCADE_YELLOW);

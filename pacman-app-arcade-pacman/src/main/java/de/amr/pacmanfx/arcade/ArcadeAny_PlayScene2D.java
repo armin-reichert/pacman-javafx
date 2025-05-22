@@ -55,12 +55,11 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         gr.applyMapSettings(theGameLevel().worldMap());
         if (theGameLevel().isDemoLevel()) {
             bindArcadeInsertCoinAction();
-            updateActionBindings();
         } else {
             bindArcadePlayerActions();
             bindCheatActions();
-            updateActionBindings();
         }
+        updateActionBindings();
     }
 
     @Override
@@ -74,12 +73,6 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         if (!silent) {
             theSound().playGameReadySound();
         }
-    }
-
-    @Override
-    protected void doEnd() {
-        theSound().stopAll();
-        clearActionBindings();
     }
 
     @Override
@@ -154,7 +147,9 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
         gr.applyMapSettings(theGameLevel().worldMap());
 
-        gr.drawScores(theGame().scoreManager(), ARCADE_WHITE, arcadeFontScaledTS());
+        Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
+        gr.drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
+
         gr.drawMaze(theGameLevel(), 0, 3 * TS, backgroundColor(),
             levelCompleteAnimation != null && levelCompleteAnimation.inHighlightPhase(),
             theGameLevel().blinking().isOn());

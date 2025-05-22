@@ -34,6 +34,7 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.tinylog.Logger;
 
@@ -443,7 +444,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         r.ctx().translate(scaled(2 * TS), 0);
         r.setScaling(scaling());
 
-        r.drawScores(tengenGame.scoreManager(), nesPaletteColor(0x20), arcadeFontScaledTS());
+        Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
+        gr.drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
+
         final int mazeTopY = 3 * TS;
         final boolean flashing = levelCompleteAnimation != null && levelCompleteAnimation.inFlashingPhase();
         if (flashing) {

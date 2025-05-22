@@ -20,6 +20,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createRe
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.pacmanfx.ui.GameAssets.ARCADE_WHITE;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theAssets;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.theUIConfig;
 
 /**
@@ -105,7 +106,8 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     protected void drawSceneContent() {
         final Font font = arcadeFontScaledTS();
         gr.fillCanvas(backgroundColor());
-        gr.drawScores(theGame().scoreManager(), ARCADE_WHITE, font);
+        Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
+        gr.drawScores(theGame().scoreManager(), scoreColor, font);
         var r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
         r.setScaling(scaling());

@@ -8,6 +8,7 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.theCoinMechanism;
@@ -15,8 +16,7 @@ import static de.amr.pacmanfx.Globals.theGame;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.GameAssets.*;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.theAssets;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.theSound;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
 /**
  * @author Armin Reichert
@@ -44,7 +44,8 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         Font font = arcadeFontScaledTS();
         Font font6 = theAssets().arcadeFontAtSize(scaled(6));
         gr.fillCanvas(backgroundColor());
-        gr.drawScores(theGame().scoreManager(), ARCADE_WHITE, font);
+        Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
+        gr.drawScores(theGame().scoreManager(), scoreColor, font);
         GameSpriteSheet spriteSheet = gr.spriteSheet();
         gr.fillTextAtScaledTilePosition("PUSH START BUTTON", ARCADE_ORANGE, font, 6, 16);
         gr.fillTextAtScaledTilePosition("1 PLAYER ONLY", ARCADE_ORANGE, font, 8, 18);

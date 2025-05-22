@@ -113,7 +113,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     @Override
     public void drawSceneContent() {
         gr.fillCanvas(backgroundColor());
-        gr.drawScores(theGame().scoreManager(), ARCADE_WHITE, arcadeFontScaledTS());
+        Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
+        gr.drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
         gr.fillTextAtScaledPosition(
             "CREDIT %2d".formatted(theCoinMechanism().numCoins()),
             ARCADE_WHITE, arcadeFontScaledTS(), 2 * TS, sizeInPx().y() - 2);

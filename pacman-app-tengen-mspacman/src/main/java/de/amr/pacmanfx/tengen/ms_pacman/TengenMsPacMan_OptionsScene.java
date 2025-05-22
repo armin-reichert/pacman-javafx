@@ -17,8 +17,8 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameAction.START_P
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameAction.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.CONTINUES_SPRITES;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.theJoypad;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.theSound;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theUIConfig;
 import static de.amr.pacmanfx.uilib.input.Keyboard.alt;
 
 /**
@@ -230,7 +230,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     protected void drawSceneContent() {
         final Font font = arcadeFontScaledTS();
         gr.fillCanvas(backgroundColor());
-        gr.drawScores(theGame().scoreManager(), nesPaletteColor(0x20), font);
+        Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
+        gr.drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
         TengenMsPacMan_Renderer2D r = (TengenMsPacMan_Renderer2D) gr;
         r.drawSceneBorderLines();
 
