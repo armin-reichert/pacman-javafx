@@ -176,7 +176,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
             gr.drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - 2 * TS);
         } else {
             gr.fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
-                ARCADE_WHITE, arcadeFontScaledTS(), 2 * TS, sizeInPx().y() - 2);
+                scoreColor, arcadeFontScaledTS(), 2 * TS, sizeInPx().y() - 2);
         }
         gr.drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }

@@ -55,8 +55,8 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
             r.drawMidwayCopyright(6, 28, ARCADE_RED, font);
         }
-        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()), ARCADE_WHITE, font,
-            tiles_to_px(2), sizeInPx().y() - 2);
+        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
+                scoreColor, font, tiles_to_px(2), sizeInPx().y() - 2);
         gr.drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 

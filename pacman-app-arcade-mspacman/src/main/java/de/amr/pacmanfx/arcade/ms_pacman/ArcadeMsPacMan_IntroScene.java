@@ -147,7 +147,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         if (gr instanceof ArcadeMsPacMan_GameRenderer r) { // might be PacManXXL vector renderer!
             r.drawMidwayCopyright(6, 28, ARCADE_RED, font);
         }
-        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()), ARCADE_WHITE, font, 2 * TS, sizeInPx().y() - 2);
+        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
+                scoreColor, font, 2 * TS, sizeInPx().y() - 2);
         gr.drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 

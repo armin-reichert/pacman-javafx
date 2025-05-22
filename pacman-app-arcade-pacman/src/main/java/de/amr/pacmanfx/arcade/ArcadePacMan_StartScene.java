@@ -50,7 +50,8 @@ public class ArcadePacMan_StartScene extends GameScene2D {
             // In Pac-Man XXL, another renderer is used!
             r.drawMidwayCopyright(4, 29, ARCADE_PINK, font);
         }
-        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()), ARCADE_WHITE, font, 2 * TS, sizeInPx().y() - 2);
+        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
+                scoreColor, font, 2 * TS, sizeInPx().y() - 2);
         gr.drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 

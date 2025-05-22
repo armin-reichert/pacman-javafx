@@ -115,9 +115,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         gr.fillCanvas(backgroundColor());
         Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
         gr.drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
-        gr.fillTextAtScaledPosition(
-            "CREDIT %2d".formatted(theCoinMechanism().numCoins()),
-            ARCADE_WHITE, arcadeFontScaledTS(), 2 * TS, sizeInPx().y() - 2);
+        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
+            scoreColor, arcadeFontScaledTS(), 2 * TS, sizeInPx().y() - 2);
         gr.drawLevelCounter(theGame().levelCounter(), sizeInPx());
 
         drawGallery();
