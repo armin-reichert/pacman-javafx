@@ -9,6 +9,8 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.MapSelector;
 import org.tinylog.Logger;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 public class ArcadePacMan_MapSelector extends MapSelector {
@@ -26,12 +28,18 @@ public class ArcadePacMan_MapSelector extends MapSelector {
     public void loadAllMaps(GameModel game) {
         if (theMap == null) {
             try {
-                theMap = new WorldMap(getClass().getResource(MAP_PATH));
-                theMap.setConfigValue("mapNumber", 1);
-                theMap.setConfigValue("colorMapIndex", 0);
-                Logger.info("Pac-Man Arcade map loaded, URL={}", theMap.url());
-            } catch (Exception x) {
-                Logger.error("Could not load map from path {}", MAP_PATH);
+                URL mapURL = getClass().getResource(MAP_PATH);
+                if (mapURL != null) {
+                    theMap = new WorldMap(mapURL);
+                    theMap.setConfigValue("mapNumber", 1);
+                    theMap.setConfigValue("colorMapIndex", 0);
+                    Logger.info("Pac-Man Arcade map loaded, URL='{}'", theMap.url());
+                } else {
+                    Logger.error("Could not locate Pac-Man Arcade map, path='{}'", MAP_PATH);
+                    throw new IllegalStateException();
+                }
+            } catch (IOException x) {
+                Logger.error("Could not load Pac-Man Arcade map, path={}", MAP_PATH);
                 throw new IllegalStateException(x);
             }
         }

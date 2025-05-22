@@ -68,7 +68,7 @@ public class PacManGamesUI implements GameUI {
         } catch (Exception x) {
             Logger.error(x);
             Logger.error("SOMETHING VERY BAD HAPPENED DURING SIMULATION STEP!");
-            showFlashMessageSec(10, "KA-TA-STROPHE!");
+            showFlashMessageSec(10, "KA-TA-STROOO-PHE!\nSOMEONE CALL AN AMBULANCE!");
         }
     }
 
@@ -78,7 +78,7 @@ public class PacManGamesUI implements GameUI {
         } catch (Exception x) {
             Logger.error(x);
             Logger.error("SOMETHING VERY BAD HAPPENED DURING SIMULATION STEP!");
-            showFlashMessageSec(10, "KA-TA-STROPHE!");
+            showFlashMessageSec(10, "KA-TA-STROOO-PHE!\nSOMEONE CALL AN AMBULANCE!");
         }
     }
 
