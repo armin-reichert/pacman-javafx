@@ -45,7 +45,7 @@ public class ArcadeMsPacMan_MapSelector extends MapSelector {
      * <p>
      */
     @Override
-    public WorldMap selectWorldMap(int levelNumber) {
+    public WorldMap findWorldMap(int levelNumber) {
         requireValidLevelNumber(levelNumber);
         final int mapNumber = switch (levelNumber) {
             case 1, 2 -> 1;

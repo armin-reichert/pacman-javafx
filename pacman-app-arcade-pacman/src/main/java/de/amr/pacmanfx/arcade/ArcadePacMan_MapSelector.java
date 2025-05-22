@@ -45,7 +45,7 @@ public class ArcadePacMan_MapSelector extends MapSelector {
     }
 
     @Override
-    public WorldMap selectWorldMap(int levelNumber) {
+    public WorldMap findWorldMap(int levelNumber) {
         return theMap;
     }
 }

@@ -115,7 +115,7 @@ public class XXLAnyPacMan_MapSelector extends MapSelector {
     }
 
     @Override
-    public WorldMap selectWorldMap(int levelNumber) {
+    public WorldMap findWorldMap(int levelNumber) {
         WorldMap template = switch (mapSelectionMode()) {
             case NO_CUSTOM_MAPS ->
                     levelNumber <= builtinMaps.size()

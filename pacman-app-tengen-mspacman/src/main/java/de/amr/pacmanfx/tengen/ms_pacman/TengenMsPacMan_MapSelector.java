@@ -48,7 +48,7 @@ public class TengenMsPacMan_MapSelector extends MapSelector {
     }
 
     @Override
-    public WorldMap selectWorldMap(int levelNumber) {
+    public WorldMap findWorldMap(int levelNumber) {
         throw new UnsupportedOperationException(); //TODO ugly
     }
 

@@ -12,13 +12,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Objects.requireNonNull;
+
 public abstract class MapSelector {
 
-    private MapSelectionMode mapSelectionMode;
-
-    public MapSelector() {
-        this.mapSelectionMode = MapSelectionMode.NO_CUSTOM_MAPS;
-    }
+    private MapSelectionMode mapSelectionMode = MapSelectionMode.NO_CUSTOM_MAPS;
 
     /**
      * @param mapPattern path (pattern) to access the map files inside resources folder,
@@ -29,27 +27,27 @@ public abstract class MapSelector {
         var maps = new ArrayList<WorldMap>();
         for (int mapNumber = 1; mapNumber <= mapCount; ++mapNumber) {
             URL url = getClass().getResource(mapPattern.formatted(mapNumber));
-            if (url != null) {
-                try {
-                    WorldMap worldMap = new WorldMap(url);
-                    maps.add(worldMap);
-                    Logger.info("Map loaded, URL={}", worldMap.url());
-                } catch (IOException x) {
-                    Logger.error(x);
-                    Logger.error("Could not load world map, URL={}", url);
-                }
-            } else {
-                Logger.error("Map not found, pattern={}, number={}", mapPattern, mapNumber);
+            if (url == null) {
+                Logger.error("Map not found, pattern='{}', number={}", mapPattern, mapNumber);
+                throw new IllegalStateException();
+            }
+            try {
+                WorldMap worldMap = new WorldMap(url);
+                maps.add(worldMap);
+                Logger.info("Map loaded, URL='{}'", worldMap.url());
+            } catch (IOException x) {
+                Logger.error("Could not load map, URL='{}'", url);
+                throw new IllegalStateException(x);
             }
         }
         return maps;
     }
 
-    public final MapSelectionMode mapSelectionMode() { return mapSelectionMode; }
+    public MapSelectionMode mapSelectionMode() { return mapSelectionMode; }
 
-    public void setMapSelectionMode(MapSelectionMode mode) { mapSelectionMode = mode; }
+    public void setMapSelectionMode(MapSelectionMode mode) { mapSelectionMode = requireNonNull(mode); }
 
-    public abstract WorldMap selectWorldMap(int levelNumber);
+    public abstract WorldMap findWorldMap(int levelNumber);
 
     public abstract List<WorldMap> builtinMaps();
 
