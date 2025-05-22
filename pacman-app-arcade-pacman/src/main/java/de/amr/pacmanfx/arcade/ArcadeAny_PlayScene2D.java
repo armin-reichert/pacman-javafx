@@ -156,9 +156,10 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         if (theGameLevel().message() != null) {
             drawLevelMessage();
         }
+
+        // Use correct z-order: bonus, Pac-Man, ghosts in order
         theGameLevel().bonus().ifPresent(gr::drawBonus);
         gr.drawActor(theGameLevel().pac());
-        // Use correct z-order
         Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
                 .map(theGameLevel()::ghost).forEach(gr::drawActor);
 
@@ -168,7 +169,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
                     .map(theGameLevel()::ghost).forEach(gr::drawAnimatedCreatureInfo);
         }
 
-        // Draw either lives counter or missing credit
+        // Draw either lives counter or credit text
         if (theGame().canStartNewGame()) {
             // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
             int numLivesDisplayed = theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()
