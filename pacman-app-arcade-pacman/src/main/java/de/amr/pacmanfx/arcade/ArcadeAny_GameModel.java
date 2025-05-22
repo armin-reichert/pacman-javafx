@@ -25,7 +25,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
 
     public static final byte PELLET_VALUE = 10;
     public static final byte ENERGIZER_VALUE = 50;
-    public static final int POINTS_ALL_GHOSTS_EATEN_IN_LEVEL = 12_000;
+    public static final int ALL_GHOSTS_IN_LEVEL_KILLED_BONUS_POINTS = 12_000;
     public static final int EXTRA_LIFE_SCORE = 10_000;
     public static final byte[] KILLED_GHOST_VALUE_FACTORS = {2, 4, 8, 16}; // points = factor * 100
 
@@ -36,19 +36,6 @@ public abstract class ArcadeAny_GameModel extends GameModel {
     protected Steering autopilot;
     protected Steering demoLevelSteering;
     protected int cruiseElroy;
-
-    @Override
-    public Optional<GateKeeper> gateKeeper() { return Optional.of(gateKeeper); }
-
-    @Override
-    public LevelCounter levelCounter() {
-        return levelCounter;
-    }
-
-    @Override
-    public MapSelector mapSelector() {
-        return mapSelector;
-    }
 
     @Override
     public void init() {
@@ -92,6 +79,21 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         return lifeCount() == 0;
     }
 
+    // Components
+
+    @Override
+    public Optional<GateKeeper> gateKeeper() { return Optional.of(gateKeeper); }
+
+    @Override
+    public LevelCounter levelCounter() {
+        return levelCounter;
+    }
+
+    @Override
+    public MapSelector mapSelector() {
+        return mapSelector;
+    }
+
     // Actors
 
     @Override
@@ -120,25 +122,19 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
         level.registerGhostKilled();
         if (level.numGhostsKilled() == 16) {
-            int extraPoints = POINTS_ALL_GHOSTS_EATEN_IN_LEVEL;
-            scoreManager.scorePoints(extraPoints);
-            Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, level.number());
+            scoreManager.scorePoints(ALL_GHOSTS_IN_LEVEL_KILLED_BONUS_POINTS);
+            Logger.info("Scored {} points for killing all ghosts in level {}",
+                ALL_GHOSTS_IN_LEVEL_KILLED_BONUS_POINTS, level.number());
         }
     }
 
-    public int cruiseElroy() {
-        return cruiseElroy;
-    }
+    /**
+     * @return "Cruise Elroy" state (changes behavior of red ghost).
+     * <p>0=off, 1=Elroy1, 2=Elroy2, -1=Elroy1 (disabled), -2=Elroy2 (disabled).</p>
+     */
+    public int cruiseElroy() { return cruiseElroy; }
 
     public boolean isCruiseElroyModeActive() { return cruiseElroy > 0; }
-
-    public void updateCruiseElroyMode() {
-        if (level.uneatenFoodCount() == level.data().elroy1DotsLeft()) {
-            cruiseElroy = 1;
-        } else if (level.uneatenFoodCount() == level.data().elroy2DotsLeft()) {
-            cruiseElroy = 2;
-        }
-    }
 
     protected void activateCruiseElroyMode(boolean active) {
         int absValue = Math.abs(cruiseElroy);
@@ -165,6 +161,14 @@ public abstract class ArcadeAny_GameModel extends GameModel {
             theGameEventManager().publishEvent(this, GameEventType.PAC_FOUND_FOOD, tile);
         } else {
             level.pac().starvingContinues();
+        }
+    }
+
+    private void updateCruiseElroyMode() {
+        if (level.uneatenFoodCount() == level.data().elroy1DotsLeft()) {
+            cruiseElroy = 1;
+        } else if (level.uneatenFoodCount() == level.data().elroy2DotsLeft()) {
+            cruiseElroy = 2;
         }
     }
 
@@ -213,7 +217,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         level.pac().immuneProperty().bind(PacManGamesEnv.PY_IMMUNITY);
         level.pac().usingAutopilotProperty().bind(PacManGamesEnv.PY_USING_AUTOPILOT);
         scoreManager.setScoreLevelNumber(levelNumber);
-        gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(levelNumber));
+        gateKeeper.setLevelNumber(levelNumber);
         level.huntingTimer().reset();
         theGameEventManager().publishEvent(this, GameEventType.LEVEL_CREATED);
     }
@@ -228,7 +232,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
         demoLevelSteering.init();
         levelCounter.setEnabled(true);
         scoreManager.setScoreLevelNumber(1);
-        gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(1));
+        gateKeeper.setLevelNumber(1);
         level.huntingTimer().reset();
         theGameEventManager().publishEvent(this, GameEventType.LEVEL_CREATED);
     }
