@@ -28,7 +28,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Armin Reichert
  */
-public class Ghost extends Creature {
+public abstract class Ghost extends Creature {
 
     private final byte personality;
     private final String name;
@@ -41,7 +41,7 @@ public class Ghost extends Creature {
      * @param personality ghost ID
      * @param name readable name, used for logging or debug display
      */
-    public Ghost(byte personality, String name) {
+    protected Ghost(byte personality, String name) {
         this.personality = requireValidGhostPersonality(personality);
         this.name = requireNonNull(name);
         corneringSpeedUp = -1.25f;
@@ -90,9 +90,22 @@ public class Ghost extends Creature {
         return specialTerrainTiles;
     }
 
-    public void hunt(GameLevel level) {}
+    /**
+     * Subclasses implement this method to define the behavior of the ghost when hunting Pac-Man through
+     * the given game level.
+     *
+     * @param level the game level
+     */
+    public abstract void hunt(GameLevel level);
 
-    public Vector2i chasingTargetTile(GameLevel level) { return null; }
+    /**
+     * Subclasses implement this method to define the target tile of the ghost when hunting Pac-Man through
+     * the given game level.
+     *
+     * @param level the game level
+     * @return the current target tile when chasing Pac-Man
+     */
+    public abstract Vector2i chasingTargetTile(GameLevel level);
 
     /**
      * Lets the ghost randomly roam through the world.

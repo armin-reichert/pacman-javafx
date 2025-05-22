@@ -85,7 +85,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
             @Override
             public Vector2i chasingTargetTile(GameLevel level) {
                 // Pinky (pink ghost) ambushes Pac-Man
-                return level.pac().tilesAheadWithArcadeOverflowBug(4);
+                return level.pac().tilesAheadWithOverflowBug(4);
             }
         };
     }
@@ -103,7 +103,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
             @Override
             public Vector2i chasingTargetTile(GameLevel level) {
                 // Inky (cyan ghost) attacks from opposite side as Blinky
-                return level.pac().tilesAheadWithArcadeOverflowBug(2).scaled(2).minus(level.ghost(RED_GHOST_SHADOW).tile());
+                return level.pac().tilesAheadWithOverflowBug(2).scaled(2).minus(level.ghost(RED_GHOST_SHADOW).tile());
             }
         };
     }

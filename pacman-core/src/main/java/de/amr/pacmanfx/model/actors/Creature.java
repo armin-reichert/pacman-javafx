@@ -192,7 +192,7 @@ public abstract class Creature extends Actor {
      * @return the tile located the given number of tiles towards the current move direction of the creature.
      *          Overflow bug: In case the creature looks UP, additional {@code numTiles} tiles are added towards LEFT.
      */
-    public Vector2i tilesAheadWithArcadeOverflowBug(int numTiles) {
+    public Vector2i tilesAheadWithOverflowBug(int numTiles) {
         Vector2i ahead = tilesAhead(numTiles);
         if (moveDir == UP) {
             ahead = ahead.minus(numTiles, 0);
