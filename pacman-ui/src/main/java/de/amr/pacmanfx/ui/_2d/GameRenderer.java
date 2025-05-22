@@ -25,6 +25,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 import org.tinylog.Logger;
 
 import java.util.function.Predicate;
@@ -239,6 +240,15 @@ public interface GameRenderer {
         ctx().setFont(font);
         ctx().setFill(color);
         ctx().fillText(text, scaled(x), scaled(y));
+    }
+
+    default void centerTextAtScaledPosition(String text, Color color, Font font, double x, double y) {
+        ctx().save();
+        ctx().setFont(font);
+        ctx().setFill(color);
+        ctx().setTextAlign(TextAlignment.CENTER);
+        ctx().fillText(text, scaled(x), scaled(y));
+        ctx().restore();
     }
 
     default void fillTextAtScaledTilePosition(String text, Color color, Font font, int tileX, int tileY) {

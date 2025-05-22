@@ -20,8 +20,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.pacmanfx.Globals.theGameController;
-import static de.amr.pacmanfx.Globals.theGameEventManager;
+import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_DYING;
 
 /**
@@ -466,6 +465,16 @@ public enum GameState implements FsmState<GameModel> {
 
         private int lastTestedLevelNumber;
 
+        private void configureLevelForTest() {
+            theGameLevel().pac().usingAutopilotProperty().unbind();
+            theGameLevel().pac().setUsingAutopilot(true);
+            theGameLevel().pac().playAnimation();
+            theGameLevel().ghosts().forEach(Ghost::playAnimation);
+            theGameLevel().showPacAndGhosts();
+            theGameLevel().showMessage(LevelMessage.TEST_LEVEL);
+            theGameEventManager().publishEvent(theGame(), GameEventType.STOP_ALL_SOUNDS);
+        }
+
         @Override
         public void onEnter(GameModel game) {
             lastTestedLevelNumber = 25;
@@ -476,27 +485,20 @@ public enum GameState implements FsmState<GameModel> {
             game.prepareForNewGame();
             game.buildNormalLevel(1);
             game.startLevel();
-            GameLevel level = game.level().orElseThrow();
-            level.showPacAndGhosts();
-            level.pac().playAnimation();
-            level.ghosts().forEach(Ghost::playAnimation);
+            configureLevelForTest();
         }
 
         @Override
         public void onUpdate(GameModel game) {
             game.doHuntingStep();
-            GameLevel level = game.level().orElseThrow();
             if (timer().hasExpired()) {
-                if (level.number() == lastTestedLevelNumber) {
+                if (theGameLevel().number() == lastTestedLevelNumber) {
                     theGameEventManager().publishEvent(game, GameEventType.STOP_ALL_SOUNDS);
                     theGameController().changeState(INTRO);
                 } else {
-                    level.pac().stopAndShowInFullBeauty();
-                    level.bonus().ifPresent(Bonus::setInactive);
-                    setProperty("mazeFlashing", false);
-                    level.blinking().reset();
-                    game.startNextLevel();
                     timer().restartSeconds(TEASER_TIME_SECONDS);
+                    game.startNextLevel();
+                    configureLevelForTest();
                 }
             }
             else if (game.isLevelCompleted()) {

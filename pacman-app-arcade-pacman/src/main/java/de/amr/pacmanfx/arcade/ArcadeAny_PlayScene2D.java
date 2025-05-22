@@ -159,15 +159,18 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
             levelCompleteAnimation != null && levelCompleteAnimation.inHighlightPhase(),
             theGameLevel().blinking().isOn());
         if (theGameLevel().message() != null) {
-            drawLevelMessage(theGameLevel().message(), theGameLevel().number(), centerPositionBelowHouse());
+            drawLevelMessage();
         }
         theGameLevel().bonus().ifPresent(gr::drawBonus);
         gr.drawActor(theGameLevel().pac());
-        ghostsInZOrder().forEach(gr::drawActor);
+        // Use correct z-order
+        Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
+                .map(theGameLevel()::ghost).forEach(gr::drawActor);
 
         if (debugInfoVisiblePy.get()) {
             gr.drawAnimatedCreatureInfo(theGameLevel().pac());
-            ghostsInZOrder().forEach(gr::drawAnimatedCreatureInfo);
+            Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
+                    .map(theGameLevel()::ghost).forEach(gr::drawAnimatedCreatureInfo);
         }
 
         // Draw either lives counter or missing credit
@@ -183,38 +186,16 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         gr.drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 
-    private void drawLevelMessage(LevelMessage message, int levelNumber, Vector2f messageCenterPosition) {
-        switch (message) {
-            case GAME_OVER -> {
-                String text = "GAME  OVER";
-                // this assumes fixed font width of one tile:
-                double x = messageCenterPosition.x() - (text.length() * HTS);
-                gr.fillTextAtScaledPosition(text, ARCADE_RED, arcadeFontScaledTS(), x, messageCenterPosition.y());
-            }
-            case READY -> {
-                String text = "READY!";
-                // this assumes fixed font width of one tile:
-                double x = messageCenterPosition.x() - (text.length() * HTS);
-                gr.fillTextAtScaledPosition(text, ARCADE_YELLOW, arcadeFontScaledTS(), x, messageCenterPosition.y());
-            }
-            case TEST_LEVEL -> {
-                String text = "TEST    L%03d".formatted(levelNumber);
-                // this assumes fixed font width of one tile:
-                double x = messageCenterPosition.x() - (text.length() * HTS);
-                gr.fillTextAtScaledPosition(text, ARCADE_WHITE, arcadeFontScaledTS(), x, messageCenterPosition.y());
-            }
+    private void drawLevelMessage() {
+        Vector2i houseMinTile = theGameLevel().houseMinTile(), houseSize = theGameLevel().houseSizeInTiles();
+        float cx = TS * (houseMinTile.x() + houseSize.x() * 0.5f);
+        float cy = TS * (houseMinTile.y() + houseSize.y() + 1);
+        switch (theGameLevel().message()) {
+            case GAME_OVER -> gr.centerTextAtScaledPosition("GAME  OVER", ARCADE_RED, arcadeFontScaledTS(), cx, cy);
+            case READY -> gr.centerTextAtScaledPosition("READY!", ARCADE_YELLOW, arcadeFontScaledTS(), cx, cy);
+            case TEST_LEVEL -> gr.centerTextAtScaledPosition("TEST    L%03d".formatted(theGameLevel().number()),
+                    ARCADE_WHITE, arcadeFontScaledTS(), cx, cy);
         }
-    }
-
-    private Vector2f centerPositionBelowHouse() {
-        Vector2i houseTopLeft = theGameLevel().houseMinTile(), houseSize = theGameLevel().houseSizeInTiles();
-        float x = TS * (houseTopLeft.x() + houseSize.x() * 0.5f);
-        float y = TS * (houseTopLeft.y() + houseSize.y() + 1);
-        return new Vector2f(x, y);
-    }
-
-    private Stream<Ghost> ghostsInZOrder() {
-        return Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(theGameLevel()::ghost);
     }
 
     @Override
