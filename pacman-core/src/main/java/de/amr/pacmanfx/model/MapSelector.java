@@ -12,21 +12,17 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Objects.requireNonNull;
-
-public abstract class MapSelector {
-
-    private MapSelectionMode mapSelectionMode = MapSelectionMode.NO_CUSTOM_MAPS;
+public interface MapSelector {
 
     /**
      * @param mapPattern path (pattern) to access the map files inside resources folder,
      *                   counting from 1, e.g. <code>"maps/masonic_%d.world"</code>
      * @param mapCount number of maps to be loaded
      */
-    public List<WorldMap> loadMapsFromModule(String mapPattern, int mapCount) {
+    static List<WorldMap> loadMapsFromModule(Class<?> loaderClass, String mapPattern, int mapCount) {
         var maps = new ArrayList<WorldMap>();
         for (int mapNumber = 1; mapNumber <= mapCount; ++mapNumber) {
-            URL url = getClass().getResource(mapPattern.formatted(mapNumber));
+            URL url = loaderClass.getResource(mapPattern.formatted(mapNumber));
             if (url == null) {
                 Logger.error("Map not found, pattern='{}', number={}", mapPattern, mapNumber);
                 throw new IllegalStateException();
@@ -43,19 +39,9 @@ public abstract class MapSelector {
         return maps;
     }
 
-    public MapSelectionMode mapSelectionMode() { return mapSelectionMode; }
-
-    public void setMapSelectionMode(MapSelectionMode mode) { mapSelectionMode = requireNonNull(mode); }
-
-    public abstract WorldMap findWorldMap(int levelNumber);
-
-    public abstract List<WorldMap> builtinMaps();
-
-    public List<WorldMap> customMaps() {
-        return List.of();
-    }
-
-    public void loadCustomMaps() {}
-
-    public abstract void loadAllMaps();
+    WorldMap findWorldMap(int levelNumber);
+    List<WorldMap> builtinMaps();
+    List<WorldMap> customMaps();
+    void loadCustomMaps();
+    void loadAllMaps();
 }

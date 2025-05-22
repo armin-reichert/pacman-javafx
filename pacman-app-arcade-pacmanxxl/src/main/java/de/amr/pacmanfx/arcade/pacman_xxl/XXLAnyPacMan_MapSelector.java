@@ -3,7 +3,6 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.MapSelectionMode;
 import de.amr.pacmanfx.model.MapSelector;
 import de.amr.pacmanfx.model.WorldMapProperty;
@@ -20,7 +19,7 @@ import java.util.Map;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static java.util.Objects.requireNonNull;
 
-public class XXLAnyPacMan_MapSelector extends MapSelector {
+public class XXLAnyPacMan_MapSelector implements MapSelector {
 
     private static final List<Map<String, String>> MAP_COLORINGS = List.of(
             Map.of("fill", "#359c9c", "stroke", "#85e2ff", "door", "#fcb5ff", "pellet", "#feb8ae"),
@@ -38,11 +37,12 @@ public class XXLAnyPacMan_MapSelector extends MapSelector {
     private final ObservableList<WorldMap> customMapsByFile = FXCollections.observableList(new ArrayList<>());
     private final DirectoryWatchdog goodBoy;
     private boolean customMapsUpToDate;
+    private MapSelectionMode mapSelectionMode;
 
     public XXLAnyPacMan_MapSelector(File customMapDir) {
         this.customMapDir = requireNonNull(customMapDir);
         goodBoy = new DirectoryWatchdog(customMapDir);
-        setMapSelectionMode(MapSelectionMode.CUSTOM_MAPS_FIRST);
+        mapSelectionMode = MapSelectionMode.CUSTOM_MAPS_FIRST;
         customMapsUpToDate = false;
         goodBoy.setEventConsumer(eventList -> {
             Logger.info("Custom map change(s) detected: {}",
@@ -52,6 +52,14 @@ public class XXLAnyPacMan_MapSelector extends MapSelector {
             setCustomMapsUpToDate(false);
             loadCustomMaps();
         });
+    }
+
+    public MapSelectionMode mapSelectionMode() {
+        return mapSelectionMode;
+    }
+
+    public void setMapSelectionMode(MapSelectionMode mapSelectionMode) {
+        this.mapSelectionMode = requireNonNull(mapSelectionMode);
     }
 
     public void startWatchingCustomMaps() {
@@ -109,14 +117,14 @@ public class XXLAnyPacMan_MapSelector extends MapSelector {
     @Override
     public void loadAllMaps() {
         if (builtinMaps.isEmpty()) {
-            builtinMaps = loadMapsFromModule("maps/masonic_%d.world", 8);
+            builtinMaps = MapSelector.loadMapsFromModule(getClass(), "maps/masonic_%d.world", 8);
         }
         loadCustomMaps();
     }
 
     @Override
     public WorldMap findWorldMap(int levelNumber) {
-        WorldMap template = switch (mapSelectionMode()) {
+        WorldMap template = switch (mapSelectionMode) {
             case NO_CUSTOM_MAPS ->
                     levelNumber <= builtinMaps.size()
                             ? builtinMaps.get(levelNumber - 1)
@@ -139,7 +147,7 @@ public class XXLAnyPacMan_MapSelector extends MapSelector {
         Map<String, String> mapColoring = builtinMaps.contains(template) ? randomMapColoring() : coloringFromMap(template);
         worldMap.setConfigValue("colorMap", mapColoring);
 
-        Logger.info("Map selected (Mode {}): {}", mapSelectionMode(), worldMap.url());
+        Logger.info("Map selected (Mode {}): {}", mapSelectionMode, worldMap.url());
         return worldMap;
     }
 

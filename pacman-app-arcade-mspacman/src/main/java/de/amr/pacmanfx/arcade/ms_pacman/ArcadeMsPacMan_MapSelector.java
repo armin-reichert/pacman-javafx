@@ -5,14 +5,13 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.MapSelector;
 
 import java.util.List;
 
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 
-public class ArcadeMsPacMan_MapSelector extends MapSelector {
+public class ArcadeMsPacMan_MapSelector implements MapSelector {
 
     private List<WorldMap> maps = List.of();
 
@@ -22,9 +21,17 @@ public class ArcadeMsPacMan_MapSelector extends MapSelector {
     }
 
     @Override
+    public List<WorldMap> customMaps() {
+        return List.of();
+    }
+
+    @Override
+    public void loadCustomMaps() {}
+
+    @Override
     public void loadAllMaps() {
         if (maps.isEmpty()) {
-            maps = loadMapsFromModule("maps/mspacman_%d.world", 4);
+            maps = MapSelector.loadMapsFromModule(getClass(), "maps/mspacman_%d.world", 4);
         }
     }
 

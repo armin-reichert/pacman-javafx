@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade;
 
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.MapSelector;
 import org.tinylog.Logger;
 
@@ -13,7 +12,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-public class ArcadePacMan_MapSelector extends MapSelector {
+public class ArcadePacMan_MapSelector implements MapSelector {
 
     private static final String MAP_PATH = "/de/amr/pacmanfx/arcade/maps/pacman.world";
 
@@ -22,6 +21,15 @@ public class ArcadePacMan_MapSelector extends MapSelector {
     @Override
     public List<WorldMap> builtinMaps() {
         return List.of(theMap);
+    }
+
+    @Override
+    public List<WorldMap> customMaps() {
+        return List.of();
+    }
+
+    @Override
+    public void loadCustomMaps() {
     }
 
     @Override

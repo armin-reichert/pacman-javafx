@@ -168,13 +168,14 @@ public class XXLAnyPacMan_StartPage implements StartPage {
 
         private void initState() {
             GameModel game = theGameController().game(gameVariant);
-            game.mapSelector().loadAllMaps();
-            boolean customMapsExist = !game.mapSelector().customMaps().isEmpty();
+            var mapSelector = (XXLAnyPacMan_MapSelector) game.mapSelector();
+            mapSelector.loadAllMaps();
+            boolean customMapsExist = !mapSelector.customMaps().isEmpty();
 
             entryGameVariant.selectValue(gameVariant);
             setPlay3D(PY_3D_ENABLED.get());
             setCutScenesEnabled(game.cutScenesEnabledProperty().get());
-            setMapOrder(game.mapSelector().mapSelectionMode(), customMapsExist);
+            setMapOrder(mapSelector.mapSelectionMode(), customMapsExist);
 
             resetActorAnimation();
             setActorAnimationVariant(gameVariant);
@@ -230,8 +231,9 @@ public class XXLAnyPacMan_StartPage implements StartPage {
             if (gameVariant == GameVariant.PACMAN_XXL || gameVariant == GameVariant.MS_PACMAN_XXL) {
                 GameModel game = theGameController().game(gameVariant);
                 game.cutScenesEnabledProperty().set(cutScenesEnabled);
-                game.mapSelector().setMapSelectionMode(mapOrder);
-                game.mapSelector().loadAllMaps();
+                var mapSelector = (XXLAnyPacMan_MapSelector) game.mapSelector();
+                mapSelector.setMapSelectionMode(mapOrder);
+                mapSelector.loadAllMaps();
                 theUI().selectGameVariant(gameVariant);
             } else {
                 Logger.error("Game variant {} is not allowed for XXL game", gameVariant);

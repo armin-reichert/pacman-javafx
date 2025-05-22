@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.MapSelector;
 import org.tinylog.Logger;
 
@@ -20,7 +19,7 @@ import java.util.Map;
 import static de.amr.pacmanfx.lib.nes.NES_ColorScheme.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.MapCategory.*;
 
-public class TengenMsPacMan_MapSelector extends MapSelector {
+public class TengenMsPacMan_MapSelector implements MapSelector {
 
     private static final String MAPS_ROOT = "/de/amr/pacmanfx/tengen/ms_pacman/maps/";
 
@@ -36,6 +35,14 @@ public class TengenMsPacMan_MapSelector extends MapSelector {
         }
         return maps;
     }
+
+    @Override
+    public List<WorldMap> customMaps() {
+        return List.of();
+    }
+
+    @Override
+    public void loadCustomMaps() {}
 
     @Override
     public void loadAllMaps() {
