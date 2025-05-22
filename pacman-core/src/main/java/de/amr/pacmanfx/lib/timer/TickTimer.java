@@ -109,8 +109,6 @@ public class TickTimer {
             state = RUNNING;
             Logger.trace("{} started", this);
             publishEvent(new TickTimerEvent(Type.STARTED));
-        } else {
-            Logger.warn("Timer {} not started, state is {}", this, state);
         }
     }
 
@@ -122,8 +120,6 @@ public class TickTimer {
             state = STOPPED;
             Logger.trace("{} stopped", this);
             publishEvent(new TickTimerEvent(Type.STOPPED));
-        } else {
-            Logger.warn("Timer {} not stopped, state is {}", this, state);
         }
     }
 
