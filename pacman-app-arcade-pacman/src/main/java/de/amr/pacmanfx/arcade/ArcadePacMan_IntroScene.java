@@ -66,16 +66,12 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     private long ghostKilledTime;
 
     @Override
-    public void bindActions() {
-        bindArcadeInsertCoinAction();
-        bindArcadeStartGameAction();
-        bindStartTestsActions();
-    }
-
-    @Override
     public void doInit() {
         ArcadePacMan_SpriteSheet spriteSheet = theUIConfig().current().spriteSheet();
         theGame().scoreManager().setScoreVisible(true);
+        bindArcadeInsertCoinAction();
+        bindArcadeStartGameAction();
+        bindStartTestsActions();
         blinking = new Pulse(10, true);
         pacMan = createPac();
         pacMan.setAnimations(new ArcadePacMan_PacAnimationMap(spriteSheet));

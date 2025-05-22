@@ -46,14 +46,11 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     private ClapperboardAnimation clapAnimation;
 
     @Override
-    public void bindActions() {
-        bind(theGameController()::letCurrentGameStateExpire, theJoypad().key(JoypadButton.START));
-    }
-
-    @Override
     public void doInit() {
         t = -1;
         theGame().scoreManager().setScoreVisible(false);
+        bind(theGameController()::letCurrentGameStateExpire, theJoypad().key(JoypadButton.START));
+
         msPacMan = createMsPacMan();
         pacMan = createPacMan();
         var spriteSheet = (TengenMsPacMan_SpriteSheet) theUIConfig().current().spriteSheet();

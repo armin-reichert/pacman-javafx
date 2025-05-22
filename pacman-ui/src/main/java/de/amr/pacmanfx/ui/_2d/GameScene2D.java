@@ -45,7 +45,6 @@ public abstract class GameScene2D implements GameScene, CommonActionProvider {
     public final void init() {
         arcadeFontScaledTS.bind(scalingPy.map(scaling -> theAssets().arcadeFontAtSize((float) scaling * TS)));
         doInit();
-        bindActions();
         updateActionBindings();
         theKeyboard().logCurrentBindings();
     }
@@ -61,9 +60,6 @@ public abstract class GameScene2D implements GameScene, CommonActionProvider {
     public Map<KeyCodeCombination, Action> actionBindings() {
         return actionBindings;
     }
-
-    @Override
-    public void bindActions() {}
 
     @Override
     public void onStopAllSounds(GameEvent event) {

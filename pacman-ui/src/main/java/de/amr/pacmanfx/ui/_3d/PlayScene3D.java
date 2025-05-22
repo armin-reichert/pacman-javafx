@@ -198,8 +198,7 @@ public class PlayScene3D implements GameScene, CommonActionProvider, CameraContr
     @Override
     public Keyboard keyboard() { return theKeyboard(); }
 
-    @Override
-    public void bindActions() {
+    private void bindActions() {
         bindArcadeInsertCoinAction();
         if (optGameLevel().isPresent() && !optGameLevel().get().isDemoLevel()) {
             if (!theGameController().isSelected(GameVariant.MS_PACMAN_TENGEN)) {

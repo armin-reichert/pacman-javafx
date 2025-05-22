@@ -59,16 +59,13 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     private int initialDelay;
 
     @Override
-    public void bindActions() {
+    public void doInit() {
+        theGame().scoreManager().setScoreVisible(false);
         bind(() -> theJoypad().selectNextKeyBinding(this), alt(KeyCode.J));
         bind(START_PLAYING, theJoypad().key(JoypadButton.START));
         bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, theJoypad().key(JoypadButton.SELECT));
         bindStartTestsActions();
-    }
 
-    @Override
-    public void doInit() {
-        theGame().scoreManager().setScoreVisible(false);
         selectedOption = OPTION_PAC_BOOSTER;
         tengenGame = (TengenMsPacMan_GameModel) theGame();
         tengenGame.setCanStartNewGame(true);

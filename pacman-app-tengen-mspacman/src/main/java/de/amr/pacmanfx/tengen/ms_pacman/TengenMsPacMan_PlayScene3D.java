@@ -26,7 +26,8 @@ import static de.amr.pacmanfx.uilib.input.Keyboard.alt;
 public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
-    public void bindActions() {
+    public void init() {
+        super.init();
         bind(GameAction.PERSPECTIVE_PREVIOUS, alt(KeyCode.LEFT));
         bind(GameAction.PERSPECTIVE_NEXT, alt(KeyCode.RIGHT));
         bind(GameAction.TOGGLE_DRAW_MODE, alt(KeyCode.W));

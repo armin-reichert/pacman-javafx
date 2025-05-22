@@ -20,7 +20,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     static final float DISPLAY_SECONDS = 12;
 
     @Override
-    public void bindActions() {
+    protected void doInit() {
         theGame().scoreManager().setScoreVisible(false);
         bind(START_GAME, theJoypad().key(JoypadButton.START));
     }

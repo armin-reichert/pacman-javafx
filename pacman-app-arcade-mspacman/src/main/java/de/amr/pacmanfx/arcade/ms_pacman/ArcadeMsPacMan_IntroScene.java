@@ -74,15 +74,11 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     }
 
     @Override
-    public void bindActions() {
+    public void doInit() {
+        theGame().scoreManager().setScoreVisible(true);
         bindArcadeInsertCoinAction();
         bindArcadeStartGameAction();
         bindStartTestsActions();
-    }
-
-    @Override
-    public void doInit() {
-        theGame().scoreManager().setScoreVisible(true);
 
         msPacMan = createMsPacMan();
         ghosts = new Ghost[] {

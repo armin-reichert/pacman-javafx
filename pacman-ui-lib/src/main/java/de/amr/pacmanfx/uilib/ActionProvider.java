@@ -17,8 +17,6 @@ public interface ActionProvider {
     Keyboard keyboard();
     Map<KeyCodeCombination, Action> actionBindings();
 
-    void bindActions();
-
     default void updateActionBindings() {
         Logger.info("Key bindings updated for {}", getClass().getSimpleName());
         for (KeyCodeCombination combination : actionBindings().keySet()) {

@@ -229,16 +229,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     }
 
     @Override
-    public void bindActions() {
-        bind(TengenMsPacMan_GameAction.TOGGLE_DISPLAY_MODE, Keyboard.alt(KeyCode.C));
-    }
-
-    @Override
     public void doInit() {
-        messageMovement = new MessageMovement();
         theGame().scoreManager().setScoreVisible(true);
+        bind(TengenMsPacMan_GameAction.TOGGLE_DISPLAY_MODE, Keyboard.alt(KeyCode.C));
         setGameRenderer(theUIConfig().current().createRenderer(canvas));
         movingCamera.focusTopOfScene();
+        messageMovement = new MessageMovement();
     }
 
     @Override

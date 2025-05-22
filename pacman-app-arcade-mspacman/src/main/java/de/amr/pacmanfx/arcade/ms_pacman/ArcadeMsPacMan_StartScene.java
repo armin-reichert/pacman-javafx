@@ -24,14 +24,10 @@ import static de.amr.pacmanfx.ui.PacManGamesEnv.theSound;
 public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
     @Override
-    public void bindActions() {
-        bindArcadeInsertCoinAction();
-        bindArcadeStartGameAction();
-    }
-
-    @Override
     public void doInit() {
         theGame().scoreManager().setScoreVisible(true);
+        bindArcadeInsertCoinAction();
+        bindArcadeStartGameAction();
     }
 
     @Override
