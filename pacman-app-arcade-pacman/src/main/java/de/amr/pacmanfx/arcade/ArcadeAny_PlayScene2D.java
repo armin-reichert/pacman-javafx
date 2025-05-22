@@ -53,10 +53,6 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
     @Override
     public void onLevelCreated(GameEvent e) {
         gr.applyMapSettings(theGameLevel().worldMap());
-    }
-
-    @Override
-    public void onLevelStarted(GameEvent e) {
         if (theGameLevel().isDemoLevel()) {
             bindArcadeInsertCoinAction();
             updateActionBindings();

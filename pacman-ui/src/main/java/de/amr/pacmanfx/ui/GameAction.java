@@ -347,6 +347,11 @@ public enum GameAction implements Action {
 
             @Override
             public boolean isEnabled() { return theGameLevel() != null && !theGameLevel().pac().isUsingAutopilot(); }
+
+            @Override
+            public String toString() {
+                return "Player " + wishDir;
+            }
         };
     }
 
