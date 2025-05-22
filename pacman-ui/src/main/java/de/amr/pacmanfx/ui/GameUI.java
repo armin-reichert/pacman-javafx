@@ -17,7 +17,7 @@ import java.util.Optional;
 public interface GameUI {
 
     void addStartPage(StartPage startPage);
-    void build(Stage stage, double width, double height);
+    void buildSceneGraph(Stage stage, double width, double height);
     void buildDashboard(DashboardID... ids);
     Optional<GameScene> currentGameScene();
     View currentView();

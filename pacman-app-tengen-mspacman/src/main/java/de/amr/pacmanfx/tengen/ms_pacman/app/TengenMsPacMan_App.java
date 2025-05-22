@@ -36,7 +36,7 @@ public class TengenMsPacMan_App extends Application {
         // UI size: 80% of available screen height, aspect 32:30
         double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
         double aspect = (double) NES_TILES.x() / NES_TILES.y();
-        theUI().build(stage, aspect * height, height);
+        theUI().buildSceneGraph(stage, aspect * height, height);
 
         theUI().buildDashboard(
                 DashboardID.README,

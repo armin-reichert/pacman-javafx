@@ -200,7 +200,7 @@ public class PacManGamesUI implements GameUI {
     }
 
     @Override
-    public void build(Stage stage, double width, double height) {
+    public void buildSceneGraph(Stage stage, double width, double height) {
         this.stage = requireNonNull(stage);
         root.setBackground(theAssets().get("background.scene"));
         root.getChildren().add(new Pane()); // placeholder for root of current view
