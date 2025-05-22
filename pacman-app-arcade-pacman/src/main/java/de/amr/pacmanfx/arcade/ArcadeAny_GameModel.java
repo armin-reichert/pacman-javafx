@@ -23,11 +23,11 @@ import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
  */
 public abstract class ArcadeAny_GameModel extends GameModel {
 
-    protected static final byte PELLET_VALUE = 10;
-    protected static final byte ENERGIZER_VALUE = 50;
-    protected static final int POINTS_ALL_GHOSTS_EATEN_IN_LEVEL = 12_000;
-    protected static final int EXTRA_LIFE_SCORE = 10_000;
-    protected static final byte[] KILLED_GHOST_VALUE_MULTIPLIER = {2, 4, 8, 16}; // points = value * 100
+    public static final byte PELLET_VALUE = 10;
+    public static final byte ENERGIZER_VALUE = 50;
+    public static final int POINTS_ALL_GHOSTS_EATEN_IN_LEVEL = 12_000;
+    public static final int EXTRA_LIFE_SCORE = 10_000;
+    public static final byte[] KILLED_GHOST_VALUE_FACTORS = {2, 4, 8, 16}; // points = factor * 100
 
     protected MapSelector mapSelector;
     protected LevelCounter levelCounter;
@@ -113,7 +113,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
     public void onGhostKilled(Ghost ghost) {
         theSimulationStep().killedGhosts().add(ghost);
         int killedSoFar = level.victims().size();
-        int points = 100 * KILLED_GHOST_VALUE_MULTIPLIER[killedSoFar];
+        int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
         level.victims().add(ghost);
         ghost.eaten(killedSoFar);
         scoreManager.scorePoints(points);

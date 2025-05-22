@@ -93,7 +93,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         BONUS_VALUE_FACTORS[BONUS_FLOWER]        = 100;
     }
 
-    private static final byte[] KILLED_GHOST_VALUE_MULTIPLIER = {2, 4, 8, 16}; // factor * 100 = value
+    private static final byte[] KILLED_GHOST_VALUE_FACTORS = {2, 4, 8, 16}; // points = factor * 100
 
     public static Pac createMsPacMan() {
         var msPacMan = new Pac("Ms. Pac-Man");
@@ -102,9 +102,9 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     public static Pac createPacMan() {
-        var msPacMan = new Pac("Pac-Man");
-        msPacMan.reset();
-        return msPacMan;
+        var pacMan = new Pac("Pac-Man");
+        pacMan.reset();
+        return pacMan;
     }
 
     public static Ghost createRedGhost() {
@@ -207,7 +207,10 @@ public class TengenMsPacMan_GameModel extends GameModel {
         gateKeeper = new GateKeeper(); //TODO implement Tengen logic
         huntingTimer = new TengenMsPacMan_HuntingTimer();
         huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
-            if (nv.intValue() > 0) level.ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE).forEach(Ghost::reverseAtNextOccasion);
+            if (nv.intValue() > 0) {
+                level.ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
+                    .forEach(Ghost::reverseAtNextOccasion);
+            }
         });
         autopilot = new RuleBasedPacSteering(this);
         demoLevelSteering = new RuleBasedPacSteering(this);
@@ -401,8 +404,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public void initAnimationOfPacManAndGhosts() {
-        level.pac().selectAnimation(boosterActive
-            ? ANIM_MS_PAC_MAN_BOOSTER : ANIM_ANY_PAC_MUNCHING);
+        level.pac().selectAnimation(boosterActive ? ANIM_MS_PAC_MAN_BOOSTER : ANIM_ANY_PAC_MUNCHING);
         level.pac().resetAnimation();
         level.ghosts().forEach(ghost -> {
             ghost.selectAnimation(ANIM_GHOST_NORMAL);
@@ -434,13 +436,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         msPacMan.setAutopilotAlgorithm(autopilot);
         level.setPac(msPacMan);
 
-        //TODO clarify hunting behavior
-        level.setGhosts(
-            createRedGhost(),
-            createPinkGhost(),
-            createCyanGhost(),
-            createOrangeGhost()
-        );
+        level.setGhosts(createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost());
         level.ghosts().forEach(ghost -> {
             ghost.reset();
             ghost.setRevivalPosition(ghost.personality() == RED_GHOST_SHADOW
@@ -450,23 +446,18 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
         // Ghosts inside house start at bottom of house instead at middle (as marked in map)
         Stream.of(PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
-            .forEach(id -> level.setGhostStartPosition(id,
-                level.ghostStartPosition(id).plus(0, HTS))
+            .forEach(personality -> level.setGhostStartPosition(personality, level.ghostStartPosition(personality).plus(0, HTS))
         );
 
         level.setSpeedControl(speedControl);
-
-        // Must be called after creation of the actors!
-        if (pacBooster == PacBooster.ALWAYS_ON) {
-            activatePacBooster(true);
-        }
 
         //TODO this might not be appropriate for Tengen Ms. Pac-Man
         level.setBonusSymbol(0, computeBonusSymbol(level.number()));
         level.setBonusSymbol(1, computeBonusSymbol(level.number()));
 
         levelCounter.setEnabled(levelNumber < 8);
-        activatePacBooster(false); // gets activated in startLevel() if mode is ALWAYS_ON
+
+        activatePacBooster(pacBooster == PacBooster.ALWAYS_ON);
     }
 
     //TODO needed?
@@ -499,7 +490,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
         theGameEventManager().publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 
-
     @Override
     public void buildDemoLevel() {
         createLevel(1);
@@ -516,9 +506,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public int lastLevelNumber() {
-        return LAST_LEVEL_NUMBER;
-    }
+    public int lastLevelNumber() { return LAST_LEVEL_NUMBER; }
 
     @Override
     public boolean isPacManSafeInDemoLevel() {
@@ -640,7 +628,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public void onGhostKilled(Ghost ghost) {
         theSimulationStep().killedGhosts().add(ghost);
         int killedSoFar = level.victims().size();
-        int points = 100 * KILLED_GHOST_VALUE_MULTIPLIER[killedSoFar];
+        int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
         level.victims().add(ghost);
         ghost.eaten(killedSoFar);
         scoreManager.scorePoints(points);
