@@ -59,5 +59,5 @@ public abstract class MapSelector {
 
     public void loadCustomMaps() {}
 
-    public abstract void loadAllMaps(GameModel game);
+    public abstract void loadAllMaps();
 }

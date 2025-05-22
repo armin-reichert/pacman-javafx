@@ -22,7 +22,7 @@ public class ArcadeMsPacMan_MapSelector extends MapSelector {
     }
 
     @Override
-    public void loadAllMaps(GameModel game) {
+    public void loadAllMaps() {
         if (maps.isEmpty()) {
             maps = loadMapsFromModule("maps/mspacman_%d.world", 4);
         }

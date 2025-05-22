@@ -168,7 +168,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
 
         private void initState() {
             GameModel game = theGameController().game(gameVariant);
-            game.mapSelector().loadAllMaps(game);
+            game.mapSelector().loadAllMaps();
             boolean customMapsExist = !game.mapSelector().customMaps().isEmpty();
 
             entryGameVariant.selectValue(gameVariant);
@@ -231,7 +231,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
                 GameModel game = theGameController().game(gameVariant);
                 game.cutScenesEnabledProperty().set(cutScenesEnabled);
                 game.mapSelector().setMapSelectionMode(mapOrder);
-                game.mapSelector().loadAllMaps(game);
+                game.mapSelector().loadAllMaps();
                 theUI().selectGameVariant(gameVariant);
             } else {
                 Logger.error("Game variant {} is not allowed for XXL game", gameVariant);

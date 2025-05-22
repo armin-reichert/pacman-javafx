@@ -107,7 +107,7 @@ public class XXLAnyPacMan_MapSelector extends MapSelector {
     }
 
     @Override
-    public void loadAllMaps(GameModel game) {
+    public void loadAllMaps() {
         if (builtinMaps.isEmpty()) {
             builtinMaps = loadMapsFromModule("maps/masonic_%d.world", 8);
         }

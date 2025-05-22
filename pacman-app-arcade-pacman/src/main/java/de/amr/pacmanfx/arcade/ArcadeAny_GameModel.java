@@ -40,7 +40,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
     @Override
     public void init() {
         setInitialLifeCount(3);
-        mapSelector.loadAllMaps(this);
+        mapSelector.loadAllMaps();
     }
 
     @Override

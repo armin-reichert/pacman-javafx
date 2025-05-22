@@ -217,7 +217,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     public void init() {
-        mapSelector.loadAllMaps(this);
+        mapSelector.loadAllMaps();
         setInitialLifeCount(3);
         resetEverything();
     }

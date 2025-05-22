@@ -25,7 +25,7 @@ public class ArcadePacMan_MapSelector extends MapSelector {
     }
 
     @Override
-    public void loadAllMaps(GameModel game) {
+    public void loadAllMaps() {
         if (theMap == null) {
             URL mapURL = getClass().getResource(MAP_PATH);
             if (mapURL == null) {
