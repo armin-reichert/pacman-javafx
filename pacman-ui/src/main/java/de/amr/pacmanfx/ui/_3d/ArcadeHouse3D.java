@@ -22,7 +22,7 @@ public class ArcadeHouse3D {
     public ArcadeHouse3D(
             GameLevel level,
             TerrainMapRenderer3D r3D,
-            Color houseBaseColor, Color houseTopColor, Color doorsColor, float wallOpacity,
+            Color houseBaseColor, Color houseTopColor, Color doorColor, float wallOpacity,
             DoubleProperty wallBaseHeightPy, float wallTopHeight, float wallThickness,
             BooleanProperty houseLightOnPy)
     {
@@ -38,21 +38,10 @@ public class ArcadeHouse3D {
         int yMin = level.houseMinTile().y(), yMax = yMin + tilesY - 1;
         Vector2i leftDoorTile = level.houseLeftDoorTile(), rightDoorTile = level.houseRightDoorTile();
 
-        door3D = new Door3D(leftDoorTile, rightDoorTile, doorsColor, wallBaseHeightPy.get());
+        door3D = new Door3D(leftDoorTile, rightDoorTile, doorColor, wallBaseHeightPy.get());
 
-        root.getChildren().addAll(
-            door3D,
-            r3D.createWallBetweenTiles(Vector2i.of(xMin, yMin), Vector2i.of(leftDoorTile.x() - 1, yMin)),
-            r3D.createWallBetweenTiles(Vector2i.of(rightDoorTile.x() + 1, yMin), Vector2i.of(xMax, yMin)),
-            r3D.createWallBetweenTiles(Vector2i.of(xMin, yMin), Vector2i.of(xMin, yMax)),
-            r3D.createWallBetweenTiles(Vector2i.of(xMax, yMin), Vector2i.of(xMax, yMax)),
-            r3D.createWallBetweenTiles(Vector2i.of(xMin, yMax), Vector2i.of(xMax, yMax))
-        );
-
-        // pixel coordinates
         float centerX = xMin * TS + tilesX * HTS;
         float centerY = yMin * TS + tilesY * HTS;
-
         var light = new PointLight();
         light.lightOnProperty().bind(houseLightOnPy);
         light.setColor(Color.GHOSTWHITE);
@@ -61,7 +50,15 @@ public class ArcadeHouse3D {
         light.setTranslateY(centerY - 6);
         light.translateZProperty().bind(wallBaseHeightPy.multiply(-1));
 
-        root.getChildren().add(light);
+        root.getChildren().addAll(
+                light,
+                door3D,
+                r3D.createWallBetweenTiles(Vector2i.of(xMin, yMin), Vector2i.of(leftDoorTile.x() - 1, yMin)),
+                r3D.createWallBetweenTiles(Vector2i.of(rightDoorTile.x() + 1, yMin), Vector2i.of(xMax, yMin)),
+                r3D.createWallBetweenTiles(Vector2i.of(xMin, yMin), Vector2i.of(xMin, yMax)),
+                r3D.createWallBetweenTiles(Vector2i.of(xMax, yMin), Vector2i.of(xMax, yMax)),
+                r3D.createWallBetweenTiles(Vector2i.of(xMin, yMax), Vector2i.of(xMax, yMax))
+        );
     }
 
     public Group getRoot() {
