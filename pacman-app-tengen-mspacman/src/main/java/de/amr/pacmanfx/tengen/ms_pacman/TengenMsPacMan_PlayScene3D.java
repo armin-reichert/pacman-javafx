@@ -9,7 +9,6 @@ import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
-import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.ui._3d.Bonus3D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import javafx.scene.canvas.Canvas;
@@ -46,11 +45,11 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     protected void bindPlayerSteeringActions() { bindJoypadPlayerSteeringActions(); }
 
     @Override
-    protected void replaceGameLevel3D(GameLevel level) {
-        super.replaceGameLevel3D(level);
+    protected void replaceGameLevel3D() {
+        super.replaceGameLevel3D();
         var tengenGame = (TengenMsPacMan_GameModel) theGame();
         if (!tengenGame.optionsAreInitial()) {
-            ImageView infoView = createGameInfoView(tengenGame, level);
+            ImageView infoView = createGameInfoView(tengenGame, theGameLevel());
             level3D.root().getChildren().add(infoView);
         }
     }

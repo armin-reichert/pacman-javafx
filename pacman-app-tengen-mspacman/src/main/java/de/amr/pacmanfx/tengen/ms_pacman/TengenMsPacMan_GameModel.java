@@ -574,7 +574,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     @Override
     protected void checkIfPacManFindsFood() {
         Vector2i tile = level.pac().tile();
-        if (level.hasFoodAt(tile)) {
+        if (level.tileContainsFood(tile)) {
             level.pac().starvingEnds();
             level.registerFoodEatenAt(tile);
             gateKeeper().ifPresent(gateKeeper -> gateKeeper.registerFoodEaten(level));

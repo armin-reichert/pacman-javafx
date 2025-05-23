@@ -174,7 +174,7 @@ public interface GameRenderer {
     default void overPaintEatenPelletTiles(GameLevel level, Paint paint) {
         level.worldMap().tiles()
             .filter(not(level::isEnergizerPosition))
-            .filter(level::hasEatenFoodAt).forEach(tile -> paintSquareInsideTile(tile, 4, paint));
+            .filter(level::tileContainsEatenFood).forEach(tile -> paintSquareInsideTile(tile, 4, paint));
     }
 
     /**

@@ -215,7 +215,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             double cx = tile.x() * TS + HTS, cy = tile.y() * TS + HTS;
             ctx().setFill(backgroundColorPy.get());
             ctx().fillRect(cx - 2, cy - 2, 4, 4);
-            if (!level.hasEatenFoodAt(tile)) {
+            if (!level.tileContainsEatenFood(tile)) {
                 ctx().setFill(pelletColor);
                 ctx().fillRect(cx - 1, cy - 1, 2, 2);
             }
@@ -229,7 +229,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             double x = tile.x() * TS, y = tile.y() * TS;
             ctx().setFill(backgroundColorPy.get());
             ctx().fillRect(x - 1, y - 1, TS + 2, TS + 2); // avoid blitzer
-            if (!level.hasEatenFoodAt(tile) && level.blinking().isOn()) {
+            if (!level.tileContainsEatenFood(tile) && level.blinking().isOn()) {
                 ctx().setFill(pelletColor);
                 // draw pixelated "circle"
                 ctx().fillRect(x + offset, y, HTS, size);

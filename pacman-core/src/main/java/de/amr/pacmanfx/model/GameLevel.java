@@ -439,7 +439,7 @@ public class GameLevel {
     }
 
     public void registerFoodEatenAt(Vector2i tile) {
-        if (hasFoodAt(tile)) {
+        if (tileContainsFood(tile)) {
             eatenFoodBits.set(worldMap.index(tile));
             --uneatenFoodCount;
         } else {
@@ -450,13 +450,13 @@ public class GameLevel {
     public void eatAllPellets() {
         worldMap.tiles()
                 .filter(not(this::isEnergizerPosition))
-                .filter(this::hasFoodAt)
+                .filter(this::tileContainsFood)
                 .forEach(this::registerFoodEatenAt);
     }
 
     public void eatAll() {
         worldMap.tiles()
-                .filter(this::hasFoodAt)
+                .filter(this::tileContainsFood)
                 .forEach(this::registerFoodEatenAt);
     }
 
@@ -468,11 +468,15 @@ public class GameLevel {
         return isInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) == FoodTiles.ENERGIZER;
     }
 
-    public boolean hasFoodAt(Vector2i tile) {
-        return isFoodPosition(tile) && !hasEatenFoodAt(tile);
+    public boolean tileContainsFood(Vector2i tile) {
+        return isFoodPosition(tile) && !tileContainsEatenFood(tile);
     }
 
-    public boolean hasEatenFoodAt(Vector2i tile) {
+    public boolean tileContainsEatenFood(Vector2i tile) {
         return isInsideWorld(tile) && eatenFoodBits.get(worldMap.index(tile));
+    }
+
+    public Stream<Vector2i> tilesContainingFood() {
+        return worldMap.tiles().filter(this::tileContainsFood);
     }
 }

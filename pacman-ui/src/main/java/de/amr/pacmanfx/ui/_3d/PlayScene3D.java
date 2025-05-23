@@ -10,14 +10,12 @@ import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
-import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingBonus;
-import de.amr.pacmanfx.ui.GameActionBindingManager;
 import de.amr.pacmanfx.ui.GameAction;
+import de.amr.pacmanfx.ui.GameActionBindingManager;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.uilib.Action;
 import de.amr.pacmanfx.uilib.CameraControlledView;
@@ -95,8 +93,8 @@ public class PlayScene3D implements GameScene, GameActionBindingManager, CameraC
 
     protected Perspective perspective() { return perspectiveMap.get(perspectiveIDPy.get()); }
 
-    protected void replaceGameLevel3D(GameLevel level) {
-        level3D = new GameLevel3D(theGameVariant(), level);
+    protected void replaceGameLevel3D() {
+        level3D = new GameLevel3D();
         level3D.addLevelCounter(theUIConfig().current());
         root.getChildren().set(root.getChildren().size() - 1, level3D.root());
         scores3D.translateXProperty().bind(level3D.root().translateXProperty().add(TS));
@@ -211,11 +209,11 @@ public class PlayScene3D implements GameScene, GameActionBindingManager, CameraC
     public void onLevelStarted(GameEvent event) {
         bindActions(); //TODO check if this is necessary
         if (level3D == null) {
-            replaceGameLevel3D(theGameLevel());
+            replaceGameLevel3D();
         }
         switch (theGameState()) {
             case TESTING_LEVELS, TESTING_LEVEL_TEASERS -> {
-                replaceGameLevel3D(theGameLevel());
+                replaceGameLevel3D();
                 level3D.playLivesCounterAnimation();
                 level3D.energizers3D().forEach(Energizer3D::startPumping);
                 showLevelTestMessage("TEST LEVEL " + theGameLevel().number());
@@ -238,10 +236,10 @@ public class PlayScene3D implements GameScene, GameActionBindingManager, CameraC
             bindPlayerSteeringActions();
             bindActions();
             if (level3D == null) {
-                replaceGameLevel3D(level);
+                replaceGameLevel3D();
             }
-            level3D.pellets3D().forEach(pellet -> pellet.shape3D().setVisible(!level.hasEatenFoodAt(pellet.tile())));
-            level3D.energizers3D().forEach(energizer -> energizer.shape3D().setVisible(!level.hasEatenFoodAt(energizer.tile())));
+            level3D.pellets3D().forEach(pellet -> pellet.shape3D().setVisible(!level.tileContainsEatenFood(pellet.tile())));
+            level3D.energizers3D().forEach(energizer -> energizer.shape3D().setVisible(!level.tileContainsEatenFood(energizer.tile())));
             if (isOneOf(theGameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
                 level3D.energizers3D().filter(energizer -> energizer.shape3D().isVisible()).forEach(Energizer3D::startPumping);
             }
@@ -404,13 +402,13 @@ public class PlayScene3D implements GameScene, GameActionBindingManager, CameraC
 
     private void onEnterStateLevelTransition() {
         theGameState().timer().restartSeconds(3);
-        replaceGameLevel3D(theGameLevel());
+        replaceGameLevel3D();
         level3D.pac3D().init();
         perspective().init(fxSubScene, theGameLevel());
     }
 
     private void onEnterStateTestingLevels() {
-        replaceGameLevel3D(theGameLevel());
+        replaceGameLevel3D();
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(theGameLevel()));
         showLevelTestMessage("TEST LEVEL" + theGameLevel().number());
@@ -418,7 +416,7 @@ public class PlayScene3D implements GameScene, GameActionBindingManager, CameraC
     }
 
     private void onEnterStateTestingLevelTeasers() {
-        replaceGameLevel3D(theGameLevel());
+        replaceGameLevel3D();
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(theGameLevel()));
         showLevelTestMessage("PREVIEW LEVEL " + theGameLevel().number());

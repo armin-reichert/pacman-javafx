@@ -98,7 +98,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
             ctx.save();
             ctx.scale(scaling(), scaling());
             overPaintEatenPelletTiles(level, backgroundColor);
-            overPaintEnergizerTiles(level, tile -> !blinking || level.hasEatenFoodAt(tile), backgroundColor);
+            overPaintEnergizerTiles(level, tile -> !blinking || level.tileContainsEatenFood(tile), backgroundColor);
             ctx.restore();
         }
     }

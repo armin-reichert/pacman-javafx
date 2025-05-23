@@ -60,7 +60,7 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
         } else {
             drawSprite(FULL_MAZE_SPRITE, x, y);
             overPaintEatenPelletTiles(level, backgroundColor);
-            overPaintEnergizerTiles(level, tile -> !blinking || level.hasEatenFoodAt(tile), backgroundColor);
+            overPaintEnergizerTiles(level, tile -> !blinking || level.tileContainsEatenFood(tile), backgroundColor);
         }
         ctx.restore();
     }

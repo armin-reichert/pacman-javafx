@@ -90,10 +90,10 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
             terrainRenderer.drawHouse(ctx, level.houseMinTile(), level.houseSizeInTiles());
             foodRenderer.setPelletColor(Color.web(colorMap.get("pellet")));
             foodRenderer.setEnergizerColor(Color.web(colorMap.get("pellet")));
-            worldMap.tiles().filter(level::hasFoodAt).filter(not(level::isEnergizerPosition))
+            worldMap.tiles().filter(level::tileContainsFood).filter(not(level::isEnergizerPosition))
                 .forEach(tile -> foodRenderer.drawPellet(ctx, tile));
             if (blinking) {
-                level.energizerTiles().filter(level::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(ctx, tile));
+                level.energizerTiles().filter(level::tileContainsFood).forEach(tile -> foodRenderer.drawEnergizer(ctx, tile));
             }
         }
     }

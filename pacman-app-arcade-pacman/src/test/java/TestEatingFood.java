@@ -26,7 +26,7 @@ public class TestEatingFood {
 
     private void eatNextPellet() {
         theGameLevel().worldMap().tiles()
-            .filter(theGameLevel()::hasFoodAt)
+            .filter(theGameLevel()::tileContainsFood)
             .filter(not(theGameLevel()::isEnergizerPosition))
             .findFirst().ifPresent(tile -> {
                 theGameLevel().registerFoodEatenAt(tile);
@@ -36,7 +36,7 @@ public class TestEatingFood {
 
     private void eatNextEnergizer() {
         theGameLevel().energizerTiles()
-            .filter(theGameLevel()::hasFoodAt)
+            .filter(theGameLevel()::tileContainsFood)
             .findFirst().ifPresent(tile -> {
                 theGameLevel().registerFoodEatenAt(tile);
                 pacManGame().onEnergizerEaten(tile);

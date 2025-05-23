@@ -9,7 +9,6 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.steering.Steering;
-import de.amr.pacmanfx.ui.PacManGamesEnv;
 import org.tinylog.Logger;
 
 import java.util.Optional;
@@ -147,7 +146,7 @@ public abstract class ArcadeAny_GameModel extends GameModel {
 
     protected void checkIfPacManFindsFood() {
         Vector2i tile = level.pac().tile();
-        if (level.hasFoodAt(tile)) {
+        if (level.tileContainsFood(tile)) {
             level.pac().starvingEnds();
             level.registerFoodEatenAt(tile);
             if (level.isEnergizerPosition(tile)) {
