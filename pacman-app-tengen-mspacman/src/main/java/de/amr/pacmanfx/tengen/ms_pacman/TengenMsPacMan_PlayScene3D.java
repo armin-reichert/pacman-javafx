@@ -50,12 +50,12 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         super.replaceGameLevel3D(level);
         var tengenGame = (TengenMsPacMan_GameModel) theGame();
         if (!tengenGame.optionsAreInitial()) {
-            ImageView infoView = createGameInformation(tengenGame, level);
+            ImageView infoView = createGameInfoView(tengenGame, level);
             level3D.root().getChildren().add(infoView);
         }
     }
 
-    private ImageView createGameInformation(TengenMsPacMan_GameModel game, GameLevel level) {
+    private ImageView createGameInfoView(TengenMsPacMan_GameModel game, GameLevel level) {
         final int infoWidth = level.worldMap().numCols() * TS, infoHeight = 2 * TS;
         final float quality = 5; // scale for better snapshot resolution
 
