@@ -45,6 +45,7 @@ public class XXLPacMan_UIConfig implements GameUIConfig {
         appIcon = rm.loadImage("graphics/icons/pacman.png");
         spriteSheet = new ArcadePacMan_SpriteSheet(rm.loadImage("graphics/pacman_spritesheet.png"));
 
+        assets.store("pacman_xxl.color.score",                     ARCADE_WHITE);
         assets.store("pacman_xxl.color.game_over_message",         ARCADE_RED);
 
         assets.store("pacman_xxl.pac.color.head",                  ARCADE_YELLOW);
