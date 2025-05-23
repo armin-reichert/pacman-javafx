@@ -49,4 +49,10 @@ public interface CommonActionBindingManager extends ActionBindingManager {
         bind(GameAction.TEST_LEVELS_BONI,    alt(KeyCode.T));
         bind(GameAction.TEST_LEVELS_TEASERS, Keyboard.shift_alt(KeyCode.T));
     }
+
+    default void bindScene3DActions() {
+        bind(GameAction.PERSPECTIVE_PREVIOUS, alt(KeyCode.LEFT));
+        bind(GameAction.PERSPECTIVE_NEXT, alt(KeyCode.RIGHT));
+        bind(GameAction.TOGGLE_DRAW_MODE, alt(KeyCode.W));
+    }
 }

@@ -19,6 +19,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameAction.QUIT_DEMO_LEVEL;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameAction.TOGGLE_PAC_BOOSTER;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 import static de.amr.pacmanfx.uilib.input.Keyboard.alt;
@@ -26,24 +27,31 @@ import static de.amr.pacmanfx.uilib.input.Keyboard.alt;
 public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
-    public void init() {
-        super.init();
-        bind(GameAction.PERSPECTIVE_PREVIOUS, alt(KeyCode.LEFT));
-        bind(GameAction.PERSPECTIVE_NEXT, alt(KeyCode.RIGHT));
-        bind(GameAction.TOGGLE_DRAW_MODE, alt(KeyCode.W));
+    protected void bindActions() {
+        // if demo level is running, allow starting game
         if (optGameLevel().isPresent() && theGameLevel().isDemoLevel()) {
-            bind(TengenMsPacMan_GameAction.QUIT_DEMO_LEVEL, theJoypad().key(JoypadButton.START));
-        }
-        else {
+            bind(QUIT_DEMO_LEVEL, theJoypad().key(JoypadButton.START));
+        } else {
             bindPlayerActions();
-            bind(TOGGLE_PAC_BOOSTER, theJoypad().key(JoypadButton.A), theJoypad().key(JoypadButton.B));
             bindCheatActions();
+            bind(TOGGLE_PAC_BOOSTER, theJoypad().key(JoypadButton.A), theJoypad().key(JoypadButton.B));
         }
+        bindScene3DActions();
+
         updateActionBindings();
     }
 
     @Override
     protected void bindPlayerActions() { bindJoypadPlayerActions(); }
+
+    @Override
+    public void init() {
+        theGame().scoreManager().setScoreVisible(true);
+        perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
+        scores3D.setFont(theAssets().font("font.arcade", TS));
+
+        bindActions();
+    }
 
     @Override
     protected void replaceGameLevel3D(GameLevel level) {

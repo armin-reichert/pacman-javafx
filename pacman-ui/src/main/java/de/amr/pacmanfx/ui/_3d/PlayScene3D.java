@@ -176,12 +176,29 @@ public class PlayScene3D implements GameScene, CommonActionBindingManager, Camer
         return items;
     }
 
+    protected void bindActions() {
+        bindArcadeInsertCoinAction();
+        // if demo level is running, allow starting game
+        if (optGameLevel().isPresent() && !theGameLevel().isDemoLevel()) {
+            bindArcadeStartGameAction();
+        } else {
+            bindPlayerActions();
+            bindCheatActions();
+        }
+        bindScene3DActions();
+
+        updateActionBindings();
+    }
+
+    protected void bindPlayerActions() { bindArcadePlayerActions(); }
+
     @Override
     public void init() {
-        bindActions();
         theGame().scoreManager().setScoreVisible(true);
         perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
         scores3D.setFont(theAssets().font("font.arcade", TS));
+
+        bindActions();
     }
 
     @Override
@@ -195,23 +212,6 @@ public class PlayScene3D implements GameScene, CommonActionBindingManager, Camer
 
     @Override
     public Keyboard keyboard() { return theKeyboard(); }
-
-    private void bindActions() {
-        bindArcadeInsertCoinAction();
-        if (optGameLevel().isPresent() && !optGameLevel().get().isDemoLevel()) {
-            if (!theGameController().isSelected(GameVariant.MS_PACMAN_TENGEN)) {
-                bindArcadeStartGameAction();
-            }
-            bindCheatActions();
-        }
-        bind(GameAction.PERSPECTIVE_PREVIOUS, alt(KeyCode.LEFT));
-        bind(GameAction.PERSPECTIVE_NEXT, alt(KeyCode.RIGHT));
-        bind(GameAction.TOGGLE_DRAW_MODE, alt(KeyCode.W));
-        updateActionBindings();
-    }
-
-    // Tengen 3D play scene overrides this
-    protected void bindPlayerActions() { bindArcadePlayerActions(); }
 
     @Override
     public void onLevelStarted(GameEvent event) {
