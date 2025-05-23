@@ -49,7 +49,7 @@ import static de.amr.pacmanfx.uilib.Ufx.doAfterSec;
 import static java.util.Objects.requireNonNull;
 
 /**
- * 3D representation of current game theGameLevel().
+ * 3D representation of current game level.
  */
 public class GameLevel3D {
 
