@@ -11,7 +11,6 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -97,11 +96,9 @@ public class PlayScene3D implements GameScene, CommonActionBindingManager, Camer
     protected Perspective perspective() { return perspectiveMap.get(perspectiveIDPy.get()); }
 
     protected void replaceGameLevel3D(GameLevel level) {
-        final GameVariant gameVariant = theGameVariant();
-        level3D = new GameLevel3D(gameVariant, level);
-        level3D.addLevelCounter(theUIConfig().configuration(gameVariant));
-        int lastIndex = root.getChildren().size() - 1;
-        root.getChildren().set(lastIndex, level3D.root());
+        level3D = new GameLevel3D(theGameVariant(), level);
+        level3D.addLevelCounter(theUIConfig().current());
+        root.getChildren().set(root.getChildren().size() - 1, level3D.root());
         scores3D.translateXProperty().bind(level3D.root().translateXProperty().add(TS));
         scores3D.translateYProperty().bind(level3D.root().translateYProperty().subtract(3.5 * TS));
         scores3D.translateZProperty().bind(level3D.root().translateZProperty().subtract(3.5 * TS));
@@ -200,11 +197,11 @@ public class PlayScene3D implements GameScene, CommonActionBindingManager, Camer
 
     @Override
     public final void end() {
+        theSound().stopAll();
         deleteActionBindings();
         perspectiveIDPy.unbind();
         level3D.stopAnimations();
         level3D = null;
-        theSound().stopAll();
     }
 
     @Override
