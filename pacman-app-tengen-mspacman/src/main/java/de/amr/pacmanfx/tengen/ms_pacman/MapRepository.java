@@ -18,7 +18,7 @@ import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 
 /**
- * This class provides an API to access the maze images in files {@code non_arcade_mazes.png} and {@code arcade_mazes.png}.
+ * This is the API to access the maze images in files {@code non_arcade_mazes.png} and {@code arcade_mazes.png}.
  * <p>
  * These PNG files contain images for all mazes of the different map categories.
  * The color schemes correspond to the ones used in STRANGE mode running through all levels (1-32).
@@ -27,18 +27,18 @@ import static java.util.Objects.requireNonNull;
  * combinations.
  * </p>
  * <p>
-*  For this reason, a cache is provided where each maze image contained in the file can be
- * stored after having been recolored to the color scheme required in the game level.
+*  For this reason a cache is provided where maze images are stored after getting recolored into the color scheme
+ * required in a specific game level.
  * </p>
  */
 public class MapRepository {
 
     private record RepositoryKey(MapCategory mapCategory, int spriteNumber, NES_ColorScheme colorScheme) {}
 
-    static final int ARCADE_MAZE_WIDTH = 28*8, ARCADE_MAZE_HEIGHT = 31*8;
+    private static final int ARCADE_MAZE_WIDTH = 28*8, ARCADE_MAZE_HEIGHT = 31*8;
 
     // Map row counts as they appear in the sprite sheet (row by row)
-    static final byte[] NON_ARCADE_MAP_ROW_COUNTS = {
+    private static final byte[] NON_ARCADE_MAP_ROW_COUNTS = {
         31, 31, 31, 31, 31, 31, 30, 31,
         31, 37, 31, 31, 31, 37, 31, 25,
         37, 31, 37, 37, 37, 37, 37, 31,
@@ -47,7 +47,7 @@ public class MapRepository {
     };
 
     // Strange map #15 (level 32) has 3 different images to create an animation effect
-    static final RectArea[] STRANGE_MAP_15_SPRITES = {
+    private static final RectArea[] STRANGE_MAP_15_SPRITES = {
         rect(1568,  840, 224, 248),
         rect(1568, 1088, 224, 248),
         rect(1568, 1336, 224, 248),
@@ -62,15 +62,15 @@ public class MapRepository {
         return STRANGE_MAP_15_SPRITES[index];
     }
 
-    private static List<NES_ColorScheme> randomColorSchemes(int count, NES_ColorScheme usedScheme) {
-        Set<NES_ColorScheme> colorSchemes = new HashSet<>();
-        while (colorSchemes.size() < count) {
-            NES_ColorScheme colorScheme = NES_ColorScheme.random();
-            if (!colorScheme.equals(usedScheme)) {
-                colorSchemes.add(colorScheme);
+    private static List<NES_ColorScheme> randomColorSchemes(int count, NES_ColorScheme colorScheme) {
+        var randomColorSchemes = new HashSet<NES_ColorScheme>();
+        while (randomColorSchemes.size() < count) {
+            NES_ColorScheme randomColorScheme = NES_ColorScheme.random();
+            if (!randomColorScheme.equals(colorScheme)) {
+                randomColorSchemes.add(randomColorScheme);
             }
         }
-        return colorSchemes.stream().toList();
+        return randomColorSchemes.stream().toList();
     }
 
     // Maze areas where ghosts are shown in maze images, must be masked at runtime
