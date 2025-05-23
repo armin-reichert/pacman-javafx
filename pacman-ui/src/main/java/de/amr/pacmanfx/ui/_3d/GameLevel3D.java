@@ -53,6 +53,10 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameLevel3D {
 
+    private static boolean isInsideWorldMap(WorldMap worldMap, double x, double y) {
+        return 0 <= x && x <= worldMap.numCols() * TS && 0 <= y && y <= worldMap.numRows() * TS;
+    }
+
     private final BooleanProperty houseOpenPy = new SimpleBooleanProperty() {
         @Override
         protected void invalidated() {
@@ -79,26 +83,21 @@ public class GameLevel3D {
     private Animation livesCounterAnimation;
 
     public GameLevel3D() {
-        final WorldMap worldMap = theGameLevel().worldMap();
-        final int numRows = worldMap.numRows(), numCols = worldMap.numCols();
-        final WorldMapColorScheme colorScheme = theUIConfig().current().worldMapColorScheme(worldMap);
-
-        livesCounter3D = createLivesCounter3D(theGame().canStartNewGame());
-        livesCounter3D.livesCountPy.bind(livesCountPy);
-
         pac3D = createPac3D();
         ghost3DAppearances = theGameLevel().ghosts()
-            .map(ghost -> createGhost3D(theUIConfig().current().assetNamespace(), ghost, theGameLevel().data().numFlashes()))
+            .map(ghost -> createGhost3D(ghost, theGameLevel().data().numFlashes()))
             .toList();
 
-        floor3D = createFloor(numCols * TS, numRows * TS);
-        floor3D.materialProperty().bind(PY_3D_FLOOR_COLOR.map(Ufx::coloredPhongMaterial));
-        floor3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
-
+        final WorldMapColorScheme colorScheme = theUIConfig().current().worldMapColorScheme(theGameLevel().worldMap());
+        floor3D = createFloor3D(theGameLevel().worldMap().numCols() * TS, theGameLevel().worldMap().numRows() * TS);
         maze3D = new Maze3D(theGameLevel(), colorScheme);
         mazeGroup.getChildren().addAll(floor3D, maze3D);
-
         createFood3D(colorScheme);
+
+        livesCounter3D = createLivesCounter3D(theGame().canStartNewGame());
+
+        var ambientLight = new AmbientLight();
+        ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
 
         // Note: The order in which children are added matters!
         // Walls and house must be added last, otherwise, transparency is not working correctly.
@@ -108,19 +107,15 @@ public class GameLevel3D {
         root.getChildren().addAll(ghost3DAppearances);
         root.getChildren().add(livesCounter3D);
         root.getChildren().add(mazeGroup);
-
-        var ambientLight = new AmbientLight();
-        ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
         root.getChildren().add(ambientLight);
 
-        // For wireframe mode view. Pac-Man and ghost shapes are already bound to global draw mode property.
+        root.setMouseTransparent(true); //TODO does this really increase performance?
+        // Pac-Man and ghost shapes are already bound to global draw mode property.
         // Pellets are not included because this would cause huge performance penalty.
         Stream.concat(mazeGroup.lookupAll("*").stream(), livesCounter3D.lookupAll("*").stream())
             .filter(Shape3D.class::isInstance)
             .map(Shape3D.class::cast)
             .forEach(shape3D -> shape3D.drawModeProperty().bind(PY_3D_DRAW_MODE));
-
-        root.setMouseTransparent(true); //TODO does this really increase performance?
     }
 
     public void update() {
@@ -139,17 +134,19 @@ public class GameLevel3D {
         livesCountPy.set(livesCounterSize());
     }
 
-    private Box createFloor(double sizeX, double sizeY) {
+    private Box createFloor3D(double sizeX, double sizeY) {
         double extraSpace = 10;
         var floor3D = new Box(sizeX + extraSpace, sizeY, FLOOR_3D_THICKNESS);
         floor3D.translateXProperty().bind(floor3D.widthProperty().divide(2).subtract(0.5 * extraSpace));
         floor3D.translateYProperty().bind(floor3D.heightProperty().divide(2));
         floor3D.translateZProperty().bind(floor3D.depthProperty().divide(2));
+        floor3D.materialProperty().bind(PY_3D_FLOOR_COLOR.map(Ufx::coloredPhongMaterial));
+        floor3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
         return floor3D;
     }
 
-    private Ghost3DAppearance createGhost3D(String ans, Ghost ghost, int numFlashes) {
-        var ghost3D = new Ghost3DAppearance(theAssets(), ans,
+    private Ghost3DAppearance createGhost3D(Ghost ghost, int numFlashes) {
+        var ghost3D = new Ghost3DAppearance(theAssets(), theUIConfig().current().assetNamespace(),
             new MeshView(Model3DRepository.get().ghostDressMesh()),
             new MeshView(Model3DRepository.get().ghostPupilsMesh()),
             new MeshView(Model3DRepository.get().ghostEyeballsMesh()),
@@ -189,10 +186,6 @@ public class GameLevel3D {
         return energizer3D;
     }
 
-    private boolean isInsideWorldMap(WorldMap worldMap, double x, double y) {
-        return 0 <= x && x <= worldMap.numCols() * TS && 0 <= y && y <= worldMap.numRows() * TS;
-    }
-
     private SquirtingAnimation createSquirtingAnimation(WorldMap worldMap, Energizer3D energizer3D, PhongMaterial dropMaterial) {
         Vector2i tile = energizer3D.tile();
         var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
@@ -228,18 +221,19 @@ public class GameLevel3D {
         return pac3D;
     }
 
-    private LivesCounter3D createLivesCounter3D(boolean canStartNewGame) {
+    private LivesCounter3D createLivesCounter3D(boolean visible) {
         Node[] counterShapes = new Node[LIVES_COUNTER_MAX];
         for (int i = 0; i < counterShapes.length; ++i) {
             counterShapes[i] = theUIConfig().current().createLivesCounterShape(theAssets(), LIVES_COUNTER_3D_SIZE);
         }
         var counter3D = new LivesCounter3D(counterShapes);
+        counter3D.drawModePy.bind(PY_3D_DRAW_MODE);
+        counter3D.livesCountPy.bind(livesCountPy);
         counter3D.setTranslateX(2 * TS);
         counter3D.setTranslateY(2 * TS);
-        counter3D.setVisible(canStartNewGame);
-        counter3D.drawModePy.bind(PY_3D_DRAW_MODE);
+        counter3D.setVisible(visible);
         counter3D.light().colorProperty().set(Color.CORNFLOWERBLUE);
-        counter3D.light().setLightOn(canStartNewGame);
+        counter3D.light().setLightOn(visible);
         return counter3D;
     }
 
