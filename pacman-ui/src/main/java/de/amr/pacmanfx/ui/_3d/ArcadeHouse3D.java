@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Vector2i;
@@ -37,7 +41,6 @@ public class ArcadeHouse3D {
         int xMin = level.houseMinTile().x(), xMax = xMin + tilesX - 1;
         int yMin = level.houseMinTile().y(), yMax = yMin + tilesY - 1;
         Vector2i leftDoorTile = level.houseLeftDoorTile(), rightDoorTile = level.houseRightDoorTile();
-
         door3D = new Door3D(leftDoorTile, rightDoorTile, doorColor, wallBaseHeightPy.get());
 
         float centerX = xMin * TS + tilesX * HTS;
