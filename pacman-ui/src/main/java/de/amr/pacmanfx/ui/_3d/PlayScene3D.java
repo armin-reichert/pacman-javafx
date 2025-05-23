@@ -271,14 +271,15 @@ public class PlayScene3D implements GameScene, GameActionBindingManager, CameraC
             return;
         }
         level3D.update();
-        if (!theGameLevel().isDemoLevel()) {
-            updateScores();
-            updateSound();
-        }
+        updateScores();
+        updateSound();
         perspective().update(fxSubScene, theGameLevel(), theGameLevel().pac());
     }
 
     protected void updateSound() {
+        if (theGameLevel().isDemoLevel()) {
+            return; // demo level is silent
+        }
         if (theGameState() == GameState.HUNTING && !theGameLevel().pac().powerTimer().isRunning()) {
             int sirenNumber = 1 + theGameLevel().huntingTimer().phaseIndex() / 2;
             theSound().selectSiren(sirenNumber);
@@ -296,17 +297,18 @@ public class PlayScene3D implements GameScene, GameActionBindingManager, CameraC
     }
 
     protected void updateScores() {
-        ScoreManager scoreManager = theGame().scoreManager();
-        Score score = scoreManager.score(), highScore = scoreManager.highScore();
-        scores3D.showHighScore(highScore.points(), highScore.levelNumber());
+        final Score score = theGame().scoreManager().score(),
+                highScore = theGame().scoreManager().highScore();
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
         }
-        else { // score is disabled, show text "GAME OVER"
+        else { // disabled, show text "GAME OVER"
             String ans = theUIConfig().current().assetNamespace();
             Color color = theAssets().color(ans + ".color.game_over_message");
             scores3D.showTextAsScore(theAssets().text("score.game_over"), color);
         }
+        // Always show high score
+        scores3D.showHighScore(highScore.points(), highScore.levelNumber());
     }
 
     @Override
