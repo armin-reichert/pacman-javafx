@@ -38,8 +38,6 @@ import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
 /**
  * 2D play scene for Arcade game variants.
- *
- * @author Armin Reichert
  */
 public class ArcadeAny_PlayScene2D extends GameScene2D {
 

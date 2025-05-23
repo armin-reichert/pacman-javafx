@@ -37,8 +37,6 @@ import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
  * <p>
  * The ghosts are presented one by one, Pac-Man is chased by the ghosts, turns the cards and hunts the ghosts himself.
  * </p>
- *
- * @author Armin Reichert
  */
 public class ArcadePacMan_IntroScene extends GameScene2D {
 

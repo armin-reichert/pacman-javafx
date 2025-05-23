@@ -75,17 +75,13 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     @Override
     public void doInit() {
         theGame().scoreManager().setScoreVisible(true);
+
         bindArcadeInsertCoinAction();
         bindArcadeStartGameAction();
         bindStartTestsActions();
 
         msPacMan = createMsPacMan();
-        ghosts = new Ghost[] {
-            createRedGhost(),
-            createPinkGhost(),
-            createCyanGhost(),
-            createOrangeGhost()
-        };
+        ghosts = new Ghost[] { createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost() };
         marqueeTimer = new TickTimer("marquee-timer");
         currentPersonality = RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;

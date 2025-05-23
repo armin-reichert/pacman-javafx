@@ -55,8 +55,6 @@ import static de.amr.pacmanfx.uilib.input.Keyboard.alt;
 /**
  * 3D play scene. Provides different camera perspectives that can be stepped
  * through using keys <code>Alt+LEFT</code> and <code>Alt+RIGHT</code>.
- *
- * @author Armin Reichert
  */
 public class PlayScene3D implements GameScene, CommonActionBindingManager, CameraControlledView {
 
