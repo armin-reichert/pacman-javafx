@@ -12,46 +12,56 @@ import org.tinylog.Logger;
 import java.util.Map;
 import java.util.Optional;
 
-public interface ActionProvider {
+import static java.util.Objects.requireNonNull;
+
+/**
+ * Manages binding of actions to keyboard combinations. Implemented by the "views" (game view,
+ * editor view, start pages view) and the game scenes.
+ */
+public interface ActionBindingManager {
 
     Keyboard keyboard();
+
     Map<KeyCodeCombination, Action> actionBindings();
 
     default void updateActionBindings() {
-        Logger.info("Key bindings updated for {}", getClass().getSimpleName());
         for (KeyCodeCombination combination : actionBindings().keySet()) {
             keyboard().addBinding(combination, this);
         }
+        Logger.info("Key bindings updated for {}", getClass().getSimpleName());
     }
 
-    default void clearActionBindings() {
-        Logger.info("Key bindings cleared for {}", getClass().getSimpleName());
+    default void deleteActionBindings() {
         for (KeyCodeCombination combination : actionBindings().keySet()) {
             keyboard().removeBinding(combination, this);
         }
+        Logger.info("Key bindings cleared for {}", getClass().getSimpleName());
     }
 
     default void bind(Action action, KeyCodeCombination... combinations) {
+        requireNonNull(action);
+        requireNonNull(combinations);
         for (KeyCodeCombination combination : combinations) {
             actionBindings().put(combination, action);
         }
     }
 
     default void bind(Action action, KeyCode... keyCodes) {
+        requireNonNull(keyCodes);
         for (KeyCode keyCode : keyCodes) {
             actionBindings().put(new KeyCodeCombination(keyCode), action);
         }
     }
 
-    default Optional<Action> firstTriggeredAction() {
+    default Optional<Action> matchingAction() {
         return actionBindings().keySet().stream()
             .filter(keyboard()::isMatching)
             .map(actionBindings()::get)
             .findFirst();
     }
 
-    default void runTriggeredAction() {
-        firstTriggeredAction().ifPresent(action -> {
+    default void runMatchingAction() {
+        matchingAction().ifPresent(action -> {
             if (action.isEnabled()) {
                 action.execute();
             } else {
@@ -60,8 +70,8 @@ public interface ActionProvider {
         });
     }
 
-    default void runTriggeredActionElse(Runnable defaultAction) {
-        firstTriggeredAction().ifPresentOrElse(action -> {
+    default void runMatchingActionOrElse(Runnable defaultAction) {
+        matchingAction().ifPresentOrElse(action -> {
             if (action.isEnabled()) {
                 action.execute();
             } else {
@@ -70,7 +80,5 @@ public interface ActionProvider {
         }, defaultAction);
     }
 
-    default void handleKeyboardInput() {
-        runTriggeredAction();
-    }
+    default void handleKeyboardInput() { runMatchingAction(); }
 }

@@ -17,7 +17,7 @@ import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingBonus;
-import de.amr.pacmanfx.ui.CommonActionProvider;
+import de.amr.pacmanfx.ui.CommonActionBindingManager;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.uilib.Action;
@@ -58,7 +58,7 @@ import static de.amr.pacmanfx.uilib.input.Keyboard.alt;
  *
  * @author Armin Reichert
  */
-public class PlayScene3D implements GameScene, CommonActionProvider, CameraControlledView {
+public class PlayScene3D implements GameScene, CommonActionBindingManager, CameraControlledView {
 
     protected final ObjectProperty<PerspectiveID> perspectiveNamePy = new SimpleObjectProperty<>() {
         @Override
@@ -188,7 +188,7 @@ public class PlayScene3D implements GameScene, CommonActionProvider, CameraContr
 
     @Override
     public final void end() {
-        clearActionBindings();
+        deleteActionBindings();
         perspectiveNamePy.unbind();
         level3D.stopAnimations();
         level3D = null;

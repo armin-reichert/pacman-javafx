@@ -85,7 +85,7 @@ public class PacManGamesUI implements GameUI {
     private void handleViewChange(View oldView, View newView) {
         root.getChildren().set(0, newView.layoutRoot());
         if (oldView != null) {
-            oldView.clearActionBindings();
+            oldView.deleteActionBindings();
             theGameEventManager().removeEventListener(oldView);
         }
         newView.updateActionBindings();

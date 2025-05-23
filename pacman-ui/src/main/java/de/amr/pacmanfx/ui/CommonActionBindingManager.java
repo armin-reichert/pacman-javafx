@@ -6,14 +6,14 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
-import de.amr.pacmanfx.uilib.ActionProvider;
+import de.amr.pacmanfx.uilib.ActionBindingManager;
 import de.amr.pacmanfx.uilib.input.Keyboard;
 import javafx.scene.input.KeyCode;
 
 import static de.amr.pacmanfx.ui.PacManGamesEnv.theJoypad;
 import static de.amr.pacmanfx.uilib.input.Keyboard.*;
 
-public interface CommonActionProvider extends ActionProvider {
+public interface CommonActionBindingManager extends ActionBindingManager {
 
     default void bindArcadeInsertCoinAction() {
         bind(GameAction.INSERT_COIN,  naked(KeyCode.DIGIT5), naked(KeyCode.NUMPAD5));

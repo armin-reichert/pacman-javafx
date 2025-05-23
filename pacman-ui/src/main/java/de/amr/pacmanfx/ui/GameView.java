@@ -154,7 +154,7 @@ public class GameView implements View {
 
     @Override
     public void handleKeyboardInput() {
-        runTriggeredActionElse(() -> currentGameScene().ifPresent(ActionProvider::handleKeyboardInput));
+        runMatchingActionOrElse(() -> currentGameScene().ifPresent(ActionBindingManager::handleKeyboardInput));
     }
 
     // -----------------------------------------------------------------------------------------------------------------

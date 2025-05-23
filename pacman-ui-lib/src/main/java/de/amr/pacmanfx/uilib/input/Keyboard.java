@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.input;
 
-import de.amr.pacmanfx.uilib.ActionProvider;
+import de.amr.pacmanfx.uilib.ActionBindingManager;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
@@ -48,19 +48,19 @@ public class Keyboard {
     }
 
     private final Set<KeyCode> pressedKeys = new HashSet<>();
-    private final Map<KeyCodeCombination, ActionProvider> registeredBindings = new HashMap<>();
+    private final Map<KeyCodeCombination, ActionBindingManager> registeredBindings = new HashMap<>();
     private final List<KeyCodeCombination> matches = new ArrayList<>(3);
 
-    public void addBinding(KeyCodeCombination combination, ActionProvider actionProvider) {
-        if (registeredBindings.get(combination) == actionProvider) {
-            Logger.debug("Key code combination '{}' already bound to {}", combination, actionProvider);
+    public void addBinding(KeyCodeCombination combination, ActionBindingManager actionBindingManager) {
+        if (registeredBindings.get(combination) == actionBindingManager) {
+            Logger.debug("Key code combination '{}' already bound to {}", combination, actionBindingManager);
         } else {
-            registeredBindings.put(combination, actionProvider);
-            Logger.debug("Key code combination '{}' bound to {}", combination, actionProvider);
+            registeredBindings.put(combination, actionBindingManager);
+            Logger.debug("Key code combination '{}' bound to {}", combination, actionBindingManager);
         }
     }
 
-    public void removeBinding(KeyCodeCombination combination, ActionProvider client) {
+    public void removeBinding(KeyCodeCombination combination, ActionBindingManager client) {
         boolean removed = registeredBindings.remove(combination, client);
         if (removed) {
             Logger.debug("Key code combination '{}' bound to {}", combination, client);
@@ -92,8 +92,8 @@ public class Keyboard {
         registeredBindings.keySet().stream()
             .sorted(Comparator.comparing(KeyCodeCombination::getDisplayText))
             .forEach(combination -> {
-                ActionProvider actionProvider = registeredBindings.get(combination);
-                Logger.debug("{}: {}", combination, actionProvider.getClass().getSimpleName());
+                ActionBindingManager actionBindingManager = registeredBindings.get(combination);
+                Logger.debug("{}: {}", combination, actionBindingManager.getClass().getSimpleName());
         });
         Logger.debug("--------------------------");
     }
