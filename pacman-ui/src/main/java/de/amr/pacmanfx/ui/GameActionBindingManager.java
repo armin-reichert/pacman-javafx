@@ -13,7 +13,7 @@ import javafx.scene.input.KeyCode;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.theJoypad;
 import static de.amr.pacmanfx.uilib.input.Keyboard.*;
 
-public interface CommonActionBindingManager extends ActionBindingManager {
+public interface GameActionBindingManager extends ActionBindingManager {
 
     default void bindArcadeInsertCoinAction() {
         bind(GameAction.INSERT_COIN,  naked(KeyCode.DIGIT5), naked(KeyCode.NUMPAD5));

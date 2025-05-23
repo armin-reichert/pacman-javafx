@@ -13,6 +13,7 @@ import javafx.scene.layout.Region;
 
 import static de.amr.pacmanfx.ui.PacManGamesEnv.theKeyboard;
 
+//TODO Maybe this should become a FX scene?
 public interface View extends ActionBindingManager, GameEventListener {
     @Override
     default Keyboard keyboard() { return theKeyboard(); }

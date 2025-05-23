@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui._2d;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.ui.CommonActionBindingManager;
+import de.amr.pacmanfx.ui.GameActionBindingManager;
 import de.amr.pacmanfx.uilib.Action;
 import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.input.Keyboard;
@@ -29,7 +29,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Armin Reichert
  */
-public abstract class GameScene2D implements GameScene, CommonActionBindingManager {
+public abstract class GameScene2D implements GameScene, GameActionBindingManager {
 
     protected final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     protected final BooleanProperty debugInfoVisiblePy = new SimpleBooleanProperty(false);
