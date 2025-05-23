@@ -95,7 +95,7 @@ public class PlayScene3D implements GameScene, GameActionBindingManager, CameraC
 
     protected void replaceGameLevel3D() {
         level3D = new GameLevel3D();
-        level3D.addLevelCounter(theUIConfig().current());
+        level3D.addLevelCounter();
         root.getChildren().set(root.getChildren().size() - 1, level3D.root());
         scores3D.translateXProperty().bind(level3D.root().translateXProperty().add(TS));
         scores3D.translateYProperty().bind(level3D.root().translateYProperty().subtract(3.5 * TS));
