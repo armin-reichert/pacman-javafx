@@ -56,46 +56,45 @@ import static de.amr.pacmanfx.uilib.Ufx.contextMenuTitleItem;
  */
 public class PlayScene3D implements GameScene, CommonActionBindingManager, CameraControlledView {
 
-    protected final ObjectProperty<PerspectiveID> perspectiveNamePy = new SimpleObjectProperty<>() {
+    protected final SubScene fxSubScene;
+    protected final Group root = new Group();
+    protected final Scores3D scores3D;
+    protected final PerspectiveCamera camera = new PerspectiveCamera(true);
+    protected final Map<PerspectiveID, Perspective> perspectiveMap = new EnumMap<>(PerspectiveID.class);
+    protected final Map<KeyCodeCombination, Action> actionBindingMap = new HashMap<>();
+
+    protected final ObjectProperty<PerspectiveID> perspectiveIDPy = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
             optGameLevel().ifPresent(level -> perspective().init(fxSubScene, level));
         }
     };
 
-    protected final Map<PerspectiveID, Perspective> perspectives = new EnumMap<>(PerspectiveID.class);
-    protected final Map<KeyCodeCombination, Action> actionBindings = new HashMap<>();
-    protected final Group root = new Group();
-    protected final SubScene fxSubScene;
-    protected final PerspectiveCamera camera = new PerspectiveCamera(true);
-    protected final Scores3D scores3D;
-
     protected GameLevel3D level3D;
 
     public PlayScene3D() {
-        var axes = new CoordinateSystem();
-        axes.visibleProperty().bind(PY_3D_AXES_VISIBLE);
-
         scores3D = new Scores3D(theAssets().text("score.score"), theAssets().text("score.high_score"));
+        scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
+        scores3D.rotateProperty().bind(camera.rotateProperty());
+
+        var coordinateSystem = new CoordinateSystem();
+        coordinateSystem.visibleProperty().bind(PY_3D_AXES_VISIBLE);
 
         // last child is placeholder for level 3D
-        root.getChildren().addAll(scores3D, axes, new Group());
+        root.getChildren().addAll(scores3D, coordinateSystem, new Group());
 
-        // initial size is irrelevant, gets bound to parent scene size later
+        // initial size is irrelevant because size gets bound to parent scene size anyway
         fxSubScene = new SubScene(root, 88, 88, true, SceneAntialiasing.BALANCED);
         fxSubScene.setFill(Color.TRANSPARENT);
         fxSubScene.setCamera(camera);
 
-        perspectives.put(PerspectiveID.DRONE, new Perspective.Drone());
-        perspectives.put(PerspectiveID.TOTAL, new Perspective.Total());
-        perspectives.put(PerspectiveID.TRACK_PLAYER, new Perspective.TrackingPlayer());
-        perspectives.put(PerspectiveID.NEAR_PLAYER, new Perspective.StalkingPlayer());
-
-        scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
-        scores3D.rotateProperty().bind(camera.rotateProperty());
+        perspectiveMap.put(PerspectiveID.DRONE, new Perspective.Drone());
+        perspectiveMap.put(PerspectiveID.TOTAL, new Perspective.Total());
+        perspectiveMap.put(PerspectiveID.TRACK_PLAYER, new Perspective.TrackingPlayer());
+        perspectiveMap.put(PerspectiveID.NEAR_PLAYER, new Perspective.StalkingPlayer());
     }
 
-    protected Perspective perspective() { return perspectives.get(perspectiveNamePy.get()); }
+    protected Perspective perspective() { return perspectiveMap.get(perspectiveIDPy.get()); }
 
     protected void replaceGameLevel3D(GameLevel level) {
         final GameVariant gameVariant = theGameVariant();
@@ -194,7 +193,7 @@ public class PlayScene3D implements GameScene, CommonActionBindingManager, Camer
     public void init() {
         scores3D.setFont(theAssets().arcadeFontAtSize(TS));
         theGame().scoreManager().setScoreVisible(true);
-        perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
+        perspectiveIDPy.bind(PY_3D_PERSPECTIVE);
 
         bindActions();
     }
@@ -202,7 +201,7 @@ public class PlayScene3D implements GameScene, CommonActionBindingManager, Camer
     @Override
     public final void end() {
         deleteActionBindings();
-        perspectiveNamePy.unbind();
+        perspectiveIDPy.unbind();
         level3D.stopAnimations();
         level3D = null;
         theSound().stopAll();
@@ -315,7 +314,7 @@ public class PlayScene3D implements GameScene, CommonActionBindingManager, Camer
 
     @Override
     public Map<KeyCodeCombination, Action> actionBindings() {
-        return actionBindings;
+        return actionBindingMap;
     }
 
     @Override
@@ -395,12 +394,12 @@ public class PlayScene3D implements GameScene, CommonActionBindingManager, Camer
         Animation animation = level3D.createLevelCompleteAnimation();
         animation.setDelay(Duration.seconds(2));
         animation.setOnFinished(e -> {
-            perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
+            perspectiveIDPy.bind(PY_3D_PERSPECTIVE);
             theGameController().letCurrentGameStateExpire();
         });
         theGameState().timer().resetIndefiniteTime();
-        perspectiveNamePy.unbind();
-        perspectiveNamePy.set(PerspectiveID.TOTAL);
+        perspectiveIDPy.unbind();
+        perspectiveIDPy.set(PerspectiveID.TOTAL);
         animation.play();
     }
 
