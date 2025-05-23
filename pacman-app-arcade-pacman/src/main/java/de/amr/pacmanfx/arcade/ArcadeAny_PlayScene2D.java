@@ -54,7 +54,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         if (theGameLevel().isDemoLevel()) {
             bindArcadeInsertCoinAction();
         } else {
-            bindArcadePlayerActions();
+            bindArcadePlayerSteeringActions();
             bindCheatActions();
         }
         updateActionBindings();
@@ -217,7 +217,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
         Logger.info("{} entered from {}", this, oldScene);
-        bindArcadePlayerActions();
+        bindArcadePlayerSteeringActions();
         updateActionBindings();
         if (gr == null) {
             setGameRenderer(theUIConfig().current().createRenderer(canvas));

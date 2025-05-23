@@ -222,7 +222,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         if (level.isDemoLevel()) {
             bind(QUIT_DEMO_LEVEL, theJoypad().key(JoypadButton.START));
         } else {
-            bindJoypadPlayerActions();
+            bindJoypadPlayerSteeringActions();
             bind(TengenMsPacMan_GameAction.TOGGLE_PAC_BOOSTER, theJoypad().key(JoypadButton.A), theJoypad().key(JoypadButton.B));
             bindCheatActions();
         }

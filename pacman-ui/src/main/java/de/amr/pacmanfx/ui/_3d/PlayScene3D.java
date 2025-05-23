@@ -34,7 +34,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -50,7 +49,6 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 import static de.amr.pacmanfx.uilib.Ufx.contextMenuTitleItem;
-import static de.amr.pacmanfx.uilib.input.Keyboard.alt;
 
 /**
  * 3D play scene. Provides different camera perspectives that can be stepped
@@ -182,7 +180,7 @@ public class PlayScene3D implements GameScene, CommonActionBindingManager, Camer
         if (optGameLevel().isPresent() && !theGameLevel().isDemoLevel()) {
             bindArcadeStartGameAction();
         } else {
-            bindPlayerActions();
+            bindPlayerSteeringActions();
             bindCheatActions();
         }
         bindScene3DActions();
@@ -190,13 +188,13 @@ public class PlayScene3D implements GameScene, CommonActionBindingManager, Camer
         updateActionBindings();
     }
 
-    protected void bindPlayerActions() { bindArcadePlayerActions(); }
+    protected void bindPlayerSteeringActions() { bindArcadePlayerSteeringActions(); }
 
     @Override
     public void init() {
+        scores3D.setFont(theAssets().arcadeFontAtSize(TS));
         theGame().scoreManager().setScoreVisible(true);
         perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
-        scores3D.setFont(theAssets().font("font.arcade", TS));
 
         bindActions();
     }
@@ -228,7 +226,7 @@ public class PlayScene3D implements GameScene, CommonActionBindingManager, Camer
             }
             default -> {
                 if (!theGameLevel().isDemoLevel()) {
-                    bindPlayerActions();
+                    bindPlayerSteeringActions();
                     updateActionBindings();
                     showReadyMessage();
                 }
@@ -241,7 +239,7 @@ public class PlayScene3D implements GameScene, CommonActionBindingManager, Camer
     @Override
     public void onSceneVariantSwitch(GameScene fromScene) {
         optGameLevel().ifPresent(level -> {
-            bindPlayerActions();
+            bindPlayerSteeringActions();
             bindActions();
             if (level3D == null) {
                 replaceGameLevel3D(level);

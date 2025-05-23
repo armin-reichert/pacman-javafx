@@ -10,29 +10,30 @@ import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.ScoreManager;
-import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui._3d.Bonus3D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameAction.QUIT_DEMO_LEVEL;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameAction.TOGGLE_PAC_BOOSTER;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
-import static de.amr.pacmanfx.uilib.input.Keyboard.alt;
 
+/**
+ * The 3D play scene of Tengen Ms. Pac-Man. Differs slightly from the Arcade version, e.g. the
+ * action bindings differ or additional information is displayed (difficulty, maze category etc.)
+ */
 public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void bindActions() {
-        // if demo level is running, allow starting game
+        // if demo level is running, allow going back to options screen
         if (optGameLevel().isPresent() && theGameLevel().isDemoLevel()) {
             bind(QUIT_DEMO_LEVEL, theJoypad().key(JoypadButton.START));
         } else {
-            bindPlayerActions();
+            bindPlayerSteeringActions();
             bindCheatActions();
             bind(TOGGLE_PAC_BOOSTER, theJoypad().key(JoypadButton.A), theJoypad().key(JoypadButton.B));
         }
@@ -42,47 +43,39 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     }
 
     @Override
-    protected void bindPlayerActions() { bindJoypadPlayerActions(); }
-
-    @Override
-    public void init() {
-        theGame().scoreManager().setScoreVisible(true);
-        perspectiveNamePy.bind(PY_3D_PERSPECTIVE);
-        scores3D.setFont(theAssets().font("font.arcade", TS));
-
-        bindActions();
-    }
+    protected void bindPlayerSteeringActions() { bindJoypadPlayerSteeringActions(); }
 
     @Override
     protected void replaceGameLevel3D(GameLevel level) {
         super.replaceGameLevel3D(level);
-
-        // At the bottom of the 3D maze, display level number boxes, maze category and difficulty as in 2D view
         var tengenGame = (TengenMsPacMan_GameModel) theGame();
         if (!tengenGame.optionsAreInitial()) {
-            int imgWidth = level.worldMap().numCols() * TS, imgHeight = 2 * TS;
-
-            ImageView imageView = new ImageView();
-            imageView.setFitWidth(imgWidth);
-            imageView.setFitHeight(imgHeight);
-            imageView.setTranslateY((level.worldMap().numRows() - 2) * TS);
-            imageView.setTranslateZ(-level3D.floorThickness());
-
-            float quality = 5; // scale 5x for better quality of snapshot
-            var canvas = new Canvas(quality * imgWidth, quality * imgHeight);
-            canvas.getGraphicsContext2D().setImageSmoothing(false); // important!
-
-            var r = (TengenMsPacMan_Renderer2D) theUIConfig().current().createRenderer(canvas);
-            r.setScaling(quality);
-            r.ctx().setFill(level3D.floorColor());
-            r.ctx().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-            r.drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBooster(), 0.5 * imgWidth, TS + HTS);
-            r.drawLevelNumberBox(level.number(), 0, 0);
-            r.drawLevelNumberBox(level.number(), imgWidth - 2 * TS, 0);
-
-            imageView.setImage(canvas.snapshot(null, null));
-            level3D.root().getChildren().add(imageView);
+            ImageView infoView = createGameInformation(tengenGame, level);
+            level3D.root().getChildren().add(infoView);
         }
+    }
+
+    private ImageView createGameInformation(TengenMsPacMan_GameModel game, GameLevel level) {
+        final int infoWidth = level.worldMap().numCols() * TS, infoHeight = 2 * TS;
+        final float quality = 5; // scale for better snapshot resolution
+
+        var canvas = new Canvas(quality * infoWidth, quality * infoHeight);
+        canvas.getGraphicsContext2D().setImageSmoothing(false); // important!
+
+        var r = (TengenMsPacMan_Renderer2D) theUIConfig().current().createRenderer(canvas);
+        r.setScaling(quality);
+        r.ctx().setFill(level3D.floorColor());
+        r.ctx().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        r.drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(), 0.5 * infoWidth, TS + HTS);
+        r.drawLevelNumberBox(level.number(), 0, 0);
+        r.drawLevelNumberBox(level.number(), infoWidth - 2 * TS, 0);
+
+        ImageView infoView = new ImageView(canvas.snapshot(null, null));
+        infoView.setFitWidth(infoWidth);
+        infoView.setFitHeight(infoHeight);
+        infoView.setTranslateY((level.worldMap().numRows() - 2) * TS);
+        infoView.setTranslateZ(-level3D.floorThickness());
+        return infoView;
     }
 
     @Override

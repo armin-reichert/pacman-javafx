@@ -30,14 +30,14 @@ public interface CommonActionBindingManager extends ActionBindingManager {
         bind(GameAction.CHEAT_KILL_GHOSTS, alt(KeyCode.X));
     }
 
-    default void bindArcadePlayerActions() {
+    default void bindArcadePlayerSteeringActions() {
         bind(GameAction.createPlayerSteeringAction(Direction.UP),    naked(KeyCode.UP),    control(KeyCode.UP));
         bind(GameAction.createPlayerSteeringAction(Direction.DOWN),  naked(KeyCode.DOWN),  control(KeyCode.DOWN));
         bind(GameAction.createPlayerSteeringAction(Direction.LEFT),  naked(KeyCode.LEFT),  control(KeyCode.LEFT));
         bind(GameAction.createPlayerSteeringAction(Direction.RIGHT), naked(KeyCode.RIGHT), control(KeyCode.RIGHT));
     }
 
-    default void bindJoypadPlayerActions() {
+    default void bindJoypadPlayerSteeringActions() {
         bind(GameAction.createPlayerSteeringAction(Direction.UP),    theJoypad().key(JoypadButton.UP),    control(KeyCode.UP));
         bind(GameAction.createPlayerSteeringAction(Direction.DOWN),  theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN));
         bind(GameAction.createPlayerSteeringAction(Direction.LEFT),  theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT));
