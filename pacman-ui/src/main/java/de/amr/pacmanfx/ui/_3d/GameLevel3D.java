@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.GameUIConfig;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
@@ -83,7 +82,6 @@ public class GameLevel3D {
         final WorldMap worldMap = theGameLevel().worldMap();
         final int numRows = worldMap.numRows(), numCols = worldMap.numCols();
         final WorldMapColorScheme colorScheme = theUIConfig().current().worldMapColorScheme(worldMap);
-        final PhongMaterial foodMaterial = coloredPhongMaterial(colorScheme.pellet()); // TODO move into UI config?
 
         livesCounter3D = createLivesCounter3D(theGame().canStartNewGame());
         livesCounter3D.livesCountPy.bind(livesCountPy);
@@ -100,7 +98,7 @@ public class GameLevel3D {
         maze3D = new Maze3D(theGameLevel(), colorScheme);
         mazeGroup.getChildren().addAll(floor3D, maze3D);
 
-        createFood3D(foodMaterial);
+        createFood3D(colorScheme);
 
         // Note: The order in which children are added matters!
         // Walls and house must be added last, otherwise, transparency is not working correctly.
@@ -125,6 +123,22 @@ public class GameLevel3D {
         root.setMouseTransparent(true); //TODO does this really increase performance?
     }
 
+    public void update() {
+        pac3D.update(theGameLevel());
+        ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.update(theGameLevel()));
+        bonus3D().ifPresent(Bonus3D::update);
+        boolean houseAccessRequired = theGameLevel().ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+                .anyMatch(Ghost::isVisible);
+        maze3D.setHouseLightOn(houseAccessRequired);
+
+        boolean ghostNearHouseEntry = theGameLevel().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+                .filter(ghost -> ghost.position().euclideanDist(theGameLevel().houseEntryPosition()) <= HOUSE_3D_SENSITIVITY)
+                .anyMatch(Ghost::isVisible);
+        houseOpenPy.set(ghostNearHouseEntry);
+
+        livesCountPy.set(livesCounterSize());
+    }
+
     private Box createFloor(double sizeX, double sizeY) {
         double extraSpace = 10;
         var floor3D = new Box(sizeX + extraSpace, sizeY, FLOOR_3D_THICKNESS);
@@ -144,12 +158,14 @@ public class GameLevel3D {
         return ghost3D;
     }
 
-    private void createFood3D(PhongMaterial foodMaterial) {
+    private void createFood3D(WorldMapColorScheme colorScheme) {
         final Mesh pelletMesh = Model3DRepository.get().pelletMesh();
+        PhongMaterial foodMaterial = coloredPhongMaterial(colorScheme.pellet());
         theGameLevel().tilesContainingFood().forEach(tile -> {
             if (theGameLevel().isEnergizerPosition(tile)) {
                 Energizer3D energizer3D = createEnergizer3D(tile, foodMaterial);
-                addSquirtingAnimation(theGameLevel().worldMap(), energizer3D, foodMaterial);
+                SquirtingAnimation squirting = createSquirtingAnimation(theGameLevel().worldMap(), energizer3D, foodMaterial);
+                root.getChildren().add(squirting.root());
                 energizers3D.add(energizer3D);
             } else {
                 var pelletShape3D = new MeshView(pelletMesh);
@@ -177,16 +193,16 @@ public class GameLevel3D {
         return 0 <= x && x <= worldMap.numCols() * TS && 0 <= y && y <= worldMap.numRows() * TS;
     }
 
-    private void addSquirtingAnimation(WorldMap worldMap, Energizer3D energizer3D, PhongMaterial dropMaterial) {
+    private SquirtingAnimation createSquirtingAnimation(WorldMap worldMap, Energizer3D energizer3D, PhongMaterial dropMaterial) {
         Vector2i tile = energizer3D.tile();
         var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
-        var squirting = new SquirtingAnimation(Duration.seconds(2));
-        squirting.createDrops(23, 69, dropMaterial, center);
-        squirting.setDropFinalPosition(drop -> drop.getTranslateZ() >= -1
+        var animation = new SquirtingAnimation(Duration.seconds(2));
+        animation.createDrops(23, 69, dropMaterial, center);
+        animation.setDropFinalPosition(drop -> drop.getTranslateZ() >= -1
                 && isInsideWorldMap(worldMap, drop.getTranslateX(), drop.getTranslateY()));
-        squirting.setOnFinished(e -> root.getChildren().remove(squirting.root()));
-        root.getChildren().add(squirting.root());
-        energizer3D.setEatenAnimation(squirting);
+        animation.setOnFinished(e -> root.getChildren().remove(animation.root()));
+        energizer3D.setEatenAnimation(animation);
+        return animation;
     }
 
     private Pellet3D createPellet3D(Vector2i tile, Shape3D shape3D, PhongMaterial foodMaterial) {
@@ -231,11 +247,11 @@ public class GameLevel3D {
         // Place level counter at top right maze corner
         double x = theGameLevel().worldMap().numCols() * TS - 2 * TS;
         double y = 2 * TS;
-        Node levelCounter3D = createLevelCounter3D(theUIConfig().current().spriteSheet(), theGame().levelCounter(), x, y);
+        Node levelCounter3D = createLevelCounter3D(theGame().levelCounter(), x, y);
         root.getChildren().add(levelCounter3D);
     }
 
-    private Node createLevelCounter3D(GameSpriteSheet spriteSheet, LevelCounter levelCounter, double x, double y) {
+    private Node createLevelCounter3D(LevelCounter levelCounter, double x, double y) {
         double spacing = 2 * TS;
         var levelCounter3D = new Group();
         levelCounter3D.setTranslateX(x);
@@ -243,6 +259,7 @@ public class GameLevel3D {
         levelCounter3D.setTranslateZ(-6);
         levelCounter3D.getChildren().clear();
         int n = 0;
+        GameSpriteSheet spriteSheet = theUIConfig().current().spriteSheet();
         for (byte symbol : levelCounter.symbols()) {
             Box cube = new Box(TS, TS, TS);
             cube.setTranslateX(-n * spacing);
@@ -268,22 +285,6 @@ public class GameLevel3D {
     }
 
     public Group root() { return root; }
-
-    public void update() {
-        pac3D.update(theGameLevel());
-        ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.update(theGameLevel()));
-        bonus3D().ifPresent(Bonus3D::update);
-        boolean houseAccessRequired = theGameLevel().ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-            .anyMatch(Ghost::isVisible);
-        maze3D.setHouseLightOn(houseAccessRequired);
-
-        boolean ghostNearHouseEntry = theGameLevel().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-            .filter(ghost -> ghost.position().euclideanDist(theGameLevel().houseEntryPosition()) <= HOUSE_3D_SENSITIVITY)
-            .anyMatch(Ghost::isVisible);
-        houseOpenPy.set(ghostNearHouseEntry);
-
-        livesCountPy.set(livesCounterSize());
-    }
 
     private int livesCounterSize() {
         int n = theGame().lifeCount();
