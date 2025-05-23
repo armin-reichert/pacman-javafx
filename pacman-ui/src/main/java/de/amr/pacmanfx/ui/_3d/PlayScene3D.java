@@ -171,7 +171,7 @@ public class PlayScene3D implements GameScene, GameActionBindingManager, CameraC
     protected void bindActions() {
         bindArcadeInsertCoinAction();
         // if demo level is running, allow starting game
-        if (optGameLevel().isPresent() && !theGameLevel().isDemoLevel()) {
+        if (optGameLevel().isPresent() && theGameLevel().isDemoLevel()) {
             bindArcadeStartGameAction();
         } else {
             bindPlayerSteeringActions();
@@ -233,8 +233,6 @@ public class PlayScene3D implements GameScene, GameActionBindingManager, CameraC
     @Override
     public void onSceneVariantSwitch(GameScene fromScene) {
         optGameLevel().ifPresent(level -> {
-            bindPlayerSteeringActions();
-            bindActions();
             if (level3D == null) {
                 replaceGameLevel3D();
             }
@@ -254,6 +252,7 @@ public class PlayScene3D implements GameScene, GameActionBindingManager, CameraC
                 level3D.playLivesCounterAnimation();
             }
             updateScores();
+            bindActions();
         });
     }
 

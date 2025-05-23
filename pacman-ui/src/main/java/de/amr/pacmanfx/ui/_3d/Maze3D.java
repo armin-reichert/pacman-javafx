@@ -17,7 +17,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
-import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
@@ -30,7 +29,8 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
-import static de.amr.pacmanfx.uilib.Ufx.*;
+import static de.amr.pacmanfx.uilib.Ufx.opaqueColor;
+import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
 
 public class Maze3D extends Group {
 
@@ -39,7 +39,7 @@ public class Maze3D extends Group {
     private final DoubleProperty houseBaseHeightPy = new SimpleDoubleProperty(HOUSE_3D_BASE_HEIGHT);
     private final BooleanProperty houseLightOnPy = new SimpleBooleanProperty(false);
 
-    private final Door3D door3D;
+    private final ArcadeHouse3D house3D;
     private final MaterialColorAnimation materialColorAnimation;
 
     public Maze3D(GameLevel level, WorldMapColorScheme colorScheme) {
@@ -89,15 +89,12 @@ public class Maze3D extends Group {
             }
         }
 
-        // House
-        houseBaseHeightPy.set(HOUSE_3D_BASE_HEIGHT);
-        door3D = addGhostHouse(
-                level, r3D,
-                colorScheme.fill(), colorScheme.stroke(), colorScheme.door(),
-            HOUSE_3D_OPACITY,
-                houseBaseHeightPy, HOUSE_3D_WALL_TOP_HEIGHT, HOUSE_3D_WALL_THICKNESS,
-                houseLightOnPy);
-        getChildren().add(door3D); //TODO check this
+        house3D = new ArcadeHouse3D(level, r3D,
+            colorScheme.fill(), colorScheme.stroke(), colorScheme.door(),
+            HOUSE_3D_OPACITY,  houseBaseHeightPy, HOUSE_3D_WALL_TOP_HEIGHT, HOUSE_3D_WALL_THICKNESS,
+            houseLightOnPy);
+
+        getChildren().add(house3D.getRoot()); //TODO check this
 
         PY_3D_WALL_HEIGHT.addListener((py, ov, nv) -> obstacleBaseHeightPy.set(nv.doubleValue()));
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
@@ -110,52 +107,6 @@ public class Maze3D extends Group {
         } else {
             return start.x() == 0 || start.x() == worldMap.numCols() * TS;
         }
-    }
-
-    private Door3D addGhostHouse(
-        GameLevel level,
-        TerrainMapRenderer3D r3D,
-        Color houseBaseColor, Color houseTopColor, Color doorsColor, float wallOpacity,
-        DoubleProperty wallBaseHeightPy, float wallTopHeight, float wallThickness,
-        BooleanProperty houseLightOnPy)
-    {
-        Vector2i houseSize = level.houseSizeInTiles();
-        r3D.setWallBaseHeightProperty(wallBaseHeightPy);
-        r3D.setWallTopHeight(wallTopHeight);
-        r3D.setWallThickness(wallThickness);
-        r3D.setWallBaseMaterial(coloredPhongMaterial(opaqueColor(houseBaseColor, wallOpacity)));
-        r3D.setWallTopMaterial(coloredPhongMaterial(houseTopColor));
-
-        int tilesX = houseSize.x(), tilesY = houseSize.y();
-        int xMin = level.houseMinTile().x(), xMax = xMin + tilesX - 1;
-        int yMin = level.houseMinTile().y(), yMax = yMin + tilesY - 1;
-        Vector2i leftDoorTile = level.houseLeftDoorTile(), rightDoorTile = level.houseRightDoorTile();
-
-        var door3D = new Door3D(leftDoorTile, rightDoorTile, doorsColor, wallBaseHeightPy.get());
-
-        getChildren().addAll(
-            r3D.createWallBetweenTiles(Vector2i.of(xMin, yMin), Vector2i.of(leftDoorTile.x() - 1, yMin)),
-            r3D.createWallBetweenTiles(Vector2i.of(rightDoorTile.x() + 1, yMin), Vector2i.of(xMax, yMin)),
-            r3D.createWallBetweenTiles(Vector2i.of(xMin, yMin), Vector2i.of(xMin, yMax)),
-            r3D.createWallBetweenTiles(Vector2i.of(xMax, yMin), Vector2i.of(xMax, yMax)),
-            r3D.createWallBetweenTiles(Vector2i.of(xMin, yMax), Vector2i.of(xMax, yMax))
-        );
-
-        // pixel coordinates
-        float centerX = xMin * TS + tilesX * HTS;
-        float centerY = yMin * TS + tilesY * HTS;
-
-        var light = new PointLight();
-        light.lightOnProperty().bind(houseLightOnPy);
-        light.setColor(Color.GHOSTWHITE);
-        light.setMaxRange(3 * TS);
-        light.setTranslateX(centerX);
-        light.setTranslateY(centerY - 6);
-        light.translateZProperty().bind(wallBaseHeightPy.multiply(-1));
-
-        getChildren().add(light);
-
-        return door3D;
     }
 
     public void playMaterialAnimation() {
@@ -172,7 +123,7 @@ public class Maze3D extends Group {
     }
 
     public Door3D door3D() {
-        return door3D;
+        return house3D.getDoor3D();
     }
 
     public Animation wallsDisappearAnimation(double seconds) {
