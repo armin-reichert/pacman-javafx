@@ -165,7 +165,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         RectArea area = tengenGame.mapCategory() == MapCategory.STRANGE && mapNumber == 15
             ? strangeMap15Sprite(theClock().tickCount()) // Strange map #15: psychedelic animation
             : coloredMapSet.normalMaze().region();
-        ctx().drawImage(coloredMapSet.normalMaze().source(),
+        ctx().drawImage(coloredMapSet.normalMaze().image(),
             area.x(), area.y(), area.width(), area.height(),
             scaled(x), scaled(y), scaled(area.width()), scaled(area.height())
         );
@@ -193,9 +193,9 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBooster(),
                 level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
         }
-        ColoredMapImage mapImage = coloredMapSet.flashingMazes().get(flashingIndex);
+        ColoredImageRegion mapImage = coloredMapSet.flashingMazes().get(flashingIndex);
         RectArea region = mapImage.region();
-        ctx().drawImage(mapImage.source(),
+        ctx().drawImage(mapImage.image(),
             region.x(), region.y(), region.width(), region.height(),
             scaled(mapX), scaled(mapY), scaled(region.width()), scaled(region.height())
         );
