@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.actors;
 
+import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.GameLevel;
@@ -180,7 +181,7 @@ public class Pac extends Creature {
      * or if he is resting for an indefinite time.
      */
     public boolean isStandingStill() {
-        return velocity().length() == 0 || !moveInfo.moved || restingTicks == REST_INDEFINITELY;
+        return velocity().equals(Vector2f.ZERO) || !moveInfo.moved || restingTicks == REST_INDEFINITELY;
     }
 
     public void setAutopilotAlgorithm(Steering steering) {

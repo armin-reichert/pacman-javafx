@@ -17,6 +17,8 @@ import java.util.Optional;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.PY_IMMUNITY;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.PY_USING_AUTOPILOT;
 
 /**
  * Common data and functionality of Pac-Man and Ms. Pac-Man Arcade games.
@@ -103,11 +105,11 @@ public abstract class ArcadeAny_GameModel extends GameModel {
 
     @Override
     public void onPacKilled() {
+        gateKeeper.resetCounterAndSetEnabled(true);
         huntingTimer.stop();
+        activateCruiseElroyMode(false);
         level.pac().powerTimer().stop();
         level.pac().powerTimer().reset(0);
-        gateKeeper.resetCounterAndSetEnabled(true);
-        activateCruiseElroyMode(false);
         level.pac().die();
     }
 
@@ -214,26 +216,28 @@ public abstract class ArcadeAny_GameModel extends GameModel {
     public void buildNormalLevel(int levelNumber) {
         createLevel(levelNumber);
         level.setDemoLevel(false);
-        level.pac().immuneProperty().bind(PacManGamesEnv.PY_IMMUNITY);
-        level.pac().usingAutopilotProperty().bind(PacManGamesEnv.PY_USING_AUTOPILOT);
+        level.huntingTimer().reset();
+        level.pac().immuneProperty().bind(PY_IMMUNITY);
+        level.pac().usingAutopilotProperty().bind(PY_USING_AUTOPILOT);
+        levelCounter.setEnabled(true);
         scoreManager.setScoreLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
-        level.huntingTimer().reset();
         theGameEventManager().publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 
     @Override
     public void buildDemoLevel() {
-        createLevel(1);
+        int levelNumber = 1;
+        createLevel(levelNumber);
         level.setDemoLevel(true);
+        level.huntingTimer().reset();
         level.pac().setImmune(false);
         level.pac().setUsingAutopilot(true);
         level.pac().setAutopilotAlgorithm(demoLevelSteering);
         demoLevelSteering.init();
         levelCounter.setEnabled(true);
-        scoreManager.setScoreLevelNumber(1);
-        gateKeeper.setLevelNumber(1);
-        level.huntingTimer().reset();
+        scoreManager.setScoreLevelNumber(levelNumber);
+        gateKeeper.setLevelNumber(levelNumber);
         theGameEventManager().publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 

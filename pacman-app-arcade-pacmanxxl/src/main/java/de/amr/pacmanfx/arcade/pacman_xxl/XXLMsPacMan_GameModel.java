@@ -6,10 +6,12 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
+import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.model.MapSelectionMode;
 
 import java.io.File;
 
+import static de.amr.pacmanfx.Globals.theGameEventManager;
 import static de.amr.pacmanfx.Globals.theRNG;
 
 public class XXLMsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
@@ -29,12 +31,16 @@ public class XXLMsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
         int levelNumber = levelNumbers[theRNG().nextInt(levelNumbers.length)];
         mapSelector().setMapSelectionMode(MapSelectionMode.NO_CUSTOM_MAPS);
         createLevel(levelNumber);
-        level.setData(createLevelData(1)); // overwrite to always run as fast as first level
+        level.setData(createLevelData(1)); // always run with settings (speed etc.) of first level
         level.setDemoLevel(true);
+        level.huntingTimer().reset();
         level.pac().setImmune(false);
         level.pac().setUsingAutopilot(true);
         level.pac().setAutopilotAlgorithm(demoLevelSteering);
         demoLevelSteering.init();
         levelCounter.setEnabled(false);
+        scoreManager.setScoreLevelNumber(levelNumber);
+        gateKeeper.setLevelNumber(levelNumber);
+        theGameEventManager().publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 }
