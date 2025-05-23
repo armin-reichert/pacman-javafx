@@ -31,17 +31,17 @@ public interface CommonActionProvider extends ActionProvider {
     }
 
     default void bindArcadePlayerActions() {
-        bind(GameAction.createPlayerAction(Direction.UP),    naked(KeyCode.UP),    control(KeyCode.UP));
-        bind(GameAction.createPlayerAction(Direction.DOWN),  naked(KeyCode.DOWN),  control(KeyCode.DOWN));
-        bind(GameAction.createPlayerAction(Direction.LEFT),  naked(KeyCode.LEFT),  control(KeyCode.LEFT));
-        bind(GameAction.createPlayerAction(Direction.RIGHT), naked(KeyCode.RIGHT), control(KeyCode.RIGHT));
+        bind(GameAction.createPlayerSteeringAction(Direction.UP),    naked(KeyCode.UP),    control(KeyCode.UP));
+        bind(GameAction.createPlayerSteeringAction(Direction.DOWN),  naked(KeyCode.DOWN),  control(KeyCode.DOWN));
+        bind(GameAction.createPlayerSteeringAction(Direction.LEFT),  naked(KeyCode.LEFT),  control(KeyCode.LEFT));
+        bind(GameAction.createPlayerSteeringAction(Direction.RIGHT), naked(KeyCode.RIGHT), control(KeyCode.RIGHT));
     }
 
     default void bindJoypadPlayerActions() {
-        bind(GameAction.createPlayerAction(Direction.UP),    theJoypad().key(JoypadButton.UP),    control(KeyCode.UP));
-        bind(GameAction.createPlayerAction(Direction.DOWN),  theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN));
-        bind(GameAction.createPlayerAction(Direction.LEFT),  theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT));
-        bind(GameAction.createPlayerAction(Direction.RIGHT), theJoypad().key(JoypadButton.RIGHT), control(KeyCode.RIGHT));
+        bind(GameAction.createPlayerSteeringAction(Direction.UP),    theJoypad().key(JoypadButton.UP),    control(KeyCode.UP));
+        bind(GameAction.createPlayerSteeringAction(Direction.DOWN),  theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN));
+        bind(GameAction.createPlayerSteeringAction(Direction.LEFT),  theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT));
+        bind(GameAction.createPlayerSteeringAction(Direction.RIGHT), theJoypad().key(JoypadButton.RIGHT), control(KeyCode.RIGHT));
     }
 
     default void bindStartTestsActions() {

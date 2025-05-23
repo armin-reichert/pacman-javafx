@@ -340,17 +340,17 @@ public enum GameAction implements Action {
     static final int SIMULATION_SPEED_MIN   = 10;
     static final int SIMULATION_SPEED_MAX   = 240;
 
-    public static Action createPlayerAction(Direction wishDir) {
+    public static Action createPlayerSteeringAction(Direction dir) {
         return new Action() {
             @Override
-            public void execute() { theGameLevel().pac().setWishDir(wishDir); }
+            public void execute() { theGameLevel().pac().setWishDir(dir); }
 
             @Override
-            public boolean isEnabled() { return theGameLevel() != null && !theGameLevel().pac().isUsingAutopilot(); }
+            public boolean isEnabled() { return optGameLevel().isPresent() && !theGameLevel().pac().isUsingAutopilot(); }
 
             @Override
             public String toString() {
-                return "Player " + wishDir;
+                return "SteerPlayer_" + dir;
             }
         };
     }
