@@ -15,7 +15,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameActions;
-import de.amr.pacmanfx.ui._2d.FlashingMazeAnimation;
+import de.amr.pacmanfx.ui._2d.LevelCompletionAnimation;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.GameScene;
@@ -124,7 +124,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     private final ObjectProperty<SceneDisplayMode> displayModePy = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
 
     private MessageMovement messageMovement;
-    private FlashingMazeAnimation levelCompleteAnimation;
+    private LevelCompletionAnimation levelCompleteAnimation;
 
     public TengenMsPacMan_PlayScene2D() {
         movingCamera = new MovingCamera();
@@ -324,7 +324,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             case HUNTING -> movingCamera.focusPlayer(true);
             case LEVEL_COMPLETE -> {
                 theSound().stopAll();
-                levelCompleteAnimation = new FlashingMazeAnimation(theGameLevel());
+                levelCompleteAnimation = new LevelCompletionAnimation(theGameLevel());
                 levelCompleteAnimation.setActionOnFinished(theGameController()::letCurrentGameStateExpire);
                 levelCompleteAnimation.start();
             }

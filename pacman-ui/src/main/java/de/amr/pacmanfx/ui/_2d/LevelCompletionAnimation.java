@@ -23,7 +23,7 @@ import static java.util.Objects.requireNonNull;
  * After each flashing cycle, the flashing index is incremented. This is used by the Tengen play scene renderer to
  * draw a different map color for each flashing cycle (only for the non-ARCADE maps starting at level 28)
  */
-public class FlashingMazeAnimation {
+public class LevelCompletionAnimation {
 
     private final GameLevel level;
 
@@ -41,7 +41,7 @@ public class FlashingMazeAnimation {
     private boolean running;
     private Runnable actionOnFinished;
 
-    public FlashingMazeAnimation(GameLevel level) {
+    public LevelCompletionAnimation(GameLevel level) {
         this.level = requireNonNull(level);
         tick = 0;
         flashingIndex = 0;

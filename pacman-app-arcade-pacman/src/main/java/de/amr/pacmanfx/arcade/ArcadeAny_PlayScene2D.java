@@ -14,10 +14,11 @@ import de.amr.pacmanfx.model.LevelMessage;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.ui.GameActions;
-import de.amr.pacmanfx.ui._2d.FlashingMazeAnimation;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
 import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.Ufx;
+import javafx.animation.Animation;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -41,7 +42,7 @@ import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
  */
 public class ArcadeAny_PlayScene2D extends GameScene2D {
 
-    private FlashingMazeAnimation levelCompleteAnimation;
+    private LevelFinishedAnimation levelFinishedAnimation;
 
     @Override
     protected void doInit() {
@@ -78,9 +79,6 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         if (optGameLevel().isPresent()) {
             if (!theGameLevel().isDemoLevel()) {
                 updateSound();
-            }
-            if (theGameState() == GameState.LEVEL_COMPLETE) {
-                levelCompleteAnimation.tick();
             }
         } else {
             // Scene is already active 2 ticks before game level is created!
@@ -148,9 +146,11 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
         gr.drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
 
-        gr.drawMaze(theGameLevel(), 0, 3 * TS, backgroundColor(),
-            levelCompleteAnimation != null && levelCompleteAnimation.inHighlightPhase(),
-            theGameLevel().blinking().isOn());
+        boolean highlighted = levelFinishedAnimation != null
+            && levelFinishedAnimation.getAnimation().getStatus() == Animation.Status.RUNNING
+            && levelFinishedAnimation.isHighlighted();
+        gr.drawMaze(theGameLevel(), 0, 3 * TS, backgroundColor(), highlighted, theGameLevel().blinking().isOn());
+
         if (theGameLevel().message() != null) {
             drawLevelMessage();
         }
@@ -232,9 +232,9 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         }
         else if (state == GameState.LEVEL_COMPLETE) {
             theSound().stopAll();
-            levelCompleteAnimation = new FlashingMazeAnimation(theGameLevel());
-            levelCompleteAnimation.setActionOnFinished(theGameController()::letCurrentGameStateExpire);
-            levelCompleteAnimation.start();
+            levelFinishedAnimation = new LevelFinishedAnimation(theGameLevel());
+            levelFinishedAnimation.getAnimation().setOnFinished(e -> theGameController().letCurrentGameStateExpire());
+            levelFinishedAnimation.getAnimation().play();
         }
     }
 
