@@ -6,7 +6,10 @@ package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
-import javafx.animation.*;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.SequentialTransition;
+import javafx.animation.Timeline;
 import javafx.util.Duration;
 
 import static de.amr.pacmanfx.uilib.Ufx.doAfterSec;
@@ -31,21 +34,19 @@ public class LevelFinishedAnimation {
     private boolean highlighted;
 
     public LevelFinishedAnimation(GameLevel level, int singleFlashMillis) {
+        int numFlashes = level.data().numFlashes();
         animation = new SequentialTransition(
             doAfterSec(1.5, () -> level.ghosts().forEach(Actor::hide)),
-            doAfterSec(0.5, flashes(level.data().numFlashes(), 333)),
+            doAfterSec(0.5, numFlashes > 0 ? flashes(numFlashes, 333) : pauseSec(0)),
             pauseSec(1)
         );
     }
 
     private Animation flashes(int numFlashes, int singleFlashMillis) {
-        if (numFlashes == 0) {
-            return new PauseTransition(Duration.ZERO);
-        }
         var flashes = new Timeline(
-            new KeyFrame(Duration.millis(0.5 * singleFlashMillis), e -> highlighted = true),
+            new KeyFrame(Duration.millis(singleFlashMillis * 0.25), e -> highlighted = true),
+            new KeyFrame(Duration.millis(singleFlashMillis * 0.75), e -> highlighted = false),
             new KeyFrame(Duration.millis(singleFlashMillis), e -> {
-                highlighted = false;
                 if (flashingIndex + 1 < numFlashes) flashingIndex++;
             })
         );
