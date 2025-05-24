@@ -21,7 +21,6 @@ import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.input.Keyboard;
-import javafx.animation.Animation;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -125,7 +124,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     private final ObjectProperty<SceneDisplayMode> displayModePy = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
 
     private MessageMovement messageMovement;
-    private LevelFinishedAnimation levelCompleteAnimation;
+    private LevelFinishedAnimation levelFinishedAnimation;
 
     public TengenMsPacMan_PlayScene2D() {
         movingCamera = new MovingCamera();
@@ -322,9 +321,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             case HUNTING -> movingCamera.focusPlayer(true);
             case LEVEL_COMPLETE -> {
                 theSound().stopAll();
-                levelCompleteAnimation = new LevelFinishedAnimation(theGameLevel(), 333); //TODO what is the exact single flash time?
-                levelCompleteAnimation.getAnimation().setOnFinished(e -> theGameController().letCurrentGameStateExpire());
-                levelCompleteAnimation.getAnimation().play();
+                levelFinishedAnimation = new LevelFinishedAnimation(theGameLevel(), 333);
+                levelFinishedAnimation.whenFinished(theGameController()::letCurrentGameStateExpire);
+                levelFinishedAnimation.play();
             }
             case GAME_OVER -> {
                 var tengenGame = (TengenMsPacMan_GameModel) theGame();
@@ -446,11 +445,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         gr.drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
 
         final int mazeTopY = 3 * TS;
-        final boolean flashing = levelCompleteAnimation != null
-            && levelCompleteAnimation.getAnimation().getStatus() == Animation.Status.RUNNING;
+        final boolean flashing = levelFinishedAnimation != null && levelFinishedAnimation.isRunning();
         if (flashing) {
-            if (levelCompleteAnimation.isHighlighted()) {
-                r.drawHighlightedWorld(theGameLevel(), 0, mazeTopY, levelCompleteAnimation.getFlashingIndex());
+            if (levelFinishedAnimation.isHighlighted()) {
+                r.drawHighlightedWorld(theGameLevel(), 0, mazeTopY, levelFinishedAnimation.getFlashingIndex());
             } else {
                 r.drawMaze(theGameLevel(), 0, mazeTopY, null, false, false);
                 r.drawFood(theGameLevel()); // this also hides the eaten food!
@@ -462,9 +460,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             theGameLevel().bonus().ifPresent(r::drawBonus);
             //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
             r.drawLevelMessage(theGameLevel(), currentMessagePosition(), arcadeFontScaledTS());
-            r.drawActor(theGameLevel().pac());
-            ghostsInZOrder().forEach(r::drawActor);
         }
+        r.drawActor(theGameLevel().pac());
+        ghostsInZOrder().forEach(r::drawActor);
 
         // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
         int numLivesDisplayed = theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()

@@ -54,8 +54,18 @@ public class LevelFinishedAnimation {
         return flashes;
     }
 
-    public SequentialTransition getAnimation() {
-        return animation;
+    public void play() {
+        flashingIndex = 0;
+        highlighted = false;
+        animation.play();
+    }
+
+    public boolean isRunning() {
+        return animation.getStatus() == Animation.Status.RUNNING;
+    }
+
+    public void whenFinished(Runnable action) {
+        animation.setOnFinished(e -> action.run());
     }
 
     public int getFlashingIndex() {
