@@ -1,2 +1,3 @@
 #!/bin/sh
-./gradlew --info --warning-mode all clean jpackage
+# --warning-mode=(all,none,summary)
+./gradlew --info --warning-mode summary clean jpackage
