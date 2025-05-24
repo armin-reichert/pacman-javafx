@@ -10,6 +10,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
  * The color schemes used in the Tengen Ms. Pac-Man maps.
  */
 public enum NES_ColorScheme {
+    /** This scheme is used for highlighted maze in flashing animation. */
     _0F_20_0F_BLACK_WHITE_BLACK   (0x0f, 0x20, 0x0f),
     _0F_20_1C_BLACK_WHITE_GREEN   (0x0f, 0x20, 0x1c),
     _0F_20_28_BLACK_WHITE_YELLOW  (0x0f, 0x20, 0x28),
@@ -49,8 +50,9 @@ public enum NES_ColorScheme {
     }
 
     public static NES_ColorScheme random() {
-        var all = NES_ColorScheme.values();
-        return all[randomInt(0, all.length)];
+        // ignore first color scheme
+        int index = randomInt(1, values().length);
+        return values()[index];
     }
 
     public String fillColor() {
