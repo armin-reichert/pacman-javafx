@@ -37,7 +37,7 @@ public class LevelFinishedAnimation {
         int numFlashes = level.data().numFlashes();
         animation = new SequentialTransition(
             doAfterSec(1.5, () -> level.ghosts().forEach(Actor::hide)),
-            doAfterSec(0.5, numFlashes > 0 ? flashes(numFlashes, 333) : pauseSec(0)),
+            doAfterSec(0.5, numFlashes > 0 ? flashes(numFlashes, singleFlashMillis) : pauseSec(0)),
             pauseSec(1)
         );
     }
