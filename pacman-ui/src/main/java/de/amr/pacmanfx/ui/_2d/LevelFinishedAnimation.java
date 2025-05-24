@@ -8,7 +8,6 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
 import javafx.animation.*;
 import javafx.util.Duration;
-import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.uilib.Ufx.doAfterSec;
 import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
@@ -31,40 +30,27 @@ public class LevelFinishedAnimation {
     private int flashingIndex;
     private boolean highlighted;
 
-    public LevelFinishedAnimation(GameLevel level) {
+    public LevelFinishedAnimation(GameLevel level, int singleFlashMillis) {
         animation = new SequentialTransition(
             doAfterSec(1.5, () -> level.ghosts().forEach(Actor::hide)),
-            doAfterSec(0.5, createMazeFlashingAnimation(level.data().numFlashes())),
+            doAfterSec(0.5, flashes(level.data().numFlashes(), 333)),
             pauseSec(1)
         );
     }
 
-    private Animation createMazeFlashingAnimation(int numFlashes) {
+    private Animation flashes(int numFlashes, int singleFlashMillis) {
         if (numFlashes == 0) {
             return new PauseTransition(Duration.ZERO);
         }
-
-        return new Transition() {
-            {
-                setCycleDuration(Duration.millis(333));
-                setCycleCount(numFlashes);
-                setInterpolator(Interpolator.LINEAR);
-            }
-
-            @Override
-            protected void interpolate(double t) {
-                //TODO WTF? How to get the exact middle of the interpolation interval?
-                if (Math.abs(t - 0.5) < 0.1 && !highlighted) {
-                    highlighted = true;
-                    logState("Half time of single flash");
-                }
-                else if (t == 1) {
-                    highlighted = false;
-                    if (flashingIndex + 1 < numFlashes) flashingIndex++;
-                    logState("End of single flash");
-                }
-            }
-        };
+        var flashes = new Timeline(
+            new KeyFrame(Duration.millis(0.5 * singleFlashMillis), e -> highlighted = true),
+            new KeyFrame(Duration.millis(singleFlashMillis), e -> {
+                highlighted = false;
+                if (flashingIndex + 1 < numFlashes) flashingIndex++;
+            })
+        );
+        flashes.setCycleCount(numFlashes);
+        return flashes;
     }
 
     public SequentialTransition getAnimation() {
@@ -77,9 +63,5 @@ public class LevelFinishedAnimation {
 
     public boolean isHighlighted() {
         return highlighted;
-    }
-
-    private void logState(String desc) {
-        Logger.info("{}: highlighted={} flashingIndex={}", desc, highlighted, flashingIndex);
     }
 }

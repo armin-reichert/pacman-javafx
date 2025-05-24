@@ -232,7 +232,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         }
         else if (state == GameState.LEVEL_COMPLETE) {
             theSound().stopAll();
-            levelFinishedAnimation = new LevelFinishedAnimation(theGameLevel());
+            levelFinishedAnimation = new LevelFinishedAnimation(theGameLevel(), 333);
             levelFinishedAnimation.getAnimation().setOnFinished(e -> theGameController().letCurrentGameStateExpire());
             levelFinishedAnimation.getAnimation().play();
         }

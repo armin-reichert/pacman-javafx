@@ -322,7 +322,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             case HUNTING -> movingCamera.focusPlayer(true);
             case LEVEL_COMPLETE -> {
                 theSound().stopAll();
-                levelCompleteAnimation = new LevelFinishedAnimation(theGameLevel());
+                levelCompleteAnimation = new LevelFinishedAnimation(theGameLevel(), 333); //TODO what is the exact single flash time?
                 levelCompleteAnimation.getAnimation().setOnFinished(e -> theGameController().letCurrentGameStateExpire());
                 levelCompleteAnimation.getAnimation().play();
             }
