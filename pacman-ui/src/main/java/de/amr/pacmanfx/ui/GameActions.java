@@ -13,7 +13,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
-import de.amr.pacmanfx.uilib.Action;
+import de.amr.pacmanfx.uilib.GameAction;
 import de.amr.pacmanfx.uilib.GameScene;
 import javafx.scene.shape.DrawMode;
 import org.tinylog.Logger;
@@ -28,9 +28,9 @@ import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
-public enum GameAction implements Action {
+public interface GameActions {
 
-    CHEAT_ADD_LIVES {
+    GameAction CHEAT_ADD_LIVES = new GameAction() {
         @Override
         public void execute() {
             theGame().addLives(3);
@@ -39,9 +39,9 @@ public enum GameAction implements Action {
 
         @Override
         public boolean isEnabled() { return optGameLevel().isPresent(); }
-    },
+    };
 
-    CHEAT_EAT_ALL_PELLETS {
+    GameAction CHEAT_EAT_ALL_PELLETS = new GameAction() {
         @Override
         public void execute() {
             theGameLevel().eatAllPellets();
@@ -55,9 +55,9 @@ public enum GameAction implements Action {
                     && !theGameLevel().isDemoLevel()
                     && theGameState() == GameState.HUNTING;
         }
-    },
+    };
 
-    CHEAT_KILL_GHOSTS {
+    GameAction CHEAT_KILL_GHOSTS = new GameAction() {
         @Override
         public void execute() {
             GameLevel level = theGameLevel();
@@ -75,9 +75,9 @@ public enum GameAction implements Action {
                     && optGameLevel().isPresent()
                     && !theGameLevel().isDemoLevel();
         }
-    },
+    };
 
-    CHEAT_ENTER_NEXT_LEVEL {
+    GameAction CHEAT_ENTER_NEXT_LEVEL = new GameAction() {
         @Override
         public void execute() {
             theGameController().changeState(GameState.LEVEL_COMPLETE);
@@ -90,12 +90,12 @@ public enum GameAction implements Action {
                     && optGameLevel().isPresent()
                     && theGameLevel().number() < theGame().lastLevelNumber();
         }
-    },
+    };
 
     /**
      * Adds credit (simulates insertion of a coin) and switches the game state accordingly.
      */
-    INSERT_COIN {
+    GameAction INSERT_COIN = new GameAction() {
         @Override
         public void execute() {
             if (theCoinMechanism().numCoins() < CoinMechanism.MAX_COINS) {
@@ -116,9 +116,17 @@ public enum GameAction implements Action {
                 || optGameLevel().isPresent() && optGameLevel().get().isDemoLevel()
                 || theCoinMechanism().isEmpty();
         }
-    },
+    };
 
-    QUIT_GAME_SCENE {
+    GameAction PLAYER_UP = createPlayerSteeringAction(Direction.UP);
+
+    GameAction PLAYER_DOWN = createPlayerSteeringAction(Direction.DOWN);
+
+    GameAction PLAYER_LEFT = createPlayerSteeringAction(Direction.LEFT);
+
+    GameAction PLAYER_RIGHT = createPlayerSteeringAction(Direction.RIGHT);
+
+    GameAction QUIT_GAME_SCENE = new GameAction() {
         @Override
         public void execute() {
             theUI().currentGameScene().ifPresent(GameScene::end);
@@ -126,9 +134,9 @@ public enum GameAction implements Action {
             if (!theCoinMechanism().isEmpty()) theCoinMechanism().consumeCoin();
             theUI().showStartView();
         }
-    },
+    };
 
-    RESTART_INTRO {
+    GameAction RESTART_INTRO = new GameAction() {
         @Override
         public void execute() {
             theSound().stopAll();
@@ -139,9 +147,9 @@ public enum GameAction implements Action {
             theClock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
             theGameController().restart(INTRO);
         }
-    },
+    };
 
-    SIMULATION_SLOWER {
+    GameAction SIMULATION_SLOWER = new GameAction() {
         @Override
         public void execute() {
             double newRate = theClock().getTargetFrameRate() - SIMULATION_SPEED_DELTA;
@@ -150,9 +158,9 @@ public enum GameAction implements Action {
             String prefix = newRate == SIMULATION_SPEED_MIN ? "At minimum speed: " : "";
             theUI().showFlashMessageSec(0.75, prefix + newRate + "Hz");
         }
-    },
+    };
 
-    SIMULATION_FASTER {
+    GameAction SIMULATION_FASTER = new GameAction() {
         @Override
         public void execute() {
             double newRate = theClock().getTargetFrameRate() + SIMULATION_SPEED_DELTA;
@@ -161,9 +169,9 @@ public enum GameAction implements Action {
             String prefix = newRate == SIMULATION_SPEED_MAX ? "At maximum speed: " : "";
             theUI().showFlashMessageSec(0.75, prefix + newRate + "Hz");
         }
-    },
+    };
 
-    SIMULATION_ONE_STEP {
+    GameAction SIMULATION_ONE_STEP = new GameAction() {
         @Override
         public void execute() {
             boolean success = theClock().makeOneStep(true);
@@ -174,9 +182,9 @@ public enum GameAction implements Action {
 
         @Override
         public boolean isEnabled() { return theClock().isPaused(); }
-    },
+    };
 
-    SIMULATION_TEN_STEPS {
+    GameAction SIMULATION_TEN_STEPS = new GameAction() {
         @Override
         public void execute() {
             boolean success = theClock().makeSteps(10, true);
@@ -187,17 +195,17 @@ public enum GameAction implements Action {
 
         @Override
         public boolean isEnabled() { return theClock().isPaused(); }
-    },
+    };
 
-    SIMULATION_RESET {
+    GameAction SIMULATION_RESET = new GameAction() {
         @Override
         public void execute() {
             theClock().setTargetFrameRate(NUM_TICKS_PER_SEC);
             theUI().showFlashMessageSec(0.75, theClock().getTargetFrameRate() + "Hz");
         }
-    },
+    };
 
-    START_ARCADE_GAME {
+    GameAction START_ARCADE_GAME = new GameAction() {
         @Override
         public void execute() {
             theSound().stopVoice();
@@ -211,33 +219,33 @@ public enum GameAction implements Action {
                 && (theGameState() == GameState.INTRO || theGameState() == GameState.SETTING_OPTIONS)
                 && theGame().canStartNewGame();
         }
-    },
+    };
 
-    TEST_CUT_SCENES {
+    GameAction TEST_CUT_SCENES = new GameAction() {
         @Override
         public void execute() {
             theGameController().changeState(GameState.TESTING_CUT_SCENES);
             theUI().showFlashMessage("Cut scenes test"); //TODO localize
         }
-    },
+    };
 
-    TEST_LEVELS_BONI {
+    GameAction TEST_LEVELS_BONI = new GameAction() {
         @Override
         public void execute() {
             theGameController().restart(GameState.TESTING_LEVELS);
             theUI().showFlashMessageSec(3, "Level TEST MODE");
         }
-    },
+    };
 
-    TEST_LEVELS_TEASERS {
+    GameAction TEST_LEVELS_TEASERS = new GameAction() {
         @Override
         public void execute() {
             theGameController().restart(GameState.TESTING_LEVEL_TEASERS);
             theUI().showFlashMessageSec(3, "Level TEST MODE");
         }
-    },
+    };
 
-    TOGGLE_AUTOPILOT {
+    GameAction TOGGLE_AUTOPILOT = new GameAction() {
         @Override
         public void execute() {
             toggle(PY_USING_AUTOPILOT);
@@ -245,25 +253,25 @@ public enum GameAction implements Action {
             theUI().showFlashMessage(theAssets().text(auto ? "autopilot_on" : "autopilot_off"));
             theSound().playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
         }
-    },
+    };
 
-    TOGGLE_DEBUG_INFO {
+    GameAction TOGGLE_DEBUG_INFO = new GameAction() {
         @Override
         public void execute() {
             toggle(PY_DEBUG_INFO_VISIBLE);
         }
-    },
+    };
 
-    TOGGLE_IMMUNITY {
+    GameAction TOGGLE_IMMUNITY = new GameAction() {
         @Override
         public void execute() {
             toggle(PY_IMMUNITY);
             theUI().showFlashMessage(theAssets().text(PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
             theSound().playVoice(PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
         }
-    },
+    };
 
-    TOGGLE_PAUSED {
+    GameAction TOGGLE_PAUSED = new GameAction() {
         @Override
         public void execute() {
             toggle(theClock().pausedProperty());
@@ -272,9 +280,9 @@ public enum GameAction implements Action {
             }
             Logger.info("Game ({}) {}", theGameVariant(), theClock().isPaused() ? "paused" : "resumed");
         }
-    },
+    };
 
-    PERSPECTIVE_NEXT {
+    GameAction PERSPECTIVE_NEXT = new GameAction() {
         @Override
         public void execute() {
             PerspectiveID id = PY_3D_PERSPECTIVE.get().next();
@@ -282,9 +290,9 @@ public enum GameAction implements Action {
             String msgKey = theAssets().text("camera_perspective", theAssets().text("perspective_id_" + id.name()));
             theUI().showFlashMessage(msgKey);
         }
-    },
+    };
 
-    PERSPECTIVE_PREVIOUS {
+    GameAction PERSPECTIVE_PREVIOUS = new GameAction() {
         @Override
         public void execute() {
             PerspectiveID id = PY_3D_PERSPECTIVE.get().prev();
@@ -292,16 +300,16 @@ public enum GameAction implements Action {
             String msgKey = theAssets().text("camera_perspective", theAssets().text("perspective_id_" + id.name()));
             theUI().showFlashMessage(msgKey);
         }
-    },
+    };
 
-    TOGGLE_DRAW_MODE {
+    GameAction TOGGLE_DRAW_MODE = new GameAction() {
         @Override
         public void execute() {
             PY_3D_DRAW_MODE.set(PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
         }
-    },
+    };
 
-    TOGGLE_PLAY_SCENE_2D_3D {
+    GameAction TOGGLE_PLAY_SCENE_2D_3D = new GameAction() {
         @Override
         public void execute() {
             theUI().currentGameScene().ifPresent(gameScene -> {
@@ -324,9 +332,9 @@ public enum GameAction implements Action {
                 GameState.TESTING_LEVEL_TEASERS, GameState.TESTING_LEVELS
             );
         }
-    },
+    };
 
-    TOGGLE_PIP_VISIBILITY {
+    GameAction TOGGLE_PIP_VISIBILITY = new GameAction() {
         @Override
         public void execute() {
             toggle(PY_PIP_ON);
@@ -336,12 +344,12 @@ public enum GameAction implements Action {
         }
     };
 
-    static final int SIMULATION_SPEED_DELTA = 2;
-    static final int SIMULATION_SPEED_MIN   = 10;
-    static final int SIMULATION_SPEED_MAX   = 240;
+    int SIMULATION_SPEED_DELTA = 2;
+    int SIMULATION_SPEED_MIN   = 10;
+    int SIMULATION_SPEED_MAX   = 240;
 
-    public static Action createPlayerSteeringAction(Direction dir) {
-        return new Action() {
+    private static GameAction createPlayerSteeringAction(Direction dir) {
+        return new GameAction() {
             @Override
             public void execute() { theGameLevel().pac().setWishDir(dir); }
 
@@ -354,5 +362,4 @@ public enum GameAction implements Action {
             }
         };
     }
-
 }

@@ -14,10 +14,10 @@ import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingBonus;
-import de.amr.pacmanfx.ui.GameAction;
+import de.amr.pacmanfx.ui.GameActions;
 import de.amr.pacmanfx.ui.GameActionBindingManager;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
-import de.amr.pacmanfx.uilib.Action;
+import de.amr.pacmanfx.uilib.GameAction;
 import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -58,7 +58,7 @@ public class PlayScene3D implements GameScene, GameActionBindingManager, CameraC
     protected final Scores3D scores3D;
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final Map<PerspectiveID, Perspective> perspectiveMap = new EnumMap<>(PerspectiveID.class);
-    protected final Map<KeyCodeCombination, Action> actionBindingMap = new HashMap<>();
+    protected final Map<KeyCodeCombination, GameAction> actionBindingMap = new HashMap<>();
 
     protected final ObjectProperty<PerspectiveID> perspectiveIDPy = new SimpleObjectProperty<>() {
         @Override
@@ -109,7 +109,7 @@ public class PlayScene3D implements GameScene, GameActionBindingManager, CameraC
         items.add(contextMenuTitleItem(theAssets().text("scene_display")));
 
         var item = new MenuItem(theAssets().text("use_2D_scene"));
-        item.setOnAction(ae -> GameAction.TOGGLE_PLAY_SCENE_2D_3D.execute());
+        item.setOnAction(ae -> GameActions.TOGGLE_PLAY_SCENE_2D_3D.execute());
         items.add(item);
 
         // Toggle picture-in-picture display
@@ -162,7 +162,7 @@ public class PlayScene3D implements GameScene, GameActionBindingManager, CameraC
         items.add(miMuted);
 
         var miQuit = new MenuItem(theAssets().text("quit"));
-        miQuit.setOnAction(ae -> GameAction.QUIT_GAME_SCENE.execute());
+        miQuit.setOnAction(ae -> GameActions.QUIT_GAME_SCENE.execute());
         items.add(miQuit);
 
         return items;
@@ -309,7 +309,7 @@ public class PlayScene3D implements GameScene, GameActionBindingManager, CameraC
     }
 
     @Override
-    public Map<KeyCodeCombination, Action> actionBindings() {
+    public Map<KeyCodeCombination, GameAction> actionBindings() {
         return actionBindingMap;
     }
 

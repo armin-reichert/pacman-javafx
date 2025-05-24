@@ -14,7 +14,7 @@ import de.amr.pacmanfx.model.LevelMessage;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.GameAction;
+import de.amr.pacmanfx.ui.GameActions;
 import de.amr.pacmanfx.ui._2d.FlashingMazeAnimation;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.CameraControlledView;
@@ -46,7 +46,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameAction.QUIT_DEMO_LEVEL;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
@@ -193,7 +193,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         items.add(miMuted);
 
         var miQuit = new MenuItem(theAssets().text("quit"));
-        miQuit.setOnAction(ae -> GameAction.QUIT_GAME_SCENE.execute());
+        miQuit.setOnAction(ae -> GameActions.QUIT_GAME_SCENE.execute());
         items.add(miQuit);
 
         return items;
@@ -223,7 +223,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             bind(QUIT_DEMO_LEVEL, theJoypad().key(JoypadButton.START));
         } else {
             bindJoypadPlayerSteeringActions();
-            bind(TengenMsPacMan_GameAction.TOGGLE_PAC_BOOSTER, theJoypad().key(JoypadButton.A), theJoypad().key(JoypadButton.B));
+            bind(TOGGLE_PAC_BOOSTER, theJoypad().key(JoypadButton.A), theJoypad().key(JoypadButton.B));
             bindCheatActions();
         }
         updateActionBindings();
@@ -232,7 +232,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void doInit() {
         theGame().scoreManager().setScoreVisible(true);
-        bind(TengenMsPacMan_GameAction.TOGGLE_DISPLAY_MODE, Keyboard.alt(KeyCode.C));
+        bind(TOGGLE_DISPLAY_MODE, Keyboard.alt(KeyCode.C));
         setGameRenderer(theUIConfig().current().createRenderer(canvas));
         movingCamera.focusTopOfScene();
         messageMovement = new MessageMovement();

@@ -8,7 +8,7 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameActionBindingManager;
-import de.amr.pacmanfx.uilib.Action;
+import de.amr.pacmanfx.uilib.GameAction;
 import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.input.Keyboard;
 import javafx.beans.property.*;
@@ -36,7 +36,7 @@ public abstract class GameScene2D implements GameScene, GameActionBindingManager
     protected final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
     protected final ObjectProperty<Font> arcadeFontScaledTS = new SimpleObjectProperty<>();
 
-    protected final Map<KeyCodeCombination, Action> actionBindings = new HashMap<>();
+    protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
 
     protected GameRenderer gr;
     protected Canvas canvas;
@@ -57,7 +57,7 @@ public abstract class GameScene2D implements GameScene, GameActionBindingManager
     }
 
     @Override
-    public Map<KeyCodeCombination, Action> actionBindings() {
+    public Map<KeyCodeCombination, GameAction> actionBindings() {
         return actionBindings;
     }
 

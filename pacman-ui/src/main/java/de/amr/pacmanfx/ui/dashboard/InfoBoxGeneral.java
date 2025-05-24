@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
-import de.amr.pacmanfx.ui.GameAction;
+import de.amr.pacmanfx.ui.GameActions;
 import de.amr.pacmanfx.ui.PacManGamesUI;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.control.Button;
@@ -43,7 +43,7 @@ public class InfoBoxGeneral extends InfoBox {
         btnPlayPause.setStyle("-fx-background-color: transparent");
         btnPlayPause.graphicProperty().bind(theClock().pausedProperty().map(paused -> paused ? iconPlay : iconStop));
         btnPlayPause.tooltipProperty().bind(theClock().pausedProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
-        setAction(btnPlayPause, GameAction.TOGGLE_PAUSED);
+        setAction(btnPlayPause, GameActions.TOGGLE_PAUSED);
 
         Button btnStep = buttonsSimulationControl[1];
         btnStep.setGraphic(iconStep);

@@ -7,7 +7,7 @@ package de.amr.pacmanfx.uilib;
 /**
  * @author Armin Reichert
  */
-public interface Action {
+public interface GameAction {
 
     void execute();
 

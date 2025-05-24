@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
-import de.amr.pacmanfx.uilib.Action;
+import de.amr.pacmanfx.uilib.GameAction;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.beans.binding.StringExpression;
 import javafx.scene.input.KeyCodeCombination;
@@ -44,7 +44,7 @@ public class EditorView implements View {
     }
 
     @Override
-    public Map<KeyCodeCombination, Action> actionBindings() {
+    public Map<KeyCodeCombination, GameAction> actionBindings() {
         return Map.of();
     }
 }

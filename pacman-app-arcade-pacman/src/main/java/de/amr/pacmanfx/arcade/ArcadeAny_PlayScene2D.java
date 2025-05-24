@@ -13,7 +13,7 @@ import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.LevelMessage;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.ui.GameAction;
+import de.amr.pacmanfx.ui.GameActions;
 import de.amr.pacmanfx.ui._2d.FlashingMazeAnimation;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.GameScene;
@@ -108,7 +108,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         items.add(miMuted);
 
         var miQuit = new MenuItem(theAssets().text("quit"));
-        miQuit.setOnAction(ae -> GameAction.QUIT_GAME_SCENE.execute());
+        miQuit.setOnAction(ae -> GameActions.QUIT_GAME_SCENE.execute());
         items.add(miQuit);
 
         return items;

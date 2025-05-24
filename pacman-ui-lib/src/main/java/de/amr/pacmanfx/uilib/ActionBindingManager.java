@@ -22,7 +22,7 @@ public interface ActionBindingManager {
 
     Keyboard keyboard();
 
-    Map<KeyCodeCombination, Action> actionBindings();
+    Map<KeyCodeCombination, GameAction> actionBindings();
 
     default void updateActionBindings() {
         for (KeyCodeCombination combination : actionBindings().keySet()) {
@@ -38,7 +38,7 @@ public interface ActionBindingManager {
         Logger.info("Key bindings cleared for {}", getClass().getSimpleName());
     }
 
-    default void bind(Action action, KeyCodeCombination... combinations) {
+    default void bind(GameAction action, KeyCodeCombination... combinations) {
         requireNonNull(action);
         requireNonNull(combinations);
         for (KeyCodeCombination combination : combinations) {
@@ -46,14 +46,14 @@ public interface ActionBindingManager {
         }
     }
 
-    default void bind(Action action, KeyCode... keyCodes) {
+    default void bind(GameAction action, KeyCode... keyCodes) {
         requireNonNull(keyCodes);
         for (KeyCode keyCode : keyCodes) {
             actionBindings().put(new KeyCodeCombination(keyCode), action);
         }
     }
 
-    default Optional<Action> matchingAction() {
+    default Optional<GameAction> matchingAction() {
         return actionBindings().keySet().stream()
             .filter(keyboard()::isMatching)
             .map(actionBindings()::get)

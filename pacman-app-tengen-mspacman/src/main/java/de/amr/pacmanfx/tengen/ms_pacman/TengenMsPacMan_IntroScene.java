@@ -25,6 +25,8 @@ import java.util.BitSet;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.START_GAME;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.MS_PAC_MAN_TITLE_SPRITE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
@@ -66,8 +68,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     @Override
     public void doInit() {
         theGame().scoreManager().setScoreVisible(false);
-        bind(TengenMsPacMan_GameAction.START_GAME, theJoypad().key(JoypadButton.START));
-        bind(TengenMsPacMan_GameAction.TOGGLE_JOYPAD_BINDINGS_DISPLAYED, naked(KeyCode.SPACE));
+        bind(START_GAME, theJoypad().key(JoypadButton.START));
+        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, naked(KeyCode.SPACE));
 
         sceneController.restart(SceneState.WAITING_FOR_START);
     }

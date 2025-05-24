@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameAction.START_GAME;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.START_GAME;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;

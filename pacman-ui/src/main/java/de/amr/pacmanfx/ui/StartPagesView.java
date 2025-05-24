@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.uilib.Action;
+import de.amr.pacmanfx.uilib.GameAction;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import javafx.beans.binding.Bindings;
@@ -44,7 +44,7 @@ public class StartPagesView implements View {
         return button;
     }
 
-    private final Action actionSelectGamePage = new Action() {
+    private final GameAction actionSelectGamePage = new GameAction() {
         @Override
         public void execute() {
             theUI().showGameView();
@@ -57,7 +57,7 @@ public class StartPagesView implements View {
     };
 
     private final List<StartPage> startPageList = new ArrayList<>();
-    private final Map<KeyCodeCombination, Action> actionBindings = new HashMap<>();
+    private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
     private final Carousel carousel;
     private StringExpression titleExpression;
 
@@ -102,7 +102,7 @@ public class StartPagesView implements View {
         bind(carousel::showPreviousSlide, KeyCode.LEFT);
         bind(carousel::showNextSlide,     KeyCode.RIGHT);
         bind(actionSelectGamePage,        KeyCode.ENTER);
-        bind(GameAction.TOGGLE_PAUSED,    KeyCode.P);
+        bind(GameActions.TOGGLE_PAUSED,    KeyCode.P);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class StartPagesView implements View {
     }
 
     @Override
-    public Map<KeyCodeCombination, Action> actionBindings() {
+    public Map<KeyCodeCombination, GameAction> actionBindings() {
         return actionBindings;
     }
 

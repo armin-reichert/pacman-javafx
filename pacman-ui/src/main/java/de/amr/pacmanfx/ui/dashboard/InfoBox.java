@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.ui.GameAction;
+import de.amr.pacmanfx.uilib.GameAction;
 import de.amr.pacmanfx.uilib.GameScene;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -215,10 +215,6 @@ public abstract class InfoBox extends TitledPane {
         valuePy.addListener((py,ov,nv) -> spinner.getValueFactory().setValue(nv.intValue()));
         addRow(labelText, spinner);
         return spinner;
-    }
-
-    protected void setAction(Button button, Runnable action) {
-        button.setOnAction(e -> action.run());
     }
 
     protected void setAction(Button button, GameAction gameAction) {

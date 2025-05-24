@@ -44,7 +44,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameView implements View {
 
-    private final Map<KeyCodeCombination, Action> actionBindings = new HashMap<>();
+    private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
 
     private final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene") {
         @Override
@@ -94,20 +94,20 @@ public class GameView implements View {
     private void bindActions() {
         bind(theUI()::restart,                   naked(KeyCode.F3));
         bind(this::showGameSceneHelp,            naked(KeyCode.H));
-        bind(GameAction.QUIT_GAME_SCENE,         naked(KeyCode.Q));
-        bind(GameAction.SIMULATION_SLOWER,       alt(KeyCode.MINUS));
-        bind(GameAction.SIMULATION_FASTER,       alt(KeyCode.PLUS));
-        bind(GameAction.SIMULATION_RESET,        alt(KeyCode.DIGIT0));
-        bind(GameAction.SIMULATION_ONE_STEP,     shift(KeyCode.P));
-        bind(GameAction.SIMULATION_TEN_STEPS,    shift(KeyCode.SPACE));
-        bind(GameAction.TOGGLE_AUTOPILOT,        alt(KeyCode.A));
-        bind(GameAction.TOGGLE_DEBUG_INFO,       alt(KeyCode.D));
-        bind(GameAction.TOGGLE_PAUSED,           naked(KeyCode.P));
+        bind(GameActions.QUIT_GAME_SCENE,         naked(KeyCode.Q));
+        bind(GameActions.SIMULATION_SLOWER,       alt(KeyCode.MINUS));
+        bind(GameActions.SIMULATION_FASTER,       alt(KeyCode.PLUS));
+        bind(GameActions.SIMULATION_RESET,        alt(KeyCode.DIGIT0));
+        bind(GameActions.SIMULATION_ONE_STEP,     shift(KeyCode.P));
+        bind(GameActions.SIMULATION_TEN_STEPS,    shift(KeyCode.SPACE));
+        bind(GameActions.TOGGLE_AUTOPILOT,        alt(KeyCode.A));
+        bind(GameActions.TOGGLE_DEBUG_INFO,       alt(KeyCode.D));
+        bind(GameActions.TOGGLE_PAUSED,           naked(KeyCode.P));
         bind(this::toggleDashboardVisibility,    naked(KeyCode.F1), alt(KeyCode.B));
-        bind(GameAction.TOGGLE_IMMUNITY,         alt(KeyCode.I));
+        bind(GameActions.TOGGLE_IMMUNITY,         alt(KeyCode.I));
         // 3D only
-        bind(GameAction.TOGGLE_PIP_VISIBILITY,   naked(KeyCode.F2));
-        bind(GameAction.TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3));
+        bind(GameActions.TOGGLE_PIP_VISIBILITY,   naked(KeyCode.F2));
+        bind(GameActions.TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -148,7 +148,7 @@ public class GameView implements View {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Map<KeyCodeCombination, Action> actionBindings() {
+    public Map<KeyCodeCombination, GameAction> actionBindings() {
         return actionBindings;
     }
 
@@ -352,7 +352,7 @@ public class GameView implements View {
         var menuItems = new ArrayList<>(gameScenePy.get().supplyContextMenuItems(e));
         if (theUIConfig().currentGameSceneIsPlayScene2D()) {
             var item = new MenuItem(theAssets().text("use_3D_scene"));
-            item.setOnAction(ae -> GameAction.TOGGLE_PLAY_SCENE_2D_3D.execute());
+            item.setOnAction(ae -> GameActions.TOGGLE_PLAY_SCENE_2D_3D.execute());
             menuItems.addFirst(item);
             menuItems.addFirst(contextMenuTitleItem(theAssets().text("scene_display")));
         }
