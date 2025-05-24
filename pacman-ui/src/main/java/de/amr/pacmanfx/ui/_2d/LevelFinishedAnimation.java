@@ -25,18 +25,17 @@ import org.tinylog.Logger;
  */
 public class LevelFinishedAnimation {
 
-    private final SequentialTransition animation = new SequentialTransition();
+    private final SequentialTransition animation;
     private int flashingIndex;
     private boolean highlighted;
 
     public LevelFinishedAnimation(GameLevel level) {
-        animation.setDelay(Duration.seconds(1.5));
-        animation.getChildren().add(Ufx.now(() -> {
-            level.ghosts().forEach(Actor::hide);
-            highlighted = false;
-        }));
-        animation.getChildren().add(createMazeFlashingAnimation(level.data().numFlashes()));
-        animation.getChildren().add(new PauseTransition(Duration.seconds(1)));
+        animation = new SequentialTransition(
+            Ufx.doAfterSec(1.5, () -> level.ghosts().forEach(Actor::hide)),
+            new PauseTransition(Duration.seconds(0.5)),
+            createMazeFlashingAnimation(level.data().numFlashes()),
+            new PauseTransition(Duration.seconds(1))
+        );
         animation.setOnFinished(e -> {
             highlighted = false;
             logState("end of animation");
@@ -46,7 +45,6 @@ public class LevelFinishedAnimation {
     private Animation createMazeFlashingAnimation(int numFlashes) {
         return new Transition() {
             {
-                setDelay(Duration.millis(500));
                 setCycleDuration(Duration.millis(333));
                 setCycleCount(numFlashes);
                 setInterpolator(Interpolator.LINEAR);
