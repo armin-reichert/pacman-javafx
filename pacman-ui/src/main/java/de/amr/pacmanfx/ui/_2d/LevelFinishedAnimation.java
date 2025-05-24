@@ -6,10 +6,15 @@ package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.uilib.Ufx;
-import javafx.animation.*;
+import javafx.animation.Animation;
+import javafx.animation.Interpolator;
+import javafx.animation.SequentialTransition;
+import javafx.animation.Transition;
 import javafx.util.Duration;
 import org.tinylog.Logger;
+
+import static de.amr.pacmanfx.uilib.Ufx.doAfterSec;
+import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
 
 /**
  * Animation played when level is complete. Consists of the following steps:
@@ -18,7 +23,7 @@ import org.tinylog.Logger;
  *     0.0                Start animation
  *     1.5                Hide ghosts
  *     2.0                Start n flashing cycles, each cycle takes 1/3 sec
- *     2.0 + n * 1/3 sec  Wait for 1 sec, then run the action specified for finishing the animation
+ *     2.0 + n * 1/3 sec  Wait 1 sec
  * </pre>
  * After each flashing cycle, the flashing index is incremented. This is used by the Tengen play scene renderer to
  * draw a different map color for each flashing cycle (only for the non-ARCADE maps starting at level 28)
@@ -31,10 +36,9 @@ public class LevelFinishedAnimation {
 
     public LevelFinishedAnimation(GameLevel level) {
         animation = new SequentialTransition(
-            Ufx.doAfterSec(1.5, () -> level.ghosts().forEach(Actor::hide)),
-            new PauseTransition(Duration.seconds(0.5)),
-            createMazeFlashingAnimation(level.data().numFlashes()),
-            new PauseTransition(Duration.seconds(1))
+            doAfterSec(1.5, () -> level.ghosts().forEach(Actor::hide)),
+            doAfterSec(0.5, createMazeFlashingAnimation(level.data().numFlashes())),
+            pauseSec(1)
         );
         animation.setOnFinished(e -> highlighted = false);
     }
