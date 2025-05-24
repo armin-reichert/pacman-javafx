@@ -59,7 +59,7 @@ public class LevelFinishedAnimation {
                 }
                 else if (t == 1) {
                     highlighted = false;
-                    flashingIndex++;
+                    if (flashingIndex + 1 < numFlashes) flashingIndex++;
                     logState("End of single flash");
                 }
             }
