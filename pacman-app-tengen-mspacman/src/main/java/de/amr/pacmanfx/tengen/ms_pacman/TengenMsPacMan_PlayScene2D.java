@@ -15,12 +15,13 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameActions;
-import de.amr.pacmanfx.ui._2d.LevelCompletionAnimation;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
 import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.input.Keyboard;
+import javafx.animation.Animation;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -124,7 +125,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     private final ObjectProperty<SceneDisplayMode> displayModePy = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
 
     private MessageMovement messageMovement;
-    private LevelCompletionAnimation levelCompleteAnimation;
+    private LevelFinishedAnimation levelCompleteAnimation;
 
     public TengenMsPacMan_PlayScene2D() {
         movingCamera = new MovingCamera();
@@ -250,9 +251,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 messageMovement.update();
                 updateSound(level);
             }
-            if (theGameState() == GameState.LEVEL_COMPLETE) {
-                levelCompleteAnimation.tick();
-            }
             if (fxSubScene.getCamera() == movingCamera) {
                 if (theGameState() == GameState.HUNTING) {
                     movingCamera.focusPlayer(true);
@@ -324,9 +322,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             case HUNTING -> movingCamera.focusPlayer(true);
             case LEVEL_COMPLETE -> {
                 theSound().stopAll();
-                levelCompleteAnimation = new LevelCompletionAnimation(theGameLevel());
-                levelCompleteAnimation.setActionOnFinished(theGameController()::letCurrentGameStateExpire);
-                levelCompleteAnimation.start();
+                levelCompleteAnimation = new LevelFinishedAnimation(theGameLevel());
+                levelCompleteAnimation.getAnimation().setOnFinished(e -> theGameController().letCurrentGameStateExpire());
+                levelCompleteAnimation.getAnimation().play();
             }
             case GAME_OVER -> {
                 var tengenGame = (TengenMsPacMan_GameModel) theGame();
@@ -448,10 +446,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         gr.drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
 
         final int mazeTopY = 3 * TS;
-        final boolean flashing = levelCompleteAnimation != null && levelCompleteAnimation.inFlashingPhase();
+        final boolean flashing = levelCompleteAnimation != null
+            && levelCompleteAnimation.getAnimation().getStatus() == Animation.Status.RUNNING;
         if (flashing) {
-            if (levelCompleteAnimation.inHighlightPhase()) {
-                r.drawHighlightedWorld(theGameLevel(), 0, mazeTopY, levelCompleteAnimation.flashingIndex());
+            if (levelCompleteAnimation.isHighlighted()) {
+                r.drawHighlightedWorld(theGameLevel(), 0, mazeTopY, levelCompleteAnimation.getFlashingIndex());
             } else {
                 r.drawMaze(theGameLevel(), 0, mazeTopY, null, false, false);
                 r.drawFood(theGameLevel()); // this also hides the eaten food!
