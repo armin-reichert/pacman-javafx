@@ -36,10 +36,7 @@ public class LevelFinishedAnimation {
             createMazeFlashingAnimation(level.data().numFlashes()),
             new PauseTransition(Duration.seconds(1))
         );
-        animation.setOnFinished(e -> {
-            highlighted = false;
-            logState("end of animation");
-        });
+        animation.setOnFinished(e -> highlighted = false);
     }
 
     private Animation createMazeFlashingAnimation(int numFlashes) {
@@ -52,15 +49,15 @@ public class LevelFinishedAnimation {
 
             @Override
             protected void interpolate(double t) {
-                //TODO WTF
+                //TODO WTF? How to get the exact middle of the interpolation interval?
                 if (Math.abs(t - 0.5) < 0.1 && !highlighted) {
                     highlighted = true;
-                    logState("half time of flash cycle");
+                    logState("Half time of single flash");
                 }
                 else if (t == 1) {
                     highlighted = false;
                     flashingIndex++;
-                    logState("end of flash cycle");
+                    logState("End of single flash");
                 }
             }
         };
@@ -78,7 +75,7 @@ public class LevelFinishedAnimation {
         return highlighted;
     }
 
-    private void logState(String where) {
-        Logger.info("At {}: highlighted={} flashingIndex={}", where, highlighted, flashingIndex);
+    private void logState(String desc) {
+        Logger.info("{}: highlighted={} flashingIndex={}", desc, highlighted, flashingIndex);
     }
 }
