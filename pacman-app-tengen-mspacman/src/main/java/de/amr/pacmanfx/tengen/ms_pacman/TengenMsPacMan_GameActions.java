@@ -10,7 +10,7 @@ import de.amr.pacmanfx.uilib.GameAction;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.theSound;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
 public interface TengenMsPacMan_GameActions {
@@ -18,20 +18,17 @@ public interface TengenMsPacMan_GameActions {
     GameAction QUIT_DEMO_LEVEL = new GameAction() {
         @Override
         public void execute() {
-            optGameLevel().ifPresent(level -> theGameController().changeState(GameState.SETTING_OPTIONS));
+            theGameController().changeState(GameState.SETTING_OPTIONS);
         }
 
         @Override
         public boolean isEnabled() {
             return optGameLevel().isPresent() && optGameLevel().get().isDemoLevel();
         }
-    };
 
-    GameAction SHOW_OPTIONS = new GameAction() {
         @Override
-        public void execute() {
-            theGame().playingProperty().set(false);
-            theGameController().changeState(GameState.SETTING_OPTIONS);
+        public String toString() {
+            return "QuitDemoLevel";
         }
     };
 
@@ -39,6 +36,11 @@ public interface TengenMsPacMan_GameActions {
         @Override
         public void execute() {
             theGameController().changeState(GameState.SETTING_OPTIONS);
+        }
+
+        @Override
+        public String toString() {
+            return "StartGame";
         }
     };
 
@@ -49,6 +51,11 @@ public interface TengenMsPacMan_GameActions {
             theGame().playingProperty().set(false);
             theGameController().changeState(GameState.STARTING_GAME);
         }
+
+        @Override
+        public String toString() {
+            return "StartPlaying";
+        }
     };
 
     GameAction TOGGLE_DISPLAY_MODE = new GameAction() {
@@ -57,6 +64,11 @@ public interface TengenMsPacMan_GameActions {
             SceneDisplayMode mode = PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.get();
             PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(mode == SceneDisplayMode.SCROLLING
                 ? SceneDisplayMode.SCALED_TO_FIT : SceneDisplayMode.SCROLLING);
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return theUIConfig().currentGameSceneIsPlayScene2D();
         }
     };
 
