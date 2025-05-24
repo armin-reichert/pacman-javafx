@@ -124,11 +124,11 @@ public class MapRepository {
             default -> throw new IllegalArgumentException("Illegal Arcade map number: " + mapNumber);
         };
         int col = spriteIndex % 3, row = spriteIndex / 3;
-        RectArea mazeSprite = new RectArea(col * ARCADE_MAZE_WIDTH, row * ARCADE_MAZE_HEIGHT, ARCADE_MAZE_WIDTH, ARCADE_MAZE_HEIGHT);
-        ColoredImageRegion normalMaze = new ColoredImageRegion(arcadeMapsSpriteSheet, mazeSprite, colorScheme);
+        var mazeSprite = new RectArea(col * ARCADE_MAZE_WIDTH, row * ARCADE_MAZE_HEIGHT, ARCADE_MAZE_WIDTH, ARCADE_MAZE_HEIGHT);
+        var normalMaze = new ColoredImageRegion(arcadeMapsSpriteSheet, mazeSprite, colorScheme);
         var flashingMazes = new ArrayList<ColoredImageRegion>();
         ColoredImageRegion blackWhiteMaze = getOrCreateMapImage(MapCategory.ARCADE, mapNumber, mazeSprite,
-            NES_ColorScheme.FLASHING_BLACK_WHITE, colorScheme, 13, 23);
+            NES_ColorScheme._0F_20_0F_BLACK_WHITE_BLACK, colorScheme, 13, 23);
         for (int i = 0; i < flashCount; ++i) {
             flashingMazes.add(blackWhiteMaze);
         }
@@ -167,7 +167,7 @@ public class MapRepository {
                 flashingMazes.add(randomMaze);
             }
         } else {
-            ColoredImageRegion blackWhiteMaze = getOrCreateMapImage(MapCategory.MINI, spriteNumber, mazeSprite, NES_ColorScheme.FLASHING_BLACK_WHITE, availableColorScheme, pacTileX, pacTileY);
+            ColoredImageRegion blackWhiteMaze = getOrCreateMapImage(MapCategory.MINI, spriteNumber, mazeSprite, NES_ColorScheme._0F_20_0F_BLACK_WHITE_BLACK, availableColorScheme, pacTileX, pacTileY);
             for (int i = 0; i < flashCount; ++i) {
                 flashingMazes.add(blackWhiteMaze);
             }
@@ -217,7 +217,7 @@ public class MapRepository {
                 flashingMazes.add(randomMaze);
             }
         } else {
-            ColoredImageRegion blackWhiteMaze = getOrCreateMapImage(MapCategory.BIG, spriteNumber, mazeSprite, NES_ColorScheme.FLASHING_BLACK_WHITE, availableColorScheme, pacTileX, pacTileY);
+            ColoredImageRegion blackWhiteMaze = getOrCreateMapImage(MapCategory.BIG, spriteNumber, mazeSprite, NES_ColorScheme._0F_20_0F_BLACK_WHITE_BLACK, availableColorScheme, pacTileX, pacTileY);
             for (int i = 0; i < flashCount; ++i) {
                 flashingMazes.add(blackWhiteMaze);
             }
@@ -277,7 +277,7 @@ public class MapRepository {
             }
         } else {
             ColoredImageRegion blackWhiteMaze = getOrCreateMapImage(MapCategory.STRANGE, spriteNumber, mazeSprite,
-                NES_ColorScheme.FLASHING_BLACK_WHITE, availableColorScheme, pacTileX, pacTileY);
+                NES_ColorScheme._0F_20_0F_BLACK_WHITE_BLACK, availableColorScheme, pacTileX, pacTileY);
             for (int i = 0; i < flashCount; ++i) {
                 flashingMazes.add(blackWhiteMaze);
             }
