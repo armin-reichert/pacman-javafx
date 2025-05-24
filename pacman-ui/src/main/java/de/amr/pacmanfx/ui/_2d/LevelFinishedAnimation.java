@@ -40,7 +40,6 @@ public class LevelFinishedAnimation {
             doAfterSec(0.5, createMazeFlashingAnimation(level.data().numFlashes())),
             pauseSec(1)
         );
-        animation.setOnFinished(e -> highlighted = false);
     }
 
     private Animation createMazeFlashingAnimation(int numFlashes) {
