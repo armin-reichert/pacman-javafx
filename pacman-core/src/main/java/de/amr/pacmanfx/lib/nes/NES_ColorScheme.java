@@ -12,6 +12,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 public enum NES_ColorScheme {
     /** This scheme is used for highlighted maze in flashing animation. */
     _0F_20_0F_BLACK_WHITE_BLACK   (0x0f, 0x20, 0x0f),
+
     _0F_20_1C_BLACK_WHITE_GREEN   (0x0f, 0x20, 0x1c),
     _0F_20_28_BLACK_WHITE_YELLOW  (0x0f, 0x20, 0x28),
     _0F_01_20_BLACK_BLUE_WHITE    (0x0f, 0x01, 0x20),
@@ -50,22 +51,13 @@ public enum NES_ColorScheme {
     }
 
     public static NES_ColorScheme random() {
-        // ignore first color scheme
-        int index = randomInt(1, values().length);
-        return values()[index];
+        // ignore first entry
+        return values()[randomInt(1, values().length)];
     }
 
-    public String fillColor() {
-        return fillColor;
-    }
-
-    public String strokeColor() {
-        return strokeColor;
-    }
-
-    public String pelletColor() {
-        return pelletColor;
-    }
+    public String fillColor() { return fillColor; }
+    public String strokeColor() { return strokeColor; }
+    public String pelletColor() { return pelletColor; }
 
     private final String fillColor;
     private final String strokeColor;
