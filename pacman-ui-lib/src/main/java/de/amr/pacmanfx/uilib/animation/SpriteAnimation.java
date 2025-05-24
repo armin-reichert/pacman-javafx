@@ -13,27 +13,30 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 /**
- * @author Armin Reichert
+ * Plays a sequence of sprite sheet regions ("sprites") to create an animation effect.
  */
 public class SpriteAnimation extends Transition {
 
-    private static final int FPS = 60;
-
     public static class Builder {
 
-        private final SpriteAnimation workPiece;
+        private final SpriteAnimation anim;
 
         private Builder(SpriteSheet spriteSheet) {
-            workPiece = new SpriteAnimation(spriteSheet);
+            anim = new SpriteAnimation(spriteSheet);
+        }
+
+        public Builder fps(int fps) {
+            anim.fps = fps;
+            return this;
         }
 
         public Builder frameTicks(int ticks) {
-            workPiece.frameTicks = ticks;
+            anim.frameTicks = ticks;
             return this;
         }
 
         public Builder take(RectArea... sprites) {
-            workPiece.sprites = sprites;
+            anim.sprites = sprites;
             return this;
         }
 
@@ -42,15 +45,15 @@ public class SpriteAnimation extends Transition {
         }
 
         public SpriteAnimation end() {
-            return build(workPiece.sprites.length);
+            return build(anim.sprites.length);
         }
 
         private SpriteAnimation build(int cycleCount) {
-            workPiece.setCycleDuration(Duration.seconds(1.0 / FPS * workPiece.frameTicks));
-            workPiece.setCycleCount(cycleCount);
-            workPiece.setInterpolator(Interpolator.LINEAR);
-            Logger.debug("New sprite animation '{}'", workPiece);
-            return workPiece;
+            anim.setCycleDuration(Duration.seconds(1.0 / anim.fps * anim.frameTicks));
+            anim.setCycleCount(cycleCount);
+            anim.setInterpolator(Interpolator.LINEAR);
+            Logger.debug("New sprite animation '{}'", anim);
+            return anim;
         }
     }
 
@@ -60,11 +63,13 @@ public class SpriteAnimation extends Transition {
 
     private final SpriteSheet spriteSheet;
     private RectArea[] sprites = new RectArea[0];
+    private int fps = 60;
     private int frameTicks = 1;
     private int frameIndex;
 
     private SpriteAnimation(SpriteSheet spriteSheet) {
         this.spriteSheet = spriteSheet;
+        setCycleDuration(Duration.seconds(1.0 / fps));
     }
 
     @Override
