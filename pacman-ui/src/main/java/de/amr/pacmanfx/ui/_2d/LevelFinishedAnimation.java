@@ -6,10 +6,7 @@ package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
-import javafx.animation.Animation;
-import javafx.animation.Interpolator;
-import javafx.animation.SequentialTransition;
-import javafx.animation.Transition;
+import javafx.animation.*;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -43,6 +40,10 @@ public class LevelFinishedAnimation {
     }
 
     private Animation createMazeFlashingAnimation(int numFlashes) {
+        if (numFlashes == 0) {
+            return new PauseTransition(Duration.ZERO);
+        }
+
         return new Transition() {
             {
                 setCycleDuration(Duration.millis(333));
