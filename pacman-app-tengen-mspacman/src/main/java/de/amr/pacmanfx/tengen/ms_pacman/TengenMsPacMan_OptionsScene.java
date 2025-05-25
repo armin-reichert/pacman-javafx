@@ -17,8 +17,8 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.START_
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.CONTINUES_SPRITES;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.theUIConfig;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theJoypad;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theSound;
 import static de.amr.pacmanfx.uilib.input.Keyboard.alt;
 
 /**
@@ -229,18 +229,21 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     @Override
     protected void drawSceneContent() {
         var r = (TengenMsPacMan_Renderer2D) gr();
-        gr().fillCanvas(backgroundColor());
-        Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
-        gr().drawScores(theGame().scoreManager(), scoreColor, defaultSceneFont());
-        r.drawSceneBorderLines();
+        r.fillCanvas(backgroundColor());
 
         if (initialDelay > 0) {
             return;
         }
-        r.setScaling(scaling());
+
+        r.drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
+        r.drawSceneBorderLines();
+        if (PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED.get()) {
+            r.drawJoypadKeyBinding(theJoypad().currentKeyBinding());
+        }
+
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), sizeInPx().x(), 20);
-        r.fillTextAtScaledPosition("MS PAC-MAN OPTIONS", NES_YELLOW,
-            defaultSceneFont(), COL_LABEL + 3 * TS, 48);
+        r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), sizeInPx().x(), 212);
+        r.fillTextAtScaledPosition("MS PAC-MAN OPTIONS", NES_YELLOW, defaultSceneFont(), COL_LABEL + 3 * TS, 48);
 
         // Players (not implemented)
         drawArrowIfSelected(OPTION_PLAYERS, 72, defaultSceneFont());
@@ -283,12 +286,6 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         r.fillTextAtScaledPosition("MOVE ARROW WITH JOYPAD", NES_YELLOW, defaultSceneFont(), 4 * TS,  192);
         r.fillTextAtScaledPosition("CHOOSE OPTIONS WITH A AND B", NES_YELLOW, defaultSceneFont(), 2 * TS,  200);
         r.fillTextAtScaledPosition("PRESS START TO START GAME", NES_YELLOW, defaultSceneFont(), 3 * TS,  208);
-
-        r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), sizeInPx().x(), 212);
-
-        if (PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED.get()) {
-            r.drawJoypadKeyBinding(theJoypad().currentKeyBinding());
-        }
     }
 
     private void drawArrowIfSelected(int option, double y, Font font) {
