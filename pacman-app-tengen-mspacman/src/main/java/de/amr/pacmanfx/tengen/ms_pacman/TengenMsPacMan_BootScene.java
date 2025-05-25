@@ -9,7 +9,6 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
@@ -52,8 +51,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             ghost = createRedGhost();
             ghost.setSpeed(0);
             ghost.hide();
-            GameSpriteSheet spriteSheet = theUIConfig().current().spriteSheet();
-            ghost.setAnimations(new TengenMsPacMan_GhostAnimationMap(spriteSheet, ghost.personality()));
+            ghost.setAnimations(new TengenMsPacMan_GhostAnimationMap(theUIConfig().current().spriteSheet(), ghost.personality()));
             ghost.selectAnimation(ANIM_GHOST_NORMAL);
         }
         if (t == 7) {
@@ -102,14 +100,12 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        gr().fillCanvas(backgroundColor());
-        gr().drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
         var r = (TengenMsPacMan_Renderer2D) gr();
+        r.fillCanvas(backgroundColor());
+        r.drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
         r.drawSceneBorderLines();
-        r.setScaling(scaling());
         if (grayScreen) {
-            r.ctx().setFill(nesPaletteColor(0x10));
-            r.ctx().fillRect(0, 0, canvas().getWidth(), canvas().getHeight());
+            r.fillCanvas(nesPaletteColor(0x10));
         } else {
             r.fillTextAtScaledPosition("TENGEN PRESENTS", r.shadeOfBlue(t), defaultSceneFont(), TENGEN_PRESENTS_X, tengenPresentsY);
             r.drawActor(ghost);
