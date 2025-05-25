@@ -163,7 +163,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
                 .map(theGameLevel()::ghost).forEach(gr()::drawActor);
 
-        if (debugInfoVisiblePy.get()) {
+        if (debugInfoVisibleProperty().get()) {
             gr().drawAnimatedCreatureInfo(theGameLevel().pac());
             Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
                     .map(theGameLevel()::ghost).forEach(gr()::drawAnimatedCreatureInfo);

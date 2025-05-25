@@ -90,11 +90,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         }
 
         public double camMinY() {
-            return scalingPy.get() * (-9 * TS);
+            return scaled(-9 * TS);
         }
 
         public double camMaxY() {
-            return scalingPy.get() * (verticalRangeTiles - 35) * TS;
+            return scaled(verticalRangeTiles - 35) * TS;
         }
 
         public void focusPlayer(boolean focus) {
@@ -138,7 +138,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         int stripeWidth = 2 * TS;
         clip.xProperty().bind(canvas().translateXProperty().add(scalingProperty().multiply(stripeWidth)));
         clip.yProperty().bind(canvas().translateYProperty());
-        clip.widthProperty().bind(canvas().widthProperty().subtract(scalingPy.multiply(2 * stripeWidth)));
+        clip.widthProperty().bind(canvas().widthProperty().subtract(scalingProperty().multiply(2 * stripeWidth)));
         clip.heightProperty().bind(canvas().heightProperty());
         canvas().setClip(clip);
 
@@ -473,7 +473,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             r.drawLevelCounterWithLevelNumbers(theGameLevel().number(), game.levelCounter(), sizeInPx());
         }
 
-        if (debugInfoVisiblePy.get()) {
+        if (debugInfoVisibleProperty().get()) {
             r.drawAnimatedCreatureInfo(theGameLevel().pac());
             ghostsInZOrder().forEach(r::drawAnimatedCreatureInfo);
             drawDebugInfo();
