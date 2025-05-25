@@ -61,6 +61,12 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     public ObjectProperty<Color> backgroundColorProperty() { return  backgroundColorPy; }
 
+    public void ensureMapSettingsApplied(GameLevel level) {
+        if (coloredMapSet == null) {
+            applyMapSettings(level.worldMap());
+        }
+    }
+
     @Override
     public void applyMapSettings(WorldMap worldMap) {
         int flashCount = 5; // TODO: is this correct for all levels?

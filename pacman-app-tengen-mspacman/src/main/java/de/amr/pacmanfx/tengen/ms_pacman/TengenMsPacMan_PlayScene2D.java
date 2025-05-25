@@ -435,6 +435,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
         final var tengenGame = (TengenMsPacMan_GameModel) theGame();
         final var r = (TengenMsPacMan_Renderer2D) gr;
+        //TODO check this workaround
+        r.ensureMapSettingsApplied(theGameLevel());
 
         r.ctx().save();
         // Tengen screen width is 32 tiles, each maze is 28 tiles wide, so reserve 2 tiles on each side
