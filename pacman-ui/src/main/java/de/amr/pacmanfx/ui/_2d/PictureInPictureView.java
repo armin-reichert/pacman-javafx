@@ -40,7 +40,6 @@ public class PictureInPictureView extends VBox {
         GameRenderer renderer = theUIConfig().current().createRenderer(canvas);
         scene2D.setGameRenderer(renderer);
         scene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
-        //scene2D.arcadeFontOneTileScaled.bind(scene2D.scalingPy.map(scaling -> theAssets().arcadeFontAtSize((float) scaling * TS)));
         recomputeLayout();
     }
 
