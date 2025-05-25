@@ -41,18 +41,18 @@ public class ArcadePacMan_StartScene extends GameScene2D {
         final Font font = arcadeFontScaledTS();
         final Font smallFont = theAssets().arcadeFontAtSize(scaled(6));
         Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
-        gr.drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
-        gr.fillTextAtScaledPosition("PUSH START BUTTON", ARCADE_ORANGE, font, tiles_to_px(6), tiles_to_px(17));
-        gr.fillTextAtScaledPosition("1 PLAYER ONLY", ARCADE_CYAN, font, tiles_to_px(8), tiles_to_px(21));
-        gr.fillTextAtScaledPosition("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, font, tiles_to_px(1), tiles_to_px(25));
-        gr.fillTextAtScaledPosition("PTS", ARCADE_ROSE, smallFont, tiles_to_px(25), tiles_to_px(25));
-        if (gr instanceof ArcadePacMan_GameRenderer r) {
+        gr().drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
+        gr().fillTextAtScaledPosition("PUSH START BUTTON", ARCADE_ORANGE, font, tiles_to_px(6), tiles_to_px(17));
+        gr().fillTextAtScaledPosition("1 PLAYER ONLY", ARCADE_CYAN, font, tiles_to_px(8), tiles_to_px(21));
+        gr().fillTextAtScaledPosition("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, font, tiles_to_px(1), tiles_to_px(25));
+        gr().fillTextAtScaledPosition("PTS", ARCADE_ROSE, smallFont, tiles_to_px(25), tiles_to_px(25));
+        if (gr() instanceof ArcadePacMan_GameRenderer r) {
             // In Pac-Man XXL, another renderer is used!
             r.drawMidwayCopyright(4, 29, ARCADE_PINK, font);
         }
-        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
+        gr().fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 scoreColor, font, 2 * TS, sizeInPx().y() - 2);
-        gr.drawLevelCounter(theGame().levelCounter(), sizeInPx());
+        gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 
     @Override

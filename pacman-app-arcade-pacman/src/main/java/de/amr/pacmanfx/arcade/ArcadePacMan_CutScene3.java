@@ -22,7 +22,6 @@ import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ANIM_BLINKY_PATCHED;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
-import static de.amr.pacmanfx.ui.GameAssets.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
 /**
@@ -93,16 +92,16 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
-        gr.drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
-        gr.drawActor(pac);
-        gr.drawActor(blinky);
-        gr.drawLevelCounter(theGame().levelCounter(), sizeInPx());
+        gr().drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
+        gr().drawActor(pac);
+        gr().drawActor(blinky);
+        gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 
     @Override
     protected void drawDebugInfo() {
         super.drawDebugInfo();
         String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-        gr.fillTextAtScaledPosition(text, Color.YELLOW, DEBUG_TEXT_FONT, tiles_to_px(1), tiles_to_px(5));
+        gr().fillTextAtScaledPosition(text, Color.YELLOW, DEBUG_TEXT_FONT, tiles_to_px(1), tiles_to_px(5));
     }
 }

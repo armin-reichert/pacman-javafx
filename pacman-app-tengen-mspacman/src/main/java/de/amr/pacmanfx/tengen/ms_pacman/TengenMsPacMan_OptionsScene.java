@@ -229,10 +229,10 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     @Override
     protected void drawSceneContent() {
         final Font font = arcadeFontScaledTS();
-        gr.fillCanvas(backgroundColor());
+        gr().fillCanvas(backgroundColor());
         Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
-        gr.drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
-        TengenMsPacMan_Renderer2D r = (TengenMsPacMan_Renderer2D) gr;
+        gr().drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
+        TengenMsPacMan_Renderer2D r = (TengenMsPacMan_Renderer2D) gr();
         r.drawSceneBorderLines();
 
         if (initialDelay > 0) {
@@ -293,8 +293,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     private void drawArrowIfSelected(int option, double y, Font font) {
         if (selectedOption == option) {
-            gr.fillTextAtScaledPosition("-", NES_YELLOW, font, COL_ARROW, y);
-            gr.fillTextAtScaledPosition(">", NES_YELLOW, font, COL_ARROW + 3, y);
+            gr().fillTextAtScaledPosition("-", NES_YELLOW, font, COL_ARROW, y);
+            gr().fillTextAtScaledPosition(">", NES_YELLOW, font, COL_ARROW + 3, y);
         }
     }
 }

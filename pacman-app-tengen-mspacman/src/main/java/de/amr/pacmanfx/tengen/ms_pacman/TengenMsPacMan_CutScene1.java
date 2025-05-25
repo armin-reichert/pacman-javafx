@@ -20,7 +20,8 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationMap.ANIM_PAC_MAN_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.HEART_SPRITE;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
 /**
@@ -205,10 +206,10 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gr.fillCanvas(backgroundColor());
+        gr().fillCanvas(backgroundColor());
         Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
-        gr.drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
-        var r = (TengenMsPacMan_Renderer2D) gr;
+        gr().drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
+        var r = (TengenMsPacMan_Renderer2D) gr();
         r.drawSceneBorderLines();
         r.drawClapperBoard(clapAnimation, "THEY MEET", 1, CLAP_TILE_X, CLAP_TILE_Y, arcadeFontScaledTS());
         r.drawActor(msPacMan);

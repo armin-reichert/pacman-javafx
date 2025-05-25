@@ -19,7 +19,8 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHI
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationMap.*;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
 public class TengenMsPacMan_CutScene4 extends GameScene2D {
@@ -205,10 +206,10 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        gr.fillCanvas(backgroundColor());
+        gr().fillCanvas(backgroundColor());
         Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
-        gr.drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
-        var r = (TengenMsPacMan_Renderer2D) gr;
+        gr().drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
+        var r = (TengenMsPacMan_Renderer2D) gr();
         r.drawSceneBorderLines();
         r.drawClapperBoard(clapAnimation, "THE END", 4, CLAP_TILE_X, CLAP_TILE_Y, arcadeFontScaledTS());
         r.drawActor(msPacMan);

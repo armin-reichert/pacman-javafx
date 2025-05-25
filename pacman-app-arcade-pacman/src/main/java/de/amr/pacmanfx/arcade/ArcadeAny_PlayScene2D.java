@@ -50,7 +50,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        gr.applyMapSettings(theGameLevel().worldMap());
+        gr().applyMapSettings(theGameLevel().worldMap());
         if (theGameLevel().isDemoLevel()) {
             bindArcadeInsertCoinAction();
         } else {
@@ -140,30 +140,30 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         if (optGameLevel().isEmpty())
             return; // Scene is drawn already 2 ticks before level has been created
 
-        gr.applyMapSettings(theGameLevel().worldMap());
+        gr().applyMapSettings(theGameLevel().worldMap());
 
         Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
-        gr.drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
+        gr().drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
 
         boolean highlighted = levelFinishedAnimation != null
             && levelFinishedAnimation.isRunning()
             && levelFinishedAnimation.isHighlighted();
-        gr.drawMaze(theGameLevel(), 0, 3 * TS, backgroundColor(), highlighted, theGameLevel().blinking().isOn());
+        gr().drawMaze(theGameLevel(), 0, 3 * TS, backgroundColor(), highlighted, theGameLevel().blinking().isOn());
 
         if (theGameLevel().message() != null) {
             drawLevelMessage();
         }
 
         // Use correct z-order: bonus, Pac-Man, ghosts in order
-        theGameLevel().bonus().ifPresent(gr::drawBonus);
-        gr.drawActor(theGameLevel().pac());
+        theGameLevel().bonus().ifPresent(gr()::drawBonus);
+        gr().drawActor(theGameLevel().pac());
         Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
-                .map(theGameLevel()::ghost).forEach(gr::drawActor);
+                .map(theGameLevel()::ghost).forEach(gr()::drawActor);
 
         if (debugInfoVisiblePy.get()) {
-            gr.drawAnimatedCreatureInfo(theGameLevel().pac());
+            gr().drawAnimatedCreatureInfo(theGameLevel().pac());
             Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
-                    .map(theGameLevel()::ghost).forEach(gr::drawAnimatedCreatureInfo);
+                    .map(theGameLevel()::ghost).forEach(gr()::drawAnimatedCreatureInfo);
         }
 
         // Draw either lives counter or credit text
@@ -171,12 +171,12 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
             // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
             int numLivesDisplayed = theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()
                 ? theGame().lifeCount() : theGame().lifeCount() - 1;
-            gr.drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - 2 * TS);
+            gr().drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - 2 * TS);
         } else {
-            gr.fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
+            gr().fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 scoreColor, arcadeFontScaledTS(), 2 * TS, sizeInPx().y() - 2);
         }
-        gr.drawLevelCounter(theGame().levelCounter(), sizeInPx());
+        gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 
     private void drawLevelMessage() {
@@ -184,32 +184,32 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         float cx = TS * (houseMinTile.x() + houseSize.x() * 0.5f);
         float cy = TS * (houseMinTile.y() + houseSize.y() + 1);
         switch (theGameLevel().message()) {
-            case GAME_OVER -> gr.centerTextAtScaledPosition("GAME  OVER", ARCADE_RED, arcadeFontScaledTS(), cx, cy);
-            case READY -> gr.centerTextAtScaledPosition("READY!", ARCADE_YELLOW, arcadeFontScaledTS(), cx, cy);
-            case TEST_LEVEL -> gr.centerTextAtScaledPosition("TEST    L%03d".formatted(theGameLevel().number()),
+            case GAME_OVER -> gr().centerTextAtScaledPosition("GAME  OVER", ARCADE_RED, arcadeFontScaledTS(), cx, cy);
+            case READY -> gr().centerTextAtScaledPosition("READY!", ARCADE_YELLOW, arcadeFontScaledTS(), cx, cy);
+            case TEST_LEVEL -> gr().centerTextAtScaledPosition("TEST    L%03d".formatted(theGameLevel().number()),
                     ARCADE_WHITE, arcadeFontScaledTS(), cx, cy);
         }
     }
 
     @Override
     protected void drawDebugInfo() {
-        gr.drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
+        gr().drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
         optGameLevel().ifPresent(level -> {
             // assume all ghosts have the same special tiles
             level.ghost(RED_GHOST_SHADOW).specialTerrainTiles().forEach(tile -> {
                 double x = scaled(tile.x() * TS), y = scaled(tile.y() * TS + HTS), size = scaled(TS);
-                gr.ctx().setFill(Color.RED);
-                gr.ctx().fillRect(x, y, size, 2);
+                gr().ctx().setFill(Color.RED);
+                gr().ctx().fillRect(x, y, size, 2);
             });
-            gr.ctx().setFill(Color.YELLOW);
-            gr.ctx().setFont(DEBUG_TEXT_FONT);
+            gr().ctx().setFill(Color.YELLOW);
+            gr().ctx().setFont(DEBUG_TEXT_FONT);
             String gameStateText = theGameState().name() + " (Tick %d)".formatted(theGameState().timer().tickCount());
             String huntingPhaseText = "";
             if (theGameState() == GameState.HUNTING) {
                 HuntingTimer huntingTimer = level.huntingTimer();
                 huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.phase(), huntingTimer.tickCount());
             }
-            gr.ctx().fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, 64);
+            gr().ctx().fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, 64);
         });
     }
 
@@ -218,10 +218,12 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         Logger.info("{} entered from {}", this, oldScene);
         bindArcadePlayerSteeringActions();
         updateActionBindings();
-        if (gr == null) {
-            setGameRenderer(theUIConfig().current().createRenderer(canvas));
+
+        //TODO check this
+        if (gr() == null) {
+            setGameRenderer(theUIConfig().current().createRenderer(canvas()));
         }
-        optGameLevel().map(GameLevel::worldMap).ifPresent(gr::applyMapSettings);
+        optGameLevel().map(GameLevel::worldMap).ifPresent(gr()::applyMapSettings);
     }
 
     @Override

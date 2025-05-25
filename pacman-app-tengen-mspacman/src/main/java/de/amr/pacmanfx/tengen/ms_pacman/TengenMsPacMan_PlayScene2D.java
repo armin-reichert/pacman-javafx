@@ -130,20 +130,20 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         movingCamera = new MovingCamera();
         fixedCamera = new ParallelCamera();
 
-        canvas = new Canvas();
-        canvas.widthProperty().bind(scalingProperty().multiply(UNSCALED_CANVAS_SIZE.x()));
-        canvas.heightProperty().bind(scalingProperty().multiply(UNSCALED_CANVAS_SIZE.y()));
+        setCanvas(new Canvas());
+        canvas().widthProperty().bind(scalingProperty().multiply(UNSCALED_CANVAS_SIZE.x()));
+        canvas().heightProperty().bind(scalingProperty().multiply(UNSCALED_CANVAS_SIZE.y()));
 
         // maze is drawn centered inside canvas: clip left and right vertical stripes (2 tiles wide each)
         var clip = new Rectangle();
         int stripeWidth = 2 * TS;
-        clip.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(stripeWidth)));
-        clip.yProperty().bind(canvas.translateYProperty());
-        clip.widthProperty().bind(canvas.widthProperty().subtract(scalingPy.multiply(2 * stripeWidth)));
-        clip.heightProperty().bind(canvas.heightProperty());
-        canvas.setClip(clip);
+        clip.xProperty().bind(canvas().translateXProperty().add(scalingProperty().multiply(stripeWidth)));
+        clip.yProperty().bind(canvas().translateYProperty());
+        clip.widthProperty().bind(canvas().widthProperty().subtract(scalingPy.multiply(2 * stripeWidth)));
+        clip.heightProperty().bind(canvas().heightProperty());
+        canvas().setClip(clip);
 
-        var root = new StackPane(canvas);
+        var root = new StackPane(canvas());
         root.setBackground(Background.EMPTY);
 
         fxSubScene = new SubScene(root, 42, 42);
@@ -199,9 +199,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         return items;
     }
 
-    @Override
-    public void setCanvas(Canvas canvas) { /* ignore */ }
-
     public ObjectProperty<SceneDisplayMode> displayModeProperty() {
         return displayModePy;
     }
@@ -233,7 +230,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     public void doInit() {
         theGame().scoreManager().setScoreVisible(true);
         bind(TOGGLE_DISPLAY_MODE, Keyboard.alt(KeyCode.C));
-        setGameRenderer(theUIConfig().current().createRenderer(canvas));
+        setGameRenderer(theUIConfig().current().createRenderer(canvas()));
         movingCamera.focusTopOfScene();
         messageMovement = new MessageMovement();
     }
@@ -298,7 +295,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     public void onLevelCreated(GameEvent e) {
         GameLevel level = theGameLevel();
         setJoypadKeyBindings(level);
-        gr.applyMapSettings(level.worldMap());
+        gr().applyMapSettings(level.worldMap());
     }
 
     @Override
@@ -312,7 +309,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     public void onSceneVariantSwitch(GameScene oldScene) {
         GameLevel level = theGameLevel();
         setJoypadKeyBindings(level);
-        gr.applyMapSettings(level.worldMap());
+        gr().applyMapSettings(level.worldMap());
     }
 
     @Override
@@ -418,10 +415,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void draw() {
-        final var tr = (TengenMsPacMan_Renderer2D) gr;
-        tr.fillCanvas(tr.backgroundColorProperty().get());
         updateScaling();
         updateCameraPosition(scaling());
+        gr().fillCanvas(backgroundColor());
         drawSceneContent();
     }
 
@@ -433,57 +429,58 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             return;
         }
 
-        final var tengenGame = (TengenMsPacMan_GameModel) theGame();
-        final var r = (TengenMsPacMan_Renderer2D) gr;
-        //TODO check this workaround
-        r.ensureMapSettingsApplied(theGameLevel());
+        final var game = (TengenMsPacMan_GameModel) theGame();
 
-        r.ctx().save();
-        // Tengen screen width is 32 tiles, each maze is 28 tiles wide, so reserve 2 tiles on each side
-        r.ctx().translate(scaled(2 * TS), 0);
-        r.setScaling(scaling());
+        final var renderer = (TengenMsPacMan_Renderer2D) gr();
+        renderer.ensureMapSettingsApplied(theGameLevel()); //TODO check this workaround
+        renderer.ctx().save();
+        renderer.setScaling(scaling());
+
+        // NES screen width is 32 tiles but mazes are only 28 tiles wide
+        double margin = scaled((NES_TILES.x() - theGameLevel().worldMap().numCols()) * HTS);
+        renderer.ctx().translate(margin, 0);
 
         Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
-        gr.drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
+        renderer.drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
 
         final int mazeTopY = 3 * TS;
         final boolean flashing = levelFinishedAnimation != null && levelFinishedAnimation.isRunning();
         if (flashing) {
             if (levelFinishedAnimation.isHighlighted()) {
-                r.drawHighlightedWorld(theGameLevel(), 0, mazeTopY, levelFinishedAnimation.getFlashingIndex());
+                renderer.drawHighlightedWorld(theGameLevel(), 0, mazeTopY, levelFinishedAnimation.getFlashingIndex());
             } else {
-                r.drawMaze(theGameLevel(), 0, mazeTopY, null, false, false);
-                r.drawFood(theGameLevel()); // this also hides the eaten food!
+                renderer.drawMaze(theGameLevel(), 0, mazeTopY, null, false, false);
+                renderer.drawFood(theGameLevel()); // this also hides the eaten food!
             }
         }
         else {
-            r.drawMaze(theGameLevel(), 0, mazeTopY, null, false, false);
-            r.drawFood(theGameLevel());
-            theGameLevel().bonus().ifPresent(r::drawBonus);
+            renderer.drawMaze(theGameLevel(), 0, mazeTopY, null, false, false);
+            renderer.drawFood(theGameLevel());
+            theGameLevel().bonus().ifPresent(renderer::drawBonus);
             //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
-            r.drawLevelMessage(theGameLevel(), currentMessagePosition(), arcadeFontScaledTS());
+            renderer.drawLevelMessage(theGameLevel(), currentMessagePosition(), arcadeFontScaledTS());
         }
-        r.drawActor(theGameLevel().pac());
-        ghostsInZOrder().forEach(r::drawActor);
+        renderer.drawActor(theGameLevel().pac());
+        ghostsInZOrder().forEach(renderer::drawActor);
 
         // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
         int numLivesDisplayed = theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()
-            ? tengenGame.lifeCount() : tengenGame.lifeCount() - 1;
-        r.drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - TS);
+            ? game.lifeCount() : game.lifeCount() - 1;
+        renderer.drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - TS);
 
-        if (theGameLevel().isDemoLevel() || tengenGame.mapCategory() == MapCategory.ARCADE) {
-            r.drawLevelCounter(tengenGame.levelCounter(), sizeInPx());
+        if (theGameLevel().isDemoLevel() || game.mapCategory() == MapCategory.ARCADE) {
+            renderer.drawLevelCounter(game.levelCounter(), sizeInPx());
         } else {
-            r.drawLevelCounterWithLevelNumbers(theGameLevel().number(), tengenGame.levelCounter(), sizeInPx());
+            renderer.drawLevelCounterWithLevelNumbers(theGameLevel().number(), game.levelCounter(), sizeInPx());
         }
 
         if (debugInfoVisiblePy.get()) {
-            r.drawAnimatedCreatureInfo(theGameLevel().pac());
-            ghostsInZOrder().forEach(r::drawAnimatedCreatureInfo);
+            renderer.drawAnimatedCreatureInfo(theGameLevel().pac());
+            ghostsInZOrder().forEach(renderer::drawAnimatedCreatureInfo);
             drawDebugInfo();
         }
 
-        r.ctx().restore();
+        renderer.ctx().restore();
     }
 
     private Stream<Ghost> ghostsInZOrder() {

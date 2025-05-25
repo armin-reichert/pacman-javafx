@@ -51,9 +51,9 @@ public class ArcadeAny_BootScene2D extends GameScene2D {
 
     @Override
     public void draw() {
-        gr.setScaling(scaling());
+        gr().setScaling(scaling());
         if (theGameState().timer().tickCount() == 1) {
-            gr.fillCanvas(backgroundColor());
+            gr().fillCanvas(backgroundColor());
         } else {
             drawSceneContent();
         }
@@ -63,13 +63,13 @@ public class ArcadeAny_BootScene2D extends GameScene2D {
     protected void drawSceneContent() {
         TickTimer timer = theGameState().timer();
         if (timer.betweenSeconds(1, 2) && timer.tickCount() % 4 == 0) {
-            gr.fillCanvas(backgroundColor());
+            gr().fillCanvas(backgroundColor());
             drawRandomHexCodes();
         } else if (timer.betweenSeconds(2, 3.5) && timer.tickCount() % 4 == 0) {
-            gr.fillCanvas(backgroundColor());
+            gr().fillCanvas(backgroundColor());
             drawRandomSpriteFragments();
         } else if (timer.atSecond(3.5)) {
-            gr.fillCanvas(backgroundColor());
+            gr().fillCanvas(backgroundColor());
             drawGridLines();
         }
     }
@@ -78,12 +78,12 @@ public class ArcadeAny_BootScene2D extends GameScene2D {
         final Vector2f sceneSize = sizeInPx();
         final Font font = arcadeFontScaledTS();
         final int numRows = (int) (sceneSize.y() / TS), numCols = (int) (sceneSize.x() / TS);
-        gr.ctx().setFill(ARCADE_WHITE);
-        gr.ctx().setFont(font);
+        gr().ctx().setFill(ARCADE_WHITE);
+        gr().ctx().setFont(font);
         for (int row = 0; row < numRows; ++row) {
             for (int col = 0; col < numCols; ++col) {
                 var hexCode = Integer.toHexString(theRNG().nextInt(16));
-                gr.ctx().fillText(hexCode, scaled(tiles_to_px(col)), scaled(tiles_to_px(row + 1)));
+                gr().ctx().fillText(hexCode, scaled(tiles_to_px(col)), scaled(tiles_to_px(row + 1)));
             }
         }
     }
@@ -97,7 +97,7 @@ public class ArcadeAny_BootScene2D extends GameScene2D {
             RectArea fragment1 = randomFragment(), fragment2 = randomFragment();
             int split = numFragmentsX / 8 + theRNG().nextInt(numFragmentsX / 4);
             for (int col = 0; col < numFragmentsX; ++col) {
-                gr.drawSpriteScaled(col < split ? fragment1 : fragment2, FRAGMENT_SIZE * col, FRAGMENT_SIZE * row);
+                gr().drawSpriteScaled(col < split ? fragment1 : fragment2, FRAGMENT_SIZE * col, FRAGMENT_SIZE * row);
             }
         }
     }
@@ -113,15 +113,15 @@ public class ArcadeAny_BootScene2D extends GameScene2D {
         Vector2f sceneSize = sizeInPx();
         Vector2i sizeInTiles = ARCADE_MAP_SIZE_IN_TILES;
         int numRows = sizeInTiles.y() / 2, numCols = sizeInTiles.y() / 2;
-        gr.ctx().setStroke(ARCADE_WHITE);
-        gr.ctx().setLineWidth(scaled(2.0));
+        gr().ctx().setStroke(ARCADE_WHITE);
+        gr().ctx().setLineWidth(scaled(2.0));
         for (int row = 0; row <= numRows; ++row) {
-            gr.ctx().setLineWidth(row == 0 || row == numRows ? scaled(4.0) : scaled(2.0));
-            gr.ctx().strokeLine(0, scaled(row * 16), scaled(sceneSize.x()), scaled(row * 16));
+            gr().ctx().setLineWidth(row == 0 || row == numRows ? scaled(4.0) : scaled(2.0));
+            gr().ctx().strokeLine(0, scaled(row * 16), scaled(sceneSize.x()), scaled(row * 16));
         }
         for (int col = 0; col <= numCols; ++col) {
-            gr.ctx().setLineWidth(col == 0 || col == numCols ? scaled(4.0) : scaled(2.0));
-            gr.ctx().strokeLine(scaled(col * 16), 0, scaled(col * 16), scaled(sceneSize.y()));
+            gr().ctx().setLineWidth(col == 0 || col == numCols ? scaled(4.0) : scaled(2.0));
+            gr().ctx().strokeLine(scaled(col * 16), 0, scaled(col * 16), scaled(sceneSize.y()));
         }
     }
 }

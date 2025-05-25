@@ -41,21 +41,21 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
     public void drawSceneContent() {
         Font font = arcadeFontScaledTS();
         Font font6 = theAssets().arcadeFontAtSize(scaled(6));
-        gr.fillCanvas(backgroundColor());
+        gr().fillCanvas(backgroundColor());
         Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
-        gr.drawScores(theGame().scoreManager(), scoreColor, font);
-        GameSpriteSheet spriteSheet = gr.spriteSheet();
-        gr.fillTextAtScaledTilePosition("PUSH START BUTTON", ARCADE_ORANGE, font, 6, 16);
-        gr.fillTextAtScaledTilePosition("1 PLAYER ONLY", ARCADE_ORANGE, font, 8, 18);
-        gr.fillTextAtScaledTilePosition("ADDITIONAL    AT 10000", ARCADE_ORANGE, font, 2, 25);
-        gr.drawSpriteScaled(spriteSheet.livesCounterSprite(), tiles_to_px(13), tiles_to_px(23) + 1); //TODO check this
-        gr.fillTextAtScaledTilePosition("PTS", ARCADE_ORANGE, font6, 25, 25);
-        if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
+        gr().drawScores(theGame().scoreManager(), scoreColor, font);
+        GameSpriteSheet spriteSheet = gr().spriteSheet();
+        gr().fillTextAtScaledTilePosition("PUSH START BUTTON", ARCADE_ORANGE, font, 6, 16);
+        gr().fillTextAtScaledTilePosition("1 PLAYER ONLY", ARCADE_ORANGE, font, 8, 18);
+        gr().fillTextAtScaledTilePosition("ADDITIONAL    AT 10000", ARCADE_ORANGE, font, 2, 25);
+        gr().drawSpriteScaled(spriteSheet.livesCounterSprite(), tiles_to_px(13), tiles_to_px(23) + 1); //TODO check this
+        gr().fillTextAtScaledTilePosition("PTS", ARCADE_ORANGE, font6, 25, 25);
+        if (gr() instanceof ArcadeMsPacMan_GameRenderer r) {
             r.drawMidwayCopyright(6, 28, ARCADE_RED, font);
         }
-        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
+        gr().fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 scoreColor, font, tiles_to_px(2), sizeInPx().y() - 2);
-        gr.drawLevelCounter(theGame().levelCounter(), sizeInPx());
+        gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 
     @Override

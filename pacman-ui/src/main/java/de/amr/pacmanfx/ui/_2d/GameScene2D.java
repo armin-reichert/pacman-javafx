@@ -26,20 +26,18 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Base class of all 2D scenes.
- *
- * @author Armin Reichert
  */
 public abstract class GameScene2D implements GameScene, GameActionBindingManager {
 
-    protected final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
-    protected final BooleanProperty debugInfoVisiblePy = new SimpleBooleanProperty(false);
-    protected final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
-    protected final ObjectProperty<Font> arcadeFontScaledTS = new SimpleObjectProperty<>();
-
     protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
 
-    protected GameRenderer gr;
-    protected Canvas canvas;
+    protected final ObjectProperty<Font>  arcadeFontScaledTS = new SimpleObjectProperty<>();
+    protected final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
+    protected final BooleanProperty       debugInfoVisiblePy = new SimpleBooleanProperty(false);
+    protected final FloatProperty         scalingPy = new SimpleFloatProperty(1.0f);
+
+    private GameRenderer gameRenderer;
+    private Canvas canvas;
 
     @Override
     public final void init() {
@@ -82,29 +80,24 @@ public abstract class GameScene2D implements GameScene, GameActionBindingManager
         return (float) value * scaling();
     }
 
-    /**
-     * @return Arcade font at scaled tile size.
-     */
     public Font arcadeFontScaledTS() { return arcadeFontScaledTS.get(); }
-    public ObjectProperty<Color> backgroundColorProperty() { return backgroundColorPy; }
-    public void setBackgroundColor(Color color) { backgroundColorPy.set(color); }
-    public Color backgroundColor() { return backgroundColorPy.get(); }
 
-    public BooleanProperty debugInfoVisibleProperty() { return debugInfoVisiblePy; }
+    public Color backgroundColor() { return backgroundColorPy.get(); }
+    public void setBackgroundColor(Color color) { backgroundColorPy.set(color); }
+    public ObjectProperty<Color> backgroundColorProperty() { return backgroundColorPy; }
 
     protected void doInit() {}
-
     protected void doEnd() {}
 
+    public GameRenderer gr() { return gameRenderer; }
     public void setGameRenderer(GameRenderer renderer) {
-        gr = requireNonNull(renderer);
-    }
-
-    public void setCanvas(Canvas canvas) {
-        this.canvas = canvas;
+        gameRenderer = requireNonNull(renderer);
     }
 
     public Canvas canvas() { return canvas; }
+    public void setCanvas(Canvas canvas) {
+        this.canvas = canvas;
+    }
 
     /**
      * @param defaultSize size in tiles (sizeX, sizeY) = (numCols, numRows) if level is not existing
@@ -118,8 +111,8 @@ public abstract class GameScene2D implements GameScene, GameActionBindingManager
     }
 
     public void draw() {
-        gr.fillCanvas(backgroundColor());
-        gr.setScaling(scaling());
+        gameRenderer.fillCanvas(backgroundColor());
+        gameRenderer.setScaling(scaling());
         drawSceneContent();
         if (debugInfoVisiblePy.get()) {
             drawDebugInfo();
@@ -131,10 +124,12 @@ public abstract class GameScene2D implements GameScene, GameActionBindingManager
      */
     protected abstract void drawSceneContent();
 
+    public BooleanProperty debugInfoVisibleProperty() { return debugInfoVisiblePy; }
+
     protected void drawDebugInfo() {
-        gr.drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
-        gr.ctx().setFill(Color.YELLOW);
-        gr.ctx().setFont(DEBUG_TEXT_FONT);
-        gr.ctx().fillText("%s %d".formatted(theGameState(), theGameState().timer().tickCount()), 0, scaled(3 * TS));
+        gameRenderer.drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
+        gameRenderer.ctx().setFill(Color.YELLOW);
+        gameRenderer.ctx().setFont(DEBUG_TEXT_FONT);
+        gameRenderer.ctx().fillText("%s %d".formatted(theGameState(), theGameState().timer().tickCount()), 0, scaled(3 * TS));
     }
 }

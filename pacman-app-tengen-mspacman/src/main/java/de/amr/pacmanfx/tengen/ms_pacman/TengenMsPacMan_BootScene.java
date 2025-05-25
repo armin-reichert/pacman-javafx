@@ -19,7 +19,6 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createRedGhost;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
-import static de.amr.pacmanfx.ui.GameAssets.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.theAssets;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.theUIConfig;
 
@@ -105,10 +104,10 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     @Override
     protected void drawSceneContent() {
         final Font font = arcadeFontScaledTS();
-        gr.fillCanvas(backgroundColor());
+        gr().fillCanvas(backgroundColor());
         Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
-        gr.drawScores(theGame().scoreManager(), scoreColor, font);
-        var r = (TengenMsPacMan_Renderer2D) gr;
+        gr().drawScores(theGame().scoreManager(), scoreColor, font);
+        var r = (TengenMsPacMan_Renderer2D) gr();
         r.drawSceneBorderLines();
         r.setScaling(scaling());
         if (grayScreen) {
@@ -123,8 +122,8 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     @Override
     protected void drawDebugInfo() {
         super.drawDebugInfo();
-        gr.ctx().setFill(Color.WHITE);
-        gr.ctx().setFont(Font.font(20));
-        gr.ctx().fillText("Tick " + t, 20, 20);
+        gr().ctx().setFill(Color.WHITE);
+        gr().ctx().setFont(Font.font(20));
+        gr().ctx().fillText("Tick " + t, 20, 20);
     }
 }

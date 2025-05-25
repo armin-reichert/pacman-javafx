@@ -160,10 +160,10 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         if (darkness) {
             return;
         }
-        gr.fillCanvas(backgroundColor());
+        gr().fillCanvas(backgroundColor());
         Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
-        gr.drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
-        var r = (TengenMsPacMan_Renderer2D) gr;
+        gr().drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
+        var r = (TengenMsPacMan_Renderer2D) gr();
         r.drawSceneBorderLines();
         r.drawClapperBoard(clapAnimation, "JUNIOR", 3, CLAP_TILE_X, CLAP_TILE_Y, arcadeFontScaledTS());
         r.drawStork(storkAnimation, stork, bagReleased);

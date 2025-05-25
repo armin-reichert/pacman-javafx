@@ -121,31 +121,31 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         final SceneState state = sceneController.state();
         final Font font = arcadeFontScaledTS();
         Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
-        gr.drawScores(theGame().scoreManager(), scoreColor, font);
+        gr().drawScores(theGame().scoreManager(), scoreColor, font);
         drawMarquee();
-        gr.fillTextAtScaledPosition("\"MS PAC-MAN\"", ARCADE_ORANGE, font, TITLE_X, TITLE_Y);
+        gr().fillTextAtScaledPosition("\"MS PAC-MAN\"", ARCADE_ORANGE, font, TITLE_X, TITLE_Y);
         if (state == SceneState.GHOSTS_MARCHING_IN) {
             if (currentPersonality == RED_GHOST_SHADOW) {
-                gr.fillTextAtScaledPosition("WITH", ARCADE_WHITE, font, TITLE_X, TOP_Y + tiles_to_px(3));
+                gr().fillTextAtScaledPosition("WITH", ARCADE_WHITE, font, TITLE_X, TOP_Y + tiles_to_px(3));
             }
             double dx = GHOST_NAMES[currentPersonality].length() < 4 ? tiles_to_px(1) : 0;
-            gr.fillTextAtScaledPosition(GHOST_NAMES[currentPersonality], GHOST_COLORS[currentPersonality], font,
+            gr().fillTextAtScaledPosition(GHOST_NAMES[currentPersonality], GHOST_COLORS[currentPersonality], font,
                 TITLE_X + tiles_to_px(3) + dx, TOP_Y + tiles_to_px(6));
         }
         else if (state == SceneState.MS_PACMAN_MARCHING_IN || state == SceneState.READY_TO_PLAY) {
-            gr.fillTextAtScaledPosition("STARRING", ARCADE_WHITE, font, TITLE_X, TOP_Y + tiles_to_px(3));
-            gr.fillTextAtScaledPosition("MS PAC-MAN", ARCADE_YELLOW, font, TITLE_X, TOP_Y + tiles_to_px(6));
+            gr().fillTextAtScaledPosition("STARRING", ARCADE_WHITE, font, TITLE_X, TOP_Y + tiles_to_px(3));
+            gr().fillTextAtScaledPosition("MS PAC-MAN", ARCADE_YELLOW, font, TITLE_X, TOP_Y + tiles_to_px(6));
         }
         for (Ghost ghost : ghosts) {
-            gr.drawActor(ghost);
+            gr().drawActor(ghost);
         }
-        gr.drawActor(msPacMan);
-        if (gr instanceof ArcadeMsPacMan_GameRenderer r) { // might be PacManXXL vector renderer!
+        gr().drawActor(msPacMan);
+        if (gr() instanceof ArcadeMsPacMan_GameRenderer r) { // might be PacManXXL vector renderer!
             r.drawMidwayCopyright(6, 28, ARCADE_RED, font);
         }
-        gr.fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
+        gr().fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 scoreColor, font, 2 * TS, sizeInPx().y() - 2);
-        gr.drawLevelCounter(theGame().levelCounter(), sizeInPx());
+        gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 
     /**
@@ -168,8 +168,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         else if (i <= 48) { x = MARQUEE.xMax();      y = 4 * (70 - i); }   // right edge bottom-to-top
         else if (i <= 81) { x = 4 * (96 - i);        y = MARQUEE.y(); }    // upper edge right-to-left
         else              { x = MARQUEE.x();         y = 4 * (i - 59); }   // left edge top-to-bottom
-        gr.ctx().setFill(on ? COLOR_BULB_ON : COLOR_BULB_OFF);
-        gr.ctx().fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
+        gr().ctx().setFill(on ? COLOR_BULB_ON : COLOR_BULB_OFF);
+        gr().ctx().fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 
     // Scene controller FSM

@@ -36,17 +36,13 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-/**
- * @author Armin Reichert
- */
 public interface GameRenderer {
 
     Canvas canvas();
-
     default GraphicsContext ctx() { return canvas().getGraphicsContext2D(); }
 
-    default void fillCanvas(Paint paint) {
-        ctx().setFill(paint);
+    default void fillCanvas(Color color) {
+        ctx().setFill(color);
         ctx().fillRect(0, 0, canvas().getWidth(), canvas().getHeight());
     }
 

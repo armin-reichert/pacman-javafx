@@ -22,7 +22,6 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
-import static de.amr.pacmanfx.ui.GameAssets.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
 /**
@@ -100,18 +99,18 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gr.setScaling(scaling());
+        gr().setScaling(scaling());
         Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
-        gr.drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
-        if (gr instanceof ArcadeMsPacMan_GameRenderer r) { // could also be VectorGraphicsRenderer!
+        gr().drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
+        if (gr() instanceof ArcadeMsPacMan_GameRenderer r) { // could also be VectorGraphicsRenderer!
             r.drawClapperBoard(clapperboardAnimation, tiles_to_px(3), tiles_to_px(10), arcadeFontScaledTS());
         }
-        gr.drawActor(msPacMan);
-        gr.drawActor(pacMan);
-        gr.drawActor(inky);
-        gr.drawActor(pinky);
-        gr.drawActorSprite(heart, HEART_SPRITE);
-        gr.drawLevelCounter(theGame().levelCounter(), sizeInPx());
+        gr().drawActor(msPacMan);
+        gr().drawActor(pacMan);
+        gr().drawActor(inky);
+        gr().drawActor(pinky);
+        gr().drawActorSprite(heart, HEART_SPRITE);
+        gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 
     // Scene controller state machine

@@ -19,7 +19,6 @@ import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_PacAnimationMap.PA
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
-import static de.amr.pacmanfx.ui.GameAssets.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 
 /**
@@ -84,13 +83,13 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
-        gr.drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
-        if (gr instanceof ArcadeMsPacMan_GameRenderer r) {
+        gr().drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
+        if (gr() instanceof ArcadeMsPacMan_GameRenderer r) {
             r.drawClapperBoard(clapperboardAnimation, tiles_to_px(3), tiles_to_px(10), arcadeFontScaledTS());
         }
-        gr.drawActor(msPacMan);
-        gr.drawActor(pacMan);
-        gr.drawLevelCounter(theGame().levelCounter(), sizeInPx());
+        gr().drawActor(msPacMan);
+        gr().drawActor(pacMan);
+        gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 
     // Scene controller state machine

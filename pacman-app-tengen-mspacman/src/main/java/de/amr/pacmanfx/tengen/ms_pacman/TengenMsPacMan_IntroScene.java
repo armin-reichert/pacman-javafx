@@ -94,10 +94,10 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     @Override
     public void drawSceneContent() {
         final Font font = arcadeFontScaledTS();
-        gr.fillCanvas(backgroundColor());
+        gr().fillCanvas(backgroundColor());
         Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
-        gr.drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
-        TengenMsPacMan_Renderer2D r = (TengenMsPacMan_Renderer2D) gr;
+        gr().drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
+        TengenMsPacMan_Renderer2D r = (TengenMsPacMan_Renderer2D) gr();
         r.drawSceneBorderLines();
         TickTimer timer = sceneController.state().timer;
         long t = timer.tickCount();
@@ -158,7 +158,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     private void drawMarquee() {
         double xMin = MARQUEE_X, xMax = xMin + 132, yMin = MARQUEE_Y, yMax = yMin + 60;
         for (int i = 0; i < NUM_BULBS; ++i) {
-            gr.ctx().setFill(marqueeState.get(i) ? nesPaletteColor(0x20) : nesPaletteColor(0x15));
+            gr().ctx().setFill(marqueeState.get(i) ? nesPaletteColor(0x20) : nesPaletteColor(0x15));
             if (i <= 33) { // lower border left-to-right
                 drawBulb(xMin + 4 * i, yMax);
             } else if (i <= 48) { // right border bottom-to-top
@@ -172,7 +172,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     }
 
     private void drawBulb(double x, double y) {
-        gr.ctx().fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
+        gr().ctx().fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 
     private enum SceneState implements FsmState<TengenMsPacMan_IntroScene> {
