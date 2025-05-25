@@ -278,7 +278,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public Vector2f sizeInPx() {
-        return levelSizeInTilesOrElse(NES_TILES).toVector2f().scaled(TS);
+        if (optGameLevel().isPresent()) {
+            int numRows = theGameLevel().worldMap().numRows();
+            int numCols = theGameLevel().worldMap().numCols();
+            return new Vector2f(numCols * TS, numRows * TS);
+        }
+        return NES_SIZE.toVector2f();
     }
 
     @Override

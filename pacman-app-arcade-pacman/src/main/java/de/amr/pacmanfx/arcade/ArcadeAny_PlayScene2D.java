@@ -132,7 +132,12 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
     @Override
     public Vector2f sizeInPx() {
-        return levelSizeInTilesOrElse(ARCADE_MAP_SIZE_IN_TILES).scaled(TS).toVector2f();
+        if (optGameLevel().isPresent()) {
+            int numRows = theGameLevel().worldMap().numRows();
+            int numCols = theGameLevel().worldMap().numCols();
+            return new Vector2f(numCols * TS, numRows * TS);
+        }
+        return ARCADE_MAP_SIZE_IN_TILES.scaled(TS).toVector2f();
     }
 
     @Override

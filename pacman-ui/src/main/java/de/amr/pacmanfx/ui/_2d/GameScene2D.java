@@ -5,8 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameActionBindingManager;
 import de.amr.pacmanfx.uilib.GameAction;
 import de.amr.pacmanfx.uilib.GameScene;
@@ -20,7 +18,8 @@ import javafx.scene.text.Font;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.Globals.theGameState;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 import static java.util.Objects.requireNonNull;
 
@@ -99,17 +98,6 @@ public abstract class GameScene2D implements GameScene, GameActionBindingManager
     public Canvas canvas() { return canvas; }
     public void setCanvas(Canvas canvas) {
         this.canvas = canvas;
-    }
-
-    /**
-     * @param defaultSize size in tiles (sizeX, sizeY) = (numCols, numRows) if level is not existing
-     * @return level size in tiles (sizeX, sizeY) = (numCols, numRows)
-     */
-    public final Vector2i levelSizeInTilesOrElse(Vector2i defaultSize) {
-        return optGameLevel()
-            .map(GameLevel::worldMap)
-            .map(worldMap -> Vector2i.of(worldMap.numCols(), worldMap.numRows()))
-            .orElse(defaultSize);
     }
 
     public void draw() {
