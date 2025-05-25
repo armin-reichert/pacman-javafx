@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createMsPacMan;
@@ -21,7 +20,8 @@ import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_PacAnimationMap.PA
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theSound;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theUIConfig;
 
 /**
  * Intermission scene 3: "Junior".
@@ -94,11 +94,10 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
-        gr().drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
+        gr().drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
         if (gr() instanceof ArcadeMsPacMan_GameRenderer r) {
             // Note: in Ms. Pac-Man XXL another renderer is used!
-            r.drawClapperBoard(clapperboardAnimation, tiles_to_px(3), tiles_to_px(10), arcadeFontScaledTS());
+            r.drawClapperBoard(clapperboardAnimation, tiles_to_px(3), tiles_to_px(10), defaultSceneFont());
         }
         gr().drawActor(msPacMan);
         gr().drawActor(pacMan);

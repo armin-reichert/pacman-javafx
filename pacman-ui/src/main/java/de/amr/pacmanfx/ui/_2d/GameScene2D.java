@@ -31,7 +31,8 @@ public abstract class GameScene2D implements GameScene, GameActionBindingManager
 
     protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
 
-    protected final ObjectProperty<Font>  arcadeFontScaledTS = new SimpleObjectProperty<>();
+    // The Arcade font at size scaled(tile_size), adapts to current scaling
+    protected final ObjectProperty<Font>  arcadeFontOneTileScaled = new SimpleObjectProperty<>();
     protected final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     protected final BooleanProperty       debugInfoVisiblePy = new SimpleBooleanProperty(false);
     protected final FloatProperty         scalingPy = new SimpleFloatProperty(1.0f);
@@ -41,11 +42,13 @@ public abstract class GameScene2D implements GameScene, GameActionBindingManager
 
     @Override
     public final void init() {
-        arcadeFontScaledTS.bind(scalingPy.map(scaling -> theAssets().arcadeFontAtSize((float) scaling * TS)));
+        arcadeFontOneTileScaled.bind(scalingPy.map(s -> theAssets().arcadeFontAtSize(s.floatValue() * TS)));
         doInit();
         updateActionBindings();
         theKeyboard().logCurrentBindings();
     }
+
+    protected void doInit() {}
 
     @Override
     public final void end() {
@@ -53,6 +56,8 @@ public abstract class GameScene2D implements GameScene, GameActionBindingManager
         deleteActionBindings();
         theSound().stopAll();
     }
+
+    protected void doEnd() {}
 
     @Override
     public Map<KeyCodeCombination, GameAction> actionBindings() {
@@ -80,14 +85,11 @@ public abstract class GameScene2D implements GameScene, GameActionBindingManager
         return (float) value * scaling();
     }
 
-    public Font arcadeFontScaledTS() { return arcadeFontScaledTS.get(); }
+    public Font defaultSceneFont() { return arcadeFontOneTileScaled.get(); }
 
     public Color backgroundColor() { return backgroundColorPy.get(); }
     public void setBackgroundColor(Color color) { backgroundColorPy.set(color); }
     public ObjectProperty<Color> backgroundColorProperty() { return backgroundColorPy; }
-
-    protected void doInit() {}
-    protected void doEnd() {}
 
     public GameRenderer gr() { return gameRenderer; }
     public void setGameRenderer(GameRenderer renderer) {
@@ -123,6 +125,10 @@ public abstract class GameScene2D implements GameScene, GameActionBindingManager
      * Draws the scene content using the already scaled game renderer.
      */
     protected abstract void drawSceneContent();
+
+    protected Color scoreColor() {
+        return theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
+    }
 
     public BooleanProperty debugInfoVisibleProperty() { return debugInfoVisiblePy; }
 

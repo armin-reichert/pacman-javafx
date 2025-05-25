@@ -34,7 +34,6 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.tinylog.Logger;
 
@@ -430,57 +429,55 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         }
 
         final var game = (TengenMsPacMan_GameModel) theGame();
-
-        final var renderer = (TengenMsPacMan_Renderer2D) gr();
-        renderer.ensureMapSettingsApplied(theGameLevel()); //TODO check this workaround
-        renderer.ctx().save();
-        renderer.setScaling(scaling());
+        final var r = (TengenMsPacMan_Renderer2D) gr();
+        r.ensureMapSettingsApplied(theGameLevel()); //TODO check this workaround
+        r.ctx().save();
+        r.setScaling(scaling());
 
         // NES screen width is 32 tiles but mazes are only 28 tiles wide
         double margin = scaled((NES_TILES.x() - theGameLevel().worldMap().numCols()) * HTS);
-        renderer.ctx().translate(margin, 0);
+        r.ctx().translate(margin, 0);
 
-        Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
-        renderer.drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
+        r.drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
 
         final int mazeTopY = 3 * TS;
         final boolean flashing = levelFinishedAnimation != null && levelFinishedAnimation.isRunning();
         if (flashing) {
             if (levelFinishedAnimation.isHighlighted()) {
-                renderer.drawHighlightedWorld(theGameLevel(), 0, mazeTopY, levelFinishedAnimation.getFlashingIndex());
+                r.drawHighlightedWorld(theGameLevel(), 0, mazeTopY, levelFinishedAnimation.getFlashingIndex());
             } else {
-                renderer.drawMaze(theGameLevel(), 0, mazeTopY, null, false, false);
-                renderer.drawFood(theGameLevel()); // this also hides the eaten food!
+                r.drawMaze(theGameLevel(), 0, mazeTopY, null, false, false);
+                r.drawFood(theGameLevel()); // this also hides the eaten food!
             }
         }
         else {
-            renderer.drawMaze(theGameLevel(), 0, mazeTopY, null, false, false);
-            renderer.drawFood(theGameLevel());
-            theGameLevel().bonus().ifPresent(renderer::drawBonus);
+            r.drawMaze(theGameLevel(), 0, mazeTopY, null, false, false);
+            r.drawFood(theGameLevel());
+            theGameLevel().bonus().ifPresent(r::drawBonus);
             //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
-            renderer.drawLevelMessage(theGameLevel(), currentMessagePosition(), arcadeFontScaledTS());
+            r.drawLevelMessage(theGameLevel(), currentMessagePosition(), defaultSceneFont());
         }
-        renderer.drawActor(theGameLevel().pac());
-        ghostsInZOrder().forEach(renderer::drawActor);
+        r.drawActor(theGameLevel().pac());
+        ghostsInZOrder().forEach(r::drawActor);
 
         // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
         int numLivesDisplayed = theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()
             ? game.lifeCount() : game.lifeCount() - 1;
-        renderer.drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - TS);
+        r.drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - TS);
 
         if (theGameLevel().isDemoLevel() || game.mapCategory() == MapCategory.ARCADE) {
-            renderer.drawLevelCounter(game.levelCounter(), sizeInPx());
+            r.drawLevelCounter(game.levelCounter(), sizeInPx());
         } else {
-            renderer.drawLevelCounterWithLevelNumbers(theGameLevel().number(), game.levelCounter(), sizeInPx());
+            r.drawLevelCounterWithLevelNumbers(theGameLevel().number(), game.levelCounter(), sizeInPx());
         }
 
         if (debugInfoVisiblePy.get()) {
-            renderer.drawAnimatedCreatureInfo(theGameLevel().pac());
-            ghostsInZOrder().forEach(renderer::drawAnimatedCreatureInfo);
+            r.drawAnimatedCreatureInfo(theGameLevel().pac());
+            ghostsInZOrder().forEach(r::drawAnimatedCreatureInfo);
             drawDebugInfo();
         }
 
-        renderer.ctx().restore();
+        r.ctx().restore();
     }
 
     private Stream<Ghost> ghostsInZOrder() {

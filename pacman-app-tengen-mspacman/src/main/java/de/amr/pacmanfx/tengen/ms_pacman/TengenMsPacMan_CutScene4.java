@@ -7,7 +7,6 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -206,12 +205,11 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        gr().fillCanvas(backgroundColor());
-        Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
-        gr().drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
         var r = (TengenMsPacMan_Renderer2D) gr();
+        r.fillCanvas(backgroundColor());
+        r.drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
         r.drawSceneBorderLines();
-        r.drawClapperBoard(clapAnimation, "THE END", 4, CLAP_TILE_X, CLAP_TILE_Y, arcadeFontScaledTS());
+        r.drawClapperBoard(clapAnimation, "THE END", 4, CLAP_TILE_X, CLAP_TILE_Y, defaultSceneFont());
         r.drawActor(msPacMan);
         r.drawActor(pacMan);
         juniors.forEach(r::drawActor);

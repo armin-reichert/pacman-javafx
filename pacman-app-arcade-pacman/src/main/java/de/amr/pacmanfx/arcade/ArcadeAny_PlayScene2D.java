@@ -142,8 +142,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
         gr().applyMapSettings(theGameLevel().worldMap());
 
-        Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
-        gr().drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
+        gr().drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
 
         boolean highlighted = levelFinishedAnimation != null
             && levelFinishedAnimation.isRunning()
@@ -174,7 +173,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
             gr().drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - 2 * TS);
         } else {
             gr().fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
-                scoreColor, arcadeFontScaledTS(), 2 * TS, sizeInPx().y() - 2);
+                scoreColor(), defaultSceneFont(), 2 * TS, sizeInPx().y() - 2);
         }
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
@@ -184,10 +183,10 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         float cx = TS * (houseMinTile.x() + houseSize.x() * 0.5f);
         float cy = TS * (houseMinTile.y() + houseSize.y() + 1);
         switch (theGameLevel().message()) {
-            case GAME_OVER -> gr().centerTextAtScaledPosition("GAME  OVER", ARCADE_RED, arcadeFontScaledTS(), cx, cy);
-            case READY -> gr().centerTextAtScaledPosition("READY!", ARCADE_YELLOW, arcadeFontScaledTS(), cx, cy);
+            case GAME_OVER -> gr().centerTextAtScaledPosition("GAME  OVER", ARCADE_RED, defaultSceneFont(), cx, cy);
+            case READY -> gr().centerTextAtScaledPosition("READY!", ARCADE_YELLOW, defaultSceneFont(), cx, cy);
             case TEST_LEVEL -> gr().centerTextAtScaledPosition("TEST    L%03d".formatted(theGameLevel().number()),
-                    ARCADE_WHITE, arcadeFontScaledTS(), cx, cy);
+                    ARCADE_WHITE, defaultSceneFont(), cx, cy);
         }
     }
 

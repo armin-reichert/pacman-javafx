@@ -7,14 +7,13 @@ package de.amr.pacmanfx.tengen.ms_pacman;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.START_GAME;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theJoypad;
 
 public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
@@ -40,18 +39,16 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        final Font font = arcadeFontScaledTS();
-        gr().fillCanvas(backgroundColor());
-        Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
-        gr().drawScores(theGame().scoreManager(), scoreColor, font);
         var r = (TengenMsPacMan_Renderer2D) gr();
         double width = sizeInPx().x();
+        r.fillCanvas(backgroundColor());
+        r.drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), width, 20);
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), width, 212);
         if (theGameState().timer().betweenSeconds(0.5 * DISPLAY_SECONDS, DISPLAY_SECONDS)) {
-            drawJavaFXVersionAuthors(r, font);
+            drawJavaFXVersionAuthors(r, defaultSceneFont());
         } else {
-            drawOriginalGameAuthors(r, font);
+            drawOriginalGameAuthors(r, defaultSceneFont());
         }
     }
 

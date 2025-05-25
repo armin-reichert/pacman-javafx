@@ -9,15 +9,14 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.fsm.FsmState;
+import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.*;
@@ -26,7 +25,8 @@ import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.ui.GameAssets.*;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theSound;
+import static de.amr.pacmanfx.ui.PacManGamesEnv.theUIConfig;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -119,32 +119,30 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     @Override
     public void drawSceneContent() {
         final SceneState state = sceneController.state();
-        final Font font = arcadeFontScaledTS();
-        Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
-        gr().drawScores(theGame().scoreManager(), scoreColor, font);
+        gr().drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
         drawMarquee();
-        gr().fillTextAtScaledPosition("\"MS PAC-MAN\"", ARCADE_ORANGE, font, TITLE_X, TITLE_Y);
+        gr().fillTextAtScaledPosition("\"MS PAC-MAN\"", ARCADE_ORANGE, defaultSceneFont(), TITLE_X, TITLE_Y);
         if (state == SceneState.GHOSTS_MARCHING_IN) {
             if (currentPersonality == RED_GHOST_SHADOW) {
-                gr().fillTextAtScaledPosition("WITH", ARCADE_WHITE, font, TITLE_X, TOP_Y + tiles_to_px(3));
+                gr().fillTextAtScaledPosition("WITH", ARCADE_WHITE, defaultSceneFont(), TITLE_X, TOP_Y + tiles_to_px(3));
             }
             double dx = GHOST_NAMES[currentPersonality].length() < 4 ? tiles_to_px(1) : 0;
-            gr().fillTextAtScaledPosition(GHOST_NAMES[currentPersonality], GHOST_COLORS[currentPersonality], font,
+            gr().fillTextAtScaledPosition(GHOST_NAMES[currentPersonality], GHOST_COLORS[currentPersonality], defaultSceneFont(),
                 TITLE_X + tiles_to_px(3) + dx, TOP_Y + tiles_to_px(6));
         }
         else if (state == SceneState.MS_PACMAN_MARCHING_IN || state == SceneState.READY_TO_PLAY) {
-            gr().fillTextAtScaledPosition("STARRING", ARCADE_WHITE, font, TITLE_X, TOP_Y + tiles_to_px(3));
-            gr().fillTextAtScaledPosition("MS PAC-MAN", ARCADE_YELLOW, font, TITLE_X, TOP_Y + tiles_to_px(6));
+            gr().fillTextAtScaledPosition("STARRING", ARCADE_WHITE, defaultSceneFont(), TITLE_X, TOP_Y + tiles_to_px(3));
+            gr().fillTextAtScaledPosition("MS PAC-MAN", ARCADE_YELLOW, defaultSceneFont(), TITLE_X, TOP_Y + tiles_to_px(6));
         }
         for (Ghost ghost : ghosts) {
             gr().drawActor(ghost);
         }
         gr().drawActor(msPacMan);
         if (gr() instanceof ArcadeMsPacMan_GameRenderer r) { // might be PacManXXL vector renderer!
-            r.drawMidwayCopyright(6, 28, ARCADE_RED, font);
+            r.drawMidwayCopyright(6, 28, ARCADE_RED, defaultSceneFont());
         }
         gr().fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
-                scoreColor, font, 2 * TS, sizeInPx().y() - 2);
+                scoreColor(), defaultSceneFont(), 2 * TS, sizeInPx().y() - 2);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 

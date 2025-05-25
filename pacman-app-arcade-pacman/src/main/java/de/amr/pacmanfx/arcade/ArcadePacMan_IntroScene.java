@@ -111,10 +111,9 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     @Override
     public void drawSceneContent() {
         gr().fillCanvas(backgroundColor());
-        Color scoreColor = theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
-        gr().drawScores(theGame().scoreManager(), scoreColor, arcadeFontScaledTS());
+        gr().drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
         gr().fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
-            scoreColor, arcadeFontScaledTS(), 2 * TS, sizeInPx().y() - 2);
+            scoreColor(), defaultSceneFont(), 2 * TS, sizeInPx().y() - 2);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
 
         drawGallery();
@@ -127,14 +126,14 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 }
                 drawGuys(true);
                 if (gr() instanceof ArcadePacMan_GameRenderer r) {
-                    r.drawMidwayCopyright(4, 32, ARCADE_PINK, arcadeFontScaledTS());
+                    r.drawMidwayCopyright(4, 32, ARCADE_PINK, defaultSceneFont());
                 }
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints();
                 drawGuys(false);
                 if (gr() instanceof ArcadePacMan_GameRenderer r) {
-                    r.drawMidwayCopyright(4, 32, ARCADE_PINK, arcadeFontScaledTS());
+                    r.drawMidwayCopyright(4, 32, ARCADE_PINK, defaultSceneFont());
                 }
             }
         }
@@ -144,7 +143,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         var spriteSheet = (ArcadePacMan_SpriteSheet) theUIConfig().current().spriteSheet();
         if (titleVisible) {
             gr().fillTextAtScaledPosition("CHARACTER / NICKNAME", ARCADE_WHITE,
-                arcadeFontScaledTS(), tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(6));
+                defaultSceneFont(), tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(6));
         }
         for (byte personality = RED_GHOST_SHADOW; personality <= ORANGE_GHOST_POKEY; ++personality) {
             if (ghostImageVisible[personality]) {
@@ -153,11 +152,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             }
             if (ghostCharacterVisible[personality]) {
                 gr().fillTextAtScaledPosition("-" + GHOST_CHARACTERS[personality], GHOST_COLORS[personality],
-                    arcadeFontScaledTS(), tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(8 + 3 * personality));
+                    defaultSceneFont(), tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(8 + 3 * personality));
             }
             if (ghostNicknameVisible[personality]) {
                 gr().fillTextAtScaledPosition(GHOST_NICKNAMES[personality], GHOST_COLORS[personality],
-                    arcadeFontScaledTS(), tiles_to_px(LEFT_TILE_X + 14), tiles_to_px(8 + 3 * personality));
+                    defaultSceneFont(), tiles_to_px(LEFT_TILE_X + 14), tiles_to_px(8 + 3 * personality));
             }
         }
     }
@@ -181,7 +180,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     }
 
     private void drawPoints() {
-        Font font8 = arcadeFontScaledTS();
+        Font font8 = defaultSceneFont();
         Font font6 = theAssets().arcadeFontAtSize(scaled(6));
         gr().ctx().setFill(ARCADE_ROSE);
         gr().ctx().fillRect(scaled(tiles_to_px(LEFT_TILE_X + 6) + 4), scaled(tiles_to_px(24) + 4), scaled(2), scaled(2));
