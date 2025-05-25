@@ -56,7 +56,7 @@ import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
  */
 public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraControlledView {
 
-    // (NES screen width, BIG map height (42 tiles) + 2 extra tile rows)
+    // NES screen width (32 tiles), BIG map height (42 tiles) + 2 extra tile rows
     private static final Vector2i UNSCALED_CANVAS_SIZE = Vector2i.of(NES_SIZE.x(), 44 * TS);
     private static final float CAM_SPEED = 0.03f;
     private static final int MOVING_MESSAGE_DELAY = 120;
@@ -283,8 +283,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onGameStarted(GameEvent e) {
-        GameLevel level = theGameLevel();
-        boolean silent = level.isDemoLevel() || theGameState() == TESTING_LEVELS || theGameState() == TESTING_LEVEL_TEASERS;
+        boolean silent = theGameLevel().isDemoLevel() || theGameState() == TESTING_LEVELS || theGameState() == TESTING_LEVEL_TEASERS;
         if (!silent) {
             theSound().playGameReadySound();
         }
@@ -292,9 +291,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        GameLevel level = theGameLevel();
-        setJoypadKeyBindings(level);
-        gr().applyMapSettings(level.worldMap());
+        setJoypadKeyBindings(theGameLevel());
+        gr().applyMapSettings(theGameLevel().worldMap());
     }
 
     @Override
@@ -306,9 +304,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
-        GameLevel level = theGameLevel();
-        setJoypadKeyBindings(level);
-        gr().applyMapSettings(level.worldMap());
+        setJoypadKeyBindings(theGameLevel());
+        gr().applyMapSettings(theGameLevel().worldMap());
     }
 
     @Override

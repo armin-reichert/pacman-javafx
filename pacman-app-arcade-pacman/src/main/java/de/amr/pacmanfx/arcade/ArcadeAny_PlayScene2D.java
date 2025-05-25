@@ -145,8 +145,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         gr().drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
 
         boolean highlighted = levelFinishedAnimation != null
-            && levelFinishedAnimation.isRunning()
-            && levelFinishedAnimation.isHighlighted();
+            && levelFinishedAnimation.isRunning() && levelFinishedAnimation.isHighlighted();
         gr().drawMaze(theGameLevel(), 0, 3 * TS, backgroundColor(), highlighted, theGameLevel().blinking().isOn());
 
         if (theGameLevel().message() != null) {
@@ -185,7 +184,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         switch (theGameLevel().message()) {
             case GAME_OVER -> gr().centerTextAtScaledPosition("GAME  OVER", ARCADE_RED, defaultSceneFont(), cx, cy);
             case READY -> gr().centerTextAtScaledPosition("READY!", ARCADE_YELLOW, defaultSceneFont(), cx, cy);
-            case TEST_LEVEL -> gr().centerTextAtScaledPosition("TEST    L%03d".formatted(theGameLevel().number()),
+            case TEST_LEVEL -> gr().centerTextAtScaledPosition("TEST    L%02d".formatted(theGameLevel().number()),
                     ARCADE_WHITE, defaultSceneFont(), cx, cy);
         }
     }
