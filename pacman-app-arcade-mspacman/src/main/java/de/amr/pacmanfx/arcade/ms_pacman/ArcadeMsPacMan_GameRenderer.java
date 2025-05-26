@@ -87,8 +87,8 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     }
 
     @Override
-    public void drawMaze(GameLevel level, double x, double y, Color backgroundColor, boolean highlighted, boolean blinking) {
-        if (highlighted) {
+    public void drawLevel(GameLevel level, double x, double y, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
+        if (mazeHighlighted) {
             drawImageRegionScaled(theAssets().get("ms_pacman.flashing_mazes"), HIGHLIGHTED_MAZES[mazeIndex], x, y);
         } else if (level.uneatenFoodCount() == 0) {
             drawSpriteScaled(EMPTY_MAZES[mazeIndex], x, y);
@@ -97,14 +97,14 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
             ctx.save();
             ctx.scale(scaling(), scaling());
             overPaintEatenPelletTiles(level, backgroundColor);
-            overPaintEnergizerTiles(level, tile -> !blinking || level.tileContainsEatenFood(tile), backgroundColor);
+            overPaintEnergizerTiles(level, tile -> !energizerHighlighted || level.tileContainsEatenFood(tile), backgroundColor);
             ctx.restore();
         }
     }
 
     @Override
-    public void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSizeInPx) {
-        float x = sceneSizeInPx.x() - 4 * TS, y = sceneSizeInPx.y() - 2 * TS;
+    public void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSizeInPixels) {
+        float x = sceneSizeInPixels.x() - 4 * TS, y = sceneSizeInPixels.y() - 2 * TS;
         for (byte symbol : levelCounter.symbols()) {
             drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), x, y);
             x -= TS * 2;

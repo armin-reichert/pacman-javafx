@@ -74,10 +74,10 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void drawMaze(GameLevel level, double x, double y, Color backgroundColor, boolean highlighted, boolean blinking) {
+    public void drawLevel(GameLevel level, double x, double y, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
         WorldMap worldMap = level.worldMap();
-        if (highlighted) {
-            terrainRenderer.setColorScheme(blinking ? blinkingOnColors : blinkingOffColors);
+        if (mazeHighlighted) {
+            terrainRenderer.setColorScheme(energizerHighlighted ? blinkingOnColors : blinkingOffColors);
             terrainRenderer.drawTerrain(ctx, worldMap, worldMap.obstacles());
         }
         else {
@@ -97,15 +97,15 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
             foodRenderer.setEnergizerColor(Color.web(colorMap.get("pellet")));
             worldMap.tiles().filter(level::tileContainsFood).filter(not(level::isEnergizerPosition))
                 .forEach(tile -> foodRenderer.drawPellet(ctx, tile));
-            if (blinking) {
+            if (energizerHighlighted) {
                 level.energizerTiles().filter(level::tileContainsFood).forEach(tile -> foodRenderer.drawEnergizer(ctx, tile));
             }
         }
     }
 
     @Override
-    public void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSizeInPx) {
-        float x = sceneSizeInPx.x() - 4 * TS, y = sceneSizeInPx.y() - 2 * TS;
+    public void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSizeInPixels) {
+        float x = sceneSizeInPixels.x() - 4 * TS, y = sceneSizeInPixels.y() - 2 * TS;
         for (byte symbol : levelCounter.symbols()) {
             drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), x, y);
             x -= TS * 2;

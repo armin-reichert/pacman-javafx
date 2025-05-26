@@ -150,7 +150,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
         boolean highlighted = levelFinishedAnimation != null
             && levelFinishedAnimation.isRunning() && levelFinishedAnimation.isHighlighted();
-        gr().drawMaze(theGameLevel(), 0, 3 * TS, backgroundColor(), highlighted, theGameLevel().blinking().isOn());
+        gr().drawLevel(theGameLevel(), 0, 3 * TS, backgroundColor(), highlighted, theGameLevel().blinking().isOn());
 
         if (theGameLevel().message() != null) {
             drawLevelMessage();

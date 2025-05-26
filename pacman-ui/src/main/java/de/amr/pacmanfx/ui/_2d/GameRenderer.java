@@ -130,9 +130,9 @@ public interface GameRenderer {
     }
 
     /**
-     * Draws animated entity (Pac-Man, ghost, moving bonus) if entity is visible.
+     * Draws (animated) actor (Pac-Man, ghost, moving bonus) if entity is visible.
      *
-     * @param actor the animated entity
+     * @param actor the actor to draw
      */
     default void drawActor(Actor actor) {
         if (actor == null || !actor.isVisible()) {
@@ -158,26 +158,44 @@ public interface GameRenderer {
         }
     }
 
-    void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSizeInPx);
+    void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSizeInPixels);
 
-    void drawMaze(GameLevel level, double x, double y, Color backgroundColor, boolean highlighted, boolean blinking);
+    /**
+     *
+     * @param level the game level to be drawn
+     * @param x x position of left-upper corner
+     * @param y y position of left-upper corner
+     * @param backgroundColor level background color
+     * @param mazeHighlighted if the maze is drawn as highlighted (flashing)
+     * @param energizerHighlighted if the blinking energizers are in their highlighted state
+     */
+    void drawLevel(GameLevel level, double x, double y, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted);
 
     /**
      * Over-paints all eaten pellet tiles.
      * Assumes to be called in scaled graphics context!
+     *
+     * @param level the game level
+     * @param color over-paint color (background color of level)
      */
-    default void overPaintEatenPelletTiles(GameLevel level, Paint paint) {
+    default void overPaintEatenPelletTiles(GameLevel level, Color color) {
         level.worldMap().tiles()
             .filter(not(level::isEnergizerPosition))
-            .filter(level::tileContainsEatenFood).forEach(tile -> paintSquareInsideTile(tile, 4, paint));
+            .filter(level::tileContainsEatenFood)
+            .forEach(tile -> paintSquareInsideTile(tile, 4, color));
     }
 
     /**
      * Over-paints all eaten energizer tiles.
      * Assumes to be called in scaled graphics context!
+     *
+     * @param level the game level
+     * @param overPaintCondition when {@code true} energizer tile is over-painted
+     * @param color over-paint color (background color of level)
      */
-    default void overPaintEnergizerTiles(GameLevel level, Predicate<Vector2i> condition, Paint paint) {
-        level.energizerTiles().filter(condition).forEach(tile -> paintSquareInsideTile(tile, 10, paint));
+    default void overPaintEnergizerTiles(GameLevel level, Predicate<Vector2i> overPaintCondition, Color color) {
+        level.energizerTiles().filter(overPaintCondition)
+            .forEach(tile -> paintSquareInsideTile(tile, 10, color));
     }
 
     /**

@@ -147,7 +147,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     @Override
-    public void drawMaze(GameLevel level, double x, double y, Color unusedBackgroundColor, boolean unusedHighlighted, boolean unusedBlinking) {
+    public void drawLevel(GameLevel level, double x, double y, Color unusedBackgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
         if (coloredMapSet == null) {
             Logger.warn("Tick {}: Maze cannot be drawn, no map set found", theClock().tickCount());
             return;
@@ -337,9 +337,9 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     @Override
-    public void drawLevelCounter(LevelCounter levelCounter, Vector2f sizeInPx) {
+    public void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSizeInPixels) {
         ctx().setImageSmoothing(false);
-        float x = sizeInPx.x() - 4 * TS, y = sizeInPx.y() - TS;
+        float x = sceneSizeInPixels.x() - 4 * TS, y = sceneSizeInPixels.y() - TS;
         for (byte symbol : levelCounter.symbols()) {
             drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), x, y);
             x -= TS * 2;
