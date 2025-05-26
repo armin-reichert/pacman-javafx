@@ -23,6 +23,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
@@ -48,26 +49,26 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     private final FloatProperty scalingPy = new SimpleFloatProperty(1);
     private final TengenMsPacMan_SpriteSheet spriteSheet;
     private final MapRepository mapRepository;
-    private final Canvas canvas;
+    private final GraphicsContext ctx;
 
     private ColoredMapSet coloredMapSet;
 
     public TengenMsPacMan_Renderer2D(TengenMsPacMan_SpriteSheet spriteSheet, MapRepository mapRepository, Canvas canvas) {
         this.spriteSheet = requireNonNull(spriteSheet);
         this.mapRepository = requireNonNull(mapRepository);
-        this.canvas = requireNonNull(canvas);
+        ctx = requireNonNull(canvas).getGraphicsContext2D();
     }
 
     public ObjectProperty<Color> backgroundColorProperty() { return  backgroundColorPy; }
 
     public void ensureMapSettingsApplied(GameLevel level) {
         if (coloredMapSet == null) {
-            applyMapSettings(level);
+            applyRenderingHints(level);
         }
     }
 
     @Override
-    public void applyMapSettings(GameLevel level) {
+    public void applyRenderingHints(GameLevel level) {
         int flashCount = level.data().numFlashes();
         coloredMapSet = mapRepository.createMapSet(level.worldMap(), flashCount);
         Logger.info("Created maze set with {} flash colors {}", flashCount, coloredMapSet);
@@ -77,7 +78,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     public TengenMsPacMan_SpriteSheet spriteSheet() { return spriteSheet; }
 
     @Override
-    public Canvas canvas() { return canvas; }
+    public GraphicsContext ctx() { return ctx; }
 
     @Override
     public FloatProperty scalingProperty() { return scalingPy; }
@@ -140,10 +141,11 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     public void drawSceneBorderLines() {
+        double width = ctx.getCanvas().getWidth(), height = ctx.getCanvas().getHeight();
         ctx().setLineWidth(0.5);
         ctx().setStroke(Color.grayRgb(50));
-        ctx().strokeLine(0.5, 0, 0.5, canvas().getHeight());
-        ctx().strokeLine(canvas().getWidth() - 0.5, 0, canvas().getWidth() - 0.5, canvas().getHeight());
+        ctx().strokeLine(0.5, 0, 0.5, height);
+        ctx().strokeLine(width - 0.5, 0, width - 0.5, height);
     }
 
     @Override

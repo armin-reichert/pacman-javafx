@@ -17,7 +17,6 @@ import de.amr.pacmanfx.model.actors.Creature;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import javafx.beans.property.FloatProperty;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -37,15 +36,12 @@ import static java.util.function.Predicate.not;
 
 public interface GameRenderer {
 
-    Canvas canvas();
-    default GraphicsContext ctx() { return canvas().getGraphicsContext2D(); }
+    GraphicsContext ctx();
 
     default void fillCanvas(Color color) {
         ctx().setFill(color);
-        ctx().fillRect(0, 0, canvas().getWidth(), canvas().getHeight());
+        ctx().fillRect(0, 0, ctx().getCanvas().getWidth(), ctx().getCanvas().getHeight());
     }
-
-    void applyMapSettings(GameLevel level);
 
     GameSpriteSheet spriteSheet();
 
@@ -56,6 +52,13 @@ public interface GameRenderer {
     default float scaling() { return scalingProperty().get(); }
 
     default float scaled(double value) { return scaling() * (float) value; }
+
+    /**
+     * Applies the rendering hints from the world map to this renderer.
+     *
+     * @param level the game level that is rendered
+     */
+    void applyRenderingHints(GameLevel level);
 
     /**
      * Draws a sprite (region inside sprite sheet) unscaled at the given position.

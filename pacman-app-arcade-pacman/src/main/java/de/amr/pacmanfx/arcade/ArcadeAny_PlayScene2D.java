@@ -49,7 +49,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        gr().applyMapSettings(theGameLevel());
+        gr().applyRenderingHints(theGameLevel());
         if (theGameLevel().isDemoLevel()) {
             bindArcadeInsertCoinAction();
         } else {
@@ -144,7 +144,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         if (optGameLevel().isEmpty())
             return; // Scene is drawn already 2 ticks before level has been created
 
-        gr().applyMapSettings(theGameLevel());
+        gr().applyRenderingHints(theGameLevel());
 
         gr().drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
 
@@ -225,7 +225,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         if (gr() == null) {
             setGameRenderer(theUIConfig().current().createRenderer(canvas()));
         }
-        optGameLevel().ifPresent(gr()::applyMapSettings);
+        optGameLevel().ifPresent(gr()::applyRenderingHints);
     }
 
     @Override

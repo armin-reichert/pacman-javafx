@@ -50,7 +50,7 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     }
 
     @Override
-    public void applyMapSettings(GameLevel level) {}
+    public void applyRenderingHints(GameLevel level) {}
 
     @Override
     public GameSpriteSheet spriteSheet() {
@@ -58,8 +58,8 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     }
 
     @Override
-    public Canvas canvas() {
-        return ctx.getCanvas();
+    public GraphicsContext ctx() {
+        return ctx;
     }
 
     @Override

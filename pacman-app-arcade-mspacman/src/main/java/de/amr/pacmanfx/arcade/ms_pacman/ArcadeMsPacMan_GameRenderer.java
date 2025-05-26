@@ -58,12 +58,12 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;
     private final GraphicsContext ctx;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
-    private int mazeIndex;
+    private int colorMapIndex;
 
     public ArcadeMsPacMan_GameRenderer(ArcadeMsPacMan_SpriteSheet spriteSheet, Canvas canvas) {
         this.spriteSheet = requireNonNull(spriteSheet);
         ctx = requireNonNull(canvas).getGraphicsContext2D();
-        mazeIndex = -1; // undefined
+        colorMapIndex = -1; // undefined
     }
 
     @Override
@@ -72,8 +72,8 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     }
 
     @Override
-    public Canvas canvas() {
-        return ctx.getCanvas();
+    public GraphicsContext ctx() {
+        return ctx;
     }
 
     @Override
@@ -82,18 +82,18 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     }
 
     @Override
-    public void applyMapSettings(GameLevel level) {
-        mazeIndex = level.worldMap().getConfigValue("colorMapIndex");
+    public void applyRenderingHints(GameLevel level) {
+        colorMapIndex = level.worldMap().getConfigValue("colorMapIndex");
     }
 
     @Override
     public void drawLevel(GameLevel level, double x, double y, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
         if (mazeHighlighted) {
-            drawImageRegionScaled(theAssets().get("ms_pacman.flashing_mazes"), HIGHLIGHTED_MAZES[mazeIndex], x, y);
+            drawImageRegionScaled(theAssets().get("ms_pacman.flashing_mazes"), HIGHLIGHTED_MAZES[colorMapIndex], x, y);
         } else if (level.uneatenFoodCount() == 0) {
-            drawSpriteScaled(EMPTY_MAZES[mazeIndex], x, y);
+            drawSpriteScaled(EMPTY_MAZES[colorMapIndex], x, y);
         } else {
-            drawSpriteScaled(FULL_MAZES[mazeIndex], x, y);
+            drawSpriteScaled(FULL_MAZES[colorMapIndex], x, y);
             ctx.save();
             ctx.scale(scaling(), scaling());
             overPaintEatenPelletTiles(level, backgroundColor);
