@@ -297,7 +297,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void onLevelCreated(GameEvent e) {
         setJoypadKeyBindings(theGameLevel());
-        gr().applyMapSettings(theGameLevel().worldMap());
+        gr().applyMapSettings(theGameLevel());
     }
 
     @Override
@@ -310,7 +310,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
         setJoypadKeyBindings(theGameLevel());
-        gr().applyMapSettings(theGameLevel().worldMap());
+        gr().applyMapSettings(theGameLevel());
     }
 
     @Override

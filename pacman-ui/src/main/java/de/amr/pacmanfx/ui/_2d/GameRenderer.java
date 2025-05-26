@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui._2d;
 import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.Score;
@@ -46,7 +45,7 @@ public interface GameRenderer {
         ctx().fillRect(0, 0, canvas().getWidth(), canvas().getHeight());
     }
 
-    default void applyMapSettings(WorldMap worldMap) {}
+    void applyMapSettings(GameLevel level);
 
     GameSpriteSheet spriteSheet();
 

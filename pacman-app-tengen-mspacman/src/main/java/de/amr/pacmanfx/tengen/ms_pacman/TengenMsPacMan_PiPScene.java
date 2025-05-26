@@ -1,7 +1,6 @@
 package de.amr.pacmanfx.tengen.ms_pacman;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.Globals.optGameLevel;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.PY_PIP_HEIGHT;
 
 public class TengenMsPacMan_PiPScene extends TengenMsPacMan_PlayScene2D {
@@ -18,6 +17,7 @@ public class TengenMsPacMan_PiPScene extends TengenMsPacMan_PlayScene2D {
 
     @Override
     public void draw() {
+        //TODO use binding
         double aspect = sizeInPx().x() / sizeInPx().y();
         canvas().setWidth(PY_PIP_HEIGHT.doubleValue() * aspect);
         canvas().setHeight(PY_PIP_HEIGHT.doubleValue());

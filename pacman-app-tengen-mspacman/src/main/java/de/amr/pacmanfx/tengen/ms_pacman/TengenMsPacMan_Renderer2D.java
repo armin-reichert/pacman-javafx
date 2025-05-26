@@ -10,7 +10,6 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
-import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.ScoreManager;
@@ -63,29 +62,25 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     public void ensureMapSettingsApplied(GameLevel level) {
         if (coloredMapSet == null) {
-            applyMapSettings(level.worldMap());
+            applyMapSettings(level);
         }
     }
 
     @Override
-    public void applyMapSettings(WorldMap worldMap) {
-        int flashCount = 5; // TODO: is this correct for all levels?
-        coloredMapSet = mapRepository.createMazeSet(worldMap, flashCount);
+    public void applyMapSettings(GameLevel level) {
+        int flashCount = level.data().numFlashes();
+        coloredMapSet = mapRepository.createMazeSet(level.worldMap(), flashCount);
         Logger.info("Created maze set with {} flash colors {}", flashCount, coloredMapSet);
     }
 
     @Override
-    public TengenMsPacMan_SpriteSheet spriteSheet() {
-        return spriteSheet;
-    }
+    public TengenMsPacMan_SpriteSheet spriteSheet() { return spriteSheet; }
 
     @Override
     public Canvas canvas() { return canvas; }
 
     @Override
-    public FloatProperty scalingProperty() {
-        return scalingPy;
-    }
+    public FloatProperty scalingProperty() { return scalingPy; }
 
     @Override
     public void drawActor(Actor actor) {

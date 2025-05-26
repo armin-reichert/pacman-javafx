@@ -8,7 +8,6 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.LevelMessage;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -50,7 +49,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        gr().applyMapSettings(theGameLevel().worldMap());
+        gr().applyMapSettings(theGameLevel());
         if (theGameLevel().isDemoLevel()) {
             bindArcadeInsertCoinAction();
         } else {
@@ -145,7 +144,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         if (optGameLevel().isEmpty())
             return; // Scene is drawn already 2 ticks before level has been created
 
-        gr().applyMapSettings(theGameLevel().worldMap());
+        gr().applyMapSettings(theGameLevel());
 
         gr().drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
 
@@ -226,7 +225,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         if (gr() == null) {
             setGameRenderer(theUIConfig().current().createRenderer(canvas()));
         }
-        optGameLevel().map(GameLevel::worldMap).ifPresent(gr()::applyMapSettings);
+        optGameLevel().ifPresent(gr()::applyMapSettings);
     }
 
     @Override

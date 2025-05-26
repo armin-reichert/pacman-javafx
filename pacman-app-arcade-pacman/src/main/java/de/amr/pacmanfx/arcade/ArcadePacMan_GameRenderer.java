@@ -34,6 +34,9 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
     }
 
     @Override
+    public void applyMapSettings(GameLevel level) {}
+
+    @Override
     public GameSpriteSheet spriteSheet() {
         return spriteSheet;
     }

@@ -50,6 +50,9 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     }
 
     @Override
+    public void applyMapSettings(GameLevel level) {}
+
+    @Override
     public GameSpriteSheet spriteSheet() {
         return spriteSheet;
     }
@@ -78,6 +81,7 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
             terrainRenderer.drawTerrain(ctx, worldMap, worldMap.obstacles());
         }
         else {
+            //TODO move into applyMapSettings?
             Map<String, String> colorMap = worldMap.getConfigValue("colorMap");
             TerrainMapColorScheme colors = new TerrainMapColorScheme(
                 bgColor,
@@ -86,6 +90,7 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
                 Color.web(colorMap.get("door"))
             );
             terrainRenderer.setColorScheme(colors);
+
             terrainRenderer.drawTerrain(ctx, worldMap, worldMap.obstacles());
             terrainRenderer.drawHouse(ctx, level.houseMinTile(), level.houseSizeInTiles());
             foodRenderer.setPelletColor(Color.web(colorMap.get("pellet")));

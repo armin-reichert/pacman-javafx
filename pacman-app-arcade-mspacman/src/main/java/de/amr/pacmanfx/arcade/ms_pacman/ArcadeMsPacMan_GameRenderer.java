@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.actors.Bonus;
@@ -83,8 +82,8 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     }
 
     @Override
-    public void applyMapSettings(WorldMap worldMap) {
-        mazeIndex = worldMap.getConfigValue("colorMapIndex");
+    public void applyMapSettings(GameLevel level) {
+        mazeIndex = level.worldMap().getConfigValue("colorMapIndex");
     }
 
     @Override
