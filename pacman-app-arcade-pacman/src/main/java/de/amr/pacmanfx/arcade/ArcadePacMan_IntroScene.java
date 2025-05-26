@@ -125,16 +125,12 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     drawEnergizer(tiles_to_px(LEFT_TILE_X), tiles_to_px(20));
                 }
                 drawGuys(true);
-                if (gr() instanceof ArcadePacMan_GameRenderer r) {
-                    r.drawMidwayCopyright(4, 32, ARCADE_PINK, defaultSceneFont());
-                }
+                gr().fillTextAtScaledTilePosition("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, defaultSceneFont(), 4, 32);
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints();
                 drawGuys(false);
-                if (gr() instanceof ArcadePacMan_GameRenderer r) {
-                    r.drawMidwayCopyright(4, 32, ARCADE_PINK, defaultSceneFont());
-                }
+                gr().fillTextAtScaledTilePosition("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, defaultSceneFont(), 4, 32);
             }
         }
     }
