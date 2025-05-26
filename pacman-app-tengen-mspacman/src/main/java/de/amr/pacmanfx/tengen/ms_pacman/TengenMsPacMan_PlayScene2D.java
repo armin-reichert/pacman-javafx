@@ -34,6 +34,7 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.tinylog.Logger;
 
@@ -200,18 +201,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     public ObjectProperty<SceneDisplayMode> displayModeProperty() {
         return displayModePy;
-    }
-
-    protected void updateScaling() {
-        SceneDisplayMode displayMode = displayModePy.get();
-        double unscaledHeight = displayMode == SceneDisplayMode.SCROLLING ? NES_SIZE.y() : sizeInPx().y() + 3*TS;
-        setScaling(viewPortHeightProperty().get() / unscaledHeight);
-    }
-
-    private void updateCameraPosition() {
-        int worldTilesY = optGameLevel().map(level -> level.worldMap().numRows()).orElse(NES_TILES.y());
-        double dy = scaled((worldTilesY - 43) * HTS);
-        fixedCamera.setTranslateY(dy);
     }
 
     private void setJoypadKeyBindings(GameLevel level) {
@@ -414,12 +403,15 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     // drawing
 
-    @Override
-    public void draw() {
-        updateScaling();
-        updateCameraPosition();
-        gr().fillCanvas(backgroundColor());
-        drawSceneContent();
+    private void updateScaling() {
+        double unscaledHeight = displayModePy.get() == SceneDisplayMode.SCROLLING ? NES_SIZE.y() : sizeInPx().y() + 3 * TS;
+        setScaling(viewPortHeightProperty().get() / unscaledHeight);
+    }
+
+    private void updateFixedCameraPosition() {
+        int worldTilesY = optGameLevel().map(level -> level.worldMap().numRows()).orElse(NES_TILES.y());
+        double dy = scaled((worldTilesY - 43) * HTS);
+        fixedCamera.setTranslateY(dy);
     }
 
     @Override
@@ -430,12 +422,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             return;
         }
 
+        updateScaling();
+        updateFixedCameraPosition();
+
         final var game = (TengenMsPacMan_GameModel) theGame();
         final var r = (TengenMsPacMan_Renderer2D) gr();
         r.ensureMapSettingsApplied(theGameLevel()); //TODO check this workaround
-        r.ctx().save();
-        r.setScaling(scaling());
 
+        r.ctx().save();
         // NES screen width is 32 tiles but mazes are only 28 tiles wide
         double margin = scaled((NES_TILES.x() - theGameLevel().worldMap().numCols()) * HTS);
         r.ctx().translate(margin, 0);
@@ -473,13 +467,24 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             r.drawLevelCounterWithLevelNumbers(theGameLevel().number(), game.levelCounter(), sizeInPx());
         }
 
-        if (debugInfoVisibleProperty().get()) {
-            r.drawAnimatedCreatureInfo(theGameLevel().pac());
-            ghostsInZOrder().forEach(r::drawAnimatedCreatureInfo);
-            drawDebugInfo();
-        }
-
         r.ctx().restore();
+    }
+
+    @Override
+    protected void drawDebugInfo() {
+        gr().ctx().save();
+        if (optGameLevel().isPresent()) {
+            // NES screen width is 32 tiles but mazes are only 28 tiles wide
+            double margin = scaled((NES_TILES.x() - theGameLevel().worldMap().numCols()) * HTS);
+            gr().ctx().translate(margin, 0);
+            gr().drawTileGrid(UNSCALED_CANVAS_SIZE.x(), UNSCALED_CANVAS_SIZE.y(), Color.LIGHTGRAY);
+            gr().ctx().setFill(Color.YELLOW);
+            gr().ctx().setFont(DEBUG_TEXT_FONT);
+            gr().ctx().fillText("%s %d".formatted(theGameState(), theGameState().timer().tickCount()), 0, scaled(3 * TS));
+            gr().drawAnimatedCreatureInfo(theGameLevel().pac());
+            ghostsInZOrder().forEach(gr()::drawAnimatedCreatureInfo);
+        }
+        gr().ctx().restore();
     }
 
     private Stream<Ghost> ghostsInZOrder() {
