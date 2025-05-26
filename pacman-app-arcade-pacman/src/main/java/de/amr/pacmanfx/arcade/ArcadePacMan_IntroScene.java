@@ -183,10 +183,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         if (blinking.isOn()) {
             drawEnergizer(tiles_to_px(LEFT_TILE_X + 6), tiles_to_px(26));
         }
-        gr().fillTextAtScaledPosition("10",  ARCADE_WHITE, font8, tiles_to_px(LEFT_TILE_X + 8), tiles_to_px(25));
-        gr().fillTextAtScaledPosition("PTS", ARCADE_WHITE, font6, tiles_to_px(LEFT_TILE_X + 11), tiles_to_px(25));
-        gr().fillTextAtScaledPosition("50",  ARCADE_WHITE, font8, tiles_to_px(LEFT_TILE_X + 8), tiles_to_px(27));
-        gr().fillTextAtScaledPosition("PTS", ARCADE_WHITE, font6, tiles_to_px(LEFT_TILE_X + 11), tiles_to_px(27));
+        gr().fillTextAtScaledTilePosition("10",  ARCADE_WHITE, font8, LEFT_TILE_X + 8, 25);
+        gr().fillTextAtScaledTilePosition("PTS", ARCADE_WHITE, font6, LEFT_TILE_X + 11, 25);
+        gr().fillTextAtScaledTilePosition("50",  ARCADE_WHITE, font8, LEFT_TILE_X + 8, 27);
+        gr().fillTextAtScaledTilePosition("PTS", ARCADE_WHITE, font6, LEFT_TILE_X + 11, 27);
     }
 
     // draw pixelated "circle"
