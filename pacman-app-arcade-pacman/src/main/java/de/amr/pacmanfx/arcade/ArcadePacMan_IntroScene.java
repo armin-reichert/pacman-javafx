@@ -40,6 +40,8 @@ import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
  */
 public class ArcadePacMan_IntroScene extends GameScene2D {
 
+    private static final String MIDWAY_MFG_CO = "© 1980 MIDWAY MFG.CO.";
+
     private static final String[] GHOST_NICKNAMES  = { "\"BLINKY\"", "\"PINKY\"", "\"INKY\"", "\"CLYDE\"" };
     private static final String[] GHOST_CHARACTERS = { "SHADOW", "SPEEDY", "BASHFUL", "POKEY" };
     private static final Color[]  GHOST_COLORS     = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
@@ -115,7 +117,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         gr().fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
             scoreColor(), defaultSceneFont(), 2 * TS, sizeInPx().y() - 2);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
-
         drawGallery();
         switch (sceneController.state()) {
             case SHOWING_POINTS -> drawPoints();
@@ -125,12 +126,12 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     drawEnergizer(tiles_to_px(LEFT_TILE_X), tiles_to_px(20));
                 }
                 drawGuys(true);
-                gr().fillTextAtScaledTilePosition("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, defaultSceneFont(), 4, 32);
+                gr().fillTextAtScaledTilePosition(MIDWAY_MFG_CO, ARCADE_PINK, defaultSceneFont(), 4, 32);
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints();
                 drawGuys(false);
-                gr().fillTextAtScaledTilePosition("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, defaultSceneFont(), 4, 32);
+                gr().fillTextAtScaledTilePosition(MIDWAY_MFG_CO, ARCADE_PINK, defaultSceneFont(), 4, 32);
             }
         }
     }
