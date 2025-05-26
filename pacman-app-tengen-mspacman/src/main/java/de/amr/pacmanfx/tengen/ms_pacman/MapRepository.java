@@ -86,7 +86,7 @@ public class MapRepository {
         this.nonArcadeMapsSpriteSheet = requireNonNull(nonArcadeMapsSpriteSheet);
     }
 
-    public ColoredMapSet createMazeSet(WorldMap worldMap, int flashCount) {
+    public ColoredMapSet createMapSet(WorldMap worldMap, int flashCount) {
         MapCategory mapCategory        = worldMap.getConfigValue("mapCategory");
         int mapNumber                  = worldMap.getConfigValue("mapNumber");
         NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");

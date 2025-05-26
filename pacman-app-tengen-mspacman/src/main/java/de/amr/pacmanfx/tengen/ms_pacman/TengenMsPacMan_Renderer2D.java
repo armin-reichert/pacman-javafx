@@ -69,7 +69,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     @Override
     public void applyMapSettings(GameLevel level) {
         int flashCount = level.data().numFlashes();
-        coloredMapSet = mapRepository.createMazeSet(level.worldMap(), flashCount);
+        coloredMapSet = mapRepository.createMapSet(level.worldMap(), flashCount);
         Logger.info("Created maze set with {} flash colors {}", flashCount, coloredMapSet);
     }
 
