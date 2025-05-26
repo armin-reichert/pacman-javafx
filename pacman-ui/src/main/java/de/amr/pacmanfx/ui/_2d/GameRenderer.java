@@ -220,27 +220,30 @@ public interface GameRenderer {
     }
 
     default void drawAnimatedCreatureInfo(Creature creature) {
-        creature.animations().map(SpriteAnimationMap.class::cast).ifPresent(animations -> {
-            String animID = animations.selectedAnimationID();
-            if (animID != null) {
-                String text = animID + " " + animations.currentAnimation().frameIndex();
-                ctx().setFill(Color.WHITE);
-                ctx().setFont(Font.font("Monospaced", scaled(6)));
-                ctx().fillText(text, scaled(creature.x() - 4), scaled(creature.y() - 4));
-            }
-            if (creature.wishDir() != null) {
-                float scaling = scaling();
-                Vector2f center = creature.position().plus(HTS, HTS);
-                Vector2f arrowHead = center.plus(creature.wishDir().vector().scaled(12f)).scaled(scaling);
-                Vector2f guyCenter = center.scaled(scaling);
-                float radius = scaling * 2, diameter = 2 * radius;
-                ctx().setStroke(Color.WHITE);
-                ctx().setLineWidth(0.5);
-                ctx().strokeLine(guyCenter.x(), guyCenter.y(), arrowHead.x(), arrowHead.y());
-                ctx().setFill(creature.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
-                ctx().fillOval(arrowHead.x() - radius, arrowHead.y() - radius, diameter, diameter);
-            }
-        });
+        creature.animations()
+            .filter(SpriteAnimationMap.class::isInstance)
+            .map(SpriteAnimationMap.class::cast)
+            .ifPresent(animations -> {
+                String animID = animations.selectedAnimationID();
+                if (animID != null) {
+                    String text = animID + " " + animations.currentAnimation().frameIndex();
+                    ctx().setFill(Color.WHITE);
+                    ctx().setFont(Font.font("Monospaced", scaled(6)));
+                    ctx().fillText(text, scaled(creature.x() - 4), scaled(creature.y() - 4));
+                }
+                if (creature.wishDir() != null) {
+                    float scaling = scaling();
+                    Vector2f center = creature.position().plus(HTS, HTS);
+                    Vector2f arrowHead = center.plus(creature.wishDir().vector().scaled(12f)).scaled(scaling);
+                    Vector2f guyCenter = center.scaled(scaling);
+                    float radius = scaling * 2, diameter = 2 * radius;
+                    ctx().setStroke(Color.WHITE);
+                    ctx().setLineWidth(0.5);
+                    ctx().strokeLine(guyCenter.x(), guyCenter.y(), arrowHead.x(), arrowHead.y());
+                    ctx().setFill(creature.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
+                    ctx().fillOval(arrowHead.x() - radius, arrowHead.y() - radius, diameter, diameter);
+                }
+            });
         if (creature instanceof Pac pac) {
             String autopilot = pac.isUsingAutopilot() ? "autopilot" : "";
             String immune = pac.isImmune() ? "immune" : "";
@@ -313,7 +316,7 @@ public interface GameRenderer {
     }
 
     default void drawTileGrid(double sizeX, double sizeY, Color strokeColor) {
-        double thin = 0.2, medium = 0.4, thick = 0.8;
+        double thin = 0.25, medium = 0.5, thick = 0.9;
         int numCols = (int) (sizeX / TS), numRows = (int) (sizeY / TS);
         double width = scaled(numCols * TS), height = scaled(numRows * TS);
         ctx().save();
