@@ -19,6 +19,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.RectArea.rect;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
@@ -125,7 +126,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
 
     public void drawClapperBoard(ClapperboardAnimation clapperboardAnimation, double x, double y, Font font) {
         clapperboardAnimation.currentSprite().ifPresent(sprite -> {
-            drawSpriteScaledOverSquare(sprite, x, y);
+            drawSpriteScaledWithCenter(sprite, x + HTS, y + HTS);
             ctx.setFont(font);
             ctx.setFill(ARCADE_WHITE.darker());
             var numberX = scaled(x + sprite.width() - 25);

@@ -34,11 +34,15 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
+/**
+ * Common interface of all 2D game renderers.
+ */
 public interface GameRenderer {
 
     GraphicsContext ctx();
 
     default void fillCanvas(Color color) {
+        requireNonNull(color);
         ctx().setFill(color);
         ctx().fillRect(0, 0, ctx().getCanvas().getWidth(), ctx().getCanvas().getHeight());
     }
@@ -47,7 +51,12 @@ public interface GameRenderer {
 
     FloatProperty scalingProperty();
 
-    default void setScaling(float value) { scalingProperty().set(value); }
+    default void setScaling(float value) {
+        if (value <= 0) {
+            throw new IllegalArgumentException("Scaling value must be positive value but is %f".formatted(value));
+        }
+        scalingProperty().set(value);
+    }
 
     default float scaling() { return scalingProperty().get(); }
 
@@ -63,7 +72,7 @@ public interface GameRenderer {
     /**
      * Draws a sprite (region inside sprite sheet) unscaled at the given position.
      *
-     * @param sprite        the sprite sheet region to draw
+     * @param sprite        the sprite to draw (may be null)
      * @param x             x-coordinate of left-upper corner
      * @param y             y-coordinate of left-upper corner
      */
@@ -79,7 +88,7 @@ public interface GameRenderer {
      * Draws a sprite (region inside sprite sheet) the given position. The sprite size and the position are scaled using
      * the current scale factor.
      *
-     * @param sprite        the sprite sheet region to draw
+     * @param sprite        the sprite to draw (may be null)
      * @param x             x-coordinate of left-upper corner (unscaled)
      * @param y             y-coordinate of left-upper corner (unscaled)
      */
@@ -89,6 +98,15 @@ public interface GameRenderer {
         }
     }
 
+    /**
+     * Draws the given region from the given image to the given position (left-upper corner). The position and
+     * the region size are scaled by the current scaling factor.
+     *
+     * @param image an image
+     * @param region a region inside the image
+     * @param x unscaled x-coordinate of left-upper corner
+     * @param y unscaled y-coordinate of left-upper corner
+     */
     default void drawImageRegionScaled(Image image, RectArea region, double x, double y) {
         requireNonNull(image);
         requireNonNull(region);
@@ -98,37 +116,26 @@ public interface GameRenderer {
     }
 
     /**
-     * Draws a sprite centered over a one-tile square.
-     *
-     * @param sprite sprite (region in sprite sheet) (may be null)
-     * @param originX  x-coordinate of left-upper corner of the square
-     * @param originY  y-coordinate of left-upper corner of the square
-     */
-    default void drawSpriteScaledOverSquare(RectArea sprite, double originX, double originY) {
-        drawSpriteScaledCentered(sprite, originX + HTS, originY + HTS);
-    }
-
-    /**
      * Draws a sprite centered over a position.
      *
-     * @param sprite sprite (region in sprite sheet, can be null)
-     * @param centerX  x-coordinate of the center position
-     * @param centerY  y-coordinate of the center position
+     * @param sprite sprite (region in sprite sheet, may be null)
+     * @param cx  x-coordinate of the center position
+     * @param cy  y-coordinate of the center position
      */
-    default void drawSpriteScaledCentered(RectArea sprite, double centerX, double centerY) {
-        drawSpriteScaled(sprite, centerX - 0.5 * sprite.width(), centerY - 0.5 * sprite.height());
+    default void drawSpriteScaledWithCenter(RectArea sprite, double cx, double cy) {
+        drawSpriteScaled(sprite, cx - 0.5 * sprite.width(), cy - 0.5 * sprite.height());
     }
 
     /**
-     * Draws the sprite over the collision box (one tile large) of the given entity (if visible).
+     * Draws the sprite over the "collision box" (one-tile square) of the given actor (if visible).
      *
-     * @param actor an entity e.g. Pac-Man or a ghost
+     * @param actor an actor
      * @param sprite sprite sheet region (can be null)
      */
     default void drawActorSprite(Actor actor, RectArea sprite) {
         requireNonNull(actor);
         if (actor.isVisible() && sprite != null) {
-            drawSpriteScaledOverSquare(sprite, actor.x(), actor.y());
+            drawSpriteScaledWithCenter(sprite, actor.x() + HTS, actor.y() + HTS);
         }
     }
 
@@ -138,7 +145,8 @@ public interface GameRenderer {
      * @param actor the actor to draw
      */
     default void drawActor(Actor actor) {
-        if (actor == null || !actor.isVisible()) {
+        requireNonNull(actor);
+        if (!actor.isVisible()) {
             return;
         }
         actor.animations().ifPresent(animations -> {

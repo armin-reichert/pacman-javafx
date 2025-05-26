@@ -136,7 +136,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             case RIGHT -> ctx().scale(-1, 1);
             case DOWN  -> { ctx().scale(-1, 1); ctx().rotate(-90); }
         }
-        drawSpriteScaledCentered(spriteLookingLeft, 0, 0);
+        drawSpriteScaledWithCenter(spriteLookingLeft, 0, 0);
         ctx().restore();
     }
 
@@ -307,11 +307,11 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             case NORMAL -> NO_SPRITE;
         };
         if (pacBooster != PacBooster.OFF) {
-            drawSpriteScaledCentered(BOOSTER_SPRITE, centerX - tiles_to_px(6), y);
+            drawSpriteScaledWithCenter(BOOSTER_SPRITE, centerX - tiles_to_px(6), y);
         }
-        drawSpriteScaledCentered(difficultySprite, centerX, y);
-        drawSpriteScaledCentered(categorySprite, centerX + tiles_to_px(4.5), y);
-        drawSpriteScaledCentered(INFO_FRAME_SPRITE, centerX, y);
+        drawSpriteScaledWithCenter(difficultySprite, centerX, y);
+        drawSpriteScaledWithCenter(categorySprite, centerX + tiles_to_px(4.5), y);
+        drawSpriteScaledWithCenter(INFO_FRAME_SPRITE, centerX, y);
     }
 
     @Override
@@ -379,7 +379,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     public void drawClapperBoard(ClapperboardAnimation animation, String text, int number, double x, double y, Font font) {
         animation.sprite().ifPresent(clapperBoard -> {
             ctx().setImageSmoothing(false);
-            drawSpriteScaledOverSquare(clapperBoard, x, y);
+            drawSpriteScaledWithCenter(clapperBoard, x + HTS, y + HTS);
             var numberX = x + 8;
             var numberY = y + 18; // baseline
 
