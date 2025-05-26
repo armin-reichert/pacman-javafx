@@ -208,9 +208,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         setScaling(viewPortHeightProperty().get() / unscaledHeight);
     }
 
-    private void updateCameraPosition(double scaling) {
+    private void updateCameraPosition() {
         int worldTilesY = optGameLevel().map(level -> level.worldMap().numRows()).orElse(NES_TILES.y());
-        double dy = scaling * (worldTilesY - 43) * HTS;
+        double dy = scaled((worldTilesY - 43) * HTS);
         fixedCamera.setTranslateY(dy);
     }
 
@@ -417,7 +417,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void draw() {
         updateScaling();
-        updateCameraPosition(scaling());
+        updateCameraPosition();
         gr().fillCanvas(backgroundColor());
         drawSceneContent();
     }
