@@ -176,16 +176,15 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     }
 
     private void drawPoints() {
-        Font font8 = defaultSceneFont();
         Font font6 = theAssets().arcadeFontAtSize(scaled(6));
         gr().ctx().setFill(ARCADE_ROSE);
         gr().ctx().fillRect(scaled(tiles_to_px(LEFT_TILE_X + 6) + 4), scaled(tiles_to_px(24) + 4), scaled(2), scaled(2));
         if (blinking.isOn()) {
             drawEnergizer(tiles_to_px(LEFT_TILE_X + 6), tiles_to_px(26));
         }
-        gr().fillTextAtScaledTilePosition("10",  ARCADE_WHITE, font8, LEFT_TILE_X + 8, 25);
+        gr().fillTextAtScaledTilePosition("10",  ARCADE_WHITE, defaultSceneFont(), LEFT_TILE_X + 8, 25);
         gr().fillTextAtScaledTilePosition("PTS", ARCADE_WHITE, font6, LEFT_TILE_X + 11, 25);
-        gr().fillTextAtScaledTilePosition("50",  ARCADE_WHITE, font8, LEFT_TILE_X + 8, 27);
+        gr().fillTextAtScaledTilePosition("50",  ARCADE_WHITE, defaultSceneFont(), LEFT_TILE_X + 8, 27);
         gr().fillTextAtScaledTilePosition("PTS", ARCADE_WHITE, font6, LEFT_TILE_X + 11, 27);
     }
 
