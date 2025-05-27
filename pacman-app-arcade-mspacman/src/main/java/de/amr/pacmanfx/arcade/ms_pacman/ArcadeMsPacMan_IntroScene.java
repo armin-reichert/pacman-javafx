@@ -60,7 +60,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     private Pac msPacMan;
     private Ghost[] ghosts;
     private TickTimer marqueeTimer;
-    private byte currentPersonality;
+    private byte presented;
     private int numTicksBeforeRising;
 
     public ArcadeMsPacMan_IntroScene() {
@@ -83,7 +83,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         msPacMan = createMsPacMan();
         ghosts = new Ghost[] { createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost() };
         marqueeTimer = new TickTimer("marquee-timer");
-        currentPersonality = RED_GHOST_SHADOW;
+        presented = RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
 
         var spriteSheet = (ArcadeMsPacMan_SpriteSheet) theUIConfig().current().spriteSheet();
@@ -122,27 +122,25 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         gr().fillText("\"MS PAC-MAN\"", ARCADE_ORANGE, normalArcadeFont(), TITLE_X, TITLE_Y);
         switch (sceneController.state()) {
             case GHOSTS_MARCHING_IN -> {
-                if (currentPersonality == RED_GHOST_SHADOW) {
+                String ghostName = GHOST_NAMES[presented];
+                if (presented == RED_GHOST_SHADOW) {
                     gr().fillText("WITH", ARCADE_WHITE, normalArcadeFont(), TITLE_X, TOP_Y + tiles_to_px(3));
                 }
-                double dx = GHOST_NAMES[currentPersonality].length() < 4 ? tiles_to_px(1) : 0;
-                gr().fillText(GHOST_NAMES[currentPersonality], GHOST_COLORS[currentPersonality], normalArcadeFont(),
-                    TITLE_X + tiles_to_px(3) + dx, TOP_Y + tiles_to_px(6));
+                double x = TITLE_X + tiles_to_px(3);
+                if (ghostName.length() < 4) x += TS;
+                gr().fillText(ghostName, GHOST_COLORS[presented], normalArcadeFont(), x, TOP_Y + tiles_to_px(6));
             }
             case MS_PACMAN_MARCHING_IN, READY_TO_PLAY -> {
                 gr().fillText("STARRING", ARCADE_WHITE, normalArcadeFont(), TITLE_X, TOP_Y + tiles_to_px(3));
                 gr().fillText("MS PAC-MAN", ARCADE_YELLOW, normalArcadeFont(), TITLE_X, TOP_Y + tiles_to_px(6));
             }
         }
-        for (Ghost ghost : ghosts) {
-            gr().drawActor(ghost);
-        }
+        for (Ghost ghost : ghosts) { gr().drawActor(ghost); }
         gr().drawActor(msPacMan);
-        if (gr() instanceof ArcadeMsPacMan_GameRenderer r) { // might be PacManXXL vector renderer!
+        if (gr() instanceof ArcadeMsPacMan_GameRenderer r) { // might also be vector renderer!
             r.drawMsPacManCopyrightAtTile(ARCADE_RED, normalArcadeFont(), 6, 28);
         }
-        gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
-                scoreColor(), normalArcadeFont(), 2 * TS, sizeInPx().y() - 2);
+        gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()), scoreColor(), normalArcadeFont(), 2 * TS, sizeInPx().y() - 2);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 
@@ -191,7 +189,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                     ghost.setVisible(true);
                     ghost.playAnimation(ANIM_GHOST_NORMAL);
                 }
-                scene.currentPersonality = RED_GHOST_SHADOW;
+                scene.presented = RED_GHOST_SHADOW;
             }
 
             @Override
@@ -209,16 +207,16 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 scene.marqueeTimer.doTick();
                 boolean atEndPosition = letGhostWalkIn(scene);
                 if (atEndPosition) {
-                    if (scene.currentPersonality == ORANGE_GHOST_POKEY) {
+                    if (scene.presented == ORANGE_GHOST_POKEY) {
                         scene.sceneController.changeState(MS_PACMAN_MARCHING_IN);
                     } else {
-                        ++scene.currentPersonality;
+                        ++scene.presented;
                     }
                 }
             }
 
             boolean letGhostWalkIn(ArcadeMsPacMan_IntroScene scene) {
-                Ghost ghost = scene.ghosts[scene.currentPersonality];
+                Ghost ghost = scene.ghosts[scene.presented];
                 if (ghost.moveDir() == Direction.LEFT) {
                     if (ghost.x() <= STOP_X_GHOST) {
                         ghost.setX(STOP_X_GHOST);
@@ -229,7 +227,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                     }
                 }
                 else if (ghost.moveDir() == Direction.UP) {
-                    int endPositionY = TOP_Y + scene.currentPersonality * 16;
+                    int endPositionY = TOP_Y + scene.presented * 16;
                     if (scene.numTicksBeforeRising > 0) {
                         scene.numTicksBeforeRising--;
                     }
