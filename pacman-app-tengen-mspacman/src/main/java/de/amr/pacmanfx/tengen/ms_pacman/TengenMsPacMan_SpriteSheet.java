@@ -13,6 +13,7 @@ import java.util.Arrays;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.RectArea.rect;
+import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createSpriteAnimation;
 
 public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSpriteSheet {
 
@@ -254,11 +255,7 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
     }
 
     public SpriteAnimation createStorkFlyingAnimation() {
-        return SpriteAnimation.from(this)
-                .take(
-                        rect(157, 355, 33, 16),
-                        rect(198, 355, 33, 16)
-                ).frameTicks(8).endless();
+        return createSpriteAnimation().sprites(rect(157, 355, 33, 16), rect(198, 355, 33, 16)).frameTicks(8).endless();
     }
 
     // Tengen-specific

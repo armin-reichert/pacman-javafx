@@ -11,7 +11,7 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
-import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.from;
+import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createSpriteAnimation;
 
 public class ArcadeMsPacMan_PacAnimationMap extends SpriteAnimationMap {
 
@@ -19,9 +19,9 @@ public class ArcadeMsPacMan_PacAnimationMap extends SpriteAnimationMap {
 
     public ArcadeMsPacMan_PacAnimationMap(ArcadeMsPacMan_SpriteSheet ss) {
         super(ss);
-        set(ANIM_ANY_PAC_MUNCHING, from(ss).take(ss.pacMunchingSprites(Direction.LEFT)).endless());
-        set(ANIM_ANY_PAC_DYING,    from(ss).take(ss.pacDyingSprites()).frameTicks(8).end());
-        set(PAC_MAN_MUNCHING,      from(ss).take(ss.mrPacManMunchingSprites(Direction.LEFT)).frameTicks(2).endless());
+        set(ANIM_ANY_PAC_MUNCHING, createSpriteAnimation().sprites(ss.pacMunchingSprites(Direction.LEFT)).endless());
+        set(ANIM_ANY_PAC_DYING,    createSpriteAnimation().sprites(ss.pacDyingSprites()).frameTicks(8).end());
+        set(PAC_MAN_MUNCHING,      createSpriteAnimation().sprites(ss.mrPacManMunchingSprites(Direction.LEFT)).frameTicks(2).endless());
     }
 
     @Override

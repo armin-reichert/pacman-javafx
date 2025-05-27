@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.lib.RectArea;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
@@ -21,8 +20,8 @@ public class SpriteAnimation extends Transition {
 
         private final SpriteAnimation anim;
 
-        private Builder(SpriteSheet spriteSheet) {
-            anim = new SpriteAnimation(spriteSheet);
+        private Builder() {
+            anim = new SpriteAnimation();
         }
 
         public Builder fps(int fps) {
@@ -35,7 +34,7 @@ public class SpriteAnimation extends Transition {
             return this;
         }
 
-        public Builder take(RectArea... sprites) {
+        public Builder sprites(RectArea... sprites) {
             anim.sprites = sprites;
             return this;
         }
@@ -57,20 +56,14 @@ public class SpriteAnimation extends Transition {
         }
     }
 
-    public static Builder from(SpriteSheet spriteSheet) {
-        return new Builder(spriteSheet);
+    public static Builder createSpriteAnimation() {
+        return new Builder();
     }
 
-    private final SpriteSheet spriteSheet;
     private RectArea[] sprites = new RectArea[0];
     private int fps = 60;
     private int frameTicks = 1;
     private int frameIndex;
-
-    private SpriteAnimation(SpriteSheet spriteSheet) {
-        this.spriteSheet = spriteSheet;
-        setCycleDuration(Duration.seconds(1.0 / fps));
-    }
 
     @Override
     protected void interpolate(double t) {
@@ -83,10 +76,6 @@ public class SpriteAnimation extends Transition {
         stop();
         jumpTo(Duration.ZERO);
         frameIndex = 0;
-    }
-
-    public SpriteSheet from() {
-        return spriteSheet;
     }
 
     public void setSprites(RectArea[] sprites) {

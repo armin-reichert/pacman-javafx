@@ -12,21 +12,21 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
-import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.from;
+import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createSpriteAnimation;
 
 public class ArcadePacMan_GhostAnimationMap extends SpriteAnimationMap {
 
     public ArcadePacMan_GhostAnimationMap(ArcadePacMan_SpriteSheet ss, byte personality) {
         super(ss);
-        set(ANIM_GHOST_NORMAL,              from(ss).take(ss.ghostNormalSprites(personality, Direction.LEFT)).frameTicks(8).endless());
-        set(ANIM_GHOST_FRIGHTENED,          from(ss).take(ss.ghostFrightenedSprites()).frameTicks(8).endless());
-        set(ANIM_GHOST_FLASHING,            from(ss).take(ss.ghostFlashingSprites()).frameTicks(7).endless());
-        set(ANIM_GHOST_EYES,                from(ss).take(ss.ghostEyesSprites(Direction.LEFT)).end());
-        set(ANIM_GHOST_NUMBER,              from(ss).take(ss.ghostNumberSprites()).end());
-        set(ANIM_BLINKY_DAMAGED,            from(ss).take(ss.blinkyDamagedSprites()).end());
-        set(ANIM_BLINKY_NAIL_DRESS_RAPTURE, from(ss).take(ss.blinkyStretchedSprites()).end());
-        set(ANIM_BLINKY_PATCHED,            from(ss).take(ss.blinkyPatchedSprites()).frameTicks(4).endless());
-        set(ANIM_BLINKY_NAKED,              from(ss).take(ss.blinkyNakedSprites()).frameTicks(4).endless());
+        set(ANIM_GHOST_NORMAL,              createSpriteAnimation().sprites(ss.ghostNormalSprites(personality, Direction.LEFT)).frameTicks(8).endless());
+        set(ANIM_GHOST_FRIGHTENED,          createSpriteAnimation().sprites(ss.ghostFrightenedSprites()).frameTicks(8).endless());
+        set(ANIM_GHOST_FLASHING,            createSpriteAnimation().sprites(ss.ghostFlashingSprites()).frameTicks(7).endless());
+        set(ANIM_GHOST_EYES,                createSpriteAnimation().sprites(ss.ghostEyesSprites(Direction.LEFT)).end());
+        set(ANIM_GHOST_NUMBER,              createSpriteAnimation().sprites(ss.ghostNumberSprites()).end());
+        set(ANIM_BLINKY_DAMAGED,            createSpriteAnimation().sprites(ss.blinkyDamagedSprites()).end());
+        set(ANIM_BLINKY_NAIL_DRESS_RAPTURE, createSpriteAnimation().sprites(ss.blinkyStretchedSprites()).end());
+        set(ANIM_BLINKY_PATCHED,            createSpriteAnimation().sprites(ss.blinkyPatchedSprites()).frameTicks(4).endless());
+        set(ANIM_BLINKY_NAKED,              createSpriteAnimation().sprites(ss.blinkyNakedSprites()).frameTicks(4).endless());
     }
 
     @Override
