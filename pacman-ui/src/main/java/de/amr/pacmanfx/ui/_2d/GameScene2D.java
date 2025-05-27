@@ -61,14 +61,10 @@ public abstract class GameScene2D implements GameScene, GameActionBindingManager
     protected void doEnd() {}
 
     @Override
-    public Map<KeyCodeCombination, GameAction> actionBindings() {
-        return actionBindings;
-    }
+    public Map<KeyCodeCombination, GameAction> actionBindings() { return actionBindings; }
 
     @Override
-    public void onStopAllSounds(GameEvent event) {
-        theSound().stopAll();
-    }
+    public void onStopAllSounds(GameEvent event) { theSound().stopAll(); }
 
     @Override
     public void onUnspecifiedChange(GameEvent event) {
@@ -79,11 +75,9 @@ public abstract class GameScene2D implements GameScene, GameActionBindingManager
     @Override
     public Keyboard keyboard() { return theKeyboard(); }
 
-    public void setScaling(double scaling) { scalingPy.set((float) scaling); }
+    public void  setScaling(double scaling) { scalingPy.set((float) scaling); }
     public float scaling() { return scalingPy.get(); }
-    public float scaled(double value) {
-        return (float) value * scaling();
-    }
+    public float scaled(double value) { return (float) value * scaling(); }
 
     public Font defaultSceneFont() { return arcadeFontOneTileScaled.get(); }
 
@@ -120,7 +114,6 @@ public abstract class GameScene2D implements GameScene, GameActionBindingManager
             drawDebugInfo();
         }
     }
-
 
     /**
      * Draws the scene content using the already scaled game renderer.
