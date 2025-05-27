@@ -90,15 +90,16 @@ public abstract class GameScene2D implements GameScene, GameActionBindingManager
     public Color backgroundColor() { return backgroundColorPy.get(); }
     public void setBackgroundColor(Color color) { backgroundColorPy.set(color); }
 
+    /**
+     * @return color used for drawing scores and credit info
+     */
+    public Color scoreColor() { return theAssets().color(theUIConfig().current().assetNamespace() + ".color.score"); }
+
     public GameRenderer gr() { return gameRenderer; }
-    public void setGameRenderer(GameRenderer renderer) {
-        gameRenderer = requireNonNull(renderer);
-    }
+    public void setGameRenderer(GameRenderer renderer) { gameRenderer = requireNonNull(renderer); }
 
     public Canvas canvas() { return canvas; }
-    public void setCanvas(Canvas canvas) {
-        this.canvas = canvas;
-    }
+    public void setCanvas(Canvas canvas) { this.canvas = canvas; }
 
     public ObjectProperty<Color> backgroundColorProperty() { return backgroundColorPy; }
     public BooleanProperty debugInfoVisibleProperty() { return debugInfoVisiblePy; }
@@ -106,19 +107,25 @@ public abstract class GameScene2D implements GameScene, GameActionBindingManager
 
     /**
      * Default implementation: scales the renderer to the current scene scaling,
-     * clears the canvas and draws the scene content and optionally the debug information.
+     * clears the canvas and draws the scores (if on), scene content and debug information (if on).
      */
     public void draw() {
         gameRenderer.fillCanvas(backgroundColor());
         gameRenderer.setScaling(scaling());
         if (theGame().scoreManager().isScoreVisible()) {
-            gr().drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
+            gameRenderer.drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
         }
         drawSceneContent();
         if (debugInfoVisiblePy.get()) {
             drawDebugInfo();
         }
     }
+
+
+    /**
+     * Draws the scene content using the already scaled game renderer.
+     */
+    protected abstract void drawSceneContent();
 
     /**
      * Default implementation: Draws a grid indicating the tiles, the game state and the state timer.
@@ -128,14 +135,5 @@ public abstract class GameScene2D implements GameScene, GameActionBindingManager
         gameRenderer.ctx().setFill(Color.YELLOW);
         gameRenderer.ctx().setFont(DEBUG_TEXT_FONT);
         gameRenderer.ctx().fillText("%s %d".formatted(theGameState(), theGameState().timer().tickCount()), 0, scaled(3 * TS));
-    }
-
-    /**
-     * Draws the scene content using the already scaled game renderer.
-     */
-    protected abstract void drawSceneContent();
-
-    protected Color scoreColor() {
-        return theAssets().color(theUIConfig().current().assetNamespace() + ".color.score");
     }
 }

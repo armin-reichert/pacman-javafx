@@ -40,9 +40,9 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     @Override
     protected void drawSceneContent() {
         var r = (TengenMsPacMan_Renderer2D) gr();
-        double width = sizeInPx().x();
-        r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), width, 20);
-        r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), width, 212);
+        double barWidth = sizeInPx().x();
+        r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), barWidth, 20);
+        r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), barWidth, 212);
         if (theGameState().timer().betweenSeconds(0.5 * DISPLAY_SECONDS, DISPLAY_SECONDS)) {
             drawJavaFXVersionAuthors(r, defaultSceneFont());
         } else {
