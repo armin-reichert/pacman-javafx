@@ -16,6 +16,7 @@ import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Creature;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import javafx.beans.property.FloatProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;

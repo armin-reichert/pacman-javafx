@@ -15,7 +15,7 @@ import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
-import de.amr.pacmanfx.ui._2d.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.input.JoypadKeyBinding;
 import javafx.beans.property.FloatProperty;

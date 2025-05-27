@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.actors.Creature;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui._2d.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
