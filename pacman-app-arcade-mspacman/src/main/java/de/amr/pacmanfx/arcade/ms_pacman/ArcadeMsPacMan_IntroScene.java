@@ -118,20 +118,21 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        final SceneState state = sceneController.state();
         drawMarquee();
         gr().fillText("\"MS PAC-MAN\"", ARCADE_ORANGE, normalArcadeFont(), TITLE_X, TITLE_Y);
-        if (state == SceneState.GHOSTS_MARCHING_IN) {
-            if (currentPersonality == RED_GHOST_SHADOW) {
-                gr().fillText("WITH", ARCADE_WHITE, normalArcadeFont(), TITLE_X, TOP_Y + tiles_to_px(3));
+        switch (sceneController.state()) {
+            case GHOSTS_MARCHING_IN -> {
+                if (currentPersonality == RED_GHOST_SHADOW) {
+                    gr().fillText("WITH", ARCADE_WHITE, normalArcadeFont(), TITLE_X, TOP_Y + tiles_to_px(3));
+                }
+                double dx = GHOST_NAMES[currentPersonality].length() < 4 ? tiles_to_px(1) : 0;
+                gr().fillText(GHOST_NAMES[currentPersonality], GHOST_COLORS[currentPersonality], normalArcadeFont(),
+                    TITLE_X + tiles_to_px(3) + dx, TOP_Y + tiles_to_px(6));
             }
-            double dx = GHOST_NAMES[currentPersonality].length() < 4 ? tiles_to_px(1) : 0;
-            gr().fillText(GHOST_NAMES[currentPersonality], GHOST_COLORS[currentPersonality], normalArcadeFont(),
-                TITLE_X + tiles_to_px(3) + dx, TOP_Y + tiles_to_px(6));
-        }
-        else if (state == SceneState.MS_PACMAN_MARCHING_IN || state == SceneState.READY_TO_PLAY) {
-            gr().fillText("STARRING", ARCADE_WHITE, normalArcadeFont(), TITLE_X, TOP_Y + tiles_to_px(3));
-            gr().fillText("MS PAC-MAN", ARCADE_YELLOW, normalArcadeFont(), TITLE_X, TOP_Y + tiles_to_px(6));
+            case MS_PACMAN_MARCHING_IN, READY_TO_PLAY -> {
+                gr().fillText("STARRING", ARCADE_WHITE, normalArcadeFont(), TITLE_X, TOP_Y + tiles_to_px(3));
+                gr().fillText("MS PAC-MAN", ARCADE_YELLOW, normalArcadeFont(), TITLE_X, TOP_Y + tiles_to_px(6));
+            }
         }
         for (Ghost ghost : ghosts) {
             gr().drawActor(ghost);
