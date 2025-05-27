@@ -16,7 +16,7 @@ import java.util.stream.IntStream;
 import static de.amr.pacmanfx.lib.RectArea.rect;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadePacMan_SpriteSheet implements GameSpriteSheet {
+public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteSheet {
 
     private static final int RASTER = 16; // 16x16 squares in sprite sheet
     private static final int OFF_X = 456;
@@ -34,32 +34,33 @@ public class ArcadePacMan_SpriteSheet implements GameSpriteSheet {
      */
     private static RectArea[] tilesRightOf(int tileX, int tileY, int numTiles) {
         return IntStream.range(tileX, tileX + numTiles)
-            .mapToObj(x -> rect(OFF_X + RASTER * x, RASTER * tileY, RASTER, RASTER))
-            .toArray(RectArea[]::new);
+                .mapToObj(x -> rect(OFF_X + RASTER * x, RASTER * tileY, RASTER, RASTER))
+                .toArray(RectArea[]::new);
     }
 
     private static final RectArea[] GHOST_NUMBER_SPRITES = SpriteSheet.rectAreaArray(
-        rect(456, 133, 15, 7),  // 200
-        rect(472, 133, 15, 7),  // 400
-        rect(488, 133, 15, 7),  // 800
-        rect(504, 133, 16, 7)); // 1600
+            rect(456, 133, 15, 7),  // 200
+            rect(472, 133, 15, 7),  // 400
+            rect(488, 133, 15, 7),  // 800
+            rect(504, 133, 16, 7)); // 1600
 
     private static final RectArea[] BONUS_SYMBOL_SPRITES = IntStream.range(0, 8)
-        .mapToObj(i -> rect(OFF_X + RASTER * (2 + i), 49,  14, 14))
-        .toArray(RectArea[]::new);
+            .mapToObj(i -> rect(OFF_X + RASTER * (2 + i), 49, 14, 14))
+            .toArray(RectArea[]::new);
 
     private static final RectArea[] BONUS_VALUE_SPRITES = {
-        rect(457, 148, 14, 7), //  100
-        rect(472, 148, 15, 7), //  300
-        rect(488, 148, 15, 7), //  500
-        rect(504, 148, 15, 7), //  700
-        rect(520, 148, 18, 7), // 1000
-        rect(518, 164, 20, 7), // 2000
-        rect(518, 180, 20, 7), // 3000
-        rect(518, 196, 20, 7), // 5000
+            rect(457, 148, 14, 7), //  100
+            rect(472, 148, 15, 7), //  300
+            rect(488, 148, 15, 7), //  500
+            rect(504, 148, 15, 7), //  700
+            rect(520, 148, 18, 7), // 1000
+            rect(518, 164, 20, 7), // 2000
+            rect(518, 180, 20, 7), // 3000
+            rect(518, 196, 20, 7), // 5000
     };
 
     private static final RectArea[] GHOST_FACING_RIGHT_SPRITES = new RectArea[4];
+
     static {
         for (byte id = 0; id < 4; ++id) {
             int rx = 2 * DIR_ORDER.indexOf(Direction.RIGHT);
@@ -71,18 +72,20 @@ public class ArcadePacMan_SpriteSheet implements GameSpriteSheet {
     private static final RectArea LIVES_COUNTER_SPRITE = rect(OFF_X + 129, 15, 16, 16);
 
     private static final RectArea[][] PAC_MUNCHING_SPRITES = new RectArea[4][];
+
     static {
         byte margin = 1;
         int size = RASTER - 2 * margin;
         for (byte dir = 0; dir < 4; ++dir) {
-            RectArea wide   = rect(OFF_X      + margin, dir * 16 + margin, size, size);
+            RectArea wide = rect(OFF_X + margin, dir * 16 + margin, size, size);
             RectArea middle = rect(OFF_X + 16 + margin, dir * 16 + margin, size, size);
-            RectArea closed = rect(OFF_X + 32 + margin,          margin, size, size);
+            RectArea closed = rect(OFF_X + 32 + margin, margin, size, size);
             PAC_MUNCHING_SPRITES[dir] = SpriteSheet.rectAreaArray(closed, closed, middle, middle, wide, wide, middle, middle);
         }
     }
 
     private static final RectArea[] PAC_DYING_SPRITES = new RectArea[11];
+
     static {
         for (int i = 0; i < PAC_DYING_SPRITES.length; ++i) {
             boolean last = i == PAC_DYING_SPRITES.length - 1;
@@ -91,6 +94,7 @@ public class ArcadePacMan_SpriteSheet implements GameSpriteSheet {
     }
 
     private static final RectArea[][][] GHOST_NORMAL_SPRITES = new RectArea[4][4][];
+
     static {
         for (byte id = 0; id < 4; ++id) {
             for (byte dir = 0; dir < 4; ++dir) {
@@ -100,23 +104,25 @@ public class ArcadePacMan_SpriteSheet implements GameSpriteSheet {
     }
 
     private static final RectArea[] GHOST_FRIGHTENED_SPRITES = SpriteSheet.rectAreaArray(
-        rect(OFF_X + RASTER * (8), RASTER * (4), RASTER, RASTER),
-        rect(OFF_X + RASTER * (9), RASTER * (4), RASTER, RASTER));
+            rect(OFF_X + RASTER * (8), RASTER * (4), RASTER, RASTER),
+            rect(OFF_X + RASTER * (9), RASTER * (4), RASTER, RASTER));
 
     private static final RectArea[] GHOST_FLASHING_SPRITES = tilesRightOf(8, 4, 4);
 
     private static final RectArea[][] GHOST_EYES_SPRITES = new RectArea[4][];
+
     static {
         for (byte dir = 0; dir < 4; ++dir) {
             GHOST_EYES_SPRITES[dir] = SpriteSheet.rectAreaArray(
-                rect(OFF_X + RASTER * (8 + dir), RASTER * (5), RASTER, RASTER));
+                    rect(OFF_X + RASTER * (8 + dir), RASTER * (5), RASTER, RASTER));
         }
     }
 
     private static final RectArea[] BIG_PAC_MAN_SPRITES = SpriteSheet.rectAreaArray(
-        rect(OFF_X + 32, 16, 32, 32), rect(OFF_X + 64, 16, 32, 32), rect(OFF_X + 96, 16, 32, 32));
+            rect(OFF_X + 32, 16, 32, 32), rect(OFF_X + 64, 16, 32, 32), rect(OFF_X + 96, 16, 32, 32));
 
     private static final RectArea[] BLINKY_STRETCHED_SPRITES = new RectArea[5];
+
     static {
         for (int i = 0; i < 5; ++i) {
             BLINKY_STRETCHED_SPRITES[i] = rect(OFF_X + RASTER * (8 + i), RASTER * (6), RASTER, RASTER);
@@ -124,6 +130,7 @@ public class ArcadePacMan_SpriteSheet implements GameSpriteSheet {
     }
 
     private static final RectArea[] BLINKY_DAMAGED_SPRITES = new RectArea[2];
+
     static {
         byte margin = 1;
         int size = RASTER - 2 * margin;
@@ -132,26 +139,21 @@ public class ArcadePacMan_SpriteSheet implements GameSpriteSheet {
     }
 
     private static final RectArea[] BLINKY_PATCHED_SPRITES = new RectArea[2];
+
     static {
         BLINKY_PATCHED_SPRITES[0] = rect(OFF_X + RASTER * (10), RASTER * (7), RASTER, RASTER);
         BLINKY_PATCHED_SPRITES[1] = rect(OFF_X + RASTER * (11), RASTER * (7), RASTER, RASTER);
     }
 
     private static final RectArea[] BLINKY_NAKED_SPRITES = new RectArea[2];
+
     static {
         BLINKY_NAKED_SPRITES[0] = rect(OFF_X + RASTER * (8), RASTER * (8), 2 * RASTER, RASTER);
         BLINKY_NAKED_SPRITES[1] = rect(OFF_X + RASTER * (10), RASTER * (8), 2 * RASTER, RASTER);
     }
 
-    private final Image sourceImage;
-
     public ArcadePacMan_SpriteSheet(Image sourceImage) {
         this.sourceImage = requireNonNull(sourceImage);
-    }
-
-    @Override
-    public Image sourceImage() {
-        return sourceImage;
     }
 
     @Override
