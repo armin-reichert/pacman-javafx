@@ -174,7 +174,7 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
             gr().drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - 2 * TS);
         } else {
             gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
-                scoreColor(), defaultSceneFont(), 2 * TS, sizeInPx().y() - 2);
+                scoreColor(), normalFont(), 2 * TS, sizeInPx().y() - 2);
         }
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
@@ -184,10 +184,10 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
         float cx = TS * (houseMinTile.x() + houseSize.x() * 0.5f);
         float cy = TS * (houseMinTile.y() + houseSize.y() + 1);
         switch (theGameLevel().message()) {
-            case GAME_OVER -> gr().fillTextAtCenter("GAME  OVER", ARCADE_RED, defaultSceneFont(), cx, cy);
-            case READY -> gr().fillTextAtCenter("READY!", ARCADE_YELLOW, defaultSceneFont(), cx, cy);
+            case GAME_OVER -> gr().fillTextAtCenter("GAME  OVER", ARCADE_RED, normalFont(), cx, cy);
+            case READY -> gr().fillTextAtCenter("READY!", ARCADE_YELLOW, normalFont(), cx, cy);
             case TEST_LEVEL -> gr().fillTextAtCenter("TEST    L%02d".formatted(theGameLevel().number()),
-                    ARCADE_WHITE, defaultSceneFont(), cx, cy);
+                    ARCADE_WHITE, normalFont(), cx, cy);
         }
     }
 

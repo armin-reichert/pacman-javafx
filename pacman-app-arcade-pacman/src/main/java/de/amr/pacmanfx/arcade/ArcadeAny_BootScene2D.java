@@ -76,7 +76,7 @@ public class ArcadeAny_BootScene2D extends GameScene2D {
 
     private void drawRandomHexCodes() {
         final Vector2f sceneSize = sizeInPx();
-        final Font font = defaultSceneFont();
+        final Font font = normalFont();
         final int numRows = (int) (sceneSize.y() / TS), numCols = (int) (sceneSize.x() / TS);
         gr().ctx().setFill(ARCADE_WHITE);
         gr().ctx().setFont(font);

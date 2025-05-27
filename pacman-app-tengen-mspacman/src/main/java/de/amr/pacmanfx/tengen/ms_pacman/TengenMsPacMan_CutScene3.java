@@ -162,7 +162,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         }
         var r = (TengenMsPacMan_Renderer2D) gr();
         r.drawSceneBorderLines();
-        r.drawClapperBoard(clapAnimation, "JUNIOR", 3, CLAP_TILE_X, CLAP_TILE_Y, defaultSceneFont());
+        r.drawClapperBoard(clapAnimation, "JUNIOR", 3, CLAP_TILE_X, CLAP_TILE_Y, normalFont());
         r.drawStork(storkAnimation, stork, bagReleased);
         r.drawActor(msPacMan);
         r.drawActor(pacMan);

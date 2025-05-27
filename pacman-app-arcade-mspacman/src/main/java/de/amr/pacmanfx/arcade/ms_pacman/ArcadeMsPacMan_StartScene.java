@@ -7,9 +7,6 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.theCoinMechanism;
 import static de.amr.pacmanfx.Globals.theGame;
@@ -17,19 +14,15 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.GameAssets.ARCADE_ORANGE;
 import static de.amr.pacmanfx.ui.GameAssets.ARCADE_RED;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.theAssets;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.theSound;
 
 public class ArcadeMsPacMan_StartScene extends GameScene2D {
-
-    private final ObjectProperty<Font> font6Py = new SimpleObjectProperty<>();
 
     @Override
     public void doInit() {
         theGame().scoreManager().setScoreVisible(true);
         bindArcadeInsertCoinAction();
         bindArcadeStartGameAction();
-        font6Py.bind(scalingProperty().map(s -> theAssets().arcadeFontAtSize(s.floatValue() * 6)));
     }
 
     @Override
@@ -47,16 +40,16 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gr().fillTextAtTile("PUSH START BUTTON", ARCADE_ORANGE, defaultSceneFont(), 6, 16);
-        gr().fillTextAtTile("1 PLAYER ONLY", ARCADE_ORANGE, defaultSceneFont(), 8, 18);
-        gr().fillTextAtTile("ADDITIONAL    AT 10000", ARCADE_ORANGE, defaultSceneFont(), 2, 25);
+        gr().fillTextAtTile("PUSH START BUTTON", ARCADE_ORANGE, normalFont(), 6, 16);
+        gr().fillTextAtTile("1 PLAYER ONLY", ARCADE_ORANGE, normalFont(), 8, 18);
+        gr().fillTextAtTile("ADDITIONAL    AT 10000", ARCADE_ORANGE, normalFont(), 2, 25);
         gr().drawSpriteScaled(gr().spriteSheet().livesCounterSprite(), tiles_to_px(13), tiles_to_px(23) + 1); //TODO check this
-        gr().fillTextAtTile("PTS", ARCADE_ORANGE, font6Py.get(), 25, 25);
+        gr().fillTextAtTile("PTS", ARCADE_ORANGE, smallFont(), 25, 25);
         if (gr() instanceof ArcadeMsPacMan_GameRenderer r) {
-            r.drawMsPacManCopyrightAtTile(ARCADE_RED, defaultSceneFont(), 6, 28);
+            r.drawMsPacManCopyrightAtTile(ARCADE_RED, normalFont(), 6, 28);
         }
         gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
-                scoreColor(), defaultSceneFont(), tiles_to_px(2), sizeInPx().y() - 2);
+                scoreColor(), normalFont(), tiles_to_px(2), sizeInPx().y() - 2);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 }
