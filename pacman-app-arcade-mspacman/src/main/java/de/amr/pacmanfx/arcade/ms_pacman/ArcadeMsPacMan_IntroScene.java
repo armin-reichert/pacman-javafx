@@ -121,18 +121,18 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         final SceneState state = sceneController.state();
         gr().drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
         drawMarquee();
-        gr().fillTextAtScaledPosition("\"MS PAC-MAN\"", ARCADE_ORANGE, defaultSceneFont(), TITLE_X, TITLE_Y);
+        gr().fillTextAt("\"MS PAC-MAN\"", ARCADE_ORANGE, defaultSceneFont(), TITLE_X, TITLE_Y);
         if (state == SceneState.GHOSTS_MARCHING_IN) {
             if (currentPersonality == RED_GHOST_SHADOW) {
-                gr().fillTextAtScaledPosition("WITH", ARCADE_WHITE, defaultSceneFont(), TITLE_X, TOP_Y + tiles_to_px(3));
+                gr().fillTextAt("WITH", ARCADE_WHITE, defaultSceneFont(), TITLE_X, TOP_Y + tiles_to_px(3));
             }
             double dx = GHOST_NAMES[currentPersonality].length() < 4 ? tiles_to_px(1) : 0;
-            gr().fillTextAtScaledPosition(GHOST_NAMES[currentPersonality], GHOST_COLORS[currentPersonality], defaultSceneFont(),
+            gr().fillTextAt(GHOST_NAMES[currentPersonality], GHOST_COLORS[currentPersonality], defaultSceneFont(),
                 TITLE_X + tiles_to_px(3) + dx, TOP_Y + tiles_to_px(6));
         }
         else if (state == SceneState.MS_PACMAN_MARCHING_IN || state == SceneState.READY_TO_PLAY) {
-            gr().fillTextAtScaledPosition("STARRING", ARCADE_WHITE, defaultSceneFont(), TITLE_X, TOP_Y + tiles_to_px(3));
-            gr().fillTextAtScaledPosition("MS PAC-MAN", ARCADE_YELLOW, defaultSceneFont(), TITLE_X, TOP_Y + tiles_to_px(6));
+            gr().fillTextAt("STARRING", ARCADE_WHITE, defaultSceneFont(), TITLE_X, TOP_Y + tiles_to_px(3));
+            gr().fillTextAt("MS PAC-MAN", ARCADE_YELLOW, defaultSceneFont(), TITLE_X, TOP_Y + tiles_to_px(6));
         }
         for (Ghost ghost : ghosts) {
             gr().drawActor(ghost);
@@ -141,7 +141,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         if (gr() instanceof ArcadeMsPacMan_GameRenderer r) { // might be PacManXXL vector renderer!
             r.drawMidwayCopyright(6, 28, ARCADE_RED, defaultSceneFont());
         }
-        gr().fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
+        gr().fillTextAt("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 scoreColor(), defaultSceneFont(), 2 * TS, sizeInPx().y() - 2);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }

@@ -263,25 +263,32 @@ public interface GameRenderer {
      * @param x     unscaled x-position
      * @param y     unscaled y-position (baseline)
      */
-    default void fillTextAtScaledPosition(String text, Color color, Font font, double x, double y) {
+    default void fillTextAt(String text, Color color, Font font, double x, double y) {
         ctx().setFont(font);
         ctx().setFill(color);
         ctx().fillText(text, scaled(x), scaled(y));
     }
 
-    default void centerTextAtScaledPosition(String text, Color color, Font font, double x, double y) {
+    /**
+     * Draws text at the given tile position (scaled by the current scaling value).
+     *
+     * @param text  text
+     * @param color text color
+     * @param font  text font
+     * @param tileX unscaled tile x-position
+     * @param tileY unscaled tile y-position (baseline)
+     */
+    default void fillTextAtTile(String text, Color color, Font font, int tileX, int tileY) {
+        fillTextAt(text, color, font, tiles_to_px(tileX), tiles_to_px(tileY));
+    }
+
+    default void fillTextCenteredAt(String text, Color color, Font font, double x, double y) {
         ctx().save();
         ctx().setFont(font);
         ctx().setFill(color);
         ctx().setTextAlign(TextAlignment.CENTER);
         ctx().fillText(text, scaled(x), scaled(y));
         ctx().restore();
-    }
-
-    default void fillTextAtScaledTilePosition(String text, Color color, Font font, int tileX, int tileY) {
-        ctx().setFont(font);
-        ctx().setFill(color);
-        ctx().fillText(text, scaled(tiles_to_px(tileX)), scaled(tiles_to_px(tileY)));
     }
 
     default void drawLivesCounter(int numLives, int maxLives, double x, double y) {
@@ -295,7 +302,7 @@ public interface GameRenderer {
         int moreLivesThanSymbols = numLives - maxLives;
         if (moreLivesThanSymbols > 0) {
             Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-            fillTextAtScaledPosition("+" + moreLivesThanSymbols, Color.YELLOW, font, x + TS * 10, y + TS);
+            fillTextAt("+" + moreLivesThanSymbols, Color.YELLOW, font, x + TS * 10, y + TS);
         }
     }
 
@@ -307,10 +314,10 @@ public interface GameRenderer {
     }
 
     default void drawScore(Score score, String title, double x, double y, Font font, Color color) {
-        fillTextAtScaledPosition(title, color, font, x, y);
-        fillTextAtScaledPosition("%7s".formatted("%02d".formatted(score.points())), color, font, x, y + TS + 1);
+        fillTextAt(title, color, font, x, y);
+        fillTextAt("%7s".formatted("%02d".formatted(score.points())), color, font, x, y + TS + 1);
         if (score.points() != 0) {
-            fillTextAtScaledPosition("L" + score.levelNumber(), color, font, x + tiles_to_px(8), y + TS + 1);
+            fillTextAt("L" + score.levelNumber(), color, font, x + tiles_to_px(8), y + TS + 1);
         }
     }
 

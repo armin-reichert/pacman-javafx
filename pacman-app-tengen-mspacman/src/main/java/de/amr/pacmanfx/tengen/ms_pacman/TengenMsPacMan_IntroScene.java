@@ -101,47 +101,47 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         switch (sceneController.state()) {
             case WAITING_FOR_START -> {
                 if (!dark) {
-                    r.fillTextAtScaledPosition("TENGEN PRESENTS", r.shadeOfBlue(t),
+                    r.fillTextAt("TENGEN PRESENTS", r.shadeOfBlue(t),
                         defaultSceneFont(), 9 * TS, MARQUEE_Y - TS);
                     r.drawSpriteScaled(MS_PAC_MAN_TITLE_SPRITE, 6 * TS, MARQUEE_Y);
                     if (t % 60 < 30) {
-                        r.fillTextAtScaledPosition("PRESS START", nesPaletteColor(0x20),
+                        r.fillTextAt("PRESS START", nesPaletteColor(0x20),
                             defaultSceneFont(), 11 * TS, MARQUEE_Y + 9 * TS);
                     }
-                    r.fillTextAtScaledPosition("MS PAC-MAN TM NAMCO LTD", nesPaletteColor(0x25),
+                    r.fillTextAt("MS PAC-MAN TM NAMCO LTD", nesPaletteColor(0x25),
                         defaultSceneFont(), 6 * TS, MARQUEE_Y + 15 * TS);
-                    r.fillTextAtScaledPosition("©1990 TENGEN INC",        nesPaletteColor(0x25),
+                    r.fillTextAt("©1990 TENGEN INC",        nesPaletteColor(0x25),
                         defaultSceneFont(), 8 * TS, MARQUEE_Y + 16 * TS);
-                    r.fillTextAtScaledPosition("ALL RIGHTS RESERVED",     nesPaletteColor(0x25),
+                    r.fillTextAt("ALL RIGHTS RESERVED",     nesPaletteColor(0x25),
                         defaultSceneFont(), 7 * TS, MARQUEE_Y + 17 * TS);
                 }
             }
             case SHOWING_MARQUEE -> {
                 drawMarquee();
-                r.fillTextAtScaledPosition("\"MS PAC-MAN\"", nesPaletteColor(0x28),
+                r.fillTextAt("\"MS PAC-MAN\"", nesPaletteColor(0x28),
                     defaultSceneFont(), MARQUEE_X + 20, MARQUEE_Y - 18);
             }
             case GHOSTS_MARCHING_IN -> {
                 drawMarquee();
-                r.fillTextAtScaledPosition("\"MS PAC-MAN\"", nesPaletteColor(0x28),
+                r.fillTextAt("\"MS PAC-MAN\"", nesPaletteColor(0x28),
                     defaultSceneFont(), MARQUEE_X + 20, MARQUEE_Y - 18);
                 if (ghostIndex == 0) {
-                    r.fillTextAtScaledPosition("WITH", nesPaletteColor(0x20),
+                    r.fillTextAt("WITH", nesPaletteColor(0x20),
                         defaultSceneFont(), MARQUEE_X + 12, MARQUEE_Y + 23);
                 }
                 Ghost currentGhost = ghosts[ghostIndex];
                 Color ghostColor = theAssets().color("tengen.ghost.%d.color.normal.dress".formatted(currentGhost.personality()));
-                r.fillTextAtScaledPosition(currentGhost.name().toUpperCase(), ghostColor,
+                r.fillTextAt(currentGhost.name().toUpperCase(), ghostColor,
                     defaultSceneFont(), MARQUEE_X + 44, MARQUEE_Y + 41);
                 for (Ghost ghost : ghosts) { r.drawActor(ghost); }
             }
             case MS_PACMAN_MARCHING_IN -> {
                 drawMarquee();
-                r.fillTextAtScaledPosition("\"MS PAC-MAN\"", nesPaletteColor(0x28),
+                r.fillTextAt("\"MS PAC-MAN\"", nesPaletteColor(0x28),
                     defaultSceneFont(), MARQUEE_X + 20, MARQUEE_Y - 18);
-                r.fillTextAtScaledPosition("STARRING", nesPaletteColor(0x20),
+                r.fillTextAt("STARRING", nesPaletteColor(0x20),
                     defaultSceneFont(), MARQUEE_X + 12, MARQUEE_Y + 22);
-                r.fillTextAtScaledPosition("MS PAC-MAN", nesPaletteColor(0x28),
+                r.fillTextAt("MS PAC-MAN", nesPaletteColor(0x28),
                     defaultSceneFont(), MARQUEE_X + 28, MARQUEE_Y + 38);
                 for (Ghost ghost : ghosts) { r.drawActor(ghost); }
                 r.drawActor(msPacMan);

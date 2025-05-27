@@ -243,55 +243,55 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), sizeInPx().x(), 20);
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), sizeInPx().x(), 212);
-        r.fillTextAtScaledPosition("MS PAC-MAN OPTIONS", NES_YELLOW, defaultSceneFont(), COL_LABEL + 3 * TS, 48);
+        r.fillTextAt("MS PAC-MAN OPTIONS", NES_YELLOW, defaultSceneFont(), COL_LABEL + 3 * TS, 48);
 
         // Players (not implemented)
         drawArrowIfSelected(OPTION_PLAYERS, 72, defaultSceneFont());
-        r.fillTextAtScaledPosition("TYPE", NES_YELLOW, defaultSceneFont(), COL_LABEL, 72);
-        r.fillTextAtScaledPosition(":", NES_YELLOW, defaultSceneFont(), COL_LABEL + 4 * TS + 4, 72);
-        r.fillTextAtScaledPosition("1 PLAYER", NES_WHITE, defaultSceneFont(), COL_LABEL + 6 * TS  , 72);
+        r.fillTextAt("TYPE", NES_YELLOW, defaultSceneFont(), COL_LABEL, 72);
+        r.fillTextAt(":", NES_YELLOW, defaultSceneFont(), COL_LABEL + 4 * TS + 4, 72);
+        r.fillTextAt("1 PLAYER", NES_WHITE, defaultSceneFont(), COL_LABEL + 6 * TS  , 72);
 
         // Pac-Booster
         drawArrowIfSelected(OPTION_PAC_BOOSTER, 96, defaultSceneFont());
-        r.fillTextAtScaledPosition("PAC BOOSTER", NES_YELLOW, defaultSceneFont(), COL_LABEL, 96);
-        r.fillTextAtScaledPosition(":", NES_YELLOW, defaultSceneFont(), COL_COLON, 96);
+        r.fillTextAt("PAC BOOSTER", NES_YELLOW, defaultSceneFont(), COL_LABEL, 96);
+        r.fillTextAt(":", NES_YELLOW, defaultSceneFont(), COL_COLON, 96);
         String pacBoosterText = switch (tengenGame.pacBooster()) {
             case OFF -> "OFF";
             case ALWAYS_ON -> "ALWAYS ON";
             case USE_A_OR_B -> "USE A OR B";
         };
-        r.fillTextAtScaledPosition(pacBoosterText, NES_WHITE, defaultSceneFont(), COL_VALUE, 96);
+        r.fillTextAt(pacBoosterText, NES_WHITE, defaultSceneFont(), COL_VALUE, 96);
 
         // Game difficulty
         drawArrowIfSelected(OPTION_DIFFICULTY, 120, defaultSceneFont());
-        r.fillTextAtScaledPosition("GAME DIFFICULTY", NES_YELLOW, defaultSceneFont(), COL_LABEL, 120);
-        r.fillTextAtScaledPosition(":", NES_YELLOW, defaultSceneFont(), COL_COLON, 120);
-        r.fillTextAtScaledPosition(tengenGame.difficulty().name(), NES_WHITE, defaultSceneFont(), COL_VALUE, 120);
+        r.fillTextAt("GAME DIFFICULTY", NES_YELLOW, defaultSceneFont(), COL_LABEL, 120);
+        r.fillTextAt(":", NES_YELLOW, defaultSceneFont(), COL_COLON, 120);
+        r.fillTextAt(tengenGame.difficulty().name(), NES_WHITE, defaultSceneFont(), COL_VALUE, 120);
 
         // Maze (type) selection
         drawArrowIfSelected(OPTION_MAZE_SELECTION, 144, defaultSceneFont());
-        r.fillTextAtScaledPosition("MAZE SELECTION", NES_YELLOW, defaultSceneFont(), COL_LABEL, 144);
-        r.fillTextAtScaledPosition(":", NES_YELLOW, defaultSceneFont(), COL_COLON, 144);
-        r.fillTextAtScaledPosition(tengenGame.mapCategory().name(), NES_WHITE, defaultSceneFont(), COL_VALUE, 144);
+        r.fillTextAt("MAZE SELECTION", NES_YELLOW, defaultSceneFont(), COL_LABEL, 144);
+        r.fillTextAt(":", NES_YELLOW, defaultSceneFont(), COL_COLON, 144);
+        r.fillTextAt(tengenGame.mapCategory().name(), NES_WHITE, defaultSceneFont(), COL_VALUE, 144);
 
         // Starting level number
         drawArrowIfSelected(OPTION_STARTING_LEVEL, 168, defaultSceneFont());
-        r.fillTextAtScaledPosition("STARTING LEVEL", NES_YELLOW, defaultSceneFont(), COL_LABEL, 168);
-        r.fillTextAtScaledPosition(":", NES_YELLOW, defaultSceneFont(), COL_COLON, 168);
-        r.fillTextAtScaledPosition(String.valueOf(tengenGame.startLevelNumber()), NES_WHITE, defaultSceneFont(), COL_VALUE, 168);
+        r.fillTextAt("STARTING LEVEL", NES_YELLOW, defaultSceneFont(), COL_LABEL, 168);
+        r.fillTextAt(":", NES_YELLOW, defaultSceneFont(), COL_COLON, 168);
+        r.fillTextAt(String.valueOf(tengenGame.startLevelNumber()), NES_WHITE, defaultSceneFont(), COL_VALUE, 168);
         if (tengenGame.numContinues() < 4) {
             r.drawSpriteScaled(CONTINUES_SPRITES[tengenGame.numContinues()], COL_VALUE + 3 * TS, 160);
         }
 
-        r.fillTextAtScaledPosition("MOVE ARROW WITH JOYPAD", NES_YELLOW, defaultSceneFont(), 4 * TS,  192);
-        r.fillTextAtScaledPosition("CHOOSE OPTIONS WITH A AND B", NES_YELLOW, defaultSceneFont(), 2 * TS,  200);
-        r.fillTextAtScaledPosition("PRESS START TO START GAME", NES_YELLOW, defaultSceneFont(), 3 * TS,  208);
+        r.fillTextAt("MOVE ARROW WITH JOYPAD", NES_YELLOW, defaultSceneFont(), 4 * TS,  192);
+        r.fillTextAt("CHOOSE OPTIONS WITH A AND B", NES_YELLOW, defaultSceneFont(), 2 * TS,  200);
+        r.fillTextAt("PRESS START TO START GAME", NES_YELLOW, defaultSceneFont(), 3 * TS,  208);
     }
 
     private void drawArrowIfSelected(int option, double y, Font font) {
         if (selectedOption == option) {
-            gr().fillTextAtScaledPosition("-", NES_YELLOW, font, COL_ARROW, y);
-            gr().fillTextAtScaledPosition(">", NES_YELLOW, font, COL_ARROW + 3, y);
+            gr().fillTextAt("-", NES_YELLOW, font, COL_ARROW, y);
+            gr().fillTextAt(">", NES_YELLOW, font, COL_ARROW + 3, y);
         }
     }
 }

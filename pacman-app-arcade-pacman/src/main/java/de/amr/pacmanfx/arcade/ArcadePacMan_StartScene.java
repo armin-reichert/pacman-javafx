@@ -39,12 +39,12 @@ public class ArcadePacMan_StartScene extends GameScene2D {
     public void drawSceneContent() {
         final Font smallFont = theAssets().arcadeFontAtSize(scaled(6));
         gr().drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
-        gr().fillTextAtScaledTilePosition("PUSH START BUTTON", ARCADE_ORANGE, defaultSceneFont(), 6, 17);
-        gr().fillTextAtScaledTilePosition("1 PLAYER ONLY", ARCADE_CYAN, defaultSceneFont(), 8, 21);
-        gr().fillTextAtScaledTilePosition("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, defaultSceneFont(), 1, 25);
-        gr().fillTextAtScaledTilePosition("PTS", ARCADE_ROSE, smallFont, 25, 25);
-        gr().fillTextAtScaledTilePosition("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, defaultSceneFont(), 4, 29);
-        gr().fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
+        gr().fillTextAtTile("PUSH START BUTTON", ARCADE_ORANGE, defaultSceneFont(), 6, 17);
+        gr().fillTextAtTile("1 PLAYER ONLY", ARCADE_CYAN, defaultSceneFont(), 8, 21);
+        gr().fillTextAtTile("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, defaultSceneFont(), 1, 25);
+        gr().fillTextAtTile("PTS", ARCADE_ROSE, smallFont, 25, 25);
+        gr().fillTextAtTile("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, defaultSceneFont(), 4, 29);
+        gr().fillTextAt("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 scoreColor(), defaultSceneFont(), 2 * TS, sizeInPx().y() - 2);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
