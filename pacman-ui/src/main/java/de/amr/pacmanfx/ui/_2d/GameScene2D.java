@@ -29,8 +29,8 @@ public abstract class GameScene2D implements GameScene, GameActionBindingManager
 
     protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
 
-    private final ObjectProperty<Font>  normalFontPy = new SimpleObjectProperty<>();
-    private final ObjectProperty<Font>  smallFontPy = new SimpleObjectProperty<>();
+    private final ObjectProperty<Font> normalArcadeFontPy = new SimpleObjectProperty<>();
+    private final ObjectProperty<Font> smallArcadeFontPy = new SimpleObjectProperty<>();
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final BooleanProperty       debugInfoVisiblePy = new SimpleBooleanProperty(false);
     private final FloatProperty         scalingPy = new SimpleFloatProperty(1.0f);
@@ -39,8 +39,8 @@ public abstract class GameScene2D implements GameScene, GameActionBindingManager
     private Canvas canvas;
 
     protected GameScene2D() {
-        normalFontPy.bind(scalingPy.map(s -> theAssets().arcadeFontAtSize(s.floatValue() * TS)));
-        smallFontPy.bind(scalingPy.map(s -> theAssets().arcadeFontAtSize(s.floatValue() * 6)));
+        normalArcadeFontPy.bind(scalingPy.map(s -> theAssets().arcadeFontAtSize(s.floatValue() * TS)));
+        smallArcadeFontPy.bind(scalingPy.map(s -> theAssets().arcadeFontAtSize(s.floatValue() * 6)));
     }
 
     @Override
@@ -80,8 +80,8 @@ public abstract class GameScene2D implements GameScene, GameActionBindingManager
     public float scaling() { return scalingPy.get(); }
     public float scaled(double value) { return (float) value * scaling(); }
 
-    public Font normalFont() { return normalFontPy.get(); }
-    public Font smallFont() { return smallFontPy.get(); }
+    public Font normalArcadeFont() { return normalArcadeFontPy.get(); }
+    public Font smallArcadeFont() { return smallArcadeFontPy.get(); }
 
     public Color backgroundColor() { return backgroundColorPy.get(); }
     public void setBackgroundColor(Color color) { backgroundColorPy.set(color); }
@@ -109,7 +109,7 @@ public abstract class GameScene2D implements GameScene, GameActionBindingManager
         gameRenderer.fillCanvas(backgroundColor());
         gameRenderer.setScaling(scaling());
         if (theGame().scoreManager().isScoreVisible()) {
-            gameRenderer.drawScores(theGame().scoreManager(), scoreColor(), normalFont());
+            gameRenderer.drawScores(theGame().scoreManager(), scoreColor(), normalArcadeFont());
         }
         drawSceneContent();
         if (debugInfoVisiblePy.get()) {

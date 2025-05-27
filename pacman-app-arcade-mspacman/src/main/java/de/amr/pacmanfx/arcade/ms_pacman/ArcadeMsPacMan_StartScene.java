@@ -40,16 +40,16 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gr().fillTextAtTile("PUSH START BUTTON", ARCADE_ORANGE, normalFont(), 6, 16);
-        gr().fillTextAtTile("1 PLAYER ONLY", ARCADE_ORANGE, normalFont(), 8, 18);
-        gr().fillTextAtTile("ADDITIONAL    AT 10000", ARCADE_ORANGE, normalFont(), 2, 25);
+        gr().fillTextAtTile("PUSH START BUTTON", ARCADE_ORANGE, normalArcadeFont(), 6, 16);
+        gr().fillTextAtTile("1 PLAYER ONLY", ARCADE_ORANGE, normalArcadeFont(), 8, 18);
+        gr().fillTextAtTile("ADDITIONAL    AT 10000", ARCADE_ORANGE, normalArcadeFont(), 2, 25);
         gr().drawSpriteScaled(gr().spriteSheet().livesCounterSprite(), tiles_to_px(13), tiles_to_px(23) + 1); //TODO check this
-        gr().fillTextAtTile("PTS", ARCADE_ORANGE, smallFont(), 25, 25);
+        gr().fillTextAtTile("PTS", ARCADE_ORANGE, smallArcadeFont(), 25, 25);
         if (gr() instanceof ArcadeMsPacMan_GameRenderer r) {
-            r.drawMsPacManCopyrightAtTile(ARCADE_RED, normalFont(), 6, 28);
+            r.drawMsPacManCopyrightAtTile(ARCADE_RED, normalArcadeFont(), 6, 28);
         }
         gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
-                scoreColor(), normalFont(), tiles_to_px(2), sizeInPx().y() - 2);
+                scoreColor(), normalArcadeFont(), tiles_to_px(2), sizeInPx().y() - 2);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 }

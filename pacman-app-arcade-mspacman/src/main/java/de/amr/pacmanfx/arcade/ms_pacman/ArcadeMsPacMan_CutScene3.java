@@ -96,7 +96,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     public void drawSceneContent() {
         if (gr() instanceof ArcadeMsPacMan_GameRenderer r) {
             // Note: in Ms. Pac-Man XXL another renderer is used!
-            r.drawClapperBoard(clapperboardAnimation, tiles_to_px(3), tiles_to_px(10), normalFont());
+            r.drawClapperBoard(clapperboardAnimation, tiles_to_px(3), tiles_to_px(10), normalArcadeFont());
         }
         gr().drawActor(msPacMan);
         gr().drawActor(pacMan);

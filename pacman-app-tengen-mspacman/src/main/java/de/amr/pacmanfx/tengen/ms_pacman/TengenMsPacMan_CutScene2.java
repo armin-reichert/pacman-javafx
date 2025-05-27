@@ -146,7 +146,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     public void drawSceneContent() {
         var r = (TengenMsPacMan_Renderer2D) gr();
         r.drawSceneBorderLines();
-        r.drawClapperBoard(clapAnimation, "THE CHASE", 2, CLAP_TILE_X, CLAP_TILE_Y, normalFont());
+        r.drawClapperBoard(clapAnimation, "THE CHASE", 2, CLAP_TILE_X, CLAP_TILE_Y, normalArcadeFont());
         r.drawActor(msPacMan);
         r.drawActor(pacMan);
         r.drawLevelCounter(theGame().levelCounter(), sizeInPx().minus(0, 3*TS));

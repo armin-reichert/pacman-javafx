@@ -35,13 +35,13 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gr().fillTextAtTile("PUSH START BUTTON", ARCADE_ORANGE, normalFont(), 6, 17);
-        gr().fillTextAtTile("1 PLAYER ONLY", ARCADE_CYAN, normalFont(), 8, 21);
-        gr().fillTextAtTile("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, normalFont(), 1, 25);
-        gr().fillTextAtTile("PTS", ARCADE_ROSE, smallFont(), 25, 25);
-        gr().fillTextAtTile("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, normalFont(), 4, 29);
+        gr().fillTextAtTile("PUSH START BUTTON", ARCADE_ORANGE, normalArcadeFont(), 6, 17);
+        gr().fillTextAtTile("1 PLAYER ONLY", ARCADE_CYAN, normalArcadeFont(), 8, 21);
+        gr().fillTextAtTile("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, normalArcadeFont(), 1, 25);
+        gr().fillTextAtTile("PTS", ARCADE_ROSE, smallArcadeFont(), 25, 25);
+        gr().fillTextAtTile("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, normalArcadeFont(), 4, 29);
         gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
-                scoreColor(), normalFont(), 2 * TS, sizeInPx().y() - 2);
+                scoreColor(), normalArcadeFont(), 2 * TS, sizeInPx().y() - 2);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 
