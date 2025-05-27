@@ -107,7 +107,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     public void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSizeInPixels) {
         float x = sceneSizeInPixels.x() - 4 * TS, y = sceneSizeInPixels.y() - 2 * TS;
         for (byte symbol : levelCounter.symbols()) {
-            drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), x, y);
+            drawSpriteScaled(spriteSheet.bonusSymbolSprite(symbol), x, y);
             x -= TS * 2;
         }
     }
@@ -118,8 +118,8 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
         ctx.setImageSmoothing(false);
         ctx.translate(0, movingBonus.elongationY());
         switch (bonus.state()) {
-            case Bonus.STATE_EDIBLE -> drawActorSprite(bonus.actor(), spriteSheet().bonusSymbolSprite(bonus.symbol()));
-            case Bonus.STATE_EATEN  -> drawActorSprite(bonus.actor(), spriteSheet().bonusValueSprite(bonus.symbol()));
+            case Bonus.STATE_EDIBLE -> drawActorSprite(bonus.actor(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
+            case Bonus.STATE_EATEN  -> drawActorSprite(bonus.actor(), spriteSheet.bonusValueSprite(bonus.symbol()));
         }
         ctx.restore();
     }

@@ -71,7 +71,7 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
     public void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSizeInPixels) {
         float x = sceneSizeInPixels.x() - 4 * TS, y = sceneSizeInPixels.y() - 2 * TS;
         for (byte symbol : levelCounter.symbols()) {
-            drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), x, y);
+            drawSpriteScaled(spriteSheet.bonusSymbolSprite(symbol), x, y);
             x -= TS * 2;
         }
     }
