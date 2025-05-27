@@ -255,21 +255,6 @@ public interface GameRenderer {
     }
 
     /**
-     * Draws text at the given position (scaled by the current scaling value).
-     *
-     * @param text  text
-     * @param color text color
-     * @param font  text font
-     * @param x     unscaled x-position
-     * @param y     unscaled y-position (baseline)
-     */
-    default void fillTextAt(String text, Color color, Font font, double x, double y) {
-        ctx().setFont(font);
-        ctx().setFill(color);
-        ctx().fillText(text, scaled(x), scaled(y));
-    }
-
-    /**
      * Draws text at the given tile position (scaled by the current scaling value).
      *
      * @param text  text
@@ -279,15 +264,37 @@ public interface GameRenderer {
      * @param tileY unscaled tile y-position (baseline)
      */
     default void fillTextAtTile(String text, Color color, Font font, int tileX, int tileY) {
-        fillTextAt(text, color, font, tiles_to_px(tileX), tiles_to_px(tileY));
+        fillText(text, color, font, tiles_to_px(tileX), tiles_to_px(tileY));
     }
 
-    default void fillTextCenteredAt(String text, Color color, Font font, double x, double y) {
-        ctx().save();
+    /**
+     * Draws text left-aligned at the given position (scaled by the current scaling value).
+     *
+     * @param text  text
+     * @param color text color
+     * @param font  text font
+     * @param x     unscaled x-position
+     * @param y     unscaled y-position (baseline)
+     */
+    default void fillText(String text, Color color, Font font, double x, double y) {
         ctx().setFont(font);
         ctx().setFill(color);
-        ctx().setTextAlign(TextAlignment.CENTER);
         ctx().fillText(text, scaled(x), scaled(y));
+    }
+
+    /**
+     * Draws text center-aligned at the given x position (scaled by the current scaling value).
+     *
+     * @param text  text
+     * @param color text color
+     * @param font  text font
+     * @param x     unscaled x-position
+     * @param y     unscaled y-position (baseline)
+     */
+    default void fillTextAtCenter(String text, Color color, Font font, double x, double y) {
+        ctx().save();
+        ctx().setTextAlign(TextAlignment.CENTER);
+        fillText(text, color, font, x, y);
         ctx().restore();
     }
 
@@ -302,7 +309,7 @@ public interface GameRenderer {
         int moreLivesThanSymbols = numLives - maxLives;
         if (moreLivesThanSymbols > 0) {
             Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-            fillTextAt("+" + moreLivesThanSymbols, Color.YELLOW, font, x + TS * 10, y + TS);
+            fillText("+" + moreLivesThanSymbols, Color.YELLOW, font, x + TS * 10, y + TS);
         }
     }
 
@@ -314,10 +321,10 @@ public interface GameRenderer {
     }
 
     default void drawScore(Score score, String title, double x, double y, Font font, Color color) {
-        fillTextAt(title, color, font, x, y);
-        fillTextAt("%7s".formatted("%02d".formatted(score.points())), color, font, x, y + TS + 1);
+        fillText(title, color, font, x, y);
+        fillText("%7s".formatted("%02d".formatted(score.points())), color, font, x, y + TS + 1);
         if (score.points() != 0) {
-            fillTextAt("L" + score.levelNumber(), color, font, x + tiles_to_px(8), y + TS + 1);
+            fillText("L" + score.levelNumber(), color, font, x + tiles_to_px(8), y + TS + 1);
         }
     }
 

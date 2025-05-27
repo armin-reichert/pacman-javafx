@@ -114,7 +114,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public void drawSceneContent() {
         gr().fillCanvas(backgroundColor());
         gr().drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
-        gr().fillTextAt("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
+        gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
             scoreColor(), defaultSceneFont(), 2 * TS, sizeInPx().y() - 2);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
         drawGallery();
@@ -139,7 +139,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     private void drawGallery() {
         var spriteSheet = (ArcadePacMan_SpriteSheet) theUIConfig().current().spriteSheet();
         if (titleVisible) {
-            gr().fillTextAt("CHARACTER / NICKNAME", ARCADE_WHITE,
+            gr().fillText("CHARACTER / NICKNAME", ARCADE_WHITE,
                 defaultSceneFont(), tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(6));
         }
         for (byte personality = RED_GHOST_SHADOW; personality <= ORANGE_GHOST_POKEY; ++personality) {
@@ -148,11 +148,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     tiles_to_px(LEFT_TILE_X) + TS, tiles_to_px(7 + 3 * personality) + HTS);
             }
             if (ghostCharacterVisible[personality]) {
-                gr().fillTextAt("-" + GHOST_CHARACTERS[personality], GHOST_COLORS[personality],
+                gr().fillText("-" + GHOST_CHARACTERS[personality], GHOST_COLORS[personality],
                     defaultSceneFont(), tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(8 + 3 * personality));
             }
             if (ghostNicknameVisible[personality]) {
-                gr().fillTextAt(GHOST_NICKNAMES[personality], GHOST_COLORS[personality],
+                gr().fillText(GHOST_NICKNAMES[personality], GHOST_COLORS[personality],
                     defaultSceneFont(), tiles_to_px(LEFT_TILE_X + 14), tiles_to_px(8 + 3 * personality));
             }
         }

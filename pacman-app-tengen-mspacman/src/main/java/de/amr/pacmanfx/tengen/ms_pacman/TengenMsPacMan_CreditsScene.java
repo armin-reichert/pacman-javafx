@@ -54,45 +54,45 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     private void drawOriginalGameAuthors(TengenMsPacMan_Renderer2D r, Font font) {
         int y = 7 * TS;
-        r.fillTextAt("CREDITS FOR MS PAC-MAN", nesPaletteColor(0x20), font, 3 * TS, y);
+        r.fillText("CREDITS FOR MS PAC-MAN", nesPaletteColor(0x20), font, 3 * TS, y);
         y += 4 * TS;
-        r.fillTextAt("GAME PROGRAMMER:", nesPaletteColor(0x23), font, 4 * TS, y);
+        r.fillText("GAME PROGRAMMER:", nesPaletteColor(0x23), font, 4 * TS, y);
         y += 2 * TS;
-        r.fillTextAt("FRANZ LANZINGER", nesPaletteColor(0x23), font, 10 * TS, y);
+        r.fillText("FRANZ LANZINGER", nesPaletteColor(0x23), font, 10 * TS, y);
         y += 3 * TS;
-        r.fillTextAt("SPECIAL THANKS:", nesPaletteColor(0x23), font, 4 * TS, y);
+        r.fillText("SPECIAL THANKS:", nesPaletteColor(0x23), font, 4 * TS, y);
         y += 2 * TS;
-        r.fillTextAt("JEFF YONAN", nesPaletteColor(0x23), font, 10 * TS, y);
+        r.fillText("JEFF YONAN", nesPaletteColor(0x23), font, 10 * TS, y);
         y += TS;
-        r.fillTextAt("DAVE O'RIVA", nesPaletteColor(0x23), font, 10 * TS, y);
+        r.fillText("DAVE O'RIVA", nesPaletteColor(0x23), font, 10 * TS, y);
         y += 4 * TS;
-        r.fillTextAt("MS PAC-MAN TM NAMCO LTD", nesPaletteColor(0x19), font, 5 * TS, y);
+        r.fillText("MS PAC-MAN TM NAMCO LTD", nesPaletteColor(0x19), font, 5 * TS, y);
         y += TS;
-        r.fillTextAt("©1990 TENGEN INC", nesPaletteColor(0x19), font, 7 * TS, y);
+        r.fillText("©1990 TENGEN INC", nesPaletteColor(0x19), font, 7 * TS, y);
         y += TS;
-        r.fillTextAt("ALL RIGHTS RESERVED", nesPaletteColor(0x19), font, 6 * TS, y);
+        r.fillText("ALL RIGHTS RESERVED", nesPaletteColor(0x19), font, 6 * TS, y);
     }
 
     private void drawJavaFXVersionAuthors(TengenMsPacMan_Renderer2D r, Font font) {
         int y = 7 * TS;
-        r.fillTextAt("CREDITS FOR JAVAFX REMAKE", nesPaletteColor(0x20), font, 3 * TS, y);
+        r.fillText("CREDITS FOR JAVAFX REMAKE", nesPaletteColor(0x20), font, 3 * TS, y);
         y += 4 * TS;
-        r.fillTextAt("GAME PROGRAMMER:", nesPaletteColor(0x23), font, 4 * TS, y);
+        r.fillText("GAME PROGRAMMER:", nesPaletteColor(0x23), font, 4 * TS, y);
         y += 2 * TS;
-        r.fillTextAt("ARMIN REICHERT", nesPaletteColor(0x23), font, 10 * TS, y);
+        r.fillText("ARMIN REICHERT", nesPaletteColor(0x23), font, 10 * TS, y);
         y += 3 * TS;
-        r.fillTextAt("SPECIAL THANKS:", nesPaletteColor(0x23), font, 4 * TS, y);
+        r.fillText("SPECIAL THANKS:", nesPaletteColor(0x23), font, 4 * TS, y);
         y += 2 * TS;
-        r.fillTextAt("@RUSSIANMANSMWC", nesPaletteColor(0x23), font, 10 * TS, y);
+        r.fillText("@RUSSIANMANSMWC", nesPaletteColor(0x23), font, 10 * TS, y);
         y += TS;
-        r.fillTextAt("@FLICKY1211", nesPaletteColor(0x23), font, 10 * TS, y);
+        r.fillText("@FLICKY1211", nesPaletteColor(0x23), font, 10 * TS, y);
         y += TS;
-        r.fillTextAt("ANDYANA JONSEPH", nesPaletteColor(0x23), font, 10 * TS, y);
+        r.fillText("ANDYANA JONSEPH", nesPaletteColor(0x23), font, 10 * TS, y);
         y += 3 * TS;
-        r.fillTextAt("GITHUB.COM/ARMIN-REICHERT", nesPaletteColor(0x19), font, 3 * TS, y);
+        r.fillText("GITHUB.COM/ARMIN-REICHERT", nesPaletteColor(0x19), font, 3 * TS, y);
         y += TS;
-        r.fillTextAt("©2024 MIT LICENSE", nesPaletteColor(0x19), font, 6 * TS, y);
+        r.fillText("©2024 MIT LICENSE", nesPaletteColor(0x19), font, 6 * TS, y);
         y += TS;
-        r.fillTextAt("ALL RIGHTS GRANTED", nesPaletteColor(0x19), font, 5 * TS, y);
+        r.fillText("ALL RIGHTS GRANTED", nesPaletteColor(0x19), font, 5 * TS, y);
     }
 }

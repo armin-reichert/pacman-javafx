@@ -46,9 +46,9 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         gr().drawSpriteScaled(gr().spriteSheet().livesCounterSprite(), tiles_to_px(13), tiles_to_px(23) + 1); //TODO check this
         gr().fillTextAtTile("PTS", ARCADE_ORANGE, font6, 25, 25);
         if (gr() instanceof ArcadeMsPacMan_GameRenderer r) {
-            r.drawMidwayCopyright(6, 28, ARCADE_RED, defaultSceneFont());
+            r.drawMidwayCopyrightAtTile(ARCADE_RED, defaultSceneFont(), 6, 28);
         }
-        gr().fillTextAt("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
+        gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 scoreColor(), defaultSceneFont(), tiles_to_px(2), sizeInPx().y() - 2);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }

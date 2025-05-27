@@ -121,27 +121,27 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         final SceneState state = sceneController.state();
         gr().drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
         drawMarquee();
-        gr().fillTextAt("\"MS PAC-MAN\"", ARCADE_ORANGE, defaultSceneFont(), TITLE_X, TITLE_Y);
+        gr().fillText("\"MS PAC-MAN\"", ARCADE_ORANGE, defaultSceneFont(), TITLE_X, TITLE_Y);
         if (state == SceneState.GHOSTS_MARCHING_IN) {
             if (currentPersonality == RED_GHOST_SHADOW) {
-                gr().fillTextAt("WITH", ARCADE_WHITE, defaultSceneFont(), TITLE_X, TOP_Y + tiles_to_px(3));
+                gr().fillText("WITH", ARCADE_WHITE, defaultSceneFont(), TITLE_X, TOP_Y + tiles_to_px(3));
             }
             double dx = GHOST_NAMES[currentPersonality].length() < 4 ? tiles_to_px(1) : 0;
-            gr().fillTextAt(GHOST_NAMES[currentPersonality], GHOST_COLORS[currentPersonality], defaultSceneFont(),
+            gr().fillText(GHOST_NAMES[currentPersonality], GHOST_COLORS[currentPersonality], defaultSceneFont(),
                 TITLE_X + tiles_to_px(3) + dx, TOP_Y + tiles_to_px(6));
         }
         else if (state == SceneState.MS_PACMAN_MARCHING_IN || state == SceneState.READY_TO_PLAY) {
-            gr().fillTextAt("STARRING", ARCADE_WHITE, defaultSceneFont(), TITLE_X, TOP_Y + tiles_to_px(3));
-            gr().fillTextAt("MS PAC-MAN", ARCADE_YELLOW, defaultSceneFont(), TITLE_X, TOP_Y + tiles_to_px(6));
+            gr().fillText("STARRING", ARCADE_WHITE, defaultSceneFont(), TITLE_X, TOP_Y + tiles_to_px(3));
+            gr().fillText("MS PAC-MAN", ARCADE_YELLOW, defaultSceneFont(), TITLE_X, TOP_Y + tiles_to_px(6));
         }
         for (Ghost ghost : ghosts) {
             gr().drawActor(ghost);
         }
         gr().drawActor(msPacMan);
         if (gr() instanceof ArcadeMsPacMan_GameRenderer r) { // might be PacManXXL vector renderer!
-            r.drawMidwayCopyright(6, 28, ARCADE_RED, defaultSceneFont());
+            r.drawMidwayCopyrightAtTile(ARCADE_RED, defaultSceneFont(), 6, 28);
         }
-        gr().fillTextAt("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
+        gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 scoreColor(), defaultSceneFont(), 2 * TS, sizeInPx().y() - 2);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }

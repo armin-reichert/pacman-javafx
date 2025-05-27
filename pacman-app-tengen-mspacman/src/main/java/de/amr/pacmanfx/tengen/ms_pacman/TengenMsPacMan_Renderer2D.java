@@ -318,11 +318,11 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     public void drawScores(ScoreManager scoreManager, Color color, Font font) {
         if (scoreManager.isScoreVisible()) {
             if (theClock().tickCount() % 60 < 30) {
-                fillTextAt("1UP", color, font, tiles_to_px(2), tiles_to_px(1));
+                fillText("1UP", color, font, tiles_to_px(2), tiles_to_px(1));
             }
-            fillTextAt("HIGH SCORE", color, font, tiles_to_px(9), tiles_to_px(1));
-            fillTextAt("%6d".formatted(scoreManager.score().points()), color, font, 0, tiles_to_px(2));
-            fillTextAt("%6d".formatted(scoreManager.highScore().points()), color, font, tiles_to_px(11), tiles_to_px(2));
+            fillText("HIGH SCORE", color, font, tiles_to_px(9), tiles_to_px(1));
+            fillText("%6d".formatted(scoreManager.score().points()), color, font, 0, tiles_to_px(2));
+            fillText("%6d".formatted(scoreManager.highScore().points()), color, font, tiles_to_px(11), tiles_to_px(2));
         }
     }
 
@@ -436,6 +436,6 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     private void drawTextCenteredOver(String text, double cx, double y, Color color, Font font) {
         double x = (cx - text.length() * 0.5 * TS);
-        fillTextAt(text, color, font, x, y);
+        fillText(text, color, font, x, y);
     }
 }

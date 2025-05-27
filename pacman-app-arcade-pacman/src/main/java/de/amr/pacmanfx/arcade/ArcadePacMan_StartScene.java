@@ -44,7 +44,7 @@ public class ArcadePacMan_StartScene extends GameScene2D {
         gr().fillTextAtTile("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, defaultSceneFont(), 1, 25);
         gr().fillTextAtTile("PTS", ARCADE_ROSE, smallFont, 25, 25);
         gr().fillTextAtTile("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, defaultSceneFont(), 4, 29);
-        gr().fillTextAt("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
+        gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 scoreColor(), defaultSceneFont(), 2 * TS, sizeInPx().y() - 2);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
