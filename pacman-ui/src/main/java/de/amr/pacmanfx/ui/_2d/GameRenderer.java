@@ -307,9 +307,8 @@ public interface GameRenderer {
     }
 
     default void drawScore(Score score, String title, double x, double y, Font font, Color color) {
-        var pointsText = String.format("%02d", score.points());
         fillTextAtScaledPosition(title, color, font, x, y);
-        fillTextAtScaledPosition(String.format("%7s", pointsText), color, font, x, y + TS + 1);
+        fillTextAtScaledPosition("%7s".formatted("%02d".formatted(score.points())), color, font, x, y + TS + 1);
         if (score.points() != 0) {
             fillTextAtScaledPosition("L" + score.levelNumber(), color, font, x + tiles_to_px(8), y + TS + 1);
         }

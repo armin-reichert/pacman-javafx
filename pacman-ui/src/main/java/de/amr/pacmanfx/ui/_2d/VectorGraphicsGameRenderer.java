@@ -24,9 +24,7 @@ import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
 /**
- * As this game variant allows playing arbitrary custom maps, we use a
- * vector graphics rendering that draws wall and obstacle paths generated from
- * the map data.
+ * A vector graphics renderer that draws wall and obstacle paths generated from the tile map data.
  *
  * @author Armin Reichert
  */
