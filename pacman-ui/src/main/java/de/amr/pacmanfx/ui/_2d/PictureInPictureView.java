@@ -10,36 +10,31 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.VBox;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 import static java.util.Objects.requireNonNull;
 
 /**
  * Picture-in-Picture view. Adapts its aspect ratio to the current game world. Height can be changed via dashboard.
- * <p>
- * TODO: fixme: should not depend on specific game
- * TODO: For large maps we need a camera inside this view or something alike
- * </p>
+ * <br>
+ * TODO: For large maps we need a camera inside this view or something else
  */
 public class PictureInPictureView extends VBox {
 
-    private final Canvas canvas;
+    private final Canvas canvas = new Canvas();
     private GameScene2D scene2D;
 
     public PictureInPictureView() {
-        setPadding(new Insets(5, 15, 5, 15));
-        canvas = new Canvas();
         canvas.heightProperty().bind(PY_PIP_HEIGHT);
-        canvas.heightProperty().addListener((py,ov,nv) -> recomputeLayout());
         getChildren().add(canvas);
+        setPadding(new Insets(5, 15, 5, 15));
         visibleProperty().addListener((py,ov,nv) -> recomputeLayout());
+        canvas.heightProperty().addListener((py,ov,nv) -> recomputeLayout());
     }
 
     public void setScene2D(GameScene2D scene2D) {
         this.scene2D = requireNonNull(scene2D);
-        GameRenderer renderer = theUIConfig().current().createRenderer(canvas);
-        scene2D.setGameRenderer(renderer);
-        scene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
+        this.scene2D.setGameRenderer(theUIConfig().current().createRenderer(canvas));
+        this.scene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
         recomputeLayout();
     }
 
