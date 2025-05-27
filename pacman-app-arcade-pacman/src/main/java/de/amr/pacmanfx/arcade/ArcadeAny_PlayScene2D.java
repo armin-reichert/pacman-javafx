@@ -29,10 +29,10 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_TILES;
+import static de.amr.pacmanfx.arcade.ArcadePalette.*;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
-import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_TILES;
-import static de.amr.pacmanfx.ui.PacManGames_Assets.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 
 /**

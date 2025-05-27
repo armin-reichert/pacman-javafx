@@ -31,14 +31,13 @@ import javafx.scene.Group;
 import javafx.util.Duration;
 
 import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 
 /**
  * @author Armin Reichert
  */
 public class FoodOscillation extends Transition {
 
-    private static final Vector2f CENTER = ARCADE_MAP_SIZE_IN_PIXELS.scaled(HTS);
+    private static final Vector2f CENTER = Vector2f.of(28 * HTS, 36 * HTS);
 
     private final Group foodGroup;
 

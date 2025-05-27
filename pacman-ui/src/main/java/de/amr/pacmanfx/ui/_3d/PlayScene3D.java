@@ -43,7 +43,6 @@ import static de.amr.pacmanfx.Validations.isOneOf;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
-import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static de.amr.pacmanfx.uilib.Ufx.contextMenuTitleItem;
 
@@ -335,7 +334,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
 
     @Override
     public Vector2f sizeInPx() {
-        return ARCADE_MAP_SIZE_IN_PIXELS; // irrelevant
+        return Vector2f.of(28*TS, 36*TS); // irrelevant
     }
 
     @Override

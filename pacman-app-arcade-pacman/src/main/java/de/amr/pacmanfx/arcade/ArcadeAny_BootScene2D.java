@@ -13,11 +13,11 @@ import javafx.scene.image.Image;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_TILES;
+import static de.amr.pacmanfx.arcade.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
-import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_TILES;
-import static de.amr.pacmanfx.ui.PacManGames_Assets.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theUIConfig;
 
 public class ArcadeAny_BootScene2D extends GameScene2D {

@@ -8,7 +8,6 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.PacManGames_Actions;
-import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui.PacManGames_UIConfiguration;
 import de.amr.pacmanfx.ui._2d.*;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
@@ -36,7 +35,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static de.amr.pacmanfx.uilib.Ufx.*;
 import static de.amr.pacmanfx.uilib.input.Keyboard.*;
@@ -282,9 +280,9 @@ public class GameView implements PacManGames_View {
 
     private void configureCanvasContainer() {
         canvasContainer.setMinScaling(0.5);
-        canvasContainer.setUnscaledCanvasWidth(ARCADE_MAP_SIZE_IN_PIXELS.x());
-        canvasContainer.setUnscaledCanvasHeight(ARCADE_MAP_SIZE_IN_PIXELS.y());
-        canvasContainer.setBorderColor(PacManGames_Assets.ARCADE_WHITE);
+        canvasContainer.setUnscaledCanvasWidth(28*TS); // 28x36 = Arcade map size
+        canvasContainer.setUnscaledCanvasHeight(36*TS);
+        canvasContainer.setBorderColor(Color.rgb(222, 222, 255));
         //TODO check this:
         canvasContainer.decorationEnabledPy.addListener((py, ov, nv) ->
             currentGameScene().ifPresent(gameScene -> embedGameScene(theUIConfig().current(), gameScene)));

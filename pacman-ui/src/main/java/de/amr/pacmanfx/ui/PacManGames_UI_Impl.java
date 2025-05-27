@@ -34,7 +34,6 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static java.util.Objects.requireNonNull;
 
@@ -218,8 +217,9 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
                 : theAssets().get("background.scene"))
         );
 
-        stage.setMinWidth(ARCADE_MAP_SIZE_IN_PIXELS.x() * 1.25);
-        stage.setMinHeight(ARCADE_MAP_SIZE_IN_PIXELS.y() * 1.25);
+        // 28x36 = Arcade map size (in tiles)
+        stage.setMinWidth(28*TS * 1.25);
+        stage.setMinHeight(36*TS * 1.25);
         stage.setScene(mainScene);
 
         theClock().setPausableAction(this::doSimulationStepAndUpdateGameScene);
