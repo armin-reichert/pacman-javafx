@@ -16,28 +16,26 @@ import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.lib.RectArea.rect;
 
-/**
- * @author Armin Reichert
- */
-public class ArcadeMsPacMan_SpriteSheet implements GameSpriteSheet {
+public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSpriteSheet {
 
     private static final byte RASTER_SIZE = 16;
     private static final List<Direction> ORDER = List.of(Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
     private static final RectArea[] GHOST_NUMBER_SPRITES = SpriteSheet.rectAreaArray(
-        spriteAt(0, 8), spriteAt(1, 8), spriteAt(2, 8), spriteAt(3, 8));
+            spriteAt(0, 8), spriteAt(1, 8), spriteAt(2, 8), spriteAt(3, 8));
 
     private static final RectArea[] BONUS_SYMBOL_SPRITES = IntStream.range(0, 8)
-        .mapToObj(symbol -> spriteAt(3 + symbol, 0))
-        .toArray(RectArea[]::new);
+            .mapToObj(symbol -> spriteAt(3 + symbol, 0))
+            .toArray(RectArea[]::new);
 
     private static final RectArea[] BONUS_VALUE_SPRITES = IntStream.range(0, 8)
-        .mapToObj(symbol -> spriteAt(3 + symbol, 1))
-        .toArray(RectArea[]::new);
+            .mapToObj(symbol -> spriteAt(3 + symbol, 1))
+            .toArray(RectArea[]::new);
 
     private static final RectArea LIVES_COUNTER_SPRITE = spriteAt(1, 0);
 
     private static final RectArea[][] MS_PAC_MAN_MUNCHING_SPRITES = new RectArea[4][];
+
     static {
         for (byte dir = 0; dir < 4; ++dir) {
             RectArea wide = spriteAt(0, dir), open = spriteAt(1, dir), closed = spriteAt(2, dir);
@@ -46,6 +44,7 @@ public class ArcadeMsPacMan_SpriteSheet implements GameSpriteSheet {
     }
 
     private static final RectArea[] MS_PAC_MAN_DYING_SPRITES;
+
     static {
         RectArea right = spriteAt(1, 0), left = spriteAt(1, 1), up = spriteAt(1, 2), down = spriteAt(1, 3);
         // TODO: this is not yet 100% correct
@@ -53,6 +52,7 @@ public class ArcadeMsPacMan_SpriteSheet implements GameSpriteSheet {
     }
 
     private static final RectArea[][][] GHOSTS_NORMAL_SPRITES = new RectArea[4][4][];
+
     static {
         for (byte id = 0; id < 4; ++id) {
             for (byte dir = 0; dir < 4; ++dir) {
@@ -67,6 +67,7 @@ public class ArcadeMsPacMan_SpriteSheet implements GameSpriteSheet {
             spriteAt(8, 4), spriteAt(9, 4), spriteAt(10, 4), spriteAt(11, 4));
 
     private static final RectArea[][] GHOST_EYES_SPRITES = new RectArea[4][];
+
     static {
         for (byte dir = 0; dir < 4; ++dir) {
             GHOST_EYES_SPRITES[dir] = SpriteSheet.rectAreaArray(spriteAt(8 + dir, 5));
@@ -74,6 +75,7 @@ public class ArcadeMsPacMan_SpriteSheet implements GameSpriteSheet {
     }
 
     private static final RectArea[][] MR_PAC_MAN_MUNCHING_SPRITES = new RectArea[4][];
+
     static {
         for (byte dir = 0; dir < 4; ++dir) {
             MR_PAC_MAN_MUNCHING_SPRITES[dir] = SpriteSheet.rectAreaArray(spriteAt(0, 9 + dir), spriteAt(1, 9 + dir), spriteAt(2, 9));
@@ -85,24 +87,13 @@ public class ArcadeMsPacMan_SpriteSheet implements GameSpriteSheet {
     static final RectArea JUNIOR_PAC_SPRITE = rect(509, 200, 8, 8);
 
     static final RectArea[] CLAPPERBOARD_SPRITES = SpriteSheet.rectAreaArray(
-        rect(456, 208, 32, 32),  // open
-        rect(488, 208, 32, 32),  // middle
-        rect(520, 208, 32, 32)); // closed
+            rect(456, 208, 32, 32),  // open
+            rect(488, 208, 32, 32),  // middle
+            rect(520, 208, 32, 32)); // closed
 
     // third "column" contains the sprites (first two columns the maze images)
     private static RectArea spriteAt(int tileX, int tileY) {
         return rect(456 + RASTER_SIZE * tileX, RASTER_SIZE * tileY, RASTER_SIZE, RASTER_SIZE);
-    }
-
-    private final Image source;
-
-    public ArcadeMsPacMan_SpriteSheet(Image source) {
-        this.source = source;
-    }
-
-    @Override
-    public Image sourceImage() {
-        return source;
     }
 
     @Override
@@ -161,9 +152,9 @@ public class ArcadeMsPacMan_SpriteSheet implements GameSpriteSheet {
 
     public SpriteAnimation createStorkFlyingAnimation() {
         return SpriteAnimation
-            .from(this)
-            .take(rect(489, 176, 32, 16), rect(521, 176, 32, 16))
-            .frameTicks(8)
-            .endless();
+                .from(this)
+                .take(rect(489, 176, 32, 16), rect(521, 176, 32, 16))
+                .frameTicks(8)
+                .endless();
     }
 }
