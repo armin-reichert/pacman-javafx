@@ -146,8 +146,6 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
 
         gr().applyRenderingHints(theGameLevel());
 
-        gr().drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
-
         boolean highlighted = levelFinishedAnimation != null
             && levelFinishedAnimation.isRunning() && levelFinishedAnimation.isHighlighted();
         gr().drawLevel(theGameLevel(), 0, 3 * TS, backgroundColor(), highlighted, theGameLevel().blinking().isOn());

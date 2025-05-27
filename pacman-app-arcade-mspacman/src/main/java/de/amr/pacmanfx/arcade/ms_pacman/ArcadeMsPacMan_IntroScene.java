@@ -119,7 +119,6 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     @Override
     public void drawSceneContent() {
         final SceneState state = sceneController.state();
-        gr().drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
         drawMarquee();
         gr().fillText("\"MS PAC-MAN\"", ARCADE_ORANGE, defaultSceneFont(), TITLE_X, TITLE_Y);
         if (state == SceneState.GHOSTS_MARCHING_IN) {
@@ -139,7 +138,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         }
         gr().drawActor(msPacMan);
         if (gr() instanceof ArcadeMsPacMan_GameRenderer r) { // might be PacManXXL vector renderer!
-            r.drawMidwayCopyrightAtTile(ARCADE_RED, defaultSceneFont(), 6, 28);
+            r.drawMsPacManCopyrightAtTile(ARCADE_RED, defaultSceneFont(), 6, 28);
         }
         gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 scoreColor(), defaultSceneFont(), 2 * TS, sizeInPx().y() - 2);

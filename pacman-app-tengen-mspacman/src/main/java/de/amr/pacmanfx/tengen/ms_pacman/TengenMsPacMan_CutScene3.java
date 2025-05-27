@@ -161,8 +161,6 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
             return;
         }
         var r = (TengenMsPacMan_Renderer2D) gr();
-        r.fillCanvas(backgroundColor());
-        r.drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
         r.drawSceneBorderLines();
         r.drawClapperBoard(clapAnimation, "JUNIOR", 3, CLAP_TILE_X, CLAP_TILE_Y, defaultSceneFont());
         r.drawStork(storkAnimation, stork, bagReleased);

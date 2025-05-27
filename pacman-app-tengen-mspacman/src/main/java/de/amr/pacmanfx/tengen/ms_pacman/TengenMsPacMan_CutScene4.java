@@ -206,8 +206,6 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     @Override
     protected void drawSceneContent() {
         var r = (TengenMsPacMan_Renderer2D) gr();
-        r.fillCanvas(backgroundColor());
-        r.drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
         r.drawSceneBorderLines();
         r.drawClapperBoard(clapAnimation, "THE END", 4, CLAP_TILE_X, CLAP_TILE_Y, defaultSceneFont());
         r.drawActor(msPacMan);

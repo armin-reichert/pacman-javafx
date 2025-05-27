@@ -18,8 +18,7 @@ import javafx.scene.text.Font;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.Globals.theGameState;
+import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
 import static java.util.Objects.requireNonNull;
 
@@ -112,6 +111,9 @@ public abstract class GameScene2D implements GameScene, GameActionBindingManager
     public void draw() {
         gameRenderer.fillCanvas(backgroundColor());
         gameRenderer.setScaling(scaling());
+        if (theGame().scoreManager().isScoreVisible()) {
+            gr().drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
+        }
         drawSceneContent();
         if (debugInfoVisiblePy.get()) {
             drawDebugInfo();

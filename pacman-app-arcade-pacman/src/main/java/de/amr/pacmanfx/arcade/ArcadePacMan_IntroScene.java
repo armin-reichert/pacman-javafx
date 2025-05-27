@@ -112,8 +112,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gr().fillCanvas(backgroundColor());
-        gr().drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
         gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
             scoreColor(), defaultSceneFont(), 2 * TS, sizeInPx().y() - 2);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());

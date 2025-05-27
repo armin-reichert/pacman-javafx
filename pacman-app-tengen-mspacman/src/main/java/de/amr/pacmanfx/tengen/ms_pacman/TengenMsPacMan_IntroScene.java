@@ -93,8 +93,6 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     @Override
     public void drawSceneContent() {
         var r = (TengenMsPacMan_Renderer2D) gr();
-        r.fillCanvas(backgroundColor());
-        r.drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
         r.drawSceneBorderLines();
         TickTimer timer = sceneController.state().timer;
         long t = timer.tickCount();

@@ -91,7 +91,6 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gr().drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
         gr().drawActor(pac);
         gr().drawActor(blinky);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());

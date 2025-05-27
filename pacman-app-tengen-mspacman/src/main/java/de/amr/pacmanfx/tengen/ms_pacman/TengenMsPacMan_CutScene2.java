@@ -145,8 +145,6 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         var r = (TengenMsPacMan_Renderer2D) gr();
-        r.fillCanvas(backgroundColor());
-        r.drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
         r.drawSceneBorderLines();
         r.drawClapperBoard(clapAnimation, "THE CHASE", 2, CLAP_TILE_X, CLAP_TILE_Y, defaultSceneFont());
         r.drawActor(msPacMan);

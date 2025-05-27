@@ -434,8 +434,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         double margin = scaled((NES_TILES.x() - theGameLevel().worldMap().numCols()) * HTS);
         r.ctx().translate(margin, 0);
 
-        r.drawScores(theGame().scoreManager(), scoreColor(), defaultSceneFont());
-
         final int mazeTopY = 3 * TS;
         final boolean flashing = levelFinishedAnimation != null && levelFinishedAnimation.isRunning();
         if (flashing) {
