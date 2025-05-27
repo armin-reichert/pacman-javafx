@@ -7,7 +7,8 @@ package de.amr.pacmanfx.ui;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
-import de.amr.pacmanfx.ui.sound.GameSound;
+import de.amr.pacmanfx.ui.layout.PacManGames_UI;
+import de.amr.pacmanfx.ui.sound.PacManGames_SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.input.Joypad;
 import de.amr.pacmanfx.uilib.input.Keyboard;
@@ -29,15 +30,15 @@ import java.util.Map;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-public class PacManGamesEnv {
+public class PacManGames_Env {
 
-    private static GameAssets theAssets;
+    private static PacManGames_Assets theAssets;
     private static GameClock theClock;
     private static Keyboard theKeyboard;
     private static Joypad theJoypad;
-    private static GameSound theSound;
-    private static GameUI theUI;
-    private static GameUIConfigManager theUIConfigManager;
+    private static PacManGames_SoundManager theSound;
+    private static PacManGames_UI theUI;
+    private static PacManGames_UIConfigurations theUIConfigManager;
 
     private static void checkUserDirsExistingAndWritable() {
         String homeDirDesc = "Pac-Man FX home directory";
@@ -77,22 +78,22 @@ public class PacManGamesEnv {
      */
     public static void init() {
         checkUserDirsExistingAndWritable();
-        theAssets = new GameAssets();
+        theAssets = new PacManGames_Assets();
         theClock = new GameClock();
         theKeyboard = new Keyboard();
         theJoypad = new Joypad(theKeyboard);
-        theSound = new GameSound();
-        theUIConfigManager = new GameUIConfigManager();
+        theSound = new PacManGames_SoundManager();
+        theUIConfigManager = new PacManGames_UIConfigurations();
         Logger.info("Game environment initialized.");
     }
 
-    public static GameAssets theAssets() { return theAssets; }
+    public static PacManGames_Assets theAssets() { return theAssets; }
     public static GameClock theClock() { return theClock; }
     public static Keyboard theKeyboard() { return theKeyboard; }
     public static Joypad theJoypad() { return theJoypad; }
-    public static GameSound theSound() { return theSound; }
-    public static GameUI theUI() { return theUI; }
-    public static GameUIConfigManager theUIConfig() { return theUIConfigManager; }
+    public static PacManGames_SoundManager theSound() { return theSound; }
+    public static PacManGames_UI theUI() { return theUI; }
+    public static PacManGames_UIConfigurations theUIConfig() { return theUIConfigManager; }
 
     /**
      * Creates the global UI instance and stores the configurations of the supported game variants.
@@ -103,15 +104,15 @@ public class PacManGamesEnv {
      * @param support3D if the UI has 3D support
      * @param configClassesMap a map specifying the UI configuration for each supported game variant
      */
-    public static void createUI(boolean support3D, Map<GameVariant, Class<? extends GameUIConfig>> configClassesMap)
+    public static void createUI(boolean support3D, Map<GameVariant, Class<? extends PacManGames_UIConfiguration>> configClassesMap)
     {
-        theUI = new PacManGamesUI();
+        theUI = new PacManGames_UI_Impl();
         if (support3D) {
             Model3DRepository.get(); // triggers 3D model loading
         }
         configClassesMap.forEach((gameVariant, configClass) -> {
             try {
-                GameUIConfig config = configClass.getDeclaredConstructor(GameAssets.class).newInstance(theAssets);
+                PacManGames_UIConfiguration config = configClass.getDeclaredConstructor(PacManGames_Assets.class).newInstance(theAssets);
                 theUIConfigManager.set(gameVariant, config);
                 Logger.info("Game variant {} uses UI configuration: {}", gameVariant, config);
             } catch (Exception x) {
@@ -129,7 +130,7 @@ public class PacManGamesEnv {
      *
      * @param configClassesMap a map specifying the UI configuration for each supported game variant
      */
-    public static void createUI(Map<GameVariant, Class<? extends GameUIConfig>> configClassesMap) {
+    public static void createUI(Map<GameVariant, Class<? extends PacManGames_UIConfiguration>> configClassesMap) {
         createUI(true, configClassesMap);
     }
 

@@ -10,8 +10,8 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.ui.GameAssets;
-import de.amr.pacmanfx.ui.GameUIConfig;
+import de.amr.pacmanfx.ui.PacManGames_Assets;
+import de.amr.pacmanfx.ui.PacManGames_UIConfiguration;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
@@ -31,11 +31,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.ui.GameAssets.*;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.PY_3D_ENABLED;
+import static de.amr.pacmanfx.ui.PacManGames_Assets.*;
+import static de.amr.pacmanfx.ui.PacManGames_Env.PY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadeMsPacMan_UIConfig implements GameUIConfig, ResourceManager {
+public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfiguration, ResourceManager {
 
     private static final List<WorldMapColorScheme> WORLD_MAP_COLOR_SCHEMES = List.of(
         new WorldMapColorScheme("FFB7AE", "FF0000", "FCB5FF", "DEDEFF"),
@@ -55,7 +55,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUIConfig, ResourceManager {
         return ArcadeMsPacMan_UIConfig.class;
     }
 
-    public ArcadeMsPacMan_UIConfig(GameAssets assets) {
+    public ArcadeMsPacMan_UIConfig(PacManGames_Assets assets) {
         appIcon = loadImage("graphics/icons/mspacman.png");
         spriteSheet = new ArcadeMsPacMan_SpriteSheet(loadImage("graphics/mspacman_spritesheet.png"));
 

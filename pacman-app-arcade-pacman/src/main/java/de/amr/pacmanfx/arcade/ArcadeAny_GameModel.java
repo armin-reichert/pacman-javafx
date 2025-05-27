@@ -16,8 +16,8 @@ import java.util.Optional;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.PY_IMMUNITY;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.PY_USING_AUTOPILOT;
+import static de.amr.pacmanfx.ui.PacManGames_Env.PY_IMMUNITY;
+import static de.amr.pacmanfx.ui.PacManGames_Env.PY_USING_AUTOPILOT;
 
 /**
  * Common data and functionality of Pac-Man and Ms. Pac-Man Arcade games.

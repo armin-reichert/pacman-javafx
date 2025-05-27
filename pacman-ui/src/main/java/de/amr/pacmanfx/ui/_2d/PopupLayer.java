@@ -12,7 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import static de.amr.pacmanfx.Globals.theGameController;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.theAssets;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
 import static de.amr.pacmanfx.uilib.Ufx.opaqueColor;
 
 /**

@@ -18,13 +18,13 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.pacmanfx.ui.PacManGamesEnv.theAssets;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
 import static java.util.Objects.requireNonNull;
 
 /**
  * @author Armin Reichert
  */
-public class GameSound {
+public class PacManGames_SoundManager {
 
     private final BooleanProperty enabledPy = new SimpleBooleanProperty(true) {
         @Override

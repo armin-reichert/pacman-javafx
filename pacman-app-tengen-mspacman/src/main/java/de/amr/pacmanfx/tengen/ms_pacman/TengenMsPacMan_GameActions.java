@@ -10,7 +10,7 @@ import de.amr.pacmanfx.uilib.GameAction;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.PY_TENGEN_PLAY_SCENE_DISPLAY_MODE;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
+import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
 public interface TengenMsPacMan_GameActions {

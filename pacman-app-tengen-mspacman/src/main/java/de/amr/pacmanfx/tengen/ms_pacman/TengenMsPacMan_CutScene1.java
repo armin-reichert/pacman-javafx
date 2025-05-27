@@ -21,7 +21,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationMap.AN
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.HEART_SPRITE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
+import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 
 /**
  * Intermission scene 1: "They meet".

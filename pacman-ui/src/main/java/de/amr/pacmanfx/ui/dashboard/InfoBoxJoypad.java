@@ -5,19 +5,19 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.lib.nes.JoypadButton;
-import de.amr.pacmanfx.ui.PacManGamesUI;
+import de.amr.pacmanfx.ui.PacManGames_UI_Impl;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
 
-import static de.amr.pacmanfx.ui.PacManGamesEnv.theJoypad;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theJoypad;
 
 public class InfoBoxJoypad extends InfoBox {
 
     public void init() {
         super.init();
 
-        ResourceManager rm = () -> PacManGamesUI.class;
+        ResourceManager rm = () -> PacManGames_UI_Impl.class;
         var imageNesController = new ImageView(rm.loadImage("graphics/nes-controller.jpg"));
 
         setContentTextFont(Font.font("Monospace", 16));

@@ -28,7 +28,7 @@ import java.nio.charset.StandardCharsets;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
+import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static de.amr.pacmanfx.uilib.Ufx.opaqueColor;
 import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
 

@@ -23,8 +23,8 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.RectArea.rect;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
-import static de.amr.pacmanfx.ui.GameAssets.ARCADE_WHITE;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.theAssets;
+import static de.amr.pacmanfx.ui.PacManGames_Assets.ARCADE_WHITE;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_GameRenderer implements GameRenderer {

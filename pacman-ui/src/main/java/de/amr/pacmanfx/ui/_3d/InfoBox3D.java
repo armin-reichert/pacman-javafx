@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.ui.GameActions;
+import de.amr.pacmanfx.ui.PacManGames_Actions;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.dashboard.InfoBox;
 import de.amr.pacmanfx.ui.dashboard.InfoText;
@@ -17,7 +17,7 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
 
-import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
+import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 
 /**
  * 3D related settings.
@@ -73,8 +73,8 @@ public class InfoBox3D extends InfoBox {
         setEditor(comboPerspectives, PY_3D_PERSPECTIVE);
 
         //TODO check these
-        cbUsePlayScene3D.setOnAction(e -> GameActions.TOGGLE_PLAY_SCENE_2D_3D.execute());
-        cbWireframeMode.setOnAction(e -> GameActions.TOGGLE_DRAW_MODE.execute());
+        cbUsePlayScene3D.setOnAction(e -> PacManGames_Actions.TOGGLE_PLAY_SCENE_2D_3D.execute());
+        cbWireframeMode.setOnAction(e -> PacManGames_Actions.TOGGLE_DRAW_MODE.execute());
     }
 
     private void updateControlsFromProperties() {

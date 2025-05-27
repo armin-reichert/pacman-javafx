@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.ui;
+package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import de.amr.pacmanfx.uilib.GameAction;
@@ -17,7 +17,7 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public class EditorView implements View {
+public class EditorView implements PacManGames_View {
 
     private final BorderPane layout = new BorderPane();
     private final TileMapEditor editor;

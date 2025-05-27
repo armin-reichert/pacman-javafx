@@ -12,9 +12,9 @@ import static de.amr.pacmanfx.Globals.theCoinMechanism;
 import static de.amr.pacmanfx.Globals.theGame;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.pacmanfx.ui.GameAssets.ARCADE_ORANGE;
-import static de.amr.pacmanfx.ui.GameAssets.ARCADE_RED;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.theSound;
+import static de.amr.pacmanfx.ui.PacManGames_Assets.ARCADE_ORANGE;
+import static de.amr.pacmanfx.ui.PacManGames_Assets.ARCADE_RED;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
 
 public class ArcadeMsPacMan_StartScene extends GameScene2D {
 

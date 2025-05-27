@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.ui;
+package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
@@ -14,13 +14,13 @@ import javafx.stage.Stage;
 
 import java.util.Optional;
 
-public interface GameUI {
+public interface PacManGames_UI {
 
     void addStartPage(StartPage startPage);
     void buildSceneGraph(Stage stage, double width, double height);
     void buildDashboard(DashboardID... ids);
     Optional<GameScene> currentGameScene();
-    View currentView();
+    PacManGames_View currentView();
     Dashboard dashboard();
     ObjectProperty<GameScene> gameSceneProperty();
     Scene mainScene();

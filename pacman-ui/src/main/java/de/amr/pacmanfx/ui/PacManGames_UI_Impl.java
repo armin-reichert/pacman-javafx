@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
+import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.uilib.GameScene;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -34,7 +35,7 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
+import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -42,9 +43,9 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Armin Reichert
  */
-public class PacManGamesUI implements GameUI {
+public class PacManGames_UI_Impl implements PacManGames_UI {
 
-    private final ObjectProperty<View> viewPy = new SimpleObjectProperty<>();
+    private final ObjectProperty<PacManGames_View> viewPy = new SimpleObjectProperty<>();
 
     private Stage stage;
     private Scene mainScene;
@@ -55,7 +56,7 @@ public class PacManGamesUI implements GameUI {
     private GameView gameView;
     private StartPagesView startPagesView;
 
-    public PacManGamesUI() {
+    public PacManGames_UI_Impl() {
         viewPy.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
     }
 
@@ -82,7 +83,7 @@ public class PacManGamesUI implements GameUI {
         }
     }
 
-    private void handleViewChange(View oldView, View newView) {
+    private void handleViewChange(PacManGames_View oldView, PacManGames_View newView) {
         root.getChildren().set(0, newView.layoutRoot());
         if (oldView != null) {
             oldView.deleteActionBindings();
@@ -236,7 +237,7 @@ public class PacManGamesUI implements GameUI {
     }
 
     @Override
-    public View currentView() {
+    public PacManGames_View currentView() {
         return viewPy.get();
     }
 
@@ -275,7 +276,7 @@ public class PacManGamesUI implements GameUI {
             Logger.error("Cannot select game variant (NULL)");
             return;
         }
-        GameUIConfig uiConfig = theUIConfig().configuration(gameVariant);
+        PacManGames_UIConfiguration uiConfig = theUIConfig().configuration(gameVariant);
         theSound().selectGameVariant(gameVariant, uiConfig.assetNamespace());
         stage.getIcons().setAll(uiConfig.appIcon());
         gameView.canvasContainer().decorationEnabledPy.set(uiConfig.isGameCanvasDecorated());

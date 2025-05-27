@@ -9,8 +9,8 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.ui.GameAssets;
-import de.amr.pacmanfx.ui.GameUIConfig;
+import de.amr.pacmanfx.ui.PacManGames_Assets;
+import de.amr.pacmanfx.ui.PacManGames_UIConfiguration;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.ui._2d.VectorGraphicsGameRenderer;
@@ -29,17 +29,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.ui.GameAssets.*;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.PY_3D_ENABLED;
+import static de.amr.pacmanfx.ui.PacManGames_Assets.*;
+import static de.amr.pacmanfx.ui.PacManGames_Env.PY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
-public class XXLPacMan_UIConfig implements GameUIConfig {
+public class XXLPacMan_UIConfig implements PacManGames_UIConfiguration {
 
     private final Image appIcon;
     private final ArcadePacMan_SpriteSheet spriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public XXLPacMan_UIConfig(GameAssets assets) {
+    public XXLPacMan_UIConfig(PacManGames_Assets assets) {
         ResourceManager rm = () -> ArcadePacMan_UIConfig.class;
 
         appIcon = rm.loadImage("graphics/icons/pacman.png");

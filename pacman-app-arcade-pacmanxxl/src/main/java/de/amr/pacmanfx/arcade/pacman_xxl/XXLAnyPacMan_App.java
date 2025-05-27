@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.model.GameVariant;
-import de.amr.pacmanfx.ui.PacManGamesEnv;
+import de.amr.pacmanfx.ui.PacManGames_Env;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.dashboard.InfoBoxCustomMaps;
 import javafx.application.Application;
@@ -17,8 +17,8 @@ import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.CUSTOM_MAP_DIR;
 import static de.amr.pacmanfx.Globals.theGameController;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.createUI;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.theUI;
+import static de.amr.pacmanfx.ui.PacManGames_Env.createUI;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
 
 public class XXLAnyPacMan_App extends Application {
 
@@ -26,7 +26,7 @@ public class XXLAnyPacMan_App extends Application {
 
     @Override
     public void init() {
-        PacManGamesEnv.init();
+        PacManGames_Env.init();
         xxlMapSelector = new XXLAnyPacMan_MapSelector(CUSTOM_MAP_DIR);
         theGameController().register(GameVariant.PACMAN_XXL, new XXLPacMan_GameModel(xxlMapSelector));
         theGameController().register(GameVariant.MS_PACMAN_XXL, new XXLMsPacMan_GameModel(xxlMapSelector));

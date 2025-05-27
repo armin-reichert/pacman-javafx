@@ -13,13 +13,13 @@ import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.theGameVariant;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.PY_DEBUG_INFO_VISIBLE;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.theUI;
+import static de.amr.pacmanfx.ui.PacManGames_Env.PY_DEBUG_INFO_VISIBLE;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
 import static java.util.Objects.requireNonNull;
 
-public class GameUIConfigManager {
+public class PacManGames_UIConfigurations {
 
-    protected final Map<GameVariant, GameUIConfig> configMap = new EnumMap<>(GameVariant.class);
+    protected final Map<GameVariant, PacManGames_UIConfiguration> configMap = new EnumMap<>(GameVariant.class);
 
     /**
      * Stores the UI configuration for a game variant and initializes the game scenes (assigns the game context).
@@ -27,7 +27,7 @@ public class GameUIConfigManager {
      * @param variant a game variant
      * @param uiConfig the UI configuration for this variant
      */
-    public void set(GameVariant variant, GameUIConfig uiConfig) {
+    public void set(GameVariant variant, PacManGames_UIConfiguration uiConfig) {
         requireNonNull(variant);
         requireNonNull(uiConfig);
         uiConfig.gameScenes().forEach(scene -> {
@@ -38,11 +38,11 @@ public class GameUIConfigManager {
         configMap.put(variant, uiConfig);
     }
 
-    public GameUIConfig configuration(GameVariant gameVariant) {
+    public PacManGames_UIConfiguration configuration(GameVariant gameVariant) {
         return configMap.get(gameVariant);
     }
 
-    public GameUIConfig current() {
+    public PacManGames_UIConfiguration current() {
         return configMap.get(theGameVariant());
     }
 
@@ -62,7 +62,7 @@ public class GameUIConfigManager {
         return theUI().currentGameScene().map(GameScene2D.class::isInstance).orElse(false);
     }
 
-    public boolean is2D3DPlaySceneSwitch(GameUIConfig config, GameScene oldScene, GameScene newScene) {
+    public boolean is2D3DPlaySceneSwitch(PacManGames_UIConfiguration config, GameScene oldScene, GameScene newScene) {
         if (oldScene == null && newScene == null) {
             throw new IllegalStateException("WTF is going on here, both game scenes are NULL!");
         }

@@ -18,6 +18,7 @@ open module de.amr.pacmanfx.ui {
     requires de.amr.pacmanfx.mapeditor;
 
     exports de.amr.pacmanfx.ui.dashboard;
+    exports de.amr.pacmanfx.ui.layout;
     exports de.amr.pacmanfx.ui.sound;
     exports de.amr.pacmanfx.ui._2d;
     exports de.amr.pacmanfx.ui._3d;

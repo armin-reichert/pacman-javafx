@@ -21,7 +21,7 @@ import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.timer.TickTimer.ticksToString;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.theUIConfig;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theUIConfig;
 import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
 
 /**

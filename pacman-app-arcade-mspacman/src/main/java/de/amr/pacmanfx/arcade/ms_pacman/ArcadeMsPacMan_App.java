@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.model.GameVariant;
-import de.amr.pacmanfx.ui.PacManGamesEnv;
+import de.amr.pacmanfx.ui.PacManGames_Env;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.stage.Screen;
@@ -14,13 +14,13 @@ import javafx.stage.Stage;
 import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.theGameController;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
+import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 
 public class ArcadeMsPacMan_App extends Application {
 
     @Override
     public void init() {
-        PacManGamesEnv.init();
+        PacManGames_Env.init();
         theGameController().register(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameModel());
         theGameController().select(GameVariant.MS_PACMAN);
     }

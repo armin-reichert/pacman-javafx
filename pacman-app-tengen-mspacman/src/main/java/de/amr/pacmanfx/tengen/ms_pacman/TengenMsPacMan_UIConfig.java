@@ -11,8 +11,8 @@ import de.amr.pacmanfx.lib.nes.NES_Palette;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.ui.GameAssets;
-import de.amr.pacmanfx.ui.GameUIConfig;
+import de.amr.pacmanfx.ui.PacManGames_Assets;
+import de.amr.pacmanfx.ui.PacManGames_UIConfiguration;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.uilib.GameScene;
@@ -35,11 +35,11 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.PY_3D_ENABLED;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.PY_CANVAS_BG_COLOR;
+import static de.amr.pacmanfx.ui.PacManGames_Env.PY_3D_ENABLED;
+import static de.amr.pacmanfx.ui.PacManGames_Env.PY_CANVAS_BG_COLOR;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_UIConfig implements GameUIConfig, ResourceManager {
+public class TengenMsPacMan_UIConfig implements PacManGames_UIConfiguration, ResourceManager {
 
     public static final BooleanProperty PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED = new SimpleBooleanProperty(false);
     public static final ObjectProperty<SceneDisplayMode> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
@@ -61,7 +61,7 @@ public class TengenMsPacMan_UIConfig implements GameUIConfig, ResourceManager {
         return TengenMsPacMan_UIConfig.class;
     }
 
-    public TengenMsPacMan_UIConfig(GameAssets assets) {
+    public TengenMsPacMan_UIConfig(PacManGames_Assets assets) {
         appIcon = loadImage("graphics/icons/mspacman.png");
         spriteSheet = new TengenMsPacMan_SpriteSheet(loadImage("graphics/spritesheet.png"));
         mapRepository = new MapRepository(

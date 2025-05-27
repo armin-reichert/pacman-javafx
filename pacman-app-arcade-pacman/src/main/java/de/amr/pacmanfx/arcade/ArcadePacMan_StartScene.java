@@ -10,8 +10,8 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.pacmanfx.ui.GameAssets.*;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.theSound;
+import static de.amr.pacmanfx.ui.PacManGames_Assets.*;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
 
 /**
  * Scene shown after credit has been added and where game can be started.

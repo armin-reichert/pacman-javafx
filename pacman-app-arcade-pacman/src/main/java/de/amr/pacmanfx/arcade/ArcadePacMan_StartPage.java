@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade;
 
 import de.amr.pacmanfx.model.GameVariant;
-import de.amr.pacmanfx.ui.StartPage;
-import de.amr.pacmanfx.ui.StartPagesView;
+import de.amr.pacmanfx.ui.layout.StartPage;
+import de.amr.pacmanfx.ui.layout.StartPagesView;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
 import javafx.scene.input.KeyEvent;

@@ -14,7 +14,7 @@ import javafx.scene.text.Font;
 
 import java.util.ResourceBundle;
 
-public class GameAssets extends AssetStorage implements ResourceManager {
+public class PacManGames_Assets extends AssetStorage implements ResourceManager {
 
     public static final Color ARCADE_BLUE   = Color.web(Arcade.Palette.BLUE);
     public static final Color ARCADE_CYAN   = Color.web(Arcade.Palette.CYAN);
@@ -29,9 +29,9 @@ public class GameAssets extends AssetStorage implements ResourceManager {
     protected Picker<String> pickerForLevelCompleteTexts;
 
     @Override
-    public Class<?> resourceRootClass() { return GameAssets.class; }
+    public Class<?> resourceRootClass() { return PacManGames_Assets.class; }
 
-    public GameAssets() {
+    public PacManGames_Assets() {
         ResourceBundle localizedTexts = getModuleBundle("de.amr.pacmanfx.ui.localized_texts");
         setLocalizedTexts(localizedTexts);
 

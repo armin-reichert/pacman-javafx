@@ -2,11 +2,14 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.ui;
+package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameVariant;
+import de.amr.pacmanfx.ui.PacManGames_Actions;
+import de.amr.pacmanfx.ui.PacManGames_Assets;
+import de.amr.pacmanfx.ui.PacManGames_UIConfiguration;
 import de.amr.pacmanfx.ui._2d.*;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.InfoBox;
@@ -34,7 +37,7 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
+import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static de.amr.pacmanfx.uilib.Ufx.*;
 import static de.amr.pacmanfx.uilib.input.Keyboard.*;
 import static java.util.Objects.requireNonNull;
@@ -42,7 +45,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * This view shows the game play and the overlays like dashboard and picture-in-picture view of the running play scene.
  */
-public class GameView implements View {
+public class GameView implements PacManGames_View {
 
     private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
 
@@ -72,7 +75,7 @@ public class GameView implements View {
     private final StringExpression titleExpression;
     private final ContextMenu contextMenu = new ContextMenu();
 
-    public GameView(GameUI ui) {
+    public GameView(PacManGames_UI ui) {
         this.parentScene = ui.mainScene();
         titleExpression = Bindings.createStringBinding(() -> computeTitleText(ui),
                 theClock().pausedProperty(), ui.mainScene().heightProperty(), gameScenePy,
@@ -94,20 +97,20 @@ public class GameView implements View {
     private void bindActions() {
         bind(theUI()::restart,                   naked(KeyCode.F3));
         bind(this::showGameSceneHelp,            naked(KeyCode.H));
-        bind(GameActions.QUIT_GAME_SCENE,         naked(KeyCode.Q));
-        bind(GameActions.SIMULATION_SLOWER,       alt(KeyCode.MINUS));
-        bind(GameActions.SIMULATION_FASTER,       alt(KeyCode.PLUS));
-        bind(GameActions.SIMULATION_RESET,        alt(KeyCode.DIGIT0));
-        bind(GameActions.SIMULATION_ONE_STEP,     shift(KeyCode.P));
-        bind(GameActions.SIMULATION_TEN_STEPS,    shift(KeyCode.SPACE));
-        bind(GameActions.TOGGLE_AUTOPILOT,        alt(KeyCode.A));
-        bind(GameActions.TOGGLE_DEBUG_INFO,       alt(KeyCode.D));
-        bind(GameActions.TOGGLE_PAUSED,           naked(KeyCode.P));
+        bind(PacManGames_Actions.QUIT_GAME_SCENE,         naked(KeyCode.Q));
+        bind(PacManGames_Actions.SIMULATION_SLOWER,       alt(KeyCode.MINUS));
+        bind(PacManGames_Actions.SIMULATION_FASTER,       alt(KeyCode.PLUS));
+        bind(PacManGames_Actions.SIMULATION_RESET,        alt(KeyCode.DIGIT0));
+        bind(PacManGames_Actions.SIMULATION_ONE_STEP,     shift(KeyCode.P));
+        bind(PacManGames_Actions.SIMULATION_TEN_STEPS,    shift(KeyCode.SPACE));
+        bind(PacManGames_Actions.TOGGLE_AUTOPILOT,        alt(KeyCode.A));
+        bind(PacManGames_Actions.TOGGLE_DEBUG_INFO,       alt(KeyCode.D));
+        bind(PacManGames_Actions.TOGGLE_PAUSED,           naked(KeyCode.P));
         bind(this::toggleDashboardVisibility,    naked(KeyCode.F1), alt(KeyCode.B));
-        bind(GameActions.TOGGLE_IMMUNITY,         alt(KeyCode.I));
+        bind(PacManGames_Actions.TOGGLE_IMMUNITY,         alt(KeyCode.I));
         // 3D only
-        bind(GameActions.TOGGLE_PIP_VISIBILITY,   naked(KeyCode.F2));
-        bind(GameActions.TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3));
+        bind(PacManGames_Actions.TOGGLE_PIP_VISIBILITY,   naked(KeyCode.F2));
+        bind(PacManGames_Actions.TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -165,7 +168,7 @@ public class GameView implements View {
     public void onGameEvent(GameEvent event) {
         Logger.trace("{} received game event {}", getClass().getSimpleName(), event);
         // dispatch event to event specific method:
-        View.super.onGameEvent(event);
+        PacManGames_View.super.onGameEvent(event);
         // dispatch to current game scene
         currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(event));
         updateGameScene(false);
@@ -175,7 +178,7 @@ public class GameView implements View {
     public void onLevelCreated(GameEvent event) {
         //TODO find another point in time to do this
         optGameLevel().ifPresent(level -> {
-            GameUIConfig config = theUIConfig().current();
+            PacManGames_UIConfiguration config = theUIConfig().current();
             config.createActorAnimations(level);
             theSound().setEnabled(!level.isDemoLevel());
             // size of game scene might have changed, so re-embed
@@ -222,7 +225,7 @@ public class GameView implements View {
     }
 
     public void updateGameScene(boolean reloadCurrent) {
-        GameUIConfig uiConfig = theUIConfig().current();
+        PacManGames_UIConfiguration uiConfig = theUIConfig().current();
         final GameScene nextGameScene = uiConfig.selectGameScene(theGame(), theGameState());
         if (nextGameScene == null) {
             throw new IllegalStateException("Could not determine next game scene");
@@ -246,7 +249,7 @@ public class GameView implements View {
         }
     }
 
-    public void embedGameScene(GameUIConfig gameUIConfig, GameScene gameScene) {
+    public void embedGameScene(PacManGames_UIConfiguration gameUIConfig, GameScene gameScene) {
         requireNonNull(gameScene);
         switch (gameScene) {
             case CameraControlledView gameSceneUsingCamera -> {
@@ -281,7 +284,7 @@ public class GameView implements View {
         canvasContainer.setMinScaling(0.5);
         canvasContainer.setUnscaledCanvasWidth(ARCADE_MAP_SIZE_IN_PIXELS.x());
         canvasContainer.setUnscaledCanvasHeight(ARCADE_MAP_SIZE_IN_PIXELS.y());
-        canvasContainer.setBorderColor(GameAssets.ARCADE_WHITE);
+        canvasContainer.setBorderColor(PacManGames_Assets.ARCADE_WHITE);
         //TODO check this:
         canvasContainer.decorationEnabledPy.addListener((py, ov, nv) ->
             currentGameScene().ifPresent(gameScene -> embedGameScene(theUIConfig().current(), gameScene)));
@@ -311,7 +314,7 @@ public class GameView implements View {
         });
     }
 
-    private String computeTitleText(GameUI ui) {
+    private String computeTitleText(PacManGames_UI ui) {
         String keyPattern = "app.title." + theUIConfig().current().assetNamespace() + (theClock().isPaused() ? ".paused" : "");
         if (ui.currentGameScene().isPresent()) {
             return computeTitleIfGameScenePresent(ui.currentGameScene().get(), keyPattern);
@@ -352,7 +355,7 @@ public class GameView implements View {
         var menuItems = new ArrayList<>(gameScenePy.get().supplyContextMenuItems(e));
         if (theUIConfig().currentGameSceneIsPlayScene2D()) {
             var item = new MenuItem(theAssets().text("use_3D_scene"));
-            item.setOnAction(ae -> GameActions.TOGGLE_PLAY_SCENE_2D_3D.execute());
+            item.setOnAction(ae -> PacManGames_Actions.TOGGLE_PLAY_SCENE_2D_3D.execute());
             menuItems.addFirst(item);
             menuItems.addFirst(contextMenuTitleItem(theAssets().text("scene_display")));
         }

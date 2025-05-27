@@ -14,8 +14,8 @@ import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingBonus;
-import de.amr.pacmanfx.ui.GameActions;
-import de.amr.pacmanfx.ui.GameActionBindingManager;
+import de.amr.pacmanfx.ui.PacManGames_Actions;
+import de.amr.pacmanfx.ui.PacManGames_ActionBindings;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.uilib.GameAction;
 import de.amr.pacmanfx.uilib.CameraControlledView;
@@ -44,14 +44,14 @@ import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.lib.arcade.Arcade.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
+import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static de.amr.pacmanfx.uilib.Ufx.contextMenuTitleItem;
 
 /**
  * 3D play scene. Provides different camera perspectives that can be stepped
  * through using keys <code>Alt+LEFT</code> and <code>Alt+RIGHT</code>.
  */
-public class PlayScene3D implements GameScene, GameActionBindingManager, CameraControlledView {
+public class PlayScene3D implements GameScene, PacManGames_ActionBindings, CameraControlledView {
 
     protected final SubScene fxSubScene;
     protected final Group root = new Group();
@@ -109,7 +109,7 @@ public class PlayScene3D implements GameScene, GameActionBindingManager, CameraC
         items.add(contextMenuTitleItem(theAssets().text("scene_display")));
 
         var item = new MenuItem(theAssets().text("use_2D_scene"));
-        item.setOnAction(ae -> GameActions.TOGGLE_PLAY_SCENE_2D_3D.execute());
+        item.setOnAction(ae -> PacManGames_Actions.TOGGLE_PLAY_SCENE_2D_3D.execute());
         items.add(item);
 
         // Toggle picture-in-picture display
@@ -162,7 +162,7 @@ public class PlayScene3D implements GameScene, GameActionBindingManager, CameraC
         items.add(miMuted);
 
         var miQuit = new MenuItem(theAssets().text("quit"));
-        miQuit.setOnAction(ae -> GameActions.QUIT_GAME_SCENE.execute());
+        miQuit.setOnAction(ae -> PacManGames_Actions.QUIT_GAME_SCENE.execute());
         items.add(miQuit);
 
         return items;

@@ -2,9 +2,10 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.ui;
+package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.ui.PacManGames_Actions;
 import de.amr.pacmanfx.uilib.GameAction;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
@@ -26,13 +27,13 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
+import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static java.util.Objects.requireNonNull;
 
 /**
  * Carousel containing the start pages for the different game variants (XXL game variants share common start page).
  */
-public class StartPagesView implements View {
+public class StartPagesView implements PacManGames_View {
 
     public static Node createDefaultStartButton() {
         Node button = Ufx.createFancyButton(
@@ -102,7 +103,7 @@ public class StartPagesView implements View {
         bind(carousel::showPreviousSlide, KeyCode.LEFT);
         bind(carousel::showNextSlide,     KeyCode.RIGHT);
         bind(actionSelectGamePage,        KeyCode.ENTER);
-        bind(GameActions.TOGGLE_PAUSED,    KeyCode.P);
+        bind(PacManGames_Actions.TOGGLE_PAUSED,    KeyCode.P);
     }
 
     @Override

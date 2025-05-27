@@ -14,8 +14,8 @@ import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.MapSelectionMode;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.GameUIConfig;
-import de.amr.pacmanfx.ui.StartPage;
+import de.amr.pacmanfx.ui.PacManGames_UIConfiguration;
+import de.amr.pacmanfx.ui.layout.StartPage;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.input.Keyboard;
@@ -35,7 +35,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Globals.theGameController;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
+import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -241,7 +241,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
         }
 
         private void setActorAnimationVariant(GameVariant gameVariant) {
-            GameUIConfig config = theUIConfig().configuration(gameVariant);
+            PacManGames_UIConfiguration config = theUIConfig().configuration(gameVariant);
             renderer = config.createRenderer(canvas);
 
             switch (gameVariant) {

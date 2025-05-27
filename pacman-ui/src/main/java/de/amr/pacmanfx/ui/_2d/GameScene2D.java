@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.ui.GameActionBindingManager;
+import de.amr.pacmanfx.ui.PacManGames_ActionBindings;
 import de.amr.pacmanfx.uilib.GameAction;
 import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.input.Keyboard;
@@ -19,13 +19,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
+import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static java.util.Objects.requireNonNull;
 
 /**
  * Base class of all 2D scenes.
  */
-public abstract class GameScene2D implements GameScene, GameActionBindingManager {
+public abstract class GameScene2D implements GameScene, PacManGames_ActionBindings {
 
     protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
 

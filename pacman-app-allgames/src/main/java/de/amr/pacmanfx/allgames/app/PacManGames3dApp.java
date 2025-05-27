@@ -15,7 +15,7 @@ import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
-import de.amr.pacmanfx.ui.PacManGamesEnv;
+import de.amr.pacmanfx.ui.PacManGames_Env;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.dashboard.InfoBoxCustomMaps;
 import javafx.application.Application;
@@ -26,7 +26,7 @@ import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.CUSTOM_MAP_DIR;
 import static de.amr.pacmanfx.Globals.theGameController;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.*;
+import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 
 /**
  * Application containing all game variants and including 3D play scene.
@@ -39,7 +39,7 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void init() {
-        PacManGamesEnv.init();
+        PacManGames_Env.init();
         xxlMapSelector = new XXLAnyPacMan_MapSelector(CUSTOM_MAP_DIR);
         theGameController().register(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameModel());
         theGameController().register(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());

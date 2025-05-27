@@ -20,7 +20,7 @@ import javafx.scene.image.Image;
 
 import java.util.stream.Stream;
 
-public interface GameUIConfig {
+public interface PacManGames_UIConfiguration {
     Image appIcon();
     String assetNamespace();
     void createActorAnimations(GameLevel level);

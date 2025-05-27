@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.tengen.ms_pacman;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.PacManGamesEnv.PY_PIP_HEIGHT;
+import static de.amr.pacmanfx.ui.PacManGames_Env.PY_PIP_HEIGHT;
 
 public class TengenMsPacMan_PiPScene extends TengenMsPacMan_PlayScene2D {
 
