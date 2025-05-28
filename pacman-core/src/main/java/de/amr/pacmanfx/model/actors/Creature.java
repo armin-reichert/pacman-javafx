@@ -20,7 +20,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Base class for all creatures which can move through a level's world.
+ * Base class for all actors which know how to move through a level's world.
  *
  * @author Armin Reichert
  */
