@@ -122,12 +122,16 @@ public abstract class Creature extends Actor {
         newTileEntered = !tile().equals(prevTile);
     }
 
+    public void placeAtTile(int tx, int ty) {
+        placeAtTile(tx, ty, 0, 0);
+    }
+
     /**
      * Places this creature centered over the given tile.
      *
      * @param tile tile where creature is placed
      */
-    public void centerOverTile(Vector2i tile) {
+    public void placeAtTile(Vector2i tile) {
         placeAtTile(tile.x(), tile.y(), 0, 0);
     }
 
@@ -291,11 +295,11 @@ public abstract class Creature extends Actor {
         var oldX = x;
         var oldY = y;
         if (currentTile.y() == portal.leftTunnelEnd().y() && x < portal.leftTunnelEnd().x() - portal.depth() * TS) {
-            centerOverTile(portal.rightTunnelEnd());
+            placeAtTile(portal.rightTunnelEnd());
             moveInfo.teleported = true;
             moveInfo.log(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)", name(), oldX, oldY, x, y));
         } else if (currentTile.equals(portal.rightTunnelEnd().plus(portal.depth(), 0))) {
-            centerOverTile(portal.leftTunnelEnd().minus(portal.depth(), 0));
+            placeAtTile(portal.leftTunnelEnd().minus(portal.depth(), 0));
             moveInfo.teleported = true;
             moveInfo.log(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)", name(), oldX, oldY, x, y));
         }
@@ -337,7 +341,7 @@ public abstract class Creature extends Actor {
 
         if (!canAccessTile(level, touchedTile)) {
             if (!turn) {
-                centerOverTile(tile()); // adjust over tile (would move forward against wall)
+                placeAtTile(tile()); // adjust over tile (would move forward against wall)
             }
             moveInfo.log(String.format("Cannot move %s into tile %s", dir, touchedTile));
             return;
@@ -348,7 +352,7 @@ public abstract class Creature extends Actor {
             boolean atTurnPosition = Math.abs(offset) <= 1;
             if (atTurnPosition) {
                 Logger.trace("Reached turn position ({})", name());
-                centerOverTile(tile()); // adjust over tile (starts moving around corner)
+                placeAtTile(tile()); // adjust over tile (starts moving around corner)
             } else {
                 moveInfo.log(String.format("Wants to take corner towards %s but not at turn position", dir));
                 return;
