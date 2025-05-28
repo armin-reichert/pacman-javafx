@@ -11,10 +11,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.ScoreManager;
-import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.Creature;
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import javafx.beans.property.FloatProperty;
@@ -150,16 +147,18 @@ public interface GameRenderer {
         if (!actor.isVisible()) {
             return;
         }
-        actor.animations().ifPresent(animations -> {
-            if (animations instanceof SpriteAnimationMap spriteAnimations) {
-                SpriteAnimation currentAnimation = spriteAnimations.currentAnimation();
-                if (currentAnimation != null) {
-                    drawActorSprite(actor, spriteAnimations.currentSprite(actor));
-                } else {
-                    Logger.error("No current animation for actor {}", actor);
+        if (actor instanceof AnimatedActor animatedActor) {
+            animatedActor.animations().ifPresent(animations -> {
+                if (animations instanceof SpriteAnimationMap spriteAnimations) {
+                    SpriteAnimation currentAnimation = spriteAnimations.currentAnimation();
+                    if (currentAnimation != null) {
+                        drawActorSprite(actor, spriteAnimations.currentSprite(actor));
+                    } else {
+                        Logger.error("No current animation for actor {}", actor);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     default void drawBonus(Bonus bonus) {
@@ -221,30 +220,32 @@ public interface GameRenderer {
     }
 
     default void drawAnimatedCreatureInfo(Creature creature) {
-        creature.animations()
-            .filter(SpriteAnimationMap.class::isInstance)
-            .map(SpriteAnimationMap.class::cast)
-            .ifPresent(animations -> {
-                String animID = animations.selectedAnimationID();
-                if (animID != null) {
-                    String text = animID + " " + animations.currentAnimation().frameIndex();
-                    ctx().setFill(Color.WHITE);
-                    ctx().setFont(Font.font("Monospaced", scaled(6)));
-                    ctx().fillText(text, scaled(creature.x() - 4), scaled(creature.y() - 4));
-                }
-                if (creature.wishDir() != null) {
-                    float scaling = scaling();
-                    Vector2f center = creature.position().plus(HTS, HTS);
-                    Vector2f arrowHead = center.plus(creature.wishDir().vector().scaled(12f)).scaled(scaling);
-                    Vector2f guyCenter = center.scaled(scaling);
-                    float radius = scaling * 2, diameter = 2 * radius;
-                    ctx().setStroke(Color.WHITE);
-                    ctx().setLineWidth(0.5);
-                    ctx().strokeLine(guyCenter.x(), guyCenter.y(), arrowHead.x(), arrowHead.y());
-                    ctx().setFill(creature.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
-                    ctx().fillOval(arrowHead.x() - radius, arrowHead.y() - radius, diameter, diameter);
-                }
-            });
+        if (creature instanceof AnimatedActor animatedActor) {
+            animatedActor.animations()
+                .filter(SpriteAnimationMap.class::isInstance)
+                .map(SpriteAnimationMap.class::cast)
+                .ifPresent(animations -> {
+                    String animID = animations.selectedAnimationID();
+                    if (animID != null) {
+                        String text = animID + " " + animations.currentAnimation().frameIndex();
+                        ctx().setFill(Color.WHITE);
+                        ctx().setFont(Font.font("Monospaced", scaled(6)));
+                        ctx().fillText(text, scaled(creature.x() - 4), scaled(creature.y() - 4));
+                    }
+                    if (creature.wishDir() != null) {
+                        float scaling = scaling();
+                        Vector2f center = creature.position().plus(HTS, HTS);
+                        Vector2f arrowHead = center.plus(creature.wishDir().vector().scaled(12f)).scaled(scaling);
+                        Vector2f guyCenter = center.scaled(scaling);
+                        float radius = scaling * 2, diameter = 2 * radius;
+                        ctx().setStroke(Color.WHITE);
+                        ctx().setLineWidth(0.5);
+                        ctx().strokeLine(guyCenter.x(), guyCenter.y(), arrowHead.x(), arrowHead.y());
+                        ctx().setFill(creature.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
+                        ctx().fillOval(arrowHead.x() - radius, arrowHead.y() - radius, diameter, diameter);
+                    }
+                });
+        }
         if (creature instanceof Pac pac) {
             String autopilot = pac.isUsingAutopilot() ? "autopilot" : "";
             String immune = pac.isImmune() ? "immune" : "";

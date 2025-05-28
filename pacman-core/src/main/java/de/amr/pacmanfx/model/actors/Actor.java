@@ -7,21 +7,16 @@ package de.amr.pacmanfx.model.actors;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 
-import java.util.Optional;
-
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Base class for all game actors, e.g. creatures and bonus entities.
+ * Base class for all game actors like Pac-Man. ghosts and bonus entities.
  * <p>
- * Each actor has a position velocity, acceleration (all sub-pixel precision) and a visibility.
- * Optionally, an animation map can be assigned.
+ * Each actor has a position, velocity, acceleration and visibility.
  * </p>
- *
- * @author Armin Reichert
  */
 public class Actor {
 
@@ -163,35 +158,5 @@ public class Actor {
     public boolean sameTile(Actor other) {
         requireNonNull(other, "Actor to check for same tile must not be null");
         return tile().equals(other.tile());
-    }
-
-    // Optional animations API
-
-    private ActorAnimationMap animations;
-
-    public void setAnimations(ActorAnimationMap animations) {
-        this.animations = requireNonNull(animations);
-    }
-
-    public Optional<ActorAnimationMap> animations() { return Optional.ofNullable(animations); }
-
-    public void playAnimation() { animations().ifPresent(ActorAnimationMap::play); }
-
-    public void playAnimation(String id) { animations().ifPresent(animations -> animations.playAnimation(id)); }
-
-    public void stopAnimation() {
-        animations().ifPresent(ActorAnimationMap::stop);
-    }
-
-    public void resetAnimation() {
-        animations().ifPresent(ActorAnimationMap::reset);
-    }
-
-    public void selectAnimation(String id, int index) {
-        animations().ifPresent(animations -> animations.selectAnimationAtFrame(id, index));
-    }
-
-    public void selectAnimation(String id) {
-        animations().ifPresent(animations -> animations.selectAnimation(id));
     }
 }

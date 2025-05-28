@@ -14,6 +14,7 @@ import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -28,13 +29,24 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Armin Reichert
  */
-public abstract class Ghost extends Creature {
+public abstract class Ghost extends Creature implements AnimatedActor {
 
     private final byte personality;
     private final String name;
     private GhostState state;
     private Vector2f revivalPosition;
     private List<Vector2i> specialTerrainTiles = List.of();
+
+    private ActorAnimationMap animationMap;
+
+    public void setAnimations(ActorAnimationMap animationMap) {
+        this.animationMap = requireNonNull(animationMap);
+    }
+
+    @Override
+    public Optional<ActorAnimationMap> animations() {
+        return Optional.ofNullable(animationMap);
+    }
 
     /**
      * Constructs a ghost without associated world like the ones in the cut scenes.

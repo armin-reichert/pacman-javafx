@@ -12,6 +12,8 @@ import de.amr.pacmanfx.steering.Steering;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
+import java.util.Optional;
+
 import static de.amr.pacmanfx.Globals.theGame;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
 import static java.util.Objects.requireNonNull;
@@ -21,7 +23,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Armin Reichert
  */
-public class Pac extends Creature {
+public class Pac extends Creature implements AnimatedActor {
 
     public static final byte REST_INDEFINITELY = -1;
 
@@ -35,6 +37,17 @@ public class Pac extends Creature {
     private final BooleanProperty usingAutopilotPy = new SimpleBooleanProperty(false);
 
     private final TickTimer powerTimer = new TickTimer("PacPowerTimer");
+
+    private ActorAnimationMap animationMap;
+
+    public void setAnimations(ActorAnimationMap animationMap) {
+        this.animationMap = requireNonNull(animationMap);
+    }
+
+    @Override
+    public Optional<ActorAnimationMap> animations() {
+        return Optional.ofNullable(animationMap);
+    }
 
     public Pac(String name) {
         this.name = requireNonNull(name);
