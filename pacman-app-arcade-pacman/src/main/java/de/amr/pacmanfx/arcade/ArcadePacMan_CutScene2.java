@@ -23,6 +23,11 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHI
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 
+/**
+ * Second cut scene in Arcade Pac-Man game:<br>
+ * Red ghost chases Pac-Man from right to left over screen, at the middle of the screen, a nail
+ * is stopping the red ghost, its dress gets stretched and eventually raptures.
+ */
 public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     private static final short ANIMATION_START = 120;

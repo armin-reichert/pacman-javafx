@@ -9,6 +9,7 @@ import de.amr.pacmanfx.ui.layout.StartPage;
 import de.amr.pacmanfx.ui.layout.StartPagesView;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
+import javafx.geometry.Pos;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -32,7 +33,7 @@ public class ArcadePacMan_StartPage extends StackPane implements StartPage, Reso
                 case UP -> flyer.prevFlyerPage();
             }
         });
-        getChildren().addAll(flyer, StartPagesView.createDefaultStartButton());
+        getChildren().addAll(flyer, StartPagesView.createStartButton(Pos.BOTTOM_CENTER, -50));
     }
 
     @Override

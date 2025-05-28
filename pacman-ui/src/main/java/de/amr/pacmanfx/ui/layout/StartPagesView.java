@@ -5,9 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.ui.PacManGames_Actions;
 import de.amr.pacmanfx.uilib.GameAction;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
@@ -27,40 +25,15 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
+import static de.amr.pacmanfx.ui.PacManGames_Actions.TOGGLE_PAUSED;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.uilib.Ufx.createFancyButton;
 import static java.util.Objects.requireNonNull;
 
 /**
  * Carousel containing the start pages for the different game variants (XXL game variants share common start page).
  */
 public class StartPagesView implements PacManGames_View {
-
-    public static Node createDefaultStartButton() {
-        Node button = Ufx.createFancyButton(
-            theAssets().arcadeFontAtSize(30),
-            theAssets().text("play_button"),
-            theUI()::showGameView);
-        button.setTranslateY(-50);
-        StackPane.setAlignment(button, Pos.BOTTOM_CENTER);
-        return button;
-    }
-
-    private final GameAction actionSelectGamePage = new GameAction() {
-        @Override
-        public void execute() {
-            theUI().showGameView();
-        }
-
-        @Override
-        public boolean isEnabled() {
-            return !theClock().isPaused();
-        }
-    };
-
-    private final List<StartPage> startPageList = new ArrayList<>();
-    private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
-    private final Carousel carousel;
-    private StringExpression titleExpression;
 
     private static class StartPagesCarousel extends Carousel {
         @Override
@@ -83,6 +56,30 @@ public class StartPagesView implements PacManGames_View {
         }
     }
 
+    public static Node createStartButton(Pos alignment, double y) {
+        Node button = createFancyButton(theAssets().arcadeFontAtSize(30), theAssets().text("play_button"), theUI()::showGameView);
+        button.setTranslateY(y);
+        StackPane.setAlignment(button, alignment);
+        return button;
+    }
+
+    private final GameAction actionSelectGamePage = new GameAction() {
+        @Override
+        public void execute() {
+            theUI().showGameView();
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return !theClock().isPaused();
+        }
+    };
+
+    private final List<StartPage> startPageList = new ArrayList<>();
+    private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
+    private final Carousel carousel;
+    private StringExpression titleExpression;
+
     public StartPagesView() {
         carousel = new StartPagesCarousel();
         carousel.selectedIndexProperty().addListener((py,ov,nv) -> {
@@ -103,7 +100,7 @@ public class StartPagesView implements PacManGames_View {
         bind(carousel::showPreviousSlide, KeyCode.LEFT);
         bind(carousel::showNextSlide,     KeyCode.RIGHT);
         bind(actionSelectGamePage,        KeyCode.ENTER);
-        bind(PacManGames_Actions.TOGGLE_PAUSED,    KeyCode.P);
+        bind(TOGGLE_PAUSED,               KeyCode.P);
     }
 
     @Override

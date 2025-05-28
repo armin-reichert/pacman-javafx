@@ -23,7 +23,9 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHI
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 
 /**
- * @author Armin Reichert
+ * Third cut scene in Arcade Pac-Man game:<br>
+ * Red ghost in damaged dress chases Pac-Man from right to left over the screen.
+ * After they have disappeared, a naked, shaking ghost runs from left to right over the screen.
  */
 public class ArcadePacMan_CutScene3 extends GameScene2D {
 
