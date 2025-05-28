@@ -331,21 +331,21 @@ public abstract class Creature extends Actor {
     }
 
     private void tryMovingTowards(GameLevel level, Direction dir) {
-        final boolean isTurn = !dir.sameOrientation(moveDir);
+        final boolean turn = dir.vector().isOrthogonalTo(moveDir.vector());
         final Vector2i tileBeforeMove = tile();
         final Vector2f newVelocity = dir.vector().scaled(velocity().length());
         final Vector2f touchPosition = position().plus(HTS, HTS).plus(dir.vector().scaled((float) HTS)).plus(newVelocity);
         final Vector2i touchedTile = tileAt(touchPosition);
 
         if (!canAccessTile(level, touchedTile)) {
-            if (!isTurn) {
+            if (!turn) {
                 centerOverTile(tile()); // adjust over tile (would move forward against wall)
             }
             moveInfo.log(String.format("Cannot move %s into tile %s", dir, touchedTile));
             return;
         }
 
-        if (isTurn) {
+        if (turn) {
             float offset = dir.isHorizontal() ? offset().y() : offset().x();
             boolean atTurnPosition = Math.abs(offset) <= 1;
             if (atTurnPosition) {
@@ -357,7 +357,7 @@ public abstract class Creature extends Actor {
             }
         }
 
-        if (isTurn && corneringSpeedUp != 0) {
+        if (turn && corneringSpeedUp != 0) {
             setVelocity(newVelocity.plus(dir.vector().scaled(corneringSpeedUp)));
             Logger.trace("{} velocity around corner: {}", name(), velocity().length());
             move();

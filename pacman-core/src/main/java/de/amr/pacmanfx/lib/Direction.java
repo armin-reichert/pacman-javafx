@@ -72,8 +72,4 @@ public enum Direction {
     public boolean isHorizontal() {
         return this == LEFT || this == RIGHT;
     }
-
-    public boolean sameOrientation(Direction other) {
-        return isHorizontal() && other.isHorizontal() || isVertical() && other.isVertical();
-    }
 }

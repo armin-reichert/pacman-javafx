@@ -67,6 +67,10 @@ public record Vector2i(int x, int y) {
         return Math.hypot(x - v.x, y - v.y);
     }
 
+    public int dot(Vector2i v) { return x * v.x + y * v.y; }
+
+    public boolean isOrthogonalTo(Vector2i v) { return dot(v) == 0; }
+
     public int manhattanDist(Vector2i v) {
         return Math.abs(x - v.x) + Math.abs(y - v.y);
     }
