@@ -33,7 +33,7 @@ public class TengenMsPacMan_StartPage extends StackPane implements StartPage, Re
                 case UP -> flyer.prevFlyerPage();
             }
         });
-        getChildren().addAll(flyer, StartPagesView.createDefaultStartButton(Pos.BOTTOM_CENTER, -50));
+        getChildren().addAll(flyer, StartPagesView.createStartButton(Pos.BOTTOM_CENTER, -50));
     }
 
     @Override
