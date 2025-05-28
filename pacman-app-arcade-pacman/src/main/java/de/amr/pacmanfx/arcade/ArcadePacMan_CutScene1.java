@@ -23,7 +23,9 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 
 /**
- * @author Armin Reichert
+ * First cut scene in Arcade Pac-Man game:<br>
+ * Red ghost chases Pac-Man from right to left over the screen,
+ * then a frightened ghost is chased by a big Pac-Man from left to right.
  */
 public class ArcadePacMan_CutScene1 extends GameScene2D {
 
