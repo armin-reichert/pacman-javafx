@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ANIM_BIG_PAC_MAN;
@@ -25,10 +25,19 @@ public class ArcadePacMan_PacAnimationMap extends SpriteAnimationMap {
     }
 
     @Override
+    public ArcadePacMan_SpriteSheet spriteSheet() {
+        return (ArcadePacMan_SpriteSheet) super.spriteSheet();
+    }
+
+    @Override
+    public SpriteAnimation animation(String id) {
+        return super.animation(id);
+    }
+
+    @Override
     protected void updateActorSprites(Actor actor) {
         if (actor instanceof Pac pac && isCurrentAnimationID(ANIM_ANY_PAC_MUNCHING)) {
-            var gss = (GameSpriteSheet) spriteSheet;
-            currentAnimation().setSprites(gss.pacMunchingSprites(pac.moveDir()));
+            currentAnimation().setSprites(spriteSheet().pacMunchingSprites(pac.moveDir()));
         }
     }
 }

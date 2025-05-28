@@ -42,9 +42,13 @@ public class TengenMsPacMan_PacAnimationMap extends SpriteAnimationMap {
     }
 
     @Override
+    public TengenMsPacMan_SpriteSheet spriteSheet() {
+        return (TengenMsPacMan_SpriteSheet) super.spriteSheet();
+    }
+
+    @Override
     protected void updateActorSprites(Actor actor) {
         if (actor instanceof Pac msPacMan) {
-            var gss = (TengenMsPacMan_SpriteSheet) spriteSheet;
             if (isCurrentAnimationID(ANIM_ANY_PAC_MUNCHING)) {
                 currentAnimation().setSprites(MS_PAC_MUNCHING_SPRITES_LEFT);
             }
@@ -52,7 +56,7 @@ public class TengenMsPacMan_PacAnimationMap extends SpriteAnimationMap {
                 currentAnimation().setSprites(MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER);
             }
             if (isCurrentAnimationID(ANIM_PAC_MAN_MUNCHING)) {
-                currentAnimation().setSprites(gss.pacManMunchingSprites(msPacMan.moveDir()));
+                currentAnimation().setSprites(spriteSheet().pacManMunchingSprites(msPacMan.moveDir()));
             }
         }
     }

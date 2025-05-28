@@ -7,7 +7,6 @@ package de.amr.pacmanfx.arcade;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.*;
@@ -30,6 +29,11 @@ public class ArcadePacMan_GhostAnimationMap extends SpriteAnimationMap {
     }
 
     @Override
+    public ArcadePacMan_SpriteSheet spriteSheet() {
+        return (ArcadePacMan_SpriteSheet) super.spriteSheet();
+    }
+
+    @Override
     public void selectAnimationAtFrame(String id, int frameIndex) {
         super.selectAnimationAtFrame(id, frameIndex);
         if (ANIM_GHOST_NUMBER.equals(id)) {
@@ -40,12 +44,11 @@ public class ArcadePacMan_GhostAnimationMap extends SpriteAnimationMap {
     @Override
     protected void updateActorSprites(Actor actor) {
         if (actor instanceof Ghost ghost) {
-            GameSpriteSheet gss = (GameSpriteSheet) spriteSheet;
             if (isCurrentAnimationID(ANIM_GHOST_NORMAL)) {
-                currentAnimation().setSprites(gss.ghostNormalSprites(ghost.personality(), ghost.wishDir()));
+                currentAnimation().setSprites(spriteSheet().ghostNormalSprites(ghost.personality(), ghost.wishDir()));
             }
             if (isCurrentAnimationID(ANIM_GHOST_EYES)) {
-                currentAnimation().setSprites(gss.ghostEyesSprites(ghost.wishDir()));
+                currentAnimation().setSprites(spriteSheet().ghostEyesSprites(ghost.wishDir()));
             }
         }
     }

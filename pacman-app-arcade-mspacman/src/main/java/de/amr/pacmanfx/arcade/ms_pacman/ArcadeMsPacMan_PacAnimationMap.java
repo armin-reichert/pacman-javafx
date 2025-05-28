@@ -25,12 +25,16 @@ public class ArcadeMsPacMan_PacAnimationMap extends SpriteAnimationMap {
     }
 
     @Override
+    public ArcadeMsPacMan_SpriteSheet spriteSheet() {
+        return (ArcadeMsPacMan_SpriteSheet) super.spriteSheet();
+    }
+
+    @Override
     protected void updateActorSprites(Actor actor) {
         if (actor instanceof Pac pac) {
-            var gss = (ArcadeMsPacMan_SpriteSheet) spriteSheet;
             switch (currentAnimationID) {
-                case ANIM_ANY_PAC_MUNCHING -> currentAnimation().setSprites(gss.pacMunchingSprites(pac.moveDir()));
-                case PAC_MAN_MUNCHING -> currentAnimation().setSprites(gss.mrPacManMunchingSprites(pac.moveDir()));
+                case ANIM_ANY_PAC_MUNCHING -> currentAnimation().setSprites(spriteSheet().pacMunchingSprites(pac.moveDir()));
+                case PAC_MAN_MUNCHING -> currentAnimation().setSprites(spriteSheet().mrPacManMunchingSprites(pac.moveDir()));
             }
         }
     }

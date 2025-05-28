@@ -17,13 +17,15 @@ import static java.util.Objects.requireNonNull;
 
 public abstract class SpriteAnimationMap implements ActorAnimationMap {
 
-    protected final SpriteSheet spriteSheet;
-    protected final Map<String, SpriteAnimation> animationsByID = new HashMap<>();
+    private final SpriteSheet spriteSheet;
+    private final Map<String, SpriteAnimation> animationsByID = new HashMap<>();
     protected String currentAnimationID;
 
     protected SpriteAnimationMap(SpriteSheet spriteSheet) {
         this.spriteSheet = requireNonNull(spriteSheet);
     }
+
+    public SpriteSheet spriteSheet() { return spriteSheet; }
 
     //TODO this is somewhat crude but currently the way to keep e.g. the sprites up-to-date with an actors' direction etc.
     protected abstract void updateActorSprites(Actor actor);
@@ -35,6 +37,8 @@ public abstract class SpriteAnimationMap implements ActorAnimationMap {
     public SpriteAnimation animation(String id) {
         return animationsByID.get(id);
     }
+
+    public String currentAnimationID() { return currentAnimationID; }
 
     public boolean isCurrentAnimationID(String id) {
         requireNonNull(id);
