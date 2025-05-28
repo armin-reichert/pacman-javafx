@@ -233,19 +233,19 @@ public abstract class Creature extends Actor {
         double minDistToTarget = Double.MAX_VALUE;
         for (Direction dir : DIRECTION_PRIORITY) {
             if (dir == moveDir.opposite()) {
-                continue; // reversing the move direction is not allowed
+                continue; // reversing the move direction is not allowed  (except to get out of dead-ends, see below)
             }
             Vector2i neighborTile = currentTile.plus(dir.vector());
             if (canAccessTile(level, neighborTile)) {
-                double d = neighborTile.euclideanDist(targetTile);
-                if (d < minDistToTarget) {
-                    minDistToTarget = d;
+                double dist = neighborTile.euclideanDist(targetTile);
+                if (dist < minDistToTarget) {
+                    minDistToTarget = dist;
                     targetDir = dir;
                 }
             }
         }
         if (targetDir == null) {
-            targetDir = moveDir.opposite();
+            targetDir = moveDir.opposite(); // to get out of dead ends
         }
         return Optional.ofNullable(targetDir);
     }
@@ -272,33 +272,6 @@ public abstract class Creature extends Actor {
         setTargetTile(targetTile);
         navigateTowardsTarget(level);
         tryMoving(level);
-    }
-
-    /**
-     * Tries moving through the game world.
-     * <p>
-     * First checks if the creature can teleport, then if the creature can move to its wish direction. If this is not
-     * possible, it keeps moving to its current move direction.
-     */
-    public void tryMoving(GameLevel level) {
-        moveInfo.clear();
-        tryTeleport(level);
-        if (!moveInfo.teleported) {
-            if (gotReverseCommand && canReverse()) {
-                setWishDir(moveDir.opposite());
-                Logger.trace("{}: turned around at tile {}", name(), tile());
-                gotReverseCommand = false;
-            }
-            tryMoving(level, wishDir);
-            if (moveInfo.moved) {
-                setMoveDir(wishDir);
-            } else {
-                tryMoving(level, moveDir);
-            }
-        }
-        if (moveInfo.teleported || moveInfo.moved) {
-            Logger.trace("{}: {} {} {}", name(), moveInfo, String.join(", ", moveInfo.infos), this);
-        }
     }
 
     private void tryTeleport(GameLevel level) {
@@ -331,11 +304,33 @@ public abstract class Creature extends Actor {
     }
 
     /**
-     * Tries to move a creature towards the given direction. Handles collisions with walls and cornering.
-     *
-     * @param dir the direction to move
+     * Tries moving through the level's world.
+     * <p>
+     * First checks if the creature can teleport, then if the creature can move to its wish direction. If this is not
+     * possible, it keeps moving to its current move direction.
      */
-    protected void tryMoving(GameLevel level, Direction dir) {
+    public void tryMoving(GameLevel level) {
+        moveInfo.clear();
+        tryTeleport(level);
+        if (!moveInfo.teleported) {
+            if (gotReverseCommand && canReverse()) {
+                setWishDir(moveDir.opposite());
+                Logger.trace("{}: turned around at tile {}", name(), tile());
+                gotReverseCommand = false;
+            }
+            tryMovingTowards(level, wishDir);
+            if (moveInfo.moved) {
+                setMoveDir(wishDir);
+            } else {
+                tryMovingTowards(level, moveDir);
+            }
+        }
+        if (moveInfo.teleported || moveInfo.moved) {
+            Logger.trace("{}: {} {} {}", name(), moveInfo, String.join(", ", moveInfo.infos), this);
+        }
+    }
+
+    private void tryMovingTowards(GameLevel level, Direction dir) {
         final boolean isTurn = !dir.sameOrientation(moveDir);
         final Vector2i tileBeforeMove = tile();
         final Vector2f newVelocity = dir.vector().scaled(velocity().length());
