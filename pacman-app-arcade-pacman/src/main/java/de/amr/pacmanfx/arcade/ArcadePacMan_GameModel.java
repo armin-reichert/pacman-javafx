@@ -61,7 +61,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
                 boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || arcadeGame.cruiseElroy() > 0;
                 Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                 setSpeed(level.speedControl().ghostAttackSpeed(level, this));
-                followTarget(level, targetTile);
+                tryMovingTowardsTargetTile(level, targetTile);
             }
             @Override
             public Vector2i chasingTargetTile(GameLevel level) {
@@ -79,7 +79,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
                 boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
                 Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                 setSpeed(level.speedControl().ghostAttackSpeed(level, this));
-                followTarget(level, targetTile);
+                tryMovingTowardsTargetTile(level, targetTile);
             }
             @Override
             public Vector2i chasingTargetTile(GameLevel level) {
@@ -97,7 +97,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
                 boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
                 Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                 setSpeed(level.speedControl().ghostAttackSpeed(level, this));
-                followTarget(level, targetTile);
+                tryMovingTowardsTargetTile(level, targetTile);
             }
             @Override
             public Vector2i chasingTargetTile(GameLevel level) {
@@ -114,7 +114,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
                 boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
                 Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                 setSpeed(level.speedControl().ghostAttackSpeed(level, this));
-                followTarget(level, targetTile);
+                tryMovingTowardsTargetTile(level, targetTile);
             }
             @Override
             public Vector2i chasingTargetTile(GameLevel level) {

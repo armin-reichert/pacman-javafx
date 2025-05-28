@@ -264,11 +264,11 @@ public abstract class Creature extends Actor {
     }
 
     /**
-     * Lets a creature follow the given target tile.
+     * Lets a creature move towards the given target tile.
      *
      * @param targetTile target tile this creature tries to reach
      */
-    public void followTarget(GameLevel level, Vector2i targetTile) {
+    public void tryMovingTowardsTargetTile(GameLevel level, Vector2i targetTile) {
         setTargetTile(targetTile);
         navigateTowardsTarget(level);
         tryMoving(level);
@@ -293,13 +293,11 @@ public abstract class Creature extends Actor {
         if (currentTile.y() == portal.leftTunnelEnd().y() && x < portal.leftTunnelEnd().x() - portal.depth() * TS) {
             centerOverTile(portal.rightTunnelEnd());
             moveInfo.teleported = true;
-            moveInfo.log(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)",
-                name(), oldX, oldY, x, y));
+            moveInfo.log(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)", name(), oldX, oldY, x, y));
         } else if (currentTile.equals(portal.rightTunnelEnd().plus(portal.depth(), 0))) {
             centerOverTile(portal.leftTunnelEnd().minus(portal.depth(), 0));
             moveInfo.teleported = true;
-            moveInfo.log(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)",
-                name(), oldX, oldY, x, y));
+            moveInfo.log(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)", name(), oldX, oldY, x, y));
         }
     }
 

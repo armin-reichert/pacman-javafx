@@ -122,19 +122,18 @@ public abstract class Ghost extends Creature implements AnimatedActor {
     /**
      * Lets the ghost randomly roam through the world.
      *
-     * @param speed the speed (in pixels/tick)
+     * @param level the game level
      */
-    public void roam(GameLevel level, float speed) {
+    public void roam(GameLevel level) {
         Vector2i currentTile = tile();
         if (!level.isPortalAt(currentTile) && (isNewTileEntered() || !moveInfo.moved)) {
-            setWishDir(determineNextDirection(level, currentTile));
+            setWishDir(computeRoamingDirection(level, currentTile));
         }
-        setSpeed(speed);
         tryMoving(level);
     }
 
     // try a random direction towards an accessible tile, do not turn back unless there is no other way
-    private Direction determineNextDirection(GameLevel level, Vector2i currentTile) {
+    private Direction computeRoamingDirection(GameLevel level, Vector2i currentTile) {
         Direction dir = pseudoRandomDirection();
         int turns = 0;
         while (dir == moveDir.opposite() || !canAccessTile(level, currentTile.plus(dir.vector()))) {
@@ -350,7 +349,8 @@ public abstract class Ghost extends Creature implements AnimatedActor {
         float speed = level.isTunnel(tile())
             ? level.speedControl().ghostTunnelSpeed(level, this)
             : level.speedControl().ghostFrightenedSpeed(level, this);
-        roam(level, speed);
+        setSpeed(speed);
+        roam(level);
         updateFrightenedAnimation(level);
     }
 

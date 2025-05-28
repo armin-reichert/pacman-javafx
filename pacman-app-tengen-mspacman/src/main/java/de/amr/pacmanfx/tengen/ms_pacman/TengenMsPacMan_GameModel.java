@@ -112,13 +112,13 @@ public class TengenMsPacMan_GameModel extends GameModel {
             @Override
             public void hunt(GameLevel level) {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
+                setSpeed(speed);
                 if (level.huntingTimer().phaseIndex() == 0) {
-                    roam(level, speed);
+                    roam(level);
                 } else {
                     boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
                     Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
-                    setSpeed(speed);
-                    followTarget(level, targetTile);
+                    tryMovingTowardsTargetTile(level, targetTile);
                 }
             }
 
@@ -134,13 +134,13 @@ public class TengenMsPacMan_GameModel extends GameModel {
             @Override
             public void hunt(GameLevel level) {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
+                setSpeed(speed);
                 if (level.huntingTimer().phaseIndex() == 0) {
-                    roam(level, speed);
+                    roam(level);
                 } else {
                     boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
                     Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
-                    setSpeed(speed);
-                    followTarget(level, targetTile);
+                    tryMovingTowardsTargetTile(level, targetTile);
                 }
             }
 
@@ -159,7 +159,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
                 boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
                 Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                 setSpeed(speed);
-                followTarget(level, targetTile);
+                tryMovingTowardsTargetTile(level, targetTile);
             }
 
             @Override
@@ -177,7 +177,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
                 boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
                 Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                 setSpeed(speed);
-                followTarget(level, targetTile);
+                tryMovingTowardsTargetTile(level, targetTile);
             }
 
             @Override
