@@ -2,11 +2,13 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.ui.layout;
+package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
+import de.amr.pacmanfx.ui.layout.PacManGames_View;
+import de.amr.pacmanfx.ui.layout.StartPage;
 import de.amr.pacmanfx.uilib.GameScene;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Scene;

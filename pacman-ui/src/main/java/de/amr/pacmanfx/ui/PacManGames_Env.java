@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
-import de.amr.pacmanfx.ui.layout.PacManGames_UI;
 import de.amr.pacmanfx.ui.sound.PacManGames_SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.input.Joypad;

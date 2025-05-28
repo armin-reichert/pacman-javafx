@@ -35,13 +35,13 @@ import static java.util.Objects.requireNonNull;
  */
 public class StartPagesView implements PacManGames_View {
 
-    public static Node createDefaultStartButton() {
+    public static Node createDefaultStartButton(Pos alignment, double y) {
         Node button = Ufx.createFancyButton(
             theAssets().arcadeFontAtSize(30),
             theAssets().text("play_button"),
             theUI()::showGameView);
-        button.setTranslateY(-50);
-        StackPane.setAlignment(button, Pos.BOTTOM_CENTER);
+        button.setTranslateY(y);
+        StackPane.setAlignment(button, alignment);
         return button;
     }
 
