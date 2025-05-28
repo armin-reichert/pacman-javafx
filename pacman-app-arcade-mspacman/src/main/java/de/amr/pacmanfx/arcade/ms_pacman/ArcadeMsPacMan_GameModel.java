@@ -73,7 +73,8 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
                     var arcadeGame = (ArcadeAny_GameModel) theGame();
                     boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || arcadeGame.isCruiseElroyModeActive();
                     Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
-                    followTarget(level, targetTile, speed);
+                    setSpeed(speed);
+                    followTarget(level, targetTile);
                 }
             }
             @Override
@@ -95,7 +96,8 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
                 } else {
                     boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
                     Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
-                    followTarget(level, targetTile, speed);
+                    setSpeed(speed);
+                    followTarget(level, targetTile);
                 }
             }
             @Override
@@ -113,7 +115,8 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
                 boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
                 Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
-                followTarget(level, targetTile, speed);
+                setSpeed(speed);
+                followTarget(level, targetTile);
             }
             @Override
             public Vector2i chasingTargetTile(GameLevel level) {
@@ -130,7 +133,8 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
                 boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
                 Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
-                followTarget(level, targetTile, speed);
+                setSpeed(speed);
+                followTarget(level, targetTile);
             }
             @Override
             public Vector2i chasingTargetTile(GameLevel level) {

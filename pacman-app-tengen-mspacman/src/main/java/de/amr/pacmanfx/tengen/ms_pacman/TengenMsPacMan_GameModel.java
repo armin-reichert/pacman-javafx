@@ -117,7 +117,8 @@ public class TengenMsPacMan_GameModel extends GameModel {
                 } else {
                     boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
                     Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
-                    followTarget(level, targetTile, speed);
+                    setSpeed(speed);
+                    followTarget(level, targetTile);
                 }
             }
 
@@ -138,7 +139,8 @@ public class TengenMsPacMan_GameModel extends GameModel {
                 } else {
                     boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
                     Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
-                    followTarget(level, targetTile, speed);
+                    setSpeed(speed);
+                    followTarget(level, targetTile);
                 }
             }
 
@@ -156,7 +158,8 @@ public class TengenMsPacMan_GameModel extends GameModel {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
                 boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
                 Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
-                followTarget(level, targetTile, speed);
+                setSpeed(speed);
+                followTarget(level, targetTile);
             }
 
             @Override
@@ -173,7 +176,8 @@ public class TengenMsPacMan_GameModel extends GameModel {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
                 boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
                 Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
-                followTarget(level, targetTile, speed);
+                setSpeed(speed);
+                followTarget(level, targetTile);
             }
 
             @Override

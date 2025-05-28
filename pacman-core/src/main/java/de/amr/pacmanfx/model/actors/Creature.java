@@ -219,13 +219,9 @@ public abstract class Creature extends Actor {
      */
     public void setSpeed(float speed) {
         if (speed < 0) {
-            throw new IllegalArgumentException("Negative pixel speed: " + speed);
+            throw new IllegalArgumentException("Speed must not be negative but is: " + speed);
         }
         setVelocity(speed == 0 ? Vector2f.ZERO : moveDir.vector().scaled(speed));
-    }
-
-    public float speed() {
-        return velocity().length();
     }
 
     public boolean isNewTileEntered() {
@@ -271,10 +267,8 @@ public abstract class Creature extends Actor {
      * Lets a creature follow the given target tile.
      *
      * @param targetTile target tile this creature tries to reach
-     * @param speed speed (in pixels/tick)
      */
-    public void followTarget(GameLevel level, Vector2i targetTile, float speed) {
-        setSpeed(speed);
+    public void followTarget(GameLevel level, Vector2i targetTile) {
         setTargetTile(targetTile);
         navigateTowardsTarget(level);
         tryMoving(level);
