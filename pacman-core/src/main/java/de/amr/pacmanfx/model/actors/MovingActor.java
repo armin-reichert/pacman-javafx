@@ -312,6 +312,7 @@ public abstract class MovingActor extends Actor {
      * possible, it keeps moving to its current move direction.
      */
     public void tryMoving(GameLevel level) {
+        final Vector2i currentTile = tile();
         moveInfo.clear();
         tryTeleport(level);
         if (!moveInfo.teleported) {
@@ -320,11 +321,11 @@ public abstract class MovingActor extends Actor {
                 Logger.trace("{}: turned around at tile {}", name(), tile());
                 gotReverseCommand = false;
             }
-            tryMovingTowards(level, wishDir);
+            tryMovingTowards(level, currentTile, wishDir);
             if (moveInfo.moved) {
                 setMoveDir(wishDir);
             } else {
-                tryMovingTowards(level, moveDir);
+                tryMovingTowards(level, currentTile, moveDir);
             }
         }
         if (moveInfo.teleported || moveInfo.moved) {
@@ -332,12 +333,11 @@ public abstract class MovingActor extends Actor {
         }
     }
 
-    private void tryMovingTowards(GameLevel level, Direction dir) {
-        final boolean turn = dir.vector().isOrthogonalTo(moveDir.vector());
-        final Vector2i tileBeforeMove = tile();
+    private void tryMovingTowards(GameLevel level, Vector2i tileBeforeMoving, Direction dir) {
         final Vector2f newVelocity = dir.vector().scaled(velocity().length());
         final Vector2f touchPosition = position().plus(HTS, HTS).plus(dir.vector().scaled((float) HTS)).plus(newVelocity);
         final Vector2i touchedTile = tileAt(touchPosition);
+        final boolean turn = dir.vector().isOrthogonalTo(moveDir.vector());
 
         if (!canAccessTile(level, touchedTile)) {
             if (!turn) {
@@ -360,8 +360,9 @@ public abstract class MovingActor extends Actor {
         }
 
         if (turn && corneringSpeedUp != 0) {
-            setVelocity(newVelocity.plus(dir.vector().scaled(corneringSpeedUp)));
-            Logger.trace("{} velocity around corner: {}", name(), velocity().length());
+            Vector2f cornerVelocity = newVelocity.plus(dir.vector().scaled(corneringSpeedUp));
+            Logger.trace("{} velocity around corner: {}", name(), cornerVelocity.length());
+            setVelocity(cornerVelocity);
             move();
             setVelocity(newVelocity);
         } else {
@@ -369,24 +370,15 @@ public abstract class MovingActor extends Actor {
             move();
         }
 
-        Vector2i currentTile = tile();
+        final Vector2i tileAfterMoving = tile();
+        newTileEntered = !tileBeforeMoving.equals(tileAfterMoving);
 
-        newTileEntered = !tileBeforeMove.equals(currentTile);
         moveInfo.moved = true;
-        moveInfo.tunnelEntered = level.isTunnel(currentTile)
-            && !level.isTunnel(tileBeforeMove)
-            && !level.isPortalAt(tileBeforeMove);
-        moveInfo.tunnelLeft = !level.isTunnel(currentTile)
-            && level.isTunnel(tileBeforeMove)
-            && !level.isPortalAt(currentTile);
+        moveInfo.tunnelEntered = level.isTunnel(tileAfterMoving) && !level.isTunnel(tileBeforeMoving) && !level.isPortalAt(tileBeforeMoving);
+        moveInfo.tunnelLeft = !level.isTunnel(tileAfterMoving) && level.isTunnel(tileBeforeMoving)  && !level.isPortalAt(tileAfterMoving);
 
         moveInfo.log(String.format("%5s (%.2f pixels)", dir, newVelocity.length()));
-
-        if (moveInfo.tunnelEntered) {
-            Logger.trace("{} entered tunnel", name());
-        }
-        if (moveInfo.tunnelLeft) {
-            Logger.trace("{} left tunnel", name());
-        }
+        if (moveInfo.tunnelEntered) { Logger.trace("{} entered tunnel", name()); }
+        if (moveInfo.tunnelLeft)    { Logger.trace("{} left tunnel", name()); }
     }
 }
