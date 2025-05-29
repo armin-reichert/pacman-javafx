@@ -381,7 +381,7 @@ public abstract class Ghost extends MovingActor implements AnimatedActor {
     private void updateStateReturningToHouse(GameLevel level) {
         float speed = level.speedControl().ghostSpeedReturningToHouse(level, this);
         Vector2f houseEntry = level.houseEntryPosition();
-        if (position().roughlyEquals(houseEntry, 0.5f * speed, 0)) {
+        if (position().roughlyEquals(houseEntry, speed, 0)) {
             setPosition(houseEntry);
             setMoveAndWishDir(DOWN);
             setState(GhostState.ENTERING_HOUSE);

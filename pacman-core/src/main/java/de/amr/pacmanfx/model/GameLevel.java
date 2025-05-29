@@ -373,7 +373,7 @@ public class GameLevel {
     }
 
     /**
-     * @return position where ghost can enter the door
+     * @return position at which ghosts can enter the house, one tile above and horizontally between the two door tiles
      */
     public Vector2f houseEntryPosition() {
         return Vector2f.of(TS * rightDoorTile.x() - HTS, TS * (rightDoorTile.y() - 1));
