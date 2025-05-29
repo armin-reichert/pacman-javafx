@@ -24,7 +24,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Armin Reichert
  */
-public abstract class WorldMovingActor extends Actor {
+public abstract class MovingActor extends Actor {
 
     /** Order in which directions are selected when navigation decision is met. */
     private static final Direction[] DIRECTION_PRIORITY = {UP, LEFT, DOWN, RIGHT};

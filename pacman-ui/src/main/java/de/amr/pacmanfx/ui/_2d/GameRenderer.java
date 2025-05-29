@@ -219,7 +219,7 @@ public interface GameRenderer {
         ctx().fillRect(centerX - 0.5 * squareSize, centerY - 0.5 * squareSize, squareSize, squareSize);
     }
 
-    default void drawAnimatedActorInfo(WorldMovingActor movingActor) {
+    default void drawAnimatedActorInfo(MovingActor movingActor) {
         if (movingActor instanceof AnimatedActor animatedActor) {
             animatedActor.animations()
                 .filter(SpriteAnimationMap.class::isInstance)

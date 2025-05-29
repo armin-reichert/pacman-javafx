@@ -23,7 +23,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Armin Reichert
  */
-public class Pac extends WorldMovingActor implements AnimatedActor {
+public class Pac extends MovingActor implements AnimatedActor {
 
     public static final byte REST_INDEFINITELY = -1;
 

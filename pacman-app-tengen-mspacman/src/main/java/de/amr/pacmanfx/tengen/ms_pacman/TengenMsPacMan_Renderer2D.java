@@ -126,7 +126,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         });
     }
 
-    private void drawMovingActor(WorldMovingActor movingActor, Direction dir, RectArea spriteLookingLeft) {
+    private void drawMovingActor(MovingActor movingActor, Direction dir, RectArea spriteLookingLeft) {
         Vector2f center = movingActor.position().plus(HTS, HTS).scaled(scaling());
         ctx().save();
         ctx().translate(center.x(), center.y());

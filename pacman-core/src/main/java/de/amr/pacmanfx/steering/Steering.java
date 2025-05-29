@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.steering;
 
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.actors.WorldMovingActor;
+import de.amr.pacmanfx.model.actors.MovingActor;
 
 /**
  * @author Armin Reichert
@@ -14,5 +14,5 @@ public interface Steering {
 
     default void init() {}
 
-    void steer(WorldMovingActor movingActor, GameLevel level);
+    void steer(MovingActor movingActor, GameLevel level);
 }

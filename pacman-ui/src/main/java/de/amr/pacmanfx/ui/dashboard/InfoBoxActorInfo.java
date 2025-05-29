@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.actors.WorldMovingActor;
+import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -52,7 +52,7 @@ public class InfoBoxActorInfo extends InfoBox {
             : NO_INFO);
     }
 
-    private String locationInfo(GameModel game, WorldMovingActor movingActor) {
+    private String locationInfo(GameModel game, MovingActor movingActor) {
         Vector2i tile = movingActor.tile();
         Vector2f offset = movingActor.offset();
         return "(%2d,%2d)+(%2.0f,%2.0f)%s".formatted(
@@ -61,7 +61,7 @@ public class InfoBoxActorInfo extends InfoBox {
             movingActor.isNewTileEntered() ? " NEW" : "");
     }
 
-    private String movementInfo(GameModel game, WorldMovingActor movingActor) {
+    private String movementInfo(GameModel game, MovingActor movingActor) {
         var speed = movingActor.velocity().length() * 60f;
         var blocked = !movingActor.moveInfo().moved;
         var reverseText = movingActor.gotReverseCommand() ? "REV!" : "";

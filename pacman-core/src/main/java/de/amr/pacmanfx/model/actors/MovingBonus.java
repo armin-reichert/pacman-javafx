@@ -30,7 +30,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Armin Reichert
  */
-public class MovingBonus extends WorldMovingActor implements Bonus {
+public class MovingBonus extends MovingActor implements Bonus {
 
     private final Pulse animation = new Pulse(10, false);
     private final byte symbol;

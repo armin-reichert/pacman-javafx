@@ -6,7 +6,7 @@ package de.amr.pacmanfx.steering;
 
 import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.actors.WorldMovingActor;
+import de.amr.pacmanfx.model.actors.MovingActor;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -38,7 +38,7 @@ public class RouteBasedSteering implements Steering {
     }
 
     @Override
-    public void steer(WorldMovingActor movingActor, GameLevel level) {
+    public void steer(MovingActor movingActor, GameLevel level) {
         movingActor.navigateTowardsTarget(level);
         if (targetIndex == route.size()) {
             complete = true;
@@ -52,7 +52,7 @@ public class RouteBasedSteering implements Steering {
         }
     }
 
-    private void nextTarget(GameLevel level, WorldMovingActor movingActor) {
+    private void nextTarget(GameLevel level, MovingActor movingActor) {
         ++targetIndex;
         if (targetIndex < route.size()) {
             movingActor.setTargetTile(currentTarget().tile());

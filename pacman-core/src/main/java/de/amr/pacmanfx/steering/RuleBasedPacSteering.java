@@ -74,7 +74,7 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     @Override
-    public void steer(WorldMovingActor movingActor, GameLevel level) {
+    public void steer(MovingActor movingActor, GameLevel level) {
         if (movingActor.moveInfo().moved && !movingActor.isNewTileEntered()) {
             return;
         }
