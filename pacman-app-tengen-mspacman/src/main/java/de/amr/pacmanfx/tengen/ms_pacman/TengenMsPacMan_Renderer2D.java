@@ -105,7 +105,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
                          ANIM_PAC_MAN_MUNCHING,
                          ANIM_MS_PAC_MAN_BOOSTER,
                          ANIM_PAC_MAN_BOOSTER,
-                         ANIM_JUNIOR -> drawCreature(pac, pac.moveDir(), animation.currentSprite());
+                         ANIM_JUNIOR -> drawMovingActor(pac, pac.moveDir(), animation.currentSprite());
                     case ANIM_ANY_PAC_DYING -> {
                         Direction dir = Direction.UP;
                         if (animation.frameIndex() < 11) {
@@ -116,7 +116,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
                                 case 3 -> Direction.RIGHT;
                             };
                         }
-                        drawCreature(pac, dir, animation.currentSprite());
+                        drawMovingActor(pac, dir, animation.currentSprite());
                     }
                     default -> GameRenderer.super.drawActor(pac);
                 }
@@ -126,8 +126,8 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         });
     }
 
-    private void drawCreature(Creature creature, Direction dir, RectArea spriteLookingLeft) {
-        Vector2f center = creature.position().plus(HTS, HTS).scaled(scaling());
+    private void drawMovingActor(WorldMovingActor movingActor, Direction dir, RectArea spriteLookingLeft) {
+        Vector2f center = movingActor.position().plus(HTS, HTS).scaled(scaling());
         ctx().save();
         ctx().translate(center.x(), center.y());
         switch (dir) {

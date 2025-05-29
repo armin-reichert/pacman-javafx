@@ -24,7 +24,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Armin Reichert
  */
-public abstract class Creature extends Actor {
+public abstract class WorldMovingActor extends Actor {
 
     /** Order in which directions are selected when navigation decision is met. */
     private static final Direction[] DIRECTION_PRIORITY = {UP, LEFT, DOWN, RIGHT};
@@ -42,7 +42,7 @@ public abstract class Creature extends Actor {
 
     @Override
     public String toString() {
-        return "Creature{" +
+        return "WorldMovingActor{" +
             "visible=" + visible +
             ", x=" + x +
             ", y=" + y +
@@ -80,19 +80,19 @@ public abstract class Creature extends Actor {
     public abstract String name();
 
     /**
-     * @return {@code true} if this creature can reverse ist direction in its current state
+     * @return {@code true} if this actor can reverse ist direction in its current state
      */
     public abstract boolean canReverse();
 
     /**
      * @param level game level
      * @param tile some tile inside or outside the world
-     * @return if this creature can access the given tile
+     * @return if this actor can access the given tile
      */
     public abstract boolean canAccessTile(GameLevel level, Vector2i tile);
 
     /**
-     * Sets the tile this creature tries to reach (can be an unreachable tile or <code>null</code>).
+     * Sets the tile this actor tries to reach (can be an unreachable tile or <code>null</code>).
      *
      * @param tile some tile or <code>null</code>
      */
@@ -108,7 +108,7 @@ public abstract class Creature extends Actor {
     }
 
     /**
-     * Places this creature at the given tile coordinate with the given tile offsets. Updates the
+     * Places this actor at the given tile coordinate with the given tile offsets. Updates the
      * <code>newTileEntered</code> state.
      *
      * @param tx tile x-coordinate (grid column)
@@ -127,9 +127,9 @@ public abstract class Creature extends Actor {
     }
 
     /**
-     * Places this creature centered over the given tile.
+     * Places this actor centered over the given tile.
      *
-     * @param tile tile where creature is placed
+     * @param tile tile where actor is placed
      */
     public void placeAtTile(Vector2i tile) {
         placeAtTile(tile.x(), tile.y(), 0, 0);
@@ -182,7 +182,7 @@ public abstract class Creature extends Actor {
 
     /**
      * @param numTiles number of tiles
-     * @return the tile located the given number of tiles towards the current move direction of the creature.
+     * @return the tile located the given number of tiles towards the current move direction of the actor.
      */
     public Vector2i tilesAhead(int numTiles) {
         Vector2i currentTile = tile();
@@ -193,8 +193,8 @@ public abstract class Creature extends Actor {
 
     /**
      * @param numTiles number of tiles
-     * @return the tile located the given number of tiles towards the current move direction of the creature.
-     *          Overflow bug: In case the creature looks UP, additional {@code numTiles} tiles are added towards LEFT.
+     * @return the tile located the given number of tiles towards the current move direction of the actor.
+     *          Overflow bug: In case the actor looks UP, additional {@code numTiles} tiles are added towards LEFT.
      */
     public Vector2i tilesAheadWithOverflowBug(int numTiles) {
         Vector2i ahead = tilesAhead(numTiles);
@@ -205,7 +205,7 @@ public abstract class Creature extends Actor {
     }
 
     /**
-     * Signals that this creature should reverse its move direction as soon as possible.
+     * Signals that this actor should reverse its move direction as soon as possible.
      */
     public void reverseAtNextOccasion() {
         gotReverseCommand = true;
@@ -268,9 +268,9 @@ public abstract class Creature extends Actor {
     }
 
     /**
-     * Lets a creature move towards the given target tile.
+     * Lets a actor move towards the given target tile.
      *
-     * @param targetTile target tile this creature tries to reach
+     * @param targetTile target tile this actor tries to reach
      */
     public void tryMovingTowardsTargetTile(GameLevel level, Vector2i targetTile) {
         setTargetTile(targetTile);
@@ -308,7 +308,7 @@ public abstract class Creature extends Actor {
     /**
      * Tries moving through the level's world.
      * <p>
-     * First checks if the creature can teleport, then if the creature can move to its wish direction. If this is not
+     * First checks if the actor can teleport, then if the actor can move to its wish direction. If this is not
      * possible, it keeps moving to its current move direction.
      */
     public void tryMoving(GameLevel level) {

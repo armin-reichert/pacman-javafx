@@ -6,7 +6,7 @@ package de.amr.pacmanfx.steering;
 
 import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.actors.Creature;
+import de.amr.pacmanfx.model.actors.WorldMovingActor;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -14,9 +14,7 @@ import java.util.List;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Steers a creature to follow a given route.
- *
- * @author Armin Reichert
+ * Steers an actor such that it follows a given route.
  */
 public class RouteBasedSteering implements Steering {
 
@@ -40,25 +38,25 @@ public class RouteBasedSteering implements Steering {
     }
 
     @Override
-    public void steer(Creature creature, GameLevel level) {
-        creature.navigateTowardsTarget(level);
+    public void steer(WorldMovingActor movingActor, GameLevel level) {
+        movingActor.navigateTowardsTarget(level);
         if (targetIndex == route.size()) {
             complete = true;
-        } else if (creature.targetTile().isEmpty()) {
-            creature.setTargetTile(currentTarget().tile());
-            creature.navigateTowardsTarget(level);
-            Logger.trace("New target tile for {}={}s", creature.name(), creature.targetTile().get());
-        } else if (creature.tile().equals(currentTarget().tile())) {
-            nextTarget(level, creature);
-            Logger.trace("New target tile for {}={}", creature.name(), creature.targetTile().get());
+        } else if (movingActor.targetTile().isEmpty()) {
+            movingActor.setTargetTile(currentTarget().tile());
+            movingActor.navigateTowardsTarget(level);
+            Logger.trace("New target tile for {}={}s", movingActor.name(), movingActor.targetTile().get());
+        } else if (movingActor.tile().equals(currentTarget().tile())) {
+            nextTarget(level, movingActor);
+            Logger.trace("New target tile for {}={}", movingActor.name(), movingActor.targetTile().get());
         }
     }
 
-    private void nextTarget(GameLevel level, Creature creature) {
+    private void nextTarget(GameLevel level, WorldMovingActor movingActor) {
         ++targetIndex;
         if (targetIndex < route.size()) {
-            creature.setTargetTile(currentTarget().tile());
-            creature.navigateTowardsTarget(level);
+            movingActor.setTargetTile(currentTarget().tile());
+            movingActor.navigateTowardsTarget(level);
         }
     }
 

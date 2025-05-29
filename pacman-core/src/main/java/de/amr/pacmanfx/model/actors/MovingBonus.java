@@ -30,7 +30,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Armin Reichert
  */
-public class MovingBonus extends Creature implements Bonus {
+public class MovingBonus extends WorldMovingActor implements Bonus {
 
     private final Pulse animation = new Pulse(10, false);
     private final byte symbol;
@@ -43,7 +43,7 @@ public class MovingBonus extends Creature implements Bonus {
         this.symbol = symbol;
         this.points = points;
         reset();
-        canTeleport = false; // override default from Creature
+        canTeleport = false; // override default value
         countdown = 0;
         state = STATE_INACTIVE;
     }

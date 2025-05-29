@@ -219,8 +219,8 @@ public interface GameRenderer {
         ctx().fillRect(centerX - 0.5 * squareSize, centerY - 0.5 * squareSize, squareSize, squareSize);
     }
 
-    default void drawAnimatedCreatureInfo(Creature creature) {
-        if (creature instanceof AnimatedActor animatedActor) {
+    default void drawAnimatedActorInfo(WorldMovingActor movingActor) {
+        if (movingActor instanceof AnimatedActor animatedActor) {
             animatedActor.animations()
                 .filter(SpriteAnimationMap.class::isInstance)
                 .map(SpriteAnimationMap.class::cast)
@@ -230,23 +230,23 @@ public interface GameRenderer {
                         String text = animID + " " + animations.currentAnimation().frameIndex();
                         ctx().setFill(Color.WHITE);
                         ctx().setFont(Font.font("Monospaced", scaled(6)));
-                        ctx().fillText(text, scaled(creature.x() - 4), scaled(creature.y() - 4));
+                        ctx().fillText(text, scaled(movingActor.x() - 4), scaled(movingActor.y() - 4));
                     }
-                    if (creature.wishDir() != null) {
+                    if (movingActor.wishDir() != null) {
                         float scaling = scaling();
-                        Vector2f center = creature.position().plus(HTS, HTS);
-                        Vector2f arrowHead = center.plus(creature.wishDir().vector().scaled(12f)).scaled(scaling);
+                        Vector2f center = movingActor.position().plus(HTS, HTS);
+                        Vector2f arrowHead = center.plus(movingActor.wishDir().vector().scaled(12f)).scaled(scaling);
                         Vector2f guyCenter = center.scaled(scaling);
                         float radius = scaling * 2, diameter = 2 * radius;
                         ctx().setStroke(Color.WHITE);
                         ctx().setLineWidth(0.5);
                         ctx().strokeLine(guyCenter.x(), guyCenter.y(), arrowHead.x(), arrowHead.y());
-                        ctx().setFill(creature.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
+                        ctx().setFill(movingActor.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
                         ctx().fillOval(arrowHead.x() - radius, arrowHead.y() - radius, diameter, diameter);
                     }
                 });
         }
-        if (creature instanceof Pac pac) {
+        if (movingActor instanceof Pac pac) {
             String autopilot = pac.isUsingAutopilot() ? "autopilot" : "";
             String immune = pac.isImmune() ? "immune" : "";
             String text = "%s\n%s".formatted(autopilot, immune).trim();

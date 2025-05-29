@@ -479,8 +479,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             gr().ctx().setFill(Color.YELLOW);
             gr().ctx().setFont(DEBUG_TEXT_FONT);
             gr().ctx().fillText("%s %d".formatted(theGameState(), theGameState().timer().tickCount()), 0, scaled(3 * TS));
-            gr().drawAnimatedCreatureInfo(theGameLevel().pac());
-            ghostsInZOrder().forEach(gr()::drawAnimatedCreatureInfo);
+            gr().drawAnimatedActorInfo(theGameLevel().pac());
+            ghostsInZOrder().forEach(gr()::drawAnimatedActorInfo);
         }
         gr().ctx().restore();
     }

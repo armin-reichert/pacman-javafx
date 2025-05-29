@@ -161,9 +161,9 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
                 .map(theGameLevel()::ghost).forEach(gr()::drawActor);
 
         if (debugInfoVisibleProperty().get()) {
-            gr().drawAnimatedCreatureInfo(theGameLevel().pac());
+            gr().drawAnimatedActorInfo(theGameLevel().pac());
             Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
-                    .map(theGameLevel()::ghost).forEach(gr()::drawAnimatedCreatureInfo);
+                    .map(theGameLevel()::ghost).forEach(gr()::drawAnimatedActorInfo);
         }
 
         // Draw either lives counter or credit text

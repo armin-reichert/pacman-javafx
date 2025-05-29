@@ -29,7 +29,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Armin Reichert
  */
-public abstract class Ghost extends Creature implements AnimatedActor {
+public abstract class Ghost extends WorldMovingActor implements AnimatedActor {
 
     private final byte personality;
     private final String name;

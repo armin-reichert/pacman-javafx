@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.actors.Creature;
+import de.amr.pacmanfx.model.actors.WorldMovingActor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -52,22 +52,22 @@ public class InfoBoxActorInfo extends InfoBox {
             : NO_INFO);
     }
 
-    private String locationInfo(GameModel game, Creature guy) {
-        Vector2i tile = guy.tile();
-        Vector2f offset = guy.offset();
+    private String locationInfo(GameModel game, WorldMovingActor movingActor) {
+        Vector2i tile = movingActor.tile();
+        Vector2f offset = movingActor.offset();
         return "(%2d,%2d)+(%2.0f,%2.0f)%s".formatted(
             tile.x(), tile.y(),
             offset.x(), offset.y(),
-            guy.isNewTileEntered() ? " NEW" : "");
+            movingActor.isNewTileEntered() ? " NEW" : "");
     }
 
-    private String movementInfo(GameModel game, Creature guy) {
-        var speed = guy.velocity().length() * 60f;
-        var blocked = !guy.moveInfo().moved;
-        var reverseText = guy.gotReverseCommand() ? "REV!" : "";
+    private String movementInfo(GameModel game, WorldMovingActor movingActor) {
+        var speed = movingActor.velocity().length() * 60f;
+        var blocked = !movingActor.moveInfo().moved;
+        var reverseText = movingActor.gotReverseCommand() ? "REV!" : "";
         return blocked
             ? "BLOCKED!"
-            : "%.2fpx/s %s (%s)%s".formatted(speed, guy.moveDir(), guy.wishDir(), reverseText);
+            : "%.2fpx/s %s (%s)%s".formatted(speed, movingActor.moveDir(), movingActor.wishDir(), reverseText);
     }
 
     private void ghostInfo(byte personality) {
