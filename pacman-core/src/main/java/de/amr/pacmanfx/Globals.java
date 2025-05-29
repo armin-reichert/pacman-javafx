@@ -24,7 +24,7 @@ import java.util.Random;
  */
 public class Globals {
 
-    // Ghost characters
+    // Ghost personalities
     public static final byte RED_GHOST_SHADOW = 0, PINK_GHOST_SPEEDY = 1, CYAN_GHOST_BASHFUL = 2, ORANGE_GHOST_POKEY = 3;
 
     public static final byte NUM_TICKS_PER_SEC = 60;

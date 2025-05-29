@@ -171,7 +171,7 @@ public class GateKeeper {
 
     public void registerFoodEaten(GameLevel level) {
         if (globalCounterEnabled) {
-            if (level.ghost(ORANGE_GHOST_POKEY).inState(GhostState.LOCKED) && globalCounter == 32) {
+            if (level.ghost(ORANGE_GHOST_POKEY).inAnyOfStates(GhostState.LOCKED) && globalCounter == 32) {
                 Logger.info("{} inside house when global counter reached 32", level.ghost(ORANGE_GHOST_POKEY).name());
                 resetCounterAndSetEnabled(false);
             } else {
@@ -188,7 +188,7 @@ public class GateKeeper {
 
     public void unlockGhosts(GameLevel level) {
         Ghost blinky = level.ghost(RED_GHOST_SHADOW);
-        if (blinky.inState(GhostState.LOCKED)) {
+        if (blinky.inAnyOfStates(GhostState.LOCKED)) {
             if (level.isInsideHouse(blinky)) {
                 blinky.setMoveAndWishDir(Direction.UP);
                 blinky.setState(GhostState.LEAVING_HOUSE);
@@ -199,7 +199,7 @@ public class GateKeeper {
         }
         Stream.of(PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
             .map(level::ghost)
-            .filter(ghost -> ghost.inState(GhostState.LOCKED))
+            .filter(ghost -> ghost.inAnyOfStates(GhostState.LOCKED))
             .findFirst().ifPresent(prisoner -> {
                 String releaseReason = checkReleaseOf(level, prisoner);
                 if (releaseReason != null) {

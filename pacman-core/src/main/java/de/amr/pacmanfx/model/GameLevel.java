@@ -244,7 +244,7 @@ public class GameLevel {
         if (ghosts == null) {
             return Stream.empty();
         }
-        return states.length == 0 ? Stream.of(ghosts) : Stream.of(ghosts).filter(ghost -> ghost.inState(states));
+        return states.length == 0 ? Stream.of(ghosts) : Stream.of(ghosts).filter(ghost -> ghost.inAnyOfStates(states));
     }
 
     public void registerGhostKilled() { numGhostsKilled++; }

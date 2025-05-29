@@ -302,14 +302,14 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                if (Stream.of(scene.ghosts).allMatch(ghost -> ghost.inState(EATEN))) {
+                if (Stream.of(scene.ghosts).allMatch(ghost -> ghost.inAnyOfStates(EATEN))) {
                     scene.pacMan.hide();
                     scene.sceneController.changeState(READY_TO_PLAY);
                     return;
                 }
 
                 Stream.of(scene.ghosts)
-                    .filter(ghost -> ghost.inState(FRIGHTENED) && ghost.sameTile(scene.pacMan))
+                    .filter(ghost -> ghost.inAnyOfStates(FRIGHTENED) && ghost.sameTile(scene.pacMan))
                     .findFirst()
                     .ifPresent(victim -> {
                         scene.victims.add(victim);
@@ -329,7 +329,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     scene.pacMan.show();
                     scene.pacMan.setSpeed(CHASING_SPEED);
                     Stream.of(scene.ghosts).forEach(ghost -> {
-                        if (ghost.inState(EATEN)) {
+                        if (ghost.inAnyOfStates(EATEN)) {
                             ghost.hide();
                         } else {
                             ghost.show();

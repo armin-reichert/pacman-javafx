@@ -25,9 +25,7 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static java.util.Objects.requireNonNull;
 
 /**
- * There are 4 ghosts with different "personalities".
- *
- * @author Armin Reichert
+ * Common ghost base class. The specific ghosts differ in their hunting behavior and their look.
  */
 public abstract class Ghost extends MovingActor implements AnimatedActor {
 
@@ -36,8 +34,21 @@ public abstract class Ghost extends MovingActor implements AnimatedActor {
     private GhostState state;
     private Vector2f revivalPosition;
     private List<Vector2i> specialTerrainTiles = List.of();
-
     private ActorAnimationMap animationMap;
+
+    /**
+     * @param personality ghost personality, allowed values are
+     *          {@link de.amr.pacmanfx.Globals#RED_GHOST_SHADOW},
+     *          {@link de.amr.pacmanfx.Globals#PINK_GHOST_SPEEDY},
+     *          {@link de.amr.pacmanfx.Globals#CYAN_GHOST_BASHFUL} and
+     *          {@link de.amr.pacmanfx.Globals#ORANGE_GHOST_POKEY}
+     * @param name readable name, used for logging and debugging
+     */
+    protected Ghost(byte personality, String name) {
+        this.personality = requireValidGhostPersonality(personality);
+        this.name = requireNonNull(name);
+        corneringSpeedUp = -1.25f;
+    }
 
     public void setAnimations(ActorAnimationMap animationMap) {
         this.animationMap = requireNonNull(animationMap);
@@ -46,17 +57,6 @@ public abstract class Ghost extends MovingActor implements AnimatedActor {
     @Override
     public Optional<ActorAnimationMap> animations() {
         return Optional.ofNullable(animationMap);
-    }
-
-    /**
-     * Constructs a ghost without associated world like the ones in the cut scenes.
-     * @param personality ghost ID
-     * @param name readable name, used for logging or debug display
-     */
-    protected Ghost(byte personality, String name) {
-        this.personality = requireValidGhostPersonality(personality);
-        this.name = requireNonNull(name);
-        corneringSpeedUp = -1.25f;
     }
 
     @Override
@@ -127,7 +127,8 @@ public abstract class Ghost extends MovingActor implements AnimatedActor {
     public void roam(GameLevel level) {
         Vector2i currentTile = tile();
         if (!level.isPortalAt(currentTile) && (isNewTileEntered() || !moveInfo.moved)) {
-            setWishDir(computeRoamingDirection(level, currentTile));
+            Direction dir = computeRoamingDirection(level, currentTile);
+            setWishDir(dir);
         }
         tryMoving(level);
     }
@@ -168,7 +169,7 @@ public abstract class Ghost extends MovingActor implements AnimatedActor {
             }
         }
         if (level.isDoorAt(tile)) {
-            return inState(GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE);
+            return inAnyOfStates(GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE);
         }
         if (level.isInsideWorld(tile)) {
             return !level.isBlockedTile(tile);
@@ -178,7 +179,7 @@ public abstract class Ghost extends MovingActor implements AnimatedActor {
 
     @Override
     public boolean canReverse() {
-        return newTileEntered && inState(GhostState.HUNTING_PAC, GhostState.FRIGHTENED);
+        return newTileEntered && inAnyOfStates(GhostState.HUNTING_PAC, GhostState.FRIGHTENED);
     }
 
     // Here begins the state machine part
@@ -191,13 +192,13 @@ public abstract class Ghost extends MovingActor implements AnimatedActor {
     }
 
     /**
-     * @param alternatives ghost states to be checked
+     * @param states ghost states to be checked
      * @return <code>true</code> if this ghost is in any of the given states.
      * If no alternatives are given, an exception is thrown.
      * <code>false</code>
      */
-    public boolean inState(GhostState... alternatives) {
-        return state != null && isOneOf(state, alternatives);
+    public boolean inAnyOfStates(GhostState... states) {
+        return state != null && isOneOf(state, states);
     }
 
     /**
@@ -208,7 +209,7 @@ public abstract class Ghost extends MovingActor implements AnimatedActor {
     public void setState(GhostState state) {
         requireNonNull(state);
         if (this.state == state) {
-            Logger.trace("{} is already in state {}", name, state);
+            Logger.warn("{} is already in state {}", name, state);
         }
         this.state = state;
         // onEntry action:
