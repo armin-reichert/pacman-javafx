@@ -278,6 +278,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 else if (sceneTimer.tickCount() == 232) {
                     // Pac-Man reaches the energizer at the left and stops
                     scene.pacMan.setSpeed(0);
+                    scene.pacMan.stopAnimation();
                     // Ghosts get frightened and reverse direction
                     Stream.of(scene.ghosts).forEach(ghost -> {
                         ghost.setState(FRIGHTENED);
@@ -286,6 +287,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     });
                 } else if (sceneTimer.tickCount() == 240) {
                     // Pac-Man moves again a bit
+                    scene.pacMan.playAnimation(ANIM_ANY_PAC_MUNCHING);
                     scene.pacMan.setSpeed(CHASING_SPEED);
                 } else if (sceneTimer.tickCount() == 244) {
                     scene.sceneController.changeState(CHASING_GHOSTS);
