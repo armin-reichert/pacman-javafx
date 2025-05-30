@@ -143,7 +143,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         pacMan.show();
 
         inky.setMoveAndWishDir(Direction.RIGHT);
-        inky.setPosition(pacMan.position().minus(TS * 6, 0));
+        inky.setPosition(pacMan.x() - 6 * TS, pacMan.y());
         inky.setSpeed(SPEED_GHOST_CHASING);
         inky.playAnimation(ANIM_GHOST_NORMAL);
         inky.show();
@@ -155,7 +155,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         msPacMan.show();
 
         pinky.setMoveAndWishDir(Direction.LEFT);
-        pinky.setPosition(msPacMan.position().plus(TS * 6, 0));
+        pinky.setPosition(msPacMan.x() + 6 * TS, msPacMan.y());
         pinky.setSpeed(SPEED_GHOST_CHASING);
         pinky.playAnimation(ANIM_GHOST_NORMAL);
         pinky.show();
@@ -179,13 +179,13 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         msPacMan.setPosition(TS * (-3), MIDDLE_LANE_Y);
         msPacMan.setMoveDir(Direction.RIGHT);
 
-        pinky.setPosition(msPacMan.position().minus(TS * 5, 0));
+        pinky.setPosition(msPacMan.x() - 5 * TS, msPacMan.y());
         pinky.setMoveAndWishDir(Direction.RIGHT);
 
         pacMan.setPosition(TS * 31, MIDDLE_LANE_Y);
         pacMan.setMoveDir(Direction.LEFT);
 
-        inky.setPosition(pacMan.position().plus(TS * 5, 0));
+        inky.setPosition(pacMan.x() + 5 * TS, pacMan.y());
         inky.setMoveAndWishDir(Direction.LEFT);
 
         setState(STATE_COMING_TOGETHER, TickTimer.INDEFINITE);

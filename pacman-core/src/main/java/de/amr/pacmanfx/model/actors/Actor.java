@@ -79,11 +79,14 @@ public class Actor {
     }
 
     /**
-     * @return upper left corner of the entity collision box which is a square of size one tile.
+     * @return upper left corner of the entity collision box which is a square of size 1 tile.
      */
-    public Vector2f position() {
-        return Vector2f.of(x, y);
-    }
+    public Vector2f position() { return Vector2f.of(x, y); }
+
+    /**
+     * @return center of the entity collision box which is a square of size 1 tile.
+     */
+    public Vector2f center() { return Vector2f.of(x + HTS, y + HTS); }
 
     public void setPosition(float x, float y) {
         this.x = x;

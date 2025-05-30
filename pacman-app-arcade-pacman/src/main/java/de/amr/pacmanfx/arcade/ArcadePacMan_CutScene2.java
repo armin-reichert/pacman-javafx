@@ -101,7 +101,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             }
             case ANIMATION_START + 360 -> {
                 nailDressRaptureAnimation.setFrameIndex(RAPTURED);
-                blinky.setPosition(blinky.position().minus(5, 0));
+                blinky.setX(blinky.x() - 4);
                 blinky.selectAnimation(ANIM_BLINKY_DAMAGED);
             }
             case ANIMATION_START + 420 -> blinkyDamaged.nextFrame(); // Eyes right-down

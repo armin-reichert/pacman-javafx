@@ -70,7 +70,7 @@ public class Bonus3D extends Box {
     }
 
     public void update() {
-        Vector2f center = bonus.actor().position().plus(HTS, HTS);
+        Vector2f center = bonus.actor().center();
         setTranslateX(center.x());
         setTranslateY(center.y());
         setTranslateZ(-HTS);

@@ -127,7 +127,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     private void drawMovingActor(MovingActor movingActor, Direction dir, RectArea spriteLookingLeft) {
-        Vector2f center = movingActor.position().plus(HTS, HTS).scaled(scaling());
+        Vector2f center = movingActor.center().scaled(scaling());
         ctx().save();
         ctx().translate(center.x(), center.y());
         switch (dir) {
@@ -405,12 +405,11 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         if (!stork.isVisible()) {
             return;
         }
-        Vector2f pos = stork.position();
         ctx().setImageSmoothing(false);
-        drawSpriteScaled(storkAnimation.currentSprite(), pos.x(), pos.y());
+        drawSpriteScaled(storkAnimation.currentSprite(), stork.x(), stork.y());
         if (hideBag) { // over-paint bag under beak
             ctx().setFill(PY_CANVAS_BG_COLOR.get());
-            ctx().fillRect(scaled(pos.x() - 1), scaled(pos.y() + 7), scaled(9), scaled(9));
+            ctx().fillRect(scaled(stork.x() - 1), scaled(stork.y() + 7), scaled(9), scaled(9));
         }
     }
 

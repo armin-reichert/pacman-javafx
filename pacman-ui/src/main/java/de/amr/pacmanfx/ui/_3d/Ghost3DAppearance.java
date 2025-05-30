@@ -128,7 +128,7 @@ public class Ghost3DAppearance extends Group {
     }
 
     private void updateTransform(GameLevel level) {
-        Vector2f center = ghost.position().plus(HTS, HTS);
+        Vector2f center = ghost.center();
         setTranslateX(center.x());
         setTranslateY(center.y());
         setTranslateZ(-0.5 * size - 2.0); // a little bit over the floor

@@ -128,7 +128,7 @@ public abstract class XMan3D {
     }
 
     protected void updatePosition() {
-        Vector2f center = pac.position().plus(HTS, HTS);
+        Vector2f center = pac.center();
         root.setTranslateX(center.x());
         root.setTranslateY(center.y());
         root.setTranslateZ(-0.5 * size);

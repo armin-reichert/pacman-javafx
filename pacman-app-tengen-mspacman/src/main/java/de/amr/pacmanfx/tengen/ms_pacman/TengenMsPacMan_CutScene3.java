@@ -141,7 +141,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         if (!bagOpen) {
             bagWithJunior.move();
             Vector2f bv = bagWithJunior.velocity();
-            if (bagWithJunior.position().y() > GROUND_Y) {
+            if (bagWithJunior.y() > GROUND_Y) {
                 bagWithJunior.setY(GROUND_Y);
                 bagWithJunior.setVelocity(0.9f * bv.x(), -0.3f * bv.y());
             }

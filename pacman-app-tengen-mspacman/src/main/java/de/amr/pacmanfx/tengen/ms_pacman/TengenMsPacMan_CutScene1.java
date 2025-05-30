@@ -128,10 +128,10 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             pacMan.setPosition(RIGHT_BORDER, MIDDLE_LANE);
             pacMan.setMoveDir(Direction.LEFT);
 
-            pinky.setPosition(msPacMan.position().minus(TS * 11, 0));
+            pinky.setPosition(msPacMan.x() - TS * 11, msPacMan.y());
             pinky.setMoveAndWishDir(Direction.RIGHT);
 
-            inky.setPosition(pacMan.position().plus(TS * 11, 0));
+            inky.setPosition(pacMan.x() + TS * 11, pacMan.y());
             inky.setMoveAndWishDir(Direction.LEFT);
         }
         else if (t == 454) {

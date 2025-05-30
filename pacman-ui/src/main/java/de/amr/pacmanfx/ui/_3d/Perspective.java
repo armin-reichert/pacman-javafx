@@ -42,10 +42,9 @@ public interface Perspective {
         @Override
         public void update(SubScene scene, GameLevel level, Actor focussedActor) {
             PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
-            var position = focussedActor.position();
             double speed = 0.02;
-            double x = lerp(camera.getTranslateX(), position.x(), speed);
-            double y = lerp(camera.getTranslateY(), position.y(), speed);
+            double x = lerp(camera.getTranslateX(), focussedActor.x(), speed);
+            double y = lerp(camera.getTranslateY(), focussedActor.y(), speed);
             camera.setTranslateZ(-HEIGHT_OVER_GROUND);
             camera.setTranslateX(x);
             camera.setTranslateY(y);
@@ -120,7 +119,7 @@ public interface Perspective {
             double speedY = 0.04;
             double worldWidth = level.worldMap().numCols() * TS;
             double targetX = Math.clamp(spottedActor.x(), 40, worldWidth - 40);
-            double targetY = spottedActor.position().y() + 100;
+            double targetY = spottedActor.y() + 100;
             camera.setTranslateX(lerp(camera.getTranslateX(), targetX, speedX));
             camera.setTranslateY(lerp(camera.getTranslateY(), targetY, speedY));
             camera.setTranslateZ(-40);

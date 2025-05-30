@@ -234,7 +234,7 @@ public interface GameRenderer {
                     }
                     if (movingActor.wishDir() != null) {
                         float scaling = scaling();
-                        Vector2f center = movingActor.position().plus(HTS, HTS);
+                        Vector2f center = movingActor.center();
                         Vector2f arrowHead = center.plus(movingActor.wishDir().vector().scaled(12f)).scaled(scaling);
                         Vector2f guyCenter = center.scaled(scaling);
                         float radius = scaling * 2, diameter = 2 * radius;
