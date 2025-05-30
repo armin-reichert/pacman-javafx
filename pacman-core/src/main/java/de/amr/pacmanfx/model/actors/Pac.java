@@ -141,7 +141,7 @@ public class Pac extends MovingActor implements AnimatedActor {
                 stopAnimation();
             }
         } else {
-            --restingTicks;
+            rest();
         }
     }
 
@@ -175,6 +175,8 @@ public class Pac extends MovingActor implements AnimatedActor {
             throw new IllegalArgumentException("Resting time cannot be negative, but is: " + ticks);
         }
     }
+
+    public void rest() { restingTicks--; }
 
     /**
      *  @return number of ticks passed since pellet or energizer was eaten.

@@ -197,6 +197,12 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         gr().ctx().restore();
     }
 
+    @Override
+    protected void drawDebugInfo() {
+        super.drawDebugInfo();
+        gr().ctx().fillText("Scene timer %d".formatted(sceneController.state().timer().tickCount()), 0, scaled(5 * TS));
+    }
+
     private enum SceneState implements FsmState<ArcadePacMan_IntroScene> {
 
         STARTING {
@@ -245,6 +251,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         },
 
         CHASING_PAC {
+
             @Override
             public void onEnter(ArcadePacMan_IntroScene scene) {
                 sceneTimer.restartIndefinitely();
@@ -268,17 +275,20 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 if (sceneTimer.atSecond(1)) {
                     scene.blinking.start();
                 }
-                // Pac-Man reaches the energizer at the left and turns
-                if (scene.pacMan.x() <= TS * LEFT_TILE_X) {
-                    scene.sceneController.changeState(CHASING_GHOSTS);
-                }
-                // Ghosts already reverse direction before Pac-Man eats the energizer and turns!
-                else if (scene.pacMan.x() <= TS * LEFT_TILE_X + HTS) {
-                    Stream.of(scene.ghosts).filter(ghost -> !ghost.inAnyOfStates(FRIGHTENED)).forEach(ghost -> {
+                else if (sceneTimer.tickCount() == 232) {
+                    // Pac-Man reaches the energizer at the left and stops
+                    scene.pacMan.setSpeed(0);
+                    // Ghosts get frightened and reverse direction
+                    Stream.of(scene.ghosts).forEach(ghost -> {
                         ghost.setState(FRIGHTENED);
                         ghost.setMoveAndWishDir(Direction.RIGHT);
                         ghost.setSpeed(GHOST_FRIGHTENED_SPEED);
                     });
+                } else if (sceneTimer.tickCount() == 240) {
+                    // Pac-Man moves again a bit
+                    scene.pacMan.setSpeed(CHASING_SPEED);
+                } else if (sceneTimer.tickCount() == 244) {
+                    scene.sceneController.changeState(CHASING_GHOSTS);
                 }
                 scene.blinking.tick();
                 scene.pacMan.move();
