@@ -225,10 +225,7 @@ public abstract class Ghost extends MovingActor implements AnimatedActor {
      * Executes a single simulation step for this ghost in the current game level.
      */
     public void update(GameLevel level) {
-        if (level == null) {
-            Logger.warn("Cannot update ghost, no game level set");
-            return;
-        }
+        requireNonNull(level);
         switch (state) {
             case LOCKED             -> updateStateLocked(level);
             case LEAVING_HOUSE      -> updateStateLeavingHouse(level);
