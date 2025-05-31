@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib;
 
-import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.nes.NES_Palette;
@@ -210,15 +209,6 @@ public interface Ufx {
         };
         wrapper.setOnFinished(e -> action.run());
         return wrapper;
-    }
-
-    static int angle(Direction dir) {
-        return switch (dir) {
-            case LEFT  -> 0;
-            case UP    -> 90;
-            case RIGHT -> 180;
-            case DOWN  -> 270;
-        };
     }
 
     record ColorChange(Color from, Color to) {}

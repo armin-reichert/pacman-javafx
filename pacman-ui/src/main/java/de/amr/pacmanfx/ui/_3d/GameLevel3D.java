@@ -76,7 +76,7 @@ public class GameLevel3D {
     private final List<Pellet3D> pellets3D = new ArrayList<>();
     private final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
     private final XMan3D pac3D;
-    private final List<Ghost3DAppearance> ghost3DAppearances;
+    private final List<Ghost3D_Appearance> ghost3DAppearances;
     private Message3D message3D;
     private Bonus3D bonus3D;
     private Animation levelCompleteAnimation;
@@ -145,8 +145,8 @@ public class GameLevel3D {
         return floor3D;
     }
 
-    private Ghost3DAppearance createGhost3D(Ghost ghost, int numFlashes) {
-        var ghost3D = new Ghost3DAppearance(theAssets(), theUIConfig().current().assetNamespace(),
+    private Ghost3D_Appearance createGhost3D(Ghost ghost, int numFlashes) {
+        var ghost3D = new Ghost3D_Appearance(theAssets(), theUIConfig().current().assetNamespace(),
             new MeshView(Model3DRepository.get().ghostDressMesh()),
             new MeshView(Model3DRepository.get().ghostPupilsMesh()),
             new MeshView(Model3DRepository.get().ghostEyeballsMesh()),
@@ -401,8 +401,8 @@ public class GameLevel3D {
 
     public Maze3D maze3D() { return maze3D; }
     public XMan3D pac3D() { return pac3D; }
-    public Stream<Ghost3DAppearance> ghosts3D() { return ghost3DAppearances.stream(); }
-    public Ghost3DAppearance ghost3D(byte id) { return ghost3DAppearances.get(id); }
+    public Stream<Ghost3D_Appearance> ghosts3D() { return ghost3DAppearances.stream(); }
+    public Ghost3D_Appearance ghost3D(byte id) { return ghost3DAppearances.get(id); }
     public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
     public LivesCounter3D livesCounter3D() { return livesCounter3D; }
     public Stream<Pellet3D> pellets3D() { return pellets3D.stream(); }

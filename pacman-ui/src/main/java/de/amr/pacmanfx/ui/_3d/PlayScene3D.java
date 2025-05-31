@@ -372,7 +372,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
         theSimulationStep().killedGhosts().forEach(ghost -> {
             int victimIndex = theGameLevel().victims().indexOf(ghost);
             var numberImage = spriteSheet.crop(numberSprites[victimIndex]);
-            level3D.ghost3D(ghost.personality()).setNumberImage(numberImage);
+            level3D.ghost3D(ghost.personality()).setNumberTexture(numberImage);
         });
     }
 

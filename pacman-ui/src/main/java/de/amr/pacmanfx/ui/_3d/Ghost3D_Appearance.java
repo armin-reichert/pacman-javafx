@@ -30,40 +30,37 @@ import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
 
 /**
- * A 3D ghost can have one of the following appearances:
+ * Appearance of a 3D ghost. One of:
  * <ul>
- * <li>{@link Appearance#COLORED_GHOST}: colored ghost with blue eyes,
- * <li>{@link Appearance#FRIGHTENED_GHOST}: blue ghost with empty pinkish eyes (ghost looking blind),
- * <li>{@link Appearance#FLASHING_GHOST}: blue-white flashing skin, pink-red flashing eyes,
- * <li>{@link Appearance#GHOST_EYES} blue eyes only,
- * <li>{@link Appearance#NUMBER}: number cube showing eaten ghost's value.
+ * <li>{@link Appearance#NORMAL}: colored ghost with blue eyes,
+ * <li>{@link Appearance#FRIGHTENED}: blue ghost with empty, "pinkish" eyes (looking blind),
+ * <li>{@link Appearance#FLASHING}: blue-white flashing skin, pink-red flashing eyes,
+ * <li>{@link Appearance#EATEN} eyes only,
+ * <li>{@link Appearance#VALUE}: showing eaten ghost's value.
  * </ul>
- *
- * @author Armin Reichert
  */
-public class Ghost3DAppearance extends Group {
+public class Ghost3D_Appearance extends Group {
 
-    public enum Appearance { COLORED_GHOST, FRIGHTENED_GHOST, FLASHING_GHOST, GHOST_EYES, NUMBER }
+    public enum Appearance {NORMAL, FRIGHTENED, FLASHING, EATEN, VALUE}
 
     private final ObjectProperty<Appearance> appearancePy = new SimpleObjectProperty<>(this, "appearance") {
         @Override
-        protected void invalidated() { changeAppearance(getValue()); }
+        protected void invalidated() { onAppearanceChanged(getValue()); }
     };
 
     private final Ghost ghost;
     private final Ghost3D ghost3D;
-    private final Box numberCube;
-    private final RotateTransition numberCubeRotation;
+    private final Box numberBox;
+    private final RotateTransition numberBoxRotation;
     private final double size;
     private final int numFlashes;
     private RotateTransition brakeAnimation;
 
-    public Ghost3DAppearance(
-        AssetStorage assets,
-        String assetPrefix,
+    public Ghost3D_Appearance(AssetStorage assets, String assetPrefix,
         Shape3D dressShape, Shape3D pupilsShape, Shape3D eyeballsShape,
-        Ghost ghost, double size, int numFlashes) {
-
+        Ghost ghost, double size, int numFlashes)
+    {
+        requireNonNull(assets);
         requireNonNull(assetPrefix);
         requireNonNull(dressShape);
         requireNonNull(pupilsShape);
@@ -78,15 +75,71 @@ public class Ghost3DAppearance extends Group {
 
         ghost3D = new Ghost3D(assets, assetPrefix, ghost.personality(), dressShape, pupilsShape, eyeballsShape, size);
 
-        numberCube = new Box(14, 8, 8);
-        numberCubeRotation = new RotateTransition(Duration.seconds(1), numberCube);
-        numberCubeRotation.setAxis(Rotate.X_AXIS);
-        numberCubeRotation.setFromAngle(0);
-        numberCubeRotation.setToAngle(360);
-        numberCubeRotation.setInterpolator(Interpolator.LINEAR);
-        numberCubeRotation.setRate(0.75);
+        numberBox = new Box(14, 8, 8);
+        numberBoxRotation = new RotateTransition(Duration.seconds(1), numberBox);
+        numberBoxRotation.setAxis(Rotate.X_AXIS);
+        numberBoxRotation.setFromAngle(0);
+        numberBoxRotation.setToAngle(360);
+        numberBoxRotation.setInterpolator(Interpolator.LINEAR);
+        numberBoxRotation.setRate(0.75);
 
-        appearancePy.set(Appearance.COLORED_GHOST);
+        setAppearance(Appearance.NORMAL);
+    }
+
+    public Appearance appearance() { return appearancePy.get(); }
+
+    public void setAppearance(Appearance appearance) { appearancePy.set(requireNonNull(appearance)); }
+
+    public void init(GameLevel level) {
+        stopAllAnimations();
+        updateTransform(level);
+        updateAppearance(level);
+    }
+
+    public void update(GameLevel level) {
+        updateTransform(level);
+        updateAppearance(level);
+        updateAnimations();
+    }
+
+    public void setNumberTexture(Image numberTexture) {
+        var material = new PhongMaterial();
+        material.setDiffuseMap(numberTexture);
+        numberBox.setMaterial(material);
+    }
+
+    private void updateTransform(GameLevel level) {
+        Vector2f center = ghost.center();
+        setTranslateX(center.x());
+        setTranslateY(center.y());
+        setTranslateZ(-0.5 * size - 2.0); // a little bit over the floor
+        double angle = switch (ghost.wishDir()) {
+            case LEFT  -> 0;
+            case UP    -> 90;
+            case RIGHT -> 180;
+            case DOWN  -> 270;
+        };
+        ghost3D.turnTo(angle);
+        boolean outsideTerrain = center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
+        setVisible(ghost.isVisible() && !outsideTerrain);
+    }
+
+    private void stopAllAnimations() {
+        endBrakeAnimation();
+        ghost3D.stopDressAnimation();
+        numberBoxRotation.stop();
+    }
+
+    private void updateAnimations() {
+        if (appearance() == Appearance.VALUE) {
+            ghost3D.stopDressAnimation();
+        } else {
+            numberBoxRotation.stop();
+            ghost3D.playDressAnimation();
+            if (ghost.moveInfo().tunnelEntered) {
+                playBrakeAnimation();
+            }
+        }
     }
 
     private void playBrakeAnimation() {
@@ -109,67 +162,21 @@ public class Ghost3DAppearance extends Group {
         }
     }
 
-    public void init(GameLevel level) {
-        stopAllAnimations();
-        updateTransform(level);
-        updateAppearance(level);
-    }
-
-    public void update(GameLevel level) {
-        updateTransform(level);
-        updateAppearance(level);
-        updateAnimations();
-    }
-
-    public void setNumberImage(Image numberImage) {
-        var texture = new PhongMaterial();
-        texture.setDiffuseMap(numberImage);
-        numberCube.setMaterial(texture);
-    }
-
-    private void updateTransform(GameLevel level) {
-        Vector2f center = ghost.center();
-        setTranslateX(center.x());
-        setTranslateY(center.y());
-        setTranslateZ(-0.5 * size - 2.0); // a little bit over the floor
-        ghost3D.turnTo(Ufx.angle(ghost.wishDir()));
-        boolean outsideTerrain = center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
-        setVisible(ghost.isVisible() && !outsideTerrain);
-    }
-
-    private void stopAllAnimations() {
-        endBrakeAnimation();
-        ghost3D.stopDressAnimation();
-        numberCubeRotation.stop();
-    }
-
-    private void updateAnimations() {
-        if (appearancePy.get() == Appearance.NUMBER) {
-            ghost3D.stopDressAnimation();
-        } else {
-            numberCubeRotation.stop();
-            ghost3D.playDressAnimation();
-            if (ghost.moveInfo().tunnelEntered) {
-                playBrakeAnimation();
-            }
-        }
-    }
-
-    private void changeAppearance(Appearance appearance) {
-        getChildren().setAll(appearance == Appearance.NUMBER ? numberCube : ghost3D.root());
+    private void onAppearanceChanged(Appearance appearance) {
+        getChildren().setAll(appearance == Appearance.VALUE ? numberBox : ghost3D.root());
         switch (appearance) {
-            case COLORED_GHOST -> ghost3D.appearNormal();
-            case FRIGHTENED_GHOST -> ghost3D.appearFrightened();
-            case GHOST_EYES -> ghost3D.appearEyesOnly();
-            case FLASHING_GHOST -> ghost3D.appearFlashing(numFlashes);
-            case NUMBER     -> numberCubeRotation.playFromStart();
+            case NORMAL -> ghost3D.appearNormal();
+            case FRIGHTENED -> ghost3D.appearFrightened();
+            case EATEN -> ghost3D.appearEyesOnly();
+            case FLASHING -> ghost3D.appearFlashing(numFlashes);
+            case VALUE -> numberBoxRotation.playFromStart();
         }
         Logger.info("Ghost {} appearance changed to {}", ghost.personality(), appearance);
     }
 
     private void updateAppearance(GameLevel level) {
         if (ghost.state() == null) { // TODO: can this happen?
-            appearancePy.set(Appearance.COLORED_GHOST);
+            setAppearance(Appearance.NORMAL);
             return;
         }
         Appearance nextAppearance = switch (ghost.state()) {
@@ -177,16 +184,16 @@ public class Ghost3DAppearance extends Group {
                 // ghost that have been killed by current energizer will not look frightened
                 level.pac().powerTimer().isRunning() && !level.victims().contains(ghost)
                         ? frightenedOrFlashing(level.pac().isPowerFading(level))
-                        : Appearance.COLORED_GHOST;
+                        : Appearance.NORMAL;
             case FRIGHTENED -> frightenedOrFlashing(level.pac().isPowerFading(level));
-            case ENTERING_HOUSE, RETURNING_HOME -> Appearance.GHOST_EYES;
-            case EATEN -> Appearance.NUMBER;
-            default -> Appearance.COLORED_GHOST;
+            case ENTERING_HOUSE, RETURNING_HOME -> Appearance.EATEN;
+            case EATEN -> Appearance.VALUE;
+            default -> Appearance.NORMAL;
         };
-        appearancePy.set(nextAppearance);
+        setAppearance(nextAppearance);
     }
 
     private Appearance frightenedOrFlashing(boolean powerFading) {
-        return powerFading ? Appearance.FLASHING_GHOST : Appearance.FRIGHTENED_GHOST;
+        return powerFading ? Appearance.FLASHING : Appearance.FRIGHTENED;
     }
 }

@@ -9,7 +9,6 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import javafx.animation.*;
 import javafx.scene.Group;
@@ -133,7 +132,13 @@ public abstract class XMan3D {
         root.setTranslateY(center.y());
         root.setTranslateZ(-0.5 * size);
         moveRotation.setAxis(Rotate.Z_AXIS);
-        moveRotation.setAngle(Ufx.angle(pac.moveDir()));
+        double angle = switch (pac.moveDir()) {
+            case LEFT  -> 0;
+            case UP    -> 90;
+            case RIGHT -> 180;
+            case DOWN  -> 270;
+        };
+        moveRotation.setAngle(angle);
     }
 
     protected void updateVisibility(GameLevel level) {

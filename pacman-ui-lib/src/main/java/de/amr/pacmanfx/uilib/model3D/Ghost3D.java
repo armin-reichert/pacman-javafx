@@ -26,7 +26,7 @@ import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static java.util.Objects.requireNonNull;
 
 /**
- * @author Armin Reichert
+ * 3D representation of a ghost.
  */
 public class Ghost3D {
 
@@ -112,7 +112,7 @@ public class Ghost3D {
         return root;
     }
 
-    public void turnTo(int angle) {
+    public void turnTo(double angle) {
         root.setRotationAxis(Rotate.Z_AXIS);
         root.setRotate(angle);
     }
