@@ -167,6 +167,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
     }
 
     protected void bindActions() {
+        deleteActionBindings();
         bindScene3DActions();
         if (optGameLevel().isPresent()) {
             if (theGameLevel().isDemoLevel()) {
@@ -186,8 +187,6 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
         scores3D.setFont(theAssets().arcadeFontAtSize(TS));
         theGame().scoreManager().setScoreVisible(true);
         perspectiveIDPy.bind(PY_3D_PERSPECTIVE);
-
-        bindActions();
     }
 
     @Override
@@ -204,7 +203,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
 
     @Override
     public void onLevelStarted(GameEvent event) {
-        bindActions(); //TODO check if this is necessary
+        bindActions();
         if (level3D == null) {
             replaceGameLevel3D();
         }
@@ -229,28 +228,32 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
 
     @Override
     public void onSwitch_2D_3D(GameScene scene2D) {
-        optGameLevel().ifPresent(level -> {
-            if (level3D == null) {
-                replaceGameLevel3D();
+        if (optGameLevel().isEmpty()) {
+            return;
+        }
+
+        if (level3D == null) {
+            replaceGameLevel3D();
+        }
+        level3D.pellets3D().forEach(pellet -> pellet.shape3D().setVisible(!theGameLevel().tileContainsEatenFood(pellet.tile())));
+        level3D.energizers3D().forEach(energizer -> energizer.shape3D().setVisible(!theGameLevel().tileContainsEatenFood(energizer.tile())));
+        if (isOneOf(theGameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
+            level3D.energizers3D().filter(energizer -> energizer.shape3D().isVisible()).forEach(Energizer3D::startPumping);
+        }
+        theGameLevel().pac().show();
+        theGameLevel().ghosts().forEach(Ghost::show);
+        level3D.pac3D().init();
+        level3D.pac3D().update(theGameLevel());
+
+        if (theGameState() == GameState.HUNTING) {
+            if (theGameLevel().pac().powerTimer().isRunning()) {
+                theSound().playPacPowerSound();
             }
-            level3D.pellets3D().forEach(pellet -> pellet.shape3D().setVisible(!level.tileContainsEatenFood(pellet.tile())));
-            level3D.energizers3D().forEach(energizer -> energizer.shape3D().setVisible(!level.tileContainsEatenFood(energizer.tile())));
-            if (isOneOf(theGameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
-                level3D.energizers3D().filter(energizer -> energizer.shape3D().isVisible()).forEach(Energizer3D::startPumping);
-            }
-            level.pac().show();
-            level.ghosts().forEach(Ghost::show);
-            level3D.pac3D().init();
-            level3D.pac3D().update(level);
-            if (theGameState() == GameState.HUNTING) {
-                if (level.pac().powerTimer().isRunning()) {
-                    theSound().playPacPowerSound();
-                }
-                level3D.playLivesCounterAnimation();
-            }
-            updateScores();
-            bindActions();
-        });
+            level3D.playLivesCounterAnimation();
+        }
+
+        updateScores();
+        bindActions();
     }
 
     @Override
