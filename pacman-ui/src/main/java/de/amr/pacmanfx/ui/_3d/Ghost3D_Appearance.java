@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.model3D.Ghost3D;
 import javafx.animation.Interpolator;
@@ -119,7 +118,7 @@ public class Ghost3D_Appearance extends Group {
             case RIGHT -> 180;
             case DOWN  -> 270;
         };
-        ghost3D.turnTo(angle);
+        ghost3D.setRotation(angle);
         boolean outsideTerrain = center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
         setVisible(ghost.isVisible() && !outsideTerrain);
     }
@@ -165,10 +164,10 @@ public class Ghost3D_Appearance extends Group {
     private void onAppearanceChanged(Appearance appearance) {
         getChildren().setAll(appearance == Appearance.VALUE ? numberBox : ghost3D.root());
         switch (appearance) {
-            case NORMAL -> ghost3D.appearNormal();
-            case FRIGHTENED -> ghost3D.appearFrightened();
-            case EATEN -> ghost3D.appearEyesOnly();
-            case FLASHING -> ghost3D.appearFlashing(numFlashes);
+            case NORMAL -> ghost3D.setNormalAppearance();
+            case FRIGHTENED -> ghost3D.setFrightenedAppearance();
+            case EATEN -> ghost3D.setEyesOnlyAppearance();
+            case FLASHING -> ghost3D.setFlashingAppearance(numFlashes);
             case VALUE -> numberBoxRotation.playFromStart();
         }
         Logger.info("Ghost {} appearance changed to {}", ghost.personality(), appearance);
