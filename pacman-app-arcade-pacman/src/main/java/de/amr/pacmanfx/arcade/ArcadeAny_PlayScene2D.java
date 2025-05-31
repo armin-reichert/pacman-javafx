@@ -214,13 +214,12 @@ public class ArcadeAny_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onSceneVariantSwitch(GameScene oldScene) {
-        Logger.info("{} entered from {}", this, oldScene);
+    public void onSwitch_3D_2D(GameScene scene3D) {
+        Logger.info("2D scene {} entered from 3D scene {}", this, scene3D);
         bindArcadePlayerSteeringActions();
         updateActionBindings();
-
-        //TODO check this
-        if (gr() == null) {
+        if (gr() == null) { //TODO check if this can happen
+            Logger.warn("No game renderer was existing when switching to 2D scene");
             setGameRenderer(theUIConfig().current().createRenderer(canvas()));
         }
         optGameLevel().ifPresent(gr()::applyRenderingHints);

@@ -297,7 +297,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     }
 
     @Override
-    public void onSceneVariantSwitch(GameScene oldScene) {
+    public void onSwitch_3D_2D(GameScene scene3D) {
         setJoypadKeyBindings(theGameLevel());
         gr().applyRenderingHints(theGameLevel());
     }

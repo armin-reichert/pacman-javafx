@@ -240,9 +240,16 @@ public class GameView implements PacManGames_View {
         }
         embedGameScene(uiConfig, nextGameScene);
         nextGameScene.init();
-        if (theUIConfig().is2D3DPlaySceneSwitch(uiConfig, currentGameScene, nextGameScene)) {
-            nextGameScene.onSceneVariantSwitch(currentGameScene);
+
+        // Handle switching between 2D and 3D game variants
+        byte sceneSwitchType = theUIConfig().identifySceneSwitchType(uiConfig, currentGameScene, nextGameScene);
+        switch (sceneSwitchType) {
+            case 23 -> nextGameScene.onSwitch_2D_3D(currentGameScene);
+            case 32 -> nextGameScene.onSwitch_3D_2D(currentGameScene);
+            case  0 -> {}
+            default -> throw new IllegalArgumentException("Illegal scene switch type: " + sceneSwitchType);
         }
+
         if (changing) {
             gameScenePy.set(nextGameScene);
         }

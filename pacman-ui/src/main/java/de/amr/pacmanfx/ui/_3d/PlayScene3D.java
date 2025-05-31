@@ -229,7 +229,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
     }
 
     @Override
-    public void onSceneVariantSwitch(GameScene fromScene) {
+    public void onSwitch_2D_3D(GameScene scene2D) {
         optGameLevel().ifPresent(level -> {
             if (level3D == null) {
                 replaceGameLevel3D();

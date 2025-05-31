@@ -37,9 +37,16 @@ public interface GameScene extends GameEventListener, ActionBindingManager {
     /**
      * Called when scene variants for 2D and 3D exist and variant changes between 2D and 3D.
      *
-     * @param oldScene scene that was displayed before this scene
+     * @param scene2D 2D scene that was displayed before this scene
      */
-    default void onSceneVariantSwitch(GameScene oldScene) {}
+    default void onSwitch_2D_3D(GameScene scene2D) {}
+
+    /**
+     * Called when scene variants for 2D and 3D exist and variant changes between 2D and 3D.
+     *
+     * @param scene3D 3D scene that was displayed before this scene
+     */
+    default void onSwitch_3D_2D(GameScene scene3D) {}
 
     /**
      * @param e event associated with opening of context menu

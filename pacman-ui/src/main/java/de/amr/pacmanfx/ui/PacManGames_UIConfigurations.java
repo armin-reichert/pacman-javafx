@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.uilib.GameScene;
 
 import java.util.EnumMap;
@@ -62,14 +63,22 @@ public class PacManGames_UIConfigurations {
         return theUI().currentGameScene().map(GameScene2D.class::isInstance).orElse(false);
     }
 
-    public boolean is2D3DPlaySceneSwitch(PacManGames_UIConfiguration config, GameScene oldScene, GameScene newScene) {
-        if (oldScene == null && newScene == null) {
-            throw new IllegalStateException("WTF is going on here, both game scenes are NULL!");
+    /**
+     * @param config UI configuration
+     * @param sceneBefore scene displayed before switching
+     * @param sceneAfter scene displayed after switching
+     * @return <code>23</code> if 2D -> 3D switch, <code>32</code> if 3D -> 2D switch</code>,
+     *  <code>0</code> if scene before switch is not yet available
+     */
+    public byte identifySceneSwitchType(PacManGames_UIConfiguration config, GameScene sceneBefore, GameScene sceneAfter) {
+        if (sceneBefore == null && sceneAfter == null) {
+            throw new IllegalStateException("WTF is going on here, switch between NULL scenes?");
         }
-        if (oldScene == null) {
-            return false; // may happen, it's ok
-        }
-        return config.gameSceneHasID(oldScene, "PlayScene2D") && config.gameSceneHasID(newScene, "PlayScene3D")
-            || config.gameSceneHasID(oldScene, "PlayScene3D") && config.gameSceneHasID(newScene, "PlayScene2D");
+        return switch (sceneBefore) {
+            case null -> 0; // may happen, it's ok
+            case GameScene2D gameScene2D when sceneAfter instanceof PlayScene3D -> 23;
+            case PlayScene3D playScene3D when sceneAfter instanceof GameScene2D -> 32;
+            default -> 0;
+        };
     }
 }
