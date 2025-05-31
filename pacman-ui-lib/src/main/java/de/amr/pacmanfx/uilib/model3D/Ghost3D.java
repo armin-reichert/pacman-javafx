@@ -135,7 +135,7 @@ public class Ghost3D {
             // Note: Total flashing time must be shorter than Pac power fading time (2s)!
             Duration totalFlashingTime = Duration.millis(1966);
             ensureFlashingAnimationIsPlaying(numFlashes, totalFlashingTime);
-            Logger.info("{} is flashing {} times", personality, numFlashes);
+            Logger.trace("{} is flashing {} times", personality, numFlashes);
         }
     }
 
@@ -145,7 +145,7 @@ public class Ghost3D {
         eyeballsColorPy.set(frightenedEyeballsColor());
         pupilsColorPy.set(frightenedPupilsColor());
         dressShape.setVisible(true);
-        Logger.info("Appear frightened, ghost {}", personality);
+        Logger.trace("Appear frightened, ghost {}", personality);
     }
 
     public void setNormalAppearance() {
@@ -154,7 +154,7 @@ public class Ghost3D {
         eyeballsColorPy.set(normalEyeballsColor());
         pupilsColorPy.set(normalPupilsColor());
         dressShape.setVisible(true);
-        Logger.info("Appear normal, ghost {}", personality);
+        Logger.trace("Appear normal, ghost {}", personality);
     }
 
     public void setEyesOnlyAppearance() {
@@ -162,7 +162,7 @@ public class Ghost3D {
         eyeballsColorPy.set(normalEyeballsColor());
         pupilsColorPy.set(normalPupilsColor());
         dressShape.setVisible(false);
-        Logger.info("Appear eyes, ghost {}", personality);
+        Logger.trace("Appear eyes, ghost {}", personality);
     }
 
     private void createFlashingAnimation(int numFlashes, Duration totalDuration) {
@@ -178,7 +178,7 @@ public class Ghost3D {
             )
         );
         flashingAnimation.setCycleCount(numFlashes);
-        Logger.info("Created flashing animation ({} flashes, total time: {} seconds) for ghost {}",
+        Logger.trace("Created flashing animation ({} flashes, total time: {} seconds) for ghost {}",
             numFlashes, totalDuration.toSeconds(), personality);
     }
 
@@ -187,7 +187,7 @@ public class Ghost3D {
             createFlashingAnimation(numFlashes, duration);
         }
         if (flashingAnimation.getStatus() != Status.RUNNING) {
-            Logger.info("Playing flashing animation for ghost {}", personality);
+            Logger.trace("Playing flashing animation for ghost {}", personality);
             flashingAnimation.play();
         }
     }
@@ -196,7 +196,7 @@ public class Ghost3D {
         if (flashingAnimation != null) {
             flashingAnimation.stop();
             flashingAnimation = null;
-            Logger.info("Stopped flashing animation for ghost {}", personality);
+            Logger.trace("Stopped flashing animation for ghost {}", personality);
         }
     }
 }

@@ -170,7 +170,7 @@ public class Ghost3D_Appearance extends Group {
             case FLASHING -> ghost3D.setFlashingAppearance(numFlashes);
             case VALUE -> numberBoxRotation.playFromStart();
         }
-        Logger.info("Ghost {} appearance changed to {}", ghost.personality(), appearance);
+        Logger.trace("Ghost {} appearance changed to {}", ghost.personality(), appearance);
     }
 
     private void updateAppearance(GameLevel level) {
