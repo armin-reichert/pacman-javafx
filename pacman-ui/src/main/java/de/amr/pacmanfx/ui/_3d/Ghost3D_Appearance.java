@@ -174,10 +174,6 @@ public class Ghost3D_Appearance extends Group {
     }
 
     private void updateAppearance(GameLevel level) {
-        if (ghost.state() == null) { // TODO: can this happen?
-            setAppearance(Appearance.NORMAL);
-            return;
-        }
         Appearance nextAppearance = switch (ghost.state()) {
             case LEAVING_HOUSE, LOCKED ->
                 // ghost that have been killed by current energizer will not look frightened
