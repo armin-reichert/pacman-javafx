@@ -167,16 +167,15 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
     }
 
     protected void bindActions() {
-        bindArcadeInsertCoinAction();
-        // if demo level is running, allow starting game
-        if (optGameLevel().isPresent() && theGameLevel().isDemoLevel()) {
-            bindArcadeStartGameAction();
-        } else {
-            bindPlayerSteeringActions();
-            bindCheatActions();
-        }
         bindScene3DActions();
-
+        if (optGameLevel().isPresent()) {
+            if (theGameLevel().isDemoLevel()) {
+                bindArcadeInsertCoinAction();
+            } else {
+                bindPlayerSteeringActions();
+                bindCheatActions();
+            }
+        }
         updateActionBindings();
     }
 
