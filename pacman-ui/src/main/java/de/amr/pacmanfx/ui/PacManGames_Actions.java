@@ -30,6 +30,23 @@ import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
 public interface PacManGames_Actions {
 
+    int SIMULATION_SPEED_DELTA = 2;
+    int SIMULATION_SPEED_MIN   = 10;
+    int SIMULATION_SPEED_MAX   = 240;
+
+    record PlayerSteeringAction(Direction dir) implements GameAction {
+        @Override
+        public void execute() { theGameLevel().pac().setWishDir(dir); }
+
+        @Override
+        public boolean isEnabled() { return optGameLevel().isPresent() && !theGameLevel().pac().isUsingAutopilot(); }
+
+        @Override
+        public String toString() {
+            return "SteerPlayer_" + dir;
+        }
+    }
+
     GameAction CHEAT_ADD_LIVES = new GameAction() {
         @Override
         public void execute() {
@@ -118,13 +135,13 @@ public interface PacManGames_Actions {
         }
     };
 
-    GameAction PLAYER_UP = createPlayerSteeringAction(Direction.UP);
+    GameAction PLAYER_UP = new PlayerSteeringAction(Direction.UP);
 
-    GameAction PLAYER_DOWN = createPlayerSteeringAction(Direction.DOWN);
+    GameAction PLAYER_DOWN = new PlayerSteeringAction(Direction.DOWN);
 
-    GameAction PLAYER_LEFT = createPlayerSteeringAction(Direction.LEFT);
+    GameAction PLAYER_LEFT = new PlayerSteeringAction(Direction.LEFT);
 
-    GameAction PLAYER_RIGHT = createPlayerSteeringAction(Direction.RIGHT);
+    GameAction PLAYER_RIGHT = new PlayerSteeringAction(Direction.RIGHT);
 
     GameAction QUIT_GAME_SCENE = new GameAction() {
         @Override
@@ -343,23 +360,4 @@ public interface PacManGames_Actions {
             }
         }
     };
-
-    int SIMULATION_SPEED_DELTA = 2;
-    int SIMULATION_SPEED_MIN   = 10;
-    int SIMULATION_SPEED_MAX   = 240;
-
-    private static GameAction createPlayerSteeringAction(Direction dir) {
-        return new GameAction() {
-            @Override
-            public void execute() { theGameLevel().pac().setWishDir(dir); }
-
-            @Override
-            public boolean isEnabled() { return optGameLevel().isPresent() && !theGameLevel().pac().isUsingAutopilot(); }
-
-            @Override
-            public String toString() {
-                return "SteerPlayer_" + dir;
-            }
-        };
-    }
 }

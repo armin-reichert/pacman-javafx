@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib;
 
 /**
- * @author Armin Reichert
+ * Common interface for game actions.
  */
 public interface GameAction {
 
