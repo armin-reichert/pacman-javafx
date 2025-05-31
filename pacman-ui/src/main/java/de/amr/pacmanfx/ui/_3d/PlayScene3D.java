@@ -7,18 +7,17 @@ package de.amr.pacmanfx.ui._3d;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.RectArea;
-import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingBonus;
-import de.amr.pacmanfx.ui.PacManGames_Actions;
 import de.amr.pacmanfx.ui.PacManGames_ActionBindings;
+import de.amr.pacmanfx.ui.PacManGames_Actions;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
-import de.amr.pacmanfx.uilib.GameAction;
 import de.amr.pacmanfx.uilib.CameraControlledView;
+import de.amr.pacmanfx.uilib.GameAction;
 import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.input.Keyboard;
@@ -330,11 +329,6 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
     @Override
     public Camera camera() {
         return fxSubScene.getCamera();
-    }
-
-    @Override
-    public Vector2f sizeInPx() {
-        return Vector2f.of(28*TS, 36*TS); // irrelevant
     }
 
     @Override

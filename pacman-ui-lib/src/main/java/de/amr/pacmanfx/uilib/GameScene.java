@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib;
 
 import de.amr.pacmanfx.event.GameEventListener;
-import de.amr.pacmanfx.lib.Vector2f;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
 
@@ -34,11 +33,6 @@ public interface GameScene extends GameEventListener, ActionBindingManager {
      * Called when the scene ends and gets replaced by another scene.
      */
     void end();
-
-    /**
-     * @return (unscaled) scene size in pixels e.g. 224x288
-     */
-    Vector2f sizeInPx();
 
     /**
      * Called when scene variants for 2D and 3D exist and variant changes between 2D and 3D.

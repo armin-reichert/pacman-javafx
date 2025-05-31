@@ -29,6 +29,11 @@ public class ArcadePacMan_StartScene extends GameScene2D {
     public void update() {}
 
     @Override
+    public void onCreditAdded(GameEvent e) {
+        theSound().playInsertCoinSound();
+    }
+
+    @Override
     public Vector2f sizeInPx() {
         return ARCADE_MAP_SIZE_IN_PIXELS;
     }
@@ -43,10 +48,5 @@ public class ArcadePacMan_StartScene extends GameScene2D {
         gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 scoreColor(), normalArcadeFont(), 2 * TS, sizeInPx().y() - 2);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
-    }
-
-    @Override
-    public void onCreditAdded(GameEvent e) {
-        theSound().playInsertCoinSound();
     }
 }

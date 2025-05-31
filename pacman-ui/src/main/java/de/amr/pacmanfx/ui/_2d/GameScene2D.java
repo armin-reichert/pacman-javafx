@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui.PacManGames_ActionBindings;
 import de.amr.pacmanfx.uilib.GameAction;
 import de.amr.pacmanfx.uilib.GameScene;
@@ -100,6 +101,11 @@ public abstract class GameScene2D implements GameScene, PacManGames_ActionBindin
     public ObjectProperty<Color> backgroundColorProperty() { return backgroundColorPy; }
     public BooleanProperty debugInfoVisibleProperty() { return debugInfoVisiblePy; }
     public FloatProperty scalingProperty() { return scalingPy; }
+
+    /**
+     * @return (unscaled) scene size in pixels e.g. 224x288
+     */
+    public abstract Vector2f sizeInPx();
 
     /**
      * Default implementation: scales the renderer to the current scene scaling,

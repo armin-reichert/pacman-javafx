@@ -17,6 +17,7 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
 
+import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 
 /**
@@ -113,13 +114,18 @@ public class InfoBox3D extends InfoBox {
     private String sceneSizeInfo() {
         if (theUI().currentGameScene().isPresent()) {
             GameScene gameScene = theUI().currentGameScene().get();
-            Vector2f size = gameScene.sizeInPx();
             if (gameScene instanceof GameScene2D gameScene2D) {
+                Vector2f size = gameScene2D.sizeInPx();
                 double scaling = gameScene2D.scaling();
                 return "%.0fx%.0f (scaled: %.0fx%.0f)".formatted(
                         size.x(), size.y(), size.x() * scaling, size.y() * scaling);
             } else {
-                return "%.0fx%.0f".formatted(size.x(), size.y());
+                if (optGameLevel().isPresent()) {
+                    int width = theGameLevel().worldMap().numCols() * TS;
+                    int height = theGameLevel().worldMap().numRows() * TS;
+                    return "%dx%d (unscaled)".formatted(width, height);
+
+                }
             }
         }
         return InfoText.NO_INFO;
