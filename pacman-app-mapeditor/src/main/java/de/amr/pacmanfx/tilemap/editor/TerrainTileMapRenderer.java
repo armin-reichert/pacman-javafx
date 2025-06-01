@@ -110,7 +110,7 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
                     RectArea rect = rectangles.get(i);
                     g.setFill(Color.WHITE);
                     g.setFont(Font.font("Sans", FontWeight.BOLD, 3.5));
-                    g.fillText("R" + i, rect.x() + rect.width() * 0.5 - 3, rect.y() + rect.height() * 0.5 + 1);
+                    g.fillText("R" + (i+1), rect.x() + rect.width() * 0.5 - 3, rect.y() + rect.height() * 0.5 + 1);
                 }
             });
         }
