@@ -269,6 +269,9 @@ public class GameView implements PacManGames_View {
                 root.getChildren().set(0, gameSceneUsingCamera.viewPort());
                 gameSceneUsingCamera.viewPortWidthProperty().bind(parentScene.widthProperty());
                 gameSceneUsingCamera.viewPortHeightProperty().bind(parentScene.heightProperty());
+                if (gameScene instanceof GameScene2D gameScene2D) {
+                    gameScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
+                }
             }
             case GameScene2D gameScene2D -> {
                 GameRenderer renderer = gameUIConfig.createRenderer(canvas);
