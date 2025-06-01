@@ -13,6 +13,7 @@ import de.amr.pacmanfx.ui.PacManGames_UIConfiguration;
 import de.amr.pacmanfx.ui._2d.*;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.InfoBox;
+import de.amr.pacmanfx.ui.dashboard.InfoBoxReadmeFirst;
 import de.amr.pacmanfx.uilib.*;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.beans.binding.Bindings;
@@ -30,10 +31,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.FontSmoothingType;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
@@ -202,13 +200,22 @@ public class GameView implements PacManGames_View {
 
     public void setDashboardVisible(boolean visible) {
         if (visible) {
-            InfoBox[] infoBoxes = dashboard.infoBoxes().toArray(InfoBox[]::new);
-            dashboardContainer.getChildren().setAll(infoBoxes);
             dashboardContainer.setVisible(true);
-
+            updateDashboard();
         } else {
             dashboardContainer.setVisible(false);
         }
+    }
+
+    public void updateDashboard() {
+        InfoBox[] infoBoxes = dashboard.infoBoxes()
+                .filter(infoBox -> !(infoBox instanceof InfoBoxReadmeFirst infoBoxReadmeFirst) || !infoBoxReadmeFirst.isRead())
+                .toArray(InfoBox[]::new);
+        dashboard.infoBoxes().filter(infoBox -> infoBox instanceof InfoBoxReadmeFirst).findFirst().ifPresent(infoBox -> {
+            InfoBoxReadmeFirst readmeFirst = (InfoBoxReadmeFirst) infoBox;
+            readmeFirst.setActionIfRead(this::updateDashboard);
+        });
+        dashboardContainer.getChildren().setAll(infoBoxes);
     }
 
     public void toggleDashboardVisibility() {

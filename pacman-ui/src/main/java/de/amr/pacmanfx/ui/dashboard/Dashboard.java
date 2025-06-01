@@ -25,17 +25,6 @@ public class Dashboard {
 
     private final Map<DashboardID, InfoBox> infoBoxMap = new LinkedHashMap<>();
 
-    private static InfoBox configured(String title, InfoBox infoBox) {
-        infoBox.setText(title);
-        infoBox.setMinLabelWidth(INFOBOX_MIN_LABEL_WIDTH);
-        infoBox.setContentBackground(Background.fill(INFO_BOX_CONTENT_BG_COLOR));
-        infoBox.setTextColor(INFO_BOX_TEXT_COLOR);
-        infoBox.setContentTextFont(INFO_BOX_FONT);
-        infoBox.setLabelFont(INFO_BOX_FONT);
-        infoBox.init();
-        return infoBox;
-    }
-
     public Stream<InfoBox> infoBoxes() { return infoBoxMap.values().stream(); }
 
     @SuppressWarnings("unchecked")
@@ -47,26 +36,41 @@ public class Dashboard {
         for (DashboardID title : titles) { addInfoBox(title); }
     }
 
+    public void removeInfoBox(DashboardID id) {
+        infoBoxMap.remove(id);
+    }
+
     public void addInfoBox(DashboardID id) {
         switch (id) {
-            case ABOUT        -> put(id, "infobox.about.title", new InfoBoxAbout());
-            case ACTOR_INFO   -> put(id, "infobox.actor_info.title", new InfoBoxActorInfo());
-            case CUSTOM_MAPS  -> put(id, "infobox.custom_maps.title", new InfoBoxCustomMaps());
-            case GENERAL      -> put(id, "infobox.general.title", new InfoBoxGeneral());
-            case GAME_CONTROL -> put(id, "infobox.game_control.title", new InfoBoxGameControl());
-            case GAME_INFO    -> put(id, "infobox.game_info.title", new InfoBoxGameInfo());
-            case JOYPAD       -> put(id, "infobox.joypad.title", new InfoBoxJoypad());
-            case KEYBOARD     -> put(id, "infobox.keyboard_shortcuts.title", new InfoBoxKeys());
+            case ABOUT        -> addInfoBox(id, "infobox.about.title", new InfoBoxAbout());
+            case ACTOR_INFO   -> addInfoBox(id, "infobox.actor_info.title", new InfoBoxActorInfo());
+            case CUSTOM_MAPS  -> addInfoBox(id, "infobox.custom_maps.title", new InfoBoxCustomMaps());
+            case GENERAL      -> addInfoBox(id, "infobox.general.title", new InfoBoxGeneral());
+            case GAME_CONTROL -> addInfoBox(id, "infobox.game_control.title", new InfoBoxGameControl());
+            case GAME_INFO    -> addInfoBox(id, "infobox.game_info.title", new InfoBoxGameInfo());
+            case JOYPAD       -> addInfoBox(id, "infobox.joypad.title", new InfoBoxJoypad());
+            case KEYBOARD     -> addInfoBox(id, "infobox.keyboard_shortcuts.title", new InfoBoxKeys());
             case README -> {
                 InfoBox infoBox = new InfoBoxReadmeFirst();
                 infoBox.setExpanded(true);
-                put(id, "infobox.readme.title", infoBox);
+                addInfoBox(id, "infobox.readme.title", infoBox);
             }
-            case SETTINGS_3D -> put(id, "infobox.3D_settings.title", new InfoBox3D());
+            case SETTINGS_3D -> addInfoBox(id, "infobox.3D_settings.title", new InfoBox3D());
         }
     }
 
-    private void put(DashboardID id, String titleKey, InfoBox infoBox) {
-        infoBoxMap.put(id, configured(theAssets().text(titleKey), infoBox));
+    private void addInfoBox(DashboardID id, String titleKey, InfoBox infoBox) {
+        infoBoxMap.put(id, preconfiguredInfoBox(theAssets().text(titleKey), infoBox));
+    }
+
+    private InfoBox preconfiguredInfoBox(String title, InfoBox infoBox) {
+        infoBox.setText(title);
+        infoBox.setMinLabelWidth(INFOBOX_MIN_LABEL_WIDTH);
+        infoBox.setContentBackground(Background.fill(INFO_BOX_CONTENT_BG_COLOR));
+        infoBox.setTextColor(INFO_BOX_TEXT_COLOR);
+        infoBox.setContentTextFont(INFO_BOX_FONT);
+        infoBox.setLabelFont(INFO_BOX_FONT);
+        infoBox.init();
+        return infoBox;
     }
 }
