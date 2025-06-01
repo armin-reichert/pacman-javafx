@@ -45,13 +45,15 @@ import static java.util.Objects.requireNonNull;
  */
 public class PacManXXL_Common_StartPage implements StartPage {
 
-    private static class GameOptionMenu extends OptionMenu {
-
-        // State
+    private static class MenuState {
         private GameVariant gameVariant = GameVariant.PACMAN_XXL;
         private boolean play3D;
         private boolean cutScenesEnabled;
         private MapSelectionMode mapOrder;
+    }
+
+    private static class GameOptionMenu extends OptionMenu {
+        private final MenuState state = new MenuState();
 
         // Animation
         private Pac pac;
@@ -65,14 +67,14 @@ public class PacManXXL_Common_StartPage implements StartPage {
 
             @Override
             protected void onValueChanged(int index) {
-                gameVariant = selectedValue();
-                setActorAnimationVariant(gameVariant);
+                state.gameVariant = selectedValue();
+                setActorAnimationVariant(state.gameVariant);
                 logMenuState();
             }
 
             @Override
             public String selectedValueText() {
-                return switch (gameVariant) {
+                return switch (state.gameVariant) {
                     case PACMAN_XXL -> "PAC-MAN";
                     case MS_PACMAN_XXL -> "MS.PAC-MAN";
                     default -> "";
@@ -84,14 +86,14 @@ public class PacManXXL_Common_StartPage implements StartPage {
 
             @Override
             protected void onValueChanged(int index) {
-                play3D = selectedValue();
-                PY_3D_ENABLED.set(play3D);
+                state.play3D = selectedValue();
+                PY_3D_ENABLED.set(state.play3D);
                 logMenuState();
             }
 
             @Override
             public String selectedValueText() {
-                return play3D ? "3D" : "2D";
+                return state.play3D ? "3D" : "2D";
             }
         };
 
@@ -99,13 +101,13 @@ public class PacManXXL_Common_StartPage implements StartPage {
 
             @Override
             protected void onValueChanged(int index) {
-                cutScenesEnabled = selectedValue();
+                state.cutScenesEnabled = selectedValue();
                 logMenuState();
             }
 
             @Override
             public String selectedValueText() {
-                return cutScenesEnabled ? "ON" : "OFF";
+                return state.cutScenesEnabled ? "ON" : "OFF";
             }
         };
 
@@ -115,7 +117,7 @@ public class PacManXXL_Common_StartPage implements StartPage {
             @Override
             protected void onValueChanged(int index) {
                 if (enabled) {
-                    mapOrder = selectedValue();
+                    state.mapOrder = selectedValue();
                 }
                 logMenuState();
             }
@@ -125,7 +127,7 @@ public class PacManXXL_Common_StartPage implements StartPage {
                 if (!enabled) {
                     return "NO CUSTOM MAPS!";
                 }
-                return switch (mapOrder) {
+                return switch (state.mapOrder) {
                     case CUSTOM_MAPS_FIRST -> "CUSTOM MAPS FIRST";
                     case ALL_RANDOM -> "RANDOM ORDER";
                     case NO_CUSTOM_MAPS -> "NO CUSTOM MAPS";
@@ -166,41 +168,42 @@ public class PacManXXL_Common_StartPage implements StartPage {
         }
 
         private void initState() {
-            GameModel game = theGameController().game(gameVariant);
+            GameModel game = theGameController().game(state.gameVariant);
             var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();
             mapSelector.loadAllMaps();
             boolean customMapsExist = !mapSelector.customMaps().isEmpty();
 
-            entryGameVariant.selectValue(gameVariant);
+            entryGameVariant.selectValue(state.gameVariant);
             setPlay3D(PY_3D_ENABLED.get());
             setCutScenesEnabled(game.cutScenesEnabledProperty().get());
             setMapOrder(mapSelector.mapSelectionMode(), customMapsExist);
 
             resetActorAnimation();
-            setActorAnimationVariant(gameVariant);
+            setActorAnimationVariant(state.gameVariant);
 
             logMenuState();
             Logger.info("Option menu initialized");
         }
 
         private void setPlay3D(boolean play3D) {
-            this.play3D = play3D;
+            state.play3D = play3D;
             entryPlay3D.selectValue(play3D);
         }
 
         private void setCutScenesEnabled(boolean cutScenesEnabled) {
-            this.cutScenesEnabled = cutScenesEnabled;
+            state.cutScenesEnabled = cutScenesEnabled;
             entryCutScenesEnabled.selectValue(cutScenesEnabled);
         }
 
         private void setMapOrder(MapSelectionMode mapOrder, boolean customMapsExist) {
-            this.mapOrder = requireNonNull(mapOrder);
+            state.mapOrder = requireNonNull(mapOrder);
             entryMapOrder.selectValue(mapOrder);
             entryMapOrder.setEnabled(customMapsExist);
         }
 
         private void logMenuState() {
-            Logger.info("gameVariant={} play3D={} cutScenesEnabled={} mapOrder={}", gameVariant, play3D, cutScenesEnabled, mapOrder);
+            Logger.info("gameVariant={} play3D={} cutScenesEnabled={} mapOrder={}",
+                state.gameVariant, state.play3D, state.cutScenesEnabled, state.mapOrder);
         }
 
         @Override
@@ -227,15 +230,15 @@ public class PacManXXL_Common_StartPage implements StartPage {
         }
 
         private void startGame() {
-            if (gameVariant == GameVariant.PACMAN_XXL || gameVariant == GameVariant.MS_PACMAN_XXL) {
-                GameModel game = theGameController().game(gameVariant);
-                game.cutScenesEnabledProperty().set(cutScenesEnabled);
+            if (state.gameVariant == GameVariant.PACMAN_XXL || state.gameVariant == GameVariant.MS_PACMAN_XXL) {
+                GameModel game = theGameController().game(state.gameVariant);
+                game.cutScenesEnabledProperty().set(state.cutScenesEnabled);
                 var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();
-                mapSelector.setMapSelectionMode(mapOrder);
+                mapSelector.setMapSelectionMode(state.mapOrder);
                 mapSelector.loadAllMaps();
-                theUI().selectGameVariant(gameVariant);
+                theUI().selectGameVariant(state.gameVariant);
             } else {
-                Logger.error("Game variant {} is not allowed for XXL game", gameVariant);
+                Logger.error("Game variant {} is not allowed for XXL game", state.gameVariant);
             }
         }
 
@@ -363,7 +366,7 @@ public class PacManXXL_Common_StartPage implements StartPage {
 
     @Override
     public GameVariant currentGameVariant() {
-        return menu.gameVariant;
+        return menu.state.gameVariant;
     }
 
     @Override

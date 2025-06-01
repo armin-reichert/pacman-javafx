@@ -12,6 +12,9 @@ import javafx.scene.text.Font;
 
 import java.util.ResourceBundle;
 
+/**
+ * Common assets used in the Pac-Man games UI.
+ */
 public class PacManGames_Assets extends AssetStorage implements ResourceManager {
 
     protected Picker<String> pickerForGameOverTexts;
