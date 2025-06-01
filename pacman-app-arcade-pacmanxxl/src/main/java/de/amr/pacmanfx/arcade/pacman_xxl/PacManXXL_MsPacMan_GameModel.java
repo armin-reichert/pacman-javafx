@@ -14,15 +14,15 @@ import java.io.File;
 import static de.amr.pacmanfx.Globals.theGameEventManager;
 import static de.amr.pacmanfx.Globals.theRNG;
 
-public class XXLMsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
+public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
 
-    public XXLMsPacMan_GameModel(XXLAnyPacMan_MapSelector mapSelector) {
+    public PacManXXL_MsPacMan_GameModel(PacManXXL_Common_MapSelector mapSelector) {
         super(mapSelector);
         scoreManager.setHighScoreFile(new File(Globals.HOME_DIR, "highscore-mspacman_xxl.xml"));
     }
 
     @Override
-    public XXLAnyPacMan_MapSelector mapSelector() { return (XXLAnyPacMan_MapSelector) mapSelector; }
+    public PacManXXL_Common_MapSelector mapSelector() { return (PacManXXL_Common_MapSelector) mapSelector; }
 
     @Override
     public void buildDemoLevel() {

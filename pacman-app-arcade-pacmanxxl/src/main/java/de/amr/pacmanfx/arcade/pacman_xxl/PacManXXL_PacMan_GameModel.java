@@ -20,9 +20,9 @@ import static de.amr.pacmanfx.Globals.theRNG;
  * <a href="https://github.com/masonicGIT/pacman">Shaun Williams</a>) and the possibility to
  * play custom maps.
  */
-public class XXLPacMan_GameModel extends ArcadePacMan_GameModel {
+public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
 
-    public XXLPacMan_GameModel(XXLAnyPacMan_MapSelector mapSelector) {
+    public PacManXXL_PacMan_GameModel(PacManXXL_Common_MapSelector mapSelector) {
         super(mapSelector);
         scoreManager.setHighScoreFile(new File(Globals.HOME_DIR, "highscore-pacman_xxl.xml"));
         // Demo level map could be custom map, so use generic automatic steering
@@ -30,7 +30,7 @@ public class XXLPacMan_GameModel extends ArcadePacMan_GameModel {
     }
 
     @Override
-    public XXLAnyPacMan_MapSelector mapSelector() { return (XXLAnyPacMan_MapSelector) mapSelector; }
+    public PacManXXL_Common_MapSelector mapSelector() { return (PacManXXL_Common_MapSelector) mapSelector; }
 
     @Override
     public void buildDemoLevel() {

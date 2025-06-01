@@ -20,24 +20,24 @@ import static de.amr.pacmanfx.Globals.theGameController;
 import static de.amr.pacmanfx.ui.PacManGames_Env.createUI;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
 
-public class XXLAnyPacMan_App extends Application {
+public class PacManXXL_Common_App extends Application {
 
-    private XXLAnyPacMan_MapSelector xxlMapSelector;
+    private PacManXXL_Common_MapSelector xxlMapSelector;
 
     @Override
     public void init() {
         PacManGames_Env.init();
-        xxlMapSelector = new XXLAnyPacMan_MapSelector(CUSTOM_MAP_DIR);
-        theGameController().register(GameVariant.PACMAN_XXL, new XXLPacMan_GameModel(xxlMapSelector));
-        theGameController().register(GameVariant.MS_PACMAN_XXL, new XXLMsPacMan_GameModel(xxlMapSelector));
+        xxlMapSelector = new PacManXXL_Common_MapSelector(CUSTOM_MAP_DIR);
+        theGameController().register(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_GameModel(xxlMapSelector));
+        theGameController().register(GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_GameModel(xxlMapSelector));
         theGameController().select(GameVariant.MS_PACMAN_XXL);
     }
 
     @Override
     public void start(Stage stage) {
         createUI(Map.of(
-            GameVariant.PACMAN_XXL,    XXLPacMan_UIConfig.class,
-            GameVariant.MS_PACMAN_XXL, XXLMsPacMan_UIConfig.class)
+            GameVariant.PACMAN_XXL,    PacManXXL_PacMan_UIConfig.class,
+            GameVariant.MS_PACMAN_XXL, PacManXXL_MsPacMan_UIConfig.class)
         );
 
         // UI size: 80% of available screen height, aspect as screen
@@ -61,7 +61,7 @@ public class XXLAnyPacMan_App extends Application {
         infoBoxCustomMaps.setTableItems(xxlMapSelector.customMaps());
         xxlMapSelector.startWatchingCustomMaps();
 
-        theUI().addStartPage(new XXLAnyPacMan_StartPage());
+        theUI().addStartPage(new PacManXXL_Common_StartPage());
         theUI().selectStartPage(0);
 
         theUI().show();

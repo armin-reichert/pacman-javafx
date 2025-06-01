@@ -43,7 +43,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Displays an option menu where the game variant to be played and other options can be set.
  */
-public class XXLAnyPacMan_StartPage implements StartPage {
+public class PacManXXL_Common_StartPage implements StartPage {
 
     private static class GameOptionMenu extends OptionMenu {
 
@@ -167,7 +167,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
 
         private void initState() {
             GameModel game = theGameController().game(gameVariant);
-            var mapSelector = (XXLAnyPacMan_MapSelector) game.mapSelector();
+            var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();
             mapSelector.loadAllMaps();
             boolean customMapsExist = !mapSelector.customMaps().isEmpty();
 
@@ -230,7 +230,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
             if (gameVariant == GameVariant.PACMAN_XXL || gameVariant == GameVariant.MS_PACMAN_XXL) {
                 GameModel game = theGameController().game(gameVariant);
                 game.cutScenesEnabledProperty().set(cutScenesEnabled);
-                var mapSelector = (XXLAnyPacMan_MapSelector) game.mapSelector();
+                var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();
                 mapSelector.setMapSelectionMode(mapOrder);
                 mapSelector.loadAllMaps();
                 theUI().selectGameVariant(gameVariant);
@@ -340,7 +340,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
     private final StackPane root = new StackPane();
     private final GameOptionMenu menu;
 
-    public XXLAnyPacMan_StartPage() {
+    public PacManXXL_Common_StartPage() {
         ResourceManager rm = this::getClass;
         Flyer flyer = new Flyer(rm.loadImage("graphics/pacman_xxl_startpage.jpg"));
         flyer.setPageLayout(0, Flyer.LayoutMode.FILL);
