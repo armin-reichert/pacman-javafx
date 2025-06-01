@@ -34,9 +34,7 @@ import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theUIConfig;
 
 /**
- * <p>
  * The ghosts are presented one by one, Pac-Man is chased by the ghosts, turns the cards and hunts the ghosts himself.
- * </p>
  */
 public class ArcadePacMan_IntroScene extends GameScene2D {
 
@@ -112,17 +110,13 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
-            scoreColor(), normalArcadeFont(), 2 * TS, sizeInPx().y() - 2);
-        gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
         drawGallery();
         switch (sceneController.state()) {
+            case STARTING, PRESENTING_GHOSTS -> {}
             case SHOWING_POINTS -> drawPoints();
             case CHASING_PAC -> {
                 drawPoints();
-                if (blinking.isOn()) {
-                    drawEnergizer(tiles_to_px(LEFT_TILE_X), tiles_to_px(20));
-                }
+                drawBlinkingEnergizer(tiles_to_px(LEFT_TILE_X), tiles_to_px(20));
                 drawGuys(true);
                 gr().fillTextAtTile(MIDWAY_MFG_CO, ARCADE_PINK, normalArcadeFont(), 4, 32);
             }
@@ -132,6 +126,9 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 gr().fillTextAtTile(MIDWAY_MFG_CO, ARCADE_PINK, normalArcadeFont(), 4, 32);
             }
         }
+        String coinsText = "CREDIT %2d".formatted(theCoinMechanism().numCoins());
+        gr().fillText(coinsText, scoreColor(), normalArcadeFont(), 2 * TS, sizeInPx().y() - 2);
+        gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 
     private void drawGallery() {
@@ -176,25 +173,27 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     private void drawPoints() {
         gr().ctx().setFill(ARCADE_ROSE);
+        // normal pellet
         gr().ctx().fillRect(scaled(tiles_to_px(LEFT_TILE_X + 6) + 4), scaled(tiles_to_px(24) + 4), scaled(2), scaled(2));
-        if (blinking.isOn()) {
-            drawEnergizer(tiles_to_px(LEFT_TILE_X + 6), tiles_to_px(26));
-        }
         gr().fillTextAtTile("10",  ARCADE_WHITE, normalArcadeFont(), LEFT_TILE_X + 8, 25);
         gr().fillTextAtTile("PTS", ARCADE_WHITE, smallArcadeFont(), LEFT_TILE_X + 11, 25);
+        // energizer
+        drawBlinkingEnergizer(tiles_to_px(LEFT_TILE_X + 6), tiles_to_px(26));
         gr().fillTextAtTile("50",  ARCADE_WHITE, normalArcadeFont(), LEFT_TILE_X + 8, 27);
         gr().fillTextAtTile("PTS", ARCADE_WHITE, smallArcadeFont(), LEFT_TILE_X + 11, 27);
     }
 
-    // draw pixelated "circle"
-    private void drawEnergizer(double x, double y) {
-        gr().ctx().save();
-        gr().ctx().scale(scaling(), scaling());
-        gr().ctx().setFill(ARCADE_ROSE);
-        gr().ctx().fillRect(x + 2, y, 4, 8);
-        gr().ctx().fillRect(x, y + 2, 8, 4);
-        gr().ctx().fillRect(x + 1, y + 1, 6, 6);
-        gr().ctx().restore();
+    private void drawBlinkingEnergizer(double x, double y) {
+        if (blinking.isOn()) {
+            gr().ctx().save();
+            gr().ctx().scale(scaling(), scaling());
+            gr().ctx().setFill(ARCADE_ROSE);
+            // draw pixelated "circle"
+            gr().ctx().fillRect(x + 2, y, 4, 8);
+            gr().ctx().fillRect(x, y + 2, 8, 4);
+            gr().ctx().fillRect(x + 1, y + 1, 6, 6);
+            gr().ctx().restore();
+        }
     }
 
     @Override
