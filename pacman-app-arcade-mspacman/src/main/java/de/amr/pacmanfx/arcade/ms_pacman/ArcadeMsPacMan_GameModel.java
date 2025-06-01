@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
-import de.amr.pacmanfx.arcade.ArcadeAny_ActorSpeedControl;
-import de.amr.pacmanfx.arcade.ArcadeAny_GameModel;
+import de.amr.pacmanfx.arcade.ArcadeCommon_ActorSpeedControl;
+import de.amr.pacmanfx.arcade.ArcadeCommon_GameModel;
 import de.amr.pacmanfx.arcade.ArcadePacMan_LevelCounter;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
@@ -41,7 +41,7 @@ import static java.util.Objects.requireNonNull;
  * </ul>
  * </p>
  */
-public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
+public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
 
     private static final byte[] BONUS_VALUE_MULTIPLIERS = {1, 2, 5, 7, 10, 20, 50}; // points = value * 100
 
@@ -71,7 +71,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
                 if (level.huntingTimer().phaseIndex() == 0) {
                     roam(level);
                 } else {
-                    var arcadeGame = (ArcadeAny_GameModel) theGame();
+                    var arcadeGame = (ArcadeCommon_GameModel) theGame();
                     boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || arcadeGame.isCruiseElroyModeActive();
                     Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                     tryMovingTowardsTargetTile(level, targetTile);
@@ -253,7 +253,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeAny_GameModel {
                 : level.ghostStartPosition(ghost.personality()));
         });
 
-        level.setSpeedControl(new ArcadeAny_ActorSpeedControl());
+        level.setSpeedControl(new ArcadeCommon_ActorSpeedControl());
 
         level.setBonusSymbol(0, computeBonusSymbol(level.number()));
         level.setBonusSymbol(1, computeBonusSymbol(level.number()));

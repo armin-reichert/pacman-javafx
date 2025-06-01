@@ -112,10 +112,10 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfiguration, Resou
         assets.store("pacman.audio.siren.4",                   url("sound/siren_4.mp3"));
         assets.store("pacman.audio.ghost_returns",             url("sound/retreating.mp3"));
 
-        scenesByID.put("BootScene",   new ArcadeAny_BootScene2D());
+        scenesByID.put("BootScene",   new ArcadeCommon_BootScene2D());
         scenesByID.put("IntroScene",  new ArcadePacMan_IntroScene());
         scenesByID.put("StartScene",  new ArcadePacMan_StartScene());
-        scenesByID.put("PlayScene2D", new ArcadeAny_PlayScene2D());
+        scenesByID.put("PlayScene2D", new ArcadeCommon_PlayScene2D());
         scenesByID.put("PlayScene3D", new PlayScene3D());
         scenesByID.put("CutScene1",   new ArcadePacMan_CutScene1());
         scenesByID.put("CutScene2",   new ArcadePacMan_CutScene2());
@@ -146,7 +146,7 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfiguration, Resou
 
     @Override
     public GameScene2D createPiPScene(Canvas canvas) {
-        var gameScene = new ArcadeAny_PlayScene2D();
+        var gameScene = new ArcadeCommon_PlayScene2D();
         gameScene.setGameRenderer(createRenderer(canvas));
         return gameScene;
     }

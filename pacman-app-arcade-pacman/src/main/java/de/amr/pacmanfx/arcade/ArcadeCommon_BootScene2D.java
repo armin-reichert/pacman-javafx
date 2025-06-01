@@ -20,7 +20,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theUIConfig;
 
-public class ArcadeAny_BootScene2D extends GameScene2D {
+public class ArcadeCommon_BootScene2D extends GameScene2D {
 
     private static final int FRAGMENT_SIZE = 16;
 

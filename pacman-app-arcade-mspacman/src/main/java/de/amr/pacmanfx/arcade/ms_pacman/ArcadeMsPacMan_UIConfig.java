@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
-import de.amr.pacmanfx.arcade.ArcadeAny_BootScene2D;
-import de.amr.pacmanfx.arcade.ArcadeAny_PlayScene2D;
+import de.amr.pacmanfx.arcade.ArcadeCommon_BootScene2D;
+import de.amr.pacmanfx.arcade.ArcadeCommon_PlayScene2D;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
@@ -117,10 +117,10 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfiguration, Res
         assets.store("ms_pacman.audio.siren.4",                 url("sound/GhostNoise1.wav"));// TODO
         assets.store("ms_pacman.audio.ghost_returns",           url("sound/GhostEyes.mp3"));
 
-        scenesByID.put("BootScene",   new ArcadeAny_BootScene2D());
+        scenesByID.put("BootScene",   new ArcadeCommon_BootScene2D());
         scenesByID.put("IntroScene",  new ArcadeMsPacMan_IntroScene());
         scenesByID.put("StartScene",  new ArcadeMsPacMan_StartScene());
-        scenesByID.put("PlayScene2D", new ArcadeAny_PlayScene2D());
+        scenesByID.put("PlayScene2D", new ArcadeCommon_PlayScene2D());
         scenesByID.put("PlayScene3D", new PlayScene3D());
         scenesByID.put("CutScene1",   new ArcadeMsPacMan_CutScene1());
         scenesByID.put("CutScene2",   new ArcadeMsPacMan_CutScene2());
@@ -151,7 +151,7 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfiguration, Res
 
     @Override
     public GameScene2D createPiPScene(Canvas canvas) {
-        var gameScene = new ArcadeAny_PlayScene2D();
+        var gameScene = new ArcadeCommon_PlayScene2D();
         gameScene.setGameRenderer(createRenderer(canvas));
         return gameScene;
     }

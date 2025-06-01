@@ -101,10 +101,10 @@ public class XXLPacMan_UIConfig implements PacManGames_UIConfiguration {
         assets.store("pacman_xxl.audio.option.selection_changed",  rm.loadAudioClip("sound/ms-select1.wav"));
         assets.store("pacman_xxl.audio.option.value_changed",      rm.loadAudioClip("sound/ms-select2.wav"));
 
-        scenesByID.put("BootScene",   new ArcadeAny_BootScene2D());
+        scenesByID.put("BootScene",   new ArcadeCommon_BootScene2D());
         scenesByID.put("IntroScene",  new ArcadePacMan_IntroScene());
         scenesByID.put("StartScene",  new ArcadePacMan_StartScene());
-        scenesByID.put("PlayScene2D", new ArcadeAny_PlayScene2D());
+        scenesByID.put("PlayScene2D", new ArcadeCommon_PlayScene2D());
         scenesByID.put("PlayScene3D", new PlayScene3D());
         scenesByID.put("CutScene1",   new ArcadePacMan_CutScene1());
         scenesByID.put("CutScene2",   new ArcadePacMan_CutScene2());
@@ -135,7 +135,7 @@ public class XXLPacMan_UIConfig implements PacManGames_UIConfiguration {
 
     @Override
     public GameScene2D createPiPScene(Canvas canvas) {
-        var gameScene = new ArcadeAny_PlayScene2D();
+        var gameScene = new ArcadeCommon_PlayScene2D();
         gameScene.setGameRenderer(createRenderer(canvas));
         return gameScene;
     }

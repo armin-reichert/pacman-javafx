@@ -45,7 +45,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @see <a href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</a>
  */
-public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
+public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
 
     public static Pac createPac() {
         var pac = new Pac("Pac-Man");
@@ -57,7 +57,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
         return new Ghost(RED_GHOST_SHADOW, "Blinky") {
             @Override
             public void hunt(GameLevel level) {
-                var arcadeGame = (ArcadeAny_GameModel) theGame();
+                var arcadeGame = (ArcadeCommon_GameModel) theGame();
                 boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || arcadeGame.cruiseElroy() > 0;
                 Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                 setSpeed(level.speedControl().ghostAttackSpeed(level, this));
@@ -255,7 +255,7 @@ public class ArcadePacMan_GameModel extends ArcadeAny_GameModel {
             ghost.setSpecialTerrainTiles(oneWayDownTiles);
         });
 
-        level.setSpeedControl(new ArcadeAny_ActorSpeedControl());
+        level.setSpeedControl(new ArcadeCommon_ActorSpeedControl());
 
         // Each level has a single bonus symbol appearing twice during the level
         // From level 13 on, the same symbol (7 = "key") appears

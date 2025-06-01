@@ -38,7 +38,7 @@ import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 /**
  * 2D play scene for Arcade game variants.
  */
-public class ArcadeAny_PlayScene2D extends GameScene2D {
+public class ArcadeCommon_PlayScene2D extends GameScene2D {
 
     private LevelFinishedAnimation levelFinishedAnimation;
 
