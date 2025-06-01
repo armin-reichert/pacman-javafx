@@ -52,6 +52,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         @Override public ArcadePacMan_IntroScene context() { return ArcadePacMan_IntroScene.this; }
     };
 
+    private ArcadePacMan_SpriteSheet spriteSheet;
     private Pulse blinking;
     private Pac pacMan;
     private Ghost[] ghosts;
@@ -65,11 +66,13 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        ArcadePacMan_SpriteSheet spriteSheet = theUIConfig().current().spriteSheet();
         theGame().scoreManager().setScoreVisible(true);
+
         bindArcadeInsertCoinAction();
         bindArcadeStartGameAction();
         bindStartTestsActions();
+
+        spriteSheet = theUIConfig().current().spriteSheet();
         blinking = new Pulse(10, true);
         pacMan = createPac();
         pacMan.setAnimations(new ArcadePacMan_PacAnimationMap(spriteSheet));
@@ -113,7 +116,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         drawGallery();
         switch (sceneController.state()) {
             case STARTING, PRESENTING_GHOSTS -> {}
-            case SHOWING_POINTS -> drawPoints();
+            case SHOWING_PELLET_POINTS -> drawPoints();
             case CHASING_PAC -> {
                 drawPoints();
                 drawBlinkingEnergizer(tiles_to_px(LEFT_TILE_X), tiles_to_px(20));
@@ -132,10 +135,9 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     }
 
     private void drawGallery() {
-        var spriteSheet = (ArcadePacMan_SpriteSheet) theUIConfig().current().spriteSheet();
         if (titleVisible) {
-            gr().fillText("CHARACTER / NICKNAME", ARCADE_WHITE,
-                normalArcadeFont(), tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(6));
+            gr().fillText("CHARACTER / NICKNAME", ARCADE_WHITE, normalArcadeFont(),
+                tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(6));
         }
         for (byte personality = RED_GHOST_SHADOW; personality <= ORANGE_GHOST_POKEY; ++personality) {
             if (ghostImageVisible[personality]) {
@@ -143,12 +145,12 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     tiles_to_px(LEFT_TILE_X) + TS, tiles_to_px(7 + 3 * personality) + HTS);
             }
             if (ghostCharacterVisible[personality]) {
-                gr().fillText("-" + GHOST_CHARACTERS[personality], GHOST_COLORS[personality],
-                    normalArcadeFont(), tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(8 + 3 * personality));
+                gr().fillText("-" + GHOST_CHARACTERS[personality], GHOST_COLORS[personality], normalArcadeFont(),
+                    tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(8 + 3 * personality));
             }
             if (ghostNicknameVisible[personality]) {
-                gr().fillText(GHOST_NICKNAMES[personality], GHOST_COLORS[personality],
-                    normalArcadeFont(), tiles_to_px(LEFT_TILE_X + 14), tiles_to_px(8 + 3 * personality));
+                gr().fillText(GHOST_NICKNAMES[personality], GHOST_COLORS[personality], normalArcadeFont(),
+                    tiles_to_px(LEFT_TILE_X + 14), tiles_to_px(8 + 3 * personality));
             }
         }
     }
@@ -230,12 +232,12 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     }
                     scene.ghostIndex += 1;
                 } else if (sceneTimer.atSecond(2.5)) {
-                    scene.sceneController.changeState(SHOWING_POINTS);
+                    scene.sceneController.changeState(SHOWING_PELLET_POINTS);
                 }
             }
         },
 
-        SHOWING_POINTS {
+        SHOWING_PELLET_POINTS {
             @Override
             public void onEnter(ArcadePacMan_IntroScene scene) {
                 scene.blinking.stop();
