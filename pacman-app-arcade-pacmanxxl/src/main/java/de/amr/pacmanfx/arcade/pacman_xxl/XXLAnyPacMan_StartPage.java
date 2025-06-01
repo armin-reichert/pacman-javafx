@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.arcade.ArcadePacMan_GhostAnimationMap;
 import de.amr.pacmanfx.arcade.ArcadePacMan_PacAnimationMap;
+import de.amr.pacmanfx.arcade.ArcadePalette;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GhostAnimationMap;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_PacAnimationMap;
 import de.amr.pacmanfx.lib.Direction;
@@ -36,6 +37,7 @@ import static de.amr.pacmanfx.Globals.theGameController;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.uilib.widgets.OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -131,29 +133,27 @@ public class XXLAnyPacMan_StartPage implements StartPage {
             }
         };
 
-
         GameOptionMenu() {
             super(42, 36, 6, 20);
-
+            var style = new OptionMenuStyle(
+                theAssets().font("font.pacfontgood", 32),
+                theAssets().arcadeFontAtSize(8),
+                DEFAULT_OPTION_MENU_STYLE.backgroundFill(),
+                DEFAULT_OPTION_MENU_STYLE.borderStroke(),
+                ArcadePalette.ARCADE_RED,
+                ArcadePalette.ARCADE_YELLOW,
+                ArcadePalette.ARCADE_WHITE,
+                DEFAULT_OPTION_MENU_STYLE.entryValueDisabledFill(),
+                ArcadePalette.ARCADE_YELLOW,
+                DEFAULT_OPTION_MENU_STYLE.entrySelectedSound(),
+                DEFAULT_OPTION_MENU_STYLE.valueSelectedSound()
+            );
+            setStyle(style);
+            setTitle("Pac-Man XXL");
             addEntry(entryGameVariant);
             addEntry(entryPlay3D);
             addEntry(entryCutScenesEnabled);
             addEntry(entryMapOrder);
-
-            setStyle(new OptionMenuStyle(
-                theAssets().font("font.pacfontgood", 32),
-                theAssets().arcadeFontAtSize(8),
-                OptionMenu.DEFAULT_STYLE.backgroundFill(),
-                OptionMenu.DEFAULT_STYLE.borderStroke(),
-                Color.RED, // DEFAULT_STYLE.titleTextFill(),
-                OptionMenu.DEFAULT_STYLE.entryTextFill(),
-                OptionMenu.DEFAULT_STYLE.entryValueFill(),
-                OptionMenu.DEFAULT_STYLE.entryValueDisabledFill(),
-                OptionMenu.DEFAULT_STYLE.hintTextFill(),
-                OptionMenu.DEFAULT_STYLE.entrySelectedSound(),
-                OptionMenu.DEFAULT_STYLE.valueSelectedSound()
-            ));
-            setTitle("Pac-Man XXL");
             setCommandTexts(
                 "SELECT OPTIONS WITH UP AND DOWN",
                 "PRESS SPACE TO CHANGE VALUE",

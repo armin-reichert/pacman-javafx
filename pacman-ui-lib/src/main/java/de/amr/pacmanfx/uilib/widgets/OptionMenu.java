@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.widgets;
 
-import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -19,9 +18,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.media.AudioClip;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -36,23 +32,7 @@ import static java.util.Objects.requireNonNull;
 
 public class OptionMenu {
 
-    private static final ResourceManager RESOURCE_MGR = () -> OptionMenu.class;
-
     private static final int REFRESH_RATE = 60;
-
-    public static final OptionMenuStyle DEFAULT_STYLE = new OptionMenuStyle(
-        Font.font("sans", FontWeight.BLACK, 30),
-        Font.font("sans", FontWeight.BOLD, 12),
-        Color.web("0c1568"),
-        Color.web("fffeff"),
-        Color.web("fffeff"),
-        Color.web("bcbe00"),
-        Color.web("fffeff"),
-        Color.GRAY,
-        Color.web("bcbe00"),
-        RESOURCE_MGR.loadAudioClip("/de/amr/pacmanfx/uilib/sounds/menu-select1.wav"),
-        RESOURCE_MGR.loadAudioClip("/de/amr/pacmanfx/uilib/sounds/menu-select2.wav")
-    );
 
     private final int numTilesX;
     private final int numTilesY;
@@ -71,7 +51,7 @@ public class OptionMenu {
     protected final Canvas canvas = new Canvas();
     protected final GraphicsContext g = canvas.getGraphicsContext2D();
 
-    private OptionMenuStyle style = DEFAULT_STYLE;
+    private OptionMenuStyle style = OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
     private final Timeline animation;
 
     public OptionMenu(int numTilesX, int numTilesY, int textCol, int valueCol) {
