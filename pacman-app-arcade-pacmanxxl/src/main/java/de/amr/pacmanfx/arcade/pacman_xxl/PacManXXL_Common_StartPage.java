@@ -24,6 +24,8 @@ import de.amr.pacmanfx.uilib.widgets.Flyer;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
@@ -52,14 +54,118 @@ public class PacManXXL_Common_StartPage implements StartPage {
         private MapSelectionMode mapOrder;
     }
 
-    private static class GameOptionMenu extends OptionMenu {
-        private final MenuState state = new MenuState();
-
-        // Animation
+    private static class MenuAnimation {
+        private final GraphicsContext ctx;
         private Pac pac;
         private Ghost[] ghosts = new Ghost[4];
         private GameRenderer renderer;
         private boolean chasingGhosts;
+
+        MenuAnimation(Canvas canvas) {
+            ctx = canvas.getGraphicsContext2D();
+        }
+
+        void setGameVariant(GameVariant gameVariant) {
+            PacManGames_UIConfiguration config = theUIConfig().configuration(gameVariant);
+            renderer = config.createRenderer(ctx.getCanvas());
+
+            switch (gameVariant) {
+                case PACMAN_XXL -> pac.setAnimations(new ArcadePacMan_PacAnimationMap(config.spriteSheet()));
+                case MS_PACMAN_XXL -> pac.setAnimations(new ArcadeMsPacMan_PacAnimationMap(config.spriteSheet()));
+            }
+            pac.playAnimation(ANIM_ANY_PAC_MUNCHING);
+
+            for (Ghost ghost : ghosts) {
+                if (ghost.animations().isEmpty()) {
+                    switch (gameVariant) {
+                        case PACMAN_XXL ->
+                            ghost.setAnimations(new ArcadePacMan_GhostAnimationMap(config.spriteSheet(), ghost.personality()));
+                        case MS_PACMAN_XXL ->
+                            ghost.setAnimations(new ArcadeMsPacMan_GhostAnimationMap(config.spriteSheet(), ghost.personality()));
+                    }
+                    ghost.playAnimation(ANIM_GHOST_NORMAL);
+                }
+            }
+        }
+
+        void reset() {
+            chasingGhosts = false;
+
+            pac = createPac();
+            pac.setX(42 * TS);
+            pac.setMoveAndWishDir(Direction.LEFT);
+            pac.setSpeed(1.0f);
+            pac.setVisible(true);
+
+            ghosts = new Ghost[] {
+                createRedGhost(),
+                createPinkGhost(),
+                createCyanGhost(),
+                createOrangeGhost()
+            };
+            for (Ghost ghost : ghosts) {
+                ghost.setX(46 * TS + ghost.personality() * 18);
+                ghost.setMoveAndWishDir(Direction.LEFT);
+                ghost.setSpeed(1.05f);
+                ghost.setVisible(true);
+            }
+        }
+
+        void update() {
+            if (ghosts[3].x() < -4 * TS && !chasingGhosts) {
+                chasingGhosts = true;
+                pac.setMoveAndWishDir(pac.moveDir().opposite());
+                pac.setX(-36 * TS);
+                for (Ghost ghost : ghosts) {
+                    ghost.setVisible(true);
+                    ghost.setX(pac.x() + 22 * TS + ghost.personality() * 18);
+                    ghost.setMoveAndWishDir(ghost.moveDir().opposite());
+                    ghost.setSpeed(0.58f);
+                    ghost.playAnimation(ANIM_GHOST_FRIGHTENED);
+                }
+            }
+            else if (pac.x() > 56 * TS && chasingGhosts) {
+                chasingGhosts = false;
+                pac.setMoveAndWishDir(Direction.LEFT);
+                pac.setX(42 * TS);
+                for (Ghost ghost : ghosts) {
+                    ghost.setVisible(true);
+                    ghost.setMoveAndWishDir(Direction.LEFT);
+                    ghost.setX(46 * TS + ghost.personality() * 2 * TS);
+                    ghost.setSpeed(1.05f);
+                    ghost.playAnimation(ANIM_GHOST_NORMAL);
+                }
+            }
+            else if (chasingGhosts) {
+                for (int i = 0; i < 4; ++i) {
+                    if (Math.abs(pac.x() - ghosts[i].x()) < 1) {
+                        ghosts[i].selectAnimation(ANIM_GHOST_NUMBER, i);
+                        if (i > 0) {
+                            ghosts[i-1].setVisible(false);
+                        }
+                    }
+                }
+            }
+            pac.move();
+            for (Ghost ghost : ghosts) {
+                ghost.move();
+            }
+        }
+
+        void draw(float scaling) {
+            ctx.save();
+            ctx.translate(0, 23.5 * TS * scaling);
+            ctx.setImageSmoothing(false);
+            renderer.setScaling(scaling);
+            for (Ghost ghost : ghosts) { renderer.drawActor(ghost); }
+            renderer.drawActor(pac);
+            ctx.restore();
+        }
+    }
+
+    private static class GameOptionMenu extends OptionMenu {
+        private final MenuState state = new MenuState();
+        private final MenuAnimation animation;
 
         // Entries
         private final OptionMenuEntry<GameVariant> entryGameVariant = new OptionMenuEntry<>("GAME VARIANT",
@@ -68,7 +174,7 @@ public class PacManXXL_Common_StartPage implements StartPage {
             @Override
             protected void onValueChanged(int index) {
                 state.gameVariant = selectedValue();
-                setActorAnimationVariant(state.gameVariant);
+                animation.setGameVariant(state.gameVariant);
                 logMenuState();
             }
 
@@ -137,6 +243,7 @@ public class PacManXXL_Common_StartPage implements StartPage {
 
         GameOptionMenu() {
             super(42, 36, 6, 20);
+
             var style = new OptionMenuStyle(
                 theAssets().font("font.pacfontgood", 32),
                 theAssets().arcadeFontAtSize(8),
@@ -162,9 +269,9 @@ public class PacManXXL_Common_StartPage implements StartPage {
                 "PRESS E TO OPEN EDITOR",
                 "PRESS ENTER TO START"
             );
-
-            resetActorAnimation();
-            setActorAnimationVariant(GameVariant.PACMAN_XXL);
+            animation = new MenuAnimation(canvas);
+            animation.reset();
+            animation.setGameVariant(GameVariant.PACMAN_XXL);
         }
 
         private void initState() {
@@ -178,8 +285,8 @@ public class PacManXXL_Common_StartPage implements StartPage {
             setCutScenesEnabled(game.cutScenesEnabledProperty().get());
             setMapOrder(mapSelector.mapSelectionMode(), customMapsExist);
 
-            resetActorAnimation();
-            setActorAnimationVariant(state.gameVariant);
+            animation.reset();
+            animation.setGameVariant(state.gameVariant);
 
             logMenuState();
             Logger.info("Option menu initialized");
@@ -219,14 +326,14 @@ public class PacManXXL_Common_StartPage implements StartPage {
 
         @Override
         protected void animationStep() {
-            updateActorAnimation();
+            animation.update();
             draw();
         }
 
         @Override
         public void draw() {
             super.draw();
-            drawActorAnimation(scalingProperty().get());
+            animation.draw(scalingProperty().get());
         }
 
         private void startGame() {
@@ -240,103 +347,6 @@ public class PacManXXL_Common_StartPage implements StartPage {
             } else {
                 Logger.error("Game variant {} is not allowed for XXL game", state.gameVariant);
             }
-        }
-
-        private void setActorAnimationVariant(GameVariant gameVariant) {
-            PacManGames_UIConfiguration config = theUIConfig().configuration(gameVariant);
-            renderer = config.createRenderer(canvas);
-
-            switch (gameVariant) {
-                case PACMAN_XXL -> pac.setAnimations(new ArcadePacMan_PacAnimationMap(config.spriteSheet()));
-                case MS_PACMAN_XXL -> pac.setAnimations(new ArcadeMsPacMan_PacAnimationMap(config.spriteSheet()));
-            }
-            pac.playAnimation(ANIM_ANY_PAC_MUNCHING);
-
-            for (Ghost ghost : ghosts) {
-                if (ghost.animations().isEmpty()) {
-                    switch (gameVariant) {
-                        case PACMAN_XXL ->
-                            ghost.setAnimations(new ArcadePacMan_GhostAnimationMap(config.spriteSheet(), ghost.personality()));
-                        case MS_PACMAN_XXL ->
-                            ghost.setAnimations(new ArcadeMsPacMan_GhostAnimationMap(config.spriteSheet(), ghost.personality()));
-                    }
-                    ghost.playAnimation(ANIM_GHOST_NORMAL);
-                }
-            }
-        }
-
-        private void resetActorAnimation() {
-            chasingGhosts = false;
-
-            pac = createPac();
-            pac.setX(42 * TS);
-            pac.setMoveAndWishDir(Direction.LEFT);
-            pac.setSpeed(1.0f);
-            pac.setVisible(true);
-
-            ghosts = new Ghost[] {
-                createRedGhost(),
-                createPinkGhost(),
-                createCyanGhost(),
-                createOrangeGhost()
-            };
-            for (Ghost ghost : ghosts) {
-                ghost.setX(46 * TS + ghost.personality() * 18);
-                ghost.setMoveAndWishDir(Direction.LEFT);
-                ghost.setSpeed(1.05f);
-                ghost.setVisible(true);
-            }
-        }
-
-        private void updateActorAnimation() {
-            if (ghosts[3].x() < -4 * TS && !chasingGhosts) {
-                chasingGhosts = true;
-                pac.setMoveAndWishDir(pac.moveDir().opposite());
-                pac.setX(-36 * TS);
-                for (Ghost ghost : ghosts) {
-                    ghost.setVisible(true);
-                    ghost.setX(pac.x() + 22 * TS + ghost.personality() * 18);
-                    ghost.setMoveAndWishDir(ghost.moveDir().opposite());
-                    ghost.setSpeed(0.58f);
-                    ghost.playAnimation(ANIM_GHOST_FRIGHTENED);
-                }
-            }
-            else if (pac.x() > 56 * TS && chasingGhosts) {
-                chasingGhosts = false;
-                pac.setMoveAndWishDir(Direction.LEFT);
-                pac.setX(42 * TS);
-                for (Ghost ghost : ghosts) {
-                    ghost.setVisible(true);
-                    ghost.setMoveAndWishDir(Direction.LEFT);
-                    ghost.setX(46 * TS + ghost.personality() * 2 * TS);
-                    ghost.setSpeed(1.05f);
-                    ghost.playAnimation(ANIM_GHOST_NORMAL);
-                }
-            }
-            else if (chasingGhosts) {
-                for (int i = 0; i < 4; ++i) {
-                    if (Math.abs(pac.x() - ghosts[i].x()) < 1) {
-                        ghosts[i].selectAnimation(ANIM_GHOST_NUMBER, i);
-                        if (i > 0) {
-                            ghosts[i-1].setVisible(false);
-                        }
-                    }
-                }
-            }
-            pac.move();
-            for (Ghost ghost : ghosts) {
-                ghost.move();
-            }
-        }
-
-        private void drawActorAnimation(float scaling) {
-            g.save();
-            g.translate(0, 23.5 * TS * scaling);
-            g.setImageSmoothing(false);
-            renderer.setScaling(scaling);
-            for (Ghost ghost : ghosts) { renderer.drawActor(ghost); }
-            renderer.drawActor(pac);
-            g.restore();
         }
     }
 
