@@ -207,8 +207,8 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
     };
 
     private final OptionMenuEntry<MapSelectionMode> entryMapOrder = new OptionMenuEntry<>("MAP ORDER",
-        MapSelectionMode.CUSTOM_MAPS_FIRST, MapSelectionMode.ALL_RANDOM) {
-
+        MapSelectionMode.CUSTOM_MAPS_FIRST, MapSelectionMode.ALL_RANDOM, MapSelectionMode.NO_CUSTOM_MAPS)
+    {
         @Override
         protected void onValueChanged(int index) {
             if (enabled) {
@@ -339,5 +339,4 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             Logger.error("Game variant {} is not allowed for XXL game", state.gameVariant);
         }
     }
-
 }

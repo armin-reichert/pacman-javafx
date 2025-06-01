@@ -6,7 +6,7 @@ package de.amr.pacmanfx.model;
 
 public enum MapSelectionMode {
     /**
-     * Standard maps 1-8 in order, then randomly.
+     * Standard maps only, after all standard maps have been used, in random order.
      */
     NO_CUSTOM_MAPS,
     /**
