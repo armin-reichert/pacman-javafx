@@ -1,8 +1,3 @@
-plugins {
-    id "java"
-    id "org.openjfx.javafxplugin" version "0.1.0"
-}
-
 javafx {
     modules = ["javafx.base"]  // for JavFX properties and data binding
 }
