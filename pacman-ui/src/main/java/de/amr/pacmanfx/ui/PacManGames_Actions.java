@@ -169,7 +169,7 @@ public interface PacManGames_Actions {
     GameAction SIMULATION_SLOWER = new GameAction() {
         @Override
         public void execute() {
-            double newRate = theClock().getTargetFrameRate() - SIMULATION_SPEED_DELTA;
+            double newRate = theClock().targetFrameRate() - SIMULATION_SPEED_DELTA;
             newRate = Math.clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
             theClock().setTargetFrameRate(newRate);
             String prefix = newRate == SIMULATION_SPEED_MIN ? "At minimum speed: " : "";
@@ -180,7 +180,7 @@ public interface PacManGames_Actions {
     GameAction SIMULATION_FASTER = new GameAction() {
         @Override
         public void execute() {
-            double newRate = theClock().getTargetFrameRate() + SIMULATION_SPEED_DELTA;
+            double newRate = theClock().targetFrameRate() + SIMULATION_SPEED_DELTA;
             newRate = Math.clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
             theClock().setTargetFrameRate(newRate);
             String prefix = newRate == SIMULATION_SPEED_MAX ? "At maximum speed: " : "";
@@ -218,7 +218,7 @@ public interface PacManGames_Actions {
         @Override
         public void execute() {
             theClock().setTargetFrameRate(NUM_TICKS_PER_SEC);
-            theUI().showFlashMessageSec(0.75, theClock().getTargetFrameRate() + "Hz");
+            theUI().showFlashMessageSec(0.75, theClock().targetFrameRate() + "Hz");
         }
     };
 

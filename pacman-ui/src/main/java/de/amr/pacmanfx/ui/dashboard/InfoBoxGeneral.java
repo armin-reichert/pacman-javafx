@@ -57,7 +57,7 @@ public class InfoBoxGeneral extends InfoBox {
         var sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
         setEditor(sliderTargetFPS, theClock().targetFrameRateProperty());
 
-        addLabeledValue("", () -> "FPS: %.1f (Tgt: %.1f)".formatted(theClock().getActualFrameRate(), theClock().getTargetFrameRate()));
+        addLabeledValue("", () -> "Framerate: %.1f (Target: %.1f)".formatted(theClock().lastTicksPerSecond(), theClock().targetFrameRate()));
         addLabeledValue("Total Updates",  theClock()::updateCount);
 
         addColorPicker("Canvas Color", PY_CANVAS_BG_COLOR);

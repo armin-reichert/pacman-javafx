@@ -35,16 +35,16 @@ public class GameClock {
 
     private Runnable pausableAction = () -> {};
     private Runnable permanentAction = () -> {};
-    private Timeline animation;
+    private Timeline clockWork;
     private long updateCount;
     private long tickCount;
 
-    private long ticksPerSec;
+    private long lastTicksPerSec;
     private long countTicksStartTime;
     private long ticksInFrame;
 
     public GameClock() {
-        create(targetFrameRatePy.get());
+        createClockWork(targetFrameRatePy.get());
     }
 
     public void setPausableAction(Runnable action) {
@@ -63,7 +63,7 @@ public class GameClock {
 
     public BooleanProperty timeMeasuredProperty() { return timeMeasuredPy; }
 
-    public double getTargetFrameRate() {
+    public double targetFrameRate() {
         return targetFrameRatePy.get();
     }
 
@@ -72,23 +72,21 @@ public class GameClock {
     }
 
     public void start() {
-        animation.play();
+        clockWork.play();
     }
 
     public void stop() {
-        animation.stop();
+        clockWork.stop();
     }
 
     public boolean isRunning() {
-        return animation.getStatus() == Status.RUNNING;
+        return clockWork.getStatus() == Status.RUNNING;
     }
 
-    public boolean isPaused() {
-        return pausedPy.get();
-    }
+    public boolean isPaused() { return pausedPy.get(); }
 
-    public double getActualFrameRate() {
-        return ticksPerSec;
+    public double lastTicksPerSecond() {
+        return lastTicksPerSec;
     }
 
     public long tickCount() { return tickCount; }
@@ -113,7 +111,6 @@ public class GameClock {
                 updateCount++;
             } catch (Throwable x) {
                 Logger.error(x);
-                Logger.error("Something very bad happened, game clock has been stopped!");
                 return false;
             }
         }
@@ -122,34 +119,30 @@ public class GameClock {
             ++tickCount;
             ++ticksInFrame;
             if (now - countTicksStartTime > 1e9) {
-                ticksPerSec = ticksInFrame;
+                lastTicksPerSec = ticksInFrame;
                 ticksInFrame = 0;
                 countTicksStartTime = now;
             }
         } catch (Throwable x) {
             Logger.error(x);
-            Logger.error("Something very bad happened, game clock has been stopped!");
             return false;
         }
         return true;
     }
 
-    private void create(double targetFPS) {
-        var tickDuration = Duration.seconds(1.0 / targetFPS);
-        animation = new Timeline(targetFPS, new KeyFrame(tickDuration, e -> makeOneStep(!isPaused())));
-        animation.setCycleCount(Animation.INDEFINITE);
-        animation.statusProperty().addListener((py, ov, nv) -> {
-            Logger.info("Clock status: {} -> {}", ov, nv);
-            Logger.info("Clock target frequency: {} Hz", getTargetFrameRate());
-        });
+    private void createClockWork(double frameRate) {
+        clockWork = new Timeline(frameRate, new KeyFrame(Duration.seconds(1.0 / frameRate), e -> makeOneStep(!isPaused())));
+        clockWork.setCycleCount(Animation.INDEFINITE);
+        clockWork.statusProperty().addListener(
+                (py, ov, nv) -> Logger.info("Clock status: {} -> {}, target frame rate: {}", ov, nv, targetFrameRate()));
     }
 
     private void handleTargetFrameRateChanged() {
-        boolean running = animation.getStatus() == Status.RUNNING;
+        boolean running = clockWork.getStatus() == Status.RUNNING;
         if (running) {
-            animation.stop();
+            clockWork.stop();
         }
-        create(targetFrameRatePy.get());
+        createClockWork(targetFrameRatePy.get());
         if (running) {
             start();
         }
