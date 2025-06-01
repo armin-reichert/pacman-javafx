@@ -15,8 +15,8 @@ import de.amr.pacmanfx.model.MapSelectionMode;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.PacManGames_UIConfiguration;
-import de.amr.pacmanfx.ui.layout.StartPage;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
+import de.amr.pacmanfx.ui.layout.StartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.input.Keyboard;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
@@ -140,10 +140,9 @@ public class XXLAnyPacMan_StartPage implements StartPage {
             addEntry(entryCutScenesEnabled);
             addEntry(entryMapOrder);
 
-            ResourceManager rm = this::getClass;
             setStyle(new OptionMenuStyle(
-                rm.loadFont("fonts/emulogic.ttf", 3 * TS),
-                rm.loadFont("fonts/emulogic.ttf", TS),
+                theAssets().font("font.pacfontgood", 32),
+                theAssets().arcadeFontAtSize(8),
                 OptionMenu.DEFAULT_STYLE.backgroundFill(),
                 OptionMenu.DEFAULT_STYLE.borderStroke(),
                 Color.RED, // DEFAULT_STYLE.titleTextFill(),
@@ -279,7 +278,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
                 createOrangeGhost()
             };
             for (Ghost ghost : ghosts) {
-                ghost.setX(46 * TS + ghost.personality() * 2 * TS);
+                ghost.setX(46 * TS + ghost.personality() * 18);
                 ghost.setMoveAndWishDir(Direction.LEFT);
                 ghost.setSpeed(1.05f);
                 ghost.setVisible(true);
@@ -293,7 +292,7 @@ public class XXLAnyPacMan_StartPage implements StartPage {
                 pac.setX(-36 * TS);
                 for (Ghost ghost : ghosts) {
                     ghost.setVisible(true);
-                    ghost.setX(pac.x() + 22 * TS + ghost.personality() * 2.5f * TS);
+                    ghost.setX(pac.x() + 22 * TS + ghost.personality() * 18);
                     ghost.setMoveAndWishDir(ghost.moveDir().opposite());
                     ghost.setSpeed(0.58f);
                     ghost.playAnimation(ANIM_GHOST_FRIGHTENED);

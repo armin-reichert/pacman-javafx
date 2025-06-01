@@ -8,7 +8,6 @@ import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.Picker;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import java.util.ResourceBundle;
@@ -34,6 +33,8 @@ public class PacManGames_Assets extends AssetStorage implements ResourceManager 
         store("font.arcade",             loadFont("fonts/emulogic.ttf", 8));
         store("font.handwriting",        loadFont("fonts/Molle-Italic.ttf", 9));
         store("font.monospaced",         loadFont("fonts/Inconsolata_Condensed-Bold.ttf", 12));
+        store("font.pacfont",            loadFont("fonts/Pacfont.ttf", 8));
+        store("font.pacfontgood",        loadFont("fonts/PacfontGood.ttf", 8));
 
         store("voice.explain",           url("sound/voice/press-key.mp3"));
         store("voice.autopilot.off",     url("sound/voice/autopilot-off.mp3"));
