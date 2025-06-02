@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
 
 public class WorldMap {
@@ -49,6 +50,13 @@ public class WorldMap {
 
     WorldMap() {}
 
+    public WorldMap(int numRows, int numCols) {
+        requireNonNegative(numRows);
+        requireNonNegative(numCols);
+        terrainLayer = new WorldMapLayer(numRows, numCols);
+        foodLayer = new WorldMapLayer(numRows, numCols);
+    }
+
     public WorldMap(WorldMap other) {
         requireNonNull(other);
         url = other.url;
@@ -60,12 +68,6 @@ public class WorldMap {
         if (other.configMap != null) {
             configMap = new HashMap<>(other.configMap);
         }
-    }
-
-    public WorldMap(int numRows, int numCols) {
-        url = null;
-        terrainLayer = new WorldMapLayer(numRows, numCols);
-        foodLayer = new WorldMapLayer(numRows, numCols);
     }
 
     @Override
