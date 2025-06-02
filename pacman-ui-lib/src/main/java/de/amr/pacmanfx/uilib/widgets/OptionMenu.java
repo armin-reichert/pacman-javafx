@@ -20,7 +20,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
-import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -99,12 +98,10 @@ public class OptionMenu {
 
     public void startAnimation() {
         animation.play();
-        Logger.trace("Menu animation started");
     }
 
     public void stopAnimation() {
         animation.stop();
-        Logger.trace("Menu animation stopped");
     }
 
     public void draw() {

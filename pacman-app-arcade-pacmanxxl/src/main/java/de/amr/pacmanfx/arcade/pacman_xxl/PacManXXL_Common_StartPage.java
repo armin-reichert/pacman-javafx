@@ -41,8 +41,14 @@ public class PacManXXL_Common_StartPage implements StartPage {
 
     @Override
     public void onEnter() {
-        menu.initState();
+        menu.syncMenuState();
         menu.startAnimation();
+        menu.requestFocus();
+    }
+
+    @Override
+    public void onExit() {
+        menu.stopAnimation();
     }
 
     @Override
@@ -57,11 +63,6 @@ public class PacManXXL_Common_StartPage implements StartPage {
 
     @Override
     public void requestFocus() {
-        menu.requestFocus();
-    }
-
-    @Override
-    public void onExit() {
-        menu.stopAnimation();
+        onEnter();
     }
 }

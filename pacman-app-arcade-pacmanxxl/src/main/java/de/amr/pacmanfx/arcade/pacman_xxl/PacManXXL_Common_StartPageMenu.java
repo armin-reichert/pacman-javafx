@@ -33,66 +33,37 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static de.amr.pacmanfx.uilib.input.Keyboard.naked;
 import static de.amr.pacmanfx.uilib.widgets.OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
-import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
     public static class MenuState {
-        GameVariant gameVariant = GameVariant.PACMAN_XXL;
+        GameVariant gameVariant;
         boolean play3D;
         boolean cutScenesEnabled;
         MapSelectionMode mapOrder;
     }
 
-    private static class MenuAnimation {
+    private static class ChaseAnimation {
         private final GraphicsContext ctx;
-        private Pac pac;
-        private Ghost[] ghosts = new Ghost[4];
+        private final Pac pac;
+        private final Ghost[] ghosts;
         private GameRenderer renderer;
         private boolean chasingGhosts;
 
-        MenuAnimation(Canvas canvas) {
+        ChaseAnimation(Canvas canvas) {
             ctx = canvas.getGraphicsContext2D();
-        }
-
-        void setGameVariant(GameVariant gameVariant) {
-            PacManGames_UIConfiguration config = theUIConfig().configuration(gameVariant);
-            renderer = config.createRenderer(ctx.getCanvas());
-
-            switch (gameVariant) {
-                case PACMAN_XXL -> pac.setAnimations(new ArcadePacMan_PacAnimationMap(config.spriteSheet()));
-                case MS_PACMAN_XXL -> pac.setAnimations(new ArcadeMsPacMan_PacAnimationMap(config.spriteSheet()));
-            }
-            pac.playAnimation(ANIM_ANY_PAC_MUNCHING);
-
-            for (Ghost ghost : ghosts) {
-                if (ghost.animations().isEmpty()) {
-                    switch (gameVariant) {
-                        case PACMAN_XXL ->
-                            ghost.setAnimations(new ArcadePacMan_GhostAnimationMap(config.spriteSheet(), ghost.personality()));
-                        case MS_PACMAN_XXL ->
-                            ghost.setAnimations(new ArcadeMsPacMan_GhostAnimationMap(config.spriteSheet(), ghost.personality()));
-                    }
-                    ghost.playAnimation(ANIM_GHOST_NORMAL);
-                }
-            }
+            pac = createPac();
+            ghosts = new Ghost[] {createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost()};
         }
 
         void reset() {
             chasingGhosts = false;
 
-            pac = createPac();
             pac.setX(42 * TS);
             pac.setMoveAndWishDir(Direction.LEFT);
             pac.setSpeed(1.0f);
             pac.setVisible(true);
 
-            ghosts = new Ghost[] {
-                createRedGhost(),
-                createPinkGhost(),
-                createCyanGhost(),
-                createOrangeGhost()
-            };
             for (Ghost ghost : ghosts) {
                 ghost.setX(46 * TS + ghost.personality() * 18);
                 ghost.setMoveAndWishDir(Direction.LEFT);
@@ -151,10 +122,30 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             renderer.drawActor(pac);
             ctx.restore();
         }
-    }
 
-    private final MenuState state = new MenuState();
-    private final MenuAnimation animation;
+        void setGameVariant(GameVariant gameVariant) {
+            PacManGames_UIConfiguration config = theUIConfig().configuration(gameVariant);
+            renderer = config.createRenderer(ctx.getCanvas());
+
+            switch (gameVariant) {
+                case PACMAN_XXL -> pac.setAnimations(new ArcadePacMan_PacAnimationMap(config.spriteSheet()));
+                case MS_PACMAN_XXL -> pac.setAnimations(new ArcadeMsPacMan_PacAnimationMap(config.spriteSheet()));
+            }
+            pac.playAnimation(ANIM_ANY_PAC_MUNCHING);
+
+            for (Ghost ghost : ghosts) {
+                if (ghost.animations().isEmpty()) {
+                    switch (gameVariant) {
+                        case PACMAN_XXL ->
+                            ghost.setAnimations(new ArcadePacMan_GhostAnimationMap(config.spriteSheet(), ghost.personality()));
+                        case MS_PACMAN_XXL ->
+                            ghost.setAnimations(new ArcadeMsPacMan_GhostAnimationMap(config.spriteSheet(), ghost.personality()));
+                    }
+                    ghost.playAnimation(ANIM_GHOST_NORMAL);
+                }
+            }
+        }
+    }
 
     // Entries
 
@@ -164,8 +155,8 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         @Override
         protected void onValueChanged(int index) {
             state.gameVariant = selectedValue();
-            animation.setGameVariant(state.gameVariant);
-            logMenuState();
+            chaseAnimation.setGameVariant(state.gameVariant);
+            logState();
         }
 
         @Override
@@ -184,7 +175,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         protected void onValueChanged(int index) {
             state.play3D = selectedValue();
             PY_3D_ENABLED.set(state.play3D);
-            logMenuState();
+            logState();
         }
 
         @Override
@@ -198,7 +189,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         @Override
         protected void onValueChanged(int index) {
             state.cutScenesEnabled = selectedValue();
-            logMenuState();
+            logState();
         }
 
         @Override
@@ -215,7 +206,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             if (enabled) {
                 state.mapOrder = selectedValue();
             }
-            logMenuState();
+            logState();
         }
 
         @Override
@@ -231,8 +222,16 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         }
     };
 
-    PacManXXL_Common_StartPageMenu() {
+    private final MenuState state = new MenuState();
+    private final ChaseAnimation chaseAnimation;
+
+    public PacManXXL_Common_StartPageMenu() {
         super(42, 36, 6, 20);
+
+        state.gameVariant = GameVariant.PACMAN_XXL;
+        state.play3D = false;
+        state.cutScenesEnabled = true;
+        state.mapOrder = MapSelectionMode.CUSTOM_MAPS_FIRST;
 
         var style = new OptionMenuStyle(
             theAssets().font("font.pacfontgood", 32),
@@ -259,50 +258,30 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             "PRESS E TO OPEN EDITOR",
             "PRESS ENTER TO START"
         );
-        animation = new MenuAnimation(canvas);
-        animation.reset();
-        animation.setGameVariant(GameVariant.PACMAN_XXL);
+        chaseAnimation = new ChaseAnimation(canvas);
+        chaseAnimation.reset();
+        chaseAnimation.setGameVariant(GameVariant.PACMAN_XXL);
     }
 
-    public MenuState state() { return state; }
-
-    void initState() {
-        GameModel game = theGameController().game(state.gameVariant);
-        var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();
+    public void syncMenuState() {
+        final GameModel game = theGameController().game(state.gameVariant);
+        final var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();
         mapSelector.loadAllMaps();
-        boolean customMapsExist = !mapSelector.customMaps().isEmpty();
+        final boolean customMapsExist = !mapSelector.customMaps().isEmpty();
+
+        state.play3D = PY_3D_ENABLED.get();
+        state.cutScenesEnabled = game.cutScenesEnabledProperty().get();
+        state.mapOrder = mapSelector.mapSelectionMode();
+        logState();
 
         entryGameVariant.selectValue(state.gameVariant);
-        setPlay3D(PY_3D_ENABLED.get());
-        setCutScenesEnabled(game.cutScenesEnabledProperty().get());
-        setMapOrder(mapSelector.mapSelectionMode(), customMapsExist);
-
-        animation.reset();
-        animation.setGameVariant(state.gameVariant);
-
-        logMenuState();
-        Logger.info("Option menu initialized");
-    }
-
-    private void setPlay3D(boolean play3D) {
-        state.play3D = play3D;
-        entryPlay3D.selectValue(play3D);
-    }
-
-    private void setCutScenesEnabled(boolean cutScenesEnabled) {
-        state.cutScenesEnabled = cutScenesEnabled;
-        entryCutScenesEnabled.selectValue(cutScenesEnabled);
-    }
-
-    private void setMapOrder(MapSelectionMode mapOrder, boolean customMapsExist) {
-        state.mapOrder = requireNonNull(mapOrder);
-        entryMapOrder.selectValue(mapOrder);
+        entryPlay3D.selectValue(state.play3D);
+        entryCutScenesEnabled.selectValue(state.cutScenesEnabled);
+        entryMapOrder.selectValue(state.mapOrder);
         entryMapOrder.setEnabled(customMapsExist);
-    }
 
-    private void logMenuState() {
-        Logger.info("gameVariant={} play3D={} cutScenesEnabled={} mapOrder={}",
-            state.gameVariant, state.play3D, state.cutScenesEnabled, state.mapOrder);
+        chaseAnimation.setGameVariant(state.gameVariant);
+        chaseAnimation.reset();
     }
 
     @Override
@@ -318,13 +297,20 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
     @Override
     protected void updateAnimation() {
-        animation.update();
+        chaseAnimation.update();
     }
 
     @Override
     public void draw() {
         super.draw();
-        animation.draw(scalingProperty().get());
+        chaseAnimation.draw(scalingProperty().get());
+    }
+
+    public MenuState state() { return state; }
+
+    private void logState() {
+        Logger.info("Menu state: gameVariant={} play3D={} cutScenesEnabled={} mapOrder={}",
+            state.gameVariant, state.play3D, state.cutScenesEnabled, state.mapOrder);
     }
 
     private void startGame() {
