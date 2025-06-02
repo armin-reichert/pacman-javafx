@@ -5,14 +5,14 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.lib.nes.JoypadButton;
-import de.amr.pacmanfx.uilib.ActionBindingManager;
+import de.amr.pacmanfx.uilib.ActionBindingsProvider;
 import de.amr.pacmanfx.uilib.input.Keyboard;
 import javafx.scene.input.KeyCode;
 
 import static de.amr.pacmanfx.ui.PacManGames_Env.theJoypad;
 import static de.amr.pacmanfx.uilib.input.Keyboard.*;
 
-public interface PacManGames_ActionBindings extends ActionBindingManager {
+public interface PacManGames_ActionBindings extends ActionBindingsProvider {
 
     default void bindArcadeInsertCoinAction() {
         bind(PacManGames_Actions.INSERT_COIN,  naked(KeyCode.DIGIT5), naked(KeyCode.NUMPAD5));

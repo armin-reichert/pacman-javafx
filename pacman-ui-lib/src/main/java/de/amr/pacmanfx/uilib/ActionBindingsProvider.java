@@ -16,18 +16,24 @@ import java.util.Optional;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Manages binding of actions to keyboard combinations. Implemented by the "views" (game view,
+ * Collection of bindings between actions and key combinations. Implemented by the "views" (game view,
  * editor view, start pages view) and the game scenes.
  */
-public interface ActionBindingManager {
+public interface ActionBindingsProvider {
 
+    /**
+     * @return the keyboard providing the ke combinations
+     */
     Keyboard keyboard();
 
+    /**
+     * @return map for storing the key combination to action binding information
+     */
     Map<KeyCombination, GameAction> actionBindings();
 
     default void updateActionBindings() {
         for (KeyCombination combination : actionBindings().keySet()) {
-            keyboard().addBinding(combination, this);
+            keyboard().setBinding(combination, this);
         }
         Logger.info("Key bindings updated for {}", getClass().getSimpleName());
     }

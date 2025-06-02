@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.input;
 
-import de.amr.pacmanfx.uilib.ActionBindingManager;
+import de.amr.pacmanfx.uilib.ActionBindingsProvider;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -17,9 +17,9 @@ import java.util.stream.Collectors;
 import static javafx.scene.input.KeyCombination.*;
 
 /**
- * @author Armin Reichert
+ * Handles keyboard input and matching of key combinations against registered action.
  */
-public class Keyboard {
+public final class Keyboard {
 
     // Provide an API for the most common cases
     public static KeyCombination naked(KeyCode code) { return new KeyCodeCombination(code); }
@@ -42,20 +42,20 @@ public class Keyboard {
     }
 
     private final Set<KeyCode> pressedKeys = new HashSet<>();
-    private final Map<KeyCombination, ActionBindingManager> registeredBindings = new HashMap<>();
+    private final Map<KeyCombination, ActionBindingsProvider> actionBindingMaps = new HashMap<>();
     private final List<KeyCombination> matches = new ArrayList<>(3);
 
-    public void addBinding(KeyCombination combination, ActionBindingManager actionBindingManager) {
-        if (registeredBindings.get(combination) == actionBindingManager) {
-            Logger.debug("Key code combination '{}' already bound to {}", combination, actionBindingManager);
+    public void setBinding(KeyCombination combination, ActionBindingsProvider actionBindingsProvider) {
+        if (actionBindingMaps.get(combination) == actionBindingsProvider) {
+            Logger.debug("Key combination '{}' already bound to action {}", combination, actionBindingsProvider);
         } else {
-            registeredBindings.put(combination, actionBindingManager);
-            Logger.debug("Key code combination '{}' bound to {}", combination, actionBindingManager);
+            actionBindingMaps.put(combination, actionBindingsProvider);
+            Logger.debug("Key combination '{}' is bound to action {}", combination, actionBindingsProvider);
         }
     }
 
-    public void removeBinding(KeyCombination combination, ActionBindingManager client) {
-        boolean removed = registeredBindings.remove(combination, client);
+    public void removeBinding(KeyCombination combination, ActionBindingsProvider client) {
+        boolean removed = actionBindingMaps.remove(combination, client);
         if (removed) {
             Logger.debug("Key code combination '{}' bound to {}", combination, client);
         }
@@ -64,7 +64,7 @@ public class Keyboard {
     public void onKeyPressed(KeyEvent key) {
         Logger.trace("Key pressed: {}", key);
         pressedKeys.add(key.getCode());
-        registeredBindings.keySet().stream().filter(combination -> combination.match(key)).forEach(matches::add);
+        actionBindingMaps.keySet().stream().filter(combination -> combination.match(key)).forEach(matches::add);
     }
 
     public void onKeyReleased(KeyEvent key) {
@@ -83,11 +83,11 @@ public class Keyboard {
 
     public void logCurrentBindings() {
         Logger.debug("--------------------------");
-        registeredBindings.keySet().stream()
+        actionBindingMaps.keySet().stream()
             .sorted(Comparator.comparing(KeyCombination::getDisplayText))
             .forEach(combination -> {
-                ActionBindingManager actionBindingManager = registeredBindings.get(combination);
-                Logger.debug("{}: {}", combination, actionBindingManager.getClass().getSimpleName());
+                ActionBindingsProvider actionBindingsProvider = actionBindingMaps.get(combination);
+                Logger.debug("{}: {}", combination, actionBindingsProvider.getClass().getSimpleName());
         });
         Logger.debug("--------------------------");
     }

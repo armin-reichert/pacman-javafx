@@ -113,37 +113,6 @@ public final class PacManGames_Env {
         Logger.info("Game environment initialized.");
     }
 
-    private static void checkUserDirsExistingAndWritable() {
-        String homeDirDesc = "Pac-Man FX home directory";
-        String customMapDirDesc = "Pac-Man FX custom map directory";
-        boolean success = checkDirExistingAndWritable(Globals.HOME_DIR, homeDirDesc);
-        if (success) {
-            Logger.info(homeDirDesc + " is " + Globals.HOME_DIR);
-            success = checkDirExistingAndWritable(Globals.CUSTOM_MAP_DIR, customMapDirDesc);
-            if (success) {
-                Logger.info(customMapDirDesc + " is " + Globals.CUSTOM_MAP_DIR);
-            }
-            Logger.info("User directories exist and are writable!");
-        }
-    }
-
-    private static boolean checkDirExistingAndWritable(File dir, String description) {
-        requireNonNull(dir);
-        if (!dir.exists()) {
-            Logger.info(description + " does not exist, create it...");
-            if (!dir.mkdirs()) {
-                Logger.error(description + " could not be created");
-                return false;
-            }
-            Logger.info(description + " has been created");
-            if (!dir.canWrite()) {
-                Logger.error(description + " is not writable");
-                return false;
-            }
-        }
-        return true;
-    }
-
     public static PacManGames_Assets theAssets() { return theAssets; }
     public static GameClock theClock() { return theClock; }
     public static Keyboard theKeyboard() { return theKeyboard; }
@@ -191,4 +160,34 @@ public final class PacManGames_Env {
         createUI(true, configClassesMap);
     }
 
+    private static void checkUserDirsExistingAndWritable() {
+        String homeDirDesc = "Pac-Man FX home directory";
+        String customMapDirDesc = "Pac-Man FX custom map directory";
+        boolean success = checkDirExistingAndWritable(Globals.HOME_DIR, homeDirDesc);
+        if (success) {
+            Logger.info(homeDirDesc + " is " + Globals.HOME_DIR);
+            success = checkDirExistingAndWritable(Globals.CUSTOM_MAP_DIR, customMapDirDesc);
+            if (success) {
+                Logger.info(customMapDirDesc + " is " + Globals.CUSTOM_MAP_DIR);
+            }
+            Logger.info("User directories exist and are writable!");
+        }
+    }
+
+    private static boolean checkDirExistingAndWritable(File dir, String description) {
+        requireNonNull(dir);
+        if (!dir.exists()) {
+            Logger.info(description + " does not exist, create it...");
+            if (!dir.mkdirs()) {
+                Logger.error(description + " could not be created");
+                return false;
+            }
+            Logger.info(description + " has been created");
+            if (!dir.canWrite()) {
+                Logger.error(description + " is not writable");
+                return false;
+            }
+        }
+        return true;
+    }
 }

@@ -157,7 +157,7 @@ public class GameView implements PacManGames_View {
 
     @Override
     public void handleKeyboardInput() {
-        runMatchingActionOrElse(() -> currentGameScene().ifPresent(ActionBindingManager::handleKeyboardInput));
+        runMatchingActionOrElse(() -> currentGameScene().ifPresent(ActionBindingsProvider::handleKeyboardInput));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
