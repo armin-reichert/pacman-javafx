@@ -79,7 +79,7 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
             URL url = getClass().getResource(path);
             if (url != null) {
                 try {
-                    WorldMap worldMap = new WorldMap(url);
+                    WorldMap worldMap = WorldMap.fromURL(url);
                     maps.add(worldMap);
                     Logger.info("Map #{} loaded, URL={}", num, url);
                 } catch (IOException x) {

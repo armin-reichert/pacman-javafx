@@ -975,7 +975,7 @@ public class TileMapEditor {
     private boolean readMapFile(File file) {
         if (file.getName().endsWith(".world")) {
             try {
-                loadMap(new WorldMap(file));
+                loadMap(WorldMap.fromFile(file));
                 currentDirectory = file.getParentFile();
                 currentFilePy.set(file);
                 Logger.info("Map read from file {}", file);
@@ -1704,14 +1704,14 @@ public class TileMapEditor {
     }
 
     private void loadSampleMaps() throws IOException {
-        mapPacManGame = new WorldMap(sampleMapURL("pacman/pacman.world", 1));
+        mapPacManGame = WorldMap.fromURL(sampleMapURL("pacman/pacman.world", 1));
         mapsMsPacManGame = new ArrayList<>();
         for (int n = 1; n <= 6; ++n) {
-            mapsMsPacManGame.add(new WorldMap(sampleMapURL("mspacman/mspacman_%d.world", n)));
+            mapsMsPacManGame.add(WorldMap.fromURL(sampleMapURL("mspacman/mspacman_%d.world", n)));
         }
         mapsPacManXXLGame = new ArrayList<>();
         for (int n = 1; n <= 8; ++n) {
-            mapsPacManXXLGame.add(new WorldMap(sampleMapURL("pacman_xxl/masonic_%d.world", n)));
+            mapsPacManXXLGame.add(WorldMap.fromURL(sampleMapURL("pacman_xxl/masonic_%d.world", n)));
         }
     }
 

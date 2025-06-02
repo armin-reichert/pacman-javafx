@@ -41,7 +41,7 @@ public class ArcadePacMan_MapSelector implements MapSelector {
                 throw new IllegalStateException();
             }
             try {
-                theMap = new WorldMap(mapURL);
+                theMap = WorldMap.fromURL(mapURL);
                 theMap.setConfigValue("mapNumber", 1);
                 theMap.setConfigValue("colorMapIndex", 0);
                 Logger.info("Pac-Man Arcade map loaded, URL='{}'", theMap.url());

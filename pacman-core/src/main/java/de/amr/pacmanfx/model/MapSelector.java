@@ -28,7 +28,7 @@ public interface MapSelector {
                 throw new IllegalStateException();
             }
             try {
-                WorldMap worldMap = new WorldMap(url);
+                WorldMap worldMap = WorldMap.fromURL(url);
                 maps.add(worldMap);
                 Logger.info("Map loaded, URL='{}'", worldMap.url());
             } catch (IOException x) {

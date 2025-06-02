@@ -12,7 +12,6 @@ import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
@@ -27,9 +26,9 @@ public class WorldMap {
     private static final Pattern TILE_PATTERN = Pattern.compile("\\((\\d+),(\\d+)\\)");
     private static final String TILE_FORMAT = "(%d,%d)";
 
-    private static final String BEGIN_TERRAIN_LAYER = "!terrain";
-    private static final String BEGIN_FOOD_LAYER    = "!food";
-    private static final String BEGIN_DATA_SECTION  = "!data";
+    public static final String BEGIN_TERRAIN_LAYER = "!terrain";
+    public static final String BEGIN_FOOD_LAYER    = "!food";
+    public static final String BEGIN_DATA_SECTION  = "!data";
 
     public static Optional<Vector2i> parseTile(String s) {
         requireNonNull(s);
@@ -52,11 +51,26 @@ public class WorldMap {
         return String.format(TILE_FORMAT, tile.x(), tile.y());
     }
 
-    private final URL url;
-    private WorldMapLayer terrainLayer;
-    private WorldMapLayer foodLayer;
-    private Set<Obstacle> obstacles;
-    private Map<String, Object> configMap;
+    public static WorldMap fromURL(URL url) throws IOException {
+        var reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
+        WorldMap worldMap = WorldMapParser.parse(reader.lines());
+        worldMap.url = url;
+        return worldMap;
+    }
+
+    public static WorldMap fromFile(File file) throws IOException {
+        return fromURL(file.toURI().toURL());
+    }
+
+    // Package access for parser
+
+    URL url;
+    WorldMapLayer terrainLayer;
+    WorldMapLayer foodLayer;
+    Set<Obstacle> obstacles;
+    Map<String, Object> configMap;
+
+    WorldMap() {}
 
     public WorldMap(WorldMap other) {
         requireNonNull(other);
@@ -75,16 +89,6 @@ public class WorldMap {
         url = null;
         terrainLayer = new WorldMapLayer(numRows, numCols);
         foodLayer = new WorldMapLayer(numRows, numCols);
-    }
-
-    public WorldMap(URL url) throws IOException {
-        this.url = requireNonNull(url);
-        var reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
-        parse(reader.lines().toList());
-    }
-
-    public WorldMap(File file) throws IOException {
-        this(file.toURI().toURL());
     }
 
     @Override
@@ -188,127 +192,6 @@ public class WorldMap {
         return newMap;
     }
 
-    private void parse(List<String> lines_) {
-        // ensure lines can be modified
-        List<String> lines = new ArrayList<>(lines_);
-        // delete empty lines at end
-        int i = lines.size() - 1;
-        int count = 0;
-        while (i >= 0 && lines.get(i).isBlank()) {
-            lines.remove(i);
-            ++count;
-            --i;
-        }
-        if (count > 0) {
-            Logger.info("{} empty line(s) at end of map file removed", count);
-        }
-        var terrainLayerRows = new ArrayList<String>();
-        var foodLayerRows = new ArrayList<String>();
-        boolean insideTerrainLayer = false, insideFoodLayer = false;
-        for (String line : lines) {
-            if (BEGIN_TERRAIN_LAYER.equals(line)) {
-                insideTerrainLayer = true;
-            } else if (BEGIN_FOOD_LAYER.equals(line)) {
-                insideTerrainLayer = false;
-                insideFoodLayer = true;
-            } else if (insideTerrainLayer) {
-                terrainLayerRows.add(line);
-            } else if (insideFoodLayer) {
-                foodLayerRows.add(line);
-            } else {
-                Logger.error("Line skipped: '{}'", line);
-            }
-        }
-        this.terrainLayer = parseTileMap(terrainLayerRows,
-            value -> 0 <= value && value <= TerrainTiles.MAX_VALUE, TerrainTiles.EMPTY);
-
-        this.foodLayer = parseTileMap(foodLayerRows,
-            value -> 0 <= value && value <= FoodTiles.ENERGIZER, FoodTiles.EMPTY);
-
-        // Replace obsolete terrain tile values
-        tiles().forEach(tile -> {
-            byte content = content(LayerID.TERRAIN, tile);
-            byte newContent = switch (content) {
-                case TerrainTiles.OBSOLETE_DWALL_H -> TerrainTiles.WALL_H;
-                case TerrainTiles.OBSOLETE_DWALL_V -> TerrainTiles.WALL_V;
-                case TerrainTiles.OBSOLETE_DCORNER_NW -> TerrainTiles.ARC_NW;
-                case TerrainTiles.OBSOLETE_DCORNER_SW -> TerrainTiles.ARC_SW;
-                case TerrainTiles.OBSOLETE_DCORNER_SE -> TerrainTiles.ARC_SE;
-                case TerrainTiles.OBSOLETE_DCORNER_NE -> TerrainTiles.ARC_NE;
-                default -> content;
-            };
-            setContent(LayerID.TERRAIN, tile, newContent);
-        });
-    }
-
-    private WorldMapLayer parseTileMap(List<String> lines, Predicate<Byte> valueAllowed, byte emptyValue) {
-        // First pass: read property section and determine data section size
-        int numDataRows = 0, numDataCols = -1;
-        int dataStartIndex = -1;
-        StringBuilder propertySection = new StringBuilder();
-        for (int lineIndex = 0; lineIndex < lines.size(); ++lineIndex) {
-            String line = lines.get(lineIndex);
-            if (BEGIN_DATA_SECTION.equals(line)) {
-                dataStartIndex = lineIndex + 1;
-            }
-            else if (dataStartIndex == -1) {
-                propertySection.append(line).append("\n");
-            } else {
-                numDataRows++;
-                String[] columns = line.split(",");
-                if (numDataCols == -1) {
-                    numDataCols = columns.length;
-                } else if (columns.length != numDataCols) {
-                    Logger.error("Inconsistent tile map data: found {} column(s) in line {}, expected {}",
-                            columns.length, lineIndex, numDataCols);
-                }
-            }
-        }
-        if (numDataRows == 0) {
-            Logger.error("Inconsistent tile map data: No data");
-        }
-
-        // Second pass: read data and build new tile map
-        var tileMap = new WorldMapLayer(numDataRows, numDataCols);
-        tileMap.properties().putAll(parseProperties(propertySection.toString()));
-
-        for (int lineIndex = dataStartIndex; lineIndex < lines.size(); ++lineIndex) {
-            String line = lines.get(lineIndex);
-            int row = lineIndex -dataStartIndex;
-            String[] columns = line.split(",");
-            for (int col = 0; col < columns.length; ++col) {
-                String entry = columns[col].trim();
-                try {
-                    byte value = Byte.decode(entry);
-                    if (valueAllowed.test(value)) {
-                        tileMap.set(row, col, value);
-                    } else {
-                        tileMap.set(row, col, emptyValue);
-                        Logger.error("Invalid tile map value {} at row {}, col {}", value, row, col);
-                    }
-                } catch (NumberFormatException x) {
-                    Logger.error("Invalid tile map entry {} at row {}, col {}", entry, row, col);
-                }
-            }
-        }
-        return tileMap;
-    }
-
-    private Map<String, String> parseProperties(String text) {
-        var properties = new HashMap<String, String>();
-        String[] lines = text.split("\n");
-        for (String line : lines) {
-            if (line.startsWith("#")) continue;
-            String[] sides = line.split("=");
-            if (sides.length != 2) {
-                Logger.error("Invalid line inside property section: {}", line);
-            } else {
-                String lhs = sides[0].trim(), rhs = sides[1].trim();
-                properties.put(lhs, rhs);
-            }
-        }
-        return properties;
-    }
 
     public List<Vector2i> buildObstacleList() {
         List<Vector2i> tilesWithErrors = new ArrayList<>();
