@@ -4,11 +4,14 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.TerrainTiles;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 
 public class UpdateMapFiles {
 
@@ -28,13 +31,24 @@ public class UpdateMapFiles {
         }
         for (File mapFile : mapFiles) {
             try {
-                WorldMap map = new WorldMap(mapFile);
+                WorldMap map = WorldMap.fromFile(mapFile);
                 updateMapData(map);
-                map.save(mapFile);
-                Logger.info("Updated map file {}", mapFile);
+                if (saveWorldMap(map, mapFile)) {
+                    Logger.info("Updated map file {}", mapFile);
+                }
             } catch (IOException x) {
                 Logger.error(x);
             }
+        }
+    }
+
+    private static boolean saveWorldMap(WorldMap worldMap,File file) {
+        try (PrintWriter pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
+            pw.print(WorldMapFormatter.formatted(worldMap));
+            return true;
+        } catch (IOException x) {
+            Logger.error(x);
+            return false;
         }
     }
 
@@ -54,8 +68,8 @@ public class UpdateMapFiles {
         });
         Vector2i houseMinTile = map.getTerrainTileProperty("pos_house_min_tile", new Vector2i(10, 15));
         Vector2i houseMaxTile = houseMinTile.plus(7, 4);
-        map.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MIN_TILE, WorldMap.formatTile(houseMinTile));
-        map.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MAX_TILE, WorldMap.formatTile(houseMaxTile));
+        map.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MIN_TILE, WorldMapFormatter.formatTile(houseMinTile));
+        map.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MAX_TILE, WorldMapFormatter.formatTile(houseMaxTile));
         for (int row = houseMinTile.y(); row <= houseMaxTile.y(); ++row) {
             for (int col = houseMinTile.x(); col <= houseMaxTile.x(); ++col) {
                 switch (map.content(LayerID.TERRAIN, row, col)) {

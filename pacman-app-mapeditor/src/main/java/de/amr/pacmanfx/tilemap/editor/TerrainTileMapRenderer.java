@@ -24,7 +24,6 @@ import java.util.Set;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
-import static de.amr.pacmanfx.lib.tilemap.WorldMap.parseTile;
 import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.SPRITE_SHEET;
 
 /**
@@ -132,7 +131,7 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
 
     private Optional<Vector2i> specialTile(WorldMap worldMap, String propertyName) {
         if (worldMap.properties(LayerID.TERRAIN).containsKey(propertyName)) {
-            return parseTile(worldMap.properties(LayerID.TERRAIN).get(propertyName));
+            return WorldMapParser.parseTile(worldMap.properties(LayerID.TERRAIN).get(propertyName));
         }
         return Optional.empty();
     }

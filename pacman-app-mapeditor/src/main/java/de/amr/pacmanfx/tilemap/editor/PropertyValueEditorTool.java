@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.uilib.tilemap.TileMapRenderer;
 import javafx.scene.canvas.GraphicsContext;
@@ -45,7 +46,7 @@ public class PropertyValueEditorTool implements Tool {
 
     @Override
     public void apply(WorldMap worldMap, LayerID layerID, Vector2i tile) {
-        worldMap.properties(layerID).put(propertyName, WorldMap.formatTile(tile));
+        worldMap.properties(layerID).put(propertyName, WorldMapFormatter.formatTile(tile));
     }
 
     @Override

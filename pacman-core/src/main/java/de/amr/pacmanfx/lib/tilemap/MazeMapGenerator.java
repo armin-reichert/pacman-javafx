@@ -13,6 +13,9 @@ import de.amr.pacmanfx.model.WorldMapProperty;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
 public class MazeMapGenerator {
@@ -148,12 +151,22 @@ public class MazeMapGenerator {
             WorldMap mazeMap = mg.createMazeMap(40, 30);
             mg.setColors(mazeMap);
             File file = new File("maze_%d.world".formatted(i));
-            boolean saved = mazeMap.save(file);
+            boolean saved = saveWorldMap(mazeMap, file);
             if (saved) {
                 Logger.info("Map file created: {}", file.getAbsolutePath());
             } else {
                 Logger.error("Could not save map file {}", file.getAbsolutePath());
             }
+        }
+    }
+
+    private static boolean saveWorldMap(WorldMap worldMap,File file) {
+        try (PrintWriter pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
+            pw.print(WorldMapFormatter.formatted(worldMap));
+            return true;
+        } catch (IOException x) {
+            Logger.error(x);
+            return false;
         }
     }
 }

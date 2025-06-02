@@ -8,12 +8,13 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import org.tinylog.Logger;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -23,33 +24,9 @@ import static java.util.Objects.requireNonNull;
 
 public class WorldMap {
 
-    private static final Pattern TILE_PATTERN = Pattern.compile("\\((\\d+),(\\d+)\\)");
-    private static final String TILE_FORMAT = "(%d,%d)";
-
-    public static final String BEGIN_TERRAIN_LAYER = "!terrain";
-    public static final String BEGIN_FOOD_LAYER    = "!food";
-    public static final String BEGIN_DATA_SECTION  = "!data";
-
-    public static Optional<Vector2i> parseTile(String s) {
-        requireNonNull(s);
-        Matcher m = TILE_PATTERN.matcher(s);
-        if (!m.matches()) {
-            return Optional.empty();
-        }
-        try {
-            int x = Integer.parseInt(m.group(1));
-            int y = Integer.parseInt(m.group(2));
-            return Optional.of(new Vector2i(x, y));
-        } catch (NumberFormatException x) {
-            Logger.error("Could not parse tile from text '{}'", s);
-            return Optional.empty();
-        }
-    }
-
-    public static String formatTile(Vector2i tile) {
-        requireNonNull(tile);
-        return String.format(TILE_FORMAT, tile.x(), tile.y());
-    }
+    public static final String MARKER_BEGIN_TERRAIN_LAYER = "!terrain";
+    public static final String MARKER_BEGIN_FOOD_LAYER = "!food";
+    public static final String MARKER_BEGIN_DATA_SECTION = "!data";
 
     public static WorldMap fromURL(URL url) throws IOException {
         var reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
@@ -102,43 +79,6 @@ public class WorldMap {
         s.append(", url=").append(url);
         s.append("}");
         return s.toString();
-    }
-
-    public String sourceText() {
-        var sw = new StringWriter();
-        var pw = new PrintWriter(sw);
-        pw.println(BEGIN_TERRAIN_LAYER);
-        print(pw, terrainLayer);
-        pw.println(BEGIN_FOOD_LAYER);
-        print(pw, foodLayer);
-        return sw.toString();
-    }
-
-    public boolean save(File file) {
-        try (PrintWriter pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
-            pw.print(sourceText());
-            return true;
-        } catch (IOException x) {
-            Logger.error(x);
-            return false;
-        }
-    }
-
-    private void print(PrintWriter pw, WorldMapLayer layer) {
-        Map<String, String> properties = layer.properties();
-        properties.keySet().stream().sorted().map(name -> "%s=%s".formatted(name, properties.get(name))).forEach(pw::println);
-        pw.println(BEGIN_DATA_SECTION);
-        for (int row = 0; row < numRows(); ++row) {
-            for (int col = 0; col < numCols(); ++col) {
-                byte value = layer.get(row, col);
-                pw.printf("#%02X", value);
-                if (col < numCols() - 1) {
-                    pw.print(",");
-                }
-            }
-            pw.println();
-        }
-        pw.flush();
     }
 
     public WorldMap insertRowBeforeIndex(int rowIndex) {
@@ -329,7 +269,7 @@ public class WorldMap {
         requireNonNull(propertyName);
         if (properties(layerID).containsKey(propertyName)) {
             String value = properties(layerID).get(propertyName);
-            return parseTile(value).orElse(defaultTile);
+            return WorldMapParser.parseTile(value).orElse(defaultTile);
         }
         return defaultTile;
     }

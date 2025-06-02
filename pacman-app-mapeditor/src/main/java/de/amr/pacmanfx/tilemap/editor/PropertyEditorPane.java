@@ -7,6 +7,8 @@ package de.amr.pacmanfx.tilemap.editor;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
+import de.amr.pacmanfx.lib.tilemap.WorldMapParser;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -24,15 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static de.amr.pacmanfx.lib.tilemap.WorldMap.formatTile;
-import static de.amr.pacmanfx.lib.tilemap.WorldMap.parseTile;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.formatColor;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.parseColor;
 import static java.util.Objects.requireNonNull;
 
-/**
- * @author Armin Reichert
- */
 public class PropertyEditorPane extends BorderPane {
 
     private static final int NAME_COLUMN_MIN_WIDTH = 180;
@@ -220,7 +217,7 @@ public class PropertyEditorPane extends BorderPane {
             spinnerY.setMaxWidth(60);
             spinnerY.disableProperty().bind(enabledPy.not());
 
-            parseTile(propertyValue).ifPresent(tile -> {
+            WorldMapParser.parseTile(propertyValue).ifPresent(tile -> {
                 spinnerX.getValueFactory().setValue(tile.x());
                 spinnerY.getValueFactory().setValue(tile.y());
             });
@@ -234,7 +231,7 @@ public class PropertyEditorPane extends BorderPane {
         @Override
         protected void updateEditorFromProperty() {
             String propertyValue = worldMapPy.get().properties(layerID).get(propertyName);
-            parseTile(propertyValue).ifPresent(tile -> {
+            WorldMapParser.parseTile(propertyValue).ifPresent(tile -> {
                 spinnerX.getValueFactory().setValue(tile.x());
                 spinnerY.getValueFactory().setValue(tile.y());
             });
@@ -242,7 +239,7 @@ public class PropertyEditorPane extends BorderPane {
 
         @Override
         protected String formattedPropertyValue() {
-            return formatTile(new Vector2i(spinnerX.getValue(), spinnerY.getValue()));
+            return WorldMapFormatter.formatTile(new Vector2i(spinnerX.getValue(), spinnerY.getValue()));
         }
 
         @Override

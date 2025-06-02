@@ -40,8 +40,10 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.IntBuffer;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.time.Instant;
 import java.time.LocalTime;
@@ -51,7 +53,6 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
-import static de.amr.pacmanfx.lib.tilemap.WorldMap.formatTile;
 import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
 import static java.util.Objects.requireNonNull;
@@ -1026,13 +1027,28 @@ public class TileMapEditor {
         if (file != null) {
             currentDirectory = file.getParentFile();
             if (file.getName().endsWith(".world")) {
-                editedWorldMap().save(file);
-                changeManager.setEdited(false);
-                readMapFile(file);
+                boolean saved = saveWorldMap(editedWorldMap(), file);
+                if (saved) {
+                    changeManager.setEdited(false);
+                    readMapFile(file);
+                    showMessage("Map saved as '%s'".formatted(file.getName()), 3, MessageType.INFO);
+                } else {
+                    showMessage("Map could not be saved!", 4, MessageType.ERROR);
+                }
             } else {
                 Logger.error("No .world file selected");
                 showMessage("No .world file selected", 2, MessageType.WARNING);
             }
+        }
+    }
+
+    private boolean saveWorldMap(WorldMap worldMap,File file) {
+        try (PrintWriter pw = new PrintWriter(file, StandardCharsets.UTF_8)) {
+            pw.print(WorldMapFormatter.formatted(worldMap));
+            return true;
+        } catch (IOException x) {
+            Logger.error(x);
+            return false;
         }
     }
 
@@ -1064,9 +1080,9 @@ public class TileMapEditor {
 
     private void updateSourceView() {
         StringBuilder sb = new StringBuilder();
-        String[] lines = editedWorldMap().sourceText().split("\n");
-        for (int i = 0; i < lines.length; ++i) {
-            sb.append("%5d: ".formatted(i + 1)).append(lines[i]).append("\n");
+        String[] sourceTextLines = WorldMapFormatter.formatted(editedWorldMap()).split("\n");
+        for (int i = 0; i < sourceTextLines.length; ++i) {
+            sb.append("%5d: ".formatted(i + 1)).append(sourceTextLines[i]).append("\n");
         }
         sourceView.setText(sb.toString());
     }
@@ -1383,8 +1399,8 @@ public class TileMapEditor {
         if (worldMap.numRows() >= 20) {
             Vector2i houseMinTile = Vector2i.of(tilesX / 2 - 4, tilesY / 2 - 3);
             placeArcadeHouse(worldMap, houseMinTile);
-            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_PAC,   formatTile(houseMinTile.plus(3, 11)));
-            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_BONUS, formatTile(houseMinTile.plus(3, 5)));
+            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_PAC,   WorldMapFormatter.formatTile(houseMinTile.plus(3, 11)));
+            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_BONUS, WorldMapFormatter.formatTile(houseMinTile.plus(3, 5)));
         }
         worldMap.buildObstacleList();
         setDefaultColors(worldMap);
@@ -1403,10 +1419,10 @@ public class TileMapEditor {
     private void setDefaultScatterPositions(WorldMap worldMap) {
         int numCols = worldMap.numCols(), numRows = worldMap.numRows();
         if (numCols >= 3 && numRows >= 2) {
-            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_SCATTER_RED_GHOST,    formatTile(Vector2i.of(numCols - 3, 0)));
-            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_SCATTER_PINK_GHOST,   formatTile(Vector2i.of(2, 0)));
-            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_SCATTER_CYAN_GHOST,   formatTile(Vector2i.of(numCols - 1, numRows - 2)));
-            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_SCATTER_ORANGE_GHOST, formatTile(Vector2i.of(0, numRows - 2)));
+            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_SCATTER_RED_GHOST,    WorldMapFormatter.formatTile(Vector2i.of(numCols - 3, 0)));
+            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_SCATTER_PINK_GHOST,   WorldMapFormatter.formatTile(Vector2i.of(2, 0)));
+            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_SCATTER_CYAN_GHOST,   WorldMapFormatter.formatTile(Vector2i.of(numCols - 1, numRows - 2)));
+            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_SCATTER_ORANGE_GHOST, WorldMapFormatter.formatTile(Vector2i.of(0, numRows - 2)));
             changeManager.setTerrainMapChanged();
         }
     }
@@ -1439,8 +1455,8 @@ public class TileMapEditor {
 
         Vector2i oldHouseMinTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
         Vector2i oldHouseMaxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
-        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MIN_TILE, formatTile(houseMinTile));
-        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MAX_TILE, formatTile(houseMaxTile));
+        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MIN_TILE, WorldMapFormatter.formatTile(houseMinTile));
+        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MAX_TILE, WorldMapFormatter.formatTile(houseMaxTile));
 
         // clear tiles where house walls/doors were located (created at runtime!)
         if (oldHouseMinTile != null && oldHouseMaxTile != null) {
@@ -1451,10 +1467,10 @@ public class TileMapEditor {
         clearTerrainAreaOneSided(worldMap, houseMinTile, houseMaxTile);
         clearFoodAreaOneSided(worldMap, houseMinTile, houseMaxTile);
 
-        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_RED_GHOST,      formatTile(houseMinTile.plus(3, -1)));
-        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_CYAN_GHOST,     formatTile(houseMinTile.plus(1, 2)));
-        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_PINK_GHOST,     formatTile(houseMinTile.plus(3, 2)));
-        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_ORANGE_GHOST,   formatTile(houseMinTile.plus(5, 2)));
+        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_RED_GHOST,      WorldMapFormatter.formatTile(houseMinTile.plus(3, -1)));
+        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_CYAN_GHOST,     WorldMapFormatter.formatTile(houseMinTile.plus(1, 2)));
+        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_PINK_GHOST,     WorldMapFormatter.formatTile(houseMinTile.plus(3, 2)));
+        worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_ORANGE_GHOST,   WorldMapFormatter.formatTile(houseMinTile.plus(5, 2)));
 
         // clear pellets around house
         Vector2i min = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE).minus(1, 1);
