@@ -12,7 +12,7 @@ import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.input.Keyboard;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -28,7 +28,7 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class GameScene2D implements GameScene, PacManGames_ActionBindings {
 
-    protected final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
+    protected final Map<KeyCombination, GameAction> actionBindings = new HashMap<>();
 
     private final ObjectProperty<Font>  normalArcadeFontPy = new SimpleObjectProperty<>();
     private final ObjectProperty<Font>  smallArcadeFontPy = new SimpleObjectProperty<>();
@@ -63,7 +63,7 @@ public abstract class GameScene2D implements GameScene, PacManGames_ActionBindin
     protected void doEnd() {}
 
     @Override
-    public Map<KeyCodeCombination, GameAction> actionBindings() { return actionBindings; }
+    public Map<KeyCombination, GameAction> actionBindings() { return actionBindings; }
 
     @Override
     public void onStopAllSounds(GameEvent event) { theSound().stopAll(); }

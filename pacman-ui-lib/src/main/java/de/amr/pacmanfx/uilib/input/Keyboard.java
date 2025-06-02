@@ -7,6 +7,7 @@ package de.amr.pacmanfx.uilib.input;
 import de.amr.pacmanfx.uilib.ActionBindingManager;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import org.tinylog.Logger;
 
@@ -20,38 +21,31 @@ import static javafx.scene.input.KeyCombination.*;
  */
 public class Keyboard {
 
-    public static KeyCodeCombination naked(KeyCode code) {
-        return new KeyCodeCombination(code);
-    }
-
-    public static KeyCodeCombination alt(KeyCode code) {
+    // Provide an API for the most common cases
+    public static KeyCombination naked(KeyCode code) { return new KeyCodeCombination(code); }
+    public static KeyCombination alt(KeyCode code) {
         return new KeyCodeCombination(code, ALT_DOWN);
     }
-
-    public static KeyCodeCombination control(KeyCode code) {
+    public static KeyCombination control(KeyCode code) {
         return new KeyCodeCombination(code, CONTROL_DOWN);
     }
-
-    public static KeyCodeCombination shift(KeyCode code) {
+    public static KeyCombination shift(KeyCode code) {
         return new KeyCodeCombination(code, SHIFT_DOWN);
     }
+    public static KeyCombination alt_shift(KeyCode code) { return new KeyCodeCombination(code, SHIFT_DOWN, ALT_DOWN); }
 
-    public static KeyCodeCombination shift_alt(KeyCode code) {
-        return new KeyCodeCombination(code, SHIFT_DOWN, ALT_DOWN);
-    }
-
-    public static String format(KeyCodeCombination... combinations) {
+    public static String format(KeyCombination... combinations) {
         return Arrays.stream(combinations)
-            .map(KeyCodeCombination::toString)
+            .map(KeyCombination::toString)
             .map(s -> "[" + s + "]")
             .collect(Collectors.joining(", "));
     }
 
     private final Set<KeyCode> pressedKeys = new HashSet<>();
-    private final Map<KeyCodeCombination, ActionBindingManager> registeredBindings = new HashMap<>();
-    private final List<KeyCodeCombination> matches = new ArrayList<>(3);
+    private final Map<KeyCombination, ActionBindingManager> registeredBindings = new HashMap<>();
+    private final List<KeyCombination> matches = new ArrayList<>(3);
 
-    public void addBinding(KeyCodeCombination combination, ActionBindingManager actionBindingManager) {
+    public void addBinding(KeyCombination combination, ActionBindingManager actionBindingManager) {
         if (registeredBindings.get(combination) == actionBindingManager) {
             Logger.debug("Key code combination '{}' already bound to {}", combination, actionBindingManager);
         } else {
@@ -60,7 +54,7 @@ public class Keyboard {
         }
     }
 
-    public void removeBinding(KeyCodeCombination combination, ActionBindingManager client) {
+    public void removeBinding(KeyCombination combination, ActionBindingManager client) {
         boolean removed = registeredBindings.remove(combination, client);
         if (removed) {
             Logger.debug("Key code combination '{}' bound to {}", combination, client);
@@ -79,7 +73,7 @@ public class Keyboard {
         matches.clear();
     }
 
-    public boolean isMatching(KeyCodeCombination combination) {
+    public boolean isMatching(KeyCombination combination) {
         return matches.contains(combination);
     }
 
@@ -90,7 +84,7 @@ public class Keyboard {
     public void logCurrentBindings() {
         Logger.debug("--------------------------");
         registeredBindings.keySet().stream()
-            .sorted(Comparator.comparing(KeyCodeCombination::getDisplayText))
+            .sorted(Comparator.comparing(KeyCombination::getDisplayText))
             .forEach(combination -> {
                 ActionBindingManager actionBindingManager = registeredBindings.get(combination);
                 Logger.debug("{}: {}", combination, actionBindingManager.getClass().getSimpleName());

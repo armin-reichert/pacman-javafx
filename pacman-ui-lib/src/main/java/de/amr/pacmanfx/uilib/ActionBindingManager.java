@@ -7,6 +7,7 @@ package de.amr.pacmanfx.uilib;
 import de.amr.pacmanfx.uilib.input.Keyboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import org.tinylog.Logger;
 
 import java.util.Map;
@@ -22,26 +23,26 @@ public interface ActionBindingManager {
 
     Keyboard keyboard();
 
-    Map<KeyCodeCombination, GameAction> actionBindings();
+    Map<KeyCombination, GameAction> actionBindings();
 
     default void updateActionBindings() {
-        for (KeyCodeCombination combination : actionBindings().keySet()) {
+        for (KeyCombination combination : actionBindings().keySet()) {
             keyboard().addBinding(combination, this);
         }
         Logger.info("Key bindings updated for {}", getClass().getSimpleName());
     }
 
     default void deleteActionBindings() {
-        for (KeyCodeCombination combination : actionBindings().keySet()) {
+        for (KeyCombination combination : actionBindings().keySet()) {
             keyboard().removeBinding(combination, this);
         }
         Logger.info("Key bindings cleared for {}", getClass().getSimpleName());
     }
 
-    default void bind(GameAction action, KeyCodeCombination... combinations) {
+    default void bind(GameAction action, KeyCombination... combinations) {
         requireNonNull(action);
         requireNonNull(combinations);
-        for (KeyCodeCombination combination : combinations) {
+        for (KeyCombination combination : combinations) {
             actionBindings().put(combination, action);
         }
     }

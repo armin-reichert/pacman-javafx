@@ -46,7 +46,7 @@ public interface PacManGames_ActionBindings extends ActionBindingManager {
     default void bindStartTestsActions() {
         bind(PacManGames_Actions.TEST_CUT_SCENES,     alt(KeyCode.C));
         bind(PacManGames_Actions.TEST_LEVELS_BONI,    alt(KeyCode.T));
-        bind(PacManGames_Actions.TEST_LEVELS_TEASERS, Keyboard.shift_alt(KeyCode.T));
+        bind(PacManGames_Actions.TEST_LEVELS_TEASERS, Keyboard.alt_shift(KeyCode.T));
     }
 
     default void bindScene3DActions() {

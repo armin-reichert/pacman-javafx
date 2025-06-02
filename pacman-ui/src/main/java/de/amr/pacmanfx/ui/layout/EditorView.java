@@ -8,7 +8,7 @@ import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import de.amr.pacmanfx.uilib.GameAction;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.beans.binding.StringExpression;
-import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
@@ -44,7 +44,7 @@ public class EditorView implements PacManGames_View {
     }
 
     @Override
-    public Map<KeyCodeCombination, GameAction> actionBindings() {
+    public Map<KeyCombination, GameAction> actionBindings() {
         return Map.of();
     }
 }

@@ -13,7 +13,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
@@ -76,7 +76,7 @@ public class StartPagesView implements PacManGames_View {
     };
 
     private final List<StartPage> startPageList = new ArrayList<>();
-    private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
+    private final Map<KeyCombination, GameAction> actionBindings = new HashMap<>();
     private final Carousel carousel;
     private StringExpression titleExpression;
 
@@ -117,7 +117,7 @@ public class StartPagesView implements PacManGames_View {
     }
 
     @Override
-    public Map<KeyCodeCombination, GameAction> actionBindings() {
+    public Map<KeyCombination, GameAction> actionBindings() {
         return actionBindings;
     }
 

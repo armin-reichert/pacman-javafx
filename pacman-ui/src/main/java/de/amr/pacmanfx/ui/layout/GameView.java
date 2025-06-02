@@ -31,7 +31,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.FontSmoothingType;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
@@ -44,7 +47,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameView implements PacManGames_View {
 
-    private final Map<KeyCodeCombination, GameAction> actionBindings = new HashMap<>();
+    private final Map<KeyCombination, GameAction> actionBindings = new HashMap<>();
 
     private final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene") {
         @Override
@@ -148,7 +151,7 @@ public class GameView implements PacManGames_View {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Map<KeyCodeCombination, GameAction> actionBindings() {
+    public Map<KeyCombination, GameAction> actionBindings() {
         return actionBindings;
     }
 

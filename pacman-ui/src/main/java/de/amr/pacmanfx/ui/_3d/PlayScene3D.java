@@ -30,7 +30,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -56,7 +56,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
     protected final Scores3D scores3D;
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final Map<PerspectiveID, Perspective> perspectiveMap = new EnumMap<>(PerspectiveID.class);
-    protected final Map<KeyCodeCombination, GameAction> actionBindingMap = new HashMap<>();
+    protected final Map<KeyCombination, GameAction> actionBindingMap = new HashMap<>();
 
     protected final ObjectProperty<PerspectiveID> perspectiveIDPy = new SimpleObjectProperty<>() {
         @Override
@@ -309,7 +309,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
     }
 
     @Override
-    public Map<KeyCodeCombination, GameAction> actionBindings() {
+    public Map<KeyCombination, GameAction> actionBindings() {
         return actionBindingMap;
     }
 
