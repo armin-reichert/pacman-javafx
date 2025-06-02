@@ -17,7 +17,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.PacManGames_UIConfiguration;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
-import de.amr.pacmanfx.uilib.input.Keyboard;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
@@ -32,6 +31,7 @@ import static de.amr.pacmanfx.Globals.theGameController;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.uilib.input.Keyboard.naked;
 import static de.amr.pacmanfx.uilib.widgets.OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
 import static java.util.Objects.requireNonNull;
 
@@ -157,6 +157,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
     private final MenuAnimation animation;
 
     // Entries
+
     private final OptionMenuEntry<GameVariant> entryGameVariant = new OptionMenuEntry<>("GAME VARIANT",
         GameVariant.PACMAN_XXL, GameVariant.MS_PACMAN_XXL) {
 
@@ -306,9 +307,9 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
     @Override
     protected void handleKeyPress(KeyEvent e) {
-        if (Keyboard.naked(KeyCode.E).match(e)) {
+        if (naked(KeyCode.E).match(e)) {
             theUI().showEditorView();
-        } else if (Keyboard.naked(KeyCode.ENTER).match(e)) {
+        } else if (naked(KeyCode.ENTER).match(e)) {
             startGame();
         } else {
             super.handleKeyPress(e);
@@ -316,9 +317,8 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
     }
 
     @Override
-    protected void animationStep() {
+    protected void updateAnimation() {
         animation.update();
-        draw();
     }
 
     @Override
@@ -328,15 +328,11 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
     }
 
     private void startGame() {
-        if (state.gameVariant == GameVariant.PACMAN_XXL || state.gameVariant == GameVariant.MS_PACMAN_XXL) {
-            GameModel game = theGameController().game(state.gameVariant);
-            game.cutScenesEnabledProperty().set(state.cutScenesEnabled);
-            var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();
-            mapSelector.setMapSelectionMode(state.mapOrder);
-            mapSelector.loadAllMaps();
-            theUI().selectGameVariant(state.gameVariant);
-        } else {
-            Logger.error("Game variant {} is not allowed for XXL game", state.gameVariant);
-        }
+        GameModel game = theGameController().game(state.gameVariant);
+        game.cutScenesEnabledProperty().set(state.cutScenesEnabled);
+        var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();
+        mapSelector.setMapSelectionMode(state.mapOrder);
+        mapSelector.loadAllMaps();
+        theUI().selectGameVariant(state.gameVariant);
     }
 }

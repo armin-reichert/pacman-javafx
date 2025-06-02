@@ -76,13 +76,14 @@ public class OptionMenu {
         root.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPress);
 
         animation = new Timeline(REFRESH_RATE,
-            new KeyFrame(Duration.seconds(1.0 / REFRESH_RATE), e-> animationStep()));
+            new KeyFrame(Duration.seconds(1.0 / REFRESH_RATE), e -> {
+                updateAnimation();
+                draw();
+            }));
         animation.setCycleCount(Animation.INDEFINITE);
     }
 
-    protected void animationStep() {
-        draw();
-    }
+    protected void updateAnimation() {}
 
     public void requestFocus() {
         canvas.requestFocus();
