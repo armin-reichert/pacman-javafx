@@ -47,6 +47,4 @@ public interface WorldMapFormatter {
         }
         pw.flush();
     }
-
-
 }
