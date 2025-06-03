@@ -15,7 +15,6 @@ public class TerrainTileSet {
     }
 
     public static byte emptyTileValue() { return valueOf(TileID.EMPTY); }
-    public static byte maxTileValue() { return valueOf(TileID.ONE_WAY_LEFT); }
 
     public static byte valueOf(TileID tileID) {
         return switch (tileID) {

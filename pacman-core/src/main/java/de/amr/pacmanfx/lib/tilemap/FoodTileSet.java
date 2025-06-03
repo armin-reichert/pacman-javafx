@@ -6,10 +6,9 @@ package de.amr.pacmanfx.lib.tilemap;
 
 public class FoodTileSet {
 
-    public enum TileID { EMPTY, PELLET, ENERGIZER; }
+    public enum TileID { EMPTY, PELLET, ENERGIZER }
 
     public static byte emptyTileValue() { return valueOf(TileID.EMPTY); }
-    public static byte maxTileValue() { return valueOf(TileID.ENERGIZER); }
 
     public static byte valueOf(TileID tileID) {
         return switch (tileID) {
