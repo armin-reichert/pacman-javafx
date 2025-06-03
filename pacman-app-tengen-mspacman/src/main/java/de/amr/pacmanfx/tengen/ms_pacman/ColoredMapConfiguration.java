@@ -5,5 +5,4 @@ package de.amr.pacmanfx.tengen.ms_pacman;
 
 import java.util.List;
 
-public record ColoredMapSet(ColoredImageRegion normalMaze, List<ColoredImageRegion> flashingMazes) {
-}
+public record ColoredMapConfiguration(ColoredImageRegion mapRegion, List<ColoredImageRegion> flashingMapRegions) {}

@@ -51,7 +51,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     private final TengenMsPacMan_MapRepository mapRepository;
     private final GraphicsContext ctx;
 
-    private ColoredMapSet coloredMapSet;
+    private ColoredMapConfiguration coloredMapSet;
 
     public TengenMsPacMan_Renderer2D(TengenMsPacMan_SpriteSheet spriteSheet, TengenMsPacMan_MapRepository mapRepository, Canvas canvas) {
         this.spriteSheet = requireNonNull(spriteSheet);
@@ -70,7 +70,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     @Override
     public void applyRenderingHints(GameLevel level) {
         int flashCount = level.data().numFlashes();
-        coloredMapSet = mapRepository.createMapSet(level.worldMap(), flashCount);
+        coloredMapSet = mapRepository.createMapSequence(level.worldMap(), flashCount);
         Logger.info("Created maze set with {} flash colors {}", flashCount, coloredMapSet);
     }
 
@@ -167,8 +167,8 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
         RectArea area = tengenGame.mapCategory() == MapCategory.STRANGE && mapNumber == 15
             ? strangeMap15Sprite(theClock().tickCount()) // Strange map #15: psychedelic animation
-            : coloredMapSet.normalMaze().region();
-        ctx().drawImage(coloredMapSet.normalMaze().image(),
+            : coloredMapSet.mapRegion().region();
+        ctx().drawImage(coloredMapSet.mapRegion().image(),
             area.x(), area.y(), area.width(), area.height(),
             scaled(x), scaled(y), scaled(area.width()), scaled(area.height())
         );
@@ -183,7 +183,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         }
         ctx().save();
         ctx().scale(scaling(), scaling());
-        Color pelletColor = Color.web(coloredMapSet.normalMaze().colorScheme().pelletColor());
+        Color pelletColor = Color.web(coloredMapSet.mapRegion().colorScheme().pelletColor());
         drawPellets(level, pelletColor);
         drawEnergizers(level, pelletColor);
         ctx().restore();
@@ -196,7 +196,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBooster(),
                 level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
         }
-        ColoredImageRegion mapImage = coloredMapSet.flashingMazes().get(flashingIndex);
+        ColoredImageRegion mapImage = coloredMapSet.flashingMapRegions().get(flashingIndex);
         RectArea region = mapImage.region();
         ctx().drawImage(mapImage.image(),
             region.x(), region.y(), region.width(), region.height(),
@@ -207,7 +207,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         // draw food to erase eaten food!
         ctx().save();
         ctx().scale(scaling(), scaling());
-        Color pelletColor = Color.web(coloredMapSet.normalMaze().colorScheme().pelletColor());
+        Color pelletColor = Color.web(coloredMapSet.mapRegion().colorScheme().pelletColor());
         drawPellets(level, pelletColor);
         drawEnergizers(level, pelletColor);
         ctx().restore();
