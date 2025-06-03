@@ -35,7 +35,11 @@ public class TengenMsPacMan_MapRepository {
     private record CacheKey(MapCategory mapCategory, int spriteNumber, NES_ColorScheme colorScheme) {}
 
     private static final Vector2i ARCADE_MAZE_SIZE = Vector2i.of(28 * TS, 31 * TS);
+
+    // Maze areas where Pac-Man and ghosts are shown in maze images, must be over-painted at runtime
     private static final Vector2i PAC_TILE_IN_SPRITE_SHEET = Vector2i.of(13, 23);
+    private static final RectArea GHOST_OUTSIDE_HOUSE_AREA = new RectArea(105, 85, 14, 13);
+    private static final RectArea GHOSTS_INSIDE_HOUSE_AREA = new RectArea(89, 113, 46, 13);
 
     // Map row counts as they appear in the sprite sheet (row by row)
     private static final byte[] NON_ARCADE_MAP_ROW_COUNTS = {
@@ -105,10 +109,6 @@ public class TengenMsPacMan_MapRepository {
         }
         return randomColorSchemes.stream().toList();
     }
-
-    // Maze areas where ghosts are shown in maze images, must be masked at runtime
-    static final RectArea GHOST_OUTSIDE_HOUSE_AREA = new RectArea(105, 85, 14, 13);
-    static final RectArea GHOSTS_INSIDE_HOUSE_AREA = new RectArea(89, 113, 46, 13);
 
     private final Map<CacheKey, ColoredImageRegion> cache = new HashMap<>();
     private final Image arcadeMapsSpriteSheet;
