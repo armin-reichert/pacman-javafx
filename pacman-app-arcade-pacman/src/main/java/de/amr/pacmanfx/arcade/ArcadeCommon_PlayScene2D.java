@@ -15,6 +15,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.ui.PacManGames_Actions;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
+import de.amr.pacmanfx.ui._2d.VectorGraphicsGameRenderer;
 import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.scene.control.CheckMenuItem;
@@ -145,6 +146,11 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
             return; // Scene is drawn already 2 ticks before level has been created
 
         gr().applyRenderingHints(theGameLevel());
+
+        //TODO: check this
+        if (gr() instanceof VectorGraphicsGameRenderer vectorGraphicsGameRenderer) {
+            vectorGraphicsGameRenderer.setBackgroundColor(PY_CANVAS_BG_COLOR.get());
+        }
 
         boolean highlighted = levelFinishedAnimation != null
             && levelFinishedAnimation.isRunning() && levelFinishedAnimation.isHighlighted();
