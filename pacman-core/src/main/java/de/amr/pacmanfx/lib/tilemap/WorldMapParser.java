@@ -74,7 +74,11 @@ public interface WorldMapParser {
         worldMap.foodLayer = parseTileMap(foodLayerRows,
                 value -> 0 <= value && value <= FoodTiles.ENERGIZER, FoodTiles.EMPTY);
 
-        // Replace obsolete terrain tile values
+        replaceObsoleteTerrainValues(worldMap);
+        return worldMap;
+    }
+
+    private static void replaceObsoleteTerrainValues(WorldMap worldMap) {
         worldMap.tiles().forEach(tile -> {
             byte content = worldMap.content(LayerID.TERRAIN, tile);
             byte newContent = switch (content) {
@@ -86,9 +90,11 @@ public interface WorldMapParser {
                 case TerrainTiles.OBSOLETE_DCORNER_NE -> TerrainTiles.ARC_NE;
                 default -> content;
             };
-            worldMap.setContent(LayerID.TERRAIN, tile, newContent);
+            if (newContent != content) {
+                worldMap.setContent(LayerID.TERRAIN, tile, newContent);
+                Logger.info("Obsolete terrain value {} replaced by {}", content, newContent);
+            }
         });
-        return worldMap;
     }
 
     private static WorldMapLayer parseTileMap(List<String> lines, Predicate<Byte> valueAllowed, byte emptyValue) {
