@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib;
 
-import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.nes.NES_Palette;
 import javafx.animation.Animation;
@@ -288,33 +287,19 @@ public interface Ufx {
         return target;
     }
 
-    static Image maskImage(Image source, BiPredicate<Integer, Integer> isMasked, Color maskColor) {
-        WritableImage target = new WritableImage((int) source.getWidth(), (int) source.getHeight());
-        PixelReader sourceReader = source.getPixelReader();
-        PixelWriter w = target.getPixelWriter();
-        for (int x = 0; x < source.getWidth(); ++x) {
-            for (int y = 0; y < source.getHeight(); ++y) {
-                if (isMasked.test(x, y)) {
+    static Image recolorPixels(Image image, BiPredicate<Integer, Integer> insideMaskedArea, Color maskColor) {
+        WritableImage result = new WritableImage((int) image.getWidth(), (int) image.getHeight());
+        PixelWriter w = result.getPixelWriter();
+        for (int x = 0; x < image.getWidth(); ++x) {
+            for (int y = 0; y < image.getHeight(); ++y) {
+                if (insideMaskedArea.test(x, y)) {
                     w.setColor(x, y, maskColor);
                 } else {
-                    w.setColor(x, y, sourceReader.getColor(x, y));
+                    w.setColor(x, y, image.getPixelReader().getColor(x, y));
                 }
             }
         }
-        return target;
-    }
-
-    static Image subImage(Image source, RectArea area) {
-        WritableImage target = new WritableImage(area.width(), area.height());
-        PixelReader reader = source.getPixelReader();
-        PixelWriter writer = target.getPixelWriter();
-        for (int y = 0; y < area.height(); ++y) {
-            for (int x = 0; x < area.width(); ++x) {
-                Color color = reader.getColor(area.x()  + x, area.y() + y);
-                writer.setColor(x, y, color);
-            }
-        }
-        return target;
+        return result;
     }
 
     static boolean checkForNonNES_PaletteColors(Image image) {

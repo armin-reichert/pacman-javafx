@@ -8,14 +8,14 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
+import javafx.scene.image.WritableImage;
 import org.tinylog.Logger;
 
 import java.util.*;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.RectArea.rect;
-import static de.amr.pacmanfx.uilib.Ufx.*;
+import static de.amr.pacmanfx.uilib.Ufx.exchange_NESColorScheme;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -37,9 +37,9 @@ public class TengenMsPacMan_MapRepository {
     private static final Vector2i ARCADE_MAZE_SIZE = Vector2i.of(28 * TS, 31 * TS);
 
     // Maze areas where Pac-Man and ghosts are shown in maze images, must be over-painted at runtime
-    private static final Vector2i PAC_TILE_IN_SPRITE_SHEET = Vector2i.of(13, 23);
+    private static final RectArea PAC_AREA = new RectArea(13 * TS, 23 * TS, TS, TS);
     private static final RectArea GHOST_OUTSIDE_HOUSE_AREA = new RectArea(105, 85, 14, 13);
-    private static final RectArea GHOSTS_INSIDE_HOUSE_AREA = new RectArea(89, 113, 46, 13);
+    private static final RectArea GHOST_INSIDE_HOUSE_AREA = new RectArea(89, 113, 46, 13);
 
     // Map row counts as they appear in the sprite sheet (row by row)
     private static final byte[] NON_ARCADE_MAP_ROW_COUNTS = {
@@ -316,7 +316,7 @@ public class TengenMsPacMan_MapRepository {
         var key = new CacheKey(mapCategory, spriteNumber, newColorScheme);
         if (!cache.containsKey(key)) {
             Image spriteSheet = mapCategory == MapCategory.ARCADE ? arcadeMapsSpriteSheet : nonArcadeMapsSpriteSheet;
-            Image mapImage = recoloredMapImage(spriteSheet, mapSprite, existingColorScheme, newColorScheme, PAC_TILE_IN_SPRITE_SHEET.x(), PAC_TILE_IN_SPRITE_SHEET.y());
+            Image mapImage = recoloredMapImage(spriteSheet, mapSprite, existingColorScheme, newColorScheme);
             var recoloredMapImage = new ColoredImageRegion(mapImage, new RectArea(0, 0, mapSprite.width(), mapSprite.height()), newColorScheme);
             cache.put(key, recoloredMapImage);
             Logger.info("{} map image recolored to {} and stored in cache (num entries: {})", mapCategory, newColorScheme, cache.size());
@@ -326,17 +326,15 @@ public class TengenMsPacMan_MapRepository {
 
     private Image recoloredMapImage(
         Image source, RectArea mazeArea,
-        NES_ColorScheme oldColorScheme, NES_ColorScheme newColorScheme,
-        int pacTileX, int pacTileY)
+        NES_ColorScheme oldColorScheme, NES_ColorScheme newColorScheme)
     {
-        Image mapImage = subImage(source, mazeArea);
-        Image cleanedImage = maskImage(mapImage, (x, y) -> isActorPixel(x, y, pacTileX, pacTileY), Color.TRANSPARENT);
-        return exchange_NESColorScheme(cleanedImage, oldColorScheme, newColorScheme);
+        return exchange_NESColorScheme(subImage(source, mazeArea), oldColorScheme, newColorScheme);
     }
 
-    private boolean isActorPixel(int x, int y, int pacTileX, int pacTileY) {
-        return GHOST_OUTSIDE_HOUSE_AREA.contains(x, y)
-            || GHOSTS_INSIDE_HOUSE_AREA.contains(x, y)
-            || (pacTileX == x && pacTileY == y);
+    private static Image subImage(Image source, RectArea area) {
+        WritableImage result = new WritableImage(area.width(), area.height());
+        result.getPixelWriter().setPixels(0, 0, area.width(), area.height(),
+            source.getPixelReader(), area.x(), area.y());
+        return result;
     }
 }
