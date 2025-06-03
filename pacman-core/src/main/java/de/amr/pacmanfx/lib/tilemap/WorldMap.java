@@ -37,6 +37,26 @@ public class WorldMap {
         return 0 <= value && value <= FoodTiles.MAX_VALUE;
     }
 
+    public static WorldMap emptyMap(int numRows, int numCols) {
+        requireNonNegative(numRows);
+        requireNonNegative(numCols);
+        WorldMap worldMap = new WorldMap();
+        worldMap.terrainLayer = new WorldMapLayer(numRows, numCols);
+        worldMap.foodLayer = new WorldMapLayer(numRows, numCols);
+        return worldMap;
+    }
+
+    public static WorldMap copyMap(WorldMap original) {
+        requireNonNull(original);
+        WorldMap copy = new WorldMap();
+        copy.terrainLayer = new WorldMapLayer(original.terrainLayer);
+        copy.foodLayer = new WorldMapLayer(original.foodLayer);
+        copy.obstacles = new HashSet<>(original.obstacles);
+        copy.configMap = new HashMap<>(original.configMap);
+        copy.url = original.url;
+        return copy;
+    }
+
     public static WorldMap fromURL(URL url) throws IOException {
         var reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
         WorldMap worldMap = WorldMapParser.parse(reader.lines(), WorldMap::isValidTerrainValue, WorldMap::isValidFoodValue);
@@ -53,30 +73,10 @@ public class WorldMap {
     URL url;
     WorldMapLayer terrainLayer;
     WorldMapLayer foodLayer;
-    Set<Obstacle> obstacles;
-    Map<String, Object> configMap;
+    Set<Obstacle> obstacles = Set.of();
+    Map<String, Object> configMap = new HashMap<>();
 
     WorldMap() {}
-
-    public WorldMap(int numRows, int numCols) {
-        requireNonNegative(numRows);
-        requireNonNegative(numCols);
-        terrainLayer = new WorldMapLayer(numRows, numCols);
-        foodLayer = new WorldMapLayer(numRows, numCols);
-    }
-
-    public WorldMap(WorldMap other) {
-        requireNonNull(other);
-        url = other.url;
-        terrainLayer = new WorldMapLayer(other.terrainLayer);
-        foodLayer = new WorldMapLayer(other.foodLayer);
-        if (other.obstacles != null) {
-            obstacles = new HashSet<>(other.obstacles);
-        }
-        if (other.configMap != null) {
-            configMap = new HashMap<>(other.configMap);
-        }
-    }
 
     @Override
     public String toString() {
@@ -95,7 +95,7 @@ public class WorldMap {
         if (rowIndex < 0 || rowIndex > numRows()) {
             throw new IllegalArgumentException("Illegal row index for inserting row: " + rowIndex);
         }
-        WorldMap newMap = new WorldMap(numRows() + 1, numCols());
+        WorldMap newMap = emptyMap(numRows() + 1, numCols());
         newMap.terrainLayer.replaceProperties(terrainLayer.properties());
         newMap.foodLayer.replaceProperties(foodLayer.properties());
         for (int row = 0; row < newMap.numRows(); ++row) {
@@ -125,7 +125,7 @@ public class WorldMap {
         if (rowIndexToDelete < 0 || rowIndexToDelete > numRows() - 1) {
             throw new IllegalArgumentException("Illegal row index for deleting row: " + rowIndexToDelete);
         }
-        WorldMap newMap = new WorldMap(numRows() - 1, numCols());
+        WorldMap newMap = emptyMap(numRows() - 1, numCols());
         newMap.terrainLayer.replaceProperties(terrainLayer.properties());
         newMap.foodLayer.replaceProperties(foodLayer.properties());
         for (int row = 0; row < newMap.numRows(); ++row) {

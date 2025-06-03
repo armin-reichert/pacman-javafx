@@ -143,7 +143,7 @@ public class PacManXXL_Common_MapSelector implements MapSelector {
             }
         };
 
-        WorldMap worldMap = new WorldMap(template);
+        WorldMap worldMap = WorldMap.copyMap(template);
         Map<String, String> mapColoring = builtinMaps.contains(template) ? randomMapColoring() : coloringFromMap(template);
         worldMap.setConfigValue("colorMap", mapColoring);
 

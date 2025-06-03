@@ -231,7 +231,7 @@ public class TileMapEditor {
 
     private final ObjectProperty<File> currentFilePy = new SimpleObjectProperty<>();
 
-    private final ObjectProperty<WorldMap> editedWorldMapPy = new SimpleObjectProperty<>(new WorldMap(28, 36)) {
+    private final ObjectProperty<WorldMap> editedWorldMapPy = new SimpleObjectProperty<>(WorldMap.emptyMap(28, 36)) {
         @Override
         protected void invalidated() {
             templateImagePy.set(null);
@@ -914,7 +914,7 @@ public class TileMapEditor {
 
     public void loadMap(WorldMap worldMap) {
         executeWithCheckForUnsavedChanges(() -> {
-            setEditedWorldMap(new WorldMap(worldMap));
+            setEditedWorldMap(WorldMap.copyMap(worldMap));
             currentFilePy.set(null);
         });
     }
@@ -1386,14 +1386,14 @@ public class TileMapEditor {
     }
 
     private void setBlankMap(int tilesX, int tilesY) {
-        var blankMap = new WorldMap(tilesY, tilesX);
+        var blankMap = WorldMap.emptyMap(tilesY, tilesX);
         setDefaultColors(blankMap);
         setDefaultScatterPositions(blankMap);
         setEditedWorldMap(blankMap);
     }
 
     private void setPreconfiguredMap(int tilesX, int tilesY) {
-        var worldMap = new WorldMap(tilesY, tilesX);
+        var worldMap = WorldMap.emptyMap(tilesY, tilesX);
         addBorderWall(worldMap);
         setDefaultScatterPositions(worldMap);
         if (worldMap.numRows() >= 20) {
