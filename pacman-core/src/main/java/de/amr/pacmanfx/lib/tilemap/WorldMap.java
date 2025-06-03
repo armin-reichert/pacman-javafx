@@ -31,11 +31,11 @@ public class WorldMap {
     public static final String MARKER_BEGIN_DATA_SECTION = "!data";
 
     private static boolean isValidTerrainValue(byte value) {
-        return 0 <= value && value <= TerrainTileSet.maxTileValue();
+        return Stream.of(TerrainTileSet.TileID.values()).anyMatch(tileID -> TerrainTileSet.valueOf(tileID) == value);
     }
 
     private static boolean isValidFoodValue(byte value) {
-        return 0 <= value && value <= FoodTileSet.maxTileValue();
+        return Stream.of(FoodTileSet.TileID.values()).anyMatch(tileID -> FoodTileSet.valueOf(tileID) == value);
     }
 
     public static WorldMap emptyMap(int numRows, int numCols) {
