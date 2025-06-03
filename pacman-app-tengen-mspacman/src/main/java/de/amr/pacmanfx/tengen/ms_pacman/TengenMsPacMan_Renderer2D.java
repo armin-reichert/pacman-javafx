@@ -34,7 +34,7 @@ import static de.amr.pacmanfx.model.actors.Bonus.STATE_EATEN;
 import static de.amr.pacmanfx.model.actors.Bonus.STATE_EDIBLE;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
-import static de.amr.pacmanfx.tengen.ms_pacman.MapRepository.strangeMap15Sprite;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_MapRepository.strangeMap15Sprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationMap.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
@@ -48,12 +48,12 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final FloatProperty scalingPy = new SimpleFloatProperty(1);
     private final TengenMsPacMan_SpriteSheet spriteSheet;
-    private final MapRepository mapRepository;
+    private final TengenMsPacMan_MapRepository mapRepository;
     private final GraphicsContext ctx;
 
     private ColoredMapSet coloredMapSet;
 
-    public TengenMsPacMan_Renderer2D(TengenMsPacMan_SpriteSheet spriteSheet, MapRepository mapRepository, Canvas canvas) {
+    public TengenMsPacMan_Renderer2D(TengenMsPacMan_SpriteSheet spriteSheet, TengenMsPacMan_MapRepository mapRepository, Canvas canvas) {
         this.spriteSheet = requireNonNull(spriteSheet);
         this.mapRepository = requireNonNull(mapRepository);
         ctx = requireNonNull(canvas).getGraphicsContext2D();

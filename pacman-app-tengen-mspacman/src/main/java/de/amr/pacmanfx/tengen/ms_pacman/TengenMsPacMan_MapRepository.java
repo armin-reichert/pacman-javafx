@@ -31,7 +31,7 @@ import static java.util.Objects.requireNonNull;
  * required in a specific game level.
  * </p>
  */
-public class MapRepository {
+public class TengenMsPacMan_MapRepository {
 
     private record RepositoryKey(MapCategory mapCategory, int spriteNumber, NES_ColorScheme colorScheme) {}
 
@@ -81,7 +81,7 @@ public class MapRepository {
     private final Image arcadeMapsSpriteSheet;
     private final Image nonArcadeMapsSpriteSheet;
 
-    public MapRepository(Image arcadeMapsSpriteSheet, Image nonArcadeMapsSpriteSheet) {
+    public TengenMsPacMan_MapRepository(Image arcadeMapsSpriteSheet, Image nonArcadeMapsSpriteSheet) {
         this.arcadeMapsSpriteSheet = requireNonNull(arcadeMapsSpriteSheet);
         this.nonArcadeMapsSpriteSheet = requireNonNull(nonArcadeMapsSpriteSheet);
     }

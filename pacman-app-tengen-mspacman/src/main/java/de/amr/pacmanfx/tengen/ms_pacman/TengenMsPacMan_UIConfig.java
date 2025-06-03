@@ -53,7 +53,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfiguration, Res
 
     private final Image appIcon;
     private final TengenMsPacMan_SpriteSheet spriteSheet;
-    private final MapRepository mapRepository;
+    private final TengenMsPacMan_MapRepository mapRepository;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
     @Override
@@ -64,7 +64,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfiguration, Res
     public TengenMsPacMan_UIConfig(PacManGames_Assets assets) {
         appIcon = loadImage("graphics/icons/mspacman.png");
         spriteSheet = new TengenMsPacMan_SpriteSheet(loadImage("graphics/spritesheet.png"));
-        mapRepository = new MapRepository(
+        mapRepository = new TengenMsPacMan_MapRepository(
             loadImage("graphics/arcade_mazes.png"),
             loadImage("graphics/non_arcade_mazes.png")
         );
