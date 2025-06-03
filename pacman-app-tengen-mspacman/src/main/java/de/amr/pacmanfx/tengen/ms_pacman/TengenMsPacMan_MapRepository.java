@@ -53,9 +53,8 @@ public class TengenMsPacMan_MapRepository {
 
     // Frame pattern: (00000000111111112222222211111111)+, numFrames = 4, frameDuration = 8
     public static RectArea strangeMap15Sprite(long tick) {
-        int i = (int) (tick % 32) / 8;
-        // (0, 1, 2, 3) -> (0, 1, 2, 1)
-        return STRANGE_MAP_15_SPRITES[i == 3 ? 1 : i];
+        long i = tick % 32; // 0..31
+        return STRANGE_MAP_15_SPRITES[i < 8 ? 0 : i < 16 ? 1 : i < 24 ? 2 : 1];
     }
 
     private static NES_ColorScheme colorSchemeFromNonArcadeMapsSpriteSheet(int spriteNumber){
