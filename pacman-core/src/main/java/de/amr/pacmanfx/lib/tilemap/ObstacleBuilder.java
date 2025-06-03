@@ -12,6 +12,7 @@ import java.util.*;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.lib.tilemap.TerrainTileSet.TileID.*;
 import static java.util.function.Predicate.not;
 
 /**
@@ -92,8 +93,8 @@ public class ObstacleBuilder {
         worldMap.tiles()
             .filter(not(this::isExplored))
             .filter(tile ->
-                    worldMap.content(LayerID.TERRAIN, tile) == TerrainTiles.ARC_NW ||
-                    worldMap.content(LayerID.TERRAIN, tile) == TerrainTiles.DCORNER_NW) // house top-left corner
+                    worldMap.content(LayerID.TERRAIN, tile) == TerrainTileSet.valueOf(ARC_NW) ||
+                    worldMap.content(LayerID.TERRAIN, tile) == TerrainTileSet.valueOf(DCORNER_NW)) // house top-left corner
             .map(cornerNW -> buildClosedObstacle(cornerNW, tilesWithErrors))
             .forEach(obstacles::add);
 
@@ -123,25 +124,25 @@ public class ObstacleBuilder {
         byte startTileContent = worldMap.content(LayerID.TERRAIN, startTile);
         var obstacle = new Obstacle(startPoint);
         cursor = new Cursor(startTile);
-        if (startTileContent == TerrainTiles.WALL_H) {
+        if (startTileContent == TerrainTileSet.valueOf(WALL_H)) {
             Direction startDir = startsAtLeftBorder ? Direction.RIGHT : Direction.LEFT;
-            obstacle.addSegment(scaledVector(startDir, TS), true, TerrainTiles.WALL_H);
+            obstacle.addSegment(scaledVector(startDir, TS), true, TerrainTileSet.valueOf(WALL_H));
             cursor.move(startDir);
         }
-        else if (startsAtLeftBorder && startTileContent == TerrainTiles.ARC_SE) {
-            obstacle.addSegment(SEG_ARC_SE_UP, true, TerrainTiles.ARC_SE);
+        else if (startsAtLeftBorder && startTileContent == TerrainTileSet.valueOf(ARC_SE)) {
+            obstacle.addSegment(SEG_ARC_SE_UP, true, TerrainTileSet.valueOf(ARC_SE));
             cursor.move(Direction.UP);
         }
-        else if (startsAtLeftBorder && startTileContent == TerrainTiles.ARC_NE) {
-            obstacle.addSegment(SEG_ARC_NE_DOWN, false, TerrainTiles.ARC_NE);
+        else if (startsAtLeftBorder && startTileContent == TerrainTileSet.valueOf(ARC_NE)) {
+            obstacle.addSegment(SEG_ARC_NE_DOWN, false, TerrainTileSet.valueOf(ARC_NE));
             cursor.move(Direction.DOWN);
         }
-        else if (!startsAtLeftBorder && startTileContent == TerrainTiles.ARC_SW) {
-            obstacle.addSegment(SEG_ARC_SW_UP, false, TerrainTiles.ARC_SW);
+        else if (!startsAtLeftBorder && startTileContent == TerrainTileSet.valueOf(ARC_SW)) {
+            obstacle.addSegment(SEG_ARC_SW_UP, false, TerrainTileSet.valueOf(ARC_SW));
             cursor.move(Direction.UP);
         }
-        else if (!startsAtLeftBorder && startTileContent == TerrainTiles.ARC_NW) {
-            obstacle.addSegment(SEG_ARC_NW_DOWN, true, TerrainTiles.ARC_NW);
+        else if (!startsAtLeftBorder && startTileContent == TerrainTileSet.valueOf(ARC_NW)) {
+            obstacle.addSegment(SEG_ARC_NW_DOWN, true, TerrainTileSet.valueOf(ARC_NW));
             cursor.move(Direction.DOWN);
         }
         else {
@@ -170,94 +171,88 @@ public class ObstacleBuilder {
             }
             setExplored(cursor.currentTile);
             byte tileContent = worldMap.content(LayerID.TERRAIN, cursor.currentTile);
-            switch (tileContent) {
-                case TerrainTiles.WALL_V -> {
-                    if (cursor.points(Direction.DOWN)) {
-                        obstacle.addSegment(scaledVector(Direction.DOWN, TS), ccw, tileContent);
-                        cursor.move(Direction.DOWN);
-                    } else if (cursor.points(Direction.UP)) {
-                        obstacle.addSegment(scaledVector(Direction.UP, TS), ccw, tileContent);
-                        cursor.move(Direction.UP);
-                    } else {
-                        errorAtCurrentTile(tilesWithErrors);
-                    }
+            if (tileContent == TerrainTileSet.valueOf(WALL_V)) {
+                if (cursor.points(Direction.DOWN)) {
+                    obstacle.addSegment(scaledVector(Direction.DOWN, TS), ccw, tileContent);
+                    cursor.move(Direction.DOWN);
+                } else if (cursor.points(Direction.UP)) {
+                    obstacle.addSegment(scaledVector(Direction.UP, TS), ccw, tileContent);
+                    cursor.move(Direction.UP);
+                } else {
+                    errorAtCurrentTile(tilesWithErrors);
                 }
-
-                case TerrainTiles.WALL_H, TerrainTiles.DOOR -> {
-                    if (cursor.points(Direction.RIGHT)) {
-                        obstacle.addSegment(scaledVector(Direction.RIGHT, TS), ccw, tileContent);
-                        cursor.move(Direction.RIGHT);
-                    } else if (cursor.points(Direction.LEFT)) {
-                        obstacle.addSegment(scaledVector(Direction.LEFT, TS), ccw, tileContent);
-                        cursor.move(Direction.LEFT);
-                    } else {
-                        errorAtCurrentTile(tilesWithErrors);
-                    }
+            }
+            else if (tileContent == TerrainTileSet.valueOf(WALL_H) || tileContent == TerrainTileSet.valueOf(DOOR)) {
+                if (cursor.points(Direction.RIGHT)) {
+                    obstacle.addSegment(scaledVector(Direction.RIGHT, TS), ccw, tileContent);
+                    cursor.move(Direction.RIGHT);
+                } else if (cursor.points(Direction.LEFT)) {
+                    obstacle.addSegment(scaledVector(Direction.LEFT, TS), ccw, tileContent);
+                    cursor.move(Direction.LEFT);
+                } else {
+                    errorAtCurrentTile(tilesWithErrors);
                 }
-
-                case TerrainTiles.ARC_SW, TerrainTiles.DCORNER_SW -> {
-                    if (cursor.points(Direction.DOWN)) {
-                        ccw = true;
-                        obstacle.addSegment(SEG_ARC_SW_DOWN, ccw, tileContent);
-                        cursor.move(Direction.RIGHT);
-                    } else if (cursor.points(Direction.LEFT)) {
-                        ccw = false;
-                        obstacle.addSegment(SEG_ARC_SW_UP, ccw, tileContent);
-                        cursor.move(Direction.UP);
-                    } else {
-                        errorAtCurrentTile(tilesWithErrors);
-                    }
+            }
+            else if (tileContent == TerrainTileSet.valueOf(ARC_SW) || tileContent == TerrainTileSet.valueOf(DCORNER_SW)) {
+                if (cursor.points(Direction.DOWN)) {
+                    ccw = true;
+                    obstacle.addSegment(SEG_ARC_SW_DOWN, ccw, tileContent);
+                    cursor.move(Direction.RIGHT);
+                } else if (cursor.points(Direction.LEFT)) {
+                    ccw = false;
+                    obstacle.addSegment(SEG_ARC_SW_UP, ccw, tileContent);
+                    cursor.move(Direction.UP);
+                } else {
+                    errorAtCurrentTile(tilesWithErrors);
                 }
-
-                case TerrainTiles.ARC_SE, TerrainTiles.DCORNER_SE -> {
-                    if (cursor.points(Direction.DOWN)) {
-                        ccw = false;
-                        obstacle.addSegment(SEG_ARC_SE_DOWN, ccw, tileContent);
-                        cursor.move(Direction.LEFT);
-                    }
-                    else if (cursor.points(Direction.RIGHT)) {
-                        ccw = true;
-                        obstacle.addSegment(SEG_ARC_SE_UP, ccw, tileContent);
-                        cursor.move(Direction.UP);
-                    }
-                    else {
-                        errorAtCurrentTile(tilesWithErrors);
-                    }
+            }
+            else if (tileContent == TerrainTileSet.valueOf(ARC_SE) || tileContent == TerrainTileSet.valueOf(DCORNER_SE)) {
+                if (cursor.points(Direction.DOWN)) {
+                    ccw = false;
+                    obstacle.addSegment(SEG_ARC_SE_DOWN, ccw, tileContent);
+                    cursor.move(Direction.LEFT);
                 }
-
-                case TerrainTiles.ARC_NE, TerrainTiles.DCORNER_NE -> {
-                    if (cursor.points(Direction.UP)) {
-                        ccw = true;
-                        obstacle.addSegment(SEG_ARC_NE_UP, ccw, tileContent);
-                        cursor.move(Direction.LEFT);
-                    }
-                    else if (cursor.points(Direction.RIGHT)) {
-                        ccw = false;
-                        obstacle.addSegment(SEG_ARC_NE_DOWN, ccw, tileContent);
-                        cursor.move(Direction.DOWN);
-                    }
-                    else {
-                        errorAtCurrentTile(tilesWithErrors);
-                    }
+                else if (cursor.points(Direction.RIGHT)) {
+                    ccw = true;
+                    obstacle.addSegment(SEG_ARC_SE_UP, ccw, tileContent);
+                    cursor.move(Direction.UP);
                 }
-
-                case TerrainTiles.ARC_NW, TerrainTiles.DCORNER_NW -> {
-                    if (cursor.points(Direction.UP)) {
-                        ccw = false;
-                        obstacle.addSegment(SEG_ARC_NW_UP, ccw, tileContent);
-                        cursor.move(Direction.RIGHT);
-                    }
-                    else if (cursor.points(Direction.LEFT)) {
-                        ccw = true;
-                        obstacle.addSegment(SEG_ARC_NW_DOWN, ccw, tileContent);
-                        cursor.move(Direction.DOWN);
-                    }
-                    else {
-                        errorAtCurrentTile(tilesWithErrors);
-                    }
+                else {
+                    errorAtCurrentTile(tilesWithErrors);
                 }
-
-                default -> errorAtCurrentTile(tilesWithErrors);
+            }
+            else if (tileContent == TerrainTileSet.valueOf(ARC_NE) || tileContent == TerrainTileSet.valueOf(DCORNER_NE)) {
+                if (cursor.points(Direction.UP)) {
+                    ccw = true;
+                    obstacle.addSegment(SEG_ARC_NE_UP, ccw, tileContent);
+                    cursor.move(Direction.LEFT);
+                }
+                else if (cursor.points(Direction.RIGHT)) {
+                    ccw = false;
+                    obstacle.addSegment(SEG_ARC_NE_DOWN, ccw, tileContent);
+                    cursor.move(Direction.DOWN);
+                }
+                else {
+                    errorAtCurrentTile(tilesWithErrors);
+                }
+            }
+            else if (tileContent == TerrainTileSet.valueOf(ARC_NW) || tileContent == TerrainTileSet.valueOf(DCORNER_NW)) {
+                if (cursor.points(Direction.UP)) {
+                    ccw = false;
+                    obstacle.addSegment(SEG_ARC_NW_UP, ccw, tileContent);
+                    cursor.move(Direction.RIGHT);
+                }
+                else if (cursor.points(Direction.LEFT)) {
+                    ccw = true;
+                    obstacle.addSegment(SEG_ARC_NW_DOWN, ccw, tileContent);
+                    cursor.move(Direction.DOWN);
+                }
+                else {
+                    errorAtCurrentTile(tilesWithErrors);
+                }
+            }
+            else {
+                errorAtCurrentTile(tilesWithErrors);
             }
 
             if (cursor.currentTile.equals(startTile) || worldMap.outOfBounds(cursor.currentTile)) {

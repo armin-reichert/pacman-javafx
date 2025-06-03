@@ -18,10 +18,13 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
+import static de.amr.pacmanfx.lib.tilemap.FoodTileSet.TileID.PELLET;
+import static de.amr.pacmanfx.lib.tilemap.TerrainTileSet.TileID.*;
+
 public class MazeMapGenerator {
 
-    private static final byte FREE = TerrainTiles.EMPTY;
-    private static final byte BLOCKED = TerrainTiles.WALL_H;
+    private static final byte FREE = TerrainTileSet.emptyTileValue();
+    private static final byte BLOCKED = TerrainTileSet.valueOf(WALL_H);
 
     private static final int EMPTY_ROWS_ABOVE = 3, EMPTY_ROWS_BELOW = 2;
 
@@ -63,7 +66,7 @@ public class MazeMapGenerator {
     private void computeWallContour(WorldMap map, Vector2i startTile) {
         predecessor = null;
         current = startTile;
-        set(map, LayerID.TERRAIN, current, TerrainTiles.ARC_NW);
+        set(map, LayerID.TERRAIN, current, TerrainTileSet.valueOf(ARC_NW));
         moveDir = Direction.RIGHT;
         move();
         while (inRange(current, map)) {
@@ -72,30 +75,30 @@ public class MazeMapGenerator {
                 Vector2i tileAhead = current.plus(moveDir.vector());
                 if (map.content(LayerID.TERRAIN, tileAhead) == BLOCKED) {
                     set(map, LayerID.TERRAIN, current,
-                            moveDir.isHorizontal() ? TerrainTiles.WALL_H : TerrainTiles.WALL_V);
+                            moveDir.isHorizontal() ? TerrainTileSet.valueOf(WALL_H) : TerrainTileSet.valueOf(WALL_V));
                 } else {
                     byte corner = switch (moveDir) {
-                        case LEFT  -> TerrainTiles.ARC_NW;
-                        case RIGHT -> TerrainTiles.ARC_SE;
-                        case UP    -> TerrainTiles.ARC_NE;
-                        case DOWN  -> TerrainTiles.ARC_SW;
+                        case LEFT  -> TerrainTileSet.valueOf(ARC_NW);
+                        case RIGHT -> TerrainTileSet.valueOf(ARC_SE);
+                        case UP    -> TerrainTileSet.valueOf(ARC_NE);
+                        case DOWN  -> TerrainTileSet.valueOf(ARC_SW);
                     };
                     set(map, LayerID.TERRAIN, current, corner);
                     turnCounterclockwise();
                 }
             } else {
                 byte corner = switch (moveDir) {
-                    case RIGHT -> TerrainTiles.ARC_NE;
-                    case DOWN  -> TerrainTiles.ARC_SE;
-                    case LEFT  -> TerrainTiles.ARC_SW;
-                    case UP    -> TerrainTiles.ARC_NW;
+                    case RIGHT -> TerrainTileSet.valueOf(ARC_NE);
+                    case DOWN  -> TerrainTileSet.valueOf(ARC_SE);
+                    case LEFT  -> TerrainTileSet.valueOf(ARC_SW);
+                    case UP    -> TerrainTileSet.valueOf(ARC_NW);
                 };
                 set(map, LayerID.TERRAIN, current, corner);
                 turnClockwise();
             }
             move();
         }
-        set(map, LayerID.TERRAIN, predecessor, TerrainTiles.WALL_V); //TODO correct?
+        set(map, LayerID.TERRAIN, predecessor, TerrainTileSet.valueOf(WALL_V)); //TODO correct?
     }
 
     private void turnClockwise() {
@@ -109,9 +112,9 @@ public class MazeMapGenerator {
     private void addFood(WorldMap map) {
         for (int row = EMPTY_ROWS_ABOVE; row < map.numRows() - EMPTY_ROWS_BELOW; ++row) {
             for (int col = 0; col < map.numCols(); ++col) {
-                if (map.content(LayerID.TERRAIN, row, col) == TerrainTiles.EMPTY
+                if (map.content(LayerID.TERRAIN, row, col) == TerrainTileSet.emptyTileValue()
                         && new Random().nextInt(100) < 40) {
-                    map.setContent(LayerID.FOOD, row, col, FoodTiles.PELLET);
+                    map.setContent(LayerID.FOOD, row, col, FoodTileSet.valueOf(PELLET));
                 }
             }
         }

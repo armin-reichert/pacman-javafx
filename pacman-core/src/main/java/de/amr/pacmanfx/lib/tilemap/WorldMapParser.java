@@ -74,29 +74,7 @@ public interface WorldMapParser {
         worldMap.terrainLayer = parseTileMap(terrainLayerRows, validTerrainValueTest);
         worldMap.foodLayer = parseTileMap(foodLayerRows, validFoodValueTest);
 
-        //TODO remove this:
-        replaceObsoleteTerrainValues(worldMap);
-
         return worldMap;
-    }
-
-    private static void replaceObsoleteTerrainValues(WorldMap worldMap) {
-        worldMap.tiles().forEach(tile -> {
-            byte content = worldMap.content(LayerID.TERRAIN, tile);
-            byte newContent = switch (content) {
-                case TerrainTiles.OBSOLETE_DWALL_H -> TerrainTiles.WALL_H;
-                case TerrainTiles.OBSOLETE_DWALL_V -> TerrainTiles.WALL_V;
-                case TerrainTiles.OBSOLETE_DCORNER_NW -> TerrainTiles.ARC_NW;
-                case TerrainTiles.OBSOLETE_DCORNER_SW -> TerrainTiles.ARC_SW;
-                case TerrainTiles.OBSOLETE_DCORNER_SE -> TerrainTiles.ARC_SE;
-                case TerrainTiles.OBSOLETE_DCORNER_NE -> TerrainTiles.ARC_NE;
-                default -> content;
-            };
-            if (newContent != content) {
-                worldMap.setContent(LayerID.TERRAIN, tile, newContent);
-                Logger.info("Obsolete terrain value {} replaced by {}", content, newContent);
-            }
-        });
     }
 
     private static WorldMapLayer parseTileMap(List<String> lines, Predicate<Byte> valueAllowed) {

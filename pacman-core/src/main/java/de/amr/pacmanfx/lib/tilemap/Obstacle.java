@@ -12,6 +12,7 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.lib.tilemap.TerrainTileSet.TileID.*;
 import static java.lang.Math.signum;
 
 /**
@@ -106,33 +107,23 @@ public class Obstacle {
 
     public Vector2i cornerCenter(int segmentIndex) {
         ObstacleSegment corner = segment(segmentIndex);
-        return switch (corner.encoding()) {
-            case TerrainTiles.ARC_NW -> point(segmentIndex).plus(0, HTS);
-            case TerrainTiles.ARC_SW -> point(segmentIndex).plus(HTS, 0);
-            case TerrainTiles.ARC_SE -> point(segmentIndex).plus(0, -HTS);
-            case TerrainTiles.ARC_NE -> point(segmentIndex).plus(-HTS, 0);
-            default -> throw new IllegalStateException("No corner tile at index " + segmentIndex);
-        };
+        byte code = corner.encoding();
+        if (code == TerrainTileSet.valueOf(ARC_NW)) return point(segmentIndex).plus(0, HTS);
+        if (code == TerrainTileSet.valueOf(ARC_SW)) return point(segmentIndex).plus(HTS, 0);
+        if (code == TerrainTileSet.valueOf(ARC_SE)) return point(segmentIndex).plus(0, -HTS);
+        if (code == TerrainTileSet.valueOf(ARC_NE)) return point(segmentIndex).plus(-HTS, 0);
+        throw new IllegalStateException("No corner tile at index " + segmentIndex);
     }
 
     public Vector2i[] cornerCenters() {
         var centers = new LinkedHashSet<Vector2i>();
         for (var segment : segments) {
             boolean up = segment.vector().y() < 0, down = segment.vector().y() > 0;
-            switch (segment.encoding()) {
-                case TerrainTiles.ARC_NW -> {
-                    if (down) centers.add(segment.startPoint().plus(0, HTS));
-                }
-                case TerrainTiles.ARC_SW -> {
-                    if (down) centers.add(segment.startPoint().plus(HTS, 0));
-                }
-                case TerrainTiles.ARC_SE -> {
-                    if (up) centers.add(segment.startPoint().plus(0, -HTS));
-                }
-                case TerrainTiles.ARC_NE -> {
-                    if (up) centers.add(segment.startPoint().plus(-HTS, 0));
-                }
-            }
+            byte code = segment.encoding();
+            if (code == TerrainTileSet.valueOf(ARC_NW) && down) centers.add(segment.startPoint().plus(0, HTS));
+            if (code == TerrainTileSet.valueOf(ARC_SW) && down) centers.add(segment.startPoint().plus(HTS, 0));
+            if (code == TerrainTileSet.valueOf(ARC_SE) && up)   centers.add(segment.startPoint().plus(0, -HTS));
+            if (code == TerrainTileSet.valueOf(ARC_NE) && up)   centers.add(segment.startPoint().plus(-HTS, 0));
         }
         return centers.toArray(Vector2i[]::new);
     }

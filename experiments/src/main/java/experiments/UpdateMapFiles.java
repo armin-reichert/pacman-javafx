@@ -2,7 +2,7 @@ package experiments;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
-import de.amr.pacmanfx.lib.tilemap.TerrainTiles;
+import de.amr.pacmanfx.lib.tilemap.TerrainTileSet;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
 import de.amr.pacmanfx.model.WorldMapProperty;
@@ -56,12 +56,12 @@ public class UpdateMapFiles {
         map.tiles().forEach(tile -> {
             byte content = map.content(LayerID.TERRAIN, tile);
             byte newContent = switch (content) {
-                case TerrainTiles.OBSOLETE_DWALL_H -> TerrainTiles.WALL_H;
-                case TerrainTiles.OBSOLETE_DWALL_V -> TerrainTiles.WALL_V;
-                case TerrainTiles.OBSOLETE_DCORNER_NW -> TerrainTiles.ARC_NW;
-                case TerrainTiles.OBSOLETE_DCORNER_SW -> TerrainTiles.ARC_SW;
-                case TerrainTiles.OBSOLETE_DCORNER_SE -> TerrainTiles.ARC_SE;
-                case TerrainTiles.OBSOLETE_DCORNER_NE -> TerrainTiles.ARC_NE;
+                case TerrainTileSet.OBSOLETE_DWALL_H -> TerrainTileSet.WALL_H;
+                case TerrainTileSet.OBSOLETE_DWALL_V -> TerrainTileSet.WALL_V;
+                case TerrainTileSet.OBSOLETE_DCORNER_NW -> TerrainTileSet.ARC_NW;
+                case TerrainTileSet.OBSOLETE_DCORNER_SW -> TerrainTileSet.ARC_SW;
+                case TerrainTileSet.OBSOLETE_DCORNER_SE -> TerrainTileSet.ARC_SE;
+                case TerrainTileSet.OBSOLETE_DCORNER_NE -> TerrainTileSet.ARC_NE;
                 default -> content;
             };
             map.setContent(LayerID.TERRAIN, tile, newContent);
@@ -73,10 +73,10 @@ public class UpdateMapFiles {
         for (int row = houseMinTile.y(); row <= houseMaxTile.y(); ++row) {
             for (int col = houseMinTile.x(); col <= houseMaxTile.x(); ++col) {
                 switch (map.content(LayerID.TERRAIN, row, col)) {
-                    case TerrainTiles.DCORNER_NW -> map.setContent(LayerID.TERRAIN, row, col, TerrainTiles.ARC_NW);
-                    case TerrainTiles.DCORNER_SW -> map.setContent(LayerID.TERRAIN, row, col, TerrainTiles.ARC_SW);
-                    case TerrainTiles.DCORNER_SE -> map.setContent(LayerID.TERRAIN, row, col, TerrainTiles.ARC_SE);
-                    case TerrainTiles.DCORNER_NE -> map.setContent(LayerID.TERRAIN, row, col, TerrainTiles.ARC_NE);
+                    case TerrainTileSet.DCORNER_NW -> map.setContent(LayerID.TERRAIN, row, col, TerrainTileSet.ARC_NW);
+                    case TerrainTileSet.DCORNER_SW -> map.setContent(LayerID.TERRAIN, row, col, TerrainTileSet.ARC_SW);
+                    case TerrainTileSet.DCORNER_SE -> map.setContent(LayerID.TERRAIN, row, col, TerrainTileSet.ARC_SE);
+                    case TerrainTileSet.DCORNER_NE -> map.setContent(LayerID.TERRAIN, row, col, TerrainTileSet.ARC_NE);
                 }
             }
         }

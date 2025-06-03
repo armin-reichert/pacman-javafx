@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Validations.requireNonNegative;
+import static de.amr.pacmanfx.lib.tilemap.TerrainTileSet.TileID.WALL_V;
 import static java.util.Objects.requireNonNull;
 
 public class WorldMap {
@@ -30,11 +31,11 @@ public class WorldMap {
     public static final String MARKER_BEGIN_DATA_SECTION = "!data";
 
     private static boolean isValidTerrainValue(byte value) {
-        return 0 <= value && value <= TerrainTiles.MAX_VALUE;
+        return 0 <= value && value <= TerrainTileSet.maxTileValue();
     }
 
     private static boolean isValidFoodValue(byte value) {
-        return 0 <= value && value <= FoodTiles.MAX_VALUE;
+        return 0 <= value && value <= FoodTileSet.maxTileValue();
     }
 
     public static WorldMap emptyMap(int numRows, int numCols) {
@@ -51,7 +52,7 @@ public class WorldMap {
         WorldMap copy = new WorldMap();
         copy.terrainLayer = new WorldMapLayer(original.terrainLayer);
         copy.foodLayer = new WorldMapLayer(original.foodLayer);
-        copy.obstacles = new HashSet<>(original.obstacles);
+        copy.obstacles = original.obstacles != null ? new HashSet<>(original.obstacles) : null;
         copy.configMap = new HashMap<>(original.configMap);
         copy.url = original.url;
         return copy;
@@ -73,7 +74,7 @@ public class WorldMap {
     URL url;
     WorldMapLayer terrainLayer;
     WorldMapLayer foodLayer;
-    Set<Obstacle> obstacles = Set.of();
+    Set<Obstacle> obstacles = null; // uninitialized!
     Map<String, Object> configMap = new HashMap<>();
 
     WorldMap() {}
@@ -100,8 +101,8 @@ public class WorldMap {
         newMap.foodLayer.replaceProperties(foodLayer.properties());
         for (int row = 0; row < newMap.numRows(); ++row) {
             for (int col = 0; col < newMap.numCols(); ++col) {
-                byte terrainValue = TerrainTiles.EMPTY;
-                byte foodValue = FoodTiles.EMPTY;
+                byte terrainValue = TerrainTileSet.emptyTileValue();
+                byte foodValue = FoodTileSet.emptyTileValue();
                 if (row < rowIndex) {
                     terrainValue = content(LayerID.TERRAIN, row, col);
                     foodValue = content(LayerID.FOOD, row, col);
@@ -110,8 +111,8 @@ public class WorldMap {
                     foodValue = content(LayerID.FOOD, row - 1, col);
                 } else {
                     if ((col == 0 || col == numCols() - 1)
-                            && content(LayerID.TERRAIN, row, col) == TerrainTiles.WALL_V) {
-                        terrainValue = TerrainTiles.WALL_V; // keep vertical border wall
+                            && content(LayerID.TERRAIN, row, col) == TerrainTileSet.valueOf(WALL_V)) {
+                        terrainValue = TerrainTileSet.valueOf(WALL_V); // keep vertical border wall
                     }
                 }
                 newMap.setContent(LayerID.TERRAIN, row, col, terrainValue);

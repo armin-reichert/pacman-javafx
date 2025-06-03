@@ -41,7 +41,7 @@ public class TileValueEditorTool implements Tool {
 
     @Override
     public void apply(WorldMap worldMap, LayerID layerID, Vector2i tile) {
-        editor.setTileValueAndRespectSymmetricEditing(worldMap, layerID, tile, value);
+        editor.setTileValueRespectSymmetry(worldMap, layerID, tile, value);
     }
 
     @Override

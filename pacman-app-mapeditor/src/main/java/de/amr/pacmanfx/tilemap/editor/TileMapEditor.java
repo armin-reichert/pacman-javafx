@@ -53,6 +53,9 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
+import static de.amr.pacmanfx.lib.tilemap.FoodTileSet.TileID.ENERGIZER;
+import static de.amr.pacmanfx.lib.tilemap.FoodTileSet.TileID.PELLET;
+import static de.amr.pacmanfx.lib.tilemap.TerrainTileSet.TileID.*;
 import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
 import static java.util.Objects.requireNonNull;
@@ -838,7 +841,7 @@ public class TileMapEditor {
 
         var miClearTerrain = new MenuItem(tt("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(e -> {
-            editedWorldMap().layer(LayerID.TERRAIN).setAll(TerrainTiles.EMPTY);
+            editedWorldMap().layer(LayerID.TERRAIN).setAll(TerrainTileSet.emptyTileValue());
             changeManager.setTerrainMapChanged();
             changeManager.setEdited(true);
         });
@@ -846,7 +849,7 @@ public class TileMapEditor {
 
         var miClearFood = new MenuItem(tt("menu.edit.clear_food"));
         miClearFood.setOnAction(e -> {
-            editedWorldMap().layer(LayerID.FOOD).setAll(FoodTiles.EMPTY);
+            editedWorldMap().layer(LayerID.FOOD).setAll(FoodTileSet.emptyTileValue());
             changeManager.setFoodMapChanged();
             changeManager.setEdited(true);
         });
@@ -1323,10 +1326,10 @@ public class TileMapEditor {
             byte terrainValue = editedWorldMap().content(LayerID.TERRAIN, tile);
             byte foodValue = editedWorldMap().content(LayerID.FOOD, tile);
             String info = "";
-            if (terrainValue != TerrainTiles.EMPTY)
-                info = "Terrain #%02X (%s)".formatted(terrainValue, TerrainTiles.name(terrainValue));
-            if (foodValue != TerrainTiles.EMPTY)
-                info = "Food #%02X (%s)".formatted(foodValue, FoodTiles.name(foodValue));
+            if (terrainValue != TerrainTileSet.valueOf(EMPTY))
+                info = "Terrain #%02X (%s)".formatted(terrainValue, terrainValue);
+            if (foodValue != FoodTileSet.valueOf(FoodTileSet.TileID.EMPTY))
+                info = "Food #%02X (%s)".formatted(foodValue, foodValue);
             showMessage(info, 4, MessageType.INFO);
         }
     }
@@ -1334,7 +1337,7 @@ public class TileMapEditor {
     /**
      * This method should be used whenever a tile value has to be set and symmetric editing should be executed.
      */
-    public void setTileValueAndRespectSymmetricEditing(WorldMap worldMap, LayerID layerID, Vector2i tile, byte value) {
+    public void setTileValueRespectSymmetry(WorldMap worldMap, LayerID layerID, Vector2i tile, byte value) {
         requireNonNull(worldMap);
         requireNonNull(layerID);
         requireNonNull(tile);
@@ -1345,7 +1348,7 @@ public class TileMapEditor {
 
         worldMap.setContent(layerID, tile, value);
         if (layerID == LayerID.TERRAIN) {
-            worldMap.setContent(LayerID.FOOD, tile, FoodTiles.EMPTY);
+            worldMap.setContent(LayerID.FOOD, tile, FoodTileSet.emptyTileValue());
         }
 
         changeManager.setEdited(true);
@@ -1360,27 +1363,27 @@ public class TileMapEditor {
             } else {
                 byte mirroredValue = mirroredTileValue(value);
                 worldMap.setContent(layerID, mirroredTile, mirroredValue);
-                worldMap.setContent(LayerID.FOOD, mirroredTile, FoodTiles.EMPTY);
+                worldMap.setContent(LayerID.FOOD, mirroredTile, FoodTileSet.emptyTileValue());
             }
         }
     }
 
-    public void setTileValueAndRespectSymmetricEditing(WorldMap worldMap, LayerID layerID, int row, int col, byte value) {
+    public void setTileValueRespectSymmetry(WorldMap worldMap, LayerID layerID, int row, int col, byte value) {
         Vector2i tile = new Vector2i(col, row);
-        setTileValueAndRespectSymmetricEditing(worldMap, layerID, tile, value);
+        setTileValueRespectSymmetry(worldMap, layerID, tile, value);
     }
 
 
     // ignores symmetric edit mode!
     public void clearTerrainTileValue(Vector2i tile) {
-        editedWorldMap().setContent(LayerID.TERRAIN, tile, TerrainTiles.EMPTY);
+        editedWorldMap().setContent(LayerID.TERRAIN, tile, TerrainTileSet.valueOf(EMPTY));
         changeManager.setTerrainMapChanged();
         changeManager.setEdited(true);
     }
 
     // ignores symmetric edit mode!
     public void clearFoodTileValue(Vector2i tile) {
-        editedWorldMap().setContent(LayerID.FOOD, tile, FoodTiles.EMPTY);
+        editedWorldMap().setContent(LayerID.FOOD, tile, FoodTileSet.valueOf(FoodTileSet.TileID.EMPTY));
         changeManager.setFoodMapChanged();
         changeManager.setEdited(true);
     }
@@ -1429,17 +1432,17 @@ public class TileMapEditor {
 
     private void addBorderWall(WorldMap worldMap) {
         int lastRow = worldMap.numRows() - 1 - EMPTY_ROWS_BELOW_MAZE, lastCol = worldMap.numCols() - 1;
-        setTileValueAndRespectSymmetricEditing(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, 0, TerrainTiles.ARC_NW);
-        setTileValueAndRespectSymmetricEditing(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, lastCol, TerrainTiles.ARC_NE);
-        setTileValueAndRespectSymmetricEditing(worldMap, LayerID.TERRAIN, lastRow, 0, TerrainTiles.ARC_SW);
-        setTileValueAndRespectSymmetricEditing(worldMap, LayerID.TERRAIN, lastRow, lastCol, TerrainTiles.ARC_SE);
+        setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, 0, TerrainTileSet.valueOf(ARC_NW));
+        setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, lastCol, TerrainTileSet.valueOf(ARC_NE));
+        setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, lastRow, 0, TerrainTileSet.valueOf(ARC_SW));
+        setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, lastRow, lastCol, TerrainTileSet.valueOf(ARC_SE));
         for (int row = EMPTY_ROWS_BEFORE_MAZE + 1; row < lastRow; ++row) {
-            setTileValueAndRespectSymmetricEditing(worldMap, LayerID.TERRAIN, row, 0, TerrainTiles.WALL_V);
-            setTileValueAndRespectSymmetricEditing(worldMap, LayerID.TERRAIN, row, lastCol, TerrainTiles.WALL_V);
+            setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, row, 0, TerrainTileSet.valueOf(WALL_V));
+            setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, row, lastCol, TerrainTileSet.valueOf(WALL_V));
         }
         for (int col = 1; col < lastCol; ++col) {
-            setTileValueAndRespectSymmetricEditing(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, col, TerrainTiles.WALL_H);
-            setTileValueAndRespectSymmetricEditing(worldMap, LayerID.TERRAIN, lastRow, col, TerrainTiles.WALL_H);
+            setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, col, TerrainTileSet.valueOf(WALL_H));
+            setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, lastRow, col, TerrainTileSet.valueOf(WALL_H));
         }
         changeManager.setTerrainMapChanged();
     }
@@ -1477,13 +1480,13 @@ public class TileMapEditor {
         Vector2i max = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE).plus(1, 1);
         for (int x = min.x(); x <= max.x(); ++x) {
             // Note: parameters are row and col (y and x)
-            worldMap.setContent(LayerID.FOOD, min.y(), x, FoodTiles.EMPTY);
-            worldMap.setContent(LayerID.FOOD, max.y(), x, FoodTiles.EMPTY);
+            worldMap.setContent(LayerID.FOOD, min.y(), x, FoodTileSet.valueOf(FoodTileSet.TileID.EMPTY));
+            worldMap.setContent(LayerID.FOOD, max.y(), x, FoodTileSet.valueOf(FoodTileSet.TileID.EMPTY));
         }
         for (int y = min.y(); y <= max.y(); ++y) {
             // Note: parameters are row and col (y and x)
-            worldMap.setContent(LayerID.FOOD, y, min.x(), FoodTiles.EMPTY);
-            worldMap.setContent(LayerID.FOOD, y, max.x(), FoodTiles.EMPTY);
+            worldMap.setContent(LayerID.FOOD, y, min.x(), FoodTileSet.valueOf(FoodTileSet.TileID.EMPTY));
+            worldMap.setContent(LayerID.FOOD, y, max.x(), FoodTileSet.valueOf(FoodTileSet.TileID.EMPTY));
         }
 
         changeManager.setWorldMapChanged();
@@ -1494,7 +1497,7 @@ public class TileMapEditor {
         for (int row = minTile.y(); row <= maxTile.y(); ++row) {
             for (int col = minTile.x(); col <= maxTile.x(); ++col) {
                 // No symmetric editing!
-                worldMap.setContent(LayerID.TERRAIN, row, col, TerrainTiles.EMPTY);
+                worldMap.setContent(LayerID.TERRAIN, row, col, TerrainTileSet.emptyTileValue());
             }
         }
         changeManager.setTerrainMapChanged();
@@ -1505,7 +1508,7 @@ public class TileMapEditor {
         for (int row = minTile.y(); row <= maxTile.y(); ++row) {
             for (int col = minTile.x(); col <= maxTile.x(); ++col) {
                 // No symmetric editing!
-                worldMap.setContent(LayerID.FOOD, row, col, FoodTiles.EMPTY);
+                worldMap.setContent(LayerID.FOOD, row, col, FoodTileSet.emptyTileValue());
             }
         }
         changeManager.setFoodMapChanged();
@@ -1573,7 +1576,7 @@ public class TileMapEditor {
         while (!q.isEmpty()) {
             Vector2i current = q.poll();
             // use this method such that symmmetric editing etc. is taken into account:
-            setTileValueAndRespectSymmetricEditing(editedWorldMap(), LayerID.FOOD, current, value);
+            setTileValueRespectSymmetry(editedWorldMap(), LayerID.FOOD, current, value);
             for (Direction dir : Direction.values()) {
                 Vector2i neighborTile = current.plus(dir.vector());
                 if  (!visited.contains(neighborTile) && canEditFoodAtTile(neighborTile)) {
@@ -1588,11 +1591,11 @@ public class TileMapEditor {
 
     private boolean hasAccessibleTerrainAtTile(Vector2i tile) {
         byte value = editedWorldMap().content(LayerID.TERRAIN, tile);
-        return value == TerrainTiles.EMPTY
-            || value == TerrainTiles.ONE_WAY_DOWN
-            || value == TerrainTiles.ONE_WAY_UP
-            || value == TerrainTiles.ONE_WAY_LEFT
-            || value == TerrainTiles.ONE_WAY_RIGHT;
+        return value == TerrainTileSet.emptyTileValue()
+            || value == TerrainTileSet.valueOf(ONE_WAY_DOWN)
+            || value == TerrainTileSet.valueOf(ONE_WAY_UP)
+            || value == TerrainTileSet.valueOf(ONE_WAY_LEFT)
+            || value == TerrainTileSet.valueOf(ONE_WAY_RIGHT);
     }
 
     public boolean canEditFoodAtTile(Vector2i tile) {
@@ -1660,7 +1663,7 @@ public class TileMapEditor {
                     int[] pixelsOfTile = new int[TS*TS]; // pixels row-wise
                     rdr.getPixels(col * TS, row * TS, TS, TS, pixelFormat, pixelsOfTile, 0, TS);
                     byte foodValue = matcher.matchFoodTile(pixelsOfTile);
-                    if (foodValue == FoodTiles.PELLET || foodValue == FoodTiles.ENERGIZER) {
+                    if (foodValue == FoodTileSet.valueOf(PELLET) || foodValue == FoodTileSet.valueOf(ENERGIZER)) {
                         worldMap.setContent(LayerID.FOOD, worldMapTile, foodValue);
                     } else {
                         byte terrainValue = matcher.matchTerrainTile(pixelsOfTile);
@@ -1677,11 +1680,11 @@ public class TileMapEditor {
 
         // Find house: requires that at least min and max tiles have been detected
         Vector2i houseMinTile = worldMap.tiles()
-            .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTiles.DCORNER_NW)
+            .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTileSet.valueOf(DCORNER_NW))
             .findFirst().orElse(null);
 
         Vector2i houseMaxTile = worldMap.tiles()
-            .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTiles.DCORNER_SE)
+            .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTileSet.valueOf(DCORNER_SE))
             .findFirst().orElse(null);
 
         if (houseMinTile != null && houseMaxTile != null

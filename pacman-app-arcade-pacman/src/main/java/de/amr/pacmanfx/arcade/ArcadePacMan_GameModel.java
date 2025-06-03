@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
-import de.amr.pacmanfx.lib.tilemap.TerrainTiles;
+import de.amr.pacmanfx.lib.tilemap.TerrainTileSet;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.*;
@@ -26,6 +26,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.lib.Waypoint.wp;
+import static de.amr.pacmanfx.lib.tilemap.TerrainTileSet.TileID.ONE_WAY_DOWN;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -244,7 +245,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
 
         // Special tiles where attacking ghosts cannot move up
         List<Vector2i> oneWayDownTiles = worldMap.tiles()
-            .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTiles.ONE_WAY_DOWN)
+            .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTileSet.valueOf(ONE_WAY_DOWN))
             .toList();
         level.setGhosts(createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost());
         level.ghosts().forEach(ghost -> {

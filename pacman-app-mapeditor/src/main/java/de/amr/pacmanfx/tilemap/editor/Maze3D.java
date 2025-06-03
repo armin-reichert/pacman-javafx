@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.tilemap.FoodTiles;
+import de.amr.pacmanfx.lib.tilemap.FoodTileSet;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
@@ -35,6 +35,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.lib.tilemap.FoodTileSet.TileID.ENERGIZER;
 import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.getColorFromMap;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.parseColor;
@@ -247,10 +248,10 @@ public class Maze3D extends Group {
     }
 
     private boolean hasFoodAt(WorldMap worldMap, Vector2i tile) {
-        return worldMap.content(LayerID.FOOD, tile) != FoodTiles.EMPTY;
+        return worldMap.content(LayerID.FOOD, tile) != FoodTileSet.emptyTileValue();
     }
 
     private boolean hasEnergizerAt(WorldMap worldMap, Vector2i tile) {
-        return worldMap.content(LayerID.FOOD, tile) == FoodTiles.ENERGIZER;
+        return worldMap.content(LayerID.FOOD, tile) == FoodTileSet.valueOf(ENERGIZER);
     }
 }

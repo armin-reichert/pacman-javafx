@@ -5,9 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.tilemap.FoodTiles;
+import de.amr.pacmanfx.lib.tilemap.FoodTileSet;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
-import de.amr.pacmanfx.lib.tilemap.TerrainTiles;
+import de.amr.pacmanfx.lib.tilemap.TerrainTileSet;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.uilib.tilemap.TileMapRenderer;
@@ -21,6 +21,9 @@ import org.tinylog.Logger;
 import java.net.URL;
 import java.util.Locale;
 
+import static de.amr.pacmanfx.lib.tilemap.FoodTileSet.TileID.ENERGIZER;
+import static de.amr.pacmanfx.lib.tilemap.FoodTileSet.TileID.PELLET;
+import static de.amr.pacmanfx.lib.tilemap.TerrainTileSet.TileID.*;
 import static java.util.Objects.requireNonNull;
 
 public interface TileMapEditorUtil {
@@ -30,18 +33,16 @@ public interface TileMapEditorUtil {
         return url.toExternalForm();
     }
 
-    static byte mirroredTileValue(byte content) {
-        return switch (content) {
-            case TerrainTiles.ARC_NE -> TerrainTiles.ARC_NW;
-            case TerrainTiles.ARC_NW -> TerrainTiles.ARC_NE;
-            case TerrainTiles.ARC_SE -> TerrainTiles.ARC_SW;
-            case TerrainTiles.ARC_SW -> TerrainTiles.ARC_SE;
-            case TerrainTiles.DCORNER_NE -> TerrainTiles.DCORNER_NW;
-            case TerrainTiles.DCORNER_NW -> TerrainTiles.DCORNER_NE;
-            case TerrainTiles.DCORNER_SE -> TerrainTiles.DCORNER_SW;
-            case TerrainTiles.DCORNER_SW -> TerrainTiles.DCORNER_SE;
-            default -> content;
-        };
+    static byte mirroredTileValue(byte tileValue) {
+        if (tileValue == TerrainTileSet.valueOf(ARC_NE)) return TerrainTileSet.valueOf(ARC_NW);
+        if (tileValue == TerrainTileSet.valueOf(ARC_NW)) return TerrainTileSet.valueOf(ARC_NE);
+        if (tileValue == TerrainTileSet.valueOf(ARC_SE)) return TerrainTileSet.valueOf(ARC_SW);
+        if (tileValue == TerrainTileSet.valueOf(ARC_SW)) return TerrainTileSet.valueOf(ARC_SE);
+        if (tileValue == TerrainTileSet.valueOf(DCORNER_NE)) return TerrainTileSet.valueOf(DCORNER_NW);
+        if (tileValue == TerrainTileSet.valueOf(DCORNER_NW)) return TerrainTileSet.valueOf(DCORNER_NE);
+        if (tileValue == TerrainTileSet.valueOf(DCORNER_SE)) return TerrainTileSet.valueOf(DCORNER_SW);
+        if (tileValue == TerrainTileSet.valueOf(DCORNER_SW)) return TerrainTileSet.valueOf(DCORNER_SE);
+        return tileValue;
     }
 
     static Color parseColor(String text) {
@@ -94,19 +95,19 @@ public interface TileMapEditorUtil {
 
     static Palette createTerrainPalette(byte id, int toolSize, TileMapEditor editor, TileMapRenderer renderer) {
         var palette = new Palette(id, toolSize, 1, 13, renderer);
-        palette.addTileTool(editor, TerrainTiles.EMPTY, "Empty Space");
-        palette.addTileTool(editor, TerrainTiles.WALL_H, "Horiz. Wall");
-        palette.addTileTool(editor, TerrainTiles.WALL_V, "Vert. Wall");
-        palette.addTileTool(editor, TerrainTiles.ARC_NW, "NW Corner");
-        palette.addTileTool(editor, TerrainTiles.ARC_NE, "NE Corner");
-        palette.addTileTool(editor, TerrainTiles.ARC_SW, "SW Corner");
-        palette.addTileTool(editor, TerrainTiles.ARC_SE, "SE Corner");
-        palette.addTileTool(editor, TerrainTiles.TUNNEL, "Tunnel");
-        palette.addTileTool(editor, TerrainTiles.DOOR, "Door");
-        palette.addTileTool(editor, TerrainTiles.ONE_WAY_UP, "One-Way Up");
-        palette.addTileTool(editor, TerrainTiles.ONE_WAY_RIGHT, "One-Way Right");
-        palette.addTileTool(editor, TerrainTiles.ONE_WAY_DOWN, "One-Way Down");
-        palette.addTileTool(editor, TerrainTiles.ONE_WAY_LEFT, "One-Way Left");
+        palette.addTileTool(editor, TerrainTileSet.valueOf(EMPTY), "Empty Space");
+        palette.addTileTool(editor, TerrainTileSet.valueOf(WALL_H), "Horiz. Wall");
+        palette.addTileTool(editor, TerrainTileSet.valueOf(WALL_V), "Vert. Wall");
+        palette.addTileTool(editor, TerrainTileSet.valueOf(ARC_NW), "NW Corner");
+        palette.addTileTool(editor, TerrainTileSet.valueOf(ARC_NE), "NE Corner");
+        palette.addTileTool(editor, TerrainTileSet.valueOf(ARC_SW), "SW Corner");
+        palette.addTileTool(editor, TerrainTileSet.valueOf(ARC_SE), "SE Corner");
+        palette.addTileTool(editor, TerrainTileSet.valueOf(TUNNEL), "Tunnel");
+        palette.addTileTool(editor, TerrainTileSet.valueOf(DOOR), "Door");
+        palette.addTileTool(editor, TerrainTileSet.valueOf(ONE_WAY_UP), "One-Way Up");
+        palette.addTileTool(editor, TerrainTileSet.valueOf(ONE_WAY_RIGHT), "One-Way Right");
+        palette.addTileTool(editor, TerrainTileSet.valueOf(ONE_WAY_DOWN), "One-Way Down");
+        palette.addTileTool(editor, TerrainTileSet.valueOf(ONE_WAY_LEFT), "One-Way Left");
 
         palette.selectTool(0); // "No Tile"
         return palette;
@@ -114,7 +115,7 @@ public interface TileMapEditorUtil {
 
     static Palette createActorPalette(byte id, int toolSize, TileMapEditor editor, TerrainTileMapRenderer renderer) {
         var palette = new Palette(id, toolSize, 1, 11, renderer);
-        palette.addTileTool(editor, TerrainTiles.EMPTY, "Nope");
+        palette.addTileTool(editor, TerrainTileSet.emptyTileValue(), "Nope");
         palette.addPropertyTool(WorldMapProperty.POS_PAC, "Pac-Man");
         palette.addPropertyTool(WorldMapProperty.POS_RED_GHOST, "Red Ghost");
         palette.addPropertyTool(WorldMapProperty.POS_PINK_GHOST, "Pink Ghost");
@@ -131,9 +132,9 @@ public interface TileMapEditorUtil {
 
     static Palette createFoodPalette(byte id, int toolSize, TileMapEditor editor, TileMapRenderer renderer) {
         var palette = new Palette(id, toolSize, 1, 3, renderer);
-        palette.addTileTool(editor, FoodTiles.EMPTY, "No Food");
-        palette.addTileTool(editor, FoodTiles.PELLET, "Pellet");
-        palette.addTileTool(editor, FoodTiles.ENERGIZER, "Energizer");
+        palette.addTileTool(editor, FoodTileSet.emptyTileValue(), "No Food");
+        palette.addTileTool(editor, FoodTileSet.valueOf(PELLET), "Pellet");
+        palette.addTileTool(editor, FoodTileSet.valueOf(ENERGIZER), "Energizer");
         palette.selectTool(0); // "No Food"
         return palette;
     }
