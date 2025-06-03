@@ -20,7 +20,7 @@ public interface TerrainTiles {
     byte OBSOLETE_DCORNER_SE = 0x0c;
     byte OBSOLETE_DCORNER_SW = 0x0d;
     byte DOOR                = 0x0e;
-    byte OBSOLETE_WALL       = 0x0f;
+    byte UNUSED_0f           = 0x0f;
     byte DCORNER_NW          = 0x10;
     byte DCORNER_NE          = 0x11;
     byte DCORNER_SE          = 0x12;
@@ -50,7 +50,7 @@ public interface TerrainTiles {
             case ONE_WAY_RIGHT -> "ONE_WAY_RIGHT";
             case ONE_WAY_DOWN  -> "ONE_WAY_DOWN";
             case ONE_WAY_LEFT  -> "ONE_WAY_LEFT";
-            default            -> "?";
+            default            -> "[%d]".formatted(value);
         };
     }
 }

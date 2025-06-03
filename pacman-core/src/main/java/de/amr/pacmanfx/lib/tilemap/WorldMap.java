@@ -29,9 +29,17 @@ public class WorldMap {
     public static final String MARKER_BEGIN_FOOD_LAYER = "!food";
     public static final String MARKER_BEGIN_DATA_SECTION = "!data";
 
+    private static boolean isValidTerrainValue(byte value) {
+        return 0 <= value && value <= TerrainTiles.MAX_VALUE;
+    }
+
+    private static boolean isValidFoodValue(byte value) {
+        return 0 <= value && value <= FoodTiles.MAX_VALUE;
+    }
+
     public static WorldMap fromURL(URL url) throws IOException {
         var reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
-        WorldMap worldMap = WorldMapParser.parse(reader.lines());
+        WorldMap worldMap = WorldMapParser.parse(reader.lines(), WorldMap::isValidTerrainValue, WorldMap::isValidFoodValue);
         worldMap.url = url;
         return worldMap;
     }

@@ -36,7 +36,10 @@ public interface WorldMapParser {
     }
 
 
-    static WorldMap parse(Stream<String> linesStream) {
+    static WorldMap parse(Stream<String> linesStream,
+                          Predicate<Byte> validTerrainValueTest,
+                          Predicate<Byte> validFoodValueTest)
+    {
         final var lines = new ArrayList<>(linesStream.toList()); // modifiable list!
         final WorldMap worldMap = new WorldMap();
 
@@ -68,13 +71,12 @@ public interface WorldMapParser {
                 Logger.error("Line skipped: '{}'", line);
             }
         }
-        worldMap.terrainLayer = parseTileMap(terrainLayerRows,
-                value -> 0 <= value && value <= TerrainTiles.MAX_VALUE, TerrainTiles.EMPTY);
+        worldMap.terrainLayer = parseTileMap(terrainLayerRows, validTerrainValueTest);
+        worldMap.foodLayer = parseTileMap(foodLayerRows, validFoodValueTest);
 
-        worldMap.foodLayer = parseTileMap(foodLayerRows,
-                value -> 0 <= value && value <= FoodTiles.ENERGIZER, FoodTiles.EMPTY);
-
+        //TODO remove this:
         replaceObsoleteTerrainValues(worldMap);
+
         return worldMap;
     }
 
@@ -97,7 +99,7 @@ public interface WorldMapParser {
         });
     }
 
-    private static WorldMapLayer parseTileMap(List<String> lines, Predicate<Byte> valueAllowed, byte emptyValue) {
+    private static WorldMapLayer parseTileMap(List<String> lines, Predicate<Byte> valueAllowed) {
         // First pass: read property section and determine data section size
         int numDataRows = 0, numDataCols = -1;
         int dataStartIndex = -1;
@@ -139,7 +141,7 @@ public interface WorldMapParser {
                     if (valueAllowed.test(value)) {
                         tileMap.set(row, col, value);
                     } else {
-                        tileMap.set(row, col, emptyValue);
+                        tileMap.set(row, col, (byte) 0);
                         Logger.error("Invalid tile map value {} at row {}, col {}", value, row, col);
                     }
                 } catch (NumberFormatException x) {

@@ -9,12 +9,14 @@ public interface FoodTiles {
     byte PELLET    = 0x01;
     byte ENERGIZER = 0x02;
 
+    byte MAX_VALUE = ENERGIZER;
+
     static String name(byte value) {
         return switch (value) {
             case EMPTY -> "EMPTY";
             case PELLET -> "PELLET";
             case ENERGIZER -> "ENERGIZER";
-            default -> "?";
+            default -> "[%d]".formatted(value);
         };
     }
 }
