@@ -423,7 +423,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public void createLevel(int levelNumber) {
-        WorldMap worldMap = mapSelector.selectWorldMap(mapCategory, levelNumber);
+        WorldMap worldMap = mapSelector.createWorldMapForLevel(mapCategory, levelNumber);
         level = new GameLevel(levelNumber, worldMap);
         level.setData(createLevelData()); //TODO needed?
         level.setHuntingTimer(huntingTimer);

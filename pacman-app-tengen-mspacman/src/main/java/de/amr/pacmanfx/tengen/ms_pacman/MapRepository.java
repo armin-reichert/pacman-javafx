@@ -90,17 +90,15 @@ public class MapRepository {
         MapCategory mapCategory        = worldMap.getConfigValue("mapCategory");
         int mapNumber                  = worldMap.getConfigValue("mapNumber");
         NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
-        boolean usesRandomColorScheme  = worldMap.getConfigValue("randomColorScheme");
         // if color scheme has been randomly selected (levels 28-31, except ARCADE maps), use multiple flash colors
+        boolean multipleFlashColors    = worldMap.getConfigValue("multipleFlashColors");
         return switch (mapCategory) {
             case ARCADE  -> arcadeMapSet(mapNumber, nesColorScheme, flashCount);
-            case MINI    -> miniMapSet(mapNumber, nesColorScheme, flashCount, usesRandomColorScheme);
-            case BIG     -> bigMapSet(mapNumber, nesColorScheme, flashCount, usesRandomColorScheme);
-            case STRANGE -> { // TODO HACK!
-                int spriteNumber = worldMap.getConfigValue("levelNumber");
-                NES_ColorScheme colorScheme = worldMap.getConfigValue("nesColorScheme");
-                yield strangeMapSet(spriteNumber, usesRandomColorScheme ? colorScheme : null, flashCount, usesRandomColorScheme);
-            }
+            case MINI    -> miniMapSet(mapNumber, nesColorScheme, flashCount, multipleFlashColors);
+            case BIG     -> bigMapSet(mapNumber, nesColorScheme, flashCount, multipleFlashColors);
+            case STRANGE -> strangeMapSet(worldMap.getConfigValue("levelNumber"),
+                multipleFlashColors ? worldMap.getConfigValue("nesColorScheme") : null,
+                flashCount, multipleFlashColors);
         };
     }
 
