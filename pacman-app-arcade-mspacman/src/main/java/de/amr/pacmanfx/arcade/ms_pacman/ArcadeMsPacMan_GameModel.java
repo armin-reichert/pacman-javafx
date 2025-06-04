@@ -242,7 +242,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
         level.addArcadeHouse();
 
         var msPacMan = createMsPacMan();
-        msPacMan.setAutopilotAlgorithm(autopilot);
+        msPacMan.setAutopilotSteering(autopilot);
         level.setPac(msPacMan);
 
         level.setGhosts(createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost());

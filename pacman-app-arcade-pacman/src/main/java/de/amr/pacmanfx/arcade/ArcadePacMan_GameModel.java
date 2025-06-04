@@ -239,7 +239,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
         level.addArcadeHouse();
 
         Pac pacMan = createPac();
-        pacMan.setAutopilotAlgorithm(autopilot);
+        pacMan.setAutopilotSteering(autopilot);
         level.setPac(pacMan);
 
         // Special tiles where attacking ghosts cannot move up

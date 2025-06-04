@@ -279,13 +279,13 @@ public class GameLevel {
 
     public WorldMap worldMap() { return worldMap; }
 
-    public boolean isInsideWorld(Vector2i tile) { return !worldMap.outOfBounds(tile); }
+    public boolean isTileInsideWorld(Vector2i tile) { return !worldMap.outOfBounds(tile); }
 
     public Stream<Vector2i> energizerTiles() { return Arrays.stream(energizerTiles); }
 
     public Stream<Portal> portals() { return Arrays.stream(portals); }
 
-    public boolean isPortalAt(Vector2i tile) {
+    public boolean isTileCoveredByPortal(Vector2i tile) {
         requireNonNull(tile);
         return portals().anyMatch(portal -> portal.contains(tile));
     }
@@ -296,19 +296,19 @@ public class GameLevel {
     }
 
     public boolean isBlockedTile(Vector2i tile) {
-        return isInsideWorld(tile) && isInaccessible(worldMap.content(LayerID.TERRAIN, tile));
+        return isTileInsideWorld(tile) && isInaccessible(worldMap.content(LayerID.TERRAIN, tile));
     }
 
     public boolean isTunnel(Vector2i tile) {
-        return isInsideWorld(tile) && worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.TUNNEL.byteValue();
+        return isTileInsideWorld(tile) && worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.TUNNEL.byteValue();
     }
 
     public boolean isIntersection(Vector2i tile) {
-        if (worldMap.outOfBounds(tile) || isCoveredByHouse(tile)) {
+        if (worldMap.outOfBounds(tile) || isTileCoveredByHouse(tile)) {
             return false;
         }
-        long numBlockedNeighbors = tile.neighbors().filter(this::isInsideWorld).filter(this::isBlockedTile).count();
-        long numDoorNeighbors = tile.neighbors().filter(this::isInsideWorld).filter(this::isDoorAt).count();
+        long numBlockedNeighbors = tile.neighbors().filter(this::isTileInsideWorld).filter(this::isBlockedTile).count();
+        long numDoorNeighbors = tile.neighbors().filter(this::isTileInsideWorld).filter(this::isDoorAt).count();
         return numBlockedNeighbors + numDoorNeighbors < 2;
     }
 
@@ -384,15 +384,7 @@ public class GameLevel {
         return houseMinTile().toVector2f().scaled(TS).plus(houseSizeInTiles().toVector2f().scaled(HTS));
     }
 
-    /**
-     * @param actor some actor
-     * @return tells if the given actor is located inside the house
-     */
-    public boolean isInsideHouse(Actor actor) {
-        return isCoveredByHouse(requireNonNull(actor).tile());
-    }
-
-    public boolean isCoveredByHouse(Vector2i tile) {
+    public boolean isTileCoveredByHouse(Vector2i tile) {
         requireNonNull(tile);
         return tile.x() >= houseMinTile().x() && tile.x() <= houseMaxTile().x()
             && tile.y() >= houseMinTile().y() && tile.y() <= houseMaxTile().y();
@@ -423,6 +415,14 @@ public class GameLevel {
     public Direction ghostStartDirection(byte personality) {
         requireValidGhostPersonality(personality);
         return ghostStartDirections[personality];
+    }
+
+    /**
+     * @param actor some actor
+     * @return tells if the given actor is located inside the house
+     */
+    public boolean isActorInsideHouse(Actor actor) {
+        return isTileCoveredByHouse(requireNonNull(actor).tile());
     }
 
     // Food
@@ -462,11 +462,11 @@ public class GameLevel {
     }
 
     public boolean isFoodPosition(Vector2i tile) {
-        return isInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) != FoodTile.EMPTY.byteValue();
+        return isTileInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) != FoodTile.EMPTY.byteValue();
     }
 
     public boolean isEnergizerPosition(Vector2i tile) {
-        return isInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) == FoodTile.ENERGIZER.byteValue();
+        return isTileInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) == FoodTile.ENERGIZER.byteValue();
     }
 
     public boolean tileContainsFood(Vector2i tile) {
@@ -474,7 +474,7 @@ public class GameLevel {
     }
 
     public boolean tileContainsEatenFood(Vector2i tile) {
-        return isInsideWorld(tile) && eatenFoodBits.get(worldMap.index(tile));
+        return isTileInsideWorld(tile) && eatenFoodBits.get(worldMap.index(tile));
     }
 
     public Stream<Vector2i> tilesContainingFood() {

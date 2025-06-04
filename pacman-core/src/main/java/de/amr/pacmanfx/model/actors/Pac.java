@@ -20,34 +20,21 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Pac-Man / Ms. Pac-Man.
- *
- * @author Armin Reichert
  */
 public class Pac extends MovingActor implements AnimatedActor {
 
-    public static final byte REST_INDEFINITELY = -1;
-
-    private final String name;
-    private boolean dead;
-    private int restingTicks;
-    private long starvingTicks;
-    private Steering autopilotAlgorithm;
+    private static final byte INDEFINITELY = -1;
 
     private final BooleanProperty immunePy = new SimpleBooleanProperty(false);
     private final BooleanProperty usingAutopilotPy = new SimpleBooleanProperty(false);
-
     private final TickTimer powerTimer = new TickTimer("PacPowerTimer");
 
+    private final String name;
+    private boolean dead;
+    private byte restingTicks;
+    private long starvingTicks;
+    private Steering autopilotSteering;
     private ActorAnimationMap animationMap;
-
-    public void setAnimations(ActorAnimationMap animationMap) {
-        this.animationMap = requireNonNull(animationMap);
-    }
-
-    @Override
-    public Optional<ActorAnimationMap> animations() {
-        return Optional.ofNullable(animationMap);
-    }
 
     public Pac(String name) {
         this.name = requireNonNull(name);
@@ -81,13 +68,13 @@ public class Pac extends MovingActor implements AnimatedActor {
 
     @Override
     public boolean canAccessTile(GameLevel level, Vector2i tile) {
-        if (level.isCoveredByHouse(tile)) {
+        if (level.isTileCoveredByHouse(tile)) {
             return false;
         }
-        if (level.isInsideWorld(tile)) {
+        if (level.isTileInsideWorld(tile)) {
             return !level.isBlockedTile(tile);
         }
-        return level.isPortalAt(tile);
+        return level.isTileCoveredByPortal(tile);
     }
 
     @Override
@@ -124,24 +111,23 @@ public class Pac extends MovingActor implements AnimatedActor {
     }
 
     public void update(GameLevel level) {
-        if (dead || restingTicks == REST_INDEFINITELY) {
+        if (dead || restingTicks == INDEFINITELY) {
             return;
         }
-        if (restingTicks == 0) {
-            if (isUsingAutopilot()) {
-                autopilotAlgorithm.steer(this, level);
-            }
-            setSpeed(powerTimer.isRunning()
-                ? level.speedControl().pacPowerSpeed(level)
-                : level.speedControl().pacNormalSpeed(level));
-            tryMoving(level);
-            if (moveInfo.moved) {
-                playAnimation();
-            } else {
-                stopAnimation();
-            }
+        if (restingTicks > 0) {
+            restingTicks -= 1;
+            return;
+        }
+        if (isUsingAutopilot()) {
+            autopilotSteering.steer(this, level);
+        }
+        setSpeed(powerTimer.isRunning() ? level.speedControl().pacPowerSpeed(level) : level.speedControl().pacNormalSpeed(level));
+        tryMoving(level);
+
+        if (moveInfo.moved) {
+            playAnimation();
         } else {
-            rest();
+            stopAnimation();
         }
     }
 
@@ -150,13 +136,13 @@ public class Pac extends MovingActor implements AnimatedActor {
      */
     public void stopAndShowInFullBeauty() {
         setSpeed(0);
-        setRestingTicks(Pac.REST_INDEFINITELY);
+        setRestingTicks(INDEFINITELY);
         stopAnimation();
         selectAnimation(ANIM_ANY_PAC_MUNCHING);
         resetAnimation();
     }
 
-    public void die() {
+    public void sayGoodbyeCruelWorld() {
         setSpeed(0);
         stopAnimation();
         dead = true;
@@ -166,50 +152,39 @@ public class Pac extends MovingActor implements AnimatedActor {
         return !dead;
     }
 
-    public int restingTicks() { return restingTicks; }
-
     public void setRestingTicks(int ticks) {
-        if (ticks == REST_INDEFINITELY || ticks >= 0) {
-            restingTicks = ticks;
-        } else {
-            throw new IllegalArgumentException("Resting time cannot be negative, but is: " + ticks);
+        if (ticks != INDEFINITELY && (ticks < 0 || ticks > 127)) {
+            throw new IllegalArgumentException("Resting ticks must be INDEFINITE or 0..127, but is " + ticks);
         }
+        restingTicks = (byte) ticks;
     }
-
-    public void rest() { restingTicks--; }
 
     /**
      *  @return number of ticks passed since pellet or energizer was eaten.
      */
-    public long starvingTicks() {
-        return starvingTicks;
-    }
-
-    public void starvingContinues() {
-        ++starvingTicks;
-    }
-
-    public void starvingEnds() { starvingTicks = 0; }
+    public long starvingTicks() { return starvingTicks; }
+    public void starvingIsOver() { starvingTicks = 0; }
+    public void starve() { ++starvingTicks; }
 
     /**
      * @return {@code true} if Pac-Man has run against a wall and could not move, its speed is zero
      * or if he is resting for an indefinite time.
      */
     public boolean isStandingStill() {
-        return velocity().equals(Vector2f.ZERO) || !moveInfo.moved || restingTicks == REST_INDEFINITELY;
+        return velocity().equals(Vector2f.ZERO) || !moveInfo.moved || restingTicks == INDEFINITELY;
     }
 
-    public void setAutopilotAlgorithm(Steering steering) {
-        autopilotAlgorithm = steering;
-    }
-
-    public boolean isUsingAutopilot() {
-        return usingAutopilotPy.get();
-    }
-
-    public void setUsingAutopilot(boolean value) {
-        usingAutopilotPy.set(value);
-    }
-
+    public void setAutopilotSteering(Steering steering) { autopilotSteering = steering; }
+    public boolean isUsingAutopilot() { return usingAutopilotPy.get(); }
+    public void setUsingAutopilot(boolean value) { usingAutopilotPy.set(value); }
     public BooleanProperty usingAutopilotProperty() { return usingAutopilotPy; }
+
+    public void setAnimations(ActorAnimationMap animationMap) {
+        this.animationMap = requireNonNull(animationMap);
+    }
+
+    @Override
+    public Optional<ActorAnimationMap> animations() {
+        return Optional.ofNullable(animationMap);
+    }
 }

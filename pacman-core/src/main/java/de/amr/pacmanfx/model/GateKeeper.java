@@ -157,7 +157,7 @@ public class GateKeeper {
         }
         // check Pac-Man starving time
         if (level.pac().starvingTicks() >= pacStarvingLimit) {
-            level.pac().starvingEnds();
+            level.pac().starvingIsOver();
             return String.format("%s reached starving limit (%d ticks)", level.pac().name(), pacStarvingLimit);
         }
         return null;
@@ -179,7 +179,7 @@ public class GateKeeper {
                 Logger.trace("Global dot counter = {}", globalCounter);
             }
         } else {
-            level.ghosts(GhostState.LOCKED).filter(level::isInsideHouse).findFirst().ifPresent(ghost -> {
+            level.ghosts(GhostState.LOCKED).filter(level::isActorInsideHouse).findFirst().ifPresent(ghost -> {
                 countersByGhost[ghost.personality()]++;
                 Logger.trace("{} dot counter = {}", ghost.name(), countersByGhost[ghost.personality()]);
             });
@@ -189,7 +189,7 @@ public class GateKeeper {
     public void unlockGhosts(GameLevel level) {
         Ghost blinky = level.ghost(RED_GHOST_SHADOW);
         if (blinky.inAnyOfStates(GhostState.LOCKED)) {
-            if (level.isInsideHouse(blinky)) {
+            if (level.isActorInsideHouse(blinky)) {
                 blinky.setMoveAndWishDir(Direction.UP);
                 blinky.setState(GhostState.LEAVING_HOUSE);
             } else {

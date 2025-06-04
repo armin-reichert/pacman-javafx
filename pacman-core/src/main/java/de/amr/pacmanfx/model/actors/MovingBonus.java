@@ -60,13 +60,13 @@ public class MovingBonus extends MovingActor implements Bonus {
 
     @Override
     public boolean canAccessTile(GameLevel level, Vector2i tile) {
-        if (level.isCoveredByHouse(tile)) {
+        if (level.isTileCoveredByHouse(tile)) {
             return false;
         }
-        if (level.isInsideWorld(tile)) {
+        if (level.isTileInsideWorld(tile)) {
             return !level.isBlockedTile(tile);
         }
-        return level.isPortalAt(tile);
+        return level.isTileCoveredByPortal(tile);
     }
 
     @Override

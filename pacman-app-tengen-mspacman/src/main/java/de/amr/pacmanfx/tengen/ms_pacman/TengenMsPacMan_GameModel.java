@@ -437,7 +437,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.addArcadeHouse();
 
         var msPacMan = createMsPacMan();
-        msPacMan.setAutopilotAlgorithm(autopilot);
+        msPacMan.setAutopilotSteering(autopilot);
         level.setPac(msPacMan);
 
         level.setGhosts(createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost());
@@ -501,7 +501,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.setGameOverStateTicks(120);
         level.pac().setImmune(false);
         level.pac().setUsingAutopilot(true);
-        level.pac().setAutopilotAlgorithm(demoLevelSteering);
+        level.pac().setAutopilotSteering(demoLevelSteering);
         demoLevelSteering.init();
         scoreManager.setScoreLevelNumber(1);
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(1));
@@ -579,7 +579,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     protected void checkIfPacManFindsFood() {
         Vector2i tile = level.pac().tile();
         if (level.tileContainsFood(tile)) {
-            level.pac().starvingEnds();
+            level.pac().starvingIsOver();
             level.registerFoodEatenAt(tile);
             gateKeeper().ifPresent(gateKeeper -> gateKeeper.registerFoodEaten(level));
             if (level.isEnergizerPosition(tile)) {
@@ -594,7 +594,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             }
             theGameEventManager().publishEvent(this, GameEventType.PAC_FOUND_FOOD, tile);
         } else {
-            level.pac().starvingContinues();
+            level.pac().starve();
         }
     }
 
@@ -625,7 +625,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.pac().powerTimer().reset(0);
         Logger.info("Power timer stopped and set to zero");
         gateKeeper.resetCounterAndSetEnabled(true); // TODO how is that realized in Tengen?
-        level.pac().die();
+        level.pac().sayGoodbyeCruelWorld();
     }
 
     @Override

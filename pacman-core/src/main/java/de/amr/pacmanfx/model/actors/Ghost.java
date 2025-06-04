@@ -126,7 +126,7 @@ public abstract class Ghost extends MovingActor implements AnimatedActor {
      */
     public void roam(GameLevel level) {
         Vector2i currentTile = tile();
-        if (!level.isPortalAt(currentTile) && (isNewTileEntered() || !moveInfo.moved)) {
+        if (!level.isTileCoveredByPortal(currentTile) && (isNewTileEntered() || !moveInfo.moved)) {
             Direction dir = computeRoamingDirection(level, currentTile);
             setWishDir(dir);
         }
@@ -171,10 +171,10 @@ public abstract class Ghost extends MovingActor implements AnimatedActor {
         if (level.isDoorAt(tile)) {
             return inAnyOfStates(GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE);
         }
-        if (level.isInsideWorld(tile)) {
+        if (level.isTileInsideWorld(tile)) {
             return !level.isBlockedTile(tile);
         }
-        return level.isPortalAt(tile);
+        return level.isTileCoveredByPortal(tile);
     }
 
     @Override
@@ -249,7 +249,7 @@ public abstract class Ghost extends MovingActor implements AnimatedActor {
      * and start blinking when Pac-Man's power starts fading. After that, they return to their normal color.
      */
     private void updateStateLocked(GameLevel level) {
-        if (level.isInsideHouse(this)) {
+        if (level.isActorInsideHouse(this)) {
             float minY = (level.houseMinTile().y() + 1) * TS + HTS;
             float maxY = (level.houseMaxTile().y() - 1) * TS - HTS;
             setSpeed(level.speedControl().ghostSpeedInsideHouse(level, this));

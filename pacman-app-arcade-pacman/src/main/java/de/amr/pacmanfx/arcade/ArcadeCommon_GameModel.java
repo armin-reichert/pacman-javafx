@@ -109,7 +109,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
         activateCruiseElroyMode(false);
         level.pac().powerTimer().stop();
         level.pac().powerTimer().reset(0);
-        level.pac().die();
+        level.pac().sayGoodbyeCruelWorld();
     }
 
     @Override
@@ -147,7 +147,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
     protected void checkIfPacManFindsFood() {
         Vector2i tile = level.pac().tile();
         if (level.tileContainsFood(tile)) {
-            level.pac().starvingEnds();
+            level.pac().starvingIsOver();
             level.registerFoodEatenAt(tile);
             if (level.isEnergizerPosition(tile)) {
                 onEnergizerEaten(tile);
@@ -161,7 +161,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
             }
             theGameEventManager().publishEvent(this, GameEventType.PAC_FOUND_FOOD, tile);
         } else {
-            level.pac().starvingContinues();
+            level.pac().starve();
         }
     }
 
@@ -232,7 +232,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
         level.huntingTimer().reset();
         level.pac().setImmune(false);
         level.pac().setUsingAutopilot(true);
-        level.pac().setAutopilotAlgorithm(demoLevelSteering);
+        level.pac().setAutopilotSteering(demoLevelSteering);
         demoLevelSteering.init();
         levelCounter.setEnabled(true);
         scoreManager.setScoreLevelNumber(levelNumber);
