@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.lib.tilemap.FoodTile;
-import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import javafx.scene.paint.Color;
 
 import java.util.Arrays;
@@ -44,9 +43,9 @@ public class TileMatcher {
     }
 
     public byte matchFoodTile(int[] tilePixels) {
-        if (isEnergizer(tilePixels)) return FoodTile.ENERGIZER.byteValue();
-        if (isPellet(tilePixels)) return FoodTile.PELLET.byteValue();
-        return FoodTile.EMPTY.byteValue();
+        if (isEnergizer(tilePixels)) return FoodTile.ENERGIZER.code();
+        if (isPellet(tilePixels)) return FoodTile.PELLET.code();
+        return FoodTile.EMPTY.code();
     }
 
     private boolean isEnergizer(int[] tilePixels) {
@@ -60,19 +59,19 @@ public class TileMatcher {
     }
 
     public byte matchTerrainTile(int[] tilePixels) {
-        if (matchesAngularDoubleNWCorner(tilePixels)) return DCORNER_NW.byteValue();
-        if (matchesAngularDoubleSWCorner(tilePixels)) return DCORNER_SW.byteValue();
-        if (matchesAngularDoubleSECorner(tilePixels)) return DCORNER_SE.byteValue();
-        if (matchesAngularDoubleNECorner(tilePixels)) return DCORNER_NE.byteValue();
+        if (matchesAngularDoubleNWCorner(tilePixels)) return DCORNER_NW.code();
+        if (matchesAngularDoubleSWCorner(tilePixels)) return DCORNER_SW.code();
+        if (matchesAngularDoubleSECorner(tilePixels)) return DCORNER_SE.code();
+        if (matchesAngularDoubleNECorner(tilePixels)) return DCORNER_NE.code();
         //TODO: what if door and fill color are equal?
-        if (matchesDoor(tilePixels))     return DOOR.byteValue();
-        if (matchesHWall(tilePixels))    return WALL_H.byteValue();
-        if (matchesVWall(tilePixels))    return WALL_V.byteValue();
-        if (matchesNWCorner(tilePixels)) return ARC_NW.byteValue();
-        if (matchesSWCorner(tilePixels)) return ARC_SW.byteValue();
-        if (matchesNECorner(tilePixels)) return ARC_NE.byteValue();
-        if (matchesSECorner(tilePixels)) return ARC_SE.byteValue();
-        return EMPTY.byteValue();
+        if (matchesDoor(tilePixels))     return DOOR.code();
+        if (matchesHWall(tilePixels))    return WALL_H.code();
+        if (matchesVWall(tilePixels))    return WALL_V.code();
+        if (matchesNWCorner(tilePixels)) return ARC_NW.code();
+        if (matchesSWCorner(tilePixels)) return ARC_SW.code();
+        if (matchesNECorner(tilePixels)) return ARC_NE.code();
+        if (matchesSECorner(tilePixels)) return ARC_SE.code();
+        return EMPTY.code();
     }
 
     private IntStream allIndices() { return IntStream.range(0, 64); }

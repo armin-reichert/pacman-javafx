@@ -18,6 +18,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
+import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -27,16 +28,16 @@ public class GameLevel {
     public static final int EMPTY_ROWS_BELOW_MAZE = 2;
 
     private static boolean isTileAlwaysBlocked(byte code) {
-        return code == TerrainTile.WALL_H.byteValue()
-            || code == TerrainTile.WALL_V.byteValue()
-            || code == TerrainTile.ARC_NE.byteValue()
-            || code == TerrainTile.ARC_NW.byteValue()
-            || code == TerrainTile.ARC_SE.byteValue()
-            || code == TerrainTile.ARC_SW.byteValue()
-            || code == TerrainTile.DCORNER_NE.byteValue()
-            || code == TerrainTile.DCORNER_NW.byteValue()
-            || code == TerrainTile.DCORNER_SE.byteValue()
-            || code == TerrainTile.DCORNER_SW.byteValue();
+        return code == WALL_H.code()
+            || code == WALL_V.code()
+            || code == ARC_NE.code()
+            || code == ARC_NW.code()
+            || code == ARC_SE.code()
+            || code == ARC_SW.code()
+            || code == TerrainTile.DCORNER_NE.code()
+            || code == TerrainTile.DCORNER_NW.code()
+            || code == TerrainTile.DCORNER_SE.code()
+            || code == TerrainTile.DCORNER_SW.code();
     }
 
     /**
@@ -93,8 +94,8 @@ public class GameLevel {
         portals = findPortals(worldMap);
 
         currentBonusIndex = -1;
-        energizerTiles = worldMap.tilesContaining(LayerID.FOOD, FoodTile.ENERGIZER.byteValue()).toArray(Vector2i[]::new);
-        totalFoodCount = (int) worldMap.tilesContaining(LayerID.FOOD, FoodTile.PELLET.byteValue()).count() + energizerTiles.length;
+        energizerTiles = worldMap.tilesContaining(LayerID.FOOD, FoodTile.ENERGIZER.code()).toArray(Vector2i[]::new);
+        totalFoodCount = (int) worldMap.tilesContaining(LayerID.FOOD, FoodTile.PELLET.code()).count() + energizerTiles.length;
         uneatenFoodCount = totalFoodCount;
         eatenFoodBits = new BitSet(worldMap.numCols() * worldMap.numRows());
 
@@ -146,8 +147,8 @@ public class GameLevel {
         int firstColumn = 0, lastColumn = worldMap.numCols() - 1;
         for (int row = 0; row < worldMap.numRows(); ++row) {
             Vector2i leftBorderTile = Vector2i.of(firstColumn, row), rightBorderTile = Vector2i.of(lastColumn, row);
-            if (worldMap.content(LayerID.TERRAIN, row, firstColumn) == TerrainTile.TUNNEL.byteValue()
-                && worldMap.content(LayerID.TERRAIN, row, lastColumn) == TerrainTile.TUNNEL.byteValue()) {
+            if (worldMap.content(LayerID.TERRAIN, row, firstColumn) == TerrainTile.TUNNEL.code()
+                && worldMap.content(LayerID.TERRAIN, row, lastColumn) == TerrainTile.TUNNEL.code()) {
                 portals.add(new Portal(leftBorderTile, rightBorderTile, 2));
             }
         }
@@ -300,7 +301,7 @@ public class GameLevel {
     }
 
     public boolean isTunnel(Vector2i tile) {
-        return isTileInsideWorld(tile) && worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.TUNNEL.byteValue();
+        return isTileInsideWorld(tile) && worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.TUNNEL.code();
     }
 
     public boolean isIntersection(Vector2i tile) {
@@ -324,17 +325,17 @@ public class GameLevel {
 
         // Create an obstacle for the house!
         //TODO change attributes to min_tile and max_tiles
-        for (int y = minY; y <= maxY; ++y) {
-            for (int x = minX; x <= maxX; ++x) {
-                byte value = TerrainTile.EMPTY.byteValue();
-                if      (x == minX && y == minY) value = TerrainTile.ARC_NW.byteValue();
-                else if (x == minX && y == maxY) value = TerrainTile.ARC_SW.byteValue();
-                else if (x == maxX && y == minY) value = TerrainTile.ARC_NE.byteValue();
-                else if (x == maxX && y == maxY) value = TerrainTile.ARC_SE.byteValue();
-                else if (y == minY && (x == minX + 3 || x == minX + 4)) value = TerrainTile.DOOR.byteValue();
-                else if (x == minX || x == maxX) value = TerrainTile.WALL_V.byteValue();
-                else if (y == minY || y == maxY) value = TerrainTile.WALL_H.byteValue();
-                worldMap.setContent(LayerID.TERRAIN, Vector2i.of(x, y), value);
+        for (int row = minY; row <= maxY; ++row) {
+            for (int col = minX; col <= maxX; ++col) {
+                byte code = EMPTY.code();
+                if      (col == minX && row == minY) code = ARC_NW.code();
+                else if (col == minX && row == maxY) code = ARC_SW.code();
+                else if (col == maxX && row == minY) code = ARC_NE.code();
+                else if (col == maxX && row == maxY) code = ARC_SE.code();
+                else if (row == minY && (col == leftDoorTile.x() || col == rightDoorTile.x())) code = DOOR.code();
+                else if (col == minX || col == maxX) code = WALL_V.code();
+                else if (row == minY || row == maxY) code = WALL_H.code();
+                worldMap.setContent(LayerID.TERRAIN, row, col, code);
             }
         }
     }
@@ -462,11 +463,11 @@ public class GameLevel {
     }
 
     public boolean isFoodPosition(Vector2i tile) {
-        return isTileInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) != FoodTile.EMPTY.byteValue();
+        return isTileInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) != FoodTile.EMPTY.code();
     }
 
     public boolean isEnergizerPosition(Vector2i tile) {
-        return isTileInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) == FoodTile.ENERGIZER.byteValue();
+        return isTileInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) == FoodTile.ENERGIZER.code();
     }
 
     public boolean tileContainsFood(Vector2i tile) {

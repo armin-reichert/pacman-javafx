@@ -138,26 +138,26 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
     }
 
     private void drawTileUnscaled(GraphicsContext g, Vector2i tile, byte content) {
-        if       (content == WALL_H.byteValue()) drawWallH(g, tile);
-        else  if (content == WALL_V.byteValue()) drawWallV(g, tile);
+        if       (content == WALL_H.code()) drawWallH(g, tile);
+        else  if (content == WALL_V.code()) drawWallV(g, tile);
 
-        else if (content == ARC_NW.byteValue()) drawArc(g, tile, content);
-        else if (content == ARC_NE.byteValue()) drawArc(g, tile, content);
-        else if (content == ARC_SW.byteValue()) drawArc(g, tile, content);
-        else if (content == ARC_SE.byteValue()) drawArc(g, tile, content);
+        else if (content == ARC_NW.code()) drawArc(g, tile, content);
+        else if (content == ARC_NE.code()) drawArc(g, tile, content);
+        else if (content == ARC_SW.code()) drawArc(g, tile, content);
+        else if (content == ARC_SE.code()) drawArc(g, tile, content);
 
-        else if (content == DCORNER_NW.byteValue()) drawDCorner(g, tile, content, xp, yp);
-        else if (content == DCORNER_NE.byteValue()) drawDCorner(g, tile, content, xp, yp);
-        else if (content == DCORNER_SW.byteValue()) drawDCorner(g, tile, content, xp, yp);
-        else if (content == DCORNER_SE.byteValue()) drawDCorner(g, tile, content, xp, yp);
+        else if (content == DCORNER_NW.code()) drawDCorner(g, tile, content, xp, yp);
+        else if (content == DCORNER_NE.code()) drawDCorner(g, tile, content, xp, yp);
+        else if (content == DCORNER_SW.code()) drawDCorner(g, tile, content, xp, yp);
+        else if (content == DCORNER_SE.code()) drawDCorner(g, tile, content, xp, yp);
 
-        else if (content == DOOR.byteValue())   drawDoor(g, tile, colors.doorColor());
-        else if (content == TUNNEL.byteValue()) drawTunnel(g, tile);
+        else if (content == DOOR.code())   drawDoor(g, tile, colors.doorColor());
+        else if (content == TUNNEL.code()) drawTunnel(g, tile);
 
-        else if (content == ONE_WAY_UP.byteValue())    drawOneWaySign(g, tile, Direction.UP);
-        else if (content == ONE_WAY_RIGHT.byteValue()) drawOneWaySign(g, tile, Direction.RIGHT);
-        else if (content == ONE_WAY_DOWN.byteValue())  drawOneWaySign(g, tile, Direction.DOWN);
-        else if (content == ONE_WAY_LEFT.byteValue())  drawOneWaySign(g, tile, Direction.LEFT);
+        else if (content == ONE_WAY_UP.code())    drawOneWaySign(g, tile, Direction.UP);
+        else if (content == ONE_WAY_RIGHT.code()) drawOneWaySign(g, tile, Direction.RIGHT);
+        else if (content == ONE_WAY_DOWN.code())  drawOneWaySign(g, tile, Direction.DOWN);
+        else if (content == ONE_WAY_LEFT.code())  drawOneWaySign(g, tile, Direction.LEFT);
     }
 
     private void drawDoor(GraphicsContext g, Vector2i tile, Color color) {
@@ -236,10 +236,10 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
         double x = tile.x() * TS, y = tile.y() * TS;
         g.setStroke(colors.wallStrokeColor());
         g.setLineWidth(1);
-        if (cornerType == ARC_NW.byteValue()) g.strokeArc(x + 4, y + 4, TS, TS, 90, 90,  ArcType.OPEN);
-        if (cornerType == ARC_NE.byteValue()) g.strokeArc(x - 4, y + 4, TS, TS, 0, 90,   ArcType.OPEN);
-        if (cornerType == ARC_SE.byteValue()) g.strokeArc(x - 4, y - 4, TS, TS, 270, 90, ArcType.OPEN);
-        if (cornerType == ARC_SW.byteValue()) g.strokeArc(x + 4, y - 4, TS, TS, 180, 90, ArcType.OPEN);
+        if (cornerType == ARC_NW.code()) g.strokeArc(x + 4, y + 4, TS, TS, 90, 90,  ArcType.OPEN);
+        if (cornerType == ARC_NE.code()) g.strokeArc(x - 4, y + 4, TS, TS, 0, 90,   ArcType.OPEN);
+        if (cornerType == ARC_SE.code()) g.strokeArc(x - 4, y - 4, TS, TS, 270, 90, ArcType.OPEN);
+        if (cornerType == ARC_SW.code()) g.strokeArc(x + 4, y - 4, TS, TS, 180, 90, ArcType.OPEN);
     }
 
     private void drawDCorner(GraphicsContext g, Vector2i tile, byte cornerType, double[] xp, double[] yp) {
@@ -249,7 +249,7 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
         double d = 1;
         g.setStroke(colors.wallStrokeColor());
         g.setLineWidth(1);
-        if (cornerType == DCORNER_NW.byteValue()) {
+        if (cornerType == DCORNER_NW.code()) {
             xp[0]=xp[1]=cx-d; xp[2]=rightEdge;
             yp[0]=bottomEdge; yp[1]=yp[2]=cy-d;
             g.strokePolyline(xp,yp,xp.length);
@@ -258,7 +258,7 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
             yp[0]=bottomEdge; yp[1]=yp[2]=cy+d;
             g.strokePolyline(xp,yp,xp.length);
         }
-        else if (cornerType == DCORNER_NE.byteValue()) {
+        else if (cornerType == DCORNER_NE.code()) {
             xp[0]=x; xp[1]=xp[2]=cx+d;
             yp[0]=yp[1]=cy-d; yp[2]=bottomEdge;
             g.strokePolyline(xp,yp,xp.length);
@@ -267,7 +267,7 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
             yp[0]=yp[1]=cy+d; yp[2]=bottomEdge;
             g.strokePolyline(xp,yp,xp.length);
         }
-        else if (cornerType == DCORNER_SE.byteValue()) {
+        else if (cornerType == DCORNER_SE.code()) {
             xp[0]=x; xp[1]=xp[2]=cx-d;
             yp[0]=yp[1]=cy-d; yp[2]=y;
             g.strokePolyline(xp,yp,xp.length);
@@ -276,7 +276,7 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
             yp[0]=yp[1]=cy+d; yp[2]=y;
             g.strokePolyline(xp,yp,xp.length);
         }
-        else if (cornerType == DCORNER_SW.byteValue()) {
+        else if (cornerType == DCORNER_SW.code()) {
             xp[0]=xp[1]=cx-d; xp[2]=rightEdge;
             yp[0]=y; yp[1]=yp[2]=cy+d;
             g.strokePolyline(xp,yp,xp.length);

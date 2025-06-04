@@ -319,11 +319,11 @@ public class EditCanvas {
         });
 
         var miFloodWithPellets = new MenuItem(tt("menu.edit.flood_with_pellets"));
-        miFloodWithPellets.setOnAction(ae -> editor.floodWithFoodValue(tile, FoodTile.PELLET.byteValue()));
+        miFloodWithPellets.setOnAction(ae -> editor.floodWithFoodValue(tile, FoodTile.PELLET.code()));
         miFloodWithPellets.setDisable(!editor.canEditFoodAtTile(tile));
 
         var miClearPellets = new MenuItem(tt("menu.edit.clear_food"));
-        miClearPellets.setOnAction(ae -> editor.floodWithFoodValue(tile, FoodTile.EMPTY.byteValue()));
+        miClearPellets.setOnAction(ae -> editor.floodWithFoodValue(tile, FoodTile.EMPTY.code()));
         miClearPellets.setDisable(!editor.canEditFoodAtTile(tile));
 
         contextMenu.getItems().setAll(

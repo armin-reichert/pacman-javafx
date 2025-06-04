@@ -30,11 +30,11 @@ public class WorldMap {
     public static final String MARKER_BEGIN_DATA_SECTION = "!data";
 
     private static boolean isValidTerrainValue(byte value) {
-        return Stream.of(TerrainTile.values()).anyMatch(tile -> tile.byteValue() == value);
+        return Stream.of(TerrainTile.values()).anyMatch(tile -> tile.code() == value);
     }
 
     private static boolean isValidFoodValue(byte value) {
-        return Stream.of(FoodTile.values()).anyMatch(tile -> tile.byteValue() == value);
+        return Stream.of(FoodTile.values()).anyMatch(tile -> tile.code() == value);
     }
 
     public static WorldMap emptyMap(int numRows, int numCols) {
@@ -100,8 +100,8 @@ public class WorldMap {
         newMap.foodLayer.replaceProperties(foodLayer.properties());
         for (int row = 0; row < newMap.numRows(); ++row) {
             for (int col = 0; col < newMap.numCols(); ++col) {
-                byte terrainValue = TerrainTile.EMPTY.byteValue();
-                byte foodValue = FoodTile.EMPTY.byteValue();
+                byte terrainValue = TerrainTile.EMPTY.code();
+                byte foodValue = FoodTile.EMPTY.code();
                 if (row < rowIndex) {
                     terrainValue = content(LayerID.TERRAIN, row, col);
                     foodValue = content(LayerID.FOOD, row, col);
@@ -110,8 +110,8 @@ public class WorldMap {
                     foodValue = content(LayerID.FOOD, row - 1, col);
                 } else {
                     if ((col == 0 || col == numCols() - 1)
-                        && content(LayerID.TERRAIN, row, col) == TerrainTile.WALL_V.byteValue()) {
-                        terrainValue = TerrainTile.WALL_V.byteValue(); // keep vertical border wall
+                        && content(LayerID.TERRAIN, row, col) == TerrainTile.WALL_V.code()) {
+                        terrainValue = TerrainTile.WALL_V.code(); // keep vertical border wall
                     }
                 }
                 newMap.setContent(LayerID.TERRAIN, row, col, terrainValue);
@@ -331,15 +331,15 @@ public class WorldMap {
      * @param layerID Layer ID
      * @param row row inside map bounds
      * @param col column inside map bounds
-     * @param value map value
+     * @param code map value
      * @throws IllegalArgumentException if tile outside map bounds
      */
-    public void setContent(LayerID layerID, int row, int col, byte value) {
+    public void setContent(LayerID layerID, int row, int col, byte code) {
         requireNonNull(layerID);
         if (outOfBounds(row, col)) {
             throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
         }
-        layer(layerID).set(row, col, value);
+        layer(layerID).set(row, col, code);
     }
 
     /**
@@ -347,10 +347,10 @@ public class WorldMap {
      *
      * @param layerID Layer ID
      * @param tile tile inside map bounds
-     * @param value map value
+     * @param code map value
      * @throws IllegalArgumentException if tile outside map bounds
      */
-    public void setContent(LayerID layerID, Vector2i tile, byte value) {
-        setContent(layerID, tile.y(), tile.x(), value);
+    public void setContent(LayerID layerID, Vector2i tile, byte code) {
+        setContent(layerID, tile.y(), tile.x(), code);
     }
 }

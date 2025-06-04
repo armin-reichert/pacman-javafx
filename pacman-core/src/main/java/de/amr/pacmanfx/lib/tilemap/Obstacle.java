@@ -107,10 +107,10 @@ public class Obstacle {
     public Vector2i cornerCenter(int segmentIndex) {
         ObstacleSegment corner = segment(segmentIndex);
         byte code = corner.encoding();
-        if (code == TerrainTile.ARC_NW.byteValue()) return point(segmentIndex).plus(0, HTS);
-        if (code == TerrainTile.ARC_SW.byteValue()) return point(segmentIndex).plus(HTS, 0);
-        if (code == TerrainTile.ARC_SE.byteValue()) return point(segmentIndex).plus(0, -HTS);
-        if (code == TerrainTile.ARC_NE.byteValue()) return point(segmentIndex).plus(-HTS, 0);
+        if (code == TerrainTile.ARC_NW.code()) return point(segmentIndex).plus(0, HTS);
+        if (code == TerrainTile.ARC_SW.code()) return point(segmentIndex).plus(HTS, 0);
+        if (code == TerrainTile.ARC_SE.code()) return point(segmentIndex).plus(0, -HTS);
+        if (code == TerrainTile.ARC_NE.code()) return point(segmentIndex).plus(-HTS, 0);
         throw new IllegalStateException("No corner tile at index " + segmentIndex);
     }
 
@@ -119,10 +119,10 @@ public class Obstacle {
         for (var segment : segments) {
             boolean up = segment.vector().y() < 0, down = segment.vector().y() > 0;
             byte code = segment.encoding();
-            if (code == TerrainTile.ARC_NW.byteValue() && down) centers.add(segment.startPoint().plus(0, HTS));
-            if (code == TerrainTile.ARC_SW.byteValue() && down) centers.add(segment.startPoint().plus(HTS, 0));
-            if (code == TerrainTile.ARC_SE.byteValue() && up)   centers.add(segment.startPoint().plus(0, -HTS));
-            if (code == TerrainTile.ARC_NE.byteValue() && up)   centers.add(segment.startPoint().plus(-HTS, 0));
+            if (code == TerrainTile.ARC_NW.code() && down) centers.add(segment.startPoint().plus(0, HTS));
+            if (code == TerrainTile.ARC_SW.code() && down) centers.add(segment.startPoint().plus(HTS, 0));
+            if (code == TerrainTile.ARC_SE.code() && up)   centers.add(segment.startPoint().plus(0, -HTS));
+            if (code == TerrainTile.ARC_NE.code() && up)   centers.add(segment.startPoint().plus(-HTS, 0));
         }
         return centers.toArray(Vector2i[]::new);
     }

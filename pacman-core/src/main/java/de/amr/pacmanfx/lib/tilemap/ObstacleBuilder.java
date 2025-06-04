@@ -92,8 +92,8 @@ public class ObstacleBuilder {
         worldMap.tiles()
             .filter(not(this::isExplored))
             .filter(tile ->
-                    worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.ARC_NW.byteValue() ||
-                    worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.DCORNER_NW.byteValue()) // house top-left corner
+                    worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.ARC_NW.code() ||
+                    worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.DCORNER_NW.code()) // house top-left corner
             .map(cornerNW -> buildClosedObstacle(cornerNW, tilesWithErrors))
             .forEach(obstacles::add);
 
@@ -123,25 +123,25 @@ public class ObstacleBuilder {
         byte startTileContent = worldMap.content(LayerID.TERRAIN, startTile);
         var obstacle = new Obstacle(startPoint);
         cursor = new Cursor(startTile);
-        if (startTileContent == TerrainTile.WALL_H.byteValue()) {
+        if (startTileContent == TerrainTile.WALL_H.code()) {
             Direction startDir = startsAtLeftBorder ? Direction.RIGHT : Direction.LEFT;
-            obstacle.addSegment(scaledVector(startDir, TS), true, TerrainTile.WALL_H.byteValue());
+            obstacle.addSegment(scaledVector(startDir, TS), true, TerrainTile.WALL_H.code());
             cursor.move(startDir);
         }
-        else if (startsAtLeftBorder && startTileContent == TerrainTile.ARC_SE.byteValue()) {
-            obstacle.addSegment(SEG_ARC_SE_UP, true, TerrainTile.ARC_SE.byteValue());
+        else if (startsAtLeftBorder && startTileContent == TerrainTile.ARC_SE.code()) {
+            obstacle.addSegment(SEG_ARC_SE_UP, true, TerrainTile.ARC_SE.code());
             cursor.move(Direction.UP);
         }
-        else if (startsAtLeftBorder && startTileContent == TerrainTile.ARC_NE.byteValue()) {
-            obstacle.addSegment(SEG_ARC_NE_DOWN, false, TerrainTile.ARC_NE.byteValue());
+        else if (startsAtLeftBorder && startTileContent == TerrainTile.ARC_NE.code()) {
+            obstacle.addSegment(SEG_ARC_NE_DOWN, false, TerrainTile.ARC_NE.code());
             cursor.move(Direction.DOWN);
         }
-        else if (!startsAtLeftBorder && startTileContent == TerrainTile.ARC_SW.byteValue()) {
-            obstacle.addSegment(SEG_ARC_SW_UP, false, TerrainTile.ARC_SW.byteValue());
+        else if (!startsAtLeftBorder && startTileContent == TerrainTile.ARC_SW.code()) {
+            obstacle.addSegment(SEG_ARC_SW_UP, false, TerrainTile.ARC_SW.code());
             cursor.move(Direction.UP);
         }
-        else if (!startsAtLeftBorder && startTileContent == TerrainTile.ARC_NW.byteValue()) {
-            obstacle.addSegment(SEG_ARC_NW_DOWN, true, TerrainTile.ARC_NW.byteValue());
+        else if (!startsAtLeftBorder && startTileContent == TerrainTile.ARC_NW.code()) {
+            obstacle.addSegment(SEG_ARC_NW_DOWN, true, TerrainTile.ARC_NW.code());
             cursor.move(Direction.DOWN);
         }
         else {
@@ -170,7 +170,7 @@ public class ObstacleBuilder {
             }
             setExplored(cursor.currentTile);
             byte tileContent = worldMap.content(LayerID.TERRAIN, cursor.currentTile);
-            if (tileContent == TerrainTile.WALL_V.byteValue()) {
+            if (tileContent == TerrainTile.WALL_V.code()) {
                 if (cursor.points(Direction.DOWN)) {
                     obstacle.addSegment(scaledVector(Direction.DOWN, TS), ccw, tileContent);
                     cursor.move(Direction.DOWN);
@@ -181,7 +181,7 @@ public class ObstacleBuilder {
                     errorAtCurrentTile(tilesWithErrors);
                 }
             }
-            else if (tileContent == TerrainTile.WALL_H.byteValue() || tileContent == TerrainTile.DOOR.byteValue()) {
+            else if (tileContent == TerrainTile.WALL_H.code() || tileContent == TerrainTile.DOOR.code()) {
                 if (cursor.points(Direction.RIGHT)) {
                     obstacle.addSegment(scaledVector(Direction.RIGHT, TS), ccw, tileContent);
                     cursor.move(Direction.RIGHT);
@@ -192,7 +192,7 @@ public class ObstacleBuilder {
                     errorAtCurrentTile(tilesWithErrors);
                 }
             }
-            else if (tileContent == TerrainTile.ARC_SW.byteValue() || tileContent == TerrainTile.DCORNER_SW.byteValue()) {
+            else if (tileContent == TerrainTile.ARC_SW.code() || tileContent == TerrainTile.DCORNER_SW.code()) {
                 if (cursor.points(Direction.DOWN)) {
                     ccw = true;
                     obstacle.addSegment(SEG_ARC_SW_DOWN, ccw, tileContent);
@@ -205,7 +205,7 @@ public class ObstacleBuilder {
                     errorAtCurrentTile(tilesWithErrors);
                 }
             }
-            else if (tileContent == TerrainTile.ARC_SE.byteValue() || tileContent == TerrainTile.DCORNER_SE.byteValue()) {
+            else if (tileContent == TerrainTile.ARC_SE.code() || tileContent == TerrainTile.DCORNER_SE.code()) {
                 if (cursor.points(Direction.DOWN)) {
                     ccw = false;
                     obstacle.addSegment(SEG_ARC_SE_DOWN, ccw, tileContent);
@@ -220,7 +220,7 @@ public class ObstacleBuilder {
                     errorAtCurrentTile(tilesWithErrors);
                 }
             }
-            else if (tileContent == TerrainTile.ARC_NE.byteValue() || tileContent == TerrainTile.DCORNER_NE.byteValue()) {
+            else if (tileContent == TerrainTile.ARC_NE.code() || tileContent == TerrainTile.DCORNER_NE.code()) {
                 if (cursor.points(Direction.UP)) {
                     ccw = true;
                     obstacle.addSegment(SEG_ARC_NE_UP, ccw, tileContent);
@@ -235,7 +235,7 @@ public class ObstacleBuilder {
                     errorAtCurrentTile(tilesWithErrors);
                 }
             }
-            else if (tileContent == TerrainTile.ARC_NW.byteValue() || tileContent == TerrainTile.DCORNER_NW.byteValue()) {
+            else if (tileContent == TerrainTile.ARC_NW.code() || tileContent == TerrainTile.DCORNER_NW.code()) {
                 if (cursor.points(Direction.UP)) {
                     ccw = false;
                     obstacle.addSegment(SEG_ARC_NW_UP, ccw, tileContent);

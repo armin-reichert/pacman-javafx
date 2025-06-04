@@ -31,14 +31,14 @@ public interface TileMapEditorUtil {
     }
 
     static byte mirroredTileValue(byte tileValue) {
-        if (tileValue == TerrainTile.ARC_NE.byteValue())     return TerrainTile.ARC_NW.byteValue();
-        if (tileValue == TerrainTile.ARC_NW.byteValue())     return TerrainTile.ARC_NE.byteValue();
-        if (tileValue == TerrainTile.ARC_SE.byteValue())     return TerrainTile.ARC_SW.byteValue();
-        if (tileValue == TerrainTile.ARC_SW.byteValue())     return TerrainTile.ARC_SE.byteValue();
-        if (tileValue == TerrainTile.DCORNER_NE.byteValue()) return TerrainTile.DCORNER_NW.byteValue();
-        if (tileValue == TerrainTile.DCORNER_NW.byteValue()) return TerrainTile.DCORNER_NE.byteValue();
-        if (tileValue == TerrainTile.DCORNER_SE.byteValue()) return TerrainTile.DCORNER_SW.byteValue();
-        if (tileValue == TerrainTile.DCORNER_SW.byteValue()) return TerrainTile.DCORNER_SE.byteValue();
+        if (tileValue == TerrainTile.ARC_NE.code())     return TerrainTile.ARC_NW.code();
+        if (tileValue == TerrainTile.ARC_NW.code())     return TerrainTile.ARC_NE.code();
+        if (tileValue == TerrainTile.ARC_SE.code())     return TerrainTile.ARC_SW.code();
+        if (tileValue == TerrainTile.ARC_SW.code())     return TerrainTile.ARC_SE.code();
+        if (tileValue == TerrainTile.DCORNER_NE.code()) return TerrainTile.DCORNER_NW.code();
+        if (tileValue == TerrainTile.DCORNER_NW.code()) return TerrainTile.DCORNER_NE.code();
+        if (tileValue == TerrainTile.DCORNER_SE.code()) return TerrainTile.DCORNER_SW.code();
+        if (tileValue == TerrainTile.DCORNER_SW.code()) return TerrainTile.DCORNER_SE.code();
         return tileValue;
     }
 
@@ -92,19 +92,19 @@ public interface TileMapEditorUtil {
 
     static Palette createTerrainPalette(byte id, int toolSize, TileMapEditor editor, TileMapRenderer renderer) {
         var palette = new Palette(id, toolSize, 1, 13, renderer);
-        palette.addTileTool(editor, TerrainTile.EMPTY.byteValue(), "Empty Space");
-        palette.addTileTool(editor, TerrainTile.WALL_H.byteValue(), "Horiz. Wall");
-        palette.addTileTool(editor, TerrainTile.WALL_V.byteValue(), "Vert. Wall");
-        palette.addTileTool(editor, TerrainTile.ARC_NW.byteValue(), "NW Corner");
-        palette.addTileTool(editor, TerrainTile.ARC_NE.byteValue(), "NE Corner");
-        palette.addTileTool(editor, TerrainTile.ARC_SW.byteValue(), "SW Corner");
-        palette.addTileTool(editor, TerrainTile.ARC_SE.byteValue(), "SE Corner");
-        palette.addTileTool(editor, TerrainTile.TUNNEL.byteValue(), "Tunnel");
-        palette.addTileTool(editor, TerrainTile.DOOR.byteValue(), "Door");
-        palette.addTileTool(editor, TerrainTile.ONE_WAY_UP.byteValue(), "One-Way Up");
-        palette.addTileTool(editor, TerrainTile.ONE_WAY_RIGHT.byteValue(), "One-Way Right");
-        palette.addTileTool(editor, TerrainTile.ONE_WAY_DOWN.byteValue(), "One-Way Down");
-        palette.addTileTool(editor, TerrainTile.ONE_WAY_LEFT.byteValue(), "One-Way Left");
+        palette.addTileTool(editor, TerrainTile.EMPTY.code(), "Empty Space");
+        palette.addTileTool(editor, TerrainTile.WALL_H.code(), "Horiz. Wall");
+        palette.addTileTool(editor, TerrainTile.WALL_V.code(), "Vert. Wall");
+        palette.addTileTool(editor, TerrainTile.ARC_NW.code(), "NW Corner");
+        palette.addTileTool(editor, TerrainTile.ARC_NE.code(), "NE Corner");
+        palette.addTileTool(editor, TerrainTile.ARC_SW.code(), "SW Corner");
+        palette.addTileTool(editor, TerrainTile.ARC_SE.code(), "SE Corner");
+        palette.addTileTool(editor, TerrainTile.TUNNEL.code(), "Tunnel");
+        palette.addTileTool(editor, TerrainTile.DOOR.code(), "Door");
+        palette.addTileTool(editor, TerrainTile.ONE_WAY_UP.code(), "One-Way Up");
+        palette.addTileTool(editor, TerrainTile.ONE_WAY_RIGHT.code(), "One-Way Right");
+        palette.addTileTool(editor, TerrainTile.ONE_WAY_DOWN.code(), "One-Way Down");
+        palette.addTileTool(editor, TerrainTile.ONE_WAY_LEFT.code(), "One-Way Left");
 
         palette.selectTool(0); // "No Tile"
         return palette;
@@ -112,7 +112,7 @@ public interface TileMapEditorUtil {
 
     static Palette createActorPalette(byte id, int toolSize, TileMapEditor editor, TerrainTileMapRenderer renderer) {
         var palette = new Palette(id, toolSize, 1, 11, renderer);
-        palette.addTileTool(editor, TerrainTile.EMPTY.byteValue(), "Nope");
+        palette.addTileTool(editor, TerrainTile.EMPTY.code(), "Nope");
         palette.addPropertyTool(WorldMapProperty.POS_PAC, "Pac-Man");
         palette.addPropertyTool(WorldMapProperty.POS_RED_GHOST, "Red Ghost");
         palette.addPropertyTool(WorldMapProperty.POS_PINK_GHOST, "Pink Ghost");
@@ -129,9 +129,9 @@ public interface TileMapEditorUtil {
 
     static Palette createFoodPalette(byte id, int toolSize, TileMapEditor editor, TileMapRenderer renderer) {
         var palette = new Palette(id, toolSize, 1, 3, renderer);
-        palette.addTileTool(editor, FoodTile.EMPTY.byteValue(), "No Food");
-        palette.addTileTool(editor, FoodTile.PELLET.byteValue(), "Pellet");
-        palette.addTileTool(editor, FoodTile.ENERGIZER.byteValue(), "Energizer");
+        palette.addTileTool(editor, FoodTile.EMPTY.code(), "No Food");
+        palette.addTileTool(editor, FoodTile.PELLET.code(), "Pellet");
+        palette.addTileTool(editor, FoodTile.ENERGIZER.code(), "Energizer");
         palette.selectTool(0); // "No Food"
         return palette;
     }

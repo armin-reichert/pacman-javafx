@@ -108,19 +108,19 @@ public class ExperimentsApp extends Application {
         }
 
         obstacle = new Obstacle(new Vector2i(0, 15*TS));
-        extendObstacle(-4, 4, true, TerrainTile.byteValue(ARC_NW));
-        extendObstacle(0, 3*8, true, TerrainTile.byteValue(WALL_V));
-        extendObstacle(-4, 4, false, TerrainTile.byteValue(ARC_SE));
-        extendObstacle(-8, 0, false, TerrainTile.byteValue(WALL_H));
-        extendObstacle(-4, 4, true, TerrainTile.byteValue(ARC_NW));
-        extendObstacle(4, 4, true, TerrainTile.byteValue(ARC_SW));
-        extendObstacle(4*8, 0, true, TerrainTile.byteValue(WALL_H));
-        extendObstacle(4, -4, true, TerrainTile.byteValue(ARC_SE));
-        extendObstacle(-4, -4, true, TerrainTile.byteValue(ARC_NE));
-        extendObstacle(-8, 0, true, TerrainTile.byteValue(WALL_H));
-        extendObstacle(-4, -4, false, TerrainTile.byteValue(ARC_SW));
-        extendObstacle(0, -3*8, false, TerrainTile.byteValue(WALL_V));
-        extendObstacle(-4, -4, true, TerrainTile.byteValue(ARC_NE));
+        extendObstacle(-4, 4, true, TerrainTile.code(ARC_NW));
+        extendObstacle(0, 3*8, true, TerrainTile.code(WALL_V));
+        extendObstacle(-4, 4, false, TerrainTile.code(ARC_SE));
+        extendObstacle(-8, 0, false, TerrainTile.code(WALL_H));
+        extendObstacle(-4, 4, true, TerrainTile.code(ARC_NW));
+        extendObstacle(4, 4, true, TerrainTile.code(ARC_SW));
+        extendObstacle(4*8, 0, true, TerrainTile.code(WALL_H));
+        extendObstacle(4, -4, true, TerrainTile.code(ARC_SE));
+        extendObstacle(-4, -4, true, TerrainTile.code(ARC_NE));
+        extendObstacle(-8, 0, true, TerrainTile.code(WALL_H));
+        extendObstacle(-4, -4, false, TerrainTile.code(ARC_SW));
+        extendObstacle(0, -3*8, false, TerrainTile.code(WALL_V));
+        extendObstacle(-4, -4, true, TerrainTile.code(ARC_NE));
 
         Vector2i currentPoint = obstacle.startPoint();
         Vector2i endPoint = null;

@@ -52,8 +52,8 @@ public class FoodMapRenderer implements TileMapRenderer {
 
     @Override
     public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
-        if      (content == FoodTile.PELLET.byteValue()) drawPellet(g, tile);
-        else if (content == FoodTile.ENERGIZER.byteValue()) drawEnergizer(g, tile);
+        if      (content == FoodTile.PELLET.code()) drawPellet(g, tile);
+        else if (content == FoodTile.ENERGIZER.code()) drawEnergizer(g, tile);
     }
 
     public void drawPellet(GraphicsContext g, Vector2i tile) {

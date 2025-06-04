@@ -162,7 +162,7 @@ public abstract class Ghost extends MovingActor implements AnimatedActor {
         if (state == GhostState.HUNTING_PAC) {
             var currentTile = tile();
             if (specialTerrainTiles.contains(tile)
-                    && level.worldMap().content(LayerID.TERRAIN, tile) == TerrainTile.ONE_WAY_DOWN.byteValue()
+                    && level.worldMap().content(LayerID.TERRAIN, tile) == TerrainTile.ONE_WAY_DOWN.code()
                     && currentTile.equals(tile.plus(DOWN.vector()))) {
                 Logger.debug("Hunting {} cannot move up to special tile {}", name, tile);
                 return false;

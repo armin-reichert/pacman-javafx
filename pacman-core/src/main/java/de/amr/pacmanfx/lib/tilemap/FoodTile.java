@@ -7,7 +7,7 @@ package de.amr.pacmanfx.lib.tilemap;
 public enum FoodTile {
     EMPTY, PELLET, ENERGIZER;
 
-    public byte byteValue() {
+    public byte code() {
         return switch (this) {
             case EMPTY -> 0;
             case PELLET -> 1;
