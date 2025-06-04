@@ -247,7 +247,7 @@ public class Maze3D extends Group {
     }
 
     private boolean hasFoodAt(WorldMap worldMap, Vector2i tile) {
-        return worldMap.content(LayerID.FOOD, tile) != FoodTile.emptyTileValue();
+        return worldMap.content(LayerID.FOOD, tile) != FoodTile.EMPTY.byteValue();
     }
 
     private boolean hasEnergizerAt(WorldMap worldMap, Vector2i tile) {

@@ -231,6 +231,6 @@ public class ObstacleEditor {
         if (y == maxTile.y() && x == maxTile.x()) return ARC_SE.byteValue();
         if (y == minTile.y() || y == maxTile.y()) return WALL_H.byteValue();
         if (x == minTile.x() || x == maxTile.x()) return WALL_V.byteValue();
-        return TerrainTile.emptyTileValue();
+        return EMPTY.byteValue();
     }
 }

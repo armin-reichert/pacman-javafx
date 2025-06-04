@@ -46,7 +46,7 @@ public class TileMatcher {
     public byte matchFoodTile(int[] tilePixels) {
         if (isEnergizer(tilePixels)) return FoodTile.ENERGIZER.byteValue();
         if (isPellet(tilePixels)) return FoodTile.PELLET.byteValue();
-        return FoodTile.emptyTileValue();
+        return FoodTile.EMPTY.byteValue();
     }
 
     private boolean isEnergizer(int[] tilePixels) {
@@ -72,7 +72,7 @@ public class TileMatcher {
         if (matchesSWCorner(tilePixels)) return ARC_SW.byteValue();
         if (matchesNECorner(tilePixels)) return ARC_NE.byteValue();
         if (matchesSECorner(tilePixels)) return ARC_SE.byteValue();
-        return TerrainTile.emptyTileValue();
+        return EMPTY.byteValue();
     }
 
     private IntStream allIndices() { return IntStream.range(0, 64); }

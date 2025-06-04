@@ -112,7 +112,7 @@ public interface TileMapEditorUtil {
 
     static Palette createActorPalette(byte id, int toolSize, TileMapEditor editor, TerrainTileMapRenderer renderer) {
         var palette = new Palette(id, toolSize, 1, 11, renderer);
-        palette.addTileTool(editor, TerrainTile.emptyTileValue(), "Nope");
+        palette.addTileTool(editor, TerrainTile.EMPTY.byteValue(), "Nope");
         palette.addPropertyTool(WorldMapProperty.POS_PAC, "Pac-Man");
         palette.addPropertyTool(WorldMapProperty.POS_RED_GHOST, "Red Ghost");
         palette.addPropertyTool(WorldMapProperty.POS_PINK_GHOST, "Pink Ghost");
@@ -129,7 +129,7 @@ public interface TileMapEditorUtil {
 
     static Palette createFoodPalette(byte id, int toolSize, TileMapEditor editor, TileMapRenderer renderer) {
         var palette = new Palette(id, toolSize, 1, 3, renderer);
-        palette.addTileTool(editor, FoodTile.emptyTileValue(), "No Food");
+        palette.addTileTool(editor, FoodTile.EMPTY.byteValue(), "No Food");
         palette.addTileTool(editor, FoodTile.PELLET.byteValue(), "Pellet");
         palette.addTileTool(editor, FoodTile.ENERGIZER.byteValue(), "Energizer");
         palette.selectTool(0); // "No Food"

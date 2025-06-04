@@ -462,7 +462,7 @@ public class GameLevel {
     }
 
     public boolean isFoodPosition(Vector2i tile) {
-        return isInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) != FoodTile.emptyTileValue();
+        return isInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) != FoodTile.EMPTY.byteValue();
     }
 
     public boolean isEnergizerPosition(Vector2i tile) {

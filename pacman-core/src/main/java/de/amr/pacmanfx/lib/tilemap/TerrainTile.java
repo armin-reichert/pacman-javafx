@@ -8,8 +8,6 @@ public enum TerrainTile {
     EMPTY, WALL_H, WALL_V, ARC_NW, ARC_NE, ARC_SE, ARC_SW, TUNNEL, DOOR,
     DCORNER_NW, DCORNER_NE, DCORNER_SE, DCORNER_SW, ONE_WAY_UP, ONE_WAY_RIGHT, ONE_WAY_DOWN, ONE_WAY_LEFT;
 
-    public static byte emptyTileValue() { return EMPTY.byteValue(); }
-
     public byte byteValue() {
         return switch (this) {
             case EMPTY         -> 0x00;

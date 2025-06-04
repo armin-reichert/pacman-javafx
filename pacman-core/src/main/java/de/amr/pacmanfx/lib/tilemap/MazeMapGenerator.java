@@ -20,7 +20,7 @@ import java.util.Random;
 
 public class MazeMapGenerator {
 
-    private static final byte FREE = TerrainTile.emptyTileValue();
+    private static final byte FREE = TerrainTile.EMPTY.byteValue();
     private static final byte BLOCKED = TerrainTile.WALL_H.byteValue();
 
     private static final int EMPTY_ROWS_ABOVE = 3, EMPTY_ROWS_BELOW = 2;
@@ -110,7 +110,7 @@ public class MazeMapGenerator {
     private void addFood(WorldMap map) {
         for (int row = EMPTY_ROWS_ABOVE; row < map.numRows() - EMPTY_ROWS_BELOW; ++row) {
             for (int col = 0; col < map.numCols(); ++col) {
-                if (map.content(LayerID.TERRAIN, row, col) == TerrainTile.emptyTileValue()
+                if (map.content(LayerID.TERRAIN, row, col) == TerrainTile.EMPTY.byteValue()
                         && new Random().nextInt(100) < 40) {
                     map.setContent(LayerID.FOOD, row, col, FoodTile.PELLET.byteValue());
                 }

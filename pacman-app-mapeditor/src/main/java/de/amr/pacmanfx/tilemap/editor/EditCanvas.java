@@ -323,7 +323,7 @@ public class EditCanvas {
         miFloodWithPellets.setDisable(!editor.canEditFoodAtTile(tile));
 
         var miClearPellets = new MenuItem(tt("menu.edit.clear_food"));
-        miClearPellets.setOnAction(ae -> editor.floodWithFoodValue(tile, FoodTile.emptyTileValue()));
+        miClearPellets.setOnAction(ae -> editor.floodWithFoodValue(tile, FoodTile.EMPTY.byteValue()));
         miClearPellets.setDisable(!editor.canEditFoodAtTile(tile));
 
         contextMenu.getItems().setAll(

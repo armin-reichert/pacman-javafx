@@ -100,8 +100,8 @@ public class WorldMap {
         newMap.foodLayer.replaceProperties(foodLayer.properties());
         for (int row = 0; row < newMap.numRows(); ++row) {
             for (int col = 0; col < newMap.numCols(); ++col) {
-                byte terrainValue = TerrainTile.emptyTileValue();
-                byte foodValue = FoodTile.emptyTileValue();
+                byte terrainValue = TerrainTile.EMPTY.byteValue();
+                byte foodValue = FoodTile.EMPTY.byteValue();
                 if (row < rowIndex) {
                     terrainValue = content(LayerID.TERRAIN, row, col);
                     foodValue = content(LayerID.FOOD, row, col);

@@ -838,7 +838,7 @@ public class TileMapEditor {
 
         var miClearTerrain = new MenuItem(tt("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(e -> {
-            editedWorldMap().layer(LayerID.TERRAIN).setAll(TerrainTile.emptyTileValue());
+            editedWorldMap().layer(LayerID.TERRAIN).setAll(TerrainTile.EMPTY.byteValue());
             changeManager.setTerrainMapChanged();
             changeManager.setEdited(true);
         });
@@ -846,7 +846,7 @@ public class TileMapEditor {
 
         var miClearFood = new MenuItem(tt("menu.edit.clear_food"));
         miClearFood.setOnAction(e -> {
-            editedWorldMap().layer(LayerID.FOOD).setAll(FoodTile.emptyTileValue());
+            editedWorldMap().layer(LayerID.FOOD).setAll(FoodTile.EMPTY.byteValue());
             changeManager.setFoodMapChanged();
             changeManager.setEdited(true);
         });
@@ -1345,7 +1345,7 @@ public class TileMapEditor {
 
         worldMap.setContent(layerID, tile, value);
         if (layerID == LayerID.TERRAIN) {
-            worldMap.setContent(LayerID.FOOD, tile, FoodTile.emptyTileValue());
+            worldMap.setContent(LayerID.FOOD, tile, FoodTile.EMPTY.byteValue());
         }
 
         changeManager.setEdited(true);
@@ -1360,7 +1360,7 @@ public class TileMapEditor {
             } else {
                 byte mirroredValue = mirroredTileValue(value);
                 worldMap.setContent(layerID, mirroredTile, mirroredValue);
-                worldMap.setContent(LayerID.FOOD, mirroredTile, FoodTile.emptyTileValue());
+                worldMap.setContent(LayerID.FOOD, mirroredTile, FoodTile.EMPTY.byteValue());
             }
         }
     }
@@ -1477,13 +1477,13 @@ public class TileMapEditor {
         Vector2i max = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE).plus(1, 1);
         for (int x = min.x(); x <= max.x(); ++x) {
             // Note: parameters are row and col (y and x)
-            worldMap.setContent(LayerID.FOOD, min.y(), x, FoodTile.emptyTileValue());
-            worldMap.setContent(LayerID.FOOD, max.y(), x, FoodTile.emptyTileValue());
+            worldMap.setContent(LayerID.FOOD, min.y(), x, FoodTile.EMPTY.byteValue());
+            worldMap.setContent(LayerID.FOOD, max.y(), x, FoodTile.EMPTY.byteValue());
         }
         for (int y = min.y(); y <= max.y(); ++y) {
             // Note: parameters are row and col (y and x)
-            worldMap.setContent(LayerID.FOOD, y, min.x(), FoodTile.emptyTileValue());
-            worldMap.setContent(LayerID.FOOD, y, max.x(), FoodTile.emptyTileValue());
+            worldMap.setContent(LayerID.FOOD, y, min.x(), FoodTile.EMPTY.byteValue());
+            worldMap.setContent(LayerID.FOOD, y, max.x(), FoodTile.EMPTY.byteValue());
         }
 
         changeManager.setWorldMapChanged();
@@ -1494,7 +1494,7 @@ public class TileMapEditor {
         for (int row = minTile.y(); row <= maxTile.y(); ++row) {
             for (int col = minTile.x(); col <= maxTile.x(); ++col) {
                 // No symmetric editing!
-                worldMap.setContent(LayerID.TERRAIN, row, col, TerrainTile.emptyTileValue());
+                worldMap.setContent(LayerID.TERRAIN, row, col, TerrainTile.EMPTY.byteValue());
             }
         }
         changeManager.setTerrainMapChanged();
@@ -1505,7 +1505,7 @@ public class TileMapEditor {
         for (int row = minTile.y(); row <= maxTile.y(); ++row) {
             for (int col = minTile.x(); col <= maxTile.x(); ++col) {
                 // No symmetric editing!
-                worldMap.setContent(LayerID.FOOD, row, col, FoodTile.emptyTileValue());
+                worldMap.setContent(LayerID.FOOD, row, col, FoodTile.EMPTY.byteValue());
             }
         }
         changeManager.setFoodMapChanged();
@@ -1588,7 +1588,7 @@ public class TileMapEditor {
 
     private boolean hasAccessibleTerrainAtTile(Vector2i tile) {
         byte value = editedWorldMap().content(LayerID.TERRAIN, tile);
-        return value == TerrainTile.emptyTileValue()
+        return value == TerrainTile.EMPTY.byteValue()
             || value == TerrainTile.ONE_WAY_DOWN.byteValue()
             || value == TerrainTile.ONE_WAY_UP.byteValue()
             || value == TerrainTile.ONE_WAY_LEFT.byteValue()
