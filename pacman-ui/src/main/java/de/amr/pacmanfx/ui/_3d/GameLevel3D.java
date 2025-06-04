@@ -166,7 +166,7 @@ public class GameLevel3D {
         gameLevel.tilesContainingFood().forEach(tile -> {
             if (gameLevel.isEnergizerPosition(tile)) {
                 Energizer3D energizer3D = createEnergizer3D(tile, material);
-                SquirtingAnimation squirting = createSquirtingAnimation(gameLevel.worldMap(), energizer3D, material);
+                SquirtingAnimation squirting = createSquirtingAnimation(energizer3D, material);
                 root.getChildren().add(squirting.root());
                 energizers3D.add(energizer3D);
             } else {
@@ -190,13 +190,12 @@ public class GameLevel3D {
         return energizer3D;
     }
 
-    private SquirtingAnimation createSquirtingAnimation(WorldMap worldMap, Energizer3D energizer3D, PhongMaterial dropMaterial) {
-        Vector2i tile = energizer3D.tile();
-        var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
+    private SquirtingAnimation createSquirtingAnimation(Energizer3D energizer3D, PhongMaterial dropMaterial) {
+        var center = new Point3D(energizer3D.tile().x() * TS + HTS, energizer3D.tile().y() * TS + HTS, -2*ENERGIZER_3D_RADIUS);
         var animation = new SquirtingAnimation(Duration.seconds(2));
         animation.createDrops(23, 69, dropMaterial, center);
         animation.setDropFinalPosition(drop -> drop.getTranslateZ() >= -1
-                && isInsideWorldMap(worldMap, drop.getTranslateX(), drop.getTranslateY()));
+                && isInsideWorldMap(gameLevel.worldMap(), drop.getTranslateX(), drop.getTranslateY()));
         animation.setOnFinished(e -> root.getChildren().remove(animation.root()));
         energizer3D.setEatenAnimation(animation);
         return animation;
