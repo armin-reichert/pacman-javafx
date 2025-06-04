@@ -26,7 +26,6 @@ import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 import static java.lang.Math.TAU;
 
 public class ExperimentsApp extends Application {
@@ -108,19 +107,19 @@ public class ExperimentsApp extends Application {
         }
 
         obstacle = new Obstacle(new Vector2i(0, 15*TS));
-        extendObstacle(-4, 4, true, TerrainTile.code(ARC_NW));
-        extendObstacle(0, 3*8, true, TerrainTile.code(WALL_V));
-        extendObstacle(-4, 4, false, TerrainTile.code(ARC_SE));
-        extendObstacle(-8, 0, false, TerrainTile.code(WALL_H));
-        extendObstacle(-4, 4, true, TerrainTile.code(ARC_NW));
-        extendObstacle(4, 4, true, TerrainTile.code(ARC_SW));
-        extendObstacle(4*8, 0, true, TerrainTile.code(WALL_H));
-        extendObstacle(4, -4, true, TerrainTile.code(ARC_SE));
-        extendObstacle(-4, -4, true, TerrainTile.code(ARC_NE));
-        extendObstacle(-8, 0, true, TerrainTile.code(WALL_H));
-        extendObstacle(-4, -4, false, TerrainTile.code(ARC_SW));
-        extendObstacle(0, -3*8, false, TerrainTile.code(WALL_V));
-        extendObstacle(-4, -4, true, TerrainTile.code(ARC_NE));
+        extendObstacle(-4, 4, true, TerrainTile.ARC_NW.code());
+        extendObstacle(0, 3*8, true, TerrainTile.WALL_V.code());
+        extendObstacle(-4, 4, false, TerrainTile.ARC_SE.code());
+        extendObstacle(-8, 0, false, TerrainTile.WALL_H.code());
+        extendObstacle(-4, 4, true, TerrainTile.ARC_NW.code());
+        extendObstacle(4, 4, true, TerrainTile.ARC_SW.code());
+        extendObstacle(4*8, 0, true, TerrainTile.WALL_H.code());
+        extendObstacle(4, -4, true, TerrainTile.ARC_SE.code());
+        extendObstacle(-4, -4, true, TerrainTile.ARC_NE.code());
+        extendObstacle(-8, 0, true, TerrainTile.WALL_H.code());
+        extendObstacle(-4, -4, false, TerrainTile.ARC_SW.code());
+        extendObstacle(0, -3*8, false, TerrainTile.WALL_V.code());
+        extendObstacle(-4, -4, true, TerrainTile.ARC_NE.code());
 
         Vector2i currentPoint = obstacle.startPoint();
         Vector2i endPoint = null;
