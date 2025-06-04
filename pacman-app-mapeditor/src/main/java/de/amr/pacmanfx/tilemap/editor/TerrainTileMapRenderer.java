@@ -90,7 +90,7 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
                     .filter(Obstacle::isClosed)
                     .filter(obstacle -> !startsAtBorder(obstacle, worldMap)).forEach(obstacle -> {
                 Vector2i prev = null;
-                List<RectArea> rectangles = obstacle.innerAreaRectPartition().toList();
+                List<RectArea> rectangles = obstacle.innerAreaRectangles().toList();
                 for (int i = 0; i < rectangles.size(); ++i) {
                     RectArea rect = rectangles.get(i);
                     g.setFill(RANDOM_COLORS[i % RANDOM_COLORS.length]);

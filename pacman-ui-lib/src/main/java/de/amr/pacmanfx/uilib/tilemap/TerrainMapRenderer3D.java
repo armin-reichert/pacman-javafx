@@ -157,7 +157,7 @@ public class TerrainMapRenderer3D {
         for (Vector2i center : obstacle.cornerCenters()) {
             parent.getChildren().add(createCircularWall(center, HTS));
         }
-        obstacle.innerAreaRectPartition()
+        obstacle.innerAreaRectangles()
             .forEach(r -> parent.getChildren().add( createWallCenteredAt(r.center(), r.width(), r.height()) ));
     }
 

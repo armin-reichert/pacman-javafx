@@ -22,8 +22,7 @@ public class Obstacle {
 
     private final Vector2i startPoint;
     private final List<ObstacleSegment> segments = new ArrayList<>();
-    private final PolygonToRectangleConverter<RectArea> polyToRectConverter = RectArea::new;
-    private List<RectArea> innerRectanglePartition = List.of();
+    private List<RectArea> innerAreaRectangles = List.of();
 
     public Obstacle(Vector2i startPoint) {
         this.startPoint = Objects.requireNonNull(startPoint);
@@ -35,7 +34,8 @@ public class Obstacle {
         if (isClosed()) {
             try {
                 Collection<Vector2i> innerPolygon = computeInnerPolygon();
-                innerRectanglePartition = polyToRectConverter.convertPolygonToRectangles(innerPolygon);
+                PolygonToRectangleConverter<RectArea> converter = RectArea::new;
+                innerAreaRectangles = converter.convertPolygonToRectangles(innerPolygon);
             } catch (Exception x) {
                 Logger.warn("Inner area rectangle partition could not be computed");
                 Logger.error(x);
@@ -43,8 +43,8 @@ public class Obstacle {
         }
     }
 
-    public Stream<RectArea> innerAreaRectPartition() {
-        return innerRectanglePartition.stream();
+    public Stream<RectArea> innerAreaRectangles() {
+        return innerAreaRectangles.stream();
     }
 
     public Vector2i[] points() {
@@ -59,11 +59,8 @@ public class Obstacle {
     @Override
     public String toString() {
         return "Obstacle{" +
-            "encoding=" + encoding() +
-            ", start=" + startPoint +
-            ", rectangles=" + innerRectanglePartition +
+            "start=" + startPoint +
             ", segment count=" + segments.size() +
-            ", segments=" + segments +
             '}';
     }
 
