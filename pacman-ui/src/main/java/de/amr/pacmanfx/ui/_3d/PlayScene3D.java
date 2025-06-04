@@ -92,7 +92,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
     protected Perspective perspective() { return perspectiveMap.get(perspectiveIDPy.get()); }
 
     protected void replaceGameLevel3D() {
-        level3D = new GameLevel3D();
+        level3D = new GameLevel3D(theGameLevel());
         level3D.addLevelCounter();
         root.getChildren().set(root.getChildren().size() - 1, level3D.root());
         scores3D.translateXProperty().bind(level3D.root().translateXProperty().add(TS));
