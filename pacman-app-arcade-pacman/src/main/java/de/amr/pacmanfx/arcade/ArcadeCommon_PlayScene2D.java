@@ -223,6 +223,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
     public void onSwitch_3D_2D(GameScene scene3D) {
         Logger.info("2D scene {} entered from 3D scene {}", this, scene3D);
         bindArcadePlayerSteeringActions();
+        bindCheatActions();
         updateActionBindings();
         if (gr() == null) { //TODO check if this can happen
             Logger.warn("No game renderer was existing when switching to 2D scene");
