@@ -12,7 +12,6 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 import static java.lang.Math.signum;
 
 /**
@@ -108,10 +107,10 @@ public class Obstacle {
     public Vector2i cornerCenter(int segmentIndex) {
         ObstacleSegment corner = segment(segmentIndex);
         byte code = corner.encoding();
-        if (code == TerrainTile.byteValue(ARC_NW)) return point(segmentIndex).plus(0, HTS);
-        if (code == TerrainTile.byteValue(ARC_SW)) return point(segmentIndex).plus(HTS, 0);
-        if (code == TerrainTile.byteValue(ARC_SE)) return point(segmentIndex).plus(0, -HTS);
-        if (code == TerrainTile.byteValue(ARC_NE)) return point(segmentIndex).plus(-HTS, 0);
+        if (code == TerrainTile.ARC_NW.byteValue()) return point(segmentIndex).plus(0, HTS);
+        if (code == TerrainTile.ARC_SW.byteValue()) return point(segmentIndex).plus(HTS, 0);
+        if (code == TerrainTile.ARC_SE.byteValue()) return point(segmentIndex).plus(0, -HTS);
+        if (code == TerrainTile.ARC_NE.byteValue()) return point(segmentIndex).plus(-HTS, 0);
         throw new IllegalStateException("No corner tile at index " + segmentIndex);
     }
 
@@ -120,10 +119,10 @@ public class Obstacle {
         for (var segment : segments) {
             boolean up = segment.vector().y() < 0, down = segment.vector().y() > 0;
             byte code = segment.encoding();
-            if (code == TerrainTile.byteValue(ARC_NW) && down) centers.add(segment.startPoint().plus(0, HTS));
-            if (code == TerrainTile.byteValue(ARC_SW) && down) centers.add(segment.startPoint().plus(HTS, 0));
-            if (code == TerrainTile.byteValue(ARC_SE) && up)   centers.add(segment.startPoint().plus(0, -HTS));
-            if (code == TerrainTile.byteValue(ARC_NE) && up)   centers.add(segment.startPoint().plus(-HTS, 0));
+            if (code == TerrainTile.ARC_NW.byteValue() && down) centers.add(segment.startPoint().plus(0, HTS));
+            if (code == TerrainTile.ARC_SW.byteValue() && down) centers.add(segment.startPoint().plus(HTS, 0));
+            if (code == TerrainTile.ARC_SE.byteValue() && up)   centers.add(segment.startPoint().plus(0, -HTS));
+            if (code == TerrainTile.ARC_NE.byteValue() && up)   centers.add(segment.startPoint().plus(-HTS, 0));
         }
         return centers.toArray(Vector2i[]::new);
     }

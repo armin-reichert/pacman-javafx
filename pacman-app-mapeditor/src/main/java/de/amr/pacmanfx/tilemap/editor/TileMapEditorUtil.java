@@ -21,9 +21,6 @@ import org.tinylog.Logger;
 import java.net.URL;
 import java.util.Locale;
 
-import static de.amr.pacmanfx.lib.tilemap.FoodTile.ENERGIZER;
-import static de.amr.pacmanfx.lib.tilemap.FoodTile.PELLET;
-import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 import static java.util.Objects.requireNonNull;
 
 public interface TileMapEditorUtil {
@@ -34,14 +31,14 @@ public interface TileMapEditorUtil {
     }
 
     static byte mirroredTileValue(byte tileValue) {
-        if (tileValue == TerrainTile.byteValue(ARC_NE)) return TerrainTile.byteValue(ARC_NW);
-        if (tileValue == TerrainTile.byteValue(ARC_NW)) return TerrainTile.byteValue(ARC_NE);
-        if (tileValue == TerrainTile.byteValue(ARC_SE)) return TerrainTile.byteValue(ARC_SW);
-        if (tileValue == TerrainTile.byteValue(ARC_SW)) return TerrainTile.byteValue(ARC_SE);
-        if (tileValue == TerrainTile.byteValue(DCORNER_NE)) return TerrainTile.byteValue(DCORNER_NW);
-        if (tileValue == TerrainTile.byteValue(DCORNER_NW)) return TerrainTile.byteValue(DCORNER_NE);
-        if (tileValue == TerrainTile.byteValue(DCORNER_SE)) return TerrainTile.byteValue(DCORNER_SW);
-        if (tileValue == TerrainTile.byteValue(DCORNER_SW)) return TerrainTile.byteValue(DCORNER_SE);
+        if (tileValue == TerrainTile.ARC_NE.byteValue())     return TerrainTile.ARC_NW.byteValue();
+        if (tileValue == TerrainTile.ARC_NW.byteValue())     return TerrainTile.ARC_NE.byteValue();
+        if (tileValue == TerrainTile.ARC_SE.byteValue())     return TerrainTile.ARC_SW.byteValue();
+        if (tileValue == TerrainTile.ARC_SW.byteValue())     return TerrainTile.ARC_SE.byteValue();
+        if (tileValue == TerrainTile.DCORNER_NE.byteValue()) return TerrainTile.DCORNER_NW.byteValue();
+        if (tileValue == TerrainTile.DCORNER_NW.byteValue()) return TerrainTile.DCORNER_NE.byteValue();
+        if (tileValue == TerrainTile.DCORNER_SE.byteValue()) return TerrainTile.DCORNER_SW.byteValue();
+        if (tileValue == TerrainTile.DCORNER_SW.byteValue()) return TerrainTile.DCORNER_SE.byteValue();
         return tileValue;
     }
 
@@ -95,19 +92,19 @@ public interface TileMapEditorUtil {
 
     static Palette createTerrainPalette(byte id, int toolSize, TileMapEditor editor, TileMapRenderer renderer) {
         var palette = new Palette(id, toolSize, 1, 13, renderer);
-        palette.addTileTool(editor, TerrainTile.byteValue(EMPTY), "Empty Space");
-        palette.addTileTool(editor, TerrainTile.byteValue(WALL_H), "Horiz. Wall");
-        palette.addTileTool(editor, TerrainTile.byteValue(WALL_V), "Vert. Wall");
-        palette.addTileTool(editor, TerrainTile.byteValue(ARC_NW), "NW Corner");
-        palette.addTileTool(editor, TerrainTile.byteValue(ARC_NE), "NE Corner");
-        palette.addTileTool(editor, TerrainTile.byteValue(ARC_SW), "SW Corner");
-        palette.addTileTool(editor, TerrainTile.byteValue(ARC_SE), "SE Corner");
-        palette.addTileTool(editor, TerrainTile.byteValue(TUNNEL), "Tunnel");
-        palette.addTileTool(editor, TerrainTile.byteValue(DOOR), "Door");
-        palette.addTileTool(editor, TerrainTile.byteValue(ONE_WAY_UP), "One-Way Up");
-        palette.addTileTool(editor, TerrainTile.byteValue(ONE_WAY_RIGHT), "One-Way Right");
-        palette.addTileTool(editor, TerrainTile.byteValue(ONE_WAY_DOWN), "One-Way Down");
-        palette.addTileTool(editor, TerrainTile.byteValue(ONE_WAY_LEFT), "One-Way Left");
+        palette.addTileTool(editor, TerrainTile.EMPTY.byteValue(), "Empty Space");
+        palette.addTileTool(editor, TerrainTile.WALL_H.byteValue(), "Horiz. Wall");
+        palette.addTileTool(editor, TerrainTile.WALL_V.byteValue(), "Vert. Wall");
+        palette.addTileTool(editor, TerrainTile.ARC_NW.byteValue(), "NW Corner");
+        palette.addTileTool(editor, TerrainTile.ARC_NE.byteValue(), "NE Corner");
+        palette.addTileTool(editor, TerrainTile.ARC_SW.byteValue(), "SW Corner");
+        palette.addTileTool(editor, TerrainTile.ARC_SE.byteValue(), "SE Corner");
+        palette.addTileTool(editor, TerrainTile.TUNNEL.byteValue(), "Tunnel");
+        palette.addTileTool(editor, TerrainTile.DOOR.byteValue(), "Door");
+        palette.addTileTool(editor, TerrainTile.ONE_WAY_UP.byteValue(), "One-Way Up");
+        palette.addTileTool(editor, TerrainTile.ONE_WAY_RIGHT.byteValue(), "One-Way Right");
+        palette.addTileTool(editor, TerrainTile.ONE_WAY_DOWN.byteValue(), "One-Way Down");
+        palette.addTileTool(editor, TerrainTile.ONE_WAY_LEFT.byteValue(), "One-Way Left");
 
         palette.selectTool(0); // "No Tile"
         return palette;
@@ -133,8 +130,8 @@ public interface TileMapEditorUtil {
     static Palette createFoodPalette(byte id, int toolSize, TileMapEditor editor, TileMapRenderer renderer) {
         var palette = new Palette(id, toolSize, 1, 3, renderer);
         palette.addTileTool(editor, FoodTile.emptyTileValue(), "No Food");
-        palette.addTileTool(editor, FoodTile.byteValue(PELLET), "Pellet");
-        palette.addTileTool(editor, FoodTile.byteValue(ENERGIZER), "Energizer");
+        palette.addTileTool(editor, FoodTile.PELLET.byteValue(), "Pellet");
+        palette.addTileTool(editor, FoodTile.ENERGIZER.byteValue(), "Energizer");
         palette.selectTool(0); // "No Food"
         return palette;
     }

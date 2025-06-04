@@ -15,8 +15,6 @@ import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.tilemap.FoodTile.ENERGIZER;
-import static de.amr.pacmanfx.lib.tilemap.FoodTile.PELLET;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -54,8 +52,8 @@ public class FoodMapRenderer implements TileMapRenderer {
 
     @Override
     public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
-        if (content == FoodTile.byteValue(PELLET)) drawPellet(g, tile);
-        else if (content == FoodTile.byteValue(ENERGIZER)) drawEnergizer(g, tile);
+        if      (content == FoodTile.PELLET.byteValue()) drawPellet(g, tile);
+        else if (content == FoodTile.ENERGIZER.byteValue()) drawEnergizer(g, tile);
     }
 
     public void drawPellet(GraphicsContext g, Vector2i tile) {

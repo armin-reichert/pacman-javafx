@@ -26,7 +26,6 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.lib.Waypoint.wp;
-import static de.amr.pacmanfx.lib.tilemap.TerrainTile.ONE_WAY_DOWN;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -245,7 +244,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
 
         // Special tiles where attacking ghosts cannot move up
         List<Vector2i> oneWayDownTiles = worldMap.tiles()
-            .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.byteValue(ONE_WAY_DOWN))
+            .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.ONE_WAY_DOWN.byteValue())
             .toList();
         level.setGhosts(createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost());
         level.ghosts().forEach(ghost -> {

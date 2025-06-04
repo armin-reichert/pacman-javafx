@@ -35,7 +35,6 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.tilemap.FoodTile.ENERGIZER;
 import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.getColorFromMap;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.parseColor;
@@ -252,6 +251,6 @@ public class Maze3D extends Group {
     }
 
     private boolean hasEnergizerAt(WorldMap worldMap, Vector2i tile) {
-        return worldMap.content(LayerID.FOOD, tile) == FoodTile.byteValue(ENERGIZER);
+        return worldMap.content(LayerID.FOOD, tile) == FoodTile.ENERGIZER.byteValue();
     }
 }

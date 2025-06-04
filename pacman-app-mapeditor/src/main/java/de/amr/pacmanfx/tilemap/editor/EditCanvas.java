@@ -33,7 +33,6 @@ import org.tinylog.Logger;
 import java.util.function.Predicate;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.tilemap.FoodTile.PELLET;
 import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.MS_PACMAN_COLOR_FOOD;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditor.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
@@ -320,7 +319,7 @@ public class EditCanvas {
         });
 
         var miFloodWithPellets = new MenuItem(tt("menu.edit.flood_with_pellets"));
-        miFloodWithPellets.setOnAction(ae -> editor.floodWithFoodValue(tile, FoodTile.byteValue(PELLET)));
+        miFloodWithPellets.setOnAction(ae -> editor.floodWithFoodValue(tile, FoodTile.PELLET.byteValue()));
         miFloodWithPellets.setDisable(!editor.canEditFoodAtTile(tile));
 
         var miClearPellets = new MenuItem(tt("menu.edit.clear_food"));

@@ -8,8 +8,6 @@ import de.amr.pacmanfx.lib.Vector2i;
 
 import java.util.Objects;
 
-import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
-
 public record ObstacleSegment(Vector2i startPoint, Vector2i vector, boolean ccw, byte encoding) {
 
     public ObstacleSegment {
@@ -21,41 +19,15 @@ public record ObstacleSegment(Vector2i startPoint, Vector2i vector, boolean ccw,
         return startPoint.plus(vector);
     }
 
-    public boolean isRoundedNWCorner() {
-        return encoding == TerrainTile.byteValue(ARC_NW);
-    }
+    public boolean isRoundedNWCorner() { return encoding == TerrainTile.ARC_NW.byteValue(); }
+    public boolean isRoundedSWCorner() { return encoding == TerrainTile.ARC_SW.byteValue(); }
+    public boolean isRoundedSECorner() { return encoding == TerrainTile.ARC_SE.byteValue(); }
+    public boolean isRoundedNECorner() { return encoding == TerrainTile.ARC_NE.byteValue(); }
 
-    public boolean isRoundedSWCorner() {
-        return encoding == TerrainTile.byteValue(ARC_SW);
-    }
-
-    public boolean isRoundedSECorner() {
-        return encoding == TerrainTile.byteValue(ARC_SE);
-    }
-
-    public boolean isRoundedNECorner() {
-        return encoding == TerrainTile.byteValue(ARC_NE);
-    }
-
-    public boolean isRoundedCorner() {
-        return isRoundedNWCorner() || isRoundedSWCorner() || isRoundedSECorner() || isRoundedNECorner();
-    }
-
-    public boolean isAngularNWCorner() {
-        return encoding == TerrainTile.byteValue(DCORNER_NW);
-    }
-
-    public boolean isAngularSWCorner() {
-        return encoding == TerrainTile.byteValue(DCORNER_SW);
-    }
-
-    public boolean isAngularSECorner() {
-        return encoding == TerrainTile.byteValue(DCORNER_SE);
-    }
-
-    public boolean isAngularNECorner() {
-        return encoding == TerrainTile.byteValue(DCORNER_NE);
-    }
+    public boolean isAngularNWCorner() { return encoding == TerrainTile.DCORNER_NW.byteValue(); }
+    public boolean isAngularSWCorner() { return encoding == TerrainTile.DCORNER_SW.byteValue(); }
+    public boolean isAngularSECorner() { return encoding == TerrainTile.DCORNER_SE.byteValue();}
+    public boolean isAngularNECorner() { return encoding == TerrainTile.DCORNER_NE.byteValue(); }
 
     public boolean isNWCorner() {
         return isRoundedNWCorner() || isAngularNWCorner();
@@ -70,8 +42,8 @@ public record ObstacleSegment(Vector2i startPoint, Vector2i vector, boolean ccw,
         return isRoundedNECorner() || isAngularNECorner();
     }
 
-    public boolean isVerticalLine() { return encoding == TerrainTile.byteValue(WALL_V); }
-    public boolean isHorizontalLine() { return encoding == TerrainTile.byteValue(WALL_H); }
+    public boolean isVerticalLine() { return encoding == TerrainTile.WALL_V.byteValue(); }
+    public boolean isHorizontalLine() { return encoding == TerrainTile.WALL_H.byteValue(); }
     public boolean isStraightLine() {
         return isVerticalLine() || isHorizontalLine();
     }

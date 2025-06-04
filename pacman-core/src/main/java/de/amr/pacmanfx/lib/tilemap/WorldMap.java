@@ -21,7 +21,6 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Validations.requireNonNegative;
-import static de.amr.pacmanfx.lib.tilemap.TerrainTile.WALL_V;
 import static java.util.Objects.requireNonNull;
 
 public class WorldMap {
@@ -31,11 +30,11 @@ public class WorldMap {
     public static final String MARKER_BEGIN_DATA_SECTION = "!data";
 
     private static boolean isValidTerrainValue(byte value) {
-        return Stream.of(TerrainTile.values()).anyMatch(tileID -> TerrainTile.byteValue(tileID) == value);
+        return Stream.of(TerrainTile.values()).anyMatch(tile -> tile.byteValue() == value);
     }
 
     private static boolean isValidFoodValue(byte value) {
-        return Stream.of(FoodTile.values()).anyMatch(tile -> FoodTile.byteValue(tile) == value);
+        return Stream.of(FoodTile.values()).anyMatch(tile -> tile.byteValue() == value);
     }
 
     public static WorldMap emptyMap(int numRows, int numCols) {
@@ -111,8 +110,8 @@ public class WorldMap {
                     foodValue = content(LayerID.FOOD, row - 1, col);
                 } else {
                     if ((col == 0 || col == numCols() - 1)
-                            && content(LayerID.TERRAIN, row, col) == TerrainTile.byteValue(WALL_V)) {
-                        terrainValue = TerrainTile.byteValue(WALL_V); // keep vertical border wall
+                        && content(LayerID.TERRAIN, row, col) == TerrainTile.WALL_V.byteValue()) {
+                        terrainValue = TerrainTile.WALL_V.byteValue(); // keep vertical border wall
                     }
                 }
                 newMap.setContent(LayerID.TERRAIN, row, col, terrainValue);

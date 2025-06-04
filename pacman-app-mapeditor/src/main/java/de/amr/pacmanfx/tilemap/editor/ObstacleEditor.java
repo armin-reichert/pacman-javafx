@@ -138,38 +138,37 @@ public class ObstacleEditor {
         WorldMap worldMap = worldMapPy.get();
 
         byte minTileValue = worldMap.content(LayerID.TERRAIN, minTile);
-        if       (minTileValue == TerrainTile.byteValue(ARC_NE)) joinedContent[0][0] = TerrainTile.byteValue(WALL_H);
-        else if (minTileValue == TerrainTile.byteValue(ARC_SW)) joinedContent[0][0] = TerrainTile.byteValue(WALL_V);
-        else if (minTileValue == TerrainTile.byteValue(WALL_V)) joinedContent[0][0] = TerrainTile.byteValue(ARC_SW);
-        else if (minTileValue == TerrainTile.byteValue(WALL_H)) joinedContent[0][0] = TerrainTile.byteValue(ARC_NE);
+        if       (minTileValue == ARC_NE.byteValue()) joinedContent[0][0] = WALL_H.byteValue();
+        else if (minTileValue == ARC_SW.byteValue())  joinedContent[0][0] = WALL_V.byteValue();
+        else if (minTileValue == WALL_V.byteValue())  joinedContent[0][0] = ARC_SW.byteValue();
+        else if (minTileValue == WALL_H.byteValue())  joinedContent[0][0] = ARC_NE.byteValue();
 
         Vector2i lowerLeftCorner = new Vector2i(minTile.x(), maxTile.y());
         byte lowerLeftValue = worldMap.content(LayerID.TERRAIN, lowerLeftCorner);
-        if       (lowerLeftValue == TerrainTile.byteValue(WALL_H)) joinedContent[numRows-1][0] = TerrainTile.byteValue(ARC_SE);
-        else if (lowerLeftValue == TerrainTile.byteValue(WALL_V)) joinedContent[numRows-1][0] = TerrainTile.byteValue(ARC_NW);
-        else if (lowerLeftValue == TerrainTile.byteValue(ARC_SE)) joinedContent[numRows-1][0] = TerrainTile.byteValue(WALL_H);
-        else if (lowerLeftValue == TerrainTile.byteValue(ARC_NW)) joinedContent[numRows-1][0] = TerrainTile.byteValue(WALL_V);
+        if      (lowerLeftValue == WALL_H.byteValue()) joinedContent[numRows-1][0] = ARC_SE.byteValue();
+        else if (lowerLeftValue == WALL_V.byteValue()) joinedContent[numRows-1][0] = ARC_NW.byteValue();
+        else if (lowerLeftValue == ARC_SE.byteValue()) joinedContent[numRows-1][0] = WALL_H.byteValue();
+        else if (lowerLeftValue == ARC_NW.byteValue()) joinedContent[numRows-1][0] = WALL_V.byteValue();
 
         Vector2i upperRightCorner = new Vector2i(maxTile.x(), minTile.y());
         byte upperRightValue = worldMap.content(LayerID.TERRAIN, upperRightCorner);
-        if      (upperRightValue == TerrainTile.byteValue(WALL_V)) joinedContent[0][numCols-1] = TerrainTile.byteValue(ARC_SE);
-        else if (upperRightValue == TerrainTile.byteValue(WALL_H)) joinedContent[0][numCols-1] = TerrainTile.byteValue(ARC_NW);
-        else if (upperRightValue == TerrainTile.byteValue(ARC_SE)) joinedContent[0][numCols-1] = TerrainTile.byteValue(WALL_V);
-        else if (upperRightValue == TerrainTile.byteValue(ARC_NW)) joinedContent[0][numCols-1] = TerrainTile.byteValue(WALL_H);
+        if      (upperRightValue == WALL_V.byteValue()) joinedContent[0][numCols-1] = ARC_SE.byteValue();
+        else if (upperRightValue == WALL_H.byteValue()) joinedContent[0][numCols-1] = ARC_NW.byteValue();
+        else if (upperRightValue == ARC_SE.byteValue()) joinedContent[0][numCols-1] = WALL_V.byteValue();
+        else if (upperRightValue == ARC_NW.byteValue()) joinedContent[0][numCols-1] = WALL_H.byteValue();
 
         byte maxTileValue = worldMap.content(LayerID.TERRAIN, maxTile);
-        if (maxTileValue == TerrainTile.byteValue(WALL_V)) joinedContent[numRows-1][numCols-1] = TerrainTile.byteValue(ARC_NE);
-        if (maxTileValue == TerrainTile.byteValue(WALL_H)) joinedContent[numRows-1][numCols-1] = TerrainTile.byteValue(ARC_SW);
-        if (maxTileValue == TerrainTile.byteValue(ARC_SW)) joinedContent[numRows-1][numCols-1] = TerrainTile.byteValue(WALL_H);
-        if (maxTileValue == TerrainTile.byteValue(ARC_NE)) joinedContent[numRows-1][numCols-1] = TerrainTile.byteValue(WALL_V);
+        if (maxTileValue == WALL_V.byteValue()) joinedContent[numRows-1][numCols-1] = ARC_NE.byteValue();
+        if (maxTileValue == WALL_H.byteValue()) joinedContent[numRows-1][numCols-1] = ARC_SW.byteValue();
+        if (maxTileValue == ARC_SW.byteValue()) joinedContent[numRows-1][numCols-1] = WALL_H.byteValue();
+        if (maxTileValue == ARC_NE.byteValue()) joinedContent[numRows-1][numCols-1] = WALL_V.byteValue();
 
         crossings = 0;
         int leftBorder = minTile.x();
         for (int row = minTile.y(); row < maxTile.y(); ++row) {
             int x = 0, y = row - minTile.y();
-            if (editedContent[y][x] == TerrainTile.byteValue(WALL_V)
-                    && worldMap.content(LayerID.TERRAIN, row, leftBorder) == TerrainTile.byteValue(WALL_H)) {
-                joinedContent[y][x] = isEven(crossings) ? TerrainTile.byteValue(ARC_SE) : TerrainTile.byteValue(ARC_NE);
+            if (editedContent[y][x] == WALL_V.byteValue() && worldMap.content(LayerID.TERRAIN, row, leftBorder) == WALL_H.byteValue()) {
+                joinedContent[y][x] = isEven(crossings) ? ARC_SE.byteValue() : ARC_NE.byteValue();
             }
             ++crossings;
         }
@@ -178,9 +177,8 @@ public class ObstacleEditor {
         int rightBorder = maxTile.x();
         for (int row = minTile.y(); row < maxTile.y(); ++row) {
             int x = rightBorder - minTile.x(), y = row - minTile.y();
-            if (editedContent[y][x] == TerrainTile.byteValue(WALL_V)
-                    && worldMap.content(LayerID.TERRAIN, row, leftBorder) == TerrainTile.byteValue(WALL_H)) {
-                joinedContent[y][x] = isEven(crossings) ? TerrainTile.byteValue(ARC_SW) : TerrainTile.byteValue(ARC_NW);
+            if (editedContent[y][x] == WALL_V.byteValue() && worldMap.content(LayerID.TERRAIN, row, leftBorder) == WALL_H.byteValue()) {
+                joinedContent[y][x] = isEven(crossings) ? ARC_SW.byteValue() : ARC_NW.byteValue();
             }
             ++crossings;
         }
@@ -189,9 +187,8 @@ public class ObstacleEditor {
         int upperBorder = minTile.y(); // upper border
         for (int col = minTile.x(); col < maxTile.x(); ++col) {
             int x = col - minTile.x(), y = upperBorder - minTile.y();
-            if (editedContent[y][x] == TerrainTile.byteValue(WALL_H)
-                    && worldMap.content(LayerID.TERRAIN, upperBorder, col) == TerrainTile.byteValue(WALL_V)) {
-                joinedContent[y][x] = isEven(crossings) ? TerrainTile.byteValue(ARC_SE) : TerrainTile.byteValue(ARC_SW);
+            if (editedContent[y][x] == WALL_H.byteValue() && worldMap.content(LayerID.TERRAIN, upperBorder, col) == WALL_V.byteValue()) {
+                joinedContent[y][x] = isEven(crossings) ? ARC_SE.byteValue() : ARC_SW.byteValue();
             }
             ++crossings;
         }
@@ -200,9 +197,8 @@ public class ObstacleEditor {
         int lowerBorder = maxTile.y(); // lower border
         for (int col = minTile.x(); col < maxTile.x(); ++col) {
             int x = col - minTile.x(), y = lowerBorder - minTile.y();
-            if (editedContent[y][x] == TerrainTile.byteValue(WALL_H)
-                    && worldMap.content(LayerID.TERRAIN, lowerBorder, col) == TerrainTile.byteValue(WALL_V)) {
-                joinedContent[y][x] = isEven(crossings) ? TerrainTile.byteValue(ARC_NE) : TerrainTile.byteValue(ARC_NW);
+            if (editedContent[y][x] == WALL_H.byteValue() && worldMap.content(LayerID.TERRAIN, lowerBorder, col) == WALL_V.byteValue()) {
+                joinedContent[y][x] = isEven(crossings) ? ARC_NE.byteValue() : ARC_NW.byteValue();
             }
             ++crossings;
         }
@@ -229,12 +225,12 @@ public class ObstacleEditor {
     }
 
     private byte computeTileValue(int y, int x) {
-        if (y == minTile.y() && x == minTile.x()) return TerrainTile.byteValue(ARC_NW);
-        if (y == minTile.y() && x == maxTile.x()) return TerrainTile.byteValue(ARC_NE);
-        if (y == maxTile.y() && x == minTile.x()) return TerrainTile.byteValue(ARC_SW);
-        if (y == maxTile.y() && x == maxTile.x()) return TerrainTile.byteValue(ARC_SE);
-        if (y == minTile.y() || y == maxTile.y()) return TerrainTile.byteValue(WALL_H);
-        if (x == minTile.x() || x == maxTile.x()) return TerrainTile.byteValue(WALL_V);
+        if (y == minTile.y() && x == minTile.x()) return ARC_NW.byteValue();
+        if (y == minTile.y() && x == maxTile.x()) return ARC_NE.byteValue();
+        if (y == maxTile.y() && x == minTile.x()) return ARC_SW.byteValue();
+        if (y == maxTile.y() && x == maxTile.x()) return ARC_SE.byteValue();
+        if (y == minTile.y() || y == maxTile.y()) return WALL_H.byteValue();
+        if (x == minTile.x() || x == maxTile.x()) return WALL_V.byteValue();
         return TerrainTile.emptyTileValue();
     }
 }

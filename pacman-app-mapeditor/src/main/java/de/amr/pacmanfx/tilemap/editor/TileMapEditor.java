@@ -53,9 +53,6 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
-import static de.amr.pacmanfx.lib.tilemap.FoodTile.ENERGIZER;
-import static de.amr.pacmanfx.lib.tilemap.FoodTile.PELLET;
-import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
 import static java.util.Objects.requireNonNull;
@@ -1326,9 +1323,9 @@ public class TileMapEditor {
             byte terrainValue = editedWorldMap().content(LayerID.TERRAIN, tile);
             byte foodValue = editedWorldMap().content(LayerID.FOOD, tile);
             String info = "";
-            if (terrainValue != TerrainTile.byteValue(EMPTY))
+            if (terrainValue != TerrainTile.EMPTY.byteValue())
                 info = "Terrain #%02X (%s)".formatted(terrainValue, terrainValue);
-            if (foodValue != FoodTile.byteValue(FoodTile.EMPTY))
+            if (foodValue != FoodTile.EMPTY.byteValue())
                 info = "Food #%02X (%s)".formatted(foodValue, foodValue);
             showMessage(info, 4, MessageType.INFO);
         }
@@ -1376,14 +1373,14 @@ public class TileMapEditor {
 
     // ignores symmetric edit mode!
     public void clearTerrainTileValue(Vector2i tile) {
-        editedWorldMap().setContent(LayerID.TERRAIN, tile, TerrainTile.byteValue(EMPTY));
+        editedWorldMap().setContent(LayerID.TERRAIN, tile, TerrainTile.EMPTY.byteValue());
         changeManager.setTerrainMapChanged();
         changeManager.setEdited(true);
     }
 
     // ignores symmetric edit mode!
     public void clearFoodTileValue(Vector2i tile) {
-        editedWorldMap().setContent(LayerID.FOOD, tile, FoodTile.byteValue(FoodTile.EMPTY));
+        editedWorldMap().setContent(LayerID.FOOD, tile, FoodTile.EMPTY.byteValue());
         changeManager.setFoodMapChanged();
         changeManager.setEdited(true);
     }
@@ -1432,17 +1429,17 @@ public class TileMapEditor {
 
     private void addBorderWall(WorldMap worldMap) {
         int lastRow = worldMap.numRows() - 1 - EMPTY_ROWS_BELOW_MAZE, lastCol = worldMap.numCols() - 1;
-        setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, 0, TerrainTile.byteValue(ARC_NW));
-        setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, lastCol, TerrainTile.byteValue(ARC_NE));
-        setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, lastRow, 0, TerrainTile.byteValue(ARC_SW));
-        setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, lastRow, lastCol, TerrainTile.byteValue(ARC_SE));
+        setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, 0, TerrainTile.ARC_NW.byteValue());
+        setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, lastCol, TerrainTile.ARC_NE.byteValue());
+        setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, lastRow, 0, TerrainTile.ARC_SW.byteValue());
+        setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, lastRow, lastCol, TerrainTile.ARC_SE.byteValue());
         for (int row = EMPTY_ROWS_BEFORE_MAZE + 1; row < lastRow; ++row) {
-            setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, row, 0, TerrainTile.byteValue(WALL_V));
-            setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, row, lastCol, TerrainTile.byteValue(WALL_V));
+            setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, row, 0, TerrainTile.WALL_V.byteValue());
+            setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, row, lastCol, TerrainTile.WALL_V.byteValue());
         }
         for (int col = 1; col < lastCol; ++col) {
-            setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, col, TerrainTile.byteValue(WALL_H));
-            setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, lastRow, col, TerrainTile.byteValue(WALL_H));
+            setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, EMPTY_ROWS_BEFORE_MAZE, col, TerrainTile.WALL_H.byteValue());
+            setTileValueRespectSymmetry(worldMap, LayerID.TERRAIN, lastRow, col, TerrainTile.WALL_H.byteValue());
         }
         changeManager.setTerrainMapChanged();
     }
@@ -1592,10 +1589,10 @@ public class TileMapEditor {
     private boolean hasAccessibleTerrainAtTile(Vector2i tile) {
         byte value = editedWorldMap().content(LayerID.TERRAIN, tile);
         return value == TerrainTile.emptyTileValue()
-            || value == TerrainTile.byteValue(ONE_WAY_DOWN)
-            || value == TerrainTile.byteValue(ONE_WAY_UP)
-            || value == TerrainTile.byteValue(ONE_WAY_LEFT)
-            || value == TerrainTile.byteValue(ONE_WAY_RIGHT);
+            || value == TerrainTile.ONE_WAY_DOWN.byteValue()
+            || value == TerrainTile.ONE_WAY_UP.byteValue()
+            || value == TerrainTile.ONE_WAY_LEFT.byteValue()
+            || value == TerrainTile.ONE_WAY_RIGHT.byteValue();
     }
 
     public boolean canEditFoodAtTile(Vector2i tile) {
@@ -1663,7 +1660,7 @@ public class TileMapEditor {
                     int[] pixelsOfTile = new int[TS*TS]; // pixels row-wise
                     rdr.getPixels(col * TS, row * TS, TS, TS, pixelFormat, pixelsOfTile, 0, TS);
                     byte foodValue = matcher.matchFoodTile(pixelsOfTile);
-                    if (foodValue == FoodTile.byteValue(PELLET) || foodValue == FoodTile.byteValue(ENERGIZER)) {
+                    if (foodValue == FoodTile.PELLET.byteValue() || foodValue == FoodTile.ENERGIZER.byteValue()) {
                         worldMap.setContent(LayerID.FOOD, worldMapTile, foodValue);
                     } else {
                         byte terrainValue = matcher.matchTerrainTile(pixelsOfTile);
@@ -1680,11 +1677,11 @@ public class TileMapEditor {
 
         // Find house: requires that at least min and max tiles have been detected
         Vector2i houseMinTile = worldMap.tiles()
-            .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.byteValue(DCORNER_NW))
+            .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.DCORNER_NW.byteValue())
             .findFirst().orElse(null);
 
         Vector2i houseMaxTile = worldMap.tiles()
-            .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.byteValue(DCORNER_SE))
+            .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.DCORNER_SE.byteValue())
             .findFirst().orElse(null);
 
         if (houseMinTile != null && houseMaxTile != null

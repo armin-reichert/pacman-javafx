@@ -12,8 +12,6 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.tilemap.FoodTile.ENERGIZER;
-import static de.amr.pacmanfx.lib.tilemap.FoodTile.PELLET;
 import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 
 public class TileMatcher {
@@ -46,8 +44,8 @@ public class TileMatcher {
     }
 
     public byte matchFoodTile(int[] tilePixels) {
-        if (isEnergizer(tilePixels)) return FoodTile.byteValue(ENERGIZER);
-        if (isPellet(tilePixels)) return FoodTile.byteValue(PELLET);
+        if (isEnergizer(tilePixels)) return FoodTile.ENERGIZER.byteValue();
+        if (isPellet(tilePixels)) return FoodTile.PELLET.byteValue();
         return FoodTile.emptyTileValue();
     }
 
@@ -62,18 +60,18 @@ public class TileMatcher {
     }
 
     public byte matchTerrainTile(int[] tilePixels) {
-        if (matchesAngularDoubleNWCorner(tilePixels)) return TerrainTile.byteValue(DCORNER_NW);
-        if (matchesAngularDoubleSWCorner(tilePixels)) return TerrainTile.byteValue(DCORNER_SW);
-        if (matchesAngularDoubleSECorner(tilePixels)) return TerrainTile.byteValue(DCORNER_SE);
-        if (matchesAngularDoubleNECorner(tilePixels)) return TerrainTile.byteValue(DCORNER_NE);
+        if (matchesAngularDoubleNWCorner(tilePixels)) return DCORNER_NW.byteValue();
+        if (matchesAngularDoubleSWCorner(tilePixels)) return DCORNER_SW.byteValue();
+        if (matchesAngularDoubleSECorner(tilePixels)) return DCORNER_SE.byteValue();
+        if (matchesAngularDoubleNECorner(tilePixels)) return DCORNER_NE.byteValue();
         //TODO: what if door and fill color are equal?
-        if (matchesDoor(tilePixels)) return TerrainTile.byteValue(DOOR);
-        if (matchesHWall(tilePixels)) return TerrainTile.byteValue(WALL_H);
-        if (matchesVWall(tilePixels)) return TerrainTile.byteValue(WALL_V);
-        if (matchesNWCorner(tilePixels)) return TerrainTile.byteValue(ARC_NW);
-        if (matchesSWCorner(tilePixels)) return TerrainTile.byteValue(ARC_SW);
-        if (matchesNECorner(tilePixels)) return TerrainTile.byteValue(ARC_NE);
-        if (matchesSECorner(tilePixels)) return TerrainTile.byteValue(ARC_SE);
+        if (matchesDoor(tilePixels))     return DOOR.byteValue();
+        if (matchesHWall(tilePixels))    return WALL_H.byteValue();
+        if (matchesVWall(tilePixels))    return WALL_V.byteValue();
+        if (matchesNWCorner(tilePixels)) return ARC_NW.byteValue();
+        if (matchesSWCorner(tilePixels)) return ARC_SW.byteValue();
+        if (matchesNECorner(tilePixels)) return ARC_NE.byteValue();
+        if (matchesSECorner(tilePixels)) return ARC_SE.byteValue();
         return TerrainTile.emptyTileValue();
     }
 
