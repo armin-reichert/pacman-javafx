@@ -315,27 +315,23 @@ public class GameLevel {
 
     // House
 
-    private void createArcadeHouse(int minX, int minY, int maxX, int maxY) {
-        leftDoorTile = Vector2i.of(minX + 3, minY);
-        rightDoorTile = Vector2i.of(minX + 4, minY);
+    private static final TerrainTile[][] ARCADE_HOUSE = {
+        { ARC_NW, WALL_H, WALL_H, DOOR, DOOR, WALL_H, WALL_H, ARC_NE },
+        { WALL_V, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, WALL_V },
+        { WALL_V, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, WALL_V },
+        { ARC_SW, WALL_H, WALL_H, WALL_H, WALL_H, WALL_H, WALL_H, ARC_SE }
+    };
+
+    private void createArcadeHouse(int minX, int minY) {
         setGhostStartDirection(RED_GHOST_SHADOW, Direction.LEFT);
         setGhostStartDirection(PINK_GHOST_SPEEDY, Direction.DOWN);
         setGhostStartDirection(CYAN_GHOST_BASHFUL, Direction.UP);
         setGhostStartDirection(ORANGE_GHOST_POKEY, Direction.UP);
-
-        // Create an obstacle for the house!
-        //TODO change attributes to min_tile and max_tiles
-        for (int row = minY; row <= maxY; ++row) {
-            for (int col = minX; col <= maxX; ++col) {
-                byte code = EMPTY.code();
-                if      (col == minX && row == minY) code = ARC_NW.code();
-                else if (col == minX && row == maxY) code = ARC_SW.code();
-                else if (col == maxX && row == minY) code = ARC_NE.code();
-                else if (col == maxX && row == maxY) code = ARC_SE.code();
-                else if (row == minY && (col == leftDoorTile.x() || col == rightDoorTile.x())) code = DOOR.code();
-                else if (col == minX || col == maxX) code = WALL_V.code();
-                else if (row == minY || row == maxY) code = WALL_H.code();
-                worldMap.setContent(LayerID.TERRAIN, row, col, code);
+        leftDoorTile  = Vector2i.of(minX + 3, minY);
+        rightDoorTile = Vector2i.of(minX + 4, minY);
+        for (int y = 0; y < ARCADE_HOUSE.length; ++y) {
+            for (int x = 0; x < ARCADE_HOUSE[y].length; ++x) {
+                worldMap.setContent(LayerID.TERRAIN, minY + y, minX + x, ARCADE_HOUSE[y][x].code());
             }
         }
     }
@@ -349,9 +345,8 @@ public class GameLevel {
             Logger.warn("No house max tile found in map!");
             worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MAX_TILE, WorldMapFormatter.formatTile(Vector2i.of(17, 19)));
         }
-        Vector2i minTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
-        Vector2i maxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
-        createArcadeHouse(minTile.x(), minTile.y(), maxTile.x(), maxTile.y());
+        Vector2i houseMinTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
+        createArcadeHouse(houseMinTile.x(), houseMinTile.y());
     }
 
     public Vector2i houseMinTile() {
