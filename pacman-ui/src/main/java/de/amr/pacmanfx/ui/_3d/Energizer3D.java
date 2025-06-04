@@ -19,7 +19,7 @@ import static de.amr.pacmanfx.Validations.requireNonNegative;
  */
 public class Energizer3D extends Sphere implements Eatable3D {
 
-    private static final double MIN_SCALING = 0.25;
+    private static final double MIN_SCALING = 0.20;
     private static final double MAX_SCALING = 1.00;
 
     private final ScaleTransition pumpingAnimation;
@@ -29,8 +29,8 @@ public class Energizer3D extends Sphere implements Eatable3D {
     public Energizer3D(double radius) {
         requireNonNegative(radius, "Energizer radius must be positive but is %f");
         setRadius(radius);
-
-        pumpingAnimation = new ScaleTransition(Duration.seconds(1.0 / 4), this);
+        // 3 full blinks per second
+        pumpingAnimation = new ScaleTransition(Duration.millis(166.6), this);
         pumpingAnimation.setAutoReverse(true);
         pumpingAnimation.setCycleCount(Animation.INDEFINITE);
         pumpingAnimation.setInterpolator(Interpolator.EASE_BOTH);
