@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.tilemap.FoodTileSet;
+import de.amr.pacmanfx.lib.tilemap.FoodTile;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.WorldMapProperty;
@@ -33,7 +33,7 @@ import org.tinylog.Logger;
 import java.util.function.Predicate;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.tilemap.FoodTileSet.TileID.PELLET;
+import static de.amr.pacmanfx.lib.tilemap.FoodTile.PELLET;
 import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.MS_PACMAN_COLOR_FOOD;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditor.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
@@ -320,11 +320,11 @@ public class EditCanvas {
         });
 
         var miFloodWithPellets = new MenuItem(tt("menu.edit.flood_with_pellets"));
-        miFloodWithPellets.setOnAction(ae -> editor.floodWithFoodValue(tile, FoodTileSet.valueOf(PELLET)));
+        miFloodWithPellets.setOnAction(ae -> editor.floodWithFoodValue(tile, FoodTile.byteValue(PELLET)));
         miFloodWithPellets.setDisable(!editor.canEditFoodAtTile(tile));
 
         var miClearPellets = new MenuItem(tt("menu.edit.clear_food"));
-        miClearPellets.setOnAction(ae -> editor.floodWithFoodValue(tile, FoodTileSet.emptyTileValue()));
+        miClearPellets.setOnAction(ae -> editor.floodWithFoodValue(tile, FoodTile.emptyTileValue()));
         miClearPellets.setDisable(!editor.canEditFoodAtTile(tile));
 
         contextMenu.getItems().setAll(

@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 
 import java.util.Objects;
 
-import static de.amr.pacmanfx.lib.tilemap.TerrainTileSet.TileID.*;
+import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 
 public record ObstacleSegment(Vector2i startPoint, Vector2i vector, boolean ccw, byte encoding) {
 
@@ -22,19 +22,19 @@ public record ObstacleSegment(Vector2i startPoint, Vector2i vector, boolean ccw,
     }
 
     public boolean isRoundedNWCorner() {
-        return encoding == TerrainTileSet.valueOf(ARC_NW);
+        return encoding == TerrainTile.byteValue(ARC_NW);
     }
 
     public boolean isRoundedSWCorner() {
-        return encoding == TerrainTileSet.valueOf(ARC_SW);
+        return encoding == TerrainTile.byteValue(ARC_SW);
     }
 
     public boolean isRoundedSECorner() {
-        return encoding == TerrainTileSet.valueOf(ARC_SE);
+        return encoding == TerrainTile.byteValue(ARC_SE);
     }
 
     public boolean isRoundedNECorner() {
-        return encoding == TerrainTileSet.valueOf(ARC_NE);
+        return encoding == TerrainTile.byteValue(ARC_NE);
     }
 
     public boolean isRoundedCorner() {
@@ -42,19 +42,19 @@ public record ObstacleSegment(Vector2i startPoint, Vector2i vector, boolean ccw,
     }
 
     public boolean isAngularNWCorner() {
-        return encoding == TerrainTileSet.valueOf(DCORNER_NW);
+        return encoding == TerrainTile.byteValue(DCORNER_NW);
     }
 
     public boolean isAngularSWCorner() {
-        return encoding == TerrainTileSet.valueOf(DCORNER_SW);
+        return encoding == TerrainTile.byteValue(DCORNER_SW);
     }
 
     public boolean isAngularSECorner() {
-        return encoding == TerrainTileSet.valueOf(DCORNER_SE);
+        return encoding == TerrainTile.byteValue(DCORNER_SE);
     }
 
     public boolean isAngularNECorner() {
-        return encoding == TerrainTileSet.valueOf(DCORNER_NE);
+        return encoding == TerrainTile.byteValue(DCORNER_NE);
     }
 
     public boolean isNWCorner() {
@@ -70,8 +70,8 @@ public record ObstacleSegment(Vector2i startPoint, Vector2i vector, boolean ccw,
         return isRoundedNECorner() || isAngularNECorner();
     }
 
-    public boolean isVerticalLine() { return encoding == TerrainTileSet.valueOf(WALL_V); }
-    public boolean isHorizontalLine() { return encoding == TerrainTileSet.valueOf(WALL_H); }
+    public boolean isVerticalLine() { return encoding == TerrainTile.byteValue(WALL_V); }
+    public boolean isHorizontalLine() { return encoding == TerrainTile.byteValue(WALL_H); }
     public boolean isStraightLine() {
         return isVerticalLine() || isHorizontalLine();
     }

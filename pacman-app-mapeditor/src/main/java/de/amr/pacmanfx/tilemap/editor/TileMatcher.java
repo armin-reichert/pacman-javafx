@@ -4,17 +4,17 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tilemap.editor;
 
-import de.amr.pacmanfx.lib.tilemap.FoodTileSet;
-import de.amr.pacmanfx.lib.tilemap.TerrainTileSet;
+import de.amr.pacmanfx.lib.tilemap.FoodTile;
+import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import javafx.scene.paint.Color;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.tilemap.FoodTileSet.TileID.ENERGIZER;
-import static de.amr.pacmanfx.lib.tilemap.FoodTileSet.TileID.PELLET;
-import static de.amr.pacmanfx.lib.tilemap.TerrainTileSet.TileID.*;
+import static de.amr.pacmanfx.lib.tilemap.FoodTile.ENERGIZER;
+import static de.amr.pacmanfx.lib.tilemap.FoodTile.PELLET;
+import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 
 public class TileMatcher {
 
@@ -46,9 +46,9 @@ public class TileMatcher {
     }
 
     public byte matchFoodTile(int[] tilePixels) {
-        if (isEnergizer(tilePixels)) return FoodTileSet.valueOf(ENERGIZER);
-        if (isPellet(tilePixels)) return FoodTileSet.valueOf(PELLET);
-        return FoodTileSet.emptyTileValue();
+        if (isEnergizer(tilePixels)) return FoodTile.byteValue(ENERGIZER);
+        if (isPellet(tilePixels)) return FoodTile.byteValue(PELLET);
+        return FoodTile.emptyTileValue();
     }
 
     private boolean isEnergizer(int[] tilePixels) {
@@ -62,19 +62,19 @@ public class TileMatcher {
     }
 
     public byte matchTerrainTile(int[] tilePixels) {
-        if (matchesAngularDoubleNWCorner(tilePixels)) return TerrainTileSet.valueOf(DCORNER_NW);
-        if (matchesAngularDoubleSWCorner(tilePixels)) return TerrainTileSet.valueOf(DCORNER_SW);
-        if (matchesAngularDoubleSECorner(tilePixels)) return TerrainTileSet.valueOf(DCORNER_SE);
-        if (matchesAngularDoubleNECorner(tilePixels)) return TerrainTileSet.valueOf(DCORNER_NE);
+        if (matchesAngularDoubleNWCorner(tilePixels)) return TerrainTile.byteValue(DCORNER_NW);
+        if (matchesAngularDoubleSWCorner(tilePixels)) return TerrainTile.byteValue(DCORNER_SW);
+        if (matchesAngularDoubleSECorner(tilePixels)) return TerrainTile.byteValue(DCORNER_SE);
+        if (matchesAngularDoubleNECorner(tilePixels)) return TerrainTile.byteValue(DCORNER_NE);
         //TODO: what if door and fill color are equal?
-        if (matchesDoor(tilePixels)) return TerrainTileSet.valueOf(DOOR);
-        if (matchesHWall(tilePixels)) return TerrainTileSet.valueOf(WALL_H);
-        if (matchesVWall(tilePixels)) return TerrainTileSet.valueOf(WALL_V);
-        if (matchesNWCorner(tilePixels)) return TerrainTileSet.valueOf(ARC_NW);
-        if (matchesSWCorner(tilePixels)) return TerrainTileSet.valueOf(ARC_SW);
-        if (matchesNECorner(tilePixels)) return TerrainTileSet.valueOf(ARC_NE);
-        if (matchesSECorner(tilePixels)) return TerrainTileSet.valueOf(ARC_SE);
-        return TerrainTileSet.emptyTileValue();
+        if (matchesDoor(tilePixels)) return TerrainTile.byteValue(DOOR);
+        if (matchesHWall(tilePixels)) return TerrainTile.byteValue(WALL_H);
+        if (matchesVWall(tilePixels)) return TerrainTile.byteValue(WALL_V);
+        if (matchesNWCorner(tilePixels)) return TerrainTile.byteValue(ARC_NW);
+        if (matchesSWCorner(tilePixels)) return TerrainTile.byteValue(ARC_SW);
+        if (matchesNECorner(tilePixels)) return TerrainTile.byteValue(ARC_NE);
+        if (matchesSECorner(tilePixels)) return TerrainTile.byteValue(ARC_SE);
+        return TerrainTile.emptyTileValue();
     }
 
     private IntStream allIndices() { return IntStream.range(0, 64); }

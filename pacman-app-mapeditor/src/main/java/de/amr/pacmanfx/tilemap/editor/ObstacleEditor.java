@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
-import de.amr.pacmanfx.lib.tilemap.TerrainTileSet;
+import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -16,7 +16,7 @@ import javafx.scene.canvas.GraphicsContext;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.lib.UsefulFunctions.isEven;
-import static de.amr.pacmanfx.lib.tilemap.TerrainTileSet.TileID.*;
+import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.mirroredTileValue;
 import static java.util.Objects.requireNonNull;
 
@@ -138,38 +138,38 @@ public class ObstacleEditor {
         WorldMap worldMap = worldMapPy.get();
 
         byte minTileValue = worldMap.content(LayerID.TERRAIN, minTile);
-        if       (minTileValue == TerrainTileSet.valueOf(ARC_NE)) joinedContent[0][0] = TerrainTileSet.valueOf(WALL_H);
-        else if (minTileValue == TerrainTileSet.valueOf(ARC_SW)) joinedContent[0][0] = TerrainTileSet.valueOf(WALL_V);
-        else if (minTileValue == TerrainTileSet.valueOf(WALL_V)) joinedContent[0][0] = TerrainTileSet.valueOf(ARC_SW);
-        else if (minTileValue == TerrainTileSet.valueOf(WALL_H)) joinedContent[0][0] = TerrainTileSet.valueOf(ARC_NE);
+        if       (minTileValue == TerrainTile.byteValue(ARC_NE)) joinedContent[0][0] = TerrainTile.byteValue(WALL_H);
+        else if (minTileValue == TerrainTile.byteValue(ARC_SW)) joinedContent[0][0] = TerrainTile.byteValue(WALL_V);
+        else if (minTileValue == TerrainTile.byteValue(WALL_V)) joinedContent[0][0] = TerrainTile.byteValue(ARC_SW);
+        else if (minTileValue == TerrainTile.byteValue(WALL_H)) joinedContent[0][0] = TerrainTile.byteValue(ARC_NE);
 
         Vector2i lowerLeftCorner = new Vector2i(minTile.x(), maxTile.y());
         byte lowerLeftValue = worldMap.content(LayerID.TERRAIN, lowerLeftCorner);
-        if       (lowerLeftValue == TerrainTileSet.valueOf(WALL_H)) joinedContent[numRows-1][0] = TerrainTileSet.valueOf(ARC_SE);
-        else if (lowerLeftValue == TerrainTileSet.valueOf(WALL_V)) joinedContent[numRows-1][0] = TerrainTileSet.valueOf(ARC_NW);
-        else if (lowerLeftValue == TerrainTileSet.valueOf(ARC_SE)) joinedContent[numRows-1][0] = TerrainTileSet.valueOf(WALL_H);
-        else if (lowerLeftValue == TerrainTileSet.valueOf(ARC_NW)) joinedContent[numRows-1][0] = TerrainTileSet.valueOf(WALL_V);
+        if       (lowerLeftValue == TerrainTile.byteValue(WALL_H)) joinedContent[numRows-1][0] = TerrainTile.byteValue(ARC_SE);
+        else if (lowerLeftValue == TerrainTile.byteValue(WALL_V)) joinedContent[numRows-1][0] = TerrainTile.byteValue(ARC_NW);
+        else if (lowerLeftValue == TerrainTile.byteValue(ARC_SE)) joinedContent[numRows-1][0] = TerrainTile.byteValue(WALL_H);
+        else if (lowerLeftValue == TerrainTile.byteValue(ARC_NW)) joinedContent[numRows-1][0] = TerrainTile.byteValue(WALL_V);
 
         Vector2i upperRightCorner = new Vector2i(maxTile.x(), minTile.y());
         byte upperRightValue = worldMap.content(LayerID.TERRAIN, upperRightCorner);
-        if      (upperRightValue == TerrainTileSet.valueOf(WALL_V)) joinedContent[0][numCols-1] =TerrainTileSet.valueOf(ARC_SE);
-        else if (upperRightValue == TerrainTileSet.valueOf(WALL_H)) joinedContent[0][numCols-1] =TerrainTileSet.valueOf(ARC_NW);
-        else if (upperRightValue == TerrainTileSet.valueOf(ARC_SE)) joinedContent[0][numCols-1] =TerrainTileSet.valueOf(WALL_V);
-        else if (upperRightValue == TerrainTileSet.valueOf(ARC_NW)) joinedContent[0][numCols-1] =TerrainTileSet.valueOf(WALL_H);
+        if      (upperRightValue == TerrainTile.byteValue(WALL_V)) joinedContent[0][numCols-1] = TerrainTile.byteValue(ARC_SE);
+        else if (upperRightValue == TerrainTile.byteValue(WALL_H)) joinedContent[0][numCols-1] = TerrainTile.byteValue(ARC_NW);
+        else if (upperRightValue == TerrainTile.byteValue(ARC_SE)) joinedContent[0][numCols-1] = TerrainTile.byteValue(WALL_V);
+        else if (upperRightValue == TerrainTile.byteValue(ARC_NW)) joinedContent[0][numCols-1] = TerrainTile.byteValue(WALL_H);
 
         byte maxTileValue = worldMap.content(LayerID.TERRAIN, maxTile);
-        if (maxTileValue == TerrainTileSet.valueOf(WALL_V)) joinedContent[numRows-1][numCols-1] = TerrainTileSet.valueOf(ARC_NE);
-        if (maxTileValue == TerrainTileSet.valueOf(WALL_H)) joinedContent[numRows-1][numCols-1] = TerrainTileSet.valueOf(ARC_SW);
-        if (maxTileValue == TerrainTileSet.valueOf(ARC_SW)) joinedContent[numRows-1][numCols-1] = TerrainTileSet.valueOf(WALL_H);
-        if (maxTileValue == TerrainTileSet.valueOf(ARC_NE)) joinedContent[numRows-1][numCols-1] = TerrainTileSet.valueOf(WALL_V);
+        if (maxTileValue == TerrainTile.byteValue(WALL_V)) joinedContent[numRows-1][numCols-1] = TerrainTile.byteValue(ARC_NE);
+        if (maxTileValue == TerrainTile.byteValue(WALL_H)) joinedContent[numRows-1][numCols-1] = TerrainTile.byteValue(ARC_SW);
+        if (maxTileValue == TerrainTile.byteValue(ARC_SW)) joinedContent[numRows-1][numCols-1] = TerrainTile.byteValue(WALL_H);
+        if (maxTileValue == TerrainTile.byteValue(ARC_NE)) joinedContent[numRows-1][numCols-1] = TerrainTile.byteValue(WALL_V);
 
         crossings = 0;
         int leftBorder = minTile.x();
         for (int row = minTile.y(); row < maxTile.y(); ++row) {
             int x = 0, y = row - minTile.y();
-            if (editedContent[y][x] == TerrainTileSet.valueOf(WALL_V)
-                    && worldMap.content(LayerID.TERRAIN, row, leftBorder) == TerrainTileSet.valueOf(WALL_H)) {
-                joinedContent[y][x] = isEven(crossings) ? TerrainTileSet.valueOf(ARC_SE) : TerrainTileSet.valueOf(ARC_NE);
+            if (editedContent[y][x] == TerrainTile.byteValue(WALL_V)
+                    && worldMap.content(LayerID.TERRAIN, row, leftBorder) == TerrainTile.byteValue(WALL_H)) {
+                joinedContent[y][x] = isEven(crossings) ? TerrainTile.byteValue(ARC_SE) : TerrainTile.byteValue(ARC_NE);
             }
             ++crossings;
         }
@@ -178,9 +178,9 @@ public class ObstacleEditor {
         int rightBorder = maxTile.x();
         for (int row = minTile.y(); row < maxTile.y(); ++row) {
             int x = rightBorder - minTile.x(), y = row - minTile.y();
-            if (editedContent[y][x] == TerrainTileSet.valueOf(WALL_V)
-                    && worldMap.content(LayerID.TERRAIN, row, leftBorder) == TerrainTileSet.valueOf(WALL_H)) {
-                joinedContent[y][x] = isEven(crossings) ? TerrainTileSet.valueOf(ARC_SW) : TerrainTileSet.valueOf(ARC_NW);
+            if (editedContent[y][x] == TerrainTile.byteValue(WALL_V)
+                    && worldMap.content(LayerID.TERRAIN, row, leftBorder) == TerrainTile.byteValue(WALL_H)) {
+                joinedContent[y][x] = isEven(crossings) ? TerrainTile.byteValue(ARC_SW) : TerrainTile.byteValue(ARC_NW);
             }
             ++crossings;
         }
@@ -189,9 +189,9 @@ public class ObstacleEditor {
         int upperBorder = minTile.y(); // upper border
         for (int col = minTile.x(); col < maxTile.x(); ++col) {
             int x = col - minTile.x(), y = upperBorder - minTile.y();
-            if (editedContent[y][x] == TerrainTileSet.valueOf(WALL_H)
-                    && worldMap.content(LayerID.TERRAIN, upperBorder, col) == TerrainTileSet.valueOf(WALL_V)) {
-                joinedContent[y][x] = isEven(crossings) ? TerrainTileSet.valueOf(ARC_SE) : TerrainTileSet.valueOf(ARC_SW);
+            if (editedContent[y][x] == TerrainTile.byteValue(WALL_H)
+                    && worldMap.content(LayerID.TERRAIN, upperBorder, col) == TerrainTile.byteValue(WALL_V)) {
+                joinedContent[y][x] = isEven(crossings) ? TerrainTile.byteValue(ARC_SE) : TerrainTile.byteValue(ARC_SW);
             }
             ++crossings;
         }
@@ -200,9 +200,9 @@ public class ObstacleEditor {
         int lowerBorder = maxTile.y(); // lower border
         for (int col = minTile.x(); col < maxTile.x(); ++col) {
             int x = col - minTile.x(), y = lowerBorder - minTile.y();
-            if (editedContent[y][x] == TerrainTileSet.valueOf(WALL_H)
-                    && worldMap.content(LayerID.TERRAIN, lowerBorder, col) == TerrainTileSet.valueOf(WALL_V)) {
-                joinedContent[y][x] = isEven(crossings) ? TerrainTileSet.valueOf(ARC_NE) : TerrainTileSet.valueOf(ARC_NW);
+            if (editedContent[y][x] == TerrainTile.byteValue(WALL_H)
+                    && worldMap.content(LayerID.TERRAIN, lowerBorder, col) == TerrainTile.byteValue(WALL_V)) {
+                joinedContent[y][x] = isEven(crossings) ? TerrainTile.byteValue(ARC_NE) : TerrainTile.byteValue(ARC_NW);
             }
             ++crossings;
         }
@@ -229,12 +229,12 @@ public class ObstacleEditor {
     }
 
     private byte computeTileValue(int y, int x) {
-        if (y == minTile.y() && x == minTile.x()) return TerrainTileSet.valueOf(ARC_NW);
-        if (y == minTile.y() && x == maxTile.x()) return TerrainTileSet.valueOf(ARC_NE);
-        if (y == maxTile.y() && x == minTile.x()) return TerrainTileSet.valueOf(ARC_SW);
-        if (y == maxTile.y() && x == maxTile.x()) return TerrainTileSet.valueOf(ARC_SE);
-        if (y == minTile.y() || y == maxTile.y()) return TerrainTileSet.valueOf(WALL_H);
-        if (x == minTile.x() || x == maxTile.x()) return TerrainTileSet.valueOf(WALL_V);
-        return TerrainTileSet.emptyTileValue();
+        if (y == minTile.y() && x == minTile.x()) return TerrainTile.byteValue(ARC_NW);
+        if (y == minTile.y() && x == maxTile.x()) return TerrainTile.byteValue(ARC_NE);
+        if (y == maxTile.y() && x == minTile.x()) return TerrainTile.byteValue(ARC_SW);
+        if (y == maxTile.y() && x == maxTile.x()) return TerrainTile.byteValue(ARC_SE);
+        if (y == minTile.y() || y == maxTile.y()) return TerrainTile.byteValue(WALL_H);
+        if (x == minTile.x() || x == maxTile.x()) return TerrainTile.byteValue(WALL_V);
+        return TerrainTile.emptyTileValue();
     }
 }

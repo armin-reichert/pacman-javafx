@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.tilemap;
 
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.tilemap.FoodTileSet;
+import de.amr.pacmanfx.lib.tilemap.FoodTile;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleFloatProperty;
@@ -15,8 +15,8 @@ import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.tilemap.FoodTileSet.TileID.ENERGIZER;
-import static de.amr.pacmanfx.lib.tilemap.FoodTileSet.TileID.PELLET;
+import static de.amr.pacmanfx.lib.tilemap.FoodTile.ENERGIZER;
+import static de.amr.pacmanfx.lib.tilemap.FoodTile.PELLET;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -54,8 +54,8 @@ public class FoodMapRenderer implements TileMapRenderer {
 
     @Override
     public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
-        if (content == FoodTileSet.valueOf(PELLET)) drawPellet(g, tile);
-        else if (content == FoodTileSet.valueOf(ENERGIZER)) drawEnergizer(g, tile);
+        if (content == FoodTile.byteValue(PELLET)) drawPellet(g, tile);
+        else if (content == FoodTile.byteValue(ENERGIZER)) drawEnergizer(g, tile);
     }
 
     public void drawPellet(GraphicsContext g, Vector2i tile) {

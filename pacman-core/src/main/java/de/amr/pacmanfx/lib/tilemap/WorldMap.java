@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Validations.requireNonNegative;
-import static de.amr.pacmanfx.lib.tilemap.TerrainTileSet.TileID.WALL_V;
+import static de.amr.pacmanfx.lib.tilemap.TerrainTile.WALL_V;
 import static java.util.Objects.requireNonNull;
 
 public class WorldMap {
@@ -31,11 +31,11 @@ public class WorldMap {
     public static final String MARKER_BEGIN_DATA_SECTION = "!data";
 
     private static boolean isValidTerrainValue(byte value) {
-        return Stream.of(TerrainTileSet.TileID.values()).anyMatch(tileID -> TerrainTileSet.valueOf(tileID) == value);
+        return Stream.of(TerrainTile.values()).anyMatch(tileID -> TerrainTile.byteValue(tileID) == value);
     }
 
     private static boolean isValidFoodValue(byte value) {
-        return Stream.of(FoodTileSet.TileID.values()).anyMatch(tileID -> FoodTileSet.valueOf(tileID) == value);
+        return Stream.of(FoodTile.values()).anyMatch(tile -> FoodTile.byteValue(tile) == value);
     }
 
     public static WorldMap emptyMap(int numRows, int numCols) {
@@ -101,8 +101,8 @@ public class WorldMap {
         newMap.foodLayer.replaceProperties(foodLayer.properties());
         for (int row = 0; row < newMap.numRows(); ++row) {
             for (int col = 0; col < newMap.numCols(); ++col) {
-                byte terrainValue = TerrainTileSet.emptyTileValue();
-                byte foodValue = FoodTileSet.emptyTileValue();
+                byte terrainValue = TerrainTile.emptyTileValue();
+                byte foodValue = FoodTile.emptyTileValue();
                 if (row < rowIndex) {
                     terrainValue = content(LayerID.TERRAIN, row, col);
                     foodValue = content(LayerID.FOOD, row, col);
@@ -111,8 +111,8 @@ public class WorldMap {
                     foodValue = content(LayerID.FOOD, row - 1, col);
                 } else {
                     if ((col == 0 || col == numCols() - 1)
-                            && content(LayerID.TERRAIN, row, col) == TerrainTileSet.valueOf(WALL_V)) {
-                        terrainValue = TerrainTileSet.valueOf(WALL_V); // keep vertical border wall
+                            && content(LayerID.TERRAIN, row, col) == TerrainTile.byteValue(WALL_V)) {
+                        terrainValue = TerrainTile.byteValue(WALL_V); // keep vertical border wall
                     }
                 }
                 newMap.setContent(LayerID.TERRAIN, row, col, terrainValue);

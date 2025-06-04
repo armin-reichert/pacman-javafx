@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
-import de.amr.pacmanfx.lib.tilemap.TerrainTileSet;
+import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import de.amr.pacmanfx.model.GameLevel;
 import org.tinylog.Logger;
 
@@ -21,7 +21,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Validations.*;
 import static de.amr.pacmanfx.lib.Direction.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
-import static de.amr.pacmanfx.lib.tilemap.TerrainTileSet.TileID.ONE_WAY_DOWN;
+import static de.amr.pacmanfx.lib.tilemap.TerrainTile.ONE_WAY_DOWN;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static java.util.Objects.requireNonNull;
 
@@ -163,7 +163,7 @@ public abstract class Ghost extends MovingActor implements AnimatedActor {
         if (state == GhostState.HUNTING_PAC) {
             var currentTile = tile();
             if (specialTerrainTiles.contains(tile)
-                    && level.worldMap().content(LayerID.TERRAIN, tile) == TerrainTileSet.valueOf(ONE_WAY_DOWN)
+                    && level.worldMap().content(LayerID.TERRAIN, tile) == TerrainTile.byteValue(ONE_WAY_DOWN)
                     && currentTile.equals(tile.plus(DOWN.vector()))) {
                 Logger.debug("Hunting {} cannot move up to special tile {}", name, tile);
                 return false;

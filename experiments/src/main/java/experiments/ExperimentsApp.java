@@ -4,7 +4,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.ObstacleSegment;
-import de.amr.pacmanfx.lib.tilemap.TerrainTileSet;
+import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -26,7 +26,7 @@ import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.tilemap.TerrainTileSet.TileID.*;
+import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 import static java.lang.Math.TAU;
 
 public class ExperimentsApp extends Application {
@@ -108,19 +108,19 @@ public class ExperimentsApp extends Application {
         }
 
         obstacle = new Obstacle(new Vector2i(0, 15*TS));
-        extendObstacle(-4, 4, true, TerrainTileSet.valueOf(ARC_NW));
-        extendObstacle(0, 3*8, true, TerrainTileSet.valueOf(WALL_V));
-        extendObstacle(-4, 4, false, TerrainTileSet.valueOf(ARC_SE));
-        extendObstacle(-8, 0, false, TerrainTileSet.valueOf(WALL_H));
-        extendObstacle(-4, 4, true, TerrainTileSet.valueOf(ARC_NW));
-        extendObstacle(4, 4, true, TerrainTileSet.valueOf(ARC_SW));
-        extendObstacle(4*8, 0, true, TerrainTileSet.valueOf(WALL_H));
-        extendObstacle(4, -4, true, TerrainTileSet.valueOf(ARC_SE));
-        extendObstacle(-4, -4, true, TerrainTileSet.valueOf(ARC_NE));
-        extendObstacle(-8, 0, true, TerrainTileSet.valueOf(WALL_H));
-        extendObstacle(-4, -4, false, TerrainTileSet.valueOf(ARC_SW));
-        extendObstacle(0, -3*8, false, TerrainTileSet.valueOf(WALL_V));
-        extendObstacle(-4, -4, true, TerrainTileSet.valueOf(ARC_NE));
+        extendObstacle(-4, 4, true, TerrainTile.byteValue(ARC_NW));
+        extendObstacle(0, 3*8, true, TerrainTile.byteValue(WALL_V));
+        extendObstacle(-4, 4, false, TerrainTile.byteValue(ARC_SE));
+        extendObstacle(-8, 0, false, TerrainTile.byteValue(WALL_H));
+        extendObstacle(-4, 4, true, TerrainTile.byteValue(ARC_NW));
+        extendObstacle(4, 4, true, TerrainTile.byteValue(ARC_SW));
+        extendObstacle(4*8, 0, true, TerrainTile.byteValue(WALL_H));
+        extendObstacle(4, -4, true, TerrainTile.byteValue(ARC_SE));
+        extendObstacle(-4, -4, true, TerrainTile.byteValue(ARC_NE));
+        extendObstacle(-8, 0, true, TerrainTile.byteValue(WALL_H));
+        extendObstacle(-4, -4, false, TerrainTile.byteValue(ARC_SW));
+        extendObstacle(0, -3*8, false, TerrainTile.byteValue(WALL_V));
+        extendObstacle(-4, -4, true, TerrainTile.byteValue(ARC_NE));
 
         Vector2i currentPoint = obstacle.startPoint();
         Vector2i endPoint = null;
