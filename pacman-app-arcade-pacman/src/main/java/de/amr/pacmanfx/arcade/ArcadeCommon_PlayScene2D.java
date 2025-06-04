@@ -8,8 +8,8 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingTimer;
-import de.amr.pacmanfx.model.LevelMessage;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.ui.PacManGames_Actions;
@@ -62,7 +62,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameContinued(GameEvent e) {
-        theGameLevel().showMessage(LevelMessage.READY);
+        theGameLevel().showMessage(GameLevel.MESSAGE_READY);
     }
 
     @Override
@@ -156,7 +156,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
             && levelFinishedAnimation.isRunning() && levelFinishedAnimation.isHighlighted();
         gr().drawLevel(theGameLevel(), 0, 3 * TS, backgroundColor(), highlighted, theGameLevel().blinking().isOn());
 
-        if (theGameLevel().message() != null) {
+        if (theGameLevel().message() != GameLevel.MESSAGE_EMPTY) {
             drawLevelMessage();
         }
 
@@ -190,9 +190,9 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
         float cx = TS * (houseMinTile.x() + houseSize.x() * 0.5f);
         float cy = TS * (houseMinTile.y() + houseSize.y() + 1);
         switch (theGameLevel().message()) {
-            case GAME_OVER -> gr().fillTextAtCenter("GAME  OVER", ARCADE_RED, normalArcadeFont(), cx, cy);
-            case READY -> gr().fillTextAtCenter("READY!", ARCADE_YELLOW, normalArcadeFont(), cx, cy);
-            case TEST_LEVEL -> gr().fillTextAtCenter("TEST    L%02d".formatted(theGameLevel().number()),
+            case GameLevel.MESSAGE_GAME_OVER -> gr().fillTextAtCenter("GAME  OVER", ARCADE_RED, normalArcadeFont(), cx, cy);
+            case GameLevel.MESSAGE_READY -> gr().fillTextAtCenter("READY!", ARCADE_YELLOW, normalArcadeFont(), cx, cy);
+            case GameLevel.MESSAGE_TEST -> gr().fillTextAtCenter("TEST    L%02d".formatted(theGameLevel().number()),
                     ARCADE_WHITE, normalArcadeFont(), cx, cy);
         }
     }

@@ -207,7 +207,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
             theCoinMechanism().consumeCoin();
         }
         scoreManager.updateHighScore();
-        level.showMessage(LevelMessage.GAME_OVER);
+        level.showMessage(GameLevel.MESSAGE_GAME_OVER);
         theGameEventManager().publishEvent(this, GameEventType.STOP_ALL_SOUNDS);
     }
 
@@ -246,13 +246,13 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
         level.makeReadyForPlaying();
         initAnimationOfPacManAndGhosts();
         if (level.isDemoLevel()) {
-            level.showMessage(LevelMessage.GAME_OVER);
+            level.showMessage(GameLevel.MESSAGE_GAME_OVER);
             scoreManager.score().setEnabled(false);
             scoreManager.highScore().setEnabled(false);
             Logger.info("Demo level {} started", level.number());
         } else {
             levelCounter().update(level.number(), level.bonusSymbol(0));
-            level.showMessage(LevelMessage.READY);
+            level.showMessage(GameLevel.MESSAGE_READY);
             scoreManager.score().setEnabled(true);
             scoreManager.highScore().setEnabled(true);
             Logger.info("Level {} started", level.number());

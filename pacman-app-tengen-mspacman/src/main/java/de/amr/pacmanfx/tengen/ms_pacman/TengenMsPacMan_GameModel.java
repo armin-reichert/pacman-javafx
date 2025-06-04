@@ -252,7 +252,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public void onGameEnding() {
         playingProperty().set(false);
         scoreManager.updateHighScore();
-        level.showMessage(LevelMessage.GAME_OVER);
+        level.showMessage(GameLevel.MESSAGE_GAME_OVER);
         theGameEventManager().publishEvent(this, GameEventType.STOP_ALL_SOUNDS);
     }
 
@@ -356,13 +356,13 @@ public class TengenMsPacMan_GameModel extends GameModel {
             activatePacBooster(true);
         }
         if (level.isDemoLevel()) {
-            level.showMessage(LevelMessage.GAME_OVER);
+            level.showMessage(GameLevel.MESSAGE_GAME_OVER);
             scoreManager.score().setEnabled(true);
             scoreManager.highScore().setEnabled(false);
             Logger.info("Demo level {} started", level.number());
 
         } else {
-            level.showMessage(LevelMessage.READY);
+            level.showMessage(GameLevel.MESSAGE_READY);
             levelCounter().update(level.number(), level.bonusSymbol(0));
             scoreManager.score().setEnabled(true);
             scoreManager.highScore().setEnabled(true);

@@ -12,7 +12,6 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameVariant;
-import de.amr.pacmanfx.model.LevelMessage;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -166,7 +165,7 @@ public enum GameState implements FsmState<GameModel> {
             }
             if (timer.tickCount() == delay) {
                 game.startHunting();
-                if (level.message() != null && level.message() == LevelMessage.READY) {
+                if (level.message() == GameLevel.MESSAGE_READY) {
                     level.clearMessage();
                 }
             }
@@ -183,7 +182,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onExit(GameModel game) {
             GameLevel level = game.level().orElseThrow();
-            if (level.message() != null && level.message() == LevelMessage.READY) {
+            if (level.message() == GameLevel.MESSAGE_READY) {
                 level.clearMessage();
             }
         }
@@ -471,7 +470,7 @@ public enum GameState implements FsmState<GameModel> {
             theGameLevel().pac().playAnimation();
             theGameLevel().ghosts().forEach(Ghost::playAnimation);
             theGameLevel().showPacAndGhosts();
-            theGameLevel().showMessage(LevelMessage.TEST_LEVEL);
+            theGameLevel().showMessage(GameLevel.MESSAGE_TEST);
             theGameEventManager().publishEvent(theGame(), GameEventType.STOP_ALL_SOUNDS);
         }
 

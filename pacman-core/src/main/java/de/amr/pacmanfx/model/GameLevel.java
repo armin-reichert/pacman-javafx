@@ -24,6 +24,11 @@ import static java.util.function.Predicate.not;
 
 public class GameLevel {
 
+    public static final byte MESSAGE_EMPTY = -1;
+    public static final byte MESSAGE_READY = 0;
+    public static final byte MESSAGE_GAME_OVER = 1;
+    public static final byte MESSAGE_TEST = 2;
+
     public static final int EMPTY_ROWS_OVER_MAZE  = 3;
     public static final int EMPTY_ROWS_BELOW_MAZE = 2;
 
@@ -78,7 +83,7 @@ public class GameLevel {
     private Bonus bonus;
     private final byte[] bonusSymbols = new byte[2];
     private int currentBonusIndex; // -1=no bonus, 0=first, 1=second
-    private LevelMessage message;
+    private byte message = MESSAGE_EMPTY;
 
     private final Pulse blinking;
 
@@ -231,9 +236,9 @@ public class GameLevel {
     public void setCutSceneNumber(int number) { cutSceneNumber = number; }
     public int cutSceneNumber() { return cutSceneNumber; }
 
-    public void showMessage(LevelMessage message) { this.message = requireNonNull(message); }
-    public void clearMessage() { message = null; }
-    public LevelMessage message() { return message; }
+    public void showMessage(byte message) { this.message = message; }
+    public void clearMessage() { message = MESSAGE_EMPTY; }
+    public byte message() { return message; }
 
     public void setPac(Pac pac) { this.pac = pac; }
     public Pac pac() { return pac; }
