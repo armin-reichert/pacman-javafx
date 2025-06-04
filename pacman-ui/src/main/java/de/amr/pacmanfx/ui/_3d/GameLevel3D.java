@@ -162,32 +162,31 @@ public class GameLevel3D {
 
     private void createFood3D(WorldMapColorScheme colorScheme) {
         final Mesh pelletMesh = Model3DRepository.get().pelletMesh();
-        PhongMaterial foodMaterial = coloredPhongMaterial(colorScheme.pellet());
+        final PhongMaterial material = coloredPhongMaterial(colorScheme.pellet());
         gameLevel.tilesContainingFood().forEach(tile -> {
             if (gameLevel.isEnergizerPosition(tile)) {
-                Energizer3D energizer3D = createEnergizer3D(tile, foodMaterial);
-                SquirtingAnimation squirting = createSquirtingAnimation(gameLevel.worldMap(), energizer3D, foodMaterial);
+                Energizer3D energizer3D = createEnergizer3D(tile, material);
+                SquirtingAnimation squirting = createSquirtingAnimation(gameLevel.worldMap(), energizer3D, material);
                 root.getChildren().add(squirting.root());
                 energizers3D.add(energizer3D);
             } else {
-                var pelletShape3D = new MeshView(pelletMesh);
-                pelletShape3D.setRotationAxis(Rotate.Z_AXIS);
-                pelletShape3D.setRotate(90);
-                Pellet3D pellet3D = createPellet3D(tile, pelletShape3D, foodMaterial);
-                pellets3D.add(pellet3D);
+                var meshView = new MeshView(pelletMesh);
+                meshView.setRotationAxis(Rotate.Z_AXIS);
+                meshView.setRotate(90);
+                pellets3D.add(createPellet3D(tile, meshView, material));
             }
         });
         energizers3D.trimToSize();
     }
 
-    private Energizer3D createEnergizer3D(Vector2i tile, PhongMaterial foodMaterial) {
-        var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
+    private Energizer3D createEnergizer3D(Vector2i tile, PhongMaterial material) {
+        var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -2*ENERGIZER_3D_RADIUS);
         var energizer3D = new Energizer3D(ENERGIZER_3D_RADIUS);
         energizer3D.setTile(tile);
         energizer3D.shape3D().setTranslateX(center.getX());
         energizer3D.shape3D().setTranslateY(center.getY());
         energizer3D.shape3D().setTranslateZ(center.getZ());
-        energizer3D.shape3D().setMaterial(foodMaterial);
+        energizer3D.shape3D().setMaterial(material);
         return energizer3D;
     }
 
