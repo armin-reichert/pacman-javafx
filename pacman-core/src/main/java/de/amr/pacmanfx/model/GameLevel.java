@@ -26,17 +26,17 @@ public class GameLevel {
     public static final int EMPTY_ROWS_OVER_MAZE  = 3;
     public static final int EMPTY_ROWS_BELOW_MAZE = 2;
 
-    private static boolean isInaccessible(byte content) {
-        return content == TerrainTile.WALL_H.byteValue()
-            || content == TerrainTile.WALL_V.byteValue()
-            || content == TerrainTile.ARC_NE.byteValue()
-            || content == TerrainTile.ARC_NW.byteValue()
-            || content == TerrainTile.ARC_SE.byteValue()
-            || content == TerrainTile.ARC_SW.byteValue()
-            || content == TerrainTile.DCORNER_NE.byteValue()
-            || content == TerrainTile.DCORNER_NW.byteValue()
-            || content == TerrainTile.DCORNER_SE.byteValue()
-            || content == TerrainTile.DCORNER_SW.byteValue();
+    private static boolean isTileAlwaysBlocked(byte code) {
+        return code == TerrainTile.WALL_H.byteValue()
+            || code == TerrainTile.WALL_V.byteValue()
+            || code == TerrainTile.ARC_NE.byteValue()
+            || code == TerrainTile.ARC_NW.byteValue()
+            || code == TerrainTile.ARC_SE.byteValue()
+            || code == TerrainTile.ARC_SW.byteValue()
+            || code == TerrainTile.DCORNER_NE.byteValue()
+            || code == TerrainTile.DCORNER_NW.byteValue()
+            || code == TerrainTile.DCORNER_SE.byteValue()
+            || code == TerrainTile.DCORNER_SW.byteValue();
     }
 
     /**
@@ -200,7 +200,7 @@ public class GameLevel {
         Logger.info("Power timer stopped and reset to zero");
         bonus().ifPresent(Bonus::setInactive);
         // when cheating to end level, there might still be food
-        eatAll();
+        eatAllFood();
         Logger.trace("Game level {} completed.", number);
     }
 
@@ -296,7 +296,7 @@ public class GameLevel {
     }
 
     public boolean isBlockedTile(Vector2i tile) {
-        return isTileInsideWorld(tile) && isInaccessible(worldMap.content(LayerID.TERRAIN, tile));
+        return isTileInsideWorld(tile) && isTileAlwaysBlocked(worldMap.content(LayerID.TERRAIN, tile));
     }
 
     public boolean isTunnel(Vector2i tile) {
@@ -450,15 +450,15 @@ public class GameLevel {
 
     public void eatAllPellets() {
         worldMap.tiles()
-                .filter(not(this::isEnergizerPosition))
-                .filter(this::tileContainsFood)
-                .forEach(this::registerFoodEatenAt);
+            .filter(this::tileContainsFood)
+            .filter(not(this::isEnergizerPosition))
+            .forEach(this::registerFoodEatenAt);
     }
 
-    public void eatAll() {
+    public void eatAllFood() {
         worldMap.tiles()
-                .filter(this::tileContainsFood)
-                .forEach(this::registerFoodEatenAt);
+            .filter(this::tileContainsFood)
+            .forEach(this::registerFoodEatenAt);
     }
 
     public boolean isFoodPosition(Vector2i tile) {
