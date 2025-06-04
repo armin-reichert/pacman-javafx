@@ -70,12 +70,12 @@ public class GameLevel3D {
 
     private final Group root = new Group();
     private final Group mazeGroup = new Group();
+    private final List<Pellet3D> pellets3D = new ArrayList<>();
+    private final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
     private AmbientLight ambientLight;
     private Box floor3D;
     private Maze3D maze3D;
     private LivesCounter3D livesCounter3D;
-    private List<Pellet3D> pellets3D = new ArrayList<>();
-    private ArrayList<Energizer3D> energizers3D = new ArrayList<>();
     private XMan3D pac3D;
     private List<Ghost3D_Appearance> ghosts3D;
     private Message3D message3D;
@@ -86,26 +86,19 @@ public class GameLevel3D {
 
     public GameLevel3D(GameLevel gameLevel) {
         this.gameLevel = requireNonNull(gameLevel);
-
         createPac3D();
         createGhosts3D();
         createMaze3D();
         createLivesCounter3D();
         createLights();
-        composeLevel3D();
-
-        root.setMouseTransparent(true); //TODO does this really increase performance?
-        // Pac-Man and ghost shapes are already bound to global draw mode property.
-        // Pellets are not included because this would cause huge performance penalty.
-        Stream.concat(mazeGroup.lookupAll("*").stream(), livesCounter3D.lookupAll("*").stream())
-            .filter(Shape3D.class::isInstance)
-            .map(Shape3D.class::cast)
-            .forEach(shape3D -> shape3D.drawModeProperty().bind(PY_3D_DRAW_MODE));
+        compose();
+        bindShape3DDrawingMode();
+        root.setMouseTransparent(true); // this increases performance, they say...
     }
 
     // Note: The order in which children are added matters!
     // Walls and house must be added after actors, otherwise, transparency is not working correctly.
-    private void composeLevel3D() {
+    private void compose() {
         root.getChildren().add(ambientLight);
         energizers3D.forEach(energizer3D -> root.getChildren().add(energizer3D.shape3D()));
         pellets3D.forEach(pellet3D -> root.getChildren().add(pellet3D.shape3D()));
@@ -113,6 +106,14 @@ public class GameLevel3D {
         root.getChildren().addAll(ghosts3D);
         root.getChildren().add(livesCounter3D);
         root.getChildren().add(mazeGroup);
+    }
+
+    // Pellet shapes are not bound because this would cause huge performance penalty!
+    private void bindShape3DDrawingMode() {
+        Stream.concat(mazeGroup.lookupAll("*").stream(), livesCounter3D.lookupAll("*").stream())
+            .filter(Shape3D.class::isInstance)
+            .map(Shape3D.class::cast)
+            .forEach(shape3D -> shape3D.drawModeProperty().bind(PY_3D_DRAW_MODE));
     }
 
     public void update() {
@@ -345,19 +346,18 @@ public class GameLevel3D {
     }
 
     public void playLivesCounterAnimation() {
-        //TODO new animation creation needed?
         livesCounterAnimation = livesCounter3D.createAnimation();
         livesCounter3D.resetShapes();
         livesCounterAnimation.play();
     }
 
-    public RotateTransition levelRotateAnimation(double seconds) {
-        var rotation = new RotateTransition(Duration.seconds(seconds), root);
+    private void playLevelRotateAnimation() {
+        var rotation = new RotateTransition(Duration.seconds(1.5), root);
         rotation.setAxis(theRNG().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
         rotation.setFromAngle(0);
         rotation.setToAngle(360);
         rotation.setInterpolator(Interpolator.LINEAR);
-        return rotation;
+        rotation.play();
     }
 
     public Animation createLevelCompleteAnimation() {
@@ -386,7 +386,7 @@ public class GameLevel3D {
             new KeyFrame(Duration.seconds(1.0), e -> gameLevel.ghosts().forEach(Ghost::hide)),
             new KeyFrame(Duration.seconds(1.5), e -> maze3D.mazeFlashAnimation(numFlashes).play()),
             new KeyFrame(Duration.seconds(4.5), e -> gameLevel.pac().hide()),
-            new KeyFrame(Duration.seconds(5.0), e -> levelRotateAnimation(1.5).play()),
+            new KeyFrame(Duration.seconds(5.0), e -> playLevelRotateAnimation()),
             new KeyFrame(Duration.seconds(7.0), e -> {
                 maze3D.wallsDisappearAnimation(2.0).play();
                 theSound().playLevelCompleteSound();

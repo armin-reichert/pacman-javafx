@@ -363,7 +363,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
         theSound().stopAll();
         // last update before dying animation
         level3D.pac3D().update(theGameLevel());
-        playPacManDiesAnimation();
+        playPacManDyingAnimation();
     }
 
     private void onEnterStateGhostDying() {
@@ -547,20 +547,18 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
         level3D.showAnimatedMessage("READY!", seconds, x, y);
     }
 
-    private void playPacManDiesAnimation() {
+    private void playPacManDyingAnimation() {
         theGameState().timer().resetIndefiniteTime();
-        Animation pacDyingAnimation = level3D.pac3D().createDyingAnimation();
         Animation animation =
             new SequentialTransition(
                 new ParallelTransition(
                     Ufx.now(theSound()::playPacDeathSound),
-                    pacDyingAnimation
+                    level3D.pac3D().createDyingAnimation()
                 ),
                 Ufx.pauseSec(1)
             );
         animation.setDelay(Duration.seconds(2));
         animation.setOnFinished(e -> theGameController().letCurrentGameStateExpire());
-
         animation.play();
     }
 }
