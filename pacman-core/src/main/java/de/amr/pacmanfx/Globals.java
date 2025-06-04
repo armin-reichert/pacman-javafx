@@ -43,21 +43,20 @@ public class Globals {
      */
     public static final File CUSTOM_MAP_DIR = new File(HOME_DIR, "maps");
 
-    public static CoinMechanism           theCoinMechanism() { return COIN_MECHANISM; }
-    public static GameModel               theGame() { return GAME_CONTROLLER.game(); }
-    public static GameController          theGameController() { return GAME_CONTROLLER; }
+    public static CoinMechanism           theCoinMechanism()    { return COIN_MECHANISM; }
+    public static GameModel               theGame()             { return GAME_CONTROLLER.game(); }
+    public static GameController          theGameController()   { return GAME_CONTROLLER; }
     public static GameEventManager        theGameEventManager() { return GAME_EVENT_MANAGER; }
-    public static Optional<GameLevel>     optGameLevel() { return theGame().level(); }
-    public static GameLevel               theGameLevel() { return optGameLevel().orElse(null); }
-    public static GameState               theGameState() { return GAME_CONTROLLER.state(); }
-    public static GameVariant             theGameVariant() { return GAME_CONTROLLER.selectedGameVariant(); }
-    public static Random                  theRNG() { return RANDOM; }
-    public static SimulationStep          theSimulationStep() { return SIMULATION_STEP; }
+    public static Optional<GameLevel>     optGameLevel()        { return theGame().level(); }
+    public static GameLevel               theGameLevel()        { return optGameLevel().orElse(null); }
+    public static GameState               theGameState()        { return GAME_CONTROLLER.state(); }
+    public static GameVariant             theGameVariant()      { return GAME_CONTROLLER.selectedGameVariant(); }
+    public static Random                  theRNG()              { return RANDOM; }
+    public static SimulationStep          theSimulationStep()   { return SIMULATION_STEP; }
 
-
-    private static final CoinMechanism    COIN_MECHANISM = new CoinMechanism();
-    private static final GameController   GAME_CONTROLLER = new GameController();
+    private static final CoinMechanism    COIN_MECHANISM     = new CoinMechanism();
+    private static final GameController   GAME_CONTROLLER    = new GameController();
     private static final GameEventManager GAME_EVENT_MANAGER = new GameEventManager();
-    private static final Random           RANDOM = new Random();
-    private static final SimulationStep   SIMULATION_STEP = new SimulationStep();
+    private static final Random           RANDOM             = new Random();
+    private static final SimulationStep   SIMULATION_STEP    = new SimulationStep();
 }
