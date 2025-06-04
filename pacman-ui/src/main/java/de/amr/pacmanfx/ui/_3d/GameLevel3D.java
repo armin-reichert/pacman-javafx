@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
@@ -26,7 +25,6 @@ import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -55,7 +53,7 @@ import static java.util.Objects.requireNonNull;
 public class GameLevel3D {
 
     private static boolean isInsideWorldMap(WorldMap worldMap, double x, double y) {
-        return 0 <= x && x <= worldMap.numCols() * TS && 0 <= y && y <= worldMap.numRows() * TS;
+        return 0 <= x && x < worldMap.numCols() * TS && 0 <= y && y < worldMap.numRows() * TS;
     }
 
     private final BooleanProperty houseOpenPy = new SimpleBooleanProperty() {
@@ -72,13 +70,14 @@ public class GameLevel3D {
 
     private final Group root = new Group();
     private final Group mazeGroup = new Group();
-    private final Box floor3D;
-    private final Maze3D maze3D;
-    private final LivesCounter3D livesCounter3D;
-    private final List<Pellet3D> pellets3D = new ArrayList<>();
-    private final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
-    private final XMan3D pac3D;
-    private final List<Ghost3D_Appearance> ghosts3D;
+    private AmbientLight ambientLight;
+    private Box floor3D;
+    private Maze3D maze3D;
+    private LivesCounter3D livesCounter3D;
+    private List<Pellet3D> pellets3D = new ArrayList<>();
+    private ArrayList<Energizer3D> energizers3D = new ArrayList<>();
+    private XMan3D pac3D;
+    private List<Ghost3D_Appearance> ghosts3D;
     private Message3D message3D;
     private Bonus3D bonus3D;
 
@@ -88,31 +87,12 @@ public class GameLevel3D {
     public GameLevel3D(GameLevel gameLevel) {
         this.gameLevel = requireNonNull(gameLevel);
 
-        pac3D = createPac3D();
-        ghosts3D = gameLevel.ghosts()
-            .map(ghost -> createGhost3D(ghost, gameLevel.data().numFlashes()))
-            .toList();
-
-        final WorldMapColorScheme colorScheme = theUIConfig().current().worldMapColorScheme(gameLevel.worldMap());
-        floor3D = createFloor3D(gameLevel.worldMap().numCols() * TS, gameLevel.worldMap().numRows() * TS);
-        maze3D = new Maze3D(gameLevel, colorScheme);
-        mazeGroup.getChildren().addAll(floor3D, maze3D);
-        createFood3D(colorScheme);
-
-        livesCounter3D = createLivesCounter3D(theGame().canStartNewGame());
-
-        var ambientLight = new AmbientLight();
-        ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
-
-        // Note: The order in which children are added matters!
-        // Walls and house must be added last, otherwise, transparency is not working correctly.
-        energizers3D.forEach(energizer3D -> root.getChildren().add(energizer3D.shape3D()));
-        pellets3D.forEach(pellet3D -> root.getChildren().add(pellet3D.shape3D()));
-        root.getChildren().addAll(pac3D.root(), pac3D.light());
-        root.getChildren().addAll(ghosts3D);
-        root.getChildren().add(livesCounter3D);
-        root.getChildren().add(mazeGroup);
-        root.getChildren().add(ambientLight);
+        createPac3D();
+        createGhosts3D();
+        createMaze3D();
+        createLivesCounter3D();
+        createLights();
+        composeLevel3D();
 
         root.setMouseTransparent(true); //TODO does this really increase performance?
         // Pac-Man and ghost shapes are already bound to global draw mode property.
@@ -121,6 +101,18 @@ public class GameLevel3D {
             .filter(Shape3D.class::isInstance)
             .map(Shape3D.class::cast)
             .forEach(shape3D -> shape3D.drawModeProperty().bind(PY_3D_DRAW_MODE));
+    }
+
+    // Note: The order in which children are added matters!
+    // Walls and house must be added after actors, otherwise, transparency is not working correctly.
+    private void composeLevel3D() {
+        root.getChildren().add(ambientLight);
+        energizers3D.forEach(energizer3D -> root.getChildren().add(energizer3D.shape3D()));
+        pellets3D.forEach(pellet3D -> root.getChildren().add(pellet3D.shape3D()));
+        root.getChildren().addAll(pac3D.root(), pac3D.light());
+        root.getChildren().addAll(ghosts3D);
+        root.getChildren().add(livesCounter3D);
+        root.getChildren().add(mazeGroup);
     }
 
     public void update() {
@@ -136,18 +128,33 @@ public class GameLevel3D {
                 .anyMatch(Ghost::isVisible);
         houseOpenPy.set(ghostNearHouseEntry);
 
-        livesCountPy.set(livesCounterSize());
+        int livesCounterSize = theGame().lifeCount() - 1;
+        // when the game starts and Pac-Man is not yet visible, show one more
+        boolean oneMore = theGameState() == GameState.STARTING_GAME && !gameLevel.pac().isVisible();
+        if (oneMore) livesCounterSize += 1;
+        livesCountPy.set(livesCounterSize);
+
+        boolean visible = theGame().canStartNewGame();
+        livesCounter3D.setVisible(visible);
+        livesCounter3D.light().setLightOn(visible);
     }
 
-    private Box createFloor3D(double sizeX, double sizeY) {
-        double extraSpace = 10;
-        var floor3D = new Box(sizeX + extraSpace, sizeY, FLOOR_3D_THICKNESS);
-        floor3D.translateXProperty().bind(floor3D.widthProperty().divide(2).subtract(0.5 * extraSpace));
-        floor3D.translateYProperty().bind(floor3D.heightProperty().divide(2));
-        floor3D.translateZProperty().bind(floor3D.depthProperty().divide(2));
-        floor3D.materialProperty().bind(PY_3D_FLOOR_COLOR.map(Ufx::coloredPhongMaterial));
-        floor3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
-        return floor3D;
+    private void createPac3D() {
+        final String ans = theUIConfig().current().assetNamespace();
+        pac3D = switch (theGameVariant()) {
+            case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL
+                -> new MsPacMan3D(gameLevel.pac(), PAC_3D_SIZE, theAssets(), ans);
+            case PACMAN, PACMAN_XXL
+                -> new PacMan3D(gameLevel.pac(), PAC_3D_SIZE, theAssets(), ans);
+        };
+        pac3D.light().setColor(theAssets().color(ans + ".pac.color.head").desaturate());
+        Model3D.bindDrawMode(pac3D.root(), PY_3D_DRAW_MODE);
+    }
+
+    private void createGhosts3D() {
+        ghosts3D = gameLevel.ghosts()
+            .map(ghost -> createGhost3D(ghost, gameLevel.data().numFlashes()))
+            .toList();
     }
 
     private Ghost3D_Appearance createGhost3D(Ghost ghost, int numFlashes) {
@@ -158,6 +165,26 @@ public class GameLevel3D {
             ghost, GHOST_3D_SIZE, numFlashes);
         Model3D.bindDrawMode(ghost3D, PY_3D_DRAW_MODE);
         return ghost3D;
+    }
+
+    private void createMaze3D() {
+        final WorldMap worldMap = gameLevel.worldMap();
+        final WorldMapColorScheme colorScheme = theUIConfig().current().worldMapColorScheme(worldMap);
+        floor3D = createFloor3D(worldMap.numCols() * TS, worldMap.numRows() * TS);
+        maze3D = new Maze3D(gameLevel, colorScheme);
+        mazeGroup.getChildren().addAll(floor3D, maze3D);
+        createFood3D(colorScheme);
+    }
+
+    private Box createFloor3D(double sizeX, double sizeY) {
+        double paddingX = 5;
+        var floor3D = new Box(sizeX + 2*paddingX, sizeY, FLOOR_3D_THICKNESS);
+        floor3D.translateXProperty().bind(floor3D.widthProperty().divide(2).subtract(paddingX));
+        floor3D.translateYProperty().bind(floor3D.heightProperty().divide(2));
+        floor3D.translateZProperty().bind(floor3D.depthProperty().divide(2));
+        floor3D.materialProperty().bind(PY_3D_FLOOR_COLOR.map(Ufx::coloredPhongMaterial));
+        floor3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
+        return floor3D;
     }
 
     private void createFood3D(WorldMapColorScheme colorScheme) {
@@ -212,84 +239,62 @@ public class GameLevel3D {
         return pellet3D;
     }
 
-    private XMan3D createPac3D() {
-        Pac pac = gameLevel.pac();
-        String ans = theUIConfig().current().assetNamespace();
-        XMan3D pac3D = switch (theGameVariant()) {
-            case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL -> new MsPacMan3D(pac, PAC_3D_SIZE, theAssets(), ans);
-            case PACMAN, PACMAN_XXL -> new PacMan3D(pac, PAC_3D_SIZE, theAssets(), ans);
-        };
-        pac3D.light().setColor(theAssets().color(ans + ".pac.color.head").desaturate());
-        Model3D.bindDrawMode(pac3D.root(), PY_3D_DRAW_MODE);
-        return pac3D;
-    }
-
-    private LivesCounter3D createLivesCounter3D(boolean visible) {
+    private void createLivesCounter3D() {
         Node[] counterShapes = new Node[LIVES_COUNTER_MAX];
         for (int i = 0; i < counterShapes.length; ++i) {
             counterShapes[i] = theUIConfig().current().createLivesCounterShape(theAssets(), LIVES_COUNTER_3D_SIZE);
         }
-        var counter3D = new LivesCounter3D(counterShapes);
-        counter3D.drawModePy.bind(PY_3D_DRAW_MODE);
-        counter3D.livesCountPy.bind(livesCountPy);
-        counter3D.setTranslateX(2 * TS);
-        counter3D.setTranslateY(2 * TS);
-        counter3D.setVisible(visible);
-        counter3D.light().colorProperty().set(Color.CORNFLOWERBLUE);
-        counter3D.light().setLightOn(visible);
-        return counter3D;
+        livesCounter3D = new LivesCounter3D(counterShapes);
+        livesCounter3D.setTranslateX(2 * TS);
+        livesCounter3D.setTranslateY(2 * TS);
+        livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
+        livesCounter3D.livesCountPy.bind(livesCountPy);
+        livesCounter3D.light().colorProperty().set(Color.CORNFLOWERBLUE);
     }
 
     public void addLevelCounter() {
         // Place level counter at top right maze corner
         double x = gameLevel.worldMap().numCols() * TS - 2 * TS;
         double y = 2 * TS;
-        Node levelCounter3D = createLevelCounter3D(theGame().levelCounter(), x, y);
-        root.getChildren().add(levelCounter3D);
+        root.getChildren().add(createLevelCounter3D(theGame().levelCounter(), x, y, 2 * TS));
     }
 
-    private Node createLevelCounter3D(LevelCounter levelCounter, double x, double y) {
-        double spacing = 2 * TS;
+    private Node createLevelCounter3D(LevelCounter levelCounter, double x, double y, double spacing) {
+        GameSpriteSheet spriteSheet = theUIConfig().current().spriteSheet();
         var levelCounter3D = new Group();
         levelCounter3D.setTranslateX(x);
         levelCounter3D.setTranslateY(y);
         levelCounter3D.setTranslateZ(-6);
-        levelCounter3D.getChildren().clear();
         int n = 0;
-        GameSpriteSheet spriteSheet = theUIConfig().current().spriteSheet();
         for (byte symbol : levelCounter.symbols()) {
-            Box cube = new Box(TS, TS, TS);
+            var material = new PhongMaterial(Color.WHITE);
+            material.setDiffuseMap(spriteSheet.crop(spriteSheet.bonusSymbolSprite(symbol)));
+
+            var cube = new Box(TS, TS, TS);
+            cube.setMaterial(material);
             cube.setTranslateX(-n * spacing);
             cube.setTranslateZ(-HTS);
-            levelCounter3D.getChildren().add(cube);
-
-            var material = new PhongMaterial(Color.WHITE);
-            Image texture = spriteSheet.crop(spriteSheet.bonusSymbolSprite(symbol));
-            material.setDiffuseMap(texture);
-            cube.setMaterial(material);
 
             var spinning = new RotateTransition(Duration.seconds(6), cube);
-            spinning.setAxis(Rotate.X_AXIS);
             spinning.setCycleCount(Animation.INDEFINITE);
+            spinning.setInterpolator(Interpolator.LINEAR);
+            spinning.setAxis(Rotate.X_AXIS);
             spinning.setByAngle(360);
             spinning.setRate(n % 2 == 0 ? 1 : -1);
-            spinning.setInterpolator(Interpolator.LINEAR);
             spinning.play();
 
+            levelCounter3D.getChildren().add(cube);
             n += 1;
         }
         return levelCounter3D;
     }
 
-    public Group root() { return root; }
-
-    private int livesCounterSize() {
-        int n = theGame().lifeCount();
-        if (!gameLevel.pac().isVisible() && theGameState() == GameState.STARTING_GAME) {
-            return n;
-        }
-        return n - 1;
+    private void createLights() {
+        ambientLight = new AmbientLight();
+        ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
     }
+
+    public Group root() { return root; }
 
     public void showAnimatedMessage(String text, double displaySeconds, double centerX, double y) {
         if (message3D != null) {
