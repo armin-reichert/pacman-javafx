@@ -12,6 +12,7 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 import static java.lang.Math.signum;
 
 /**
@@ -107,22 +108,22 @@ public class Obstacle {
     public Vector2i cornerCenter(int segmentIndex) {
         ObstacleSegment corner = segment(segmentIndex);
         byte code = corner.encoding();
-        if (code == TerrainTile.ARC_NW.code()) return point(segmentIndex).plus(0, HTS);
-        if (code == TerrainTile.ARC_SW.code()) return point(segmentIndex).plus(HTS, 0);
-        if (code == TerrainTile.ARC_SE.code()) return point(segmentIndex).plus(0, -HTS);
-        if (code == TerrainTile.ARC_NE.code()) return point(segmentIndex).plus(-HTS, 0);
+        if (code == ARC_NW.code()) return point(segmentIndex).plus(0, HTS);
+        if (code == ARC_SW.code()) return point(segmentIndex).plus(HTS, 0);
+        if (code == ARC_SE.code()) return point(segmentIndex).plus(0, -HTS);
+        if (code == ARC_NE.code()) return point(segmentIndex).plus(-HTS, 0);
         throw new IllegalStateException("No corner tile at index " + segmentIndex);
     }
 
     public Vector2i[] cornerCenters() {
         var centers = new LinkedHashSet<Vector2i>();
-        for (var segment : segments) {
+        for (ObstacleSegment segment : segments) {
             boolean up = segment.vector().y() < 0, down = segment.vector().y() > 0;
             byte code = segment.encoding();
-            if (code == TerrainTile.ARC_NW.code() && down) centers.add(segment.startPoint().plus(0, HTS));
-            if (code == TerrainTile.ARC_SW.code() && down) centers.add(segment.startPoint().plus(HTS, 0));
-            if (code == TerrainTile.ARC_SE.code() && up)   centers.add(segment.startPoint().plus(0, -HTS));
-            if (code == TerrainTile.ARC_NE.code() && up)   centers.add(segment.startPoint().plus(-HTS, 0));
+            if (code == ARC_NW.code() && down) centers.add(segment.startPoint().plus(0, HTS));
+            if (code == ARC_SW.code() && down) centers.add(segment.startPoint().plus(HTS, 0));
+            if (code == ARC_SE.code() && up)   centers.add(segment.startPoint().plus(0, -HTS));
+            if (code == ARC_NE.code() && up)   centers.add(segment.startPoint().plus(-HTS, 0));
         }
         return centers.toArray(Vector2i[]::new);
     }
@@ -209,5 +210,4 @@ public class Obstacle {
     private boolean sameDirection(Vector2i v, Vector2i w) {
         return signum(v.x()) == signum(w.x()) && signum(v.y()) == signum(w.y());
     }
-
 }
