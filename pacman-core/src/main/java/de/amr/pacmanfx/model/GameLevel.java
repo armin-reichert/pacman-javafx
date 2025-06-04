@@ -34,10 +34,10 @@ public class GameLevel {
             || code == ARC_NW.code()
             || code == ARC_SE.code()
             || code == ARC_SW.code()
-            || code == TerrainTile.DCORNER_NE.code()
-            || code == TerrainTile.DCORNER_NW.code()
-            || code == TerrainTile.DCORNER_SE.code()
-            || code == TerrainTile.DCORNER_SW.code();
+            || code == DCORNER_NE.code()
+            || code == DCORNER_NW.code()
+            || code == DCORNER_SE.code()
+            || code == DCORNER_SW.code();
     }
 
     /**
@@ -147,8 +147,8 @@ public class GameLevel {
         int firstColumn = 0, lastColumn = worldMap.numCols() - 1;
         for (int row = 0; row < worldMap.numRows(); ++row) {
             Vector2i leftBorderTile = Vector2i.of(firstColumn, row), rightBorderTile = Vector2i.of(lastColumn, row);
-            if (worldMap.content(LayerID.TERRAIN, row, firstColumn) == TerrainTile.TUNNEL.code()
-                && worldMap.content(LayerID.TERRAIN, row, lastColumn) == TerrainTile.TUNNEL.code()) {
+            if (worldMap.content(LayerID.TERRAIN, row, firstColumn) == TUNNEL.code()
+                && worldMap.content(LayerID.TERRAIN, row, lastColumn) == TUNNEL.code()) {
                 portals.add(new Portal(leftBorderTile, rightBorderTile, 2));
             }
         }
@@ -301,7 +301,7 @@ public class GameLevel {
     }
 
     public boolean isTunnel(Vector2i tile) {
-        return isTileInsideWorld(tile) && worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.TUNNEL.code();
+        return isTileInsideWorld(tile) && worldMap.content(LayerID.TERRAIN, tile) == TUNNEL.code();
     }
 
     public boolean isIntersection(Vector2i tile) {
