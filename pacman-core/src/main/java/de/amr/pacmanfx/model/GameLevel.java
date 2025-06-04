@@ -7,7 +7,10 @@ package de.amr.pacmanfx.model;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.tilemap.*;
+import de.amr.pacmanfx.lib.tilemap.FoodTile;
+import de.amr.pacmanfx.lib.tilemap.LayerID;
+import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.model.actors.*;
 import org.tinylog.Logger;
@@ -320,11 +323,11 @@ public class GameLevel {
 
     // House
 
-    private static final TerrainTile[][] ARCADE_HOUSE = {
-        { ARC_NW, WALL_H, WALL_H, DOOR, DOOR, WALL_H, WALL_H, ARC_NE },
-        { WALL_V, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, WALL_V },
-        { WALL_V, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, WALL_V },
-        { ARC_SW, WALL_H, WALL_H, WALL_H, WALL_H, WALL_H, WALL_H, ARC_SE }
+    private static final byte[][] ARCADE_HOUSE = {
+        { ARC_NW.code(), WALL_H.code(), WALL_H.code(), DOOR.code(), DOOR.code(), WALL_H.code(), WALL_H.code(), ARC_NE.code() },
+        { WALL_V.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), WALL_V.code()   },
+        { WALL_V.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), WALL_V.code()   },
+        { ARC_SW.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), ARC_SE.code() }
     };
 
     private void createArcadeHouse(int minX, int minY) {
@@ -336,7 +339,7 @@ public class GameLevel {
         rightDoorTile = Vector2i.of(minX + 4, minY);
         for (int y = 0; y < ARCADE_HOUSE.length; ++y) {
             for (int x = 0; x < ARCADE_HOUSE[y].length; ++x) {
-                worldMap.setContent(LayerID.TERRAIN, minY + y, minX + x, ARCADE_HOUSE[y][x].code());
+                worldMap.setContent(LayerID.TERRAIN, minY + y, minX + x, ARCADE_HOUSE[y][x]);
             }
         }
     }
