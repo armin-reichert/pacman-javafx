@@ -114,7 +114,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
     private void updateSound() {
         boolean pacChased = theGameState() == GameState.HUNTING && !theGameLevel().pac().powerTimer().isRunning();
         if (pacChased) {
-            int sirenNumber = 1 + theGameLevel().huntingTimer().phaseIndex() / 2;
+            int sirenNumber = 1 + theGame().huntingTimer().phaseIndex() / 2;
             theSound().selectSiren(sirenNumber);
             theSound().playSiren();
         }
@@ -212,7 +212,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
             String gameStateText = theGameState().name() + " (Tick %d)".formatted(theGameState().timer().tickCount());
             String huntingPhaseText = "";
             if (theGameState() == GameState.HUNTING) {
-                HuntingTimer huntingTimer = level.huntingTimer();
+                HuntingTimer huntingTimer = theGame().huntingTimer();
                 huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.phase(), huntingTimer.tickCount());
             }
             gr().ctx().fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, 64);

@@ -58,7 +58,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
             @Override
             public void hunt(GameLevel level) {
                 var arcadeGame = (ArcadeCommon_GameModel) theGame();
-                boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING || arcadeGame.cruiseElroy() > 0;
+                boolean chase = arcadeGame.huntingTimer.phase() == HuntingPhase.CHASING || arcadeGame.cruiseElroy() > 0;
                 Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                 setSpeed(level.speedControl().ghostAttackSpeed(level, this));
                 tryMovingTowardsTargetTile(level, targetTile);
@@ -76,7 +76,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
         return new Ghost(PINK_GHOST_SPEEDY, "Pinky") {
             @Override
             public void hunt(GameLevel level) {
-                boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
+                boolean chase = theGame().huntingTimer().phase() == HuntingPhase.CHASING;
                 Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                 setSpeed(level.speedControl().ghostAttackSpeed(level, this));
                 tryMovingTowardsTargetTile(level, targetTile);
@@ -94,7 +94,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
         return new Ghost(CYAN_GHOST_BASHFUL, "Inky") {
             @Override
             public void hunt(GameLevel level) {
-                boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
+                boolean chase = theGame().huntingTimer().phase() == HuntingPhase.CHASING;
                 Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                 setSpeed(level.speedControl().ghostAttackSpeed(level, this));
                 tryMovingTowardsTargetTile(level, targetTile);
@@ -111,7 +111,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
         return new Ghost(ORANGE_GHOST_POKEY, "Clyde") {
             @Override
             public void hunt(GameLevel level) {
-                boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
+                boolean chase = theGame().huntingTimer().phase() == HuntingPhase.CHASING;
                 Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                 setSpeed(level.speedControl().ghostAttackSpeed(level, this));
                 tryMovingTowardsTargetTile(level, targetTile);
@@ -228,7 +228,6 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
         WorldMap worldMap = mapSelector.findWorldMap(levelNumber);
         level = new GameLevel(levelNumber, worldMap);
         level.setData(createLevelData(levelNumber));
-        level.setHuntingTimer(huntingTimer);
         level.setCutSceneNumber(switch (levelNumber) {
             case 2 -> 1;
             case 5 -> 2;

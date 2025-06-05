@@ -71,9 +71,9 @@ public class InfoBoxGameInfo extends InfoBox {
 
         addLabeledValue("Lives",           ifLevelPresent(level -> "%d".formatted(theGame().lifeCount())));
 
-        addLabeledValue("Hunting Phase",   ifLevelPresent(this::fmtHuntingPhase));
-        addLabeledValue("",                ifLevelPresent(this::fmtHuntingTicksRunning));
-        addLabeledValue("",                ifLevelPresent(this::fmtHuntingTicksRemaining));
+        addLabeledValue("Hunting Phase",   () -> fmtHuntingPhase(theGame().huntingTimer()));
+        addLabeledValue("",                () -> fmtHuntingTicksRunning(theGame().huntingTimer()));
+        addLabeledValue("",                () -> fmtHuntingTicksRemaining(theGame().huntingTimer()));
 
         addLabeledValue("Pac-Man speed",   ifLevelPresent(this::fmtPacNormalSpeed));
         addLabeledValue("- empowered",     ifLevelPresent(this::fmtPacSpeedPowered));
@@ -97,8 +97,7 @@ public class InfoBoxGameInfo extends InfoBox {
         return "Tick %d of %d. Remaining: %d".formatted(t.tickCount(), t.durationTicks(), t.remainingTicks());
     }
 
-    private String fmtHuntingPhase(GameLevel level) {
-        HuntingTimer huntingTimer = level.huntingTimer();
+    private String fmtHuntingPhase(HuntingTimer huntingTimer) {
         return "%s #%d%s".formatted(
             huntingTimer.phase().name(),
             huntingTimer.phase() == HuntingPhase.CHASING
@@ -107,12 +106,12 @@ public class InfoBoxGameInfo extends InfoBox {
             huntingTimer.isStopped() ? " STOPPED" : "");
     }
 
-    private String fmtHuntingTicksRunning(GameLevel level) {
-        return "Running:   %d".formatted(level.huntingTimer().tickCount());
+    private String fmtHuntingTicksRunning(HuntingTimer huntingTimer) {
+        return "Running:   %d".formatted(huntingTimer.tickCount());
     }
 
-    private String fmtHuntingTicksRemaining(GameLevel level) {
-        return "Remaining: %s".formatted(ticksToString(level.huntingTimer().remainingTicks()));
+    private String fmtHuntingTicksRemaining(HuntingTimer huntingTimer) {
+        return "Remaining: %s".formatted(ticksToString(huntingTimer.remainingTicks()));
     }
 
     private String fmtPelletCount(GameLevel level) {

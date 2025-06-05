@@ -113,10 +113,10 @@ public class TengenMsPacMan_GameModel extends GameModel {
             public void hunt(GameLevel level) {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
                 setSpeed(speed);
-                if (level.huntingTimer().phaseIndex() == 0) {
+                if (theGame().huntingTimer().phaseIndex() == 0) {
                     roam(level);
                 } else {
-                    boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
+                    boolean chase = theGame().huntingTimer().phase() == HuntingPhase.CHASING;
                     Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                     tryMovingTowardsTargetTile(level, targetTile);
                 }
@@ -135,10 +135,10 @@ public class TengenMsPacMan_GameModel extends GameModel {
             public void hunt(GameLevel level) {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
                 setSpeed(speed);
-                if (level.huntingTimer().phaseIndex() == 0) {
+                if (theGame().huntingTimer().phaseIndex() == 0) {
                     roam(level);
                 } else {
-                    boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
+                    boolean chase = theGame().huntingTimer().phase() == HuntingPhase.CHASING;
                     Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                     tryMovingTowardsTargetTile(level, targetTile);
                 }
@@ -156,7 +156,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             @Override
             public void hunt(GameLevel level) {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
-                boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
+                boolean chase = theGame().huntingTimer().phase() == HuntingPhase.CHASING;
                 Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                 setSpeed(speed);
                 tryMovingTowardsTargetTile(level, targetTile);
@@ -174,7 +174,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             @Override
             public void hunt(GameLevel level) {
                 float speed = level.speedControl().ghostAttackSpeed(level, this);
-                boolean chase = level.huntingTimer().phase() == HuntingPhase.CHASING;
+                boolean chase = theGame().huntingTimer().phase() == HuntingPhase.CHASING;
                 Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                 setSpeed(speed);
                 tryMovingTowardsTargetTile(level, targetTile);
@@ -255,6 +255,9 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.showMessage(GameLevel.MESSAGE_GAME_OVER);
         theGameEventManager().publishEvent(this, GameEventType.STOP_ALL_SOUNDS);
     }
+
+    @Override
+    public HuntingTimer huntingTimer() { return huntingTimer; }
 
     @Override
     public Optional<GateKeeper> gateKeeper() { return Optional.of(gateKeeper); }
@@ -426,7 +429,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
         WorldMap worldMap = mapSelector.createWorldMapForLevel(mapCategory, levelNumber);
         level = new GameLevel(levelNumber, worldMap);
         level.setData(createLevelData()); //TODO needed?
-        level.setHuntingTimer(huntingTimer);
         level.setCutSceneNumber(switch (levelNumber) {
             case 2 -> 1;
             case 5 -> 2;
@@ -488,9 +490,9 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.setDemoLevel(false);
         level.pac().immuneProperty().bind(PacManGames_Env.PY_IMMUNITY);
         level.pac().usingAutopilotProperty().bind(PacManGames_Env.PY_USING_AUTOPILOT);
+        huntingTimer().reset();
         scoreManager.setScoreLevelNumber(levelNumber);
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(levelNumber));
-        level.huntingTimer().reset();
         theGameEventManager().publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 
@@ -503,9 +505,9 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.pac().setUsingAutopilot(true);
         level.pac().setAutopilotSteering(demoLevelSteering);
         demoLevelSteering.init();
+        huntingTimer.reset();
         scoreManager.setScoreLevelNumber(1);
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(1));
-        level.huntingTimer().reset();
         theGameEventManager().publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 
@@ -604,7 +606,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.victims().clear();
         long powerTicks = pacPowerTicks(level);
         if (powerTicks > 0) {
-            level.huntingTimer().stop();
+            huntingTimer.stop();
             Logger.info("Hunting Pac-Man stopped as he got power");
             level.pac().powerTimer().restartTicks(powerTicks);
             Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerTicks / NUM_TICKS_PER_SEC);

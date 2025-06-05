@@ -278,7 +278,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
             return; // demo level is silent
         }
         if (theGameState() == GameState.HUNTING && !theGameLevel().pac().powerTimer().isRunning()) {
-            int sirenNumber = 1 + theGameLevel().huntingTimer().phaseIndex() / 2;
+            int sirenNumber = 1 + theGame().huntingTimer().phaseIndex() / 2;
             theSound().selectSiren(sirenNumber);
             theSound().playSiren();
         }

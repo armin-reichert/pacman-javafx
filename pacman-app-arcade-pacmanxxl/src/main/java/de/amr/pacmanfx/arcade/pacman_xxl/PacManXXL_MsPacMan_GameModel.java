@@ -33,12 +33,12 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
         createLevel(levelNumber);
         level.setData(createLevelData(1)); // always run with settings (speed etc.) of first level
         level.setDemoLevel(true);
-        level.huntingTimer().reset();
         level.pac().setImmune(false);
         level.pac().setUsingAutopilot(true);
         level.pac().setAutopilotSteering(demoLevelSteering);
         demoLevelSteering.init();
         levelCounter.setEnabled(false);
+        huntingTimer.reset();
         scoreManager.setScoreLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         theGameEventManager().publishEvent(this, GameEventType.LEVEL_CREATED);

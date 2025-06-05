@@ -44,6 +44,7 @@ public abstract class GameModel {
     }
 
     public ScoreManager scoreManager() { return scoreManager; }
+    public abstract HuntingTimer huntingTimer();
     public abstract LevelCounter levelCounter();
     public abstract MapSelector mapSelector();
     public Optional<GateKeeper> gateKeeper() { return Optional.empty(); }
@@ -74,14 +75,14 @@ public abstract class GameModel {
         level.ghosts().forEach(Ghost::playAnimation);
         level.blinking().setStartPhase(Pulse.ON);
         level.blinking().restart(Integer.MAX_VALUE);
-        level.huntingTimer().startFirstHuntingPhase(level.number());
+        huntingTimer().startFirstHuntingPhase(level.number());
         theGameEventManager().publishEvent(this, GameEventType.HUNTING_PHASE_STARTED);
     }
 
     public void doHuntingStep() {
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(level));
 
-        level.huntingTimer().update(level.number());
+        huntingTimer().update(level.number());
         level.blinking().tick();
 
         level.pac().update(level);
@@ -103,7 +104,7 @@ public abstract class GameModel {
 
     public void onLevelCompleted(GameLevel level) {
         Logger.info("Level complete, stop hunting timer");
-        level.huntingTimer().stop();
+        huntingTimer().stop();
         level.blinking().setStartPhase(Pulse.OFF);
         level.blinking().reset();
         level.pac().stopAndShowInFullBeauty();
@@ -161,17 +162,17 @@ public abstract class GameModel {
     }
 
     private void updatePacPower() {
-        final TickTimer timer = level.pac().powerTimer();
-        timer.doTick();
+        final TickTimer powerTimer = level.pac().powerTimer();
+        powerTimer.doTick();
         if (level.pac().isPowerFadingStarting(level)) {
             theSimulationStep().setPacStartsLosingPower();
             theGameEventManager().publishEvent(this, GameEventType.PAC_STARTS_LOSING_POWER);
-        } else if (timer.hasExpired()) {
-            timer.stop();
-            timer.reset(0);
+        } else if (powerTimer.hasExpired()) {
+            powerTimer.stop();
+            powerTimer.reset(0);
             Logger.info("Power timer stopped and reset to zero");
             level.victims().clear();
-            level.huntingTimer().start();
+            huntingTimer().start();
             Logger.info("Hunting timer restarted because Pac-Man lost power");
             level.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
             theSimulationStep().setPacLostPower();

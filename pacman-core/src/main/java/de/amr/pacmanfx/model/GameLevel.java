@@ -59,7 +59,6 @@ public class GameLevel {
     private final int number; // 1=first level
     private LevelData data;
     private ActorSpeedControl speedControl;
-    private HuntingTimer huntingTimer;
 
     private final WorldMap worldMap;
     private final Vector2f pacStartPosition;
@@ -173,14 +172,6 @@ public class GameLevel {
 
     public ActorSpeedControl speedControl() {
         return speedControl;
-    }
-
-    public void setHuntingTimer(HuntingTimer huntingTimer) {
-        this.huntingTimer = huntingTimer;
-    }
-
-    public HuntingTimer huntingTimer() {
-        return huntingTimer;
     }
 
     public void makeReadyForPlaying() {

@@ -83,6 +83,9 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
     // Components
 
     @Override
+    public HuntingTimer huntingTimer() {    return huntingTimer; }
+
+    @Override
     public Optional<GateKeeper> gateKeeper() { return Optional.of(gateKeeper); }
 
     @Override
@@ -190,7 +193,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
 
         long powerTicks = pacPowerTicks(level);
         if (powerTicks > 0) {
-            level.huntingTimer().stop();
+            huntingTimer().stop();
             Logger.debug("Hunting stopped (Pac-Man got power)");
             level.pac().powerTimer().restartTicks(powerTicks);
             Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", powerTicks, (float) powerTicks / NUM_TICKS_PER_SEC);
@@ -215,10 +218,10 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
     public void buildNormalLevel(int levelNumber) {
         createLevel(levelNumber);
         level.setDemoLevel(false);
-        level.huntingTimer().reset();
         level.pac().immuneProperty().bind(PY_IMMUNITY);
         level.pac().usingAutopilotProperty().bind(PY_USING_AUTOPILOT);
         levelCounter.setEnabled(true);
+        huntingTimer.reset();
         scoreManager.setScoreLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         theGameEventManager().publishEvent(this, GameEventType.LEVEL_CREATED);
@@ -229,12 +232,12 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
         int levelNumber = 1;
         createLevel(levelNumber);
         level.setDemoLevel(true);
-        level.huntingTimer().reset();
         level.pac().setImmune(false);
         level.pac().setUsingAutopilot(true);
         level.pac().setAutopilotSteering(demoLevelSteering);
         demoLevelSteering.init();
         levelCounter.setEnabled(true);
+        huntingTimer.reset();
         scoreManager.setScoreLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         theGameEventManager().publishEvent(this, GameEventType.LEVEL_CREATED);
