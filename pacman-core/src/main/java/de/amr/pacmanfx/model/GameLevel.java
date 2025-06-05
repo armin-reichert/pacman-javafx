@@ -238,7 +238,7 @@ public class GameLevel {
 
     public WorldMap worldMap() { return worldMap; }
 
-    public boolean isTileInsideWorld(Vector2i tile) { return !worldMap.outOfBounds(tile); }
+    public boolean isTileInsideWorld(Vector2i tile) { return !worldMap.outOfWorld(tile); }
 
     public Stream<Vector2i> energizerTiles() { return Arrays.stream(energizerTiles); }
 
@@ -263,7 +263,7 @@ public class GameLevel {
     }
 
     public boolean isIntersection(Vector2i tile) {
-        if (worldMap.outOfBounds(tile) || isTileInHouseArea(tile)) {
+        if (worldMap.outOfWorld(tile) || isTileInHouseArea(tile)) {
             return false;
         }
         long numBlockedNeighbors = tile.neighbors().filter(this::isTileInsideWorld).filter(this::isTileBlocked).count();
@@ -395,7 +395,7 @@ public class GameLevel {
 
     public void registerFoodEatenAt(Vector2i tile) {
         if (tileContainsFood(tile)) {
-            eatenFoodBits.set(worldMap.index(tile));
+            eatenFoodBits.set(worldMap.indexInRowWiseOrder(tile));
             --uneatenFoodCount;
         } else {
             Logger.warn("Attempt to eat foot at tile {} that has none", tile);
@@ -428,7 +428,7 @@ public class GameLevel {
     }
 
     public boolean tileContainsEatenFood(Vector2i tile) {
-        return isTileInsideWorld(tile) && eatenFoodBits.get(worldMap.index(tile));
+        return isTileInsideWorld(tile) && eatenFoodBits.get(worldMap.indexInRowWiseOrder(tile));
     }
 
     public Stream<Vector2i> tilesContainingFood() {

@@ -66,11 +66,11 @@ public class ObstacleBuilder {
     }
 
     private boolean isExplored(Vector2i tile) {
-        return exploredTiles.get(worldMap.index(tile));
+        return exploredTiles.get(worldMap.indexInRowWiseOrder(tile));
     }
 
     private void setExplored(Vector2i tile) {
-        exploredTiles.set(worldMap.index(tile));
+        exploredTiles.set(worldMap.indexInRowWiseOrder(tile));
     }
 
     private Set<Obstacle> buildObstacles(List<Vector2i> tilesWithErrors) {
@@ -255,7 +255,7 @@ public class ObstacleBuilder {
                 errorAtCurrentTile(tilesWithErrors);
             }
 
-            if (cursor.currentTile.equals(startTile) || worldMap.outOfBounds(cursor.currentTile)) {
+            if (cursor.currentTile.equals(startTile) || worldMap.outOfWorld(cursor.currentTile)) {
                 break;
             }
         }

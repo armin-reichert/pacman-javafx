@@ -99,7 +99,7 @@ public class EditCanvas {
     public boolean moveCursor(Direction dir, Predicate<Vector2i> canMoveIntoTile) {
         if (focussedTile() != null) {
             Vector2i nextTile = focussedTile().plus(dir.vector());
-            if (!worldMap().outOfBounds(nextTile) && canMoveIntoTile.test(nextTile)) {
+            if (!worldMap().outOfWorld(nextTile) && canMoveIntoTile.test(nextTile)) {
                 focussedTilePy.set(nextTile);
                 return true;
             }

@@ -191,11 +191,27 @@ public class WorldMap {
         return url;
     }
 
+    public boolean outOfWorld(Vector2i tile) {
+        return outOfWorld(tile.y(), tile.x());
+    }
+
+    public boolean outOfWorld(int row, int col) {
+        return row < 0 || row >= numRows() || col < 0 || col >= numCols();
+    }
+
+    public void assertInsideWorld(Vector2i tile) {
+        requireNonNull(tile);
+        if (outOfWorld(tile)) {
+            throw new IllegalArgumentException("Tile %s is not inside world".formatted(tile));
+        }
+    }
+
     /**
      * @param tile tile inside map bounds
      * @return index in row-by-row order
      */
-    public int index(Vector2i tile) {
+    public int indexInRowWiseOrder(Vector2i tile) {
+        assertInsideWorld(tile);
         return numCols() * tile.y() + tile.x();
     }
 
@@ -228,15 +244,8 @@ public class WorldMap {
      * @return The tile at the mirrored position wrt vertical mirror axis.
      */
     public Vector2i mirroredTile(Vector2i tile) {
+        assertInsideWorld(tile);
         return Vector2i.of(numCols() - 1 - tile.x(), tile.y());
-    }
-
-    public boolean outOfBounds(Vector2i tile) {
-        return outOfBounds(tile.y(), tile.x());
-    }
-
-    public boolean outOfBounds(int row, int col) {
-        return row < 0 || row >= numRows() || col < 0 || col >= numCols();
     }
 
     // Configuration map, can store values of any data type. Keys and values must not be null.
@@ -309,7 +318,7 @@ public class WorldMap {
      */
     public byte content(LayerID layerID, int row, int col) {
         requireNonNull(layerID);
-        if (outOfBounds(row, col)) {
+        if (outOfWorld(row, col)) {
             throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
         }
         return layer(layerID).get(row, col);
@@ -336,7 +345,7 @@ public class WorldMap {
      */
     public void setContent(LayerID layerID, int row, int col, byte code) {
         requireNonNull(layerID);
-        if (outOfBounds(row, col)) {
+        if (outOfWorld(row, col)) {
             throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
         }
         layer(layerID).set(row, col, code);

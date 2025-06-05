@@ -1596,7 +1596,7 @@ public class TileMapEditor {
     }
 
     public boolean canEditFoodAtTile(Vector2i tile) {
-        return !editedWorldMap().outOfBounds(tile)
+        return !editedWorldMap().outOfWorld(tile)
                 && tile.y() >= EMPTY_ROWS_BEFORE_MAZE
                 && tile.y() < editedWorldMap().numRows() - EMPTY_ROWS_BELOW_MAZE
                 && !isPartOfHouse(editedWorldMap(), tile)
