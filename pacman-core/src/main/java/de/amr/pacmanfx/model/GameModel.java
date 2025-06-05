@@ -7,10 +7,7 @@ package de.amr.pacmanfx.model;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.model.actors.*;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -43,10 +40,12 @@ public abstract class GameModel {
                 (py, ov, nv) -> scoreManager.onScoreChanged(this, ov.intValue(), nv.intValue()));
     }
 
-    public ScoreManager scoreManager() { return scoreManager; }
+    public abstract ActorSpeedControl actorSpeedControl();
     public abstract HuntingTimer huntingTimer();
     public abstract LevelCounter levelCounter();
     public abstract MapSelector mapSelector();
+
+    public ScoreManager scoreManager() { return scoreManager; }
     public Optional<GateKeeper> gateKeeper() { return Optional.empty(); }
     public Optional<GameLevel> level() { return Optional.ofNullable(level); }
 

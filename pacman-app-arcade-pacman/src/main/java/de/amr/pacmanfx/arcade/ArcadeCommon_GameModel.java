@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.*;
+import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.steering.Steering;
 import org.tinylog.Logger;
@@ -30,14 +31,18 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
     public static final int EXTRA_LIFE_SCORE = 10_000;
     public static final byte[] KILLED_GHOST_VALUE_FACTORS = {2, 4, 8, 16}; // points = factor * 100
 
+    protected final ActorSpeedControl actorSpeedControl;
     protected MapSelector mapSelector;
-    protected LevelCounter levelCounter;
     protected HuntingTimer huntingTimer;
     protected GateKeeper gateKeeper;
+    protected LevelCounter levelCounter;
     protected Steering autopilot;
     protected Steering demoLevelSteering;
     protected int cruiseElroy;
 
+    protected ArcadeCommon_GameModel() {
+        actorSpeedControl = new ArcadeCommon_ActorSpeedControl();
+    }
     @Override
     public void init() {
         setInitialLifeCount(3);
@@ -81,6 +86,9 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
     }
 
     // Components
+
+    @Override
+    public ActorSpeedControl actorSpeedControl() { return actorSpeedControl; }
 
     @Override
     public HuntingTimer huntingTimer() {    return huntingTimer; }

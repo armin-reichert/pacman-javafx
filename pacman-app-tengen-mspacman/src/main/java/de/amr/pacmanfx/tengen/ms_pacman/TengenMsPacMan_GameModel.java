@@ -10,10 +10,7 @@ import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.*;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.model.actors.MovingBonus;
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.steering.Steering;
 import de.amr.pacmanfx.ui.PacManGames_Env;
@@ -111,7 +108,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         return new Ghost(RED_GHOST_SHADOW, "Blinky") {
             @Override
             public void hunt(GameLevel level) {
-                float speed = level.speedControl().ghostAttackSpeed(level, this);
+                float speed = theGame().actorSpeedControl().ghostAttackSpeed(level, this);
                 setSpeed(speed);
                 if (theGame().huntingTimer().phaseIndex() == 0) {
                     roam(level);
@@ -133,7 +130,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         return new Ghost(PINK_GHOST_SPEEDY, "Pinky") {
             @Override
             public void hunt(GameLevel level) {
-                float speed = level.speedControl().ghostAttackSpeed(level, this);
+                float speed = theGame().actorSpeedControl().ghostAttackSpeed(level, this);
                 setSpeed(speed);
                 if (theGame().huntingTimer().phaseIndex() == 0) {
                     roam(level);
@@ -155,7 +152,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         return new Ghost(CYAN_GHOST_BASHFUL, "Inky") {
             @Override
             public void hunt(GameLevel level) {
-                float speed = level.speedControl().ghostAttackSpeed(level, this);
+                float speed = theGame().actorSpeedControl().ghostAttackSpeed(level, this);
                 boolean chase = theGame().huntingTimer().phase() == HuntingPhase.CHASING;
                 Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                 setSpeed(speed);
@@ -173,7 +170,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         return new Ghost(ORANGE_GHOST_POKEY, "Sue") {
             @Override
             public void hunt(GameLevel level) {
-                float speed = level.speedControl().ghostAttackSpeed(level, this);
+                float speed = theGame().actorSpeedControl().ghostAttackSpeed(level, this);
                 boolean chase = theGame().huntingTimer().phase() == HuntingPhase.CHASING;
                 Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                 setSpeed(speed);
@@ -189,7 +186,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     private final TengenMsPacMan_LevelCounter levelCounter;
     private final TengenMsPacMan_MapSelector mapSelector;
-    private final TengenActorSpeedControl speedControl;
+    private final TengenActorSpeedControl actorSpeedControl;
     private final GateKeeper gateKeeper;
     private final HuntingTimer huntingTimer;
     private final Steering autopilot;
@@ -206,7 +203,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public TengenMsPacMan_GameModel() {
         scoreManager.setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman_tengen.xml"));
         levelCounter = new TengenMsPacMan_LevelCounter();
-        speedControl = new TengenActorSpeedControl();
+        actorSpeedControl = new TengenActorSpeedControl();
         mapSelector = new TengenMsPacMan_MapSelector();
         gateKeeper = new GateKeeper(); //TODO implement Tengen logic
         huntingTimer = new TengenMsPacMan_HuntingTimer();
@@ -255,6 +252,9 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.showMessage(GameLevel.MESSAGE_GAME_OVER);
         theGameEventManager().publishEvent(this, GameEventType.STOP_ALL_SOUNDS);
     }
+
+    @Override
+    public ActorSpeedControl actorSpeedControl() { return actorSpeedControl; }
 
     @Override
     public HuntingTimer huntingTimer() { return huntingTimer; }
@@ -454,8 +454,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
         Stream.of(PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
             .forEach(personality -> level.setGhostStartPosition(personality, level.ghostStartPosition(personality).plus(0, HTS))
         );
-
-        level.setSpeedControl(speedControl);
 
         //TODO this might not be appropriate for Tengen Ms. Pac-Man
         level.setBonusSymbol(0, computeBonusSymbol(level.number()));

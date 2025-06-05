@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
-import de.amr.pacmanfx.arcade.ArcadeCommon_ActorSpeedControl;
 import de.amr.pacmanfx.arcade.ArcadeCommon_GameModel;
 import de.amr.pacmanfx.arcade.ArcadePacMan_LevelCounter;
 import de.amr.pacmanfx.event.GameEventType;
@@ -66,13 +65,13 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
         return new Ghost(RED_GHOST_SHADOW, "Blinky") {
             @Override
             public void hunt(GameLevel level) {
-                float speed = level.speedControl().ghostAttackSpeed(level, this);
+                final var game = (ArcadeCommon_GameModel) theGame();
+                float speed = game.actorSpeedControl().ghostAttackSpeed(level, this);
                 setSpeed(speed);
-                if (theGame().huntingTimer().phaseIndex() == 0) {
+                if (game.huntingTimer().phaseIndex() == 0) {
                     roam(level);
                 } else {
-                    var arcadeGame = (ArcadeCommon_GameModel) theGame();
-                    boolean chase = theGame().huntingTimer().phase() == HuntingPhase.CHASING || arcadeGame.isCruiseElroyModeActive();
+                    boolean chase = game.huntingTimer().phase() == HuntingPhase.CHASING || game.isCruiseElroyModeActive();
                     Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                     tryMovingTowardsTargetTile(level, targetTile);
                 }
@@ -90,7 +89,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
         return new Ghost(PINK_GHOST_SPEEDY, "Pinky") {
             @Override
             public void hunt(GameLevel level) {
-                float speed = level.speedControl().ghostAttackSpeed(level, this);
+                float speed = theGame().actorSpeedControl().ghostAttackSpeed(level, this);
                 setSpeed(speed);
                 if (theGame().huntingTimer().phaseIndex() == 0) {
                     roam(level);
@@ -112,7 +111,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
         return new Ghost(CYAN_GHOST_BASHFUL, "Inky") {
             @Override
             public void hunt(GameLevel level) {
-                float speed = level.speedControl().ghostAttackSpeed(level, this);
+                float speed = theGame().actorSpeedControl().ghostAttackSpeed(level, this);
                 boolean chase = theGame().huntingTimer().phase() == HuntingPhase.CHASING;
                 Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                 setSpeed(speed);
@@ -130,7 +129,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
         return new Ghost(ORANGE_GHOST_POKEY, "Sue") {
             @Override
             public void hunt(GameLevel level) {
-                float speed = level.speedControl().ghostAttackSpeed(level, this);
+                float speed = theGame().actorSpeedControl().ghostAttackSpeed(level, this);
                 boolean chase = theGame().huntingTimer().phase() == HuntingPhase.CHASING;
                 Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                 setSpeed(speed);
@@ -251,8 +250,6 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
                 ? level.ghostStartPosition(PINK_GHOST_SPEEDY)
                 : level.ghostStartPosition(ghost.personality()));
         });
-
-        level.setSpeedControl(new ArcadeCommon_ActorSpeedControl());
 
         level.setBonusSymbol(0, computeBonusSymbol(level.number()));
         level.setBonusSymbol(1, computeBonusSymbol(level.number()));

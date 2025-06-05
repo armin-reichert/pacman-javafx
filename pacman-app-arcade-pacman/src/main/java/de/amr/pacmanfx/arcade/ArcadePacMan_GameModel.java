@@ -60,7 +60,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
                 var arcadeGame = (ArcadeCommon_GameModel) theGame();
                 boolean chase = arcadeGame.huntingTimer.phase() == HuntingPhase.CHASING || arcadeGame.cruiseElroy() > 0;
                 Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
-                setSpeed(level.speedControl().ghostAttackSpeed(level, this));
+                setSpeed(theGame().actorSpeedControl().ghostAttackSpeed(level, this));
                 tryMovingTowardsTargetTile(level, targetTile);
             }
             @Override
@@ -78,7 +78,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
             public void hunt(GameLevel level) {
                 boolean chase = theGame().huntingTimer().phase() == HuntingPhase.CHASING;
                 Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
-                setSpeed(level.speedControl().ghostAttackSpeed(level, this));
+                setSpeed(theGame().actorSpeedControl().ghostAttackSpeed(level, this));
                 tryMovingTowardsTargetTile(level, targetTile);
             }
             @Override
@@ -96,7 +96,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
             public void hunt(GameLevel level) {
                 boolean chase = theGame().huntingTimer().phase() == HuntingPhase.CHASING;
                 Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
-                setSpeed(level.speedControl().ghostAttackSpeed(level, this));
+                setSpeed(theGame().actorSpeedControl().ghostAttackSpeed(level, this));
                 tryMovingTowardsTargetTile(level, targetTile);
             }
             @Override
@@ -113,7 +113,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
             public void hunt(GameLevel level) {
                 boolean chase = theGame().huntingTimer().phase() == HuntingPhase.CHASING;
                 Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
-                setSpeed(level.speedControl().ghostAttackSpeed(level, this));
+                setSpeed(theGame().actorSpeedControl().ghostAttackSpeed(level, this));
                 tryMovingTowardsTargetTile(level, targetTile);
             }
             @Override
@@ -253,8 +253,6 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
                 : level.ghostStartPosition(ghost.personality()));
             ghost.setSpecialTerrainTiles(oneWayDownTiles);
         });
-
-        level.setSpeedControl(new ArcadeCommon_ActorSpeedControl());
 
         // Each level has a single bonus symbol appearing twice during the level
         // From level 13 on, the same symbol (7 = "key") appears

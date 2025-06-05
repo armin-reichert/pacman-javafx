@@ -16,8 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.*;
 import static de.amr.pacmanfx.lib.Direction.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
@@ -252,7 +251,7 @@ public abstract class Ghost extends MovingActor implements AnimatedActor {
         if (level.isActorInsideHouse(this)) {
             float minY = (level.houseMinTile().y() + 1) * TS + HTS;
             float maxY = (level.houseMaxTile().y() - 1) * TS - HTS;
-            setSpeed(level.speedControl().ghostSpeedInsideHouse(level, this));
+            setSpeed(theGame().actorSpeedControl().ghostSpeedInsideHouse(level, this));
             move();
             if (y <= minY) {
                 setMoveAndWishDir(DOWN);
@@ -280,7 +279,7 @@ public abstract class Ghost extends MovingActor implements AnimatedActor {
      * The ghost speed is slower than outside, but I do not know the exact value.
      */
     private void updateStateLeavingHouse(GameLevel level) {
-        float speedInsideHouse = level.speedControl().ghostSpeedInsideHouse(level, this);
+        float speedInsideHouse = theGame().actorSpeedControl().ghostSpeedInsideHouse(level, this);
         Vector2f houseEntryPosition = level.houseEntryPosition();
         if (y <= houseEntryPosition.y()) {
             // has raised and is outside house
@@ -345,8 +344,8 @@ public abstract class Ghost extends MovingActor implements AnimatedActor {
      */
     private void updateStateFrightened(GameLevel level) {
         float speed = level.isTunnel(tile())
-            ? level.speedControl().ghostTunnelSpeed(level, this)
-            : level.speedControl().ghostFrightenedSpeed(level, this);
+            ? theGame().actorSpeedControl().ghostTunnelSpeed(level, this)
+            : theGame().actorSpeedControl().ghostFrightenedSpeed(level, this);
         setSpeed(speed);
         roam(level);
         updateFrightenedAnimation(level);
@@ -376,7 +375,7 @@ public abstract class Ghost extends MovingActor implements AnimatedActor {
      * to the ghost house to be revived. Hallelujah!
      */
     private void updateStateReturningToHouse(GameLevel level) {
-        float speed = level.speedControl().ghostSpeedReturningToHouse(level, this);
+        float speed = theGame().actorSpeedControl().ghostSpeedReturningToHouse(level, this);
         Vector2f houseEntry = level.houseEntryPosition();
         if (position().roughlyEquals(houseEntry, speed, 0)) {
             setPosition(houseEntry);
@@ -397,7 +396,7 @@ public abstract class Ghost extends MovingActor implements AnimatedActor {
      * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
      */
     private void updateStateEnteringHouse(GameLevel level) {
-        float speed = level.speedControl().ghostSpeedReturningToHouse(level, this);
+        float speed = theGame().actorSpeedControl().ghostSpeedReturningToHouse(level, this);
         if (position().roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {
             setPosition(revivalPosition);
             setMoveAndWishDir(UP);

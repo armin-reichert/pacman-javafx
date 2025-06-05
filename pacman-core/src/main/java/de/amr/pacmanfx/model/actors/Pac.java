@@ -121,7 +121,9 @@ public class Pac extends MovingActor implements AnimatedActor {
         if (isUsingAutopilot()) {
             autopilotSteering.steer(this, level);
         }
-        setSpeed(powerTimer.isRunning() ? level.speedControl().pacPowerSpeed(level) : level.speedControl().pacNormalSpeed(level));
+        setSpeed(powerTimer.isRunning()
+            ? theGame().actorSpeedControl().pacPowerSpeed(level)
+            : theGame().actorSpeedControl().pacNormalSpeed(level));
         tryMoving(level);
 
         if (moveInfo.moved) {

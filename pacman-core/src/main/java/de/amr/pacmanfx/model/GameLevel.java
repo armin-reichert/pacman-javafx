@@ -58,7 +58,6 @@ public class GameLevel {
 
     private final int number; // 1=first level
     private LevelData data;
-    private ActorSpeedControl speedControl;
 
     private final WorldMap worldMap;
     private final Vector2f pacStartPosition;
@@ -164,14 +163,6 @@ public class GameLevel {
 
     public void setData(LevelData data) {
         this.data = requireNonNull(data);
-    }
-
-    public void setSpeedControl(ActorSpeedControl speedControl) {
-        this.speedControl = speedControl;
-    }
-
-    public ActorSpeedControl speedControl() {
-        return speedControl;
     }
 
     public void makeReadyForPlaying() {
