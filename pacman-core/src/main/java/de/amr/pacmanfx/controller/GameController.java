@@ -32,7 +32,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameController  {
 
-    private final Map<GameVariant, GameModel> registeredGameModels = new EnumMap<>(GameVariant.class);
+    private final Map<GameVariant, GameModel> gameRegistry = new EnumMap<>(GameVariant.class);
     private final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>();
     private final StateMachine<GameState, GameModel> stateMachine;
 
@@ -75,11 +75,15 @@ public class GameController  {
 
     @SuppressWarnings("unchecked")
     public <T extends GameModel> T game(GameVariant variant) {
-        return (T) registeredGameModels.get(requireNonNull(variant));
+        requireNonNull(variant);
+        if (gameRegistry.containsKey(variant)) {
+            return (T) gameRegistry.get(variant);
+        }
+        throw new IllegalArgumentException("Game variant '%s' is not supported".formatted(variant));
     }
 
     public void register(GameVariant variant, GameModel gameModel) {
-        registeredGameModels.put(requireNonNull(variant), requireNonNull(gameModel));
+        gameRegistry.put(requireNonNull(variant), requireNonNull(gameModel));
     }
 
     /**
