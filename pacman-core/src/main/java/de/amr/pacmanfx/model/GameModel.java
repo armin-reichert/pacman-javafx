@@ -101,6 +101,21 @@ public abstract class GameModel {
 
     public boolean isLevelCompleted() { return level.uneatenFoodCount() == 0; }
 
+    public void onLevelCompleted(GameLevel level) {
+        Logger.info("Level complete, stop hunting timer");
+        level.huntingTimer().stop();
+        level.blinking().setStartPhase(Pulse.OFF);
+        level.blinking().reset();
+        level.pac().stopAndShowInFullBeauty();
+        level.pac().powerTimer().stop();
+        level.pac().powerTimer().reset(0);
+        Logger.info("Power timer stopped and reset to zero");
+        level.bonus().ifPresent(Bonus::setInactive);
+        // when cheating to end level, there might still be food
+        level.eatAllFood();
+        Logger.trace("Game level {} completed.", level.number());
+    }
+
     public abstract boolean isOver();
     public abstract void onGameEnding();
 
