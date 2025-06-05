@@ -31,7 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.optGameLevel;
+import static de.amr.pacmanfx.Globals.theGameLevel;
 import static de.amr.pacmanfx.arcade.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.PY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
@@ -202,11 +203,10 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfiguration, Res
                     throw new IllegalStateException("Cannot determine cut scene, no game level available");
                 }
                 int levelNumber = theGameLevel().number();
-                int cutSceneNumber = theGame().cutSceneNumber(levelNumber);
-                if (cutSceneNumber == 0) {
+                if (game.cutSceneNumber(levelNumber).isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(levelNumber));
                 }
-                yield "CutScene" + game.cutSceneNumber(levelNumber);
+                yield "CutScene" + game.cutSceneNumber(levelNumber).getAsInt();
             }
             case GameState.TESTING_CUT_SCENES -> {
                 if (optGameLevel().isEmpty()) {

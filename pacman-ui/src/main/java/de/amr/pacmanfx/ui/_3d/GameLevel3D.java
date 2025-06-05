@@ -361,7 +361,7 @@ public class GameLevel3D {
     }
 
     public Animation createLevelCompleteAnimation() {
-        levelCompleteAnimation = theGame().cutSceneNumber(gameLevel.number()) != 0
+        levelCompleteAnimation = theGame().cutSceneNumber(gameLevel.number()).isPresent()
             ? levelTransformationBeforeIntermission(gameLevel.data().numFlashes())
             : levelTransformation(gameLevel.data().numFlashes());
         return levelCompleteAnimation;

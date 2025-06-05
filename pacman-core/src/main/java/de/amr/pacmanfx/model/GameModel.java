@@ -15,6 +15,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import org.tinylog.Logger;
 
 import java.util.Optional;
+import java.util.OptionalInt;
 
 import static de.amr.pacmanfx.Globals.theGameEventManager;
 import static de.amr.pacmanfx.Globals.theSimulationStep;
@@ -44,7 +45,7 @@ public abstract class GameModel {
     public abstract HuntingTimer huntingTimer();
     public abstract LevelCounter levelCounter();
     public abstract MapSelector mapSelector();
-    public abstract int cutSceneNumber(int levelNumber);
+    public abstract OptionalInt cutSceneNumber(int levelNumber);
 
     public ScoreManager scoreManager() { return scoreManager; }
     public Optional<GateKeeper> gateKeeper() { return Optional.empty(); }

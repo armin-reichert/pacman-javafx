@@ -21,6 +21,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.List;
+import java.util.OptionalInt;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
@@ -224,12 +225,12 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     }
 
     @Override
-    public int cutSceneNumber(int levelNumber) {
+    public OptionalInt cutSceneNumber(int levelNumber) {
         return switch (levelNumber) {
-            case 2 -> 1;
-            case 5 -> 2;
-            case 9, 13, 17 -> 3;
-            default -> 0;
+            case 2 -> OptionalInt.of(1);
+            case 5 -> OptionalInt.of(2);
+            case 9, 13, 17 -> OptionalInt.of(3);
+            default -> OptionalInt.empty();
         };
     }
 

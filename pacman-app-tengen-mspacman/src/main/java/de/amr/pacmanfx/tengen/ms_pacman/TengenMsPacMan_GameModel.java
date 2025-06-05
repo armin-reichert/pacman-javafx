@@ -22,6 +22,7 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -429,12 +430,12 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public int cutSceneNumber(int levelNumber) {
+    public OptionalInt cutSceneNumber(int levelNumber) {
          return switch (levelNumber) {
-            case 2 -> 1;
-            case 5 -> 2;
-            case 9, 13, 17 -> 3;
-            default -> levelNumber == LAST_LEVEL_NUMBER ? 4 : 0;
+             case 2 -> OptionalInt.of(1);
+             case 5 -> OptionalInt.of(2);
+             case 9, 13, 17 -> OptionalInt.of(3);
+             default -> levelNumber == LAST_LEVEL_NUMBER ? OptionalInt.of(4) : OptionalInt.empty();
         };
     }
 

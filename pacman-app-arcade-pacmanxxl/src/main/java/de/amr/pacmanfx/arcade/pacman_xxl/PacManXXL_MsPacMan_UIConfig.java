@@ -200,11 +200,10 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfiguration 
                     throw new IllegalStateException("Cannot determine cut scene, no game level available");
                 }
                 int levelNumber = theGameLevel().number();
-                int cutSceneNumber = theGame().cutSceneNumber(levelNumber);
-                if (cutSceneNumber == 0) {
+                if (game.cutSceneNumber(levelNumber).isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(levelNumber));
                 }
-                yield "CutScene" + game.cutSceneNumber(levelNumber);
+                yield "CutScene" + game.cutSceneNumber(levelNumber).getAsInt();
             }
             case GameState.TESTING_CUT_SCENES -> {
                 if (optGameLevel().isEmpty()) {
