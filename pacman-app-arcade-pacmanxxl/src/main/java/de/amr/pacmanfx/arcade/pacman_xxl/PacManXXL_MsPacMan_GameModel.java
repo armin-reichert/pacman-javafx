@@ -31,7 +31,7 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
         int levelNumber = levelNumbers[theRNG().nextInt(levelNumbers.length)];
         mapSelector().setMapSelectionMode(MapSelectionMode.NO_CUSTOM_MAPS);
         createLevel(levelNumber);
-        level.setData(createLevelData(1)); // always run with settings (speed etc.) of first level
+        level.setData(createLevelData(1)); // use settings (speed etc.) of first level
         level.setDemoLevel(true);
         level.pac().setImmune(false);
         level.pac().setUsingAutopilot(true);

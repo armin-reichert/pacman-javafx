@@ -427,8 +427,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     @Override
     public void createLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.createWorldMapForLevel(mapCategory, levelNumber);
-        level = new GameLevel(levelNumber, worldMap);
-        level.setData(createLevelData()); //TODO needed?
+        level = new GameLevel(levelNumber, worldMap, createLevelData());
         level.setCutSceneNumber(switch (levelNumber) {
             case 2 -> 1;
             case 5 -> 2;

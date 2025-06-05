@@ -226,8 +226,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     @Override
     public void createLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.findWorldMap(levelNumber);
-        level = new GameLevel(levelNumber, worldMap);
-        level.setData(createLevelData(levelNumber));
+        level = new GameLevel(levelNumber, worldMap, createLevelData(levelNumber));
         level.setCutSceneNumber(switch (levelNumber) {
             case 2 -> 1;
             case 5 -> 2;

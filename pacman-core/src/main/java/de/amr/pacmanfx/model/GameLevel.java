@@ -77,9 +77,10 @@ public class GameLevel {
     private int gameOverStateTicks;
     private long startTime;
 
-    public GameLevel(int number, WorldMap worldMap) {
+    public GameLevel(int number, WorldMap worldMap, LevelData data) {
         this.number = requireValidLevelNumber(number);
         this.worldMap = requireNonNull(worldMap);
+        this.data = requireNonNull(data);
 
         blinking = new Pulse(10, Pulse.OFF);
         portals = findPortals(worldMap);
@@ -146,10 +147,6 @@ public class GameLevel {
         return portals.toArray(new Portal[0]);
     }
 
-    public void setData(LevelData data) {
-        this.data = requireNonNull(data);
-    }
-
     public void makeReadyForPlaying() {
         pac.reset(); // initially invisible!
         pac.setPosition(pacStartPosition());
@@ -175,6 +172,7 @@ public class GameLevel {
         ghosts().forEach(Ghost::hide);
     }
 
+    public void setData(LevelData data) { this.data = data; }
     public LevelData data() { return data; }
 
     public List<Ghost> victims() { return victims; }
