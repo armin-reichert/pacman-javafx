@@ -14,49 +14,64 @@ import javafx.beans.property.SimpleObjectProperty;
 
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.theGameEventManager;
 import static java.util.Objects.requireNonNull;
 
 /**
  * Controller (in the sense of MVC) for all game variants.
- * <p>
- * This is a finite-state machine ({@link StateMachine}) with states defined in {@link GameState}.
+ * <br>Contains a finite-state machine ({@link StateMachine}) with states defined in {@link GameState}.
  * Each game variant ({@link GameVariant}) is represented by an instance of a game model ({@link GameModel}).
- * <p>Scene selection is not controlled by this class but left to the specific user interface implementations.
- * <ul>
- * <li>Exact level data for Ms. Pac-Man still not available. Any hints appreciated!
- * <li>Multiple players (1up, 2up) not implemented.</li>
- * </ul>
+ * Scene selection is not controlled by this class but left to the specific user interface implementations.
  *
- * @author Armin Reichert
  * @see <a href="https://github.com/armin-reichert">GitHub</a>
  * @see <a href="https://pacman.holenet.info">Jamey Pittman: The Pac-Man Dossier</a>
  * @see <a href="https://gameinternals.com/understanding-pac-man-ghost-behavior">Chad Birch: Understanding ghost
  * behavior</a>
  * @see <a href="http://superpacman.com/mspacman/">Ms. Pac-Man</a>
  */
-public class GameController extends StateMachine<GameState, GameModel> {
+public class GameController  {
 
     private final Map<GameVariant, GameModel> registeredGameModels = new EnumMap<>(GameVariant.class);
     private final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>();
+    private final StateMachine<GameState, GameModel> stateMachine;
 
     public GameController() {
-        super(GameState.values());
-        addStateChangeListener((oldState, newState) -> theGameEventManager().publishEvent(
-                new GameStateChangeEvent(game(), oldState, newState)));
+        stateMachine = new StateMachine<>(GameState.values()) {
+            @Override public GameModel context() { return game(); }
+        };
+        stateMachine.addStateChangeListener((oldState, newState) ->
+            theGameEventManager().publishEvent(new GameStateChangeEvent(game(), oldState, newState)));
+
         gameVariantPy.addListener((py, ov, newGameVariant) -> {
-            GameModel game = game(newGameVariant);
-            game.init();
-            theGameEventManager().publishEvent(game, GameEventType.GAME_VARIANT_CHANGED);
+            GameModel newGame = game(newGameVariant);
+            newGame.init();
+            theGameEventManager().publishEvent(newGame, GameEventType.GAME_VARIANT_CHANGED);
         });
     }
 
-    @Override
-    public GameModel context() {
-        return game();
+    public void changeGameState(GameState state) {
+        requireNonNull(state);
+        stateMachine.changeState(state);
     }
+
+    public void letCurrentGameStateExpire() {
+        stateMachine.letCurrentStateExpire();
+    }
+
+    public void updateGameState() {
+        stateMachine.update();
+    }
+
+    public void resumePreviousGameState() {
+        stateMachine.resumePreviousState();
+    }
+
+    public void restart(GameState state) {
+        stateMachine.restart(state);
+    }
+
+    public GameState gameState() { return stateMachine.state(); }
 
     @SuppressWarnings("unchecked")
     public <T extends GameModel> T game(GameVariant variant) {
@@ -73,8 +88,6 @@ public class GameController extends StateMachine<GameState, GameModel> {
     public <GAME extends GameModel> GAME game() {
         return game(gameVariantPy.get());
     }
-
-    public Stream<GameModel> games() { return registeredGameModels.values().stream(); }
 
     public GameVariant selectedGameVariant() { return gameVariantPy.get(); }
 

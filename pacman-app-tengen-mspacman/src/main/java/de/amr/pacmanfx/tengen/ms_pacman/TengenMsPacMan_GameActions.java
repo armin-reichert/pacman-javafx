@@ -18,7 +18,7 @@ public interface TengenMsPacMan_GameActions {
     GameAction QUIT_DEMO_LEVEL = new GameAction() {
         @Override
         public void execute() {
-            theGameController().changeState(GameState.SETTING_OPTIONS);
+            theGameController().changeGameState(GameState.SETTING_OPTIONS);
         }
 
         @Override
@@ -35,7 +35,7 @@ public interface TengenMsPacMan_GameActions {
     GameAction START_GAME = new GameAction() {
         @Override
         public void execute() {
-            theGameController().changeState(GameState.SETTING_OPTIONS);
+            theGameController().changeGameState(GameState.SETTING_OPTIONS);
         }
 
         @Override
@@ -49,7 +49,7 @@ public interface TengenMsPacMan_GameActions {
         public void execute() {
             theSound().stopAll();
             theGame().playingProperty().set(false);
-            theGameController().changeState(GameState.STARTING_GAME);
+            theGameController().changeGameState(GameState.STARTING_GAME);
         }
 
         @Override

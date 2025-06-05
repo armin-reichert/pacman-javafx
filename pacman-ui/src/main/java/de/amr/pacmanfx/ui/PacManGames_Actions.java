@@ -82,7 +82,7 @@ public interface PacManGames_Actions {
             if (!vulnerableGhosts.isEmpty()) {
                 level.victims().clear(); // resets value of next killed ghost to 200
                 vulnerableGhosts.forEach(theGame()::onGhostKilled);
-                theGameController().changeState(GameState.GHOST_DYING);
+                theGameController().changeGameState(GameState.GHOST_DYING);
             }
         }
 
@@ -97,7 +97,7 @@ public interface PacManGames_Actions {
     GameAction CHEAT_ENTER_NEXT_LEVEL = new GameAction() {
         @Override
         public void execute() {
-            theGameController().changeState(GameState.LEVEL_COMPLETE);
+            theGameController().changeGameState(GameState.LEVEL_COMPLETE);
         }
 
         @Override
@@ -120,7 +120,7 @@ public interface PacManGames_Actions {
                 theSound().enabledProperty().set(true);
                 theGameEventManager().publishEvent(theGame(), GameEventType.CREDIT_ADDED);
             }
-            theGameController().changeState(GameState.SETTING_OPTIONS);
+            theGameController().changeGameState(GameState.SETTING_OPTIONS);
         }
 
         @Override
@@ -226,7 +226,7 @@ public interface PacManGames_Actions {
         @Override
         public void execute() {
             theSound().stopVoice();
-            theGameController().changeState(GameState.STARTING_GAME);
+            theGameController().changeGameState(GameState.STARTING_GAME);
         }
 
         @Override
@@ -241,7 +241,7 @@ public interface PacManGames_Actions {
     GameAction TEST_CUT_SCENES = new GameAction() {
         @Override
         public void execute() {
-            theGameController().changeState(GameState.TESTING_CUT_SCENES);
+            theGameController().changeGameState(GameState.TESTING_CUT_SCENES);
             theUI().showFlashMessage("Cut scenes test"); //TODO localize
         }
     };
@@ -334,7 +334,7 @@ public interface PacManGames_Actions {
                 if (theUIConfig().currentGameSceneIsPlayScene2D()
                     || theUIConfig().currentGameSceneIsPlayScene3D()) {
                     theUI().updateGameScene(true);
-                    theGameController().update(); //TODO needed?
+                    theGameController().updateGameState(); //TODO needed?
                 }
                 if (!theGame().isPlaying()) {
                     theUI().showFlashMessage(theAssets().text(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));

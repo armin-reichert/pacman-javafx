@@ -359,10 +359,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 if (sceneTimer.atSecond(0.75)) {
                     scene.ghosts.get(ORANGE_GHOST_POKEY).hide();
                     if (!theGame().canStartNewGame()) {
-                        theGameController().changeState(GameState.STARTING_GAME);
+                        theGameController().changeGameState(GameState.STARTING_GAME);
                     }
                 } else if (sceneTimer.atSecond(5)) {
-                    theGameController().changeState(GameState.SETTING_OPTIONS);
+                    theGameController().changeGameState(GameState.SETTING_OPTIONS);
                 }
             }
         };

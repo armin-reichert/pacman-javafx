@@ -49,7 +49,7 @@ public class Globals {
     public static GameEventManager        theGameEventManager() { return GAME_EVENT_MANAGER; }
     public static Optional<GameLevel>     optGameLevel()        { return theGame().level(); }
     public static GameLevel               theGameLevel()        { return optGameLevel().orElse(null); }
-    public static GameState               theGameState()        { return GAME_CONTROLLER.state(); }
+    public static GameState               theGameState()        { return GAME_CONTROLLER.gameState(); }
     public static GameVariant             theGameVariant()      { return GAME_CONTROLLER.selectedGameVariant(); }
     public static Random                  theRNG()              { return RANDOM; }
     public static SimulationStep          theSimulationStep()   { return SIMULATION_STEP; }

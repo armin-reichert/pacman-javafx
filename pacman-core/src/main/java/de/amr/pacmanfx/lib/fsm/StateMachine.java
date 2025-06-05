@@ -107,7 +107,7 @@ public abstract class StateMachine<S extends FsmState<C>, C> {
     /**
      * Lets the timer of the current game state expire.
      */
-    public void letCurrentGameStateExpire() {
+    public void letCurrentStateExpire() {
         state().timer().expire();
     }
 
