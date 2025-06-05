@@ -94,7 +94,7 @@ public class ObstacleBuilder {
             .filter(not(this::isExplored))
             .filter(tile ->
                     worldMap.content(LayerID.TERRAIN, tile) == ARC_NW.code() ||
-                    worldMap.content(LayerID.TERRAIN, tile) == DCORNER_NW.code()) // house top-left corner
+                    worldMap.content(LayerID.TERRAIN, tile) == DARC_NW.code()) // house top-left corner
             .map(cornerNW -> buildClosedObstacle(cornerNW, tilesWithErrors))
             .forEach(obstacles::add);
 
@@ -193,7 +193,7 @@ public class ObstacleBuilder {
                     errorAtCurrentTile(tilesWithErrors);
                 }
             }
-            else if (tileContent == ARC_SW.code() || tileContent == DCORNER_SW.code()) {
+            else if (tileContent == ARC_SW.code() || tileContent == DARC_SW.code()) {
                 if (cursor.points(Direction.DOWN)) {
                     ccw = true;
                     obstacle.addSegment(SEG_ARC_SW_DOWN, ccw, tileContent);
@@ -206,7 +206,7 @@ public class ObstacleBuilder {
                     errorAtCurrentTile(tilesWithErrors);
                 }
             }
-            else if (tileContent == ARC_SE.code() || tileContent == DCORNER_SE.code()) {
+            else if (tileContent == ARC_SE.code() || tileContent == DARC_SE.code()) {
                 if (cursor.points(Direction.DOWN)) {
                     ccw = false;
                     obstacle.addSegment(SEG_ARC_SE_DOWN, ccw, tileContent);
@@ -221,7 +221,7 @@ public class ObstacleBuilder {
                     errorAtCurrentTile(tilesWithErrors);
                 }
             }
-            else if (tileContent == ARC_NE.code() || tileContent == DCORNER_NE.code()) {
+            else if (tileContent == ARC_NE.code() || tileContent == DARC_NE.code()) {
                 if (cursor.points(Direction.UP)) {
                     ccw = true;
                     obstacle.addSegment(SEG_ARC_NE_UP, ccw, tileContent);
@@ -236,7 +236,7 @@ public class ObstacleBuilder {
                     errorAtCurrentTile(tilesWithErrors);
                 }
             }
-            else if (tileContent == ARC_NW.code() || tileContent == DCORNER_NW.code()) {
+            else if (tileContent == ARC_NW.code() || tileContent == DARC_NW.code()) {
                 if (cursor.points(Direction.UP)) {
                     ccw = false;
                     obstacle.addSegment(SEG_ARC_NW_UP, ccw, tileContent);

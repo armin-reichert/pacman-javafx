@@ -35,10 +35,10 @@ public interface TileMapEditorUtil {
         if (tileValue == TerrainTile.ARC_NW.code())     return TerrainTile.ARC_NE.code();
         if (tileValue == TerrainTile.ARC_SE.code())     return TerrainTile.ARC_SW.code();
         if (tileValue == TerrainTile.ARC_SW.code())     return TerrainTile.ARC_SE.code();
-        if (tileValue == TerrainTile.DCORNER_NE.code()) return TerrainTile.DCORNER_NW.code();
-        if (tileValue == TerrainTile.DCORNER_NW.code()) return TerrainTile.DCORNER_NE.code();
-        if (tileValue == TerrainTile.DCORNER_SE.code()) return TerrainTile.DCORNER_SW.code();
-        if (tileValue == TerrainTile.DCORNER_SW.code()) return TerrainTile.DCORNER_SE.code();
+        if (tileValue == TerrainTile.DARC_NE.code()) return TerrainTile.DARC_NW.code();
+        if (tileValue == TerrainTile.DARC_NW.code()) return TerrainTile.DARC_NE.code();
+        if (tileValue == TerrainTile.DARC_SE.code()) return TerrainTile.DARC_SW.code();
+        if (tileValue == TerrainTile.DARC_SW.code()) return TerrainTile.DARC_SE.code();
         return tileValue;
     }
 

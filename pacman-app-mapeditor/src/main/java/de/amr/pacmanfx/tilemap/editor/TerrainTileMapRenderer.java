@@ -146,10 +146,10 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
         else if (content == ARC_SW.code()) drawArc(g, tile, content);
         else if (content == ARC_SE.code()) drawArc(g, tile, content);
 
-        else if (content == DCORNER_NW.code()) drawDCorner(g, tile, content, xp, yp);
-        else if (content == DCORNER_NE.code()) drawDCorner(g, tile, content, xp, yp);
-        else if (content == DCORNER_SW.code()) drawDCorner(g, tile, content, xp, yp);
-        else if (content == DCORNER_SE.code()) drawDCorner(g, tile, content, xp, yp);
+        else if (content == DARC_NW.code()) drawDCorner(g, tile, content, xp, yp);
+        else if (content == DARC_NE.code()) drawDCorner(g, tile, content, xp, yp);
+        else if (content == DARC_SW.code()) drawDCorner(g, tile, content, xp, yp);
+        else if (content == DARC_SE.code()) drawDCorner(g, tile, content, xp, yp);
 
         else if (content == DOOR.code())   drawDoor(g, tile, colors.doorColor());
         else if (content == TUNNEL.code()) drawTunnel(g, tile);
@@ -249,7 +249,7 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
         double d = 1;
         g.setStroke(colors.wallStrokeColor());
         g.setLineWidth(1);
-        if (cornerType == DCORNER_NW.code()) {
+        if (cornerType == DARC_NW.code()) {
             xp[0]=xp[1]=cx-d; xp[2]=rightEdge;
             yp[0]=bottomEdge; yp[1]=yp[2]=cy-d;
             g.strokePolyline(xp,yp,xp.length);
@@ -258,7 +258,7 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
             yp[0]=bottomEdge; yp[1]=yp[2]=cy+d;
             g.strokePolyline(xp,yp,xp.length);
         }
-        else if (cornerType == DCORNER_NE.code()) {
+        else if (cornerType == DARC_NE.code()) {
             xp[0]=x; xp[1]=xp[2]=cx+d;
             yp[0]=yp[1]=cy-d; yp[2]=bottomEdge;
             g.strokePolyline(xp,yp,xp.length);
@@ -267,7 +267,7 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
             yp[0]=yp[1]=cy+d; yp[2]=bottomEdge;
             g.strokePolyline(xp,yp,xp.length);
         }
-        else if (cornerType == DCORNER_SE.code()) {
+        else if (cornerType == DARC_SE.code()) {
             xp[0]=x; xp[1]=xp[2]=cx-d;
             yp[0]=yp[1]=cy-d; yp[2]=y;
             g.strokePolyline(xp,yp,xp.length);
@@ -276,7 +276,7 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
             yp[0]=yp[1]=cy+d; yp[2]=y;
             g.strokePolyline(xp,yp,xp.length);
         }
-        else if (cornerType == DCORNER_SW.code()) {
+        else if (cornerType == DARC_SW.code()) {
             xp[0]=xp[1]=cx-d; xp[2]=rightEdge;
             yp[0]=y; yp[1]=yp[2]=cy+d;
             g.strokePolyline(xp,yp,xp.length);

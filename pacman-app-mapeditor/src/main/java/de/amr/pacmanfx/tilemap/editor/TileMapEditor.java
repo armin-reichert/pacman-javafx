@@ -1677,11 +1677,11 @@ public class TileMapEditor {
 
         // Find house: requires that at least min and max tiles have been detected
         Vector2i houseMinTile = worldMap.tiles()
-            .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.DCORNER_NW.code())
+            .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.DARC_NW.code())
             .findFirst().orElse(null);
 
         Vector2i houseMaxTile = worldMap.tiles()
-            .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.DCORNER_SE.code())
+            .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.DARC_SE.code())
             .findFirst().orElse(null);
 
         if (houseMinTile != null && houseMaxTile != null

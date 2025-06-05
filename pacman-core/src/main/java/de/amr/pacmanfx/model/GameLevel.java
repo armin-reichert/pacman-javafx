@@ -42,10 +42,10 @@ public class GameLevel {
             || code == ARC_NW.code()
             || code == ARC_SE.code()
             || code == ARC_SW.code()
-            || code == DCORNER_NE.code()
-            || code == DCORNER_NW.code()
-            || code == DCORNER_SE.code()
-            || code == DCORNER_SW.code();
+            || code == DARC_NE.code()
+            || code == DARC_NW.code()
+            || code == DARC_SE.code()
+            || code == DARC_SW.code();
     }
 
     /**
