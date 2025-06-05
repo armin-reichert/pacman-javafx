@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.GameVariant;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import org.tinylog.Logger;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -83,6 +84,12 @@ public class GameController  {
     }
 
     public void registerGame(GameVariant variant, GameModel gameModel) {
+        requireNonNull(variant);
+        requireNonNull(gameModel);
+        if (knownGames.containsKey(variant)) {
+            Logger.warn("Game model of class {} is already registered for game variant {}",
+                gameModel.getClass().getSimpleName(), variant);
+        }
         knownGames.put(requireNonNull(variant), requireNonNull(gameModel));
     }
 
