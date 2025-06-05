@@ -170,7 +170,7 @@ public abstract class Ghost extends MovingActor implements AnimatedActor {
         if (level.isDoorAt(tile)) {
             return inAnyOfStates(GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE);
         }
-        if (level.isTileInsideWorld(tile)) {
+        if (level.isInsideWorld(tile)) {
             return !level.isBlockedTile(tile);
         }
         return level.isTileCoveredByPortal(tile);

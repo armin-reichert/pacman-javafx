@@ -63,7 +63,7 @@ public class MovingBonus extends MovingActor implements Bonus {
         if (level.isTileCoveredByHouse(tile)) {
             return false;
         }
-        if (level.isTileInsideWorld(tile)) {
+        if (level.isInsideWorld(tile)) {
             return !level.isBlockedTile(tile);
         }
         return level.isTileCoveredByPortal(tile);

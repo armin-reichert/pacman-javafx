@@ -156,7 +156,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
             && levelFinishedAnimation.isRunning() && levelFinishedAnimation.isHighlighted();
         gr().drawLevel(theGameLevel(), 0, 3 * TS, backgroundColor(), highlighted, theGameLevel().blinking().isOn());
 
-        if (theGameLevel().message() != GameLevel.MESSAGE_EMPTY) {
+        if (theGameLevel().message() != GameLevel.MESSAGE_NONE) {
             drawLevelMessage();
         }
 

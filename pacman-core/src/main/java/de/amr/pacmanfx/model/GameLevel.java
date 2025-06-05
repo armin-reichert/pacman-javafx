@@ -25,28 +25,19 @@ import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
+/**
+ * A game level contains the world, the actors and the food management.
+ */
 public class GameLevel {
 
-    public static final byte MESSAGE_EMPTY = -1;
+    public static final byte MESSAGE_NONE = -1;
     public static final byte MESSAGE_READY = 0;
     public static final byte MESSAGE_GAME_OVER = 1;
     public static final byte MESSAGE_TEST = 2;
 
+    //TODO should this be stored in world map instead of hardcoding?
     public static final int EMPTY_ROWS_OVER_MAZE  = 3;
     public static final int EMPTY_ROWS_BELOW_MAZE = 2;
-
-    private static boolean isTileAlwaysBlocked(byte code) {
-        return code == WALL_H.code()
-            || code == WALL_V.code()
-            || code == ARC_NE.code()
-            || code == ARC_NW.code()
-            || code == ARC_SE.code()
-            || code == ARC_SW.code()
-            || code == DARC_NE.code()
-            || code == DARC_NW.code()
-            || code == DARC_SE.code()
-            || code == DARC_SW.code();
-    }
 
     /**
      * @param tile a tile coordinate
@@ -84,7 +75,7 @@ public class GameLevel {
     private Bonus bonus;
     private final byte[] bonusSymbols = new byte[2];
     private int currentBonusIndex; // -1=no bonus, 0=first, 1=second
-    private byte message = MESSAGE_EMPTY;
+    private byte message = MESSAGE_NONE;
 
     private final Pulse blinking;
 
@@ -207,7 +198,7 @@ public class GameLevel {
     public int cutSceneNumber() { return cutSceneNumber; }
 
     public void showMessage(byte message) { this.message = message; }
-    public void clearMessage() { message = MESSAGE_EMPTY; }
+    public void clearMessage() { message = MESSAGE_NONE; }
     public byte message() { return message; }
 
     public void setPac(Pac pac) { this.pac = pac; }
@@ -255,7 +246,7 @@ public class GameLevel {
 
     public WorldMap worldMap() { return worldMap; }
 
-    public boolean isTileInsideWorld(Vector2i tile) { return !worldMap.outOfBounds(tile); }
+    public boolean isInsideWorld(Vector2i tile) { return !worldMap.outOfBounds(tile); }
 
     public Stream<Vector2i> energizerTiles() { return Arrays.stream(energizerTiles); }
 
@@ -272,19 +263,19 @@ public class GameLevel {
     }
 
     public boolean isBlockedTile(Vector2i tile) {
-        return isTileInsideWorld(tile) && isTileAlwaysBlocked(worldMap.content(LayerID.TERRAIN, tile));
+        return isInsideWorld(tile) && isBlocked(worldMap.content(LayerID.TERRAIN, tile));
     }
 
     public boolean isTunnel(Vector2i tile) {
-        return isTileInsideWorld(tile) && worldMap.content(LayerID.TERRAIN, tile) == TUNNEL.code();
+        return isInsideWorld(tile) && worldMap.content(LayerID.TERRAIN, tile) == TUNNEL.code();
     }
 
     public boolean isIntersection(Vector2i tile) {
         if (worldMap.outOfBounds(tile) || isTileCoveredByHouse(tile)) {
             return false;
         }
-        long numBlockedNeighbors = tile.neighbors().filter(this::isTileInsideWorld).filter(this::isBlockedTile).count();
-        long numDoorNeighbors = tile.neighbors().filter(this::isTileInsideWorld).filter(this::isDoorAt).count();
+        long numBlockedNeighbors = tile.neighbors().filter(this::isInsideWorld).filter(this::isBlockedTile).count();
+        long numDoorNeighbors = tile.neighbors().filter(this::isInsideWorld).filter(this::isDoorAt).count();
         return numBlockedNeighbors + numDoorNeighbors < 2;
     }
 
@@ -433,11 +424,11 @@ public class GameLevel {
     }
 
     public boolean isFoodPosition(Vector2i tile) {
-        return isTileInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) != FoodTile.EMPTY.code();
+        return isInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) != FoodTile.EMPTY.code();
     }
 
     public boolean isEnergizerPosition(Vector2i tile) {
-        return isTileInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) == FoodTile.ENERGIZER.code();
+        return isInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) == FoodTile.ENERGIZER.code();
     }
 
     public boolean tileContainsFood(Vector2i tile) {
@@ -445,7 +436,7 @@ public class GameLevel {
     }
 
     public boolean tileContainsEatenFood(Vector2i tile) {
-        return isTileInsideWorld(tile) && eatenFoodBits.get(worldMap.index(tile));
+        return isInsideWorld(tile) && eatenFoodBits.get(worldMap.index(tile));
     }
 
     public Stream<Vector2i> tilesContainingFood() {

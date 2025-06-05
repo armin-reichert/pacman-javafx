@@ -71,7 +71,7 @@ public class Pac extends MovingActor implements AnimatedActor {
         if (level.isTileCoveredByHouse(tile)) {
             return false;
         }
-        if (level.isTileInsideWorld(tile)) {
+        if (level.isInsideWorld(tile)) {
             return !level.isBlockedTile(tile);
         }
         return level.isTileCoveredByPortal(tile);
