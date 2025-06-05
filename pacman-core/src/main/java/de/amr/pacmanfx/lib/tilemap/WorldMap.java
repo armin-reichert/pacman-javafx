@@ -37,6 +37,13 @@ public class WorldMap {
         return Stream.of(FoodTile.values()).anyMatch(tile -> tile.code() == value);
     }
 
+    private static void assertValidLayerID(LayerID id) {
+        requireNonNull(id);
+        if (Stream.of(LayerID.values()).noneMatch(layerID -> layerID == id)) {
+            throw new IllegalArgumentException("Illegal map layer ID: '%s'".formatted(id));
+        }
+    }
+
     public static WorldMap emptyMap(int numRows, int numCols) {
         requireNonNegative(numRows);
         requireNonNegative(numCols);
@@ -172,7 +179,7 @@ public class WorldMap {
     }
 
     public WorldMapLayer layer(LayerID id) {
-        requireNonNull(id);
+        assertValidLayerID(id);
         return switch (id) {
             case TERRAIN -> terrainLayer;
             case FOOD -> foodLayer;
@@ -236,6 +243,7 @@ public class WorldMap {
      * @return stream of all tiles of this map with given content (row-by-row)
      */
     public Stream<Vector2i> tilesContaining(LayerID layerID, byte content) {
+        assertValidLayerID(layerID);
         return tiles().filter(tile -> content(layerID, tile) == content);
     }
 
@@ -277,14 +285,17 @@ public class WorldMap {
     // Properties map by layer
 
     public Map<String, String> properties(LayerID layerID) {
+        assertValidLayerID(layerID);
         return layer(layerID).properties();
     }
 
     public Stream<String> propertyNames(LayerID layerID) {
+        assertValidLayerID(layerID);
         return properties(layerID).keySet().stream().sorted();
     }
 
     public Vector2i getTileProperty(LayerID layerID, String propertyName, Vector2i defaultTile) {
+        assertValidLayerID(layerID);
         requireNonNull(propertyName);
         if (properties(layerID).containsKey(propertyName)) {
             String value = properties(layerID).get(propertyName);
@@ -317,7 +328,7 @@ public class WorldMap {
      * @throws IllegalArgumentException if tile outside map bounds
      */
     public byte content(LayerID layerID, int row, int col) {
-        requireNonNull(layerID);
+        assertValidLayerID(layerID);
         if (outOfWorld(row, col)) {
             throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
         }
@@ -344,7 +355,7 @@ public class WorldMap {
      * @throws IllegalArgumentException if tile outside map bounds
      */
     public void setContent(LayerID layerID, int row, int col, byte code) {
-        requireNonNull(layerID);
+        assertValidLayerID(layerID);
         if (outOfWorld(row, col)) {
             throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
         }
