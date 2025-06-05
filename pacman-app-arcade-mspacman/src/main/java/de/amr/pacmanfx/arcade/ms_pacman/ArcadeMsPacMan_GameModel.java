@@ -229,6 +229,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
     public void createLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.findWorldMap(levelNumber);
         level = new GameLevel(levelNumber, worldMap, createLevelData(levelNumber));
+        addHouse(level);
         level.setCutSceneNumber(switch (levelNumber) {
             case 2 -> 1;
             case 5 -> 2;
@@ -236,7 +237,6 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
             default -> 0;
         });
         level.setGameOverStateTicks(150);
-        addHouse(level);
 
         var msPacMan = createMsPacMan();
         msPacMan.setAutopilotSteering(autopilot);

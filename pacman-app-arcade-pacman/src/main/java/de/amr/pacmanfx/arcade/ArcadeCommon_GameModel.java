@@ -30,6 +30,16 @@ import static de.amr.pacmanfx.ui.PacManGames_Env.PY_USING_AUTOPILOT;
  */
 public abstract class ArcadeCommon_GameModel extends GameModel {
 
+    private static final byte[][] DEFAULT_HOUSE = {
+        { ARC_NW.code(), WALL_H.code(), WALL_H.code(), DOOR.code(), DOOR.code(), WALL_H.code(), WALL_H.code(), ARC_NE.code() },
+        { WALL_V.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), WALL_V.code()   },
+        { WALL_V.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), WALL_V.code()   },
+        { ARC_SW.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), ARC_SE.code() }
+    };
+
+    private static final Vector2i DEFAULT_HOUSE_MIN_TILE = Vector2i.of(10, 15);
+    private static final Vector2i DEFAULT_HOUSE_MAX_TILE = Vector2i.of(17, 19);
+
     public static final byte PELLET_VALUE = 10;
     public static final byte ENERGIZER_VALUE = 50;
     public static final int ALL_GHOSTS_IN_LEVEL_KILLED_BONUS_POINTS = 12_000;
@@ -289,33 +299,34 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
         return Integer.MAX_VALUE;
     }
 
-    // House
 
-    private static final byte[][] HOUSE = {
-        { ARC_NW.code(), WALL_H.code(), WALL_H.code(), DOOR.code(), DOOR.code(), WALL_H.code(), WALL_H.code(), ARC_NE.code() },
-        { WALL_V.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), WALL_V.code()   },
-        { WALL_V.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), WALL_V.code()   },
-        { ARC_SW.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), ARC_SE.code() }
-    };
-
+    /**
+     * The ghost house is not explicitly stored in the world map, only its position. Therefore, we have to create an
+     * obstacle representing the house walls such that collision detection works.
+     *
+     * @param level the game level
+     */
     protected void addHouse(GameLevel level) {
         WorldMap worldMap = level.worldMap();
         if (!worldMap.properties(LayerID.TERRAIN).containsKey(WorldMapProperty.POS_HOUSE_MIN_TILE)) {
             Logger.warn("No house min tile found in map!");
-            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MIN_TILE, WorldMapFormatter.formatTile(Vector2i.of(10, 15)));
+            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MIN_TILE,
+                    WorldMapFormatter.formatTile(DEFAULT_HOUSE_MIN_TILE));
         }
         if (!worldMap.properties(LayerID.TERRAIN).containsKey(WorldMapProperty.POS_HOUSE_MAX_TILE)) {
             Logger.warn("No house max tile found in map!");
-            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MAX_TILE, WorldMapFormatter.formatTile(Vector2i.of(17, 19)));
+            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MAX_TILE,
+                    WorldMapFormatter.formatTile(DEFAULT_HOUSE_MAX_TILE));
         }
         Vector2i houseMinTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
-        for (int y = 0; y < HOUSE.length; ++y) {
-            for (int x = 0; x < HOUSE[y].length; ++x) {
-                level.worldMap().setContent(LayerID.TERRAIN, houseMinTile.y() + y, houseMinTile.x() + x, HOUSE[y][x]);
+        for (int y = 0; y < DEFAULT_HOUSE.length; ++y) {
+            for (int x = 0; x < DEFAULT_HOUSE[y].length; ++x) {
+                level.worldMap().setContent(LayerID.TERRAIN, houseMinTile.y() + y, houseMinTile.x() + x, DEFAULT_HOUSE[y][x]);
             }
         }
         level.setLeftDoorTile(houseMinTile.plus(3, 0));
         level.setRightDoorTile(houseMinTile.plus(4, 0));
+
         level.setGhostStartDirection(RED_GHOST_SHADOW, Direction.LEFT);
         level.setGhostStartDirection(PINK_GHOST_SPEEDY, Direction.DOWN);
         level.setGhostStartDirection(CYAN_GHOST_BASHFUL, Direction.UP);
