@@ -287,38 +287,12 @@ public class GameLevel {
 
     // House
 
-    private static final byte[][] ARCADE_HOUSE = {
-        { ARC_NW.code(), WALL_H.code(), WALL_H.code(), DOOR.code(), DOOR.code(), WALL_H.code(), WALL_H.code(), ARC_NE.code() },
-        { WALL_V.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), WALL_V.code()   },
-        { WALL_V.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), WALL_V.code()   },
-        { ARC_SW.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), ARC_SE.code() }
-    };
-
-    private void createArcadeHouse(int minX, int minY) {
-        setGhostStartDirection(RED_GHOST_SHADOW, Direction.LEFT);
-        setGhostStartDirection(PINK_GHOST_SPEEDY, Direction.DOWN);
-        setGhostStartDirection(CYAN_GHOST_BASHFUL, Direction.UP);
-        setGhostStartDirection(ORANGE_GHOST_POKEY, Direction.UP);
-        leftDoorTile  = Vector2i.of(minX + 3, minY);
-        rightDoorTile = Vector2i.of(minX + 4, minY);
-        for (int y = 0; y < ARCADE_HOUSE.length; ++y) {
-            for (int x = 0; x < ARCADE_HOUSE[y].length; ++x) {
-                worldMap.setContent(LayerID.TERRAIN, minY + y, minX + x, ARCADE_HOUSE[y][x]);
-            }
-        }
+    public void setLeftDoorTile(Vector2i tile) {
+        leftDoorTile = requireNonNull(tile);
     }
 
-    public void addArcadeHouse() {
-        if (!worldMap.properties(LayerID.TERRAIN).containsKey(WorldMapProperty.POS_HOUSE_MIN_TILE)) {
-            Logger.warn("No house min tile found in map!");
-            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MIN_TILE, WorldMapFormatter.formatTile(Vector2i.of(10, 15)));
-        }
-        if (!worldMap.properties(LayerID.TERRAIN).containsKey(WorldMapProperty.POS_HOUSE_MAX_TILE)) {
-            Logger.warn("No house max tile found in map!");
-            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MAX_TILE, WorldMapFormatter.formatTile(Vector2i.of(17, 19)));
-        }
-        Vector2i houseMinTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
-        createArcadeHouse(houseMinTile.x(), houseMinTile.y());
+    public void setRightDoorTile(Vector2i tile) {
+        rightDoorTile = requireNonNull(tile);
     }
 
     public Vector2i houseMinTile() {

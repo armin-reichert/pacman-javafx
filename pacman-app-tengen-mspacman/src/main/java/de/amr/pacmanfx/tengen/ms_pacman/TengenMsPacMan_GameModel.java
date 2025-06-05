@@ -5,9 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.event.GameEventType;
+import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.Waypoint;
+import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
@@ -24,6 +27,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
+import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationMap.ANIM_MS_PAC_MAN_BOOSTER;
@@ -435,7 +439,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             default -> levelNumber == LAST_LEVEL_NUMBER ? 4 : 0;
         });
         level.setGameOverStateTicks(420);
-        level.addArcadeHouse();
+        addHouse(level);
 
         var msPacMan = createMsPacMan();
         msPacMan.setAutopilotSteering(autopilot);
@@ -461,6 +465,37 @@ public class TengenMsPacMan_GameModel extends GameModel {
         levelCounter.setEnabled(levelNumber < 8);
 
         activatePacBooster(pacBooster == PacBooster.ALWAYS_ON);
+    }
+
+    private static final byte[][] HOUSE = {
+        { ARC_NW.code(), WALL_H.code(), WALL_H.code(), DOOR.code(), DOOR.code(), WALL_H.code(), WALL_H.code(), ARC_NE.code() },
+        { WALL_V.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), WALL_V.code()   },
+        { WALL_V.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), WALL_V.code()   },
+        { ARC_SW.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), ARC_SE.code() }
+    };
+
+    protected void addHouse(GameLevel level) {
+        WorldMap worldMap = level.worldMap();
+        if (!worldMap.properties(LayerID.TERRAIN).containsKey(WorldMapProperty.POS_HOUSE_MIN_TILE)) {
+            Logger.warn("No house min tile found in map!");
+            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MIN_TILE, WorldMapFormatter.formatTile(Vector2i.of(10, 15)));
+        }
+        if (!worldMap.properties(LayerID.TERRAIN).containsKey(WorldMapProperty.POS_HOUSE_MAX_TILE)) {
+            Logger.warn("No house max tile found in map!");
+            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MAX_TILE, WorldMapFormatter.formatTile(Vector2i.of(17, 19)));
+        }
+        Vector2i houseMinTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
+        for (int y = 0; y < HOUSE.length; ++y) {
+            for (int x = 0; x < HOUSE[y].length; ++x) {
+                level.worldMap().setContent(LayerID.TERRAIN, houseMinTile.y() + y, houseMinTile.x() + x, HOUSE[y][x]);
+            }
+        }
+        level.setLeftDoorTile(houseMinTile.plus(3, 0));
+        level.setRightDoorTile(houseMinTile.plus(4, 0));
+        level.setGhostStartDirection(RED_GHOST_SHADOW, Direction.LEFT);
+        level.setGhostStartDirection(PINK_GHOST_SPEEDY, Direction.DOWN);
+        level.setGhostStartDirection(CYAN_GHOST_BASHFUL, Direction.UP);
+        level.setGhostStartDirection(ORANGE_GHOST_POKEY, Direction.UP);
     }
 
     //TODO needed?

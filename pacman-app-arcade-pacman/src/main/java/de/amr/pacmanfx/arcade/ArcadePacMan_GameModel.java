@@ -234,7 +234,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
             default -> 0;
         });
         level.setGameOverStateTicks(90);
-        level.addArcadeHouse();
+        addHouse(level);
 
         Pac pacMan = createPac();
         pacMan.setAutopilotSteering(autopilot);

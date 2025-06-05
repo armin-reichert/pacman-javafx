@@ -236,7 +236,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
             default -> 0;
         });
         level.setGameOverStateTicks(150);
-        level.addArcadeHouse();
+        addHouse(level);
 
         var msPacMan = createMsPacMan();
         msPacMan.setAutopilotSteering(autopilot);
