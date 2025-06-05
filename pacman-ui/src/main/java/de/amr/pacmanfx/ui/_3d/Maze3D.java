@@ -81,7 +81,7 @@ public class Maze3D extends Group {
 
         for (Obstacle obstacle : level.worldMap().obstacles()) {
             Vector2i tile = tileAt(obstacle.startPoint().toVector2f());
-            if (!level.isTileCoveredByHouse(tile)) {
+            if (!level.isTileInHouseArea(tile)) {
                 r3D.setWallThickness(OBSTACLE_3D_THICKNESS);
                 r3D.setWallBaseMaterial(wallBaseMaterial);
                 r3D.setWallTopMaterial(wallTopMaterial);

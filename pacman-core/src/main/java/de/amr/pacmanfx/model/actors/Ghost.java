@@ -125,7 +125,7 @@ public abstract class Ghost extends MovingActor implements AnimatedActor {
      */
     public void roam(GameLevel level) {
         Vector2i currentTile = tile();
-        if (!level.isTileCoveredByPortal(currentTile) && (isNewTileEntered() || !moveInfo.moved)) {
+        if (!level.isTileInPortalSpace(currentTile) && (isNewTileEntered() || !moveInfo.moved)) {
             Direction dir = computeRoamingDirection(level, currentTile);
             setWishDir(dir);
         }
@@ -158,8 +158,8 @@ public abstract class Ghost extends MovingActor implements AnimatedActor {
         requireNonNull(level);
         requireNonNull(tile);
         // Portal tiles are the only tiles outside the world map that can be accessed
-        if (!level.isInsideWorld(tile)) {
-            return level.isTileCoveredByPortal(tile);
+        if (!level.isTileInsideWorld(tile)) {
+            return level.isTileInPortalSpace(tile);
         }
         // Hunting ghosts cannot enter some tiles in Pac-Man game from below
         // TODO: this is game-specific and does not belong here
@@ -174,7 +174,7 @@ public abstract class Ghost extends MovingActor implements AnimatedActor {
         if (level.isDoorAt(tile)) {
             return inAnyOfStates(GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE);
         }
-        return !level.isBlockedTile(tile);
+        return !level.isTileBlocked(tile);
     }
 
     @Override

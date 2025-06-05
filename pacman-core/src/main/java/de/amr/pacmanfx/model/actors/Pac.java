@@ -68,13 +68,16 @@ public class Pac extends MovingActor implements AnimatedActor {
 
     @Override
     public boolean canAccessTile(GameLevel level, Vector2i tile) {
-        if (level.isTileCoveredByHouse(tile)) {
-            return false;
+        requireNonNull(level);
+        requireNonNull(tile);
+        // Portal tiles are the only tiles outside the world map that can be accessed
+        if (!level.isTileInsideWorld(tile)) {
+            return level.isTileInPortalSpace(tile);
         }
-        if (level.isInsideWorld(tile)) {
-            return !level.isBlockedTile(tile);
+        if (level.isTileInHouseArea(tile)) {
+            return false; // Du komms hier nich rein!
         }
-        return level.isTileCoveredByPortal(tile);
+        return !level.isTileBlocked(tile);
     }
 
     @Override

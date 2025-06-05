@@ -60,13 +60,16 @@ public class MovingBonus extends MovingActor implements Bonus {
 
     @Override
     public boolean canAccessTile(GameLevel level, Vector2i tile) {
-        if (level.isTileCoveredByHouse(tile)) {
+        requireNonNull(level);
+        requireNonNull(tile);
+        // Portal tiles are the only tiles outside the world map that can be accessed
+        if (!level.isTileInsideWorld(tile)) {
+            return level.isTileInPortalSpace(tile);
+        }
+        if (level.isTileInHouseArea(tile)) {
             return false;
         }
-        if (level.isInsideWorld(tile)) {
-            return !level.isBlockedTile(tile);
-        }
-        return level.isTileCoveredByPortal(tile);
+        return !level.isTileBlocked(tile);
     }
 
     @Override

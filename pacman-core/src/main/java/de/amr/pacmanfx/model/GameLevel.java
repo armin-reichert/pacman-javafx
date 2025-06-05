@@ -246,13 +246,13 @@ public class GameLevel {
 
     public WorldMap worldMap() { return worldMap; }
 
-    public boolean isInsideWorld(Vector2i tile) { return !worldMap.outOfBounds(tile); }
+    public boolean isTileInsideWorld(Vector2i tile) { return !worldMap.outOfBounds(tile); }
 
     public Stream<Vector2i> energizerTiles() { return Arrays.stream(energizerTiles); }
 
     public Stream<Portal> portals() { return Arrays.stream(portals); }
 
-    public boolean isTileCoveredByPortal(Vector2i tile) {
+    public boolean isTileInPortalSpace(Vector2i tile) {
         requireNonNull(tile);
         return portals().anyMatch(portal -> portal.contains(tile));
     }
@@ -262,20 +262,20 @@ public class GameLevel {
         return tile.equals(leftDoorTile) || tile.equals(rightDoorTile);
     }
 
-    public boolean isBlockedTile(Vector2i tile) {
-        return isInsideWorld(tile) && isBlocked(worldMap.content(LayerID.TERRAIN, tile));
+    public boolean isTileBlocked(Vector2i tile) {
+        return isTileInsideWorld(tile) && isBlocked(worldMap.content(LayerID.TERRAIN, tile));
     }
 
     public boolean isTunnel(Vector2i tile) {
-        return isInsideWorld(tile) && worldMap.content(LayerID.TERRAIN, tile) == TUNNEL.code();
+        return isTileInsideWorld(tile) && worldMap.content(LayerID.TERRAIN, tile) == TUNNEL.code();
     }
 
     public boolean isIntersection(Vector2i tile) {
-        if (worldMap.outOfBounds(tile) || isTileCoveredByHouse(tile)) {
+        if (worldMap.outOfBounds(tile) || isTileInHouseArea(tile)) {
             return false;
         }
-        long numBlockedNeighbors = tile.neighbors().filter(this::isInsideWorld).filter(this::isBlockedTile).count();
-        long numDoorNeighbors = tile.neighbors().filter(this::isInsideWorld).filter(this::isDoorAt).count();
+        long numBlockedNeighbors = tile.neighbors().filter(this::isTileInsideWorld).filter(this::isTileBlocked).count();
+        long numDoorNeighbors = tile.neighbors().filter(this::isTileInsideWorld).filter(this::isDoorAt).count();
         return numBlockedNeighbors + numDoorNeighbors < 2;
     }
 
@@ -346,7 +346,7 @@ public class GameLevel {
         return houseMinTile().toVector2f().scaled(TS).plus(houseSizeInTiles().toVector2f().scaled(HTS));
     }
 
-    public boolean isTileCoveredByHouse(Vector2i tile) {
+    public boolean isTileInHouseArea(Vector2i tile) {
         requireNonNull(tile);
         return tile.x() >= houseMinTile().x() && tile.x() <= houseMaxTile().x()
             && tile.y() >= houseMinTile().y() && tile.y() <= houseMaxTile().y();
@@ -384,7 +384,7 @@ public class GameLevel {
      * @return tells if the given actor is located inside the house
      */
     public boolean isActorInsideHouse(Actor actor) {
-        return isTileCoveredByHouse(requireNonNull(actor).tile());
+        return isTileInHouseArea(requireNonNull(actor).tile());
     }
 
     // Food
@@ -424,11 +424,11 @@ public class GameLevel {
     }
 
     public boolean isFoodPosition(Vector2i tile) {
-        return isInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) != FoodTile.EMPTY.code();
+        return isTileInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) != FoodTile.EMPTY.code();
     }
 
     public boolean isEnergizerPosition(Vector2i tile) {
-        return isInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) == FoodTile.ENERGIZER.code();
+        return isTileInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) == FoodTile.ENERGIZER.code();
     }
 
     public boolean tileContainsFood(Vector2i tile) {
@@ -436,7 +436,7 @@ public class GameLevel {
     }
 
     public boolean tileContainsEatenFood(Vector2i tile) {
-        return isInsideWorld(tile) && eatenFoodBits.get(worldMap.index(tile));
+        return isTileInsideWorld(tile) && eatenFoodBits.get(worldMap.index(tile));
     }
 
     public Stream<Vector2i> tilesContainingFood() {

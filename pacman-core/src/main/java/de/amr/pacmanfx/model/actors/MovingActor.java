@@ -262,7 +262,7 @@ public abstract class MovingActor extends Actor {
             return; // we don't need no navigation, dim dit didit didit...
         }
         Vector2i currentTile = tile();
-        if (!level.isTileCoveredByPortal(currentTile)) {
+        if (!level.isTileInPortalSpace(currentTile)) {
             computeTargetDirection(level, currentTile, targetTile).ifPresent(this::setWishDir);
         }
     }
@@ -374,8 +374,8 @@ public abstract class MovingActor extends Actor {
         newTileEntered = !tileBeforeMoving.equals(tileAfterMoving);
 
         moveInfo.moved = true;
-        moveInfo.tunnelEntered = level.isTunnel(tileAfterMoving) && !level.isTunnel(tileBeforeMoving) && !level.isTileCoveredByPortal(tileBeforeMoving);
-        moveInfo.tunnelLeft = !level.isTunnel(tileAfterMoving) && level.isTunnel(tileBeforeMoving)  && !level.isTileCoveredByPortal(tileAfterMoving);
+        moveInfo.tunnelEntered = level.isTunnel(tileAfterMoving) && !level.isTunnel(tileBeforeMoving) && !level.isTileInPortalSpace(tileBeforeMoving);
+        moveInfo.tunnelLeft = !level.isTunnel(tileAfterMoving) && level.isTunnel(tileBeforeMoving)  && !level.isTileInPortalSpace(tileAfterMoving);
 
         moveInfo.log(String.format("%5s (%.2f pixels)", dir, newVelocity.length()));
         if (moveInfo.tunnelEntered) { Logger.trace("{} entered tunnel", name()); }
