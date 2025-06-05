@@ -30,6 +30,8 @@ import static java.util.function.Predicate.not;
  */
 public class GameLevel {
 
+    private static Vector2f halfTileRightOf(Vector2i tile) { return Vector2f.of(tile.x() * TS + HTS, tile.y() * TS); }
+
     public static final byte MESSAGE_NONE = -1;
     public static final byte MESSAGE_READY = 0;
     public static final byte MESSAGE_GAME_OVER = 1;
@@ -38,14 +40,6 @@ public class GameLevel {
     //TODO should this be stored in world map instead of hardcoding?
     public static final int EMPTY_ROWS_OVER_MAZE  = 3;
     public static final int EMPTY_ROWS_BELOW_MAZE = 2;
-
-    /**
-     * @param tile a tile coordinate
-     * @return position in world (scaled by tile size) between given tile and right neighbor tile
-     */
-    private static Vector2f posHalfTileRightOf(Vector2i tile) {
-        return tile.scaled(TS).plus(HTS, 0).toVector2f();
-    }
 
     private final int number; // 1=first level
     private LevelData data;
@@ -100,31 +94,31 @@ public class GameLevel {
         if (pacTile == null) {
             throw new IllegalArgumentException("No Pac position stored in map");
         }
-        pacStartPosition = posHalfTileRightOf(pacTile);
+        pacStartPosition = halfTileRightOf(pacTile);
 
         Vector2i redGhostTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_RED_GHOST);
         if (redGhostTile == null) {
             throw new IllegalArgumentException("No red ghost position stored in map");
         }
-        ghostStartPositions[RED_GHOST_SHADOW] = posHalfTileRightOf(redGhostTile);
+        ghostStartPositions[RED_GHOST_SHADOW] = halfTileRightOf(redGhostTile);
 
         Vector2i pinkGhostTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_PINK_GHOST);
         if (pinkGhostTile == null) {
             throw new IllegalArgumentException("No pink ghost position stored in map");
         }
-        ghostStartPositions[PINK_GHOST_SPEEDY] = posHalfTileRightOf(pinkGhostTile);
+        ghostStartPositions[PINK_GHOST_SPEEDY] = halfTileRightOf(pinkGhostTile);
 
         Vector2i cyanGhostTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_CYAN_GHOST);
         if (cyanGhostTile == null) {
             throw new IllegalArgumentException("No cyan ghost position stored in map");
         }
-        ghostStartPositions[CYAN_GHOST_BASHFUL] = posHalfTileRightOf(cyanGhostTile);
+        ghostStartPositions[CYAN_GHOST_BASHFUL] = halfTileRightOf(cyanGhostTile);
 
         Vector2i orangeGhostTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_ORANGE_GHOST);
         if (orangeGhostTile == null) {
             throw new IllegalArgumentException("No orange ghost position stored in map");
         }
-        ghostStartPositions[ORANGE_GHOST_POKEY] = posHalfTileRightOf(orangeGhostTile);
+        ghostStartPositions[ORANGE_GHOST_POKEY] = halfTileRightOf(orangeGhostTile);
 
         ghostScatterTiles[RED_GHOST_SHADOW] = worldMap.getTerrainTileProperty(WorldMapProperty.POS_SCATTER_RED_GHOST,
             Vector2i.of(0, worldMap.numCols() - 3));
