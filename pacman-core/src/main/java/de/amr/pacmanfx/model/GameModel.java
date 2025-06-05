@@ -28,11 +28,11 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
  */
 public abstract class GameModel {
 
-    private final BooleanProperty cutScenesEnabledPy = new SimpleBooleanProperty(true);
     private final BooleanProperty playingPy = new SimpleBooleanProperty(false);
 
     protected GameLevel level;
     protected ScoreManager scoreManager;
+    protected boolean cutScenesEnabled = true;
 
     protected GameModel() {
         scoreManager = new DefaultScoreManager();
@@ -44,14 +44,17 @@ public abstract class GameModel {
     public abstract HuntingTimer huntingTimer();
     public abstract LevelCounter levelCounter();
     public abstract MapSelector mapSelector();
+    public abstract int cutSceneNumber(int levelNumber);
 
     public ScoreManager scoreManager() { return scoreManager; }
     public Optional<GateKeeper> gateKeeper() { return Optional.empty(); }
     public Optional<GameLevel> level() { return Optional.ofNullable(level); }
 
-    public BooleanProperty cutScenesEnabledProperty() { return cutScenesEnabledPy; }
     public BooleanProperty playingProperty() { return playingPy; }
     public boolean isPlaying() { return playingProperty().get(); }
+
+    public boolean cutScenesEnabled() { return  cutScenesEnabled; }
+    public void setCutScenesEnabled(boolean enabled) { cutScenesEnabled = enabled; };
 
     // Game lifecycle
 

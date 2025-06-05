@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.PY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
@@ -123,6 +124,39 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfiguration, Resou
     }
 
     @Override
+    public GameScene selectGameScene(GameModel game, GameState gameState) {
+        String sceneID = switch (gameState) {
+            case GameState.BOOT               -> "BootScene";
+            case GameState.SETTING_OPTIONS    -> "StartScene";
+            case GameState.INTRO              -> "IntroScene";
+            case GameState.INTERMISSION       -> {
+                if (optGameLevel().isEmpty()) {
+                    throw new IllegalStateException("Cannot determine cut scene, no game level available");
+                }
+                int levelNumber = theGameLevel().number();
+                int cutSceneNumber = theGame().cutSceneNumber(levelNumber);
+                if (cutSceneNumber == 0) {
+                    throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(levelNumber));
+                }
+                yield "CutScene" + game.cutSceneNumber(levelNumber);
+            }
+            case GameState.TESTING_CUT_SCENES -> {
+                if (optGameLevel().isEmpty()) {
+                    throw new IllegalStateException("Cannot determine cut scene, no game level available");
+                }
+                int levelNumber = theGameLevel().number();
+                int cutSceneNumber = gameState.<Integer>getProperty("intermissionTestNumber");
+                if (cutSceneNumber == 0) {
+                    throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(levelNumber));
+                }
+                yield "CutScene" + cutSceneNumber;
+            }
+            default -> PY_3D_ENABLED.get() ?  "PlayScene3D" : "PlayScene2D";
+        };
+        return scenesByID.get(sceneID);
+    }
+
+    @Override
     public Image appIcon() {
         return appIcon;
     }
@@ -165,19 +199,6 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfiguration, Resou
     @SuppressWarnings("unchecked")
     public <T extends GameSpriteSheet> T spriteSheet() {
         return (T) spriteSheet;
-    }
-
-    @Override
-    public GameScene selectGameScene(GameModel game, GameState gameState) {
-        String sceneID = switch (gameState) {
-            case GameState.BOOT               -> "BootScene";
-            case GameState.SETTING_OPTIONS    -> "StartScene";
-            case GameState.INTRO              -> "IntroScene";
-            case GameState.INTERMISSION       -> "CutScene" + game.level().map(GameLevel::cutSceneNumber).orElseThrow();
-            case GameState.TESTING_CUT_SCENES -> "CutScene" + gameState.<Integer>getProperty("intermissionTestNumber");
-            default -> PY_3D_ENABLED.get() ?  "PlayScene3D" : "PlayScene2D";
-        };
-        return scenesByID.get(sceneID);
     }
 
     @Override

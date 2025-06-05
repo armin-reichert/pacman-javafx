@@ -257,10 +257,10 @@ public class GameLevel3D {
         // Place level counter at top right maze corner
         double x = gameLevel.worldMap().numCols() * TS - 2 * TS;
         double y = 2 * TS;
-        root.getChildren().add(createLevelCounter3D(theGame().levelCounter(), x, y, 2 * TS));
+        root.getChildren().add(createLevelCounter3D(theGame().levelCounter(), x, y));
     }
 
-    private Node createLevelCounter3D(LevelCounter levelCounter, double x, double y, double spacing) {
+    private Node createLevelCounter3D(LevelCounter levelCounter, double x, double y) {
         GameSpriteSheet spriteSheet = theUIConfig().current().spriteSheet();
         var levelCounter3D = new Group();
         levelCounter3D.setTranslateX(x);
@@ -273,7 +273,7 @@ public class GameLevel3D {
 
             var cube = new Box(TS, TS, TS);
             cube.setMaterial(material);
-            cube.setTranslateX(-n * spacing);
+            cube.setTranslateX(-n * (double) 16);
             cube.setTranslateZ(-HTS);
 
             var spinning = new RotateTransition(Duration.seconds(6), cube);
@@ -361,7 +361,7 @@ public class GameLevel3D {
     }
 
     public Animation createLevelCompleteAnimation() {
-        levelCompleteAnimation = gameLevel.cutSceneNumber() != 0
+        levelCompleteAnimation = theGame().cutSceneNumber(gameLevel.number()) != 0
             ? levelTransformationBeforeIntermission(gameLevel.data().numFlashes())
             : levelTransformation(gameLevel.data().numFlashes());
         return levelCompleteAnimation;

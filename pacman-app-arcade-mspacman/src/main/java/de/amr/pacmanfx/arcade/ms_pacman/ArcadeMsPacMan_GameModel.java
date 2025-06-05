@@ -226,16 +226,20 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
     }
 
     @Override
-    public void createLevel(int levelNumber) {
-        WorldMap worldMap = mapSelector.findWorldMap(levelNumber);
-        level = new GameLevel(levelNumber, worldMap, createLevelData(levelNumber));
-        addHouse(level);
-        level.setCutSceneNumber(switch (levelNumber) {
+    public int cutSceneNumber(int levelNumber) {
+        return switch (levelNumber) {
             case 2 -> 1;
             case 5 -> 2;
             case 9, 13, 17 -> 3;
             default -> 0;
-        });
+        };
+    }
+
+    @Override
+    public void createLevel(int levelNumber) {
+        WorldMap worldMap = mapSelector.findWorldMap(levelNumber);
+        level = new GameLevel(levelNumber, worldMap, createLevelData(levelNumber));
+        addHouse(level);
         level.setGameOverStateTicks(150);
 
         var msPacMan = createMsPacMan();

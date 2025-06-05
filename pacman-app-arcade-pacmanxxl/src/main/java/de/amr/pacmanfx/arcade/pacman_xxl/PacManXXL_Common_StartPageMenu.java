@@ -270,7 +270,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         final boolean customMapsExist = !mapSelector.customMaps().isEmpty();
 
         state.play3D = PY_3D_ENABLED.get();
-        state.cutScenesEnabled = game.cutScenesEnabledProperty().get();
+        state.cutScenesEnabled = game.cutScenesEnabled();
         state.mapOrder = mapSelector.mapSelectionMode();
         logState();
 
@@ -315,7 +315,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
     private void startGame() {
         GameModel game = theGameController().game(state.gameVariant);
-        game.cutScenesEnabledProperty().set(state.cutScenesEnabled);
+        game.setCutScenesEnabled(state.cutScenesEnabled);
         var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();
         mapSelector.setMapSelectionMode(state.mapOrder);
         mapSelector.loadAllMaps();

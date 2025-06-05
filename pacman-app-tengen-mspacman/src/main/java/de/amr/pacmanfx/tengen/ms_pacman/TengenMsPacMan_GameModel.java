@@ -429,15 +429,19 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public void createLevel(int levelNumber) {
-        WorldMap worldMap = mapSelector.createWorldMapForLevel(mapCategory, levelNumber);
-        level = new GameLevel(levelNumber, worldMap, createLevelData());
-        level.setCutSceneNumber(switch (levelNumber) {
+    public int cutSceneNumber(int levelNumber) {
+         return switch (levelNumber) {
             case 2 -> 1;
             case 5 -> 2;
             case 9, 13, 17 -> 3;
             default -> levelNumber == LAST_LEVEL_NUMBER ? 4 : 0;
-        });
+        };
+    }
+
+    @Override
+    public void createLevel(int levelNumber) {
+        WorldMap worldMap = mapSelector.createWorldMapForLevel(mapCategory, levelNumber);
+        level = new GameLevel(levelNumber, worldMap, createLevelData());
         level.setGameOverStateTicks(420);
         addHouse(level);
 

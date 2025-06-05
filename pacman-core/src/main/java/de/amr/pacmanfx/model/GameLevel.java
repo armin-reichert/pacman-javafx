@@ -10,7 +10,6 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.FoodTile;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.model.actors.*;
 import org.tinylog.Logger;
@@ -21,7 +20,8 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
-import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
+import static de.amr.pacmanfx.lib.tilemap.TerrainTile.TUNNEL;
+import static de.amr.pacmanfx.lib.tilemap.TerrainTile.isBlocked;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -61,7 +61,6 @@ public class GameLevel {
     private int uneatenFoodCount;
 
     private boolean demoLevel;
-    private int cutSceneNumber;
 
     private Pac pac;
     private Ghost[] ghosts;
@@ -185,9 +184,6 @@ public class GameLevel {
 
     public void setGameOverStateTicks(int ticks) { gameOverStateTicks = ticks; }
     public int gameOverStateTicks() { return gameOverStateTicks; }
-
-    public void setCutSceneNumber(int number) { cutSceneNumber = number; }
-    public int cutSceneNumber() { return cutSceneNumber; }
 
     public void showMessage(byte message) { this.message = message; }
     public void clearMessage() { message = MESSAGE_NONE; }
