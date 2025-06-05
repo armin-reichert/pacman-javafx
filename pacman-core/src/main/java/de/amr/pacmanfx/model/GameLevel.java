@@ -240,7 +240,19 @@ public class GameLevel {
 
     public boolean isTileInsideWorld(Vector2i tile) { return !worldMap.outOfWorld(tile); }
 
-    public Stream<Vector2i> energizerTiles() { return Arrays.stream(energizerTiles); }
+    public Stream<Vector2i> neighborsOutsideWorld(Vector2i tile) {
+        requireNonNull(tile);
+        return Stream.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT)
+            .map(dir -> tile.plus(dir.vector()))
+            .filter(not(this::isTileInsideWorld));
+    }
+
+    public Stream<Vector2i> neighborsInsideWorld(Vector2i tile) {
+        requireNonNull(tile);
+        return Stream.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT)
+            .map(dir -> tile.plus(dir.vector()))
+            .filter(this::isTileInsideWorld);
+    }
 
     public Stream<Portal> portals() { return Arrays.stream(portals); }
 
@@ -266,10 +278,11 @@ public class GameLevel {
         if (worldMap.outOfWorld(tile) || isTileInHouseArea(tile) || isTileBlocked(tile)) {
             return false;
         }
-        long accessibleNeighborCount = 4;
-        accessibleNeighborCount -= tile.neighbors().filter(this::isTileInsideWorld).filter(this::isTileBlocked).count();
-        accessibleNeighborCount -= tile.neighbors().filter(this::isTileInsideWorld).filter(this::isDoorAt).count();
-        return accessibleNeighborCount >= 3;
+        int freeNeighbors = 4;
+        freeNeighbors -= (int) neighborsOutsideWorld(tile).count();
+        freeNeighbors -= (int) neighborsInsideWorld(tile).filter(this::isTileBlocked).count();
+        freeNeighbors -= (int) neighborsInsideWorld(tile).filter(this::isDoorAt).count();
+        return freeNeighbors >= 3;
     }
 
     // House
@@ -419,6 +432,8 @@ public class GameLevel {
     public boolean isFoodPosition(Vector2i tile) {
         return isTileInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) != FoodTile.EMPTY.code();
     }
+
+    public Stream<Vector2i> energizerTiles() { return Arrays.stream(energizerTiles); }
 
     public boolean isEnergizerPosition(Vector2i tile) {
         return isTileInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) == FoodTile.ENERGIZER.code();

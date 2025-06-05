@@ -4,8 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.lib;
 
-import java.util.stream.Stream;
-
 /**
  * Immutable int 2D vector.
  *
@@ -76,10 +74,6 @@ public record Vector2i(int x, int y) {
     }
 
     public double length() { return euclideanDist(Vector2i.ZERO); }
-
-    public Stream<Vector2i> neighbors() {
-        return Stream.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT).map(dir -> this.plus(dir.vector()));
-    }
 
     @Override
     public String toString() {
