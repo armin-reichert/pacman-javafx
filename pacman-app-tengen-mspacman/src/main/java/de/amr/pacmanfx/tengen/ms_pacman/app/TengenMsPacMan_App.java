@@ -25,7 +25,7 @@ public class TengenMsPacMan_App extends Application {
     @Override
     public void init() {
         PacManGames_Env.init();
-        theGameController().register(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
+        theGameController().registerGame(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
         theGameController().select(GameVariant.MS_PACMAN_TENGEN);
     }
 

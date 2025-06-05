@@ -41,11 +41,11 @@ public class PacManGames3dApp extends Application {
     public void init() {
         PacManGames_Env.init();
         xxlMapSelector = new PacManXXL_Common_MapSelector(CUSTOM_MAP_DIR);
-        theGameController().register(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameModel());
-        theGameController().register(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
-        theGameController().register(GameVariant.PACMAN, new ArcadePacMan_GameModel());
-        theGameController().register(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_GameModel(xxlMapSelector));
-        theGameController().register(GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_GameModel(xxlMapSelector));
+        theGameController().registerGame(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameModel());
+        theGameController().registerGame(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
+        theGameController().registerGame(GameVariant.PACMAN, new ArcadePacMan_GameModel());
+        theGameController().registerGame(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_GameModel(xxlMapSelector));
+        theGameController().registerGame(GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_GameModel(xxlMapSelector));
         theGameController().select(GameVariant.PACMAN);
     }
 

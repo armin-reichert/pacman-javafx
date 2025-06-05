@@ -32,16 +32,16 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameController  {
 
-    private final Map<GameVariant, GameModel> gameRegistry = new EnumMap<>(GameVariant.class);
+    private final Map<GameVariant, GameModel> knownGames = new EnumMap<>(GameVariant.class);
     private final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>();
     private final StateMachine<GameState, GameModel> stateMachine;
 
     public GameController() {
         stateMachine = new StateMachine<>(GameState.values()) {
-            @Override public GameModel context() { return game(); }
+            @Override public GameModel context() { return currentGame(); }
         };
         stateMachine.addStateChangeListener((oldState, newState) ->
-            theGameEventManager().publishEvent(new GameStateChangeEvent(game(), oldState, newState)));
+            theGameEventManager().publishEvent(new GameStateChangeEvent(currentGame(), oldState, newState)));
 
         gameVariantPy.addListener((py, ov, newGameVariant) -> {
             GameModel newGame = game(newGameVariant);
@@ -76,20 +76,20 @@ public class GameController  {
     @SuppressWarnings("unchecked")
     public <T extends GameModel> T game(GameVariant variant) {
         requireNonNull(variant);
-        if (gameRegistry.containsKey(variant)) {
-            return (T) gameRegistry.get(variant);
+        if (knownGames.containsKey(variant)) {
+            return (T) knownGames.get(variant);
         }
         throw new IllegalArgumentException("Game variant '%s' is not supported".formatted(variant));
     }
 
-    public void register(GameVariant variant, GameModel gameModel) {
-        gameRegistry.put(requireNonNull(variant), requireNonNull(gameModel));
+    public void registerGame(GameVariant variant, GameModel gameModel) {
+        knownGames.put(requireNonNull(variant), requireNonNull(gameModel));
     }
 
     /**
      * @return The game (model) registered for the currently selected game variant.
      */
-    public <GAME extends GameModel> GAME game() {
+    public <GAME extends GameModel> GAME currentGame() {
         return game(gameVariantPy.get());
     }
 

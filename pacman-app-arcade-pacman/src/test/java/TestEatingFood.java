@@ -13,7 +13,7 @@ public class TestEatingFood {
 
     @BeforeAll
     static void setup() {
-        theGameController().register(GameVariant.PACMAN, new ArcadePacMan_GameModel());
+        theGameController().registerGame(GameVariant.PACMAN, new ArcadePacMan_GameModel());
         theGameController().select(GameVariant.PACMAN);
     }
 

@@ -44,7 +44,7 @@ public class Globals {
     public static final File CUSTOM_MAP_DIR = new File(HOME_DIR, "maps");
 
     public static CoinMechanism           theCoinMechanism()    { return COIN_MECHANISM; }
-    public static GameModel               theGame()             { return GAME_CONTROLLER.game(); }
+    public static GameModel               theGame()             { return GAME_CONTROLLER.currentGame(); }
     public static GameController          theGameController()   { return GAME_CONTROLLER; }
     public static GameEventManager        theGameEventManager() { return GAME_EVENT_MANAGER; }
     public static Optional<GameLevel>     optGameLevel()        { return theGame().level(); }
