@@ -207,6 +207,11 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
                 gr().ctx().setFill(Color.RED);
                 gr().ctx().fillRect(x, y, size, 2);
             });
+            level.worldMap().tiles().filter(level::isIntersection).forEach(tile -> {
+                gr().ctx().setStroke(Color.GREEN);
+                gr().ctx().setLineWidth(1.5);
+                gr().ctx().strokeRect(scaled(tile.x() * TS + 1), scaled(tile.y() * TS + 1), scaled(TS - 2), scaled(TS - 2));
+            });
             gr().ctx().setFill(Color.YELLOW);
             gr().ctx().setFont(DEBUG_TEXT_FONT);
             String gameStateText = theGameState().name() + " (Tick %d)".formatted(theGameState().timer().tickCount());

@@ -263,12 +263,13 @@ public class GameLevel {
     }
 
     public boolean isIntersection(Vector2i tile) {
-        if (worldMap.outOfWorld(tile) || isTileInHouseArea(tile)) {
+        if (worldMap.outOfWorld(tile) || isTileInHouseArea(tile) || isTileBlocked(tile)) {
             return false;
         }
-        long numBlockedNeighbors = tile.neighbors().filter(this::isTileInsideWorld).filter(this::isTileBlocked).count();
-        long numDoorNeighbors = tile.neighbors().filter(this::isTileInsideWorld).filter(this::isDoorAt).count();
-        return numBlockedNeighbors + numDoorNeighbors < 2;
+        long accessibleNeighborCount = 4;
+        accessibleNeighborCount -= tile.neighbors().filter(this::isTileInsideWorld).filter(this::isTileBlocked).count();
+        accessibleNeighborCount -= tile.neighbors().filter(this::isTileInsideWorld).filter(this::isDoorAt).count();
+        return accessibleNeighborCount >= 3;
     }
 
     // House
