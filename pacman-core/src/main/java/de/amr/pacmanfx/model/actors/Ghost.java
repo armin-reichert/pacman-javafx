@@ -155,25 +155,26 @@ public abstract class Ghost extends MovingActor implements AnimatedActor {
 
     @Override
     public boolean canAccessTile(GameLevel level, Vector2i tile) {
+        requireNonNull(level);
         requireNonNull(tile);
-
-        // hunting ghosts cannot move up at certain tiles in Pac-Man game
-        if (state == GhostState.HUNTING_PAC) {
-            var currentTile = tile();
-            if (specialTerrainTiles.contains(tile)
-                    && level.worldMap().content(LayerID.TERRAIN, tile) == TerrainTile.ONE_WAY_DOWN.code()
-                    && currentTile.equals(tile.plus(DOWN.vector()))) {
-                Logger.debug("Hunting {} cannot move up to special tile {}", name, tile);
-                return false;
-            }
+        // Portal tiles are the only tiles outside the world map that can be accessed
+        if (!level.isInsideWorld(tile)) {
+            return level.isTileCoveredByPortal(tile);
+        }
+        // Hunting ghosts cannot enter some tiles in Pac-Man game from below
+        // TODO: this is game-specific and does not belong here
+        if (specialTerrainTiles.contains(tile)
+                && state == GhostState.HUNTING_PAC
+                && level.worldMap().content(LayerID.TERRAIN, tile) == TerrainTile.ONE_WAY_DOWN.code()
+                && tile.equals(tile().plus(UP.vector()))
+        ) {
+            Logger.debug("Hunting {} cannot move up to special tile {}", name, tile);
+            return false;
         }
         if (level.isDoorAt(tile)) {
             return inAnyOfStates(GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE);
         }
-        if (level.isInsideWorld(tile)) {
-            return !level.isBlockedTile(tile);
-        }
-        return level.isTileCoveredByPortal(tile);
+        return !level.isBlockedTile(tile);
     }
 
     @Override
