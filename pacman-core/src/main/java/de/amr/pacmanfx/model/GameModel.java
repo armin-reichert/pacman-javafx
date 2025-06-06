@@ -243,6 +243,7 @@ public abstract class GameModel {
     }
 
     // Generic property store
+    // TODO remove, is only used by cutscene tests
 
     private Map<String, Object> propertyMap;
 
