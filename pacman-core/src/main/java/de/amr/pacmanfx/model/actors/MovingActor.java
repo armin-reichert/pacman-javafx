@@ -274,19 +274,6 @@ public abstract class MovingActor extends Actor {
         tryMoving(level);
     }
 
-    private void tryTeleport(GameLevel level) {
-        if (!canTeleport) {
-            return;
-        }
-        Vector2i currentTile = tile();
-        for (Portal portal : level.portals().toList()) {
-            tryTeleport(currentTile, portal);
-            if (moveInfo.teleported) {
-                return;
-            }
-        }
-    }
-
     private void tryTeleport(Vector2i currentTile, Portal portal) {
         var oldX = x;
         var oldY = y;
@@ -310,7 +297,14 @@ public abstract class MovingActor extends Actor {
     public void tryMoving(GameLevel level) {
         final Vector2i currentTile = tile();
         moveInfo.clear();
-        tryTeleport(level);
+        if (canTeleport) {
+            for (Portal portal : level.portals().toList()) {
+                tryTeleport(currentTile, portal);
+                if (moveInfo.teleported) {
+                    break;
+                }
+            }
+        }
         if (!moveInfo.teleported) {
             if (gotReverseCommand && canReverse()) {
                 setWishDir(moveDir.opposite());
