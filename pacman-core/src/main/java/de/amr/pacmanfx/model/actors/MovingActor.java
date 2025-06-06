@@ -257,8 +257,9 @@ public abstract class MovingActor extends Actor {
     }
 
     /**
-     * Lets a actor move towards the given target tile.
+     * Lets an actor move towards the given target tile.
      *
+     * @param level game level
      * @param targetTile target tile this actor tries to reach
      */
     public void tryMovingTowardsTargetTile(GameLevel level, Vector2i targetTile) {

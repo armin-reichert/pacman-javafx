@@ -8,8 +8,8 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_DYING;
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.*;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createSpriteAnimation;
 
@@ -26,8 +26,8 @@ public class TengenMsPacMan_PacAnimationMap extends SpriteAnimationMap {
 
     public TengenMsPacMan_PacAnimationMap(TengenMsPacMan_SpriteSheet ss) {
         super(ss);
-        set(ANIM_ANY_PAC_DYING,           createSpriteAnimation().sprites(ss.pacDyingSprites()).frameTicks(8).end());
-        set(ANIM_ANY_PAC_MUNCHING,        createSpriteAnimation().sprites(MS_PAC_MUNCHING_SPRITES_LEFT).endless());
+        set(ANIM_PAC_DYING,           createSpriteAnimation().sprites(ss.pacDyingSprites()).frameTicks(8).end());
+        set(ANIM_PAC_MUNCHING,        createSpriteAnimation().sprites(MS_PAC_MUNCHING_SPRITES_LEFT).endless());
 
         set(ANIM_MS_PAC_MAN_BOOSTER,      createSpriteAnimation().sprites(MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER).endless());
         set(ANIM_MS_PAC_MAN_WAVING_HAND,  createSpriteAnimation().sprites(MS_PAC_WAVING_HAND).frameTicks(8).endless());
@@ -49,7 +49,7 @@ public class TengenMsPacMan_PacAnimationMap extends SpriteAnimationMap {
     @Override
     protected void updateActorSprites(Actor actor) {
         if (actor instanceof Pac msPacMan) {
-            if (isCurrentAnimationID(ANIM_ANY_PAC_MUNCHING)) {
+            if (isCurrentAnimationID(ANIM_PAC_MUNCHING)) {
                 currentAnimation().setSprites(MS_PAC_MUNCHING_SPRITES_LEFT);
             }
             if (isCurrentAnimationID(ANIM_MS_PAC_MAN_BOOSTER)) {

@@ -15,7 +15,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.theGame;
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -87,7 +87,7 @@ public class Pac extends MovingActor implements AnimatedActor {
         restingTicks = 0;
         starvingTicks = 0;
         corneringSpeedUp = 1.5f; // no real cornering implementation but better than nothing
-        selectAnimation(ANIM_ANY_PAC_MUNCHING);
+        selectAnimation(ANIM_PAC_MUNCHING);
     }
 
     public boolean isImmune() {
@@ -143,7 +143,7 @@ public class Pac extends MovingActor implements AnimatedActor {
         setSpeed(0);
         setRestingTicks(INDEFINITELY);
         stopAnimation();
-        selectAnimation(ANIM_ANY_PAC_MUNCHING);
+        selectAnimation(ANIM_PAC_MUNCHING);
         resetAnimation();
     }
 

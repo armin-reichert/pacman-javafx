@@ -32,8 +32,8 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.Bonus.STATE_EATEN;
 import static de.amr.pacmanfx.model.actors.Bonus.STATE_EDIBLE;
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_DYING;
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_MapRepository.strangeMap15Sprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationMap.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.*;
@@ -101,12 +101,12 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             SpriteAnimation animation = spriteAnimations.currentAnimation();
             if (animation != null) {
                 switch (spriteAnimations.selectedAnimationID()) {
-                    case ANIM_ANY_PAC_MUNCHING,
+                    case ANIM_PAC_MUNCHING,
                          ANIM_PAC_MAN_MUNCHING,
                          ANIM_MS_PAC_MAN_BOOSTER,
                          ANIM_PAC_MAN_BOOSTER,
                          ANIM_JUNIOR -> drawMovingActor(pac, pac.moveDir(), animation.currentSprite());
-                    case ANIM_ANY_PAC_DYING -> {
+                    case ANIM_PAC_DYING -> {
                         Direction dir = Direction.UP;
                         if (animation.frameIndex() < 11) {
                             dir = switch (animation.frameIndex() % 4) {

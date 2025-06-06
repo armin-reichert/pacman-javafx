@@ -17,7 +17,7 @@ import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createMs
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_PacAnimationMap.PAC_MAN_MUNCHING;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 
 /**
@@ -116,7 +116,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
         pacMan.playAnimation(PAC_MAN_MUNCHING);
 
         msPacMan.setMoveDir(Direction.RIGHT);
-        msPacMan.playAnimation(ANIM_ANY_PAC_MUNCHING);
+        msPacMan.playAnimation(ANIM_PAC_MUNCHING);
 
         setSceneState(STATE_CHASING, TickTimer.INDEFINITE);
     }

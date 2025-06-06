@@ -9,8 +9,8 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_DYING;
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createSpriteAnimation;
 
 public class ArcadeMsPacMan_PacAnimationMap extends SpriteAnimationMap {
@@ -19,8 +19,8 @@ public class ArcadeMsPacMan_PacAnimationMap extends SpriteAnimationMap {
 
     public ArcadeMsPacMan_PacAnimationMap(ArcadeMsPacMan_SpriteSheet ss) {
         super(ss);
-        set(ANIM_ANY_PAC_MUNCHING, createSpriteAnimation().sprites(ss.pacMunchingSprites(Direction.LEFT)).endless());
-        set(ANIM_ANY_PAC_DYING,    createSpriteAnimation().sprites(ss.pacDyingSprites()).frameTicks(8).end());
+        set(ANIM_PAC_MUNCHING, createSpriteAnimation().sprites(ss.pacMunchingSprites(Direction.LEFT)).endless());
+        set(ANIM_PAC_DYING,    createSpriteAnimation().sprites(ss.pacDyingSprites()).frameTicks(8).end());
         set(PAC_MAN_MUNCHING,      createSpriteAnimation().sprites(ss.mrPacManMunchingSprites(Direction.LEFT)).frameTicks(2).endless());
     }
 
@@ -33,7 +33,7 @@ public class ArcadeMsPacMan_PacAnimationMap extends SpriteAnimationMap {
     protected void updateActorSprites(Actor actor) {
         if (actor instanceof Pac pac) {
             switch (currentAnimationID) {
-                case ANIM_ANY_PAC_MUNCHING -> currentAnimation().setSprites(spriteSheet().pacMunchingSprites(pac.moveDir()));
+                case ANIM_PAC_MUNCHING -> currentAnimation().setSprites(spriteSheet().pacMunchingSprites(pac.moveDir()));
                 case PAC_MAN_MUNCHING -> currentAnimation().setSprites(spriteSheet().mrPacManMunchingSprites(pac.moveDir()));
             }
         }

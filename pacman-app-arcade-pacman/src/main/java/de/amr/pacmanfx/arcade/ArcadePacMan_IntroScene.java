@@ -259,7 +259,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 scene.pacMan.setMoveDir(Direction.LEFT);
                 scene.pacMan.setSpeed(CHASING_SPEED);
                 scene.pacMan.show();
-                scene.pacMan.playAnimation(ANIM_ANY_PAC_MUNCHING);
+                scene.pacMan.playAnimation(ANIM_PAC_MUNCHING);
                 scene.ghosts.forEach(ghost -> {
                     ghost.setState(GhostState.HUNTING_PAC);
                     ghost.setPosition(scene.pacMan.x() + 16 * (ghost.personality() + 1), scene.pacMan.y());
@@ -287,7 +287,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     });
                 } else if (sceneTimer.tickCount() == 240) {
                     // Pac-Man moves again a bit
-                    scene.pacMan.playAnimation(ANIM_ANY_PAC_MUNCHING);
+                    scene.pacMan.playAnimation(ANIM_PAC_MUNCHING);
                     scene.pacMan.setSpeed(CHASING_SPEED);
                 } else if (sceneTimer.tickCount() == 244) {
                     scene.sceneController.changeState(CHASING_GHOSTS);

@@ -14,7 +14,7 @@ import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationMap.*;
@@ -84,7 +84,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             msPacMan.setMoveDir(Direction.LEFT);
             msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
             msPacMan.setSpeed(1f);
-            msPacMan.playAnimation(ANIM_ANY_PAC_MUNCHING);
+            msPacMan.playAnimation(ANIM_PAC_MUNCHING);
             msPacMan.show();
         }
         else if (t == 230) {
@@ -97,7 +97,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         }
         else if (t == 400) {
             pacMan.playAnimation(ANIM_PAC_MAN_MUNCHING);
-            msPacMan.playAnimation(ANIM_ANY_PAC_MUNCHING);
+            msPacMan.playAnimation(ANIM_PAC_MUNCHING);
         }
         else if (t == 520) {
             pacMan.selectAnimation(ANIM_PAC_MAN_WAVING_HAND);

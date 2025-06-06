@@ -23,7 +23,7 @@ import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PI
 import static de.amr.pacmanfx.arcade.ArcadePalette.*;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theUIConfig;
@@ -88,7 +88,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
         var spriteSheet = (ArcadeMsPacMan_SpriteSheet) theUIConfig().current().spriteSheet();
         msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimationMap(spriteSheet));
-        msPacMan.selectAnimation(ANIM_ANY_PAC_MUNCHING);
+        msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
         for (Ghost ghost : ghosts) {
             ghost.setAnimations(new ArcadeMsPacMan_GhostAnimationMap(spriteSheet, ghost.personality()));
             ghost.selectAnimation(ANIM_GHOST_NORMAL);
@@ -180,7 +180,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 scene.msPacMan.setMoveDir(Direction.LEFT);
                 scene.msPacMan.setSpeed(SPEED);
                 scene.msPacMan.setVisible(true);
-                scene.msPacMan.playAnimation(ANIM_ANY_PAC_MUNCHING);
+                scene.msPacMan.playAnimation(ANIM_PAC_MUNCHING);
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setPosition(TS * 33.5f, TS * 20);
                     ghost.setMoveAndWishDir(Direction.LEFT);

@@ -16,11 +16,8 @@ import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_DYING;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 
 /**
  * States of the Pac-Man games state machine.
@@ -277,7 +274,7 @@ public enum GameState implements FsmState<GameModel> {
             else if (timer.tickCount() == TICK_HIDE_GHOSTS) {
                 theGameLevel().ghosts().forEach(Ghost::hide);
                 //TODO this does not belong here
-                theGameLevel().pac().selectAnimation(ANIM_ANY_PAC_DYING);
+                theGameLevel().pac().selectAnimation(ANIM_PAC_DYING);
                 theGameLevel().pac().resetAnimation();
             }
             else if (timer.tickCount() == TICK_START_PAC_ANIMATION) {

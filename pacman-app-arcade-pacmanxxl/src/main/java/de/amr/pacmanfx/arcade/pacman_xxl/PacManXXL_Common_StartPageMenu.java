@@ -131,7 +131,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
                 case PACMAN_XXL -> pac.setAnimations(new ArcadePacMan_PacAnimationMap(config.spriteSheet()));
                 case MS_PACMAN_XXL -> pac.setAnimations(new ArcadeMsPacMan_PacAnimationMap(config.spriteSheet()));
             }
-            pac.playAnimation(ANIM_ANY_PAC_MUNCHING);
+            pac.playAnimation(ANIM_PAC_MUNCHING);
 
             for (Ghost ghost : ghosts) {
                 if (ghost.animations().isEmpty()) {

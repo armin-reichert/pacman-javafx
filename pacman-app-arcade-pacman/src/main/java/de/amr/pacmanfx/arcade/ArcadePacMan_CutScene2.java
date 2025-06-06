@@ -19,7 +19,7 @@ import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.createPac;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.createRedGhost;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_MUNCHING;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 
@@ -78,7 +78,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 pac.placeAtTile(28, 20, 0, 0);
                 pac.setMoveDir(Direction.LEFT);
                 pac.setSpeed(1.15f);
-                pac.playAnimation(ANIM_ANY_PAC_MUNCHING);
+                pac.playAnimation(ANIM_PAC_MUNCHING);
                 pac.show();
             }
             case ANIMATION_START + 111 -> {
