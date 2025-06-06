@@ -56,8 +56,13 @@ public class StartPagesView implements PacManGames_View {
         }
     }
 
-    public static Node createStartButton(Pos alignment, double y) {
-        Node button = createFancyButton(theAssets().arcadeFontAtSize(30), theAssets().text("play_button"), theUI()::showGameView);
+    public static Node createStartButton(Pos alignment, double y, GameAction action) {
+        Node button = createFancyButton(theAssets().arcadeFontAtSize(30), theAssets().text("play_button"),
+            () -> {
+                if (action.isEnabled()) {
+                    action.execute();
+                }
+            });
         button.setTranslateY(y);
         StackPane.setAlignment(button, alignment);
         return button;
