@@ -14,6 +14,8 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import org.tinylog.Logger;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalInt;
 
@@ -238,5 +240,25 @@ public abstract class GameModel {
 
     public void addLives(int n) {
         setLifeCount(lifeCount() + n);
+    }
+
+    // Generic property store
+
+    private Map<String, Object> propertyMap;
+
+    @SuppressWarnings("unchecked")
+    public <T> T getProperty(String key) {
+        return (T) propertyMap().get(key);
+    }
+
+    public void setProperty(String key, Object value) {
+        propertyMap().put(key, value);
+    }
+
+    protected Map<String, Object> propertyMap() {
+        if (propertyMap == null) {
+            propertyMap = new HashMap<>(4);
+        }
+        return propertyMap;
     }
 }

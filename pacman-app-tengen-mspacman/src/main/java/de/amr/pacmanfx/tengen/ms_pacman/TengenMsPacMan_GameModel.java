@@ -242,6 +242,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public void prepareForNewGame() {
         setLifeCount(initialLifeCount());
         level = null;
+        propertyMap().clear();
         levelCounter.clear();
         playingProperty().set(false);
         boosterActive = false;

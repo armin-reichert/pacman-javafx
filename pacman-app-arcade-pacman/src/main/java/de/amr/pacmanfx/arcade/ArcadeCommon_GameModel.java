@@ -76,6 +76,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
         playingProperty().set(false);
         setLifeCount(initialLifeCount());
         level = null;
+        propertyMap().clear();
         scoreManager.loadHighScore();
         scoreManager.resetScore();
         gateKeeper.reset();

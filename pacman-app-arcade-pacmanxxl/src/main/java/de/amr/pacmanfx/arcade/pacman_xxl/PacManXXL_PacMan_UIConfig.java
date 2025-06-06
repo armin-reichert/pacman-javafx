@@ -175,17 +175,7 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfiguration {
                 }
                 yield "CutScene" + game.cutSceneNumber(levelNumber).getAsInt();
             }
-            case GameState.TESTING_CUT_SCENES -> {
-                if (optGameLevel().isEmpty()) {
-                    throw new IllegalStateException("Cannot determine cut scene, no game level available");
-                }
-                int levelNumber = theGameLevel().number();
-                int cutSceneNumber = gameState.<Integer>getProperty("intermissionTestNumber");
-                if (cutSceneNumber == 0) {
-                    throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(levelNumber));
-                }
-                yield "CutScene" + cutSceneNumber;
-            }
+            case GameState.TESTING_CUT_SCENES -> "CutScene" + game.<Integer>getProperty("intermissionTestNumber");
             default -> PY_3D_ENABLED.get() ?  "PlayScene3D" : "PlayScene2D";
         };
         return scenesByID.get(sceneID);

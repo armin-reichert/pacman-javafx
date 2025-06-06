@@ -411,12 +411,12 @@ public enum GameState implements FsmState<GameModel> {
                 theGameLevel().blinking().reset();
             }
             else if (timer().atSecond(9.5)) {
-                setProperty("mazeFlashing", true); //TODO fix
+                game.setProperty("mazeFlashing", true); //TODO fix
                 theGameLevel().blinking().setStartPhase(Pulse.OFF);
                 theGameLevel().blinking().restart(2 * theGameLevel().data().numFlashes());
             }
             else if (timer().atSecond(12.0)) {
-                setProperty("mazeFlashing", false); //TODO fix
+                game.setProperty("mazeFlashing", false); //TODO fix
                 theGameLevel().blinking().reset();
                 theGameLevel().pac().stopAndShowInFullBeauty();
                 theGameLevel().bonus().ifPresent(Bonus::setInactive);
@@ -499,16 +499,16 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             timer.restartIndefinitely();
-            setProperty("intermissionTestNumber", 1);
+            game.setProperty("intermissionTestNumber", 1);
         }
 
         @Override
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
-                int number = this.<Integer>getProperty("intermissionTestNumber");
+                int number = game.<Integer>getProperty("intermissionTestNumber");
                 int lastCutSceneNumber = theGameController().isSelected(GameVariant.MS_PACMAN_TENGEN) ? 4 : 3;
                 if (number < lastCutSceneNumber) {
-                    setProperty("intermissionTestNumber", number + 1);
+                    game.setProperty("intermissionTestNumber", number + 1);
                     timer.restartIndefinitely();
                     //TODO find another solution and get rid of this event type
                     theGameEventManager().publishEvent(game, GameEventType.UNSPECIFIED_CHANGE);
@@ -526,23 +526,4 @@ public enum GameState implements FsmState<GameModel> {
 
     final TickTimer timer = new TickTimer("GameState-Timer-" + name());
 
-    //TODO replace property map by something leaner
-
-    private Map<String, Object> propertyMap;
-
-    @SuppressWarnings("unchecked")
-    public <T> T getProperty(String key) {
-        return (T) propertyMap().get(key);
-    }
-
-    public void setProperty(String key, Object value) {
-        propertyMap().put(key, value);
-    }
-
-    private Map<String, Object> propertyMap() {
-        if (propertyMap == null) {
-            propertyMap = new HashMap<>(4);
-        }
-        return propertyMap;
-    }
 }
