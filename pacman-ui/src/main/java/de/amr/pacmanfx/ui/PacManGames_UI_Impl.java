@@ -39,21 +39,64 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * User interface for all Pac-Man game variants.
- *
- * @author Armin Reichert
  */
 public class PacManGames_UI_Impl implements PacManGames_UI {
 
     private final ObjectProperty<PacManGames_View> viewPy = new SimpleObjectProperty<>();
+    private final StackPane root = new StackPane();
 
     private Stage stage;
     private Scene mainScene;
-    private final StackPane root = new StackPane();
-
     private TileMapEditor editor;
     private EditorView editorView;
     private GameView gameView;
     private StartPagesView startPagesView;
+
+    private void createMainScene(double width, double height) {
+        mainScene = new Scene(root, width, height);
+        mainScene.widthProperty() .addListener((py,ov,nv) -> gameView.resize(mainScene));
+        mainScene.heightProperty().addListener((py,ov,nv) -> gameView.resize(mainScene));
+        mainScene.addEventFilter(KeyEvent.KEY_PRESSED, theKeyboard()::onKeyPressed);
+        mainScene.addEventFilter(KeyEvent.KEY_RELEASED, theKeyboard()::onKeyReleased);
+        mainScene.setOnKeyPressed(e -> {
+            if (KEY_FULLSCREEN.match(e)) {
+                stage.setFullScreen(true);
+            }
+            else if (KEY_MUTE.match(e)) {
+                theSound().toggleMuted();
+            }
+            else if (KEY_OPEN_EDITOR.match(e)) {
+                showEditorView();
+            }
+            else {
+                currentView().handleKeyboardInput();
+            }
+        });
+    }
+
+    private void createMapEditor() {
+        editor = new TileMapEditor(stage);
+        var miQuit = new MenuItem(theAssets().text("back_to_game"));
+        miQuit.setOnAction(e -> {
+            editor.stop();
+            editor.executeWithCheckForUnsavedChanges(this::showStartView);
+        });
+        editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miQuit);
+        editor.init(CUSTOM_MAP_DIR);
+    }
+
+    private void createMapEditorView() {
+        editorView = new EditorView(editor);
+    }
+
+    private void createStartPagesView() {
+        startPagesView = new StartPagesView();
+        startPagesView.setBackground(theAssets().background("background.scene"));
+    }
+
+    private void createGameView() {
+        gameView = new GameView(this);
+    }
 
     private void doSimulationStepAndUpdateGameScene() {
         try {
@@ -88,30 +131,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         newView.layoutRoot().requestFocus();
         stage.titleProperty().bind(newView.title());
         theGameEventManager().addEventListener(newView);
-    }
-
-    private void createMainScene(double width, double height) {
-        mainScene = new Scene(root, width, height);
-        mainScene.widthProperty() .addListener((py,ov,nv) -> gameView.resize(mainScene));
-        mainScene.heightProperty().addListener((py,ov,nv) -> gameView.resize(mainScene));
-        mainScene.addEventFilter(KeyEvent.KEY_PRESSED, theKeyboard()::onKeyPressed);
-        mainScene.addEventFilter(KeyEvent.KEY_RELEASED, theKeyboard()::onKeyReleased);
-        mainScene.setOnKeyPressed(this::onKeyPressed);
-    }
-
-    private void onKeyPressed(KeyEvent keyPress) {
-        if (KEY_FULLSCREEN.match(keyPress)) {
-            stage.setFullScreen(true);
-        }
-        else if (KEY_MUTE.match(keyPress)) {
-            theSound().toggleMuted();
-        }
-        else if (KEY_OPEN_EDITOR.match(keyPress)) {
-            showEditorView();
-        }
-        else {
-            currentView().handleKeyboardInput();
-        }
     }
 
     private Pane createIconBox(Node... icons) {
@@ -152,30 +171,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         parent.getChildren().addAll(iconPaused, iconBox);
         StackPane.setAlignment(iconPaused, Pos.CENTER);
         StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
-    }
-
-    private void createMapEditor() {
-        editor = new TileMapEditor(stage);
-        var miQuit = new MenuItem(theAssets().text("back_to_game"));
-        miQuit.setOnAction(e -> {
-            editor.stop();
-            editor.executeWithCheckForUnsavedChanges(this::showStartView);
-        });
-        editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miQuit);
-        editor.init(CUSTOM_MAP_DIR);
-    }
-
-    private void createMapEditorView() {
-        editorView = new EditorView(editor);
-    }
-
-    private void createStartPagesView() {
-        startPagesView = new StartPagesView();
-        startPagesView.setBackground(theAssets().background("background.scene"));
-    }
-
-    private void createGameView() {
-        gameView = new GameView(this);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
