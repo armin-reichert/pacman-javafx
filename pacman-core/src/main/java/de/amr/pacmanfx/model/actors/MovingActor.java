@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Portal;
 import org.tinylog.Logger;
 
+import java.util.List;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.HTS;
@@ -25,9 +26,6 @@ import static java.util.Objects.requireNonNull;
  * @author Armin Reichert
  */
 public abstract class MovingActor extends Actor {
-
-    /** Order in which directions are selected when navigation decision is met. */
-    private static final Direction[] DIRECTION_PRIORITY = {UP, LEFT, DOWN, RIGHT};
 
     protected final MoveResult moveInfo = new MoveResult();
 
@@ -229,39 +227,33 @@ public abstract class MovingActor extends Actor {
         return newTileEntered;
     }
 
-    private Optional<Direction> computeTargetDirection(GameLevel level, Vector2i currentTile, Vector2i targetTile) {
-        Direction targetDir = null;
+    public void navigateTowardsTarget(GameLevel level) {
+        requireNonNull(level);
+        if (!newTileEntered && moveInfo.moved || targetTile == null) {
+            return; // we don't need no navigation, dim dit didit didit...
+        }
+        final Vector2i currentTile = tile();
+        if (level.isTileInPortalSpace(currentTile)) {
+            return;
+        }
+        Direction candidateDir = null;
         double minDistToTarget = Double.MAX_VALUE;
-        for (Direction dir : DIRECTION_PRIORITY) {
+        // Order in which directions are selected when navigation decision is met.
+        for (Direction dir : List.of(UP, LEFT, DOWN, RIGHT)) {
             if (dir == moveDir.opposite()) {
                 continue; // reversing the move direction is not allowed  (except to get out of dead-ends, see below)
             }
-            Vector2i neighborTile = currentTile.plus(dir.vector());
+            final Vector2i neighborTile = currentTile.plus(dir.vector());
             if (canAccessTile(level, neighborTile)) {
                 double dist = neighborTile.euclideanDist(targetTile);
                 if (dist < minDistToTarget) {
                     minDistToTarget = dist;
-                    targetDir = dir;
+                    candidateDir = dir;
                 }
             }
         }
-        if (targetDir == null) {
-            targetDir = moveDir.opposite(); // to get out of dead ends
-        }
-        return Optional.ofNullable(targetDir);
-    }
-
-    /**
-     * Sets the new wish direction for reaching the target tile.
-     */
-    public void navigateTowardsTarget(GameLevel level) {
-        if (!newTileEntered && moveInfo.moved || targetTile == null) {
-            return; // we don't need no navigation, dim dit didit didit...
-        }
-        Vector2i currentTile = tile();
-        if (!level.isTileInPortalSpace(currentTile)) {
-            computeTargetDirection(level, currentTile, targetTile).ifPresent(this::setWishDir);
-        }
+        // if not directory could be determined, reverse move direction (leave dead-end)
+        setWishDir(candidateDir != null ? candidateDir : moveDir.opposite());
     }
 
     /**
