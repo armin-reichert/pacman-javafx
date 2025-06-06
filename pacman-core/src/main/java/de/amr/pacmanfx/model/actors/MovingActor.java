@@ -120,6 +120,12 @@ public abstract class MovingActor extends Actor {
         newTileEntered = !tile().equals(prevTile);
     }
 
+    /**
+     * Places this actor exactly at the given tile coordinate. Updates the <code>newTileEntered</code> state.
+     *
+     * @param tx tile x-coordinate (grid column)
+     * @param ty tile y-coordinate (grid row)
+     */
     public void placeAtTile(int tx, int ty) {
         placeAtTile(tx, ty, 0, 0);
     }
