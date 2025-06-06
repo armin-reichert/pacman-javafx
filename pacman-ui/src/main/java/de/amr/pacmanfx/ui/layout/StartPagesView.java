@@ -6,19 +6,25 @@ package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.uilib.GameAction;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
@@ -27,7 +33,6 @@ import java.util.*;
 
 import static de.amr.pacmanfx.ui.PacManGames_Actions.TOGGLE_PAUSED;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
-import static de.amr.pacmanfx.uilib.Ufx.createRoundedButton;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -35,9 +40,42 @@ import static java.util.Objects.requireNonNull;
  */
 public class StartPagesView implements PacManGames_View {
 
-    private static Color START_BUTTON_BACKGROUND_COLOR = Color.rgb(0, 155, 252, 0.7);
-    private static Color START_BUTTON_FILL_COLOR = Color.WHITE;
+    //TODO make this into a normal button
+    private static Node createRoundedButton(String buttonText, Font font, Color bgColor, Color fillColor, Runnable action) {
+        var shadow = new DropShadow();
+        shadow.setOffsetY(3.0f);
+        shadow.setColor(Color.color(0.2f, 0.2f, 0.2f));
 
+        var text = new Text();
+        text.setFill(fillColor);
+        text.setFont(font);
+        text.setText(buttonText);
+        text.setEffect(shadow);
+
+        var button = new BorderPane(text);
+        button.setCursor(Cursor.HAND);
+        button.setMaxSize(200, 60);
+        button.setPadding(new Insets(5, 5, 5, 5));
+        button.setBackground(Ufx.coloredRoundedBackground(bgColor, 20));
+        button.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+            action.run();
+            e.consume();
+        });
+
+        return button;
+    }
+
+    public static Node createStartButton(Pos alignment, double y, GameAction action) {
+        Node button = createRoundedButton(
+            theAssets().text("play_button"),
+            theAssets().arcadeFontAtSize(30),
+            Color.rgb(0, 155, 252, 0.7), Color.WHITE,
+            () -> { if (action.isEnabled()) action.execute(); }
+        );
+        button.setTranslateY(y);
+        StackPane.setAlignment(button, alignment);
+        return button;
+    }
 
     private static class StartPagesCarousel extends Carousel {
         @Override
@@ -58,18 +96,6 @@ public class StartPagesView implements PacManGames_View {
             StackPane.setAlignment(box, dir == Direction.LEFT ? Pos.CENTER_LEFT : Pos.CENTER_RIGHT);
             return box;
         }
-    }
-
-    public static Node createStartButton(Pos alignment, double y, GameAction action) {
-        Node button = createRoundedButton(
-            theAssets().text("play_button"),
-            theAssets().arcadeFontAtSize(30),
-            START_BUTTON_BACKGROUND_COLOR, START_BUTTON_FILL_COLOR,
-            () -> { if (action.isEnabled()) action.execute(); }
-        );
-        button.setTranslateY(y);
-        StackPane.setAlignment(button, alignment);
-        return button;
     }
 
     private final GameAction actionSelectGamePage = new GameAction() {

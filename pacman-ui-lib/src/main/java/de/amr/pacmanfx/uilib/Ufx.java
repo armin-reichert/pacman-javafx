@@ -13,13 +13,9 @@ import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.geometry.Insets;
-import javafx.scene.Cursor;
-import javafx.scene.Node;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.MenuItem;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -328,31 +324,4 @@ public interface Ufx {
         );
         return exchangeColors(colorChanges, source);
     }
-
-    //TODO make this into a normal styled button?
-    static Node createRoundedButton(String text, Font font, Color bgColor, Color fillColor, Runnable action) {
-        var buttonText = new Text();
-        buttonText.setFill(fillColor);
-        buttonText.setFont(font);
-        buttonText.setText(text);
-
-        var shadow = new DropShadow();
-        shadow.setOffsetY(3.0f);
-        shadow.setColor(Color.color(0.2f, 0.2f, 0.2f));
-        buttonText.setEffect(shadow);
-
-        var pane = new BorderPane(buttonText);
-        pane.setCursor(Cursor.HAND);
-        pane.setMaxSize(200, 60);
-        pane.setPadding(new Insets(5, 5, 5, 5));
-        pane.setBackground(coloredRoundedBackground(bgColor, 20));
-
-        pane.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            action.run();
-            e.consume();
-        });
-
-        return pane;
-    }
-
 }
