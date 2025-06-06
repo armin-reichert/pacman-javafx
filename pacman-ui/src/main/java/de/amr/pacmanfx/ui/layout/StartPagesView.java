@@ -40,7 +40,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class StartPagesView implements PacManGames_View {
 
-    private static class FancyButton extends BorderPane {
+    public static class FancyButton extends BorderPane {
 
         private GameAction action;
 
@@ -71,12 +71,11 @@ public class StartPagesView implements PacManGames_View {
         }
     }
 
-    public static Node createStartButton(Pos alignment, double y, GameAction action) {
+    public static FancyButton createStartButton(Pos alignment, double y) {
         var button = new FancyButton(theAssets().text("play_button"), theAssets().arcadeFontAtSize(30),
             Color.rgb(0, 155, 252, 0.7), Color.WHITE);
         button.setTranslateY(y);
         StackPane.setAlignment(button, alignment);
-        button.setAction(action);
         return button;
     }
 
