@@ -40,40 +40,43 @@ import static java.util.Objects.requireNonNull;
  */
 public class StartPagesView implements PacManGames_View {
 
-    //TODO make this into a normal button
-    private static Node createRoundedButton(String buttonText, Font font, Color bgColor, Color fillColor, Runnable action) {
-        var shadow = new DropShadow();
-        shadow.setOffsetY(3.0f);
-        shadow.setColor(Color.color(0.2f, 0.2f, 0.2f));
+    private static class FancyButton extends BorderPane {
 
-        var text = new Text();
-        text.setFill(fillColor);
-        text.setFont(font);
-        text.setText(buttonText);
-        text.setEffect(shadow);
+        private GameAction action;
 
-        var button = new BorderPane(text);
-        button.setCursor(Cursor.HAND);
-        button.setMaxSize(200, 60);
-        button.setPadding(new Insets(5, 5, 5, 5));
-        button.setBackground(Ufx.coloredRoundedBackground(bgColor, 20));
-        button.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            action.run();
-            e.consume();
-        });
+        public FancyButton(String buttonText, Font font, Color bgColor, Color fillColor) {
+            var shadow = new DropShadow();
+            shadow.setOffsetY(3.0f);
+            shadow.setColor(Color.color(0.2f, 0.2f, 0.2f));
 
-        return button;
+            var text = new Text();
+            text.setFill(fillColor);
+            text.setFont(font);
+            text.setText(buttonText);
+            text.setEffect(shadow);
+
+            setCenter(text);
+            setCursor(Cursor.HAND);
+            setMaxSize(200, 60);
+            setPadding(new Insets(5, 5, 5, 5));
+            setBackground(Ufx.coloredRoundedBackground(bgColor, 20));
+            addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+                if (action != null && action.isEnabled()) action.execute();
+                e.consume();
+            });
+        }
+
+        public void setAction(GameAction action) {
+            this.action = action;
+        }
     }
 
     public static Node createStartButton(Pos alignment, double y, GameAction action) {
-        Node button = createRoundedButton(
-            theAssets().text("play_button"),
-            theAssets().arcadeFontAtSize(30),
-            Color.rgb(0, 155, 252, 0.7), Color.WHITE,
-            () -> { if (action.isEnabled()) action.execute(); }
-        );
+        var button = new FancyButton(theAssets().text("play_button"), theAssets().arcadeFontAtSize(30),
+            Color.rgb(0, 155, 252, 0.7), Color.WHITE);
         button.setTranslateY(y);
         StackPane.setAlignment(button, alignment);
+        button.setAction(action);
         return button;
     }
 
