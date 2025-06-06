@@ -318,7 +318,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             theSound().playVoice("voice.explain", 0);
         }
         gameView.resize(mainScene.getWidth(), mainScene.getHeight());
-        restart();
     }
 
     @Override

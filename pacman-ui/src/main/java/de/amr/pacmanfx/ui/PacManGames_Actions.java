@@ -166,6 +166,14 @@ public interface PacManGames_Actions {
         }
     };
 
+    GameAction SHOW_GAME_VIEW_AND_RESTART_GAME = new GameAction() {
+        @Override
+        public void execute() {
+            theUI().showGameView();
+            theUI().restart();
+        }
+    };
+
     GameAction SIMULATION_SLOWER = new GameAction() {
         @Override
         public void execute() {

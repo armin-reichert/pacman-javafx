@@ -31,8 +31,10 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
+import static de.amr.pacmanfx.ui.PacManGames_Actions.SHOW_GAME_VIEW_AND_RESTART_GAME;
 import static de.amr.pacmanfx.ui.PacManGames_Actions.TOGGLE_PAUSED;
-import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -99,18 +101,6 @@ public class StartPagesView implements PacManGames_View {
         }
     }
 
-    private final GameAction actionSelectGamePage = new GameAction() {
-        @Override
-        public void execute() {
-            theUI().showGameView();
-        }
-
-        @Override
-        public boolean isEnabled() {
-            return !theClock().isPaused();
-        }
-    };
-
     private final List<StartPage> startPageList = new ArrayList<>();
     private final Map<KeyCombination, GameAction> actionBindings = new HashMap<>();
     private final Carousel carousel;
@@ -133,16 +123,14 @@ public class StartPagesView implements PacManGames_View {
         });
         setTitleExpression(Bindings.createStringBinding(() -> "JavaFX Pac-Man Games"));
 
-        bind(carousel::showPreviousSlide, KeyCode.LEFT);
-        bind(carousel::showNextSlide,     KeyCode.RIGHT);
-        bind(actionSelectGamePage,        KeyCode.ENTER);
-        bind(TOGGLE_PAUSED,               KeyCode.P);
+        bind(carousel::showPreviousSlide,     KeyCode.LEFT);
+        bind(carousel::showNextSlide,         KeyCode.RIGHT);
+        bind(SHOW_GAME_VIEW_AND_RESTART_GAME, KeyCode.ENTER);
+        bind(TOGGLE_PAUSED,                   KeyCode.P);
     }
 
     @Override
-    public Region layoutRoot() {
-        return carousel;
-    }
+    public Region layoutRoot() { return carousel; }
 
     @Override
     public void update() {}
