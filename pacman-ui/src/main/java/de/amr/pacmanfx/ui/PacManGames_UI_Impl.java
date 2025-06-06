@@ -94,16 +94,10 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         theGameEventManager().addEventListener(newView);
     }
 
-    private void handleGameSceneChange(GameScene oldScene, GameScene newScene) {
-        String oldSceneName = oldScene != null ? oldScene.displayName() : "NONE";
-        String newSceneName = newScene != null ? newScene.displayName() : "NONE";
-        Logger.info("Game scene changed from {} to {}", oldSceneName, newSceneName);
-    }
-
     private void createMainScene(double width, double height) {
         mainScene = new Scene(root, width, height);
-        mainScene.widthProperty() .addListener((py,ov,nv) -> gameView.resize(mainScene.getWidth(), mainScene.getHeight()));
-        mainScene.heightProperty().addListener((py,ov,nv) -> gameView.resize(mainScene.getWidth(), mainScene.getHeight()));
+        mainScene.widthProperty() .addListener((py,ov,nv) -> gameView.resize(mainScene));
+        mainScene.heightProperty().addListener((py,ov,nv) -> gameView.resize(mainScene));
         mainScene.addEventFilter(KeyEvent.KEY_PRESSED, theKeyboard()::onKeyPressed);
         mainScene.addEventFilter(KeyEvent.KEY_RELEASED, theKeyboard()::onKeyReleased);
         mainScene.setOnKeyPressed(this::onKeyPressed);
@@ -186,8 +180,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     private void createGameView() {
         gameView = new GameView(this);
-        gameView.resize(mainScene.getWidth(), mainScene.getHeight());
-        gameView.gameSceneProperty().addListener((py, oldScene, newScene) -> handleGameSceneChange(oldScene, newScene));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -313,7 +305,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     @Override
     public void showGameView() {
-        gameView.resize(mainScene.getWidth(), mainScene.getHeight());
+        gameView.resize(mainScene);
         viewPy.set(gameView);
     }
 
