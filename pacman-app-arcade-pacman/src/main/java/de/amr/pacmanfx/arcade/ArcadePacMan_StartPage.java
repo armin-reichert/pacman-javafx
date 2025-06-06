@@ -34,7 +34,8 @@ public class ArcadePacMan_StartPage extends StackPane implements StartPage, Reso
                 case UP -> flyer.prevFlyerPage();
             }
         });
-        var startButton = StartPagesView.createStartButton(Pos.BOTTOM_CENTER, -50);
+        var startButton = StartPagesView.createStartButton(Pos.BOTTOM_CENTER);
+        startButton.setTranslateY(-50);
         startButton.setAction(theUI()::showGameView);
         getChildren().addAll(flyer, startButton);
     }

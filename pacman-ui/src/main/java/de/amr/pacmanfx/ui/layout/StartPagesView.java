@@ -71,10 +71,9 @@ public class StartPagesView implements PacManGames_View {
         }
     }
 
-    public static FancyButton createStartButton(Pos alignment, double y) {
+    public static FancyButton createStartButton(Pos alignment) {
         var button = new FancyButton(theAssets().text("play_button"), theAssets().arcadeFontAtSize(30),
             Color.rgb(0, 155, 252, 0.7), Color.WHITE);
-        button.setTranslateY(y);
         StackPane.setAlignment(button, alignment);
         return button;
     }
