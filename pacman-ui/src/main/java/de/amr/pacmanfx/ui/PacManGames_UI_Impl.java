@@ -55,10 +55,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     private GameView gameView;
     private StartPagesView startPagesView;
 
-    public PacManGames_UI_Impl() {
-        viewPy.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
-    }
-
     private void doSimulationStepAndUpdateGameScene() {
         try {
             theSimulationStep().init(theClock().tickCount());
@@ -202,6 +198,8 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         createStartPagesView();
         createGameView();
         createMapEditorView();
+
+        viewPy.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
 
         root.backgroundProperty().bind(gameView.gameSceneProperty().map(
             gameScene -> theUIConfig().currentGameSceneIsPlayScene3D()
