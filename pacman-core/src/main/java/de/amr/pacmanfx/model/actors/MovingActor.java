@@ -301,7 +301,7 @@ public abstract class MovingActor extends Actor {
             for (Portal portal : level.portals().toList()) {
                 tryTeleport(currentTile, portal);
                 if (moveInfo.teleported) {
-                    break;
+                    return;
                 }
             }
         }
@@ -317,9 +317,6 @@ public abstract class MovingActor extends Actor {
             } else {
                 tryMovingTowards(level, currentTile, moveDir);
             }
-        }
-        if (moveInfo.teleported || moveInfo.moved) {
-            Logger.trace("{}: {} {} {}", name(), moveInfo, String.join(", ", moveInfo.infos), this);
         }
     }
 
