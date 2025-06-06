@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade;
 
-import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
@@ -15,18 +14,16 @@ import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.steering.Steering;
-import de.amr.pacmanfx.uilib.GameScene;
 import org.tinylog.Logger;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
-import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.ui.PacManGames_Env.PY_IMMUNITY;
+import static de.amr.pacmanfx.ui.PacManGames_Env.PY_USING_AUTOPILOT;
 
 /**
  * Common data and functionality of Pac-Man and Ms. Pac-Man Arcade games.
