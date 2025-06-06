@@ -331,7 +331,7 @@ public interface GameRenderer {
     }
 
     default void drawTileGrid(double sizeX, double sizeY, Color strokeColor) {
-        double thin = 0.25, medium = 0.5, thick = 0.9;
+        double thin = 0.2, medium = 0.3, thick = 0.35;
         int numCols = (int) (sizeX / TS), numRows = (int) (sizeY / TS);
         double width = scaled(numCols * TS), height = scaled(numRows * TS);
         ctx().save();

@@ -18,6 +18,7 @@ import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
 import de.amr.pacmanfx.ui._2d.VectorGraphicsGameRenderer;
 import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.Ufx;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -199,28 +200,34 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
 
     @Override
     protected void drawDebugInfo() {
+        final GraphicsContext g = gr().ctx();
         gr().drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
         optGameLevel().ifPresent(level -> {
             // assume all ghosts have the same special tiles
             level.ghost(RED_GHOST_SHADOW).specialTerrainTiles().forEach(tile -> {
                 double x = scaled(tile.x() * TS), y = scaled(tile.y() * TS + HTS), size = scaled(TS);
-                gr().ctx().setFill(Color.RED);
-                gr().ctx().fillRect(x, y, size, 2);
+                g.setFill(Color.RED);
+                g.fillRect(x, y, size, 2);
             });
             level.worldMap().tiles().filter(level::isIntersection).forEach(tile -> {
-                gr().ctx().setStroke(Color.GREEN);
-                gr().ctx().setLineWidth(1.5);
-                gr().ctx().strokeRect(scaled(tile.x() * TS + 1), scaled(tile.y() * TS + 1), scaled(TS - 2), scaled(TS - 2));
+                g.setStroke(Color.gray(0.8));
+                g.setLineWidth(0.5);
+                g.save();
+                double cx = scaled(tile.x() * TS + HTS), cy = scaled(tile.y() * TS + HTS), size = scaled(HTS);
+                g.translate(cx, cy);
+                g.rotate(45);
+                g.strokeRect(-0.5*size, -0.5*size, size, size);
+                g.restore();
             });
-            gr().ctx().setFill(Color.YELLOW);
-            gr().ctx().setFont(DEBUG_TEXT_FONT);
+            g.setFill(Color.YELLOW);
+            g.setFont(DEBUG_TEXT_FONT);
             String gameStateText = theGameState().name() + " (Tick %d)".formatted(theGameState().timer().tickCount());
             String huntingPhaseText = "";
             if (theGameState() == GameState.HUNTING) {
                 HuntingTimer huntingTimer = theGame().huntingTimer();
                 huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.phase(), huntingTimer.tickCount());
             }
-            gr().ctx().fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, 64);
+            g.fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, 64);
         });
     }
 
