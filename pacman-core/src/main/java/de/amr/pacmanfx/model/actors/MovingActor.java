@@ -185,10 +185,7 @@ public abstract class MovingActor extends Actor {
      * @return the tile located the given number of tiles towards the current move direction of the actor.
      */
     public Vector2i tilesAhead(int numTiles) {
-        Vector2i currentTile = tile();
-        int x = currentTile.x() + moveDir.vector().x() * numTiles;
-        int y = currentTile.y() + moveDir.vector().y() * numTiles;
-        return new Vector2i(x, y);
+        return tile().plus(moveDir.vector().scaled(numTiles));
     }
 
     /**
