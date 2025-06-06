@@ -20,8 +20,11 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
+import static de.amr.pacmanfx.lib.tilemap.FoodTile.ENERGIZER;
+import static de.amr.pacmanfx.lib.tilemap.FoodTile.PELLET;
 import static de.amr.pacmanfx.lib.tilemap.TerrainTile.TUNNEL;
 import static de.amr.pacmanfx.lib.tilemap.TerrainTile.isBlocked;
+import static de.amr.pacmanfx.model.WorldMapProperty.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -85,51 +88,51 @@ public class GameLevel {
         portals = findPortals(worldMap);
 
         currentBonusIndex = -1;
-        energizerTiles = worldMap.tilesContaining(LayerID.FOOD, FoodTile.ENERGIZER.code()).toArray(Vector2i[]::new);
-        totalFoodCount = (int) worldMap.tilesContaining(LayerID.FOOD, FoodTile.PELLET.code()).count() + energizerTiles.length;
+        energizerTiles = worldMap.tilesContaining(LayerID.FOOD, ENERGIZER.code()).toArray(Vector2i[]::new);
+        totalFoodCount = (int) worldMap.tilesContaining(LayerID.FOOD, PELLET.code()).count() + energizerTiles.length;
         uneatenFoodCount = totalFoodCount;
         eatenFoodBits = new BitSet(worldMap.numCols() * worldMap.numRows());
 
-        Vector2i pacTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_PAC);
+        Vector2i pacTile = worldMap.getTerrainTileProperty(POS_PAC);
         if (pacTile == null) {
             throw new IllegalArgumentException("No Pac position stored in map");
         }
         pacStartPosition = halfTileRightOf(pacTile);
 
-        Vector2i redGhostTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_RED_GHOST);
+        Vector2i redGhostTile = worldMap.getTerrainTileProperty(POS_RED_GHOST);
         if (redGhostTile == null) {
             throw new IllegalArgumentException("No red ghost position stored in map");
         }
         ghostStartPositions[RED_GHOST_SHADOW] = halfTileRightOf(redGhostTile);
 
-        Vector2i pinkGhostTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_PINK_GHOST);
+        Vector2i pinkGhostTile = worldMap.getTerrainTileProperty(POS_PINK_GHOST);
         if (pinkGhostTile == null) {
             throw new IllegalArgumentException("No pink ghost position stored in map");
         }
         ghostStartPositions[PINK_GHOST_SPEEDY] = halfTileRightOf(pinkGhostTile);
 
-        Vector2i cyanGhostTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_CYAN_GHOST);
+        Vector2i cyanGhostTile = worldMap.getTerrainTileProperty(POS_CYAN_GHOST);
         if (cyanGhostTile == null) {
             throw new IllegalArgumentException("No cyan ghost position stored in map");
         }
         ghostStartPositions[CYAN_GHOST_BASHFUL] = halfTileRightOf(cyanGhostTile);
 
-        Vector2i orangeGhostTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_ORANGE_GHOST);
+        Vector2i orangeGhostTile = worldMap.getTerrainTileProperty(POS_ORANGE_GHOST);
         if (orangeGhostTile == null) {
             throw new IllegalArgumentException("No orange ghost position stored in map");
         }
         ghostStartPositions[ORANGE_GHOST_POKEY] = halfTileRightOf(orangeGhostTile);
 
-        ghostScatterTiles[RED_GHOST_SHADOW] = worldMap.getTerrainTileProperty(WorldMapProperty.POS_SCATTER_RED_GHOST,
+        ghostScatterTiles[RED_GHOST_SHADOW] = worldMap.getTerrainTileProperty(POS_SCATTER_RED_GHOST,
             Vector2i.of(0, worldMap.numCols() - 3));
 
-        ghostScatterTiles[PINK_GHOST_SPEEDY] = worldMap.getTerrainTileProperty(WorldMapProperty.POS_SCATTER_PINK_GHOST,
+        ghostScatterTiles[PINK_GHOST_SPEEDY] = worldMap.getTerrainTileProperty(POS_SCATTER_PINK_GHOST,
             Vector2i.of(0, 3));
 
-        ghostScatterTiles[CYAN_GHOST_BASHFUL] = worldMap.getTerrainTileProperty(WorldMapProperty.POS_SCATTER_CYAN_GHOST,
+        ghostScatterTiles[CYAN_GHOST_BASHFUL] = worldMap.getTerrainTileProperty(POS_SCATTER_CYAN_GHOST,
             Vector2i.of(worldMap.numRows() - EMPTY_ROWS_BELOW_MAZE, worldMap.numCols() - 1));
 
-        ghostScatterTiles[ORANGE_GHOST_POKEY] = worldMap.getTerrainTileProperty(WorldMapProperty.POS_SCATTER_ORANGE_GHOST,
+        ghostScatterTiles[ORANGE_GHOST_POKEY] = worldMap.getTerrainTileProperty(POS_SCATTER_ORANGE_GHOST,
             Vector2i.of(worldMap.numRows() - EMPTY_ROWS_BELOW_MAZE, 0));
     }
 
@@ -167,7 +170,7 @@ public class GameLevel {
     }
 
     public void hidePacAndGhosts() {
-        pac().hide();
+        pac.hide();
         ghosts().forEach(Ghost::hide);
     }
 
@@ -206,18 +209,12 @@ public class GameLevel {
     public void registerGhostKilled() { numGhostsKilled++; }
     public int numGhostsKilled() { return numGhostsKilled; }
 
-    public void setBonus(Bonus bonus) { this.bonus = bonus; }
-
     public Optional<Bonus> bonus() { return Optional.ofNullable(bonus); }
-
+    public void setBonus(Bonus bonus) { this.bonus = bonus; }
     public boolean isBonusEdible() { return bonus != null && bonus.state() == Bonus.STATE_EDIBLE; }
-
     public int currentBonusIndex() { return currentBonusIndex; }
-
     public void selectNextBonus() { currentBonusIndex += 1; }
-
     public byte bonusSymbol(int i) { return bonusSymbols[i]; }
-
     public void setBonusSymbol(int i, byte symbol) {
         bonusSymbols[i] = symbol;
     }
@@ -406,7 +403,7 @@ public class GameLevel {
     public Stream<Vector2i> energizerTiles() { return Arrays.stream(energizerTiles); }
 
     public boolean isEnergizerPosition(Vector2i tile) {
-        return isTileInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) == FoodTile.ENERGIZER.code();
+        return isTileInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) == ENERGIZER.code();
     }
 
     public boolean tileContainsFood(Vector2i tile) {
