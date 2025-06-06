@@ -90,7 +90,7 @@ public class GameController  {
             Logger.warn("Game model of class {} is already registered for game variant {}",
                 gameModel.getClass().getSimpleName(), variant);
         }
-        knownGames.put(requireNonNull(variant), requireNonNull(gameModel));
+        knownGames.put(variant, gameModel);
     }
 
     /**
