@@ -23,12 +23,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_ANY_PAC_DYING;
 
 /**
- * Game states of the Pac-Man game variants.
- * <p>
- * Rule of thumb: Specify what should happen when, not how exactly.
- * </p>
- *
- * @author Armin Reichert
+ * States of the Pac-Man games state machine.
  */
 public enum GameState implements FsmState<GameModel> {
 
@@ -100,12 +95,11 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             if (game.isPlaying()) {
-                GameLevel level = game.level().orElseThrow();
                 // resume running game
                 if (timer.tickCount() == 1) {
                     game.initAnimationOfPacManAndGhosts();
-                    level.makeReadyForPlaying();
-                    level.showPacAndGhosts();
+                    theGameLevel().makeReadyForPlaying();
+                    theGameLevel().showPacAndGhosts();
                     theGameEventManager().publishEvent(game, GameEventType.GAME_CONTINUED);
                 } else if (timer.tickCount() == TICK_RESUME_GAME) {
                     theGameController().changeGameState(GameState.HUNTING);
@@ -119,8 +113,7 @@ public enum GameState implements FsmState<GameModel> {
                     game.startLevel();
                 }
                 else if (timer.tickCount() == TICK_NEW_GAME_SHOW_GUYS) {
-                    GameLevel level = game.level().orElseThrow();
-                    level.showPacAndGhosts();
+                    theGameLevel().showPacAndGhosts();
                 }
                 else if (timer.tickCount() == TICK_NEW_GAME_START_PLAYING) {
                     game.playingProperty().set(true);
@@ -137,8 +130,7 @@ public enum GameState implements FsmState<GameModel> {
                 }
                 else if (timer.tickCount() == 3) {
                     // Now, actor animations are available
-                    GameLevel level = game.level().orElseThrow();
-                    level.showPacAndGhosts();
+                    theGameLevel().showPacAndGhosts();
                 }
                 else if (timer.tickCount() == TICK_DEMO_LEVEL_START) {
                     theGameController().changeGameState(GameState.HUNTING);
@@ -154,19 +146,18 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             //TODO reconsider this
-            delay = theGameController().isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN) ? 60 : 0;
+            delay = theGameController().isSelected(GameVariant.MS_PACMAN_TENGEN) ? 60 : 0;
         }
 
         @Override
         public void onUpdate(GameModel game) {
-            GameLevel level = game.level().orElseThrow();
             if (timer.tickCount() < delay) {
                 return;
             }
             if (timer.tickCount() == delay) {
                 game.startHunting();
-                if (level.message() == GameLevel.MESSAGE_READY) {
-                    level.clearMessage();
+                if (theGameLevel().message() == GameLevel.MESSAGE_READY) {
+                    theGameLevel().clearMessage();
                 }
             }
             game.doHuntingStep();
@@ -181,9 +172,8 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onExit(GameModel game) {
-            GameLevel level = game.level().orElseThrow();
-            if (level.message() == GameLevel.MESSAGE_READY) {
-                level.clearMessage();
+            if (theGameLevel().message() == GameLevel.MESSAGE_READY) {
+                theGameLevel().clearMessage();
             }
         }
     },
@@ -198,16 +188,15 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            GameLevel level = game.level().orElseThrow();
-            //TODO ugly
-            if (theGameController().isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN) && level.isDemoLevel()) {
+            if (theGameController().isSelected(GameVariant.MS_PACMAN_TENGEN) && theGameLevel().isDemoLevel()) {
                 theGameController().changeGameState(SHOWING_CREDITS);
                 return;
             }
             if (timer.hasExpired()) {
-                if (level.isDemoLevel()) { // just in case: if demo level is completed, go back to intro scene
+                if (theGameLevel().isDemoLevel()) {
+                    // just in case: if demo level is complete, go back to intro scene
                     theGameController().changeGameState(INTRO);
-                } else if (game.cutScenesEnabled() && game.cutSceneNumber(level.number()).isPresent()) {
+                } else if (game.cutScenesEnabled() && game.cutSceneNumber(theGameLevel().number()).isPresent()) {
                     theGameController().changeGameState(INTERMISSION);
                 } else {
                     theGameController().changeGameState(LEVEL_TRANSITION);
@@ -236,30 +225,28 @@ public enum GameState implements FsmState<GameModel> {
     GHOST_DYING {
         @Override
         public void onEnter(GameModel game) {
-            GameLevel level = game.level().orElseThrow();
             timer.restartSeconds(1);
-            level.pac().hide();
-            level.ghosts().forEach(Ghost::stopAnimation);
+            theGameLevel().pac().hide();
+            theGameLevel().ghosts().forEach(Ghost::stopAnimation);
             theGameEventManager().publishEvent(game, GameEventType.GHOST_EATEN);
         }
 
         @Override
         public void onUpdate(GameModel game) {
-            GameLevel level = game.level().orElseThrow();
             if (timer.hasExpired()) {
                 theGameController().resumePreviousGameState();
             } else {
-                level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).forEach(ghost -> ghost.update(level));
-                level.blinking().tick();
+                theGameLevel().ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
+                    .forEach(ghost -> ghost.update(theGameLevel()));
+                theGameLevel().blinking().tick();
             }
         }
 
         @Override
         public void onExit(GameModel game) {
-            GameLevel level = game.level().orElseThrow();
-            level.pac().show();
-            level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
-            level.ghosts().forEach(Ghost::playAnimation);
+            theGameLevel().pac().show();
+            theGameLevel().ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
+            theGameLevel().ghosts().forEach(Ghost::playAnimation);
         }
     },
 
@@ -279,9 +266,8 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            GameLevel level = game.level().orElseThrow();
             if (timer.hasExpired()) {
-                if (level.isDemoLevel()) {
+                if (theGameLevel().isDemoLevel()) {
                     theGameController().changeGameState(GAME_OVER);
                 } else {
                     game.addLives(-1);
@@ -289,31 +275,30 @@ public enum GameState implements FsmState<GameModel> {
                 }
             }
             else if (timer.tickCount() == TICK_HIDE_GHOSTS) {
-                level.ghosts().forEach(Ghost::hide);
+                theGameLevel().ghosts().forEach(Ghost::hide);
                 //TODO this does not belong here
-                level.pac().selectAnimation(ANIM_ANY_PAC_DYING);
-                level.pac().resetAnimation();
+                theGameLevel().pac().selectAnimation(ANIM_ANY_PAC_DYING);
+                theGameLevel().pac().resetAnimation();
             }
             else if (timer.tickCount() == TICK_START_PAC_ANIMATION) {
-                level.pac().playAnimation();
-                theGameEventManager().publishEvent(game, GameEventType.PAC_DYING, level.pac().tile());
+                theGameLevel().pac().playAnimation();
+                theGameEventManager().publishEvent(game, GameEventType.PAC_DYING, theGameLevel().pac().tile());
             }
             else if (timer.tickCount() == TICK_HIDE_PAC) {
-                level.pac().hide();
+                theGameLevel().pac().hide();
             }
             else if (timer.tickCount() == TICK_PAC_DEAD) {
                 theGameEventManager().publishEvent(game, GameEventType.PAC_DEAD);
             }
             else {
-                level.blinking().tick();
-                level.pac().update(level);
+                theGameLevel().blinking().tick();
+                theGameLevel().pac().update(theGameLevel());
             }
         }
 
         @Override
         public void onExit(GameModel game) {
-            GameLevel level = game.level().orElseThrow();
-            level.bonus().ifPresent(Bonus::setInactive);
+            theGameLevel().bonus().ifPresent(Bonus::setInactive);
         }
     },
 
@@ -321,18 +306,16 @@ public enum GameState implements FsmState<GameModel> {
     GAME_OVER {
         @Override
         public void onEnter(GameModel game) {
-            GameLevel level = game.level().orElseThrow();
-            timer.restartTicks(level.gameOverStateTicks());
+            timer.restartTicks(theGameLevel().gameOverStateTicks());
             game.onGameEnding();
         }
 
         @Override
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
-                GameLevel level = game.level().orElseThrow();
                 //TODO find unified solution
-                if (theGameController().isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN)) {
-                    if (level.isDemoLevel()) {
+                if (theGameController().isSelected(GameVariant.MS_PACMAN_TENGEN)) {
+                    if (theGameLevel().isDemoLevel()) {
                         theGameController().changeGameState(SHOWING_CREDITS);
                     } else {
                         boolean canContinue = game.continueOnGameOver();
@@ -351,7 +334,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onExit(GameModel game) {
-            game.level().ifPresent(GameLevel::clearMessage);
+            theGameLevel().clearMessage();
         }
     },
 
@@ -379,67 +362,65 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             lastTestedLevelNumber = 25;
-            if (theGameController().isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN)) {
+            if (theGameController().isSelected(GameVariant.MS_PACMAN_TENGEN)) {
                 lastTestedLevelNumber = 32;
             }
             timer.restartIndefinitely();
             game.prepareForNewGame();
             game.buildNormalLevel(1);
             game.startLevel();
-            GameLevel level = game.level().orElseThrow();
-            level.showPacAndGhosts();
+            theGameLevel().showPacAndGhosts();
         }
 
         @Override
         public void onUpdate(GameModel game) {
-            GameLevel level = game.level().orElseThrow();
             if (timer().tickCount() > 2 * Globals.NUM_TICKS_PER_SEC) {
-                level.blinking().tick();
-                level.ghosts().forEach(ghost -> ghost.update(level));
-                level.bonus().ifPresent(bonus -> bonus.update(game));
+                theGameLevel().blinking().tick();
+                theGameLevel().ghosts().forEach(ghost -> ghost.update(theGameLevel()));
+                theGameLevel().bonus().ifPresent(bonus -> bonus.update(game));
             }
             if (timer().atSecond(1.0)) {
                 game.initAnimationOfPacManAndGhosts();
-                level.makeReadyForPlaying();
-                level.showPacAndGhosts();
+                theGameLevel().makeReadyForPlaying();
+                theGameLevel().showPacAndGhosts();
             }
             else if (timer().atSecond(2)) {
-                level.blinking().setStartPhase(Pulse.ON);
-                level.blinking().restart();
+                theGameLevel().blinking().setStartPhase(Pulse.ON);
+                theGameLevel().blinking().restart();
             }
             else if (timer().atSecond(2.5)) {
-                level.clearMessage();
+                theGameLevel().clearMessage();
                 game.activateNextBonus();
             }
             else if (timer().atSecond(4.5)) {
-                level.bonus().ifPresent(bonus -> bonus.setEaten(Globals.NUM_TICKS_PER_SEC));
+                theGameLevel().bonus().ifPresent(bonus -> bonus.setEaten(Globals.NUM_TICKS_PER_SEC));
                 theGameEventManager().publishEvent(game, GameEventType.BONUS_EATEN);
             }
             else if (timer().atSecond(6.5)) {
-                level.bonus().ifPresent(Bonus::setInactive); // needed?
+                theGameLevel().bonus().ifPresent(Bonus::setInactive); // needed?
                 game.activateNextBonus();
             }
             else if (timer().atSecond(7.5)) {
-                level.bonus().ifPresent(bonus -> bonus.setEaten(Globals.NUM_TICKS_PER_SEC));
+                theGameLevel().bonus().ifPresent(bonus -> bonus.setEaten(Globals.NUM_TICKS_PER_SEC));
                 theGameEventManager().publishEvent(game, GameEventType.BONUS_EATEN);
             }
             else if (timer().atSecond(8.5)) {
-                level.hidePacAndGhosts();
-                level.blinking().stop();
-                level.blinking().setStartPhase(Pulse.ON);
-                level.blinking().reset();
+                theGameLevel().hidePacAndGhosts();
+                theGameLevel().blinking().stop();
+                theGameLevel().blinking().setStartPhase(Pulse.ON);
+                theGameLevel().blinking().reset();
             }
             else if (timer().atSecond(9.5)) {
                 setProperty("mazeFlashing", true); //TODO fix
-                level.blinking().setStartPhase(Pulse.OFF);
-                level.blinking().restart(2 * level.data().numFlashes());
+                theGameLevel().blinking().setStartPhase(Pulse.OFF);
+                theGameLevel().blinking().restart(2 * theGameLevel().data().numFlashes());
             }
             else if (timer().atSecond(12.0)) {
                 setProperty("mazeFlashing", false); //TODO fix
-                level.blinking().reset();
-                level.pac().stopAndShowInFullBeauty();
-                level.bonus().ifPresent(Bonus::setInactive);
-                if (level.number() == lastTestedLevelNumber) {
+                theGameLevel().blinking().reset();
+                theGameLevel().pac().stopAndShowInFullBeauty();
+                theGameLevel().bonus().ifPresent(Bonus::setInactive);
+                if (theGameLevel().number() == lastTestedLevelNumber) {
                     theGameController().restart(GameState.BOOT);
                 } else {
                     timer().restartIndefinitely();
@@ -476,7 +457,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             lastTestedLevelNumber = 25;
-            if (theGameController().isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN)) {
+            if (theGameController().isSelected(GameVariant.MS_PACMAN_TENGEN)) {
                 lastTestedLevelNumber = 32;
             }
             timer.restartSeconds(TEASER_TIME_SECONDS);
@@ -525,7 +506,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 int number = this.<Integer>getProperty("intermissionTestNumber");
-                int lastCutSceneNumber = theGameController().isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN) ? 4 : 3;
+                int lastCutSceneNumber = theGameController().isSelected(GameVariant.MS_PACMAN_TENGEN) ? 4 : 3;
                 if (number < lastCutSceneNumber) {
                     setProperty("intermissionTestNumber", number + 1);
                     timer.restartIndefinitely();

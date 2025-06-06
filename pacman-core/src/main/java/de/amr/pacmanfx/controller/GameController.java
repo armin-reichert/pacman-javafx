@@ -106,7 +106,7 @@ public class GameController  {
         gameVariantPy.set(gameVariant);
     }
 
-    public boolean isGameVariantSelected(GameVariant gameVariant) {
+    public boolean isSelected(GameVariant gameVariant) {
         return requireNonNull(gameVariant) == gameVariantPy.get();
     }
 }
