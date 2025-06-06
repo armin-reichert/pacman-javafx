@@ -384,7 +384,7 @@ public class GameView implements PacManGames_View {
     }
 
     private void showGameSceneHelp() {
-        if (!theGameController().isSelected(GameVariant.MS_PACMAN_TENGEN)
+        if (!theGameController().isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN)
             && theUIConfig().currentGameSceneIs2D()) {
             popupLayer.showHelp(canvasContainer.scaling());
         }

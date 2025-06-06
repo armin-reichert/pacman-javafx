@@ -281,7 +281,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         stage.getIcons().setAll(uiConfig.appIcon());
         gameView.canvasContainer().decorationEnabledPy.set(uiConfig.isGameCanvasDecorated());
         // this triggers a game event and calling the event handlers:
-        theGameController().select(gameVariant);
+        theGameController().selectGameVariant(gameVariant);
     }
 
     @Override
@@ -314,7 +314,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     @Override
     public void showGameView() {
         viewPy.set(gameView);
-        if (!theGameController().isSelected(GameVariant.MS_PACMAN_TENGEN)) {
+        if (!theGameController().isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN)) {
             theSound().playVoice("voice.explain", 0);
         }
         gameView.resize(mainScene.getWidth(), mainScene.getHeight());

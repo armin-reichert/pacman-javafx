@@ -22,7 +22,7 @@ public class ArcadeMsPacMan_App extends Application {
     public void init() {
         PacManGames_Env.init();
         theGameController().registerGame(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameModel());
-        theGameController().select(GameVariant.MS_PACMAN);
+        theGameController().selectGameVariant(GameVariant.MS_PACMAN);
     }
 
     @Override

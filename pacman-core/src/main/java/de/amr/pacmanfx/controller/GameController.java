@@ -87,8 +87,7 @@ public class GameController  {
         requireNonNull(variant);
         requireNonNull(gameModel);
         if (knownGames.containsKey(variant)) {
-            Logger.warn("Game model of class {} is already registered for game variant {}",
-                gameModel.getClass().getSimpleName(), variant);
+            Logger.warn("Game model ({}) is already registered for game variant {}", gameModel.getClass().getName(), variant);
         }
         knownGames.put(variant, gameModel);
     }
@@ -102,12 +101,12 @@ public class GameController  {
 
     public GameVariant selectedGameVariant() { return gameVariantPy.get(); }
 
-    public void select(GameVariant gameVariant) {
+    public void selectGameVariant(GameVariant gameVariant) {
         requireNonNull(gameVariant);
         gameVariantPy.set(gameVariant);
     }
 
-    public boolean isSelected(GameVariant gameVariant) {
+    public boolean isGameVariantSelected(GameVariant gameVariant) {
         return requireNonNull(gameVariant) == gameVariantPy.get();
     }
 }

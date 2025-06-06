@@ -154,7 +154,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             //TODO reconsider this
-            delay = theGameController().isSelected(GameVariant.MS_PACMAN_TENGEN) ? 60 : 0;
+            delay = theGameController().isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN) ? 60 : 0;
         }
 
         @Override
@@ -200,7 +200,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onUpdate(GameModel game) {
             GameLevel level = game.level().orElseThrow();
             //TODO ugly
-            if (theGameController().isSelected(GameVariant.MS_PACMAN_TENGEN) && level.isDemoLevel()) {
+            if (theGameController().isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN) && level.isDemoLevel()) {
                 theGameController().changeGameState(SHOWING_CREDITS);
                 return;
             }
@@ -331,7 +331,7 @@ public enum GameState implements FsmState<GameModel> {
             if (timer.hasExpired()) {
                 GameLevel level = game.level().orElseThrow();
                 //TODO find unified solution
-                if (theGameController().isSelected(GameVariant.MS_PACMAN_TENGEN)) {
+                if (theGameController().isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN)) {
                     if (level.isDemoLevel()) {
                         theGameController().changeGameState(SHOWING_CREDITS);
                     } else {
@@ -379,7 +379,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             lastTestedLevelNumber = 25;
-            if (theGameController().isSelected(GameVariant.MS_PACMAN_TENGEN)) {
+            if (theGameController().isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN)) {
                 lastTestedLevelNumber = 32;
             }
             timer.restartIndefinitely();
@@ -476,7 +476,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             lastTestedLevelNumber = 25;
-            if (theGameController().isSelected(GameVariant.MS_PACMAN_TENGEN)) {
+            if (theGameController().isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN)) {
                 lastTestedLevelNumber = 32;
             }
             timer.restartSeconds(TEASER_TIME_SECONDS);
@@ -525,7 +525,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 int number = this.<Integer>getProperty("intermissionTestNumber");
-                int lastCutSceneNumber = theGameController().isSelected(GameVariant.MS_PACMAN_TENGEN) ? 4 : 3;
+                int lastCutSceneNumber = theGameController().isGameVariantSelected(GameVariant.MS_PACMAN_TENGEN) ? 4 : 3;
                 if (number < lastCutSceneNumber) {
                     setProperty("intermissionTestNumber", number + 1);
                     timer.restartIndefinitely();

@@ -30,7 +30,7 @@ public class PacManXXL_Common_App extends Application {
         xxlMapSelector = new PacManXXL_Common_MapSelector(CUSTOM_MAP_DIR);
         theGameController().registerGame(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_GameModel(xxlMapSelector));
         theGameController().registerGame(GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_GameModel(xxlMapSelector));
-        theGameController().select(GameVariant.MS_PACMAN_XXL);
+        theGameController().selectGameVariant(GameVariant.MS_PACMAN_XXL);
     }
 
     @Override

@@ -46,7 +46,7 @@ public class PacManGames3dApp extends Application {
         theGameController().registerGame(GameVariant.PACMAN, new ArcadePacMan_GameModel());
         theGameController().registerGame(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_GameModel(xxlMapSelector));
         theGameController().registerGame(GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_GameModel(xxlMapSelector));
-        theGameController().select(GameVariant.PACMAN);
+        theGameController().selectGameVariant(GameVariant.PACMAN);
     }
 
     @Override

@@ -157,6 +157,8 @@ public class Pac extends MovingActor implements AnimatedActor {
         return !dead;
     }
 
+
+    public int restingTicks() { return restingTicks; }
     public void setRestingTicks(int ticks) {
         if (ticks != INDEFINITELY && (ticks < 0 || ticks > 127)) {
             throw new IllegalArgumentException("Resting ticks must be INDEFINITE or 0..127, but is " + ticks);
