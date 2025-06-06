@@ -313,11 +313,8 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     @Override
     public void showGameView() {
-        viewPy.set(gameView);
-        if (!theGameController().isSelected(GameVariant.MS_PACMAN_TENGEN)) {
-            theSound().playVoice("voice.explain", 0);
-        }
         gameView.resize(mainScene.getWidth(), mainScene.getHeight());
+        viewPy.set(gameView);
     }
 
     @Override

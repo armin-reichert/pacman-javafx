@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.image.Image;
 import javafx.scene.text.Font;
@@ -18,6 +19,7 @@ import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_TI
 import static de.amr.pacmanfx.arcade.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theUIConfig;
 
 public class ArcadeCommon_BootScene2D extends GameScene2D {
@@ -35,6 +37,7 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
         maxX = spriteImage.getWidth() - FRAGMENT_SIZE;
         minY = 0;
         maxY = spriteImage.getHeight() - FRAGMENT_SIZE;
+        theSound().playVoice("voice.explain", 0);
     }
 
     @Override

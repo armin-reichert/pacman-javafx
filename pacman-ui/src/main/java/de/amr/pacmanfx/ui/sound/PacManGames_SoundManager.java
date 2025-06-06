@@ -101,14 +101,9 @@ public class PacManGames_SoundManager {
     }
 
     public void playVoice(String voiceClipID, double delaySeconds) {
-        if (voice != null) {
-            Logger.debug("Cannot play voice {}, another voice is already playing", voiceClipID);
-            return;
-        }
         URL url = theAssets().get(voiceClipID);
         voice = new MediaPlayer(new Media(url.toExternalForm()));
         // media player stays in state PLAYING, so we remove the reference when it reaches the end
-        voice.setOnEndOfMedia(() -> voice = null);
         voice.muteProperty().bind(mutedPy);
         voice.setStartTime(Duration.seconds(delaySeconds));
         voice.play(); // play also if enabledPy is set to false
