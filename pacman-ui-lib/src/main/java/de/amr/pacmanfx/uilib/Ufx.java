@@ -329,10 +329,8 @@ public interface Ufx {
         return exchangeColors(colorChanges, source);
     }
 
-    static Node createFancyButton(Font font, String text, Runnable onClick) {
-        Color bgColor = Color.rgb(0, 155, 252, 0.7);
-        Color fillColor = Color.WHITE;
-
+    //TODO make this into a normal styled button?
+    static Node createRoundedButton(String text, Font font, Color bgColor, Color fillColor, Runnable action) {
         var buttonText = new Text();
         buttonText.setFill(fillColor);
         buttonText.setFont(font);
@@ -350,7 +348,7 @@ public interface Ufx {
         pane.setBackground(coloredRoundedBackground(bgColor, 20));
 
         pane.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            onClick.run();
+            action.run();
             e.consume();
         });
 

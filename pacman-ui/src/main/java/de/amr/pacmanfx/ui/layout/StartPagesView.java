@@ -27,13 +27,17 @@ import java.util.*;
 
 import static de.amr.pacmanfx.ui.PacManGames_Actions.TOGGLE_PAUSED;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
-import static de.amr.pacmanfx.uilib.Ufx.createFancyButton;
+import static de.amr.pacmanfx.uilib.Ufx.createRoundedButton;
 import static java.util.Objects.requireNonNull;
 
 /**
  * Carousel containing the start pages for the different game variants (XXL game variants share common start page).
  */
 public class StartPagesView implements PacManGames_View {
+
+    private static Color START_BUTTON_BACKGROUND_COLOR = Color.rgb(0, 155, 252, 0.7);
+    private static Color START_BUTTON_FILL_COLOR = Color.WHITE;
+
 
     private static class StartPagesCarousel extends Carousel {
         @Override
@@ -57,12 +61,12 @@ public class StartPagesView implements PacManGames_View {
     }
 
     public static Node createStartButton(Pos alignment, double y, GameAction action) {
-        Node button = createFancyButton(theAssets().arcadeFontAtSize(30), theAssets().text("play_button"),
-            () -> {
-                if (action.isEnabled()) {
-                    action.execute();
-                }
-            });
+        Node button = createRoundedButton(
+            theAssets().text("play_button"),
+            theAssets().arcadeFontAtSize(30),
+            START_BUTTON_BACKGROUND_COLOR, START_BUTTON_FILL_COLOR,
+            () -> { if (action.isEnabled()) action.execute(); }
+        );
         button.setTranslateY(y);
         StackPane.setAlignment(button, alignment);
         return button;
