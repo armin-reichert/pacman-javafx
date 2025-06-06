@@ -340,8 +340,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
         }
         level.selectNextBonus();
 
-        List<Portal> portals = level.portals().toList();
-        if (portals.isEmpty()) {
+        if (level.portals().isEmpty()) {
             return; // should not happen
         }
 
@@ -349,23 +348,23 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
         Vector2i exitTile;
         boolean crossingLeftToRight;
         if (entryTile != null) {
-            int exitPortalIndex = theRNG().nextInt(portals.size());
+            int exitPortalIndex = theRNG().nextInt(level.portals().size());
             if (entryTile.x() == 0) { // enter maze at left border
-                exitTile = portals.get(exitPortalIndex).rightTunnelEnd().plus(1, 0);
+                exitTile = level.portals().get(exitPortalIndex).rightTunnelEnd().plus(1, 0);
                 crossingLeftToRight = true;
             } else { // enter maze  at right border
-                exitTile = portals.get(exitPortalIndex).leftTunnelEnd().minus(1, 0);
+                exitTile = level.portals().get(exitPortalIndex).leftTunnelEnd().minus(1, 0);
                 crossingLeftToRight = false;
             }
         }
         else { // choose random crossing direction and random entry and exit portals
             crossingLeftToRight = theRNG().nextBoolean();
             if (crossingLeftToRight) {
-                entryTile = portals.get(theRNG().nextInt(portals.size())).leftTunnelEnd();
-                exitTile  = portals.get(theRNG().nextInt(portals.size())).rightTunnelEnd().plus(1, 0);
+                entryTile = randomPortal(level).leftTunnelEnd();
+                exitTile  = randomPortal(level).rightTunnelEnd().plus(1, 0);
             } else {
-                entryTile = portals.get(theRNG().nextInt(portals.size())).rightTunnelEnd();
-                exitTile = portals.get(theRNG().nextInt(portals.size())).leftTunnelEnd().minus(1, 0);
+                entryTile = randomPortal(level).rightTunnelEnd();
+                exitTile = randomPortal(level).leftTunnelEnd().minus(1, 0);
             }
         }
 
@@ -383,5 +382,9 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
 
         level.setBonus(bonus);
         theGameEventManager().publishEvent(this, GameEventType.BONUS_ACTIVATED, bonus.actor().tile());
+    }
+
+    private Portal randomPortal(GameLevel level) {
+        return level.portals().get(theRNG().nextInt(level.portals().size()));
     }
 }

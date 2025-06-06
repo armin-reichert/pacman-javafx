@@ -247,11 +247,11 @@ public class GameLevel {
             .filter(this::isTileInsideWorld);
     }
 
-    public Stream<Portal> portals() { return Arrays.stream(portals); }
+    public List<Portal> portals() { return Arrays.asList(portals); }
 
     public boolean isTileInPortalSpace(Vector2i tile) {
         requireNonNull(tile);
-        return portals().anyMatch(portal -> portal.contains(tile));
+        return portals().stream().anyMatch(portal -> portal.contains(tile));
     }
 
     public boolean isDoorAt(Vector2i tile) {

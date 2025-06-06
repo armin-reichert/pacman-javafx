@@ -291,14 +291,16 @@ public abstract class MovingActor extends Actor {
     /**
      * Tries moving through the level's world.
      * <p>
-     * First checks if the actor can teleport, then if the actor can move to its wish direction. If this is not
+     * First checks if the actor can be teleported, then if the actor can move to its wish direction. If this is not
      * possible, it keeps moving to its current move direction.
+     *
+     * @param level the game level
      */
     public void tryMoving(GameLevel level) {
         final Vector2i currentTile = tile();
         moveInfo.clear();
         if (canTeleport) {
-            for (Portal portal : level.portals().toList()) {
+            for (Portal portal : level.portals()) {
                 tryTeleport(currentTile, portal);
                 if (moveInfo.teleported) {
                     return;
