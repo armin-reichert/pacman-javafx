@@ -43,7 +43,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     private final ObjectProperty<PacManGames_View> viewPy = new SimpleObjectProperty<>();
 
-    private final StackPane root = new StackPane();
     private Stage stage;
     private Scene mainScene;
     private StartPagesView startPagesView;
@@ -82,6 +81,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         newView.layoutRoot().requestFocus();
         stage.titleProperty().bind(newView.title());
         theGameEventManager().addEventListener(newView);
+        var root = (StackPane) mainScene.getRoot();
         root.getChildren().set(0, newView.layoutRoot());
     }
 
@@ -100,7 +100,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         stage.setMinWidth(280);
         stage.setMinHeight(360);
 
-        root.getChildren().add(new Pane()); // placeholder for root of current view
+        var root = new StackPane(new Pane()); // placeholder for root of current view
 
         // Status icons
         {
