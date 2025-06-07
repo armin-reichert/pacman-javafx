@@ -19,10 +19,8 @@ import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.GameAction;
 import de.amr.pacmanfx.uilib.GameScene;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.input.Keyboard;
 import javafx.animation.Animation;
-import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -544,10 +542,10 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
     }
 
     private void showReadyMessage() {
-        Vector2i houseTopLeft = theGameLevel().houseMinTile();
-        Vector2i houseSize = theGameLevel().houseSizeInTiles();
-        double x = TS * (houseTopLeft.x() + 0.5 * houseSize.x());
-        double y = TS * (houseTopLeft.y() +       houseSize.y());
+        Vector2i houseMinTile = theGameLevel().houseMinTile();
+        Vector2i houseSizeInTiles = theGameLevel().houseSizeInTiles();
+        double x = TS * (houseMinTile.x() + 0.5 * houseSizeInTiles.x());
+        double y = TS * (houseMinTile.y() +       houseSizeInTiles.y());
         double seconds = theGame().isPlaying() ? 0.5 : 2.5;
         level3D.showAnimatedMessage("READY!", seconds, x, y);
     }
