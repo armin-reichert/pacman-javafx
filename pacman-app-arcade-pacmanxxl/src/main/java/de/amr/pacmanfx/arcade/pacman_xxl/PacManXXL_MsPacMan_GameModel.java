@@ -18,7 +18,7 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
 
     public PacManXXL_MsPacMan_GameModel(PacManXXL_Common_MapSelector mapSelector) {
         super(mapSelector);
-        scoreManager.setHighScoreFile(new File(Globals.HOME_DIR, "highscore-mspacman_xxl.xml"));
+        setHighScoreFile(new File(Globals.HOME_DIR, "highscore-mspacman_xxl.xml"));
     }
 
     @Override
@@ -39,7 +39,7 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
         demoLevelSteering.init();
         levelCounter.setEnabled(false);
         huntingTimer.reset();
-        scoreManager.setScoreLevelNumber(levelNumber);
+        setScoreLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         theGameEventManager().publishEvent(this, GameEventType.LEVEL_CREATED);
     }

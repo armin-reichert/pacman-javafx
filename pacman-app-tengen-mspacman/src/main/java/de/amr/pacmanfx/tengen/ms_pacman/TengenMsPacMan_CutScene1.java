@@ -62,7 +62,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     @Override
     public void doInit() {
         t = -1;
-        theGame().scoreManager().setScoreVisible(false);
+        theGame().setScoreVisible(false);
         bind(theGameController()::letCurrentGameStateExpire, theJoypad().key(JoypadButton.START));
 
         msPacMan = createMsPacMan();

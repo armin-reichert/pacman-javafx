@@ -24,7 +24,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
 
     public PacManXXL_PacMan_GameModel(PacManXXL_Common_MapSelector mapSelector) {
         super(mapSelector);
-        scoreManager.setHighScoreFile(new File(Globals.HOME_DIR, "highscore-pacman_xxl.xml"));
+        setHighScoreFile(new File(Globals.HOME_DIR, "highscore-pacman_xxl.xml"));
         // Demo level map could be custom map, so use generic automatic steering
         demoLevelSteering = new RuleBasedPacSteering(this);
     }
@@ -47,7 +47,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         demoLevelSteering.init();
         levelCounter.setEnabled(false);
         huntingTimer.reset();
-        scoreManager.setScoreLevelNumber(levelNumber);
+        setScoreLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         theGameEventManager().publishEvent(this, GameEventType.LEVEL_CREATED);
     }

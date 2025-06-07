@@ -61,7 +61,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        theGame().scoreManager().setScoreVisible(false);
+        theGame().setScoreVisible(false);
         bind(() -> theJoypad().selectNextKeyBinding(this), alt(KeyCode.J));
         bind(START_PLAYING, theJoypad().key(JoypadButton.START));
         bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, theJoypad().key(JoypadButton.SELECT));
@@ -180,7 +180,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         var values = MapCategory.values();
         int current = category.ordinal(), prev = (current == 0) ? values.length - 1 :  current - 1;
         tengenGame.setMapCategory(values[prev]);
-        tengenGame.scoreManager().saveHighScore();
+        tengenGame.saveHighScore();
         optionValueChanged();
     }
 
@@ -189,7 +189,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         var values = MapCategory.values();
         int current = category.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         tengenGame.setMapCategory(values[next]);
-        tengenGame.scoreManager().saveHighScore();
+        tengenGame.saveHighScore();
         optionValueChanged();
     }
 
@@ -198,7 +198,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         var values = Difficulty.values();
         int current = difficulty.ordinal(), prev = (current == 0) ? values.length - 1 : current - 1;
         tengenGame.setDifficulty(values[prev]);
-        tengenGame.scoreManager().saveHighScore();
+        tengenGame.saveHighScore();
         optionValueChanged();
     }
 
@@ -207,7 +207,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         var values = Difficulty.values();
         int current = difficulty.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         tengenGame.setDifficulty(values[next]);
-        tengenGame.scoreManager().saveHighScore();
+        tengenGame.saveHighScore();
         optionValueChanged();
     }
 

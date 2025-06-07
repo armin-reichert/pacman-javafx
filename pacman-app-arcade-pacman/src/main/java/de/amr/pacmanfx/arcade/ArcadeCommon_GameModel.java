@@ -77,8 +77,8 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
         setLifeCount(initialLifeCount());
         level = null;
         propertyMap().clear();
-        scoreManager.loadHighScore();
-        scoreManager.resetScore();
+        loadHighScore();
+        resetScore();
         gateKeeper.reset();
         huntingTimer.reset();
     }
@@ -147,11 +147,11 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
         int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
         level.victims().add(ghost);
         ghost.eaten(killedSoFar);
-        scoreManager.scorePoints(points);
+        scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
         level.registerGhostKilled();
         if (level.numGhostsKilled() == 16) {
-            scoreManager.scorePoints(ALL_GHOSTS_IN_LEVEL_KILLED_BONUS_POINTS);
+            scorePoints(ALL_GHOSTS_IN_LEVEL_KILLED_BONUS_POINTS);
             Logger.info("Scored {} points for killing all ghosts in level {}",
                 ALL_GHOSTS_IN_LEVEL_KILLED_BONUS_POINTS, level.number());
         }
@@ -202,14 +202,14 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
     }
 
     public void onPelletEaten() {
-        scoreManager.scorePoints(PELLET_VALUE);
+        scorePoints(PELLET_VALUE);
         level.pac().setRestingTicks(1);
         updateCruiseElroyMode();
     }
 
     public void onEnergizerEaten(Vector2i tile) {
         theSimulationStep().foundEnergizerAtTile = tile;
-        scoreManager.scorePoints(ENERGIZER_VALUE);
+        scorePoints(ENERGIZER_VALUE);
         level.pac().setRestingTicks(3);
         updateCruiseElroyMode();
 
@@ -234,7 +234,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
         if (!theCoinMechanism().isEmpty()) {
             theCoinMechanism().consumeCoin();
         }
-        scoreManager.updateHighScore();
+        updateHighScore();
         level.showMessage(GameLevel.MESSAGE_GAME_OVER);
         theGameEventManager().publishEvent(this, GameEventType.STOP_ALL_SOUNDS);
     }
@@ -247,7 +247,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
         level.pac().usingAutopilotProperty().bind(PY_USING_AUTOPILOT);
         levelCounter.setEnabled(true);
         huntingTimer.reset();
-        scoreManager.setScoreLevelNumber(levelNumber);
+        setScoreLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         theGameEventManager().publishEvent(this, GameEventType.LEVEL_CREATED);
     }
@@ -263,7 +263,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
         demoLevelSteering.init();
         levelCounter.setEnabled(true);
         huntingTimer.reset();
-        scoreManager.setScoreLevelNumber(levelNumber);
+        setScoreLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         theGameEventManager().publishEvent(this, GameEventType.LEVEL_CREATED);
     }
@@ -275,14 +275,14 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
         initAnimationOfPacManAndGhosts();
         if (level.isDemoLevel()) {
             level.showMessage(GameLevel.MESSAGE_GAME_OVER);
-            scoreManager.score().setEnabled(false);
-            scoreManager.highScore().setEnabled(false);
+            score().setEnabled(false);
+            highScore().setEnabled(false);
             Logger.info("Demo level {} started", level.number());
         } else {
             levelCounter().update(level.number(), level.bonusSymbol(0));
             level.showMessage(GameLevel.MESSAGE_READY);
-            scoreManager.score().setEnabled(true);
-            scoreManager.highScore().setEnabled(true);
+            score().setEnabled(true);
+            highScore().setEnabled(true);
             Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!

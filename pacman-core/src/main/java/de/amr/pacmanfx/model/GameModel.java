@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
+import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -14,33 +15,33 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import org.tinylog.Logger;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.OptionalInt;
+import java.io.File;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.*;
 
 import static de.amr.pacmanfx.Globals.theGameEventManager;
 import static de.amr.pacmanfx.Globals.theSimulationStep;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Common base class of all Pac-Man game models.
  *
  * @author Armin Reichert
  */
-public abstract class GameModel {
+public abstract class GameModel implements ScoreManager {
 
     private final BooleanProperty playingPy = new SimpleBooleanProperty(false);
 
     protected GameLevel level;
-    protected ScoreManager scoreManager;
     protected boolean cutScenesEnabled = true;
 
     protected GameModel() {
-        scoreManager = new DefaultScoreManager();
-        scoreManager.score().pointsProperty().addListener(
-                (py, ov, nv) -> scoreManager.onScoreChanged(this, ov.intValue(), nv.intValue()));
+        score().pointsProperty().addListener(
+                (py, ov, nv) -> onScoreChanged(this, ov.intValue(), nv.intValue()));
     }
 
     public abstract ActorSpeedControl actorSpeedControl();
@@ -49,7 +50,6 @@ public abstract class GameModel {
     public abstract MapSelector mapSelector();
     public abstract OptionalInt cutSceneNumber(int levelNumber);
 
-    public ScoreManager scoreManager() { return scoreManager; }
     public Optional<GateKeeper> gateKeeper() { return Optional.empty(); }
     public Optional<GameLevel> level() { return Optional.ofNullable(level); }
 
@@ -208,7 +208,7 @@ public abstract class GameModel {
         if (bonus.state() != Bonus.STATE_EDIBLE) return;
         if (actorsCollide(level.pac(), bonus.actor())) {
             bonus.setEaten(120); //TODO is 2 seconds correct?
-            scoreManager.scorePoints(bonus.points());
+            scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
             theSimulationStep().bonusEatenTile = bonus.actor().tile();
             theGameEventManager().publishEvent(this, GameEventType.BONUS_EATEN);
@@ -261,5 +261,101 @@ public abstract class GameModel {
             propertyMap = new HashMap<>(4);
         }
         return propertyMap;
+    }
+
+    // ScoreManager implementation
+
+    private final Score score = new Score();
+    private final Score highScore = new Score();
+    private File highScoreFile;
+    private List<Integer> extraLifeScores = List.of();
+    private boolean scoreVisible;
+
+    @Override
+    public void setHighScoreFile(File highScoreFile) {
+        this.highScoreFile = requireNonNull(highScoreFile);
+    }
+
+    @Override
+    public void setExtraLifeScores(Integer... scores) {
+        extraLifeScores = Arrays.stream(scores).toList();
+    }
+
+    @Override
+    public boolean isScoreVisible() { return scoreVisible; }
+
+    @Override
+    public void setScoreVisible(boolean visible) {
+        scoreVisible = visible;
+    }
+
+    @Override
+    public void scorePoints(int points) {
+        if (!score.isEnabled()) {
+            return;
+        }
+        int oldScore = score.points(), newScore = oldScore + points;
+        if (highScore().isEnabled() && newScore > highScore.points()) {
+            highScore.setPoints(newScore);
+            highScore.setLevelNumber(score.levelNumber());
+            highScore.setDate(LocalDate.now());
+        }
+        score.setPoints(newScore);
+    }
+
+    @Override
+    public void onScoreChanged(GameModel game, int oldScore, int newScore) {
+        for (int extraLifeScore : extraLifeScores) {
+            // has extra life score been crossed?
+            if (oldScore < extraLifeScore && newScore >= extraLifeScore) {
+                theSimulationStep().extraLifeWon = true;
+                theSimulationStep().extraLifeScore = extraLifeScore;
+                game.addLives(1);
+                GameEvent event = new GameEvent(game, GameEventType.SPECIAL_SCORE_REACHED);
+                event.setPayload("score", extraLifeScore); // just for testing payload implementation
+                theGameEventManager().publishEvent(event);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void loadHighScore() {
+        highScore.read(highScoreFile);
+        Logger.info("High Score loaded from '{}': points={}, level={}", highScoreFile, highScore.points(), highScore.levelNumber());
+    }
+
+    @Override
+    public void updateHighScore() {
+        var oldHighScore = new Score();
+        oldHighScore.read(highScoreFile);
+        if (highScore.points() > oldHighScore.points()) {
+            highScore.save(highScoreFile, "High Score, last update %s".formatted(LocalTime.now()));
+        }
+    }
+
+    @Override
+    public void resetScore() {
+        score.reset();
+    }
+
+    @Override
+    public void saveHighScore() {
+        new Score().save(highScoreFile, "High Score, %s".formatted(LocalDateTime.now()));
+    }
+
+    @Override
+    public Score score() {
+        return score;
+    }
+
+    @Override
+    public Score highScore() {
+        return highScore;
+    }
+
+    @Override
+    public void setScoreLevelNumber(int levelNumber) {
+        score.setLevelNumber(levelNumber);
     }
 }

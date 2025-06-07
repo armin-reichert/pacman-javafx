@@ -114,8 +114,8 @@ public abstract class GameScene2D implements GameScene, PacManGames_ActionBindin
     public void draw() {
         gameRenderer.fillCanvas(backgroundColor());
         gameRenderer.setScaling(scaling());
-        if (theGame().scoreManager().isScoreVisible()) {
-            gameRenderer.drawScores(theGame().scoreManager(), scoreColor(), normalArcadeFont());
+        if (theGame().isScoreVisible()) {
+            gameRenderer.drawScores(theGame(), scoreColor(), normalArcadeFont());
         }
         drawSceneContent();
         if (debugInfoVisiblePy.get()) {

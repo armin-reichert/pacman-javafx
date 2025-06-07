@@ -194,7 +194,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
     @Override
     public void init() {
         scores3D.setFont(theAssets().arcadeFontAtSize(TS));
-        theGame().scoreManager().setScoreVisible(true);
+        theGame().setScoreVisible(true);
         perspectiveIDPy.bind(PY_3D_PERSPECTIVE);
     }
 
@@ -305,7 +305,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
     }
 
     protected void updateScores() {
-        final Score score = theGame().scoreManager().score(), highScore = theGame().scoreManager().highScore();
+        final Score score = theGame().score(), highScore = theGame().highScore();
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
         }

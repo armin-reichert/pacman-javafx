@@ -37,7 +37,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        theGame().scoreManager().setScoreVisible(false);
+        theGame().setScoreVisible(false);
         t = -1;
     }
 

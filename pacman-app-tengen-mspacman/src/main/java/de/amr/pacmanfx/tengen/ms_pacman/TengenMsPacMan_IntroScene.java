@@ -66,7 +66,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        theGame().scoreManager().setScoreVisible(false);
+        theGame().setScoreVisible(false);
         bind(START_GAME, theJoypad().key(JoypadButton.START));
         bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, naked(KeyCode.SPACE));
 

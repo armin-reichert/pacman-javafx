@@ -44,7 +44,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void doInit() {
-        theGame().scoreManager().setScoreVisible(true);
+        theGame().setScoreVisible(true);
         pac = createPac();
         blinky = createRedGhost();
         blinky.setSpeed(0);
