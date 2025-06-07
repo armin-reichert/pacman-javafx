@@ -351,94 +351,78 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
         Logger.trace("Entering game state {}", state);
         if (optGameLevel().isPresent()) {
             switch (state) {
-                case HUNTING               -> onEnter_Hunting();
-                case PACMAN_DYING          -> onEnter_PacManDying();
-                case GHOST_DYING           -> onEnter_GhostDying();
-                case LEVEL_COMPLETE        -> onEnter_LevelComplete();
-                case LEVEL_TRANSITION      -> onEnter_LevelTransition();
-                case TESTING_LEVELS        -> onEnter_TestingLevels();
-                case TESTING_LEVEL_TEASERS -> onEnter_TestingLevelTeasers();
-                case GAME_OVER             -> onEnter_GameOver();
+                case HUNTING -> {
+                    level3D.pac3D().init();
+                    level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(theGameLevel()));
+                    level3D.energizers3D().forEach(Energizer3D::startPumping);
+                    level3D.playLivesCounterAnimation();
+                }
+                case PACMAN_DYING -> {
+                    level3D.stopAnimations();
+                    theSound().stopAll();
+                    // last update before dying animation
+                    level3D.pac3D().update(theGameLevel());
+                    playPacManDyingAnimation();
+                }
+                case GHOST_DYING -> {
+                    GameSpriteSheet spriteSheet = theUIConfig().current().spriteSheet();
+                    RectArea[] numberSprites = spriteSheet.ghostNumberSprites();
+                    theSimulationStep().killedGhosts().forEach(ghost -> {
+                        int victimIndex = theGameLevel().victims().indexOf(ghost);
+                        var numberImage = spriteSheet.crop(numberSprites[victimIndex]);
+                        level3D.ghost3D(ghost.personality()).setNumberTexture(numberImage);
+                    });
+                }
+                case LEVEL_COMPLETE -> {
+                    theSound().stopAll();
+                    level3D.pellets3D().forEach(Pellet3D::onEaten);
+                    level3D.energizers3D().forEach(Energizer3D::onEaten);
+                    level3D.maze3D().door3D().setVisible(false);
+                    level3D.stopAnimations();
+                    Animation animation = level3D.createLevelCompleteAnimation();
+                    animation.setDelay(Duration.seconds(2));
+                    animation.setOnFinished(e -> {
+                        perspectiveIDPy.bind(PY_3D_PERSPECTIVE);
+                        theGameController().letCurrentGameStateExpire();
+                    });
+                    theGameState().timer().resetIndefiniteTime();
+                    perspectiveIDPy.unbind();
+                    perspectiveIDPy.set(PerspectiveID.TOTAL);
+                    animation.play();
+                }
+                case LEVEL_TRANSITION -> {
+                    theGameState().timer().restartSeconds(3);
+                    replaceGameLevel3D();
+                    level3D.pac3D().init();
+                    perspective().init(subScene3D, theGameLevel());
+                }
+                case GAME_OVER -> {
+                    // delay state exit for 3 seconds:
+                    theGameState().timer().restartSeconds(3);
+                    level3D.stopAnimations();
+                    if (!theGameLevel().isDemoLevel() && randomInt(0, 100) < 25) {
+                        theUI().showFlashMessageSec(3, theAssets().localizedGameOverMessage());
+                    }
+                    theSound().stopAll();
+                    theSound().playGameOverSound();
+                }
+                case TESTING_LEVELS -> {
+                    replaceGameLevel3D();
+                    level3D.pac3D().init();
+                    level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(theGameLevel()));
+                    showLevelTestMessage("TEST LEVEL" + theGameLevel().number());
+                    PY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
+                }
+                case TESTING_LEVEL_TEASERS -> {
+                    replaceGameLevel3D();
+                    level3D.pac3D().init();
+                    level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(theGameLevel()));
+                    showLevelTestMessage("PREVIEW LEVEL " + theGameLevel().number());
+                    PY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
+                }
                 default -> {}
             }
         }
-    }
-
-    private void onEnter_Hunting() {
-        level3D.pac3D().init();
-        level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(theGameLevel()));
-        level3D.energizers3D().forEach(Energizer3D::startPumping);
-        level3D.playLivesCounterAnimation();
-    }
-
-    private void onEnter_PacManDying() {
-        level3D.stopAnimations();
-        theSound().stopAll();
-        // last update before dying animation
-        level3D.pac3D().update(theGameLevel());
-        playPacManDyingAnimation();
-    }
-
-    private void onEnter_GhostDying() {
-        GameSpriteSheet spriteSheet = theUIConfig().current().spriteSheet();
-        RectArea[] numberSprites = spriteSheet.ghostNumberSprites();
-        theSimulationStep().killedGhosts().forEach(ghost -> {
-            int victimIndex = theGameLevel().victims().indexOf(ghost);
-            var numberImage = spriteSheet.crop(numberSprites[victimIndex]);
-            level3D.ghost3D(ghost.personality()).setNumberTexture(numberImage);
-        });
-    }
-
-    private void onEnter_LevelComplete() {
-        theSound().stopAll();
-        level3D.pellets3D().forEach(Pellet3D::onEaten);
-        level3D.energizers3D().forEach(Energizer3D::onEaten);
-        level3D.maze3D().door3D().setVisible(false);
-        level3D.stopAnimations();
-        Animation animation = level3D.createLevelCompleteAnimation();
-        animation.setDelay(Duration.seconds(2));
-        animation.setOnFinished(e -> {
-            perspectiveIDPy.bind(PY_3D_PERSPECTIVE);
-            theGameController().letCurrentGameStateExpire();
-        });
-        theGameState().timer().resetIndefiniteTime();
-        perspectiveIDPy.unbind();
-        perspectiveIDPy.set(PerspectiveID.TOTAL);
-        animation.play();
-    }
-
-    private void onEnter_LevelTransition() {
-        theGameState().timer().restartSeconds(3);
-        replaceGameLevel3D();
-        level3D.pac3D().init();
-        perspective().init(subScene3D, theGameLevel());
-    }
-
-    private void onEnter_TestingLevels() {
-        replaceGameLevel3D();
-        level3D.pac3D().init();
-        level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(theGameLevel()));
-        showLevelTestMessage("TEST LEVEL" + theGameLevel().number());
-        PY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
-    }
-
-    private void onEnter_TestingLevelTeasers() {
-        replaceGameLevel3D();
-        level3D.pac3D().init();
-        level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(theGameLevel()));
-        showLevelTestMessage("PREVIEW LEVEL " + theGameLevel().number());
-        PY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
-    }
-
-    private void onEnter_GameOver() {
-        // delay state exit for 3 seconds:
-        theGameState().timer().restartSeconds(3);
-        level3D.stopAnimations();
-        if (!theGameLevel().isDemoLevel() && randomInt(0, 100) < 25) {
-            theUI().showFlashMessageSec(3, theAssets().localizedGameOverMessage());
-        }
-        theSound().stopAll();
-        theSound().playGameOverSound();
     }
 
     @Override
