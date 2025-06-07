@@ -92,15 +92,14 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     @Override
     public void addStartPage(StartPage startPage) {
-        startPagesView.addStartPage(startPage);
+        startPagesView.addStartPage(requireNonNull(startPage));
     }
 
     @Override
     public void buildUI(Stage stage, double width, double height) {
         this.stage = requireNonNull(stage);
-        // 28x36 = Arcade map size (in tiles)
-        stage.setMinWidth(28*TS * 1.25);
-        stage.setMinHeight(36*TS * 1.25);
+        stage.setMinWidth(280);
+        stage.setMinHeight(360);
 
         root.getChildren().add(new Pane()); // placeholder for root of current view
 
