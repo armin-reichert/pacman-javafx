@@ -31,7 +31,7 @@ public class ArcadeMsPacMan_App extends Application {
 
         // UI size: 80% of available screen height, aspect 12:10
         double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
-        theUI().buildSceneGraph(stage, 1.2 * height, height);
+        theUI().buildUI(stage, 1.2 * height, height);
 
         theUI().buildDashboard(
                 DashboardID.README,

@@ -96,7 +96,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     }
 
     @Override
-    public void buildSceneGraph(Stage stage, double width, double height) {
+    public void buildUI(Stage stage, double width, double height) {
         this.stage = requireNonNull(stage);
         // 28x36 = Arcade map size (in tiles)
         stage.setMinWidth(28*TS * 1.25);

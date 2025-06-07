@@ -44,7 +44,7 @@ public class PacManXXL_Common_App extends Application {
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
         double aspect = screenSize.getWidth() / screenSize.getHeight();
         double height = 0.8 * screenSize.getHeight();
-        theUI().buildSceneGraph(stage, aspect * height, height);
+        theUI().buildUI(stage, aspect * height, height);
 
         theUI().buildDashboard(
                 DashboardID.README,
