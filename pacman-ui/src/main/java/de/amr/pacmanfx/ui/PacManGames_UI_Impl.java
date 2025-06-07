@@ -58,9 +58,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             theSimulationStep().log();
             currentView().update();
         } catch (Exception x) {
-            Logger.error(x);
-            Logger.error("SOMETHING VERY BAD HAPPENED DURING SIMULATION STEP!");
-            showFlashMessageSec(10, "KA-TA-STROOO-PHE!\nSOMEONE CALL AN AMBULANCE!");
+            ka_tas_trooo_phe(x);
         }
     }
 
@@ -68,10 +66,14 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         try {
             currentView().draw();
         } catch (Exception x) {
-            Logger.error(x);
-            Logger.error("SOMETHING VERY BAD HAPPENED DURING SIMULATION STEP!");
-            showFlashMessageSec(10, "KA-TA-STROOO-PHE!\nSOMEONE CALL AN AMBULANCE!");
+            ka_tas_trooo_phe(x);
         }
+    }
+
+    private void ka_tas_trooo_phe(Throwable x) {
+        Logger.error(x);
+        Logger.error("SOMETHING VERY BAD HAPPENED DURING SIMULATION STEP!");
+        showFlashMessageSec(10, "KA-TA-STROOO-PHE!\nSOMEONE CALL AN AMBULANCE!");
     }
 
     private void handleViewChange(PacManGames_View oldView, PacManGames_View newView) {
