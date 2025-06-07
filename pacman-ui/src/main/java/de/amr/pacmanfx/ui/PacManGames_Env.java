@@ -130,7 +130,7 @@ public final class PacManGames_Env {
      * @param support3D if the UI has 3D support
      * @param configClassesMap a map specifying the UI configuration for each supported game variant
      */
-    public static void createUI(boolean support3D, Map<GameVariant, Class<? extends PacManGames_UIConfiguration>> configClassesMap)
+    public static void initUI(boolean support3D, Map<GameVariant, Class<? extends PacManGames_UIConfiguration>> configClassesMap)
     {
         theUI = new PacManGames_UI_Impl();
         if (support3D) {
@@ -156,8 +156,8 @@ public final class PacManGames_Env {
      *
      * @param configClassesMap a map specifying the UI configuration for each supported game variant
      */
-    public static void createUI(Map<GameVariant, Class<? extends PacManGames_UIConfiguration>> configClassesMap) {
-        createUI(true, configClassesMap);
+    public static void initUI(Map<GameVariant, Class<? extends PacManGames_UIConfiguration>> configClassesMap) {
+        initUI(true, configClassesMap);
     }
 
     private static void checkUserDirsExistingAndWritable() {

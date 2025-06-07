@@ -35,12 +35,10 @@ import static de.amr.pacmanfx.ui.PacManGames_Env.*;
  */
 public class PacManGames3dApp extends Application {
 
-    private PacManXXL_Common_MapSelector xxlMapSelector;
-
     @Override
     public void init() {
         PacManGames_Env.init();
-        xxlMapSelector = new PacManXXL_Common_MapSelector(CUSTOM_MAP_DIR);
+        var xxlMapSelector = new PacManXXL_Common_MapSelector(CUSTOM_MAP_DIR);
         theGameController().registerGame(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameModel());
         theGameController().registerGame(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
         theGameController().registerGame(GameVariant.PACMAN, new ArcadePacMan_GameModel());
@@ -51,7 +49,7 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        createUI(Map.of(
+        initUI(Map.of(
             GameVariant.PACMAN,           ArcadePacMan_UIConfig.class,
             GameVariant.MS_PACMAN,        ArcadeMsPacMan_UIConfig.class,
             GameVariant.MS_PACMAN_TENGEN, TengenMsPacMan_UIConfig.class,
@@ -75,8 +73,9 @@ public class PacManGames3dApp extends Application {
                 DashboardID.ABOUT);
 
         InfoBoxCustomMaps infoBoxCustomMaps = theUI().dashboard().getInfoBox(DashboardID.CUSTOM_MAPS);
-        infoBoxCustomMaps.setTableItems(xxlMapSelector.customMaps());
-        xxlMapSelector.startWatchingCustomMaps();
+        var mapSelector = (PacManXXL_Common_MapSelector) theGameController().game(GameVariant.PACMAN_XXL).mapSelector();
+        infoBoxCustomMaps.setTableItems(mapSelector.customMaps());
+        mapSelector.startWatchingCustomMaps();
 
         theUI().addStartPage(new ArcadePacMan_StartPage(GameVariant.PACMAN));
         theUI().addStartPage(new ArcadeMsPacMan_StartPage(GameVariant.MS_PACMAN));
