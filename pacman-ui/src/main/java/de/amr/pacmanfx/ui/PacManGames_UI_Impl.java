@@ -252,11 +252,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     }
 
     @Override
-    public Scene mainScene() {
-        return mainScene;
-    }
-
-    @Override
     public void restart() {
         theClock().stop();
         theClock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
