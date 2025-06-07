@@ -44,6 +44,7 @@ import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static de.amr.pacmanfx.uilib.Ufx.contextMenuTitleItem;
+import static java.util.Objects.requireNonNull;
 
 /**
  * 3D play scene. Provides different camera perspectives that can be stepped
@@ -51,7 +52,7 @@ import static de.amr.pacmanfx.uilib.Ufx.contextMenuTitleItem;
  */
 public class PlayScene3D implements GameScene, PacManGames_ActionBindings, CameraControlledView {
 
-    protected final SubScene fxSubScene;
+    protected final SubScene subScene3D;
     protected final Group root = new Group();
     protected final Scores3D scores3D;
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
@@ -61,7 +62,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
     protected final ObjectProperty<PerspectiveID> perspectiveIDPy = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
-            optGameLevel().ifPresent(level -> perspective().init(fxSubScene, level));
+            optGameLevel().ifPresent(level -> perspective().init(subScene3D, level));
         }
     };
 
@@ -79,9 +80,9 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
         root.getChildren().addAll(scores3D, coordinateSystem, new Group());
 
         // initial size is irrelevant because size gets bound to parent scene size anyway
-        fxSubScene = new SubScene(root, 88, 88, true, SceneAntialiasing.BALANCED);
-        fxSubScene.setFill(Color.TRANSPARENT);
-        fxSubScene.setCamera(camera);
+        subScene3D = new SubScene(root, 88, 88, true, SceneAntialiasing.BALANCED);
+        subScene3D.setFill(Color.TRANSPARENT);
+        subScene3D.setCamera(camera);
 
         perspectiveMap.put(PerspectiveID.DRONE, new Perspective.Drone());
         perspectiveMap.put(PerspectiveID.TOTAL, new Perspective.Total());
@@ -235,7 +236,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
             }
         }
         updateScores();
-        perspective().init(fxSubScene, theGameLevel());
+        perspective().init(subScene3D, theGameLevel());
     }
 
     @Override
@@ -282,7 +283,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
         level3D.update();
         updateScores();
         updateSound();
-        perspective().update(fxSubScene, theGameLevel(), theGameLevel().pac());
+        perspective().update(subScene3D, theGameLevel(), theGameLevel().pac());
     }
 
     protected void updateSound() {
@@ -306,8 +307,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
     }
 
     protected void updateScores() {
-        final Score score = theGame().scoreManager().score(),
-                highScore = theGame().scoreManager().highScore();
+        final Score score = theGame().scoreManager().score(), highScore = theGame().scoreManager().highScore();
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
         }
@@ -327,50 +327,51 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
 
     @Override
     public DoubleProperty viewPortWidthProperty() {
-        return fxSubScene.widthProperty();
+        return subScene3D.widthProperty();
     }
 
     @Override
     public DoubleProperty viewPortHeightProperty() {
-        return fxSubScene.heightProperty();
+        return subScene3D.heightProperty();
     }
 
     @Override
     public SubScene viewPort() {
-        return fxSubScene;
+        return subScene3D;
     }
 
     @Override
     public Camera camera() {
-        return fxSubScene.getCamera();
+        return subScene3D.getCamera();
     }
 
     @Override
     public void onEnterGameState(GameState state) {
+        requireNonNull(state);
         Logger.trace("Entering game state {}", state);
-        optGameLevel().ifPresent(level -> {
+        if (optGameLevel().isPresent()) {
             switch (state) {
-                case HUNTING               -> onEnterStateHunting();
-                case PACMAN_DYING          -> onEnterStatePacManDying();
-                case GHOST_DYING           -> onEnterStateGhostDying();
-                case LEVEL_COMPLETE        -> onEnterStateLevelComplete();
-                case LEVEL_TRANSITION      -> onEnterStateLevelTransition();
-                case TESTING_LEVELS        -> onEnterStateTestingLevels();
-                case TESTING_LEVEL_TEASERS -> onEnterStateTestingLevelTeasers();
-                case GAME_OVER             -> onEnterStateGameOver();
+                case HUNTING               -> onEnter_Hunting();
+                case PACMAN_DYING          -> onEnter_PacManDying();
+                case GHOST_DYING           -> onEnter_GhostDying();
+                case LEVEL_COMPLETE        -> onEnter_LevelComplete();
+                case LEVEL_TRANSITION      -> onEnter_LevelTransition();
+                case TESTING_LEVELS        -> onEnter_TestingLevels();
+                case TESTING_LEVEL_TEASERS -> onEnter_TestingLevelTeasers();
+                case GAME_OVER             -> onEnter_GameOver();
                 default -> {}
             }
-        });
+        }
     }
 
-    private void onEnterStateHunting() {
+    private void onEnter_Hunting() {
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(theGameLevel()));
         level3D.energizers3D().forEach(Energizer3D::startPumping);
         level3D.playLivesCounterAnimation();
     }
 
-    private void onEnterStatePacManDying() {
+    private void onEnter_PacManDying() {
         level3D.stopAnimations();
         theSound().stopAll();
         // last update before dying animation
@@ -378,7 +379,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
         playPacManDyingAnimation();
     }
 
-    private void onEnterStateGhostDying() {
+    private void onEnter_GhostDying() {
         GameSpriteSheet spriteSheet = theUIConfig().current().spriteSheet();
         RectArea[] numberSprites = spriteSheet.ghostNumberSprites();
         theSimulationStep().killedGhosts().forEach(ghost -> {
@@ -388,7 +389,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
         });
     }
 
-    private void onEnterStateLevelComplete() {
+    private void onEnter_LevelComplete() {
         theSound().stopAll();
         level3D.pellets3D().forEach(Pellet3D::onEaten);
         level3D.energizers3D().forEach(Energizer3D::onEaten);
@@ -406,14 +407,14 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
         animation.play();
     }
 
-    private void onEnterStateLevelTransition() {
+    private void onEnter_LevelTransition() {
         theGameState().timer().restartSeconds(3);
         replaceGameLevel3D();
         level3D.pac3D().init();
-        perspective().init(fxSubScene, theGameLevel());
+        perspective().init(subScene3D, theGameLevel());
     }
 
-    private void onEnterStateTestingLevels() {
+    private void onEnter_TestingLevels() {
         replaceGameLevel3D();
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(theGameLevel()));
@@ -421,7 +422,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
         PY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
     }
 
-    private void onEnterStateTestingLevelTeasers() {
+    private void onEnter_TestingLevelTeasers() {
         replaceGameLevel3D();
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(theGameLevel()));
@@ -429,7 +430,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
         PY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
     }
 
-    private void onEnterStateGameOver() {
+    private void onEnter_GameOver() {
         // delay state exit for 3 seconds:
         theGameState().timer().restartSeconds(3);
         level3D.stopAnimations();
