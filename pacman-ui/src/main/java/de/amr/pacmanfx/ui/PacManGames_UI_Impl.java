@@ -189,7 +189,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             gameView = new GameView(mainScene);
             gameScenePy.bind(gameView.gameSceneProperty());
             gameView.bindTitle(Bindings.createStringBinding(
-                () -> computeTitleText(PY_3D_ENABLED.get(), PY_DEBUG_INFO_VISIBLE.get()),
+                () -> computeTitleText(currentGameScene().orElse(null), PY_3D_ENABLED.get(), PY_DEBUG_INFO_VISIBLE.get()),
                 theClock().pausedProperty(), mainScene.heightProperty(), gameSceneProperty(),
                 PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE));
 
@@ -214,19 +214,17 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         );
     }
 
-    // Asset key regex:
-    // app.title.(ms_pacman|ms_pacman_xxl|pacman,pacman_xxl|tengen)(.paused)?
-    private String computeTitleText(boolean threeDModeEnabled, boolean modeDebug) {
+    // Asset key regex: app.title.(ms_pacman|ms_pacman_xxl|pacman,pacman_xxl|tengen)(.paused)?
+    private static String computeTitleText(GameScene currentGameScene, boolean threeDModeEnabled, boolean modeDebug) {
         String ans = theUIConfig().current().assetNamespace();
         String paused = theClock().isPaused() ? ".paused" : "";
         String key = "app.title." + ans + paused;
         String modeText = theAssets().text(threeDModeEnabled ? "threeD" : "twoD");
-        Optional<GameScene> currentGameScene = currentGameScene();
-        if (currentGameScene.isEmpty() || !modeDebug) {
+        if (currentGameScene == null || !modeDebug) {
             return theAssets().text(key, modeText);
         }
-        String sceneClassName = currentGameScene.get().getClass().getSimpleName();
-        if (currentGameScene.get() instanceof GameScene2D gameScene2D) {
+        String sceneClassName = currentGameScene.getClass().getSimpleName();
+        if (currentGameScene instanceof GameScene2D gameScene2D) {
             return theAssets().text(key, modeText)
                 + " [%s]".formatted(sceneClassName)
                 + " (%.2fx)".formatted(gameScene2D.scaling());
