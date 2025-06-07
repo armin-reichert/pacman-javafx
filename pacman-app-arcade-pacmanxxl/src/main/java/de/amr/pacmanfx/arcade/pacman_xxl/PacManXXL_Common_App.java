@@ -54,7 +54,7 @@ public class PacManXXL_Common_App extends Application {
             DashboardID.KEYBOARD,
             DashboardID.ABOUT);
 
-        InfoBoxCustomMaps infoBoxCustomMaps = theUI().dashboard().getInfoBox(DashboardID.CUSTOM_MAPS);
+        InfoBoxCustomMaps infoBoxCustomMaps = theUI().gameView().dashboard().getInfoBox(DashboardID.CUSTOM_MAPS);
         infoBoxCustomMaps.setTableItems(xxlMapSelector.customMaps());
         xxlMapSelector.startWatchingCustomMaps();
 

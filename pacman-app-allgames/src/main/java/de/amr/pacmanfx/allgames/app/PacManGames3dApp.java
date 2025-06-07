@@ -70,7 +70,7 @@ public class PacManGames3dApp extends Application {
             DashboardID.KEYBOARD,
             DashboardID.ABOUT);
 
-        InfoBoxCustomMaps infoBoxCustomMaps = theUI().dashboard().getInfoBox(DashboardID.CUSTOM_MAPS);
+        InfoBoxCustomMaps infoBoxCustomMaps = theUI().gameView().dashboard().getInfoBox(DashboardID.CUSTOM_MAPS);
         var mapSelector = (PacManXXL_Common_MapSelector) theGameController().game(GameVariant.PACMAN_XXL).mapSelector();
         infoBoxCustomMaps.setTableItems(mapSelector.customMaps());
         mapSelector.startWatchingCustomMaps();

@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
+import de.amr.pacmanfx.ui.layout.GameView;
 import de.amr.pacmanfx.ui.layout.PacManGames_View;
 import de.amr.pacmanfx.ui.layout.StartPagesView;
 import de.amr.pacmanfx.uilib.GameScene;
@@ -25,8 +26,8 @@ public interface PacManGames_UI {
     boolean currentGameSceneIsPlayScene3D();
     boolean currentGameSceneIs2D();
     PacManGames_View currentView();
-    Dashboard dashboard();
     ObjectProperty<GameScene> gameSceneProperty();
+    GameView gameView();
     void restart();
     void selectGameVariant(GameVariant variant);
     void setConfig(GameVariant variant, PacManGames_UIConfiguration uiConfig);

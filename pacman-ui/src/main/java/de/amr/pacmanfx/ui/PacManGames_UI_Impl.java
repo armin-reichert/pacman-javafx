@@ -9,7 +9,6 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.uilib.GameScene;
@@ -242,13 +241,13 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     }
 
     @Override
-    public Dashboard dashboard() {
-        return gameView.dashboard();
+    public ObjectProperty<GameScene> gameSceneProperty() {
+        return gameScenePy;
     }
 
     @Override
-    public ObjectProperty<GameScene> gameSceneProperty() {
-        return gameScenePy;
+    public GameView gameView() {
+        return gameView;
     }
 
     @Override
