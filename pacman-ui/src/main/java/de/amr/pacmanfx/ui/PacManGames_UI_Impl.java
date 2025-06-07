@@ -8,6 +8,7 @@ import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.layout.*;
@@ -184,7 +185,12 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
         // Game view and dashboard
         {
-            gameView = new GameView(this);
+            gameView = new GameView(mainScene);
+            gameView.bindTitle(Bindings.createStringBinding(
+                () -> computeTitleText(PY_3D_ENABLED.get(), PY_DEBUG_INFO_VISIBLE.get()),
+                theClock().pausedProperty(), mainScene.heightProperty(), gameSceneProperty(),
+                PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE));
+
             if (dashboardIDs.length > 0) {
                 gameView.dashboard().addInfoBox(DashboardID.README);
                 for (DashboardID id : dashboardIDs) {
@@ -204,6 +210,26 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
                 ? theAssets().get("background.play_scene3d")
                 : theAssets().get("background.scene"))
         );
+    }
+
+    // Asset key regex:
+    // app.title.(ms_pacman|ms_pacman_xxl|pacman,pacman_xxl|tengen)(.paused)?
+    private String computeTitleText(boolean threeDModeEnabled, boolean modeDebug) {
+        String ans = theUIConfig().current().assetNamespace();
+        String paused = theClock().isPaused() ? ".paused" : "";
+        String key = "app.title." + ans + paused;
+        String modeText = theAssets().text(threeDModeEnabled ? "threeD" : "twoD");
+        Optional<GameScene> currentGameScene = currentGameScene();
+        if (currentGameScene.isEmpty() || !modeDebug) {
+            return theAssets().text(key, modeText);
+        }
+        String sceneClassName = currentGameScene.get().getClass().getSimpleName();
+        if (currentGameScene.get() instanceof GameScene2D gameScene2D) {
+            return theAssets().text(key, modeText)
+                + " [%s]".formatted(sceneClassName)
+                + " (%.2fx)".formatted(gameScene2D.scaling());
+        }
+        return theAssets().text(key, modeText) + " [%s]".formatted(sceneClassName);
     }
 
     @Override

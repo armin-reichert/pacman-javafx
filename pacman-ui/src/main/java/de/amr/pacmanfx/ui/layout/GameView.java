@@ -8,7 +8,6 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.PacManGames_Actions;
-import de.amr.pacmanfx.ui.PacManGames_UI;
 import de.amr.pacmanfx.ui.PacManGames_UIConfiguration;
 import de.amr.pacmanfx.ui._2d.*;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
@@ -72,21 +71,19 @@ public class GameView implements PacManGames_View {
     private final TooFancyCanvasContainer canvasContainer = new TooFancyCanvasContainer(canvas);
     private final PictureInPictureView pipView = new PictureInPictureView();
     private final VBox pipContainer = new VBox(pipView, new HBox());
-    private final StringExpression titleExpression;
     private final ContextMenu contextMenu = new ContextMenu();
 
-    public GameView(PacManGames_UI ui) {
-        this.parentScene = ui.mainScene();
-        titleExpression = Bindings.createStringBinding(() -> computeTitleText(ui),
-                theClock().pausedProperty(), ui.mainScene().heightProperty(), gameScenePy,
-                PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE);
+    private StringExpression title;
+
+    public GameView(Scene parentScene) {
+        this.parentScene = parentScene;
         configureCanvasContainer();
         configurePiPView();
         createLayers();
         configurePropertyBindings();
         root.setOnContextMenuRequested(this::handleContextMenuRequest);
         //TODO is this the recommended way to close a context-menu?
-        ui.mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+        parentScene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
             if (contextMenu.isShowing() && e.getButton() == MouseButton.PRIMARY) {
                 contextMenu.hide();
             }
@@ -113,6 +110,10 @@ public class GameView implements PacManGames_View {
         bind(PacManGames_Actions.TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3));
     }
 
+    public void bindTitle(StringExpression expression) {
+        title = requireNonNull(expression);
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     // View interface implementation
     // -----------------------------------------------------------------------------------------------------------------
@@ -124,7 +125,7 @@ public class GameView implements PacManGames_View {
 
     @Override
     public StringExpression title() {
-        return titleExpression;
+        return title;
     }
 
     @Override
@@ -331,22 +332,6 @@ public class GameView implements PacManGames_View {
                 canvasLayer.setBorder(null);
             }
         });
-    }
-
-    private String computeTitleText(PacManGames_UI ui) {
-        String keyPattern = "app.title." + theUIConfig().current().assetNamespace() + (theClock().isPaused() ? ".paused" : "");
-        if (ui.currentGameScene().isPresent()) {
-            return computeTitleIfGameScenePresent(ui.currentGameScene().get(), keyPattern);
-        }
-        return theAssets().text(keyPattern, theAssets().text(PY_3D_ENABLED.get() ? "threeD" : "twoD"));
-    }
-
-    private String computeTitleIfGameScenePresent(GameScene gameScene, String keyPattern) {
-        String sceneNameSuffix = PY_DEBUG_INFO_VISIBLE.get() ? " [%s]".formatted(gameScene.getClass().getSimpleName()) : "";
-        String modeKey = theAssets().text(PY_3D_ENABLED.get() ? "threeD" : "twoD");
-        return theAssets().text(keyPattern, modeKey)
-            + sceneNameSuffix
-            + (gameScene instanceof GameScene2D gameScene2D  ? " (%.2fx)".formatted(gameScene2D.scaling()) : "");
     }
 
     private void createLayers() {
