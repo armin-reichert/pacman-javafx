@@ -15,6 +15,7 @@ import javafx.scene.paint.Color;
 
 import java.util.Map;
 
+import static de.amr.pacmanfx.uilib.Ufx.coloredBackground;
 import static java.util.Objects.requireNonNull;
 
 public class EditorView implements PacManGames_View {
@@ -24,11 +25,13 @@ public class EditorView implements PacManGames_View {
 
     public EditorView(TileMapEditor editor) {
         this.editor = requireNonNull(editor);
-        // without this, Pac-Man wallpaper shines through
-        layout.setBackground(Ufx.coloredBackground(Color.web("#dddddd"))); // JavaFX default grey
+        // without this, Pac-Man wallpaper shines through!
+        layout.setBackground(coloredBackground(Color.web("#dddddd"))); // JavaFX default grey
         layout.setCenter(editor.getContentPane());
         layout.setTop(editor.getMenuBar());
     }
+
+    public TileMapEditor editor() { return editor; }
 
     @Override
     public Region layoutRoot() {

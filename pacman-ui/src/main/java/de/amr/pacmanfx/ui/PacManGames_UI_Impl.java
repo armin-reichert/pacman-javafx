@@ -42,14 +42,13 @@ import static java.util.Objects.requireNonNull;
 public class PacManGames_UI_Impl implements PacManGames_UI {
 
     private final ObjectProperty<PacManGames_View> viewPy = new SimpleObjectProperty<>();
-    private final StackPane root = new StackPane();
 
+    private final StackPane root = new StackPane();
     private Stage stage;
     private Scene mainScene;
-    private TileMapEditor editor;
-    private EditorView editorView;
-    private GameView gameView;
     private StartPagesView startPagesView;
+    private GameView gameView;
+    private EditorView editorView;
 
     private void doSimulationStepAndUpdateGameScene() {
         try {
@@ -142,7 +141,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
         // Map editor
         {
-            editor = new TileMapEditor(stage);
+            var editor = new TileMapEditor(stage);
             var miQuit = new MenuItem(theAssets().text("back_to_game"));
             miQuit.setOnAction(e -> {
                 editor.stop();
@@ -275,7 +274,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             currentGameScene().ifPresent(GameScene::end);
             theSound().stopAll();
             theClock().stop();
-            editor.start(stage);
+            editorView.editor().start(stage);
             viewPy.set(editorView);
         } else {
             Logger.info("Editor view cannot be opened, game is playing");
