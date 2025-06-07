@@ -19,16 +19,15 @@ import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static de.amr.pacmanfx.uilib.Ufx.opaqueColor;
 
 public class ArcadeHouse3D {
-
     private final Group root = new Group();
     private final Door3D door3D;
 
     public ArcadeHouse3D(
-            GameLevel level,
-            TerrainMapRenderer3D r3D,
-            Color houseBaseColor, Color houseTopColor, Color doorColor, float wallOpacity,
-            DoubleProperty wallBaseHeightPy, float wallTopHeight, float wallThickness,
-            BooleanProperty houseLightOnPy)
+        GameLevel level,
+        TerrainMapRenderer3D r3D,
+        Color houseBaseColor, Color houseTopColor, Color doorColor, float wallOpacity,
+        DoubleProperty wallBaseHeightPy, float wallTopHeight, float wallThickness,
+        BooleanProperty houseLightOnPy)
     {
         Vector2i houseSize = level.houseSizeInTiles();
         r3D.setWallBaseHeightProperty(wallBaseHeightPy);
@@ -54,21 +53,21 @@ public class ArcadeHouse3D {
         light.translateZProperty().bind(wallBaseHeightPy.multiply(-1));
 
         root.getChildren().addAll(
-                light,
-                door3D,
-                r3D.createWallBetweenTiles(Vector2i.of(xMin, yMin), Vector2i.of(leftDoorTile.x() - 1, yMin)),
-                r3D.createWallBetweenTiles(Vector2i.of(rightDoorTile.x() + 1, yMin), Vector2i.of(xMax, yMin)),
-                r3D.createWallBetweenTiles(Vector2i.of(xMin, yMin), Vector2i.of(xMin, yMax)),
-                r3D.createWallBetweenTiles(Vector2i.of(xMax, yMin), Vector2i.of(xMax, yMax)),
-                r3D.createWallBetweenTiles(Vector2i.of(xMin, yMax), Vector2i.of(xMax, yMax))
+            light,
+            door3D,
+            r3D.createWallBetweenTiles(Vector2i.of(xMin, yMin), Vector2i.of(leftDoorTile.x() - 1, yMin)),
+            r3D.createWallBetweenTiles(Vector2i.of(rightDoorTile.x() + 1, yMin), Vector2i.of(xMax, yMin)),
+            r3D.createWallBetweenTiles(Vector2i.of(xMin, yMin), Vector2i.of(xMin, yMax)),
+            r3D.createWallBetweenTiles(Vector2i.of(xMax, yMin), Vector2i.of(xMax, yMax)),
+            r3D.createWallBetweenTiles(Vector2i.of(xMin, yMax), Vector2i.of(xMax, yMax))
         );
     }
 
-    public Group getRoot() {
+    public Group root() {
         return root;
     }
 
-    public Door3D getDoor3D() {
+    public Door3D door3D() {
         return door3D;
     }
 }

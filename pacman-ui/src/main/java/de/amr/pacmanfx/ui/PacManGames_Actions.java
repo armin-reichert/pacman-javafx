@@ -28,6 +28,7 @@ import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
+@SuppressWarnings("ALL")
 public interface PacManGames_Actions {
 
     int SIMULATION_SPEED_DELTA = 2;

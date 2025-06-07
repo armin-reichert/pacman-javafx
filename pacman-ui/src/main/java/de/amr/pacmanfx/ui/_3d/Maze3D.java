@@ -94,7 +94,7 @@ public class Maze3D extends Group {
             HOUSE_3D_OPACITY,  houseBaseHeightPy, HOUSE_3D_WALL_TOP_HEIGHT, HOUSE_3D_WALL_THICKNESS,
             houseLightOnPy);
 
-        getChildren().add(house3D.getRoot()); //TODO check this
+        getChildren().add(house3D.root()); //TODO check this
 
         PY_3D_WALL_HEIGHT.addListener((py, ov, nv) -> obstacleBaseHeightPy.set(nv.doubleValue()));
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
@@ -123,7 +123,7 @@ public class Maze3D extends Group {
     }
 
     public Door3D door3D() {
-        return house3D.getDoor3D();
+        return house3D.door3D();
     }
 
     public Animation wallsDisappearAnimation(double seconds) {
