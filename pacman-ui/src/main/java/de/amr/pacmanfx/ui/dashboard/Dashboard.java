@@ -32,10 +32,6 @@ public class Dashboard {
         return (I) infoBoxMap.get(id);
     }
 
-    public void addDefaultInfoBoxes(DashboardID... titles) {
-        for (DashboardID title : titles) { addInfoBox(title); }
-    }
-
     public void removeInfoBox(DashboardID id) {
         infoBoxMap.remove(id);
     }

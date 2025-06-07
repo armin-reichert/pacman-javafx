@@ -37,14 +37,13 @@ public class TengenMsPacMan_App extends Application {
         double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
         double aspect = (double) NES_TILES.x() / NES_TILES.y();
         theUI().buildUI(stage, aspect * height, height,
-                DashboardID.README,
-                DashboardID.GENERAL,
-                DashboardID.GAME_CONTROL,
-                DashboardID.SETTINGS_3D,
-                DashboardID.GAME_INFO,
-                DashboardID.ACTOR_INFO,
-                DashboardID.KEYBOARD,
-                DashboardID.ABOUT);
+            DashboardID.GENERAL,
+            DashboardID.GAME_CONTROL,
+            DashboardID.SETTINGS_3D,
+            DashboardID.GAME_INFO,
+            DashboardID.ACTOR_INFO,
+            DashboardID.KEYBOARD,
+            DashboardID.ABOUT);
 
         theUI().addStartPage(new TengenMsPacMan_StartPage(GameVariant.MS_PACMAN_TENGEN));
         theUI().selectStartPage(0);

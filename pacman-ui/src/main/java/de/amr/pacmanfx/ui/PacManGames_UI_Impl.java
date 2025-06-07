@@ -75,7 +75,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     }
 
     private void handleViewChange(PacManGames_View oldView, PacManGames_View newView) {
-        root.getChildren().set(0, newView.layoutRoot());
         if (oldView != null) {
             oldView.deleteActionBindings();
             theGameEventManager().removeEventListener(oldView);
@@ -84,6 +83,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         newView.layoutRoot().requestFocus();
         stage.titleProperty().bind(newView.title());
         theGameEventManager().addEventListener(newView);
+        root.getChildren().set(0, newView.layoutRoot());
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -186,7 +186,14 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         // Game view and dashboard
         {
             gameView = new GameView(this);
-            gameView.dashboard().addDefaultInfoBoxes(dashboardIDs);
+            if (dashboardIDs.length > 0) {
+                gameView.dashboard().addInfoBox(DashboardID.README);
+                for (DashboardID id : dashboardIDs) {
+                    if (id != DashboardID.README) {
+                        gameView.dashboard().addInfoBox(id);
+                    }
+                }
+            }
         }
 
         theClock().setPausableAction(this::doSimulationStepAndUpdateGameScene);

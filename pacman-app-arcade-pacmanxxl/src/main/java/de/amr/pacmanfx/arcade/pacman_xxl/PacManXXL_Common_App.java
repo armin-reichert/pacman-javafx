@@ -45,15 +45,14 @@ public class PacManXXL_Common_App extends Application {
         double aspect = screenSize.getWidth() / screenSize.getHeight();
         double height = 0.8 * screenSize.getHeight();
         theUI().buildUI(stage, aspect * height, height,
-                DashboardID.README,
-                DashboardID.GENERAL,
-                DashboardID.GAME_CONTROL,
-                DashboardID.SETTINGS_3D,
-                DashboardID.GAME_INFO,
-                DashboardID.ACTOR_INFO,
-                DashboardID.CUSTOM_MAPS,
-                DashboardID.KEYBOARD,
-                DashboardID.ABOUT);
+            DashboardID.GENERAL,
+            DashboardID.GAME_CONTROL,
+            DashboardID.SETTINGS_3D,
+            DashboardID.GAME_INFO,
+            DashboardID.ACTOR_INFO,
+            DashboardID.CUSTOM_MAPS,
+            DashboardID.KEYBOARD,
+            DashboardID.ABOUT);
 
         InfoBoxCustomMaps infoBoxCustomMaps = theUI().dashboard().getInfoBox(DashboardID.CUSTOM_MAPS);
         infoBoxCustomMaps.setTableItems(xxlMapSelector.customMaps());

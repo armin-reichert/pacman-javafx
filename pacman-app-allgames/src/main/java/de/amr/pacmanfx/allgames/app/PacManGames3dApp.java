@@ -60,15 +60,15 @@ public class PacManGames3dApp extends Application {
         // UI size: 80% of available screen height, aspect 16:10
         double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
         theUI().buildUI(stage, 1.6 * height, height,
-                DashboardID.README,
-                DashboardID.GENERAL,
-                DashboardID.GAME_CONTROL,
-                DashboardID.SETTINGS_3D,
-                DashboardID.GAME_INFO,
-                DashboardID.ACTOR_INFO,
-                DashboardID.CUSTOM_MAPS,
-                DashboardID.KEYBOARD,
-                DashboardID.ABOUT);
+            DashboardID.README,
+            DashboardID.GENERAL,
+            DashboardID.GAME_CONTROL,
+            DashboardID.SETTINGS_3D,
+            DashboardID.GAME_INFO,
+            DashboardID.ACTOR_INFO,
+            DashboardID.CUSTOM_MAPS,
+            DashboardID.KEYBOARD,
+            DashboardID.ABOUT);
 
         InfoBoxCustomMaps infoBoxCustomMaps = theUI().dashboard().getInfoBox(DashboardID.CUSTOM_MAPS);
         var mapSelector = (PacManXXL_Common_MapSelector) theGameController().game(GameVariant.PACMAN_XXL).mapSelector();
