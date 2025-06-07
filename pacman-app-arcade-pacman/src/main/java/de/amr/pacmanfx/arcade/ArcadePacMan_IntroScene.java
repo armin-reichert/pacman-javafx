@@ -74,7 +74,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         bindToDefaultKeys(PacManGames_Actions.TEST_LEVELS_BONI);
         bindToDefaultKeys(PacManGames_Actions.TEST_LEVELS_TEASERS);
 
-        spriteSheet = theUI().configs().current().spriteSheet();
+        spriteSheet = theUI().currentConfig().spriteSheet();
         blinking = new Pulse(10, true);
         pacMan = createPac();
         pacMan.setAnimations(new ArcadePacMan_PacAnimationMap(spriteSheet));

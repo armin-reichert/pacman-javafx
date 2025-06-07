@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.PacManGames_Actions;
 import de.amr.pacmanfx.ui.PacManGames_UIConfiguration;
 import de.amr.pacmanfx.ui._2d.*;
+import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.InfoBox;
 import de.amr.pacmanfx.ui.dashboard.InfoBoxReadmeFirst;
@@ -52,7 +53,7 @@ public class GameView implements PacManGames_View {
         @Override
         protected void invalidated() {
             GameScene gameScene = get();
-            if (gameScene != null) embedGameScene(theUI().configs().current(), gameScene);
+            if (gameScene != null) embedGameScene(theUI().currentConfig(), gameScene);
             contextMenu.hide();
         }
     };
@@ -179,7 +180,7 @@ public class GameView implements PacManGames_View {
     public void onLevelCreated(GameEvent event) {
         //TODO find another point in time to do this
         optGameLevel().ifPresent(level -> {
-            PacManGames_UIConfiguration config = theUI().configs().current();
+            PacManGames_UIConfiguration config = theUI().currentConfig();
             config.createActorAnimations(level);
             theSound().setEnabled(!level.isDemoLevel());
             // size of game scene might have changed, so re-embed
@@ -235,7 +236,7 @@ public class GameView implements PacManGames_View {
     }
 
     public void updateGameScene(boolean reloadCurrent) {
-        PacManGames_UIConfiguration uiConfig = theUI().configs().current();
+        PacManGames_UIConfiguration uiConfig = theUI().currentConfig();
         final GameScene nextGameScene = uiConfig.selectGameScene(theGame(), theGameState());
         if (nextGameScene == null) {
             throw new IllegalStateException("Could not determine next game scene");
@@ -253,7 +254,7 @@ public class GameView implements PacManGames_View {
         nextGameScene.init();
 
         // Handle switching between 2D and 3D game variants
-        byte sceneSwitchType = theUI().configs().identifySceneSwitchType(uiConfig, currentGameScene, nextGameScene);
+        byte sceneSwitchType = identifySceneSwitchType(uiConfig, currentGameScene, nextGameScene);
         switch (sceneSwitchType) {
             case 23 -> nextGameScene.onSwitch_2D_3D(currentGameScene);
             case 32 -> nextGameScene.onSwitch_3D_2D(currentGameScene);
@@ -265,6 +266,26 @@ public class GameView implements PacManGames_View {
             gameScenePy.set(nextGameScene);
         }
     }
+
+    /**
+     * @param config UI configuration
+     * @param sceneBefore scene displayed before switching
+     * @param sceneAfter scene displayed after switching
+     * @return <code>23</code> if 2D -> 3D switch, <code>32</code> if 3D -> 2D switch</code>,
+     *  <code>0</code> if scene before switch is not yet available
+     */
+    private byte identifySceneSwitchType(PacManGames_UIConfiguration config, GameScene sceneBefore, GameScene sceneAfter) {
+        if (sceneBefore == null && sceneAfter == null) {
+            throw new IllegalStateException("WTF is going on here, switch between NULL scenes?");
+        }
+        return switch (sceneBefore) {
+            case null -> 0; // may happen, it's ok
+            case GameScene2D playScene2D when sceneAfter instanceof PlayScene3D -> 23;
+            case PlayScene3D playScene3D when sceneAfter instanceof GameScene2D -> 32;
+            default -> 0;
+        };
+    }
+
 
     public void embedGameScene(PacManGames_UIConfiguration gameUIConfig, GameScene gameScene) {
         requireNonNull(gameScene);
@@ -307,14 +328,14 @@ public class GameView implements PacManGames_View {
         canvasContainer.setBorderColor(Color.rgb(222, 222, 255));
         //TODO check this:
         canvasContainer.decorationEnabledPy.addListener((py, ov, nv) ->
-            currentGameScene().ifPresent(gameScene -> embedGameScene(theUI().configs().current(), gameScene)));
+            currentGameScene().ifPresent(gameScene -> embedGameScene(theUI().currentConfig(), gameScene)));
     }
 
     private void configurePiPView() {
         pipView.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Background::fill));
         pipView.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
         pipView.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> PY_PIP_ON.get() && theUI().configs().currentGameSceneIsPlayScene3D(),
+            () -> PY_PIP_ON.get() && theUI().currentGameSceneIsPlayScene3D(),
             PY_PIP_ON, gameScenePy
         ));
     }
@@ -357,7 +378,7 @@ public class GameView implements PacManGames_View {
 
     private void handleContextMenuRequest(ContextMenuEvent e) {
         var menuItems = new ArrayList<>(gameScenePy.get().supplyContextMenuItems(e));
-        if (theUI().configs().currentGameSceneIsPlayScene2D()) {
+        if (theUI().currentGameSceneIsPlayScene2D()) {
             var item = new MenuItem(theAssets().text("use_3D_scene"));
             item.setOnAction(ae -> PacManGames_Actions.TOGGLE_PLAY_SCENE_2D_3D.execute());
             menuItems.addFirst(item);
@@ -370,7 +391,7 @@ public class GameView implements PacManGames_View {
 
     private void showGameSceneHelp() {
         if (!theGameController().isSelected(GameVariant.MS_PACMAN_TENGEN)
-            && theUI().configs().currentGameSceneIs2D()) {
+            && theUI().currentGameSceneIs2D()) {
             popupLayer.showHelp(canvasContainer.scaling());
         }
     }

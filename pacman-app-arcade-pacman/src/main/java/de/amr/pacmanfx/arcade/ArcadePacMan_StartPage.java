@@ -15,7 +15,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 
-import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_StartPage extends StackPane implements StartPage, ResourceManager {

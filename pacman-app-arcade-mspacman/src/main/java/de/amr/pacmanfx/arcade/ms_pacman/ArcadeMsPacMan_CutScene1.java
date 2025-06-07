@@ -62,7 +62,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         pinky = createPinkGhost();
         heart = new Actor();
 
-        ArcadeMsPacMan_SpriteSheet spriteSheet = theUI().configs().current().spriteSheet();
+        ArcadeMsPacMan_SpriteSheet spriteSheet = theUI().currentConfig().spriteSheet();
         msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimationMap(spriteSheet));
         pacMan.setAnimations(new ArcadeMsPacMan_PacAnimationMap(spriteSheet));
         inky.setAnimations(new ArcadeMsPacMan_GhostAnimationMap(spriteSheet, inky.personality()));

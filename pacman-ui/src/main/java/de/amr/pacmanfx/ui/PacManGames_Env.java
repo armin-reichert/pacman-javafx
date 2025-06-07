@@ -136,7 +136,7 @@ public final class PacManGames_Env {
         configClassesMap.forEach((gameVariant, configClass) -> {
             try {
                 PacManGames_UIConfiguration config = configClass.getDeclaredConstructor(PacManGames_Assets.class).newInstance(theAssets);
-                theUI.configs().set(gameVariant, config);
+                theUI.setConfig(gameVariant, config);
                 Logger.info("Game variant {} uses UI configuration: {}", gameVariant, config);
             } catch (Exception x) {
                 Logger.error("Could not create UI configuration of class {}", configClass);

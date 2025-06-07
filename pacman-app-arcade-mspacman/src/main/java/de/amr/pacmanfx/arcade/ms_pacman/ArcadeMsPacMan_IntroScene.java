@@ -89,7 +89,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         presented = RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
 
-        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) theUI().configs().current().spriteSheet();
+        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) theUI().currentConfig().spriteSheet();
         msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimationMap(spriteSheet));
         msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
         for (Ghost ghost : ghosts) {

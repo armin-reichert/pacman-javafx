@@ -124,7 +124,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         }
 
         void setGameVariant(GameVariant gameVariant) {
-            PacManGames_UIConfiguration config = theUI().configs().configuration(gameVariant);
+            PacManGames_UIConfiguration config = theUI().configuration(gameVariant);
             renderer = config.createRenderer(ctx.getCanvas());
 
             switch (gameVariant) {

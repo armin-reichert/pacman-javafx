@@ -43,20 +43,20 @@ public class PacManGames_UIConfigurations {
         return configMap.get(gameVariant);
     }
 
-    public PacManGames_UIConfiguration current() {
+    public PacManGames_UIConfiguration currentConfig() {
         return configMap.get(theGameVariant());
     }
 
     public boolean currentGameSceneIsPlayScene2D() {
         Optional<GameScene> currentGameScene = theUI().currentGameScene();
         return currentGameScene.isPresent()
-            && current().gameSceneHasID(currentGameScene.get(), "PlayScene2D");
+            && currentConfig().gameSceneHasID(currentGameScene.get(), "PlayScene2D");
     }
 
     public boolean currentGameSceneIsPlayScene3D() {
         Optional<GameScene> currentGameScene = theUI().currentGameScene();
         return currentGameScene.isPresent()
-            && current().gameSceneHasID(currentGameScene.get(), "PlayScene3D");
+            && currentConfig().gameSceneHasID(currentGameScene.get(), "PlayScene3D");
     }
 
     public boolean currentGameSceneIs2D() {

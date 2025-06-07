@@ -69,7 +69,7 @@ public interface TengenMsPacMan_GameActions {
 
         @Override
         public boolean isEnabled() {
-            return theUI().configs().currentGameSceneIsPlayScene2D();
+            return theUI().currentGameSceneIsPlayScene2D();
         }
     };
 

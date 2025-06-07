@@ -20,8 +20,12 @@ public interface PacManGames_UI {
 
     void addStartPage(StartPage startPage);
     void buildUI(Stage stage, double width, double height, DashboardID... dashboardIDs);
-    PacManGames_UIConfigurations configs();
+    PacManGames_UIConfiguration configuration(GameVariant gameVariant);
+    PacManGames_UIConfiguration currentConfig();
     Optional<GameScene> currentGameScene();
+    boolean currentGameSceneIsPlayScene2D();
+    boolean currentGameSceneIsPlayScene3D();
+    boolean currentGameSceneIs2D();
     PacManGames_View currentView();
     Dashboard dashboard();
     ObjectProperty<GameScene> gameSceneProperty();
@@ -29,6 +33,7 @@ public interface PacManGames_UI {
     void restart();
     void selectGameVariant(GameVariant variant);
     void selectStartPage(int index);
+    void setConfig(GameVariant variant, PacManGames_UIConfiguration uiConfig);
     void show();
     void showEditorView();
     default void showFlashMessage(String message, Object... args) { showFlashMessageSec(1.5, message, args); }

@@ -31,6 +31,8 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
 import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -44,8 +46,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     private final ObjectProperty<PacManGames_View> viewPy = new SimpleObjectProperty<>();
     private final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
-
-    private final PacManGames_UIConfigurations configs = new PacManGames_UIConfigurations();
 
     private Stage stage;
     private Scene mainScene;
@@ -212,7 +212,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
         viewPy.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
         root.backgroundProperty().bind(gameSceneProperty().map(
-            gameScene -> configs.currentGameSceneIsPlayScene3D()
+            gameScene -> currentGameSceneIsPlayScene3D()
                 ? theAssets().get("background.play_scene3d")
                 : theAssets().get("background.scene"))
         );
@@ -220,7 +220,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     // Asset key regex: app.title.(ms_pacman|ms_pacman_xxl|pacman,pacman_xxl|tengen)(.paused)?
     private String computeTitleText(GameScene currentGameScene, boolean threeDModeEnabled, boolean modeDebug) {
-        String ans = configs.current().assetNamespace();
+        String ans = currentConfig().assetNamespace();
         String paused = theClock().isPaused() ? ".paused" : "";
         String key = "app.title." + ans + paused;
         String modeText = theAssets().text(threeDModeEnabled ? "threeD" : "twoD");
@@ -235,9 +235,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         }
         return theAssets().text(key, modeText) + " [%s]".formatted(sceneClassName);
     }
-
-    @Override
-    public PacManGames_UIConfigurations configs() { return configs; }
 
     @Override
     public Optional<GameScene> currentGameScene() {
@@ -284,7 +281,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             Logger.error("Cannot select game variant (NULL)");
             return;
         }
-        PacManGames_UIConfiguration uiConfig = configs.configuration(gameVariant);
+        PacManGames_UIConfiguration uiConfig = configuration(gameVariant);
         theSound().selectGameVariant(gameVariant, uiConfig.assetNamespace());
         stage.getIcons().setAll(uiConfig.appIcon());
         gameView.canvasContainer().decorationEnabledPy.set(uiConfig.isGameCanvasDecorated());
@@ -338,4 +335,56 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     public void updateGameScene(boolean reloadCurrent) {
         gameView.updateGameScene(reloadCurrent);
     }
+
+    // UI configuration
+
+    protected final Map<GameVariant, PacManGames_UIConfiguration> configMap = new EnumMap<>(GameVariant.class);
+
+    /**
+     * Stores the UI configuration for a game variant and initializes the game scenes (assigns the game context).
+     *
+     * @param variant a game variant
+     * @param uiConfig the UI configuration for this variant
+     */
+    @Override
+    public void setConfig(GameVariant variant, PacManGames_UIConfiguration uiConfig) {
+        requireNonNull(variant);
+        requireNonNull(uiConfig);
+        uiConfig.gameScenes().forEach(scene -> {
+            if (scene instanceof GameScene2D gameScene2D) {
+                gameScene2D.debugInfoVisibleProperty().bind(PY_DEBUG_INFO_VISIBLE);
+            }
+        });
+        configMap.put(variant, uiConfig);
+    }
+
+    @Override
+    public PacManGames_UIConfiguration configuration(GameVariant gameVariant) {
+        return configMap.get(gameVariant);
+    }
+
+    @Override
+    public PacManGames_UIConfiguration currentConfig() {
+        return configMap.get(theGameVariant());
+    }
+
+    @Override
+    public boolean currentGameSceneIsPlayScene2D() {
+        Optional<GameScene> currentGameScene = theUI().currentGameScene();
+        return currentGameScene.isPresent()
+                && currentConfig().gameSceneHasID(currentGameScene.get(), "PlayScene2D");
+    }
+
+    @Override
+    public boolean currentGameSceneIsPlayScene3D() {
+        Optional<GameScene> currentGameScene = theUI().currentGameScene();
+        return currentGameScene.isPresent()
+                && currentConfig().gameSceneHasID(currentGameScene.get(), "PlayScene3D");
+    }
+
+    @Override
+    public boolean currentGameSceneIs2D() {
+        return theUI().currentGameScene().map(GameScene2D.class::isInstance).orElse(false);
+    }
+
 }

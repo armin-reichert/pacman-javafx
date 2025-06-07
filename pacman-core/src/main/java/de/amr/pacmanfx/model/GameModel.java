@@ -21,8 +21,8 @@ import java.util.OptionalInt;
 
 import static de.amr.pacmanfx.Globals.theGameEventManager;
 import static de.amr.pacmanfx.Globals.theSimulationStep;
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 
 /**
  * Common base class of all Pac-Man game models.

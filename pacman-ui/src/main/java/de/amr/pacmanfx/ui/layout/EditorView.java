@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import de.amr.pacmanfx.uilib.GameAction;
-import de.amr.pacmanfx.uilib.Ufx;
 import javafx.beans.binding.StringExpression;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;

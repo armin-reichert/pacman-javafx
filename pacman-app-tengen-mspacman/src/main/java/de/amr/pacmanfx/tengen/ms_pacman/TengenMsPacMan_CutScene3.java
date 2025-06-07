@@ -70,7 +70,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         bagWithJunior = new Actor();
         bagWithJunior.hide();
 
-        spriteSheet = theUI().configs().current().spriteSheet();
+        spriteSheet = theUI().currentConfig().spriteSheet();
         pacMan.setAnimations(new TengenMsPacMan_PacAnimationMap(spriteSheet));
         msPacMan.setAnimations(new TengenMsPacMan_PacAnimationMap(spriteSheet));
 
