@@ -43,6 +43,7 @@ import static java.util.Objects.requireNonNull;
 public class PacManGames_UI_Impl implements PacManGames_UI {
 
     private final ObjectProperty<PacManGames_View> viewPy = new SimpleObjectProperty<>();
+    private final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
 
     private Stage stage;
     private Scene mainScene;
@@ -186,6 +187,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         // Game view and dashboard
         {
             gameView = new GameView(mainScene);
+            gameScenePy.bind(gameView.gameSceneProperty());
             gameView.bindTitle(Bindings.createStringBinding(
                 () -> computeTitleText(PY_3D_ENABLED.get(), PY_DEBUG_INFO_VISIBLE.get()),
                 theClock().pausedProperty(), mainScene.heightProperty(), gameSceneProperty(),
@@ -205,7 +207,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         theClock().setPermanentAction(this::drawCurrentView);
 
         viewPy.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
-        root.backgroundProperty().bind(gameView.gameSceneProperty().map(
+        root.backgroundProperty().bind(gameSceneProperty().map(
             gameScene -> theUIConfig().currentGameSceneIsPlayScene3D()
                 ? theAssets().get("background.play_scene3d")
                 : theAssets().get("background.scene"))
@@ -249,7 +251,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     @Override
     public ObjectProperty<GameScene> gameSceneProperty() {
-        return gameView.gameSceneProperty();
+        return gameScenePy;
     }
 
     @Override
@@ -323,7 +325,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         theClock().stop();
         theClock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
         theSound().stopAll();
-        gameView.gameSceneProperty().set(null);
         gameView.setDashboardVisible(false);
         viewPy.set(startPagesView);
         startPagesView.currentStartPage().ifPresent(StartPage::requestFocus);

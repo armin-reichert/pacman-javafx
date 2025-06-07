@@ -194,7 +194,9 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
         theSound().stopAll();
         deleteActionBindings();
         perspectiveIDPy.unbind();
-        level3D.stopAnimations();
+        if (level3D != null) {
+            level3D.stopAnimations();
+        }
         level3D = null;
     }
 
