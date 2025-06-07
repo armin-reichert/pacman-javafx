@@ -238,7 +238,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     @Override
     public Optional<GameScene> currentGameScene() {
-        return gameView.currentGameScene();
+        return Optional.ofNullable(gameScenePy.get());
     }
 
     @Override
@@ -370,21 +370,18 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     @Override
     public boolean currentGameSceneIsPlayScene2D() {
-        Optional<GameScene> currentGameScene = theUI().currentGameScene();
-        return currentGameScene.isPresent()
-                && currentConfig().gameSceneHasID(currentGameScene.get(), "PlayScene2D");
+        GameScene currentGameScene = currentGameScene().orElse(null);
+        return currentGameScene != null && currentConfig().gameSceneHasID(currentGameScene, "PlayScene2D");
     }
 
     @Override
     public boolean currentGameSceneIsPlayScene3D() {
-        Optional<GameScene> currentGameScene = theUI().currentGameScene();
-        return currentGameScene.isPresent()
-                && currentConfig().gameSceneHasID(currentGameScene.get(), "PlayScene3D");
+        GameScene currentGameScene = currentGameScene().orElse(null);
+        return currentGameScene != null && currentConfig().gameSceneHasID(currentGameScene, "PlayScene3D");
     }
 
     @Override
     public boolean currentGameSceneIs2D() {
-        return theUI().currentGameScene().map(GameScene2D.class::isInstance).orElse(false);
+        return currentGameScene().map(GameScene2D.class::isInstance).orElse(false);
     }
-
 }
