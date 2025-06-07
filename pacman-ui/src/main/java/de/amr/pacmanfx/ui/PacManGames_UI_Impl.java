@@ -281,17 +281,17 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         theSound().selectGameVariant(gameVariant, uiConfig.assetNamespace());
         stage.getIcons().setAll(uiConfig.appIcon());
         gameView.canvasContainer().decorationEnabledPy.set(uiConfig.isGameCanvasDecorated());
-        // this triggers a game event and calling the event handlers:
+        // this triggers a game event and the event handlers:
         theGameController().selectGameVariant(gameVariant);
     }
 
     @Override
     public void show() {
-        selectGameVariant(theGameVariant());
         viewPy.set(startPagesView);
         startPagesView.currentStartPage().ifPresent(StartPage::requestFocus);
         stage.centerOnScreen();
         stage.show();
+        selectGameVariant(theGameVariant());
     }
 
     @Override
