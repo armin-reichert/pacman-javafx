@@ -20,6 +20,7 @@ public interface PacManGames_UI {
 
     void addStartPage(StartPage startPage);
     void buildUI(Stage stage, double width, double height, DashboardID... dashboardIDs);
+    PacManGames_UIConfigurations configs();
     Optional<GameScene> currentGameScene();
     PacManGames_View currentView();
     Dashboard dashboard();

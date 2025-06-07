@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.image.Image;
 import javafx.scene.text.Font;
@@ -20,7 +19,7 @@ import static de.amr.pacmanfx.arcade.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theUIConfig;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
 
 public class ArcadeCommon_BootScene2D extends GameScene2D {
 
@@ -31,7 +30,7 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
     @Override
     public void doInit() {
         theGame().scoreManager().setScoreVisible(false);
-        Image spriteImage = theUIConfig().current().spriteSheet().sourceImage();
+        Image spriteImage = theUI().configs().current().spriteSheet().sourceImage();
         // ignore left half of sprite sheet image
         minX = spriteImage.getWidth() / 2;
         maxX = spriteImage.getWidth() - FRAGMENT_SIZE;

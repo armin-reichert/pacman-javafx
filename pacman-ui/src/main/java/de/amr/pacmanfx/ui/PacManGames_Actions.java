@@ -340,8 +340,8 @@ public interface PacManGames_Actions {
         public void execute() {
             theUI().currentGameScene().ifPresent(gameScene -> {
                 toggle(PY_3D_ENABLED);
-                if (theUIConfig().currentGameSceneIsPlayScene2D()
-                    || theUIConfig().currentGameSceneIsPlayScene3D()) {
+                if (theUI().configs().currentGameSceneIsPlayScene2D()
+                    || theUI().configs().currentGameSceneIsPlayScene3D()) {
                     theUI().updateGameScene(true);
                     theGameController().updateGameState(); //TODO needed?
                 }
@@ -364,7 +364,7 @@ public interface PacManGames_Actions {
         @Override
         public void execute() {
             toggle(PY_PIP_ON);
-            if (!theUIConfig().currentGameSceneIsPlayScene3D()) {
+            if (!theUI().configs().currentGameSceneIsPlayScene3D()) {
                 theUI().showFlashMessage(theAssets().text(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
             }
         }

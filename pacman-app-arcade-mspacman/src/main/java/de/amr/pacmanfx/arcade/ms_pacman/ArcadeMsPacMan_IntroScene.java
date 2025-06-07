@@ -24,10 +24,10 @@ import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PI
 import static de.amr.pacmanfx.arcade.ArcadePalette.*;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theUIConfig;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -89,7 +89,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         presented = RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
 
-        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) theUIConfig().current().spriteSheet();
+        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) theUI().configs().current().spriteSheet();
         msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimationMap(spriteSheet));
         msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
         for (Ghost ghost : ghosts) {

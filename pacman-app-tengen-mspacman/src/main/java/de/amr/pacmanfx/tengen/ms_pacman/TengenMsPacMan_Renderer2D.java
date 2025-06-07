@@ -15,8 +15,8 @@ import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.input.JoypadKeyBinding;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.ObjectProperty;
@@ -258,7 +258,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     public void drawLevelMessage(GameLevel level, Vector2f position, Font font) {
         if (level.message() != GameLevel.MESSAGE_NONE) {
-            String ans = theUIConfig().current().assetNamespace();
+            String ans = theUI().configs().current().assetNamespace();
             float x = position.x(), y = position.y();
             switch (level.message()) {
                 case GameLevel.MESSAGE_READY -> drawTextCenteredOver("READY!", x, y, theAssets().color(ans + ".color.ready_message"), font);

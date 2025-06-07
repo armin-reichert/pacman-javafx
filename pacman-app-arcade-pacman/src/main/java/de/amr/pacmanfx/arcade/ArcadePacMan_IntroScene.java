@@ -31,7 +31,7 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.model.actors.GhostState.EATEN;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theUIConfig;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
 
 /**
  * The ghosts are presented one by one, Pac-Man is chased by the ghosts, turns the cards and hunts the ghosts himself.
@@ -74,7 +74,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         bindToDefaultKeys(PacManGames_Actions.TEST_LEVELS_BONI);
         bindToDefaultKeys(PacManGames_Actions.TEST_LEVELS_TEASERS);
 
-        spriteSheet = theUIConfig().current().spriteSheet();
+        spriteSheet = theUI().configs().current().spriteSheet();
         blinking = new Pulse(10, true);
         pacMan = createPac();
         pacMan.setAnimations(new ArcadePacMan_PacAnimationMap(spriteSheet));

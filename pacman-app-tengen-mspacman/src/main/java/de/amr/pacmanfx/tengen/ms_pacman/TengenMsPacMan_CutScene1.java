@@ -14,8 +14,8 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationMap.ANIM_PAC_MAN_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.HEART_SPRITE;
@@ -71,7 +71,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         pinky = createPinkGhost();
         heart = new Actor();
 
-        var spriteSheet = (TengenMsPacMan_SpriteSheet) theUIConfig().current().spriteSheet();
+        var spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configs().current().spriteSheet();
         msPacMan.setAnimations(new TengenMsPacMan_PacAnimationMap(spriteSheet));
         pacMan.setAnimations(new TengenMsPacMan_PacAnimationMap(spriteSheet));
         inky.setAnimations(new TengenMsPacMan_GhostAnimationMap(spriteSheet, inky.personality()));

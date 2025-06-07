@@ -94,8 +94,7 @@ public final class PacManGames_Env {
     private static Keyboard theKeyboard;
     private static Joypad theJoypad;
     private static PacManGames_SoundManager theSound;
-    private static PacManGames_UI theUI;
-    private static PacManGames_UIConfigurations theUIConfigManager;
+    private static PacManGames_UI_Impl theUI;
 
     /**
      * Initializes the global game objects like game assets, clock, keyboard input etc.
@@ -109,7 +108,6 @@ public final class PacManGames_Env {
         theKeyboard = new Keyboard();
         theJoypad = new Joypad(theKeyboard);
         theSound = new PacManGames_SoundManager();
-        theUIConfigManager = new PacManGames_UIConfigurations();
         Logger.info("Game environment initialized.");
     }
 
@@ -119,7 +117,6 @@ public final class PacManGames_Env {
     public static Joypad theJoypad() { return theJoypad; }
     public static PacManGames_SoundManager theSound() { return theSound; }
     public static PacManGames_UI theUI() { return theUI; }
-    public static PacManGames_UIConfigurations theUIConfig() { return theUIConfigManager; }
 
     /**
      * Creates the global UI instance and stores the configurations of the supported game variants.
@@ -139,7 +136,7 @@ public final class PacManGames_Env {
         configClassesMap.forEach((gameVariant, configClass) -> {
             try {
                 PacManGames_UIConfiguration config = configClass.getDeclaredConstructor(PacManGames_Assets.class).newInstance(theAssets);
-                theUIConfigManager.set(gameVariant, config);
+                theUI.configs().set(gameVariant, config);
                 Logger.info("Game variant {} uses UI configuration: {}", gameVariant, config);
             } catch (Exception x) {
                 Logger.error("Could not create UI configuration of class {}", configClass);

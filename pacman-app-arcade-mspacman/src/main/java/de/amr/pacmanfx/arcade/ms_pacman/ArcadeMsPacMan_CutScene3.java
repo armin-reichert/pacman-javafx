@@ -21,7 +21,7 @@ import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_PacAnimationMap.PA
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theUIConfig;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
 
 /**
  * Intermission scene 3: "Junior".
@@ -57,7 +57,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         stork = new Actor();
         bag = new Actor();
 
-        ArcadeMsPacMan_SpriteSheet spriteSheet = theUIConfig().current().spriteSheet();
+        ArcadeMsPacMan_SpriteSheet spriteSheet = theUI().configs().current().spriteSheet();
         msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimationMap(spriteSheet));
         pacMan.setAnimations(new ArcadeMsPacMan_PacAnimationMap(spriteSheet));
 

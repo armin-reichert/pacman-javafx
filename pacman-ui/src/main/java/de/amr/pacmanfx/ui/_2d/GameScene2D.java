@@ -90,7 +90,7 @@ public abstract class GameScene2D implements GameScene, PacManGames_ActionBindin
     /**
      * @return color used for drawing scores and credit info
      */
-    public Color scoreColor() { return theAssets().color(theUIConfig().current().assetNamespace() + ".color.score"); }
+    public Color scoreColor() { return theAssets().color(theUI().configs().current().assetNamespace() + ".color.score"); }
 
     public GameRenderer gr() { return gameRenderer; }
     public void setGameRenderer(GameRenderer renderer) { gameRenderer = requireNonNull(renderer); }

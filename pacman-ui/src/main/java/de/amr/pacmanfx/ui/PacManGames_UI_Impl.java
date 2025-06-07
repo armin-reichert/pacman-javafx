@@ -45,6 +45,8 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     private final ObjectProperty<PacManGames_View> viewPy = new SimpleObjectProperty<>();
     private final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
 
+    private final PacManGames_UIConfigurations configs = new PacManGames_UIConfigurations();
+
     private Stage stage;
     private Scene mainScene;
     private StartPagesView startPagesView;
@@ -210,15 +212,15 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
         viewPy.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
         root.backgroundProperty().bind(gameSceneProperty().map(
-            gameScene -> theUIConfig().currentGameSceneIsPlayScene3D()
+            gameScene -> configs.currentGameSceneIsPlayScene3D()
                 ? theAssets().get("background.play_scene3d")
                 : theAssets().get("background.scene"))
         );
     }
 
     // Asset key regex: app.title.(ms_pacman|ms_pacman_xxl|pacman,pacman_xxl|tengen)(.paused)?
-    private static String computeTitleText(GameScene currentGameScene, boolean threeDModeEnabled, boolean modeDebug) {
-        String ans = theUIConfig().current().assetNamespace();
+    private String computeTitleText(GameScene currentGameScene, boolean threeDModeEnabled, boolean modeDebug) {
+        String ans = configs.current().assetNamespace();
         String paused = theClock().isPaused() ? ".paused" : "";
         String key = "app.title." + ans + paused;
         String modeText = theAssets().text(threeDModeEnabled ? "threeD" : "twoD");
@@ -233,6 +235,9 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         }
         return theAssets().text(key, modeText) + " [%s]".formatted(sceneClassName);
     }
+
+    @Override
+    public PacManGames_UIConfigurations configs() { return configs; }
 
     @Override
     public Optional<GameScene> currentGameScene() {
@@ -279,7 +284,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             Logger.error("Cannot select game variant (NULL)");
             return;
         }
-        PacManGames_UIConfiguration uiConfig = theUIConfig().configuration(gameVariant);
+        PacManGames_UIConfiguration uiConfig = configs.configuration(gameVariant);
         theSound().selectGameVariant(gameVariant, uiConfig.assetNamespace());
         stage.getIcons().setAll(uiConfig.appIcon());
         gameView.canvasContainer().decorationEnabledPy.set(uiConfig.isGameCanvasDecorated());

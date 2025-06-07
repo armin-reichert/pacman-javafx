@@ -19,8 +19,8 @@ import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.createPac;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.createRedGhost;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
+import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 
 /**
@@ -50,7 +50,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         blinky.setSpeed(0);
         blinky.hide();
         music = theSound().createSound("intermission");
-        ArcadePacMan_SpriteSheet spriteSheet = theUIConfig().current().spriteSheet();
+        ArcadePacMan_SpriteSheet spriteSheet = theUI().configs().current().spriteSheet();
         pac.setAnimations(new ArcadePacMan_PacAnimationMap(spriteSheet));
         var blinkyAnimations = new ArcadePacMan_GhostAnimationMap(spriteSheet, blinky.personality());
         blinkyNormal = blinkyAnimations.animation(ANIM_GHOST_NORMAL);
