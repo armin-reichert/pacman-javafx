@@ -75,11 +75,11 @@ public class PacManGames3dApp extends Application {
         infoBoxCustomMaps.setTableItems(mapSelector.customMaps());
         mapSelector.startWatchingCustomMaps();
 
-        theUI().addStartPage(new ArcadePacMan_StartPage(GameVariant.PACMAN));
-        theUI().addStartPage(new ArcadeMsPacMan_StartPage(GameVariant.MS_PACMAN));
-        theUI().addStartPage(new TengenMsPacMan_StartPage(GameVariant.MS_PACMAN_TENGEN));
-        theUI().addStartPage(new PacManXXL_Common_StartPage());
-        theUI().selectStartPage(0);
+        theUI().startPagesView().addStartPage(new ArcadePacMan_StartPage(GameVariant.PACMAN));
+        theUI().startPagesView().addStartPage(new ArcadeMsPacMan_StartPage(GameVariant.MS_PACMAN));
+        theUI().startPagesView().addStartPage(new TengenMsPacMan_StartPage(GameVariant.MS_PACMAN_TENGEN));
+        theUI().startPagesView().addStartPage(new PacManXXL_Common_StartPage());
+        theUI().startPagesView().selectStartPage(0);
 
         theUI().show();
     }

@@ -9,6 +9,7 @@ import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.layout.PacManGames_View;
 import de.amr.pacmanfx.ui.layout.StartPage;
+import de.amr.pacmanfx.ui.layout.StartPagesView;
 import de.amr.pacmanfx.uilib.GameScene;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Scene;
@@ -18,7 +19,8 @@ import java.util.Optional;
 
 public interface PacManGames_UI {
 
-    void addStartPage(StartPage startPage);
+    StartPagesView startPagesView();
+
     void buildUI(Stage stage, double width, double height, DashboardID... dashboardIDs);
     PacManGames_UIConfiguration configuration(GameVariant gameVariant);
     PacManGames_UIConfiguration currentConfig();
@@ -32,7 +34,6 @@ public interface PacManGames_UI {
     Scene mainScene();
     void restart();
     void selectGameVariant(GameVariant variant);
-    void selectStartPage(int index);
     void setConfig(GameVariant variant, PacManGames_UIConfiguration uiConfig);
     void show();
     void showEditorView();

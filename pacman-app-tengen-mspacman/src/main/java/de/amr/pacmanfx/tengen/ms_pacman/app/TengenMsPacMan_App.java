@@ -45,8 +45,8 @@ public class TengenMsPacMan_App extends Application {
             DashboardID.KEYBOARD,
             DashboardID.ABOUT);
 
-        theUI().addStartPage(new TengenMsPacMan_StartPage(GameVariant.MS_PACMAN_TENGEN));
-        theUI().selectStartPage(0);
+        theUI().startPagesView().addStartPage(new TengenMsPacMan_StartPage(GameVariant.MS_PACMAN_TENGEN));
+        theUI().startPagesView().selectStartPage(0);
 
         theUI().show();
     }

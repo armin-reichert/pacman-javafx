@@ -58,8 +58,8 @@ public class PacManXXL_Common_App extends Application {
         infoBoxCustomMaps.setTableItems(xxlMapSelector.customMaps());
         xxlMapSelector.startWatchingCustomMaps();
 
-        theUI().addStartPage(new PacManXXL_Common_StartPage());
-        theUI().selectStartPage(0);
+        theUI().startPagesView().addStartPage(new PacManXXL_Common_StartPage());
+        theUI().startPagesView().selectStartPage(0);
 
         theUI().show();
     }

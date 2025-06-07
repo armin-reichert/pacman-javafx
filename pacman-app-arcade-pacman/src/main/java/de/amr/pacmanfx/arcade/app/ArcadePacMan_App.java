@@ -43,8 +43,8 @@ public class ArcadePacMan_App extends Application {
             DashboardID.KEYBOARD,
             DashboardID.ABOUT);
 
-        theUI().addStartPage(new ArcadePacMan_StartPage(GameVariant.PACMAN));
-        theUI().selectStartPage(0);
+        theUI().startPagesView().addStartPage(new ArcadePacMan_StartPage(GameVariant.PACMAN));
+        theUI().startPagesView().selectStartPage(0);
 
         theUI().show();
     }

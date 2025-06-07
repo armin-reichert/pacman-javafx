@@ -96,11 +96,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void addStartPage(StartPage startPage) {
-        startPagesView.addStartPage(requireNonNull(startPage));
-    }
-
-    @Override
     public void buildUI(Stage stage, double width, double height, DashboardID... dashboardIDs) {
         this.stage = requireNonNull(stage);
         stage.setMinWidth(280);
@@ -271,11 +266,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     }
 
     @Override
-    public void selectStartPage(int index) {
-        startPagesView.selectStartPage(index);
-    }
-
-    @Override
     public void selectGameVariant(GameVariant gameVariant) {
         if (gameVariant == null) {
             Logger.error("Cannot select game variant (NULL)");
@@ -330,6 +320,9 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         viewPy.set(startPagesView);
         startPagesView.currentStartPage().ifPresent(StartPage::requestFocus);
     }
+
+    @Override
+    public StartPagesView startPagesView() { return startPagesView; }
 
     @Override
     public void updateGameScene(boolean reloadCurrent) {
