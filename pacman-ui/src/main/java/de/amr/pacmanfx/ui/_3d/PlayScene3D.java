@@ -43,7 +43,7 @@ import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
-import static de.amr.pacmanfx.uilib.Ufx.contextMenuTitleItem;
+import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -362,7 +362,15 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
                     theSound().stopAll();
                     // last update before dying animation
                     level3D.pac3D().update(theGameLevel());
-                    playPacManDyingAnimation();
+                    theGameState().timer().resetIndefiniteTime();
+                    Animation animation = new SequentialTransition(
+                        now(theSound()::playPacDeathSound),
+                        level3D.pac3D().createDyingAnimation(),
+                        pauseSec(1)
+                    );
+                    animation.setDelay(Duration.seconds(2));
+                    animation.setOnFinished(e -> theGameController().letCurrentGameStateExpire());
+                    animation.play();
                 }
                 case GHOST_DYING -> {
                     GameSpriteSheet spriteSheet = theUIConfig().current().spriteSheet();
@@ -542,20 +550,5 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
         double y = TS * (houseTopLeft.y() +       houseSize.y());
         double seconds = theGame().isPlaying() ? 0.5 : 2.5;
         level3D.showAnimatedMessage("READY!", seconds, x, y);
-    }
-
-    private void playPacManDyingAnimation() {
-        theGameState().timer().resetIndefiniteTime();
-        Animation animation =
-            new SequentialTransition(
-                new ParallelTransition(
-                    Ufx.now(theSound()::playPacDeathSound),
-                    level3D.pac3D().createDyingAnimation()
-                ),
-                Ufx.pauseSec(1)
-            );
-        animation.setDelay(Duration.seconds(2));
-        animation.setOnFinished(e -> theGameController().letCurrentGameStateExpire());
-        animation.play();
     }
 }

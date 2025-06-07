@@ -304,9 +304,7 @@ public class PacManGames_SoundManager {
         stop("pacman_munch");
     }
 
-    public void playPacDeathSound() {
-        playIfEnabled("pacman_death");
-    }
+    public void playPacDeathSound() { playIfEnabled("pacman_death"); }
 
     public void playPacPowerSound() { playIfEnabled("pacman_power"); }
 
