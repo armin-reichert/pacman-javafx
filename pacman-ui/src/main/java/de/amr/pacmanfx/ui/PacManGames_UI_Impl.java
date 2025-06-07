@@ -96,7 +96,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     }
 
     @Override
-    public void buildUI(Stage stage, double width, double height) {
+    public void buildUI(Stage stage, double width, double height, DashboardID... dashboardIDs) {
         this.stage = requireNonNull(stage);
         stage.setMinWidth(280);
         stage.setMinHeight(360);
@@ -183,9 +183,10 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             startPagesView.setBackground(theAssets().background("background.scene"));
         }
 
-        // Game view
+        // Game view and dashboard
         {
             gameView = new GameView(this);
+            gameView.dashboard().addDefaultInfoBoxes(dashboardIDs);
         }
 
         theClock().setPausableAction(this::doSimulationStepAndUpdateGameScene);
@@ -197,11 +198,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
                 ? theAssets().get("background.play_scene3d")
                 : theAssets().get("background.scene"))
         );
-    }
-
-    @Override
-    public void buildDashboard(DashboardID... ids) {
-        gameView.dashboard().addDefaultInfoBoxes(ids);
     }
 
     @Override

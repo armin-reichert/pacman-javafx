@@ -34,9 +34,7 @@ public class ArcadePacMan_App extends Application {
 
         // UI size: 80% of available screen height, aspect 12:10
         double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
-        theUI().buildUI(stage, 1.2 * height, height);
-
-        theUI().buildDashboard(
+        theUI().buildUI(stage, 1.2 * height, height,
             DashboardID.README,
             DashboardID.GENERAL,
             DashboardID.GAME_CONTROL,
@@ -44,8 +42,8 @@ public class ArcadePacMan_App extends Application {
             DashboardID.GAME_INFO,
             DashboardID.ACTOR_INFO,
             DashboardID.KEYBOARD,
-            DashboardID.ABOUT
-        );
+            DashboardID.ABOUT);
+
         theUI().addStartPage(new ArcadePacMan_StartPage(GameVariant.PACMAN));
         theUI().selectStartPage(0);
 

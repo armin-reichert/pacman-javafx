@@ -59,9 +59,7 @@ public class PacManGames3dApp extends Application {
 
         // UI size: 80% of available screen height, aspect 16:10
         double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
-        theUI().buildUI(stage, 1.6 * height, height);
-
-        theUI().buildDashboard(
+        theUI().buildUI(stage, 1.6 * height, height,
                 DashboardID.README,
                 DashboardID.GENERAL,
                 DashboardID.GAME_CONTROL,

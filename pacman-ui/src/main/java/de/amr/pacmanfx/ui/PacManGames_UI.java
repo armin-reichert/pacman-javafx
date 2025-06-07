@@ -19,8 +19,7 @@ import java.util.Optional;
 public interface PacManGames_UI {
 
     void addStartPage(StartPage startPage);
-    void buildUI(Stage stage, double width, double height);
-    void buildDashboard(DashboardID... ids);
+    void buildUI(Stage stage, double width, double height, DashboardID... dashboardIDs);
     Optional<GameScene> currentGameScene();
     PacManGames_View currentView();
     Dashboard dashboard();
