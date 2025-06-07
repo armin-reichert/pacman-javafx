@@ -15,6 +15,7 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.PacManGames_Actions;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
 
@@ -76,9 +77,11 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     public void doInit() {
         theGame().scoreManager().setScoreVisible(true);
 
-        bindArcadeInsertCoinAction();
-        bindArcadeStartGameAction();
-        bindStartTestsActions();
+        bindToDefaultKeys(PacManGames_Actions.ARCADE_INSERT_COIN);
+        bindToDefaultKeys(PacManGames_Actions.ARCADE_START_GAME);
+        bindToDefaultKeys(PacManGames_Actions.TEST_CUT_SCENES);
+        bindToDefaultKeys(PacManGames_Actions.TEST_LEVELS_BONI);
+        bindToDefaultKeys(PacManGames_Actions.TEST_LEVELS_TEASERS);
 
         msPacMan = createMsPacMan();
         ghosts = new Ghost[] { createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost() };

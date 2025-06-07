@@ -112,7 +112,7 @@ public interface PacManGames_Actions {
     /**
      * Adds credit (simulates insertion of a coin) and switches the game state accordingly.
      */
-    GameAction INSERT_COIN = new GameAction() {
+    GameAction ARCADE_INSERT_COIN = new GameAction() {
         @Override
         public void execute() {
             if (theCoinMechanism().numCoins() < CoinMechanism.MAX_COINS) {
@@ -230,7 +230,7 @@ public interface PacManGames_Actions {
         }
     };
 
-    GameAction START_ARCADE_GAME = new GameAction() {
+    GameAction ARCADE_START_GAME = new GameAction() {
         @Override
         public void execute() {
             theSound().stopVoice();

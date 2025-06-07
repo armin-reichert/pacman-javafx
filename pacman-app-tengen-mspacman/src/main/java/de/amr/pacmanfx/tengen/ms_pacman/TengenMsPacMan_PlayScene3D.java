@@ -9,16 +9,19 @@ import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
+import de.amr.pacmanfx.ui.PacManGames_Actions;
 import de.amr.pacmanfx.ui._3d.Bonus3D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.QUIT_DEMO_LEVEL;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.TOGGLE_PAC_BOOSTER;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.uilib.input.Keyboard.control;
 
 /**
  * The 3D play scene of Tengen Ms. Pac-Man. Differs slightly from the Arcade version, e.g. the
@@ -33,16 +36,26 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             bind(QUIT_DEMO_LEVEL, theJoypad().key(JoypadButton.START));
         } else {
             bindPlayerSteeringActions();
-            bindCheatActions();
+            bindToDefaultKeys(PacManGames_Actions.CHEAT_EAT_ALL_PELLETS);
+            bindToDefaultKeys(PacManGames_Actions.CHEAT_ADD_LIVES);
+            bindToDefaultKeys(PacManGames_Actions.CHEAT_ENTER_NEXT_LEVEL);
+            bindToDefaultKeys(PacManGames_Actions.CHEAT_KILL_GHOSTS);
             bind(TOGGLE_PAC_BOOSTER, theJoypad().key(JoypadButton.A), theJoypad().key(JoypadButton.B));
         }
-        bindScene3DActions();
+        bindToDefaultKeys(PacManGames_Actions.PERSPECTIVE_PREVIOUS);
+        bindToDefaultKeys(PacManGames_Actions.PERSPECTIVE_NEXT);
+        bindToDefaultKeys(PacManGames_Actions.TOGGLE_DRAW_MODE);
 
         updateActionBindings();
     }
 
     @Override
-    protected void bindPlayerSteeringActions() { bindJoypadPlayerSteeringActions(); }
+    protected void bindPlayerSteeringActions() {
+        bind(PacManGames_Actions.PLAYER_UP,    theJoypad().key(JoypadButton.UP),    control(KeyCode.UP));
+        bind(PacManGames_Actions.PLAYER_DOWN,  theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN));
+        bind(PacManGames_Actions.PLAYER_LEFT,  theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT));
+        bind(PacManGames_Actions.PLAYER_RIGHT, theJoypad().key(JoypadButton.RIGHT), control(KeyCode.RIGHT));
+    }
 
     @Override
     protected void replaceGameLevel3D() {

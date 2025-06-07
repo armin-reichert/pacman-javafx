@@ -168,19 +168,29 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
 
     protected void bindActions() {
         deleteActionBindings();
-        bindScene3DActions();
+        bindToDefaultKeys(PacManGames_Actions.PERSPECTIVE_PREVIOUS);
+        bindToDefaultKeys(PacManGames_Actions.PERSPECTIVE_NEXT);
+        bindToDefaultKeys(PacManGames_Actions.TOGGLE_DRAW_MODE);
         if (optGameLevel().isPresent()) {
             if (theGameLevel().isDemoLevel()) {
-                bindArcadeInsertCoinAction();
+                bindToDefaultKeys(PacManGames_Actions.ARCADE_INSERT_COIN);
             } else {
                 bindPlayerSteeringActions();
-                bindCheatActions();
+                bindToDefaultKeys(PacManGames_Actions.CHEAT_EAT_ALL_PELLETS);
+                bindToDefaultKeys(PacManGames_Actions.CHEAT_ADD_LIVES);
+                bindToDefaultKeys(PacManGames_Actions.CHEAT_ENTER_NEXT_LEVEL);
+                bindToDefaultKeys(PacManGames_Actions.CHEAT_KILL_GHOSTS);
             }
         }
         updateActionBindings();
     }
 
-    protected void bindPlayerSteeringActions() { bindArcadePlayerSteeringActions(); }
+    protected void bindPlayerSteeringActions() {
+        bindToDefaultKeys(PacManGames_Actions.PLAYER_UP);
+        bindToDefaultKeys(PacManGames_Actions.PLAYER_DOWN);
+        bindToDefaultKeys(PacManGames_Actions.PLAYER_LEFT);
+        bindToDefaultKeys(PacManGames_Actions.PLAYER_RIGHT);
+    }
 
     @Override
     public void init() {

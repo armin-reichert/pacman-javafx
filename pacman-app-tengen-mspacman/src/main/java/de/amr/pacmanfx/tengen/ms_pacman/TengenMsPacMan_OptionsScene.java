@@ -7,6 +7,7 @@ package de.amr.pacmanfx.tengen.ms_pacman;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
+import de.amr.pacmanfx.ui.PacManGames_Actions;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -64,7 +65,9 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         bind(() -> theJoypad().selectNextKeyBinding(this), alt(KeyCode.J));
         bind(START_PLAYING, theJoypad().key(JoypadButton.START));
         bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, theJoypad().key(JoypadButton.SELECT));
-        bindStartTestsActions();
+        bindToDefaultKeys(PacManGames_Actions.TEST_CUT_SCENES);
+        bindToDefaultKeys(PacManGames_Actions.TEST_LEVELS_BONI);
+        bindToDefaultKeys(PacManGames_Actions.TEST_LEVELS_TEASERS);
 
         selectedOption = OPTION_PAC_BOOSTER;
         tengenGame = (TengenMsPacMan_GameModel) theGame();

@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.ui.PacManGames_Actions;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 
 import static de.amr.pacmanfx.Globals.theCoinMechanism;
@@ -21,8 +22,8 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
     @Override
     public void doInit() {
         theGame().scoreManager().setScoreVisible(true);
-        bindArcadeInsertCoinAction();
-        bindArcadeStartGameAction();
+        bindToDefaultKeys(PacManGames_Actions.ARCADE_INSERT_COIN);
+        bindToDefaultKeys(PacManGames_Actions.ARCADE_START_GAME);
     }
 
     @Override

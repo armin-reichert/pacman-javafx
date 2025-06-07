@@ -48,6 +48,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.uilib.input.Keyboard.control;
 
 /**
  * Tengen play scene, uses vertical scrolling.
@@ -206,9 +207,15 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         if (level.isDemoLevel()) {
             bind(QUIT_DEMO_LEVEL, theJoypad().key(JoypadButton.START));
         } else {
-            bindJoypadPlayerSteeringActions();
+            bind(PacManGames_Actions.PLAYER_UP,    theJoypad().key(JoypadButton.UP),    control(KeyCode.UP));
+            bind(PacManGames_Actions.PLAYER_DOWN,  theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN));
+            bind(PacManGames_Actions.PLAYER_LEFT,  theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT));
+            bind(PacManGames_Actions.PLAYER_RIGHT, theJoypad().key(JoypadButton.RIGHT), control(KeyCode.RIGHT));
             bind(TOGGLE_PAC_BOOSTER, theJoypad().key(JoypadButton.A), theJoypad().key(JoypadButton.B));
-            bindCheatActions();
+            bindToDefaultKeys(PacManGames_Actions.CHEAT_EAT_ALL_PELLETS);
+            bindToDefaultKeys(PacManGames_Actions.CHEAT_ADD_LIVES);
+            bindToDefaultKeys(PacManGames_Actions.CHEAT_ENTER_NEXT_LEVEL);
+            bindToDefaultKeys(PacManGames_Actions.CHEAT_KILL_GHOSTS);
         }
         updateActionBindings();
     }
