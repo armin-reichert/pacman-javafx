@@ -15,8 +15,10 @@ import de.amr.pacmanfx.uilib.GameScene;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -29,7 +31,6 @@ import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
-import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
@@ -118,21 +119,19 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
             var iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, STATUS_ICON_COLOR);
             iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
-                () -> currentView() != editorView && theClock().isPaused(),
+                () -> viewPy.get() != editorView && theClock().isPaused(),
                 viewPy, theClock().pausedProperty()));
 
-            final FontIcon[] icons = {iconMuted, icon3D, iconAutopilot, iconImmune};
-            final HBox iconBox = new HBox(icons);
+            final HBox iconBox = new HBox(iconMuted, icon3D, iconAutopilot, iconImmune);
             iconBox.setMinHeight(STATUS_ICON_SIZE + STATUS_ICON_PADDING);
             iconBox.setMaxHeight(STATUS_ICON_SIZE + STATUS_ICON_PADDING);
             iconBox.setPadding(new Insets(STATUS_ICON_PADDING));
             iconBox.setSpacing(STATUS_ICON_SPACING);
-            iconBox.visibleProperty().bind(Bindings.createBooleanBinding(() -> currentView() != editorView, viewPy));
+            iconBox.visibleProperty().bind(Bindings.createBooleanBinding(() -> viewPy.get() != editorView, viewPy));
             // keep box compact, show only visible items
-            for (FontIcon icon : icons) {
-                icon.visibleProperty().addListener(
-                    (py, ov, nv) -> iconBox.getChildren().setAll(Arrays.stream(icons).filter(FontIcon::isVisible).toList()));
-            }
+            ChangeListener<? super Boolean> iconVisibilityHandler = (_1, _2, _3) ->
+                iconBox.getChildren().setAll(iconBox.getChildren().stream().filter(Node::isVisible).toList());
+            iconBox.getChildren().forEach(icon -> icon.visibleProperty().addListener(iconVisibilityHandler));
 
             root.getChildren().addAll(iconPaused, iconBox);
             StackPane.setAlignment(iconPaused, Pos.CENTER);
