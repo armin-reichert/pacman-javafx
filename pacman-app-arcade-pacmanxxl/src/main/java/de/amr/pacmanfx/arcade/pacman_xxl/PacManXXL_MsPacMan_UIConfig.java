@@ -19,7 +19,6 @@ import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.ui._2d.VectorGraphicsGameRenderer;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.uilib.GameScene;
-import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
@@ -36,7 +35,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.optGameLevel;
 import static de.amr.pacmanfx.Globals.theGameLevel;
 import static de.amr.pacmanfx.arcade.ArcadePalette.*;
-import static de.amr.pacmanfx.ui.PacManGames_Env.PY_3D_ENABLED;
+import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfiguration {
@@ -167,19 +166,19 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfiguration 
     }
 
     @Override
-    public Node createLivesCounterShape(AssetStorage assets, double size) {
+    public Node createLivesCounterShape() {
         String namespace = assetNamespace();
         return new Group(
             Model3DRepository.get().createPacShape(
-                size,
-                assets.color(namespace + ".pac.color.head"),
-                assets.color(namespace + ".pac.color.eyes"),
-                assets.color(namespace + ".pac.color.palate")
+                    LIVES_COUNTER_3D_SIZE,
+                    theAssets().color(namespace + ".pac.color.head"),
+                    theAssets().color(namespace + ".pac.color.eyes"),
+                    theAssets().color(namespace + ".pac.color.palate")
             ),
-            Model3DRepository.get().createFemaleBodyParts(size,
-                assets.color(namespace + ".pac.color.hairbow"),
-                assets.color(namespace + ".pac.color.hairbow.pearls"),
-                assets.color(namespace + ".pac.color.boobs")
+            Model3DRepository.get().createFemaleBodyParts(LIVES_COUNTER_3D_SIZE,
+                    theAssets().color(namespace + ".pac.color.hairbow"),
+                    theAssets().color(namespace + ".pac.color.hairbow.pearls"),
+                    theAssets().color(namespace + ".pac.color.boobs")
             )
         );
     }

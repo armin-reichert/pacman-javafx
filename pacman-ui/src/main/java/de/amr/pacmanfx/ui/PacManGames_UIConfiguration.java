@@ -12,7 +12,6 @@ import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.uilib.GameScene;
-import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -24,6 +23,7 @@ public interface PacManGames_UIConfiguration {
     Image appIcon();
     String assetNamespace();
     void createActorAnimations(GameLevel level);
+    Node createLivesCounterShape();
     GameScene2D createPiPScene(Canvas canvas);
     GameRenderer createRenderer(Canvas canvas);
     Stream<GameScene> gameScenes();
@@ -32,7 +32,4 @@ public interface PacManGames_UIConfiguration {
     GameScene selectGameScene(GameModel game, GameState gameState);
     <T extends GameSpriteSheet> T spriteSheet();
     WorldMapColorScheme worldMapColorScheme(WorldMap worldMap);
-
-    // 3D-only
-    Node createLivesCounterShape(AssetStorage assets, double size);
 }

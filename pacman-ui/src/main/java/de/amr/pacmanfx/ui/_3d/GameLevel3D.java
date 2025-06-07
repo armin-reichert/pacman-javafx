@@ -243,7 +243,7 @@ public class GameLevel3D {
     private void createLivesCounter3D() {
         Node[] counterShapes = new Node[LIVES_COUNTER_MAX];
         for (int i = 0; i < counterShapes.length; ++i) {
-            counterShapes[i] = theUI().currentConfig().createLivesCounterShape(theAssets(), LIVES_COUNTER_3D_SIZE);
+            counterShapes[i] = theUI().currentConfig().createLivesCounterShape();
         }
         livesCounter3D = new LivesCounter3D(counterShapes);
         livesCounter3D.setTranslateX(2 * TS);
