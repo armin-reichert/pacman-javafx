@@ -55,7 +55,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     private void doSimulationStepAndUpdateGameScene() {
         try {
-            theSimulationStep().init(theClock().tickCount());
+            theSimulationStep().start(theClock().tickCount());
             theGameController().updateGameState();
             theSimulationStep().log();
             currentView().update();

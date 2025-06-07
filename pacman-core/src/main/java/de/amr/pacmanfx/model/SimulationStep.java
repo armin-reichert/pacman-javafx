@@ -17,22 +17,22 @@ import java.util.List;
  * @author Armin Reichert
  */
 public class SimulationStep {
-    private long       tick;
-    private Vector2i   foundEnergizerAtTile;
-    private int        bonusIndex = -1;
-    private Vector2i   bonusEatenTile;
-    private boolean    pacGotPower;
-    private boolean    pacStartsLosingPower;
-    private boolean    pacLostPower;
-    private Vector2i   pacKilledTile;
-    private Ghost pacKiller;
-    private boolean    extraLifeWon;
-    private int        extraLifeScore;
-    private Ghost      releasedGhost;
-    private String     ghostReleaseInfo;
-    private final List<Ghost> killedGhosts = new ArrayList<>();
+    public long       tick;
+    public Vector2i   foundEnergizerAtTile;
+    public int        bonusIndex = -1;
+    public Vector2i   bonusEatenTile;
+    public boolean    pacGotPower;
+    public boolean    pacStartsLosingPower;
+    public boolean    pacLostPower;
+    public Vector2i   pacKilledTile;
+    public Ghost      pacKiller;
+    public boolean    extraLifeWon;
+    public int        extraLifeScore;
+    public Ghost      releasedGhost;
+    public String     ghostReleaseInfo;
+    public final List<Ghost> killedGhosts = new ArrayList<>();
 
-    public void init(long tick) {
+    public void start(long tick) {
         this.tick = tick;
         foundEnergizerAtTile = null;
         bonusIndex = -1;
@@ -49,63 +49,7 @@ public class SimulationStep {
         killedGhosts.clear();
     }
 
-    public void setFoundEnergizerAtTile(Vector2i tile) {
-        this.foundEnergizerAtTile = tile;
-    }
-
-    public void setBonusIndex(int bonusIndex) {
-        this.bonusIndex = bonusIndex;
-    }
-
-    public void setBonusEatenTile(Vector2i tile) {
-        this.bonusEatenTile = tile;
-    }
-
-    public void setPacGotPower() {
-        this.pacGotPower = true;
-    }
-
-    public void setPacStartsLosingPower() {
-        this.pacStartsLosingPower = true;
-    }
-
-    public void setPacLostPower() {
-        this.pacLostPower = true;
-    }
-
-    public void setPacKilledTile(Vector2i tile) {
-        this.pacKilledTile = tile;
-    }
-
-    public void setPacKiller(Ghost pacKiller) {
-        this.pacKiller = pacKiller;
-    }
-
-    public void setExtraLifeWon() {
-        this.extraLifeWon = true;
-    }
-
-    public void setExtraLifeScore(int extraLifeScore) {
-        this.extraLifeScore = extraLifeScore;
-    }
-
-    public void setReleasedGhost(Ghost releasedGhost) {
-        this.releasedGhost = releasedGhost;
-    }
-
-    public void setGhostReleaseInfo(String ghostReleaseInfo) {
-        this.ghostReleaseInfo = ghostReleaseInfo;
-    }
-
-    public Vector2i pacKilledTile() {
-        return pacKilledTile;
-    }
-
-    public List<Ghost> killedGhosts() {
-        return killedGhosts;
-    }
-
-    public List<String> createMessageList() {
+    public List<String> createReport() {
         var messages = new ArrayList<String>();
         if (foundEnergizerAtTile != null) {
             messages.add("Energizer found at " + foundEnergizerAtTile);
@@ -143,10 +87,10 @@ public class SimulationStep {
     }
 
     public void log() {
-        var messageList = createMessageList();
-        if (!messageList.isEmpty()) {
+        var report = createReport();
+        if (!report.isEmpty()) {
             Logger.info("Simulation step #{}:", tick);
-            for (var msg : messageList) {
+            for (var msg : report) {
                 Logger.info("- " + msg);
             }
         }

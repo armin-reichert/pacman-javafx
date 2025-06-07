@@ -142,7 +142,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
 
     @Override
     public void onGhostKilled(Ghost ghost) {
-        theSimulationStep().killedGhosts().add(ghost);
+        theSimulationStep().killedGhosts.add(ghost);
         int killedSoFar = level.victims().size();
         int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
         level.victims().add(ghost);
@@ -185,7 +185,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
             gateKeeper.registerFoodEaten(level);
             if (isBonusReached()) {
                 activateNextBonus();
-                theSimulationStep().setBonusIndex(level.currentBonusIndex());
+                theSimulationStep().bonusIndex = level.currentBonusIndex();
             }
             theGameEventManager().publishEvent(this, GameEventType.PAC_FOUND_FOOD, tile);
         } else {
@@ -208,7 +208,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
     }
 
     public void onEnergizerEaten(Vector2i tile) {
-        theSimulationStep().setFoundEnergizerAtTile(tile);
+        theSimulationStep().foundEnergizerAtTile = tile;
         scoreManager.scorePoints(ENERGIZER_VALUE);
         level.pac().setRestingTicks(3);
         updateCruiseElroyMode();
@@ -223,7 +223,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
             level.pac().powerTimer().restartTicks(powerTicks);
             Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", powerTicks, (float) powerTicks / NUM_TICKS_PER_SEC);
             level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
-            theSimulationStep().setPacGotPower();
+            theSimulationStep().pacGotPower = true;
             theGameEventManager().publishEvent(this, GameEventType.PAC_GETS_POWER);
         }
     }

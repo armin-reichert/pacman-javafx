@@ -57,7 +57,7 @@ public abstract class GameModel {
     public boolean isPlaying() { return playingProperty().get(); }
 
     public boolean cutScenesEnabled() { return  cutScenesEnabled; }
-    public void setCutScenesEnabled(boolean enabled) { cutScenesEnabled = enabled; };
+    public void setCutScenesEnabled(boolean enabled) { cutScenesEnabled = enabled; }
 
     // Game lifecycle
 
@@ -160,8 +160,8 @@ public abstract class GameModel {
                     killed = !level.pac().isImmune();
                 }
                 if (killed) {
-                    theSimulationStep().setPacKiller(potentialKiller);
-                    theSimulationStep().setPacKilledTile(potentialKiller.tile());
+                    theSimulationStep().pacKiller = potentialKiller;
+                    theSimulationStep().pacKilledTile = potentialKiller.tile();
                 }
             });
     }
@@ -170,7 +170,7 @@ public abstract class GameModel {
         final TickTimer powerTimer = level.pac().powerTimer();
         powerTimer.doTick();
         if (level.pac().isPowerFadingStarting(level)) {
-            theSimulationStep().setPacStartsLosingPower();
+            theSimulationStep().pacStartsLosingPower = true;
             theGameEventManager().publishEvent(this, GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (powerTimer.hasExpired()) {
             powerTimer.stop();
@@ -180,15 +180,15 @@ public abstract class GameModel {
             huntingTimer().start();
             Logger.info("Hunting timer restarted because Pac-Man lost power");
             level.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
-            theSimulationStep().setPacLostPower();
+            theSimulationStep().pacLostPower = true;
             theGameEventManager().publishEvent(this, GameEventType.PAC_LOST_POWER);
         }
     }
 
-    public boolean hasPacManBeenKilled() { return theSimulationStep().pacKilledTile() != null; }
+    public boolean hasPacManBeenKilled() { return theSimulationStep().pacKilledTile != null; }
     public abstract void onPacKilled();
 
-    public boolean haveGhostsBeenKilled() { return !theSimulationStep().killedGhosts().isEmpty(); }
+    public boolean haveGhostsBeenKilled() { return !theSimulationStep().killedGhosts.isEmpty(); }
     public abstract void onGhostKilled(Ghost ghost);
 
     protected void checkIfGhostsKilled() {
@@ -210,7 +210,7 @@ public abstract class GameModel {
             bonus.setEaten(120); //TODO is 2 seconds correct?
             scoreManager.scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-            theSimulationStep().setBonusEatenTile(bonus.actor().tile());
+            theSimulationStep().bonusEatenTile = bonus.actor().tile();
             theGameEventManager().publishEvent(this, GameEventType.BONUS_EATEN);
         }
     }

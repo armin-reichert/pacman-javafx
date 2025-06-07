@@ -622,14 +622,14 @@ public class TengenMsPacMan_GameModel extends GameModel {
             level.registerFoodEatenAt(tile);
             gateKeeper().ifPresent(gateKeeper -> gateKeeper.registerFoodEaten(level));
             if (level.isEnergizerPosition(tile)) {
-                theSimulationStep().setFoundEnergizerAtTile(tile);
+                theSimulationStep().foundEnergizerAtTile = tile;
                 onEnergizerEaten();
             } else {
                 scoreManager.scorePoints(PELLET_VALUE);
             }
             if (isBonusReached()) {
                 activateNextBonus();
-                theSimulationStep().setBonusIndex(level.currentBonusIndex());
+                theSimulationStep().bonusIndex = level.currentBonusIndex();
             }
             theGameEventManager().publishEvent(this, GameEventType.PAC_FOUND_FOOD, tile);
         } else {
@@ -649,7 +649,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerTicks / NUM_TICKS_PER_SEC);
             level.ghosts(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
             level.ghosts(GhostState.FRIGHTENED).forEach(Ghost::reverseAtNextOccasion);
-            theSimulationStep().setPacGotPower();
+            theSimulationStep().pacGotPower = true;
             theGameEventManager().publishEvent(this, GameEventType.PAC_GETS_POWER);
         } else {
             level.ghosts(GhostState.FRIGHTENED, GhostState.HUNTING_PAC).forEach(Ghost::reverseAtNextOccasion);
@@ -669,7 +669,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public void onGhostKilled(Ghost ghost) {
-        theSimulationStep().killedGhosts().add(ghost);
+        theSimulationStep().killedGhosts.add(ghost);
         int killedSoFar = level.victims().size();
         int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
         level.victims().add(ghost);
