@@ -17,7 +17,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -51,52 +50,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     private EditorView editorView;
     private GameView gameView;
     private StartPagesView startPagesView;
-
-    private void createMainScene(double width, double height) {
-        mainScene = new Scene(root, width, height);
-        mainScene.widthProperty() .addListener((py,ov,nv) -> gameView.resize(mainScene));
-        mainScene.heightProperty().addListener((py,ov,nv) -> gameView.resize(mainScene));
-        mainScene.addEventFilter(KeyEvent.KEY_PRESSED, theKeyboard()::onKeyPressed);
-        mainScene.addEventFilter(KeyEvent.KEY_RELEASED, theKeyboard()::onKeyReleased);
-        mainScene.setOnKeyPressed(e -> {
-            if (KEY_FULLSCREEN.match(e)) {
-                stage.setFullScreen(true);
-            }
-            else if (KEY_MUTE.match(e)) {
-                theSound().toggleMuted();
-            }
-            else if (KEY_OPEN_EDITOR.match(e)) {
-                showEditorView();
-            }
-            else {
-                currentView().handleKeyboardInput();
-            }
-        });
-    }
-
-    private void createMapEditor() {
-        editor = new TileMapEditor(stage);
-        var miQuit = new MenuItem(theAssets().text("back_to_game"));
-        miQuit.setOnAction(e -> {
-            editor.stop();
-            editor.executeWithCheckForUnsavedChanges(this::showStartView);
-        });
-        editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miQuit);
-        editor.init(CUSTOM_MAP_DIR);
-    }
-
-    private void createMapEditorView() {
-        editorView = new EditorView(editor);
-    }
-
-    private void createStartPagesView() {
-        startPagesView = new StartPagesView();
-        startPagesView.setBackground(theAssets().background("background.scene"));
-    }
-
-    private void createGameView() {
-        gameView = new GameView(this);
-    }
 
     private void doSimulationStepAndUpdateGameScene() {
         try {
@@ -133,46 +86,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         theGameEventManager().addEventListener(newView);
     }
 
-    private Pane createIconBox(Node... icons) {
-        int height = STATUS_ICON_SIZE + STATUS_ICON_PADDING;
-        var iconBox = new HBox(STATUS_ICON_SPACING);
-        iconBox.getChildren().addAll(icons);
-        iconBox.setPadding(new Insets(STATUS_ICON_PADDING));
-        iconBox.setMaxHeight(height);
-        // keep box compact, show only visible items
-        for (var icon : icons) {
-            icon.visibleProperty().addListener(
-                (py, ov, nv) -> iconBox.getChildren().setAll(Arrays.stream(icons).filter(Node::isVisible).toList()));
-        }
-        return iconBox;
-    }
-
-    private void addStatusIcons(Pane parent) {
-        var iconMuted = FontIcon.of(FontAwesomeSolid.DEAF, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
-        iconMuted.visibleProperty().bind(theSound().mutedProperty());
-
-        var iconAutopilot = FontIcon.of(FontAwesomeSolid.TAXI, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
-        iconAutopilot.visibleProperty().bind(PY_USING_AUTOPILOT);
-
-        var iconImmune = FontIcon.of(FontAwesomeSolid.USER_SECRET, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
-        iconImmune.visibleProperty().bind(PY_IMMUNITY);
-
-        var icon3D = FontIcon.of(FontAwesomeSolid.CUBES, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
-        icon3D.visibleProperty().bind(PY_3D_ENABLED);
-
-        var iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, STATUS_ICON_COLOR);
-        iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> currentView() != editorView && theClock().isPaused(),
-            viewPy, theClock().pausedProperty()));
-
-        Pane iconBox = createIconBox(iconMuted, icon3D, iconAutopilot, iconImmune);
-        iconBox.visibleProperty().bind(Bindings.createBooleanBinding(() -> currentView() != editorView, viewPy));
-
-        parent.getChildren().addAll(iconPaused, iconBox);
-        StackPane.setAlignment(iconPaused, Pos.CENTER);
-        StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
     // GameUI interface implementation
     // -----------------------------------------------------------------------------------------------------------------
@@ -185,30 +98,106 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     @Override
     public void buildSceneGraph(Stage stage, double width, double height) {
         this.stage = requireNonNull(stage);
-        root.setBackground(theAssets().get("background.scene"));
+        // 28x36 = Arcade map size (in tiles)
+        stage.setMinWidth(28*TS * 1.25);
+        stage.setMinHeight(36*TS * 1.25);
+
         root.getChildren().add(new Pane()); // placeholder for root of current view
-        addStatusIcons(root);
-        createMapEditor();
-        createMainScene(width, height);
-        createStartPagesView();
-        createGameView();
-        createMapEditorView();
+
+        // Status icons
+        {
+            var iconMuted = FontIcon.of(FontAwesomeSolid.DEAF, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
+            iconMuted.visibleProperty().bind(theSound().mutedProperty());
+
+            var icon3D = FontIcon.of(FontAwesomeSolid.CUBES, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
+            icon3D.visibleProperty().bind(PY_3D_ENABLED);
+
+            var iconAutopilot = FontIcon.of(FontAwesomeSolid.TAXI, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
+            iconAutopilot.visibleProperty().bind(PY_USING_AUTOPILOT);
+
+            var iconImmune = FontIcon.of(FontAwesomeSolid.USER_SECRET, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
+            iconImmune.visibleProperty().bind(PY_IMMUNITY);
+
+            var iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, STATUS_ICON_COLOR);
+            iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
+                () -> currentView() != editorView && theClock().isPaused(),
+                viewPy, theClock().pausedProperty()));
+
+            final FontIcon[] icons = {iconMuted, icon3D, iconAutopilot, iconImmune};
+            final HBox iconBox = new HBox(icons);
+            iconBox.setMinHeight(STATUS_ICON_SIZE + STATUS_ICON_PADDING);
+            iconBox.setMaxHeight(STATUS_ICON_SIZE + STATUS_ICON_PADDING);
+            iconBox.setPadding(new Insets(STATUS_ICON_PADDING));
+            iconBox.setSpacing(STATUS_ICON_SPACING);
+            iconBox.visibleProperty().bind(Bindings.createBooleanBinding(() -> currentView() != editorView, viewPy));
+            // keep box compact, show only visible items
+            for (FontIcon icon : icons) {
+                icon.visibleProperty().addListener(
+                    (py, ov, nv) -> iconBox.getChildren().setAll(Arrays.stream(icons).filter(FontIcon::isVisible).toList()));
+            }
+
+            root.getChildren().addAll(iconPaused, iconBox);
+            StackPane.setAlignment(iconPaused, Pos.CENTER);
+            StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
+        }
+
+        // Map editor
+        {
+            editor = new TileMapEditor(stage);
+            var miQuit = new MenuItem(theAssets().text("back_to_game"));
+            miQuit.setOnAction(e -> {
+                editor.stop();
+                editor.executeWithCheckForUnsavedChanges(this::showStartView);
+            });
+            editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miQuit);
+            editor.init(CUSTOM_MAP_DIR);
+            editorView = new EditorView(editor);
+        }
+
+        // Main scene
+        {
+            mainScene = new Scene(root, width, height);
+            mainScene.widthProperty() .addListener((py,ov,nv) -> gameView.resize(mainScene));
+            mainScene.heightProperty().addListener((py,ov,nv) -> gameView.resize(mainScene));
+            mainScene.addEventFilter(KeyEvent.KEY_PRESSED, theKeyboard()::onKeyPressed);
+            mainScene.addEventFilter(KeyEvent.KEY_RELEASED, theKeyboard()::onKeyReleased);
+            mainScene.setOnKeyPressed(e -> {
+                if (KEY_FULLSCREEN.match(e)) {
+                    stage.setFullScreen(true);
+                }
+                else if (KEY_MUTE.match(e)) {
+                    theSound().toggleMuted();
+                }
+                else if (KEY_OPEN_EDITOR.match(e)) {
+                    showEditorView();
+                }
+                else {
+                    currentView().handleKeyboardInput();
+                }
+            });
+        }
+        stage.setScene(mainScene);
+
+        // Start pages view
+        {
+            startPagesView = new StartPagesView();
+            startPagesView.setBackground(theAssets().background("background.scene"));
+        }
+
+        // Game view
+        {
+            gameView = new GameView(this);
+        }
+
+        theClock().setPausableAction(this::doSimulationStepAndUpdateGameScene);
+        theClock().setPermanentAction(this::drawCurrentView);
 
         viewPy.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
-
         root.backgroundProperty().bind(gameView.gameSceneProperty().map(
             gameScene -> theUIConfig().currentGameSceneIsPlayScene3D()
                 ? theAssets().get("background.play_scene3d")
                 : theAssets().get("background.scene"))
         );
-
-        // 28x36 = Arcade map size (in tiles)
-        stage.setMinWidth(28*TS * 1.25);
-        stage.setMinHeight(36*TS * 1.25);
-        stage.setScene(mainScene);
-
-        theClock().setPausableAction(this::doSimulationStepAndUpdateGameScene);
-        theClock().setPermanentAction(this::drawCurrentView);
     }
 
     @Override
