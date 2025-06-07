@@ -314,7 +314,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     @Override
     public void showGameView() {
-        gameView.resize(mainScene);
         viewPy.set(gameView);
     }
 
