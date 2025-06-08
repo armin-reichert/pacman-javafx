@@ -286,10 +286,9 @@ public class GameView implements PacManGames_View, PacManGames_ActionBindings {
             throw new IllegalStateException("WTF is going on here, switch between NULL scenes?");
         }
         return switch (sceneBefore) {
-            case null -> 0; // may happen, it's ok
-            case GameScene2D playScene2D when sceneAfter instanceof PlayScene3D -> 23;
+            case GameScene2D scene2D when sceneAfter instanceof PlayScene3D -> 23;
             case PlayScene3D playScene3D when sceneAfter instanceof GameScene2D -> 32;
-            default -> 0;
+            case null, default -> 0; // may happen, it's ok
         };
     }
 
