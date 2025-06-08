@@ -22,6 +22,12 @@ public class Score {
     private final IntegerProperty levelNumberPy = new SimpleIntegerProperty();
     private final ObjectProperty<LocalDate> datePy = new SimpleObjectProperty<>();
 
+    public static Score fromFile(File scoreFile) {
+        var score = new Score();
+        score.read(scoreFile);
+        return score;
+    }
+
     public Score() {
         reset();
     }

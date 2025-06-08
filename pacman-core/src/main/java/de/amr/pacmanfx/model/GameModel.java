@@ -327,8 +327,7 @@ public abstract class GameModel implements ScoreManager {
 
     @Override
     public void updateHighScore() {
-        var oldHighScore = new Score();
-        oldHighScore.read(highScoreFile);
+        var oldHighScore = Score.fromFile(highScoreFile);
         if (highScore.points() > oldHighScore.points()) {
             highScore.save(highScoreFile, "High Score, last update %s".formatted(LocalTime.now()));
         }
