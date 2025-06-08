@@ -15,7 +15,6 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.PacManGames_Actions;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
 
@@ -30,6 +29,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.model.actors.GhostState.EATEN;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
+import static de.amr.pacmanfx.ui.PacManGames_Actions.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
 
@@ -68,11 +68,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public void doInit() {
         theGame().setScoreVisible(true);
 
-        bindAction(PacManGames_Actions.ACTION_ARCADE_INSERT_COIN);
-        bindAction(PacManGames_Actions.ACTION_ARCADE_START_GAME);
-        bindAction(PacManGames_Actions.ACTION_TEST_CUT_SCENES);
-        bindAction(PacManGames_Actions.ACTION_TEST_LEVELS_BONI);
-        bindAction(PacManGames_Actions.ACTION_TEST_LEVELS_TEASERS);
+        bindAction(ACTION_ARCADE_INSERT_COIN);
+        bindAction(ACTION_ARCADE_START_GAME);
+        bindAction(ACTION_TEST_CUT_SCENES);
+        bindAction(ACTION_TEST_LEVELS_BONI);
+        bindAction(ACTION_TEST_LEVELS_TEASERS);
 
         spriteSheet = theUI().currentConfig().spriteSheet();
         blinking = new Pulse(10, true);
