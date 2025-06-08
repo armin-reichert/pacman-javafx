@@ -30,7 +30,9 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Globals.theGameController;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
-import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
+import static de.amr.pacmanfx.ui.PacManGames_UI.PY_3D_ENABLED;
 import static de.amr.pacmanfx.uilib.input.Keyboard.nude;
 import static de.amr.pacmanfx.uilib.widgets.OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
 

@@ -14,8 +14,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.theGameController;
-import static de.amr.pacmanfx.ui.PacManGames_Env.PY_DEBUG_INFO_VISIBLE;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
+import static de.amr.pacmanfx.ui.PacManGames_UI.PY_DEBUG_INFO_VISIBLE;
 import static java.util.Objects.requireNonNull;
 
 public class PacManGames_UIConfigurations {

@@ -47,6 +47,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGames_Actions.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 
 /**
  * Tengen play scene, uses vertical scrolling.

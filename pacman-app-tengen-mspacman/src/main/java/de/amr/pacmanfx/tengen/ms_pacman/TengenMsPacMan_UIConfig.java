@@ -34,7 +34,8 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
+import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_UIConfig implements PacManGames_UIConfiguration, ResourceManager {

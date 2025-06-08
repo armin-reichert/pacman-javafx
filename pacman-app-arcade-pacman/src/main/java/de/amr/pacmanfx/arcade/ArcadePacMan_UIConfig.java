@@ -11,7 +11,6 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
-import de.amr.pacmanfx.ui.PacManGames_Env;
 import de.amr.pacmanfx.ui.PacManGames_UIConfiguration;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
@@ -32,7 +31,9 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.optGameLevel;
 import static de.amr.pacmanfx.Globals.theGameLevel;
 import static de.amr.pacmanfx.arcade.ArcadePalette.*;
-import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
+import static de.amr.pacmanfx.ui.PacManGames_UI.LIVES_COUNTER_3D_SIZE;
+import static de.amr.pacmanfx.ui.PacManGames_UI.PY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_UIConfig implements PacManGames_UIConfiguration, ResourceManager {

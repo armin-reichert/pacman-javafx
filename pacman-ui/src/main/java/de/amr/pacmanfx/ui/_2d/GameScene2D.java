@@ -21,6 +21,7 @@ import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.ui.PacManGames_UI.DEBUG_TEXT_FONT;
 import static java.util.Objects.requireNonNull;
 
 /**

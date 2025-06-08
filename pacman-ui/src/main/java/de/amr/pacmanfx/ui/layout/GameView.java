@@ -40,6 +40,7 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 import static de.amr.pacmanfx.uilib.Ufx.*;
 import static de.amr.pacmanfx.uilib.input.Keyboard.nude;
 import static java.util.Objects.requireNonNull;

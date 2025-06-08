@@ -20,7 +20,9 @@ import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ANIM_BIG_PAC_MAN;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
-import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
+import static de.amr.pacmanfx.ui.PacManGames_UI.DEBUG_TEXT_FONT;
 
 /**
  * First cut scene in Arcade Pac-Man game:<br>

@@ -33,7 +33,9 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.optGameLevel;
 import static de.amr.pacmanfx.Globals.theGameLevel;
 import static de.amr.pacmanfx.arcade.ArcadePalette.*;
-import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
+import static de.amr.pacmanfx.ui.PacManGames_UI.LIVES_COUNTER_3D_SIZE;
+import static de.amr.pacmanfx.ui.PacManGames_UI.PY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfiguration, ResourceManager {

@@ -16,7 +16,6 @@ import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.steering.Steering;
-import de.amr.pacmanfx.ui.PacManGames_Env;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -32,6 +31,8 @@ import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationMap.ANIM_MS_PAC_MAN_BOOSTER;
+import static de.amr.pacmanfx.ui.PacManGames_UI.PY_IMMUNITY;
+import static de.amr.pacmanfx.ui.PacManGames_UI.PY_USING_AUTOPILOT;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -526,8 +527,8 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public void buildNormalLevel(int levelNumber) {
         createLevel(levelNumber);
         level.setDemoLevel(false);
-        level.pac().immuneProperty().bind(PacManGames_Env.PY_IMMUNITY);
-        level.pac().usingAutopilotProperty().bind(PacManGames_Env.PY_USING_AUTOPILOT);
+        level.pac().immuneProperty().bind(PY_IMMUNITY);
+        level.pac().usingAutopilotProperty().bind(PY_USING_AUTOPILOT);
         huntingTimer().reset();
         setScoreLevelNumber(levelNumber);
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(levelNumber));

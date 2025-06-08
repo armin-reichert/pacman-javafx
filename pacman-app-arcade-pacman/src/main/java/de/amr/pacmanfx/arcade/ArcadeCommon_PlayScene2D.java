@@ -36,6 +36,7 @@ import static de.amr.pacmanfx.arcade.ArcadePalette.*;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 
 /**
  * 2D play scene for Arcade game variants.
