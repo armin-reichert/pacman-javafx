@@ -292,7 +292,6 @@ public class GameView implements PacManGames_View, PacManGames_ActionBindings {
         };
     }
 
-
     public void embedGameScene(PacManGames_UIConfiguration gameUIConfig, GameScene gameScene) {
         requireNonNull(gameScene);
         switch (gameScene) {
