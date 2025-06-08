@@ -53,11 +53,11 @@ public interface PacManGames_ActionBindings extends ActionBindingsProvider {
         actionBinding(TOGGLE_DRAW_MODE,        alt(KeyCode.W))
     );
 
-    default void bindToCommonKeys(GameAction gameAction) {
-        bindToKeys(gameAction, COMMON_BINDING_MAP);
+    default void bindActionToCommonKeys(GameAction gameAction) {
+        bindActionToKeys(gameAction, COMMON_BINDING_MAP);
     }
 
-    default void bindToKeys(GameAction gameAction, Map<GameAction, Set<KeyCombination>> bindingMap) {
+    default void bindActionToKeys(GameAction gameAction, Map<GameAction, Set<KeyCombination>> bindingMap) {
         requireNonNull(gameAction);
         if (bindingMap.containsKey(gameAction)) {
             bind(gameAction, bindingMap.get(gameAction));

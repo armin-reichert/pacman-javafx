@@ -53,16 +53,16 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
     public void onLevelCreated(GameEvent e) {
         gr().applyRenderingHints(theGameLevel());
         if (theGameLevel().isDemoLevel()) {
-            bindToCommonKeys(PacManGames_Actions.ARCADE_INSERT_COIN);
+            bindActionToCommonKeys(PacManGames_Actions.ARCADE_INSERT_COIN);
         } else {
-            bindToCommonKeys(PacManGames_Actions.PLAYER_UP);
-            bindToCommonKeys(PacManGames_Actions.PLAYER_DOWN);
-            bindToCommonKeys(PacManGames_Actions.PLAYER_LEFT);
-            bindToCommonKeys(PacManGames_Actions.PLAYER_RIGHT);
-            bindToCommonKeys(PacManGames_Actions.CHEAT_EAT_ALL_PELLETS);
-            bindToCommonKeys(PacManGames_Actions.CHEAT_ADD_LIVES);
-            bindToCommonKeys(PacManGames_Actions.CHEAT_ENTER_NEXT_LEVEL);
-            bindToCommonKeys(PacManGames_Actions.CHEAT_KILL_GHOSTS);
+            bindActionToCommonKeys(PacManGames_Actions.PLAYER_UP);
+            bindActionToCommonKeys(PacManGames_Actions.PLAYER_DOWN);
+            bindActionToCommonKeys(PacManGames_Actions.PLAYER_LEFT);
+            bindActionToCommonKeys(PacManGames_Actions.PLAYER_RIGHT);
+            bindActionToCommonKeys(PacManGames_Actions.CHEAT_EAT_ALL_PELLETS);
+            bindActionToCommonKeys(PacManGames_Actions.CHEAT_ADD_LIVES);
+            bindActionToCommonKeys(PacManGames_Actions.CHEAT_ENTER_NEXT_LEVEL);
+            bindActionToCommonKeys(PacManGames_Actions.CHEAT_KILL_GHOSTS);
         }
         updateActionBindings();
     }
@@ -240,14 +240,14 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
     @Override
     public void onSwitch_3D_2D(GameScene scene3D) {
         Logger.info("2D scene {} entered from 3D scene {}", this, scene3D);
-        bindToCommonKeys(PacManGames_Actions.PLAYER_UP);
-        bindToCommonKeys(PacManGames_Actions.PLAYER_DOWN);
-        bindToCommonKeys(PacManGames_Actions.PLAYER_LEFT);
-        bindToCommonKeys(PacManGames_Actions.PLAYER_RIGHT);
-        bindToCommonKeys(PacManGames_Actions.CHEAT_EAT_ALL_PELLETS);
-        bindToCommonKeys(PacManGames_Actions.CHEAT_ADD_LIVES);
-        bindToCommonKeys(PacManGames_Actions.CHEAT_ENTER_NEXT_LEVEL);
-        bindToCommonKeys(PacManGames_Actions.CHEAT_KILL_GHOSTS);
+        bindActionToCommonKeys(PacManGames_Actions.PLAYER_UP);
+        bindActionToCommonKeys(PacManGames_Actions.PLAYER_DOWN);
+        bindActionToCommonKeys(PacManGames_Actions.PLAYER_LEFT);
+        bindActionToCommonKeys(PacManGames_Actions.PLAYER_RIGHT);
+        bindActionToCommonKeys(PacManGames_Actions.CHEAT_EAT_ALL_PELLETS);
+        bindActionToCommonKeys(PacManGames_Actions.CHEAT_ADD_LIVES);
+        bindActionToCommonKeys(PacManGames_Actions.CHEAT_ENTER_NEXT_LEVEL);
+        bindActionToCommonKeys(PacManGames_Actions.CHEAT_KILL_GHOSTS);
         updateActionBindings();
         if (gr() == null) { //TODO check if this can happen
             Logger.warn("No game renderer was existing when switching to 2D scene");

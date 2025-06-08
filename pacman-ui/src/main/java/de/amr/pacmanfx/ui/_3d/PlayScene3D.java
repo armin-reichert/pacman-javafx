@@ -167,28 +167,28 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
 
     protected void bindActions() {
         deleteActionBindings();
-        bindToCommonKeys(PacManGames_Actions.PERSPECTIVE_PREVIOUS);
-        bindToCommonKeys(PacManGames_Actions.PERSPECTIVE_NEXT);
-        bindToCommonKeys(PacManGames_Actions.TOGGLE_DRAW_MODE);
+        bindActionToCommonKeys(PacManGames_Actions.PERSPECTIVE_PREVIOUS);
+        bindActionToCommonKeys(PacManGames_Actions.PERSPECTIVE_NEXT);
+        bindActionToCommonKeys(PacManGames_Actions.TOGGLE_DRAW_MODE);
         if (optGameLevel().isPresent()) {
             if (theGameLevel().isDemoLevel()) {
-                bindToCommonKeys(PacManGames_Actions.ARCADE_INSERT_COIN);
+                bindActionToCommonKeys(PacManGames_Actions.ARCADE_INSERT_COIN);
             } else {
                 bindPlayerSteeringActions();
-                bindToCommonKeys(PacManGames_Actions.CHEAT_EAT_ALL_PELLETS);
-                bindToCommonKeys(PacManGames_Actions.CHEAT_ADD_LIVES);
-                bindToCommonKeys(PacManGames_Actions.CHEAT_ENTER_NEXT_LEVEL);
-                bindToCommonKeys(PacManGames_Actions.CHEAT_KILL_GHOSTS);
+                bindActionToCommonKeys(PacManGames_Actions.CHEAT_EAT_ALL_PELLETS);
+                bindActionToCommonKeys(PacManGames_Actions.CHEAT_ADD_LIVES);
+                bindActionToCommonKeys(PacManGames_Actions.CHEAT_ENTER_NEXT_LEVEL);
+                bindActionToCommonKeys(PacManGames_Actions.CHEAT_KILL_GHOSTS);
             }
         }
         updateActionBindings();
     }
 
     protected void bindPlayerSteeringActions() {
-        bindToCommonKeys(PacManGames_Actions.PLAYER_UP);
-        bindToCommonKeys(PacManGames_Actions.PLAYER_DOWN);
-        bindToCommonKeys(PacManGames_Actions.PLAYER_LEFT);
-        bindToCommonKeys(PacManGames_Actions.PLAYER_RIGHT);
+        bindActionToCommonKeys(PacManGames_Actions.PLAYER_UP);
+        bindActionToCommonKeys(PacManGames_Actions.PLAYER_DOWN);
+        bindActionToCommonKeys(PacManGames_Actions.PLAYER_LEFT);
+        bindActionToCommonKeys(PacManGames_Actions.PLAYER_RIGHT);
     }
 
     @Override

@@ -94,20 +94,20 @@ public class GameView implements PacManGames_View, PacManGames_ActionBindings {
     }
 
     private void bindActions() {
-        bindToCommonKeys(PacManGames_Actions.BOOT_SHOW_GAME_VIEW);
-        bindToCommonKeys(PacManGames_Actions.QUIT_GAME_SCENE);
-        bindToCommonKeys(PacManGames_Actions.SIMULATION_SLOWER);
-        bindToCommonKeys(PacManGames_Actions.SIMULATION_FASTER);
-        bindToCommonKeys(PacManGames_Actions.SIMULATION_RESET);
-        bindToCommonKeys(PacManGames_Actions.SIMULATION_ONE_STEP);
-        bindToCommonKeys(PacManGames_Actions.SIMULATION_TEN_STEPS);
-        bindToCommonKeys(PacManGames_Actions.TOGGLE_AUTOPILOT);
-        bindToCommonKeys(PacManGames_Actions.TOGGLE_DEBUG_INFO);
-        bindToCommonKeys(PacManGames_Actions.TOGGLE_PAUSED);
-        bindToCommonKeys(PacManGames_Actions.TOGGLE_DASHBOARD);
-        bindToCommonKeys(PacManGames_Actions.TOGGLE_IMMUNITY);
-        bindToCommonKeys(PacManGames_Actions.TOGGLE_PIP_VISIBILITY);
-        bindToCommonKeys(PacManGames_Actions.TOGGLE_PLAY_SCENE_2D_3D);
+        bindActionToCommonKeys(PacManGames_Actions.BOOT_SHOW_GAME_VIEW);
+        bindActionToCommonKeys(PacManGames_Actions.QUIT_GAME_SCENE);
+        bindActionToCommonKeys(PacManGames_Actions.SIMULATION_SLOWER);
+        bindActionToCommonKeys(PacManGames_Actions.SIMULATION_FASTER);
+        bindActionToCommonKeys(PacManGames_Actions.SIMULATION_RESET);
+        bindActionToCommonKeys(PacManGames_Actions.SIMULATION_ONE_STEP);
+        bindActionToCommonKeys(PacManGames_Actions.SIMULATION_TEN_STEPS);
+        bindActionToCommonKeys(PacManGames_Actions.TOGGLE_AUTOPILOT);
+        bindActionToCommonKeys(PacManGames_Actions.TOGGLE_DEBUG_INFO);
+        bindActionToCommonKeys(PacManGames_Actions.TOGGLE_PAUSED);
+        bindActionToCommonKeys(PacManGames_Actions.TOGGLE_DASHBOARD);
+        bindActionToCommonKeys(PacManGames_Actions.TOGGLE_IMMUNITY);
+        bindActionToCommonKeys(PacManGames_Actions.TOGGLE_PIP_VISIBILITY);
+        bindActionToCommonKeys(PacManGames_Actions.TOGGLE_PLAY_SCENE_2D_3D);
         bind(this::showGameSceneHelp, nude(KeyCode.H));
     }
 

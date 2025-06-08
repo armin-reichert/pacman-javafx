@@ -18,7 +18,6 @@ import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
 import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.input.Keyboard;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -29,7 +28,6 @@ import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -205,17 +203,17 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     private void setJoypadKeyBindings(GameLevel level) {
         if (level.isDemoLevel()) {
-            bindToKeys(QUIT_DEMO_LEVEL, TENGEN_DEFAULT_BINDING_MAP);
+            bindActionToKeys(QUIT_DEMO_LEVEL, TENGEN_DEFAULT_BINDING_MAP);
         } else {
-            bindToKeys(PLAYER_UP, TENGEN_DEFAULT_BINDING_MAP);
-            bindToKeys(PLAYER_DOWN, TENGEN_DEFAULT_BINDING_MAP);
-            bindToKeys(PLAYER_LEFT, TENGEN_DEFAULT_BINDING_MAP);
-            bindToKeys(PLAYER_RIGHT, TENGEN_DEFAULT_BINDING_MAP);
-            bindToKeys(TOGGLE_PAC_BOOSTER, TENGEN_DEFAULT_BINDING_MAP);
-            bindToCommonKeys(CHEAT_EAT_ALL_PELLETS);
-            bindToCommonKeys(CHEAT_ADD_LIVES);
-            bindToCommonKeys(CHEAT_ENTER_NEXT_LEVEL);
-            bindToCommonKeys(CHEAT_KILL_GHOSTS);
+            bindActionToKeys(PLAYER_UP, TENGEN_DEFAULT_BINDING_MAP);
+            bindActionToKeys(PLAYER_DOWN, TENGEN_DEFAULT_BINDING_MAP);
+            bindActionToKeys(PLAYER_LEFT, TENGEN_DEFAULT_BINDING_MAP);
+            bindActionToKeys(PLAYER_RIGHT, TENGEN_DEFAULT_BINDING_MAP);
+            bindActionToKeys(TOGGLE_PAC_BOOSTER, TENGEN_DEFAULT_BINDING_MAP);
+            bindActionToCommonKeys(CHEAT_EAT_ALL_PELLETS);
+            bindActionToCommonKeys(CHEAT_ADD_LIVES);
+            bindActionToCommonKeys(CHEAT_ENTER_NEXT_LEVEL);
+            bindActionToCommonKeys(CHEAT_KILL_GHOSTS);
         }
         updateActionBindings();
     }
@@ -223,7 +221,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void doInit() {
         theGame().setScoreVisible(true);
-        bindToKeys(TOGGLE_DISPLAY_MODE, TENGEN_DEFAULT_BINDING_MAP);
+        bindActionToKeys(TOGGLE_DISPLAY_MODE, TENGEN_DEFAULT_BINDING_MAP);
         setGameRenderer(theUI().currentConfig().createRenderer(canvas()));
         movingCamera.focusTopOfScene();
         messageMovement = new MessageMovement();

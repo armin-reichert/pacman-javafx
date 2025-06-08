@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
@@ -14,14 +13,14 @@ import de.amr.pacmanfx.ui._3d.Bonus3D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TENGEN_DEFAULT_BINDING_MAP;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.QUIT_DEMO_LEVEL;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.TOGGLE_PAC_BOOSTER;
+import static de.amr.pacmanfx.ui.PacManGames_Actions.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
-import static de.amr.pacmanfx.uilib.input.Keyboard.control;
 
 /**
  * The 3D play scene of Tengen Ms. Pac-Man. Differs slightly from the Arcade version, e.g. the
@@ -33,28 +32,28 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     protected void bindActions() {
         // if demo level is running, allow going back to options screen
         if (optGameLevel().isPresent() && theGameLevel().isDemoLevel()) {
-            bind(QUIT_DEMO_LEVEL, theJoypad().key(JoypadButton.START));
+            bindActionToKeys(QUIT_DEMO_LEVEL, TENGEN_DEFAULT_BINDING_MAP);
         } else {
             bindPlayerSteeringActions();
-            bindToCommonKeys(PacManGames_Actions.CHEAT_EAT_ALL_PELLETS);
-            bindToCommonKeys(PacManGames_Actions.CHEAT_ADD_LIVES);
-            bindToCommonKeys(PacManGames_Actions.CHEAT_ENTER_NEXT_LEVEL);
-            bindToCommonKeys(PacManGames_Actions.CHEAT_KILL_GHOSTS);
-            bind(TOGGLE_PAC_BOOSTER, theJoypad().key(JoypadButton.A), theJoypad().key(JoypadButton.B));
+            bindActionToCommonKeys(CHEAT_EAT_ALL_PELLETS);
+            bindActionToCommonKeys(CHEAT_ADD_LIVES);
+            bindActionToCommonKeys(CHEAT_ENTER_NEXT_LEVEL);
+            bindActionToCommonKeys(CHEAT_KILL_GHOSTS);
+            bindActionToKeys(TOGGLE_PAC_BOOSTER, TENGEN_DEFAULT_BINDING_MAP);
         }
-        bindToCommonKeys(PacManGames_Actions.PERSPECTIVE_PREVIOUS);
-        bindToCommonKeys(PacManGames_Actions.PERSPECTIVE_NEXT);
-        bindToCommonKeys(PacManGames_Actions.TOGGLE_DRAW_MODE);
+        bindActionToCommonKeys(PacManGames_Actions.PERSPECTIVE_PREVIOUS);
+        bindActionToCommonKeys(PacManGames_Actions.PERSPECTIVE_NEXT);
+        bindActionToCommonKeys(PacManGames_Actions.TOGGLE_DRAW_MODE);
 
         updateActionBindings();
     }
 
     @Override
     protected void bindPlayerSteeringActions() {
-        bind(PacManGames_Actions.PLAYER_UP,    theJoypad().key(JoypadButton.UP),    control(KeyCode.UP));
-        bind(PacManGames_Actions.PLAYER_DOWN,  theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN));
-        bind(PacManGames_Actions.PLAYER_LEFT,  theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT));
-        bind(PacManGames_Actions.PLAYER_RIGHT, theJoypad().key(JoypadButton.RIGHT), control(KeyCode.RIGHT));
+        bindActionToKeys(PLAYER_UP,    TENGEN_DEFAULT_BINDING_MAP);
+        bindActionToKeys(PLAYER_DOWN,  TENGEN_DEFAULT_BINDING_MAP);
+        bindActionToKeys(PLAYER_LEFT,  TENGEN_DEFAULT_BINDING_MAP);
+        bindActionToKeys(PLAYER_RIGHT, TENGEN_DEFAULT_BINDING_MAP);
     }
 
     @Override
