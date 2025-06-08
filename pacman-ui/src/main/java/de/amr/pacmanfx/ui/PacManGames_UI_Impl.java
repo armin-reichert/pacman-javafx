@@ -32,6 +32,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -122,16 +123,18 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
                 () -> viewPy.get() != editorView && theClock().isPaused(),
                 viewPy, theClock().pausedProperty()));
 
-            final HBox iconBox = new HBox(iconMuted, icon3D, iconAutopilot, iconImmune);
+            final List<FontIcon> icons = List.of(iconMuted, icon3D, iconAutopilot, iconImmune);
+            final HBox iconBox = new HBox();
+            iconBox.getChildren().addAll(icons);
             iconBox.setMinHeight(STATUS_ICON_SIZE + STATUS_ICON_PADDING);
             iconBox.setMaxHeight(STATUS_ICON_SIZE + STATUS_ICON_PADDING);
             iconBox.setPadding(new Insets(STATUS_ICON_PADDING));
             iconBox.setSpacing(STATUS_ICON_SPACING);
             iconBox.visibleProperty().bind(Bindings.createBooleanBinding(() -> viewPy.get() != editorView, viewPy));
-            // keep box compact, show only visible items
-            ChangeListener<? super Boolean> iconVisibilityHandler = (_1, _2, _3) ->
-                iconBox.getChildren().setAll(iconBox.getChildren().stream().filter(Node::isVisible).toList());
-            iconBox.getChildren().forEach(icon -> icon.visibleProperty().addListener(iconVisibilityHandler));
+            // keep box compact, show visible items only
+            ChangeListener<? super Boolean> iconVisibilityChangeHandler = (py,ov,nv) ->
+                iconBox.getChildren().setAll(icons.stream().filter(Node::isVisible).toList());
+            icons.forEach(icon -> icon.visibleProperty().addListener(iconVisibilityChangeHandler));
 
             root.getChildren().addAll(iconPaused, iconBox);
             StackPane.setAlignment(iconPaused, Pos.CENTER);
