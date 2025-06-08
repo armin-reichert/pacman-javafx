@@ -63,7 +63,7 @@ public final class PacManGames_Env {
     public static final float PELLET_3D_RADIUS         = 1.0f;
 
     // Global key combinations
-    public static final KeyCombination KEY_FULLSCREEN  = Keyboard.naked(KeyCode.F11);
+    public static final KeyCombination KEY_FULLSCREEN  = Keyboard.nude(KeyCode.F11);
     public static final KeyCombination KEY_MUTE        = Keyboard.alt(KeyCode.M);
     public static final KeyCombination KEY_OPEN_EDITOR = Keyboard.alt_shift(KeyCode.E);
 

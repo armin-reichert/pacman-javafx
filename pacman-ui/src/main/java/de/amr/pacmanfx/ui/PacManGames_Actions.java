@@ -167,7 +167,7 @@ public interface PacManGames_Actions {
         }
     };
 
-    GameAction SHOW_GAME_VIEW_AND_RESTART_GAME = new GameAction() {
+    GameAction BOOT_SHOW_GAME_VIEW = new GameAction() {
         @Override
         public void execute() {
             theUI().showGameView();

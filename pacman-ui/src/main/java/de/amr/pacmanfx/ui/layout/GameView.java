@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameVariant;
+import de.amr.pacmanfx.ui.PacManGames_ActionBindings;
 import de.amr.pacmanfx.ui.PacManGames_Actions;
 import de.amr.pacmanfx.ui.PacManGames_UIConfiguration;
 import de.amr.pacmanfx.ui._2d.*;
@@ -39,13 +40,13 @@ import java.util.Optional;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static de.amr.pacmanfx.uilib.Ufx.*;
-import static de.amr.pacmanfx.uilib.input.Keyboard.*;
+import static de.amr.pacmanfx.uilib.input.Keyboard.nude;
 import static java.util.Objects.requireNonNull;
 
 /**
  * This view shows the game play and the overlays like dashboard and picture-in-picture view of the running play scene.
  */
-public class GameView implements PacManGames_View {
+public class GameView implements PacManGames_View, PacManGames_ActionBindings {
 
     private final Map<KeyCombination, GameAction> actionBindings = new HashMap<>();
 
@@ -93,21 +94,21 @@ public class GameView implements PacManGames_View {
     }
 
     private void bindActions() {
-        bind(PacManGames_Actions.SHOW_GAME_VIEW_AND_RESTART_GAME, naked(KeyCode.F3));
-        bind(this::showGameSceneHelp,                             naked(KeyCode.H));
-        bind(PacManGames_Actions.QUIT_GAME_SCENE,                 naked(KeyCode.Q));
-        bind(PacManGames_Actions.SIMULATION_SLOWER,               alt(KeyCode.MINUS));
-        bind(PacManGames_Actions.SIMULATION_FASTER,               alt(KeyCode.PLUS));
-        bind(PacManGames_Actions.SIMULATION_RESET,                alt(KeyCode.DIGIT0));
-        bind(PacManGames_Actions.SIMULATION_ONE_STEP,             shift(KeyCode.P));
-        bind(PacManGames_Actions.SIMULATION_TEN_STEPS,            shift(KeyCode.SPACE));
-        bind(PacManGames_Actions.TOGGLE_AUTOPILOT,                alt(KeyCode.A));
-        bind(PacManGames_Actions.TOGGLE_DEBUG_INFO,               alt(KeyCode.D));
-        bind(PacManGames_Actions.TOGGLE_PAUSED,                   naked(KeyCode.P));
-        bind(PacManGames_Actions.TOGGLE_DASHBOARD,                naked(KeyCode.F1), alt(KeyCode.B));
-        bind(PacManGames_Actions.TOGGLE_IMMUNITY,                 alt(KeyCode.I));
-        bind(PacManGames_Actions.TOGGLE_PIP_VISIBILITY,           naked(KeyCode.F2));
-        bind(PacManGames_Actions.TOGGLE_PLAY_SCENE_2D_3D,         alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3));
+        bindToDefaultKeys(PacManGames_Actions.BOOT_SHOW_GAME_VIEW);
+        bindToDefaultKeys(PacManGames_Actions.QUIT_GAME_SCENE);
+        bindToDefaultKeys(PacManGames_Actions.SIMULATION_SLOWER);
+        bindToDefaultKeys(PacManGames_Actions.SIMULATION_FASTER);
+        bindToDefaultKeys(PacManGames_Actions.SIMULATION_RESET);
+        bindToDefaultKeys(PacManGames_Actions.SIMULATION_ONE_STEP);
+        bindToDefaultKeys(PacManGames_Actions.SIMULATION_TEN_STEPS);
+        bindToDefaultKeys(PacManGames_Actions.TOGGLE_AUTOPILOT);
+        bindToDefaultKeys(PacManGames_Actions.TOGGLE_DEBUG_INFO);
+        bindToDefaultKeys(PacManGames_Actions.TOGGLE_PAUSED);
+        bindToDefaultKeys(PacManGames_Actions.TOGGLE_DASHBOARD);
+        bindToDefaultKeys(PacManGames_Actions.TOGGLE_IMMUNITY);
+        bindToDefaultKeys(PacManGames_Actions.TOGGLE_PIP_VISIBILITY);
+        bindToDefaultKeys(PacManGames_Actions.TOGGLE_PLAY_SCENE_2D_3D);
+        bind(this::showGameSceneHelp, nude(KeyCode.H));
     }
 
     public void setTitleBinding(StringBinding binding) {

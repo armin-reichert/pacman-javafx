@@ -31,7 +31,7 @@ import static de.amr.pacmanfx.Globals.theGameController;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
-import static de.amr.pacmanfx.uilib.input.Keyboard.naked;
+import static de.amr.pacmanfx.uilib.input.Keyboard.nude;
 import static de.amr.pacmanfx.uilib.widgets.OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
 
 public class PacManXXL_Common_StartPageMenu extends OptionMenu {
@@ -286,9 +286,9 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
     @Override
     protected void handleKeyPress(KeyEvent e) {
-        if (naked(KeyCode.E).match(e)) {
+        if (nude(KeyCode.E).match(e)) {
             theUI().showEditorView();
-        } else if (naked(KeyCode.ENTER).match(e)) {
+        } else if (nude(KeyCode.ENTER).match(e)) {
             startGame();
         } else {
             super.handleKeyPress(e);

@@ -30,7 +30,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.MS_PAC_MAN_TITLE_SPRITE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
-import static de.amr.pacmanfx.uilib.input.Keyboard.naked;
+import static de.amr.pacmanfx.uilib.input.Keyboard.nude;
 
 /**
  * @author Armin Reichert
@@ -68,7 +68,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     public void doInit() {
         theGame().setScoreVisible(false);
         bind(START_GAME, theJoypad().key(JoypadButton.START));
-        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, naked(KeyCode.SPACE));
+        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, nude(KeyCode.SPACE));
 
         sceneController.restart(SceneState.WAITING_FOR_START);
     }
