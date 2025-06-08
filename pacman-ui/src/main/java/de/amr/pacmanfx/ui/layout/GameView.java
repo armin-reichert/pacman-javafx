@@ -94,20 +94,20 @@ public class GameView implements PacManGames_View, PacManGames_ActionBindings {
     }
 
     private void bindActions() {
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_BOOT_SHOW_GAME_VIEW);
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_QUIT_GAME_SCENE);
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_SIMULATION_SLOWER);
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_SIMULATION_FASTER);
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_SIMULATION_RESET);
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_SIMULATION_ONE_STEP);
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_SIMULATION_TEN_STEPS);
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_TOGGLE_AUTOPILOT);
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_TOGGLE_DEBUG_INFO);
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_TOGGLE_PAUSED);
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_TOGGLE_DASHBOARD);
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_TOGGLE_IMMUNITY);
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_TOGGLE_PIP_VISIBILITY);
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_TOGGLE_PLAY_SCENE_2D_3D);
+        bindAction(PacManGames_Actions.ACTION_BOOT_SHOW_GAME_VIEW);
+        bindAction(PacManGames_Actions.ACTION_QUIT_GAME_SCENE);
+        bindAction(PacManGames_Actions.ACTION_SIMULATION_SLOWER);
+        bindAction(PacManGames_Actions.ACTION_SIMULATION_FASTER);
+        bindAction(PacManGames_Actions.ACTION_SIMULATION_RESET);
+        bindAction(PacManGames_Actions.ACTION_SIMULATION_ONE_STEP);
+        bindAction(PacManGames_Actions.ACTION_SIMULATION_TEN_STEPS);
+        bindAction(PacManGames_Actions.ACTION_TOGGLE_AUTOPILOT);
+        bindAction(PacManGames_Actions.ACTION_TOGGLE_DEBUG_INFO);
+        bindAction(PacManGames_Actions.ACTION_TOGGLE_PAUSED);
+        bindAction(PacManGames_Actions.ACTION_TOGGLE_DASHBOARD);
+        bindAction(PacManGames_Actions.ACTION_TOGGLE_IMMUNITY);
+        bindAction(PacManGames_Actions.ACTION_TOGGLE_PIP_VISIBILITY);
+        bindAction(PacManGames_Actions.ACTION_TOGGLE_PLAY_SCENE_2D_3D);
         bind(this::showGameSceneHelp, nude(KeyCode.H));
     }
 

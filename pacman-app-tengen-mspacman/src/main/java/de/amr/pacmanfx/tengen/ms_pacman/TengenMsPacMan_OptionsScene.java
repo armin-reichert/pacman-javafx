@@ -65,9 +65,9 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         bind(() -> theJoypad().selectNextKeyBinding(this), alt(KeyCode.J));
         bind(ACTION_START_PLAYING, theJoypad().key(JoypadButton.START));
         bind(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, theJoypad().key(JoypadButton.SELECT));
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_TEST_CUT_SCENES);
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_TEST_LEVELS_BONI);
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_TEST_LEVELS_TEASERS);
+        bindAction(PacManGames_Actions.ACTION_TEST_CUT_SCENES);
+        bindAction(PacManGames_Actions.ACTION_TEST_LEVELS_BONI);
+        bindAction(PacManGames_Actions.ACTION_TEST_LEVELS_TEASERS);
 
         selectedOption = OPTION_PAC_BOOSTER;
         tengenGame = (TengenMsPacMan_GameModel) theGame();

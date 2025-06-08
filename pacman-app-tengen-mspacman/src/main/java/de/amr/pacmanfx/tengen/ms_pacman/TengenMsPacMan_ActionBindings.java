@@ -17,7 +17,7 @@ import static de.amr.pacmanfx.uilib.input.Keyboard.control;
 
 public interface TengenMsPacMan_ActionBindings {
 
-    Map<GameAction, Set<KeyCombination>> TENGEN_DEFAULT_BINDING_MAP = Map.ofEntries(
+    Map<GameAction, Set<KeyCombination>> TENGEN_DEFAULT_ACTION_BINDINGS = Map.ofEntries(
         actionBinding(ACTION_PLAYER_UP,           theJoypad().key(JoypadButton.UP),    control(KeyCode.UP)),
         actionBinding(ACTION_PLAYER_DOWN,         theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
         actionBinding(ACTION_PLAYER_LEFT,         theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT)),

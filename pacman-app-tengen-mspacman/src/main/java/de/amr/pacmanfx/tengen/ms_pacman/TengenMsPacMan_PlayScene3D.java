@@ -15,7 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TENGEN_DEFAULT_BINDING_MAP;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TENGEN_DEFAULT_ACTION_BINDINGS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.ACTION_QUIT_DEMO_LEVEL;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.ACTION_TOGGLE_PAC_BOOSTER;
 import static de.amr.pacmanfx.ui.PacManGames_Actions.*;
@@ -31,28 +31,28 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     protected void bindActions() {
         // if demo level is running, allow going back to options screen
         if (optGameLevel().isPresent() && theGameLevel().isDemoLevel()) {
-            bindActionToKeys(ACTION_QUIT_DEMO_LEVEL, TENGEN_DEFAULT_BINDING_MAP);
+            bindAction(ACTION_QUIT_DEMO_LEVEL, TENGEN_DEFAULT_ACTION_BINDINGS);
         } else {
             bindPlayerSteeringActions();
-            bindActionToCommonKeys(ACTION_CHEAT_EAT_ALL_PELLETS);
-            bindActionToCommonKeys(ACTION_CHEAT_ADD_LIVES);
-            bindActionToCommonKeys(ACTION_CHEAT_ENTER_NEXT_LEVEL);
-            bindActionToCommonKeys(ACTION_CHEAT_KILL_GHOSTS);
-            bindActionToKeys(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_DEFAULT_BINDING_MAP);
+            bindAction(ACTION_CHEAT_EAT_ALL_PELLETS);
+            bindAction(ACTION_CHEAT_ADD_LIVES);
+            bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL);
+            bindAction(ACTION_CHEAT_KILL_GHOSTS);
+            bindAction(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_DEFAULT_ACTION_BINDINGS);
         }
-        bindActionToCommonKeys(ACTION_PERSPECTIVE_PREVIOUS);
-        bindActionToCommonKeys(ACTION_PERSPECTIVE_NEXT);
-        bindActionToCommonKeys(ACTION_TOGGLE_DRAW_MODE);
+        bindAction(ACTION_PERSPECTIVE_PREVIOUS);
+        bindAction(ACTION_PERSPECTIVE_NEXT);
+        bindAction(ACTION_TOGGLE_DRAW_MODE);
 
         updateActionBindings();
     }
 
     @Override
     protected void bindPlayerSteeringActions() {
-        bindActionToKeys(ACTION_PLAYER_UP,    TENGEN_DEFAULT_BINDING_MAP);
-        bindActionToKeys(ACTION_PLAYER_DOWN,  TENGEN_DEFAULT_BINDING_MAP);
-        bindActionToKeys(ACTION_PLAYER_LEFT,  TENGEN_DEFAULT_BINDING_MAP);
-        bindActionToKeys(ACTION_PLAYER_RIGHT, TENGEN_DEFAULT_BINDING_MAP);
+        bindAction(ACTION_PLAYER_UP, TENGEN_DEFAULT_ACTION_BINDINGS);
+        bindAction(ACTION_PLAYER_DOWN, TENGEN_DEFAULT_ACTION_BINDINGS);
+        bindAction(ACTION_PLAYER_LEFT, TENGEN_DEFAULT_ACTION_BINDINGS);
+        bindAction(ACTION_PLAYER_RIGHT, TENGEN_DEFAULT_ACTION_BINDINGS);
     }
 
     @Override

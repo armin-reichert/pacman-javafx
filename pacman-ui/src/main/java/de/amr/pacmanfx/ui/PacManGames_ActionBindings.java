@@ -20,7 +20,7 @@ import static java.util.Objects.requireNonNull;
 
 public interface PacManGames_ActionBindings extends ActionBindingsProvider {
 
-    Map<GameAction, Set<KeyCombination>> COMMON_BINDING_MAP = Map.ofEntries(
+    Map<GameAction, Set<KeyCombination>> COMMON_ACTION_BINDINGS = Map.ofEntries(
         actionBinding(ACTION_ARCADE_INSERT_COIN,      nude(KeyCode.DIGIT5), nude(KeyCode.NUMPAD5)),
         actionBinding(ACTION_ARCADE_START_GAME,       nude(KeyCode.DIGIT1), nude(KeyCode.NUMPAD1)),
         actionBinding(ACTION_BOOT_SHOW_GAME_VIEW,     nude(KeyCode.F3)),
@@ -53,11 +53,11 @@ public interface PacManGames_ActionBindings extends ActionBindingsProvider {
         actionBinding(ACTION_TOGGLE_DRAW_MODE,        alt(KeyCode.W))
     );
 
-    default void bindActionToCommonKeys(GameAction gameAction) {
-        bindActionToKeys(gameAction, COMMON_BINDING_MAP);
+    default void bindAction(GameAction gameAction) {
+        bindAction(gameAction, COMMON_ACTION_BINDINGS);
     }
 
-    default void bindActionToKeys(GameAction gameAction, Map<GameAction, Set<KeyCombination>> bindingMap) {
+    default void bindAction(GameAction gameAction, Map<GameAction, Set<KeyCombination>> bindingMap) {
         requireNonNull(gameAction);
         if (bindingMap.containsKey(gameAction)) {
             bind(gameAction, bindingMap.get(gameAction));

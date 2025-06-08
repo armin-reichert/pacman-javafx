@@ -68,11 +68,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public void doInit() {
         theGame().setScoreVisible(true);
 
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_ARCADE_INSERT_COIN);
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_ARCADE_START_GAME);
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_TEST_CUT_SCENES);
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_TEST_LEVELS_BONI);
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_TEST_LEVELS_TEASERS);
+        bindAction(PacManGames_Actions.ACTION_ARCADE_INSERT_COIN);
+        bindAction(PacManGames_Actions.ACTION_ARCADE_START_GAME);
+        bindAction(PacManGames_Actions.ACTION_TEST_CUT_SCENES);
+        bindAction(PacManGames_Actions.ACTION_TEST_LEVELS_BONI);
+        bindAction(PacManGames_Actions.ACTION_TEST_LEVELS_TEASERS);
 
         spriteSheet = theUI().currentConfig().spriteSheet();
         blinking = new Pulse(10, true);

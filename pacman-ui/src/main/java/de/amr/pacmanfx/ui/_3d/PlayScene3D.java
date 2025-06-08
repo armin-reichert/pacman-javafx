@@ -167,28 +167,28 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
 
     protected void bindActions() {
         deleteActionBindings();
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_PERSPECTIVE_PREVIOUS);
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_PERSPECTIVE_NEXT);
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_TOGGLE_DRAW_MODE);
+        bindAction(PacManGames_Actions.ACTION_PERSPECTIVE_PREVIOUS);
+        bindAction(PacManGames_Actions.ACTION_PERSPECTIVE_NEXT);
+        bindAction(PacManGames_Actions.ACTION_TOGGLE_DRAW_MODE);
         if (optGameLevel().isPresent()) {
             if (theGameLevel().isDemoLevel()) {
-                bindActionToCommonKeys(PacManGames_Actions.ACTION_ARCADE_INSERT_COIN);
+                bindAction(PacManGames_Actions.ACTION_ARCADE_INSERT_COIN);
             } else {
                 bindPlayerSteeringActions();
-                bindActionToCommonKeys(PacManGames_Actions.ACTION_CHEAT_EAT_ALL_PELLETS);
-                bindActionToCommonKeys(PacManGames_Actions.ACTION_CHEAT_ADD_LIVES);
-                bindActionToCommonKeys(PacManGames_Actions.ACTION_CHEAT_ENTER_NEXT_LEVEL);
-                bindActionToCommonKeys(PacManGames_Actions.ACTION_CHEAT_KILL_GHOSTS);
+                bindAction(PacManGames_Actions.ACTION_CHEAT_EAT_ALL_PELLETS);
+                bindAction(PacManGames_Actions.ACTION_CHEAT_ADD_LIVES);
+                bindAction(PacManGames_Actions.ACTION_CHEAT_ENTER_NEXT_LEVEL);
+                bindAction(PacManGames_Actions.ACTION_CHEAT_KILL_GHOSTS);
             }
         }
         updateActionBindings();
     }
 
     protected void bindPlayerSteeringActions() {
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_PLAYER_UP);
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_PLAYER_DOWN);
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_PLAYER_LEFT);
-        bindActionToCommonKeys(PacManGames_Actions.ACTION_PLAYER_RIGHT);
+        bindAction(PacManGames_Actions.ACTION_PLAYER_UP);
+        bindAction(PacManGames_Actions.ACTION_PLAYER_DOWN);
+        bindAction(PacManGames_Actions.ACTION_PLAYER_LEFT);
+        bindAction(PacManGames_Actions.ACTION_PLAYER_RIGHT);
     }
 
     @Override
