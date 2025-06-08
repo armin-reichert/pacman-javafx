@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.uilib.GameAction;
 import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.input.Keyboard;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -33,8 +34,7 @@ import java.util.*;
 
 import static de.amr.pacmanfx.ui.PacManGames_Actions.ACTION_BOOT_SHOW_GAME_VIEW;
 import static de.amr.pacmanfx.ui.PacManGames_Actions.ACTION_TOGGLE_PAUSED;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
+import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static de.amr.pacmanfx.uilib.input.Keyboard.nude;
 import static java.util.Objects.requireNonNull;
 
@@ -128,6 +128,11 @@ public class StartPagesView implements PacManGames_View {
         bindActionToKeyCombination(carousel::showNextSlide,         nude(KeyCode.RIGHT));
         bindActionToKeyCombination(ACTION_BOOT_SHOW_GAME_VIEW,      nude(KeyCode.ENTER));
         bindActionToKeyCombination(ACTION_TOGGLE_PAUSED,            nude(KeyCode.P));
+    }
+
+    @Override
+    public Keyboard keyboard() {
+        return theKeyboard();
     }
 
     @Override

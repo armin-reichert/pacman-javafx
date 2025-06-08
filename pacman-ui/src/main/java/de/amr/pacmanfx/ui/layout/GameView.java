@@ -16,6 +16,7 @@ import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.InfoBox;
 import de.amr.pacmanfx.ui.dashboard.InfoBoxReadmeFirst;
 import de.amr.pacmanfx.uilib.*;
+import de.amr.pacmanfx.uilib.input.Keyboard;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -120,6 +121,11 @@ public class GameView implements PacManGames_View, PacManGames_ActionBindings {
         theGameController().updateGameState();
         theSimulationStep().log();
         currentGameScene().ifPresent(GameScene::update);
+    }
+
+    @Override
+    public Keyboard keyboard() {
+        return theKeyboard();
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -256,7 +262,7 @@ public class GameView implements PacManGames_View, PacManGames_ActionBindings {
         nextGameScene.init();
 
         // Handle switching between 2D and 3D game variants
-        byte sceneSwitchType = identifySceneSwitchType(uiConfig, currentGameScene, nextGameScene);
+        byte sceneSwitchType = identifySceneSwitchType(currentGameScene, nextGameScene);
         switch (sceneSwitchType) {
             case 23 -> nextGameScene.onSwitch_2D_3D(currentGameScene);
             case 32 -> nextGameScene.onSwitch_3D_2D(currentGameScene);
@@ -270,13 +276,12 @@ public class GameView implements PacManGames_View, PacManGames_ActionBindings {
     }
 
     /**
-     * @param config UI configuration
      * @param sceneBefore scene displayed before switching
      * @param sceneAfter scene displayed after switching
      * @return <code>23</code> if 2D -> 3D switch, <code>32</code> if 3D -> 2D switch</code>,
      *  <code>0</code> if scene before switch is not yet available
      */
-    private byte identifySceneSwitchType(PacManGames_UIConfiguration config, GameScene sceneBefore, GameScene sceneAfter) {
+    private byte identifySceneSwitchType(GameScene sceneBefore, GameScene sceneAfter) {
         if (sceneBefore == null && sceneAfter == null) {
             throw new IllegalStateException("WTF is going on here, switch between NULL scenes?");
         }
