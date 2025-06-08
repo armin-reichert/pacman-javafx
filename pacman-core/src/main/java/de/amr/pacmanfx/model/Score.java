@@ -24,7 +24,12 @@ public class Score {
 
     public static Score fromFile(File scoreFile) {
         var score = new Score();
-        score.read(scoreFile);
+        try {
+            score.read(scoreFile);
+        } catch (IOException x) {
+            Logger.error("Score could not be read from file '{}'", score);
+            Logger.error(x);
+        }
         return score;
     }
 
@@ -68,34 +73,29 @@ public class Score {
         return dateProperty().get();
     }
 
-    public void read(File file) {
-        var p = new Properties();
+    public void read(File file) throws IOException {
         try (var in = new BufferedInputStream(new FileInputStream(file))) {
+            var p = new Properties();
             p.loadFromXML(in);
             setPoints(Integer.parseInt(p.getProperty("points")));
             setLevelNumber(Integer.parseInt(p.getProperty("level")));
             setDate(LocalDate.parse(p.getProperty("date"), DateTimeFormatter.ISO_LOCAL_DATE));
-        } catch (Exception x) {
-            Logger.warn("Score could not be loaded from file '{}'.", file);
         }
     }
 
-    public void save(File file, String description) {
-        var p = new Properties();
+    public void save(File file, String description) throws IOException {
         boolean created = file.getParentFile().mkdirs();
         if (created) {
             Logger.info("Folder {} has been created", file.getParentFile());
         }
         try (var out = new BufferedOutputStream(new FileOutputStream(file))) {
+            var p = new Properties();
             p.setProperty("points", String.valueOf(points()));
             p.setProperty("level",  String.valueOf(levelNumber()));
             p.setProperty("date",   date().format(DateTimeFormatter.ISO_LOCAL_DATE));
             p.setProperty("url",    "https://github.com/armin-reichert/pacman-javafx");
             p.storeToXML(out, description);
-            Logger.info("Saved '{}' to file '{}'. Points: {} Level: {}",
-                description, file, points(), levelNumber());
-        } catch (Exception x) {
-            Logger.error("Score could not be saved to file '{}'.", file);
+            Logger.info("Saved '{}' to file '{}'. Points: {} Level: {}", description, file, points(), levelNumber());
         }
     }
 }

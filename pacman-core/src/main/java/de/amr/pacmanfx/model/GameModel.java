@@ -16,6 +16,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -321,15 +322,25 @@ public abstract class GameModel implements ScoreManager {
 
     @Override
     public void loadHighScore() {
-        highScore.read(highScoreFile);
-        Logger.info("High Score loaded from '{}': points={}, level={}", highScoreFile, highScore.points(), highScore.levelNumber());
+        try {
+            highScore.read(highScoreFile);
+            Logger.info("High Score loaded from file '{}': points={}, level={}", highScoreFile, highScore.points(), highScore.levelNumber());
+        } catch (IOException x) {
+            Logger.error("High Score could not be loaded from file '{}'", highScoreFile);
+            Logger.error(x);
+        }
     }
 
     @Override
     public void updateHighScore() {
         var oldHighScore = Score.fromFile(highScoreFile);
         if (highScore.points() > oldHighScore.points()) {
-            highScore.save(highScoreFile, "High Score, last update %s".formatted(LocalTime.now()));
+            try {
+                highScore.save(highScoreFile, "High Score updated at %s".formatted(LocalTime.now()));
+            } catch (IOException x) {
+                Logger.error("High Score could not be saved to file '{}'", highScoreFile);
+                Logger.error(x);
+            }
         }
     }
 
@@ -340,7 +351,12 @@ public abstract class GameModel implements ScoreManager {
 
     @Override
     public void saveHighScore() {
-        new Score().save(highScoreFile, "High Score, %s".formatted(LocalDateTime.now()));
+        try {
+            new Score().save(highScoreFile, "High Score, %s".formatted(LocalDateTime.now()));
+        } catch (IOException x) {
+            Logger.error("High Score could not be saved to file '{}'", highScoreFile);
+            Logger.error(x);
+        }
     }
 
     @Override
