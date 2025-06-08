@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.input;
 
-import de.amr.pacmanfx.uilib.ActionBindingsProvider;
+import de.amr.pacmanfx.uilib.ActionBindingsSupport;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -42,19 +42,19 @@ public final class Keyboard {
     }
 
     private final Set<KeyCode> pressedKeys = new HashSet<>();
-    private final Map<KeyCombination, ActionBindingsProvider> actionBindingMaps = new HashMap<>();
+    private final Map<KeyCombination, ActionBindingsSupport> actionBindingMaps = new HashMap<>();
     private final List<KeyCombination> matches = new ArrayList<>(3);
 
-    public void setBinding(KeyCombination combination, ActionBindingsProvider actionBindingsProvider) {
-        if (actionBindingMaps.get(combination) == actionBindingsProvider) {
-            Logger.debug("Key combination '{}' already bound to action {}", combination, actionBindingsProvider);
+    public void setBinding(KeyCombination combination, ActionBindingsSupport actionBindingsSupport) {
+        if (actionBindingMaps.get(combination) == actionBindingsSupport) {
+            Logger.debug("Key combination '{}' already bound to action {}", combination, actionBindingsSupport);
         } else {
-            actionBindingMaps.put(combination, actionBindingsProvider);
-            Logger.debug("Key combination '{}' is bound to action {}", combination, actionBindingsProvider);
+            actionBindingMaps.put(combination, actionBindingsSupport);
+            Logger.debug("Key combination '{}' is bound to action {}", combination, actionBindingsSupport);
         }
     }
 
-    public void removeBinding(KeyCombination combination, ActionBindingsProvider client) {
+    public void removeBinding(KeyCombination combination, ActionBindingsSupport client) {
         boolean removed = actionBindingMaps.remove(combination, client);
         if (removed) {
             Logger.debug("Key code combination '{}' bound to {}", combination, client);
@@ -86,8 +86,8 @@ public final class Keyboard {
         actionBindingMaps.keySet().stream()
             .sorted(Comparator.comparing(KeyCombination::getDisplayText))
             .forEach(combination -> {
-                ActionBindingsProvider actionBindingsProvider = actionBindingMaps.get(combination);
-                Logger.debug("{}: {}", combination, actionBindingsProvider.getClass().getSimpleName());
+                ActionBindingsSupport actionBindingsSupport = actionBindingMaps.get(combination);
+                Logger.debug("{}: {}", combination, actionBindingsSupport.getClass().getSimpleName());
         });
         Logger.debug("--------------------------");
     }

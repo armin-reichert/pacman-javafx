@@ -11,21 +11,21 @@ import java.util.Set;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.*;
 import static de.amr.pacmanfx.ui.PacManGames_Actions.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theJoypad;
-import static de.amr.pacmanfx.uilib.ActionBindingsProvider.actionBinding;
+import static de.amr.pacmanfx.uilib.ActionBindingsSupport.createBinding;
 import static de.amr.pacmanfx.uilib.input.Keyboard.*;
 
 public interface TengenMsPacMan_ActionBindings {
 
     Map<GameAction, Set<KeyCombination>> TENGEN_DEFAULT_ACTION_BINDINGS = Map.ofEntries(
-        actionBinding(ACTION_PLAYER_UP,                theJoypad().key(JoypadButton.UP),    control(KeyCode.UP)),
-        actionBinding(ACTION_PLAYER_DOWN,              theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
-        actionBinding(ACTION_PLAYER_LEFT,              theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
-        actionBinding(ACTION_PLAYER_RIGHT,             theJoypad().key(JoypadButton.RIGHT), control(KeyCode.RIGHT)),
-        actionBinding(ACTION_QUIT_DEMO_LEVEL,          theJoypad().key(JoypadButton.START)),
-        actionBinding(ACTION_START_GAME,               theJoypad().key(JoypadButton.START)),
-        actionBinding(ACTION_START_PLAYING,            theJoypad().key(JoypadButton.START)),
-        actionBinding(ACTION_TOGGLE_DISPLAY_MODE,      alt(KeyCode.C)),
-        actionBinding(ACTION_TOGGLE_JOYPAD_KEYS_SHOWN, nude(KeyCode.SPACE)),
-        actionBinding(ACTION_TOGGLE_PAC_BOOSTER,       theJoypad().key(JoypadButton.A), theJoypad().key(JoypadButton.B))
+        createBinding(ACTION_PLAYER_UP,                theJoypad().key(JoypadButton.UP),    control(KeyCode.UP)),
+        createBinding(ACTION_PLAYER_DOWN,              theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
+        createBinding(ACTION_PLAYER_LEFT,              theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
+        createBinding(ACTION_PLAYER_RIGHT,             theJoypad().key(JoypadButton.RIGHT), control(KeyCode.RIGHT)),
+        createBinding(ACTION_QUIT_DEMO_LEVEL,          theJoypad().key(JoypadButton.START)),
+        createBinding(ACTION_START_GAME,               theJoypad().key(JoypadButton.START)),
+        createBinding(ACTION_START_PLAYING,            theJoypad().key(JoypadButton.START)),
+        createBinding(ACTION_TOGGLE_DISPLAY_MODE,      alt(KeyCode.C)),
+        createBinding(ACTION_TOGGLE_JOYPAD_KEYS_SHOWN, nude(KeyCode.SPACE)),
+        createBinding(ACTION_TOGGLE_PAC_BOOSTER,       theJoypad().key(JoypadButton.A), theJoypad().key(JoypadButton.B))
     );
 }

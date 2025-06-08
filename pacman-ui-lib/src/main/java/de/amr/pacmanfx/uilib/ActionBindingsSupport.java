@@ -19,9 +19,9 @@ import static java.util.Objects.requireNonNull;
  * Collection of bindings between actions and key combinations. Implemented by the "views" (game view,
  * editor view, start pages view) and the game scenes.
  */
-public interface ActionBindingsProvider {
+public interface ActionBindingsSupport {
 
-    static Map.Entry<GameAction, Set<KeyCombination>> actionBinding(GameAction action, KeyCombination... combinations) {
+    static Map.Entry<GameAction, Set<KeyCombination>> createBinding(GameAction action, KeyCombination... combinations) {
         return entry(action, Set.of(combinations));
     }
 
@@ -53,14 +53,6 @@ public interface ActionBindingsProvider {
         requireNonNull(action);
         requireNonNull(combination);
         actionBindings().put(combination, action);
-    }
-
-    default void bindActionToKeyCombinations(GameAction action, Set<KeyCombination> combinations) {
-        requireNonNull(action);
-        requireNonNull(combinations);
-        for (KeyCombination combination : combinations) {
-            actionBindings().put(combination, action);
-        }
     }
 
     default Optional<GameAction> matchingAction() {

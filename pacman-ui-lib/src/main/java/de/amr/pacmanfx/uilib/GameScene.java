@@ -17,7 +17,7 @@ import static de.amr.pacmanfx.Globals.theGameVariant;
  *
  * @author Armin Reichert
  */
-public interface GameScene extends GameEventListener, ActionBindingsProvider {
+public interface GameScene extends GameEventListener, ActionBindingsSupport {
 
     /**
      * Called when the scene becomes the current one.
