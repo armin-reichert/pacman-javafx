@@ -10,8 +10,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import org.tinylog.Logger;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static de.amr.pacmanfx.ui.PacManGames_Actions.*;
 import static de.amr.pacmanfx.uilib.input.Keyboard.*;
@@ -20,11 +20,11 @@ import static java.util.Objects.requireNonNull;
 
 public interface PacManGames_ActionBindings extends ActionBindingsProvider {
 
-    private static Map.Entry<GameAction, List<KeyCombination>> mapping(GameAction action, KeyCombination... combinations) {
-        return entry(action, List.of(combinations));
+    private static Map.Entry<GameAction, Set<KeyCombination>> mapping(GameAction action, KeyCombination... combinations) {
+        return entry(action, Set.of(combinations));
     }
 
-    Map<GameAction, List<KeyCombination>> DEFAULT_MAPPINGS = Map.ofEntries(
+    Map<GameAction, Set<KeyCombination>> DEFAULT_MAPPINGS = Map.ofEntries(
         mapping(ARCADE_INSERT_COIN,      nude(KeyCode.DIGIT5), nude(KeyCode.NUMPAD5)),
         mapping(ARCADE_START_GAME,       nude(KeyCode.DIGIT1), nude(KeyCode.NUMPAD1)),
         mapping(BOOT_SHOW_GAME_VIEW,     nude(KeyCode.F3)),

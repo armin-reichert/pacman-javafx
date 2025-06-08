@@ -10,9 +10,9 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import org.tinylog.Logger;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
@@ -54,7 +54,7 @@ public interface ActionBindingsProvider {
         }
     }
 
-    default void bind(GameAction action, List<KeyCombination> combinations) {
+    default void bind(GameAction action, Set<KeyCombination> combinations) {
         requireNonNull(action);
         requireNonNull(combinations);
         for (KeyCombination combination : combinations) {
