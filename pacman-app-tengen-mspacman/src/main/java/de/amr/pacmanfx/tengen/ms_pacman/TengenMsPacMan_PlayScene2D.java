@@ -8,7 +8,6 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -45,10 +44,11 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TENGEN_DEFAULT_BINDING_MAP;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
+import static de.amr.pacmanfx.ui.PacManGames_Actions.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
-import static de.amr.pacmanfx.uilib.input.Keyboard.control;
 
 /**
  * Tengen play scene, uses vertical scrolling.
@@ -205,17 +205,17 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     private void setJoypadKeyBindings(GameLevel level) {
         if (level.isDemoLevel()) {
-            bind(QUIT_DEMO_LEVEL, theJoypad().key(JoypadButton.START));
+            bindToKeys(QUIT_DEMO_LEVEL, TENGEN_DEFAULT_BINDING_MAP);
         } else {
-            bind(PacManGames_Actions.PLAYER_UP,    theJoypad().key(JoypadButton.UP),    control(KeyCode.UP));
-            bind(PacManGames_Actions.PLAYER_DOWN,  theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN));
-            bind(PacManGames_Actions.PLAYER_LEFT,  theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT));
-            bind(PacManGames_Actions.PLAYER_RIGHT, theJoypad().key(JoypadButton.RIGHT), control(KeyCode.RIGHT));
-            bind(TOGGLE_PAC_BOOSTER, theJoypad().key(JoypadButton.A), theJoypad().key(JoypadButton.B));
-            bindToDefaultKeys(PacManGames_Actions.CHEAT_EAT_ALL_PELLETS);
-            bindToDefaultKeys(PacManGames_Actions.CHEAT_ADD_LIVES);
-            bindToDefaultKeys(PacManGames_Actions.CHEAT_ENTER_NEXT_LEVEL);
-            bindToDefaultKeys(PacManGames_Actions.CHEAT_KILL_GHOSTS);
+            bindToKeys(PLAYER_UP, TENGEN_DEFAULT_BINDING_MAP);
+            bindToKeys(PLAYER_DOWN, TENGEN_DEFAULT_BINDING_MAP);
+            bindToKeys(PLAYER_LEFT, TENGEN_DEFAULT_BINDING_MAP);
+            bindToKeys(PLAYER_RIGHT, TENGEN_DEFAULT_BINDING_MAP);
+            bindToKeys(TOGGLE_PAC_BOOSTER, TENGEN_DEFAULT_BINDING_MAP);
+            bindToCommonKeys(CHEAT_EAT_ALL_PELLETS);
+            bindToCommonKeys(CHEAT_ADD_LIVES);
+            bindToCommonKeys(CHEAT_ENTER_NEXT_LEVEL);
+            bindToCommonKeys(CHEAT_KILL_GHOSTS);
         }
         updateActionBindings();
     }
@@ -223,7 +223,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void doInit() {
         theGame().setScoreVisible(true);
-        bind(TOGGLE_DISPLAY_MODE, Keyboard.alt(KeyCode.C));
+        bindToKeys(TOGGLE_DISPLAY_MODE, TENGEN_DEFAULT_BINDING_MAP);
         setGameRenderer(theUI().currentConfig().createRenderer(canvas()));
         movingCamera.focusTopOfScene();
         messageMovement = new MessageMovement();

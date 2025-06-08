@@ -77,11 +77,11 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     public void doInit() {
         theGame().setScoreVisible(true);
 
-        bindToDefaultKeys(PacManGames_Actions.ARCADE_INSERT_COIN);
-        bindToDefaultKeys(PacManGames_Actions.ARCADE_START_GAME);
-        bindToDefaultKeys(PacManGames_Actions.TEST_CUT_SCENES);
-        bindToDefaultKeys(PacManGames_Actions.TEST_LEVELS_BONI);
-        bindToDefaultKeys(PacManGames_Actions.TEST_LEVELS_TEASERS);
+        bindToCommonKeys(PacManGames_Actions.ARCADE_INSERT_COIN);
+        bindToCommonKeys(PacManGames_Actions.ARCADE_START_GAME);
+        bindToCommonKeys(PacManGames_Actions.TEST_CUT_SCENES);
+        bindToCommonKeys(PacManGames_Actions.TEST_LEVELS_BONI);
+        bindToCommonKeys(PacManGames_Actions.TEST_LEVELS_TEASERS);
 
         msPacMan = createMsPacMan();
         ghosts = new Ghost[] { createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost() };

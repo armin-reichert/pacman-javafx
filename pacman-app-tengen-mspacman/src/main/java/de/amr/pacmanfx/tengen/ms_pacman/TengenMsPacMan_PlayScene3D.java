@@ -36,15 +36,15 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             bind(QUIT_DEMO_LEVEL, theJoypad().key(JoypadButton.START));
         } else {
             bindPlayerSteeringActions();
-            bindToDefaultKeys(PacManGames_Actions.CHEAT_EAT_ALL_PELLETS);
-            bindToDefaultKeys(PacManGames_Actions.CHEAT_ADD_LIVES);
-            bindToDefaultKeys(PacManGames_Actions.CHEAT_ENTER_NEXT_LEVEL);
-            bindToDefaultKeys(PacManGames_Actions.CHEAT_KILL_GHOSTS);
+            bindToCommonKeys(PacManGames_Actions.CHEAT_EAT_ALL_PELLETS);
+            bindToCommonKeys(PacManGames_Actions.CHEAT_ADD_LIVES);
+            bindToCommonKeys(PacManGames_Actions.CHEAT_ENTER_NEXT_LEVEL);
+            bindToCommonKeys(PacManGames_Actions.CHEAT_KILL_GHOSTS);
             bind(TOGGLE_PAC_BOOSTER, theJoypad().key(JoypadButton.A), theJoypad().key(JoypadButton.B));
         }
-        bindToDefaultKeys(PacManGames_Actions.PERSPECTIVE_PREVIOUS);
-        bindToDefaultKeys(PacManGames_Actions.PERSPECTIVE_NEXT);
-        bindToDefaultKeys(PacManGames_Actions.TOGGLE_DRAW_MODE);
+        bindToCommonKeys(PacManGames_Actions.PERSPECTIVE_PREVIOUS);
+        bindToCommonKeys(PacManGames_Actions.PERSPECTIVE_NEXT);
+        bindToCommonKeys(PacManGames_Actions.TOGGLE_DRAW_MODE);
 
         updateActionBindings();
     }

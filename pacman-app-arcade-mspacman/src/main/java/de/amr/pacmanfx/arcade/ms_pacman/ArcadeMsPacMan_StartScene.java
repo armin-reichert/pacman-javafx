@@ -22,8 +22,8 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
     @Override
     public void doInit() {
         theGame().setScoreVisible(true);
-        bindToDefaultKeys(PacManGames_Actions.ARCADE_INSERT_COIN);
-        bindToDefaultKeys(PacManGames_Actions.ARCADE_START_GAME);
+        bindToCommonKeys(PacManGames_Actions.ARCADE_INSERT_COIN);
+        bindToCommonKeys(PacManGames_Actions.ARCADE_START_GAME);
     }
 
     @Override

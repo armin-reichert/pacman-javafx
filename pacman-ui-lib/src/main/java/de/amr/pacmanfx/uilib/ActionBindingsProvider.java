@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import static java.util.Map.entry;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -21,6 +22,10 @@ import static java.util.Objects.requireNonNull;
  * editor view, start pages view) and the game scenes.
  */
 public interface ActionBindingsProvider {
+
+    static Map.Entry<GameAction, Set<KeyCombination>> actionBinding(GameAction action, KeyCombination... combinations) {
+        return entry(action, Set.of(combinations));
+    }
 
     /**
      * @return the keyboard providing the ke combinations

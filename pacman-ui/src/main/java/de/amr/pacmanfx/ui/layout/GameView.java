@@ -94,20 +94,20 @@ public class GameView implements PacManGames_View, PacManGames_ActionBindings {
     }
 
     private void bindActions() {
-        bindToDefaultKeys(PacManGames_Actions.BOOT_SHOW_GAME_VIEW);
-        bindToDefaultKeys(PacManGames_Actions.QUIT_GAME_SCENE);
-        bindToDefaultKeys(PacManGames_Actions.SIMULATION_SLOWER);
-        bindToDefaultKeys(PacManGames_Actions.SIMULATION_FASTER);
-        bindToDefaultKeys(PacManGames_Actions.SIMULATION_RESET);
-        bindToDefaultKeys(PacManGames_Actions.SIMULATION_ONE_STEP);
-        bindToDefaultKeys(PacManGames_Actions.SIMULATION_TEN_STEPS);
-        bindToDefaultKeys(PacManGames_Actions.TOGGLE_AUTOPILOT);
-        bindToDefaultKeys(PacManGames_Actions.TOGGLE_DEBUG_INFO);
-        bindToDefaultKeys(PacManGames_Actions.TOGGLE_PAUSED);
-        bindToDefaultKeys(PacManGames_Actions.TOGGLE_DASHBOARD);
-        bindToDefaultKeys(PacManGames_Actions.TOGGLE_IMMUNITY);
-        bindToDefaultKeys(PacManGames_Actions.TOGGLE_PIP_VISIBILITY);
-        bindToDefaultKeys(PacManGames_Actions.TOGGLE_PLAY_SCENE_2D_3D);
+        bindToCommonKeys(PacManGames_Actions.BOOT_SHOW_GAME_VIEW);
+        bindToCommonKeys(PacManGames_Actions.QUIT_GAME_SCENE);
+        bindToCommonKeys(PacManGames_Actions.SIMULATION_SLOWER);
+        bindToCommonKeys(PacManGames_Actions.SIMULATION_FASTER);
+        bindToCommonKeys(PacManGames_Actions.SIMULATION_RESET);
+        bindToCommonKeys(PacManGames_Actions.SIMULATION_ONE_STEP);
+        bindToCommonKeys(PacManGames_Actions.SIMULATION_TEN_STEPS);
+        bindToCommonKeys(PacManGames_Actions.TOGGLE_AUTOPILOT);
+        bindToCommonKeys(PacManGames_Actions.TOGGLE_DEBUG_INFO);
+        bindToCommonKeys(PacManGames_Actions.TOGGLE_PAUSED);
+        bindToCommonKeys(PacManGames_Actions.TOGGLE_DASHBOARD);
+        bindToCommonKeys(PacManGames_Actions.TOGGLE_IMMUNITY);
+        bindToCommonKeys(PacManGames_Actions.TOGGLE_PIP_VISIBILITY);
+        bindToCommonKeys(PacManGames_Actions.TOGGLE_PLAY_SCENE_2D_3D);
         bind(this::showGameSceneHelp, nude(KeyCode.H));
     }
 
