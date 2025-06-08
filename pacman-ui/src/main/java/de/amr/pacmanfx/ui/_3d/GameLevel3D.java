@@ -141,7 +141,7 @@ public class GameLevel3D {
     }
 
     private void createPac3D() {
-        final String ans = theUI().currentConfig().assetNamespace();
+        final String ans = theUI().configuration().assetNamespace();
         pac3D = switch (theGameVariant()) {
             case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL
                 -> new MsPacMan3D(gameLevel.pac(), PAC_3D_SIZE, theAssets(), ans);
@@ -159,7 +159,7 @@ public class GameLevel3D {
     }
 
     private Ghost3D_Appearance createGhost3D(Ghost ghost, int numFlashes) {
-        var ghost3D = new Ghost3D_Appearance(theAssets(), theUI().currentConfig().assetNamespace(),
+        var ghost3D = new Ghost3D_Appearance(theAssets(), theUI().configuration().assetNamespace(),
             new MeshView(Model3DRepository.get().ghostDressMesh()),
             new MeshView(Model3DRepository.get().ghostPupilsMesh()),
             new MeshView(Model3DRepository.get().ghostEyeballsMesh()),
@@ -170,7 +170,7 @@ public class GameLevel3D {
 
     private void createMaze3D() {
         final WorldMap worldMap = gameLevel.worldMap();
-        final WorldMapColorScheme colorScheme = theUI().currentConfig().worldMapColorScheme(worldMap);
+        final WorldMapColorScheme colorScheme = theUI().configuration().worldMapColorScheme(worldMap);
         floor3D = createFloor3D(worldMap.numCols() * TS, worldMap.numRows() * TS);
         maze3D = new Maze3D(gameLevel, colorScheme);
         mazeGroup.getChildren().addAll(floor3D, maze3D);
@@ -243,7 +243,7 @@ public class GameLevel3D {
     private void createLivesCounter3D() {
         Node[] counterShapes = new Node[LIVES_COUNTER_MAX];
         for (int i = 0; i < counterShapes.length; ++i) {
-            counterShapes[i] = theUI().currentConfig().createLivesCounterShape();
+            counterShapes[i] = theUI().configuration().createLivesCounterShape();
         }
         livesCounter3D = new LivesCounter3D(counterShapes);
         livesCounter3D.setTranslateX(2 * TS);
@@ -261,7 +261,7 @@ public class GameLevel3D {
     }
 
     private Node createLevelCounter3D(LevelCounter levelCounter, double x, double y) {
-        GameSpriteSheet spriteSheet = theUI().currentConfig().spriteSheet();
+        GameSpriteSheet spriteSheet = theUI().configuration().spriteSheet();
         var levelCounter3D = new Group();
         levelCounter3D.setTranslateX(x);
         levelCounter3D.setTranslateY(y);

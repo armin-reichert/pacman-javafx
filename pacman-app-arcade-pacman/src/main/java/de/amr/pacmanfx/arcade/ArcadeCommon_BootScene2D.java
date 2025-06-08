@@ -30,7 +30,7 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
     @Override
     public void doInit() {
         theGame().setScoreVisible(false);
-        Image spriteImage = theUI().currentConfig().spriteSheet().sourceImage();
+        Image spriteImage = theUI().configuration().spriteSheet().sourceImage();
         // ignore left half of sprite sheet image
         minX = spriteImage.getWidth() / 2;
         maxX = spriteImage.getWidth() - FRAGMENT_SIZE;

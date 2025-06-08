@@ -55,7 +55,7 @@ public class GameView implements PacManGames_View, PacManGames_ActionBindings {
         @Override
         protected void invalidated() {
             GameScene gameScene = get();
-            if (gameScene != null) embedGameScene(theUI().currentConfig(), gameScene);
+            if (gameScene != null) embedGameScene(theUI().configuration(), gameScene);
             contextMenu.hide();
         }
     };
@@ -188,7 +188,7 @@ public class GameView implements PacManGames_View, PacManGames_ActionBindings {
     public void onLevelCreated(GameEvent event) {
         //TODO find another point in time to do this
         optGameLevel().ifPresent(level -> {
-            PacManGames_UIConfiguration config = theUI().currentConfig();
+            PacManGames_UIConfiguration config = theUI().configuration();
             config.createActorAnimations(level);
             theSound().setEnabled(!level.isDemoLevel());
             // size of game scene might have changed, so re-embed
@@ -244,7 +244,7 @@ public class GameView implements PacManGames_View, PacManGames_ActionBindings {
     }
 
     public void updateGameScene(boolean reloadCurrent) {
-        PacManGames_UIConfiguration uiConfig = theUI().currentConfig();
+        PacManGames_UIConfiguration uiConfig = theUI().configuration();
         final GameScene nextGameScene = uiConfig.selectGameScene(theGame(), theGameState());
         if (nextGameScene == null) {
             throw new IllegalStateException("Could not determine next game scene");
@@ -333,7 +333,7 @@ public class GameView implements PacManGames_View, PacManGames_ActionBindings {
         canvasContainer.setBorderColor(Color.rgb(222, 222, 255));
         //TODO check this:
         canvasContainer.decorationEnabledPy.addListener((py, ov, nv) ->
-            currentGameScene().ifPresent(gameScene -> embedGameScene(theUI().currentConfig(), gameScene)));
+            currentGameScene().ifPresent(gameScene -> embedGameScene(theUI().configuration(), gameScene)));
     }
 
     private void configurePiPView() {

@@ -251,7 +251,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
         updateActionBindings();
         if (gr() == null) { //TODO check if this can happen
             Logger.warn("No game renderer was existing when switching to 2D scene");
-            setGameRenderer(theUI().currentConfig().createRenderer(canvas()));
+            setGameRenderer(theUI().configuration().createRenderer(canvas()));
         }
         optGameLevel().ifPresent(gr()::applyRenderingHints);
     }

@@ -258,7 +258,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     public void drawLevelMessage(GameLevel level, Vector2f position, Font font) {
         if (level.message() != GameLevel.MESSAGE_NONE) {
-            String ans = theUI().currentConfig().assetNamespace();
+            String ans = theUI().configuration().assetNamespace();
             float x = position.x(), y = position.y();
             switch (level.message()) {
                 case GameLevel.MESSAGE_READY -> drawTextCenteredOver("READY!", x, y, theAssets().color(ans + ".color.ready_message"), font);

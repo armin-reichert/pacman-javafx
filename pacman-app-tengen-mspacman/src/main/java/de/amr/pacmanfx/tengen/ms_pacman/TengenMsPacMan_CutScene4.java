@@ -54,7 +54,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         juniors = new ArrayList<>();
         juniorCreationTime = new ArrayList<>();
 
-        spriteSheet = theUI().currentConfig().spriteSheet();
+        spriteSheet = theUI().configuration().spriteSheet();
         pacMan.setAnimations(new TengenMsPacMan_PacAnimationMap(spriteSheet));
         msPacMan.setAnimations(new TengenMsPacMan_PacAnimationMap(spriteSheet));
 
@@ -146,7 +146,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     }
 
     private void spawnJunior() {
-        String assetNamespace = theUI().currentConfig().assetNamespace();
+        String assetNamespace = theUI().configuration().assetNamespace();
         var junior = createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
         int rnd = randomInt(1, 3);

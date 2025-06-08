@@ -310,7 +310,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
             scores3D.showScore(score.points(), score.levelNumber());
         }
         else { // disabled, show text "GAME OVER"
-            String ans = theUI().currentConfig().assetNamespace();
+            String ans = theUI().configuration().assetNamespace();
             Color color = theAssets().color(ans + ".color.game_over_message");
             scores3D.showTextAsScore(theAssets().text("score.game_over"), color);
         }
@@ -371,7 +371,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
                     animation.play();
                 }
                 case GHOST_DYING -> {
-                    GameSpriteSheet spriteSheet = theUI().currentConfig().spriteSheet();
+                    GameSpriteSheet spriteSheet = theUI().configuration().spriteSheet();
                     RectArea[] numberSprites = spriteSheet.ghostNumberSprites();
                     theSimulationStep().killedGhosts.forEach(ghost -> {
                         int victimIndex = theGameLevel().victims().indexOf(ghost);
@@ -434,7 +434,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
     @Override
     public void onBonusActivated(GameEvent event) {
         theGameLevel().bonus().ifPresent(bonus -> {
-            level3D.updateBonus3D(bonus, theUI().currentConfig().spriteSheet());
+            level3D.updateBonus3D(bonus, theUI().configuration().spriteSheet());
             if (bonus instanceof MovingBonus) {
                 theSound().playBonusActiveSound();
             }
