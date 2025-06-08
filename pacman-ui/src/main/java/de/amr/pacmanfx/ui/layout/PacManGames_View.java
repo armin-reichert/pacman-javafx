@@ -8,19 +8,17 @@ import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.uilib.ActionBindingsProvider;
 import de.amr.pacmanfx.uilib.input.Keyboard;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.binding.StringExpression;
 import javafx.scene.layout.Region;
 
 import static de.amr.pacmanfx.ui.PacManGames_Env.theKeyboard;
 
-//TODO Maybe this should become a FX scene?
 public interface PacManGames_View extends ActionBindingsProvider, GameEventListener {
     @Override
     default Keyboard keyboard() { return theKeyboard(); }
     Region layoutRoot();
-    void update();
-    default void draw() {}
-    default StringExpression title() {
+    default StringExpression titleBinding() {
         return Bindings.createStringBinding(() -> getClass().getSimpleName());
     }
 }

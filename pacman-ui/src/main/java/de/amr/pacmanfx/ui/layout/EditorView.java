@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import de.amr.pacmanfx.uilib.GameAction;
-import javafx.beans.binding.StringExpression;
+import javafx.beans.property.StringProperty;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
@@ -38,10 +38,7 @@ public class EditorView implements PacManGames_View {
     }
 
     @Override
-    public void update() {}
-
-    @Override
-    public StringExpression title() {
+    public StringProperty titleBinding() {
         return editor.titleProperty();
     }
 

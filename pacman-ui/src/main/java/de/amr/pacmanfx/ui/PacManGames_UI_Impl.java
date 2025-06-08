@@ -54,25 +54,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     private GameView gameView;
     private EditorView editorView;
 
-    private void doSimulationStepAndUpdateGameScene() {
-        try {
-            theSimulationStep().start(theClock().tickCount());
-            theGameController().updateGameState();
-            theSimulationStep().log();
-            currentView().update();
-        } catch (Exception x) {
-            ka_tas_trooo_phe(x);
-        }
-    }
-
-    private void drawCurrentView() {
-        try {
-            currentView().draw();
-        } catch (Exception x) {
-            ka_tas_trooo_phe(x);
-        }
-    }
-
     private void ka_tas_trooo_phe(Throwable x) {
         Logger.error(x);
         Logger.error("SOMETHING VERY BAD HAPPENED DURING SIMULATION STEP!");
@@ -86,7 +67,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         }
         newView.updateActionBindings();
         newView.layoutRoot().requestFocus();
-        stage.titleProperty().bind(newView.title());
+        stage.titleProperty().bind(newView.titleBinding());
         theGameEventManager().addEventListener(newView);
         var root = (StackPane) mainScene.getRoot();
         root.getChildren().set(0, newView.layoutRoot());
@@ -188,7 +169,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         {
             gameView = new GameView(mainScene);
             gameScenePy.bind(gameView.gameSceneProperty());
-            gameView.bindTitle(Bindings.createStringBinding(
+            gameView.setTitleBinding(Bindings.createStringBinding(
                 () -> computeTitleText(currentGameScene().orElse(null), PY_3D_ENABLED.get(), PY_DEBUG_INFO_VISIBLE.get()),
                 theClock().pausedProperty(), mainScene.heightProperty(), gameSceneProperty(),
                 PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE));
@@ -201,10 +182,21 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
                     }
                 }
             }
+            theClock().setPausableAction(() -> {
+                try {
+                    gameView.doSimulationStepAndUpdateGameScene();
+                } catch (Throwable x) {
+                    ka_tas_trooo_phe(x);
+                }
+            });
+            theClock().setPermanentAction(() -> {
+                try {
+                    gameView.draw();
+                } catch (Throwable x) {
+                    ka_tas_trooo_phe(x);
+                }
+            });
         }
-
-        theClock().setPausableAction(this::doSimulationStepAndUpdateGameScene);
-        theClock().setPermanentAction(this::drawCurrentView);
 
         viewPy.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
         root.backgroundProperty().bind(gameSceneProperty().map(

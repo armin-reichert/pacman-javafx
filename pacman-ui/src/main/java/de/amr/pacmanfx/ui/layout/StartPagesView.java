@@ -9,7 +9,7 @@ import de.amr.pacmanfx.uilib.GameAction;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.StringExpression;
+import javafx.beans.binding.StringBinding;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -104,7 +104,7 @@ public class StartPagesView implements PacManGames_View {
     private final List<StartPage> startPageList = new ArrayList<>();
     private final Map<KeyCombination, GameAction> actionBindings = new HashMap<>();
     private final Carousel carousel;
-    private StringExpression titleExpression;
+    private StringBinding titleBinding;
 
     public StartPagesView() {
         carousel = new StartPagesCarousel();
@@ -121,7 +121,7 @@ public class StartPagesView implements PacManGames_View {
                 startPage.onEnter();
             }
         });
-        setTitleExpression(Bindings.createStringBinding(() -> "JavaFX Pac-Man Games"));
+        setTitleBinding(Bindings.createStringBinding(() -> "JavaFX Pac-Man Games"));
 
         bind(carousel::showPreviousSlide,     KeyCode.LEFT);
         bind(carousel::showNextSlide,         KeyCode.RIGHT);
@@ -133,11 +133,8 @@ public class StartPagesView implements PacManGames_View {
     public Region layoutRoot() { return carousel; }
 
     @Override
-    public void update() {}
-
-    @Override
-    public StringExpression title() {
-        return titleExpression;
+    public StringBinding titleBinding() {
+        return titleBinding;
     }
 
     @Override
@@ -145,8 +142,8 @@ public class StartPagesView implements PacManGames_View {
         return actionBindings;
     }
 
-    public void setTitleExpression(StringExpression stringExpression) {
-        titleExpression = requireNonNull(stringExpression);
+    public void setTitleBinding(StringBinding binding) {
+        titleBinding = requireNonNull(binding);
     }
 
     public Optional<StartPage> currentStartPage() {

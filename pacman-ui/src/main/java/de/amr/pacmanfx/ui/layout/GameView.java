@@ -17,7 +17,7 @@ import de.amr.pacmanfx.ui.dashboard.InfoBoxReadmeFirst;
 import de.amr.pacmanfx.uilib.*;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.StringExpression;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
@@ -74,7 +74,7 @@ public class GameView implements PacManGames_View {
     private final VBox pipContainer = new VBox(pipView, new HBox());
     private final ContextMenu contextMenu = new ContextMenu();
 
-    private StringExpression title;
+    private StringBinding titleBinding;
 
     public GameView(Scene parentScene) {
         this.parentScene = parentScene;
@@ -111,8 +111,15 @@ public class GameView implements PacManGames_View {
         bind(PacManGames_Actions.TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3));
     }
 
-    public void bindTitle(StringExpression expression) {
-        title = requireNonNull(expression);
+    public void setTitleBinding(StringBinding binding) {
+        titleBinding = requireNonNull(binding);
+    }
+
+    public void doSimulationStepAndUpdateGameScene() {
+        theSimulationStep().start(theClock().tickCount());
+        theGameController().updateGameState();
+        theSimulationStep().log();
+        currentGameScene().ifPresent(GameScene::update);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -125,13 +132,8 @@ public class GameView implements PacManGames_View {
     }
 
     @Override
-    public StringExpression title() {
-        return title;
-    }
-
-    @Override
-    public void update() {
-        currentGameScene().ifPresent(GameScene::update);
+    public StringBinding titleBinding() {
+        return titleBinding;
     }
 
     public void draw() {
