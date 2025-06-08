@@ -23,9 +23,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -87,6 +89,11 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
         // Status icons
         {
+            final Color STATUS_ICON_COLOR = Color.LIGHTGRAY;
+            final byte STATUS_ICON_SIZE = 24;
+            final byte STATUS_ICON_SPACING = 5;
+            final byte STATUS_ICON_PADDING = 10;
+
             var iconMuted = FontIcon.of(FontAwesomeSolid.DEAF, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
             iconMuted.visibleProperty().bind(theSound().mutedProperty());
 
@@ -107,8 +114,8 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             final List<FontIcon> icons = List.of(iconMuted, icon3D, iconAutopilot, iconImmune);
             final HBox iconBox = new HBox();
             iconBox.getChildren().addAll(icons);
-            iconBox.setMinHeight(STATUS_ICON_SIZE + STATUS_ICON_PADDING);
-            iconBox.setMaxHeight(STATUS_ICON_SIZE + STATUS_ICON_PADDING);
+            iconBox.setMaxHeight(STATUS_ICON_SIZE);
+            iconBox.setMaxWidth(STATUS_ICON_SIZE * 4);
             iconBox.setPadding(new Insets(STATUS_ICON_PADDING));
             iconBox.setSpacing(STATUS_ICON_SPACING);
             iconBox.visibleProperty().bind(Bindings.createBooleanBinding(() -> viewPy.get() != editorView, viewPy));
