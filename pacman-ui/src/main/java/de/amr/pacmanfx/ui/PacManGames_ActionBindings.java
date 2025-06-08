@@ -60,7 +60,7 @@ public interface PacManGames_ActionBindings extends ActionBindingsProvider {
     default void bindAction(GameAction gameAction, Map<GameAction, Set<KeyCombination>> bindingMap) {
         requireNonNull(gameAction);
         if (bindingMap.containsKey(gameAction)) {
-            bind(gameAction, bindingMap.get(gameAction));
+            bindActionToKeys(gameAction, bindingMap.get(gameAction));
         } else {
             Logger.error("No keyboard binding found for game action {}", gameAction);
         }

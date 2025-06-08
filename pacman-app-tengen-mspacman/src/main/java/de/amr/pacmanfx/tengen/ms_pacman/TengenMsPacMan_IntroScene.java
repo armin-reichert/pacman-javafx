@@ -9,13 +9,11 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
-import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
@@ -24,13 +22,13 @@ import java.util.BitSet;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TENGEN_DEFAULT_ACTION_BINDINGS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.ACTION_START_GAME;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.ACTION_TOGGLE_JOYPAD_KEYS_SHOWN;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.MS_PAC_MAN_TITLE_SPRITE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
-import static de.amr.pacmanfx.uilib.input.Keyboard.nude;
 
 /**
  * @author Armin Reichert
@@ -67,9 +65,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     @Override
     public void doInit() {
         theGame().setScoreVisible(false);
-        bind(ACTION_START_GAME, theJoypad().key(JoypadButton.START));
-        bind(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, nude(KeyCode.SPACE));
-
+        bindAction(ACTION_START_GAME, TENGEN_DEFAULT_ACTION_BINDINGS);
+        bindAction(ACTION_TOGGLE_JOYPAD_KEYS_SHOWN, TENGEN_DEFAULT_ACTION_BINDINGS);
         sceneController.restart(SceneState.WAITING_FOR_START);
     }
 

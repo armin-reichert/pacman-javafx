@@ -5,8 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib;
 
 import de.amr.pacmanfx.uilib.input.Keyboard;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import org.tinylog.Logger;
 
@@ -51,26 +49,17 @@ public interface ActionBindingsProvider {
         Logger.info("Key bindings cleared for {}", getClass().getSimpleName());
     }
 
-    default void bind(GameAction action, KeyCombination... combinations) {
+    default void bindActionToKeyCombination(GameAction action, KeyCombination combination) {
+        requireNonNull(action);
+        requireNonNull(combination);
+        actionBindings().put(combination, action);
+    }
+
+    default void bindActionToKeys(GameAction action, Set<KeyCombination> combinations) {
         requireNonNull(action);
         requireNonNull(combinations);
         for (KeyCombination combination : combinations) {
             actionBindings().put(combination, action);
-        }
-    }
-
-    default void bind(GameAction action, Set<KeyCombination> combinations) {
-        requireNonNull(action);
-        requireNonNull(combinations);
-        for (KeyCombination combination : combinations) {
-            actionBindings().put(combination, action);
-        }
-    }
-
-    default void bind(GameAction action, KeyCode... keyCodes) {
-        requireNonNull(keyCodes);
-        for (KeyCode keyCode : keyCodes) {
-            actionBindings().put(new KeyCodeCombination(keyCode), action);
         }
     }
 

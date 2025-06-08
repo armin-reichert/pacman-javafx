@@ -35,6 +35,7 @@ import static de.amr.pacmanfx.ui.PacManGames_Actions.ACTION_BOOT_SHOW_GAME_VIEW;
 import static de.amr.pacmanfx.ui.PacManGames_Actions.ACTION_TOGGLE_PAUSED;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
+import static de.amr.pacmanfx.uilib.input.Keyboard.nude;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -123,10 +124,10 @@ public class StartPagesView implements PacManGames_View {
         });
         setTitleBinding(Bindings.createStringBinding(() -> "JavaFX Pac-Man Games"));
 
-        bind(carousel::showPreviousSlide,     KeyCode.LEFT);
-        bind(carousel::showNextSlide,         KeyCode.RIGHT);
-        bind(ACTION_BOOT_SHOW_GAME_VIEW, KeyCode.ENTER);
-        bind(ACTION_TOGGLE_PAUSED,                   KeyCode.P);
+        bindActionToKeyCombination(carousel::showPreviousSlide,     nude(KeyCode.LEFT));
+        bindActionToKeyCombination(carousel::showNextSlide,         nude(KeyCode.RIGHT));
+        bindActionToKeyCombination(ACTION_BOOT_SHOW_GAME_VIEW,      nude(KeyCode.ENTER));
+        bindActionToKeyCombination(ACTION_TOGGLE_PAUSED,            nude(KeyCode.P));
     }
 
     @Override

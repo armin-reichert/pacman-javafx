@@ -5,15 +5,14 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TENGEN_DEFAULT_ACTION_BINDINGS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.ACTION_START_GAME;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theJoypad;
 
 public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
@@ -22,7 +21,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     @Override
     protected void doInit() {
         theGame().setScoreVisible(false);
-        bind(ACTION_START_GAME, theJoypad().key(JoypadButton.START));
+        bindAction(ACTION_START_GAME, TENGEN_DEFAULT_ACTION_BINDINGS);
     }
 
     @Override

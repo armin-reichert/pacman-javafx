@@ -108,7 +108,7 @@ public class GameView implements PacManGames_View, PacManGames_ActionBindings {
         bindAction(PacManGames_Actions.ACTION_TOGGLE_IMMUNITY);
         bindAction(PacManGames_Actions.ACTION_TOGGLE_PIP_VISIBILITY);
         bindAction(PacManGames_Actions.ACTION_TOGGLE_PLAY_SCENE_2D_3D);
-        bind(this::showGameSceneHelp, nude(KeyCode.H));
+        bindActionToKeyCombination(this::showGameSceneHelp, nude(KeyCode.H));
     }
 
     public void setTitleBinding(StringBinding binding) {
