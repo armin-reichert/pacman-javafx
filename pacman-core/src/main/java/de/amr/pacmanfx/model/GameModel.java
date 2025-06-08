@@ -38,8 +38,14 @@ public abstract class GameModel implements ScoreManager {
     protected GameLevel level;
     protected boolean cutScenesEnabled = true;
 
+    private final Score score = new Score();
+    private final Score highScore = new Score();
+    private File highScoreFile;
+    private List<Integer> extraLifeScores = List.of();
+    private boolean scoreVisible;
+
     protected GameModel() {
-        score().pointsProperty().addListener((py, ov, nv) -> onScoreChanged(this, ov.intValue(), nv.intValue()));
+        score.pointsProperty().addListener((py, ov, nv) -> onScoreChanged(this, ov.intValue(), nv.intValue()));
     }
 
     public abstract ActorSpeedControl actorSpeedControl();
@@ -262,12 +268,6 @@ public abstract class GameModel implements ScoreManager {
     }
 
     // ScoreManager implementation
-
-    private final Score score = new Score();
-    private final Score highScore = new Score();
-    private File highScoreFile;
-    private List<Integer> extraLifeScores = List.of();
-    private boolean scoreVisible;
 
     @Override
     public void setHighScoreFile(File highScoreFile) {
