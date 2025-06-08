@@ -55,7 +55,7 @@ public interface ActionBindingsProvider {
         actionBindings().put(combination, action);
     }
 
-    default void bindActionToKeys(GameAction action, Set<KeyCombination> combinations) {
+    default void bindActionToKeyCombinations(GameAction action, Set<KeyCombination> combinations) {
         requireNonNull(action);
         requireNonNull(combinations);
         for (KeyCombination combination : combinations) {
