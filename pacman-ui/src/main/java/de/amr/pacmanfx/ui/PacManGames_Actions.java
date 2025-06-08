@@ -328,6 +328,18 @@ public interface PacManGames_Actions {
         }
     };
 
+    GameAction TOGGLE_DASHBOARD = new GameAction() {
+        @Override
+        public void execute() {
+            theUI().gameView().toggleDashboardVisibility();
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return theUI().currentView().equals(theUI().gameView());
+        }
+    };
+
     GameAction TOGGLE_DRAW_MODE = new GameAction() {
         @Override
         public void execute() {

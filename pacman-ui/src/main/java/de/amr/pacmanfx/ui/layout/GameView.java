@@ -93,22 +93,21 @@ public class GameView implements PacManGames_View {
     }
 
     private void bindActions() {
-        bind(theUI()::restart,                   naked(KeyCode.F3));
-        bind(this::showGameSceneHelp,            naked(KeyCode.H));
-        bind(PacManGames_Actions.QUIT_GAME_SCENE,         naked(KeyCode.Q));
-        bind(PacManGames_Actions.SIMULATION_SLOWER,       alt(KeyCode.MINUS));
-        bind(PacManGames_Actions.SIMULATION_FASTER,       alt(KeyCode.PLUS));
-        bind(PacManGames_Actions.SIMULATION_RESET,        alt(KeyCode.DIGIT0));
-        bind(PacManGames_Actions.SIMULATION_ONE_STEP,     shift(KeyCode.P));
-        bind(PacManGames_Actions.SIMULATION_TEN_STEPS,    shift(KeyCode.SPACE));
-        bind(PacManGames_Actions.TOGGLE_AUTOPILOT,        alt(KeyCode.A));
-        bind(PacManGames_Actions.TOGGLE_DEBUG_INFO,       alt(KeyCode.D));
-        bind(PacManGames_Actions.TOGGLE_PAUSED,           naked(KeyCode.P));
-        bind(this::toggleDashboardVisibility,    naked(KeyCode.F1), alt(KeyCode.B));
-        bind(PacManGames_Actions.TOGGLE_IMMUNITY,         alt(KeyCode.I));
-        // 3D only
-        bind(PacManGames_Actions.TOGGLE_PIP_VISIBILITY,   naked(KeyCode.F2));
-        bind(PacManGames_Actions.TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3));
+        bind(PacManGames_Actions.SHOW_GAME_VIEW_AND_RESTART_GAME, naked(KeyCode.F3));
+        bind(this::showGameSceneHelp,                             naked(KeyCode.H));
+        bind(PacManGames_Actions.QUIT_GAME_SCENE,                 naked(KeyCode.Q));
+        bind(PacManGames_Actions.SIMULATION_SLOWER,               alt(KeyCode.MINUS));
+        bind(PacManGames_Actions.SIMULATION_FASTER,               alt(KeyCode.PLUS));
+        bind(PacManGames_Actions.SIMULATION_RESET,                alt(KeyCode.DIGIT0));
+        bind(PacManGames_Actions.SIMULATION_ONE_STEP,             shift(KeyCode.P));
+        bind(PacManGames_Actions.SIMULATION_TEN_STEPS,            shift(KeyCode.SPACE));
+        bind(PacManGames_Actions.TOGGLE_AUTOPILOT,                alt(KeyCode.A));
+        bind(PacManGames_Actions.TOGGLE_DEBUG_INFO,               alt(KeyCode.D));
+        bind(PacManGames_Actions.TOGGLE_PAUSED,                   naked(KeyCode.P));
+        bind(PacManGames_Actions.TOGGLE_DASHBOARD,                naked(KeyCode.F1), alt(KeyCode.B));
+        bind(PacManGames_Actions.TOGGLE_IMMUNITY,                 alt(KeyCode.I));
+        bind(PacManGames_Actions.TOGGLE_PIP_VISIBILITY,           naked(KeyCode.F2));
+        bind(PacManGames_Actions.TOGGLE_PLAY_SCENE_2D_3D,         alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3));
     }
 
     public void setTitleBinding(StringBinding binding) {
