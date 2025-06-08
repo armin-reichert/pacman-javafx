@@ -142,7 +142,7 @@ public class GameLevel3D {
 
     private void createPac3D() {
         final String ans = theUI().configuration().assetNamespace();
-        pac3D = switch (theGameVariant()) {
+        pac3D = switch (theGameController().selectedGameVariant()) {
             case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL
                 -> new MsPacMan3D(gameLevel.pac(), PAC_3D_SIZE, theAssets(), ans);
             case PACMAN, PACMAN_XXL

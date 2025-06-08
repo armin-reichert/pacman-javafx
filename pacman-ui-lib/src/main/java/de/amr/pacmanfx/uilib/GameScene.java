@@ -10,7 +10,7 @@ import javafx.scene.input.ContextMenuEvent;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.Globals.theGameVariant;
+import static de.amr.pacmanfx.Globals.theGameController;
 
 /**
  * Common interface of all game scenes (2D and 3D).
@@ -58,6 +58,6 @@ public interface GameScene extends GameEventListener, ActionBindingsSupport {
      * @return scene name as used by logging output
      */
     default String displayName() {
-        return "%s (%s)".formatted(getClass().getSimpleName(), theGameVariant());
+        return "%s (%s)".formatted(getClass().getSimpleName(), theGameController().selectedGameVariant());
     }
 }

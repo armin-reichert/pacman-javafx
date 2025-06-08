@@ -345,7 +345,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     @Override
     public PacManGames_UIConfiguration configuration() {
-        return configMap.get(theGameVariant());
+        return configMap.get(theGameController().selectedGameVariant());
     }
 
     @Override

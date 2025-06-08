@@ -240,7 +240,7 @@ public interface PacManGames_Actions {
 
         @Override
         public boolean isEnabled() {
-            return theGameVariant() != GameVariant.MS_PACMAN_TENGEN
+            return theGameController().selectedGameVariant() != GameVariant.MS_PACMAN_TENGEN
                 && !theCoinMechanism().isEmpty()
                 && (theGameState() == GameState.INTRO || theGameState() == GameState.SETTING_OPTIONS)
                 && theGame().canStartNewGame();
@@ -304,7 +304,7 @@ public interface PacManGames_Actions {
             if (theClock().isPaused()) {
                 theSound().stopAll();
             }
-            Logger.info("Game ({}) {}", theGameVariant(), theClock().isPaused() ? "paused" : "resumed");
+            Logger.info("Game ({}) {}", theGameController().selectedGameVariant(), theClock().isPaused() ? "paused" : "resumed");
         }
     };
 
