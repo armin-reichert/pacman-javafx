@@ -20,37 +20,41 @@ import static java.util.Objects.requireNonNull;
 
 public interface PacManGames_ActionBindings extends ActionBindingsProvider {
 
+    private static Map.Entry<GameAction, List<KeyCombination>> mapping(GameAction action, KeyCombination... combinations) {
+        return entry(action, List.of(combinations));
+    }
+
     Map<GameAction, List<KeyCombination>> DEFAULT_MAPPINGS = Map.ofEntries(
-        entry(ARCADE_INSERT_COIN,      List.of(nude(KeyCode.DIGIT5), nude(KeyCode.NUMPAD5))),
-        entry(ARCADE_START_GAME,       List.of(nude(KeyCode.DIGIT1), nude(KeyCode.NUMPAD1))),
-        entry(BOOT_SHOW_GAME_VIEW,     List.of(nude(KeyCode.F3))),
-        entry(CHEAT_EAT_ALL_PELLETS,   List.of(alt(KeyCode.E))),
-        entry(CHEAT_ADD_LIVES,         List.of(alt(KeyCode.L))),
-        entry(CHEAT_ENTER_NEXT_LEVEL,  List.of(alt(KeyCode.N))),
-        entry(CHEAT_KILL_GHOSTS,       List.of(alt(KeyCode.X))),
-        entry(PERSPECTIVE_PREVIOUS,    List.of(alt(KeyCode.LEFT))),
-        entry(PERSPECTIVE_NEXT,        List.of(alt(KeyCode.RIGHT))),
-        entry(PLAYER_UP,               List.of(nude(KeyCode.UP), control(KeyCode.UP))),
-        entry(PLAYER_DOWN,             List.of(nude(KeyCode.DOWN), control(KeyCode.DOWN))),
-        entry(PLAYER_LEFT,             List.of(nude(KeyCode.LEFT), control(KeyCode.LEFT))),
-        entry(PLAYER_RIGHT,            List.of(nude(KeyCode.RIGHT), control(KeyCode.RIGHT))),
-        entry(QUIT_GAME_SCENE,         List.of(nude(KeyCode.Q))),
-        entry(SIMULATION_SLOWER,       List.of(alt(KeyCode.MINUS))),
-        entry(SIMULATION_FASTER,       List.of(alt(KeyCode.PLUS))),
-        entry(SIMULATION_RESET,        List.of(alt(KeyCode.DIGIT0))),
-        entry(SIMULATION_ONE_STEP,     List.of(shift(KeyCode.P))),
-        entry(SIMULATION_TEN_STEPS,    List.of(shift(KeyCode.SPACE))),
-        entry(TEST_CUT_SCENES,         List.of(alt(KeyCode.C))),
-        entry(TEST_LEVELS_BONI,        List.of(alt(KeyCode.T))),
-        entry(TEST_LEVELS_TEASERS,     List.of(alt_shift(KeyCode.T))),
-        entry(TOGGLE_AUTOPILOT,        List.of(alt(KeyCode.A))),
-        entry(TOGGLE_DEBUG_INFO,       List.of(alt(KeyCode.D))),
-        entry(TOGGLE_PAUSED,           List.of(nude(KeyCode.P))),
-        entry(TOGGLE_DASHBOARD,        List.of(nude(KeyCode.F1), alt(KeyCode.B))),
-        entry(TOGGLE_IMMUNITY,         List.of(alt(KeyCode.I))),
-        entry(TOGGLE_PIP_VISIBILITY,   List.of(nude(KeyCode.F2))),
-        entry(TOGGLE_PLAY_SCENE_2D_3D, List.of(alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3))),
-        entry(TOGGLE_DRAW_MODE,        List.of(alt(KeyCode.W)))
+        mapping(ARCADE_INSERT_COIN,      nude(KeyCode.DIGIT5), nude(KeyCode.NUMPAD5)),
+        mapping(ARCADE_START_GAME,       nude(KeyCode.DIGIT1), nude(KeyCode.NUMPAD1)),
+        mapping(BOOT_SHOW_GAME_VIEW,     nude(KeyCode.F3)),
+        mapping(CHEAT_EAT_ALL_PELLETS,   alt(KeyCode.E)),
+        mapping(CHEAT_ADD_LIVES,         alt(KeyCode.L)),
+        mapping(CHEAT_ENTER_NEXT_LEVEL,  alt(KeyCode.N)),
+        mapping(CHEAT_KILL_GHOSTS,       alt(KeyCode.X)),
+        mapping(PERSPECTIVE_PREVIOUS,    alt(KeyCode.LEFT)),
+        mapping(PERSPECTIVE_NEXT,        alt(KeyCode.RIGHT)),
+        mapping(PLAYER_UP,               nude(KeyCode.UP), control(KeyCode.UP)),
+        mapping(PLAYER_DOWN,             nude(KeyCode.DOWN), control(KeyCode.DOWN)),
+        mapping(PLAYER_LEFT,             nude(KeyCode.LEFT), control(KeyCode.LEFT)),
+        mapping(PLAYER_RIGHT,            nude(KeyCode.RIGHT), control(KeyCode.RIGHT)),
+        mapping(QUIT_GAME_SCENE,         nude(KeyCode.Q)),
+        mapping(SIMULATION_SLOWER,       alt(KeyCode.MINUS)),
+        mapping(SIMULATION_FASTER,       alt(KeyCode.PLUS)),
+        mapping(SIMULATION_RESET,        alt(KeyCode.DIGIT0)),
+        mapping(SIMULATION_ONE_STEP,     shift(KeyCode.P)),
+        mapping(SIMULATION_TEN_STEPS,    shift(KeyCode.SPACE)),
+        mapping(TEST_CUT_SCENES,         alt(KeyCode.C)),
+        mapping(TEST_LEVELS_BONI,        alt(KeyCode.T)),
+        mapping(TEST_LEVELS_TEASERS,     alt_shift(KeyCode.T)),
+        mapping(TOGGLE_AUTOPILOT,        alt(KeyCode.A)),
+        mapping(TOGGLE_DEBUG_INFO,       alt(KeyCode.D)),
+        mapping(TOGGLE_PAUSED,           nude(KeyCode.P)),
+        mapping(TOGGLE_DASHBOARD,        nude(KeyCode.F1), alt(KeyCode.B)),
+        mapping(TOGGLE_IMMUNITY,         alt(KeyCode.I)),
+        mapping(TOGGLE_PIP_VISIBILITY,   nude(KeyCode.F2)),
+        mapping(TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3)),
+        mapping(TOGGLE_DRAW_MODE,        alt(KeyCode.W))
     );
 
     default void bindToDefaultKeys(GameAction gameAction) {
