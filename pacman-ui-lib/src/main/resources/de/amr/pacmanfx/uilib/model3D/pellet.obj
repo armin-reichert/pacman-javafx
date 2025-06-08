@@ -1,7 +1,7 @@
-mtllib fruit.mtl
+mtllib pellet.mtl
 
 #
-# object Fruit
+# object Pellet
 #
 
 v  -0.0078 -12.8970 11.0917
@@ -8227,8 +8227,8 @@ vt 0.7139 0.1610 -0.0361
 vt 0.7204 0.1733 -0.0361
 # 2837 texture coords
 
-g Fruit
-usemtl Fruit
+g Pellet
+usemtl Pellet
 s 2
 f 1/1/1 2/2/2 3/3/3 4/4/4 
 f 2/2/2 5/5/5 6/6/6 3/3/3 

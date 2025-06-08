@@ -30,7 +30,7 @@ public final class Model3DRepository {
     private static final String GHOST_MESH_ID_PUPILS   = "Sphere.010_Sphere.039_grey_wall";
     private static final String GHOST_MESH_ID_EYEBALLS = "Sphere.009_Sphere.036_white";
 
-    public static final String PELLET_MESH_ID          = "Fruit";
+    public static final String PELLET_MESH_ID          = "Pellet";
 
     private static Model3DRepository instance;
 
@@ -51,7 +51,7 @@ public final class Model3DRepository {
         try {
             pacManModel = new Model3D(rm.url("/de/amr/pacmanfx/uilib/model3D/pacman.obj"));
             ghostModel = new Model3D(rm.url("/de/amr/pacmanfx/uilib/model3D/ghost.obj"));
-            pelletModel = new Model3D(rm.url("/de/amr/pacmanfx/uilib/model3D/fruit.obj"));
+            pelletModel = new Model3D(rm.url("/de/amr/pacmanfx/uilib/model3D/pellet.obj"));
         } catch (Exception x) {
             Logger.error(x);
             Logger.error("3D models could not be loaded properly");

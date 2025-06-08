@@ -1,4 +1,4 @@
-newmtl FruitMaterial
+newmtl PelletMaterial
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
