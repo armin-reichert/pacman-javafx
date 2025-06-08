@@ -66,11 +66,11 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             theGameEventManager().removeEventListener(oldView);
         }
         newView.updateActionBindings();
-        newView.layoutRoot().requestFocus();
+        newView.container().requestFocus();
         stage.titleProperty().bind(newView.titleBinding());
         theGameEventManager().addEventListener(newView);
         var root = (StackPane) mainScene.getRoot();
-        root.getChildren().set(0, newView.layoutRoot());
+        root.getChildren().set(0, newView.container());
     }
 
     // -----------------------------------------------------------------------------------------------------------------

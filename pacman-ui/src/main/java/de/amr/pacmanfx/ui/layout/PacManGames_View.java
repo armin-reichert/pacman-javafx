@@ -10,6 +10,6 @@ import javafx.beans.binding.StringExpression;
 import javafx.scene.layout.Region;
 
 public interface PacManGames_View extends ActionBindingsSupport, GameEventListener {
-    Region layoutRoot();
+    Region container();
     StringExpression titleBinding();
 }

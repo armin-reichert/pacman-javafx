@@ -133,7 +133,7 @@ public class GameView implements PacManGames_View, PacManGames_ActionBindings {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public StackPane layoutRoot() {
+    public StackPane container() {
         return root;
     }
 

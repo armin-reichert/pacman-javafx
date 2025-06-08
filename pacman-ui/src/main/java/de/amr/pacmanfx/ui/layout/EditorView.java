@@ -40,7 +40,7 @@ public class EditorView implements PacManGames_View {
     public TileMapEditor editor() { return editor; }
 
     @Override
-    public Region layoutRoot() {
+    public Region container() {
         return layout;
     }
 

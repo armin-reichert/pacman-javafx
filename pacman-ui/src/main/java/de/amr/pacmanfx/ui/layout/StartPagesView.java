@@ -136,7 +136,7 @@ public class StartPagesView implements PacManGames_View {
     }
 
     @Override
-    public Region layoutRoot() { return carousel; }
+    public Region container() { return carousel; }
 
     @Override
     public StringBinding titleBinding() {
