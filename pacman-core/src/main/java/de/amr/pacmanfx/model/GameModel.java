@@ -30,8 +30,6 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Common base class of all Pac-Man game models.
- *
- * @author Armin Reichert
  */
 public abstract class GameModel implements ScoreManager {
 
@@ -41,8 +39,7 @@ public abstract class GameModel implements ScoreManager {
     protected boolean cutScenesEnabled = true;
 
     protected GameModel() {
-        score().pointsProperty().addListener(
-                (py, ov, nv) -> onScoreChanged(this, ov.intValue(), nv.intValue()));
+        score().pointsProperty().addListener((py, ov, nv) -> onScoreChanged(this, ov.intValue(), nv.intValue()));
     }
 
     public abstract ActorSpeedControl actorSpeedControl();
