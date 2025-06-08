@@ -59,6 +59,7 @@ public interface PacManGames_ActionBindings extends ActionBindingsSupport {
 
     default void bindAction(GameAction gameAction, Map<GameAction, Set<KeyCombination>> bindingMap) {
         requireNonNull(gameAction);
+        requireNonNull(bindingMap);
         if (bindingMap.containsKey(gameAction)) {
             for (KeyCombination combination : bindingMap.get(gameAction)) {
                 actionBindings().put(combination, gameAction);
