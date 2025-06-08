@@ -14,8 +14,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.START_PLAYING;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.ACTION_START_PLAYING;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.CONTINUES_SPRITES;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theJoypad;
@@ -63,11 +63,11 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     public void doInit() {
         theGame().setScoreVisible(false);
         bind(() -> theJoypad().selectNextKeyBinding(this), alt(KeyCode.J));
-        bind(START_PLAYING, theJoypad().key(JoypadButton.START));
-        bind(TOGGLE_JOYPAD_BINDINGS_DISPLAYED, theJoypad().key(JoypadButton.SELECT));
-        bindActionToCommonKeys(PacManGames_Actions.TEST_CUT_SCENES);
-        bindActionToCommonKeys(PacManGames_Actions.TEST_LEVELS_BONI);
-        bindActionToCommonKeys(PacManGames_Actions.TEST_LEVELS_TEASERS);
+        bind(ACTION_START_PLAYING, theJoypad().key(JoypadButton.START));
+        bind(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, theJoypad().key(JoypadButton.SELECT));
+        bindActionToCommonKeys(PacManGames_Actions.ACTION_TEST_CUT_SCENES);
+        bindActionToCommonKeys(PacManGames_Actions.ACTION_TEST_LEVELS_BONI);
+        bindActionToCommonKeys(PacManGames_Actions.ACTION_TEST_LEVELS_TEASERS);
 
         selectedOption = OPTION_PAC_BOOSTER;
         tengenGame = (TengenMsPacMan_GameModel) theGame();

@@ -48,7 +48,7 @@ public interface PacManGames_Actions {
         }
     }
 
-    GameAction CHEAT_ADD_LIVES = new GameAction() {
+    GameAction ACTION_CHEAT_ADD_LIVES = new GameAction() {
         @Override
         public void execute() {
             theGame().addLives(3);
@@ -59,7 +59,7 @@ public interface PacManGames_Actions {
         public boolean isEnabled() { return optGameLevel().isPresent(); }
     };
 
-    GameAction CHEAT_EAT_ALL_PELLETS = new GameAction() {
+    GameAction ACTION_CHEAT_EAT_ALL_PELLETS = new GameAction() {
         @Override
         public void execute() {
             theGameLevel().eatAllPellets();
@@ -75,7 +75,7 @@ public interface PacManGames_Actions {
         }
     };
 
-    GameAction CHEAT_KILL_GHOSTS = new GameAction() {
+    GameAction ACTION_CHEAT_KILL_GHOSTS = new GameAction() {
         @Override
         public void execute() {
             GameLevel level = theGameLevel();
@@ -95,7 +95,7 @@ public interface PacManGames_Actions {
         }
     };
 
-    GameAction CHEAT_ENTER_NEXT_LEVEL = new GameAction() {
+    GameAction ACTION_CHEAT_ENTER_NEXT_LEVEL = new GameAction() {
         @Override
         public void execute() {
             theGameController().changeGameState(GameState.LEVEL_COMPLETE);
@@ -113,7 +113,7 @@ public interface PacManGames_Actions {
     /**
      * Adds credit (simulates insertion of a coin) and switches the game state accordingly.
      */
-    GameAction ARCADE_INSERT_COIN = new GameAction() {
+    GameAction ACTION_ARCADE_INSERT_COIN = new GameAction() {
         @Override
         public void execute() {
             if (theCoinMechanism().numCoins() < CoinMechanism.MAX_COINS) {
@@ -136,15 +136,15 @@ public interface PacManGames_Actions {
         }
     };
 
-    GameAction PLAYER_UP = new PlayerSteeringAction(Direction.UP);
+    GameAction ACTION_PLAYER_UP = new PlayerSteeringAction(Direction.UP);
 
-    GameAction PLAYER_DOWN = new PlayerSteeringAction(Direction.DOWN);
+    GameAction ACTION_PLAYER_DOWN = new PlayerSteeringAction(Direction.DOWN);
 
-    GameAction PLAYER_LEFT = new PlayerSteeringAction(Direction.LEFT);
+    GameAction ACTION_PLAYER_LEFT = new PlayerSteeringAction(Direction.LEFT);
 
-    GameAction PLAYER_RIGHT = new PlayerSteeringAction(Direction.RIGHT);
+    GameAction ACTION_PLAYER_RIGHT = new PlayerSteeringAction(Direction.RIGHT);
 
-    GameAction QUIT_GAME_SCENE = new GameAction() {
+    GameAction ACTION_QUIT_GAME_SCENE = new GameAction() {
         @Override
         public void execute() {
             theUI().currentGameScene().ifPresent(GameScene::end);
@@ -154,7 +154,7 @@ public interface PacManGames_Actions {
         }
     };
 
-    GameAction RESTART_INTRO = new GameAction() {
+    GameAction ACTION_RESTART_INTRO = new GameAction() {
         @Override
         public void execute() {
             theSound().stopAll();
@@ -167,7 +167,7 @@ public interface PacManGames_Actions {
         }
     };
 
-    GameAction BOOT_SHOW_GAME_VIEW = new GameAction() {
+    GameAction ACTION_BOOT_SHOW_GAME_VIEW = new GameAction() {
         @Override
         public void execute() {
             theUI().showGameView();
@@ -175,7 +175,7 @@ public interface PacManGames_Actions {
         }
     };
 
-    GameAction SIMULATION_SLOWER = new GameAction() {
+    GameAction ACTION_SIMULATION_SLOWER = new GameAction() {
         @Override
         public void execute() {
             double newRate = theClock().targetFrameRate() - SIMULATION_SPEED_DELTA;
@@ -186,7 +186,7 @@ public interface PacManGames_Actions {
         }
     };
 
-    GameAction SIMULATION_FASTER = new GameAction() {
+    GameAction ACTION_SIMULATION_FASTER = new GameAction() {
         @Override
         public void execute() {
             double newRate = theClock().targetFrameRate() + SIMULATION_SPEED_DELTA;
@@ -197,7 +197,7 @@ public interface PacManGames_Actions {
         }
     };
 
-    GameAction SIMULATION_ONE_STEP = new GameAction() {
+    GameAction ACTION_SIMULATION_ONE_STEP = new GameAction() {
         @Override
         public void execute() {
             boolean success = theClock().makeOneStep(true);
@@ -210,7 +210,7 @@ public interface PacManGames_Actions {
         public boolean isEnabled() { return theClock().isPaused(); }
     };
 
-    GameAction SIMULATION_TEN_STEPS = new GameAction() {
+    GameAction ACTION_SIMULATION_TEN_STEPS = new GameAction() {
         @Override
         public void execute() {
             boolean success = theClock().makeSteps(10, true);
@@ -223,7 +223,7 @@ public interface PacManGames_Actions {
         public boolean isEnabled() { return theClock().isPaused(); }
     };
 
-    GameAction SIMULATION_RESET = new GameAction() {
+    GameAction ACTION_SIMULATION_RESET = new GameAction() {
         @Override
         public void execute() {
             theClock().setTargetFrameRate(NUM_TICKS_PER_SEC);
@@ -231,7 +231,7 @@ public interface PacManGames_Actions {
         }
     };
 
-    GameAction ARCADE_START_GAME = new GameAction() {
+    GameAction ACTION_ARCADE_START_GAME = new GameAction() {
         @Override
         public void execute() {
             theSound().stopVoice();
@@ -247,7 +247,7 @@ public interface PacManGames_Actions {
         }
     };
 
-    GameAction TEST_CUT_SCENES = new GameAction() {
+    GameAction ACTION_TEST_CUT_SCENES = new GameAction() {
         @Override
         public void execute() {
             theGameController().changeGameState(GameState.TESTING_CUT_SCENES);
@@ -255,7 +255,7 @@ public interface PacManGames_Actions {
         }
     };
 
-    GameAction TEST_LEVELS_BONI = new GameAction() {
+    GameAction ACTION_TEST_LEVELS_BONI = new GameAction() {
         @Override
         public void execute() {
             theGameController().restart(GameState.TESTING_LEVELS);
@@ -263,7 +263,7 @@ public interface PacManGames_Actions {
         }
     };
 
-    GameAction TEST_LEVELS_TEASERS = new GameAction() {
+    GameAction ACTION_TEST_LEVELS_TEASERS = new GameAction() {
         @Override
         public void execute() {
             theGameController().restart(GameState.TESTING_LEVEL_TEASERS);
@@ -271,7 +271,7 @@ public interface PacManGames_Actions {
         }
     };
 
-    GameAction TOGGLE_AUTOPILOT = new GameAction() {
+    GameAction ACTION_TOGGLE_AUTOPILOT = new GameAction() {
         @Override
         public void execute() {
             toggle(PY_USING_AUTOPILOT);
@@ -281,14 +281,14 @@ public interface PacManGames_Actions {
         }
     };
 
-    GameAction TOGGLE_DEBUG_INFO = new GameAction() {
+    GameAction ACTION_TOGGLE_DEBUG_INFO = new GameAction() {
         @Override
         public void execute() {
             toggle(PY_DEBUG_INFO_VISIBLE);
         }
     };
 
-    GameAction TOGGLE_IMMUNITY = new GameAction() {
+    GameAction ACTION_TOGGLE_IMMUNITY = new GameAction() {
         @Override
         public void execute() {
             toggle(PY_IMMUNITY);
@@ -297,7 +297,7 @@ public interface PacManGames_Actions {
         }
     };
 
-    GameAction TOGGLE_PAUSED = new GameAction() {
+    GameAction ACTION_TOGGLE_PAUSED = new GameAction() {
         @Override
         public void execute() {
             toggle(theClock().pausedProperty());
@@ -308,7 +308,7 @@ public interface PacManGames_Actions {
         }
     };
 
-    GameAction PERSPECTIVE_NEXT = new GameAction() {
+    GameAction ACTION_PERSPECTIVE_NEXT = new GameAction() {
         @Override
         public void execute() {
             PerspectiveID id = PY_3D_PERSPECTIVE.get().next();
@@ -318,7 +318,7 @@ public interface PacManGames_Actions {
         }
     };
 
-    GameAction PERSPECTIVE_PREVIOUS = new GameAction() {
+    GameAction ACTION_PERSPECTIVE_PREVIOUS = new GameAction() {
         @Override
         public void execute() {
             PerspectiveID id = PY_3D_PERSPECTIVE.get().prev();
@@ -328,7 +328,7 @@ public interface PacManGames_Actions {
         }
     };
 
-    GameAction TOGGLE_DASHBOARD = new GameAction() {
+    GameAction ACTION_TOGGLE_DASHBOARD = new GameAction() {
         @Override
         public void execute() {
             theUI().gameView().toggleDashboardVisibility();
@@ -340,14 +340,14 @@ public interface PacManGames_Actions {
         }
     };
 
-    GameAction TOGGLE_DRAW_MODE = new GameAction() {
+    GameAction ACTION_TOGGLE_DRAW_MODE = new GameAction() {
         @Override
         public void execute() {
             PY_3D_DRAW_MODE.set(PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
         }
     };
 
-    GameAction TOGGLE_PLAY_SCENE_2D_3D = new GameAction() {
+    GameAction ACTION_TOGGLE_PLAY_SCENE_2D_3D = new GameAction() {
         @Override
         public void execute() {
             theUI().currentGameScene().ifPresent(gameScene -> {
@@ -372,7 +372,7 @@ public interface PacManGames_Actions {
         }
     };
 
-    GameAction TOGGLE_PIP_VISIBILITY = new GameAction() {
+    GameAction ACTION_TOGGLE_PIP_VISIBILITY = new GameAction() {
         @Override
         public void execute() {
             toggle(PY_PIP_ON);

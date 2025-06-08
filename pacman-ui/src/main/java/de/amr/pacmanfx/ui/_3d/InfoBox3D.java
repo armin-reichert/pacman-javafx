@@ -74,8 +74,8 @@ public class InfoBox3D extends InfoBox {
         setEditor(comboPerspectives, PY_3D_PERSPECTIVE);
 
         //TODO check these
-        cbUsePlayScene3D.setOnAction(e -> PacManGames_Actions.TOGGLE_PLAY_SCENE_2D_3D.execute());
-        cbWireframeMode.setOnAction(e -> PacManGames_Actions.TOGGLE_DRAW_MODE.execute());
+        cbUsePlayScene3D.setOnAction(e -> PacManGames_Actions.ACTION_TOGGLE_PLAY_SCENE_2D_3D.execute());
+        cbWireframeMode.setOnAction(e -> PacManGames_Actions.ACTION_TOGGLE_DRAW_MODE.execute());
     }
 
     private void updateControlsFromProperties() {

@@ -16,7 +16,7 @@ import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
 public interface TengenMsPacMan_GameActions {
 
-    GameAction QUIT_DEMO_LEVEL = new GameAction() {
+    GameAction ACTION_QUIT_DEMO_LEVEL = new GameAction() {
         @Override
         public void execute() {
             theGameController().changeGameState(GameState.SETTING_OPTIONS);
@@ -33,7 +33,7 @@ public interface TengenMsPacMan_GameActions {
         }
     };
 
-    GameAction START_GAME = new GameAction() {
+    GameAction ACTION_START_GAME = new GameAction() {
         @Override
         public void execute() {
             theGameController().changeGameState(GameState.SETTING_OPTIONS);
@@ -45,7 +45,7 @@ public interface TengenMsPacMan_GameActions {
         }
     };
 
-    GameAction START_PLAYING = new GameAction() {
+    GameAction ACTION_START_PLAYING = new GameAction() {
         @Override
         public void execute() {
             theSound().stopAll();
@@ -59,7 +59,7 @@ public interface TengenMsPacMan_GameActions {
         }
     };
 
-    GameAction TOGGLE_DISPLAY_MODE = new GameAction() {
+    GameAction ACTION_TOGGLE_DISPLAY_MODE = new GameAction() {
         @Override
         public void execute() {
             SceneDisplayMode mode = PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.get();
@@ -73,14 +73,14 @@ public interface TengenMsPacMan_GameActions {
         }
     };
 
-    GameAction TOGGLE_JOYPAD_BINDINGS_DISPLAYED = new GameAction() {
+    GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED = new GameAction() {
         @Override
         public void execute() {
             toggle(PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED);
         }
     };
 
-    GameAction TOGGLE_PAC_BOOSTER = new GameAction() {
+    GameAction ACTION_TOGGLE_PAC_BOOSTER = new GameAction() {
         @Override
         public void execute() {
             var tengenGame = (TengenMsPacMan_GameModel) theGame();

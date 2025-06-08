@@ -94,20 +94,20 @@ public class GameView implements PacManGames_View, PacManGames_ActionBindings {
     }
 
     private void bindActions() {
-        bindActionToCommonKeys(PacManGames_Actions.BOOT_SHOW_GAME_VIEW);
-        bindActionToCommonKeys(PacManGames_Actions.QUIT_GAME_SCENE);
-        bindActionToCommonKeys(PacManGames_Actions.SIMULATION_SLOWER);
-        bindActionToCommonKeys(PacManGames_Actions.SIMULATION_FASTER);
-        bindActionToCommonKeys(PacManGames_Actions.SIMULATION_RESET);
-        bindActionToCommonKeys(PacManGames_Actions.SIMULATION_ONE_STEP);
-        bindActionToCommonKeys(PacManGames_Actions.SIMULATION_TEN_STEPS);
-        bindActionToCommonKeys(PacManGames_Actions.TOGGLE_AUTOPILOT);
-        bindActionToCommonKeys(PacManGames_Actions.TOGGLE_DEBUG_INFO);
-        bindActionToCommonKeys(PacManGames_Actions.TOGGLE_PAUSED);
-        bindActionToCommonKeys(PacManGames_Actions.TOGGLE_DASHBOARD);
-        bindActionToCommonKeys(PacManGames_Actions.TOGGLE_IMMUNITY);
-        bindActionToCommonKeys(PacManGames_Actions.TOGGLE_PIP_VISIBILITY);
-        bindActionToCommonKeys(PacManGames_Actions.TOGGLE_PLAY_SCENE_2D_3D);
+        bindActionToCommonKeys(PacManGames_Actions.ACTION_BOOT_SHOW_GAME_VIEW);
+        bindActionToCommonKeys(PacManGames_Actions.ACTION_QUIT_GAME_SCENE);
+        bindActionToCommonKeys(PacManGames_Actions.ACTION_SIMULATION_SLOWER);
+        bindActionToCommonKeys(PacManGames_Actions.ACTION_SIMULATION_FASTER);
+        bindActionToCommonKeys(PacManGames_Actions.ACTION_SIMULATION_RESET);
+        bindActionToCommonKeys(PacManGames_Actions.ACTION_SIMULATION_ONE_STEP);
+        bindActionToCommonKeys(PacManGames_Actions.ACTION_SIMULATION_TEN_STEPS);
+        bindActionToCommonKeys(PacManGames_Actions.ACTION_TOGGLE_AUTOPILOT);
+        bindActionToCommonKeys(PacManGames_Actions.ACTION_TOGGLE_DEBUG_INFO);
+        bindActionToCommonKeys(PacManGames_Actions.ACTION_TOGGLE_PAUSED);
+        bindActionToCommonKeys(PacManGames_Actions.ACTION_TOGGLE_DASHBOARD);
+        bindActionToCommonKeys(PacManGames_Actions.ACTION_TOGGLE_IMMUNITY);
+        bindActionToCommonKeys(PacManGames_Actions.ACTION_TOGGLE_PIP_VISIBILITY);
+        bindActionToCommonKeys(PacManGames_Actions.ACTION_TOGGLE_PLAY_SCENE_2D_3D);
         bind(this::showGameSceneHelp, nude(KeyCode.H));
     }
 
@@ -382,7 +382,7 @@ public class GameView implements PacManGames_View, PacManGames_ActionBindings {
         var menuItems = new ArrayList<>(gameScenePy.get().supplyContextMenuItems(e));
         if (theUI().currentGameSceneIsPlayScene2D()) {
             var item = new MenuItem(theAssets().text("use_3D_scene"));
-            item.setOnAction(ae -> PacManGames_Actions.TOGGLE_PLAY_SCENE_2D_3D.execute());
+            item.setOnAction(ae -> PacManGames_Actions.ACTION_TOGGLE_PLAY_SCENE_2D_3D.execute());
             menuItems.addFirst(item);
             menuItems.addFirst(contextMenuTitleItem(theAssets().text("scene_display")));
         }

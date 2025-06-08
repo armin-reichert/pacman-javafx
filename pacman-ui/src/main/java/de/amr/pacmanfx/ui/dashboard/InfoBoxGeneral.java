@@ -43,7 +43,7 @@ public class InfoBoxGeneral extends InfoBox {
         btnPlayPause.setStyle("-fx-background-color: transparent");
         btnPlayPause.graphicProperty().bind(theClock().pausedProperty().map(paused -> paused ? iconPlay : iconStop));
         btnPlayPause.tooltipProperty().bind(theClock().pausedProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
-        setAction(btnPlayPause, PacManGames_Actions.TOGGLE_PAUSED);
+        setAction(btnPlayPause, PacManGames_Actions.ACTION_TOGGLE_PAUSED);
 
         Button btnStep = buttonsSimulationControl[1];
         btnStep.setGraphic(iconStep);

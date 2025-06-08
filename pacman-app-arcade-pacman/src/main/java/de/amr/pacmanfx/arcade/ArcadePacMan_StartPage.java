@@ -36,7 +36,7 @@ public class ArcadePacMan_StartPage extends StackPane implements StartPage, Reso
         });
         var startButton = StartPagesView.createStartButton(Pos.BOTTOM_CENTER);
         startButton.setTranslateY(-50);
-        startButton.setAction(PacManGames_Actions.BOOT_SHOW_GAME_VIEW);
+        startButton.setAction(PacManGames_Actions.ACTION_BOOT_SHOW_GAME_VIEW);
         getChildren().addAll(flyer, startButton);
     }
 

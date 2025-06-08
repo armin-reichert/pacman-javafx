@@ -8,7 +8,6 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
-import de.amr.pacmanfx.ui.PacManGames_Actions;
 import de.amr.pacmanfx.ui._3d.Bonus3D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import javafx.scene.canvas.Canvas;
@@ -17,8 +16,8 @@ import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TENGEN_DEFAULT_BINDING_MAP;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.QUIT_DEMO_LEVEL;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.TOGGLE_PAC_BOOSTER;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.ACTION_QUIT_DEMO_LEVEL;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.ACTION_TOGGLE_PAC_BOOSTER;
 import static de.amr.pacmanfx.ui.PacManGames_Actions.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 
@@ -32,28 +31,28 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     protected void bindActions() {
         // if demo level is running, allow going back to options screen
         if (optGameLevel().isPresent() && theGameLevel().isDemoLevel()) {
-            bindActionToKeys(QUIT_DEMO_LEVEL, TENGEN_DEFAULT_BINDING_MAP);
+            bindActionToKeys(ACTION_QUIT_DEMO_LEVEL, TENGEN_DEFAULT_BINDING_MAP);
         } else {
             bindPlayerSteeringActions();
-            bindActionToCommonKeys(CHEAT_EAT_ALL_PELLETS);
-            bindActionToCommonKeys(CHEAT_ADD_LIVES);
-            bindActionToCommonKeys(CHEAT_ENTER_NEXT_LEVEL);
-            bindActionToCommonKeys(CHEAT_KILL_GHOSTS);
-            bindActionToKeys(TOGGLE_PAC_BOOSTER, TENGEN_DEFAULT_BINDING_MAP);
+            bindActionToCommonKeys(ACTION_CHEAT_EAT_ALL_PELLETS);
+            bindActionToCommonKeys(ACTION_CHEAT_ADD_LIVES);
+            bindActionToCommonKeys(ACTION_CHEAT_ENTER_NEXT_LEVEL);
+            bindActionToCommonKeys(ACTION_CHEAT_KILL_GHOSTS);
+            bindActionToKeys(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_DEFAULT_BINDING_MAP);
         }
-        bindActionToCommonKeys(PacManGames_Actions.PERSPECTIVE_PREVIOUS);
-        bindActionToCommonKeys(PacManGames_Actions.PERSPECTIVE_NEXT);
-        bindActionToCommonKeys(PacManGames_Actions.TOGGLE_DRAW_MODE);
+        bindActionToCommonKeys(ACTION_PERSPECTIVE_PREVIOUS);
+        bindActionToCommonKeys(ACTION_PERSPECTIVE_NEXT);
+        bindActionToCommonKeys(ACTION_TOGGLE_DRAW_MODE);
 
         updateActionBindings();
     }
 
     @Override
     protected void bindPlayerSteeringActions() {
-        bindActionToKeys(PLAYER_UP,    TENGEN_DEFAULT_BINDING_MAP);
-        bindActionToKeys(PLAYER_DOWN,  TENGEN_DEFAULT_BINDING_MAP);
-        bindActionToKeys(PLAYER_LEFT,  TENGEN_DEFAULT_BINDING_MAP);
-        bindActionToKeys(PLAYER_RIGHT, TENGEN_DEFAULT_BINDING_MAP);
+        bindActionToKeys(ACTION_PLAYER_UP,    TENGEN_DEFAULT_BINDING_MAP);
+        bindActionToKeys(ACTION_PLAYER_DOWN,  TENGEN_DEFAULT_BINDING_MAP);
+        bindActionToKeys(ACTION_PLAYER_LEFT,  TENGEN_DEFAULT_BINDING_MAP);
+        bindActionToKeys(ACTION_PLAYER_RIGHT, TENGEN_DEFAULT_BINDING_MAP);
     }
 
     @Override

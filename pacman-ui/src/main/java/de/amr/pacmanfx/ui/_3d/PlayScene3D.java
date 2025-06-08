@@ -106,7 +106,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
         items.add(contextMenuTitleItem(theAssets().text("scene_display")));
 
         var item = new MenuItem(theAssets().text("use_2D_scene"));
-        item.setOnAction(ae -> PacManGames_Actions.TOGGLE_PLAY_SCENE_2D_3D.execute());
+        item.setOnAction(ae -> PacManGames_Actions.ACTION_TOGGLE_PLAY_SCENE_2D_3D.execute());
         items.add(item);
 
         // Toggle picture-in-picture display
@@ -159,7 +159,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
         items.add(miMuted);
 
         var miQuit = new MenuItem(theAssets().text("quit"));
-        miQuit.setOnAction(ae -> PacManGames_Actions.QUIT_GAME_SCENE.execute());
+        miQuit.setOnAction(ae -> PacManGames_Actions.ACTION_QUIT_GAME_SCENE.execute());
         items.add(miQuit);
 
         return items;
@@ -167,28 +167,28 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBindings, Camer
 
     protected void bindActions() {
         deleteActionBindings();
-        bindActionToCommonKeys(PacManGames_Actions.PERSPECTIVE_PREVIOUS);
-        bindActionToCommonKeys(PacManGames_Actions.PERSPECTIVE_NEXT);
-        bindActionToCommonKeys(PacManGames_Actions.TOGGLE_DRAW_MODE);
+        bindActionToCommonKeys(PacManGames_Actions.ACTION_PERSPECTIVE_PREVIOUS);
+        bindActionToCommonKeys(PacManGames_Actions.ACTION_PERSPECTIVE_NEXT);
+        bindActionToCommonKeys(PacManGames_Actions.ACTION_TOGGLE_DRAW_MODE);
         if (optGameLevel().isPresent()) {
             if (theGameLevel().isDemoLevel()) {
-                bindActionToCommonKeys(PacManGames_Actions.ARCADE_INSERT_COIN);
+                bindActionToCommonKeys(PacManGames_Actions.ACTION_ARCADE_INSERT_COIN);
             } else {
                 bindPlayerSteeringActions();
-                bindActionToCommonKeys(PacManGames_Actions.CHEAT_EAT_ALL_PELLETS);
-                bindActionToCommonKeys(PacManGames_Actions.CHEAT_ADD_LIVES);
-                bindActionToCommonKeys(PacManGames_Actions.CHEAT_ENTER_NEXT_LEVEL);
-                bindActionToCommonKeys(PacManGames_Actions.CHEAT_KILL_GHOSTS);
+                bindActionToCommonKeys(PacManGames_Actions.ACTION_CHEAT_EAT_ALL_PELLETS);
+                bindActionToCommonKeys(PacManGames_Actions.ACTION_CHEAT_ADD_LIVES);
+                bindActionToCommonKeys(PacManGames_Actions.ACTION_CHEAT_ENTER_NEXT_LEVEL);
+                bindActionToCommonKeys(PacManGames_Actions.ACTION_CHEAT_KILL_GHOSTS);
             }
         }
         updateActionBindings();
     }
 
     protected void bindPlayerSteeringActions() {
-        bindActionToCommonKeys(PacManGames_Actions.PLAYER_UP);
-        bindActionToCommonKeys(PacManGames_Actions.PLAYER_DOWN);
-        bindActionToCommonKeys(PacManGames_Actions.PLAYER_LEFT);
-        bindActionToCommonKeys(PacManGames_Actions.PLAYER_RIGHT);
+        bindActionToCommonKeys(PacManGames_Actions.ACTION_PLAYER_UP);
+        bindActionToCommonKeys(PacManGames_Actions.ACTION_PLAYER_DOWN);
+        bindActionToCommonKeys(PacManGames_Actions.ACTION_PLAYER_LEFT);
+        bindActionToCommonKeys(PacManGames_Actions.ACTION_PLAYER_RIGHT);
     }
 
     @Override

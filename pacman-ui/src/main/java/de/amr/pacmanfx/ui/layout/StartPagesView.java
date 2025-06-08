@@ -31,8 +31,8 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.pacmanfx.ui.PacManGames_Actions.BOOT_SHOW_GAME_VIEW;
-import static de.amr.pacmanfx.ui.PacManGames_Actions.TOGGLE_PAUSED;
+import static de.amr.pacmanfx.ui.PacManGames_Actions.ACTION_BOOT_SHOW_GAME_VIEW;
+import static de.amr.pacmanfx.ui.PacManGames_Actions.ACTION_TOGGLE_PAUSED;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
 import static java.util.Objects.requireNonNull;
@@ -125,8 +125,8 @@ public class StartPagesView implements PacManGames_View {
 
         bind(carousel::showPreviousSlide,     KeyCode.LEFT);
         bind(carousel::showNextSlide,         KeyCode.RIGHT);
-        bind(BOOT_SHOW_GAME_VIEW, KeyCode.ENTER);
-        bind(TOGGLE_PAUSED,                   KeyCode.P);
+        bind(ACTION_BOOT_SHOW_GAME_VIEW, KeyCode.ENTER);
+        bind(ACTION_TOGGLE_PAUSED,                   KeyCode.P);
     }
 
     @Override
