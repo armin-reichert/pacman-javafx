@@ -11,7 +11,6 @@ import de.amr.pacmanfx.ui.sound.PacManGames_SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.input.Joypad;
 import de.amr.pacmanfx.uilib.input.Keyboard;
-import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import javafx.application.Application;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
@@ -124,15 +123,10 @@ public final class PacManGames_Env {
      * Call this method in {@link javafx.application.Application#start(Stage)}!
      * </p>
      *
-     * @param support3D if the UI has 3D support
      * @param configClassesMap a map specifying the UI configuration for each supported game variant
      */
-    public static void initUI(boolean support3D, Map<GameVariant, Class<? extends PacManGames_UIConfiguration>> configClassesMap)
-    {
+    public static void initUI(Map<GameVariant, Class<? extends PacManGames_UIConfiguration>> configClassesMap) {
         theUI = new PacManGames_UI_Impl();
-        if (support3D) {
-            Model3DRepository.get(); // triggers 3D model loading
-        }
         configClassesMap.forEach((gameVariant, configClass) -> {
             try {
                 PacManGames_UIConfiguration config = configClass.getDeclaredConstructor(PacManGames_Assets.class).newInstance(theAssets);
@@ -143,18 +137,6 @@ public final class PacManGames_Env {
                 throw new IllegalStateException(x);
             }
         });
-    }
-
-    /**
-     * Creates the global UI instance (with 3D scenes) and stores the configurations of the supported game variants.
-     * <p>
-     * Call this method in {@link javafx.application.Application#start(Stage)}!
-     * </p>
-     *
-     * @param configClassesMap a map specifying the UI configuration for each supported game variant
-     */
-    public static void initUI(Map<GameVariant, Class<? extends PacManGames_UIConfiguration>> configClassesMap) {
-        initUI(true, configClassesMap);
     }
 
     private static void checkUserDirsExistingAndWritable() {
