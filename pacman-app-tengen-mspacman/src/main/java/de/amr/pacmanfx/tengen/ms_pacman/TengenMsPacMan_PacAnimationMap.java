@@ -72,6 +72,4 @@ public class TengenMsPacMan_PacAnimationMap extends SpriteAnimationMap<RectArea>
         Arrays.fill(sprites, munchingOpen);
         return sprites;
     }
-
-
 }

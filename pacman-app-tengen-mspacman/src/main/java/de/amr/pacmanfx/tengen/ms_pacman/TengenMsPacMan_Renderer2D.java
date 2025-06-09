@@ -41,7 +41,6 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.getSpr
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.PY_CANVAS_BG_COLOR;
-import static de.amr.pacmanfx.ui._2d.GameSpriteSheet.NO_SPRITE;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -300,13 +299,13 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             case BIG     -> getSprite(SpriteID.INFO_CATEGORY_BIG);
             case MINI    -> getSprite(SpriteID.INFO_CATEGORY_MINI);
             case STRANGE -> getSprite(SpriteID.INFO_CATEGORY_STRANGE);
-            case ARCADE  -> NO_SPRITE;
+            case ARCADE  -> RectArea.PIXEL;
         };
         RectArea infoDifficulty = switch (difficulty) {
             case EASY   -> getSprite(SpriteID.INFO_DIFFICULTY_EASY);
             case HARD   -> getSprite(SpriteID.INFO_DIFFICULTY_HARD);
             case CRAZY  -> getSprite(SpriteID.INFO_DIFFICULTY_CRAZY);
-            case NORMAL -> NO_SPRITE;
+            case NORMAL -> RectArea.PIXEL;
         };
         if (pacBooster != PacBooster.OFF) {
             drawSpriteScaledWithCenter(getSprite(SpriteID.INFO_BOOSTER), centerX - tiles_to_px(6), y);

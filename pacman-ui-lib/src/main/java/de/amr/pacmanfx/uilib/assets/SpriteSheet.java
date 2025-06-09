@@ -15,12 +15,6 @@ import javafx.scene.image.WritableImage;
  */
 public interface SpriteSheet {
 
-    static RectArea[] rectAreaArray(RectArea... areas) {
-        return areas;
-    }
-
-    RectArea NO_SPRITE  = RectArea.PIXEL;
-
     Image sourceImage();
 
     /**

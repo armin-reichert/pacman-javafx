@@ -13,7 +13,6 @@ import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.SpriteID.*;
 import static de.amr.pacmanfx.lib.RectArea.rect;
-import static de.amr.pacmanfx.uilib.assets.SpriteSheet.rectAreaArray;
 import static java.util.Objects.requireNonNull;
 
 public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteSheet {
@@ -129,7 +128,7 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
         RectArea wide = rect(OFF_X + margin, dir * 16 + margin, size, size);
         RectArea middle = rect(OFF_X + 16 + margin, dir * 16 + margin, size, size);
         RectArea closed = rect(OFF_X + 32 + margin, margin, size, size);
-        return rectAreaArray(closed, closed, middle, middle, wide, wide, middle, middle);
+        return new RectArea[] {closed, closed, middle, middle, wide, wide, middle, middle};
     }
 
     private static RectArea[] crappyPacManDyingSpriteExtraction() {
