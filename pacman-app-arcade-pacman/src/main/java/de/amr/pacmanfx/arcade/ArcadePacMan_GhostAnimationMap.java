@@ -21,7 +21,7 @@ public class ArcadePacMan_GhostAnimationMap extends SpriteAnimationMap<RectArea>
     public ArcadePacMan_GhostAnimationMap(ArcadePacMan_SpriteSheet ss, byte personality) {
         super(ss);
         set(ANIM_GHOST_NORMAL,              createAnimation().sprites(ghostNormalSprites(personality, Direction.LEFT)).frameTicks(8).endless());
-        set(ANIM_GHOST_FRIGHTENED,          createAnimation().sprites(ss.ghostFrightenedSprites()).frameTicks(8).endless());
+        set(ANIM_GHOST_FRIGHTENED,          createAnimation().sprites(getSprites(GHOST_FRIGHTENED)).frameTicks(8).endless());
         set(ANIM_GHOST_FLASHING,            createAnimation().sprites(ss.ghostFlashingSprites()).frameTicks(7).endless());
         set(ANIM_GHOST_EYES,                createAnimation().sprites(ss.ghostEyesSprites(Direction.LEFT)).end());
         set(ANIM_GHOST_NUMBER,              createAnimation().sprites(ss.ghostNumberSprites()).end());

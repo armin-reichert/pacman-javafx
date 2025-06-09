@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import javafx.scene.image.Image;
 
-import java.util.Arrays;
 import java.util.EnumMap;
 
 import static de.amr.pacmanfx.lib.RectArea.rect;
@@ -233,9 +232,6 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
 
     @Override
     public RectArea[] ghostFlashingSprites() { return getSprites(SpriteID.GHOST_FLASHING); }
-
-    @Override
-    public RectArea[] ghostFrightenedSprites() { return getSprites(SpriteID.GHOST_FRIGHTENED); }
 
     @Override
     public RectArea[] ghostNumberSprites() { return getSprites(SpriteID.GHOST_NUMBERS); }
