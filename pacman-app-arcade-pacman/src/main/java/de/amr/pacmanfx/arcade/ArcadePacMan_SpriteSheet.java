@@ -184,9 +184,7 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
     }
 
     @Override
-    public RectArea[] ghostNumberSprites() {
-        return getSprites(GHOST_NUMBERS);
-    }
+    public RectArea[] ghostNumberSprites() { return getSprites(GHOST_NUMBERS); }
 
     @Override
     public RectArea bonusSymbolSprite(byte symbol) { return getSprites(BONUS_SYMBOLS)[symbol]; }
