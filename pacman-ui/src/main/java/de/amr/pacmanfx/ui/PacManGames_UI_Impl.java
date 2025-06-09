@@ -23,7 +23,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -54,7 +53,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     private Scene mainScene;
     private StartPagesView startPagesView;
     private GameView gameView;
-    private EditorView editorView;
+    private EditorView editorView; // created on first access
 
     private void ka_tas_trooo_phe(Throwable x) {
         Logger.error(x);
@@ -73,6 +72,21 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         theGameEventManager().addEventListener(newView);
         var root = (StackPane) mainScene.getRoot();
         root.getChildren().set(0, newView.container());
+    }
+
+    private EditorView lazyGetEditorView() {
+        if (editorView == null) {
+            var editor = new TileMapEditor(stage);
+            var miQuit = new MenuItem(theAssets().text("back_to_game"));
+            miQuit.setOnAction(e -> {
+                editor.stop();
+                editor.executeWithCheckForUnsavedChanges(this::showStartView);
+            });
+            editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miQuit);
+            editor.init(CUSTOM_MAP_DIR);
+            editorView = new EditorView(editor);
+        }
+        return editorView;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -108,7 +122,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
             var iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, STATUS_ICON_COLOR);
             iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
-                () -> viewPy.get() != editorView && theClock().isPaused(),
+                () -> (viewPy.get() == gameView) && theClock().isPaused(),
                 viewPy, theClock().pausedProperty()));
 
             final List<FontIcon> icons = List.of(iconMuted, icon3D, iconAutopilot, iconImmune);
@@ -118,7 +132,8 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             iconBox.setMaxWidth(STATUS_ICON_SIZE * 4);
             iconBox.setPadding(new Insets(STATUS_ICON_PADDING));
             iconBox.setSpacing(STATUS_ICON_SPACING);
-            iconBox.visibleProperty().bind(Bindings.createBooleanBinding(() -> viewPy.get() != editorView, viewPy));
+            iconBox.visibleProperty().bind(Bindings.createBooleanBinding
+                (() -> (viewPy.get() == startPagesView || viewPy.get() == gameView), viewPy));
             // keep box compact, show visible items only
             ChangeListener<? super Boolean> iconVisibilityChangeHandler = (py,ov,nv) ->
                 iconBox.getChildren().setAll(icons.stream().filter(Node::isVisible).toList());
@@ -127,19 +142,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             root.getChildren().addAll(iconPaused, iconBox);
             StackPane.setAlignment(iconPaused, Pos.CENTER);
             StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
-        }
-
-        // Map editor
-        {
-            var editor = new TileMapEditor(stage);
-            var miQuit = new MenuItem(theAssets().text("back_to_game"));
-            miQuit.setOnAction(e -> {
-                editor.stop();
-                editor.executeWithCheckForUnsavedChanges(this::showStartView);
-            });
-            editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miQuit);
-            editor.init(CUSTOM_MAP_DIR);
-            editorView = new EditorView(editor);
         }
 
         // Main scene
@@ -288,8 +290,8 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             currentGameScene().ifPresent(GameScene::end);
             theSound().stopAll();
             theClock().stop();
-            editorView.editor().start(stage);
-            viewPy.set(editorView);
+            lazyGetEditorView().editor().start(stage);
+            viewPy.set(lazyGetEditorView());
         } else {
             Logger.info("Editor view cannot be opened, game is playing");
         }
