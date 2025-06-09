@@ -11,6 +11,8 @@ import javafx.animation.Transition;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * Plays a sequence of sprite sheet regions ("sprites") to create an animation effect.
  */
@@ -65,6 +67,8 @@ public class SpriteAnimation extends Transition {
     private int frameTicks = 1;
     private int frameIndex;
 
+    private boolean isValidFrameIndex(int index) { return 0 <= index && index < sprites.length; }
+
     @Override
     protected void interpolate(double t) {
         if (t == 1) {
@@ -79,10 +83,13 @@ public class SpriteAnimation extends Transition {
     }
 
     public void setSprites(RectArea[] sprites) {
-        this.sprites = sprites;
+        this.sprites = requireNonNull(sprites);
     }
 
     public void setFrameTicks(int ticks) {
+        if (ticks <= 0) {
+            throw new IllegalArgumentException("Frame ticks must be a positive number, but you gave me " + ticks);
+        }
         if (ticks != frameTicks) {
             boolean doRestart = getStatus() == Status.RUNNING;
             stop();
@@ -94,24 +101,16 @@ public class SpriteAnimation extends Transition {
     }
 
     public void setFrameIndex(int index) {
-        if (index < 0 || index >= sprites.length) {
-            Logger.error("Frame index {} is out of range, Number of sprites: {}", index, sprites.length);
-        } else {
+        if (isValidFrameIndex(index)) {
             frameIndex = index;
+        } else {
+            throw new IllegalArgumentException("Frame index %d is out of range, number of sprites: %d".formatted(index, sprites.length));
         }
     }
 
-    public int frameIndex() {
-        return frameIndex;
-    }
+    public int frameIndex() { return frameIndex; }
 
-    public RectArea currentSprite() {
-        if (frameIndex < sprites.length) {
-            return sprites[frameIndex];
-        }
-        Logger.warn("No sprite for frame index {}", frameIndex);
-        return RectArea.PIXEL;
-    }
+    public RectArea currentSprite() { return sprites[frameIndex]; }
 
     public void nextFrame() {
         frameIndex++;
