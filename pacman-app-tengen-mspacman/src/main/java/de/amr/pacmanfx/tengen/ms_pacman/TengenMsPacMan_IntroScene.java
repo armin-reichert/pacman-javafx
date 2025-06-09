@@ -13,6 +13,7 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.SpriteID;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -26,7 +27,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TEN
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.ACTION_START_GAME;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.ACTION_TOGGLE_JOYPAD_KEYS_SHOWN;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.*;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.MS_PAC_MAN_TITLE_SPRITE;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.getSprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 
@@ -98,7 +99,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 if (!dark) {
                     r.fillText("TENGEN PRESENTS", r.shadeOfBlue(t),
                         normalArcadeFont(), 9 * TS, MARQUEE_Y - TS);
-                    r.drawSpriteScaled(MS_PAC_MAN_TITLE_SPRITE, 6 * TS, MARQUEE_Y);
+                    r.drawSpriteScaled(getSprite(SpriteID.TITLE_TEXT), 6 * TS, MARQUEE_Y);
                     if (t % 60 < 30) {
                         r.fillText("PRESS START", nesPaletteColor(0x20),
                             normalArcadeFont(), 11 * TS, MARQUEE_Y + 9 * TS);

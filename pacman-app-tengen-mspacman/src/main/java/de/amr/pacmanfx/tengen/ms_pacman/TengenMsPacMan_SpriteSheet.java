@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import javafx.scene.image.Image;
-import org.w3c.dom.css.Rect;
 
 import java.util.Arrays;
 
@@ -19,7 +18,9 @@ import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSpriteSheet {
 
     public enum SpriteID {
+        TITLE_TEXT,
         INFO_FRAME,
+        INFO_BOOSTER,
         INFO_CATEGORY_BIG, INFO_CATEGORY_MINI, INFO_CATEGORY_STRANGE,
         INFO_DIFFICULTY_CRAZY, INFO_DIFFICULTY_EASY, INFO_DIFFICULTY_HARD,
         HEART, BLUE_BAG, JUNIOR_PAC,
@@ -39,11 +40,16 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
         GHOST_NUMBERS,
         BONUS_SYMBOLS,
         BONUS_VALUES,
+        CONTINUES_0, CONTINUES_1, CONTINUES_2, CONTINUES_3,
+        LEVEL_NUMBER_BOX,
+        CLAPPERBOARD,
     }
 
     public static RectArea getSprite(SpriteID spriteID) {
         return switch (spriteID) {
+            case TITLE_TEXT -> rect(15, 191, 152, 40);
             case INFO_FRAME -> rect(175, 125, 126, 7);
+            case INFO_BOOSTER -> rect(190, 134, 7, 5);
             case INFO_CATEGORY_BIG -> rect(261, 141, 26, 7);
             case INFO_CATEGORY_MINI -> rect(261, 149, 26, 7);
             case INFO_CATEGORY_STRANGE -> rect(261, 133, 26, 7);
@@ -57,7 +63,12 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
             case GHOST_EYES_LEFT -> rect(140, 166, 10, 5);
             case GHOST_EYES_UP -> rect(153, 166, 10, 5);
             case GHOST_EYES_DOWN -> rect(153, 173, 10, 5);
-            default -> null; //TODO
+            case CONTINUES_0 -> rect(180, 243, 40, 8);
+            case CONTINUES_1 -> rect(180, 234, 40, 8);
+            case CONTINUES_2 -> rect(180, 225, 40, 8);
+            case CONTINUES_3 -> rect(180, 216, 40, 8);
+            case LEVEL_NUMBER_BOX -> rect(200, 164, 16, 16);
+            default -> throw new IllegalArgumentException();
         };
     }
 
@@ -169,7 +180,11 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
             };
             case BONUS_SYMBOLS -> sillyBonusSymbolComputation();
             case BONUS_VALUES -> sillyBonusValuesComputation();
-            default -> null; //TODO
+            case CLAPPERBOARD -> new RectArea[] {
+                // wide open, open, closed
+                rect(91, 361, 32, 32), rect(53, 361, 32, 32), rect(14, 361, 32, 32),
+            };
+            default -> throw new IllegalArgumentException();
         };
     }
 
@@ -193,38 +208,17 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
         return valueSprites;
     }
 
-    // there is only a sprite pointing left in the sprite sheet, renderer makes the animation
-    public static final RectArea[] MS_PAC_ROTATING_SPRITES = new RectArea[11];
-    static {
-        Arrays.fill(MS_PAC_ROTATING_SPRITES, rect(51, 15, 15, 15));
-    }
-
-    public static final RectArea[] CONTINUES_SPRITES = {
-            rect(180, 243, 40, 8), // Continues:0
-            rect(180, 234, 40, 8), // Continues:1
-            rect(180, 225, 40, 8), // Continues:2
-            rect(180, 216, 40, 8), // Continues:3
-    };
-
-    public static final RectArea LEVEL_BOX_SPRITE = rect(200, 164, 16, 16);
-
-    public static final RectArea BOOSTER_SPRITE = rect(190, 134, 7, 5);
-
-    public static final RectArea MS_PAC_MAN_TITLE_SPRITE = rect(15, 191, 152, 40);
-
-    public static final RectArea[] CLAPPERBOARD_SPRITES = {
-            // wide open, open, closed
-            rect(91, 361, 32, 32), rect(53, 361, 32, 32), rect(14, 361, 32, 32),
-    };
-
     @Override
-    public RectArea[] pacMunchingSprites(Direction dir) {
-        return getSprites(SpriteID.MS_PAC_MUNCHING);
-    }
+    public RectArea[] pacMunchingSprites(Direction dir) { return getSprites(SpriteID.MS_PAC_MUNCHING); }
 
     @Override
     public RectArea[] pacDyingSprites() {
-        return MS_PAC_ROTATING_SPRITES;
+        // TODO this is nuts
+        // renderer rotates single sprite to create animation effect
+        var sprites = new RectArea[11];
+        RectArea munchingOpen = getSprites(SpriteID.MS_PAC_MUNCHING)[0];
+        Arrays.fill(sprites, munchingOpen);
+        return sprites;
     }
 
     @Override
@@ -282,15 +276,6 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
                 case Direction.DOWN -> getSprites(SpriteID.ORANGE_GHOST_DOWN);
             };
             default -> throw new IllegalArgumentException();
-        };
-    }
-
-    private int dirIndex(Direction dir) {
-        return switch (dir) {
-            case Direction.RIGHT -> 0;
-            case Direction.LEFT -> 1;
-            case Direction.UP -> 2;
-            case Direction.DOWN -> 3;
         };
     }
 

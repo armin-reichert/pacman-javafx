@@ -295,23 +295,23 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     public void drawGameOptions(MapCategory mapCategory, Difficulty difficulty, PacBooster pacBooster, double centerX, double y) {
-        RectArea categorySprite = switch (mapCategory) {
+        RectArea infoCategory = switch (mapCategory) {
             case BIG     -> getSprite(SpriteID.INFO_CATEGORY_BIG);
             case MINI    -> getSprite(SpriteID.INFO_CATEGORY_MINI);
             case STRANGE -> getSprite(SpriteID.INFO_CATEGORY_STRANGE);
             case ARCADE  -> NO_SPRITE;
         };
-        RectArea difficultySprite = switch (difficulty) {
+        RectArea infoDifficulty = switch (difficulty) {
             case EASY   -> getSprite(SpriteID.INFO_DIFFICULTY_EASY);
             case HARD   -> getSprite(SpriteID.INFO_DIFFICULTY_HARD);
             case CRAZY  -> getSprite(SpriteID.INFO_DIFFICULTY_CRAZY);
             case NORMAL -> NO_SPRITE;
         };
         if (pacBooster != PacBooster.OFF) {
-            drawSpriteScaledWithCenter(BOOSTER_SPRITE, centerX - tiles_to_px(6), y);
+            drawSpriteScaledWithCenter(getSprite(SpriteID.INFO_BOOSTER), centerX - tiles_to_px(6), y);
         }
-        drawSpriteScaledWithCenter(difficultySprite, centerX, y);
-        drawSpriteScaledWithCenter(categorySprite, centerX + tiles_to_px(4.5), y);
+        drawSpriteScaledWithCenter(infoDifficulty, centerX, y);
+        drawSpriteScaledWithCenter(infoCategory, centerX + tiles_to_px(4.5), y);
         drawSpriteScaledWithCenter(getSprite(SpriteID.INFO_FRAME), centerX, y);
     }
 
@@ -350,7 +350,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     public void drawLevelNumberBox(int levelNumber, double x, double y) {
-        drawSpriteScaled(LEVEL_BOX_SPRITE, x, y);
+        drawSpriteScaled(getSprite(SpriteID.LEVEL_NUMBER_BOX), x, y);
         double digitY = y + 2;
         int tens = levelNumber / 10, ones = levelNumber % 10;
         drawSpriteScaled(spriteSheet.digit(ones), x + 10, digitY);

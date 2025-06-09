@@ -5,10 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.SpriteID;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.CLAPPERBOARD_SPRITES;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.getSprites;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Animated movie clapperboard.
@@ -27,7 +29,9 @@ public class ClapperboardAnimation {
     }
 
     public Optional<RectArea> sprite() {
-        return state == HIDDEN ? Optional.empty() : Optional.of(CLAPPERBOARD_SPRITES[state]);
+        if (state == HIDDEN) return Optional.empty();
+        RectArea[] clapperboardSprites = requireNonNull(getSprites(SpriteID.CLAPPERBOARD));
+        return Optional.of(clapperboardSprites[state]);
     }
 
     public void start() {
