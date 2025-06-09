@@ -10,9 +10,7 @@ import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 public interface GameSpriteSheet extends SpriteSheet {
     RectArea[] ghostEyesSprites(Direction dir);
-    RectArea[] ghostFlashingSprites();
     RectArea[] ghostNumberSprites();
-
     RectArea livesCounterSprite();
     RectArea bonusSymbolSprite(byte symbol);
     RectArea bonusValueSprite(byte symbol);

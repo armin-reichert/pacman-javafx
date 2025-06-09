@@ -231,9 +231,6 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
     }
 
     @Override
-    public RectArea[] ghostFlashingSprites() { return getSprites(SpriteID.GHOST_FLASHING); }
-
-    @Override
     public RectArea[] ghostNumberSprites() { return getSprites(SpriteID.GHOST_NUMBERS); }
 
     @Override
