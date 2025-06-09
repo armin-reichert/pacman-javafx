@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
+import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.SpriteID.*;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.getSprites;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
@@ -23,7 +24,7 @@ public class ArcadePacMan_GhostAnimationMap extends SpriteAnimationMap<RectArea>
         set(ANIM_GHOST_NORMAL,              createAnimation().sprites(ghostNormalSprites(personality, Direction.LEFT)).frameTicks(8).endless());
         set(ANIM_GHOST_FRIGHTENED,          createAnimation().sprites(getSprites(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).endless());
         set(ANIM_GHOST_FLASHING,            createAnimation().sprites(getSprites(SpriteID.GHOST_FLASHING)).frameTicks(7).endless());
-        set(ANIM_GHOST_EYES,                createAnimation().sprites(ss.ghostEyesSprites(Direction.LEFT)).end());
+        set(ANIM_GHOST_EYES,                createAnimation().sprites(ghostEyesSprites(Direction.LEFT)).end());
         set(ANIM_GHOST_NUMBER,              createAnimation().sprites(ss.ghostNumberSprites()).end());
         set(ANIM_BLINKY_DAMAGED,            createAnimation().sprites(getSprites(SpriteID.RED_GHOST_DAMAGED)).end());
         set(ANIM_BLINKY_NAIL_DRESS_RAPTURE, createAnimation().sprites(getSprites(SpriteID.RED_GHOST_STRETCHED)).end());
@@ -51,7 +52,7 @@ public class ArcadePacMan_GhostAnimationMap extends SpriteAnimationMap<RectArea>
                 currentAnimation().setSprites(ghostNormalSprites(ghost.personality(), ghost.wishDir()));
             }
             if (isCurrentAnimationID(ANIM_GHOST_EYES)) {
-                currentAnimation().setSprites(spriteSheet().ghostEyesSprites(ghost.wishDir()));
+                currentAnimation().setSprites(ghostEyesSprites(ghost.wishDir()));
             }
         }
     }
@@ -83,6 +84,15 @@ public class ArcadePacMan_GhostAnimationMap extends SpriteAnimationMap<RectArea>
                 case DOWN ->  SpriteID.ORANGE_GHOST_DOWN;
             };
             default -> throw new IllegalArgumentException("Illegal ghost ID " + id);
+        });
+    }
+
+    private RectArea[] ghostEyesSprites(Direction dir) {
+        return getSprites(switch (dir) {
+            case Direction.RIGHT -> GHOST_EYES_RIGHT;
+            case Direction.LEFT  -> GHOST_EYES_LEFT;
+            case Direction.UP    -> GHOST_EYES_UP;
+            case Direction.DOWN  -> GHOST_EYES_DOWN;
         });
     }
 }

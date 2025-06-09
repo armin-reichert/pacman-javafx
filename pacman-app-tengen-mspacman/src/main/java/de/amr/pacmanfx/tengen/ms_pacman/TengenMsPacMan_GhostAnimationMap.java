@@ -13,6 +13,7 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.getSprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.getSprites;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 
@@ -27,7 +28,7 @@ public class TengenMsPacMan_GhostAnimationMap extends SpriteAnimationMap<RectAre
         set(ANIM_GHOST_NORMAL,     createAnimation().sprites(ghostNormalSprites(personality, Direction.LEFT)).frameTicks(NORMAL_TICKS).endless());
         set(ANIM_GHOST_FRIGHTENED, createAnimation().sprites(getSprites(SpriteID.GHOST_FRIGHTENED)).frameTicks(FRIGHTENED_TICKS).endless());
         set(ANIM_GHOST_FLASHING,   createAnimation().sprites(getSprites(SpriteID.GHOST_FLASHING)).frameTicks(FLASH_TICKS).endless());
-        set(ANIM_GHOST_EYES,       createAnimation().sprites(ss.ghostEyesSprites(Direction.LEFT)).end());
+        set(ANIM_GHOST_EYES,       createAnimation().sprites(ghostEyesSprites(Direction.LEFT)).end());
         set(ANIM_GHOST_NUMBER,     createAnimation().sprites(ss.ghostNumberSprites()).end());
     }
 
@@ -51,7 +52,7 @@ public class TengenMsPacMan_GhostAnimationMap extends SpriteAnimationMap<RectAre
                 currentAnimation().setSprites(ghostNormalSprites(ghost.personality(), ghost.wishDir()));
             }
             if (isCurrentAnimationID(ANIM_GHOST_EYES)) {
-                currentAnimation().setSprites(spriteSheet().ghostEyesSprites(ghost.wishDir()));
+                currentAnimation().setSprites(ghostEyesSprites(ghost.wishDir()));
             }
         }
     }
@@ -83,6 +84,17 @@ public class TengenMsPacMan_GhostAnimationMap extends SpriteAnimationMap<RectAre
                 case Direction.DOWN  -> getSprites(SpriteID.ORANGE_GHOST_DOWN);
             };
             default -> throw new IllegalArgumentException();
+        };
+    }
+
+    private RectArea[] ghostEyesSprites(Direction dir) {
+        return new RectArea[] {
+            switch (dir) {
+                case RIGHT -> getSprite(SpriteID.GHOST_EYES_RIGHT);
+                case LEFT -> getSprite(SpriteID.GHOST_EYES_LEFT);
+                case UP -> getSprite(SpriteID.GHOST_EYES_UP);
+                case DOWN -> getSprite(SpriteID.GHOST_EYES_DOWN);
+            }
         };
     }
 }

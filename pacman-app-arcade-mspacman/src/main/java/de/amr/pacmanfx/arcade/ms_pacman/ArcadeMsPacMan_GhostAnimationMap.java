@@ -25,7 +25,7 @@ public class ArcadeMsPacMan_GhostAnimationMap extends SpriteAnimationMap<RectAre
         set(ANIM_GHOST_NORMAL,     createAnimation().sprites(ghostNormalSprites(personality, Direction.LEFT)).frameTicks(8).endless());
         set(ANIM_GHOST_FRIGHTENED, createAnimation().sprites(getSprites(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).endless());
         set(ANIM_GHOST_FLASHING,   createAnimation().sprites(getSprites(GHOST_FLASHING)).frameTicks(7).endless());
-        set(ANIM_GHOST_EYES,       createAnimation().sprites(ss.ghostEyesSprites(Direction.LEFT)).end());
+        set(ANIM_GHOST_EYES,       createAnimation().sprites(ghostEyesSprites(Direction.LEFT)).end());
         set(ANIM_GHOST_NUMBER,     createAnimation().sprites(ss.ghostNumberSprites()).end());
     }
 
@@ -47,7 +47,7 @@ public class ArcadeMsPacMan_GhostAnimationMap extends SpriteAnimationMap<RectAre
         if (actor instanceof Ghost ghost) {
             switch (currentAnimationID) {
                 case ANIM_GHOST_NORMAL -> currentAnimation().setSprites(ghostNormalSprites(ghost.personality(), ghost.wishDir()));
-                case ANIM_GHOST_EYES   -> currentAnimation().setSprites(spriteSheet().ghostEyesSprites(ghost.wishDir()));
+                case ANIM_GHOST_EYES   -> currentAnimation().setSprites(ghostEyesSprites(ghost.wishDir()));
             }
         }
     }
@@ -79,6 +79,15 @@ public class ArcadeMsPacMan_GhostAnimationMap extends SpriteAnimationMap<RectAre
                 case DOWN -> ORANGE_GHOST_DOWN;
             };
             default -> throw new IllegalArgumentException("Illegal ghost ID " + id);
+        });
+    }
+
+    private RectArea[] ghostEyesSprites(Direction dir) {
+        return getSprites(switch (dir) {
+            case Direction.RIGHT -> GHOST_EYES_RIGHT;
+            case Direction.LEFT  -> GHOST_EYES_LEFT;
+            case Direction.UP    -> GHOST_EYES_UP;
+            case Direction.DOWN  -> GHOST_EYES_DOWN;
         });
     }
 }

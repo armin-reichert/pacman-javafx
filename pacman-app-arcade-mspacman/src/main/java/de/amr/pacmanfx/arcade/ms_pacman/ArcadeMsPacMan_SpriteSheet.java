@@ -126,14 +126,4 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
 
     @Override
     public RectArea livesCounterSprite() { return getSprite(LIVES_COUNTER_SYMBOL); }
-
-    @Override
-    public RectArea[] ghostEyesSprites(Direction dir) {
-        return getSprites(switch (dir) {
-            case Direction.RIGHT -> GHOST_EYES_RIGHT;
-            case Direction.LEFT  -> GHOST_EYES_LEFT;
-            case Direction.UP    -> GHOST_EYES_UP;
-            case Direction.DOWN  -> GHOST_EYES_DOWN;
-        });
-    }
 }

@@ -219,18 +219,6 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
     public static RectArea[] getSprites(SpriteID spriteID) { return (RectArea[]) SPRITE_MAP.get(spriteID); }
 
     @Override
-    public RectArea[] ghostEyesSprites(Direction dir) {
-        return new RectArea[] {
-            switch (dir) {
-                case RIGHT -> getSprite(SpriteID.GHOST_EYES_RIGHT);
-                case LEFT -> getSprite(SpriteID.GHOST_EYES_LEFT);
-                case UP -> getSprite(SpriteID.GHOST_EYES_UP);
-                case DOWN -> getSprite(SpriteID.GHOST_EYES_DOWN);
-            }
-        };
-    }
-
-    @Override
     public RectArea[] ghostNumberSprites() { return getSprites(SpriteID.GHOST_NUMBERS); }
 
     @Override
