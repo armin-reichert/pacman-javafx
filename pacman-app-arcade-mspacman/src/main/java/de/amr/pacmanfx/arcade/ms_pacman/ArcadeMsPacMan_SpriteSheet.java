@@ -22,7 +22,7 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
 
     // third "column" contains the sprites (first two columns the maze images)
     private static RectArea tile(int tileX, int tileY) {
-        return rect(456 + R16 * tileX, R16 * tileY, R16, R16);
+        return rect(OFF_X + R16 * tileX, R16 * tileY, R16, R16);
     }
 
     private static RectArea[] tilesRightOf(int tileX, int tileY, int numTiles) {
@@ -86,9 +86,7 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
         SPRITE_MAP.put(GHOST_EYES_LEFT,          tilesRightOf(9, 5, 1));
         SPRITE_MAP.put(GHOST_EYES_UP,            tilesRightOf(10, 5, 1));
         SPRITE_MAP.put(GHOST_EYES_DOWN,          tilesRightOf(11, 5, 1));
-        SPRITE_MAP.put(GHOST_NUMBERS, new RectArea[] {
-            tile(0, 8), tile(1, 8), tile(2, 8), tile(3, 8)
-        });
+        SPRITE_MAP.put(GHOST_NUMBERS,            tilesRightOf(0, 8, 4));
         SPRITE_MAP.put(BONUS_SYMBOLS, IntStream.range(0, 8)
                 .mapToObj(symbol -> tile(3 + symbol, 0))
                 .toArray(RectArea[]::new)
