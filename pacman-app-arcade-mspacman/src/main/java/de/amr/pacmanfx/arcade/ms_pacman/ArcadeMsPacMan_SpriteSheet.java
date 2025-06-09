@@ -151,7 +151,7 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
     }
 
     public SpriteAnimation createStorkFlyingAnimation() {
-        return SpriteAnimation.createSpriteAnimation()
+        return SpriteAnimation.createAnimation()
                 .sprites(new RectArea[] {rect(489, 176, 32, 16), rect(521, 176, 32, 16)})
                 .frameTicks(8)
                 .endless();

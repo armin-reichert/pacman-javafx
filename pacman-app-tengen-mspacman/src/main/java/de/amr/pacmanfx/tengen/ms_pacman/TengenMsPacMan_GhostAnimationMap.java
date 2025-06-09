@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
-import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createSpriteAnimation;
+import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 
 public class TengenMsPacMan_GhostAnimationMap extends SpriteAnimationMap<RectArea> {
 
@@ -21,11 +21,11 @@ public class TengenMsPacMan_GhostAnimationMap extends SpriteAnimationMap<RectAre
 
     public TengenMsPacMan_GhostAnimationMap(TengenMsPacMan_SpriteSheet ss, byte personality) {
         super(ss);
-        set(ANIM_GHOST_NORMAL,     createSpriteAnimation().sprites(ss.ghostNormalSprites(personality, Direction.LEFT)).frameTicks(NORMAL_TICKS).endless());
-        set(ANIM_GHOST_FRIGHTENED, createSpriteAnimation().sprites(ss.ghostFrightenedSprites()).frameTicks(FRIGHTENED_TICKS).endless());
-        set(ANIM_GHOST_FLASHING,   createSpriteAnimation().sprites(ss.ghostFlashingSprites()).frameTicks(FLASH_TICKS).endless());
-        set(ANIM_GHOST_EYES,       createSpriteAnimation().sprites(ss.ghostEyesSprites(Direction.LEFT)).end());
-        set(ANIM_GHOST_NUMBER,     createSpriteAnimation().sprites(ss.ghostNumberSprites()).end());
+        set(ANIM_GHOST_NORMAL,     createAnimation().sprites(ss.ghostNormalSprites(personality, Direction.LEFT)).frameTicks(NORMAL_TICKS).endless());
+        set(ANIM_GHOST_FRIGHTENED, createAnimation().sprites(ss.ghostFrightenedSprites()).frameTicks(FRIGHTENED_TICKS).endless());
+        set(ANIM_GHOST_FLASHING,   createAnimation().sprites(ss.ghostFlashingSprites()).frameTicks(FLASH_TICKS).endless());
+        set(ANIM_GHOST_EYES,       createAnimation().sprites(ss.ghostEyesSprites(Direction.LEFT)).end());
+        set(ANIM_GHOST_NUMBER,     createAnimation().sprites(ss.ghostNumberSprites()).end());
     }
 
     @Override

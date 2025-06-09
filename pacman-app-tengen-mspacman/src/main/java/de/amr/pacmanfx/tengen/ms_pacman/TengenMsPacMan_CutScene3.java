@@ -9,6 +9,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.SpriteID;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import javafx.scene.media.MediaPlayer;
@@ -17,8 +18,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createPacMan;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.BLUE_BAG_SPRITE;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.JUNIOR_PAC_SPRITE;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.getSprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
@@ -168,9 +168,9 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         r.drawActor(pacMan);
         if (bagWithJunior.isVisible()) {
             if (bagOpen) {
-                r.drawActorSprite(bagWithJunior, JUNIOR_PAC_SPRITE);
+                r.drawActorSprite(bagWithJunior, getSprite(SpriteID.JUNIOR_PAC));
             } else {
-                r.drawActorSprite(bagWithJunior, BLUE_BAG_SPRITE);
+                r.drawActorSprite(bagWithJunior, getSprite(SpriteID.BLUE_BAG));
             }
         }
         r.drawLevelCounter(theGame().levelCounter(), sizeInPx().minus(0, 3*TS));

@@ -13,106 +13,140 @@ import java.util.Arrays;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.RectArea.rect;
-import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createSpriteAnimation;
+import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 
 public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSpriteSheet {
 
-    public static final RectArea INFO_FRAME_SPRITE = rect(175, 125, 126, 7);
+    public enum SpriteID {
+        INFO_FRAME,
+        INFO_CATEGORY_BIG, INFO_CATEGORY_MINI, INFO_CATEGORY_STRANGE,
+        INFO_DIFFICULTY_CRAZY, INFO_DIFFICULTY_EASY, INFO_DIFFICULTY_HARD,
+        HEART, BLUE_BAG, JUNIOR_PAC,
+        MS_PAC_MUNCHING, MS_PAC_MUNCHING_BOOSTER,
+        MS_PAC_WAVING_HAND,
+        MS_PAC_TURNING_AWAY,
+        MR_PAC_MUNCHING, MR_PAC_MUNCHING_BOOSTER,
+        MR_PAC_WAVING_HAND,
+        MR_PAC_TURNING_AWAY,
+        RED_GHOST_RIGHT, RED_GHOST_LEFT, RED_GHOST_UP, RED_GHOST_DOWN,
+        PINK_GHOST_RIGHT, PINK_GHOST_LEFT, PINK_GHOST_UP, PINK_GHOST_DOWN,
+        CYAN_GHOST_RIGHT, CYAN_GHOST_LEFT, CYAN_GHOST_UP, CYAN_GHOST_DOWN,
+        ORANGE_GHOST_RIGHT, ORANGE_GHOST_LEFT, ORANGE_GHOST_UP, ORANGE_GHOST_DOWN,
+    }
 
-    public static final RectArea STRANGE_SPRITE = rect(261, 133, 26, 7);
-    public static final RectArea BIG_SPRITE = rect(261, 141, 26, 7);
-    public static final RectArea MINI_SPRITE = rect(261, 149, 26, 7);
+    public static RectArea getSprite(SpriteID spriteID) {
+        return switch (spriteID) {
+            case INFO_FRAME -> rect(175, 125, 126, 7);
+            case INFO_CATEGORY_BIG -> rect(261, 141, 26, 7);
+            case INFO_CATEGORY_MINI -> rect(261, 149, 26, 7);
+            case INFO_CATEGORY_STRANGE -> rect(261, 133, 26, 7);
+            case INFO_DIFFICULTY_CRAZY -> rect(229, 133, 18, 7);
+            case INFO_DIFFICULTY_EASY -> rect(229, 149, 18, 7);
+            case INFO_DIFFICULTY_HARD -> rect(229, 141, 18, 7);
+            case HEART -> rect(162, 270, 18, 18);
+            case BLUE_BAG -> rect(241, 363, 7, 8);
+            case JUNIOR_PAC -> rect(176, 304, 7, 8);
+            default -> null; //TODO
+        };
+    }
 
-    public static final RectArea CRAZY_SPRITE = rect(229, 133, 18, 7);
-    public static final RectArea HARD_SPRITE = rect(229, 141, 18, 7);
-    public static final RectArea EASY_SPRITE = rect(229, 149, 18, 7);
-
-    public static final RectArea[] MS_PAC_MUNCHING_SPRITES_LEFT = {
-            rect(51, 15, 15, 15), // open
-            rect(66, 15, 15, 15), // wide open
-            rect(51, 15, 15, 15), // open
-            rect(32, 15, 15, 15), // closed
-    };
-
-    public static final RectArea[] MS_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER = {
-            rect(105, 15, 15, 15), // open
-            rect(120, 15, 15, 15), // wide open
-            rect(105, 15, 15, 15), // open
-            rect(86, 15, 15, 15), // closed
-    };
-
-    public static final RectArea[] MS_PAC_WAVING_HAND = {
-            rect(140, 10, 20, 20),
-            rect(163, 10, 20, 20),
-    };
-
-    public static final RectArea[] MS_PAC_TURNING_AWAY = {
-            rect(186, 15, 15, 15),
-            rect(205, 20, 8, 8),
-            rect(218, 21, 5, 5),
-    };
-
-    public static final RectArea[] MR_PAC_MUNCHING_SPRITES_LEFT = {
-            rect(51, 41, 15, 15), // open
-            rect(66, 41, 15, 15), // wide open
-            rect(51, 41, 15, 15), // open
-            rect(32, 41, 15, 15), // closed
-    };
-
-    public static final RectArea[] MR_PAC_MUNCHING_SPRITES_LEFT_POWER_BOOSTER = {
-            rect(105, 41, 15, 15), // open
-            rect(120, 41, 15, 15), // wide open
-            rect(86, 4, 15, 15), // closed
-            rect(120, 41, 15, 15), // wide open
-    };
-
-    public static final RectArea[] MR_PAC_WAVING_HAND = {
-            rect(140, 36, 20, 20),
-            rect(163, 36, 20, 20),
-    };
-
-    public static final RectArea[] MR_PAC_TURNING_AWAY = {
-            rect(186, 42, 15, 15),
-            rect(205, 46, 8, 8),
-            rect(218, 47, 5, 5),
-    };
+    public static RectArea[] getSprites(SpriteID spriteID) {
+        return switch (spriteID) {
+            case MS_PAC_MUNCHING -> new RectArea[] {
+                rect(51, 15, 15, 15), // open
+                rect(66, 15, 15, 15), // wide open
+                rect(51, 15, 15, 15), // open
+                rect(32, 15, 15, 15)  // closed
+            };
+            case MS_PAC_MUNCHING_BOOSTER -> new RectArea[] {
+                rect(105, 15, 15, 15), // open
+                rect(120, 15, 15, 15), // wide open
+                rect(105, 15, 15, 15), // open
+                rect(86, 15, 15, 15)   // closed
+            };
+            case MS_PAC_WAVING_HAND -> new RectArea[] {
+                rect(140, 10, 20, 20),
+                rect(163, 10, 20, 20),
+            };
+            case MS_PAC_TURNING_AWAY -> new RectArea[] {
+                rect(186, 15, 15, 15),
+                rect(205, 20, 8, 8),
+                rect(218, 21, 5, 5),
+            };
+            case MR_PAC_MUNCHING -> new RectArea[] {
+                rect(51, 41, 15, 15), // open
+                rect(66, 41, 15, 15), // wide open
+                rect(51, 41, 15, 15), // open
+                rect(32, 41, 15, 15), // closed
+            };
+            case MR_PAC_MUNCHING_BOOSTER -> new RectArea[] {
+                rect(105, 41, 15, 15), // open
+                rect(120, 41, 15, 15), // wide open
+                rect(86, 4, 15, 15), // closed
+                rect(120, 41, 15, 15), // wide open
+            };
+            case MR_PAC_WAVING_HAND -> new RectArea[] {
+                rect(140, 36, 20, 20), rect(163, 36, 20, 20),
+            };
+            case MR_PAC_TURNING_AWAY -> new RectArea[] {
+                rect(186, 42, 15, 15), rect(205, 46, 8, 8), rect(218, 47, 5, 5),
+            };
+            case RED_GHOST_RIGHT -> new RectArea[] {
+                rect(10, 120, 14, 13), rect(26, 120, 14, 13),
+            };
+            case RED_GHOST_LEFT -> new RectArea[] {
+                rect(42, 120, 14, 13), rect(58, 120, 14, 13)
+            };
+            case RED_GHOST_UP -> new RectArea[] {
+                rect(74, 120, 14, 13), rect(90, 120, 14, 13)
+            };
+            case RED_GHOST_DOWN -> new RectArea[] {
+                rect(106, 120, 14, 13), rect(122, 120, 14, 13)
+            };
+            case PINK_GHOST_RIGHT -> new RectArea[] {
+                rect(10, 135, 14, 13), rect(26, 135, 14, 13)
+            };
+            case PINK_GHOST_LEFT -> new RectArea[] {
+                rect(42, 135, 14, 13), rect(58, 135, 14, 13)
+            };
+            case PINK_GHOST_UP -> new RectArea[] {
+                rect(74, 135, 14, 13), rect(90, 135, 14, 13)
+            };
+            case PINK_GHOST_DOWN -> new RectArea[] {
+                rect(106, 135, 14, 13), rect(122, 135, 14, 13)
+            };
+            case CYAN_GHOST_RIGHT -> new RectArea[] {
+                rect(10, 150, 14, 13), rect(26, 150, 14, 13)
+            };
+            case CYAN_GHOST_LEFT -> new RectArea[] {
+                rect(42, 150, 14, 13), rect(58, 150, 14, 13)
+            };
+            case CYAN_GHOST_UP -> new RectArea[] {
+                rect(74, 150, 14, 13), rect(90, 150, 14, 13)
+            };
+            case CYAN_GHOST_DOWN -> new RectArea[] {
+                rect(106, 150, 14, 13), rect(122, 150, 14, 13)
+            };
+            case ORANGE_GHOST_RIGHT -> new RectArea[] {
+                rect(10, 165, 14, 13), rect(26, 165, 14, 13)            };
+            case ORANGE_GHOST_LEFT -> new RectArea[] {
+                rect(42, 165, 14, 13), rect(58, 165, 14, 13)
+            };
+            case ORANGE_GHOST_UP -> new RectArea[] {
+                rect(74, 165, 14, 13), rect(90, 165, 14, 13)
+            };
+            case ORANGE_GHOST_DOWN -> new RectArea[] {
+                rect(106, 165, 14, 13), rect(122, 165, 14, 13)
+            };
+            default -> null; //TODO
+        };
+    }
 
     // there is only a sprite pointing left in the sprite sheet, renderer makes the animation
     public static final RectArea[] MS_PAC_ROTATING_SPRITES = new RectArea[11];
-
     static {
-        RectArea pacSprite = rect(51, 15, 15, 15);
-        Arrays.fill(MS_PAC_ROTATING_SPRITES, pacSprite);
+        Arrays.fill(MS_PAC_ROTATING_SPRITES, rect(51, 15, 15, 15));
     }
-
-    // directions: rr ll uu dd
-    public static final RectArea[][] RED_GHOST_SPRITES = {
-            {rect(10, 120, 14, 13), rect(26, 120, 14, 13)},
-            {rect(42, 120, 14, 13), rect(58, 120, 14, 13)},
-            {rect(74, 120, 14, 13), rect(90, 120, 14, 13)},
-            {rect(106, 120, 14, 13), rect(122, 120, 14, 13)},
-    };
-
-    public static final RectArea[][] PINK_GHOST_SPRITES = {
-            {rect(10, 135, 14, 13), rect(26, 135, 14, 13)},
-            {rect(42, 135, 14, 13), rect(58, 135, 14, 13)},
-            {rect(74, 135, 14, 13), rect(90, 135, 14, 13)},
-            {rect(106, 135, 14, 13), rect(122, 135, 14, 13)},
-    };
-
-    public static final RectArea[][] CYAN_GHOST_SPRITES = {
-            {rect(10, 150, 14, 13), rect(26, 150, 14, 13)},
-            {rect(42, 150, 14, 13), rect(58, 150, 14, 13)},
-            {rect(74, 150, 14, 13), rect(90, 150, 14, 13)},
-            {rect(106, 150, 14, 13), rect(122, 150, 14, 13)},
-    };
-
-    public static final RectArea[][] ORANGE_GHOST_SPRITES = {
-            {rect(10, 165, 14, 13), rect(26, 165, 14, 13)},
-            {rect(42, 165, 14, 13), rect(58, 165, 14, 13)},
-            {rect(74, 165, 14, 13), rect(90, 165, 14, 13)},
-            {rect(106, 165, 14, 13), rect(122, 165, 14, 13)},
-    };
 
     public static final RectArea[] GHOST_FRIGHTENED_SPRITES = {
             rect(138, 120, 14, 13), rect(154, 120, 14, 13)
@@ -174,13 +208,9 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
             rect(91, 361, 32, 32), rect(53, 361, 32, 32), rect(14, 361, 32, 32),
     };
 
-    public static final RectArea HEART_SPRITE = rect(162, 270, 18, 18);
-    public static final RectArea BLUE_BAG_SPRITE = rect(241, 363, 7, 8);
-    public static final RectArea JUNIOR_PAC_SPRITE = rect(176, 304, 7, 8);
-
     @Override
     public RectArea[] pacMunchingSprites(Direction dir) {
-        return MS_PAC_MUNCHING_SPRITES_LEFT;
+        return getSprites(SpriteID.MS_PAC_MUNCHING);
     }
 
     @Override
@@ -211,10 +241,30 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
     @Override
     public RectArea[] ghostNormalSprites(byte id, Direction dir) {
         return switch (id) {
-            case RED_GHOST_SHADOW -> RED_GHOST_SPRITES[dirIndex(dir)];
-            case PINK_GHOST_SPEEDY -> PINK_GHOST_SPRITES[dirIndex(dir)];
-            case CYAN_GHOST_BASHFUL -> CYAN_GHOST_SPRITES[dirIndex(dir)];
-            case ORANGE_GHOST_POKEY -> ORANGE_GHOST_SPRITES[dirIndex(dir)];
+            case RED_GHOST_SHADOW -> switch (dir) {
+                case Direction.RIGHT -> getSprites(SpriteID.RED_GHOST_RIGHT);
+                case Direction.LEFT -> getSprites(SpriteID.RED_GHOST_LEFT);
+                case Direction.UP -> getSprites(SpriteID.RED_GHOST_UP);
+                case Direction.DOWN -> getSprites(SpriteID.RED_GHOST_DOWN);
+            };
+            case PINK_GHOST_SPEEDY -> switch (dir) {
+                case Direction.RIGHT -> getSprites(SpriteID.PINK_GHOST_RIGHT);
+                case Direction.LEFT -> getSprites(SpriteID.PINK_GHOST_LEFT);
+                case Direction.UP -> getSprites(SpriteID.PINK_GHOST_UP);
+                case Direction.DOWN -> getSprites(SpriteID.PINK_GHOST_DOWN);
+            };
+            case CYAN_GHOST_BASHFUL -> switch (dir) {
+                case Direction.RIGHT -> getSprites(SpriteID.CYAN_GHOST_RIGHT);
+                case Direction.LEFT -> getSprites(SpriteID.CYAN_GHOST_LEFT);
+                case Direction.UP -> getSprites(SpriteID.CYAN_GHOST_UP);
+                case Direction.DOWN -> getSprites(SpriteID.CYAN_GHOST_DOWN);
+            };
+            case ORANGE_GHOST_POKEY -> switch (dir) {
+                case Direction.RIGHT -> getSprites(SpriteID.ORANGE_GHOST_RIGHT);
+                case Direction.LEFT -> getSprites(SpriteID.ORANGE_GHOST_LEFT);
+                case Direction.UP -> getSprites(SpriteID.ORANGE_GHOST_UP);
+                case Direction.DOWN -> getSprites(SpriteID.ORANGE_GHOST_DOWN);
+            };
             default -> throw new IllegalArgumentException();
         };
     }
@@ -250,12 +300,8 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
         return BONUS_VALUE_SPRITES[index];
     }
 
-    public RectArea[] pacManMunchingSprites(Direction dir) {
-        return MR_PAC_MUNCHING_SPRITES_LEFT;
-    }
-
     public SpriteAnimation createStorkFlyingAnimation() {
-        return createSpriteAnimation()
+        return createAnimation()
             .sprites(new RectArea[] { rect(157, 355, 33, 16), rect(198, 355, 33, 16)})
             .frameTicks(8)
             .endless();

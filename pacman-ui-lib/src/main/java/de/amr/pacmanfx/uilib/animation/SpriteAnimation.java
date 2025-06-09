@@ -62,7 +62,7 @@ public class SpriteAnimation extends Transition {
         }
     }
 
-    public static Builder createSpriteAnimation() {
+    public static Builder createAnimation() {
         return new Builder();
     }
 

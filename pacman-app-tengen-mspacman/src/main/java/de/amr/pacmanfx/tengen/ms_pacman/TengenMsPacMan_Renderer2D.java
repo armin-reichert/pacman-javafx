@@ -296,15 +296,15 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     public void drawGameOptions(MapCategory mapCategory, Difficulty difficulty, PacBooster pacBooster, double centerX, double y) {
         RectArea categorySprite = switch (mapCategory) {
-            case BIG     -> BIG_SPRITE;
-            case MINI    -> MINI_SPRITE;
-            case STRANGE -> STRANGE_SPRITE;
+            case BIG     -> getSprite(SpriteID.INFO_CATEGORY_BIG);
+            case MINI    -> getSprite(SpriteID.INFO_CATEGORY_MINI);
+            case STRANGE -> getSprite(SpriteID.INFO_CATEGORY_STRANGE);
             case ARCADE  -> NO_SPRITE;
         };
         RectArea difficultySprite = switch (difficulty) {
-            case EASY   -> EASY_SPRITE;
-            case HARD   -> HARD_SPRITE;
-            case CRAZY  -> CRAZY_SPRITE;
+            case EASY   -> getSprite(SpriteID.INFO_DIFFICULTY_EASY);
+            case HARD   -> getSprite(SpriteID.INFO_DIFFICULTY_HARD);
+            case CRAZY  -> getSprite(SpriteID.INFO_DIFFICULTY_CRAZY);
             case NORMAL -> NO_SPRITE;
         };
         if (pacBooster != PacBooster.OFF) {
@@ -312,7 +312,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         }
         drawSpriteScaledWithCenter(difficultySprite, centerX, y);
         drawSpriteScaledWithCenter(categorySprite, centerX + tiles_to_px(4.5), y);
-        drawSpriteScaledWithCenter(INFO_FRAME_SPRITE, centerX, y);
+        drawSpriteScaledWithCenter(getSprite(SpriteID.INFO_FRAME), centerX, y);
     }
 
     @Override

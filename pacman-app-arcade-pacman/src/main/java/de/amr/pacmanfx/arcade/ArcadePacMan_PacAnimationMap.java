@@ -14,15 +14,15 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ANIM_BIG_PAC_MAN;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
-import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createSpriteAnimation;
+import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 
 public class ArcadePacMan_PacAnimationMap extends SpriteAnimationMap<RectArea> {
 
     public ArcadePacMan_PacAnimationMap(ArcadePacMan_SpriteSheet ss) {
         super(ss);
-        set(ANIM_PAC_MUNCHING, createSpriteAnimation().sprites(ss.pacMunchingSprites(Direction.LEFT)).endless());
-        set(ANIM_PAC_DYING,    createSpriteAnimation().sprites(ss.pacDyingSprites()).frameTicks(8).end());
-        set(ANIM_BIG_PAC_MAN,      createSpriteAnimation().sprites(ss.bigPacManSprites()).frameTicks(3).endless());
+        set(ANIM_PAC_MUNCHING, createAnimation().sprites(ss.pacMunchingSprites(Direction.LEFT)).endless());
+        set(ANIM_PAC_DYING,    createAnimation().sprites(ss.pacDyingSprites()).frameTicks(8).end());
+        set(ANIM_BIG_PAC_MAN,      createAnimation().sprites(ss.bigPacManSprites()).frameTicks(3).endless());
     }
 
     @Override
