@@ -163,6 +163,7 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
     @Override
     public RectArea livesCounterSprite() { return getSprite(LIVES_COUNTER_SYMBOL); }
 
+    @Override
     public RectArea[] pacMunchingSprites(Direction dir) {
         return switch (dir) {
             case RIGHT -> getSprites(PACMAN_MUNCHING_RIGHT);
