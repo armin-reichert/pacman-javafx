@@ -4,17 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.assets;
 
-import de.amr.pacmanfx.lib.RectArea;
 import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
 
 /**
- * Sprite sheet interface for all game variants.
- *
- * @author Armin Reichert
+ * Sprite sheet interface.
  */
 public interface SpriteSheet {
-
     Image sourceImage();
-
 }
