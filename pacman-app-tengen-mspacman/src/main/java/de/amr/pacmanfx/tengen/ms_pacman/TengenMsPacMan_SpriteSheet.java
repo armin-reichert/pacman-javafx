@@ -11,7 +11,6 @@ import javafx.scene.image.Image;
 import java.util.Arrays;
 import java.util.EnumMap;
 
-import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.RectArea.rect;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.SpriteID.*;
 
@@ -250,37 +249,6 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
 
     @Override
     public RectArea[] ghostNumberSprites() { return getSprites(SpriteID.GHOST_NUMBERS); }
-
-    @Override
-    public RectArea[] ghostNormalSprites(byte id, Direction dir) {
-        return switch (id) {
-            case RED_GHOST_SHADOW -> switch (dir) {
-                case Direction.RIGHT -> getSprites(SpriteID.RED_GHOST_RIGHT);
-                case Direction.LEFT  -> getSprites(SpriteID.RED_GHOST_LEFT);
-                case Direction.UP    -> getSprites(SpriteID.RED_GHOST_UP);
-                case Direction.DOWN  -> getSprites(SpriteID.RED_GHOST_DOWN);
-            };
-            case PINK_GHOST_SPEEDY   -> switch (dir) {
-                case Direction.RIGHT -> getSprites(SpriteID.PINK_GHOST_RIGHT);
-                case Direction.LEFT  -> getSprites(SpriteID.PINK_GHOST_LEFT);
-                case Direction.UP    -> getSprites(SpriteID.PINK_GHOST_UP);
-                case Direction.DOWN  -> getSprites(SpriteID.PINK_GHOST_DOWN);
-            };
-            case CYAN_GHOST_BASHFUL  -> switch (dir) {
-                case Direction.RIGHT -> getSprites(SpriteID.CYAN_GHOST_RIGHT);
-                case Direction.LEFT  -> getSprites(SpriteID.CYAN_GHOST_LEFT);
-                case Direction.UP    -> getSprites(SpriteID.CYAN_GHOST_UP);
-                case Direction.DOWN  -> getSprites(SpriteID.CYAN_GHOST_DOWN);
-            };
-            case ORANGE_GHOST_POKEY  -> switch (dir) {
-                case Direction.RIGHT -> getSprites(SpriteID.ORANGE_GHOST_RIGHT);
-                case Direction.LEFT  -> getSprites(SpriteID.ORANGE_GHOST_LEFT);
-                case Direction.UP    -> getSprites(SpriteID.ORANGE_GHOST_UP);
-                case Direction.DOWN  -> getSprites(SpriteID.ORANGE_GHOST_DOWN);
-            };
-            default -> throw new IllegalArgumentException();
-        };
-    }
 
     @Override
     public RectArea livesCounterSprite() { return getSprite(SpriteID.LIVES_COUNTER_SYMBOL); }

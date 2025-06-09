@@ -128,37 +128,6 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
     public RectArea livesCounterSprite() { return getSprite(LIVES_COUNTER_SYMBOL); }
 
     @Override
-    public RectArea[] ghostNormalSprites(byte id, Direction dir) {
-        return getSprites(switch (id) {
-            case 0 -> switch (dir) {
-                case RIGHT -> RED_GHOST_RIGHT;
-                case LEFT -> RED_GHOST_LEFT;
-                case UP -> RED_GHOST_UP;
-                case DOWN -> RED_GHOST_DOWN;
-            };
-            case 1 -> switch (dir) {
-                case RIGHT -> PINK_GHOST_RIGHT;
-                case LEFT -> PINK_GHOST_LEFT;
-                case UP -> PINK_GHOST_UP;
-                case DOWN -> PINK_GHOST_DOWN;
-            };
-            case 2 -> switch (dir) {
-                case RIGHT -> CYAN_GHOST_RIGHT;
-                case LEFT -> CYAN_GHOST_LEFT;
-                case UP -> CYAN_GHOST_UP;
-                case DOWN -> CYAN_GHOST_DOWN;
-            };
-            case 3 -> switch (dir) {
-                case RIGHT -> ORANGE_GHOST_RIGHT;
-                case LEFT -> ORANGE_GHOST_LEFT;
-                case UP -> ORANGE_GHOST_UP;
-                case DOWN -> ORANGE_GHOST_DOWN;
-            };
-            default -> throw new IllegalArgumentException("Illegal ghost ID " + id);
-        });
-    }
-
-    @Override
     public RectArea[] ghostFrightenedSprites() { return getSprites(GHOST_FRIGHTENED); }
 
     @Override

@@ -15,7 +15,6 @@ public interface GameSpriteSheet extends SpriteSheet {
     RectArea[] ghostFlashingSprites();
     RectArea[] ghostFrightenedSprites();
     RectArea[] ghostNumberSprites();
-    RectArea[] ghostNormalSprites(byte id, Direction dir);
 
     RectArea livesCounterSprite();
     RectArea bonusSymbolSprite(byte symbol);
