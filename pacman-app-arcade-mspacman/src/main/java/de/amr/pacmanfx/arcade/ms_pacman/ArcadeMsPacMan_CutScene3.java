@@ -19,6 +19,8 @@ import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PI
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_PacAnimationMap.PAC_MAN_MUNCHING;
+import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.SpriteID.STORK;
+import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.getSprites;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
@@ -62,7 +64,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimationMap(spriteSheet));
         pacMan.setAnimations(new ArcadeMsPacMan_PacAnimationMap(spriteSheet));
 
-        storkAnimation = spriteSheet.createStorkFlyingAnimation();
+        storkAnimation =  SpriteAnimation.createAnimation().sprites(getSprites(STORK)).frameTicks(8).endless();
         storkAnimation.play();
 
         clapperboardAnimation = new ClapperboardAnimation("3", "JUNIOR");

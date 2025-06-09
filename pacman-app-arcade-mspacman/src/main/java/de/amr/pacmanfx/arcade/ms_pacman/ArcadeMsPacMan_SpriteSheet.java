@@ -50,6 +50,7 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
         BONUS_SYMBOLS,
         BONUS_VALUES,
         LIVES_COUNTER_SYMBOL,
+        STORK
     }
 
     private static final EnumMap<SpriteID, Object> SPRITE_MAP = new EnumMap<>(SpriteID.class);
@@ -97,6 +98,7 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
                 .toArray(RectArea[]::new)
         );
         SPRITE_MAP.put(LIVES_COUNTER_SYMBOL, tile(1, 0));
+        SPRITE_MAP.put(STORK, new RectArea[] {rect(489, 176, 32, 16), rect(521, 176, 32, 16)});
     }
 
     public static RectArea getSprite(SpriteID spriteID) { return (RectArea) SPRITE_MAP.get(spriteID); }
@@ -194,21 +196,5 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
     @Override
     public RectArea[] pacDyingSprites() {
         return getSprites(MS_PACMAN_DYING);
-    }
-
-    public RectArea[] mrPacManMunchingSprites(Direction dir) {
-        return getSprites(switch (dir) {
-            case RIGHT -> MR_PACMAN_MUNCHING_RIGHT;
-            case LEFT -> MR_PACMAN_MUNCHING_LEFT;
-            case UP -> MR_PACMAN_MUNCHING_UP;
-            case DOWN -> MR_PACMAN_MUNCHING_DOWN;
-        });
-    }
-
-    public SpriteAnimation createStorkFlyingAnimation() {
-        return SpriteAnimation.createAnimation()
-                .sprites(new RectArea[] {rect(489, 176, 32, 16), rect(521, 176, 32, 16)})
-                .frameTicks(8)
-                .endless();
     }
 }

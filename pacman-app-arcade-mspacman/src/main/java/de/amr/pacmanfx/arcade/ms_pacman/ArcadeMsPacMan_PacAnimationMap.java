@@ -10,6 +10,8 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
+import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.SpriteID.*;
+import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.getSprites;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
@@ -22,7 +24,7 @@ public class ArcadeMsPacMan_PacAnimationMap extends SpriteAnimationMap<RectArea>
         super(ss);
         set(ANIM_PAC_MUNCHING, createAnimation().sprites(ss.pacMunchingSprites(Direction.LEFT)).endless());
         set(ANIM_PAC_DYING,    createAnimation().sprites(ss.pacDyingSprites()).frameTicks(8).end());
-        set(PAC_MAN_MUNCHING,      createAnimation().sprites(ss.mrPacManMunchingSprites(Direction.LEFT)).frameTicks(2).endless());
+        set(PAC_MAN_MUNCHING,      createAnimation().sprites(mrPacManMunchingSprites(Direction.LEFT)).frameTicks(2).endless());
     }
 
     @Override
@@ -35,8 +37,18 @@ public class ArcadeMsPacMan_PacAnimationMap extends SpriteAnimationMap<RectArea>
         if (actor instanceof Pac pac) {
             switch (currentAnimationID) {
                 case ANIM_PAC_MUNCHING -> currentAnimation().setSprites(spriteSheet().pacMunchingSprites(pac.moveDir()));
-                case PAC_MAN_MUNCHING -> currentAnimation().setSprites(spriteSheet().mrPacManMunchingSprites(pac.moveDir()));
+                case PAC_MAN_MUNCHING -> currentAnimation().setSprites(mrPacManMunchingSprites(pac.moveDir()));
             }
         }
     }
+
+    private static RectArea[] mrPacManMunchingSprites(Direction dir) {
+        return getSprites(switch (dir) {
+            case RIGHT -> MR_PACMAN_MUNCHING_RIGHT;
+            case LEFT -> MR_PACMAN_MUNCHING_LEFT;
+            case UP -> MR_PACMAN_MUNCHING_UP;
+            case DOWN -> MR_PACMAN_MUNCHING_DOWN;
+        });
+    }
+
 }
