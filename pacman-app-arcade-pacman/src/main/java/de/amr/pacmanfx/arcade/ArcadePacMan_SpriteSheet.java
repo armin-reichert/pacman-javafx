@@ -32,6 +32,8 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
                 .toArray(RectArea[]::new);
     }
 
+    private static RectArea tile(int tileX, int tileY) { return rect(OFF_X + RASTER * tileX, RASTER * tileY, RASTER, RASTER); }
+
     private static final int RASTER = 16; // 16x16 squares in sprite sheet
     private static final int OFF_X = 456;
 
@@ -45,6 +47,8 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
         PINK_GHOST_RIGHT, PINK_GHOST_LEFT, PINK_GHOST_UP, PINK_GHOST_DOWN,
         CYAN_GHOST_RIGHT, CYAN_GHOST_LEFT, CYAN_GHOST_UP, CYAN_GHOST_DOWN,
         ORANGE_GHOST_RIGHT, ORANGE_GHOST_LEFT, ORANGE_GHOST_UP, ORANGE_GHOST_DOWN,
+        GHOST_FRIGHTENED,
+        GHOST_FLASHING,
         GHOST_NUMBERS,
         BONUS_SYMBOLS,
         BONUS_VALUES,
@@ -75,7 +79,6 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
             rect(518, 180, 20, 7), // 3000
             rect(518, 196, 20, 7), // 5000
         });
-        SPRITE_MAP.put(GALLERY_GHOSTS, sillyGalleryGhostSpriteExtraction());
         SPRITE_MAP.put(LIVES_COUNTER_SYMBOL, rect(OFF_X + 129, 15, 16, 16));
         SPRITE_MAP.put(PACMAN_MUNCHING_RIGHT, sillyPacManMunchingSpritesExtraction(0));
         SPRITE_MAP.put(PACMAN_MUNCHING_LEFT, sillyPacManMunchingSpritesExtraction(1));
@@ -98,19 +101,15 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
         SPRITE_MAP.put(ORANGE_GHOST_LEFT,  tilesRightOf(2, 7, 2));
         SPRITE_MAP.put(ORANGE_GHOST_UP,    tilesRightOf(4, 7, 2));
         SPRITE_MAP.put(ORANGE_GHOST_DOWN,  tilesRightOf(6, 7, 2));
+        SPRITE_MAP.put(GALLERY_GHOSTS,     new RectArea[] { tile(0, 4), tile(0, 5), tile(0, 6), tile(0, 7) });
+        SPRITE_MAP.put(GHOST_FRIGHTENED,   new RectArea[] { tile(8, 4), tile(9, 4) });
+        SPRITE_MAP.put(GHOST_FLASHING,     new RectArea[] { tile(8, 4), tile(9, 4), tile(10, 4), tile(11, 4)} );
     }
 
     public static RectArea getSprite(SpriteID spriteID) { return (RectArea) SPRITE_MAP.get(spriteID); }
     public static RectArea[] getSprites(SpriteID spriteID) { return (RectArea[]) SPRITE_MAP.get(spriteID); }
 
-    private static RectArea[] sillyGalleryGhostSpriteExtraction() {
-        return IntStream.range(0, 4)
-                .mapToObj(id -> rect(OFF_X + RASTER * (2 * DIR_ORDER.indexOf(Direction.RIGHT)), RASTER * (4 + id), RASTER, RASTER))
-                .toArray(RectArea[]::new);
-    }
-
     private static RectArea[] sillyPacManMunchingSpritesExtraction(int dir) {
-        final RectArea[][] sprites = new RectArea[4][];
         byte margin = 1;
         int size = RASTER - 2 * margin;
         RectArea wide = rect(OFF_X + margin, dir * 16 + margin, size, size);
@@ -127,14 +126,6 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
         }
         return sprites;
     }
-
-//        return tilesRightOf(2 * dir, 4 + id, 2);
-
-    private static final RectArea[] GHOST_FRIGHTENED_SPRITES = rectAreaArray(
-            rect(OFF_X + RASTER * (8), RASTER * (4), RASTER, RASTER),
-            rect(OFF_X + RASTER * (9), RASTER * (4), RASTER, RASTER));
-
-    private static final RectArea[] GHOST_FLASHING_SPRITES = tilesRightOf(8, 4, 4);
 
     private static final RectArea[][] GHOST_EYES_SPRITES = new RectArea[4][];
 
@@ -241,14 +232,10 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
     }
 
     @Override
-    public RectArea[] ghostFrightenedSprites() {
-        return GHOST_FRIGHTENED_SPRITES;
-    }
+    public RectArea[] ghostFrightenedSprites() { return getSprites(GHOST_FRIGHTENED); }
 
     @Override
-    public RectArea[] ghostFlashingSprites() {
-        return GHOST_FLASHING_SPRITES;
-    }
+    public RectArea[] ghostFlashingSprites() { return getSprites(GHOST_FLASHING); }
 
     @Override
     public RectArea[] ghostEyesSprites(Direction dir) {
