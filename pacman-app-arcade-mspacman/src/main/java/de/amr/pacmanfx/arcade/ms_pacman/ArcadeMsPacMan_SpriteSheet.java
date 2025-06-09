@@ -11,44 +11,60 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.image.Image;
 
+import java.util.EnumMap;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.SpriteID.*;
 import static de.amr.pacmanfx.lib.RectArea.rect;
 
 public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSpriteSheet {
 
-    private static final byte RASTER_SIZE = 16;
+    private static final byte R16 = 16;
     private static final List<Direction> ORDER = List.of(Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
-    private static final RectArea[] GHOST_NUMBER_SPRITES = SpriteSheet.rectAreaArray(
-            spriteAt(0, 8), spriteAt(1, 8), spriteAt(2, 8), spriteAt(3, 8));
-
-    private static final RectArea[] BONUS_SYMBOL_SPRITES = IntStream.range(0, 8)
-            .mapToObj(symbol -> spriteAt(3 + symbol, 0))
-            .toArray(RectArea[]::new);
-
-    private static final RectArea[] BONUS_VALUE_SPRITES = IntStream.range(0, 8)
-            .mapToObj(symbol -> spriteAt(3 + symbol, 1))
-            .toArray(RectArea[]::new);
-
-    private static final RectArea LIVES_COUNTER_SPRITE = spriteAt(1, 0);
-
-    private static final RectArea[][] MS_PAC_MAN_MUNCHING_SPRITES = new RectArea[4][];
-
-    static {
-        for (byte dir = 0; dir < 4; ++dir) {
-            RectArea wide = spriteAt(0, dir), open = spriteAt(1, dir), closed = spriteAt(2, dir);
-            MS_PAC_MAN_MUNCHING_SPRITES[dir] = SpriteSheet.rectAreaArray(open, open, wide, wide, open, open, open, closed, closed);
-        }
+    public enum SpriteID {
+        MS_PACMAN_MUNCHING_RIGHT, MS_PACMAN_MUNCHING_LEFT, MS_PACMAN_MUNCHING_UP, MS_PACMAN_MUNCHING_DOWN,
+        MS_PACMAN_DYING,
+        GHOST_NUMBERS,
+        BONUS_SYMBOLS,
+        BONUS_VALUES,
+        LIVES_COUNTER_SYMBOL,
     }
 
-    private static final RectArea[] MS_PAC_MAN_DYING_SPRITES;
-
+    private static final EnumMap<SpriteID, Object> SPRITE_MAP = new EnumMap<>(SpriteID.class);
     static {
+        SPRITE_MAP.put(MS_PACMAN_MUNCHING_RIGHT, crappyPacManMunchingSpritesExtraction(0));
+        SPRITE_MAP.put(MS_PACMAN_MUNCHING_LEFT,  crappyPacManMunchingSpritesExtraction(1));
+        SPRITE_MAP.put(MS_PACMAN_MUNCHING_UP,    crappyPacManMunchingSpritesExtraction(2));
+        SPRITE_MAP.put(MS_PACMAN_MUNCHING_DOWN,  crappyPacManMunchingSpritesExtraction(3));
+        SPRITE_MAP.put(MS_PACMAN_DYING,          crappyPacManDyingSpriteExtraction());
+        SPRITE_MAP.put(GHOST_NUMBERS, new RectArea[] {
+            spriteAt(0, 8), spriteAt(1, 8), spriteAt(2, 8), spriteAt(3, 8)
+        });
+        SPRITE_MAP.put(BONUS_SYMBOLS, IntStream.range(0, 8)
+                .mapToObj(symbol -> spriteAt(3 + symbol, 0))
+                .toArray(RectArea[]::new)
+        );
+        SPRITE_MAP.put(BONUS_VALUES, IntStream.range(0, 8)
+                .mapToObj(symbol -> spriteAt(3 + symbol, 1))
+                .toArray(RectArea[]::new)
+        );
+        SPRITE_MAP.put(LIVES_COUNTER_SYMBOL, spriteAt(1, 0));
+    }
+
+    public static RectArea getSprite(SpriteID spriteID) { return (RectArea) SPRITE_MAP.get(spriteID); }
+    public static RectArea[] getSprites(SpriteID spriteID) { return (RectArea[]) SPRITE_MAP.get(spriteID); }
+
+    private static RectArea[] crappyPacManMunchingSpritesExtraction(int dir) {
+        RectArea wide = spriteAt(0, dir), open = spriteAt(1, dir), closed = spriteAt(2, dir);
+        return new RectArea[] {open, open, wide, wide, open, open, open, closed, closed};
+    }
+
+    private static RectArea[] crappyPacManDyingSpriteExtraction() {
         RectArea right = spriteAt(1, 0), left = spriteAt(1, 1), up = spriteAt(1, 2), down = spriteAt(1, 3);
         // TODO: this is not yet 100% correct
-        MS_PAC_MAN_DYING_SPRITES = SpriteSheet.rectAreaArray(down, left, up, right, down, left, up, right, down, left, up);
+        return new RectArea[] {down, left, up, right, down, left, up, right, down, left, up};
     }
 
     private static final RectArea[][][] GHOSTS_NORMAL_SPRITES = new RectArea[4][4][];
@@ -93,27 +109,27 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
 
     // third "column" contains the sprites (first two columns the maze images)
     private static RectArea spriteAt(int tileX, int tileY) {
-        return rect(456 + RASTER_SIZE * tileX, RASTER_SIZE * tileY, RASTER_SIZE, RASTER_SIZE);
+        return rect(456 + R16 * tileX, R16 * tileY, R16, R16);
     }
 
     @Override
     public RectArea[] ghostNumberSprites() {
-        return GHOST_NUMBER_SPRITES;
+        return getSprites(GHOST_NUMBERS);
     }
 
     @Override
     public RectArea bonusSymbolSprite(byte symbol) {
-        return BONUS_SYMBOL_SPRITES[symbol];
+        return getSprite(BONUS_SYMBOLS);
     }
 
     @Override
     public RectArea bonusValueSprite(byte symbol) {
-        return BONUS_VALUE_SPRITES[symbol];
+        return getSprite(BONUS_VALUES);
     }
 
     @Override
     public RectArea livesCounterSprite() {
-        return LIVES_COUNTER_SPRITE;
+        return getSprite(LIVES_COUNTER_SYMBOL);
     }
 
     @Override
@@ -138,12 +154,17 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
 
     @Override
     public RectArea[] pacMunchingSprites(Direction dir) {
-        return MS_PAC_MAN_MUNCHING_SPRITES[ORDER.indexOf(dir)];
+        return getSprites(switch (dir) {
+            case RIGHT -> MS_PACMAN_MUNCHING_RIGHT;
+            case LEFT -> MS_PACMAN_MUNCHING_LEFT;
+            case UP -> MS_PACMAN_MUNCHING_UP;
+            case DOWN -> MS_PACMAN_MUNCHING_DOWN;
+        });
     }
 
     @Override
     public RectArea[] pacDyingSprites() {
-        return MS_PAC_MAN_DYING_SPRITES;
+        return getSprites(MS_PACMAN_DYING);
     }
 
     public RectArea[] mrPacManMunchingSprites(Direction dir) {

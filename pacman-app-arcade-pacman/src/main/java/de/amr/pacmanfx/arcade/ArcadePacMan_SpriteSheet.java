@@ -84,11 +84,11 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
             rect(518, 196, 20, 7), // 5000
         });
         SPRITE_MAP.put(LIVES_COUNTER_SYMBOL, rect(OFF_X + 129, 15, 16, 16));
-        SPRITE_MAP.put(PACMAN_MUNCHING_RIGHT, sillyPacManMunchingSpritesExtraction(0));
-        SPRITE_MAP.put(PACMAN_MUNCHING_LEFT,  sillyPacManMunchingSpritesExtraction(1));
-        SPRITE_MAP.put(PACMAN_MUNCHING_UP,    sillyPacManMunchingSpritesExtraction(2));
-        SPRITE_MAP.put(PACMAN_MUNCHING_DOWN,  sillyPacManMunchingSpritesExtraction(3));
-        SPRITE_MAP.put(PACMAN_DYING,          sillyPacManDyingSpriteExtraction());
+        SPRITE_MAP.put(PACMAN_MUNCHING_RIGHT, crappyPacManMunchingSpritesExtraction(0));
+        SPRITE_MAP.put(PACMAN_MUNCHING_LEFT,  crappyPacManMunchingSpritesExtraction(1));
+        SPRITE_MAP.put(PACMAN_MUNCHING_UP,    crappyPacManMunchingSpritesExtraction(2));
+        SPRITE_MAP.put(PACMAN_MUNCHING_DOWN,  crappyPacManMunchingSpritesExtraction(3));
+        SPRITE_MAP.put(PACMAN_DYING,          crappyPacManDyingSpriteExtraction());
         SPRITE_MAP.put(RED_GHOST_RIGHT,       tilesRightOf(0, 4, 2));
         SPRITE_MAP.put(RED_GHOST_LEFT,        tilesRightOf(2, 4, 2));
         SPRITE_MAP.put(RED_GHOST_UP,          tilesRightOf(4, 4, 2));
@@ -130,7 +130,7 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
     public static RectArea getSprite(SpriteID spriteID) { return (RectArea) SPRITE_MAP.get(spriteID); }
     public static RectArea[] getSprites(SpriteID spriteID) { return (RectArea[]) SPRITE_MAP.get(spriteID); }
 
-    private static RectArea[] sillyPacManMunchingSpritesExtraction(int dir) {
+    private static RectArea[] crappyPacManMunchingSpritesExtraction(int dir) {
         byte margin = 1;
         int size = R16 - 2 * margin;
         RectArea wide = rect(OFF_X + margin, dir * 16 + margin, size, size);
@@ -139,7 +139,7 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
         return rectAreaArray(closed, closed, middle, middle, wide, wide, middle, middle);
     }
 
-    private static RectArea[] sillyPacManDyingSpriteExtraction() {
+    private static RectArea[] crappyPacManDyingSpriteExtraction() {
         return IntStream.range(0, 12)
                 .mapToObj(i -> rect(504 + i * R16, 0, R16 - 1, i == 11 ? R16 : R16 - 1))
                 .toArray(RectArea[]::new);
