@@ -221,9 +221,6 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
     public static RectArea[] getSprites(SpriteID spriteID) { return (RectArea[]) SPRITE_MAP.get(spriteID); }
 
     @Override
-    public RectArea[] pacMunchingSprites(Direction dir) { return getSprites(MS_PAC_MUNCHING); }
-
-    @Override
     public RectArea[] pacDyingSprites() {
         // TODO this is nuts
         // renderer rotates single sprite to create animation effect

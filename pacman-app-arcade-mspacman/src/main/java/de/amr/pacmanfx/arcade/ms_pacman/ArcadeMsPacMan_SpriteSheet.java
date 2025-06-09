@@ -60,10 +60,10 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
         SPRITE_MAP.put(MS_PACMAN_MUNCHING_UP,    crappyPacManMunchingSpritesExtraction(2));
         SPRITE_MAP.put(MS_PACMAN_MUNCHING_DOWN,  crappyPacManMunchingSpritesExtraction(3));
         SPRITE_MAP.put(MS_PACMAN_DYING,          crappyPacManDyingSpriteExtraction());
-        SPRITE_MAP.put(MR_PACMAN_MUNCHING_RIGHT, new RectArea[] {tile(0, 9),  tile(1, 9),  tile(2,9)});
-        SPRITE_MAP.put(MR_PACMAN_MUNCHING_LEFT,  new RectArea[] {tile(0, 10), tile(1, 10), tile(2,9)});
-        SPRITE_MAP.put(MR_PACMAN_MUNCHING_UP,    new RectArea[] {tile(0, 11), tile(1, 11), tile(2,9)});
-        SPRITE_MAP.put(MR_PACMAN_MUNCHING_DOWN,  new RectArea[] {tile(0, 12), tile(1, 12), tile(2,9)});
+        SPRITE_MAP.put(MR_PACMAN_MUNCHING_RIGHT, new RectArea[] {tile(0, 9),  tile(1, 9),  tile(2, 9)});
+        SPRITE_MAP.put(MR_PACMAN_MUNCHING_LEFT,  new RectArea[] {tile(0, 10), tile(1, 10), tile(2, 9)});
+        SPRITE_MAP.put(MR_PACMAN_MUNCHING_UP,    new RectArea[] {tile(0, 11), tile(1, 11), tile(2, 9)});
+        SPRITE_MAP.put(MR_PACMAN_MUNCHING_DOWN,  new RectArea[] {tile(0, 12), tile(1, 12), tile(2, 9)});
         SPRITE_MAP.put(RED_GHOST_RIGHT,          tilesRightOf(0, 4, 2));
         SPRITE_MAP.put(RED_GHOST_LEFT,           tilesRightOf(2, 4, 2));
         SPRITE_MAP.put(RED_GHOST_UP,             tilesRightOf(4, 4, 2));
@@ -87,24 +87,18 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
         SPRITE_MAP.put(GHOST_EYES_UP,            tilesRightOf(10, 5, 1));
         SPRITE_MAP.put(GHOST_EYES_DOWN,          tilesRightOf(11, 5, 1));
         SPRITE_MAP.put(GHOST_NUMBERS,            tilesRightOf(0, 8, 4));
-        SPRITE_MAP.put(BONUS_SYMBOLS, IntStream.range(0, 8)
-                .mapToObj(symbol -> tile(3 + symbol, 0))
-                .toArray(RectArea[]::new)
-        );
-        SPRITE_MAP.put(BONUS_VALUES, IntStream.range(0, 8)
-                .mapToObj(symbol -> tile(3 + symbol, 1))
-                .toArray(RectArea[]::new)
-        );
-        SPRITE_MAP.put(LIVES_COUNTER_SYMBOL, tile(1, 0));
-        SPRITE_MAP.put(STORK, new RectArea[] {rect(489, 176, 32, 16), rect(521, 176, 32, 16)});
-        SPRITE_MAP.put(CLAPPERBOARD, new RectArea[] {
-                rect(456, 208, 32, 32),  // open
-                rect(488, 208, 32, 32),  // middle
-                rect(520, 208, 32, 32)   // closed
+        SPRITE_MAP.put(BONUS_SYMBOLS,            IntStream.range(0, 8).mapToObj(symbol -> tile(3 + symbol, 0)).toArray(RectArea[]::new));
+        SPRITE_MAP.put(BONUS_VALUES,             IntStream.range(0, 8).mapToObj(symbol -> tile(3 + symbol, 1)).toArray(RectArea[]::new));
+        SPRITE_MAP.put(LIVES_COUNTER_SYMBOL,     tile(1, 0));
+        SPRITE_MAP.put(STORK,                    new RectArea[] {rect(489, 176, 32, 16), rect(521, 176, 32, 16)});
+        SPRITE_MAP.put(CLAPPERBOARD,             new RectArea[] {
+                                                    rect(456, 208, 32, 32),  // open
+                                                    rect(488, 208, 32, 32),  // middle
+                                                    rect(520, 208, 32, 32)   // closed
         });
-        SPRITE_MAP.put(HEART, tile(2, 10));
-        SPRITE_MAP.put(BLUE_BAG, rect(488, 199, 8, 8));
-        SPRITE_MAP.put(JUNIOR_PAC, rect(509, 200, 8, 8));
+        SPRITE_MAP.put(HEART,                    tile(2, 10));
+        SPRITE_MAP.put(BLUE_BAG,                 rect(488, 199, 8, 8));
+        SPRITE_MAP.put(JUNIOR_PAC,               rect(509, 200, 8, 8));
     }
 
     public static RectArea getSprite(SpriteID spriteID) { return (RectArea) SPRITE_MAP.get(spriteID); }
@@ -177,16 +171,6 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
             case Direction.LEFT  -> GHOST_EYES_LEFT;
             case Direction.UP    -> GHOST_EYES_UP;
             case Direction.DOWN  -> GHOST_EYES_DOWN;
-        });
-    }
-
-    @Override
-    public RectArea[] pacMunchingSprites(Direction dir) {
-        return getSprites(switch (dir) {
-            case RIGHT -> MS_PACMAN_MUNCHING_RIGHT;
-            case LEFT -> MS_PACMAN_MUNCHING_LEFT;
-            case UP -> MS_PACMAN_MUNCHING_UP;
-            case DOWN -> MS_PACMAN_MUNCHING_DOWN;
         });
     }
 

@@ -22,9 +22,9 @@ public class ArcadeMsPacMan_PacAnimationMap extends SpriteAnimationMap<RectArea>
 
     public ArcadeMsPacMan_PacAnimationMap(ArcadeMsPacMan_SpriteSheet ss) {
         super(ss);
-        set(ANIM_PAC_MUNCHING, createAnimation().sprites(ss.pacMunchingSprites(Direction.LEFT)).endless());
+        set(ANIM_PAC_MUNCHING, createAnimation().sprites(msPacManMunchingSprites(Direction.LEFT)).endless());
         set(ANIM_PAC_DYING,    createAnimation().sprites(ss.pacDyingSprites()).frameTicks(8).end());
-        set(PAC_MAN_MUNCHING,      createAnimation().sprites(mrPacManMunchingSprites(Direction.LEFT)).frameTicks(2).endless());
+        set(PAC_MAN_MUNCHING,  createAnimation().sprites(mrPacManMunchingSprites(Direction.LEFT)).frameTicks(2).endless());
     }
 
     @Override
@@ -36,13 +36,22 @@ public class ArcadeMsPacMan_PacAnimationMap extends SpriteAnimationMap<RectArea>
     protected void updateActorSprites(Actor actor) {
         if (actor instanceof Pac pac) {
             switch (currentAnimationID) {
-                case ANIM_PAC_MUNCHING -> currentAnimation().setSprites(spriteSheet().pacMunchingSprites(pac.moveDir()));
+                case ANIM_PAC_MUNCHING -> currentAnimation().setSprites(msPacManMunchingSprites(pac.moveDir()));
                 case PAC_MAN_MUNCHING -> currentAnimation().setSprites(mrPacManMunchingSprites(pac.moveDir()));
             }
         }
     }
 
-    private static RectArea[] mrPacManMunchingSprites(Direction dir) {
+    private RectArea[] msPacManMunchingSprites(Direction dir) {
+        return getSprites(switch (dir) {
+            case RIGHT -> MS_PACMAN_MUNCHING_RIGHT;
+            case LEFT -> MS_PACMAN_MUNCHING_LEFT;
+            case UP -> MS_PACMAN_MUNCHING_UP;
+            case DOWN -> MS_PACMAN_MUNCHING_DOWN;
+        });
+    }
+
+    private RectArea[] mrPacManMunchingSprites(Direction dir) {
         return getSprites(switch (dir) {
             case RIGHT -> MR_PACMAN_MUNCHING_RIGHT;
             case LEFT -> MR_PACMAN_MUNCHING_LEFT;
