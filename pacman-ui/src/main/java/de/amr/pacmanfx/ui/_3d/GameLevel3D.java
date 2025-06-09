@@ -44,8 +44,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
-import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
-import static de.amr.pacmanfx.uilib.Ufx.doAfterSec;
+import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -270,7 +269,7 @@ public class GameLevel3D {
         int n = 0;
         for (byte symbol : levelCounter.symbols()) {
             var material = new PhongMaterial(Color.WHITE);
-            material.setDiffuseMap(spriteSheet.crop(spriteSheet.bonusSymbolSprite(symbol)));
+            material.setDiffuseMap(crop(spriteSheet.sourceImage(), spriteSheet.bonusSymbolSprite(symbol)));
 
             var cube = new Box(TS, TS, TS);
             cube.setMaterial(material);
@@ -340,8 +339,8 @@ public class GameLevel3D {
             mazeGroup.getChildren().remove(bonus3D);
         }
         bonus3D = new Bonus3D(bonus,
-            spriteSheet.crop(spriteSheet.bonusSymbolSprite(bonus.symbol())),
-            spriteSheet.crop(spriteSheet.bonusValueSprite(bonus.symbol())));
+            crop(spriteSheet.sourceImage(), spriteSheet.bonusSymbolSprite(bonus.symbol())),
+            crop(spriteSheet.sourceImage(), spriteSheet.bonusValueSprite(bonus.symbol())));
         bonus3D.showEdible();
         mazeGroup.getChildren().add(bonus3D);
     }

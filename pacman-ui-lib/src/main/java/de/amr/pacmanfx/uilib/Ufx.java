@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib;
 
+import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.nes.NES_Palette;
 import javafx.animation.Animation;
@@ -225,6 +226,30 @@ public interface Ufx {
         }
         return target;
     }
+
+    /**
+     * @param sourceImage source image
+     * @param r rectangular region
+     * @return image copy of region
+     */
+    static Image crop(Image sourceImage, RectArea r) {
+        return crop(sourceImage, r.x(), r.y(), r.width(), r.height());
+    }
+
+    /**
+     * @param sourceImage source image
+     * @param x      region x-coordinate
+     * @param y      region y-coordinate
+     * @param width  region width
+     * @param height region height
+     * @return image copy of region
+     */
+    static Image crop(Image sourceImage, int x, int y, int width, int height) {
+        var section = new WritableImage(width, height);
+        section.getPixelWriter().setPixels(0, 0, width, height, sourceImage.getPixelReader(), x, y);
+        return section;
+    }
+
 
     static Image exchangeColors(Map<String, ColorChange> changes, Image source) {
         WritableImage target = new WritableImage((int) source.getWidth(), (int) source.getHeight());
