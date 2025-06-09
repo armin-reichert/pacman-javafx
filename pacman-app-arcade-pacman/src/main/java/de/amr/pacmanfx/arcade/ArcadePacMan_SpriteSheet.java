@@ -10,7 +10,6 @@ import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import javafx.scene.image.Image;
 
 import java.util.EnumMap;
-import java.util.List;
 import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.SpriteID.*;
@@ -37,12 +36,9 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
     private static final int R16 = 16; // 16x16 squares in sprite sheet
     private static final int OFF_X = 456;
 
-    private static final List<Direction> DIR_ORDER = List.of(Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
-
-    static final RectArea FULL_MAZE_SPRITE = rect(0, 0, 224, 248);
-    static final RectArea EMPTY_MAZE_SPRITE = rect(228, 0, 224, 248);
-
     public enum SpriteID {
+        MAP_FULL,
+        MAP_EMPTY,
         RED_GHOST_RIGHT, RED_GHOST_LEFT, RED_GHOST_UP, RED_GHOST_DOWN,
         PINK_GHOST_RIGHT, PINK_GHOST_LEFT, PINK_GHOST_UP, PINK_GHOST_DOWN,
         CYAN_GHOST_RIGHT, CYAN_GHOST_LEFT, CYAN_GHOST_UP, CYAN_GHOST_DOWN,
@@ -66,6 +62,8 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
 
     private static final EnumMap<SpriteID, Object> SPRITE_MAP = new EnumMap<>(SpriteID.class);
     static {
+        SPRITE_MAP.put(MAP_FULL, rect(0, 0, 224, 248));
+        SPRITE_MAP.put(MAP_EMPTY, rect(228, 0, 224, 248));
         SPRITE_MAP.put(GHOST_NUMBERS, new RectArea[] {
             rect(456, 133, 15, 7),  // 200
             rect(472, 133, 15, 7),  // 400

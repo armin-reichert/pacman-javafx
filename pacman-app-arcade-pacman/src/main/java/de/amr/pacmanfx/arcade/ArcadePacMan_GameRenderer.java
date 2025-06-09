@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade;
 
+import de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.SpriteID;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.LevelCounter;
@@ -16,8 +17,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.EMPTY_MAZE_SPRITE;
-import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.FULL_MAZE_SPRITE;
+import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.getSprite;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
 import static java.util.Objects.requireNonNull;
 
@@ -58,9 +58,9 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
             ctx.drawImage(theAssets().image("pacman.flashing_maze"), x, y);
         }
         else if (level.uneatenFoodCount() == 0) {
-            drawSprite(EMPTY_MAZE_SPRITE, x, y);
+            drawSprite(getSprite(SpriteID.MAP_EMPTY), x, y);
         } else {
-            drawSprite(FULL_MAZE_SPRITE, x, y);
+            drawSprite(getSprite(SpriteID.MAP_FULL), x, y);
             overPaintEatenPelletTiles(level, backgroundColor);
             overPaintEnergizerTiles(level, tile -> !energizerHighlighted || level.tileContainsEatenFood(tile), backgroundColor);
         }
