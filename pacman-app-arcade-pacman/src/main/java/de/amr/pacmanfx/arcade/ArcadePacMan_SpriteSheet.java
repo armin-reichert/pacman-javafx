@@ -19,12 +19,6 @@ import static java.util.Objects.requireNonNull;
 
 public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteSheet {
 
-    /**
-     * @param tileX    grid column (in tile coordinates)
-     * @param tileY    grid row (in tile coordinates)
-     * @param numTiles number of tiles
-     * @return horizontal stripe of tiles at given grid position
-     */
     private static RectArea[] tilesRightOf(int tileX, int tileY, int numTiles) {
         return IntStream.range(tileX, tileX + numTiles)
                 .mapToObj(x -> rect(OFF_X + R16 * x, R16 * tileY, R16, R16))
@@ -156,9 +150,7 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
     public RectArea bonusSymbolSprite(byte symbol) { return getSprites(BONUS_SYMBOLS)[symbol]; }
 
     @Override
-    public RectArea bonusValueSprite(byte symbol) {
-        return getSprites(BONUS_VALUES)[symbol];
-    }
+    public RectArea bonusValueSprite(byte symbol) { return getSprites(BONUS_VALUES)[symbol]; }
 
     @Override
     public RectArea livesCounterSprite() { return getSprite(LIVES_COUNTER_SYMBOL); }

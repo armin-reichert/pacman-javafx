@@ -21,11 +21,27 @@ import static de.amr.pacmanfx.lib.RectArea.rect;
 public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSpriteSheet {
 
     private static final byte R16 = 16;
+    private static final int OFF_X = 456;
     private static final List<Direction> ORDER = List.of(Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
+
+    // third "column" contains the sprites (first two columns the maze images)
+    private static RectArea tile(int tileX, int tileY) {
+        return rect(456 + R16 * tileX, R16 * tileY, R16, R16);
+    }
+
+    private static RectArea[] tilesRightOf(int tileX, int tileY, int numTiles) {
+        return IntStream.range(tileX, tileX + numTiles)
+                .mapToObj(x -> rect(OFF_X + R16 * x, R16 * tileY, R16, R16))
+                .toArray(RectArea[]::new);
+    }
 
     public enum SpriteID {
         MS_PACMAN_MUNCHING_RIGHT, MS_PACMAN_MUNCHING_LEFT, MS_PACMAN_MUNCHING_UP, MS_PACMAN_MUNCHING_DOWN,
         MS_PACMAN_DYING,
+        RED_GHOST_RIGHT, RED_GHOST_LEFT, RED_GHOST_UP, RED_GHOST_DOWN,
+        PINK_GHOST_RIGHT, PINK_GHOST_LEFT, PINK_GHOST_UP, PINK_GHOST_DOWN,
+        CYAN_GHOST_RIGHT, CYAN_GHOST_LEFT, CYAN_GHOST_UP, CYAN_GHOST_DOWN,
+        ORANGE_GHOST_RIGHT, ORANGE_GHOST_LEFT, ORANGE_GHOST_UP, ORANGE_GHOST_DOWN,
         GHOST_NUMBERS,
         BONUS_SYMBOLS,
         BONUS_VALUES,
@@ -39,54 +55,61 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
         SPRITE_MAP.put(MS_PACMAN_MUNCHING_UP,    crappyPacManMunchingSpritesExtraction(2));
         SPRITE_MAP.put(MS_PACMAN_MUNCHING_DOWN,  crappyPacManMunchingSpritesExtraction(3));
         SPRITE_MAP.put(MS_PACMAN_DYING,          crappyPacManDyingSpriteExtraction());
+        // new RectArea[] {tile(2 * dir, 4 + id), tile(2 * dir + 1, 4 + id)}
+        SPRITE_MAP.put(RED_GHOST_RIGHT,          tilesRightOf(0, 4, 2));
+        SPRITE_MAP.put(RED_GHOST_LEFT,           tilesRightOf(2, 4, 2));
+        SPRITE_MAP.put(RED_GHOST_UP,             tilesRightOf(4, 4, 2));
+        SPRITE_MAP.put(RED_GHOST_DOWN,           tilesRightOf(6, 4, 2));
+        SPRITE_MAP.put(PINK_GHOST_RIGHT,         tilesRightOf(0, 5, 2));
+        SPRITE_MAP.put(PINK_GHOST_LEFT,          tilesRightOf(2, 5, 2));
+        SPRITE_MAP.put(PINK_GHOST_UP,            tilesRightOf(4, 5, 2));
+        SPRITE_MAP.put(PINK_GHOST_DOWN,          tilesRightOf(6, 5, 2));
+        SPRITE_MAP.put(CYAN_GHOST_RIGHT,         tilesRightOf(0, 6, 2));
+        SPRITE_MAP.put(CYAN_GHOST_LEFT,          tilesRightOf(2, 6, 2));
+        SPRITE_MAP.put(CYAN_GHOST_UP,            tilesRightOf(4, 6, 2));
+        SPRITE_MAP.put(CYAN_GHOST_DOWN,          tilesRightOf(6, 6, 2));
+        SPRITE_MAP.put(ORANGE_GHOST_RIGHT,       tilesRightOf(0, 7, 2));
+        SPRITE_MAP.put(ORANGE_GHOST_LEFT,        tilesRightOf(2, 7, 2));
+        SPRITE_MAP.put(ORANGE_GHOST_UP,          tilesRightOf(4, 7, 2));
+        SPRITE_MAP.put(ORANGE_GHOST_DOWN,        tilesRightOf(6, 7, 2));
         SPRITE_MAP.put(GHOST_NUMBERS, new RectArea[] {
-            spriteAt(0, 8), spriteAt(1, 8), spriteAt(2, 8), spriteAt(3, 8)
+            tile(0, 8), tile(1, 8), tile(2, 8), tile(3, 8)
         });
         SPRITE_MAP.put(BONUS_SYMBOLS, IntStream.range(0, 8)
-                .mapToObj(symbol -> spriteAt(3 + symbol, 0))
+                .mapToObj(symbol -> tile(3 + symbol, 0))
                 .toArray(RectArea[]::new)
         );
         SPRITE_MAP.put(BONUS_VALUES, IntStream.range(0, 8)
-                .mapToObj(symbol -> spriteAt(3 + symbol, 1))
+                .mapToObj(symbol -> tile(3 + symbol, 1))
                 .toArray(RectArea[]::new)
         );
-        SPRITE_MAP.put(LIVES_COUNTER_SYMBOL, spriteAt(1, 0));
+        SPRITE_MAP.put(LIVES_COUNTER_SYMBOL, tile(1, 0));
     }
 
     public static RectArea getSprite(SpriteID spriteID) { return (RectArea) SPRITE_MAP.get(spriteID); }
     public static RectArea[] getSprites(SpriteID spriteID) { return (RectArea[]) SPRITE_MAP.get(spriteID); }
 
     private static RectArea[] crappyPacManMunchingSpritesExtraction(int dir) {
-        RectArea wide = spriteAt(0, dir), open = spriteAt(1, dir), closed = spriteAt(2, dir);
+        RectArea wide = tile(0, dir), open = tile(1, dir), closed = tile(2, dir);
         return new RectArea[] {open, open, wide, wide, open, open, open, closed, closed};
     }
 
     private static RectArea[] crappyPacManDyingSpriteExtraction() {
-        RectArea right = spriteAt(1, 0), left = spriteAt(1, 1), up = spriteAt(1, 2), down = spriteAt(1, 3);
+        RectArea right = tile(1, 0), left = tile(1, 1), up = tile(1, 2), down = tile(1, 3);
         // TODO: this is not yet 100% correct
         return new RectArea[] {down, left, up, right, down, left, up, right, down, left, up};
     }
 
-    private static final RectArea[][][] GHOSTS_NORMAL_SPRITES = new RectArea[4][4][];
-
-    static {
-        for (byte id = 0; id < 4; ++id) {
-            for (byte dir = 0; dir < 4; ++dir) {
-                GHOSTS_NORMAL_SPRITES[id][dir] = SpriteSheet.rectAreaArray(spriteAt(2 * dir, 4 + id), spriteAt(2 * dir + 1, 4 + id));
-            }
-        }
-    }
-
-    private static final RectArea[] GHOST_FRIGHTENED_SPRITES = SpriteSheet.rectAreaArray(spriteAt(8, 4), spriteAt(9, 4));
+    private static final RectArea[] GHOST_FRIGHTENED_SPRITES = SpriteSheet.rectAreaArray(tile(8, 4), tile(9, 4));
 
     private static final RectArea[] GHOST_FLASHING_SPRITES = SpriteSheet.rectAreaArray(
-            spriteAt(8, 4), spriteAt(9, 4), spriteAt(10, 4), spriteAt(11, 4));
+            tile(8, 4), tile(9, 4), tile(10, 4), tile(11, 4));
 
     private static final RectArea[][] GHOST_EYES_SPRITES = new RectArea[4][];
 
     static {
         for (byte dir = 0; dir < 4; ++dir) {
-            GHOST_EYES_SPRITES[dir] = SpriteSheet.rectAreaArray(spriteAt(8 + dir, 5));
+            GHOST_EYES_SPRITES[dir] = SpriteSheet.rectAreaArray(tile(8 + dir, 5));
         }
     }
 
@@ -94,11 +117,11 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
 
     static {
         for (byte dir = 0; dir < 4; ++dir) {
-            MR_PAC_MAN_MUNCHING_SPRITES[dir] = SpriteSheet.rectAreaArray(spriteAt(0, 9 + dir), spriteAt(1, 9 + dir), spriteAt(2, 9));
+            MR_PAC_MAN_MUNCHING_SPRITES[dir] = SpriteSheet.rectAreaArray(tile(0, 9 + dir), tile(1, 9 + dir), tile(2, 9));
         }
     }
 
-    static final RectArea HEART_SPRITE = spriteAt(2, 10);
+    static final RectArea HEART_SPRITE = tile(2, 10);
     static final RectArea BLUE_BAG_SPRITE = rect(488, 199, 8, 8);
     static final RectArea JUNIOR_PAC_SPRITE = rect(509, 200, 8, 8);
 
@@ -107,34 +130,47 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
             rect(488, 208, 32, 32),  // middle
             rect(520, 208, 32, 32)); // closed
 
-    // third "column" contains the sprites (first two columns the maze images)
-    private static RectArea spriteAt(int tileX, int tileY) {
-        return rect(456 + R16 * tileX, R16 * tileY, R16, R16);
-    }
+    @Override
+    public RectArea[] ghostNumberSprites() { return getSprites(GHOST_NUMBERS); }
 
     @Override
-    public RectArea[] ghostNumberSprites() {
-        return getSprites(GHOST_NUMBERS);
-    }
+    public RectArea bonusSymbolSprite(byte symbol) { return getSprites(BONUS_SYMBOLS)[symbol]; }
 
     @Override
-    public RectArea bonusSymbolSprite(byte symbol) {
-        return getSprite(BONUS_SYMBOLS);
-    }
+    public RectArea bonusValueSprite(byte symbol) { return getSprites(BONUS_VALUES)[symbol]; }
 
     @Override
-    public RectArea bonusValueSprite(byte symbol) {
-        return getSprite(BONUS_VALUES);
-    }
-
-    @Override
-    public RectArea livesCounterSprite() {
-        return getSprite(LIVES_COUNTER_SYMBOL);
-    }
+    public RectArea livesCounterSprite() { return getSprite(LIVES_COUNTER_SYMBOL); }
 
     @Override
     public RectArea[] ghostNormalSprites(byte id, Direction dir) {
-        return GHOSTS_NORMAL_SPRITES[id][ORDER.indexOf(dir)];
+        return getSprites(switch (id) {
+            case 0 -> switch (dir) {
+                case RIGHT -> RED_GHOST_RIGHT;
+                case LEFT -> RED_GHOST_LEFT;
+                case UP -> RED_GHOST_UP;
+                case DOWN -> RED_GHOST_DOWN;
+            };
+            case 1 -> switch (dir) {
+                case RIGHT -> PINK_GHOST_RIGHT;
+                case LEFT -> PINK_GHOST_LEFT;
+                case UP -> PINK_GHOST_UP;
+                case DOWN -> PINK_GHOST_DOWN;
+            };
+            case 2 -> switch (dir) {
+                case RIGHT -> CYAN_GHOST_RIGHT;
+                case LEFT -> CYAN_GHOST_LEFT;
+                case UP -> CYAN_GHOST_UP;
+                case DOWN -> CYAN_GHOST_DOWN;
+            };
+            case 3 -> switch (dir) {
+                case RIGHT -> ORANGE_GHOST_RIGHT;
+                case LEFT -> ORANGE_GHOST_LEFT;
+                case UP -> ORANGE_GHOST_UP;
+                case DOWN -> ORANGE_GHOST_DOWN;
+            };
+            default -> throw new IllegalArgumentException("Illegal ghost ID " + id);
+        });
     }
 
     @Override
