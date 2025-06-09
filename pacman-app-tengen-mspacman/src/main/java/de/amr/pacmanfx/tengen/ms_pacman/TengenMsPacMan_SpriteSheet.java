@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import javafx.scene.image.Image;
+import org.w3c.dom.css.Rect;
 
 import java.util.Arrays;
 
@@ -32,6 +33,12 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
         PINK_GHOST_RIGHT, PINK_GHOST_LEFT, PINK_GHOST_UP, PINK_GHOST_DOWN,
         CYAN_GHOST_RIGHT, CYAN_GHOST_LEFT, CYAN_GHOST_UP, CYAN_GHOST_DOWN,
         ORANGE_GHOST_RIGHT, ORANGE_GHOST_LEFT, ORANGE_GHOST_UP, ORANGE_GHOST_DOWN,
+        GHOST_FRIGHTENED,
+        GHOST_FLASHING,
+        GHOST_EYES_RIGHT, GHOST_EYES_LEFT, GHOST_EYES_UP, GHOST_EYES_DOWN,
+        GHOST_NUMBERS,
+        BONUS_SYMBOLS,
+        BONUS_VALUES,
     }
 
     public static RectArea getSprite(SpriteID spriteID) {
@@ -46,6 +53,10 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
             case HEART -> rect(162, 270, 18, 18);
             case BLUE_BAG -> rect(241, 363, 7, 8);
             case JUNIOR_PAC -> rect(176, 304, 7, 8);
+            case GHOST_EYES_RIGHT -> rect(140, 173, 10, 5);
+            case GHOST_EYES_LEFT -> rect(140, 166, 10, 5);
+            case GHOST_EYES_UP -> rect(153, 166, 10, 5);
+            case GHOST_EYES_DOWN -> rect(153, 173, 10, 5);
             default -> null; //TODO
         };
     }
@@ -138,56 +149,54 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
             case ORANGE_GHOST_DOWN -> new RectArea[] {
                 rect(106, 165, 14, 13), rect(122, 165, 14, 13)
             };
+            case GHOST_FRIGHTENED -> new RectArea[] {
+                rect(138, 120, 14, 13), rect(154, 120, 14, 13)
+            };
+            case GHOST_FLASHING -> new RectArea[] {
+                //TODO when are the white-red sprites used?
+                //rect(138, 120, 14, 13), rect(154, 120, 14, 13), // blue
+                //rect(138, 135, 14, 13),  rect(154, 135, 14, 13), // white/red eyes+mouth
+                rect(138, 120, 14, 13),
+                rect(154, 120, 14, 13), // blue
+                rect(138, 150, 14, 13),
+                rect(154, 150, 14, 13), // white/blue eyes+mouth
+            };
+            case GHOST_NUMBERS -> new RectArea[] {
+                rect(259, 172, 16, 10),
+                rect(279, 172, 16, 10),
+                rect(259, 183, 16, 10),
+                rect(279, 183, 16, 10)
+            };
+            case BONUS_SYMBOLS -> sillyBonusSymbolComputation();
+            case BONUS_VALUES -> sillyBonusValuesComputation();
             default -> null; //TODO
         };
+    }
+
+    private static final int[] xs = {8, 24, 40, 56, 76, 96, 118, 140, 162, 182, 204, 230, 250, 272};
+    private static final int[] ws = {16, 15, 16, 18, 18, 20, 18, 18, 18, 18, 18, 18, 18, 18};
+    private static final int[] dy = {3, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+    private static RectArea[] sillyBonusSymbolComputation() {
+        RectArea[] symbolSprites = new RectArea[14];
+        for (int i = 0; i < 14; ++i) {
+            symbolSprites[i] = new RectArea(xs[i], 66 + dy[i], ws[i], 20 - dy[i]);
+        }
+        return symbolSprites;
+    }
+
+    private static RectArea[] sillyBonusValuesComputation() {
+        RectArea[] valueSprites = new RectArea[14];
+        for (int i = 0; i < 14; ++i) {
+            valueSprites[i] = new RectArea(xs[i], 85, ws[i], 18);
+        }
+        return valueSprites;
     }
 
     // there is only a sprite pointing left in the sprite sheet, renderer makes the animation
     public static final RectArea[] MS_PAC_ROTATING_SPRITES = new RectArea[11];
     static {
         Arrays.fill(MS_PAC_ROTATING_SPRITES, rect(51, 15, 15, 15));
-    }
-
-    public static final RectArea[] GHOST_FRIGHTENED_SPRITES = {
-            rect(138, 120, 14, 13), rect(154, 120, 14, 13)
-    };
-
-    public static final RectArea[] GHOST_FLASHING_SPRITES = {
-            //TODO when are the white-red sprites used?
-            //rect(138, 120, 14, 13), rect(154, 120, 14, 13), // blue
-            //rect(138, 135, 14, 13),  rect(154, 135, 14, 13), // white/red eyes+mouth
-            rect(138, 120, 14, 13),
-            rect(154, 120, 14, 13), // blue
-            rect(138, 150, 14, 13),
-            rect(154, 150, 14, 13), // white/blue eyes+mouth
-    };
-
-    public static final RectArea[] GHOST_EYES_SPRITES = {
-            rect(140, 173, 10, 5), // right
-            rect(140, 166, 10, 5), // left
-            rect(153, 166, 10, 5), // up
-            rect(153, 173, 10, 5), // down
-    };
-
-    public static final RectArea[] GHOST_NUMBER_SPRITES = {
-            rect(259, 172, 16, 10),
-            rect(279, 172, 16, 10),
-            rect(259, 183, 16, 10),
-            rect(279, 183, 16, 10)
-    };
-
-    public static final RectArea[] BONUS_SYMBOL_SPRITES = new RectArea[14];
-
-    public static final RectArea[] BONUS_VALUE_SPRITES = new RectArea[14];
-
-    static {
-        int[] xs = {8, 24, 40, 56, 76, 96, 118, 140, 162, 182, 204, 230, 250, 272};
-        int[] ws = {16, 15, 16, 18, 18, 20, 18, 18, 18, 18, 18, 18, 18, 18};
-        int[] dy = {3, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        for (int i = 0; i < 14; ++i) {
-            BONUS_SYMBOL_SPRITES[i] = new RectArea(xs[i], 66 + dy[i], ws[i], 20 - dy[i]);
-            BONUS_VALUE_SPRITES[i] = new RectArea(xs[i], 85, ws[i], 18);
-        }
     }
 
     public static final RectArea[] CONTINUES_SPRITES = {
@@ -220,22 +229,29 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
 
     @Override
     public RectArea[] ghostEyesSprites(Direction dir) {
-        return new RectArea[]{GHOST_EYES_SPRITES[dirIndex(dir)]};
+        return new RectArea[] {
+            switch (dir) {
+                case RIGHT -> getSprite(SpriteID.GHOST_EYES_RIGHT);
+                case LEFT -> getSprite(SpriteID.GHOST_EYES_LEFT);
+                case UP -> getSprite(SpriteID.GHOST_EYES_UP);
+                case DOWN -> getSprite(SpriteID.GHOST_EYES_DOWN);
+            }
+        };
     }
 
     @Override
     public RectArea[] ghostFlashingSprites() {
-        return GHOST_FLASHING_SPRITES;
+        return getSprites(SpriteID.GHOST_FLASHING);
     }
 
     @Override
     public RectArea[] ghostFrightenedSprites() {
-        return GHOST_FRIGHTENED_SPRITES;
+        return getSprites(SpriteID.GHOST_FRIGHTENED);
     }
 
     @Override
     public RectArea[] ghostNumberSprites() {
-        return GHOST_NUMBER_SPRITES;
+        return getSprites(SpriteID.GHOST_NUMBERS);
     }
 
     @Override
@@ -285,7 +301,7 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
 
     @Override
     public RectArea bonusSymbolSprite(byte symbol) {
-        return BONUS_SYMBOL_SPRITES[symbol];
+        return getSprites(SpriteID.BONUS_SYMBOLS)[symbol];
     }
 
     @Override
@@ -297,7 +313,7 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
             case TengenMsPacMan_GameModel.BONUS_ICE_CREAM -> 7; // 4000!
             default -> symbol;
         };
-        return BONUS_VALUE_SPRITES[index];
+        return getSprites(SpriteID.BONUS_VALUES)[index];
     }
 
     public SpriteAnimation createStorkFlyingAnimation() {
