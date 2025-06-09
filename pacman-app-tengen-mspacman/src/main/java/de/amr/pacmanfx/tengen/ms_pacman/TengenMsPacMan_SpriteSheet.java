@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.tengen.ms_pacman;
 
-import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import javafx.scene.image.Image;
