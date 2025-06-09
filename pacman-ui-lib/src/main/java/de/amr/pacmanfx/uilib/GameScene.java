@@ -20,6 +20,11 @@ import static de.amr.pacmanfx.Globals.theGameController;
 public interface GameScene extends GameEventListener, ActionBindingSupport {
 
     /**
+     * Called on begin of each simulation frame. By default, the first matching game action is executed.
+     */
+    default void handleKeyboardInput() { runMatchingAction(); }
+
+    /**
      * Called when the scene becomes the current one.
      */
     void init();

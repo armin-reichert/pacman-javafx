@@ -12,4 +12,5 @@ import javafx.scene.layout.Region;
 public interface PacManGames_View extends ActionBindingSupport, GameEventListener {
     Region container();
     StringExpression titleBinding();
+    default void handleKeyboardInput() { runMatchingAction(); }
 }

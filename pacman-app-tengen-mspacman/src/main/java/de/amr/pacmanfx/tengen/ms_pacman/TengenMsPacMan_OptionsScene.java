@@ -118,7 +118,6 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     public void handleKeyboardInput() {
-
         if (theJoypad().isButtonPressed(JoypadButton.DOWN)) {
             selectNextOption();
         }

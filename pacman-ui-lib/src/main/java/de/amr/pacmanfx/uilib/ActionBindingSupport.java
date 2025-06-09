@@ -81,6 +81,4 @@ public interface ActionBindingSupport {
             }
         }, defaultAction);
     }
-
-    default void handleKeyboardInput() { runMatchingAction(); }
 }
