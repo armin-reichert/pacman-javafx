@@ -44,7 +44,8 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
         LEVEL_NUMBER_BOX,
         CLAPPERBOARD,
         STORK,
-        LIVES_COUNTER_SYMBOL
+        LIVES_COUNTER_SYMBOL,
+        DIGIT_1, DIGIT_2, DIGIT_3, DIGIT_4, DIGIT_5, DIGIT_6, DIGIT_7, DIGIT_8, DIGIT_9, DIGIT_0,
     }
 
     private static final int[] xs = {8, 24, 40, 56, 76, 96, 118, 140, 162, 182, 204, 230, 250, 272};
@@ -91,7 +92,16 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
         SPRITE_MAP.put(CONTINUES_3, rect(180, 216, 40, 8));
         SPRITE_MAP.put(LEVEL_NUMBER_BOX, rect(200, 164, 16, 16));
         SPRITE_MAP.put(LIVES_COUNTER_SYMBOL, rect(241, 15, 16, 16));
-
+        SPRITE_MAP.put(DIGIT_1, rect(185 + 5,      184, 4, 5));
+        SPRITE_MAP.put(DIGIT_2, rect(185 + 5 *  2, 184, 4, 5));
+        SPRITE_MAP.put(DIGIT_3, rect(185 + 5 *  3, 184, 4, 5));
+        SPRITE_MAP.put(DIGIT_4, rect(185 + 5 *  4, 184, 4, 5));
+        SPRITE_MAP.put(DIGIT_5, rect(185 + 5 *  5, 184, 4, 5));
+        SPRITE_MAP.put(DIGIT_6, rect(185 + 5 *  6, 184, 4, 5));
+        SPRITE_MAP.put(DIGIT_7, rect(185 + 5 *  7, 184, 4, 5));
+        SPRITE_MAP.put(DIGIT_8, rect(185 + 5 *  8, 184, 4, 5));
+        SPRITE_MAP.put(DIGIT_9, rect(185 + 5 *  9, 184, 4, 5));
+        SPRITE_MAP.put(DIGIT_0, rect(185 + 5 * 10, 184, 4, 5));
         SPRITE_MAP.put(MS_PAC_MUNCHING, new RectArea[] {
             rect(51, 15, 15, 15), // open
             rect(66, 15, 15, 15), // wide open
@@ -291,10 +301,5 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
             default -> symbol;
         };
         return getSprites(SpriteID.BONUS_VALUES)[index];
-    }
-
-    // Tengen-specific
-    public RectArea digit(int d) {
-        return d == 0 ? rect(235, 184, 4, 5) : rect(185 + 5 * d, 184, 4, 5);
     }
 }

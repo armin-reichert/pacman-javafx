@@ -353,10 +353,26 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         drawSpriteScaled(getSprite(SpriteID.LEVEL_NUMBER_BOX), x, y);
         double digitY = y + 2;
         int tens = levelNumber / 10, ones = levelNumber % 10;
-        drawSpriteScaled(spriteSheet.digit(ones), x + 10, digitY);
         if (tens > 0) {
-            drawSpriteScaled(spriteSheet.digit(tens), x + 2,  digitY);
+            drawSpriteScaled(digitSprite(tens), x + 2, digitY);
         }
+        drawSpriteScaled(digitSprite(ones), x + 10, digitY);
+    }
+
+    private RectArea digitSprite(int digit) {
+        return getSprite(switch (digit) {
+            case 1 -> SpriteID.DIGIT_1;
+            case 2 -> SpriteID.DIGIT_2;
+            case 3 -> SpriteID.DIGIT_3;
+            case 4 -> SpriteID.DIGIT_4;
+            case 5 -> SpriteID.DIGIT_5;
+            case 6 -> SpriteID.DIGIT_6;
+            case 7 -> SpriteID.DIGIT_7;
+            case 8 -> SpriteID.DIGIT_8;
+            case 9 -> SpriteID.DIGIT_9;
+            case 0 -> SpriteID.DIGIT_0;
+            default -> throw new IllegalArgumentException("Illegal digit value " + digit);
+        });
     }
 
     // Blue colors used in intro, dark to brighter blue shade.
