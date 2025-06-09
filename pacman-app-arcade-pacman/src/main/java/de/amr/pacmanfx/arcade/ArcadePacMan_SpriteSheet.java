@@ -28,13 +28,13 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
      */
     private static RectArea[] tilesRightOf(int tileX, int tileY, int numTiles) {
         return IntStream.range(tileX, tileX + numTiles)
-                .mapToObj(x -> rect(OFF_X + RASTER * x, RASTER * tileY, RASTER, RASTER))
+                .mapToObj(x -> rect(OFF_X + R16 * x, R16 * tileY, R16, R16))
                 .toArray(RectArea[]::new);
     }
 
-    private static RectArea tile(int tileX, int tileY) { return rect(OFF_X + RASTER * tileX, RASTER * tileY, RASTER, RASTER); }
+    private static RectArea tile(int tileX, int tileY) { return rect(OFF_X + R16 * tileX, R16 * tileY, R16, R16); }
 
-    private static final int RASTER = 16; // 16x16 squares in sprite sheet
+    private static final int R16 = 16; // 16x16 squares in sprite sheet
     private static final int OFF_X = 456;
 
     private static final List<Direction> DIR_ORDER = List.of(Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
@@ -57,6 +57,11 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
         LIVES_COUNTER_SYMBOL,
         PACMAN_MUNCHING_RIGHT, PACMAN_MUNCHING_LEFT, PACMAN_MUNCHING_UP, PACMAN_MUNCHING_DOWN,
         PACMAN_DYING,
+        PACMAN_BIG,
+        RED_GHOST_STRETCHED,
+        RED_GHOST_DAMAGED,
+        RED_GHOST_PATCHED,
+        RED_GHOST_NAKED
     }
 
     private static final EnumMap<SpriteID, Object> SPRITE_MAP = new EnumMap<>(SpriteID.class);
@@ -68,7 +73,7 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
             rect(504, 133, 16, 7)   // 1600
         });
         SPRITE_MAP.put(BONUS_SYMBOLS, IntStream.range(0, 8)
-            .mapToObj(i -> rect(OFF_X + RASTER * (2 + i), 49, 14, 14))
+            .mapToObj(i -> rect(OFF_X + R16 * (2 + i), 49, 14, 14))
             .toArray(RectArea[]::new));
         SPRITE_MAP.put(BONUS_VALUES, new RectArea[] {
             rect(457, 148, 14, 7), //  100
@@ -109,6 +114,19 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
         SPRITE_MAP.put(GHOST_EYES_LEFT,       tilesRightOf(9, 5, 1));
         SPRITE_MAP.put(GHOST_EYES_UP,         tilesRightOf(10, 5, 1));
         SPRITE_MAP.put(GHOST_EYES_DOWN,       tilesRightOf(11, 5, 1));
+        SPRITE_MAP.put(PACMAN_BIG,            new RectArea[] {
+                rect(OFF_X + 32, 16, 32, 32), rect(OFF_X + 64, 16, 32, 32), rect(OFF_X + 96, 16, 32, 32)
+        });
+        SPRITE_MAP.put(RED_GHOST_STRETCHED,   IntStream.range(0,5).mapToObj(i -> tile(8 + i, 6)).toArray(RectArea[]::new));
+        SPRITE_MAP.put(RED_GHOST_DAMAGED,     new RectArea[] {
+                rect(OFF_X + R16 * 8 + 1, R16 * 7 + 1, 14, 14),
+                rect(OFF_X + R16 * 9 + 1, R16 * 7 + 1, 14, 14)
+        });
+        SPRITE_MAP.put(RED_GHOST_PATCHED, new RectArea[] { tile(10, 7), tile(11, 7) });
+        SPRITE_MAP.put(RED_GHOST_NAKED, new RectArea[] {
+                rect(OFF_X + R16 * 8, R16 * 8, 2 * R16, R16),
+                rect(OFF_X + R16 * 10, R16 * 8, 2 * R16, R16)
+        });
     }
 
     public static RectArea getSprite(SpriteID spriteID) { return (RectArea) SPRITE_MAP.get(spriteID); }
@@ -116,7 +134,7 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
 
     private static RectArea[] sillyPacManMunchingSpritesExtraction(int dir) {
         byte margin = 1;
-        int size = RASTER - 2 * margin;
+        int size = R16 - 2 * margin;
         RectArea wide = rect(OFF_X + margin, dir * 16 + margin, size, size);
         RectArea middle = rect(OFF_X + 16 + margin, dir * 16 + margin, size, size);
         RectArea closed = rect(OFF_X + 32 + margin, margin, size, size);
@@ -125,42 +143,8 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
 
     private static RectArea[] sillyPacManDyingSpriteExtraction() {
         return IntStream.range(0, 12)
-                .mapToObj(i -> rect(504 + i * RASTER, 0, RASTER - 1, i == 11 ? RASTER : RASTER - 1))
+                .mapToObj(i -> rect(504 + i * R16, 0, R16 - 1, i == 11 ? R16 : R16 - 1))
                 .toArray(RectArea[]::new);
-    }
-
-    private static final RectArea[] BIG_PAC_MAN_SPRITES = rectAreaArray(
-            rect(OFF_X + 32, 16, 32, 32), rect(OFF_X + 64, 16, 32, 32), rect(OFF_X + 96, 16, 32, 32));
-
-    private static final RectArea[] BLINKY_STRETCHED_SPRITES = new RectArea[5];
-
-    static {
-        for (int i = 0; i < 5; ++i) {
-            BLINKY_STRETCHED_SPRITES[i] = rect(OFF_X + RASTER * (8 + i), RASTER * (6), RASTER, RASTER);
-        }
-    }
-
-    private static final RectArea[] BLINKY_DAMAGED_SPRITES = new RectArea[2];
-
-    static {
-        byte margin = 1;
-        int size = RASTER - 2 * margin;
-        BLINKY_DAMAGED_SPRITES[0] = rect(OFF_X + RASTER * (8) + margin, RASTER * (7) + margin, size, size);
-        BLINKY_DAMAGED_SPRITES[1] = rect(OFF_X + RASTER * (9) + margin, RASTER * (7) + margin, size, size);
-    }
-
-    private static final RectArea[] BLINKY_PATCHED_SPRITES = new RectArea[2];
-
-    static {
-        BLINKY_PATCHED_SPRITES[0] = rect(OFF_X + RASTER * (10), RASTER * (7), RASTER, RASTER);
-        BLINKY_PATCHED_SPRITES[1] = rect(OFF_X + RASTER * (11), RASTER * (7), RASTER, RASTER);
-    }
-
-    private static final RectArea[] BLINKY_NAKED_SPRITES = new RectArea[2];
-
-    static {
-        BLINKY_NAKED_SPRITES[0] = rect(OFF_X + RASTER * (8), RASTER * (8), 2 * RASTER, RASTER);
-        BLINKY_NAKED_SPRITES[1] = rect(OFF_X + RASTER * (10), RASTER * (8), 2 * RASTER, RASTER);
     }
 
     public ArcadePacMan_SpriteSheet(Image sourceImage) {
@@ -244,23 +228,21 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
         return getSprites(GALLERY_GHOSTS)[personality];
     }
 
-    public RectArea[] bigPacManSprites() {
-        return BIG_PAC_MAN_SPRITES;
-    }
+    public RectArea[] bigPacManSprites() { return getSprites(PACMAN_BIG); }
 
     public RectArea[] blinkyStretchedSprites() {
-        return BLINKY_STRETCHED_SPRITES;
+        return getSprites(RED_GHOST_STRETCHED);
     }
 
     public RectArea[] blinkyDamagedSprites() {
-        return BLINKY_DAMAGED_SPRITES;
+        return getSprites(RED_GHOST_DAMAGED);
     }
 
     public RectArea[] blinkyPatchedSprites() {
-        return BLINKY_PATCHED_SPRITES;
+        return getSprites(RED_GHOST_PATCHED);
     }
 
     public RectArea[] blinkyNakedSprites() {
-        return BLINKY_NAKED_SPRITES;
+        return getSprites(RED_GHOST_NAKED);
     }
 }
